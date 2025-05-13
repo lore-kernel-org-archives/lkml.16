@@ -1,294 +1,234 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5750C17BD3
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2BD3FB0E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747096453; cv=none; b=JPK10qWYyj2Q5Z6QpeAZIOZPi5ff35NRyRfHPaS49DlRqZxd9YBFkBjM6rvEz/FLtjoYMgNG1e6SUAafSsI81XUSRdszY2igI6aUO/L0RoZFPj2xhwTFz1vA4nNanjozu0h22LgLVIZEXaEH4zHxdKrh9hLYSCOZ6acoeUMWM38=
+	t=1747096605; cv=none; b=XwpaDvDCaELiuR5iEkAL/lH7RebWZZM9vOph7Eis7kjM4Itsy9eKl9/LKURjigRIuC0zGOMaJ5E9657RHyXTPuh5jhV6qvOb85Xwx49pbuJCWs+AqEf20oP3Eph2x0q+EkAUDsjaLvwqX+qAAUQ0BiW2yXnMinHxv7f/++JqYvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747096453; c=relaxed/simple;
-	bh=fU7pBdKdDLvcMx8zh+viNeC2gR91xPbL999COyMNtfI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qifoMUMYTzBIdGutQghXXdk2CSF4EcHCB1lpnQFkO8f7zhXVxn20iQ4iKlVdqIAgZIbQpT7NbJwNHoUjf/gkhGhOW2IsKCp380RhIzO+HiGLPK0+VwqlFR4cEYP+Js3O8IaLS7ZxXqXywLFjMUgVZdgwJbKmUTZhZjP65z0poDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E7+A/sRU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747096605; c=relaxed/simple;
+	bh=yb8jSVRsF30mHGOhOVdM3imAWsNOsAUSfNyxlcnfirk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BsqnVcaFDUk9fW5rPYNpctX5MhJIxsizdI06zbzMtvryjSl9Rz1MqNGlhZ0VP6sKTgrLHgntniv26H8MPnWa5M7L3ri9TS6ZPLHwur3LC2QcIpN7jy21jig0KpO7vCJACG7WK7kpcRtmC0NlFnH423DvjS6rA+C+d29WvlEirBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hfDkTmhz; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7+A/sRU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747096450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MuVgDh54fhNKdyszi5Ue5nINMoJxAHC1Wn8pfTLezZ8=;
-	b=E7+A/sRUhHUEQihYzYD/FUduoPFmD5WrsAS5XHAS8Sb7wjrF3LTcVLoenez9s2uPZJmRDg
-	UO3dFKs27+cEcOnzC9YOAmpWpNlRs/928KGDcNwrGm00bIPKhHmYpvNb8Tjx52PQq6YBdS
-	L5AJi86VWZc4GjqisxopxGXMSBZQf+o=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-8-9oaNBdm1Myasa68olPs2uA-1; Mon, 12 May 2025 20:34:06 -0400
-X-MC-Unique: 9oaNBdm1Myasa68olPs2uA-1
-X-Mimecast-MFC-AGG-ID: 9oaNBdm1Myasa68olPs2uA_1747096445
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f544cf3f6dso93833096d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:34:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hfDkTmhz"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74019695377so3711158b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747096602; x=1747701402; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HA199g5QXmHqVIsbfWXsAzYBHgqNJazclMs1z1NJXJM=;
+        b=hfDkTmhzeA9rIAWsn0azZww56h74mks+koiDvV09oG+FlK/3aUQ0QrSHmg/g0DtFX9
+         ItWUhym2n/HSAOOYkT6PA2NnccFsOU3NuyqGsv9K69f//x2irwUn2I4MxwmCqGMmdehj
+         4XncuyU7L/hrRo5opYHJOFe7AS3Yw2jhe1uDM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747096445; x=1747701245;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MuVgDh54fhNKdyszi5Ue5nINMoJxAHC1Wn8pfTLezZ8=;
-        b=TWqheWVu4Xfd52Etx1PvFM13flDYdIWvXGnAbEvRKEjnLZqlLQZo0QTmh4ScOLg1qz
-         1SSv+xxSUfbM1XMJtd1cjmEepoLFipNTBrNyxgJyqaPNxZtSXRj6a0LS3G1hr1ZFxCrW
-         aOCCAH2DObmHOpOdHeWxKPSvWaIZ4VhlLrdhuZey7OC7mZCAlsCGppV29KC3RARExYYf
-         ybHvtye8UqEkZPRnoprnpnezreVCQCP5DdsIlEQvlJHG8a6/y/yKyYaMDXrANew/l6lN
-         EUz9l8tirKBgOjyfvN1RMA6LD2W01CFtd/qai8vpoF7OO2SuV9Zsj2vEHM31R5UCHOmZ
-         NRnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHYHFDJSghIHb8Cw0SG4yAYhBU67fmed/ORY63+xuA0oDRG3aAwOL9hZ7JzH5qHEXy3cKTMhx6iDTMZT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYOg/igSdzlHG9BckhOrT8RfQHf5W4KH/WNnSn9Tebie4vxZUy
-	Q3jymUlm+3LysAJNQAyYwSwfoXuty0oICEeuGvjYdAPPL8R6e4WgmD9zldS/fGMn0ku89EteoZW
-	ZhSiHG6wE9E4eDmHGcmV96Z7p0HRX9nVU/1CxRQNlYuCDpRO0YBh0V+WC5+QNQg==
-X-Gm-Gg: ASbGnctwrnKFnKDIBqdRRNa9c26kAAhABU7R4pZz+KaPwKuF9sHonvDMiygR4zMjtuD
-	56mvY+pdGo8h1ogj6AwHQhXbotVGE/HdJOW+LFjtA+sr8OFs7KI11q1bXKKfsmW2hlEPHlHzuXm
-	QD1y7o0b1p+dp3AVlOszfXmXAlTr767QwPUkTHw4fN5UBGqR/iGsjmveSRrCUGPyS3I7lhr2jjo
-	OAezbb4kxqf0Kv8x/6UTVuhiErBqnmmpjZ+L+93HLefh73CXSZPC5+HaPkPyq3veFA4AEP+S1Fl
-	szJKiNomUmFgnWnepKBU882sersJBrfZFDy6sKzCS8pJiaSrGubV8QNMqSc=
-X-Received: by 2002:a05:6214:f03:b0:6f2:a4cf:5fd7 with SMTP id 6a1803df08f44-6f6e4848aa4mr231130876d6.45.1747096445495;
-        Mon, 12 May 2025 17:34:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8aGvObkI3NF7VMdyY5mR4dqP88kLTJMkaUNYqYbYgo2VKQhOvw1mD6AuqFsDuxk5hHuobFw==
-X-Received: by 2002:a05:6214:f03:b0:6f2:a4cf:5fd7 with SMTP id 6a1803df08f44-6f6e4848aa4mr231130676d6.45.1747096445084;
-        Mon, 12 May 2025 17:34:05 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a0c5eesm59058176d6.61.2025.05.12.17.34.03
+        d=1e100.net; s=20230601; t=1747096602; x=1747701402;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HA199g5QXmHqVIsbfWXsAzYBHgqNJazclMs1z1NJXJM=;
+        b=G/sg6D5dyS2MjWTiTgK5L5uwlLeQhtd9gmrtCV6FlCRbW7bB8Uq6+P7pyZSrXvKEFX
+         F/Z7BcVTEb3AbK6jdwk+nRkRr3DK9DdSy9lOSkOqxtlgkdfYbaynP70tXB1Te4Yic2LH
+         dcX7dY7GlmZTlpC65mtBckETcljYmg+BrnXzR7jcjYJHwvfWwMQyZ1g24Q/NfiReAuVL
+         kPrKOgier7KIPObLuSJNOkX/e4WRnutl0Zuz2W/i/rHzZ0hxPB49JX8EVwH8yZMfwGyf
+         /b1Hac4iyjIDNtQOo058uS9CDvyDbTmzK7UjXbdUlKyvUj1kCcoATssSZWIpZRSQXGLN
+         PXhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWH0D9Yvk8FLQSA4prFC8d9YMMoLg/wnzndPCRCi8nTIGNdhLoslC8W/KR49uVZvRwi1oS2XU4iIsqo27Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1FHe8cuvKqC5+nF1GD86nJDEVPeJZLQH08cDOoIxUcT69XxrU
+	UTpGDfS7FRbT2fXug0/p+kfJ7O+PcTehG6yu5q2nM5cH+tMmhKwRClyDEh2tgw==
+X-Gm-Gg: ASbGncs+fpC+oWDHm4aNh8M1dLY+tvY4yXH68c369MtqfsaKsIYdpbzOyZaAF0HIJIH
+	lXgqhwPY/LFEF5tHyWwczo8fzL30IJgQXw6cEsGvHLaTadB+y4aOtoMpGch/x8VhJb99s79AekD
+	fFDb/9BW00u87o1MmXN+hsPkiYaUKJCathX3NlXs1yWFjFrtTMIsigssfCgTMnhORyDYEJtRELi
+	Vxzub9utEmeRrr7vJp9AtNtOnB4gSCVkHeNn50VMg9RcAnp4u6Kb4U3dW0lf5o1VH3hbKNHnlYz
+	4GRabjDo8ZankkMWlWUp+WAt9dfF//n0K52KjbP5LGbSHN11ID+MbCHxR8bx7A/zuIsB44efw8O
+	So3Ny9EZ9KmnXSIxDWLWUm59Z62eVuOpM+II=
+X-Google-Smtp-Source: AGHT+IGTlWjnHg+bWaHK446oE4g5aGMBwlecdmK/2JewCCDAhph9OjKEstpKEUumR8JMf8iUdJ2OJA==
+X-Received: by 2002:a05:6a20:7288:b0:215:edf7:c8f2 with SMTP id adf61e73a8af0-215edf7cae1mr835745637.16.1747096602544;
+        Mon, 12 May 2025 17:36:42 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e14:7:ed5d:332e:f26c:a223])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2350ddb7f8sm5197691a12.50.2025.05.12.17.36.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 17:34:04 -0700 (PDT)
-Message-ID: <9ac64e89dc5467e15c397e7bc14f775c693f91d7.camel@redhat.com>
-Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
- with access functions
-From: mlevitsk@redhat.com
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
- linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Date: Mon, 12 May 2025 20:34:03 -0400
-In-Reply-To: <aBuV7JmMU3TcsqFW@google.com>
-References: <20250416002546.3300893-1-mlevitsk@redhat.com>
-	 <20250416002546.3300893-2-mlevitsk@redhat.com>
-	 <aAgnRx2aMbNKOlXY@google.com>
-	 <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
-	 <aBuV7JmMU3TcsqFW@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        Mon, 12 May 2025 17:36:41 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: chintanpandya@google.com,
+	Douglas Anderson <dianders@chromium.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Maulik Shah <quic_mkshah@quicinc.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] genirq/PM: Fix IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND if depth > 1
+Date: Mon, 12 May 2025 17:32:52 -0700
+Message-ID: <20250512173250.1.If5c00cf9f08732f4af5f104ae59b8785c7f69536@changeid>
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-05-07 at 10:18 -0700, Sean Christopherson wrote:
-> On Thu, May 01, 2025, mlevitsk@redhat.com=C2=A0wrote:
-> > On Tue, 2025-04-22 at 16:33 -0700, Sean Christopherson wrote:
-> > > > @@ -2653,11 +2654,17 @@ static int prepare_vmcs02(struct kvm_vcpu *=
-vcpu, struct vmcs12 *vmcs12,
-> > > > =C2=A0	if (vmx->nested.nested_run_pending &&
-> > > > =C2=A0	=C2=A0=C2=A0=C2=A0 (vmcs12->vm_entry_controls & VM_ENTRY_LOA=
-D_DEBUG_CONTROLS)) {
-> > > > =C2=A0		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
-> > > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
-> > > > +		new_debugctl =3D vmcs12->guest_ia32_debugctl;
-> > > > =C2=A0	} else {
-> > > > =C2=A0		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
-> > > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugc=
-tl);
-> > > > +		new_debugctl =3D vmx->nested.pre_vmenter_debugctl;
-> > > > =C2=A0	}
-> > > > +
-> > > > +	if (CC(!vmx_set_guest_debugctl(vcpu, new_debugctl, false))) {
-> > >=20
-> > > The consistency check belongs in nested_vmx_check_guest_state(), only=
- needs to
-> > > check the VM_ENTRY_LOAD_DEBUG_CONTROLS case, and should be posted as =
-a separate
-> > > patch.
-> >=20
-> > I can move it there. Can you explain why though you want this? Is it be=
-cause of the
-> > order of checks specified in the PRM?
->=20
-> To be consistent with how KVM checks guest state.=C2=A0 The two checks in=
- prepare_vmcs02()
-> are special cases.=C2=A0 vmx_guest_state_valid() consumes a huge variety =
-of state, and
-> so replicating all of its logic for vmcs12 isn't worth doing.=C2=A0 The c=
-heck on the
-> kvm_set_msr() for guest_ia32_perf_global_ctrl exists purely so that KVM d=
-oesn't
-> simply ignore the return value.
->=20
-> And to a lesser degree, because KVM assumes that guest state has been san=
-itized
-> after nested_vmx_check_guest_state() is called.=C2=A0 Violating that risk=
-s introducing
-> bugs, e.g. consuming vmcs12->guest_ia32_debugctl before it's been vetted =
-could
-> theoretically be problematic.
->=20
-> > Currently GUEST_IA32_DEBUGCTL of the host is *written* in prepare_vmcs0=
-2.=C2=A0
-> > Should I also move this write to nested_vmx_check_guest_state?
->=20
-> No.=C2=A0 nested_vmx_check_guest_state() verifies the incoming vmcs12 sta=
-te,
-> prepare_vmcs02() merges the vmcs12 state with KVM's desires and fills vmc=
-s02.
->=20
-> > Or should I write the value blindly in prepare_vmcs02 and then check th=
-e value
-> > of 'vmx->msr_ia32_debugctl' in nested_vmx_check_guest_state and fail if=
- the value
-> > contains reserved bits?=C2=A0
->=20
-> I don't follow.=C2=A0 nested_vmx_check_guest_state() is called before pre=
-pare_vmcs02().
+The IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag doesn't work properly if the
+IRQ disable depth is not 0 or 1 at suspend time. In this case, the
+IRQ's depth will be decremented but the IRQ won't be enabled to wake
+the system up. Add a special case for when we're suspending and always
+enable the IRQ in that case.
 
-My mistake, I for some reason thought that nested_vmx_check_guest_state is =
-called from
-prepare_vmcs02(). Your explanation now makes sense.
+A few notes:
+* As part of this, irq_startup() can no longer force the depth to 0.
+  Change irq_startup() to decrement by 1 and make all other callers of
+  irq_startup() initialize the depth to 1 to keep them working the
+  same.
+* In order to avoid turning __enable_irq() into spaghetti code for the
+  special case, swap from a "switch" statement to a handful of
+  "if/else". Nicely, this eliminates an old "goto".
 
+Fixes: 90428a8eb494 ("genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I fully realize there are rough edges to this patch. Specifically,
+it's a bit ugly to init the depth to 1 in all the callers. Things
+could also get dicey of any code tries to enable/disable the IRQ
+_after_ we've set the "IRQD_IRQ_ENABLED_ON_SUSPEND", though I hope
+that doesn't happen.
 
->=20
-> > > > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool =
-host_initiated)
-> > > > +{
-> > > > +	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_ini=
-tiated);
-> > > > +
-> > > > +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
-> > > > +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
-> > > > +		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-> > > > +		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-> > > > +	}
-> > > > +
-> > > > +	if (invalid)
-> > > > +		return false;
-> > > > +
-> > > > +	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
-> > > > +					VM_EXIT_SAVE_DEBUG_CONTROLS))
-> > > > +		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
-> > > > +
-> > > > +	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.eve=
-nt &&
-> > > > +	=C2=A0=C2=A0=C2=A0 (data & DEBUGCTLMSR_LBR))
-> > > > +		intel_pmu_create_guest_lbr_event(vcpu);
-> > > > +
-> > > > +	__vmx_set_guest_debugctl(vcpu, data);
-> > > > +	return true;
-> > >=20
-> > > Return 0/-errno, not true/false.
-> >=20
-> > There are plenty of functions in this file and KVM that return boolean.
->=20
-> That doesn't make them "right".=C2=A0 For helpers that are obvious predic=
-ates, then
-> absolutely use a boolean return value.=C2=A0 The names for nested_vmx_che=
-ck_eptp()
-> and vmx_control_verify() aren't very good, e.g. they should be
-> nested_vmx_is_valid_eptp() and vmx_is_valid_control(), but the intent is =
-good.
->=20
-> But for flows like modifying guest state, KVM should return 0/-errno.
->=20
-> > e.g:=C2=A0
-> >=20
-> > static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
-> > static inline bool vmx_control_verify(u32 control, u32 low, u32 high)
-> > static bool nested_evmcs_handle_vmclear(struct kvm_vcpu *vcpu, gpa_t vm=
-ptr)
-> > static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
-> > 						=C2=A0struct vmcs12 *vmcs12)
->=20
-> These two should return 0/-errno.
->=20
-> =C2=A0
-> > static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
-> > static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
->=20
-> Probably should return 0/-errno, but nested_get_vmcs12_pages() is a bit o=
-f a mess.
+If you hate this patch, feel free to simply treat it as a bug report.
+I'm happy if someone wants to write an alternative patch or I can make
+whatever cleanups are needed and send a v2/v3/etc. Let me know!
 
-I am not going to argue with you about this, let it be.
+This patch has only been lightly tested.
 
->=20
-> > ...
-> >=20
-> >=20
-> > I personally think that functions that emulate hardware should return b=
-oolean
-> > values or some hardware specific status code (e.g VMX failure code) bec=
-ause
-> > the real hardware never returns -EINVAL and such.
->=20
-> Real hardware absolutely "returns" granular error codes.=C2=A0 KVM even h=
-as informal
-> mappings between some of them, e.g. -EINVAL =3D=3D #GP, -EFAULT =3D=3D #P=
-F, -EOPNOTSUPP =3D=3D #UD,
-> BUG() =3D=3D 3-strike #MC.
->=20
-> And hardware has many more ways to report errors to software. E.g. VMLAUN=
-CH can
-> #UD, #GP(0), VM-Exit, VMfailInvalid, or VMFailValid with 30+ unique reaso=
-ns.=C2=A0 #MC
-> has a crazy number of possible error encodings.=C2=A0 And so on and so fo=
-rth.
->=20
-> Software visible error codes aside, comparing individual KVM functions to=
- an
-> overall CPU is wildly misguided.=C2=A0 A more appropriate comparison woul=
-d be between
-> a KVM function and the ucode for a single instruction/operation.=C2=A0 I =
-highly, highly
-> doubt ucode flows are limited to binary yes/no outputs.
+ kernel/irq/chip.c       |  3 ++-
+ kernel/irq/cpuhotplug.c |  4 +++-
+ kernel/irq/manage.c     | 29 ++++++++++++++++-------------
+ kernel/irq/pm.c         |  2 +-
+ 4 files changed, 22 insertions(+), 16 deletions(-)
 
-I don't think you understood my point - I just pointed out that real hardwa=
-re will never return
-things like -EINVAL.
-
-I never have claimed that real hardware never does return error codes - it =
-of course does,=C2=A0
-like indeed VMX can return something like 77 different error codes.
-
-So I said that functions that emulate hardware should return either boolean=
- in case hardware
-only accepts/rejects the action, or hardware specific error codes, because
-I think that its a bit confusing to map hardware error codes and kernel err=
-or codes.
-
-In case of MSR write, hardware response is more or less boolean - hardware =
-either accepts
-the write or raises #GP.
-
-
-Yes I understand that hardware can in theory also #UD, or silently ignore w=
-rite, etc,
-so I am not going to argue about this, let it be.
-
-AFAIK the KVM convention for msr writes is that 1 is GP, 0 success, and neg=
-ative value
-exits as a KVM internal error to userspace. Not very developer friendly IMH=
-O, there is
-a room for improvement here.
-
-And I see that we now also have KVM_MSR_RET_UNSUPPORTED and KVM_MSR_RET_FIL=
-TERED.
-
-Thanks for the review,
-Best regards,
-	Maxim Levitsky
-
->=20
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 36cf1b09cc84..24a5958c09e4 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -272,7 +272,7 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
+ 	const struct cpumask *aff = irq_data_get_affinity_mask(d);
+ 	int ret = 0;
+ 
+-	desc->depth = 0;
++	desc->depth--;
+ 
+ 	if (irqd_is_started(d)) {
+ 		irq_enable(desc);
+@@ -313,6 +313,7 @@ int irq_activate_and_startup(struct irq_desc *desc, bool resend)
+ {
+ 	if (WARN_ON(irq_activate(desc)))
+ 		return 0;
++	desc->depth = 1;
+ 	return irq_startup(desc, resend, IRQ_START_FORCE);
+ }
+ 
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index 15a7654eff68..8d98a2961e91 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -218,8 +218,10 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+ 	if (desc->istate & IRQS_SUSPENDED)
+ 		return;
+ 
+-	if (irqd_is_managed_and_shutdown(data))
++	if (irqd_is_managed_and_shutdown(data)) {
++		desc->depth = 1;
+ 		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
++	}
+ 
+ 	/*
+ 	 * If the interrupt can only be directed to a single target
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 753eef8e041c..a8c9b645fe49 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -688,7 +688,14 @@ EXPORT_SYMBOL_GPL(irq_set_vcpu_affinity);
+ 
+ void __disable_irq(struct irq_desc *desc)
+ {
+-	if (!desc->depth++)
++	struct irq_data *irqd = &desc->irq_data;
++
++	/*
++	 * Always increase the disable depth; actually do the disable if
++	 * the depth was 0 _or_ we temporarily enabled during the suspend
++	 * path.
++	 */
++	if (!desc->depth++ || irqd_is_enabled_on_suspend(irqd))
+ 		irq_disable(desc);
+ }
+ 
+@@ -786,15 +793,12 @@ void disable_nmi_nosync(unsigned int irq)
+ 
+ void __enable_irq(struct irq_desc *desc)
+ {
+-	switch (desc->depth) {
+-	case 0:
+- err_out:
++	struct irq_data *irqd = &desc->irq_data;
++
++	if (desc->depth == 0 || desc->istate & IRQS_SUSPENDED) {
+ 		WARN(1, KERN_WARNING "Unbalanced enable for IRQ %d\n",
+ 		     irq_desc_get_irq(desc));
+-		break;
+-	case 1: {
+-		if (desc->istate & IRQS_SUSPENDED)
+-			goto err_out;
++	} else if (desc->depth == 1 || irqd_is_enabled_on_suspend(irqd)) {
+ 		/* Prevent probing on this irq: */
+ 		irq_settings_set_noprobe(desc);
+ 		/*
+@@ -809,9 +813,7 @@ void __enable_irq(struct irq_desc *desc)
+ 		 * invoke irq_enable() under the hood.
+ 		 */
+ 		irq_startup(desc, IRQ_RESEND, IRQ_START_FORCE);
+-		break;
+-	}
+-	default:
++	} else {
+ 		desc->depth--;
+ 	}
+ }
+@@ -1774,6 +1776,9 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+ 			irqd_set(&desc->irq_data, IRQD_NO_BALANCING);
+ 		}
+ 
++		/* Undo nested disables: */
++		desc->depth = 1;
++
+ 		if (!(new->flags & IRQF_NO_AUTOEN) &&
+ 		    irq_settings_can_autoenable(desc)) {
+ 			irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+@@ -1785,8 +1790,6 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+ 			 * interrupts forever.
+ 			 */
+ 			WARN_ON_ONCE(new->flags & IRQF_SHARED);
+-			/* Undo nested disables: */
+-			desc->depth = 1;
+ 		}
+ 
+ 	} else if (new->flags & IRQF_TRIGGER_MASK) {
+diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+index c556bc49d213..b151a94f6233 100644
+--- a/kernel/irq/pm.c
++++ b/kernel/irq/pm.c
+@@ -86,8 +86,8 @@ static bool suspend_device_irq(struct irq_desc *desc)
+ 			 * Enable interrupt here to unmask/enable in irqchip
+ 			 * to be able to resume with such interrupts.
+ 			 */
+-			__enable_irq(desc);
+ 			irqd_set(irqd, IRQD_IRQ_ENABLED_ON_SUSPEND);
++			__enable_irq(desc);
+ 		}
+ 		/*
+ 		 * We return true here to force the caller to issue
+-- 
+2.49.0.1045.g170613ef41-goog
 
