@@ -1,84 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6111E9B03
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57641E9B03;
+	Tue, 13 May 2025 09:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129627; cv=none; b=Lub7WfBXb3EPJqaPz+5EhMIFd/usvEQcyhzIWkFs5/KKz4hyQ9XQjr3C5MLg6hqe78zkyx5b7hSEoKD6FZcSNsEwyD8znu711KerHt5JJLaiq0ICHJ1nZL/UXqaPYPjnP1F5D08nZGt+TQ8U4NpW0KKdOzg8PaLP+qfSZ0Sv91k=
+	t=1747129652; cv=none; b=OlC07b2App+9D3e3bOjEOpsfj1KfD7GzsWda9eJx4Axh4erZJvh71ZARAVhMxCKAGCX8L6NS2iL7hCyBYdC/vk7RvWqNXEv14/WpPpfZUeaepvRtQkSHusm+PnzxlgZXDW2qiiKr1+OYUkuw0U657YVx2NDnQwyoF2BFSeHm7Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129627; c=relaxed/simple;
-	bh=b7siKQi24yevBo11SRzBrrvRK89vCTeLTpr1jo1HuBs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KoSq+VuiP7JJKfGj8JLZZzqERnR2p16M6jplgoF1SmL+3nWa0yFcea3AMotcD9YQylQTsPbnvijy8Fy5bvj8oKW8nhDoNUQTjKJOmAAuLyzklUl0X+sSIjxTW/8ruhMZGjZP5DH4GErDuW3GiuUhRF02eEY7CclYdTqik8W+KJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJvUol5d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747129652; c=relaxed/simple;
+	bh=xdZRAhNT35b5XbONWZpeY/LWsNXSL4jD++flhQxZj+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pm5uiGVoPodNDvAGNksMZYCTkG9gyyhFipLbisGCvghFaQOBPmX6pnWKf0Z18ei7GU54Uh1Qs5DKUnW9F693XkkuclXs71ADn98Yz40beJF+wMRG44rX1Glvlgp0oyaZ+bG/dtyPBrWi/lNAh4s5ajSfvpF4MvghqZP9yZ4vrZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDL938PQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJvUol5d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5626C4CEE4;
-	Tue, 13 May 2025 09:47:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDL938PQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB88C4CEE4;
+	Tue, 13 May 2025 09:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747129626;
-	bh=b7siKQi24yevBo11SRzBrrvRK89vCTeLTpr1jo1HuBs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kJvUol5df8hj1/dTrJlGoIDLbE7H2VgKjjKv0wKxLp9n9IxF2eIVxGFzC1PyH3Kpq
-	 nZ/AjmIi8OSAny/Y4xXMsbjSSogyjmSsxENhmKEgrRNgB99t4ITDkhxmKo+Jdy6yv1
-	 cEGr5EsGUM1i2LZLfmeXqGjWlP9GrAp8vIDCJJsCBoi3tinR6kpmvlGwWHOQks5h/T
-	 ClfFT1c0ZErz/8tkDffde9EjrjhA37RvfyXKRhMQgy6Xr5HiFAsDFnU5kiWyPcqtWb
-	 sfK7qkGMR6tXG5nz9AE/OZoS9xnmYccjJWIxjR+I1NGvqJaSDJ4eT+KzyEIGMR0/Al
-	 3K8BHg44+4RyA==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Nishanth Menon <nm@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250512185727.2907411-1-nm@ti.com>
-References: <20250512185727.2907411-1-nm@ti.com>
-Subject: Re: [PATCH] regulator: gpio: Use dev_err_probe
-Message-Id: <174712962358.91325.1280177002395058293.b4-ty@kernel.org>
-Date: Tue, 13 May 2025 11:47:03 +0200
+	s=k20201202; t=1747129651;
+	bh=xdZRAhNT35b5XbONWZpeY/LWsNXSL4jD++flhQxZj+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qDL938PQADFWvv1iYObPBQQN0mxoiEw+n1aZ8rwiWW8ckHeMPhXAUvnyuFTUmMctt
+	 RBYOwvDyXj5YbwOSseS5nNUvOi4A7ylzUidJgq6CBqJePPoTrMfznVqr7WRkXzKoUS
+	 4qCva9J5YLTaHQqM5kYbrnV+hSKlLnBXLGmdjDwQmPkviDNHQC8pP8+io4yKK9KW9f
+	 9t9+hATyYNXCrRZTlFtCuHijFlFpGl4aX3IPcmImJ6HqJUXrY9+c6+LkFZZi26OQ2Y
+	 zrYQ7iAC1XD/wdWROWl960ipCy7gn56+DxRvNj7HbxTgTUvTT8MSdXtWqSfyfWXGQu
+	 by6UdqRUqPF/A==
+Date: Tue, 13 May 2025 10:47:26 +0100
+From: Lee Jones <lee@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] mfd: Remove node variables that are unused with
+ CONFIG_OF=n
+Message-ID: <20250513094726.GG2936510@google.com>
+References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
 
-On Mon, 12 May 2025 13:57:27 -0500, Nishanth Menon wrote:
-> During probe the gpio driver may not yet be available. Use
-> dev_err_probe to provide just the pertinent log.
+On Thu, 08 May 2025, Nathan Chancellor wrote:
+
+> A recent cleanup introduced a few instances of -Wunused-variable in
+> configurations without CONFIG_OF because of_fwnode_handle() does not
+> reference its argument in that case:
 > 
-> Since dev_err_probe takes care of reporting the error value,
-> drop the redundant ret variable while at it.
+>   drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
+>   drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
+>     679 |         struct                  device_node *node = dev->of_node;
+>         |                                              ^~~~
+>   drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
+>   drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
+>     659 |         struct device_node *node = chip->dev->of_node;
+>         |                             ^~~~
+>   drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
+>   drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
+>     576 |         struct device_node *node = i2c->dev.of_node;
+>         |                             ^~~~
 > 
+> Use the value of these variables as the argument to of_fwnode_handle()
+> directly, clearing up the warnings.
 > 
-> [...]
+> Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>  drivers/mfd/88pm860x-core.c | 5 ++---
+>  drivers/mfd/max8925-core.c  | 5 ++---
+>  drivers/mfd/twl4030-irq.c   | 5 ++---
+>  3 files changed, 6 insertions(+), 9 deletions(-)
 
-Applied to
+Doesn't apply.  Which base commit / repo / branch are you using?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-
-Thanks!
-
-[1/1] regulator: gpio: Use dev_err_probe
-      commit: cad915e4515790d2e66525a86a166e7ce81e3055
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+Lee Jones [李琼斯]
