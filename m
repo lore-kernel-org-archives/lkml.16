@@ -1,101 +1,207 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC131F5827
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4411F473A;
+	Tue, 13 May 2025 08:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123701; cv=none; b=qaBdWaIouAhDpRRmAyIEW+rzLosv4tOwJ9fvAXBt3M5HaORwcs5hLkuVcW60eJUreK7SYEteOpzN90w5zP3QlQKqDKAWIH72zYAeJG6N9xlU2HffZUMgCL6ybMzQV9Ylm3qYLa11We3KUIqp7Yur8GW0DgVE14Yy/lbDFHORNB4=
+	t=1747123725; cv=none; b=t+/K4wUpnIVUqJ+6kjCWit9ppLutcedAUP3K5XGOgh0zEF2dlv9NoBKY6wheLr9TJdrlXDJeOpVb6+NlMdUwJ5wi0FRPFm25Oq/9i0AZGQYy22rgM1oCRE3VRdZD3ZQ//H6lnPPpDCQoAOCu3YrgJWmZFMYJBoATBHSEWGJVIGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123701; c=relaxed/simple;
-	bh=L2fUONMvwnW8yiHGxt/Cv3eCXBmSe0K4+Yn3jlPnreU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lKqYD13yNpa1zBG3qJkL++isLN4sdM4XbwhVYrGha1hw7rlHTaN4WUP23gu4jGWUny3S31Ua6K9Klh6CbEoN/IjW2YlOh0Jv3mhB71sbbdACltQTSQhtDF/Bhfds2+fHdYUwsHHN4Kev3EqRalJ9NzZxKbsZ9kppluhQG6xm5wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KXEI0iAX; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747123725; c=relaxed/simple;
+	bh=qpu4GWk38f9wakUkXBPq5Dr+ab4bLpt3174rgWFnguE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=N/kbHZzTUoc8WbXJow7/AfDEibofMWB7k+OlkGr4sFE26lnayLkBak0V9LPGut6oC1cGAQEElsjB9SOV8JxvN3V/ImcPVMYV+SOV4OiP9LxVQjkDkYv9MuVXwggAZXEAH8w8+rYoQZBMCPmj7OjOdeOZWVYszR6CE3EcqKQ7bus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skXMQBTd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KXEI0iAX"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbfdf7d353so7031055a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747123695; x=1747728495; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=L2fUONMvwnW8yiHGxt/Cv3eCXBmSe0K4+Yn3jlPnreU=;
-        b=KXEI0iAXx2Zj4xumoxPw7G6SuLVZzZGf5ovqJlrs/fx9weVgXtah8kMNbeIq9XwWjr
-         tAeHUDLhNXypPU8lACn+aBn64nS4lLhM1WVDz1x21x22whp5YxnmiquD8JEEYvXkHd5e
-         PJ1nm36zNjF8v0+rALqQ3h5UebhL8v26qbPbzdtL2fk2IjqEYeSJPnpnMN+NXsS8Q2Vg
-         JSgCYi2Rnu53hU0+0rrdCJtNNDPg1UawvqlUrYwRDBKMqNYImr63e7ME8iPnjKy5p+N4
-         x9fuV3/GzL6SXxWaEtSw8WqSn2vP8HWzQ8LhMYIKiQu/Ekrg4XMqxzNPXygzP0E/hG2M
-         MqYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747123695; x=1747728495;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L2fUONMvwnW8yiHGxt/Cv3eCXBmSe0K4+Yn3jlPnreU=;
-        b=PfJ1+O5+OhXFkZWdGELU1ZvzFjuR8ALZ9iNE3e39saHpjXKOfeE2v5NewUGUp0glnV
-         bE/bSz3+OXPznXUGuDoOMUPDFwsE2LAaC6MuqgdqlSBjneGR/kQbt3l+lTnTqZKjmpck
-         7nNteIrdikvugl+QSJKAOcqRbA+OlY9xIh95JC5HmtexWFQ3IV7IKZVcBZeQGd7pwKLa
-         VPZkdtFSmLiWmFtrh0zaUStggu7cgGuUewQ/ugGkAPYK9+iO/o9isaDHqPEquJSBBwtd
-         C4ccWih8FVMzfK0eMlyV/eBacOhEE83bNMRxpm6mpVbiQUu8gIyZDlwA1X8aVF17rvt6
-         1DnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFG+Sh2og9iIXfaAD1mkoycziorWXQyZJ+tEzXjIY4p2Phl+SRZpv4Du6jNxGBufXMhNN61ufGn9eTNb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5uXDpItuiL6MxYo2m0T02UR4OOxC8p3rmb39D4MDzNu7cPuIO
-	73o7JPWDsPEmmNHI89h//2sKk5wmdwcdYILc/XMQzo0s+8TdX8pXRJi6ePfyEqcH65EufCqfV56
-	TmGj5Z7AkizvD8d3VUb+u04r79Pof5kp53twpug==
-X-Gm-Gg: ASbGncuRt5UjFsUUkMKbnTNZ3m1TpY8y0ovpgoVQDGrUFlHEXVIlesSBq/80SYu0mbQ
-	OdXURj95qH4KzbFIbFh64HfAGeTlZvcGS+CAO1Utyzmg5+ue38u+tBw7Q0cGOh/JhIiN6LVs50A
-	oGz66OUZdJZPTifKZ/NGf1S7sPF2g/aHBZ+cU8vCEgAw==
-X-Google-Smtp-Source: AGHT+IHads4QlEtEqDY0AcLA2qwd9nCVGS/i83MACpvcqYx3SKhyrTWngOEajmlG/EhswkvR+dusb++aWne7YfpHpW0=
-X-Received: by 2002:a17:906:adce:b0:ace:d986:d7d2 with SMTP id
- a640c23a62f3a-ad2192b5c89mr1251560466b.49.1747123694914; Tue, 13 May 2025
- 01:08:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skXMQBTd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F7EAC4CEE4;
+	Tue, 13 May 2025 08:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747123724;
+	bh=qpu4GWk38f9wakUkXBPq5Dr+ab4bLpt3174rgWFnguE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=skXMQBTdAo3l4fHmuiur7V2ZxjECppgZqz8+4zOTYDGB17yB3bn+074AlWY5tgwgV
+	 pc52OUFSlCQLOEYqg3JL0V2TT901jZGVqCX9W66fO2mEa/Ha9qMdIJI9sXkWDdftRb
+	 A1izmCJPVm1ulXr7k5uqDizk8Sn/4iAoal9akV8dlOXXay63EYBFRDahSi3zs/sHD6
+	 pjG4Fx1aGfiK1WazcxkmmyfAgKpe7VChUtBZTy2HkCSLyi8ohwUqybmj9+DQiFbIe9
+	 z0uMUeAsvgNxGpPhV2r2rCrEEqyjodOOYg6jId9nAwUDNDDtUe2ryOmrbtkBc+SwGG
+	 01hcn/ofgZcog==
+Message-ID: <4783c1aa-d918-4194-90d7-ebc69ddbb789@kernel.org>
+Date: Tue, 13 May 2025 10:08:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512172321.3004779-1-neelx@suse.com> <20250512202054.GX9140@twin.jikos.cz>
- <CAPjX3Fe1izCGUJhTWk1mB=9uK7kNHeCOj51_TZQG7DOe_aooig@mail.gmail.com>
-In-Reply-To: <CAPjX3Fe1izCGUJhTWk1mB=9uK7kNHeCOj51_TZQG7DOe_aooig@mail.gmail.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Tue, 13 May 2025 10:08:04 +0200
-X-Gm-Features: AX0GCFup9GV-6iFM44V2E1_7oBRjVed2wfgAv6JSFREeDOMW27ll8odrJ9yyM5g
-Message-ID: <CAPjX3FdBCqDLyOyoQkm16-rQLGbPu-3mdesepd9KbpCa=mPxwQ@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: index buffer_tree using node size
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 2/2] net: pse-pd: Add Si3474 PSE controller
+ driver
+To: Piotr Kubik <piotr.kubik@adtran.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
+ <036e6a6c-ba45-4288-bc2a-9fd8d860ade6@adtran.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <036e6a6c-ba45-4288-bc2a-9fd8d860ade6@adtran.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 13 May 2025 at 09:56, Daniel Vacek <neelx@suse.com> wrote:
->
-> On Mon, 12 May 2025 at 22:20, David Sterba <dsterba@suse.cz> wrote:
-> >
-> > On Mon, May 12, 2025 at 07:23:20PM +0200, Daniel Vacek wrote:
-> > > So far we are deriving the buffer tree index using the sector size. But each
-> > > extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
-> > >
-> > > For example the typical and quite common configuration uses sector size of 4KiB
-> > > and node size of 16KiB. In this case it means the buffer tree is using up to
-> > > the maximum of 25% of it's slots. Or in other words at least 75% of the tree
-> > > slots are wasted as never used.
-> > >
-> > > We can score significant memory savings on the required tree nodes by indexing
-> > > the tree using the node size instead. As a result far less slots are wasted
-> > > and the tree can now use up to all 100% of it's slots this way.
-> >
-> > This looks interesting. Is there a way to get xarray stats? I don't see
-> > anything in the public API, e.g. depth, fanout, slack per level. For
-> > debugging purposes we can put it to sysfs or as syslog message,
-> > eventually as non-debugging output to commit_stats.
->
-> I'm using a python script in crash (even live on my laptop). I believe
-> you could do the same in dragon. Though that's not the runtime stats
-> you described. And I don't really think it's worth it.
+On 13/05/2025 00:06, Piotr Kubik wrote:
+> +/* Parse pse-pis subnode into chan array of si3474_priv */
+> +static int si3474_get_of_channels(struct si3474_priv *priv)
+> +{
+> +	struct device_node *pse_node, *node;
+> +	struct pse_pi *pi;
+> +	u32 pi_no, chan_id;
+> +	s8 pairset_cnt;
+> +	s32 ret = 0;
+> +
+> +	pse_node = of_get_child_by_name(priv->np, "pse-pis");
+> +	if (!pse_node) {
+> +		dev_warn(&priv->client[0]->dev,
+> +			 "Unable to parse DT PSE power interface matrix, no pse-pis node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	for_each_child_of_node(pse_node, node) {
 
-Eventually you could use a systemtap or bpftrace script. Though both
-have their pros and cons.
+Use scoped variant. One cleanup less.
+
+
+> +		if (!of_node_name_eq(node, "pse-pi"))
+> +			continue;
+
+...
+
+> +
+> +	ret = i2c_smbus_read_byte_data(client, FIRMWARE_REVISION_REG);
+> +	if (ret < 0)
+> +		return ret;
+> +	fw_version = ret;
+> +
+> +	ret = i2c_smbus_read_byte_data(client, CHIP_REVISION_REG);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dev_info(dev, "Chip revision: 0x%x, firmware version: 0x%x\n",
+
+dev_dbg or just drop. Drivers should be silent on success.
+
+> +		 ret, fw_version);
+> +
+> +	priv->client[0] = client;
+> +	i2c_set_clientdata(client, priv);
+> +
+> +	priv->client[1] = i2c_new_ancillary_device(priv->client[0], "slave",
+> +						   priv->client[0]->addr + 1);
+> +	if (IS_ERR(priv->client[1]))
+> +		return PTR_ERR(priv->client[1]);
+> +
+> +	ret = i2c_smbus_read_byte_data(priv->client[1], VENDOR_IC_ID_REG);
+> +	if (ret < 0) {
+> +		dev_err(&priv->client[1]->dev, "Cannot access slave PSE controller\n");
+> +		goto out_err_slave;
+> +	}
+> +
+> +	if (ret != SI3474_DEVICE_ID) {
+> +		dev_err(&priv->client[1]->dev,
+> +			"Wrong device ID for slave PSE controller: 0x%x\n", ret);
+> +		ret = -ENXIO;
+> +		goto out_err_slave;
+> +	}
+> +
+> +	priv->np = dev->of_node;
+> +	priv->pcdev.owner = THIS_MODULE;
+> +	priv->pcdev.ops = &si3474_ops;
+> +	priv->pcdev.dev = dev;
+> +	priv->pcdev.types = ETHTOOL_PSE_C33;
+> +	priv->pcdev.nr_lines = SI3474_MAX_CHANS;
+> +
+> +	ret = devm_pse_controller_register(dev, &priv->pcdev);
+> +	if (ret) {
+
+No need for {}
+
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to register PSE controller\n");
+
+No cleanup here? That's odd.
+
+> +	}
+> +
+> +	return ret;
+
+return 0
+
+> +
+> +out_err_slave:
+> +	i2c_unregister_device(priv->client[1]);
+> +	return ret;
+> +}
+> +
+> +static void si3474_i2c_remove(struct i2c_client *client)
+> +{
+> +	struct si3474_priv *priv = i2c_get_clientdata(client);
+> +
+> +	i2c_unregister_device(priv->client[1]);
+
+So you first unregister i2c device and then unregister pse controller.
+Feels like possible issues, difficult to debug.... Use devm reset
+wrapper for that.
+
+
+Best regards,
+Krzysztof
