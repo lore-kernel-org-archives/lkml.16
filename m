@@ -1,105 +1,205 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0F021FF22
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F746210F44;
+	Tue, 13 May 2025 09:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128428; cv=none; b=cG8/2T19Bae5qPZ1YHQBJMbQK6mrRet23WZjIxY2e4cskCNfTO4IXMipxvWvSqE1mm68SXxqlIy+Y8kBGWHOgHZD/HJxEGOfw7gQP0xv5wqmD5Cqq9B+wuawzA5M/sIs8Z0MUVSWJXoxP4RbzVgZECLdVwxSVHfFiOItOp+sMIk=
+	t=1747128446; cv=none; b=ZWd2AnwX2amRKuAuYIcTN10LCzHR6i8TC5prBIJmyUDnIAm6Ac0aI7Wg8S+fguZ1mJ5kk9Sib/k0v8A/RI0FFniRunu3mHpjFDDrNEQuopmvfbiM3ZFHI0g1/g1SxP6MudrCWWwyD7gW21w87V5k2Vko7Khr8z9ymBD7BSeat0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128428; c=relaxed/simple;
-	bh=dBHjeKALgKb8PK7SZY/p8ey0dlC17faEy13K5JvMwtg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iuFNmSsMJT8H2oaR6q6SGYULg6huL9wZCk6RIm3H/9raY8Qhdrr2PfLj/vMMLcP0KhqBLxLLq9dY39FeMZUiC+EEUPjorJPnqTJPNRl8wWnhm845bed04iKjd+e1q2ILT+Zx2/hvzjo1RefDRLsa9azj83fSKB9GUN5Br7r62N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EQCXBuIA; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747128446; c=relaxed/simple;
+	bh=Wg06r22yGHw69tTIasp8otwWawX8Zrx13Gm/NsTM7Cw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BNma8kZ6W4puuXvJWO0x9SuWp+VaoxMIaQmvJBt2ufU4vCUmpKhUQ87tfY/aeQzohArwlDdAZ4Gv3yl8yCA/5NjBAbjDw3xzbAfoczGMKsu06iNvhywJAlhTryEhe8TL2EpnnSbqbI2xO7YlwmyEJNGQs5njp8dA37sIgYcUh3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXOU5tqT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQCXBuIA"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54fcc593466so4084341e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747128424; x=1747733224; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bRI51hopg7WgPcKQ0KhMvn+lW2eJu7995NqNQ16hkew=;
-        b=EQCXBuIAzkrJ0YcaH2GFD2Kn7IIkRf3EfASYuN9gmZmKU011yTL9ljYuZqcyDQgEjX
-         DatySf72ZK7SO/csXBc9SsEQOhbG95HVAcWAnDdAk4rFptHFzcKZG7tsYxDbmvu0SOdj
-         fYlQBpROD2x9mrbHBbHMsJ0G+mh9VHbn9HJ9FSCkrJKm48dfLbsFW6r6kVlsT2OilRG1
-         moLllsokiYKYf/vq5+zzSFrPLAI6rdDF/q35GLKOKFTmBPJouZFE62KQE1UXe+xmGifh
-         PNSwzVEGFN63bOlK8RoAokLHfdzXfA75TN4LXq11A9uq3/oimB9vsZKHIdBuHYEufTKX
-         t14g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747128424; x=1747733224;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bRI51hopg7WgPcKQ0KhMvn+lW2eJu7995NqNQ16hkew=;
-        b=aj5E+3rUzNR1NeGJpE52dN7ALDbhpeNesE13AhVN9xQsDqfeQDycIRw3okc/yiprUT
-         K4/0E2oUQKmHY4yNILSUrhXBdLxjQmCRhsKwAf3ESS9JJElJexhYZLcZGDCnMn9vsfub
-         vagfr7JmF/q7K2JeuUO+a95cCp726sTDPkon/LeeJpB7qMlDgs9g1TPc3p0T43yWVwow
-         CJOzh5AxAFLKCM6huqVBUpWCNzIqVzFt7giHgRA06Iw/jBGM+hi1tvVGYthscBZ6buys
-         cv/PqWKiLmDK1Oq1mKBIsmrxqlGShNNqVbGjdzkqgp1QPr/f9zhL8zxClgrRl5+iMvTv
-         Zupw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE66h5nI9+2zX5Vx7Aj6q8f1ievQv0oJtACwRS2W+BZitZOkXquduO4Pu3/WIYm9MRHVglk9OI0RcmN08=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYWIrFcj4SS6fZMW/QxNb8YM43PUXVo13aMj5UIEtPkfdjnz2K
-	wiS94uPQAN+ZzVOewWIr9zZ6ZzTB/YiMdUlpeSIXmGQGP8Lr7i37sGgaq2hsZ6qWwtPtF55Ec83
-	/Cd3cI+Afz1sG1yQDCiG3VoylmJ3kt7lQODH50A==
-X-Gm-Gg: ASbGnctf3e2oneB8UuXABr76xPpgYFc33P+2ZNaIA4dTE7PxG6mfVndggTWIXt+Shu4
-	TSoRjcosklRlFHQQ91fHNuv72WW37PW55ZownVaMdFmc4Gjw2fUBjUccB3mfUNrJb24y0D8QkqC
-	Ue2/6HYpY2yUzMe3I6+9v+C1wwNo3DSjHr
-X-Google-Smtp-Source: AGHT+IG9aZSpEQxvWlu8ce2CXwCkeQw4aEsqx0A7UdazXuZrCCQu4J181mxHBoFbawXCJgTrKHYOmXCDjY2BLlsEQTo=
-X-Received: by 2002:a05:6512:6408:b0:545:2950:5360 with SMTP id
- 2adb3069b0e04-54fc67c2233mr4949153e87.22.1747128424591; Tue, 13 May 2025
- 02:27:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXOU5tqT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911ECC4CEE4;
+	Tue, 13 May 2025 09:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747128445;
+	bh=Wg06r22yGHw69tTIasp8otwWawX8Zrx13Gm/NsTM7Cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GXOU5tqTKTQ3t/0vHaE4JWvwxAWoB0ZmFNE1dtIbU15cbRGFohh4TtKYEDmSdNssG
+	 am042avuucvbAyB/Y48h7JJfhSeDCcso5SgQCr/77VlRyeRAhOnBVCYf2nOmZ6XJnv
+	 ttJ3QC9x3P16UDLAfBjTALn8OoGwRVmzLHk4DjNzWApxortuMpt7GNsRcjbT0sI01S
+	 IbPChFCT5UtvaGBL87DesezQ+bOtmwW4FrehqSJ1L/u+NS1hvSdvCWU+P+XsLhPqTa
+	 9X/Lj+KxAlqfdb9tEeksLQncleQsywzbHFNuOTg82fO1nd5fKT+2vhgNsjnbS+XLb2
+	 2SymKu+QCMIHg==
+Date: Tue, 13 May 2025 11:27:23 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] pwm: tiehrpwm: add get_state function to retrieve
+ PWM channel state
+Message-ID: <iguu6qhympqyoyxxqwwlyceg4qk2pwqodwfvwh2q45z5hqkqdv@zinbt6go5rqn>
+References: <20250419194835.77860-1-rafael.v.volkmer@gmail.com>
+ <20250419195555.78933-1-rafael.v.volkmer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
- <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com> <CACMJSesqtkorg1akuXjMa9U1fe60aDhfGOSB_T6mX5CtCYDwtg@mail.gmail.com>
-In-Reply-To: <CACMJSesqtkorg1akuXjMa9U1fe60aDhfGOSB_T6mX5CtCYDwtg@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 11:26:52 +0200
-X-Gm-Features: AX0GCFs-_g09qTgH6m_jk6ylbKM6K0LWLr1kjRESYHMTO1WN6HIA2pdGmO-YFt0
-Message-ID: <CACRpkdbDNbEpNOLT31+8Jb_fdvnROOtONxFc0hxCFa5AotSwTw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Josh Cartwright <joshc@codeaurora.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gdjj4z3ymrkqaokk"
+Content-Disposition: inline
+In-Reply-To: <20250419195555.78933-1-rafael.v.volkmer@gmail.com>
+
+
+--gdjj4z3ymrkqaokk
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/4] pwm: tiehrpwm: add get_state function to retrieve
+ PWM channel state
+MIME-Version: 1.0
 
-Hi Dmitry,
+Hello Rafael,
 
-thanks for your patch!
+On Sat, Apr 19, 2025 at 04:55:55PM -0300, Rafael V. Volkmer wrote:
+> The ehrpwm driver was missing a get_state function, which is required
+> to properly retrieve the current state of the PWM channel. Add the
+> ehrpwm_get_state() function, allowing users to query the enabled state,
+> period, duty cycle, and polarity of the PWM output.
+>=20
+> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+> ---
+>  drivers/pwm/pwm-tiehrpwm.c | 97 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>=20
+> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+> index 1ead1aa91a1a..cde331a73696 100644
+> --- a/drivers/pwm/pwm-tiehrpwm.c
+> +++ b/drivers/pwm/pwm-tiehrpwm.c
+> @@ -68,7 +68,9 @@
+>  #define AQCTL_ZRO_MASK	GENMASK(1, 0)
+>  #define AQCTL_PRD_MASK	GENMASK(3, 2)
+>  #define AQCTL_CAU_MASK	GENMASK(5, 4)
+> +#define AQCTL_CAD_MASK	GENMASK(7, 6)
+>  #define AQCTL_CBU_MASK	GENMASK(9, 8)
+> +#define AQCTL_CBD_MASK	GENMASK(11, 10)
+> =20
+>  /* common action codes (2=E2=80=91bit) */
+>  #define AQCTL_FRCLOW	1
+> @@ -470,9 +472,104 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>  	return err;
+>  }
+> =20
+> +static int ehrpwm_get_state(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    struct pwm_state *state)
+> +{
+> +	int ret =3D 0;
+> +
+> +	struct ehrpwm_pwm_chip *pc =3D NULL;
+> +
+> +	/* Registers */
+> +	u16 aqcsfrc_reg, aqctl_reg, tbprd_reg, cmpa_reg;
+> +
+> +	/* Bits */
+> +	u8 csf_bits;
+> +
+> +	/* Values */
+> +	u64 period_cycles, duty_cycles;
+> +
+> +	/* Actions */
+> +	u8 up_action, down_action;
+> +
+> +	pc =3D to_ehrpwm_pwm_chip(chip);
+> +
+> +	/*
+> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
+> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
+> +	 */
+> +	if (pwm->hwpwm =3D=3D 0) {
+> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
+> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg);
+> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
+> +	} else {
+> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
+> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg);
+> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
+> +	}
+> +
+> +	if (csf_bits)
+> +		state->enabled =3D false;
+> +	else if (aqctl_reg)
+> +		state->enabled =3D true;
+> +	else
+> +		state->enabled =3D false;
 
-On Tue, May 6, 2025 at 7:28=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@linaro.org> wrote:
-> On Sat, 3 May 2025 at 07:32, Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+if (csf_bits || !aqctl_reg) {
+	state->enabled =3D false;
+	return 0;
+}
 
-> > +       /*
-> > +        * hog pins are requested before registering GPIO chip, don't c=
-rash in
-> > +        * gpiochip_line_is_valid().
-> > +        */
-> > +       if (!chip->gpiodev)
-> > +               return 0;
-> > +
->
-> I really dislike you dereferencing gpiodev here which is (implicitly,
-> I know...) very much a private structure for GPIOLIB. Can we move this
-> into gpiochip_line_is_valid() itself?
+?
+=09
+> +
+> +	tbprd_reg =3D readw(pc->mmio_base + TBPRD);
+> +	period_cycles =3D (u64)tbprd_reg + 1u;
+> +
+> +	/*
+> +	 * period (in ns) =3D (period_cycles * 1e9) / clk_rate
+> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
+> +	 */
+> +	state->period =3D DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, pc->cl=
+k_rate);
+> +
+> +	cmpa_reg =3D readw(pc->mmio_base + CMPA);
+> +	duty_cycles =3D cmpa_reg;
 
-I agree with Bartosz. Patch gpiochip_line_is_valid() so everyone
-can benefit from the extended check.
+duty_cycles =3D readw(pc->mmio_base + CMPA);
 
-Thanks!
-Linus Walleij
+and drop the otherwise unused cmpa_reg.
+
+I would expect that you need to read CMPB for hwpwm =3D=3D 1?
+
+I see the naming is consistent with ehrpwm_pwm_config, but I'd prefer
+period_ticks and duty_ticks over period_cycles and duty_cycles. Then
+it's clear that the unit is clock ticks and not ns.
+
+> +	/*
+> +	 * duty_cycle (in ns) =3D (duty_cycles * 1e9) / clk_rate
+> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
+> +	 */
+> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, pc->=
+clk_rate);
+> +
+> +	/*
+> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
+> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
+> +	 */
+> +	if (pwm->hwpwm =3D=3D 0) {
+> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
+> +		up_action =3D FIELD_GET(AQCTL_CAU_MASK, aqctl_reg);
+> +		down_action =3D FIELD_GET(AQCTL_CAD_MASK, aqctl_reg);
+> +	} else {
+> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
+> +		up_action =3D FIELD_GET(AQCTL_CBU_MASK, aqctl_reg);
+> +		down_action =3D FIELD_GET(AQCTL_CBD_MASK, aqctl_reg);
+> +	}
+
+When you send a new revision, please start a new thread.
+
+Best regards
+Uwe
+
+--gdjj4z3ymrkqaokk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgjEHgACgkQj4D7WH0S
+/k6moAf/cQFPZ4ZF9AmccXdb9k8uDXklzqySktF6cFaaZT+Gds3GYfSV/dL+kgZ9
+hLgUjt6l0nvChDTUSUp2HXLrYqYaW1HPKKlgujHWTdzQi6I8c5Jm19mMWmkP1Foh
+YqakAuZlDXbBrBCOjYOwCJMEsQ98qvf09aVIYsIrxseCNVga1kYYHZzDTbY9Us/I
+64VLyjyPANQ/+4StOsX7y5SCF7on6fiIVxWeX2JOjLB7PX/NtDZ/tFQ7lJ9TxqhK
+ZFoUKJIyfKxtecQ3YdfKHNONTnoTfOI+NkXoMqWeeQ+YTK1jrkoB06Ofw7GEggXz
+AvkIPyGVdhmyz+k/961d16hgfmMrvw==
+=8q+T
+-----END PGP SIGNATURE-----
+
+--gdjj4z3ymrkqaokk--
