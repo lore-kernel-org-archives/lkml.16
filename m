@@ -1,88 +1,90 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FCD80B;
-	Tue, 13 May 2025 11:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705A617A2ED;
+	Tue, 13 May 2025 11:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136935; cv=none; b=pVX41OVbmzchZ7ZfqEFXBC70gWQgLVY90WHq2FXc9Ys1OINZCVBAGSteVCY64JtptsxDU5yNtTTSmnZLr9604sYB+FClSnrzagZrV3NgsmCkOh3JOM76+JewB+G1zeqW4MvP1ZRva3uDQYnT0H3oe2Ln2ncHloKuEFJzxuxrYhg=
+	t=1747137512; cv=none; b=UbP/pk3DZ/rJWdrbha9Oa+ir17iuuCcqlGZ7EmCB22ko2eaSDVQ4xwAqZRokBSWX5B9Qs6y32h3UXMDULYm3m9wucblddFmmcQzvItrb9KNEmJqEPtkwqXtkTdOjnHHcQ3XYHLZpIXtHweNYtWmdOGt8OjUTG0Ou7n31WEAwhMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136935; c=relaxed/simple;
-	bh=PfHDASGae7GwzCjj5rJNhR8LKba7dyTry6KYd7MXJfo=;
+	s=arc-20240116; t=1747137512; c=relaxed/simple;
+	bh=5OnMqy4x/fxysop1pI30I+DFYwCEXMalkXpph2ZdJaw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pz9MYgIqDYYwQwxnV78cCYdTIEonBWct0KpPhhOIm/s7OLPg8stutt1Q10K7WQ2UteVAVZe/F1cIzTGGnp5cJYYxemt9uNwsDwSbTQEanum1Zn9diTbMn7+Clz9ILFnswiBKJR9EciwPE4ulA7FuX6moaEjBx/MsebEdUrvTVZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fFbje9LC; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 MIME-Version:Content-Type; b=cXv4hoYZHMR2PpizzXvjgl8CdvcbnPs3dlT+fxZ8JsEkXDuiu5R9AS5lqG4Cg+VogiB196t3jyedAXowSzFy5JiTe11RjaXK+09x+E8/q047oxZy418rLTFpqc35rP9gmi8IG3v4kghbpsSTIqIkR7KziEKJnbOoCsdBkg7TKHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MZX/SRgu; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fFbje9LC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4BB8543224;
-	Tue, 13 May 2025 11:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747136925;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PfHDASGae7GwzCjj5rJNhR8LKba7dyTry6KYd7MXJfo=;
-	b=fFbje9LCo6l6XU2zxFRW5hVpKZrp8WzQUh3eW+UpxYIan3ddHX1xVjmBw90aIIxFvKC/tp
-	nKoQCCddeRToqSi/ByA5DoYeL8SEqxlz6pKwPssNtTZI5ThN9vtZTxkwTJCr0Uw6uC+Svq
-	bAtETBQghcEAsuW0f6vBqorqw3Ms6/HmSbxtJPKV+gx0Ftrv7OtjsiQqeFfeUZ44xHdGvu
-	iuODVwB+44/tmcRpSjVdZKmtIwuMFKMpsozrJeW9z9DhS5WZ8LyZhSTmmqWOnXrJXHfUf6
-	ZZIJslOKFeN/fcH9iNmPbUTGbEIMZtBMDyhc9iHkPyjS+T862lsBs0mBHJG7Jg==
-Date: Tue, 13 May 2025 13:48:39 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 0/2] Add Si3474 PSE controller driver
-Message-ID: <20250513134813.579ff90e@kmaincent-XPS-13-7390>
-In-Reply-To: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
-References: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MZX/SRgu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747137505;
+	bh=5OnMqy4x/fxysop1pI30I+DFYwCEXMalkXpph2ZdJaw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MZX/SRgukj+hj5idAWEfzjXMKmLh6ZP3LcfRvGUHDaqvXOp4KcBaBY5j8sKzwnjV2
+	 H0nGcTDcuNKy4wnd4gUS2BRQSLfdzdohc4uEuTEjEIYDmKcQMPTLQTamZ05Lo1W13e
+	 npEVZ82R3gqmcNJwQ6dRWHiSrPMp+udCv0ErW8vJfsM1JGojuSOXpWohWcYTf5NqO0
+	 GV/iS6aGKoKiu+5mCUfYbBkd11fyBq78h65S5xk5evzz/9g3cXabAkzD4Uyh1VOxhE
+	 Aq4/2MY3CWZGZW6YK0gHi4WH41w5ZW2cMskdW7j4THEjk+I4BYRAQJRMU0yEiPawqO
+	 lQvtF+SkcmFUA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxZk83FJMz4wcj;
+	Tue, 13 May 2025 21:58:24 +1000 (AEST)
+Date: Tue, 13 May 2025 21:58:22 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto
+ <inochiama@outlook.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: warning when fetching the sophgo tree
+Message-ID: <20250513215822.3c026a3b@canb.auug.org.au>
+In-Reply-To: <5muhaygt7rpuyvtx4ppmuuebsqqh7z4bp43c7akmuimxhrnqva@hobausqvilur>
+References: <20250513212242.2f951e70@canb.auug.org.au>
+	<5muhaygt7rpuyvtx4ppmuuebsqqh7z4bp43c7akmuimxhrnqva@hobausqvilur>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="Sig_/ZrQZlmU7AvylNt6Cy9EMY=m";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/ZrQZlmU7AvylNt6Cy9EMY=m
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdegtddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudgrmeeiudemjehfkegtmehfjeekrgemfhelvghfmeekkegttdemieefsghfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdurgemiedumeejfhektgemfhejkegrmehflegvfhemkeektgdtmeeifegsfhdphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepphhiohhtrhdrkhhusghikhesrgguthhrrghnrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhop
- egrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, 12 May 2025 22:02:52 +0000
-Piotr Kubik <piotr.kubik@adtran.com> wrote:
+Hi Inochi,
 
-> From: Piotr Kubik <piotr.kubik@adtran.com>
->=20
-> These patch series provide support for Skyworks Si3474 I2C
-> Power Sourcing Equipment controller.
->=20
-> Based on the TPS23881 driver code.
->=20
-> Supported features of Si3474:
-> - get port status,
-> - get port admin state,
-> - get port power,
-> - get port voltage,
-> - enable/disable port power
+On Tue, 13 May 2025 19:29:05 +0800 Inochi Amaoto <inochiama@gmail.com> wrot=
+e:
+>
+> Sorry for the mistake, I add this file by mistake when doing merge.
+> I have updated the repo and remove this file. Can you re-fetch it?
 
-You forgot the series version in the subject like this: [PATCH net-next v2 =
-0/2]
+No worries, I will refetch your tree in the morning.
 
-Regards,
 --=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZrQZlmU7AvylNt6Cy9EMY=m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgjM98ACgkQAVBC80lX
+0Gz70ggAjI+/qhdM90ex2Ga5iZtWTOwvwZ95JK1oIwn6cRIACRA0YAKWImdgj3HO
+qKhICe59sKbyhpN4H/xcmO+urF2OTHeYaKcIDkSlrRE6mQfg85uWmqWI3MY2/khk
+N3uwkGASvo734l42mdgbuoSe9NxnYgRiT+o1LIOwSruMQw4ONANuswc14Hgy41IV
+YreAJIWPMv4Y3u9WwDeqfsdV1u70YfswOTLNc/ueUOZIJr/hlG6fjozg0aLsFmWD
+hycoxyqg7GjEr+5dH3416g2zlFOGPAXT/CCWFT5gLC/uAqGhXusxKBHPO+6FeUFT
+nOzqeYggIqbdcdKKPVmr5KXvIPGwww==
+=AKPK
+-----END PGP SIGNATURE-----
+
+--Sig_/ZrQZlmU7AvylNt6Cy9EMY=m--
