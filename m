@@ -1,130 +1,164 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15D1ACE0C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DF62BE0ED
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747151376; cv=none; b=S6pyR7xjwKzpzdzJ8DIU04H+sJdHIaySI1EOnholiA8X6EEHrwK78ZAgeKSQI5BM8xMRUYCluFis+GQOvQBWULH1GPVlcETwMeKdZqDU23vQk15WA7CyCmclG6n92CjpXLTx/pJCUiGHxcNe4rlzEodGJjefQg2a4n12XQwE0uo=
+	t=1747151394; cv=none; b=lMbrpCcadMjBGbXICE8t1bXg6u08l+I+JhLVxDKKJQM4vJwJ/6gUfmn3RKhK76o4LUoWyJvDthCwQ2EJFSGeTl8YgfUT/cqokPdTHV/VXFVwv6RqZejm3pVaPla8RafAAe5HIP4bjT9rN+iNho1GlGVUFQs8evVevyrDKfGTqtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747151376; c=relaxed/simple;
-	bh=D7zyA+xvfSPVgIkyhp+oaqUj3TbRMXLr6UE39/JJcCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tA338wiCAzVxNkcKzGFsHkgk3HMtcE1XYpk7Hrq7C6TO9hjSkWofALoBA/8b3uiIvnJsQRhD5TpQXqH4xiLNGwKyhqHP2r1EDkdc9mw8WrCKAWINXD8nqfjs8B0v1E3zyS1rn2viDzd95oDy0di4M6/Lmop0O4Ho2LqW3+/1EFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EasnDy3R; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747151394; c=relaxed/simple;
+	bh=UPRvfjCDbgTsZ86qu1ogt0H4x+rT6E70pK6QAigrfME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NqSU1h5Q6TkXbaWiZAWGBbaChldfU5PdAgbJMgCSIhH6+VvJ0299DE1njzb/unj8BrTL+37jdC6ooKPkn+qzx/lCt30DSut2IZcveh/Ys+cEJl8/lmhSRBp+j34txWn4s1q4RAiEF+lEQSDuPSScRQQWznPVMyYjjqXGBfU2UaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OL+eIHxf; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EasnDy3R"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so33656955e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747151373; x=1747756173; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=l7qg/6GxjFXWiC5kQXeaivvG2EH2dCIS/N7d/lBrQ9Q=;
-        b=EasnDy3RaX5zoLCq2YkP6aMIVrLvJl+VuNsRBBWPAviBqSfo+xafnW1svztakNDpn0
-         1Nx4iRAPlZR/zLBgM9M+BO9NJXeTeSWZTGxnFFCOxciyHWAPjN/weKhI+bpOKx29zSGa
-         4U63A+VMnPIA3uLI3OxUjY7aE8UZAFBDWnqKtVJH9vix8i0IQM+NRLH79d5pqoqw5YIk
-         2GPw5iM9skIt9Nut42zAk+MumwVKimtFM4lLcGPsxns8zfoQOBs2uBZPEHp6x1m09q4I
-         GiRYY/jTi30nwRPg8r96jueCZnX0vOox4pzs1403MFALzO1I0mYKOmHH8cdgdrJ0pHdy
-         n3HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747151373; x=1747756173;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l7qg/6GxjFXWiC5kQXeaivvG2EH2dCIS/N7d/lBrQ9Q=;
-        b=AgAMj0TxC0qqdPvcalmFYZU2zacBPGaOZIwjYA+0uMMra9sBuckVFmYeD/PT7ajSLc
-         8ifYzZEeiNlU9yvbid5CKqFM2YKMKJCgGnEKQMko/8KlxNtmzdlpRy2bbzauAWIus9Fu
-         LFg9X0L/kUX2y0MwEG8RRUph1pFu80XWgPOj+Ma4ASqfmuASnawG2HXdCFEMX0AcFl65
-         DTUMxKg/00aWMkrD6i7YUpOmSgDXxUddtELBGdxY1RlQ3k2ccmjOge7xQxoR8jyjtGjx
-         xR6IB1+JxVj+g+YS2FCACpT5c2bub1OyqN2vsLTR09mlUZYNHbU0n7spQvQ0XN8zvEa8
-         T5aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb9U5ZjN4KlT/6TaNZL1DA+BqGhnH5TyhoxFrGzkWA90ubVQ8HsgkWGqPHAZbOsYetbbb56ajo98iG6Vg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4tzx9rPL/fGZe+z1BvvAfk9PlvWaHfg0E2gkQLv6rCqEkVEDP
-	R1oW+iLrhLWViyquq92/Iw/HksTdyBxVRR/7Iuig1doKgbaCQbGQXu+g6e9GPc+FAxbvNYv/lh2
-	a2Jp3dQ==
-X-Gm-Gg: ASbGncsrfvCaIgdWX4dJDE0DB+rjYeEUiFmXCuaiwRiWqXZbg3Wr0F6yldHkPn11p21
-	hc7BB3PZt03+0GixZast5nFR1GU2mDXpKsQpIWwLD+zlMjnqUAM2tpwCKdrPIYVLGZoBNbU20sv
-	B8lRtOz7AfQ63uq9a09j5cAKVPJQAmQs0F9BZIa7KQodVCBAJFnNON+RqrKldS8myT2qgiBIdIi
-	7UUKOd6lKpz2bCOgHPq79jVwjUQQWpZI9TIsbRD0zQUa2kSGvUVhgYaNLiZY5OzpGdYzUdzoVbd
-	aeqyIjU3efylEydpIY4myAr/EpB4YRwhKpI24bAiltLzkVlZGrzNfu33qzsEGNRPKkCWCbEsZrs
-	P6gBNwqAD31cM6w==
-X-Google-Smtp-Source: AGHT+IGOxH+5gWmbyyxxmGOMrk+23j8sz87XVh50Wr2hHSe2CGZP4m+YqUI33m8XElSElt+cCQlIDA==
-X-Received: by 2002:a05:600c:1c8f:b0:43c:e467:d6ce with SMTP id 5b1f17b1804b1-442d6d11a67mr146232535e9.4.1747151372773;
-        Tue, 13 May 2025 08:49:32 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb85bb20sm22789305e9.0.2025.05.13.08.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 08:49:32 -0700 (PDT)
-Date: Tue, 13 May 2025 17:49:30 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] dt-bindings: timer: via,vt8500-timer: Convert to YAML
-Message-ID: <aCNqCrBqGSxRGMKd@mai.linaro.org>
-References: <20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OL+eIHxf"
+Message-ID: <e545e5c2-daeb-4cd1-b9f8-e5d28e6250c8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747151388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sNdDOdS7VSWTN7I3rO8Mx3bkxkkBYYP/FPTqxCVSQ+I=;
+	b=OL+eIHxf5n10DZEiT+75UW7KoUwm+8ZWsB+KdyUhm8ONDQIXiSCCzGNre4ndL7jWZrCILe
+	06lnXjHWgG06g/fJuQEv/Mey9UY29CbxKli/B88a6Ao0lqpptBgdGZtHTcpgnTLbOgjOYo
+	1q8CzehfhCRhZ3QCn8QJ+9UM0jJ+Gpo=
+Date: Tue, 13 May 2025 11:49:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com>
+Subject: Re: [net-next PATCH v4 09/11] net: macb: Move most of mac_config to
+ mac_prepare
+To: "Karumanchi, Vineeth" <vineeth.karumanchi@amd.com>,
+ netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>
+Cc: upstream@airoha.com, Simon Horman <horms@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-kernel@vger.kernel.org,
+ Christian Marangi <ansuelsmth@gmail.com>,
+ Claudiu Beznea <claudiu.beznea@microchip.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>
+References: <20250512161013.731955-1-sean.anderson@linux.dev>
+ <20250512161416.732239-1-sean.anderson@linux.dev>
+ <6a8f1a28-29c0-4a8b-b3c2-d746a3b57950@amd.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <6a8f1a28-29c0-4a8b-b3c2-d746a3b57950@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 06, 2025 at 04:16:32PM +0400, Alexey Charkov wrote:
-> Rewrite the textual description for the VIA/WonderMedia timer
-> as YAML schema.
+On 5/13/25 11:29, Karumanchi, Vineeth wrote:
+> Hi Sean,
 > 
-> The IP can generate up to four interrupts from four respective match
-> registers, so reflect that in the schema.
+> Sorry for the delayed response.
 > 
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
-> Changes in v3:
-> - Added Rob's review tag (thanks Rob)
-> - Rebased on top of next-20250506 to pull in MAINTAINERS updates
-> - Link to v2: https://lore.kernel.org/r/20250418-via_vt8500_timer_binding-v2-1-3c125568f028@gmail.com
+> We are working on MACB with two internal PCS's (10G-BASER, 1000-BASEX) supporting 1G, 2.5G, 5G, and 10G with AN disabled.
 > 
-> Changes in v2:
-> - split out this binding change from the big series affecting multiple
->   subsystems unnecessarily (thanks Rob)
-> - added description for the four possible interrupts (thanks Rob)
-> - added overall description of the IC block
+> I have sent an initial RFC : https://lore.kernel.org/netdev/20241009053946.3198805-1-vineeth.karumanchi@amd.com/
 > 
-> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-6-f9af689cdfc2@gmail.com/
-> ---
+> Currently, we are working on integrating the MAC in fixed-link and phy-mode.
+> 
+> Please see my inline comments.
+> 
+> On 5/12/2025 9:44 PM, Sean Anderson wrote:
+>> mac_prepare is called every time the interface is changed, so we can do
+>> all of our configuration there, instead of in mac_config. This will be
+>> useful for the next patch where we will set the PCS bit based on whether
+>> we are using our internal PCS. No functional change intended.
+>>
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>>
+> 
+> <...>
+> 
+>> +static int macb_pcs_config(struct phylink_pcs *pcs, unsigned int mode,
+>> +               phy_interface_t interface,
+>> +               const unsigned long *advertising,
+>> +               bool permit_pause_to_mac)
+>> +{
+>> +    struct macb *bp = container_of(pcs, struct macb, phylink_sgmii_pcs);
+>> +    bool changed = false;
+>> +    unsigned long flags;
+>> +    u32 old, new;
+>> +
+>> +    spin_lock_irqsave(&bp->lock, flags);
+>> +    old = new = gem_readl(bp, NCFGR);
+>> +    new |= GEM_BIT(SGMIIEN);
+> 
+> This bit represents the AN feature, can we make it conditional to facilitate IP's with AN disabled.
 
-The patch does not apply.
+To clarify, this bit enables SGMII timings for AN (as opposed to
+1000Base-X). If you don't have AN enabled at 1G, then this bit affects
+nothing.
 
---- MAINTAINERS
-+++ MAINTAINERS
-@@ -3467,6 +3467,7 @@ F:        Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
- F:     Documentation/devicetree/bindings/i2c/i2c-wmt.txt
- F:     Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
- F:     Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+1000Base-X is not currently supported by the built-in PCS. Therefore,
+this bit should be set unconditionally at 1G speeds. This patch aims to
+avoid functional changes so I have not made it conditional. Making this
+bit conditional would be appropriate for a patch adding support for
+1000Base-X using the internal PCS.
 
-        ^^^^^^ those bindings are not in my tree
+>> +    if (old != new) {
+>> +        changed = true;
+>> +        gem_writel(bp, NCFGR, new);
+>> +    }
+> 
+> <..>
+> 
+>>     static void macb_usx_pcs_get_state(struct phylink_pcs *pcs,
+>> @@ -589,45 +661,60 @@ static int macb_usx_pcs_config(struct phylink_pcs *pcs,
+>>                      bool permit_pause_to_mac)
+>>   {
+>>       struct macb *bp = container_of(pcs, struct macb, phylink_usx_pcs);
+>> +    unsigned long flags;
+>> +    bool changed;
+>> +    u16 old, new;
+>>   -    gem_writel(bp, USX_CONTROL, gem_readl(bp, USX_CONTROL) |
+>> -           GEM_BIT(SIGNAL_OK));
+>> +    spin_lock_irqsave(&bp->lock, flags);
+>> +    if (macb_pcs_config_an(bp, neg_mode, interface, advertising))
+>> +        changed = true;
+>>   -    return 0;
+>> -}
+>> +    old = new = gem_readl(bp, USX_CONTROL);
+>> +    new |= GEM_BIT(SIGNAL_OK);
+>> +    if (old != new) {
+>> +        changed = true;
+>> +        gem_writel(bp, USX_CONTROL, new);
+>> +    }
+>>   -static void macb_pcs_get_state(struct phylink_pcs *pcs, unsigned int neg_mode,
+>> -                   struct phylink_link_state *state)
+>> -{
+>> -    state->link = 0;
+>> -}
+>> +    old = new = gem_readl(bp, USX_CONTROL);
+>> +    new = GEM_BFINS(SERDES_RATE, MACB_SERDES_RATE_10G, new);
+>> +    new = GEM_BFINS(USX_CTRL_SPEED, HS_SPEED_10000M, new);
+>> +    new &= ~(GEM_BIT(TX_SCR_BYPASS) | GEM_BIT(RX_SCR_BYPASS));
+>> +    new |= GEM_BIT(TX_EN);
+>> +    if (old != new) {
+>> +        changed = true;
+>> +        gem_writel(bp, USX_CONTROL, new);
+>> +    }
+> 
+> The above speed/rate configuration was moved from macb_usx_pcs_link_up() where speed is an argument, which can be leveraged to configure multiple speeds.
+> 
+> Can we achieve configuring for multiple speeds from macb_usx_pcs_config() in fixed-link and phy-mode ?
 
-+F:     Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
- F:     arch/arm/boot/dts/vt8500/
- F:     arch/arm/mach-vt8500/
- F:     drivers/clocksource/timer-vt8500.c
+Form what I can tell, the USX PCS is only used for 10G interfaces. If
+you want to add support for using it at other link speeds, then yes some
+of these register writes should be moved to link_up. For the moment it
+doesn't matter where they happen.
 
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--Sean
