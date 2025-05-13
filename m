@@ -1,107 +1,133 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5ED1E883A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E8328D8D9
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747135547; cv=none; b=cfKzwEaelUlIRE0K4lV2dkE9VPHOpHNYKVW0AqFdL11Vc79TP/wSsulbltv1nQ3HJhThko9oU1F7I2Du+i9kPrJe4iatadP73Djmu+4R2VU6hOFJ2zq39yU7QLRDa+iZiXoUrGXLdRxyokCDHPdWl8HzyBpUzF01wTt5x5K7gEY=
+	t=1747135550; cv=none; b=RpHfM4kLCXwZhGNDwReZYPSDvbVuJH73M7jW7/GSJF6ab2XCvHd8pKHAWaJ40qwHMpOqf1biM+40YB5CvdRqm4jjVO6tpSKU8xYkh0Lg5IOZASW+CrLmq69Vk/iu3a4cUiGDExJSKXXq2dkRfOgibBr11BlPhR018sZLcDbdYsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747135547; c=relaxed/simple;
-	bh=jx0+CUZ4EKjOYqBTrzvNRrsrmlGJQqODHuBIWAuoAtY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EgSjarJJnM8L2Uv/1tY1vTQrRG2gS2v7RdQc+/Sxe44RZcYc2xxQWNG1MPsYBWjB9WuS8Jc64KqM7/Y65+Fjol7BzWwclLXkcBQzjyYeUsXE9CS1PjLBDKbFVfByqa8Kw3pl079xrqeCxqM14GpV9AdN3sufQ7ON3+R0dP/c+II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDoaOK0T; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747135550; c=relaxed/simple;
+	bh=0J3AmpgxrgdihS47fcOtQKkWG6kAzIX6hHAOFnABgjs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U5xb6BoaVrcB6kxJ6Zj3/iH9oxWo41gWOC3N1U/84FGL22GeMwQ2aL8TZ9eRdQIVvxN5yPEfiujTgkfJA7O0dzwOMf5zdPiaa//ujnYVifGtRY+YWLvzy+XqxT5lCmJq1hZkkhh+c2cgMT2nMqFWAZmOGxApJcxdhQxIgY5LCoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv7AnWOn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDoaOK0T"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso4957911276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747135544; x=1747740344; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jx0+CUZ4EKjOYqBTrzvNRrsrmlGJQqODHuBIWAuoAtY=;
-        b=XDoaOK0T1K5jdMjUFblC12Pso6KIkIoIMt9dJPoOPoZutMNui02gO2e0/aYqAmNnCa
-         k39R3qR9OGjKP2xyM3J9lhyC6GPY1WSxDwYLW4J3RXmeUwBOP2ojYZ+CVEX3RLvSBtXB
-         7wpHikEiz0nS0/3KaaJbpgj55iXEjLDh6/gbJvYmK/z7hHHp0Bzl5b3Uvdg9eqMvx3gb
-         obXjOvo5h/xa7UdDqz2onym/VjAuBocNMXIQ/eNquTXHf6qUltxgZcojzfx8rAMirCsj
-         VzbC1u9VlFOnU6E1y3dsMkEN2E6W/9nXEjizDJUNS5ChVbS1N6M1fbi3AtJc76LXxter
-         G5lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747135544; x=1747740344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jx0+CUZ4EKjOYqBTrzvNRrsrmlGJQqODHuBIWAuoAtY=;
-        b=AUUKBekXkLkx7cjWNr8RBMYsi+iFXhRnkK84PRL9Mn4r3ETvXtTgBn3P7AtgHP5Ei8
-         daR6UBbmda4FdjDPYd6XmO2Klj3MPIYbgRHiH67DjD3SNzJ3Xl1VEcwc5zKzOcdAExhE
-         qCO05jtgm25nRDR6o+oifiKxqtBaBAGEXfEakUvn8RPlAgMSL03luFFnI4ek/ieuYR2y
-         t/LQJXUEoZGdy3RiI9W96cgYejWYH4c/MAc7kyUNVaV0MmLH6ckMhNpU9PikvwqZ7txH
-         7El/YqYWtj9Qb8ieZtprEO5LFno9gJZ1VYM8JulXi+2npNygD8mCNojyXOuWh/gMcR1l
-         //HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqoeQ0u5y8AJlp8yNTjDZIAq2ZVNacjxCcqhKiQFy8j8rh3kWpy2E9vAYOl4IQpd7aThFQzK5MvDoRJAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPwfoGMiAdODHHjUJZIns7LTHv2JgdLHiaFoAbGhpxEzM1Jcel
-	NkXP93WNo8S4bhhaWCgqjMx2EtyZQVqk+MXA/5U056ayDB/AHmIL4xZM6TIOzjQfDBBjN2XzniH
-	acxwy+4kdCt1+OxbKLxoXj82JWR8=
-X-Gm-Gg: ASbGncvCssVENLDIaCO6juapBZs4RtQ1Nz+syX88XiD0w7wlbvEIPYkr69U7jAJWE1U
-	O7ph/rMrChfFnEp/OxT+eknCRYuwDi0vb0M6epdvArske/QrduRMXh3X8J9sLKV8le2d/UxF3UO
-	y/74xDjIH3yA/GSjBjC2biUcFG+AKUUQMKo7HC1ndb7SMEzIvztN7isgqcEw5aIYU=
-X-Google-Smtp-Source: AGHT+IEGuuMxziFVdYtUP8z9TiEd4FVrseEW+8XGrscfjTnQ5gzhzi+tTBvoGUPcw5YgnCtq/jIVxJL1A7ZmTNzChIA=
-X-Received: by 2002:a05:6902:220f:b0:e73:20fd:5959 with SMTP id
- 3f1490d57ef6-e78fdc4d09emr20601806276.9.1747135544555; Tue, 13 May 2025
- 04:25:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nv7AnWOn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B1BC4CEE4;
+	Tue, 13 May 2025 11:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747135549;
+	bh=0J3AmpgxrgdihS47fcOtQKkWG6kAzIX6hHAOFnABgjs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nv7AnWOn3KDpGOErXfMiQXqw3XPiFemukNgTp2oJ6mQW0N00GCsqickpFLsm1tRQC
+	 kGKxp9w0NOIH7QV3js5sNOkkzZ+YUVr0KNq0kN/Kul3D9O9AICYm/pp/WqkzwGfs5x
+	 om+cjrv+s1+QdgWTiCeb2/xWoEJIg/dTEPivNKwMMjKnkiITGURGCrjNDIMImtyW3o
+	 qUIsnCXryaASPU+VNHgTL7PTzwB9v343TXM7BWhDbTUStZogqGfWId8tr7XzrFpBCj
+	 CrjJPDqVh15FlPjX9ekDDthbibf/sjkkcua1kKwHqFkLjQAU8nEJg0Vi4KN6iPT3AO
+	 tQ6TyWTkfa02w==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	stable@kernel.org
+Subject: [PATCH] f2fs: don't over-report free space or inodes in statvfs
+Date: Tue, 13 May 2025 19:25:38 +0800
+Message-ID: <20250513112538.2999915-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14@epcas5p3.samsung.com>
- <20250428095849.11709-1-nj.shetty@samsung.com>
-In-Reply-To: <20250428095849.11709-1-nj.shetty@samsung.com>
-From: Nitesh Shetty <nitheshshetty@gmail.com>
-Date: Tue, 13 May 2025 16:55:32 +0530
-X-Gm-Features: AX0GCFuFnoLNeALUUDBFsbp6HxDnPDx3NuD5hpDHJ6C0RToIDBiGd2l00jeMANQ
-Message-ID: <CAOSviJ3d1EjLPEni6BCZT502c3WCf1o42d5OQb+2dFx=z29zew@mail.gmail.com>
-Subject: Re: [PATCH v3] iov_iter: Use iov_offset for length calculation in iov_iter_aligned_bvec
-To: Nitesh Shetty <nj.shetty@samsung.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>, 
-	gost.dev@samsung.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 4:23=E2=80=AFPM Nitesh Shetty <nj.shetty@samsung.co=
-m> wrote:
->
-> If iov_offset is non-zero, then we need to consider iov_offset in length
-> calculation, otherwise we might pass smaller IOs such as 512 bytes, in
-> below scenario[1].
-> This issue is reproducible using lib-uring test/fixed-seg.c application
-> with fixed buffer on a 512 LBA formatted device.
->
-> [1]
-> At present we pass the alignment check,
-> for 512 LBA formatted devices, len_mask =3D 511
-> when IO is smaller, i->count =3D 512
-> has an offset, i->io_offset =3D 3584
-> with bvec values, bvec->bv_offset =3D 256, bvec->bv_len =3D 3840.
-> In short, the first 256 bytes are in the current page,
-> next 256 bytes are in the another page.
-> Ideally we expect to fail the IO.
->
-> Fixes: 2263639f96f2 ("iov_iter: streamline iovec/bvec alignment iteration=
-")
-> Reviewed-by: Jens Axboe <axboe@kernel.dk>
-> Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> ---
-Hi Andrew,
+This fixes an analogus bug that was fixed in modern filesystems:
+a) xfs in commit 4b8d867ca6e2 ("xfs: don't over-report free space or
+inodes in statvfs")
+b) ext4 in commit f87d3af74193 ("ext4: don't over-report free space
+or inodes in statvfs")
+where statfs can report misleading / incorrect information where
+project quota is enabled, and the free space is less than the
+remaining quota.
 
-Can you review and pick this change ?
+This commit will resolve a test failure in generic/762 which tests
+for this bug.
 
-Thank you,
-Nitesh
+generic/762       - output mismatch (see /share/git/fstests/results//generic/762.out.bad)
+    --- tests/generic/762.out   2025-04-15 10:21:53.371067071 +0800
+    +++ /share/git/fstests/results//generic/762.out.bad 2025-05-13 16:13:37.000000000 +0800
+    @@ -6,8 +6,10 @@
+     root blocks2 is in range
+     dir blocks2 is in range
+     root bavail2 is in range
+    -dir bavail2 is in range
+    +dir bavail2 has value of 1539066
+    +dir bavail2 is NOT in range 304734.87 .. 310891.13
+     root blocks3 is in range
+    ...
+    (Run 'diff -u /share/git/fstests/tests/generic/762.out /share/git/fstests/results//generic/762.out.bad'  to see the entire diff)
+
+HINT: You _MAY_ be missing kernel fix:
+      XXXXXXXXXXXXXX xfs: don't over-report free space or inodes in statvfs
+
+Cc: stable@kernel.org
+Fixes: ddc34e328d06 ("f2fs: introduce f2fs_statfs_project")
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/super.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 32f2abac19cf..da64760af74b 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2069,26 +2069,32 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 
+ 	limit = min_not_zero(dquot->dq_dqb.dqb_bsoftlimit,
+ 					dquot->dq_dqb.dqb_bhardlimit);
+-	if (limit)
+-		limit >>= sb->s_blocksize_bits;
++	limit >>= sb->s_blocksize_bits;
++
++	if (limit) {
++		uint64_t remaining = 0;
+ 
+-	if (limit && buf->f_blocks > limit) {
+ 		curblock = (dquot->dq_dqb.dqb_curspace +
+ 			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
+-		buf->f_blocks = limit;
+-		buf->f_bfree = buf->f_bavail =
+-			(buf->f_blocks > curblock) ?
+-			 (buf->f_blocks - curblock) : 0;
++		if (limit > curblock)
++			remaining = limit - curblock;
++
++		buf->f_blocks = min(buf->f_blocks, limit);
++		buf->f_bfree = min(buf->f_bfree, remaining);
++		buf->f_bavail = min(buf->f_bavail, remaining);
+ 	}
+ 
+ 	limit = min_not_zero(dquot->dq_dqb.dqb_isoftlimit,
+ 					dquot->dq_dqb.dqb_ihardlimit);
+ 
+-	if (limit && buf->f_files > limit) {
+-		buf->f_files = limit;
+-		buf->f_ffree =
+-			(buf->f_files > dquot->dq_dqb.dqb_curinodes) ?
+-			 (buf->f_files - dquot->dq_dqb.dqb_curinodes) : 0;
++	if (limit) {
++		uint64_t remaining = 0;
++
++		if (limit > dquot->dq_dqb.dqb_curinodes)
++			remaining = limit - dquot->dq_dqb.dqb_curinodes;
++
++		buf->f_files = min(buf->f_files, limit);
++		buf->f_ffree = min(buf->f_ffree, remaining);
+ 	}
+ 
+ 	spin_unlock(&dquot->dq_dqb_lock);
+-- 
+2.49.0
+
