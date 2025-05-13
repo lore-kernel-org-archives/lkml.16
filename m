@@ -1,330 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0C821CC6C;
-	Tue, 13 May 2025 22:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557991E5B9C;
+	Tue, 13 May 2025 22:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175727; cv=none; b=Z/qz3AxULFDOXOv7m5+Qfxy2WRC7QTioBnqqslrAcEr0hTASmg4hyLkBE5CZYR710qprYpL3Z+UTv2e5cwxocrMjq3kXxyPV2n8+kunx29WS+CCN14kDHmWtSlAGDPGYNkvS/tcWi1fFsDapzHx7FMpcVEmY2EXzJrgYBYOLrqw=
+	t=1747175991; cv=none; b=P7Ymj7hicC3EWxEge3JnljgeSwa+tgl2ab/5zCDGoFFZWFsXNGrLdcnBVMgft+t8MMhSwxswEEz+XvIobWCbaGeNRthgXOSy4LEAr3YZP7yds4pcFoV3Dx5n9JYEauVlCEgVgLHC+bdv5lQ51hWOf5y8rkkVzjW37baI3aF3YUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175727; c=relaxed/simple;
-	bh=LPJdAvV3vgiW3CunL+1Ufqd5avv0X4srOOM4scFLZac=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=W4HR9bH2cofhdQwQWXHg787Z7wTJUJIYxiFgvvfwEmChWqoYg4CqnX2dKrpVwHvuAwbAQIqHXHmjWav8WtI+xZrXyLPHsvBYPElh9xQTa1nYRpwTOQzEP93Q1Nh97dxMo+uhgYgLoGfrPdM4knROAA29SaIZezBLJCb+ywlgmc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6407FC4CEEB;
-	Tue, 13 May 2025 22:35:27 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uEyE5-00000004sfZ-1EJW;
-	Tue, 13 May 2025 18:35:53 -0400
-Message-ID: <20250513223553.143567998@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 13 May 2025 18:34:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v9 13/13] unwind: Clear unwind_mask on exit back to user space
-References: <20250513223435.636200356@goodmis.org>
+	s=arc-20240116; t=1747175991; c=relaxed/simple;
+	bh=aLktDCzX+0PwAhuyOQmH4ustFfZ3+JKd+qWpKjP1SYw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IiI9Cd8JQHR2FW+/kh02+TMk5CA78lI+6h6/zsDuGQ8cjuEwNs6iunewhyTsHM48sL3AECE99kgrEKYuppjwlXO0yeFmktyYGwsG9CPlJSnoMMKHMaPerdoezmKX6BRyOT9V7U4ASnRU0qKIMehTs1a5YHm+ezN2LDpMv2ipinQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdAb80Ae; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdAb80Ae"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D5FC4CEE4;
+	Tue, 13 May 2025 22:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747175990;
+	bh=aLktDCzX+0PwAhuyOQmH4ustFfZ3+JKd+qWpKjP1SYw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KdAb80Ae2YCL0N41YWO7jqZpKLM+gXLfTXaCEpyPINwYBVVTbgc5o4Mx2r6qZN26/
+	 MpLO+2wEIWQHL86x0Y9JBDNhXzsdsrZD0kyO33mOzxOBrw5O765Ur8ELf5vQYhJ22M
+	 G0Qq/e2DSn8FfLDNfC6dRqij6YdGrcEkiA6uU6osqAbt9gyYJIAr/rqlQt7V17vCKA
+	 QPz4mt1/JzQ+nUxzfqJTasUx0GgVbFuCGybh79TbOdjO6rAj+C9McX/XkFnOq2lUNq
+	 p6RlysCmXF/dWdHoPInA3oz5uTK0AUp56F48mlXKjZFHCRFFjNC0zIHBBbKNtNE+WL
+	 5FW1Lk+bJDb/Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C23380DBE8;
+	Tue, 13 May 2025 22:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net/mlx5e: Disable MACsec offload for uplink representor
+ profile
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174717602826.1813866.4021390736886437386.git-patchwork-notify@kernel.org>
+Date: Tue, 13 May 2025 22:40:28 +0000
+References: <1746958552-561295-1-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <1746958552-561295-1-git-send-email-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, andrew+netdev@lunn.ch, saeedm@nvidia.com,
+ leon@kernel.org, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, moshe@nvidia.com, mbloch@nvidia.com,
+ cjubran@nvidia.com
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hello:
 
-When testing the deferred unwinder by attaching deferred user space
-stacktraces to events, a live lock happened. This was when the deferred
-unwinding was added to the irqs_disabled event, which happens after the
-task_work callbacks are called and before the task goes back to user
-space.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-The event callback would be registered when irqs were disabled, the
-task_work would trigger, call the callback for this work and clear the
-work's bit. Then before getting back to user space, irqs would be disabled
-again, the event triggered again, and a new task_work registered. This
-caused an infinite loop and the system hung.
+On Sun, 11 May 2025 13:15:52 +0300 you wrote:
+> From: Carolina Jubran <cjubran@nvidia.com>
+> 
+> MACsec offload is not supported in switchdev mode for uplink
+> representors. When switching to the uplink representor profile, the
+> MACsec offload feature must be cleared from the netdevice's features.
+> 
+> If left enabled, attempts to add offloads result in a null pointer
+> dereference, as the uplink representor does not support MACsec offload
+> even though the feature bit remains set.
+> 
+> [...]
 
-To prevent this, clear the bits at the very last moment before going back
-to user space and when instrumentation is disabled. That is in
-unwind_exit_to_user_mode().
+Here is the summary with links:
+  - [net] net/mlx5e: Disable MACsec offload for uplink representor profile
+    https://git.kernel.org/netdev/net/c/588431474eb7
 
-Move the pending bit from a value on the task_struct to the most
-significant bit of the unwind_mask (saves space on the task_struct). This
-will allow modifying the pending bit along with the work bits atomically.
-
-Instead of clearing a work's bit after its callback is called, it is
-delayed until exit. If the work is requested again, the task_work is not
-queued again and the work will be notified that the task has already been
-called (via UNWIND_ALREADY_EXECUTED return value).
-
-The pending bit is cleared before calling the callback functions but the
-current work bits remain. If one of the called works registers again, it
-will not trigger a task_work if its bit is still present in the task's
-unwind_mask.
-
-If a new work registers, then it will set both the pending bit and its own
-bit but clear the other work bits so that their callbacks do not get
-called again.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/unwind_deferred.h       | 23 ++++++-
- include/linux/unwind_deferred_types.h |  1 -
- kernel/unwind/deferred.c              | 96 +++++++++++++++++++--------
- 3 files changed, 90 insertions(+), 30 deletions(-)
-
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index 1789c3624723..b3c8703fcc22 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -18,6 +18,14 @@ struct unwind_work {
- 
- #ifdef CONFIG_UNWIND_USER
- 
-+#define UNWIND_PENDING_BIT	(BITS_PER_LONG - 1)
-+#define UNWIND_PENDING		(1UL << UNWIND_PENDING_BIT)
-+
-+enum {
-+	UNWIND_ALREADY_PENDING	= 1,
-+	UNWIND_ALREADY_EXECUTED	= 2,
-+};
-+
- void unwind_task_init(struct task_struct *task);
- void unwind_task_free(struct task_struct *task);
- 
-@@ -29,7 +37,20 @@ void unwind_deferred_cancel(struct unwind_work *work);
- 
- static __always_inline void unwind_exit_to_user_mode(void)
- {
--	if (unlikely(current->unwind_info.cache))
-+	unsigned long bits;
-+
-+	/* Was there any unwinding? */
-+	if (likely(!current->unwind_mask))
-+		return;
-+
-+	bits = current->unwind_mask;
-+	do {
-+		/* Is a task_work going to run again before going back */
-+		if (bits & UNWIND_PENDING)
-+			return;
-+	} while (!try_cmpxchg(&current->unwind_mask, &bits, 0UL));
-+
-+	if (likely(current->unwind_info.cache))
- 		current->unwind_info.cache->nr_entries = 0;
- 	current->unwind_info.timestamp = 0;
- }
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index ae27a02234b8..28811a9d4262 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -12,7 +12,6 @@ struct unwind_task_info {
- 	struct callback_head	work;
- 	u64			timestamp;
- 	u64			nmi_timestamp;
--	int			pending;
- };
- 
- #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index 5d6976ee648f..b0289a695b92 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -19,6 +19,11 @@ static LIST_HEAD(callbacks);
- static unsigned long unwind_mask;
- DEFINE_STATIC_SRCU(unwind_srcu);
- 
-+static inline bool unwind_pending(struct task_struct *task)
-+{
-+	return test_bit(UNWIND_PENDING_BIT, &task->unwind_mask);
-+}
-+
- /*
-  * Read the task context timestamp, if this is the first caller then
-  * it will set the timestamp.
-@@ -107,15 +112,18 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
- 	struct unwind_stacktrace trace;
- 	struct unwind_work *work;
-+	unsigned long bits;
- 	u64 timestamp;
- 	struct task_struct *task = current;
- 	int idx;
- 
--	if (WARN_ON_ONCE(!info->pending))
-+	if (WARN_ON_ONCE(!unwind_pending(task)))
- 		return;
- 
--	/* Allow work to come in again */
--	WRITE_ONCE(info->pending, 0);
-+	/* Clear pending bit but make sure to have the current bits */
-+	bits = READ_ONCE(task->unwind_mask);
-+	while (!try_cmpxchg(&task->unwind_mask, &bits, bits & ~UNWIND_PENDING_BIT))
-+		;
- 
- 	/*
- 	 * From here on out, the callback must always be called, even if it's
-@@ -138,10 +146,8 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	idx = srcu_read_lock(&unwind_srcu);
- 	list_for_each_entry_srcu(work, &callbacks, list,
- 				 srcu_read_lock_held(&unwind_srcu)) {
--		if (task->unwind_mask & (1UL << work->bit)) {
-+		if (bits & (1UL << work->bit))
- 			work->func(work, &trace, timestamp);
--			clear_bit(work->bit, &current->unwind_mask);
--		}
- 	}
- 	srcu_read_unlock(&unwind_srcu, idx);
- }
-@@ -168,10 +174,13 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
- 		inited_timestamp = true;
- 	}
- 
--	if (current->unwind_mask & (1UL << work->bit))
--		return 1;
-+	/* Is this already queued */
-+	if (current->unwind_mask & (1UL << work->bit)) {
-+		return unwind_pending(current) ? UNWIND_ALREADY_PENDING :
-+			UNWIND_ALREADY_EXECUTED;
-+	}
- 
--	if (info->pending)
-+	if (unwind_pending(current))
- 		goto out;
- 
- 	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
-@@ -186,9 +195,17 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
- 		return ret;
- 	}
- 
--	info->pending = 1;
-+	/*
-+	 * This is the first to set the PENDING_BIT, clear all others
-+	 * as any other bit has already had their callback called, and
-+	 * those callbacks should not be called again because of this
-+	 * new callback. If they request another callback, then they
-+	 * will get a new one.
-+	 */
-+	current->unwind_mask = UNWIND_PENDING;
- out:
--	return test_and_set_bit(work->bit, &current->unwind_mask);
-+	return test_and_set_bit(work->bit, &current->unwind_mask) ?
-+		UNWIND_ALREADY_PENDING : 0;
- }
- 
- /**
-@@ -211,15 +228,17 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
-  * it has already been previously called for the same entry context, it will be
-  * called again with the same stack trace and timestamp.
-  *
-- * Return: 1 if the the callback was already queued.
-- *         0 if the callback successfully was queued.
-+ * Return: 0 if the callback successfully was queued.
-+ *         UNWIND_ALREADY_PENDING if the the callback was already queued.
-+ *         UNWIND_ALREADY_EXECUTED if the callback was already called
-+ *                (and will not be called again)
-  *         Negative if there's an error.
-  *         @timestamp holds the timestamp of the first request by any user
-  */
- int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
- {
- 	struct unwind_task_info *info = &current->unwind_info;
--	int pending;
-+	unsigned long old, bits;
- 	int bit;
- 	int ret;
- 
-@@ -241,28 +260,49 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
- 
- 	*timestamp = get_timestamp(info);
- 
--	/* This is already queued */
--	if (current->unwind_mask & (1UL << bit))
--		return 1;
-+	old = READ_ONCE(current->unwind_mask);
-+
-+	/* Is this already queued */
-+	if (old & (1UL << bit)) {
-+		/*
-+		 * If pending is not set, it means this work's callback
-+		 * was already called.
-+		 */
-+		return old & UNWIND_PENDING ? UNWIND_ALREADY_PENDING :
-+			UNWIND_ALREADY_EXECUTED;
-+	}
- 
--	/* callback already pending? */
--	pending = READ_ONCE(info->pending);
--	if (pending)
-+	if (unwind_pending(current))
- 		goto out;
- 
--	/* Claim the work unless an NMI just now swooped in to do so. */
--	if (!try_cmpxchg(&info->pending, &pending, 1))
-+	/*
-+	 * This is the first to enable another task_work for this task since
-+	 * the task entered the kernel, or had already called the callbacks.
-+	 * Set only the bit for this work and clear all others as they have
-+	 * already had their callbacks called, and do not need to call them
-+	 * again because of this work.
-+	 */
-+	bits = UNWIND_PENDING | (1 << bit);
-+
-+	/*
-+	 * If the cmpxchg() fails, it means that an NMI came in and set
-+	 * the pending bit as well as cleared the other bits. Just
-+	 * jump to setting the bit for this work.
-+	 */
-+	if (!try_cmpxchg(&current->unwind_mask, &old, bits))
- 		goto out;
- 
- 	/* The work has been claimed, now schedule it. */
- 	ret = task_work_add(current, &info->work, TWA_RESUME);
--	if (WARN_ON_ONCE(ret)) {
--		WRITE_ONCE(info->pending, 0);
--		return ret;
--	}
-+
-+	if (WARN_ON_ONCE(ret))
-+		WRITE_ONCE(current->unwind_mask, 0);
-+
-+	return ret;
- 
-  out:
--	return test_and_set_bit(work->bit, &current->unwind_mask);
-+	return test_and_set_bit(work->bit, &current->unwind_mask) ?
-+		UNWIND_ALREADY_PENDING : 0;
- }
- 
- void unwind_deferred_cancel(struct unwind_work *work)
-@@ -298,7 +338,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
- 	guard(mutex)(&callback_mutex);
- 
- 	/* See if there's a bit in the mask available */
--	if (unwind_mask == ~0UL)
-+	if (unwind_mask == ~(UNWIND_PENDING))
- 		return -EBUSY;
- 
- 	work->bit = ffz(unwind_mask);
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
