@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5817621C170;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EBC21CC41;
 	Tue, 13 May 2025 22:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175727; cv=none; b=E2EXxe3/fm3I03YB30b6VBEtsFjF2RLm1iJPGtimq2LiOrOMVK4F40MC0geNvWauIejE+7ZU11xcRVY5+Glvc/WDz2fhOD20z4WcDa2Vvhk2XUBPZ3FKH4ql4Je8kb7b1WX464DEfxnitfsSjmKwKZy92ByR8EsBRbK4jgcvgZY=
+	t=1747175727; cv=none; b=o9YZA52Wxs9NUyDcFVyxoBc7qCk1Fv00DdYSohPl5yFsp8DLu2uK0QvbhKQHFrMqNph7W+SEgTfaugTEsmDayYzgSyHLtNx4TPuDcjejvKR8AOS2mFkDGhc31EqZIERXOQdawteVJZ4Ml9IFZ9Zl2ds0xDZun0Yn2NYeu8ZHBd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747175727; c=relaxed/simple;
-	bh=ePrYEFetA2AGPPlR+mtPu6lafIOMlawpXk82EuphyTo=;
+	bh=8wIrQLCzy/WCwv1KoHFeyBM230ZOJ5A3BIstJAMapOk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=epBbZz/xb6Ri387zGrkGFSxUbqUlydr+UgYUaru+2Nx45qc14dYG1oQClsf3LTrCqc3rc2Yw1yo38Tysuy8ysO2r8/LFlxxZDW1SnN5nZ2b3bTCaiSbVWlFS8By68oJc9SX17W4RTaenxNYN4ZlMy8UOeV35w5HCBfRxYSkOJRk=
+	 Content-Type; b=V+Ph+bNX1BlxiDngDcLzxlxz1l/nwQcgvubd8Q956XvmKz6mypc5eIaLO5QPUz4JKdploBBzoNF2MdKbVyzCWheSeXhdYnqRvlBciVLWrUcAeGWqHU55+CuDAYvTUmFOHKcNQuSwZI72zNoui7q2GpA02HnRbuQ1c3OMwYDt/mw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEE7C4CEE4;
-	Tue, 13 May 2025 22:35:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349C9C4CEF7;
+	Tue, 13 May 2025 22:35:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uEyE4-00000004se4-3HgR;
-	Tue, 13 May 2025 18:35:52 -0400
-Message-ID: <20250513223552.636076711@goodmis.org>
+	id 1uEyE5-00000004sf4-0VRi;
+	Tue, 13 May 2025 18:35:53 -0400
+Message-ID: <20250513223552.971405502@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 13 May 2025 18:34:45 -0400
+Date: Tue, 13 May 2025 18:34:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -38,7 +38,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v9 10/13] unwind_user/deferred: Make unwind deferral requests NMI-safe
+Subject: [PATCH v9 12/13] unwind deferred: Use SRCU unwind_deferred_task_work()
 References: <20250513223435.636200356@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,175 +48,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Make unwind_deferred_request() NMI-safe so tracers in NMI context can
-call it and safely request a user space stacktrace when the task exits.
+Instead of using the callback_mutex to protect the link list of callbacks
+in unwind_deferred_task_work(), use SRCU instead. This gets called every
+time a task exits that has to record a stack trace that was requested.
+This can happen for many tasks on several CPUs at the same time. A mutex
+is a bottleneck and can cause a bit of contention and slow down performance.
 
-A "nmi_timestamp" is added to the unwind_task_info that gets updated by
-NMIs to not race with setting the info->timestamp.
+As the callbacks themselves are allowed to sleep, regular RCU can not be
+used to protect the list. Instead use SRCU, as that still allows the
+callbacks to sleep and the list can be read without needing to hold the
+callback_mutex.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com/
+
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/unwind_deferred_types.h |  1 +
- kernel/unwind/deferred.c              | 91 ++++++++++++++++++++++++---
- 2 files changed, 84 insertions(+), 8 deletions(-)
+Discussion about using guard for SRCU:
+   https://lore.kernel.org/20250509165155.628873521@goodmis.org
 
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index 5df264cf81ad..ae27a02234b8 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -11,6 +11,7 @@ struct unwind_task_info {
- 	struct unwind_cache	*cache;
- 	struct callback_head	work;
- 	u64			timestamp;
-+	u64			nmi_timestamp;
- 	int			pending;
- };
- 
+   Andrii Nakryiko brought up using guard for SRCU around the
+   list iteration, but it was decided that just using the normal
+   methods were fine for this use case.
+
+ kernel/unwind/deferred.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
 diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index b76c704ddc6d..238cd97079ec 100644
+index 7ae0bec5b36a..5d6976ee648f 100644
 --- a/kernel/unwind/deferred.c
 +++ b/kernel/unwind/deferred.c
-@@ -25,8 +25,27 @@ static u64 get_timestamp(struct unwind_task_info *info)
- {
- 	lockdep_assert_irqs_disabled();
+@@ -13,10 +13,11 @@
  
--	if (!info->timestamp)
--		info->timestamp = local_clock();
-+	/*
-+	 * Note, the timestamp is generated on the first request.
-+	 * If it exists here, then the timestamp is earlier than
-+	 * this request and it means that this request will be
-+	 * valid for the stracktrace.
-+	 */
-+	if (!info->timestamp) {
-+		WRITE_ONCE(info->timestamp, local_clock());
-+		barrier();
-+		/*
-+		 * If an NMI came in and set a timestamp, it means that
-+		 * it happened before this timestamp was set (otherwise
-+		 * the NMI would have used this one). Use the NMI timestamp
-+		 * instead.
-+		 */
-+		if (unlikely(info->nmi_timestamp)) {
-+			WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-+			barrier();
-+			WRITE_ONCE(info->nmi_timestamp, 0);
-+		}
-+	}
+ #define UNWIND_MAX_ENTRIES 512
  
- 	return info->timestamp;
- }
-@@ -103,6 +122,13 @@ static void unwind_deferred_task_work(struct callback_head *head)
+-/* Guards adding to and reading the list of callbacks */
++/* Guards adding to or removing from the list of callbacks */
+ static DEFINE_MUTEX(callback_mutex);
+ static LIST_HEAD(callbacks);
+ static unsigned long unwind_mask;
++DEFINE_STATIC_SRCU(unwind_srcu);
  
- 	unwind_deferred_trace(&trace);
+ /*
+  * Read the task context timestamp, if this is the first caller then
+@@ -108,6 +109,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 	struct unwind_work *work;
+ 	u64 timestamp;
+ 	struct task_struct *task = current;
++	int idx;
  
-+	/* Check if the timestamp was only set by NMI */
-+	if (info->nmi_timestamp) {
-+		WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-+		barrier();
-+		WRITE_ONCE(info->nmi_timestamp, 0);
-+	}
-+
+ 	if (WARN_ON_ONCE(!info->pending))
+ 		return;
+@@ -133,13 +135,15 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 
  	timestamp = info->timestamp;
  
- 	guard(mutex)(&callback_mutex);
-@@ -111,6 +137,48 @@ static void unwind_deferred_task_work(struct callback_head *head)
+-	guard(mutex)(&callback_mutex);
+-	list_for_each_entry(work, &callbacks, list) {
++	idx = srcu_read_lock(&unwind_srcu);
++	list_for_each_entry_srcu(work, &callbacks, list,
++				 srcu_read_lock_held(&unwind_srcu)) {
+ 		if (task->unwind_mask & (1UL << work->bit)) {
+ 			work->func(work, &trace, timestamp);
+ 			clear_bit(work->bit, &current->unwind_mask);
+ 		}
  	}
++	srcu_read_unlock(&unwind_srcu, idx);
  }
  
-+static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
-+{
-+	struct unwind_task_info *info = &current->unwind_info;
-+	bool inited_timestamp = false;
-+	int ret;
-+
-+	/* Always use the nmi_timestamp first */
-+	*timestamp = info->nmi_timestamp ? : info->timestamp;
-+
-+	if (!*timestamp) {
-+		/*
-+		 * This is the first unwind request since the most recent entry
-+		 * from user space. Initialize the task timestamp.
-+		 *
-+		 * Don't write to info->timestamp directly, otherwise it may race
-+		 * with an interruption of get_timestamp().
-+		 */
-+		info->nmi_timestamp = local_clock();
-+		*timestamp = info->nmi_timestamp;
-+		inited_timestamp = true;
-+	}
-+
-+	if (info->pending)
-+		return 1;
-+
-+	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
-+	if (ret) {
-+		/*
-+		 * If this set nmi_timestamp and is not using it,
-+		 * there's no guarantee that it will be used.
-+		 * Set it back to zero.
-+		 */
-+		if (inited_timestamp)
-+			info->nmi_timestamp = 0;
-+		return ret;
-+	}
-+
-+	info->pending = 1;
-+
-+	return 0;
-+}
-+
- /**
-  * unwind_deferred_request - Request a user stacktrace on task exit
-  * @work: Unwind descriptor requesting the trace
-@@ -139,31 +207,38 @@ static void unwind_deferred_task_work(struct callback_head *head)
- int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
+@@ -216,6 +220,7 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
  {
  	struct unwind_task_info *info = &current->unwind_info;
-+	int pending;
+ 	int pending;
++	int bit;
  	int ret;
  
  	*timestamp = 0;
+@@ -227,12 +232,17 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ 	if (in_nmi())
+ 		return unwind_deferred_request_nmi(work, timestamp);
  
--	if (WARN_ON_ONCE(in_nmi()))
--		return -EINVAL;
--
- 	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
- 	    !user_mode(task_pt_regs(current)))
- 		return -EINVAL;
- 
-+	if (in_nmi())
-+		return unwind_deferred_request_nmi(work, timestamp);
++	/* Do not allow cancelled works to request again */
++	bit = READ_ONCE(work->bit);
++	if (WARN_ON_ONCE(bit < 0))
++		return -EINVAL;
 +
  	guard(irqsave)();
  
  	*timestamp = get_timestamp(info);
  
- 	/* callback already pending? */
--	if (info->pending)
-+	pending = READ_ONCE(info->pending);
-+	if (pending)
-+		return 1;
-+
-+	/* Claim the work unless an NMI just now swooped in to do so. */
-+	if (!try_cmpxchg(&info->pending, &pending, 1))
+ 	/* This is already queued */
+-	if (current->unwind_mask & (1UL << work->bit))
++	if (current->unwind_mask & (1UL << bit))
  		return 1;
  
- 	/* The work has been claimed, now schedule it. */
- 	ret = task_work_add(current, &info->work, TWA_RESUME);
--	if (WARN_ON_ONCE(ret))
-+	if (WARN_ON_ONCE(ret)) {
-+		WRITE_ONCE(info->pending, 0);
- 		return ret;
-+	}
+ 	/* callback already pending? */
+@@ -258,19 +268,26 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ void unwind_deferred_cancel(struct unwind_work *work)
+ {
+ 	struct task_struct *g, *t;
++	int bit;
  
--	info->pending = 1;
- 	return 0;
+ 	if (!work)
+ 		return;
+ 
+ 	guard(mutex)(&callback_mutex);
+-	list_del(&work->list);
++	list_del_rcu(&work->list);
++	bit = work->bit;
++
++	/* Do not allow any more requests and prevent callbacks */
++	work->bit = -1;
++
++	clear_bit(bit, &unwind_mask);
+ 
+-	clear_bit(work->bit, &unwind_mask);
++	synchronize_srcu(&unwind_srcu);
+ 
+ 	guard(rcu)();
+ 	/* Clear this bit from all threads */
+ 	for_each_process_thread(g, t) {
+-		clear_bit(work->bit, &t->unwind_mask);
++		clear_bit(bit, &t->unwind_mask);
+ 	}
  }
  
+@@ -287,7 +304,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+ 	work->bit = ffz(unwind_mask);
+ 	unwind_mask |= 1UL << work->bit;
+ 
+-	list_add(&work->list, &callbacks);
++	list_add_rcu(&work->list, &callbacks);
+ 	work->func = func;
+ 	return 0;
+ }
 -- 
 2.47.2
 
