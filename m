@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3911F2BFC82;
-	Tue, 13 May 2025 17:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D43C2BF984;
+	Tue, 13 May 2025 17:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747158528; cv=none; b=nhEqQ8JsYIRRzxaud3LKgfIC6iRi7skmXV4FS+0pR6gTc2jyjTSaOsZaGHcgBTd1svjOqKK+5NZPUsKkJTvhvfy9gozyPC5Y+gauJMh9lXQa/0rOjFr60h8GpcUflzRsT/rRbmFqtvoqn2t7ivtYWnof1QuN2kKigeVicj8STrM=
+	t=1747158533; cv=none; b=pYPNSAueHqvz8MQkaadftHj6q/u/1ZHCXkcc57eXUUbSYhLjTS7Xt8c8j4tI15Utw0YRCaBEcTebKUoIsxKnQ7NvlG0iH7MVWyQMQdkPyzrlhxLhNl03+S/DRWZAWDLr8qjj6/XMYyiLwFImtLJ7a03+VLbgbE9Tk4pA/eo4oqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747158528; c=relaxed/simple;
-	bh=mlQNA+RcP+TkISqqpQ6NRcU4ByGp0IwlwE/d33L8eXU=;
+	s=arc-20240116; t=1747158533; c=relaxed/simple;
+	bh=L2AyC0q/j1rg0Q8xOp2gZtcfrltSKtgGKZOBzDeAFq4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VbzmnoRPtuh1TLFfEAkmY8hNB/BNfTaGklwx2/TYUtE8+O5q/021cFNgV1Jm2vYlHKinWhP9005bywO6NEXvRiat8D9UgbU840MqR7eMJJmxu1w2W7X7rbNnoX1npzLl/sXVvXt27epkrwQ29/euLzyYJC8C2na6EKWNiw2b+5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAOFtQo9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=a4FVrUYm4hbmp1QCUN3c4FWgvHwNyh2bdSUWdTSlOb+nziAOrz8b9OAlgmp3SYaAsS9UofL2rZdthrHgLDxdgpfw5M3k5M14Ci0LWxhTu7cyKoCVCPtQZ7UKHstj9gC26CrOAnCL1gTTDod+G1LTV6KoCqJx5VGKosG1Y/aWBIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Si3CbBIi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAOFtQo9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911E7C4AF0C;
-	Tue, 13 May 2025 17:48:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Si3CbBIi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76590C4CEE4;
+	Tue, 13 May 2025 17:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747158528;
-	bh=mlQNA+RcP+TkISqqpQ6NRcU4ByGp0IwlwE/d33L8eXU=;
+	s=k20201202; t=1747158532;
+	bh=L2AyC0q/j1rg0Q8xOp2gZtcfrltSKtgGKZOBzDeAFq4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VAOFtQo9xf6O2U5ExyyY7SI22eOqG+CVxdoURFUh3Jcx/QdWa4khVHCEiGpQb5vDu
-	 84BhTnzgm5z1Abn90Fkc19Gy1fIdjiPbqDYuYr/iJxKeF1/6Grm/mQ2s5ebKK0tYC4
-	 hA1ziEWUkMWtVdal0t4ViQ3JzL8GJU2VnItzOFm6+fZ7IK7AuZgR2ag7AnwAlgFJpx
-	 MuLIArEylRquGnPK3h+TVVzFnvQMurOSksnKcdiwaOVzWWV/S3gLJZDVLkkZ1mtrfk
-	 QJkWFnKdRpCQy55APO7ir8Y1S3nhS6/lundFrNT+wcTspBrOZmfAUXmQf0e1QC2C//
-	 jrQ2MAOzjXKfQ==
+	b=Si3CbBIi33CEmSG4N5JcX7DG+/zFMZgBY39aevyfWF/GzESs6Z0W5wURjq8giRZnx
+	 C8fgH/z/xNuNVROorc/hm08x8gZCadSFfansf4ZSWkKILQqxMMf+aDuBUJTycPFspc
+	 XJ4lDQSC6SvCP+1ZUidPBOoE6MwuSYmxqAdzwY6KziHbNz2ZcXJSr5xDZHXdrtGh4t
+	 Lyp9UJZHaiw4vqwZXCmokMjECZIJtnNCCvH9yD5LgjOpJ44p4Bv1wDPtx0++0swZwu
+	 jI6dMnKqsKvoVAsb4Vxs075jDQ4SwMRN8B8QrjgXpaWIfHhC95d+9S7JzPwaLH+UHZ
+	 r/3XnpE7lbjZQ==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 13 May 2025 19:47:58 +0200
-Subject: [PATCH v4 05/26] arm64/sysreg: Add ICC_PPI_HMR<n>_EL1
+Date: Tue, 13 May 2025 19:47:59 +0200
+Subject: [PATCH v4 06/26] arm64/sysreg: Add ICC_PPI_ENABLER<n>_EL1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250513-gicv5-host-v4-5-b36e9b15a6c3@kernel.org>
+Message-Id: <20250513-gicv5-host-v4-6-b36e9b15a6c3@kernel.org>
 References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
 In-Reply-To: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -53,7 +53,7 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.14.2
 
-Add ICC_PPI_HMR<n>_EL1 registers sysreg description.
+Add ICC_PPI_ENABLER<n>_EL1 registers sysreg description.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Will Deacon <will@kernel.org>
@@ -64,91 +64,91 @@ Cc: Marc Zyngier <maz@kernel.org>
  1 file changed, 75 insertions(+)
 
 diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 6f18ceeff0de324ab954b14136b44da102bc0539..9d8e62f1c2f4f123f8f8b71966806a07ff006da1 100644
+index 9d8e62f1c2f4f123f8f8b71966806a07ff006da1..02eb3fd876dcb1612dc5436d509a80f9e7f70903 100644
 --- a/arch/arm64/tools/sysreg
 +++ b/arch/arm64/tools/sysreg
-@@ -2310,6 +2310,81 @@ Field	31	C
- Field	30:0	P
+@@ -2399,6 +2399,81 @@ Field	1	Enabled
+ Field	0	F
  EndSysreg
  
-+SysregFields	ICC_PPI_HMRx_EL1
-+Field	63	HM63
-+Field	62	HM62
-+Field	61	HM61
-+Field	60	HM60
-+Field	59	HM59
-+Field	58	HM58
-+Field	57	HM57
-+Field	56	HM56
-+Field	55	HM55
-+Field	54	HM54
-+Field	53	HM53
-+Field	52	HM52
-+Field	51	HM51
-+Field	50	HM50
-+Field	49	HM49
-+Field	48	HM48
-+Field	47	HM47
-+Field	46	HM46
-+Field	45	HM45
-+Field	44	HM44
-+Field	43	HM43
-+Field	42	HM42
-+Field	41	HM41
-+Field	40	HM40
-+Field	39	HM39
-+Field	38	HM38
-+Field	37	HM37
-+Field	36	HM36
-+Field	35	HM35
-+Field	34	HM34
-+Field	33	HM33
-+Field	32	HM32
-+Field	31	HM31
-+Field	30	HM30
-+Field	29	HM29
-+Field	28	HM28
-+Field	27	HM27
-+Field	26	HM26
-+Field	25	HM25
-+Field	24	HM24
-+Field	23	HM23
-+Field	22	HM22
-+Field	21	HM21
-+Field	20	HM20
-+Field	19	HM19
-+Field	18	HM18
-+Field	17	HM17
-+Field	16	HM16
-+Field	15	HM15
-+Field	14	HM14
-+Field	13	HM13
-+Field	12	HM12
-+Field	11	HM11
-+Field	10	HM10
-+Field	9	HM9
-+Field	8	HM8
-+Field	7	HM7
-+Field	6	HM6
-+Field	5	HM5
-+Field	4	HM4
-+Field	3	HM3
-+Field	2	HM2
-+Field	1	HM1
-+Field	0	HM0
++SysregFields	ICC_PPI_ENABLERx_EL1
++Field	63	EN63
++Field	62	EN62
++Field	61	EN61
++Field	60	EN60
++Field	59	EN59
++Field	58	EN58
++Field	57	EN57
++Field	56	EN56
++Field	55	EN55
++Field	54	EN54
++Field	53	EN53
++Field	52	EN52
++Field	51	EN51
++Field	50	EN50
++Field	49	EN49
++Field	48	EN48
++Field	47	EN47
++Field	46	EN46
++Field	45	EN45
++Field	44	EN44
++Field	43	EN43
++Field	42	EN42
++Field	41	EN41
++Field	40	EN40
++Field	39	EN39
++Field	38	EN38
++Field	37	EN37
++Field	36	EN36
++Field	35	EN35
++Field	34	EN34
++Field	33	EN33
++Field	32	EN32
++Field	31	EN31
++Field	30	EN30
++Field	29	EN29
++Field	28	EN28
++Field	27	EN27
++Field	26	EN26
++Field	25	EN25
++Field	24	EN24
++Field	23	EN23
++Field	22	EN22
++Field	21	EN21
++Field	20	EN20
++Field	19	EN19
++Field	18	EN18
++Field	17	EN17
++Field	16	EN16
++Field	15	EN15
++Field	14	EN14
++Field	13	EN13
++Field	12	EN12
++Field	11	EN11
++Field	10	EN10
++Field	9	EN9
++Field	8	EN8
++Field	7	EN7
++Field	6	EN6
++Field	5	EN5
++Field	4	EN4
++Field	3	EN3
++Field	2	EN2
++Field	1	EN1
++Field	0	EN0
 +EndSysregFields
 +
-+Sysreg	ICC_PPI_HMR0_EL1	3	0	12	10	0
-+Fields ICC_PPI_HMRx_EL1
++Sysreg	ICC_PPI_ENABLER0_EL1	3	0	12	10	6
++Fields ICC_PPI_ENABLERx_EL1
 +EndSysreg
 +
-+Sysreg	ICC_PPI_HMR1_EL1	3	0	12	10	1
-+Fields ICC_PPI_HMRx_EL1
++Sysreg	ICC_PPI_ENABLER1_EL1	3	0	12	10	7
++Fields ICC_PPI_ENABLERx_EL1
 +EndSysreg
 +
- Sysreg	ICC_ICSR_EL1	3	0	12	10	4
- Res0	63:48
- Field	47:32	IAFFID
+ SysregFields	ICC_PPI_PRIORITYRx_EL1
+ Res0	63:61
+ Field	60:56	Priority7
 
 -- 
 2.48.0
