@@ -1,102 +1,147 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1712566F3;
-	Tue, 13 May 2025 10:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E386248880;
+	Tue, 13 May 2025 10:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130879; cv=none; b=dvwzXTZSuOH5VrkpTbo5gFSxcNYHFE5ke8dO5D81V2s1TBvFfzVMK+GVs7vihLetD3stvx7+AQ541KesTSpzOEOllPsu527OGMQeVT4PWNAd1+ahBjME9fUiiytZfczpkvdeW7QZABGXhb9Yp4P8Wdg7bjSA+baa5BdCe1d6F6s=
+	t=1747130881; cv=none; b=EAjE+hn700nMwn01DNDwbDQIruQXFN3QYpMjSdJR7HnPLqGw/ZUPKlpNpZKzGjZfil/HbP0EXINYyZZ/4E4pC73q3DLlg+PvE4OSm4rkdz6OpOCkx8xkQGnwhDiH6GL1qGN9KT20RikS/dYC04q7GiMKlzG84f1AChX0qvD/sP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130879; c=relaxed/simple;
-	bh=zHHPe2RlT3alVG++pzwYl1p0dat//Yfu/0wYDLnttxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QvYQU5veKVAn2Dbq9quWpAHu1xEup20cijF9inToPmPsj8iBN6GsIKCrEk4Ew81fksBYJA40+ArReLi8v4emrX2GTAI5keE+E4wo/s10yziicdQzm+CXvAPlrZgaqEwzguYvIwtb2hNoQrxAOBmy+/90UpD5ErLj2Tn0D8BnIkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hMyycpyt; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMyycpyt"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4768f90bf36so58757751cf.0;
-        Tue, 13 May 2025 03:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747130876; x=1747735676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxTCWdoxxph2uKRlpdzs8tMyten2c/Vtkg5n7lhhiZs=;
-        b=hMyycpytx7XRafWItRyjMfGc8B3xbUh4NaTaUkGCQ9kjeG+AR+cCg1FW+OH1RT5QtD
-         rkpGfaXSZwj0pjUnxnDsaJQxlFvUU0NA+le69ZM5nEt5vjzq1xOmr+V3+pm3pfDxSIbj
-         B24uhqFIVHnbQqTO2QfQZHSJsGXL72mNVj71TJMEEEe+g8GNnEDadEYyNyF8CgInXpIn
-         VseYWYmd9uuk0t65uzxv8O0puB/QNUJR1gaYU71YkkNrwvrAzW//7qoTrd60VDF64Pu8
-         dBziTX5mCSf08FunalzXJskc29IG6vxHlRCs3yqC+WRQHM678SG52MpNOKE46s4M4Eii
-         RK+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747130876; x=1747735676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxTCWdoxxph2uKRlpdzs8tMyten2c/Vtkg5n7lhhiZs=;
-        b=UoND/t3rumIrCNvMQP4f5QkNm/fj8Zqqeb0aLP84CbMrm25APolZxgjrtYmNBWA/Ud
-         iE1HM//b/wK8pGk3/1i19eNDQuEoNc/o8KxSzA+QRT6ZKqvsV2blX+2tExzR4V9c6DE7
-         q9SMtG6hbXmZ+4Jae1E/a2AZnNWFZdhzkkfMq4rT5E3DAIdY1J+l29O64MqGw8zDULZb
-         FEE29kJU89cGBCce7TroDZbXoa5ggkcp7mgR8DvQaWb0UaWDipIrF3Njvm04CQInvcWX
-         ntX/ZeCs3+P+85ck6dxofJsjkOLoRyswo/1HLIYfDbBwRw/glZZwBxFxF8AXs0c5AdNj
-         ypvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeg0unAKF4tx9lNFtTUolVkKXHOBB5WoJmJdTaOanwh0zWoWrU6YRyBdgYnqBzr1ypjrgtCdSA8Jr3@vger.kernel.org, AJvYcCXAUc0A6GJzXC+i+7HWuTpuPdRPWLK/r1pm/ProNSmK2UymgG/MN0AXIQvx4fzQ1hBnnkuUsEa3/KxknxnR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHMClzD0+HrJBpIOU+XcQLzQHOK+ZFUtzc4bBC6Wfftv8Rfi8T
-	qr4HaFJ6kqjlTlAu7rfGbkuRUGvVGwBTf2ClSuPJ1fgPYdlVjsw6
-X-Gm-Gg: ASbGnctQlpw0T7lHrhkteIGA2zd20s5jUUqrU3MUVYHgJPma/1NxgJyrcjyxjmQOYgP
-	g/99r1bUMN0s1AeuAPNGdjo765x57lxV6JzlT+BIMoWHZ57ToH8Ju1+lX7w8ov41tRTjdqmraJC
-	zv5etI1+s1OW2oDbHmkOLTHVdI3vg1F4THKosKOdO8CHzDfln9acKKBfMWzZDOqGW4OqSMzXfes
-	3kyd8KNPzrlj6eZ/U8X8kqbNFx2OYTL580ePpGJ59UgY4bFofeVYiXYahKDUu5ivcmRdcb4vW7I
-	GpPvVdycO6y7VNyhSMzTCStnX60=
-X-Google-Smtp-Source: AGHT+IH2nYMxmNh6Mi7SbRh4cdJMyyTGclEOl+xdQXn3Xj59qNVfbigfG60vlKhSQo/mjolVBqJhqQ==
-X-Received: by 2002:a05:622a:406:b0:476:a969:90c5 with SMTP id d75a77b69052e-49452761774mr194593351cf.24.1747130875543;
-        Tue, 13 May 2025 03:07:55 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4945259f42esm63437641cf.78.2025.05.13.03.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 03:07:55 -0700 (PDT)
-Date: Tue, 13 May 2025 18:07:24 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, 
-	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
-Message-ID: <ya3mpue6pndlzkmr6bouyrqldysmsfcu36b6lwrgbnvo2xw5ru@7ugamdke32nh>
-References: <cover.1746811744.git.rabenda.cn@gmail.com>
- <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
- <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <CAAT7Ki9=ROP47hsugf3BS1nXr9oOPHWgjQoGfjAZiwHnXS19Pw@mail.gmail.com>
- <nrtzltuus47rjds3x54e72mtflvjh4najyqdjnagxq5etge5e7@vkikyxa5zf6k>
- <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1747130881; c=relaxed/simple;
+	bh=9o9SI0ONdb1WbiIWXrCSb5nX53qir4UGX5Gt0IQgpYM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=n3Dn1OQcRi3YqqNkKpWhuwgYWc481xv71+npgMwZo34nWPrn8TI7xbBER1/rNYh+S3PtFV+xh0z6Nxrv8upGq9z1YOcEeG7BJCz5M8qUrgu/wzJd0jBV5OSXg/g+3JakzZYvSDoFAIB5QZUlyNPyIM58A2tLHDVSS6DauYDqQkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-fc-682319f015c0
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	harry.yoo@oracle.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	yskelg@gmail.com,
+	yunseong.kim@ericsson.com,
+	yeoreum.yun@arm.com,
+	netdev@vger.kernel.org,
+	matthew.brost@intel.com,
+	her0gyugyu@gmail.com
+Subject: [PATCH v15 20/43] dept: apply timeout consideration to swait
+Date: Tue, 13 May 2025 19:07:07 +0900
+Message-Id: <20250513100730.12664-21-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250513100730.12664-1-byungchul@sk.com>
+References: <20250513100730.12664-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0zTZxjFff/XUq3+7cj2etcKajAyi7o8H+biF8P7xWSXZHPTRBv5Z21W
+	QAqikJhRBYIIDCGVCKgtkFKhSCle8FJXQe5Y6+iAKrLJjFlHkaXaZkBxKzi/PDk55+T8vjwS
+	Wt7DrpRoUjJEXYpKq+CkjHRySc22v1dsVG/3TayH4JsCBqqbrRy4rzYisF7TU+DrTIThkB/B
+	7MNHNFQY3AhMz5/RcK1rDIHDcoqDwRdLwROc4qDXcJaD07XNHDyeCFMwer6Mgkb7PvjN/JKB
+	/tIaCip8HFRVnKYi508Kps0NPJhzYmHcUslD+LkSeseGWHA82QoXLo1ycNfRy0BX2zgFg7er
+	ORiz/stCf1cPA6GSVeA+V8xC06saDiZCZhrMwSkefnEaKegyfgi23Mhg/uu3LHQXOynIr2uh
+	wOO9g+Bewe8U2K1DHHQE/RS02g00zNR3IhgvmeQhr2iahyp9CYKzeecZyB3dBbP/RMgX3yhB
+	f9nGQNPcENqzm1gvWRHp8E/RJLf1OJkJ/soRR8jIkL4aTG5VPuNJ7r0nPDHaj5FWSxypveuj
+	iCkQZIm94QxH7IEynhROeijyyuXiP1/9nfTTJFGryRR1H392WKpufqFHR19zJyo669gc1McW
+	oigJFnbiAkse/16fqncw85oTNuORkWl6XkcL63Fr8ctIXyqhhaHFePiiF80HHwh7cXu+YaHE
+	CLF49HLlwpBM+ATrp53/A9bhRptzoRMV8efqXQsAubALlxobmflRLPwUhW2V78hYWIHvW0aY
+	UiQzokUNSK5JyUxWabQ749VZKZoT8UdSk+0o8l/mk+EDbSjg/qodCRKkWCLr8W1Qy1lVZnpW
+	cjvCEloRLdPfjFiyJFVWtqhLPaQ7phXT29EqCaP4SJYQOp4kF75XZYg/iOJRUfc+pSRRK3MQ
+	k2zeT9oKZhNtdJnO1FuYWeS3v73yY3ZV3dMmj39ix/ZFM6Zl5V8+PfnzmfJzf+0wdS+ztnzd
+	MaCbCoXjUnevcXk9iwfEtbXfbvX/YYQ9g+4m5epsblNeWrjfpd3vPhigYoq2XHfI5gwbvd5v
+	Br5wBmKU+EFCRuCGdXlCWmx1j4JJV6uUcbQuXfUfaqoksVsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0hTcRjG+5/rXE6OS+qkRbbogpYmZLxQaV/CQ2SEBIEEOfLQlpvGlqZB
+	5XKJXSZL0pHXpTJlzqZTUquJTZyXylba0jArG9HIS5STVnaZUl9efjzPw/N8eQW42EyGC+SZ
+	Z3lVplQhoYSE8PCegh1f1m6S7ax14eCbLyKg0mqhwHW3CYGlXYOBty8JXi1MI/j59BkOhlIX
+	gjvv3+DQ7pxEYG+8TMGIJwRGfXMUDJZep6CgzkrB88+LGEyUlWDQZEuGt6aPBDzW12Jg8FJQ
+	YSjAAucTBn6TmQZT/maYaiynYfF9HAxOuknorRokwf46Gm5XT1Dw0D5IgLNzCoOR+5UUTFr+
+	kPDYOUDAQnEEuG7qSGieraXg84IJB5NvjoYXPUYMnMbV0KINtBZ++01Cv64Hg8L6VgxGxx8g
+	6C56h4HN4qag1zeNQZutFIcfDX0IpopnaLhyw09DhaYYwfUrZQRoJ+Lh5/fActV8HGhqWgho
+	/uVG+xM4S7UFcb3TczinbTvH/fC9pDj7gpHghmpZrqv8Dc1pu1/TnNGWzbU1RnF1D70Yd+er
+	j+Rs5qsUZ/taQnPXZkYxbnZ4mD6yPlW4N51XyHN4VWxCmlBm9WjQmW9UrqGvnsxHQ+Q1FCRg
+	mV3s5QY7scQUs5UdG/PjSxzGRLJtuo+BjFCAM+6V7KuqcbRkrGIOsI7C0uUQwWxmJ2rK6SUW
+	MbtZjb/nX+kGtqmlZzkTFNB/NQwvD4iZeFZvbCL0SGhEK8woTJ6Zo5TKFfEx6gxZXqY8N+Zk
+	ltKGAh9kurB4sxPNjyQ5ECNAkmDRgHejTExKc9R5SgdiBbgkTKTpCEiidGneeV6VdUKVreDV
+	DhQhICRrRAeP8Wli5pT0LJ/B82d41X8XEwSF5yP979R2U/ktb/KlxKjCw+uiY501l7z60/7w
+	6tlcQ0Ta+WxdjMTZkZOYmHroWKL4g67q+Qvr0ZHmRt/co/7pd7PbQlwplrCu7hXR/bonW+q0
+	6SXe1j3WcJEnxRzyKfJil2dmLDT4+3aHMuvls+57Es96t5Ldl+FSBBc9uhVadjzKKiHUMmlc
+	FK5SS/8CJQIgkj0DAAA=
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
-On Tue, May 13, 2025 at 05:59:23PM +0800, Chen Wang wrote:
-> 
-> On 2025/5/13 17:49, Inochi Amaoto wrote:
-> > On Tue, May 13, 2025 at 02:48:44PM +0800, Han Gao wrote:
-> > > I hope it is sg2042-x8evb.
-> > > 
-> > > Sophgo is also making EVB boards for sg2044.
-> > > 
-> > > I think a distinction needs to be made here.
-> > > 
-> > SG2044 evb has a formal name like srd3-10, but I think it should
-> > have a sg2044 prefix. as the name printing on the board has a
-> > sg2042 prefix.
-> sg2042 prefix? :)
+Now that CONFIG_DEPT_AGGRESSIVE_TIMEOUT_WAIT was introduced, apply the
+consideration to swait, assuming an input 'ret' in ___swait_event()
+macro is used as a timeout value.
 
-You are right, I have make a mistake.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+---
+ include/linux/swait.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 277ac74f61c3..233acdf55e9b 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -162,7 +162,7 @@ extern void finish_swait(struct swait_queue_head *q, struct swait_queue *wait);
+ 	struct swait_queue __wait;					\
+ 	long __ret = ret;						\
+ 									\
+-	sdt_might_sleep_start(NULL);					\
++	sdt_might_sleep_start_timeout(NULL, __ret);			\
+ 	INIT_LIST_HEAD(&__wait.task_list);				\
+ 	for (;;) {							\
+ 		long __int = prepare_to_swait_event(&wq, &__wait, state);\
+-- 
+2.17.1
+
