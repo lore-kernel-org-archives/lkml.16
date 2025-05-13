@@ -1,144 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A161E9B14
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12164C6C;
+	Tue, 13 May 2025 08:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747125085; cv=none; b=ClZmgo47O4mKThoDzas0qb4jtenXJ0nN1SloaOktaUMhaicK6Tplnrj7wuzTZzexUCCSAdlIv6GDV6MhfG+c5T2SQ5P3oSabzrTkFYmiavRuto+IOW63WGqiBVO/9dOxEec60XRHaE+4j1hFgdM2WXRjHhDMM0ryLelXlxXisbI=
+	t=1747125152; cv=none; b=PMRZQ31t6hDOmZsMwAt+yLLVzQXjDSEg9FRmvCyAXiXZmW3aSn55OX9gpIMqRTuGcHub59yMIgmYMLhDO+Emu3If2fXcvD5FJh0X0LEaxxAYE000K6BFRiUDVVrolF4bs/15CEhrHWeW+9YYYKNYiTjIHUAvwskMm7okw1z5HLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747125085; c=relaxed/simple;
-	bh=7xVkCv5/WtRaQADfBp06Txnipb0t0/dIJvMLX4GArzg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T5A7KlH+oKh21C9FN16vOwIiWWAehHY4m+8uzo9fgR6csPTCGm82ygDe9IAjTpzt8cd06Pf9w3NlgoexTgtsuTTZJTlxuqjqnVZ5MbLFJ4P79t73gqcsaOg0Dd0DiS8rS5w8cWws96JhVB/XmAjg1zUKKHaUZBwnQVeqgsuULoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3XOp6Sg; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747125152; c=relaxed/simple;
+	bh=qEeth5gfdHFocktPysgpKR3djQ+QAg++lc+RTE0OoJA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Ot0gJmmetxkc2/KM+IHAOm0FQba4h+I5G8wQn2MT+bxn7V6UcgeosXnw1PJX1hD5+9i13hxiZciDnDTPHNYHr5+5pQHb5JHxsur45Fgsp01cSw5jkkyZ64HK43XbtZcYfjSLQIoSalAJ79zX6d9Y7oDh2l1GeJenBwQPAwOxcb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=MEyXMj4z reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3XOp6Sg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747125084; x=1778661084;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=7xVkCv5/WtRaQADfBp06Txnipb0t0/dIJvMLX4GArzg=;
-  b=U3XOp6Sgb6N7S9/7oOHkUqzasWbV0R0ldM0+xT7UjNimughs6QO+P59V
-   +XH2CIXQAXR2GRQVvzsKpMm+Skv6Q5hpIebnlTRHa8AilBOvYBKWq2kQZ
-   uFCiN7nnON/VfEz93VRZpaeQ0BJ2j7OI6skrulqvPGGELVKXuYMnDPcGO
-   8td6aQZx8uqwHr2UG9CUtFx+Pf+Zg8izUgTU5aNh0QoDMpUxhnI/z4rzv
-   VrcLvQaIxQY30P8qgXUwDKhz9Knw5xE9VxnxUNPs4dQDJMfE7fcHBchfq
-   r/qvf+MfNsdE9ZVoFloXniWNNM42Qgz6LFmBwLLKF/wN83dEHG3k3swlc
-   A==;
-X-CSE-ConnectionGUID: rH+HwjMgQmODpUIhu7Ic1g==
-X-CSE-MsgGUID: 1mu1GGXbRAC4z5F9zEmP3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48854689"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="48854689"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 01:31:23 -0700
-X-CSE-ConnectionGUID: RORnQEJ9Q0SC/t43H+X+FA==
-X-CSE-MsgGUID: E/YNyvopT/6G2+YQY2Ub0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="137497947"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.175])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 01:31:19 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: feijuan.li@samsung.com, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
- "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
- <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
- "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Cc: Hongfei Tang <hongfei.tang@samsung.com>, Minggui Yan
- <minggui.yan@samsung.com>, Qilin Wang <qilin.wang@samsung.com>
-Subject: Re: [PATCH v2] drm/edid: fixed the bug that hdr metadata was not
- cleared
-In-Reply-To: <20250513011145epcms5p84bf94d5c03933fd61f4abf1fadab5016@epcms5p8>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CGME20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p8>
- <20250513011145epcms5p84bf94d5c03933fd61f4abf1fadab5016@epcms5p8>
-Date: Tue, 13 May 2025 11:31:16 +0300
-Message-ID: <87sel8j4iz.fsf@intel.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="MEyXMj4z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=r5g/HdRGV3CZ2sUgwPHRpvFdkoD9ErLEom5erjkSpTs=; b=M
+	EyXMj4zxI3+3B7memUYPCpG4Pr/PlfoMhuaNB5dHCm1KRJSRfhDOOi/Bkdz2J97w
+	QivpHb8uHPTKHgYTNaUXzNMonaV90R7jGT4ByaWHTjEsRqb/lyFflHYmnoHlgYL7
+	DJe4hrRfWOmlBaljpq07s7W3cp0wITNQgTEPDgcjc8=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-110 (Coremail) ; Tue, 13 May 2025 16:31:31 +0800
+ (CST)
+Date: Tue, 13 May 2025 16:31:31 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Oliver Neukum" <oneukum@suse.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+	stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] USB: xhci: use urb hcpriv mempool for private data
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <875848ec-f92b-48a9-b5c2-792bb0121824@suse.com>
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513055545.5738-1-00107082@163.com>
+ <875848ec-f92b-48a9-b5c2-792bb0121824@suse.com>
+X-NTES-SC: AL_Qu2fBf2Zukgi5yOYY+kZnEYQheY4XMKyuPkg1YJXOp80vyTg8BgQZm9MAUHHws6uNDKhoAi0TT1A0eZkcIVZfqQyXwUBQOfPkouoQyAIP8ct
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <1335f63c.7bea.196c8c53bef.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:bigvCgDX36VjAyNoGFUDAA--.11642W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hdMqmgi-c1uJwAGsW
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, 13 May 2025, Feijuan Li <feijuan.li@samsung.com> wrote:
-> Dear maintainer:
->
-> I have changed the patch as your suggestion.
-> v1->v2:make a new function for hdr info reset.
->
->
-> From: "feijuan.li" <feijuan.li@samsung.com>
-> Date: Fri, 18 Apr 2025 14:56:49 +0000
-> Subject: [PATCH v2] drm/edid: fixed the bug that hdr metadata was not res=
-et
->
-> When DP connected to a device with HDR capability,
-> the hdr structure was filled.Then connected to another
-> sink device without hdr capability, but the hdr info
-> still exist.
->
-> Signed-off-by: feijuan.li <feijuan.li@samsung.com>
-> ---
-> =C2=A0drivers/gpu/drm/drm_edid.c 6 ++++++
-> =C2=A01 file changed, 6 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 13bc4c290b17..cd0e4148f6b0 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -6576,6 +6576,11 @@ static void drm_update_mso(struct drm_connector *c=
-onnector,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0displayid_iter_end(&iter);
-> =C2=A0}
-> =C2=A0
-> +static void drm_reset_hdr_sink_metadata(struct drm_connector *connector)
-> +{
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 memset(&connector->hdr_sink_metadata, 0, siz=
-eof(connector->hdr_sink_metadata));
-
-Please just put this memset inside drm_reset_display_info() right after:
-
-	memset(&info->hdmi, 0, sizeof(info->hdmi));
-
-I have local patches to move hdr_sink_metadata as part of display info
-anyway. Adding an extra function here is a bit much.
-
-There's also something wrong with the formatting here. Please use git
-send-email.
-
-BR,
-Jani.
-
-> +}
-> +
-> =C2=A0/* A connector has no EDID information, so we've got no EDID to com=
-pute quirks from. Reset
-> =C2=A0 * all of the values which would have been set from EDID
-> =C2=A0 */
-> @@ -6651,6 +6656,7 @@ static void update_display_info(struct drm_connecto=
-r *connector,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0struct drm_display_info *info =3D &conn=
-ector->display_info;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0const struct edid *edid;
-> =C2=A0
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 drm_reset_hdr_sink_metadata(connector);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0drm_reset_display_info(connector);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clear_eld(connector);
-> =C2=A0
-> --=C2=A0
-> 2.25.1
->
->
-
---=20
-Jani Nikula, Intel
+CgpBdCAyMDI1LTA1LTEzIDE2OjIxOjA2LCAiT2xpdmVyIE5ldWt1bSIgPG9uZXVrdW1Ac3VzZS5j
+b20+IHdyb3RlOgo+SGksCj4KPk9uIDEzLjA1LjI1IDA3OjU1LCBEYXZpZCBXYW5nIHdyb3RlOgo+
+PiB4aGNpIGtlZXBzIGFsbG9jL2ZyZWUgcHJpdmF0ZSBkYXRhIGZvciBlYWNoIGVucXVldWUvZGVx
+dWV1ZSBjeWNsZXMsCj4+IHdoZW4gdXNpbmcgYSBVU0Igd2ViY2FtLCB0aGUgbWVtb3J5IGFsbG9j
+YXRpb24gZnJlcXVlbmN5IGNvdWxkIHJlYWNoCj4+IGFib3V0IDFrL3MuCj4+IAo+PiBVUkIgb2Jq
+ZWN0cyBoYXZlIGxvbmdlciBsaWZlY3ljbGUgdGhhbiBwcml2YXRlIGRhdGEsIGhhbmQgb3ZlciBv
+d25lcnNoaXAKPj4gb2YgcHJpdmF0ZSBkYXRhIHRvIHVyYiBjYW4gc2F2ZSBsb3RzIG9mIG1lbW9y
+eSBhbGxvY2F0aW9ucyBvdmVyIHRpbWUuCj4KPkkgYW0gYWZyYWlkIEkgbmVlZCB0byBtYWtlIGEg
+Y29tbWVudCBhYm91dCBhIHByaW5jaXBhbCBpc3N1ZS4KPgo+VGhpcyBwYXRjaCBzZXQgb3Zlcmxv
+b2tzIGEgZnVuZGFtZW50YWwgaXNzdWUuIFlvdSBjYW5ub3QgZ3VhcmFudGVlCj50aGF0IGFuIFVS
+QiBpcyByZXVzZWQgYnkgdGhlIHNhbWUgSEMuIEZvciBleGFtcGxlIHlvdSBjYW5ub3QgcnVsZQo+
+b3V0IHRoYXQgdGhlIG5leHQgdGltZSB5b3VyIFVSQiBpcyByZXN1Ym1pdHRlZCwgaXQgd2lsbCBs
+YW5kIHdpdGgKPlhIQ0kgYWdhaW4uCj4KPlRoYXQgbWVhbnMgeW91IGNhbm5vdCB0b3VjaCBqdXN0
+IGhvdyBvbmUgSENEIGhhbmRsZXMgcHJpdmF0ZSBkYXRhLgo+T3IgeW91IG5lZWQgdG8gcmVjb3Jk
+IHdoaWNoIEhDIHRoZSBVUkIgd2FzIGxhc3QgdXNlZCBmb3IuCgpObywgSSBkb24ndCB0aGluayB3
+aGljaCBIQyB0aGUgVVJCIHdhcyBsYXN0IHVzZWQgZm9yIGNvbmNlcm5zIGhlcmUuCkEgVVJCIGNh
+bm5vdCBiZSB1c2VkIGJ5IHR3byBIQyBhdCB0aGUgc2FtZSB0aW1lLCBhcyBsb25nIGFzIHRoaXMg
+aG9sZCwgSSBkb24ndCBzZWUgcmVhc29uCiB3b3JyeWluZyBhYm91dCB3aG8gdXNlIHRoaXMgcHJp
+dmF0ZSBkYXRhIGJlZm9yZS4KClRoaXMgcGF0Y2ggZm9yIHhoY2kgZG9zZSBub3QgYXNzdW1lIHdo
+aWNoIEhDIHVzZSB0aGUgcHJpdmF0ZSBkYXRhIG1lbXBvb2wgIHByZXZpb3VzbHksIG5vcgpzaG91
+bGQgb3RoZXIgSENzLgoKT3IsIGRvIEkgbWlzdW5kZXJzdGFuZCB5b3VyIGNvbW1lbnRzPwoKRGF2
+aWQKCj4KPglSZWdhcmRzCj4JCU9saXZlcgo=
