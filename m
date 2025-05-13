@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5DC28BA9F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9CC528BA86;
 	Tue, 13 May 2025 10:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130897; cv=none; b=YxIPBulYU6xhK7dSfcwF1Wv+DrGeJHt1FDoDeM0efXWXmXM4mmKkaUbB4lbumiBMCcPvKNf/AW7Xd82t4mqP2zPXtviWai5GlGXlrFyMxFNYMGJQfYch4Dg0y3nEDbDCWwFk6cAdB91iu3USzHIVG8+4mQvIFpNiDx3Wv7kxO9g=
+	t=1747130898; cv=none; b=INAhoK6RXEuh79uGpqtxhCG//4RGc6XkGGLqMIzihosPLjSz03pOyvfdZIW4YrtQO31LdiycpSgLCi2xG+pCD37Nfr7hlqrt54Mx5qrTYPA1GLrpljmyHTDIzWZ4HQAL6gq35DYQEJtG00tdjMpON6Co16SZZNIo0JjjvhgXyeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130897; c=relaxed/simple;
-	bh=YJ8xcmEE39aGVby1qjH5lpQQhezUmf8G4pJR1ncXYyQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=tUVAwzQKzMyYzg0JCZtU+amFgpYRuqPVOKCkmYY9HenZ/B9W7NLMi8ImApw0gNRxNANOqelG2F/3yuk6VBg6Yzeazm5QjAqPALhPCBzLVbNmwqhTKddtHE+6PDv+mHMu2wpsd4AGpdxtNGlF1vHovcHXXzyJLKyARk0qlPhQal4=
+	s=arc-20240116; t=1747130898; c=relaxed/simple;
+	bh=s958f0RG0z2GBnnNwp7CQVbHsfxq66tZewU+8+MIME8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=G3hq6IS3ECkIjabM/XOuf504U2eMYh593okw/7C6ZHJbBRa8u6sMGmJZdq7jHrOe2e8vA+2iZg5+lrS2lOqvX6bE3dDQpsoPGZLKzscNc30mVqUgn4t1qj77RxxKB8XPGCIkjTOZtfpNUXFJvbkdlht+0MbkV+AnWlaftQm02eY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-3e-682319f3ed9d
+X-AuditID: a67dfc5b-681ff7000002311f-5e-682319f38f86
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -75,44 +75,44 @@ Cc: kernel_team@skhynix.com,
 	netdev@vger.kernel.org,
 	matthew.brost@intel.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v15 40/43] dept: add module support for struct dept_event_site and dept_event_site_dep
-Date: Tue, 13 May 2025 19:07:27 +0900
-Message-Id: <20250513100730.12664-41-byungchul@sk.com>
+Subject: [PATCH v15 42/43] dept: implement a basic unit test for dept
+Date: Tue, 13 May 2025 19:07:29 +0900
+Message-Id: <20250513100730.12664-43-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250513100730.12664-1-byungchul@sk.com>
 References: <20250513100730.12664-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0wTaRSG+b6Z+WZaqU7qbfAS3W6IWY0oBM2JUWNM1MmuJsbVP7qbtVlG
-	WwUkRRDWNbZaTK1AoAYRQS2gpSkVsXWzriuKmFbwgqhQwQAKUSJShKBtRIvYSvxz8uR9T57z
-	53CU0sPM4rSp+yVdqjpZReS0fDC6fPH7mB81S/X66RD4YKKh7LKTQEtNNQLnVQOGfs8GeBb0
-	I/j88BEFxUUtCMp7uii46u1GUGc/QuDpq8nQGhgi0FR0gsDRyssEHg+EMHSesmCodm2CF7Y+
-	Gu4XVGAo7idQWnwUh8cbDKM2Bws2fSz02s+wEOqJh6ZuHwN1zxdByblOAjfqmmjwXuvF8PR6
-	GYFu5zgD972NNATzZ0NLYR4Dl95VEBgI2iiwBYZYeFJvxeC1zoBaY1h47P0XBu7m1WM4duEK
-	htaO/xHcNL3E4HL6CNwJ+DG4XUUUfKryIOjNH2QhJ3eUhVJDPoITOadoMHYug88fw5fPfogH
-	w/laGi6N+dCaVaLznBOJd/xDlGh0HxA/BdqIWBe00uK9CkH870wXKxpvPmdFqytDdNsXipU3
-	+rFYPhJgRJfjOBFdIxZWNA+2YvFdczO7ec52+cokKVmbKemWrN4p1+RaXqO0gfVZw9f7sB5d
-	WGFGHCfwicLJkNKMZN/w4oiZRJjwC4T29lEqwtP4+YI7r48xIzlH8b5JwrOzHShSTOV3CaP5
-	OSjioflY4a49JRIr+OVC43g9mXDOE6pr6795ZOF8rKqZjrCSXyYUWKvpiZ2TMmHIIZvgGOG2
-	vZ0uQAorinIgpTY1M0WtTU6M02SnarPi/tyX4kLh57IdCu24hkZafm1APIdU0YrG/h80Skad
-	mZ6d0oAEjlJNUxj+DUeKJHX2X5Ju3x+6jGQpvQHN5mjVTEVC8ECSkt+t3i/tlaQ0Sfe9xZxs
-	lh5ZTD0H52ybqa15A3HOtVeKhxcXruqqhCVbFsSZ5m6bEt2gkP9Olfb84/eGosYyb3WfPkxq
-	YrQbkwJvq3xR/KOSwlfjCQkbt/5t/G1P6BdTCT380/q3uPXnnQ+yovnXVUpPbprD7/McPLyj
-	bbCtd53jcceR0nlukkXFxzJordFiUNHpGnX8QkqXrv4KHlBP3FgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzHfX/PHWc/CT9hOGIyD5n0mTB/GD+P8x/zj275cbeu4k4phk5X
-	y9GplCbiSl2nu5S7RuiSmh48JEqpJRVarYdruWuuB9wx/3z22uu9vd//fBjc+z7py8gjTgvK
-	CKlCQokI0YHg+DWj85fJ1r8wBoHTkUTA7WIzBY0PTAjMpWoM+l/ugtaxQQQTb9/hkJnRiCCn
-	+zMOpTWdCGzGSxQ0fZsJzU47BfUZVyiIv1dMwfuBSQw6bqRhYLLshy+GXgJep+RikNlPwa3M
-	eMx9+jBwGQppMMT5QY8xi4bJ7gCo72whoTq7ngRb+2q4eaeDgnJbPQE1ZT0YND29TUGn+TcJ
-	r2vqCBjTLYDG1GQSioZzKRgYM+BgcNpp+FCpx6BGPxdKNO7WxB+/SKhNrsQgMe8hBs1tzxBU
-	JHVhYDG3UFDtHMTAasnAYbzgJYIe3RANCVddNNxS6xBcSbhBgKYjECZ+upezHQGgvltCQNFU
-	C9q+jTffMSO+etCO8xrrGX7c+ZHibWN6gn+Vy/FPsj7TvKaineb1lijeavTn75X3Y3zOqJPk
-	LYWXKd4ymkbz2qFmjB9uaKAPLjoi2nJMUMijBeW6bSEi2dW07+jkwM6Ykae9WBzK26xFXgzH
-	buTyR7WUhyl2Jffpkwv3sA+7hLMm95JaJGJwtmU615rdhjzBbPY459IluJlhCNaPqzWGe7SY
-	3cTV/a6k/nUu5kwllX97vNx+qqCB8LA3G8il6E1EChLp0bRC5COPiA6XyhWBa1VhstgIecza
-	0MhwC3I/kOH8ZGoZcjTtqkIsgyQzxHX9S2XepDRaFRtehTgGl/iI1Y/dSnxMGntWUEYeVUYp
-	BFUVWsAQknniPYeEEG/2hPS0ECYIJwXl/xRjvHzj0JyAnQX7inzLU8MmQjfagzaMH76YrrDO
-	Lf8ic5nK8tl0bdaKqb0dMaeW78uoWOW/ZaGxseFCYXdQ7azi547oN4HD597aIp8cvJ8+gvuc
-	tXU6er7bc/qCraF7Fs6RyKrXN83InpqXkLY96lXX9dYdWfHK3b46+6NSNd2leXNt60r/oq8S
-	QiWTBvjjSpX0DziDbA08AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzHfb+/x46zn2P8PMzDmbWFFLHP8jAzD7+ZPIz5gxlHv7mbLrke
+	FLPd6UouJVk1eboru1pd5PIQuiQ60kr0nAqNSKUpd+tUuKv557PX3p/35/3+58MSsgpqFqsK
+	jRA1oYoQOS0hJX2TTEsHZy5U+mXqvMHxK4GEa3csNNTezkdguafD0F2xBZqcvQiGq98QkJFW
+	i8D0qZ2Ae/YOBLbcszTUfZ4M9Y5+GirTEmmIzb5Dw9ueEQxt6akY8q1B8MHcRUJVShaGjG4a
+	rmbEYvf4hsFlzmPArF0EnbmZDIx88ofKjkYKbK2L4cqNNhpKbJUk2Is7MdQ9vkZDh+UvBVX2
+	VyQ4k2dD7aUkCgp+ZNHQ4zQTYHb0M/CuzIjBbpwOhXp3YPzgHwpeJpVhiL91F0N9yxMEpQkf
+	MVgtjTQ8d/RiKLKmEfA7pwJBZ3IfA3EXXAxc1SUjSIxLJ0HfthKGh9zN13/5g+5mIQkFo41o
+	/VrBcsOChOe9/YSgLzop/HY00ILNaSSF11m88CiznRH0pa2MYLRGCkW5PkJ2STcWTAMOSrDm
+	nacF60AqIxj66rHwo6aG2Tlnn2RNsBiiihI1y9Ydkii/Zptw2M/N0U1fLjBaZFptQCzLcwH8
+	g/glBuQ1hp32QuRhmvPmm5tdhIencfP5oqQuyoAkLME1TuSbrrcgz+1UbhP/rfi0x0Nyi/hz
+	scOkh6XcKt5lN9DjmfP4/MKysRwvtz6aUzPmkXEr+RRjPjnuuezFn29dM84z+We5zWQKkhrR
+	hDwkU4VGqRWqkABfZUyoKtr3yHG1Fbmfy3xmZH8xGqjdXY44FsknSV91L1DKKEVUeIy6HPEs
+	IZ8m1T10S9JgRcwpUXP8oCYyRAwvR7NZUj5Dutx5MljGHVVEiMdEMUzU/N9i1muWFm03O05X
+	ldweqj5TP0rsG9Srn2ovlnjviva9e27PksOfL7WceEEc7fWPDlwx1FB238d7w/wXXffnlp5I
+	bT84URE/A+ms2+Kyb0llgWqjX8KBFUwkVZDzMKIpKJ3yw9UN3wPFmyZJD6ENWhWQvPFR3t6d
+	g1vfT0mcvtXmetm+I+jQ9vVyMlyp8PchNOGKf/fDXXFYAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0yScRSH/b93KOidWb3lutF1tS62rLN1/WK+a2V+616yegumUgM1sdo0
+	rczSUZvZRQ20kQkWYVtU4pwuylhmoXiZWlJZTNNlQnmhwlpfzp79zrPf+XIYPPQuOYNRqpIE
+	tUqeIKPEhDhmXeay79PnKVb2uqXgG8omoPC+mYLGeyYE5ocZGHifRUOLvw/B6KvXOBTkNyIw
+	dHfi8NDRhcBedoYC10cpNPkGKKjPv0hBZul9Ct70jmHQcfUKBibrdnhn7CHAqSvBoMBLwc2C
+	TCw4vmAwbCynwZi+ADxlN2gY646A+i43CXVF9STY25fC9eIOCqrs9QQ4bB4MXE8KKegy/ybB
+	6XhBgD8vHBov55JQ0V9CQa/fiIPRN0DD2xo9Bg79VLBkBVvPff9FwvPcGgzO3X6AQVPbUwTV
+	2e8xsJrdFNT5+jCotObjMHLnGQJP3lcazl4apuFmRh6Ci2evEpDVEQmjP4OXi4YiIOOWhYCK
+	gBtt3sibi82Ir+sbwPmsyhP8iK+Z4u1+PcG/LOH4xzc6aT6rup3m9dZkvrJsCV9a5cV4w6CP
+	5K3lFyjeOniF5nO+NmF8f0MDHTtzj3j9YSFBmSKoV2yMEys+lxqw49+2pLZ8ukSnI8O6HCRi
+	OHY153FY0DhT7CKutXUYH+cwdg5XmdtD5iAxg7PuCVxLUVtQYpjJbBT3xXZy3CHYBdz5zFFi
+	nCXsGm7YkUP965zNmSw1f3tEwTxwp+GvE8pGcjq9idAhsR6FlKMwpSolUa5MiFyuiVdoVcrU
+	5YeOJVpR8IGMp8cu29CQK7oWsQySTZS88M5VhJLyFI02sRZxDC4Lk2Q8CkaSw3JtmqA+dlCd
+	nCBoalE4Q8imSbbuFOJC2aPyJCFeEI4L6v9bjBHNSEcWbXVU1KTy2IBo9/7YkFXZuvZZaRXz
+	1Rqvs+PINVvq3vCR5tbegFR10B+3I37t4p6FgeiQ7jSp1/mzUJe97cPRux7zNOeFna7FkpX4
+	ppilVZ25tzyfB60bdsU0Ndv2iX5M7G+jkqIOSItN11I6l7UoFmkr8qecsocZ2FUuX3LaLhmh
+	UcgjluBqjfwPYpXPqTwDAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -120,283 +120,350 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-struct dept_event_site and struct dept_event_site_dep have been
-introduced to track dependencies between multi event sites for a single
-wait, that will be loaded to data segment.  Plus, a custom section,
-'.dept.event_sites', also has been introduced to keep pointers to the
-objects to make sure all the event sites defined exist in code.
-
-dept should work with the section and segment of module.  Add the
-support to handle the section and segment properly whenever modules are
-loaded and unloaded.
+Implement CONFIG_DEPT_UNIT_TEST introducing a kernel module that runs
+basic unit test for dept.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/dept.h     | 14 +++++++
- include/linux/module.h   |  5 +++
- kernel/dependency/dept.c | 79 +++++++++++++++++++++++++++++++++++-----
- kernel/module/main.c     | 15 ++++++++
- 4 files changed, 103 insertions(+), 10 deletions(-)
+ include/linux/dept_unit_test.h     |  67 +++++++++++
+ kernel/dependency/Makefile         |   1 +
+ kernel/dependency/dept.c           |  12 ++
+ kernel/dependency/dept_unit_test.c | 173 +++++++++++++++++++++++++++++
+ lib/Kconfig.debug                  |  12 ++
+ 5 files changed, 265 insertions(+)
+ create mode 100644 include/linux/dept_unit_test.h
+ create mode 100644 kernel/dependency/dept_unit_test.c
 
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index b933f9d98c69..a97f34d62468 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -419,6 +419,11 @@ struct dept_event_site {
- 	struct dept_event_site		*bfs_parent;
- 	struct list_head		bfs_node;
- 
-+	/*
-+	 * for linking all dept_event_site's
-+	 */
-+	struct list_head		all_node;
+diff --git a/include/linux/dept_unit_test.h b/include/linux/dept_unit_test.h
+new file mode 100644
+index 000000000000..51660f534104
+--- /dev/null
++++ b/include/linux/dept_unit_test.h
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * DEPT unit test
++ *
++ * Copyright (C) SK hynix, 2025
++ *
++ * Authors: Byungchul Park <max.byungchul.park@gmail.com>
++ */
 +
- 	/*
- 	 * flag indicating the event is not only declared but also
- 	 * actually used in code
-@@ -435,6 +440,11 @@ struct dept_event_site_dep {
- 	 */
- 	struct list_head		dep_node;
- 	struct list_head		dep_rev_node;
++#ifndef __LINUX_DEPT_UNIT_TEST_H
++#define __LINUX_DEPT_UNIT_TEST_H
 +
-+	/*
-+	 * for linking all dept_event_site_dep's
-+	 */
-+	struct list_head		all_node;
- };
- 
- #define DEPT_EVENT_SITE_INITIALIZER(es)					\
-@@ -446,6 +456,7 @@ struct dept_event_site_dep {
- 	.bfs_gen = 0,							\
- 	.bfs_parent = NULL,						\
- 	.bfs_node = LIST_HEAD_INIT((es).bfs_node),			\
-+	.all_node = LIST_HEAD_INIT((es).all_node),			\
- 	.used = false,							\
- }
- 
-@@ -455,6 +466,7 @@ struct dept_event_site_dep {
- 	.recover_site = NULL,						\
- 	.dep_node = LIST_HEAD_INIT((esd).dep_node),			\
- 	.dep_rev_node = LIST_HEAD_INIT((esd).dep_rev_node),		\
-+	.all_node = LIST_HEAD_INIT((esd).all_node),			\
- }
- 
- struct dept_event_site_init {
-@@ -478,6 +490,7 @@ extern void dept_init(void);
- extern void dept_task_init(struct task_struct *t);
- extern void dept_task_exit(struct task_struct *t);
- extern void dept_free_range(void *start, unsigned int sz);
-+extern void dept_mark_event_site_used(void *start, void *end);
- 
- extern void dept_map_init(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
- extern void dept_map_reinit(struct dept_map *m, struct dept_key *k, int sub_u, const char *n);
-@@ -541,6 +554,7 @@ struct dept_event_site { };
- #define dept_task_init(t)				do { } while (0)
- #define dept_task_exit(t)				do { } while (0)
- #define dept_free_range(s, sz)				do { } while (0)
-+#define dept_mark_event_site_used(s, e)			do { } while (0)
- 
- #define dept_map_init(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
- #define dept_map_reinit(m, k, su, n)			do { (void)(n); (void)(k); } while (0)
-diff --git a/include/linux/module.h b/include/linux/module.h
-index b3329110d668..3da466a2c705 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -28,6 +28,7 @@
- #include <linux/srcu.h>
- #include <linux/static_call_types.h>
- #include <linux/dynamic_debug.h>
-+#include <linux/dept.h>
- 
- #include <linux/percpu.h>
- #include <asm/module.h>
-@@ -599,6 +600,10 @@ struct module {
- #ifdef CONFIG_DYNAMIC_DEBUG_CORE
- 	struct _ddebug_info dyndbg_info;
- #endif
-+#ifdef CONFIG_DEPT
-+	struct dept_event_site **dept_event_sites;
-+	unsigned int num_dept_event_sites;
++#if defined(CONFIG_DEPT_UNIT_TEST) || defined(CONFIG_DEPT_UNIT_TEST_MODULE)
++struct dept_ut {
++	bool circle_detected;
++	bool recover_circle_detected;
++
++	int ecxt_stack_total_cnt;
++	int wait_stack_total_cnt;
++	int evnt_stack_total_cnt;
++	int ecxt_stack_valid_cnt;
++	int wait_stack_valid_cnt;
++	int evnt_stack_valid_cnt;
++};
++
++extern struct dept_ut dept_ut_results;
++
++static inline void dept_ut_circle_detect(void)
++{
++	dept_ut_results.circle_detected = true;
++}
++static inline void dept_ut_recover_circle_detect(void)
++{
++	dept_ut_results.recover_circle_detected = true;
++}
++static inline void dept_ut_ecxt_stack_account(bool valid)
++{
++	dept_ut_results.ecxt_stack_total_cnt++;
++
++	if (valid)
++		dept_ut_results.ecxt_stack_valid_cnt++;
++}
++static inline void dept_ut_wait_stack_account(bool valid)
++{
++	dept_ut_results.wait_stack_total_cnt++;
++
++	if (valid)
++		dept_ut_results.wait_stack_valid_cnt++;
++}
++static inline void dept_ut_evnt_stack_account(bool valid)
++{
++	dept_ut_results.evnt_stack_total_cnt++;
++
++	if (valid)
++		dept_ut_results.evnt_stack_valid_cnt++;
++}
++#else
++struct dept_ut {};
++
++#define dept_ut_circle_detect() do { } while (0)
++#define dept_ut_recover_circle_detect() do { } while (0)
++#define dept_ut_ecxt_stack_account(v) do { } while (0)
++#define dept_ut_wait_stack_account(v) do { } while (0)
++#define dept_ut_evnt_stack_account(v) do { } while (0)
++
 +#endif
- } ____cacheline_aligned __randomize_layout;
- #ifndef MODULE_ARCH_INIT
- #define MODULE_ARCH_INIT {}
++#endif /* __LINUX_DEPT_UNIT_TEST_H */
+diff --git a/kernel/dependency/Makefile b/kernel/dependency/Makefile
+index 92f165400187..fc584ca87124 100644
+--- a/kernel/dependency/Makefile
++++ b/kernel/dependency/Makefile
+@@ -2,3 +2,4 @@
+ 
+ obj-$(CONFIG_DEPT) += dept.o
+ obj-$(CONFIG_DEPT) += dept_proc.o
++obj-$(CONFIG_DEPT_UNIT_TEST) += dept_unit_test.o
 diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index b7167ce4f647..bd46c2ce84eb 100644
+index 03d6c057cdc5..50ba3e1c3fd5 100644
 --- a/kernel/dependency/dept.c
 +++ b/kernel/dependency/dept.c
-@@ -990,6 +990,9 @@ static void bfs(void *root, struct bfs_ops *ops, void *in, void **out)
-  * event sites.
-  */
+@@ -77,8 +77,12 @@
+ #include <linux/workqueue.h>
+ #include <linux/irq_work.h>
+ #include <linux/vmalloc.h>
++#include <linux/dept_unit_test.h>
+ #include "dept_internal.h"
  
-+static LIST_HEAD(dept_event_sites);
-+static LIST_HEAD(dept_event_site_deps);
++struct dept_ut dept_ut_results;
++EXPORT_SYMBOL_GPL(dept_ut_results);
 +
- /*
-  * Print all events in the circle.
-  */
-@@ -2053,6 +2056,33 @@ static void del_dep_rcu(struct rcu_head *rh)
- 	preempt_enable();
+ static int dept_stop;
+ static int dept_per_cpu_ready;
+ 
+@@ -826,6 +830,10 @@ static void print_dep(struct dept_dep *d)
+ 			pr_warn("(wait to wake up)\n");
+ 			print_ip_stack(0, e->ewait_stack);
+ 		}
++
++		dept_ut_ecxt_stack_account(valid_stack(e->ecxt_stack));
++		dept_ut_wait_stack_account(valid_stack(w->wait_stack));
++		dept_ut_evnt_stack_account(valid_stack(e->event_stack));
+ 	}
  }
  
+@@ -926,6 +934,8 @@ static void print_circle(struct dept_class *c)
+ 		tc = fc;
+ 		fc = fc->bfs_parent;
+ 	} while (tc != c);
++
++	dept_ut_circle_detect();
+ }
+ 
+ /*
+@@ -1027,6 +1037,8 @@ static void print_recover_circle(struct dept_event_site *es)
+ 	dump_stack();
+ 
+ 	dept_outworld_exit();
++
++	dept_ut_recover_circle_detect();
+ }
+ 
+ static void bfs_init_recover(void *node, void *in, void **out)
+diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
+new file mode 100644
+index 000000000000..489a7870f2c4
+--- /dev/null
++++ b/kernel/dependency/dept_unit_test.c
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * NOTE: Must be called with dept_lock held.
++ * DEPT unit test
++ *
++ * Copyright (C) SK hynix, 2025
++ *
++ * Authors: Byungchul Park <max.byungchul.park@gmail.com>
 + */
-+static void disconnect_event_site_dep(struct dept_event_site_dep *esd)
++
++#include <linux/module.h>
++#include <linux/spinlock.h>
++#include <linux/mutex.h>
++#include <linux/dept.h>
++#include <linux/dept_unit_test.h>
++
++MODULE_DESCRIPTION("DEPT unit test");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Byungchul Park <max.byungchul.park@sk.com>");
++
++struct unit {
++	const char *name;
++	bool (*func)(void);
++	bool result;
++};
++
++static DEFINE_SPINLOCK(s1);
++static DEFINE_SPINLOCK(s2);
++static bool test_spin_lock_deadlock(void)
 +{
-+	list_del_rcu(&esd->dep_node);
-+	list_del_rcu(&esd->dep_rev_node);
++	dept_ut_results.circle_detected = false;
++
++	spin_lock(&s1);
++	spin_lock(&s2);
++	spin_unlock(&s2);
++	spin_unlock(&s1);
++
++	spin_lock(&s2);
++	spin_lock(&s1);
++	spin_unlock(&s1);
++	spin_unlock(&s2);
++
++	return dept_ut_results.circle_detected;
 +}
 +
-+/*
-+ * NOTE: Must be called with dept_lock held.
-+ */
-+static void disconnect_event_site(struct dept_event_site *es)
++static DEFINE_MUTEX(m1);
++static DEFINE_MUTEX(m2);
++static bool test_mutex_lock_deadlock(void)
 +{
-+	struct dept_event_site_dep *esd, *next_esd;
++	dept_ut_results.circle_detected = false;
 +
-+	list_for_each_entry_safe(esd, next_esd, &es->dep_head, dep_node) {
-+		list_del_rcu(&esd->dep_node);
-+		list_del_rcu(&esd->dep_rev_node);
-+	}
++	mutex_lock(&m1);
++	mutex_lock(&m2);
++	mutex_unlock(&m2);
++	mutex_unlock(&m1);
 +
-+	list_for_each_entry_safe(esd, next_esd, &es->dep_rev_head, dep_rev_node) {
-+		list_del_rcu(&esd->dep_node);
-+		list_del_rcu(&esd->dep_rev_node);
-+	}
++	mutex_lock(&m2);
++	mutex_lock(&m1);
++	mutex_unlock(&m1);
++	mutex_unlock(&m2);
++
++	return dept_ut_results.circle_detected;
 +}
 +
- /*
-  * NOTE: Must be called with dept_lock held.
-  */
-@@ -2396,6 +2426,8 @@ void dept_free_range(void *start, unsigned int sz)
- {
- 	struct dept_task *dt = dept_task();
- 	struct dept_class *c, *n;
-+	struct dept_event_site_dep *esd, *next_esd;
-+	struct dept_event_site *es, *next_es;
- 	unsigned long flags;
- 
- 	if (unlikely(!dept_working()))
-@@ -2417,6 +2449,24 @@ void dept_free_range(void *start, unsigned int sz)
- 	while (unlikely(!dept_lock()))
- 		cpu_relax();
- 
-+	list_for_each_entry_safe(esd, next_esd, &dept_event_site_deps, all_node) {
-+		if (!within((void *)esd, start, sz))
-+			continue;
-+
-+		disconnect_event_site_dep(esd);
-+		list_del(&esd->all_node);
-+	}
-+
-+	list_for_each_entry_safe(es, next_es, &dept_event_sites, all_node) {
-+		if (!within((void *)es, start, sz) &&
-+		    !within(es->name, start, sz) &&
-+		    !within(es->func_name, start, sz))
-+			continue;
-+
-+		disconnect_event_site(es);
-+		list_del(&es->all_node);
-+	}
-+
- 	list_for_each_entry_safe(c, n, &dept_classes, all_node) {
- 		if (!within((void *)c->key, start, sz) &&
- 		    !within(c->name, start, sz))
-@@ -3348,6 +3398,7 @@ void __dept_recover_event(struct dept_event_site_dep *esd,
- 
- 	list_add(&esd->dep_node, &es->dep_head);
- 	list_add(&esd->dep_rev_node, &rs->dep_rev_head);
-+	list_add(&esd->all_node, &dept_event_site_deps);
- 	check_recover_dl_bfs(esd);
- unlock:
- 	dept_unlock();
-@@ -3358,6 +3409,23 @@ EXPORT_SYMBOL_GPL(__dept_recover_event);
- 
- #define B2KB(B) ((B) / 1024)
- 
-+void dept_mark_event_site_used(void *start, void *end)
++static bool test_wait_event_deadlock(void)
 +{
-+	struct dept_event_site_init **evtinitpp;
++	struct dept_map dmap1;
++	struct dept_map dmap2;
 +
-+	for (evtinitpp = (struct dept_event_site_init **)start;
-+	     evtinitpp < (struct dept_event_site_init **)end;
-+	     evtinitpp++) {
-+		(*evtinitpp)->evt_site->used = true;
-+		(*evtinitpp)->evt_site->func_name = (*evtinitpp)->func_name;
-+		list_add(&(*evtinitpp)->evt_site->all_node, &dept_event_sites);
++	sdt_map_init(&dmap1);
++	sdt_map_init(&dmap2);
 +
-+		pr_info("dept_event_site %s@%s is initialized.\n",
-+				(*evtinitpp)->evt_site->name,
-+				(*evtinitpp)->evt_site->func_name);
-+	}
++	dept_ut_results.circle_detected = false;
++
++	sdt_request_event(&dmap1); /* [S] */
++	sdt_wait(&dmap2); /* [W] */
++	sdt_event(&dmap1); /* [E] */
++
++	sdt_request_event(&dmap2); /* [S] */
++	sdt_wait(&dmap1); /* [W] */
++	sdt_event(&dmap2); /* [E] */
++
++	return dept_ut_results.circle_detected;
 +}
 +
- extern char __dept_event_sites_start[], __dept_event_sites_end[];
- 
- /*
-@@ -3367,20 +3435,11 @@ extern char __dept_event_sites_start[], __dept_event_sites_end[];
- void __init dept_init(void)
- {
- 	size_t mem_total = 0;
--	struct dept_event_site_init **evtinitpp;
- 
- 	/*
- 	 * dept recover dependency tracking works from now on.
- 	 */
--	for (evtinitpp = (struct dept_event_site_init **)__dept_event_sites_start;
--	     evtinitpp < (struct dept_event_site_init **)__dept_event_sites_end;
--	     evtinitpp++) {
--		(*evtinitpp)->evt_site->used = true;
--		(*evtinitpp)->evt_site->func_name = (*evtinitpp)->func_name;
--		pr_info("dept_event %s@%s is initialized.\n",
--				(*evtinitpp)->evt_site->name,
--				(*evtinitpp)->evt_site->func_name);
--	}
-+	dept_mark_event_site_used(__dept_event_sites_start, __dept_event_sites_end);
- 	dept_recover_ready = true;
- 
- 	local_irq_disable();
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 7e569e1b4db5..1c439ed8c9ed 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -2611,6 +2611,11 @@ static int find_module_sections(struct module *mod, struct load_info *info)
- 						&mod->dyndbg_info.num_classes);
- #endif
- 
-+#ifdef CONFIG_DEPT
-+	mod->dept_event_sites = section_objs(info, ".dept.event_sites",
-+					sizeof(*mod->dept_event_sites),
-+					&mod->num_dept_event_sites);
-+#endif
- 	return 0;
- }
- 
-@@ -3249,6 +3254,14 @@ static int early_mod_check(struct load_info *info, int flags)
- 	return err;
- }
- 
-+static void dept_mark_event_site_used_module(struct module *mod)
++static void dummy_event(void)
 +{
-+#ifdef CONFIG_DEPT
-+	dept_mark_event_site_used(mod->dept_event_sites,
-+			     mod->dept_event_sites + mod->num_dept_event_sites);
-+#endif
++	/* Do nothing. */
 +}
 +
- /*
-  * Allocate and load the module: note that size of section 0 is always
-  * zero, and we rely on this for optional sections.
-@@ -3408,6 +3421,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	/* Done! */
- 	trace_module_load(mod);
- 
-+	dept_mark_event_site_used_module(mod);
++static DEFINE_DEPT_EVENT_SITE(es1);
++static DEFINE_DEPT_EVENT_SITE(es2);
++static bool test_recover_deadlock(void)
++{
++	dept_ut_results.recover_circle_detected = false;
 +
- 	return do_init_module(mod);
++	dept_recover_event(&es1, &es2);
++	dept_recover_event(&es2, &es1);
++
++	event_site(&es1, dummy_event);
++	event_site(&es2, dummy_event);
++
++	return dept_ut_results.recover_circle_detected;
++}
++
++static struct unit units[] = {
++	{
++		.name = "spin lock deadlock test",
++		.func = test_spin_lock_deadlock,
++	},
++	{
++		.name = "mutex lock deadlock test",
++		.func = test_mutex_lock_deadlock,
++	},
++	{
++		.name = "wait event deadlock test",
++		.func = test_wait_event_deadlock,
++	},
++	{
++		.name = "event recover deadlock test",
++		.func = test_recover_deadlock,
++	},
++};
++
++static int __init dept_ut_init(void)
++{
++	int i;
++
++	lockdep_off();
++
++	dept_ut_results.ecxt_stack_valid_cnt = 0;
++	dept_ut_results.ecxt_stack_total_cnt = 0;
++	dept_ut_results.wait_stack_valid_cnt = 0;
++	dept_ut_results.wait_stack_total_cnt = 0;
++	dept_ut_results.evnt_stack_valid_cnt = 0;
++	dept_ut_results.evnt_stack_total_cnt = 0;
++
++	for (i = 0; i < ARRAY_SIZE(units); i++)
++		units[i].result = units[i].func();
++
++	pr_info("\n");
++	pr_info("******************************************\n");
++	pr_info("DEPT unit test results\n");
++	pr_info("******************************************\n");
++	for (i = 0; i < ARRAY_SIZE(units); i++) {
++		pr_info("(%s) %s\n", units[i].result ? "pass" : "fail",
++				units[i].name);
++	}
++	pr_info("ecxt stack valid count = %d/%d\n",
++			dept_ut_results.ecxt_stack_valid_cnt,
++			dept_ut_results.ecxt_stack_total_cnt);
++	pr_info("wait stack valid count = %d/%d\n",
++			dept_ut_results.wait_stack_valid_cnt,
++			dept_ut_results.wait_stack_total_cnt);
++	pr_info("event stack valid count = %d/%d\n",
++			dept_ut_results.evnt_stack_valid_cnt,
++			dept_ut_results.evnt_stack_total_cnt);
++	pr_info("******************************************\n");
++	pr_info("\n");
++
++	lockdep_on();
++
++	return 0;
++}
++
++static void dept_ut_cleanup(void)
++{
++	/*
++	 * Do nothing for now.
++	 */
++}
++
++module_init(dept_ut_init);
++module_exit(dept_ut_cleanup);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 7c74f92e4cc2..65f867e35be8 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1404,6 +1404,18 @@ config DEPT_AGGRESSIVE_TIMEOUT_WAIT
+ 	  that timeout is used to avoid a deadlock. Say N if you'd like
+ 	  to avoid verbose reports.
  
-  sysfs_cleanup:
++config DEPT_UNIT_TEST
++	tristate "unit test for DEPT"
++	depends on DEBUG_KERNEL && DEPT
++	default n
++	help
++	  This option provides a kernel module that runs unit test for
++	  DEPT.
++
++	  Say Y if you want DEPT unit test to be built into the kernel.
++	  Say M if you want DEPT unit test to build as a module.
++	  Say N if you are unsure.
++
+ config LOCK_DEBUGGING_SUPPORT
+ 	bool
+ 	depends on TRACE_IRQFLAGS_SUPPORT && STACKTRACE_SUPPORT && LOCKDEP_SUPPORT
 -- 
 2.17.1
 
