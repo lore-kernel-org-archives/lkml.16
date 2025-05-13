@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE43B2BE7C4;
-	Tue, 13 May 2025 17:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2762BF970;
+	Tue, 13 May 2025 17:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157310; cv=none; b=MG4czBLRp0jvzNBzlNJzf4r/euQScIvCAMaFJi1GvXK4Dsi7eLPYfHHGgH/iWTNWFYZtKTBDfrVn8L8SyeC5FUbEnZBUJGQOqont8xn/AVcRNaEiotjBz0XTWI3y4UhT6rWgEwBy22O3gQ70GVyhYE5wHza7XjuLNejCb7Dcs3o=
+	t=1747157311; cv=none; b=McEniaojrY18E0yebVCtCCXBh11fdxYM/z5tTQZWS6JgIbBHtfap0qDr4S9r1pLcsKlZg7sQOdfMwPyVAT3vMT/3qLMzZa6zyhCICHPfINp10Tt2b7CA9qZbZJwQMNcsEMas2V4PCILeLuyxt/vf3w7HyXWbeWz49YgsbvwrebI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157310; c=relaxed/simple;
-	bh=hJnEDdlO2yAeWjJZLwOK8T9TN8bPwhBcclQiZAl/tvQ=;
+	s=arc-20240116; t=1747157311; c=relaxed/simple;
+	bh=5BoSY6I4E3zhXcU/3IAaz838Ni4OzdDS8jPXJzV6qg4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RCZGeRRfRx/+PBTvh0Y2lkNaJmF10iIJVdKc8o0aGET5F99YfoOquz0DlhYBDZbRECLlyMgA+yDRXDavJzH/wbpYIYwEL4cejOfX895mblBCrYyZIm5OLAsP4JjDvHa05CyoIsYZWGalBRrPP1XuDrA5zWWj72jRiHhHCoV4LHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3NXXBME; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KemKTF9qoj5J97HVsx8XQ2Fu94z338ZMwkP+24ZX9l0ioz7RfJfqvC1LeqhVtrXDiNkL0TxjEuSsrKE1YHSHML/sPSBWpxwiUNkKeOoXiOUFKV+z70R4obpOAB5nj0suVa5zIux8c+UmBk9yiAmqQlqD/GGlmvZX35e+ah7GUYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm8fnhbb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3NXXBME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60828C4CEF2;
-	Tue, 13 May 2025 17:28:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm8fnhbb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A5AC4AF0C;
+	Tue, 13 May 2025 17:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747157310;
-	bh=hJnEDdlO2yAeWjJZLwOK8T9TN8bPwhBcclQiZAl/tvQ=;
+	s=k20201202; t=1747157311;
+	bh=5BoSY6I4E3zhXcU/3IAaz838Ni4OzdDS8jPXJzV6qg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m3NXXBMEOno7S4l41KbEzkbwBRE0r32Lrlik96A7hRHsMUPQDujQ4f1z01V0wv5Lr
-	 nPmmGQAXsxOlzy58uQc78D9aWMkpIWkKXjgBrQFUDFf2w4fjWNwcADhcRQLfPW3/IU
-	 hJlq3tAZh8SulU07V3e+b5rZmlphQ9B+nhALsGlTBga75KJfCC8ijE5+XQdPI1SfBv
-	 Xffhs97gS0jM0Af3k/vvzahGfHfdX9feZpBE6Tf7Pce7w1lzVHb296s+pBUteGKZYn
-	 lqvpBmhMEP7K34siTFutWivrPR/tVQKJqQJeyaHcJBf5nskooCUgP8Y2vvNt2WTFHh
-	 kpmLq3bq7t+yw==
+	b=Dm8fnhbb1HXn9Xj7HTUoE8BQAcuWlp0sNhyErxY9mHhVVE0lAMWqRBK5LDrxmjB0W
+	 BS5PshtG6OQFNM0XU9LNbzNgGHixp9rMcaBz1q/oJGMJSGReYcm8NwfdtY1/I6M4C7
+	 m+hnhYBkHPddwowLFrZ9QmEsoGOvnPZsTG1FXaVfc4DHU/lC6x5dNiYAWVTvfbk3hw
+	 rILWiC4xmuFJ/brRqRagFPQKNRidwiQITQfBJnwg3Vzvwwf9d3yF8zKNZN0Gd4Gdj8
+	 /StB4Cng0CwOX8TfoNfXeSYyA1ch6cQ0tTg1iWwdj10ajEWztRiu18loLqYfddn4Uv
+	 dXn5Kn/l5w7XQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uEtQa-00EbRz-HN;
-	Tue, 13 May 2025 18:28:28 +0100
+	id 1uEtQb-00EbRz-7F;
+	Tue, 13 May 2025 18:28:29 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -48,9 +48,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Thierry Reding <thierry.reding@gmail.com>,
 	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v2 3/9] irqchip/gic: Convert to msi_create_parent_irq_domain() helper
-Date: Tue, 13 May 2025 18:28:13 +0100
-Message-Id: <20250513172819.2216709-4-maz@kernel.org>
+Subject: [PATCH v2 6/9] irqchip/msi-lib: Honour the MSI_FLAG_NO_AFFINITY flag
+Date: Tue, 13 May 2025 18:28:16 +0100
+Message-Id: <20250513172819.2216709-7-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250513172819.2216709-1-maz@kernel.org>
 References: <20250513172819.2216709-1-maz@kernel.org>
@@ -66,111 +66,38 @@ X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradea
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Now that we have a concise helper to create an MSI parent domain,
-switch the GIC family over to that.
+Bad MSI implementations multiplex MSIs onto a single downstream
+interrupt, meaning they have no concept of individual affinity.
+
+The old MSI code did a reasonable job at this by honouring the
+MSI_FLAG_NO_AFFINITY, but the new shiny device MSI code doesn't.
+
+Teach it about the sad reality of existing hardware.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v2m.c    | 12 +++++++-----
- drivers/irqchip/irq-gic-v3-its.c | 19 +++++++++----------
- drivers/irqchip/irq-gic-v3-mbi.c | 11 ++++++-----
- 3 files changed, 22 insertions(+), 20 deletions(-)
+ drivers/irqchip/irq-msi-lib.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index 62676994d0695..9050792e3242f 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -268,16 +268,18 @@ static __init int gicv2m_allocate_domains(struct irq_domain *parent)
- 	if (!v2m)
- 		return 0;
- 
--	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
--						   &gicv2m_domain_ops, v2m);
-+	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-+			.fwnode		= v2m->fwnode,
-+			.ops		= &gicv2m_domain_ops,
-+			.host_data	= v2m,
-+			.parent		= parent,
-+		}, &gicv2m_msi_parent_ops);
-+
- 	if (!inner_domain) {
- 		pr_err("Failed to create GICv2m domain\n");
- 		return -ENOMEM;
- 	}
- 
--	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
--	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
--	inner_domain->msi_parent_ops = &gicv2m_msi_parent_ops;
- 	return 0;
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index 2a61c06c4da07..246c30205af40 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -105,8 +105,13 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 	 * MSI message into the hardware which is the whole purpose of the
+ 	 * device MSI domain aside of mask/unmask which is provided e.g. by
+ 	 * PCI/MSI device domains.
++	 *
++	 * The exception to the rule is when the underlying domain
++	 * tells you that affinity is not a thing -- for example when
++	 * everything is muxed behind a single interrupt.
+ 	 */
+-	chip->irq_set_affinity = msi_domain_set_affinity;
++	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_NO_AFFINITY))
++		chip->irq_set_affinity = msi_domain_set_affinity;
+ 	return true;
  }
- 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 9e6380f597488..9ea3a6723263c 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5128,20 +5128,19 @@ static int its_init_domain(struct its_node *its)
- 	info->ops = &its_msi_domain_ops;
- 	info->data = its;
- 
--	inner_domain = irq_domain_create_hierarchy(its_parent,
--						   its->msi_domain_flags, 0,
--						   its->fwnode_handle, &its_domain_ops,
--						   info);
-+	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-+			.fwnode		= its->fwnode_handle,
-+			.ops		= &its_domain_ops,
-+			.host_data	= info,
-+			.domain_flags	= its->msi_domain_flags,
-+			.parent		= its_parent,
-+		}, &gic_v3_its_msi_parent_ops);
-+
- 	if (!inner_domain) {
- 		kfree(info);
- 		return -ENOMEM;
- 	}
- 
--	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
--
--	inner_domain->msi_parent_ops = &gic_v3_its_msi_parent_ops;
--	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT | IRQ_DOMAIN_FLAG_MSI_IMMUTABLE;
--
- 	return 0;
- }
- 
-@@ -5518,7 +5517,7 @@ static struct its_node __init *its_node_init(struct resource *res,
- 	its->base = its_base;
- 	its->phys_base = res->start;
- 	its->get_msi_base = its_irq_get_msi_base;
--	its->msi_domain_flags = IRQ_DOMAIN_FLAG_ISOLATED_MSI;
-+	its->msi_domain_flags = IRQ_DOMAIN_FLAG_ISOLATED_MSI | IRQ_DOMAIN_FLAG_MSI_IMMUTABLE;
- 
- 	its->numa_node = numa_node;
- 	its->fwnode_handle = handle;
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index e562b57923229..11fa5df9da8c7 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -208,14 +208,15 @@ static int mbi_allocate_domain(struct irq_domain *parent)
- {
- 	struct irq_domain *nexus_domain;
- 
--	nexus_domain = irq_domain_create_hierarchy(parent, 0, 0, parent->fwnode,
--						   &mbi_domain_ops, NULL);
-+	nexus_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-+			.fwnode		= parent->fwnode,
-+			.ops		= &mbi_domain_ops,
-+			.parent		= parent,
-+		}, &gic_v3_mbi_msi_parent_ops);
-+
- 	if (!nexus_domain)
- 		return -ENOMEM;
- 
--	irq_domain_update_bus_token(nexus_domain, DOMAIN_BUS_NEXUS);
--	nexus_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
--	nexus_domain->msi_parent_ops = &gic_v3_mbi_msi_parent_ops;
- 	return 0;
- }
- 
+ EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
 -- 
 2.39.2
 
