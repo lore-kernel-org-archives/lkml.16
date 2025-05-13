@@ -1,285 +1,111 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDDC1EB1A8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF811F5435
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123997; cv=none; b=jE3sbl64d6Xwf8YsYUp2cktzTJfPpDZl3c3Ty5vI5SwhgceWqmdjBc68s6yeQpaa2py7rVLV+bSULA+N5f45Zaip33fZ6jF+LPtX93Mugzv/Hj+gZDMUMMnS1BunEkSe+dwkUjLrIDJlVEVHsVUZM3d9AtWUGV2L/GbYU++072k=
+	t=1747124035; cv=none; b=XZ0/aFHwlcBkVO6izseESe8oqdyo6R22XgSnUh3Xu+983klbHsCZigzItRanh0//G830EL91xgij1j8xfZvxn7mDLIFkqVkV+9sFNVYGNR/n05fRzxbxHtWWjo8xHqXkkP01uwdLpE0+N0DobYsrOmLp789kQlFfXyiExDOYBic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123997; c=relaxed/simple;
-	bh=FVispU/bP5PzByg1gx3UIn0ELRl06f844D51hZGkB/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dTRrlnesyAKem95YYP+6YlBfhOOr4JVwJ0r+6NTcZtyzA2u6uXOfOCNdI7uOzLDO5/xlLAYTGrXYLXdo9zN4NfWkk2gpPQr8/9fr0OUB2aJZVO0NQqUI+A0yLF65AZEI81C/ny9IUhUuiuX58VDSJlA2HR9baXEcl57juAapY74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A/GDB9Oi; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747124035; c=relaxed/simple;
+	bh=OMO7uyKqiGXSdbBTRpMsGiPhXfiWRanx24fEA05hC4E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XzR9hbSOPIRDHBW81cAyOHcycoqqvpl7Wa9gknh4PGcm5FuU7Us1e1ChycNZLsT60Cd2lBF+8ZwNvnrzffC5ECkud4KQDcZ9DI/DQvRElaOmQK8zgOsMvpTUhPNyQeN58FGnBCmo5jvN2OnAMb+O7h0Q6lPv7joTGy/RpEK4gAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mpxSmPI1; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A/GDB9Oi"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so5573118e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:13:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mpxSmPI1"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43f106a3591so5027665e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747123993; x=1747728793; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1747124031; x=1747728831; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=39zu7seed4jgg43LW2MbbGC/aWRzIIESDfHi1Ed39Jo=;
-        b=A/GDB9Oi61gsOJtLjDDWDDAON6kN5aRD0mhj8P4cRjvkCwIaims9Tf/q3Ft4SrfVke
-         /IH6pZiGaJFSo2N3e4WOh+bZTj8G8O8hoxzedkOkOhyGNDFE7YxK4QRkbDgzvijw3Q9L
-         xgpKIFgPMAvlvjByb9VkytwTXvVAwvIrN0LsQVxge/dwge9PJ+4mFGdr2KjJ/IsRvPir
-         lZ0pUV5Qbpc9tNwhWkEUMya5wq/OHJPfwyP34gIK2YkPKG1IB8G0DHuf0UByeu0+9VgA
-         ibTsTPBn1JS0SzBgbwvmFmQpCSm/lHwqh39V1VmxjQiVPTiiGP9qoYXH66QAEXwVQvhE
-         cH5w==
+        bh=gfD8KA5bfxaU+Q1NTIOmhw+vBh6gQYcxk5fcGmeOrhI=;
+        b=mpxSmPI11h3EKfIiLQkaiAISjzIZ8szj+stMXWAYDNeF53nobikOaDUlLF3CkU1po4
+         FYBbuCIvt20FF94FRmuSXuwTRggl2TtkQN+scQNPeJocCwJ8gvLZEVY6rcF6OfBLGMkR
+         Hl+UCYzU/QAHhXjjSaard7f+AHGsQ0Hsb0sc1gmGcM10OXS2bZJdUnl+KsqFt2/oT+Vg
+         V5z1GcxCQSU54G0NR0Hp4J2N7GrxwvC2rbkGqMPAvDANRLFsB0SuWt0RIA54g5xf76Zd
+         wCXJ7YiZ7V8iKNiNpLwaKYDkwSAJhlkFM7/Uz4dZpfJspADBvSkqLsW7xC0CKXUXZ3hn
+         a3QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747123993; x=1747728793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747124031; x=1747728831;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=39zu7seed4jgg43LW2MbbGC/aWRzIIESDfHi1Ed39Jo=;
-        b=FYSFir+Lem9pQBlStPl05etzRcO88PTeeMIindRBNb+KPum54FKlwVbwq9sO076uB8
-         VslSUNRoY+n7LIvFSjbZsZiCaMLmM01tcsxdj7hVIz1awbw33Swkm3F8FxD3vexULOpf
-         Mb+N4tKIDIvYXE7JOT/rbX5xnSCFsAJgOQ9odQ2wrBja6W800Q2cY08HRfVDpZ0b8Trh
-         oJVHhuFI44s6wYs1zzel218svQlHetLL61W4HCMz4RYuJZteAhlqx9ekZFWbWP8MDMaU
-         bwl0QA9BnIk09MO8gkP5IU+AzomXug5HMjK2JcGTBk/g6rkibcwlnuBr8REhCtBcO/Hs
-         aNFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDgaGlxTeRxpkTFATLHSs/gyV5ZHj6SAPeN+HcFNBe+ZLRHvSU0cfGf9LAQTe9qbho0CdYRrrjme91Nxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1a0Z0uKz7TOuBoA6PcBmN/5bLwScrQLISWqN+TJJnWwdqNmng
-	rI8zzAwfyfbSNRJPevLvU+QPq9zwrqLA4PSI8/693jBdqiSRACpBv/TzgyyKK3SKvOTQvc8IBY+
-	+I1km3ecy2y2GBfgxgfzqpSAlhHZZS7iw4jEm
-X-Gm-Gg: ASbGncuHwCNYLzlU+CB3pI1BNgTXTwOVrZeEEkdVQyovCM7O7uX3VoSlMnm0dGZCNgb
-	Xw1+fkep+k8TrZJZiq9EAYHEVZ/VsVODUau94BSBeybygd9kHMKPPdcQ1rO9I8y6nfcIRHhswUb
-	fNzYghiSrEW2RrLSuyybK9zT5PbG0z4UyF58OBvAwHGfgdssJr64rm838ZRkgUofGCJA==
-X-Google-Smtp-Source: AGHT+IE7L97rmyF6Rls4Vi11gKD7y5J5hh8OUwc4dI3VutRIld7UCLaygWrzqLzlZnE/u8M+GZgvo6S1ZMI914UgAgY=
-X-Received: by 2002:a05:6512:3088:b0:549:8c86:9bf6 with SMTP id
- 2adb3069b0e04-54fc67e61a5mr5388577e87.39.1747123992999; Tue, 13 May 2025
- 01:13:12 -0700 (PDT)
+        bh=gfD8KA5bfxaU+Q1NTIOmhw+vBh6gQYcxk5fcGmeOrhI=;
+        b=XT2E+pqPnMyYSKKJ2uUISh7JVfCtWcaTdGPI5klyyzgkpEPCmbXXiRpsREogCJGzZd
+         k0X2ooJ/IvUyHtonexvHq784waXb0d596kJdp5sBnqKyf6xYJR0iG23tN65zJwtc1lC/
+         77+MeNuTT69Ca/Pgsf1WVlPmJDVyXcH//OJr/GObAuJYd7E5hpKqTeGnk4m2IXZh7sws
+         fWNs6GBKIfdnChe1LEC1rsxtXgBScqCyN88WTA0qR8lAF7kP+X4EepR46FcL3ximRes/
+         Z0JsVKwLgJYBFQ5g344YDk+VP2VzNdTLLjhasXgWQMwIXPXXN/nqwccD0PFM0ASzeohu
+         hwJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaq1sIr7MZjMzXhZbpWAQJvviQnhbtxF+5gMwjZBI9mu4biyh0VXAq5WQc10ty0hdmAZm8KwNr2XSmrzo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyyLB9IRdbKr4sczPbgpmYqiPhLES7ruPBYElD0UIHgPlEgLCj
+	bgCy3N/ru8TXgEsoZW5mDYnKquxaAe0HztZbos7AnEx2UVGjbZp24VTAHxLNHUI=
+X-Gm-Gg: ASbGncvRYgBrmydKbz8LHGotkZS3KvmRk8bCr5rRuOy3LgrchCvTwsz8nJTWP7oOWnx
+	TPpfTEonX8Cd29MnsN6Lij3LWnuykzSYEI5CVONTHQbbxuxcXdUMrlXQXKTrsd99COS6xHJVwFG
+	1yPyxh/A8vcl1MFCk49uVkmX10HDw2Z0xlRYwCF2PJZAKybkr5rZY8FbwcPRzzMVfkuh0Xj4jBP
+	HR0QaEsTMS+790Flx39xSdoqbcP4VflutVVUBxd2P9lI7J8iPgq06qYsaC0GJ+8kpACB82pNIhP
+	/cWGv5ynw2OfATBM3L2kZtIzuhPh4mu3hdjUYSJTHHsxfxwE/SnL9G7KqNDIrp/l7jjHUEc2Vcy
+	9Ruju44vPtLFV/0yF4g==
+X-Google-Smtp-Source: AGHT+IHI0BUvRWvY4Y2/8bHQXKFDvKBHupqbi0BQODrVBg+55fcuB5CxUmKYcrieaLRvHUYS/EkBCg==
+X-Received: by 2002:a05:600c:3490:b0:439:9b3f:2dd9 with SMTP id 5b1f17b1804b1-442d6ddd6a8mr47990065e9.7.1747124030617;
+        Tue, 13 May 2025 01:13:50 -0700 (PDT)
+Received: from [10.61.0.48] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687bdc0sm155170805e9.39.2025.05.13.01.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 01:13:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ tudor.ambarus@linaro.org, andre.draszik@linaro.org, willmcvicker@google.com, 
+ kernel-team@android.com
+In-Reply-To: <20250506-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v4-0-9f64a2657316@linaro.org>
+References: <20250506-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v4-0-9f64a2657316@linaro.org>
+Subject: Re: [PATCH v4 0/5] Fix gs101 CPU hotplug support
+Message-Id: <174712402896.10876.6908975403195941350.b4-ty@linaro.org>
+Date: Tue, 13 May 2025 10:13:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <68213ddf.050a0220.f2294.0045.GAE@google.com> <CAEf4BzbsmHonD-G45-Jo8RQHPjDYEz-Nwx0MGtsk427tgsqGkg@mail.gmail.com>
-In-Reply-To: <CAEf4BzbsmHonD-G45-Jo8RQHPjDYEz-Nwx0MGtsk427tgsqGkg@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 13 May 2025 10:13:01 +0200
-X-Gm-Features: AX0GCFvhf698Mjpq7Vly8ZviUnLjvyWjqHtMZKusaXObUFgruVQJYzVQZuDpuKg
-Message-ID: <CACT4Y+YpBHXXjU6rPBtB7_-5BvxqZUHW8i6YjOa6twoR=2u1aA@mail.gmail.com>
-Subject: Re: [syzbot] [bpf?] KASAN: vmalloc-out-of-bounds Write in
- vrealloc_noprof (2)
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: syzbot <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com>, 
-	Linux Memory Management List <linux-mm@kvack.org>, andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
-	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 13 May 2025 at 00:52, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
-rote:
->
-> On Sun, May 11, 2025 at 5:16=E2=80=AFPM syzbot
-> <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.ker=
-nel..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D16b1b2bc580=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D91c351a0f62=
-29e67
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D659fcc0678e5a=
-1193143
-> > compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89=
-dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets=
-/d900f083ada3/non_bootable_disk-707df337.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/bc3944720ea5/vmli=
-nux-707df337.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/7bc2f45ae23f=
-/bzImage-707df337.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com
-> >
-> > syz.0.0 uses obsolete (PF_INET,SOCK_PACKET)
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > BUG: KASAN: vmalloc-out-of-bounds in vrealloc_noprof+0x396/0x430 mm/vma=
-lloc.c:4093
-> > Write of size 4064 at addr ffffc9000efa1020 by task syz.0.0/5317
-> >
->
-> A while back I sent a fix for kasan handling of vrealloc ([0]), but
-> this issue came back even with my changes in [0]. Can anyone from mm
-> side take a look at vrealloc_noprof() and see if we are missing
-> anything else to convince KASAN that we are using vrealloc()
-> correctly?
->
-> Seems like kasan_poison_vmalloc() + kasan_unpoison_vmalloc() dance
-> isn't covering all cases? Or am I missing something? It's doubtful
-> that there is any BPF-side bug in using kvrealloc().
->
->   [0] https://lore.kernel.org/linux-mm/20241126005206.3457974-1-andrii@ke=
-rnel.org/
-
-Hi Andrii,
-
-The report flags the very memset that's visible in this patch chunk, right?
-https://lore.kernel.org/linux-mm/20241126005206.3457974-1-andrii@kernel.org=
-/
-Unless I am missing something obvious, the unpoison is added _after_
-the memset, so it can't help. The unpoison should be done _before_ the
-memset.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
 
-> > CPU: 0 UID: 0 PID: 5317 Comm: syz.0.0 Not tainted 6.15.0-rc5-syzkaller-=
-00038-g707df3375124 #0 PREEMPT(full)
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
-1.16.3-2~bpo12+1 04/01/2014
-> > Call Trace:
-> >  <TASK>
-> >  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
-> >  print_address_description mm/kasan/report.c:408 [inline]
-> >  print_report+0xb4/0x290 mm/kasan/report.c:521
-> >  kasan_report+0x118/0x150 mm/kasan/report.c:634
-> >  check_region_inline mm/kasan/generic.c:-1 [inline]
-> >  kasan_check_range+0x29a/0x2b0 mm/kasan/generic.c:189
-> >  __asan_memset+0x22/0x50 mm/kasan/shadow.c:84
-> >  vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
-> >  push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
-> >  do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
-> >  do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
-> >  do_check_main kernel/bpf/verifier.c:22867 [inline]
-> >  bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
-> >  bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
-> >  __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
-> >  __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
-> >  __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
-> >  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > RIP: 0033:0x7f649c58e969
-> > Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89=
- f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 =
-ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> > RSP: 002b:00007f649d4dd038 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-> > RAX: ffffffffffffffda RBX: 00007f649c7b5fa0 RCX: 00007f649c58e969
-> > RDX: 0000000000000048 RSI: 00002000000017c0 RDI: 0000000000000005
-> > RBP: 00007f649c610ab1 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > R13: 0000000000000000 R14: 00007f649c7b5fa0 R15: 00007fff542287e8
-> >  </TASK>
-> >
-> > The buggy address belongs to the virtual mapping at
-> >  [ffffc9000ef81000, ffffc9000efa3000) created by:
-> >  kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
-> >
-> > The buggy address belongs to the physical page:
-> > page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x3ffd0 pfn:=
-0x3efe5
-> > flags: 0x4fff00000000000(node=3D1|zone=3D1|lastcpupid=3D0x7ff)
-> > raw: 04fff00000000000 0000000000000000 dead000000000122 000000000000000=
-0
-> > raw: 000000000003ffd0 0000000000000000 00000001ffffffff 000000000000000=
-0
-> > page dumped because: kasan: bad access detected
-> > page_owner tracks the page as allocated
-> > page last allocated via order 0, migratetype Unmovable, gfp_mask 0x102c=
-c2(GFP_HIGHUSER|__GFP_NOWARN), pid 5317, tgid 5316 (syz.0.0), ts 8258753338=
-3, free_ts 81110216781
-> >  set_page_owner include/linux/page_owner.h:32 [inline]
-> >  post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1718
-> >  prep_new_page mm/page_alloc.c:1726 [inline]
-> >  get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
-> >  __alloc_pages_slowpath+0x2fe/0xcc0 mm/page_alloc.c:4509
-> >  __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4983
-> >  alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
-> >  alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
-> >  alloc_pages_noprof+0xa9/0x190 mm/mempolicy.c:2392
-> >  vm_area_alloc_pages mm/vmalloc.c:3591 [inline]
-> >  __vmalloc_area_node mm/vmalloc.c:3669 [inline]
-> >  __vmalloc_node_range_noprof+0x8fe/0x12c0 mm/vmalloc.c:3844
-> >  __kvmalloc_node_noprof+0x3a0/0x5e0 mm/slub.c:5034
-> >  kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
-> >  push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
-> >  do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
-> >  do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
-> >  do_check_main kernel/bpf/verifier.c:22867 [inline]
-> >  bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
-> >  bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
-> >  __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
-> >  __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
-> >  __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
-> >  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
-> > page last free pid 82 tgid 82 stack trace:
-> >  reset_page_owner include/linux/page_owner.h:25 [inline]
-> >  free_pages_prepare mm/page_alloc.c:1262 [inline]
-> >  free_unref_folios+0xb81/0x14a0 mm/page_alloc.c:2782
-> >  shrink_folio_list+0x3053/0x4e90 mm/vmscan.c:1552
-> >  evict_folios+0x417b/0x5110 mm/vmscan.c:4698
-> >  try_to_shrink_lruvec+0x705/0x990 mm/vmscan.c:4859
-> >  shrink_one+0x21b/0x7c0 mm/vmscan.c:4904
-> >  shrink_many mm/vmscan.c:4967 [inline]
-> >  lru_gen_shrink_node mm/vmscan.c:5045 [inline]
-> >  shrink_node+0x3139/0x3750 mm/vmscan.c:6016
-> >  kswapd_shrink_node mm/vmscan.c:6867 [inline]
-> >  balance_pgdat mm/vmscan.c:7050 [inline]
-> >  kswapd+0x1675/0x2970 mm/vmscan.c:7315
-> >  kthread+0x70e/0x8a0 kernel/kthread.c:464
-> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >
-> > Memory state around the buggy address:
-> >  ffffc9000efa0f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >  ffffc9000efa0f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > >ffffc9000efa1000: 00 00 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-> >                                ^
-> >  ffffc9000efa1080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-> >  ffffc9000efa1100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> >
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > If the report is already addressed, let syzbot know by replying with:
-> > #syz fix: exact-commit-title
-> >
-> > If you want to overwrite report's subsystems, reply with:
-> > #syz set subsystems: new-subsystem
-> > (See the list of subsystem names on the web dashboard)
-> >
-> > If the report is a duplicate of another one, reply with:
-> > #syz dup: exact-subject-of-another-report
-> >
-> > If you want to undo deduplication, reply with:
-> > #syz undup
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
--bugs/CAEf4BzbsmHonD-G45-Jo8RQHPjDYEz-Nwx0MGtsk427tgsqGkg%40mail.gmail.com.
+On Tue, 06 May 2025 21:57:26 +0100, Peter Griffin wrote:
+> As part of an effort to make suspend to RAM functional upstream on
+> Pixel 6 I noticed that CPU hotplug leads to a system hang.
+> 
+> After debugging and comparing with downstream drivers it became clear
+> that some extra register writes are required to make CPU hotplug
+> functional on these older devices which use a el3mon firmware.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/5] dt-bindings: soc: google: Add gs101-pmu-intr-gen binding documentation
+      https://git.kernel.org/krzk/linux/c/0475b0d8a1e0f80a47536dfb19c28dc4bb6adc05
+[2/5] dt-bindings: soc: samsung: exynos-pmu: gs101: add google,pmu-intr-gen phandle
+      https://git.kernel.org/krzk/linux/c/83b66cdb5d5b6aa4ed1f085b3b2f917af0c2890b
+[3/5] MAINTAINERS: Add google,gs101-pmu-intr-gen.yaml binding file
+      https://git.kernel.org/krzk/linux/c/20adeaca8bc6a084f2610e7c89a8601c9904a0e2
+[4/5] arm64: dts: exynos: gs101: add pmu-intr-gen syscon node
+      https://git.kernel.org/krzk/linux/c/aaf02428fdd50b818c77644bc0b8a0b282ce8ea4
+[5/5] soc: samsung: exynos-pmu: enable CPU hotplug support for gs101
+      https://git.kernel.org/krzk/linux/c/598995027b9181ada81789bf01fb8ef30d93c9dc
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
