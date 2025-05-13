@@ -1,109 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C01C28C863;
-	Tue, 13 May 2025 11:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485AE28C863
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747134590; cv=none; b=gK2bGnraBx4/ECbI9DOGcIJNEQd25vOG2O5eSHhlKrtbog3VC70O17HSrHYmhQb93159/BnK0VYlewKzwIYdXNX54sr+lbwhwwyAZUJn5wb9MCGmBus+TPPWhIFAXRuSEYH/+nVhGrwoXHZD1gsth9ptWsq30aPEVAYmQe9hzyo=
+	t=1747134622; cv=none; b=Ow8G2/k3r2jkPaXCHxmcM/JSYhxua3guUgshxH1AxdbV2ujOWcEVFoebtxEEtF3wK3/WUQ1+jztuQRvMuMO3i0u2/I9vw0Ie5ka0fB1sC53DVcc86VDMvDxDezLq9YCxHanatezkknzu/cDf818nxaQdnmVnxi9quLTg47te0zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747134590; c=relaxed/simple;
-	bh=PCcbjUrOFmJlpnhODLBlzDB5IxuULw8I8RG6eT+YV44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsflIVxD7EKltnmPv2i/bRC9v4qsB4kmlYAibt1Ac/re450s33HPzgVibQ8U//3CmtM6xRSLOVGDYRzSXZzrb96QNRc8eoaQrGYw1RZZeX0xXnt9voZyWQ1MUSSyHfLKafty/CEjxkTgU+k4SeEqkSCkzaRBvRv190nfh55VGyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=feK7OW7F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747134622; c=relaxed/simple;
+	bh=vJ+aZs4J3I4B+KmzowPhOdBXKYIgIVVzFxRxaKSvLzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZQvRQoINbgDWfUkERQu9ye2SSb/4tNVycOxXo+Mf+68QKoeakBHcnNkwC+XH5QHcCW+NVs0sekO1rUs02mbkLN+pUHC/Jg/iZMMV4nfkxXvfUiTjW4md5EXAVCC1z/J6s15S9F+cxiCl++QbSPkJIH42v1TI8H33Gz1i/rx5i/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be; spf=fail smtp.mailfrom=hammernet.be; dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b=feOfwgzT; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hammernet.be
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=hammernet.be
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="feK7OW7F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3148C4CEEB;
-	Tue, 13 May 2025 11:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747134589;
-	bh=PCcbjUrOFmJlpnhODLBlzDB5IxuULw8I8RG6eT+YV44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=feK7OW7FwHoi4OhtOu7F98KEGSctnjGS5nj6laZjAI4seK3EA+Vk+37j637GNRrNO
-	 ha7EBfFVqEiY17ZwWFFXce9yEwagN33CWkm5HMyYzGYAv38YSjAavo0+akYOGlrq5l
-	 VuCogM2TiYIbSy1mpWZXvGIRipPNTXYAJh5y5vZw0wqgh4hLrznnkN30JIJDXM0PCr
-	 4U6qOGiv2NkU5lGdOb+iWATP0QALNZLKipmqLWCjDiaPFtCtRb5RcLSgG/jUXc0TD4
-	 QMFcfTmxJus5+H4KWoHIXGnkjXAj6g0jie/+a2X/QjiMTAQj59MM0YsNXQ9vuPptbl
-	 3nU0UTzAF6NUg==
-Date: Tue, 13 May 2025 12:09:45 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: Remove node variables that are unused with
- CONFIG_OF=n
-Message-ID: <20250513110945.GK2936510@google.com>
-References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
- <20250513094726.GG2936510@google.com>
- <20250513104518.GA2811486@ax162>
+	dkim=pass (2048-bit key) header.d=hammernet-be.20230601.gappssmtp.com header.i=@hammernet-be.20230601.gappssmtp.com header.b="feOfwgzT"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-442ea341570so6994215e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hammernet-be.20230601.gappssmtp.com; s=20230601; t=1747134616; x=1747739416; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xW5d22AyfE5WGuuD+WsgObkxfatUVH6GU6OG+OuxcAI=;
+        b=feOfwgzTJUIcVXscQynE6z5Jm9pi+Lsjg1PsO/MN+5UlVz/XG5zdnQGjTYMqx8VKbz
+         KK4Z0nmyUDYADLCC8fnbz8Qpqhavmeexhx6Qw2if+JgxVMMbUCBd00CEKSbBs5SfXSt1
+         qD9T8I7wRw7DRXHYreEVlATugJzc/OHEnj+ssWuwWxtQn+LC2w32pGydxrZVXU2PWJjO
+         U3KSl0MMiB6Uvvre4V30L5xEXG48BkoefApdmz0tVKWLPiws8xOLZYnGh1K2JqN4lRj8
+         /bfCwQ8QsxpYG1sxStxAt6/fGS+YxOVirWNXGHyHK4MW9YdMTY9zT3ZpAipciaAkk+mC
+         OfPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747134616; x=1747739416;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xW5d22AyfE5WGuuD+WsgObkxfatUVH6GU6OG+OuxcAI=;
+        b=euUIjNlBDDFsuig879+uFcvNWUm0fr+k5sgZwBVzyNiVvF7A228k7EwQ+qon9Y+NuC
+         PuLjx9WhWRYHk37qLfTH5/DzB655nkfWc/yvCrmp2JZeSfro1TNqSKReVs5lLGhht+Wq
+         7oKWXoSgYn9TMUMrd7RM/pGABlXKeo/vxnjb4SM/b6qRZSRz0idVWLrQHdsyMefRZRHx
+         3E1Tj3lyU5DGUedbGjsjlXL1OVe/wEZyL3VAdrPU3UQpHAIIC21hhmwByCEojksbhTu0
+         4xCUAgFkRAhbGWJaDYFXKfMdyNSi4H3P+97VKLamQMWLxN8LAoZ5ERy6Pvfb7jjvMjuP
+         QUZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcYoCaZh4ouwxZoiuo9tF9uSR+c8QjEoPuZMDPH3VsbDFt8w0c28JJHEMvFSfJ0L7zSI9DWFVyuO36jWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg/2Zd7Voma+MbKum5lR+pT6tQY1TQb+IN4BEZw5h4wBZfBaR8
+	LLUPrY+wAvX5ie7HNPmRjTCSZWgn3qpU4cY4a9F7l4hgRFvV1SOkrpBg9fGBzNY=
+X-Gm-Gg: ASbGnctfBmsL7Oug4ykYtPIFhya/VoUegHzAxahgj2UYiWewCSUsRZfe7UJk15WgDwC
+	JkK6q1vyNGQvuVPUe1JDTgMOeYbv8gC8EVBnkC1l6K+T1lpWZDKu/RP4xfq2qm1p97He6d6K7Pl
+	prRTRysWTDDejSUpMWwRNApm5IoGUx57eNin89Wsipc7lco3BBrfJKQXFX3Qsnj6WWZ1XqRl6xw
+	vslrAkh79KWttu4U9WOZLySvkVZBL0EEDR42SCny2cno/U2MWoSxtykcUSMV2rw015J6SYaRLAM
+	PwNm96pdsLQZncVVGbJ2fAVPep8r03j9nYeisqo15Avge4eJ7QItX9PC1Wv5QPvsEz/t1RYjMAr
+	vG5f250ZiWl4=
+X-Google-Smtp-Source: AGHT+IFuIhHmYNLqyH+zu54PArNHeQDifEpT6IgxsW2fAt6qVuFPJEi1RiNOKS9sGvGl0NdPBZRNRQ==
+X-Received: by 2002:a05:6000:200d:b0:3a0:6f92:ef7c with SMTP id ffacd0b85a97d-3a1f64314c7mr13612076f8f.17.1747134616347;
+        Tue, 13 May 2025 04:10:16 -0700 (PDT)
+Received: from pop-os.telenet.be ([2a02:1807:2a00:3400:849e:fc74:c88b:cc])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2d3sm16077941f8f.63.2025.05.13.04.10.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 04:10:15 -0700 (PDT)
+From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
+To: corbet@lwn.net,
+	suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	james.clark@linaro.org,
+	skhan@linuxfoundation.org
+Cc: coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
+Subject: [PATCH] docs: fix "incase" typo in coresight/panic.rst
+Date: Tue, 13 May 2025 13:09:31 +0200
+Message-ID: <20250513110931.15072-1-hendrik.hamerlinck@hammernet.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250513104518.GA2811486@ax162>
 
-On Tue, 13 May 2025, Nathan Chancellor wrote:
+Corrects a spelling mistake in Documentation/trace/coresight/panic.rst
+where "incase" was used instead of "in case".
 
-> On Tue, May 13, 2025 at 10:47:26AM +0100, Lee Jones wrote:
-> > On Thu, 08 May 2025, Nathan Chancellor wrote:
-> > 
-> > > A recent cleanup introduced a few instances of -Wunused-variable in
-> > > configurations without CONFIG_OF because of_fwnode_handle() does not
-> > > reference its argument in that case:
-> > > 
-> > >   drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
-> > >   drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
-> > >     679 |         struct                  device_node *node = dev->of_node;
-> > >         |                                              ^~~~
-> > >   drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
-> > >   drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
-> > >     659 |         struct device_node *node = chip->dev->of_node;
-> > >         |                             ^~~~
-> > >   drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
-> > >   drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
-> > >     576 |         struct device_node *node = i2c->dev.of_node;
-> > >         |                             ^~~~
-> > > 
-> > > Use the value of these variables as the argument to of_fwnode_handle()
-> > > directly, clearing up the warnings.
-> > > 
-> > > Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
-> > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> > > ---
-> > >  drivers/mfd/88pm860x-core.c | 5 ++---
-> > >  drivers/mfd/max8925-core.c  | 5 ++---
-> > >  drivers/mfd/twl4030-irq.c   | 5 ++---
-> > >  3 files changed, 6 insertions(+), 9 deletions(-)
-> > 
-> > Doesn't apply.  Which base commit / repo / branch are you using?
-> 
-> -tip's irq/cleanups branch:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=irq/cleanups
-> 
-> This change has both a base commit and a Fixes tag and you were on Cc,
-> not To. Is there anything else I can do (aside from a note in the
-> scissor area) to signal that you don't need to handle this change?
+Signed-off-by: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
+---
+ Documentation/trace/coresight/panic.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Wait what!  This is not okay.
-
-e3d44f11da04 ("mfd: Switch to irq_domain_create_*()") should not have
-been applied without at least an MFD Ack.  Preferably it would have been
-applied to an MFD based immutable branch where it could have been shared
-from (if required).
-
-It was missed because the submitted patch had an "irqdomain" prefix.
-And now we're in a position where conflicts are likely to occur.
-
+diff --git a/Documentation/trace/coresight/panic.rst b/Documentation/trace/coresight/panic.rst
+index a58aa914c241..6e4bde953cae 100644
+--- a/Documentation/trace/coresight/panic.rst
++++ b/Documentation/trace/coresight/panic.rst
+@@ -67,8 +67,8 @@ Trace data captured at the time of panic, can be read from rebooted kernel
+ or from crashdump kernel using a special device file /dev/crash_tmc_xxx.
+ This device file is created only when there is a valid crashdata available.
+ 
+-General flow of trace capture and decode incase of kernel panic
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++General flow of trace capture and decode in case of kernel panic
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1. Enable source and sink on all the cores using the sysfs interface.
+    ETR sinks should have trace buffers allocated from reserved memory,
+    by selecting "resrv" buffer mode from sysfs.
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
