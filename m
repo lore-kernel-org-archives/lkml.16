@@ -1,207 +1,281 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2040.outbound.protection.outlook.com [40.107.220.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF0880B;
-	Tue, 13 May 2025 12:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747137787; cv=fail; b=JzmM2wwj5UWf+kicDYe6n+hbUJeoqxT/WlaGKvDShFjlKwtiOn1t3BnngZPjSDLXcOeCfiYPPvBeRO3HHeIMPb+1fkjGbc9v1gBlKkVOscD5qtMgbxwAx6K9PkhxFuT+tE5cLaHPaxWapOGtKllSIDOySBzBrh+Ip8vXQb1J6sw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747137787; c=relaxed/simple;
-	bh=Ag3Kwsk/HsmvGYPZbmyBjONtWK67GJAIEa5fljMGWlc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oMuOIb8AjwXMopSR6b8LAm3tnoIDw5TQidIiYiM21huFHF169YRhQ7x5+ufTolJSwlDpFFqG3XlErM5Anf529RKtByJFy5NSctZJi5eyLB48IQ2d51VGrQq4dIccrwFdXpxYwiCQaAY1tMUOm60mBFxaajoD2DD/S2inLxN1aOo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cji8Auo8; arc=fail smtp.client-ip=40.107.220.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2A22376FC
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747137906; cv=none; b=l8LX3l9xiDHZIo0SfTTWOZ7U4Q9r5EMFH2njKq8MKeFhlvBwFy2KrNNLAAzLlOA/ntntaNs4LZjORAOtZIxuQD4hdK6GZg6SPFnZ9mT6G15lvks1oLcNDNpB/P4lnl/Q38GcOu82+g2YDHn+ty+tNZ09aqYKW0fc3d7FY6kHKR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747137906; c=relaxed/simple;
+	bh=ayE5yaDJcFWQ1CRsu6iAnv1gk66PPFeRH6En8Ip6L3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C/vsCft357jOPPlmremZWLpVJpnxhWpMUrty3PPlkqSGCI5zL0pDw7WXDGGdRSoMJi39HWIPeYmhc9zVuBna8fgIYEWlg+6HXUPDsZyNDg2ErJE8dAJASi05lMY2Jt7FZTQLu6sSea5ysgyBji2aNcT+IDHBaqcyk1Wgg+NgjrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wtc9ASoN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cji8Auo8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EWcp7BkrAVEhHFK3m1L3dZ8QSOiwafGsGgFOtIw4wlMD8VmfOsvqYn0sXNyNfSxuWsLwnQau7vBC1Av7y30yoao3D6vLhA7moXwGstnXvwxxTt/d2TY1otbvNhmN9nBSCjJe3UuXu1xp+YlBir54/COlY5mSRmV9N/5XQXC2EML/dzn55/1B53bhJRXx/Nh8MZBxOlRygFgxhwC9IlA15oIbFECRLhTq/vRf8aR1SdCXaP6LKRkDIpjEGgjuXerI1rSBlDAjpt3TaO6kkQCmpv9pdb3bahnlSJu6T1LlgPPs9N//ibWT2Wh3nMlGWfD92Pu2yrewAz24/a/aGhBxLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EbkJZAB0byLtOMa7Xms7zTwzw5PlcbFiD5hplMU09CE=;
- b=RRmLbC8TRbanqmyGEeCjwE/pzVBxkXFIQnrtt8aZmrPJJ3RfjOtFTMkVuY0MD0y0ma02BSs2mjr6UTVlatBgpeTJlAkykSABpz61YjxjhXAfLdtwi4OucZGGXF9yXka/m8glUM9cO9MJztoYJbqLxlE/lZ6PuPi91qeNQ3AROsa9EHrPBJOKP1w4IXPwob1Xfnr2s1TBTbLThaYZ1gtCZskD4hGR2KgJVZqGM6v7a5DIvxxZCbXM6yXN679pxDJ2Z8JGmEFKwb3RGJSg/rmnMRoL/BsvcvIHKpdhTQfNeRDMUaO7tbCJLY+NIIL7iSQ8+78kHgWPDEmF74wTw5CKzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EbkJZAB0byLtOMa7Xms7zTwzw5PlcbFiD5hplMU09CE=;
- b=cji8Auo8xKuLy5gxez3JICB0why/GMxw6pmD4qj3czMVn/J1Zytxi2ZfbBTBdG7R8slxE6G5CUXrNh+BWevu+bkOjL7eH5009dpAN72KZjZlpyG4QCgzSZcvStLBx5gH7a75e0/zsWQk+XQC8Birrv5P3MQT6NU6FM0g72JoGFw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by SN7PR12MB7882.namprd12.prod.outlook.com (2603:10b6:806:348::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
- 2025 12:03:03 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf%3]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 12:03:03 +0000
-Message-ID: <c0af2efa-aea4-43aa-b1da-46ac4c50314b@amd.com>
-Date: Tue, 13 May 2025 17:32:55 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] x86/sev: Fix making shared pages private during kdump
-To: Borislav Petkov <bp@alien8.de>, Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
- michael.roth@amd.com, nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev
-References: <20250506183529.289549-1-Ashish.Kalra@amd.com>
- <20250507094211.GAaBsq8zEJMAuffwmh@fat_crate.local>
-Content-Language: en-US
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <20250507094211.GAaBsq8zEJMAuffwmh@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0124.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::12) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wtc9ASoN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747137903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RcBbTWk1MmR2T0AlKxvTo8Y8PbTzTSaPXQ4qigT09M8=;
+	b=Wtc9ASoNqK9Eq+QwOC0CbTl+X7Ar3Nf1vx1tGxm1yr5BIuRgvl4y+hQiL32Uj7ptoUIt1X
+	XvMbv2Ep5wl0qbjALGGxSi300ke92QWZ8JHHEdIBOBN7ORjoUL6HZpfFH3y01YnG0btA6X
+	pjc6ixvAGlaMFPYVpE2zCVysDetAdz8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-LRM6E1XaM2qol4n0nb9QaQ-1; Tue, 13 May 2025 08:05:01 -0400
+X-MC-Unique: LRM6E1XaM2qol4n0nb9QaQ-1
+X-Mimecast-MFC-AGG-ID: LRM6E1XaM2qol4n0nb9QaQ_1747137901
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso40026665e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:05:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747137901; x=1747742701;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RcBbTWk1MmR2T0AlKxvTo8Y8PbTzTSaPXQ4qigT09M8=;
+        b=mG5O4/BSdwRfLEI19mvsJazG3k/FjbX/+cMVWf8IuMe9+crhMcK6Im4baCeghb8B9B
+         G5mPyjuMqHRLX28AI3Xw+8dOidgcdz7fc7hBZCZS1PrqxeK83CSFBXLQeGQHNKIL2TOB
+         25QccsuszffhnJ5JZ6UkDppRF1XhRxmVnWpnI7m7x8FFDbcNqha268aXi3HX73iHEXSu
+         9ZF7WizIAaTg7I/q4VPtZczgTmEW3JQTJ70eYmyOq5RKOxUUX/iQp6dzw8UIq6FVzhyA
+         KQ9y0Svk3OcBNhu+s6P8g7Ib3VFfX8vOZHsHRdeSi0jmYNsawsUQ8IaLvxyvWi2fYNRy
+         XiEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD/z0i9JwvC7/xPm0S9RJSMpHDSEx/2DNdG15PzlnWnmSJTAIMqwJUPCcdf1oQFCIh4e5umYQeICWK8gQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydsIJgOOlNgRXcUQSZCNTPiUbOjlYs1eFwuANteIRNDZHpDysg
+	r3Hkkr51ttjGzqzBAiIgytiQOSreFxE4H0f2Av67CDusZUQGqDxPRC57xpZhb3e833bRXI5ZCmE
+	sf4jXycPSdsWL2I1MaKUzFZm5GrPiFKB+0LN7PeWjGcqTmRN4HxIOjnkq2VkZ5Q==
+X-Gm-Gg: ASbGnctIJOdjYEdX67MsyBZK2CvXOjmMu2ZD0T8RR2OGfURJJx1IlyPoVSZ0CglpsFb
+	LDc/d7PHVLKFiyY5bRkvMtdHMrFccMG2jVFQigvcyvGlRU4mIVx/9u7KrKPmkdQUNyqRJqP7lIW
+	dcKq/CMcGTUxFT8eg5HQdrHl+LF22LDGpu39zU6lkGLjud3ibhtzGUd4q791lcQoUMV0kK53qYi
+	69mIwaDHqlMkzsy8Gx0zrp2sdxNhZ/3b+FbaXFl3X1omxFgdHC9ubo7KwiwWdBrPTW4ldwpdWAo
+	x4I9b/sH0aaSVa96AuxDM8dmILfXVbTCAPEZfsDD+K0CDZsRmmEI92TqWphmmz+O/c951tsdAEw
+	75UgET6A7ApECZnOZOfmAV4HwixaJSAvJLyEok0Q=
+X-Received: by 2002:a05:600c:1d1c:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-442eaadc756mr27756715e9.8.1747137900557;
+        Tue, 13 May 2025 05:05:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuirvefTSz3ZYGRTt8umYT7eIPBBaBLXqUzBE+NVqEiT//WFW0c+DSxeGJEPKg3eOIEgWJUQ==
+X-Received: by 2002:a05:600c:1d1c:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-442eaadc756mr27756015e9.8.1747137899943;
+        Tue, 13 May 2025 05:04:59 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34? (p200300d82f4d1a004fdf53e21a36ba34.dip0.t-ipconnect.de. [2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67efd26sm165164545e9.23.2025.05.13.05.04.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 05:04:59 -0700 (PDT)
+Message-ID: <97702ff0-fc50-4779-bfa8-83dc42352db1@redhat.com>
+Date: Tue, 13 May 2025 14:04:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|SN7PR12MB7882:EE_
-X-MS-Office365-Filtering-Correlation-Id: e705930e-6f7a-453a-594e-08dd92161cd9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aDROcmYyNldRTm5jTHMxcHV2SGF2S0FOdmtsemIvNElsM2U2ckFrdnRHOUJm?=
- =?utf-8?B?MXQ1WFJaMHJMWUJYZVlZZ2hTWUluWXYzcGZDT21KTlRveTNNNkdBdm1XaHFR?=
- =?utf-8?B?cEVLYnhOVjE1Z3loOXUrRHF5ZHpkcDdzL1NFZzk4bTBuclJidGdyNnpHQ1lh?=
- =?utf-8?B?RlA4NGtvMTg4VUk2cllEYjF3ZkIwZWR1U2tTU2U2ZExpZTNxRmVpdmxGRnNG?=
- =?utf-8?B?MCtoSFRMWFlCN0o5SFFRak5QU2V4YitWVit4WUNZcnFUUVBmY3ZTN1U0Rklz?=
- =?utf-8?B?SGZKMUdNZ28ybDgvTGFVQzBhVWpwTDJrTHJHTW9yK2VRU21WVUlIekJYc3Jh?=
- =?utf-8?B?dlgwbGdoTE5UZ2hoWmxuU0Z1SS9hampJNUhJSUQzNHJuUUE2SGRlK2JyNUha?=
- =?utf-8?B?eFRFQlFmNnNnSzZzWWlPVCtPdHU2Y3U2dkN6ZkpMN2dDWVVKNEV2ajlHdDly?=
- =?utf-8?B?aHBqWnIrQTdZZUJLeDk1RzJ2dEU4WksyenNzZkp2UWM0dVBEUWZaTC9XMWVH?=
- =?utf-8?B?M1ZPcFpEYWNZSmlGV3AzT0Y4Y1QxaFhBZ0VFcDhnNXRnY2lxbW5XWnF4TEN3?=
- =?utf-8?B?d1pIdldIL3ZmVHNWK1NxaVhyTkxwRElpNi96RE9pYmlkVHVzWWsycUVjancz?=
- =?utf-8?B?dzZ2TEpmS2VZNTR6Q2xDMnd3TWp3WDBRZXhQR3FtWFJPZFVQRHpYTVZwN0FO?=
- =?utf-8?B?M2ZxQkRMS1lGaE05ekpHWnk3aURxVjJObE1sYS9YZ25PYTNOb0s1SWYzd09u?=
- =?utf-8?B?TU94aUNBTXhFUnJ5MGZrTFNyMlNTbDJWclVDNlBzSUJpcjZvcEI5bzVNeXlM?=
- =?utf-8?B?SzRpeDRtaTBlRm50OE85S0ViWlNaYmZ0S1cwWnoxdnA5cGtydnpONlhFVHlT?=
- =?utf-8?B?aWRiQ1hOMkpDUGQ2UkIvQUdGQWNwSlZmZmh3TnhTMkpyMWhRV3RmOVRpN01V?=
- =?utf-8?B?ZzBJcy9MelY0ZGcyUis4cVU5RjBkb3lUTTdBSmMvbEoxWTg2R2FFVW8rUnFC?=
- =?utf-8?B?TTVGNjR4clZpemxRdkR4OTlwRCt5dFVkL0c2YnFwSjc5SXM2U0pMUEREbWNt?=
- =?utf-8?B?cGZEdHQ4ZHdIS05idEt2SVBmK0RuMzdneWlJQ1hYbUFWQS9WVTZKZEkvVjJM?=
- =?utf-8?B?NDd2WC82UWxQelJsVGx1ZGg0by9KUFN4cE5US0dqTDJQd1FUVjc5ZXp4alZY?=
- =?utf-8?B?K0NTdi9LK0JPUHVlMXZSMlZkSC90eHB6dWc4K2s4UkZXV083NU1LSU1qN3lv?=
- =?utf-8?B?SU8xaGJEWnJEV1ErLzlvMHA1dFZPYzJXWGhIY2dkcDBsSnVUSlRBWklrSVJt?=
- =?utf-8?B?SkVFUkNMeWlmb0V2UlZUVzlITjAxQVhJSStzYmo2Sy9zc2puQUczNEZvYzBI?=
- =?utf-8?B?VmRhUGJaMkoyWHplT0NGQ1NzdU01OXhZc0JwYkhoVHhqZkwyblpmSy8vOWRM?=
- =?utf-8?B?S04rSUdLSjlyUnhPY0NZcVFUZHEzbml0Q2RRNjVOZTltekY5QnJ0ZFR2TkJW?=
- =?utf-8?B?alV0amIxRVF5elRKajRvbGZrN2Fpb3BGMVJURmo2aUhJUzU0Z2VnZjNxajgz?=
- =?utf-8?B?WGtlbC9LTEFDajd1YTBsblhrZ3VaUHdaMFRRRWxHU1drM2dnZmtVMkNJbnhS?=
- =?utf-8?B?dmdiY3VpL1NUcEtoNDl6RDJaU1hwclhDOWdrV05JRElXZTQyV0hISjF5ZFpj?=
- =?utf-8?B?SnRYR0RnMG0yeTRFL21uMUF4cXBnbC9EbDJEQlVROXk4L2gyd0c2TUJxQTlD?=
- =?utf-8?B?anJlc0lYZlBnTnBOS0dWbFpvUFlqSEs1RFUvOTc1K1JYelV3aDAwRERNMTRm?=
- =?utf-8?B?WVplYmdGczlRc0djL2RLcGJOSTE1aS91a3hITkRVTU5KSFN2dklTYXY2UUZy?=
- =?utf-8?B?M0Q5QmRCNS9FdWllUlZhMHh3bEJYUFBoenI0TVlwcmFxUTE4U3BiYS9KTkNF?=
- =?utf-8?Q?ROMmNK0IzLg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aDkyY2NKZk9pa0lWOEsvZW82dEdVM3VVWEh2ek5hVjVBMUFqaG5rczRIVVlP?=
- =?utf-8?B?Rmo3aEFiU0RrdC9xTGFYSW5DY3AzUGRNWGVTa3Z6MlZldHU3WWQ0NW5CREQ3?=
- =?utf-8?B?Mm5heStIZUN0LzdQb3hIdEhqWWZlUnEvV1d3MmMzT3pLQmc1SmJPUlRzeUls?=
- =?utf-8?B?T3RzR3c4Qk1sU3hVQm1Rbkd5M1hHWmM3SXRvNWQ5T3VwNWs0cHJwODVYdDNY?=
- =?utf-8?B?ODNGZ0JPU24zcTJxRTJqM0N5R1lzdXVKSzZPZUxkWHhjMlRIaTBWeGhGN3pX?=
- =?utf-8?B?NERwdWVycnFZMDZqU1RDQUVsNmo1YkJBTExDWi9kbGdaWEZOaW1nU29DOGRa?=
- =?utf-8?B?b0N1N3JiWVNyMytNSmZVWHBFRlhLVUUxamhUb29SRXNqbCtrWFRnNlJSNFVa?=
- =?utf-8?B?VHZWdmh4cWFjVitBYjlCM3VKYVBnZDZrVWVyU25rWGlLNndRRFFsVkFDZHRi?=
- =?utf-8?B?OWd6T2FpNS9PTVdDSjNOV3BxNHg4aTJjT3FVb2FBS1l3ZE1nT0hhZjYyUnh3?=
- =?utf-8?B?RVBLZEw4Q1c1NUlEb1JsNTFsNFlyY1ZHLzExcXduUUx5YklpUkdnRDBxOFZV?=
- =?utf-8?B?QlRzbkVickRjOWxyR3Q0WWRWTDB2NnM0aUpkaityM1BkejBRS0ZYb0YrNklp?=
- =?utf-8?B?d29VMHJHMHQvWDlGZUlNalI2YXg0SXRhUDlHOVk5Yi9Od0t6Yk5qOW5wY2hB?=
- =?utf-8?B?RGxDWU9CdVhFT1hHZUVwRmFpNlR4bWdiVUNMVVVnS0ZwcVZia0krMUUzZGM5?=
- =?utf-8?B?MkMxVkVhdTNNK0ZadzFlNll6ajhMMTFhcmNOTFh0YVJVdHJqRkYvUzVMdmZR?=
- =?utf-8?B?M0oyc0xvNWtVWGFUTTRUQ2Fla05LcUNiRytJb3AzTGZya1prNnlZR1BjVmFz?=
- =?utf-8?B?dWowMXVwRnZ0Vk9sclZqWndTMG52NXV5Q1laWHBveTNmMXdWOTFGcFRnUTNF?=
- =?utf-8?B?MlVmYzE5cDJQR2wrTFNTby9ZanNvcVpLM0U5c1U1eGxpdm5teDhNZGdnbnkx?=
- =?utf-8?B?bzhXVlgxRDZSeWN4aU5Pdkd1S3JTVnFKS29EM1NPMjg4WTZkT0oxMVhWdndl?=
- =?utf-8?B?YzlWVkY4MHN4SDNqRHZsR3VrTGdrcm12eUlRVXBkZUJPSnRLc2dmUElHTnlE?=
- =?utf-8?B?Y3VCdVVTSjVFcXorVWkxdzlWTnczZ2o5UVpzNXc3by9mUkxvVlQxV2xqcVlJ?=
- =?utf-8?B?QU9tZ1Q0SW5DOGNyRVRkaEhRaWwyNE51NE5lWlpZSkFKUlNKRzYyVm9RaE1m?=
- =?utf-8?B?YXJPVWZaYkRJdW93aFdWQTN5OFFzSUJRTXVOdlRjSHdPdklSQXVJd3pMcmo1?=
- =?utf-8?B?eEZqZ2JuRi9UUmhaOEMxNm42NU1HVDB2T0E0SVZRSjRISkR5UmY4ZTZISWtK?=
- =?utf-8?B?NXo3Yk55OHN1ZHdzVVFSZXF4Mk9vWHUvVy9Ga0lIZEg1clRtT1J0QWtSZ3Fv?=
- =?utf-8?B?VmRreUxvVGFNckhoT0dzcnhmZjJudFBEL3h0aUt4NjlaMzhYZnk4NEtSWk1s?=
- =?utf-8?B?U0owRk9NRStONk0zYU40RGdjdW0rY2NVMU1mVXBlTzF5SGhSNzBLanZ1Y3RJ?=
- =?utf-8?B?L3c3Y2wrMVJZb3p5UlJ5a3pkVzRiVmxPM3BzMENEYTFTTnNLZWJtaThyWWRi?=
- =?utf-8?B?TTlKVGxlR2kxTHlGcTZvcXFuK2ZINmJSWUY2RkN4TDNBdEdPM3N3QVVqYzgw?=
- =?utf-8?B?OTh0cGdwL2Z2VVNqK1lPMnlQNkxDT3BSeXg0a05INFo4b3oxU3FZM3hMREd1?=
- =?utf-8?B?WFgyekFERXNlYnhRUFoyZDA5Q1BBeE45bTdjTHhtT0x5cGJ0WkEvVHlUMjJx?=
- =?utf-8?B?R3QvOVE3d05RNUNONDFkRUplVDBqU0RSN0g2YnlmdUVac2VLWVhKeGlxUTB5?=
- =?utf-8?B?dkJqWWRva2lYMjBuR0hJK1lMRm5PUCs1a3NoSVJWS2hucHQ1TytiYy8vRkoz?=
- =?utf-8?B?SjNpaTZvMVF0OXNpTWhlYXdERGxoUkx6MmorL1UzOVdiOFR6REZ3K0x2ZEI2?=
- =?utf-8?B?OXVPYUlZYzluTHNDbllMbDBDZGcwRmk2dk4wcXppU2ZsSHR2MUVJNlg1NDFY?=
- =?utf-8?B?WUhGSWN6blZqRmtxQ3NzTVgrUU9hUzEvVWNJNjc4WjlhaXJ0cmM3Snk0cU0v?=
- =?utf-8?Q?Yi61FR7Jxi3pQWHlOOvZWQCg+?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e705930e-6f7a-453a-594e-08dd92161cd9
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 12:03:03.2191
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OPgHQx9jJgjxfIi+jdj3tnHqcIWEPBS0tMkFDU0kUYT3JpCO/Epl/HKONOwZw6C+U41mfx76mNfNCDw6xMeRBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7882
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+To: Usama Arif <usamaarif642@gmail.com>, Zi Yan <ziy@nvidia.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Yafang Shao <laoar.shao@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ shakeel.butt@linux.dev, riel@surriel.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+ <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+ <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
+ <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
+ <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com>
+ <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
+ <20250509051328.GF323143@cmpxchg.org>
+ <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
+ <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com>
+ <CALOAHbAvQDee2=5vsDqj77g5gAGdGpXFBbsC7tpKnCYEDZS3vw@mail.gmail.com>
+ <20250509164654.GA608090@cmpxchg.org>
+ <f691d2e0-5919-4581-8a24-1b543d798ae4@redhat.com>
+ <8A18FB29-CC41-456F-A80E-807984691F0F@nvidia.com>
+ <913bdc9b-a3c2-401c-99d0-18799850db9e@redhat.com>
+ <13b68fa0-8755-43d8-8504-d181c2d46134@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <13b68fa0-8755-43d8-8504-d181c2d46134@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/7/2025 3:12 PM, Borislav Petkov wrote:
-> On Tue, May 06, 2025 at 06:35:29PM +0000, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
+>>> This means process level control overrides VMA level control, which
+>>> overrides global control, right?
+>>>
+>>> Intuitively, it should be that VMA level control overrides process level
+>>> control, which overrides global control, namely finer granularly control
+>>> precedes coarse one. But some apps might not use VMA level control
+>>> (e.g., madvise) carefully, we want to override that. Maybe ignoring VMA
+>>> level control is what we want?
 >>
->> When the shared pages are being made private during kdump preparation
->> there are additional checks to handle shared GHCB pages.
+>> Let's take a step back:
 >>
->> These additional checks include handling the case of GHCB page being
->> contained within a huge page.
+>> Current behavior is
 >>
->> The check for handling the case of GHCB contained within a huge
->> page incorrectly skips a page just below the GHCB page from being
->> transitioned back to private during kdump preparation.
->>
->> This skipped page causes a 0x404 #VC exception when it is accessed
->> later while dumping guest memory during vmcore generation via kdump.
->>
->> Correct the range to be checked for GHCB contained in a huge page.
->> Also ensure that the skipped huge page containing the GHCB page is
->> transitioned back to private by applying the correct address mask
->> later when changing GHCBs to private at end of kdump preparation.
->>
->> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->> ---
->>   arch/x86/coco/sev/core.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
+>> 1) If anybody (global / process / VM) says "never" (never/PR_SET_THP_DISABLE/VM_NOHUGEPAGE), the behavior is "never".
 > 
-> Ok, I've pushed both patches here:
+> Just to add here to the current behavior for completeness, if we have the global system setting set to never,
+> but the global hugepage level setting set to madvise, we do still get a THP, i.e. if I have:
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-urgent-sev
+> [root@vm4 vmuser]# cat /sys/kernel/mm/transparent_hugepage/enabled
+> always madvise [never]
+> [root@vm4 vmuser]# cat /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+> always inherit [madvise] never
 > 
-> Please have those who are affected by the issues test and report back.
+> And then MADV_HUGEPAGE some region, it still gives me a THP.
+
+Yes. These "global" / "system" toggles are to be considered "one 
+setting". If you set a per-size toggle to something that is not 
+"inherit", then you're telling the system that you want more fine-grain 
+control.
+
+In retrospective, we could maybe have made 
+"/sys/kernel/mm/transparent_hugepage/enabled" a symlink to 
+/sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled, but we 
+didn't think of that option back then and decided for the "inherit" 
+solution.
+
 > 
-> Thx.
+>>
+>> 2) In "madvise" mode, only "VM_HUGEPAGE" gets THP unless PR_SET_THP_DISABLE is set. So per-process overrides per-VMA.
+>>
+>> 3) In "always" mode, everything gets THP unless per-VMA (VM_NOHUGEPAGE) or per-process (PR_SET_THP_DISABLE) disables it.
+>>
+>>
+>> Interestingly, PR_SET_THP_DISABLE used to mimic exactly what I proposed for the other direction (change default of VM_HUGEPAGE), except that it wouldn't modify already existing mappings. Worth looking at 1860033237d4. Not sure if that commit was the right call, but it's the semantics we have today.
+>>
+>> That commit notes:
+>>
+>> "It should be noted, that the new implementation makes PR_SET_THP_DISABLE master override to any per-VMA setting, which was not the case previously."
+>>
+>>
+>> Whatever we do, we have to be careful to not create more mess or inconsistency.
+>>
+>> Especially, if anybody sets VM_NOHUGEPAGE or PR_SET_THP_DISABLE, we must not use THPs, ever.
+>>
+> 
+> 
+> I thought I will also summarize what the real world usecases are that we want to solve:
+> 
+> 1) global system policy=madvise, process wants "always" policy for itself: We can have different types of workloads stacked on the same host, some of them benefit from always having THPs,
+> others will incur a regression (either its a performance regression or they are completely memory bound and even a very slight increase in memory will cause them to OOM).
+> So we want to selectively have "always" set for just those workloads (processes). (This is how workloads are deployed in our (Metas) fleet at this moment.)
+
+Agreed.
+
+Similar to the process setting VM_HUGEPAGE on all VMAs where we do want 
+VMAs.
+
+> 
+> 2) global system policy=always, process wants "madvise" policy for itself: Same reasoning as 1, just that the host has a different default policy and we don't want the workloads (processes) that regress with always getting THPs to do so.
+> (We hope this is us (meta) in the future, if a majority of workloads show that they benefit from always, we flip the default host setting to "always" and workloads that regress can opt-out and be "madvise".
+> New services developed will then be tested with always by default. Always is also the default defconfig option upstream, so I would imagine this is faced by others as well.)
 > 
 
-I tested the failure scenario with the patch hosted in the referenced 
-Git tree [1]. The patch resolves the issue.
+Understood.
 
-Tested-by: Srikanth Aithal <sraithal@amd.com>
+Similar to the process setting VM_NOHUGEPAGE on all VMAs where we don't 
+want THPs.
 
-[1]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-urgent-sev
+> 3) global system policy=never, process wants "madvise" policy for itself: This is what Yafang mentioned in [1]. sysadmins dont want to switch the global policy to madvise, but are willing to accept certain processes to madvise.
+> But David mentioned in [2] that never means no thps, no exceptions and the only way to solve some issues in the past has been to disable THPs completely.
+
+Yes.
+
+Similar to setting on all processes where we don't want any THPs 
+PR_SET_THP_DISABLE.
+
+> 
+> Please feel free to add to the above list. I thought it would be good to list them out so that the solution can be derived with them in mind.
+> 
+> In terms of doing this with prctl, I was able to make prototypes for the 2 approaches that have been discussed:
+> 
+> a) have prctl change how existing and new VMAs have VM_HUGEPAGE set for the process including after fork+exec, as proposed by David. This prototype is available at [3]. This will solve problem 1 discussed above, but I don't think this
+> approach can be used to solve problems 2 and 3? There isnt a way where we can have a process change VMA setting so that after prctl, all future allocations are on madvise basis and not global policy (even if always). IOW we will need
+> some change in thp_vma_allowable_orders to have it done on process level basis.
+
+Let's assume we change PR_SET_THP_DISABLE to per-VMA handling as well, 
+we could have for the use cases
+
+1) system policy=madvise. Set (new) PR_SET_THP_ENABLE on the process.
+
+Afterwards, MADV_NOHUGEPAGE could be used to fine-tune the VMAs. (e.g., 
+explicitly temporarily disable on some areas, for example, required with 
+some uffd scenarios)
+
+2) system policy=always. Set PR_SET_THP_DISABLE, then only enable it for 
+the VMAs using MADV_HUGEPAGE.
+
+3) system policy=madvise/always. Set PR_SET_THP_DISABLE on all processes 
+where we don't want THPs.
+
+
+In case of 3) nothing would stop the process from re-enabling THPs 
+either using the prctl or madvise(). If that's a problem, 
+PR_SET_THP_DISABLE_LOCKED or sth. like that could be used.
+
+
+But again, just a thought on how to work with what we already have, 
+trying not to create an absolute mess.
+
+> 
+> b) have prctl override global policy *only* for hugepages that "inherit" global and only if global is "madvise" or "always". This prototype is available at [4]. The way I did this will achieve usecase 1 and 2, but not 3 (It can very easily be modified to get 3, but didn't do it as there maybe still is a discussion on what should be allowed when global=never?). I do prefer this method as I think it might be simpler overall and achieves both usecases.
+
+
+I'm afraid that will create a mess. :/
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
