@@ -1,108 +1,70 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298073FBA7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4303C3FBA7;
+	Tue, 13 May 2025 23:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747179320; cv=none; b=bkS6rQzyFruGXYDYo1n2f6NHDFoMBR81ePhREgSRwVUmaHpQeIBloI5ZUZJbn+yIt2qUscepur2Bseof8q+NhM5nDMvXtkxbg4HEkpmAuEpjZt01lQ5FV/NeTIi8lLIez5kRli/k+VWqdQx1EpSo18Y+b0ZQAWS03Ieub2u5658=
+	t=1747179468; cv=none; b=f3P/hTeBZwxcAm9bMvHhgwr7pAfPJvCRAULw2C5tM7Ms2TV5WhXa92E7OyZgKkbfuUVtLir+jWHg87S/v9HsdPBpH0Nkgft6X1v6U84tVfI/ymz8D2fj/B3Am1ThTQwBv0mNfRyXRX18ExyagrXuxFQngMmtvP03XgMlxhgf5VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747179320; c=relaxed/simple;
-	bh=+4vW6CNsHxe61iwdan0mTr6dPCihj4VpRe5EH1LXf1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HanxmWNClMGEfGWSsDmlePU4Ps+wTyXCFZByN0FqKeXM29Z/Fd8Hm6kWbW2O7DgAPN1490ZBIQf46qSHKeB2Jk0msmFqo2yAE4ALT/4kLmofMgF80995WINifHZhMfZ5J/3YEdkIcaQhgX3Jbkv7lM9VD7BpokRYB45rff9WSMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZKrNvc82; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747179468; c=relaxed/simple;
+	bh=d7e15YBeDTYxkNwm52QjN3kE/RCjGpq8kBOBS3qCUZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tRIWS+7428HdmLEEPTOs2zAl8gpjHlWWpeGtBfbT4nJsig8md6r6hkZQNyM/Q1p0szvexnEwQQNKebZmH78zfjC6glaDBMvBPYUyRCaozERWkwXfQBLnpiyjRdrN0B6xsUVARnQ5THZYsQzCeZtmCvwg23fnU3OzaGN4Gk0GgR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8NEbqXy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZKrNvc82"
-Date: Tue, 13 May 2025 19:34:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747179303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BP5364cOafYuTahp1Ohm9NsSXHYREJKJOMbyAPXgGBs=;
-	b=ZKrNvc82pIE6EsJUoM2rpmUVMOmrWGEfrw+CjXcnlTGWoeTBi5Rv5TTN3jrqSyGvZLg2tT
-	GuLjRCMhyngW2hYKGO4K6Dl6VQC3xCsnqI9ZyJPHt9UWiHG+hPZ82qn5R9Jcf22lBVBY6Q
-	6AxGMaVMk/q5bqcKoVfnh3ZXB/XjcO8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jason Baron <jbaron@akamai.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2] params: Add support for static keys
-Message-ID: <tjqz5spozvd35egxtfn2n3csvqu2qsaobbkfzf52ovhsokq47y@eq5xl2ugyydq>
-References: <20250513130734.370280-1-kent.overstreet@linux.dev>
- <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8NEbqXy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C54C4CEE4;
+	Tue, 13 May 2025 23:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747179466;
+	bh=d7e15YBeDTYxkNwm52QjN3kE/RCjGpq8kBOBS3qCUZw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b8NEbqXy+C+8yutkV6fDKPrYhNMTOS2z/vEyRNe8dj94zQ6T88SNYMIU3JtcXp+aR
+	 /9DB32Hoo39leQjuT19O27r4y4xI+5Gkf1ymwVIrGoC0504QpclF5P+2Qo+QQsbjv2
+	 x51/RoZXe0ofgFPap2bPBUaOzaZrttfHB475/Bc+XksbVYVW3wxKJKVZfPit24joYC
+	 YTXMLt39iSLKqi1zoq9ENUdt+tTx9kJ/qY0km5tk9oBvXonmDfMc/IRrecQmfdlzOr
+	 VRaToepivA8WQ1sc9skAsKPwGXX+oaUdLyCpwueXQeXXScOwTZEEokoxD/uTEORJBl
+	 RqQ3bQ0nnNb/g==
+Date: Tue, 13 May 2025 16:37:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jakob Unterwurzacher <jakobunt@gmail.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>, UNGLinuxDriver@microchip.com,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Marek Vasut
+ <marex@denx.de>, Tristram Ha <Tristram.Ha@microchip.com>, Florian Fainelli
+ <f.fainelli@gmail.com>, jakob.unterwurzacher@cherry.de,
+ stable@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] net: dsa: microchip: linearize skb for
+ tail-tagging switches
+Message-ID: <20250513163744.20299747@kernel.org>
+In-Reply-To: <20250512144416.3697054-1-jakob.unterwurzacher@cherry.de>
+References: <20250512144416.3697054-1-jakob.unterwurzacher@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 02:24:46PM -0700, Josh Poimboeuf wrote:
-> On Tue, May 13, 2025 at 09:07:32AM -0400, Kent Overstreet wrote:
-> > Static keys can now be a module parameter, e.g.
-> > 
-> > module_param_named(foo, foo.key, static_key_t, 0644)
-> > 
-> > bcachefs is now using this.
-> > 
-> > Cc: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: Petr Pavlu <petr.pavlu@suse.com>
-> > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > Cc: Daniel Gomez <da.gomez@samsung.com>
-> > Cc: linux-modules@vger.kernel.org
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> > Cc: Jason Baron <jbaron@akamai.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > ---
-> >  include/linux/jump_label.h  |  2 ++
-> >  include/linux/moduleparam.h |  7 +++++++
-> >  kernel/params.c             | 35 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 44 insertions(+)
-> > 
-> > diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-> > index fdb79dd1ebd8..0fc9b71db56f 100644
-> > --- a/include/linux/jump_label.h
-> > +++ b/include/linux/jump_label.h
-> > @@ -107,6 +107,8 @@ struct static_key {
-> >  #endif	/* CONFIG_JUMP_LABEL */
-> >  };
-> >  
-> > +typedef struct static_key static_key_t;
-> > +
-> >  #endif /* __ASSEMBLY__ */
-> >  
-> >  #ifdef CONFIG_JUMP_LABEL
-> > diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> > index bfb85fd13e1f..11e8d5c57435 100644
-> > --- a/include/linux/moduleparam.h
-> > +++ b/include/linux/moduleparam.h
-> > @@ -122,6 +122,7 @@ struct kparam_array
-> >   *	charp: a character pointer
-> >   *	bool: a bool, values 0/1, y/n, Y/N.
-> >   *	invbool: the above, only sense-reversed (N = true).
-> > + *	static_key_t: same as bool, but updates a 'struct static_key'
-> 
-> The static_key_*() interfaces are deprecated because they're really easy
-> to use incorrectly.  I don't think we want to propagate that misuse to
-> modules.
-> 
-> It would be better to have type(s) based on static_key_false and/or
-> static_key_true, depending on whatever the default is.
+On Mon, 12 May 2025 16:44:18 +0200 Jakob Unterwurzacher wrote:
+>  static struct sk_buff *ksz9477_rcv(struct sk_buff *skb, struct net_device *dev)
+>  {
+> +	u8 *tag;
+> +
+> +	if (skb_linearize(skb))
+> +		return NULL;
+> +
+>  	/* Tag decoding */
+> -	u8 *tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
+> +	tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
+>  	unsigned int port = tag[0] & KSZ9477_TAIL_TAG_EG_PORT_M;
+>  	unsigned int len = KSZ_EGRESS_TAG_LEN;
 
-Except those are just wrappers around struct static_key, so why does
-that matter here?
+Please don't add code before variable declarations.
+-- 
+pw-bot: cr
