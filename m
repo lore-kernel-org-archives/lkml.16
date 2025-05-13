@@ -1,916 +1,522 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E92C0305
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1462BF3EA
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161551; cv=none; b=IF+CflRu+5NJgqX32ZZ9djCbVcDerRa9kJw0GYPgYxBFI4TrJxs/X0wBw01Wtj92tGrLLAdw1AZ+CHgyn9f8l9ivQsUqr5xV7KOa3TdYobRak0HjvkjvedmOBTkvEN30T7d0Hfd1peMFnsH2P06MT2UxmdV6h1K9X+vyogUKG/w=
+	t=1747161604; cv=none; b=ixHi9kZaYxBByaZY64vPwuZ004mb/KOzv1T8KFvWzADK1sL/rVH1fWWJm+J7zfMJRz5tUY3m9szVRjlPzfLFFJoym8KHWEK4TiF5Smv7u3RZVqRdeMyv38KIgYPG1k/Xm9Zi4aiSg67qDmzaX8zj7L9OhOP8QbuonnXRyxEDn3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161551; c=relaxed/simple;
-	bh=/mPP7LUjsm5a3AYJ45yK78U2SSvUhN9glXB7b/297zg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Pvn0VFwBNZtIb5pEQLh6oqA9wAJhOTFZZMZSGOSHoMjCmoDicanqz9wIOxmLzXnYvcd8VwQrKeEW+ZHizz6GIuz2jsSm+ZpB4cNFuF1cAMyyHQ2Pry5H2L8GIo+kOH5PNmyecJKLecY98Pki2xWv/LxDXRFXmW6v8Tu8FszYZKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KnA0q9ku; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747161604; c=relaxed/simple;
+	bh=Inlve9B27G/udqVfkpo+fqAYRJJBogL+t7oOgfg2yNQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hUJL/uIHtQMsTa3T9PA09MIJ9dDgHKBce6EhT2ASBggrLujCuW4VBOPopl2tfk5Y5UtwxK0eDH2ORh/+qr+ZmGdTWAvySq3GTbcWGi237zWkXMvDV1cWjFHm23YV2Z+Ig+Pt2KFJrqyAKLMT3Dh6lClGQGDuGrJ//BURLoNGDpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Bg0JHItn; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KnA0q9ku"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIVkoK009946
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:39:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Bmm/Z5+zAJ+GMjEm5WuoeHNssuHI0duAPzumFQz+FuE=; b=KnA0q9kuKL3YnQCd
-	qMLX6LsNb2h4n+Wsf284CJwxZarp6bqACnfwCFLb6p2Hda1+i8rql6EkuZrfUTZJ
-	4H3QOglQ7n3gdvbGHo2/JdPGxs5RqjimQ77JEUxv34x6BLDTzf5x8jVnoqbq2XNB
-	ro63covDkyVZLzj35PMZNl17DhjFjhfbVHqtETFawIL8xrWy7LvRsAv9r0abUxOn
-	JvK3XliJjLP/KuoZcNBQDHNd/egL5JDj2E3Z8QEsfD/eSkj6ihEgfHKBnQnIqhAM
-	amWFUJFeiUXNkD57lAe4NrFPL7UHEpTQVNIA1BQlwluQ5/8OtYG2wHYdwqZCqKVH
-	3V5jJg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcyg16x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:39:08 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4769273691dso97629631cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:39:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747161546; x=1747766346;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bmm/Z5+zAJ+GMjEm5WuoeHNssuHI0duAPzumFQz+FuE=;
-        b=kk+8fcfkwABEALzPkK3r/R9j9yT5CzMLMqQmcJPVPY1cREak2WuAaFDHRrfV44Iwyx
-         hRP+y+45QkJUmEi1gd0Z9mIaNcsDD0DzfSdVAMvEA8NWshtbNWIzb+tgt+4KIzFZKx3O
-         qJQ25LR94xBpTVqkKWJ+B24K/bM5r7u8Hzsp5La+yiz0wdUZtSW+9qCaE9vukwwaalHp
-         m8j6QacaH+n1vqlAVaZjHkqmYMjF3GiLMaycgK2RU8B2jSueTiAxumGRIuGvQ5yq2YPr
-         gX0uc/uIhMhlXJMOt2lDy5pEo7hFL7KlLGRnhTawXxaS/e/Wd2nSWHYdRFVmyhHoA7yG
-         dmgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuQ1k6MMJ12s2mf6QqxHnoVkr5iuBiV6INLicQXAC9CZtKvzyAvJJBaNqsgdk5sjjS1DG0fv19xOL8axo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfWw0iajmPrCWF1AeFSNkkFFDhOmAVuuh+FapMae2WXScKeUPR
-	R+5KGlCLFcYKa/yyZ7gGR1wFoy+MSJmItKPgHMFaH8L4U/1KB8pSGzIZ4lAULo6H1Z8mz4jldls
-	rvNmzc8Si4YlkYL5BRBDuCPHr8+iJdNXXWo+53zh1PGgBaSRKx97HZDyKYkuR+S0=
-X-Gm-Gg: ASbGncsFnsHIV4nV9ABTalG2VZAMHfhvwkAFXamZhqeH+9sZt1Gs9hcb4ZK34Jd9Xsj
-	1/h46Dvsh+irenlYq73GvDfn+j3ZJcqgZHCiFQgc44zRddGh3vZpr1rlTB+RCjVsubauQ25AX+D
-	T357adeUM+2SpCzhy3+yZDtKnrLCne9dJWoigGSPCAEnhTKTEDKn+EKC159Ca9En3yAptZupwMT
-	mgFeW8Dibwn/s4rDcsWcBKoSSED3Q1CMe4/hZqFCG+7DUJUpzh11Ib8dMp9h+diMoxJ8UW1th75
-	4kYcDD1D3i5RChzNfLXHzgU5tcGwpYffrw+zGz5D8Ygqs3cJ0cc6nTch0c8AD4zh9fpIgzFYXct
-	TXxsS6+iHnKLGlgVc04dzj7Mj
-X-Received: by 2002:a05:622a:1b14:b0:476:ad9d:d4e9 with SMTP id d75a77b69052e-49495cb5b81mr7594591cf.24.1747161545459;
-        Tue, 13 May 2025 11:39:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGv46mmG3PotEg9vfO+MOqZn+YkAsixtOeNppHNgTaa9RnQyB4q6gfa/9ZSXAilT6M/H18yrQ==
-X-Received: by 2002:a05:622a:1b14:b0:476:ad9d:d4e9 with SMTP id d75a77b69052e-49495cb5b81mr7593991cf.24.1747161544866;
-        Tue, 13 May 2025 11:39:04 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c33c12b7sm17383921fa.50.2025.05.13.11.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 11:39:03 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Tue, 13 May 2025 21:38:59 +0300
-Subject: [PATCH v2 3/3] pinctrl: qcom: switch to devm_gpiochip_add_data()
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Bg0JHItn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747161603; x=1778697603;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xQlODAc+F1Mjzr3iD1pMBijNuo39nDz1Foa9ysrTKZU=;
+  b=Bg0JHItn36WjO+WLNoPyJ3JLuioqZ5b86eAPjPaTjjZ+lI1/wzW2hCMW
+   ntWL/G6FbQmUB89bzTYSoLHyC7BANe7n5F+r+W/cnvEJ+r/ieSgI1QZSH
+   wTONO6hNxhtExXxkLHkXoyRMMLkLKiOUE3W72Mox9VjBKTbOkZ2CGQNbA
+   QrV09LMM4U7Fk2PGsjkQomF1vKpbSzgnWkVhzwB87xx/XlqsbhmctC2xt
+   3fs0oIApYlHNKrQ+/B3ONReXdo/cvA/jRETGmb+8rgCbh1DOE2wYUIWq9
+   VGr0WehUFapnc0s3hcPT5OvFrO+Zn7UCmnTXOhLbCf0Q65EB5lkKk1av1
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,285,1739836800"; 
+   d="scan'208";a="520096534"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 18:02:33 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:59787]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.234:2525] with esmtp (Farcaster)
+ id 2a6dff77-943e-4bbd-8ead-72bed80543cb; Tue, 13 May 2025 18:02:32 +0000 (UTC)
+X-Farcaster-Flow-ID: 2a6dff77-943e-4bbd-8ead-72bed80543cb
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 13 May 2025 18:02:32 +0000
+Received: from dev-dsk-graf-1a-90d01eec.eu-west-1.amazon.com (172.19.99.218)
+ by EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 13 May 2025 18:02:30 +0000
+From: Alexander Graf <graf@amazon.com>
+To: <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH v3] kexec: Enable CMA based contiguous allocation
+Date: Tue, 13 May 2025 18:02:29 +0000
+Message-ID: <20250513180229.7494-1-graf@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250513-pinctrl-msm-fix-v2-3-249999af0fc1@oss.qualcomm.com>
-References: <20250513-pinctrl-msm-fix-v2-0-249999af0fc1@oss.qualcomm.com>
-In-Reply-To: <20250513-pinctrl-msm-fix-v2-0-249999af0fc1@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=34886;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=/mPP7LUjsm5a3AYJ45yK78U2SSvUhN9glXB7b/297zg=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoI5HCs1QFstaI+n45YN7w2VOJpJziFpt4OyFt+
- ge0HvFsXkCJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCORwgAKCRCLPIo+Aiko
- 1ch4B/9DnQdThxiK7fZEEJwlphCV287mFVj8d48PF508u0rftpHf27fGAfX6eM7ZghptrRgi7Af
- T98kpFH6+e9GL0DHISm9QhzY9B0LlLZb7Tv14ML4LDtygBsV4mhzZwZReV0xUppQHw4f0G14Pdv
- fV7CVK974rIkG+Uw9eSWBuIWe8rNzOuzcRZhfBBqjXx7hHKy4ntm5As5CimR7U4SgNYkIZFBcTj
- OtbgdfTop60p0TX8FFsTbyPa5pTpRkX1mBZfRlPga34Dtxlm6xHedub1i5G/OkUGbxO4nkcNHLk
- FoG/vP35F+aGiFu4t4Ug932ShIGfjUKx9Tew07KsrD8OlHVM
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: w0phZL56huDkyn-xQOw3LBQItCLGfaQe
-X-Proofpoint-ORIG-GUID: w0phZL56huDkyn-xQOw3LBQItCLGfaQe
-X-Authority-Analysis: v=2.4 cv=JszxrN4C c=1 sm=1 tr=0 ts=682391cc cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=HEy92-61m365HJIm5JYA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE3NyBTYWx0ZWRfXzVEuQTvnJgyh
- C7yRSEu78xmZyx30eYcTmribaXWUxqNZkfyg0WTi5VL6vc21nFGdlKcc1VS+BHCeeu+vCUnBVYE
- DGKxsuHJXJlxnF+rIgkJP5pe0DuHNuNwaA3BpjEpJK1ZIRyb5CQ6kEcyZGMd0XKgFWhU5CBFR50
- zq5cky568dCPJ5Z8wYWa0rkLmgJ+R2hGkuOb1WjpC09BIsre9cHyzZhCmWwNNI0Ysggqx5XU8Vh
- Go4mm1ZFeTrLXLzkQ+wTBoJhvQA+Zb4Zn73APuviqMhLY6EgIyiAdHUgEHhgIQybOSDXECKxrOY
- f9s4iFokZ+d+swr7G7fX63eanyhjuFEFyWmyY5ScFLIuhV/555X1J2IvlUq2KTH5IHTz1n0UPzl
- ZfaNqi4aTjvqk0jtwIemWGZB8QVIvhvreyTyNIwiA7xIY/RWHW/Lt7ZmratvgxdSHbaZ3HiR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 mlxscore=0 adultscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505130177
 
-In order to simplify cleanup actions, use devres-enabled version of
-gpiochip_add_data().  As the msm_pinctrl_remove() function is now empty,
-drop it and all its calls from the corresponding pinctrl drivers.
+When booting a new kernel with kexec_file, the kernel picks a target
+location that the kernel should live at, then allocates random pages,
+checks whether any of those patches magically happens to coincide with
+a target address range and if so, uses them for that range.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+For every page allocated this way, it then creates a page list that the
+relocation code - code that executes while all CPUs are off and we are
+just about to jump into the new kernel - copies to their final memory
+location. We can not put them there before, because chances are pretty
+good that at least some page in the target range is already in use by
+the currently running Linux environment. Copying is happening from a
+single CPU at RAM rate, which takes around 4-50 ms per 100 MiB.
+
+All of this is inefficient and error prone.
+
+To successfully kexec, we need to quiesce all devices of the outgoing
+kernel so they don't scribble over the new kernel's memory. We have seen
+cases where that does not happen properly (*cough* GIC *cough*) and hence
+the new kernel was corrupted. This started a month long journey to root
+cause failing kexecs to eventually see memory corruption, because the new
+kernel was corrupted severely enough that it could not emit output to
+tell us about the fact that it was corrupted. By allocating memory for the
+next kernel from a memory range that is guaranteed scribbling free, we can
+boot the next kernel up to a point where it is at least able to detect
+corruption and maybe even stop it before it becomes severe. This increases
+the chance for successful kexecs.
+
+Since kexec got introduced, Linux has gained the CMA framework which
+can perform physically contiguous memory mappings, while keeping that
+memory available for movable memory when it is not needed for contiguous
+allocations. The default CMA allocator is for DMA allocations.
+
+This patch adds logic to the kexec file loader to attempt to place the
+target payload at a location allocated from CMA. If successful, it uses
+that memory range directly instead of creating copy instructions during
+the hot phase. To ensure that there is a safety net in case anything goes
+wrong with the CMA allocation, it also adds a flag for user space to force
+disable CMA allocations.
+
+Using CMA allocations has two advantages:
+
+  1) Faster by 4-50 ms per 100 MiB. There is no more need to copy in the
+     hot phase.
+  2) More robust. Even if by accident some page is still in use for DMA,
+     the new kernel image will be safe from that access because it resides
+     in a memory region that is considered allocated in the old kernel and
+     has a chance to reinitialize that component.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
+
 ---
- drivers/pinctrl/qcom/pinctrl-apq8064.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-apq8084.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq4019.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5018.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5332.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq5424.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq6018.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq8064.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq8074.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-ipq9574.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-mdm9607.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-mdm9615.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm.c      | 11 +----------
- drivers/pinctrl/qcom/pinctrl-msm.h      |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8226.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8660.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8909.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8916.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8917.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8953.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8960.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8976.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8994.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8996.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8998.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-msm8x74.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-qcm2290.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-qcs404.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-qcs615.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-qcs8300.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-qdf2xxx.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-qdu1000.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-sa8775p.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-sar2130p.c |  1 -
- drivers/pinctrl/qcom/pinctrl-sc7180.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sc7280.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sc8180x.c  |  1 -
- drivers/pinctrl/qcom/pinctrl-sc8280xp.c |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm660.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm670.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sdm845.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx55.c    |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx65.c    |  1 -
- drivers/pinctrl/qcom/pinctrl-sdx75.c    |  1 -
- drivers/pinctrl/qcom/pinctrl-sm4450.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6115.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6125.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6350.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm6375.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm7150.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8150.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8250.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8350.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8450.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8550.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8650.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-sm8750.c   |  1 -
- drivers/pinctrl/qcom/pinctrl-x1e80100.c |  1 -
- 58 files changed, 1 insertion(+), 67 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8064.c b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-index 20c3b9025044515477f39bc25f0202dcca561743..3654913f1ae584394f5d08305f49e72a9b49fe5a 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-@@ -629,7 +629,6 @@ static struct platform_driver apq8064_pinctrl_driver = {
- 		.of_match_table = apq8064_pinctrl_of_match,
- 	},
- 	.probe = apq8064_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
+v1 -> v2:
+
+  - Clarify patch description
+  - Move cma pointer out of kexec_segment. That is a sneaky UAPI struct we
+    can not modify. Fixes non kexec_file path
+  - Coding style
+  - Move memset(0) to only clear remainder
+  - Move kexec_alloc_contig() into kexec_locate_mem_hole(). Makes the code
+    flow easier to read.
+  - Sanitize return values
+
+v2 -> v3:
+
+  - Fix refactoring bug which meant we never exercised the new code path
+---
+ arch/riscv/kernel/elf_kexec.c |   1 +
+ include/linux/kexec.h         |  10 ++++
+ include/uapi/linux/kexec.h    |   1 +
+ kernel/kexec.c                |   2 +-
+ kernel/kexec_core.c           | 100 +++++++++++++++++++++++++++++++---
+ kernel/kexec_file.c           |  47 +++++++++++++++-
+ kernel/kexec_internal.h       |   2 +-
+ 7 files changed, 152 insertions(+), 11 deletions(-)
+
+diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+index e783a72d051f..d81647c98c92 100644
+--- a/arch/riscv/kernel/elf_kexec.c
++++ b/arch/riscv/kernel/elf_kexec.c
+@@ -109,6 +109,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
+ 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
+ 	kbuf.top_down = false;
++	kbuf.cma = NULL;
+ 	ret = arch_kexec_locate_mem_hole(&kbuf);
+ 	if (!ret) {
+ 		*old_pbase = lowest_paddr;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c8971861521a..7821b23bd1e9 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -75,6 +75,12 @@ extern note_buf_t __percpu *crash_notes;
+ 
+ typedef unsigned long kimage_entry_t;
+ 
++/*
++ * This is a copy of the UAPI struct kexec_segment and must be identical
++ * to it because it gets copied straight from user space into kernel
++ * memory. Do not modify this structure unless you change the way segments
++ * get ingested from user space.
++ */
+ struct kexec_segment {
+ 	/*
+ 	 * This pointer can point to user memory if kexec_load() system
+@@ -169,6 +175,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+  * @buf_min:	The buffer can't be placed below this address.
+  * @buf_max:	The buffer can't be placed above this address.
+  * @top_down:	Allocate from top of memory.
++ * @cma:	CMA page if the buffer is backed by CMA.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -180,6 +187,7 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++	struct page *cma;
  };
  
- static int __init apq8064_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8084.c b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-index 3fc0a40762b631ad3dc15c9a7624ab705f367e74..27693cd648818bbcf6236cffad2efcd31c92018b 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8084.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-@@ -1207,7 +1207,6 @@ static struct platform_driver apq8084_pinctrl_driver = {
- 		.of_match_table = apq8084_pinctrl_of_match,
- 	},
- 	.probe = apq8084_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+@@ -310,6 +318,7 @@ struct kimage {
  
- static int __init apq8084_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-index 1f7944dd829d1b9cb8c445ee075e0e29a12294b9..6ede3149b6e1730ea432a1636152abcbf0fa73b2 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-@@ -710,7 +710,6 @@ static struct platform_driver ipq4019_pinctrl_driver = {
- 		.of_match_table = ipq4019_pinctrl_of_match,
- 	},
- 	.probe = ipq4019_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ 	unsigned long nr_segments;
+ 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
++	struct page *segment_cma[KEXEC_SEGMENT_MAX];
  
- static int __init ipq4019_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5018.c b/drivers/pinctrl/qcom/pinctrl-ipq5018.c
-index e2951f81c3eeb3f4d52c3941ab6f591da0254a23..10b99d5d8a11db644e974a80b9d7d04ffc09bd4c 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq5018.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq5018.c
-@@ -754,7 +754,6 @@ static struct platform_driver ipq5018_pinctrl_driver = {
- 		.of_match_table = ipq5018_pinctrl_of_match,
- 	},
- 	.probe = ipq5018_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq5018_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5332.c b/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-index 625f8014051f6acf8e6f91d48d0406b8c2bd8caf..1ac2fc09c11923cd716495b16a7f4af5686ce398 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-@@ -834,7 +834,6 @@ static struct platform_driver ipq5332_pinctrl_driver = {
- 		.of_match_table = ipq5332_pinctrl_of_match,
- 	},
- 	.probe = ipq5332_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq5332_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5424.c b/drivers/pinctrl/qcom/pinctrl-ipq5424.c
-index 0d610b076da3bb7940c99cfaf4c69261f9509390..7ff1f8acc1a3a81037298464130fda59f329d53e 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq5424.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq5424.c
-@@ -791,7 +791,6 @@ static struct platform_driver ipq5424_pinctrl_driver = {
- 		.of_match_table = ipq5424_pinctrl_of_match,
- 	},
- 	.probe = ipq5424_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq5424_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq6018.c b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-index 0ad08647dbcdf0b1fa21a618310f150a1bde2fae..a4ba980252e187879947e7057004fa48815f2620 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-@@ -1080,7 +1080,6 @@ static struct platform_driver ipq6018_pinctrl_driver = {
- 		.of_match_table = ipq6018_pinctrl_of_match,
- 	},
- 	.probe = ipq6018_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq6018_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-index e2bb94e86aef6e0055860794a1c64649c722aebc..0a9e357e64c60d61a094000f167defc80503e649 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-@@ -631,7 +631,6 @@ static struct platform_driver ipq8064_pinctrl_driver = {
- 		.of_match_table = ipq8064_pinctrl_of_match,
- 	},
- 	.probe = ipq8064_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq8064_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-index 337f3a1c92c19285f16f59a79f3e2b20561ae19a..482f13282fc2be951032cbe6dc5100bf9129ea5f 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-@@ -1041,7 +1041,6 @@ static struct platform_driver ipq8074_pinctrl_driver = {
- 		.of_match_table = ipq8074_pinctrl_of_match,
- 	},
- 	.probe = ipq8074_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq8074_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq9574.c b/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-index e2491617b2364a64169297426351e723c37f030c..89c05d8eb55034dea3e1c7299ede6567c20e0159 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-@@ -799,7 +799,6 @@ static struct platform_driver ipq9574_pinctrl_driver = {
- 		.of_match_table = ipq9574_pinctrl_of_match,
- 	},
- 	.probe = ipq9574_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init ipq9574_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9607.c b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-index e7cd3ef1cf3e815ae25aa9e0c6872fbbd2c8ac79..3e18ba124fede923f56eab1aec5aaf875f06e343 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-@@ -1059,7 +1059,6 @@ static struct platform_driver mdm9607_pinctrl_driver = {
- 		.of_match_table = mdm9607_pinctrl_of_match,
- 	},
- 	.probe = mdm9607_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init mdm9607_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9615.c b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-index 0a2ae383d3d57bd4101efb7a2093b68b8920b426..bea1ca3d1b7f84c28c23af2a52cc464da44a90b0 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-@@ -446,7 +446,6 @@ static struct platform_driver mdm9615_pinctrl_driver = {
- 		.of_match_table = mdm9615_pinctrl_of_match,
- 	},
- 	.probe = mdm9615_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init mdm9615_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index f012ea88aa22ca3e184b05c39da9a1f7c2b3c74f..5c4687de1464a60355e6cb1e456b487ad368275a 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1442,7 +1442,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	girq->handler = handle_bad_irq;
- 	girq->parents[0] = pctrl->irq;
- 
--	ret = gpiochip_add_data(&pctrl->chip, pctrl);
-+	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
- 	if (ret) {
- 		dev_err(pctrl->dev, "Failed register gpiochip\n");
- 		return ret;
-@@ -1463,7 +1463,6 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 			dev_name(pctrl->dev), 0, 0, chip->ngpio);
- 		if (ret) {
- 			dev_err(pctrl->dev, "Failed to add pin range\n");
--			gpiochip_remove(&pctrl->chip);
- 			return ret;
- 		}
- 	}
-@@ -1599,13 +1598,5 @@ int msm_pinctrl_probe(struct platform_device *pdev,
- }
- EXPORT_SYMBOL(msm_pinctrl_probe);
- 
--void msm_pinctrl_remove(struct platform_device *pdev)
--{
--	struct msm_pinctrl *pctrl = platform_get_drvdata(pdev);
--
--	gpiochip_remove(&pctrl->chip);
--}
--EXPORT_SYMBOL(msm_pinctrl_remove);
--
- MODULE_DESCRIPTION("Qualcomm Technologies, Inc. TLMM driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 63852ed702957b8111b364267af17737b7a582a1..d7dc0947bb161868c8f433dc2536719b8afc8bd8 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -171,6 +171,5 @@ extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
- 
- int msm_pinctrl_probe(struct platform_device *pdev,
- 		      const struct msm_pinctrl_soc_data *soc_data);
--void msm_pinctrl_remove(struct platform_device *pdev);
- 
+ 	struct list_head control_pages;
+ 	struct list_head dest_pages;
+@@ -331,6 +340,7 @@ struct kimage {
+ 	 */
+ 	unsigned int hotplug_support:1;
  #endif
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-index 64fee70f1772c41f5d8e20deb270ed66cb20a151..f9a957347340813f87e58d3bcbea81faa9d6255e 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-@@ -654,7 +654,6 @@ static struct platform_driver msm8226_pinctrl_driver = {
- 		.of_match_table = msm8226_pinctrl_of_match,
- 	},
- 	.probe = msm8226_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++	unsigned int no_cma:1;
  
- static int __init msm8226_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8660.c b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-index 999a5f867eb5081232443a893773d73c8dc65d1b..4dbc19ffd80efcdab059a253904e1ffe95fd36f7 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-@@ -981,7 +981,6 @@ static struct platform_driver msm8660_pinctrl_driver = {
- 		.of_match_table = msm8660_pinctrl_of_match,
- 	},
- 	.probe = msm8660_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+ 	struct kimage_arch arch;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 5ae1741ea8ea..8958ebfcff94 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -27,6 +27,7 @@
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
++#define KEXEC_FILE_NO_CMA	0x00000010
  
- static int __init msm8660_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8909.c b/drivers/pinctrl/qcom/pinctrl-msm8909.c
-index 756856d20d6b5f2d4e764ff32f2493de24ca677c..0aa4f77b774f45947ffade7d167dd25cc4da5297 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8909.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8909.c
-@@ -929,7 +929,6 @@ static struct platform_driver msm8909_pinctrl_driver = {
- 		.of_match_table = msm8909_pinctrl_of_match,
- 	},
- 	.probe = msm8909_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a6b3f96bb50c..28008e3d462e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -152,7 +152,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 		goto out;
  
- static int __init msm8909_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8916.c b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-index cea5c54f92fec1829c5378a8441eb8710fd500f0..0dfc6dd33d58b2d9df7a5cc3f7ff8890976207d3 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8916.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-@@ -969,7 +969,6 @@ static struct platform_driver msm8916_pinctrl_driver = {
- 		.of_match_table = msm8916_pinctrl_of_match,
- 	},
- 	.probe = msm8916_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ 	for (i = 0; i < nr_segments; i++) {
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 3e62b944c883..b5b680dd1796 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/dma-map-ops.h>
  
- static int __init msm8916_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8917.c b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-index 350636807b07d9ab0e207368de63837bc5fa5502..2e1a94ab18b219f818c591ff3b07280578822d1a 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8917.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-@@ -1607,7 +1607,6 @@ static struct platform_driver msm8917_pinctrl_driver = {
- 		.of_match_table = msm8917_pinctrl_of_match,
- 	},
- 	.probe = msm8917_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
+ 	kimage_free_pages(page);
+ }
  
- static int __init msm8917_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8953.c b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-index 998351bdfee1369fe0f369648d66a1a05493c8fb..956383341a7a777edf28c710353dc6deab124ef9 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8953.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-@@ -1816,7 +1816,6 @@ static struct platform_driver msm8953_pinctrl_driver = {
- 		.of_match_table = msm8953_pinctrl_of_match,
- 	},
- 	.probe = msm8953_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++static void kimage_free_cma(struct kimage *image)
++{
++	unsigned long i;
++
++	for (i = 0; i < image->nr_segments; i++) {
++		struct page *cma = image->segment_cma[i];
++		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
++
++		if (!cma)
++			continue;
++
++		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
++		dma_release_from_contiguous(NULL, cma, nr_pages);
++		image->segment_cma[i] = NULL;
++	}
++
++}
++
+ void kimage_free(struct kimage *image)
+ {
+ 	kimage_entry_t *ptr, entry;
+@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
  
- static int __init msm8953_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8960.c b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-index ebe230b3b437ccc63535fdf51639e64a67fe05eb..a937ea867de709326a2aea77f980cae1d8480f35 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8960.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-@@ -1246,7 +1246,6 @@ static struct platform_driver msm8960_pinctrl_driver = {
- 		.of_match_table = msm8960_pinctrl_of_match,
- 	},
- 	.probe = msm8960_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++	/* Free CMA allocations */
++	kimage_free_cma(image);
++
+ 	/*
+ 	 * Free up any temporary buffers allocated. This might hit if
+ 	 * error occurred much later after buffer allocation.
+@@ -716,9 +738,69 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
  
- static int __init msm8960_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8976.c b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-index c30d80e4e98ca68ccede66001445967a47d6ec8f..3bcb03387781f803bf7e0251496a88a43b562b8d 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8976.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-@@ -1096,7 +1096,6 @@ static struct platform_driver msm8976_pinctrl_driver = {
- 		.of_match_table = msm8976_pinctrl_of_match,
- 	},
- 	.probe = msm8976_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+-static int kimage_load_normal_segment(struct kimage *image,
+-					 struct kexec_segment *segment)
++static int kimage_load_cma_segment(struct kimage *image, int idx)
++{
++	struct kexec_segment *segment = &image->segment[idx];
++	struct page *cma = image->segment_cma[idx];
++	char *ptr = page_address(cma);
++	unsigned long maddr;
++	size_t ubytes, mbytes;
++	int result = 0;
++	unsigned char __user *buf = NULL;
++	unsigned char *kbuf = NULL;
++
++	if (image->file_mode)
++		kbuf = segment->kbuf;
++	else
++		buf = segment->buf;
++	ubytes = segment->bufsz;
++	mbytes = segment->memsz;
++	maddr = segment->mem;
++
++	/* Then copy from source buffer to the CMA one */
++	while (mbytes) {
++		size_t uchunk, mchunk;
++
++		ptr += maddr & ~PAGE_MASK;
++		mchunk = min_t(size_t, mbytes,
++				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min(ubytes, mchunk);
++
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
++		}
++
++		if (result) {
++			result = -EFAULT;
++			goto out;
++		}
++
++		ptr    += mchunk;
++		maddr  += mchunk;
++		mbytes -= mchunk;
++
++		cond_resched();
++	}
++
++	/* Clear any remainder */
++	memset(ptr, 0, mbytes);
++
++out:
++	return result;
++}
++
++static int kimage_load_normal_segment(struct kimage *image, int idx)
+ {
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -733,6 +815,9 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	mbytes = segment->memsz;
+ 	maddr = segment->mem;
  
- static int __init msm8976_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8994.c b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-index b1a6759ab4a5e70501aba4325e80db2359251204..7a3b6cbccb687c8b5040ee6bf372f092f21aa872 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8994.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-@@ -1343,7 +1343,6 @@ static struct platform_driver msm8994_pinctrl_driver = {
- 		.of_match_table = msm8994_pinctrl_of_match,
- 	},
- 	.probe = msm8994_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++	if (image->segment_cma[idx])
++		return kimage_load_cma_segment(image, idx);
++
+ 	result = kimage_set_destination(image, maddr);
+ 	if (result < 0)
+ 		goto out;
+@@ -787,13 +872,13 @@ static int kimage_load_normal_segment(struct kimage *image,
+ }
  
- static int __init msm8994_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8996.c b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-index 1b5d80eaab83c7e2c81c96019e8b0cc6f5461c69..d86d83106d3ba12343a4685e5b87c661f823c35b 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8996.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-@@ -1920,7 +1920,6 @@ static struct platform_driver msm8996_pinctrl_driver = {
- 		.of_match_table = msm8996_pinctrl_of_match,
- 	},
- 	.probe = msm8996_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ #ifdef CONFIG_CRASH_DUMP
+-static int kimage_load_crash_segment(struct kimage *image,
+-					struct kexec_segment *segment)
++static int kimage_load_crash_segment(struct kimage *image, int idx)
+ {
+ 	/* For crash dumps kernels we simply copy the data from
+ 	 * user space to it's destination.
+ 	 * We do things a page at a time for the sake of kmap.
+ 	 */
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -858,18 +943,17 @@ static int kimage_load_crash_segment(struct kimage *image,
+ }
+ #endif
  
- static int __init msm8996_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8998.c b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-index b7cbf32b3125a91081c6644cd3d343e08499dd1f..1daee815888f54b711505dfacefd614df83affc0 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8998.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-@@ -1535,7 +1535,6 @@ static struct platform_driver msm8998_pinctrl_driver = {
- 		.of_match_table = msm8998_pinctrl_of_match,
- 	},
- 	.probe = msm8998_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+-int kimage_load_segment(struct kimage *image,
+-				struct kexec_segment *segment)
++int kimage_load_segment(struct kimage *image, int idx)
+ {
+ 	int result = -ENOMEM;
  
- static int __init msm8998_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-index 238c83f6ec4f41ff2dc572fd910c1c9aef9d290a..8253aa25775b247dc54a377c9781094e465e22b6 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-@@ -1083,7 +1083,6 @@ static struct platform_driver msm8x74_pinctrl_driver = {
- 		.of_match_table = msm8x74_pinctrl_of_match,
- 	},
- 	.probe = msm8x74_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ 	switch (image->type) {
+ 	case KEXEC_TYPE_DEFAULT:
+-		result = kimage_load_normal_segment(image, segment);
++		result = kimage_load_normal_segment(image, idx);
+ 		break;
+ #ifdef CONFIG_CRASH_DUMP
+ 	case KEXEC_TYPE_CRASH:
+-		result = kimage_load_crash_segment(image, segment);
++		result = kimage_load_crash_segment(image, idx);
+ 		break;
+ #endif
+ 	}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fba686487e3b..916beae68fb6 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel_read_file.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
++#include <linux/dma-map-ops.h>
+ #include "kexec_internal.h"
  
- static int __init msm8x74_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcm2290.c b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-index f885af571ec93d66533f4909e935e5c7a2dd0511..85c951305abd6640b33cc4d8bf2283ffab18bbc4 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-@@ -1125,7 +1125,6 @@ static struct platform_driver qcm2290_pinctrl_driver = {
- 		.of_match_table = qcm2290_pinctrl_of_match,
- 	},
- 	.probe = qcm2290_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
+ #ifdef CONFIG_KEXEC_SIG
+@@ -230,6 +231,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		ret = 0;
+ 	}
  
- static int __init qcm2290_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs404.c b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-index ae7224012f8aa00a41350b3ce670511aa8ce18bd..54e3b44353494e9398a88702945b7a85ff901b4d 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs404.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-@@ -1644,7 +1644,6 @@ static struct platform_driver qcs404_pinctrl_driver = {
- 		.of_match_table = qcs404_pinctrl_of_match,
- 	},
- 	.probe = qcs404_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
++
+ 	if (cmdline_len) {
+ 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+ 		if (IS_ERR(image->cmdline_buf)) {
+@@ -406,7 +409,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+ 			      ksegment->memsz);
  
- static int __init qcs404_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs615.c b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-index 23015b055f6a925e8157363952f3ce659059d719..0c3182808d021616848c31d605383296eb4e8e43 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs615.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-@@ -1087,7 +1087,6 @@ static struct platform_driver qcs615_tlmm_driver = {
- 		.of_match_table = qcs615_tlmm_of_match,
- 	},
- 	.probe = qcs615_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -632,6 +635,39 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
  
- static int __init qcs615_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs8300.c b/drivers/pinctrl/qcom/pinctrl-qcs8300.c
-index ba6de944a859a0b637812e5d39c9eab7ea3ef8ed..e4ca2c0c12a6eb7460cdbf6f2e4a3086313a5a55 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs8300.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs8300.c
-@@ -1227,7 +1227,6 @@ static struct platform_driver qcs8300_pinctrl_driver = {
- 		.of_match_table = qcs8300_pinctrl_of_match,
- 	},
- 	.probe = qcs8300_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++static int kexec_alloc_contig(struct kexec_buf *kbuf)
++{
++	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
++	unsigned long mem;
++	struct page *p;
++
++	/* User space disabled CMA allocations, bail out. */
++	if (kbuf->image->no_cma)
++		return -EPERM;
++
++	p = dma_alloc_from_contiguous(NULL, nr_pages, get_order(kbuf->buf_align), true);
++	if (!p)
++		return -ENOMEM;
++
++	pr_debug("allocated %zu DMA pages at 0x%lx", nr_pages, page_to_boot_pfn(p));
++
++	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++
++	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
++		/* Our region is already in use by a statically defined one. Bail out. */
++		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
++		dma_release_from_contiguous(NULL, p, nr_pages);
++		return -EBUSY;
++	}
++
++	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++	kbuf->cma = p;
++
++	arch_kexec_post_alloc_pages(page_address(p), (int)nr_pages, 0);
++
++	return 0;
++}
++
+ /**
+  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
+  * @kbuf:	Parameters for the memory search.
+@@ -648,6 +684,13 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+ 		return 0;
  
- static int __init qcs8300_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-index b5808fcfb13cdebd04c0c71b24043b924094a683..9ecc4d40e4dc4f36aafc70309102b9e66ce024c0 100644
---- a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-@@ -145,7 +145,6 @@ static struct platform_driver qdf2xxx_pinctrl_driver = {
- 		.acpi_match_table = qdf2xxx_acpi_ids,
- 	},
- 	.probe = qdf2xxx_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
++	/*
++	 * Try to find a free physically contiguous block of memory first. With that, we
++	 * can avoid any copying at kexec time.
++	 */
++	if (!kexec_alloc_contig(kbuf))
++		return 0;
++
+ 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+ 	else
+@@ -693,6 +736,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	/* Ensure minimum alignment needed for segments. */
+ 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
++	kbuf->cma = NULL;
  
- static int __init qdf2xxx_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-qdu1000.c b/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-index 47bc529ef550d2ab9a13341295eacc08faed24c4..eacb89fa388850ef39ceb50497df9e5cca54191c 100644
---- a/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-@@ -1248,7 +1248,6 @@ static struct platform_driver qdu1000_tlmm_driver = {
- 		.of_match_table = qdu1000_tlmm_of_match,
- 	},
- 	.probe = qdu1000_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init qdu1000_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-index a5b38221aea851ce09448eb7eb71f7f94721443a..1b62eb3e6620c978225c5fd2ab541451cbe93093 100644
---- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-@@ -1540,7 +1540,6 @@ static struct platform_driver sa8775p_pinctrl_driver = {
- 		.of_match_table = sa8775p_pinctrl_of_match,
- 	},
- 	.probe = sa8775p_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sa8775p_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sar2130p.c b/drivers/pinctrl/qcom/pinctrl-sar2130p.c
-index 19a2e37826c7b25f6d37f130a0fb5ef4cdadb61c..3dd1b5e5cfee489ec34b16ee2ae1c8d2c2756553 100644
---- a/drivers/pinctrl/qcom/pinctrl-sar2130p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sar2130p.c
-@@ -1486,7 +1486,6 @@ static struct platform_driver sar2130p_tlmm_driver = {
- 		.of_match_table = sar2130p_tlmm_of_match,
- 	},
- 	.probe = sar2130p_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sar2130p_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 6eb0c73791c0bc9883bf0b740b8930fe7c7fced0..c43fe10b71add7d6294c90e86578ed472b8759a3 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -1159,7 +1159,6 @@ static struct platform_driver sc7180_pinctrl_driver = {
- 		.of_match_table = sc7180_pinctrl_of_match,
- 	},
- 	.probe = sc7180_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sc7180_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-index 0c10eeb60b55e742a73dfd43d647f7009471b1b0..1b070e9d41f5972470d245edb821d202ca24522b 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-@@ -1505,7 +1505,6 @@ static struct platform_driver sc7280_pinctrl_driver = {
- 		.of_match_table = sc7280_pinctrl_of_match,
- 	},
- 	.probe = sc7280_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sc7280_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-index d6a79ad41a40a804c503d97a6279db4b533f0047..26dd165d154348a8659720335ec16c3e5ace30ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-@@ -1720,7 +1720,6 @@ static struct platform_driver sc8180x_pinctrl_driver = {
- 		.acpi_match_table = sc8180x_pinctrl_acpi_match,
- 	},
- 	.probe = sc8180x_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sc8180x_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-index 96f4fb5a5d297f784e63f4335e294ebdee5f487f..6ccd7e5648d420072f7ce467d92ef0764a6d7764 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-@@ -1926,7 +1926,6 @@ static struct platform_driver sc8280xp_pinctrl_driver = {
- 		.of_match_table = sc8280xp_pinctrl_of_match,
- 	},
- 	.probe = sc8280xp_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sc8280xp_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm660.c b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-index 907e4ffca5e7df48aed8f917455f35c0da8c6265..1a78288f1bc832837d5c72d9eb1659f397d79b94 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-@@ -1442,7 +1442,6 @@ static struct platform_driver sdm660_pinctrl_driver = {
- 		.of_match_table = sdm660_pinctrl_of_match,
- 	},
- 	.probe = sdm660_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdm660_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm670.c b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-index c76183ba95e17473d1ed313090e8cc3546431348..0fe1fa94cd6da13591397442a63ce8daec9f4674 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm670.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-@@ -1337,7 +1337,6 @@ static struct platform_driver sdm670_pinctrl_driver = {
- 		.of_match_table = sdm670_pinctrl_of_match,
- 	},
- 	.probe = sdm670_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdm670_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index cc05c415ed15512f1f99a598650d3adfdc795a6d..0446e291aa4831da439af12b7934fbda5915ee5a 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1351,7 +1351,6 @@ static struct platform_driver sdm845_pinctrl_driver = {
- 		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
- 	},
- 	.probe = sdm845_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdm845_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-index 8826db9d21d04cecca844b0607984e21a500f15b..2c17bf889146362edf9f482d33b17d35a255882e 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-@@ -990,7 +990,6 @@ static struct platform_driver sdx55_pinctrl_driver = {
- 		.of_match_table = sdx55_pinctrl_of_match,
- 	},
- 	.probe = sdx55_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdx55_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx65.c b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-index f6f319c997fc7a39d672872c0df1fa2ea821b2d9..85b5c0206dbd199c6efc15aad10784d20c1addde 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx65.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-@@ -939,7 +939,6 @@ static struct platform_driver sdx65_pinctrl_driver = {
- 		.of_match_table = sdx65_pinctrl_of_match,
- 	},
- 	.probe = sdx65_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdx65_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx75.c b/drivers/pinctrl/qcom/pinctrl-sdx75.c
-index 3cfe8c7f04df816a93252a162ccfa502854411fe..ab13a3a57a830781f35916ff508ca65d6699271d 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx75.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx75.c
-@@ -1124,7 +1124,6 @@ static struct platform_driver sdx75_pinctrl_driver = {
- 		.of_match_table = sdx75_pinctrl_of_match,
- 	},
- 	.probe = sdx75_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sdx75_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm4450.c b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-index 622f20e6f6f859ee4f132809304bc3f0685e8ff3..1ecdf1ab4f275ede7cb629321f9c37d3f81a25e9 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm4450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-@@ -994,7 +994,6 @@ static struct platform_driver sm4450_tlmm_driver = {
- 		.of_match_table = sm4450_tlmm_of_match,
- 	},
- 	.probe = sm4450_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- MODULE_DEVICE_TABLE(of, sm4450_tlmm_of_match);
- 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115.c b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-index 4e91c75ad952487e755e0abdf861b1f118bf4de5..c273efa4399630a2187845382e231fe150d997fd 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6115.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-@@ -907,7 +907,6 @@ static struct platform_driver sm6115_tlmm_driver = {
- 		.of_match_table = sm6115_tlmm_of_match,
- 	},
- 	.probe = sm6115_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm6115_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6125.c b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-index c188842047aae054929e124f650290034cfad979..5092f20e0c1bdee2e99b768f12cfbec31972c24c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6125.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-@@ -1266,7 +1266,6 @@ static struct platform_driver sm6125_tlmm_driver = {
- 		.of_match_table = sm6125_tlmm_of_match,
- 	},
- 	.probe = sm6125_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm6125_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6350.c b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-index f3828c07b134500e4307db1d42aabae389a03360..ba4686c86c54b8c1dc32522c83587521e149a5ae 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-@@ -1373,7 +1373,6 @@ static struct platform_driver sm6350_tlmm_driver = {
- 		.of_match_table = sm6350_tlmm_of_match,
- 	},
- 	.probe = sm6350_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm6350_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6375.c b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-index c82c8516932ea2e1880284fa86bdaf3683f024cc..49031571e65ee3291fb1e5269e071a08a77c87de 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6375.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-@@ -1516,7 +1516,6 @@ static struct platform_driver sm6375_tlmm_driver = {
- 		.of_match_table = sm6375_tlmm_of_match,
- 	},
- 	.probe = sm6375_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm6375_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm7150.c b/drivers/pinctrl/qcom/pinctrl-sm7150.c
-index 3c7fd8af6635b94df107f44e3e0e68a2778a25e7..6e89966cd70e34bcb74cfb50e80e110e40655b0e 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm7150.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm7150.c
-@@ -1255,7 +1255,6 @@ static struct platform_driver sm7150_tlmm_driver = {
- 		.of_match_table = sm7150_tlmm_of_match,
- 	},
- 	.probe = sm7150_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm7150_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-index 01aea9c70b7a78168ee063f5ac88afc0d7290bcb..794ed99463f76032f56be9464a4aa3018537df94 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-@@ -1542,7 +1542,6 @@ static struct platform_driver sm8150_pinctrl_driver = {
- 		.of_match_table = sm8150_pinctrl_of_match,
- 	},
- 	.probe = sm8150_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8150_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index e9961a49ff9811bfa3ed3c6c1a8f1cf90afa1d29..fb6f005d64f53f318d58e69681f07e36404439cf 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -1351,7 +1351,6 @@ static struct platform_driver sm8250_pinctrl_driver = {
- 		.of_match_table = sm8250_pinctrl_of_match,
- 	},
- 	.probe = sm8250_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8250_pinctrl_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-index 9c69458bd9109119e7a88d1a92f633bbf188ed0c..c8a3f39ce6f1b8565a783f04100269b3cadb9bcc 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-@@ -1642,7 +1642,6 @@ static struct platform_driver sm8350_tlmm_driver = {
- 		.of_match_table = sm8350_tlmm_of_match,
- 	},
- 	.probe = sm8350_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8350_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450.c b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-index d11bb1ee9e3d8dfbb1e810051d5c854a959b428b..f2e52d5a0f9369d21922d0651539908d592301e5 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-@@ -1677,7 +1677,6 @@ static struct platform_driver sm8450_tlmm_driver = {
- 		.of_match_table = sm8450_tlmm_of_match,
- 	},
- 	.probe = sm8450_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8450_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8550.c b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-index 3c847d9cb5d93bbc7bb5a9b0b2ee707e14de6387..1b4496cb39eb46b2b660ef213e1f3c8fdac2b21e 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8550.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-@@ -1762,7 +1762,6 @@ static struct platform_driver sm8550_tlmm_driver = {
- 		.of_match_table = sm8550_tlmm_of_match,
- 	},
- 	.probe = sm8550_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8550_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8650.c b/drivers/pinctrl/qcom/pinctrl-sm8650.c
-index 104708252d12a82a887aa2bdaecf31d3308a102c..449a0077f4b10666ecd9dfaae8e0057a91e181a6 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8650.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8650.c
-@@ -1742,7 +1742,6 @@ static struct platform_driver sm8650_tlmm_driver = {
- 		.of_match_table = sm8650_tlmm_of_match,
- 	},
- 	.probe = sm8650_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8650_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8750.c b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-index 1af11cd95fb0e69fcc876fe069cc2cd6fd6679fd..b2764b722a560e932660f3d0557ad745880b91c4 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8750.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-@@ -1709,7 +1709,6 @@ static struct platform_driver sm8750_tlmm_driver = {
- 		.of_match_table = sm8750_tlmm_of_match,
- 	},
- 	.probe = sm8750_tlmm_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init sm8750_tlmm_init(void)
-diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-index 419cb8facb2f3d261558593800a26694eddb4817..d4b215f34c39bf67a0656a3f894b8639491e898b 100644
---- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-+++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-@@ -1861,7 +1861,6 @@ static struct platform_driver x1e80100_pinctrl_driver = {
- 		.of_match_table = x1e80100_pinctrl_of_match,
- 	},
- 	.probe = x1e80100_pinctrl_probe,
--	.remove = msm_pinctrl_remove,
- };
- 
- static int __init x1e80100_pinctrl_init(void)
-
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	ret = arch_kexec_locate_mem_hole(kbuf);
+@@ -705,6 +749,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index d35d9792402d..29e6cebe0c43 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -10,7 +10,7 @@ struct kimage *do_kimage_alloc_init(void);
+ int sanity_check_segment_list(struct kimage *image);
+ void kimage_free_page_list(struct list_head *list);
+ void kimage_free(struct kimage *image);
+-int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
++int kimage_load_segment(struct kimage *image, int idx);
+ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
 -- 
-2.39.5
+2.34.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
