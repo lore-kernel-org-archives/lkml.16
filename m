@@ -1,265 +1,176 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39B428DF0B
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434271D555
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150604; cv=none; b=DeArqUaTdmghVxHTu6ZgkNB9qKgrgw61JYGiUVJT0lgMORTfVLMUbLCmemetfk7hQHbBbJHegnikwsl5boAYwu5DJpYjTOx61uwhgvAjoo6Ax+jD5bZXssiXajsSkLxV6dgkwqFr32ZEjUAKzjCHoe5Ob+APKOLAhIO9e2yIQLo=
+	t=1747150646; cv=none; b=k6CK0d3047swgNnN7SC9LjF9kvQhdPP1b3d2fc0Dm+TQxHz0s+dQ2eMuNjfsQdLjNvv5hdn/Eg/KPrQT215XE6wDXkt1UFf1VuQz0uwqDtJDPU9LoSrvakb9LGzRs9tmAErwsa6UI4xEr8K8t20+labWsq+JXRfybaZTIWhwrBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150604; c=relaxed/simple;
-	bh=g8+164MWQnwm/Yvz9p3c3pVZTgk5x0kJhrCBitVwXJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f+ZfL8wJplWrKE4qbnMH/Y8nIqJH0VtK+6K0U0IeoARSZI5/lLEI08iPk+4lHm2Y9kzJHUAo3RvezE6WjFEfYWG7vDGf+3aG2D+kobXi6UYXi9506uxHY/7kf2p7Vite3dG1q2fiuF5W5iR4kPIylcCnWO5m5sMRVloZEow7kq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=V8x/SrQP; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747150646; c=relaxed/simple;
+	bh=CTtDbeWwdllOOJFC6Uy8ygOqbtnJf22JPHMG6jug4UE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCDeme4mn76PUO44ddK7p6bJWBqMQ9bkVe1YHsc3RxFHw3Wt8IgrxrrVkGdJdXa6G6WqAhQIjnaYWNuiQdI5sh00ytmJnaQ2T51id2MJlyBB2y1bSpdl28n92idcDfcnMM5ZOfF6PIj8M0B7wH7QoKWY8ZaIWXQ2ZXIJWkXnOWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=uZnzP3Vq; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="V8x/SrQP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so42931975e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:36:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="uZnzP3Vq"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f0ad744811so42694136d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747150599; x=1747755399; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L57om844kxS3HDPApKIBPPD4O1jfgBmX7JYFvjM39sM=;
-        b=V8x/SrQPZxRnMnsHiB438NwCSZj0RCPgkyzK8+wWjLkWOs9+EtSoiVN9yDdeyOBNgi
-         nGuQutR8jC7fhdCuDAF0v1RFiUCzU30tfRMf5+GgMZyuTXRzz7AbYVvnXZbl/2lPHSXQ
-         pcKf2KodxzqTJgga+v7AnbYzQhqHAWSc2oy78R7e6jWSzp3nSvVgzXxbKJ2mYbZWkuT3
-         Ou224kIHF/mNA244zMJCMu5G/I831oi0mgKBiM2XTGu6JjTQ77EOWSVJFmjO/nmzo/+T
-         95qOeL1+RW+s5443TPpLEItNM8wu8RZwXQW5FZtG6Hc9B3l4+FpaPlJTplp0NZwtr3zD
-         arQw==
+        d=rowland.harvard.edu; s=google; t=1747150643; x=1747755443; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NFGbIoM56oY9CYSlck5qbHpuQ4uA8AlSWoOsJXQxQnQ=;
+        b=uZnzP3Vqldfp6S/mKh4emO+FxOi+DjPNrQofYIRKgTxEYMOps2iJ2NB2JqdpMcQVcT
+         ICWmxvCgf64vrPxEhnN/lJfPiim8y25lbegciZZKwBdNBvvydiaVgVXwifij/1ohU6bB
+         9TpkHPwprdVGT3NbaFquz/Epzs4U0Zz8DNtfLaGhZr3rij+SQUB2radEPwQU/qh5x0/r
+         t6LoE5pzUO6hsOZ598gKdgAEMyDKcjO/QBuI+fAyaoxurwsLP76ormN4jkUqDJ9Mtw9n
+         CdHrLOZWbLqAkNTPjJh0UdiEWi6CFdOzhD7keZLmDMupJXpX05RG2ScW1zNSnBHhD+dL
+         /xJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747150599; x=1747755399;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L57om844kxS3HDPApKIBPPD4O1jfgBmX7JYFvjM39sM=;
-        b=S62PycKDdxh4kRfA5lXO9sLxNeT7c/mxX8N8EOLJBxdq+8V24VFRX6qtm0gvWv21r1
-         ilZG5uFuwNC79RZcVk4Bcafs4I2cZavEavXbFTl+fI7bJcfjzkQoCWPtVM0z3YzMnq9b
-         7Ahi6BSQtmoxZM6spG2pem8ZHr18wcThdJQJlb/oreE7HEpyzCGItl5/HU5nU7rIwLvi
-         buiez9ZdEgHqnQmvXQBtvy5tlpV4P1vymvWn+Ii32UVFunciBBjr8aJmoom7cc0ZWmeD
-         yKSYXXGuy5okgp/OTw1gr6xYlNlW48cn3JwWV/Zzp10joV+YrW0rlx9biBRUl1n/Mdyd
-         zT0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtXIaZn83AtgCUdD3aVIgz4i9k5igo4HWhZnlZRTQDDrWkK91MqF0iWigUhRWcOJRyVWEb6+4Vorejt9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywwJU7R0PTlJBvPpliKVSU/EvFMlqVP7nKP+oKsZI5Phq/hCGk
-	2McO53ZB16h8dhp+GoO74aIUnDx7T2Gh8EMQv/c0M6/YAQ1vlJ2dozmNhUPj13w=
-X-Gm-Gg: ASbGnctLiRlm4+mKb/rfRjGwNyk/GPuen0C2XlYePAsCALhRtN7GQQGtyFSg2K+EEoD
-	ZFz0Rfv8ySGJrpq5LxIFCrb0mjW3YifpCyOWoDwHn7PUgYUFPNVoJhjGN6NvSK1MgzS1MzF/cze
-	qZBykNL4l1MpgyIEwvoaIfJTx8y9FGqGj+jN252H6SM022A+gCAP+6Ui4S1DvSxsPHC7n2QmvDZ
-	fv7+igkjftBWidtF21YU3HfhfCfFh7HRkJR+dXB4iZTOz2zJlkjG6DKD9hgLh602lEYB0LD2tHi
-	o+i7RPsvXDMrsbFtVQy0oulzDL8W3C5UziXdnjk/SnohEPbcF/9Y9gZZNCQDcQfs/JA=
-X-Google-Smtp-Source: AGHT+IFml+AzNYNXdPMsjKRnKr8SIqb9NPuxRgmuQY6V1E11Gk6Rx5OhkWkHEuPN0PEic9EHObJEdA==
-X-Received: by 2002:a05:600c:a44:b0:43c:ec4c:25b1 with SMTP id 5b1f17b1804b1-442d6dc5328mr136024405e9.23.1747150598818;
-        Tue, 13 May 2025 08:36:38 -0700 (PDT)
-Received: from [192.168.157.194] ([213.233.104.159])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d5cf5d6bsm176202005e9.1.2025.05.13.08.36.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 08:36:38 -0700 (PDT)
-Message-ID: <433f188f-054d-4f22-86bf-74b8c38f11f5@tuxon.dev>
-Date: Tue, 13 May 2025 18:36:35 +0300
+        d=1e100.net; s=20230601; t=1747150643; x=1747755443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NFGbIoM56oY9CYSlck5qbHpuQ4uA8AlSWoOsJXQxQnQ=;
+        b=Q/RKIvr0dbqBoBk5Ybt7ZLNKL2Vpt3Fzyfe2a5I5njKpbeswKItn2TBLUtoc8cY0FJ
+         EtBNOalErDI1D2mGyXrgfI+UAL81/wFDmnhn+3Yf9eZJ7cSz1xDHZlmSy4UyJ5a0uDEs
+         TxMD7ZVjMo14OrICkLU7HbAPi6qCGjV3gr1gUDJCrZrKgB4Zfi2zNZ6DjT4Oujtqyna3
+         wpTvn0JqNvpaC9RS3J8g9L4GF9M/3KP95q4+GiTwIvZHsjjNjDi5X0tated/9U41txDj
+         VTVu9qyKx1Kl/62+6ZTy4SLiCJ3l2VM/XdDxIfybmOndkFQcNh98QT6wJjg1Ypn26pfD
+         TXwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ/77OQz3nKgAaRtu2WkJ6xUe04UfeOnSZQKYLMUoytPBr1qsxm9bL4qlTIngbwhA9Ou8/CMDUyphSEag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznknLIzfUx3mhhcJ4TN08Rb0o8Z0ZYhqHThOh4laER0sjw0iLO
+	jKi/uY3VyQXFWZDKxKeXPWbBUDQrtTkUKkk1pZYDruyq6Y+hmyE2vVFRWpvaMA==
+X-Gm-Gg: ASbGncteJ/bXC2JvlBT7QNmzqrm3FdIbh07dmGnxtVbBcZRWi0zz+kboVZmQvssaVRn
+	o5tUJ4Bo2M7d+y4aQYKi5ogzoWec3VMPPeSTFC8siUwHQ7HF2VRjKL7DEK0GseMdcZGwQpKqIN0
+	wf/H6OPUVRhdWPB1zpt8IrfK4gXxq45Op2EFcAfMYBBmApCFGcgL13VfkWFfHuUaARJVBoU7gHq
+	55p28KCfkarR0xi0e+/fzu0k8u6axmTj0AhX3vS57K4Or3+3fKcFYNkzMPZ/uUYPv8FOZtNUp3h
+	xp4vAuef8DDn2joMJDfnT1iqEMThUdEHunsMCOLaBAn72h7qWS4GvTKMQ3sZA6vV+2ZBQg==
+X-Google-Smtp-Source: AGHT+IEHksdm/pCnn1uQwnUiWMrycBmsekx8bStKKlWjCJife5ySIwj7iwgMGAClNr2Csvd7UdE+Dg==
+X-Received: by 2002:a05:6214:f2c:b0:6f5:41b8:47ed with SMTP id 6a1803df08f44-6f6e470e2fdmr303779196d6.0.1747150643015;
+        Tue, 13 May 2025 08:37:23 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a0c93esm68146846d6.60.2025.05.13.08.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 08:37:22 -0700 (PDT)
+Date: Tue, 13 May 2025 11:37:20 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+Message-ID: <b334ef97-1f79-4dd9-98f6-8fd7f360101e@rowland.harvard.edu>
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513113817.11962-1-00107082@163.com>
+ <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
+ <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] clk: renesas: rzg2l-cpg: Add support for MSTOP in
- clock enable/disable API
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
- <20250410140628.4124896-4-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdUv6+KFuobDzzmKFOH6PvwU0RFzd1M9WrEZ-yzESBahkw@mail.gmail.com>
- <e77c85de-4542-44e1-af2e-f63f72602ff8@tuxon.dev>
- <CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com>
- <53999471-277b-4621-abfd-b4c25761b3da@tuxon.dev>
- <CAMuHMdWa_GuHmw0wRjMJi8ydcn-YTapruWKfoX96FBZHhveQHg@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAMuHMdWa_GuHmw0wRjMJi8ydcn-YTapruWKfoX96FBZHhveQHg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
 
-Hi, Geert,
+On Tue, May 13, 2025 at 10:41:45PM +0800, David Wang wrote:
+> 
+> 
+> At 2025-05-13 22:25:50, "Alan Stern" <stern@rowland.harvard.edu> wrote:
+> >On Tue, May 13, 2025 at 07:38:17PM +0800, David Wang wrote:
+> >> ---
+> >> Changes:
+> >> 1. Use caller's mem_flags if a larger memory is needed.
+> >> Thanks to Oliver Neukum <oneukum@suse.com>'s review.
+> >> ---
+> >> URB objects have long lifecycle, an urb can be reused between
+> >> enqueue-dequeue loops; The private data needed by some host controller
+> >> has very short lifecycle, the memory is alloced when enqueue, and
+> >> released when dequeue. For example, on a system with xhci, several
+> >> minutes of usage of webcam/keyboard/mouse have memory alloc counts:
+> >>   drivers/usb/core/urb.c:75 [usbcore] func:usb_alloc_urb 661
+> >>   drivers/usb/host/xhci.c:1555 [xhci_hcd] func:xhci_urb_enqueue 424863
+> >> Memory allocation frequency for host-controller private data can reach
+> >> ~1k/s and above.
+> >> 
+> >> High frequent allocations for host-controller private data can be
+> >> avoided if urb take over the ownership of memory, the memory then shares
+> >> the longer lifecycle with urb objects.
+> >> 
+> >> Add a mempool to urb for hcpriv usage, the mempool only holds one block
+> >> of memory and grows when larger size is requested.
+> >> 
+> >> Signed-off-by: David Wang <00107082@163.com>
+> >
+> >It should be possible to do what you want without touching the USB core 
+> >code at all, changing only xhci-hcd.  That's what Mathias is suggesting.
+> >
+> >Instead of having an URB keep ownership of its extra memory after it 
+> >completes, xhci-hcd can put the memory area onto a free list.  Then 
+> >memory areas on the free list can be reused with almost no overhead when 
+> >URBs are enqueued later on.
+> 
+> I have to disagree,  your suggestion has no much difference from requesting memory from
+> system, locks and memory pool managements, all the same are needed, why bother?
 
-On 13.05.2025 17:07, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Tue, 13 May 2025 at 14:34, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
->> On 09.05.2025 15:34, Geert Uytterhoeven wrote:
->>> On Fri, 9 May 2025 at 12:54, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
->>>> On 07.05.2025 18:42, Geert Uytterhoeven wrote:
->>>>> On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>>
->>>>>> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
->>>>>> module has one or more MSTOP bits associated with it, and these bits need
->>>>>> to be configured along with the module clocks. Setting the MSTOP bits
->>>>>> switches the module between normal and standby states.
->>>>>>
->>>>>> Previously, MSTOP support was abstracted through power domains
->>>>>> (struct generic_pm_domain::{power_on, power_off} APIs). With this
->>>>>> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
->>>>>>
->>>>>> Previous Order:
->>>>>> A/ Switching to Normal State (e.g., during probe):
->>>>>> 1/ Clear module MSTOP bits
->>>>>> 2/ Set module CLKON bits
->>>>>>
->>>>>> B/ Switching to Standby State (e.g., during remove):
->>>>>> 1/ Clear CLKON bits
->>>>>> 2/ Set MSTOP bits
->>>>>>
->>>>>> However, in some cases (when the clock is disabled through devres), the
->>>>>> order may have been (due to the issue described in link section):
->>>>>>
->>>>>> 1/ Set MSTOP bits
->>>>>> 2/ Clear CLKON bits
->>>>>>
->>>>>> Recently, the hardware team has suggested that the correct order to set
->>>>>> the MSTOP and CLKON bits is:
->>>>>>
->>>>>> Updated Order:
->>>>>> A/ Switching to Normal State (e.g., during probe):
->>>>>> 1/ Set CLKON bits
->>>>>> 2/ Clear MSTOP bits
->>>>>>
->>>>>> B/ Switching to Standby State (e.g., during remove):
->>>>>> 1/ Set MSTOP bits
->>>>>> 2/ Clear CLKON bits
->>>>>>
->>>>>> To prevent future issues due to incorrect ordering, the MSTOP setup has
->>>>>> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
->>>>>> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
->>>>>> from the RZ/G3S HW manual.
->>>>>>
->>>>>> Additionally, since multiple clocks of a single module may be mapped to a
->>>>>> single MSTOP bit, MSTOP setup is reference-counted.
->>>>>>
->>>>>> Furthermore, as all modules start in the normal state after reset, if the
->>>>>> module clocks are disabled, the module state is switched to standby. This
->>>>>> prevents keeping the module in an invalid state, as recommended by the
->>>>>> hardware team.
->>>>>>
->>>>>> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
->>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>
->>>>> Thanks for your patch!
->>>>>
->>>>>> --- a/drivers/clk/renesas/rzg2l-cpg.c
->>>>>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->>>
->>>>>> +/* Need to be called with a lock held to avoid concurrent access to mstop->refcnt. */
->>>>>> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
->>>>>> +                                            bool standby)
->>>>>> +{
->>>>>> +       struct rzg2l_cpg_priv *priv = clock->priv;
->>>>>> +       struct mstop *mstop = clock->mstop;
->>>>>> +       bool update = false;
->>>>>> +       u32 value;
->>>>>> +
->>>>>> +       if (!mstop)
->>>>>> +               return;
->>>>>> +
->>>>>> +       value = MSTOP_MASK(mstop->conf) << 16;
->>>>>> +
->>>>>> +       if (standby) {
->>>>>> +               unsigned int criticals = 0;
->>>>>> +
->>>>>> +               for (u8 i = 0; i < clock->num_shared_mstop_clks; i++) {
->>>>>
->>>>> unsigned int
->>>>>
->>>>>> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
->>>>>> +
->>>>>> +                       if (clk->critical)
->>>>>> +                               criticals++;
->>>>>> +               }
->>>>>> +
->>>>>> +               /* Increment if clock is critical, too. */
->>>>>> +               if (clock->critical)
->>>>>> +                       criticals++;
->>>>>
->>>>> If clock->shared_mstop_clks[] would include the current clock, then
->>>>> (a) this test would not be needed, and
->>>>
->>>> Agree!
->>>>
->>>>> (b) all clocks sharing the same mstop could share a single
->>>>>     clock->shared_mstop_clks[] array.
->>>>
->>>> I'll look into this but I'm not sure how should I do it w/o extra
->>>> processing at the end of registering all the clocks. FWICT, that would
->>>> involve freeing some shared_mstop_clks arrays and using a single reference
->>>> as the shared_mstop_clks[] is updated after every clock is registered. Can
->>>> you please let me know if this what you are thinking about?
->>>
->>> Currently, when detecting two clocks share the same mstop,
->>> you (re)allocate each clock's shared_mstop_clks[], and add the
->>> other clock:
->>>
->>>     rzg2l_cpg_add_shared_mstop_clock(priv->dev, clock, clk);
->>>     rzg2l_cpg_add_shared_mstop_clock(priv->dev, clk, clock);
->>>
->>> Instead, call rzg2l_cpg_add_shared_mstop_clock() once, and modify
->>> rzg2l_cpg_add_shared_mstop_clock() to not only realloc the target's
->>> shared_mstop_clks[], but also loop over all its existing entries,
->>> and update their shared_mstop_clks[] pointers.
->> I tried this approach but w/o complicated further the code I can't keep
->> track of whether the "to be updated" (not reallocated) shared_mstop_clks[]
->> pointers were previously updated pointers or devm_krealloc()'ed ones. I
->> need this to properly free the unused arrays. Calling devm_kfree() on a
->> non-devres resource triggers a WARN_ON() for each call.
->>
->> Because of this I prepared a new version where the duplicated lists are
->> freed after all the mod clocks were initialized. I'll publish it soon.
-> 
-> What about using in rzg2l_cpg_update_shared_mstop_clocks():
-> 
->     for (i = 0; i < priv->num_mod_clks; i++) {
->         clk = ...[i];
-> 
->         if (clk->mstop != clock->mstop)
->                 continue;
-> 
->         n = clk->num_shared_mstop_clks;
->         if (!n) {
->             new_clks = devm_kmalloc(dev, 2 * sizeof(...), GFP_KERNEL);
->             new_clks[n++] = clk;
->         } else {
->             new_clks = devm_krealloc(dev, clk->shared_mstop_clks,
->                                      (n + 1) * sizeof(...), GFP_KERNEL);
->         }
->         new_clks[n++] = clock;
-> 
->         /* update all matching clocks */
->         for (j = 0; j < n; j++) {
->             priv->clks[new_clks[j]]->shared_mstop_clks = new_clks;
->             priv->clks[new_clks[j]]->num_shared_mstop_clks = n;
->         }
-> 
->         break;
->     }
-> 
-> The above is an oversimplification, as it does not take care of
-> converting between mstp_clock and clk_hw pointers where needed.
-> 
-> Does that make sense?
+There are two differences.  First, xhci-hcd already has its own lock 
+that it acquires when enqueuing or dequeuing URBs, so no additional 
+locks would be needed.  Second, complicated memory pool management isn't 
+necessary; the management can be extremely simple.  (For example, 
+Mathias suggested just reusing the most recently released memory area 
+unless it is too small.)
 
-I see it now. It make sense. Thank you for sharing.
-
-Claudiu
-
+> The reason I choose URB is that  URB life cycle contains the private data's lifecycle, 
+> and no two HCD can take over the same URB as the same time.
 > 
-> Gr{oetje,eeting}s,
+> I think the memory pool here is not actually a pool,  or I should say the mempool consists of
+> pool of URBs, and each URB have only "single one" slot of mem pool in it.
 > 
->                         Geert
 > 
+> >
+> >This idea can become more elaborate if you maintain separate free lists 
+> >for different devices, or even for different endpoints, or sort the free 
+> >list by the size of the memory areas.  But the basic idea is always the 
+> >same: Don't change usbcore (including struct urb), and make getting and 
+> >releasing the extra memory areas have extremely low overhead.
+> 
+> Why implements a device level memory pool would have extremely low overhead?
 
+Because then getting or releasing memory areas from the pool could be 
+carried out just by manipulating a couple of pointers.
+
+Some fraction of the time, URBs are created on demand and destroyed upon 
+completion.  Your approach would not save any time for these URBs, 
+whereas my suggested approach would.  (This fraction probably isn't very 
+large, although I don't know how big it is.)
+
+> Why  making changes to usb core is bad? The idea in this thread is meant for all kinds of
+> host controllers, xhci is what I have in my system; i think similar changes would benefit other
+> HCs
+
+Those other HC drivers would still require changes.  They could be 
+changed to support my scheme as easily as your scheme.
+
+If I were redesigning Linux's entire USB stack from the beginning, I 
+would change it so that URBs would be dedicated to particular host 
+controllers and endpoint types -- maybe even to particular endpoints.  
+They would contain all the additional memory required for the HCD to use 
+them, all pre-allocated, so that dynamic allocation would not be needed 
+during normal use.  (The gadget subsystem behaves this way already.)
+
+Such a drastic change isn't feasible at this point, although what you 
+are suggesting is a step in that direction.  In the end it comes down 
+to a time/space tradeoff, and it's very difficult to know what the best 
+balance is.
+
+I'm not saying that your approach is bad or wrong, just that there are 
+other possibilities to consider.
+
+Alan Stern
+
+Alan Stern
