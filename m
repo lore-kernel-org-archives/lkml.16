@@ -1,80 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC9725393E;
-	Tue, 13 May 2025 10:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B4125393E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131281; cv=none; b=X/Q6hStIWu2vikSWx79byvCBl6XC+pBH0KQyXXdEi5VxYOW9MkJ9CT/McKVtci2BRD/E8tLAR67noJSW8k2YZCVzbmS7iAUqgSJP2Y/SmJzozxMgVolIFLAC9g0QMzkG24AleOxiCO5Z4T5BsLE4aJ2g74NuXHwUwTP3Sv0izeI=
+	t=1747131293; cv=none; b=TfIw0aI+n3BY6TO/uYdB1tSNL7N2wI3ubAo4/LOvvxceC7x+zwt/7y77ZAdJPvq+qmKKJHsuSybxKf3TZ27yifJjlYks7/UbN8wCzrGX7qTDTbLADxNdIJLaa9I6gnjn6FJD17YfYVTShamoQeMykRONBOEYZxSu8LqNIp5fFzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131281; c=relaxed/simple;
-	bh=TudxigjBRZmDuW3JVuS0UdXgbmBBti/+Bcm5HABZycc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hXR6x5V7WwM33a0MJOvdjDPp7hAC0pvCH8HoGXPcheCX0rDrAxrI5KiVcuJGQYapZq/cVh/iSj7rdzhlF5K+KCI/CoSV2gSnmZoj+UBV0bud6Vllw9PWv1eCSuTa2dzaO9h216EmFv8hRkm+kw1NQjKDn8ksNUSPLuUfJNOgmmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gO9Odf6y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747131293; c=relaxed/simple;
+	bh=BdTGy28wMZlgh3Zpdrf17IYevdmEz295jwjYmhNjv1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E5ija6LqKy+N3DNJIk5lEUsisR3TytHFrRHmfG1+QapyMzLjy9abPoJUN0e+PMj2xJXCOgN5lRM6opG4rk2Y8yZWFkkox6Fnaiglr+TWK9EjlZycoS+WnraJu41zGR8f+h0XbhliUPc0D8E4d8jNp0ry7W5smcWnmmwN2TFxNiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=gIYeV1lG; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gO9Odf6y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A53C4CEE4;
-	Tue, 13 May 2025 10:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747131280;
-	bh=TudxigjBRZmDuW3JVuS0UdXgbmBBti/+Bcm5HABZycc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gO9Odf6yxgKQ/tjlCyh718juS1TDEPZcF+wxJN+UoX2qvYyLv8aw+tAO+keDPD+i1
-	 IT03ndNxQJAga5CuP135TsbcLg59TiGomAO/x9C2N6LKAd9YqVC6qE00olsjRw3hCx
-	 WXWuat4XwWf2z/1JE75K9uADTwx4eLKypgSmhme5ihpDSAUnFLC/4pgVEc0m2lW4y7
-	 58BF5P4XzyGI4VLqc2GZcsJ8NliIeOMYsDPOZmQkYZlQ1HkINCT9x+Xi+sTJGSVDoF
-	 XPmrqJviP7NQA8mzw6HYC3+y0IOz6rSNaovSt+T8xdHz0ATUsQrpzPDYDXAC4G4zwH
-	 wgoQ/7utBR43g==
-From: Lee Jones <lee@kernel.org>
-To: daniel.lezcano@linaro.org, lee@kernel.org, alexandre.torgue@foss.st.com, 
- tglx@linutronix.de, Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- jic23@kernel.org, robh@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
- devicetree@vger.kernel.org, wbg@kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- olivier.moysan@foss.st.com
-In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
-References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
-Subject: Re: (subset) [PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM,
- IIO, counter, clocksource
-Message-Id: <174713127684.4157861.15977616973399970511.b4-ty@kernel.org>
-Date: Tue, 13 May 2025 11:14:36 +0100
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="gIYeV1lG"
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by cmsmtp with ESMTPS
+	id EYKduoebvWuHKEmewu9a6j; Tue, 13 May 2025 10:14:50 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id Emevuyhs5yFMjEmevuzhtb; Tue, 13 May 2025 10:14:49 +0000
+X-Authority-Analysis: v=2.4 cv=SJREVvvH c=1 sm=1 tr=0 ts=68231b99
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=FZ5sTdBPW01O8ca3/UvAbjqPfK3+X4GxjMf1K+2FoYw=; b=gIYeV1lGr7Bae2GR0YYuGarm/9
+	0v2iKHrexu3oIujgXHNL+yvUwSpuy6966KnghO4x1bUhufFWuAPdinQEuRQqOMPDydtN0apf9eOxy
+	r6tW27qKqaAoqJof2TOq5XbboAa+852tt1EGbCFJ9sNeHVhHn+4oHXISNe+Cb6681LwpEdal9Hmmv
+	ikKLXdqpvbPdXHqv0ZkNA2FD5/6xX0E9cAVvXTXSa2M27ERTWWMu/ckAImj5ji3ckVsnIwb0vGpwf
+	hFqtuvwAWjsOsR04nwrjs3HwNP4v7qXCaphpOt3YARdDSwi4iW2nTfAeLUnw7blTIye+tmkDVco8d
+	JdTrCueA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:35082 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uEmeu-00000003UJy-1PV9;
+	Tue, 13 May 2025 04:14:48 -0600
+Message-ID: <0df0d357-8dd3-4bcc-ad84-675912bb465b@w6rz.net>
+Date: Tue, 13 May 2025 03:14:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-b75d9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 00/54] 5.15.183-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172015.643809034@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250512172015.643809034@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uEmeu-00000003UJy-1PV9
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:35082
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 35
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNmsDjslY22J9oE9VBDZfy82XO+NDL8NjNHo3dWuuizeN76M3iw/yaYX4u7L0XPAY1Bm9Iq/FI3vFL+H9x5n3bzFTl/M5eWfaNK0LMaHTHiCehhSXbVj
+ 8lVsY1n6cdf4ceY3iY+YPnKAuiJLd8SlVymTPTzqslb0sOvUwrrK5Ka7o2qorW+m7BjklmTC3Ltr+rvPOnqyfueVAwbbj+eaHUw=
 
-On Tue, 29 Apr 2025 14:51:26 +0200, Fabrice Gasnier wrote:
-> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
-> clocksource low-power timer (LPTIM) drivers.
-> This new variant is managed by using a new DT compatible string, hardware
-> configuration and version registers.
-> It comes with a slightly updated register set, some new features and new
-> interconnect signals inside the SoC.
-> Same feature list as on STM32MP1x is supported currently.
-> The device tree files add all instances in stm32mp251 dtsi file.
-> 
-> [...]
+On 5/12/25 10:29, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.183 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.183-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Applied, thanks!
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-[1/7] dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
-      commit: 3f9ce9d0760ad68a9c20167664d026d91da66879
-[2/7] mfd: stm32-lptimer: add support for stm32mp25
-      commit: 4f8ceb0302b36c5f78bcc8d0e7cfa2372fba134c
-[3/7] clocksource: stm32-lptimer: add support for stm32mp25
-      commit: 5414bc8c57c41038b1994cd21a2cc0b8415c1544
-[4/7] pwm: stm32-lp: add support for stm32mp25
-      commit: 3f51b232c1da8e59eb562f1d81533334827a4799
-
---
-Lee Jones [李琼斯]
+Tested-by: Ron Economos <re@w6rz.net>
 
