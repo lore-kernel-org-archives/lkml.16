@@ -1,97 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BE01E487;
-	Tue, 13 May 2025 16:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408852BE7DD
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747152847; cv=none; b=gYnPipbKq4XCaXEY9x6sm1Irg1vLHLL/OquFm0MkRG8XtSZEU3UxV7he6oGH5fS41LR9SylxfRCIuVcWpK9w+gJSO0qBgO8wt/ZRDh265/2CGijgE3gcMux+lwnDu5cyuyW8LFcFoaKqVK5Eq1EnyWsZMGmz9htHzKRBMp8yCIY=
+	t=1747152904; cv=none; b=p+RTe9TRjH0eVdq0ktOlwu/gMzUJonAfBM51a0lJzUVgz6iWXzMf8hF1WktLjIfD0VIaMJGMw2L+gbySLF3wrYzJcnb7sO2aPgVOYHM05a9MTOqNo9ByFDbEG2pOm2/wEaHbhyEAVXDSCKGvnQ9EsbaIxaKdBeimyHCy9bzBQCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747152847; c=relaxed/simple;
-	bh=06Mnn8DD0kLBqrjcbG6VmX6krU353wykhLimJN/+7xU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hn3UrJFWGqo64anr6Pn7Kx8xejppYmZq6x6Kn5ZCsN8yEDxdLP9SKoIVbwIGMpkzUtwg5cIA36ouFtF7JogdIpwBtt+jrukNA7oF+m4YEdG47Ksg2tfJn2mF3/XNKqEI5xvBVkACyxbAkPzTcvZxhUOOZvUNpgBtuGm6Ie0Gbno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfgPG+1g; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfgPG+1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475F8C4CEE4;
-	Tue, 13 May 2025 16:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747152847;
-	bh=06Mnn8DD0kLBqrjcbG6VmX6krU353wykhLimJN/+7xU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VfgPG+1gu3HnDcoCcWfF54jXdFqSUmEcC2xaRR5tohWvyDs3e+RECsHP3Boi63FF5
-	 XZJLq32RabDUHIqw1tKniKFfcWr99oXUe6YWvRr3GWHuPk9NklME+qld8XzHBlmrs6
-	 WAhu6x/9lfyJr7z1YJfiqhyawsDNYeJnE3ItC3PU+DXA3k2dFbMDVW1zL6AtdO92W5
-	 QK2hrQ5FdXQwSQyUbi956WVibwN7tpE4/J8AqSX5OzaoPsANTM0tKYtE1w8xrxGZeS
-	 tQcVMTA9v4NES1AljWumULgEMn6oHrpfEPZ6YbEct4pTm77EjD8M4weOrjkKB2t4+i
-	 Sl0Zq2nd0TB1A==
-Message-ID: <34aa4d3e-ed6b-4caf-aeb5-0f40ecff1a94@kernel.org>
-Date: Tue, 13 May 2025 11:14:05 -0500
+	s=arc-20240116; t=1747152904; c=relaxed/simple;
+	bh=HKpPJXxjYuQqKPv3yWs9KuFjDcumekh/Ju6urfgl5vg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=pzVGLsdi0z6sByhboxlgeTfq6KwwSR4yLYblyemsckmjxztGlNwZXUV0RMhYKrvP/O4l9/tGzgFTR0BGC3cmV0XLTMCxkOOBokeolYjuYlYiT8vfS42vt3eGNg0LsJW0+4A+8N8E3/boqte9jbnw8gzweHw4fYZb5IfPLysZxd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86465e3f1c6so663592539f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:15:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747152902; x=1747757702;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cTe00c1hyRHsKpLSvC9ga8m24ZFPh8xvwPrz92lnjcY=;
+        b=FHYA1iyoVun+lISkXI2E/oEdyCAoq3Fl6QbkGYQjQhfDlbwIm9z48ffIYzbfyc/jnM
+         FWSMLJs09Jzw2W+fd8kt0aqR6+DvAiFGdA4glvQQ8ChUdhJZeayg+hB07WwpG9PL0gGd
+         jxcVFKWav3Jcr06n8FYVzktTC7NAILyHQx/WOrSCtg9yICJDcAqr4/5zWYx7s3hsdpAh
+         Q/9TYbtuflukK3w52VWFPtVvrPOf47mUcvBe1PlZcJI60klphvt8dJ1Xs0cc0dHcn+Eo
+         Je5rtBFSzSbWNKBXvnife4XFxAQGSpgijPI6pb6vvQN2y+o2XIAeEcGzPqoOPhg7WVD+
+         FZMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYYC1I2bE+TqtRBNG39kJQp+EnPrNsvSrrW35O16Uveb7s7rnKiDeqnD2UwjRbpjGxdQa3ggpUD1irEIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdDrghlvQyzyw0IKBPagAQNlGNxfI52xa4fcZVGDifwXart7S7
+	9By5tCVnsljJ0Fx4Dt8Ckwq45qz/fjs5zJPWVriyuqjIwshhP0KyPEw8rVtRAT9JmB4wiRR973M
+	oRX/Ze4O/MV30ViiQIJijFJWD+wxciul435GIjM0/JAckWy1XBYafLbI=
+X-Google-Smtp-Source: AGHT+IE8LfMTg5FIn95j+7dtuIhT1njfrdxjsVnXFKXXpQV2HKiggVRMkKoIk355xKYHhv44FNsUa85Z7jfQ5UtInEyhsmWALdeR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq/amd-pstate: Avoid shadowing ret in
- amd_pstate_ut_check_driver()
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, kernel test robot <lkp@intel.com>,
- Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Swapnil Sapkal <swapnil.sapkal@amd.com>
-References: <20250512-amd-pstate-ut-uninit-ret-v1-1-fcb4104f502e@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250512-amd-pstate-ut-uninit-ret-v1-1-fcb4104f502e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:3e94:b0:867:8bb:4d8 with SMTP id
+ ca18e2360f4ac-86a0819f174mr21692439f.0.1747152902292; Tue, 13 May 2025
+ 09:15:02 -0700 (PDT)
+Date: Tue, 13 May 2025 09:15:02 -0700
+In-Reply-To: <tencent_7CCE5C7B1E6DB02E756D609404E99EEEE20A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68237006.050a0220.f2294.09fe.GAE@google.com>
+Subject: Re: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
+From: syzbot <syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/12/2025 4:28 PM, Nathan Chancellor wrote:
-> Clang warns (or errors with CONFIG_WERROR=y):
-> 
->    drivers/cpufreq/amd-pstate-ut.c:262:6: error: variable 'ret' is uninitialized when used here [-Werror,-Wuninitialized]
->      262 |         if (ret)
->          |             ^~~
-> 
-> ret is declared at the top of the function and in the for loop so the
-> initialization of ret is local to the loop. Remove the declaration in
-> the for loop so that ret is always used initialized.
-> 
-> Fixes: d26d16438bc5 ("amd-pstate-ut: Reset amd-pstate driver mode after running selftests")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505072226.g2QclhaR-lkp@intel.com/
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->   drivers/cpufreq/amd-pstate-ut.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
-> index 30835d0e4994..65f9d2bae2d3 100644
-> --- a/drivers/cpufreq/amd-pstate-ut.c
-> +++ b/drivers/cpufreq/amd-pstate-ut.c
-> @@ -246,7 +246,7 @@ static int amd_pstate_ut_check_driver(u32 index)
->   	int ret;
->   
->   	for (mode1 = AMD_PSTATE_DISABLE; mode1 < AMD_PSTATE_MAX; mode1++) {
-> -		int ret = amd_pstate_set_mode(mode1);
-> +		ret = amd_pstate_set_mode(mode1);
->   		if (ret)
->   			return ret;
->   		for (mode2 = AMD_PSTATE_DISABLE; mode2 < AMD_PSTATE_MAX; mode2++) {
-> 
-> ---
-> base-commit: b01fc4eca73cbd7946181255a95dbe64ff83bc5f
-> change-id: 20250512-amd-pstate-ut-uninit-ret-46a23a195687
-> 
-> Best regards,
+Hello,
 
-Much appreciated.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Acked-by: Mario Limonciello <mario.limonciello@amd.com>
+Reported-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
+Tested-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
 
-Applied to superm1/bleeding-edge.
+Tested on:
+
+commit:         e9565e23 Merge tag 'sched_ext-for-6.15-rc6-fixes' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1668ecd4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6d3b7b9473eaace7
+dashboard link: https://syzkaller.appspot.com/bug?extid=321477fad98ea6dd35b7
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17544af4580000
+
+Note: testing is done by a robot and is best-effort only.
