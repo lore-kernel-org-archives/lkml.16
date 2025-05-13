@@ -1,61 +1,63 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8389428E611;
-	Tue, 13 May 2025 13:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8ED28E582;
+	Tue, 13 May 2025 13:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142058; cv=none; b=lYiM7diGlw/73dvCGH3NH8+G/kJX+bH0bWLqrySEyoqQhZp63Ve1qja0eTw22DITbOjoDiKm6oX3TR61ZFjYyJOxTGXba8+R+SDF19AU8Dcv9fO22d+exdeOR46NbBmY7qIUTBgsmpmZNCZjXqOJfAMSzLf08Esu7CsnBwvz7V8=
+	t=1747142059; cv=none; b=rjGJoCRMXwof5TGJC0K7nrKrDrTbKW2RZGX9A0+VUbRH+3jW9UpkrSl2IzaWFSSm+rTVCZ0xgLFIHZWQRU/nmyLxMus/Qwsjbfs3HowWrLtDz69WLmkQkyMeeG+qvIrJCYF004fkKgcoBNYaOKIWePR+AzsEogCs+eVsIlrE02s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142058; c=relaxed/simple;
-	bh=hzYpFMz6PEQzypuJgh+TBXks5QKrMb8FlaruZc7qMKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V+P6e2w9sHIabyQS5GLotY4BxuRx/WuySSJZ9yINmqsRJNriioC2Qdp1CjP/pRa6CHeA1LyNs/leoS2G/j4sppLdwR5stGjt9xyBJ1Owtjchj0eHfXwsKXXHeba1XYDbozQKuq8SwKYBfD+Ve/7uOrUTenrqyPxbFqfWISxBLwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWlYxvRd; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1747142059; c=relaxed/simple;
+	bh=v5S4maaoyBtxxMaaqGoIdTkhU54pd8/40QxQsa0V9CY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=paomHi/Z29YgwF7966BFkYfkCZeX+SgEn+GA9r/1UybGkZoDceS0XO+9ZQceFgU+xJwb7k8+ETrOBuezemP+Fz9PjDk4hy71jKCS4tMhgPAKqDkTeH7eVz+BAbjHwlyb2MoCwALV4CtUTmM/mc/ACSW88K3CN+vqag/attXU5as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hYBJHn3a; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWlYxvRd"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a0b637db6eso3376102f8f.0;
-        Tue, 13 May 2025 06:14:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYBJHn3a"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a1fb17bb8cso3403729f8f.0;
+        Tue, 13 May 2025 06:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747142055; x=1747746855; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hTUBT0w5GEaEnTVNn0rNkm7MAuh5tuedOe/9zO701YU=;
-        b=QWlYxvRdNxCeRRf7yo/PpxRoAjW0uD9D0sN3tyunu585tDrWkeIvTJHvXck/l9YGGI
-         EB51XN/uigYT0gKcyBW1JLcLQuuOnSoGH7ukrweIK2MDZnM+iEwY5q7zFtur+WWflk3t
-         o9fuWDMBDBIgSHqwJqaGhAxu5DtXdLX8RwWRXj8LreqtjH9ktWVU7oEFzEzVH3LESRCM
-         kCHxsjmjz8Cr21hQvoojS/260HmnkGSL5KJn0ryosAL61sOwfdvg2/7qSNKvK2TzrcO2
-         EjTV+Iw+Pl45ARLpnKRQoENGnFZsOaqZKhSZXx9l8vjSMQwq+ur8TbbspFGzHgn3VWX7
-         6d4A==
+        d=gmail.com; s=20230601; t=1747142056; x=1747746856; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eSgMeEPJZwfTowiMMOsvLgVDH0pf/G4XujOfK/95V18=;
+        b=hYBJHn3a7t0pNVsE33vAGkdoQVnmjWXQuqCugDMRYVnmCOST/lB3arjMn99FaZEXhl
+         U2dZODWxMUGqrx3fxN710jCV9xIzuQjBO0l/Nd+PJxlr2OwychNQ0qFFFGyLNmOiKNxL
+         T3RS8BNFcMiAJ7iouECX4L91awlvU1sRZL1uFz3MPFJTKAqoLPcLb2k9r6cjJ06jKwaN
+         xiraACVacDt77ZWgCqvlkFiJc5LxYtQ3XuvGMkfLuHKNnPcUdTrfMWmlb3BOgVPMQKjp
+         BZsjOf5KnAKrrLxlkO4Z+r4ndzlqBxiKfImu7VVscGLAXstQtKZ7LQ9rKvkfBoCQClOO
+         STDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142055; x=1747746855;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hTUBT0w5GEaEnTVNn0rNkm7MAuh5tuedOe/9zO701YU=;
-        b=V23xkOMfTRvCdZRf5DGboNReB5f6gzEp5gHO9f/P292KVhtwKas/UJdQBLrHLFoLOX
-         u0awyV9TTMuN/nF3CnueTj8P8sDbI9JXs+iP3Jss6XqWtBJaz7pFGp40GEV+wtvTljHs
-         cojiCI/eGO1h+0VZxLXAsD/PduJMvfyNW7Rcrs/Q2FjLBg3h6qZErwAJLi9kSucRXCpm
-         JJDoaGHI0tTm1H5bpEf19YjCYuXpGtrAZyV/LivPD9CejtETWIik5xJSosdI4ODjPCUR
-         T3UzdjHV8nhwP/nDGcFuyZNhoA7oEBTr3mZNmWGF4uGrossIsDT0F1LE7WMiXZBy2O3i
-         BBBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0vMlJx/S2nBX5+Y9NCiu8yaageoWQqpPhfwTFXaXC9QGo2tuRC+/TCIEDzqvTvcpWstjBoMVKDS3tqEow@vger.kernel.org, AJvYcCUySZGQq6LXdg/8qQuKi0hwJVndak2Fk//Tx/X7US7hklK0hP8MW56QHd9bYiTaGZ5H/90YWN6e0daU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+v1IgNypVxrS5HMIBhC0HncQOLisy2xzvs6+7FmzcKwujPkCc
-	P7tnsnsR4WdOcnztQ8xTQxPY7GvzlOXFnO8z/gy3hXzEMAQExWcgC902w+1r
-X-Gm-Gg: ASbGncvsokWR3M3nnA4sgdIyHjS6WOqYbwfbZdh90m4Jd2V7wjYeK4LiCIFe3N6JI9E
-	EMMg3I1fnz6FSLrX+o1uWWD7uPXEJ1ZlQ4naRBKUgC9Mr3YgGwa+7xjn0YHS+17su/+Yw7fU4UL
-	EC8w6fnEtv1hwixhpEZ+qMa+0I9C9vROhnjBJrQd7S7jlvpbfwyoZSx60JdDPzwS75D/TTzwJsg
-	cSDfnsiNsRv+xjwDPpqllBr5dCOyJFvmE6hoKiY/08lfqSktptYKRDItzof68f1jyApwQ+wft4R
-	tstZRVmiTDaPRcWUeNWZKliqI8JZdiSnfqJVOZBl4GNcYcdxHc6S00sPVfL+vM/DNisJ9gJna2U
-	HbMqUnwJhTcRGDWQQVOin
-X-Google-Smtp-Source: AGHT+IFfFbXrnZLOm1LMUciqOqNghquIAlCVEEKmB7KYZmvMF0RFxvW6cqW4Nofb0IMrGZ0vnv5pEQ==
-X-Received: by 2002:a5d:5984:0:b0:3a1:f537:45ea with SMTP id ffacd0b85a97d-3a1f643cb61mr14795095f8f.25.1747142054295;
-        Tue, 13 May 2025 06:14:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747142056; x=1747746856;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eSgMeEPJZwfTowiMMOsvLgVDH0pf/G4XujOfK/95V18=;
+        b=GbAXqqFbiFaMd1TNh06NZJiYK9u5zv46pXqMpKDnNttfBRcQP6sIBfnU+RAg/XYR7M
+         vte3dwlkwf8x4wUIfawfRXUALlHbAhPNfhdLSN8pkQ+5wea3nvPFdL6IuDWH45zWYkoU
+         fEv/VaXkpUUcIynQezFX5uTLXlxRPV+RDtKoJjF3agmN782eU88SGKjL1zZNHyEEILID
+         UQEACjV0t8tS1SYOdkZ/wNP1HkE7FWdOs+9xhziZdvly1M1AIQRmV9/iz/m3SrdSIykN
+         L0PCOtNRNlZ6XiPSApKieC8aGCH1nmNH2Wme2ohn2t9XCatbqpjvRBv/8PnpOlekM7Za
+         bVdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWmspPowi/pejUag1ajrlbPdbez4lZh9gUDL0fzdlgip2u68pD9GXvFPqYO5tfvw79VLNPIGjbRgAcV6df@vger.kernel.org, AJvYcCXaBIZYjMzfz034hSmHhQpaRna69aT8DXN1HbViYLID8WCx116e4VhUhxgaVFLKhO1Zb/YX0nx/yF66@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/RzZZtbK+zFQzl7q0iuJZEB9j2m4V3E0o+dObtr0oPxtFTDq/
+	AFgLyue+6S8DYI/tXpRPCDnTvniQ5/fFfG4yhYH7661z+uLlDF7o
+X-Gm-Gg: ASbGncuHUcQPArySoVb0sXljATALB5LoFGNPJ9419iQl6tvpbPnYJdTkE0zxoo1ME1/
+	VFAki98Vksc4//iZviZxpMw6ynAuano8O6Cc8iHzDD0qyLyQipzNK4OLdow5Lm98H2jfbRIp8j5
+	vWIxRF+CkGMNKBDM5nBEZdEUo51AGMFGS2friWa3TIam73w5gNxUpsZwE+u1NhdehXhT53lL9Z1
+	tsoyVGBzG3Aq9ZtOiF4Em6pMYw3zgVm21toIwP1cJliPve9F4Nfl3GwPwwPIzEoR1+GqJ95uTiQ
+	sI5yTThU0J7m+OG2gMALERihfDMOqGWPEuCiJCgZyLezcdcAdyoVrSYQHtUA2OhpwOjHnkzLSws
+	ozG8AlI73zQ==
+X-Google-Smtp-Source: AGHT+IGLirPuM2ESKO9RNv/lwTmXbJqFl1w/JRNf0VJzgkGe/UInLy4SxcAMlJX6fZelQ5H+mCjjMw==
+X-Received: by 2002:a05:6000:a90:b0:3a1:f8d1:6340 with SMTP id ffacd0b85a97d-3a1f8d163efmr11827186f8f.34.1747142055783;
+        Tue, 13 May 2025 06:14:15 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:c996:6219:e8d3:1274])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddfd6sm15910102f8f.4.2025.05.13.06.14.13
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddfd6sm15910102f8f.4.2025.05.13.06.14.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:14:13 -0700 (PDT)
+        Tue, 13 May 2025 06:14:15 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -70,10 +72,12 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 0/2] arm64: dts: renesas: Add GBETH support to R9A09G057 SoC
-Date: Tue, 13 May 2025 14:14:10 +0100
-Message-ID: <20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 2/2] arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Enable GBETH
+Date: Tue, 13 May 2025 14:14:12 +0100
+Message-ID: <20250513131412.253091-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,34 +88,119 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi All,
+Enable the GBETH nodes on the RZ/V2H Evaluation Kit.
 
-This patch series adds support for the GBETH (Gigabit Ethernet) IP block
-to the R9A09G057 SoC. The first patch adds the GBETH nodes to the
-device tree source file for the R9A09G057 SoC, while the second patch
-enables the GBETH nodes on the RZ/V2H Evaluation Kit.
-
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
 v2->v3:
-- Added the mdio0/1 nodes to the R9A09G057 SoC DTSI.
-- Added the mdio0/1 nodes to the RZ/V2H Evaluation Kit DTS.
-- Added Reviewed-by tag from Geert
+- Split adding the PHY nodes into the mdio0/1 nodes.
+- Added Reviewed-by tag from Geert.
 
 v1->v2:
-- Added missing power-domains property to the GBETH nodes.
-- Fixed interrupt number 745 -> 775 in eth0 node.
-- Added  snps,rx-sched-sp property to mtl_rx_setup1
+- No change.
+---
+ .../dts/renesas/r9a09g057h44-rzv2h-evk.dts    | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (2):
-  arm64: dts: renesas: r9a09g057: Add GBETH nodes
-  arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Enable GBETH
-
- arch/arm64/boot/dts/renesas/r9a09g057.dtsi    | 209 ++++++++++++++++++
- .../dts/renesas/r9a09g057h44-rzv2h-evk.dts    |  66 ++++++
- 2 files changed, 275 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+index 063eca0ba3e2..d6d2f689b875 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
++++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
+@@ -16,6 +16,8 @@ / {
+ 	compatible = "renesas,rzv2h-evk", "renesas,r9a09g057h44", "renesas,r9a09g057";
+ 
+ 	aliases {
++		ethernet0 = &eth0;
++		ethernet1 = &eth1;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+@@ -78,6 +80,22 @@ &audio_extal_clk {
+ 	clock-frequency = <22579200>;
+ };
+ 
++&eth0 {
++	pinctrl-0 = <&eth0_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&phy0>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
++
++&eth1 {
++	pinctrl-0 = <&eth1_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
++
+ &gpu {
+ 	status = "okay";
+ 	mali-supply = <&reg_0p8v>;
+@@ -139,6 +157,44 @@ &i2c8 {
+ 	status = "okay";
+ };
+ 
++&mdio0 {
++	phy0: ethernet-phy@0 {
++		compatible = "ethernet-phy-id0022.1640", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		rxc-skew-psec = <0>;
++		txc-skew-psec = <0>;
++		rxdv-skew-psec = <0>;
++		txdv-skew-psec = <0>;
++		rxd0-skew-psec = <0>;
++		rxd1-skew-psec = <0>;
++		rxd2-skew-psec = <0>;
++		rxd3-skew-psec = <0>;
++		txd0-skew-psec = <0>;
++		txd1-skew-psec = <0>;
++		txd2-skew-psec = <0>;
++		txd3-skew-psec = <0>;
++	};
++};
++
++&mdio1 {
++	phy1: ethernet-phy@1 {
++		compatible = "ethernet-phy-id0022.1640", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		rxc-skew-psec = <0>;
++		txc-skew-psec = <0>;
++		rxdv-skew-psec = <0>;
++		txdv-skew-psec = <0>;
++		rxd0-skew-psec = <0>;
++		rxd1-skew-psec = <0>;
++		rxd2-skew-psec = <0>;
++		rxd3-skew-psec = <0>;
++		txd0-skew-psec = <0>;
++		txd1-skew-psec = <0>;
++		txd2-skew-psec = <0>;
++		txd3-skew-psec = <0>;
++	};
++};
++
+ &ostm0 {
+ 	status = "okay";
+ };
+@@ -172,6 +228,16 @@ &ostm7 {
+ };
+ 
+ &pinctrl {
++	eth0_pins: eth0 {
++		pins = "ET0_TXC_TXCLK";
++		output-enable;
++	};
++
++	eth1_pins: eth0 {
++		pins = "ET1_TXC_TXCLK";
++		output-enable;
++	};
++
+ 	i2c0_pins: i2c0 {
+ 		pinmux = <RZV2H_PORT_PINMUX(3, 0, 1)>, /* I2C0_SDA */
+ 			 <RZV2H_PORT_PINMUX(3, 1, 1)>; /* I2C0_SCL */
 -- 
 2.49.0
 
