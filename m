@@ -1,143 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013061.outbound.protection.outlook.com [40.107.162.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9F015ECDF;
-	Tue, 13 May 2025 15:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148483; cv=none; b=JuH5qgsRuQS2zveQOg2UEUSd569bhVj3w/zh6q/A2OlSUecqpfkbJZiRkts/uV+vHmiCunMCBH6vlV4SRRiEc1siu6qfR2SBrynZcD12CJzspXD4Qao8KCiPQQfgjC9IzfNWmCc2hjTmLBfyuLeKBbVlqnoLFM2CFEVzxVfO+fQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148483; c=relaxed/simple;
-	bh=34s7YxmsaatctKTQbzFyxUDNZ+7apb5XXLKqnullZvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IPyGw93IzTQ4ibny2tBJ0H/HnscfdOcIto3bSeDaUtIKnXa1iIYvl/1K1X7pGtm1Rr9V4prAxvHQ9jv916aTTXArPGwaHU6PGnNNvTX55CY50ODzDJud25F1XQpjJbJ2h03KRrRpaz717gxiguxhRwU3IQgqT5wH2+ozu0XBP4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/gALtmW; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518181AB528;
+	Tue, 13 May 2025 15:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747148502; cv=fail; b=RTn1zn+WqZpHrlhGLQ2cWfcb6TYjUuVGsUXe+lP4s7Vin+U2bXMA6JZRzWYqzp/dSFnamdUreg5ne1HxX4IqsbJz2bkX/sTtiufZjCb3yFU/ZahsQKNKyF0Wp3FPUGpppX6DL/55w7fTaDfX6zQo//oAiBoMGTixFiM7UN0FaSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747148502; c=relaxed/simple;
+	bh=XjgN2Nv/02U+9zMtAJBJMweTrRurvUy1CEhFSrwzM3U=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L6OgdNUTU5/wDNEAU6wsMNSfOIP6o1Yoi/P1wG70ioVVzuvlUcRnPbH5Ju6dFcr7H/ITcLYPqG4arvkWXNjMJZtCNrEwOdtGC0gJQpQdq+Hubfb4sHhLUwRPw/hhxozanK4zXl3tEwPVZmxUAk5nxcBFP21fEF5ThFpoCttFLCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=BYW0n+no; arc=fail smtp.client-ip=40.107.162.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/gALtmW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AF8EC4CEE4;
-	Tue, 13 May 2025 15:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747148483;
-	bh=34s7YxmsaatctKTQbzFyxUDNZ+7apb5XXLKqnullZvE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E/gALtmW+EfzWKoF2KpxSAKZN7jpgEaKdZTy0nucbKFDrrfCosmmp9S5gUlV7iJHB
-	 Ast18q8Xo++prH9x1E9N+KbC9cQciG3uSmooQeGsX60XVAn8a8ZvGp/K9pIwmPr4Sy
-	 VwAK1VvJxY2yX9XNjwCI/HzcQ6n+EpQ5NEKNYdXzVCtI7PWC0xrUqhJaZ2lPoU5ibQ
-	 zIuNEn3EykL/n49836Ho48wQyYX2PGqAbz4zXvr0nlZ2HzrArgrKN8xRJrMefx5gwq
-	 9oYTFPOyptmLZNuC3PcNHh+bwTUYEm2C+upRhTLeKD0UciUAZCpJv4cBQm06+bL0tH
-	 NkNhb4KljOxmg==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fc61b3ccaso6032532e87.1;
-        Tue, 13 May 2025 08:01:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMpipm6FpsJ6xFACsu7TLll7kvykzitYBeWXHILqp3UGNHWE1TXc9fzZiXLKp7BD1JsdPyuAnLJCc=@vger.kernel.org, AJvYcCWvvcBE4GaIanc3jj0Rg5whQtYbGZ0tVDoDUtDt/9vsCbjEPE8fg0Co5Xm7AKBhgw1CIBxVu4vNsEft+aNr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxRIDowAPmTW5dbm81C/zQg0IWk5BkscpRHlIiNKLvkTzKY4uy
-	PEOsx1/9gFEEZc13gJVoqQ3BZtpYcKta+NaJlM5eq8NQr9z/NlcHj97UnUT9nRbTIeDY0GRKdZm
-	mIJF7Ef1hLscG7wIXfjx1JxVTBnk=
-X-Google-Smtp-Source: AGHT+IFE6mAIe5vuAXJSo3LndPPPOdDDg3ad6kR6mPzNI+jVZ4lm/Q3UYaFA2494VDuJ62xbhyRZrudr1sG15MDqqiQ=
-X-Received: by 2002:a05:6512:3b88:b0:54f:c66b:8b78 with SMTP id
- 2adb3069b0e04-54fc67ecebbmr5413584e87.49.1747148480833; Tue, 13 May 2025
- 08:01:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="BYW0n+no"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qvvBMSM0VIZcq7dJyb8MZm5yMcFKPx7SR5bfJEshQwVOHBzOcRid4DnYN2+gRUlLJZUXxXUkeP2P4dsJj4TYv/m476iInFJRQW4n2PV37t4eKuAwuMb+YNw1dWxOTWHN0/HFFPv082+LG0Jb91qih5/hFCC8FKfCZRUzve0UCATfLz9do1IJZWl4ttvEgT7S+lAqbd9qa/oucpROVVYmvEzKwHc/tPhPjsEXGMMrHM7RxDsq8Dv1r5yNGJwAFupDM6bRUecy3FmF35i2K3VF32nw70I5TAxcRHoDvQfo3MwZIjpZo3eOEHg+/kZqA6KReMZdHPE28pzpRZUwQEfmXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bjIsDiCoF6jnkS5smHU2kM5XkeSWntqusBg31KgDOCA=;
+ b=D2GnuOGAjpl6WyKnHGuVDxIG19NOIu89xc9gK8z6E744uqrPoeHIYmrAAvC/qMF0mSVxEn2mNFLrnCSO/TWLeJhNpWW73TOC66X4mQk+CqIK/N1D90Juq56hMaYcuyX4ZFTDGNrswkjp22Q1I8gGyqqw+9aKwZN9aYQI2eewIYstdCRRyLPMR2uTBhncrqek3DTaegt8k0Owph91+09ncanobU1VFrA3T7+3Ef15muWtQQOGxWIFk88eMoDQ72VCVi7EFcW2GbUAk+lo9iG1QCjAx1QmywVom9y84yQCH6yCJSF0FblL0Wd9JwqnwykvUBHySLngO7zQv8A52kgbag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bjIsDiCoF6jnkS5smHU2kM5XkeSWntqusBg31KgDOCA=;
+ b=BYW0n+noXiI/JO2/WUZzJ73C6rrBbgcq7Cp1UwZDjgmjHbPSfmaWodJBfcH8MuuiSFdOve89AwMalfgD1MGoq6g+Qjogg6KPv5/Ta7xCObRdtCDLS0ZeAxA64uKALuX2xRZfkqpYbl9pzEbJRgU3VC2tZYrYm9m4MvtLb6ERzDvEo1B7tvyNwXlUHoBX0+aDrI3FGqYkglLiQEpaL05DPgDMx3NqayImOJDjbP+ZXTemIHLSA+WiR6L7+eVxnBOikSnSOOUhw6AjQjpNkXbHGIo0S7LgUvUdJMGaF6vQTwo0Aea6oqzavKYkHuBezjFLgk15hQMqD4VyR7uK//T6Tw==
+Received: from AM8P191CA0019.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:21a::24)
+ by DU2PR10MB7861.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:497::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
+ 2025 15:01:36 +0000
+Received: from AMS0EPF00000190.eurprd05.prod.outlook.com
+ (2603:10a6:20b:21a:cafe::2d) by AM8P191CA0019.outlook.office365.com
+ (2603:10a6:20b:21a::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.25 via Frontend Transport; Tue,
+ 13 May 2025 15:01:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.206) by
+ AMS0EPF00000190.mail.protection.outlook.com (10.167.16.213) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Tue, 13 May 2025 15:01:36 +0000
+Received: from SI-EXCAS2000.de.bosch.com (10.139.217.201) by eop.bosch-org.com
+ (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 13 May
+ 2025 17:01:11 +0200
+Received: from RNGMBX3002.de.bosch.com (10.124.11.207) by
+ SI-EXCAS2000.de.bosch.com (10.139.217.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.43; Tue, 13 May 2025 17:01:10 +0200
+Received: from LR-C-0008DVM.lr.de.bosch.com (10.13.215.140) by
+ smtp.app.bosch.com (10.124.11.207) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 13 May 2025 17:01:08 +0200
+From: <Jianping.Shen@de.bosch.com>
+To: <jic23@kernel.org>, <lars@metafoo.de>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <dima.fedrau@gmail.com>,
+	<marcelo.schmitt1@gmail.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<Jianping.Shen@de.bosch.com>, <Christian.Lorenz3@de.bosch.com>,
+	<Ulrike.Frauendorf@de.bosch.com>, <Kai.Dolde@de.bosch.com>
+Subject: [PATCH v2 1/2] dt-bindings: iio: imu: smi330: Add binding
+Date: Tue, 13 May 2025 17:00:27 +0200
+Message-ID: <20250513150028.42775-2-Jianping.Shen@de.bosch.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250513150028.42775-1-Jianping.Shen@de.bosch.com>
+References: <20250513150028.42775-1-Jianping.Shen@de.bosch.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512190834.332684-23-ardb+git@google.com> <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com> <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
- <aCMraFZ2yJQNyHf3@gmail.com> <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
-In-Reply-To: <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 13 May 2025 16:01:08 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com>
-X-Gm-Features: AX0GCFsTW_CqMzWDFZJVcJhvNUrqzoVNzZVp2bRtE1RA4pVO9l2ukTYmMVSKPQ8
-Message-ID: <CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF00000190:EE_|DU2PR10MB7861:EE_
+X-MS-Office365-Filtering-Correlation-Id: f444470f-0a72-4d93-dadc-08dd922f0eb3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?y/zteSWk5Be3taEttAQ+kTAm2Ltplupnq+vak8acTTB9/dj2z5BpbbYXc7H0?=
+ =?us-ascii?Q?uxD7EU+ZrNhiWVBIig+SXzmjlKQc3UTEVLBiNiSj+NJalz+TmI0t9Yo2mr7h?=
+ =?us-ascii?Q?2ld5WetU5CtSL9xSzvP4WdR0R/x1kPezPrUegfPIbVgIAjOMNm+Qw+mSD+mZ?=
+ =?us-ascii?Q?THz8E6+Qkwka00T6D13nGiQ7eUH9OpVpBwrH2LGq2bK/tXS177yp7W410/Vj?=
+ =?us-ascii?Q?rLU24+nKPqXPuCpNe/gP3moq+uDrJDpb3ofhlnBWIRD3ZtmtfO2OsulYCiUa?=
+ =?us-ascii?Q?xjEXxTguzDnKVe4GOgRWZu18R1/9r1mYPzaURkpnFQzQjnXPwz+jf5BL8vHi?=
+ =?us-ascii?Q?1ZKTaPPVuIgZA1ejSssY/KJJ6ICizzbbwbgt1SGJyUiaas2bj6+6qsUW7zSB?=
+ =?us-ascii?Q?9EB1so0wfu/aZG8ruWNxjKL2578ocnFxy5jA+9g0IcT0MftBSM0mA9SAuugi?=
+ =?us-ascii?Q?JH5rED1l+xCmYPrnviDiz7vE7zcKKAEVxQhBz20ZuMmChbH8QOy8Tp1EZ240?=
+ =?us-ascii?Q?Y+HdfTL2hoc0NJr5PWQcJH1Cwo5ycu8d19TZDO9xBmWKa9FchCO2NYs4QwVz?=
+ =?us-ascii?Q?/s5R8cxttjnMm4wbwjiUM11FaKM4dfisz/nY/VszH4VMz3r7Z7VshVz/GnW4?=
+ =?us-ascii?Q?qf8pc/aVyFh27vPWKLxyAmfetAKJrT4q8veU8HpTTvIrxS6ByMFrefZPxWAM?=
+ =?us-ascii?Q?SV2O1LPqS1zetUJT15Yy0QD8EYQUMIUUFE2Y2BGrt3AZhmmaP9Ek7613klmv?=
+ =?us-ascii?Q?Bq+ToFU/qigYIi/Kn2BFXogk5sMKuYXEGl+CkfbiFAgIa3Oss4TTe7X8OBPB?=
+ =?us-ascii?Q?oVC6/oGhZTnwaayL2sxQFBaczgPLqI2+ZluApplPRJByWkhFahAF6CpPyrw8?=
+ =?us-ascii?Q?DiWZn4WYCeiEueXJiEmaPn0tsIOGfGnm6yxZ5XaR1AiQxDhduypqLep54nuw?=
+ =?us-ascii?Q?N88XRBmX3jPc24USj6nhcOzL/at1yE+4mJ6avPiPUHNIhn10flb0JU3myyUN?=
+ =?us-ascii?Q?gvk770eNSU0rjKNRtlPx8Wtu9Rab6axLJBWariVzOxEred55Ia3wrbY10be2?=
+ =?us-ascii?Q?71tF8rfjXRl89xX0prht92arIv6nTnHGHzcL0tcCCX2WO0XcqzRmKA5Uc3OM?=
+ =?us-ascii?Q?1nMtw5VUUd4FzPvQrXT7mKiWCMH7wXusMSrEUGjNGTueAJt3YjnrvvffEF8Z?=
+ =?us-ascii?Q?PIrsnz8gcP8rk01RE88dherUBbtPbTtNpuTUgn0Gs0UWYzKZrTBZ/a4Dtgjc?=
+ =?us-ascii?Q?mmKinDOXYNUlvB1ASebRSiDUdGxyCTmB8LLYhpkL32TSmRXgZYKrp4HUqltK?=
+ =?us-ascii?Q?M+SJEEL2+ZroW3Bt++x6EvKham6XgKyBaNRiS/Q4n8L4WDCKJzUtKf1dKL+q?=
+ =?us-ascii?Q?modRckoy26FtmGYcgyMyh/WDrC9MPzrmqxLGGM8L/+NYTkRT3ifym21yycGS?=
+ =?us-ascii?Q?R0A0tb9p9VgmPDEJkcdXZMpwfTDanMphTP8TI4hi6u5SFtWHUgeS8WyXWhRc?=
+ =?us-ascii?Q?oDwjin20R1sw5dI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(7416014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 15:01:36.3539
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f444470f-0a72-4d93-dadc-08dd922f0eb3
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000190.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR10MB7861
 
-On Tue, 13 May 2025 at 15:17, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, May 13, 2025 at 01:22:16PM +0200, Ingo Molnar wrote:
-...
-> > Note that two of those fixes were from Ard who is working on further
-> > robustifying the startup code - a much needed change.
->
-> Really? Much needed huh?
->
-> Please do explain why is it much needed?
->
-> Because the reason Ard is doing it is a different one but maybe
-> I misunderstood him...
->
+From: Jianping Shen <Jianping.Shen@de.bosch.com>
 
-I will refrain from inserting myself into the intra-tip review and
-testing policy debate, but let me at least provide a quick recap of
-what I am doing here and why.
+Add devicetree binding for Bosch imu smi330.
+The smi330 is a combined three axis angular rate and
+three axis acceleration sensor module.
 
-Since commit
+Signed-off-by: Jianping Shen <Jianping.Shen@de.bosch.com>
+---
+ .../bindings/iio/imu/bosch,smi330.yaml        | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/bosch,smi330.yaml
 
-   c88d71508e36 x86/boot/64: Rewrite startup_64() in C
+diff --git a/Documentation/devicetree/bindings/iio/imu/bosch,smi330.yaml b/Documentation/devicetree/bindings/iio/imu/bosch,smi330.yaml
+new file mode 100644
+index 00000000000..9924fadccbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/imu/bosch,smi330.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/imu/bosch,smi330.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bosch SMI330 6-Axis IMU
++
++maintainers:
++  - Stefan Gutmann <stefam.gutmann@de.bosch.com>
++
++description:
++  SMI330 is a 6-axis inertial measurement unit that supports acceleration and
++  gyroscopic measurements with hardware fifo buffering. Sensor also provides
++  events information such as motion, no-motion and tilt detection.
++
++properties:
++  compatible:
++    const: bosch,smi330
++
++  reg:
++    maxItems: 1
++
++  vdd-supply:
++    description: provide VDD power to the sensor.
++
++  vddio-supply:
++    description: provide VDD IO power to the sensor.
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      enum:
++        - INT1
++        - INT2
++
++  drive-open-drain:
++    type: boolean
++    description:
++      set if the interrupt pin(s) should be configured as
++      open drain. If not set, defaults to push-pull.
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    // Example for I2C
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        imu@68 {
++            compatible = "bosch,smi330";
++            reg = <0x68>;
++            vddio-supply = <&vddio>;
++            vdd-supply = <&vdd>;
++            interrupt-parent = <&gpio>;
++            interrupts = <26 IRQ_TYPE_EDGE_RISING>;
++            interrupt-names = "INT1";
++        };
++    };
++
++    // Example for SPI
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        imu@0 {
++            compatible = "bosch,smi330";
++            reg = <0>;
++            spi-max-frequency = <10000000>;
++            interrupt-parent = <&gpio>;
++            interrupts = <26 IRQ_TYPE_EDGE_RISING>, <20 IRQ_TYPE_EDGE_RISING>;
++            interrupt-names = "INT1", "INT2";
++        };
++    };
+-- 
+2.34.1
 
-dated Jun 6 2017, we have been using C code on the boot path in a way
-that is not supported by the toolchain, i.e., to execute non-PIC C
-code from a mapping of memory that is different from the one provided
-to the linker. It should have been obvious at the time that this was a
-bad idea, given the need to sprinkle fixup_pointer() calls left and
-right to manipulate global variables (including non-pointer variables)
-without crashing.
-
-This C startup code has been expanding, and in particular, the SEV-SNP
-startup code has been expanding over the past couple of years, and
-grown many of these warts, where the C code needs to use special
-annotations or helpers to access global objects.
-
-Google uses Clang internally, and as expected, it does not behave
-quite like GCC in this regard either. The result is that the SEV-SNP
-boot tended to break in cryptic ways with Clang built kernels, due to
-absolute references in the startup code that runs before those
-absolute references are mapped.
-
-I've done a preliminary pass upstream with RIP_REL_REF() and
-rip_rel_ptr() and the use of the .head.text section for startup code
-to ensure that we detect such issues at build time, and it has already
-resulted in a number of true positives where the code in question
-would have failed at boot time. At this point, I'm not aware of any
-issues caused by absolute references going undetected.
-
-However, Linus kindly indicated that the resulting diagnostics
-produced by the relocs tool do not meet his high standards, and so I
-proposed another approach, which I am implementing now (see cover
-letter for details). Note that this approach is also much more robust,
-as annotating things as __head by hand to get it emitted into the
-section to which the diagnostics are applied is obviously not
-foolproof.
-
-Fixing the existing 5-level paging and kernel mapping code was rather
-straight-forward. However, splitting up the SEV-SNP code has been
-rather challenging due to the way it was put together, i.e., as a
-single source file used everywhere, and to which additional
-functionality has been added piecemeal (i.e., the SVSM support).
-
-It is obvious that these changes should be tested before being merged,
-hence the RFT in the subject. And I have been struggling a bit to get
-access to usable hardware. (I do have access to internal development
-systems, but those do not fit the 'usable' description by any measure,
-given that I have to go through the cloud VM orchestration APIs to
-test boot a simple kernel image).
-
-What Boris might allude to is the fact that some of these changes also
-form a prerequisite for being able to construct a generic EFI zboot
-image for x86, which is a long-term objective that I am working on in
-the background. But this is not the main reason.
-
-In any case, there is no urgency wrt these changes as far as I am
-concerned, and given that I already found an issue myself with v3,
-perhaps it is better if we disregard it for the time being, and we can
-come back to it for the next cycle. In the mean time, I can compare
-notes with Boris and Tom directly to ensure that this is in the right
-shape, and perhaps we could at least fix the pgtable_l5_enabled() mess
-as well (for which I sent out a RFC/v3 today).
