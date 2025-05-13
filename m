@@ -1,164 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EA41E8328
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD191F5E6;
+	Tue, 13 May 2025 05:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747115853; cv=none; b=CRmu0kwv5Fa5gpKGYA9tElxWjmS8mwB8LtPaPFOKULO3ZcgEX3MxCqvjRzbMhRdihI/3lwRd/ORX4EL74of4qJ6AcWiZwdYfsUK646zdUDbGbiqtbw+u8D7mBLVKyy06yqev5B8m2oc0NmZjAhb6Bp0/xQ0h1GAR3ta2LczxdTo=
+	t=1747115946; cv=none; b=geCbF9rks1NeYkyv20YIAedqA4OHWg7MCWpoq1cKqaDEsO14v+qOrHYjn5RbzfqjKxC0mfy9c/S4AI2uh9Ph+PJrJ21/qm8zcNbhQzFZz0Ql2grLA4HYIL1UJBs7r6b8QXbK05B01J0VXHOeaAn8WfBFSjWvdDwDPhjFa2wZZTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747115853; c=relaxed/simple;
-	bh=6JdgKPvcId4fCWzb6BG+UUXHnkY1ko2PixZoQLW9HDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SGTH+1BtUAWyuB7xNT5nwCHH60eFbrG1w7whGoUOOa7QBo22UZI8zEyUGK42k+kt/88wjFayOL8+WI7nRUQV9vHaTSyBW4BXeJywLPwIwLa1O7s2KBeaSKwNlaV6nTCwfbPiCpcXhycK/Z5vvlaf7wXEy/8Ud51byGaQGlvuSN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abvSqW+y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747115946; c=relaxed/simple;
+	bh=TVLwvym3/aeVn56CFigfV5fSvkWJ7gX8ZKNcs9D7kS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fumbzA6ISUg7MAnRGjw91Qdah3cM4xrxnwFkG5OS0Noy1W6NGZhV2Lp5+l61bK48j3nCZovzJQYXA8z3mOXfcD2Is+Jt1wOxBkNSjidyTSYpEUgSo/s6FrlVT9txBqtL9r4l3DDrOCo7P/1LLncvEAOair2whF8wd8/QvkBvK3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N74Jmfn3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abvSqW+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D13C4CEEF;
-	Tue, 13 May 2025 05:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747115853;
-	bh=6JdgKPvcId4fCWzb6BG+UUXHnkY1ko2PixZoQLW9HDs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=abvSqW+yGARp0WlPZZp1A7KWCPolmDsob66HnuAcjSJhvdTWNIWA16VxXx6liEkbA
-	 0WHASlMZFtFiJ5Sl7nOiX7ix4sYmNjGfOeMjOzP2kHsyCkcyEYGyl1rBaSPYJEmLfp
-	 R7vRqgZ9eDM8YPj29i1Az6b6Hf2tNGROFzJIEA8UaQvo7vEknra9V0U4nN5uR7V4lS
-	 6i5JZdvZFYIrjAQFXF0ePUkO7ZxPAlp3yUTZSzU1LbxPD3MHHuwpbcrVoNDgAPNwJc
-	 PfQBq4YqeZ8qm3PHWWBY9VcN9QCGR2uUgdjdjYw2FMFBggxIGrvpevAx1ucPSIzFQ+
-	 S5l1M7f4e0HUA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/2] f2fs: introduce FAULT_VMALLOC
-Date: Tue, 13 May 2025 13:57:21 +0800
-Message-ID: <20250513055721.2918793-2-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-In-Reply-To: <20250513055721.2918793-1-chao@kernel.org>
-References: <20250513055721.2918793-1-chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N74Jmfn3"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CJjj3i015336;
+	Tue, 13 May 2025 05:58:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PzWx5mdJE8aGGqbeuU1GMbdJ+i1PkQW3UbKqRtbnCL4=; b=N74Jmfn3wvRWHS32
+	Jf7wF+OewiI3sJW6lxAd3hBSB8lxol4OPsvo1CGx1bcBvl6vK8M3SY3uhQ7ucQvS
+	IOJtUDhU30L01V27ahjN/Ip9YcyqSkgHAOxgru1hLWzWGY2CFFzHMqpkMdkkFzyV
+	QztFZEU8uLI1hEgTNdaH100+H7jTAQo8lw5deOFlSZkVolHAtK5Rv7VoAJZzgomR
+	tDBgNeM7sXBohxkVqz5czC6GO7fY9jdrbh1YsWOz04qSXqFZamvhv+1QX20tOwak
+	B5HoUirTkmI6ppR8uUHTXTa4H9uV+ph4mz97QfesCU5/au1WA6qNMGVkKEgoNuth
+	yZOQ1A==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hwt96m9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 05:58:59 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54D5wwRw014882
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 05:58:58 GMT
+Received: from [10.204.65.175] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 12 May
+ 2025 22:58:53 -0700
+Message-ID: <a21be690-4ff3-4b4a-84ec-f1da4a7b577d@quicinc.com>
+Date: Tue, 13 May 2025 11:28:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Ekansh Gupta
+	<ekansh.gupta@oss.qualcomm.com>
+CC: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Alexey Klimov
+	<alexey.klimov@linaro.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <srini@kernel.org>, <krzysztof.kozlowski@linaro.org>,
+        "Bharath Kumar (QUIC)"
+	<quic_bkumar@quicinc.com>,
+        "Chenna Kesava Raju (QUIC)"
+	<quic_chennak@quicinc.com>
+References: <20250502011539.739937-1-alexey.klimov@linaro.org>
+ <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
+ <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
+ <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
+ <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
+ <pzlsbznxpfsbdsxlzvcbdy7wwba4z5hoya7fyoacwjadtpl7y4@qajecdvs3bho>
+ <effea02f-6ffb-42e9-87df-081caafab728@oss.qualcomm.com>
+ <ziko5cxt2cabyu4aimpqhbzcacudfhf3jtp23psobxtjdgi5vg@xcfeush5xlhm>
+Content-Language: en-US
+From: Ekansh Gupta <quic_ekangupt@quicinc.com>
+In-Reply-To: <ziko5cxt2cabyu4aimpqhbzcacudfhf3jtp23psobxtjdgi5vg@xcfeush5xlhm>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDA1NCBTYWx0ZWRfX5rf4kle4AVtz
+ W7WShxHc7pPzPYcTCRklUUDOFfoXPOkgkxf5H08a+Pjx4K36cX4mATAq/X3+LMNwqeg85YdrRYp
+ 3ziUbbD7xRZ68nM4qQegXDGDdaJHX9b31u58b0jHo/g+hS0cTRleq5sFFmgx+sH1qaZgwA0Lf9R
+ l5FNTIjrqbCtQo1DAr7U01BBjVWOeT3XsUG5etf72h5zgEkB5pYh/qh8eVPTI9X9lnLkkF1kKAg
+ y3Oo4Hy92ehjBKdAUQ0uRqZMv55PlO5JtOHiGER7udNmi41txzH9V9PL+HRsuQ6GLjTCH8wenDw
+ RUbV5VxcAMGlCTht1n7Zl5YOLTTY2g/L4bFx4G0xVIlaaSfwrtFRKJQI66vIbnFHi+GpgYB2RaD
+ tzk4tRmJuGUU0DkNj5fmWWyDslIwkdibWAgEthPo9UzikGt4a1WhYpyGdEOaiL+FJ0sAF/qU
+X-Proofpoint-ORIG-GUID: 8wJJCaZjow0aV2xi5Gxm73KsZCA_2ywt
+X-Proofpoint-GUID: 8wJJCaZjow0aV2xi5Gxm73KsZCA_2ywt
+X-Authority-Analysis: v=2.4 cv=a58w9VSF c=1 sm=1 tr=0 ts=6822dfa3 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=HFRqob4Jp56kE4hCLf0A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1011 impostorscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130054
 
-Introduce a new fault type FAULT_VMALLOC to simulate no memory error in
-f2fs_vmalloc().
 
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- Documentation/ABI/testing/sysfs-fs-f2fs | 1 +
- Documentation/filesystems/f2fs.rst      | 1 +
- fs/f2fs/compress.c                      | 9 +++++----
- fs/f2fs/f2fs.h                          | 6 +++++-
- fs/f2fs/super.c                         | 1 +
- 5 files changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index e060798f9fc1..bf03263b9f46 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -736,6 +736,7 @@ Description:	Support configuring fault injection type, should be
- 		FAULT_NO_SEGMENT                 0x00100000
- 		FAULT_INCONSISTENT_FOOTER        0x00200000
- 		FAULT_TIMEOUT                    0x00400000 (1000ms)
-+		FAULT_VMALLOC                    0x00800000
- 		===========================      ==========
- 
- What:		/sys/fs/f2fs/<disk>/discard_io_aware_gran
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 724fc5e2889a..440e4ae74e44 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -208,6 +208,7 @@ fault_type=%d		 Support configuring fault injection type, should be
- 			 FAULT_NO_SEGMENT                 0x00100000
- 			 FAULT_INCONSISTENT_FOOTER        0x00200000
- 			 FAULT_TIMEOUT                    0x00400000 (1000ms)
-+			 FAULT_VMALLOC                    0x00800000
- 			 ===========================      ==========
- mode=%s			 Control block allocation mode which supports "adaptive"
- 			 and "lfs". In "lfs" mode, there should be no random
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 37d18e2a3327..2a9f7b68a6c6 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -180,7 +180,8 @@ void f2fs_compress_ctx_add_page(struct compress_ctx *cc, struct folio *folio)
- #ifdef CONFIG_F2FS_FS_LZO
- static int lzo_init_compress_ctx(struct compress_ctx *cc)
- {
--	cc->private = f2fs_vmalloc(LZO1X_MEM_COMPRESS);
-+	cc->private = f2fs_vmalloc(F2FS_I_SB(cc->inode),
-+					LZO1X_MEM_COMPRESS);
- 	if (!cc->private)
- 		return -ENOMEM;
- 
-@@ -247,7 +248,7 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
- 		size = LZ4HC_MEM_COMPRESS;
- #endif
- 
--	cc->private = f2fs_vmalloc(size);
-+	cc->private = f2fs_vmalloc(F2FS_I_SB(cc->inode), size);
- 	if (!cc->private)
- 		return -ENOMEM;
- 
-@@ -343,7 +344,7 @@ static int zstd_init_compress_ctx(struct compress_ctx *cc)
- 	params = zstd_get_params(level, cc->rlen);
- 	workspace_size = zstd_cstream_workspace_bound(&params.cParams);
- 
--	workspace = f2fs_vmalloc(workspace_size);
-+	workspace = f2fs_vmalloc(F2FS_I_SB(cc->inode), workspace_size);
- 	if (!workspace)
- 		return -ENOMEM;
- 
-@@ -423,7 +424,7 @@ static int zstd_init_decompress_ctx(struct decompress_io_ctx *dic)
- 
- 	workspace_size = zstd_dstream_workspace_bound(max_window_size);
- 
--	workspace = f2fs_vmalloc(workspace_size);
-+	workspace = f2fs_vmalloc(F2FS_I_SB(dic->inode), workspace_size);
- 	if (!workspace)
- 		return -ENOMEM;
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 6e9615b5cdc3..bf6056aa09d8 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -64,6 +64,7 @@ enum {
- 	FAULT_NO_SEGMENT,
- 	FAULT_INCONSISTENT_FOOTER,
- 	FAULT_TIMEOUT,
-+	FAULT_VMALLOC,
- 	FAULT_MAX,
- };
- 
-@@ -3540,8 +3541,11 @@ static inline void *f2fs_kvzalloc(struct f2fs_sb_info *sbi,
- 	return f2fs_kvmalloc(sbi, size, flags | __GFP_ZERO);
- }
- 
--static inline void *f2fs_vmalloc(size_t size)
-+static inline void *f2fs_vmalloc(struct f2fs_sb_info *sbi, size_t size)
- {
-+	if (time_to_inject(sbi, FAULT_VMALLOC))
-+		return NULL;
-+
- 	return vmalloc(size);
- }
- 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1860edc2a8fb..32f2abac19cf 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -68,6 +68,7 @@ const char *f2fs_fault_name[FAULT_MAX] = {
- 	[FAULT_NO_SEGMENT]		= "no free segment",
- 	[FAULT_INCONSISTENT_FOOTER]	= "inconsistent footer",
- 	[FAULT_TIMEOUT]			= "timeout",
-+	[FAULT_VMALLOC]			= "vmalloc",
- };
- 
- int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
--- 
-2.49.0
+On 5/12/2025 9:25 PM, Dmitry Baryshkov wrote:
+> On Mon, May 12, 2025 at 09:25:13AM +0530, Ekansh Gupta wrote:
+>>
+>> On 5/10/2025 1:19 AM, Dmitry Baryshkov wrote:
+>>> On Fri, May 09, 2025 at 09:12:30AM +0530, Ekansh Gupta wrote:
+>>>> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
+>>>>> On 5/9/25 12:20 AM, Alexey Klimov wrote:
+>>>>>> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
+>>>>>>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
+>>>>>>>> While at this, also add required memory region for fastrpc.
+>>>>>>>>
+>>>>>>>> Tested on sm8750-mtp device with adsprpdcd.
+>>>>>>>>
+>>>>>>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
+>>>>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>>>>>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>>>>>>> ---
+>>>>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
+>>>>>>>>  1 file changed, 70 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>>>> index 149d2ed17641..48ee66125a89 100644
+>>>>>>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>>>>> @@ -7,6 +7,7 @@
+>>>>>>>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
+>>>>>>>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
+>>>>>>>>  #include <dt-bindings/dma/qcom-gpi.h>
+>>>>>>>> +#include <dt-bindings/firmware/qcom,scm.h>
+>>>>>>>>  #include <dt-bindings/interconnect/qcom,icc.h>
+>>>>>>>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
+>>>>>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>>>>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
+>>>>>>>>  			reg = <0x0 0xff800000 0x0 0x800000>;
+>>>>>>>>  			no-map;
+>>>>>>>>  		};
+>>>>>>>> +
+>>>>>>>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
+>>>>>>>> +			compatible = "shared-dma-pool";
+>>>>>>>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
+>>>>>>>> +			alignment = <0x0 0x400000>;
+>>>>>>>> +			size = <0x0 0xc00000>;
+>>>>>>>> +			reusable;
+>>>>>>>> +		};
+>>>>>>>>  	};
+>>>>>>>>  
+>>>>>>>>  	smp2p-adsp {
+>>>>>>>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
+>>>>>>>>  						};
+>>>>>>>>  					};
+>>>>>>>>  				};
+>>>>>>>> +
+>>>>>>>> +				fastrpc {
+>>>>>>>> +					compatible = "qcom,fastrpc";
+>>>>>>>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
+>>>>>>>> +					label = "adsp";
+>>>>>>>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
+>>>>>>> IIUC the driver only considers this on the sensor DSP
+>>>>>> Memory region is required for audio protection domain + adsprpdcd as far as I know.
+>>>>> next-20250508
+>>>>>
+>>>>> rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
+>>>>> if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
+>>>>> 	// ...
+>>>>> }
+>>>>>
+>>>>> maybe some driver changes are still pending?
+>>>> Would like to add some more details here:
+>>>>
+>>>> Memory region is required for audio PD for dynamic loading and remote heap memory
+>>>> requirements. Some initial memory(~2MB) is allocated initially when audio daemon
+>>>> is getting attached[1] and this memory is added to audio PD memory pool.
+>>> How is being handled for the audio PD case? Could you please point it
+>>> out in? Currently, as Konrad pointed out, it is only being used for
+>>> Sensors domain (unless I miss some obvious usage handled by the core).
+>> The reserved-memory support was actually first added for audio PD only[1].
+> Okay, so it uses an API which I missed, excuse me. But then... How does
+> it work? of_reserved_mem_device_init_by_idx() requires
+> rmem->ops->device_init() to be present, which is not set for a
+> reserved-memory nodes without a compat string. However on all two and a
+> half platforms where I see the ADSP remote heap, it is declared without
+> extra compat.
+
+Yes, of_reserved_mem_device_init_by_idx() will fail if the compat
+string is not included in the reserved-memory nodes. To understand
+this better, I tested the reserved-memory both with and without the
+compat string. Despite this, I did not observe any allocation
+failures in either case. The only difference was the appearance of
+the log message "no reserved DMA memory for FASTRPC" when the compat
+string was not added, although the allocation was still successful.
+The correct approach is to include the compat string, and it's
+unclear why it was omitted for existing platforms.
+
+//Ekansh
+
+>
+>> The usage of reserved-memory is audio PD:
+>>
+>> This memory is used by audio PD for it's dynamic loading and remote heap
+>> requirements as I had mentioned earlier. I'll give more details here:
+>> When audio PD starts, it expects some initial memory for it's dynamic
+>> loading and other allocation requirements. To fulfill this, the audio
+>> daemon allocates[2] some initial memory(~2MB) and moves the ownership to
+>> the audio specific VMIDs that are configured in DT[3]. Audio PD then uses
+>> this memory for it's initial operations. If there is any more memory
+>> needed, audio PD makes a request to allocate memory from HLOS which is
+>> again allocated from the same region[4] and then the ownership is moved
+>> to the configured VMIDs[5].
+>>
+>> The sensors domain that you are pointing was an extension of this and as
+>> pointed earlier, it was added to support SDSP use cases on some old platform
+>> where there are no dedicated SDSP context banks.
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=1ce91d45ba77a4f6bf9209d142d5c89c42cf877a
+>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1274
+>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/sa8775p.dtsi#n5334
+>> [4] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
+>> [5] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1927
+>>
+>> //Ekansh
+>>
+>>>> Additionally, if there is some additional memory requirement from audio PD, the
+>>>> PD can request for more memory using remote heap request[2]
+>>>>
+>>>> The support for SDSP was added sometime back[3] to support SDSP usecases on some old
+>>>> platform as there were no dedicated context banks for SDSP there. On recent platforms,
+>>>> context banks are available wherever SDSP is supported. 
+>>>>
+>>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1273
+>>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
+>>>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=c3c0363bc72d4d0907a6d446d7424b3f022ce82a
+>>>>
+>>>> //Ekansh
+>>>>
+>>>>> Konrad
+>>>>>
 
