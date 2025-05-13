@@ -1,172 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC61EB5CB;
-	Tue, 13 May 2025 20:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95E553365;
+	Tue, 13 May 2025 20:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747167945; cv=none; b=gvTn/RBOCnAziiD8EcwbIi22H3y5ACAB3YUDuEkhDGM1Z281XC56J6UhcTyHWnnM4BHC36fO1CUhQ38qQBUpdwH5ggLKxX1/RcGTcCx00PXSEYim+1XX4Gv9QR7ObC7JjoDyKJBVshe5+XyGrkMX0sSzc3sbCbbzeT24UPIe0Ok=
+	t=1747168058; cv=none; b=b+owH0a4V6RUIuPPRhf08QeYs4CHCLGROarVYrCmeJc1YvAm4UBRQeXN29umHfxm8SPfHdvEFQeyUVbHt6cAeCk4QhLv2MS++Sy9xPnWa4hwa3aOFuz3kRLmLxD3B+uMBZBsywzJwXigNer3muhyWy1z/lMPPJVrHjaXgswM9Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747167945; c=relaxed/simple;
-	bh=0MKuDY/6Amoi1YM1St5qTbrAf/RVeMjzPu/o1T55q68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tZPemUm2E2NZTSDJTPmtyYG6oDKtOFTZEhvmdi8IzioNBX5zOr4IpcDiQThlnzL9klMnhlUN3FF4VBxyeKsWGRO5L5jlabdOds6G6xabgI7aUemLPcPXA/y/mTj7I1egjypQD1itJrTYl21T+nNwNHn8LfynEYYFR1cR9BGnxQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyXdIM8l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747168058; c=relaxed/simple;
+	bh=1qlkKnKr6mpTEKwTKCrOVtAcjB9mogqj/qJ43mfs3Xg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DV1NKMHtXV813ZAuk7MzjWJPosquJf4TTwHuGnnZ3mJrD+fr2aaAvc2zCRHQS1jhrZdLmHKGvnIAO/fm44ZCGgWC63irzyWbnUM7Np0rGEdKafEb5e+q/ATjMsE/vss0L2FQYdQRpTARKLeR1ooz2wqjEI3HpIcVFNMA1K8uzEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=CW5ezgBo; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyXdIM8l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44E2C4CEE4;
-	Tue, 13 May 2025 20:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747167945;
-	bh=0MKuDY/6Amoi1YM1St5qTbrAf/RVeMjzPu/o1T55q68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KyXdIM8lW/Fz/OS1iSgShRZC6HD8y1wZPX6NKUd6ZxV+M3BOdHNeJz7RiXuI9GZZ7
-	 afWWRjC/RUyYGvqqMMzP2mrG1PBZcjo89oENhXt92rp+Iaf5P821SNH44s6kVbQtJR
-	 dsEJTJRWyR8DXwVBA4PbVgfhwuc8En8n7yWXDxbuS264OS6/8pwHeOTxmjfOFSKuII
-	 eW23utU8oNa0/yHlOGkaUBjKk4SKoc1JqOJl8TsSLGVNrKqyD8kIgxaoCy+7uFzv/e
-	 jayLWkSkLPaOyUeIEwphQoLa1WU4VY8OLJG58fD7bsIS6yel/4VrlcTzqgx8iM2y6b
-	 Iac+/B2Li44Pg==
-Date: Tue, 13 May 2025 17:25:42 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Weilin Wang <weilin.wang@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf list: Display the PMU name associated with a
- perf metric in json
-Message-ID: <aCOqxtOqVHF1XRN_@x1>
-References: <20250512184700.11691-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CW5ezgBo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1747168054;
+	bh=1qlkKnKr6mpTEKwTKCrOVtAcjB9mogqj/qJ43mfs3Xg=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=CW5ezgBo8S4Yj3HHtPdzckn31HtjeECRN0ypqBQxuV1LvTmJHdB1RMqxI/V0LoFwo
+	 ddmYfLRCcrjQgee+fI8rflo36fFTNEk0dw0201T0JhUExsbuhctbf9AqZ9CkEEoj6T
+	 WFQyd0/hcecczrJnIPjcG5td5k+GlszjTh9Yexek=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 6F3181C02E3;
+	Tue, 13 May 2025 16:27:34 -0400 (EDT)
+Message-ID: <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by
+ mid-layer
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Salomon Dushimirimana <salomondush@google.com>, "Martin K . Petersen"
+	 <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 13 May 2025 16:27:33 -0400
+In-Reply-To: <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
+References: <20250422181729.2792081-1-salomondush@google.com>
+	 <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512184700.11691-1-irogers@google.com>
 
-On Mon, May 12, 2025 at 11:46:59AM -0700, Ian Rogers wrote:
-> The perf stat --cputype option can be used to filter which metrics
-> will be applied, for this reason the json metrics have an associated
-> PMU. List this PMU name in the perf list output in json mode so that
-> tooling may access it.
-> 
-> An example of the new field is:
-> ```
-> {
->         "MetricGroup": "Backend",
->         "MetricName": "tma_core_bound",
->         "MetricExpr": "max(0, tma_backend_bound - tma_memory_bound)",
->         "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2",
->         "ScaleUnit": "100%",
->         "BriefDescription": "This metric represents fraction of slots where ...
->         "PublicDescription": "This metric represents fraction of slots where ...
->         "Unit": "cpu_core"
-> },
-> ```
+On Tue, 2025-05-13 at 12:00 -0700, Salomon Dushimirimana wrote:
+> Hi James and Martin
+>=20
+> I wanted to follow up on this patch! It's a decently sized patch, so
+> it might take some time, but I'd love to hear your thoughts and
+> address any feedback!!
 
-Tried testing this but the Intel system I have (14700k) while hybrid
-doesn't have this "unit"  field in its JSON files :-)
+I think the first fundamental question should be why is this a uevent?
+It looks like what you're obtaining is really tracing information on
+the retry and we could simply add it as another tracepoint in the
+existing blktrace infrastructure SCSI already has.
 
-Anyway, applying the patches.
+Regards,
 
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-list.c      | 12 ++++++++++--
->  tools/perf/util/metricgroup.c  |  5 ++++-
->  tools/perf/util/print-events.h |  3 ++-
->  3 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index fed482adb039..e9b595d75df2 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -197,7 +197,8 @@ static void default_print_metric(void *ps,
->  				const char *long_desc,
->  				const char *expr,
->  				const char *threshold,
-> -				const char *unit __maybe_unused)
-> +				const char *unit __maybe_unused,
-> +				const char *pmu_name __maybe_unused)
->  {
->  	struct print_state *print_state = ps;
->  	FILE *fp = print_state->fp;
-> @@ -433,7 +434,8 @@ static void json_print_event(void *ps, const char *topic, const char *pmu_name,
->  static void json_print_metric(void *ps __maybe_unused, const char *group,
->  			      const char *name, const char *desc,
->  			      const char *long_desc, const char *expr,
-> -			      const char *threshold, const char *unit)
-> +			      const char *threshold, const char *unit,
-> +			      const char *pmu_name)
->  {
->  	struct json_print_state *print_state = ps;
->  	bool need_sep = false;
-> @@ -483,6 +485,12 @@ static void json_print_metric(void *ps __maybe_unused, const char *group,
->  				   long_desc);
->  		need_sep = true;
->  	}
-> +	if (pmu_name) {
-> +		fix_escape_fprintf(fp, &buf, "%s\t\"Unit\": \"%S\"",
-> +				   need_sep ? ",\n" : "",
-> +				   pmu_name);
-> +		need_sep = true;
-> +	}
->  	fprintf(fp, "%s}", need_sep ? "\n" : "");
->  	strbuf_release(&buf);
->  }
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 126a631686b0..43d35f956a33 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -396,6 +396,7 @@ struct mep {
->  	const char *metric_expr;
->  	const char *metric_threshold;
->  	const char *metric_unit;
-> +	const char *pmu_name;
->  };
->  
->  static int mep_cmp(struct rb_node *rb_node, const void *entry)
-> @@ -476,6 +477,7 @@ static int metricgroup__add_to_mep_groups(const struct pmu_metric *pm,
->  			me->metric_expr = pm->metric_expr;
->  			me->metric_threshold = pm->metric_threshold;
->  			me->metric_unit = pm->unit;
-> +			me->pmu_name = pm->pmu;
->  		}
->  	}
->  	free(omg);
-> @@ -551,7 +553,8 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
->  				me->metric_long_desc,
->  				me->metric_expr,
->  				me->metric_threshold,
-> -				me->metric_unit);
-> +				me->metric_unit,
-> +				me->pmu_name);
->  		next = rb_next(node);
->  		rblist__remove_node(&groups, node);
->  	}
-> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-> index 445efa1636c1..8f19c2bea64a 100644
-> --- a/tools/perf/util/print-events.h
-> +++ b/tools/perf/util/print-events.h
-> @@ -25,7 +25,8 @@ struct print_callbacks {
->  			const char *long_desc,
->  			const char *expr,
->  			const char *threshold,
-> -			const char *unit);
-> +			const char *unit,
-> +			const char *pmu_name);
->  	bool (*skip_duplicate_pmus)(void *print_state);
->  };
->  
-> -- 
-> 2.49.0.1045.g170613ef41-goog
+James
+
