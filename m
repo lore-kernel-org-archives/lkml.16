@@ -1,209 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BD1805B;
-	Tue, 13 May 2025 00:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C5628F3;
+	Tue, 13 May 2025 00:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094946; cv=none; b=ViYpSbcTd3BGFFZYpEYFTCUq97Znn/WN1ooECcfgmUyQrOuY68qg1r1TJwbLCQgRONw4hNcf0CWveKKmOv5x3OxT++jP2OcpKkJRK9n6iOTUFLwApjC8ev9I/aVoLzUzpnT9w5WQ//VuDRsiC9uCAB/IGSGbXcba1ALhIJM8xmk=
+	t=1747095020; cv=none; b=KTh6jqpoVvhpaql7OsMG+R9Xf2kdb9b19j3QovWrC4aQ61qtuFigjMpDL2Fu7f1cl5lzUAibWGXstqVynhYZt/Mj9AliYKu04S8P2EqhJT3y6uIV6YWjROZHBH814BG6kwUtEUoRmPvqqaFD+jnzk92AY1ef7Eg3AtgRBfslv24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094946; c=relaxed/simple;
-	bh=7ZtSxivjoK3M9fH9frt+xHwAgujTa7ewgoWYcEHRngQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lK4byBSjEZGl3u8zSLWomF8ZJ0q6LFq9nRDz3UrL/PMN5pVwiy1lMFf5KyqZyF0howRDqU6CqosHBfPwXWscYAwxN/Q2CDa7YO64fC5fCgOjgbsED7Gw/SIi7DAlorgqTWK2tZ2jHhhUZPiREFXgLWKCBKPECbAgdZ7x/t+XToo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcfzYnTT; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747095020; c=relaxed/simple;
+	bh=BDDpyAkm8mUWkHjzl3M/Ww19BsFg0LLbVl5EU9dvudk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VPx8UkqaAyvjkPQxbiTdY+pDgmlUo/EivzaJbkhkC6Xu8QSz8Ef0lboZE2BVPOKaOdJHqipJnBkSr6ctG4Un2QkMqRccQ+XXnGdGhZAP7s58++jTAiBBDJu2ZTFQHhu1dG7sWB3+WzN8lKELY1RkyLHdxKaMZy95uN2xrb/pAYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8a9pT7q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcfzYnTT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747094944; x=1778630944;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7ZtSxivjoK3M9fH9frt+xHwAgujTa7ewgoWYcEHRngQ=;
-  b=TcfzYnTTl2Xo830J8AoM/Nq4I0Q2sAu8mAMMuqWebosa9qVeIXTEQFco
-   4g8ZbmhksGKGE1aC9ysIyA9boIDv3oFFKA2cj+KF54I6d/e2m+D8x04LS
-   uVdCQsI2S3GRJiZPHEup35hbmfxIfJDMhl3fG7xr2b15bqEiCd4FFTfd0
-   CitvmjnHI1mZKk5PGv/OXTFHeGuz6Ih7qTPo3I4OsbssNf7son1jG2Z1V
-   qJclDzo453iSyg+pox1pHgKarKxt+BKoTh5ZIM3H5OGqTaPXrZgVnX4jn
-   NG+qOYWIE37fCOvqh04WXWvnc4tJuqbTq2ENG5aQ1QHhxsI5zPfPTN4fe
-   g==;
-X-CSE-ConnectionGUID: ddVq+PXkRFyPzp3Keg24uQ==
-X-CSE-MsgGUID: 005j1EzzTCePd9TyUWkw6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="60255183"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="60255183"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 17:09:03 -0700
-X-CSE-ConnectionGUID: vx8DaHZKTM6lKYNLqr0TuQ==
-X-CSE-MsgGUID: nRaBNcnFQtmSyh1F8YdDcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="142711631"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.233]) ([10.124.220.233])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 17:09:03 -0700
-Message-ID: <0c753b5b-37e9-4f72-a27a-acd5b64752aa@intel.com>
-Date: Mon, 12 May 2025 17:09:00 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8a9pT7q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF488C4AF09;
+	Tue, 13 May 2025 00:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747095019;
+	bh=BDDpyAkm8mUWkHjzl3M/Ww19BsFg0LLbVl5EU9dvudk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c8a9pT7qmL7m7+la5hTzwL2/bUgKtk31hKlQX3POVW5kSvWOZhNJIdTlANllPvfvf
+	 mDQmUWR+AOIqG9MkS8E15SZ7WLHG6GUe8OLVAve44x6ixNV53z8EPp6bCfDvZUWpY1
+	 MvySIJhMNDnsUaqf9Ymg6hJFBdZ87zTy8EfHOmKud4U7BEmbeQPYKfujI4oMFOkL8j
+	 oowtFPkt4294Ou13W/eJSvfjc3aTviquM5wNpY8U8nxVN+CIFimy7MBIeBx6KohYfy
+	 bLKhgXUw7Njn2fjPmclvtzcgcq3mC2i5ueNJ0JoDf++wS6ucQqAKpVW15Wd6UJCABO
+	 fVaQ20xDpiHww==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-708d90aa8f9so46923617b3.3;
+        Mon, 12 May 2025 17:10:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUl5u1I69vSiyNt3CvbAcY68qn2jFzCBwsRRr/83BAbKrSiTK++AShl35p2/78qWs52/DID+avPUiVzsiQ=@vger.kernel.org, AJvYcCW/wFRQ7l3/dnJSVtFxkcqkJrkUsowDylhkF4Eg92xbk6Vzr1uDt3BRxUnNfa2YmzvoHXvnl2Ny8r6grydqG1Cl99FetgUF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOWA2ZEmYjmXk6uHbpuo3NTcPeoJGIpgStmdm0dMVl//fL5Az8
+	BP/aax+hOxGB+mvvkgAxb3YobB+SYSm6/YqeTSK4di1cQkOuTIUwc+5XSWq0H+pKKYvnj1cOtJW
+	O6qvhRT0AiH70/tVrsfAAzzYRqw0=
+X-Google-Smtp-Source: AGHT+IEIF0c2ke/1klWIdASX3Xu++buwLzEZcBdDHlLXFskiSFKbrgNsih1kWPFMwkBf1BBrS3IE9UjKYQ0gjgpjWLo=
+X-Received: by 2002:a05:690c:708b:b0:6f9:3dd2:7941 with SMTP id
+ 00721157ae682-70a3fb68f6amr216010367b3.38.1747095019062; Mon, 12 May 2025
+ 17:10:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/17] cxl: docs/linux - overview
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-8-gourry@gourry.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250512162134.3596150-8-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250508140438.648533-2-alexjlzheng@tencent.com>
+ <20250509032326.GJ2023217@ZenIV> <20250509043712.GK2023217@ZenIV>
+ <20250509044613.GT2023217@ZenIV> <CAHC9VhRp5Nb_1FPu8tF6EUsPpSEbbTT0K7a3V-Z7OWKNXy9Yyg@mail.gmail.com>
+In-Reply-To: <CAHC9VhRp5Nb_1FPu8tF6EUsPpSEbbTT0K7a3V-Z7OWKNXy9Yyg@mail.gmail.com>
+From: Fan Wu <wufan@kernel.org>
+Date: Mon, 12 May 2025 17:10:07 -0700
+X-Gmail-Original-Message-ID: <CAKtyLkGGQ0F_zfwNEs05Orsm6Vq+E82=eOd=YdbxiXUYW9O1Jg@mail.gmail.com>
+X-Gm-Features: AX0GCFs81tqMm_BBRXejb3cTMNt7Xm4wAEQBkqhPLMdSkF1fk1mXY6euPqgpybE
+Message-ID: <CAKtyLkGGQ0F_zfwNEs05Orsm6Vq+E82=eOd=YdbxiXUYW9O1Jg@mail.gmail.com>
+Subject: Re: [PATCH v3] securityfs: fix missing of d_delete() in securityfs_remove()
+To: Paul Moore <paul@paul-moore.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, alexjlzheng@gmail.com, jmorris@namei.org, 
+	serge@hallyn.com, greg@kroah.com, chrisw@osdl.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 12, 2025 at 2:19=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+>
+> On Fri, May 9, 2025 at 12:46=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk>=
+ wrote:
+> > On Fri, May 09, 2025 at 05:37:12AM +0100, Al Viro wrote:
+> > > On Fri, May 09, 2025 at 04:23:26AM +0100, Al Viro wrote:
+> > >
+> > > > I have fixes for some of that crap done on top of tree-in-dcache se=
+ries;
+> > > > give me an hour or two and I'll separate those and rebase to mainli=
+ne...
+> > >
+> > > Completely untested:
+> > > git://git.kernel.org:/pub/scm/linux/kernel/git/viro/vfs.git #untested=
+.securityfs
+> > >
+> > > on top of v6.15-rc5.  And I'm serious about the "untested" part - it =
+builds
+> > > with allmodconfig, but that's all I've checked.  So treat that as an =
+outline
+> > > of what could be done, but don't use as-is without serious testing.
+> >
+> > PS: I'm really, really serious - do not use without a serious review; t=
+his
+> > is a rebase of a branch last touched back in March and it was a part of
+> > long tail, with pretty much zero testing even back then.
+> >
+> > Patches are simple enough to have a chance to be somewhere in the vicin=
+ity
+> > of being correct, but that's all I can promise.
+>
+> Fair enough, although unfortunately I don't think anyone has anything
+> close to a securityfs test suite so I suspect this may languish on the
+> lists for a bit unless someone has the cycles to pick it up and
+> properly test it.
+>
 
+Since it's me who added the recursive remove, I'm interested in
+helping get the fix tested and verified. However, I might not have
+enough cycles in the near future. Happy to let someone else test it if
+they have bandwidth.
 
-On 5/12/25 9:21 AM, Gregory Price wrote:
-> Add type-3 device configuration overview that explains the probe
-> process for a type-3 device from early-boot through memory-hotplug.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  Documentation/driver-api/cxl/index.rst        |   3 +-
->  .../driver-api/cxl/linux/overview.rst         | 103 ++++++++++++++++++
->  2 files changed, 105 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
-> 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index 6a5fb7e00c52..bc2228c77c32 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -30,9 +30,10 @@ that have impacts on each other.  The docs here break up configurations steps.
->     platform/example-configs
->  
->  .. toctree::
-> -   :maxdepth: 1
-> +   :maxdepth: 2
->     :caption: Linux Kernel Configuration
->  
-> +   linux/overview
->     linux/access-coordinates
->  
->  
-> diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
-> new file mode 100644
-> index 000000000000..648beb2c8c83
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/linux/overview.rst
-> @@ -0,0 +1,103 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +========
-> +Overview
-> +========
-> +
-> +This section presents the configuration process of a CXL Type-3 memory device,
-> +and how it is ultimately exposed to users as either a :code:`DAX` device or
-> +normal memory pages via the kernel's page allocator.
-> +
-> +Portions marked with a bullet are points at which certain kernel objects
-> +are generated.
-> +
-> +1) Early Boot
-> +
-> +  a) BIOS, Build, and Boot Parameters
-> +
-> +    i) EFI_MEMORY_SP
-> +    ii) CONFIG_EFI_SOFT_RESERVE
-> +    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
-> +    iv) nosoftreserve
-> +
-> +  b) Memory Map Creation
-> +
-> +    i) EFI Memory Map / E820 Consulted for Soft-Reserved
-> +
-> +      * CXL Memory is set aside to be handled by the CXL driver
-> +
-> +      * Soft-Reserved IO Resource created for CFMWS entry
-> +
-> +  c) NUMA Node Creation
-> +
-> +    * Nodes created from ACPI CEDT CFMWS and SRAT Proximity domains (PXM)
-> +
-> +  d) Memory Tier Creation
-> +
-> +    * A default memory_tier is created with all nodes.
-> +
-> +  e) Contiguous Memory Allocation
-> +
-> +    * Any requested CMA is allocated from Online nodes
-> +
-> +  f) Init Finishes, Drivers start probing
-> +
-> +2) ACPI and PCI Drivers
-> +
-> +  a) Detects PCI device is CXL, marking it for probe by CXL driver
-> +
-> +3) CXL Driver Operation
-> +
-> +  a) Base device creation
-> +
-> +    * root, port, and memdev devices created
-> +    * CEDT CFMWS IO Resource creation
-> +
-> +  b) Decoder creation
-> +
-> +    * root, switch, and endpoint decoders created
-> +
-> +  c) Logical device creation
-> +
-> +    * memory_region and endpoint devices created
-> +
-> +  d) Devices are associated with each other
-> +
-> +    * If auto-decoder (BIOS-programmed decoders), driver validates
-> +      configurations, builds associations, and locks configs at probe time.
-> +
-> +    * If user-configured, validation and associations are built at
-> +      decoder-commit time.
-> +
-> +  e) Regions surfaced as DAX region
-> +
-> +    * dax_region created
-> +
-> +    * DAX device created via DAX driver
-> +
-> +4) DAX Driver Operation
-> +
-> +  a) DAX driver surfaces DAX region as one of two dax device modes
-> +
-> +    * kmem - dax device is converted to hotplug memory blocks
-> +
-> +      * DAX kmem IO Resource creation
-> +
-> +    * hmem - dax device is left as daxdev to be accessed as a file.
-> +
-> +      * If hmem, journey ends here.
-> +
-> +  b) DAX kmem surfaces memory region to Memory Hotplug to add to page
-> +     allocator as "driver managed memory"
-> +
-> +5) Memory Hotplug
-> +
-> +  a) mhp component surfaces a dax device memory region as multiple memory
-> +     blocks to the page allocator
-> +
-> +    * blocks appear in :code:`/sys/bus/memory/devices` and linked to a NUMA node
-> +
-> +  b) blocks are onlined into the requested zone (NORMAL or MOVABLE)
-> +
-> +    * Memory is marked "Driver Managed" to avoid kexec from using it as region
-> +      for kernel updates
-
+-Fan
