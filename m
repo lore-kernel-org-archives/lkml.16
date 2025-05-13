@@ -1,499 +1,184 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11022128.outbound.protection.outlook.com [52.101.66.128])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88C748F;
-	Tue, 13 May 2025 18:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.128
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162266; cv=fail; b=t8F9oqjjKX591A6km4z6BS9gZSbyULisxo6lcO7+xGnWQ0NS2tdaVgWfj1vHbb22lLnn8DyivmFuRHwf4OPpgZUn87ehfuxlgR43+iEF6en2Uk8vG+gHcmNIFAxdiwg6uzwL9gkTllUBPRWoeTYEc/w2lpsV613tacBM7+fG5uA=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162266; c=relaxed/simple;
-	bh=CtTGTOnrT6KAwOBbJJc76l6ZWHb+25y+IcnPe76wRJE=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lbe7n6UrOU3qlPb1KvsAKxwoSw2fOuAVFMLKfj06NUaV5GXOt7eVtjsMOIHPMNaW9PlzPYzHpP3BmfUlwDMUOPiJx8hdV6zNS7I3/pC2/9NOZ5Lr2o78LH/4Z1xerGu4wffsTCNOyjecbqFLcZQX2dME4xjoMq9HTHWvw/AAg60=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seco.com; spf=pass smtp.mailfrom=seco.com; dkim=pass (2048-bit key) header.d=seco.com header.i=@seco.com header.b=EcdUq5LA; dkim=pass (2048-bit key) header.d=seco.com header.i=@seco.com header.b=EcdUq5LA; arc=fail smtp.client-ip=52.101.66.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seco.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E08249620
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747162308; cv=none; b=lBgSQMwX8/WNOzxFSElCK/R5Em52p/Y3gKtcbb2sQwhoC8f+S73hJjh50ZnjM5vsbBCSIp6O1cExAPAn0wq/3iIMfLU51lUg4/10+Rr1FomlEb3pDK/68aDQobo5yZY8E18Ehn4GtX7AX8WuKrXhZME7ES1q+K8Kiy1zsRfILAo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747162308; c=relaxed/simple;
+	bh=8aF340dgmVwMplRdL4mqUGNXBthPtGz9cX7S0m3V9yY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lgTG0WamAcUVslFpi91jYFpIzJiR5Czt2R2I1NKZnlGOgxUNIqfXsrfRUwBMwe3zwZR0NRTjXxWFNqOj7zBZK9ud9KeN/g0xrWdnaxP0qNDZW9bmjfZrL0+3gaLvw8AJVJjVWSiQO8XnQ4KzftqWhBHRD/UBWp7YIHpmH9o0OPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GXbIUyHY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=seco.com header.i=@seco.com header.b="EcdUq5LA";
-	dkim=pass (2048-bit key) header.d=seco.com header.i=@seco.com header.b="EcdUq5LA"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=xZJJlvCk/KIK8WBbhlNl2qdtJgupnmypj0G2srF5mM88XW1X8VX5gQd8b/guWhg5k82CFpHpw4+68yc4PPRjM0exEFesc9uCLqn9w7BGmWeKsSiI/ve2r7jch1sc36gdnrDSCfOaAfW0+uV06TA9UMhhNflYZjAcQkubMuIVKezMp4FF3xeJprliZwIpzXRaa4R5D4LwqoaGkgjKeNR7GtT0JfT73hJ4OkFyobzzFWRXGzDIAHKl9DIpFNvmaY1GjgSj/aBok5D3pal5P/wcBCWYfksaxjtCnPCUKpICjA7ms08cIMZ9jnNhoW1Xky+c99OjJqOOj1WY2k1ccFNKCQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GS5lmZxJfD8FvyZkXA8alDuOO2UQskfM3Cq21GLWInI=;
- b=MW1y3CqYLGTUwuc1wqA24gTlSl5plbXbxZEY7y6nR9LFKk6PiTayNAKIzD10w1hkpfrs3/4IKsOezL64od/HhGVa43d/YIYw/0ZVEultMviY1l98351REMkarlkI05MQDdvcc9P+o3u/C2K8OewSWwwtoJmZq8ulkj+Ao94CMNOjs7dN6mdIKQhRB0vxGupsgezM5dpFpLxK9wWUdgyXPR4nmHkbatdFPz3G/CZsxKlKKtWIgCyoL9lXxElPLI2CLHn0LQmNJxyHGeEVMQe5Ul+PDiaIjIBzIkPMGrSl8t3nfzqMNtp7L7TxC/w/BCqOge67Jks07D8LUwhipqySOw==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 20.160.56.81) smtp.rcpttodomain=armlinux.org.uk smtp.mailfrom=seco.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=seco.com;
- dkim=pass (signature was verified) header.d=seco.com; arc=pass (0 oda=1
- ltdi=1 spf=[1,1,smtp.mailfrom=seco.com] dkim=[1,1,header.d=seco.com]
- dmarc=[1,1,header.from=seco.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GS5lmZxJfD8FvyZkXA8alDuOO2UQskfM3Cq21GLWInI=;
- b=EcdUq5LAFlKmUDh2bQfPEVve47v8XTAX98DlXpUb5cWqc9t6+rkBCpAfey9UPJF0eqWRTrE0oH92JTkvFXcLXS9atw5/4V829IqNoMvRhfhtvaJQpXXrhXIVsp6DGQ1NVYxsDEYhfDLDrsWOylJ+1hBxbZS1LV9w1GbUkkJv1Z49qhWUNCeVPEMqKEbgLOztDmIXzMGm7TbSxuW/dmj+X42Ojyo6MExvLElH6Q9dQnuwhukbBNfR63GUiya3QDUgBD5qeMla6ukLsFF2hTSvDNOBUd6a15e2lGf7/JVG7yt9ceFI9fn4OXtsayH/NnexK2yj9XEvMLOL3BPYugb1Yw==
-Received: from DB7PR03CA0099.eurprd03.prod.outlook.com (2603:10a6:10:72::40)
- by AM7PR03MB6580.eurprd03.prod.outlook.com (2603:10a6:20b:1b4::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 13 May
- 2025 18:50:59 +0000
-Received: from DB3PEPF0000885A.eurprd02.prod.outlook.com
- (2603:10a6:10:72:cafe::b9) by DB7PR03CA0099.outlook.office365.com
- (2603:10a6:10:72::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Tue,
- 13 May 2025 18:50:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.81)
- smtp.mailfrom=seco.com; dkim=pass (signature was verified)
- header.d=seco.com;dmarc=pass action=none header.from=seco.com;
-Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
- 20.160.56.81 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.160.56.81; helo=repost-eu.tmcas.trendmicro.com; pr=C
-Received: from repost-eu.tmcas.trendmicro.com (20.160.56.81) by
- DB3PEPF0000885A.mail.protection.outlook.com (10.167.242.5) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
- via Frontend Transport; Tue, 13 May 2025 18:50:58 +0000
-Received: from outmta (unknown [192.168.82.140])
-	by repost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id 4C5BF20080268;
-	Tue, 13 May 2025 18:50:58 +0000 (UTC)
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (unknown [104.47.11.238])
-	by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 2F0832008006F;
-	Tue, 13 May 2025 18:50:56 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lDcdpZzdhQPZG/RC4dsT25QLRI4YthT+qNv1+OszMdcj4fPDgNSrdbUn0VR1B7fTpLtOH+wkGprutm39D2sNJw35eAs2kidh8nMCmy8MZlwlCx9ZnpU05Si9iE+qgyaBv4NpbbgWi+GBW4bQJEcxC6EJzgooVPlh+o9+z7yiIRrbfgZkDMqwAStPHz9BNassrXPXbcbKt2Hn4BUp/MgTOeVPDzWvtNSoZb+D6UFUEgIBOXpIx+Iy/QGin88IExbsPGReZMzDxUbZS4EWu0jlEMSe1k4VkypiYb5BDlTCcdvtwDwTKFh0VwwvTrK9QtPpAfYKvCV6QNW4ORh4gcUxOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GS5lmZxJfD8FvyZkXA8alDuOO2UQskfM3Cq21GLWInI=;
- b=leYf6GVm0kp+T/ItcstKbneOg1ksg7Os3SEqYAHQ6FIph8Wel4Hkw/9+Jm800BA3A3MBCUGMMt5xvS1KFyCQLJuZVxxQM34Luay3ZKZPwBoqyTzSxsDtRxFlUiqSP6+XaPNgv9078G3Fs1jvoZrb4xZuB+JLpYIyEt9LyEAiTpWEUAUyKbAollFeBMfea7BlQY2G8DqpS17W1x9Z2oRdvmCh6XE0dMwx1uDtAfumXmsx75D0oT9kOZgta7OC6U9uXG5Xn1PID5hCzSbZwFklfcFJ/VllUbyG/FY606XWquZbr5CL4gtZW8A5aG3t++fmidD6zvamYJPapXmeCoidng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GS5lmZxJfD8FvyZkXA8alDuOO2UQskfM3Cq21GLWInI=;
- b=EcdUq5LAFlKmUDh2bQfPEVve47v8XTAX98DlXpUb5cWqc9t6+rkBCpAfey9UPJF0eqWRTrE0oH92JTkvFXcLXS9atw5/4V829IqNoMvRhfhtvaJQpXXrhXIVsp6DGQ1NVYxsDEYhfDLDrsWOylJ+1hBxbZS1LV9w1GbUkkJv1Z49qhWUNCeVPEMqKEbgLOztDmIXzMGm7TbSxuW/dmj+X42Ojyo6MExvLElH6Q9dQnuwhukbBNfR63GUiya3QDUgBD5qeMla6ukLsFF2hTSvDNOBUd6a15e2lGf7/JVG7yt9ceFI9fn4OXtsayH/NnexK2yj9XEvMLOL3BPYugb1Yw==
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=seco.com;
-Received: from PAVPR03MB9020.eurprd03.prod.outlook.com (2603:10a6:102:329::6)
- by DU6PR03MB10944.eurprd03.prod.outlook.com (2603:10a6:10:5c0::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.27; Tue, 13 May
- 2025 18:50:54 +0000
-Received: from PAVPR03MB9020.eurprd03.prod.outlook.com
- ([fe80::2174:a61d:5493:2ce]) by PAVPR03MB9020.eurprd03.prod.outlook.com
- ([fe80::2174:a61d:5493:2ce%7]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 18:50:54 +0000
-Message-ID: <19547e54-1253-409d-8e89-a395fed478a0@seco.com>
-Date: Tue, 13 May 2025 14:50:49 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next PATCH v4 11/11] net: airoha: add phylink support for
- GDM2/3/4
-To: Christian Marangi <ansuelsmth@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- llvm@lists.linux.dev
-References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
- <20250511201250.3789083-12-ansuelsmth@gmail.com>
-Content-Language: en-US
-From: Sean Anderson <sean.anderson@seco.com>
-In-Reply-To: <20250511201250.3789083-12-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL6PEPF0001641C.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:11) To PAVPR03MB9020.eurprd03.prod.outlook.com
- (2603:10a6:102:329::6)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GXbIUyHY"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIWMjj032632
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=spJV8R8Bs+sSlbQ8ehRNXH
+	ZILSzp5Uy8JZHgSPrWiv8=; b=GXbIUyHYlAsbf6jVpJqiOe6Phh4ElBlYzJLAwq
+	ysariO3UGI6TChpuL6dGHd++bOyYxfaIDetkA7KlbAYwAkQFKzCsRi6QHiH3zfcS
+	vZUfyfBtQBh4pPi8u4Lq93XVBxNmJKaZ9Ce+AKV4QaLhpjVTeTNBRNs5j05AKuAj
+	XhPjsWGYFg89nZI/ajBQ41GwG2T2zjBnNJMYkVJGtsdNMR/rbYlAcMfN4Il0mv2I
+	tgRKGnfFR/H8EiVNUqDtdG2Bj/W/iu8jk52iP+PluDCr6npI5Zr88aBFStTwzzjk
+	h4qbPqZs/NO+Ny7ENpqWesvMCLfnC1H+6FrIASPs3JricA8w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnr2mt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:46 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b94827so971501785a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:51:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747162305; x=1747767105;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=spJV8R8Bs+sSlbQ8ehRNXHZILSzp5Uy8JZHgSPrWiv8=;
+        b=JEl5pXcXKAK/R4Am8xXUaglMo4lZ3eHNkw8UvOM97WQ7tzyXYFhBV1U3AJEkHHZCeX
+         Gfmm5+WjKK2jXgGj4yHTi7+Ohd77BafutwdiIKQuWTiqyz1Fb5WFJW9A+VKCuCgHYiqo
+         J9pbCzip37pWDA4HLWULmOjXQoQJMtP5amGS5Ye/eiK1GfNS071RCdXtuY244HWsKPFl
+         5L1W5xoGo/3uCBIH6s0xIu5y7zlF6218jLHmqI34hIkwSxIdxsanjIj5L521voTAsObD
+         IcyEdXraDLNJ4Q8yZh/O8KdRa0wFNUjoWkqsMwTYGxpUTqFjjuPMO2g0ZHDBluWXZC6m
+         o7tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnmx7dg89UZ0VHhwP3viaNoaYUGVzbNuoWDe+uqFs+9QreOXULIALegxrC1Wpvz6KAZMlRptUcveH7vJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL83ka03BFyZByuIp/0vVTVLZ+x958JDmltMORqdYhQlV7oLIL
+	GPtpqfgxj0Ux6p9paL2U2h+9Uf8ZvanbDRsk57t5u5mP4Qx82nO37RZDrTbJfd2vzyy7oyVf9AH
+	J1QH+XwX0fSvUEwCOUxoPH5R8sDFSB6kC2PFz3XJ5DGGzYYzLhiBQ8UlqtkQvBNk=
+X-Gm-Gg: ASbGncsWMb78BG6xtcl1AyPmsmCdqRr6CvGq5WINlQTHcvFOLq6IclAMfjzqc1tpBnX
+	gytZPUaoR92Q7donK97VHH7VxM8/E/zr2YErAockPACOsuNnmfLRQ5fTT6bhDRbK90hSkhoZkI1
+	29IDRWapvu8m2eU2qQbLWgatFc4YOUSkMZMMWS/YSByElcKxG7OM/q2d/ZYpWPKH4o2Z3W/ODK1
+	pZ+AzNTVlbIlXCS52BccfAKXLYbX8lSpJE+9cioB1ddITiaE2mcpG0kirCzvlfRGt4EH8gnfeKK
+	oFE8KFJ81r2hNf/LrrNKWG/+lcUmOBZlvBshcPLr5Y9yELRu7mpjTYNOMCebyukD8ofUVatZj5t
+	f0z1PC/fZu3+xD0g23Tc5BPzO
+X-Received: by 2002:a05:620a:4551:b0:7c5:3b3b:c9da with SMTP id af79cd13be357-7cd28847654mr136577985a.40.1747162305184;
+        Tue, 13 May 2025 11:51:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKPB9Lqd5DHIDqIUSv2k1KGjQ6LFo1CTuDOZKsPaobR2sbUqTntY/YEFbpxxNxBcCiVDzTVw==
+X-Received: by 2002:a05:620a:4551:b0:7c5:3b3b:c9da with SMTP id af79cd13be357-7cd28847654mr136573085a.40.1747162304785;
+        Tue, 13 May 2025 11:51:44 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64bf86fsm1958205e87.178.2025.05.13.11.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 11:51:43 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Tue, 13 May 2025 21:51:41 +0300
+Subject: [PATCH] drm/ci: disable sdm845 devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	PAVPR03MB9020:EE_|DU6PR03MB10944:EE_|DB3PEPF0000885A:EE_|AM7PR03MB6580:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6d6ea6b0-e36d-48eb-6860-08dd924f19ad
-X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007|921020;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?V3J4L2MvcExmQmtKcmhwbEVvcVhaVE1kZWVWNlB3aWYvOVpacVcyRGc5Ky9i?=
- =?utf-8?B?QkFvNEJscXFJUU43a1hHd0tpV3BzWERFenRUWEJQR1JDN3hpSnBJa3RLdU1x?=
- =?utf-8?B?eGFCTWRlTVlicitXdW1aZnpmL1lBZ3IwRitWei95Y2tuV0M1OHIrKzdmTExy?=
- =?utf-8?B?bmg2OWlqOGorVUwrdjJiMmNoMVBTL3I2V2F3SXlyaWhISVNuVnN2WWxQcTBi?=
- =?utf-8?B?NXJ4TTI4dU0zU01qYTNmenlBeXNNdkoxZGF4N3VYTmE5bXhuQ2krT243ZXhq?=
- =?utf-8?B?Rk5ITE1GVk1ERXU4ZW04d1E1T3JLVTBJeSszUmlkV0RkcTNjOTBjMjdqOU5k?=
- =?utf-8?B?Sms1ZlQ0UDFRUlR1cE9YUGc1V3cxdHp3dk5RL0N2QkhyYVVtVUVVRHcwOWQ4?=
- =?utf-8?B?VDNXOWs5OEx2a2hQZFRzZmNZZndsVGVMc2JFRzNCY1VUY0VTdEZqSWlTNi9s?=
- =?utf-8?B?aFFoV0NhMlNiMWtOTnJmSXZmWkNjbll0VHRuRHU3bnBmdyttQms3SE5STkov?=
- =?utf-8?B?VWFUSmZCRmxxV24vaGd4Y2w1Q1RyYXE2N3lJaHNxS0tRTXlLaTNMSUZsQ0lu?=
- =?utf-8?B?MU1aa3FoNDlBL1p5YWxmYW95ZEVGRjF1elVjYXEyL3RaWFdvdlhOZkFVK3Iw?=
- =?utf-8?B?TWo5ZERlNTdqQisxYlhEb1k0UjAwUlFWQklkYnJBZWd0cE1EeXpyY1ZWbTBO?=
- =?utf-8?B?cGwyUWVyakZRR1VEZWlUL2hZZWZnMHRyV2c4SmpCVENUazdWOTE0eC9KY1FK?=
- =?utf-8?B?b0tpQWpselBtL1JXY3FuajlIMnhXcU5nMFhvcHlrLzdQN1dZbjQ5cW91RWRE?=
- =?utf-8?B?VlhjNDZJc0hpbzJmUG40QTFHL0phbkR0TXZ6NGJhR1BCYmcvNnBNUXN0Ly9u?=
- =?utf-8?B?Nzk2TytiWCthZG9pRUc4a1VGRGVHdHNDbnRxSUpBTDJZR2RvWi9CdUJ4dHRX?=
- =?utf-8?B?WFUzNUxnK1lweW90dGllajFEUU4vaGNpVEJkNE8xSEVZeUwrUHppYjRicVZO?=
- =?utf-8?B?ZG5oZjhFaXpWTTVkZ1ZmUHVHRk1XQWZobEw0OElmNDNRL08vS29TaHJFYm13?=
- =?utf-8?B?eDZwRkMxTUFacElHczdRYldVQ0dGd08vNkw5eXYwc05rbjRQcFVTZUZlQ3BX?=
- =?utf-8?B?M1kyUCt4WjJ6S2tha3NWOGM2TDlYd3Y5RSs1Rm5BU2hLQ2lETWNmUFJvSlEv?=
- =?utf-8?B?bnRTcDE3T0EzeGk5MDN3WWdQWG96cFFIZ3NSYmJPcXhpd1JXK3FlMWlxOXVv?=
- =?utf-8?B?MHFEbEx4WVBuQVdMVnliOERYdDY0WHgyOEN1RmVlNGVma3NqWHRXWFFTK0VM?=
- =?utf-8?B?SlNKYUo3WnQ3elJ5NXJmU1JnanhVRmlJWmpXMDBVSHBROWpBTzF5R2NYaUVn?=
- =?utf-8?B?eit4RUxYbWpIMjhQTFpKWTArKzRXblozUHBub1BweHl3RXFpWVE5Y2tkRHpt?=
- =?utf-8?B?U2JTdGRSQndVUjhKK1g5MWwyOE5XTFUweFZuR245Ynd0Z1NKMDVuTFpUYUEz?=
- =?utf-8?B?OTFvTW5tTmg2c2ZHbkJLZE0rSEU2Q0xjbnhNb3h0ZDVIc01uUUtlUnpyUUNu?=
- =?utf-8?B?ZVFrM1dsQ3RlczUvREQ4ZXNWRmZaNU1BRlordGp3L1Z1V3NjLzAxaVRjcGdN?=
- =?utf-8?B?bUIwK1V0N2tBMUtGMlptM3orbWxoYVZwaW1hcTZjYXVkZnlQS3F1azl6NThk?=
- =?utf-8?B?a2RlSVNKdDNncndVY2NPS1UrTHRGMXIyU2tNMXlZT3Z5WlJiVXEweE5LRHRP?=
- =?utf-8?B?cExZV2V4QkRMc3MxZFRvRVU1U2NrTEo3MDM4Y3pjMUQydlNlUEVQaG1OSUFJ?=
- =?utf-8?B?Rmh2aHFGd0tWVDl0cXkyWDhLY1hSTTg3TWNTQ093U3c5TEYrUWdVY2ZxZDNQ?=
- =?utf-8?B?SHdpUnVxTWlndXNNRVlUTXlNZVNabXF5NUhjY0lWR0tJZFc3N0h5cFdjTVYz?=
- =?utf-8?B?WFhqdTlzVEVOSmw0bmtqNGJtV0lNZFpZWndzS1FtZXV3aXppWHJlVGJzTnht?=
- =?utf-8?B?NlFGNmdrYmlnPT0=?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAVPR03MB9020.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU6PR03MB10944
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB3PEPF0000885A.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	95985f8a-dfaf-49c7-d01e-08dd924f1703
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|35042699022|1800799024|14060799003|376014|82310400026|7416014|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?anlOSTdpYXU5bk5XNHZaVEF3RHREWHIxZTN0RDgwQ3JWZmo1ck9WaGxzckRz?=
- =?utf-8?B?SjJGdkl3SDBwVEZhbXpCTFBZOVhZM2crSnR4dFg0bzUrRmR1Q1VvQWxiMXVj?=
- =?utf-8?B?WFdWU0dwLzJKVnBGQmVpRW92WjZqcEgwVGV5em8yRzRhYWZKVG5mS0RJQ0JO?=
- =?utf-8?B?cVBpTVV4RkhVQ0dSdG1NNHBqYjhFb2ZUcDQ5VzdKNDFZTUFvTEtSeTNyTTFn?=
- =?utf-8?B?ZzdHdWZ0azF1NlhFcFlQbWlXQTlYTTBTeitZL3A5TVVaS2Q0TEhIcEFBQUc3?=
- =?utf-8?B?c2ZkNVNRalJqaVExQ05lRDBjVktXTUFvUWFQSk00L2N2Vi94eWlET09STUpl?=
- =?utf-8?B?L1NjWjBDaytTUUNveEFUNFNvYTY1a25WR0ZVZUNvSW5JcERNaVh1eDlTVXJj?=
- =?utf-8?B?Rk9ZRENRRlVMNnRObEVBV24yQjgrWHFjdE8yUE9ic0V6VVNvUHJTNlE4UFJR?=
- =?utf-8?B?ekxZc0hDZHd1c25FaHJnMVQ2TmRRbHhrY1YyOWtacG00aHNUNDZ5VXZxMSs0?=
- =?utf-8?B?c0F1bHBvdnZqQ0t4WEk1cWhySlI4YnY0VzlWVjVZQWJrS2pMTTQzT1VseUhR?=
- =?utf-8?B?cE5KRUVWaHVZbTJSa1VvREQyVlJ3S0dZbmF6NVp1dGFYeWUrNDFVa0k1Qy9O?=
- =?utf-8?B?Wkl5QnAzdTBXd3ZMZWJRNmtWbFljSEtLU3kyYVJRSnY0aDhWTVgvN1l1SHBX?=
- =?utf-8?B?d290K3BuRUcxcEtaZWJRNkl4WUlYNDA5NTlZK1RPMmZBUVIzUkFYc0FURTBO?=
- =?utf-8?B?ZlFpMWRlSStmenN3QjFvenhWajV1RXpuSHRIVTlsYkg0REhVM3BnRDY4OENz?=
- =?utf-8?B?TFBtTVNvNEpwdzVmZTJRYnBWUytkczhacklKNVNKQTBveDZDcVRpRVhEY0wv?=
- =?utf-8?B?TnErbGRnRnFLY2tvdnNCSlBRa24ySk5weVY1NEE3L0NEc1pxbkpBUitqN0VG?=
- =?utf-8?B?QzA4a1hybnZJbWlrYWUzc3B1NEZIVUttRXBsQWxQSkxMcU1Jcmk3V0kvRTNv?=
- =?utf-8?B?bzQ3VzJIU0htSit3NGp3TnhRc2JNS0hGY1VYOGduVEc0REp2MGRleitIRWps?=
- =?utf-8?B?RGxrSVV0RHcvU3kvT1BuaXVZTU1Yd0hYVFF5ZDBiZHFSc1kxT0JYdTdsbFE4?=
- =?utf-8?B?NzhHSFRYZnllZGFxTThqTk9ZbGxxakxaQWpIMEV2eUUxNGg0cVA5UU9Mbnk2?=
- =?utf-8?B?VVorNnVUU2o1V0Vrc0ZVWFAvcW5odU91eUh3NVhqb21aRklMakIxNS9Ccm54?=
- =?utf-8?B?dUY2QmxVaStlQTBtbzR0bG9DbGdMYUFXR0NSOFZyZm9hQStKZWpnM0g5VDFQ?=
- =?utf-8?B?eFQ5K2FabDZmVitJK0w0bG93Z2JHWFNyY2tDU3lhbTJqUEtRYVlnbFUvZFVL?=
- =?utf-8?B?QUZmSm51QW1FOWxmbVRmWStzVWNSOUJsb1kvNVF1ZTlaUVlXdmxxTW9BU08v?=
- =?utf-8?B?Uk1TRjhPM2o4cDg3RXd6a3dGNDdJKzB4eW81Z1FLelp1TDYrUytpcEJQVFov?=
- =?utf-8?B?TWlOUkpnK29wck0yR2U0UFNHM2s2eEptbjFTWHY0ZThPYUxYK05pakl4ZzZE?=
- =?utf-8?B?NHpTbjZQcFJialZvZ3Z0b1ozWEgzRzBPd2JmdWU3ZHNUTTNBb3hOK2QzN05a?=
- =?utf-8?B?WDZ1OVpIeW1IKzBrWnp5cHRnc0d1YWhPNkZKcHd1M1VBRHBrSGxEaDdqR0hT?=
- =?utf-8?B?amI1QkNEWXVXTFNpV2xWOHVuQnN1MFI3SG5EVDBvR1p2WmJlZm9NWFJOQlBF?=
- =?utf-8?B?c1RSTUc2bXRXWkg2OTNWd1BNQ1ZqV09uSjJrM2xTRGdUNlpsZkN2K3YveC9Y?=
- =?utf-8?B?MnhYRW1ZQWZCOEZwU3VHMjAyOHJTQWx0YzB6N3VEZ2p1K1pVdm9yR05wR1RH?=
- =?utf-8?B?YXcrbVQ3Nm5oZzJ2MVFQdEhTbjY0dWZDVkJLL0pEamhDdWZnVmlCNW9JRmw3?=
- =?utf-8?B?MkFCTlBkYldWV2RkSnRGeWw0V0JOdEdnTktpMTBTeXhPVEE4VTJSOFZNWjVt?=
- =?utf-8?B?Q3VvbGxQT3QrVHIwaUJBYVVUb2wzWWRVVUR6L2xiWWx2dkQrNmZIQy9IOFhn?=
- =?utf-8?B?M0NuYWNmSktjai9RRXpuMnRWRnBCcmdzbXo4Zz09?=
-X-Forefront-Antispam-Report:
-	CIP:20.160.56.81;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:repost-eu.tmcas.trendmicro.com;PTR:repost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230040)(35042699022)(1800799024)(14060799003)(376014)(82310400026)(7416014)(36860700013)(921020);DIR:OUT;SFP:1102;
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 18:50:58.6452
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d6ea6b0-e36d-48eb-6860-08dd924f19ad
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.81];Helo=[repost-eu.tmcas.trendmicro.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB3PEPF0000885A.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6580
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250513-ci-disable-sdm845-v1-1-9c3ca7d0f24b@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIALyUI2gC/x3MSwqAMAwA0atI1gY0taJeRVzUNmrAHw2IIN7d4
+ vItZh5QjsIKXfZA5EtUjj2hzDPwi9tnRgnJQAXZwpYGvWAQdePKqGFrKouTd1Qb2xK1DlJ3Rp7
+ k/p/98L4fjmeyXGMAAAA=
+X-Change-ID: 20250513-ci-disable-sdm845-fca26359229a
+To: Helen Koike <helen.fornazier@gmail.com>,
+        Vignesh Raman <vignesh.raman@collabora.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1591;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=8aF340dgmVwMplRdL4mqUGNXBthPtGz9cX7S0m3V9yY=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoI5S+1K1S5sW7YKw4EMKuEMPH6y1TiYRpCvxYJ
+ tEhQgDB/s+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCOUvgAKCRCLPIo+Aiko
+ 1YMoB/0VrkkVQfRm3u7sOkHUgXVMQO4ygTDFfTGsUywrYYNzd7dvsEWrEs9myvn9POsj60lOkdS
+ gmy55JITDFOdBESpZh05xg8ufrSYfPoYS5x+TXeWdcwHm2fqLrCbv9FsPZ1R7XN9meoKucdnYMc
+ /A33AN946aNu2TzHmHl1BQE1zySRhw8HusxPDhxC3X9hc9Q3N481VdcTx12+4v3tfygxIB2PHsG
+ FMgrsxaCF1Ls9pxeehzWXvp6OfKuPDPzwnIdU0C2s85M6JLq0RZWg28D9m/TLsMrKiC3cUnxPsf
+ VY1jMTNV+7e3DZX37sdiM/aCVRlRU4eVSMeUwG3L117dT0NQ
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-ORIG-GUID: OOyr7Fr5dQQ6IqdxvKuB4D8WsG1POAp3
+X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=682394c2 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=O38deLNlhEFyGSD7h7sA:9 a=QEXdDO2ut3YA:10
+ a=s5zKW874KtQA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE4MCBTYWx0ZWRfX9E1w1sZi3m7/
+ +Ru5kfeioTZ5dXGEMuKujXnk5ADqZQmc6Ri81Khd/knqgP6fXu4S2a5H58CmRtrk4yjNmJEmjys
+ JbGAZAj3aeuzTATGPFQgjbUuP45n9GblwBnK9fAsekbFpZGguumLGl6EPU3QYkoADbdupy6t+hp
+ 0GtZYC28h2iDtu5uvp4fpAuTyDfXgBC7rn10zsiSYR2LrXQLhFvbMnAlJ/slSm/ziw52C0uHZbc
+ IUZHAJpL3DCGZlIN1QZc36rxwfnNbDPzcoMbXz7S+/3SiOvFFkDcJ4tRPUh70l9w1A9Pc38zRLT
+ vu/T4MKvAWYQuZvg5pilWL+M32yJ+sD2WH5Jk/8W3HnpE0nWZlKFl0effuYNOSEntoYV7dlO8ER
+ JAJpinne7+w0VtdOYuuorvwPavMHASQqHhYKUV3SeenS3XU5kliC4/gW7Zy/02JrErla4CVH
+X-Proofpoint-GUID: OOyr7Fr5dQQ6IqdxvKuB4D8WsG1POAp3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=577 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505130180
 
-On 5/11/25 16:12, Christian Marangi wrote:
-> Add phylink support for GDM2/3/4 port that require configuration of the
-> PCS to make the external PHY or attached SFP cage work.
-> 
-> These needs to be defined in the GDM port node using the pcs-handle
-> property.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  drivers/net/ethernet/airoha/airoha_eth.c  | 155 +++++++++++++++++++++-
->  drivers/net/ethernet/airoha/airoha_eth.h  |   3 +
->  drivers/net/ethernet/airoha/airoha_regs.h |  12 ++
->  3 files changed, 169 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
-> index 16c7896f931f..3be1ae077a76 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.c
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.c
-> @@ -7,6 +7,7 @@
->  #include <linux/of_net.h>
->  #include <linux/platform_device.h>
->  #include <linux/tcp.h>
-> +#include <linux/pcs/pcs.h>
->  #include <linux/u64_stats_sync.h>
->  #include <net/dst_metadata.h>
->  #include <net/page_pool/helpers.h>
-> @@ -79,6 +80,11 @@ static bool airhoa_is_lan_gdm_port(struct airoha_gdm_port *port)
->  	return port->id == 1;
->  }
->  
-> +static bool airhoa_is_phy_external(struct airoha_gdm_port *port)
-> +{
-> +	return port->id != 1;
-> +}
-> +
->  static void airoha_set_macaddr(struct airoha_gdm_port *port, const u8 *addr)
->  {
->  	struct airoha_eth *eth = port->qdma->eth;
-> @@ -1613,6 +1619,17 @@ static int airoha_dev_open(struct net_device *dev)
->  	struct airoha_gdm_port *port = netdev_priv(dev);
->  	struct airoha_qdma *qdma = port->qdma;
->  
-> +	if (airhoa_is_phy_external(port)) {
-> +		err = phylink_of_phy_connect(port->phylink, dev->dev.of_node, 0);
-> +		if (err) {
-> +			netdev_err(dev, "%s: could not attach PHY: %d\n", __func__,
-> +				   err);
-> +			return err;
-> +		}
-> +
-> +		phylink_start(port->phylink);
-> +	}
-> +
->  	netif_tx_start_all_queues(dev);
->  	err = airoha_set_vip_for_gdm_port(port, true);
->  	if (err)
-> @@ -1665,6 +1682,11 @@ static int airoha_dev_stop(struct net_device *dev)
->  		}
->  	}
->  
-> +	if (airhoa_is_phy_external(port)) {
-> +		phylink_stop(port->phylink);
-> +		phylink_disconnect_phy(port->phylink);
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -2795,6 +2817,115 @@ bool airoha_is_valid_gdm_port(struct airoha_eth *eth,
->  	return false;
->  }
->  
-> +static void airoha_mac_link_up(struct phylink_config *config, struct phy_device *phy,
-> +			       unsigned int mode, phy_interface_t interface,
-> +			       int speed, int duplex, bool tx_pause, bool rx_pause)
-> +{
-> +	struct airoha_gdm_port *port = container_of(config, struct airoha_gdm_port,
-> +						    phylink_config);
-> +	struct airoha_qdma *qdma = port->qdma;
-> +	struct airoha_eth *eth = qdma->eth;
-> +	u32 frag_size_tx, frag_size_rx;
-> +
-> +	if (port->id != 4)
-> +		return;
-> +
-> +	switch (speed) {
-> +	case SPEED_10000:
-> +	case SPEED_5000:
-> +		frag_size_tx = 8;
-> +		frag_size_rx = 8;
-> +		break;
-> +	case SPEED_2500:
-> +		frag_size_tx = 2;
-> +		frag_size_rx = 1;
-> +		break;
-> +	default:
-> +		frag_size_tx = 1;
-> +		frag_size_rx = 0;
-> +	}
-> +
-> +	/* Configure TX/RX frag based on speed */
-> +	airoha_fe_rmw(eth, REG_GDMA4_TMBI_FRAG,
-> +		      GDMA4_SGMII0_TX_FRAG_SIZE_MASK,
-> +		      FIELD_PREP(GDMA4_SGMII0_TX_FRAG_SIZE_MASK,
-> +				 frag_size_tx));
-> +
-> +	airoha_fe_rmw(eth, REG_GDMA4_RMBI_FRAG,
-> +		      GDMA4_SGMII0_RX_FRAG_SIZE_MASK,
-> +		      FIELD_PREP(GDMA4_SGMII0_RX_FRAG_SIZE_MASK,
-> +				 frag_size_rx));
-> +}
-> +
-> +static const struct phylink_mac_ops airoha_phylink_ops = {
-> +	.mac_link_up = airoha_mac_link_up,
-> +};
-> +
-> +static int airoha_setup_phylink(struct net_device *dev)
-> +{
-> +	struct airoha_gdm_port *port = netdev_priv(dev);
-> +	struct device_node *np = dev->dev.of_node;
-> +	struct phylink_pcs **available_pcs;
-> +	phy_interface_t phy_mode;
-> +	struct phylink *phylink;
-> +	unsigned int num_pcs;
-> +	int err;
-> +
-> +	err = of_get_phy_mode(np, &phy_mode);
-> +	if (err) {
-> +		dev_err(&dev->dev, "incorrect phy-mode\n");
-> +		return err;
-> +	}
-> +
-> +	port->phylink_config.dev = &dev->dev;
-> +	port->phylink_config.type = PHYLINK_NETDEV;
-> +	port->phylink_config.mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
-> +						MAC_10 | MAC_100 | MAC_1000 | MAC_2500FD |
-> +						MAC_5000FD | MAC_10000FD;
-> +
-> +	err = fwnode_phylink_pcs_parse(dev_fwnode(&dev->dev), NULL, &num_pcs);
-> +	if (err)
-> +		return err;
-> +
-> +	available_pcs = kcalloc(num_pcs, sizeof(*available_pcs), GFP_KERNEL);
-> +	if (!available_pcs)
-> +		return -ENOMEM;
-> +
-> +	err = fwnode_phylink_pcs_parse(dev_fwnode(&dev->dev), available_pcs,
-> +				       &num_pcs);
-> +	if (err)
-> +		goto out;
+The SDM845 Cheeza runners are currently offline. Disable them until they
+come back again.
 
-OK, so say you have PCSs A, B, and C. phylink determines that you are
-going to use B. But where do you select the PCS? Don't you have to
-configure a mux or something?
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/ci/test.yml | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
---Sean
+diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+index 84a25f0e783b6ca7f8a993c709d5a0fc86bf18d3..cc685833e8d2747dd21dc9a549c3d405431de8d0 100644
+--- a/drivers/gpu/drm/ci/test.yml
++++ b/drivers/gpu/drm/ci/test.yml
+@@ -180,19 +180,19 @@ msm:apq8096:
+   script:
+     - ./install/bare-metal/fastboot.sh || exit $?
+ 
+-msm:sdm845:
+-  extends:
+-    - .baremetal-igt-arm64
+-  stage: msm
+-  parallel: 6
+-  variables:
+-    DEVICE_TYPE: sdm845-cheza-r3
+-    DRIVER_NAME: msm
+-    BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
+-    GPU_VERSION: sdm845
+-    RUNNER_TAG: google-freedreno-cheza
+-  script:
+-    - ./install/bare-metal/cros-servo.sh || exit $?
++#msm:sdm845:
++#  extends:
++#    - .baremetal-igt-arm64
++#  stage: msm
++#  parallel: 6
++#  variables:
++#    DEVICE_TYPE: sdm845-cheza-r3
++#    DRIVER_NAME: msm
++#    BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
++#    GPU_VERSION: sdm845
++#    RUNNER_TAG: google-freedreno-cheza
++#  script:
++#    - ./install/bare-metal/cros-servo.sh || exit $?
+ 
+ msm:sm8350-hdk:
+   extends:
 
-> +	port->phylink_config.available_pcs = available_pcs;
-> +	port->phylink_config.num_available_pcs = num_pcs;
-> +
-> +	__set_bit(PHY_INTERFACE_MODE_SGMII,
-> +		  port->phylink_config.supported_interfaces);
-> +	__set_bit(PHY_INTERFACE_MODE_1000BASEX,
-> +		  port->phylink_config.supported_interfaces);
-> +	__set_bit(PHY_INTERFACE_MODE_2500BASEX,
-> +		  port->phylink_config.supported_interfaces);
-> +	__set_bit(PHY_INTERFACE_MODE_USXGMII,
-> +		  port->phylink_config.supported_interfaces);
-> +
-> +	phy_interface_copy(port->phylink_config.pcs_interfaces,
-> +			   port->phylink_config.supported_interfaces);
-> +
-> +	phylink = phylink_create(&port->phylink_config,
-> +				 of_fwnode_handle(np),
-> +				 phy_mode, &airoha_phylink_ops);
-> +	if (IS_ERR(phylink)) {
-> +		err = PTR_ERR(phylink);
-> +		goto out;
-> +	}
-> +
-> +	port->phylink = phylink;
-> +out:
-> +	kfree(available_pcs);
-> +
-> +	return err;
-> +}
-> +
->  static int airoha_alloc_gdm_port(struct airoha_eth *eth,
->  				 struct device_node *np, int index)
->  {
-> @@ -2873,7 +3004,23 @@ static int airoha_alloc_gdm_port(struct airoha_eth *eth,
->  	if (err)
->  		return err;
->  
-> -	return register_netdev(dev);
-> +	if (airhoa_is_phy_external(port)) {
-> +		err = airoha_setup_phylink(dev);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	err = register_netdev(dev);
-> +	if (err)
-> +		goto free_phylink;
-> +
-> +	return 0;
-> +
-> +free_phylink:
-> +	if (airhoa_is_phy_external(port))
-> +		phylink_destroy(port->phylink);
-> +
-> +	return err;
->  }
->  
->  static int airoha_probe(struct platform_device *pdev)
-> @@ -2967,6 +3114,9 @@ static int airoha_probe(struct platform_device *pdev)
->  		struct airoha_gdm_port *port = eth->ports[i];
->  
->  		if (port && port->dev->reg_state == NETREG_REGISTERED) {
-> +			if (airhoa_is_phy_external(port))
-> +				phylink_destroy(port->phylink);
-> +
->  			unregister_netdev(port->dev);
->  			airoha_metadata_dst_free(port);
->  		}
-> @@ -2994,6 +3144,9 @@ static void airoha_remove(struct platform_device *pdev)
->  			continue;
->  
->  		airoha_dev_stop(port->dev);
-> +		if (airhoa_is_phy_external(port))
-> +			phylink_destroy(port->phylink);
-> +
->  		unregister_netdev(port->dev);
->  		airoha_metadata_dst_free(port);
->  	}
-> diff --git a/drivers/net/ethernet/airoha/airoha_eth.h b/drivers/net/ethernet/airoha/airoha_eth.h
-> index 53f39083a8b0..73a500474076 100644
-> --- a/drivers/net/ethernet/airoha/airoha_eth.h
-> +++ b/drivers/net/ethernet/airoha/airoha_eth.h
-> @@ -498,6 +498,9 @@ struct airoha_gdm_port {
->  	struct net_device *dev;
->  	int id;
->  
-> +	struct phylink *phylink;
-> +	struct phylink_config phylink_config;
-> +
->  	struct airoha_hw_stats stats;
->  
->  	DECLARE_BITMAP(qos_sq_bmap, AIROHA_NUM_QOS_CHANNELS);
-> diff --git a/drivers/net/ethernet/airoha/airoha_regs.h b/drivers/net/ethernet/airoha/airoha_regs.h
-> index d931530fc96f..54f7079b28b0 100644
-> --- a/drivers/net/ethernet/airoha/airoha_regs.h
-> +++ b/drivers/net/ethernet/airoha/airoha_regs.h
-> @@ -357,6 +357,18 @@
->  #define IP_FRAGMENT_PORT_MASK		GENMASK(8, 5)
->  #define IP_FRAGMENT_NBQ_MASK		GENMASK(4, 0)
->  
-> +#define REG_GDMA4_TMBI_FRAG		0x2028
-> +#define GDMA4_SGMII1_TX_WEIGHT_MASK	GENMASK(31, 26)
-> +#define GDMA4_SGMII1_TX_FRAG_SIZE_MASK	GENMASK(25, 16)
-> +#define GDMA4_SGMII0_TX_WEIGHT_MASK	GENMASK(15, 10)
-> +#define GDMA4_SGMII0_TX_FRAG_SIZE_MASK	GENMASK(9, 0)
-> +
-> +#define REG_GDMA4_RMBI_FRAG		0x202c
-> +#define GDMA4_SGMII1_RX_WEIGHT_MASK	GENMASK(31, 26)
-> +#define GDMA4_SGMII1_RX_FRAG_SIZE_MASK	GENMASK(25, 16)
-> +#define GDMA4_SGMII0_RX_WEIGHT_MASK	GENMASK(15, 10)
-> +#define GDMA4_SGMII0_RX_FRAG_SIZE_MASK	GENMASK(9, 0)
-> +
->  #define REG_MC_VLAN_EN			0x2100
->  #define MC_VLAN_EN_MASK			BIT(0)
->  
+---
+base-commit: 8f5264d302e803e7ef82a61f9632a0d2ef67413f
+change-id: 20250513-ci-disable-sdm845-fca26359229a
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
