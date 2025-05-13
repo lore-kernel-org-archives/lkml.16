@@ -1,149 +1,159 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D371B3956;
-	Tue, 13 May 2025 06:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECE62556E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747116627; cv=none; b=Z/FlquKjubxolam+oCxEAuVhCU2JzB+X57jsyFTU8CIpny4Ozj6pLdQnwQuK/f9jncUyQmn8liLmLbHYZ9kSTidkKN4E0uijqPqHRGD+ZQLY9iDj9+UpfWQOco5rNdXnFQsnh9u3hpZS0TA3HeSKWZWbzcHThf9IVu/NKtsPBuU=
+	t=1747116673; cv=none; b=Di469Ji9etA+bMl8+2kLv+PMioUL+lVo52EUh4nmcPp0dzAFHxZ4xR/gmTDPvwzEYfoo7uLM+QkNvY8nfJMab4aRbiWYxyNMPN9XZPSwwzINvG4LbCgz+BDsUlMRj2Pxd123Z4t7EPgW6FJwcRbgBQOgf4byGrMVpdOf/cy05QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747116627; c=relaxed/simple;
-	bh=pp/g36CGeCan1Eh/sxlUoxIv6TI4DTTer5csaOg+IYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jCMzhy/M8yh2fVhN5oiooe1JWVPGtpioDrFXNsc+diWJWHtt/KFtZ2rxD5X+deUCIbvBqjt9LWFG/qIfUjptZwIkf2DtvFDhnngBkFG4pP6mfDXxUSDiikgL4J/jagVjc3mirFh1Ujc2KKbi9PZM7I2ilbxo312UN/rB8V6y3u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Q1HwPYTA; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747116673; c=relaxed/simple;
+	bh=AuyKC3qOychXuDAeIAHX0G5Bz7LqlYSbAFejuq0z97s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qt2RLTDDpS0SbRGborv9oPN0zi1Odzo+py89XIPNBOnGTiyh8GHpn6pLf/yv5CA1KsMBtv5iuid61B+tlRd6mAsAstITpUc3nmn+kwEITr5f7vkQmXpsSJtst5Pcfyhr9WWHUqTNB0ChoAjeCJzc/55Odvd7WUdmnxB+di3J0dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0aIGaER; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q1HwPYTA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747116621;
-	bh=zckOA6qotZ8O2PcXu2tqk96ixCz/VZ7YSefpJVgwM5A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Q1HwPYTA80nuhbP9rj/wkd0m0RIuON8BNin8uzlr+11XS5UiSUcnAWzILCzHzKPLa
-	 0kg6zbR2ghSudm9yAGSVxI2cR4doZWUL2RQ/g9Zwr+MMPOr3Eyns9e0/vJL5XyIkoW
-	 oUQMH25zYbssPKH6jgSubDu9ZjqXVepIngwJbczJBl/J8Xl7QhJaeY42UG2Vd311ho
-	 zl14EwaJxHPVhqk03tdOn+i76i8/yf7Yx1WNjZNpVMriuV1BWkwWOzmAq5S0fmmmLK
-	 /N0dn0QtEuh43fJq4y7fWbA7mY8WsvbcqCYRkSFB4diHCcB2uwO2mmNU2gjhcW4fhh
-	 /oeYlIxviD1rg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxR0X501Cz4wcx;
-	Tue, 13 May 2025 16:10:20 +1000 (AEST)
-Date: Tue, 13 May 2025 16:10:20 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Subject: linux-next: manual merge of the tip tree with Linus' tree
-Message-ID: <20250513161020.4e97ddde@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0aIGaER"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b7fbdde7so4973489f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747116669; x=1747721469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qZ1ztaXbZmCcupyFU8aDO4tFwSr0/lqFrQA95vlhVAk=;
+        b=E0aIGaERBH70Hv4QfaKNXqCPINeUcrMm/xx1z17RkA6alZE0IqJLEqctKBf6F1GEXu
+         2JpJyjPnGQU0tolX7E0qOdji/WiesAQMLMcaCfL+MP89Gq+e41O31bs6YQ0Ow9+oxZGV
+         E4MGfgdAifEhn24w1JVSegb99QW+F7LXeq5oUTa8CNxfjS5+RvNdA7Nqmw9GLDiVCFzf
+         Y1l4jVlhZGDsCcoeYh3C2TIhT1UAA4Q4MmgCFJLkSR6eBNKJGMEsdud7SP5qDHL5H1Gr
+         WX9egE1D1tTeyBVjzpyZQhfZzksIMllZFFZsDBd0+V614Zh51uVGfiUd5zkbyRZ/MfmQ
+         x6Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747116669; x=1747721469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qZ1ztaXbZmCcupyFU8aDO4tFwSr0/lqFrQA95vlhVAk=;
+        b=eQibWon8NTjHVeTIbtv5s415bWW9MVm3gXzdZTXmbpxK6Ud+E94GAEynxlA8rzU+2h
+         fLdHgjBMDmF2oNv3coYtRefonciYRB7fgJz575wgO7z55EsekIP9KcV+VE+HKuQqQc0G
+         NAG7r9ob3nJHFlhctHhezKCIYo1pNX41vtDLVWQzdujpwZD1x0O/U5gwu21sc7uQM2QR
+         YCqNxvtmq5Fnpsrp2WN/DbwkA1rKGh6zeLgugUybb9BCz+UgRkJhmPEn5L2dt85pJ1TU
+         7RZB4d011X9DNJSiXqpAO32tIbIbka729yAdlruxyH+uKxi7KZi7jqZRO7bb25Ijfxaj
+         aRDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdtIXzUgzDKdPW4FdHeWlvbWOgOFZ2/TnhUdZ0RbRmEur7HMVvZOMdcF2r8UoFqNVZaFvpur7R3T+N+gg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFsvzDW6jAV7Q/cmC+V6CzwinQBHbG3X8Efn6fVuaEeg85KOP0
+	xo73gnWQ2VX/c0phHlBco0Q7chcUcPOhQSKuKK4YZUBOzfMpqNWJ
+X-Gm-Gg: ASbGncv43bl8iLsQqGfVsBuK2GMkO2jK1j0fGhEAi0+HownhaKF83us7+ayEhZUoWvh
+	fhOUOLs7xl8Qv4d5gqaXtgj/5/cR71x/XXU1KR7fzGLFfzOp7biD4Cd5V8PO52a2a+sWcAlqtv/
+	2VoK+sqZoW/qR+P4hGXsOxOz3OCmx4dDAy1wLl4UYv2vPf7KNHo+eZVxykDg852GcIpRYlkJgba
+	k/SkaikFe606qKb3C0q+D9DjtDsXRNJYbjeWE2aubFIp4QlWn3Ouc42IYAz9NXQqqGMElUBepKn
+	CNp1wTJJtl/VY9O5riJsbNDJbWTmPf8lXedAb7v5XmL728wlf9TIc+yoZvwFB7myYVXal+Auz//
+	6Q+6hBG7Jg4Pxig9tSC4vEEEA0i8mg0AOsErzBmHXaX7xN0uSUqg=
+X-Google-Smtp-Source: AGHT+IHtLmNxRhJzVtEfa0YzN0wa/v4767LFxr1jVbK0LU6e1aqWmtNaLjdRNUu1pTd0oic5PbWAOQ==
+X-Received: by 2002:a05:6000:2ce:b0:39a:c8a8:4fdc with SMTP id ffacd0b85a97d-3a1f6437880mr12578857f8f.16.1747116668665;
+        Mon, 12 May 2025 23:11:08 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-0400-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:400::8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm15156220f8f.15.2025.05.12.23.11.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 23:11:08 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: dregan@broadcom.com,
+	florian.fainelli@broadcom.com,
+	computersforpeace@gmail.com,
+	kamal.dasu@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH] mtd: rawnand: brcmnand: remove unused parameters
+Date: Tue, 13 May 2025 08:10:52 +0200
+Message-Id: <20250513061052.547392-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_XF9DEQC5hYZD1=Q_MSsa_N";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---Sig_/_XF9DEQC5hYZD1=Q_MSsa_N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+last_cmd and last_byte are now unused brcmnand_host members.
+last_addr is only written and never read so we can remove it too.
 
-Hi all,
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-Today's linux-next merge of the tip tree got a conflict in:
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 17f6d9723df9..5ef5d075a30c 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -310,9 +310,6 @@ struct brcmnand_host {
+ 	struct platform_device	*pdev;
+ 	int			cs;
+ 
+-	unsigned int		last_cmd;
+-	unsigned int		last_byte;
+-	u64			last_addr;
+ 	struct brcmnand_cfg	hwcfg;
+ 	struct brcmnand_controller *ctrl;
+ };
+@@ -2237,10 +2234,8 @@ static int brcmnand_read_page(struct nand_chip *chip, uint8_t *buf,
+ 	u8 *oob = oob_required ? (u8 *)chip->oob_poi : NULL;
+ 	u64 addr = (u64)page << chip->page_shift;
+ 
+-	host->last_addr = addr;
+-
+-	return brcmnand_read(mtd, chip, host->last_addr,
+-			mtd->writesize >> FC_SHIFT, (u32 *)buf, oob);
++	return brcmnand_read(mtd, chip, addr, mtd->writesize >> FC_SHIFT,
++			     (u32 *)buf, oob);
+ }
+ 
+ static int brcmnand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
+@@ -2252,11 +2247,9 @@ static int brcmnand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
+ 	int ret;
+ 	u64 addr = (u64)page << chip->page_shift;
+ 
+-	host->last_addr = addr;
+-
+ 	brcmnand_set_ecc_enabled(host, 0);
+-	ret = brcmnand_read(mtd, chip, host->last_addr,
+-			mtd->writesize >> FC_SHIFT, (u32 *)buf, oob);
++	ret = brcmnand_read(mtd, chip, addr, mtd->writesize >> FC_SHIFT,
++			    (u32 *)buf, oob);
+ 	brcmnand_set_ecc_enabled(host, 1);
+ 	return ret;
+ }
+@@ -2367,9 +2360,7 @@ static int brcmnand_write_page(struct nand_chip *chip, const uint8_t *buf,
+ 	void *oob = oob_required ? chip->oob_poi : NULL;
+ 	u64 addr = (u64)page << chip->page_shift;
+ 
+-	host->last_addr = addr;
+-
+-	return brcmnand_write(mtd, chip, host->last_addr, (const u32 *)buf, oob);
++	return brcmnand_write(mtd, chip, addr, (const u32 *)buf, oob);
+ }
+ 
+ static int brcmnand_write_page_raw(struct nand_chip *chip, const uint8_t *buf,
+@@ -2381,9 +2372,8 @@ static int brcmnand_write_page_raw(struct nand_chip *chip, const uint8_t *buf,
+ 	u64 addr = (u64)page << chip->page_shift;
+ 	int ret = 0;
+ 
+-	host->last_addr = addr;
+ 	brcmnand_set_ecc_enabled(host, 0);
+-	ret = brcmnand_write(mtd, chip, host->last_addr, (const u32 *)buf, oob);
++	ret = brcmnand_write(mtd, chip, addr, (const u32 *)buf, oob);
+ 	brcmnand_set_ecc_enabled(host, 1);
+ 
+ 	return ret;
+-- 
+2.39.5
 
-  arch/x86/kernel/alternative.c
-
-between commits:
-
-  ebebe30794d3 ("x86/ibt: Keep IBT disabled during alternative patching")
-  872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
-
-from Linus' tree and commit:
-
-  db5c68c88c07 ("x86/alternatives: Simplify the #include section")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/kernel/alternative.c
-index 48fd04e90114,ddbc303e41e3..000000000000
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@@ -1,39 -1,14 +1,17 @@@
-  // SPDX-License-Identifier: GPL-2.0-only
-  #define pr_fmt(fmt) "SMP alternatives: " fmt
- =20
-- #include <linux/module.h>
-- #include <linux/sched.h>
-+ #include <linux/mmu_context.h>
-  #include <linux/perf_event.h>
-- #include <linux/mutex.h>
-- #include <linux/list.h>
-- #include <linux/stringify.h>
-- #include <linux/highmem.h>
-- #include <linux/mm.h>
-  #include <linux/vmalloc.h>
-  #include <linux/memory.h>
-- #include <linux/stop_machine.h>
-- #include <linux/slab.h>
-- #include <linux/kdebug.h>
-- #include <linux/kprobes.h>
-- #include <linux/mmu_context.h>
-- #include <linux/bsearch.h>
-- #include <linux/sync_core.h>
- +#include <linux/execmem.h>
-+=20
-  #include <asm/text-patching.h>
-- #include <asm/alternative.h>
-- #include <asm/sections.h>
-- #include <asm/mce.h>
-- #include <asm/nmi.h>
-- #include <asm/cacheflush.h>
-- #include <asm/tlbflush.h>
-  #include <asm/insn.h>
-- #include <asm/io.h>
-- #include <asm/fixmap.h>
-- #include <asm/paravirt.h>
-- #include <asm/asm-prototypes.h>
-- #include <asm/cfi.h>
-+ #include <asm/nmi.h>
- +#include <asm/ibt.h>
- +#include <asm/set_memory.h>
- =20
-  int __read_mostly alternatives_patched;
- =20
-
---Sig_/_XF9DEQC5hYZD1=Q_MSsa_N
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgi4kwACgkQAVBC80lX
-0GyBoQf+ODp5g1CBRnf+VzyeC2Y0VzH/MGS5+9VHeerQ4R3iL94bkEAEsz6qhz5t
-FGocShFVytJnjfdDDQi9RlF2A6YKXAT1Xw4QVtyu+DUBlw6f+dqzyQ+DRRPsoHPL
-v33/dNuECMO9+jpJxJiVYaSbqQCOiTzbV2BsFNWcS7JLSlhQZx4D0d/aavGTYXiP
-Oe+bfP+ikh/NDSuIWv5Edzw5B9Rvux+XXPh0MMT1FfOBRwG6mo/21Or1qLiJ6Nca
-psUw24Cm91Z8Cjn24Vpya5502+961F2LfetGn88KnkBzZz7UDKWb/O6eZ97YVshO
-ktZEOGQv5WojZunjtTAcGt13sDGR2Q==
-=xy/+
------END PGP SIGNATURE-----
-
---Sig_/_XF9DEQC5hYZD1=Q_MSsa_N--
