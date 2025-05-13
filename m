@@ -1,126 +1,124 @@
-Received: from forward200b.mail.yandex.net (forward200b.mail.yandex.net [178.154.239.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F0C4C6C;
-	Tue, 13 May 2025 08:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1D020CCE4;
+	Tue, 13 May 2025 08:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747125292; cv=none; b=QhCZBHXbflr+cTMWCfAVZUgqCzvYuxGC3XWCRwD9B3j0zSS+BfixL1Y8JY0I7ZbIdysSJQ2eOEtxJN9nZgns1VAp+PnwyzS2hB5xAzCL6e0iBtRyWaS0RJnGnPNFyCuBRg0p74JsPSOkve3a6KZzm/KeSmQ4PUDfwVuXx8JMdQE=
+	t=1747125336; cv=none; b=gdHlSbOwVF0R2PKPmO0HXHKgH81HPknSvMFrcMWBRvMcfAmCfFb9VozryvWCsnSmbCeaoIUkj7TNOE4CtiFT+09DO2/rVxiJwBBs5fOGdVkkdxB88o6VoUGsOMI+wl2ULuCMFMjuOlumiWbuKpDois9pwXQbJjp12d15UcXWWmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747125292; c=relaxed/simple;
-	bh=hYEZhT0rjcfx1YSa8YgQAEFvxp+4UDB6FPkUh10hD3A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DtmdGSfmWfQ/LLALgnbZh3BcHoiU+PdrxrPw8NZinSZVBzuLlKL0YKNSdZXl5NOddd4v1xhj1mZn4Lld6gjwo+fAdO2nzj9DQ7afcyD94ICp7miGxlqaJPZDkdEhHnNbB93IgBiUDvRY3nNb5lleGOi6SHvE6hODeSKCE1SRSwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=f/cgcOnW; arc=none smtp.client-ip=178.154.239.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1747125336; c=relaxed/simple;
+	bh=AQsw6m7iH5by6TnMCmB9Fcyzck4JqC+iM5hS4GjSXTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9DPGdZaZuCf6UNBk6+6cYaqVbuMIWJbS9kPFz/pbl8cawf6WKjn8Pcss1YOHN+apNTI98C7C8r8RB2uV3uKknf1q5OE28sWcwNnu1TvM+wDaoSq42gN7P1c9hl9m9+zc6fXkLJN2oh3FucMTHFRLf7ElktgHyxkeWku5P4UgpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKRyHWXQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="f/cgcOnW"
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
-	by forward200b.mail.yandex.net (Yandex) with ESMTPS id 216B066598;
-	Tue, 13 May 2025 11:28:27 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-77.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-77.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:740a:0:640:fb7d:0])
-	by forward102b.mail.yandex.net (Yandex) with ESMTPS id 1CCE260A0A;
-	Tue, 13 May 2025 11:28:19 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-77.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 7SBqoZ6LmmI0-j95Imxz2;
-	Tue, 13 May 2025 11:28:18 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1747124898; bh=YFLJIFdIz7AuJegxGHvHpBo2JpT7LU7z0UDvryUuXSo=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=f/cgcOnWejOAKW6GXfioWsqdE7yvQ9yaBEDtW/2wWGZ4UCbhmIBoV82GSuXTU2Z5S
-	 sStQIilXLiDNT2qo8X5REHZpxlv1S3GPMtgHPMVHUHLPgT325fTaItLfzlTEnHi17r
-	 gQ3VNIIEzjmUw6YFimADs3eW2imAkc8vdKMtGuII=
-Authentication-Results: mail-nwsmtp-smtp-production-main-77.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Andrey Tsygunka <aitsygunka@yandex.ru>
-To: Arnd Bergmann <arnd@arndb.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKRyHWXQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E58DC4CEE4;
+	Tue, 13 May 2025 08:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747125334;
+	bh=AQsw6m7iH5by6TnMCmB9Fcyzck4JqC+iM5hS4GjSXTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cKRyHWXQ1Ci63Evz8Btig3gSKZnRJ2oQPD64QOiVjNS+aHTHvyJl0XrXNKlyfag/Y
+	 IOstQmBNvqBol0UBuLeiZXhJsF6MuKwK3FCYmxTd32Mk949NRR06rKkdajNsXLQdVf
+	 DTDnPFDBRc43DaZei1QMHRjFhEqlRL+OMwqK+lD7RSfACwPhji6Jn4leHixc+tJRoS
+	 fSddiK2SDvfnC/3HTBT8vqH/QOxksGWXHnqrBU1fC9DqiSlYdlCF98SDSQ/yg4Pq6n
+	 8XCbpE4CUONrW8BvlicrLpW9NF7IEHcHI5pNnKFalA/D/eC2XYsD1s9nqqom+jMMuD
+	 bfxYFaLd9LTiw==
+Date: Tue, 13 May 2025 09:35:28 +0100
+From: Lee Jones <lee@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Nam Tran <trannamatk@gmail.com>, andy@kernel.org, geert@linux-m68k.org,
+	pavel@ucw.cz, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, christophe.jaillet@wanadoo.fr, corbet@lwn.net,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrey Tsygunka <aitsygunka@yandex.ru>,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH v3] misc: sram: Fix NULL pointer dereference in sram_probe
-Date: Tue, 13 May 2025 11:27:57 +0300
-Message-Id: <20250513082757.1323953-1-aitsygunka@yandex.ru>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix
+ LED driver
+Message-ID: <20250513083528.GA2936510@google.com>
+References: <aCGPuKtfprIvwADa@smile.fi.intel.com>
+ <20250512173800.6767-1-trannamatk@gmail.com>
+ <CAHp75VcXmOByVsuwm0m0+FYXoaxBc1CLKtofGgHfB4sMDg+T2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VcXmOByVsuwm0m0+FYXoaxBc1CLKtofGgHfB4sMDg+T2A@mail.gmail.com>
 
-Add a check for the return value from platform_get_resource() call
-to be NULL.
+On Mon, 12 May 2025, Andy Shevchenko wrote:
 
-If the passed device-tree contains a node for sram-device
-without a specified '<reg>' property value, for example:
+> On Mon, May 12, 2025 at 8:38 PM Nam Tran <trannamatk@gmail.com> wrote:
+> > On Mon, 12 May 2025 Andy Shevchenko wrote:
+> > > On Sat, May 10, 2025 at 02:48:02PM +0700, Nam Tran wrote:
+> > > > On Thu, 8 May 2025 Lee Jones wrote:
+> > > > > On Thu, 08 May 2025, Andy Shevchenko wrote:
+> > > > > > On Thu, May 8, 2025 at 5:27 PM Nam Tran <trannamatk@gmail.com> wrote:
+> > > > > > > On Thu, 8 May 2025 Lee Jones wrote:
+> > > > > > > > On Thu, 08 May 2025, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > I think setting PWM also same as brightness_set API. However, there are
+> > > > many PWM config for a LED and it is one of other config to make autonomous mode work.
+> > > > Therefore, standard led API can use in some use cases only.
+> > > >
+> > > > Please see the link below for a better visualization of how to configure the LP5812.
+> > > > https://dev.ti.com/gallery/view/LED/LP581x/ver/0.10.0/
+> > >
+> > > To me it sounds like you should start from the small steps, i.e. do not
+> > > implement everything at once. And starting point of the 4 RGB LEDs sounds
+> > > the best approach to me. Then, if needed, you can always move on with
+> > > fancy features of this hardware on top of the existing code.
+> >
+> > Thanks for the suggestion.
+> > I understand your point and agree that starting with standard LED APIs is the preferred approach.
+> >
+> > However, the LP5812 hardware offers more advanced features, and I’d like to support end users all
+> > features as shown in the link: https://dev.ti.com/gallery/view/LED/LP581x/ver/0.10.0/.
+> > It is easy for end user to investigate and use driver.
+> 
+> I see. Good luck then!
+> 
+> > If I want to keep the current driver interface to meet this expectation, would it be acceptable
+> > to move it to the misc subsystem to better support the hardware?
+> 
+> Don't ask me, I don't know what you want at the end and I have not so
+> much time to invest in this anymore. Only what I'm sure about I
+> already expressed in the previous replies and emails.
 
-    sram: sram@5c0000000 {
-        compatible = "nvidia,tegra186-sysram";
-    };
+Briefly spoke to Greg (now Cc:ed).  We can all discuss this together.
 
-and the of_device_id[] '.data' element contains a sram_config*
-with '.map_only_reserved = true' property, we get the error:
+My 2c, whilst falling short of deep-diving, is as follows:
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.1.96 #1
-Hardware name: linux,dummy-virt (DT)
-Call trace:
-  sram_probe+0x134/0xd30
-  platform_probe+0x94/0x130
-  really_probe+0x124/0x580
-  __driver_probe_device+0xd0/0x1f0
-  driver_probe_device+0x50/0x1c0
-  __device_attach_driver+0x140/0x220
-  bus_for_each_drv+0xbc/0x130
-  __device_attach+0xec/0x2c0
-  device_initial_probe+0x24/0x40
-  bus_probe_device+0xd8/0xe0
-  device_add+0x67c/0xc80
-  of_device_add+0x58/0x80
-  of_platform_device_create_pdata+0xd0/0x1b0
-  of_platform_bus_create+0x27c/0x6f0
-  of_platform_populate+0xac/0x1d0
-  of_platform_default_populate_init+0x10c/0x130
-  do_one_initcall+0xdc/0x510
-  kernel_init_freeable+0x43c/0x4d8
-  kernel_init+0x2c/0x1e0
-  ret_from_fork+0x10/0x20
+1. No one is going to enjoy reviewing a 3k line submission!
 
-Fixes: 444b0111f3bc ("misc: sram: use devm_platform_ioremap_resource_wc()")
-Signed-off-by: Andrey Tsygunka <aitsygunka@yandex.ru>
----
-v3: Removed unnecessary 'unlikely()'.
-https://lore.kernel.org/lkml/2025041528-garment-senior-1c71@gregkh/
-v2: Description changed based on comments from Markus Elfring
-at https://lore.kernel.org/linux-kernel/84969aba-67ba-4990-9065-6b55ce26ff92@web.de/,
-added tag 'Fixes', removed useless information from backtrace.
+   - Instead, submit the smallest driver you can whilst still retaining
+     functionality.  It is not good practice to fully enable a
+     complicated driver such as this in a single submission - let alone
+     a single patch.
 
- drivers/misc/sram.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+2. Hand-rolling your own API from scratch is to be highly discouraged.
 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index e5069882457e..f308bfc56645 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -410,8 +410,13 @@ static int sram_probe(struct platform_device *pdev)
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
- 
--	ret = sram_reserve_regions(sram,
--			platform_get_resource(pdev, IORESOURCE_MEM, 0));
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "invalid resource\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = sram_reserve_regions(sram, res);
- 	if (ret)
- 		return ret;
- 
+   - There seems to be quite a bit of overlap in functionality between
+     your bespoke API and LED's.  The LED subsystem already supports a
+     lot of what's being implemented here.  Instead of letting the user
+     configure the device directly, why not offer some high level
+     options and attempt to infer the rest.  If possible, the complexity
+     of the device should be handed by driver, rather than placing the
+     onus on the user.
+
+3. Shoving this into Misc because you don't want to use the APIs that
+   are already offered to you is not a good approach.
+
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
