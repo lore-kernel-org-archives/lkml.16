@@ -1,99 +1,124 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96117202C43
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146447; cv=none; b=L4/SDn3X5wFF7ICqUwQYGs907DYjwNNO5Ggx6/V8WKLPgX0fyhKFdTiCu02pjDBvI5NTSilY/LrKCkC853rHQaAPkZxLoF1ArIWiIXr4kWb2hbHrT72UnNYok3zIHqGpfcCtDvw+DcdGrkZAlxVD2Y+q4HCgqh8BCIuTedW6qQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146447; c=relaxed/simple;
-	bh=lgLLaFw+DGiRpN5vtWLkRsjp7dexj3Ed4DWpipUeNIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oPz7XhEK48nnEdjKgKMwmv0TcivViA73JBs0JrAITwH/edJwICbTe+UNfXDhOlOGHjGs3eHGWPA+zuXDn6KwYHnm1+xhx4Hh58Fv6sWPASj0tcbN6Edf5YmjWhhs7dagPJjbOJOA2TZRqOU1hvt3OcX2REkGFu7nekpfjZX4nio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uwaPuZZ0; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C7E269D1B;
+	Tue, 13 May 2025 14:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747146464; cv=pass; b=RnDFoEvPgP1Pw9CubvlWQ/xf89uNUude9NfFjnzuY3rlE8bzVFidpNhvKibNqJdh5JYZuyw4nYlgVo4TGQ5aIHanVTjCB8i4lquvoGXNn5akiKoEDuEOLYw42EA4ngTs7LRd0+Yn/GCz1AtKGk360rvseDs+mEbgOBxvOhXEO5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747146464; c=relaxed/simple;
+	bh=qrm7iQ0BdPOTxoVtofacn+8/rrDJ538eLVyyVWrv16g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sh+SfAv1XG0ILVEmQw/V+E8/U4e/DNOeRF9S/uEt6/eAMieCVepQaUaxo7frGqXPC2uO/U9egUk4RgzZ4agZy30WNQoPGcn6E6y4eVg8xzZ/ki81P6aKcFn6G1078h/o9jppaaxRt7Yzgg4GizIhBqKXYfOOBu9GHcJXOyQrfMI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=TL9bA5j1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uwaPuZZ0"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so33039115e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747146444; x=1747751244; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=viRbW34aeCx4jZ8hMquiEOhZCzi3ewdZnltxTsu27hY=;
-        b=uwaPuZZ0pzNj6ljJXOiXQA8VNI16ETkn5jlnyK3YRWZ0E0mABezpXqrIrB2OLUpU6j
-         yq+PGkxFUfi3sHRQP3LsJpBZ752Yv7Fl+Yf2jJr9h2FaALlozvybL7vz3sUhisQ4Zzo4
-         sHIqQlCvMesRjOmpw8xepgWahcq3bt/f4lj/FwFSZXMqnGrmV+1XJk2k+G08AHmqVfHe
-         L9zYifxfSeghKIdtIHJpRbxm252b0TH1ddaJKSTDje8ghw4vfx9efXrO1Nk2TB61W0bB
-         zeiX/gX+SHd/dHpgv9gwr6vTSj+RPSoHl+9/vuusgJhq8iP/J5wzvZlGa3mxKxEqOK0F
-         +pMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747146444; x=1747751244;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=viRbW34aeCx4jZ8hMquiEOhZCzi3ewdZnltxTsu27hY=;
-        b=Z5sNeThL4WLPNL2PGJOwk9T3OeL1NlST/r4AaRc0XSWUlrVRfvGkZQztm3pXKEUCoM
-         iOPSkxkuw1Ibsucj4ZYj0QVLw7tO6zN6iMnRdx8a1pybetj3fwFjLl5T9lrLbCD/jtHz
-         LxJroe7cOMakR9PyeVtcujaEqaBTADU4uWmCg7Y9I3/4apW1cXKN09PHqjkGuinpILZR
-         eR1fGfe73S9x9//Xl1C9526XeZCjXhMtK1e8SkynV/fvSZqiA9jsxoC7Yt6DIwAhcAAn
-         kNHtXp8dxHCkybWDmb9f+//tNTsLjXkLZXg1KBgy7S6Jl8SI+Nj2CHJGWLTs1kwKaKxH
-         +pow==
-X-Forwarded-Encrypted: i=1; AJvYcCU0i7F6NDXAaLw+Ug1aZhVbpU79MmXcGOVG70eGausW4I2ZSIsStK5FVWrZ8xS6t7wcknMKh1IYLgM22h0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXUWzQJS8WyeFfw7KQrZ+9ZQ40Svza8AgtEQA49b3H9iMy2bEz
-	8mg3FGqvo8cCDA+K0ijWRcU62hFh/4Eixll2auDcZfx1XieiY/DXK9d1ggs7+BA=
-X-Gm-Gg: ASbGncvV3O/z4nxzsauGAwrxzIV2p5bY3/bytvD0eRReWGI9bj3nfqNU/nAg/7+Tqlz
-	Ohq34MkF0OqqVslFxaJ37P2NA89eQ2GIleVjwXi3TpyWDhnqgBO+jALv/ELBo8Yxyc81QiFNohv
-	zfBR/od8ehiUCltgMx7fUpqkBRD0L0QIviY6gkzq1LD4aULAt09kUX/FN4RISgMH2t5xxsAwEe7
-	FUJGEZVIZSB93nh+LISw1xR6TDIeLtzhxJQAtujF2lpMn0GMfTehdHTEVWs+nlkn8r567ExKmrV
-	nvk2rCRi3oVOo3StYVm3APfazs+fLMvVJizMAcC2UplUSKRdSsBqrp2TUeSWQ2Jlae7/nWFyKli
-	/104wTuxjPcxEIw==
-X-Google-Smtp-Source: AGHT+IHh/hXr3C7uQeuwDkBgmFkciCogzqhIeeyghe0EZPx1ZwEoRcQabNz0405E/QeKtC3MsK4qiw==
-X-Received: by 2002:a5d:6305:0:b0:3a1:f67f:1bc with SMTP id ffacd0b85a97d-3a1f67f022emr12630885f8f.0.1747146444005;
-        Tue, 13 May 2025 07:27:24 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2ca47sm16511097f8f.73.2025.05.13.07.27.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:27:23 -0700 (PDT)
-Date: Tue, 13 May 2025 16:27:21 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert marvell,orion-timer to DT
- schema
-Message-ID: <aCNWybCBUHQ2FKl8@mai.linaro.org>
-References: <20250506022305.2588431-1-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="TL9bA5j1"
+ARC-Seal: i=1; a=rsa-sha256; t=1747146434; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ANqNFwZEb+ZFYow3aFAQoyO/1Ud2AXpFUIBSle0bCo8FVYBcNiP+i1HJVeS9GxYppl7HJpmC+qZl37HtRPkZXcPEOXkDBCQ/zrr8dgKo5uei6H47cW+QVV7ZXJHw8+jUnBeKS3gYXF9OXPTulAsAQCmtDNFdp0Tbw/DhN5W4wsg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747146434; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=S8HvFU+C7sIo5Yzd4dl6ojrhAT/ghV8MpikwHZzYzPM=; 
+	b=juo7qhHanaIrojtSIzpy4DRVsL0LxCZof/Ml9fpsJ0EWTj5tH9ljTvKL658u060IhnGxO0kOeBj1jr4KDs4a0RM2Ff4rELQ6Xo0dB7Amhs30S12gFTnGp+viG8MZG4T5h0EJuFWABukZ5OjIvp4EG54KMCC1prBrdmXWOVtR1t0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747146434;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=S8HvFU+C7sIo5Yzd4dl6ojrhAT/ghV8MpikwHZzYzPM=;
+	b=TL9bA5j1wnQEzElGt0exkEIhE0Vo7i6xr6vp0qX6xbOLsv8oU234w/eH/ZX6PJJ4
+	goH3Vq90j1+kAQio1s0ScSTAfdctQvB99CVnqDrQkokNPU2LuRPEm7T3kvOY7xyhf0T
+	oVg9Lwl4xwFaLP7+KQ2QJZqRJPmFWFuGHhXf4uT8=
+Received: by mx.zohomail.com with SMTPS id 1747146427338952.0201359300785;
+	Tue, 13 May 2025 07:27:07 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
+ Elaine Zhang <zhangqing@rock-chips.com>,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>, kernel@collabora.com,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v3] mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
+Date: Tue, 13 May 2025 16:27:02 +0200
+Message-ID: <6154950.lOV4Wx5bFT@workhorse>
+In-Reply-To:
+ <CAPDyKFp5N23KCZwOTba6vGyk9eaS1-SjSqY52FfPDng-bahn6g@mail.gmail.com>
+References:
+ <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
+ <CAPDyKFp5N23KCZwOTba6vGyk9eaS1-SjSqY52FfPDng-bahn6g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022305.2588431-1-robh@kernel.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, May 05, 2025 at 09:23:04PM -0500, Rob Herring wrote:
-> Convert the Marvell Orion Timer binding to DT schema format. It's a
-> straight-forward conversion.
+On Tuesday, 29 April 2025 12:06:16 Central European Summer Time Ulf Hansson wrote:
+> On Wed, 23 Apr 2025 at 09:54, Nicolas Frattaroli
+> <nicolas.frattaroli@collabora.com> wrote:
+> >
+> > RK3576's power domains have a peculiar design where the PD_NVM power
+> > domain, of which the sdhci controller is a part, seemingly does not have
+> > idempotent runtime disable/enable. The end effect is that if PD_NVM gets
+> > turned off by the generic power domain logic because all the devices
+> > depending on it are suspended, then the next time the sdhci device is
+> > unsuspended, it'll hang the SoC as soon as it tries accessing the CQHCI
+> > registers.
+> >
+> > RK3576's UFS support needed a new dev_pm_genpd_rpm_always_on function
+> > added to the generic power domains API to handle what appears to be a
+> > similar hardware design.
+> >
+> > Use this new function to ask for the same treatment in the sdhci
+> > controller by giving rk3576 its own platform data with its own postinit
+> > function. The benefit of doing this instead of marking the power domains
+> > always on in the power domain core is that we only do this if we know
+> > the platform we're running on actually uses the sdhci controller. For
+> > others, keeping PD_NVM always on would be a waste, as they won't run
+> > into this specific issue. The only other IP in PD_NVM that could be
+> > affected is FSPI0. If it gets a mainline driver, it will probably want
+> > to do the same thing.
+> >
+> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> Applied for next, thanks!
+> 
+> Kind regards
+> Uffe
+> 
 
-Applied, thanks!
+Hi Uffe,
 
--- 
+I was wondering whether we can get this into 6.15 as a fix as well, as 6.15
+should already have the genpd API additions this requires AFAIU.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Fixes tag could be something like:
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+  Fixes: cfee1b507758 ("pmdomain: rockchip: Add support for RK3576 SoC")
+
+but may need some more flavorings to keep the stable robot overlords from
+trying to apply it to 6.14 and earlier and then starting the robot uprising
+in your inbox when they notice the API is missing.
+
+I originally left out the Fixes tag on the rewrite of this using the new
+API because I wanted to avoid those awkward backport scenarios for a fairly
+freshly supported SoC, but it'd be great to have this in 6.15 because that
+will be with us for a full release cycle to come.
+
+Kind regards,
+Nicolas Frattaroli
+
+
+
