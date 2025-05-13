@@ -1,115 +1,124 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840672153FB;
-	Tue, 13 May 2025 21:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56AB1B0409
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172805; cv=none; b=QRpw/a2g96SxMMVeQWOmS4jAstD3Xywnl1cCC9fac47KXwDiYNr44y/yMRxUCS65c8FL5he0Ipu4pqyfZE8vtN7NTBA/Sl4/gGJnpDFI1iWIvyBkj6QOrK2T82MIykykP87+HLtsgMjboVDX9WP75o55s74UWhZh8rmuCcw6gPw=
+	t=1747172887; cv=none; b=SefQnYS4cfPl5A8tKrbyYutwbWLFE3+OQfxfX1eHf0y3JLlWFm0sENBMAxPDUnwmHaU6ggaUqcaQGQlY0m7alnNRdn7iadZAi54WN1G5PJjC0AHM5JZmyfhlbwXtnD0CuUMk9iGPMARBuMDAbl3fAbyFIkg1PPAqtGehXh9EH20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172805; c=relaxed/simple;
-	bh=wG/Wp1GjJWoFt+2qnjj6hA+4W+5qF2qQBrY0vwHfkDk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iqC3hEH8OpBvAYr/xR7mZHmaoEV5pTppOmSLJC8+sIrbgqPGlhiE3QJ2CLhjxi+hY4rj8WdxZMf7I9xxpehrymisSUns+LcUnlKwpKis64k8py9HU301hKGDtlmOTYhZRXdxG8dowfkDFsJtoVgRjgyWGlg+Aoeh84AKUSyiqGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYSHZOyj; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747172887; c=relaxed/simple;
+	bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rrf2Sf0K1WWqaBEK/XKTsvHalwrX8ncpJayDzptXBrIpNSMtW1VpAWk83nu2HduHXaXUYS6fIXSRWCAQCl5sXV+koU7f8UyTB6X8nBG1mGV7ESzA92aFB2FCHQNfTUB1g4eI88KMe7NnfFMu6Oqfbll4e2RiQgPiPFmszeAFBhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X8V7pgnB; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYSHZOyj"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d72b749dcso7308225e9.1;
-        Tue, 13 May 2025 14:46:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X8V7pgnB"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e1eafa891so64175ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:48:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747172802; x=1747777602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=stc73lGvEUEFWN8GCfFvarZDGFQnQhaMztIejiIT7GA=;
-        b=BYSHZOyjG0dYKWQca/yBtfnotL7sKwisaNf6nUzKGjKEXv53syHB3WZgvc4iQ+M4kr
-         B6tYiQ8vOwEz7KSmol5gNZ0REJVaOwGrsS4FjgEeyYwzgH36OnYSa7csz2t1/s/Acspv
-         K01VlUy3bDU/E2bsLB/Prc3oO6Pq88PBfH9oD2J6oCNj5skRdJ9GFADdHXoPPDkY9Y0N
-         ufgiOWSX19gFqzpm9CcF6IGibUbuh0TkrQNLq0vgKndVov2qtrrvlPLCbsXeOJHnGT+e
-         /ZVSNdJV06K+HJkpEOV3dVigmArBpzX9mi4qL2z8d5lA+BHCjcqX/BmvLHEH5S5vrvDe
-         KuLA==
+        d=google.com; s=20230601; t=1747172885; x=1747777685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
+        b=X8V7pgnBH7ps++IOxXnTrN9yjBAUYocMo9Z5qTyjFIw+rlmqZX8EQb38EeRm+03MGB
+         B8OCOr6yi+DGnUF30pdJNNkcFYM/vfS2jyRauIgy7UqXh3AFQ9cbrERao7WV6aE5mgSB
+         KOj91koSc9Px/Ouuh8YETGValXz9LoDoY9IT2rA0NF751kGemDviM5aKMdUKOkvCOVUQ
+         EOlgc2JxrePPB7LL+T895UkxJICyVuJtKyHGT4jd2ijuudZ51r6jOStpdnNUO+S8I0WQ
+         fOID76fVBdnVhQ8As1e5aKjsQe0M+g/4y9c8B28u1jVQjMzlKLgP64o49g7DPU7tJ2IO
+         mwAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747172802; x=1747777602;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=stc73lGvEUEFWN8GCfFvarZDGFQnQhaMztIejiIT7GA=;
-        b=NpCANIr3YUtleABa6NbDTg3dGA2bbaByfS6GpCTLfh+532omkCr2ZzaTJbg5maj680
-         6v2EKbqmRyGdFdmFN+roKBfzWFl1qJibbuYiEe+nXeGISSiVKiEL608hot/TzPrDVuhd
-         dx+ia2NckNEowub2vq74+KfsOKU457BWBwX465YUSLujgdjccAF7V57owq+aDpmjeoDc
-         2t64tkHHngfqVqO74/k35CF6fpr4zjOovyIMxWlpG6LyQBROTBvRWJVD3dOHj5El05VM
-         ERLnO+fBadeK0aTIwI4xVsPbnHRdo/tcIrKEP260VFangEnO0ocPLI7pEYeS2jrVKuPD
-         sPqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoMdDm7J02wtgS7i2XNQ63oPxkEHYvpJjZ/XTtU5WBl+KUEi7b4M3MPca+tbT9Soy0OcmKqo4QDX0wEK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznof1YBBYFxRXq+wgAh1ZMUL11QHMEBTyPnk+4d/RZh57XnJ3O
-	h8Ry5j6Cj+Q74Png+nS9zUhqDBmcw+MA2Uqc+MAl1mdW4+TcSfsJ
-X-Gm-Gg: ASbGncsKhsAaPU55eBRpY6TWQzFqfRO1y4irQj6IV6EC6f2YQ288uRWBRKapaev5BT/
-	2a9Dx/8OLVvDUAepfaqTFvWtN4GBPerbinamt8yikaAvNdHMkmSsLhZxYZTBkZnRclWtazSjTR1
-	iy5kHuCYIYhk9p6K8L3YX/KemV0qCYkXzeJo7I+FBVF4dL2qI3OPpG/41PRvx3QvHV13cpmXwz/
-	52X6//QJpGahQbwMHf6ZCApyyzK8+bXI/fViwtbfun7FqPJx+foBdKMrZOMgbunv3MlOhZ9kRF8
-	gqSLaSlpsyb3wPwaZ+OmaT3vPuzHQv7jU9UIjdbLR4uN2p8rudRI3gutyaR8PCrJDkn/shi13az
-	ESEceKhOymOuPNhO/2Fb9+Sw=
-X-Google-Smtp-Source: AGHT+IHiV8X+PIZMB34eU//Sz/WBPdRkfT4sZ6bPvbJjMB0TtkFVxh14WGHbwd+hbFf4okMBSwWR3Q==
-X-Received: by 2002:a05:600c:4f0d:b0:439:9909:c785 with SMTP id 5b1f17b1804b1-442f217aba9mr2686485e9.7.1747172801282;
-        Tue, 13 May 2025 14:46:41 -0700 (PDT)
-Received: from localhost.localdomain ([102.44.114.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f337db8asm2601235e9.9.2025.05.13.14.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 14:46:40 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-X-Google-Original-From: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
-To: shuah@Kernel.org,
-	skhan@linuxfoundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>,
-	Abdelrahman Fekry <AbdelrahmanFekry375@gmail.com>
-Subject: [PATCH] selftests: size: fix grammar and align output formatting
-Date: Wed, 14 May 2025 00:46:37 +0300
-Message-Id: <20250513214637.300563-1-Abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1747172885; x=1747777685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
+        b=PUvKR5qpMV4LTH92yoe7q7JSn/8HVZ7FddZsj37VpmdTcnbDhvnEMOGlgHVKeEVxyL
+         tjSAXx0HOIgYIl+rczZyre/ehcQFva2PBs5tJQlv+I8gInzojTB9FPywXzKxipZZT12y
+         CdlgdFC45Y7ya/dVV48t0DaNOI4X8tlgYq37rKKTTWJHLuwQ4V50HdZhTTse4lUPNe+q
+         /D1NQ8c5UhKXV8B2hTTymNsEwv+dKvkudIuKQ3fxsywOi5maXK9+xwnTofBxOVUzJ3xa
+         e0L1E/XC9plQ+UVLkedKaSrvMQsxjNo+gwR+QKHHrEjMw+pc1lOFjj9C+8JJpVdJb15z
+         XOFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkb1/CmK2mXW7K08AdOJ+L7iuOswgozepnzcLIR+j+DD2xxF6z8cbxFT1BG+uC818Z/5Yk7cc+rL9y2VI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJSEqpWQ506XnFUR/A37PGfD+0Mvkuzk+X2TugYtqAoN840pEI
+	wfn2ACiNAz3e1nEfHkn1yZB0NTaEUHVRUJ6pn4nMJKTg2X+L6EG5KYmkGXjDdUf2orwZ4Sr8e7C
+	TNBPeM3EEW7eA7Lta9QM22yrAw81JTANNxkmRR4tm
+X-Gm-Gg: ASbGnctAskITwGdeoABpY31hXiM9Ccgzw23iM8NUIpya0soELMomIjGIjI2eH9mwyNA
+	XXy5Ot9T2A3N8KxnPR3DRqWv+AEB/YV6UbSAp75F+cDGkpu2s6VQ88ej9qeQZWIGBWOKPYSGBfe
+	BMPfjOwO7hk5Yev952boyvzZSBi/1+Ln/HojSVV4Z2RjANNi5EgLPxxpjsmKdwDw==
+X-Google-Smtp-Source: AGHT+IGWnW2WGxzwBbXWKiTn3MvoWiCD0XtTUgC4Dyy6a5CfSo+75wPjhsjn9A6aqbNxMFJ5cC9rThSPTVN3I4JESDE=
+X-Received: by 2002:a17:902:f708:b0:21f:3f5c:d24c with SMTP id
+ d9443c01a7336-23198fb5195mr1065335ad.0.1747172884970; Tue, 13 May 2025
+ 14:48:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
+ <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+ <aCI0oDBSz86S9fz-@x1> <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
+ <aCOwnUUVKx798Uza@x1> <CAP-5=fXK9Jru+ZqeTSuaTmOTmpF3JDHDswUOcmdOyLSP1Go_Gg@mail.gmail.com>
+ <aCO2nJG8i3S6vUid@x1>
+In-Reply-To: <aCO2nJG8i3S6vUid@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 May 2025 14:47:52 -0700
+X-Gm-Features: AX0GCFvwPjF_wCWYPn7MYZ-YTSuih7Z6FiFjJVGe-Qu4_P_r0R8eZp_JhA1M6xk
+Message-ID: <CAP-5=fX8xkO8jXqvgksTF_5m+gknhZ2p1NuPZ_Lb0fzbDMDJ=A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
+ counting perf events
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Improve the grammar in the test name by changing "get runtime memory use"
-to "get runtime memory usage". Also adjust spacing in output lines
-("Total:", "Free:", etc.) to ensure consistent alignment and readability.
+On Tue, May 13, 2025 at 2:16=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, May 13, 2025 at 01:59:28PM -0700, Ian Rogers wrote:
+> > On Tue, May 13, 2025 at 1:50=E2=80=AFPM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > [snip]
+> > > Right, I like the effort he is making into having perf more usable in
+> > > python, and I encourage him to think about the issues you raised so t=
+hat
+> > > we can come to some good abstractions.
+> >
+> > Thanks Arnaldo, can we be tolerant to API changes in the python from a
+> > "regression" point-of-view? Like avoiding the notion of indices?
+>
+> But correct me if I am missing something, aren't indices only introduced
+> with this new patchset?
 
-Signed-off-by: Abdelrahman Fekry <AbdelrahmanFekry375@gmail.com>
----
- tools/testing/selftests/size/get_size.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Checking the code I think you're right. Unless you do something like
+the range loop:
+```
+ for thread in range(len(thread_map)):
+```
+so I think we'd all prefer indices not to be a part of the python API.
+On the C side we can get indices via helpers like perf_cpu_map__idx,
+which will introduce O(log N) overhead - thread map is missing this
+currently I believe. For compatibility a CPU and thread should remain
+an int.
 
-diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
-index 2980b1a63366..d5b67c073d8e 100644
---- a/tools/testing/selftests/size/get_size.c
-+++ b/tools/testing/selftests/size/get_size.c
-@@ -86,7 +86,7 @@ void _start(void)
- 	int ccode;
- 	struct sysinfo info;
- 	unsigned long used;
--	static const char *test_name = " get runtime memory use\n";
-+	static const char *test_name = " get runtime memory usage\n";
- 
- 	print("TAP version 13\n");
- 	print("# Testing system size.\n");
-@@ -105,8 +105,8 @@ void _start(void)
- 	used = info.totalram - info.freeram - info.bufferram;
- 	print("# System runtime memory report (units in Kilobytes):\n");
- 	print(" ---\n");
--	print_k_value(" Total:  ", info.totalram, info.mem_unit);
--	print_k_value(" Free:   ", info.freeram, info.mem_unit);
-+	print_k_value(" Total : ", info.totalram, info.mem_unit);
-+	print_k_value(" Free  : ", info.freeram, info.mem_unit);
- 	print_k_value(" Buffer: ", info.bufferram, info.mem_unit);
- 	print_k_value(" In use: ", used, info.mem_unit);
- 	print(" ...\n");
--- 
-2.25.1
+Thanks,
+Ian
 
+> - Arnaldo
+>
+> > Presumably such a fix would also need fixing in all the perf python
+> > scripts, but the external users I worry about. My sense is the number
+> > of external users is minimal, for example, toplev I don't believe is a
+> > user [1].
+> >
+> > Ian
+> >
+> > [1] https://github.com/andikleen/pmu-tools
