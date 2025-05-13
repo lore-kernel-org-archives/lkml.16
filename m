@@ -1,83 +1,85 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B812BFC63;
-	Tue, 13 May 2025 18:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BF520E032;
+	Tue, 13 May 2025 18:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161985; cv=none; b=ay+6AEGrcA+1WPRVXZBP6RwO27RJ/9nH6L1gDGIaVNYNynWI6vDPT/VDPK17KJWFio7JsxsLmYPZp7zkeM6q4Vgs+9AXsXNSC8RSzHBz0dfteXTYYhc8zMgxfJDOJK2vNjlBqA/iI6hSUawMR4YgpjmkpLaTFXSEdKO+0mG+3aY=
+	t=1747162034; cv=none; b=h0aYiQ7mRdeJRCqM8JmpIDWZg+KXco/lr5YGw5pj+nOyhmoRg3a3A6scC475YJQlq4HcNGKyttJYQsg1+f28SSpYvm47hfWtehQCSsPgOPvaOarZIia1cBYtmVf41M4BUFoPUIGm77oNiz8WfAAWJFUquA9/gEHe+6z1KgDds9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161985; c=relaxed/simple;
-	bh=a86Hk1zUh0lw7WnEYZxXZzrjaEcd8l5cOmuifa9DsA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CmzTExaXcojH0+/EEmkOaGTBqeLE+jsE3AH7vO8qX5t8JRdLz663T8bgetjJ6goC50jwUYnDm/C1nziBXpAr5w2TUueD5lw/LpvTjbl0IYiDV0icg5oIi65wTxGEoLxRsA1h9QpjKv4Re6gpNk9CEVOReOoiK0CykFQj49p3BAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Su1uE+eM; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1747162034; c=relaxed/simple;
+	bh=RogUgGwR0FOP6KYfV+t2DS4AvPTOIL+mE8+yVO+7w0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLndxyVn/WLkKKlu8ryvCYSHPPmJ+HxZrN1G8KxK5q95EW7+d4OX+VslicM4mBNHDepKHgrF0p60/QwGf2Z250lfOaiw2JnCgdCNsYFZXqfiJPiYG9PvvI/4xwQBW0btyexUh5glVxIzjs+JSTdwZqv/4w1gzMBtvWFfoMp3IY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nFjfmaiB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Su1uE+eM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=VClIxoKnQSPlpEtPntyY38ibx0Yg+JD3nBRlgh7tJyk=; b=Su1uE+eMIRzUcEzkFiCqxIcUNe
-	Tq1rklhRUQZhydAUMLMuPOzZaAAOWdqC74fkyiU7KbpatoYbG48tWqYrMAJa2JK4IAtYxa6GnLZCH
-	jWRq07kWgj210M+oi+daswoBMrG/EYg1YeQZDywDo1338H7g7n3cDj8JDk99cHraRPV9+UnVAmoEN
-	/jqZ3/7XoLae5SyGbJtyhEjA4fnnSuJaIZ8P9PP+c0s5o4quaI9BFu04BxD5FdAh98N6FLjA3F7o9
-	O2Xgi2/mopp+KW74QAAoiuFoBIKTzkh/LYN1iTvpRTqVjtqkR1goQiwthTJelMXcHvWBEfvtus+vN
-	ZN9VDemQ==;
-Received: from [61.8.147.169] (helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uEudq-0003up-Jp; Tue, 13 May 2025 20:46:14 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Hao Zhang <hao.zhang@coolkit.cn>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	tim@feathertop.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm: dts: rockchip: Adapt to IO domain and SDIO for Sonoff iHost
-Date: Tue, 13 May 2025 20:46:03 +0200
-Message-ID: <174716195450.2345121.11352398890391626406.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250509101419.460473-1-hao.zhang@coolkit.cn>
-References: <20250509101419.460473-1-hao.zhang@coolkit.cn>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nFjfmaiB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=L61EUFuE+Uq6nCLl8f3dUo/UmLoSS1/cO7xG1BCxA+c=; b=nF
+	jfmaiBN+QXzHcGAxI2akzGtdEYv8hNnwN5bDkrKU2qOZkD3thr9CvnhfbCh9Sws/nn88v0oDli/Yw
+	LghD3qJnTInrgopOeQRV3Dp1XSP7Inlufs+3/c3btAMq4FEM+LMov4OghGMahsKm5qU/X3M3paV7F
+	iOCO059MV0q/rTU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEueZ-00CULZ-Gk; Tue, 13 May 2025 20:46:59 +0200
+Date: Tue, 13 May 2025 20:46:59 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH 0/7] pinctrl: armada-37xx: a couple of small fixes
+Message-ID: <f638f5ca-a479-4ab2-a8ae-6300bbe0cb08@lunn.ch>
+References: <20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com>
+ <60ef3803-4f8b-4d9b-bef8-6cf3708af057@lunn.ch>
+ <CACRpkdbqPLaBheEv1=ky1gUJ-qSsPRjR0J-UXEuhXf2Oix_EzQ@mail.gmail.com>
+ <aefa5ed3-1085-4e88-b3ec-4cf9958e7e2a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aefa5ed3-1085-4e88-b3ec-4cf9958e7e2a@gmail.com>
 
-
-On Fri, 09 May 2025 18:14:17 +0800, Hao Zhang wrote:
-> Changes since v1:
-> - Use full name 'Hao Zhang' instead of login in From and Signed-off-by
+On Tue, May 13, 2025 at 06:51:35PM +0200, Gabor Juhos wrote:
+> 2025. 05. 13. 15:36 keltezéssel, Linus Walleij írta:
+> > On Mon, May 12, 2025 at 11:33 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >> On Mon, May 12, 2025 at 04:22:36PM +0200, Gabor Juhos wrote:
+> >>> The series contains several small patches to fix various
+> >>> issues in the pinctrl driver for Armada 3700.
+> >>
+> >> I'm not sure all these should be for stable. Some are clear bugs, but
+> >> not propagating the errors has not bothered anybody so far, a
+> >> requirement for stable.
+> > 
+> > So we are at -rc6 so I'm not sending these as fixes to Torvalds
+> > right now unless they are super-critical.
+> > 
+> > I will merge this for v6.16 (-rc1) and then the stable maintainers
+> > will have to decide from the point it enters mainline.
+> > 
+> > Gabor: can you look over the tags? Once you have decided
+> > on stable/non-stable tags I will merge the series.
 > 
-> This patch series makes two corrections for the RV1126-based
-> Sonoff iHost board:
-> 
-> - Patch 1 adjusts the SDIO max-frequency to improve WiFi stability.
-> - Patch 2 updates the IO domain voltages to match the board schematics.
-> 
-> [...]
+> Sure, I will send a v2. Just a question, shall I also remove the 'Fixes' tags
+> along with the 'stable' ones? If I keep those, they might land up in stable
+> trees anyway.
 
-Applied, thanks!
+For the return values patches, i would drop the Fixes. It is just
+really continuing development work for the driver.
 
-[1/2] ARM: dts: rockchip: Sonoff-iHost: adjust SDIO for stability
-      commit: f9c7ba983f7b44fe698d580dec67552123520472
-[2/2] ARM: dts: rockchip: Sonoff-iHost: correct IO domain voltages
-      commit: c2089976772364a3b910676693bf52497ab35475
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+	Andrew
