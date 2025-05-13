@@ -1,119 +1,134 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF611C68F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2DE126BF7
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747165607; cv=none; b=F4SjE+Ztw6SzEg4lkeaPmZSwz54Hr67qHL+3q1sSoYStOxCK2fqQvp+4hLPsTx2LP6hamebBdXRH0jUjb9yzjFKDUVxFt0GinMU7p1PMIm9s9u3qZ892K4fPUTnLL/50A20R1ELahY50FRPgKISDIefnUV5hn6xE0tPvV+4LUN0=
+	t=1747165616; cv=none; b=Zt20mPcwqno66h4uYet3XKqLzxjWaV24smLQEW/6HB1wNhMagjoerJj8F6lNHx7e2GfQFq6iAbtWiuW7h0m1mwZJ31SfHsHRIFRSgRKQbwc54AHsWtefYCwt6PBlpbSisfc7+OHbLx9MkE5v7bNGcijvUzzBFIYIgBqdhPFzobA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747165607; c=relaxed/simple;
-	bh=MszmKtBNtjS/mCXs9S5eoJis8nie5o+i/1key2F4EpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTNb85w7qPIzhLusJxk4Ya860m7fIttWwFhU4xBq+H0cx4+3I1X1fyZxDz9ex2k8cfyFLdFZSdMDkk/6x4RW2QZ8wwKUGQbsjOjqBGgID/DBkht+Ic5rMmAt2+ZA0i0Pj7U2YcZKOSTgX3i6M7QP3Xr0MK2CzgjbcOwYEhpqBFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=iE6bub0D; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1747165616; c=relaxed/simple;
+	bh=6To62uGcZQK9appizY45ArRLRBgOVTSRVl6vAQqFx8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghTqOLkhhHQ6nFwvEgRVQtUein5etbVL3+jGqJSpZPQ85Ir1JWtTlgJL5jGRKFQKdTHuutzgCl9rbunnMah/ba5reSQqOs1+Qiumlkk7XAjYxmn32u5uygDrQMY8w7yZ+o5nVsXkT027VgRuSLcdnIoXxrwP6QlZAYWqB8tu/Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Ky9lgirV; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="iE6bub0D"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6f54036c4b9so60870346d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:46:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ky9lgirV"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso12244095a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1747165604; x=1747770404; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Gfow+0jLuuX+jpDPFCaVboVDazQRdjtB0gETvpjt9w=;
-        b=iE6bub0DTWAtC297gUbFgS9sBUm2+JTh2uqjUS3Y+Ud8vrLrIZVU/ij/k0dZlgnFod
-         dXcdS89R43Lc3fe+4ljKfo9at6OFgd3ZPq1wVG3LQmf5L9JIdJoIUxLOkmzAaOZpIKdd
-         mPIhw1s7B0z1h1G2m5xfhYCrpzLb8OSEMTzaJK/l02Bq+l3DcQQVJ8ZNrU42pqaDTbOJ
-         rXjiJmxIKHW3FmLGH3XDT2tHecwm5xHCpXPypQvWOHmRh3hicuEsc5rqnqO4PUCRbZPc
-         XpP3fmHSkOTjSWg+0Z+m3SshYfS83VmvjhyKvttNLyKnRtMyCqPnBUD3MElv9h4VArMW
-         EDfA==
+        d=linux-foundation.org; s=google; t=1747165610; x=1747770410; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=osowZHiCh4FTRJAovq7d86Sc/0+MJzT7LiUAm+X/OlY=;
+        b=Ky9lgirV1t+1n+9FU9ZfHrA0F7NqBa1dIpWEyrviyMQHdLOGQkgMTI2IclqupBL1V2
+         rQMsN98/EDWg6iKUHluJhqCDHGXBgmidaFlxRdwOEAhaUs/1H20TdCPRbQFidhmkRuDU
+         lDIGhGos/czETelr5nDricmGh/CFAy4MGeubc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747165604; x=1747770404;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Gfow+0jLuuX+jpDPFCaVboVDazQRdjtB0gETvpjt9w=;
-        b=vWtVCF7zTDqJRZE7LN93mAO002JOySIzhWOURUM6I+vC0Sm220R0w1vFux3v3PTgYw
-         f5PLmJahrY403884kxdymkhBUygCXIsN+X5UfN/9B99sL4ZmnaiU7qmM37mRmnA6tYwu
-         +oTsGzXIL8i3UnoVoWtaSrgBX4MGrWboftshcqFjt/4XgAhjqWQ8Gj/wX71M9gW8WY0u
-         dojl+GjPTmS22zY4e5Me2e1qavVKF9JbLJtfv9vl4afxS90g+mXnhgdtaHRuFR5BWKKb
-         kRYrWAxk2RMQFtaaVL9BoyvRenTXrhKSqOOqu4PzEDOKb4xUMECmj9FjSlK14vY+I6QB
-         oFjA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8BSQic2vUzG5ydwPeB0QzEJ0hx+U6oc9uNwRiJZnjTYrZMmbdA73NjV/nmuvhXKdZ73nn6/90Ma8qiDs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmpngDOWIE+ij8mqE9AetlChtvMvHeV78cdQ5kS9OvXgW7K1A3
-	tJA8iZSRsSswuv9UA+POLlgA/gYG4cvJh4BPzYUsFv+ktH4bL64QdC844klqHVlSMBf/Ep1qoj8
-	=
-X-Gm-Gg: ASbGncsbi1kjL8Nfo4pqr4wXFErb1wTCGMk1xvwsOcddA+YTCX7uVDcOhzlLC7Ne2qg
-	uTstCe1lMrcdreG4g7toK+Ah/Lb8/qP+r79s0s+kl/fzKE2ZtcDpGwLXUrX53DcxM715wiira0l
-	x5wktHpbcLzscdIA/P44x9zQm99++y7xghLgtRu6PbKQvh2fPoaYx57ljMRnYnbo0tsCrcgIQdF
-	JEzvHiMnM8bVoT3Kzwu4xcpN9zM5usZl2ZJoGNNjmQseCBEeXMOY35pyFNjI4GAmrg/AmM3vXVv
-	QKA1cti3KzK9S2i0/5dsFH7s5uafhcKxADxf4+FIoWIzPEnTaepWil8zP97UyQDdx5shjyp3e1f
-	bsuntyincUJO+XtEdILh5FozcZQ12oiqmBt8f5hxNYbky
-X-Google-Smtp-Source: AGHT+IEQ1s26wkUIF5mIfJy/X2WZMgbORKbbBrxgLhKcXjfhLXPfNrdW83rnhJVDuRATHDAgFIYlmw==
-X-Received: by 2002:a05:6214:1bcb:b0:6f5:dd5:a594 with SMTP id 6a1803df08f44-6f896dfb53emr11435646d6.5.1747165604259;
-        Tue, 13 May 2025 12:46:44 -0700 (PDT)
-Received: from rowland.harvard.edu (nat-65-112-8-28.harvard-secure.wrls.harvard.edu. [65.112.8.28])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e39e09b4sm70419606d6.6.2025.05.13.12.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 12:46:43 -0700 (PDT)
-Date: Tue, 13 May 2025 15:46:41 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: David Wang <00107082@163.com>
-Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-Message-ID: <110b763e-30c3-4e2a-b06c-339e086a48fd@rowland.harvard.edu>
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513113817.11962-1-00107082@163.com>
- <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
- <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
- <b334ef97-1f79-4dd9-98f6-8fd7f360101e@rowland.harvard.edu>
- <40618da9.b062.196ca805193.Coremail.00107082@163.com>
- <ed0c2f75-f97b-4cad-ad35-78361edf142b@rowland.harvard.edu>
- <3aed7b55.b165.196caf9f5ec.Coremail.00107082@163.com>
+        d=1e100.net; s=20230601; t=1747165610; x=1747770410;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=osowZHiCh4FTRJAovq7d86Sc/0+MJzT7LiUAm+X/OlY=;
+        b=OuzqhVNI4dUfmTIeLNzg+klFwJUTtBxLu3j9SyIvdn32GonkfVusOAcz1D0OBDxSCq
+         U+5e03hm8fE+mcfuN4L2kiVgURGlQdVnKR9WBo67e4Q8nI7ryWzyMlpDy8cImGqAdfX7
+         gWpWxa4m2M15lPvddpLURRPPbRo0hw0U1g/Ra5cVjRCLmSMUTyqlmj6hUZ9CDKx83mAh
+         FoWllJXowmQpvpf6eXbGpGUUDwju7AAjGWyzoCpnZMae4NqEsSQbNV55ZprmPz2o12h4
+         uH53kQ92dhJlB6t0PyLq+1LEkGW0kLLd1M+9QBOaxS3mww5nwZ8DkiBQRW8MX2sIHney
+         WNHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNp9FYLmL0VUnlPERdvFUS+scJvAUvTWrgS2k9IQjZFwSa+jX31z76R2VLOeoOOSqi0SjhGupUEQO8abU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0RNP/Be08KP7MELJdzwbwAKV89NbeU6PrdnAIq47lQVKMQbC1
+	TH+WZYwLwpZozo2G+qTuhNR0i1PZ+zoVuvqY7oVcyemfQrQj0WxTA1xM8eigNFJp2+dugCHGxho
+	p7kY=
+X-Gm-Gg: ASbGnctoq9Znbl5AcCl1RsTa/e7uBiMpBChUG5+rJoD7R+4IGF/2Qz4CSqYb+W0l0+a
+	oIxgUVWtOC8cz0M/4hCzSUlNEnoD3iykdCbbhCz2na6f6f2YkqBieI3yzpXPwL+oo7xxwSpWeTD
+	gAc3QGj2CKCZX4kj/28vuttSEId8jBZe8N9nSnu0npSEucyq/5FgfutGTtPc4b+5z4F6WPcQ9z0
+	Yx5byeCSeP7x41yddbt2nDTD0AyhnwU7zp9a7/vbvLo9F4dlli7h8ilGJMZ3ydWXT7dSLregPJn
+	MyRnplYFeIFAjxTZI8v6NfplCdvVlJB0M/y0cRytBg9RLoLM0MKlb3jqEoCRC/u/PeZGr+emEhm
+	tW97w7KTUTQ+thQgo/BjnWkFgQfsVDT27sP8y
+X-Google-Smtp-Source: AGHT+IFV8jAcvx1flTG4cR/ScSvSW95TfTrmdt64XR5mOve2Yct/qClBXDsC/k0pk05axoeEZAKxBw==
+X-Received: by 2002:a17:907:3f17:b0:ad2:499d:dfdb with SMTP id a640c23a62f3a-ad4f723b6e7mr87154766b.26.1747165610596;
+        Tue, 13 May 2025 12:46:50 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cc3f5ffsm7668937a12.30.2025.05.13.12.46.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 12:46:47 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fbf0324faaso12243965a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:46:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWNMVh/K0l62MvRLVXq15co5qf2nQxGkZ5ElfQpZkgWg5ct63slDYO9t7dS+twiPD/QAByXfxnqOHHO7jI=@vger.kernel.org
+X-Received: by 2002:a05:6402:51d0:b0:5e5:bdfe:6bfb with SMTP id
+ 4fb4d7f45d1cf-5ff988b09cbmr377585a12.16.1747165607045; Tue, 13 May 2025
+ 12:46:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3aed7b55.b165.196caf9f5ec.Coremail.00107082@163.com>
+References: <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net> <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250509104028.GL4439@noisy.programming.kicks-ass.net> <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
+ <20250512105026.GP4439@noisy.programming.kicks-ass.net> <20250512182559.GB25891@noisy.programming.kicks-ass.net>
+ <20250512185817.GA1808@noisy.programming.kicks-ass.net> <CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
+ <20250513070918.GB25763@noisy.programming.kicks-ass.net> <20250513085001.GC25891@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250513085001.GC25891@noisy.programming.kicks-ass.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 13 May 2025 12:46:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjBiAqaWnXG_44ajMCqU3nNQOC1RQ6SUmKYC03Y1G=r1g@mail.gmail.com>
+X-Gm-Features: AX0GCFslz14saMekTGJPQNGTU2UmwQF8S0KGif2G5A5hwICwjStllVCXsNnUObA
+Message-ID: <CAHk-=wjBiAqaWnXG_44ajMCqU3nNQOC1RQ6SUmKYC03Y1G=r1g@mail.gmail.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>, 
+	Ingo Molnar <mingo@kernel.org>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 14, 2025 at 02:48:21AM +0800, David Wang wrote:
-> It is not an "extra" memory area,  the memory is needed by HC anyway, the memory pool just cache it.
-> And about not freeing memory until URB released,  you seems forgot that we are talking 
-> about "memory pool" .  A URB only used once could be considered a memory pool never used.
-> 
-> If your memory pool approach would not  "waste" memory, I would  rather happy to learn.
+On Tue, 13 May 2025 at 01:50, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> +#define __GUARD_IS_ERR(_ptr) \
+> +       ({ unsigned long _var = (__force unsigned long)(_ptr); \
+> +          bool _s; \
+> +          asm_inline volatile ("cmp %[val], %[var]" \
+> +                               : "=@ccns" (_s) \
+> +                               : [val] "i" (-MAX_ERRNO), \
+> +                                 [var] "r" (_var)); \
+> +          unlikely(_s); })
 
-Here's a simple example to illustrate the point.  Suppose a driver uses 
-two URBs, call them A and B, but it never has more than one URB active 
-at a time.  Thus, when A completes B is submitted, and when B completes 
-A is submitted.
+I think that this might be acceptable if it was some actual common operation.
 
-With your approach A and B each have their own memory area.  With my 
-approach, a single memory area is shared between A and B.  Therefore my 
-approach uses less total memory.
+But for just the conditional guard test, I think it's cute, but I
+don't think it's really worth it.
 
-Now, I admit this pattern is probably not at all common.  Usually if a 
-driver is going to reuse an URB, it resubmits the URB as soon as the URB 
-completes rather than waiting for some other URB to complete.  Drivers 
-generally don't keep many unused URBs just sitting around -- although 
-there may be exceptions, like a driver for a media device when the 
-device isn't running.
+Put another way: if we actually used this for IS_ERR_OR_NULL(), it
+might be a worthwhile thing to look at. We have lots of those - some
+of them in important core places.
 
-> I want to mention the purpose of this patch again:  
-> A lot of "private data" allocation could be avoided if  we use a "mempool" to cache and reuse those memory.
-> And use URB as the holder is a very simple way to implement this,. 
-> 
-> And to add , base on my memory profiling, URB usage is very efficient. I think it is a very good candidate to hold
-> private data cache for HCs.
+Right now IS_ERR_OR_NULL() generates pretty disgusting code, with
+clang doing things like this:
 
-All right.  I withdraw any objection to your patches.
+        testq   %rdi, %rdi
+        sete    %al
+        cmpq    $-4095, %rdi                    # imm = 0xF001
+        setae   %cl
+        orb     %al, %cl
+        je      .LBB3_1
 
-Alan Stern
+in order to avoid two jumps, while gcc generates that
+
+        testq   %rdi, %rdi
+        je      .L189
+        cmpq    $-4096, %rdi
+        ja      .L189
+
+pattern.
+
+               Linus
