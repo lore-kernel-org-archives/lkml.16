@@ -1,198 +1,200 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7151F03D9;
-	Tue, 13 May 2025 22:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5801F2B83;
+	Tue, 13 May 2025 22:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747174633; cv=none; b=ZsAM248C3OY+56z/IK3xnht1rWLfHxzOXo0VoqgI9yszB8Xgw3+zTRZp31WFf9Ef2VPxDyo9izneS7G6Fx+LtyrhWz2CSckxLN4Wl8lNtF5GdWirUchf+3FmUcEF2FARJy2TvuvY1lTVYhOahqCObKRvt3SLcGHGGSXFOM0wbKo=
+	t=1747174654; cv=none; b=ZYwuVcsmLneYS2Pw3I10pYjvzC5rGM4j4Y5xg8VJplyP5CVKnuOyvadNHrjgoftINFU85J50UcMLSJomzOoHElBfJBq8rm0j/+ps+EFkFmrcRNwAj+892xUQ2Z3DXg9qlLV2aSlqo844W0J94MGs6qoy93EB5O4TPMR/rVZJDdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747174633; c=relaxed/simple;
-	bh=yNLqlPWASut9p1xEAFv4YgaFRmFtpdfW1XyDhbCPf5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nj5M4QkMFEAOPSUlLwbgPic1s8/F3v8tpmQiv/ApaMAIR0baEX3BSDP/+b9l8KlBh0kmOlIZVXOY1drv+9tQwZmub3oVV4P78LATqTBowfmpBFrLDHhfpm/vOyw8UYvbFszoLkTDcT2lNAXHzJMvuMUPxRoeAvcU8NHDkfTN/8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wx9K/XDN; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wx9K/XDN"
-Date: Tue, 13 May 2025 15:17:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747174626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rahQYu1hjcaoMkOQ2Z62DrFUneDFZMeqj32rynYl3Ak=;
-	b=wx9K/XDNsqu6pyfaRN9KPelr685TgwkIZ1xr5mFHW+x3b9xZQLu1VZrf/0N2qg1XVpfB9O
-	0Hf3zWfQM3ZlD4p5dlaRY6pGJFUrKBK+9vQaQJjTOPRT8PivyYeNxB1GUui0ARnNei+Os6
-	I8+Ybr+04GBOUr87R0gPSswu14rvZx4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Message-ID: <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
- <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
- <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
- <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
- <20250513114125.GE25763@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1747174654; c=relaxed/simple;
+	bh=EqI+Zbf+yprFaOnpVj9CMNRe5vztGlLJaZ5wSl6b0nc=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=IC376gfu5/cNxtEZcrecJsqkN8pD9qTqnJS41lVbAE96Ww3F84uHI8UGgX7505sOUtLXQ04/ItVryTimtZDG2HYFSoDdB3YRKfRIdczQbsn+pN6Xuc84VqjfzeNns3L3I3nAJGWzj5agg+tgIJEPAdeqg8AbH/ttD+zObfKyB+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:44070)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uExwB-005sqC-Le; Tue, 13 May 2025 16:17:23 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:34512 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uExwA-004yCk-FO; Tue, 13 May 2025 16:17:23 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Jann Horn <jannh@google.com>
+Cc: Kees Cook <kees@kernel.org>,  Mateusz Guzik <mjguzik@gmail.com>,  Kees
+ Cook <keescook@chromium.org>,  Christian Brauner <brauner@kernel.org>,
+  Jorge Merlino <jorge.merlino@canonical.com>,  Alexander Viro
+ <viro@zeniv.linux.org.uk>,  Thomas Gleixner <tglx@linutronix.de>,  Andy
+ Lutomirski <luto@kernel.org>,  Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>,  Andrew Morton <akpm@linux-foundation.org>,
+  linux-mm@kvack.org,  linux-fsdevel@vger.kernel.org,  John Johansen
+ <john.johansen@canonical.com>,  Paul Moore <paul@paul-moore.com>,  James
+ Morris <jmorris@namei.org>,  "Serge E. Hallyn" <serge@hallyn.com>,
+  Stephen Smalley <stephen.smalley.work@gmail.com>,  Eric Paris
+ <eparis@parisplace.org>,  Richard Haines
+ <richard_c_haines@btinternet.com>,  Casey Schaufler
+ <casey@schaufler-ca.com>,  Xin Long <lucien.xin@gmail.com>,  "David S.
+ Miller" <davem@davemloft.net>,  Todd Kjos <tkjos@google.com>,  Ondrej
+ Mosnacek <omosnace@redhat.com>,  Prashanth Prahlad <pprahlad@redhat.com>,
+  Micah Morton <mortonm@chromium.org>,  Fenghua Yu <fenghua.yu@intel.com>,
+  Andrei Vagin <avagin@gmail.com>,  linux-kernel@vger.kernel.org,
+  apparmor@lists.ubuntu.com,  linux-security-module@vger.kernel.org,
+  selinux@vger.kernel.org,  linux-hardening@vger.kernel.org,
+  oleg@redhat.com
+References: <20221006082735.1321612-1-keescook@chromium.org>
+	<20221006082735.1321612-2-keescook@chromium.org>
+	<20221006090506.paqjf537cox7lqrq@wittgenstein>
+	<CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+	<86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
+	<h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
+	<D03AE210-6874-43B6-B917-80CD259AE2AC@kernel.org>
+	<CAG48ez0aP8LaGppy6Yon7xcFbQa1=CM-HXSZChvXYV2VJZ8y7g@mail.gmail.com>
+Date: Tue, 13 May 2025 17:16:49 -0500
+In-Reply-To: <CAG48ez0aP8LaGppy6Yon7xcFbQa1=CM-HXSZChvXYV2VJZ8y7g@mail.gmail.com>
+	(Jann Horn's message of "Tue, 13 May 2025 23:09:48 +0200")
+Message-ID: <871pss17hq.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513114125.GE25763@noisy.programming.kicks-ass.net>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-XM-SPF: eid=1uExwA-004yCk-FO;;;mid=<871pss17hq.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX19MKpBmCOdib17JedfBy1DoBc7s2t+3dns=
+X-Spam-Level: ****
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  1.5 XMNoVowels Alpha-numberic number with no vowels
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	*  0.0 XM_B_Unicode BODY: Testing for specific types of unicode
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  1.0 XMGenDplmaNmb Diploma spam phrases+possible phone number
+	*  1.0 XM_B_Phish_Phrases Commonly used Phishing Phrases
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ****;Jann Horn <jannh@google.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 686 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 11 (1.6%), b_tie_ro: 9 (1.4%), parse: 1.44 (0.2%),
+	 extract_message_metadata: 6 (0.9%), get_uri_detail_list: 3.2 (0.5%),
+	tests_pri_-2000: 3.5 (0.5%), tests_pri_-1000: 6 (0.8%),
+	tests_pri_-950: 1.26 (0.2%), tests_pri_-900: 1.06 (0.2%),
+	tests_pri_-90: 78 (11.4%), check_bayes: 77 (11.2%), b_tokenize: 14
+	(2.1%), b_tok_get_all: 14 (2.0%), b_comp_prob: 4.6 (0.7%),
+	b_tok_touch_all: 39 (5.8%), b_finish: 0.96 (0.1%), tests_pri_0: 551
+	(80.4%), check_dkim_signature: 0.58 (0.1%), check_dkim_adsp: 3.4
+	(0.5%), poll_dns_idle: 1.49 (0.2%), tests_pri_10: 2.3 (0.3%),
+	tests_pri_500: 15 (2.1%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+X-SA-Exim-Connect-IP: 166.70.13.51
+X-SA-Exim-Rcpt-To: too long (recipient list exceeded maximum allowed size of 512 bytes)
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out03.mta.xmission.com); SAEximRunCond expanded to false
 
-On Tue, May 13, 2025 at 01:41:25PM +0200, Peter Zijlstra wrote:
-> On Tue, May 13, 2025 at 09:15:23AM +0200, Vlastimil Babka wrote:
-> 
-> > >> > The initial prototype tried to make memcg charging infra for kernel
-> > >> > memory re-entrant against irq and nmi. However upon realizing that
-> > >> > this_cpu_* operations are not safe on all architectures (Tejun), this
-> > >> 
-> > >> I assume it was an off-list discussion?
-> > >> Could we avoid this for the architectures where these are safe, which should
-> > >> be the major ones I hope?
-> 
-> IIRC Power64 has issues here, 'funnily' their local_t is NMI safe.
-> Perhaps we could do the same for their this_cpu_*(), but ideally someone
-> with actual power hardware should do this ;-)
-> 
+Jann Horn <jannh@google.com> writes:
 
-Is CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS the right config to
-differentiate between such archs? I see Power64 does not have that
-enabled.
+> On Tue, May 13, 2025 at 10:57=E2=80=AFPM Kees Cook <kees@kernel.org> wrot=
+e:
+>> On May 13, 2025 6:05:45 AM PDT, Mateusz Guzik <mjguzik@gmail.com> wrote:
+>> >Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
+>> >shared. This will have to be checked for after the execing proc becomes
+>> >single-threaded ofc.
+>>
+>> Unfortunately the above Chrome helper is setuid and uses CLONE_FS.
+>
+> Chrome first launches a setuid helper, and then the setuid helper does
+> CLONE_FS. Mateusz's proposal would not impact this usecase.
+>
+> Mateusz is proposing to block the case where a process first does
+> CLONE_FS, and *then* one of the processes sharing the fs_struct does a
+> setuid execve(). Linux already downgrades such an execve() to be
+> non-setuid, which probably means anyone trying to do this will get
+> hard-to-understand problems. Mateusz' proposal would just turn this
+> hard-to-debug edgecase, which already doesn't really work, into a
+> clean error; I think that is a nice improvement even just from the
+> UAPI standpoint.
+>
+> If this change makes it possible to clean up the kernel code a bit, even =
+better.
 
-> > > Yes it was an off-list discussion. The discussion was more about the
-> > > this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
-> > > prefix and how I should prefer this_cpu_* over atomic_* for my series on
-> > > objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
-> > > not nmi safe for some archs and it would be better to handle nmi context
-> > > separately. So, I am not that worried about optimizing for NMI context
-> > 
-> > Well, we're introducing in_nmi() check and different execution paths to all
-> > charging. This could be e.g. compiled out for architectures where this_cpu*
-> > is NMI safe or they don't have NMIs in the first place.
-> 
-> Very few architectures one would care about do not have NMIs. Risc-V
-> seems to be the exception here ?!?
-> 
-> > > but your next comment on generic_atomic64_* ops is giving me headache.
-> > > 
-> > >> 
-> > >> > series took a different approach targeting only nmi context. Since the
-> > >> > number of stats that are updated in kernel memory charging path are 3,
-> > >> > this series added special handling of those stats in nmi context rather
-> > >> > than making all >100 memcg stats nmi safe.
-> > >> 
-> > >> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
-> > >> But AFAIU lib/atomic64.c has the generic fallback implementation for
-> > >> architectures that don't know better, and that would be using the "void
-> > >> generic_atomic64_##op" macro, which AFAICS is doing:
-> > >> 
-> > >>         local_irq_save(flags);                                          \
-> > >>         arch_spin_lock(lock);                                           \
-> > >>         v->counter c_op a;                                              \
-> > >>         arch_spin_unlock(lock);                                         \
-> > >>         local_irq_restore(flags);                                       \
-> > >> 
-> > >> so in case of a nmi hitting after the spin_lock this can still deadlock?
-> > >> 
-> > >> Hm or is there some assumption that we only use these paths when already
-> > >> in_nmi() and then another nmi can't come in that context?
-> > >> 
-> > >> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
-> > >> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
-> > >> irq_save+spin_lock. So can't we deadlock there?
-> > > 
-> > > I was actually assuming that atomic_* ops are safe against nmis for all
-> > > archs.
-> 
-> We have HAVE_NMI_SAFE_CMPXCHG for this -- there are architectures where
-> this is not the case -- but again, those are typically oddball archs you
-> don't much care about.
-> 
-> But yes, *64 on 32bit archs is generally not NMI safe.
-> 
-> > I looked at atomic_* ops in include/asm-generic/atomic.h and it
-> > > is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
-> > > cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
-> > > using arch_cmpxchg() instead. I will dig more.
-> 
-> Not many 32bit architectures have 64bit cmpxchg. We're only now dropping
-> support for x86 chips without CMPXCHG8b.
-> 
+What has brought this to everyone's attention just now?  This is
+the second mention of this code path I have seen this week.
 
-As Vlastimil pointed out (last point), I don't think I will need 64bit
-cmpxchg, 32bit cmpxchg will be fine.
+AKA: security/commoncap.c:cap_bprm_creds_from_file(...)
+> ...
+> 	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
+> 	 * credentials unless they have the appropriate permit.
+> 	 *
+> 	 * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
+> 	 */
+> 	is_setid =3D __is_setuid(new, old) || __is_setgid(new, old);
+>=20
+> 	if ((is_setid || __cap_gained(permitted, new, old)) &&
+> 	    ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
+> 	     !ptracer_capable(current, new->user_ns))) {
+> 		/* downgrade; they get no more than they had, and maybe less */
+> 		if (!ns_capable(new->user_ns, CAP_SETUID) ||
+> 		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
+> 			new->euid =3D new->uid;
+> 			new->egid =3D new->gid;
+> 		}
+> 		new->cap_permitted =3D cap_intersect(new->cap_permitted,
+> 						   old->cap_permitted);
+> 	}
 
-> > Yeah I've found https://docs.kernel.org/core-api/local_ops.html and since it
-> > listed Mathieu we discussed on IRC and he mentioned the same thing that
-> > atomic_ ops are fine, but the later added 64bit variant isn't, which PeterZ
-> > (who added it) acknowledged.
-> > 
-> > But there could be way out if we could somehow compile-time assert that
-> > either is true:
-> > - CONFIG_HAVE_NMI=n - we can compile out all the nmi code
-> 
-> Note that in_nmi() is not depending on HAVE_NMI -- nor can it be. Many
-> architectures treat various traps as NMI-like, even though they might
-> not have real NMIs.
-> 
-> > - this_cpu is safe on that arch - we can also compile out the nmi code
-> 
-> There is no config symbol for this presently.
+The actual downgrade is because a ptrace'd executable also takes
+this path.
 
-Hmm what about CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS?
+I have seen it argued rather forcefully that continuing rather than
+simply failing seems better in the ptrace case.
 
-> 
-> > - (if the above leaves any 64bit arch) its 64bit atomics implementation is safe
-> 
-> True, only because HPPA does not in fact have NMIs.
+In general I think it can be said this policy is "safe".  AKA we don't
+let a shared fs struct confuse privileged applications.  So nothing
+to panic about.
 
-What is HPPA?
+It looks like most of the lsm's also test bprm->unsafe.
 
-> 
-> > - (if there are any 32bit applicable arch left) 32bit atomics should be
-> > enough for the nmi counters even with >4GB memory as we flush them? and we
-> > know the 32bit ops are safe
-> 
-> Older ARM might qualify here.
+So I imagine someone could very carefully separate the non-ptrace case
+from the ptrace case but *shrug*.
 
-Thanks a lot Vlastimil & Peter for the suggestions. Let me summarize
-what I plan to do and please point out if I am doing something wrong:
+Perhaps:
 
+ 	if ((is_setid || __cap_gained(permitted, new_old)) &&
+ 	    ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
+ 	     !ptracer_capable(current, new->user_ns))) {
++		if (!(bprm->unsafe & LSM_UNSAFE_PTRACE)) {
++			return -EPERM;
++		}
+  		/* downgrade; they get no more than they had, and maybe less */
+  		if (!ns_capable(new->user_ns, CAP_SETUID) ||
+  		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
+  			new->euid =3D new->uid;
+  			new->egid =3D new->gid;
+  		}
+  		new->cap_permitted =3D cap_intersect(new->cap_permitted,
+  						   old->cap_permitted);
+         }
 
-#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || !defined(CONFIG_HAVE_NMI)
+If that is what you want that doesn't look to scary.  I don't think
+it simplifies anything about fs->in_exec.  As fs->in_exec is set when
+the processing calling exec is the only process that owns the fs_struct.
+With fs->in_exec just being a flag that doesn't allow another thread
+to call fork and start sharing the fs_struct during exec.
 
-// Do normal this_cpu* ops
+*Shrug*
 
-#elif defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
+I don't see why anyone would care.  It is just a very silly corner case.
 
-// Do 32 bit atomic ops with in_nmi() checks
-
-#else
-
-// Build error or ignore nmi stats??
-
-#endif
-
-
-WDYT?
-
-(BTW Vlastimil, I might rebase send out the irq-safe series before this
-nmi one.)
-
-thanks,
-Shakeel
+Eric
