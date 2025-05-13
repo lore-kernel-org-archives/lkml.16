@@ -1,177 +1,77 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA421EDA04;
-	Tue, 13 May 2025 07:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5266374059;
+	Tue, 13 May 2025 07:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121070; cv=none; b=tnIdjrSfXiG/zqRRQ3KzcsmWKgObz2SP4RD6SiEC6K7vHOkk0PtIPiv8SPRq7nY9Ju/CWonCt35bOeL4IDATyupZYUUIXqRjyNvNWUmefXD5+9rSaANq3Lui/Ko25lA06RxrZLGqcq9yoIdGIdAXRCMs4dGvxWJPPu9UMbd1sFs=
+	t=1747121302; cv=none; b=olAvwIcOuWSczMPdW/kf34iQQJr4JzJUHsygagR5wJC6SSEZ51lIV0cIhKBVr2W5j4dBTVnUEq0Z8noaZ6lGjCZ6uEowKMbiHHJf2N9aQlk8ZXt3cQxYFY8rDFSA9gTKfVKcBaG4a2ZUc2zc/TUasRt13iLPAQ0QQ0lFjS6Hexo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121070; c=relaxed/simple;
-	bh=8ygg5+lbmN/VLtz/D714USCmypSOCh9GpoUadQ03tCs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H5xu/zji49G9lftEECXAxBciG6RUyj1sOYkQXmWzVqZtNpZBrvQGkq+es4x2SJYS17/YB6XRb1zGh3ul+BNHSxQhtIWoarnGoHd1C2N55ZBK4Hg0Mmg560eC3fZk8RHHKezRFu5CLqWPYdx02OB/5h2C3sGuMQWzk1OV/YYlEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZxScH0Gq5z1d1JV;
-	Tue, 13 May 2025 15:22:55 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id A5DAF180477;
-	Tue, 13 May 2025 15:24:19 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
- 2025 15:24:18 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfsd: Invoke tracking callbacks only after initialization is complete
-Date: Tue, 13 May 2025 15:43:05 +0800
-Message-ID: <20250513074305.3362209-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1747121302; c=relaxed/simple;
+	bh=q7vKAMtpDtiGe3w4FV5/B8hFy8LHK/sB/Y2saJPHOdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hvaTT0KW/DYuB+08Z/bx/iyzZo5bfktg5pAgr1oBNgoHCoXzC9e3P/qcu2rL1NZsxGAhoIrTB6koI6lUt0nba49rMyMHE1MMv3Aambw8cXBdnzNtLiZwLuzfUN8ZFcztAV38/fcbRzFvmTEiaC7bmxvwFRRTGE+RA1xkQTWC/J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l49k1T3u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l49k1T3u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F367AC4CEED;
+	Tue, 13 May 2025 07:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747121301;
+	bh=q7vKAMtpDtiGe3w4FV5/B8hFy8LHK/sB/Y2saJPHOdI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=l49k1T3u2A9E2RAxBw+nZHwz0WPWf9l4MT7sd0mt4GtFwyxsv5KqF6YkhSt2K+ol5
+	 2Ivt5dF8dbD2kpcV8oa4/Onu9rAA2gLhUtWzTjjDgLlq6H2QTXgXI0taZpM7kNEbC2
+	 ItEsiXkBDoyD0BHb7qd3KjE/PW69mT4sK+FZqaVqifRpPT/cZd/UAqH5AoV/VPJUfJ
+	 t50QUzyyfV79oxldUa0KG+1/3mD7xVsVgorSm/mkp7lQhMFuOlk+t5w6ACyDpUBq5c
+	 G/cFf3LadnNSxyVBcPR+NOLAz0iYBIb2dzWZfo8Db9NAu5NWESbtH7LYkhAUDU9jUD
+	 k1WHmHaxKoQXA==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH RESEND] Documentation: fix typo in root= kernel parameter description
+Date: Tue, 13 May 2025 09:28:12 +0200
+Message-ID: <20250513-textil-kureinrichtung-15d108bb56c8@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250512110827.32530-1-arkamar@atlas.cz>
+References: <20250512110827.32530-1-arkamar@atlas.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=943; i=brauner@kernel.org; h=from:subject:message-id; bh=q7vKAMtpDtiGe3w4FV5/B8hFy8LHK/sB/Y2saJPHOdI=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQofZmw+/ScE4e98huavRV4+XM3v/6dWeFRdbdVKMr68 nH2c+yrO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbim8XwPyHBvHfDfV4TBfmf 52R+xtS/SVFSXJHplWnS8y543Y35jxkZ/v0/lHOHsetbjVOiaiP/juYQBdtdAbO70xP+7RJ/sly IFQA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg500017.china.huawei.com (7.202.181.81)
 
-Checking whether tracking callbacks can be called based on whether
-nn->client_tracking_ops is NULL may lead to callbacks being invoked
-before tracking initialization completes, causing resource access
-violations (UAF, NULL pointer dereference). Examples:
+On Mon, 12 May 2025 13:08:27 +0200, Petr Vaněk wrote:
+> Fixes a typo in the root= parameter description, changing
+> "this a a" to "this is a".
+> 
+> 
 
-1) nfsd4_client_tracking_init
-   // set nn->client_tracking_ops
-   nfsd4_cld_tracking_init
-    nfs4_cld_state_init
-     nn->reclaim_str_hashtbl = kmalloc_array
-    ... // error path, goto err
-    nfs4_cld_state_shutdown
-     kfree(nn->reclaim_str_hashtbl)
-                                      write_v4_end_grace
-                                       nfsd4_end_grace
-                                        nfsd4_record_grace_done
-                                         nfsd4_cld_grace_done
-                                          nfs4_release_reclaim
-                                           nn->reclaim_str_hashtbl[i]
-                                           // UAF
-   // clear nn->client_tracking_ops
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
-2) nfsd4_client_tracking_init
-   // set nn->client_tracking_ops
-   nfsd4_cld_tracking_init
-                                      write_v4_end_grace
-                                       nfsd4_end_grace
-                                        nfsd4_record_grace_done
-                                         nfsd4_cld_grace_done
-                                          alloc_cld_upcall
-                                           cn = nn->cld_net
-                                           spin_lock // cn->cn_lock
-                                           // NULL deref
-   // error path, skip init pipe
-   __nfsd4_init_cld_pipe
-    cn = kzalloc
-    nn->cld_net = cn
-   // clear nn->client_tracking_ops
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-After nfsd mounts, users can trigger grace_done callbacks via
-/proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
-in error paths, this causes access violations.
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl),
-introducing a flag to indicate whether tracking initialization has
-completed and checking this flag before invoking callbacks may be better.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfsd/netns.h       |  1 +
- fs/nfsd/nfs4recover.c | 13 +++++++++----
- 2 files changed, 10 insertions(+), 4 deletions(-)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 3e2d0fde80a7..dbd782d6b063 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -113,6 +113,7 @@ struct nfsd_net {
- 
- 	struct file *rec_file;
- 	bool in_grace;
-+	bool client_tracking_init_done;
- 	const struct nfsd4_client_tracking_ops *client_tracking_ops;
- 
- 	time64_t nfsd4_lease;
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index c1d9bd07285f..6c27c1252c0e 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
- 		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n", status);
- 		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_CLIENT_TRACKING.\n");
- 		nn->client_tracking_ops = NULL;
-+		nn->client_tracking_init_done = false;
-+	} else {
-+		nn->client_tracking_init_done = true;
- 	}
-+
- 	return status;
- }
- 
-@@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
-+	nn->client_tracking_init_done = false;
- 	if (nn->client_tracking_ops) {
- 		if (nn->client_tracking_ops->exit)
- 			nn->client_tracking_ops->exit(net);
-@@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->create(clp);
- }
- 
-@@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->remove(clp);
- }
- 
-@@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		return nn->client_tracking_ops->check(clp);
- 
- 	return -EOPNOTSUPP;
-@@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
- void
- nfsd4_record_grace_done(struct nfsd_net *nn)
- {
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->grace_done(nn);
- }
- 
--- 
-2.31.1
-
+[1/1] Documentation: fix typo in root= kernel parameter description
+      https://git.kernel.org/vfs/vfs/c/678927c0c96b
