@@ -1,169 +1,118 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C851B2BE0F0
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4766E1A23AD;
+	Tue, 13 May 2025 17:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747158896; cv=none; b=EV4n83hLWTgvZljOSr73bObj7jB9ySjwleHcSSwY4jpX7OKfPa8PE5xXw13HhVU/cog24vlPf8JjVuNu2fHr5IB/mp2y0ahjTbQqbLG8UB2e7LqP5QlB+lql3tSajKb1man3PDgaDc2Be3JpCo1M+5LkRZzgp6WHz1O7pTIrd54=
+	t=1747158966; cv=none; b=XzrxFT0pGuGaK3RiXAbXWdNGUOjZM2ZubwAAAxl5+EGaJgTcbatevgQ3SDrLUoPIav3pBywYD6Lf/2PwB3IrRQFChXCfDlbhu7iSaXnPkY6GlnMrrY6KFc1nyYRygoWVKyK9WJexDirOXDUtufqocAsp6XoLQ0rcVX5B/miq3CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747158896; c=relaxed/simple;
-	bh=GyMwpjiPNcK4vLmXY1CwDjpVBCthEk928qIThdfw4k4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VijNjRU/TmJ3lAx2LC74YBHMXaNVZ7CO4sgpfLyAaOxkc4ohrfKgr/x/eLk3gjf2IgfWBWMK9T2lw+YR3l8Q3tpl/hrKJtiXBa16DGOmTb7v0+uNRKhJ1/jv+ezVSgxoR4sqAJYoDIu2gb6uIwc7OGImQvrSZDPKSZHt24KDNEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=EPsY95dY; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	s=arc-20240116; t=1747158966; c=relaxed/simple;
+	bh=lKU4yC0LDzvWGnPi2a2trNAiYx++eO2qqjqJ8pI4kWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SVLr87P9kbHeVOwAkFCAlVpUPJhVWf9F0xD6JUds9yD8sb5mwYVQwFaJ1yjzfx98kaFK20nPmXCVG2myn6reglTOOHRwxNppqm34pEk2QT9Jh+GInDxekVQ+wpM9w50Jb3SOUGyv6d4ul65B9Y48HpjiTFaCgi5xTM4GrlStQJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UTIUHlj3; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="EPsY95dY"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54fc61b3ccaso6287297e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1747158892; x=1747763692; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fEkbbjc8SgdWndktwHsp8qvmd1XKdC5xi77nBDSspCk=;
-        b=EPsY95dYAeTKenJtsa5JZjlcCCGLKJC5YNJMXuHF6aZb7UhNRiRhQxYQDRtd33F2h+
-         S1eUa4teUA3ixbpB24jJwIGE/hpCjzCSn/SuErsyly1E1uHRwVd+7LxATA/UqkmAkqzJ
-         H2Ii1fknze7AKqNtAbiob70KFppp9ecj85Bn8gs4PPG0NYk2u5DkTdxqxFi4NXDVqxCg
-         Knjtw+4/V3hsVCSZGBEZ9dwr68LeDh17Py6DkjjpbRs+ff1xbXY+oOAGXo6o6A8xpW6z
-         c23eVuOeXDmhsLvm8Hmbn4rDqW9fO+yQaXxAH/gfOtgDaQORhT8e6skNRm6eky2abnqf
-         orIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747158892; x=1747763692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fEkbbjc8SgdWndktwHsp8qvmd1XKdC5xi77nBDSspCk=;
-        b=GmEjKzcR8wWJqcKjklCSdhqX2PkJfIa+43keS6EIJKMLs2IHHcjj0ub5oHBfjKk+ZZ
-         Q5Zvb6ClgVZvVfEw3KPVt/4hGvVctx/nAHMNgl/lGlu8XxTICsNJMHHCxuFaGPg0sgT4
-         pP7MQqZZb8Y/ljecN3k4yx00cUPXG3Co/1Hxzf71g47XWQCo4KP43g0eL9cTANQVVDn2
-         GIoqlibmeAXjykfVjCAbMD/HahJoyubkWwT6rtw+d+89KRGvx6hdM6Aal7tCC2uKC3e8
-         j18yR9z93RYqusx8tGkK734AW3no6TQP0U1EWl5qUjsI1JCcXCswQX2ko4QUx714L8A7
-         M0lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxRv+ekmu6WypoWcSkcue+2bsCp2LTUA7/XWWZhi84KbzZ05FljHTgJFG/qDQP+gprOXJYwd8F+4u2CI4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/Gci/i0W6NLs0H6+m4EsSCjZbPtD8rb54mN/umdP1B308aZTV
-	IynZZWLaE9FFIV4UThSYJZcY1Yuwv8CV7IGpMeMqQqzs3ETGX8DWpDFswpmKptUuitorR6JhuhG
-	HOFNoWpiNQf+PGUa2EYuhwjdb32tHYqOO2iLQ9WfyooxZnAdFOg==
-X-Gm-Gg: ASbGnctX81ONVkdtHuPg/QXC1O3A8WUQb9KCMeBbuUnoUJsqYEHU0in3ylSCXr3kPFc
-	3B2o1R1xwj8/X7GMOteBhA7CCEPqlk98aruVgB5xRW0lMRBJY1fIb4BVb+oow2KaL13edWOaGDG
-	yJtwym1Q/ETGknZP506LXq6NTmHxy4rueF9ZdcU1cVEvM=
-X-Google-Smtp-Source: AGHT+IEdqK+uTg3aHvnbNkaG9RlhSEYZqBiUwcBgzQU1q3K8m+RX0GeIMjK97H9IUDcFFqxAb7dhp9Ubi7rz5ZLPNHc=
-X-Received: by 2002:a05:651c:2227:b0:30d:b366:d259 with SMTP id
- 38308e7fff4ca-327ed0d966fmr541821fa.10.1747158891597; Tue, 13 May 2025
- 10:54:51 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UTIUHlj3"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4E36440E0258;
+	Tue, 13 May 2025 17:55:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JpLsm2pOe23w; Tue, 13 May 2025 17:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747158955; bh=sWXeWbXM32FMVWj9tAPAqAkgSHn0OWH7WTFUlRYYCcA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UTIUHlj3pZFEE1MC4xQAs0G03aNVpaSsw3x12AkbkaA5Z226yICH+EMBunFrsJLwt
+	 yxhPoj/7r+HMQeeRFgHLbKda4bgTHOmEUjHbvckw4r7MaIm/Vkff07kmFdiOsgGkk+
+	 j2Gn4IQyY451aV8gJHJU0FELZzfZsBqy9rc+9CN6UshmFlc/1dGgKtCLa6kFevGWfp
+	 jC3PSAbWEtYhUps6dXnvHTa90znJvm+IzLzBIp0Mjd1a/z1rQca/0VvMrFfJ4JljI6
+	 PeZe6ov9IWum6UfTNgrddXitJqdKJdhav+X242b5ourt8MHjhFw4Q6VXZmdr39Wbkr
+	 w49yBkSuusiinA9fHXRWeO1I+oZorjT6m9VDK4vgKbf+Ggb/FKnL9osPVuayraDSnX
+	 fFB9khGYv+n1F8NVPrqd7L0UIlDQbzz9JgB4f0uwe+8FHqe6VbEzN0+KSRIiqr7P3u
+	 tNqvK+htLM/VIM30TMqZyDeYtS63gGpsZsF1JXyDcZGKfjPEKg8l1/2M+f359/Q5Yo
+	 jvl9LITzN5Qv0Vn80AkGUiVyL3s3HfpE4wRGPXEkIZlLGWwsFizDd4QzggzSx1Nr5d
+	 lEtszAyUQMjGVhHIgei1eg5jIsgTZh9uXp4Gx7xZpMyqRnHGalza5zFUVLFrcYfnod
+	 65wZbD8qfA+Chb2LRLCFCfcw=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5F55440E023B;
+	Tue, 13 May 2025 17:55:48 +0000 (UTC)
+Date: Tue, 13 May 2025 19:55:43 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 17/17] x86/mce: Restore poll settings after storm
+ subsides
+Message-ID: <20250513175543.GGaCOHn26isB18J9ig@fat_crate.local>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-17-8ffd9eb4aa56@amd.com>
+ <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
+ <20250512154315.GC2355@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512171922.356408-1-peterx@redhat.com> <20250512171922.356408-2-peterx@redhat.com>
-In-Reply-To: <20250512171922.356408-2-peterx@redhat.com>
-From: Kyle Huey <me@kylehuey.com>
-Date: Tue, 13 May 2025 10:54:39 -0700
-X-Gm-Features: AX0GCFu0GiXP77j7Ocw_EEYHdj6M7fuJmdwT_meIB0dk-dffw8oy1ZpyJcbP0xo
-Message-ID: <CAP045Ar2nojOceUMZYx5x5YPkafNYvMMKRKezQqYa67+CDRxWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
- feature probe
-To: Peter Xu <peterx@redhat.com>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, linux-mm@kvack.org, 
-	"Robert O'Callahan" <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250512154315.GC2355@yaz-khff2.amd.com>
 
-On Mon, May 12, 2025 at 10:19=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote=
-:
->
-> There's a confusing paragraph in the man page on two-steps handshake for
-> userfaultfd UFFDIO_API ioctl.  In reality, after a successful UFFDIO_API
-> ioctl, the userfaultfd will be locked up on the features and any further
-> UFFDIO_API on top of an initialized userfaultfd would fail.
->
-> Modify the UFFDIO_API(2const) man page to reflect the reality.  Instead,
-> add a paragraph explaining the right way to probe userfaultfd features.
-> Add that only after the "Before Linux 4.11" paragraph, as the old kernel
-> doesn't support any feature anyway.
->
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  man/man2const/UFFDIO_API.2const | 43 ++++++++++++++++++---------------
->  1 file changed, 24 insertions(+), 19 deletions(-)
->
-> diff --git a/man/man2const/UFFDIO_API.2const b/man/man2const/UFFDIO_API.2=
-const
-> index 54b34a1bc..1c554107a 100644
-> --- a/man/man2const/UFFDIO_API.2const
-> +++ b/man/man2const/UFFDIO_API.2const
-> @@ -42,25 +42,6 @@ fields to bit masks representing all the available fea=
-tures and the generic
->  .BR ioctl (2)
->  operations available.
->  .P
-> -Since Linux 4.11,
-> -applications should use the
-> -.I features
-> -field to perform a two-step handshake.
-> -First,
-> -.B UFFDIO_API
-> -is called with the
-> -.I features
-> -field set to zero.
-> -The kernel responds by setting all supported feature bits.
-> -.P
-> -Applications which do not require any specific features
-> -can begin using the userfaultfd immediately.
-> -Applications which do need specific features
-> -should call
-> -.B UFFDIO_API
-> -again with a subset of the reported feature bits set
-> -to enable those features.
-> -.P
->  Before Linux 4.11, the
->  .I features
->  field must be initialized to zero before the call to
-> @@ -70,6 +51,30 @@ and zero (i.e., no feature bits) is placed in the
->  field by the kernel upon return from
->  .BR ioctl (2).
->  .P
-> +Since Linux 4.11,
-> +userfaultfd supports features that need to be enabled explicitly.
-> +To enable any of the features,
-> +one needs to set the corresponding feature bits in
-> +.I features
-> +when issuing the
-> +.B UFFDIO_API
-> +ioctl.
-> +.P
-> +For historical reasons,
-> +a temporary userfaultfd is needed to probe
-> +what userfaultfd features the kernel supports.
-> +The application needs to create a temporary userfaultfd,
-> +issue an
-> +.B UFFDIO_API
-> +ioctl with
-> +.I features
-> +set to 0. After the
-> +.B UFFDIO_API
-> +ioctl returns successfully,
-> +.I features
-> +should contain all the userfaultfd features that the kernel supports.
-> +The temporary userfaultfd can be safely closed after the probe.
-> +.P
->  If the application sets unsupported feature bits,
->  the kernel will zero out the returned
->  .I uffdio_api
-> --
-> 2.49.0
->
+On Mon, May 12, 2025 at 11:43:15AM -0400, Yazen Ghannam wrote:
+> The use case is "disable MCA polling". I just gave two examples of how
+> this can be done.
 
-lgtm
+Our documentation says:
 
-Reviewed-by: Kyle Huey <khuey@kylehuey.com>
+                ignore_ce
+                        disable features for corrected errors, e.g.
+                        polling timer and CMCI.  All events reported as 
+                        corrected are not cleared by OS and remained in its
+                        error banks.
 
-Thanks,
+                        Usually this disablement is not recommended, however
+                        if there is an agent checking/clearing corrected
+                        errors (e.g. BIOS or hardware monitoring 
+                        applications), conflicting with OS's error handling,
+                        and you cannot deactivate the agent, then this option
+                        will be a help.
 
-- Kyle
+it basically disables all: polling *and* CMCI.
+
+So why do we even bother with storms?
+
+> We can focus on "check_interval=0". The user wants to disable MCA
+> polling and rely only on interrupts. They still want to see the CEs.
+
+Is that a use case we support?
+
+Where is that documented?
+
+I can see why someone would want to avoid the recurrent polling but I'm not
+sure we explicitly say that somewhere in the text...
+
+> When the storm ends, the kernel should go back to how things were before
+> the storm. If there was a timer before, then go back to the old
+> interval. If there was *not* a timer before, then delete/remove the
+> timer.
+
+That I agree with.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
