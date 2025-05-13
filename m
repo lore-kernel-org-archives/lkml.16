@@ -1,85 +1,118 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF551E51D;
-	Tue, 13 May 2025 09:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197641E51D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129775; cv=none; b=d1MwQdVJO+k7c3RgLRmq/xKk97I9Fv6Jsstp9uJWFgusu+0gC6nNqwGo0haFAtLoQ5Np2GNHG/uHHcuZtuPkdugPQpCwdzNh+rThKhdJ69DgnREEyrBo81CB5eXOEK3xnXwUI+F12FxWpIZl2jehbzREGrnjJ3ePw8Ew/HMIOoQ=
+	t=1747129794; cv=none; b=uym89dXkQ9hVr1Ni4wU0Q0xJq1TRalFAW9TECNeT9Qkk6k2wGQrNJzjHdXjw2f4Rc3XfkcVk5EnM6BHQjo5eIXNPiBe+/ngZVhHUN9b8YPEBzNO7AVgymJuvIx89cz4PQABKUHA48SMflfb+C5NyElKcmpoe5pP1CBQNx2jTkRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129775; c=relaxed/simple;
-	bh=tDHaUyPFPsTXbPXqyTR203/WVin54neZUQNaYDsIqyM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=JRHPT1uuhdVxGrS87rjnLzr42PqR4QnQQJBftxiWgc59DixioKTSpDwyXgIewWTnCBetfIlvtCpBvGJI8SqL3LKAZWos61IhdWO/L7Z2tKqOimRbv9jjNGgmiEbomv55DM1+OoshUR2QDf9zP2jXIBsTb/St0tbMExBoUkhwlEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=n+ZI8hlH reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="n+ZI8hlH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=3GUQMII91S1WyO44PVIBc4fKDtpO1Qp2juoUMvZtpHg=; b=n
-	+ZI8hlHkBNvTM+4FMvyIllO4JFzgJiEekMiYHWwwDHvhY/SqlGkWQx7/s76NPP59
-	XpnHVax8RFCh/POkda9hn9cJdJ0oj5/iAR8X24KdydeN8lBsa9YpOZ0ZPM+P19KU
-	UNYYxnzfKrBDWm6YAoBw4kr/cv+yqae9K9lyG3Wj5k=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-110 (Coremail) ; Tue, 13 May 2025 17:49:02 +0800
- (CST)
-Date: Tue, 13 May 2025 17:49:02 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Oliver Neukum" <oneukum@suse.com>
-Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-	stern@rowland.harvard.edu, surenb@google.com,
-	kent.overstreet@linux.dev, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <b07c7d9f-a20a-49bc-adbc-d43326b2d2df@suse.com>
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513055447.5696-1-00107082@163.com>
- <48d5cae9-ff7c-4076-8b71-8c16bcf00443@suse.com>
- <4006cec4.794d.196c8be2fd1.Coremail.00107082@163.com>
- <b07c7d9f-a20a-49bc-adbc-d43326b2d2df@suse.com>
-X-NTES-SC: AL_Qu2fBf2Ztk8v5CKcYukZnEYQheY4XMKyuPkg1YJXOp80vyTg8BgQZm9MAUHHws6uNDKhoAi0TT1A0eZkcIVZfqSIyg+KHZRdQ1+fSG2pOTmB
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1747129794; c=relaxed/simple;
+	bh=duFvUMtyhYPtD9MLOwrTpIsSZp60K3X9+r+EsGHiN58=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q1keS8sFkeyr6sEGgttDTXqY4u11EuHKbnz3CaIvTB/ZzfEvY7zFwmiAAOqlJWFFjaJ6kdLLMshorl1uA3dVWeobSQd8fZIKpV7ian9+Nbni7ZZpjX4/OLmYvpEzXmAHPKZyx+eIIuKkUPxlMi991/t8wZJyR9h9opWH7wWCpQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 54D9nZei044744
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 17:49:35 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Tue, 13 May 2025
+ 17:49:35 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To:
+CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
+        Ben Zong-You Xie <ben717@andestech.com>
+Subject: [PATCH v3 0/9] add Voyager board support
+Date: Tue, 13 May 2025 17:49:24 +0800
+Message-ID: <20250513094933.1631493-1-ben717@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3dd5e698.921f.196c90c33af.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:bigvCgDX36WOFSNoqXUDAA--.12715W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hVMqmgjDQV06AAGs4
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 54D9nZei044744
 
-CgpBdCAyMDI1LTA1LTEzIDE2OjQ2OjM5LCAiT2xpdmVyIE5ldWt1bSIgPG9uZXVrdW1Ac3VzZS5j
-b20+IHdyb3RlOgo+T24gMTMuMDUuMjUgMTA6MjMsIERhdmlkIFdhbmcgd3JvdGU6Cj4KPkhpLAo+
-ICA+IFRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoaXMuICBUaGUgbWVtb3J5IGZsYWcgdGhpbmcgZG8g
-cmFpc2UgY29uY2Vybi4KPj4gSSB0aGluayBJIGNhbiBtYWtlIGFkanVzdG1lbnQ6ICByZWFsbG9j
-IHRoZSBtZW1vcnkgaWYgZmxhZyBjaGFuZ2VkLgo+Cj5JIGFtIHNvcnJ5LiBJIGhhdmUgYmVlbiB1
-bmNsZWFyLiBIZXJlIGNvbWVzIGEgZGV0YWlsZWQgZXhwbGFuYXRpb246Cj4KPldoYXQgd2UgY2Fs
-bCAiZ2ZwX3QiIGlzIGEgY29tYmluYXRpb24gb2YgZmxhZ3MuIFRoZXkgZGVzY3JpYmUKPgo+QSAt
-IHRoZSB0eXBlIG9mIG1lbW9yeSAoYWx3YXlzIHZhbGlkKQo+QiAtIHRoZSB3YXkgdGhlIG1lbW9y
-eSBjYW4gYmUgYWxsb2NhdGVkICh2YWxpZCBvbmx5IGF0IGEgc3BlY2lmaWMgdGltZSkKPgo+VGhl
-IFVSQiBpcyBhIGdlbmVyaWMgZGF0YSBzdHJ1Y3R1cmUgdG8gYmUgcHJvY2Vzc2VkIGJ5IHRoZSBD
-UFUsIF9ub3RfCj50aGUgSEMuIEl0IGlzIGFsd2F5cyBnZW5lcmljIGtlcm5lbCBtZW1vcnkuIEZs
-YWdzIG9mIHR5cGUgQSBtYWtlIG5vIHNlbnNlCj50byBwYXNzLgo+SW4gZmFjdCB5b3UgbWF5IG5v
-dCBrbm93IGZvciB3aGljaCBkZXZpY2UgYW4gVVJCIHdpbGwgYmUgdXNlZCB3aGVuIHlvdQo+YWxs
-b2NhdGUgaXQuIFRoZSBvbmx5IHZhbGlkIG1lbV9mbGFncyB5b3UgY2FuIHBhc3MgdG8gdXNiX2Fs
-bG9jX3VyYigpCj5hcmUgR0ZQX0tFUk5FTCwgR0ZQX05PSU8gb3IgR0ZQX0FUT01JQy4KPgo+SWYg
-eW91IG5lZWQgdG8gcmVhbGxvY2F0ZSBtZW1vcnkgZm9yIHByaXZhdGUgZGF0YSB5b3UgX211c3Rf
-IHVzZQo+dGhlIGZsYWdzIHBhc3NlZCB3aXRoIHVzYl9zdWJtaXRfdXJiKCkuIEEgSENEIGNhbiBt
-b2RpZnkgdGhlbSBieSBhZGRpbmcKPmZsYWdzIG9mIHR5cGUgQSwgYnV0IHlvdSBjYW5ub3QgY2hh
-bmdlIGZsYWdzIG9mIHR5cGUgQi4KPkZvciBleGFtcGxlLCBpZiB1c2JfYWxsb2NfdXJiKCkgdXNl
-ZCBHRlBfS0VSTkVMIHRvIGFsbG9jYXRlIHRoZSBVUkIsCj5idXQgdXNlcyBHRlBfQVRPTUlDIGlu
-IHVzYl9zdWJtaXRfdXJiKCksIHlvdSB3aWxsIGRlYWRsb2NrIGlmIHlvdSBzYXZlCj5hbmQgcmV1
-c2UgdGhlIEdGUF9LRVJORUwuCj4KPglIVEgKPgkJT2xpdmVyCj4gIAoKSGksIEkgaGF2ZSBvbmUg
-cXVlc3Rpb24gYWJvdXQgbWVtIGZsYWdzLgpJZiB1c2Jfc3VibWl0X3VyYiB3YW50cyBhIG1lbW9y
-eSBpbiBjb250ZXh0IG9mIGZsYWdzIEEsIHNheSBHRlBfQVRPTUlDLCBidXQgSSBhbHJlYWR5IGhh
-dmUgYSBtZW1vcnkgYWxsb2Mgd2l0aCAgZmxhZ3MgQiAgYW5kIGl0cyBzaXplCmlzIGJpZyBlbm91
-Z2gsICBpcyBpdCBzYWZlIHRvIHJldHVybiB0aGlzIG1lbW9yeSAgdG8gdXNiX3N1Ym1pdF91cmIg
-IHdoaWNoIGlzIGluIHRoZSBjb250ZXh0IG9mIGZsYWdzIEE/IAoKClRoYW5rcwpEYXZpZAo=
+The Voyager is a 9.6” x 9.6” Micro ATX form factor development board
+including Andes QiLai SoC. This patch series adds minimal device tree
+files for the QiLai SoC and the Voyager board [1].
+
+Now only support basic uart drivers to boot up into a basic console. Other
+features will be added later.
+
+[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
+---
+
+Changelog from v2 to v3:
+  - Rebase the series on Conor/riscv-soc-for-next
+  - Reform patch 6 as suggested by Conor
+  - Modify l2_cache's compatible in qilai.dtsi due to patch 6
+  - Add Conor's Acked-by tag to patch 4
+  - Add Conor's Acked-by tag to patch 5
+  - Add Conor's Acked-by tag to patch 9
+
+v2: https://lore.kernel.org/all/20250503151829.605006-5-ben717@andestech.com/
+
+Changelog from v1 to v2:
+  - Add detailed descriptions to PLIC_SW and PLMT0
+  - Move the aliases node and memory node from qilai.dtsi to qilai-voyager.dts
+  - Drop "status = okay" in each CPU node since the status property is by
+    default "okay"
+  - Reorder the nodes in qilai.dtsi by unit address in ascending order
+  - Add myself as the maintainer of Andes's SoC tree
+  - Add Rob's Reviewed-by tag to patch 2
+  - Add Rob's Acked-by tag to patch 3
+  - Add Rob's Acked-by tag to patch 6.
+
+v1: https://lore.kernel.org/all/20250407104937.315783-1-ben717@andestech.com/
+
+---
+Ben Zong-You Xie (9):
+  riscv: add Andes SoC family Kconfig support
+  dt-bindings: riscv: add Andes QiLai SoC and the Voyager board bindings
+  dt-bindings: interrupt-controller: add Andes QiLai PLIC
+  dt-bindings: interrupt-controller: add Andes machine-level software
+    interrupt controller
+  dt-bindings: timer: add Andes machine timer
+  dt-bindings: cache: add QiLai compatible to ax45mp
+  riscv: dts: andes: add QiLai SoC device tree
+  riscv: dts: andes: add Voyager board device tree
+  riscv: defconfig: enable Andes SoC
+
+ .../cache/andestech,ax45mp-cache.yaml         |  52 ++++-
+ .../andestech,plicsw.yaml                     |  54 +++++
+ .../sifive,plic-1.0.0.yaml                    |   1 +
+ .../devicetree/bindings/riscv/andes.yaml      |  25 +++
+ .../bindings/timer/andestech,plmt0.yaml       |  53 +++++
+ MAINTAINERS                                   |   9 +
+ arch/riscv/Kconfig.errata                     |   2 +-
+ arch/riscv/Kconfig.socs                       |   9 +
+ arch/riscv/boot/dts/Makefile                  |   1 +
+ arch/riscv/boot/dts/andes/Makefile            |   2 +
+ arch/riscv/boot/dts/andes/qilai-voyager.dts   |  28 +++
+ arch/riscv/boot/dts/andes/qilai.dtsi          | 186 ++++++++++++++++++
+ arch/riscv/configs/defconfig                  |   1 +
+ 13 files changed, 417 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+ create mode 100644 Documentation/devicetree/bindings/riscv/andes.yaml
+ create mode 100644 Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
+ create mode 100644 arch/riscv/boot/dts/andes/Makefile
+ create mode 100644 arch/riscv/boot/dts/andes/qilai-voyager.dts
+ create mode 100644 arch/riscv/boot/dts/andes/qilai.dtsi
+
+--
+2.34.1
