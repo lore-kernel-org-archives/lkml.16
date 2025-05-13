@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1C02BE0E6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37922BE7BC
 	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153912; cv=none; b=jxmo3QTKE3FLUTDPjAy+hdwIMrbL4EUr4nv76iSK4Mgp7NNBJ3SigNJVdcktCu26FLjg64qs3e25OJ8JyIszrzlqevRFYjymMR/GAY3GDqLRodiLQiiOuV1S00m9xJq0crFe3hsp/obOmp2nomhl/715SfV9SVpQ8DCEPvsq8IE=
+	t=1747153912; cv=none; b=AqUvmuNVTBP92raR883UPlnBsndyK9Lvuslhg2YcyM9NQUoyxLhQdip5lVyHx/1xdgXc5mX0tKAoZR4M70P9LK+KSK6kzdETkWvRL3gotSQnCsGnuoNfNLDJhgQ6R+tF/0MvofQf3Fvxf+S0FsqD6zAlzGpGASYXOQSb/vh+lB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747153912; c=relaxed/simple;
-	bh=EnmoQWrnaV1Hvaf1udlclzJvTLDhJHEEja5GIK61C/I=;
+	bh=WVNzJ1QslGOZvrM8+INHuUbrNxIwVxMRLbrLof8UGE0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g7iWDpnWyx0mDHTyzDgdANEOO0RMwdm+NkUfiVyy/K7whbAFhlUBw8n6ZQ93FpCZ8qPOnrn/tEIGUj6hI9vIJcKpJwvxlH65dXDDDa6HJO/KC0er3pW3Z0DN7MOKB4KRusZ0nTtRS6gSRXtRf+veKuEOtJa7hw6On1qaQW8zI2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFJsX6Td; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X2iYytWlZbRtbRk/9cMikgOBeLmo0IMzGD2mCN5977wPBTT/q3uoYo56nduBMynJ+n5floRij24LVqQmEs+ud9rbOba8VpyPpbqq76Z/iMwJiISJxO2GNN4hKlhSaw6n9FdoVo5+0UV7uNy+SxnrhxcNygiAc7iGjAcuOI2D/9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9kMzXXD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFJsX6Td"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6E2C4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9kMzXXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628CAC4CEF4;
 	Tue, 13 May 2025 16:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747153912;
-	bh=EnmoQWrnaV1Hvaf1udlclzJvTLDhJHEEja5GIK61C/I=;
+	bh=WVNzJ1QslGOZvrM8+INHuUbrNxIwVxMRLbrLof8UGE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fFJsX6TdE3Ukgp937aSEcaY4ZWy0xuVyFyqU4fCsA7l/5mg80Bcgltlp6srb+BIvc
-	 oLY4Nfhbph0bTJLDcF5Z0YHuARDg37/CAdJP4OVcQwX98d4dy2El7jfD2Tfaxlw7w/
-	 7MjFLMikWTE2e2W4uJ/CWkWoWfmXRVVfeL5Johj00F9an59BGiCYqYZVOL14m725JF
-	 NQqb7r4m6hPnICEGTgrCdTkECOM7NBiMKt/BSxyFRtsNyCQR7Q/tJCxjg65/2uHM/W
-	 MptUIh7cpv2DuWbDCSje9Jrm1b4L+/xrjHHTodi+upO20fzVpUY+GFLfycsZn8lkV4
-	 q3AzgMyWNoRVQ==
+	b=h9kMzXXDBuRa3vfoSYnrhhdB5pvIx2WCKZ71M0Pmc2Lept3bgCBcto6sgWuvVOqro
+	 bBcP5w5R2OtBt//zq3TGAw24/hnSQcAUBq0MDr0LiyVbOtAR02KfPej14Aey3jH/4t
+	 hC2A/uBZasZ8xAw7a09lCVCzznRqJ9nEgWmNctrkza/7yBewxiIDQhxWfqP9neKFVA
+	 NLY8E9bYBe0hrXcqDdiTDMJ3DHOxPRUWSffMDrUoQcfklHtrg3+xkGh7jhR7m01zSj
+	 ZvKOIaFI4A8l8H5fzHJi9OiKWFr5ra38eRKnk/xoZkkT1Bk8DSc3ar50F4KdFRE0Kc
+	 mX5Jj+HKhMtOw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uEsXm-00EaLc-65;
+	id 1uEsXm-00EaLc-Ba;
 	Tue, 13 May 2025 17:31:50 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-kernel@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Sascha Bischoff <sascha.bischoff@arm.com>,
 	Timothy Hayes <timothy.hayes@arm.com>
-Subject: [PATCH v2 2/5] irqchip/gic-v3-its: Implement .msi_teardown() callback
-Date: Tue, 13 May 2025 17:31:41 +0100
-Message-Id: <20250513163144.2215824-3-maz@kernel.org>
+Subject: [PATCH v2 3/5] genirq/msi: Move prepare() call to per-device allocation
+Date: Tue, 13 May 2025 17:31:42 +0100
+Message-Id: <20250513163144.2215824-4-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250513163144.2215824-1-maz@kernel.org>
 References: <20250513163144.2215824-1-maz@kernel.org>
@@ -57,153 +57,136 @@ X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradea
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The ITS driver currently nukes the structure representing
-an endpoint device translating via an ITS on freeing the last LPI
-allocated for it.
+The current device MSI infrastructure is subtly broken, as it
+will issue an .msi_prepare() callback into the MSI controller
+driver every time it needs to allocate an MSI. That's pretty wrong,
+as the contract (or unwarranted assumption, depending who you ask)
+between the MSI controller and the core code is that .msi_prepare()
+is called exactly once per device.
 
-That's an unfortunate state of affair, as it is pretty common for
-a driver to allocate a single MSI, do something clever, teardown
-this MSI, and reallocate a whole bunch of them. The nvme driver
-does exactly that, amongst others.
+This leads to some subtle breakage in said MSI controller drivers,
+as it gives the impression that there are multiple endpoints sharing
+a bus identifier (RID in PCI parlance, DID for GICv3+). It implies
+that whatever allocation the ITS driver (for example) has done on
+behalf of these devices cannot be undone, as there is no way to
+track the shared state. This is particularly bad for wire-MSI devices,
+for which .msi_prepare() is called for. each. input. line.
 
-What happens in that case is that the core code is buggy enough
-to issue another .msi_prepare() call, even if it shouldn't.
-This luckily cancels the above behaviour and hides the problem.
+To address this issue, move the call to .msi_prepare() to take place
+at the point of irq domain allocation, which is the only place that
+makes sense. The msi_alloc_info_t structure is made part of the
+msi_domain_template, so that its life-cycle is that of the domain
+as well.
 
-In order to fix the core code, start by implementing the new
-.msi_teardown() callback. Nothing calls it yet, so a side effect
-is that the its_dev structure will not be freed and that the DID
-will stay mapped. Not a big deal, and this will be solved in
-following patches.
+Finally, the msi_info::alloc_data field is made to point at this
+allocation tracking structure, ensuring that it is carried around
+the block.
+
+This is all pretty straightforward, except for the non-device-MSI
+leftovers, which still have to call .msi_prepare() at the old
+spot. One day...
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its-msi-parent.c | 10 +++++
- drivers/irqchip/irq-gic-v3-its.c            | 46 +++++++++++----------
- kernel/irq/msi.c                            |  3 +-
- 3 files changed, 36 insertions(+), 23 deletions(-)
+ include/linux/msi.h |  2 ++
+ kernel/irq/msi.c    | 35 +++++++++++++++++++++++++++++++----
+ 2 files changed, 33 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-index 68f9ba4085ce5..958736622fa57 100644
---- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-@@ -167,6 +167,14 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
- 					  dev, nvec, info);
- }
- 
-+static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-+{
-+	struct msi_domain_info *msi_info;
-+
-+	msi_info = msi_get_domain_info(domain->parent);
-+	msi_info->ops->msi_teardown(domain->parent, info);
-+}
-+
- static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 				  struct irq_domain *real_parent, struct msi_domain_info *info)
- {
-@@ -190,6 +198,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 		 * %MSI_MAX_INDEX.
- 		 */
- 		info->ops->msi_prepare = its_pci_msi_prepare;
-+		info->ops->msi_teardown = its_msi_teardown;
- 		break;
- 	case DOMAIN_BUS_DEVICE_MSI:
- 	case DOMAIN_BUS_WIRED_TO_MSI:
-@@ -198,6 +207,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- 		 * size is also known at domain creation time.
- 		 */
- 		info->ops->msi_prepare = its_pmsi_prepare;
-+		info->ops->msi_teardown = its_msi_teardown;
- 		break;
- 	default:
- 		/* Confused. How did the lib return true? */
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index fd6e7c170d37e..a77f11e23ad6c 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3620,8 +3620,33 @@ static int its_msi_prepare(struct irq_domain *domain, struct device *dev,
- 	return err;
- }
- 
-+static void its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-+{
-+	struct its_device *its_dev = info->scratchpad[0].ptr;
-+
-+	guard(mutex)(&its_dev->its->dev_alloc_lock);
-+
-+	/* If the device is shared, keep everything around */
-+	if (its_dev->shared)
-+		return;
-+
-+	/* LPIs should have been already unmapped at this stage */
-+	if (WARN_ON_ONCE(!bitmap_empty(its_dev->event_map.lpi_map,
-+				       its_dev->event_map.nr_lpis)))
-+		return;
-+
-+	its_lpi_free(its_dev->event_map.lpi_map,
-+		     its_dev->event_map.lpi_base,
-+		     its_dev->event_map.nr_lpis);
-+
-+	/* Unmap device/itt, and get rid of the tracking */
-+	its_send_mapd(its_dev, 0);
-+	its_free_device(its_dev);
-+}
-+
- static struct msi_domain_ops its_msi_domain_ops = {
- 	.msi_prepare	= its_msi_prepare,
-+	.msi_teardown	= its_msi_teardown,
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 63c23003ec9b7..ba1c77a829a1c 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -516,12 +516,14 @@ struct msi_domain_info {
+  * @chip:	Interrupt chip for this domain
+  * @ops:	MSI domain ops
+  * @info:	MSI domain info data
++ * @alloc_info:	MSI domain allocation data (arch specific)
+  */
+ struct msi_domain_template {
+ 	char			name[48];
+ 	struct irq_chip		chip;
+ 	struct msi_domain_ops	ops;
+ 	struct msi_domain_info	info;
++	msi_alloc_info_t	alloc_info;
  };
  
- static int its_irq_gic_domain_alloc(struct irq_domain *domain,
-@@ -3722,7 +3747,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- {
- 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	struct its_node *its = its_dev->its;
- 	int i;
- 
- 	bitmap_release_region(its_dev->event_map.lpi_map,
-@@ -3736,26 +3760,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 		irq_domain_reset_irq_data(data);
- 	}
- 
--	mutex_lock(&its->dev_alloc_lock);
--
--	/*
--	 * If all interrupts have been freed, start mopping the
--	 * floor. This is conditioned on the device not being shared.
--	 */
--	if (!its_dev->shared &&
--	    bitmap_empty(its_dev->event_map.lpi_map,
--			 its_dev->event_map.nr_lpis)) {
--		its_lpi_free(its_dev->event_map.lpi_map,
--			     its_dev->event_map.lpi_base,
--			     its_dev->event_map.nr_lpis);
--
--		/* Unmap device/itt */
--		its_send_mapd(its_dev, 0);
--		its_free_device(its_dev);
--	}
--
--	mutex_unlock(&its->dev_alloc_lock);
--
- 	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
- }
- 
+ /*
 diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index a3b34c3c599be..31378a2535fb9 100644
+index 31378a2535fb9..07eb857efd15e 100644
 --- a/kernel/irq/msi.c
 +++ b/kernel/irq/msi.c
-@@ -795,8 +795,7 @@ static int msi_domain_ops_prepare(struct irq_domain *domain, struct device *dev,
+@@ -59,7 +59,8 @@ struct msi_ctrl {
+ static void msi_domain_free_locked(struct device *dev, struct msi_ctrl *ctrl);
+ static unsigned int msi_domain_get_hwsize(struct device *dev, unsigned int domid);
+ static inline int msi_sysfs_create_group(struct device *dev);
+-
++static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
++				   int nvec, msi_alloc_info_t *arg);
+ 
+ /**
+  * msi_alloc_desc - Allocate an initialized msi_desc
+@@ -1023,6 +1024,7 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
+ 	bundle->info.ops = &bundle->ops;
+ 	bundle->info.data = domain_data;
+ 	bundle->info.chip_data = chip_data;
++	bundle->info.alloc_data = &bundle->alloc_info;
+ 
+ 	pops = parent->msi_parent_ops;
+ 	snprintf(bundle->name, sizeof(bundle->name), "%s%s-%s",
+@@ -1061,11 +1063,18 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
+ 	if (!domain)
+ 		return false;
+ 
++	domain->dev = dev;
++	dev->msi.data->__domains[domid].domain = domain;
++
++	if (msi_domain_prepare_irqs(domain, dev, hwsize, &bundle->alloc_info)) {
++		dev->msi.data->__domains[domid].domain = NULL;
++		irq_domain_remove(domain);
++		return false;
++	}
++
+ 	/* @bundle and @fwnode_alloced are now in use. Prevent cleanup */
+ 	retain_and_null_ptr(bundle);
+ 	retain_and_null_ptr(fwnode_alloced);
+-	domain->dev = dev;
+-	dev->msi.data->__domains[domid].domain = domain;
+ 	return true;
+ }
+ 
+@@ -1232,6 +1241,24 @@ static int msi_init_virq(struct irq_domain *domain, int virq, unsigned int vflag
  	return 0;
  }
  
--static void msi_domain_ops_teardown(struct irq_domain *domain,
--				    msi_alloc_info_t *arg)
-+static void msi_domain_ops_teardown(struct irq_domain *domain, msi_alloc_info_t *arg)
++static int populate_alloc_info(struct irq_domain *domain, struct device *dev,
++			       unsigned int nirqs, msi_alloc_info_t *arg)
++{
++	struct msi_domain_info *info = domain->host_data;
++
++	/*
++	 * If the caller has provided a template alloc info, use that. Once
++	 * all users of msi_create_irq_domain() have been eliminated, this
++	 * should be the only source of allocation information, and the
++	 * prepare call below should be finally removed.
++	 */
++	if (!info->alloc_data)
++		return msi_domain_prepare_irqs(domain, dev, nirqs, arg);
++
++	*arg = *info->alloc_data;
++	return 0;
++}
++
+ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain,
+ 				   struct msi_ctrl *ctrl)
  {
- }
+@@ -1244,7 +1271,7 @@ static int __msi_domain_alloc_irqs(struct device *dev, struct irq_domain *domain
+ 	unsigned long idx;
+ 	int i, ret, virq;
+ 
+-	ret = msi_domain_prepare_irqs(domain, dev, ctrl->nirqs, &arg);
++	ret = populate_alloc_info(domain, dev, ctrl->nirqs, &arg);
+ 	if (ret)
+ 		return ret;
  
 -- 
 2.39.2
