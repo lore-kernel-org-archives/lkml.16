@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E26B21DF979;
-	Tue, 13 May 2025 06:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599D51D6DB4;
+	Tue, 13 May 2025 06:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117189; cv=none; b=qj/vo4jgZu4e/AfxmfFcBmDj3nnQnjSLydcu97y6A9Ld3h1EXW95KEJqIjKuTfOgQzI/XIbE0BSbbnrPCoJEN/w7c6XxVHiPAnMhKMhMr0w0kowWskUZjIpOhZ386TBaiYPV2lkU9dWUgo6BJ6onIWYLgstd+UtZ/gvO6exGNUo=
+	t=1747117335; cv=none; b=rFiMnCvXI/+WmDH8FMq5GvLRf3V+gU+moGaKIik6pF+afWTbfCJIoeehlTE6nS6zKO6FZsOer6/eGsCr3OPN+bqRtuTk4qBatq+R3mfiAv3yrHyhD+nofWRfNIhDqoUbJhhnTocQ8eVbvov0nf+rW7fKRZKg+iMBffsMIFAy908=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117189; c=relaxed/simple;
-	bh=NM+JArslqXBTjf2bZCJpnk+HeQXIcVjhE9jWEamlUp4=;
+	s=arc-20240116; t=1747117335; c=relaxed/simple;
+	bh=F1Dc+MvNAUMUR1sJ7kUFlsLn2WNtlz1OKvBBhuM5kL0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IA8xLOazatTJ2VSXWQ40NOAO76a2Yh6hgXlmwmuaL+8s/ULBc20/pZZFjvoR6128Xz592AHkFzjSh5LyLcgj/DQi3CE/0Dv4ssgeqzO8qL274ammIYrFDPQp4URokTcZtmuYUV4orRa+k5Agz8Pk6sMVXQqOj4Cr0CqRBqQArCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06F68150C;
-	Mon, 12 May 2025 23:19:32 -0700 (PDT)
-Received: from [10.174.37.63] (unknown [10.174.37.63])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87D583F5A1;
-	Mon, 12 May 2025 23:19:37 -0700 (PDT)
-Message-ID: <30799c1f-eaa1-4c32-b22d-4c7505304d69@arm.com>
-Date: Tue, 13 May 2025 11:49:33 +0530
+	 In-Reply-To:Content-Type; b=mr+HnJxfO7OqqpipgeENgR79jrCu3Aumcj+npLZ+bbNq0n7ld2NcxzMmPC3P/6qkqe7sJA+mvXRr5y4WSbMJQVwMFA2YtjwMVamvyDHHIry9WDi73z0/rqIsepIjibEoc5BkTxdQF5nZp7nL+yMxTaJjOfcgJ4lIHza6jgn6elg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q/zd0tS2; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q/zd0tS2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747117334; x=1778653334;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=F1Dc+MvNAUMUR1sJ7kUFlsLn2WNtlz1OKvBBhuM5kL0=;
+  b=Q/zd0tS2bkwoEnTMBrWBBlINtqWFuTGWk1upj5nrhWrDzjXRELOe/MIW
+   RZPE2sElVcOtzSJw44f7vBKK1ocQVyjC+GpBJajU0QvWnayYym+Vs6TGV
+   Knk2oSkax3q8PGpeDlRm0mK3beOo172T+BLgVh3gzaqTVE1LSv13aJgdk
+   pIQqqzpRFRwcepCFR6KjkriPZsWcz68DRxjEuaqyUGTrflRyrZRrJhVLz
+   Q601QPn7lxv8ZjVpWZQzbkpYxzNVUf3ey52WkUWGEG+xkMrYm9OA6hq0K
+   ZzkRXvCOdiElnwcu3AiMfPaUdCu+fLwoSkKeuyRdwKWHGdK+ariaGemk0
+   w==;
+X-CSE-ConnectionGUID: Q3nu4yxmQtewYVs3csuTnA==
+X-CSE-MsgGUID: tyfI+G9YTymvAcKot80qBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59582992"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="59582992"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 23:22:13 -0700
+X-CSE-ConnectionGUID: f4OsESHLRUGcubGHkai75g==
+X-CSE-MsgGUID: mzq1OOppSn+X0tOak6kzAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="142785867"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO [10.245.246.168]) ([10.245.246.168])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 23:22:09 -0700
+Message-ID: <bfb8e9a6-92c1-4079-aec0-b1ad2b245c70@linux.intel.com>
+Date: Tue, 13 May 2025 09:23:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,151 +52,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
-Content-Language: en-GB
-From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-In-Reply-To: <20250430145920.3748738-2-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ lgirdwood@gmail.com, broonie@kernel.org
+Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
+ guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
+ <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-On 30/04/25 20:29, Ryan Roberts wrote:
-> page_cache_ra_order() takes a parameter called new_order, which is
-> intended to express the preferred order of the folios that will be
-> allocated for the readahead operation. Most callers indeed call this
-> with their preferred new order. But page_cache_async_ra() calls it with
-> the preferred order of the previous readahead request (actually the
-> order of the folio that had the readahead marker, which may be smaller
-> when alignment comes into play).
->
-> And despite the parameter name, page_cache_ra_order() always treats it
-> at the old order, adding 2 to it on entry. As a result, a cold readahead
-> always starts with order-2 folios.
->
-> Let's fix this behaviour by always passing in the *new* order.
->
-> Worked example:
->
-> Prior to the change, mmaping an 8MB file and touching each page
-> sequentially, resulted in the following, where we start with order-2
-> folios for the first 128K then ramp up to order-4 for the next 128K,
-> then get clamped to order-5 for the rest of the file because pa_pages is
-> limited to 128K:
->
-> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> -----  ----------  ----------  ---------  -------  -------  -----  -----
-> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
-> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
-> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
-> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
-> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
-> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
-> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
-> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
-> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
-> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
-> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
-> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
-> ...
->
-> After the change, the same operation results in the first 128K being
-> order-0, then we start ramping up to order-2, -4, and finally get
-> clamped at order-5:
->
-> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> -----  ----------  ----------  ---------  -------  -------  -----  -----
-> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
-> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
-> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
-> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
-> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
-> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
-> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
-> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
-> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
-> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
-> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
-> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
-> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
-> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
-> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
-> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
-> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
-> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
-> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
-> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
-> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
-> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
-> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
-> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
-> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
-> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
-> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
-> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
-> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
-> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
-> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
-> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
-> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
-> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
-> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
-> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
-> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
-> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
-> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
-> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
-> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
-> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
-> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
-> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
-> ...
->
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
-This looks good to me.
+On 12/05/2025 15:59, Pierre-Louis Bossart wrote:
+> 
+>> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
+>> Panther Lake, the main difference is the number of DSP cores, memory
+>> and clocking.
+>> It is based on the same ACE3 architecture.
+>>
+>> In SOF the PTL topologies can be re-used for WCL to reduce duplication
+>> of code and topology files. 
+> 
+> Is this really true? I thought topology files are precisely the place where a specific pipeline is assigned to a specific core. If the number of cores is lower, then a PTL topology could fail when used on a WCL DSP, no?
 
-Tested-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+Yes, that is true, however for generic (sdw, HDA) topologies this is not
+an issue as we don't spread the modules (there is no customization per
+platform).
+When it comes to product topologies, they can still be named as PTL/WCL
+if needed and have tailored core use.
 
-> ---
->   mm/readahead.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 6a4e96b69702..8bb316f5a842 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -479,9 +479,6 @@ void page_cache_ra_order(struct readahead_control *ractl,
->   
->   	limit = min(limit, index + ra->size - 1);
->   
-> -	if (new_order < mapping_max_folio_order(mapping))
-> -		new_order += 2;
-> -
->   	new_order = min(mapping_max_folio_order(mapping), new_order);
->   	new_order = min_t(unsigned int, new_order, ilog2(ra->size));
->   	new_order = max(new_order, min_order);
-> @@ -683,6 +680,7 @@ void page_cache_async_ra(struct readahead_control *ractl,
->   	ra->size = get_next_ra_size(ra, max_pages);
->   	ra->async_size = ra->size;
->   readit:
-> +	order += 2;
->   	ractl->_index = ra->start;
->   	page_cache_ra_order(ractl, ra, order);
->   }
+It might be that WCL will not use audio configs common with PTL, in that
+case we still can have sof-wcl-* topologies if desired.
+
+Fwiw, in case of soundwire we are moving to a even more generic function
+topology split, where all SDW device can us generic function fragments
+stitched together to create a complete topology.
+Those will have to be compatible with all platforms, so wide swing of
+core use cannot be possible anymore.
+
+-- 
+Péter
+
