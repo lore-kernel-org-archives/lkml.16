@@ -1,100 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A902AF10;
-	Tue, 13 May 2025 19:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9300C1F098A;
+	Tue, 13 May 2025 19:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747164919; cv=none; b=e9VJyM+jAY/Mhn9DQrfumaABWEsVZ/DYnXyxlTtvw2fA2GgScyd5MtiHT/mIKsAbn1Hjty2vlfQ3EzW+V4PGvK4Go6dR4B89Jb7wNlnHGxioPc3wnNFKfs/yfHiTd5Laz+kIjZ2Ph53ZeskhCkm/1FL4diudj/T8UZx0nOPzfjs=
+	t=1747165159; cv=none; b=Gb8idDkaIv6q4m72DI5+YE71EqLMJAljnIBnTKp2kPhGLVPAJIAgldeKtISQx9/2hRPS4yeRzz/06K4FhDbnvzqtpp+JgcgagAwJqSuN2OngSce89B/4hCxBIbkGPrlLB6tTmjNThRGVijj435lW5/GK9Bn1OZ+SBgiPcsIllgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747164919; c=relaxed/simple;
-	bh=NKW7fWAMGx7vuDsNqjWG++yNI1YSSBcCdp2F3u9Eoac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owrfMXhO2lI6lfjhPWbgu1uJRQOO/hi8uqxWkwbQByn753/EzpQI6PmCvlz3dwERK+N0Ne0kJaqIkElvaXeETK03cPorj4BoDB19mDQ1t1UZn+MDos/yNr4FeEfVmw8bSw69aBxSywig607QRA5iFehR2gK+oh5dRdPRq66JpzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHamqIXR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747165159; c=relaxed/simple;
+	bh=1shFHY4kJtz0oI5zPIYpAeK/A+xuI8MIOwlYL8H86bw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D3ORTEkEuGmXpHJS1t37g8amz/VOo81cs2rwd3OuFlb5wzo/MjdybP2UZ84ypjzaV8xGel3muY7p/G7Q1bErWnR0jF6vQadHaikbCvwSxA8W8WDTxMtOdfcy7PkKx7KePcUXywabwkd1rBzxicAcy2z0R24CzMIWd3QvdhxDk9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Zn7NRM0t; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHamqIXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0F9C4CEEB;
-	Tue, 13 May 2025 19:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747164918;
-	bh=NKW7fWAMGx7vuDsNqjWG++yNI1YSSBcCdp2F3u9Eoac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHamqIXRvn5zOEHqKLiHjErflvpdj1JYDOAJaGK492eYJZHRqRLtCf9qOGdINcmHn
-	 HickgvddKLqBo6Y1oYFVI0FevwPcq0CPmlQuPY4Yw7ZLG+npgTOkMy5Q00qOG0hGym
-	 KPNgdZcvoTF40UX+d85nAf0Wgcx9w9e/7VAHIbZCdS0Ik8IzZtBzyzMFx8WDLwKbwH
-	 Kob6qDqGMhn9tJlg/eYGOaVs4PEKZ29NioKEHzq5LQLY/LraZepBwNU2NUFoxMT1vt
-	 y/UzCNPGbc49/AU33iuNA+BSG3cKIY46Vd9507gRXXZX2vPClLGe8egTjz+0u1rhtq
-	 B3BW2/RxzqDwQ==
-Date: Tue, 13 May 2025 16:35:15 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Metric related performance improvements
-Message-ID: <aCOe85iNjzgIW1B-@x1>
-References: <20250410044532.52017-1-irogers@google.com>
- <Z_dp7E2wtSek-KHo@z2>
- <aCOewZobRD1dPrl4@x1>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Zn7NRM0t"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Zxmxm2HM4zlvnLs;
+	Tue, 13 May 2025 19:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1747165146; x=1749757147; bh=1shFHY4kJtz0oI5zPIYpAeK/
+	A+xuI8MIOwlYL8H86bw=; b=Zn7NRM0ttt/4/PstqrfSbmAsnJ70YbjjIaT+ypsV
+	E89WDa0HOOnIEmDcxoIlo8VNhc+xQ1huEsFFKpiWCIm8FPZ05UEWBRwekQCAvJaR
+	oPV1elZrQ9UsOzSNkwmHYK221Cvmo9wjxqgm9pvmbSyYNkjfs/vkImqZmFu3fuPQ
+	AiYWOm0mc99NleaPUiebUN247bPG3jrfTG2vrG0Q3naWNjbxRDMeRHQ1qw8lR15v
+	oJN60mI2jj/rVgCmrpZHHWE5n/I4AbnDJitP/2YnxjmQ6aadpiUi97M8cHC/q1/v
+	+vYwB3AuvZE9WcdRlI87G3AKrtymMlsTZZmlC2Khpwccxw==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id YmXNaaPw4iC8; Tue, 13 May 2025 19:39:06 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Zxmxg1pnMzlng8g;
+	Tue, 13 May 2025 19:39:02 +0000 (UTC)
+Message-ID: <c0865d5a-12ba-425c-af5a-1da1a06ce426@acm.org>
+Date: Tue, 13 May 2025 12:39:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCOewZobRD1dPrl4@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by
+ mid-layer
+To: Salomon Dushimirimana <salomondush@google.com>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422181729.2792081-1-salomondush@google.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250422181729.2792081-1-salomondush@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 04:34:28PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 09, 2025 at 11:49:16PM -0700, Namhyung Kim wrote:
-> > Great, I also see the speedup on my machine from 32s to 3s.
+On 4/22/25 11:17 AM, Salomon Dushimirimana wrote:
+> A per-device ratelimiting mechanism is added to prevent flooding
+> userspace during persistent error conditions. The ratelimit is checked
+> before scheduling the event work.
 
-> > Tested-by: Namhyung Kim <namhyung@kernel.org>
- 
-> I'm collecting this for v2 as well, ok? Holler if you disagree.
+Isn't the above an argument to use ftrace instead of uevents to
+send this information to user space?
 
-BTW, in my workstation:
+Thanks,
 
-Before:
-
-  root@number:~# time perf test "Parsing of PMU event table metrics"
-   10.3: Parsing of PMU event table metrics                            : Ok
-   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-
-  real  0m9.286s
-  user  0m9.354s
-  sys   0m0.062s
-  root@number:~#
-
-After:
-
-  root@number:~# time perf test "Parsing of PMU event table metrics"
-   10.3: Parsing of PMU event table metrics                            : Ok
-   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-
-  real  0m0.689s
-  user  0m0.766s
-  sys   0m0.042s
-  root@number:~# time perf test 10
-   10: PMU JSON event tests                                            :
-   10.1: PMU event table sanity                                        : Ok
-   10.2: PMU event map aliases                                         : Ok
-   10.3: Parsing of PMU event table metrics                            : Ok
-   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-   10.5: Parsing of metric thresholds with fake PMUs                   : Ok
-
-  real  0m0.696s
-  user  0m0.807s
-  sys   0m0.064s
-  root@number:~#
+Bart.
