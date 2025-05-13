@@ -1,76 +1,118 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9601E885A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D3111EFF89;
+	Tue, 13 May 2025 07:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120817; cv=none; b=Tu1ZtBieNAGOkBbwkd3gAxS6FCoekZ7otibKISTKCEXrlfx+6Boqf+uEHqiwkoFRbwVnTOGlHfv0hNEh3o9/7ruxo5AaafdhOzFcLEyh8hMQ56cVSejSFjxDGyi3FDw6wRbw1EHnnD2/cRcz77BpaHZLxtl66fJSe9MQXljWORs=
+	t=1747120870; cv=none; b=PghFV6n9ecT+lxk1/z4Loe4XwOkxJUbwqt7482qn2RsTv5Nxe5OK7E1DiVXFohxGTR+NlorWQpRhLdGxqvFODJiZd4opaJl4ZIytnuj1pqThU3JHdYYNrwHWEeWfGhaEAfZc7YLgIgkWNoWXOcpMVZbcAPhoDVD00h+K8OGDF/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120817; c=relaxed/simple;
-	bh=z89cV37A1BzKVH5waNhFO0vTDICN0cpfkHVfKGEx1HM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=D7//grbciWGSMrhwo6nvKc1iiSlF6kP57uDqxRmQKkPD+s15t+iEC54gEB2fR3yzJoEfncQtYTPxQTdE3ILDTvL5F0WUk8BfkQoPVRiQDR5E95+TMPhj/u3YNz83CEfPGa6Q4R/xhI8p9w6Rt8CrmnCVXBC3v3FW8Ryyoh7tpvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.214.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22fafbbe51fso75470185ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:20:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747120814; x=1747725614;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MeRMeXbTDrvhPp+1BOYIczfNEGi+t+SLBi0QtIycPH8=;
-        b=LGlgwCXGt0a5jQLjMuei/3G/8q5D+dCMnw7fWBa68SepQSSBLu8ztfecqffyX1TmP+
-         cR/uk8rqgs5jZJGiW1xj61OV6doA0ExkT1F2rqj5oZhHBJFV0Mirm7lOrJpsdovI3nmB
-         2LiGStfCVh4EofptfAZ6yvBv5lBTfCif/Vx81huKVClKZdojiAlhvoBmuGgf6eQAcg/b
-         0JP8O8CUN2b+0sdL664e6cJCYt/ahro5MXC1Q4gCwDk3lJderVIgGPfFPOqdsGE5ir5R
-         ZgVl5w6me6qYmU3pbeKA6FgkYLfIYfHJTnUtrbfbImdLikpQuOD56qH1aYFTUBb5tm3f
-         ky4A==
-X-Forwarded-Encrypted: i=1; AJvYcCURUG6h/FTh0zezeSyyXVHUIrWGkTPPLqeLzRnNl8KZyr6Zew5g0Fabds/MFL3NXPfw7Oc5VoZ8ShaOYiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG49sP/98Oc0mtJZ378gBTKXWSv1OxN9l0XcAyflLyKxFLuBkq
-	8xxkLGMemoQfNr2aIG3fPlHLHRUX8AcLL7KTy0zRZdDOYjJPOI3P5JWcRiIEMYBPFdV4uH1o7ek
-	7+qsk172tkuDbG+WrU6VRaa45+RyLtsdeadyvZtN0MGZ88as/mz39T0E=
-X-Google-Smtp-Source: AGHT+IHkvnZLGzM8GIvS9rpIvhqGG29wKFa6dseqNcftKL44TEPKgL2MlP8nj1Ok1QbFjPtxMGKC9Y40GMBfMMynzFPAV6dx7ANM
+	s=arc-20240116; t=1747120870; c=relaxed/simple;
+	bh=yj51drKVlwDLsjkAZzJZty2Bp0QzpA0GLqtNmCscr4w=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZJCLWxsq5DYLupBSPK9s/fWV/Y7V99dt4jW19+4rnxZGPG9NefWg+8VuiYbg1PXhQJo11Zwxb/kE2PZV0WQsh3D4lbTN+0Unbna0pNEj6JzyFTZcYbtir9yWGn+FaHXOQ7l3GAGGyO4vAeIQNXd+w02pA6gGdqQJ5eoIQkA4tuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8DxbKzg8iJojobjAA--.43654S3;
+	Tue, 13 May 2025 15:21:04 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxjhvc8iJon1XNAA--.17820S2;
+	Tue, 13 May 2025 15:21:02 +0800 (CST)
+Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
+To: jarkko@kernel.org, Stefano Garzarella <sgarzare@redhat.com>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <20250506031947.11130-5-zhaoqunqin@loongson.cn>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <e5f868d2-295d-b1ab-904a-9e5c032037f0@loongson.cn>
+Date: Tue, 13 May 2025 15:20:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc6:b0:3d8:1b25:cc2 with SMTP id
- e9e14a558f8ab-3da7e1e34b0mr191437605ab.8.1747120803765; Tue, 13 May 2025
- 00:20:03 -0700 (PDT)
-Date: Tue, 13 May 2025 00:20:03 -0700
-In-Reply-To: <tencent_B0F292D9064049B26EFC6ECACC8227E4C606@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6822f2a3.050a0220.f2294.0120.GAE@google.com>
-Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
-From: syzbot <syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-drivers/media/usb/dvb-usb/cxusb.c:1668:13: error: invalid storage class for function 'cxusb_disconnect'
-drivers/media/usb/dvb-usb/cxusb.c:2389:27: error: initializer element is not constant
-drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: invalid storage class for function 'cxusb_driver_init'
-./include/linux/compiler.h:286:52: error: initializer element is not constant
-drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: invalid storage class for function 'cxusb_driver_exit'
-drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: initializer element is not constant
-drivers/media/usb/dvb-usb/cxusb.c:2400:1: error: expected declaration or statement at end of input
+In-Reply-To: <20250506031947.11130-5-zhaoqunqin@loongson.cn>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxjhvc8iJon1XNAA--.17820S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UJFyruFW3Gw15Kw1ktFc_yoW8ArykpF
+	WfAa1UCF45Ar1UCws8JrW5A3ya9r93Gr1Dua9Fy347GF1DA3s5G34Uurn7Xw18Ar4DGr1I
+	gFWkuF4093WqkFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 
 
-Tested on:
+Hi, Jarkko and Stefano
 
-commit:         e9565e23 Merge tag 'sched_ext-for-6.15-rc6-fixes' of g..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca17f2d2ba38f7a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=0dcc341ee61fc9e4032f
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1509e2f4580000
+ÔÚ 2025/5/6 ÉÏÎç11:19, Qunqin Zhao Ð´µÀ:
+> Loongson Security Engine supports random number generation, hash,
+> symmetric encryption and asymmetric encryption. Based on these
+> encryption functions, TPM2 have been implemented in the Loongson
+> Security Engine firmware. This driver is responsible for copying data
+> into the memory visible to the firmware and receiving data from the
+> firmware.
+>
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+> v9: "tpm_loongson_driver" --> "tpm_loongson"
+>      "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+>
+...
+> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+
+if (cmd_ret->data_len > count)
+         return -EIO;
+
+> +
+> +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> +
+> +	return cmd_ret->data_len;
+> +}
+> +
+> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> +
+if (count > tpm_engine->buffer_size)
+
+         return -E2BIG;
+
+> +	cmd->data_len = count;
+> +	memcpy(tpm_engine->data_buffer, buf, count);
+> +
+> +	return loongson_se_send_engine_cmd(tpm_engine);
+> +}
+
+Thanks for your comments,
+
+Qunqin.
 
