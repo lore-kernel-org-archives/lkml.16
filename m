@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B81012C0320
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:17:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B6372C033B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747156636; cv=none; b=EAGxH/xwY+WOsBalShqA6wFt5wodiYzAswmi+0AcDIv8FFBioi7QPmYFKhYoedv6zKRDXOtoRxC6tDr8GBElDeUSacoXiSS32dZoxy/dsZDYqfHXzRDbgXZHTLjdmPAHMJCtuACF7t6p7FdLlyNkq+CSA+0oZAug7KXhw8lXQ7g=
+	t=1747156640; cv=none; b=L/SKaVM6g7xIPZIE+zOTBsa/6hlr3y8z0ccZESHi/vAQDeIyDIzCE0XYfshDsiSeCrJkVkMuMLHsJLd6PYRXTfSjtnK8UnDuX3F1Uq4OlXnDiBqGkdVHmGcjeiYRkqrdkKD5ScNOiCJ/Umz1S3jTO+f/uQSwQDNKbCLeKtw6VYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747156636; c=relaxed/simple;
-	bh=4qutBq/6wWZ1+fMN+6uquQ91zPCBod52RytrKCNyu8U=;
+	s=arc-20240116; t=1747156640; c=relaxed/simple;
+	bh=kCfjAWwOcjkww2BzhBLdV4nKQV1zocz1R4YNppI587c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZekcSHxXbutljRKm2uLHcPnPHuRXUI+iNEGxla8WAxm4I/bL7u7sDsqvXP6Thy7genG2Ooje7ea96c+HSTCYETis+vnrOyUyTsBUlm3PiZ+JPzNJfy9sNdpros8hC9KwkHdzKU7N2moKbPcM6BP7kRNLmisz4lk7WQB6/Cpjld0=
+	 MIME-Version; b=Vp+GVQeukfPOL75YxnfD9QraQ+VlKm6BOavNFNrLN4XDCavkOHVyMih4bHFXX+UVrr7ET8cf+sidI8v0iHbS2n244Dud0OfuZTSA3KwcrdrCAjLjuoKmvt61c2Cf4Xp020djN35z0PgD9wjbefAtJ/nMwKB0SJJOcua+GY6K00M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D2AC2A31;
-	Tue, 13 May 2025 10:17:03 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED51C2A68;
+	Tue, 13 May 2025 10:17:06 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C23883F63F;
-	Tue, 13 May 2025 10:17:10 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C1C63F63F;
+	Tue, 13 May 2025 10:17:14 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -46,12 +46,11 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Babu Moger <babu.moger@amd.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v11 13/30] x86/resctrl: Split trace.h
-Date: Tue, 13 May 2025 17:15:30 +0000
-Message-Id: <20250513171547.15194-14-james.morse@arm.com>
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Subject: [PATCH v11 14/30] x86/resctrl: Add 'resctrl' to the title of the resctrl documentation
+Date: Tue, 13 May 2025 17:15:31 +0000
+Message-Id: <20250513171547.15194-15-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250513171547.15194-1-james.morse@arm.com>
 References: <20250513171547.15194-1-james.morse@arm.com>
@@ -63,156 +62,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-trace.h contains all the tracepoints. After the move to /fs/resctrl, some
-of these will be left behind. All the pseudo_lock tracepoints remain part
-of the architecture. The lone tracepoint in monitor.c moves to /fs/resctrl.
+The resctrl documentation is titled "User Interface for Resource Control
+feature".
 
-Split trace.h so that each C file includes a different trace header file.
-This means the trace header files are not modified when they are moved.
+Once the documentation follows the code in a move to the filesystem, this
+appears in the list of filesystems, but doesn't contain the name of the
+filesystem, making it hard to find.
 
+Add 'resctrl' to the title.
+
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 ---
- arch/x86/kernel/cpu/resctrl/Makefile          |  3 ++
- arch/x86/kernel/cpu/resctrl/monitor.c         |  4 ++-
- arch/x86/kernel/cpu/resctrl/monitor_trace.h   | 31 +++++++++++++++++++
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  2 +-
- .../resctrl/{trace.h => pseudo_lock_trace.h}  | 24 +++-----------
- 5 files changed, 42 insertions(+), 22 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/resctrl/monitor_trace.h
- rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+Changes since v9:
+ * Fixed typs in tags.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index 0c13b0befd8a..909be78ec6da 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -2,4 +2,7 @@
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
- obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
- obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
-+
-+# To allow define_trace.h's recursive include:
- CFLAGS_pseudo_lock.o = -I$(src)
-+CFLAGS_monitor.o = -I$(src)
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 4962ae4bc596..ac1cec61829c 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -26,7 +26,9 @@
- #include <asm/resctrl.h>
+Changes since v8:
+ * This patch is new.
+---
+ Documentation/arch/x86/resctrl.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+index 6768fc1fad16..c7949dd44f2f 100644
+--- a/Documentation/arch/x86/resctrl.rst
++++ b/Documentation/arch/x86/resctrl.rst
+@@ -1,9 +1,9 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. include:: <isonum.txt>
  
- #include "internal.h"
--#include "trace.h"
-+
-+#define CREATE_TRACE_POINTS
-+#include "monitor_trace.h"
+-===========================================
+-User Interface for Resource Control feature
+-===========================================
++=====================================================
++User Interface for Resource Control feature (resctrl)
++=====================================================
  
- /**
-  * struct rmid_entry - dirty tracking for all RMID.
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor_trace.h b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
-new file mode 100644
-index 000000000000..ade67daf42c2
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM resctrl
-+
-+#if !defined(_FS_RESCTRL_MONITOR_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _FS_RESCTRL_MONITOR_TRACE_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(mon_llc_occupancy_limbo,
-+	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
-+	    TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
-+	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
-+			     __field(u32, mon_hw_id)
-+			     __field(int, domain_id)
-+			     __field(u64, llc_occupancy_bytes)),
-+	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
-+			   __entry->mon_hw_id = mon_hw_id;
-+			   __entry->domain_id = domain_id;
-+			   __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
-+	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
-+		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
-+		      __entry->llc_occupancy_bytes)
-+	   );
-+
-+#endif /* _FS_RESCTRL_MONITOR_TRACE_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE monitor_trace
-+#include <trace/define_trace.h>
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 92ea1472bde9..f7bb586a83f9 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -30,7 +30,7 @@
- #include "internal.h"
- 
- #define CREATE_TRACE_POINTS
--#include "trace.h"
-+#include "pseudo_lock_trace.h"
- 
- /*
-  * The bits needed to disable hardware prefetching varies based on the
-diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
-similarity index 56%
-rename from arch/x86/kernel/cpu/resctrl/trace.h
-rename to arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
-index 2a506316b303..5a0fae61d3ee 100644
---- a/arch/x86/kernel/cpu/resctrl/trace.h
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock_trace.h
-@@ -2,8 +2,8 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM resctrl
- 
--#if !defined(_TRACE_RESCTRL_H) || defined(TRACE_HEADER_MULTI_READ)
--#define _TRACE_RESCTRL_H
-+#if !defined(_X86_RESCTRL_PSEUDO_LOCK_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _X86_RESCTRL_PSEUDO_LOCK_TRACE_H
- 
- #include <linux/tracepoint.h>
- 
-@@ -35,25 +35,9 @@ TRACE_EVENT(pseudo_lock_l3,
- 	    TP_printk("hits=%llu miss=%llu",
- 		      __entry->l3_hits, __entry->l3_miss));
- 
--TRACE_EVENT(mon_llc_occupancy_limbo,
--	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int domain_id, u64 llc_occupancy_bytes),
--	    TP_ARGS(ctrl_hw_id, mon_hw_id, domain_id, llc_occupancy_bytes),
--	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
--			     __field(u32, mon_hw_id)
--			     __field(int, domain_id)
--			     __field(u64, llc_occupancy_bytes)),
--	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
--			   __entry->mon_hw_id = mon_hw_id;
--			   __entry->domain_id = domain_id;
--			   __entry->llc_occupancy_bytes = llc_occupancy_bytes;),
--	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain_id=%d llc_occupancy_bytes=%llu",
--		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->domain_id,
--		      __entry->llc_occupancy_bytes)
--	   );
--
--#endif /* _TRACE_RESCTRL_H */
-+#endif /* _X86_RESCTRL_PSEUDO_LOCK_TRACE_H */
- 
- #undef TRACE_INCLUDE_PATH
- #define TRACE_INCLUDE_PATH .
--#define TRACE_INCLUDE_FILE trace
-+#define TRACE_INCLUDE_FILE pseudo_lock_trace
- #include <trace/define_trace.h>
+ :Copyright: |copy| 2016 Intel Corporation
+ :Authors: - Fenghua Yu <fenghua.yu@intel.com>
 -- 
 2.39.5
 
