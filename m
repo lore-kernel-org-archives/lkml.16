@@ -1,162 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1CD4C6C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A161E9B14
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747125053; cv=none; b=kYTIAJEMFTIlG1Wl8+x47J3BfUZNomQ7h3g3gsNLpu3Tfv6RhIjRaKZQT+ZfZqEf0IhNNAYvc17T5h27nFSexW3OtyYU0WlEwlM/osTAB6Ni9mIB/lvUAy7liEFO1zDYr8K6KOaMNrqPfWdi5fIb9PdVPOam4W95EOIeDR57qQw=
+	t=1747125085; cv=none; b=ClZmgo47O4mKThoDzas0qb4jtenXJ0nN1SloaOktaUMhaicK6Tplnrj7wuzTZzexUCCSAdlIv6GDV6MhfG+c5T2SQ5P3oSabzrTkFYmiavRuto+IOW63WGqiBVO/9dOxEec60XRHaE+4j1hFgdM2WXRjHhDMM0ryLelXlxXisbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747125053; c=relaxed/simple;
-	bh=lKCD5p78XTapKoayaaiCjdiJ6kTlhoeA/8korK3+dPI=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=ctchR5UjPql1nOugqo+pbxqJirXjbXORCNN5V1sTVV0DiaYG/9x4tMv3RKZsBXnDpWE3kjFZh7wXRK0xLVsELefOOyOhkUZyyq7N1/zlnhzuipIvaq6QiV7Usha315voOlTCr59E5ZpDpFbkrKsshtzwMQLyhYxo5/ovPpEwWk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bBQY1lgf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747125085; c=relaxed/simple;
+	bh=7xVkCv5/WtRaQADfBp06Txnipb0t0/dIJvMLX4GArzg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T5A7KlH+oKh21C9FN16vOwIiWWAehHY4m+8uzo9fgR6csPTCGm82ygDe9IAjTpzt8cd06Pf9w3NlgoexTgtsuTTZJTlxuqjqnVZ5MbLFJ4P79t73gqcsaOg0Dd0DiS8rS5w8cWws96JhVB/XmAjg1zUKKHaUZBwnQVeqgsuULoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3XOp6Sg; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBQY1lgf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747125050;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=djX5rz1QOMfyKf29sDrWfCxXgFvZbFqAZlnot23wFwY=;
-	b=bBQY1lgfuPd8MwWlI2EmVR9hL1DJWA8u+fIutdzPtXDhFFZWjvrc0Rk+E5dspoEmzmBJ+i
-	jN2voJwFKNGRL6mKC/wgn+PDBlkADkmsvZXgAg0WYAHhgtqKHS/kT4GwFYYpmMtoD8FvCY
-	ibilsme1HMjKWP8cpaXpJnATYxkSO80=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-0lT6ZzMhMJOpP4u8BCSH5A-1; Tue,
- 13 May 2025 04:30:48 -0400
-X-MC-Unique: 0lT6ZzMhMJOpP4u8BCSH5A-1
-X-Mimecast-MFC-AGG-ID: 0lT6ZzMhMJOpP4u8BCSH5A_1747125046
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A36019560AA;
-	Tue, 13 May 2025 08:30:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C864C1955EA0;
-	Tue, 13 May 2025 08:30:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250513-dividende-kursniveau-014674876b04@brauner>
-References: <20250513-dividende-kursniveau-014674876b04@brauner> <20250509-deckung-glitschig-8d27cb12f09f@brauner> <20250505-erproben-zeltlager-4c16f07b96ae@brauner> <433928.1745944651@warthog.procyon.org.uk> <1209711.1746527190@warthog.procyon.org.uk> <2086612.1747054957@warthog.procyon.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-    Etienne Champetier <champetier.etienne@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jeffrey Altman <jaltman@auristor.com>,
-    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
-    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
-    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3XOp6Sg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747125084; x=1778661084;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=7xVkCv5/WtRaQADfBp06Txnipb0t0/dIJvMLX4GArzg=;
+  b=U3XOp6Sgb6N7S9/7oOHkUqzasWbV0R0ldM0+xT7UjNimughs6QO+P59V
+   +XH2CIXQAXR2GRQVvzsKpMm+Skv6Q5hpIebnlTRHa8AilBOvYBKWq2kQZ
+   uFCiN7nnON/VfEz93VRZpaeQ0BJ2j7OI6skrulqvPGGELVKXuYMnDPcGO
+   8td6aQZx8uqwHr2UG9CUtFx+Pf+Zg8izUgTU5aNh0QoDMpUxhnI/z4rzv
+   VrcLvQaIxQY30P8qgXUwDKhz9Knw5xE9VxnxUNPs4dQDJMfE7fcHBchfq
+   r/qvf+MfNsdE9ZVoFloXniWNNM42Qgz6LFmBwLLKF/wN83dEHG3k3swlc
+   A==;
+X-CSE-ConnectionGUID: rH+HwjMgQmODpUIhu7Ic1g==
+X-CSE-MsgGUID: 1mu1GGXbRAC4z5F9zEmP3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48854689"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="48854689"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 01:31:23 -0700
+X-CSE-ConnectionGUID: RORnQEJ9Q0SC/t43H+X+FA==
+X-CSE-MsgGUID: E/YNyvopT/6G2+YQY2Ub0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="137497947"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.175])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 01:31:19 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: feijuan.li@samsung.com, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+ <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Cc: Hongfei Tang <hongfei.tang@samsung.com>, Minggui Yan
+ <minggui.yan@samsung.com>, Qilin Wang <qilin.wang@samsung.com>
+Subject: Re: [PATCH v2] drm/edid: fixed the bug that hdr metadata was not
+ cleared
+In-Reply-To: <20250513011145epcms5p84bf94d5c03933fd61f4abf1fadab5016@epcms5p8>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CGME20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p8>
+ <20250513011145epcms5p84bf94d5c03933fd61f4abf1fadab5016@epcms5p8>
+Date: Tue, 13 May 2025 11:31:16 +0300
+Message-ID: <87sel8j4iz.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2164800.1747125039.1@warthog.procyon.org.uk>
-Date: Tue, 13 May 2025 09:30:39 +0100
-Message-ID: <2164801.1747125039@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Christian Brauner <brauner@kernel.org> wrote:
+On Tue, 13 May 2025, Feijuan Li <feijuan.li@samsung.com> wrote:
+> Dear maintainer:
+>
+> I have changed the patch as your suggestion.
+> v1->v2:make a new function for hdr info reset.
+>
+>
+> From: "feijuan.li" <feijuan.li@samsung.com>
+> Date: Fri, 18 Apr 2025 14:56:49 +0000
+> Subject: [PATCH v2] drm/edid: fixed the bug that hdr metadata was not res=
+et
+>
+> When DP connected to a device with HDR capability,
+> the hdr structure was filled.Then connected to another
+> sink device without hdr capability, but the hdr info
+> still exist.
+>
+> Signed-off-by: feijuan.li <feijuan.li@samsung.com>
+> ---
+> =C2=A0drivers/gpu/drm/drm_edid.c 6 ++++++
+> =C2=A01 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 13bc4c290b17..cd0e4148f6b0 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -6576,6 +6576,11 @@ static void drm_update_mso(struct drm_connector *c=
+onnector,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0displayid_iter_end(&iter);
+> =C2=A0}
+> =C2=A0
+> +static void drm_reset_hdr_sink_metadata(struct drm_connector *connector)
+> +{
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 memset(&connector->hdr_sink_metadata, 0, siz=
+eof(connector->hdr_sink_metadata));
 
-> There's a few other places where we compare vfsuids:
-> 
-> * may_delete()
->   -> check_sticky()
->      -> __check_sticky()
-> 
-> * may_follow_link()
-> 
-> * may_linkat()
-> 
-> * fsuidgid_has_mapping()
-> 
-> Anyone of those need special treatment on AFS as well?
+Please just put this memset inside drm_reset_display_info() right after:
 
-That's a good question.  I think it might be better to switch back to the v1
-patch - which gives me two separate ops and provide a couple of vfs wrappers
-for them and use them more widely.
+	memset(&info->hdmi, 0, sizeof(info->hdmi));
 
-So, perhaps:
+I have local patches to move hdr_sink_metadata as part of display info
+anyway. Adding an extra function here is a bit much.
 
-	vfs_have_same_owner(inode1, inode2)
+There's also something wrong with the formatting here. Please use git
+send-email.
 
-which indicates if the two inodes have the same ownership and:
+BR,
+Jani.
 
-	vfs_is_owned_by_me(inode)
+> +}
+> +
+> =C2=A0/* A connector has no EDID information, so we've got no EDID to com=
+pute quirks from. Reset
+> =C2=A0 * all of the values which would have been set from EDID
+> =C2=A0 */
+> @@ -6651,6 +6656,7 @@ static void update_display_info(struct drm_connecto=
+r *connector,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0struct drm_display_info *info =3D &conn=
+ector->display_info;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0const struct edid *edid;
+> =C2=A0
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0 drm_reset_hdr_sink_metadata(connector);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0drm_reset_display_info(connector);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clear_eld(connector);
+> =C2=A0
+> --=C2=A0
+> 2.25.1
+>
+>
 
-which compares the inode's ownership to current_fsuid() by default.
-
-The following places need to be considered for being changed:
-
- (*) chown_ok()
- (*) chgrp_ok()
-
-     Should call vfs_is_owned_by_me().  Possibly these need to defer all their
-     checks to the network filesystem as the interpretation of the target
-     UID/GID depends on the netfs.
-
- (*) do_coredump()
-
-     Should probably call vfs_is_owned_by_me() to check that the file created
-     is owned by the caller - but the check that's there might be sufficient.
-
- (*) inode_owner_or_capable()
-
-     Should call vfs_is_owned_by_me().  I'm not sure whether the namespace
-     mapping makes sense in such a case, but it probably could be used.
-
- (*) vfs_setlease()
-
-     Should call vfs_is_owned_by_me().  Actually, it should query if leasing
-     is permitted.
-
-     Also, setting locks could perhaps do with a permission call to the
-     filesystem driver as AFS, for example, has a lock permission bit in the
-     ACL, but since the AFS server checks that when the RPC call is made, it's
-     probably unnecessary.
-
- (*) acl_permission_check()
- (*) posix_acl_permission()
-
-     UIDs are part of these ACLs, so no change required.  AFS implements its
-     own ACLs and evaluates them in ->permission() and on the server.
-
- (*) may_follow_link()
-
-     Should call vfs_is_owned_by_me() and also vfs_have_same_owner() on the
-     the link and its parent dir.  The latter only applies on world-writable
-     sticky dirs.
-
- (*) may_create_in_sticky()
-
-     The initial subject of this patch.  Should call vfs_is_owned_by_me() and
-     also vfs_have_same_owner() both.
-
- (*) __check_sticky()
-
-     Should call vfs_is_owned_by_me() on both the dir and the inode.
-
- (*) may_dedupe_file()
-
-     Should call vfs_is_owned_by_me().
-
- (*) IMA policy ops.
-
-     No idea.
-
-David
-
+--=20
+Jani Nikula, Intel
