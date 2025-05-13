@@ -1,103 +1,135 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD3D242936;
-	Tue, 13 May 2025 10:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF60224395C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131017; cv=none; b=rnTHR9GKnpMIByo7olYIBQgpOgMurtCcR2oZ47hEqkzZRk9GTMm1LFZ5OW4O0H9tfYTBtRmyRV8Pa3orEP5H6WoPnvYTW7GWar45QDAd+QPnJRN3C9Y2f8TPaDardphQddbaPM3fF+FbVyRe7KxVIBSsafqvmtue80Eku1GFNCM=
+	t=1747131039; cv=none; b=XcO/KZlapis8m9bucRukZu5ObN8rThpNqIKIPvp0yPK9wUFUin488BxiUolk6mus0aqEvJNoyqYFA0Vhn0feuVZYnRZgoIDM/NrIG9jnITxyQ3z8ei8QaixzZLAt7QcTXUJMAx0lFsfb07OMAlApDsgbjC00pznrh7Di2VjtGCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131017; c=relaxed/simple;
-	bh=odXP4jacTJrgnDY+LG3HYYqyaDF6mb6R1oBRuN2esec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dqFA5NroknW2EWLa1dhX6J79e+xpM/ctH7RkWW0LsPHI1JBj5bgvz9uhsgswQHjjcZOptOMqtZRw5hwGAfb8z89x0B/9VB+jyglgfuT6axAs5+gmqTxeg62AHsYFgvll+uLQ/JVh9XM16SsngPRjKVfrAdQOf1bSqrS4DLgCGB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-8783b2cbce3so1365225241.3;
-        Tue, 13 May 2025 03:10:14 -0700 (PDT)
+	s=arc-20240116; t=1747131039; c=relaxed/simple;
+	bh=S2iTrSKyId8Z4Fz+KFg97dcG4QI+SgeyYQ5rhg6W4Fk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rEqzJKQlCTPlye6s8jBXxASBLeVNiPcrrDxhizYxhmH+avh/sTds0QEPZXGtACMyWDq6FpfHyitFAGKlKGmh7ujWiWocn+fsTzJy6vwJJDwPviYqTBcCd7C1fomt0PYG26mrfe8qdGgUpoOOLBy2M3qP4ojtfRbzq7qTQdqVGWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i2EGmgYn; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2EGmgYn"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-440668acbf3so2694585e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:10:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747131036; x=1747735836; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eT4RifiabCn3jNXGZ/1SUNp8XFTerXnwE9dw2ciCKO8=;
+        b=i2EGmgYnTv3attlg4uA7zdfFhOXHjtJAJ8XYVdBc00hgLOdaXdoI2053lvr+GwV+Us
+         ynCXe/xIuGqFesVdcgtrgC+/gyg5Ztu1T3GJGmI8wrzv2DHU9MyTR32J5TnFaqvH//Ae
+         giHJhRCGu5ZvI1nbi/KyFDawgsZyr4CdRjAU6s6tuXWzMtYPr1HJNwsz23X7icbwNdgH
+         piPTEBP4FuZdWUd4la3Jy98AZuQJmZ2ypLSV0e5lEikMZsI/+6+ph7tRU4f0kV6kYHm8
+         q3X4+xfZae6wlhWTc4Xjon70R7HF6t+zEfqP1mTdobXqFO+HqnrJ3afpzzu9t0JP4d5h
+         Xd9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747131013; x=1747735813;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747131036; x=1747735836;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tEHsGcgeFxHmqxM+gq4Bvi2pObgGCXu9Z6FvaGC39Dk=;
-        b=jTygksAEPrzQx/YCJ/H9qIlRrRtnR6m1LoKQ+AGheeRfDI7SaUUVihEjuTT+5aeTps
-         ModP8JToBfD1U29wZeDxgDB/pwNC3ecLcrk0HyIn1W+DW3cE2+rKhUo33iSZ0lFOI0+I
-         9YUm0lc8/0PJkDgXYx1DIsh/0N+B7mGX2r2FMPZMLRmuTeJ3gw/cqfqWdA/W4YV4pxwk
-         6rDteTbx3t7qBopdPWshU07FXk2DkiD1Ty673eyfZNBn3XQ8Cb/jA7/w9Fz4muVtm60E
-         4cMnhOSVw9AS9glddmTWURT0DzqzME0ckDOaFH3P1ubsGmygd+V9t//aVZ93VJRZmU31
-         2ZZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOxVom+EY3YqfLeQlv6VxIYiff/5J5PwAYyQI6pVSc0DQGEFnVF1P7QHj1lbuG0GMTCpwKmqceyc+8nWnZ@vger.kernel.org, AJvYcCWcsLZFC8VFHiABWs5qOZ+/QvXHbn+m0NNUiWUfXQ0nSu0NNUcfB0LeO/kCfo67YVm99aUDpnTJDe8=@vger.kernel.org, AJvYcCXlLt+xGkvuZYxR7wkGY83+v17gXr0McplqhWi6+b2k7LN5ScIPzK69IQ2ywe/9rCOS1levC3rNru46RVk4lkCO5Yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhytHkLfu5yJx6HMF2OGs8d74JGy5z0qaDXagDRV3ZWZtp5yBq
-	UnzFR0GOXIcBciayXrurTPJKmbGVS18Vw3VnOC58o1c9ulD+ex742esTPIWt
-X-Gm-Gg: ASbGncu5H2vmjkrWRWjF0in9P0Dr9tq9cKrXRr24GDmam8f2NE7rO7fZpm/Bz3r8OFK
-	FN0uFAQOFpZQFQOzBgV9icpJwpcrBugx2SlYAoALtnMopokydUSvfQ8bld3/mTIzU8LNlBQgHQH
-	rz2eSVggOYxEFSWdKRsZlD3FQ0almKpS0kkJ6mFlkzb+DgNOW5U7q56jD19fhse9s0jxVc5sJzh
-	lyPj0rR7XdTIC8tpvsHB7dNN/ecYxoO+AUvsVpKW9T08iLF2oYOS5nXi5KU0TJDvgdC4Lb3cwtQ
-	/GEM3g93GCmkDEomYQQRvSomZAK6Renwjhtm0F9hvctVrcYYUaJAJ52/XMAAW8tjcKic8sqd55g
-	3ezUKAu7Zfq3EVV8cART7Cae9
-X-Google-Smtp-Source: AGHT+IHJv1mh4oudJFanXJU1gxkDANo2RFbl2+zEVadvk4HeoSMT37LVvSWOChbr2HwzIDWnEv8o6Q==
-X-Received: by 2002:a05:6102:4bc4:b0:4bb:eb4a:f9ef with SMTP id ada2fe7eead31-4deed30e605mr12767743137.4.1747131013548;
-        Tue, 13 May 2025 03:10:13 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f61701d1sm6470534241.11.2025.05.13.03.10.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 03:10:13 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1632716241.2;
-        Tue, 13 May 2025 03:10:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgVaUBg1in+BVwitz6I37cxu5QoBNz31vN8miwtcniWZF3KWGo1ILPiTKWEydoxnDW9YU4qmzPDgT0f5oJET9Nhnk=@vger.kernel.org, AJvYcCWGW9VP6GDts0JVeOMl0xWAau70wze5VIE7b0AA90bb1xjSUyU+BrOOcMFMNL/lhe1+rKhygCACYWJ2UW7B@vger.kernel.org, AJvYcCXt4t04U+v84COjeWR8wsEqoWa5mduPm8698z+SVdcxXsYQ9wopra6MJelh2c3BVXRtx0vmbTX6+Ds=@vger.kernel.org
-X-Received: by 2002:a05:6102:150e:b0:4c3:6546:5456 with SMTP id
- ada2fe7eead31-4deed30cdb5mr14839665137.3.1747131013029; Tue, 13 May 2025
- 03:10:13 -0700 (PDT)
+        bh=eT4RifiabCn3jNXGZ/1SUNp8XFTerXnwE9dw2ciCKO8=;
+        b=lKkmlJkOQ6Df12UoSCZ54lgKbKAYa1qhJzP6KpSYRMrCNOQd1T/ojaI8h9W4byj1Sr
+         D6dertPUBYhCgks/t5/0CIHWf9l/kS362LqmZJS6gAwYU7MKYPIjZxJoj0kCZTmN9xKw
+         1j635YID7X5DS3zigUfyjQMidUUMSJRenJrfpwZ+T2RUyLfWmCZuSTtMdPrMmYe4dqrW
+         zXekkyCzQKBzBuBYdUFIlyuXREZnfhusqrOnTJlIYhpP3PqMmjleujjfjNG7BuASG1DH
+         cY7zMclcA3GIvypk3OJgdLFORpbDCTMnkVhHgfTNmp+kC1kLowCDb/mjipCPcomZQlyn
+         f0Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWZgQQ5Tlic+yRqkjcTspStz8q5/gDvP+CDdK7G2okVqkC6kS6jhcANVTySyfczq7bfiRhkaUc2ndzcP1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznlDzPfpO9N+uoJ7bpZcqw7aGcSj3HfRcA2wLyaB3Okre25yzF
+	Evlg3U+Lfmzf/SeabyD3M0qr8CkNXQQH04slxZXbeopp/Jz/ac9vZ4XiaG8S+32nsZPoDCP+BnI
+	Dt1Mvdw==
+X-Gm-Gg: ASbGnctZuThrKFyKwm03lSi4QnS7HSBv1un/8RLSIpY8R01xBUDX92dfK57bYqjL7pc
+	Hu6RimhoJBogWUznjKUdRAEjCTGHhF40BrJ0WGvc1v6kccWdEOcUpCMqWrZ3we20M2hoQ7u/Dlc
+	ltt0rQHBIKBFl3KqHjyxrJaX3OgmTbyRKfBHWbQZ82dPVpVvky9VPpm261xS3ieRCVh0wPkwnzM
+	2xd1C25n0zP0yJndJJ7KJt7vFkkOITAJbLUNqlh2xIvCqU2b2GK5WjBHE38TM8+LRsDMJNuU6+X
+	ulGCY2uwlpkIQThnqM5NEY4+rJ0xKz77it4v/w0Z/Vnm9/ewuWDcAgRcg8dnAdy7CfrKdkGQqtJ
+	zToYCQmwnmf8AfRj4OthJdvVQDcw4aWYULOcIg3c=
+X-Google-Smtp-Source: AGHT+IEMONG7o+2qqLec3J40u8cxE5Hikn1gleQY4dduRgG1LUtg8CN8da8I9rkzzSsfliL822Q/Vw==
+X-Received: by 2002:a05:600c:4f43:b0:439:8294:2115 with SMTP id 5b1f17b1804b1-442d6de79b0mr53581305e9.8.1747131036030;
+        Tue, 13 May 2025 03:10:36 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67df574sm159683635e9.11.2025.05.13.03.10.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:10:35 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	soc@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL 1/4 fixes] samsung: drivers: fixes for v6.15
+Date: Tue, 13 May 2025 12:10:22 +0200
+Message-ID: <20250513101023.21552-5-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com> <20250429081956.3804621-6-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250429081956.3804621-6-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 May 2025 12:10:00 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVY7dphF7DkC28of=5TQpRt5_vynkL1GssRopj9Yzh_hQ@mail.gmail.com>
-X-Gm-Features: AX0GCFsyCgBliMzI4nUjy751X_YHJrFNp-gw04bxtnT-KEGMKnJWXLDv1kgjZbg
-Message-ID: <CAMuHMdVY7dphF7DkC28of=5TQpRt5_vynkL1GssRopj9Yzh_hQ@mail.gmail.com>
-Subject: Re: [PATCH v8 05/11] clk: renesas: Pass sub struct of cpg_mssr_priv
- to cpg_clk_register
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1359; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=S2iTrSKyId8Z4Fz+KFg97dcG4QI+SgeyYQ5rhg6W4Fk=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoIxqPmFvw4YlLZILw8ztH+LBScalD7xKqIX+Ch
+ i/m/UIVK92JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCMajwAKCRDBN2bmhouD
+ 1/eqD/9MbCSa5fsTfL4M6Msdl6XVHg9QIaMp8B66liyP+bBooJn55w6uXhxdlwHF9ySGKC641F8
+ 0Q1O0VRsta3YWmVqQswD9tO22ySzkEyzl0q4aKLWMuasrAHJcQcVIdgOQC0yNNJip17k1LvXj3Z
+ UHxJULw7Td0SC9sdIVsYgteRyMVemT8dZK5zpNGPLwTN5oKFrDtiJgyDI24sFknyq745ownKXvX
+ WZ2iukaUZ8tQIe2JiOy63Sc4OHe3Aqca4auvoJtF3k3o3+u0kO0wN4DeyNubrYXKjm2zgCTLP6F
+ l0CyTXp6qLXSXc8FhOwM0TLdrJvfyYDSGsqI1FnXyGJ+xlZOKkZQ6WOKILmPVA4DqSbvIpPpXFZ
+ PDq9RJBQt9ryi5c2neECV2UWcAEhvfuWf/A1M7g6MyKofT8qf9bWbAyCBDV1qlqWRm1HbWQmOF/
+ IeEgAn4K3cl0l4xRZ9FuxhRxTk9peYXqenF/s+o4vnGHsewyHM8EAKzRbWejkywbwTHsE2Wj7s5
+ qUHiYm79dBT3JNWbYJA3c71y65aW96Uz7nH/T33/sKRbmHDAnaFxvwzcOUl/y1ZDntKGKW+Wl6E
+ E1u3eXEFPjrr1v+0gRTvgG1vGf8uFKkN+fZM9uBSQezJZCkwjVxr+Gv3ly/VRKhcIvnUjtLBrBK A/ZSg49r/gysgUA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> In a subsequent patch, the registration callback will need more parameters
-> from cpg_mssr_priv (like another base address with clock controllers
-> with double register block, and also, notifiers and rmw_lock).
-> Instead of adding more parameters, move the needed parameters to a public
-> sub-struct.
-> Instead moving clks to this structure, which would have implied to add
-> an allocation (and cleanup) for it, keep the way the allocation is done
-> and just have a copy of the pointer in the public structure.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> ---
-> Changes v7->v8:
->  - moved struct cpg_mssr_pub pub to the beginning of struct cpg_mssr_priv
->  - make *core & *info fit on the same line
->  - order of doc tags
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Please pull for current cycle. Both commits fix issues introduced in this merge
+window.
 
-Gr{oetje,eeting}s,
+Best regards,
+Krzysztof
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-fixes-6.15
+
+for you to fetch changes up to dd303e021996a0e43963d852af8a3277e6f5ed88:
+
+  soc: samsung: usi: prevent wrong bits inversion during unconfiguring (2025-04-14 08:51:18 +0200)
+
+----------------------------------------------------------------
+Samsung SoC driver fixes for v6.15
+
+1. Exynos ACPM driver (used on Google GS101): Fix timeout due to missing
+   responses from the firmware part.
+
+2. Samsung USI (serial engines) driver: Correct ineffective
+   unconfiguring of the interface during probe removal.
+
+----------------------------------------------------------------
+Ivaylo Ivanov (1):
+      soc: samsung: usi: prevent wrong bits inversion during unconfiguring
+
+Tudor Ambarus (1):
+      firmware: exynos-acpm: check saved RX before bailing out on empty RX queue
+
+ drivers/firmware/samsung/exynos-acpm.c | 44 +++++++++++++++++++++++-----------
+ drivers/soc/samsung/exynos-usi.c       |  2 +-
+ 2 files changed, 31 insertions(+), 15 deletions(-)
