@@ -1,72 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DB31FBC90;
-	Tue, 13 May 2025 21:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2D03596B;
+	Tue, 13 May 2025 21:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172455; cv=none; b=UryBc+2oWkEYFaGArA499A5xJGrV2VnEj6O5UBidnbrBT4fG+tk5pUgDtxpSi72UYZqhiZ5cYze2MmQSpx63cWclg2Gx+hyk0wCK76baAT/rpXUa3CGSFXzdeEm70ply5OZsUVAb7gyqbjcS6j8MRmgn+sG9UyiM5ys/kF8xLJw=
+	t=1747172516; cv=none; b=s4/vw/7onso99TrFx99YM6FQb/Ex6Is58Cx48wd/wfm+mS3XlvqwCT4VA5laF6enti+/ozWmpLDdMCxDuI12FrmqJVu88ShHmxJMIeILJiPBcSC/1X7S/SEqdicFTFYaAsjMUs9zqKWwNNadk3uMJ1KZwKU+WG0V0sFv27Uetrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172455; c=relaxed/simple;
-	bh=yXb8txYJm6mJkCI6iPW8AnmDF85fxh1wy2Mr6nQRybo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWGSWUAgWL91WomRx3NY9fWZw3d1pvmW/APMjAkmbEvhVXC59/Pf5jG/SPmJ83/LL1FKRr59eLdSCrETal6sizMFD6es0pqg2UUboHUUYELg8bz9UGD6UBoUP2I8f0bLWqPcnj+4d3jHj3ZI7xVC/4PhgC3/0YPXv3vZ3wnc3kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbgPHC7Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747172516; c=relaxed/simple;
+	bh=8PWt1duAkSY7eSn4u0WA9MHoPcUK8ogpDcpia6Mf+yA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OhqTcD+i3e6oGNxLG3YaQ7gnDRtSlk1a3aScZjWtahM9zt1mvorxLWtnIbJIPphhTv8r0xyh6jVxnoYJTEUrvrmqSSsfmM+20KarPVnOS4twMBVSaO7REqxyCCJZK6H3NlpXMY0JO9WzyZw9Ue1xtsq/LswM6oOLA+XORWwbGXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYfUUcKS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbgPHC7Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EF6C4CEEB;
-	Tue, 13 May 2025 21:40:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYfUUcKS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABD4C4CEE4;
+	Tue, 13 May 2025 21:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747172454;
-	bh=yXb8txYJm6mJkCI6iPW8AnmDF85fxh1wy2Mr6nQRybo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZbgPHC7YRjvDkaDvE7bgKN2T5jPjFWOqcEPNbM2FLgP9hv5E3XIsYjBm9abdCgahh
-	 rGWxBN2ZU+odXoUSHkZ88MiXwPYfuwdN0YO4gM6JGcakEafRHth5BZQTjAK7qHdXN9
-	 knhwE20Ax958MV6FLbHT4ri++40W1LmyvO92osDj4l4zk8CqdZK5C4Ht9HdzlmFeMf
-	 vBwMpIrA0byckfGHBx/l1DJ4sDh3c13J15m0r6dQnwVgFxTsOFu+9c4lu+CpdgIzow
-	 lUC9vQMEsozZZEoGjrOkfcf/KTp4lmJD1Amc476Htrjr7GIg4DatxP1mdADrLw9Y01
-	 FgqcPzP+2BlMg==
-Date: Tue, 13 May 2025 14:40:51 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, mingo@kernel.com, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, jikos@kernel.org, 
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] sched,livepatch: Untangle cond_resched() and
- live-patching
-Message-ID: <kdg7dlwiec53dqtf37qx4whsra6ahplgxpdc7zg6mpr5eshkvp@wmct3blis2js>
-References: <20250509113659.wkP_HJ5z@linutronix.de>
+	s=k20201202; t=1747172515;
+	bh=8PWt1duAkSY7eSn4u0WA9MHoPcUK8ogpDcpia6Mf+yA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QYfUUcKS7ZRph5ZQSlsbksWFlsHZrbYQU91a1GdrsTJKsGnBwGd9bEjQ0JzxQGZBG
+	 zRPMX5cd389R1pA+9RiAx7VsRVe0R8Vj3zm35epQASw2usv2xC1DU9h6bVGKN6Z/VR
+	 PKdJ+E/bWYHTXpICV/pSE38natav9ZT3UPQaMO/HrBw/2kG831go1wIrheYPldhChd
+	 QHcoDk3XFl3hFlrXxSniyVxZZVBqqlFLTsfzKkuC712ILn6HYEImlsRVr9oSRprxOF
+	 rj7P/j44FWiRYyEq3MN5wnMEc+YMSKktXHFR/Wqhti6xnyIYmHFahyz036ZTbXVHg7
+	 kCAXqNsJ6U2Kg==
+Date: Tue, 13 May 2025 14:41:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+ linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Sagi Grimberg
+ <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH net-next 08/10] net: add
+ skb_copy_and_crc32c_datagram_iter()
+Message-ID: <20250513144154.49f8faaa@kernel.org>
+In-Reply-To: <20250511004110.145171-9-ebiggers@kernel.org>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+	<20250511004110.145171-9-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250509113659.wkP_HJ5z@linutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 09, 2025 at 01:36:59PM +0200, Sebastian Andrzej Siewior wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> With the goal of deprecating / removing VOLUNTARY preempt, live-patch
-> needs to stop relying on cond_resched() to make forward progress.
-> 
-> Instead, rely on schedule() with TASK_FREEZABLE set. Just like
-> live-patching, the freezer needs to be able to stop tasks in a safe /
-> known state.
-> 
-> Compile tested only.
-> 
-> [bigeasy: use likely() in __klp_sched_try_switch() and update comments]
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Sat, 10 May 2025 17:41:08 -0700 Eric Biggers wrote:
+> +/**
+> + *	skb_copy_and_crc32c_datagram_iter - Copy datagram to an iovec iterator
+> + *		and update a CRC32C value.
+> + *	@skb: buffer to copy
+> + *	@offset: offset in the buffer to start copying from
+> + *	@to: iovec iterator to copy to
+> + *	@len: amount of data to copy from buffer to iovec
+> + *	@crcp: pointer to CRC32C value to update
+> + */
 
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+When you repost please toss a Return: statement here.
+kernel-doc -Wall is complaining
 
--- 
-Josh
+> +int skb_copy_and_crc32c_datagram_iter(const struct sk_buff *skb, int offset,
+> +				      struct iov_iter *to, int len, u32 *crcp)
