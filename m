@@ -1,172 +1,80 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B46125393D;
-	Tue, 13 May 2025 10:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC9725393E;
+	Tue, 13 May 2025 10:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131272; cv=none; b=Ie3TDpRoLqAlCxxIsKpDWWQ8vwAvIdYLg1n3JhFR9oV5pb2XoWhKhZNKMkB91V6EePFORfoDHIGc7g0pIyg5ba1UFKGXMIm98QDF6oY3fjLBXCa6FZLfCoIKwKkSbl6s3o7PLWK+Tn2vQMRfa9FYHRpW5RCWfU+iJzdlE1KlUQg=
+	t=1747131281; cv=none; b=X/Q6hStIWu2vikSWx79byvCBl6XC+pBH0KQyXXdEi5VxYOW9MkJ9CT/McKVtci2BRD/E8tLAR67noJSW8k2YZCVzbmS7iAUqgSJP2Y/SmJzozxMgVolIFLAC9g0QMzkG24AleOxiCO5Z4T5BsLE4aJ2g74NuXHwUwTP3Sv0izeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131272; c=relaxed/simple;
-	bh=OJ5FIOcpAaEVIMWQCdFSHi7h7oeCiUO0xWA9T+9LplE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RE48ZNof8otdqo5FSTcl+iMTkbvEopVshFr/3sOWTbTu48msIMrskW0uJtzRNH/wXflFIwJiUdtygo5OwUY7VG9i73Hzvbx8dSgfQYY2c4xtREJ8vWCMsxqGmSSI+tqsLThfnoMOqbFMFWBgSmVnE9poG6B7l6YYEDjggZekQ7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
-X-QQ-mid: zesmtpsz3t1747131226td9801c64
-X-QQ-Originating-IP: jCZAM53cAG3vpG/2hV17YiSk1mUo2IDzWNaEy81zy9Q=
-Received: from localhost.localdomain ( [114.212.81.69])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 13 May 2025 18:13:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10312789656265926078
-EX-QQ-RecipientCnt: 17
-From: Xizhe Yin <xizheyin@smail.nju.edu.cn>
-To: linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	xizheyin <xizheyin@smail.nju.edu.cn>
-Subject: [PATCH] rust: rename expanded Rust file extension from .rsi to .expanded.rs
-Date: Tue, 13 May 2025 18:11:06 +0800
-Message-ID: <9AE2FD1B8A570866+20250513101106.28584-1-xizheyin@smail.nju.edu.cn>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747131281; c=relaxed/simple;
+	bh=TudxigjBRZmDuW3JVuS0UdXgbmBBti/+Bcm5HABZycc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hXR6x5V7WwM33a0MJOvdjDPp7hAC0pvCH8HoGXPcheCX0rDrAxrI5KiVcuJGQYapZq/cVh/iSj7rdzhlF5K+KCI/CoSV2gSnmZoj+UBV0bud6Vllw9PWv1eCSuTa2dzaO9h216EmFv8hRkm+kw1NQjKDn8ksNUSPLuUfJNOgmmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gO9Odf6y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gO9Odf6y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A53C4CEE4;
+	Tue, 13 May 2025 10:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747131280;
+	bh=TudxigjBRZmDuW3JVuS0UdXgbmBBti/+Bcm5HABZycc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gO9Odf6yxgKQ/tjlCyh718juS1TDEPZcF+wxJN+UoX2qvYyLv8aw+tAO+keDPD+i1
+	 IT03ndNxQJAga5CuP135TsbcLg59TiGomAO/x9C2N6LKAd9YqVC6qE00olsjRw3hCx
+	 WXWuat4XwWf2z/1JE75K9uADTwx4eLKypgSmhme5ihpDSAUnFLC/4pgVEc0m2lW4y7
+	 58BF5P4XzyGI4VLqc2GZcsJ8NliIeOMYsDPOZmQkYZlQ1HkINCT9x+Xi+sTJGSVDoF
+	 XPmrqJviP7NQA8mzw6HYC3+y0IOz6rSNaovSt+T8xdHz0ATUsQrpzPDYDXAC4G4zwH
+	 wgoQ/7utBR43g==
+From: Lee Jones <lee@kernel.org>
+To: daniel.lezcano@linaro.org, lee@kernel.org, alexandre.torgue@foss.st.com, 
+ tglx@linutronix.de, Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ jic23@kernel.org, robh@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
+ devicetree@vger.kernel.org, wbg@kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ olivier.moysan@foss.st.com
+In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+Subject: Re: (subset) [PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM,
+ IIO, counter, clocksource
+Message-Id: <174713127684.4157861.15977616973399970511.b4-ty@kernel.org>
+Date: Tue, 13 May 2025 11:14:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OccmtviHNKX2I3Js/cjybR17nTMAqvWiuY3pXrUbNdi9gb79GaHieZt6
-	AZoLRKgYHcru6S/4/Ghr+I1/oXU16568Zjl8WSeUwaQRU3lnOeT6J3FGXNxctu7/vRapQC4
-	V4aiOV9obIEs4FCkI4pxLVq0i9mAraeoNO/YS/huD+JvdRCobYbCjVjxyDqKKBMz4ldHsCs
-	fA5dAr7xud2FsaFmOMVAq2sFFYcGeQP5osUi2YnfoNfNy5giwUYsy86c2WM6fjC018UVStc
-	Luw0o4radhiFK3XbOtbYaeln2cHvi+aVr32MVRfKLBZZO1bZ5Pkmylj5L6ucNMOwNDfNGeD
-	eHoBZM7XkEPb2ku5XW+2l3gncqiMMtjU/IB81E9SvdoKEQZAfKba707Sj+I1gObzUWlSHtM
-	mW+0NccANLbHSO9g8793z+kIrMxKfQoWNMjusW82mWJ5c5szSobfwoqJlWJBZc4mPfmZ+vk
-	WAf3Qd5dOj8naSyp8Rk/aUtja1ETH0adR5UAJ2xN9mZ3gKDQC2Nn/AtrTExFBc42RrgUHL6
-	MOCUy0To2+ftuiSAsT7LhuAYK3lx0xz6lyUP8WAs3JRYfzNQcURcIp0jxCLSB96g4krSzcJ
-	KdNhqvSMD64zzHoowjItpGPTGnHad8A1t4UyfIuOslX4W6r8rOH7aBAXWsJsHURiwvoTDEK
-	9LOor3rRjqeVUFq5T+ni0Wf+iUuQPhxuAAe6VP4CBwPZ4H7EI1whXFXbzt7es/W87geapW/
-	OMntahrKkcHCztKjjVgNonvuhlXO884SRgsK5RQB2RflBXA2b6FwvInkPp1toXSR3QZE5YA
-	S4hBnjjqI3Lw8tjviGLE3cdabsjtmejDnwknyhfG9fx8svGLadebya2tYFfRPHzdBl5XmA+
-	xGe4sWCbR8vxJpO0SrdUWyGq0OqfvrYlfIVr3O+SPurKrSDrMykXUrj8inK3GOzJB132X5F
-	ISXHqGPjH/OgJjFYMk5t57F3WOGdrbsI11Z6pWyO7hQt8JIwBugzMBwa/
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+X-Mailer: b4 0.15-dev-b75d9
 
-From: xizheyin <xizheyin@smail.nju.edu.cn>
+On Tue, 29 Apr 2025 14:51:26 +0200, Fabrice Gasnier wrote:
+> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+> clocksource low-power timer (LPTIM) drivers.
+> This new variant is managed by using a new DT compatible string, hardware
+> configuration and version registers.
+> It comes with a slightly updated register set, some new features and new
+> interconnect signals inside the SoC.
+> Same feature list as on STM32MP1x is supported currently.
+> The device tree files add all instances in stm32mp251 dtsi file.
+> 
+> [...]
 
-The build system currently uses .rsi as the extension for expanded
-Rust files. This extension comes from the C/assembly world and is not
-recognized as a Rust file, making it both unintuitive and hard to
-remember.
+Applied, thanks!
 
-Rename the extension to .expanded.rs, which clearly indicates the file
-contains expanded Rust code. Use source file basename for --crate-name
-to prevent rustc from treating .expanded as part of the crate name.
+[1/7] dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
+      commit: 3f9ce9d0760ad68a9c20167664d026d91da66879
+[2/7] mfd: stm32-lptimer: add support for stm32mp25
+      commit: 4f8ceb0302b36c5f78bcc8d0e7cfa2372fba134c
+[3/7] clocksource: stm32-lptimer: add support for stm32mp25
+      commit: 5414bc8c57c41038b1994cd21a2cc0b8415c1544
+[4/7] pwm: stm32-lp: add support for stm32mp25
+      commit: 3f51b232c1da8e59eb562f1d81533334827a4799
 
-Link: https://github.com/Rust-for-Linux/linux/issues/1158
-Closes: https://github.com/Rust-for-Linux/linux/issues/1158
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Signed-off-by: xizheyin <xizheyin@smail.nju.edu.cn>
----
- .gitignore             |  2 +-
- Makefile               |  6 +++---
- scripts/Makefile.build | 10 +++++-----
- 3 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/.gitignore b/.gitignore
-index f2f63e47fb88..c6786f5d5d24 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -42,7 +42,7 @@
- *.patch
- *.rmeta
- *.rpm
--*.rsi
-+*.expanded.rs
- *.s
- *.so
- *.so.dbg
-diff --git a/Makefile b/Makefile
-index 64c514f4bc19..443719123eb5 100644
---- a/Makefile
-+++ b/Makefile
-@@ -298,7 +298,7 @@ no-dot-config-targets := $(clean-targets) \
- 			 outputmakefile rustavailable rustfmt rustfmtcheck
- no-sync-config-targets := $(no-dot-config-targets) %install modules_sign kernelrelease \
- 			  image_name
--single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.rsi %.s %/
-+single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.expanded.rs %.s %/
- 
- config-build	:=
- mixed-build	:=
-@@ -1714,7 +1714,7 @@ help:
- 	@echo  '  rust-analyzer	  - Generate rust-project.json rust-analyzer support file'
- 	@echo  '		    (requires kernel .config)'
- 	@echo  '  dir/file.[os]   - Build specified target only'
--	@echo  '  dir/file.rsi    - Build macro expanded source, similar to C preprocessing.'
-+	@echo  '  dir/file.expanded.rs    - Build macro expanded source, similar to C preprocessing.'
- 	@echo  '                    Run with RUSTFMT=n to skip reformatting if needed.'
- 	@echo  '                    The output is not intended to be compilable.'
- 	@echo  '  dir/file.ll     - Build the LLVM assembly file'
-@@ -2011,7 +2011,7 @@ $(clean-dirs):
- clean: $(clean-dirs)
- 	$(call cmd,rmfiles)
- 	@find . $(RCS_FIND_IGNORE) \
--		\( -name '*.[aios]' -o -name '*.rsi' -o -name '*.ko' -o -name '.*.cmd' \
-+		\( -name '*.[aios]' -o -name '*.expanded.rs' -o -name '*.ko' -o -name '.*.cmd' \
- 		-o -name '*.ko.*' \
- 		-o -name '*.dtb' -o -name '*.dtbo' \
- 		-o -name '*.dtb.S' -o -name '*.dtbo.S' \
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index da2d720c964a..77b4a54ae2eb 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -244,7 +244,7 @@ rust_common_cmd = \
- 	-Zcrate-attr='feature($(rust_allowed_features))' \
- 	-Zunstable-options --extern pin_init --extern kernel \
- 	--crate-type rlib -L $(objtree)/rust/ \
--	--crate-name $(basename $(notdir $@)) \
-+	--crate-name $(basename $(notdir $<)) \
- 	--sysroot=/dev/null \
- 	--out-dir $(dir $@) --emit=dep-info=$(depfile)
- 
-@@ -267,13 +267,13 @@ endef
- $(obj)/%.o: $(obj)/%.rs FORCE
- 	+$(call if_changed_rule,rustc_o_rs)
- 
--quiet_cmd_rustc_rsi_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
--      cmd_rustc_rsi_rs = \
-+quiet_cmd_rustc_expanded_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
-+      cmd_rustc_expanded_rs = \
- 	$(rust_common_cmd) -Zunpretty=expanded $< >$@; \
- 	command -v $(RUSTFMT) >/dev/null && $(RUSTFMT) $@
- 
--$(obj)/%.rsi: $(obj)/%.rs FORCE
--	+$(call if_changed_dep,rustc_rsi_rs)
-+$(obj)/%.expanded.rs: $(obj)/%.rs FORCE
-+	+$(call if_changed_dep,rustc_expanded_rs)
- 
- quiet_cmd_rustc_s_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
-       cmd_rustc_s_rs = $(rust_common_cmd) --emit=asm=$@ $<
--- 
-2.49.0
+--
+Lee Jones [李琼斯]
 
