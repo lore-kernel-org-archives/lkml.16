@@ -1,55 +1,47 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C243F1DD0F2;
-	Tue, 13 May 2025 08:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059F1EB5DB;
+	Tue, 13 May 2025 08:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123454; cv=none; b=OqgvrLWQZPQKv4cAvopNS6o0ay3LaHZwpHzBfGRIq2l1MJKOLtmdIOiMZJG28JLtrH+tzqWvFn2nr3r085K07TPz2vUm6tpAEAu9mYslhyZN0fbhLOwB6YkXCx20M1zev6Jkx7dRixHCFMoF3+cxX7JEw1d5CKLjDAmAPnt7oHA=
+	t=1747123472; cv=none; b=E9q87LFMJom7VXvlyeLR86as6t5ov/0DwaiSP/BnaQ50KRkNXFkwajgDm6I6mhse0A1Q67Tj43OCgzAI33riJb4dBwdQ+cwJneBKhvfhdu1LH6I6sCA4E0XBXa7Q1bB9T2z+A5plcaGBumHquRZVdabGHIC284/YevnComz1CSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123454; c=relaxed/simple;
-	bh=uSbcxShINHYnSQx8wO/+fvnyfkSVNITyw0n0ZpsI574=;
+	s=arc-20240116; t=1747123472; c=relaxed/simple;
+	bh=7I1gwSaGTujG4gf8FypyquviBk2E4QA6iyS8EFE6L6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eFWvcfRDolmbE42ZJDwu5K8hfAR3d9Srn3fucPzMyJHFzFxXhbhRQ+f4V6KzRqjD6IV37EcZ+M6L5szKsmEdcD4V7SvVFvlK7JQ+XYQzEnlgH5wOixzdof1I22bs+w28MBg13nfhWSwzCUoZmhzlAXFILTxCcv1I6/h7k+/xj0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=RagQYqKr; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=an7kE+V4IGHh1ZHUtrbVnZ7eOjh+q/DK9nrC00Cv4eUoSpesCNr9RFov+ph9/OWu9flrPXWDnPxUAi4RJJrVgNOiF63bGmj5o8ZGKfknL2dtTbrGZI7M8GvM0jQdfG0E5yKB4aZi8SdNGm7QDDqG//ycSERMMehoiqbie9reUxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYAwYSA9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="RagQYqKr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=tU3l2c07mvndmmHAYvuNdlNfXRDo6nfCCiXpFFqIq3Q=; b=RagQYqKrzdLqzAv2P/FxPi3WBt
-	fdNGmGxw/EL3Y/nw8P/jcHVeYFc9KYBL+MqiWl3dO5WrVc8VOzk8ocvbV/kxQex2b+IVazwap2E+b
-	ixaX2yMkF9RpAPUjfy+v55jbHSRAEZMKubQNifOmxiRbN9uOIM6UVGiDyqavF74fDm9V6VyiTmsjx
-	1DQ4aQKWs74YEvVZ10Y6nGxogJXAR9RE/ZCHTsc1AMa5k2bWKgtcei+ZTlSaOjeA7IDO2CVwAkkO0
-	nYA6qzbN/jUBCNkWeQ8A7mY4j0/SyVN+GU0FPXqE+jbvQJCI3J7ZvIwmYSMVoCzEkh8O8Dg3bIjQn
-	ZB+suTNg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uEkcF-005hQZ-13;
-	Tue, 13 May 2025 16:03:56 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 13 May 2025 16:03:55 +0800
-Date: Tue, 13 May 2025 16:03:55 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org,
-	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
-	usamaarif642@gmail.com, ryan.roberts@arm.com, 21cnbao@gmail.com,
-	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
-	senozhatsky@chromium.org, linux-crypto@vger.kernel.org,
-	davem@davemloft.net, clabbe@baylibre.com, ardb@kernel.org,
-	ebiggers@google.com, surenb@google.com, kristen.c.accardi@intel.com,
-	vinicius.gomes@intel.com, wajdi.k.feghali@intel.com,
-	vinodh.gopal@intel.com
-Subject: Re: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
- batching support in acomp & drivers.
-Message-ID: <aCL86_v0jaqW8jxS@gondor.apana.org.au>
-References: <20250508194134.28392-1-kanchana.p.sridhar@intel.com>
- <20250508194134.28392-11-kanchana.p.sridhar@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYAwYSA9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131B3C4CEE4;
+	Tue, 13 May 2025 08:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747123472;
+	bh=7I1gwSaGTujG4gf8FypyquviBk2E4QA6iyS8EFE6L6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pYAwYSA98xROfFniPKW3Fnq8c74xOH7tQB+7DL1Y3zkoNSUZa186JCYkIIk7ybc78
+	 7AbBU7MdRy2DIyGDFmaL67xunDbaKOH+e49iBT1rl38dlT7eXLtzI7CwfKdBPKzKMz
+	 NYF9WFAsOL28v3+dWBFFLxX7AH9Bc3wffNb3cnv/7RBbOkniVAw03ynnpN42vMcEy4
+	 CqQQBhbnGtNA8ZcO3oukS9kXVQWDWe0gJRRikY2FbxSbgUiLCHbKiGxJOAtoGM+GJM
+	 tGLoKBIu5QCyByqotji/y2HAziWoVDAk2DJ7knsHN3BZxI/ELVUPPeR4oA351WZ0pU
+	 ZlYmsSP8YGZvQ==
+Date: Tue, 13 May 2025 10:04:25 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org,
+	yue.wang@amlogic.com, pali@kernel.org, neil.armstrong@linaro.org,
+	robh@kernel.org, jingoohan1@gmail.com, khilman@baylibre.com,
+	jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 1/2] PCI: Configure root port MPS during host probing
+Message-ID: <aCL9CStLrGEY2MEH@ryzen>
+References: <20250510155607.390687-1-18255117159@163.com>
+ <20250510155607.390687-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,19 +50,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250508194134.28392-11-kanchana.p.sridhar@intel.com>
+In-Reply-To: <20250510155607.390687-2-18255117159@163.com>
 
-On Thu, May 08, 2025 at 12:41:25PM -0700, Kanchana P Sridhar wrote:
-> This commit adds get_batch_size(), batch_compress() and batch_decompress()
-> interfaces to:
+On Sat, May 10, 2025 at 11:56:06PM +0800, Hans Zhang wrote:
+> Current PCIe initialization logic may leave root ports operating with
+> non-optimal Maximum Payload Size (MPS) settings. While downstream device
+> configuration is handled during bus enumeration, root port MPS values
+> inherited from firmware or hardware defaults might not utilize the full
+> capabilities supported by the controller hardware. This can result is
+> uboptimal data transfer efficiency across the PCIe hierarchy.
 > 
->   struct acomp_alg
->   struct crypto_acomp
+> During host controller probing phase, when PCIe bus tuning is enabled,
+> the implementation now configures root port MPS settings to their
+> hardware-supported maximum values. By iterating through bridge devices
+> under the root bus and identifying PCIe root ports, each port's MPS is
+> set to 128 << pcie_mpss to match the device's maximum supported payload
+> size. The Max Read Request Size (MRRS) is subsequently adjusted through
+> existing companion logic to maintain compatibility with PCIe
+> specifications.
+> 
+> Explicit initialization at host probing stage ensures consistent PCIe
+> topology configuration before downstream devices perform their own MPS
+> negotiations. This proactive approach addresses platform-specific
+> requirements where controller drivers depend on properly initialized
+> root port settings, while maintaining backward compatibility through
+> PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
+> utilized without altering existing device negotiation behaviors.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
 
-An array-based interface is not acceptable.
+Looks good to me, but since this I'm the one who suggested this specific
+implementation, it would be good if someone else could review it as well.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
