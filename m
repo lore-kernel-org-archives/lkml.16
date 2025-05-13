@@ -1,141 +1,154 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DF441C7F;
-	Tue, 13 May 2025 02:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F931B4132
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747103244; cv=none; b=k+HcYtWkOwN+Ur+ULVBlx9oX3F1ksZ6Cng5hsZ1tZ8vs67TZbWSVVI8wiZ0KEVEy3OVprP8m/J8L9ehKRTrBquJhwUnh2v9Rh3aWHtPIijmkt3zhQnOwxW9tmbe0S1Da6A29TarkBrAjklsezBOf3DR/8xTiXyijhxz8JN7k56Q=
+	t=1747103370; cv=none; b=QQvasmOEPbMisaqkQxmfZE/51Emf/hNw/WgGkpiJDHtToYzXEGrFQYHKnZjkqiFNdNGT7deiO3a4PCTWbThXj5VIJWgFbIiG67QiiPcWq3HYfzwMjpJGb9H24rnJFlrQGgtpK55qsEnVyqrGKclJPe6yDiQY0pU2nOrENsJ4CwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747103244; c=relaxed/simple;
-	bh=98a6Snc/NXc0TR9PbEOFzsCdszqsYw9UelW69TWeBR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f1RuaWUiwtehIxn074Xt1MKMXT4cXvqWaSMSo8XE6xzl5Z+s+GvyqQ05Qf0FRJ3PpUPhauE55lq0naPS3LCYfyKJoW6Xax7cRy8xGaOYTs0nJZy/fd8wRSmu8fMYxUB0iAdQWzsk22htZ9j5Fm84FzxmUEMye7UuF4/Hn6AgjhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTOcduti; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747103370; c=relaxed/simple;
+	bh=ob/MwPIUanAXW2/dT7IDcGu+dS+IXfMNOAdIJYXN5+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=iGgqwu7IfgV+IS3zycQwJhXlbXVrJrQ92TOikMQSMJyzmxtTCsPQLTjfRBlM+VY7YGV9hv6UJZopfoZncCV4zMF8Wi+ObMu85D/4x2Nn9YnvD+Xi7BYS13CL0JAfS/lEmZSTaiVna0jzVkJ5G+L78opdKEXhmqBL00ojS3tGn8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eRQ7d0fz; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTOcduti"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-861b1f04b99so138093039f.0;
-        Mon, 12 May 2025 19:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747103242; x=1747708042; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=azq0tGUBdBCpe+b8W3cDnCoHuYkgjMlpC0CbksCxYv0=;
-        b=KTOcduti2X8HMMMfngP988ohN5FKLlY++FAcXLsErwDc4TEr5p01f289WtWz+SQ4vI
-         VqQUiUCmsMig9HRo+Pz1mkeCDaPqAEKAzGphu53YjJR9Y9jdq50Lu8tmKrO00pXvuOPz
-         j+NO4Ceb7BUqIpMGw5MN2iW4/gc5SGlUWFvEGHrvIY5A9m5oV9UNnPzeVRom9IxdggsL
-         FyGOTWvGrvpAbAAno95FfU236urxARHwENMzyJPkyacqhbGyd1EDmLickYoWfssMBWK6
-         iy+huLb1HD54eyyP/weJIUWX5kNvmeMwVW0xyOjX+nIiqWSNGMFgKKohRd91D67yVn8x
-         NWuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747103242; x=1747708042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=azq0tGUBdBCpe+b8W3cDnCoHuYkgjMlpC0CbksCxYv0=;
-        b=iFRUniXpEN3oCOkYa2mbduAEbwPvsVPuoK3PjqxXl3suE+GPjq/PNctB/4uJ0OdvyG
-         Kqj78cZQmxbHZo2s3oNdc2f3nu122Yj6JuFFnRIHHjBT//Arp5j3fCSH3uEj7kRRXbW6
-         qKeaSuO8zHKz8+M3uNJdbWLx6dN6nrpzqlUa5VncPFk4xCj2MkOTTfVO1eCHxO/HIBRE
-         s9ZGcA9St1zTsO3q07y7M2UWKxBQPyc0F17HQdaiaXU/ktQ0o0B+Hiw5kPGHG9udQw8h
-         yA78nMDsJkLhMKBpaincDq6NOUiWJuSv+fAZ/PHupas5uRdw7ZLH199uBqy2xVSyVu91
-         A0IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4/mNUuVt0VQ9CQDrKcgrcBzN+Iql4h76Zkc9/Z5Dmytz0yPTpPUzCJ0VC15s61m19UjdTwS3p0mU8Vw==@vger.kernel.org, AJvYcCXNbvWTqYlO+zgocf5B+Pi/IAk3a8V1LT1O9ZaRo4j/dpZtYEuwF68TLzllImrwsQAvpuA44toQLUAOiT2K/Z8M/nmA@vger.kernel.org, AJvYcCXgDcxQeXvwmfJ3hOiddwIcnxp+f0W+qmyd+g9OJpHVGC2YdaXd/pR35wj2n1leJWO9PkFc+39L3xaci9P5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP2Bn5UF0QHumPIS4YmzT7KbI2E44GEgdHzsDmcjr+SRRdnbJA
-	MEDNfjecCh2k5Jb++FgYm8C/V7WEmhDvrT2cZZtl5dD/SY2txghEdUmPIZtXQCV87Uhd3Frusiz
-	kbaMbUT9ILDIiEvsP5Wwwjo743qhnRq0YYIO1EA==
-X-Gm-Gg: ASbGnctkFeRmQBEqWj5vJAPAiGpuMiTmKRPctya4kjVgJmdz6gvWebO/h3+N29h72Ia
-	WH8/oxn83ueojdl+CFI8PDM/pmqb9AyPUDpyiArgyf02Met2C3H2l2lcXkJdI0w5UP1JGG36ZJu
-	oZpWRmVoJ4PL0lDw0JLvQOBXgn4xgW6gY=
-X-Google-Smtp-Source: AGHT+IFfqqqM0qYp1RV8b6+aJrLmSHYVs776COusec5YkuRmhO78WWK5gbTx99FVP7Iy1g3PjpggMOHyAQxltVnIERQ=
-X-Received: by 2002:a05:6e02:1a8d:b0:3d8:1d2d:60b0 with SMTP id
- e9e14a558f8ab-3da7e1e26e9mr165032355ab.5.1747103242248; Mon, 12 May 2025
- 19:27:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eRQ7d0fz"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250513022924epoutp01356ec76dbaffdafb875b7ef537cf9307~_9UDNUzbF2500125001epoutp01Q
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:29:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250513022924epoutp01356ec76dbaffdafb875b7ef537cf9307~_9UDNUzbF2500125001epoutp01Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747103364;
+	bh=IicaQDkKtbQe1ausUDFbCbe++r6MaGwzgTL/G2ugDaY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eRQ7d0fzDCevTfLeDJw6+Xst136Q1Q5u/V0j2oawZv3f2tzzcYEUVAs8CQkUbeIwW
+	 g5r2zxEq0zo1GTEKelXna08bWzFmRLAmEzlu7VF3oJ1V1Iz0G3Y2KLoo6sDSIC8fGP
+	 yVHNItECRzhNxtWhGVn2p3vof3qumpD4sA+6wtDE=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250513022923epcas2p407e14f6a2a99a63b8440b38c84ec571a~_9UCqMKAj0752207522epcas2p41;
+	Tue, 13 May 2025 02:29:23 +0000 (GMT)
+Received: from epcas2p4.samsung.com (unknown [182.195.36.101]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZxL5Z4khdz3hhTD; Tue, 13 May
+	2025 02:29:22 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250513022921epcas2p27d201ffddda2189f94fc20b336e0eb84~_9UBBmfQU2762527625epcas2p2X;
+	Tue, 13 May 2025 02:29:21 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250513022921epsmtrp2970b99450b221d9b76d2444149eaf54b~_9UBA-PpI2654826548epsmtrp2H;
+	Tue, 13 May 2025 02:29:21 +0000 (GMT)
+X-AuditID: b6c32a2a-d57fe70000002265-a3-6822ae818e3f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	28.B2.08805.18EA2286; Tue, 13 May 2025 11:29:21 +0900 (KST)
+Received: from au1-maretx-p37.eng.sarc.samsung.com (unknown
+	[105.148.41.227]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250513022919epsmtip19c171ac69889c3c280e9a91142b3b089~_9T-K-IyC2306323063epsmtip1C;
+	Tue, 13 May 2025 02:29:19 +0000 (GMT)
+Date: Mon, 12 May 2025 21:29:14 -0500
+From: Hyejeong Choi <hjeong.choi@samsung.com>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	sumit.semwal@linaro.org
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	hjeong.choi@samsung.com
+Subject: Re: [PATCH] dma-buf: insert memory barrier before updating
+ num_fences
+Message-ID: <20250513022914.GA2330982@au1-maretx-p37.eng.sarc.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
- <20250512024935.64704-3-kerneljasonxing@gmail.com> <20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
- <CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com> <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
-In-Reply-To: <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 13 May 2025 10:26:45 +0800
-X-Gm-Features: AX0GCFt-It6JU-VSizNKEH2nMqzT2SRUTafCnyqDEsiL8cxKunhyC1lIzE3Gk_U
-Message-ID: <CAL+tcoD+VrRfAGMjj=9uAbanMO=W+cW0xgxMzVwrpiTgagmQ2w@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics function
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <86ddb4dd-6327-4a4b-8584-df366737d636@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBLMWRmVeSWpSXmKPExsWy7bCSnG7jOqUMg5lNmhZv7+9mtbjy9T2b
+	xcWer2wWX648ZLK4vGsOm0XPhq2sFqfufmZ3YPdovfSXzePOtT1sHve7jzN53P73mNmjb8sq
+	Ro/Pm+QC2KK4bFJSczLLUov07RK4Mu5sucVS0MBTsffSNOYGxpOcXYwcHBICJhKn+qq6GLk4
+	hAR2M0qca3rFBBGXlug4lt7FyAlkCkvcbznCClHTwCTxYMppJpAEi4CqxMqOmYwgNpuArsS2
+	TzfYQGwRgRiJWRdOMIE0MAvMZpTof9vMCjJUWMBP4v0RsF5eAS+Jxp+72SGGnmeUuNO+Hyoh
+	KHFy5hMWEJtZQEdi59Y7bCC9zEAHLf/HARGWl2jeOpsZxOYUsJZ4OX0XM0iJqICKxOcFAhMY
+	hWYhGTQLyaBZCINmIRm0gJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcORoae1g
+	3LPqg94hRiYOxkOMEhzMSiK8jdsVM4R4UxIrq1KL8uOLSnNSiw8xSnOwKInzfnvdmyIkkJ5Y
+	kpqdmlqQWgSTZeLglGpgmtS91HU9z9Uu1Q8PHzvKdih1rjR3XMJlIffHeeXEcxOysw9N1Lyf
+	qKqsvkuAdcf1wlJNjkMmIqbzUnbYBi8XX9ej9KU20ut+bMDB+2b/jyhnx0UecnhwhU+v7cbb
+	W6yMew1vd7T7z0tbHbj4ofL2BcdFV0bxJ39J3G34XqrmYPP/pG2nbKS9a5adZG9o78jl23Ex
+	wUf91CKJgBlyl35Eyatd/qH4uP0Az6F6t2ta+a2atSv6fLXtvpVOvCNYVry7pq13+lmFD3H3
+	HO9VNSfwzwtvnZx773Swssf5lVLrnk7xU3yY+KneYIehglHt95NSp97/z+jQ63Z8dKbwYF2M
+	2jqFZov8n8Jswpvk/L4rsRRnJBpqMRcVJwIALbISDAsDAAA=
+X-CMS-MailID: 20250513022921epcas2p27d201ffddda2189f94fc20b336e0eb84
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----bwpRUJ-w.o_6tYjOOTP081ktEXBjAdpLJQBDwy6xW4Fo1YbP=_2d1f0_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250512111240epcas2p321f5121e34f63383e1724de05e55420d
+References: <CGME20250512111240epcas2p321f5121e34f63383e1724de05e55420d@epcas2p3.samsung.com>
+	<20250512111231.GA1265534@au1-maretx-p37.eng.sarc.samsung.com>
+	<86ddb4dd-6327-4a4b-8584-df366737d636@amd.com>
 
-On Tue, May 13, 2025 at 10:04=E2=80=AFAM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Tue, 13 May 2025 09:48:15 +0800 Jason Xing <kerneljasonxing@gmail.com>=
- wrote:
->
-> > > > +{
-> > > > +     unsigned int i, full_counter =3D 0;
-> > > > +     struct rchan_buf *rbuf;
-> > > > +     int offset =3D 0;
-> > > > +
-> > > > +     if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
-> > > > +             return;
-> > > > +
-> > > > +     if (len < RELAY_DUMP_BUF_MAX_LEN)
-> > > > +             return;
-> > >
-> > > So we left the memory at *buf uninitialized but failed to tell the
-> > > caller this.  The caller will then proceed to use uninitialized memor=
-y.
-> > >
-> > > It's a programming error, so simply going BUG seems OK.
-> >
-> > Are you suggesting that I should remove the above check because
-> > developers should take care of the length of the buffer to write
-> > outside of the relay_dump function? or use this instead:
-> > WARN_ON_ONCE(len < RELAY_DUMP_BUF_MAX_LEN);
-> > ?
->
-> It's a poor interface - it returns uninitialized data while not
-> alerting the caller to this.  You'll figure something out ;)
->
-> Perhaps
->
->         BUG_ON(len < RELAY_DUMP_BUF_MAX_LEN);
+------bwpRUJ-w.o_6tYjOOTP081ktEXBjAdpLJQBDwy6xW4Fo1YbP=_2d1f0_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
-I'm unsure if BUG_ON is appropriate here since technically speaking
-it's not a bug. For now, only sizeof(u32) is used in the buffer.
+Thank you for the review.
+I re-sent updated patch, please take a look.
 
->         *buf =3D '\0';
->         if (!chan || (flags & ~RELAY_DUMP_MASK))
->                 return;
->
-> We don't need to check for !buf - the oops message contains the same info=
-.
+Best regards,
+Hyejeong
 
-Got it. Thanks.
 
->
-> Maybe we don't need to check !chan either.  Can it be NULL here?
+On Mon, May 12, 2025 at 03:16:33PM +0200, Christian König wrote:
+> On 5/12/25 13:12, Hyejeong Choi wrote:
+> > smp_store_mb() inserts memory barrier after storing operation.
+> > It is different with what the comment is originally aiming so Null
+> > pointer dereference can be happened if memory update is reordered.
+> > 
+> > Signed-off-by: Hyejeong Choi <hjeong.choi@samsung.com>
+> > ---
+> >  drivers/dma-buf/dma-resv.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+> > index 5f8d010516f0..52af5c7430da 100644
+> > --- a/drivers/dma-buf/dma-resv.c
+> > +++ b/drivers/dma-buf/dma-resv.c
+> > @@ -320,8 +320,9 @@ void dma_resv_add_fence(struct dma_resv *obj, struct dma_fence *fence,
+> >  	count++;
+> >  
+> >  	dma_resv_list_set(fobj, i, fence, usage);
+> > -	/* pointer update must be visible before we extend the num_fences */
+> > -	smp_store_mb(fobj->num_fences, count);
+> > +	/* fence update must be visible before we extend the num_fences */
+> > +	smp_wmb();
+> > +	WRITE_ONCE(fobj->num_fences, count);
+> 
+> The WRITE_ONCE isn't necessary since smp_wmb() implies a compiler barrier, but apart from that really good catch.
+> 
+> Can you modify the patch and re-send? I will be pushing it to -fixes ASAP.
+> 
+> Regards,
+> Christian.
+> 
+> >  }
+> >  EXPORT_SYMBOL(dma_resv_add_fence);
+> >  
+> > 
+> > 
+> 
+> 
 
-It depends on how users call this. If users call this without
-initialization of chan, relay_dump() can avoid the crash. It works
-like kfree() which prevents the NULL object from being freed.
+------bwpRUJ-w.o_6tYjOOTP081ktEXBjAdpLJQBDwy6xW4Fo1YbP=_2d1f0_
+Content-Type: text/plain; charset="utf-8"
 
-BTW, should I merge this commit [1] into the series in V2 so that you
-can easily review?
 
-[1]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@gma=
-il.com/
-
-Thanks,
-Jason
+------bwpRUJ-w.o_6tYjOOTP081ktEXBjAdpLJQBDwy6xW4Fo1YbP=_2d1f0_--
