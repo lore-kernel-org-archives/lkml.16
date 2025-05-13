@@ -1,213 +1,72 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2053.outbound.protection.outlook.com [40.107.244.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FA61A0BE1;
-	Tue, 13 May 2025 21:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747170414; cv=fail; b=lzVZS+/Q54ZRLmy43IK8dlWCrSzURvZqINApY2pU6Afu/Wbb1cCGyrlQAbHT6KL/6arImBc+WaQLgT13QJykonl/qc8oIeavm8zspuU3MN7YkInKYkJSn9Ur9f+aNT5Ws8z2Gm35oEEXDwZ4q6jcDPZrVAN0HFpZq3kDmQhkMcI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747170414; c=relaxed/simple;
-	bh=cXwp+WbFsJiZaEz1uJTGaQOyfNtzbo5X6n8i1tS17Xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ilJxhjtsA189rrLrj1rTziuCqH4R3MpEv6WnDH57WGOeD/v8W92VewIKYQNZHBcioGZg5sVaAoEoxOL9DANLpFUXAtAfMEShOpkqpsUMsCAhe6/065mR0lOfopXk+unFxtRdqpw9mX6MYnPPFF7kmkrbzizusPsIDBIN/uLAovA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rqpIVWcR; arc=fail smtp.client-ip=40.107.244.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rqpIVWcR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vVnBj4J0qKId+fQIoWU1rCbdjw4bPNCSDEFXUptqMx/5DMp9pPVMrIRi1EEnOOH0pQ06Z3NrciEMAWecI4iM06LULwkroftQNKuWpTPzWnP3VMNyH9EV8B6vXZDkXGAKUIe3g12+A1vaFIIg+88oATul5A09lVQfqr2YwOfkBqRRKeNEZ5Epd/F0jXpQ7UIWgVpx6MX1l34sADvcGh+/+ec6RMtsNMCXsOYSoYGPr1AUVe/H9DpLbII4p3aPS2GJ5N3JoUeQkGnhylq2wdLCjMepl/WLWp+XiR4URyUfJT2iKrOjrGWu8a4oSSZH518n8BtBR2rsHH1pyz5Jo+W3Cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vT137LxKok42X4D3Kh6oFtLLh2q99JnbOUGiu13jUlY=;
- b=grxHIvY9Vsn/3LcM3NyLQKbvvskvktQ4ivtrN0qqqM3V47prqzOBL+M5g0Vx8rhfqKdgVcIs5l3zuWDJzpl6fqriwFJ1r4ra8lC1XvdRy14BmAvM9A+w5xqmfOMfIh0smjWSvkhZpmzNw61ucpD0lxzvIykpcs18cYJzAHRj/1vw+smjPqRrhoj0cTFhyvjNSB1dTR3bCmGmPyTEsUY4lMBh1YNQDmC3JJCiEWBLi3PiPtO8pQWW++gCCAKwQFeHya+EzbosPPJlcDBGmxWBVK0TATFalranAWOtKWhdmCPaFDQrfkYj8UC577dl9NVFhmRaqK8tlttjqy0psflPog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vT137LxKok42X4D3Kh6oFtLLh2q99JnbOUGiu13jUlY=;
- b=rqpIVWcRrsZIIvfnwgQnhOZBPR+NHYu5jci8E3M71Sw7XT1jJElyySXS5BEq1e38N//62yjC+i+s8leLbs5w4cD4OOlCmoEnzJ4JQAZfujRNXiKK2U2Wi1F/r5egVDih4m+ODPF50HuJKhwLPE9kQYUyyQ1JSngmp9wwOrlPbOQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- DM3PR12MB9326.namprd12.prod.outlook.com (2603:10b6:0:3d::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.35; Tue, 13 May 2025 21:06:50 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 21:06:50 +0000
-Date: Tue, 13 May 2025 17:06:40 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH v3 17/17] x86/mce: Restore poll settings after storm
- subsides
-Message-ID: <20250513210640.GA515295@yaz-khff2.amd.com>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
- <20250415-wip-mca-updates-v3-17-8ffd9eb4aa56@amd.com>
- <20250512074616.GSaCGnSJbBpToh2VM6@fat_crate.local>
- <20250512154315.GC2355@yaz-khff2.amd.com>
- <20250513175543.GGaCOHn26isB18J9ig@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513175543.GGaCOHn26isB18J9ig@fat_crate.local>
-X-ClientProxiedBy: BN9PR03CA0569.namprd03.prod.outlook.com
- (2603:10b6:408:138::34) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DFB13959D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747170427; cv=none; b=sriggW39uO5+B/JtTA7Ty/T9hNDzExDDKnhC81iyQR2uY/WZ9/ZsGVLNQw48kgakmGS+1HL8X9Smx/jXwjKpoS/EH+2Mf2CFkE/4TKGfsHVygAevKYZqMhcYd/LoklOxdLrlnwXvRFWXYjnTngS9KHX539SgM92gR0qMoBuMMCE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747170427; c=relaxed/simple;
+	bh=sGaN9H2ohZ88mAQIQVWjpKshggAaXxS0lcalRTsOtHc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=afUkI9qf4XfgmCf13FgT+H4b7kxVSHydbWQJD110tRS6orvuJE1jnTPZidFIwD1UDpFBSQLfsHAO0Y3b7C3oDlmAQzYv86oXYFh+MGSJ++4vmw2SLwP7O93Kv5gJgOyEdXIBSHoWkx5GBfZa85+5wec/Ixlzpf8QfM17a2CpBKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3da7455cb93so3113765ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:07:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747170425; x=1747775225;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6v0sPg7FLtQ0+WLZuplB/m07+UpbozEmRG/sG202he4=;
+        b=cLoOEa3Iuz9XSqjv477T46yAPBmuC3qzcmLmXqHerAHShZAbEs3DyLH8y8v5CMUmNS
+         dNFaGRC0M2EQqQB8DCAoaVzoIo9hXo3SlIpKKd8wPdMIso91G5vtpO5ToJxqeHNX5/hU
+         RrMUmaj7EYDtmODZmpFkhTs5GSgfLucbM+s5qf8VeBNO7Mci2j8b2gEfT/PoGHoNlvLJ
+         pCv1dvsPQ5bVDzUj20Xslcy7Wvctv2oPqdEBTy5BZXKY3oGkU6xTFRgvSrJrR1I6G+Xm
+         ykM1PbK87ZucLs7WkpbQCwVijbor35ALM7BGmTyXdU5ClcGba/9b+R/aaq8Z+L01EfcH
+         7/gA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMq/PXb86I1WC+RBTbUsXRfaol6JwBaO1hSsns2bcZujGKXh45W8yFYmVF8+oxDNJ84FtkoozJXK5wM+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpDxKuKMy4Oj1JwQWn2BNnfJHvLh3oB5FHlm6OP5HdkWoFXwRV
+	hpNuR2/LsiyWs+tkId353QImb1wlePtstJ1x0KM+QmT2JclmAmf+QfwlSCUc2MbqnFKTowt5VrX
+	Ojx9fKsulbkDCngb5EmX1/emu11N2LEdtGzb4UXKKFDYhKntjx4cFWJ4=
+X-Google-Smtp-Source: AGHT+IGyVvDThfw3sSYtBVY2adUQUGEijvwjF7PeMsRuGPDOBpcHAJDm1yMJaifUaKRRhUt3Duh8fTWTGvpIIB0dsedEOkLFkx6f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|DM3PR12MB9326:EE_
-X-MS-Office365-Filtering-Correlation-Id: f43acf37-eba6-4991-59d1-08dd92621415
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OQ8jOBIB6H/ON7q0jN45mwb9AG8sOIZTDtq2GOfRv/+y4RgYfzipIP885u/w?=
- =?us-ascii?Q?TAYxDFdobsbopiISM7w71lt4KEFT7ul5bTm6iNVJYNz4fcxEe/tARKJ+RdQE?=
- =?us-ascii?Q?XQfc+wxm4YH1iudNnkpxqfglFNbSNDcolXOTPa2EKx1Z0dvuu2OdSFNBIaba?=
- =?us-ascii?Q?8TSUf2PKCMdL/2cXByLX+eSeZAlF7rAxAr/fF6/zm9E+otaqOHCN4BvXFSOa?=
- =?us-ascii?Q?JZGkBfeIMYpEBhNoApis71Ghz3mtQ4ZWOsc5i2ZYAKpXhkR5UHupVRwxFXQO?=
- =?us-ascii?Q?TC/UIguSlqDfurAkPAQKHX+dIxVRr06aGCFI4WT+X1122PSoxH7T/0JlcIma?=
- =?us-ascii?Q?CqKk+lWLMBEYm2qb3EwFV5DgDDS+A4hLcbgYd5Koj6X1VMVYpRb6LxGTrgoK?=
- =?us-ascii?Q?TZdqKVegDRmrGSvXbaUY/GJycGyTK6Si/Kx6nTybFZYiXQEqXk/J3Dk7h1S9?=
- =?us-ascii?Q?+9YRLDryYgwSVBYUr3gP2qv8Xl0CmZqOfiHabrbzPrNBx0z/Z+TY4Qk2rQeW?=
- =?us-ascii?Q?hLUaAjU879x85AjiCDhGXOLUybIUBK144c6W53pQWN9IzvPuenyOP3V92c6p?=
- =?us-ascii?Q?i3t71NuyJIUs3ZyTmXmVG6Sa7yZPone90zkaTCIbkGVNGmQyv78TzJRbEwkU?=
- =?us-ascii?Q?yZCDd+2DeVmrdYFGS3nXE2LYGQ5fEf6ti0TesuIxBxOkk8KDVktpdefs9/jV?=
- =?us-ascii?Q?+NkG10vWR9yg1XVF3L4lrDXzZ5Jau/uZ6hdZaytMxaSHNdRarufoffAvTk1F?=
- =?us-ascii?Q?VBlvumDiK7qvGvfCtTpin9Dol/OsoJgDDTm299GMc299E2wY9x/A6R1DeeYX?=
- =?us-ascii?Q?Qfr6AwPD94SIYWZ1FDaNjUdJCCfQHbUnFDuEEb2PoWKUGY39cK65V+uPvZom?=
- =?us-ascii?Q?IO8Ermx+Qs7on533h+6cW7RiOMjPjnCqyuW+9hpBDL7EhPAXY3MEqp5QKcyI?=
- =?us-ascii?Q?6BaSUqURQ6Ky3yFx9+I0h2CqI99IsAoc05UXm+L8J6tHRj7+O1STQMMNixmu?=
- =?us-ascii?Q?++EmxGdOcsEX+30qimRl8EEJddNaKrig1eg3Xc1ziYVFnyFLwkRrJ5nqNzap?=
- =?us-ascii?Q?dbE++vg3zw3IBPGucsEFZ/Opmy2shjWMMsTpC0IvR/uO7EQK+vpZtqxtDeam?=
- =?us-ascii?Q?2lSfmRIrJJAPiQJdTciK/joYqbZ185ngEpAN/4LiMZosvZvVmuqQ5OhpFkiT?=
- =?us-ascii?Q?/lGcwGIBzhoASu8MhQ+0BjYZXM6yEgycTzIvsrJL/FtSnpkxZ7/XmYEUT4vM?=
- =?us-ascii?Q?2FumoASbbMOT+72LdiGJS2owaNZxUd3PnXq3Zwix6pGjz1foboe7+BFOE+aE?=
- =?us-ascii?Q?iBbdl/2VHXqnXEqd+7kx/Zw7BIpWitBnDbaBNnl4o69j1/N7Soik8M5EPQx1?=
- =?us-ascii?Q?QVJGdEW6myb+mYQpAPoQPm0gVYgDy804vfUGy7PFm1e1XCm2xBv90tSNAIFc?=
- =?us-ascii?Q?5tuit4mZoj0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Y2GPF903BM/86O9xsBuPM0Bei2u7dEQLFCJMm1Erbsxc4yczjgxfG58XR4b4?=
- =?us-ascii?Q?lhFJg+oaZ5YCvzDwBTY6G0MRaxX9U9DOH6J72ikovlIB6rvmKXaAm9P+www9?=
- =?us-ascii?Q?101ok81b/YdGWQWw60QgBT2gOPue+WVo2aDpVedjuJquvOuRS7fX7qB3Djm5?=
- =?us-ascii?Q?fBFpseXlEcJZ0FDHab5M6AXraBZU9xm8QcoYVcO44wEBu1wKntPJp8cQv66d?=
- =?us-ascii?Q?vpQuTL0JjB2008Nat0nSVGmDG59/I1Olu0qipAUC5wJKfHbU6LpT5CVgnOkz?=
- =?us-ascii?Q?KuE2hA3aq0+j6gwraUoryn33tsXZBdKQaxwEaB/hv0Hk+At5ZMMqYW6FpErk?=
- =?us-ascii?Q?KiHwvb3wTAVBSjHZ6LPI90vYi0wMub4t48s9333USSl/jIpqgtkOQ8B1f8T8?=
- =?us-ascii?Q?GBC7Tf1ILrX8hNtX9GqcLCdDQw5fODXvFSv/VxCEG5oIq2q/YMkhWVrVwvB1?=
- =?us-ascii?Q?VKoavJ1xnTh/WTTOv6THT3gsrUIaSVlbH66K1DUrhw8bT5jj93m20cYNlGCU?=
- =?us-ascii?Q?SlZOqEnVUI674EnhfB59RlUWerFh2BQDrORhnigWDr6WEkmNQGk5HWufuHXj?=
- =?us-ascii?Q?rj1wezsLboyIhGa+F4147uD/wTgG3PLdZIRfOYUuLn5OzDigfzb9v1lq/Nq2?=
- =?us-ascii?Q?OWTxFlf0Z0YQj5cxtsHJ8QfFA6pjocuhxcJ8vSAmOTgqQjR0ZwIJ1rtvzl73?=
- =?us-ascii?Q?OEdgMTECTi9FJ6VCLt5PBIM2gXc8tuJUpvbdAykxy5l23MtvDLsKnrDxTlyR?=
- =?us-ascii?Q?9if5QYTXCY0+V0qyzqI6P0qfr249mMdl9iPF9XWo5O4i04KcGDAlbrCAGBJA?=
- =?us-ascii?Q?5C5IXthREiBFUE8z0n0QHBYOVj1s5eqOH1eEQcyOCOmi7iNYFJUeyqfoi+NE?=
- =?us-ascii?Q?qPRb8yUitJV5X+SMvPZwz5ASiHXYK8oi6nwOr8q24FBHZI4TnUB6DU27+GpM?=
- =?us-ascii?Q?cDHwoOSGFtQtQpvcrV+uq23lHvPBtx8YRFuPXnCnE2eLoibW0HdUHx2eIAdf?=
- =?us-ascii?Q?wxBCi6TMaVay1XhCcs/BNqSGWVOBoMsAKIUeEfL5z+0RcNdJBmtRe/XxiJyU?=
- =?us-ascii?Q?a0pjhx4yYzDnsTNbtPmcNxIrJ4hFbATRDU2i/Z9sAFmZbAmTXi97yIfTvzj9?=
- =?us-ascii?Q?Sub4rCKG9fxFBWI/otIaArPmECREuqVhpGAyHOk3IWBFoFGnuBoMVcjkgBnQ?=
- =?us-ascii?Q?Lhu9kl9OFRkIS5HEIrFp0sg1cJv+ULCqsP3JhfXOoQCfcJsS4w9kZf8bMM2U?=
- =?us-ascii?Q?uDnxiFR1JmSs6YizbGdOBMyN1YhhYfcYaubBh/Szo1U7xykAweTTT/06Zkzc?=
- =?us-ascii?Q?wcrcC21uXq22ew4pA3NXkr0fBiXobFuMGGja9/dx4Yr1qdFlfaCodVSgIjjR?=
- =?us-ascii?Q?a5qYd+8DkL8d//qbgZf+hvvxf19vyrJe8a54838bhtw3O7/X4ItKVtRpM+rK?=
- =?us-ascii?Q?QOOUUjhXcdryJeIOhf3L/19N1aNT/K2Xp4crrFG7OYW06/RhvPCFbXTbjms0?=
- =?us-ascii?Q?YUoghtNmqVuL9Yjr7Q0pRuPz/bTSvuBXkJ/Er81hwiH+YZWKqV8pffEo1EhG?=
- =?us-ascii?Q?8FgEpvDduPIlG/0HzfrUHEL4SfKYfBGFRgon2J3w?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f43acf37-eba6-4991-59d1-08dd92621415
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 21:06:49.9852
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VPWQIrIQiCrwai46v/cijQ7brVMbnHIUswtL97Jw5exBw6EeeJtVfLC07R5k2a+xPwL1fIxD22igQRYHIxCCdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9326
+X-Received: by 2002:a05:6e02:3f0b:b0:3d0:26a5:b2c with SMTP id
+ e9e14a558f8ab-3db6f5ba6ccmr14300005ab.8.1747170424069; Tue, 13 May 2025
+ 14:07:04 -0700 (PDT)
+Date: Tue, 13 May 2025 14:07:04 -0700
+In-Reply-To: <20250513201811.1956-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6823b478.a00a0220.104b28.0001.GAE@google.com>
+Subject: Re: [syzbot] [nbd?] KASAN: slab-use-after-free Write in recv_work (2)
+From: syzbot <syzbot+48240bab47e705c53126@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 13, 2025 at 07:55:43PM +0200, Borislav Petkov wrote:
-> On Mon, May 12, 2025 at 11:43:15AM -0400, Yazen Ghannam wrote:
-> > The use case is "disable MCA polling". I just gave two examples of how
-> > this can be done.
-> 
-> Our documentation says:
-> 
->                 ignore_ce
->                         disable features for corrected errors, e.g.
->                         polling timer and CMCI.  All events reported as 
->                         corrected are not cleared by OS and remained in its
->                         error banks.
-> 
->                         Usually this disablement is not recommended, however
->                         if there is an agent checking/clearing corrected
->                         errors (e.g. BIOS or hardware monitoring 
->                         applications), conflicting with OS's error handling,
->                         and you cannot deactivate the agent, then this option
->                         will be a help.
-> 
-> it basically disables all: polling *and* CMCI.
-> 
-> So why do we even bother with storms?
-> 
+Hello,
 
-I think I see your point. The AMD MCA Thresholding init flow doesn't
-check "ignore_ce". We should fix that to have more feature parity
-between vendors.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Another item for the to do list. :)
+Reported-by: syzbot+48240bab47e705c53126@syzkaller.appspotmail.com
+Tested-by: syzbot+48240bab47e705c53126@syzkaller.appspotmail.com
 
-> > We can focus on "check_interval=0". The user wants to disable MCA
-> > polling and rely only on interrupts. They still want to see the CEs.
-> 
-> Is that a use case we support?
-> 
-> Where is that documented?
-> 
-> I can see why someone would want to avoid the recurrent polling but I'm not
-> sure we explicitly say that somewhere in the text...
-> 
+Tested on:
 
-Right, good point. This may come down to another vendor difference.
+commit:         405e6c37 Merge tag 'probes-fixes-v6.15-rc6' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=174aeaf4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c9b33a466dfee330
+dashboard link: https://syzkaller.appspot.com/bug?extid=48240bab47e705c53126
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16d34af4580000
 
-On Intel, the set of banks for polling and for CMCI are mutually
-exclusive. So polling can be effectively disabled if all banks support
-CMCI.
-
-On AMD, polling and interrupt are independent. We still poll all banks
-even if they are interrupt-capable. I think we discussed this in a
-previous revision of this set.
-
-So I think we should document this use case. And also consider changing
-the polling/interrupt behavior on AMD. Even if this use case is
-documented, it still requires user intervention which we can avoid if we
-change the kernel behavior.
-
-> > When the storm ends, the kernel should go back to how things were before
-> > the storm. If there was a timer before, then go back to the old
-> > interval. If there was *not* a timer before, then delete/remove the
-> > timer.
-> 
-> That I agree with.
-> 
-
-Okay.
-
-Thanks,
-Yazen
+Note: testing is done by a robot and is best-effort only.
