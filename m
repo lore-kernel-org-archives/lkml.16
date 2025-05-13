@@ -1,123 +1,102 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2E1E5207;
-	Tue, 13 May 2025 07:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9258D26AFB;
+	Tue, 13 May 2025 07:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122200; cv=none; b=VSJnatwz0HuF1Z+6xuKHxSwI6IVwiZFq3MLWyml05NjH5DGe0syt808lSejW93HZ9+rtdzSac4THo6iTB/wrXbxRDvCjqw5zK2oOfTUaAlI14DbJ+LGsXw/Es/XfRebAAWHvNCqi7bfZzon0+zS0jIvczaFLsc1i0pqQJtXs9Sg=
+	t=1747122240; cv=none; b=DClyPAWggFEjyhvmI31AbIRd6I/30x6TFyebRaiLFic2Ed7Sf3ymjau33j4ot+D5pLLhGOB7Qyg21u23BPkvLzNxxXg7Nc79y/g0AguPQ3zZr97KtD1kp8Pk66f+M2WxJHFEmrtOTgyQg2IOh4tdA6KIkWSpGMeh9hJBbnAyUq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122200; c=relaxed/simple;
-	bh=jolsXHXKcmam1GMy6yynZRDnDDKcH0YQBj1q8mdncu4=;
+	s=arc-20240116; t=1747122240; c=relaxed/simple;
+	bh=h++75clzys47eBFuF7l+Mxc5y6MYCu91Gsf4i1cCO3U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LlL48gsFKqmwFWcSESizvlQ05Axw4h3nYgDbknEwi0AvoPEVD2d0Qd50CJlTEqEq8MnJVxyW2sO14IzK1Y3ejUv4v74v2OSDYzglwyClCUebBPi9pfyGR8S1tcnVFGlGVGRQD13u03IZYfagkO0TToaWR0jdGxyIK60hR1mYs7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoYGeyAA; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=l4XHoQS+T+Xjwiuad5xBWw5/RacF0zgSX/q/7CjcvvQUUWCTvg7+TaeE0fEffTplEc6GTtnd3DxVa/HYvf/p/l3TnZZO6vKosi6gg+vErUNx2eHDTHdNbUMC+x5GyHENkz0JYtql/bsxO+losxh/k1MAsmjDK8gzfy3Zu3n4qOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoYGeyAA"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so2752290f8f.1;
-        Tue, 13 May 2025 00:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747122195; x=1747726995; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fG8oqj+Wp78YD53lMG3NWPJMEgG7b7UFy7qM2sNYujM=;
-        b=OoYGeyAAVV5eNvpgduPOelqJH975lQ5TiiSVm+i2kZVhoEd8vnp5u9niUOS0giUOly
-         uoiZRnmioisFCKnpg6uXv6uXaaUZLDnycttyry5YG0hpMdsuFp2D7Btx8fN3CfF3Zq58
-         aHzlc5R8E3zNBUNiafnUh8iU8rfr5oVZo4ZbzkirTmnSiiW6wp3T90tWIWn1maPSZz9E
-         2w5cLs16sqyD9TiUPsuB1VQ//9wb4I4geXb10dH0Kld0DQugg/nGWG9qlkAM83NVwbZW
-         pZON9516mYSECpj8+zJXpyIMjvO4g8OUTPAQQegxRom622n5IeXCGLW8HigzFUeRCi2s
-         Zn9A==
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4c4e1f16833so1854556137.0;
+        Tue, 13 May 2025 00:43:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747122195; x=1747726995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fG8oqj+Wp78YD53lMG3NWPJMEgG7b7UFy7qM2sNYujM=;
-        b=MAPtQVNZ3qJ9flHy6JekgdLI/Jv4ZMB4tNFawgHtASHAkD//bh+Y40cWd5lhQcwiBQ
-         OXfwcYmpYONOAL9vzxbP3RkQQu6h3dhPGJ3IpkmSK6AWcb3k3i7XqdkbDUCiqaov8g+g
-         GE8iPyJ3nL8ERwdy2tm8YKBSMqYNP8MUtfFv/Lvxplqu4GZPhBHiZnsloZrXi1qCKDjb
-         xje303mLbSAOSdX/SftS2Ue5Bcgkb3OKxLH1KEF5cUzqKMe2xgbqpaVC+44Ocqg8gQCh
-         fPX/pw7DogtWW/QiMtmBqarJi+Xgomc/rTI43BmrUsTLHXZf8ziUxb67KUxl951zzok6
-         Nigw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOTASAAOVhgDJ/jw1MPJmOlzR2Cq5H0396IvNk3P0e0GRjuTcrEJZ+paJOASVIjV/Kv13+g4Z8OVw7@vger.kernel.org, AJvYcCXO/h9L2z23ldAoR78ELjqFDyxwn7Yxu9HURlm5yQDt+5oxebXVB4PxTFFG514PSbr8zugj8scUgdQ+p3V2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIaa2tcV2IGbv4uJstIqOWPzqDlh4oJtCBjacOS/DmuqwwcLEV
-	iQ2ZlioUdBpQ7RL2263Ywznzcl517ehDCHt94ERGvoa9OFYansOBpuAp5bw1h7WFDL/aNQFbgr/
-	0dhNC1q3E8SXnJcI2JUbnoaEXn7g=
-X-Gm-Gg: ASbGncuNtAKU98b1Kfy75i47DDPE1s1fNU5+qFsDcT/k7kwlfu9J7AX8wM9lcy0OozU
-	vnYQ3iASk/ehTwOK+BSXbDfgotnNJrxph7LBZlIzbKLSMs1PtFhluuODy3ubbT51A+s2gvfnIeV
-	lK/qU52z7uqGvC1AkiP8aeDl0EwDniL3bpevJW2NxT3yQVAw==
-X-Google-Smtp-Source: AGHT+IEZGFUBGfpFWoH02PF3w4asX5yVpyJ9KxOfndhTR3c9CFgfuFIy472TCk4Qb3+UWsnv0YDG9mgYiKqGQ6eYoMg=
-X-Received: by 2002:a05:6000:430e:b0:3a0:b5ec:f05f with SMTP id
- ffacd0b85a97d-3a1f6482aabmr12175878f8f.39.1747122195541; Tue, 13 May 2025
- 00:43:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747122236; x=1747727036;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9px7yMYPHcOtAwKGdYxPAkCFxVsMD5aB3ekj+hfP2Uk=;
+        b=cvDrzkcXgef9fSW24AH969NHvAVzaN/yRZO23Tnv7CGiqn1mE9CjNoxQs5Q9xnOmuC
+         qef7kfSVwj5hkBq1HSZmmT/TWJttehO2KtjXrAPuw2Hq4qGtWgk5IJMpT2855wxTKJ3L
+         Qbc2Xuu7JJ8MsAHI1PH0JO1b6CVFSjJSgvG3uiIUlw+8ZHro8WcBVySxM87Ho/4fmqRM
+         BkMlkvEWjXVQ0p6gtqxIUDk1odQIOp8EpYG1qucc0z2IzvN4jMnqmzPMSQpU/aIhX2Fx
+         Ri5NcHvj39u1BLj36ZsDW2cnBcoXdZ6fHtqnuzUepa0FiTsAT0uy4awuca117BsCTSPs
+         BSjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNGbn541IBIfCH+bLAacu9GVpiKVp3GO7Sx+Xd2epJwCUEou1K1bErcHxFSH7yKOrvnCNAWdeTYKS4@vger.kernel.org, AJvYcCVWXdKCnnE6dtTewAyYODPhVXr+NRZO3cISJFuZAivIWUnJM6HNcqktP5o6mI78v4OLDoazdHkg2Wy6merx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMbaF8b3BU9wBBqQMPDm/FiFqA62bN+cwAApNuJqosBhX/mawy
+	K2qcUugVYNXltklR5zq7Tz4Mek+p9dwAOje7KSilhC6PX0tYr1HQE8n4o27u
+X-Gm-Gg: ASbGnct4Y4LhSG6uxEAVksq4FaJ2pn38D5dVgehGCl2af0BWnaKNvy/fGyb+LpV4SHl
+	lhE85cPjn40taEee7QecWyTRoz4hBM0qJ7+adCWnXqksbSPkXCqmcNxf0k+xMEwQfQbiYLT7Ss2
+	CObzwU0vVvoQJrPQ0svpVnAFrRSKJGD36fI0NnQfnZQFo1HQKiWxo9AMz9SjO5fO/FOH1M0pR99
+	8PUD8bhaF9BHhA6WTMlLkYMfRauXwJstF+dlIYK4xadCy90Z1R/3FcQqCQBjy4ngQTZ6CeuJdgT
+	PR8OxI112HUOvoYaWGKA02v+Ay0maDQsO8jvEZqlAVP7364ZMLVUROUsy06fcOvgUPFksqxcIYz
+	yDkgcwoFaEJHCZd9HcnHx9A7E
+X-Google-Smtp-Source: AGHT+IF5oPBPBEvlNoqyJYbAhnk8fbdWqmhquvqSousCX257tzKjtek26LgmbTqOxgk974FKBZtdAg==
+X-Received: by 2002:a05:6102:2b8e:b0:4c2:20d3:a125 with SMTP id ada2fe7eead31-4deed33cf89mr13508003137.8.1747122236468;
+        Tue, 13 May 2025 00:43:56 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4df3fe369b7sm4672333137.16.2025.05.13.00.43.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 00:43:56 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso1331293241.2;
+        Tue, 13 May 2025 00:43:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMLev7BDy3hwZP/hb0Iz98agPHPB2WdA1m0MNWh9/S+fuVU02NKcslbj0OjrSqLJq+Qz+iilDt8NRX@vger.kernel.org, AJvYcCVy4b10Vdow+YjsPqc7eTYMILn4MA4Fc2SmdvA2KNg7ZzSD5NP7yycATvJAqfOw350RH8ui9w9W75Fbbwfy@vger.kernel.org
+X-Received: by 2002:a05:6102:91a:b0:4da:e6e9:1f56 with SMTP id
+ ada2fe7eead31-4deed3e926dmr12879431137.23.1747122235875; Tue, 13 May 2025
+ 00:43:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512-daily-saga-36a3a017dd42@spud> <20250512-sphere-plenty-8ce4cd772745@spud>
-In-Reply-To: <20250512-sphere-plenty-8ce4cd772745@spud>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 13 May 2025 08:42:48 +0100
-X-Gm-Features: AX0GCFuqAHW_El1GmwQL0ffwl-eOvi3d0MKWaPdlKXmQfFMsGd_d4EiSnbBSRgQ
-Message-ID: <CA+V-a8tgkNd92USA99UtgydA7F6BdYYB=eBXF7VNR_4h6ViOzA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] riscv: dts: renesas: add specific RZ/Five cache compatible
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20250505144809.1291619-1-robh@kernel.org>
+In-Reply-To: <20250505144809.1291619-1-robh@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 May 2025 09:43:44 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWncKNK6PWckippu69MBhLq+zACbEbfowkWfTK7M2_q_g@mail.gmail.com>
+X-Gm-Features: AX0GCFujJPju3_lxCoE4JcDCtIZA51Q7ofr6KjChwZUjyBr-akmvlJ7H2HyD46c
+Message-ID: <CAMuHMdWncKNK6PWckippu69MBhLq+zACbEbfowkWfTK7M2_q_g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert chrp,open-pic
+ to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 2:48=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> When the binding was originally written, it was assumed that all
-> ax45mp-caches had the same properties etc. This has turned out to be
-> incorrect, as the QiLai SoC has a different number of cache-sets.
->
-> Add a specific compatible for the RZ/Five for property enforcement and
-> in case there turns out to be additional differences between these
-> implementations of the cache controller.
->
-> Acked-by: Ben Zong-You Xie <ben717@andestech.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi Rob,
 
-Cheers,
-Prabhakar
+On Mon, 5 May 2025 at 16:53, Rob Herring (Arm) <robh@kernel.org> wrote:
+> Convert the Open PIC interrupt controller binding to schema format.
+>
+> While the Linux kernel supports the "open-pic" compatible, that's not
+> used in any upstream .dts file. It used for "device_type" though. Add
+> "fsl,mpic" compatible which was not documented.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-> diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boo=
-t/dts/renesas/r9a07g043f.dtsi
-> index e0ddf8f602c79..a8bcb26f42700 100644
-> --- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-> +++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-> @@ -143,7 +143,8 @@ plic: interrupt-controller@12c00000 {
->         };
->
->         l2cache: cache-controller@13400000 {
-> -               compatible =3D "andestech,ax45mp-cache", "cache";
-> +               compatible =3D "renesas,r9a07g043f-ax45mp-cache", "andest=
-ech,ax45mp-cache",
-> +                            "cache";
->                 reg =3D <0x0 0x13400000 0x0 0x100000>;
->                 interrupts =3D <SOC_PERIPHERAL_IRQ(476) IRQ_TYPE_LEVEL_HI=
-GH>;
->                 cache-size =3D <0x40000>;
-> --
-> 2.45.2
->
->
+Thanks for your patch, which is now commit 45168cd2df5019cf
+("dt-bindings: interrupt-controller: Convert chrp,open-pic to DT
+schema") in dt-rh/for-next.
+
+FTR, the real Open Firmware in CHRP LongTail also used the full
+"chrp,open-pic" compatible value.
+http://g33rt.be/migrated/Linux/PPC/pci/mac-ioAT2/open-picAT40000/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
