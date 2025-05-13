@@ -1,203 +1,120 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A69C21C190;
-	Tue, 13 May 2025 09:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1E417FAC2;
+	Tue, 13 May 2025 09:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127993; cv=none; b=KT2wsYS4pxGi/ASyiHHfWOujCkMvs2k9YdjzAoJesnghTxBkNheteVjHJAF6u/2iUykNL2pdTxQnS84IgKahK2SU//kdLA18emxuXR/GPihpOWXSSKar+AhFXUu+x/u0nvJuC+/CZDGQ1JlrHxnmAtYgNjjL/1dzX7f37AuADco=
+	t=1747128017; cv=none; b=e5cxmGgDcS++i2qnyb/OXGLsnTRj9vm4kNUVN7Cag8a+oti+aXqb9SBMA2JAUulQndZGbasA47L6XMrbXm3mrsj5xRrkUxfaR3XgjZlfLOY1JppW9YdV5RWESkrYJA06pFf0PUJ9YgmFK+tii//VPy2165sirNT/6TNdR7QkJGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127993; c=relaxed/simple;
-	bh=rtSyRjTECZ5Et9M3bDmL4vpi8VcFKKqiV8JKoAZieVU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m0umdEs7wE03lTDuQc0SZXkAZcgW4z9HqDSUAqjNyy4gioV7xRGITQc4AqXADbw32dY7t0nKaEFMEYjTYixR6uzquxUXNrmOHGnQ0Kg1KR7p+EAP8hgluy1flHxlc7NBXx/Ch5HKwuJBQus2VI07E2++FpqV2Rs+vO4EPBA0OoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=EgJIASSY; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1747128017; c=relaxed/simple;
+	bh=a3HdxlXncWI1w776qXRRfyOysZby/NwAboYU6kKpoBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sxq7CFVZi7NajK3i/0ywV0QkG27MZM6iAfw+D5fr/s20XBq6m5f6BJ1xp/BhadVLQ22Kr6JSa5bJmd57tNRP6JiutAtSy+Rk6OLeHo1O/JZub0i/6+ElRPzW/x7DLag0cQ3eB014/rWd7MreKVTEb7V9vBatDYAYLvFjFvgsBHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=cet+Wo79; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EgJIASSY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747127991; x=1778663991;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rtSyRjTECZ5Et9M3bDmL4vpi8VcFKKqiV8JKoAZieVU=;
-  b=EgJIASSYMWF5qb2D5RQ+4VrSXEqKASGVt0r+ZCBFyQGv/tFvMx05fRKY
-   VsmpjJIuql4ONTSZURRqswU/aGEgRUUmCchwOJ9ik16Q3F00v1SRKSnD4
-   4KuKPqI+WusbNrnyDzEzQFnJZvc4RLBSQovyeZVczRd2PsDcmvSun7lJ0
-   hfadqFpZ9KBHxgUSNC7aY0C9HWsKM0miEM3ofQM+fm4eutr/va/0HVQ9Z
-   YGLHvyHAAKkhmzrCtwKM2N2UEYT3hMFnRaYuv02DLfsNdg+QeG2Ttl/FY
-   YDf4SHd8qoudUaMBA0uBurtrbOBt3E112th7xCNkTE8auhr9dEqrXib0p
-   A==;
-X-CSE-ConnectionGUID: 4la2DOakSDynwZsvbJGMbg==
-X-CSE-MsgGUID: auJ8YDCYTGmt0RUCe8/urw==
-X-IronPort-AV: E=Sophos;i="6.15,284,1739862000"; 
-   d="scan'208";a="209027475"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 May 2025 02:19:48 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 13 May 2025 02:19:28 -0700
-Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 13 May 2025 02:19:24 -0700
-From: Rengarajan S <rengarajan.s@microchip.com>
-To: <vaibhaavram.tl@microchip.com>, <kumaravel.thiagarajan@microchip.com>,
-	<arnd@arndb.de>, <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-	<brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <unglinuxdriver@microchip.com>
-CC: <rengarajan.s@microchip.com>
-Subject: [PATCH v1 char-misc-next 2/2] misc: microchip: pci1xxxx: Add GPIO Wakeup Support
-Date: Tue, 13 May 2025 14:45:57 +0530
-Message-ID: <20250513091557.3660-3-rengarajan.s@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250513091557.3660-1-rengarajan.s@microchip.com>
-References: <20250513091557.3660-1-rengarajan.s@microchip.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="cet+Wo79"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ujdQa38ajbtim3vKv/37DL30QUuxBtRR1SWz+JPonBo=; b=cet+Wo79Mk2Rq5JOvCFUb5ZOOL
+	zLLcQDodIaxvX6NkNygY8RH9MlgLkHEVHQsd//TeHk8Xf17+NYpUCDnzGCrWYdKfH04++Xjq2APG9
+	BSppjY+zMe0ibNULuipjvVjefzWcBRoKjRE/G7SxvNnHCmJnT9iAXcO79UP2yanexiK6N1Z9+sdod
+	gd7ffo8/xFGrVRT8Zg8iHp3vUdNsGD3gdbCrJSSjG28AKS+LxSKR68SAjuByULWkAwb3+0VHxx4bc
+	UvZR3KhTRmnozNdyFpKMEH+eOZrpyiyTEuA+HfReEdLuuv4IiF/6R6aZj96FRanoeMXnLZEuqL/NQ
+	zKq+Vw8w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uElo1-005iPI-03;
+	Tue, 13 May 2025 17:20:10 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 13 May 2025 17:20:09 +0800
+Date: Tue, 13 May 2025 17:20:09 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+Message-ID: <aCMOyWVte4tw85_F@gondor.apana.org.au>
+References: <aBt5Mxq1MeefwXGJ@Red>
+ <aBw-C_krkNsIoPlT@gondor.apana.org.au>
+ <aBw_iC_4okpiKglQ@gondor.apana.org.au>
+ <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
+ <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
+ <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
+ <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
+ <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
+ <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
+ <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
 
-The patch adds PIO asynchronous wakeup support while PIO PCIe Endpoint
-function is in D3 state. When such a wakeup event occurs, the PIO
-asserts a PIO_WAKE signal, which in turn triggers PCIe Wake signaling.
-This wake request should trigger the PCIe Host to take the PIO PCIe
-Endpoint function into the D0 device state.
+On Sun, May 11, 2025 at 06:39:43PM +0200, Klaus Kudielka wrote:
+>
+> Here the log after modprobe, with the new printk patch:
 
-The device supports up to 96 PIOs distributed across three GPIO banks.
-During suspend and resume, the driver checks the status of each GPIO bank
-to determine if any GPIOs with wake masking enabled have triggered an
-event. Upon resume, PIOxx_STATUS register must be cleared by software
-explicitly to enable the detection of the next transition.
+Thanks.  I'm starting to get the feeling that the partial hash
+is corrupted.
 
-Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
----
- .../misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c   | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
+Please apply this patch on top of the printk patch to confirm this.
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-index 3a2a1a4ef612..847f77792f3e 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-@@ -42,6 +42,7 @@ struct pci1xxxx_gpio {
- 	raw_spinlock_t wa_lock;
- 	struct gpio_chip gpio;
- 	spinlock_t lock;
-+	u32 gpio_wake_mask[3];
- 	int irq_base;
- 	u8 dev_rev;
- };
-@@ -272,6 +273,22 @@ static int pci1xxxx_gpio_set_type(struct irq_data *data, unsigned int trigger_ty
- 	return true;
- }
- 
-+static int pci1xxxx_gpio_set_wake(struct irq_data *data, unsigned int enable)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct pci1xxxx_gpio *priv = gpiochip_get_data(chip);
-+	unsigned int gpio = irqd_to_hwirq(data);
-+	unsigned int bitpos = gpio % 32;
-+	unsigned int bank = gpio / 32;
-+
-+	if (enable)
-+		priv->gpio_wake_mask[bank] |= (1 << bitpos);
-+	else
-+		priv->gpio_wake_mask[bank] &= ~(1 << bitpos);
-+
-+	return 0;
-+}
-+
- static irqreturn_t pci1xxxx_gpio_irq_handler(int irq, void *dev_id)
- {
- 	struct pci1xxxx_gpio *priv = dev_id;
-@@ -319,6 +336,7 @@ static const struct irq_chip pci1xxxx_gpio_irqchip = {
- 	.irq_mask = pci1xxxx_gpio_irq_mask,
- 	.irq_unmask = pci1xxxx_gpio_irq_unmask,
- 	.irq_set_type = pci1xxxx_gpio_set_type,
-+	.irq_set_wake = pci1xxxx_gpio_set_wake,
- 	.flags = IRQCHIP_IMMUTABLE,
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
-@@ -326,8 +344,26 @@ static const struct irq_chip pci1xxxx_gpio_irqchip = {
- static int pci1xxxx_gpio_suspend(struct device *dev)
- {
- 	struct pci1xxxx_gpio *priv = dev_get_drvdata(dev);
-+	struct device *parent = priv->aux_dev->dev.parent;
-+	struct pci_dev *pcidev = to_pci_dev(parent);
-+	unsigned int gpio_bank_base;
-+	unsigned int wake_mask;
-+	unsigned int gpiobank;
- 	unsigned long flags;
- 
-+	for (gpiobank = 0; gpiobank < 3; gpiobank++) {
-+		wake_mask = priv->gpio_wake_mask[gpiobank];
-+
-+		if (wake_mask) {
-+			gpio_bank_base = gpiobank * 32;
-+
-+			pci1xxx_assign_bit(priv->reg_base,
-+					   PIO_PCI_CTRL_REG_OFFSET, 0, true);
-+			writel(~wake_mask, priv->reg_base +
-+			       WAKEMASK_OFFSET(gpio_bank_base));
-+		}
-+	}
-+
- 	spin_lock_irqsave(&priv->lock, flags);
- 	pci1xxx_assign_bit(priv->reg_base, PIO_GLOBAL_CONFIG_OFFSET,
- 			   16, true);
-@@ -340,14 +376,37 @@ static int pci1xxxx_gpio_suspend(struct device *dev)
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
-+	device_set_wakeup_enable(&pcidev->dev, true);
-+	pci_wake_from_d3(pcidev, true);
-+
- 	return 0;
- }
- 
- static int pci1xxxx_gpio_resume(struct device *dev)
- {
- 	struct pci1xxxx_gpio *priv = dev_get_drvdata(dev);
-+	struct device *parent = priv->aux_dev->dev.parent;
-+	struct pci_dev *pcidev = to_pci_dev(parent);
-+	unsigned int gpio_bank_base;
-+	unsigned int wake_mask;
-+	unsigned int gpiobank;
- 	unsigned long flags;
- 
-+	for (gpiobank = 0; gpiobank < 3; gpiobank++) {
-+		wake_mask = priv->gpio_wake_mask[gpiobank];
-+
-+		if (wake_mask) {
-+			gpio_bank_base = gpiobank * 32;
-+
-+			writel(wake_mask, priv->reg_base +
-+			       INTR_STAT_OFFSET(gpio_bank_base));
-+			pci1xxx_assign_bit(priv->reg_base,
-+					   PIO_PCI_CTRL_REG_OFFSET, 0, false);
-+			writel(0xffffffff, priv->reg_base +
-+			       WAKEMASK_OFFSET(gpio_bank_base));
-+		}
-+	}
-+
- 	spin_lock_irqsave(&priv->lock, flags);
- 	pci1xxx_assign_bit(priv->reg_base, PIO_GLOBAL_CONFIG_OFFSET,
- 			   17, true);
-@@ -360,6 +419,8 @@ static int pci1xxxx_gpio_resume(struct device *dev)
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
-+	pci_wake_from_d3(pcidev, false);
-+
- 	return 0;
- }
- 
+Cheers,
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..230501fe843b 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -374,6 +374,12 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 
+ 		memcpy(ahashreq->result, data, digsize);
+ 	} else {
++		struct {
++			u32 digest[8];
++			u64 len;
++		} state;
++
++		memcpy(state.digest, creq->state, digsize);
+ 		for (i = 0; i < digsize / 4; i++)
+ 			creq->state[i] = readl_relaxed(engine->regs +
+ 						       CESA_IVDIG(i));
+@@ -393,6 +399,21 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 				for (i = 0; i < digsize / 4; i++)
+ 					result[i] = cpu_to_be32(creq->state[i]);
+ 			}
++		} else {
++			HASH_FBREQ_ON_STACK(fbreq, ahashreq);
++
++			crypto_ahash_import_core(fbreq, &state);
++			crypto_ahash_update(fbreq);
++			crypto_ahash_export_core(fbreq, &state);
++			if (memcmp(state.digest, creq->state, digsize)) {
++				pr_err("mv_cesa_ahash_complete partial hash mismatch\n");
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						state.digest, digsize, false);
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						creq->state, digsize, false);
++			}
+ 		}
+ 	}
+ 
