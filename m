@@ -1,188 +1,150 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8345F258CE4;
-	Mon, 12 May 2025 23:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34C9367;
+	Tue, 13 May 2025 00:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094400; cv=none; b=oOq7Y3tyBWfoqb73bKMMlm9xktZENSmKJv3+MGUfeRbaoV2P9dGbLYj8NA3siVIyWbKpfqNzl5ezcTusUHbBofDQbecC2k1G+wMa6U0Acl/F0Mmd9wWb9GZh89UBww39nL12vkwn2PTBsHtFKJRoYqtEh0mv+S32ASqT6NrXU4g=
+	t=1747094784; cv=none; b=Ka9YCWqqmb5IWAq8paqUVSlllR8VFpLrLLEC7mKyNLjNXs2N9GC8CM5JaI8QeqNE3UAk1hQe9GuVcWEBlL6S+57c6xAtWUrN77B+AMr700VNptQGgYkOenQlOKYDUiDO+Y+64ZIXxaUrcX7wcrlpHIzOfoYGrNcqEiOkSH8kY3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094400; c=relaxed/simple;
-	bh=2J/em8HLtQvc9E3150hVUwCcvJnp4okY6FX7p2Q6hbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aUIXeCmKL6Ay4Ym/9i+jZAO59QIzWmyEkmfnAEVwnv85DdhZ+2YExEuj1vGm2lld/BZ0PqhnHwOuQgfw01NyGbZ1EHOo4rvHx/CIm2xpUamoOa7Jda/Nf3AD79sVBFhhIyo1hsRF8PHNPeXZy+LvrfSewIZeJyo7zAjFiwzK6ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XcmgrWyh; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1747094784; c=relaxed/simple;
+	bh=FqKM+4QL0Ww31oOptKrxbmEN83vTXpCtq/sYWBVjerc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KkSO/pmRYnsPe5pSkNw3s5CAhl9EdhqXYgnwMJ05KqeSBcRjbMzCUel+UQ7QND3uZGv0F6ayXI1ElLh1U9iAHA5lo5fKcKXtb7htCARrsPcO33ITtvm/HYY2HSqoe0YivhKDFCzK7GCo58z8v17yoHmKmtXOyOJ2AAO5NkliWCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8ka0XCE; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcmgrWyh"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso53684195e9.0;
-        Mon, 12 May 2025 16:59:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8ka0XCE"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e4d235811so72608925ad.2;
+        Mon, 12 May 2025 17:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747094397; x=1747699197; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XqkHrkvohXoeATOZwyroosrjMBKBmZpV7oFref0aHQE=;
-        b=XcmgrWyhUnQzffwxalDBryr56+2TklbbjyEnN012qKhLEF7tVcagn5j46njXAUOcf3
-         whHUkYodcLJ49Ad9/AZi8jSCv7IcNQvU09yIswkAuHAt/sxerPottZTyMYl0fJ4k85TY
-         7Q0s11x/8ry4FRc4BsgjR9LXs1h34w1B+ZGXYlBo3pKjHAzy3NA/7GmWWqC+bf3SeGeY
-         mWIN3YJv6+t4KkZy9DnFsGWy6EMw3GHwsg3JU0LvO4PgpjTly8yC6YzL1d4IIwpmedhQ
-         go9XNGD/NKXnHnKEkZe4QMvHtNPExlRoQHqD28NBqNTEKQjD5ZQK1AiMeuRd6nwj1kSB
-         Z/jg==
+        d=gmail.com; s=20230601; t=1747094782; x=1747699582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K+wz2fZe6II1B8M7LCEZ+1BKnQs3N11wYkIiB94tlgk=;
+        b=S8ka0XCEqmC4Ys2FDA+kV3i0WXoiN/zC/8IxQlQmTgw1Pr/AX3H/KOGcBMQyrdu3lR
+         ROM9Jqo1dNPua2pWBXteHjTh3R1b8gPnKFzrMp1m1MenOWDBx3d2yt5ebASJUNKCBEmR
+         yKdkNJDJADRaQOM1zeOdT9xSSb+rhnSCmRmRlg8d03F996Cn4RQVtuQlxG9eXw09FaNr
+         6ETLd4SbTCWmjJ/27ka/fzobDs7apqC8POCkHjAFA7uW3HcYiKVweoARvuRzhafe//CI
+         Ku2ZFXzSEfRx5f3mlqzcD9lv49waJGmBi2LaCqOyWVYL8bacE0zIaszqE3l5DEgT+3sb
+         L9Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747094397; x=1747699197;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XqkHrkvohXoeATOZwyroosrjMBKBmZpV7oFref0aHQE=;
-        b=CDLMyF2Qm3iSgD6EzlndPhNlkjktAnJ7/rSxN/WcSyoxQiJ9KJLOiv26yeXQJGSGmh
-         FVHbEsbA1XrdSjWgOjPgcbNTuNKQjWNSOiYSGN4MFIBGJn++agM3LUTB/zORCHIEJ8lK
-         WoI6FF6hg0H6XLp6CTkQpqqGBNBHKftxYSFf2h8uMWvObs7JbKPtWl/ZrnY/ySI/+vL9
-         LN2ERMmgdxTFe3bAS3MdvzWSQeNkOBYiP+OmKa2PWjAprBPxbScXs30X72xZUQG3KEAe
-         gn6t0IL1caoWl8N3cRHgYTK4JQZjINm36TKsZ/UquWJu5ziN9Wjy6Dl3oWmTitdK85ai
-         QlyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVkupJ4a2qNwqw2hSQMQVPkVpAIBOtNMxJP+ZKr2raxPIGi0i1t2Jpptz1bN1+RWs7cnutDf//xnsbIWjb@vger.kernel.org, AJvYcCXZBNkTXgNWeTpD+8R8UJRFD1n4YJNV2Q2x+uJ0/VgkXlvVoadxT17yBrmHl9wuGvXvxfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxed1+SfcbNc0jdTVvDijWZD/NFqsBYoHKAt2hq11UlB1RnZCWz
-	xuNHXbisUZdXrKBKfQm9uX3iJhe5G9ySRP0OadG92UhIWSo/1TB0W6iJ5YKQzd8/aOSjkB2dM/9
-	BSaeHPy32jTwAbjSWsMrF8Z6q0VY=
-X-Gm-Gg: ASbGnctNRmjz4HpFHyyRW2GBxKZ2PWUIF+oeVF+m8L5oDZXbvJOdZxqo8xVPRSx/+4a
-	roJ3UAURuzwgctpZysuc0W/0bK6X/+9AY8Zb5v3flfVg1P/Wayn2SSwRvk8dKQICRvbVO5HOFIG
-	mIJ1c26SR+uzMUlI4FAKYT+WhxGzjc7+gK3ilwlyfNC7v51SWo50xRunTbnyZy8w==
-X-Google-Smtp-Source: AGHT+IHUc1cjGA+9WC0p4KmY9aXJ3wnQCknBGLCj1rhOfrN+pLJVHyAGYd9lc567X5ES9Kd6yqHQcFQDOFI71pZEHXU=
-X-Received: by 2002:a05:6000:1ac6:b0:39e:dbee:f644 with SMTP id
- ffacd0b85a97d-3a1f64b5a71mr11441819f8f.46.1747094396479; Mon, 12 May 2025
- 16:59:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747094782; x=1747699582;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K+wz2fZe6II1B8M7LCEZ+1BKnQs3N11wYkIiB94tlgk=;
+        b=nEpahuvhTKFMYwp0n2c2Q9w8C+ThjNh+xrF8q8nafK+rnVvQECtqiP8DU/7djJLh1q
+         IVlaicm0hNK2VGOLVSm5XXHA7eOrZYCweI89WiVIqOpP1PD5mmnGHhTeHTEKZq3lKduX
+         kSwYMP12sFnysjTqT3VhBYVKwF2Jh7JzEKh79l39rF3KUrnfIOlBvvRKexYMRagjjm/6
+         Hlf1apTk4LAiiqa7Wuo2zyfQKev7BDWbELaZkoWbsr+78fvM87/4fskfFki9FUo99dsC
+         QEbkLLJ+xffbi2lzkZOmAUlM7dyGwObhbqUOEJ0wkuHaC3iJ+hUFKY2nmyP9DUsqmLzp
+         JYjg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0r+SCpqnh2n5/TUljLZp2c53QZDp34VjfVN5fQKF5cwVoaht9Dd/CQJ+LZi4U0oq+oaGMCcGL@vger.kernel.org, AJvYcCV6GUzxBrQ7EjbuyZzpbj60TzT4BaWJPjFaobVhbd4nAzScRulXQVHaTTL18Wc/Hzl/UObkSz33KVfZEg==@vger.kernel.org, AJvYcCVkCPKPVd1zXLFUElstktQ8iGdv1Fb/aVGmSSD8GWaAGWWXw4akvRcewdBZMOIVJbCCzm5JZr+/dXMbK7s=@vger.kernel.org, AJvYcCWzoAE3MYSqyQDuwJnBeicwg0DGzsizNEgezO2nQOmgLHG8BJseJednACSHSeOTlOmOUgKZ3iow@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX+2KDHcUrFaya+i3HBHPpXjFV+6WrOzwhZPm9DdQ0OhYl+kVk
+	2qHg1igMBl/te2D3+cCqU2z7CqVErV3GDFmF7iUwwelpN6OviRMe
+X-Gm-Gg: ASbGncsoCD7KkOBNPgqHgtFVyg8AwlepFZZOaXPmnN1je4qtpcVTcQngX8PK+sl3uZC
+	/+2Lmwosz0/IXPDT7d6kdqihwr2f+OzzjBydRDvA/ScJKUNeSfA5v6ljFAWLaBdl3PWwRfxS5o3
+	qBExxAL9UEwlt9a3E6kHmlbaRRlVvzLbpL5tn90ojg01ROgeHCYoajHMnjdCn4ARdBPHoyoqpE2
+	gNdBbwTge5vbSdIvMSScxSRpF/sgrOqZ2Ejqe/jOHx9ztl3Ub5cE5P5OwbXtCRs6j58eF2lt8eV
+	NJ5ggn+/uYoXjitkBrr7vndidPp4myiQxm6Wzc6CFp4xOLMje69XpIC4H1yvkod3Ns5jpL16kdI
+	VU1EdqblFgSuDlGF71Bnp5pEebWP7ccNbUKeO9Q5U
+X-Google-Smtp-Source: AGHT+IHIWe95ox3zt/ZzG1SW9KG/4OtiRl2M/Zxq8XMDH7/fn4wU67Qk37R3LtB/fXEZes0qT3Tkkw==
+X-Received: by 2002:a17:902:ce83:b0:227:ac2a:2472 with SMTP id d9443c01a7336-22fc8c83d38mr230587205ad.28.1747094782102;
+        Mon, 12 May 2025 17:06:22 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b491sm68470665ad.184.2025.05.12.17.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 17:06:21 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH net 1/5] Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
+Date: Mon, 12 May 2025 17:06:00 -0700
+Message-Id: <20250513000604.1396-2-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250513000604.1396-1-mhklinux@outlook.com>
+References: <20250513000604.1396-1-mhklinux@outlook.com>
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512145901.691685-1-chen.dylane@linux.dev>
-In-Reply-To: <20250512145901.691685-1-chen.dylane@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 12 May 2025 16:59:45 -0700
-X-Gm-Features: AX0GCFv2mL6YyRFJjz6uEDOQtpzKiEgSaMHj8gosX_KFjGLuWx8EQHoXsRH7xw4
-Message-ID: <CAADnVQJNmS-3gDQ4=GRGzk00S-n9KOs2temi+P-7Nac_gnx5DQ@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Fix bpf_prog nested call in trace_mmap_lock_acquire_returned
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Liam Howlett <Liam.Howlett@oracle.com>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 7:59=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> syzkaller reported an issue:
->
->  bpf_prog_ec3b2eefa702d8d3+0x43/0x47
->  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
->  __bpf_prog_run include/linux/filter.h:718 [inline]
->  bpf_prog_run include/linux/filter.h:725 [inline]
->  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
->  bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
->  __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/m=
-map_lock.h:47
->  __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mm=
-ap_lock.h:47
->  __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:4=
-7 [inline]
->  trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [in=
-line]
->  __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
->  __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
->  mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
->  stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
->  __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
->  ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
->  bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
->  ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
->  bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
->  bpf_prog_ec3b2eefa702d8d3+0x43/0x47
->  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
->  __bpf_prog_run include/linux/filter.h:718 [inline]
->  bpf_prog_run include/linux/filter.h:725 [inline]
->  __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
->  bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
->  __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/m=
-map_lock.h:47
->  __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mm=
-ap_lock.h:47
->  __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:4=
-7 [inline]
->  trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [in=
-line]
->  __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
->  __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
->  mmap_read_lock include/linux/mmap_lock.h:185 [inline]
->  exit_mm kernel/exit.c:565 [inline]
->  do_exit+0xf72/0x2c30 kernel/exit.c:940
->  do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
->  __do_sys_exit_group kernel/exit.c:1113 [inline]
->  __se_sys_exit_group kernel/exit.c:1111 [inline]
->  __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
->  x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:=
-232
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> mmap_read_trylock is used in stack_map_get_build_id_offset, if user
-> wants to trace trace_mmap_lock_acquire_returned tracepoint and get user
-> stack in the bpf_prog, it will call trace_mmap_lock_acquire_returned
-> again in the bpf_get_stack, which will lead to a nested call relationship=
-.
->
-> Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/bpf/8bc2554d-1052-4922-8832-e0078a033e1d@=
-gmail.com
-> Fixes: 2f1aaf3ea666 ("bpf, mm: Fix lockdep warning triggered by stack_map=
-_get_build_id_offset()")
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  kernel/bpf/stackmap.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 3615c06b7dfa..eec51f069028 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -130,6 +130,10 @@ static int fetch_build_id(struct vm_area_struct *vma=
-, unsigned char *build_id, b
->                          : build_id_parse_nofault(vma, build_id, NULL);
->  }
->
-> +static inline bool mmap_read_trylock_no_trace(struct mm_struct *mm)
-> +{
-> +       return down_read_trylock(&mm->mmap_lock) !=3D 0;
-> +}
->  /*
->   * Expects all id_offs[i].ip values to be set to correct initial IPs.
->   * They will be subsequently:
-> @@ -154,7 +158,7 @@ static void stack_map_get_build_id_offset(struct bpf_=
-stack_build_id *id_offs,
->          * build_id.
->          */
->         if (!user || !current || !current->mm || irq_work_busy ||
-> -           !mmap_read_trylock(current->mm)) {
-> +           !mmap_read_trylock_no_trace(current->mm)) {
+From: Michael Kelley <mhklinux@outlook.com>
 
-This is not a fix.
-It doesn't address the issue.
-Since syzbot managed to craft such corner case,
-let's remove WARN_ON_ONCE from get_bpf_raw_tp_regs() for now.
+vmbus_sendpacket_mpb_desc() is currently used only by the storvsc driver
+and is hardcoded to create a single GPA range. To allow it to also be
+used by the netvsc driver to create multiple GPA ranges, no longer
+hardcode as having a single GPA range. Allow the calling driver to
+specify the rangecount in the supplied descriptor.
 
-In the long run we may consider adding a per-tracepoint
-recursion count for particularly dangerous tracepoints like this one,
-but let's not do it just yet.
-Removing WARN_ON_ONCE should do it.
+Update the storvsc driver to reflect this new approach.
 
-pw-bot: cr
+Cc: <stable@vger.kernel.org> # 6.1.x
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/hv/channel.c       | 6 +++---
+ drivers/scsi/storvsc_drv.c | 1 +
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index fb8cd8469328..4ffd5eaa7817 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -1136,9 +1136,10 @@ int vmbus_sendpacket_pagebuffer(struct vmbus_channel *channel,
+ EXPORT_SYMBOL_GPL(vmbus_sendpacket_pagebuffer);
+ 
+ /*
+- * vmbus_sendpacket_multipagebuffer - Send a multi-page buffer packet
++ * vmbus_sendpacket_mpb_desc - Send one or more multi-page buffer packets
+  * using a GPADL Direct packet type.
+- * The buffer includes the vmbus descriptor.
++ * The desc argument must include space for the VMBus descriptor. The
++ * rangecount field must already be set.
+  */
+ int vmbus_sendpacket_mpb_desc(struct vmbus_channel *channel,
+ 			      struct vmbus_packet_mpb_array *desc,
+@@ -1160,7 +1161,6 @@ int vmbus_sendpacket_mpb_desc(struct vmbus_channel *channel,
+ 	desc->length8 = (u16)(packetlen_aligned >> 3);
+ 	desc->transactionid = VMBUS_RQST_ERROR; /* will be updated in hv_ringbuffer_write() */
+ 	desc->reserved = 0;
+-	desc->rangecount = 1;
+ 
+ 	bufferlist[0].iov_base = desc;
+ 	bufferlist[0].iov_len = desc_size;
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 35db061ae3ec..2e6b2412d2c9 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1819,6 +1819,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 				return SCSI_MLQUEUE_DEVICE_BUSY;
+ 		}
+ 
++		payload->rangecount = 1;
+ 		payload->range.len = length;
+ 		payload->range.offset = offset_in_hvpg;
+ 
+-- 
+2.25.1
+
