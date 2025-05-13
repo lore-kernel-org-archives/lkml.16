@@ -1,125 +1,124 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42585198E63
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB86298989
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143774; cv=none; b=Yp1lAwJtziWjlLF2F+bSJUaq0O5RY5G6PkGGmU6uf1J6GXDz350Dmc7iN27y73+CZn+mRmpSYdWMyBsVhjr3pMonNbAhAdg9lDBfHQ132Fm9NSr5iDuL+FrGiLUqaVW5R48v8mxzieqXi83knRJZdS7smk2HfiJQdQJ+yVs3Q7A=
+	t=1747143876; cv=none; b=hH1z7JCY25YlD/MfJ0XF2l1kDjyYLb/C8nUBpu3+SGAbu2SfCROX+SpQ617YqM6as8ra40wyqF+tO4aiaIVrvoJeNARdnDUg0hIpYl0iI9zIiZOgflJazd6B1htDPPODaxCOU81/AjQQq3YWKhA6H/tkhhiV2J2fdsOCxV3UKGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143774; c=relaxed/simple;
-	bh=cXtCqNVBtfHAR3Wz41FoENDIF0sXd1+ZLkqfbG9Hmy0=;
+	s=arc-20240116; t=1747143876; c=relaxed/simple;
+	bh=e4eJ1305I+EgHcEaP7lZEmnVbMFKKOUHcQqiW/2DwFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEoRiO04Y02epqOwmgl9NBisCEIBZCp98/VfJYqqbATfkZOnQfD26I9ZnqwzYE5BHuZueIpK49uCkTdD8DL94BDtkZoC1aY+xUnFlj0C74b7CPk/fjZFGE4QYy7l08Jb2Z101jwtckFgvGkByFU6kzdsmYnzOiQmTX1Hh3XEIps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ORnehZRE; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=aTKdRq56Aa+1g+u8OS1kZb1h/XBOZPOuq2CZ+f75LLnrhfSYKKZJqNaN8iQHdEXrDG+0iqZ3w57lSzmSlr5tieocZRAdH8kMgwlX8LjDKUzc1inWYv1u8H8K2aF5o+k5oMSZLQh5Dkgfn5I1Ps+WotW7zEGPtwsOvyQ2Z3vDsXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZPUf4DXB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ORnehZRE"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fcaff7274bso7170679a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747143770; x=1747748570; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9aJRU5NnMYxotDGMJbw8Txya51AKLb246t5s3qUk+k=;
-        b=ORnehZREY8Ek0ANnXDuft2QyzjybT4f2S/Je3RgZRb62Xl71eSlZEpskd99wWCu3TD
-         6aB0yrc6+Ht+rPYVnqw8TOb5f+zLjqxBDwUxVAnzhF24uXuD/jnun6axLR+RduDnJgAj
-         GoqOyZ7oXEJUK57lJoCnsfaVAUI+YCnFz3F9H0E4FsDvK7ispagAKdRqT+cu/KxAGDJX
-         KTK6qfxzz14GwyjDvDxru9NLPQmFiFQdVtBEE2Wzu1PmCX7qQQk8e1q/fJhfCLHuuSrV
-         ebiGSropFk8EDe4ig4HB3C0au+54v34mUYFjXNR8TBzSacCw7jibYGHw/HgwVcNUEs+W
-         kjkA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZPUf4DXB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747143873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jguUTZh5JvRuhjXFBXsB5gTRN4crP6ONtuEb+MxDCd0=;
+	b=ZPUf4DXBVOWcr2iIAKf3IPRQUtoRfceIt4lULHS1OQZUip4YIoaz5UArdIUCOIY8BH5DVE
+	Q3Q1o4lSr7vdqFu+XDZWBCylFjzFZdr4yZAi+ORBwDUdifQu875LZ8TGptgN7ZV8LT7C6e
+	kHdCEg/cEqhQSCEouF9L1csxo2+2NE4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-4IGdiuqbOl6A513Si4ykPg-1; Tue, 13 May 2025 09:44:32 -0400
+X-MC-Unique: 4IGdiuqbOl6A513Si4ykPg-1
+X-Mimecast-MFC-AGG-ID: 4IGdiuqbOl6A513Si4ykPg_1747143871
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f6c5f54cso1636867f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:44:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747143770; x=1747748570;
+        d=1e100.net; s=20230601; t=1747143871; x=1747748671;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K9aJRU5NnMYxotDGMJbw8Txya51AKLb246t5s3qUk+k=;
-        b=DNucLK3xX7LYGSS/gbql9T5AKEY5E+MSmPxTEsT8hSko0hqs9PQEzQmK9i7bb7wAqM
-         Eb179GvKDNrnE48XDKK6uH/tgj1MICof6j2XzvnIsBvr7Qa6JB5sm9KnR+dGtmh0X05h
-         9JbSaodvJ1smwAD8c5QjG7fGNs3tZjuPDhHvvBwXsAw49Z1lD2E66Z/6JqoiulQzshU1
-         CbVjdwmXclfjMFnTtRBTnGIogV/UnXGBYcDjYgp7KgdTegkSbFXh1TTp1KEY3cQcWO2K
-         PwCxI6zy5lKntcn34amWQ5mqUipUTv1hY+4X97LWsK555NTT8zVSh0SSj5nhTIATjfAH
-         ysNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgzqWMF8pljrHaUTKsi0QooRpQdyUbHqsCr0+mNxwqTP7HOwIxyAw9iu3sc3V1hKwCX3KYvkoN8aZsGW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk0OPCQHaqz55fWUxT4tetMQTv8E/1IpgyW+8GJyOQnWcpJK9D
-	2c7QPkuNfaYKcK633QY6HMFn7e2WI2iUzZZLz8aDaq/r98PflKzBIW98D2sgq+s=
-X-Gm-Gg: ASbGncv3RiJzZvupfmPoVEzCztdBPM9fjNjL6yNLfxUq7E9Eal6GoNLJyfQs/q2AGHW
-	/fYo6VefWv9W/vrfdcvA0tJs6cbpXkSP9bFMmqgwUC3Y6DdKHwf8lY4Z+2jkB2VJXuJqq0fwZwo
-	88Civsa3Z5iywOUOciqY6XOXi/LEXPvGXBXk89as1tKiYkwIHzX07nbgF74sCo8Cyk1rpdx2cGi
-	9gk0QoRDIXDoQMZAn8sQf9/CHykQ61mHrTVdKYahTdlYv65MbkMhLwwHvXCki/GpBCoCXzZrgdC
-	Jqa150tsJX0gJJfioH1kYDKm9gWGWMXAQv6h1FJjXFcsfkI1
-X-Google-Smtp-Source: AGHT+IGfQ6YvcHSNfv2dnuJBtshq2DA0StbbcUkMKGymnYuscXLUWxhwrxXFZ9g4zAoXPV49pVkndw==
-X-Received: by 2002:a05:6402:354a:b0:5e5:bb58:d6bd with SMTP id 4fb4d7f45d1cf-5fca0759a40mr15005682a12.10.1747143770505;
-        Tue, 13 May 2025 06:42:50 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5feadd3957csm2485544a12.67.2025.05.13.06.42.48
+        bh=jguUTZh5JvRuhjXFBXsB5gTRN4crP6ONtuEb+MxDCd0=;
+        b=IetqE+Jeb8J/aavcneftFPmhTKK9Ly2GlY/OLPks7fIHRyaebpwzsWnWolJ+v23+2w
+         GeWbdyZfKKMYV2x6nGjtj5K/yrcEKfByL1ZLQVrB63V1vu7ipcIaoXgEbcHlcTWipK0X
+         aCBzxKKcyTzBs6TTcG6FVKUfkwL4GgcKpHHywf9vJcxUi5k+FaS5IlanyW3Rk+CSNRFO
+         vWSA1Y4ZupBLgKfHnrl1U5rPVxpifcfh4LXU6obYVkuQm6oco9s3Z8uePN8xjbstB0XV
+         Nkm0fExh7gawLnE79KaJdksBsGyKYa5L7GwL65gLD45qvzeeYzo6xZmSogYjx+/gfvC7
+         6w7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqmJFGyxe4Gop8kYGy6fRdNwuHnoI5Y0ya8eUToZ0badReiPnNwibYaAneM0rKY6wgfXe25sHJamR+tTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOubkqNKgksrwqksOgkGzs1v174ByIpMqyfbcBJvbfXwt4IZOk
+	/o6G7ctINc+Kk0QE7lTZGfH2pEYTLNoZGw/F8gKv7x698U2XI4okDx/cu1OfXqFE3IGDhekTUWy
+	b1n11q2ZbmASjWsBmzybtMue/JeUC4yEp6AL7sy8GtCARhe50xNeyt0KdW/vmXd6giVpqsA==
+X-Gm-Gg: ASbGncsIkdcv8ne4mK3qi1e2XUoql5CwNX6Q2BV5vjBC/UMS2rwrXf5kdB4IxanHBOM
+	3kAeFTNwv9iuPYlXSwVtR+TlWHNGwZ+SxDRyCdOKBM1q3fcUyhxppIbDxwzTlmw+Ho57eJobYSQ
+	ZLA4R7UWubq0D4Oe8gIBuJV0kq7FP+LAZlsEn39tYlucxZMHVrDco9Lc4Fe4akkV19Lj7p2rLQr
+	oA7QGT56OjGOeb/ObciIGek0x8pgSMN5YeiOWf1whuo5Rv28odMeHI7BNKwBC9y10hn7R94cw3D
+	TBMefZAdWvopykk=
+X-Received: by 2002:a05:6000:1a87:b0:3a2:6b2:e558 with SMTP id ffacd0b85a97d-3a206b2e7cbmr6897540f8f.28.1747143870786;
+        Tue, 13 May 2025 06:44:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJPvRc2d/tScX3zj2Zy4dIA1+zH01wyvfnGBVZQ5VJgZ3BSnWeMNjMYPwqRM4uUjlqx7Agqg==
+X-Received: by 2002:a05:6000:1a87:b0:3a2:6b2:e558 with SMTP id ffacd0b85a97d-3a206b2e7cbmr6897501f8f.28.1747143870216;
+        Tue, 13 May 2025 06:44:30 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.148.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ee95asm16433764f8f.11.2025.05.13.06.44.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:42:49 -0700 (PDT)
-Date: Tue, 13 May 2025 16:42:48 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Mike Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: imx@lists.linux.dev, NXP Linux Team <linux-imx@nxp.com>,
-	linux-clk@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] clk: imx: Updates for v6.16
-Message-ID: <aCNMWP1MF2+ATdgb@linaro.org>
-References: <20250507123528.585447-1-abel.vesa@linaro.org>
+        Tue, 13 May 2025 06:44:29 -0700 (PDT)
+Date: Tue, 13 May 2025 15:44:23 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Konstantin Shkolnyy <kshk@linux.ibm.com>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mjrosato@linux.ibm.com
+Subject: Re: [PATCH net v2] vsock/test: Fix occasional failure in SIOCOUTQ
+ tests
+Message-ID: <2lh2s2nnhiyqjlwl3xgkh3ujjipaggi3isjgrhgi27s62exh7m@bwyn34knronr>
+References: <20250507151456.2577061-1-kshk@linux.ibm.com>
+ <2d2a92d2-1844-49de-a869-4caf2677b099@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250507123528.585447-1-abel.vesa@linaro.org>
+In-Reply-To: <2d2a92d2-1844-49de-a869-4caf2677b099@redhat.com>
 
-On 25-05-07 15:35:28, Abel Vesa wrote:
-> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-> 
->   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/abelvesa/linux.git/ tags/clk-imx-6.16
-> 
-> for you to fetch changes up to 6a55647af3334f1d935ece67de4a838a864b53fc:
-> 
->   dt-bindings: clock: imx8m-clock: add PLLs (2025-05-05 10:48:56 +0300)
-> 
-> ----------------------------------------------------------------
-> i.MX clock changes for 6.16
-> 
-> - Add video PLL clocks to both i.MX8MM and i.MX8MP
->   while dropping the numeral suffix.
-> - Add imx_anatop_get_clk_hw helper
-> - Add anatop clock providers for i.MX8M[MNP]
-> - Drop ccm_ prefix from base in i.MX8MP clock provider
-> - Document bindings for PLLs in imx8m-clock schema
-> 
-> ----------------------------------------------------------------
-> Dario Binacchi (11):
->       dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
->       clk: imx8mm: rename video_pll1 to video_pll
->       dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
->       clk: imx8mp: rename video_pll1 to video_pll
->       dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
->       clk: imx: add hw API imx_anatop_get_clk_hw
->       clk: imx: add support for i.MX8MM anatop clock driver
->       clk: imx: add support for i.MX8MN anatop clock driver
->       clk: imx: add support for i.MX8MP anatop clock driver
->       clk: imx8mp: rename ccm_base to base
->       dt-bindings: clock: imx8m-clock: add PLLs
+On Tue, May 13, 2025 at 10:46:35AM +0200, Paolo Abeni wrote:
+>On 5/7/25 5:14 PM, Konstantin Shkolnyy wrote:
+>> These tests:
+>>     "SOCK_STREAM ioctl(SIOCOUTQ) 0 unsent bytes"
+>>     "SOCK_SEQPACKET ioctl(SIOCOUTQ) 0 unsent bytes"
+>> output: "Unexpected 'SIOCOUTQ' value, expected 0, got 64 (CLIENT)".
+>>
+>> They test that the SIOCOUTQ ioctl reports 0 unsent bytes after the data
+>> have been received by the other side. However, sometimes there is a delay
+>> in updating this "unsent bytes" counter, and the test fails even though
+>> the counter properly goes to 0 several milliseconds later.
+>>
+>> The delay occurs in the kernel because the used buffer notification
+>> callback virtio_vsock_tx_done(), called upon receipt of the data by the
+>> other side, doesn't update the counter itself. It delegates that to
+>> a kernel thread (via vsock->tx_work). Sometimes that thread is delayed
+>> more than the test expects.
+>>
+>> Change the test to poll SIOCOUTQ until it returns 0 or a timeout occurs.
+>>
+>> Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+>
+>Could you please provide a suitable fixes tag?
+>
+>No need to repost, just reply here.
 
-Hi Stephen,
+I always get confused whether to use Fixes tags for tests, but I saw 
+this patch target `net`, so it makes sense. BTW IMHO it can go 
+eventually through net-next, which is the target tree I usually use for 
+new tests but also test fixes.
 
-Please ignore this pull request. It currently breaks everything: ABI,
-build, boot.
+In any case, the tag should be this one:
 
-This patchset will have to wait until next merge window, at least.
+Fixes: 18ee44ce97c1 ("test/vsock: add ioctl unsent bytes test")
 
-Sorry for the mess.
+Thanks,
+Stefano
 
-Abel
