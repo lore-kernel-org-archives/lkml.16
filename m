@@ -1,295 +1,185 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2058.outbound.protection.outlook.com [40.107.236.58])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60CF212FBD;
-	Tue, 13 May 2025 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146392; cv=fail; b=VvsLhqNfv5qXcr/N156LwlQyRkuZLmeVWT3Snz0KEkbtR7Fgbhnb8OycbCm7PMVVcNQE0xQ8uUTu+LEcC6/jjIFROu0AhBv2YL6EApJUDttmP9MMN76i8GHG/MJwbth7GTLT1YpciNBhbJ2OeTiPu6mBz+Z6+WqpSDsUkG+mZO0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146392; c=relaxed/simple;
-	bh=8YcDJBWlGu14B0ZD+9E5mb8J2HpXX+BNpAF/uaT8OL4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=IyHeXHBSa8JJ/VsfKXfBKr6NvVsfKurgXleV8z52DuPxuTj189/dsj6K9PhvarVE4sO9s6gxSYCXvfIfWV1hsNSFy9CIDkeXEsOcKD7zKaJ2Ffw7y/9Uu9RIhjbXLY6gSwDGLq9inL/eyJdcnq9qUjXTB5a8fsql0tx4yFWT7ME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=naNHX8Gn; arc=fail smtp.client-ip=40.107.236.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4B8292080
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747146407; cv=none; b=gtiudeg86eR466xAAqBu8FFnk5Vu9fNeKduBbhpQy+LCoLqTrlt+LcOLEh7wNW7nZQsjE8xlOWrHgCyk8gYXx/oxTFudZbNPTdx7CEG7oyKyzGlrk1NSpdWFEXT+iMolH4fC0WeWXSGTqCbdnF4gO0hyfkgUw31lhc4THX3gRC4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747146407; c=relaxed/simple;
+	bh=qYsRr27KyrzorRZGruY/mzik8/noi2HJgHEFtl9lCDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D4w/6mrtdNLiRJkrpSmZgBipH2TqiRu+7Ll+5TLn90OrbRc9/HxwWCHwb3RUMYwc4pJj/BfqMTkGvnx3dSTa4YnbUkO5+UEsERHXND76gKLfujEGtGhumrNKb0V+cuY+XS7jwM9qALcZhpyN1C7CZs5vThuNM7aJEIxXG3Rdewo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NaqflHUz; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="naNHX8Gn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b4POCyCEAjcGlDhvQ0hoRzNX5aRMMAyXvb59zQ6J4iiaWqX05pnnwzCZ87MfGoCZTOY4DLFIfGqtn2H/0FdaR9TlAJFs5GTtL2YCOolzvSn/8dA3AKxzh/Ks8BXpFe7GB+yrEV7YggJx+XsZQrcMmDlmcFJBjqINGONsPtjK8X45KSkTOctPcYydD25hmMmOPGGmFXwLwQRHFaY/hEa9yMnmvPj5ko1H3ue3uV6htWtM1NlTLQa1jSjxJa+CuPLcZsc5pvEhPVhkSfOB2vsJj96mgmCC3icMK4X6zIIWJfHpwUz65WWjajrEtzd8VRz6qgeKxTvLgwWpp0UZ9elZuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lrdQRoJOEMtq9Y9qXZnYtl9ydcYqy8JgXv5Cf40cCa4=;
- b=yz/rK3/LXcNZWx5DwvNF2ZpIZUQs0bsvN9yCQwNXp7ufDrX4Xp606mYC9fJIVA4G6dUJufo6svo6W+GCE9iqoU9EjHQFyPy61/ppfDewzh5dS8Dftg1blOm9/trZX2W3VT86cgx3cPkAA+DPCeORRHErn0CaPgzsjYPir81nNwdFgTcTEg5JAWmyzMcaycRsR1BKJzXgELBG9zeYUkFcX9T5pz6/UNdJOdA/iyeloZdlWNJ534TRWZDwPl3T6rn0pqF6yQyokPJhTVIJRrwMuuIGRUVvnDjj2Y2lMM8Ons+5cYpbBaC8NHDWlpvD2NGSCyKBZ/zzQZ6oXg66j6UCXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lrdQRoJOEMtq9Y9qXZnYtl9ydcYqy8JgXv5Cf40cCa4=;
- b=naNHX8Gnoecp0KnGUVGcdBkV5qxkMNryHfRROer5wFBvxBiZGS+JhOI41uvkVZZXViuhSNrHyVoezU42pyb0Du2phwiUgk36sV8A06UD5tyetFEiaXAyBg6y+vixxPxhf2HDv10+uPdR9owU4IXnKsLFA9lD+cNeFEbqpsA0I97MNeaNG/4VxcnPDQfLgoxsaoKAP/5uV2n67wZ78cUyROcLfrHpH60/XCOXz07bd9rq99aRulnQFSnHD/Y40wuK0A8HsJcbA1AdtNbyi4R6NoYrwntAObCZw5S01/0V8EmtsNm0T2Tylf4BSV73VHcb3LKX7Nq/VfnIrO+OvMRsNw==
-Received: from PH8PR11MB7965.namprd11.prod.outlook.com (2603:10b6:510:25c::13)
- by BL4PR11MB8845.namprd11.prod.outlook.com (2603:10b6:208:5aa::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 14:26:26 +0000
-Received: from PH8PR11MB7965.namprd11.prod.outlook.com
- ([fe80::ad6c:cf56:3c3d:4739]) by PH8PR11MB7965.namprd11.prod.outlook.com
- ([fe80::ad6c:cf56:3c3d:4739%7]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 14:26:26 +0000
-From: <Ronnie.Kunin@microchip.com>
-To: <Rengarajan.S@microchip.com>, <VaibhaavRam.TL@microchip.com>,
-	<Kumaravel.Thiagarajan@microchip.com>, <arnd@arndb.de>,
-	<gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<UNGLinuxDriver@microchip.com>
-CC: <Rengarajan.S@microchip.com>
-Subject: RE: [PATCH v1 char-misc-next 1/2] misc: microchip: pci1xxxx: Add PCIe
- Hot reset disable support for Rev C0 and later devices
-Thread-Topic: [PATCH v1 char-misc-next 1/2] misc: microchip: pci1xxxx: Add
- PCIe Hot reset disable support for Rev C0 and later devices
-Thread-Index: AQHbw+gjXcEcB6a0LEe3pRMswGcUKLPQnIyQ
-Date: Tue, 13 May 2025 14:26:26 +0000
-Message-ID:
- <PH8PR11MB79656E8B640C7497F074DDF49596A@PH8PR11MB7965.namprd11.prod.outlook.com>
-References: <20250513091557.3660-1-rengarajan.s@microchip.com>
- <20250513091557.3660-2-rengarajan.s@microchip.com>
-In-Reply-To: <20250513091557.3660-2-rengarajan.s@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH8PR11MB7965:EE_|BL4PR11MB8845:EE_
-x-ms-office365-filtering-correlation-id: 75b466c6-6e63-4b6c-e57c-08dd922a24f1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|366016|1800799024|921020|7053199007|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?YH1CeHkNTcf/QV22MVLQj9rufgg3rf2MRxvMwVIjs8xYQhnsiXkqlfeYILWJ?=
- =?us-ascii?Q?DPJNWARbiEv9DHdwXyt6WYJWL7dkG9/XMe5m9ecxF4fb3RfWdKsEgv6LYXBI?=
- =?us-ascii?Q?+C1Ke+X2zxq2+9EY02obb6E7bCXhsTTqxPZnYiwMJ2pbMv89rnXebPVhkdut?=
- =?us-ascii?Q?DyJcCYsZAYnh2t8N5/Kd91bZNPLVi0DSGaGXLMXScNTcva33Lrs+k43K6kVJ?=
- =?us-ascii?Q?MIVnfoESAFP52Yp9djeYt5oeJZjvN7wNVMTd01lbbPIIvyAYlVkbPlL9fm+/?=
- =?us-ascii?Q?hFQxgGgSxhobQmTo5xEU8afq4wBBV+a6B+cZqxbh6AO2d8T+x6fT81SNcq5S?=
- =?us-ascii?Q?OICCOkdHUtxYBUsIOOR8G4ASX8b8mYUffzmoe+C6ET05B7JTdg/Z8rl7dnGh?=
- =?us-ascii?Q?aI6ZPJVAk4fDlf1IAYuJwwPmlKe7cx1g2r+OvWE3QOTQEvoazOA+Wy/2t59B?=
- =?us-ascii?Q?k/LfM9VI+BCRbwUeD9GKXZG16+nmIx/jUHljV1O8+yhYoeQMRbI540YnbseF?=
- =?us-ascii?Q?40BBg2vBlC3nmRlMRCd4HjBTo7Q2LNCPcHJrS3yg5HHqPEL4KYmM1o6tFLfy?=
- =?us-ascii?Q?7ptN4gAWzjDOvil8qqoyCJzLKGxi+q2Hz9E5IJEsA/Ntwp6OqFNGD6jRdv8Y?=
- =?us-ascii?Q?/c3T9IGnVozMhB2VPAmhjlrWDDKR05gePI+XJz724A2ZSPA5q7xLYJNXYq79?=
- =?us-ascii?Q?bq00rgFvxdxWVo7kcIc4dPCBfv6W0sWR68jauZ0FQZkkX1URRVd6z2Xwlccy?=
- =?us-ascii?Q?QNXxsFkgalOMlsfdClAgxDvNkK+b/nKRQz5QoUG53xt3uF2JcTNPRg1aeaPj?=
- =?us-ascii?Q?NyQedvT2zPHSI34jc8dR4Hpv7BeNUK9ERhvE06nviW2NmlamRrKaRvXi8V4Y?=
- =?us-ascii?Q?o5wZz1EIxk57IKuJcNm9HOPzJK1Js3OHcD7QlyzYNA0BhqA2cUIoYALmi+mb?=
- =?us-ascii?Q?isCDN9nE0MKabfm6m4JGevhFBXkrkHGwr9DaRL2pkMd0uaikGvH7rAhOvYFA?=
- =?us-ascii?Q?xM6pzV4UOiuhmqNzfdiAKzJsmuPNE1DmDaGsBdM4lf/ZkYm3BkVR+qs243bf?=
- =?us-ascii?Q?8uDYzf8603rEY0gBI+ICCgjQhUusn5GKCdxiU0Trik11ebrezxhSt9BPWq/y?=
- =?us-ascii?Q?MDqEPL22qIewwLjdEd26+ApFRhpocba121Wt71me158zJ51f1+OquN3G3dQ3?=
- =?us-ascii?Q?yDZ8cTf910IqMMHbJcYnM1DjeZQ50mXRo+DWPit7XyjVMRHegWFp5cJb+gF1?=
- =?us-ascii?Q?9ABb8arFDyqupy2X7iXY+SjbbePeG1i3GnWXRxrE+1dTp9u6UO2r6NOKOzNI?=
- =?us-ascii?Q?IQp+JD9eu2UHi9QYQxxFrSyjudESEU7ezLR19Mz4q/KuwdBtWo9atoXFlStR?=
- =?us-ascii?Q?HYHDVKnBxntZYVXUmQbzq0eQw6Cev0g2IQSXP9A6xgZz2lUbCxqFsCQeB51G?=
- =?us-ascii?Q?ZVV5rNkDc71PGchnpuv+mS6jj1GE8KjVoiNnQN8eLD20ziVSu6YLW0UF2rci?=
- =?us-ascii?Q?cOb3+hRhNJwsu1Aoru2dRBtvDRhxIpulsUZi?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB7965.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(921020)(7053199007)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?xkRmktk+75u+x2Ck1yTVB2cxTaYRTbB9SNqQMG4Mv5sb7zKgnibCrYTPwYn/?=
- =?us-ascii?Q?XMpVgz3sRqKC563ScdpxO7H/K7o5szQEEMgB0pVvRhRYoiHbI9VdsUxGgTun?=
- =?us-ascii?Q?CC5XKabDunyDqLaeby9eZFGjEQUewE3brxCRdYnWQorpnWJXX5lfDaAdLaaU?=
- =?us-ascii?Q?O9FYa3ZO2T4q+R7kyygVua9VtW2ZG/73xf51IPq7rCO5CK3aeK90JUqtl7W0?=
- =?us-ascii?Q?rHlxrvbI35Kxqy8gr9CZ1B3ph4G/TGsA4UVF2l8D/yb4+wPYSPZSt4ERjozW?=
- =?us-ascii?Q?wt/0ufjIW8Q4mypFsjh2SxLbHbkodRXoopR4qam8JIycpTptltcxeUi7RU2c?=
- =?us-ascii?Q?TgEslU6n/SqM7POXJ3VZwLnhBeMvnM09vRfBpQoy9uJDbjBeQ5v1okvTbaKP?=
- =?us-ascii?Q?nRNUImVmcVu7flG6sZuKxRZkB0hGLOCgpD/rYkt4/KcOZ/ee3XDTABlPcKtk?=
- =?us-ascii?Q?FiyG1P5unmB9Q3SeywbORO046THp4UZ56Nw38l6vKSV4wYBGF9LGtNkc1Tw+?=
- =?us-ascii?Q?uXOxBPyf/GnRdwh8TofWOKBntcKWb/85zA+xAzDt8Tn1CovRegZhvboOi6/0?=
- =?us-ascii?Q?lhkWgHhD0j/JFA2xZX0v2OtKqRmNtW7p1u6QtbbCrnvhfxbA64Mht2ePXRjb?=
- =?us-ascii?Q?ZqE/2m/ClYGod5rgRvGBG8crXCSXDNAnrebu8XJyU13thAP3G7DTHMqqiuOs?=
- =?us-ascii?Q?E1pGmeWgV+w74magPAUNiRS0Fx5DApyxm604nNGsFzwcYpXBc3lcXr7wi5hh?=
- =?us-ascii?Q?viPEwkwtPqgLrT/VpigwMX8p07cqQsWBufBXU3TV6k70xx7uT/Ft6DIOR/ir?=
- =?us-ascii?Q?XDaWRGt+BY3uo2LYY8E2Wu0J/s69Kzb+9UcApyRVxpjxYlLIw6vKbdaPGgGI?=
- =?us-ascii?Q?6yanCJt1p320ivy7KAs0sG4uKrOTDem3VaGu60tyxIvb+46m9BEqQNnv+UQ/?=
- =?us-ascii?Q?INO0JSfMJ1mK5gknP346i4u25UZjIU2wXkrze46eEAQJbE8qnlcPWE96VyT9?=
- =?us-ascii?Q?bEmWx/QU67gGNSGWmF1GbIMC90WB6Ef/pkD9cExS33l1+zMjDeHycETWBe6P?=
- =?us-ascii?Q?n2RMCInyHnfJK2uWlWyLWCWWuJlvGhHR/EzqNpPA9Q/0Ohbqx2V2S+aOvEUd?=
- =?us-ascii?Q?Dg1kMClHCRsZf3hwH1SScC44BhXyTU7o7z2CjJblTh36ScvAE7eoR50Z4+WM?=
- =?us-ascii?Q?H1dstkvWLVUXJkNgTp4pESx42ZdZqbIyokc7VZ8GHF4PhCy7TrlvmIaUuF7T?=
- =?us-ascii?Q?1At5EQ1u/cAg621LUtXN21iBFRPJNIIv9mWQ4PIMWU21Mrd/EVnXhppMl6T9?=
- =?us-ascii?Q?n+95yEwvV798R4HOr8d9HA3UoL62EQg/hoWFtsH07Z7AYsXqV6x4soVAL95f?=
- =?us-ascii?Q?dPLUgApgmWNHSvZvuPXaVkQ1Qe9uBSVvjhMT3CvWPQyKFI4vL15o0F151OuQ?=
- =?us-ascii?Q?VbEUcTv2wa/MWVWwnarxR4LSPI1KPOZwhVP2ypycTLnMzElEk6HeIuaN76Gz?=
- =?us-ascii?Q?IkGefyy/j0cSKwRjkXi7h5mysIpdcbRCpHXPI9gpW+IHRGe/Q7RmPKXUxNHj?=
- =?us-ascii?Q?itw3hinqPzLoOJt2hZwwqlQ//hADJy72pouOU8wv?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NaqflHUz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747146402;
+	bh=qYsRr27KyrzorRZGruY/mzik8/noi2HJgHEFtl9lCDw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NaqflHUzrjEmu83Eqdfz5vLp3EilaB2O8KPNvY/sTINp3b2J4o5wHRZqljmqVRHPx
+	 TeVF5AcuzpPhIVekv8CFOpJOZ9DOfuwDUzBHhM/yXBOyG8bx/Zvr5nho2SVKiTx1ql
+	 /qNsZl1ujKNzhm96njzQwruku+sC32EX2KPdD5XeoG5tSvTdRCWR1cVBy7YuYY05mR
+	 Q75J20j6QqMg10Zbv486KCoDTgxHE/fTppHbI+92pKiCxTSeCDw4jczEDWxeoD4wU8
+	 2jBNrGQfXx8Jqu516PEzb6+Hqk7ZoYYyb3jnsY3FCmjHnDzionLtLxHko5F/rl2Hsr
+	 P/KZgNU5s1ZdA==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4A75C17E07E4;
+	Tue, 13 May 2025 16:26:40 +0200 (CEST)
+Message-ID: <714a719a-9e56-4158-a8ce-118b7ddb97b3@collabora.com>
+Date: Tue, 13 May 2025 19:56:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB7965.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75b466c6-6e63-4b6c-e57c-08dd922a24f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2025 14:26:26.2248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0GfdaqF+wPBFumlZG+HGFdH5RJQw/EiCWeqayt4K0lCj/qT5ISlDr8aitFChd5wGKrXyR/5e/k8Xr/o609wGwFPcJCCjIC+LKELq+4+3S7c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR11MB8845
+User-Agent: Mozilla Thunderbird
+Subject: Re: amlogic: Synchronous Abort with v6.15-rc6
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+ linux-amlogic <linux-amlogic@lists.infradead.org>
+Cc: khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, sboyd@kernel.org,
+ daniels <daniels@collabora.com>, Daniel Stone <daniel@fooishbar.org>,
+ lumag@kernel.org, robdclark <robdclark@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <eb9281cc-de91-48a4-bbd6-f67ddc67a9dd@collabora.com>
+ <b090cef6-5b9e-4149-872d-0316666f9e90@linaro.org>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <b090cef6-5b9e-4149-872d-0316666f9e90@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi Neil,
 
+On 13/05/25 15:25, neil.armstrong@linaro.org wrote:
+> Hi,
+> 
+> On 13/05/2025 11:41, Vignesh Raman wrote:
+>> Hi,
+>>
+>> The Amlogic Meson G12B (A311D) SoC board (meson-g12b-a311d-khadas- 
+>> vim3) fails to boot with the following logs,
+>>
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76210200
+>>
+>> 02:58:27.819: Starting kernel ...
+>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
+>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
+>> 02:58:27.819: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
+>> 02:58:27.819: elr: 00000000f2f26a48 lr : 00000000f2f26c88
+>> 02:58:27.819: x0 : 00000000050fffc0 x1 : 0000000001004383
+>> 02:58:27.819: x2 : 00000000f2f6a358 x3 : 000000000000003f
+>> 02:58:27.819: x4 : 00000000f4fefffc x5 : 0000000000000010
+>> 02:58:27.819: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
+>> 02:58:27.819: x8 : 0000000000000008 x9 : 0000000000000001
+>> 02:58:27.820: x10: 0000000000000010 x11: 0000000000000004
+>> 02:58:27.820: x12: 00000000f4fefc00 x13: 0000000000000000
+>> 02:58:27.820: x14: 00000000f4fefc00 x15: 0000000000000000
+>> 02:58:27.820: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
+>> 02:58:27.820: x18: 00000000f0f21d90 x19: 00000000050fffc0
+>> 02:58:27.820: x20: 0000000000000000 x21: 000000007ffe9000
+>> 02:58:27.820: x22: 0000000000001710 x23: 00000000f0f0e8c0
+>> 02:58:27.820: x24: 0000000000000000 x25: 0000000000000000
+>> 02:58:27.820: x26: 0000000000000000 x27: 0000000000000000
+>> 02:58:27.820: x28: 00000000f0f4f790 x29: 00000000050fff60
+>> 02:58:27.820: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
+>> 02:58:27.820: Resetting CPU ...
+>>
+> 
+> Could you boot with earlycon enabled to at least have a clue of what's 
+> happening ?
 
-> -----Original Message-----
-> From: Rengarajan S <rengarajan.s@microchip.com>
-> Sent: Tuesday, May 13, 2025 5:16 AM
-> To: VaibhaavRam TL - I69105 <VaibhaavRam.TL@microchip.com>; Kumaravel Thi=
-agarajan - I21417
-> <Kumaravel.Thiagarajan@microchip.com>; arnd@arndb.de; gregkh@linuxfoundat=
-ion.org;
-> linus.walleij@linaro.org; brgl@bgdev.pl; linux-gpio@vger.kernel.org; linu=
-x-kernel@vger.kernel.org;
-> UNGLinuxDriver <UNGLinuxDriver@microchip.com>
-> Cc: Rengarajan S - I69107 <Rengarajan.S@microchip.com>
-> Subject: [PATCH v1 char-misc-next 1/2] misc: microchip: pci1xxxx: Add PCI=
-e Hot reset disable support
-> for Rev C0 and later devices
->=20
-> Systems that issue PCIe hot reset requests during a suspend/resume cycle =
-cause PCI1XXXX device
-> revisions prior to C0 to get its GPIO configuration registers reset to ha=
-rdware default values. This results
-> in device inaccessibility and GPIO read/write failure. Starting with Revi=
-sion C0, support was added in the
-> device hardware (via the Hot Reset Disable Bit) to allow resetting only t=
-he PCIe interface and its
-> associated logic, but preserving the GPIO configurations during a hot res=
-et. This patch enables the hot
-> reset disable feature during suspend/ resume for C0 and later revisions o=
-f the device.
->=20
-> mchp_pci1xxxx_gpio is an auxiliary child of mchp_pci1xxxx_gp and does not=
- have access to system
-> register address space for reading the device revision. Hence, the device=
- revision is retrieved directly
-> from PCIe config space.
->=20
-> Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
-> ---
->  .../misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c   | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->=20
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> index 98d3d123004c..3a2a1a4ef612 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> @@ -7,12 +7,14 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/bio.h>
->  #include <linux/mutex.h>
-> +#include <linux/pci.h>
->  #include <linux/kthread.h>
->  #include <linux/interrupt.h>
->=20
->  #include "mchp_pci1xxxx_gp.h"
->=20
->  #define PCI1XXXX_NR_PINS		93
-> +#define PCI_DEV_REV_OFFSET		0x08
->  #define PERI_GEN_RESET			0
->  #define OUT_EN_OFFSET(x)		((((x) / 32) * 4) + 0x400)
->  #define INP_EN_OFFSET(x)		((((x) / 32) * 4) + 0x400 + 0x10)
-> @@ -41,8 +43,25 @@ struct pci1xxxx_gpio {
->  	struct gpio_chip gpio;
->  	spinlock_t lock;
->  	int irq_base;
-> +	u8 dev_rev;
->  };
->=20
-> +static int pci1xxxx_gpio_get_device_revision(struct pci1xxxx_gpio
-> +*priv) {
-> +	struct device *parent =3D priv->aux_dev->dev.parent;
-> +	struct pci_dev *pcidev =3D to_pci_dev(parent);
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D pci_read_config_dword(pcidev, PCI_DEV_REV_OFFSET, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->dev_rev =3D val;
-> +
-> +	return 0;
-> +}
-> +
+There is a synchronous abort right after 'Starting kernel...'. Maybe 
+this prevents any early console logs from appearing.
 
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243455
 
-Reiterate my comment close to an year ago for the SPI driver=20
-https://jira.microchip.com/browse/UNG_BRIDGEPORT-5468?focusedId=3D4336619&p=
-age=3Dcom.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comm=
-ent-4336619
+13:54:02.013: => setenv bootargs 'console=ttyAML0,115200n8 root=/dev/nfs 
+rw 
+nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18641665/extract-nfsrootfs-h2fjsmdc,tcp,hard,v3 
+init=/init rootwait usbcore.quirks=0bda:8153:k earlycon=meson,0xff803000 
+keep_bootcon  ip=dhcp'
+13:54:02.014: $ booti 0x1080000 - 0x1000000
+13:54:02.014: => booti 0x1080000 - 0x1000000
+13:54:02.014: Moving Image from 0x1080000 to 0x1200000, end=5160000
+13:54:02.014: ## Flattened Device Tree blob at 01000000
+13:54:02.014:    Booting using the fdt blob at 0x1000000
+13:54:02.014: Working FDT set to 1000000
+13:54:02.014: ERROR: reserving fdt memory region failed (addr=5000000 
+size=300000 flags=4)
+13:54:02.014:    Loading Device Tree to 000000007ffe9000, end 
+000000007ffff57c ... OK
+13:54:02.014: Working FDT set to 7ffe9000
+13:54:02.014: Starting kernel ...
+13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
+13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
+13:54:02.014: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
+13:54:02.014: elr: 00000000f2f26a48 lr : 00000000f2f26c88
+13:54:02.014: x0 : 00000000050fffc0 x1 : 0000000001004383
+13:54:02.014: x2 : 00000000f2f6a358 x3 : 000000000000003f
+13:54:02.014: x4 : 00000000f4fefffc x5 : 0000000000000010
+13:54:02.014: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
+13:54:02.014: x8 : 0000000000000008 x9 : 0000000000000001
+13:54:02.014: x10: 0000000000000010 x11: 0000000000000004
+13:54:02.014: x12: 00000000f4fefc00 x13: 0000000000000000
+13:54:02.014: x14: 00000000f4fefc00 x15: 0000000000000000
+13:54:02.014: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
+13:54:02.014: x18: 00000000f0f21d90 x19: 00000000050fffc0
+13:54:02.014: x20: 0000000000000000 x21: 000000007ffe9000
+13:54:02.014: x22: 0000000000001710 x23: 00000000f0f0e8c0
+13:54:02.014: x24: 0000000000000000 x25: 0000000000000000
+13:54:02.014: x26: 0000000000000000 x27: 0000000000000000
+13:54:02.014: x28: 00000000f0f566a0 x29: 00000000050fff60
+13:54:02.014: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
+13:54:02.014: Resetting CPU ...
 
-"Just so we are clear. using the PCI config Revision ID field is NOT as com=
-prehensive/safe a solution for checking the chip revision as checking the i=
-nternal BAR DEV_REV_REG register's REVID. You are only guaranteed Revision =
-ID to match the DEFAULT value of DEV_REG REVID.
-While it would be highly unusual to do that, if a customer were to customiz=
-e the (VID/PID) / Rev for his device they will not."
+Successful logs with v6.14-rc7,
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76248143
 
-If you are going to continue to check revision ID thru config space in more=
- drivers for now, then for each one please open a new Jira so that whenever=
- you decide to do it the proper way you do not forget any driver that needs=
- to be updated.=20
+> 
+> BPI-M2S (A311D) is booting fine on v6.15-rc, see https://gitlab.com/ 
+> amlogic-foss/abcd-linux-test/-/jobs/10004997032
+> 
+> But perhaps something specific to the VIM3 is breaking, do you change 
+> the kernel config for the DRM ?
 
->  static int pci1xxxx_gpio_get_direction(struct gpio_chip *gpio, unsigned =
-int nr)  {
->  	struct pci1xxxx_gpio *priv =3D gpiochip_get_data(gpio); @@ -315,6 +334,=
-10 @@ static int
-> pci1xxxx_gpio_suspend(struct device *dev)
->  	pci1xxx_assign_bit(priv->reg_base, PIO_GLOBAL_CONFIG_OFFSET,
->  			   17, false);
->  	pci1xxx_assign_bit(priv->reg_base, PERI_GEN_RESET, 16, true);
-> +
-> +	if (priv->dev_rev >=3D 0xC0)
-> +		pci1xxx_assign_bit(priv->reg_base, PERI_GEN_RESET, 17, true);
-> +
->  	spin_unlock_irqrestore(&priv->lock, flags);
->=20
->  	return 0;
-> @@ -331,6 +354,10 @@ static int pci1xxxx_gpio_resume(struct device *dev)
->  	pci1xxx_assign_bit(priv->reg_base, PIO_GLOBAL_CONFIG_OFFSET,
->  			   16, false);
->  	pci1xxx_assign_bit(priv->reg_base, PERI_GEN_RESET, 16, false);
-> +
-> +	if (priv->dev_rev >=3D 0xC0)
-> +		pci1xxx_assign_bit(priv->reg_base, PERI_GEN_RESET, 17, false);
-> +
->  	spin_unlock_irqrestore(&priv->lock, flags);
->=20
->  	return 0;
-> @@ -412,6 +439,10 @@ static int pci1xxxx_gpio_probe(struct auxiliary_devi=
-ce *aux_dev,
->  	if (retval < 0)
->  		return retval;
->=20
-> +	retval =3D pci1xxxx_gpio_get_device_revision(priv);
-> +	if (retval)
-> +		return retval;
-> +
->  	dev_set_drvdata(&aux_dev->dev, priv);
->=20
->  	return devm_gpiochip_add_data(&aux_dev->dev, &priv->gpio, priv);
-> --
-> 2.25.1
+Yes, we change the config. Please see the config used to build the kernel,
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243439/artifacts/file/artifacts/testing:arm64_config
+
+Regards,
+Vignesh
+
+> 
+> Neil
+> 
+> 
+>> The board boots successfully in v6.14-rc7, but the issue appears 
+>> starting from v6.15-rc1. These tests were run in drm-ci.
+>>
+>> On bisecting the kernel, the first bad commit identified by git biscet 
+>> is,
+>>
+>> 59c35416f4246aee66b5f5523fdc950b83325d82 is the first bad commit
+>> commit 59c35416f4246aee66b5f5523fdc950b83325d82
+>> Merge: 472863ab2aca e988adcb5dee
+>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>> Date:   Sat Mar 29 17:23:34 2025 -0700
+>>
+>>      Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/ 
+>> kernel/git/clk/linux
+>>
+>> Please could you look into this issue. Thank you.
+>>
+>> Regards,
+>> Vignesh
+> 
 
