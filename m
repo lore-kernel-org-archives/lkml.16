@@ -1,197 +1,89 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E4C42A80;
-	Tue, 13 May 2025 19:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E9B1A83E8
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747165643; cv=none; b=gy62OXQeG4ivkYrsyctG4l8OwmRKSQbz307dFkYm+gBt71tjxZpNrawQriEVW0sy8DsxkfXQzaRblu8n2EWF8W4/78Q4zw7jWZgbH15CSy25knPty5n5vbqjtzNBxZhBl70owlmrIfOElgJKEdZ6IUa48iItO1sQkeB4yexozbM=
+	t=1747165768; cv=none; b=fpss1C9CgzAGwFHcIcehn8IduQVG/0O2jB8ZU7weUln+YTcGDbDAqeux8zLxTqzMGH1wm2TFm0auL/yWPUKwapwLm0HmWBMxiS/L7uGIFNtkMB96vEQkrryezNb2m+okZBwPYAL/QsnMhvwpUu0jq4mLcSGea9O64q9oY1Iiok0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747165643; c=relaxed/simple;
-	bh=kQXIKFkHopB881D/+rcYsW/DSTtHXNPYYrm1SPaK0tc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CHnemhYGq/qAxFs1prjnLIZmoqgvmgCHs6HjtZWirBNt/EoyAIhjt6OTNpy38h+DekNdbatV4zyXUXffmHRwuY7JssfzuGGU+5DvQXSnJDGEWGIdFJH1ZEKq3nxUu8JYbbe73ARLboHsjm/OFrL7Xt6mCx0Le7rqmBhQ0B8Suuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=BmeY3436; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1747165768; c=relaxed/simple;
+	bh=ikLxg3MBXkVsTCXyTjrjCIdheWVz7XC4SO91OfvACqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JGTusXiECRe1K4jRkpXgUqK5gio/73qnyBp7R6jkcba9iEz7psESTo12ZI7aA/Es2sNLLCjQgjXs+WXcsIFzVefVLLSzcreQ9G0EJ8NJTJLRSkPsNiiAq3OmQkjAk9cfwp+CiuLMVCX4KRZq9M7hfPffmyyYIY3ZuatN6fvJqOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WrEf+sHE; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="BmeY3436"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747165634; x=1747770434; i=w_armin@gmx.de;
-	bh=Fo3Xxh2RrxttsgvFoCkccAxMzFFBRgehDBGJ7ejlRqU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BmeY3436aXbXXnqf9fvOb13jxL4tUxNN26+v0xjXaeZwyzmWauKs61Sg6UR81AFd
-	 bDImGXYzcroaszPo7VTDNKD0TaP5k0yiieE+FLljE3dxI+cKk/g+fXrQB//yo3YWS
-	 ZnSgqltZIaTI04vEGlDlRJ43hqHw+IMHZJ7u+mRKFTLbKZtWAUzR8d3748TVNClSL
-	 P4XMuv3Sj+vB//TLvrOlaMPe63mp9ueNbtpYkwSJuvzh8NOtRwNAAlC4R/7F+LCZd
-	 bSEaAlIOil7W4N83GVRpUNex6R3PkuVX4IQ5kj7ykNSkCS5avfqyVXlyuffkCFyXQ
-	 LImj9qI70QlyCNKKhA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPokD-1uaBk11slX-00MNtI; Tue, 13
- May 2025 21:47:14 +0200
-Message-ID: <487100c4-f507-426a-b6fd-58a4cefced47@gmx.de>
-Date: Tue, 13 May 2025 21:47:12 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WrEf+sHE"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad241baf856so39698066b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1747165765; x=1747770565; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PsvA6fkbEWSeqHZ/fl5+/tjEQUAFgjAIUBszF8f/hiE=;
+        b=WrEf+sHEXLW0m6PKpxOZe8xk04NrTYNB7c5rm7tXUCMsHZm8hJw/WCmdFw4rqw5kST
+         5iF9VqDtCAbPHb9sneIgkRSdYO8idBPuAu0zJpoXlQLWjPMW/ZguxXM0MpaGSfZ1ixLx
+         uD0KXvP2d6CA5ZjTMtJ3vZQYoZbHHrJwwQVWw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747165765; x=1747770565;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PsvA6fkbEWSeqHZ/fl5+/tjEQUAFgjAIUBszF8f/hiE=;
+        b=jE61ZLGsm7U94zbcBshiZawAaMgcFUwIpAfeOMSXlJxp+IsHcn2qWlx2dudxnCKYAp
+         yo1DNO4YKJhpA/W1UXa9kDscBDctAjsSU6HsTEGy8gN1ru3G6Jxt59Wi1AUau8Pv5QUB
+         iwT3+YkxzbJ4/l/fDV9dU+DTR/ZVbLW+hVPcIFj3Z1IlpKLcVfCxgWBLmSY4cxDRCerv
+         lVuzw49d2NxGg175QQZX4QKzO1d2jXCDYsVwoOs7Q+j2xaIehSNd1A/+VUrrrqWZWeXk
+         QH3l4xak7/sn9evJ9/wGB+sJyqWud/AXY/lW5PaMxELfmn8ODNYIUmULSbkAwrcUnTEF
+         aN0g==
+X-Gm-Message-State: AOJu0YwtNOD9fibKCYl4anek9WewTo/bMmF5U6vpXEfm1e0WGXhFiyac
+	nn1U/CqRGVn8ZHy/stj5A11zuHtcYY8crFu+pF4uB45vApie79iRh6JCKbVWhCpFbkzXNiguzKC
+	Wo9U=
+X-Gm-Gg: ASbGnctOCjRY7MduJQ0CxwleLiw+hzAVCmIYUNV21WUsHnImj/ad2a/74aZEukmu8DM
+	QWM+WuhJB7VxblvwCfmTP7zLEboj3l/Z6XqXXqY+fUXZVEhE87mkwxT376f2sTI//Rd9HJjHFgV
+	eyCWuX4Zm+N7p9nTBnMyd3b0enZNPoWI6f5l3fMJ+6mLY3uzo8zI+Bq7UumZISNeK0C07asmLJa
+	G2PdCofLcyCtjJwmwz1fES998Qfal0bH0hwUsrsQRUEQpcZfc42Sx467sFEa0p8BPXhcbr07szU
+	rJoRHUjIU7/Nt47QZJZPentj9nXga2Ypk7goU/7MXcYj3nW1qKJhp42R8swWwokv9Y9AumW6nB9
+	lPZ9hlVszPvk/ceaVv97xRc7a2g==
+X-Google-Smtp-Source: AGHT+IHpHgbczG7fos2ul35zPK2eSp+E5Ctr+my79CZTPJzFbgz7wlfmPDpj1Pi7QhzZfPhpQQe78Q==
+X-Received: by 2002:a17:907:c38e:b0:acb:b9ab:6d75 with SMTP id a640c23a62f3a-ad4f7558640mr67795566b.23.1747165764749;
+        Tue, 13 May 2025 12:49:24 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2198b68dasm817531666b.181.2025.05.13.12.49.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 12:49:23 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso382235a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:49:23 -0700 (PDT)
+X-Received: by 2002:a05:6402:274c:b0:5ff:8c0a:88ea with SMTP id
+ 4fb4d7f45d1cf-5ff8c0a89e5mr2111225a12.9.1747165763215; Tue, 13 May 2025
+ 12:49:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/10] platform/x86: msi-wmi-platform: Add unlocked
- msi_wmi_platform_query
-To: Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Kurt Borja <kuurtb@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-3-lkml@antheas.dev>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250511204427.327558-3-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:93LxcMH+J0ZDaeNsAsDqPjI4w/OnB1nvcgp7bMHWSh9nSsv6eq4
- TlsuWDZMShZinvJvJ7x745xasQ3DdOSLTRK4iB8X2kXxk8G62iec3/kFjMTgBsZIOFn+2Gz
- 2Jn+Y4r8jJVWRRlMQ8IwmlvPJoAudo5L9PmOXN+X4PJBnqPzHkC/Mp0gMGbhnUYR/OINXAd
- c+GReJ8b2UkLiedCPF9rQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Sm3Rgi+gKPA=;Pv2cyXgag1k4vfBoiXqhm2Tlpst
- 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
- T+62GQJ9sK3DDpUeIPopkuDRHveihY7RED
+References: <20250513111157.717727-8-ardb+git@google.com> <20250513111157.717727-10-ardb+git@google.com>
+In-Reply-To: <20250513111157.717727-10-ardb+git@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 13 May 2025 12:49:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg6LNJmj5FD-PFXNFECthYJDA3sPkPYBYg1EjBhuZJ6wg@mail.gmail.com>
+X-Gm-Features: AX0GCFuQIXZzXD2X3By67QYycQVSSbxPLcoxb-FQDDM823OJYrbvQFNwM7B9mmM
+Message-ID: <CAHk-=wg6LNJmj5FD-PFXNFECthYJDA3sPkPYBYg1EjBhuZJ6wg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/6] x86/cpu: Use a new feature flag for 5 level paging
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Am 11.05.25 um 22:44 schrieb Antheas Kapenekakis:
-
-> This driver requires to be able to handle transactions that perform
-> multiple WMI actions at a time. Therefore, it needs to be able to
-> lock the wmi_lock mutex for multiple operations.
+On Tue, 13 May 2025 at 04:12, Ard Biesheuvel <ardb+git@google.com> wrote:
 >
-> Add msi_wmi_platform_query_unlocked() to allow the caller to
-> perform the WMI query without locking the wmi_lock mutex, by
-> renaming the existing function and adding a new one that only
-> locks the mutex.
->
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->   drivers/platform/x86/msi-wmi-platform.c | 27 ++++++++++++++++---------
->   1 file changed, 17 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/=
-x86/msi-wmi-platform.c
-> index 41218a9d6e35d..f0d1b8e1a2fec 100644
-> --- a/drivers/platform/x86/msi-wmi-platform.c
-> +++ b/drivers/platform/x86/msi-wmi-platform.c
-> @@ -140,7 +140,7 @@ static int msi_wmi_platform_parse_buffer(union acpi_=
-object *obj, u8 *output, siz
->   	return 0;
->   }
->  =20
-> -static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
-> +static int msi_wmi_platform_query_unlocked(struct msi_wmi_platform_data=
- *data,
->   				  enum msi_wmi_platform_method method, u8 *buffer,
->   				  size_t length)
->   {
-> @@ -156,15 +156,9 @@ static int msi_wmi_platform_query(struct msi_wmi_pl=
-atform_data *data,
->   	if (!length)
->   		return -EINVAL;
->  =20
-> -	/*
-> -	 * The ACPI control method responsible for handling the WMI method cal=
-ls
-> -	 * is not thread-safe. Because of this we have to do the locking ourse=
-lf.
-> -	 */
-> -	scoped_guard(mutex, &data->wmi_lock) {
-> -		status =3D wmidev_evaluate_method(data->wdev, 0x0, method, &in, &out)=
-;
-> -		if (ACPI_FAILURE(status))
-> -			return -EIO;
-> -	}
-> +	status =3D wmidev_evaluate_method(data->wdev, 0x0, method, &in, &out);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
->  =20
->   	obj =3D out.pointer;
->   	if (!obj)
-> @@ -176,6 +170,19 @@ static int msi_wmi_platform_query(struct msi_wmi_pl=
-atform_data *data,
->   	return ret;
->   }
->  =20
-> +static int msi_wmi_platform_query(struct msi_wmi_platform_data *data,
-> +				  enum msi_wmi_platform_method method, u8 *buffer,
-> +				  size_t length)
-> +{
-> +	/*
-> +	 * The ACPI control method responsible for handling the WMI method cal=
-ls
-> +	 * is not thread-safe. Because of this we have to do the locking ourse=
-lf.
-> +	 */
-> +	scoped_guard(mutex, &data->wmi_lock) {
-> +		return msi_wmi_platform_query_unlocked(data, method, buffer, length);
-> +	}
+> Separate the two so that the CPU hardware capability can be identified
+> unambiguously in all cases.
 
-Please just use guard() here.
+Yeah, I like this version of the patch series, it seems much clearer.
 
-Thanks,
-Armin Wolf
-
-> +}
-> +
->   static umode_t msi_wmi_platform_is_visible(const void *drvdata, enum h=
-wmon_sensor_types type,
->   					   u32 attr, int channel)
->   {
+             Linus
