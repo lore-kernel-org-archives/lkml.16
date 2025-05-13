@@ -1,158 +1,145 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF3128D8DA;
-	Tue, 13 May 2025 12:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DCD14F70
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141026; cv=none; b=Fmzd3e8nqwLHnDjepLkOvHiNGZFlkQY+Rm/zEAzbkm1Aol5LzfNTcYY3Wp0dC+WvpsHYXpl0aO7As5wYpm3kNIVrQWBn4fvF+6DxFvY19LQY6RNi3RPeYyvJZIL2+yzl7DuOwb33qTJkPCyhTzQPWQ0jRcqSFQf+2tlKDHQ4nHc=
+	t=1747141109; cv=none; b=H8zUOf6P4HtwCFVDcBgcVS3rP8W8GnlGIVrHXvTzaYg3vMMRvcqKsirVFQY3G7JF9p+Dw94yflAJg2SHJYk+oyL6PWKJjoHmYE/gBk8hwrTfdvNxYK42UbdW3jnIPm3ePgx1M3Jm9me9v52dcLkqjniDpK27feA77BoSVBKKhbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141026; c=relaxed/simple;
-	bh=Z/Q3OWGG4uUror9F6q9eZkrcruvRoD7ROPnVAldNGNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VI1+fwBAjhaQ41aGjx4nay6sHEG4piAAK3idynBVkmBJpF/klpYsIeu/78kXrGlWUJCyTBBw5zW6EFRSXzMkkW9IisQVL1EAP5WZJjvDmg/76CWuIoT2S9+ULRvP1ocLf0EsowYadBC14RbWaA1bcEYYNkY6OLDI/CwrfWuUeJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zarp+dSM; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747141109; c=relaxed/simple;
+	bh=T0sXzZEZf8SnXjc4Pqz33S9vO5BZO+cUZAga5earu9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EwWeCjujF5bl6gpBs3mizs9fxGttXcDw5+RMFTAR5PCIXozdfdHmtfLRZDcYnXvWvLyFbMGWFvyBp0Sh2jlGodMHX1iwZkIbznexouWcNxdKK/aEz0hTmLlYWd/1aM412UoHsoaNYzsKsR0SEVCSJ7tsYzUbeuSWLvz9gvv/dwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O72exmpP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zarp+dSM"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so58043325e9.2;
-        Tue, 13 May 2025 05:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747141022; x=1747745822; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=03yBcZd1C5Kf3vXNHOpqaX6GbesxUIZrlQDHf/MdZ7A=;
-        b=Zarp+dSMpYDswqd58AO9degVEQQvUkfWt0t8ymcAEcnlVviqvDps8vHUaCteJDeByv
-         95ygLKB1QrmmWM6v25ZvizrKmFE4RCab7YVDQ/IDLgFJkvriWGc3ORDKh2BMtlwiGr2s
-         9F0aZjR0UiPk5lYc083q/HWdRqXqI7AV2gjmS87fws+mCj0SZS5uNkU/A7jlSoukWYJ7
-         Gpbbp/IRxJ1vkhxUkp3hXEb+XITKtGbTQNRzSXg9tpGJbhrPIfqRBuKvcXDUn2viyWaE
-         tflkTkXWre5iJ1YLXdv0dM8vbWLLHMXFS6UlpMOZ3KbtUWR5ZerkwIC645VD8KCjhFOb
-         FeIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141022; x=1747745822;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=03yBcZd1C5Kf3vXNHOpqaX6GbesxUIZrlQDHf/MdZ7A=;
-        b=V1snGHEB7/FKvu6D5+8lmRU3ejioH15hJtRQ7MKiOqGY5ibK5mnKZZht7ZdiprrcX4
-         FM56INQ3CHNBetdlmX3bPlLURpauafkmKsr+NpOpn2r/LaSDt2Q0lQnO2Pajnm+Nf+N4
-         dUiNPddS9zrDHSLyNqyRxRMCFOGg/uBVQrr7rJWN3W8jBceMcFlQtgnOwC6HFLghSBDL
-         1pCeOgQ01VQLRbY/wBtW8ucu3Wukc6WGpZ8NLsh9Jf90aNDYeTiqAtYSKlHhq8eZVCnF
-         pfS51YEW/CbV3LqJfeLHP4gJ/f4j8mGfb/zdWk7pqfMEQkwEqgCjfV5uOdWIJd1C7Gr5
-         zgNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG/KR/RDhvI/MLbf9tWWINnUDWFRVSgZpIPgRS0MwH7FUdseU86Ald344IcUbs1k+g0pcOpr8RNK6q5WQ=@vger.kernel.org, AJvYcCUZBAb5pp2/pqm9nPeocd+CQAW4ThVGtotaMzD4GLf/rBobX0gOuFMN8F9rFK8NWIfr28ZtliLU@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWDMUMdpjrY/t+YkFBqMzwvK0JDk3sffMRJh3WhgChkoiyB7hE
-	PWSYbn/CB8FvAOf5Iy8aTHD/CPMDEM2Tu3p2nJRHv2H/rnza606M
-X-Gm-Gg: ASbGncuRj4ts7+NLOxcFqktZ4FrkDwwcyBK0lWJkpfaNMOFo+C0Y0haHRxV44OWO9Lr
-	Y6hG6BtBzEYBasB8G1IygFrxuAwM2hvGWxMq1MHe9LmVG7QM1LEM+1XA56hRFeH16UqKwAWUVs/
-	WzBIkWgaNe51nUqCCGcT2Nzhs9YleJFgpxPzTLF+lV7teub6O3cRMGDdwzrlWIDC6FGjj+9vEqo
-	5u/1WYz2HNrRAZJO6lvM6i6qvg4XjG2d1Nzdao/sjt8ujDEkhoqEKPQbprk0PHL4RzettNMD9Sm
-	PRm4VKcgVxRYsoL9y6yC3Qzxmdgl0TdoBWf68Goe/nplbMQ1R1GGPG0T5YihTGh0KGkyYBVj
-X-Google-Smtp-Source: AGHT+IHZL9X1s2X9oNq/syLNUtLSYZBACUE3MU9l1yQ7kT7pQZhyTfvikRP2Kz0THW0u7ZtrcCNjbw==
-X-Received: by 2002:a05:600c:4454:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-442d6d44a31mr173268525e9.12.1747141022101;
-        Tue, 13 May 2025 05:57:02 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.146.237])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddde0sm16465597f8f.14.2025.05.13.05.57.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 05:57:01 -0700 (PDT)
-Message-ID: <d08b9abf-9b42-47ae-9ec7-36b59931ffb5@gmail.com>
-Date: Tue, 13 May 2025 13:58:10 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O72exmpP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747141105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tucWRC3XFzuFyx+C0oC/MLuVq9IHMPkKp/mbZoswM9Q=;
+	b=O72exmpPWhkkj5YzvErPZk17U3/yTGnRBZoT4/9y5oAyCaw0sk1eK8LNL6IPjNCs3sWkXk
+	hvS+nu8XyzikHmXyjqj0UvZXjtwUMQWWCf0EgPjJiNf4Tlf/TO4/GtqMrqacfKcqisuSB2
+	Tvqp5ZTSDEnMZNA8ma8mGG8XlFo2pAk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-570-EwsnQiaINuKII31rE5n2Tg-1; Tue,
+ 13 May 2025 08:58:22 -0400
+X-MC-Unique: EwsnQiaINuKII31rE5n2Tg-1
+X-Mimecast-MFC-AGG-ID: EwsnQiaINuKII31rE5n2Tg_1747141099
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E8F51800115;
+	Tue, 13 May 2025 12:58:18 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.16])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 33A1C30001A1;
+	Tue, 13 May 2025 12:58:09 +0000 (UTC)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: x86@kernel.org,
+	linux-efi@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Peter Jones <pjones@redhat.com>,
+	Daniel Berrange <berrange@redhat.com>,
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Luca Boccassi <bluca@debian.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] efi: Add a mechanism for embedding SBAT section
+Date: Tue, 13 May 2025 14:58:06 +0200
+Message-ID: <20250513125808.75510-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 01/19] netmem: rename struct net_iov to struct netmem_desc
-To: Byungchul Park <byungchul@sk.com>, Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
- hawk@kernel.org, akpm@linux-foundation.org, ast@kernel.org,
- daniel@iogearbox.net, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
- vishal.moola@gmail.com
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-2-byungchul@sk.com>
- <ea4f2f83-e9e4-4512-b4be-af91b3d6b050@gmail.com>
- <20250512132939.GF45370@system.software.com>
- <CAHS8izPoNw9qbtAZgsNxAAPYqu7czdRYSZAXVZbJo9pP-htfDg@mail.gmail.com>
- <20250513020007.GB577@system.software.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250513020007.GB577@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 5/13/25 03:00, Byungchul Park wrote:
-> On Mon, May 12, 2025 at 12:14:13PM -0700, Mina Almasry wrote:
->> On Mon, May 12, 2025 at 6:29 AM Byungchul Park <byungchul@sk.com> wrote:
->>>
->>> On Mon, May 12, 2025 at 02:11:13PM +0100, Pavel Begunkov wrote:
->>>> On 5/9/25 12:51, Byungchul Park wrote:
->>>>> To simplify struct page, the page pool members of struct page should be
->>>>> moved to other, allowing these members to be removed from struct page.
->>>>>
->>>>> Reuse struct net_iov for also system memory, that already mirrored the
->>>>> page pool members.
->>>>>
->>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>>>> ---
->>>>>    include/linux/skbuff.h                  |  4 +--
->>>>>    include/net/netmem.h                    | 20 ++++++------
->>>>>    include/net/page_pool/memory_provider.h |  6 ++--
->>>>>    io_uring/zcrx.c                         | 42 ++++++++++++-------------
->>>>
->>>> You're unnecessarily complicating it for yourself. It'll certainly
->>>> conflict with changes in the io_uring tree, and hence it can't
->>>> be taken normally through the net tree.
->>>>
->>>> Why are you renaming it in the first place? If there are good
->>>
->>> It's because the struct should be used for not only io vetor things but
->>> also system memory.  Current network code uses struct page as system
->>> memory descriptor but struct page fields for page pool will be gone.
->>>
->>> So I had to reuse struct net_iov and I thought renaming it made more
->>> sense.  It'd be welcome if you have better idea.
->>>
->>
->> As I said in another thread, struct page should not embed struct
-> 
-> I don't understand here.  Can you explain more?  Do you mean do not use
-> place holder?
+Changes since v2 (Ard):
+(https://lore.kernel.org/linux-efi/20250505154523.231233-1-vkuznets@redhat.com/)
+- Use 'textsize' intermediary in arch/x86/boot/header.S to avoid additional
+ '#ifdef CONFIG_EFI_SBAT'.
+- Fix indentation.
+- Added R-b tags.
 
-I assume this:
+Original description:
 
-struct netmem_desc {
-	...
-};
+SBAT is a mechanism which improves SecureBoot revocations of UEFI binaries
+by introducing a generation-based technique. Compromised or vulnerable UEFI
+binaries can be prevented from booting by bumping the minimal required
+generation for the specific component in the bootloader. More information
+on the SBAT can be obtained here:
 
-struct net_iov {
-	netmem_desc desc;
-};
+https://github.com/rhboot/shim/blob/main/SBAT.md
 
-struct page {
-	union {
-		// eventually will go away
-		netmem_desc desc;
-		...	
-	};
-};
+Currently, shim checks .sbat data for itself in self-test and for second
+stage bootloaders (grub, sd-boot, UKIs with sd-stub, ...) but kernel
+revocations require cycling signing keys or adding kernel hashes to shim's
+internal dbx. Adding .sbat to kernel and enforcing it on kernel loading
+will allow to do the same tracking and revocation distros are already
+doing with a simplified mechanism, and without having to keep lists of
+kernels outside of the git repos.
 
+Previously, an attempt was made to add ".sbat" section to the linux kernel:
 
-And to avoid conflicts with io_uring, you can send something like the
-following to the net tree, and finish the io_uring conversion later.
+https://lwn.net/Articles/938422/
 
-struct net_iov {
-	struct_group_tagged(netmem_desc, desc,
-		...
-	);
-};
+The approach was rejected mainly because currently there's no policy on how
+to update SBAT generation number when a new vulnerability is discovered. In
+particular, it is unclear what to do with stable kernels which may or may
+not backport certain patches making it impossible to describe the current
+state with a simple number.
+
+This series suggests a different approach: instead of defining SBAT
+information, provide a mechanism for downstream kernel builders (distros)
+to include their own SBAT data. This leaves the decision on the policy to
+the distro vendors. Basically, each distro implementing SecureBoot today,
+will have an option to inject their own SBAT data during kernel build and
+before it gets signed by their SecureBoot CA. Different distro do not need
+to agree on the common SBAT component names or generation numbers as each
+distro ships its own 'shim' with their own 'vendor_cert'/'vendor_db'. Linux
+upstream will never, ever need to care about the data unless they choose in
+the future to participate in that way.
+
+Vitaly Kuznetsov (2):
+  efi: zboot specific mechanism for embedding SBAT section
+  x86/efi: Implement support for embedding SBAT data for x86
+
+ arch/x86/boot/Makefile                      |  2 +-
+ arch/x86/boot/compressed/Makefile           |  5 ++++
+ arch/x86/boot/compressed/sbat.S             |  7 +++++
+ arch/x86/boot/compressed/vmlinux.lds.S      |  8 ++++++
+ arch/x86/boot/header.S                      | 31 +++++++++++++++------
+ drivers/firmware/efi/Kconfig                | 24 ++++++++++++++++
+ drivers/firmware/efi/libstub/Makefile.zboot |  4 +++
+ drivers/firmware/efi/libstub/zboot-header.S | 22 +++++++++++++--
+ drivers/firmware/efi/libstub/zboot.lds      | 11 ++++++++
+ 9 files changed, 102 insertions(+), 12 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/sbat.S
 
 -- 
-Pavel Begunkov
+2.49.0
 
