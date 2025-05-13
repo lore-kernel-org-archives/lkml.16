@@ -1,203 +1,130 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEEF2BE7A8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15D1ACE0C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747151291; cv=none; b=CrLQht4SScwoyN44NmsLriNVJMqF4vRgW0ec0PlIGMT/b6Dw+BQOY/pWSI7hixjjGfaztKU/X+00Zn3A2roziiosgVeymALV03xDbtwvZ2jyjz3UJQxBwfVcdlh2oLPvrHy/U/mcmUoV7L3WRuxX5oHUzabmfrVZ+zOROkJj7Qg=
+	t=1747151376; cv=none; b=S6pyR7xjwKzpzdzJ8DIU04H+sJdHIaySI1EOnholiA8X6EEHrwK78ZAgeKSQI5BM8xMRUYCluFis+GQOvQBWULH1GPVlcETwMeKdZqDU23vQk15WA7CyCmclG6n92CjpXLTx/pJCUiGHxcNe4rlzEodGJjefQg2a4n12XQwE0uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747151291; c=relaxed/simple;
-	bh=F++oKdlleNkqIzAyMkX2ficnHvCzzNPCUl+jvu3Ym3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PPxM0/RaF0WPAuOpT3gVHQawxxwT3eSJDDzUpOI3yAhT6jvoj0tzHnf79YS+oPlLRNRfJkMgARuB0XHqbH/rxh9s6f4+H3W31MKSJ0SGjM8LCRnj13/+FlzLdoHfuxqaeCPOoGORUXgNCTRUTR8Z5N5xembUub580aR/kwxeunE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HFthmLFP; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747151376; c=relaxed/simple;
+	bh=D7zyA+xvfSPVgIkyhp+oaqUj3TbRMXLr6UE39/JJcCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tA338wiCAzVxNkcKzGFsHkgk3HMtcE1XYpk7Hrq7C6TO9hjSkWofALoBA/8b3uiIvnJsQRhD5TpQXqH4xiLNGwKyhqHP2r1EDkdc9mw8WrCKAWINXD8nqfjs8B0v1E3zyS1rn2viDzd95oDy0di4M6/Lmop0O4Ho2LqW3+/1EFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EasnDy3R; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HFthmLFP"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47666573242so404581cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:48:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EasnDy3R"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so33656955e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747151289; x=1747756089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R2wylvLG9Yiv6fQtmkfrtl0YoNU9Q/NZC3Did8qduYE=;
-        b=HFthmLFPyCwEZhgnNIKsTu0h75uOyu/tioKz7XlnWQBGHheI1/zSYPhD+bK781UaMf
-         hzQ0AUY64iFEmGOLk2+3HA/gREq3J1SRSjCvlvE8zBSC25nBR1Mz++05vkacRNf6/ROm
-         7FWXf8jzo8gleYNEeVfHWCZAIbPmzIWlPEiB+k4CYD8Bs4PaQ6cXtkCxQ7z7rP7SsQaY
-         Ol6lmS91bRVCLLnduDT9dyriJP+zaoVNMJp/sT8/wqhaHmv0eOGOu+KMh0odGucDg3Po
-         8m4zg9Nv03iT7KafcKdeQwZv3txn3XNJ35NKp1SOXu5U4s+HxF2+fAjpRRoF3Mikqu5A
-         SCpg==
+        d=linaro.org; s=google; t=1747151373; x=1747756173; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=l7qg/6GxjFXWiC5kQXeaivvG2EH2dCIS/N7d/lBrQ9Q=;
+        b=EasnDy3RaX5zoLCq2YkP6aMIVrLvJl+VuNsRBBWPAviBqSfo+xafnW1svztakNDpn0
+         1Nx4iRAPlZR/zLBgM9M+BO9NJXeTeSWZTGxnFFCOxciyHWAPjN/weKhI+bpOKx29zSGa
+         4U63A+VMnPIA3uLI3OxUjY7aE8UZAFBDWnqKtVJH9vix8i0IQM+NRLH79d5pqoqw5YIk
+         2GPw5iM9skIt9Nut42zAk+MumwVKimtFM4lLcGPsxns8zfoQOBs2uBZPEHp6x1m09q4I
+         GiRYY/jTi30nwRPg8r96jueCZnX0vOox4pzs1403MFALzO1I0mYKOmHH8cdgdrJ0pHdy
+         n3HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747151289; x=1747756089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R2wylvLG9Yiv6fQtmkfrtl0YoNU9Q/NZC3Did8qduYE=;
-        b=CGp2yS1mZeOSF9r98hug2q4WJLmt0Q+ULfU1/UGz9NHtzSlWxEWM+1sM+8/YASTHCg
-         kbEwIi/+Qm3Vhf8OgaUEpJr+CZt3LEvDQldEI+bMA0D+zCyHHLEoKZ0PTZZDcRla/8zr
-         XrX+GM0b6hZlhsQfCIvQPx38M3aXGc44m/ujPs1NLaZZalqhujdu9Ol6Bg5f8/bawnGT
-         eYLFIVcF/CSHSnIrjoOucIfpablitK84vAX0FrXLFcI3RVBfg6cioLLKkp5AoekwSjn7
-         t6KGCocLlsKapGEvs+MxAR3WastBZlhDEkB8LMv6blLU/fIfVz8QPdnsjylxuVmlNp1S
-         nZHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPcasFNQzblPRwCCuYqa5bzA7ONTW9ccae0GzYceHgYts4gh0Eq9A6jfbNTAR2Yiy6DW5TmdhEE2IhF5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRZl1gf8r+kASC+gAXq9DXN5cgP19+qzByntkYI+lxvUFQL051
-	W0zryn+snfbIV9OQE/ZJclYbFZp0Px2rLU19h83ycVAhLYETzvUUCJVTMGlJZY8ItzO1Pf5qDYf
-	xJA+Qk1Hy03wU1MxpEE8WQtXCuhRHAEeDqkv8eUuf
-X-Gm-Gg: ASbGncvty1OiVQ3MkWn8P/DDdbHQG+05nzzX9Tw4ThwcHA2ZitqWm6lpoxZjRbR7XhQ
-	6O1o6oZAqPJY413kr4pgc7If0lbYE0le0GtYhZPXBXO3vL5NYAHfTXWtroVmylqW2cTBlXetfRB
-	QxmZoD0RQVwbin1D/L8DgOxn8CODY42loO3fSbd+sNW5R+EDxyMtBTeEl6OQ9U
-X-Google-Smtp-Source: AGHT+IH8DMTILSvUJoMpGb18mZ8byfPhh+/ztyC7r2/4+jBrcA5yV1p/g99cmuYDsGVIgLwAQ/QHAzoIZ7A5XPCW53E=
-X-Received: by 2002:ac8:7f4c:0:b0:48a:1291:d7df with SMTP id
- d75a77b69052e-4948802ac85mr4207271cf.12.1747151288360; Tue, 13 May 2025
- 08:48:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747151373; x=1747756173;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7qg/6GxjFXWiC5kQXeaivvG2EH2dCIS/N7d/lBrQ9Q=;
+        b=AgAMj0TxC0qqdPvcalmFYZU2zacBPGaOZIwjYA+0uMMra9sBuckVFmYeD/PT7ajSLc
+         8ifYzZEeiNlU9yvbid5CKqFM2YKMKJCgGnEKQMko/8KlxNtmzdlpRy2bbzauAWIus9Fu
+         LFg9X0L/kUX2y0MwEG8RRUph1pFu80XWgPOj+Ma4ASqfmuASnawG2HXdCFEMX0AcFl65
+         DTUMxKg/00aWMkrD6i7YUpOmSgDXxUddtELBGdxY1RlQ3k2ccmjOge7xQxoR8jyjtGjx
+         xR6IB1+JxVj+g+YS2FCACpT5c2bub1OyqN2vsLTR09mlUZYNHbU0n7spQvQ0XN8zvEa8
+         T5aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9U5ZjN4KlT/6TaNZL1DA+BqGhnH5TyhoxFrGzkWA90ubVQ8HsgkWGqPHAZbOsYetbbb56ajo98iG6Vg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4tzx9rPL/fGZe+z1BvvAfk9PlvWaHfg0E2gkQLv6rCqEkVEDP
+	R1oW+iLrhLWViyquq92/Iw/HksTdyBxVRR/7Iuig1doKgbaCQbGQXu+g6e9GPc+FAxbvNYv/lh2
+	a2Jp3dQ==
+X-Gm-Gg: ASbGncsrfvCaIgdWX4dJDE0DB+rjYeEUiFmXCuaiwRiWqXZbg3Wr0F6yldHkPn11p21
+	hc7BB3PZt03+0GixZast5nFR1GU2mDXpKsQpIWwLD+zlMjnqUAM2tpwCKdrPIYVLGZoBNbU20sv
+	B8lRtOz7AfQ63uq9a09j5cAKVPJQAmQs0F9BZIa7KQodVCBAJFnNON+RqrKldS8myT2qgiBIdIi
+	7UUKOd6lKpz2bCOgHPq79jVwjUQQWpZI9TIsbRD0zQUa2kSGvUVhgYaNLiZY5OzpGdYzUdzoVbd
+	aeqyIjU3efylEydpIY4myAr/EpB4YRwhKpI24bAiltLzkVlZGrzNfu33qzsEGNRPKkCWCbEsZrs
+	P6gBNwqAD31cM6w==
+X-Google-Smtp-Source: AGHT+IGOxH+5gWmbyyxxmGOMrk+23j8sz87XVh50Wr2hHSe2CGZP4m+YqUI33m8XElSElt+cCQlIDA==
+X-Received: by 2002:a05:600c:1c8f:b0:43c:e467:d6ce with SMTP id 5b1f17b1804b1-442d6d11a67mr146232535e9.4.1747151372773;
+        Tue, 13 May 2025 08:49:32 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb85bb20sm22789305e9.0.2025.05.13.08.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 08:49:32 -0700 (PDT)
+Date: Tue, 13 May 2025 17:49:30 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] dt-bindings: timer: via,vt8500-timer: Convert to YAML
+Message-ID: <aCNqCrBqGSxRGMKd@mai.linaro.org>
+References: <20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513140126.4fc4de8b@yea> <aCNFHVG_l2Pfs8Gs@harry>
-In-Reply-To: <aCNFHVG_l2Pfs8Gs@harry>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 13 May 2025 08:47:57 -0700
-X-Gm-Features: AX0GCFvTIDtqi4IAmnqzZ7bYUIfFhIBu2DkFl4AaYAVeH7cIJLJGLjOSAS6O6hQ
-Message-ID: <CAJuCfpGbk+xKskvhCkc79uUJhoG1UsLfD2WsPmWMcHDxxrJKQw@mail.gmail.com>
-Subject: Re: prepare_slab_obj_exts_hook, zs_handle-zram2: Failed to create
- slab extension vector! (v6.12.28, amd64)
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Erhard Furtner <erhard_f@mailbox.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com>
 
-On Tue, May 13, 2025 at 6:12=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> wr=
-ote:
->
-> On Tue, May 13, 2025 at 02:01:26PM +0200, Erhard Furtner wrote:
-> > Greetings!
-> >
-> > Got that during building on my Thinkpad T495 on following zram disk:
-> > NAME       ALGORITHM DISKSIZE   DATA COMPR TOTAL STREAMS MOUNTPOINT
-> > /dev/zram2 lz4            32G 138.7M 16.1M 41.2M       8 /var/tmp
-> >
-> > [...]
-> > ------------[ cut here ]------------
-> > prepare_slab_obj_exts_hook, zs_handle-zram2: Failed to create slab exte=
-nsion vector!
-> > WARNING: CPU: 6 PID: 17975 at mm/slub.c:2076 prepare_slab_obj_exts_hook=
-+0x152/0x190
->
-> Hi, thanks for the report!
->
-> I think there is not much the kernel can do when it failed to allocate
-> the slab extension vector. Memory allocations can fail under pressure.
->
-> In this case, the memory is not accounted by memory cgroup or memory
-> allocation profiling subsystems.
->
-> But it's not the end of world and I think this is not a bug.
->
-> Maybe WARN() is too much here?
+On Tue, May 06, 2025 at 04:16:32PM +0400, Alexey Charkov wrote:
+> Rewrite the textual description for the VIA/WonderMedia timer
+> as YAML schema.
+> 
+> The IP can generate up to four interrupts from four respective match
+> registers, so reflect that in the schema.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Changes in v3:
+> - Added Rob's review tag (thanks Rob)
+> - Rebased on top of next-20250506 to pull in MAINTAINERS updates
+> - Link to v2: https://lore.kernel.org/r/20250418-via_vt8500_timer_binding-v2-1-3c125568f028@gmail.com
+> 
+> Changes in v2:
+> - split out this binding change from the big series affecting multiple
+>   subsystems unnecessarily (thanks Rob)
+> - added description for the four possible interrupts (thanks Rob)
+> - added overall description of the IC block
+> 
+> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-6-f9af689cdfc2@gmail.com/
+> ---
 
-Yeah, perhaps pr_warn() is more appropriate. Having a call stack
-serves no purpose here IMO. If others agree I'll add that to my TODO
-list.
+The patch does not apply.
 
->
-> > Modules linked in: cifs dns_resolver cifs_arc4 nls_ucs2_utils cifs_md4 =
-snd_hrtimer snd_seq snd_seq_device rfcomm fuse zram lz4_decompress lz4_comp=
-ress af_packet ccm algif_aead crypto_null des3_ede_x86_64 cbc des_generic l=
-ibdes md5 cmac bnep nls_iso8859_15 nls_cp437 vfat fat dm_crypt nhpoly1305_a=
-vx2 nhpoly1305 chacha_generic chacha_x86_64 libchacha adiantum libpoly1305 =
-algif_skcipher dm_mod btusb btrtl btmtk think_lmi btbcm btintel joydev edac=
-_mce_amd wmi_bmof firmware_attributes_class snd_ctl_led bluetooth amdgpu in=
-put_leds evdev iwlmvm snd_hda_codec_realtek thinkpad_acpi mfd_core snd_hda_=
-codec_generic mac80211 snd_hda_scodec_component drm_buddy libarc4 kvm_amd p=
-kcs8_key_parser nvram drm_suballoc_helper platform_profile acpi_cpufreq spa=
-rse_keymap snd_hda_codec_hdmi led_class drm_exec battery k10temp i2c_algo_b=
-it video snd_hda_intel ac drm_display_helper snd_intel_dspcfg iwlwifi snd_h=
-da_codec backlight snd_hwdep gpu_sched snd_hda_core amdxcp snd_pcm drm_ttm_=
-helper i2c_scmi snd_timer ttm cfg80211 wmi snd
-> >  soundcore hwmon rfkill button processor efivarfs hid_generic usbhid hi=
-d sha512_ssse3 sha256_ssse3 sha1_ssse3 xhci_pci sha1_generic ehci_pci aesni=
-_intel xhci_hcd ehci_hcd gf128mul crypto_simd cryptd ccp usbcore ucsi_acpi =
-typec_ucsi roles typec usb_common
-> > CPU: 6 UID: 0 PID: 17975 Comm: kworker/u32:11 Not tainted 6.12.28-gento=
-o-Zen1 #1
-> > Hardware name: LENOVO 20NKS2PE00/20NKS2PE00, BIOS R12ET64W(1.34 ) 02/23=
-/2024
-> > Workqueue: writeback wb_workfn (flush-252:2)
-> > RIP: 0010:prepare_slab_obj_exts_hook+0x152/0x190
-> > Code: 31 f6 e9 51 49 75 00 cc 48 ff ca 48 89 d0 e9 3b ff ff ff 49 8b 56=
- 58 48 c7 c7 c9 6f ea a0 48 c7 c6 d2 1b f4 a0 e8 46 7c e4 ff <0f> 0b e9 c8 =
-fe ff ff 48 89 c1 48 c1 e1 34 0f 85 10 ff ff ff 48 f7
-> > RSP: 0018:ffffaa7728fb33a0 EFLAGS: 00010246
-> > RAX: 0000000000000000 RBX: ffff99a3e8ec67c8 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > RBP: 0000000000002800 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: ffff99a3e8ec67c8
-> > R13: ffffffffa029dbe8 R14: ffff99a490b5b800 R15: ffffe7c681a3b180
-> > FS:  0000000000000000(0000) GS:ffff99a76fd00000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007f288f146000 CR3: 0000000104f8f000 CR4: 00000000003506f0
-> > Call Trace:
-> >  <TASK>
-> >  kmem_cache_alloc_noprof+0x141/0x278
-> >  zs_malloc+0x50/0x1e8
-> >  zram_submit_bio+0x1b9/0x898 [zram]
-> >  __submit_bio+0x122/0x1a0
-> >  submit_bio_noacct_nocheck+0x19b/0x2d8
-> >  ext4_io_submit+0x23/0x38
-> >  ext4_bio_write_folio+0x313/0x348
-> >  mpage_submit_folio+0x63/0x90
-> >  mpage_process_page_bufs+0x10a/0x160
-> >  mpage_prepare_extent_to_map+0x2fb/0x410
-> >  ext4_do_writepages+0x2bc/0xaf0
-> >  ? zram_submit_bio+0x81f/0x898 [zram]
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? xas_load+0x9/0xf8
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? filemap_get_entry+0x160/0x178
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? __filemap_get_folio+0x22a/0x2b8
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? __find_get_block+0x262/0x2a8
-> >  ext4_writepages+0x91/0x148
-> >  do_writepages+0xe3/0x2a8
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? __ext4_get_inode_loc_noinmem+0x22/0x70
-> >  ? srso_return_thunk+0x5/0x5f
-> >  ? ext4_write_inode+0x115/0x148
-> >  __writeback_single_inode+0x2c/0x180
-> >  writeback_sb_inodes+0x223/0x430
-> >  __writeback_inodes_wb+0x59/0xf0
-> >  wb_writeback+0x117/0x1a0
-> >  wb_workfn+0x230/0x318
-> >  process_scheduled_works+0x215/0x380
-> >  worker_thread+0x1bf/0x288
-> >  ? __cfi_worker_thread+0x8/0x8
-> >  kthread+0xf4/0x118
-> >  ? __cfi_kthread+0x8/0x8
-> >  ret_from_fork+0x48/0x58
-> >  ? __cfi_kthread+0x8/0x8
-> >  ret_from_fork_asm+0x11/0x20
-> >  </TASK>
-> > ---[ end trace 0000000000000000 ]---
-> >
-> >
-> > Apart from that the machine kept running. So far that also occured once=
- only.
-> >
-> > Kernel .config and full dmesg attached.
-> >
-> > Regards,
-> > Erhard
->
-> --
-> Cheers,
-> Harry / Hyeonggon
+--- MAINTAINERS
++++ MAINTAINERS
+@@ -3467,6 +3467,7 @@ F:        Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+ F:     Documentation/devicetree/bindings/i2c/i2c-wmt.txt
+ F:     Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
+ F:     Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+
+        ^^^^^^ those bindings are not in my tree
+
++F:     Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
+ F:     arch/arm/boot/dts/vt8500/
+ F:     arch/arm/mach-vt8500/
+ F:     drivers/clocksource/timer-vt8500.c
+
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
