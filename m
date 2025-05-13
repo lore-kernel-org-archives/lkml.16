@@ -1,196 +1,167 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B768D1E9B06;
-	Tue, 13 May 2025 07:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747119803; cv=none; b=JyUvGYD2M4jef5WkrLqWa7sjznjlddRDlMIyRjy8SIb0clsj/GxM4Tw2rzEeE1PZBMOVczfcqDu7B+Wa4YXuqiVzB7zBhlS2kwTgv03lzZmxYfh2E9tEDn346aEAfMAlQlqO2haKb9IT7oLAHI5Why3cwK/ZOsD8qYuV2I6KcXk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747119803; c=relaxed/simple;
-	bh=lmt3+WfOxDH98tdCH5d1AJxZ/W6YhFWUNQketqH0NZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qWZlaMYDxS28ol3U9bUk9S8Inft25YuqQNCMymWSiy0wtKh/xst+2tiZB/88TEnG0qG36GW1WrAEj01bnCGlOz6pypUHGJdob+EBFc/EKLkpjV069D6GPIoLQW277ptCihjQOmwl1YFaazLT8NsuppufjCMOQVcqSD9XqkEOv1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lYAV4OTJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B41D1E9B06;
+	Tue, 13 May 2025 07:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747119811; cv=fail; b=MNdQDdnMjl46rYg5hjVuhneZVp55+inLrdan+XRjfgE7qUJsLKo776mXQ70of5q35YcqfbsjwZQ9iE9D76iMxiS/lrfZhyOPc18jXtlDbE9ndnnzHqEsN58YaErP6GvejltnwayTbhcq/1g6ipSDKoOXWLG7Mp2OJG5yIa5dRlU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747119811; c=relaxed/simple;
+	bh=sAPaGNbmcNaZ2FjSmVeLeKEeXH5DChwSRCnidHOGLMY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ujzpjik9Yh1fT9Z90K3BHlayeyRUh6Mc7RQwuxBDluh2KjTzmgBRuIvCKlS/7RUkMlCsem/3ygmk2xwKTpAwKDNhQiwqknX0QUXJzqvrdPzVYQmorlVrb4TTbfOoU/ZNxXEtp0hWedqxgBZkZZ9BggPY6lAeNRrKh4O83djasMU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rMM1aotC; arc=fail smtp.client-ip=40.107.92.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lYAV4OTJ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D6cgPQ015340;
-	Tue, 13 May 2025 07:03:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	q9p0omokZ2YahADYaFBdyYRAcygeShdpSGEeoqaghfU=; b=lYAV4OTJ3nzkqKqm
-	W7DRVTLYA7Ao4THI8NRCsk81mmi0zGeIg7UcAhB535Kurf9YrtaI4n2GXEO1lgt8
-	jnECUujneIJrgF8t/fNG8flzYsfbSMO/710XIz4MfXDEABEYvrIwzKMkHKzoIX/Z
-	S3VpK3jK43KiuRijnUttPMvWdOVGPYCQJ5z2c4O/7zFYOAFeL+BJLdjwc2NVWazu
-	bjb4J9h6H5DblFeJXg6W5Cfr+5wyc5FdyKPKKo7MCIhYNvJKPYJ/5zX7AW8Gd4dL
-	sBw0foIzFjMHPEEqFxqSXmZ2lLgm2xJBCsn674jYrZKCG2BokEsK+ZF3X3KLmCHp
-	ApS+ig==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46j03bes63-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 07:03:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54D73Ch7011149
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 07:03:13 GMT
-Received: from [10.50.52.254] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 13 May
- 2025 00:03:09 -0700
-Message-ID: <4c32e675-e352-0af2-fe58-70ca7e28d56d@quicinc.com>
-Date: Tue, 13 May 2025 12:32:40 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rMM1aotC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VljALCcS7k1Zwx5gUhm2fFNQk/KitPf+Yk9QexrAFHJDMEghDufgaN8DOUAwnwJ494fim5fDOTMuaH4mMQm2wQJ50AD2YwR5HrCk/2PA9AKRsEL1GOyg+j6vv8Ej3zaH2wO0o9VikelR8lRKc5c7Xdl2jQBS4HEFkszbIlH/6iKaNkxaNQ9hQYYbzEpZZQnU1rLBCAEBcZhmtib7ONXvQjxs0UXiONtWFS0da9d0X5bjj5BvhR8nRSGaWfTlwOyg8vI3GcgiNs4fo7KZaHcZd8LWFvt1BFg0BGNPiQZQ7eWLdnrzcuxGklxsPJbb6BzXtn4gbF22hRBNxqsCxG9GVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
+ b=B2/4LqC8r6gJbusMOU+s21HYTenh4zQBIUC2A8cxTGcFfR8MbHsTn0puTlIi+79BxWvUzq7YKb8uYF0A6ZtqUEqj5cnBu+MlDUSPZriaeQm31g2v6ggrqAUp+iTUOcg91JH5oYwoMzFGcb9CZql8kIYKoKhjW3K4qtOB4RpCTV098Z2bmehWk4QI166OSVSGhddbWSwRJK7iMxp/hzORCFaw2Uapu+/ZR7NeHjLQRLFS2sgB8Kno7x3V9ltryNkrtMcYlg8B96nFJln8DciisiXsDlDOoDLmAuraW3kJ6IcfOYbZtQPLR7Jr+lbPlbM9Fro7s8tCsYtxYb7WpeERtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
+ b=rMM1aotCRA5aILlpqTgMICzDfvCxrIQr5jJ+vfPwCJSEibNJ4G/djP74lBWnyNabPU9HpWG5xkip5uGfIxgN4jmhJv1Id36tQDjc/gXYPTyGLp6TiTX3qxMS1Z2tIcOoRTCaPC0h3wtF1Uj01xXuGtf0hl8QfKXpJNK1l52fMjo=
+Received: from SJ0PR05CA0041.namprd05.prod.outlook.com (2603:10b6:a03:33f::16)
+ by MN0PR12MB5714.namprd12.prod.outlook.com (2603:10b6:208:371::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
+ 2025 07:03:25 +0000
+Received: from SJ5PEPF000001E9.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f:cafe::1a) by SJ0PR05CA0041.outlook.office365.com
+ (2603:10b6:a03:33f::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Tue,
+ 13 May 2025 07:03:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001E9.mail.protection.outlook.com (10.167.242.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 13 May 2025 07:03:24 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 13 May
+ 2025 02:03:23 -0500
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 13 May 2025 02:03:21 -0500
+From: Devendra K Verma <devverma@amd.com>
+To: <devverma@amd.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<manivannan.sadhasivam@linaro.org>, <michal.simek@amd.com>,
+	<vkoul@kernel.org>
+Subject: [RESEND PATCH v2] dmaengine: dw-edma: Add HDMA NATIVE map check
+Date: Tue, 13 May 2025 12:33:14 +0530
+Message-ID: <20250513070314.577823-1-devverma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/2] media: venus: fix OOB access issue while reading
- sequence changed events
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vedang Nagar
-	<quic_vnagar@quicinc.com>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
- <20250215-venus-security-fixes-v2-2-cfc7e4b87168@quicinc.com>
- <664809e5-c027-4d0e-a604-d9fdf4b1f2da@linaro.org>
-Content-Language: en-US
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <664809e5-c027-4d0e-a604-d9fdf4b1f2da@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: CUf2cx3BHkQwpZZa8fS79pmFiSY3S5kC
-X-Authority-Analysis: v=2.4 cv=DOuP4zNb c=1 sm=1 tr=0 ts=6822eeb1 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=cJ6X7pDOamNDxTYa5t0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: CUf2cx3BHkQwpZZa8fS79pmFiSY3S5kC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDA2NSBTYWx0ZWRfX7BibS6WGvGQV
- zSmXAmvnjTqSOxRuVbJ7JAQziKOnaUxRSO/9R6VA5SrsUImsSCiT6TyjQ0TrVtdh+Yav/mlgzIM
- qJusvispDfGzdp+ZGWcvZ22jhrhhS0TRve2/tzs+letkS5KG9EOLHsyU3x9rQhLx0k8sSPLX+CU
- P3p34FKVvuFpJJ8FzPhJ4TZD+/M+YwwOjt7uWcf/2sBofd4nLTAWVMTxjMoCKGyHDoHxjR6SNPg
- xNaKRPc9FX2ABkF+UkS0fUjdwA5i6DPOxmyzqSJ7oE09wlCpQIAv+0NaxHFkoQ41Tkj2lFvvBsi
- DiRL5MhKucqrm9Rd7jqeMi0fuYFQn1lmpMZm3SD9M5zdR7B3tYNQqEVwutm0UVfzDbJ4NbyQ/Z9
- qA+aNxPS7sGN9urP5bSlY5hlZMEDRBtpFyTzPoKeeT34dvUBK0pIwb2rMYRKpQLi3psekWEH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 adultscore=0 spamscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505130065
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: devverma@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E9:EE_|MN0PR12MB5714:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7854359-826f-441b-6a05-08dd91ec412d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gCzrw6wTxjd87Q61jdgrkkhvMxCOlZd4Ps1AaEoCZdmDqEbjefG4AC1R+R5n?=
+ =?us-ascii?Q?liZfmCQc026XcyNx6pFshdlOz7KMueTR6YL3GJQSPQhrwwZfpLwLfA5fNRWR?=
+ =?us-ascii?Q?FjNJB17ZA13SUOmKPikS/+qrzgrxrqx2SOFpY7ptZShaqyu0B9QEeA56Mzdf?=
+ =?us-ascii?Q?1yDPv9TCB+0aac/DunKEWE9xncpNuN3iOtYQSIH0Ijw6b26LeBGLu9aFLjZ4?=
+ =?us-ascii?Q?VdPGbsob+pUM7ExeNfMSomtP8U05P0gItiZwdIlRiZRdrkK53hPQFEL0NHZd?=
+ =?us-ascii?Q?/30e8haAwAIl+Kl0HHtRSNTEvIaAHExiEZpWFQjVfUv1AZMZ50cGUJYZfsgB?=
+ =?us-ascii?Q?dCv4h/W6LdtZLGmTKZrbF99+bpHPiiIO6AQh2IxZmpLHteI9J3Dyin4HuWL5?=
+ =?us-ascii?Q?+ja9qGtTnL/OIWTs9oBvKmxGoSOXZudUsI2EDwFig/M7Z1rbpJdGoMD69Ivk?=
+ =?us-ascii?Q?UazI/+wDS2UbXF7mUJAjkWBP3YuV2yAH+p20HfsPdztQaz/yRAdR8cInMbOs?=
+ =?us-ascii?Q?i0OO7TeyVJvKncpUN3o9kT8g0DHGfEpbKT2/rsp2MeRzlZ7Ii37xuarTQHrJ?=
+ =?us-ascii?Q?DZoJgjjK0dedFkAmYWn+GusJeZ6AGV5lzM0cFrvEsQt1IY3fIqbImItYHh//?=
+ =?us-ascii?Q?/4pZsZLcayAmuh9SIRESbzPHVpRG+8zyaR6gfHBqSN1xIPkJymjGIld+tzzO?=
+ =?us-ascii?Q?rbjBxOOhZ2KqRMlNqZd8Rj3CNkue9bNBQ8PPTirCs6vr4VmkBD7Fsu7wWLs+?=
+ =?us-ascii?Q?GQ6BljWQjIHJDR/dRTNKBju2p3kIoqx+3UKl9tts2aRSv3uykLZzAOob9xYj?=
+ =?us-ascii?Q?o8RuPwSXS7N/+iMR3/v7DYirOFi+4GnJje3r15B0xVwXMpHpgDZ/uzYDPtuf?=
+ =?us-ascii?Q?udRtubmALJ4G7BzTZXEkEXHjJID/yg4MAxKsxs5jIzlEEVnqepIkraDuAfen?=
+ =?us-ascii?Q?qwA0fnAMsK8C7LkkcMlKL4tCj6tB2tVe+c/XRyD8VKPDucElriRkcKHa0kr7?=
+ =?us-ascii?Q?YdjsS+SsBmEnPPTKJBhlHoup8r4ynWl5nOunoEmG7IfYlFjh8R83B+UBNh5u?=
+ =?us-ascii?Q?GMIX61h3u7eOnO/VDGrD+VlF5g0BFYl68PbkRoLVlgLdu/ela5xdflZc5Bhz?=
+ =?us-ascii?Q?qyvecj1n9v7B0rN9uD1igFmJvrIBPMOYemd6PfQaeG/+JZTQmRZyDUnJtxBn?=
+ =?us-ascii?Q?dxX4pN1G9WQKoC6U3ZuX+7IeekUfu6tGhtDYA0if5XKMlT6gN3hdpm49TUyJ?=
+ =?us-ascii?Q?hJOn69RNsnJsz7QqmBgN4ks92fGBGcZPsY1tWra8LdEQkyIeJSfG6qqtO+xa?=
+ =?us-ascii?Q?gZzHBvwPsxlVrehzEzJJCCdDr8mGRQpRB0n0cALY1Uieur+EuNbwGQokeE4F?=
+ =?us-ascii?Q?WKLbNKTRsUby61+Juw6s31gc2zMUOdWvdObRGfpAOl/ZUKMSgt1rGbmh3cZJ?=
+ =?us-ascii?Q?m9hMIei2ttrF6Mqfj21Q3s4Dlb4a2t2UXlJbkcwN5kG0Lu0iN3OdEfm+z5Cb?=
+ =?us-ascii?Q?qX297P2kPEsg7T5862MF3A+AjSREbpFdaPEY?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 07:03:24.7063
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7854359-826f-441b-6a05-08dd91ec412d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001E9.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5714
 
+The HDMA IP supports the HDMA_NATIVE map format as part of Vendor-Specific
+Extended Capability. Added the check for HDMA_NATIVE map format.
+The check for map format enables the IP specific function invocation
+during the DMA ops.
 
+Signed-off-by: Devendra K Verma <devverma@amd.com>
+---
+Changes in v2
+Addressed the review comments and added the 'Debug info' for
+HDMA_NATIVE in dw_edma_pcie_probe().
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 3/4/2025 7:05 PM, Bryan O'Donoghue wrote:
-> On 15/02/2025 17:19, Vedang Nagar wrote:
->> num_properties_changed is being read from the message queue but is
->> not validated. Value can be corrupted from the firmware leading to
->> OOB read access issues. Add fix to read the size of the packets as
->> well and crosscheck before reading from the packet.
->>
->> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
->> ---
->>   drivers/media/platform/qcom/venus/hfi_msgs.c | 72
->> ++++++++++++++++++++++++----
->>   1 file changed, 62 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c
->> b/drivers/media/platform/qcom/venus/hfi_msgs.c
->> index
->> 0a041b4db9efc549621de07dd13b4a3a37a70d11..2ad60a3fbfe0286de09a44664fc3b30259aa0368 100644
->> --- a/drivers/media/platform/qcom/venus/hfi_msgs.c
->> +++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
->> @@ -19,6 +19,16 @@
->>   #define VER_STR_SZ        128
->>   #define SMEM_IMG_OFFSET_VENUS    (14 * 128)
->>   +static inline int increment_data_ptr(u8 *data_ptr, u32 *rem_bytes)
->> +{
->> +    if (*rem_bytes < sizeof(u32))
->> +        return -EINVAL;
->> +    data_ptr += sizeof(u32);
->> +    *rem_bytes -= sizeof(u32);
->> +
->> +    return 0;
->> +}
->> +
->>   static void event_seq_changed(struct venus_core *core, struct
->> venus_inst *inst,
->>                     struct hfi_msg_event_notify_pkt *pkt)
->>   {
->> @@ -33,8 +43,8 @@ static void event_seq_changed(struct venus_core *core,
->> struct venus_inst *inst,
->>       struct hfi_buffer_requirements *bufreq;
->>       struct hfi_extradata_input_crop *crop;
->>       struct hfi_dpb_counts *dpb_count;
->> +    u32 ptype, rem_bytes;
->>       u8 *data_ptr;
->> -    u32 ptype;
->>         inst->error = HFI_ERR_NONE;
->>   @@ -56,66 +66,108 @@ static void event_seq_changed(struct venus_core
->> *core, struct venus_inst *inst,
->>       }
->>         data_ptr = (u8 *)&pkt->ext_event_data[0];
->> +    rem_bytes = pkt->shdr.hdr.size - sizeof(*pkt);
->> +    if (rem_bytes - 4 < 0) {
->> +        inst->error = HFI_ERR_SESSION_INSUFFICIENT_RESOURCES;
->> +        goto done;
->> +    }
-> 
-> This doesn't make sense.
-> 
-> u32 rem_bytes;
-> 
-> if (rem_bytes - 4 < 0)
-> 
-Would be better to replace it with
-if (rem_bytes < sizeof(u32))
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 1c6043751dc9..49f09998e5c0 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -136,7 +136,8 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+ 	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+ 	if (map != EDMA_MF_EDMA_LEGACY &&
+ 	    map != EDMA_MF_EDMA_UNROLL &&
+-	    map != EDMA_MF_HDMA_COMPAT)
++	    map != EDMA_MF_HDMA_COMPAT &&
++	    map != EDMA_MF_HDMA_NATIVE)
+ 		return;
+ 
+ 	pdata->mf = map;
+@@ -291,6 +292,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", chip->mf);
+ 	else if (chip->mf == EDMA_MF_HDMA_COMPAT)
+ 		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", chip->mf);
++	else if (chip->mf == EDMA_MF_HDMA_NATIVE)
++		pci_dbg(pdev, "Version:\tHDMA Native (0x%x)\n", chip->mf);
+ 	else
+ 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
+ 
+-- 
+2.43.0
 
-this make sure that rem_bytes contain some valid packet.
-> 
->> +
->>       do {
->>           ptype = *((u32 *)data_ptr);
->>           switch (ptype) {
->>           case HFI_PROPERTY_PARAM_FRAME_SIZE:
->> -            data_ptr += sizeof(u32);
->> +            if (increment_data_ptr(data_ptr, &rem_bytes))
->> +                break;
->> +            if (rem_bytes < sizeof(struct hfi_framesize))
->> +                break;
-> 
-> In every case you are return -EINVAL but not setting
-> 
-> inst->error = HFI_ERR_SESSION_INSUFFICIENT_RESOURCES;
-> 
-> surely that is a natural and logical outcome of running out of buffer and a
-> fact you'd want to communicate outside of the driver, rather than silent
-> failing in this switch ?
-> 
-Make sense.
-we should set the inst->error instead of silently breaking from loop.
-Will handle this in next revision.
-
-Thanks,
-Dikshita
-> ---
-> bod
-> 
