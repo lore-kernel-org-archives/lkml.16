@@ -1,211 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C360113D2B2
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67FC24397A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142177; cv=none; b=u41Baf/G1e0RyuJJjPFsg+FCZJwzvVor+9wkvxg/Y1vaX7kW1ESpVwidQaO2nZsNpKDO6gr+6j5Omf5nOrIQxWfDCD81f3LgXFLs4aJ6lLgSbrIsHbmHsgFtCIihh2CizmuAeS0C1b1lrpu4Wz2hJkmvo9mP+dRQf1Nz62I0Dr0=
+	t=1747142232; cv=none; b=nhatdqVizVeGmybv5j/RulXlv6SGYchZz8OrYvipGzrGQp/skvcjNG2+t122vclP59q1+esEkvRelVyGS5NTcNrST57eHcrm1TE7gHAVv3shKQgRGpFzWxvIhLPDYpLpvRH3b5KScIGTtfNphy8ch8VXYLOSQGeRlhuG2E40UUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142177; c=relaxed/simple;
-	bh=dc1EvFdByajZoUd7bPWEy3aTiCwvIbfqMrCdk76T0rM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2WQA9CHlMRcNAJYQl3OsVk5mM82JoZa+OSuJmys2jp9l7FUQMdJ72i3ggN05nT7rzhTde5S/J6mo8ME93IGPFF4WYv8CSZtD2oPJR+Y5n2WB16ORdG49RbbWX9XlzMkQXfs4lxgd6+JUuwFWSuskt2uzlIgcFLhWm/CaVUzVOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fXT5cKYA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747142232; c=relaxed/simple;
+	bh=HCxtUhV0n5ObKOhNbl1mM0TaQS12Gee1diWbIonF2TM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InUtuyxtqMbR+m44clRVaydK/EJQQkZvNJOqHqH51WxUcNXggcDazjiWWKLGaWWgKU+IFmgb1FxduCdS/56/oRTHpsij2cydpf2hxyavYF/jZXcm5pgZNikmIwbx84YsrdyUYOpYBE7OUXSUkYUZrgNOoXmGX2dtagSsBEIhjNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRULYFbC; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fXT5cKYA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747142174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5lK2aUXXFM24jrUuqUNjXmhdY+CHae+0dmeoTkQXG4c=;
-	b=fXT5cKYAaQ2uHZLCYANpQxZFOZMYvR3ja4zQ7qZPKRSieg8K7QEOPsJBRX9+t3wm0MXnqK
-	dLKbvIq6w3VK+zmDrUCTV0SHoEsaq5tAjlO217Z3QLiesfpJdxz/uouszPkT+8tERD7dyC
-	ySzdL5c1m+REanybCc252OcofnO+xPo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-Pb-EsgMSOnmffwH0FtTKdw-1; Tue, 13 May 2025 09:16:11 -0400
-X-MC-Unique: Pb-EsgMSOnmffwH0FtTKdw-1
-X-Mimecast-MFC-AGG-ID: Pb-EsgMSOnmffwH0FtTKdw_1747142170
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso40765425e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:16:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRULYFbC"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf680d351so39099175e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747142229; x=1747747029; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fSKROeG6WIpVx9D960CzNibMdBJ6VLFhrNLL+i7WoQo=;
+        b=pRULYFbC9AVSyNz2e360366ONMG75W4ysygYHU7YSQxD2xdrnJZPMDutdBHmuLpD/G
+         xhhnr6EJzCIrl0S7MLCg6fsUSJ5cjG1XIVJqKDHcT+lDqt6WidgHTeqpeMmY0YaLU+Ja
+         KnG3rfvc3f5rr5z4L/MPVji6Q3XMGh+5j0dwhui89ccMHrCRiU9jiunTyA+KCwne0etu
+         TpxwFAwgZpMH8UemlzHJsfzeb6gqqNA2jd75NAaOYBg6N5x/UKdytHLOoGGSM6uammZ1
+         OH4JS2pg1xAz6QAl2pAYlHIyqu9NYUmwWs9uPyDoXGgxFB1vV6mzv1fBad3RGfcFEnPb
+         YPxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142170; x=1747746970;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5lK2aUXXFM24jrUuqUNjXmhdY+CHae+0dmeoTkQXG4c=;
-        b=NwHUxnpCGIbp1qdS6xksRP8+JDiDNNy8jLolnDWqxBShyECge5uQB/J1cit0IzwRAE
-         +cs2ZQFKsjt7iCCuWPk1hlHRBqg5JLsW5aTyQCdcWMyXcWAcpCgO174mQq49KNZTVfI8
-         jMdYLH2K7wss+rQWFR3oAUagQP1jQMnnLDVJvzk8zE1HR23EV+xQWYV+DdVfAHVAx4xW
-         +/wJTx+/OW6ieTAKmJWnFWju3MJdpQjSBcHSTuqAo07DpoBhYHo/hU0w77qCj6bKdU9g
-         4WfpsMNUX9yZkUfl4rD3a+1LNmKZWV03smLT+NDalLtt67lJK45m01j2wCdZ/QXj7dr9
-         LRyA==
-X-Gm-Message-State: AOJu0YzXgdxPWCwEaXzPtucO4ZBougbZ1fxksLtgad2Ej3ybozmW/bGz
-	XDqIf6ACq54LZlDrE1yXxrpoq3/BKn2ZxjEDgzOpwAtd37Ui9BrMpl9Ya+Dw8wR00QRJubjdozs
-	HTGGRcOYgLEt5ds6UqIR7+auvrf3Pzf+G+PoUP+qOyJcLLyhcuxaaNsnV9+G4xA==
-X-Gm-Gg: ASbGncsEOoVqSel25dpbUhBwNtEk/I6hvp0D7t2APDYlgkiG+Zw3mqQULwjHgo3VPlP
-	plVBRm4UzXj9ubUdIPQJf0aS0VpihXx4c8nZs+O7hI0M4vqa677Mi5eFvILnVkxSC4i+kIdOtMh
-	1ad6RB5mseg+vdcfzK2ZiVsDx2NOoBNLY8IGFUD9D/TZlBpVFRk/SuyUu1noJpOR1fHObIWK09M
-	S+1y1fVX4nqYbYFbS4WAvkLXoHjHuQtceL9Ha2ScNXg7cyAS0atDl5T6eslmCSe0c3NRunN5Ruj
-	zsj6vmyVlBkYTarIpm40oVAhJmt2oZsDXOQ5FFyeY9u5O5IvhXmDa5TNKOLnUoQp6su7LuM2/Cy
-	rnZigH7lxgIbZq2vwv1TAf+FeWMjLO4UL/1021jA=
-X-Received: by 2002:a05:600c:608c:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442d6dbbd6cmr141286055e9.22.1747142170038;
-        Tue, 13 May 2025 06:16:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGeRzfDrwIycfq9a6Yco8QlNMnfOIsdHECdmUa8WqAn0Qia0p9wrag/isuPcxnBtSVbdOdr7Q==
-X-Received: by 2002:a05:600c:608c:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442d6dbbd6cmr141285665e9.22.1747142169593;
-        Tue, 13 May 2025 06:16:09 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34? (p200300d82f4d1a004fdf53e21a36ba34.dip0.t-ipconnect.de. [2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d146af31sm203932935e9.17.2025.05.13.06.16.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 06:16:09 -0700 (PDT)
-Message-ID: <60b3386e-dbb1-4fe9-bc38-d62eba4d9c50@redhat.com>
-Date: Tue, 13 May 2025 15:16:08 +0200
+        d=1e100.net; s=20230601; t=1747142229; x=1747747029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fSKROeG6WIpVx9D960CzNibMdBJ6VLFhrNLL+i7WoQo=;
+        b=hwPXr0kzlTkTUkJ47KlFwZAQVo3+0ae9dI9pkJ4qPGYFwQAn+rZ5hcjRsGRK/rhPyN
+         Xkrk4RIqh98ELye35En7fxt2oXa19Me+x3wey21zIW8hhgAne798y7eaiSks+pzLzFWB
+         neAA7n4C9azercHZOlE1cKnWM/SzTsMs5qExBsADmP+gHcKuyZIXtHQE0pnIdvmuBSlg
+         EPhhZMwfNq/l8ff4s1G3ui4pYhsXfWLVcaN/TgpLgjTTuXSVvuCY0wNEV7l7jYZ/G2SD
+         HMjsd2ys9gZ/9vHS99erfswVwE36JlgUFAdP8SVgU/10hHNHS6CFLnLhC/gqI6xKT5fu
+         fmng==
+X-Forwarded-Encrypted: i=1; AJvYcCUXfMuFpbKiJjpoomoUTn5XGBwkP5clRU0dIIT6zTyaiLnBi/pmS/ETqGj7dGqWNYEq47GjyFlIac8yO3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb+79XXj/So3QvPIif9UTQUp5Tm86k++J2L5l5EwfUxsXaqNBH
+	gyNeuVhpLps47Zaeu+kjI7HI2IujEPV5RZCyXyZReOpASlNFyTS9HWP44wMHe3M=
+X-Gm-Gg: ASbGncvpPYZ8L0J0krHfW14QXnKlBCEvw+d5olwgQNLaW/I7TBkqWLfQVJAAUeHtTGX
+	PDV4/soDmopaS6AYbKdVm5KFjtpKqvTS+YB4g0fdlpuDdzQxDdh3asTa6z32llPVABBXsCZfWZf
+	M812GMSSgDpt6vEk+a6yw7IcBl9LegcgMjEIuK9+CK/PBEQwdvRHDQ/DzD6fH65+QtD5RIkeKPQ
+	Q7eH9UgEcx9fM6UNBb3T+Oia8hHr9hPjRuWILOL5MV+37x/SgP000SDbB4F03/X6yE0qbY5wQk2
+	SNv4ybj4CiGzob/XnQWvqa1Q3Hq7oh/1hvQBVXFWqhAcVMuN2gIm7IKLF3IltDvxv5B8O9R7wCZ
+	MicPHkwi1lw==
+X-Google-Smtp-Source: AGHT+IEXNErNLH6JYcRZtXPTKbltNSbK20Unh3nfkeGF/m82+yZaCLAyjteYTaGHlJ6/REhSJrcoqw==
+X-Received: by 2002:a05:600c:1d86:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-442eac9ddb4mr30238655e9.4.1747142229046;
+        Tue, 13 May 2025 06:17:09 -0700 (PDT)
+Received: from linaro.org (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebd47d39sm18740035e9.1.2025.05.13.06.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 06:17:08 -0700 (PDT)
+Date: Tue, 13 May 2025 14:16:59 +0100
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <aCNGSwL7043GoJBz@linaro.org>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
+ <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in
- uprobe_unregister error path
-To: Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250513122125.1617722-1-jolsa@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250513122125.1617722-1-jolsa@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
 
-On 13.05.25 14:21, Jiri Olsa wrote:
-> From: Jiri Olsa <olsajiri@gmail.com>
+On Sun, May 11, 2025 at 05:48:11PM -0500, Bjorn Andersson wrote:
+> On Tue, May 06, 2025 at 03:10:08PM +0200, Stephan Gerhold wrote:
+> > APCS "global" is sort of a "miscellaneous" hardware block that combines
+> > multiple registers inside the application processor subsystem. Two distinct
+> > use cases are currently stuffed together in a single device tree node:
+> > 
+> >  - Mailbox: to communicate with other remoteprocs in the system.
+> >  - Clock: for controlling the CPU frequency.
+> > 
+> > These two use cases have unavoidable circular dependencies: the mailbox is
+> > needed as early as possible during boot to start controlling shared
+> > resources like clocks and power domains, while the clock controller needs
+> > one of these shared clocks as its parent. Currently, there is no way to
+> > distinguish these two use cases for generic mechanisms like fw_devlink.
+> > 
+> > This is currently blocking conversion of the deprecated custom "qcom,ipc"
+> > properties to the standard "mboxes", see e.g. commit d92e9ea2f0f9
+> > ("arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM"):
+> >   1. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
+> >   2. The clock controller inside &apcs1_mbox needs
+> >      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
+> >   3. &rpmcc is a child of remoteproc &rpm
+> > 
+> > The mailbox itself does not need any clocks and should probe early to
+> > unblock the rest of the boot process. The "clocks" are only needed for the
+> > separate clock controller. In Linux, these are already two separate drivers
+> > that can probe independently.
+> > 
+> 
+> Why does this circular dependency need to be broken in the DeviceTree
+> representation?
+> 
+> As you describe, the mailbox probes and register the mailbox controller
+> and it registers the clock controller. The mailbox device isn't affected
+> by the clock controller failing to find rpmcc...
 > 
 
-Thanks for debugging.
+That's right, but the problem is that the probe() function of the
+mailbox driver won't be called at all. The device tree *looks* like the
+mailbox depends on the clock, so fw_devlink tries to defer probing until
+the clock is probed (which won't ever happen, because the mailbox is
+needed to make the clock available).
 
-> There's error path that could lead to inactive uprobe:
-> 
->    1) uprobe_register succeeds - updates instruction to int3 and
->       changes ref_ctr from 0 to 1
->    2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
->       is changed to 0 (it's not restored to 1 in the fail path)
->       uprobe is leaked
->    3) another uprobe_register comes and re-uses the leaked uprobe
->       and succeds - but int3 is already in place, so ref_ctr update
->       is skipped and it stays 0 - uprobe CAN NOT be triggered now
->    4) uprobe_unregister fails because ref_ctr value is unexpected
-> 
-> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
-> which is the case when uprobe_unregister fails (int3 stays in place),
-> but we have already updated refctr.
-> 
-> The new scenario will go as follows:
-> 
->    1) uprobe_register succeeds - updates instruction to int3 and
->       changes ref_ctr from 0 to 1
->    2) uprobe_unregister fails  - int3 stays in place and ref_ctr
->       is reverted to 1..  uprobe is leaked
->    3) another uprobe_register comes and re-uses the leaked uprobe
->       and succeds - but int3 is already in place, so ref_ctr update
->       is skipped and it stays 1 - uprobe CAN be triggered now
->    4) uprobe_unregister succeeds
-> 
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
+them anyway, but fact is that we need to split this up in order to avoid
+warnings and have the supplies/consumers set up properly. Those device
+links are created based on the device tree and not the drivers.
 
-If it's in mm-stable, we should have
-
-Fixes: ...
-
-here
-
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
-> Please note it's based on mm-stable branch, because it has the
-> latest uprobe_write_opcode rewrite changes.
-> 
->   kernel/events/uprobes.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4c965ba77f9f..84ee7b590861 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->   
->   out:
->   	/* Revert back reference counter if instruction update failed. */
-> -	if (ret < 0 && is_register && ref_ctr_updated)
-> -		update_ref_ctr(uprobe, mm, -1);
-> +	if (ret < 0 && ref_ctr_updated)
-> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
-
-
-Hm, but my patch essentially did here
-
-         /* Revert back reference counter if instruction update failed. */
--       if (ret && is_register && ref_ctr_updated)
-+       if (ret < 0 && is_register && ref_ctr_updated)
-                 update_ref_ctr(uprobe, mm, -1);
-
-So how come this wasn't a problem before?
-
--- 
-Cheers,
-
-David / dhildenb
-
+Thanks,
+Stephan
