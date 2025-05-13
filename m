@@ -1,112 +1,189 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE392556E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0E4290F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747114875; cv=none; b=Oj5yEJtLgKE8pQgnxOG/J8u4ngNl1OBlf5JBBlzQJ++EAKv3XbPAPHYUVRUsBnm1OtcuLHDZYo7L1ARbALBJtHks6pU8CzPNMZeVqMlMFDG0U3/qjYnzfYjiQF57faL7iJDoytz1jmhBVtQ6059HVpTUqFIEruV1mJPImX6o1aQ=
+	t=1747115000; cv=none; b=aPALXaDntaJZpR51AebzfAy9/EN1UwSfTZzxv4DchQEeL1Ua8aIdadhBLlmyMX+KWg9dVcNbu0HjhxYUsroVmtxAX4uaNKmcJpCqyB4oMQqpHgcNnyBUd4qYgSd0BJaJsVyerd6Zo5dstSODBGjM7VXdRQG6ujFuHiHcx36h16Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747114875; c=relaxed/simple;
-	bh=xFjsDPqOCUK6o2h49r2W4b0pCc2igav2DUvsk72eYTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOHGWdxXv2PmidCpXA/aawEY6qvCBUq49vBbQfn2/On8sauiv4YYOrY31Db2L+8ebAIoBc8RmSMpnbklTLjvzrQ8lkpll/ebHhKBk3aClKElGtf1xOiQv+VAxzWQecZ+jA5BWRqOz4MXz2IAIznyyI7ROh9dDbPbBf69dL3eFGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KkG88GME; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747115000; c=relaxed/simple;
+	bh=1JhOXWqoYeM8bClO98qNw8UBKuzb4MdKLTuTZL/T03U=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kPVz+xhD3TjDTtTaOWlaUm2iFdadFxqH4Gj8X47ht1YSJdefQ3iuMWt4UBG74H125laIllX8QrpZKnDDmP8/Do16SPOEsGt94s75AgNzuyzZ93pjlpi688BRLIF7qa1EAWl0O19sJCXTnpWfO75emVTayTywNhVZQcrN1ktU5m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jRKgioD4; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KkG88GME"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af908bb32fdso4099592a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747114873; x=1747719673; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y8/e09aU88+x5oHV/hz7bpXJqL27aHVE4yHbJnrLGY8=;
-        b=KkG88GMEPuA7Ip8KO0CPTxeU6/oYyBa5+NknsZJa7ccrPaLJQ6bC2ae73GKOPtk6B3
-         CD2OTQHnrjVa6cP7N9Rfxp57Ta9rFUHklCFRO2XubBMp8hNgOiebbgzbJqWwAJU1zZZj
-         o9Rq9IaaPMK/SPb5q3dqtTFhqUuhX/SAguV0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747114873; x=1747719673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y8/e09aU88+x5oHV/hz7bpXJqL27aHVE4yHbJnrLGY8=;
-        b=CxQN9ck4n1Iw3b++wJLfZJFcNL91mtetZdrHJV62nwEj6W/srg+8H1eeJmRi/uzGju
-         As1ljp0cj1JKT8YEYrNChhtEUOuYN4bT9o5SzaOfYbeGOjzfchdyLKSM4KstxQIiHTMl
-         shZIqKdMxhU7vGwJnkH/sQKU7zsnElUJSe+MKsk5BuGUuEf8pa6HSKcTYbE4HkiIVB7e
-         MjHg6CZqlKnfKhbKovDCDMcqsOgSScJ8CXGLV/qF9Of9OrcUbHk8hMYAXDhnfY0uVL6o
-         KK06ng5pM4lYj/F7/jjW6TcYoVraaG3Gk8aQ9xd57T3hVm8F0UHAATuAcTGsUFw37Lbv
-         mY7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWvDe75/nLZ5SIF2Wss/3tnKqe5ljy3GyKufeu3XgdtMAQJwqH4Dl4KBdOnAthBd+H4xSx/EssF9LQ5uWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfJCVHLQCJ0zU7EQJyQ2+AAqjSZV+kdzWOM1HZ5daKxJYL6Nxe
-	CqJzHKsuYaulaEP5sNsDm+KXSNyGk6ICn6M3e4g4E9RFWDv37zEPXybrUuXIyQ==
-X-Gm-Gg: ASbGncs5yUVZZwrEcQc3UTCCIZm+l98Ht2uEMGE8Jk9DyV93mg7c2xgWyzX0LPY3iww
-	LTZOBDrJFpNdynw2gCoXPRvZdswW94Cpr4BydAO55EjYocgIg3hSSfXFXskXDIMeZlIZ9cyodgi
-	mdpUguvBwxZo5wgjSRbdVnFRIt7DlNMtmeCexuqw4kxU57UTgj99bvWHan7xS9q2CVg9meI+9uq
-	mDak0aP04j+Yg1TK+jucafMiQqfiOM5cpR90GIHimnUnnQR2uR6J+vVqAWpLP2uW0ZnNJHv9KY8
-	/wD0mimgyZl+ydtxT69lsoHFjapKE/3bA0pR9BmiBGObLEjqUl1PJPyadAe2HyDuFw==
-X-Google-Smtp-Source: AGHT+IH8HYi0iwLoSM9ZEcgQsdWi1ONEPLQT8boJV6r/gWgrnH9v6R8JgAnAP2PObxArdEfREkH33A==
-X-Received: by 2002:a17:90b:2547:b0:2fc:aaf:74d3 with SMTP id 98e67ed59e1d1-30e0daf571emr2971081a91.4.1747114873621;
-        Mon, 12 May 2025 22:41:13 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:7e67:ed66:98df:7a2d])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e6572fsm7787428a91.37.2025.05.12.22.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 22:41:12 -0700 (PDT)
-Date: Tue, 13 May 2025 14:41:07 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Ilya Leoshkevich <iii@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
-Message-ID: <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
-References: <20240902105656.1383858-1-senozhatsky@chromium.org>
- <20240902105656.1383858-11-senozhatsky@chromium.org>
- <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
- <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
- <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jRKgioD4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747114998; x=1778650998;
+  h=date:from:to:cc:subject:message-id;
+  bh=1JhOXWqoYeM8bClO98qNw8UBKuzb4MdKLTuTZL/T03U=;
+  b=jRKgioD4dcIW7x5vR2Wdihx7nULHm6h0VKo4UjyS2qVhPg6pAIYIvClz
+   ywGWFYbeC1HwzjVgBONvfEiamn+Oae5501f49u3XS7JqxrfYYcng093Kx
+   gvDcBDyyJlflaTgtu4vpDBmli9GBGTnnbB3+p3YFtjL+e3BAdjaL/hW+U
+   oLZThrKgR6I52Q1CmaeHTdec7xOymKQ2lbEKASqQYmsNmC7kUer5GUkul
+   NGUGFJi++pxUOBNGZR+YNSURld2psIVZ5E3q97l0ky+P6oHhObV1yRMWh
+   vxrApWyESJ3da/C7G+/XhcC2+gcgXMo7CZaC8OEf1AHBPwIisOOe9/u1x
+   w==;
+X-CSE-ConnectionGUID: 3SVpqRtwTTidCkU5vnu+ew==
+X-CSE-MsgGUID: CMs9wFJrRWyfDQOer/35pw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="36568814"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="36568814"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:43:14 -0700
+X-CSE-ConnectionGUID: MF5l9W29RvqZEp+v29WjZw==
+X-CSE-MsgGUID: yHfD4/D7SemEwOuXq5cysA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="142720574"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 12 May 2025 22:43:13 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEiQ2-000FkV-1s;
+	Tue, 13 May 2025 05:43:10 +0000
+Date: Tue, 13 May 2025 13:42:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ b671c27ccae55303f42c9f32de65cd07c0ba028f
+Message-ID: <202505131341.cpmRZ9ZZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
 
-Sorry for the delay,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: b671c27ccae55303f42c9f32de65cd07c0ba028f  Merge branch into tip/master: 'x86/sgx'
 
-On (25/05/09 17:18), Zaslonko Mikhail wrote:
-> > When zram transitioned from Crypto API (scomp) to custom compression
-> > API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
-> > 
-> > crypto/deflate.c: DEFLATE_DEF_WINBITS	11
-> > 
-> > which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
-> > 
-> >> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
-> >> verified that s390 hardware deflate acceleration works for zram devices
-> >> with a deflate compression.
-> > 
-> > If we define it as 15 on non-s390 machines, will there be any
-> > consequences?  Increased memory usage?  By how much?
-> 
-> On s390, setting windowBits to 15 would lead to zlib workarea size
-> increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
-> i.e. per online CPU. 
-> On non-s390 machine, that impact will be about 115K per stream. 
-> Increasing window size should improve deflate compression,
-> although the compression speed might be affected. Couldn't find any
-> relevant zlib benchmarks though.
-> 
-> Not sure what other consequences might there be for zram. Do you see any?
+elapsed time: 954m
 
-The increased per-CPU memory usage is the only thing I can think of.
-I guess for zram we could turn this into a run-time parameter, but for
-Crypto API compile-time is the only option, I guess.
+configs tested: 112
+configs skipped: 3
 
-Can you send a patch series (for zram and Crypto API) that sets
-windowBits to 15?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                        nsim_700_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250512    gcc-14.2.0
+arc                   randconfig-002-20250512    gcc-11.5.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250512    gcc-7.5.0
+arm                   randconfig-002-20250512    clang-17
+arm                   randconfig-003-20250512    gcc-6.5.0
+arm                   randconfig-004-20250512    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250512    gcc-7.5.0
+arm64                 randconfig-002-20250512    clang-21
+arm64                 randconfig-003-20250512    clang-21
+arm64                 randconfig-004-20250512    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250513    gcc-14.2.0
+csky                  randconfig-002-20250513    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250513    clang-21
+hexagon               randconfig-002-20250513    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250512    gcc-11
+i386        buildonly-randconfig-002-20250512    clang-20
+i386        buildonly-randconfig-003-20250512    clang-20
+i386        buildonly-randconfig-004-20250512    gcc-12
+i386        buildonly-randconfig-005-20250512    clang-20
+i386        buildonly-randconfig-006-20250512    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                 loongson3_defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250513    gcc-14.2.0
+loongarch             randconfig-002-20250513    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip22_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250513    gcc-10.5.0
+nios2                 randconfig-002-20250513    gcc-12.4.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250513    gcc-11.5.0
+parisc                randconfig-002-20250513    gcc-11.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc               randconfig-001-20250513    clang-21
+powerpc               randconfig-002-20250513    gcc-8.5.0
+powerpc               randconfig-003-20250513    clang-21
+powerpc64             randconfig-001-20250513    clang-21
+powerpc64             randconfig-003-20250513    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250512    gcc-7.5.0
+riscv                 randconfig-002-20250512    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250512    clang-18
+s390                  randconfig-002-20250512    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250512    gcc-11.5.0
+sh                    randconfig-002-20250512    gcc-9.3.0
+sh                          rsk7203_defconfig    gcc-14.2.0
+sh                           se7712_defconfig    gcc-14.2.0
+sh                           se7724_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250512    gcc-10.3.0
+sparc                 randconfig-002-20250512    gcc-8.5.0
+sparc64               randconfig-001-20250512    gcc-6.5.0
+sparc64               randconfig-002-20250512    gcc-10.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250512    gcc-12
+um                    randconfig-002-20250512    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250512    gcc-12
+x86_64      buildonly-randconfig-002-20250512    gcc-12
+x86_64      buildonly-randconfig-003-20250512    clang-20
+x86_64      buildonly-randconfig-004-20250512    clang-20
+x86_64      buildonly-randconfig-005-20250512    clang-20
+x86_64      buildonly-randconfig-006-20250512    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250512    gcc-12.4.0
+xtensa                randconfig-002-20250512    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
