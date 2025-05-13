@@ -1,265 +1,451 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666AA1E883A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B5E1E883A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127365; cv=none; b=K2qA8Lo7a43qvAOmN9koEAMZac5ryXWHkkvFgZvYm3UDTig3HF8iz7F9Usr6hcMq5pELybmst2jrilzMKeHkWRoxT2XesB7JvwQmCUfl2IY0FqFLbtG5RAmxUhuHivDs3hKN0KJ1CnSeAlcjEgmrNtXfaqOAjoAAo2/JERIU4T8=
+	t=1747127455; cv=none; b=S0G4/GjrzW3gmsrUL44hmEd5armATTzMxMFr3gtFyW5mcwLSFEyk7ando3kkADP7efd+a0z+pDRZYUGq+Edr9dgdPFU00C1Ngt4FkWb4QxVjyasF35eAHcwqlbPsFS+2Q5hfsauD+eiDgp17GuQ6Ha02WoCmXj2KF5+8z6s+UOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127365; c=relaxed/simple;
-	bh=0VewDEz0OVdUFJoKtitteEe+7RDKAGh5SCrFJfrS0ew=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WwYZp0oPVLz+3EFo1tsGJGQUKfrfNCT6GYsVag57NYNOXAXdWrY5Pjcw1TE8bkPyw1Mmx5bw8huqQcw+TBfPMDJGAI1TN9eTQNKokhKGz+dn8+xBewOXZkK5PEDsydz5u6J368ppI3iwHlFOnRgoki1dXUV3gujH+63YH31cm80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/zNg61Q; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747127455; c=relaxed/simple;
+	bh=j/KIuNIGnOG07xaRel6ctCnYGJhi0CBcYqvFNW07Czw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVV7olHEJ0cEvQWurT59RWqb9AxfwO+3vIdf5i/DP6I/rgPA5W73rHkxFXhSO6yu3ZVLKAS6cVTPMFUC3Oi+tDJWaAEOIXWyjB0CIARsFxOMMc8v8ygWHYjmr2QSAzqBmZBmFmiZS7+8oB1izKKCf4LhixbsYd9O+6LYBeaaiW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PizL1vGy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/zNg61Q"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e732386e4b7so5372967276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747127362; x=1747732162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0VewDEz0OVdUFJoKtitteEe+7RDKAGh5SCrFJfrS0ew=;
-        b=e/zNg61QGDqbLlYZeuvOgCyOwpBviEUqJzA0xa4DOzHiwh+5wbT7qRMbMZY72SN7Rx
-         xlAkESXDRvvlRMus45mrvhkYWfeLnYTO5ali3xgSjLqR7BAuZHJHc9wKpG7wkMCXU8LB
-         AbYGdm8Ao8iQoLJU4qcAozt4HxWvRmM4OxbOBeESzvfqnS9PsFHyJ7LBigOGww3QIyrP
-         HENluRAPducD5NCJInUgY0D0Pz4VPBfaMBXA1GSAJZOXTVw4+pX3HnLHUczUnJSYe1gw
-         1I8ZEtRz2UPlAeGzocTCPyohHMZ4J9fVp3iHOHxOF7gOf0jU6xD6DDA8wMTA9gEnzwaO
-         jxJg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PizL1vGy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747127452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xRw8K0GCG9Y9Bw/zOLR2bmWzH8I8Xdc1bw9RZcjFhAY=;
+	b=PizL1vGyHFk7XOdCicS9GpnpSoZ1bqtMBpnvdZmjE0iDZ3FQNMRbU5vpCXHzONgUGYaUs4
+	dQEjXXtcZ2uWevP036stLoi3p2sBYinVHGEhzlKo+TNbafgEeiUSqdVdhXL0mfWnc/e90z
+	217AnUmaGRPFU0lmY5acF1xZfpDE//A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-576-rEE88sn-PJePuWhZtNWaNA-1; Tue, 13 May 2025 05:10:49 -0400
+X-MC-Unique: rEE88sn-PJePuWhZtNWaNA-1
+X-Mimecast-MFC-AGG-ID: rEE88sn-PJePuWhZtNWaNA_1747127448
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so39670165e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:10:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747127362; x=1747732162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0VewDEz0OVdUFJoKtitteEe+7RDKAGh5SCrFJfrS0ew=;
-        b=Pw7TMc4V/eNpkR4HIf8xb6ISF8EhNKk7AlmsdXKRROJgZ6rqZThow61KYa6bPX5rZ2
-         u9BQSzoP+2DOVgEB41b2krq9jZznRIr1zvCqKz4oq//yl0nPTgIqpftosNhTE6vblPi9
-         +Q7+du1mK+Zl493IH7cI+roCkiXnjuViYOK2HF8LDrzr4uCy5spAIzKoGuswowR8oov1
-         Pz4WJhi+iYH369jENgrBtAn/s5dDijo8cOEZDDRBQ0MEi/GgqboSHWjUj6Ql11ogmAb+
-         qX+8xpPdEEjcHhNWBp6wNAsIjQx3jQq52Br1MYCXnZCVJJ3dfM/O4I0zMiNDn8HLs6Hj
-         lOTg==
-X-Gm-Message-State: AOJu0YxQWq50Uwi/y7M38Fz7zYmGOut2h/fAPkXnsZB8G0XhgJVvNdKZ
-	ef3Q6jx/TU9DAfSPtWtccgOFfi6NHwOIEGDShBYnheLXq5N0jOQEa1hFaORgnLu0jVIaRjvclHG
-	Z4jfWAtn9FT235T08yvsv2vzRkJY=
-X-Gm-Gg: ASbGncuXrlJauI0XUt19I6Xeig1Hv0/4RAComcdcE8eKTNCLsxzN3oWcL/chBP707/x
-	XXYR/Br56fLp398zL/toVrkb4fhi6ViwuCbUpxubbfZ7qHoig+1IyDqUpM1+1ONLwrnIXs0l5Md
-	AaPi4e1usOJBDhiZbQMkS3wzNdrzUv0ts=
-X-Google-Smtp-Source: AGHT+IGCL1unN7OB+cKfHrGNgbV7oXHANzZetC/mDZeeYJ3nMajP4AYg44piHv4Kb2FUGowy4PhjC3lxXKL/4vSwxgs=
-X-Received: by 2002:a25:df05:0:b0:e79:1011:a64a with SMTP id
- 3f1490d57ef6-e791011acb0mr11021719276.42.1747127362156; Tue, 13 May 2025
- 02:09:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747127448; x=1747732248;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xRw8K0GCG9Y9Bw/zOLR2bmWzH8I8Xdc1bw9RZcjFhAY=;
+        b=k5XxTd1uw/UlSIJQSJwV7/1wiR5dr22DBm0KN9vWGUYNxVmrNU5r10C2cXtH+pqSGI
+         ycJ2gegJKQg9qoppZwVY0ndab0sJK6dvUmk1CrWnhcbN47/D1XnTVK81qmv4d46NabDJ
+         fEyaxq9wSfd3pQvzoy4ANmWOAmXaGRiwvRbsPeatH6/jcMhYf7CZzQCySFx1I5yPs+wc
+         s+mjptH37WFrr3j5o4DOVqft28BE01wITmmOW/SkDvO20bzPxt2bPVj472mGfo45ChfI
+         6r7upgMY+1lOrA8wkSFibmtCVVHOUqqhoJvRrktFBm77M6DYP77hj4bXKlb5Cu2z5PgF
+         jDEw==
+X-Gm-Message-State: AOJu0Yyawd/stiGd03QratAVZCCjIRLjv/JYQelxV5XRxpQnyI27ug3o
+	SPYA7JvoxKeaiUgIcc0I9E8qMUTAgHvyIXWYDAf89H/DqOoVLFG48j5FOF5ReBzuLV4Vitx/0TZ
+	iZHATLrP8uNgwIkhlkQVT7P7WiLnLzkVIxjxJ75RDOMS2XSFv+fzGWQn0ffD2mvla6oroA6Nt
+X-Gm-Gg: ASbGncvJjQjj6sfXfhuHKhxsZP9UgVHXhLET97r1pHf+s0d8dE/ykeTnBZe97xmCiXU
+	MjWVoh5z1J2btSQ6mTqMU0nqwtuyFQ3UZEV1+XcTTcpIe7RQJ9nBGusK0qG1KyX98M+mdCxWtAA
+	0olQKLHfTdadb8BZahsYve+JReKeiH2AAPPIgLt/P3VyrAouAtdO25sLpKLpsDUqSYL2JU/IWnL
+	i+yEBxTow9oyGpgo/99J8gT6tosdCsrgljt5UMbDUo2VVmE//6K9KpHBQw/9gxKCWnFOP1C28ij
+	J70H+1jChqkFzIglYlBnxPOr8vgbFIpRUbeYfTFiWT7AUPVDmuq9oyW/rNt5Ig4V4EQ5lA0axm0
+	ehc8dcclvSFpY3O+dLIng93SasbBAuxnZaubu7Ok=
+X-Received: by 2002:a05:6000:3102:b0:39c:cd5:4bc0 with SMTP id ffacd0b85a97d-3a1f64ae7bamr14020818f8f.52.1747127448189;
+        Tue, 13 May 2025 02:10:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhMfGXX+LfoTaRmQxDRv9M6jlSovi0I1OJwxnluMn2RG9cmrKRWpV5jdZZJbJOGzf1wyCCZw==
+X-Received: by 2002:a05:6000:3102:b0:39c:cd5:4bc0 with SMTP id ffacd0b85a97d-3a1f64ae7bamr14020781f8f.52.1747127447724;
+        Tue, 13 May 2025 02:10:47 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34? (p200300d82f4d1a004fdf53e21a36ba34.dip0.t-ipconnect.de. [2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2a07sm15737321f8f.50.2025.05.13.02.10.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 02:10:47 -0700 (PDT)
+Message-ID: <c7a4d470-16a7-423f-b9a4-a73210596d8b@redhat.com>
+Date: Tue, 13 May 2025 11:10:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: cen zhang <zzzccc427@gmail.com>
-Date: Tue, 13 May 2025 17:09:09 +0800
-X-Gm-Features: AX0GCFvs5hrBDDPajxEgjoQLQk4Up1svE0Hnv-AiJCv71HzcDVm6IpqzCnTUneo
-Message-ID: <CAFRLqsXtezaJp+nUdukL2ocHGupHQX_=_NfeChjpTKG9RD3VJg@mail.gmail.com>
-Subject: [BUG] Five data races in f2fs, two potentially harmful
-To: jaegeuk@kernel.org, chao@kernel.org
-Cc: linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, 
-	zhenghaoran154@gmail.com, linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
+ + pfnmap_untrack()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>
+References: <20250512123424.637989-1-david@redhat.com>
+ <20250512123424.637989-5-david@redhat.com>
+ <d180a8d2-87e2-4878-bca1-e6986b7fc110@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d180a8d2-87e2-4878-bca1-e6986b7fc110@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello maintainers,
+On 12.05.25 18:42, Lorenzo Stoakes wrote:
+> On Mon, May 12, 2025 at 02:34:17PM +0200, David Hildenbrand wrote:
+>> Let's use our new interface. In remap_pfn_range(), we'll now decide
+>> whether we have to track (full VMA covered) or only lookup the
+>> cachemode (partial VMA covered).
+>>
+>> Remember what we have to untrack by linking it from the VMA. When
+>> duplicating VMAs (e.g., splitting, mremap, fork), we'll handle it similar
+>> to anon VMA names, and use a kref to share the tracking.
+>>
+>> Once the last VMA un-refs our tracking data, we'll do the untracking,
+>> which simplifies things a lot and should sort our various issues we saw
+>> recently, for example, when partially unmapping/zapping a tracked VMA.
+>>
+>> This change implies that we'll keep tracking the original PFN range even
+>> after splitting + partially unmapping it: not too bad, because it was
+>> not working reliably before. The only thing that kind-of worked before
+>> was shrinking such a mapping using mremap(): we managed to adjust the
+>> reservation in a hacky way, now we won't adjust the reservation but
+>> leave it around until all involved VMAs are gone.
+>>
+>> If that ever turns out to be an issue, we could hook into VM splitting
+>> code and split the tracking; however, that adds complexity that might
+>> not be required, so we'll keep it simple for now.
+>>
+>> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Other than small nit below,
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+>> ---
+>>   include/linux/mm_inline.h |  2 +
+>>   include/linux/mm_types.h  | 11 ++++++
+>>   mm/memory.c               | 82 +++++++++++++++++++++++++++++++--------
+>>   mm/mmap.c                 |  5 ---
+>>   mm/mremap.c               |  4 --
+>>   mm/vma_init.c             | 50 ++++++++++++++++++++++++
+>>   6 files changed, 129 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
+>> index f9157a0c42a5c..89b518ff097e6 100644
+>> --- a/include/linux/mm_inline.h
+>> +++ b/include/linux/mm_inline.h
+>> @@ -447,6 +447,8 @@ static inline bool anon_vma_name_eq(struct anon_vma_name *anon_name1,
+>>
+>>   #endif  /* CONFIG_ANON_VMA_NAME */
+>>
+>> +void pfnmap_track_ctx_release(struct kref *ref);
+>> +
+>>   static inline void init_tlb_flush_pending(struct mm_struct *mm)
+>>   {
+>>   	atomic_set(&mm->tlb_flush_pending, 0);
+>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>> index 15808cad2bc1a..3e934dc6057c4 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -763,6 +763,14 @@ struct vma_numab_state {
+>>   	int prev_scan_seq;
+>>   };
+>>
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +struct pfnmap_track_ctx {
+>> +	struct kref kref;
+>> +	unsigned long pfn;
+>> +	unsigned long size;	/* in bytes */
+>> +};
+>> +#endif
+>> +
+>>   /*
+>>    * Describes a VMA that is about to be mmap()'ed. Drivers may choose to
+>>    * manipulate mutable fields which will cause those fields to be updated in the
+>> @@ -900,6 +908,9 @@ struct vm_area_struct {
+>>   	struct anon_vma_name *anon_name;
+>>   #endif
+>>   	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +	struct pfnmap_track_ctx *pfnmap_track_ctx;
+>> +#endif
+>>   } __randomize_layout;
+>>
+>>   #ifdef CONFIG_NUMA
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index 064fc55d8eab9..4cf4adb0de266 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -1371,7 +1371,7 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
+>>   	struct mm_struct *dst_mm = dst_vma->vm_mm;
+>>   	struct mm_struct *src_mm = src_vma->vm_mm;
+>>   	struct mmu_notifier_range range;
+>> -	unsigned long next, pfn = 0;
+>> +	unsigned long next;
+>>   	bool is_cow;
+>>   	int ret;
+>>
+>> @@ -1381,12 +1381,6 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
+>>   	if (is_vm_hugetlb_page(src_vma))
+>>   		return copy_hugetlb_page_range(dst_mm, src_mm, dst_vma, src_vma);
+>>
+>> -	if (unlikely(src_vma->vm_flags & VM_PFNMAP)) {
+>> -		ret = track_pfn_copy(dst_vma, src_vma, &pfn);
+>> -		if (ret)
+>> -			return ret;
+>> -	}
+>> -
+>>   	/*
+>>   	 * We need to invalidate the secondary MMU mappings only when
+>>   	 * there could be a permission downgrade on the ptes of the
+>> @@ -1428,8 +1422,6 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
+>>   		raw_write_seqcount_end(&src_mm->write_protect_seq);
+>>   		mmu_notifier_invalidate_range_end(&range);
+>>   	}
+>> -	if (ret && unlikely(src_vma->vm_flags & VM_PFNMAP))
+>> -		untrack_pfn_copy(dst_vma, pfn);
+>>   	return ret;
+>>   }
+>>
+>> @@ -1924,9 +1916,6 @@ static void unmap_single_vma(struct mmu_gather *tlb,
+>>   	if (vma->vm_file)
+>>   		uprobe_munmap(vma, start, end);
+>>
+>> -	if (unlikely(vma->vm_flags & VM_PFNMAP))
+>> -		untrack_pfn(vma, 0, 0, mm_wr_locked);
+>> -
+>>   	if (start != end) {
+>>   		if (unlikely(is_vm_hugetlb_page(vma))) {
+>>   			/*
+>> @@ -2872,6 +2861,36 @@ int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long addr,
+>>   	return error;
+>>   }
+>>
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +static inline struct pfnmap_track_ctx *pfnmap_track_ctx_alloc(unsigned long pfn,
+>> +		unsigned long size, pgprot_t *prot)
+>> +{
+>> +	struct pfnmap_track_ctx *ctx;
+>> +
+>> +	if (pfnmap_track(pfn, size, prot))
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
+>> +	if (unlikely(!ctx)) {
+>> +		pfnmap_untrack(pfn, size);
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	ctx->pfn = pfn;
+>> +	ctx->size = size;
+>> +	kref_init(&ctx->kref);
+>> +	return ctx;
+>> +}
+>> +
+>> +void pfnmap_track_ctx_release(struct kref *ref)
+>> +{
+>> +	struct pfnmap_track_ctx *ctx = container_of(ref, struct pfnmap_track_ctx, kref);
+>> +
+>> +	pfnmap_untrack(ctx->pfn, ctx->size);
+>> +	kfree(ctx);
+>> +}
+>> +#endif /* __HAVE_PFNMAP_TRACKING */
+>> +
+>>   /**
+>>    * remap_pfn_range - remap kernel memory to userspace
+>>    * @vma: user vma to map to
+>> @@ -2884,20 +2903,51 @@ int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long addr,
+>>    *
+>>    * Return: %0 on success, negative error code otherwise.
+>>    */
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>>   int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
+>>   		    unsigned long pfn, unsigned long size, pgprot_t prot)
+>>   {
+>> +	struct pfnmap_track_ctx *ctx = NULL;
+>>   	int err;
+>>
+>> -	err = track_pfn_remap(vma, &prot, pfn, addr, PAGE_ALIGN(size));
+>> -	if (err)
+>> +	size = PAGE_ALIGN(size);
+>> +
+>> +	/*
+>> +	 * If we cover the full VMA, we'll perform actual tracking, and
+>> +	 * remember to untrack when the last reference to our tracking
+>> +	 * context from a VMA goes away. We'll keep tracking the whole pfn
+>> +	 * range even during VMA splits and partial unmapping.
+>> +	 *
+>> +	 * If we only cover parts of the VMA, we'll only setup the cachemode
+>> +	 * in the pgprot for the pfn range.
+>> +	 */
+>> +	if (addr == vma->vm_start && addr + size == vma->vm_end) {
+>> +		if (vma->pfnmap_track_ctx)
+>> +			return -EINVAL;
+>> +		ctx = pfnmap_track_ctx_alloc(pfn, size, &prot);
+>> +		if (IS_ERR(ctx))
+>> +			return PTR_ERR(ctx);
+>> +	} else if (pfnmap_setup_cachemode(pfn, size, &prot)) {
+>>   		return -EINVAL;
+>> +	}
+>>
+>>   	err = remap_pfn_range_notrack(vma, addr, pfn, size, prot);
+>> -	if (err)
+>> -		untrack_pfn(vma, pfn, PAGE_ALIGN(size), true);
+>> +	if (ctx) {
+>> +		if (err)
+>> +			kref_put(&ctx->kref, pfnmap_track_ctx_release);
+>> +		else
+>> +			vma->pfnmap_track_ctx = ctx;
+>> +	}
+>>   	return err;
+>>   }
+>> +
+>> +#else
+>> +int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
+>> +		    unsigned long pfn, unsigned long size, pgprot_t prot)
+>> +{
+>> +	return remap_pfn_range_notrack(vma, addr, pfn, size, prot);
+>> +}
+>> +#endif
+>>   EXPORT_SYMBOL(remap_pfn_range);
+>>
+>>   /**
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 50f902c08341a..09c563c951123 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -1784,11 +1784,6 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>>   		tmp = vm_area_dup(mpnt);
+>>   		if (!tmp)
+>>   			goto fail_nomem;
+>> -
+>> -		/* track_pfn_copy() will later take care of copying internal state. */
+>> -		if (unlikely(tmp->vm_flags & VM_PFNMAP))
+>> -			untrack_pfn_clear(tmp);
+>> -
+>>   		retval = vma_dup_policy(mpnt, tmp);
+>>   		if (retval)
+>>   			goto fail_nomem_policy;
+>> diff --git a/mm/mremap.c b/mm/mremap.c
+>> index 7db9da609c84f..6e78e02f74bd3 100644
+>> --- a/mm/mremap.c
+>> +++ b/mm/mremap.c
+>> @@ -1191,10 +1191,6 @@ static int copy_vma_and_data(struct vma_remap_struct *vrm,
+>>   	if (is_vm_hugetlb_page(vma))
+>>   		clear_vma_resv_huge_pages(vma);
+>>
+>> -	/* Tell pfnmap has moved from this vma */
+>> -	if (unlikely(vma->vm_flags & VM_PFNMAP))
+>> -		untrack_pfn_clear(vma);
+>> -
+>>   	*new_vma_ptr = new_vma;
+>>   	return err;
+>>   }
+>> diff --git a/mm/vma_init.c b/mm/vma_init.c
+>> index 967ca85179864..8e53c7943561e 100644
+>> --- a/mm/vma_init.c
+>> +++ b/mm/vma_init.c
+>> @@ -71,7 +71,51 @@ static void vm_area_init_from(const struct vm_area_struct *src,
+>>   #ifdef CONFIG_NUMA
+>>   	dest->vm_policy = src->vm_policy;
+>>   #endif
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +	dest->pfnmap_track_ctx = NULL;
+>> +#endif
+>> +}
+>> +
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +static inline int vma_pfnmap_track_ctx_dup(struct vm_area_struct *orig,
+>> +		struct vm_area_struct *new)
+>> +{
+>> +	struct pfnmap_track_ctx *ctx = orig->pfnmap_track_ctx;
+>> +
+>> +	if (likely(!ctx))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * We don't expect to ever hit this. If ever required, we would have
+>> +	 * to duplicate the tracking.
+>> +	 */
+>> +	if (unlikely(kref_read(&ctx->kref) >= REFCOUNT_MAX))
+> 
+> How not expected is this? :) maybe use WARN_ON_ONCE() if it really should
+> never happen?
+I guess if we mmap a large PFNMAP and then split it into individual 
+PTE-sized chunks, we could get many VMAs per-process referencing that 
+tracing.
 
-I would like to report five data race bugs we discovered in the F2FS
-filesystem on Linux kernel v6.14-rc4. These issues were identified
-using our data race detector.
+Combine that with fork() and I assume one could hit this -- when really 
+trying hard to achieve it. (probably as privileged user to get a big 
+VM_PFNMAP, though, but not sure)
 
-Among the five races, we believe that three are benign, and might be
-acceptable to annotate with `data_race()`. However, the remaining two
-involve shared global state and may lead to inconsistencies. We are
-uncertain about their potential harmfulness and would appreciate your
-evaluation.
+In that case, a WARN_ON_ONCE() would be bad -- because it could be 
+triggered by the user.
 
-Below is a summary of the findings:
+We could do a pr_warn_once() instead, stating that this is not supported 
+right now?
 
----
+-- 
+Cheers,
 
-Benign Races
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+David / dhildenb
 
-1. Race in `f2fs_update_time()` at lines 1915 and 1916
-------------------------------------------------------
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: f2fs_fallocate+0xbb6/0x13e0 fs/f2fs/f2fs.h:1915
-Function: vfs_fallocate+0x38d/0x440
-Function: __x64_sys_fallocate+0xb0/0xf0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Function: f2fs_fallocate+0xbb6/0x13e0 fs/f2fs/f2fs.h:1915
-Function: vfs_fallocate+0x38d/0x440
-Function: __x64_sys_fallocate+0xb0/0xf0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: f2fs_fallocate+0xc30/0x13e0 fs/f2fs/f2fs.h:1916
-Function: vfs_fallocate+0x38d/0x440
-Function: __x64_sys_fallocate+0xb0/0xf0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Function: f2fs_setxattr+0x53d/0x8e0 fs/f2fs/f2fs.h:1916
-Function: f2fs_xattr_generic_set+0x293/0x3c0 fs/f2fs/xattr.c:86
-Function: __vfs_setxattr+0x3b6/0x3f0
-Function: __vfs_setxattr_noperm+0x115/0x5c0
-Function: vfs_setxattr+0x165/0x300
-Function: file_setxattr+0x1a9/0x280
-Function: path_setxattrat+0x2f4/0x370
-Function: __x64_sys_fsetxattr+0xbc/0xe0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-
-2. Race on `inode->i_advise`
-----------------------------
-A read in `f2fs_update_inode()` and a write in
-`f2fs_expand_inode_data()` can happen concurrently.
-
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: f2fs_update_inode+0x36a/0x7c30 fs/f2fs/inode.c:670
-Function: f2fs_fsync_node_pages+0x3756/0x61a0 fs/f2fs/node.c:1848
-Function: f2fs_do_sync_file+0x1935/0x3ba0 fs/f2fs/file.c:343
-Function: f2fs_sync_file+0x2e2/0x450 fs/f2fs/file.c:395
-Function: __x64_sys_fsync+0x18a/0x1d0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-VarName 7370413196168665605, BlockLineNumber 152, IrLineNumber 2,
-watchpoint index 38631
-Function: f2fs_expand_inode_data+0x14ad/0x1af0 fs/f2fs/f2fs.h:3346
-Function: f2fs_fallocate+0x7be/0x13e0 fs/f2fs/file.c:1959
-Function: vfs_fallocate+0x38d/0x440
-Function: __x64_sys_fallocate+0xb0/0xf0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-
-3. Race on `mapping->writeback_index` in `f2fs_write_cache_pages()`
--------------------------------------------------------------------
-Multiple writers may assign to `mapping->writeback_index` concurrently.
-This behavior is also seen in other subsystems and may be acceptable,
-although racy in a strict sense.
-
-Kernel panic: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-Function: f2fs_write_data_pages+0x55ca/0x7220 fs/f2fs/data.c:3221
-Function: do_writepages+0x302/0x7c0
-Function: file_write_and_wait_range+0x1e2/0x3e0
-Function: f2fs_do_sync_file+0xa41/0x3ba0 fs/f2fs/file.c:278
-Function: f2fs_sync_file+0x2e2/0x450 fs/f2fs/file.c:395
-Function: __x64_sys_fsync+0x18a/0x1d0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: f2fs_write_data_pages+0x55ca/0x7220 fs/f2fs/data.c:3221
-Function: do_writepages+0x302/0x7c0
-Function: file_write_and_wait_range+0x1e2/0x3e0
-Function: f2fs_do_sync_file+0xa41/0x3ba0 fs/f2fs/file.c:278
-Function: f2fs_sync_file+0x2e2/0x450 fs/f2fs/file.c:395
-Function: __x64_sys_fsync+0x18a/0x1d0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
----
-
-Possibly Harmful Race
-----------------------------
-
-1. Race on `free_sections` field of `struct f2fs_sb_info`
-----------------------------
-
-This race involves concurrent read and write to `sbi->free_sections`.
-The read occurs in the function `has_not_enough_free_secs()` during a
-write operation, while the write occurs deeper in `new_curseg()`
-during a sync path.=EF=BC=9A
-
-Kernel panic: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-Function: has_not_enough_free_secs+0x11fd/0x1f50 fs/f2fs/segment.h:530
-Function: f2fs_write_begin+0x33df/0x5580 fs/f2fs/data.c:3627
-Function: generic_perform_write+0x26d/0x660
-Function: f2fs_file_write_iter+0x15ea/0x55a0 fs/f2fs/file.c:4855
-Function: vfs_write+0x940/0xd10
-Function: ksys_write+0x116/0x200
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Function: new_curseg+0x2382/0x3900 fs/f2fs/segment.h:456
-Function: f2fs_allocate_data_block+0x47e3/0xa570 fs/f2fs/segment.c:3800
-Function: do_write_page+0x321/0x1170 fs/f2fs/segment.c:3913
-Function: f2fs_do_write_node_page+0x1aa/0x4d0 fs/f2fs/segment.c:3965
-Function: __write_node_page+0x166e/0x4400 fs/f2fs/node.c:1706
-Function: f2fs_fsync_node_pages+0x3b70/0x61a0 fs/f2fs/node.c:1860
-Function: f2fs_do_sync_file+0x1935/0x3ba0 fs/f2fs/file.c:343
-Function: f2fs_sync_file+0x2e2/0x450 fs/f2fs/file.c:395
-Function: __x64_sys_fsync+0x18a/0x1d0
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-----
-
-2. Race on `nat_cnt[TOTAL_NAT]` in `struct f2fs_nm_info`
-----------------------------
-A read from `f2fs_balance_fs()` (via `excess_cached_nats()`) and a
-concurrent write from `__init_nat_entry()` (in the mkdir path) race on
-the same counter field. No locking or atomic access is used.
-
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D DATARACE =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: f2fs_balance_fs+0x269/0xcd0 fs/f2fs/node.h:138
-Function: f2fs_setattr+0x2585/0x38f0 fs/f2fs/file.c:1142
-Function: notify_change+0x9f9/0xca0
-Function: chmod_common+0x1fe/0x410
-Function: __x64_sys_fchmod+0xd4/0x130
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Function: 0x0
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DOTHER_INFO=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-Function: set_node_addr+0x8c1/0x3760 fs/f2fs/node.c:202
-Function: f2fs_new_node_page+0x12ce/0x3870 fs/f2fs/node.c:1357
-Function: f2fs_new_inode_page+0x1a6/0x290 fs/f2fs/node.c:1313
-Function: f2fs_init_inode_metadata+0x13a/0x32a0 fs/f2fs/dir.c:524
-Function: f2fs_add_regular_entry+0xa3f/0x1cc0 fs/f2fs/dir.c:721
-Function: f2fs_add_dentry+0x15e/0x560 fs/f2fs/dir.c:769
-Function: f2fs_do_add_link+0x660/0xb30 fs/f2fs/dir.c:808
-Function: f2fs_mkdir+0x70c/0xd50 fs/f2fs/f2fs.h:3616
-Function: vfs_mkdir+0x4b1/0x6e0
-Function: do_mkdirat+0x1ae/0x260
-Function: __x64_sys_mkdir+0x6c/0x80
-Function: do_syscall_64+0xc9/0x1a0
-Function: entry_SYSCALL_64_after_hwframe+0x77/0x7f
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3DEND=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
------
-
-Thank you for your attention to this matter.
-
-Best regards,
-Cen Zhang
