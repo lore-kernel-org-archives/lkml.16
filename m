@@ -1,134 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953681DDC28;
-	Tue, 13 May 2025 16:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2BB61DFD96
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154709; cv=none; b=BLmku2NEL3eK5elc+e5yy7U67WdaXrbkqxGsKQFmPN2EzagJvMw/PEJBA/ejs9ENZ0TyEzMZNH4xRzcu6IJgWi1Xs7JegHTg/0icGxsi0E2DIo9Xd5CXX1xoAGav5U2U7ckeP2T5nfq0soX5r328ngmgGdvpFBXcgYCRwhEcOZc=
+	t=1747154757; cv=none; b=KrcrqHfCC7nW95MU9Bt5JEaklnk0qkKFVy+YuhM1Eob1EyupaWOoamqdOPRgP92ePBbBJyIg/wxZhr1SQHPTViG3gKD9T2OrsALavbi2SYBpQS6O+3CjsslTGG+a681DeZyDUUya6Gphkzf2QPbMXx5MQhm9zuP95j6sRS6wE2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154709; c=relaxed/simple;
-	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=En2S/0MZDO4dn5TGaradHI+iiGt4tkawVJyo3nuzqOViv6FAPEz8hLKbml6WeCdb1b89AuS9e/SR4wBbNV6pXg5Tfr0MXX561BmJTvoMvw3gyaMKiGSYY/mP/SdR7XRV2FBqFFnrRUAzJnlzNQchPkXkMXfW18zuosS6vJajn78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edjxddpo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edjxddpo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBC7C4CEE4;
-	Tue, 13 May 2025 16:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747154709;
-	bh=9qNt2vvTJ8vncwwFBakHVgY0+vXZKoSXtrmG1BSclXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EdjxddpojJLkHNXEKf4SNDvhSbdPn4MGNdTfRNKe6PNXXYUIC7NTLm2hMYj2Z5/6y
-	 WqQ0FoQDs4UMpOgrmLdwyMvOo2OZRj9u745CBFtKXaXs0TChFW9KqVYNLF36kKc1+k
-	 hHbWGRrx+jQmrPneAzC1aM6/INbcK/X6WPCi9DYpPiy7J5EIYv97PSuCAaFURLMn3W
-	 R/ofKjCnMvgknvFJz7eolbYdlOcEjhry+XCLDGz4z91Rr4y9/vWjnzGoVsfP5x0MIp
-	 ud+NFf8ABf57KuUncbjMiaFV4WqMjKyjjHC0QE8meIYRHM2YfK+ZvcPurMNmbGmAet
-	 xpA7gEp4Lv9VA==
-Date: Tue, 13 May 2025 16:45:07 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] PCI: hv: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aCN3E7pQc5UHJ-4w@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <aAu8qsMQlbgH82iN@kspp>
- <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
+	s=arc-20240116; t=1747154757; c=relaxed/simple;
+	bh=n8HQLytcOAdobhHpnYRDrBIig+xBeeekssVwl+Ekk+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N4ddwn/cLY8xtcPaWi5qdurwPzmx4LZGyRu1P7p1VSH4BQgTzLBaj6CwFnBL7YpZ28mJ9I9yTbUbG0HclU161E7rF3qhLCVzlJ6rm2kyVC+GuhbSWMmh6WIvCm6YDqOY0D0ln3hia6adWqo8p0UxcXyK/75oBiCzWRSowsJlgj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4F581688;
+	Tue, 13 May 2025 09:45:43 -0700 (PDT)
+Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70EB53F673;
+	Tue, 13 May 2025 09:45:49 -0700 (PDT)
+Message-ID: <1a75e173-8a90-4f57-ba23-40008f445b71@arm.com>
+Date: Tue, 13 May 2025 17:45:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 18/30] x86/resctrl: Fix types in
+ resctrl_arch_mon_ctx_{alloc,free}() stubs
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20250508171858.9197-1-james.morse@arm.com>
+ <20250508171858.9197-19-james.morse@arm.com>
+ <7c7d8278-d188-4280-a5ef-c8dfcd8387fd@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <7c7d8278-d188-4280-a5ef-c8dfcd8387fd@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 02:07:45AM +0000, Michael Kelley wrote:
-> From: Michael Kelley <mhklinux@outlook.com> Sent: Sunday, April 27, 2025 8:22 AM
-> > 
-> > From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, April 25, 2025 9:48
-> > AM
-> > >
-> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > getting ready to enable it, globally.
-> > >
-> > > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
-> > > of a flexible structure where the size of the flexible-array member
-> > > is known at compile-time, and refactor the rest of the code,
-> > > accordingly.
-> > >
-> > > So, with these changes, fix the following warnings:
-> > >
-> > > drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure containing a flexible
-> > > array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > 
-> > I'm supportive of cleaning up these warnings. I've worked with the pci-hyperv.c
-> > code a fair amount over the years, but never had looked closely at the on-stack
-> > structs that are causing the warnings. The current code is a bit unusual and
-> > perhaps unnecessarily obtuse.
-> > 
-> > Rather than the approach you've taken below, I tried removing the flex array
-> > entirely from struct pci_packet. In all cases except one, it was used only to
-> > locate the end of struct pci_packet, which is the beginning of the follow-on
-> > message. Locating that follow-on message can easily be done by just referencing
-> > the "buf" field in the on-stack structs, or as (pkt + 1) in the dynamically allocated
-> > case. In both cases, there's no need for the flex array. In the one exception, a
-> > couple of minor tweaks avoids the need for the flex array as well.
-> > 
-> > So here's an alternate approach to solving the problem. This approach is
-> > 14 insertions and 15 deletions, so it's a lot less change than your approach.
-> > I still don't understand why the on-stack struct are declared as (for example):
-> > 
-> > 	struct {
-> > 		struct pci_packet pkt;
-> > 		char buf[sizeof(struct pci_read_block)];
-> > 	} pkt;
-> > 
-> > instead of just:
-> > 
-> > 	struct {
-> > 		struct pci_packet pkt;
-> > 		struct pci_read_block msg;
-> > 	} pkt;
-> > 
-> > but that's a topic for another time.  Anyway, here's my proposed diff, which I've
-> > compiled and smoke-tested in a VM in the Azure cloud:
-> > 
+Hi Reinette,
+
+On 08/05/2025 23:45, Reinette Chatre wrote:
+> On 5/8/25 10:18 AM, James Morse wrote:
+>> resctrl_arch_mon_ctx_alloc() and resctrl_arch_mon_ctx_free() take an enum
+>> resctrl_event_id that is al;ready defined in resctrl_types.h to be
 > 
-> Gustavo -- Are you waiting for me to submit a patch with my alternate proposal?
-> I had not seen any follow up, so wanted to make sure we have clarity on who
-> has the next action. Thx.
+> al;ready -> already
 
-Michael, I prefer your approach. Please send a patch.
+Bah - me and my fat fingers!
 
-Thanks,
-Wei.
 
+>> accessible to asm/resctrl.h.
+>>
+>> The x86 stubs take an int. Fix that.
+>>
+>> Signed-off-by: James Morse <james.morse@arm.com>
+>> Tested-by: Babu Moger <babu.moger@amd.com>
+>> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+>> ---
 > 
-> Michael
+> With typo fixed:
+> 
+> | Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+
+
+Thanks!
+
+James
