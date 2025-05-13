@@ -1,77 +1,81 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED31723A9BE
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B808A23814A;
+	Tue, 13 May 2025 09:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129858; cv=none; b=JcnBBj9hXPQWJB5BQ9fSbO4ak2MS416c3d4tgowgZEeV7DZydSt/ZrRHATmsyxx5KfHsaucezSG90aHAziTLL+pIkvydfj7BMNM5yC5mEEZ9+XMMa8HO/d2zbzYYf0qfrntIzqeekrP81vpdl5EeqsxHwlRaqfWBa2DXKyIP+Z0=
+	t=1747130016; cv=none; b=mAblvLQlB6VZd2MyKiPCFRiEcdlPZRCdI2BimLuoW6/v9j217WZ/JUotjPi8brpebsbbSD+V048ZrJyltNhiAlViAZgEklOu7krqXmB4SObnl7mlEX1MmirTNwptDgSiPKIge2WN9Cmr+efjJ4WTXdnVUYaULdZzq0Bpe3Bp6ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129858; c=relaxed/simple;
-	bh=MUNzFZca4jP1Wzj7p7OSBhZbTeKUQVOelMr5pj0uSLM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uEJH8ik139JYmJ/t3SheZBiq9+42y6zMeydFX7Ra2VmCvg3qT0BKkbfrz787ZCIkqrHOjIxvsGIfjSS+NoyoaMfapkymDtDFmL3ggW77Pk1EvuJjcOxNvkFpA6wlKPFz4DmtJdD/SWqLpllUTDAwUoG3Djki7gZjDRNW64L10/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 54D9ntro044935
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 17:49:55 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Tue, 13 May 2025
- 17:49:55 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To:
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
-        Ben Zong-You Xie <ben717@andestech.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH v3 9/9] riscv: defconfig: enable Andes SoC
-Date: Tue, 13 May 2025 17:49:33 +0800
-Message-ID: <20250513094933.1631493-10-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250513094933.1631493-1-ben717@andestech.com>
-References: <20250513094933.1631493-1-ben717@andestech.com>
+	s=arc-20240116; t=1747130016; c=relaxed/simple;
+	bh=WkPoPj7QdMXdas7VfZz2r9mgd9PMl7uh0K0dF6+vB24=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C0KmLdjKzCZlq5hHjUYQyAB/tTmD/Ro281HcjkMp/GcTejkEg0IrwGa5BLgLE8H3m+DnBvFIFrWFiUpo2dJts++NDJoG1KzGtrQrZ+EV8sSVZOB5ECUt030l7zSQUF63M0sPNSQskrqtKvr700HkCEjlBE8k1BfBgWjKyJKjbEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4ZxWWL4RR0zYl4S7;
+	Tue, 13 May 2025 17:33:50 +0800 (CST)
+Received: from a010.hihonor.com (10.68.16.52) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
+ 2025 17:35:53 +0800
+Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
+ (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
+ 2025 17:35:52 +0800
+From: wangtao <tao.wangtao@honor.com>
+To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
+	<benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
+	<jstultz@google.com>, <tjmercier@google.com>
+CC: <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
+	<bintian.wang@honor.com>, <yipengxiang@honor.com>, <liulu.liu@honor.com>,
+	<feng.han@honor.com>
+Subject: [PATCH 0/2] dma-buf: Add direct I/O support via DMA_BUF_IOCTL_RW_FILE
+Date: Tue, 13 May 2025 17:27:09 +0800
+Message-ID: <20250513092709.1869-1-tao.wangtao@honor.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54D9ntro044935
+X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a010.hihonor.com
+ (10.68.16.52)
 
-Enable Andes SoC config in defconfig to allow the default
-upstream kernel to boot on Voyager board.
+Introduce DMA_BUF_IOCTL_RW_FILE ioctl for direct file I/O on dma-buf objects.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+CURRENT WORKFLOW:
+1. Allocate dma-buf:
+   dmabuf_fd = dmabuf_alloc(len, heap_fd)
+2. Map memory:
+   vaddr = mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_SHARED, dmabuf_fd, 0)
+3. File operations:
+   file_fd = open(file_path, O_RDONLY)
+   lseek(file_fd, pos)
+   // 70% time spent on page cache management and memory copies
+   read(file_fd, vaddr, len)
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index eea825ee58e1..29a97cbf4ee6 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -25,6 +25,7 @@ CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
- # CONFIG_SYSFS_SYSCALL is not set
- CONFIG_PROFILING=y
-+CONFIG_ARCH_ANDES=y
- CONFIG_ARCH_MICROCHIP=y
- CONFIG_ARCH_SIFIVE=y
- CONFIG_ARCH_SOPHGO=y
---
-2.34.1
+KEY OPTIMIZATIONS:
+- Convert sg_table to bio_vec
+- Enable IOCB_DIRECT flag
+- Execute I/O via vfs_iocb_iter_read()
+
+OPTIMIZED WORKFLOW:
+   dmabuf_fd = dmabuf_alloc(len, heap_fd)
+   file_fd = open(file_path, O_RDONLY)
+   if (direct_io) arg.flags |= DMA_BUF_RW_FLAGS_DIRECT
+   ioctl(dmabuf_fd, DMA_BUF_IOCTL_RW_FILE, &arg)
+
+PERFORMANCE RESULTS:
+- Throughput: 3776 MB/s (UFS 4.0 4GB/s limit)
+- Page cache overhead eliminated
+- Direct data path reduces memory copies
+
+APPLICABLE SCENARIOS:
+- AI model loading
+- Real-time data acquisition
+- Task snapshot persistence
