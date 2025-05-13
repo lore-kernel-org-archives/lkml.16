@@ -1,228 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241982BE7B8;
-	Tue, 13 May 2025 15:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B418E1F;
+	Tue, 13 May 2025 15:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149228; cv=none; b=uqyCArUmZUgWeylJFasH1J1HHUgN/oU2rRp3eyuBB/k9WJIDEbeoHZtF6j77fQ0rXGyciJBp5yKmwIQXTCqn147fxpV3V2jjgaGvxAZDaRcOon9UjZ2k8YTFUiYPh8VJViNUe6lxn+SNt5DavYWHcajKQjBWQl4baYr7AeAj/+A=
+	t=1747149371; cv=none; b=c3qeQGEX5O0boOS1n0E4VNXzYN54smMeQIQQSiCL9qVCF80y+4fvToLdXTHWacZP2CfAU9+vm4Nyfd6eHDpsB9hQ4cGK4mQ/c5CNbzaK3c2QM4McsCfY3WOt0r5qQNFdZKLgufiXTIwgIMU9IsElsZVF2Vs/hhJi6MCVf+6cm9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747149228; c=relaxed/simple;
-	bh=41v7R615ZjWO7LUc2GvrJB6a77p2xlm3SbRtu9DjoEY=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=hGKr7TGIp+Nr3Z5mtFmLcbbQ2HNTsK2/CP9f+LylTDHp35DNcJ+BR9csnaoJBvYbKcBPguRjSx/GFM8BeC6nt80hCGMaXPbWsB3C8DDpDDE16Zw44+wakte5zNqGkGdulS3R/xlEBnrGdq/JSUCj0aUea9PNSk6axe+qfFAoLYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DMkNnoqY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wrsEkRGd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747149371; c=relaxed/simple;
+	bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lzBnXBoO8TSf1uAhOH3qHobe22fwoek2soxj8Rr/xudv5mKV8eaXaFAu5SGYUowVvkEhg+YkRFrRBHqvXmFf9U8ASFyizZitTxCwVHNBNumfY9YKR9vFO41Xkr8i+ds6HYqI1L6hkRBVCx9D1cEivyCeG4bfsKwggf5D6qQq5LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjsGTcZC; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DMkNnoqY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wrsEkRGd"
-Message-ID: <20250513145138.212062332@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747149225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=C/nM/U5FRwaKrJBXZ75yUzC1wtA3Or236TCJmRmP5DU=;
-	b=DMkNnoqYgQEe1rVzPnNkHzukFoOaWhepgv0FcX74b4P36xUtV+Eb5v9vP0FoQRMP3fTWM4
-	mV19RLhrPko7tTfxeWlmWWLEGJu09p8dAujukhwBD6rwQHTENp2MtERfhqo5TIJKCUlxoS
-	KPtS+9TzG9Ta6BTETVSDcMIxuNfa+1vdkcfddQBkhOXfC0qTUpWbKSXeZDiTMqeFq81Xkh
-	N31QvJwh79fsLD88R68Aft3FDIlov7Djo0Tw8luodFdU2RBExF2RWNNYPNSfHWDZKA0SXa
-	XSxFhYjn69vk+TVln+Mr1wGPTH7xiizuqpfGACaf7F/FnBwbEDSpd9PL8RQj1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747149225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=C/nM/U5FRwaKrJBXZ75yUzC1wtA3Or236TCJmRmP5DU=;
-	b=wrsEkRGdB5n8wpG+GCkszFKbZ6zRdPejuIf7pcn9CK8JiiB3kGQCvImxMAAmYONUvDeJVv
-	m3qjrLzbgAdbvaCA==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: netdev@vger.kernel.org,
- Richard Cochran <richardcochran@gmail.com>,
- Christopher Hall <christopher.s.hall@intel.com>,
- David Zage <david.zage@intel.com>,
- John Stultz <jstultz@google.com>,
- Frederic Weisbecker <frederic@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Miroslav Lichvar <mlichvar@redhat.com>,
- Werner Abt <werner.abt@meinberg-usa.com>,
- David Woodhouse <dwmw2@infradead.org>,
- Stephen Boyd <sboyd@kernel.org>,
- =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Kurt Kanzenbach <kurt@linutronix.de>,
- Nam Cao <namcao@linutronix.de>,
- Alex Gieringer <gieri@linutronix.de>
-Subject: [patch 26/26] timekeeping: Provide interface to control independent
- PTP clocks
-References: <20250513144615.252881431@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjsGTcZC"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-730580b0de8so3918031a34.1;
+        Tue, 13 May 2025 08:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747149369; x=1747754169; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
+        b=TjsGTcZCG8xVHzecc3IhC0N0hWKrd12FzhBu4N7uI7Oyjnz3vdy3hfI6Tmam6eHbTn
+         hRimn/ncGUfz/OL43gghjHooZvWGmtSkyHoErZ6Z5PiZP4IQ5DqtfiPa3G+Iih8t7kGY
+         p4zk0iMFp1kDQU4M5YqrTHgl+JJ2VBkkJ/J18BdGVCB2vyaE4fL9psS1mwj6NVw6LFsp
+         +vkCZkuResQEAGz4YnDY5Xn0l1gdOjHY6V55MBvHIkoclNjL4O7sdyRbg677bOb+N+/p
+         OaGmgDcarhIiCYkj4dj/cfcyTa66XyyPqy+KGzjMkf9PvUuNhrYOMjfW64sJib+7udGV
+         fvzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747149369; x=1747754169;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0uh/PTXJRbMcazwRaWv8Bo4RnC9VvZ9wH65449hEE1k=;
+        b=K2+Svxw9AhVSwV3jECbw156pq2IoWF+uaVQmOSirnKIvV3qNYj3ZquKRqv/4+ZTt8+
+         ika1bgypSp28PMhIPB+XqTzbMKpPzaDCbh14uFyY9kbkV66Mp9OyiR4GNz+SIPixiwTS
+         MA0Z9BYouCY0m/6dbFjFxEkSplKzlYjxVLnR4jggxlHqoZV2queGsvWMngooCB57vudd
+         8ed11D/509FOVkwmzUE2rOZUq4wuKw+6EfDchoWw/0kFCGIfYlmgnFGfOVrdJ3jSk+Cp
+         DQ26WYn6st0WKSH6YTLhE/xuaDQQBzBJZwEwPu2q4+Uh+nml6y2s7t8Hejct6Ytqbx/n
+         q2Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3V3f2dGyXbd8J7AeiUmGY02Y9YZ/GEqYFMBy3y/rYgLOma4ZM/O5GE8s96qGHn7mk9j9v9MucyjyN@vger.kernel.org, AJvYcCUimwU2XgGQsZervKcY5E9wfMvczCzE5P0MuI2nDDOqUMXdyIk65zkzca/GlWENGHgBQ0VSJ4PKoGr5m6B+7LU=@vger.kernel.org, AJvYcCV+Ufsu6Bfst/7IlmDJw6x/NmeQX3HQSyJK68ai5nX/SO9ARwwNuFhLdg+HnQNj59X4zjrHtDf7+iKfmng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykwwNkyao4eGYmJ0OMIuosFHkTKBM7mEWlHUQPEqEA6aS4nSg+
+	Jg+u507GMqrR8my7z/clyIS735yt43xNy0O9QfbMEVEBRAopnQxI
+X-Gm-Gg: ASbGncuWSmEj/tOmFBqbUbz3SBZR47igfiFdsoh47S4U73M91Wlpb8pGRiWlMaZrjlE
+	1ktH+nre2EWaF5bYlHIao/R4TmWOBeUqf+TdWpMGxfwsjrYyB4SEv4bP6zadqqbenNW+e180rOX
+	l5xfDMkkeCl3wI4aXQsJqbRqAhv4Du6Mliv0CbBZZ4qLFj0iyFRvySq4yyP9o69lv/MRbcZw7Kp
+	Gzqov7la21gd42HiUNIo57h7MRw7WvS8ZEgKHAg9qDzfcYyCoFRaidMKR+z9oZe7/LBtQxRy5h3
+	V5D18DtChGyzibe7besFAp4VSSbpNZ3pk+bzkEZCWIv8J9FNx1cG2435TZWI9bl807KZi61ovhj
+	u1SgCjyeXDA2G2NqdUkU5TdY00ktV
+X-Google-Smtp-Source: AGHT+IGbr/uZ7r4cS/fBNvQYU2fhVqEpCiBt00je02tqMC1tSmemGmi5CB3JGNk1qdmVKM7wKn0FCw==
+X-Received: by 2002:a05:6871:e086:b0:2c4:1b1c:42c3 with SMTP id 586e51a60fabf-2e005bc46camr2217682fac.9.1747149368576;
+        Tue, 13 May 2025 08:16:08 -0700 (PDT)
+Received: from my-computer (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2dba0b7f856sm2270445fac.45.2025.05.13.08.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 08:16:08 -0700 (PDT)
+Date: Tue, 13 May 2025 10:15:24 -0500
+From: Andrew Ballance <andrewjballance@gmail.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Danilo Krummrich <dakr@kernel.org>, Dave Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, bhelgaas@google.com,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, me@kloenk.dev,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	daniel.almeida@collabora.com,
+	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 00/11] rust: add support for Port io
+Message-ID: <aCNiDPgMGZ-tD66n@my-computer>
+References: <20250509031524.2604087-1-andrewjballance@gmail.com>
+ <ff526b49-a033-450d-9e48-699187167712@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 May 2025 17:13:44 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff526b49-a033-450d-9e48-699187167712@app.fastmail.com>
 
-Independent PTP clocks are disabled by default and attempts to access them
-fail.
+On Fri, May 09, 2025 at 07:53:31AM +0200, Arnd Bergmann wrote:
+> Can you describe here why you want to support both "Io" and "PortIo"
+> cases separately? I don't think we need to micro-optimize for
+> legacy ISA devices any more, so I'd hope the "Io" path would be
+> sufficient to cover the common outliers (ata, uart, vga, ipmi, ne2000)
+> that need the iomap indirection and also the legacy devices that only
+> need port I/O (floppy, x86 platform devices, ...).
 
-Provide an interface to enable/disable them at run-time.
+Yeah, we probably don`t need the `PortIo` type and can rely on `Io` for
+port io. I`ll remove it for the v2.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- Documentation/ABI/stable/sysfs-kernel-time-ptp |    6 +
- kernel/time/timekeeping.c                      |  125 +++++++++++++++++++++++++
- 2 files changed, 131 insertions(+)
-
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-kernel-time-ptp
-@@ -0,0 +1,6 @@
-+What:		/sys/kernel/time/ptp/<ID>/enable
-+Date:		May 2025
-+Contact:	Thomas Gleixner <tglx@linutronix.de>
-+Description:
-+		Controls the enablement of independent PTP clock
-+		timekeepers.
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -14,6 +14,7 @@
- #include <linux/sched/loadavg.h>
- #include <linux/sched/clock.h>
- #include <linux/syscore_ops.h>
-+#include <linux/sysfs.h>
- #include <linux/clocksource.h>
- #include <linux/jiffies.h>
- #include <linux/time.h>
-@@ -2900,6 +2901,130 @@ const struct k_clock clock_ptp = {
- 	.clock_adj		= ptp_clock_adj,
- };
- 
-+static void ptp_clock_enable(unsigned int id)
-+{
-+	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
-+	struct tk_data *tkd = ptp_get_tk_data(id);
-+	struct timekeeper *tks = &tkd->shadow_timekeeper;
-+
-+	/* Prevent the core timekeeper from changing. */
-+	guard(raw_spinlock_irq)(&tk_core.lock);
-+
-+	/*
-+	 * Setup the PTP clock assuming that the raw core timekeeper clock
-+	 * frequency conversion is close enough. PTP userspace has to
-+	 * adjust for the deviation via clock_adjtime(2).
-+	 */
-+	guard(raw_spinlock_nested)(&tkd->lock);
-+
-+	/* Remove leftovers of a previous registration */
-+	memset(tks, 0, sizeof(*tks));
-+	/* Restore the timekeeper id */
-+	tks->id = tkd->timekeeper.id;
-+	/* Setup the timekeeper based on the current system clocksource */
-+	tk_setup_internals(tks, tkr_raw->clock);
-+
-+	/* Mark it valid and set it live */
-+	tks->clock_valid = true;
-+	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-+}
-+
-+static void ptp_clock_disable(unsigned int id)
-+{
-+	struct tk_data *tkd = ptp_get_tk_data(id);
-+
-+	guard(raw_spinlock_irq)(&tkd->lock);
-+	tkd->shadow_timekeeper.clock_valid = false;
-+	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-+}
-+
-+static DEFINE_MUTEX(ptp_clock_mutex);
-+
-+static ssize_t ptp_clock_enable_store(struct kobject *kobj, struct kobj_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	/* Lazy atoi() as name is "0..7" */
-+	int id = kobj->name[0] & 0x7;
-+	bool enable;
-+
-+	if (!capable(CAP_SYS_TIME))
-+		return -EPERM;
-+
-+	if (kstrtobool(buf, &enable) < 0)
-+		return -EINVAL;
-+
-+	guard(mutex)(&ptp_clock_mutex);
-+	if (enable == test_bit(id, &ptp_timekeepers))
-+		return count;
-+
-+	if (enable) {
-+		ptp_clock_enable(CLOCK_PTP + id);
-+		set_bit(id, &ptp_timekeepers);
-+	} else {
-+		ptp_clock_disable(CLOCK_PTP + id);
-+		clear_bit(id, &ptp_timekeepers);
-+	}
-+	return count;
-+}
-+
-+static ssize_t ptp_clock_enable_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	unsigned long active = READ_ONCE(ptp_timekeepers);
-+	/* Lazy atoi() as name is "0..7" */
-+	int id = kobj->name[0] & 0x7;
-+
-+	return sysfs_emit(buf, "%d\n", test_bit(id, &active));
-+}
-+
-+static struct kobj_attribute ptp_clock_enable_attr = __ATTR_RW(ptp_clock_enable);
-+
-+static struct attribute *ptp_clock_enable_attrs[] = {
-+	&ptp_clock_enable_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group ptp_clock_enable_attr_group = {
-+	.attrs = ptp_clock_enable_attrs,
-+};
-+
-+static int __init tk_ptp_sysfs_init(void)
-+{
-+	struct kobject *ptpo, *tko = kobject_create_and_add("time", kernel_kobj);
-+
-+	if (!tko) {
-+		pr_warn("Unable to create /sys/kernel/time/. POSIX PTP clocks disabled.\n");
-+		return -ENOMEM;
-+	}
-+
-+	ptpo = kobject_create_and_add("ptp_clocks", tko);
-+	if (!ptpo) {
-+		pr_warn("Unable to create /sys/kernel/time/ptp_clocks. POSIX PTP clocks disabled.\n");
-+		kobject_put(tko);
-+		return -ENOMEM;
-+	}
-+
-+	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++) {
-+		char id[2] = { [0] = '0' + (i - TIMEKEEPER_PTP), };
-+		struct kobject *clk = kobject_create_and_add(id, ptpo);
-+
-+		if (!clk) {
-+			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d\n",
-+				i - TIMEKEEPER_PTP);
-+			return -ENOMEM;
-+		}
-+
-+		int ret = sysfs_create_group(clk, &ptp_clock_enable_attr_group);
-+
-+		if (ret) {
-+			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d/enable\n",
-+				i - TIMEKEEPER_PTP);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+late_initcall(tk_ptp_sysfs_init);
-+
- static __init void tk_ptp_setup(void)
- {
- 	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++)
-
+Best regards
+Andrew Ballance
