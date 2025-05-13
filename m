@@ -1,109 +1,106 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BE71F12F8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295F017578;
+	Tue, 13 May 2025 07:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122625; cv=none; b=EdM7eNAFMdAa2NU3GDf3SotMIN4rcsWQPI1XDnek+7qEpRPDf/3wfgNUiPz+M1fY1W+wLqoXAvvQV124d5pJSRmF+kYqIk8lan579x9AvGJCxkjUakN0d+ZSHisZF+14y4h4sb40aRSSbfUHueVkqHQecIgW9uKXlGzqYJX8ytQ=
+	t=1747122761; cv=none; b=aaZO8s/tKOwrw8cc8EH5ZP4jEU0ZdT4dudUC6VJHegqh6MnhDe0tH274IZG6G7J/K+trTFdqIZGw5MlLXrXnyjih9LhAkTRse7MUK4mMw1oamp4hA/2cyNrJgFaFK246bunmLOCQOlNC5xJb4+8wJLoU2E2l4jhIYwCzVFCUHdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122625; c=relaxed/simple;
-	bh=krU1Sg3RCwMKkG2EHCWcfC+xnsb9o2PFUa/MAVSJCEQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PBBEJqhrOWMYMVhijgvV5h/eTo0zkhjVmE5c1hsvvrr7oGz6U21aHELesZRY6pRM6eC1yjsOjhFOuauUhTp77Kb+vHKNSHyI00nItCtkSBNwE3r0FEOvfby+fO8IscvtyhtAld5kaci7wzOTFjLj3Cws86pm4fmFLyOQx6GHzDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WyfEMidx; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747122761; c=relaxed/simple;
+	bh=wXxLScjGKsjLhWRczXN6p4PXXAWncz3wQwK5AUZd+xg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cu9YWvnrsbBqTci//JGuu1/cFcJtIuVmf4ebOVcec77/f3eHkiCFoKS9KmMPoz8n+5fI/rPm+DsiTn6xynm9zoy1jQB/JmI6jSSJBN1O8AnpZQwDVxo3kA6vE36e3YBliGl/Syy7f9Nc8A2owRGPOzRNRnlH7M6vjntOfM6uWwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSogvT3P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WyfEMidx"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad2216ef31cso613479466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747122621; x=1747727421; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mbx15P5bR+V1GlX7KV4xE3K+3/1ghgzLSbo/fj+Lw3M=;
-        b=WyfEMidxE48pECEG6aHQbPwQnLVKTEdjFrg1li7A3F3GYQNpoBQQA+l6W1agUMRMA1
-         cE+pquGXDNC/9aoe9BZPDl3tIKyWCbgAhfOgpbtGrU6Bq+UO5upr0J5fu5tfFVY6kPaq
-         Gkx7JOvh90Fyk3QjL6ksYZCBJk/FIbvxp4vDa5/IwvwxqVk/2dOrrMEY2gmbGSljaPkB
-         c28aAeImvtFnNVBBNgQh/StItLNMCYLvRSslGyBS1866PHeBqiqC8AoESybLUiI4K7IN
-         hoUd8RoN0E3Hz6o44q4RuFtBTtAxlVl0RYpLD9st6f7Q93TpJT0dwa/02jXHkuBw51xF
-         /tcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747122621; x=1747727421;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mbx15P5bR+V1GlX7KV4xE3K+3/1ghgzLSbo/fj+Lw3M=;
-        b=pdK3TgKteibRFMmJ9V+y6E9jZMhhr000QMyteNqlt4hhh7gYBjXAt2Qcm0ZUoIUDDc
-         V3ikOhQ00yAPg56tJoEsSOydc4sCWIxh/ThSOx/MdzOdm/1cHLN+XvF+Cmj8s7bx/jqZ
-         A/gCJN7mXgk8I8u2Zl9I+6TYdmi6ipyA4YCFm+cwvHQjN3l8MjyHgA7cB4Or37MGLraC
-         1QcVkEF+lwor0b/v5LtLqaHPDetpgfMByK8/ELgqx3iy6HUUT2QXFx+6fO2N/552FyWW
-         n0259Vqs+xvP3GAvrqc9+2gNpdzwXZ6iyugx/tlKEg0urWmBkaG0KH20Cls4TyC8x7z8
-         IAbA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0FD7RKEpCIQkNi3XpdC4ePPyImL4D9Ujw2HzI/4ZvZPFVTVoLzFxgr+inOHirer2/+4A7evFzyxbchos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc1rmShC/FMd/FL7Ge6jhIo5JnMlNfdu2ko2eejpj0/LDcuxuA
-	+J7RrBsY3sQpKRrIOWbwLzYhoGLQqJgkNMRS6AjFjpdCYdrptLbezVfI8ag8eXI/HkH2SHNSr+6
-	V0xdZ0v4G7WnTl2f5cxpllVBDHN/iNXhLSz1NSQ==
-X-Gm-Gg: ASbGnctS8t4kT2KK2A+i/gMu1KMyw+HDACwYwUjIdxQ2kLL8V0Ck2+JqO5On96PBmqu
-	OKIGAgGidpCcB+ddJNJsTFce7donKpvD3bJG7A3aNOwU1L7Yf2Ai9KpF+dYSN/XhjOs1COb5qfq
-	DrE9Cao2LKRZHrb5n7F0SqTfayXNNADU0=
-X-Google-Smtp-Source: AGHT+IESJNifxjTIWbN+YaTvGiDVixINiLHP3D+SQIGf0ilJ+WDW4SxVXcU8CZ4FaumUN8fK3f7r4RyGjM5M61BADus=
-X-Received: by 2002:a17:907:3f1b:b0:ad2:51d8:7930 with SMTP id
- a640c23a62f3a-ad251d87b27mr699367966b.12.1747122621134; Tue, 13 May 2025
- 00:50:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSogvT3P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F2CFC4CEE4;
+	Tue, 13 May 2025 07:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747122760;
+	bh=wXxLScjGKsjLhWRczXN6p4PXXAWncz3wQwK5AUZd+xg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HSogvT3PVXnIbmXrU9etRU5mYK/E99wnFgCrDdfnyulI+hfyU1MUl30lfhJPiNxLh
+	 ibN7R0qTWjMz6tL5UwXLF8Zk3c9kNFKSxSEWgNapDrsna0QzwLQas1oDoGZWG7Em3H
+	 WhgU/yKJt+TMopII9C8uHQUAYeTFoxJ64gqMZS6i/jvmukUWl4yVLl/O3DXrGiecW6
+	 L/f2HjXVKd9ZsitTjb0PYYsmLGSO5lzXvqhMMg9P5V4bYnInbJaqEKhLzCh4Jz/10d
+	 7LTU1TsujmtmC2KaDjeuEjKB8ErFfsPfmYN/L3BfLtKPxYbGEZklahSXX5CHcMTaZj
+	 f98XNQfoXyJdQ==
+Message-ID: <271da1c2-c322-4568-b484-c368e5e0ae7c@kernel.org>
+Date: Tue, 13 May 2025 09:52:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512132850.2973032-1-neelx@suse.com> <20250512175353.GA3472716@zen.localdomain>
-In-Reply-To: <20250512175353.GA3472716@zen.localdomain>
-From: Daniel Vacek <neelx@suse.com>
-Date: Tue, 13 May 2025 09:50:10 +0200
-X-Gm-Features: AX0GCFvpOlnDoiBFJ9GVPix74qGApiZGAyvW8-mPyHiTR65notxoBWDkhFW8lGU
-Message-ID: <CAPjX3FeEvwkKWPB+DqZYufmjyAuyXxzHmtL+S6z7o971=yMxWw@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: correct the assert for subpage case
-To: Boris Burkov <boris@bur.io>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] w1: ds2406: use crc16() instead of crc16_byte() loop
+To: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>
+References: <20250513022115.39109-1-ebiggers@kernel.org>
+ <20250513022115.39109-2-ebiggers@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250513022115.39109-2-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 12 May 2025 at 19:53, Boris Burkov <boris@bur.io> wrote:
->
-> On Mon, May 12, 2025 at 03:28:50PM +0200, Daniel Vacek wrote:
-> > The assert is only true in !subpage case. We can either fix it this way
-> > or completely remove it.
-> >
-> > This fixes and should be folded into:
-> >       btrfs: fix broken drop_caches on extent buffer folios
-> >
-> > Signed-off-by: Daniel Vacek <neelx@suse.com>
->
-> I would lean towards removing it, personally. But LGTM, thanks.
+On 13/05/2025 04:21, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Instead of looping through each byte and calling crc16_byte(), instead
+> just call crc16() on the whole buffer.  No functional change.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  drivers/w1/slaves/w1_ds2406.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 
-Good. Let's remove it then. Will you amend your patch?
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> Reviewed-by: Boris Burkov <boris@bur.io>
->
-> > ---
-> >  fs/btrfs/extent_io.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> > index 80a8563a25add..3b3f73894ffe2 100644
-> > --- a/fs/btrfs/extent_io.c
-> > +++ b/fs/btrfs/extent_io.c
-> > @@ -3411,7 +3411,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
-> >                       continue;
-> >               }
-> >
-> > -             ASSERT(!folio_test_private(folio));
-> > +             ASSERT(!btrfs_meta_is_subpage(fs_info) && !folio_test_private(folio));
-> >               folio_put(folio);
-> >               eb->folios[i] = NULL;
-> >       }
-> > --
-> > 2.47.2
-> >
+Best regards,
+Krzysztof
