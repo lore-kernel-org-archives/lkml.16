@@ -1,180 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E932F215046
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D6A21ADB5;
+	Tue, 13 May 2025 09:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127979; cv=none; b=uHqI2oCVGmV66DViTBMe/lpp9qzUs11Wm4AiTCdBDhbCuN9Ir+Ap9vgb6a3Tlhx2kgS9G7GOTc2gxi29CU1KfetY1puFASOgjRt8HdOr57CHs2Z4ZH5xG+IAjiVPLpZE6ZIH2HBRClo1SG26KjLjVkHxVEzhlMY4HLZPvXaEOT8=
+	t=1747127986; cv=none; b=n9MMp8dPKWI4f5sqG4NRdUEtnv/niyA0qUDWdFxW22A4cTvh7sbfdKgeInmLfyrBwAvvJPLETe4ZA6JP54sL9krFHdA/cYVAECtfQJPkB32lF7G6m6VqGCDPO52czkvKR4zlMsHIT35qwTAS99bOY/nkUa8WAkbZKYctSumV2ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127979; c=relaxed/simple;
-	bh=0KETN5AWlWq5ENBwZXBnjnYnclctLbJUt1NNBu4J6ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CtuwT+n+BeEAPjrfsJCCuOpVFdIXQGKVuMOUYt64qfcGGjLUsriveW9DESC+Sn8Q8pyD8fYDxP6NxmI75UQagyJtR/zoQDrhJWR+59gkAaZAF7s8wfXqL68+QAyL/2uN+aQqJiKFjmLX7J6RriqIhjglXtaNKTDKRZFZvjIVk7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jAzQ66CG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jAzQ66CG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747127978; x=1778663978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=0KETN5AWlWq5ENBwZXBnjnYnclctLbJUt1NNBu4J6ok=;
-  b=jAzQ66CGk24NkPpzqE7QtEmTZPWhfbB9YYxDlZYqIsCjj1lurJTf48WZ
-   3mYmQuyJM/llj06xnGKH/2o8aCc2pmg9kzfx/KTNgohidPQ28s+8jF6gG
-   Yo/tdTkeROrgKzA4xevZb+7wuMN+SejLvkBgc00RC6uANXco6SyN1qQXY
-   X1T4HkcIG1Z1gF0AQqgMmvZLZY8lAfUZXc8wc8/uy2D0UNyagLa0CbOZL
-   mk7U8QOGOC8vyB7z+NWNEvhd6PBzxxeBAXPdyWHbHOZRI6PffyEjEG8CM
-   ZUUZCQ5YUC48LQzDGb3OZ7UDOUmGy0YhlWXKiJbYA5WuzuHjSnCMf5x6W
-   w==;
-X-CSE-ConnectionGUID: oV6zlrUMSj+4FsxkST2s1g==
-X-CSE-MsgGUID: T6otKT8IQ7Stb+ktKkGSdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48955174"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="48955174"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 02:19:37 -0700
-X-CSE-ConnectionGUID: DjWiANOTRk29Biv/VprKgA==
-X-CSE-MsgGUID: XxXI2IblTbS0YvK7mfFlxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="142766533"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO stinkbox) ([10.245.244.221])
-  by orviesa005.jf.intel.com with SMTP; 13 May 2025 02:19:33 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 13 May 2025 12:19:32 +0300
-Date: Tue, 13 May 2025 12:19:32 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Zeng Heng <zengheng4@huawei.com>
-Cc: tzimmermann@suse.de, airlied@gmail.com,
-	maarten.lankhorst@linux.intel.com, mario.kleiner@tuebingen.mpg.de,
-	airlied@redhat.com, mripard@kernel.org, simona@ffwll.ch,
-	bobo.shaobowang@huawei.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vblank: Fix hard lockup in drm_handle_vblank()
-Message-ID: <aCMOpOrPHXGX75RQ@intel.com>
-References: <20250510094757.4174662-1-zengheng4@huawei.com>
+	s=arc-20240116; t=1747127986; c=relaxed/simple;
+	bh=5YrABFzbKb8Src/u5OGMIShsQQLYX37Y/4zalAnMTa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UI9czNUJWj6BG7JbSM7BgDwrpGUwfg2Rn4LAZgVT5nCWjvYgnuw1MTq1XW4loreCqfGZSsA2J8J8BCv2q5FeHC8GfQrrIG8CJ2etUMNTg+IDfHJ0qk3Scc8WvbeGJGxK7IHMlZk2y5ggGlGbtoA98HcjVuu8wtPPMQzQSqmGCqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0522168F;
+	Tue, 13 May 2025 02:19:32 -0700 (PDT)
+Received: from [10.57.90.222] (unknown [10.57.90.222])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E603F673;
+	Tue, 13 May 2025 02:19:41 -0700 (PDT)
+Message-ID: <56655ac1-a650-43d8-8080-a03c250474d3@arm.com>
+Date: Tue, 13 May 2025 10:19:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250510094757.4174662-1-zengheng4@huawei.com>
-X-Patchwork-Hint: comment
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
+ disabled
+Content-Language: en-GB
+To: Kees Cook <kees@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Ali Saidi <alisaidi@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20250502001820.it.026-kees@kernel.org>
+ <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
+ <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
+ <202505121340.7CA14D4C@keescook>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <202505121340.7CA14D4C@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 10, 2025 at 05:47:57PM +0800, Zeng Heng wrote:
-> When we performed fuzz testing on DRM using syzkaller, we encountered
-> the following hard lockup issue:
+On 12/05/2025 21:40, Kees Cook wrote:
+> On Mon, May 12, 2025 at 04:17:12PM +0100, Ryan Roberts wrote:
+>> Hi Andrew,
+>>
+>>
+>> On 02/05/2025 11:01, Ryan Roberts wrote:
+>>> On 02/05/2025 01:18, Kees Cook wrote:
+>>>> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
+>>>> direct loader exec"), the brk was moved out of the mmap region when
+>>>> loading static PIE binaries (ET_DYN without INTERP). The common case
+>>>> for these binaries was testing new ELF loaders, so the brk needed to
+>>>> be away from mmap to avoid colliding with stack, future mmaps (of the
+>>>> loader-loaded binary), etc. But this was only done when ASLR was enabled,
+>>>> in an attempt to minimize changes to memory layouts.
+>>>>
+>>>> After adding support to respect alignment requirements for static PIE
+>>>> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
+>>>> for static PIE"), it became possible to have a large gap after the
+>>>> final PT_LOAD segment and the top of the mmap region. This means that
+>>>> future mmap allocations might go after the last PT_LOAD segment (where
+>>>> brk might be if ASLR was disabled) instead of before them (where they
+>>>> traditionally ended up).
+>>>>
+>>>> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
+>>>> a static PIE, has alignment requirements that leaves a gap large enough
+>>>> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
+>>>> enough space for the brk (which immediately follows the last PT_LOAD
+>>>> segment) to be allocated by the binary.
+>>>>
+>>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
+>>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
+>>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+>>>> ***[brk will go here at fffff7ffa000]***
+>>>> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+>>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+>>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+>>>>
+>>>> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
+>>>> implementation"), the arm64 vvar grew slightly, and suddenly the brk
+>>>> collided with the allocation.
+>>>>
+>>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
+>>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
+>>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
+>>>> ***[oops, no room any more, vvar is at fffff7ffa000!]***
+>>>> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
+>>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
+>>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+>>
+>> This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
+>> hoping it would make it into the v6.15 final release. I'm guessing mm is the
+>> correct route in? But I don't currently see this in linus's tree or in any of
+>> your mm- staging branches. Is there still time to get this in?
 > 
-> Kernel panic - not syncing: Hard LOCKUP
-> CPU: 3 PID: 0 Comm: swapper/3 Not tainted 6.6.0+ #21
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> Call Trace:
->  <IRQ>
->  hrtimer_cancel+0x52/0x70 kernel/time/hrtimer.c:1449
->  __disable_vblank drivers/gpu/drm/drm_vblank.c:434 [inline]
->  drm_vblank_disable_and_save+0x27f/0x3c0 drivers/gpu/drm/drm_vblank.c:478
->  vblank_disable_fn+0x15d/0x1b0 drivers/gpu/drm/drm_vblank.c:495
->  call_timer_fn+0x39/0x280 kernel/time/timer.c:1700
->  expire_timers+0x22d/0x3c0 kernel/time/timer.c:1751
->  __run_timers kernel/time/timer.c:2022 [inline]
->  run_timer_softirq+0x315/0x8a0 kernel/time/timer.c:2035
->  handle_softirqs+0x195/0x580 kernel/softirq.c:553
->  __do_softirq kernel/softirq.c:587 [inline]
->  </IRQ>
-> 
-> This is a deadlock issue as follows:
-> 
->     CPU3				CPU 7
-> 
-> vblank_disable_fn()
->   drm_vblank_disable_and_save()
->   spin_lock(vblank_time_lock)
-> 				hrtimer_interrupt()
-> 				  vkms_vblank_simulate()
-> 				    drm_handle_vblank()
-> 				      // wait for CPU3 to release vblank_time_lock
-> 				      spin_lock(vblank_time_lock)
->     vkms_disable_vblank()
->       // wait for vblank_hrtimer on CPU7 to finish
->       hrtimer_cancel(vblank_hrtimer)
+> I'll be sending it to Linus this week. I've been letting it bake in
+> -next for a while just to see if anything shakes out.
 
-Looks like a vkms bug to me, so should IMO be fixed there instead
-of hacking around it in the common vblank code.
-
-Maybe vkms can just have the timer not rearm itself when it notices
-that vblank interrupts are disabled?
-
-> 
-> The call of hrtimer_cancel() has hold vblank_time_lock which would prevent
-> completion of the hrtimer's callback function.
-> 
-> Therefore, in drm_handle_vblank(), we move the check for the
-> vblank->enabled variable to the time when vblank_time_lock() is acquired.
-> If the CRTC event has already been canceled, the drm_handle_vblank() will
-> be terminated and will no longer attempt to acquire vblank_time_lock.
-> 
-> In the same time, in drm_vblank_disable_and_save(), we set vblank->enabled
-> to disable before calling hrtimer_cancel() to avoid endless waiting in
-> hrtimer_cancel_wait_running().
-> 
-> Fixes: 27641c3f003e ("drm/vblank: Add support for precise vblank timestamping.")
-> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
-> ---
->  drivers/gpu/drm/drm_vblank.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 78958ddf8485..56b80e5ede2a 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -471,6 +471,8 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
->  	if (!vblank->enabled)
->  		goto out;
->  
-> +	vblank->enabled = false;
-> +
->  	/*
->  	 * Update the count and timestamp to maintain the
->  	 * appearance that the counter has been ticking all along until
-> @@ -479,7 +481,6 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
->  	 */
->  	drm_update_vblank_count(dev, pipe, false);
->  	__disable_vblank(dev, pipe);
-> -	vblank->enabled = false;
->  
->  out:
->  	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags);
-> @@ -1932,14 +1933,13 @@ bool drm_handle_vblank(struct drm_device *dev, unsigned int pipe)
->  	 * vblank enable/disable, as this would cause inconsistent
->  	 * or corrupted timestamps and vblank counts.
->  	 */
-> -	spin_lock(&dev->vblank_time_lock);
-> -
-> -	/* Vblank irq handling disabled. Nothing to do. */
-> -	if (!vblank->enabled) {
-> -		spin_unlock(&dev->vblank_time_lock);
-> -		spin_unlock_irqrestore(&dev->event_lock, irqflags);
-> -		return false;
-> -	}
-> +	do {
-> +		/* Vblank irq handling disabled. Nothing to do. */
-> +		if (!vblank->enabled) {
-> +			spin_unlock_irqrestore(&dev->event_lock, irqflags);
-> +			return false;
-> +		}
-> +	} while (!spin_trylock(&dev->vblank_time_lock));
->  
->  	drm_update_vblank_count(dev, pipe, true);
->  
-> -- 
-> 2.25.1
-
--- 
-Ville Syrjälä
-Intel
+Sorry, Kees - my bad! For some reason, I thought this would go via the mm tree.
+Thanks again for jumping on this.
