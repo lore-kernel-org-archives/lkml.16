@@ -1,110 +1,98 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD2D34545
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8E820B7EE
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747173763; cv=none; b=HmdqoQfvlxdv45/hk8nFXlyJ/+9B9UD53lJU9P4Ja3ZbjsAlMBCjh9xLEPJXAJ99rz9ys7YGNsue756WWJYhbuR14QbrtZdvS8XQ9rRYgkZvORDvFXo/pqjGHl+kTKb1pkdSQlxUd+UIfIfx6cVq7ELcQR3gYnJu9F2BrR7c6gU=
+	t=1747173769; cv=none; b=RySOlKvHTWIHAqcp3fOzldTEZAAT2pi+/11hTbn4nL2DlSyJVTJT1/o6lny5Cr09WVBmJK2Zpj157Kv5F3DrHBoC4L70VPImFORqmrBEUQMi12w86hXRaysXaRVcZSDft3RO9Z4bn4gS1nkNKv3t9WbYCRZY3gDvD7/3llhDMBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747173763; c=relaxed/simple;
-	bh=34UNS8y1XedFDkbLbV884ATVVNqKpycwchmUNakcKQM=;
+	s=arc-20240116; t=1747173769; c=relaxed/simple;
+	bh=1EAngaPc7uOdyOtINcBruD+FdbRowx/2Y1slal9XMzE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xq2KbwtyeJOc5wabLTJQrBLhM9ejfgCekEVT3MoVo+pul392fjtpkHSNOFq4/f4eGgDhK0zt3yRSNCSEwNVNN9I+4x0ZKZx3QR6lyHv8feO6BS6dZQjBfcsyS9ik9PtlO/iCuWR4/h7jTMoR8kSJJluGOIi8xSVJhWp6oXSuyQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NofvvoSn; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=WtSVexZ+fbz+oqYPeKr/9MIiPqMh18FMP0Igmo5BOKwgtiYQs49GOxTuUt81Be+vELCLsabB7E4a7tliRzTf8nR0HeOuqxjAndI6byIrdJew0rS+Udt9PmUlTm8yXnLgpueC39I0+dv1g1Z42GI8aPLEpZhdOpXEBAzFbSnQjqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uGSuCyV6; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NofvvoSn"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad1a87d93f7so936252666b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:02:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGSuCyV6"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54d98aa5981so9809763e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1747173759; x=1747778559; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MeUhnGHcnbyf4punTwW0oo5FUzmJQ0vKIFvAjlIakFQ=;
-        b=NofvvoSntphOinrdf01zE/D2Ye73U82fwi6ZZ0M24lDWiet95m22Slxb1D3iy0edOH
-         poIbRYG8mMkS1Djz2XjVr2OBgOvHX2uzIwhFIfiJbMY6/Pgn3XC7h1PxQXea3Kx2oVxh
-         R6K2YjFG2oOSffsGjrvnuP6J9c9aED6uf3G8c=
+        d=linaro.org; s=google; t=1747173766; x=1747778566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OF3Y7OxM3P8Aw80IWQnBi8AWbTqWJX1OjgpSqEvS6a8=;
+        b=uGSuCyV6qvuY4kVmd6bgVP0SGhvTTQEEFv/GDUKXxq49KIt6NY//cl4MMWxM8hGqey
+         tLHsas5Rd0KLjqy8fB+tcTCOWK94biaj5HCGCBffyvP/DInryyMUapPHuM2rfKivT/j5
+         JckKhAfCSFiIUOc+oGICQqyXuQeroMlgAQK5dylFaPj4g7zUkFluCNAUOv5mcepurwlu
+         RyhaBw9uhFspiu+et8C+cys55TAWAD2/vVFnw1mA5pTXcaTVkTlkNr5HpQtUgemW8cio
+         /vA7+yde8d6NN2Fk4bdxj2P8yOJOFrMeyzhTKUsgBEUcGfmlyiwUIWkO6tTcHjVXC829
+         ajrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747173759; x=1747778559;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MeUhnGHcnbyf4punTwW0oo5FUzmJQ0vKIFvAjlIakFQ=;
-        b=jc2vJ9kt7Sk8bT7HUbO9LP8eBTcbB/fBMcrl6N2LR4Viw9ZBC6NtMpKDoNsdOaqypd
-         g2cfRa+iPtmKxI4O3sbhzOKlGBrsGe6S0eZ0VCqrZJm/OxOu9sFV27KybBHkSnogoHYQ
-         7n/B6SFDjGfTN1PWFj0oPZZd5BpEv3QBXeo6FRS8axBqKAyP/oVYmWA5lHdrVo9Gkrrn
-         v5vCSsRlkmyxeJDiBUzJz8S56UCQbjUlGRJ7cicYoJ9HXrS4TkU8pi/rblfSI4WAGpwu
-         2G63NxxSLzybHPUbEVgOX4VNrVAaaX83KvMtNCCeDY0PVWFn21KfiUQIMa07QPbM4k2r
-         RoZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNjcbw8uVSpb1/mnXlNWjUGSMXeEHdlxH3x0D6KLaLCbzESRCxzTpZmD2s554sDwBTAWkluxgQUPKkFfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrgIQMLS9E1XgUvBoanEntddGiS1NqnCdwWBkfK4RsyHPvOQ/1
-	BM7dlFx+IOzuSEkLQ+0WuFJpXepKO3jLHZOznMzsz+jJPlyr8WS41uk/K8F8LaECj6A2lugHocM
-	mITp1gw==
-X-Gm-Gg: ASbGncucoU+mo5qjwiu0nunvXSjFVXBSuzILtxI/Pd/rg/X9Ndb+AG0xCufsEDLg4Aw
-	FROB8Ewztr8llqnstWM7BwHBxAQoOuWnNk8emkkRoJF1E3P4JF9cm6Iclq5duVkMaV7UmpgcvEJ
-	4ROTov5CknHJjgNbdNKHIxe95MNeQ+ktXPlCXW6X0UV2Yzz3udheeC2h7n/u9Fa+0AujRpS/XBB
-	Lo0are15bpoOGPfFdNgXdMAf9U1cHunHN3uzozj3tTbEOac+gBQ3N+KCGu9CIiiE+xTVGPLdqGJ
-	neaQ6maggx3+n8qJXIZMiZildjSzX8Fcm/UQqGQMYFp0UkTIukdbLt5JIlNbDXj8bDQFcVan0fV
-	b6G41fdLjibrls+rOrZwm75kAuA==
-X-Google-Smtp-Source: AGHT+IFnyUpT2L5BeSAYCRWBtQI27zVw+/nybsOzyfF949i6nf1d7+WmTC3OWbuUjNqivcTtIRFdhw==
-X-Received: by 2002:a17:907:c39a:b0:ad4:f440:151a with SMTP id a640c23a62f3a-ad4f71479a9mr104074566b.27.1747173758689;
-        Tue, 13 May 2025 15:02:38 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad22ba47376sm717522066b.53.2025.05.13.15.02.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 15:02:37 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad2452e877aso567382466b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:02:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXjv1oqn3lGv8CnkVw0c3YBqdksBkqTIQ83xEijedt2FtwsUkW6LPtgZE2vffwPSTcbX4evfBaIKFgdJfY=@vger.kernel.org
-X-Received: by 2002:a17:907:d386:b0:aca:d6f2:5d5 with SMTP id
- a640c23a62f3a-ad4f7270122mr109900766b.39.1747173757110; Tue, 13 May 2025
- 15:02:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747173766; x=1747778566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OF3Y7OxM3P8Aw80IWQnBi8AWbTqWJX1OjgpSqEvS6a8=;
+        b=buHMZaTTZvMr5FN5zitKrpt8lrdv+6fZOj1ELB3LAIPTwYtcEdo0ttQsPt/3IqClBr
+         7K3wSZ1S59X4xsQyGndG59xOdi0OLltigL4ZYD/qPNI1E0EbCpALUhiB2y40AF8yFyOv
+         LJn23yTr0zw4UoIj4hLLK6KQELU/Fk7DMTOO6n6fcMbZV8uqPviw0Su+d7VODCShftxT
+         THeNOQ/sJY98jVWZiBzXfmHTmWUGR3Qf9ptzTPilglVwxequTYbFlhoA5pZl0TnaffVA
+         mJBPANzrUHXzSk4ZZknRXbjR+8kAG6advNIFvo/8k0YDFnXpvANzssKJbDptyePA6S/r
+         yuvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0g4IJdJPWW+pMWVYnHK0Y9UjBjyenhcY/q0y2NJA+UGXszIwCABws08gY6UaefEJxIWNNn357O1gr97E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxjo5rcOPMxDVCAEQm2fY66ULjdtAs9DIEI7LiRaqs1+wZzSsu8
+	0DB9k21SSoSuiUYbvfUei3hBvvIjqRJLFW2iGmT8fxPqv0LmessGiKP0Et4k2XoSpVT6oto60G9
+	C66b1An8TX44njaz3byg+rvYzdS19JNEdW6xeug==
+X-Gm-Gg: ASbGncsRjzEHgpUhQOfG+1SJZKTzcLuctmyxhQvG82QgO7NeZRWeO4RBfS+eCA8TAcI
+	GKnqhcG6MFhMfeSzm7M3HeCuwua/cwwP7NWdK2A5jFykU/RzRvsA1QafUByRMPFpGSmAHgzPXpM
+	L3PuJ6XBTE5aR9ne2NFobg+5f++eM9DYwX/JTsE1Wg3wM=
+X-Google-Smtp-Source: AGHT+IFV6oM1huMeF+j8D3av0zRQp+sO6a3WETyY9TcoM8z4D0gAPRxDZ6Iruo7oYj1D+k2aLqn2jGcIPx0XlTck+IM=
+X-Received: by 2002:a05:651c:30d3:b0:30d:e104:b67b with SMTP id
+ 38308e7fff4ca-327ed22688dmr3408491fa.38.1747173765836; Tue, 13 May 2025
+ 15:02:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
- <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
- <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com> <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
- <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk> <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
- <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk> <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de>
- <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk> <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local>
- <alpine.DEB.2.21.2505121810040.46553@angie.orcam.me.uk> <CAADWXX8+-=pcOUeu_cwX_vkkkGp6jn0GQLUhZX8MxGGRjKz=Lg@mail.gmail.com>
- <a719b6ec1ccba2ecad7421a2cdf1660d1be16888.camel@physik.fu-berlin.de> <alpine.DEB.2.21.2505131735170.46553@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2505131735170.46553@angie.orcam.me.uk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 13 May 2025 15:02:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
-X-Gm-Features: AX0GCFvbLV_t5LunCuCIvsaOW6Nhc5Nz2xrqTWxRIvZK7F4aacLpAaA2dh6GfTk
-Message-ID: <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less CPUs
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Borislav Petkov <bp@alien8.de>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	"Ahmed S . Darwish" <darwi@linutronix.de>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, John Ogness <john.ogness@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+References: <20250513105941.28448-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250513105941.28448-2-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 14 May 2025 00:02:34 +0200
+X-Gm-Features: AX0GCFvrX_aqXbESUgpoRHsXNXvkw7MLENgWNexCpBHmO_EVXfh1y4WvP_Nh-o4
+Message-ID: <CACRpkda6zzroe3XbPpnrRMqbHcCsiczEQM9JW7c-hwhiV3vtNg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v6.16
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 13 May 2025 at 14:55, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+On Tue, May 13, 2025 at 12:59=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+
+> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089a=
+c8:
 >
->  Hmm, a .mailmap artifact perhaps
+>   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tag=
+s/samsung-pinctrl-6.16
+>
+> for you to fetch changes up to a30692b4f81ba864cf880d57e9cc6cf6278a2943:
+>
+>   pinctrl: samsung: Add filter selection support for alive bank on gs101 =
+(2025-04-08 20:57:51 +0200)
 
-Ahh, indeed. I was looking at commit feea1db26e5b ("[PATCH] defxx: Use
-irqreturn_t for the interrupt handler") from 2005, but yes, the raw
-commit information has your linux-mips address, and it's just that
-"git log" will translate it to something much newer...
+Pulled in!
 
-But I really don't think we've ever been *so* strict about pgp keys
-having all the proper pgp key signature chains. Yes, it's the normal
-rule and the regular way people identify themselves, but nothing
-should ever be mindlessly black-and-white.
-
-               Linus
+Thanks Krzysztof!
+Linus Walleij
