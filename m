@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF6D1DFE8;
-	Tue, 13 May 2025 12:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224ED1D52B;
+	Tue, 13 May 2025 12:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140372; cv=none; b=EwxqrCiK2PIbywdwKMqDvSJhP4F8P2sek/40P9ODVFXLBmz6qPyExpdk0jsdBh7ENo5dKR5fK0yWm8YHWEaVxQfgDEq1asRI8n+eqtI2VEOEoLmlLfhR0WD+/uobYaXjW6k33wGmKJ7y2ufGul0BhFG4wNxNN6Bz2AAi8bX1Tjo=
+	t=1747140531; cv=none; b=tVo/jeaKXWJwDo7dH4AyMiqWfzc8zH9xdX3ObjCBSAI0RHRXLzVHOdtuCHyIdkJMFohJtIii52OYzcpyCFYyHdRiT+cvg2DGSyAmJpHFbw5NzTGN3ZznKxWEwJRMusLc9+eFgHzzawko1ZkHfQxuta6pbdcUKOzlxwfiItoxa5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140372; c=relaxed/simple;
-	bh=HECroQbmfC0nRDQFU+KWqqjaMG83MD5Do6IdYhmQLlQ=;
+	s=arc-20240116; t=1747140531; c=relaxed/simple;
+	bh=IRMm+C+NtzCnQzW5ekgvU/LsZ5ZGYQm9QCLC9PLIH7U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A1An+C318C9Veb6X8QWY+4EFo2rFeiM41CK+8gLacCTcflQpm347bdbvwVLbvZ+k4II2H+TiUfL2dHyEEQCHcJRCv54OtNslR+7nULuPaNC/IqDGbRzltq5TL1KOIll2ZuVLM4RN18BRLDtbZyGm3JzMowXQjKYZo1ez0/BUSWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BBB8168F;
-	Tue, 13 May 2025 05:45:58 -0700 (PDT)
-Received: from [10.1.25.187] (XHFQ2J9959.cambridge.arm.com [10.1.25.187])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6B5C3F5A1;
-	Tue, 13 May 2025 05:46:07 -0700 (PDT)
-Message-ID: <c52861ac-9622-4d4f-899e-3a759f04af12@arm.com>
-Date: Tue, 13 May 2025 13:46:06 +0100
+	 In-Reply-To:Content-Type; b=JtgY2nek0mPhiatCQJo+60EBXPXBr1uCSroiJnvYSXW5gESHXxhvYBtSLy/dPhgL0jLLpRWD9Rf63Z7MNJD+hyCorKgLF77NUim+UuHBFpxDabKe1ymRS6EKAsxK7sQKyrfWfvRtioqKHhwI68HOj5CMzJqKr6DMAjf3r0/sKgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HU9V43Ii; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HU9V43Ii"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf680d351so38896135e9.0;
+        Tue, 13 May 2025 05:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747140528; x=1747745328; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a5TgOXyLSPHdmxHWX/DD9xraZLG6iwcHdcK24HBFLhk=;
+        b=HU9V43IipaRy17NuU15l1HKOr9KH9cnIT8fmvYJAZ9W+8sjyNhVs42ZHa0zWT2k9ne
+         YTgR2e1DMaO0CHolLi5icBnv2cQW3jv8OuE2MGOQO2bHZtG08GFAqtyBZr6r6T6Gg7PO
+         B5wTTpD8jWdgF+hB+HmVB25EogTv/OnBo1Pfg3/AzjSpC0yo2rfGkTBnzKkbPF9vhQHO
+         dtVYu0Vf+hGCbU0wJbcv9oIQOUdA5uQFBRKyk0CVFiTPWwBI4f2/7lEG0MTXiw6T5KtS
+         stbSz5ZLdBN3S8fLcms+FegHflcgDhRmjIs7QrQy5axmoprCV2+glY1UcFgIkDbwrFjb
+         LIUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747140528; x=1747745328;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a5TgOXyLSPHdmxHWX/DD9xraZLG6iwcHdcK24HBFLhk=;
+        b=fx5pZI/P7/AXLu8rj/B28RUq7ZQ6kX8XUeJrhBeW3hbQQTWwbTonFvTSyTr+iah9zL
+         dyoqHeTTsPSrkn723HD/ibjUIT0iSicz21qSzJTjWX7ejfnPeXG6gUiUPtreBmafH+a4
+         gro++EaBdqOTmUnyyeQDPGzYjo0iFzbvpBwIpcuHh2U2whKj3QylmTzeewyT5yDvJ25l
+         KynbVVSQPwZbMo4mdHHmsaeBVqLAdEJ/6zgci6DfPc7NCSiGNW6tcBtm0hPSCLhd6HmT
+         940YlezRtdzVYSpfKjjHR+MUYgdLEEN+JaZ0cU/2NamgwuckoGeD/JkqmKIA66zdqyEF
+         944Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUzN3f7LJ8ncFq56vKwj5XqbUGpn2EtjHX3vqRLjT+XJuS3eGvNkTb9SomXcczQRLE0xD0Wy0EeOnNujYU=@vger.kernel.org, AJvYcCXbkYUYoGBVq7D79jF3bH88RIvCqiL9DRuPeOY5ZY8yNJ2FXdYsDnriaWGxqYf8l6AQhVMU6Wjq@vger.kernel.org
+X-Gm-Message-State: AOJu0YylawN83dRYNzUHqNa3klplQUb3zZuL7C6xtjPKWOQLB8ehX82A
+	qR4NMoE3+BskRBlG4b10IsQfwixy4ILj0eBciPV0KwU9Lf0+sYxb
+X-Gm-Gg: ASbGncsTHpH/YsFe1pmlhL1h69gUOp7MHJfB3bPlWKK4T4MljCa9q+3L/3ttd9EkWWb
+	4XIeqshA8TfFOwcvSMutY1KP/80Op52Xd497Fgfiqt84/+RBKcrsyVQM8XTnIhkGaqSIIAJJSwY
+	EwpVVcVzU429FQLo+LzD6aFvUnTbCX5K3zwigNoYE7T34CNDImTifkEJ2llF0mC8N+7Fo4GDfSn
+	TzrmtWTIuxFG3/ECy2gSaI+HtQUM2Y435SAuLDGyyZ6+EB5K/zx0gxAAs9Cqrxv/ezVokWMVQMg
+	6aksTholVGis/Il3dTWQ5A/cO1MfAroc2i42K1fupZD+XErILc+LLQOMH2RKQF53HHy/Ka2P
+X-Google-Smtp-Source: AGHT+IHBreVwaNTD250MP1ZhUthvVQWAn2cvlOqmyeNmqTywxz6tsH2Gn2/fdJuks7mp7pU/Wx6dDg==
+X-Received: by 2002:a5d:47a7:0:b0:3a0:9a02:565a with SMTP id ffacd0b85a97d-3a340d15421mr2730099f8f.3.1747140528111;
+        Tue, 13 May 2025 05:48:48 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.146.237])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d6858566sm165365765e9.32.2025.05.13.05.48.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 05:48:47 -0700 (PDT)
+Message-ID: <eae3e1a9-1d82-40b7-a835-978be4a6ef56@gmail.com>
+Date: Tue, 13 May 2025 13:49:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,222 +66,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 5/5] mm/filemap: Allow arch to request folio size
- for exec memory
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-6-ryan.roberts@arm.com>
- <20250509135223.GB5707@willie-the-truck>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250509135223.GB5707@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [RFC 01/19] netmem: rename struct net_iov to struct netmem_desc
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
+ harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+ ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+ john.fastabend@gmail.com, andrew+netdev@lunn.ch, edumazet@google.com,
+ pabeni@redhat.com, vishal.moola@gmail.com
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-2-byungchul@sk.com>
+ <ea4f2f83-e9e4-4512-b4be-af91b3d6b050@gmail.com>
+ <20250512132939.GF45370@system.software.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250512132939.GF45370@system.software.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 09/05/2025 14:52, Will Deacon wrote:
-> On Wed, Apr 30, 2025 at 03:59:18PM +0100, Ryan Roberts wrote:
->> Change the readahead config so that if it is being requested for an
->> executable mapping, do a synchronous read into a set of folios with an
->> arch-specified order and in a naturally aligned manner. We no longer
->> center the read on the faulting page but simply align it down to the
->> previous natural boundary. Additionally, we don't bother with an
->> asynchronous part.
+On 5/12/25 14:29, Byungchul Park wrote:
+> On Mon, May 12, 2025 at 02:11:13PM +0100, Pavel Begunkov wrote:
+>> On 5/9/25 12:51, Byungchul Park wrote:
+>>> To simplify struct page, the page pool members of struct page should be
+>>> moved to other, allowing these members to be removed from struct page.
+>>>
+>>> Reuse struct net_iov for also system memory, that already mirrored the
+>>> page pool members.
+>>>
+>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>>> ---
+>>>    include/linux/skbuff.h                  |  4 +--
+>>>    include/net/netmem.h                    | 20 ++++++------
+>>>    include/net/page_pool/memory_provider.h |  6 ++--
+>>>    io_uring/zcrx.c                         | 42 ++++++++++++-------------
 >>
->> On arm64 if memory is physically contiguous and naturally aligned to the
->> "contpte" size, we can use contpte mappings, which improves utilization
->> of the TLB. When paired with the "multi-size THP" feature, this works
->> well to reduce dTLB pressure. However iTLB pressure is still high due to
->> executable mappings having a low likelihood of being in the required
->> folio size and mapping alignment, even when the filesystem supports
->> readahead into large folios (e.g. XFS).
+>> You're unnecessarily complicating it for yourself. It'll certainly
+>> conflict with changes in the io_uring tree, and hence it can't
+>> be taken normally through the net tree.
 >>
->> The reason for the low likelihood is that the current readahead
->> algorithm starts with an order-0 folio and increases the folio order by
->> 2 every time the readahead mark is hit. But most executable memory tends
->> to be accessed randomly and so the readahead mark is rarely hit and most
->> executable folios remain order-0.
->>
->> So let's special-case the read(ahead) logic for executable mappings. The
->> trade-off is performance improvement (due to more efficient storage of
->> the translations in iTLB) vs potential for making reclaim more difficult
->> (due to the folios being larger so if a part of the folio is hot the
->> whole thing is considered hot). But executable memory is a small portion
->> of the overall system memory so I doubt this will even register from a
->> reclaim perspective.
->>
->> I've chosen 64K folio size for arm64 which benefits both the 4K and 16K
->> base page size configs. Crucially the same amount of data is still read
->> (usually 128K) so I'm not expecting any read amplification issues. I
->> don't anticipate any write amplification because text is always RO.
->>
->> Note that the text region of an ELF file could be populated into the
->> page cache for other reasons than taking a fault in a mmapped area. The
->> most common case is due to the loader read()ing the header which can be
->> shared with the beginning of text. So some text will still remain in
->> small folios, but this simple, best effort change provides good
->> performance improvements as is.
->>
->> Confine this special-case approach to the bounds of the VMA. This
->> prevents wasting memory for any padding that might exist in the file
->> between sections. Previously the padding would have been contained in
->> order-0 folios and would be easy to reclaim. But now it would be part of
->> a larger folio so more difficult to reclaim. Solve this by simply not
->> reading it into memory in the first place.
->>
->> Benchmarking
->> ============
->> TODO: NUMBERS ARE FOR V3 OF SERIES. NEED TO RERUN FOR THIS VERSION.
->>
->> The below shows nginx and redis benchmarks on Ampere Altra arm64 system.
->>
->> First, confirmation that this patch causes more text to be contained in
->> 64K folios:
->>
->> | File-backed folios     |   system boot   |      nginx      |      redis      |
->> | by size as percentage  |-----------------|-----------------|-----------------|
->> | of all mapped text mem | before |  after | before |  after | before |  after |
->> |========================|========|========|========|========|========|========|
->> | base-page-4kB          |    26% |     9% |    27% |     6% |    21% |     5% |
->> | thp-aligned-8kB        |     4% |     2% |     3% |     0% |     4% |     1% |
->> | thp-aligned-16kB       |    57% |    21% |    57% |     6% |    54% |    10% |
->> | thp-aligned-32kB       |     4% |     1% |     4% |     1% |     3% |     1% |
->> | thp-aligned-64kB       |     7% |    65% |     8% |    85% |     9% |    72% |
->> | thp-aligned-2048kB     |     0% |     0% |     0% |     0% |     7% |     8% |
->> | thp-unaligned-16kB     |     1% |     1% |     1% |     1% |     1% |     1% |
->> | thp-unaligned-32kB     |     0% |     0% |     0% |     0% |     0% |     0% |
->> | thp-unaligned-64kB     |     0% |     0% |     0% |     1% |     0% |     1% |
->> | thp-partial            |     1% |     1% |     0% |     0% |     1% |     1% |
->> |------------------------|--------|--------|--------|--------|--------|--------|
->> | cont-aligned-64kB      |     7% |    65% |     8% |    85% |    16% |    80% |
->>
->> The above shows that for both workloads (each isolated with cgroups) as
->> well as the general system state after boot, the amount of text backed
->> by 4K and 16K folios reduces and the amount backed by 64K folios
->> increases significantly. And the amount of text that is contpte-mapped
->> significantly increases (see last row).
->>
->> And this is reflected in performance improvement:
->>
->> | Benchmark                                     |          Improvement |
->> +===============================================+======================+
->> | pts/nginx (200 connections)                   |                8.96% |
->> | pts/nginx (1000 connections)                  |                6.80% |
->> +-----------------------------------------------+----------------------+
->> | pts/redis (LPOP, 50 connections)              |                5.07% |
->> | pts/redis (LPUSH, 50 connections)             |                3.68% |
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/include/asm/pgtable.h |  8 +++++++
->>  include/linux/pgtable.h          | 11 +++++++++
->>  mm/filemap.c                     | 40 ++++++++++++++++++++++++++------
->>  3 files changed, 52 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index 2a77f11b78d5..9eb35af0d3cf 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -1537,6 +1537,14 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
->>   */
->>  #define arch_wants_old_prefaulted_pte	cpu_has_hw_af
->>  
->> +/*
->> + * Request exec memory is read into pagecache in at least 64K folios. This size
->> + * can be contpte-mapped when 4K base pages are in use (16 pages into 1 iTLB
->> + * entry), and HPA can coalesce it (4 pages into 1 TLB entry) when 16K base
->> + * pages are in use.
->> + */
->> +#define exec_folio_order() ilog2(SZ_64K >> PAGE_SHIFT)
->> +
->>  static inline bool pud_sect_supported(void)
->>  {
->>  	return PAGE_SIZE == SZ_4K;
->> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->> index b50447ef1c92..1dd539c49f90 100644
->> --- a/include/linux/pgtable.h
->> +++ b/include/linux/pgtable.h
->> @@ -456,6 +456,17 @@ static inline bool arch_has_hw_pte_young(void)
->>  }
->>  #endif
->>  
->> +#ifndef exec_folio_order
->> +/*
->> + * Returns preferred minimum folio order for executable file-backed memory. Must
->> + * be in range [0, PMD_ORDER). Default to order-0.
->> + */
->> +static inline unsigned int exec_folio_order(void)
->> +{
->> +	return 0;
->> +}
->> +#endif
->> +
->>  #ifndef arch_check_zapped_pte
->>  static inline void arch_check_zapped_pte(struct vm_area_struct *vma,
->>  					 pte_t pte)
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index e61f374068d4..37fe4a55c00d 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -3252,14 +3252,40 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->>  	if (mmap_miss > MMAP_LOTSAMISS)
->>  		return fpin;
->>  
->> -	/*
->> -	 * mmap read-around
->> -	 */
->>  	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->> -	ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
->> -	ra->size = ra->ra_pages;
->> -	ra->async_size = ra->ra_pages / 4;
->> -	ra->order = 0;
->> +	if (vm_flags & VM_EXEC) {
->> +		/*
->> +		 * Allow arch to request a preferred minimum folio order for
->> +		 * executable memory. This can often be beneficial to
->> +		 * performance if (e.g.) arm64 can contpte-map the folio.
->> +		 * Executable memory rarely benefits from readahead, due to its
->> +		 * random access nature, so set async_size to 0.
+>> Why are you renaming it in the first place? If there are good
 > 
-> In light of this observation (about randomness of instruction fetch), do
-> you think it's worth ignoring VM_RAND_READ for VM_EXEC?
+> It's because the struct should be used for not only io vetor things but
+> also system memory.  Current network code uses struct page as system
 
-Hmm, yeah that makes sense. Something like:
+Not sure what you mean by "io vector things", but it can already
+point to system memory, and if anything, the use conceptually more
+resembles struct pages rather than iovec. IOW, it's just a name,
+neither gives a perfect understanding until you look up details,
+so you could just leave it net_iov. Or follow what Mina suggested,
+I like that option.
 
----8<---
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 7b90cbeb4a1a..6c8bf5116c54 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3233,7 +3233,8 @@ static struct file *do_sync_mmap_readahead(struct vm_fault
-*vmf)
-        if (!ra->ra_pages)
-                return fpin;
-
--       if (vm_flags & VM_SEQ_READ) {
-+       /* VM_EXEC case below is already intended for random access */
-+       if ((vm_flags & (VM_SEQ_READ | VM_EXEC)) == VM_SEQ_READ) {
-                fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-                page_cache_sync_ra(&ractl, ra->ra_pages);
-                return fpin;
----8<---
-
+> memory descriptor but struct page fields for page pool will be gone.
 > 
-> Either way, I was looking at this because it touches arm64 and it looks
-> fine to me:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-
-Thanks!
-
-> 
-> Will
+> So I had to reuse struct net_iov and I thought renaming it made more
+> sense.  It'd be welcome if you have better idea.
+-- 
+Pavel Begunkov
 
