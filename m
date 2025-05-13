@@ -1,102 +1,404 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450EB25634
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68DB1AF0A7
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146952; cv=none; b=buThOWC5t+otEsMTKDFX75X+Sz2Rz6cLOBEgKyPt0xlj24MD3D3u7KlCQBc9ONo0p4jy2p+WZvJBZWQ0MGlJ85cUZQ8mFTYNDyrUquwJ6/6r/YcT+L7l8ctv2iAfuUHo2jZrr35gw8a8LVOORnNKj1FpUmzROWA7jwUHMc7XYSs=
+	t=1747147072; cv=none; b=skmBxfaIi0dqzXiSWllvpyybYt8I3Shsvi7A4HcniMnT4H1hWpfpyLRlKHX03GnxsgWjsAnn/fTDm0whNxcE7eT3d8It56G2htHLIX8pVPZMRz9AXUVBYZm4GcZNVvMQF7hyCCL0bBy57ezb3DWqKs5MqMRrQ2HqjEMOf5PBAV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146952; c=relaxed/simple;
-	bh=K1Jt/PMyy3R9NjxblrEwux7XcHTEGSGgj5ti5f+Hh5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E58drbgglOA+IdBx3aFgjXDr/DZrumEViAn87PeyUyxyKgX5E1duXzanLGIVTkkyno0FMsWNcoq1ZRb4LrxgO/tWa+G2izj2q7chdsZpaRmPT19BBO8AAgTJg/Fsw3HyeSZ6ovS5lATpjA2lKyQPn3hyrIGLrlUhszsS8Xei/mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f6scww6H; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747147072; c=relaxed/simple;
+	bh=CQ1eTpAirWAWicVJP9Z4ssU7VJWA2MrVQn6FMscmAM0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BpeK6knJFr6aRk4QHp/0LJsI/zJegdhHv9YDSA6aEoTV8D4dWmb8IWlNyeZaCheTjZXFGbCu8/qZzjjQzPnpKI7aG4UCOzikI+KvNRZUrcVwzWDWyCMOhqu8ysuF/oyhi8mxd2RobjBKZUzxew9OJeaEdpFFp7T/G6QALSMqE/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VJ0wFnZz; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6scww6H"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a0be50048eso4354878f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:35:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VJ0wFnZz"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad2490d7838so517519566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747146949; x=1747751749; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zgyk97IfeYVOskXq3/ZxZBDTiB8IvjRjENNa45XTzuY=;
-        b=f6scww6HEtiLebqKoFy3diiwc+NdgKBHhqE+fD1j1tTTx0jCGDINFPKA0h4/Uy85Xw
-         bl2he21NNgJQPZn5jJmvElJuVGq+yIeHBRo53Nl9uNBm4q6RbqH9TidPULR5PKMszjBo
-         OHXw3EoSXDmslwoOj3CkmOMS5wj/Yfq3me00f3qXi9TFzutYJ9kZrpYKVzuKUazStDy3
-         nbKMoseCQeu6xfU8pK2bksGWtc7wNKXuSrvQ183nCiAzGaeFT2tWx2j0EwrQ13+Dzy0I
-         4ZyG07SvA1EGWCzIaeVJt14OOAbXoDK/xGXZaFg38aLl/TS7a/WEMoVonUMkz1+whvZS
-         vt5A==
+        d=suse.com; s=google; t=1747147067; x=1747751867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qBbAyLqny0RImEAM2CODiB0gqDeoovZSecFLzkFrj30=;
+        b=VJ0wFnZz0qBPSgKt5EDqPT3URSJL49pCk+uib4XiEV6nBpjVLM0A+fz6Cv1J65N4Pl
+         8g5CXvmW+HRQPkO/kqF+Oxj7uNuleeOj47Y9CmtoBHlcyyPCB4uGpXmIYIC3BrUuBsuS
+         2dvdaNxFhQKAZleQXQ0bjyN7WgvcXd7d3uJJfZMNaCAC4Nt/vCjH5GJXyg3kqnKKqpzB
+         LTMZS9i2usdV+qVsDEqjrFs5GaEaXXz4GCI9Jf/LkiTHEFnqN08TyxnUnq9XvmH2kHz8
+         NuZTpfNUAn4ZetQtJRAzhgICW9UG8sdUjasNhRdynV/p/iEgSy6A6D7YcTktszui5uSA
+         +frg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747146949; x=1747751749;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgyk97IfeYVOskXq3/ZxZBDTiB8IvjRjENNa45XTzuY=;
-        b=XEq9zBaN8rTSA2BG2vUt/IN2nwK+436UITVPMY9WFyP9WJCLbkpTyXFLT47G9VmLkL
-         p7iTdSLlnQ4osmXzk1KKHKRLeMhhrDYVVFA5V6omzUK4WConVrvgR9olIH+3MmRgM7Cc
-         ZrSA4V14A86gJw07r/e916jSvpd9dDULFVJHl9GSOUOLyQ4dd/bM2NZs46iQYv64BCS/
-         qUDstV442fU61FCggXh50UmqHLMEiZxA0WOERI9kz1AWMZBZzCHGd3nkbt01PKBcoC2a
-         FG/1U07Of5l9m+rxYXwokfpZohas586jwVh5BdQbRx/AVmcFOGECZ06u9Dp+auVyOdq0
-         TtNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJMB8T+eoFD0VB8aGdRGWDHsXZg/uzu9mz41S1RRXmqzafGaGeEKicT6h2ac4yPrGrQPZupAYU0deiv/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz00KGRJ4WjA90IkSLnZOJvKnrzY2rGWj7WA0AGi48Z6mkCwzq1
-	jbcKkxa1RC1OdYQ7MCdrSAvMuzxQdXMlfaxCbxbwq3brV71GadiVUIGF2ncE2yk=
-X-Gm-Gg: ASbGncu0UV+yPnntF0IxppY+Njy/M9OY62JwX7FuhmctAeXVJYXD+5uOSRMlvhC+uz0
-	UmQR9MXI843f8egIpdSB6/YhHBzXeWHemMLRD9FeJNGCDjRQdKtojvFROSVKskpdI0I3mOixLD1
-	hPBIGDKWIv1R1D6V+LgirNVqrz1q8DipMXK30fcGfV3I7JsnBYko4yvKwMybbWwyCnrdA6nLU0/
-	k0YfKEl/SK+PDLE78X2CvfYooVhS+gRLBZVU4n9RQTz+hg/WgSkZD8FVb/yDQofDOavUoOV9qyd
-	+PJMEOVDDDbk+MOWqkow9NHm8Tc4wMK4YhFqoEwo9m0LiTdtXPALCRSjjsTj4S7opgIcpROioCY
-	DzilTwFWT479vMQ==
-X-Google-Smtp-Source: AGHT+IECI9WPDGbN1PKQdBTuC0zojDWLobQgT9+jZfgetVRbIflVKBhtcHxhKo9cRWHWaWFom3XPPw==
-X-Received: by 2002:a05:6000:40c9:b0:39c:1f02:5409 with SMTP id ffacd0b85a97d-3a1f6424053mr13007915f8f.9.1747146948656;
-        Tue, 13 May 2025 07:35:48 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2ca31sm16559682f8f.65.2025.05.13.07.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:35:47 -0700 (PDT)
-Date: Tue, 13 May 2025 16:35:46 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Vladimir Murzin <vladimir.murzin@arm.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert arm,mps2-timer to DT schema
-Message-ID: <aCNYws2IeRm-D8Fg@mai.linaro.org>
-References: <20250506022210.2586404-1-robh@kernel.org>
+        d=1e100.net; s=20230601; t=1747147067; x=1747751867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qBbAyLqny0RImEAM2CODiB0gqDeoovZSecFLzkFrj30=;
+        b=oWBfxlZNllvDr3FCMk29pnhaSRQSyL8Z0S6GjHjq6k5iy3DxHXbvl0Eyp4KgD0uANC
+         YmwB9/xu2Hq0iA3dHkngzeTkb7zWE7ssWGteFiG1zuf0mRZdrvDoYonKPuo9p2lyDvow
+         dE4mGdXOPwZBpuVMGtWKWKVZdpoBhBN8QzVu7uzs+m120RHZf7cXDOnvJlK/CfvPL5xl
+         TsSDFR8TV8CYmmA/V3jNs33DZJD6vVv2Ye/M4fbIlROdJ8vIhFmsePuKCt5pVWM13oLT
+         ASUigos6vp3Yilklcc0aVPcp+xFS0nxWB4ubYzqiVjNP8D0XLRu4XI6uXGaCItQ2n91h
+         fyZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/7Ek42arjUWM5KVJb9ev/yPezAnDXoMf0naXConPW5RDENCOHyUR7okz6PV7X20OHCiIjjVWWKABmdco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbE60YQ5ZBWRu+5Ys73k4pp/XSiZN5awRUtIXHu5caW/nVSAJA
+	wDzlYTupUOsNRYoLSJdb7HdwUn9zGC57BhPgrQhbeka7NVPjLE/S1c3yATb31ecAGWbEHzi5ff3
+	/7Laae5iZC2n6IgkERMVYDKtjdej7fNT8tMZPng==
+X-Gm-Gg: ASbGncuBiljDTF45MdtbybjIbFakNrv1J07jG2CPH3NLDIsRGG415TuND5rQKRfDkaE
+	Sm3YwgLjT4ySfICe494Hj/B2WXWmc687TYqV0HPsJe97Yw2lgY0y+Mo4CA21oLi1lwvAs+powoN
+	yPfuKoKaTQf2lCmtAFn8zif1v9PoRQAS1WAoCIq+N8Qw==
+X-Google-Smtp-Source: AGHT+IG8jJwG6WGrQYdVHirdz+fmJ6PUu4jl3YppfzRPrSvGdsxCuj94hLlUgd48ZLTDCHIu5fuySiAUFzGa1Bem4VI=
+X-Received: by 2002:a17:906:6a0a:b0:ad2:2a5d:b1af with SMTP id
+ a640c23a62f3a-ad22a5db5b9mr1571684066b.55.1747147066907; Tue, 13 May 2025
+ 07:37:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022210.2586404-1-robh@kernel.org>
+References: <20250512172321.3004779-1-neelx@suse.com> <CAL3q7H5WVUu3sHAJYhP+n2UKKKRNLbYHayBUvc8W9RC2_i5nuQ@mail.gmail.com>
+In-Reply-To: <CAL3q7H5WVUu3sHAJYhP+n2UKKKRNLbYHayBUvc8W9RC2_i5nuQ@mail.gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Tue, 13 May 2025 16:37:34 +0200
+X-Gm-Features: AX0GCFvgvhkhbNq5oCfHwVUrBRPkmkAca-V7VKJFmnNUEJPf22R4TzuLjJxbfp8
+Message-ID: <CAPjX3FdOBKFYNkMiAa=cV6VUdqCLVGoHDCGnJsEP0-Mgn7azjQ@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: index buffer_tree using node size
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 09:22:09PM -0500, Rob Herring wrote:
-> Convert the Arm MPS2 Timer binding to DT schema format. It's a
-> straight-forward conversion.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+On Tue, 13 May 2025 at 12:12, Filipe Manana <fdmanana@kernel.org> wrote:
+>
+> On Mon, May 12, 2025 at 6:24=E2=80=AFPM Daniel Vacek <neelx@suse.com> wro=
+te:
+> >
+> > So far we are deriving the buffer tree index using the sector size. But=
+ each
+> > extent buffer covers multiple sectors. This makes the buffer tree rathe=
+r sparse.
+> >
+> > For example the typical and quite common configuration uses sector size=
+ of 4KiB
+> > and node size of 16KiB. In this case it means the buffer tree is using =
+up to
+> > the maximum of 25% of it's slots. Or in other words at least 75% of the=
+ tree
+> > slots are wasted as never used.
+> >
+> > We can score significant memory savings on the required tree nodes by i=
+ndexing
+> > the tree using the node size instead. As a result far less slots are wa=
+sted
+> > and the tree can now use up to all 100% of it's slots this way.
+>
+> Did you do any benchmarks? What results did you get?
 
-Applied, thanks
+Not really benchmarks. I just run fstests to make sure nothing fails.
 
--- 
+> If we could get in practice such a huge amount of space gains and
+> waste so much less memory, you should observe faster operations on the
+> buffer tree (xarray) as well, as we would get a smaller data
+> structure, with fewer nodes.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+That's precisely the point, to save the memory with less nodes. I
+don't expect to see any faster operations, really. I believe the radix
+tree is quite efficient in the kernel. And for a tree in general
+theory the operations are O(log(n)), so a bigger tree does not have
+that much higher overhead.
+But this reduces the tree height by one level tops. More likely not
+even that. I still quite believe the tree operations overhead is well
+below the threshold of noise for fs operations. You would really have
+to microbenchmark just the tree operations themselves to see the
+difference.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+But I can still be pleasantly surprised.
+
+> However, while this is a logically sound thing to do, in practice we
+> will always get many unused slots per xarray node, because:
+>
+> 1) We don't keep all extent buffers in memory all the time - some are
+> less frequently used and get evicted from memory after a while or
+> rarely get loaded in the first place, not all parts of a btree are
+> equally "hot";
+
+No questions about that. This part does not change.
+
+> 2) It's a COW filesystem and metadata is always COWed, so you get
+> extent buffers allocated all over the place with big gaps between
+> them, in different block groups, etc.
+
+Yes, and sparse leaf nodes are actually expected and perfectly fine.
+Still, there is no need to be more sparse than actually needed. Wasted
+slots are wasted slots. Some leaf nodes are still full with 16 ebs
+while 64 could have been fitted.
+
+> And what about memory usage, did you see any significant reduction for
+> some workload? What was the reduction, what was the workload?
+
+I did not really check, to be honest. But since you're asking...
+
+On my laptop with an uptime of two months and with a handful of sleep
+cycles, workload about what you do on your workstation (couple VMs,
+many FF tabs, many terminals and a live crash running), mem stats from
+`top` below, 1T NVMe, there are 20610 ebs and 6455 tree leaves as I
+type at the moment (but I bet it was similar yday or a week ago). The
+highest tree index is 4341c9c which means 5 levels (with the patch it
+would still be 5 levels, just the width would be 1/4 as the index
+would become 10d0727) and that FS (/home) has 13k of the ebs and 4150
+of leave nodes (/ is 7600 ebs / 2300 leaves and /boot has 10/5
+allocated in memory), so you can see the tree is still fairly sparse
+as there are way less ebs then available slots. Not even 3.2 ebs in
+one leaf on average.
+
+MiB Mem :  58470,3 total,   6035,4 free,  34408,7 used,  19525,8 buff/cache
+MiB Swap:  32768,0 total,  15929,4 free,  16838,6 used.  24061,6 avail Mem
+
+But I believe there are also huge parts of the tree not even
+allocated. For example there are no nodes needed between indices 41ccc
+and 3cc1d88 as there are no ebs allocated in this range. I did not
+check but I guess the hole actually begins with the end of one bg and
+ends with the start of another bg??
+
+With the patch I guess you could expect something like 4k leaf nodes
+instead of the 6k5 I see now. I estimate something like 30-40% savings
+instead of the theoretical 75% if the ebs were fully present. Well
+that's still not bad.
+
+On the other hand if you check the absolute numbers, that's roughly
+1.5 megs saved on a 64 gigs machine. And that's provided the slabs
+were released, but see below...
+
+Now even though it looks like a huge win if you focused only in terms
+of btrfs, compared to the rest of the system it looks almost
+insignificant:
+
+> crash> kmem -s radix_tree_node
+> CACHE             OBJSIZE  ALLOCATED     TOTAL  SLABS  SSIZE  NAME
+> ffff9eecc0045b00      576     464807    542899  19393    16k  radix_tree_=
+node
+
+I guess most of the tree nodes are used in memory mappings, vmas and
+stuff, and inode mapping to page cache.
+
+If btrfs is using 6.5k tree nodes (just for leaves to be fair, there
+will be some more for inner nodes) out of the total of 0.5M nodes in
+flight system-wide it's something over 1%, so maybe 2%. This patch can
+reduce it by something like 0.5% being generous. Well, I can take it.
+
+So yeah, we're wasting some memory and that can be fixed. But we're
+far from being any significant user in the kernel. Just to fill in the
+perspective.
+
+> Xarray uses a kmem_cache to allocate nodes, so if we get such huge
+> gains as the change log claims, we should see a reduction by
+> monitoring files inside /sys/kernel/slab/radix_tree_node, like the
+> "objects" and "total_objects" files which tell the us the total amount
+> of allocated xarray nodes and how many are in use - this is for all
+> xarrays, so many will not belong to the buffer tree or even btrfs, but
+> it should still be very noticeable reduction on a workload that is
+> heavy on metadata, like fs_mark with empty files creating a large fs
+> tree (a few gigabytes at least).
+>
+> Thanks.
+>
+>
+> >
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > ---
+> >  fs/btrfs/disk-io.c   |  1 +
+> >  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+> >  fs/btrfs/fs.h        |  3 ++-
+> >  3 files changed, 18 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> > index 5bcf11246ba66..dcea5b0a2db50 100644
+> > --- a/fs/btrfs/disk-io.c
+> > +++ b/fs/btrfs/disk-io.c
+> > @@ -3395,6 +3395,7 @@ int __cold open_ctree(struct super_block *sb, str=
+uct btrfs_fs_devices *fs_device
+> >         fs_info->delalloc_batch =3D sectorsize * 512 * (1 + ilog2(nr_cp=
+u_ids));
+> >
+> >         fs_info->nodesize =3D nodesize;
+> > +       fs_info->node_bits =3D ilog2(nodesize);
+> >         fs_info->sectorsize =3D sectorsize;
+> >         fs_info->sectorsize_bits =3D ilog2(sectorsize);
+> >         fs_info->csums_per_leaf =3D BTRFS_MAX_ITEM_SIZE(fs_info) / fs_i=
+nfo->csum_size;
+> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > index 4d3584790cf7f..80a8563a25add 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffer=
+_for_io(struct extent_buffer *e
+> >          */
+> >         spin_lock(&eb->refs_lock);
+> >         if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
+> > -               XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_in=
+fo->sectorsize_bits);
+> > +               XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_in=
+fo->node_bits);
+> >                 unsigned long flags;
+> >
+> >                 set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+> > @@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer =
+*eb)
+> >  static void buffer_tree_set_mark(const struct extent_buffer *eb, xa_ma=
+rk_t mark)
+> >  {
+> >         struct btrfs_fs_info *fs_info =3D eb->fs_info;
+> > -       XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sect=
+orsize_bits);
+> > +       XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node=
+_bits);
+> >         unsigned long flags;
+> >
+> >         xas_lock_irqsave(&xas, flags);
+> > @@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct ext=
+ent_buffer *eb, xa_mark_t mark)
+> >  static void buffer_tree_clear_mark(const struct extent_buffer *eb, xa_=
+mark_t mark)
+> >  {
+> >         struct btrfs_fs_info *fs_info =3D eb->fs_info;
+> > -       XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->sect=
+orsize_bits);
+> > +       XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node=
+_bits);
+> >         unsigned long flags;
+> >
+> >         xas_lock_irqsave(&xas, flags);
+> > @@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(struc=
+t btrfs_fs_info *fs_info,
+> >         rcu_read_lock();
+> >         while ((eb =3D find_get_eb(&xas, end, tag)) !=3D NULL) {
+> >                 if (!eb_batch_add(batch, eb)) {
+> > -                       *start =3D (eb->start + eb->len) >> fs_info->se=
+ctorsize_bits;
+> > +                       *start =3D (eb->start + eb->len) >> fs_info->no=
+de_bits;
+> >                         goto out;
+> >                 }
+> >         }
+> > @@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_n=
+olock(
+> >                 struct btrfs_fs_info *fs_info, u64 start)
+> >  {
+> >         struct extent_buffer *eb;
+> > -       unsigned long index =3D start >> fs_info->sectorsize_bits;
+> > +       unsigned long index =3D start >> fs_info->node_bits;
+> >
+> >         rcu_read_lock();
+> >         eb =3D xa_load(&fs_info->buffer_tree, index);
+> > @@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btrf=
+s_fs_info *fs_info, u64 start,
+> >                                       u64 end)
+> >  {
+> >         struct eb_batch batch;
+> > -       unsigned long start_index =3D start >> fs_info->sectorsize_bits=
+;
+> > -       unsigned long end_index =3D end >> fs_info->sectorsize_bits;
+> > +       unsigned long start_index =3D start >> fs_info->node_bits;
+> > +       unsigned long end_index =3D end >> fs_info->node_bits;
+> >
+> >         eb_batch_init(&batch);
+> >         while (start_index <=3D end_index) {
+> > @@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space =
+*mapping,
+> >
+> >         eb_batch_init(&batch);
+> >         if (wbc->range_cyclic) {
+> > -               index =3D (mapping->writeback_index << PAGE_SHIFT) >> f=
+s_info->sectorsize_bits;
+> > +               index =3D (mapping->writeback_index << PAGE_SHIFT) >> f=
+s_info->node_bits;
+> >                 end =3D -1;
+> >
+> >                 /*
+> > @@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space =
+*mapping,
+> >                  */
+> >                 scanned =3D (index =3D=3D 0);
+> >         } else {
+> > -               index =3D wbc->range_start >> fs_info->sectorsize_bits;
+> > -               end =3D wbc->range_end >> fs_info->sectorsize_bits;
+> > +               index =3D wbc->range_start >> fs_info->node_bits;
+> > +               end =3D wbc->range_end >> fs_info->node_bits;
+> >
+> >                 scanned =3D 1;
+> >         }
+> > @@ -3037,7 +3037,7 @@ struct extent_buffer *alloc_test_extent_buffer(st=
+ruct btrfs_fs_info *fs_info,
+> >         eb->fs_info =3D fs_info;
+> >  again:
+> >         xa_lock_irq(&fs_info->buffer_tree);
+> > -       exists =3D __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info=
+->sectorsize_bits,
+> > +       exists =3D __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info=
+->node_bits,
+> >                               NULL, eb, GFP_NOFS);
+> >         if (xa_is_err(exists)) {
+> >                 ret =3D xa_err(exists);
+> > @@ -3353,7 +3353,7 @@ struct extent_buffer *alloc_extent_buffer(struct =
+btrfs_fs_info *fs_info,
+> >  again:
+> >         xa_lock_irq(&fs_info->buffer_tree);
+> >         existing_eb =3D __xa_cmpxchg(&fs_info->buffer_tree,
+> > -                                  start >> fs_info->sectorsize_bits, N=
+ULL, eb,
+> > +                                  start >> fs_info->node_bits, NULL, e=
+b,
+> >                                    GFP_NOFS);
+> >         if (xa_is_err(existing_eb)) {
+> >                 ret =3D xa_err(existing_eb);
+> > @@ -3456,7 +3456,7 @@ static int release_extent_buffer(struct extent_bu=
+ffer *eb)
+> >                  * in this case.
+> >                  */
+> >                 xa_cmpxchg_irq(&fs_info->buffer_tree,
+> > -                              eb->start >> fs_info->sectorsize_bits, e=
+b, NULL,
+> > +                              eb->start >> fs_info->node_bits, eb, NUL=
+L,
+> >                                GFP_ATOMIC);
+> >
+> >                 btrfs_leak_debug_del_eb(eb);
+> > @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(stru=
+ct folio *folio)
+> >  {
+> >         struct btrfs_fs_info *fs_info =3D folio_to_fs_info(folio);
+> >         struct extent_buffer *eb;
+> > -       unsigned long start =3D folio_pos(folio) >> fs_info->sectorsize=
+_bits;
+> > +       unsigned long start =3D folio_pos(folio) >> fs_info->node_bits;
+> >         unsigned long index =3D start;
+> > -       unsigned long end =3D index + (PAGE_SIZE >> fs_info->sectorsize=
+_bits) - 1;
+> > +       unsigned long end =3D index + (PAGE_SIZE >> fs_info->node_bits)=
+ - 1;
+> >         int ret;
+> >
+> >         xa_lock_irq(&fs_info->buffer_tree);
+> > diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+> > index cf805b4032af3..8c9113304fabe 100644
+> > --- a/fs/btrfs/fs.h
+> > +++ b/fs/btrfs/fs.h
+> > @@ -778,8 +778,9 @@ struct btrfs_fs_info {
+> >
+> >         struct btrfs_delayed_root *delayed_root;
+> >
+> > -       /* Entries are eb->start / sectorsize */
+> > +       /* Entries are eb->start >> node_bits */
+> >         struct xarray buffer_tree;
+> > +       int node_bits;
+> >
+> >         /* Next backup root to be overwritten */
+> >         int backup_root_index;
+> > --
+> > 2.47.2
+> >
+> >
