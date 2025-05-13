@@ -1,177 +1,328 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7BE1F12F4
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851691C8601;
+	Tue, 13 May 2025 16:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154499; cv=none; b=kUj7gBeflUlxE/JqFzTv+Ml3GRLV22PB9c4Pg68yqYczn24L+6rYnpRLfIPLnv4gDt3s+47M+Bdrx2uXz2KOYbu106O34zIXCXOUmgWOm6Nx8h8uYT93mT85JYx3hilqb5Dwc7ll9ZwVPmmM+Y0/+drH8gWUIwpVeudhG7m4N0A=
+	t=1747154524; cv=none; b=CJX20+RnBtjDAWKwziJWx5ajNx7YwHUTUHPPirPl1rpJUGzuHKk10Rpazs97IBnJ/MArzfJfJETt8V75ZNwbcg+K0v3lUdS7FYh+CX3ynKPl0B9+pmUSIoSU3Aqo3RgO/MvnO8m8nDML1t0S0i4p++UtF62/h+vJufkFmX0HcY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154499; c=relaxed/simple;
-	bh=qh5G/eEmWG16XzGmayNka2kXrS3FjLV815oMffc4Klg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nE8dSC9N3aQQjfBbr7pw0cs+B6hmNf/TqMSUvWASbhSVi6kBV9OxAmu5cCE/84dfmzPTeysKsti62IYGG67/bD2ueSawqJkSSmvTo0m0tovNoMOQAJRt7EhldBu8Vtb/ui4uR1RZ6l9KlmAMmjrA4ghS16PLE8nAdjgnEkFbyJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TFL0S+hY; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747154524; c=relaxed/simple;
+	bh=/Ux1HyjQpDgAp9sU7Ea8h3m+O43EqtR+LSbkjZzf9sU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B8o21YN1k/khbzu7we6aWfk5EFJRILjWVgr+DCjkjQomwSFFTIDxLiwE/KyoOsockSZ37ISkIh7VnPFQEySoePKjaY39vtBRycn2aiTOchdkbMRB5bZX8HNycOhq11uljeWa9tG8vdldXYZggZaQvVMVOI0bUPccbc1SILUfpvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJtyN6qz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFL0S+hY"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47666573242so7181cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747154497; x=1747759297; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6BnDDfyJoznq74Fy9bepDWSIw4wPa6h1sLOGzU/61vk=;
-        b=TFL0S+hYoonCCqnL/rFEfeOaAgAsYCgTK5rL1C7RCRPtDTbvtmCoV/YAy9UXHs9FK1
-         xTCvU2T6Z1DBT50coN9xa2xLO8u3awRQ4n7lH1eU4M3HqG6+luEblnDK71Fj9RGV7IoB
-         CyccTDOZhuRStbS87InWpnWwDSTrgdfqwBewntuC+UmV4jfmNqdUxk1HDcEu8YD7BAgD
-         bLXwcAACQyhUGSQ0RR4z1SMQ4agxfgaB/hdLzC/j99zPjWFtCiuF21k3TuGjzfuF+KUP
-         LchC2Xcf3yYIl6fvyMnZErMmGwY93reReMomerswthppgltaHRVQdW+/Ic+Qt34kcQnJ
-         GmDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747154497; x=1747759297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6BnDDfyJoznq74Fy9bepDWSIw4wPa6h1sLOGzU/61vk=;
-        b=bAfoS+Ny/6hSwxToJdKpEzTmbDLHZ34ttcb7shQkGH6VNza/AnzpvZv5yrckRVWcCH
-         mzX/uRllxHGMbh1QsqF8I63CE9UKOnlv1kXleEff1xJ5WmHJkOehKsdsZcBuYuFc+sMt
-         5VjfequDzEGfwL7Mv6blH7r+e2U5m7g5ifpR9GnrG2JNexmgPekU+/5iXvnCLh68jFXD
-         v4gBtELik7V0JGp30sVSQk3hyhpmXapqH2PBA6ayTbIgMauVJuPvdPmH7rSjjjvmVU80
-         LekimMbT7q0wxlD+GmOexpgDQSep3vtlv2mfsd2KBqU/lJKTG2ZvEQSK0x5wKGO4ELO4
-         /9wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXrKiyDPv95FZ2ZDQw95Mm00sx40CR2dksd1bqIIcp7ftsVW64rXmJa8kRH7VCgO3c9khbWUUuc6Blu7NM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrazSHb9GtBjRjXYfw0IfeXh0uDIMJrjTZaN/OaGqBhkAZAej2
-	kGWTod1NTbM/NwJd8EuyzGvMMgT1wKtJrhd09yFDTo0TBrji0y+6V2Fmi0Rl9RRHBHHiVgXEm9m
-	FGbv7WK7pnX0MNHcHqGQgqyn5yfczvZ20ETop1TOU
-X-Gm-Gg: ASbGncvjO8lEEVS+6V8UfwI0NrsLIydoH08jPhY7U5yJFx89UyyCOQqdoqkTJPgkKYn
-	QPB93q/9T8mVvmJubnTI4wok1w7ecunNB100K+32qyVb4hz1VB5ktnIqJUDhaPU1NQqM8npVTWA
-	i5q8i8VzKp2dMybDfcBD1w8MhUsJdVe2toYQ==
-X-Google-Smtp-Source: AGHT+IEJHAdBReTtQOM+Du77qJGTcBmfyorO99vnOGQflRem28oWY3TBlhFPfh4hozV7waawUleyczMmoCPeFGe6apM=
-X-Received: by 2002:a05:622a:1b9f:b0:47d:4e8a:97f0 with SMTP id
- d75a77b69052e-4948990f38dmr3883821cf.29.1747154496402; Tue, 13 May 2025
- 09:41:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJtyN6qz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43926C4CEE4;
+	Tue, 13 May 2025 16:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747154524;
+	bh=/Ux1HyjQpDgAp9sU7Ea8h3m+O43EqtR+LSbkjZzf9sU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kJtyN6qzbU8Rs6/rCCgnuXBAtvewFagk5TAUVRxX1QPIN8TFuaQuMN3c1y9V4yX8C
+	 hx0bHCmFdTpoBmZ01k1kkc3770bCWN4vp4bPvV6htromxmClw9AajgKwMJCStCMsgk
+	 71MXDMB9kN1V1un54zvQk7W6T0yGYatEu5DfM0ufB7PKmWrG9Yx2Cd//04fY6iRb+n
+	 p8Zwd984PLAoRB837Tnx4vFoEIov7okdyLYuG6c+2q4VgnOotBWn9ABNIqvXFXrbQu
+	 vOVU9a9ggdng1Mc2fe2LWZn6DcRPolaiknLJK8epyNToqYRl5iZA9PFjV273r8uL0S
+	 NO7sEUgHO/CRw==
+Date: Tue, 13 May 2025 18:41:56 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 17/19] gpu: nova-core: compute layout of the FRTS
+ region
+Message-ID: <aCN2VIIKYGcVtctN@pollux>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-17-fcb02749754d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510010338.3978696-1-jyescas@google.com> <202505110035.wtOWnL8o-lkp@intel.com>
- <A3E9017A-7282-4BF9-AC60-E2C74EB68980@nvidia.com>
-In-Reply-To: <A3E9017A-7282-4BF9-AC60-E2C74EB68980@nvidia.com>
-From: Juan Yescas <jyescas@google.com>
-Date: Tue, 13 May 2025 09:41:24 -0700
-X-Gm-Features: AX0GCFuQ__xLeJQ79EFOWN0yV7Y9yxsqU-iVJS9r_l0AKVbr7f7W4t90YzZtWWI
-Message-ID: <CAJDx_rj2QpiQkLoJM0x-WOD5nJQVLDbsFNm4-xZ9SfAq_f1SBw@mail.gmail.com>
-Subject: Re: [PATCH v4] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel test robot <lkp@intel.com>, 
-	linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-	Linux Memory Management List <linux-mm@kvack.org>, tjmercier@google.com, isaacmanjarres@google.com, 
-	surenb@google.com, kaleshsingh@google.com, Vlastimil Babka <vbabka@suse.cz>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507-nova-frts-v3-17-fcb02749754d@nvidia.com>
 
-On Tue, May 13, 2025 at 8:08=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 10 May 2025, at 13:16, kernel test robot wrote:
->
-> > Hi Juan,
-> >
-> > kernel test robot noticed the following build errors:
-> >
-> > [auto build test ERROR on linus/master]
-> > [also build test ERROR on v6.15-rc5]
-> > [cannot apply to akpm-mm/mm-everything next-20250509]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Juan-Yescas/mm-A=
-dd-CONFIG_PAGE_BLOCK_ORDER-to-select-page-block-order/20250510-090501
-> > base:   linus/master
-> > patch link:    https://lore.kernel.org/r/20250510010338.3978696-1-jyesc=
-as%40google.com
-> > patch subject: [PATCH v4] mm: Add CONFIG_PAGE_BLOCK_ORDER to select pag=
-e block order
-> > config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/2=
-0250511/202505110035.wtOWnL8o-lkp@intel.com/config)
-> > compiler: powerpc64-linux-gcc (GCC) 14.2.0
-> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
-hive/20250511/202505110035.wtOWnL8o-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202505110035.wtOWnL8o-l=
-kp@intel.com/
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    In file included from include/linux/gfp.h:7,
-> >                     from include/linux/xarray.h:16,
-> >                     from include/linux/list_lru.h:14,
-> >                     from include/linux/fs.h:14,
-> >                     from include/linux/compat.h:17,
-> >                     from arch/powerpc/kernel/asm-offsets.c:12:
-> >>> include/linux/mmzone.h:53:2: error: #error MAX_PAGE_ORDER must be >=
-=3D PAGE_BLOCK_ORDER
-> >       53 | #error MAX_PAGE_ORDER must be >=3D PAGE_BLOCK_ORDER
-> >          |  ^~~~~
-> >    make[3]: *** [scripts/Makefile.build:98: arch/powerpc/kernel/asm-off=
-sets.s] Error 1
->
-> In this config, CONFIG_ARCH_FORCE_MAX_ORDER is set to 8, lower than
-> the default PAGE_BLOCK_ORDER value, 10. I wonder if the error should
-> be changed to ignore CONFIG_PAGE_BLOCK_ORDER when MAX_PAGE_ORDER is
-> set by CONFIG_ARCH_FORCE_MAX_ORDER and give a warning instead.
+On Wed, May 07, 2025 at 10:52:44PM +0900, Alexandre Courbot wrote:
+> FWSEC-FRTS is run with the desired address of the FRTS region as
+> parameter, which we need to compute depending on some hardware
+> parameters.
+> 
+> Do this in a `FbLayout` structure, that will be later extended to
+> describe more memory regions used to boot the GSP.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  drivers/gpu/nova-core/gpu.rs       |   4 ++
+>  drivers/gpu/nova-core/gsp.rs       |   3 ++
+>  drivers/gpu/nova-core/gsp/fb.rs    | 108 +++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/nova-core/nova_core.rs |   1 +
+>  drivers/gpu/nova-core/regs.rs      |  27 ++++++++++
+>  5 files changed, 143 insertions(+)
+> 
+> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+> index 4bf7f72247e5320935a517270b5a0e1ec2becfec..a3d96639706e808305cce66416778d2bf6e7e683 100644
+> --- a/drivers/gpu/nova-core/gpu.rs
+> +++ b/drivers/gpu/nova-core/gpu.rs
+> @@ -7,6 +7,7 @@
+>  use crate::driver::Bar0;
+>  use crate::falcon::{gsp::Gsp, sec2::Sec2, Falcon};
+>  use crate::firmware::Firmware;
+> +use crate::gsp::fb::FbLayout;
+>  use crate::regs;
+>  use crate::util;
+>  use crate::vbios::Vbios;
+> @@ -239,6 +240,9 @@ pub(crate) fn new(
+>  
+>          let _sec2_falcon = Falcon::<Sec2>::new(pdev.as_ref(), spec.chipset, bar, true)?;
+>  
+> +        let fb_layout = FbLayout::new(spec.chipset, bar)?;
+> +        dev_dbg!(pdev.as_ref(), "{:#x?}\n", fb_layout);
+> +
+>          let _bios = Vbios::new(pdev, bar)?;
+>  
+>          Ok(pin_init!(Self {
+> diff --git a/drivers/gpu/nova-core/gsp.rs b/drivers/gpu/nova-core/gsp.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..27616a9d2b7069b18661fc97811fa1cac285b8f8
+> --- /dev/null
+> +++ b/drivers/gpu/nova-core/gsp.rs
+> @@ -0,0 +1,3 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +pub(crate) mod fb;
+> diff --git a/drivers/gpu/nova-core/gsp/fb.rs b/drivers/gpu/nova-core/gsp/fb.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f28ded59469d52daf39e5d19c09efd7bf08fee92
+> --- /dev/null
+> +++ b/drivers/gpu/nova-core/gsp/fb.rs
+> @@ -0,0 +1,108 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +use core::ops::Range;
+> +
+> +use kernel::prelude::*;
+> +
+> +use crate::driver::Bar0;
+> +use crate::gpu::Chipset;
+> +use crate::regs;
+> +
+> +fn align_down(value: u64, align: u64) -> u64 {
+> +    value & !(align - 1)
+> +}
 
-In ARMv8, MAX_PAGE_ORDER is set up by CONFIG_ARCH_FORCE_MAX_ORDER
-and CONFIG_PAGE_BLOCK_ORDER is also set up, so we need to take into account
-CONFIG_PAGE_BLOCK_ORDER. For other architectures, the default will be:
-CONFIG_ARCH_FORCE_MAX_ORDER =3D CONFIG_PAGE_BLOCK_ORDER.
+Can this go in the previous patch, i.e. "rust: num: Add an upward alignment
+helper for usize"?
 
-Is there any valid case where the MAX_PAGE_ORDER needs to be smaller than
-the page block order?
+> +
+> +/// Layout of the GPU framebuffer memory.
+> +///
+> +/// Contains ranges of GPU memory reserved for a given purpose during the GSP bootup process.
+> +#[derive(Debug)]
+> +#[expect(dead_code)]
+> +pub(crate) struct FbLayout {
+> +    pub fb: Range<u64>,
+> +
+> +    pub vga_workspace: Range<u64>,
+> +    pub bios: Range<u64>,
+> +
+> +    pub frts: Range<u64>,
 
-Thanks
-Juan
->
-> >    make[3]: Target 'prepare' not remade because of errors.
-> >    make[2]: *** [Makefile:1275: prepare0] Error 2
-> >    make[2]: Target 'prepare' not remade because of errors.
-> >    make[1]: *** [Makefile:248: __sub-make] Error 2
-> >    make[1]: Target 'prepare' not remade because of errors.
-> >    make: *** [Makefile:248: __sub-make] Error 2
-> >    make: Target 'prepare' not remade because of errors.
-> >
-> >
-> > vim +53 include/linux/mmzone.h
-> >
-> >     46
-> >     47        /*
-> >     48         * The MAX_PAGE_ORDER, which defines the max order of pag=
-es to be allocated
-> >     49         * by the buddy allocator, has to be larger or equal to t=
-he PAGE_BLOCK_ORDER,
-> >     50         * which defines the order for the number of pages that c=
-an have a migrate type
-> >     51         */
-> >     52        #if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
-> >   > 53        #error MAX_PAGE_ORDER must be >=3D PAGE_BLOCK_ORDER
-> >     54        #endif
-> >     55
-> >
-> > --
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
->
->
-> Best Regards,
-> Yan, Zi
+Please remove the empty lines.
+
+> +}
+> +
+> +impl FbLayout {
+> +    pub(crate) fn new(chipset: Chipset, bar: &Bar0) -> Result<Self> {
+> +        let fb = {
+> +            let fb_size = vidmem_size(bar, chipset);
+> +
+> +            0..fb_size
+> +        };
+> +        let fb_len = fb.end - fb.start;
+
+Isn't this the same as fb_size? Why not just write it as
+
+	let fb_size = vidmem_size(bar, chipset);
+	let fb = 0..fb_size;
+
+> +
+> +        let vga_workspace = {
+> +            let vga_base = vga_workspace_addr(bar, fb_len, chipset);
+> +
+> +            vga_base..fb.end
+> +        };
+> +
+> +        let bios = vga_workspace.clone();
+
+Why? And why store the same thing twice in FbLayout? If it's really needed,
+clone it in the constructor below and add a comment why it's the same.
+
+> +
+> +        let frts = {
+> +            const FRTS_DOWN_ALIGN: u64 = 0x20000;
+> +            const FRTS_SIZE: u64 = 0x100000;
+> +            let frts_base = align_down(vga_workspace.start, FRTS_DOWN_ALIGN) - FRTS_SIZE;
+> +
+> +            frts_base..frts_base + FRTS_SIZE
+> +        };
+> +
+> +        Ok(Self {
+> +            fb,
+> +            vga_workspace,
+> +            bios,
+> +            frts,
+> +        })
+> +    }
+> +}
+
+I'd probably wrap those helpers below in
+
+	mod hal { ... }
+
+or even a new file fb/hal.rs to make their purpose obvious.
+
+> +/// Returns `true` if the display is disabled.
+> +fn display_disabled(bar: &Bar0, chipset: Chipset) -> bool {
+> +    if chipset >= Chipset::GA100 {
+> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_MAXWELL::read(bar).display_disabled()
+> +    } else {
+> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_AMPERE::read(bar).display_disabled()
+> +    }
+> +}
+> +
+> +/// Returns the video memory size in bytes.
+> +fn vidmem_size(bar: &Bar0, chipset: Chipset) -> u64 {
+> +    if chipset >= Chipset::GA102 {
+
+Is GA102 intentional or should this also be GA100?
+
+> +        (regs::NV_PGC6_AON_SECURE_SCRATCH_GROUP_42::read(bar).value() as u64) << 20
+
+Why isn't this shift part of the register abstraction?
+
+> +    } else {
+> +        let local_mem_range = regs::NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE::read(bar);
+> +        let size =
+> +            (local_mem_range.lower_mag() as u64) << ((local_mem_range.lower_scale() as u64) + 20);
+
+Same here. Please make this part of the register abstraction as it is done in
+previous patches.
+
+> +
+> +        if local_mem_range.ecc_mode_enabled() {
+> +            size / 16 * 15
+> +        } else {
+> +            size
+> +        }
+> +    }
+> +}
+> +
+> +/// Returns the vga workspace address.
+> +fn vga_workspace_addr(bar: &Bar0, fb_size: u64, chipset: Chipset) -> u64 {
+> +    let base = fb_size - 0x100000;
+
+What's this offset? How do you guarantee that this never underflows?
+
+> +    let vga_workspace_base = if display_disabled(bar, chipset) {
+> +        regs::NV_PDISP_VGA_WORKSPACE_BASE::read(bar)
+> +    } else {
+> +        return base;
+> +    };
+> +
+> +    if !vga_workspace_base.status_valid() {
+> +        return base;
+> +    }
+> +
+> +    let addr = (vga_workspace_base.addr() as u64) << 16;
+
+Where does this shift come from? Shouldn't this be part of the register
+abstraction?
+
+> +    if addr < base {
+> +        fb_size - 0x20000
+
+What's this offset? Can this ever underflow?
+
+> +    } else {
+> +        addr
+> +    }
+> +}
+> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
+> index ff6d0b40c18f36af4c7e2d5c839fdf77dba23321..202e978e56f024de3ae8b178e65b63c2cea244e1 100644
+> --- a/drivers/gpu/nova-core/nova_core.rs
+> +++ b/drivers/gpu/nova-core/nova_core.rs
+> @@ -8,6 +8,7 @@
+>  mod falcon;
+>  mod firmware;
+>  mod gpu;
+> +mod gsp;
+>  mod regs;
+>  mod util;
+>  mod vbios;
+> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+> index b5c6eeb6ed873a06b4aefcb375f4944eb0b20597..15ec9b7e69694ff198b5353d562fc1aff5eefd3f 100644
+> --- a/drivers/gpu/nova-core/regs.rs
+> +++ b/drivers/gpu/nova-core/regs.rs
+> @@ -53,6 +53,12 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
+>      23:0    adr_63_40 as u32;
+>  });
+>  
+> +register!(NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE @ 0x00100ce0 {
+> +    3:0     lower_scale as u8;
+> +    9:4     lower_mag as u8;
+> +    30:30   ecc_mode_enabled as bool;
+> +});
+> +
+>  /* PGC6 */
+>  
+>  register!(NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK @ 0x00118128 {
+> @@ -64,6 +70,27 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
+>      31:0    value as u32;
+>  });
+>  
+> +register!(NV_PGC6_AON_SECURE_SCRATCH_GROUP_42 @ 0x001183a4 {
+> +    31:0    value as u32;
+> +});
+> +
+> +/* PDISP */
+> +
+> +register!(NV_PDISP_VGA_WORKSPACE_BASE @ 0x00625f04 {
+> +    3:3     status_valid as bool;
+> +    31:8    addr as u32;
+> +});
+> +
+> +/* FUSE */
+> +
+> +register!(NV_FUSE_STATUS_OPT_DISPLAY_MAXWELL @ 0x00021c04 {
+> +    0:0     display_disabled as bool;
+> +});
+> +
+> +register!(NV_FUSE_STATUS_OPT_DISPLAY_AMPERE @ 0x00820c04 {
+> +    0:0     display_disabled as bool;
+> +});
+> +
+>  /* PFALCON */
+>  
+>  register!(NV_PFALCON_FALCON_IRQSCLR @ +0x00000004 {
+> 
+> -- 
+> 2.49.0
+> 
