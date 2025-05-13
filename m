@@ -1,109 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5F12550BA;
-	Tue, 13 May 2025 10:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE90B2571A8;
+	Tue, 13 May 2025 10:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131441; cv=none; b=VbPBD1Eoja/tUh+MS7SSM71c+CSj2EzN6dkEaly0IVyb9HZP5cI4TXBcwTVdyTeyG9jP1XycDET6pmNyl/oqBUqqcZ8okP3UDM+KOtndMbyX4Sjgvotm5N9ubNsVqDGPYzMGlq8uDeZ8gSU2Wy0ZrePg/EgPZSAzzghLy1T716I=
+	t=1747131446; cv=none; b=iuTUYzCTDgu49wUH0tlBKyVAmxfF1ku0IWeyIbSNAJMOCLdJW7QBwr5HzU85vc3uiygygsuw2mCIIz+jG4BaXc30dfqoxWakleLKN167B0hruQ1TDepf2wouuz02jfgWYK7DTffBUg+1KIsTOEWffR/B9KYfgA5P+3QS1UcgQA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131441; c=relaxed/simple;
-	bh=hY6JMq7THSkphVKJ2fISJVvqScuKDYpOKS5qPPVopS0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Kv/2nPK2WMp37hpA7VIbNNXaaABqs1OwfAVIJxvYbcgb9eambCq2AafkVaZ41G6dlOGF/cB9GOU5jnSaDrITqgyppP23UDbRNgVsF6UGrlZh5lwBeoX9R3/fMNk5Ve1hFjH5VYIhnS+phYbC4d/zdZqcqa4VEkvM187nMNaECjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDIRe6nL; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747131446; c=relaxed/simple;
+	bh=1gM1XLcPgvrG+ys+qc6lxYqS0BilUpTT/Xx1KYUfe40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YIH3dfXLijufruJU6VWaQd9vnhhOMYzSbs54Zx0+fDzihT0H31aSMXHm/3M2uru757tbKhUYcRZZHB96/gbiVLbDwBrkpGqw+6dtHWMPXYyyBT+8/BzatB3/F9p8wHKfye74ojG360Bf2mdKvUC7tL2DcmTwQx3cBbA9kW2EBLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGeVCKf5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDIRe6nL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747131440; x=1778667440;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=hY6JMq7THSkphVKJ2fISJVvqScuKDYpOKS5qPPVopS0=;
-  b=KDIRe6nLFrFAjexiJsseNsqydHuPDH1DNDU1DeNxqbHSVt0FNwD9IzxQ
-   zxwsWPeK/QM1PkF3W1ODls88dklCJ0JzJ8CwdOGgVH/q/D+yyhhRzROLh
-   1fMSUK0nNpp8g9CxANt06DNnHQlTy86Em8HAX2ddOJJrVJrVx/Xp8YxwC
-   Ixad7OjJuN/rwiDdmFt1azEOiX8e+Qj4kwXGRMmSGdu4eoQhOwfNkEa45
-   6acEGGkc3kDNsll2bOBjUME6YmuOPImPL3Kp/RRAdIZqJ0ej/QQUHmMnJ
-   x7K90mdM9SbGQRHWMAYemMeowmdSK8gTfYEmoEJ3RSai4hunlg2aU6GTJ
-   g==;
-X-CSE-ConnectionGUID: Zg/UqpuSSxucpbj1LVHVvQ==
-X-CSE-MsgGUID: 3hyUFr7ySS+3bwiA85eSSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52770695"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="52770695"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 03:17:19 -0700
-X-CSE-ConnectionGUID: 2OkGwFL6RHmF5mC+jShRFw==
-X-CSE-MsgGUID: /dYZXNteR2qXU5fv6V4NFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="138178180"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO [10.245.246.168]) ([10.245.246.168])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 03:17:17 -0700
-Message-ID: <e7032baf-2742-450a-ab3d-5cb34bd22152@linux.intel.com>
-Date: Tue, 13 May 2025 13:18:28 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGeVCKf5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A91CC4CEED;
+	Tue, 13 May 2025 10:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747131446;
+	bh=1gM1XLcPgvrG+ys+qc6lxYqS0BilUpTT/Xx1KYUfe40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WGeVCKf5BhAzUcwQrQNKICGlkgCNdN3dH/UoO/2nAPKY9brPthNPn8gUGIf70g9YL
+	 TMf8n+iVRsClxw1Va7+bTGdReYr/vKD3+z2XaEWycSj0tjnfF6K4StAwWXmIEGGM2t
+	 CVdPEf7vLcUe9uiUFWZc0RtAZw6TRwAtwYOoPByVro1hqMizQnD0Ffzm5/oIR7K3EF
+	 iAtCQrA0g6iL9FD+8KfsGzSIzrcuK6tU2Q4LczOxUzE7GFd2fCdi51Xx+JUlRDQIB/
+	 yfgUiX7a4O2nR/rDMwFZ5vVlaRR8NV/dAjfW9/SNuHaOJiVEaxK9i6DkmBFFSnQfWq
+	 EoKuvHVSEYLkw==
+Date: Tue, 13 May 2025 11:17:20 +0100
+From: Lee Jones <lee@kernel.org>
+To: daniel.lezcano@linaro.org, alexandre.torgue@foss.st.com,
+	tglx@linutronix.de, Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	jic23@kernel.org, robh@kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, devicetree@vger.kernel.org, wbg@kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	olivier.moysan@foss.st.com
+Subject: Re: (subset) [PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM,
+ IIO, counter, clocksource
+Message-ID: <20250513101720.GH2936510@google.com>
+References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+ <174713127684.4157861.15977616973399970511.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- lgirdwood@gmail.com, broonie@kernel.org
-Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
- guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
- <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
- <c95dec28-b77d-47ff-95a3-d103991180ed@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <c95dec28-b77d-47ff-95a3-d103991180ed@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <174713127684.4157861.15977616973399970511.b4-ty@kernel.org>
 
+On Tue, 13 May 2025, Lee Jones wrote:
 
-On 13/05/2025 09:21, Péter Ujfalusi wrote:
+> On Tue, 29 Apr 2025 14:51:26 +0200, Fabrice Gasnier wrote:
+> > This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+> > clocksource low-power timer (LPTIM) drivers.
+> > This new variant is managed by using a new DT compatible string, hardware
+> > configuration and version registers.
+> > It comes with a slightly updated register set, some new features and new
+> > interconnect signals inside the SoC.
+> > Same feature list as on STM32MP1x is supported currently.
+> > The device tree files add all instances in stm32mp251 dtsi file.
+> > 
+> > [...]
 > 
+> Applied, thanks!
 > 
-> On 12/05/2025 15:59, Pierre-Louis Bossart wrote:
->>
->>> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
->>> Panther Lake, the main difference is the number of DSP cores, memory
->>> and clocking.
->>> It is based on the same ACE3 architecture.
->>>
->>> In SOF the PTL topologies can be re-used for WCL to reduce duplication
->>> of code and topology files. 
->>
->> Is this really true? I thought topology files are precisely the place where a specific pipeline is assigned to a specific core. If the number of cores is lower, then a PTL topology could fail when used on a WCL DSP, no?
-> 
-> Yes, that is true, however for generic (sdw, HDA) topologies this is not
-> an issue as we don't spread the modules (there is no customization per
-> platform).
-> When it comes to product topologies, they can still be named as PTL/WCL
-> if needed and have tailored core use.
-> 
-> Fwiw, in case of soundwire we are moving to a even more generic function
-> topology split, where all SDW device can us generic function fragments
-> stitched together to create a complete topology.
-> Those will have to be compatible with all platforms
+> [1/7] dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
+>       commit: 3f9ce9d0760ad68a9c20167664d026d91da66879
+> [2/7] mfd: stm32-lptimer: add support for stm32mp25
+>       commit: 4f8ceb0302b36c5f78bcc8d0e7cfa2372fba134c
+> [3/7] clocksource: stm32-lptimer: add support for stm32mp25
+>       commit: 5414bc8c57c41038b1994cd21a2cc0b8415c1544
+> [4/7] pwm: stm32-lp: add support for stm32mp25
+>       commit: 3f51b232c1da8e59eb562f1d81533334827a4799
 
-My line of thinking was:
-sof-tgl topologies: TGL (4 cores), TGL-H (2 cores)
-sof-adl topologies: ADL/ADL-N (4 cores), ADL-S (2 cores)
-sof-arl topologies: ARL (3 cores), ARL-S (2 cores)
+In future, please match the subject format with that expected by the
+subsystem.  For this, `git log --oneline -- <subsystem>` is your friend.
 
-the PTL vs WCL is not much of a difference apart from the fact that the
-produce code-name is not a postfixed one:
-sof-ptl topologies: PTL (5 cores), WCL (3 cores)
+I changed them all for you this time.
+
+The above patches have been applied and submitted for build testing.
+Once complete, I'll follow-up with an PR for the other maintainers to
+pull from.
+
+Note to self: ib-mfd-clocksource-pwm-6.16
 
 -- 
-Péter
-
+Lee Jones [李琼斯]
