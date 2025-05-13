@@ -1,565 +1,148 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6748F58
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7632139CF2;
+	Tue, 13 May 2025 19:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162854; cv=none; b=nY45mFrGY1iNXAOMKwKmAy4kmHt/kmA6N4Fu9kbMTup4efAwEBcDwma+a3OX6cFYf3W0AXuYtGEMng/RZPmDxDx0p8ugxHeCEIE4vKhGvAVcUZo0Y2kXUQctAoQEApmj8HqUf2JIjm+4guIEGSkkgk6GKiX7740ASdGPFAEEOh8=
+	t=1747163026; cv=none; b=Ib4UOW/coPXPNae3A+Iqx2LZj3Xd/vUCMORtB1gtBpRpR9DiQiNmYtlffXADxRnPpYjMrwSFSo+mFH0ZPWxoTx8/MaVnONFfz+c8rqpzQhtU847sZxW4yrjo7ZFHBrR3SwhtoKWXKUmKRrGz1f3dLerb7W1AWCFAVqzhTted8yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162854; c=relaxed/simple;
-	bh=M4+9RD18/zXOu/etGZGkDEvhcKUDpM2gBTMbL9UT9NQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cku/dF1LEpD4SU7/j156gqo0MwfRBV9mK6F1vm3oRVx8JdsGhF/XjjqAxc01xSPEs4gyTxLKSPmIIqilX9cwzB9NHQ1dSas3jcItF5EOIBmHoLaFwiU5oJ6i00RJq5q2MEkwUQptimZfIJcko9YlnMWldsIklCtMDPJPVT1aW9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rlahlFo3; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rlahlFo3"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-48b7747f881so63121cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747162851; x=1747767651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4cUc9T2sHnhCYBHfb8AJ1s8PRRU4wPBZSZvKKfXSRps=;
-        b=rlahlFo3wX/2UmqQ5dXgo3HosHbtBmxmdohIjQPSEd3P3uPcR8ka16ejnwG8sangm7
-         kZDFtfAMan4ILmTMJIWlF38+/ddEKSJ9/WzsjRz+w89/RWAibP6tUIrxYQzx9B+Cqi4/
-         NxthpJA/IVvIJZ7+9JRbsMbt1cAfaANJ5f97ZkN2Cb7VHUskpp4+Y/lSmNdj1BR8j6Jg
-         Onvqfgj0DKzguc7VNdXEVGO3YsVFA9IGQSDWj89D9AAKXqFOwVONvyKb86cHtHDAE76i
-         TsyN6yFnVwTS/WDEnV3nFlOG5Gi+e718he87SHY03cucyb0IGlQTCQ0wWZj6uYDkGVgh
-         bWUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747162851; x=1747767651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4cUc9T2sHnhCYBHfb8AJ1s8PRRU4wPBZSZvKKfXSRps=;
-        b=evv/kPfkr5GcxnoWkp/4DThV33QxZJZ/y/hX7UInnL76s6skf58ZPw1096susD1CIz
-         65KwNyhF316qzYCrjCBbzszg810ocT9dSnUe3a60cLaQDfwXDRKcwhLx9c0hdY2VBJeI
-         odZy2p1GMjwQCfglDZ0ptcbKMHQxQgnN60Zb9Woar2syu88tOPOTQnIqnDfc+cWcduly
-         Vd/Xj9JBNWiOtiFOvehKbODr3sy/qEQbv0cWBl3TSiyseGeNmEKiwhe2OMKVBswYSHmm
-         wjho5UOhNgPgjBDShF97WdPkxatZXGplDmo/cZb2jefLWqEvXBZ1XMMXxD7lFuJzO3GQ
-         DbZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnNfkw4SAuUIHo6gQXtXyDhb3lIRVA18adKpAhlyUkxvqAviCoc4KifkYGnMV+/kTTP1MELfgNV09OT5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3PnrCI0+XuS8yXM1RRYuLwURnwCPY9WRcyBoasFnQrxel05BI
-	muCi3a13t3gbs9oZnTzsE3zNi1sWc3FoogIimZ/GjkJ5e9/asfzlEIOaPxGU819UfYPOIONMLxa
-	e9vMspjtz3mAfPVLeOFRWv20FeDMywfssCdjMfbCU
-X-Gm-Gg: ASbGncvTBWu/GdReV5jkN/SQuOayae3zwMqD+QiA2bR+wcrQ4FkbATGD4DrMIiBZGWj
-	9FOZWQRYcHt/EqNQKHBnNvQh2Du3N3F2dlFs98eklQxrDQTLoXHG8Yczc/ySTapI3PL/xsNPEf5
-	1Wy/6nael6msIjRX5Nuz0xJvUXToNlaDjUW+XAdGqVvk5izrmUIKxsYdAl4bk=
-X-Google-Smtp-Source: AGHT+IHIKxFKnYmT7IGRz0JawhPrOlYLXAymk6k9Ex2k3r1NtbxvtVMqrroa2IFQgSnZ6itwt7r5Ft9gYT/iBifR14Q=
-X-Received: by 2002:a05:622a:1985:b0:48a:42fa:78fa with SMTP id
- d75a77b69052e-494960f071emr529341cf.2.1747162850152; Tue, 13 May 2025
- 12:00:50 -0700 (PDT)
+	s=arc-20240116; t=1747163026; c=relaxed/simple;
+	bh=xOX2aEFNLfafziYim7DQ7yE2j/RCERFPYvsKlEZEDY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NO+RtyaN/IGz6CxPkmN9KbaWYNcIYSwyX2ucUmjV23ZD/S0Y4B709WsgUPXuu+Wg+HVd90xPDihdJYpq1ShdYSH7C4doTcirPKcfieHot2KTosex2NKOgANveNI8RTvmroD+MXHJmI6U9iM1SRLuUPh5/gmfjIWMgK6Ib3f/eyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1uEuop-000000006PI-1lSq;
+	Tue, 13 May 2025 19:03:31 +0000
+Date: Tue, 13 May 2025 20:03:27 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [net-next PATCH v4 03/11] net: phylink: introduce internal
+ phylink PCS handling
+Message-ID: <aCOXfw-krDZo9phk@makrotopia.org>
+References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
+ <20250511201250.3789083-4-ansuelsmth@gmail.com>
+ <5d004048-ef8f-42ad-8f17-d1e4d495f57f@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422181729.2792081-1-salomondush@google.com>
-In-Reply-To: <20250422181729.2792081-1-salomondush@google.com>
-From: Salomon Dushimirimana <salomondush@google.com>
-Date: Tue, 13 May 2025 12:00:39 -0700
-X-Gm-Features: AX0GCFt8Xij1w9xEGbNc7rpNW3CsAjKZFjw-fsARhcPUzW4tP9lQ7Ibj2FTl6sU
-Message-ID: <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
-Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
-To: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d004048-ef8f-42ad-8f17-d1e4d495f57f@linux.dev>
 
-Hi James and Martin
+On Tue, May 13, 2025 at 02:18:02PM -0400, Sean Anderson wrote:
+> On 5/11/25 16:12, Christian Marangi wrote:
+> > Introduce internal handling of PCS for phylink. This is an alternative
+> > to .mac_select_pcs that moves the selection logic of the PCS entirely to
+> > phylink with the usage of the supported_interface value in the PCS
+> > struct.
+> > 
+> > MAC should now provide an array of available PCS in phylink_config in
+> > .available_pcs and fill the .num_available_pcs with the number of
+> > elements in the array. MAC should also define a new bitmap,
+> > pcs_interfaces, in phylink_config to define for what interface mode a
+> > dedicated PCS is required.
+> > 
+> > On phylink_create() this array is parsed and a linked list of PCS is
+> > created based on the PCS passed in phylink_config.
+> > Also the supported_interface value in phylink struct is updated with the
+> > new supported_interface from the provided PCS.
+> > 
+> > On phylink_start() every PCS in phylink PCS list gets attached to the
+> > phylink instance. This is done by setting the phylink value in
+> > phylink_pcs struct to the phylink instance.
+> > 
+> > On phylink_stop(), every PCS in phylink PCS list is detached from the
+> > phylink instance. This is done by setting the phylink value in
+> > phylink_pcs struct to NULL.
+> > 
+> > phylink_validate_mac_and_pcs(), phylink_major_config() and
+> > phylink_inband_caps() are updated to support this new implementation
+> > with the PCS list stored in phylink.
+> > 
+> > They will make use of phylink_validate_pcs_interface() that will loop
+> > for every PCS in the phylink PCS available list and find one that supports
+> > the passed interface.
+> > 
+> > phylink_validate_pcs_interface() applies the same logic of .mac_select_pcs
+> > where if a supported_interface value is not set for the PCS struct, then
+> > it's assumed every interface is supported.
+> > 
+> > A MAC is required to implement either a .mac_select_pcs or make use of
+> > the PCS list implementation. Implementing both will result in a fail
+> > on MAC/PCS validation.
+> > 
+> > phylink value in phylink_pcs struct with this implementation is used to
+> > track from PCS side when it's attached to a phylink instance. PCS driver
+> > will make use of this information to correctly detach from a phylink
+> > instance if needed.
+> > 
+> > The .mac_select_pcs implementation is not changed but it's expected that
+> > every MAC driver migrates to the new implementation to later deprecate
+> > and remove .mac_select_pcs.
+> 
+> This introduces a completely parallel PCS selection system used by a
+> single driver. I don't think we want the maintenance burden and
+> complexity of two systems in perpetuity. So what is your plan for
+> conversion of existing drivers to your new system?
 
-I wanted to follow up on this patch! It's a decently sized patch, so
-it might take some time, but I'd love to hear your thoughts and
-address any feedback!!
+Moving functionality duplicated in many drivers to a common shared
+implementation is nothing unsual.
 
-Thank you,
-Salomon Dushimirimana
+While this series proposes the new mechanism for Airoha SoC, they are
+immediately useful (and long awaited) also for MediaTek and Qualcomm
+SoCs.
 
-Salomon Dushimirimana
+Also in the series you posted at least the macb driver (in "[net-next
+PATCH v4 09/11] net: macb: Move most of mac_config to  mac_prepare")
+would benefit from that shared implementation, as all it does in it's
+mac_select_pcs is selecting the PCS by a given phy_interface_t, which is
+what most Ethernet drivers which use more than one PCS are doing in
+their implementatio of mac_select_pcs().
+
+Also axienet_mac_select_pcs() from "[net-next PATCH v4 08/11] net:
+axienet: Convert to use PCS subsystem" could obviously very easily be
+mirated to use the phylink-internal handling of PCS selection.
 
 
-On Tue, Apr 22, 2025 at 11:17=E2=80=AFAM Salomon Dushimirimana
-<salomondush@google.com> wrote:
->
-> Adds a new function scsi_emit_error(), called when a command is placed
-> back on the command queue for retry by the error handler, or when a
-> command completes.
->
-> The scsi_emit_error() function uses the kobject_uevent_env() mechanism
-> to emit a KOBJ_CHANGE event with details about the SCSI error.
->
-> The event has the following key/value pairs set in the environment:
-> - SDEV_ERROR: Always set to 1, to distinguish disk errors
->   from media change events, which have SDEV_MEDIA_CHANGE=3D1
-> - SDEV_ERROR_RETRY: 0 if this is an error in the completion
->   path in scsi_io_completion(), 1 if the command is going to be
->   placed back on the queue
-> - SDEV_ERROR_RESULT: Host byte of result code
-> - SDEV_ERROR_SK: Sense key
-> - SDEV_ERROR_ASC: Additional sense code
-> - SDEV_ERROR_ASCQ: Additional sense code qualifier
->
-> Error events are filtered under specific conditions:
-> - DID_BAD_TARGET: Avoids uevent storms if a removed device is repeatedly
->   accessed and is not responding.
-> - DID_IMM_RETRY: Avoids reporting temporary transport errors where the
->   command is immediately retried. This is a temporary error that should
->   not be forwarded to userspace.
->
-> scsi_emit_error() can be invoked from vairous atomic contexts, where
-> sleeping is not permitted, so GFP_ATOMIC is used to ensure allocations
-> can safely occur in these contexts.
->
-> A per-device ratelimiting mechanism is added to prevent flooding
-> userspace during persistent error conditions. The ratelimit is checked
-> before scheduling the event work.
->
-> Signed-off-by: Salomon Dushimirimana <salomondush@google.com>
-> ---
->  drivers/scsi/Kconfig       |  17 +++++++
->  drivers/scsi/scsi_error.c  |  66 ++++++++++++++++++++++++
->  drivers/scsi/scsi_lib.c    | 100 ++++++++++++++++++++++++++++++++-----
->  drivers/scsi/scsi_priv.h   |   1 +
->  drivers/scsi/scsi_scan.c   |   4 ++
->  drivers/scsi/scsi_sysfs.c  |   2 +
->  include/scsi/scsi_device.h |  22 +++++++-
->  7 files changed, 199 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-> index 5a3c670aec27d..36a156ad6afd2 100644
-> --- a/drivers/scsi/Kconfig
-> +++ b/drivers/scsi/Kconfig
-> @@ -240,6 +240,23 @@ config SCSI_SCAN_ASYNC
->           Note that this setting also affects whether resuming from
->           system suspend will be performed asynchronously.
->
-> +config SCSI_ERROR_UEVENT
-> +       bool "Enable SCSI error uevent reporting"
-> +       depends on SCSI
-> +       default n
-> +       help
-> +         If enabled, the SCSI mid-layer will emit kobject uevents when
-> +         SCSI commands fail or are retried by the error handler. These
-> +         events provide details about the error, including the command
-> +         result (host byte), sense key (SK), additional sense code (ASC)=
-,
-> +         additional sense code qualifier (ASCQ), and whether the command
-> +         is being retried (SDEV_ERROR_RETRY=3D1) or finally failing beca=
-use
-> +         of error in completion path (SDEV_ERROR_RETRY=3D0).
-> +
-> +         Events are filtered for certain conditions (e.g., DID_BAD_TARGE=
-T,
-> +         DID_IMM_RETRY) and are also ratelimited per device to prevent
-> +         excessive noise.
-> +
->  config SCSI_PROTO_TEST
->         tristate "scsi_proto.h unit tests" if !KUNIT_ALL_TESTS
->         depends on SCSI && KUNIT
-> diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-> index 376b8897ab90a..327a012f328ff 100644
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -2227,6 +2227,9 @@ void scsi_eh_flush_done_q(struct list_head *done_q)
->                                 scmd_printk(KERN_INFO, scmd,
->                                              "%s: flush retry cmd\n",
->                                              current->comm));
-> +#ifdef CONFIG_SCSI_ERROR_UEVENT
-> +                               scsi_emit_error(scmd);
-> +#endif
->                                 scsi_queue_insert(scmd, SCSI_MLQUEUE_EH_R=
-ETRY);
->                                 blk_mq_kick_requeue_list(sdev->request_qu=
-eue);
->                 } else {
-> @@ -2595,3 +2598,66 @@ bool scsi_get_sense_info_fld(const u8 *sense_buffe=
-r, int sb_len,
->         }
->  }
->  EXPORT_SYMBOL(scsi_get_sense_info_fld);
-> +
-> +/**
-> + * scsi_emit_error - Emit an error event.
-> + *
-> + * May be called from scsi_softirq_done(). Cannot sleep.
-> + *
-> + * @cmd: the scsi command
-> + */
-> +void scsi_emit_error(struct scsi_cmnd *cmd)
-> +{
-> +       struct scsi_sense_hdr sshdr;
-> +       u8 result, sk, asc, ascq;
-> +       int sense_valid;
-> +       int retry;
-> +
-> +       if (unlikely(cmd->result)) {
-> +               result =3D host_byte(cmd->result);
-> +               if (result =3D=3D DID_BAD_TARGET ||
-> +                   result =3D=3D DID_IMM_RETRY)
-> +                       /*
-> +                        * Do not report an error upstream, the situation=
- is
-> +                        * not stable. Will report once the IO really fai=
-ls.
-> +                        */
-> +                       return;
-> +               sk =3D 0;
-> +               asc =3D 0;
-> +               ascq =3D 0;
-> +
-> +               if (result =3D=3D DID_OK) {
-> +                       sense_valid =3D scsi_command_normalize_sense(cmd,=
- &sshdr);
-> +                       if (!sense_valid) {
-> +                               /*
-> +                                * With libata, this happens when the err=
-or
-> +                                * handler is called but the error causes=
- are
-> +                                * not identified yet.
-> +                                */
-> +                               return;
-> +                       }
-> +
-> +                       sk =3D sshdr.sense_key;
-> +                       asc =3D sshdr.asc;
-> +                       ascq =3D sshdr.ascq;
-> +
-> +                       /*
-> +                        * asc =3D=3D 0 && ascq =3D=3D 0x1D means "ATA pa=
-ss through
-> +                        * information available"; this is not an error, =
-but
-> +                        * rather the driver returning some data.
-> +                        */
-> +                       if (sk =3D=3D NO_SENSE ||
-> +                           (sk =3D=3D RECOVERED_ERROR &&
-> +                            asc =3D=3D 0x0 &&
-> +                            ascq =3D=3D 0x1D)) {
-> +                               return;
-> +                       }
-> +               }
-> +
-> +               retry =3D (!scsi_noretry_cmd(cmd) &&
-> +                        cmd->retries > 0 &&
-> +                        cmd->retries <=3D cmd->allowed);
-> +               sdev_evt_send_error(cmd->device, GFP_ATOMIC,
-> +                                   retry, result, sk, asc, ascq);
-> +       }
-> +}
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index 0d29470e86b0b..2a2fae00e9f1c 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -1029,6 +1029,9 @@ static int scsi_io_completion_nz_result(struct scsi=
-_cmnd *cmd, int result,
->                 result =3D 0;
->                 *blk_statp =3D BLK_STS_OK;
->         }
-> +#ifdef CONFIG_SCSI_ERROR_UEVENT
-> +       scsi_emit_error(cmd);
-> +#endif
->         return result;
->  }
->
-> @@ -1544,6 +1547,9 @@ static void scsi_complete(struct request *rq)
->                 scsi_finish_command(cmd);
->                 break;
->         case NEEDS_RETRY:
-> +#ifdef CONFIG_SCSI_ERROR_UEVENT
-> +               scsi_emit_error(cmd);
-> +#endif
->                 scsi_queue_insert(cmd, SCSI_MLQUEUE_EH_RETRY);
->                 break;
->         case ADD_TO_MLQUEUE:
-> @@ -2559,43 +2565,77 @@ EXPORT_SYMBOL(scsi_device_set_state);
->   */
->  static void scsi_evt_emit(struct scsi_device *sdev, struct scsi_event *e=
-vt)
->  {
-> -       int idx =3D 0;
-> -       char *envp[3];
-> +       struct kobj_uevent_env *env;
-> +
-> +       env =3D kzalloc(sizeof(struct kobj_uevent_env), GFP_KERNEL);
-> +       if (!env)
-> +               return;
->
->         switch (evt->evt_type) {
->         case SDEV_EVT_MEDIA_CHANGE:
-> -               envp[idx++] =3D "SDEV_MEDIA_CHANGE=3D1";
-> +               if (add_uevent_var(env, "SDEV_MEDIA_CHANGE=3D1"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_INQUIRY_CHANGE_REPORTED:
->                 scsi_rescan_device(sdev);
-> -               envp[idx++] =3D "SDEV_UA=3DINQUIRY_DATA_HAS_CHANGED";
-> +               if (add_uevent_var(env, "SDEV_UA=3DINQUIRY_DATA_HAS_CHANG=
-ED"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_CAPACITY_CHANGE_REPORTED:
-> -               envp[idx++] =3D "SDEV_UA=3DCAPACITY_DATA_HAS_CHANGED";
-> +               if (add_uevent_var(env, "SDEV_UA=3DCAPACITY_DATA_HAS_CHAN=
-GED"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED:
-> -              envp[idx++] =3D "SDEV_UA=3DTHIN_PROVISIONING_SOFT_THRESHOL=
-D_REACHED";
-> +               if (add_uevent_var(env,
-> +                       "SDEV_UA=3DTHIN_PROVISIONING_SOFT_THRESHOLD_REACH=
-ED"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_MODE_PARAMETER_CHANGE_REPORTED:
-> -               envp[idx++] =3D "SDEV_UA=3DMODE_PARAMETERS_CHANGED";
-> +               if (add_uevent_var(env, "SDEV_UA=3DMODE_PARAMETERS_CHANGE=
-D"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_LUN_CHANGE_REPORTED:
-> -               envp[idx++] =3D "SDEV_UA=3DREPORTED_LUNS_DATA_HAS_CHANGED=
-";
-> +               if (add_uevent_var(env,
-> +                       "SDEV_UA=3DREPORTED_LUNS_DATA_HAS_CHANGED"))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
-> -               envp[idx++] =3D "SDEV_UA=3DASYMMETRIC_ACCESS_STATE_CHANGE=
-D";
-> +               if (add_uevent_var(env,
-> +                       "SDEV_UA=3DASYMMETRIC_ACCESS_STATE_CHANGED"))
-> +                       goto exit;
-> +               break;
-> +       case SDEV_EVT_ERROR:
-> +               if (add_uevent_var(env, "SDEV_ERROR=3D1"))
-> +                       goto exit;
-> +               if (add_uevent_var(env, "SDEV_ERROR_RETRY=3D%u",
-> +                                       evt->error_evt.retry))
-> +                       goto exit;
-> +               if (add_uevent_var(env, "SDEV_ERROR_RESULT=3D%u",
-> +                                       evt->error_evt.result))
-> +                       goto exit;
-> +               if (add_uevent_var(env, "SDEV_ERROR_SK=3D%u",
-> +                                       evt->error_evt.sk))
-> +                       goto exit;
-> +               if (add_uevent_var(env, "SDEV_ERROR_ASC=3D%u",
-> +                                       evt->error_evt.asc))
-> +                       goto exit;
-> +               if (add_uevent_var(env, "SDEV_ERROR_ASCQ=3D%u",
-> +                                       evt->error_evt.ascq))
-> +                       goto exit;
->                 break;
->         case SDEV_EVT_POWER_ON_RESET_OCCURRED:
-> -               envp[idx++] =3D "SDEV_UA=3DPOWER_ON_RESET_OCCURRED";
-> +               if (add_uevent_var(env, "SDEV_UA=3DPOWER_ON_RESET_OCCURRE=
-D"))
-> +                       goto exit;
->                 break;
->         default:
->                 /* do nothing */
->                 break;
->         }
->
-> -       envp[idx++] =3D NULL;
-> +       kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, env->env=
-p);
->
-> -       kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, envp);
-> +exit:
-> +       kfree(env);
->  }
->
->  /**
-> @@ -2693,6 +2733,7 @@ struct scsi_event *sdev_evt_alloc(enum scsi_device_=
-event evt_type,
->         case SDEV_EVT_LUN_CHANGE_REPORTED:
->         case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
->         case SDEV_EVT_POWER_ON_RESET_OCCURRED:
-> +       case SDEV_EVT_ERROR:
->         default:
->                 /* do nothing */
->                 break;
-> @@ -2724,6 +2765,41 @@ void sdev_evt_send_simple(struct scsi_device *sdev=
-,
->  }
->  EXPORT_SYMBOL_GPL(sdev_evt_send_simple);
->
-> +/**
-> + *     sdev_evt_send_error - send error event to uevent thread
-> + *     @sdev: scsi_device event occurred on
-> + *     @gfpflags: GFP flags for allocation
-> + *     @retry: if non-zero, command failed, will retry, otherwise final =
-attempt
-> + *     @result: host byte of result
-> + *     @sk: sense key
-> + *     @asc: additional sense code
-> + *     @ascq: additional sense code qualifier
-> + *
-> + *     Assert scsi device error event asynchronously.
-> + */
-> +void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags,
-> +                        u8 retry, u8 result, u8 sk, u8 asc, u8 ascq)
-> +{
-> +       struct scsi_event *evt;
-> +
-> +       evt =3D sdev_evt_alloc(SDEV_EVT_ERROR, gfpflags);
-> +       if (!evt) {
-> +               sdev_printk(KERN_ERR, sdev, "error event eaten due to OOM=
-: retry=3D%u result=3D%u sk=3D%u asc=3D%u ascq=3D%u\n",
-> +                           retry, result, sk, asc, ascq);
-> +               return;
-> +       }
-> +
-> +       evt->error_evt.retry =3D retry;
-> +       evt->error_evt.result =3D result;
-> +       evt->error_evt.sk =3D sk;
-> +       evt->error_evt.asc =3D asc;
-> +       evt->error_evt.ascq =3D ascq;
-> +
-> +       if (___ratelimit(&sdev->error_ratelimit, "SCSI error"))
-> +               sdev_evt_send(sdev, evt);
-> +}
-> +EXPORT_SYMBOL_GPL(sdev_evt_send_error);
-> +
->  /**
->   *     scsi_device_quiesce - Block all commands except power management.
->   *     @sdev:  scsi device to quiesce.
-> diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
-> index 9fc397a9ce7a4..8519b563e2feb 100644
-> --- a/drivers/scsi/scsi_priv.h
-> +++ b/drivers/scsi/scsi_priv.h
-> @@ -101,6 +101,7 @@ int scsi_eh_get_sense(struct list_head *work_q,
->                       struct list_head *done_q);
->  bool scsi_noretry_cmd(struct scsi_cmnd *scmd);
->  void scsi_eh_done(struct scsi_cmnd *scmd);
-> +extern void scsi_emit_error(struct scsi_cmnd *scmd);
->
->  /* scsi_lib.c */
->  extern void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmn=
-d *cmd);
-> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-> index 4833b8fe251b8..5c311dfc501c3 100644
-> --- a/drivers/scsi/scsi_scan.c
-> +++ b/drivers/scsi/scsi_scan.c
-> @@ -310,6 +310,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scs=
-i_target *starget,
->         mutex_init(&sdev->inquiry_mutex);
->         INIT_WORK(&sdev->event_work, scsi_evt_thread);
->         INIT_WORK(&sdev->requeue_work, scsi_requeue_run_queue);
-> +       ratelimit_state_init(&sdev->error_ratelimit, 5 * HZ, 10);
->
->         sdev->sdev_gendev.parent =3D get_device(&starget->dev);
->         sdev->sdev_target =3D starget;
-> @@ -363,6 +364,9 @@ static struct scsi_device *scsi_alloc_sdev(struct scs=
-i_target *starget,
->
->         scsi_change_queue_depth(sdev, depth);
->
-> +       /* All devices support error events */
-> +       set_bit(SDEV_EVT_ERROR, sdev->supported_events);
-> +
->         scsi_sysfs_device_initialize(sdev);
->
->         if (shost->hostt->sdev_init) {
-> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-> index d772258e29ad2..20a537490e9f2 100644
-> --- a/drivers/scsi/scsi_sysfs.c
-> +++ b/drivers/scsi/scsi_sysfs.c
-> @@ -1025,6 +1025,7 @@ DECLARE_EVT(capacity_change_reported, CAPACITY_CHAN=
-GE_REPORTED)
->  DECLARE_EVT(soft_threshold_reached, SOFT_THRESHOLD_REACHED_REPORTED)
->  DECLARE_EVT(mode_parameter_change_reported, MODE_PARAMETER_CHANGE_REPORT=
-ED)
->  DECLARE_EVT(lun_change_reported, LUN_CHANGE_REPORTED)
-> +DECLARE_EVT(error, ERROR)
->
->  static ssize_t
->  sdev_store_queue_depth(struct device *dev, struct device_attribute *attr=
-,
-> @@ -1345,6 +1346,7 @@ static struct attribute *scsi_sdev_attrs[] =3D {
->         REF_EVT(soft_threshold_reached),
->         REF_EVT(mode_parameter_change_reported),
->         REF_EVT(lun_change_reported),
-> +       REF_EVT(error),
->         NULL
->  };
->
-> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-> index 68dd49947d041..5485d3b5853e2 100644
-> --- a/include/scsi/scsi_device.h
-> +++ b/include/scsi/scsi_device.h
-> @@ -64,7 +64,8 @@ enum scsi_scan_mode {
->  };
->
->  enum scsi_device_event {
-> -       SDEV_EVT_MEDIA_CHANGE   =3D 1,    /* media has changed */
-> +       SDEV_EVT_MEDIA_CHANGE   =3D 0,    /* media has changed */
-> +       SDEV_EVT_ERROR          =3D 1,    /* command failed */
->         SDEV_EVT_INQUIRY_CHANGE_REPORTED,               /* 3F 03  UA repo=
-rted */
->         SDEV_EVT_CAPACITY_CHANGE_REPORTED,              /* 2A 09  UA repo=
-rted */
->         SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED,       /* 38 07  UA repo=
-rted */
-> @@ -79,6 +80,19 @@ enum scsi_device_event {
->         SDEV_EVT_MAXBITS        =3D SDEV_EVT_LAST + 1
->  };
->
-> +struct scsi_error_event {
-> +       /* A retry event */
-> +       u8 retry;
-> +       /* Host byte */
-> +       u8 result;
-> +       /* Sense key */
-> +       u8 sk;
-> +       /* Additional sense code */
-> +       u8 asc;
-> +       /* Additional sense code qualifier */
-> +       u8 ascq;
-> +};
-> +
->  struct scsi_event {
->         enum scsi_device_event  evt_type;
->         struct list_head        node;
-> @@ -86,6 +100,9 @@ struct scsi_event {
->         /* put union of data structures, for non-simple event types,
->          * here
->          */
-> +       union {
-> +               struct scsi_error_event error_evt;
-> +       };
->  };
->
->  /**
-> @@ -269,6 +286,7 @@ struct scsi_device {
->                                 sdev_dev;
->
->         struct work_struct      requeue_work;
-> +       struct ratelimit_state  error_ratelimit;
->
->         struct scsi_device_handler *handler;
->         void                    *handler_data;
-> @@ -474,6 +492,8 @@ extern struct scsi_event *sdev_evt_alloc(enum scsi_de=
-vice_event evt_type,
->  extern void sdev_evt_send(struct scsi_device *sdev, struct scsi_event *e=
-vt);
->  extern void sdev_evt_send_simple(struct scsi_device *sdev,
->                           enum scsi_device_event evt_type, gfp_t gfpflags=
-);
-> +extern void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags=
-,
-> +       u8 retry, u8 result, u8 sk, u8 asc, u8 ascq);
->  extern int scsi_device_quiesce(struct scsi_device *sdev);
->  extern void scsi_device_resume(struct scsi_device *sdev);
->  extern void scsi_target_quiesce(struct scsi_target *);
-> --
-> 2.49.0.805.g082f7c87e0-goog
->
+> 
+> DSA drivers typically have different PCSs for each port. At the moment
+> these are selected with mac_select_pcs, allowing the use of a single
+> phylink_config for each port. If you need to pass PCSs through
+> phylink_config then each port will needs its own config. This may prove
+> difficult to integrate with the existing API.
+
+This might be a misunderstanding. Also here there is only a single
+phylink_config for each MAC or DSA port, just instead of having many
+more or less identical implementations of .mac_select_pcs, this
+functionality is moved into phylink. As a nice side-effect that also
+makes managing the life-cycle of the PCS more easy, so we won't need all
+the wrappers for all the PCS OPs.
