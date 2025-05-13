@@ -1,97 +1,226 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C1B28E564
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8762424397A;
+	Tue, 13 May 2025 13:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142031; cv=none; b=EyvLbkdnhqHE8ISkZWQfN5Zjab0wQ8U3OkSUwY2dAJ7vzbv6YziWJVxySU/zfxN+nWBs/PP9aCk5t10Y3HnOLoBYtpVHfFyOkqymCv3/8+SapEHVrNKj1gRwdJ9aDwbnowjkCUzQRrMsX9ljwmN5Uf5YCY67JuIlSpa7ynQDnKI=
+	t=1747142047; cv=none; b=rdIg0iToyxck8TqLa3d3YOmK/NqOoCfjrZ/ArJiivzmna90yxtMRkY4b5zkXPQBAsMkq0n/alyy2KlFKL9FkySrUrRz47XDz68hD5oQpCDr2d6T75ZuCoe1GW1JAlRw31FPQ3bTUIAt078GIChSXebHoZg1QrsA37y5uGZeIW80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142031; c=relaxed/simple;
-	bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t+ncEkC/AE7qs1NuZh1n4ZRusjyP8FGfyGdnUj7VvdSXcWtliYjP5Yo3uIGY/Knl1Q7EXPL7xvs/kYZ5PnXvCV1fgLz1FT5ocq32WtNrp+dT5jF4C0Nv3rwOEOmIQ9RKOU/l6L6f9ZsQcav0JAomE2TBN034Gs+5VXgIUe0fqoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QLDzxz92; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747142047; c=relaxed/simple;
+	bh=9qYzq2shSFDDkR3f0FiqWCgsrvJDozSPoDj5zHqfdwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KEVTbkriFnVCcquHC20A9WRMLNknXbxlY8jHTkY9i99svpa7Ykaysu0d+wnAMGISCYPszPkXRKmw1lG8WwQwut/XWUZb5pcIF/UKn7xn+ogTGfIFvNAGd6fkfo8tNzbkTxaX98curuifamNO2oPIKsBjiYzqb10Xz59JC232LOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K3WTJ+B5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QLDzxz92"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54b1095625dso6688720e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747142027; x=1747746827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
-        b=QLDzxz924SVUm0i5grfkNxKCa4GOuzB++lKlQnn2y0A7NDARziTCf3cjsl0QvBPp1z
-         POl0WMA2Pt8z7TkRroAaFfRmCSHgzm++WY/mWDC1K/M0YlM6+MQMGf/H5Kob6VLcoVAz
-         3SdQlKw7Ww6V94ZjnudJ/VQd/zXU8r/e3p8x+SAVK/uRiQpSeTkuXBMOxLFOX4l9mgU+
-         MexX4fzgmWOq1b2GCeOWH8Gop71uXTpKcOSVSNkQvB97zE2+Tci8CB/2JBX5do8afgPU
-         YIxYihcBMApkiTydTF8/FQ0uPkaFXdmLHOTAcIoApNJfyVIvRYKvCmtAW1v9MepDAsQp
-         /9Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142027; x=1747746827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FH3BY6eCD7Lez7c7QuOQpeui3zGud0bNV62j7nTi9Ak=;
-        b=rakC8otTSBDkVo9v5W6InMUzS4hSwIja5VkGcSDMAj6eYu16YBKkpsm0Vq8b3kw0sY
-         p6G0Jdbe92+zT7nycRsl7IIghn7fkuLFWq4cqcEwOlT32+lkLCiYAercZx3aUbka03aX
-         hZiAbluw+QBTujcin3o4owkmkmNgnEQJKMFcy832be49BNv9ehvmGBSiGgU/cGfTXHMZ
-         ROdjHqV5gP8uYkuySlOsDvEeFEHUcQWgON2qV0G/GWM2WtJQF+TvK2LyXkLlNf6HHWL8
-         T9oOH5byfblI1jONwldwuY2l2PVZtoaKnUsqKvsnPo65BYmK65zhFp93kYGmvPHhnmQ2
-         xOyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXzdk21UiW74mTdri5iLEGjFofti6ElBweOcehKdHKURxZrxFOezkme0QnDuKNpWMKOMkA+TNOdVla0ZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwMKKAkg4zwe+NSXkpw+37BAG6m63YyZVgJvc6GfcBFERBwLWh
-	kY9U+BRnwyhOA5kHxKuwedSDaYuDUHmjcjItlz97FHpCNoaNN/KgNrIDHKWjDCyNAFb1iinENsI
-	aWvJgQ5KzbwzoQa/vrio5lua9sxsZ+GUwtFzGlg==
-X-Gm-Gg: ASbGnctqVotzMOOUJFEAn6TEipyX7spJdhGZE7fbDdBy28e0Wh6yGZY2j7iB9bfzQbw
-	uekrOow4kTEoX8RjCIZ6dEtnJ1oVu9WCC7O4Ci6evOQeY2HRfAFgl/XE1+Fu8H3HiTzSncdarn9
-	ibeuu4UF0wZAXVn+bv07pGfJg4z6ftwru5
-X-Google-Smtp-Source: AGHT+IErd1zECtSWmiueqkwD4t5q1dDN1qHnbcMn1cncmM9gOi/5w9TSouYOqYoqxFwgSSQ9wh2aWvhxApgZaMeuOic=
-X-Received: by 2002:a05:6512:640b:b0:549:8b24:989d with SMTP id
- 2adb3069b0e04-54fc6764426mr5389978e87.0.1747142027286; Tue, 13 May 2025
- 06:13:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K3WTJ+B5"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D6PeRE022722;
+	Tue, 13 May 2025 13:14:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jF6x9fttJR2HbAsgmsB6mkGPnwiACPSiXe3vG6c/vdk=; b=K3WTJ+B5PxbuY0ln
+	t4VMVCjdRPVz0vKvcptH8IpbffceJ3M4pVskKm0Bjvc6uofAje4Vj3xSx8Wh34gR
+	+xh3SNdkKWe9qmJlQHedewdL3l7TxunfNJ6tsTlk2Rz6phahFWCPByUQ2UN2Ln/h
+	ReqoNhhBW2ravjdfL2QvGLHHESsEXn3AfXfNxSOYxzNXqf/ZQbQwpmje2DwbLY8D
+	6LxoxfGigPWswgi6VOGofdYIzyY2ax4oWae3+yH6iYnqXUbF7o9TQ9ULd43Tsaxk
+	6uFHfPOr15sYptGZUAxxyuDBlMYoHwql++tqjFkCnByUcQXZNHiwrJ2RAtZXtjqX
+	u57qkQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46kdsp410g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 13:14:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54DDDxl7007677
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 13:13:59 GMT
+Received: from [10.50.52.254] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 13 May
+ 2025 06:13:56 -0700
+Message-ID: <7e6fc439-b948-6777-0a70-a8ea58b1f7bd@quicinc.com>
+Date: Tue, 13 May 2025 18:43:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-gpio-v1-0-639377c98288@nxp.com>
-In-Reply-To: <20250509-gpio-v1-0-639377c98288@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 15:13:36 +0200
-X-Gm-Features: AX0GCFtipyG-m8FrUnzYpmqYR7dxFkSgGJS5zK3dL1i48JJGkPJ7bD5UcE0Rkes
-Message-ID: <CACRpkdaDiJDoyW18cAsb1JcJvFvrweWKtUbO0=pUtGKbz1GtCw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/9] gpio: make irq_chip immutable
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Ray Jui <rjui@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Keerthy <j-keerthy@ti.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 1/2] media: venus: fix OOB read issue due to double
+ read
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Vedang Nagar
+	<quic_vnagar@quicinc.com>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
+ <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
+ <79691e26-cddb-47d2-9112-deae3f9aaee6@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <79691e26-cddb-47d2-9112-deae3f9aaee6@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: JMjbAZVqLz-G-p7IdoGID5YPt3VsJPva
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEyNSBTYWx0ZWRfX9sd+Zxee6WqQ
+ xJ0dxltk8gIBWP8tw1jbZLKAjOv74DAHc18S3x09MXNVQubWQJ6kZwFjt3whA6mBQiFuQ+USoYF
+ fS3Iz7DZLMgpHaoxvAOBrmfVQefKCwXIJZ3yCuBRh3MXTy6uocda4Atel/Dj4EBlv3iswrRUKJb
+ eq/igw0pidDCH8Vakkf1n1MP3jo9Y/dlkpTKa+HegO8mL1x479+L2qQoPItuH3tF9flywVr21eq
+ v2pEYG5j8akKxPCKZBAAxR7se78AHIJSQf6mSzPUWuAgsngoR8NNEmdWc4cYJrrUBAq8Y1DZ9Yp
+ 2wykWJzZzpgPnO8Vdn1bk/qT5HFRI1xY8HbtGCGWuuoqGhre911TtqFn2Kc4RVIjzSgfGF8ojQQ
+ g9CoNE1q/RCcrRslzSESMIW9BJSnWLjFvLw0v8AtaYcvXi5dBFHK8WADAG59icoaoNM2hEtP
+X-Authority-Analysis: v=2.4 cv=TrfmhCXh c=1 sm=1 tr=0 ts=68234598 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=RWc0MnvpR_tpw4Xja0UA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: JMjbAZVqLz-G-p7IdoGID5YPt3VsJPva
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 clxscore=1015 spamscore=0 malwarescore=0 mlxlogscore=753
+ suspectscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130125
 
-On Fri, May 9, 2025 at 6:47=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
 
-> This might be a bit late to post this patchset, since it is almost rc6,
-> but no rush here. Not expect this patchset be in 6.16.
 
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 3/4/2025 7:15 PM, Bryan O'Donoghue wrote:
+> On 15/02/2025 17:19, Vedang Nagar wrote:
+>> During message queue read, the address is being read twice
+>> from the shared memory. The first read is validated against
+>> the size of the packet, however the second read is not
+>> being validated. Therefore, it's possible for firmware to
+>> modify the value to a bigger invalid value which can lead
+>> to OOB read access issue while reading the packet.
+>> Added fix to reupdate the size of the packet which was
+>> read for the first time.
+>>
+>> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
+>> ---
+>>   drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c
+>> b/drivers/media/platform/qcom/venus/hfi_venus.c
+>> index
+>> f9437b6412b91c2483670a2b11f4fd43f3206404..c124db8ac79d18f32289a690ee82145dc93daee6 100644
+>> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+>> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+>> @@ -298,6 +298,7 @@ static int venus_read_queue(struct venus_hfi_device
+>> *hdev,
+>>               memcpy(pkt, rd_ptr, len);
+>>               memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+>>           }
+>> +        *(u32 *)pkt = dwords << 2;
+>>       } else {
+>>           /* bad packet received, dropping */
+>>           new_rd_idx = qhdr->write_idx;
+>>
+> 
+> This is confusing - where is the read
+> 
+> Your previous code
+> 
+> https://lore.kernel.org/lkml/20250104-venus-security-fixes-v1-1-9d0dd4594cb4@quicinc.com/
+> 
+> memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
+> 
+> V1 then would have been:
+> 
+> if (new_rd_idx < qsize) {
+>     memcpy(pkt, rd_ptr, dwords << 2);
+> } else {
+>     size_t len;
+> 
+>     new_rd_idx -= qsize;
+>     len = (dwords - new_rd_idx) << 2;
+>     memcpy(pkt, rd_ptr, len);
+>     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+> }
+> 
+> + memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
+> 
+> V2 proposed:
+> 
+> if (new_rd_idx < qsize) {
+>     memcpy(pkt, rd_ptr, dwords << 2);
+> } else {
+>     size_t len;
+> 
+>     new_rd_idx -= qsize;
+>     len = (dwords - new_rd_idx) << 2;
+>     memcpy(pkt, rd_ptr, len);
+>     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+> }
+> 
+> + *(u32 *)pkt = dwords << 2;
+> 
+> My comment wasn't about use of memcpy() it was about why we are doing this.
+> 
+> For example if new_rd_idx < qsize is true then we literally do
+> 
+> a) memcpy(pkt, rd_ptr, dwords << 2);
+> b) *(u32 *)pkt = dwords << 2;
+> 
+> and the question is why ? That is an unambiguous cast of pkt to the value
+> of dwords << 2;
+> 
+> What is the scope of how the data can change from a to b ?
+> 
+> And why is the data considered potentially invalid @ the memcpy() but valid
+> subsequent the cast ?
+> 
+The concern here is not about the value of dword which will be fixed once
+we read the *rd_ptr first time and validate it.
 
-I agree with Andy, why not just apply this, these drivers have
-had long time to adopt to immutable GPIO chip and your
-patches are generously helping them to migrate. If things
-break for these users they can fix it in the rc:s, and if there
-are no users testing these, well that's a community problem.
+The concern here is, with the data contents at rd_ptr which could be
+tempered with after validation, because the memory is shared by firmware
 
-But there can be some fallout, so it's your pick!
+So the real problem here is:
+- driver read *rd_ptr, extract dwords = *rd_ptr >> 2, and validate it, lets
+say this value is 10
+- then copy dwords << 2 bytes from rd_ptr to a kernel buffer (pkt).
+- But: the first 4 bytes at rd_ptr (which represent the size field again)
+could have changed in the meantime — now saying 40 instead of the original 10.
 
-Yours,
-Linus Walleij
+security concern here is:
+Even though the outer dwords is correct, the copied content might claim to
+be bigger than what was validated — potentially tricking the rest of the
+system into processing garbage or running past buffer bounds.
+
+This is not a TOCTOU on the dwords, but a TOCTOU on the contents at rd_ptr,
+where the firmware changes the actual data after size is checked, but
+before it's copied.
+
+> Assuming rd_ptr contains the length of dwords << 2 to begin with in the
+> first 4 bytes - why is it necessary to make _really_ _really_ sure by
+> restuffing the data ?
+> 
+> For example if *(u32 *)rd_ptr != dwords << 2 - why shouldn't we just throw
+> the whole frame away as containing junk data ?
+
+Agree with returning error during mismatch instead of forcefully
+overwriting the content.
+
+Thank,
+Dikshita
+> 
+> ---
+> bod
+> 
