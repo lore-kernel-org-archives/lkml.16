@@ -1,127 +1,113 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41780A93D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844351E8345
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747115796; cv=none; b=HwVNYeilz4g+gncG4Q/V5ACkfWBfEczqrdmAV4d18MxEHBirsq6+/Ezl/dYILF5V1SMzzt3WIkSiwjczST0G80DaTKuzKxGc6HI2Bz9jBXwYuz1OasAWPHYhidUCkaxzUeNYvKuttXfZgo8kpzb8IA4oW0gkalvsKt1QFVQNJgM=
+	t=1747115800; cv=none; b=bq0s0LUa7u5u2JMqWO7YgIJfRh183o80VDSCXfXjjvQL4ePdNooIkYPq2kpG3f2lmqiAM8kRGj8bjhxXqgwNtlAOVKzeQEn7rzUPcGk8Gb9Aqmdl27ypFTArTCVC934af8WN/ETBSrzY+PrVAZDBEHA0EgdSQZLIkU21qCVyy+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747115796; c=relaxed/simple;
-	bh=bfgBCFcmciuJwkPC05xHjkwqwt5P6DCFva6GaSBqJUs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJOVLQCAdiiHae/RhrL6mi5VuFTFKhQVV2pHeFGueXWgtGagcBZx3/Mahni4JNtiMsQmuI84NhXysBsAHM0nwJxZPcHTZWFQw23OYQVUIBIsZKhBcncEw/BG9zshzUn0zJG1lCunQVSA1Y3jFpms8Fs7zEWtWM4g4XIBVOaaab4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gilTBwJB; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1747115800; c=relaxed/simple;
+	bh=RPz0eLbYPFGINc2p56hFio954XIUXmr+cMCiO/Mj88g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJ5jsUq29AxjhN2b0udphvLaiVd6MrzpkKj17aeMaPv4/aTniJvHS1R4Xkaky1CtataZE1lHKrkxvmVYtDKw3H/Tq1bIdtoXDF2C3M+xrjS9S1iYbzgP4pAT3XFCJBMaKIJC5biQc+3m5Zt29zhBgYW2XgCz0ozvJBilGIFTDl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RUlxtiSS; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gilTBwJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1747115786;
-	bh=Cdfa9q+LfPj/LtxoZ3TN4HjZOAHkdcdlZlPL8sLbxmM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gilTBwJB4csrnd9SAquchlc97mKa2zIeKhIT/wgREUGYH5WMwqWN87Lnxg9lw2bPQ
-	 7GoDdfDHdOSIY2sWuHYbql2yHlE4ahnmEC3JWjbyob2Upysk1ynjqUHKhgXjsFSWSt
-	 SW4g+fwWji+KAPBw0I+IOWaSoumJl5lpuLjXhg94=
-X-QQ-mid: zesmtpip3t1747115745t002de209
-X-QQ-Originating-IP: 74dfBN0ozjFYrRhJVFtCAeE4JnKwu0jg1GRcfTwQ+f0=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 13 May 2025 13:55:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13709064314909415111
-EX-QQ-RecipientCnt: 16
-From: WangYuli <wangyuli@uniontech.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	akpm@linux-foundation.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	yujiaoliang@vivo.com,
-	cvam0000@gmail.com,
-	colin.i.king@gmail.com,
-	jesse.brandeburg@intel.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: [PATCH] drm/uapi: Fix typo "restictions"
-Date: Tue, 13 May 2025 13:55:21 +0800
-Message-ID: <DC0C6B72CF24C41B+20250513055521.40969-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RUlxtiSS"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54D5trQ52161420
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 12 May 2025 22:55:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54D5trQ52161420
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747115755;
+	bh=U6rcHZb4UW+jBgjxBhhwYGrN+qx8Tm8tX6P2roKukRQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RUlxtiSSvL2zbdTxckg53o+QAfrDWf6H+yzUUXrHIYb0PPAoQ6MSHxFw6kOeUq+oG
+	 KaQwRsRKDadcJVZUk4LoQ4MIDtSjEH3MpMtwbWMljIEvGit9JSB3LYtAao5NqnaxX3
+	 73OkpjBHIhaCU8wAFyZtfQi/UnvDInPkne+6fTfWNJhjvGnfWd8YoEVchZUGfFJImV
+	 FWYoBlTrVymscSGDsakRpQiYXvt6BwN3Ai4Frx5MvB9uLc3FZ3II0QTJImlziUnnTb
+	 FZTI0Uo45mq/idyBSi8WPkEJ86WHg5azErFWd76rcZG+l/h/FwJ6OcsIrUh9XwWEp7
+	 xHc1pAahRuBKA==
+Message-ID: <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com>
+Date: Mon, 12 May 2025 22:55:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: M7wLkObIDn00ubp87rm0DBH68w/DsjFOc4XQNlbGFO7Mheo3WucdO6Si
-	wkY20DMpQgspH0FTtK8FHEaj92Nb14siDeOyVpsm3xpITSyT0XAJNgadeCie7u0qFeVHZBp
-	ipkEVt2Z/jdY+98lsBKZYV9XkF32KaFH1DaOQpuGbnRVFt0Yn6DS0MdTlaYg9UUSskGh8KT
-	1VQ2xurMLos/3sZamERzGrTW7R/K2a4s+B+O+aOHppoMZuYhT35eCdZ3ly5HKWRavH1kSrC
-	OFrFO8EFdvx+Y5Q4vUTdCTzTBhlcHYmxAuoJwCwCFvhSS2bbfQxlmFwB8eBTHXgaF30OIml
-	Gi9EZqWHVZ2IY2SEHFlNw0AXGVUND3lAwkf3QQijeU64sHF5/ld36MRCNg7B4YBTpMtFWkm
-	DXs2ZnXoTZEMjArRwCbCDAK36OPfw2iPXQFa2NrWMjvL2eqFs0EZaCV6/6sjiUzejFrRXZ+
-	C0/1cjgzlEq08mXimdBm3YM0iYP6jJQ/oLIYCb/DVCYpk6W4owo1XapiiDmo4lDCKPicFGB
-	3cRI5zyzJErBx3lvnGDoH85+zlzfBLyu3jfMHeZe9JNFRCVpPd1T0Diayl0Ld682TS51lWV
-	Zoa/LmrMKJuLWZ5lkkIRbDod1jfOvROhhhOhLPbG2v0uwRS6pdXrSGHBsWb5p0DJ4CxcazE
-	nQaWiy9L96q/RjnX9eCCxIUp4NH2chJCxRr4e0f6BqHDfcf4MZJqa5c7zclg7bQ6vOzfzAN
-	+f+sjhNGWwKD4B2Os7xu5pOXNS5vq1SB+HHKzlxE3dk9KUvqoUpl8Io8XZXRKukVWIRSUVX
-	IFSkMCyzARnUuLRYVNicppLL8h3zEIU8U4rJCpqLzwXy2tnoXanhG4W+QQQ9Z4WmWjsRb7f
-	PShg/IwEmXibyUxUnZfTgwGUe3MdCxUuHUhCpqYB+UqhbDN4Ceh5+812JZRDIZdCy3g8dxQ
-	4n3pyxV/DPJpObzIanBEdg/NUJ7GTPwPHzRpG0FvDo6kC+dbX6fB8lCvSghaBXWVHPaZpS5
-	ys4pajejhM0FAATTyr1EU+gHJcrWmo1EVxeG3r6A==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
+ instruction interfaces
+To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, virtualization@lists.linux.dev
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
+        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+        Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+        Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org
+References: <20250506092015.1849-1-jgross@suse.com>
+ <20250506092015.1849-6-jgross@suse.com>
+ <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
+ <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
+ <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake of 'restictions' in comments which
-should be 'restrictions'.
+On 5/12/2025 4:24 AM, Juergen Gross wrote:
+> Now with the mentioned patch really attached. :-)
+> 
 
-This typo was not listed in scripts/spelling.txt, thus it was more
-difficult to detect. Add it for convenience.
+Does it allow patching with an instruction more than 6 bytes long?
 
-This typo is reported by GitHub Copilot code review. [1]
+The immediate form MSR instructions are 9 bytes long.
 
-[1]. https://github.com/deepin-community/kernel/pull/796
-
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- include/uapi/drm/drm.h | 2 +-
- scripts/spelling.txt   | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
-index 7fba37b94401..16f772dd7069 100644
---- a/include/uapi/drm/drm.h
-+++ b/include/uapi/drm/drm.h
-@@ -860,7 +860,7 @@ struct drm_get_cap {
-  * cursor and have correctly set hotspot properties.
-  * If this client cap is not set the DRM core will hide cursor plane on
-  * those virtualized drivers because not setting it implies that the
-- * client is not capable of dealing with those extra restictions.
-+ * client is not capable of dealing with those extra restrictions.
-  * Clients which do set cursor hotspot and treat the cursor plane
-  * like a mouse cursor should set this property.
-  * The client must enable &DRM_CLIENT_CAP_ATOMIC first.
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index ac94fa1c2415..c33128db7163 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -1406,6 +1406,8 @@ ressizes||resizes
- ressource||resource
- ressources||resources
- restesting||retesting
-+restiction||restriction
-+restictions||restrictions
- resumbmitting||resubmitting
- retransmited||retransmitted
- retreived||retrieved
--- 
-2.49.0
-
+Thanks!
+     Xin
