@@ -1,197 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C505028D8D5;
-	Tue, 13 May 2025 11:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D94171CD;
+	Tue, 13 May 2025 11:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136522; cv=none; b=o7R+Emj2xYLFJMPkPu5EkH1TbMEvu/OEBqfn4Pu1b3VFBE7ZCbTyGox2i67Jfa68AQxcDohANhImyVfFaCut1zFW4sjdnNLHvijjcSxEgGSXnj+M7cvfrMQMQ1fBUVoiU4YZui0TID/cAu67Ui0LXCSC1XPmUXQfIS4YIl99gKE=
+	t=1747136579; cv=none; b=bSjm92OsxTB7qn1VRnKCajxg8C80DDz4m4d4V7sk+oweZU2xl9/jgjh6cWnEHV23DhVhMR3JI+vgiJMQLak9MgqxTS4HkLHsbXc+X6sMxY0BGuy1JZQNfP4T1Gn+lG9Bzr3UT47eM0IQ5lEpy6Nn3xZNy4F2iQdkycgcuvKkgFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136522; c=relaxed/simple;
-	bh=eO9w3nrvJ3H7rmAo2MSmMtziW1MVTfuuIqYcS6Qt1nc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AF+4SPash3SIrc2smLaymje5pA8ssvD3RuMrDwqdcylP5MAUHuzHRuRdKBDytYnS10JwLAKlCXTEfbh0VTvvmEU+wB34NwFbuGO+dGF4ToMxKCccDsyDkryK8bi+5IYwwe6/x3p1wgHTGlsc6uV/5xjmDIbLqLnuc8N2lQ0tR0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALQTm+uZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747136579; c=relaxed/simple;
+	bh=BXZoTSb4aQ9Wtu3tuWW0AsAZj/p2yFulUCCm1/NKIK4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FphS+CwhQEfSVrYyAEOqhTE6KWhwuf/IvNoDTUHzAHERiYgrzx481rLbDJlp/pA/FIeRx1gF0dnSSuGThktWTHteuhc2rk7tqRM31e2qixwzZp6hclaIiGUUiAsdmj3rfLeP4T8j2oQveAa2str2s4k9JMmP505BkBep8VH4/pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PRDZ1dTH; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALQTm+uZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88DFAC4CEE4;
-	Tue, 13 May 2025 11:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747136522;
-	bh=eO9w3nrvJ3H7rmAo2MSmMtziW1MVTfuuIqYcS6Qt1nc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ALQTm+uZKtmN5UlGkFrdCVIxYdmEa51vs3Szkdm/bveJ7cMR8fbapYChmVr4IOXVy
-	 JTmyKduvFQ7iheA0gswCrH+MhKqDbBOXLG445lihmw/VGg6qbqyGWZH8oImsbH9ydk
-	 zreDSLU3ZMLy+3p49pfo8SRhhW1z9iPZAPKrTYido6cGWXKWY4cU6zQ6kecLo11vO3
-	 KfUMs6o4Pp9FMaS8QX2R8or77RRf7C8co856S4AholzaZ40vOBemhzj27WpDu+nChG
-	 0hyBFJLdyD+depPaZm3pxw7pNL1jyDahEztadYIypvXPauJPaxlfc7/YNgpgyRxEID
-	 UIF6c8Cpjwv/w==
-Message-ID: <58dcc38b-8150-4272-b214-b046163292a6@kernel.org>
-Date: Tue, 13 May 2025 14:41:57 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PRDZ1dTH"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D9F3c3029908;
+	Tue, 13 May 2025 11:41:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BXZoTS
+	b4aQ9Wtu3tuWW0AsAZj/p2yFulUCCm1/NKIK4=; b=PRDZ1dTHxB+wW2IKskFaxF
+	9/KI6Bcgo61Y730i4lx2NzKw2qlWv3aSEFkpm9tI9z9Nu8d/2AhbmheqILG8fXmZ
+	asUSCcajOoU4Lh5mMAc5yq+35Lk9ndTj4o79bTPyizG52bUuWfKodnsJ9bqzZZWH
+	xiWkUwbrfwjc7YR/a1vONRV8C86OIPQl8DBYOTOnSOZGUXSigrQbT7hqf8eDNrdb
+	U7x7MbT67jo0opM81yuwc2rl0QJvZxNQHADWutzBL1DoDzoptUTImzdP0sDxMED5
+	JFuvA0NSoqIBfwmu/BO7nqMxj/5BmqO90BxlQbYwoBVGb0m14X5QRC2PlgCoajsA
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m39j8pba-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 11:41:30 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DB5Tv8024478;
+	Tue, 13 May 2025 11:41:29 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jjmm2sdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 11:41:29 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DBfTMp29033212
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 11:41:29 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45F2858056;
+	Tue, 13 May 2025 11:41:29 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 454AF58052;
+	Tue, 13 May 2025 11:41:28 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.130.167])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 May 2025 11:41:28 +0000 (GMT)
+Message-ID: <71973027bb0fbc436a95e8bb7fbd2b7d2eab95b4.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
+ measurement
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com
+Date: Tue, 13 May 2025 07:41:27 -0400
+In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
+References: <20250502200337.6293-1-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 8/9] net: ethernet: ti: am65-cpsw: add network
- flow classification support
-To: Paolo Abeni <pabeni@redhat.com>, Siddharth Vadapalli
- <s-vadapalli@ti.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Russell King <linux@armlinux.org.uk>,
- danishanwar@ti.com
-Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250505-am65-cpsw-rx-class-v2-0-5359ea025144@kernel.org>
- <20250505-am65-cpsw-rx-class-v2-8-5359ea025144@kernel.org>
- <244138b2-a90e-404d-946f-9ce25c6155e1@redhat.com>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <244138b2-a90e-404d-946f-9ce25c6155e1@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: iOEulkBYl26x9Ilz2fprraGsqD1yO4zT
+X-Proofpoint-ORIG-GUID: iOEulkBYl26x9Ilz2fprraGsqD1yO4zT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDExMCBTYWx0ZWRfXx4Can8PSvMlx vUnHo5sK6RKQqOBsktYUfIOrlvFLhTo0GVAWEmx49wj6RQzhzdH27Nhp61/bXy1XXjWUG1KRDxb HtzJag6Q6I2wdLeL/qKd1sKBSvtY/Z5TUyPwI03klxn8Ofs7rVQblrSRLizGrCGE0rXmCg/LFSB
+ A+1JZeQ/9u0uQD7xzHUphUeoM0Q3zidn21ttZTszqsd7qJ5mJL898Ipw2vUgGLjEjpJaElmwlFr mjAyeiKlH82/ixFANG4qGOpW3BhP7XaS2dEfDW6FwSz1fgV5BfmdTRAnlUMar1h1gPJO+YyeRny 35a1VF+qvOXRY60pgVF6rNpAE8sC3lcSf6oBH2rWl4+2tSTqzvIRMqTI4mQqJfg2RHUxd17pv+/
+ oviUApI6smnWpZ9l4I2WM2gT5F4s6bhSGEpe8p9uTHfSy14+ivwSRqwLhxJtiVLkogVSQoNP
+X-Authority-Analysis: v=2.4 cv=Sfb3duRu c=1 sm=1 tr=0 ts=68232fea cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=yMhMjlubAAAA:8 a=1v2mA-L8tnUgDz3cNWsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130110
 
+Hi Steven,
 
+On Fri, 2025-05-02 at 13:03 -0700, steven chen wrote:
+> From: Steven Chen <chenste@linux.microsoft.com>
+>=20
+> Kdump kernel doesn't need IMA to do integrity measurement.
+> Hence the measurement list in 1st kernel doesn't need to be copied to
+> kdump kenrel.
 
-On 08/05/2025 17:00, Paolo Abeni wrote:
-> On 5/5/25 6:26 PM, Roger Quadros wrote:
-> [...]
->> +/* validate the rxnfc rule and convert it to policer config */
->> +static int am65_cpsw_rxnfc_validate(struct am65_cpsw_port *port,
->> +				    struct ethtool_rxnfc *rxnfc,
->> +				    struct cpsw_ale_policer_cfg *cfg)
->> +{
->> +	struct ethtool_rx_flow_spec *fs = &rxnfc->fs;
->> +	int flow_type = AM65_CPSW_FLOW_TYPE(fs->flow_type);
->> +	struct ethhdr *eth_mask;
-> 
-> (Minor nit only mentioned because of more relevant comments on previous
-> patch) Please respect the reverse christmas tree order above.
+^kernel
 
-Yes, will fix.
-> 
->> +
->> +	memset(cfg, 0, sizeof(*cfg));
->> +
->> +	if (flow_type & FLOW_RSS)
->> +		return -EINVAL;
->> +
->> +	if (fs->location == RX_CLS_LOC_ANY ||
->> +	    fs->location >= port->rxnfc_max)
->> +		return -EINVAL;
->> +
->> +	if (fs->ring_cookie == RX_CLS_FLOW_DISC)
->> +		cfg->drop = true;
->> +	else if (fs->ring_cookie > AM65_CPSW_MAX_QUEUES)
->> +		return -EINVAL;
->> +
->> +	cfg->port_id = port->port_id;
->> +	cfg->thread_id = fs->ring_cookie;
->> +
->> +	switch (flow_type) {
->> +	case ETHER_FLOW:
->> +		eth_mask = &fs->m_u.ether_spec;
->> +
->> +		/* etherType matching is supported by h/w but not yet here */
->> +		if (eth_mask->h_proto)
->> +			return -EINVAL;
->> +
->> +		/* Only support source matching addresses by full mask */
->> +		if (is_broadcast_ether_addr(eth_mask->h_source)) {
->> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_MACSRC;
->> +			ether_addr_copy(cfg->src_addr,
->> +					fs->h_u.ether_spec.h_source);
->> +		}
->> +
->> +		/* Only support destination matching addresses by full mask */
->> +		if (is_broadcast_ether_addr(eth_mask->h_dest)) {
->> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_MACDST;
->> +			ether_addr_copy(cfg->dst_addr,
->> +					fs->h_u.ether_spec.h_dest);
->> +		}
->> +
->> +		if ((fs->flow_type & FLOW_EXT) && fs->m_ext.vlan_tci) {
->> +			/* Don't yet support vlan ethertype */
->> +			if (fs->m_ext.vlan_etype)
->> +				return -EINVAL;
->> +
->> +			if (fs->m_ext.vlan_tci != VLAN_TCI_FULL_MASK)
->> +				return -EINVAL;
->> +
->> +			cfg->vid = FIELD_GET(VLAN_VID_MASK,
->> +					     ntohs(fs->h_ext.vlan_tci));
->> +			cfg->vlan_prio = FIELD_GET(VLAN_PRIO_MASK,
->> +						   ntohs(fs->h_ext.vlan_tci));
->> +			cfg->match_flags |= CPSW_ALE_POLICER_MATCH_OVLAN;
->> +		}
->> +
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int am65_cpsw_policer_find_match(struct am65_cpsw_port *port,
->> +					struct cpsw_ale_policer_cfg *cfg)
->> +{
->> +	struct am65_cpsw_rxnfc_rule *rule;
->> +	int loc = -EINVAL;
->> +
->> +	mutex_lock(&port->rxnfc_lock);
->> +	list_for_each_entry(rule, &port->rxnfc_rules, list) {
->> +		if (!memcmp(&rule->cfg, cfg, sizeof(*cfg))) {
->> +			loc = rule->location;
->> +			break;
->> +		}
->> +	}
->> +
->> +	mutex_unlock(&port->rxnfc_lock);
->> +
->> +	return loc;
->> +}
->> +
->> +static int am65_cpsw_rxnfc_add_rule(struct am65_cpsw_port *port,
->> +				    struct ethtool_rxnfc *rxnfc)
->> +{
->> +	struct ethtool_rx_flow_spec *fs = &rxnfc->fs;
->> +	struct am65_cpsw_rxnfc_rule *rule;
->> +	struct cpsw_ale_policer_cfg cfg;
->> +	int loc, ret;
->> +
->> +	if (am65_cpsw_rxnfc_validate(port, rxnfc, &cfg))
->> +		return -EINVAL;
->> +
->> +	/* need to check if similar rule is already present at another location,
->> +	 * if yes error out
->> +	 */
->> +	loc = am65_cpsw_policer_find_match(port, &cfg);
->> +	if (loc >= 0 && loc != fs->location) {
->> +		netdev_info(port->ndev,
->> +			    "rule already exists in location %d. not adding\n",
->> +			    loc);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* delete exisiting rule */
->> +	if (loc >= 0) {
->> +		mutex_lock(&port->rxnfc_lock);
-> 
-> The rxnfc_lock mutex is released and re-aquired after the previous
-> lookup. Con some other thread delete the matching rule in-between and
-> add another one at a different location?
+Please use "scripts/checkpatch.pl --codespell" to check for typos.
 
-Good point. I will remove mutex acquiring from am65_cpsw_policer_find_match() and
-add acquire it instead in the beginning of am65_cpsw_rxnfc_add_rule()
+Mimi
 
-> 
-> /P
-> 
+>=20
+> Here skip allocating buffer for measurement list copying if loading
+> kdump kernel. Then there won't be the later handling related to
+> ima_kexec_buffer.
+>=20
+> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
 
--- 
-cheers,
--roger
 
