@@ -1,105 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82408227E8C;
-	Tue, 13 May 2025 09:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D69A634EC;
+	Tue, 13 May 2025 09:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128606; cv=none; b=O5Nk4olKc0C6MSTowdRXg3BAJsgb7An9/yQqweOHpc7tFXoLTYMpzFoVUvvAkePms9wlWaqKzm1TeEPP8UD/87f/DuHuuxYmCRGEozNBBPkC2gWxOJAYC1pIGXXoYxN/kSk+PcGRg7uIHH0Bl2ACbVzxrOLZu10jroNaLmp9KLQ=
+	t=1747128675; cv=none; b=q5jZSqo56AnWecP4Di2JDhtOXEBuxdJN2c6kq+KcttRNMtGaZAzc2C4ECAn3dO3MXiTprzU8937LNmzK8qk9zILgEBGBeTiX8uSF7alG9CJg+OCxiaOrInr2Thc1FBsyA5ibbKs5sSeCJlVfl6mXJo2EQ8sIgnZQlBnme/69BXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128606; c=relaxed/simple;
-	bh=982jXf6QjefdLWj60I4V7qnuv7iqFenReu2jMD1Hcfw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=q3qJdNxfBktA4+CSxShq8fZpzdt7yocr342ltES4cNSJCG900LA9dVvswKQx9ySvQfiy42l6msW9WPP1wWhrftFHtohA+9L3OBkedsr3MVpdtMCd2b0lf3oIw4oTywWSgqWqMgDxlTzWlxPOFb0lzGjHxrJhqNicbXBFk+V4aAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJ5StDbd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747128675; c=relaxed/simple;
+	bh=jsqqrcfYq+bnJqM7TR/bt4mLPJ69Cu+o4leVutMS2Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ah762fjjGMSS43/Y2Mp2yWwGLrQWdhJk/zKOTmqXBLxxtUYl0XwnyqVOrPDT2xXu16GtouQ3Kl3A0HIUpME6JRQO9jxOj5Iuzx8HNb2xgv1cAsuyOdH3SiNHLRHDV27aJ5rd6/hfGqbsobqlP2uq9J3wPYKs8YQu6VkCgGklJ30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHI0+0jx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJ5StDbd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC583C4CEE4;
-	Tue, 13 May 2025 09:30:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHI0+0jx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8118BC4CEE4;
+	Tue, 13 May 2025 09:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747128605;
-	bh=982jXf6QjefdLWj60I4V7qnuv7iqFenReu2jMD1Hcfw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cJ5StDbdMUqgFU1nibcKTcrE/lbpar8UNz+17VvmArjbq84lV9qpZZqyb1B0AE5F0
-	 hzLxOV7veV6tbS1CpfJ5d1udD1Dmx22doiZvU3S0D+beoc4jKqsLWChkqyUjXAbTBc
-	 Ps0hpLc4ENGfEhFxB+Z7bfRoPm7cZZJQGXKVzgPS3fIJHygsFh1GgJSna8BIaytCHN
-	 GX1bgSWC8ATTt5ym2XRwjuH+nZnROAbHmox5yXjEnIlbQmRPsCOY21TaZtoxqCkY0p
-	 pAJSg1K3OfodDaqE8/TZ+2gCV0N+JrRw2vwA4f76drx+Dp6A1beSfuE3d/BFT6at2z
-	 YZiYii6kMOuqA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF8839D6553;
-	Tue, 13 May 2025 09:30:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1747128674;
+	bh=jsqqrcfYq+bnJqM7TR/bt4mLPJ69Cu+o4leVutMS2Rc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mHI0+0jxgvDq2H+naSqE+eBaNqvmqwpNyecqNTZZ4VHserpQaOPhA9RvDuTyTjF5s
+	 /zsm9sMwCSOd8gTOQzxtYKbmsqsnUt09M0K6fEEHlph919MDI2nyVU9+Cs3ULBXsVO
+	 FK6w1HJEsWuBhuiUhPTV831bzeFCQERsTj353uaDRyhQs9sz6sL5k/BaIl8Hu7D36v
+	 unFPlEg+BZ2Y2uKdvwGcpeqaKJhe/NV6l95bwuZ9Bb8dhUaUOS1Ob2ABNPBKQAR8wQ
+	 4wXNSLla4/E1/Dwq0zWf4UNeb7+616VqCYaKTbj9IZypnncAlk2RzLISBn80P7IRiI
+	 74JIJz09QyCXQ==
+Date: Tue, 13 May 2025 10:31:07 +0100
+From: Lee Jones <lee@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+Message-ID: <20250513093107.GC2936510@google.com>
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+ <aCG9lyaCGchBsqLE@smile.fi.intel.com>
+ <D9UW14SJQ9HV.3BA1FYKMG9DE0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v14 0/9] Device memory TCP TX
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174712864353.1250182.17683820324947823076.git-patchwork-notify@kernel.org>
-Date: Tue, 13 May 2025 09:30:43 +0000
-References: <20250508004830.4100853-1-almasrymina@google.com>
-In-Reply-To: <20250508004830.4100853-1-almasrymina@google.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, io-uring@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, donald.hunter@gmail.com, kuba@kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, corbet@lwn.net, andrew+netdev@lunn.ch, jeroendb@google.com,
- hramamurthy@google.com, kuniyu@amazon.com, willemb@google.com,
- axboe@kernel.dk, asml.silence@gmail.com, dsahern@kernel.org,
- ncardwell@google.com, mst@redhat.com, jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com, eperezma@redhat.com, stefanha@redhat.com,
- sgarzare@redhat.com, shuah@kernel.org, sdf@fomichev.me, dw@davidwei.uk,
- jhs@mojatatu.com, victor@mojatatu.com, pctammela@mojatatu.com,
- skhawaja@google.com
+In-Reply-To: <D9UW14SJQ9HV.3BA1FYKMG9DE0@bootlin.com>
 
-Hello:
+On Tue, 13 May 2025, Mathieu Dubois-Briand wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Thu,  8 May 2025 00:48:20 +0000 you wrote:
-> v14: https://lore.kernel.org/netdev/20250429032645.363766-1-almasrymina@google.com/
-> ===
+> On Mon May 12, 2025 at 11:21 AM CEST, Andy Shevchenko wrote:
+> > On Fri, May 09, 2025 at 11:14:36AM +0200, mathieu.dubois-briand@bootlin.com wrote:
+> >
+> >> +#define MAX7360_REG_GPIO_LAST		0x5F
+> >
+> >> +#define MAX7360_FIFO_EMPTY		0x3f
+> >> +#define MAX7360_FIFO_OVERFLOW		0x7f
+> >
+> > Please, be consistent in style of the values.
 > 
-> Picked up acks from Paolo, and addressed feedback from Paolo and Jakub.
-> 
-> Changelog:
-> - Fix issue in patch 4 where sockc_valid == false but err is
->   overwritten.
-> - Addressed nits.
-> 
-> [...]
+> Is your point about the alignment of the values? Most of these are
+> aligned on column 41, including the ones above. I just have an exception
+> with MAX7360_PORT_CFG_*, as they are a bit too long. But as we are using
+> tabs here, indentation appears a bit broken in the patch.
 
-Here is the summary with links:
-  - [net-next,v14,1/9] netmem: add niov->type attribute to distinguish different net_iov types
-    https://git.kernel.org/netdev/net-next/c/03e96b8c11d1
-  - [net-next,v14,2/9] net: add get_netmem/put_netmem support
-    https://git.kernel.org/netdev/net-next/c/e9f3d61db5cb
-  - [net-next,v14,3/9] net: devmem: TCP tx netlink api
-    https://git.kernel.org/netdev/net-next/c/8802087d20c0
-  - [net-next,v14,4/9] net: devmem: Implement TX path
-    https://git.kernel.org/netdev/net-next/c/bd61848900bf
-  - [net-next,v14,5/9] net: add devmem TCP TX documentation
-    https://git.kernel.org/netdev/net-next/c/17af8cc06a5a
-  - [net-next,v14,6/9] net: enable driver support for netmem TX
-    https://git.kernel.org/netdev/net-next/c/383faec0fd64
-  - [net-next,v14,7/9] gve: add netmem TX support to GVE DQO-RDA mode
-    https://git.kernel.org/netdev/net-next/c/c32532670cec
-  - [net-next,v14,8/9] net: check for driver support in netmem TX
-    https://git.kernel.org/netdev/net-next/c/ae28cb114727
-  - [net-next,v14,9/9] selftests: ncdevmem: Implement devmem TCP TX
-    https://git.kernel.org/netdev/net-next/c/2f1a805f32ba
+I believe the point was in reference to capitalisation.
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Lee Jones [李琼斯]
