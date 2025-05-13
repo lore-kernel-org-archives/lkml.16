@@ -1,40 +1,40 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022122.outbound.protection.outlook.com [40.107.75.122])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022072.outbound.protection.outlook.com [52.101.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0152E17583;
-	Tue, 13 May 2025 02:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D358413A86C;
+	Tue, 13 May 2025 02:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.72
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747101816; cv=fail; b=eY6u1twI3Jr1zPhZwmRfkZhFFTHPoD5QtXzxGzuYrRABF9lI5tlD8f4UTwceDBfIl/gquLXws9ZkH3X6NyFVaPv5X/5UUFM2BJd1HYLKZErybFOmxaZCSbfvS2o6hH3ui9Kd8x4HD2iTZ+1U5N7D9fi8ZXm9XERz7vfnkyOQve8=
+	t=1747101817; cv=fail; b=gvnftk5y/9gnG5ENKtI+CyRMFv4BB45WupGuQ2IVNdFrCp08w8JEBFGV+qenRwlCy6U4065UJQdmfb9AQtbwuCMkmIUJrO42GO3S7LpgB0tQ9CQps+OxVi1T5d4cAQ2bGSuF4gGEI3qpniaNJ5esE+dy5sOF3AhpeldjiLjhiRs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747101816; c=relaxed/simple;
-	bh=Tjq7yEi3Eva7UnUwWK8/OlGs8G9CXfrE9qqaXi4Uk54=;
+	s=arc-20240116; t=1747101817; c=relaxed/simple;
+	bh=fFoL3rdgjp4+y/5N+HrtFWZnayANAgkly/CdA1Aev50=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FkQSMq4FEO8QTwBEMeuO/R2BWihPlnBKB4o3cqSpoX15ZkWYkhf/q1jd07+CdANJG7UmB5SgIJA/h0d4y4oEWSMm8Ry4SLIKl1xP7kd8zhEuf5xKBOgIAzoRxnFdovb45VkXjL3rJ1kXsFZIg84XxRZmWLQKitWZ1W7yA13Z63k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.122
+	 MIME-Version:Content-Type; b=Xk0DaUJ387ksDarFK7/WSMrYcLP0XjoG0cxZHpOvEVvjtkmvxBbRK+Ft6cOWIRvCVtl1GLF4+dA13Ca2Zfd+1ZXgF5w7ktYXwvpVWxDlWRBBIGMEioZLze0I8dfyKKGB/YtT8fKnsl6mvi1U5bpqJXrd60+7HgWCXWldSFYqLtY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SZTij1tYk+ZzXC9l//KhGoyJmMjOGQxVaT3h4EfLvZjZ+B3ssntmMDJqjSma9iQ+yib14gTZuKZrapAEchofKz8dc6RslD78re/e4nGkAAjbYexr4zs4RdVt8NkFviLlMFbMy8rL0yLRjAGJWEwmFqmZ1J/PBgqx//zzhy/+s0jWGfYv+o/cCpniLfaDhaJ0LGK0G4gYAnIVaS1zP1MPiPzER0s0tJ4Xt7a07pXZYjJIOepHXtoPKKhZwZiaXg0rplBhCo+FfF/KsqCZbLwxI55XvxVan4j0hiIKEhdHvuO/2kfO4CjfYaui2oy80cf2B7NhRbRlnwAMOSjpnZpe+w==
+ b=S+CWH+OMchwJ5Yj7JU1zhz/2hrCntdF+Hq91OEcIDXMKLA6zPh4QOHa9nFCzRURoYYoGqfwwmkTf7tVNFXa5ukbMTrNbKwO9Be/urS3Twi2lv3yvB5P1oSeegT/XDEBPif5n5N3y+vlyK0rO3zcyhC3hpH0NSPRDnNG6Wq0Inh89Gf/6o4fLJa4YLDx2CvL8GZ7E0KFwuuLlXuCj1Omw7lxeDCQS1kwIxX/7Wz7NQyGm76fwt78dv2XRFeQUJoNt0curNWJeMSBkWidrGXE9Jfa1fT0lJD1ZFYQnn1OUnP+zhrI+ZIjj9QzgTY/SMjx+hHjjp0i6trw+Aww8ERnBMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZP9QGGTyXIDxN+slq3xiv1h9BVQVaWovuDi1sh7ESVM=;
- b=eT/HZI5bVwMfm1nR3wBPii3yDTVWUf4OZ3nOySeAAaaWD6SsejDOpUWMi6zcwT89HaWX75QBZIr2WPMx4Kyg0JXUJ/p7BoJUvlgK6wpd/vJzbxV03VbprGx8ofOOy/iJkY1q0FnibDiOaZx6OUAZBrDTWOlZy8EySHk3cBcWbU0yOuxc1UnNTAnDa158mE/Uxnj/NEiGnoLVZqp77plgTI9KxAjRiGFU6n0y+syqDQ31mrjFiKhJOc/vQmWtzJah4JuuSaxzYKTDySAIKFqFyXBK/elSPDkraqWi4flaVdVboelR4sCNnYYbEj1UeaZEgdWSsl75yjCkByNCcJKpXw==
+ bh=vaiwQNFdGChfGfZt4ATADiwB8lH9qKzjeyr/Osx7Dcs=;
+ b=ql/NhAolQg6/7SyDr56Nk1LSly7ttD59LuH9PThl0O4EbaPWuexB6vBrNLxKfGc0J+/NkdWi8e+IozEgy77MZSI3CgB1jYEYVF3eVYzQaIa+SLVBf3ZtmW4+m8znl5sJJMyIsxJI9Ma9puQqPa5cW2LH/vb99sftFvX+dhbynKcwhUcV92smk46y8rVT5DFCd13UJ3RjvTQRsNcOXqj3fOY5op/Xyf/WchV5h2xE5FN8lGtyRCEqAVwe0/mKwJRZ6uqHUdBVDCBuJvZvIOVukx4GXXZlZf/maglfosFtBrd3I1x7M6Hx4TJlmtuNpBNF03pZGxWCA/DFV8KDJe4rSA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from TYCP286CA0098.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b4::19)
- by SG2PR06MB5132.apcprd06.prod.outlook.com (2603:1096:4:1cf::5) with
+Received: from TYCP286CA0092.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b4::10)
+ by TYZPR06MB5483.apcprd06.prod.outlook.com (2603:1096:400:288::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 13 May
- 2025 02:03:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 13 May
+ 2025 02:03:31 +0000
 Received: from TY2PEPF0000AB89.apcprd03.prod.outlook.com
- (2603:1096:400:2b4:cafe::72) by TYCP286CA0098.outlook.office365.com
- (2603:1096:400:2b4::19) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:1096:400:2b4:cafe::d9) by TYCP286CA0092.outlook.office365.com
+ (2603:1096:400:2b4::10) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.30 via Frontend Transport; Tue,
- 13 May 2025 02:03:30 +0000
+ 13 May 2025 02:03:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -46,7 +46,7 @@ Received: from smtprelay.cixcomputing.com (222.71.101.198) by
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.8722.18 via Frontend Transport; Tue, 13 May 2025 02:03:30 +0000
 Received: from localhost.localdomain (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 808CC4160517;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id A5BD2416051B;
 	Tue, 13 May 2025 10:03:27 +0800 (CST)
 From: Peter Chen <peter.chen@cixtech.com>
 To: robh@kernel.org,
@@ -64,13 +64,12 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	sudeep.holla@arm.com,
 	kajetan.puchalski@arm.com,
 	eballetb@redhat.com,
-	Guomin Chen <Guomin.Chen@cixtech.com>,
-	Peter Chen <peter.chen@cixtech.com>,
 	Gary Yang <gary.yang@cixtech.com>,
-	Lihua Liu <Lihua.Liu@cixtech.com>
-Subject: [PATCH v8 5/9] mailbox: add CIX mailbox driver
-Date: Tue, 13 May 2025 10:03:23 +0800
-Message-Id: <20250513020327.414017-6-peter.chen@cixtech.com>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Peter Chen <peter.chen@cixtech.com>
+Subject: [PATCH v8 7/9] dt-bindings: clock: cix: Add CIX sky1 scmi clock id
+Date: Tue, 13 May 2025 10:03:25 +0800
+Message-Id: <20250513020327.414017-8-peter.chen@cixtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250513020327.414017-1-peter.chen@cixtech.com>
 References: <20250513020327.414017-1-peter.chen@cixtech.com>
@@ -83,739 +82,359 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB89:EE_|SG2PR06MB5132:EE_
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB89:EE_|TYZPR06MB5483:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 12666fd3-270d-420c-fb7c-08dd91c25bcf
+X-MS-Office365-Filtering-Correlation-Id: 6977b810-580b-4b91-c453-08dd91c25c0a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?f15g4WowmRfYryx5r0WNyPEa840S41LhuIu9HcFQXEGIxlfquOPw6IuaBuIV?=
- =?us-ascii?Q?OoVd1aUT78RA1m7EU6LZfXYf77d5ZcSi3PgyuAXlP2wrHLYqT4DUnXmV31+W?=
- =?us-ascii?Q?K0ISAcG4MB5Q/PlhKd0Fz7vO/wnjTpuhFpSeZsbcXNVtHmriCkqcnLdn9x6z?=
- =?us-ascii?Q?stZ4qxrhG39WRP40xY2hfW9qNWdQvKGG0yCYP8+1sOSJTLrbY7pQsIuOToGT?=
- =?us-ascii?Q?ieITEUm0IPY3WYhq6/o6hFxQflnDAbGDSsQU8GUZmtSwdQ32+5wB6qZsl4Hy?=
- =?us-ascii?Q?sYeC+2g3UU4yXmlaSqejdjr0bIMgCjFe6zdoOXOI8y55gQANmSx+60oz5Ri9?=
- =?us-ascii?Q?Ihane/t0LmrLVQAwEEhProNKNGXD6f16oe4j9Su4dZG8IQbQMPUQ2ByZSjoK?=
- =?us-ascii?Q?Qj5X+wH0cVguVN1Actb34T2E0j1zg8EgDNjkHB39NyQJmV3XNj5ms4yW7+xM?=
- =?us-ascii?Q?9I4l3ke54d+l6GPS2UeQNs84bVAX3f+acEsvd8E7VzurJqSl/BnHMJHc2i1P?=
- =?us-ascii?Q?YegIaaqClW9iqyR5ewJC0QooPXsE2Tlo/PDFWoKLB/YwcKDvqtl/cQhTjm7N?=
- =?us-ascii?Q?N3x6nVmAQt86RmBmwrv2IklfZ/h4QbETyd7GRCfF+qQ2jS+X8/MsrJNUrxJF?=
- =?us-ascii?Q?SO0+XpvO//EQR8N4ss5CdYQ7kRTU6B/a8mFSvo9WHaMDGG99qHgtQ/e5vog6?=
- =?us-ascii?Q?kFyZKrrKjcyXhV3AurHTrBqb6aZsqTjrbSv1gdfcruA8xG/kO6Q5zwgLUejw?=
- =?us-ascii?Q?hNzF35wPV3hIW/JD6jhq6xkr8nzIpHd0XG964qcDICMIskS/o0+H4Y/fWnjS?=
- =?us-ascii?Q?DywGVtVSCnacVi8VkA01X0+zPEDE/8wMIeHANYDjz0ltLe5ispHF/zaqspHk?=
- =?us-ascii?Q?jY3cJOit5uqwfVcJg1yEXYZyoAgTSqRBTm/efjU50p0vB/jLnysFol437JB3?=
- =?us-ascii?Q?UmRwzoAnLJazji7kNX3Xg6iBHowfsVXsezSppKX3ZDAuclagsmAeTjUIrMR+?=
- =?us-ascii?Q?FpTGjFmplCnNZ0HJhCMi0c2P9AzHlqivSp26le4EKkx+kzqF1ZvKa1lP7UhS?=
- =?us-ascii?Q?nQaunFc9xuDnQhIkMSttrivknq2rN7Ac2S3OIQdeeN6nMc2oYJLMnI/yMfky?=
- =?us-ascii?Q?MbTz3jfF7m0ezz++w7vclFZn/dt1vIowFPgTNqlwsNnPTohBw3zXJTup4ugE?=
- =?us-ascii?Q?7a6JDeSvZW++QpRfJLi24Om9ZCKxmsxoYEblGwOCsUVBVjtcTRSsEAnQcAb3?=
- =?us-ascii?Q?We3/ySqoIbS9witmDXJ+231xgdVwyRkV7wV+brm+9dnRDSSzfPwXkIabc+7q?=
- =?us-ascii?Q?4kEUH+6XPh0d/bR0IQOYpVm02+6fkeTSSsZOUvNajXcljAmTWVZWz4KtNsog?=
- =?us-ascii?Q?LqSNiS8olkkpR3bTl5UdkPSoCZGiA0h1I6NaR9d6mjXJyL9MmpHiBAyEw7f7?=
- =?us-ascii?Q?G8k8n/NP6zH6T3oLrCluNmY6dF4R3YjbtRguOlx8BFFDcI7GLIvyoaLPEmoY?=
- =?us-ascii?Q?Ss5u7bju5wPnHw2osrMV99GZQTw8lH2TRPND?=
+	=?us-ascii?Q?jBEdeP2td090eNGky9V8e0NnIY80QLCTXXzVUftnDiAgZxkXtMqkWDsCWLy1?=
+ =?us-ascii?Q?X/xHnEqTp4idtcFJI1Z08XxryBx2U1XmZF4zI7bYZjA52ic67ECxsH9G8WM2?=
+ =?us-ascii?Q?7FPGRVoHFW4ovhFmUYeyDzgWYrJUEX1PfBj8leb4+mkkbnP75V1k9XSw2vbt?=
+ =?us-ascii?Q?9dKgIFXPuOOebQa7ulUXdCsI6/Rm0qowSrSw66T+bPOlmaVBH3X1olel0t6O?=
+ =?us-ascii?Q?GRmhtRPRBF0PaAeOsYScSULgm3jWknfVVKjZStyjd1vIjO02hjqTw9q7f5RD?=
+ =?us-ascii?Q?D/i12lrs5vUWYirDQkni6sdaiUV6CqRi5DGo2YNJc0adaDUEME21QRB+bwrI?=
+ =?us-ascii?Q?VwX/ugxUfo9RftWgSZ1EIOLqryPR/7DUe9Wb5ZTzd4DK1PIzIP3mVjZFUGoW?=
+ =?us-ascii?Q?qdlEEFnfGZtVoaqKaZyVr5QN5P3d+gg8DDxZPYtKNso5yHInE2ILk9ki7Zo4?=
+ =?us-ascii?Q?avu6YDAo0sU42mnylOmSeyBmcBD4ZPXTECm+dIUTSKG8F+zOIcfL3VaXkzsf?=
+ =?us-ascii?Q?s5s+Ym0GGcFAKz1qNEzCpP1DJy8LdbUBJn5gWqmXProC6W20/X5Ek7FYc5aG?=
+ =?us-ascii?Q?0x8mufw68NrSPz5BfQcLuj6LHf67RQ3S2+MSbXBhZtujUBpKg+Gb22t0pFJg?=
+ =?us-ascii?Q?saJrmvzJ5fbpQjvkfu/8qXDt8cAGHJgaMMGkx0RIjmUcZekm0dFg2k1Tu2Mm?=
+ =?us-ascii?Q?o50+RS5Pfkjvqe66L6w4Wz0g7NAl1Dn0J7K5lJITP3Xge2EUFb0bdwxTH9cC?=
+ =?us-ascii?Q?YN3fmsHJayAFVd9gSJDlJVwW4bOXMVg/F7DR5iNzRi6X2nxwhqcY+Sqxu/No?=
+ =?us-ascii?Q?ulwlPV0Qg5uVQTU5Zgtu1Wl7txx3BgfR3VET42APNPpw3NUHOF/gzfp46Srm?=
+ =?us-ascii?Q?Acf+t4MSikkNhuGnH5BkvkZANcnXfnhVP3C9zRILF4YFd4DIDV9gcyQSzwbi?=
+ =?us-ascii?Q?5WIKEVGXEnQDyQwHXYbcSBgS0dSL86fjdacr7Ervoy5mwLippxKVT/w1ktCT?=
+ =?us-ascii?Q?6lJKqFUpoStVv5KIzrkK+PJ6wHfs9DMCkADOXSf4taD3KhtxW8vtmN+i/zKG?=
+ =?us-ascii?Q?E6VztWHlzdWrZeEHCUknDDwnUQUsTZsHmDq+9HHZaJhEM9V9H6gT4t/5ceoz?=
+ =?us-ascii?Q?oxrGux4NhOe6GR08MJP4C7Wfm7DkIoMmERGHzzUx8SBAvECfeU9fv1M7czpl?=
+ =?us-ascii?Q?L/qcpW+fWyYZTDN55KAHC11w9NXaVtQdqzWjUmFh5R46MnrqQ6Obg+3Qtim/?=
+ =?us-ascii?Q?Yq5jO8AEZOHykT0wnJiuEWOI0eGIV7VvE/7DGmZ/lyWtXn2aa/yAkLagUdpR?=
+ =?us-ascii?Q?uXaG5MPR3ykkyZvponnNkA6UtgE4s5dVn0rZ6kQAgkPojXwrhxGK3AwlqALT?=
+ =?us-ascii?Q?eWCCMb3K7LRutdrRBPWxAlZKKcQnlsU/+KZNnT4ElKLpxtT09c3y6tjHXhx8?=
+ =?us-ascii?Q?tHN5v+xtlpQ0kyxy2Wk9CrlAww7DUEOX0OMytCDYbfj+JKk2U5csIeTMK44V?=
+ =?us-ascii?Q?pYealGHDQ0rbKLNmoVRMOa7wNn4DkqODWb1D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 02:03:30.4354
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 02:03:30.4820
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12666fd3-270d-420c-fb7c-08dd91c25bcf
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6977b810-580b-4b91-c453-08dd91c25c0a
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB89.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5132
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5483
 
-From: Guomin Chen <Guomin.Chen@cixtech.com>
+From: Gary Yang <gary.yang@cixtech.com>
 
-The CIX mailbox controller, used in the Cix SoCs, like sky1.
-facilitates message transmission between multiple processors
-within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
-and others.
+Add device tree bindings for the scmi clock id on
+Cix sky1 platform.
 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
 Signed-off-by: Gary Yang <gary.yang@cixtech.com>
-Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
 Signed-off-by: Peter Chen <peter.chen@cixtech.com>
 ---
- drivers/mailbox/Kconfig       |  10 +
- drivers/mailbox/Makefile      |   2 +
- drivers/mailbox/cix-mailbox.c | 632 ++++++++++++++++++++++++++++++++++
- 3 files changed, 644 insertions(+)
- create mode 100644 drivers/mailbox/cix-mailbox.c
+Changes for v8:
+- Add Krzysztof Kozlowski's Acked-by tag
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ed52db272f4d..3231facf03b2 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -330,4 +330,14 @@ config THEAD_TH1520_MBOX
- 	  kernel is running, and E902 core used for power management among other
- 	  things.
- 
-+config CIX_MBOX
-+        tristate "CIX Mailbox"
-+        depends on ARCH_CIX || COMPILE_TEST
-+        depends on OF
-+        help
-+          Mailbox implementation for CIX IPC system. The controller supports
-+          11 mailbox channels with different operating mode and every channel
-+          is unidirectional. Say Y here if you want to use the CIX Mailbox
-+          support.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 9a1542b55539..97a5a7068c10 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -70,3 +70,5 @@ obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
- obj-$(CONFIG_QCOM_IPCC)		+= qcom-ipcc.o
- 
- obj-$(CONFIG_THEAD_TH1520_MBOX)	+= mailbox-th1520.o
-+
-+obj-$(CONFIG_CIX_MBOX)	+= cix-mailbox.o
-diff --git a/drivers/mailbox/cix-mailbox.c b/drivers/mailbox/cix-mailbox.c
+Changes for v7:
+- Rename clock binding file from sky1-clk.h to cix,sky1.h
+- Add my Sob
+
+ include/dt-bindings/clock/cix,sky1.h | 279 +++++++++++++++++++++++++++
+ 1 file changed, 279 insertions(+)
+ create mode 100644 include/dt-bindings/clock/cix,sky1.h
+
+diff --git a/include/dt-bindings/clock/cix,sky1.h b/include/dt-bindings/clock/cix,sky1.h
 new file mode 100644
-index 000000000000..c2783dd7d145
+index 000000000000..9245ebd1e80a
 --- /dev/null
-+++ b/drivers/mailbox/cix-mailbox.c
-@@ -0,0 +1,632 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/include/dt-bindings/clock/cix,sky1.h
+@@ -0,0 +1,279 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 +/*
-+ * Copyright 2025 Cix Technology Group Co., Ltd.
++ * Copyright 2024-2025 Cix Technology Group Co., Ltd.
 + */
 +
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "mailbox.h"
-+
-+/* Register define */
-+#define REG_MSG(n)	(0x0 + 0x4*(n))			/* 0x0~0x7c */
-+#define REG_DB_ACK	REG_MSG(CIX_MBOX_MSG_LEN)	/* 0x80 */
-+#define ERR_COMP	(REG_DB_ACK + 0x4)		/* 0x84 */
-+#define ERR_COMP_CLR	(REG_DB_ACK + 0x8)		/* 0x88 */
-+#define REG_F_INT(IDX)	(ERR_COMP_CLR + 0x4*(IDX+1))	/* 0x8c~0xa8 */
-+#define FIFO_WR		(REG_F_INT(MBOX_FAST_IDX+1))	/* 0xac */
-+#define FIFO_RD		(FIFO_WR + 0x4)			/* 0xb0 */
-+#define FIFO_STAS	(FIFO_WR + 0x8)			/* 0xb4 */
-+#define FIFO_WM		(FIFO_WR + 0xc)			/* 0xb8 */
-+#define INT_ENABLE	(FIFO_WR + 0x10)		/* 0xbc */
-+#define INT_ENABLE_SIDE_B	(FIFO_WR + 0x14)	/* 0xc0 */
-+#define INT_CLEAR	(FIFO_WR + 0x18)		/* 0xc4 */
-+#define INT_STATUS	(FIFO_WR + 0x1c)		/* 0xc8 */
-+#define FIFO_RST	(FIFO_WR + 0x20)		/* 0xcc */
-+
-+/* [0~7] Fast channel
-+ * [8] doorbell base channel
-+ * [9]fifo base channel
-+ * [10] register base channel
-+ */
-+#define CIX_MBOX_CHANS		(11)
-+
-+/*
-+ * The maximum transmission size is 32 words or 128 bytes.
-+ */
-+#define CIX_MBOX_MSG_LEN	(32)	/* Max length = 32 words */
-+#define MBOX_MSG_LEN_MASK	(0x7fL)	/* Max length = 128 bytes */
-+
-+#define MBOX_FAST_IDX		(7)
-+#define MBOX_DB_IDX		(8)
-+#define MBOX_FIFO_IDX		(9)
-+#define MBOX_REG_IDX		(10)
-+
-+#define MBOX_TX		(0)
-+#define MBOX_RX		(1)
-+
-+#define DB_INT_BIT	BIT(0)
-+#define DB_ACK_INT_BIT	BIT(1)
-+
-+#define FIFO_WM_DEFAULT		CIX_MBOX_MSG_LEN
-+#define FIFO_STAS_WMK		BIT(0)
-+#define FIFO_STAS_FULL		BIT(1)
-+#define FIFO_STAS_EMPTY		BIT(2)
-+#define FIFO_STAS_UFLOW		BIT(3)
-+#define FIFO_STAS_OFLOW		BIT(4)
-+
-+#define FIFO_RST_BIT		BIT(0)
-+
-+#define DB_INT			BIT(0)
-+#define ACK_INT			BIT(1)
-+#define FIFO_FULL_INT		BIT(2)
-+#define FIFO_EMPTY_INT		BIT(3)
-+#define FIFO_WM01_INT		BIT(4)
-+#define FIFO_WM10_INT		BIT(5)
-+#define FIFO_OFLOW_INT		BIT(6)
-+#define FIFO_UFLOW_INT		BIT(7)
-+#define FIFO_N_EMPTY_INT	BIT(8)
-+#define FAST_CH_INT(IDX)	BIT((IDX)+9)
-+
-+#define SHMEM_OFFSET 0x80
-+
-+enum cix_mbox_chan_type {
-+	CIX_MBOX_TYPE_DB,
-+	CIX_MBOX_TYPE_REG,
-+	CIX_MBOX_TYPE_FIFO,
-+	CIX_MBOX_TYPE_FAST,
-+};
-+
-+struct cix_mbox_con_priv {
-+	enum cix_mbox_chan_type type;
-+	struct mbox_chan	*chan;
-+	int index;
-+};
-+
-+struct cix_mbox_priv {
-+	struct device *dev;
-+	int irq;
-+	int dir;
-+	bool tx_irq_mode;	/* flag of enabling tx's irq mode */
-+	void __iomem *base;	/* region for mailbox */
-+	unsigned int chan_num;
-+	struct cix_mbox_con_priv con_priv[CIX_MBOX_CHANS];
-+	struct mbox_chan mbox_chans[CIX_MBOX_CHANS];
-+	struct mbox_controller mbox;
-+	bool use_shmem;
-+};
-+
-+/*
-+ * The CIX mailbox supports four types of transfers:
-+ * CIX_MBOX_TYPE_DB, CIX_MBOX_TYPE_FAST, CIX_MBOX_TYPE_REG, and CIX_MBOX_TYPE_FIFO.
-+ * For the REG and FIFO types of transfers, the message format is as follows:
-+ */
-+union cix_mbox_msg_reg_fifo {
-+	u32 length;	/* unit is byte */
-+	u32 buf[CIX_MBOX_MSG_LEN]; /* buf[0] must be the byte length of this array */
-+};
-+
-+static struct cix_mbox_priv *to_cix_mbox_priv(struct mbox_controller *mbox)
-+{
-+	return container_of(mbox, struct cix_mbox_priv, mbox);
-+}
-+
-+static void cix_mbox_write(struct cix_mbox_priv *priv, u32 val, u32 offset)
-+{
-+	if (priv->use_shmem)
-+		iowrite32(val, priv->base + offset - SHMEM_OFFSET);
-+	else
-+		iowrite32(val, priv->base + offset);
-+}
-+
-+static u32 cix_mbox_read(struct cix_mbox_priv *priv, u32 offset)
-+{
-+	if (priv->use_shmem)
-+		return ioread32(priv->base + offset - SHMEM_OFFSET);
-+	else
-+		return ioread32(priv->base + offset);
-+}
-+
-+static bool mbox_fifo_empty(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+
-+	return ((cix_mbox_read(priv, FIFO_STAS) & FIFO_STAS_EMPTY) ? true : false);
-+}
-+
-+/*
-+ *The transmission unit of the CIX mailbox is word.
-+ *The byte length should be converted into the word length.
-+ */
-+static inline u32 mbox_get_msg_size(void *msg)
-+{
-+	u32 len;
-+
-+	len = ((u32 *)msg)[0] & MBOX_MSG_LEN_MASK;
-+	return DIV_ROUND_UP(len, 4);
-+}
-+
-+static int cix_mbox_send_data_db(struct mbox_chan *chan, void *data)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+
-+	/* trigger doorbell irq */
-+	cix_mbox_write(priv, DB_INT_BIT, REG_DB_ACK);
-+
-+	return 0;
-+}
-+
-+static int cix_mbox_send_data_reg(struct mbox_chan *chan, void *data)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	int i;
-+	union cix_mbox_msg_reg_fifo *msg = data;
-+	u32 len;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	len = mbox_get_msg_size(data);
-+	for (i = 0; i < len; i++)
-+		cix_mbox_write(priv, msg->buf[i], REG_MSG(i));
-+
-+	/* trigger doorbell irq */
-+	cix_mbox_write(priv, DB_INT_BIT, REG_DB_ACK);
-+
-+	return 0;
-+}
-+
-+static int cix_mbox_send_data_fifo(struct mbox_chan *chan, void *data)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	int i;
-+	union cix_mbox_msg_reg_fifo *msg = data;
-+	u32 len, val_32;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	len = mbox_get_msg_size(data);
-+	cix_mbox_write(priv, len, FIFO_WM);
-+	for (i = 0; i < len; i++)
-+		cix_mbox_write(priv, msg->buf[i], FIFO_WR);
-+
-+	/* Enable fifo empty interrupt */
-+	val_32 = cix_mbox_read(priv, INT_ENABLE);
-+	val_32 |= FIFO_EMPTY_INT;
-+	cix_mbox_write(priv, val_32, INT_ENABLE);
-+
-+	return 0;
-+}
-+
-+static int cix_mbox_send_data_fast(struct mbox_chan *chan, void *data)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+	u32 *arg = (u32 *)data;
-+	int index = cp->index;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	if (index < 0 || index > MBOX_FAST_IDX) {
-+		dev_err(priv->dev, "Invalid Mbox index %d\n", index);
-+		return -EINVAL;
-+	}
-+
-+	cix_mbox_write(priv, arg[0], REG_F_INT(index));
-+
-+	return 0;
-+}
-+
-+static int cix_mbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+
-+	if (priv->dir != MBOX_TX) {
-+		dev_err(priv->dev, "Invalid Mbox dir %d\n", priv->dir);
-+		return -EINVAL;
-+	}
-+
-+	switch (cp->type) {
-+	case CIX_MBOX_TYPE_DB:
-+		cix_mbox_send_data_db(chan, data);
-+		break;
-+	case CIX_MBOX_TYPE_REG:
-+		cix_mbox_send_data_reg(chan, data);
-+		break;
-+	case CIX_MBOX_TYPE_FIFO:
-+		cix_mbox_send_data_fifo(chan, data);
-+		break;
-+	case CIX_MBOX_TYPE_FAST:
-+		cix_mbox_send_data_fast(chan, data);
-+		break;
-+	default:
-+		dev_err(priv->dev, "Invalid channel type: %d\n", cp->type);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static void cix_mbox_isr_db(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	u32 int_status;
-+
-+	int_status = cix_mbox_read(priv, INT_STATUS);
-+
-+	if (priv->dir == MBOX_RX) {
-+		/* rx interrupt is triggered */
-+		if (int_status & DB_INT) {
-+			cix_mbox_write(priv, DB_INT, INT_CLEAR);
-+			mbox_chan_received_data(chan, NULL);
-+			/* trigger ack interrupt */
-+			cix_mbox_write(priv, DB_ACK_INT_BIT, REG_DB_ACK);
-+		}
-+	} else {
-+		/* tx ack interrupt is triggered */
-+		if (int_status & ACK_INT) {
-+			cix_mbox_write(priv, ACK_INT, INT_CLEAR);
-+			mbox_chan_received_data(chan, NULL);
-+		}
-+	}
-+}
-+
-+static void cix_mbox_isr_reg(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	u32 int_status;
-+	u32 data[CIX_MBOX_MSG_LEN];
-+	int i;
-+	u32 len;
-+
-+	int_status = cix_mbox_read(priv, INT_STATUS);
-+
-+	if (priv->dir == MBOX_RX) {
-+		/* rx interrupt is triggered */
-+		if (int_status & DB_INT) {
-+			cix_mbox_write(priv, DB_INT, INT_CLEAR);
-+			data[0] = cix_mbox_read(priv, REG_MSG(0));
-+			len = mbox_get_msg_size(data);
-+			for (i = 0; i < len; i++)
-+				data[i] = cix_mbox_read(priv, REG_MSG(i));
-+
-+			/* trigger ack interrupt */
-+			cix_mbox_write(priv, DB_ACK_INT_BIT, REG_DB_ACK);
-+			mbox_chan_received_data(chan, data);
-+		}
-+	} else {
-+		/* tx ack interrupt is triggered */
-+		if (int_status & ACK_INT) {
-+			cix_mbox_write(priv, ACK_INT, INT_CLEAR);
-+			mbox_chan_txdone(chan, 0);
-+		}
-+	}
-+}
-+
-+static void cix_mbox_isr_fifo(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	u32 data[CIX_MBOX_MSG_LEN] = { 0 };
-+	int i = 0;
-+	u32 int_status, status, val_32;
-+
-+	int_status = cix_mbox_read(priv, INT_STATUS);
-+
-+	if (priv->dir == MBOX_RX) {
-+		/* FIFO waterMark interrupt is generated */
-+		if (int_status & (FIFO_FULL_INT | FIFO_WM01_INT)) {
-+			cix_mbox_write(priv, (FIFO_FULL_INT | FIFO_WM01_INT), INT_CLEAR);
-+			do {
-+				data[i++] = cix_mbox_read(priv, FIFO_RD);
-+			} while (!mbox_fifo_empty(chan) && i < CIX_MBOX_MSG_LEN);
-+
-+			mbox_chan_received_data(chan, data);
-+		}
-+		/* FIFO underflow is generated */
-+		if (int_status & FIFO_UFLOW_INT) {
-+			status = cix_mbox_read(priv, FIFO_STAS);
-+			dev_err(priv->dev, "fifo underflow: int_stats %d\n", status);
-+			cix_mbox_write(priv, FIFO_UFLOW_INT, INT_CLEAR);
-+		}
-+	} else {
-+		/* FIFO empty interrupt is generated */
-+		if (int_status & FIFO_EMPTY_INT) {
-+			cix_mbox_write(priv, FIFO_EMPTY_INT, INT_CLEAR);
-+			/* Disable empty irq*/
-+			val_32 = cix_mbox_read(priv, INT_ENABLE);
-+			val_32 &= ~FIFO_EMPTY_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE);
-+			mbox_chan_txdone(chan, 0);
-+		}
-+		/* FIFO overflow is generated */
-+		if (int_status & FIFO_OFLOW_INT) {
-+			status = cix_mbox_read(priv, FIFO_STAS);
-+			dev_err(priv->dev, "fifo overlow: int_stats %d\n", status);
-+			cix_mbox_write(priv, FIFO_OFLOW_INT, INT_CLEAR);
-+		}
-+	}
-+}
-+
-+static void cix_mbox_isr_fast(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+	u32 int_status, data;
-+
-+	/* no irq will be trigger for TX dir mbox */
-+	if (priv->dir != MBOX_RX)
-+		return;
-+
-+	int_status = cix_mbox_read(priv, INT_STATUS);
-+
-+	if (int_status & FAST_CH_INT(cp->index)) {
-+		cix_mbox_write(priv, FAST_CH_INT(cp->index), INT_CLEAR);
-+		data = cix_mbox_read(priv, REG_F_INT(cp->index));
-+		mbox_chan_received_data(chan, &data);
-+	}
-+}
-+
-+static irqreturn_t cix_mbox_isr(int irq, void *arg)
-+{
-+	struct mbox_chan *chan = arg;
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+
-+	switch (cp->type) {
-+	case CIX_MBOX_TYPE_DB:
-+		cix_mbox_isr_db(chan);
-+		break;
-+	case CIX_MBOX_TYPE_REG:
-+		cix_mbox_isr_reg(chan);
-+		break;
-+	case CIX_MBOX_TYPE_FIFO:
-+		cix_mbox_isr_fifo(chan);
-+		break;
-+	case CIX_MBOX_TYPE_FAST:
-+		cix_mbox_isr_fast(chan);
-+		break;
-+	default:
-+		dev_err(priv->dev, "Invalid channel type: %d\n", cp->type);
-+		return IRQ_NONE;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cix_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+	int ret;
-+	int index = cp->index;
-+	u32 val_32;
-+
-+	ret = request_irq(priv->irq, cix_mbox_isr, 0,
-+			  dev_name(priv->dev), chan);
-+	if (ret) {
-+		dev_err(priv->dev, "Unable to acquire IRQ %d\n", priv->irq);
-+		return ret;
-+	}
-+
-+	switch (cp->type) {
-+	case CIX_MBOX_TYPE_DB:
-+		/* Overwrite txdone_method for DB channel */
-+		chan->txdone_method = TXDONE_BY_ACK;
-+		fallthrough;
-+	case CIX_MBOX_TYPE_REG:
-+		if (priv->dir == MBOX_TX) {
-+			/* Enable ACK interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE);
-+			val_32 |= ACK_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE);
-+		} else {
-+			/* Enable Doorbell interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 |= DB_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+	case CIX_MBOX_TYPE_FIFO:
-+		/* reset fifo */
-+		cix_mbox_write(priv, FIFO_RST_BIT, FIFO_RST);
-+		/* set default watermark */
-+		cix_mbox_write(priv, FIFO_WM_DEFAULT, FIFO_WM);
-+		if (priv->dir == MBOX_TX) {
-+			/* Enable fifo overflow interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE);
-+			val_32 |= FIFO_OFLOW_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE);
-+		} else {
-+			/* Enable fifo full/underflow interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 |= FIFO_UFLOW_INT|FIFO_WM01_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+	case CIX_MBOX_TYPE_FAST:
-+		/* Only RX channel has intterupt */
-+		if (priv->dir == MBOX_RX) {
-+			if (index < 0 || index > MBOX_FAST_IDX) {
-+				dev_err(priv->dev, "Invalid index %d\n", index);
-+				return ret;
-+			}
-+			/* enable fast channel interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 |= FAST_CH_INT(index);
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+	default:
-+		dev_err(priv->dev, "Invalid channel type: %d\n", cp->type);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static void cix_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct cix_mbox_priv *priv = to_cix_mbox_priv(chan->mbox);
-+	struct cix_mbox_con_priv *cp = chan->con_priv;
-+	u32 val_32;
-+	int index = cp->index;
-+
-+	switch (cp->type) {
-+	case CIX_MBOX_TYPE_DB:
-+	case CIX_MBOX_TYPE_REG:
-+		if (priv->dir == MBOX_TX) {
-+			/* Disable ACK interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE);
-+			val_32 &= ~ACK_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE);
-+		} else if (priv->dir == MBOX_RX) {
-+			/* Disable Doorbell interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 &= ~DB_INT;
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+	case CIX_MBOX_TYPE_FIFO:
-+		if (priv->dir == MBOX_TX) {
-+			/* Disable empty/fifo overflow irq*/
-+			val_32 = cix_mbox_read(priv, INT_ENABLE);
-+			val_32 &= ~(FIFO_EMPTY_INT | FIFO_OFLOW_INT);
-+			cix_mbox_write(priv, val_32, INT_ENABLE);
-+		} else if (priv->dir == MBOX_RX) {
-+			/* Disable fifo WM01/underflow interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 &= ~(FIFO_UFLOW_INT | FIFO_WM01_INT);
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+	case CIX_MBOX_TYPE_FAST:
-+		if (priv->dir == MBOX_RX) {
-+			if (index < 0 || index > MBOX_FAST_IDX) {
-+				dev_err(priv->dev, "Invalid index %d\n", index);
-+				break;
-+			}
-+			/* Disable fast channel interrupt */
-+			val_32 = cix_mbox_read(priv, INT_ENABLE_SIDE_B);
-+			val_32 &= ~FAST_CH_INT(index);
-+			cix_mbox_write(priv, val_32, INT_ENABLE_SIDE_B);
-+		}
-+		break;
-+
-+	default:
-+		dev_err(priv->dev, "Invalid channel type: %d\n", cp->type);
-+		break;
-+	}
-+
-+	free_irq(priv->irq, chan);
-+}
-+
-+static const struct mbox_chan_ops cix_mbox_chan_ops = {
-+	.send_data = cix_mbox_send_data,
-+	.startup = cix_mbox_startup,
-+	.shutdown = cix_mbox_shutdown,
-+};
-+
-+static void cix_mbox_init(struct cix_mbox_priv *priv)
-+{
-+	int i;
-+	struct cix_mbox_con_priv *cp;
-+
-+	for (i = 0; i < CIX_MBOX_CHANS; i++) {
-+		cp = &priv->con_priv[i];
-+		cp->index = i;
-+		cp->chan = &priv->mbox_chans[i];
-+		priv->mbox_chans[i].con_priv = cp;
-+		if (cp->index <= MBOX_FAST_IDX)
-+			cp->type = CIX_MBOX_TYPE_FAST;
-+		if (cp->index == MBOX_DB_IDX) {
-+			cp->type = CIX_MBOX_TYPE_DB;
-+			priv->use_shmem = true;
-+		}
-+		if (cp->index == MBOX_FIFO_IDX)
-+			cp->type = CIX_MBOX_TYPE_FIFO;
-+		if (cp->index == MBOX_REG_IDX)
-+			cp->type = CIX_MBOX_TYPE_REG;
-+	}
-+}
-+
-+static int cix_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cix_mbox_priv *priv;
-+	int ret;
-+	const char *dir_str;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq < 0)
-+		return priv->irq;
-+
-+	if (device_property_read_string(dev, "cix,mbox-dir", &dir_str)) {
-+		dev_err(priv->dev, "cix,mbox_dir property not found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!strcmp(dir_str, "tx"))
-+		priv->dir = 0;
-+	else if (!strcmp(dir_str, "rx"))
-+		priv->dir = 1;
-+	else {
-+		dev_err(priv->dev, "cix,mbox_dir=%s is not expected\n", dir_str);
-+		return -EINVAL;
-+	}
-+
-+	cix_mbox_init(priv);
-+
-+	priv->mbox.dev = dev;
-+	priv->mbox.ops = &cix_mbox_chan_ops;
-+	priv->mbox.chans = priv->mbox_chans;
-+	priv->mbox.txdone_irq = true;
-+	priv->mbox.num_chans = CIX_MBOX_CHANS;
-+	priv->mbox.of_xlate = NULL;
-+
-+	platform_set_drvdata(pdev, priv);
-+	ret = devm_mbox_controller_register(dev, &priv->mbox);
-+	if (ret)
-+		dev_err(dev, "Failed to register mailbox %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id cix_mbox_dt_ids[] = {
-+	{ .compatible = "cix,sky1-mbox" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, cix_mbox_dt_ids);
-+
-+static struct platform_driver cix_mbox_driver = {
-+	.probe = cix_mbox_probe,
-+	.driver = {
-+		.name = "cix_mbox",
-+		.of_match_table = cix_mbox_dt_ids,
-+	},
-+};
-+
-+static int __init cix_mailbox_init(void)
-+{
-+	return platform_driver_register(&cix_mbox_driver);
-+}
-+arch_initcall(cix_mailbox_init);
-+
-+MODULE_AUTHOR("Cix Technology Group Co., Ltd.");
-+MODULE_DESCRIPTION("CIX mailbox driver");
-+MODULE_LICENSE("GPL");
++#ifndef _DT_BINDINGS_CLK_CIX_SKY1_H
++#define _DT_BINDINGS_CLK_CIX_SKY1_H
++
++#define CLK_TREE_CPU_GICxCLK			0
++#define CLK_TREE_CPU_PPUCLK			1
++#define CLK_TREE_CPU_PERIPHCLK			2
++#define CLK_TREE_DSU_CLK			3
++#define CLK_TREE_DSU_PCLK			4
++#define CLK_TREE_CPU_CLK_BC0			5
++#define CLK_TREE_CPU_CLK_BC1			6
++#define CLK_TREE_CPU_CLK_BC2			7
++#define CLK_TREE_CPU_CLK_BC3			8
++#define CLK_TREE_CPU_CLK_MC0			9
++#define CLK_TREE_CPU_CLK_MC1			10
++#define CLK_TREE_CPU_CLK_MC2			11
++#define CLK_TREE_CPU_CLK_MC3			12
++#define CLK_TREE_CPU_CLK_LC0			13
++#define CLK_TREE_CPU_CLK_LC1			14
++#define CLK_TREE_CPU_CLK_LC2			15
++#define CLK_TREE_CPU_CLK_LC3			16
++#define CLK_TREE_CSI_CTRL0_PCLK			17
++#define CLK_TREE_CSI_CTRL1_PCLK			18
++#define CLK_TREE_CSI_CTRL2_PCLK			19
++#define CLK_TREE_CSI_CTRL3_PCLK			20
++#define CLK_TREE_CSI_DMA0_PCLK			21
++#define CLK_TREE_CSI_DMA1_PCLK			22
++#define CLK_TREE_CSI_DMA2_PCLK			23
++#define CLK_TREE_CSI_DMA3_PCLK			24
++#define CLK_TREE_CSI_PHY0_PSM			25
++#define CLK_TREE_CSI_PHY1_PSM			26
++#define CLK_TREE_CSI_PHY0_APBCLK		27
++#define CLK_TREE_CSI_PHY1_APBCLK		28
++#define CLK_TREE_FCH_APB_CLK			29
++#define CLK_TREE_GPU_CLK_400M			30
++#define CLK_TREE_GPU_CLK_CORE			31
++#define CLK_TREE_GPU_CLK_STACKS			32
++#define CLK_TREE_DP0_PIXEL0			33
++#define CLK_TREE_DP0_PIXEL1			34
++#define CLK_TREE_DP1_PIXEL0			35
++#define CLK_TREE_DP1_PIXEL1			36
++#define CLK_TREE_DP2_PIXEL0			37
++#define CLK_TREE_DP2_PIXEL1			38
++#define CLK_TREE_DP3_PIXEL0			39
++#define CLK_TREE_DP3_PIXEL1			40
++#define CLK_TREE_DP4_PIXEL0			41
++#define CLK_TREE_DP4_PIXEL1			42
++#define CLK_TREE_DPU_CLK			43
++#define CLK_TREE_DPU0_ACLK			44
++#define CLK_TREE_DPU1_ACLK			45
++#define CLK_TREE_DPU2_ACLK			46
++#define CLK_TREE_DPU3_ACLK			47
++#define CLK_TREE_DPU4_ACLK			48
++#define CLK_TREE_DPC0_VIDCLK0			49
++#define CLK_TREE_DPC0_VIDCLK1			50
++#define CLK_TREE_DPC1_VIDCLK0			51
++#define CLK_TREE_DPC1_VIDCLK1			52
++#define CLK_TREE_DPC2_VIDCLK0			53
++#define CLK_TREE_DPC2_VIDCLK1			54
++#define CLK_TREE_DPC3_VIDCLK0			55
++#define CLK_TREE_DPC3_VIDCLK1			56
++#define CLK_TREE_DPC4_VIDCLK0			57
++#define CLK_TREE_DPC4_VIDCLK1			58
++#define CLK_TREE_DPC0_APBCLK			59
++#define CLK_TREE_DPC1_APBCLK			60
++#define CLK_TREE_DPC2_APBCLK			61
++#define CLK_TREE_DPC3_APBCLK			62
++#define CLK_TREE_DPC4_APBCLK			63
++#define CLK_TREE_NPU_MEMCLK			64
++#define CLK_TREE_NPU_SYSCLK			65
++#define CLK_TREE_NPU_DBGCLK			66
++#define CLK_TREE_VPU_APBCLK			67
++#define CLK_TREE_ISP_ACLK			68
++#define CLK_TREE_ISP_SCLK			69
++#define CLK_TREE_AUDIO_CLK4			70
++#define CLK_TREE_AUDIO_CLK5			71
++#define CLK_TREE_CAMERA_MCLK0			72
++#define CLK_TREE_CAMERA_MCLK1			73
++#define CLK_TREE_CAMERA_MCLK2			74
++#define CLK_TREE_CAMERA_MCLK3			75
++#define CLK_TREE_AUDIO_CLK0			76
++#define CLK_TREE_AUDIO_CLK1			77
++#define CLK_TREE_AUDIO_CLK2			78
++#define CLK_TREE_AUDIO_CLK3			79
++#define CLK_TREE_MM_NI700_CLK			80
++#define CLK_TREE_SYS_NI700_CLK			81
++#define CLK_TREE_GMAC0_ACLK			82
++#define CLK_TREE_GMAC1_ACLK			83
++#define CLK_TREE_GMAC0_DIV_ACLK			84
++#define CLK_TREE_GMAC0_DIV_TXCLK		85
++#define CLK_TREE_GMAC0_RGMII0_TXCLK		86
++#define CLK_TREE_GMAC1_DIV_ACLK			87
++#define CLK_TREE_GMAC1_DIV_TXCLK		88
++#define CLK_TREE_GMAC1_RGMII0_TXCLK		89
++#define CLK_TREE_GMAC0_PCLK			90
++#define CLK_TREE_GMAC1_PCLK			91
++#define CLK_TREE_USB2_0_AXI_GATE		92
++#define CLK_TREE_USB2_0_APB_GATE		93
++#define CLK_TREE_USB2_1_AXI_GATE		94
++#define CLK_TREE_USB2_1_APB_GATE		95
++#define CLK_TREE_USB2_2_AXI_GATE		96
++#define CLK_TREE_USB2_2_APB_GATE		97
++#define CLK_TREE_USB2_3_AXI_GATE		98
++#define CLK_TREE_USB2_3_APB_GATE		99
++#define CLK_TREE_USB2_0_PHY_GATE		100
++#define CLK_TREE_USB2_1_PHY_GATE		101
++#define CLK_TREE_USB2_2_PHY_GATE		102
++#define CLK_TREE_USB2_3_PHY_GATE		103
++#define CLK_TREE_USB3C_DRD_AXI_GATE		104
++#define CLK_TREE_USB3C_DRD_APB_GATE		105
++#define CLK_TREE_USB3C_DRD_PHY2_GATE		106
++#define CLK_TREE_USB3C_DRD_PHY3_GATE		107
++#define CLK_TREE_USB3C_0_AXI_GATE		108
++#define CLK_TREE_USB3C_0_APB_GATE		109
++#define CLK_TREE_USB3C_0_PHY2_GATE		110
++#define CLK_TREE_USB3C_0_PHY3_GATE		111
++#define CLK_TREE_USB3C_1_AXI_GATE		112
++#define CLK_TREE_USB3C_1_APB_GATE		113
++#define CLK_TREE_USB3C_1_PHY2_GATE		114
++#define CLK_TREE_USB3C_1_PHY3_GATE		115
++#define CLK_TREE_USB3C_2_AXI_GATE		116
++#define CLK_TREE_USB3C_2_APB_GATE		117
++#define CLK_TREE_USB3C_2_PHY2_GATE		118
++#define CLK_TREE_USB3C_2_PHY3_GATE		119
++#define CLK_TREE_USB3A_0_AXI_GATE		120
++#define CLK_TREE_USB3A_0_APB_GATE		121
++#define CLK_TREE_USB3A_0_PHY2_GATE		122
++#define CLK_TREE_USB3A_1_AXI_GATE		123
++#define CLK_TREE_USB3A_1_APB_GATE		124
++#define CLK_TREE_USB3A_1_PHY2_GATE		125
++#define CLK_TREE_USB3A_PHY3_GATE		126
++#define CLK_TREE_USB2_0_CLK_SOF			127
++#define CLK_TREE_USB2_1_CLK_SOF			128
++#define CLK_TREE_USB2_2_CLK_SOF			129
++#define CLK_TREE_USB2_3_CLK_SOF			130
++#define CLK_TREE_USB3C_DRD_CLK_SOF		131
++#define CLK_TREE_USB3C_H0_CLK_SOF		132
++#define CLK_TREE_USB3C_H1_CLK_SOF		133
++#define CLK_TREE_USB3C_H2_CLK_SOF		134
++#define CLK_TREE_USB3A_H0_CLK_SOF		135
++#define CLK_TREE_USB3A_H1_CLK_SOF		136
++#define CLK_TREE_USB2_0_CLK_LPM			137
++#define CLK_TREE_USB2_1_CLK_LPM			138
++#define CLK_TREE_USB2_2_CLK_LPM			139
++#define CLK_TREE_USB2_3_CLK_LPM			140
++#define CLK_TREE_USB3C_DRD_CLK_LPM		141
++#define CLK_TREE_USB3C_H0_CLK_LPM		142
++#define CLK_TREE_USB3C_H1_CLK_LPM		143
++#define CLK_TREE_USB3C_H2_CLK_LPM		144
++#define CLK_TREE_USB3A_H0_CLK_LPM		145
++#define CLK_TREE_USB3A_H1_CLK_LPM		146
++#define CLK_TREE_USB2_0_PHY_REF			147
++#define CLK_TREE_USB2_1_PHY_REF			148
++#define CLK_TREE_USB2_2_PHY_REF			149
++#define CLK_TREE_USB2_3_PHY_REF			150
++#define CLK_TREE_USB3C_DRD_PHY_REF		151
++#define CLK_TREE_USB3C_H0_PHY_REF		152
++#define CLK_TREE_USB3C_H1_PHY_REF		153
++#define CLK_TREE_USB3C_H2_PHY_REF		154
++#define CLK_TREE_USB3A_H0_PHY_REF		155
++#define CLK_TREE_USB3A_H1_PHY_REF		156
++#define CLK_TREE_USB3C_DRD_PHY_x4_REF		157
++#define CLK_TREE_USB3C_H0_PHY_x4_REF		158
++#define CLK_TREE_USB3C_H1_PHY_x4_REF		159
++#define CLK_TREE_USB3C_H2_PHY_x4_REF		160
++#define CLK_TREE_USB3A_PHY_x2_REF		161
++#define CLK_TREE_PCIE_X8CTRL_APB		162
++#define CLK_TREE_PCIE_X4CTRL_APB		163
++#define CLK_TREE_PCIE_X2CTRL_APB		164
++#define CLK_TREE_PCIE_X1_0CTRL_APB		165
++#define CLK_TREE_PCIE_X1_1CTRL_APB		166
++#define CLK_TREE_PCIE_X8_PHY_APB		167
++#define CLK_TREE_PCIE_X4_PHY_APB		168
++#define CLK_TREE_PCIE_X211_PHY_APB		169
++#define CLK_TREE_PCIE_NI700_CLK			170
++#define CLK_TREE_PCIE_CTRL0_CLK			171
++#define CLK_TREE_PCIE_CTRL1_CLK			172
++#define CLK_TREE_PCIE_CTRL2_CLK			173
++#define CLK_TREE_PCIE_CTRL3_CLK			174
++#define CLK_TREE_PCIE_CTRL4_CLK			175
++#define CLK_TREE_CSI_CTRL0_SYSCLK		176
++#define CLK_TREE_CSI_CTRL1_SYSCLK		177
++#define CLK_TREE_CSI_CTRL2_SYSCLK		178
++#define CLK_TREE_CSI_CTRL3_SYSCLK		179
++#define CLK_TREE_CSI_CTRL0_PIXEL0_CLK		180
++#define CLK_TREE_CSI_CTRL0_PIXEL1_CLK		181
++#define CLK_TREE_CSI_CTRL0_PIXEL2_CLK		182
++#define CLK_TREE_CSI_CTRL0_PIXEL3_CLK		183
++#define CLK_TREE_CSI_CTRL1_PIXEL0_CLK		184
++#define CLK_TREE_CSI_CTRL2_PIXEL0_CLK		185
++#define CLK_TREE_CSI_CTRL2_PIXEL1_CLK		186
++#define CLK_TREE_CSI_CTRL2_PIXEL2_CLK		187
++#define CLK_TREE_CSI_CTRL2_PIXEL3_CLK		188
++#define CLK_TREE_CSI_CTRL3_PIXEL0_CLK		189
++#define CLK_TREE_CI700_GCLK0			190
++#define CLK_TREE_DDRC0_ACLK_CLK			191
++#define CLK_TREE_DDRC1_ACLK_CLK			192
++#define CLK_TREE_DDRC2_ACLK_CLK			193
++#define CLK_TREE_DDRC3_ACLK_CLK			194
++#define CLK_TREE_DDRC0_DFICLK_CLK		195
++#define CLK_TREE_DDRC1_DFICLK_CLK		196
++#define CLK_TREE_DDRC2_DFICLK_CLK		197
++#define CLK_TREE_DDRC3_DFICLK_CLK		198
++#define CLK_TREE_PHY0_SYNC_CLK			199
++#define CLK_TREE_PHY1_SYNC_CLK			200
++#define CLK_TREE_PHY2_SYNC_CLK			201
++#define CLK_TREE_PHY3_SYNC_CLK			202
++#define CLK_TREE_PHY0_BYPASS_CLK		203
++#define CLK_TREE_PHY1_BYPASS_CLK		204
++#define CLK_TREE_PHY2_BYPASS_CLK		205
++#define CLK_TREE_PHY3_BYPASS_CLK		206
++#define CLK_TREE_DDRC_0_APB			207
++#define CLK_TREE_DDRC_1_APB			208
++#define CLK_TREE_DDRC_2_APB			209
++#define CLK_TREE_DDRC_3_APB			210
++#define CLK_TREE_TZC400_0_APB			211
++#define CLK_TREE_TZC400_1_APB			212
++#define CLK_TREE_TZC400_2_APB			213
++#define CLK_TREE_TZC400_3_APB			214
++#define CLK_TREE_S5_SENSOR_HUB_25M		215
++#define CLK_TREE_S5_SENSOR_HUB_400M		216
++#define CLK_TREE_S5_CSS600_100M			217
++#define CLK_TREE_S5_DFD_800M			218
++#define CLK_TREE_S5_CSU_SE_800M			219
++#define CLK_TREE_S5_CSU_PM_800M			220
++#define CLK_TREE_PCIE_REF_B0			221
++#define CLK_TREE_PCIE_REF_B1			222
++#define CLK_TREE_PCIE_REF_B2			223
++#define CLK_TREE_PCIE_REF_B3			224
++#define CLK_TREE_PCIE_REF_B4			225
++#define CLK_TREE_PCIE_REF_PHY_X8		226
++#define CLK_TREE_PCIE_REF_PHY_X4		227
++#define CLK_TREE_PCIE_REF_PHY_X211		228
++#define CLK_TREE_GMAC_REC_CLK			229
++#define CLK_TREE_GPUTOP_PLL			230
++#define CLK_TREE_GPUCORE_PLL			231
++#define CLK_TREE_CPU_PLL_LIT			232
++#define CLK_TREE_CPU_PLL0			233
++#define CLK_TREE_CPU_PLL1			234
++#define CLK_TREE_CPU_PLL2			235
++#define CLK_TREE_CPU_PLL3			236
++#define CLK_TREE_FCH_I3C0_FUNC			237
++#define CLK_TREE_FCH_I3C1_FUNC			238
++#define CLK_TREE_FCH_DMA_ACLK			239
++#define CLK_TREE_FCH_XSPI_FUNC			240
++#define CLK_TREE_FCH_XSPI_MACLK			241
++#define CLK_TREE_FCH_TIMER_FUN			242
++#define CLK_TREE_FCH_APB_IO_S0			243
++#define CLK_TREE_FCH_I3C0_APB			244
++#define CLK_TREE_FCH_I3C1_APB			245
++#define CLK_TREE_FCH_UART0_APB			246
++#define CLK_TREE_FCH_UART1_APB			247
++#define CLK_TREE_FCH_UART2_APB			248
++#define CLK_TREE_FCH_UART3_APB			249
++#define CLK_TREE_FCH_SPI0_APB			250
++#define CLK_TREE_FCH_SPI1_APB			251
++#define CLK_TREE_FCH_XSPI_APB			252
++#define CLK_TREE_FCH_I2C0_APB			253
++#define CLK_TREE_FCH_I2C1_APB			254
++#define CLK_TREE_FCH_I2C2_APB			255
++#define CLK_TREE_FCH_I2C3_APB			256
++#define CLK_TREE_FCH_I2C4_APB			257
++#define CLK_TREE_FCH_I2C5_APB			258
++#define CLK_TREE_FCH_I2C6_APB			259
++#define CLK_TREE_FCH_I2C7_APB			260
++#define CLK_TREE_FCH_TIMER_APB			261
++#define CLK_TREE_FCH_GPIO_APB			262
++#define CLK_TREE_FCH_UART0_FUNC			263
++#define CLK_TREE_FCH_UART1_FUNC			264
++#define CLK_TREE_FCH_UART2_FUNC			265
++#define CLK_TREE_FCH_UART3_FUNC			266
++/* 267~271 not used by AP, skip */
++#define CLK_TREE_GPU_CLK_200M			272
++
++#endif
 -- 
 2.25.1
 
