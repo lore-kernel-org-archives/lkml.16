@@ -1,244 +1,153 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8437F1E5B9D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4692857EB
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142931; cv=none; b=IdcOKe612/erUnsxeaRzIATGcExDuvdTZv7yA5oirsHtpMWPwR5Hx0zPQjtCCbw6ETKuX9SOIr3r+uCH3tBZMPzJdEwvJHf9pTE3fsz2rZpvOLdE4UVQWrPXdvf+gly+FFvO3JMhhFrYSKnR+jO0mu7RT1Xb8a83mD6kZA+NGeI=
+	t=1747142975; cv=none; b=SudL6mMSH+2z0tKlbUXwMtb8ugG0U1N84ZM5vlCa3tg6Ke282r+7bT6Pkvk8ZEE2v03aV/PRcl0RlndyWm/CeKrtMHQP3Fzk3YrLakATPecr4Ff1PyWptIScVf+234gpmIiBQkfCaMH0vbyhQUe5QcyqzzAWKlOa9E7Q2Efv6Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142931; c=relaxed/simple;
-	bh=UeQ0R6/2OS4BggIY2zYE8XT+93b2kOy9oTbdqkpSZ/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FEEXPsWh30eis3R45X7UxVfJXtfJZ+nNry2u0YP8sFXrO2GwNnkoQc3vv+Lvfe+xzi61UVni552KP8a3wJPnaCxp7tUw2HWBz+uJ45Om8YzQc7fy8n4k4qVmcxcj0E4+edbObWBS9yTgUpSXPwqHnJhrXz3kyZGkDnZqOl1KJw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=omVlSl+s; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747142975; c=relaxed/simple;
+	bh=pIZnqAbvKi6g6bM9xBkbfMYNKRFSU6d2NCIENbAWFOs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dvwjcNQwopQ2EeI4u4ZDo23CQ3m6nwajJbOtfTBcmD85Wl8hRlDcXbZR2FJnsBW6IoiiRZ+PKIF2zFKX00/e5lFGOSob0Jz47eOhhc2gJ0Xwu89IBSdSCkvSZUjWIt2SWmYoYs0Q+SgoPuQ4Iu+mWZypI9xvY1hffBQBPm8qF/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kR3p5wQ9; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="omVlSl+s"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747142924; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=SogKgca4SRd3X5KRN0cFvcTQeBOkLPMuNvAdEG4/e1U=;
-	b=omVlSl+sY2nOnPrCLpvvMC+f5MX8/QLRAyeZb+1ICP9XWD4IkSdukKt4MYHhSKD0J8YV9rGDN/caqvpDLHdaH1Trl6H6fuLndm+hSRbiUbtK3Y4ZmKGtP+jiKgwljQlesRjWUwuo1beCSATP2zlnyezyA9EVlACWw+iNQrOK1TI=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WabVqvr_1747142606 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 13 May 2025 21:23:26 +0800
-Date: Tue, 13 May 2025 21:23:25 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org, llong@redhat.com
-Subject: Re: [PATCH v1 1/3] kernel/panic: generalize panic_print's function
- to show sys info
-Message-ID: <aCNHzXkz4wfnIDPM@U-2FWC9VHC-2323.local>
-References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
- <20250511085254.61446-2-feng.tang@linux.alibaba.com>
- <aCMXf0JOi1g6ZI8u@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kR3p5wQ9"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4ddba761dc4so3703365137.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:29:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747142971; x=1747747771; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LZEie1OhAZfjtagVfLYxTcaBKPW2X7YkdVD9WseQzgE=;
+        b=kR3p5wQ9nxxZ0EVG5HcRztu35MW/ZMH0Z4Ap5aqYoCDbROItNisvMevG528ocbPQkd
+         Ja4KRQ/9tSVsSnPXW68q4x+7rTwCd3sGTkEZB4P2dYtgjk9yVWelrQqqHVkkQ81UBC0y
+         Gk8ZHpjj0r8KNzSrudIc/bB47aaFhpTkJRqCUCnLxkL+qZPfUxIqcov/xmgnPMtaeB0X
+         H/GHyI78InR86RlUJ0jXHgJTs+zTMZe20A5CgDi9luYA/WHykBLdTPcE53s/WmVGZ+LG
+         IeXmObmPFBorJOwPeeJkjzdZzes/uWXoCSZgBycuzBR0OtGftgifPQ0T8HU2jCurYrU1
+         DE0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747142971; x=1747747771;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LZEie1OhAZfjtagVfLYxTcaBKPW2X7YkdVD9WseQzgE=;
+        b=pmBS7iXdzV9vreSWid22IsxrBj1o3g/x6VmAe4IqrcX53LvCdpzXlZlcInoua1Qbwx
+         ZbiipBOqRKFWjefGCbjLxXdkfj6d3k0n4nrFlKPvQA3qfQebEv2+tjIPke5HCe7aFrcp
+         P8RTtDHIuptToGHQTTLWVcmAe7CSVC9WennMPu7npYBKgehoiahceN03KkhQAM+QeKiz
+         XfLvWjkcosypjyqw3xbq+RSZd6f1z99AQpgDYA9e8lKqGZ3owwvIR+FZOO/otQNHCrrX
+         2i+dWZ3tHuCuIqth9I5rOz7NeD3UbW1iGGJzf7OYyKzPP8CQ+RAIKTyftrdLp52yI8py
+         AObA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz50Ljp53kntSNKhmZo28dTyg1coUquI+aV70NBVjVRE/4AgTMcNv6I50LqCTqruSYamrBmQ+y/pbXGsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqpShYun/qqxCFBvSxYs2wlk2b8zeNq/VwbCJKpuSXS6RXoNEB
+	EDunl4exuoA33zSZH0ptZ72hkz0xXIzLpl5B2Lww2tfg2MkwxmMAG0H+ks9IpZxZiTPtp5S6gRi
+	Q2toMuLs/4fBc34dY0WYjjMEAIXrId7HBR9uUMg==
+X-Gm-Gg: ASbGncsFZBJqlzyN0g7zAN91/iNEBSpW3byvNzrjWPz6bAy/FLnv7SohBIfHowBlURe
+	HSOQpL+hUUZV1GvzfalhratNKnpA8I4NGn6XOrVcRldY0XnVb8oQbAuq7xVuzWynu2iGBv8brNq
+	9PD8c9TJbYmgh7vmKhDeDvilKGJyI1DzY=
+X-Google-Smtp-Source: AGHT+IHlbMMFq5nAfSA83CCKmxe6r5lw+vXbf9voMmrMRSDCezf0HsCPwNDvoXL3icNnJqJh9L6Y0Q0gPm4WwUngrEA=
+X-Received: by 2002:a05:6102:2c08:b0:4c1:9b88:5c30 with SMTP id
+ ada2fe7eead31-4deed3d3870mr14789892137.19.1747142971375; Tue, 13 May 2025
+ 06:29:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCMXf0JOi1g6ZI8u@pathway.suse.cz>
+References: <20250512172044.326436266@linuxfoundation.org> <CA+G9fYuO5m0EgOAbytJv2Ytp9uj-0jHVUGddaXHLckHk+ZLEHA@mail.gmail.com>
+In-Reply-To: <CA+G9fYuO5m0EgOAbytJv2Ytp9uj-0jHVUGddaXHLckHk+ZLEHA@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 13 May 2025 14:29:20 +0100
+X-Gm-Features: AX0GCFvoub22XkeGUwB2DkAUVguhCcizeWQN8lgksWkCPZabNB8ZW-3lo3CS3bQ
+Message-ID: <CA+G9fYsGTqCxiXQOY3HEu4Z3CEwmyQoOb8DnpzVToWMW-Y8R5A@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, clang-built-linux <llvm@lists.linux.dev>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Marco Crivellari <marco.crivellari@suse.com>, Thorsten Blum <thorsten.blum@linux.dev>, 
+	linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Petr,
+On Tue, 13 May 2025 at 11:40, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Mon, 12 May 2025 at 18:43, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.14.7 release.
+> > There are 197 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.7-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Regressions on mips defconfig tinyconfig and allnoconfig builds failed with
+> clang-20 toolchain on stable-rc  6.14.7-rc1, 6.12.29-rc1 and 6.6.91-rc1.
+> But, builds pass with gcc-13.
+>
+> * mips, build
+>   - clang-20-allnoconfig
+>   - clang-20-defconfig
+>   - clang-20-tinyconfig
+>   - korg-clang-20-lkftconfig-hardening
+>   - korg-clang-20-lkftconfig-lto-full
+>   - korg-clang-20-lkftconfig-lto-thing
+>
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+>
+> Build regression: mips defconfig clang-20 instantiation error expected
+> an immediate
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> ## Build error mips
+> <instantiation>:7:11: error: expected an immediate
+>  ori $26, r4k_wait_idle_size - 2
+>           ^
+> <instantiation>:10:13: error: expected an immediate
+>  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+>             ^
+> <instantiation>:10:29: error: expected an immediate
+>  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+>                             ^
+> <instantiation>:7:11: error: expected an immediate
+>  ori $26, r4k_wait_idle_size - 2
+>           ^
+> <instantiation>:10:13: error: expected an immediate
+>  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+>             ^
+> <instantiation>:10:29: error: expected an immediate
+>  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+>                             ^
 
-Thanks for the review!
 
-On Tue, May 13, 2025 at 11:57:19AM +0200, Petr Mladek wrote:
-> On Sun 2025-05-11 16:52:52, Feng Tang wrote:
-> > panic_print was introduced to help debugging kernel panic by dumping
-> > different kinds of system information like tasks' call stack, memory,
-> > ftrace buffer etc. Acutually this function could help debugging cases
-> > like task-hung, soft/hard lockup too, where user may need the snapshot
-> > of system info at that time.
-> > 
-> > Extract sys_show_info() function out to be used by other kernel parts
-> > for debugging.
-> > 
-> > --- a/include/linux/panic.h
-> > +++ b/include/linux/panic.h
-> > @@ -16,6 +16,17 @@ extern void oops_enter(void);
-> >  extern void oops_exit(void);
-> >  extern bool oops_may_print(void);
-> >  
-> > +#define SYS_PRINT_TASK_INFO		0x00000001
-> > +#define SYS_PRINT_MEM_INFO		0x00000002
-> > +#define SYS_PRINT_TIMER_INFO		0x00000004
-> > +#define SYS_PRINT_LOCK_INFO		0x00000008
-> > +#define SYS_PRINT_FTRACE_INFO		0x00000010
-> > +#define SYS_PRINT_ALL_PRINTK_MSG	0x00000020
-> 
-> Please, remove this option from the generic interface. It is
-> controversial. In the current form, it makes sense to replay
-> the log only in panic() after all the other actions:
-> 
-> 	console_verbose();
-> 	bust_spinlocks(1);
-> 	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
-> 	printk_legacy_allow_panic_sync();
-> 	console_unblank();
-> 	debug_locks_off();
-> 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+The bisection found this as first bad commit,
 
-OK, will do.
+    MIPS: Fix idle VS timer enqueue
 
-In my RFC version, I did reserved it for panic use only :) and
-added the support to general case in v1 after some hesitation. 
+    [ Upstream commit 56651128e2fbad80f632f388d6bf1f39c928267a ]
 
-https://lore.kernel.org/lkml/20250507104322.30700-2-feng.tang@linux.alibaba.com/
-
-> 
-> All these operations have some (side-)effect which increases
-> the chance to actually see the messages on the console.
-> 
-> I think that it was primary meant for graphics consoles. But there
-> it would need to be used together with printk_delay
-> (/proc/sys/kernel/printk_delay, sysctl printk_delay).
-> 
-> Note that it creates a hairy code. It is the only reason why we need to
-> call panic_print_sys_info() twice with "false" and "true"
-> parameter.
-
-Yes.
-
-> 
-> That said, I could imagine a generic use, for example, after forcing
-> ignore_loglevel or so. Otherwise, I do not see any advantage in
-> flushing the same messages again, for example, on serial or network
-> consoles where they are likely already stored. We could add this
-> later when there is a real-life demand.
-
-You are right, one main usage is for some product which has only graphics
-console and no serial one. And we also used for serial console sometimes,
-when the console have a lot of user space message mixed with kernel ones,
-and we'd like to see the full clean kernel messages.
-
-> 
-> > +#define SYS_PRINT_ALL_CPU_BT		0x00000040
-> > +#define SYS_PRINT_BLOCKED_TASKS		0x00000080
-> 
-> The generic approach might deserve a separate source file,
-> for example:
-> 
->     include/linux/sys_info.h
->     lib/sys_info.c
-
-Thanks for the suggestion! I'm really not good at naming. 
-
-As panic.c is always built-in, I'll put sys_info.c as obj-y.
-
-> Also I always considered the bitmask as a horrible user interface.
-> It might be used internally. But it would be better to allow a human
-> readable parameter, for example:
-> 
-> 	panic_sys_info=task,mem,timer,lock,ftrace,bt,all_bt,blocked_tasks
-
-Yes, it's convenient for developers, as a cmdline parameter being parsed
-at boot time.
-
-But I think bitmask may be easier for runtime changing as a core parameter
-under /proc/ or /sys/, or from sysctl interface. There are also some other
-modules use debug bitmask controlling printking info for different
-sub-components.
-
-And we have similar control knobs for hung, lockup etc.
-
-Or should I change the name from 'xxx_print_mask' to 'xxx_sysinfo_flag'
-in patch 2/3 ?
-
-> 
-> The console reply might be handled by a separate:
-> 
-> 	panic_console_reply=1
-> 
-> And it would obsolete the existing "panic_print" which is an
-> ugly name and interface from my POV.
-
-Agree it's ugly :). But besides a kernel parameter,  'panic_print' is
-also a sysctl interface, I'm afraid renaming it might break user ABI.
-
-> > +extern void sys_show_info(unsigned long info_mask);
-> > +
-> >  extern bool panic_triggering_all_cpu_backtrace;
-> >  extern int panic_timeout;
-> >  extern unsigned long panic_print;
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -208,33 +200,44 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
-> >  }
-> >  EXPORT_SYMBOL(nmi_panic);
-> >  
-> > -static void panic_print_sys_info(bool console_flush)
-> > +void sys_show_info(unsigned long info_mask)
-> >  {
-> > -	if (console_flush) {
-> > -		if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-> > -			console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> > -		return;
-> > -	}
-> > -
-> > -	if (panic_print & PANIC_PRINT_TASK_INFO)
-> > +	if (info_mask & SYS_PRINT_TASK_INFO)
-> >  		show_state();
-> >  
-> > -	if (panic_print & PANIC_PRINT_MEM_INFO)
-> > +	if (info_mask & SYS_PRINT_MEM_INFO)
-> >  		show_mem();
-> >  
-> > -	if (panic_print & PANIC_PRINT_TIMER_INFO)
-> > +	if (info_mask & SYS_PRINT_TIMER_INFO)
-> >  		sysrq_timer_list_show();
-> >  
-> > -	if (panic_print & PANIC_PRINT_LOCK_INFO)
-> > +	if (info_mask & SYS_PRINT_LOCK_INFO)
-> >  		debug_show_all_locks();
-> >  
-> > -	if (panic_print & PANIC_PRINT_FTRACE_INFO)
-> > +	if (info_mask & SYS_PRINT_FTRACE_INFO)
-> >  		ftrace_dump(DUMP_ALL);
-> >  
-> > -	if (panic_print & PANIC_PRINT_BLOCKED_TASKS)
-> > +	if (panic_print & SYS_PRINT_ALL_PRINTK_MSG)
-> > +		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> 
-> I do not see any advantage in replaying the log at this stage.
-> It might make sense to replay the messages printed before
-> the critical situation. But it makes sense only when they
-> might be filtered/blocked before and can be seen now (unblanked
-> consoles, forced  ignore_loglevel, or so).
-> 
-> I would keep this in the bitmap for backward compactibility.
-> But I would ignore it my the generic print_sys_info().
-
-OK.
-
-> And I would replace panic_print_sys_info(true) call with:
-> 
-> static void panic_console_replay(void)
-> {
-> 	if (panic_print & SYS_PRINT_ALL_PRINTK_MSG)
-> 		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> }
-
-Nice cleanup! Will do. I'll fold this change with this patch.
-
-Thanks,
-Feng
-
-> 
-> > +	if (info_mask & SYS_PRINT_ALL_CPU_BT)
-> > +		trigger_all_cpu_backtrace();
-> > +
-> > +	if (info_mask & SYS_PRINT_BLOCKED_TASKS)
-> >  		show_state_filter(TASK_UNINTERRUPTIBLE);
-> >  }
-> 
-> Best Regards,
-> Petr
+- Naresh Kamboju
