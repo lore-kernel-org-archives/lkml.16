@@ -1,142 +1,114 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BF92441B8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44FA23F424
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129847; cv=none; b=kSBRiEz5SSPDaCoTyd2YMSgdbdX3r0vFLbuVRN5rd4eu0DTCE67iuy9ELHtSU/Er5qdRSAcyhRpn/+OhPFtCik7kQ9QM2414+I1YFMNBW0n8tM1CIr81uqi3coqnEARRiLfhSPVeCbI3uoh35Nb86qDxndyoN0R8NFKSKlJM2E8=
+	t=1747129850; cv=none; b=tljpRQHsQQ+pNI2BMHzoUUQFtVL00efTmjGLm8DMNNTM+/2KHMOfpLmfrWJr19pYlmyKeJANOBC6vkbIqfI1OfoIYTXXe++OR2ya7z+7YgkxOJ0gRSkNYZcUnYLkCAEjnMQexhgMj4A82YzW98WVWReqtKUSbdBU0SyT1zyR0sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129847; c=relaxed/simple;
-	bh=pE00uCTIvhPmghgm1yPqWBS0KhYlBMQjtjn/MUMREMo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JWdkKt/nwhG5icv+Rn9+eJcPdTM0vju9Ja0c0WdUJ0pExPoN8HMkUMrj2yrNXmqmAEAdZsWFDxVbC9rzvNhkRZBrnC4lO87cpP08FCJ1xgNCZBpJm7ZVetXaKmvKSV3M5Od5tbH6/Xmpq8SuvJCo37OimHC+e0D0UG1647iBd4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 54D9noxM044858
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 17:49:50 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Tue, 13 May 2025
- 17:49:50 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To:
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
-        Ben Zong-You Xie <ben717@andestech.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH v3 5/9] dt-bindings: timer: add Andes machine timer
-Date: Tue, 13 May 2025 17:49:29 +0800
-Message-ID: <20250513094933.1631493-6-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250513094933.1631493-1-ben717@andestech.com>
-References: <20250513094933.1631493-1-ben717@andestech.com>
+	s=arc-20240116; t=1747129850; c=relaxed/simple;
+	bh=xhz5BzF3Pu3H9WbN4J0UYcTsgR51XWVznDUx32kPP98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k3Q2N5TUXO0PKcrnT7cL9upCOCpFlqQdIPXkkv7MDM5yc9XTVbTL+auvpfe3RmMJbuRgAMnr0vri+zA1KX+47wwPWo2in83JfwlMkwb4Rvn6l75oiyYmYDsQ+nBVoNlpqletHFPQlVynrQJ/pJpEhyf+qWKZ3X5/7HHZosd49m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=2/p3OhWt; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="2/p3OhWt"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id ETryuAruizZPaEmHeuTYmm; Tue, 13 May 2025 09:50:46 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id EmHdu5tCWc6KWEmHduJYLq; Tue, 13 May 2025 09:50:45 +0000
+X-Authority-Analysis: v=2.4 cv=L/QbQfT8 c=1 sm=1 tr=0 ts=682315f5
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2sK+jMQgNSt/N+/Hq6dPCdUDGhjbYwgu+z26tNnWh3A=; b=2/p3OhWtQlNIphwRRYB8Zbb/iS
+	Wmnymp//C/dhnE4v07ofrpZ1CSZz4cZ5JawlUD6cXCsdnIOVN1DzCewFMcws6peI9/1uYTgg+XmGY
+	hLwCrvGaXSD3Ztxbsvm9mvwaoXZIn7m7vmNqE5QuA8tTeIghwTAzuAepDk5QfHA46p9kJNhADu5a3
+	mtolnQel/PLIvm+/6vtaBOkuK54EDksuTGZqGbTmDxdVZUcTXidbzUbZyA5i6Oo96z03P9IeeK5r2
+	x5PQ2x78bIeUH6b/HaiETa85TGSdoq5/GCz/TP9pGwa2I/xFROzU0jKZZqlSSExV7WPiNstvS4j9W
+	yUMKl8+Q==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:60484 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uEmHc-00000003JaK-1iVE;
+	Tue, 13 May 2025 03:50:44 -0600
+Message-ID: <ff0fb2be-a3f3-45d7-8370-b9925c688659@w6rz.net>
+Date: Tue, 13 May 2025 02:50:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54D9noxM044858
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172041.624042835@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250512172041.624042835@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uEmHc-00000003JaK-1iVE
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:60484
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 35
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFYiQVXbiZtVjkuwIDvudZ1dNd7VcZCbYm1fHu7eIkqaH0l1LywuYBqTDQ27bC1XZ3rtAIpxjFzdKOG4V9aNhPRvWFhr7PsrpLx0g8tUv20wUjlxt7eK
+ lkDYPXyf08rSXTzRRis3ruIzbUqw5JAOrkvkiQ6uqRdzv65Oy2sBB+fzmvhhd/HL8wOPMGsowYqdKPw7QI5QDnv5dA/4bVlboCc=
 
-Add the DT binding documentation for Andes machine timer.
+On 5/12/25 10:43, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.29-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The RISC-V architecture defines a machine timer that provides a real-time
-counter and generates timer interrupts. Andes machiner timer (PLMT0) is
-the implementation of the machine timer, and it contains memory-mapped
-registers (mtime and mtimecmp). This device supports up to 32 cores.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
----
- .../bindings/timer/andestech,plmt0.yaml       | 53 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
+Tested-by: Ron Economos <re@w6rz.net>
 
-diff --git a/Documentation/devicetree/bindings/timer/andestech,plmt0.yaml b/Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
-new file mode 100644
-index 000000000000..90b612096004
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/andestech,plmt0.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Andes machine-level timer
-+
-+description:
-+  The Andes machine-level timer device (PLMT0) provides machine-level timer
-+  functionality for a set of HARTs on a RISC-V platform. It has a single
-+  fixed-frequency monotonic time counter (MTIME) register and a time compare
-+  register (MTIMECMP) for each HART connected to the PLMT0. A timer interrupt is
-+  generated if MTIME >= MTIMECMP.
-+
-+maintainers:
-+  - Ben Zong-You Xie <ben717@andestech.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - andestech,qilai-plmt
-+      - const: andestech,plmt0
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts-extended:
-+    minItems: 1
-+    maxItems: 32
-+    description:
-+      Specifies which harts are connected to the PLMT0. Each item must points
-+      to a riscv,cpu-intc node, which has a riscv cpu node as parent. The
-+      PLMT0 supports 1 hart up to 32 harts.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts-extended
-+
-+examples:
-+  - |
-+    interrupt-controller@100000 {
-+      compatible = "andestech,qilai-plmt", "andestech,plmt0";
-+      reg = <0x100000 0x100000>;
-+      interrupts-extended = <&cpu0intc 7>,
-+                            <&cpu1intc 7>,
-+                            <&cpu2intc 7>,
-+                            <&cpu3intc 7>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 645d7137cb07..d1e1b98dfe7b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20730,6 +20730,7 @@ M:	Ben Zong-You Xie <ben717@andestech.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
- F:	Documentation/devicetree/bindings/riscv/andes.yaml
-+F:	Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
-
- RISC-V ARCHITECTURE
- M:	Paul Walmsley <paul.walmsley@sifive.com>
---
-2.34.1
