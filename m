@@ -1,73 +1,51 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB189202C48;
-	Tue, 13 May 2025 22:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758BE1F92A;
+	Tue, 13 May 2025 22:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747174492; cv=none; b=A3jtuqG/8rpLkQ6dzMKiYsQ9KAExLFpmRbA5sQeaN/rwOyu1J+Hlg29Ixb0pnUWZTHExldpC0AP0y2KGn6V2yEwP+VROjdEXSMeqxRJS77DWCoIunjopVir0mXddE/41QzWYW5jgIPUaKf3+ReotNMoNFyKpTTobPs6RN9dexS8=
+	t=1747174550; cv=none; b=PPc+RpEeyuH77gYDKXCW5ER0jmQyeIk2W2ljQ/ec/CKyw6QCrsP1vuo8YAmmuxax0l4l/WiTZnDP0r9C8k5dcLJdtuE2QKPoYyqm43o97ut2LPi3ZH0AU5VPSwnms4EvcSoLDUS3nhqDi1SmbRyhfgjj2I+3+cb7OS9RHIfaoxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747174492; c=relaxed/simple;
-	bh=maKoMyNUptWEACg33q1vpy/GSFWTvEqnX6P66Eb3NJE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WMkr9/G7ULCweHEfu+RdrXnx01I7zxnw3Fv2U+TvGdcalYQ2uEgDiJvMMWvLs9m0lhgP7HVltj4APuH6tm9uvWQG1CUMPF629t6lNKMCxEgQANo3ArgiAwCBkI+Rgk+/cPD0pJxHocMErNL1UGH0boVoh448Ip7ViRjRlOmUHfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TO9JqyCU; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747174550; c=relaxed/simple;
+	bh=/6JGk2DoI6qFvLdA+3NLv30kEQpSMfwvorKLNIMJluk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dmjDv2M3G/yUY22n2AVEOuyj891cQT7ZQvfTkEUBhXWR1gIdzpw3uUDiR05UKqoHpwHXy2SPzIFBtMG7RQyF7AUFQBBfP2zizZyIa+ElXH/KjH+ZDmsehrAXydPQPrwTD9KComny5XUttaKcbUdoqP9RMT/NsGJ8M6bXIrEBIX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=QwG4SGSC; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TO9JqyCU"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b3f62d1aso757195f8f.1;
-        Tue, 13 May 2025 15:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747174489; x=1747779289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z6twoJszxPLDnRSsZ54kwRwjtDyPeTyb0lPKYWaATxI=;
-        b=TO9JqyCU9HhsftWOLKM1s5vaYvUmJPGgcy6aGR2annZ4CpnldgZn6a9mSBVVmV7JFe
-         kYaH806cLuie7X/szBMqwb1mw8pAp+gw58tiWnGJziRWEFaYqeUlimk3iz9DTPXYQbeu
-         zZK1cFPRo/nE4+wbpnKaz2kvduK/2dx26XXw6lTlREFvYDMFslnM7IvU1e2gGL7ZkHOf
-         M/TowDDm8ClBJN7Kyu2jrTjYvQUCQMkkqQjiTsx4xmKf4NKXeK2y1GxunhTXGG0KVRye
-         IartBV4tYsgz1nCJpev4euXNu13HA8frZswnm2CR0+L0WovhYYhcF++0GFO7YFbUKsfX
-         6HeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747174489; x=1747779289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z6twoJszxPLDnRSsZ54kwRwjtDyPeTyb0lPKYWaATxI=;
-        b=JRj64fKTMQoN+8aUXuDfsjI6gvN4+nLGkKB26sOS3Wc1Ak+UtDpJrZwJBn/C6II0pK
-         WlYKgxl5/1lEWJ315A6lrIyi4WhOy2xyh0R9scDD5BQm4rnTkU2YRTLPTOr70KD/MVaU
-         i+fovwAv0QeCV4+xYVYqJjLci1ig3Fcm7ZHgKSKmaWryKxPz6NhKg1mafvYokEVQvb/+
-         16VzSABsYX2M64hHhC6mfGDZihLtGvYwKvtRapUHzjhj1OHApNNEz41cSVzVVqROCy4e
-         U02rIU1FNwYZuk23GIR2+8NXwHvJgQ56FA/PhLd8cagfbrfTK4PtJ/SdjHUI6tqR90jN
-         KdZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKW3t99ivbRyNoramkhE+nPgGTy5x2O7iUeTx4a8nSBDk/VZtPLK5JVu7K72is1iJitiekGjyQOa6VcDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycTKNn34Wth4I/qZIOgexcT6VjngCXpTzdekveQPFBnuoyrEh/
-	JIo7YsY0nAuzNZS8tqdUyfJpoH25n2wPer7n0q1pN7c9GnHEsI3P
-X-Gm-Gg: ASbGncuhdxuFZkSbqaYi/RsaQFeN9AOEEz3e59kXqPRPUsu5tu9JHSx0C3WYIfH2KB7
-	9eEfX/A88MPGSxA2vz2622Gr+Xwe9JCSu2TAYng4+77spID7aDTj8czvEZooj4Wk2Tn2zCyAxgS
-	V8TTNwmtAT3hiEJnHRejxfFuL8SY6hgnQdFCf329Fv/MDH4LWj8Q5tjoQNV/mAf+4wiCBCjBsrq
-	FYWJS4/aXHv5itfAbvK/pvKLXGpiV0Te+aHzFszoGX5XRsN0Inncahabwt+UxuuTba4j39QBJ1s
-	SvFuTVytKHVhO4i+oXXPeWibizHUlm9kTBhlLIKn4PGX6N+qit6oRnIFw9gsP/phpd8zylryLzg
-	l5t0Slrqko3/k
-X-Google-Smtp-Source: AGHT+IHgrMjW9Ba1gwxGTJLcFIR6YYXzawIfwNKz16y8Eau2B+r2Bk5p9TNdYT7x/IbG5+ngKJe5SQ==
-X-Received: by 2002:a05:6000:240a:b0:3a2:133:b1a4 with SMTP id ffacd0b85a97d-3a3499454c3mr257125f8f.13.1747174488910;
-        Tue, 13 May 2025 15:14:48 -0700 (PDT)
-Received: from localhost.localdomain ([102.44.114.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3951a97sm3194375e9.23.2025.05.13.15.14.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 15:14:48 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-X-Google-Original-From: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
-To: shuah@Kernel.org,
-	skhan@linuxfoundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
-Subject: [PATCH] selftests: acct: fix grammar and clarify output messages
-Date: Wed, 14 May 2025 01:14:26 +0300
-Message-Id: <20250513221426.303691-1-Abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="QwG4SGSC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747174533; x=1747779333; i=spasswolf@web.de;
+	bh=/6JGk2DoI6qFvLdA+3NLv30kEQpSMfwvorKLNIMJluk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QwG4SGSCK5aevOMdIURsAq9kUetkeW4CTIM48WKxYBODQsv4BCM9oirNYOP04Ce6
+	 EOnmo97fUDx6lyuvBWAXyZQRpGfejOTvs704rREXhXfXvS9xsqnvnLjBE3+mgcPfP
+	 8lEcMGmSP/Fh3P+29/AOQE2nFrvnvsj8Kdk3Dqm7p0bWCgQpd4OVlsPwesYQ29geZ
+	 +WeC4O5ctZcuLpDpcAv2Hykrm/zbAWjF3RFUJnDNUzTYhs6k3eIyAciQVQx2aDbru
+	 aEiegcRE/NVb7jaIqqMcteeb8nkCy683fHFkdDqJeDRpHnU1W7HtRR8F5mXPEJmcf
+	 jla7kZlcEposz524QQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
+ (mrweb005 [213.165.67.108]) with ESMTPSA (Nemesis) id
+ 1M6HG8-1uLagf1glM-0019ST; Wed, 14 May 2025 00:15:33 +0200
+From: Bert Karwatzki <spasswolf@web.de>
+To: linux-kernel@vger.kernel.org
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	linux-next@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Johannes Berg <johannes.berg@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when compiled with clang
+Date: Wed, 14 May 2025 00:15:29 +0200
+Message-ID: <20250513221530.2966-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: 20250513164807.51780-1-spasswolf@web.de
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,48 +53,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:QbM8WIz0yz2M2XOuky6oi/SH1BqLt0DoQE3r1SGxkHNDE+nYO+o
+ Z+MgfqWB1irJ2/wf7NhbprDk6okV6W1dRwvWOhIINzhxUiFykrZ8+9bG25+aBfQeLBxjs5f
+ DD6UpOgi4hjeptdj8IcPmKHFxf7yljs/7K2WSgd6HBu2lmsYxBc0fIKpZ7fqnOBGn3r8t7Y
+ oVnsqAg9ozs0CcFTnv73Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Lu/Gg/EVVtM=;zZgYsZTJLB6AiZLcYNgqMRQfgif
+ 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
+ bk2q1kAn96Yrc=
 
-This patch improves the clarity and grammar of output messages in the acct()
-selftest. Minor changes were made to user-facing strings and comments to make
-them easier to understand and more consistent with the kselftest style.
+commit 97f4b999e0c8 ("genirq: Use scoped_guard() to shut clang up") may me have been
+a false lead, I reverted the following commit in next-20250512 and the boot failure
+is still there.
 
-Changes include:
-- Fixing grammar in printed messages and comments.
-- Rewording error and success outputs for clarity and professionalism.
-- Making the "root check" message more direct.
+73e2e0671c90 (HEAD -> clang_panic) Revert "genirq/manage: Convert to lock guards"
+ff2e5dfa1c21 Revert "genirq/manage: Rework irq_update_affinity_desc()"
+f2be1d787117 Revert "genirq/manage: Rework __irq_apply_affinity_hint()"
+bc2493e2bdef Revert "genirq/manage: Rework irq_set_vcpu_affinity()"
+8c1736260f99 Revert "genirq/manage: Rework __disable_irq_nosync()"
+dd529a9bc52d Revert "genirq/manage: Rework enable_irq()"
+75316d9120cf Revert "genirq/manage: Rework irq_set_irq_wake()"
+544ff63947f5 Revert "genirq/manage: Rework can_request_irq()"
+198028713b99 Revert "genirq/manage: Rework irq_set_parent()"
+70a3f6953491 Revert "genirq/manage: Rework enable_percpu_irq()"
+bcb28ca2603d Revert "genirq/manage: Rework irq_percpu_is_enabled()"
+5858d87ac7e3 Revert "genirq/manage: Rework disable_percpu_irq()"
+1a1f97a3dde0 Revert "genirq/manage: Rework prepare_percpu_nmi()"
+e249ccf0dde0 Revert "genirq/manage: Rework teardown_percpu_nmi()"
+9be3639bdde9 Revert "genirq: Remove irq_[get|put]_desc*()"
+942b93a1ee9c Revert "genirq/manage: Rework irq_get_irqchip_state()"
+8f731e7b7475 Revert "genirq/manage: Rework irq_set_irqchip_state()"
+5bb621187696 Revert "genirq: Use scoped_guard() to shut clang up"
+6539255c6012 Revert "wifi: free SKBTX_WIFI_STATUS skb tx_flags flag"
+edef45700477 (tag: next-20250512, origin/master, origin/HEAD, master) Add linux-next specific files for 20250512
 
-These updates improve readability without affecting test logic or behavior.
 
-Signed-off-by: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
----
- tools/testing/selftests/acct/acct_syscall.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/acct/acct_syscall.c b/tools/testing/selftests/acct/acct_syscall.c
-index 87c044fb9293..2c120a527574 100644
---- a/tools/testing/selftests/acct/acct_syscall.c
-+++ b/tools/testing/selftests/acct/acct_syscall.c
-@@ -22,9 +22,9 @@ int main(void)
- 	ksft_print_header();
- 	ksft_set_plan(1);
- 
--	// Check if test is run a root
-+	// Check if test is run as root
- 	if (geteuid()) {
--		ksft_exit_skip("This test needs root to run!\n");
-+		ksft_exit_skip("This test must be run as root!\n");
- 		return 1;
- 	}
- 
-@@ -52,7 +52,7 @@ int main(void)
- 	child_pid = fork();
- 
- 	if (child_pid < 0) {
--		ksft_test_result_error("Creating a child process to log failed\n");
-+		ksft_test_result_error("Failed to create child process for logging\n");
- 		acct(NULL);
- 		return 1;
- 	} else if (child_pid > 0) {
--- 
-2.25.1
+Bert Karwatzki
 
