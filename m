@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D273F1E5207;
-	Tue, 13 May 2025 07:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B871EB19F;
+	Tue, 13 May 2025 07:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122239; cv=none; b=clrfc33YljdNOPeE0nBw9+XZIi8SggvPKiHmDqJR4esEfBr4H2cUVqJaMUL294AIMu/ZA/XHNwVHrCnwIuL4iTKaMPW+W9oRP2UUfYbFvbfuaV0fcwDzAkik5Cuvg/PPW1eyCdMbiQI2oIGezxclHZQj01bAqG3kZrjjK+qSX+o=
+	t=1747122275; cv=none; b=nD+YZtEnlhNeONQBeMpRAO85uFyb+nHYj2tmpIheW7JxBv64oykH/+vYBmY+RVPDV4exRr8sa/1t8dbmjNPRWZjseO4K2d7l8AiYKpLqPFCQWPKtBbaJHcOnTusEmlQgENVYyMleldOVHa0IN+05k5kTuQ0wF2QNBqPoTfnr2AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122239; c=relaxed/simple;
-	bh=05PSGXPxm8T4uMcfkw55dhfsSpGEmeGikCGoTlmDtMA=;
+	s=arc-20240116; t=1747122275; c=relaxed/simple;
+	bh=So8EYAkv+topCuJPKHzoizloHPKAUlC844pl1wuMZrc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RtvLSdQszpzOHQG5ZBIJCifiZc7hlLkKmOzFszI6gj0hxtyUmBBUwcl4/JqYJoSpMfF/pXXF7oJSVkUx4WparU81cibZQPcZP6s/TjGbRPVJ0+EHRCSErrBP98nfeQiMnGkYptpypHSjvIdeQdMeOjQuHcMhLWWQ5M8yahEokQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3SWsk3s; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KIhRSbj0l1ISg3ogdsioD3EqMKOSm1HZq2w77NP3hm4h6MrCeNoaIBd3XEUTxL+AGTYzKAT15NOrB6LQwx2H6MDPkw80CMTidFBSZ3ST5mlv6Lc7ZmI//3xPM7pl54srlDcDqDlzY46ZP3rBU21BagkBSngvsN0qZG1JYEsoeiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r74a3h1s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3SWsk3s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32D1C4CEE4;
-	Tue, 13 May 2025 07:43:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r74a3h1s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C5B9C4CEE4;
+	Tue, 13 May 2025 07:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747122239;
-	bh=05PSGXPxm8T4uMcfkw55dhfsSpGEmeGikCGoTlmDtMA=;
+	s=k20201202; t=1747122275;
+	bh=So8EYAkv+topCuJPKHzoizloHPKAUlC844pl1wuMZrc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H3SWsk3se2ELFISRDHFZRYT1BU1LkCsETW7FY8H4zIaWqeq5WFwi4GTqVqb25y6y1
-	 jPBZfSlSZ+gL3rEDzaHXdDOUxSbpkuDeOnJ+1xb6xJWUBwrAoAuSfNM3Tu+Xg1ZMgT
-	 8Uk5NJIvhkQsZeTSvinD+KTnTrT+s1W00j2/kuHN0XfmJB+Fld9v7iQv73Zg5y5bBn
-	 voK21xcUG7kYJG7bjQ+tQrXgHC+NfU7civ0zCJaV+OmF3ak//Ax5HsMWoi40XB0Jt2
-	 /Ge9m1RWW1krdcWmiy7CmSqYLs3xC7jyFIs1Xnd3MS/JVALwPzkt/kq61uwtFxmGFi
-	 xUWbhr7HhCk3Q==
-Message-ID: <732fb2d3-5843-41bc-8c62-915193815b08@kernel.org>
-Date: Tue, 13 May 2025 09:43:55 +0200
+	b=r74a3h1sEqQmFxWkOc4i9G+ecYkfigt5dkXCErBp+m1gzAVqqCnoHfhYQAIQmYmEt
+	 gal3LPDTS6BW3udBKZqPfUriOuExj8DQqMVN19aLWURSmrE4qsnXKqAwYoUGDt6vyO
+	 gahiw5G2L9SqvDeyO2D6K4JzTOYnyktqFZ1v+b5dk//tFMjYFP6vIt0dgoxMHIKL2k
+	 /EpmfNqWJzQmKP9I525OnliC3h16JnMVoTdNlyhDnuWUjsQlKd5/sY5UaTuGCQdDLH
+	 BgMc3vjwE4iLKlqIMu/+zg8c8aHYONxRPbbiZFLKPw0gDaE/dGIWqeIEIOo+PAhd1q
+	 IUd1KISwcqG8w==
+Message-ID: <cb1e6cb8-2d51-44b5-88a6-8015a011380b@kernel.org>
+Date: Tue, 13 May 2025 09:44:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [ARM: dts: aspeed: clemente: add Meta Clemente BMC] ARM: dts:
- aspeed: clemente: add Meta Clemente BMC
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
 To: leo.jt.wang@gmail.com, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
@@ -44,7 +43,8 @@ To: leo.jt.wang@gmail.com, Rob Herring <robh@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  george.kw.lee@fii-foxconn.com, leo.jt.wang@fii-foxconn.com
-References: <6821dbe7.170a0220.3b15e.ab77@mx.google.com>
+References: <20250513031010.267994-1-LeoWang>
+ <6822b851.050a0220.27a24d.d071@mx.google.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,64 +90,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <6821dbe7.170a0220.3b15e.ab77@mx.google.com>
+In-Reply-To: <6822b851.050a0220.27a24d.d071@mx.google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/05/2025 13:30, leo.jt.wang@gmail.com wrote:
+On 13/05/2025 05:10, leo.jt.wang@gmail.com wrote:
 > From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 > 
->     Add linux device tree entry for Meta(Facebook) Clemente compute-tray
->     BMC using AST2600 SoC.
-
-
-Not really Linux coding style. Do you see existing patches with above
-format - indentation?
-
+> Add linux device tree entry for Meta Clemente compute-tray
+> BMC using AST2600 SoC.
 > 
 > Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
-> ---
->  arch/arm/boot/dts/aspeed/Makefile             |    1 +
->  .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1269 +++++++++++++++++
->  2 files changed, 1270 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
-> 
-> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
-> index b3170fdd3096..9d0a465cbb36 100644
-> --- a/arch/arm/boot/dts/aspeed/Makefile
-> +++ b/arch/arm/boot/dts/aspeed/Makefile
-> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
->  	aspeed-bmc-delta-ahe50dc.dtb \
->  	aspeed-bmc-facebook-bletchley.dtb \
->  	aspeed-bmc-facebook-catalina.dtb \
-> +	aspeed-bmc-facebook-clemente.dtb \
->  	aspeed-bmc-facebook-cmm.dtb \
->  	aspeed-bmc-facebook-elbert.dtb \
->  	aspeed-bmc-facebook-fuji.dtb \
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
-> new file mode 100644
-> index 000000000000..0313150841e1
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
-> @@ -0,0 +1,1269 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright (c) 2021 Facebook Inc.
-> +/dts-v1/;
-> +
-> +#include "aspeed-g6.dtsi"
-> +#include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/usb/pd.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/i2c/i2c.h>
-> +
-> +/ {
-> +	model = "Facebook Clemente BMC";
-> +	compatible = "facebook,clemente-bmc", "aspeed,ast2600";
 
+Missing threading.
 
-Missing binding or was there saeparate patch exactly for that? But why
-separate?
+Missing versioning.
 
 Best regards,
 Krzysztof
