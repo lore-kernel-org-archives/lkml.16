@@ -1,78 +1,94 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3695419E82A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE131A83E8;
+	Tue, 13 May 2025 15:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148524; cv=none; b=eoT8osau5e7njtLWisruwsd5SfJBV5wgddML+jsiSQdaU7Of0wXI49DnU0MhBNehuys96wieqG/xsYy7esUYGAfMOS/yx0n8eeP6YcxwqlG8plF5VpaXKlS9+e5tqU3wnKbMBh3ChYMnpvdLUTAjO5oMsl5M4JZORW3KqxaUSH0=
+	t=1747148581; cv=none; b=jpVtL5Evwik+c1UkRuCa4DGDDeIMjPYHr3Rp3Xe2cdS6YAlQ/wjOwQ+LQ2UVm3hC4Q+62lFy+7tFw7br2qasuRdEdJy+HCZtWj9GElNCE6nt4eWNZldnCPo6XfKqDSl4MSx+YDBd6vUHxEWU71vN1dBzHLMm1wyM03hrFwDC+FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148524; c=relaxed/simple;
-	bh=hP4PegqdC13RnAQ85+yUWVwc7+/McCk2lZDiw5UO/Bg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=S2bd37ahBObGOBfg8dstoGrttxB2mrZC5bK1Bf7bvMI9jYvA11DThsBwA4drklO1z1+x9sKeeFNUkB7hdQzNmiK9KNd+QrtesQURMEq5otPpRl4liCN86UWriu7UHcQYVJXDIhBUVIIexyoPKWEsKvaOEjP3R/6Uj3VgZ85GilM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85db3356bafso1139272739f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747148522; x=1747753322;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QRCw3Vnmu98ynSRU7dOHd3K3QYDecyR1q9zxGNfhk6k=;
-        b=P9+npjdRv7omrFgjaSyvpnfZfvtcxrr7n89/cjqrysXiJW2XYw/2GS/T9wszB/UZW7
-         7zSydDhJqlgeqmelEgE0OPCpDHIQjvPN4YOWR0JPt3+K082at7Rymw8zwY0+xZloQEYK
-         O7IAfMNm0ku3cUSYkuMOVEw/4EvPQdXNVIKcAq6StXTr5bIKDHT7EH6sSbNiJvEw5QS1
-         3JhAiTIEBNFWcJCFIlnbb6CrtvfXmS6KaZpcNb0ltl2Pg5fyxWo6Sc7K7QCo97DcC0nX
-         iAALD2wRUoLNb7U2aVi9WQmjDHgU6Ofji+ZPwxw3t4Ov8eKKR5VkbmkGdqkZpmUIXddZ
-         USTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUosODFCyAUnbNAYJ4Q68no7bqLBibpyFetu9sWLZbCvk68zfvMUqdXOVseJ7xb+uIMvbUcDAsb7Zjx2SM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiK8Do4b8+f07A8sOCM+bz2vb1m7RCOwg5y2cVXLf1zPs69+Bd
-	iznvBgMHA/mT05akcgaXaerHHmfz5alqEBENa6goo3iL2Pyxt4z1XY42CyZHMDyQgHR5sFQBeh4
-	MIowP41w7d/peNaZwtvtSIdu2ehlMY9rxAHzLvJDtXRCp7rB/tuyVR2A=
-X-Google-Smtp-Source: AGHT+IGMtQ161tXmf2KXLsHZBWzf4It6/o3Ywvnbm9ZKDK/irJkDeLwoCqMl97LC/tlvDAtSX5MOkOfGHaXSl5yf56Ur/aYT6NLX
+	s=arc-20240116; t=1747148581; c=relaxed/simple;
+	bh=v5YY0SZ0PYpJOc41X3mbWN+7Qhji612T5TVNWtMUFmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eFxe2OfPC5W9U4rp2ooEaGZmqQAn2QU+cp7b3hwgMeIjoBg9WbT80RU07yOjSBiseVenuDbSEBsSRYHl7wP+hi7GF9TzRfwEtEKwHsXHNqFB7O4qfCPtwvOvalth9RtEaiWSneC192V2i7PIoUkEjDYTBk21XX7mS8x1JdKbWrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=utYb/EL4; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="utYb/EL4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=RV3QvTlWfQTkDjPmndYOu91G7Myw8NKGakZkfON1fQE=; b=utYb/EL4RvDbKkhKrPXOMrbWto
+	MmdWPsTo7RL3nrPSkz3EBwx392PRrk1tIbgAuFDm5cqJ5YI2NQmmCJehGz0G2XOsnacsJPshdf4OG
+	ay3NeuQAAjxl7ZrPyvvwX9zIVRgxN5F0+R/gYMplzDE3Nb87RtLRdUyPScqYc1bImWnemp028jEGn
+	Pq2wUcrPIJa1fVOtJxLy2IxQV/0UQG6d/bVeVrNiC3g3r0fJHkHyTa8NF+GgNXNcEumX1OFjtTIVS
+	8UdOgzRzlmSZu/Eki7gx8Lg3morJCwkjLbqqY6+HNytDtEeXFGI8qwBpz2noUo6cc4Co2NloI0dhz
+	XMqE54xA==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uEr9a-0008L7-VI; Tue, 13 May 2025 17:02:47 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: quentin.schulz@cherry.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH v2 1/6] arm64: dts: rockchip: add basic mdio node to px30
+Date: Tue, 13 May 2025 17:02:29 +0200
+Message-ID: <20250513150234.2331221-2-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250513150234.2331221-1-heiko@sntech.de>
+References: <20250513150234.2331221-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:da19:0:b0:867:63db:8e4e with SMTP id
- ca18e2360f4ac-86763db8f38mr1628657039f.1.1747148521963; Tue, 13 May 2025
- 08:02:01 -0700 (PDT)
-Date: Tue, 13 May 2025 08:02:01 -0700
-In-Reply-To: <000000000000453f3d05db72fc7e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68235ee9.050a0220.f2294.09fc.GAE@google.com>
-Subject: Re: [syzbot] [usb?] [media?] KASAN: use-after-free Read in
- em28xx_init_extension (2)
-From: syzbot <syzbot+99d6c66dbbc484f50e1c@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-usb@vger.kernel.org, mchehab@kernel.org, 
-	paskripkin@gmail.com, stern@rowland.harvard.edu, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-commit a368ecde8a5055b627749b09c6218ef793043e47
-Author: Alan Stern <stern@rowland.harvard.edu>
-Date:   Thu Jun 27 19:56:18 2024 +0000
+Using snps,reset-* properties for handling the phy-reset is deprecated
+and instead a real phy node should be defined that then contains the
+reset-gpios handling.
 
-    USB: core: Fix duplicate endpoint bug by clearing reserved bits in the descriptor
+To facilitate this, add the core mdio node under the px30's gmac, similar
+to how the other Rockchip socs already do this.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12cf6cd4580000
-start commit:   cd802e7e5f1e Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11cf6cd4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16cf6cd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
-dashboard link: https://syzkaller.appspot.com/bug?extid=99d6c66dbbc484f50e1c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143a7768580000
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Reported-by: syzbot+99d6c66dbbc484f50e1c@syzkaller.appspotmail.com
-Fixes: a368ecde8a50 ("USB: core: Fix duplicate endpoint bug by clearing reserved bits in the descriptor")
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index 9137dd76e72c..feabdadfa440 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -985,6 +985,12 @@ gmac: ethernet@ff360000 {
+ 		resets = <&cru SRST_GMAC_A>;
+ 		reset-names = "stmmaceth";
+ 		status = "disabled";
++
++		mdio: mdio {
++			compatible = "snps,dwmac-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
+ 	};
+ 
+ 	sdmmc: mmc@ff370000 {
+-- 
+2.47.2
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
