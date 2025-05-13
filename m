@@ -1,72 +1,66 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCE81DA0E0;
-	Tue, 13 May 2025 13:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B8128CF42
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143123; cv=none; b=J3d9tu9x2p78CsWu8l4QVCR14v44Xg7zZSKv2SMqBJPwtFWY3gbB1Ahy4z56kRTdHoCmOLvYGnrymH7e7WIszypfpBje4XtIBZUfsoKa7O/OX0MUbML1lzKqa3D9em3zmi9/kRkjY+79lGY4JcSNwdfqzwIdRIQJRIOInc89gpk=
+	t=1747143134; cv=none; b=adOrboqgseEXIizK3+FB3eWV86hrEwllwNv2adV+dqMfG51KQtFwDoau7Weff69g0xug/0poCczEhGF/rKEtQyn0tLUrW/IY5SwwiHRSpyGJWxbZSUxq7RgnaoLNzw/w0U37YOXGduYQuixXEWuoEshxBfCKXmp5bJUHihfkKc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143123; c=relaxed/simple;
-	bh=YsIKILfQNS7UinbPrFtQtobq+mN8hl8flRW8Cn9zmqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YlfDpE1JjTKuhMMczu3hGNp5/RYunXDaHoadL77NAF9le5UM//DoBTuEC26qFvqd2ltM+1fHPm1hGUbyUsDmYfkVOfxFIj93hf0+drPlLY0UOs4u6SXyXzb7QoFHZqe1fUJPjAtFkGyTQhRQsXVWoMJkpGhsfwygCLT2mFd0O7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=fH+YppnT; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1747143134; c=relaxed/simple;
+	bh=z2haIjDqNrb4s1Ft9q/VKPrJ20SNCg8ofCGnU1k9Lx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M52uAYRzEYqnCz2Xa9jN+p8+p5UeVCXNGQsKJiezk/+rRCLdOuG9YLf2HImlllKjiX7il5GIzhyuq/teIG0Me8Bop/cPSxYyzPEqrwyUTC1wWOdzOvF6gCWnHw5qeIiH/gZzRtvEJBff6RvuJHSpI0yKjvOUIwTcWrIRAYbdaL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xGDTNX0z; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="fH+YppnT"
-Received: from localhost.localdomain (unknown [202.119.23.198])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 14e429d87;
-	Tue, 13 May 2025 21:31:53 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: dawid.osuchowski@linux.intel.com
-Cc: andrew+netdev@lunn.ch,
-	anthony.l.nguyen@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	intel-wired-lan@lists.osuosl.org,
-	jianhao.xu@seu.edu.cn,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	przemyslaw.kitszel@intel.com,
-	zilin@seu.edu.cn
-Subject: Re: [PATCH] ixgbe/ipsec: use memzero_explicit() for stack SA structs
-Date: Tue, 13 May 2025 13:31:52 +0000
-Message-Id: <20250513133152.4071482-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170f287e-23b1-468b-9b59-08680de1ecf1@linux.intel.com>
-References: <170f287e-23b1-468b-9b59-08680de1ecf1@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xGDTNX0z"
+Message-ID: <58e21463-6db8-4e26-b212-590453b1ddbf@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747143120;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cNQdCCb9ecdF4xZ/wYPQwhqLJYrt76SqeLQABihcuco=;
+	b=xGDTNX0zEv/pkFboH2sxbJy9Q80jSSlkWjLPbV/qzlBrA8dX+b+bIMWIRN08ks0Xmi4Qxd
+	b59Tctqr7VnnFottq9Hyi975AZGVaTx0z1q4A7Gzedd2rxBf7mZED6WVOeLBZ+TnD9B3CK
+	Axb+0J1sBs6KOJLkjPu4kfBV2oJgLOc=
+Date: Tue, 13 May 2025 16:31:33 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCT01DVk0eSEsfTktKQxhNTVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk9ITFVKS0tVSk
-	JLS1kG
-X-HM-Tid: 0a96c9d83ba403a1kunm14e429d87
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NRg6Djo5CTE9UToUMzEhHyIT
-	CSMwCktVSlVKTE9MSk9ISkpPQktMVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
-	SkpCVUlIVUpCQ1lXWQgBWUFKSU5INwY+
-DKIM-Signature:a=rsa-sha256;
-	b=fH+YppnTV23L9Mdg8mnyZ3T6Y6/o30N+4dgO+bUS8CZP/+3Kp6jRymt7IwrA0ZPYFKwIBJuDr0hGwW8CgxD8RDsk0pZidqIGCoIH97c0uhPxxWv+jPbYzFY7Z2BkDudLBPpR0aPtu+FrngPUX9oF7DACN+xu+bj9N2vKUpEmUwU=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=l8Yr1CSkPkOtqf6fgw4DQxke/6uqpIqLiUd46wrdXKo=;
-	h=date:mime-version:subject:message-id:from;
+Subject: Re: [PATCH] driver/infiniband/efa: Fix possible null pointer
+ dereference in `efa_alloc_pd()`
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Michael Margolin <mrgolin@amazon.com>, Yossi Leybovich
+ <sleybo@amazon.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Shiraz Saleem <shiraz.saleem@intel.com>,
+ Steve Wise <larrystevenwise@gmail.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250513132252.980614-1-fourier.thomas@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Gal Pressman <gal.pressman@linux.dev>
+Content-Language: en-US
+In-Reply-To: <20250513132252.980614-1-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 12:24:41PM+0000, Zilin Guan wrote:
-> Both paths return immediately on key-parsing failure, should I add a 
-> memzero_explicit(&rsa, sizeof(rsa)) before Rx-SA's return or remove the 
-> memset(&tsa, ...) in the Tx-SA path to keep them consistent?
+On 13/05/2025 16:22, Thomas Fourier wrote:
+> `efa_alloc_pd()` assumes that `udata` is not null but it seems like
+> `__ib_alloc_pd()` in drivers/infiniband/core/verbs.c:279 can call it
+> through the `ib_device` interface.  This checks if `udata` is null
+> before dereferencing it.
 > 
-> Best Regards,
-> Zilin Guan
+> Fixes: 40909f664d27 ("RDMA/efa: Add EFA verbs implementation")
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
 
-If this change is required, should I submit it as a new standalone patch, 
-or include it in a v2 of the existing patch series?
+udata will never be NULL since EFA does not support kverbs, and
+userspace will always pass udata.
+
+Look at ib_device_check_mandatory().
