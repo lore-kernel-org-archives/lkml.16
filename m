@@ -1,109 +1,92 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE0328DB63;
-	Tue, 13 May 2025 12:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAD128E56C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141150; cv=none; b=Yis6tG0TF6tAQgnpocPYKWzoH6tUIIJIQ1vOS7V0PLJfirBfm4Pkd9impqWSBzpO/VQFn4tc8YERWqpJ94tUDn35UfFhr9n/3We13ie98myMmL1GmVJesSRqQKFMxyg+gPB994ltjnPXxrJhwtjKX+DmIsd/kb3K5BoQJM+h+6o=
+	t=1747141156; cv=none; b=XgxdwFOHgGkCOf1l2ktYSYNRekVcu2j4IpMdwrfH+kCXvoizlIHE7VfglX4OmwZ76a83PxebhiXtlYc2RTFechr50v1lDXR3YMWKfxoxA8fRf+h13I0J7gKaIjRDezYqHwsJnA6N3V9v4h32KFVnENt104JYIvvMKZe5wuETycc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141150; c=relaxed/simple;
-	bh=tf0jFY/TSrmrdAxa/ShEqbM7ixHECcRUaxvLEZ8CbZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OBYz3QU1eey/+iskJfyW6+y1/zFvhiioqdCs7i2gsKODTCR4FX5McSFbmyQQ0E7NHf06QMgSOZ34lZ/B+vix7UUaCFsfx/OFTsMxRnDBmpxmEAPCCL/M4/bvWmlr6EmlrgztaPuvEuB/PVpoDrYzKxLfwp3fL97ZcIZdmkny78U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fnMTbRlx; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747141156; c=relaxed/simple;
+	bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h9owooMuF7sjXZnShZOqs5kVLHI3Xxyy1nrOkrrT6Roitgkb/7DisJ9e6uYTM+mghKwv2LD6UqGonYCUSUZ+jopsH54ok+7zg+ohUUdIFH348IXYxYIpsjkTr2XE4nxPpWbRi8fcTcB0d6sLqG9mumVnRZwSegPhhuz1D3hSXQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NaxZ9zaG; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnMTbRlx"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso37276135e9.2;
-        Tue, 13 May 2025 05:59:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NaxZ9zaG"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54fc35a390eso6707376e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747141147; x=1747745947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4KUE5PwbLuRO17xX3E9IBzNHOEezC89N05pYrN0JM8=;
-        b=fnMTbRlx8bTPdreE382AWav+mNFaUnzQcphLA9Mitg/diSexZA6y5pi5eCRO7O4TEP
-         G2tXqcC/DVL3dHVckqCVLeCBWenLEHxCMOkI1kuVa9xx2x/sazQ5bKhfed63d70cLt1h
-         j4c1AjmxWszzn/QOKctnGgV4tHhWpFHYDUiaSBMjaWBznWcZt0lO/c0JfCcdcdE7suqd
-         utAC7Npo8leX1ltVjxXHMvkmPjXeUzbZaLO5t2xXz3hvEZuGA5hbqBoUWthpnwcOjF8F
-         FXsssf1yYtTK3dIX0NCxIrdNZlA9l0EUSIJOUlW1QtQN32lKvE01WS1r7nqshNxREFht
-         8+NQ==
+        d=linaro.org; s=google; t=1747141152; x=1747745952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
+        b=NaxZ9zaG63W4bd4VUkxGiFjRk5qHllCf2EsWG3Q8Wlxxh0ovnGDMS17DSPvSegcGHk
+         CKTrpclXS/25nQlxrZUmog+3U5GRuZ079Laxxr5mnCOoJza0uc1C4GtJUWUoy8pp6fmH
+         +tY9diaQMwSTIrRNgOJbOuOMHhYroALAXFCEKmVFPm4IldVff4gfq9aKS5zmxHRymClk
+         8sMpZCtAthCl+MD6g1YulmLYy4acwLOvqqTlgNLVCRUwTkxNSoAd0oDgKvR5SNGWIWbt
+         gilcE/aP7IPVRU+nqXfnziFEx1N08mwebXX3pnhfyhhb+JtlyVOwaSzoZyuf9+NQDPXy
+         XFXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141147; x=1747745947;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J4KUE5PwbLuRO17xX3E9IBzNHOEezC89N05pYrN0JM8=;
-        b=Uw0iH+67wguhq0yZbWRM3TiUe7ZJLQO/EbHk+ogTrj2DGYtvDpxPlIxQkGziE0ujOP
-         rReCNN/jciEQI7YTRz8K0VUFDnR018WS8jXZksVCozBZAlBMBxxnq+syS3Tn10R1yi9a
-         1LJktBbAo/jmS7c4Kddez473vZcWuQm4lUWLmxrMI5qCT7gl3j1K8FjUDxaQIXJxlUD5
-         PSpLpDw2c1jqZkZwdpZZrJBgYAQiteMD7lp972dJHRwCJTnNxlrsZywPFoUI78mTWJrp
-         UaUBzoycrODKMay9JcWNKJGqJ2tM9DMp+iPjl2HfR0PK4lGo/+LEjKQcP6NqJ/Kd4n5P
-         +6Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVEtsbNnEiaTdCeKmHJJfEfqRoPk62ZbblGXtdx7Us4uY3BIoqCPo+5TVkctWd1/GLUOwKwXeNuZMvSgT0=@vger.kernel.org, AJvYcCX2kkcgfGDfcpBxYq9CwZ2rUFz8ltQkHvbxP/d5iJwuC6usYr2WLdjApNXxgIr2vCWBkZr5ZVDa1jiYfu6qFEbKetk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGEbn83cnolSxi1lYeasjKWjHdrkBdFYWfuDppzr4DELCSoCT+
-	bJ2VESSAny/FhHje/0rJgCSO23sHFAQTNzLqYzVTAi91rCPXkLiqf1hD2nlv
-X-Gm-Gg: ASbGncuDhawaulTMgR0NdB2CpsXy17FusmY4jniM/7Eb0PN6S2LpVjX/FbHERqzqd7R
-	KrCfkJsIS20T0/KbPThVROjjuhQZH47+EW3f+jnCjZSAM1qp7sTsLzMNBaCkN5OMMZlxd82csae
-	jkx9QNhOl7fMwUDr+7IZUJTts/rRMtM/8xbUl2bXxXexjsuX57EGQY5EepG24+WXpgTRT+4Sxva
-	duSPPzfnspxrP7f6xr5xeaacbNpkfWVgRHs8cvCaCvebESQ4YzQzytZ9TPk2aziKArMvMCpxwlO
-	jtQT1TpQcSVsdJ2XmAisUFE23xRe7tNqCojMm1ai8B/xQkxzBeLHmwSeYfwUswiVR/UVzWADUd7
-	gOvkXw/xyNEIjR21deakc
-X-Google-Smtp-Source: AGHT+IGrGbY/B7j0dC6au6j3G/+LoFZKy9rhzDsTGCOWgRKsnjHyUXuPtdByxPNlg8XArd2DgLvsrw==
-X-Received: by 2002:a05:600c:8212:b0:442:d5dd:5b4b with SMTP id 5b1f17b1804b1-442d6de0e29mr175513075e9.31.1747141146338;
-        Tue, 13 May 2025 05:59:06 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:c996:6219:e8d3:1274])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aeca5sm215741905e9.26.2025.05.13.05.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 05:59:05 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: defconfig: Enable RZ/V2H(P) USB2 PHY controller reset driver
-Date: Tue, 13 May 2025 13:58:58 +0100
-Message-ID: <20250513125858.251064-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1747141152; x=1747745952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8S3Yph41W8zJG6kDyye8/3nlQvoaGabwx2YL+oI7wA0=;
+        b=s0KsiXJSb0dxRDYZsY30hGagGJ77D05Vz7fwQSVZTSXSGYsXyVVusXo1vnVlEQsxBH
+         Nl/19mF9miSODQ1fcOreEm78U+dfXW9E5BGp4PC36ZWlNPY6AIDRtofCmF5iAbvqsMND
+         R+qoYWb/pfnpypdjtcmsW8KfyTz+w/ND/W2IJc9g/vP7dIdhMq8mFGi4dDe8Q4XhGGF3
+         aiqAJX7Wxh8p2k50wLxkG5h2QxCumiGrtDep9McCq6PRTDcDTIgYp96aiIygvXoy+pr1
+         71CUnHhXeLN/+5PFKqz54TQ7yv0Efa5LLnrwBBI8ZP5EZjbw/ISs64jVxOMtCdHSK3Cq
+         rI+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXAdpvctMc8XoZmEhv9wjgXFNxsOO6pqx0vCjZP3PxDUwjLR4UB92fprUQT8hcG2arvXQ3FKDEv7dELbZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHg4jS1SZv3624YNq0GHzYHbe2d6bX4B7gHW0tV3+WwX1HvDon
+	HCetLu7TwPj2SFvQkSex/8H/dnOU0vb7Hrq1fVFAdfP/EiN9Vq1AySPhmaRFaMFXuOtPEfhJMHz
+	plbDpd7/eNhfxT+1Sb7MTn2Zffv9xALN0hO2XFA==
+X-Gm-Gg: ASbGncv/sbxlyIAmBDuSI/ZkqZUDN1lB1mqKCamcLYPPOfxGKr3PSdkAQCCdls8jgnT
+	DfSjzuh6CZ1+bwlhFV6O5rY+78IhdPwi0DSpQdxw6H1F1IT/JTioQ+3a1XOMLZAaYyzZVP07qtz
+	tj8AhZMMUANF2Vz+J25isfU2z0N6fE4hx1
+X-Google-Smtp-Source: AGHT+IH8XHefqNP0R9UQJCUOm8QNLo2Ezd+mWaxac97cDIiKEKJXNuZgmWyG8hS99tlcf+2TC0nBCMeUjZpkYFyc7oA=
+X-Received: by 2002:a05:6512:608b:b0:545:2cb6:af31 with SMTP id
+ 2adb3069b0e04-54fc67b8e2emr6534510e87.15.1747141152348; Tue, 13 May 2025
+ 05:59:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-2-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-2-3906529757d2@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 14:59:00 +0200
+X-Gm-Features: AX0GCFtmi1qs_gSfGas8GoZGoCMX4N_wHeVY3_msDsE4LWjvnIpjpsZUBZz2o4E
+Message-ID: <CACRpkdZs+Hb=XGMvKxTTgNVBKDO1cjOCjfY2yQj_bxWtjwbSag@mail.gmail.com>
+Subject: Re: [PATCH v5 02/12] pinctrl: remove extern specifier for functions
+ in machine.h
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, May 6, 2025 at 5:21=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Enable the `CONFIG_RESET_RZV2H_USB2PHY` option in the arm64 defconfig to
-support the USB2 PHY controller reset driver on the Renesas RZ/V2H(P) SoC.
+> Extern is the default specifier for a function, no need to define it.
+>
+> Suggested-by: Andy Shevchenko <andy@kernel.org>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 38d1c2ff3aa9..457dc12f35d7 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1550,6 +1550,7 @@ CONFIG_RESET_IMX7=y
- CONFIG_RESET_QCOM_AOSS=y
- CONFIG_RESET_QCOM_PDC=m
- CONFIG_RESET_RZG2L_USBPHY_CTRL=y
-+CONFIG_RESET_RZV2H_USB2PHY=m
- CONFIG_RESET_TI_SCI=y
- CONFIG_PHY_XGENE=y
- CONFIG_PHY_CAN_TRANSCEIVER=m
--- 
-2.49.0
-
+Yours,
+Linus Walleij
