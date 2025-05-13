@@ -1,113 +1,118 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9697B1C84A0;
-	Tue, 13 May 2025 14:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A0519CC3C;
+	Tue, 13 May 2025 14:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147762; cv=none; b=Bpyu8kNzmNRuBe2VXOdoGL2Ej+28hle9AYKwa2+/1dC4nzvBk89+gkAniKT/Y+c6YBhsGW2jaG69ULc+qSMGXjSnSN5/iUMNfOyfZoXdNcaF5UXdfT+xVb5G8pgsuaOdgqfeS8aIfsVwdPPEhtA9AbPRodsRXYrC4SkTkS+IWcM=
+	t=1747147826; cv=none; b=K52ItSjNChuqAtoyX2F5r2D0HQ1o34/SdPZ0g+abG3qM/TyMOx/Nqv34gquzJdztYeh/ACos+8PqG9yOmQ39UfZbhSJngDSIClRu8ZmfOWY3FU+pNnNM72u15j0PVFSIQ1DA2TP+LdwSV2UAOrILtQlRwb2KCzGInqZDoWWMUe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147762; c=relaxed/simple;
-	bh=horsV6zhU54XLy4AAcl0GiFBdRVk3FtVkYR1dWqa1EI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ETOSavsQanwRP1Ww3/VOYQ7Bl6LJGwkDeyFasMM7SfCunXYfaBde/5R2oXsEGp42F2vJUfch5TXICkx8xFN55/YJhwfDYxO7XoveJLBHzYHfhMf1jgzI902kUftKIf0OlbikcNmJg3c2A0EUMhOsTVF4CFcOfLllaKP1jeB7mu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yXKa9w6X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pUIcjLim; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747147826; c=relaxed/simple;
+	bh=8nE/mVj/5tKUiVMPvMi5ed3vQ2RYq7H69J2WfDO/NH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UkDqFop1WxKNSEW7qlKu5+okopspcuK2RCHNi+TzDsHY7GI/Rw4LP1CT8fRqD9trZUwHXH8Wbf+hmvEUHbpeu5HQuUGLupVyjw4o+82wCq3NqxSFmXFIL5uWjbraX/B2a0paZe8To0e/M9hd5GLcyHdxr3lGiTKleK3vRDj+nJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIfVpoi9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yXKa9w6X";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pUIcjLim"
-Date: Tue, 13 May 2025 14:49:18 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747147758;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aKK54Rn44cE0lOKxQ25Io3SwfV+oqPsZvPgN7E2mfYE=;
-	b=yXKa9w6Xa6wNwOtdhTqpNo53VTWs3qJ6snQOiXGr8ouZQOkWd8MK2oARoDHR8dT/+ubRyf
-	0Fb0SD1lJp4/J73vR9x2pMcIjTl/udU15yPAU3ir74LkRYSCgmYd+xG/8sL9QxDUwX4qzb
-	31MHJc96dg8Wj44nj3tr6uPWNRt/jUgjNEjcbuBRi8dW7XTwHHdSUC1oMJv8zPB7nq3S0t
-	N8pfC67NTOgfGPlTMUDIuhqnay8huC6BL6qHavh4B/U1W0d561g40QJqIKIGIHQkqVvvSv
-	coQaQaY2797S0ruaFUSXzbG7JUrbzFT9GvtxHEAWc7dEvJv7qd8wEpVtc4obsw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747147758;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aKK54Rn44cE0lOKxQ25Io3SwfV+oqPsZvPgN7E2mfYE=;
-	b=pUIcjLimWySQ0OfoMbEYcJAHqyb5jqPSpHCB99phdMrn2l/s5DYTcAN/fO9+erQcX2JQ5c
-	iHGNcQ5iK6xbwvAA==
-From: "tip-bot2 for Alex Shi" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/core] tick/nohz: Remove unused tick_nohz_full_add_cpus_to()
-Cc: Alex Shi <alexs@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250410092423.9831-1-alexs@kernel.org>
-References: <20250410092423.9831-1-alexs@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIfVpoi9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD58C4CEE4;
+	Tue, 13 May 2025 14:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747147825;
+	bh=8nE/mVj/5tKUiVMPvMi5ed3vQ2RYq7H69J2WfDO/NH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VIfVpoi9JN7QI4JV7U4pUtfMbHMPXh1b2t4m4qidr/lxq/XZeodRhjeJPGM/bQIYv
+	 kb75Dge9taXUs3KGjG58XrPsN+AorUfLlB5AjfvsMNnrvCkWTFzWToWtJIHNZwckpD
+	 8vk62piL6MYLZZuTNt0w+ja6W7QxBqLbNTn89gWAjMttnIVi8rAND7H7K6RJRfa6aG
+	 4ds0VXhgrm3nof11lnuI4k1fUaAhwta1B6goCvij1M9h30ji+jBc2/piX/Dq+Q/Lbi
+	 r8EOl5VtBXn1LG0N5kPUMxJeclhqddxcYGAm4x8nA5Yy7DKIhbBH8vINcPoSHxou27
+	 hjsg9UVcnk8OQ==
+Date: Tue, 13 May 2025 15:50:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+Cc: Michael Tretter <m.tretter@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>, Junhao Xie <bigfoot@classfun.cn>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Gaosheng Cui <cuigaosheng1@huawei.com>,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH 2/5] dt-bindings: Add vendor prefix for allegrodvt
+Message-ID: <20250513-varnish-subtitle-0421b30a9626@spud>
+References: <20250513083609.328422-1-yassine.ouaissa@allegrodvt.com>
+ <20250513083609.328422-3-yassine.ouaissa@allegrodvt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174714775803.406.6293002744771643287.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="b0tNX6rinjYvhaZl"
+Content-Disposition: inline
+In-Reply-To: <20250513083609.328422-3-yassine.ouaissa@allegrodvt.com>
 
-The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     6c58d2791d6046727d87db50a5e46644f195dcf9
-Gitweb:        https://git.kernel.org/tip/6c58d2791d6046727d87db50a5e46644f195dcf9
-Author:        Alex Shi <alexs@kernel.org>
-AuthorDate:    Thu, 10 Apr 2025 17:24:16 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 13 May 2025 16:38:03 +02:00
+--b0tNX6rinjYvhaZl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-tick/nohz: Remove unused tick_nohz_full_add_cpus_to()
+On Tue, May 13, 2025 at 10:35:47AM +0200, Yassine Ouaissa wrote:
+> Add allegrodvt vendor prefix so it may be used in future device.
+> compatibles
 
-This function isn't used anywhere. Remove it.
+Why should this company get two vendor prefixes?
+I don't see what is wrong with the existing one, sorry.
 
-Signed-off-by: Alex Shi <alexs@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250410092423.9831-1-alexs@kernel.org
+>=20
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
+umentation/devicetree/bindings/vendor-prefixes.yaml
+> index 86f6a19b28ae..90bc1ec721ed 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -81,7 +81,7 @@ patternProperties:
+>      description: Aldec, Inc.
+>    "^alfa-network,.*":
+>      description: ALFA Network Inc.
+> -  "^allegro,.*":
+> +  "^(allegro|allegrodvt),.*":
+>      description: Allegro DVT
+>    "^allegromicro,.*":
+>      description: Allegro MicroSystems, Inc.
+> --=20
+> 2.30.2
+>=20
 
----
- include/linux/tick.h | 7 -------
- 1 file changed, 7 deletions(-)
+--b0tNX6rinjYvhaZl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index b8ddc8e..ac76ae9 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -195,12 +195,6 @@ static inline bool tick_nohz_full_enabled(void)
- 	__ret;								\
- })
- 
--static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask)
--{
--	if (tick_nohz_full_enabled())
--		cpumask_or(mask, mask, tick_nohz_full_mask);
--}
--
- extern void tick_nohz_dep_set(enum tick_dep_bits bit);
- extern void tick_nohz_dep_clear(enum tick_dep_bits bit);
- extern void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit);
-@@ -281,7 +275,6 @@ extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
- #else
- static inline bool tick_nohz_full_enabled(void) { return false; }
- static inline bool tick_nohz_full_cpu(int cpu) { return false; }
--static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
- 
- static inline void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
- static inline void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit) { }
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCNcKgAKCRB4tDGHoIJi
+0iWkAP91CM1tZScImp5J6RFXp4KtN1OSuAzTfgl5VQeyhWZF4AD/Q45N6Gl3PSLD
+FzOuC6YGTfwPRbuUyijgHc29uXAKwQk=
+=dDyk
+-----END PGP SIGNATURE-----
+
+--b0tNX6rinjYvhaZl--
