@@ -1,160 +1,275 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C4D1F12F4;
-	Tue, 13 May 2025 13:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D883A2BCF53
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747144780; cv=none; b=ZygPLdxSIVYRW/3RS5hfnHdzkLQUDPwXMQwAMQM+5imOw1Cr17sxrGkKnZCCsls8grrXM2gU+yp4wBy9Pf8HB1JJaAW8wwvf6nZE1RP6XIiDbklG2DoLxOCJAfHywewPZF7OelU3oG8Vw/UTT5S/zJSf6VhxiIEW+xwqY1otfNM=
+	t=1747144805; cv=none; b=hN0lplxWLA1G5NzVWEo29tPkHn3PlYnlHSoYZo8Pl2qCcMePcQmFoUL2BMXNt70iWAZ3pPBUTWHk+yUxWrfO1/tyFaRCbnY7t1DySBkdAWZWubD5eZAHVhD3OMBJ+NOPUqo7L3njPqmoNAR7iu0xq9nEhde3FdiYfSB04vvEAA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747144780; c=relaxed/simple;
-	bh=uupRQJKR5302NtGuYUnRSSAUi44AgE1Gm0o6msWcW54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=momB2cRB4eFUbd+ZNu/7HhOK82SJ7rtKTyScSNRzijY7/K+h6SJocdOxfwiTs5jCKbaWq7kubsFv3tycpPQ+vS3/20IydSkj/FCEb271RXEsgNNv1fu1TDeRVklFJQ+NRV9nc7FGop5Grm1+1jONxrVYSR5CzWeDQZiZMwD6bfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQVxzcsW; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQVxzcsW"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70b50e0566fso25429867b3.0;
-        Tue, 13 May 2025 06:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747144778; x=1747749578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SxHPphgXbWdm5nbT9IaJtyapq7Mq0HF46NjBnfggMmc=;
-        b=aQVxzcsWeancnsXzEFNkeQcnqThDgfAIqaqcGJweX64pa3RazRtGfZmWdLohxzR/SC
-         /Ik5k6V6CQxVFkxCvIqnZExmaWemKyG3iMXHHv02b+6G5eO/jfvTMqkeOM7Tk1+uLHS7
-         /ypCVMB/NgcS7O86BrUuFO1Lhmm+ofrp7r9pvJKGc/zjEJ2Q41fMv3IXraEmvKDO68zU
-         OIZD3onw9g78VMWTbG7XDg58s5huWh11+yk7hhRx1VBvsLBuz9b7Fdw0HGXSSyQafL7q
-         F1tqHCImadsC+r8dO3WLiV8zawZocT6aopXNRNnRQhpS2qJeipKGLMX2ApsHSAU753LN
-         eAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747144778; x=1747749578;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SxHPphgXbWdm5nbT9IaJtyapq7Mq0HF46NjBnfggMmc=;
-        b=a+YuTVDKRAAHF3h+9uwJ0yjxD1dZWvg4KkUB9rFnUs7Nun/yS1ZfmePf1+UF+3pc7W
-         95XVU2ISfW5m9QylfSS2AaAhJLKFrnavd7rRNv+QQf1d2GhBrOn06ngxkP7PSKxrJzwb
-         8d4hsOldSPN1cDw2YnI9ok4+uWqegwJE0rlhdsAGI3jDlybWeDRVv1bd4BEj/7KzoKnf
-         rU0/2TDJGui6e0+vURausN+/21oGGmSJAba3E61W6Y8OjjjgAWqXcbRAjvCmGZ+hdSfQ
-         tKh1Iqhq1JrwbkqePsAxR+q0VwiXBl4bNLonWzshz0o8txUC0/wDwYYB/Rb7urmN+TAc
-         XlJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXil74GqI7ygzQjkC2RvFn1oVYR2Jw7vdkRx8LiUsXPpvPisn5owLj5RXxUPy/9IIcpVNK+WOO7Ccg61/76@vger.kernel.org, AJvYcCXvZta5YZJRZHnAGaE6oBk26vpQSnJOmLm6zQO0BDSGSA/ZpBoJMJ4JUggjhtWSZpq3cQgnavlUaHEr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU31lKt8REOYG9n8uh6uf3XGg39Qw+WHIk3aYAAxtbdqCjPXdu
-	PfDkdN+kEhLSjMx25G+/HEl6NXDZfbkOIH58yA15IyQIA1VWNwm3WSPDvg==
-X-Gm-Gg: ASbGncsPL1Apxd9Kd8uMvvDpgUdbOOFBz07PIkP7ENoS9sId95oxRQWklv7gaQtviki
-	C5abwTZ/+dybXpAtZlq7QdCupmtPl6tfuKl5i6sMb/C4xoYuTT86SNuUk0/0fRuo4CWtBlkr9dh
-	nXgP0VQEhTYOrAeHkZT5oMXHmJ2TK2Z8jfHBXE2nfPbg2mHPnZDraQts/sFMy5Ad7LW4ZsOP4Dn
-	eFEI2/UX7+fGKZWCXsqehfCxtWzxJc730HxDBy4Vpvms98X6ypI+7jCLNgCRldFPlztqx/Psw93
-	tCUICrtF8lftbtQB/9N/AZK3sErK69JkOUzW4f/2OYgTf2yQKy4=
-X-Google-Smtp-Source: AGHT+IHHNeRb5OLaGj6qAjtuql5TdNI/3gNeh0Ot5Zvdx+MoysAHOVc6WPZPIR8ztl4F1Alzh3G7ZA==
-X-Received: by 2002:a05:690c:4d08:b0:702:52fb:4629 with SMTP id 00721157ae682-70a3fb123ccmr221926307b3.23.1747144777713;
-        Tue, 13 May 2025 06:59:37 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:71::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9eccd9sm24474957b3.97.2025.05.13.06.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:59:37 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	gourry@gourry.net,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Tue, 13 May 2025 06:59:33 -0700
-Message-ID: <20250513135935.2914896-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <87tt5puw21.fsf@DESKTOP-5N7EMDA>
-References: 
+	s=arc-20240116; t=1747144805; c=relaxed/simple;
+	bh=g903TXgDm/iR1tYROzDDHZfU5k0AbSE+mHK4kpwp6CM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=M9hT9OeWydL+eRLCIvbecZZHWYH/4itJN3aqtWmETvVI92FAi6YKcHDXJWYzZUm0CZURzfkM1aQ2Ljsr3cVvqU2PTNZ5XZfdVYpcFd8iUhIdOQA98HAKUCGi99SatLJDFB5MY4+KXezpCuBMM4VNd9KJ1TZL0uNS9WCKe9S/+vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZxdPc6xwhzsTK6;
+	Tue, 13 May 2025 21:59:16 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 027881A016C;
+	Tue, 13 May 2025 22:00:00 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 13 May 2025 21:59:59 +0800
+Message-ID: <a78509f0-f333-4a53-a618-2f05a53ff91b@huawei.com>
+Date: Tue, 13 May 2025 21:59:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] erofs: add 'fsoffset' mount option for file-backed
+ & bdev-based mounts
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+To: Sheng Yong <shengyong2021@gmail.com>, <xiang@kernel.org>,
+	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>,
+	<dhavale@google.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Sheng Yong
+	<shengyong1@xiaomi.com>, Wang Shuai <wangshuai12@xiaomi.com>
+References: <20250513113418.249798-1-shengyong1@xiaomi.com>
+ <a20ac409-f8a5-48d6-9e8b-3c40f829bea9@huawei.com>
+In-Reply-To: <a20ac409-f8a5-48d6-9e8b-3c40f829bea9@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-On Tue, 13 May 2025 09:41:10 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
 
-> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
-> 
-> > On Mon, 12 May 2025 09:35:16 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
-> >
-> >> Hi, Joshua,
-> >> 
-> >> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
-> >> 
-> >> [snip]
-> >> 
-> >> > @@ -3707,8 +3720,12 @@ static void wi_state_free(void)
-> >> >  	kfree(&wi_group->wi_kobj);
-> >> >  }
-> >> >
-> >> > +static struct kobj_attribute wi_auto_attr =
-> >> > +	__ATTR(auto, 0664, weighted_interleave_auto_show,
-> >> > +			   weighted_interleave_auto_store);
-> >> > +
-> >> >  static void wi_cleanup(void) {
-> >> > -	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
-> >> > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-> >> 
-> >> If we use wi_auto_attr directly here, we can remove auto_kobj_attr field
-> >> from struct sysfs_wi_group?
-> >
-> > Hi Ying, thank you for this comment. I should have caught it as well.
-> > Removing the last users / setters doesn't seem complicated.
-> >
-> > Andrew, I'm very sorry -- do you think you can fold this fixlet in as well?
-> > This is a minor change that removes the only users of this variable.
-> >
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index d5ae36d2eda8..8581cc861945 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -3543,7 +3543,6 @@ struct iw_node_attr {
-> >  struct sysfs_wi_group {
-> >         struct kobject wi_kobj;
-> >         struct mutex kobj_lock;
-> > -       struct kobj_attribute auto_kobj_attr;
-> >         struct iw_node_attr *nattrs[];
-> >  };
-> >
-> > @@ -3833,7 +3832,6 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-> >         err = sysfs_create_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
-> >         if (err)
-> >                 goto err_put_kobj;
-> > -       wi_group->auto_kobj_attr = wi_auto_attr
-> >
-> >         for_each_online_node(nid) {
-> >                 if (!node_state(nid, N_MEMORY))
-> >
-> > Thank you both, I hope you have a great day!
-> 
-> Thanks!  LGTM, please feel free to add my
-> 
-> Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
 
-Thank you Ying, really appreciate all of your feedback throughout this
-series. I hope you have a great day!
-Joshua
-
+On 2025/5/13 21:56, Hongbo Li wrote:
 > 
-> ---
-> Best Regards,
-> Huang, Ying
+> 
+> On 2025/5/13 19:34, Sheng Yong wrote:
+>> From: Sheng Yong <shengyong1@xiaomi.com>
+>>
+>> When attempting to use an archive file, such as APEX on android,
+>> as a file-backed mount source, it fails because EROFS image within
+>> the archive file does not start at offset 0. As a result, a loop
+>> device is still needed to attach the image file at an appropriate
+>> offset first. Similarly, if an EROFS image within a block device
+>> does not start at offset 0, it cannot be mounted directly either.
+>>
+>> To address this issue, this patch adds a new mount option `fsoffset=x'
+>> to accept a start offset for both file-backed and bdev-based mounts.
+>> The offset should be aligned to block size. EROFS will add this offset
+>> before performing read requests.
+>>
+>> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+>> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
+>> ---
+>>   Documentation/filesystems/erofs.rst |  1 +
+>>   fs/erofs/data.c                     |  8 ++++++--
+>>   fs/erofs/fileio.c                   |  3 ++-
+>>   fs/erofs/internal.h                 |  2 ++
+>>   fs/erofs/super.c                    | 12 +++++++++++-
+>>   fs/erofs/zdata.c                    |  3 ++-
+>>   6 files changed, 24 insertions(+), 5 deletions(-)
+>> ---
+>> v5: * fix fsoffset on multiple device by adding off when creating io
+>>        request, erofs_map_device selects the target device an only
+>>        primary device has an off
+>>      * remove unnecessary checks of fsoffset value
+>>      * try to combine off and dax_part_off, but it is not easy to do
+>>        that, because dax_part_off is not needed when reading metadata
+>>
+>> v4: * change mount option `offset=x' to `fsoffset=x'
+>> https://lore.kernel.org/linux-erofs/c5110e03-90ea-40be-b05f-bc920332a1e1@linux.alibaba.com
+>>
+>> v3: * rename `offs' to `off'
+>>      * parse offset using fsparam_u64 and validate it in fill_super
+>>      * update bi_sector inline
+>>      
+>> https://lore.kernel.org/linux-erofs/98585dd8-d0b6-4000-b46d-a08c64eae44d@linux.alibaba.com
+>>
+>> v2: * add a new mount option `offset=X' for start offset, and offset
+>>         should be aligned to PAGE_SIZE
+>>      * add start offset for both file-backed and bdev-based mounts
+>>      
+>> https://lore.kernel.org/linux-erofs/0725c2ec-528c-42a8-9557-4713e7e35153@linux.alibaba.com
+>>
+>> v1: 
+>> https://lore.kernel.org/all/20250324022849.2715578-1-shengyong1@xiaomi.com/
+>>
+>> diff --git a/Documentation/filesystems/erofs.rst 
+>> b/Documentation/filesystems/erofs.rst
+>> index c293f8e37468..0fa4c7826203 100644
+>> --- a/Documentation/filesystems/erofs.rst
+>> +++ b/Documentation/filesystems/erofs.rst
+>> @@ -128,6 +128,7 @@ device=%s              Specify a path to an extra 
+>> device to be used together.
+>>   fsid=%s                Specify a filesystem image ID for Fscache 
+>> back-end.
+>>   domain_id=%s           Specify a domain ID in fscache mode so that 
+>> different images
+>>                          with the same blobs under a given domain ID 
+>> can share storage.
+>> +fsoffset=%s            Specify image offset for file-backed or 
+>> bdev-based mounts.
+Hi, Yong
+
+fsoffset should be formatted with %lu ?
+
+Thanks,
+Hongbo
+
+>>   ===================    
+>> =========================================================
+>>   Sysfs Entries
+>> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+>> index 2409d2ab0c28..599a44d5d782 100644
+>> --- a/fs/erofs/data.c
+>> +++ b/fs/erofs/data.c
+>> @@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
+>>   void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool 
+>> need_kmap)
+>>   {
+>> -    pgoff_t index = offset >> PAGE_SHIFT;
+>> +    pgoff_t index;
+>>       struct folio *folio = NULL;
+>> +    offset += buf->off;
+>> +    index = offset >> PAGE_SHIFT;
+>> +
+>>       if (buf->page) {
+>>           folio = page_folio(buf->page);
+>>           if (folio_file_page(folio, index) != buf->page)
+>> @@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, 
+>> struct super_block *sb)
+>>       struct erofs_sb_info *sbi = EROFS_SB(sb);
+>>       buf->file = NULL;
+>> +    buf->off = sbi->dif0.off;
+>>       if (erofs_is_fileio_mode(sbi)) {
+>>           buf->file = sbi->dif0.file;    /* some fs like FUSE needs it */
+>>           buf->mapping = buf->file->f_mapping;
+>> @@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, 
+>> loff_t offset, loff_t length,
+>>           iomap->private = buf.base;
+>>       } else {
+>>           iomap->type = IOMAP_MAPPED;
+>> -        iomap->addr = mdev.m_pa;
+>> +        iomap->addr = mdev.m_dif->off + mdev.m_pa;
+>>           if (flags & IOMAP_DAX)
+>>               iomap->addr += mdev.m_dif->dax_part_off;
+>>       }
+>> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+>> index 60c7cc4c105c..a2c7001ff789 100644
+>> --- a/fs/erofs/fileio.c
+>> +++ b/fs/erofs/fileio.c
+>> @@ -147,7 +147,8 @@ static int erofs_fileio_scan_folio(struct 
+>> erofs_fileio *io, struct folio *folio)
+>>                   if (err)
+>>                       break;
+>>                   io->rq = erofs_fileio_rq_alloc(&io->dev);
+>> -                io->rq->bio.bi_iter.bi_sector = io->dev.m_pa >> 9;
+>> +                io->rq->bio.bi_iter.bi_sector =
+>> +                    (io->dev.m_dif->off + io->dev.m_pa) >> 9;
+>>                   attached = 0;
+>>               }
+>>               if (!bio_add_folio(&io->rq->bio, folio, len, cur))
+>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+>> index 4ac188d5d894..10656bd986bd 100644
+>> --- a/fs/erofs/internal.h
+>> +++ b/fs/erofs/internal.h
+>> @@ -43,6 +43,7 @@ struct erofs_device_info {
+>>       char *path;
+>>       struct erofs_fscache *fscache;
+>>       struct file *file;
+>> +    loff_t off;
+> 
+> Use u64 is better?
+> 
+>>       struct dax_device *dax_dev;
+>>       u64 dax_part_off;
+>> @@ -199,6 +200,7 @@ enum {
+>>   struct erofs_buf {
+>>       struct address_space *mapping;
+>>       struct file *file;
+>> +    loff_t off;
+> 
+> Same here.
+> 
+>>       struct page *page;
+>>       void *base;
+>>   };
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index da6ee7c39290..512877d7d855 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -356,7 +356,7 @@ static void erofs_default_options(struct 
+>> erofs_sb_info *sbi)
+>>   enum {
+>>       Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+>> -    Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
+>> +    Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
+>>   };
+>>   static const struct constant_table erofs_param_cache_strategy[] = {
+>> @@ -383,6 +383,7 @@ static const struct fs_parameter_spec 
+>> erofs_fs_parameters[] = {
+>>       fsparam_string("fsid",        Opt_fsid),
+>>       fsparam_string("domain_id",    Opt_domain_id),
+>>       fsparam_flag_no("directio",    Opt_directio),
+>> +    fsparam_u64("fsoffset",        Opt_fsoffset),
+>>       {}
+>>   };
+>> @@ -506,6 +507,9 @@ static int erofs_fc_parse_param(struct fs_context 
+>> *fc,
+>>           errorfc(fc, "%s option not supported", 
+>> erofs_fs_parameters[opt].name);
+>>   #endif
+>>           break;
+>> +    case Opt_fsoffset:
+>> +        sbi->dif0.off = result.uint_64;
+>> +        break;
+>>       }
+>>       return 0;
+>>   }
+>> @@ -599,6 +603,10 @@ static int erofs_fc_fill_super(struct super_block 
+>> *sb, struct fs_context *fc)
+>>                   &sbi->dif0.dax_part_off, NULL, NULL);
+>>       }
+>> +    if (sbi->dif0.off & ((1 << sbi->blkszbits) - 1))
+>> +        return invalfc(fc, "fsoffset %lld not aligned to block size",
+>> +                   sbi->dif0.off);
+>> +
+>>       err = erofs_read_superblock(sb);
+>>       if (err)
+>>           return err;
+>> @@ -947,6 +955,8 @@ static int erofs_show_options(struct seq_file 
+>> *seq, struct dentry *root)
+>>       if (sbi->domain_id)
+>>           seq_printf(seq, ",domain_id=%s", sbi->domain_id);
+>>   #endif
+>> +    if (sbi->dif0.off)
+>> +        seq_printf(seq, ",fsoffset=%lld", sbi->dif0.off);
+>>       return 0;
+>>   }
+>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+>> index b8e6b76c23d5..4f910d7ffb2f 100644
+>> --- a/fs/erofs/zdata.c
+>> +++ b/fs/erofs/zdata.c
+>> @@ -1707,7 +1707,8 @@ static void z_erofs_submit_queue(struct 
+>> z_erofs_frontend *f,
+>>                       bio = bio_alloc(mdev.m_bdev, BIO_MAX_VECS,
+>>                               REQ_OP_READ, GFP_NOIO);
+>>                   bio->bi_end_io = z_erofs_endio;
+>> -                bio->bi_iter.bi_sector = cur >> 9;
+>> +                bio->bi_iter.bi_sector =
+>> +                        (mdev.m_dif->off + cur) >> 9;
+>>                   bio->bi_private = q[JQ_SUBMIT];
+>>                   if (readahead)
+>>                       bio->bi_opf |= REQ_RAHEAD;
