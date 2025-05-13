@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89BDD529;
-	Tue, 13 May 2025 03:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE223D529;
+	Tue, 13 May 2025 03:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747107163; cv=none; b=JM4adJcU9V5iQ3LACqHQLuIjwComchRNC/MkO5A7Wv5D+xH6A1EpBPPo+MXdifXAkquliMLt5nk3sF6IismYVs/58RDSWrJBzLMfLzVTIHk2cbiu+xT46Z7FpkqpCmAyaAf+YcVf36aW4E6kjiwJckOM3OV7OQhuPguhFkVA7e0=
+	t=1747107168; cv=none; b=S286qm5wHzquaJC7M+LOD2zlmBEte8DFCtzxkz4E3r1uGWPtmne+Ncq/j8N5VZZklOljTk6chkL0RfmpEm0zGdg6+73+QXBD+pRoYO/D3s9GQ0NoPmlaGqfATeaSv3NANuO2Y9h/9m+oNuKqrjY8yuoSNkJeTdSDdL0TP0OS5IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747107163; c=relaxed/simple;
-	bh=jf+c6CkllJsEeeSEs1uL0F5V7YOIJiyJsXTD+Kyc9QE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=X2nUTxTzGAwP9Luzf3PSHv/oVSiK1PxRJLAm9FTMgp4xPHGhJG21WEiCWnwYJZQ9aNi0GsFEKQAD4BYtF6Ix3xpRO/3mRxUOSzzcaZKHewxwyuO+8g+FqKJGpK0rY76G9282hiBIo6Zjjp5oxX16Ra+c4lYr0pqcrHpm43egygo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Egtg+2mB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747107168; c=relaxed/simple;
+	bh=4ZpuRm/rWnIt8cBt9aMZCGpXNxBNEUvJFCjUueodcS0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=lwMi9gWULsgmLN9CbC6XeDnAJzEnsNkUDguETpOTRccLV/rxE71ZChXt9uBFhyoRm+obdLINMCGfCOCIbWqUIB5P8xZxSQfUaEZwxo65hoYRnjFdxNkPMCL27Eq+3bKWLNb6QNJFoimBzdLefUjNjbSX+Tux/XatDcedL0Rd0PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+A4/dZw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Egtg+2mB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA2CC4CEE7;
-	Tue, 13 May 2025 03:32:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+A4/dZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC6CC4CEE7;
+	Tue, 13 May 2025 03:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747107162;
-	bh=jf+c6CkllJsEeeSEs1uL0F5V7YOIJiyJsXTD+Kyc9QE=;
+	s=k20201202; t=1747107167;
+	bh=4ZpuRm/rWnIt8cBt9aMZCGpXNxBNEUvJFCjUueodcS0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Egtg+2mB/Z/QXGCXKdLegwSV1HtaRmvSRrWhDN3TuNO1d8k4zjMsYOXmZIZCPySJ/
-	 X9ckLlc3sPjk89Utlx+CppOg8NvDQXwd9do4xirJJOiHvfTS8oxMClHMnY+0w6bVdr
-	 PJ0QP8rRyBKiafVJCs4Ex+GFzdPd34drCQ5XmVPwaoHRa5HreYJHnTOpBvCCnenfpt
-	 dpBdjgqspcixg8KNNx5TT4WNi+F7k6G2wvhjX3cVZ6BDj/MGteO9s2xs7JdTHnvPbh
-	 mytkEiKZoIZxyy/wlDAdPnRHweB2r2JYCdnA8mAGS0qFfDfXbDrt6Y69jytdIoUX3j
-	 LLgYuIDiInNHw==
+	b=W+A4/dZwtj3v6qjYKfPdK6tZ/uQXTWC4zYh9Hxz484m59dMmB4ATcxIJ2HVhOi420
+	 iqa87eFlqAEwbFaT9KFj7CtyIvYe2qFRXnEqrpAI4St0Bul11rDNQxtwCYj3IcF3BC
+	 83EXmqAR7dcB09DpklydJ4urW8Rhd/A1U1KONgRilGF12OTb78InTNBPCc17hCq7fy
+	 k/E317XkVLYu1SfOH/S/6SnwmeQ46kNd509RzTemwLOyfbqNt/1I+OgByBg7l95KO7
+	 W5lMNzT0GV8a+hLr37n0bNhfhw/F8fQXsZO9dyBwSenwNuozTMzptmUiOHPmNWEHkE
+	 Srgk3NGlnXKsw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DB039D6541;
-	Tue, 13 May 2025 03:33:21 +0000 (UTC)
-Subject: Re: [GIT PULL] vfs fixes
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADBAE39D6541;
+	Tue, 13 May 2025 03:33:26 +0000 (UTC)
+Subject: Re: [GIT PULL] cgroup: A fix for v6.15-rc6
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250512-vfs-fixes-5cd1f86de6df@brauner>
-References: <20250512-vfs-fixes-5cd1f86de6df@brauner>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250512-vfs-fixes-5cd1f86de6df@brauner>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc7.fixes
-X-PR-Tracked-Commit-Id: 04679f3c27e132c1a2d3881de2f0c5d7128de7c1
+In-Reply-To: <aCKV6jvb5Cej5wlF@slm.duckdns.org>
+References: <aCKV6jvb5Cej5wlF@slm.duckdns.org>
+X-PR-Tracked-List-Id: <cgroups.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aCKV6jvb5Cej5wlF@slm.duckdns.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.15-rc6-fixes
+X-PR-Tracked-Commit-Id: 39b5ef791d109dd54c7c2e6e87933edfcc0ad1ac
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e238e49b18ee1bcbe4de952d06631dd3beada097
-Message-Id: <174710719983.1163096.11611103812175966513.pr-tracker-bot@kernel.org>
-Date: Tue, 13 May 2025 03:33:19 +0000
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: d471045e757e941ca802bca3147aab45bf770754
+Message-Id: <174710720517.1163096.1522779546894472787.pr-tracker-bot@kernel.org>
+Date: Tue, 13 May 2025 03:33:25 +0000
+To: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, Waiman Long <longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 12 May 2025 13:01:54 +0200:
+The pull request you sent on Mon, 12 May 2025 14:44:26 -1000:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc7.fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.15-rc6-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e238e49b18ee1bcbe4de952d06631dd3beada097
+https://git.kernel.org/torvalds/c/d471045e757e941ca802bca3147aab45bf770754
 
 Thank you!
 
