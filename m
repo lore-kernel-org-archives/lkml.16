@@ -1,216 +1,379 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2043.outbound.protection.outlook.com [40.107.100.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824C11DED6D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142274; cv=none; b=pY6ct6AiIgXNc1qEnj9F8P7nKtSMEjAfHglydVvZuMGarpbT08z2fSRTQ6BXIdGAW/iN+PFZZ91xaXvSyMi8TvYk9rfZwfNQdk1sUM8+GgZ0SFZDa2BD/pOey1tcQ9s58kfAG0zYX7DaMwj0SVQyLxvYM+aAYj4fYCLGJKc1VbU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142274; c=relaxed/simple;
-	bh=+IIeoefvax3z2R5UYJE415V8jYsDaKdQT79nFLsrOxk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NnhI76/isT22CLEWjMUm7+ZXbeRrShqDkl2JumIahwZ9GGSl6Qu89n0rvCv5qlY0gwGt789l0uheBbNff+k0FCQ+F0RkUXbNuAF/C3WohXYkSX/LQGdvKvvWt4KHJgvKmCqPTzJA4l286oa7Bi2AwpOdmH0Vt0f2IlrpOJmwpp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VRoUVt53; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7067028E611;
+	Tue, 13 May 2025 13:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747142293; cv=fail; b=TjjayEFy6sL3CGhm/Pbi5u2Izlg3eMOLZGdejN6MFQm8iRCzf/ULGuvxw2qVRTxRVQ4nkvri9nQdmJ/zV/v9ZyCrAjMag0gRgd3A/IwQdt4peuGgYw9JfcAwEjy/ynz2PgkhoBEYq8XGo3WTKwhpNKE7rn1A2VyicfSDtnq193k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747142293; c=relaxed/simple;
+	bh=xVxa+0klo4QtLM8TEHmSmfQt5/nGsgN2st2PpwcMi3M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=R6EcIl6CO6IGX7NqUJ7lBWBEUu04X/9lKJ9/I64oru44ZxyffjDoWiYbZ6gqywel75iSwgU5kP0Gm6RdjXCsi5T7uHAftkGN/GC1dytq6xLgiOzx2Aq68a2agJHgWrmlONNv5jb90rEv89+b9qxhcK5tdzuT8g/9bf27NZ2I9ZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SzFvDVRk; arc=fail smtp.client-ip=40.107.100.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VRoUVt53"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747142271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HxxQXVVSK4rEec2wlzYJRfWIp4Ihbr4/ZHGnPtMfr/8=;
-	b=VRoUVt531MvB2uok0u1owLwJwzNI3/fFXKzDJ4yreRfhpwSmMUKZU03fTcLfkR4GgoOMZQ
-	lKY6prSrvJRJM2dCa3nz1+pKgaQzaFr5qENcMNUGU19Pu8nIVxg0vPJZeEKiZz/k3hydO7
-	XQGLO1ESjgsSn4FA6D9TnWYFwlCYa90=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-382-SkDLVpLTM2imyLFbg24TSA-1; Tue, 13 May 2025 09:17:49 -0400
-X-MC-Unique: SkDLVpLTM2imyLFbg24TSA-1
-X-Mimecast-MFC-AGG-ID: SkDLVpLTM2imyLFbg24TSA_1747142268
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cec217977so27960795e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:17:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142268; x=1747747068;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HxxQXVVSK4rEec2wlzYJRfWIp4Ihbr4/ZHGnPtMfr/8=;
-        b=CgbPKA+1vxx8o99i1Nn10Cci3YgYOYQRKnjqU66CfKOxjrTgPGeyyPMXXZmspQNW7n
-         iHK6+UChaabZbsQXkolYjqbIvG2WtPvcYiLvhndppo1MoVh3LQecLjjkB8nNWy4+Qo/H
-         fTcXUFtc/zRxR3H9ZGiqoHMPE1/1pGXPHbikot9k/HDnXYLHbc/PNizFI9MzFVcj4c3a
-         TWTrvtmR3UP3/oN49AERM+kyI44vjzzsa8luKHd1ZovWLmULP320v4hEerkzf4wNfWaS
-         0hA2wgPrc+ODpxrbgmHGSWwIRC2ji1NwQGY3RFIY3spRdNW+a+WeEfvrhD7iMgtD76JX
-         QYZw==
-X-Gm-Message-State: AOJu0YwFToy/Z7h9j02djnvQMJcrk1TX2pSwfPEhKXCTyPQULgpD79K0
-	Dhh5IcPB9CcLhMJ1bIclu7MtUQ3WCRq/8XlJGvKaS5Ot1pkqmMgVDvULFqm70ngFcH6bfUnUk3E
-	tsOpOVuspzVhcBWuiGcKzSVOsvSi1Ti8J/mpdGU/rup9sX9FW7iVQ+oDnEvxx5wmfaXenN4ME
-X-Gm-Gg: ASbGnctBeOZmHchpm0EBi/1LUF0K/BFyuG7llgsyvwzjSO2PUVHVBLAP8Q0mYU5gcH3
-	V+YPs3KszjUMoFUWJ9XL2PVHJSyR+G2tkXzFUWAaQkfz3q5zuAWPxhzyr5EByrvjwp3tLU9miK6
-	catYGPywcoygtd7DfzrYT6IJvA9ljfxG9Ph+28LMtjgtJAbLMNEU9C6ugTh2BjxnHZ4VIZa/a5v
-	yE6wdUaZpYHEmo7pJTd+XFJwH27BG+mHtGLKoBS2CLCh70cuXNBpIdDVC3H4wLRbXX3XPo6jJbC
-	NYDq0DnRD8cN88PEWPFFfu/kQXsgVh7UjJ9plL/YpyqWOq7AZ0lqs2Bes0uEZ3lDoQ4LX471tX5
-	yqlBIVSB3SUjfFS/EJbsioflmGxpEAqvs85iHXsc=
-X-Received: by 2002:a05:600c:37c8:b0:43c:ef13:7e5e with SMTP id 5b1f17b1804b1-442d6dd1de7mr130325495e9.26.1747142267991;
-        Tue, 13 May 2025 06:17:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHantouXqVhTL24de5TQ1dXzQkhUda30erwWtCLKJNo5hGRQspQ1sW+fpX8kF19xdrg7cbZww==
-X-Received: by 2002:a05:600c:37c8:b0:43c:ef13:7e5e with SMTP id 5b1f17b1804b1-442d6dd1de7mr130325295e9.26.1747142267655;
-        Tue, 13 May 2025 06:17:47 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34? (p200300d82f4d1a004fdf53e21a36ba34.dip0.t-ipconnect.de. [2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd34bef4sm214544335e9.24.2025.05.13.06.17.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 06:17:47 -0700 (PDT)
-Message-ID: <8323f942-52e1-44b4-b599-e275f1c66ede@redhat.com>
-Date: Tue, 13 May 2025 15:17:46 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SzFvDVRk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ml6+QTm8JMgFPk+9X4UiQXUr5yJgmaWz2770xpuNgUT0L6UbeuDn82GBZuf+gJbMvJWVOjnhwj43d219TAB8t+OBAmagCacpHik6K3Yr1vaRVpVfsC9lhDx+EDJLhsk2VF6UwzkuCr3Er0duCAO+tTaEU3QhHtM6iB62zo1945J/iIT9KppTwzgyBl9nWWrz+f5eIBob6fhnnbmMgQoydIesfHsz4BqmJU5pjjS24Wu01kZrY+dQUVPDliORtg5tBcE4W8dlQ8bVqkRYwCV5hBHuXNELTCuOSqJBCejruJ6qi6xGstHPaBAf6qnfHV1Lw7v2bzN8JjIegow3fCfkaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D0XYqoDLKn1X8U042JbzEqsU7/9qTxfLm7/S6JhoPo4=;
+ b=QTFILjsad6dETWKvH7ec30gFubO4sOiWYmgTAbc7WCFdAV5c27tq55MrELDVm/fsp3quBzO8YFxZFnCIlwGSiaqu1uPGmnGqM+IBb66e6vG1Wv9TWb03fuv1nl/61PanliiBpdztQQgwy9nmCHy0+cincimNKwFozV/FqvPvN4QlEmWVud5h5fJl2jMRjEiPihKSo100QUpndKlPwxaOsM5IbS3wczbztI2Y+ZQwZDxKoSguzeLuytY5wKFyrsQR/a5Eg+aV7yuH4xi8Sqfoksb2xcpcNMnDHGmauRd8DwVRi/PcptFhHmPc26AK0cYdBMN0uoX619oYouavCRSQVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D0XYqoDLKn1X8U042JbzEqsU7/9qTxfLm7/S6JhoPo4=;
+ b=SzFvDVRkHHelc+9fd8VlJ5Bgybnw9pi70J9T/4N5RdI4mzMvXW+9d/6i6qASXLwdSiKT5yxCYL6FZi+yQXiMx74ggr5D7nm0yy1SUv1jZ4SZOUddMRPAPz4m+FEifrB/yI61LjGLwQYI83j+cbVJ3G49Yoz+C9BigQfBvEUw7W4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by MN0PR12MB6248.namprd12.prod.outlook.com (2603:10b6:208:3c0::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 13 May
+ 2025 13:18:07 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 13:18:06 +0000
+Message-ID: <ef978301-6a63-451d-9ae6-171968b26a55@amd.com>
+Date: Tue, 13 May 2025 15:17:59 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dmabuf/heaps: implement DMA_BUF_IOCTL_RW_FILE for
+ system_heap
+To: wangtao <tao.wangtao@honor.com>,
+ "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+ "benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
+ "Brian.Starkey@arm.com" <Brian.Starkey@arm.com>,
+ "jstultz@google.com" <jstultz@google.com>,
+ "tjmercier@google.com" <tjmercier@google.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "wangbintian(BintianWang)" <bintian.wang@honor.com>,
+ yipengxiang <yipengxiang@honor.com>, liulu 00013167 <liulu.liu@honor.com>,
+ hanfeng 00012985 <feng.han@honor.com>
+References: <20250513092803.2096-1-tao.wangtao@honor.com>
+ <fdc8f0a2-5b2f-4898-8090-0d7b888c15d8@amd.com>
+ <5b68b2a50d48444b93d97f5d342f37c8@honor.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <5b68b2a50d48444b93d97f5d342f37c8@honor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN0PR02CA0028.namprd02.prod.outlook.com
+ (2603:10b6:208:530::22) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in
- uprobe_unregister error path
-From: David Hildenbrand <david@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250513122125.1617722-1-jolsa@kernel.org>
- <60b3386e-dbb1-4fe9-bc38-d62eba4d9c50@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <60b3386e-dbb1-4fe9-bc38-d62eba4d9c50@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN0PR12MB6248:EE_
+X-MS-Office365-Filtering-Correlation-Id: 811ec9b9-bd77-4831-1e4a-08dd92209922
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MkN0NkhDbWNKam9RWU9UVHRFSTlxOWg4SkdBUDk4cWVtM3RxcG1vanppN0R1?=
+ =?utf-8?B?K2hxREFUcGwxWGNDYSszSUhtclVUbnU2L2xqRnVFaGZnb0ljMGs0enRIWE0r?=
+ =?utf-8?B?Zk5Cb1hPR1hZL05LYThBUmxXQmYzL0g4OVJTZ0wvU2pIMHd6bXFpYUViM3RL?=
+ =?utf-8?B?aTUxNFhCWVNDVXFVeEY2TjJtRVk5VldNREFadDNkbUNRTlpHSHNTdWR0aURM?=
+ =?utf-8?B?djVXMVd1YVJiTE1ZZFlPaEpVMzdlaHhJY29BclBqajYzV1ZKYWhoR0tPaFcz?=
+ =?utf-8?B?TEVVSFBCeXYwenVLd1NyaTR2YU45blBRSUIvZ3FWSXBnb0dvb0piQ0RSTkdJ?=
+ =?utf-8?B?b2Q0dGRhaG9tekYxVDNTNWV6N2hRbXFIbzRYRjA4OWhqN1kzRTBnRG4wWklw?=
+ =?utf-8?B?NFVVd3h0NCtRVG9xalMrZXlmb01LU0pHL1hDZlpDUnpxcFNyMnFiTGxOZVpF?=
+ =?utf-8?B?dEErK1QvNHFFd2Vod3ozUERjZ2ptQit6N3BNbjZhRUprcE05bUF0WlJtblI2?=
+ =?utf-8?B?UFlRVEVmVFU2Si9JcWVCMnU0Qy91QXByNlB1ZDI2eWdTQlEya1k4NTQ3RW43?=
+ =?utf-8?B?SkExL1JaVlRSaVdkdWg5WmlHKzdYbEcxWXo2Umh6aThCY2RuQXEvYU1MUkQz?=
+ =?utf-8?B?eWpLVnZGNFluNXo0enFGUzJta3dwY2lzSE9kTmtJWXd5V0Zob2dzc0M1em9W?=
+ =?utf-8?B?RXVyMXc3M2F0bGN0eTQwUHRqaEJLWW1ySllGbGl0UzlsdDljMFJrb3FEWHBn?=
+ =?utf-8?B?WWh5KzFINnZMZGVMdnl6aENtVk84RVNpZGp5d09rZDJNQS9wcC9IYjRKazkz?=
+ =?utf-8?B?NEkxRXA4VDc3cmFuYW5tRXhSc2VjeUxMdG1CSU55YWNldUpBZEI3L3llUmRB?=
+ =?utf-8?B?VWk0TStGRDdDamp2Ry9mM1JWZjBKY2dxUm9HMTBrRnZ5WXA2VDF0RTYzWFZj?=
+ =?utf-8?B?ektSc1J6TzR4dXdyc3dMcXZsVFdaV00zaHJnd2loc1hjbkpNd0JVTVQxekht?=
+ =?utf-8?B?eUZjcVNhRnhnTGZNWk8rcFR2SlZoLzFRdFMva2phSXpTSzZpMEQySHJlMjBl?=
+ =?utf-8?B?bk83aVQ4cUNpWFRROW1meEtxeVM5ajJZL3lmaUhhTldQR25STjBJK2cyV0xS?=
+ =?utf-8?B?d0dPZ1l6aUd4R0dNVTFVNkxvUUZoTDM3Sk5iQ1ExNVRxL1p6SHEzdTVGeTU0?=
+ =?utf-8?B?OFA1YkJXK3IzQ1MzYXY0cGlCUis3d2MxM0k2bzNNOUVyMXNISG9UUVMwK3Fq?=
+ =?utf-8?B?VXR6V3JEenJPdTh2Ny9VRHdTZUIyZ3ZXMlFwUW1ITE1iTFV1S3FpbjBXVDdO?=
+ =?utf-8?B?RVV2aEJpR0VQQ0tNSWZPRi9UNm92OTlvMEcrSWpjLy9MSVY2SUU2eVZrczBj?=
+ =?utf-8?B?RndlOVd2ZFI5dGNVV3AwY3REL2M5T3BXMzRMY2pMYmhWekJZei9yK3dSeGZJ?=
+ =?utf-8?B?RlhrMmNCWFRvQ2xFaHRGb3BwOCtJM1V6VEhvTTR0M2drNG9kL3dhZWZrdE5o?=
+ =?utf-8?B?N3MrZUc2MHlyWHg0djNtNzdQb2hIU2pPMlZmVmliOVdvRGRwUUhFRGx5bGY5?=
+ =?utf-8?B?Z0R1Y3hiTWh2Tm1jbHFxZG5aeFVmSUl5U01JZGViQkJKL2F1MGxlbVFYa3Bh?=
+ =?utf-8?B?YjJxYVdIZW8yaCtqLzV4WnRLckwxR2pUMFJTZVVQQ1FabXdaMUNRUWhuMHVK?=
+ =?utf-8?B?ajUvTDY4aytsbVdqYlMwL3A0Smt6ZVNLMW1iOFJuWm1rZHYrVlN2V1lxbEJC?=
+ =?utf-8?B?MXRLcFRUZHF6bDNZZ0JLWVoxQSsxMk5SWFZvWURaR0FXd3BGNGVFekIxSFVW?=
+ =?utf-8?B?UWJRSlRMZWZsWHVGWmZKeDFSa0FTamtWN1djV0tBclhMYWF3MHN3NVlRN0pB?=
+ =?utf-8?B?dlhmWjh6YlBwSFlabmtHZUhHWmtWczNDVWFIazRLYlppNFViaUgrVjdmUHJU?=
+ =?utf-8?Q?XVLKVNV+b6g=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WVNHaU5KbjBQSm5VQVc5RVlndW5JZE9ST3FQMjA2MHVPTmplNjhwNlNCaVcx?=
+ =?utf-8?B?Mmg0R2RtdjlFYStkSlozS09ybmp6WUE1R0UvUTlyQnFnNWE4M0I2SVM3cGpk?=
+ =?utf-8?B?MUE5R1lXVk9VQ3crdTNicmNaTUZpaXhmemJMVmtqdkQvaHo3dFFBM0dpQUlo?=
+ =?utf-8?B?Q2NIOGlrcTB0cEFpbjFoUDhFRFZreE9valAvdHkxRjk4aWc2cHRINEY0alZj?=
+ =?utf-8?B?eDIwcTlsaHZDK1VtVytOODF4dVppNFphWHVNR1VNazl3QUZaM3ZMUGxlU2dt?=
+ =?utf-8?B?NzZVZlRmMkUybTQwU0lKQnA4cjk0SEk1aThiRzVmL1BCdWFKKy90blk2a0lU?=
+ =?utf-8?B?SzBMZHhyYk5haG9uMEJFbnVmTkxhcmE0SmZTeVJMeERWL2dtV0grTWFDczdJ?=
+ =?utf-8?B?bHU4cWVvd3Z6cGQ0QUUrV05UN1JyaGxFZ1JwMWM1bFIwdldMbjFPSWdVYWps?=
+ =?utf-8?B?V0dEdXl3blM2ZHBGR29rbVdDT3ZxNUdqdmhpODRhb0N6MVJ2WGZjTW1RY2Qv?=
+ =?utf-8?B?Yyt6VFNMcDczQnNFUXJldXA4SFFFU21kWFJXbmFmL3IwTi9PY3pJdFlXM1R6?=
+ =?utf-8?B?TmtvNGd4NkVueWd3U3NmU2FQQmxGMW0rM2FjcHc4QXM2YURVcThFbmFlWG9L?=
+ =?utf-8?B?Y2Y4eVVWclZlSlVVckgrcEFVZlFRUGxyNVVqT29NVzJiRER1eGZjcDZJMms5?=
+ =?utf-8?B?LzZUd1luTE9TaVpHMHlRRW1zQ1ZVT2N6a043OWw0WUJIeWVaN1lpUndHSjd2?=
+ =?utf-8?B?clNTVWo1cityMHlrelptVkFVOGVCb3JiZTNiNlRIVFNjZ1JoUDlxUldyeEFh?=
+ =?utf-8?B?VERvb3I5UlYrb0xtc1pnNGRhdnVWWWdCQnUwWmJoRHZrTUhlUXhkZElRUzRj?=
+ =?utf-8?B?Q3VJZGZIaHN6OVVjSFI0bzQ3QXBHMUE1Z1dPZk5jM0cydGZQcHI5YVU0WS9J?=
+ =?utf-8?B?N3VpbzdBR3Vvb2ZLb0RRcDlvN3JwOGR4Ti9NdGdQOEZMV1NtNWtMdzA1cGhG?=
+ =?utf-8?B?OFdRNHZsSFl6ZnhzK3AwVWpIMGdrYkhucTU2dC9OQlVDMmF3Z2UyZ3RFNGdu?=
+ =?utf-8?B?YmtPM2JDb0R3aWZ1RHRTalQxeWtUakZ1dDZmSGE0MG5UMGoybm9GMStRQnZt?=
+ =?utf-8?B?b0pnZjdZWThpeVl2YWJxTDNjak5GVzdMM2syQ0ZlY2FXdGMyN3Nyd0g5U2lu?=
+ =?utf-8?B?SW43Sjhva2lmdERyWFJxUFZjK3JSZmdubnpTbll2Snd2Ujh6cThLYks2aTdj?=
+ =?utf-8?B?Q05YR2hLZUhkYmE5ZWRlMUI1ZUgweE9reHM0Z1poQUtTa1dKSUppeHBORFRL?=
+ =?utf-8?B?SFN5SmExWmhvbVV2Z3YxU2tEZW0zckVWdkpTQWpIWEdIL3NmKy9GWmR2MHdK?=
+ =?utf-8?B?cnRLazhtSUpNWUZQbmdnRExpTmgwYUJmWVdiWlhzd0d6alF3ZEEyWll0cmg2?=
+ =?utf-8?B?ZnhuYUt3QjgxeElLUURqakQ5dnRCdWNPZ2dDNUVrVWo4VkdxU1p0VkFsUzFn?=
+ =?utf-8?B?Um5SVHF1V0tjNVd5WCtlRnAzK2pOUjJSQjNrZVlnbnduMXgyN0xrYk9nUE1s?=
+ =?utf-8?B?L1BickRMRi90cERhdC9CZmtHZnptU2txN1NDSDJvblJEcDBuTWRCL1RLZmVW?=
+ =?utf-8?B?WU9jMDhhMTdHakVzRTVkeW41Mk1OR3FsUUJaOHA0UjVET2lHQ252ck1mOWRi?=
+ =?utf-8?B?RmNlc3dvZW5sdkl0WmdkTkViSVhxZ1kwTWIrM25RWWhabllLZnRJR3BNRnJC?=
+ =?utf-8?B?YjA5b3BGVDkzbFUrSHBGeWFqVkV1MTZka2NLNnVoeXlOU3MyOXBiTHY1Q2lU?=
+ =?utf-8?B?ZGZVTjd5cGJJTjJnL2c4S2loMVdhSkhRc2FrUUVJc0pkdm5Bb2NRRTVWMnd1?=
+ =?utf-8?B?RlpUbFVkalhwM2FIMmNrVjN4TnVjNHJyUm5hdHdDWkd0T2R6UjBYVlNjeC9t?=
+ =?utf-8?B?N2pNUUp2ZlloMitxc0ZaV0ZUVEhUN1o0R1MxL1lNcThhdlZubUxPSDJ3bkM2?=
+ =?utf-8?B?OXdZRWx1a2VxZ0ozNWJBSjVGRzlJbUlJYWZ0MGtoSHI5V0x2RHZmNnJ3RUxE?=
+ =?utf-8?B?bHo0ZEk2TTVyRnM5bGJxTm9kNXR4Uk85Y1hQbjJVdG95M3pCaHdBcHArN0xD?=
+ =?utf-8?Q?mTd8=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 811ec9b9-bd77-4831-1e4a-08dd92209922
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 13:18:06.4111
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B3ttb9eyjmpMYQsbj/F5jnXwVcKCS3NoOu2YK63IpyxrDNmbasaAQmtMtsO2k2Sh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6248
 
-On 13.05.25 15:16, David Hildenbrand wrote:
-> On 13.05.25 14:21, Jiri Olsa wrote:
->> From: Jiri Olsa <olsajiri@gmail.com>
+On 5/13/25 14:30, wangtao wrote:
+>> -----Original Message-----
+>> From: Christian König <christian.koenig@amd.com>
+>> Sent: Tuesday, May 13, 2025 7:32 PM
+>> To: wangtao <tao.wangtao@honor.com>; sumit.semwal@linaro.org;
+>> benjamin.gaignard@collabora.com; Brian.Starkey@arm.com;
+>> jstultz@google.com; tjmercier@google.com
+>> Cc: linux-media@vger.kernel.org; dri-devel@lists.freedesktop.org; linaro-
+>> mm-sig@lists.linaro.org; linux-kernel@vger.kernel.org;
+>> wangbintian(BintianWang) <bintian.wang@honor.com>; yipengxiang
+>> <yipengxiang@honor.com>; liulu 00013167 <liulu.liu@honor.com>; hanfeng
+>> 00012985 <feng.han@honor.com>
+>> Subject: Re: [PATCH 2/2] dmabuf/heaps: implement
+>> DMA_BUF_IOCTL_RW_FILE for system_heap
 >>
-> 
-> Thanks for debugging.
-> 
->> There's error path that could lead to inactive uprobe:
+>> On 5/13/25 11:28, wangtao wrote:
+>>> Support direct file I/O operations for system_heap dma-buf objects.
+>>> Implementation includes:
+>>> 1. Convert sg_table to bio_vec
 >>
->>     1) uprobe_register succeeds - updates instruction to int3 and
->>        changes ref_ctr from 0 to 1
->>     2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
->>        is changed to 0 (it's not restored to 1 in the fail path)
->>        uprobe is leaked
->>     3) another uprobe_register comes and re-uses the leaked uprobe
->>        and succeds - but int3 is already in place, so ref_ctr update
->>        is skipped and it stays 0 - uprobe CAN NOT be triggered now
->>     4) uprobe_unregister fails because ref_ctr value is unexpected
->>
->> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
->> which is the case when uprobe_unregister fails (int3 stays in place),
->> but we have already updated refctr.
->>
->> The new scenario will go as follows:
->>
->>     1) uprobe_register succeeds - updates instruction to int3 and
->>        changes ref_ctr from 0 to 1
->>     2) uprobe_unregister fails  - int3 stays in place and ref_ctr
->>        is reverted to 1..  uprobe is leaked
->>     3) another uprobe_register comes and re-uses the leaked uprobe
->>        and succeds - but int3 is already in place, so ref_ctr update
->>        is skipped and it stays 1 - uprobe CAN be triggered now
->>     4) uprobe_unregister succeeds
->>
->> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> 
-> If it's in mm-stable, we should have
-> 
-> Fixes: ...
-> 
-> here
-> 
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->> ---
->> Please note it's based on mm-stable branch, because it has the
->> latest uprobe_write_opcode rewrite changes.
->>
->>    kernel/events/uprobes.c | 4 ++--
->>    1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 4c965ba77f9f..84ee7b590861 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->>    
->>    out:
->>    	/* Revert back reference counter if instruction update failed. */
->> -	if (ret < 0 && is_register && ref_ctr_updated)
->> -		update_ref_ctr(uprobe, mm, -1);
->> +	if (ret < 0 && ref_ctr_updated)
->> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
-> 
-> 
-> Hm, but my patch essentially did here
-> 
->           /* Revert back reference counter if instruction update failed. */
-> -       if (ret && is_register && ref_ctr_updated)
-> +       if (ret < 0 && is_register && ref_ctr_updated)
->                   update_ref_ctr(uprobe, mm, -1);
-> 
-> So how come this wasn't a problem before?
+>> That is usually illegal for DMA-bufs.
+> [wangtao] The term 'convert' is misleading in this context. The appropriate phrasing should be: Construct bio_vec from sg_table.
 
-Oh, or was this a problem before? Then we should find the corresponding 
-commit that needs fixing.
+Well it doesn't matter what you call it. Touching the page inside an sg table of a DMA-buf is illegal, we even have code to actively prevent that.
 
--- 
-Cheers,
+Once more: This approach was already rejected multiple times! Please use udmabuf instead!
 
-David / dhildenb
+The hack you came up here is simply not necessary.
+
+Regards,
+Christian.
+
+
+> Appreciate your feedback.
+>>
+>> Regards,
+>> Christian.
+>>
+>>> 2. Set IOCB_DIRECT when O_DIRECT is supported 3. Invoke
+>>> vfs_iocb_iter_read()/vfs_iocb_iter_write() for actual I/O
+>>>
+>>> Performance metrics (UFS 4.0 device @4GB/s, Arm64 CPU @1GHz):
+>>>
+>>> | Metric             |    1MB |    8MB |    64MB |   1024MB |   3072MB |
+>>> |--------------------|-------:|-------:|--------:|---------:|---------
+>>> |--------------------|:|
+>>> | Buffer Read (us)   |   1658 |   9028 |   69295 |  1019783 |  2978179 |
+>>> | Direct Read (us)   |    707 |   2647 |   18689 |   299627 |   937758 |
+>>> | Buffer Rate (MB/s) |    603 |    886 |     924 |     1004 |     1032 |
+>>> | Direct Rate (MB/s) |   1414 |   3022 |    3425 |     3418 |     3276 |
+>>>
+>>> Signed-off-by: wangtao <tao.wangtao@honor.com>
+>>> ---
+>>>  drivers/dma-buf/heaps/system_heap.c | 118
+>>> ++++++++++++++++++++++++++++
+>>>  1 file changed, 118 insertions(+)
+>>>
+>>> diff --git a/drivers/dma-buf/heaps/system_heap.c
+>>> b/drivers/dma-buf/heaps/system_heap.c
+>>> index 26d5dc89ea16..f7b71b9843aa 100644
+>>> --- a/drivers/dma-buf/heaps/system_heap.c
+>>> +++ b/drivers/dma-buf/heaps/system_heap.c
+>>> @@ -20,6 +20,8 @@
+>>>  #include <linux/scatterlist.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/vmalloc.h>
+>>> +#include <linux/bvec.h>
+>>> +#include <linux/uio.h>
+>>>
+>>>  static struct dma_heap *sys_heap;
+>>>
+>>> @@ -281,6 +283,121 @@ static void system_heap_vunmap(struct dma_buf
+>> *dmabuf, struct iosys_map *map)
+>>>  	iosys_map_clear(map);
+>>>  }
+>>>
+>>> +static struct bio_vec *system_heap_init_bvec(struct
+>> system_heap_buffer *buffer,
+>>> +			size_t offset, size_t len, int *nr_segs) {
+>>> +	struct sg_table *sgt = &buffer->sg_table;
+>>> +	struct scatterlist *sg;
+>>> +	size_t length = 0;
+>>> +	unsigned int i, k = 0;
+>>> +	struct bio_vec *bvec;
+>>> +	size_t sg_left;
+>>> +	size_t sg_offset;
+>>> +	size_t sg_len;
+>>> +
+>>> +	bvec = kvcalloc(sgt->nents, sizeof(*bvec), GFP_KERNEL);
+>>> +	if (!bvec)
+>>> +		return NULL;
+>>> +
+>>> +	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+>>> +		length += sg->length;
+>>> +		if (length <= offset)
+>>> +			continue;
+>>> +
+>>> +		sg_left = length - offset;
+>>> +		sg_offset = sg->offset + sg->length - sg_left;
+>>> +		sg_len = min(sg_left, len);
+>>> +
+>>> +		bvec[k].bv_page = sg_page(sg);
+>>> +		bvec[k].bv_len = sg_len;
+>>> +		bvec[k].bv_offset = sg_offset;
+>>> +		k++;
+>>> +
+>>> +		offset += sg_len;
+>>> +		len -= sg_len;
+>>> +		if (len <= 0)
+>>> +			break;
+>>> +	}
+>>> +
+>>> +	*nr_segs = k;
+>>> +	return bvec;
+>>> +}
+>>> +
+>>> +static int system_heap_rw_file(struct system_heap_buffer *buffer, bool
+>> is_read,
+>>> +		bool direct_io, struct file *filp, loff_t file_offset,
+>>> +		size_t buf_offset, size_t len)
+>>> +{
+>>> +	struct bio_vec *bvec;
+>>> +	int nr_segs = 0;
+>>> +	struct iov_iter iter;
+>>> +	struct kiocb kiocb;
+>>> +	ssize_t ret = 0;
+>>> +
+>>> +	if (direct_io) {
+>>> +		if (!(filp->f_mode & FMODE_CAN_ODIRECT))
+>>> +			return -EINVAL;
+>>> +	}
+>>> +
+>>> +	bvec = system_heap_init_bvec(buffer, buf_offset, len, &nr_segs);
+>>> +	if (!bvec)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	iov_iter_bvec(&iter, is_read ? ITER_DEST : ITER_SOURCE, bvec,
+>> nr_segs, len);
+>>> +	init_sync_kiocb(&kiocb, filp);
+>>> +	kiocb.ki_pos = file_offset;
+>>> +	if (direct_io)
+>>> +		kiocb.ki_flags |= IOCB_DIRECT;
+>>> +
+>>> +	while (kiocb.ki_pos < file_offset + len) {
+>>> +		if (is_read)
+>>> +			ret = vfs_iocb_iter_read(filp, &kiocb, &iter);
+>>> +		else
+>>> +			ret = vfs_iocb_iter_write(filp, &kiocb, &iter);
+>>> +		if (ret <= 0)
+>>> +			break;
+>>> +	}
+>>> +
+>>> +	kvfree(bvec);
+>>> +	return ret < 0 ? ret : 0;
+>>> +}
+>>> +
+>>> +static int system_heap_dma_buf_rw_file(struct dma_buf *dmabuf,
+>>> +			struct dma_buf_rw_file *back)
+>>> +{
+>>> +	struct system_heap_buffer *buffer = dmabuf->priv;
+>>> +	int ret = 0;
+>>> +	__u32 op = back->flags & DMA_BUF_RW_FLAGS_OP_MASK;
+>>> +	bool direct_io = back->flags & DMA_BUF_RW_FLAGS_DIRECT;
+>>> +	struct file *filp;
+>>> +
+>>> +	if (op != DMA_BUF_RW_FLAGS_READ && op !=
+>> DMA_BUF_RW_FLAGS_WRITE)
+>>> +		return -EINVAL;
+>>> +	if (direct_io) {
+>>> +		if (!PAGE_ALIGNED(back->file_offset) ||
+>>> +			!PAGE_ALIGNED(back->buf_offset) ||
+>>> +			!PAGE_ALIGNED(back->buf_len))
+>>> +		return -EINVAL;
+>>> +	}
+>>> +	if (!back->buf_len || back->buf_len > dmabuf->size ||
+>>> +		back->buf_offset >= dmabuf->size ||
+>>> +		back->buf_offset + back->buf_len > dmabuf->size)
+>>> +		return -EINVAL;
+>>> +	if (back->file_offset + back->buf_len < back->file_offset)
+>>> +		return -EINVAL;
+>>> +
+>>> +	filp = fget(back->fd);
+>>> +	if (!filp)
+>>> +		return -EBADF;
+>>> +
+>>> +	mutex_lock(&buffer->lock);
+>>> +	ret = system_heap_rw_file(buffer, op ==
+>> DMA_BUF_RW_FLAGS_READ, direct_io,
+>>> +			filp, back->file_offset, back->buf_offset, back-
+>>> buf_len);
+>>> +	mutex_unlock(&buffer->lock);
+>>> +
+>>> +	fput(filp);
+>>> +	return ret;
+>>> +}
+>>> +
+>>>  static void system_heap_dma_buf_release(struct dma_buf *dmabuf)  {
+>>>  	struct system_heap_buffer *buffer = dmabuf->priv; @@ -308,6
+>> +425,7
+>>> @@ static const struct dma_buf_ops system_heap_buf_ops = {
+>>>  	.mmap = system_heap_mmap,
+>>>  	.vmap = system_heap_vmap,
+>>>  	.vunmap = system_heap_vunmap,
+>>> +	.rw_file = system_heap_dma_buf_rw_file,
+>>>  	.release = system_heap_dma_buf_release,  };
+>>>
+> 
 
