@@ -1,188 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEA41E570D;
-	Tue, 13 May 2025 09:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5C237717;
+	Tue, 13 May 2025 09:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129293; cv=none; b=IiMvEbLuwUWBLLAhfR9Zf6kbzmF1eSdtdAQeb58X4WY5ivWxGK6aBKNHDAus7Bt+MApVgd94mtSr/6CsMWa6Da54+acqHBzVnesy1dGnp5QOPyeipuBJZNwe9dPT3SnZAJrIkGBAudvL64j0a3AFz9V37SugZvXEKYRu0e/ufrc=
+	t=1747129324; cv=none; b=be7aTniwv9Y4ZDYUFBGwc8wZasAWLdvh/UBwF8vFix4g3tYkoUt++DAt7n01sfWK0AMR/abPvHtfAE4XrS9joMK7WnC626jEXT/TrBEocvB9P7PaEwrRJmJ6+4zpRA4c8v6plTCzZ/sJGjuCSmWNm6kSq0wXK+3+dTfA1GJD+ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129293; c=relaxed/simple;
-	bh=9LpchjhiZX+DBZ6lMeGJvFj12PZytbaMZ9VCzKNnWKk=;
+	s=arc-20240116; t=1747129324; c=relaxed/simple;
+	bh=qBLNBy/gq445RAkBYHQEtoxXsl0N+NBg01MgE36mwbQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I5B/Q0QeyF5jS2TtxrjiVbPHTfR2/lXJmBIqW5Q8qH1IXOjoVXXYaON3NxsBD21dnTraothZBADinzLACxWZ8baqSn36pXN2v5ze56/70+WYqqRDWi7DYyxHrqVkj3Zs5pvMOQoz4aP4+N6F+ci2gLXZDd5uMbqMr1qKP/+E0yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBQFW/OS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IatMWohm+7aSZ5BoqWFLNY8DMSTOX1/lqJu43JWMOnPeJGyF526tLm51miObvx/g3hGRnKStL/gSDYCcp8HuGrV+gXIYAr4Kq5VNqGNUKIh9wy2gb564mtxmhZ5pqohJZQcHPUPsqeBGX8mhg6lmkDY5SAqzVD7j5i0nKM98ma0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VCiENWgH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBQFW/OS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D74C4CEE4;
-	Tue, 13 May 2025 09:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747129293;
-	bh=9LpchjhiZX+DBZ6lMeGJvFj12PZytbaMZ9VCzKNnWKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBQFW/OSWl0JKCgO3wU5Zev4svkXFf7hg1hXf5vz/dafM3maiJzs1pvZB4PggT3J7
-	 4Fgb0P+P3LbyvaBBr+NTPBk5toNUyb87sBxZfI029TpdTVwCYABse2TcYvVL3TzZRe
-	 9C4BxfZkhY6ir7IctfItjKlVifYGxX11uT+x8kHAsC7aCQrQyotU+baHY2Z0qsG4XD
-	 Vg9Gu0DWBjjxzBIlamIYcZ9EPvglCZ2lXw9NX7+y5wXevRIfDjRe3oukq9hP9DTrSd
-	 jegikYcugiinVo0isHFxAPJLdkQ+V3E8WpGg+7wZWeF7zzIkfEjiL7pChb+hsn8aX5
-	 OCNDfyrLDoADg==
-Date: Tue, 13 May 2025 10:41:26 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
- during init
-Message-ID: <20250513094126.GF2936510@google.com>
-References: <20250507124358.48776-1-ivecera@redhat.com>
- <20250507124358.48776-9-ivecera@redhat.com>
- <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
- <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
- <aBt1N6TcSckYj23A@smile.fi.intel.com>
- <20250507152609.GK3865826@google.com>
- <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VCiENWgH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=js5CdpYS9yFA/MzQbhixDBeZ4NnfAUqz+EhtbAMZ180=; b=VCiENWgHxoFeNq368K6MRyaFcu
+	ifPbpMsoCnYsfCxINGjEfCZPR63eukf0vd3F8365MwYkW9ssTdMgJiHqSyEuiC+MM0L4fr8iR3sUy
+	JgBjBvzhX9KWoSOE8UHs2LJhPytfs/x0nwp+nODRVq401eNDc8Txm3SkMZZjdLv7CqoDym7SL3ki3
+	bdsxAvFmyfAiGC1cXZXzHvwqyKXUzOX5tIqg5JpBTpDohty4f3tScHXyf3P8frhmCMmQEA9G78el7
+	CxNBqRbjBzCQPY3xCmon1LzemNW3e9LULkUYa2gmwcISrnX3fpJuMop/+hdTco5lg558EpUJmvbI3
+	8F5sqRMg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uEm95-0000000GuC2-3uRT;
+	Tue, 13 May 2025 09:41:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4F3E0300787; Tue, 13 May 2025 11:41:55 +0200 (CEST)
+Date: Tue, 13 May 2025 11:41:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, namhyung@kernel.org, irogers@google.com,
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, eranian@google.com,
+	ctshao@google.com, tmricht@linux.ibm.com
+Subject: Re: [RFC PATCH 01/15] perf: Fix the throttle logic for a group
+Message-ID: <20250513094155.GD25763@noisy.programming.kicks-ass.net>
+References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
+ <20250506164740.1317237-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
+In-Reply-To: <20250506164740.1317237-2-kan.liang@linux.intel.com>
 
-On Mon, 12 May 2025, Ivan Vecera wrote:
+On Tue, May 06, 2025 at 09:47:26AM -0700, kan.liang@linux.intel.com wrote:
 
-> On 07. 05. 25 5:26 odp., Lee Jones wrote:
-> > On Wed, 07 May 2025, Andy Shevchenko wrote:
-> > 
-> > > On Wed, May 07, 2025 at 03:56:37PM +0200, Ivan Vecera wrote:
-> > > > On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
-> > > > > On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> wrote:
-> > > 
-> > > ...
-> > > 
-> > > > > > +static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
-> > > > > > +       { .channel = 0, },
-> > > > > > +       { .channel = 1, },
-> > > > > > +       { .channel = 2, },
-> > > > > > +       { .channel = 3, },
-> > > > > > +       { .channel = 4, },
-> > > > > > +};
-> > > > > 
-> > > > > > +static const struct mfd_cell zl3073x_devs[] = {
-> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 0),
-> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 1),
-> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 2),
-> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 3),
-> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 4),
-> > > > > > +};
-> > > > > 
-> > > > > > +#define ZL3073X_MAX_CHANNELS   5
-> > > > > 
-> > > > > Btw, wouldn't be better to keep the above lists synchronised like
-> > > > > 
-> > > > > 1. Make ZL3073X_CELL() to use indexed variant
-> > > > > 
-> > > > > [idx] = ...
-> > > > > 
-> > > > > 2. Define the channel numbers
-> > > > > 
-> > > > > and use them in both data structures.
-> > > > > 
-> > > > > ...
-> > > > 
-> > > > WDYM?
-> > > > 
-> > > > > OTOH, I'm not sure why we even need this. If this is going to be
-> > > > > sequential, can't we make a core to decide which cell will be given
-> > > > > which id?
-> > > > 
-> > > > Just a note that after introduction of PHC sub-driver the array will look
-> > > > like:
-> > > > static const struct mfd_cell zl3073x_devs[] = {
-> > > >         ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
-> > > >         ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
-> > > >         ZL3073X_CELL("zl3073x-dpll", 1),  // ...
-> > > >         ZL3073X_CELL("zl3073x-phc", 1),
-> > > >         ZL3073X_CELL("zl3073x-dpll", 2),
-> > > >         ZL3073X_CELL("zl3073x-phc", 2),
-> > > >         ZL3073X_CELL("zl3073x-dpll", 3),
-> > > >         ZL3073X_CELL("zl3073x-phc", 3),
-> > > >         ZL3073X_CELL("zl3073x-dpll", 4),
-> > > >         ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
-> > > > };
-> > > 
-> > > Ah, this is very important piece. Then I mean only this kind of change
-> > > 
-> > > enum {
-> > > 	// this or whatever meaningful names
-> > > 	..._CH_0	0
-> > > 	..._CH_1	1
-> > > 	...
-> > > };
-> > > 
-> > > static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
-> > >         { .channel = ..._CH_0, },
-> > >         ...
-> > > };
-> > > 
-> > > static const struct mfd_cell zl3073x_devs[] = {
-> > >         ZL3073X_CELL("zl3073x-dpll", ..._CH_0),
-> > >         ZL3073X_CELL("zl3073x-phc", ..._CH_0),
-> > >         ...
-> > > };
-> > 
-> > This is getting hectic.  All for a sequential enumeration.  Seeing as
-> > there are no other differentiations, why not use IDA in the child
-> > instead?
-> 
-> For that, there have to be two IDAs, one for DPLLs and one for PHCs...
-
-Sorry, can you explain a bit more.  Why is this a problem?
-
-The IDA API is very simple.
-
-Much better than building your own bespoke MACROs.
-
-> The approach in my second reply in this thread is simpler and taken
-> in v8.
-> 
-> <cite>
-> +#define ZL3073X_PDATA(_channel)			\
-> +	(&(const struct zl3073x_pdata) {	\
-> +		.channel = _channel,		\
-> +	})
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a84abc2b7f20..eb0dc871f4f1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2734,6 +2734,38 @@ void perf_event_disable_inatomic(struct perf_event *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>  
+> +static void perf_event_group_unthrottle(struct perf_event *event, bool start_event)
+> +{
+> +	struct perf_event *leader = event->group_leader;
+> +	struct perf_event *sibling;
 > +
-> +#define ZL3073X_CELL(_name, _channel)				\
-> +	MFD_CELL_BASIC(_name, NULL, ZL3073X_PDATA(_channel),	\
-> +		       sizeof(struct zl3073x_pdata), 0)
+> +	if (leader != event || start_event)
+> +		leader->pmu->start(leader, 0);
+> +	leader->hw.interrupts = 0;
 > +
-> +static const struct mfd_cell zl3073x_devs[] = {
-> +	ZL3073X_CELL("zl3073x-dpll", 0),
-> +	ZL3073X_CELL("zl3073x-dpll", 1),
-> +	ZL3073X_CELL("zl3073x-dpll", 2),
-> +	ZL3073X_CELL("zl3073x-dpll", 3),
-> +	ZL3073X_CELL("zl3073x-dpll", 4),
-> +};
-> </cite>
-> 
-> Lee, WDYT?
-> 
-> Thanks,
-> Ivan
-> 
+> +	for_each_sibling_event(sibling, leader) {
+> +		if (sibling != event || start_event)
+> +			sibling->pmu->start(sibling, 0);
+> +		sibling->hw.interrupts = 0;
+> +	}
+> +
+> +	perf_log_throttle(leader, 1);
+> +}
+> +
+> +static void perf_event_group_throttle(struct perf_event *event)
+> +{
+> +	struct perf_event *leader = event->group_leader;
+> +	struct perf_event *sibling;
+> +
+> +	leader->hw.interrupts = MAX_INTERRUPTS;
+> +	leader->pmu->stop(leader, 0);
+> +
+> +	for_each_sibling_event(sibling, leader)
+> +		sibling->pmu->stop(sibling, 0);
+> +
+> +	perf_log_throttle(leader, 0);
+> +}
 
--- 
-Lee Jones [李琼斯]
+Urgh, this seems inconsistent at best.
+
+ - unthrottle will set interrupts to 0 for the whole group
+ - throttle will set interrupts for leader
+   while the old code would set interrupts for event.
+ - interrupts was written with event stopped, while now you consistently
+   write when started
+ - both now issue perf_log_throttle() on leader, whereas previously it
+   was issued on event.
+
+IOW
+
+before:				after:
+ event stops			 leader MAX_INTERRUPTS
+ event MAX_INTERRUPTS		 event group stops
+ event logs			 leader logs
+
+ event 0			 event group 0
+ event starts			 event group starts
+ event logs			 leader logs
+
+Like said, a rather inconsistent and random collection of things.
+
+
+
+What's wrong with something simple like:
+
+static void perf_event_throttle(struct perf_event *event, bool start)
+{
+	event->hw.interrupts = 0;
+	if (start)
+		event->pmu->start(event, 0);
+	perf_log_throttle(event, 1);
+}
+
+static void perf_event_unthrottle(struct perf_event *event)
+{
+	event->pmu->stop(event, 0);
+	event->hw.interrupts = MAX_INTERRUPTS;
+	perf_log_throttle(event, 0);
+}
+
+static void perf_event_throttle_group(struct perf_event *event, bool start)
+{
+	struct perf_event *sibling, *leader = event->group_leader;
+
+	perf_event_throttle(leader, start);
+	for_each_sibling_event(sibling, leader)
+		perf_event_throttle(sibling, start);
+}
+
+static void perf_event_unthrottle_group(struct perf_event *event)
+{
+	struct perf_event *sibling, *leader = event->group_leader;
+
+	perf_event_unthrottle(leader);
+	for_each_sibling_event(sibling, leader)
+		perf_event_unthrottle(sibling);
+}
+
+That way:
+
+before:				after:
+ event stops			 event group stops
+ event MAX_INTERRUPTS		 event group MAX_INTERRUPTS
+ event logs			 event group logs
+
+ event 0			 event group 0
+ event starts			 event group starts
+ event logs			 event group logs
+
+All that was done before is still done - no change in behaviour for
+event. Its just that the rest of the group is now taken along for the
+ride.
+
+> @@ -6421,14 +6451,6 @@ static void __perf_event_period(struct perf_event *event,
+>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
+>  	if (active) {
+>  		perf_pmu_disable(event->pmu);
+> -		/*
+> -		 * We could be throttled; unthrottle now to avoid the tick
+> -		 * trying to unthrottle while we already re-started the event.
+> -		 */
+> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
+> -			event->hw.interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -		}
+>  		event->pmu->stop(event, PERF_EF_UPDATE);
+>  	}
+>  
+> @@ -6436,6 +6458,12 @@ static void __perf_event_period(struct perf_event *event,
+>  
+>  	if (active) {
+>  		event->pmu->start(event, PERF_EF_RELOAD);
+> +		/*
+> +		 * We could be throttled; unthrottle now to avoid the tick
+> +		 * trying to unthrottle while we already re-started the event.
+> +		 */
+> +		if (event->group_leader->hw.interrupts == MAX_INTERRUPTS)
+> +			perf_event_group_unthrottle(event, false);
+>  		perf_pmu_enable(event->pmu);
+>  	}
+>  }
+
+This change seems random. Also, note that I'm kicking myself for the
+total lack of useful information in commit 1e02cd40f151.
+
+Notably, we're calling this from event_function_call(), this means we're
+having IRQs disabled and are running on the events CPU. How can we
+interact with the tick?
+
+
