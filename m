@@ -1,186 +1,94 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0219B4C6C;
-	Tue, 13 May 2025 03:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9312AF1C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747105601; cv=none; b=I8KgtV2ABNqZDq1ZcG6ATGzCUpS5zMH81bj3XPb5JTRHMWn2tHsF72rEyaUbvXgFNfIBVGQ4sdINR6dQC8DjAQMsxZWJJEqUKllciso341DLwqTS5jM6WEau+0ly8XuL42h4kvSQ17OBvP++wQWdRQvwsXGF/u/GuIWkhy2xL0E=
+	t=1747105620; cv=none; b=V7THkbPS+pfztC75iJqxQdDaA/HVdtWp/vC1TfiCiiLyaAADncQ1w3KwK8X0QYsmnWAzOvuI7nAcoNPtq+VQSHA7zlSB/IiaSNAwDBQEXLXePlMq5kJM8nskvo7FM/96QTe7BU3liLOjcUU8kYeZL8EKAASYFz1qisCK/eju3/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747105601; c=relaxed/simple;
-	bh=tIgXaLSVizFofL4SRJwe+0I2bWrhtONCrIazmJtlLdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YJvgZ/qVAHvtUVZ1zJrq9VsWYM3yklJ+4NAcEyWmH+06nO05yVtJOJAD/RzAWPg4K8X1NNWbZoiZwYYCiyhhN/RmokFAR9QpeuqKiEnBcTFnIdjJCe4QmPhIRfWDbfR4ohTWcmuYK8pqqvfI/wtWjm6K/KTdJMA8V664DmBsgjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TJfUolF5; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747105620; c=relaxed/simple;
+	bh=7Sq8YaAZmVI9KNclbZEAVx+oOCp0RssOb8yh6fyMa1g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J+eet0I7tBNhpPTwl5fBeql0qyNfV4GYYI8MOKW7rpcwIh05U60lqNM1Hz48OBfD1ECfa5wtI/kDqp6+sTjdOtDDx8zyC6489LNdO3vMASUlLXWVxZeYlZ1/slRoqyjkYShdPggHXh62hBqShtwwBSQw9fImAL9m2QkX3Yp2+/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j4qKgyKE; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TJfUolF5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747105593;
-	bh=ayxdP8gWAbkfn0fMI/Ym542Ws5mHhmNhJ/pLVIx2Sfw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TJfUolF5Qu4L+3FUqR/hcIS/mcpl2wRYcFwH1T02kpmGvh51LyZmpKPDqCbn8qjul
-	 zZsBD3tvj1SCThzy9OabEyaF9INaBi3vJ1y7ibEAJON9WMiw0ePC5vd8WGGLK/DIiq
-	 U38ppv+4NR6y4BnyfyvuxWXtwtTNnwUtM4EfNFV9oMlu0MRzSB/BRHbaB0MIP5icHk
-	 jHfppDZNrrVZXYuuVZobIsz56SzwD2YE6XgKmfzaGygEEwsViZ3cmdNwV60lOlhIw4
-	 DW1hO4eYFSQnNV/CFc8cGzfRQZdh3YOf9BrSU3vrqE4mciYeAu8/6ocEmhxeI4HEp5
-	 aplgGW/00xgTg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxLwS67Xkz4wcd;
-	Tue, 13 May 2025 13:06:32 +1000 (AEST)
-Date: Tue, 13 May 2025 13:06:30 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Networking <netdev@vger.kernel.org>, Jason
- Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, Dave Ertman
- <david.m.ertman@intel.com>, Leon Romanovsky <leon@kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Michal Swiatkowski
- <michal.swiatkowski@linux.intel.com>, Mustafa Ismail
- <mustafa.ismail@intel.com>, Shiraz Saleem <shiraz.saleem@intel.com>,
- Tatyana Nikolova <tatyana.e.nikolova@intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>
-Subject: linux-next: manual merge of the net-next tree with the rdma-fixes
- tree
-Message-ID: <20250513130630.280ee6c5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j4qKgyKE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747105617; x=1778641617;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7Sq8YaAZmVI9KNclbZEAVx+oOCp0RssOb8yh6fyMa1g=;
+  b=j4qKgyKElxue38uDjsljdOxMM1TlTl1eradEQihL9RFnsKTIifdb/hDL
+   DHTMFGZ6c1gDIlezy9aRPBj0IgK7BVlUN+cDP/S8wcgjh5a7+ovoQBTZ4
+   wBmiKYB58dhq/yFQGNKNyL1ZTubJLWmufToICSFUT86VzIHxxfO9Lc9BX
+   tKucqfHKtuzm7uXY30XmwtXyQLsyXqcInE2cGtGrH66KD2D2Z5GbBESg5
+   ESsNg2amJpAFqyscbPYhbcWH8MOFZeO7jYLWunkUB/YQGy4FjKf5igUkZ
+   fASoL9/LSlFnSh+pELbdiBMOhJX91IFfN+JvyPiiBH7wnv5vFGeMp4+bt
+   w==;
+X-CSE-ConnectionGUID: QvNjekQJSTuUivouGcSj9A==
+X-CSE-MsgGUID: Sl+YTeaPQYSc4uWQBrtqVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52735270"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="52735270"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 20:06:56 -0700
+X-CSE-ConnectionGUID: IseoW6NdTYS/sPrNIPjUwA==
+X-CSE-MsgGUID: AIbmauM9TOOcdbM3GNc0mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="138522214"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by fmviesa009.fm.intel.com with ESMTP; 12 May 2025 20:06:56 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] [PULL REQUEST] Intel IOMMU updates for v6.16
+Date: Tue, 13 May 2025 11:07:34 +0800
+Message-ID: <20250513030739.2718555-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vtpU+YY_BFYko292DKksJ2y";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/vtpU+YY_BFYko292DKksJ2y
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Joerg,
 
-Hi all,
+The following changes have been queued for v6.16-rc1. They are about new
+features and code refactoring, including:
 
-Today's linux-next merge of the net-next tree got a conflict in:
+ - Restore WO permissions on second-level paging entries
+ - Use ida to manage domain id
+ - Miscellaneous cleanups
 
-  drivers/infiniband/hw/irdma/main.c
+These patches are based on v6.15-rc6. Please consider them for the
+iommu/vt-d branch.
 
-between commits:
+Best regards,
+baolu
 
-  80f2ab46c2ee ("irdma: free iwdev->rf after removing MSI-X")
-  4bcc063939a5 ("ice, irdma: fix an off by one in error handling code")
+Jason Gunthorpe (1):
+  iommu/vt-d: Restore WO permissions on second-level paging entries
 
-from the rdma-fixes tree and commit:
+Lu Baolu (2):
+  iommu/vt-d: Use ida to manage domain id
+  iommu/vt-d: Replace spin_lock with mutex to protect domain ida
 
-  c24a65b6a27c ("iidc/ice/irdma: Update IDC to support multiple consumers")
+Wei Wang (2):
+  iommu/vt-d: Eliminate pci_physfn() in dmar_find_matched_satc_unit()
+  iommu/vt-d: Change dmar_ats_supported() to return boolean
 
-from the net-next tree.
+ drivers/iommu/intel/dmar.c  |   4 ++
+ drivers/iommu/intel/iommu.c | 113 ++++++++++--------------------------
+ drivers/iommu/intel/iommu.h |  21 +++++--
+ 3 files changed, 51 insertions(+), 87 deletions(-)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+-- 
+2.43.0
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/infiniband/hw/irdma/main.c
-index 7599e31b5743,abb532bc8ce4..000000000000
---- a/drivers/infiniband/hw/irdma/main.c
-+++ b/drivers/infiniband/hw/irdma/main.c
-@@@ -221,8 -221,8 +221,8 @@@ static int irdma_init_interrupts(struc
-  			break;
- =20
-  	if (i < IRDMA_MIN_MSIX) {
- -		for (; i > 0; i--)
- +		while (--i >=3D 0)
-- 			ice_free_rdma_qvector(pf, &rf->msix_entries[i]);
-+ 			ice_free_rdma_qvector(cdev, &rf->msix_entries[i]);
- =20
-  		kfree(rf->msix_entries);
-  		return -ENOMEM;
-@@@ -245,35 -245,40 +245,42 @@@ static void irdma_deinit_interrupts(str
- =20
-  static void irdma_remove(struct auxiliary_device *aux_dev)
-  {
-- 	struct iidc_auxiliary_dev *iidc_adev =3D container_of(aux_dev,
-- 							    struct iidc_auxiliary_dev,
-- 							    adev);
-- 	struct ice_pf *pf =3D iidc_adev->pf;
-  	struct irdma_device *iwdev =3D auxiliary_get_drvdata(aux_dev);
-+ 	struct iidc_rdma_core_auxiliary_dev *iidc_adev;
-+ 	struct iidc_rdma_core_dev_info *cdev_info;
- =20
-+ 	iidc_adev =3D container_of(aux_dev, struct iidc_rdma_core_auxiliary_dev,=
- adev);
-+ 	cdev_info =3D iidc_adev->cdev_info;
-+=20
-+ 	ice_rdma_update_vsi_filter(cdev_info, iwdev->vsi_num, false);
-  	irdma_ib_unregister_device(iwdev);
-- 	ice_rdma_update_vsi_filter(pf, iwdev->vsi_num, false);
-- 	irdma_deinit_interrupts(iwdev->rf, pf);
-+ 	irdma_deinit_interrupts(iwdev->rf, cdev_info);
- =20
- +	kfree(iwdev->rf);
- +
-- 	pr_debug("INIT: Gen2 PF[%d] device remove success\n", PCI_FUNC(pf->pdev-=
->devfn));
-+ 	pr_debug("INIT: Gen2 PF[%d] device remove success\n", PCI_FUNC(cdev_info=
-->pdev->devfn));
-  }
- =20
-- static void irdma_fill_device_info(struct irdma_device *iwdev, struct ice=
-_pf *pf,
-- 				   struct ice_vsi *vsi)
-+ static void irdma_fill_device_info(struct irdma_device *iwdev,
-+ 				   struct iidc_rdma_core_dev_info *cdev_info)
-  {
-+ 	struct iidc_rdma_priv_dev_info *iidc_priv =3D cdev_info->iidc_priv;
-  	struct irdma_pci_f *rf =3D iwdev->rf;
- =20
-- 	rf->cdev =3D pf;
-+ 	rf->sc_dev.hw =3D &rf->hw;
-+ 	rf->iwdev =3D iwdev;
-+ 	rf->cdev =3D cdev_info;
-+ 	rf->hw.hw_addr =3D iidc_priv->hw_addr;
-+ 	rf->pcidev =3D cdev_info->pdev;
-+ 	rf->hw.device =3D &rf->pcidev->dev;
-+ 	rf->pf_id =3D iidc_priv->pf_id;
-  	rf->gen_ops.register_qset =3D irdma_lan_register_qset;
-  	rf->gen_ops.unregister_qset =3D irdma_lan_unregister_qset;
-- 	rf->hw.hw_addr =3D pf->hw.hw_addr;
-- 	rf->pcidev =3D pf->pdev;
-- 	rf->pf_id =3D pf->hw.pf_id;
-- 	rf->default_vsi.vsi_idx =3D vsi->vsi_num;
-- 	rf->protocol_used =3D pf->rdma_mode & IIDC_RDMA_PROTOCOL_ROCEV2 ?
-- 			    IRDMA_ROCE_PROTOCOL_ONLY : IRDMA_IWARP_PROTOCOL_ONLY;
-+=20
-+ 	rf->default_vsi.vsi_idx =3D iidc_priv->vport_id;
-+ 	rf->protocol_used =3D
-+ 		cdev_info->rdma_protocol =3D=3D IIDC_RDMA_PROTOCOL_ROCEV2 ?
-+ 		IRDMA_ROCE_PROTOCOL_ONLY : IRDMA_IWARP_PROTOCOL_ONLY;
-  	rf->rdma_ver =3D IRDMA_GEN_2;
-  	rf->rsrc_profile =3D IRDMA_HMC_PROFILE_DEFAULT;
-  	rf->rst_to =3D IRDMA_RST_TIMEOUT_HZ;
-
---Sig_/vtpU+YY_BFYko292DKksJ2y
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgitzYACgkQAVBC80lX
-0GxN2wf/TyrOJtgN7ZJw0Bz09/UfTOtj5gwx+vfMDRkoBU8Hp19s4Sfy+TQgz/NO
-8R+9c9iIzEOlHCPg0kIMS96YPmtL05NFXKzoMcHbWnZSiXyVdNe5HcQ1s6KRjKul
-u9XF9bO+phRCqbM3ixPnMxBIBl1tQcWICk9AXq8oKB6cK7U6qUUYxU7TDfoO4VU4
-GF72MJ3+CY6stJhqeh3SzUmWvmyrc5xn4szl5Zm141UD7/gYd08CJ2sz0U/15Duf
-1Z6aaCX75TKjhqacDD8JDVoFmz2dLGS+5r3LRsj9dirUPplMfxrgsvjtg476Ti4m
-lx6u0SjVXre0VszySdrKK8XZg49dIA==
-=czAo
------END PGP SIGNATURE-----
-
---Sig_/vtpU+YY_BFYko292DKksJ2y--
