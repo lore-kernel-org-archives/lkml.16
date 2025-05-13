@@ -1,275 +1,110 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7B528ECEA
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C528DF0F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140943; cv=none; b=VBMY/t88wuCG7LeFixXyil42ppWAxs+/pLu1uCgqeRSN2SuOqA3Y24M17Lkw4/73RCvpCiY9eoalLoKmF3qo0+wq0QRPD/o6FMrK6MuHq3r9fMSjK9FyiDEzKU/F+uH8nlr3sL35kzJtS4qrASpz/HxUiY4g6FEvIO1XXqu8u3M=
+	t=1747140967; cv=none; b=HHxQvaS6G8TM0e81W6eOlfU/CNNJF2MdTyHiYC104OPoNMAQ4V80x5EtLTUjCSme8KNCcKoU50iux7fTXgaUdkLDyHIajDuM3KEumpK1VYt59P+FABz3eZpFv0pEAP64g2TlNdP+SewO2eSePK3sSM96w8C4sv6bD6OPEfRsPz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140943; c=relaxed/simple;
-	bh=NlJ/Fp92upe1PHTUxI10oRYp7XkaSCcUunuBq9RDqtA=;
+	s=arc-20240116; t=1747140967; c=relaxed/simple;
+	bh=3DeTAi1I6ja/kcy7TOnjzoICqTpw6MKwiMgn5ZsOA6M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sdlunq/V+UEK+jUnFDYHSPQxpG5s6BmkkfmhktOHOzAa0mSkWU0Q/jv3K3kHfGH6bfMK1E3+dgZNJzt7BuT4x9zVZRPe4OEwX2ti1+7DfNLPt35OqFTgW0/PgpLF2N1O9ZZFKmpz1qYFDawqsAe/Dy3oE8XpDPHiGbygNTCjYFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rmVtEKWZ; arc=none smtp.client-ip=209.85.217.54
+	 To:Cc:Content-Type; b=BA+zSpbxV0ndBBRLbRdeNuUsgGg2o6FyTBcPlfDippF9y3mGVIR4yQoX6243nquTf24U9A4hpldyCSl0fiKBo4Lvc2s+4Mswiawvw6LVUiOWrUsotyT2iy5HCt1jXJJHj+Wn9dX7m9OEJS9YOVkAWX7MZFSxJi/H4HpgzHlBlqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wuxVo5Z0; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rmVtEKWZ"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4dad6cc2be0so2117750137.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:55:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wuxVo5Z0"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54fd1650b83so3228930e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747140940; x=1747745740; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nry7u6hfWQwQzzFrNP3dV55JxQ3yh9zE6gPBoBNYa8E=;
-        b=rmVtEKWZLq7kSdmo+z474aLFwt15jWMsIcMqVajFrKAvgFEiRZrmykxwCzkezH032f
-         otLjqyC97wWQSDlXM+R7ixep80AQuVvtkOpju4UfSI0MIQP8EyI1n3JQWKDZgnOCuxVo
-         3oM0Vo5LgnxSPLTi16BZ4eXAOvqvhxroVdONIpVLlZj04AQvMVyncR5BxLztdr3F8G40
-         1F+XHFRGgMgqy8n32tv8rDMZLe2sLVcKLLEVW8c+3eG8TAr+83zEhI9xFm+FVWh5giCh
-         Xt1P3LkjSPwjB8/H842o6D4HMLGP6qhSknJIDoEKCf26pCoc5AkSiqejG4KZKVv73eEi
-         ZLaA==
+        d=linaro.org; s=google; t=1747140963; x=1747745763; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TnrDtFR/wUG3jSxJnmOhIX6bU0T3LAwlfTt3Gj6//94=;
+        b=wuxVo5Z0jdBa6UwMTXEIhfKGNV3eQdRoW97gGbTQNavJdsrUTUHZsbzie1bmR2MNl/
+         NyMumE0PVCLvF1Vzuuj/O9RilKnwZILxqEfvBHxy4cUcJSnoyk+ZLnEzkOCHcvTi1cat
+         7XiMUjdQToWpasxXShuMQIzIW1olS1iu0HAd1TGfw32hCjBd7Sn07eHo2aR4vn7cVg18
+         xFY906MYgNsQi0RHUgVm1N6GYEvGFb4hL/9yXtswkLyhwtBBEjX6qBo4bK4Tr9Ptl2hC
+         b67hCvzTjDr4wdfRiAdNgEZ5HYRH9EYuxlEqYRuJDkUbFZinDQfsUQjGqrRazsZg/N++
+         fKpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747140940; x=1747745740;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nry7u6hfWQwQzzFrNP3dV55JxQ3yh9zE6gPBoBNYa8E=;
-        b=LR/wHCNfT2hC88RqWPTo+ZV5Tlxw719+WqiBYE4yAU0ILhwYQckAT6cMUY/o+xrUma
-         KgRVriegnEvpi84Pc1JK6OBr0g0ET4TMryfBHZDLfNn74MM/rKuCiJWAKqClD2wc1yVM
-         Z1xUuDUz1sVFblG/zKHR6BUSteuHQeWIDm7KP9i75cLp/nAZRN+F9b8p94PSQvOr4O4y
-         50QTEwW+XyNzE84MCxywsuTbsWhpctLmUOBmuphWiPQB4Qd1wGs+NzsTLkNXbjO4zU8i
-         w0D2eX9yOyIz+PbADIXVw2DPZLAQkrU9/PeOJK7a0RjvjK7NnH51m9GpbJ7UaO+bWIVK
-         1Ggw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhnJCJrcOZT8P96n7u7ZVIB4Jk2vuxTfrhjw3YUq29YLG6p0TeglGtlS6AHcWSmls/RC85NUiaaDT/O3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNFvU+IuLIFy0CIh4Q/tRAnBI9jNgpJpA72S3NW/mHP/CfjK1f
-	UeAm5W2s7/GFK++4Y3TxV5fbY4L0hZanf3jmcrdIcSissW+zcxoKkgeifJHM7z8Bjdgnoz6gYF0
-	CfaK878SPaC9wd1mvd9S0KZJ/hBrtXln7U9y/Gw==
-X-Gm-Gg: ASbGncvXjRBwoMmv5B8C/W6DuWsdjKeAnGAhYqnhOskExJqwIrLAentPmCzY2o8Kr2f
-	lI8JdpJ8+Q8GNZ2zqpU/x+/EnmRthVvPmNHVC1ZmVj/kGmu0w5KiEOcJGdMryONNbpLv/YP0DKX
-	8v/kS2PQbcxNzqJhWbEjhJsOfDfJm+KF8=
-X-Google-Smtp-Source: AGHT+IGFcHp5JvTFATrGpVvnOd6CO2iyeKzv73ghvBmScpT3is0UNci+6dQ/KgknaFzY+U4cPmuhRe+a6b3XtqCIY5k=
-X-Received: by 2002:a05:6102:1521:b0:4de:81a:7d40 with SMTP id
- ada2fe7eead31-4deed357904mr13690723137.9.1747140939905; Tue, 13 May 2025
- 05:55:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747140963; x=1747745763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TnrDtFR/wUG3jSxJnmOhIX6bU0T3LAwlfTt3Gj6//94=;
+        b=mzL13fb6OqrjCb9QDIRghoffhgKFNWy4X5nYzATTXw8avdu39Y+RYRlr/sCIKZ1GE8
+         civ42t/U3nkZmQTDqONehdxVD9P7DB2acxKrtEYd7LQlEDvDHhxL7sVC60dUK+mYHyJ+
+         hxHcqVBUT8fJejmtpa360tUvJqy3gtW/IjFqQwQXL1jv3xzImN0icfhOBxkwyCLz14yR
+         OKGLIfFeEDL/tWYZ93fUphAyYTHeqSLHjdIW/BmeQ7V0Kf/Shg9Fw+SGzz3QBTEEhkod
+         W3RER4Oo6GZAoz0PAPq+CfFsl1g/2B3YXLbjJYvffWV4itwIJjZuMEXt1gkzdwaJQzW2
+         Aq7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWVgheMM5chkxlevpcqprHJPiWfYFFGeajatTG4w+7ZqQatbE51RkYJOD2kHLWALGPE5oWSXb+sW5rxgg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5KFhhiCo7fGCxvOgDRsF19lhRDjHMXCahgzDy7xCIFXZrjceb
+	ms7rsqKYEiYOjY193roLodKyNhEd7onBMyGb8c5CcFg8oq0yOOAkOutdVmmvvnPZ2WmzzGIT549
+	9IPX4+gkfyfenjmP9bb4tS4YoASCFLmeHJophKQ==
+X-Gm-Gg: ASbGncsB+p3vy1MElHHaTZASF3wMGUfTAeWhGHloaCknebHo79BJMh7bZKB9ailZsEV
+	wVJshWsIx4GvlFadDWK5kTYHk+BvahrbG50wrg7J2qs5yya+0ffr5QcE4KY4mNcD83vX0RYiIUi
+	1ZMP3a4nYwyydQF3Zd3otH4fWIPSA/aiC0
+X-Google-Smtp-Source: AGHT+IGn3b+7Zh7S//+wx+Xxtb6ZBtSzHkIJbXRsy4U2x/LmPx9JYtJc5JoaPFpYaECnMq8H1yt+/F1ni3yf6HVA9Sc=
+X-Received: by 2002:a05:6512:1194:b0:54a:cc04:ea24 with SMTP id
+ 2adb3069b0e04-54fc67e7ea7mr5900714e87.46.1747140963389; Tue, 13 May 2025
+ 05:56:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512172041.624042835@linuxfoundation.org>
-In-Reply-To: <20250512172041.624042835@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 13 May 2025 13:55:28 +0100
-X-Gm-Features: AX0GCFth71TY2p9GdRVKCuaaW-FDb23AYXLI8pnuI3D_eyoXuasH5z7h8h0Z8N0
-Message-ID: <CA+G9fYsnfsB+NVwntOVVH8KuaZ-TffKiejsFFTVmk-TCNeSy9Q@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <20250506-csl42x-v3-0-e9496db544c4@nxp.com> <20250506-csl42x-v3-9-e9496db544c4@nxp.com>
+In-Reply-To: <20250506-csl42x-v3-9-e9496db544c4@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 14:55:51 +0200
+X-Gm-Features: AX0GCFtFzSwk7eRmxngH80W_FVCoWA7VvCWFx4m0A5ByX0Uxkd3cGc7bhazETXQ
+Message-ID: <CACRpkdbcCGVQca4arnRD4rc1W+4L5g3yT8VTb35G1CrwgBfvAw@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 12 May 2025 at 18:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, May 6, 2025 at 9:31=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
+> wrote:
+
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> This is the start of the stable review cycle for the 6.12.29 release.
-> There are 184 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor with default
+>    polarity GPIOD_OUT_LOW, set consumer name.
+>  - Use gpiod_set_value_cansleep to configure output value.
 >
-> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
-> Anything received after that time might be too late.
+> Checking the current driver using legacy GPIO API, the
+> reset value is first output HIGH, then LOW, then HIGH.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.29-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
+> Checking the datasheet, the device remains in Power-down state until
+> RESET pin is brought high.
 >
-> thanks,
+> Since the driver has been here for quite long time and no complain on
+> the reset flow, still follow original flow when using GPIOD
+> descriptors.
 >
-> greg k-h
+> Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
+> example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong.
+> And the binding use reset-gpio as example, not same as driver using
+> "cirrus,reset-gpio", and there is no in-tree DTS has the device,
+> so all should be fine with this patch.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Regressions on mips defconfig tinyconfig and allnoconfig builds failed with
-clang-20 toolchain on stable-rc 6.12.29-rc1, 6.14.7-rc1, and 6.6.91-rc1.
-But, builds pass with gcc-12.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-* mips, build
-  - clang-20-allnoconfig
-  - clang-20-defconfig
-  - clang-20-tinyconfig
-  - korg-clang-20-lkftconfig-hardening
-  - korg-clang-20-lkftconfig-lto-full
-  - korg-clang-20-lkftconfig-lto-thing
-
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
-
-Build regression: mips defconfig clang-20 instantiation error expected
-an immediate
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build error mips
-<instantiation>:7:11: error: expected an immediate
- ori $26, r4k_wait_idle_size - 2
-          ^
-<instantiation>:10:13: error: expected an immediate
- addiu $26, r4k_wait_exit - r4k_wait_insn + 2
-            ^
-<instantiation>:10:29: error: expected an immediate
- addiu $26, r4k_wait_exit - r4k_wait_insn + 2
-                            ^
-<instantiation>:7:11: error: expected an immediate
- ori $26, r4k_wait_idle_size - 2
-          ^
-<instantiation>:10:13: error: expected an immediate
- addiu $26, r4k_wait_exit - r4k_wait_insn + 2
-            ^
-<instantiation>:10:29: error: expected an immediate
- addiu $26, r4k_wait_exit - r4k_wait_insn + 2
-                            ^
-## Build mips
-* Build log: https://qa-reports.linaro.org/api/testruns/28410167/log_file/
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.28-185-gd90d77b7ffdf/testrun/28410167/suite/build/test/clang-20-defconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.28-185-gd90d77b7ffdf/testrun/28410167/suite/build/test/clang-20-defconfig/details/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2x0STWrUibOnjQLcSDWp3b7iEHf/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2x0STWrUibOnjQLcSDWp3b7iEHf/config
-* Toolchain: clang-20
-
-
-## Build
-* kernel: 6.12.29-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git commit: d90d77b7ffdf042185947a9671131e657003287a
-* git describe: v6.12.28-185-gd90d77b7ffdf
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12.28-185-gd90d77b7ffdf
-
-## Test Regressions (compared to v6.12.26-167-g483b39c5e6de)
-* mips, build
-  - clang-20-allnoconfig
-  - clang-20-defconfig
-  - clang-20-tinyconfig
-  - korg-clang-20-lkftconfig-hardening
-  - korg-clang-20-lkftconfig-lto-full
-  - korg-clang-20-lkftconfig-lto-thing
-
-## Metric Regressions (compared to v6.12.26-167-g483b39c5e6de)
-
-## Test Fixes (compared to v6.12.26-167-g483b39c5e6de)
-
-## Metric Fixes (compared to v6.12.26-167-g483b39c5e6de)
-
-## Test result summary
-total: 148229, pass: 122716, fail: 6415, skip: 18536, xfail: 562
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 137 passed, 2 failed
-* arm64: 56 total, 55 passed, 1 failed
-* i386: 18 total, 16 passed, 2 failed
-* mips: 34 total, 27 passed, 7 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 40 passed, 0 failed
-* riscv: 25 total, 23 passed, 2 failed
-* s390: 22 total, 21 passed, 1 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 42 passed, 7 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-di[
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Yours,
+Linus Walleij
