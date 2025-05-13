@@ -1,161 +1,207 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9815B1B87C9
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 20:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747169354; cv=fail; b=Zq+NHPMGthEAy5LhrZ+4dBOb5xwDEVaW4K0MkgFa++6Zmns6+JTuo4VtKnM4CdAJBlLa3ML2j4BrXSnU/qdUUI+Kxv4jys4eM9xWG6h85d9ZDYcicUNHVk0lZYhDtL7NeQI2CTLVIgCL+zwl4DbwZH6gpvs/C57/zJinpD0wDJg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747169354; c=relaxed/simple;
-	bh=YTa6NetG+Q04SMpjgdB2AWN+VlhzrPs90Nduv918jXk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JGIdwJp7q46ayXamHbc4GsMrj4gZW8gjJyIyWJRDQZ4DGLREJeABdvOFg/mQ0NvI7igQcxh+y0+0mhxWcyRr4QMl8zdzcTC3C2tOd1JFY4TqX/qXbmGW5YVr0dW9i6IfOxUHXRWcwHvTyFDv1G33j87sguUiGJyGK/R6rORdRV4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RRVfAiem; arc=fail smtp.client-ip=40.107.94.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA2A143895;
+	Tue, 13 May 2025 20:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747169440; cv=none; b=QpaCIC5QZjYezGO1EWllsQ36R+AkT+6F3Pw0x0IDqVO91lzmRUDDtDO0ECdzEM3fijKDhjekkHnAUMgWDEkAAsPm2Zuyi14AzHAgJbnjLkh5ZsLIHeSgfUWCUoIGcfRZIeWnaId56AYBWbuAcg3DoW1j3Qga7IlHDAEJyugwEPA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747169440; c=relaxed/simple;
+	bh=k24S/q0mljfkMX65LqmfPHCdtiBSQ90MpBoOiBvQ1gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZJf5CmwFRr5eU4WaS5tfgM74SdRDm/BcTmkGE1ZT+JbjRN01cfrlpcEIIQ/c7IozC+tQ4p0+KlPwBWcF1g5+629imC/Q3cQvDPHb+tjZE2UQweEN/971Po4ru7aiUiVWPmjR60sx/PfHsC3BogcbLhEoEdO9tjoFI/+KpZ9yjYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jV7KEtcD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RRVfAiem"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xms8V6YgprQ5IGc3iJvyOh8JtsxKiRySRz9i4Cvz89aS0y6I9optr14qUDZLNBW3omXsUSI9zAQoyLaRGz5O7e3qKgEEMa8LBPe2uT94Qq7ONTHLJpntnING6CqYOiIUibDW0taCc47eSdJanAJT3HZtf/UR0Cl3YI2ENgwX2ndL6uUafQ1rzGR9z8V+j33zMCXiSPCGdUEg2AY+qiZYZPJFAT3YzLYaaSS3sW5AgRiMrathH770NqAT0F1PRp0fvHqNqEXgoz9UaMMgWBesWQwUW0HkpnpoO78ELb1jYXNh5ey2zpDnzbK0PPIxpBP9uhdeJou3vqZ+not/iYW3aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lOzb2JbpOB9e6KcIQPgXRafI4NipghslQItW5CVaL4s=;
- b=rP9JfxLOffJQjh6XQnLIZHv6dA0AOPTqL5nhFCLwx3hF8OSOQ0JGW+jk44E19+IJrCOUt3N0oWLpcfTc/MAPfOgFxDdfGDiIdT/RzOJnlStDKEmb2XAvSCecy6Svx0enYvcbxRK5OeNh/BJyO43r5ibYiT/IY6jgGLSDsUd9dKtYZ9KUgWEiaAaiwEJZHtaHUlNpzXJHuTy7j4UNXBYPq2fU+y2IZZbTn1ddggNydZo6du2Onmf50LPC95XvSBKpySwRH5iut2yDnw1CGebm0crQ9jD4mxdx5ZQZqFAwkw0rrJFexJ8EKvs2cc0v3m45UEDEFBwqp0P1rr2nMXCuyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lOzb2JbpOB9e6KcIQPgXRafI4NipghslQItW5CVaL4s=;
- b=RRVfAiemPczyoGT96hMFoU/eXLCaBO+VnLRAv4I5FSM/nW5cn5SngFgWLTDCQVMDXVUHzYQeOae8R205IjQ0IRjSbaQLN68ZrQIC5jpyNa6wFd5BZYTeHjSc4M4nK2PF5hO2PVDQ2vJ6V9G6dB7dHP7DXTJ3z6/bO/Tk3p0mO+4=
-Received: from SJ0PR13CA0055.namprd13.prod.outlook.com (2603:10b6:a03:2c2::30)
- by DM4PR12MB5940.namprd12.prod.outlook.com (2603:10b6:8:6b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 20:49:09 +0000
-Received: from CO1PEPF000044F8.namprd21.prod.outlook.com
- (2603:10b6:a03:2c2:cafe::fa) by SJ0PR13CA0055.outlook.office365.com
- (2603:10b6:a03:2c2::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18 via Frontend Transport; Tue,
- 13 May 2025 20:49:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F8.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.1 via Frontend Transport; Tue, 13 May 2025 20:49:08 +0000
-Received: from purico-9eb2host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 13 May
- 2025 15:49:07 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <x86@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH] x86/CPU/AMD: Add X86_FEATURE_ZEN6
-Date: Tue, 13 May 2025 20:48:57 +0000
-Message-ID: <20250513204857.3376577-1-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jV7KEtcD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C76C4CEE4;
+	Tue, 13 May 2025 20:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747169440;
+	bh=k24S/q0mljfkMX65LqmfPHCdtiBSQ90MpBoOiBvQ1gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jV7KEtcDUD8pAG+ZEpDgUU/G24NIcHzb3Omk1Po2t2JvLNSHX4EqurmTaLzY9APMF
+	 uYYHzE2ZeHQHabbwKMwCubMc81ZHwKS4N0+wLzq06sG0RHb5BpmOdhKJU8G93nPxex
+	 fZLk9F7if9gTaY78lbbjRU3oPd4H38h7j4qGS5LpDkLTsY61eAHB9yM4099O/e3QG0
+	 +3l8P51W+GfsJG944oYAyjbLThST9fZl4nJplQo/JcwTIbG32OtC2twsLkEU7Iq7/s
+	 uUh+E5fFQ+hCGdD6GgCa9Fyqve4E7Lqra5alEWhnfic8lmo7EjLNX6s/bglEP1SPdm
+	 Vxd+uSISHocCA==
+Date: Tue, 13 May 2025 17:50:37 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	maddy@linux.ibm.com
+Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
+ counting perf events
+Message-ID: <aCOwnUUVKx798Uza@x1>
+References: <20250512055748.479786-1-gautam@linux.ibm.com>
+ <20250512055748.479786-5-gautam@linux.ibm.com>
+ <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
+ <aCI0oDBSz86S9fz-@x1>
+ <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F8:EE_|DM4PR12MB5940:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03676f94-a100-4ac8-131d-08dd925f9b8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zk1CJ/7TQdPbCgJnsHySOOsdAsZgLUzplATXVIZdsRIlBRCc6t6/xCr3wz5U?=
- =?us-ascii?Q?tXGGlE7VElpfqcH+CIUOKQznk/ir9xdZ/q/TlbPj71aguekkDIZNChnpVULR?=
- =?us-ascii?Q?iMbx1GOQjOZqrzcgidAJqSPLo7DJqPEoTo2VNMDYebqw1nbl/GMZu152WFpi?=
- =?us-ascii?Q?Y1bazBhiVgQ2En+xL+G2Gi95saA0pwlAj3fz38tM9dr8E3oR3zxld2NJT4dy?=
- =?us-ascii?Q?ao0E5S8ZFbiKqcoMQldedqQC1D9RHvm44qatx/2JNZMS61H4tmf17oHMZGx2?=
- =?us-ascii?Q?5+FhcbOF669ZBttFc6RYQGGgNut3grCbRwjLzyt5IdL+j7GqYTWJUMQaIlhu?=
- =?us-ascii?Q?8XRQzXzI/RCizfKpfqR9fDVbCyCRCo65d/Z9cheCkISd4U9J36WvXa5Ut7LB?=
- =?us-ascii?Q?d42ScXjbcGZsIL9F9+smtpGTLnFPgcwB+87stdw1Ida4vvHH+1EzNfsgqffV?=
- =?us-ascii?Q?wAPjYCNUV1x6cUlou3h83neXL+GaxFUMSsxda67R2S7CpbudXLRWEL5PneDv?=
- =?us-ascii?Q?pfM1a1b/T3D5TrDNfIm2L08gyRnWeVknMtnc7cOPOw/IzWjJbFa0MCUxzbFq?=
- =?us-ascii?Q?wzPI6oNd419L/k5lRsSRhnhxWPyaR2K0cyrP8fuItEt3NCTZFx53Ams4dg9X?=
- =?us-ascii?Q?KEoTfenQ01SdEBzRlgg4+sCzpYmgaTWl1JTarklwdGv77hKsoHydLZ3NQnnP?=
- =?us-ascii?Q?BCS89V+iv+Vqs5UYCAiiymsExVHtoZwZi9kxFV+4W6whDboMP4fUkktZJFax?=
- =?us-ascii?Q?0ksL635NjkQBAidpCx8RymU2jw4A1/BJz6IxA47nIWysZEZzel2I0lUgnh3u?=
- =?us-ascii?Q?0riVV4xHsyR6AuiHcmRJHw8O+eqy3K21TNyUC4KUz1TXtzdjvVZHh0Ip+9HH?=
- =?us-ascii?Q?3VQB7i2rsRaxVp/VjyMw+5UTUno+slppE9gQgtw6MvQ0R40VGcOoX7F4bg4z?=
- =?us-ascii?Q?VZEZYgon0UBExPlHRTNKEZAvgjyXO5cjH9xdlGoOwYEtfNw5Ee4GwX2hbRCy?=
- =?us-ascii?Q?pGYOayqimQUCL+Q6D5kxmmOj93JteggoN963wqRT9wCEaGu64dl9+Duunxy7?=
- =?us-ascii?Q?CyKjmLY9kVRYuwta9IEhPnj6eFnx/9N7rHNgk09XdWuKcb8dtu2oBWhviRsD?=
- =?us-ascii?Q?N7ssqWkHg57S7aAvl7ra7bGu1AYpFtTjHJkw/lSxTTIbC6O1RRg0Df9g10CO?=
- =?us-ascii?Q?t6vVXR2Z5fsZLNdq9HVywPsLvPqyts6BeCxYn0+bkURnHo7OA2WKWxzHir7J?=
- =?us-ascii?Q?pSleb0XQL7J3QzSv7tB0TiRoarosMgO2UsbYb1cNCMGuIHBOTss9rRYEvkfP?=
- =?us-ascii?Q?LUBME3c37nYSwAEd0dtpguhjYi3IvbnzZ1Lbo4VBotpt/g7QQm89Q2SxZa39?=
- =?us-ascii?Q?OjM+eonYNsuvKCA4oKf33OiADD12GZZf4zavyrESTW6l5Uub2KktEOigAkxe?=
- =?us-ascii?Q?asU430nn7f67BeDhB9wNF0uroUSDdVPnZwrkz8R3LN2vWKoRSbrHfVHrOpOY?=
- =?us-ascii?Q?kaGstI8gmlUPngP1kE+wxIZOryftZyrKdgm5?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 20:49:08.4037
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03676f94-a100-4ac8-131d-08dd925f9b8a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F8.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5940
+In-Reply-To: <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
 
-Add a synthetic feature flag for Zen6.
+On Mon, May 12, 2025 at 12:38:23PM -0700, Ian Rogers wrote:
+> On Mon, May 12, 2025 at 10:49 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Mon, May 12, 2025 at 10:23:39AM -0700, Ian Rogers wrote:
+> > > On Sun, May 11, 2025 at 10:58 PM Gautam Menghani <gautam@linux.ibm.com> wrote:
+> > > > Add counting.py - a python version of counting.c to demonstrate
+> > > > measuring and reading of counts for given perf events.
+> >
+> > > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > > > ---
+> > > > v1 -> v2:
+> > > > 1. Use existing iteration support instead of next
+> > > > 2. Read the counters on all cpus
+> > > > 3. Use existing helper functions
+> > > >
+> > > >  tools/perf/python/counting.py | 34 ++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 34 insertions(+)
+> > > >  create mode 100755 tools/perf/python/counting.py
+> >
+> > > > diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
+> > > > new file mode 100755
+> > > > index 000000000000..e535e3ae8bdf
+> > > > --- /dev/null
+> > > > +++ b/tools/perf/python/counting.py
+> > > > @@ -0,0 +1,34 @@
+> > > > +#!/usr/bin/env python3
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +# -*- python -*-
+> > > > +# -*- coding: utf-8 -*-
+> > > > +
+> > > > +import perf
+> > > > +
+> > > > +def main():
+> > > > +        cpus = perf.cpu_map()
+> > > > +        thread_map = perf.thread_map(-1)
+> > > > +        evlist = perf.parse_events("cpu-clock,task-clock", cpus, thread_map)
+> >
+> > > Thanks Gautam! I think this is really good. Perhaps the events could
+> > > be a command line option, but I can see why you want to keep this
+> > > similar to counting.c.
+> >
+> > > > +
+> > > > +        for ev in evlist:
+> > > > +            ev.read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
+> > > > +
+> > > > +        evlist.open()
+> > > > +        evlist.enable()
+> > > > +
+> > > > +        count = 100000
+> > > > +        while count > 0:
+> > > > +            count -= 1
+> > > > +
+> > > > +        evlist.disable()
+> > > > +
+> > > > +        for evsel in evlist:
+> > > > +            for cpu in cpus:
+> > > > +                for thread in range(len(thread_map)):
+> >
+> > > I kind of wish, for the reason of being intention revealing, this could just be:
+> >
+> > > for thread in thread_map:
+> >
+> > > I can see the problem though, the counts lack the thread_map and the
+> > > thread_map is needed to turn a thread back into an index. Perhaps when
+> > > the python counts is created we hold onto the evsel so that this is
+> > > possible. I also suspect that in the code:
+> >
+> > > for cpu in cpus:
+> >
+> > > The CPU number is being used rather than its index, which is a similar
+> > > story/problem.
+> >
+> > Lemme see the rest of this code...
+> >
+> > +static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
+> > +                                 PyObject *args, PyObject *kwargs)
+> > +{
+> > +       struct evsel *evsel = &pevsel->evsel;
+> > +       int cpu_map_idx = 0, thread = 0;
+> > +       struct perf_counts_values counts;
+> > +       struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
+> > +                                                              &pyrf_counts_values__type);
+> > +
+> > +       if (!PyArg_ParseTuple(args, "ii", &cpu_map_idx, &thread))
+> > +               return NULL;
+> > +
+> > +       perf_evsel__read(&(evsel->core), cpu_map_idx, thread, &counts);
+> > +       count_values->values = counts;
+> > +       return (PyObject *)count_values;
+> > +}
+> >
+> > Yeah, it is expecting the cpu_map_idx but the cpu number is being used,
+> > that is a bug.
+> >
+> > The way perf_evsel__read() is implemented:
+> >
+> > int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
+> >                      struct perf_counts_values *count)
+> >
+> > It expects a cpu_map index, not a cpu and then a thread that in its
+> > prototype seems to imply its not an index? But it is an index as it ends
+> > up being the 'y' for:
+> >
+> >   xyarray__entry(_evsel->mmap, _cpu_map_idx, _thread))
+> >
+> > :-/
+> 
+> Yeah. In the C code we've pretty much committed to notions of cpu map
+> index and CPU. We're more ambiguous with threads, but generally thread
+> is actually thread index into the thread map. As you say it is for the
+> xyarray so that we can densely pack things by index rather than having
+> huge gaps, say between PIDs. For the python we don't have to have a
+> 1:1 mapping with the C code, so I was wondering if we could just
+> remove the notions of index and have them be implementation details?
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/amd.c          | 5 +++++
- 2 files changed, 6 insertions(+)
+Agreed, even in the C case I find it confusing to sometimes deal with
+indexes and sometimes with real thread/cpu numbers, but if we try and
+at least keep the variables/parameter naming reflecting that, then it
+should be bearable.
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f67a93fc9391..920e7d0d1976 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -483,6 +483,7 @@
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
- #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
-+#define X86_FEATURE_ZEN6		(21*32+11) /* CPU based on Zen6 microarchitecture */
+> This would lead to an unfortunate O(log n) translation between
+> thread/CPU and index (perf_cpu_map__idx) at the API boundary in
+> python.c.
+
+Maybe with some more thinking we can get something better? But I don't
+have the bw now to think about it.
  
- /*
-  * BUG word(s)
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 13a48ec28f32..93da466dfe2c 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -474,6 +474,11 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
- 		case 0x60 ... 0x7f:
- 			setup_force_cpu_cap(X86_FEATURE_ZEN5);
- 			break;
-+		case 0x50 ... 0x5f:
-+		case 0x90 ... 0xaf:
-+		case 0xc0 ... 0xcf:
-+			setup_force_cpu_cap(X86_FEATURE_ZEN6);
-+			break;
- 		default:
- 			goto warn;
- 		}
--- 
-2.49.0
+> > So probably its best to do it using indexes and when needing to know the
+> > pid or cpu number then use some helper to get the entry at the given
+> > entry? At least for the perf_evsel__read() API that seems to be the
+> > case, right?
 
+> > > Arnaldo, could you give some input on what to do wrt indices, threads
+> > > and CPUs at the API level? Perhaps we need a refactor and objects for
+> > > perf CPU and perf thread, similar to the use of struct perf_cpu in the
+> > > C code. The original API all pre-dates that change. The issue is that
+> > > changing the API could break existing scripts and we can only fix
+> > > those that ship with perf.
+> > So it was more for catching new/dead threads without having to process /proc.
+
+<SNIP>
+ 
+> Yeah. I think the sampling API is okay. The nice thing with Gautum's
+> patches is adding support for counters for use-cases like perf stat.
+
+Right, I like the effort he is making into having perf more usable in
+python, and I encourage him to think about the issues you raised so that
+we can come to some good abstractions.
+
+- Arnaldo
