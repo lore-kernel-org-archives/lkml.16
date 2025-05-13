@@ -1,108 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEE81F03D6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747DA26AFB;
 	Tue, 13 May 2025 07:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121989; cv=none; b=RydfJrp25sOwNGMriTrbKN1Jj67smExoy19KFJp2IzcpeBIlC7PtrRIaeu2CSJ341iuV1v6B0W+4Vb6wCD1Rj5fOQgw1VZ4qV0/miM1Fxqte12dVPTpj9+EoyHUn6mhJ3lv5Ou4dOvCQZ6DRtMwwOFjG+UcgaNzvfiUMOIhpr1g=
+	t=1747121990; cv=none; b=tw/PzTltOsOkS5kJfm+jEI/b+ZVI0j5LmdpOJ2E+nIXpvoCyjdfgDJoxLPQpW6H4tiUkltCbiXkQ4pFqOtWSap5vsramOEOCcORH22OQUYyvkBdF95czNo0jZrvj7aCW50uvdYGSM6ij3VHyiCj4HI1j5CAF2IjI0fogG4GqImE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121989; c=relaxed/simple;
-	bh=hjWQjgTtHXLhLzvMlxehe6/+1Kfl8Mm7PJtbcltv3iY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hXyYg9Ut/yyl8iSDVoWliyyeYTq6NvR033n8+8HoinZOdRCdR6uDxpX1pGDLEGhD0avpABWsdNmi+pvY5PUh5daS/X+Urd6VuVF8JZJiyLA4O7giaJ5SARaYIt1KEBhbj48xNxU1LvK9Jm3D/HjD4BpGej8ZkR8OkoP24ISuIKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i40G3V6u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747121990; c=relaxed/simple;
+	bh=WvLCTR3fNxN4J7wyKalvtVWgPuKFp8nP0TrLSLy8sWk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=l6De+AW9j8c1C6c1NVM9zYuAx3gXc3g+Y/XQ4YKFfZITLseBLQZTD6h2Nen+7qsZN0zlAo2iGjH2WDv8bm1fPdKggK4bhoB8dOvfbSIwxgKRK1k3C/3VUla3Cl0VGAts8r8avOUoLNfLajDlwlvOYqgK0EwlAwTKFVmTkcsKC84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DVjBMxid; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SOhWVJpy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i40G3V6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80157C4CEE4;
-	Tue, 13 May 2025 07:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747121988;
-	bh=hjWQjgTtHXLhLzvMlxehe6/+1Kfl8Mm7PJtbcltv3iY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i40G3V6uP21v6a5wEmsDMf5+UO8lAxBF2jpdwodzqIF72E7JNM74ODWfnOzOGUCJ+
-	 6sJKz3yFYe1MghSR8XlpJq6pRY0w06DKMjxYOcwO8ds2toNBbPBNf0CmT7NJ1C4owX
-	 pMv3cOhhslII932jl0Vvgl76MsfbBB8CfPmQicNYbmECUSWztJKt9WYZmu/Utg1jiK
-	 K6yP5N/4avrX+YOgokbVMgaEBIulp2mRKn0sfRygG4zXvVYbslBaOPz1VAcM+fGYuZ
-	 QupmJj9+YvW8s7NHlm9GyKN5a+vuRiwox5VlhfecW+OhpmXbeBtHgtehU9NrE/Hxh6
-	 qyHaEOAU0lIdg==
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DVjBMxid";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SOhWVJpy"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747121986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AlNVEwGL4cI2wJsUZRWNYyvdArHzwAhJF0ypQd+HF5A=;
+	b=DVjBMxid1ViGD3poxgE+hQWyDzBxU4mR4V2C21tf4donG6ySbAneinGo6yScjsIazZJmPb
+	qXYTAVfanPgKe2ECZeMe2baQgOXSbY82WXqWa/syv+nnrQtB8IVVtNZyemAffOapjRisWz
+	Kf2ADHL+nCPl+kjIHwhJgQCeQfvXMxHUPZhLA4/YSutmh/JpsEta7SOgu01UBAtQlWqS17
+	KwYtB9OertqJWhSB5d/DvBObaqkr2KshLKKaLVbyyJEquXSW59SfSO1dX0Fi9jJI4hWpSp
+	bWhyrtGUFehcA1Q9UQeNi++Oz+3FxdnMib0Zg8zW8LHQWeVwhgCiJOsA4DX2ng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747121986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AlNVEwGL4cI2wJsUZRWNYyvdArHzwAhJF0ypQd+HF5A=;
+	b=SOhWVJpyXL34/xMJLrsJaJfZ4M47tNH6FL8veq6syJTBMNymlISJ3sgSraZh6iAvEAJwxy
+	1jMl6j8seS544bCQ==
+To: paulmck@kernel.org, Marco Elver <elver@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Dmitry Vyukov <dvyukov@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-next@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [BUG] sleeping function called from invalid context at
+ ./include/linux/sched/mm.h:321
+In-Reply-To: <a5c939c4-b123-4b2f-8a22-130e508cbcce@paulmck-laptop>
+References: <a5c939c4-b123-4b2f-8a22-130e508cbcce@paulmck-laptop>
 Date: Tue, 13 May 2025 09:39:45 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>, 
-	Chen Linxuan <chenlinxuan@uniontech.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] fs: fuse: add backing_files control file
-Message-ID: <20250513-etage-dankbar-0d4e76980043@brauner>
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
- <20250509-fusectl-backing-files-v3-2-393761f9b683@uniontech.com>
- <CAJfpegvhZ8Pts5EJDU0efcdHRZk39mcHxmVCNGvKXTZBG63k6g@mail.gmail.com>
- <CAC1kPDPeQbvnZnsqeYc5igT3cX=CjLGFCda1VJE2DYPaTULMFg@mail.gmail.com>
- <CAJfpegsTfUQ53hmnm7192-4ywLmXDLLwjV01tjCK7PVEqtE=yw@mail.gmail.com>
- <CAC1kPDPWag5oaZH62YbF8c=g7dK2_AbFfYMK7EzgcegDHL829Q@mail.gmail.com>
- <CAJfpegu59imrvXSbkPYOSkn0k_FrE6nAK1JYWO2Gg==Ozk9KSg@mail.gmail.com>
- <CAOQ4uxgM+oJxp0Od=i=Twj9EN2v2+rFByEKabZybic=6gA0QgA@mail.gmail.com>
- <CAJfpegs-SbCUA-nGnnoHr=UUwzzNKuZ9fOB86+jgxM6RH4twAA@mail.gmail.com>
+Message-ID: <87o6vxj6wu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJfpegs-SbCUA-nGnnoHr=UUwzzNKuZ9fOB86+jgxM6RH4twAA@mail.gmail.com>
+Content-Type: text/plain
 
-On Mon, May 12, 2025 at 12:06:19PM +0200, Miklos Szeredi wrote:
-> On Mon, 12 May 2025 at 11:23, Amir Goldstein <amir73il@gmail.com> wrote:
-> 
-> > The way I see it is, generic vs. specialized have pros and cons
-> > There is no clear winner.
-> > Therefore, investing time on the getxattr() direction without consensus
-> > with vfs maintainer is not wise IMO.
-> 
-> AFAIU Christian is hung up about getting a properly sized buffer for the result.
+On Mon, May 12 2025 at 16:47, Paul E. McKenney wrote:
+> I ran this on x86 with clang version 19.1.7 (CentOS 19.1.7-1.el9).
+>
+> See below for the full splat.  The TINY02 and SRCU-T scenarios are unique
+> in setting both CONFIG_SMP=n and CONFIG_PROVE_LOCKING=y.
+>
+> Bisection converges here:
+>
+> c836e5a70c59 ("genirq/chip: Rework irq_set_msi_desc_off()")
+>
+> The commit reverts cleanly, but results in the following build error:
+>
+> kernel/irq/chip.c:98:26: error: call to undeclared function 'irq_get_desc_lock'
+>
+> Thoughts?
 
-No, the xattr interface is ugly as hell and I don't want it used as a
-generic information transportation information interface. And I don't
-want a single thing that sets a precedent in that direction.
+Smells like what the top commit of the irq/core branch fixes:
 
-> But if the data is inherently variable sized, adding specialized
-> interface is not going to magically solve that.
-> 
-> Instead we can concentrate on solving the buffer sizing problem
-> generally, so that all may benefit.
-
-The xattr system call as far as I'm concerned is not going to be pimped
-to support stuff like that.
-
-> 
-> > The problem I see with this scheme is that it is not generic enough.
-> > If lsof is to support displaying fuse backing files, then it needs to
-> > know specifically about those magic xattrs.
-> 
-> Yeah, I didn't think that through.  Need some *standard* names.
-> 
-> > Because lsof only displays information about open files, I think
-> > it would be better to come up with a standard tag in fdinfo for lsof
-> > to recognize, for example:
-> >
-> > hidden_file: /path/to/hidden/file
-> > hidden_files_list: /path/to/connections/N/backing_files
-> 
-> Ugh.
-> 
-> > Making an interface more hierarchic than hidden_files_list:
-> > is useless because lsof traverses all fds anyway to filter by
-> > name pattern and I am very sceptical of anyone trying to
-> > push for an API get_open_fds_by_name_pattern()...
-> 
-> The problem is that hidden files are hidden, lsof can't traverse them
-> normally.  It would be good to unhide them in some ways, and for me
-> that would at least mean that you can
-> 
->  1) query the path (proc/PID/fd/N link)
->  2) query fdinfo
->  3) query hidden files
-
-Then by all means we can come up with a scheme in procfs that displays
-this hierarchically if we have to.
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=irq/core
