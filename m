@@ -1,86 +1,43 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FAB1E47BA
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F30178F44;
+	Tue, 13 May 2025 06:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747116417; cv=none; b=ULXwiPp5tJcNXKf/RETieSLbDoiGkuQE5IX02JkZ+jeGakmSd//BoW/+ePht08PkzbL7ra8x/8Ia+7vrl7zROAToNXA7MfoyY7/nuyXPo6gNzryy0JQ+3PcRAsKD9wyzWUtw0olXZebOcFoGhd70PeejqxuhZ9EzApAyJp2swLA=
+	t=1747116460; cv=none; b=b0ljlBahLvjJscLLlcw5B61+JH5H5jhXbu01076jOIZRJpgmeT+X2n91V8do2fdOA6f1Hn9aZ+L5/JLiFFoVkaV5hvKYXRlVhvR55jKIwhktlfinEnmCwxabkGcIn7Q3pSkhQCsyePiQ+XVQw5v2jyI7V/fTSAMJ1VouvoD55nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747116417; c=relaxed/simple;
-	bh=HlnGcNmsBXS7NICS76hHGOoW9gRPbN+aLVrm8YGH8Eo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JV8EEZjttHSUdDB+zI66W8MnuneH9dX/AJ+Qh0ptE7I7ck1OwRPObxFY1LPWr3oI4jb+KJXw76NnlDUW/a0Jce1jxDUj16QJm7PH3Y/fVn05oS6kMiHM4AAs544iQA9jV874Qu05pAarSDl8q5zHFj77BCYy1rqyh7O+oFpksqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=P4RKUP/c; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="P4RKUP/c"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747116404; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=fUPTQE19Sg3GsFNuknlANEEVIykzFfRofXNpKO+DKkU=;
-	b=P4RKUP/cAbsaulk1DcRY2lnt0kd1/h0zmxpfqlIQA0arM5eDiB79E+GagQQc6HkNN1rDJ1szBLRToZ1+Khf6qaLwrUlGVq0ax3vUldAYyHoalQ4M3xQrmgUDhmNH7tumqmgBzt46u8jty7RnoGNsrQ2Zodyr4Rp/FBbIlTay3nY=
-Received: from 30.74.144.114(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WaULMRz_1747116401 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 13 May 2025 14:06:42 +0800
-Message-ID: <f671e835-5cc2-4f1f-987d-b71b446c2275@linux.alibaba.com>
-Date: Tue, 13 May 2025 14:06:41 +0800
+	s=arc-20240116; t=1747116460; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OEN7Uew0luJxC1vz3+kL1+x22fjIQaTcKVFfH8OgvAZTe7stymsRU7YsB1U//qU/Amq7blZrNwskgIqvMW5Z1/gbBSyJ+G+r1OtUt/O96APmO3m/FCganZ3ilx9uphIAwD8t96ReKv9Qvy+ID+VhCMBXi9lcZE5AQYaxDM1sdnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 89F9A68C7B; Tue, 13 May 2025 08:07:32 +0200 (CEST)
+Date: Tue, 13 May 2025 08:07:31 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH RESEND] Documentation: fix typo in root= kernel
+ parameter description
+Message-ID: <20250513060731.GA396@lst.de>
+References: <20250512110827.32530-1-arkamar@atlas.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: khugepaged: decouple SHMEM and file folios'
- collapse
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, ziy@nvidia.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <fbdbb35301219f8fef5697006b58d82b045114f5.1747019851.git.baolin.wang@linux.alibaba.com>
- <5d5e50f1-ee5d-4fca-8d7a-31482a8482bb@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <5d5e50f1-ee5d-4fca-8d7a-31482a8482bb@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512110827.32530-1-arkamar@atlas.cz>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
+Looks good:
 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-On 2025/5/12 16:08, David Hildenbrand wrote:
->>   static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int 
->> *result,
->>                           struct collapse_control *cc)
->> @@ -2436,7 +2427,7 @@ static unsigned int 
->> khugepaged_scan_mm_slot(unsigned int pages, int *result,
->>               VM_BUG_ON(khugepaged_scan.address < hstart ||
->>                     khugepaged_scan.address + HPAGE_PMD_SIZE >
->>                     hend);
->> -            if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
->> +            if (!vma_is_anonymous(vma)) {
->>                   struct file *file = get_file(vma->vm_file);
->>                   pgoff_t pgoff = linear_page_index(vma,
->>                           khugepaged_scan.address);
->> @@ -2782,7 +2773,7 @@ int madvise_collapse(struct vm_area_struct *vma, 
->> struct vm_area_struct **prev,
->>           mmap_assert_locked(mm);
->>           memset(cc->node_load, 0, sizeof(cc->node_load));
->>           nodes_clear(cc->alloc_nmask);
->> -        if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
->> +        if (!vma_is_anonymous(vma)) {
->>               struct file *file = get_file(vma->vm_file);
->>               pgoff_t pgoff = linear_page_index(vma, addr);
-> 
-> Yeah, I've been complaining about these checks for too long :)
-
-Yes, I know:)
-
-> I assume this is fine
-
-I tested khugepaged selftest, and no issues found.
-
-> Acked-by: David Hildenbrand <david@redhat.com>
-
-Thanks.
