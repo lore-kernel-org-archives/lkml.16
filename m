@@ -1,190 +1,68 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995AD27603A;
-	Tue, 13 May 2025 10:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABB027B51A;
+	Tue, 13 May 2025 10:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130888; cv=none; b=fjGl9UFs6kxkCP+KpsazbIgVO1xLNAzfJr2TXA+1YxAFeJ5JJivk2264Z9tL176DF5QE7Mkrw6B6jKhreAjxhBSdxvWT8ZVBGmwgGzp350NsemQu20PMJECKx0/z6zZUVySH2ZKatbKT6fMTTC6KBnQvKQTKmmtPslmjuIYcvqE=
+	t=1747130887; cv=none; b=B8MiR8PxNVdJTWVrl9QnpQbdHaOaiKq/T3y0SAhWHuDFUEys1K4OnAbvWge8Pgmd0SH8HfRLEDf9IaIqrqhxNS0SxSzVv7Kdjfy1kCszob6p4tEZBWWaEuIDJd+YIR8JBZck3PFBMWWF5n2EE2PMKEvKPrkYcy1XRI5bPhvqvCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130888; c=relaxed/simple;
-	bh=V9G75luuvDdhIj9lO7cbblDKNYFXdg8m9W2gAiy+KKI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dPpO21+f1DVWiIBbGVeN09WOELxOcttGiqjOSTXdF6RpAEV9VEl7JOJVGdKnKKpctWs6pIEuE09aGASs1YzIwyfQGZx99S7cf/IsGmW4ZyI1lPwp3PYtWQaIfLpus3dPTyb/4mJlnXlCuliYZRfLJnflg1sJWajAW6wxbtlQIdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-7c-682319f13be5
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com,
-	torvalds@linux-foundation.org,
-	damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	will@kernel.org,
-	tglx@linutronix.de,
-	rostedt@goodmis.org,
-	joel@joelfernandes.org,
-	sashal@kernel.org,
-	daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com,
-	johannes.berg@intel.com,
-	tj@kernel.org,
-	tytso@mit.edu,
-	willy@infradead.org,
-	david@fromorbit.com,
-	amir73il@gmail.com,
-	gregkh@linuxfoundation.org,
-	kernel-team@lge.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	mhocko@kernel.org,
-	minchan@kernel.org,
-	hannes@cmpxchg.org,
-	vdavydov.dev@gmail.com,
-	sj@kernel.org,
-	jglisse@redhat.com,
-	dennis@kernel.org,
-	cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	vbabka@suse.cz,
-	ngupta@vflare.org,
-	linux-block@vger.kernel.org,
-	josef@toxicpanda.com,
-	linux-fsdevel@vger.kernel.org,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	dan.j.williams@intel.com,
-	hch@infradead.org,
-	djwong@kernel.org,
-	dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com,
-	harry.yoo@oracle.com,
-	chris.p.wilson@intel.com,
-	gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com,
-	boqun.feng@gmail.com,
-	longman@redhat.com,
-	yskelg@gmail.com,
-	yunseong.kim@ericsson.com,
-	yeoreum.yun@arm.com,
-	netdev@vger.kernel.org,
-	matthew.brost@intel.com,
-	her0gyugyu@gmail.com
-Subject: [PATCH v15 28/43] dept: suppress reports with classes that have been already reported
-Date: Tue, 13 May 2025 19:07:15 +0900
-Message-Id: <20250513100730.12664-29-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250513100730.12664-1-byungchul@sk.com>
-References: <20250513100730.12664-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUxTZxSHfd9773tviyXXSvCixI8aYwLRiVFzssxtxkRvDEajy6YumWvk
-	Zu0shbR8iIkpVTSC0iCKBAQsZakNrcqK2xyCQwwFNGIVKB8BNokBiiCKtFkVP1qN/5w8+f1y
-	nvPP4ShlG7OY0+ozJINerVMROS2fml+95mXcSs26uoo4CMyepqHiuouA95oTgeuGGYO/dTv0
-	BicRvHnwkILSEi+C6idDFNzwDCNochwn0PU0GroD0wQ6Ss4QOFFzncCjZ3MYBi8WY3C6d8K/
-	9lEa7hfZMJT6CVwqPYHDYxxDyF7Lgj13FYw4ylmYe5IEHcM+BpoGEqGsapBAY1MHDZ6bIxi6
-	GioIDLveM3Df005D0LIEvOcKGbj63EbgWdBOgT0wzcLjZisGjzUW6vLCwlOv3jHQVtiM4dRv
-	v2Po7r+F4Pbp/zC4XT4CdwOTGOrdJRS8vtKKYMQyxcLJsyEWLpktCM6cvEhD3uBGePN/+HLl
-	bBKYL9fRcPWtD327WXRVuZB4d3KaEvPqs8XXgR4iNgWttHjPJoh/lw+xYt7tAVa0ujPFekeC
-	WNPox2L1TIAR3bX5RHTPFLNiwVQ3Fp93drK74w/Iv0qRdNosyfDF1z/LNY7KRpQ+pDgyHpxg
-	c9G4vADJOIHfIFw2t+PP3FBrIREm/Gqhry9ERTiGXy7UF44yBUjOUbwvSuit7EeRYiH/k9D7
-	R094geNofpXQdlwXiRX8JqHhxSvyyblMcNY1f/TIwvnbK510hJX8RqHI6qQjToE/LxNszgvs
-	p4U44Y6jjy5CCiuaV4uUWn1Wqlqr27BWk6PXHll7KC3VjcLvZT829+NNNOPd24J4DqnmK9r9
-	KzRKRp1lzEltQQJHqWIU5r/CkSJFnXNUMqQdNGTqJGMLWsLRqkWK9cHsFCX/izpDOixJ6ZLh
-	c4s52eJc9M0sS0y7lJb1R9NCiVvfl36XLPwjK+5KjveP9rRPRJUNFM8scHLe1l/TW/Ntt/Yh
-	46wpetuC7cy6pd+v+TJ7ZZWlbOdYf3JCRo3GFLXFeudpZmLh0MGQSRe7NWuiSj8auzBhDG3m
-	zfFxvuhzbDk+9EOM6Vr+MUrl+XPHfvlY2h4VbdSokxIog1H9AaMSespaAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSf0yMcRzHfZ8f3+fpOB6n6aH5da3ZGNUmPhuz/KNnjPGXLYaTZ+64u3Kn
-	koVyMUq3MtVcXa6ykzrkCkm1W1FOk1IurJKYleJQd1zy447557PXXu993p9/Piwpu0bPZ1Xa
-	I6JOq1DLsYSSbF1rWPFlXpgy0tJMgGfiLAXFN20YOm9UIbDVZhAw8jAWer1jCH48eUpCYX4n
-	gtI3/STUtg4gaKw4haH73Uzo8bgxOPOzMRjKb2LoGp0ioK/gAgFV9i3w2vqegvbcMgIKRzAU
-	FRoI/xgmwGetZMCaHg5DFSYGpt5EgXPARUOL2UlD46vlcKmkD0NDo5OC1rohArrrizEM2H7T
-	0N76iAKvMRQ683JouP6pDMOo10qC1eNm4JnDQkCrZS5UZ/pbz4z/oqEtx0HAmSu3COh5eR9B
-	09lBAuw2F4YWzxgBNfZ8EiavPkQwZPzIwOnzPgaKMowIsk8XUJDZFw0/vvsvmyeiIONyNQXX
-	f7pQzHrBVmJDQsuYmxQya1KESc9zLDR6LZTwuIwX7pn6GSGz6RUjWOxJQk3FMqG8YYQQSr96
-	aMFeeQ4L9q8XGCHrYw8hfOroYLYtiJOs2y+qVcmiLmL9XomywtyAEvulR4e9H5h0NCzJQkEs
-	z63i6yuNOMCYW8q/eOEjAxzMLeZrct7TWUjCkpxrOt9rfokCwRxuN997+7l/gWUpLpxvO6UO
-	aCm3mq//PI7/dS7iq6odf3uC/P7n1Q4qwDIums+1VFG5SGJB0ypRsEqbrFGo1NEr9YeUqVrV
-	0ZXxCRo78j+Q9fhUXh2a6I5tRhyL5DOkj0aWKGW0IlmfqmlGPEvKg6UZd/1Kul+RekzUJezR
-	JalFfTMKZSl5iHTTDnGvjDugOCIeEsVEUfc/Jdig+ekIG3wq88aQ0bQTF3cNNqVFFBVsvnTf
-	Ne/c4hzNuGyn4+0i08Hd4ZHF2oRrsa4Erm0ge1AbL+8wFTrSSlakGPLWumPcC7u+pW4ONT0Y
-	dMSsueKbnf3aueGidvVhe9hYX54WJ207uT1Csy4/co9h1uw6Y1PRnRRl+76wOL1OE7nljldO
-	6ZWKqGWkTq/4A1Zc+8g8AwAA
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1747130887; c=relaxed/simple;
+	bh=H0y27dOg2P0MQDU3OpxlLzjXcVSh03yvSfMo9m4F6pM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=h82Y+nuq8k6eNDS4KoFJy/jNrnpkW8qQHgnhTB0dhXUyzBX3Get60GW/OWXCt2LBt0KR0AjqL7fEqSUBTOaCvR0VnpNiNgyDT0H8x7CA+MZWFbVYvza+DfeH8IlnTEjDLR7m2uujO611+rbBl9ZQ+G4QhKSzMqw8+v2N7G5wvsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiVOhcJn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiVOhcJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA164C4CEF3;
+	Tue, 13 May 2025 10:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747130886;
+	bh=H0y27dOg2P0MQDU3OpxlLzjXcVSh03yvSfMo9m4F6pM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SiVOhcJnZXUr590y1SdNJcqg7z0YRhw09CgyQpn7Vm91BPjS/rrTrFKWKh4FbYTlw
+	 ABGsufY7qAo9jHRSwmEaHrHz8R3Se1IPKORd9eVuDQAglq5kro7uUv590SG7w8/3QE
+	 H043DqCd7uNNIKUQfl/lm6xWGRdkuiw8eSroRErNU3VfzK/OVcL2bqWYxrgtXPCO9f
+	 8FoGXhOpsTvI8TEUmwitBAjnw36ruqG2xG0PpfPMBWkbmbNsSzibW37g5yykpZ2M3w
+	 EGkvyTYlhQbarGeWgMNqeFuUD0coS0wu6eo35hncsufVHe8H2I6vMuSjfDldCrOwa8
+	 HVNjvwUWWcfmA==
+From: Lee Jones <lee@kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Richard Leitner <richard.leitner@linux.dev>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <20250507-ov9282-flash-strobe-v4-2-72b299c1b7c9@linux.dev>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-2-72b299c1b7c9@linux.dev>
+Subject: Re: (subset) [PATCH v4 02/10] leds: flash: add support for
+ flash/stobe duration
+Message-Id: <174713088439.4152099.12343512351616334508.b4-ty@kernel.org>
+Date: Tue, 13 May 2025 11:08:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-b75d9
 
-Each different chain implies its own dependency problem, that is worth
-being reported.  However, generating similar reports mutiple times
-should be suppressed.
+On Wed, 07 May 2025 09:51:31 +0200, Richard Leitner wrote:
+> Add support for the new V4L2_CID_FLASH_DURATION control to the leds
+> driver.
+> 
+> 
 
-To avoid that, suppress reports with classes that have been already
-reported.
+Applied, thanks!
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- include/linux/dept.h     |  6 ++++++
- kernel/dependency/dept.c | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+[02/10] leds: flash: add support for flash/stobe duration
+        commit: 4cad0552415aa8c43af8d8d5924226c9b4c83889
 
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index 551168220954..b1e5a1ec6763 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -107,6 +107,12 @@ struct dept_class {
- 			 * not an explicit map
- 			 */
- 			bool		sched_map;
-+
-+			/*
-+			 * for avoiding this class involved in report
-+			 * more than once
-+			 */
-+			bool		reported;
- 		};
- 	};
- };
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index 278194093108..8bea64bab379 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -501,6 +501,7 @@ static void initialize_class(struct dept_class *c)
- 		iw->touched = false;
- 	}
- 	c->bfs_gen = 0U;
-+	c->reported = false;
- 
- 	INIT_LIST_HEAD(&c->all_node);
- 	INIT_LIST_HEAD(&c->dep_head);
-@@ -913,6 +914,12 @@ static void print_circle(struct dept_class *c)
- 	dump_stack();
- 
- 	dept_outworld_exit();
-+
-+	do {
-+		tc->reported = true;
-+		tc = fc;
-+		fc = fc->bfs_parent;
-+	} while (tc != c);
- }
- 
- /*
-@@ -1225,6 +1232,9 @@ static enum bfs_ret cb_check_dl(void *node, void *in, void **out)
- 	struct dept_class *cur = (struct dept_class *)node;
- 	struct dept_dep *new = (struct dept_dep *)in;
- 
-+	if (cur->reported)
-+		return BFS_SKIP;
-+
- 	if (cur == dep_fc(new)) {
- 		print_circle(dep_tc(new));
- 		return BFS_DONE;
--- 
-2.17.1
+--
+Lee Jones [李琼斯]
 
