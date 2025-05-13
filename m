@@ -1,124 +1,143 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B3D28D8F0;
-	Tue, 13 May 2025 11:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342D928CF7E;
+	Tue, 13 May 2025 11:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136366; cv=none; b=tsOZ2VQgVKy3B2JUVD8AbLgmxBlHKwCskLqT8QIFo3KqUG08r4ujdeYh3h00knqCl1+a6LBR5yLFdwBKYoUVwbRDXYU4hYhsQwe3fVqEtY6GdowIAOveh6U/E5Jdm5WOlVv03jQQBeteielcCv5C9m5mN8IuOvtU6tTBT+OamqM=
+	t=1747136365; cv=none; b=hOyFJAELjcClF/AxwZrOvckn6b9on4psCTg6dB99XES7y1xJkyo/31rbB7mPs9mlawBjDB18gtFSCS9wSy8HDzjYk29F7qGyAlLQN/7IakqaY+lW6MgNq0rreBij2VC788iwCPiaYB6CSw9EDRsVwsJtXNh0JEV1EjKfcBEG9yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136366; c=relaxed/simple;
-	bh=xIPfY1QrYOliZowq818wTKFat+dNvGdrN/9lVMnwB3Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lsuwBd7A5A9zdchZ++Qh0U4fhoRS1OPBZ/IJmd/JP30iC9LD93DAf9XRDX7hRRnP0J8R3LeaFA52p4V+UJV4dJUQLZpd+wwIl9qcnLsEyJfxEwBnqJjLMI+Bh/7DBkm86o03VX9zudgqJ5t3DBpQOC7/ByruMOqhItyURvMORSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D84DA43AD2;
-	Tue, 13 May 2025 11:39:15 +0000 (UTC)
-Message-ID: <da18536c-cb40-42f4-a097-2e8a03780dc9@ghiti.fr>
-Date: Tue, 13 May 2025 13:39:14 +0200
+	s=arc-20240116; t=1747136365; c=relaxed/simple;
+	bh=sakjGWFrGCsJtJMuNHZvf4IXAuWs0DjW6D7LHP/RS9w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lNgoJz5J9+P+WStUmtyXr3yucwbj6NeCOBCbJGaUioeBp6pfHqG1arjKfAZkoq+EO47yLB3MQ+9NQQ39uY4yptVN04ld6AJVWKIOv8yqNLzWaYNKIdsw8cIj2TphRsb46YrgEqvS7pD1VU3no43zt3Ah9i5NAmhSkgJWynqbbT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mvFAUHeS; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mvFAUHeS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=D1
+	d5Mv3O2B4ADycUafrn1h0QXPGeO+8J5MjFluopYfY=; b=mvFAUHeS0wKcgzl+Nl
+	27I669SfkEft4YOkU/UNmLgMkZCHW+bdhAcAoncXE23BLkCtEmZ2E82cqfgvbrR1
+	ZlI/uT76icnLb4PINi7RHsPTk9bfHM85n47UDvjXXrkMiY7AtzRVP7bLB7WYcG+W
+	+az5lsHRHCWlgdMpgMDnAgH90=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wC3kuMqLyNotfVmBA--.12824S4;
+	Tue, 13 May 2025 19:38:33 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org,
+	oneukum@suse.com
+Cc: stern@rowland.harvard.edu,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [PATCH v2 1/2] USB: core: add a memory pool to urb for host-controller private data
+Date: Tue, 13 May 2025 19:38:17 +0800
+Message-Id: <20250513113817.11962-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250512150724.4560-1-00107082@163.com>
+References: <20250512150724.4560-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5] raid6: Add RISC-V SIMD syndrome and recovery
- calculations
-Content-Language: en-US
-To: Chunyan Zhang <zhang.lyra@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: zhangchunyan@iscas.ac.cn, Paul Walmsley <paul.walmsley@sifive.com>,
- aou@eecs.berkeley.edu, Charlie Jenkins <charlie@rivosinc.com>,
- song@kernel.org, yukuai3@huawei.com, linux-riscv@lists.infradead.org,
- linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250305083707.74218-1-zhangchunyan@iscas.ac.cn>
- <mhng-63c49bc7-0f86-47f7-bc41-0186f77b9d6f@palmer-ri-x1c9>
- <CAAfSe-vD_37uihLjGwOqQKnyKJaJ36OwxDeocMOhK4s6-cpzAA@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAAfSe-vD_37uihLjGwOqQKnyKJaJ36OwxDeocMOhK4s6-cpzAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdegtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetieeitefghfeuvddvjeeiudehheeiffffgeeviedtleehgeffgfdtveekteehudenucffohhmrghinhepihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopeiihhgrnhhgrdhlhihrrgesghhmrghilhdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopeiih
- hgrnhhgtghhuhhnhigrnhesihhstggrshdrrggtrdgtnhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeihuhhkuhgrihefsehhuhgrfigvihdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3kuMqLyNotfVmBA--.12824S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF17CFWxCw1DJF18Cw17ZFb_yoW5tFWUpF
+	4xA3s3tF1FqrW3XrZ3Gan7uayrJ3Wv9ryjkryfu345Xr17tw18A3Z2yFyrCr9xJr4Syw4Y
+	qFsIgan8Ww1UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEF1v7UUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0hxMqmgjJyLldgAAs1
 
-Hi Chunyan,
+---
+Changes:
+1. Use caller's mem_flags if a larger memory is needed.
+Thanks to Oliver Neukum <oneukum@suse.com>'s review.
+---
+URB objects have long lifecycle, an urb can be reused between
+enqueue-dequeue loops; The private data needed by some host controller
+has very short lifecycle, the memory is alloced when enqueue, and
+released when dequeue. For example, on a system with xhci, several
+minutes of usage of webcam/keyboard/mouse have memory alloc counts:
+  drivers/usb/core/urb.c:75 [usbcore] func:usb_alloc_urb 661
+  drivers/usb/host/xhci.c:1555 [xhci_hcd] func:xhci_urb_enqueue 424863
+Memory allocation frequency for host-controller private data can reach
+~1k/s and above.
 
-On 08/05/2025 09:14, Chunyan Zhang wrote:
-> Hi Palmer,
->
-> On Mon, 31 Mar 2025 at 23:55, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->> On Wed, 05 Mar 2025 00:37:06 PST (-0800), zhangchunyan@iscas.ac.cn wrote:
->>> The assembly is originally based on the ARM NEON and int.uc, but uses
->>> RISC-V vector instructions to implement the RAID6 syndrome and
->>> recovery calculations.
->>>
->>> The functions are tested on QEMU running with the option "-icount shift=0":
->> Does anyone have hardware benchmarks for this?  There's a lot more code
->> here than the other targets have.  If all that unrolling is necessary for
->> performance on real hardware then it seems fine to me, but just having
->> it for QEMU doesn't really tell us much.
-> I made tests on Banana Pi BPI-F3 and Canaan K230.
->
-> BPI-F3 is designed with SpacemiT K1 8-core RISC-V chip, the test
-> result on BPI-F3 was:
->
->    raid6: rvvx1    gen()  2916 MB/s
->    raid6: rvvx2    gen()  2986 MB/s
->    raid6: rvvx4    gen()  2975 MB/s
->    raid6: rvvx8    gen()  2763 MB/s
->    raid6: int64x8  gen()  1571 MB/s
->    raid6: int64x4  gen()  1741 MB/s
->    raid6: int64x2  gen()  1639 MB/s
->    raid6: int64x1  gen()  1394 MB/s
->    raid6: using algorithm rvvx2 gen() 2986 MB/s
->    raid6: .... xor() 2 MB/s, rmw enabled
->    raid6: using rvv recovery algorithm
->
-> The K230 uses the XuanTie C908 dual-core processor, with the larger
-> core C908 featuring the RVV1.0 extension, the test result on K230 was:
->
->    raid6: rvvx1    gen()  1556 MB/s
->    raid6: rvvx2    gen()  1576 MB/s
->    raid6: rvvx4    gen()  1590 MB/s
->    raid6: rvvx8    gen()  1491 MB/s
->    raid6: int64x8  gen()  1142 MB/s
->    raid6: int64x4  gen()  1628 MB/s
->    raid6: int64x2  gen()  1651 MB/s
->    raid6: int64x1  gen()  1391 MB/s
->    raid6: using algorithm int64x2 gen() 1651 MB/s
->    raid6: .... xor() 879 MB/s, rmw enabled
->    raid6: using rvv recovery algorithm
->
-> We can see the fastest unrolling algorithm was rvvx2 on BPI-F3 and
-> rvvx4 on K230 compared with other rvv algorithms.
->
-> I have only these two RVV boards for now, so no more testing data on
-> more different systems, I'm not sure if rvv8 will be needed on some
-> hardware or some other system environments.
+High frequent allocations for host-controller private data can be
+avoided if urb take over the ownership of memory, the memory then shares
+the longer lifecycle with urb objects.
 
+Add a mempool to urb for hcpriv usage, the mempool only holds one block
+of memory and grows when larger size is requested.
 
-Can we have a comparison before and after the use of your patch?
+Signed-off-by: David Wang <00107082@163.com>
+---
+ drivers/usb/core/urb.c | 23 +++++++++++++++++++++++
+ include/linux/usb.h    |  3 +++
+ 2 files changed, 26 insertions(+)
 
-In addition, how do you check the correctness of your implementation?
+diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+index 5e52a35486af..51bf25125aeb 100644
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -23,6 +23,7 @@ static void urb_destroy(struct kref *kref)
+ 
+ 	if (urb->transfer_flags & URB_FREE_BUFFER)
+ 		kfree(urb->transfer_buffer);
++	kfree(urb->hcpriv_mempool);
+ 
+ 	kfree(urb);
+ }
+@@ -1037,3 +1038,25 @@ int usb_anchor_empty(struct usb_anchor *anchor)
+ 
+ EXPORT_SYMBOL_GPL(usb_anchor_empty);
+ 
++/**
++ * urb_hcpriv_mempool_zalloc - alloc memory from mempool for hcpriv
++ * @urb: pointer to URB being used
++ * @size: memory size requested by current host controller
++ * @mem_flags: the type of memory to allocate
++ *
++ * Return: NULL if out of memory, otherwise memory are zeroed
++ */
++void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags)
++{
++	if (urb->hcpriv_mempool_size < size) {
++		kfree(urb->hcpriv_mempool);
++		urb->hcpriv_mempool_size = size;
++		urb->hcpriv_mempool = kmalloc(size, mem_flags);
++	}
++	if (urb->hcpriv_mempool)
++		memset(urb->hcpriv_mempool, 0, size);
++	else
++		urb->hcpriv_mempool_size = 0;
++	return urb->hcpriv_mempool;
++}
++EXPORT_SYMBOL_GPL(urb_hcpriv_mempool_zalloc);
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index b46738701f8d..4400e41271bc 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -1602,6 +1602,8 @@ struct urb {
+ 	struct kref kref;		/* reference count of the URB */
+ 	int unlinked;			/* unlink error code */
+ 	void *hcpriv;			/* private data for host controller */
++	void *hcpriv_mempool;           /* a single slot of cache for HCD's private data */
++	size_t hcpriv_mempool_size;     /* current size of the memory pool */
+ 	atomic_t use_count;		/* concurrent submissions counter */
+ 	atomic_t reject;		/* submissions will fail */
+ 
+@@ -1790,6 +1792,7 @@ extern int usb_wait_anchor_empty_timeout(struct usb_anchor *anchor,
+ extern struct urb *usb_get_from_anchor(struct usb_anchor *anchor);
+ extern void usb_scuttle_anchored_urbs(struct usb_anchor *anchor);
+ extern int usb_anchor_empty(struct usb_anchor *anchor);
++extern void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags);
+ 
+ #define usb_unblock_urb	usb_unpoison_urb
+ 
+-- 
+2.39.2
 
-I'll add whatever numbers you provide to the commit log and merge your 
-patch for 6.16.
-
-Thanks a lot,
-
-Alex
-
-
->
-> Thanks,
-> Chunyan
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
