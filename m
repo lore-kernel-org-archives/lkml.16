@@ -1,94 +1,119 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1D7347C7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B111EB5F0
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142886; cv=none; b=IfdMiuVktpBi4Bcw0jjAOfxnieiGdSgKYCXT4Fe1pgrmIqnjS1JjM3q+bP7D0lIFmAQy2ArR73pz5/aK9/L8HNgiJAAs2qJuy6VK08Yj8dSECf1JX05AzekaKXhS8Q9DP/T4m5mtgGL8tEBQtF0iyT8eKE7mEntun52oqCfZgr4=
+	t=1747142899; cv=none; b=cBtzTBnvYNoNEVApxyq5e1GfaazJir93s1YtOmf/s+zVcXT4lfpTQVlr+iPm3g+VijpvhSnHYqF2oZxRI36X6ErdrMpOnYuqlk13RoYjISIKzXqZVhk0MamyYZhGFswOHzqF4QrkxklzWe0lEnYHHE6ohXBMR7Dg/yRyb1+UehU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142886; c=relaxed/simple;
-	bh=Lmyj3hP5CkRfmv8NZKBXt2FvgPVL/V2jgy3imsWNkMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ofRNc7ClBiAZvtt6OrdtGduwQUZsar7eIUdGzH895aS85IYBL8vAy9yEMee+8UQx/uiyBhK50oXhQMRHFZO2hs1Ga+vKV8EOeIkm/TS1xorRhgYoidAZ03oolnTnkszudInU3u2gS7tAs5hcYuCzoWUZrHRCon3H4JsFp3xXz9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f5l6CBH7; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747142899; c=relaxed/simple;
+	bh=c+q34kbRvUZ1A5FxHPWqxBi7hEvp/OdKmOyxM3Seyas=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LTFMtHrIb4tfWBo1Ply4hDfCvKR4aO4uce8aHGZOr37t16RK79wJR4gVFcmZio8D/Q+BCLg8WXkPZHjxWITV/GhVKOACsg6E8rjFudaMJjIVW62jRHkrJUVpWGXuy482bEu7hROVfy8tnq3/ZO7kcMH6Q8ZaJmDy69VBUKvOd3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMVO8gol; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f5l6CBH7"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7b3178473eso527756276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:28:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMVO8gol"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742575c4fa6so2080850b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:28:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747142883; x=1747747683; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lmyj3hP5CkRfmv8NZKBXt2FvgPVL/V2jgy3imsWNkMA=;
-        b=f5l6CBH7VO5T6SUFiRN1N7dgor6Hr14LOSpvh2EkLMkAzCYSS+8atxDCG9KGHwRUyl
-         4z7GW4ctxSPrAUv/Kfl4bVVZoNXmZMc7ueuyUC5gZ+32OKWnA28i0F+EWaUDnXiZsvXP
-         4wfY0rsmJsvgHQQp0J5UiBrspjXVF7NwD+Gbv6QqsV7sJ3KXTACeNfbIYfmBGOubumhe
-         QiGk0mZvUoGG/Anov3ZqKH9eSQn35jxz8dQi4KcbVtg0f697nUHsUewc6gQTJO9seONr
-         spQAzY9m3LcVtafjL6KZHfKK4gTfh0+KGx0zeCk2agoLGxSh+5PebNnfuPuLbsLQv56L
-         THgA==
+        d=google.com; s=20230601; t=1747142897; x=1747747697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8X0jVFckAPxaCnI7pAGE+i1A3ZXX7wi7lJ+jewe5bQU=;
+        b=KMVO8goltqQ3T4YNiUyVpOXUEM38+PSbVJHXa9DM39xVtlw6AYSoBu8w/ywsK8L3+/
+         1qUgqdF7itvWlbukNBjunHkoN/YWuwJFooy7qGMwGRBXzFK4wSY3OZXru9KOqmvAm7W6
+         x2ZU7SyVd4ThKNhMcM5Dl+T0VBaCJwHgobJQkTdkgxouvd4tLkzVJo27vKUcaP9Bp3lN
+         zSTBdxjdgu/9HckkTnTUsJZcQ0Lp3dZYoAALOsZYb75TQkSnE8nwU7Q5vb6YMMTfkDV+
+         WtGwTQXj9h1nT6iO1NRA9t2EvFfFTsOIYRrs/Kf9RqF2VDjWkcKZ1ZWhKpHYGprM9OKG
+         SLlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142883; x=1747747683;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lmyj3hP5CkRfmv8NZKBXt2FvgPVL/V2jgy3imsWNkMA=;
-        b=SNIGyo3/zuZO3K/Oo/liq/7VgaLOsui6I1OWF6DRKxnsoYvkUKkzsEyCwP0N34f29u
-         nIEpxipan0QLofgINW+ctFDFhAYafnGmJ3YXDl8krTx/cVvgUuxAC/WPs4KGM7CeNPzA
-         HtcHFrG1kntu9bHbHuwck7a2Po5pO403bldf2S00StT+xJ5xlzoqiJRYwYEQvcIffDm2
-         qmzEUufCDRcMIWh9QMz8SD4e5Lo9Y/e8OW1A0J/exsocHv6UfegO4qopFW4yNZZ6FKit
-         3hJC5ig1qjsgjF6I8k9GcEZbqqEDt72MWFwW27Z5mMLC/h/X6ZxaiEqw2oFbHwh3RZ7R
-         iiiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsnBxESf4cKvgJP3VCt96uA72mzL85IQ1xawud4EXEX3Krn8oukHzZgUqx2WPvc+8DmVsFew79DHVzEDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDhhAtQKfsADkvlccD5w0b++Rpp177Zwlq0yilPRy9WICo7+ia
-	/PbfruO08hK+hHyPq4RPAH8lfFQ/1NNxB35d9hZ6Y+snoaLF3/N4Lnq5qHBwF91E6XJ1M45bK9x
-	1BAk4hRggx/gKk2i//1DE7gNnFL6UzVOfq/fLfQ==
-X-Gm-Gg: ASbGncs1KUgwOif9qz42nWvIjy2HiGy2rInmBbh+GJgLULamVUtuzrkO3Gv16IHTQAL
-	PzddED1c+e731+Nhcr7B2UNj4Lfju2gVwe30/kebyct5ggPUfeLV1B+zS/ERbItt+BBi2ffiwlV
-	frdeAhGPF98aToZBhk7YqHfr9QG3l5qyEz
-X-Google-Smtp-Source: AGHT+IGwA9BFxyqwYNEBt7U5MGtywFT6puWcYgnlhrrQ514BRD+zuSEIuyxmPn0OaxGK/ficXJk/LrcOoaZiYWm0Zsg=
-X-Received: by 2002:a05:6902:1893:b0:e78:f395:7d01 with SMTP id
- 3f1490d57ef6-e78fdcd1532mr23000451276.28.1747142883341; Tue, 13 May 2025
- 06:28:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747142897; x=1747747697;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8X0jVFckAPxaCnI7pAGE+i1A3ZXX7wi7lJ+jewe5bQU=;
+        b=XdqqHjOtst2X9IwpIEEL2wszK636Z/ybOOKiz87vgqi77iTciwqO+/bsVOPW6p0Aci
+         I7ulDecurNQccQyB4u/KAwnZDxlA2hqBskJe29Dx6KoPD+JWRFdyMdgXQFILEEzSz8r3
+         jGKHH/oZp7IovY1tretW/PJZFkQDuRpqBxNJXMZkoIwrwxOEmVIHp9sOOkGNqaC2ebNY
+         XM300oDHiHejy2xzolwMCZhhGQSDpXnH+QCK5vh1+bBncogJCaaJMwM6Cv/0rPUeb62g
+         9Y1CFmfIEiXPksVxhFfne4V8TtIlpv3Kl0YO3B/eDE5ceXtxQ9RW/KvwS6SumNZZUnxj
+         Vn4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3SJPoq0dIhgXebCA1Mh3EbtG3R4M0gpMCkJ8GgtUqtR+e7q1awmR+Y+rXj0v7z2LT435qAcpyRwIjGCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtGM+Uai87uIOHIionByTVxVD+QLcvJ6inLEbB89DyyKUlESeI
+	4hilWxBOWC4lzLm+lsAj3J9xccmF3Hv4xpHmp6O1kFAotvLTwAzsrXkOd/7U2swC5zZWYyRy48V
+	jUw==
+X-Google-Smtp-Source: AGHT+IFrYTRYyI6vdzRG5DapDxsNyp8wuBVHd1nEnVFl2gCK7K8ZWOgP9cYwwdpOAgoiNdeaXO7CokwCWCk=
+X-Received: from pgbem9.prod.google.com ([2002:a05:6a02:4689:b0:b1b:54f8:d2ee])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:438f:b0:1f5:619a:8f75
+ with SMTP id adf61e73a8af0-215ababd87amr27581506637.2.1747142897657; Tue, 13
+ May 2025 06:28:17 -0700 (PDT)
+Date: Tue, 13 May 2025 06:28:15 -0700
+In-Reply-To: <49556BAF-9244-4FE5-9BA9-846F2959ABD1@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250508200807.1384558-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250508200807.1384558-1-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 15:27:47 +0200
-X-Gm-Features: AX0GCFtjRegm5A3xop934setnF5I9P9pPbOKoUABWT9UO5DUuWgk9ya_2vMnsdg
-Message-ID: <CACRpkda+ouxrpUSbhk0OD5CRjorbQqg_1aGx0WgYw0X78eUutg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: at91: Fix possible out-of-boundary access
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-7-jon@nutanix.com>
+ <aCI8pGJbn3l99kq8@google.com> <49556BAF-9244-4FE5-9BA9-846F2959ABD1@nutanix.com>
+Message-ID: <aCNI72KuMLfWb9F2@google.com>
+Subject: Re: [RFC PATCH 06/18] KVM: VMX: Wire up Intel MBEC enable/disable logic
+From: Sean Christopherson <seanjc@google.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 8, 2025 at 10:08=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, May 13, 2025, Jon Kohler wrote:
+> > On May 12, 2025, at 2:23=E2=80=AFPM, Sean Christopherson <seanjc@google=
+.com> wrote:
+> > > On Thu, Mar 13, 2025, Jon Kohler wrote:
+> >> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> >> index 7a98f03ef146..116910159a3f 100644
+> >> --- a/arch/x86/kvm/vmx/vmx.c
+> >> +++ b/arch/x86/kvm/vmx/vmx.c
+> >> @@ -2694,6 +2694,7 @@ static int setup_vmcs_config(struct vmcs_config =
+*vmcs_conf,
+> >> return -EIO;
+> >>=20
+> >> vmx_cap->ept =3D 0;
+> >> + _cpu_based_2nd_exec_control &=3D ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC=
+;
+> >> _cpu_based_2nd_exec_control &=3D ~SECONDARY_EXEC_EPT_VIOLATION_VE;
+> >> }
+> >> if (!(_cpu_based_2nd_exec_control & SECONDARY_EXEC_ENABLE_VPID) &&
+> >> @@ -4641,11 +4642,15 @@ static u32 vmx_secondary_exec_control(struct v=
+cpu_vmx *vmx)
+> >> exec_control &=3D ~SECONDARY_EXEC_ENABLE_VPID;
+> >> if (!enable_ept) {
+> >> exec_control &=3D ~SECONDARY_EXEC_ENABLE_EPT;
+> >> + exec_control &=3D ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
+> >> exec_control &=3D ~SECONDARY_EXEC_EPT_VIOLATION_VE;
+> >> enable_unrestricted_guest =3D 0;
+> >> }
+> >> if (!enable_unrestricted_guest)
+> >> exec_control &=3D ~SECONDARY_EXEC_UNRESTRICTED_GUEST;
+> >> + if (!enable_pt_guest_exec_control)
+> >> + exec_control &=3D ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
+> >=20
+> > This is wrong and unnecessary.  As mentioned early, the input that matt=
+ers is
+> > vmcs12.  This flag should *never* be set for vmcs01.
+>=20
+> I=E2=80=99ll page this back in, but I=E2=80=99m like 75% sure it didn=E2=
+=80=99t work when I did it that way.
 
-> at91_gpio_probe() doesn't check that given OF alias is not available or
-> something went wrong when trying to get it. This might have consequences
-> when accessing gpio_chips array with that value as an index. Note, that
-> BUG() can be compiled out and hence won't actually perform the required
-> checks.
->
-> Fixes: 6732ae5cb47c ("ARM: at91: add pinctrl support")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Patch applied and hey, b4 just picked up all the extra tags for me!
-Love this tool.
-
-Yours,
-Linus Walleij
+Then you had other bugs.  The control is per-VMCS and thus needs to be emul=
+ated
+as such.  Definitely holler if you get stuck, there's no need to develop th=
+is in
+complete isolation.
