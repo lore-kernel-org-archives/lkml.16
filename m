@@ -1,684 +1,269 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D87433C8;
-	Tue, 13 May 2025 12:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF384433C8;
+	Tue, 13 May 2025 12:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139661; cv=none; b=tRwqOeK4mKopF7ftEL65GzjmoQ7wG/TkR33170zWAIOSfS+Um1VLa8M48zCweCUGJ18ggyMSQ+u3qQqnv4bbBE666Qh2tMS0nv3iFdlVVInqDH/sxTxKGteb92XSOIrPwKGFPgUUp2d+UdLEBemDaVJR4DxOQ1r4b8FMCiyBvqQ=
+	t=1747139667; cv=none; b=GDNcXJZ86LVjPBvQizv3en6OWKV/vUCS0voX1+TbxyTnwBvGeXSNqPqPM/fkikllNcCFhMftmsZuDfKNOQlkmcMYdUQnTHynhh0fzBMrAOPBaQCxcVVlxuYMCnB6CdW/8QdviPRQOCknm/GtFBL1PY5/kEeh1HAQIFV0Q6F3m3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747139661; c=relaxed/simple;
-	bh=imWSPaOXD9MeCqg/vjBPtip3n1AsC7/GDfvELLCNQ1M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XqoC3UfNqsNdQA4yzwSZtZ3Gyi7ryavBdacYG7CWLJH2UivNzVl2rcBGxdQEr/WC9kyCYQwZD9AktUv7Lf2wWHWs0AhWIUE6uCDLQYlYseyFVxnjNU5b633M7dnoh8gUyIfgBN/9ZEzyuBafaLwwcMYX4lPtB0t5iRBSBzcpMMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1vhiSDFI; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1747139667; c=relaxed/simple;
+	bh=L/PKo1bvenxOX5KxfcuFokTk98eNQn0t0+hcfoQIZ+g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N4WVhTvggyD4HTraLjeyHEMJLlX/GuC7+9n7C1v01t2yToSvjncIOcePpJeqV1yzq6VKx4O+mixNy4gZXrtr22Qgus+c68ruobyWIz3kJY8QQBINZHrNWn1RB4CH6w8MLeYLEGw/Nab20gia06a/XqQsfNoa2kN0/xR0ckqzrEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiPJzKfq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1vhiSDFI"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBMTUq007943;
-	Tue, 13 May 2025 08:33:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=/r5FV
-	5HQTRpHspXnEoltgAt2Vpkpbz7Pm8vdzh3ZMSE=; b=1vhiSDFIfa667eN/DoyFn
-	8nfxCgavFDhblF0UQ/BUx5VmLC6SHhxiWLbP2MBitkGxYmCkP6ylof1EWpMRQ7Zj
-	dAvR+E7u8Nnp4U/XDwfnARFe8fL8XAcS2bDVOvV88ItW9Qm9F5h7bNZn07dVxFY+
-	+QZF6NwewCpxjAfB8FK3yJ4buN06HgO+kxmRqktmiyfx1qQtzrUT6pQ65eF55m4H
-	KVWUcgRiXa4z5aw90sWPBj1rtA9wk8uGGk1Nm5CtnMBc/xwuPYZ46Alo4glIvRt1
-	uvgZQo6rZFPMdoh9UYNMd+spBHhAVbTi5awykfZDZ+XcnskehQLIa3KTkoAnsP7B
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46kx53aep0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 08:33:58 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54DCXvvE040937
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 13 May 2025 08:33:57 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 13 May
- 2025 08:33:57 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 13 May 2025 08:33:57 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54DCXgHb007451;
-	Tue, 13 May 2025 08:33:44 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
-Date: Tue, 13 May 2025 09:33:40 -0300
-Message-ID: <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1747083143.git.marcelo.schmitt@analog.com>
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiPJzKfq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56608C4CEE9;
+	Tue, 13 May 2025 12:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747139667;
+	bh=L/PKo1bvenxOX5KxfcuFokTk98eNQn0t0+hcfoQIZ+g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=SiPJzKfqX8CSp3O+1dElMFyF23WNGHD6OcJSJrhMjwM7aD2D3soDn6LnqwD//vEt6
+	 uELacpOeutJooDFeHe/sdIdKHN37axBQ6IszCeAd2hS+gkI54gve5pBGwH0AMr2n2t
+	 pEYSTlZ5hEpMhamQxF1JxmhE+oIAWFmKE/Jm6jyuNEN2rMccO396EoL8+Se+xvdrWV
+	 13GYhD2XqR/Wi6m60MP6FRWJGcHQKKBfhPFsOV0PrCIzubdl5TZxEOmCMztTyBTlDy
+	 uSnXrUwAyTd03ZdrIFd/9wGLxcGvpNgA5pOVBN5JXM/VGqI38H5ZZBY6YloGISK/rw
+	 Nb/C+wZ9wq6JA==
+Message-ID: <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Invoke tracking callbacks only after
+ initialization is complete
+From: Jeff Layton <jlayton@kernel.org>
+To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
+ neilb@suse.de, 	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
+ tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Date: Tue, 13 May 2025 07:34:25 -0500
+In-Reply-To: <20250513074305.3362209-1-lilingfeng3@huawei.com>
+References: <20250513074305.3362209-1-lilingfeng3@huawei.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=a4sw9VSF c=1 sm=1 tr=0 ts=68233c37 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8
- a=VwQbUJbxAAAA:8 a=qjk4kMxMGZ-Z2-xVo1MA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-ORIG-GUID: iB1SWDxRugx3S0CZhlzamogTx2ShpjVP
-X-Proofpoint-GUID: iB1SWDxRugx3S0CZhlzamogTx2ShpjVP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDExOSBTYWx0ZWRfX+qd+qu7aCTwn
- eeRaz9+Cy+v3O1xh8MiINJ70HOt5xGBILowZW9IjU8eqBsTNDPnJ6YE5nKkBq8z9xqWGmBVSe9x
- /9On7ShJRrQIlWLrItHsZukip2EpT+70Cg3Td3G0U+w8erEISJxgL/Nus1tN2hrY7jIS+H/K+hm
- 8ci2E4xbhfACvo+ZXL2ePMoOo+qML+OLYuu4pj1WjThz7aEwq+QMEQymhMy+NQX8/MjZ7Z41w4G
- kQ+Pgg3VvAHpZT4YdKJZNjD1xip9Y1Zuzs2JBoxSI6eFQoIPOdbSC1Yk8lh3tIbV5Jdl0bZJ2aB
- MK3hE9j14+9MHAzi7W9hlviXfsK3PPKh5t8LNO/UJpgpkiLdQHlCeTXoNVwHX+8ait6F51cm2TU
- Q7xrtoF/jRgVtMOYbTXXjvXC9Rl+yoxycnztORNwo0xyEzmyHvF7DZ8EvW8kQ0CFWc+6qNsH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 spamscore=0 clxscore=1011 bulkscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505130119
 
-Add device tree documentation for AD4170 and similar sigma-delta ADCs.
-The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+On Tue, 2025-05-13 at 15:43 +0800, Li Lingfeng wrote:
+> Checking whether tracking callbacks can be called based on whether
+> nn->client_tracking_ops is NULL may lead to callbacks being invoked
+> before tracking initialization completes, causing resource access
+> violations (UAF, NULL pointer dereference). Examples:
+>=20
+> 1) nfsd4_client_tracking_init
+>    // set nn->client_tracking_ops
+>    nfsd4_cld_tracking_init
+>     nfs4_cld_state_init
+>      nn->reclaim_str_hashtbl =3D kmalloc_array
+>     ... // error path, goto err
+>     nfs4_cld_state_shutdown
+>      kfree(nn->reclaim_str_hashtbl)
+>                                       write_v4_end_grace
+>                                        nfsd4_end_grace
+>                                         nfsd4_record_grace_done
+>                                          nfsd4_cld_grace_done
+>                                           nfs4_release_reclaim
+>                                            nn->reclaim_str_hashtbl[i]
+>                                            // UAF
+>    // clear nn->client_tracking_ops
+>=20
+> 2) nfsd4_client_tracking_init
+>    // set nn->client_tracking_ops
+>    nfsd4_cld_tracking_init
+>                                       write_v4_end_grace
+>                                        nfsd4_end_grace
+>                                         nfsd4_record_grace_done
+>                                          nfsd4_cld_grace_done
+>                                           alloc_cld_upcall
+>                                            cn =3D nn->cld_net
+>                                            spin_lock // cn->cn_lock
+>                                            // NULL deref
+>    // error path, skip init pipe
+>    __nfsd4_init_cld_pipe
+>     cn =3D kzalloc
+>     nn->cld_net =3D cn
+>    // clear nn->client_tracking_ops
+>=20
+> After nfsd mounts, users can trigger grace_done callbacks via
+> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
+> in error paths, this causes access violations.
+>=20
+> Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl)=
+,
+> introducing a flag to indicate whether tracking initialization has
+> completed and checking this flag before invoking callbacks may be better.
+>=20
+> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> ---
+>  fs/nfsd/netns.h       |  1 +
+>  fs/nfsd/nfs4recover.c | 13 +++++++++----
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 3e2d0fde80a7..dbd782d6b063 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -113,6 +113,7 @@ struct nfsd_net {
+> =20
+>  	struct file *rec_file;
+>  	bool in_grace;
+> +	bool client_tracking_init_done;
+>  	const struct nfsd4_client_tracking_ops *client_tracking_ops;
+> =20
+>  	time64_t nfsd4_lease;
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index c1d9bd07285f..6c27c1252c0e 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
+>  		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n",=
+ status);
+>  		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_C=
+LIENT_TRACKING.\n");
+>  		nn->client_tracking_ops =3D NULL;
+> +		nn->client_tracking_init_done =3D false;
+> +	} else {
+> +		nn->client_tracking_init_done =3D true;
+>  	}
+> +
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-Change log v2 -> v3
+The problem seems real (theoretically at least), but I'm not a fan of
+this fix.
 
-[device tree changes]
-- Removed unneeded allOf.
-- Removed occurences of adi,sensor-type type re-declaration.
-- Created type for the AD4170 channels, allowing to avoid dt doc repetition.
+If the problem is as you say, then why not just delay the setting of
+the client_tracking_ops until there is a method that works. IOW, set a
+temporary variable with an ops pointer and only assign
+client_tracking_ops at the end of the function/
 
- .../bindings/iio/adc/adi,ad4170.yaml          | 544 ++++++++++++++++++
- MAINTAINERS                                   |   7 +
- 2 files changed, 551 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+Would that also fix this issue?
+=20
+>  	return status;
+>  }
+> =20
+> @@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+> +	nn->client_tracking_init_done =3D false;
+>  	if (nn->client_tracking_ops) {
+>  		if (nn->client_tracking_ops->exit)
+>  			nn->client_tracking_ops->exit(net);
+> @@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> -	if (nn->client_tracking_ops)
+> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>  		nn->client_tracking_ops->create(clp);
+>  }
+> =20
+> @@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> -	if (nn->client_tracking_ops)
+> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>  		nn->client_tracking_ops->remove(clp);
+>  }
+> =20
+> @@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> -	if (nn->client_tracking_ops)
+> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>  		return nn->client_tracking_ops->check(clp);
+> =20
+>  	return -EOPNOTSUPP;
+> @@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
+>  void
+>  nfsd4_record_grace_done(struct nfsd_net *nn)
+>  {
+> -	if (nn->client_tracking_ops)
+> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>  		nn->client_tracking_ops->grace_done(nn);
+>  }
+> =20
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-new file mode 100644
-index 000000000000..0a06258b6631
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-@@ -0,0 +1,544 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD4170 and similar Analog to Digital Converters
-+
-+maintainers:
-+  - Marcelo Schmitt <marcelo.schmitt@analog.com>
-+
-+description: |
-+  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
-+  Specifications can be found at:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
-+
-+$ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+$defs:
-+  ad4170-channel:
-+    type: object
-+    $ref: /schemas/iio/adc/adc.yaml#
-+    description:
-+      Common properties for configuring AD4170 channels.
-+
-+    properties:
-+      adi,reference-select:
-+        description: |
-+          Selects the reference source to use when converting on the specific
-+          channel. Valid values are:
-+          0: Differential reference voltage REFIN+ - REFIN−.
-+          1: Differential reference voltage REFIN2+ - REFIN2−.
-+          2: Internal 2.5V referece (REFOUT) relative to AVSS.
-+          3: Analog supply voltage (AVDD) relative AVSS.
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        enum: [0, 1, 2, 3]
-+
-+
-+  sensor-node:
-+    type: object
-+    $ref: '#/$defs/ad4170-channel'
-+    description:
-+      The AD4170 and similar designs have features to aid interfacing with weigh
-+      scale, RTD, and thermocouple sensors. Each of those sensor types requires
-+      either distinct wiring configuration or external circuitry for proper
-+      sensor operation and can use different AD4170 functionality on their
-+      setups. A key characteristic of those external sensors is that they must
-+      be excited either by voltage supply or by AD4170 excitation signals. The
-+      sensor can then be read through a pair of analog inputs. These properties
-+      describe external sensor circuitry connected to the ADC.
-+
-+    properties:
-+      reg:
-+        description:
-+          Channel number. Connects the sensor to the channel with this number
-+          of the device.
-+        minimum: 1
-+        maximum: 16
-+
-+      diff-channels:
-+        description:
-+          Defines the ADC input pins used to read sensor data. Only regular
-+          analog input pins can be used.
-+        items:
-+          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-+
-+      bipolar: true
-+
-+      adi,sensor-type:
-+        description: |
-+          Type of sensor connected to the device. Depending on the sensor type
-+          (weigh scale, RTD, or thermocouple) the values of sensor-node
-+          properties have slightly different constraints. This property
-+          specifies which particular external sensor is connected to the ADC so
-+          the sensor-node properties can be properly parsed and verified. The
-+          possible sensor types are:
-+          0: weigh scale;
-+          1: RTD;
-+          2: thermocouple.
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+
-+      adi,excitation-ac:
-+        type: boolean
-+        description:
-+          Whether the external sensor has to be AC or DC excited.
-+
-+      adi,excitation-pins:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          Pins used to excite the sensor or external circuit that contains the
-+          sensor. Thermocouples and RTD sensors are excited either with one
-+          current source or with a pair of current sources to minimize the
-+          excitation current mismatch and the excitation current drift matching
-+          on the ADC. E.g. <0>; <1>; <0 1>. Load cell weigh scales may be
-+          excited with one current source, a pair of excitation currents, or two
-+          pairs of excitation currents. When four pins are defined, the first
-+          two values specify the first pair and the last ones specify the second
-+          pair of excitation currents. E.g. <0>; <0 1>; <0 1 2 3>.
-+        items:
-+          minimum: 0
-+          maximum: 20
-+
-+      adi,excitation-current-microamp:
-+        description:
-+          Excitation current in microamperes to be output to each excitation pin
-+          specified by adi,excitation-pins property. If not provided and
-+          adi,excitation-ac is true, use predefined ACX1, ACX1 negated, ACX2,
-+          and ACX2 negated signals to AC excite the bridge circuit. Those
-+          singals are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
-+        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
-+        default: 0
-+
-+      adi,power-down-switch-pin:
-+        description:
-+          Number of the GPIO used as power-down switch for the bridge circuit.
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        enum: [0, 1]
-+
-+      adi,vbias:
-+        type: boolean
-+        description:
-+          For unbiased thermocouple applications, the voltage generated by the
-+          thermocouple must be biased around some DC voltage. When present, this
-+          property specifies a bias voltage of (AVDD + AVSS)/2 to be applied as
-+          common-mode voltage for the sensor.
-+
-+    required:
-+      - reg
-+      - diff-channels
-+      - bipolar
-+      - adi,sensor-type
-+      - adi,reference-select
-+
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad4170
-+      - adi,ad4190
-+      - adi,ad4195
-+
-+  avss-supply:
-+    description:
-+      Referece voltage supply for AVSS. If provided, describes the magnitude
-+      (absolute value) of the negative voltage supplied to the AVSS pin. Since
-+      AVSS must be −2.625V minimum and 0V maximum, the declared supply voltage
-+      must be between 0 and 2.65V. If not provided, AVSS is assumed to be at
-+      system ground (0V).
-+
-+  avdd-supply:
-+    description:
-+      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (AVDD).
-+
-+  iovdd-supply:
-+    description: 1.7V to 5.25V reference supply to the serial interface (IOVDD).
-+
-+  refin1p-supply:
-+    description: REFIN+ supply that can be used as reference for conversion.
-+
-+  refin1n-supply:
-+    description: REFIN- supply that can be used as reference for conversion. If
-+      provided, describes the magnitude (absolute value) of the negative voltage
-+      supplied to the REFIN- pin.
-+
-+  refin2p-supply:
-+    description: REFIN2+ supply that can be used as reference for conversion.
-+
-+  refin2n-supply:
-+    description: REFIN2- supply that can be used as reference for conversion. If
-+      provided, describes the magnitude (absolute value) of the negative voltage
-+      supplied to the REFIN2- pin.
-+
-+  spi-cpol: true
-+
-+  spi-cpha: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    description:
-+      Specify which pin should be configured as Data Ready interrupt.
-+    enum:
-+      - sdo
-+      - dig_aux1
-+    default: sdo
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Optional external clock source. Can specify either an external clock or
-+      external crystal.
-+
-+  clock-names:
-+    enum:
-+      - ext-clk
-+      - xtal
-+    default: ext-clk
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description: |
-+      The first cell is for the GPIO number: 0 to 3.
-+      The second cell takes standard GPIO flags.
-+
-+  ldac-gpios:
-+    description:
-+      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to control the
-+      transfer of data from the DAC_INPUT_A register to the DAC.
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+patternProperties:
-+  "^channel@[0-9a-f]$":
-+    $ref: '#/$defs/ad4170-channel'
-+    unevaluatedProperties: false
-+    description:
-+      Represents the external channels which are connected to the ADC.
-+
-+    properties:
-+      reg:
-+        description:
-+          The channel number.
-+        minimum: 0
-+        maximum: 15
-+
-+      diff-channels:
-+        description: |
-+          This property is used for defining the inputs of a differential
-+          voltage channel. The first value is the positive input and the second
-+          value is the negative input of the channel.
-+
-+          Besides the analog input pins AIN0 to AIN8, there are special inputs
-+          that can be selected with the following values:
-+          17: Internal temperature sensor
-+          18: (AVDD-AVSS)/5
-+          19: (IOVDD-DGND)/5
-+          20: DAC output
-+          21: ALDO
-+          22: DLDO
-+          23: AVSS
-+          24: DGND
-+          25: REFIN+
-+          26: REFIN-
-+          27: REFIN2+
-+          28: REFIN2-
-+          29: REFOUT
-+          For the internal temperature sensor, use the input number for both
-+          inputs (i.e. diff-channels = <17 17>).
-+        items:
-+          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-+                 26, 27, 28, 29]
-+
-+      single-channel: true
-+
-+      common-mode-channel: true
-+
-+      bipolar: true
-+
-+      adi,buffered-positive:
-+        description: |
-+          Enable precharge buffer, full buffer, or skip reference buffering of
-+          the positive voltage reference. Because the output impedance of the
-+          source driving the voltage reference inputs may be dynamic, RC
-+          combinations of those inputs can cause DC gain errors if the reference
-+          inputs go unbuffered into the ADC. Enable reference buffering if the
-+          provided reference source has dynamic high impedance output. Note the
-+          absolute voltage allowed on positive reference inputs (REFIN+,
-+          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-+          buffers are disabled but narrows to AVSS to AVDD when reference
-+          buffering is enabled or in precharge mode.
-+          0: Reference precharge buffer.
-+          1: Full Buffer.
-+          2: Bypass reference buffers (buffering disabled).
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        enum: [0, 1, 2]
-+        default: 1
-+
-+      adi,buffered-negative:
-+        description: |
-+          Enable precharge buffer, full buffer, or skip reference buffering of
-+          the negative voltage reference. Because the output impedance of the
-+          source driving the voltage reference inputs may be dynamic, RC
-+          combinations of those inputs can cause DC gain errors if the reference
-+          inputs go unbuffered into the ADC. Enable reference buffering if the
-+          provided reference source has dynamic high impedance output. Note the
-+          absolute voltage allowed on negative reference inputs (REFIN-,
-+          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-+          buffers are disabled but narrows to AVSS to AVDD when reference
-+          buffering is enabled or in precharge mode.
-+          0: Reference precharge buffer.
-+          1: Full Buffer.
-+          2: Bypass reference buffers (buffering disabled).
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        enum: [0, 1, 2]
-+        default: 1
-+
-+    required:
-+      - reg
-+
-+    oneOf:
-+      - required: [single-channel]
-+        properties:
-+          diff-channels: false
-+      - required: [diff-channels]
-+        properties:
-+          single-channel: false
-+          common-mode-channel: false
-+
-+  "^weighscale@":
-+    $ref: '#/$defs/sensor-node'
-+    unevaluatedProperties: false
-+
-+    properties:
-+      diff-channels: true
-+      bipolar: true
-+
-+      adi,sensor-type:
-+        description: Weigh scale sensor.
-+        const: 0
-+
-+      adi,excitation-pins: true
-+
-+  "^rtd@":
-+    $ref: '#/$defs/sensor-node'
-+    unevaluatedProperties: false
-+
-+    properties:
-+      diff-channels: true
-+      bipolar: true
-+
-+      adi,sensor-type:
-+        description: RTD sensor.
-+        const: 1
-+
-+      adi,excitation-pins: true
-+
-+      adi,excitation-current-microamp: true
-+
-+    required:
-+      - adi,excitation-pins
-+      - adi,excitation-current-microamp
-+
-+  "^thermocouple@":
-+    $ref: '#/$defs/sensor-node'
-+    unevaluatedProperties: false
-+
-+    properties:
-+      diff-channels: true
-+      bipolar: true
-+
-+      adi,sensor-type:
-+        description: Thermocouple sensor.
-+        const: 2
-+
-+    required:
-+      - adi,excitation-pins
-+      - adi,excitation-current-microamp
-+
-+required:
-+  - compatible
-+  - reg
-+  - avdd-supply
-+  - iovdd-supply
-+  - spi-cpol
-+  - spi-cpha
-+
-+allOf:
-+  # Some devices don't have integrated DAC
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - adi,ad4190
-+              - adi,ad4195
-+    then:
-+      properties:
-+        ldac-gpios: false
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+            compatible = "adi,ad4170";
-+            reg = <0>;
-+            spi-max-frequency = <20000000>;
-+            spi-cpol;
-+            spi-cpha;
-+            avdd-supply = <&avdd>;
-+            iovdd-supply = <&iovdd>;
-+            interrupt-parent = <&gpio_in>;
-+            interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            // Sample AIN0 with respect to DGND throughout AVDD/DGND input range
-+            // Pseudo-differential unipolar
-+            channel@0 {
-+                reg = <0>;
-+                single-channel = <0>;
-+                common-mode-channel = <24>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Weigh scale sensor
-+            weighscale@1 {
-+                reg = <1>;
-+                bipolar;
-+                diff-channels = <1 2>;
-+                adi,sensor-type = /bits/ 8 <0>;
-+                adi,reference-select = /bits/ 8 <0>;
-+                adi,excitation-ac;
-+                adi,excitation-pins = <19 20>;
-+                adi,power-down-switch-pin = /bits/ 8 <0>;
-+            };
-+            // RTD sensor
-+            rtd@2 {
-+                reg = <2>;
-+                bipolar;
-+                diff-channels = <3 4>;
-+                adi,sensor-type = /bits/ 8 <1>;
-+                adi,reference-select = /bits/ 8 <0>;
-+                adi,excitation-ac;
-+                adi,excitation-pins = <5 6>;
-+                adi,excitation-current-microamp = <500>;
-+            };
-+            // Thermocouple sensor
-+            thermocouple@3 {
-+                reg = <3>;
-+                bipolar;
-+                diff-channels = <7 8>;
-+                adi,sensor-type = /bits/ 8 <2>;
-+                adi,reference-select = /bits/ 8 <0>;
-+                adi,excitation-pins = <18>;
-+                adi,excitation-current-microamp = <500>;
-+                adi,vbias;
-+            };
-+        };
-+    };
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+            compatible = "adi,ad4170";
-+            reg = <0>;
-+            spi-max-frequency = <20000000>;
-+            spi-cpol;
-+            spi-cpha;
-+            avdd-supply = <&avdd>;
-+            iovdd-supply = <&iovdd>;
-+            interrupt-parent = <&gpio_in>;
-+            interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            // Sample AIN0 with respect to AIN1 throughout AVDD/AVSS input range
-+            // Differential bipolar. If AVSS < 0V, differential true bipolar
-+            channel@0 {
-+                reg = <0>;
-+                bipolar;
-+                diff-channels = <0 1>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Sample AIN2 with respect to DGND throughout AVDD/DGND input range
-+            // Pseudo-differential unipolar
-+            channel@1 {
-+                reg = <1>;
-+                single-channel = <2>;
-+                common-mode-channel = <24>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Sample AIN3 with respect to 2.5V throughout AVDD/AVSS input range
-+            // Pseudo-differential bipolar
-+            channel@2 {
-+                reg = <2>;
-+                bipolar;
-+                single-channel = <3>;
-+                common-mode-channel = <29>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Sample AIN4 with respect to DGND throughout AVDD/AVSS input range
-+            // Pseudo-differential bipolar
-+            channel@3 {
-+                reg = <3>;
-+                bipolar;
-+                single-channel = <4>;
-+                common-mode-channel = <24>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Sample AIN5 with respect to 2.5V throughout AVDD/AVSS input range
-+            // Pseudo-differential unipolar (AD4170 datasheet page 46 example)
-+            channel@4 {
-+                reg = <4>;
-+                single-channel = <5>;
-+                common-mode-channel = <29>;
-+                adi,reference-select = /bits/ 8 <3>;
-+            };
-+            // Sample AIN6 with respect to 2.5V throughout REFIN+/REFIN- input range
-+            // Pseudo-differential bipolar
-+            channel@5 {
-+                reg = <5>;
-+                bipolar;
-+                single-channel = <6>;
-+                common-mode-channel = <29>;
-+                adi,reference-select = /bits/ 8 <0>;
-+            };
-+            // Weigh scale sensor
-+            weighscale@6 {
-+                reg = <6>;
-+                bipolar;
-+                diff-channels = <7 8>;
-+                adi,reference-select = /bits/ 8 <0>;
-+                adi,sensor-type = /bits/ 8 <0>;
-+                adi,excitation-ac;
-+                adi,excitation-pins = <17 18 19 20>;
-+            };
-+        };
-+    };
-+...
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc9582b14ced..0a8f2c7a139c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1346,6 +1346,13 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-adc-ad4130
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad4130.yaml
- F:	drivers/iio/adc/ad4130.c
- 
-+ANALOG DEVICES INC AD4170 DRIVER
-+M:	Marcelo Schmitt <marcelo.schmitt@analog.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Supported
-+W:	https://ez.analog.com/linux-software-drivers
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-+
- ANALOG DEVICES INC AD4695 DRIVER
- M:	Michael Hennerich <michael.hennerich@analog.com>
- M:	Nuno Sá <nuno.sa@analog.com>
--- 
-2.47.2
-
+--=20
+Jeff Layton <jlayton@kernel.org>
