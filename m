@@ -1,331 +1,209 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7FF1A23B7;
-	Tue, 13 May 2025 18:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747159578; cv=fail; b=A7AfuZ/SeZNbb80xUdMSfJW0Y6T98rpoHe4LNIDaXVlMhZm1PYjcSzY9ZsGJtoJHUdwlLcOgs+2a23sh08oPC55E+dCbJJmwkoYOHngmAGrr1NS8cYimznzci30s4XWlkvX8pJf0GGvPQsspQsGkz+eBhy2kuIk1l1OgIu2uO0A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747159578; c=relaxed/simple;
-	bh=kukyl8frdW7kBzt7IEUs9+K6ZNHkTPD6mJYr385Z7lk=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=on2P9m57Dy1x1vfKI4TXUIc3UIlQTD4VeF348zFUDa1Q7VxADvTIwf3Np9j5IZLTEVFMXl9RirC7bSFs2Drm2uhLkCH7WJtkUudD7hS2IPsupKVrvz0CrEBqkLQNV9Mqw32H/MSZOeCcGPZv0l2Ip2gXQwp2qQMo31lnECZ+kUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aZ4KmDdB; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=S3s83fAc; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D8E1E521A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747159616; cv=none; b=X9gwO3u/FKVxYy5nOspTVDnEQV6N4SVpuK1B2SqqLfP/qJO89ylCpZRLY+J/VIYtvnRtRvMo/otIRb/pQ+F9tIp75AGp/8Fn+A1UE4c30HMVgSI5EmgnfG+MT6xxIzGyE7JH6wzE+RRmrP0LaS7RF4bi2vLKD6QcZKTDC8L6Wfw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747159616; c=relaxed/simple;
+	bh=G+4bynD0YU9kPFF9UuUk4sgePwNL032sDiiiP2k4vb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1riEwZUW8tfodBbHLJ9KuJkn5BNGh/+zJNIetiWvZVSyR1l4AqzALmIK6qClM3+3rBO/WHapv2CljzIEKHKGYyk+6JRGxvYaNO5JaX/RbN9idOypNdrLmoOXOM4aH8QRh+DGAIl1edjHRKml9G40RSfaDR/BZmm778p/iOSNjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=NCH+txNr; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aZ4KmDdB";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="S3s83fAc"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DCHLne018782;
-	Tue, 13 May 2025 18:06:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=hxLzR6B9tXaGHdQvEbTz+0UYPeVWlyTzAmc/4etSWTk=; b=
-	aZ4KmDdBL290aYrNC/ImjcL1lyaC9qMPa5Wyc7BM7v7udMyWohTdMuOhMV/8hRcq
-	T7Th/r0MCDzw1ybCk+ky8bCqiry/4pCHi7CdutOPU7dOHcpjP24U2mKrDWjjdxe1
-	gOfrjl/p5tfKPoiUbIBKWM3ySLFrJjBDg5iVRScVO3zq6pj4rSpfsPRtlEBG6SjA
-	HoQj5C26xiL1R3vQ95riPDI6HRiXytCQuUBYmusGg+uE2bxP8FApuhmJMJV8OpGH
-	xESzvcmrMa/WsSQ9VHP4oUnVyIcJlvkc87HOqFH6QJo74Amuogo4joajp+lru36H
-	cUc2MDiQFspXzzAhPU+lCA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j0gwngey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 18:06:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54DGp4hp002573;
-	Tue, 13 May 2025 18:06:06 GMT
-Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazlp17012013.outbound.protection.outlook.com [40.93.14.13])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46jwx4qap3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 18:06:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HJFnXe0qUCyKeFyutPj3AC/P36/kyFsALwUb/C4zzflH8WwKAKkVlWObynchNw8t5y4H+8uGHjGvJCYE+7UXp8Y0p8xiGk7NHSOlfSwLwzaQyMMZcvvF4d5H1+/ED9kGEefBYy16Ch4+WZJFiZlmixjTuXAUMcQudG3lRenOFB5+P/7NXx7JWyx0GFk8Ln6opQR44U0hNfF549aX1pJ1KNq62pA/JbazirI90Gwp9U9LFqfSFSuyjZbSRK144CQaPjX6JawRwFcINf40f/VtHWaTX+Niy03IdJln/8HjVHx5u9iIBEFv5nQC87ApmjKQwTRJmH+GZ8Oubui1dPyeWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hxLzR6B9tXaGHdQvEbTz+0UYPeVWlyTzAmc/4etSWTk=;
- b=gqwWytnDNxeaoM1me/iaEXZaCUj32gNzI6KsTZjKliKakFRO6sakQcUylUirXRG3xDM2TxWcilLDjdqJ7zFli+5Z8PWWmN8SNTgLR4tkPyfZB6LSPAGAPrspAtmFifqplioRBz0/UJ7HQ/mFnK4K50jUUVq2OayjfXiOP3+SGYlfyGTuBZTOSR11piIl4t/ecfDfZV6JGb5LeUR3N5mtFAhdtlPbh1W5hTMNrTSO/pjJUl6L1te8ZMSjPOp6YKx62eJ2KgD4h9eDArU8IV0cBcA6HrUQP/maA4BLBpqmJEOCHsZfgCZV1QKXj42FeTg/Lk6nEccD/iX9w3uhE2vXzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hxLzR6B9tXaGHdQvEbTz+0UYPeVWlyTzAmc/4etSWTk=;
- b=S3s83fAcypsRL+Bh5yYkJ/lvx/H/2HuDKbTuSdOnEaQNJRGLdTpKQ2aWNkrUc+WzjGtI0oZlGDxK0iKs8G96HzZmQ1cx78R37RqrD+iUvHLFVwA6AKyeqs/yknDy1S3boC06QJ8/CNJGpFGo/hbQsNZNsKPeloQsr7A7g0mWnFk=
-Received: from SN4PR10MB5622.namprd10.prod.outlook.com (2603:10b6:806:209::18)
- by PH7PR10MB6578.namprd10.prod.outlook.com (2603:10b6:510:205::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.27; Tue, 13 May
- 2025 18:06:03 +0000
-Received: from SN4PR10MB5622.namprd10.prod.outlook.com
- ([fe80::6bce:37ef:d1de:d084]) by SN4PR10MB5622.namprd10.prod.outlook.com
- ([fe80::6bce:37ef:d1de:d084%6]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 18:06:03 +0000
-Message-ID: <74d81bef-c77d-4b84-a50a-665ff852fba1@oracle.com>
-Date: Tue, 13 May 2025 20:06:00 +0200
-User-Agent: Mozilla Thunderbird
-Cc: alexandre.chartre@oracle.com, Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/its: Fix build errors when CONFIG_MODULES=n
-To: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org
-References: <20250513025839.495755-1-ebiggers@kernel.org>
-Content-Language: en-US
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
-Autocrypt: addr=alexandre.chartre@oracle.com; keydata=
- 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
- swLliy6PdpST
-In-Reply-To: <20250513025839.495755-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0028.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:61::16) To SN4PR10MB5622.namprd10.prod.outlook.com
- (2603:10b6:806:209::18)
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="NCH+txNr"
+Date: Tue, 13 May 2025 14:06:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1747159601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZFzbwOA81P5sS+hYMBCOhRe8L6e57vhIa9vpahzlRbk=;
+	b=NCH+txNr+FH6s7cvCCufHbFl9gjJ7CG4d9M4HbjCjESVWYm51bl/RZJnUn+SJBVWkxSda6
+	ll52LC69nokIUQ4s/dfb0zl5pUkmvahVcnfRuk1gBCpp5LQzdLoO7pTkb4xBcRROkMbjRx
+	y7bmI7Yb/weMzdLy5tXCX0nQaQemLVZNcTu6Nv+2onm1CzBzxQpYGLLwdugKhM5isuJU0y
+	8MlPwbFhmOjm73RPl1uw+NZhjhUdBxjGcAwgBDM3SxAQwiOMGgoCu4dLMXKx5X5mP8FPjw
+	MzeUcB6VlfQ+gjtPC5GtPzXJPUZ5DUp63KLU2doPoC8Jkd+dApJe4IniiewyyQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Toan Le <toan@os.amperecomputing.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v2 7/9] PCI: apple: Convert to MSI parent infrastructure
+Message-ID: <aCOKLCaU64JLbfKB@blossom>
+References: <20250513172819.2216709-1-maz@kernel.org>
+ <20250513172819.2216709-8-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN4PR10MB5622:EE_|PH7PR10MB6578:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e2bc19e-0579-4a27-859b-08dd9248d306
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ek9ucXZyc3NmVTVGdlhyL3hXWmhNcmVHTG9DdHBpRXN4Rnd5b3VrOCtlUEl5?=
- =?utf-8?B?c2xmQWE3MFJGS0dYS09OZTV0SGtkTFg0TXVEZWQwYnRUN3lxcWx5bDBHbVpC?=
- =?utf-8?B?VmVqM1pBSXZwWTBQT1hiYjVydm5lcDZiYXJlWVBtYmxRVU1VcHdTa0lreVQ5?=
- =?utf-8?B?VDdYekJMbzQwTUdheEh2SHkyWG1jRjNYdlhaQWZVQ3Y3aWJsdlhmazNteFJJ?=
- =?utf-8?B?N1MzbDI3SjRLZjN2QXFaRmVOY1RoTTg0OUdkSnlSNW5XeVNtY1dxalp3Z3c2?=
- =?utf-8?B?bVp5U2ZYM3lVblBTaHdNYnVJS3haWU94d2lyYk1rM1VWdjVIdUxkMlY5dENh?=
- =?utf-8?B?NXlRRklWbDdxb3dubEF4UFlqMFdBc1ZGUm1EN1pwenpHeDUwb3JKcmg2OFR5?=
- =?utf-8?B?S1pCQldTUk1XU3hrNGdnMXUxUWQzVGxsR1ZrZmxQU0JJN3p4MHROamQvNUFH?=
- =?utf-8?B?QXZoQmp2S3d4cmE5MENSeVA2NmRHUEQ5L2EyVmJIRElOUFkwS2xoU2JPT082?=
- =?utf-8?B?VTNQb0x5OUZaTGJVZkVid3NPL3gvaU1HWUtBeUxab05iaDN2RUxqMHd1MjB1?=
- =?utf-8?B?M2hZL1dCNGdWLy8zZUZqUm0vWHoxa1NoY0ZURVNzMXN5NVF3WkNYQXh3WHp5?=
- =?utf-8?B?SFdtU1RkUGhBQ3o1RjQrTTFQVnRMUkhJNnp6Y1FFWldQRzdtbk1nQTdOUUFo?=
- =?utf-8?B?VGk4bjJzREg1U2YxbHBoRitpdUF0VlZ1KzZYVlZQWEdBUzBjcVNBWitIbVRw?=
- =?utf-8?B?Z05ya0tNTk00KzBpWjRONG9ZSFdtOHBlYjJFZnVmTjh4SEYxeVkzTUU1WG9S?=
- =?utf-8?B?VGtqaENGOHJJSVpDbXBOd0ErOUtoN3QyVlpPREt0SllGbmo5b3F1ZVRwdW16?=
- =?utf-8?B?SlRYQ2F3dGFnQUsvUFhKRHZzaThFdTVmVUVWbk9HVWNvL1RyYmpIUitLNy81?=
- =?utf-8?B?N0UxV3VDaTNPWmxWeDByQzlZOGZJMS9tTFhRM3RKdVd5N21OZlJHQ1k3L21E?=
- =?utf-8?B?TkxhSDFINXo0clRCcTlFNHVwSXErUjcxaFlmMitMaTZkNkMrZlR5UnpET05T?=
- =?utf-8?B?TzU4VmxqNW5Xd2RvMnJqNmJIY3dEWGtEYWh2WkNUSDFiUHE2eUYwczZnL1dn?=
- =?utf-8?B?VjYyZ0V0NTdxQXF5U2hHNjU2R3ZPaWhyTHBIeHZUS2dKSEhSVk5Sb3U1YVBv?=
- =?utf-8?B?K2FJdzk1RmNhYks5MVR0c21TRUl5Qk9wVVJ3YnZVK2tZMEY4RUxwQVE3V3pS?=
- =?utf-8?B?UEtpbkwvUFBWK3IrYng2YVF2c1F2Tm5iT0tteExvQVQreURQcWx6cXVSMndm?=
- =?utf-8?B?QnlyNE5Iclc4c1NzMFBhQ3FLaDNFUHVXWW5Db2xieEdsbkNiU0FnWmI3QkRQ?=
- =?utf-8?B?blRBUkpjWDJQcWVPT1hHeWdNWC9rWXg0K3R1UU5yWmNBdE1QeUZFUW1wdHJH?=
- =?utf-8?B?b2hTL3pPOUNmN2g3SXV4YllyM245MG1ySVJGejBFSTNGRWhJTTVKOFArSWRY?=
- =?utf-8?B?K0p4RUdMVlM3amh6MzA0WmFzZ2ExZFJOaWxmQk1hWVp3L0gwNy83L0tmWnRH?=
- =?utf-8?B?RkpvalpXamh0aDdGbmorZ3BaaHlVMk9ObUFMOHIvOFpQVzlHclZWbmQvZGlM?=
- =?utf-8?B?TmVJUzdrUDJrbjArNTZwNzBuRTZMa0hYZDBZVnBYcXRNek1DeHl0aHhrNDRR?=
- =?utf-8?B?SWVQWkoyVENaRlQxRTZOU1Z3d3NEQXoyOG5IczRLR0hvb3ZzUE1abVBPa0Yw?=
- =?utf-8?B?TW1sQUc1bWsvVlg1bnpzOXZqeXh6cHdheWZOWXREUHFHMmliU1duTGQ4N3hX?=
- =?utf-8?B?U1RhcVpQVmlKZVJ6YTBqVy9weGFWR3Qwb21MVHRLTy96ZDV1djFEMGRlWGxo?=
- =?utf-8?B?ZnVyQ3AzWXpjNHAwVVFCRS9oSjU0cEJvRVQxUUEydzRpanJxWnFYTXk2cUtN?=
- =?utf-8?Q?iBesbvWaTJ0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR10MB5622.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZnZZTGVUNFp5Q3RncU5FUzZlSGtRdHpwZDBDajhZUGtMY3FEVk5xOGNHdGJG?=
- =?utf-8?B?M0J6Z3N6TWxPMXJiekV4Sm9KaXcxVFN2dDhhWjR1MTEveXNIZ2IrcksveDJh?=
- =?utf-8?B?b1EvTXlUNUJZYzhINjN4OXVnbVV3bkZlYW1MYnhTVFJhVWxPUk85d1Mzby9i?=
- =?utf-8?B?NWpwbEVKMFBPbU5OMVV3Z20rYzYvOVpndlQ5TWtodlFaaFkyNUJra0RTcGJ1?=
- =?utf-8?B?bS9URnUvS1Zuei9Gc05YMmFsN3FKZ1hDN0ZTVVZjWUpVUVVxSGJNWTAzYUx0?=
- =?utf-8?B?Q2h3MXNBWnJWTkVKVW9IaWlmcnYrQkVEbk4rRGRjQVFsZXY5NTJNUDM3aDZz?=
- =?utf-8?B?RFNUK2JKTUJkWStJRmJ5ZWkySGNxd1pXcThtaUtacUNJUC9XQ09ZdlhkQTNK?=
- =?utf-8?B?VDhQazk2clV4dGc1TUk4bDFqbVZjNUtXZW91TGphZDJOV053cHR1QnNIcVRP?=
- =?utf-8?B?MjM0ODNFRC93SVFPSTJIWTR1TndOaHpSWmc2bEFkdmVQWEMvRC94Z0x1YzZm?=
- =?utf-8?B?YzNveElYZkJoOUszSHpWRUNyRVB6eGZCYVhrZXRPMGRBS2ttaERGcGtDbXhN?=
- =?utf-8?B?MjIrQi9OVGdxYno3OEl6U2NGRFJlSlMySW9nS0d6cURBUkZuMzFZOHp4SzZX?=
- =?utf-8?B?WjhSYjlGSlE1UnVVQWJtRHRKckp6UG4reFZ5elMxVG42azM3T0ZVa1dOdkFN?=
- =?utf-8?B?eVVHazhsYStTbGVzdHV2Tm1lUmRVajlYN2VMditwa25Ka2hYTDdoS3M3bklS?=
- =?utf-8?B?dGlHYjBoRVRzaW9INERuUUhSVW9kQWpiR2JxbS9vOHorRllLcXZPR0dLS2ZS?=
- =?utf-8?B?YUphL2Q4V1QrcWtVMno4Vmd6QTRqZjBORzcwaDcwZEZpNGlnckRZZ2ZCTk1h?=
- =?utf-8?B?RGJUUW56ZXBDNFMzNWMvN3pDeDFJa3BFeTZTdVNCN3paMTBRSE4zWW5TMXY0?=
- =?utf-8?B?MmR6b2htR0dWM3d5UVRMSkFPSlhzalJVeHc0cUVNb3VBZGIzOERrNHJ3aWFn?=
- =?utf-8?B?RDZkR3lvWXc4SG9QZkZvMFJ5ajNOdUhMNnB3NmhQUGtLOVN5Mk1abUw5MGZz?=
- =?utf-8?B?YkpFbThnSU1yWFlKTWJQSEg4cDRnNFUzcHFldFJIU2RQODFlOHpLVmJ5OG1a?=
- =?utf-8?B?cGtCa2NVcUFieGhoNkZ3SlpGZC93UEUwcE1jTWsxVEdkMjhWNlVtVXo5UzFV?=
- =?utf-8?B?RExYRVdQNERuNDV0eDBGbkpGWEJJemhkTi9Eb0VhaHNtVGJTMWtZeGNqUUtQ?=
- =?utf-8?B?RHFUODVKSzVKaE53YitqZ1JRTCtuODdoNDQ0U0VXZHA0cGhJUm8yQmpBWGky?=
- =?utf-8?B?cmY4eEhIMUJaQW9DSUpDcWhmZTdOUVcraHlNQ09sMWN2SkdPbnVyVW9TaW9w?=
- =?utf-8?B?dlNlVVNPN0tXbHJkYlJuRmlXVG9lZ0FiZGJTa1hYK2tHeGlHRUU0WG05aUhp?=
- =?utf-8?B?bGkrT3loTnZUU1Yya0p5SDVaOVNFQUFvVHFIT0J4Z09veGZCb2VtckowaHdJ?=
- =?utf-8?B?K2tERHYyVDlVbFJBTHdkYUFTMHNqU3lTK3ZyeEM4dlBudEdpRmlDZFdRZjUr?=
- =?utf-8?B?ektNclA2TXk2U2llN0JTQ0xNN2g2SEFHVGY2UUhqdWFqaXU1c0ljNEtwS1hQ?=
- =?utf-8?B?RllsUkI5aHZycHhXSENFekV3Y2R6UGxiWEg4dkh0TVBUZC9zSXFNcm14czl3?=
- =?utf-8?B?aUNRMDRjY1dENkd5ZVNXRms1VnpuMUxrY0JlUHEwb3gwcFVHYmhJQlc1L2FG?=
- =?utf-8?B?SzdhOSs4QmF3NnFBWTFiMGw1VjVRUXJxVzgwMFpaei90KzJnQ1ZEVzZtU0JK?=
- =?utf-8?B?dlloUnhYa0I4RlFCR2Jxd0ZzMDdIUTZOdUFSRmJMTDhZQXVZYVdwNmh2L1Mr?=
- =?utf-8?B?MFo4TTdJcXJKWHJmc2R4VWxuYWxNekhBdVFVWDVNZG9lZkVkUlhlUW1Odzd6?=
- =?utf-8?B?eVlQazhzU096T0xScVlqNlpJR0VpRDJJL09BTDRMbGJUK2d6ZTh5UUFDNFBy?=
- =?utf-8?B?dWcxbGhETnZ6dTcyQUFtZFNtd0ZmbXNROEVRYUpCeUo4cXNQMGJIVkNGYzZ0?=
- =?utf-8?B?TXcrSi9PWUQ3UEd3L1dIMUtUdnRGcEZSR2tLWFpBTXhtVnJTSVdHVDhBMldL?=
- =?utf-8?B?QUcvZmxLZFErTTdKc2JUKzAxUUtXeFFtWHNoWEI1OWVEdzlwMGVRVFlxZWFo?=
- =?utf-8?B?Q0d3SDJxanVoNXcyOEZNSHd4d0dQRkVVaXVqUEJJd3Y5RzFnU2xMcjN6d0xQ?=
- =?utf-8?B?eURYb3NBTjlaRFNIbU5RaE45WHlnPT0=?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	sMckY4VEM/KrKqWlUJd/z4VTQh4PDGqm+QVZobLX/TKnoVzfqfZSC5rJKj+DKZPi2iBHHq/C7poXQ7OYBgiDHe0umDwmioXGAWR51hzsga1+zig/C8mzMBawXKeXrzbagJL8XcFM140/UMsJIKjdlpY1VmwgV5Ohb8hc3CqzmQSnSRjPE0Q3aEo7bfOC0u1lYK3U/EOxsptBxLQq23YImKBx3UMP+CInIS6hDsWjZqtVVLWzcoffFq/VHgsiVf7fAQaVR/plQgaxWAJtskCAd48xla60zgkQjq+QR2sMHXwgI3blpAOo0Ygu5/Za7NlcBJ5CNXittJSzNjv0GixQemGt4pJgU+OEnrlrKEiV3BeQ9Alzf1dBtKiAnHDmB2hF1NJaMgcE+WFmv0kvK1QvsvCzDZ0xsO+FeItXEvBuDRmijrz8cw6N0s1HYwfGqgj66suXRnheKRC6kI/Fi8D4TiaRWuHhUcOEqT6+eA5axDrruGnXdudkuNGTNLHuwHsFYEvhuTWQGCUIzhQeJPAu23b2tYIGCPdUoydy7TsNbIPfGa4Bz3TdCgnsGI8PeHnhrd++B++VIa+2DjpkYVY3nVU6PNq/aA5L77hZYCEiy7g=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e2bc19e-0579-4a27-859b-08dd9248d306
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR10MB5622.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 18:06:03.4009
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5TU9FUP6HpUH0c7nzmfEiYOO5O2vvHm0sKTb20EACyZGNi5fz3ifaIV598eNQq3aWTEJOB6YqEGeVMXKo7gz4TQUOXCYoS8ycaNf/0N6MwU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6578
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 spamscore=0
- bulkscore=0 suspectscore=0 phishscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
- definitions=main-2505130172
-X-Authority-Analysis: v=2.4 cv=M8hNKzws c=1 sm=1 tr=0 ts=68238a0f b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=S8Fhi8tFek0lTXm9LyUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: t23RgAPrT9BxOZEavfrA9MRo5FgKo_m8
-X-Proofpoint-ORIG-GUID: t23RgAPrT9BxOZEavfrA9MRo5FgKo_m8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE3MiBTYWx0ZWRfX5wTaGdDSlWXl aDHmwYXk4lJe+nD8ZO9rgpcPnul1okzVjPJ+bwouO2flBYiCVeiobn0U18k6pxVxx6hoqbbGa5H H9SjxlAyN+ZUSd6rFsIoN+AZADPdZ/16/vDMGcqdotfH2Nj8YEnBTnFKCnlaVbLNlp1AW7gmvK9
- mKqlaBMiDMI1qlEDi0BA8IQ8QyJza833RXYvwkoJOnBAy6fniOlxFl7p4QWxirFQKAKqN5g5I82 vCje+cFrNe+BpHfg/5JVrTVQxqlVHmUcMsDtzbH7IUuy7nPAiz6CPZUsYNVs7F2Xxe3ekkHTNbi H8k9y+oOpghYqRLY5sDDH5jtX1bb2+OdhT3+hxlnEIiqa+4J7faBxV2P7BD8tMfElWrhkiJBLu3
- Cl1YOKcfh2KvJ0RB/7kEsQpA2DhiyDTl6hP4uX5dFShR9bVC5aiXBNWj7tpnfubnN8D46TMK
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250513172819.2216709-8-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
+Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
-On 5/13/25 04:58, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+Le Tue , May 13, 2025 at 06:28:17PM +0100, Marc Zyngier a écrit :
+> In an effort to move arm64 away from the legacy MSI setup,
+> convert the apple PCIe driver to the MSI-parent infrastructure
+> and let each device have its own MSI domain.
 > 
-> Fix several build errors when CONFIG_MODULES=n, including the following:
-> 
-> ../arch/x86/kernel/alternative.c:195:25: error: incomplete definition of type 'struct module'
->    195 |         for (int i = 0; i < mod->its_num_pages; i++) {
-> 
-> Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->   arch/x86/kernel/alternative.c | 6 ++++++
->   1 file changed, 6 insertions(+)
+>  drivers/pci/controller/Kconfig      |  1 +
+>  drivers/pci/controller/pcie-apple.c | 62 ++++++++++-------------------
+>  2 files changed, 22 insertions(+), 41 deletions(-)
 > 
-
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex.
-
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 48fd04e90114..45bcff181cba 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -131,11 +131,13 @@ const unsigned char * const x86_nops[ASM_NOP_MAX+1] =
->   static bool cfi_paranoid __ro_after_init;
->   #endif
->   
->   #ifdef CONFIG_MITIGATION_ITS
->   
-> +#ifdef CONFIG_MODULES
->   static struct module *its_mod;
-> +#endif
->   static void *its_page;
->   static unsigned int its_offset;
->   
->   /* Initialize a thunk with the "jmp *reg; int3" instructions. */
->   static void *its_init_thunk(void *thunk, int reg)
-> @@ -169,10 +171,11 @@ static void *its_init_thunk(void *thunk, int reg)
->   	bytes[i++] = 0xcc;
->   
->   	return thunk + offset;
->   }
->   
-> +#ifdef CONFIG_MODULES
->   void its_init_mod(struct module *mod)
->   {
->   	if (!cpu_feature_enabled(X86_FEATURE_INDIRECT_THUNK_ITS))
->   		return;
->   
-> @@ -207,18 +210,20 @@ void its_free_mod(struct module *mod)
->   		void *page = mod->its_page_array[i];
->   		execmem_free(page);
->   	}
->   	kfree(mod->its_page_array);
->   }
-> +#endif /* CONFIG_MODULES */
->   
->   static void *its_alloc(void)
->   {
->   	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
->   
->   	if (!page)
->   		return NULL;
->   
-> +#ifdef CONFIG_MODULES
->   	if (its_mod) {
->   		void *tmp = krealloc(its_mod->its_page_array,
->   				     (its_mod->its_num_pages+1) * sizeof(void *),
->   				     GFP_KERNEL);
->   		if (!tmp)
-> @@ -227,10 +232,11 @@ static void *its_alloc(void)
->   		its_mod->its_page_array = tmp;
->   		its_mod->its_page_array[its_mod->its_num_pages++] = page;
->   
->   		execmem_make_temp_rw(page, PAGE_SIZE);
->   	}
-> +#endif /* CONFIG_MODULES */
->   
->   	return no_free_ptr(page);
->   }
->   
->   static void *its_allocate_thunk(int reg)
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 9800b76810540..98a62f4559dfd 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -40,6 +40,7 @@ config PCIE_APPLE
+>  	depends on OF
+>  	depends on PCI_MSI
+>  	select PCI_HOST_COMMON
+> +	select IRQ_MSI_LIB
+>  	help
+>  	  Say Y here if you want to enable PCIe controller support on Apple
+>  	  system-on-chips, like the Apple M1. This is required for the USB
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index 18e11b9a7f464..6c88b4dd34151 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqchip/irq-msi-lib.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> @@ -133,7 +134,6 @@ struct apple_pcie {
+>  	struct mutex		lock;
+>  	struct device		*dev;
+>  	void __iomem            *base;
+> -	struct irq_domain	*domain;
+>  	unsigned long		*bitmap;
+>  	struct list_head	ports;
+>  	struct completion	event;
+> @@ -162,27 +162,6 @@ static void rmw_clear(u32 clr, void __iomem *addr)
+>  	writel_relaxed(readl_relaxed(addr) & ~clr, addr);
+>  }
+>  
+> -static void apple_msi_top_irq_mask(struct irq_data *d)
+> -{
+> -	pci_msi_mask_irq(d);
+> -	irq_chip_mask_parent(d);
+> -}
+> -
+> -static void apple_msi_top_irq_unmask(struct irq_data *d)
+> -{
+> -	pci_msi_unmask_irq(d);
+> -	irq_chip_unmask_parent(d);
+> -}
+> -
+> -static struct irq_chip apple_msi_top_chip = {
+> -	.name			= "PCIe MSI",
+> -	.irq_mask		= apple_msi_top_irq_mask,
+> -	.irq_unmask		= apple_msi_top_irq_unmask,
+> -	.irq_eoi		= irq_chip_eoi_parent,
+> -	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> -	.irq_set_type		= irq_chip_set_type_parent,
+> -};
+> -
+>  static void apple_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	msg->address_hi = upper_32_bits(DOORBELL_ADDR);
+> @@ -226,8 +205,7 @@ static int apple_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  
+>  	for (i = 0; i < nr_irqs; i++) {
+>  		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
+> -					      &apple_msi_bottom_chip,
+> -					      domain->host_data);
+> +					      &apple_msi_bottom_chip, pcie);
+>  	}
+>  
+>  	return 0;
+> @@ -251,12 +229,6 @@ static const struct irq_domain_ops apple_msi_domain_ops = {
+>  	.free	= apple_msi_domain_free,
+>  };
+>  
+> -static struct msi_domain_info apple_msi_info = {
+> -	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
+> -	.chip	= &apple_msi_top_chip,
+> -};
+> -
+>  static void apple_port_irq_mask(struct irq_data *data)
+>  {
+>  	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
+> @@ -595,6 +567,18 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	return 0;
+>  }
+>  
+> +static const struct msi_parent_ops apple_msi_parent_ops = {
+> +	.supported_flags	= (MSI_GENERIC_FLAGS_MASK	|
+> +				   MSI_FLAG_PCI_MSIX		|
+> +				   MSI_FLAG_MULTI_PCI_MSI),
+> +	.required_flags		= (MSI_FLAG_USE_DEF_DOM_OPS	|
+> +				   MSI_FLAG_USE_DEF_CHIP_OPS	|
+> +				   MSI_FLAG_PCI_MSI_MASK_PARENT),
+> +	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+> +	.bus_select_token	= DOMAIN_BUS_PCI_MSI,
+> +	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
+> +};
+> +
+>  static int apple_msi_init(struct apple_pcie *pcie)
+>  {
+>  	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
+> @@ -625,21 +609,17 @@ static int apple_msi_init(struct apple_pcie *pcie)
+>  		return -ENXIO;
+>  	}
+>  
+> -	parent = irq_domain_create_hierarchy(parent, 0, pcie->nvecs, fwnode,
+> -					     &apple_msi_domain_ops, pcie);
+> +	parent = msi_create_parent_irq_domain(&(struct irq_domain_info){
+> +			.fwnode		= fwnode,
+> +			.ops		= &apple_msi_domain_ops,
+> +			.size		= pcie->nvecs,
+> +			.host_data	= pcie,
+> +			.parent		= parent,
+> +		}, &apple_msi_parent_ops);
+>  	if (!parent) {
+>  		dev_err(pcie->dev, "failed to create IRQ domain\n");
+>  		return -ENOMEM;
+>  	}
+> -	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
+> -
+> -	pcie->domain = pci_msi_create_irq_domain(fwnode, &apple_msi_info,
+> -						 parent);
+> -	if (!pcie->domain) {
+> -		dev_err(pcie->dev, "failed to create MSI domain\n");
+> -		irq_domain_remove(parent);
+> -		return -ENOMEM;
+> -	}
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.39.2
 > 
-> base-commit: 627277ba7c2398dc4f95cc9be8222bb2d9477800
-
