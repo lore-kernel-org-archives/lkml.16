@@ -1,139 +1,265 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4004828689C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60F1B4232;
+	Tue, 13 May 2025 10:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747133808; cv=none; b=ZBhFe2DvmXVtpymTwisJu0krAKgXaTaYbBr9aVte3HvNqiy2BOrDyonyw7a7y66RKQHUwO731k/s5xfH9efdDYlLIxYm7+arh/igIE2wAwQP9nJdMpZTBR+3of7aqGhtk4fyWhllWKBlU2ZfJuVzLSt58BTYlLDjAX6yumn39eg=
+	t=1747133898; cv=none; b=UIhS7JRCjvxxCWpPKOth5AqH85v3UIj3Aav7E7YEOfo+z2Nmk5Q0wSn0w558TVcpNYLAEJEpi56x2Kd5odgepa47YTSunhoJWJPPU1lUqonQTlV3WfAoE6I/l3e1eYRaIsK330wCFozjja/FC/c1h/CMkGEQKVEiBxevW1KnSe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747133808; c=relaxed/simple;
-	bh=L0oZNBNb5KDSBD1YnNTVQFxqf67QjDSZupvPJk8sUXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BbN3xuqr9m0+0bZbjKRQS9ua5FilB/wqlrohbV5CjDzsSZJq6cSgjc0n6NvseRe1CIAqBwBsX+ptqpsdSwodDLDcQ0e1cnj8nnpT8Qru+PbB+me4lbgEYHhS5mVxZ18hZHkqhuMMpdeFV69kCwR1/4/VlDP0N6ossc+Mf1/Np4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SIM/Tavf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747133898; c=relaxed/simple;
+	bh=pEjfIy7LfwjPQeD1nx7Lo63vowG+mXPynEzz0J06X5g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e1U7tLo+8/XETJi0+7vtLV4eWtWc8/ob/hplQ5pieVbRRUawSU2Hpm/E/o8qoLEHraLTF20ijy3zdd3gddsGYD9dJzOmU3IvWoOapt6lvmqwZrSCDdu+l6ja3K7nPdLRDsH3mnE+Wu2/9MbtMQhIXNnWihYL/pCQkkPrFR0NVow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f4W9IVu7; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SIM/Tavf"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D6B0Vp026907
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:56:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FJBRR62o3uX80SBDIqqnKU3aMyKpPYvJPwwRrE8Tb+U=; b=SIM/TavfqUtrS4Os
-	xK0Wqdv+B/IFHjJnB8P+MJ11WLhBO1ScJcAZ0QXSwtNwzaRKC9Brh+3EeaP5asdf
-	FvKo7Tcwwd//7eP9ONY8jGtieuRMnnHZQrhdYVT6Bta1/GIFXHZ2cOrXbQ36UeiT
-	RLIkKETEHzTRkM7J+b9TRGDFayAOr5T2JLwSjRJchJGGvzeoiTmg2zM50meU95u/
-	uDQ3liyCR2FlwWeoykTv396vN47fiTxtnIWTiZjyL4AuVg51UHRkTqZ/zlUTxOdd
-	eiPNcfl/B4/2e/TWBAnbDie/q3/CQ1WijjZA56TC72keJDtgYa1geDWtpkp5lS2E
-	eQ2ikg==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hv5qfrsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:56:45 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2318043effaso8435395ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:56:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747133804; x=1747738604;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FJBRR62o3uX80SBDIqqnKU3aMyKpPYvJPwwRrE8Tb+U=;
-        b=u2gWqCbcFflN8popWRjMN86OiwQmllfFJkemX78JM77ckThU0q43mmIdamilqfovhL
-         0rKdHemwALcIhkOe3kN4IMx0b7lE4XSicqqkWwFWNWxsqR3+/jLyaYkDP3yNv7anDReu
-         po9ch/a6MF5PDiRHwUewOCZ5HLMR/sUacv8pijUlKBOGcTDYglSoT0m3+7Spc22g6+6V
-         pKAg0jNN7n4dktaHEDZ97V6yNpELZdEjnPX3LjJkLjGGcdMA2vG01NBbzA3g14wcopxc
-         wVdiW46oTezUjJ58lPI6NXxhkUspgcjK6kOfADi0C7vPk1pJinE+2AaSJljjJCttacDv
-         DVKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9+l2256eQpgP9gSPQ9ZZBdMibkTUp4PtvH3+ESoTCyS2K3AtC87lXhsqiP6y4aHnWUOE2BEJCkv0Xi3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzgwc6f6Bacobh6vkfbhEvPGxOzIZpfSDMZMAVsY3PmwHxSy0RG
-	w1EClJupbbXe9r5MpQOn0xkMY3EB3OX2hj7z7CLlrTOx5gn0mLZrBB+p63i1ApkdJz8wxLv+UXY
-	pT4BbPESEnk65bw0Vm8iZF3PvrzFkqtasCxiGxKFQ3AN2WCsWUJtmlnKPdvAHXfg=
-X-Gm-Gg: ASbGncuEDnJ8xBYCYsTZdm4lxQNpTtJdsKt9/l/sXMykbKAq4Pxp84GSxQG5dmQd9v3
-	RelU78gkiSokzOEyLH5E+sVN7bQS0lHZeqoBzX8ucyGF5r5pqvLdp8uewp2AN3Yl7K+deFPCjth
-	fVeKEn7tMSDBsvuqmEJ9D6wxBDtD+Bi+mByit91jM1ZOnGTLKrULhjWdOHVi5dO1Bd6W/r9Y6rV
-	MU3tUcudhYdXA1Hv6+PwsMZZ0T6HgqMcikfr8hW8DSbDqYzHivFv5o+YRdsAFpEnQA0q8V4O4zB
-	qM7mwTp8g/Bf/b71jTUV4nL7P7x8Q0evsr5ZB3tznAsGJifh1Zk=
-X-Received: by 2002:a17:902:f70a:b0:227:e709:f71 with SMTP id d9443c01a7336-22fc8c8ccf0mr254953135ad.29.1747133804455;
-        Tue, 13 May 2025 03:56:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsf5tREbUMFBBtD0Hz+Z0kckWcjsKPrOZzQurZEc/5IkxxH/Fa6v15+tlLj3WYvlCqbZehBg==
-X-Received: by 2002:a17:902:f70a:b0:227:e709:f71 with SMTP id d9443c01a7336-22fc8c8ccf0mr254952835ad.29.1747133804060;
-        Tue, 13 May 2025 03:56:44 -0700 (PDT)
-Received: from [10.152.194.206] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7540056sm79235615ad.23.2025.05.13.03.56.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 03:56:43 -0700 (PDT)
-Message-ID: <772514cb-298a-40b0-9a33-a7dfcf037bd1@oss.qualcomm.com>
-Date: Tue, 13 May 2025 16:26:41 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f4W9IVu7"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D8pIEo012732;
+	Tue, 13 May 2025 10:58:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+wHXap
+	LzifsdRBOpwP5KHLuo9BLVp6erNMcqcfeWd4Y=; b=f4W9IVu7qexw2FIer/0dTg
+	X84aUIx+dHIvHsAPG70jfPnmO9L64KPKJC1VNuzdfPHDhFN4Xn7iwWTRUhyLDEgw
+	3R2Ak9N20Smscz/DgBK+H78ZZ4R2fr7AzK3vKL7ZwX+hj0XuekZwjaLKjs1w0WDg
+	sbsJ6b5aZsdeKyykhdegWuUeletOl4ZZ9CY5+iY9kVYooofuc09ufp1yJbUXz+V5
+	Zu8ybvs0B3dZnDXwiM2GMt09akW0bfB1AhhZdGu8SB7G+dBhy1HVTAdEOSPZwr9h
+	5bQYKy2z5XOKBdyLj9gB6P7A4qGTkGajlB90/Xw7fZP+7AT62VclJzEyQnraKY3g
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m2xh0kgr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 10:58:06 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54DAo3BG029058;
+	Tue, 13 May 2025 10:58:06 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m2xh0kgj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 10:58:06 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DA5DKD025974;
+	Tue, 13 May 2025 10:58:05 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46jj4ntqaj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 10:58:05 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DAw3IY32244478
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 10:58:03 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 832BD58064;
+	Tue, 13 May 2025 10:58:03 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B35FF5803F;
+	Tue, 13 May 2025 10:58:00 +0000 (GMT)
+Received: from [9.111.68.46] (unknown [9.111.68.46])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 May 2025 10:58:00 +0000 (GMT)
+Message-ID: <df79fe398bf832fc10c985e38654c6ffb47ad587.camel@linux.ibm.com>
+Subject: Re: [PATCH] PCI/ERR: s390/pci: Use pci_uevent_ers() in PCI recovery
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Lukas Wunner <lukas@wunner.de>,
+        Gerald Schaefer	
+ <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger	 <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        Bjorn Helgaas	 <bhelgaas@google.com>,
+        Peter
+ Oberparleiter <oberpar@linux.ibm.com>,
+        Matthew Rosato
+ <mjrosato@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O'Halloran"	 <oohall@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date: Tue, 13 May 2025 12:57:59 +0200
+In-Reply-To: <20250424-add_err_uevents-v1-1-3384d6b779c6@linux.ibm.com>
+References: <20250424-add_err_uevents-v1-1-3384d6b779c6@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless-next 1/2] wifi: mac80211: validate SCAN_FLAG_AP
- in scan request during MLO
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250513-bug_fix_mlo_scan-v1-0-94235bb42fbe@oss.qualcomm.com>
- <20250513-bug_fix_mlo_scan-v1-1-94235bb42fbe@oss.qualcomm.com>
- <16499ad8e4b060ee04c8a8b3615fe8952aa7b07b.camel@sipsolutions.net>
- <26a9e68d-bce6-4bba-871d-13e2aeee3fed@oss.qualcomm.com>
- <296b9aa887022258f8ec8e4f352822c24b41ab82.camel@sipsolutions.net>
- <77fe950d-c5af-4c28-8b0b-bd1aa08d885a@oss.qualcomm.com>
- <d211e634532031322a77053ff912394714b5ff35.camel@sipsolutions.net>
-Content-Language: en-US
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-In-Reply-To: <d211e634532031322a77053ff912394714b5ff35.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=DqtW+H/+ c=1 sm=1 tr=0 ts=6823256d cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=yWWtvJtKPxVNrAc7q94A:9
- a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-ORIG-GUID: TQl6lqG_CuVQ7p-9rfje9WV1Tb5Q8jDd
-X-Proofpoint-GUID: TQl6lqG_CuVQ7p-9rfje9WV1Tb5Q8jDd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEwNCBTYWx0ZWRfXySJzLHvxEBWv
- yPgqvV2/QD+dL1hnoEgGIfsqLSqH/feyUyI2jGJtKGXjKwxGfXCIehLq9Q38CQEQrQKnJf7+kxP
- CbnEDoFNHjjF8jy5q0GquzLlrFsP2o2QeWtj9ARPiYvgcvQy7CBzzb9f1Wnrb9VYENlrq4WXxWS
- pU9av0rdPfzovwNpSFF4Nu1HrOPHlNi/O5jmmYXXEPiZ7z0CNC3moG1+vSswGf/+/+4t8AwcRek
- q43kDblB2p81WtPvG3BF5LZdRoKZTtP8QhueK8RLoxpX6ABN7iifcEU1vCCSFX4xjAUwFaKRRX+
- qJvGVuEdU5oLvJELjBgQdPri6PlX8XP3bvajVhKl4dPcBESgS41YYKhGiuXXTGeFYque2ARr6U2
- YbwdUyjoXxySEDwQROzywUSpEO++B/RBwzbKBWfcIem5+Pq9xgd3hSFmarv6uF6Ge8HVe9B5
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ut2ivt-u5QJSSOIiaiagLtfdjydYMmhg
+X-Proofpoint-ORIG-GUID: 8E81g7jIrpP88tlhpeoDOkb8rA8lS2Xv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEwMSBTYWx0ZWRfX5AH0d8fiklFk zM4wd6VO0fzHyiPB3QvQly2sj/NJaNY/TkT8fCjUXGpZ+eomb0CKJMfYizooYvFF33yrgsYpMGu bCoI4ibnuQx1GVDlhH+Rv8UG5fkBLWvpHxD+s6zB/I4HK8ty1qVgBUtwmb6i6ScHXyot61uOnPQ
+ LXO3d8tTP7XeXEJXipltf5rWYa853j4q3Uz4nsjqJCu26Mw5Qk9AjMHJ2Altm1ZyEu3NuumHVcq BYTxzPhl0eOr4fI1T8dSEHcal8T/rQsaHLYwwKY++BxQwPa+nQIix4Uy5RuVgTt2RZOhy5NtBHJ 9E9WCCdfGwtB4HLt8bTv/TeXqwgBsbW5fUOb+cCADNbsva8cFTgtVpWh19C/bZZA+tcmYS5wp6R
+ Q6nlHzhzZ+wyvxFUd++b9VrOJGvIs7Rjg2mLR6H1MFJIwvEjKIN9KjzbhgenNVRea55WxJWt
+X-Authority-Analysis: v=2.4 cv=e+sGSbp/ c=1 sm=1 tr=0 ts=682325be cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=nbiFzm51mJyoxPHMFpAA:9 a=QEXdDO2ut3YA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 bulkscore=0 phishscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 mlxlogscore=757 malwarescore=0
- suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505130104
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
+ bulkscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130101
 
-On 5/13/2025 4:18 PM, Johannes Berg wrote:
-> On Tue, 2025-05-13 at 16:02 +0530, Aditya Kumar Singh wrote:
->>
->> Okay sure let me first send a clean up. So,
->> ieee80211_num_beaconing_links() should return 1 for non-MLO as well?
->>
-> 
-> That would seem logical to me? For this and many other things non-MLO is
-> mostly equivalent to just having a single link (apart from the address
-> translation.)
+On Thu, 2025-04-24 at 14:02 +0200, Niklas Schnelle wrote:
+> Issue uevents during PCI recovery using pci_uevent_ers() as done by EEH
+> and AER PCIe recovery routines.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery")
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+> Question: pci_uevent_ers() ignores PCI_ERS_RESULT_NEED_RESET which also
+> means that unless we use PCI_ERS_RESULT_NONE instead of the return of
+> error_detected() like EEH also does. there is no event for beginning
+> recovery. This is also true for AER and seems odd, is this intentional?
+>=20
+> Npte: The fixes tag / Cc stable is maybe a bit borderline but I think
+> having the events on EEH and AER but not on s390 warrants it. Thoughts?
+> ---
+>  arch/s390/pci/pci_event.c | 3 +++
+>  drivers/pci/pci-driver.c  | 2 +-
+>  include/linux/pci.h       | 2 +-
+>  3 files changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
+> index 7bd7721c1239a20e13cd3c618cce6679f36b0d06..37609bc2b514c00b5b91d6edd=
+2ec366d59ae9f49 100644
+> --- a/arch/s390/pci/pci_event.c
+> +++ b/arch/s390/pci/pci_event.c
+> @@ -91,6 +91,7 @@ static pci_ers_result_t zpci_event_notify_error_detecte=
+d(struct pci_dev *pdev,
+>  	pci_ers_result_t ers_res =3D PCI_ERS_RESULT_DISCONNECT;
+> =20
+>  	ers_res =3D driver->err_handler->error_detected(pdev,  pdev->error_stat=
+e);
+> +	pci_uevent_ers(pdev, PCI_ERS_RESULT_NONE);
+>  	if (ers_result_indicates_abort(ers_res))
+>  		pr_info("%s: Automatic recovery failed after initial reporting\n", pci=
+_name(pdev));
+>  	else if (ers_res =3D=3D PCI_ERS_RESULT_NEED_RESET)
+> @@ -226,6 +227,7 @@ static pci_ers_result_t zpci_event_attempt_error_reco=
+very(struct pci_dev *pdev)
+>  		ers_res =3D zpci_event_do_reset(pdev, driver);
+> =20
+>  	if (ers_res !=3D PCI_ERS_RESULT_RECOVERED) {
+> +		pci_uevent_ers(pdev, PCI_ERS_RESULT_DISCONNECT);
+>  		pr_err("%s: Automatic recovery failed; operator intervention is requir=
+ed\n",
+>  		       pci_name(pdev));
+>  		status_str =3D "failed (driver can't recover)";
+> @@ -235,6 +237,7 @@ static pci_ers_result_t zpci_event_attempt_error_reco=
+very(struct pci_dev *pdev)
+>  	pr_info("%s: The device is ready to resume operations\n", pci_name(pdev=
+));
+>  	if (driver->err_handler->resume)
+>  		driver->err_handler->resume(pdev);
+> +	pci_uevent_ers(pdev, PCI_ERS_RESULT_RECOVERED);
+>  out_unlock:
+>  	pci_dev_unlock(pdev);
+>  	zpci_report_status(zdev, "recovery", status_str);
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index c8bd71a739f724e09b4dd773fb0cf74bddda1728..5cc031fae9a0210d66959ce60=
+82539e52cdd81b4 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1584,7 +1584,7 @@ static int pci_uevent(const struct device *dev, str=
+uct kobj_uevent_env *env)
+>  	return 0;
+>  }
+> =20
+> -#if defined(CONFIG_PCIEAER) || defined(CONFIG_EEH)
+> +#if defined(CONFIG_PCIEAER) || defined(CONFIG_EEH) || defined(CONFIG_S39=
+0)
+>  /**
+>   * pci_uevent_ers - emit a uevent during recovery path of PCI device
+>   * @pdev: PCI device undergoing error recovery
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77e96713054388bdc82f439e51023c1bf..71628a9c61bd7bc90fdbd9bc6=
+ab68603ac8800dd 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2688,7 +2688,7 @@ static inline bool pci_is_thunderbolt_attached(stru=
+ct pci_dev *pdev)
+>  	return false;
+>  }
+> =20
+> -#if defined(CONFIG_PCIEPORTBUS) || defined(CONFIG_EEH)
+> +#if defined(CONFIG_PCIEPORTBUS) || defined(CONFIG_EEH) || defined(CONFIG=
+_S390)
+>  void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type)=
+;
+>  #endif
+> =20
+>=20
+> ---
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+> change-id: 20250417-add_err_uevents-6f8d4d7ce09c
+>=20
+> Best regards,
 
-Yeah in a way true only.
-
-> 
->> And callers should test for == 1 instead of <= 1.
-> 
-> Not even sure that matters enough to need to change?
-yeah can be left as it is. Sure then I will change the function alone to 
-return 1 for non-MLO case as well.
-
-Thanks for the inputs :)
-
--- 
-Aditya
+Gentle ping.
