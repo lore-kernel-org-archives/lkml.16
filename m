@@ -1,210 +1,179 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E9D2BE110;
-	Tue, 13 May 2025 17:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378CF2AF10
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747156065; cv=none; b=cYHxhfZDOml0MuaLP5F03MZE6j6+cf95SDlM0Uh1zpJ1FgL/iRoZg4Sbb41nb+5FoIFhklzQDxdCP9mrO9Ni6iiXaqyJQWr2BvCtUALM9e4sVDrHEhmp65qw2pqYKF22q3c8xHs0YvIiJ3nIQOxP8DfpAU7VF6N8f24LzSIcqYc=
+	t=1747156192; cv=none; b=A8EWAbWAkGyOmQtVC05snJGDG2rWl9y9obFt69TfeiMN3d3ZWqInl/veh/kJGCwnKSr2E/9S1/ZlH3CX+KuKNDz2bTVA7CuWkf4YRcEchJV6ME7NpYf7uMfmXGs/kH40OPxPgU5O11G07wkZXzUrW3G5auPe19l53/RwNz0MDaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747156065; c=relaxed/simple;
-	bh=uanJLByxQFW3gbTPTgvXVKnJwMqfoxW0i7mA6lk5O9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uv61hEdzp19AD1R+qxJEe9JbrcGQXsMWs/ksmxGTToYlWtJlkH8hSym0JGCs8OprbZe3YfS7q/50TKo406TGaIEbG/V4jbbSjTz8HRCuNhVpJ2+InaumYieMYgB2lVu6fn5hId0wpUcUEQ7PipIJ+/KUhUOkBIVCZbjPJOB1Y94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egkiV0DY; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747156192; c=relaxed/simple;
+	bh=4OH0bVCUtbU61Gbf8HUbLxGscrrrkKQ42GdgKGwgFA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s447je3QTF3kCnVmjpROedItLXozn9ZFtWFarjijJTu5by5y7Y18OVXM9fKZs5DqXcvVGgnr/fb3fP8LmrUIxrkWTHJUXg4pF6HZr/Q4HaVXYo9Mx469K0V8vIUDnqcN2ERSa7ljkwjbCxkPoL+Ao5kSz21l8hFFda4h37rB7xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=De/jiANt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egkiV0DY"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30a99e2bdd4so5248459a91.0;
-        Tue, 13 May 2025 10:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747156063; x=1747760863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MfL86GdlhnBK3jXx8LFujEcI9N5sypqjwqtS1nmW2i8=;
-        b=egkiV0DY99hgUVYh5j6LU5NzuheVJ3z7m/T1B/eS46UwSfztNnAK1SDRrkoF3ALCGR
-         JhBGVneemhlmEXw9haPM7+bGR9f0hZEfDFDuytyeSQKFGHVBbsNhnasD0trPS5h4Pljn
-         XFgrqcF+nbY86Zb/LSFNJi4HF9nLvMwMW/4DXBt5cbVH4oQMAiialEssLStnFEdRWUUl
-         HnEdsVqHAv0c7FW3A8MR2OnL6DSf6QZmG+BrjDMX4tHBFFFh7N/N0AQeOF9J5XF5AZvw
-         uYy/DE6uaWL1uqOmU8j6/0ArrU0Ng5TYAzVfxImtWreDNRMIS38q41t+oYDgKM/zO9/Q
-         2RrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747156063; x=1747760863;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MfL86GdlhnBK3jXx8LFujEcI9N5sypqjwqtS1nmW2i8=;
-        b=uAP2vJHZ6VoudXrF5ftvMaKGJf9GrVYgxZMcCMB9sQ75VeuuXc1p4UfSjFIJbqPp0L
-         fvZBv0/ap2LNcpWGALy6ooZO5zPYeufB3XQR+JmijnyAX6JrScHKk3KOYnWc3zDuPIta
-         vxFtAzOnpCSM33bEHz1gQwRrnRimhrGXNTgPKr34xBDY5KuGf9SFslDikXrHv/ItER0/
-         w3jZXg/2m9vI1eYXTS2i5mem4bqwcLLgkIzbctzk9lY2KWqjpCX3SnMfSEyEC9EHHkl/
-         am5GS8u+xdjavgKi2QZQr4yaTvgzq3pto7koxdKGzyul/pmhKyf6LtZtjRQzDh8gbd+0
-         9boA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJn16IEEuJ8qFI1zF2kGz2rmqxIEAbjKuHwesQ01oQLFBLaFk9wANFXkGBXkN2NVvqsvwmMUmxoC1EUgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcNfF0usXHxUXwbpnxnEDJU4GwSn0CwCOGFw95PMpcu/lcDASQ
-	T0xe1pxpryuX5JOchuRUa3aT1QgUDZ9vHm64AHptUtdQF96x94eS
-X-Gm-Gg: ASbGncuJmDOGcx5KoEdDKI0bQ6YTP/fod6wmZpMz4gq0kHjqPuM4jlzibc8Qaw4a2nS
-	ir4/5RE+OGTqc6UH4B1v42rg659l9wPNCp4jwULsE4uVc27JCT1j2/NF9HHOZ7sKeDi6VdEMg38
-	a+w0lmmi2hg+4+8LNZQdTdloZ40I7qEn7CUyW1bNzn4G+dXrdoyiy7bHEYtvLXocmQqw40OBr7Q
-	hD+fEAYgm9pzvUBhcQOCuEXMtGg6DS2gP4wzn1nNtjxV5liJYIFUyJQ3hkRKIr2p3dpBNrCqJ9c
-	NeKAxZVmWyDy4hW2VzQq3lOdKyp8XhBtsrZHW5khChkwa2FDfphWziQc5KxpsPrpEuR/aVX87pN
-	uah6a
-X-Google-Smtp-Source: AGHT+IE550DTZxU0fAa0iB/XH8wB1LPuYOfBQ7sf4z66ubJSzSBXCrqXU7OTN2wRAWtJzZbWszP1Zw==
-X-Received: by 2002:a17:90b:58ef:b0:2ff:64c3:3bd9 with SMTP id 98e67ed59e1d1-30e2e625f04mr394350a91.23.1747156062426;
-        Tue, 13 May 2025 10:07:42 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e75dbfsm8756276a91.41.2025.05.13.10.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 10:07:42 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: tytso@mit.edu,
-	jack@suse.cz
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH] jbd2: fix data-race and null-ptr-deref in jbd2_journal_dirty_metadata()
-Date: Wed, 14 May 2025 02:04:41 +0900
-Message-ID: <20250513170441.54658-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="De/jiANt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AE5C4CEE4;
+	Tue, 13 May 2025 17:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747156191;
+	bh=4OH0bVCUtbU61Gbf8HUbLxGscrrrkKQ42GdgKGwgFA8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=De/jiANtzSXB36c6ArGeIuconZ4jrvJNfi/sEI1DLaCTDXdVQ56K6N6frpkE1H1u+
+	 4dLCuf6UdVDEiTP5jz8Ks9sz+BE+Hzd8I5XJnnsSiOAnE/4BIGxVZkkyqreQnpLD2k
+	 anV/P2ZuN/iLyY3h41zd0lzHB8ZG5bf7fYcONzVRfUUwpIFHKejJXz3SN8ZIxOnhdh
+	 K1u0m+JZi/h3ZmChObLkwLVFSlPX3kS3rOCGO6eAGixG0/wz/a0RyoWn5lDY4bs5ti
+	 JQqYnbmGrSl0KMYrRO9QcfCdVIVmQLMyFM1IDPHxTcGjwKQGfxR0rLkv9feSeJAcwo
+	 AmtqShPYiol4Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3BC79CE0908; Tue, 13 May 2025 10:09:51 -0700 (PDT)
+Date: Tue, 13 May 2025 10:09:51 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Lance Yang <lance.yang@linux.dev>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	mhiramat@kernel.org, llong@redhat.com,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v1 0/3] generalize panic_print's dump function to be used
+ by other kernel parts
+Message-ID: <c33acfb8-0078-46e2-b3a3-f753909749c9@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+ <20250511184617.85d5fe22fde831c1edb8321c@linux-foundation.org>
+ <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
+ <1a5bc420-c716-4d0b-b767-32adf32f4958@linux.dev>
+ <aCNIxWaPVHywfek2@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCNIxWaPVHywfek2@pathway.suse.cz>
 
-Since handle->h_transaction may be a NULL pointer, so we should change it
-to call is_handle_aborted(handle) first before dereferencing it.
+On Tue, May 13, 2025 at 03:27:33PM +0200, Petr Mladek wrote:
+> On Mon 2025-05-12 16:23:30, Lance Yang wrote:
+> > 
+> > 
+> > On 2025/5/12 11:14, Feng Tang wrote:
+> > > Hi Andrew,
+> > > 
+> > > Thanks for the review!
+> > > 
+> > > On Sun, May 11, 2025 at 06:46:17PM -0700, Andrew Morton wrote:
+> > > > On Sun, 11 May 2025 16:52:51 +0800 Feng Tang <feng.tang@linux.alibaba.com> wrote:
+> > > > 
+> > > > > When working on kernel stability issues, panic, task-hung and
+> > > > > software/hardware lockup are frequently met. And to debug them, user
+> > > > > may need lots of system information at that time, like task call stacks,
+> > > > > lock info, memory info etc.
+> > > > > 
+> > > > > panic case already has panic_print_sys_info() for this purpose, and has
+> > > > > a 'panic_print' bitmask to control what kinds of information is needed,
+> > > > > which is also helpful to debug other task-hung and lockup cases.
+> > > > > 
+> > > > > So this patchset extract the function out, and make it usable for other
+> > > > > cases which also need system info for debugging.
+> > > > > 
+> > > > > Locally these have been used in our bug chasing for stablility issues
+> > > > > and was helpful.
+> > > > 
+> > > > Truth.  Our responses to panics, oopses, WARNs, BUGs, OOMs etc seem
+> > > > quite poorly organized.  Some effort to clean up (and document!) all of
+> > > > this sounds good.
+> > > > 
+> > > > My vote is to permit the display of every scrap of information we can
+> > > > think of in all situations.  And then to permit users to select which of
+> > > > that information is to be displayed under each situation.
+> > 
+> > Completely agreed. The tricky part is making a global knob that works for
+> > all situations without breaking userspace, but it's a better system-wide
+> > approach ;)
+> > 
+> > > 
+> > > Good point! Maybe one future todo is to add a gloabl system info dump
+> > > function with ONE global knob for selecting different kinds of information,
+> > > which could be embedded into some cases you mentioned above.
+> > 
+> > IMHO, for features with their own knobs, we need:
+> > a) The global knob (if enabled) turns on all related feature-level knobs,
+> > b) while still allowing users to manually override individual knobs.
+> > 
+> > Something like:
+> > 
+> > If SYS_PRINT_ALL_CPU_BT (global knob) is on, it enables
+> > hung_task_all_cpu_backtrace
+> > for hung-task situation automatically. But users can still disable it via
+> > hung_task_all_cpu_backtrace.
+> 
+> I am all for unifying the options for printing debug information
+> in various emergency situations. I am just not sure whether we really
+> want to do the same in all situations.
+> 
+> Some lockup detectors tries to be more clever, for example:
+> 
+>   + RCU stall detector prints backtraces only from CPUs which are
+>     involved in the stall, see print_other_cpu_stall().
+> 
+>   + Workqueues watchdog shows backtraces from tasks which are
+>     preventing forward progress, see show_cpu_pool_hog().
+> 
+> And stalls are about scheduling (disabled preemption, disabled IRQ,
+> deadlocks, too long uninterruptible sleep). OOM is about memory
+> usage. Oops is about an invalid memory access. WARNs() are
+> completely random stuff.
+> 
+> Also I am afraid of printing too much information when the system
+> is supposed to continue running. It would make sense to print it in
+> nbcon_cpu_emergency_enter()/exit() context which disables
+> preemption. And it might cause softlockups on its own.
 
-And the following data-race was reported in my fuzzer:
+And we did do some of the cleverness that Petr points out because of
+problems caused by flooding the console log.  We first ran into this
+sort of thing on embedded systems with slow serial consoles (where 115K
+baud is now way slow), but it also shows up in other environments, for
+example, those committing large numbers of console logs to stable storage,
+multiplexing large numbers of logs across networks that sometimes get
+congested, and so on.
 
-==================================================================
-BUG: KCSAN: data-race in jbd2_journal_dirty_metadata / jbd2_journal_dirty_metadata
+So I second the call for individual knobs, either in addition to or
+instead of the global knob.
 
-write to 0xffff888011024104 of 4 bytes by task 10881 on cpu 1:
- jbd2_journal_dirty_metadata+0x2a5/0x770 fs/jbd2/transaction.c:1556
- __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
- ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
- ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
- __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
- ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
-....
+> Finally, I wonder whether ftrace_dump() might cause a livelock when ftrace
+> is adding new messages in parallel.
 
-read to 0xffff888011024104 of 4 bytes by task 10880 on cpu 0:
- jbd2_journal_dirty_metadata+0xf2/0x770 fs/jbd2/transaction.c:1512
- __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
- ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
- ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
- __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
- ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
-....
+It definitely can cause problems, and me learning this the hard way is
+why rcutorture calls tracing_off() before calling ftrace_dump().
 
-value changed: 0x00000000 -> 0x00000001
-==================================================================
+> The situation is much easier during panic() because the system is
+> going to die() anyway, non-panic CPUs are stopped, ...
+> 
+> That said, I could understand that people might want to see as much
+> information as possible when the console is fast and the range of
+> possible problems is big.
 
-According to this crash report, there is a read/write data-race in
-jh->b_modified.
+No argument here.
 
-This is because the b_state_lock is locked too late.
+							Thanx, Paul
 
-For some reason, jbd2_journal_dirty_metadata() has been written in a way
-that it does not lock b_state_lock before checking jh->b_transaction.
-
-However, This makes the code that checks jh->b_transaction messy and
-causes a data-race in jh->b_* variables. Since locking b_state_lock
-earlier is not enough to significantly affect performance and most of the
-functions defined in transaction.c lock b_state_lock before
-reading/writing jh->b_*.
-
-Thereforce, I think it would be appropriate to modify 
-jbd2_journal_dirty_metadata() to lock b_state_lock earlier as well.
-
-Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
-Fixes: 6e06ae88edae ("jbd2: speedup jbd2_journal_dirty_metadata()")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
- fs/jbd2/transaction.c | 49 +++++++++++++++----------------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
-
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index cbc4785462f5..7e6dbf37396f 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1496,41 +1496,25 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
- 	jbd2_debug(5, "journal_head %p\n", jh);
- 	JBUFFER_TRACE(jh, "entry");
- 
--	/*
--	 * This and the following assertions are unreliable since we may see jh
--	 * in inconsistent state unless we grab bh_state lock. But this is
--	 * crucial to catch bugs so let's do a reliable check until the
--	 * lockless handling is fully proven.
--	 */
--	if (data_race(jh->b_transaction != transaction &&
--	    jh->b_next_transaction != transaction)) {
--		spin_lock(&jh->b_state_lock);
--		J_ASSERT_JH(jh, jh->b_transaction == transaction ||
--				jh->b_next_transaction == transaction);
--		spin_unlock(&jh->b_state_lock);
--	}
-+	spin_lock(&jh->b_state_lock);
-+
-+	J_ASSERT_JH(jh, jh->b_transaction == transaction ||
-+			jh->b_next_transaction == transaction);
-+
- 	if (jh->b_modified == 1) {
- 		/* If it's in our transaction it must be in BJ_Metadata list. */
--		if (data_race(jh->b_transaction == transaction &&
--		    jh->b_jlist != BJ_Metadata)) {
--			spin_lock(&jh->b_state_lock);
--			if (jh->b_transaction == transaction &&
--			    jh->b_jlist != BJ_Metadata)
--				pr_err("JBD2: assertion failure: h_type=%u "
--				       "h_line_no=%u block_no=%llu jlist=%u\n",
--				       handle->h_type, handle->h_line_no,
--				       (unsigned long long) bh->b_blocknr,
--				       jh->b_jlist);
--			J_ASSERT_JH(jh, jh->b_transaction != transaction ||
--					jh->b_jlist == BJ_Metadata);
--			spin_unlock(&jh->b_state_lock);
--		}
--		goto out;
-+		if (jh->b_transaction == transaction &&
-+			jh->b_jlist != BJ_Metadata)
-+			pr_err("JBD2: assertion failure: h_type=%u "
-+			       "h_line_no=%u block_no=%llu jlist=%u\n",
-+			       handle->h_type, handle->h_line_no,
-+			       (unsigned long long) bh->b_blocknr,
-+			       jh->b_jlist);
-+		J_ASSERT_JH(jh, jh->b_transaction != transaction ||
-+				jh->b_jlist == BJ_Metadata);
-+		goto out_unlock_bh;
- 	}
- 
--	journal = transaction->t_journal;
--	spin_lock(&jh->b_state_lock);
--
- 	if (is_handle_aborted(handle)) {
- 		/*
- 		 * Check journal aborting with @jh->b_state_lock locked,
-@@ -1543,6 +1527,8 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
- 		goto out_unlock_bh;
- 	}
- 
-+	journal = transaction->t_journal;
-+
- 	if (jh->b_modified == 0) {
- 		/*
- 		 * This buffer's got modified and becoming part
-@@ -1628,7 +1614,6 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
- 	spin_unlock(&journal->j_list_lock);
- out_unlock_bh:
- 	spin_unlock(&jh->b_state_lock);
--out:
- 	JBUFFER_TRACE(jh, "exit");
- 	return ret;
- }
---
+> Anyway, I have added few more people into Cc who are interested into
+> the various watchdogs.
+> 
+> And there is parallel initiative which tries to unify the loglevel or
+> somehow make the filtering easier, see
+> https://lore.kernel.org/r/20250424070436.2380215-1-senozhatsky@chromium.org
+> 
+> Best Regards,
+> Petr
