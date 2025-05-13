@@ -1,420 +1,242 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-002c1b01.pphosted.com (mx0b-002c1b01.pphosted.com [148.163.155.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AE31A7044
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747102470; cv=none; b=OR+dlkk8sw3VfMZbZ2Zmgu1Lbze+hlOj+DtTYJOwR+36xQ6cttYQNlrDtaLDsFv+VIxp57Y6LVMQJVZhjgtXS4ZTM6RTkf5jmWsKgvTemvnvBUoPAVMlUO2B7+0va9rx2LbOsKj0GHPPzyegL400P6e0esEtwC7Tj2ikug3eQXI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747102470; c=relaxed/simple;
-	bh=ieor3tLUVFxTnjlpkxp2nBfoSp2nUKu7NDxY9Ou46E4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=j7s5YkACDYe9Zm+nLHvHBoU+OqXnSgAuZ1F7lmBUHxhhTUfhAlnYq2htqPL2IKnNhMYNHebncKsBOmqDsJt2FD7y1y4AIiQazLFjTGZJFdayWNU57lxU9n5ZhDFFEjEUs3R5+6vyrZRm1cBQSbpjlI4O6bL4KJSCQWHumBnpCkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d90ba11afcso58127575ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 19:14:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747102466; x=1747707266;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kO4Jl/o7NJi0wFJPRurmXgjfPaKYJsRjlw2GZSDQy+E=;
-        b=J864KxB4Vj+6dwfeZIskn3nvsAYHNjRVw4I1zkpaTMzZrZio8FptleyRCXw+1vnP04
-         qJ+Su1f32xRxz7UQZCfmI9g1ikpPed/r8KegND1R5gATHnDhxAe73gpQN0Hzk9nfqXzV
-         moMopAvj1+QgmcW9hZIAfg+o66iogljPvKzPgJ5KD6qXxdqH4NBm5BIF59CKTgdgNwCZ
-         C4XKP/sCpvd/LWVZ86n3/u9zcziO+KfYPEE4KB+fyWLDAlV2Md7kpP4YHIq3rfvJkKHv
-         +N0OLqCrnziumtm3pMKU4i4NuNYBKWxTNYYcIOSseaOw0UHISrwDDK75CC2mOtkcPvp9
-         /4Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuYNMR3hGa09WjQRdYxjHMKfNCWOGTlT+cye5AmwHci9GnVFQTyGR1YwPgAeXVOu29nyddjd6Qq45JQds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdR2LPiEqgZ+T9RE6S0sGy1APUAlJJkvFQOMScBkTg2Jl4BJWx
-	9pBA+wJxcFMqsKXehxesU6dVByauAqhb9vSvyVwTos10FhgusHcTXDMo4g98xL9LVzF3P/1hnXx
-	we8GsTjXlYKEz3K3xbNg3r4ac3IcNEAzVXf/H9iSiX6MUKW5B+hwMVKQ=
-X-Google-Smtp-Source: AGHT+IH/QjShxlwUHaM/RREZP0ThnKVN3767LeOTQdPfCtfCtTt/5Cy+DhZEVPICLMHATNP1a13QnmKvnHi+8oHNea43DB4ApVr9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865411B3950;
+	Tue, 13 May 2025 02:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.155.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747102516; cv=fail; b=ueX1+qym34HyxpFVm1DLEMFavOARCqnJxz7tROr6hN/AITWYGe9z2iNzNDXX1s5fjUACmpmuOtAcQ1M+c0scJg8x/YTIB3Y2+da64sKdtzyXazhFwsWC5SdFQk/EWkbGC4xmL3bZlWSuNU+Cuk1q8lDKzFVB+eUeljf9ThoHxj8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747102516; c=relaxed/simple;
+	bh=cw4PXC8fwwT7BscpsJQkUPSMnkyuG5o7KOEA8IaB6Zg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=e8HXJhomcD8CVtMo0tDTGYQcua1NxYIanDblxREEmp50hqO78FSOuiptMa1ZPuGswsd5ilS3EgwN678j0T4whgfOAssAqgNzhn8ZjsRJZQUrWyelHW417F77NhewWrQMuKtSjAf9+HO4gmKt5C5e8ojwYlNWPF9kkx4PkESMWgQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com; spf=pass smtp.mailfrom=nutanix.com; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=MR/Zk7Nk; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=XinK8dMp; arc=fail smtp.client-ip=148.163.155.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="MR/Zk7Nk";
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="XinK8dMp"
+Received: from pps.filterd (m0127844.ppops.net [127.0.0.1])
+	by mx0b-002c1b01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CIKMUB007643;
+	Mon, 12 May 2025 19:14:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=
+	cc:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	proofpoint20171006; bh=cw4PXC8fwwT7BscpsJQkUPSMnkyuG5o7KOEA8IaB6
+	Zg=; b=MR/Zk7NkLfpAQF08830jh60U94UGRXPLP7BihSVZlo7gdNXMJCte471+I
+	pNQkF46pcYFBVL/vE4b6nKFrwdrWCvPMOkUhTs9YT4AFOfjlP/m1icZy34fVvjlg
+	X4lyjx3yNf8iriXrNRxGSE7G9EeI4Ys5xQRMfy3ux4G6JC2ZqUrrNYsoSD+WO3yF
+	fjNy3zsnwXcGz8/c7cMUSXDsSj4CpHkqZwm8BTXxdUNj3/i8qz9fkNMxakraM7jU
+	uYs/h6ePJMm/MZZFMZeCzYuzmydPPCh00zhCp7s6DWRDorgVfTQmSvGix/PHaNZ9
+	y97u8BzDcuGxYTjvpXdu1DH+tP12g==
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2175.outbound.protection.outlook.com [104.47.55.175])
+	by mx0b-002c1b01.pphosted.com (PPS) with ESMTPS id 46j6b04kw9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 12 May 2025 19:14:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vvw+A5aG/sUrnZW/FnwzkcQeYOxIHJVq7dGfi71FjMEm9AdAfU22JS1Fi9W7pYfsbEqCfhiznQJJBWg1P3ExbOrBbuXbzDR99NISQsAMJrdM2kNbsyVN3b8heTGoLRfzEEe87M2WLvA0HiHndSPdtQGBppWd/dBfzhYuuTaiEbFuwk6W+y16JaiFu+fmDX7+xrYiPPZC+Jk5BQrauMDYsQhtEIl9x8eorjlXN5Fqll2uGOXnlFbfBPEMVLeKP7ViVq0vskE/1qQ+ptkJIhNtGNijMxCp7CNYD4dNo4L4jbFZpCNmmvM3XKeaplU3koiZANpl906RvkDWcUcDyQI+CA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cw4PXC8fwwT7BscpsJQkUPSMnkyuG5o7KOEA8IaB6Zg=;
+ b=hIavTc6clAWTZ5bW167fyenSy9kISdHddgnDyxygi2x+U6x0r1OBrWG+dMWaBvoUZsx6jojS3aK3bt0SPt9ukQ5F16XTWKS7QyBCg0ep6nphXzA0Cc1bpU17oDO8AdYH2oJjn6XYO+kwFBLdDBeQntvoFgkoHt0jZLj84oN+zOcHseIZbmx69SmltvxWluHoFMLbAiE3walh4zE0gwUxsorX2u94i0aizYmsBb3hvjAKz0ry5nM0fvuw4amGetnyzj/hVK1L6apGS9ho5apnkMKnyRy7tNPqD1I1v9DpoDc0BdsdlJvnwYTCQQl/g+nHIM9oFikcDzFS+9cnESCY8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cw4PXC8fwwT7BscpsJQkUPSMnkyuG5o7KOEA8IaB6Zg=;
+ b=XinK8dMp2nXkesrOnXLgBXUT6URQkEGKY8wPHClqeQZ069pa74wmay2GsaXjKlV/I9tHoudI330Eci7j2o/bCfkmWFeBxDjjv9TQknZE8C4PBeRfCRueXQg/Osj2D4MEb5tC80Ja45U70olRMQwGCUeBe8bA3AscTXmJ25t0N5DCFHjzgYusTFGM1+tPiGhulMgAoMs6LsRVrJLXXHCqxjtNKvM9bT9+SHl8zEeG/C0toou+owXK4h+fwpAQC+rE7r9q6039hZsWcKjqPDwqfLIsIcd1j8Z9apiAKDqcYLQR9XQzYGWwLYQtFQmKbc6yIVX4y4bkjITgXcWgyZGfVw==
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ (2603:10b6:408:1fa::10) by SJ0PR02MB7151.namprd02.prod.outlook.com
+ (2603:10b6:a03:290::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
+ 2025 02:14:46 +0000
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054]) by LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054%5]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 02:14:45 +0000
+From: Jon Kohler <jon@nutanix.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "tglx@linutronix.de"
+	<tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        =?utf-8?B?TWlja2HDq2wgU2FsYcO8bg==?=
+	<mic@digikod.net>,
+        Sergey Dyasli <sergey.dyasli@nutanix.com>
+Subject: Re: [RFC PATCH 09/18] KVM: x86/mmu: Extend access bitfield in
+ kvm_mmu_page_role
+Thread-Topic: [RFC PATCH 09/18] KVM: x86/mmu: Extend access bitfield in
+ kvm_mmu_page_role
+Thread-Index: AQHblFPzZbE3L8M/tkagt2HsJIwA07PPr9yAgACBBoA=
+Date: Tue, 13 May 2025 02:14:45 +0000
+Message-ID: <A72BD2D1-4D38-4F3E-B05F-A9002256BFBF@nutanix.com>
+References: <20250313203702.575156-1-jon@nutanix.com>
+ <20250313203702.575156-10-jon@nutanix.com> <aCI-z5vzzLwxOCfw@google.com>
+In-Reply-To: <aCI-z5vzzLwxOCfw@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Apple Mail (2.3826.400.131.1.6)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV8PR02MB10287:EE_|SJ0PR02MB7151:EE_
+x-ms-office365-filtering-correlation-id: ce73d680-191d-4036-efc3-08dd91c3ee3e
+x-proofpoint-crosstenant: true
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?Y1VnaFpqMXo1bHloVUNmVS9NRXE0WkZDTXpLUDRnMzYwS3E5d1lvbGFVY1J2?=
+ =?utf-8?B?N1d5WVBzTDZvZExaa3hkSnlhR0JsSmUyb284SGljWlpQN2lqNDFJbmNDdHhU?=
+ =?utf-8?B?NnRZQ0hzVWNKUnBjNTh4eDN2SmxoenFjUEd0N0o3UWJTUklFZS9xdWdEK2lz?=
+ =?utf-8?B?cllWL0tkL0hGWTZNVTJ2UUZMYzBWQUx4UjZsWDFHUHFhK0ZJTUVTSGxwREpK?=
+ =?utf-8?B?RklWbm5RNGF0ZGJyRHdJQ2YzT1hOY2IyQjU4NXhQYnJsdlQ1UzA2c0ZQUzJP?=
+ =?utf-8?B?Rm9RdzVLV2dUa1RGMFNwNEVwV3NqUWVWWjQ2Yll6UGFCYkZkMjVQQUlIQUNW?=
+ =?utf-8?B?cVdrdnVteFROeHpka00za292Vno4RFZKSFlFeHN1Q29oeEJiN3QxNVErV016?=
+ =?utf-8?B?dEI1alcyWWFRaVhwbEl2dlRNczRQenY2Slp3ZXN1QThCSXBMeTlsUDloWVNT?=
+ =?utf-8?B?Z2NrUFNXcXJpM0R0UlBPYUJUdzB6N2FxVExybUJFU1lDUml6NzJxR0NJRTI1?=
+ =?utf-8?B?SzlzUkJ3ZkNKMGNkWWNXZ2Y2Z0I3c2trL3pzamZEUDI0dVkvNFU0YzduSmRv?=
+ =?utf-8?B?MTgyQWU3ZGRnb0o4aTRCcDhtUnNSK2ZkRmlNVEVUSVhYRFlNT2tHclZrdm1h?=
+ =?utf-8?B?TTQ2M1NLQVNRVy9QVDM2R2V6MzBtdVZSRlJGSFZ5Z1EyTkEvc25OV3hmbmRy?=
+ =?utf-8?B?Q3owYWRHNWwzNWE2TUxVV2FLM0VyRWxjZUwxREcrTUw3Wk80Y2N5WE9QMitN?=
+ =?utf-8?B?Wkp6L1BTZHhLaXFCQXF1UW1CUUxHOXIvWTkwa2c2TVhWMWp5OFJ0c28rT1RC?=
+ =?utf-8?B?d0RwTFJpZ0tuYWNWVHBieHBzU2ZybTNQVUJFbTQxSVM3V05jMU1UaEVJMXVz?=
+ =?utf-8?B?Z2x5bTc5ZmNXd3JRRWRrWUlHb2tpRGhKUko4L1ZTb2NwSFhFa0xpL0d3QVc5?=
+ =?utf-8?B?V2tkSUZPR2FUKzRVR1FEVXdhTmw2RlAzNlJmTThNbEl5cWdobzIxelhrVGZH?=
+ =?utf-8?B?Z0JCOUYxWkRCYnc3ZS9oVFEwK2llcFVxYU9RZStjZ2tzeVVwZzRXTlZzZEF1?=
+ =?utf-8?B?QWZJRTJWTW1qemRmQ253eDBvSVZibXoweW5kNzl3NEduU2YvVENUd1FVNFk4?=
+ =?utf-8?B?OTNLakpmYzdrUExOZTdHNkwySGNpdisyN2liSkNYeHd3UVRhbllqbjR6NWRX?=
+ =?utf-8?B?eTBHOUlNNnU2djM2M1VrcXdRSU9NVlBHeFRkT0hBc0tTY0Y2Yk1mOXE4cm1s?=
+ =?utf-8?B?MmNLR3pyRWhUd3lhNE9GU1dtZ0Z3NFJSN0RoTW8zU1dLSU4wTTFqNzBQVWlu?=
+ =?utf-8?B?STZVWXdkSCs1OHRCV25xMmRrUTlEd2VocjVMNzFUVk1nL0NJZHNzYkducHd1?=
+ =?utf-8?B?SVgyR1l3MFp0QXdWcWplT0txUC81ZEkwY0ZERUVXdjZmYTQ1SWxiK1djUWcy?=
+ =?utf-8?B?RG00TEZUTlhEcHY0YWFNczVvdHA4RUZ4MnV3eHZjT0pRSDhOanlaejFpdUtr?=
+ =?utf-8?B?UkluRWUxTHFzL0dVSmlTM0hjcnRkUzlsSStsdjZHUkhVRGVBbWwybHVQUFgx?=
+ =?utf-8?B?a2o2bTZNa3EzbHFCMnhMTFNXSXZLcDZxVUZQakhMQTcrWDVoVGxNSFNnRkRy?=
+ =?utf-8?B?Mmo2STFCUitPWGlRcjh1SFBQUHkzazgxUm9ENXI0WVhGaklsNVdTcEVBWHJi?=
+ =?utf-8?B?Z1ZuaURWVjNZVThBNzg2K0hEaFc1Z1hsV0gzOERjN3FnY0hvRVN1WW51SnJX?=
+ =?utf-8?B?SWZEWUVsNlA4Vzk5UDZqMVhIMWtjVDIzMmVYa3F5MGFYNTZWY3M4dDlUbzYw?=
+ =?utf-8?B?SmtPZ3JjbmdwWWhNRGFTQWUyWHVJVHVSWGNELzFlYmMvYXNrTmxsb21TMVlW?=
+ =?utf-8?B?bHlnOTVsVU1RYUY0cFhlSnlyRnBYb0ZNSzlMK3c2aVpQNDRNeUtZdU1EcHhT?=
+ =?utf-8?B?ODhISS8wZ0hjcFFvVUFVNkovQjBWQkVaU0thWDZHcnRJeFlxT0hpNUlaL01l?=
+ =?utf-8?Q?9ONqiPdkbybqoVvDGLibjhI/K0CbWs=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR02MB10287.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TnNsNDFCYnhKeDQzVE5UWXpVNFZoVzArU0luQVBVWFpnSS9tNUZJOFB6SjZT?=
+ =?utf-8?B?WUpwMC9GWkZNaDZHN2plZkFJL2NvaTFsdDUzU0F5Y2tZWHdaQW9hVlppKzBa?=
+ =?utf-8?B?Q3Byd0FLblZtRDdVR0tGWkRUcUVIeXdiOVFVbTIydVFnQUV0QnhwZXVDQ041?=
+ =?utf-8?B?b2NvMzBqbG55U2pINDZWYkl2cEpSa1paZG0vZDYvcGdwVzJ0eHZabHNhSTkz?=
+ =?utf-8?B?WEhGRXAycG9HdnA2d1NSU29KNk5DeWFPdnpIQUZrWHBwYlY0ZmQvektLNEdk?=
+ =?utf-8?B?dEU0SlJUZk1WZWMzT0wwdDFxM2tFUVl1YmtiL2lCUUw0MG81ODRCZXdwMXpO?=
+ =?utf-8?B?SFE5NWYveGFIQXBOTU0xN0F6MGxVeTVkMXdzSG9TZkxpNFJIc3Q2N2pZOTh6?=
+ =?utf-8?B?b2plaUNhVlVBblFhaFBwTlptN1F0dTQyNDgwV3cxOEhpZG1JTlhXUDZTV2xy?=
+ =?utf-8?B?SXhRT3ROZms2ZjhZSHFoeUJzUjFFbVJ4WEs5RkxubTZvNXo4RFdmWWUzMDRl?=
+ =?utf-8?B?emNUR0VDdkxGaU9TeVdKYzh5ZytXL2o1b3RPTEUxRkF0S3lzTURvakphb1RD?=
+ =?utf-8?B?VUpSMm5RdlhJZmpvOTdpeExXTkg0blZPejJzODB3TG1VQ1d6emdDdHVvZWJz?=
+ =?utf-8?B?a0VLN0VzTHg1dENFT2VlZDhyTEVsSk1uVWhCNG14eCtYZytxUUpOK1M2ejMr?=
+ =?utf-8?B?aXFwYThMY1V4ZnJEK3lxL2dhaXdvVXlPWnEvaUdCVUtuVC9SallQOTVscW5K?=
+ =?utf-8?B?blhtRHBweC80b2pZRnVTMFlhSzFHTE1XOFJwZDk2cmoyTTZpVWR1Q2w1ZWVh?=
+ =?utf-8?B?ekYyNXQzMDhzay9yc2h3L01Rd1B5SEVsQkFKd2ZPZmp1NzE2dnlKbUp2Um8x?=
+ =?utf-8?B?WTNSYVI5UzRWQldiY1hIa25wRVVVWHVOTHBUeHF1N3JPZXIzWVAwUlFxdEpN?=
+ =?utf-8?B?QytDcWFFd2FSSnJIQ3JGUXFXa2F4WE9FWHJVeWNGNXNsMXpJRzJ4dmhYSnhO?=
+ =?utf-8?B?TGJuT0o3aDdHZWMrVXhFamd3dFA3SkRDMEdBczZmUHNyU2pzVkQ1VHN5MXNa?=
+ =?utf-8?B?T0VmdVVPVnhXYi9hdWk5alBmVk9uZ1ZrNVFCUnRmZWdFMm1vNXd2WWZ5eWho?=
+ =?utf-8?B?TFJqczUvUGNRaFlFcUhiVGFCRUtnRjdIQVNxV1hqL0lObnNXT3BSRWQyMDdh?=
+ =?utf-8?B?YTRtRmt2eVZydk9NL0w5bUk4OGVselZnbWhkZ0Q5dUZ4NVlQN1dxTGxJR0w4?=
+ =?utf-8?B?M3J4WUsrTk9vaTRSQml3cE9DSm4rbUxscXdKREJpZWlwY2pWT3hXRkdxRGM3?=
+ =?utf-8?B?VmhTR2dzZk9IeE5Pb3dVY2l2OGZYTC9jWk5oNC9zSXVGaXlPcWlkanFrNmJh?=
+ =?utf-8?B?RTNFeDFFbUVvV3pRMUNKRTZZSFFldWFRVlFNbTlmSkF4UU9jVktobEZJM0FN?=
+ =?utf-8?B?Z1VFVE16cURJSVJtNDVDTmJKM1IvanRCUnI0TjlEbFNUcXo4QXg2bjh4eVJm?=
+ =?utf-8?B?cnE4TVUxUkRWK081alVPMmZKeVkwTGJCaEdxZ1N6TWRFa2NFUGVrV1dwUEU2?=
+ =?utf-8?B?amNDc3l0ejVIbDNESHN5UnJaVmVNQWNYUkFtbXVnZHBLa3QyZ2NsTGhCM2FX?=
+ =?utf-8?B?dmdmMzY2UUlVaDIweERtc0RoNm5TamNWUGNTWFdEVXBrN0xmVkFoQVljOW1N?=
+ =?utf-8?B?Z2NGUGdVUUxDL0VTS3l6QjhHT1JzQmh4M05MdXhhNGFTVEtTTWYwNHVyclJq?=
+ =?utf-8?B?VlBkaFQ5TFpaVSt2dXJ0NVlZOERGTE40eGs0VzF1clBrVVJvV25QZVZzK29W?=
+ =?utf-8?B?WWliYWFsd200WW55OUtPNVlMT0YrNjNXQmdCWWtXVlRyK0xiQ1MvNkptekZ1?=
+ =?utf-8?B?WWdQdXVyZ0l2NmFPSmtTSFpUclhKbzVhTGo4TXhMOWlPbUROUWNzYUwySzEr?=
+ =?utf-8?B?NFc2MllSREl5TThOcllBdlk4aWZ3REk1WlhFcUExT2hPTytOTHVYTXJNMVhL?=
+ =?utf-8?B?Nzk5UUt3NFovUW5Sc3hIQXNEVk9WR1daZVptVTJQN0lyQ0FzL1NDTzg1UDk2?=
+ =?utf-8?B?eFU1QXl3ZmRLYmdvdEhkQkxuYSsvcWpkRUM3Z0t0aVVleGN0a0Rsck9BVzhU?=
+ =?utf-8?B?K01UTWxHV2pVUkJ6amRweFQ2ellXYjNSNk5DOGZxSHBLMzdiRWt6bnNlS2Zj?=
+ =?utf-8?B?TXFaR3Jueit3QVdzS2tyckNMTDQxRm15TENRU2RvbDQ3UWxCZmNQRHZTSzVU?=
+ =?utf-8?B?UUx0YzV1Q2RCaFF2cTdYeUwrMnZRPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <368E4F0153ABFA4DA28C0E8C11243C19@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4513:b0:3d8:2032:ca67 with SMTP id
- e9e14a558f8ab-3da7e1e762bmr127904315ab.9.1747102466220; Mon, 12 May 2025
- 19:14:26 -0700 (PDT)
-Date: Mon, 12 May 2025 19:14:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6822ab02.050a0220.f2294.00cb.GAE@google.com>
-Subject: [syzbot] [bcachefs?] possible deadlock in __bch2_fsck_err (2)
-From: syzbot <syzbot+2c3ef91c9523c3d1a25c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR02MB10287.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce73d680-191d-4036-efc3-08dd91c3ee3e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2025 02:14:45.7695
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sxUqP3kif4clCpUy3kEbuuqCCxIkE0kqexU3XTYp9KaSfjjMwWM0IL85HojdLmgKMoBtr4NisW1tH0q/qSrlrau5ga0hhu1X9rs17smbv00=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7151
+X-Proofpoint-GUID: G9F7VwopmTnzymO-kAc8uUUg-5-aMXVv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDAxOSBTYWx0ZWRfX+LxLMjNMX7Go klquPQZIHDLgcSa9r7W1ClOBeE/eR2Ucni/epBH20tUOJoY5swR0WiDK9xbdfSqbVP19r5xr1yu bGUbluWVPCgVnMEydXCFtWA4/NOjgZQGky26n5fKOrP2HSlyFOXWvXQvfq26xvlVL/PH/oMk2dC
+ +JGBBceNYcQEZc19w+YiA76Lgq0ER75DahNgnO9H3Cqfqrvzrm7d2iT1a8zRgO99PqeMBq8RXVF HxS2a5YwcwOJ8og5paQtMasfiJrOt+9uTcln/OSKpDR1kyoFsY4vqCsKLhVFV/AL1ce6ELN5Mcl y4WNJ57ass6NHRbLppD5mFion9dzXkfKXLcV1wGPfFwgq1Lt79DMYpmlygSGRbB1GrjWXSXEae4
+ p8HIlr2QZIrYC2oIvop0PeaDY7L9sL6MpG7GPujHoRHWjyng14k/X6OzNhVKGoDgoKWJx6b/
+X-Authority-Analysis: v=2.4 cv=FZs3xI+6 c=1 sm=1 tr=0 ts=6822ab18 cx=c_pps a=F+2k2gSOfOtDHduSTNWrfg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=0kUYKlekyDsA:10 a=1XWaLZrsAAAA:8 a=gl23KLxdzlndNxrgooIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: G9F7VwopmTnzymO-kAc8uUUg-5-aMXVv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Reason: safe
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a7b4f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=2c3ef91c9523c3d1a25c
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1385f4f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f694d4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/bef5d39edee9/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/ae8072e17390/mount_8.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2c3ef91c9523c3d1a25c@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 Not tainted
-------------------------------------------------------
-kworker/u8:5/201 is trying to acquire lock:
-ffff80008f4edda0 (console_lock){+.+.}-{0:0}, at: __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-ffff80008f4edda0 (console_lock){+.+.}-{0:0}, at: bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-
-but task is already holding lock:
-ffff0000ebae1448 (&c->fsck_error_msgs_lock){+.+.}-{4:4}, at: __bch2_fsck_err+0x370/0xdd0 fs/bcachefs/error.c:455
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #9 (&c->fsck_error_msgs_lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __bch2_count_fsck_err+0x58/0x98 fs/bcachefs/error.c:385
-       __bch2_i_sectors_acct+0x328/0x3c4 fs/bcachefs/fs-io.c:155
-       bch2_i_sectors_acct fs/bcachefs/fs-io.h:138 [inline]
-       bchfs_truncate+0x684/0xa70 fs/bcachefs/fs-io.c:510
-       bch2_setattr+0x198/0x20c fs/bcachefs/fs.c:1245
-       notify_change+0x9a4/0xc50 fs/attr.c:552
-       do_truncate+0x178/0x1f0 fs/open.c:65
-       handle_truncate fs/namei.c:3501 [inline]
-       do_open fs/namei.c:3884 [inline]
-       path_openat+0x25a0/0x2c40 fs/namei.c:4039
-       do_filp_open+0x18c/0x36c fs/namei.c:4066
-       do_sys_openat2+0x11c/0x1b4 fs/open.c:1429
-       do_sys_open fs/open.c:1444 [inline]
-       __do_sys_openat fs/open.c:1460 [inline]
-       __se_sys_openat fs/open.c:1455 [inline]
-       __arm64_sys_openat+0x120/0x158 fs/open.c:1455
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #8 (&inode->ei_quota_lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       bch2_quota_reservation_add fs/bcachefs/fs-io.h:97 [inline]
-       __bch2_folio_reservation_get+0x5c0/0xa00 fs/bcachefs/fs-io-pagecache.c:460
-       bch2_folio_reservation_get fs/bcachefs/fs-io-pagecache.c:477 [inline]
-       bch2_page_mkwrite+0xa48/0xd60 fs/bcachefs/fs-io-pagecache.c:637
-       do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-       wp_page_shared mm/memory.c:3688 [inline]
-       do_wp_page+0x1b54/0x43a8 mm/memory.c:3907
-       handle_pte_fault mm/memory.c:6013 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1064/0x4cec mm/memory.c:6309
-       do_page_fault+0x428/0x1554 arch/arm64/mm/fault.c:647
-       do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
-       el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #7 (sb_pagefaults){.+.+}-{0:0}:
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       bch2_page_mkwrite+0x260/0xd60 fs/bcachefs/fs-io-pagecache.c:614
-       do_page_mkwrite+0x138/0x2b8 mm/memory.c:3287
-       wp_page_shared mm/memory.c:3688 [inline]
-       do_wp_page+0x1b54/0x43a8 mm/memory.c:3907
-       handle_pte_fault mm/memory.c:6013 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x1064/0x4cec mm/memory.c:6309
-       do_page_fault+0x428/0x1554 arch/arm64/mm/fault.c:647
-       do_mem_abort+0x70/0x194 arch/arm64/mm/fault.c:919
-       el0_da+0x64/0x160 arch/arm64/kernel/entry-common.c:627
-       el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:789
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #6 (vm_lock){++++}-{0:0}:
-       __vma_enter_locked+0x184/0x354 mm/memory.c:6473
-       __vma_start_write+0x34/0x158 mm/memory.c:6497
-       vma_start_write include/linux/mm.h:829 [inline]
-       vma_expand+0x1b8/0x8f0 mm/vma.c:1086
-       relocate_vma_down+0x234/0x400 mm/mmap.c:1767
-       setup_arg_pages+0x4b4/0x920 fs/exec.c:800
-       load_elf_binary+0x8c4/0x1ebc fs/binfmt_elf.c:1019
-       search_binary_handler fs/exec.c:1778 [inline]
-       exec_binprm fs/exec.c:1810 [inline]
-       bprm_execve+0x77c/0x10dc fs/exec.c:1862
-       kernel_execve+0x70c/0x7f4 fs/exec.c:2028
-       run_init_process+0x1bc/0x1ec init/main.c:1378
-       try_to_run_init_process+0x20/0x7c init/main.c:1385
-       kernel_init+0xa8/0x1dc init/main.c:1513
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #5 (&mm->mmap_lock){++++}-{4:4}:
-       __might_fault+0xc4/0x124 mm/memory.c:7151
-       drm_mode_object_get_properties+0x1f0/0x524 drivers/gpu/drm/drm_mode_object.c:407
-       drm_mode_getconnector+0xd78/0x1254 drivers/gpu/drm/drm_connector.c:3399
-       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
--> #4 (crtc_ww_class_mutex){+.+.}-{4:4}:
-       ww_acquire_init include/linux/ww_mutex.h:162 [inline]
-       drm_modeset_acquire_init+0x1d8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drmm_mode_config_init+0xb0c/0x10d8 drivers/gpu/drm/drm_mode_config.c:462
-       vkms_modeset_init drivers/gpu/drm/vkms/vkms_drv.c:146 [inline]
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:207 [inline]
-       vkms_init+0x2c0/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #3 (crtc_ww_class_acquire){+.+.}-{0:0}:
-       ww_acquire_init include/linux/ww_mutex.h:161 [inline]
-       drm_modeset_acquire_init+0x1b8/0x374 drivers/gpu/drm/drm_modeset_lock.c:250
-       drm_client_modeset_commit_atomic+0xcc/0x6ac drivers/gpu/drm/drm_client_modeset.c:1018
-       drm_client_modeset_commit_locked+0xd0/0x4a0 drivers/gpu/drm/drm_client_modeset.c:1182
-       drm_client_modeset_commit+0x50/0x7c drivers/gpu/drm/drm_client_modeset.c:1208
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x94/0x198 drivers/gpu/drm/drm_fb_helper.c:237
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #2 (&client->modeset_mutex){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       drm_client_modeset_probe+0x2f0/0x4e88 drivers/gpu/drm/drm_client_modeset.c:843
-       __drm_fb_helper_initial_config_and_unlock+0xf0/0x159c drivers/gpu/drm/drm_fb_helper.c:1828
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #1 (&helper->lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
--> #0 (console_lock){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
-       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
-       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-       __bch2_fsck_err+0xb5c/0xdd0 fs/bcachefs/error.c:562
-       __need_discard_or_freespace_err+0x14c/0x1cc fs/bcachefs/alloc_background.c:678
-       bch2_bucket_do_index+0x320/0x490 fs/bcachefs/alloc_background.c:729
-       bch2_trigger_alloc+0xd1c/0x2d54 fs/bcachefs/alloc_background.c:885
-       bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
-       bch2_key_trigger_new fs/bcachefs/bkey_methods.h:116 [inline]
-       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:516 [inline]
-       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
-       __bch2_trans_commit+0x634/0x62d0 fs/bcachefs/btree_trans_commit.c:990
-       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
-       btree_update_nodes_written fs/bcachefs/btree_update_interior.c:705 [inline]
-       btree_interior_update_work+0xb80/0x1cfc fs/bcachefs/btree_update_interior.c:843
-       process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
-       process_scheduled_works kernel/workqueue.c:3319 [inline]
-       worker_thread+0x958/0xed8 kernel/workqueue.c:3400
-       kthread+0x5fc/0x75c kernel/kthread.c:464
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-
-other info that might help us debug this:
-
-Chain exists of:
-  console_lock --> &inode->ei_quota_lock --> &c->fsck_error_msgs_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&c->fsck_error_msgs_lock);
-                               lock(&inode->ei_quota_lock);
-                               lock(&c->fsck_error_msgs_lock);
-  lock(console_lock);
-
- *** DEADLOCK ***
-
-5 locks held by kworker/u8:5/201:
- #0: ffff0000d985d948 ((wq_completion)btree_update#5){+.+.}-{0:0}, at: process_one_work+0x658/0x156c kernel/workqueue.c:3212
- #1: ffff80009b8d7bc0 ((work_completion)(&c->btree_interior_update_work)){+.+.}-{0:0}, at: process_one_work+0x6ec/0x156c kernel/workqueue.c:3212
- #2: ffff0000eba84228 (&c->btree_trans_barrier){.+.+}-{0:0}, at: srcu_lock_acquire+0x18/0x54 include/linux/srcu.h:160
- #3: ffff0000cf2bc140 (bcachefs_btree){+.+.}-{0:0}, at: trans_set_locked+0x68/0x200 fs/bcachefs/btree_locking.h:197
- #4: ffff0000ebae1448 (&c->fsck_error_msgs_lock){+.+.}-{4:4}, at: __bch2_fsck_err+0x370/0xdd0 fs/bcachefs/error.c:455
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 201 Comm: kworker/u8:5 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: btree_update btree_interior_update_work
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- console_lock+0x194/0x1ec kernel/printk/printk.c:2849
- __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
- bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
- __bch2_fsck_err+0xb5c/0xdd0 fs/bcachefs/error.c:562
- __need_discard_or_freespace_err+0x14c/0x1cc fs/bcachefs/alloc_background.c:678
- bch2_bucket_do_index+0x320/0x490 fs/bcachefs/alloc_background.c:729
- bch2_trigger_alloc+0xd1c/0x2d54 fs/bcachefs/alloc_background.c:885
- bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
- bch2_key_trigger_new fs/bcachefs/bkey_methods.h:116 [inline]
- run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:516 [inline]
- bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
- __bch2_trans_commit+0x634/0x62d0 fs/bcachefs/btree_trans_commit.c:990
- bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
- btree_update_nodes_written fs/bcachefs/btree_update_interior.c:705 [inline]
- btree_interior_update_work+0xb80/0x1cfc fs/bcachefs/btree_update_interior.c:843
- process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x958/0xed8 kernel/workqueue.c:3400
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-bcachefs (loop2): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:1:0 len 0 ver 0, , continuing
-bcachefs (loop2): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:4:0 len 0 ver 0, , continuing
-bcachefs (loop2): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:6:0 len 0 ver 0, , continuing
-bcachefs (loop2): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:9:0 len 0 ver 0, , continuing
-bcachefs (loop0): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:1:0 len 0 ver 0, , continuing
-bcachefs (loop0): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:4:0 len 0 ver 0, , continuing
-bcachefs (loop0): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:6:0 len 0 ver 0, , continuing
-bcachefs (loop0): bucket incorrectly unset in freespace btree
-  u64s 5 type deleted 0:9:0 len 0 ver 0, , continuing
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+DQoNCj4gT24gTWF5IDEyLCAyMDI1LCBhdCAyOjMy4oCvUE0sIFNlYW4gQ2hyaXN0b3BoZXJzb24g
+PHNlYW5qY0Bnb29nbGUuY29tPiB3cm90ZToNCj4gDQo+ICEtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfA0KPiAgQ0FVVElP
+TjogRXh0ZXJuYWwgRW1haWwNCj4gDQo+IHwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIQ0KPiANCj4gT24gVGh1LCBNYXIg
+MTMsIDIwMjUsIEpvbiBLb2hsZXIgd3JvdGU6DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3Zt
+L21tdS9zcHRlLmggYi9hcmNoL3g4Ni9rdm0vbW11L3NwdGUuaA0KPj4gaW5kZXggNzFkNmZlMjhm
+YWZjLi5kOWUyMjEzM2I2ZDAgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9rdm0vbW11L3NwdGUu
+aA0KPj4gKysrIGIvYXJjaC94ODYva3ZtL21tdS9zcHRlLmgNCj4+IEBAIC00NSw3ICs0NSw5IEBA
+IHN0YXRpY19hc3NlcnQoU1BURV9URFBfQURfRU5BQkxFRCA9PSAwKTsNCj4+ICNkZWZpbmUgQUND
+X0VYRUNfTUFTSyAgICAxDQo+PiAjZGVmaW5lIEFDQ19XUklURV9NQVNLICAgUFRfV1JJVEFCTEVf
+TUFTSw0KPj4gI2RlZmluZSBBQ0NfVVNFUl9NQVNLICAgIFBUX1VTRVJfTUFTSw0KPj4gLSNkZWZp
+bmUgQUNDX0FMTCAgICAgICAgICAoQUNDX0VYRUNfTUFTSyB8IEFDQ19XUklURV9NQVNLIHwgQUND
+X1VTRVJfTUFTSykNCj4+ICsjZGVmaW5lIEFDQ19VU0VSX0VYRUNfTUFTSyAoMVVMTCA8PCAzKQ0K
+Pj4gKyNkZWZpbmUgQUNDX0FMTCAgICAgICAgICAoQUNDX0VYRUNfTUFTSyB8IEFDQ19XUklURV9N
+QVNLIHwgQUNDX1VTRVJfTUFTSyB8IFwNCj4+ICsgIEFDQ19VU0VSX0VYRUNfTUFTSykNCj4gDQo+
+IFRoaXMgaXMgdmVyeSBzdWJ0bHkgYSBtYXNzaXZlIGNoYW5nZSwgYW5kIEknbSBub3QgY29udmlu
+Y2VkIGl0cyBvbmUgd2Ugd2FudCB0bw0KPiBtYWtlLiAgQWxsIHVzYWdlIGluIHRoZSBub24tbmVz
+dGVkIFREUCBmbG93cyBpcyBhcmd1YWJseSB3cm9uZywgYmVjYXVzZSBLVk0gc2hvdWxkDQo+IG5l
+dmVyIGVuYWJsZSBNQkVDIHdoZW4gdXNpbmcgbm9uLW5lc3RlZCBURFAuDQo+IA0KPiBBbmQgdGhl
+IHVzZSBpbiBrdm1fY2FsY19zaGFkb3dfZXB0X3Jvb3RfcGFnZV9yb2xlKCkgaXMgd3JvbmcsIGJl
+Y2F1c2UgdGhlIHJvb3QNCj4gcGFnZSByb2xlIHNob3VsZG4ndCBpbmNsdWRlIEFDQ19VU0VSX0VY
+RUNfTUFTSyBpZiB0aGUgYXNzb2NpYXRlZCBWTUNTIGRvZXNuJ3QNCj4gaGF2ZSBNQkVDLiAgRGl0
+dG8gZm9yIHRoZSB1c2UgaW4ga3ZtX2NhbGNfY3B1X3JvbGUoKS4NCj4gDQo+IFNvIEknbSBwcmV0
+dHkgc3VyZSB0aGUgb25seSBiaXQgb2YgdGhpcyBjaGFuZ2UgdGhhdCBpcyBkZXNyaWFibGUvY29y
+cmVjdCBpcyB0aGUNCj4gdXNhZ2UgaW4ga3ZtX21tdV9wYWdlX2dldF9hY2Nlc3MoKS4gIChBbmQg
+SSBndWVzcyBtYXliZSB0cmFjZV9tYXJrX21taW9fc3B0ZSgpPykNCj4gDQo+IE9mZiB0aGUgY3Vm
+ZiwgSSBkb24ndCBrbm93IHdoYXQgdGhlIGJlc3QgYXBwcm9hY2ggaXMuICBPbmUgdGhvdWdodCB3
+b3VsZCBiZSB0bw0KPiBwcmVwIGZvciBhZGRpbmcgQUNDX1VTRVJfRVhFQ19NQVNLIHRvIEFDQ19B
+TEwgYnkgaW50cm9kdWNpbmcgQUNDX1JXWCBhbmQgdXNpbmcNCj4gdGhhdCB3aGVyZSBLVk0gcmVh
+bGx5IGp1c3Qgd2FudHMgdG8gc2V0IFJXWCBwZXJtaXNzaW9ucy4gIFRoYXQgd291bGQgZnJlZSB1
+cA0KPiBBQ0NfQUxMIGZvciB0aGUgZmV3IGNhc2VzIHdoZXJlIEtWTSByZWFsbHkgdHJ1bHkgd2Fu
+dHMgdG8gY2FwdHVyZSBhbGwgYWNjZXNzIGJpdHMuDQoNCkF0IGZpcnN0IGJsdXNoLCBJIGxpa2Ug
+dGhpcyBBQ0NfUldYIGlkZWEuIEnigJlsbCBjaGV3IG9uIHRoYXQgYW5kIHNlZSB3aGF0DQp0cm91
+YmxlIEkgY2FuIGdldCBpbi4NCg0K
