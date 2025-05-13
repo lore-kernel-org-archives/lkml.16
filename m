@@ -1,194 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B055B1A3A8D;
-	Tue, 13 May 2025 15:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32991A3A8D;
+	Tue, 13 May 2025 15:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747151597; cv=none; b=niCPQhKl3hR5BQL8+R0qrSyHH0fkyuMBeTaScdmqeS6jiyJ4iKKdBuUGUiRuvYU+4NGFeV6l+UGwKkDqYN6bBA6vCBifWbWMlHLtd0b5PGIb5qW/NX/TR5OnvPMK0qCc/ntaUv2GQF8X3emjRIvpK06F68idZ0h97Yp/+ffzxSw=
+	t=1747151612; cv=none; b=XO1FpC+iA8cfZZ/xvJQOS5Kg11LAr38h+3SOp+UYpeNhPyJfYemYm/k7rv0raKK/wFauliyCWlH9XgtaP8Ybxa8UtY3GD7aRVllHWoLGeRguEh1LGa/rA/H1hRtdktK5eFTGLxuuNzcVtAP7Df8S2Oprhgp76r8ePeKWhe3OVWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747151597; c=relaxed/simple;
-	bh=bGea28BdYlH0En91j3DBfSyfXO+62W84BSnvaKbiFxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMrJ+adcWquDgT3wVgRiPjwL0b0iqfWBaGwip1oOOeW9cLOEKAIxcW17pVSO06XvtUjxOK26X2aTR64tdLrHQc+wiLOQhNPuIuBSaXfb3zDZ07IszLeQnkHFv8ootyaLc4r7g5q4dYkB+CghfJ4erMWhgprPh5eMNUJ8hDR0f/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1RPcaND; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747151612; c=relaxed/simple;
+	bh=hu7KL6SGvQ91ChmM4dOxm/FwnmotCZDHZWO4BDpNTOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jCQETMIs8lMfzNVHml3/TBxwWlSFXSzfDtViKdj9b9nbOTL6yRxvoUdKaeMdxkQgnnZg0IsHevAotFEddRbRe2zsOJzVOojbEqaAps/y5jZMJRM6KU86BwCIW4SL7QCjfo90kiO+mrS5wSLNEc0A4MaiYrwpTcw+r9rszYdHG/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=IkMrIhBn; arc=none smtp.client-ip=5.135.140.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1RPcaND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574E9C4CEE4;
-	Tue, 13 May 2025 15:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747151595;
-	bh=bGea28BdYlH0En91j3DBfSyfXO+62W84BSnvaKbiFxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I1RPcaNDM3rlbUb38uz4rTUDyU8Zvjtj4QQuJoRnicTgyNv/o9KxENj8B4NL6bF3s
-	 z5uZdD89UKe+zD6/14St1KZ3Lo6eQ8W7CGIi4pxI+GANzuhzTv/ojw+aR4p5rkuuQK
-	 YN5Dqeyhygf9OTPdgFN2K0tgxIdBMirZ1Jf/U+ZK8Pl5asl5pTb82g9fJFECjCUyat
-	 gT61jnQ1VVlqRvZwb6CmSnlpZI6yjDfCGYJFGD/4/vKYDASyNtbVsGLlGZKq+vgCcY
-	 x4UKqR3ckkW0kYuWJBFKSfBxkxsfWBFM4KUNO28EvpnPzYTm0YSl2zc3CEw7l0EBKn
-	 STSJUxz4nkRYg==
-Date: Tue, 13 May 2025 16:53:09 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	tim609@andestech.com
-Subject: Re: [PATCH v3 6/9] dt-bindings: cache: add QiLai compatible to ax45mp
-Message-ID: <20250513-duplex-collage-5a52f50b74bb@spud>
-References: <20250513094933.1631493-1-ben717@andestech.com>
- <20250513094933.1631493-7-ben717@andestech.com>
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="IkMrIhBn"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CBEC8135653;
+	Tue, 13 May 2025 17:53:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
+	t=1747151608; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=xuqyAAuoDMtQl7aHc6ogdkm/UKwvvmnE5+dcBd3QudM=;
+	b=IkMrIhBnJaCErPFw1yEBeZgaFvMO39PNrFDmmXYjXNLBaKjIzoJtB8wGIinVp1i4Yj3QH0
+	/aKR23//abEyMb0eAe/tWrVJ9qjo4gGwHrsE1QahL6HoGVYmXqTGGFFAMoDMFGu12nmghF
+	su6eAIAPrpv7DR9A/r/4SGsvKzJCnA2KIfQWH7vaQwV318LY9HfR80aCgZcvN9Sl/+bjLb
+	cOiPpxnWB2n+tBdvSXOgVW8dyDg6EGzYk7blIC1oMCL0Ux/+NQELPeIXMzFSicj4lQlGtI
+	Gq5waCU93MqwSSpb/jHufZOEqFgphhPRotzJOkuxqJfkvDsXP+Kq9+RsrtmM4Q==
+Message-ID: <927c8a59-ac1b-49dc-b889-22c3a65bb49c@cjdns.fr>
+Date: Tue, 13 May 2025 17:53:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Hn+PSynL2KApRliI"
-Content-Disposition: inline
-In-Reply-To: <20250513094933.1631493-7-ben717@andestech.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v5 0/7] Add EcoNet EN751221 MIPS platform support
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
+References: <20250507134500.390547-1-cjd@cjdns.fr>
+ <aCNWM5Xq7wnHVCrc@mai.linaro.org>
+ <45166de2-8504-484d-90f6-6ef97c650b61@cjdns.fr>
+ <aCNkmCJK1wOLGmgy@mai.linaro.org>
+Content-Language: en-US
+From: Caleb James DeLisle <cjd@cjdns.fr>
+In-Reply-To: <aCNkmCJK1wOLGmgy@mai.linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
 
---Hn+PSynL2KApRliI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13/05/2025 17:26, Daniel Lezcano wrote:
+> On Tue, May 13, 2025 at 04:31:05PM +0200, Caleb James DeLisle wrote:
+>> On 13/05/2025 16:24, Daniel Lezcano wrote:
+>>> On Wed, May 07, 2025 at 01:44:53PM +0000, Caleb James DeLisle wrote:
+>>>> EcoNet MIPS SoCs are big endian machines based on 34Kc and 1004Kc
+>>>> processors. They are found in xDSL and xPON modems, and contain PCM
+>>>> (VoIP), Ethernet, USB, GPIO, I2C, SPI (Flash), UART, and PCIe.
+>>>>
+>>>> The EcoNet MIPS SoCs are divided broadly into two families, the
+>>>> EN751221 family based on the 34Kc, and the EN751627 family based on
+>>>> the 1004Kc. Individual SoCs within a family are very similar, only
+>>>> with different peripherals.
+>>>>
+>>>> This patchset adds basic "boots to a console" support for the EN751221
+>>>> family and adds SmartFiber XP8421-B, a low cost commercially available
+>>>> board that is useful for testing and development.
+>>>>
+>>>> Note that Airoha (AN7523, AN7581) is similar to EcoNet in terms of
+>>>> peripherals, and for historical reasons Airoha chips are sometimes
+>>>> referred to with the EN75xx prefix. However this is a different
+>>>> platform because Airoha chips are ARM based.
+>>>>
+>>>> This patchset is against mips-next.
+>>>>
+>>>> v4 -> v5
+>>>> * 2/7 clocksource/drivers: Add EcoNet Timer HPT driver:
+>>>>     * Improve explanation of HPT timer in changelog
+>>>>     * Move pr_info to pr_debug per recommendation
+>>>>     * Remove pointless debug on spurious interrupt
+>>>>     * Small code-style change
+>>> Shall I pick the clocksource + bindings changes through my tree ?
+>>>
+>> I'm new here so I don't know what that means for the merges which
+>> will happen later, but I don't see any reason to do otherwise.
+> The series introduces a new platform. The patches are touching
+> different susystems managed by different maintainers.
+>
+> Usually, the changes are per subsystem, except when they are
+> interdependant.
+>
+> Here you can choose to merge all the patches through the mips tree or
+> let the different maintainers to pick the changes related to the
+> subsystems they handle. You should clarify that in the cover
+> letter. If you choose the first alternative, then before merging the
+> changes, all maintainer should have blessed the patches with their
+> acked-by.
+>
+Thank you for the explanation, this patchset has already started to be
+taken piece-wise, and the only dependency that comes to mind
+is the econet vendor prefix which Rob Herring took few weeks ago.
 
-On Tue, May 13, 2025 at 05:49:30PM +0800, Ben Zong-You Xie wrote:
-> Add a new compatible string for ax45mp-cache on QiLai SoC.
->=20
-> Also, add allOf constraints to enforce specific cache-sets and cache-size
-> values for each compatible string.
+With that said, I see no reason not to continue taking it piece-wise.
 
-"Also" is a massive hint that this should be two patches. I think the
-Renesas part (if it can only do 1024/262144, and is not configurable)
-should be a patch of its own, since it is valid independent of this
-being added.
+Thanks,
 
->=20
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  .../cache/andestech,ax45mp-cache.yaml         | 52 +++++++++++++++++--
->  1 file changed, 47 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/cache/andestech,ax45mp-cac=
-he.yaml b/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.ya=
-ml
-> index df8bba14f758..dc03ffae6c9f 100644
-> --- a/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.yaml
-> +++ b/Documentation/devicetree/bindings/cache/andestech,ax45mp-cache.yaml
-> @@ -28,7 +28,9 @@ select:
->  properties:
->    compatible:
->      items:
-> -      - const: renesas,r9a07g043f-ax45mp-cache
-> +      - enum:
-> +          - andestech,qilai-ax45mp-cache
-> +          - renesas,r9a07g043f-ax45mp-cache
->        - const: andestech,ax45mp-cache
->        - const: cache
-> =20
-> @@ -44,11 +46,9 @@ properties:
->    cache-level:
->      const: 2
-> =20
-> -  cache-sets:
-> -    enum: [1024, 2048]
+Caleb
 
-^^ this and...
-
-> +  cache-sets: true
-> =20
-> -  cache-size:
-> -    enum: [131072, 262144, 524288, 1048576, 2097152]
-
-=2E.. ^^ this should remain at the top level...
-
-> +  cache-size: true
-> =20
->    cache-unified: true
-> =20
-> @@ -66,7 +66,49 @@ required:
->    - cache-size
->    - cache-unified
-> =20
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: andestech,qilai-ax45mp-cache
-> +
-> +    then:
-> +      properties:
-> +        cache-sets:
-> +          const: 2048
-> +        cache-size:
-> +          const: 2097152
-
-=2E..and you just constrain things here. Effectively this means just
-restore the enum outside the if/then/else.
-
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: renesas,r9a07g043f-ax45mp-cache
-> +
-> +    then:
-> +      properties:
-> +        cache-sets:
-> +          const: 1024
-> +        cache-size:
-> +          const: 262144
-> +
->  examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-
-Honestly, just delete this whole example, it doesn't do anything
-meaningfully different from the existing one.
-
-> +    l2_cache: cache-controller@200000 {
-
-But if you don't delete the example, remove the "l2_cache" label cos it
-is unused.
-
-
-Cheers,
-Conor.
-
-> +        compatible =3D "andestech,qilai-ax45mp-cache", "andestech,ax45mp=
--cache",
-> +                     "cache";
-> +        reg =3D <0x00200000 0x100000>;
-> +        interrupts =3D <16 IRQ_TYPE_LEVEL_HIGH>;
-> +        cache-line-size =3D <64>;
-> +        cache-level =3D <2>;
-> +        cache-sets =3D <2048>;
-> +        cache-size =3D <2097152>;
-> +        cache-unified;
-> +    };
-> +
->    - |
->      #include <dt-bindings/interrupt-controller/irq.h>
-> =20
-> --=20
-> 2.34.1
->=20
-
---Hn+PSynL2KApRliI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCNq5QAKCRB4tDGHoIJi
-0v7rAPsFhJbHaCPBhRimiE9I+FLuciA6lcf8JDnxppQLNLe1swEA+quUTT+7Ll1N
-7ZUvKDF4vkqbcGzirfTwqsdYCnwJIgM=
-=L0Zu
------END PGP SIGNATURE-----
-
---Hn+PSynL2KApRliI--
