@@ -1,107 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1312F20E6E7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FE52222D3;
+	Tue, 13 May 2025 09:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128562; cv=none; b=ShkZgoFofUQs2+1WI0AjMu+V9EUYo8DiqylA0qOLI4SkoISPmO4YP5jueO05ucEBtw6GNgXDvM2CnByQz9RzK8EUrlnGqGtqwqQafAu79CJxVGw1Aha1KmXt1Y0KbAlDC0CcAtV4GSQLVhPirWuyFKoVPsxWsW6r4ZFqYob/D6E=
+	t=1747128592; cv=none; b=M5uQqvSfbA3NzmWFj62jg1yZtwNHupD9h5Vs/03VlkzogFdFth926MlrPumFX3WXnhgsqF64p1lxInSEhCpZn+KZGBtFS9WHC/t3qXf1yvibaoM/8hAlo/6lM6Sb1DtxAEWeLt+JWFzwUPyw5nsEqy5tGCcPF0XUfht6XN8Dx4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128562; c=relaxed/simple;
-	bh=8O7CUj/TgXcdonn9vBDT5qTqdIn+fJHSMgChw4LhMjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0sczwTKB8X8aaGzMHjuBK+Gzv9CrH+1Mj1d5QJhVpwTkh6alao+CS0dBCZIqL67aFIqSNkrJ3MZS6BYIOfWi0U7/TdLU+sne7FtPSJiki349PF96UGNOTrZBHdYF/EXXZOpW14trG8NWWmpDrzCW8/kWycgsdNmZEIxDZ62E3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X8HqYb3T; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747128592; c=relaxed/simple;
+	bh=lwuNQzkVZY+r3BjYV69YcvGsn1lcu7z4FuHiHAtN86Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nCLI80sOik6eLMuVubliYvW19Ck9/1+0ozsrG2svG7S4Gq+SfVvWvBZqChd4b2/G9bI6Khb0rDmgWVcp94WlIySiGYmm3YA5IC7jAUlWD8cysVZmY4WMJ9BpfmD40b6dkgg7GwXXan+AUhM6VrNwRm3Gn1DoujXaYr3QmTI/edM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHXFY5q6; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8HqYb3T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747128560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=93t4tFkIyPCogX7UwUqjdNFHzcw9/x4QgZzmXcOPlSo=;
-	b=X8HqYb3TI7JgDhFqXD1+i8yUddYAsvNmMka87R2sp63BneTtdKvHN2PoXlEEsfJ3dA2iEB
-	lcheWQsNegrmaA3a8Vccu27U5YkRrM6CK2Te73PBhGoPHcFUG1fX/P6LhZ0phdNzz3kv1/
-	S2lRkX090B+APVWqqhufZN1gNwCRrBE=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-D5izl036PjW_6LLqymc3TA-1; Tue,
- 13 May 2025 05:29:17 -0400
-X-MC-Unique: D5izl036PjW_6LLqymc3TA-1
-X-Mimecast-MFC-AGG-ID: D5izl036PjW_6LLqymc3TA_1747128555
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F5F51955DB2;
-	Tue, 13 May 2025 09:29:15 +0000 (UTC)
-Received: from redhat.com (unknown [10.45.224.238])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E8BD1953B82;
-	Tue, 13 May 2025 09:29:12 +0000 (UTC)
-Date: Tue, 13 May 2025 11:29:09 +0200
-From: Kevin Wolf <kwolf@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-	bmarzins@redhat.com, linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCMQ5S-gI6vZJxmq@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <aCLe5UT2kfzI96TQ@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHXFY5q6"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22fa47d6578so54305625ad.2;
+        Tue, 13 May 2025 02:29:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747128591; x=1747733391; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=g0FbxF4j+yV005ArDJfZEQRtUEXUG2HW1Azh2TjM6qQ=;
+        b=JHXFY5q622JRys8hWA04YDSoY1yTn76eb8ONcjs3H+lfD+MJgB3IQrdmaBkLyOF2yc
+         QEwdQ+ebrg1OWe4SKEWckJZMM3jS+Hn1Cbbso8jj9iSbudNk7O3lXag/KVMR9uSjOnLW
+         yLBfEgQjaRt2Qge+0+SyUkw37K9fNKb1UQF4KrdylCIQD2FPR5NpMxZZWo0c+fXztCU2
+         VFYVKlrscLVehulTsQK24Xjdug8DEWgRSBKT/pU12oUs94JlLd5Wc/k3Q4ceJGZ6bdCz
+         DarzNTBbOtPkRNdhZCCXzxn/fATP3hWxBFl0cgI5rbgdK6rZ5wADHvfTe4Al10/BNvkw
+         dXeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747128591; x=1747733391;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g0FbxF4j+yV005ArDJfZEQRtUEXUG2HW1Azh2TjM6qQ=;
+        b=msJHYVh6r81ZRre9zVnb9ZrBxT1WgN146+gk9dXaZRRqLZSKtQNAtavPJmL5DBoNFx
+         zNT2fYNk3GOAMwxD+PLcS4LkN7MY/Q2zKd/pU+ZOg1h7klGUxdFNPtp7WozXoZGgCpna
+         x3HsinfkrS1tz2FE1KBfg6vzJaGpd4+4vnwM0vwCuQf3GpAsbQNG1v4Ljw7gZ8ndoGiY
+         TYJ65ffTOM1FkA2lTcpaQ9FOPqPwD7zahga38G8oCnN/DhBMTsCGufHJ+T7AnERyEmC0
+         Rf0mrN/cYeXM8C0ZAepBwiNPiHErw8U7FZuyy7aJkbByuRCwNtk8msloInA4FwEMGP5p
+         G5yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX2QK4uk9n4HJ/wgozwXommXOyfMhnvudjbIVilkYV12Xy0au9OaSOQtfwiFs4IDAaNhgbCshM@vger.kernel.org, AJvYcCWXD67elpysVFaXkpXpU4dg4c7RitNxSpKWS0z6enZHetJUIDpN7Im8YaRYbxzz+xu6UMXTv6ICRL7FzGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyByk7M2H4aDb+A+3nZcMb0zk247udIE/YjeHdfuNo5/pNsfg+1
+	MWwYBdRGT2wqNT0QfmweR7yLWoLJoloigMYkV5brXFBKQCWP2WDe
+X-Gm-Gg: ASbGnctL/Ub8doPI6K3dKCjR4kweCPmHvfNNWS4PkSPU3kXtZPbA9H4KnYh+cSSdQ61
+	gvRLAV/zyntNQOk/A73P2hIIlOa6Iobf4mjQGjmVeQpBB+w10KwueXstAkSCOuGEyV5NpE4CXXf
+	f8JrgihlZx0hsevHLFqBuHor+6MSEe5jG/BZ2ko1h7MVcaRVO19teTPZciidgT3KmkBhDy4MDhd
+	vQfjInGojtq0JsbCalUK56OiPVOPYyoXfBvjrY9zBydtFslu7jHGbgScPQ3gHvsWqnhiNTTsT7/
+	+6ZlbOBC4Kk+MT7FhsLoLPzcLlCIfwNAZ4/BjiihJ4RBJGsTiOAesgZvyG86lUEu5pRWnL11aQr
+	GhAWeQkYaOUTJy4fNxiEnp0arbP5TK4Mx8juPzQ==
+X-Google-Smtp-Source: AGHT+IFajfHqbu4LbEcFiAzWJeLvYPulEit9SQtbrCnulAq3KRzKom7xG3bcmHEz+/YVp29nrxS5BQ==
+X-Received: by 2002:a17:902:ced1:b0:22e:4db0:6b2 with SMTP id d9443c01a7336-22fc8b107f4mr214961565ad.9.1747128590674;
+        Tue, 13 May 2025 02:29:50 -0700 (PDT)
+Received: from [192.168.1.24] (90-47-60-187.ftth.fr.orangecustomers.net. [90.47.60.187])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7742e1dsm76849965ad.78.2025.05.13.02.29.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 02:29:49 -0700 (PDT)
+Message-ID: <ef73c998-fa93-4681-a87c-ef9dcd70034f@gmail.com>
+Date: Tue, 13 May 2025 11:29:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCLe5UT2kfzI96TQ@infradead.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 00/54] 5.15.183-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172015.643809034@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCZ7gLLgUJMbXO7gAKCRBhV5kVtWN2DlsbAJ9zUK0VNvlLPOclJV3YM5HQ
+ LkaemACgkF/tnkq2cL6CVpOk3NexhMLw2xzOw00ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU8JPBBgRAgAPAhsMBQJn
+ uAtCBQkxtc7uAAoJEGFXmRW1Y3YOJHUAoLuIJDcJtl7ZksBQa+n2T7T5zXoZAJ9EnFa2JZh7
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250512172015.643809034@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am 13.05.2025 um 07:55 hat Christoph Hellwig geschrieben:
-> On Mon, May 12, 2025 at 05:18:43PM +0200, Kevin Wolf wrote:
-> > Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
-> > doesn't even necessarily know that it's dealing with a multipath device,
-> > so it just has to blindly try the ioctl and see if it works.
+
+
+On 5/12/2025 7:29 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.183 release.
+> There are 54 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Why is qemu even using SG_IO to start with?
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.183-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-How else would you do SCSI passthrough?
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Ok, from your replies to Hannes I understand an implicit message, you
-wouldn't. But I don't think that's really an answer, at least not for
-all users.
-
-Yes, I'll give you that in the long term, we might be able to move some
-passthrough users away from it by using more specific interfaces like
-for persistent reservations (though see below). But for example, it's
-also used for vendor-specific commands and I don't see how Linux could
-ever provide more specific interfaces than SG_IO for those.
-
-But it's even about more than just accessing commands that aren't
-otherwise accessible. Mapping a SCSI response from the device to a
-single errno and back into SCSI status for the guest isn't lossless.
-QEMU's scsi-block device actually started off using normal I/O for reads
-and writes and using SG_IO only for things that aren't covered by normal
-I/O. But then those had to be changed to SG_IO, too, so that the guest
-would actually see the full SCSI status. Things the commit message
-mentions are unit attention codes and handling RESERVATION CONFLICT
-correctly (which made me unsure above if the more specific interface for
-reservations could actually be used to fully get rid of SG_IO). For more
-context, I'm adding Paolo who actually made that change back then. He
-may remember the concrete bug(s) this fixed.
-
-So if you want the guest device to behave mostly the same as your host
-device, I don't really see any way around SCSI passthrough and therefore
-SG_IO.
-
-Kevin
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
