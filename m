@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FC5198E75;
-	Tue, 13 May 2025 01:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E1A19E98A;
+	Tue, 13 May 2025 01:53:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747101178; cv=none; b=YcyqO+19gpIkb4m6j1Hw8tZS6f9kpCqFmHDOLvXCGvmeu5TZIT8rh0mBg/b02KaPzdkW/6jHgoBEC6hmtRBXWLi6d8ts+z3bmDh+58IQO3s11fodDatxoEVpuQexINGrqDfjnYCfy4Qx0RP/6bAd1gisTWPdsJvEC+gq7Ou92VY=
+	t=1747101188; cv=none; b=mfyqsD9aDSQc7tNdU41xEkQ1snXb/IlaBPoRjHV45IHOrEUdd+Y2mcvXlAO+B6vRXs38GJMhB3jeY+BMGe8O90ZHHA7V7Wo0ZKS0BCK+5x6WZzUuwtES1Mdi2/XDgxynu8e42JyzwWnwudXY4EbSmOFH37VpoG8fJGjTayGJT+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747101178; c=relaxed/simple;
-	bh=jl/FpWQhL2KmC31Y5BDsKgeO6wFNGMuLkMZGebpnU/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yp4jqIJg5ccoNgSmsM/wAjiacMrZEzAc2bWbG444Qjd1w+KhwAe3oQ9lhOYozRJhPpB+fxlLxZuhQAalW9rWedOzX8TX1+CAgwKdQKqzJROgp6KjfU+P6mfZqUFaiyvp7AUNdRQUUz2XwZ+lPD/7hSfAcbimHpEtMvzNYK6hpxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cE3EIW0B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747101188; c=relaxed/simple;
+	bh=xH/n1xylllnKSsp2fCcJP15uxmoPNM6MP+NC2ALHIO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AQNffy0NHpMXZDdibt+HiWFbGfPR0KNokpQ8DWM23w7+5j+xp/HOA7bzu+nRKdRvYHUvwoJsHtqHyWKd1H6lGogp8WXGfPN5GMlc8iKTYW33ThkkVZvJUeGL1MxZ1XQ1DL9cq0Ffs/buQOKzVHpem4J6E/jT/pSLjiP0viX9Ed0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7MWu5Mq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cE3EIW0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0950EC4CEE7;
-	Tue, 13 May 2025 01:52:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7MWu5Mq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8D2C4CEE7;
+	Tue, 13 May 2025 01:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747101178;
-	bh=jl/FpWQhL2KmC31Y5BDsKgeO6wFNGMuLkMZGebpnU/M=;
+	s=k20201202; t=1747101188;
+	bh=xH/n1xylllnKSsp2fCcJP15uxmoPNM6MP+NC2ALHIO4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=cE3EIW0BqvPNDsfp24kOaMLFHkRtLv7TzDGf15McrxFXxyd5HeeKqO1m1nrX7FTCM
-	 4jmNJVzQpIO4zj8S5dYkBdb/Mjx4D7CN5lxdoMp9Ld3KVYRfGvWZpsATTRrOnxzaJi
-	 Rq2LDiCEYBwAz+y2JUDCkxIA2iGLtrvVDA2bolK/pMuQFtNqIdpkYMjF3ilETiuen4
-	 FNOUN4xjov0+H+4Hl7ORdnSmwcCDBSVqY47ATbbyfjNfqIYQL0toX8KZq6cJI76bqK
-	 5POBpHFx9727PFIU0qd08v4qXx7g6txZhkA3+Uzqwhe2bAiLbgaTbdDGvWvwEZzI+L
-	 S3xRbnkE8MDfA==
+	b=m7MWu5MqHjXeXf5EyRDnfEYieQSoSE4dENyjF+CsD8c1qCaNswduGhHaQA8QiA8sU
+	 keAlP7aunUEG4b2r2wkkm2iV83RjTRZxW64OoGtAe1QNY8NKb1SzI0xKQZk8X0EJB2
+	 QPDAu06IdJfnGxb+l6s7otvRyFM8kKtz0MJuhAOVMht1ICmm2G533IPUDDuPezzPWp
+	 hygfpVgptZTzqea4DWMifZt8SL5lmy8dK/dMi2ob+rMftfNJVxi1nctJk+gxrwvWUm
+	 YiljHua3dtU4nPiB2Nc9kDZZwATG8aTyQfWPTfi7hTnsMxZDg7778HN56JJ+gDzjqy
+	 V03b+rOcqjSqg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Conor Dooley <conor@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -32,9 +32,9 @@ To: Conor Dooley <conor@kernel.org>,
 	Gregory Clement <gregory.clement@bootlin.com>
 Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: cache: Convert marvell,{feroceon,kirkwood}-cache to DT schema
-Date: Mon, 12 May 2025 20:52:51 -0500
-Message-ID: <20250513015252.1049409-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: cache: Convert marvell,tauros2-cache to DT schema
+Date: Mon, 12 May 2025 20:53:01 -0500
+Message-ID: <20250513015302.1049682-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,54 +44,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell Feroceon/Kirkwood Cache binding to DT schema format.
-
-Use "marvell,kirkwood-cache" for the filename instead as that's only
-compatible used in a .dts upstream.
-
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/cache/marvell,feroceon-cache.txt | 16 -------
- .../cache/marvell,kirkwood-cache.yaml         | 45 +++++++++++++++++++
- 2 files changed, 45 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/cache/marvell,feroceon-cache.txt
- create mode 100644 Documentation/devicetree/bindings/cache/marvell,kirkwood-cache.yaml
+ .../bindings/cache/marvell,tauros2-cache.txt  | 17 --------
+ .../bindings/cache/marvell,tauros2-cache.yaml | 39 +++++++++++++++++++
+ 2 files changed, 39 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/cache/marvell,tauros2-cache.txt
+ create mode 100644 Documentation/devicetree/bindings/cache/marvell,tauros2-cache.yaml
 
-diff --git a/Documentation/devicetree/bindings/cache/marvell,feroceon-cache.txt b/Documentation/devicetree/bindings/cache/marvell,feroceon-cache.txt
+diff --git a/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.txt b/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.txt
 deleted file mode 100644
-index 0d244b999d10..000000000000
---- a/Documentation/devicetree/bindings/cache/marvell,feroceon-cache.txt
+index 31af1cbb60bd..000000000000
+--- a/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.txt
 +++ /dev/null
-@@ -1,16 +0,0 @@
--* Marvell Feroceon Cache
+@@ -1,17 +0,0 @@
+-* Marvell Tauros2 Cache
 -
 -Required properties:
--- compatible : Should be either "marvell,feroceon-cache" or
--  	       "marvell,kirkwood-cache".
--
--Optional properties:
--- reg        : Address of the L2 cache control register. Mandatory for
--  	       "marvell,kirkwood-cache", not used by "marvell,feroceon-cache"
--
+-- compatible : Should be "marvell,tauros2-cache".
+-- marvell,tauros2-cache-features : Specify the features supported for the
+-  tauros2 cache.
+-  The features including
+-    CACHE_TAUROS2_PREFETCH_ON       (1 << 0)
+-    CACHE_TAUROS2_LINEFILL_BURST8   (1 << 1)
+-  The definition can be found at
+-  arch/arm/include/asm/hardware/cache-tauros2.h
 -
 -Example:
--		l2: l2-cache@20128 {
--			compatible = "marvell,kirkwood-cache";
--			reg = <0x20128 0x4>;
--		};
-diff --git a/Documentation/devicetree/bindings/cache/marvell,kirkwood-cache.yaml b/Documentation/devicetree/bindings/cache/marvell,kirkwood-cache.yaml
+-	L2: l2-cache {
+-		compatible = "marvell,tauros2-cache";
+-		marvell,tauros2-cache-features = <0x3>;
+-	};
+diff --git a/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.yaml b/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.yaml
 new file mode 100644
-index 000000000000..2bfa3c29f6a6
+index 000000000000..9f7f0d031631
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/cache/marvell,kirkwood-cache.yaml
-@@ -0,0 +1,45 @@
++++ b/Documentation/devicetree/bindings/cache/marvell,tauros2-cache.yaml
+@@ -0,0 +1,39 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/cache/marvell,kirkwood-cache.yaml#
++$id: http://devicetree.org/schemas/cache/marvell,tauros2-cache.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell Feroceon/Kirkwood Cache
++title: Marvell Tauros2 Cache
 +
 +maintainers:
 +  - Andrew Lunn <andrew@lunn.ch>
@@ -99,36 +95,30 @@ index 000000000000..2bfa3c29f6a6
 +
 +properties:
 +  compatible:
-+    enum:
-+      - marvell,feroceon-cache
-+      - marvell,kirkwood-cache
++    const: marvell,tauros2-cache
 +
-+  reg:
-+    maxItems: 1
++  marvell,tauros2-cache-features:
++    description: >
++      Specify the features supported for the tauros2 cache. The features include:
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: marvell,kirkwood-cache
-+    then:
-+      required:
-+        - reg
-+    else:
-+      properties:
-+        reg: false
++        - CACHE_TAUROS2_PREFETCH_ON (1 << 0)
++        - CACHE_TAUROS2_LINEFILL_BURST8 (1 << 1)
++
++      The definition can be found at arch/arm/include/asm/hardware/cache-tauros2.h
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 0x3
 +
 +required:
 +  - compatible
++  - marvell,tauros2-cache-features
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    l2-cache@20128 {
-+        compatible = "marvell,kirkwood-cache";
-+        reg = <0x20128 0x4>;
++    l2-cache {
++        compatible = "marvell,tauros2-cache";
++        marvell,tauros2-cache-features = <0x3>;
 +    };
 -- 
 2.47.2
