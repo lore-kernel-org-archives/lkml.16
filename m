@@ -1,240 +1,221 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6500B286A1
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D721286A1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117860; cv=none; b=gyrwy214vMx/BRPdoL8r09uhsS9itHuqpznYqFjran43PfKkvSb/+PVqU3MngOFcbLd4jH10+PQNalnUHd/XB5GPuTnIQj+rCtVGPI4e8PBTmTjO9PMtdEzEuRP28hb/UbZtdL7O1BQ8Ge1NICZ/WkitNO4FsAoxXO6uqDs43t0=
+	t=1747117870; cv=none; b=ETgavXTrVq+78RKt9ki01CMjME/rHTPKhhrOYxNsj0Jr/QQBLmoDKXtIl3sIeVsH7GFk0H12OUb9+3En9S0rWoZGWC2wR2ojq2Imnru6PtwxUC0jXiPphCmhC+bUWc5IAhDRZVEoV6k1UWsqUYun+GWEu6YAh0XO94XqJI9y7gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117860; c=relaxed/simple;
-	bh=aZBL4GBTXVH/XcCa0nhyLI3hav2EGhWlligqqBckACI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z0kf5M6t9Gc4V1qACFEdK9i2D4t3XXCUDRXBwax7EmwCFD4dIKUKeyXholXSd6EBSYLSktHNiAnGDJw408UlVmP0AryQVfR+OfJNN4XKhkpkHVXI2d00VZoar82z2ZB18ot82JP3v9L19UikyPl/vy3LJ4C4M/DKZCtly0qgAuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQQxuheK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZC6wYFni; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQQxuheK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZC6wYFni; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747117870; c=relaxed/simple;
+	bh=1hTuqJl+kEzhDCVhaf84dO8h/aL3GOUNQIrlCz3+rAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KuiBL1uUTY64zOmhpWqyRik4o4HzHAYS7aCImBM9wXKJNyzdTxJY7C1qbtaf18vvRt6RZjnEajd7n21gd9LQE9vC/ymy3TBtOrl392vdLtHx2jqSn4bqqZEPulDC7NeR44r5+K1ETYPKMBhLl1dzmpKDkZBHt3EYgpWHiIUL5tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=lHuMdPUy; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQQxuheK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZC6wYFni";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQQxuheK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZC6wYFni"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 78B9D211A2;
-	Tue, 13 May 2025 06:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747117856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
-	b=lQQxuheKUsh61PzojAfA/oIL3zgzDtf9NU2OKg1r+UM6VhaRNvSr3FJ6EfGwQFvIWpJ42n
-	GWmQOliYUb1t92w42FHjXguq/x0NyOO82Zj/FEAdIldoR+OSxw5yZldLlO3VlaClAC3lOI
-	dVfNUD5v/ue+KZqbqBZZo/ZdtTf3ico=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747117856;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
-	b=ZC6wYFniyoAzOK84hHfcGLeWQai9U4b5O8PdmByr5eNNuDR2og2II1wmBzBq8MEG0bvDSk
-	nv5ZtibE6C3+sFAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lQQxuheK;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZC6wYFni
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747117856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
-	b=lQQxuheKUsh61PzojAfA/oIL3zgzDtf9NU2OKg1r+UM6VhaRNvSr3FJ6EfGwQFvIWpJ42n
-	GWmQOliYUb1t92w42FHjXguq/x0NyOO82Zj/FEAdIldoR+OSxw5yZldLlO3VlaClAC3lOI
-	dVfNUD5v/ue+KZqbqBZZo/ZdtTf3ico=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747117856;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
-	b=ZC6wYFniyoAzOK84hHfcGLeWQai9U4b5O8PdmByr5eNNuDR2og2II1wmBzBq8MEG0bvDSk
-	nv5ZtibE6C3+sFAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12360137E8;
-	Tue, 13 May 2025 06:30:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jpDpASDnImgSRwAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 13 May 2025 06:30:56 +0000
-Message-ID: <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
-Date: Tue, 13 May 2025 08:30:55 +0200
+	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="lHuMdPUy"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e75668006b9so5354294276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vayavyalabs.com; s=google; t=1747117866; x=1747722666; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p7OlFTi12hwyalq/qmKqo6prizaYQ9kY/jjhoEX/luo=;
+        b=lHuMdPUycv0wdY2BfXmYwTXdppUf2BmzGFBYwc1jyOKm1mLNs7BYI6dIcOUZCn0d4n
+         zeNFBjHErzybyBeSJySj9z8H7dXWEZepUmb9CqUexIXbdkeh3Ezg82WmAM44DMA/F2R9
+         kjpvUPkK+3qmCmFyYFa8lBaJNdNfLrEhOTi10=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747117866; x=1747722666;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p7OlFTi12hwyalq/qmKqo6prizaYQ9kY/jjhoEX/luo=;
+        b=u+VVH7w7hVva4fwdVzd9bhOvHg/sbjLZgjrPSny0UH33AnpFsP9o09FqU2u3S7DeAb
+         8C6z8cCYm8KGMFvcN/MbQEjZUhpavbfIoklh5M4Ur4Iv/5qV4ZOPKxDVMBItBkND1d40
+         l4VYBHc1fJTeLBApFy2ITyyDP5XH2l5tYTMvvfIR61Ym3162noltlkLHwerg5lDAhQfF
+         SLNWENu3WfAhsJjNrX5enXxrjD44kUZN8DdsG1oRvxuvqbN/FBUaNHACkiO1ExKgwF+J
+         oRQ/vMWWbx+9aUiQhh2WHe/ocP2/M3MKLm6BttYZPBaO5sslfFlFwPKV+31BSkj8SxZt
+         4o/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVa5KyMdD3uPvwpQ12Y7J5FrjQsJOWqv5HWUICLTUjOsGHN/onXExa/hxztbCBNp8DA805+YS0ZrnUMKNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo4/P6bkQt/wlseCqvUQKkLQmfoTZHFbFAnvLO2WIVzlz+0yjc
+	QJKPpbxC4Q/xbVt6dqMfJoaDSvImQ+kCjeMNGGKlsVKz8LDWYyGRZy/B17mlK0HC4R+Jm5NXQCj
+	A30J/Q6+Kx0XMGSC1o4KKaDJ1S0Gky9iaefpT9Q==
+X-Gm-Gg: ASbGncuJY7/5YxLlVnfOinzoBlVv3+R8qJ7XrwsfmFlSwSJvkT9B1Is2pgOF03gjHVr
+	NKdSU/s2PyTCaBIXPfB167QNDsqy0ehJ14SbHPgVPeHQYo+NQpsSUvvuxca5srQ9GG5OKa1pVPy
+	EvP7YmVDzCvnA0h9SpD+Pb6BLUi1m56cH4ffZMPc8VYkYCsgQzyH6a/D6FTviGMuj5
+X-Google-Smtp-Source: AGHT+IGHecXBiimo+/WObMz24h+s2FGkrwwHovLXpyYwtTLKN9MfBfCW9jRS30vYs1g68tffN8lDlQZi361bjU7uaNo=
+X-Received: by 2002:a05:6902:161c:b0:e78:c445:87b2 with SMTP id
+ 3f1490d57ef6-e78fdbe22e5mr21869126276.13.1747117866486; Mon, 12 May 2025
+ 23:31:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-To: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>
-Cc: dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
- snitzer@kernel.org, bmarzins@redhat.com, linux-kernel@vger.kernel.org
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <aCIRUwt5BueQmlMZ@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 78B9D211A2
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
+References: <20250505125538.2991314-1-pavitrakumarm@vayavyalabs.com>
+ <20250505125538.2991314-2-pavitrakumarm@vayavyalabs.com> <5b6c66e8-3fac-408f-980c-f261ccd3fefd@kernel.org>
+ <bcf5c5de-e649-491b-9849-21eeaae0b64a@kernel.org> <CALxtO0=jB9L4WvaZNjP5qVB1tc9UfhjC5-u7e1dhveaQF=AOEQ@mail.gmail.com>
+ <19b1fca7-e1b1-4190-9bcb-7ce36fabd02e@kernel.org>
+In-Reply-To: <19b1fca7-e1b1-4190-9bcb-7ce36fabd02e@kernel.org>
+From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Date: Tue, 13 May 2025 12:00:55 +0530
+X-Gm-Features: AX0GCFtPpw5etqx8ywxgVQBuM1csOzYUZVYWf19eq8SortJt3gcNPfhT0f1OlYI
+Message-ID: <CALxtO0m_iVo4nnfYg5PzL5K0HgG-U2yNVeS3S0hfdXnObbJDJA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: crypto: Document support for SPAcc
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
+	herbert@gondor.apana.org.au, robh@kernel.org, Ruud.Derwig@synopsys.com, 
+	Conor Dooley <conor@kernel.org>, davem@davemloft.net, linux-kernel@vger.kernel.org, 
+	adityak@vayavyalabs.com, manjunath.hadli@vayavyalabs.com, 
+	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/12/25 17:18, Kevin Wolf wrote:
-> Am 08.05.2025 um 15:51 hat Martin Wilck geschrieben:
->> Hello Kevin,
->>
->> [I'm sorry for the previous email. It seems that I clicked "send" in
->> the wrong window].
->>
->> On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
->>> Multipath cannot directly provide failover for ioctls in the kernel
->>> because it doesn't know what each ioctl means and which result could
->>> indicate a path error. Userspace generally knows what the ioctl it
->>> issued means and if it might be a path error, but neither does it
->>> know
->>> which path the ioctl took nor does it necessarily have the privileges
->>> to
->>> fail a path using the control device.
->>
->> Thanks for this effort.
->>
->> I have some remarks about your approach. The most important one is that
->> the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
->> It sends IO to possibly broken paths and waits for it to complete. In
->> the common error case of a device not responding, this might cause the
->> code to hang for a long time in the kernel ioctl code path, in
->> uninterruptible sleep (note that these probing commands will be queued
->> after other possibly hanging IO). In the past we have put a lot of
->> effort into other code paths in multipath-tools and elsewhere to avoid
->> this kind of hang to the extent possible. It seems to me that your set
->> re-introduces this risk.
-> 
-> That's a fair point. I don't expect this code to be fully final, another
-> thing that isn't really optimal (as mentioned in the comment message) is
-> that we're not probing paths in parallel, potentially adding up timeouts
-> from multiple paths.
-> 
-> I don't think this is a problem of the interface, though, but we can
-> improve the implementation keeping the same interface.
-> 
-> Maybe I'm missing something, but I think the reason why it has to be
-> uninterruptible is just that submit_bio_wait() has the completion on the
-> stack? So I suppose we could just kmalloc() some state, submit all the
-> bios, let the completion callback free it, and then we can just stop
-> waiting early (i.e. wait_for_completion_interruptible/killable) and let
-> the requests complete on their own in the background.
-> 
-> Would this address your concerns or is there another part to it?
-> 
-Not really. There are two issues which ultimately made us move away
-from read I/O as path checkers:
+Hi Krzysztof,
+  My comments embedded below
 
-- Spurious timeouts due to blocked or congested submission
-- Error handling delays and stalls
+Warm regards,
+PK
 
-When using normal read/write functions for path checking you are
-subjected to normal I/O processing rules, ie I/O is inserted
-at the end of the submission queue. If the system is busy the
-path checker will time out prematurely without ever having reached
-the target. One could avoid that by extending the timeout, but that
-would make the path checker unreliable.
+On Tue, May 6, 2025 at 12:21=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 06/05/2025 08:33, Pavitrakumar Managutte wrote:
+> > Hi Krzysztof,
+> >   My comments are embedded below.
+> >
+> > Warm regards,
+> > PK
+> >
+> > On Mon, May 5, 2025 at 9:22=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On 05/05/2025 17:48, Krzysztof Kozlowski wrote:
+> >>> On 05/05/2025 14:55, Pavitrakumar M wrote:
+> >>>> From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+> >>>>
+> >>>> Add DT bindings related to the SPAcc driver for Documentation.
+> >>>> DWC Synopsys Security Protocol Accelerator(SPAcc) Hardware Crypto
+> >>>> Engine is a crypto IP designed by Synopsys.
+> >>>>
+> >>>> Co-developed-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> >>>> Signed-off-by: Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+> >>>> Signed-off-by: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com=
+>
+> >>>> Acked-by: Ruud Derwig <Ruud.Derwig@synopsys.com>
+> >>>
+> >>>
+> >>> I do not see any improvements. It seems you ignored all comments, not
+> >>> single one was responded to or addressed.
+> >
+> > PK: Addressed all the below
+> >
+> > 1. SoC Bindings: We dont have any SoC bindings since its tested on the
+> > Zynq platform (on FPGA). So I have retained just the Synopsys SPAcc
+> > device here. Also added a detailed description for the same, which
+> > describes how we have tested the SPAcc peripheral on Zynq. This was
+> > based on your inputs to describe the existing hardware.
+>
+> 1. I asked to use SoC specific compatibles and after such explanation
+> that you use it in some different, hardware configuration, I asked to
+> use that.
+>
+> Reflect whatever your hardware is called in the compatible.
 
-But the real issue is error handling. Path checker are precisely there
-to check if the path is healthy, and as such _will_ be subjected
-to error handling (or might even trigger error handling itself).
-The thing about error handling is that you can only return affected
-commands once error handling is complete, as only then you can be
-sure that no DMA is pending on the buffers and one can free/re-use
-the associated pages.
-On SCSI error handling can be an _extremely_ lengthy affair
-(we had reports for over one hour), and the last thing you want is
-to delay your path checker for that time.
+PK: Some context from my side which might clear up things
+1. We have developed the SPAcc Crypto Linux driver for the Synopsys SPAcc I=
+P.
+2. Yes, this is technically a soft IP which we test on FPGA (Zynq
+Ultrascale Boards).
+3. We are NOT evaluating SPAcc IP and thus its not a custom use case
+or a custom hardware.
+4. Also SPAcc IP is NOT part of any SoC yet, but it may be in future.
 
-(And besides, I didn't even mention the third problem with I/O-based
-path checkers, namely that the check entirely the wrong thing; we
-are not interested whether we can do I/O, we are interested in whether
-we can send commands. In the light of eg ALUA these are two very
-different things.)
+Synopsys Semiconductor IP Business:
+Synopsys develops Semiconductor IPs (aka DesignWare IPs) and provides
+Linux device drivers to the SoC Vendors. We, as partners of Synopsys,
+develop Linux device drivers for the IP, in this case SPAcc. So as of
+now SPAcc is just a semiconductor IP which is not part of any SoC. A
+3rd party SoC vendor would take this and integrate this as part of
+their upcoming SoC.
 
->> Apart from that, minor observations are that in patch 2/2 you don't
->> check whether the map is in queueing state, and I don't quite
->> understand why you only check paths in the map's active path group
->> without attempting a PG failover in the case where all paths in the
->> current PG fail.
-> 
-> Ben already fixed up the missing check.
-> 
-> Not attempting PG failover was also his suggestion, on the basis that it
-> would be additional work for no real benefit when you can only submit
-> requests for the current PG anyway. If userspace retries the SG_IO, it
-> will already pick a different PG, so having the kernel do the same
-> doesn't really improve anything.
-> 
-Precisely.
+SPAcc Semiconductor IP details:
+https://www.synopsys.com/designware-ip/security-ip/security-protocol-accele=
+rators.html
 
-I think the best way forward here is to have a 'post_ioctl' handler
-(much like we have a pre_ioctl handler nowadays).
-This would check the return code from the ioctl, and invalidate the
-current path if there was an I/O error.
-That way the user can resubmit the ioctl, until all paths are exhausted.
-For that to work we need to agree on two error codes, one for
-'path failed, retry' and one for 'path failed, no retry possible'.
-Resetting path status will be delegated to multipathd, but then that's
-its main task anyway.
+Synopsys DesignWare IPs
+1. DWC MMC Host controller drivers : drivers/mmc/host/dw_mmc.c
+2. DWC HSOTG Driver : drivers/usb/dwc2, drivers/usb/dwc3
+3. DWC Ethernet driver : drivers/net/ethernet/synopsys
+4. DWC DMA driver : drivers/dma/dw/
 
-Cheers,
+Intent of upstreaming IP drivers by Synopsys
+1. As a Semiconductor IP designer, Synopsys provides Linux device
+drivers with their IPs to the customers.
+2. These Linux drivers handle all the configurations in those respective IP=
+s.
+3. At this stage of driver development, the focus is on the Semiconductor I=
+P
+4. Yes, the IP can be configured differently for different SoCs and
+the driver has to take care of that.
+5. The driver might need some enhancements based on the SoC
+configurations, which could be done later.
+6. Its a good approach to upstream IP drivers, so the vendors could
+use/enhance the same open sourced drivers.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+>
+> I claim this cannot be used in a SoC without customization. If I
+
+PK: Synopsys SPAcc is a highly configurable semiconductor IP. I agree
+that it can be customized for the SoC vendors. But I dont understand
+why it can't be used without SoC customizations for a default
+configuration. All the IP customizations are handled by the driver.
+Say, in the case of SPAcc, all the IP customizations are accessible as
+part of the "Version" and "Version Extension-1, 2, 3" registers. So
+the driver uses these IP customizations and nothing gets hardcoded. In
+other cases, those customizations will come as vendor specific DT
+properties.
+
+As an IP, which can be memory mapped and with interrupt support, it
+works perfectly with a default test configuration. And this is what
+the current driver has.
+
+> understood correctly this is soft IP in FPGA for evaluation, so no one
+> will be ever able to use it. Therefore this binding makes no sense to me
+
+PK: No, we are not evaluating, but we have developed a driver for
+SPAcc, which has been tested on a FPGA.
+
+> in general: you do not add anything any customer could use. It is fine
+> to add something which you use internally only, but again describe the
+> hardware properly.
+
+PK: Its not an internal use case. We have tested the SPAcc driver on a
+FPGA, as detailed above. We dont have any custom hardware and the
+SPAcc IP is tested in a default configuration.
+
+Question : Could you help me understand how a semiconductor IP vendor
+like Synopsys, upstream Linux drivers for its IPs? In the current
+scheme of things, if the SoC bindings are mandatory then we dont have
+them at this stage. Those would have to come from the 3rd party SoC
+vendors.
+
+As a work around, I could add SPAcc bindings to Synopsys's "nsimosci".
+Please let me know.
+ARC - linux/arch/arc/boot/dts/nsimosci.dts
+
+>
+> 2. I wrote you entire guide what is wrong with your Cc addresses and
+> this was fully ignored. Neither responded to, nor resolved.
+
+PK: I have fixed that.
+
+>
+> I am not going to review the rest of the file.
+>
+> Best regards,
+> Krzysztof
