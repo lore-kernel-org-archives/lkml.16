@@ -1,60 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCCD19597F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE392556E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747114695; cv=none; b=j2zETApx0auKon8edMUc8C3wlu2dsLloewvsOXCKy6+toeMBv8f40VKkFoKApGmX7jDJg66QyYrez3+nkvLMvFp17VTZm6REtb0foG78nh1EjBDnPoDJ4f/LmA5EJV9/LbSj8AIqb9ruEeBF2Zt8nDagYs5NkG7nZDg5LegRjbM=
+	t=1747114875; cv=none; b=Oj5yEJtLgKE8pQgnxOG/J8u4ngNl1OBlf5JBBlzQJ++EAKv3XbPAPHYUVRUsBnm1OtcuLHDZYo7L1ARbALBJtHks6pU8CzPNMZeVqMlMFDG0U3/qjYnzfYjiQF57faL7iJDoytz1jmhBVtQ6059HVpTUqFIEruV1mJPImX6o1aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747114695; c=relaxed/simple;
-	bh=i+J9Ik2pi9xbkAKtxdEabZFN2JpPP5trKFNArRxuAuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UPO3lwdo6naMyHzuIMiB97gNDWJuiiCL3UxwO5A+zbwJHx3msopgKFq+NzGDh9kaZCslaUQ/Kv6tbnmd2lIhJEu59t0we/lyrAfQiBMf2wQXyHp+F0DLpW8ecCSw7qrjGYX8V9Wl09YGEjq+C8pLybWmOHYh/IgqEY9SKK1MmB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8eah8WU; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747114875; c=relaxed/simple;
+	bh=xFjsDPqOCUK6o2h49r2W4b0pCc2igav2DUvsk72eYTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YOHGWdxXv2PmidCpXA/aawEY6qvCBUq49vBbQfn2/On8sauiv4YYOrY31Db2L+8ebAIoBc8RmSMpnbklTLjvzrQ8lkpll/ebHhKBk3aClKElGtf1xOiQv+VAxzWQecZ+jA5BWRqOz4MXz2IAIznyyI7ROh9dDbPbBf69dL3eFGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KkG88GME; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8eah8WU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747114694; x=1778650694;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=i+J9Ik2pi9xbkAKtxdEabZFN2JpPP5trKFNArRxuAuk=;
-  b=e8eah8WUC4OQk/zUf4Fv7EW/cgrOJwi0JMv3+3tCWPpO1kL754nEjQHI
-   OMrHk1gc58NRWXFwrCo1Z0ePH4g7L/gBd1NyVAjBh0rS0hOtWXCPhkdpe
-   AOrDXCz1CiaPITyE0WQuwOqZkYS+p9pGsTAPj0SqaOkYywlCKyKstr4el
-   2iog3GxUH/UdD0R8jsrMawxGGbkni8zckHyDuta2MpLffVW/UaDRLR15W
-   7WD8vrqJcYUhWHskTrbn+OmnA0eJqURk2mFVDPR9NlEQpOLTWERfkgKmm
-   iwZae/Ue0sEDRjwsbCjl+JTqsLZZaTvuStFij+kMa3z3g+HgEZnTusCeZ
-   A==;
-X-CSE-ConnectionGUID: hrpX+cW2Rk2yle28AqDHZA==
-X-CSE-MsgGUID: Vf/MdnECQFeXp1IYXWkKaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="71450818"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="71450818"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:38:13 -0700
-X-CSE-ConnectionGUID: ZiF53FBiTc29dDxLFf6PEg==
-X-CSE-MsgGUID: dsa6mdrGSgONL9Efv21b3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="137625484"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 12 May 2025 22:38:11 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEiLB-000FkH-1c;
-	Tue, 13 May 2025 05:38:09 +0000
-Date: Tue, 13 May 2025 13:37:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: [tip:x86/boot 6/10] vmlinux.o: warning: objtool:
- __sev_es_nmi_complete+0x5a: call to __kcsan_check_access() leaves
- .noinstr.text section
-Message-ID: <202505131323.rs2DCGPp-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KkG88GME"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af908bb32fdso4099592a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747114873; x=1747719673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y8/e09aU88+x5oHV/hz7bpXJqL27aHVE4yHbJnrLGY8=;
+        b=KkG88GMEPuA7Ip8KO0CPTxeU6/oYyBa5+NknsZJa7ccrPaLJQ6bC2ae73GKOPtk6B3
+         CD2OTQHnrjVa6cP7N9Rfxp57Ta9rFUHklCFRO2XubBMp8hNgOiebbgzbJqWwAJU1zZZj
+         o9Rq9IaaPMK/SPb5q3dqtTFhqUuhX/SAguV0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747114873; x=1747719673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y8/e09aU88+x5oHV/hz7bpXJqL27aHVE4yHbJnrLGY8=;
+        b=CxQN9ck4n1Iw3b++wJLfZJFcNL91mtetZdrHJV62nwEj6W/srg+8H1eeJmRi/uzGju
+         As1ljp0cj1JKT8YEYrNChhtEUOuYN4bT9o5SzaOfYbeGOjzfchdyLKSM4KstxQIiHTMl
+         shZIqKdMxhU7vGwJnkH/sQKU7zsnElUJSe+MKsk5BuGUuEf8pa6HSKcTYbE4HkiIVB7e
+         MjHg6CZqlKnfKhbKovDCDMcqsOgSScJ8CXGLV/qF9Of9OrcUbHk8hMYAXDhnfY0uVL6o
+         KK06ng5pM4lYj/F7/jjW6TcYoVraaG3Gk8aQ9xd57T3hVm8F0UHAATuAcTGsUFw37Lbv
+         mY7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWvDe75/nLZ5SIF2Wss/3tnKqe5ljy3GyKufeu3XgdtMAQJwqH4Dl4KBdOnAthBd+H4xSx/EssF9LQ5uWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfJCVHLQCJ0zU7EQJyQ2+AAqjSZV+kdzWOM1HZ5daKxJYL6Nxe
+	CqJzHKsuYaulaEP5sNsDm+KXSNyGk6ICn6M3e4g4E9RFWDv37zEPXybrUuXIyQ==
+X-Gm-Gg: ASbGncs5yUVZZwrEcQc3UTCCIZm+l98Ht2uEMGE8Jk9DyV93mg7c2xgWyzX0LPY3iww
+	LTZOBDrJFpNdynw2gCoXPRvZdswW94Cpr4BydAO55EjYocgIg3hSSfXFXskXDIMeZlIZ9cyodgi
+	mdpUguvBwxZo5wgjSRbdVnFRIt7DlNMtmeCexuqw4kxU57UTgj99bvWHan7xS9q2CVg9meI+9uq
+	mDak0aP04j+Yg1TK+jucafMiQqfiOM5cpR90GIHimnUnnQR2uR6J+vVqAWpLP2uW0ZnNJHv9KY8
+	/wD0mimgyZl+ydtxT69lsoHFjapKE/3bA0pR9BmiBGObLEjqUl1PJPyadAe2HyDuFw==
+X-Google-Smtp-Source: AGHT+IH8HYi0iwLoSM9ZEcgQsdWi1ONEPLQT8boJV6r/gWgrnH9v6R8JgAnAP2PObxArdEfREkH33A==
+X-Received: by 2002:a17:90b:2547:b0:2fc:aaf:74d3 with SMTP id 98e67ed59e1d1-30e0daf571emr2971081a91.4.1747114873621;
+        Mon, 12 May 2025 22:41:13 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:7e67:ed66:98df:7a2d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30c39e6572fsm7787428a91.37.2025.05.12.22.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 22:41:12 -0700 (PDT)
+Date: Tue, 13 May 2025 14:41:07 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
+Message-ID: <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
+References: <20240902105656.1383858-1-senozhatsky@chromium.org>
+ <20240902105656.1383858-11-senozhatsky@chromium.org>
+ <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
+ <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
+ <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,23 +75,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
-head:   ed4d95d033e359f9445e85bf5a768a5859a5830b
-commit: a3cbbb4717e120f9e53fa7685909b310f7e99bf5 [6/10] x86/boot: Move SEV startup code into startup/
-config: x86_64-randconfig-103-20250513 (https://download.01.org/0day-ci/archive/20250513/202505131323.rs2DCGPp-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250513/202505131323.rs2DCGPp-lkp@intel.com/reproduce)
+Sorry for the delay,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505131323.rs2DCGPp-lkp@intel.com/
+On (25/05/09 17:18), Zaslonko Mikhail wrote:
+> > When zram transitioned from Crypto API (scomp) to custom compression
+> > API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
+> > 
+> > crypto/deflate.c: DEFLATE_DEF_WINBITS	11
+> > 
+> > which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
+> > 
+> >> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
+> >> verified that s390 hardware deflate acceleration works for zram devices
+> >> with a deflate compression.
+> > 
+> > If we define it as 15 on non-s390 machines, will there be any
+> > consequences?  Increased memory usage?  By how much?
+> 
+> On s390, setting windowBits to 15 would lead to zlib workarea size
+> increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
+> i.e. per online CPU. 
+> On non-s390 machine, that impact will be about 115K per stream. 
+> Increasing window size should improve deflate compression,
+> although the compression speed might be affected. Couldn't find any
+> relevant zlib benchmarks though.
+> 
+> Not sure what other consequences might there be for zram. Do you see any?
 
-All warnings (new ones prefixed by >>):
+The increased per-CPU memory usage is the only thing I can think of.
+I guess for zram we could turn this into a run-time parameter, but for
+Crypto API compile-time is the only option, I guess.
 
->> vmlinux.o: warning: objtool: __sev_es_nmi_complete+0x5a: call to __kcsan_check_access() leaves .noinstr.text section
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Can you send a patch series (for zram and Crypto API) that sets
+windowBits to 15?
