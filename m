@@ -1,139 +1,118 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6CD2260C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8594919F111
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146712; cv=none; b=TmwOomW2wNmmgUiQjP/DacF9ZXnwGpc2K2gCuyjgBej1w1KliLEHUUkmpsW9P5cwpG6ktx5JZD356gSfKgI91vX823Yw4x0nDvmkWebAJEgmUo9zSYWV4FZxH6eLN7j5vIDNZ3b3V7GnfGQV90biHH29wXyxL9GC71gZWsmh0h4=
+	t=1747146804; cv=none; b=eLpejIyndediFlPINDIbBRcmJP705mP09kSoAMGgvUOlVJsTLwZ1W7BIUKu1PgnjFz3Q/GOAjK3BX+WK6feemnyDGw7yTye+h3kDiEVvr1W2NcFu3Zu7HxqzehnGM1wK86xhPB9lbREUoj2xq+knAi9ZF9cpaZbZTq166aNy+hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146712; c=relaxed/simple;
-	bh=vvoH7hwi+JxUz+93mNR6csyhgFsywBIGw+igaPb76Mk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O5WDb9X4Sd2OZ4SuqikSkdMW9JnYTCwgrg7WktesP2Jx62CnjayzK9cS+umus+8MXxIMFkg7SHEem34S4rverb6zMB2gcBXPbTTDxCSUHbREJEvjItQTf+uxObXhtkWzCDuxjOp9fHjioBCkNf2qFcqgnnoIwi6xPfrl8j6HvWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kf0Bqtj6; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747146804; c=relaxed/simple;
+	bh=iQEF7nznmEycoRdRwifBr5zcStMelsRnNg7k+aa6KwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWU99sdvWZ0AUD0+maC9g3SqxBXrVg8qNPvu7fkEywUAuv+mQ82GJaIv5NLdmF+PZ/TvhMf3VlxlJS0tP6q3+kw/W2VlkKhrnkMspH09DgD55jHnFy8HfECz3NbFldhhwnwq8lGvQkXIuK1qvWm74V6Ze7sHhU0RdVDnRE5vH0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z8gzNNuu; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kf0Bqtj6"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7396f13b750so6248180b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z8gzNNuu"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-326d823304fso25593111fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747146708; x=1747751508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vvoH7hwi+JxUz+93mNR6csyhgFsywBIGw+igaPb76Mk=;
-        b=Kf0Bqtj6Rsbj7AfsQ/qHpJU2IowCVEPH2l99v4OjijBKez2RUJ2ip8TwZveCw8D2y9
-         FKkGIm1RYQO1zyDNmasAZ4HhmD7ZdULgcB9f2zUb+d7F/WqkMCT8AsBuOrzrNWY3KTqd
-         oeYDpu6oY7U76Vej1tNTUC5UJ8X9jUqMk1Zig=
+        d=linaro.org; s=google; t=1747146800; x=1747751600; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6C+eOPgBkYyfSbaSp3zhH361dNsffIyxJdkkZYVPmTA=;
+        b=Z8gzNNuuEhC9ToJQBXiF5ZFqeeBi1WceWyKf71VHr6WiImWo31odsQdUVlm1PvTvsA
+         lknjbDZB7X/B9T0zGlVhdfvQrpg9Ghr/22cTvMzDP2oiGvO2RG7Vh5AQcSgR4gj7EXti
+         rvbqSSNBzQ8gtjBFzFk7JqoXHTmf2d+kglEP1IYmNsd635FGJ3uHY2U6lvYe9fPCvx3J
+         q7iIngoTIvA4+HP8iab5vMXw4PnXlRq100/q/UbF40pJf23ssspCeS4gWloPRh1Zgukj
+         3vVaLmrZqJn31ScAa403D2/XzpwahA9FDoMgNNQLzGFwFpIW5URs7hDIRj8GOP3ME3AK
+         OWhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747146708; x=1747751508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vvoH7hwi+JxUz+93mNR6csyhgFsywBIGw+igaPb76Mk=;
-        b=eBo/gYl1FGUj6eWirkea71ZUNX/Mtjb5RacrhjTLTjIeYJ7xsJAuI7zvOgQ0pPnpaW
-         5VvuFw5i0obpzvbRM9ykkKRDHXmwqYsMckeI1HprOJFVR+44tKEXLNnh55EUVBh1uVE3
-         9a0l1j8H9ms+pGb0sWzr7lwu/+FDJD8kCq6DbfcH51zXsry+gXnoI9a9WufXGJWlM2sI
-         951JN1T5R5edhMsLGtXM6hkj2KRDrB27wVkh5ecfOL04dmVSc4Pa+5CCsIQmfEX5AOxM
-         GmFkF3H8NEnGsXbCuCEB89HRMjsMzQb+9GrxOvQnx09b1wWWNvwTnKtvbPS5ukqmnoZk
-         uNoA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2U+djb7MfsvyU9SIMSg3WT9Q+LrfedIYKO7ThujtIlVrrPLhNxT1rBnxo2hkjPTBmf9c9gJElTRV2dN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVOccUu/IcvW4kdNfoY1KWophnjPCR3qz94iEamyFySg0s96/e
-	iDrl7NHO3WRXsi/m66zGyM/GLrXh7zd4fwsCsVSW9RE1AOrH7nSqT7xQYAFd1Yiqism8TiCC/vo
-	=
-X-Gm-Gg: ASbGncuHJVt9cID8bmjqrXdbFUaW4NRmtOmqV6+wS2kkXUmW1/POu4E2javQD6bnelt
-	z9aHbhPW754FCRo/d+W3PvYfxThT056CF3rdxes6aGTJbPj5/UuucCx/eZdQfsbupTQWZ5vpUGU
-	ki4cAlpKUjlhHu3/bVVa64im2gW3gTgDL+m+29Eq+U+Ke4lG+RhEOz6MaYWTcHRtEuZBSp3CtQV
-	eKNlUrB57QUzx3zADsqYFqM96g9aqtxAFF7yD2amYoeyCnUTeyBH6c3kGDlNkR+HdMVqXpbGSWW
-	mPCiOpc5YAFITibjg6ngTbeXZEdOfp5I/6nD7cDTV2tfS7yz0BDP3ALheO/PWDuoWrVbAEhEFGM
-	DioT+0q3QYv7+KyHMpwg=
-X-Google-Smtp-Source: AGHT+IEKf7czkJNevTGMhpAdDFoFjEh2QpEQKqLs8z4KdrhAR29WfrxtsMlf4Ewdrz5w8JSoQdILaQ==
-X-Received: by 2002:a05:6a20:c78d:b0:1f5:769a:a4b2 with SMTP id adf61e73a8af0-215abafbdbdmr21624608637.17.1747146708533;
-        Tue, 13 May 2025 07:31:48 -0700 (PDT)
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com. [209.85.214.173])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7427fb03fc4sm1168463b3a.84.2025.05.13.07.31.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 07:31:47 -0700 (PDT)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e70a9c6bdso79140235ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWOBOgR8lHLW6n+YU1LeROu/xRjQ77ZuE6uVJm77pVUNcVug/pW8e6ZPoo2OVfrt9Zb99dskxQKYyA/MeE=@vger.kernel.org
-X-Received: by 2002:a17:903:2a8e:b0:224:256e:5e3f with SMTP id
- d9443c01a7336-22fc8b59827mr287727935ad.25.1747146706761; Tue, 13 May 2025
- 07:31:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747146800; x=1747751600;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6C+eOPgBkYyfSbaSp3zhH361dNsffIyxJdkkZYVPmTA=;
+        b=PPEcihQZZPDI3KHehYkeiwgZ21la+wj18MnXZVOeWz7iOp40ClWeeR+Ywf4RvNfoST
+         FdkKYxliJYCAnI5ndKWk8TfGGmGMM9FLo5dNl2dgC67LAJ01wc8HMjdILpMxRJjdGJvp
+         1GgZEidgDUViyenv0gYpHNtl7oiLqLLXJ9v4bBr5N5cSTe6v1zKcrk40T4uZbuk9/OgG
+         cW0y6isPYpEwOs43BAy69Wp8mhAJrN15B1blLUqWW7VFdvWd7sUdoRgZ6fqqzLyY/K1O
+         CXYz92BmIvR6Xou+c2opOCAI6W9B1ScW7qyX0NMaYDcXXSzi071lzQqubxHMOQTK+h2d
+         R+WA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTZwmgHQ0b/6lbRXQU7Ne/0xnIt5pWJQ3NbQ7QT6SahlpseaYVbjPKfIdr51C7IoefJYMNAdNrgwJJoeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr151x5qf3NBMyUvqh4wFjp7WeN5v41vkObTHl2qrZnSUtCgi/
+	yj/GbJfcPbpn1A539DiQ1aSx2f/VC8Ysiy10Cxjgc/ZyCUGoKHUC20SA59Fx0fTNEBCvNHNKnYY
+	19D2cEw==
+X-Gm-Gg: ASbGncvV7kgi2w/tRwk0g7CAY3bp4CgJVukrW4TFdGh7N5f1hDFldSqkvKnW33ybYgg
+	WnyKwIe6u9Sk/67IXKCjhicJ8oPv9SBY/7qBMycWd/rgNcW1l3xD2XhJvz6CyLASz0+qbf4uyqD
+	f5RQpVQBaYuAkFGkbiMhJNNIFND58pOZFH6P9mRd53rE8XVkxMHFv8z+PRwre4OP7Ox0ttqEKJS
+	4VMSjjgKhdJYzJ8n1tpx4kR1RwptUiKspEFwtfheycrcPcX9t00FofWH4e1FA/BGf+yCBzXePtA
+	zkWKg94GDmGO6h0lZ/P9SEVj80tdrR++avptFsI+H3iy36DLIydJYERvGxDmfocmMyVEFEnN6X1
+	RfS8b/gPCcSNuZA==
+X-Google-Smtp-Source: AGHT+IEBNTH4zw64AEMKKTiN2s5UEu33251ThUx0I1Ms2D2DvDbTNPIeVXC3gTvYmyig2JEqJ5+Vcw==
+X-Received: by 2002:a5d:650b:0:b0:3a1:f655:c5b2 with SMTP id ffacd0b85a97d-3a1f655c5femr12440694f8f.39.1747146789207;
+        Tue, 13 May 2025 07:33:09 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecadfsm16357348f8f.22.2025.05.13.07.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 07:33:08 -0700 (PDT)
+Date: Tue, 13 May 2025 16:33:06 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH v2 02/10] dt-bindings: timer: Add Sophgo SG2044 ACLINT
+ timer
+Message-ID: <aCNYItP6SWImMvFv@mai.linaro.org>
+References: <20250413223507.46480-1-inochiama@gmail.com>
+ <20250413223507.46480-3-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512173250.1.If5c00cf9f08732f4af5f104ae59b8785c7f69536@changeid>
- <86plgdeyrx.wl-maz@kernel.org>
-In-Reply-To: <86plgdeyrx.wl-maz@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 13 May 2025 07:31:35 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WYk+cXZCyPoeWwqpVc9hUXcU_BiafJ9s7B2W_Ow2eyWA@mail.gmail.com>
-X-Gm-Features: AX0GCFsp8SCqYGmOj0-EDhv29ocsfEYuQg6EbYMcYbr_nJ0-_c8twh--m5N5kvs
-Message-ID: <CAD=FV=WYk+cXZCyPoeWwqpVc9hUXcU_BiafJ9s7B2W_Ow2eyWA@mail.gmail.com>
-Subject: Re: [PATCH] genirq/PM: Fix IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND if depth
- > 1
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, chintanpandya@google.com, 
-	Maulik Shah <quic_mkshah@quicinc.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250413223507.46480-3-inochiama@gmail.com>
 
-Hi,
+On Mon, Apr 14, 2025 at 06:34:56AM +0800, Inochi Amaoto wrote:
+> Like SG2042, SG2044 implements an enhanced ACLINT, so add necessary
+> compatible string for SG2044 SoC.
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
-On Tue, May 13, 2025 at 12:49=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrot=
-e:
->
-> Hey Doug,
->
-> On Tue, 13 May 2025 01:32:52 +0100,
-> Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > The IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag doesn't work properly if the
-> > IRQ disable depth is not 0 or 1 at suspend time. In this case, the
-> > IRQ's depth will be decremented but the IRQ won't be enabled to wake
-> > the system up. Add a special case for when we're suspending and always
-> > enable the IRQ in that case.
->
-> For my own edification, can you explain why you end-up in this
-> situation?
+Applied patch 2, thanks!
 
-Dang, I meant to put it in the commit message. ...but this patch
-doesn't fix any problems we're experiencing. The issue was found by
-code inspection during a code review.
+-- 
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> Because I think I can see a use case for the current
-> behaviour, where a driver controls whether it wants to use this
-> interrupt as a wake-up source or not dynamically, irrespective of the
-> underlying chip's capabilities (which I suspect is pinctrl-msm).
-
-If a driver wants to dynamically choose whether it's a wake-up source,
-wouldn't it just call disable_irq_wake() and enable_irq_wake()?
-
-
-> This is also consistent with the way disable_irq() nests, making
-> IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND the equivalent of an enable_irq()
-> call.
-
-To me it feels like we need to go back to what we were trying to
-accomplish when we added IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND. The main
-issue we were trying to solve was to make it so that an interrupt that
-was masked by disable_irq() could still wake the system. IMO an
-interrupt that has been masked _twice_ by disable_irq() is logically
-in the same state and should still be able to wake the system up.
-
-I think we'd also have to compare this to how it would work on systems
-where there is a different bit for enabling an interrupt and enabling
-wakeup. Those are the kinds of controllers that _don't_ need
-IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND. In those controllers, we're not
-going to look at how many disable_irq() refcounts we have when we
-decide to set the bit enabling the wakeup...
-
--Doug
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
