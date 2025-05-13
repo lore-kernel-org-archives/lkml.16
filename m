@@ -1,81 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE14D1AF0A7;
-	Tue, 13 May 2025 14:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655E5255E2B;
+	Tue, 13 May 2025 14:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147288; cv=none; b=RI6yZvsHZtziQI7GRiS5XvB3l/owIgg8A0/IdXlWt9Qzc5GyxvP1CyDiSPZSd1xtoej7IqSemAJPSyYicJayXCcKUclsxyEHm/N1SiYIFPz8USDFakI2/ntsriJ/raZcwffSauNFePqsJ9DrvPA7JMAeAJFThxWYxECVhMY5ENM=
+	t=1747147297; cv=none; b=RWIfYcad+2MBwDRxv/9Xk2y8yOuSzKVFVUHgv9jzyZcbakq5b15VWroJ2PGgD3WYbi+1OZO6rIJ8Fc7xBj2tgKswwKMkuuAEqeAPz4dgMIiMBQw8Hu4j9VzocRxhOP8vdT8LgGtv8jLXnX9BAx4SohkTDu0pJq9xPS5TjllWcbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147288; c=relaxed/simple;
-	bh=9rek26u3z9azmwOQJIZVAvbpbRZcwrSvVWLI/781IIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nMWAzHnCwvR/orsu8NGLMwvSwlP7VICmepSf6sMEBw8Y1D5tQli+pBLYJk/NqJ56M6VkKV2ULGMZgBIUDqjGT2NIvUaf1VyvG6eiW4N4aMGqHd6UvbmWa+gDuO0NHjPIpbhC6GVWdXGzM7mDIVr+zYffEaRGE6xBHG9x6jJCpmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGfsG26f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747147297; c=relaxed/simple;
+	bh=mb8IYcPf0v9mQ3lN7BV4NxzF8+trVK3fEDW/UJOXu58=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jYIhBhgRbWN+GmORLHktAVxzYu8gtKa9HhC8ew61Lw2t/gKzavjNl1c0LCHOhATJhASWpomFjQ7bobF6cZbIZwCKkKgOAasdmBbEWfVDN9ypIWzCmbu/z+hsEtEtb2PC+KKvahL591HDexyYKtG7D8z/eHiPQAdFOLmd67TgovU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lekU8uJu; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGfsG26f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E73C4CEE4;
-	Tue, 13 May 2025 14:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747147288;
-	bh=9rek26u3z9azmwOQJIZVAvbpbRZcwrSvVWLI/781IIk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nGfsG26f/rgdzMXctx0MglLJybNp+KWifX6SJ136P6pW3LpTXKI6UHRPvbqdn8gCQ
-	 wsuGO387b9knuH5ITzA6E4CLjpKJPu7jZfh68e2JBLooX1Q0DefAfNKjtJt4ravwhn
-	 mCijz7ggSDagZH1eG9ETQmArV3xy00Y6TL/CMlZ9J1WQJ6eejFrdHRxvZy0bwN7H0H
-	 FUJqhmL2gHuKqOU7bgiyJDWwLJaaZh8FFhX2z1a+RYyjmImL8WNkrAHgNEK2KHWTZz
-	 EI49b7rHqPxyLgd7MPT8QENtb0FWgeudX+mmzO+QpuF61BxV1/nI5JeY4AtaK7ka6P
-	 b8ZJ9KuSJ2VVA==
-Date: Tue, 13 May 2025 07:41:27 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v10 02/13] net: pse-pd: Add support for
- reporting events
-Message-ID: <20250513074127.5b64fc6e@kernel.org>
-In-Reply-To: <20250513114409.6aae3eb9@kmaincent-XPS-13-7390>
-References: <20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com>
-	<20250506-feature_poe_port_prio-v10-2-55679a4895f9@bootlin.com>
-	<20250508201041.40566d3f@kernel.org>
-	<20250513114409.6aae3eb9@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lekU8uJu"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbcd9088a7so197657a12.0;
+        Tue, 13 May 2025 07:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747147293; x=1747752093; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sj9JWobjjURndiB5voh74O3FyUWIq5WzIHSbkeGfY7w=;
+        b=lekU8uJuAHyJIMkEvbflsgr5rTLYm6cxGUltXEvh6uqdPzdW4uJO2ew/5LvrAS8a8s
+         TD56KgS+uEzQTDAyFL2Yv5t4yUg2vAQTgwqQ8PFBC7hiMyRkLpsUN+M7dBZBDjuvG0N+
+         QLlaXRUlgr4d2tOWBSHtBBHDLb2/cQzV9n8eHM68KZf29w53r1tyxB0H/cjAK/UeH/k+
+         gHfxC2xvXdtBEVzyEqtgrLWOA4We67ISsKZaKBhZ4q2QLq2f9mqbC60LrDEi/14KZ5i7
+         Qo19yZMmxYzSwIdM0MTZeG9dakcnkidR1aEfLKLaXiFxSLKLyt6NCpRKXv4lSDx1ajEC
+         EA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747147293; x=1747752093;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sj9JWobjjURndiB5voh74O3FyUWIq5WzIHSbkeGfY7w=;
+        b=A74bm34nD0riPTDXf0gHeMgjM4usH65dIqJIUejLOfRqVU1QUSZPn210RqTY5Rcl90
+         Tbx65xIPSUZT6E500HQ3Q1iHvqwWvZ5UKTd21MjsnMHUe5iQx8RAQRfQqlAaKS34a5Un
+         o28kdX0EcBmeDyYUAEgFPYBXu5BIzAiv2ZD6UMxiglRKU7JEBwevd/K+H+FV+qqyop+m
+         3g3gR/qy7xL6TbfRW4iYLfFGVU9g/5zMwi3865SUTVsMXapyievlMePDbqUUmRVosOqp
+         +JisAPG4IU/AzswSs7fXXN90dcX3J28Pq4YxM9zk6GHskn9GF6KNBbTxRLd9l+fpBSDz
+         heKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfJhDCC0YD/gjOqAa0DJG03lU2GP1zeLHD7UNq8Bm9rM15ZKAZoiSAY8dRSR19tQtc13xP2D4fjC5Hm1I=@vger.kernel.org, AJvYcCXBgZuP78mTbsk/7H2/P8lyYfR/UP1IxOTemK99ZjG3N6OXCoENSS0TleHFkWU1EkmLcSF7aCPq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9AbfbIELdmi0QCgkawpCe6DqaAQraMuU6RKpePwWcLi+FbUYB
+	VQDGv3WE/RTePH1HzCT8+qfEWiC0ad+zII5phZQRfxXX9LRBLe2D
+X-Gm-Gg: ASbGncvY15Xco1NynE+JM9mJrbzW3+pcGU/GlLdM6a+RtSeWQ6x34iywJngWaoE4BF8
+	uKvw/cmWWGRh2VnUPTk1532AtlnEenxczf2FNEpqzuLfcPzDpV/xHhRFuA5uO7bPsWI1n7PpM4m
+	UT1dnzDsur1uqxwXgpCb3dyBZPS6+ciqYE7bhrg1/SkKxHchLPe4OQTXjStmuwvoloyPrKaGhwj
+	dM2QmZ4QCgBV16BPc1QS89NKQZ0DA/QIp9wrAg30EFqYdmbkDrpena8hhPZs4dYqwVQ600VG5pZ
+	z4n0+AHkMR5MJ1MwkXPc2BLOEOsuVBCJQkLFqUb0t0Nb/hf/O4M0FOVqJ+S77w==
+X-Google-Smtp-Source: AGHT+IGFa9mS6+Nc4qN7oSyL9hgE8zSKSOzKP1YZ2WxaGrwH+6/a691+vK33Dfrpje5zGQyh50Dbhg==
+X-Received: by 2002:a05:6402:270c:b0:5fc:af59:e180 with SMTP id 4fb4d7f45d1cf-5feebe47c84mr2963420a12.15.1747147293309;
+        Tue, 13 May 2025 07:41:33 -0700 (PDT)
+Received: from debian-vm.localnet ([2a01:4b00:d20c:cddd:20c:29ff:fe56:c86])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d700e56sm7301556a12.57.2025.05.13.07.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 07:41:33 -0700 (PDT)
+From: Zak Kemble <zakkemble@gmail.com>
+To: Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Zak Kemble <zakkemble@gmail.com>
+Subject: [PATCH 0/3] net: bcmgenet: 64bit stats and expose more stats in ethtool
+Date: Tue, 13 May 2025 15:41:04 +0100
+Message-Id: <20250513144107.1989-1-zakkemble@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 11:44:09 +0200 Kory Maincent wrote:
-> > >  attribute-sets:
-> > >    -
-> > > @@ -1528,6 +1534,18 @@ attribute-sets:
-> > >          name: hwtstamp-flags
-> > >          type: nest
-> > >          nested-attributes: bitset
-> > > +  -
-> > > +    name: pse-ntf
-> > > +    attr-cnt-name: __ethtool-a-pse-ntf-cnt    
-> > 
-> > please use -- instead of underscores  
-> 
-> All the other attributes are using underscore in this property.
-> Are you sure about this?
+Hi, this patchset updates the bcmgenet driver with new 64bit statistics via
+ndo_get_stats64 and rtnl_link_stats64, now reports hardware discarded
+packets in the rx_missed_errors stat and exposes more stats in ethtool.
 
-yessir, we're trying to guide everyone to use -- these days.
-We should probably s/_/-/ all the existing cases which don't
-result in codegen changes.
+Zak Kemble (3):
+  net: bcmgenet: switch to use 64bit statistics
+  net: bcmgenet: count hw discarded packets in missed stat
+  net: bcmgenet: expose more stats in ethtool
+
+ .../net/ethernet/broadcom/genet/bcmgenet.c    | 263 +++++++++++++-----
+ .../net/ethernet/broadcom/genet/bcmgenet.h    |  32 ++-
+ 2 files changed, 214 insertions(+), 81 deletions(-)
+
+-- 
+2.39.5
+
