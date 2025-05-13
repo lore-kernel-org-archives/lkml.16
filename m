@@ -1,99 +1,93 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768DBDF42
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0732260C;
+	Tue, 13 May 2025 14:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146666; cv=none; b=sHsQ/6SV8y2tLMQJx4DcRgbYIKL5kTGnwA3dDjNt1oFJZj1oBHNRleV1R721BafIWtiv7dCSzTJr48JpAfGW9+MpGrDlyVlR5qXUN70cebt/VoGkY/3esLwA4Vzx0fEUfp05FStVmRTnrIxn0eMUMyPcnwI5SC0lrWaFOvEzb1Q=
+	t=1747146679; cv=none; b=mGLdj2Nucr1Vp240OpI3aj1PFBHcseifuumwyTyY9hPzIuc8qJrEqlgw0TnqbTMNejzWULmE+CsGpReZDJR4ZNzsSBo559pOZgHTjtSyMvCeo65uJhSeMyvep2V256pN2TnqA8lqpWxXHDJ9JaaBlqV5Pc5ZppapIvpiEetUsrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146666; c=relaxed/simple;
-	bh=GoMTa1oiBRufAMk+TJR19hVLI1uHIVu+p5+V59bCmTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8ccxsvt4e/CWR4rHqQpfxJcCGUx/3ji9b9PnokQciSKO7aldNTLiE2WZ4vQKgla64xdioFhjUp8Ia2YO8xheNkAUBo8AOeTCoqzJLZgejZoJj+jX15WvtVQxOpM7LeSeA2apCYtBf0ev7ytxBNZVmyEviY4ikt/9m8INtoH8ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CseQ8F+H; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747146679; c=relaxed/simple;
+	bh=FVma0HglSHdfRfFV6OtVOHyiSgVx1ms3kePqvf2OV/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MqZG9lrC0f+LVrsk06Q/BgO2EvF+NjD8eBD1vJ4+uYNy5uHRdX2gajgQ2eSYEesp5gzWDwwz5CNRmG2BLkmxZXQL5/ajwu5jxjUN/+VN4ikjHBJLExSM+Q6AHyuB3TYW9gd02DGWrZuUb4obdXkB3d8Zqfl42l2uhlN3BWnSiug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=ImR3Veu6; arc=none smtp.client-ip=5.135.140.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CseQ8F+H"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442ea95f738so8881295e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747146663; x=1747751463; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yyty9J7oFX8g3fubknNJuxgnKh0O3w+60/UN3l+3UkA=;
-        b=CseQ8F+HhATdy8UD/Y+r1Nw+BSzQWu7Btu4Q6Dkj3y5GT2XE9kCgFDppS+YmhdBCd1
-         hXqK24KnczpB0lsPg4Af0MWBv93V8KdOjJn0X/fDKMog4/SL1nW9oG/71M2sp126dN7P
-         rucLcOmKO0PYOWkVlvUHVlJ9O0FC4GLrN9sol6IN+l9Id6GgFF5p19Zxdp6QJYJfrvVB
-         Pj6WUj9YE1581+6yFou+NDuKJfGjmbO3+hyUVgk9sobrMj7lLEvduJ8TuzuJ1AT0uZej
-         l9Y7bSW3qivT3edVWv678uHXrZl8fZWwkQF5fxGePn7n3Bk9wzJ3jiOzoyFRefUF0Cyj
-         mbeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747146663; x=1747751463;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yyty9J7oFX8g3fubknNJuxgnKh0O3w+60/UN3l+3UkA=;
-        b=KTkK8gU/IVn3woXNlsdZFd9nTAhhp9w3AbnhS/msQjyrw8FTsIXOVJ9YlCUWeoNxeY
-         gzLM6af1MokQ1TVcivL5SYNFJggGmR0J7SgitHm5D6Da+LUwBRsE3fNW5LO74eS/jKx7
-         Tmeyo9W0rCTq0ZVW4HmzvecjaY/wSIWIe6IPMC8ijppzxXcPTfeuHEQdJcTe7wfGlQF3
-         C7jGLS2hhZ22nPOhnHGVXmfgwt0ejN94Y5/rX28oKPiSdPNegVjBGIiAgJ/QlVa3aEyK
-         0e4ajvHw+6EhDZkGRcHneV4V+DedqMP+B/wTpfF07jWXiOpn5ZxsUcW4udvXHN7cNWo3
-         ilzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkG5RXZzViQ5yGArebME3r+FF5OOlj6nqtxK/qsHWLFbbRdvS6jKawWW7Mbbmqu4Vp6agV8CREU8Gu4M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcUawb8tbS6xrAQri3dCS8j6ZXYecrB/BddXVqpVq5SA6KV8kP
-	P/wok+9qbX4tkJiQUG3forU9b1A09v1I88Xa7nyKP2t1VfM6yUVKTPjei5mgakA=
-X-Gm-Gg: ASbGncuvKR2ep17DkavNV8COzy/Xug+fynKtV7LrDMyfy3Wd+8r+pvkRN3Y+K+1LKOg
-	KWyj2VmotKDZvZFt2ndej5eslyCZZNmNmKS7z5Z9EIAFhCd19t4c3NfnlG4ejuq31drSr8tUGuC
-	W/DtG8b3iqDuCbpWURmmBgObE6P0dgYdRnh2WxVQC3ynQ0mb3nsR+0Iyb8RiiaFRIIwH/MOSAhE
-	GGTdEFSlzfBbk/Kjz86+c+b5J5eXUEgZYBnBmcVmsQE4mY/nbJqhGmTTkPHen+p10jeVVlc3VXP
-	B+B1dxTBll8CVDYFhf3xvjBHM5lpsw9YAXNdYWzIZbMWwt4hU0PZwcok9TtUAa/9sdZ2iXp60uA
-	0rZ29g01xhQYAcA==
-X-Google-Smtp-Source: AGHT+IGyf1wD89DJXcgW642MDWFrZO+pHlL+xumUMPnNlympatoSZi++X3uov9+a1oXYEtcPTWl+zw==
-X-Received: by 2002:a05:600c:a00a:b0:43d:db5:7af8 with SMTP id 5b1f17b1804b1-442d6dc7cd1mr139332205e9.21.1747146662687;
-        Tue, 13 May 2025 07:31:02 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d6858626sm174090695e9.27.2025.05.13.07.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:31:02 -0700 (PDT)
-Date: Tue, 13 May 2025 16:31:00 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Baruch Siach <baruch@tkos.co.il>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert cnxt,cx92755-timer to DT
- schema
-Message-ID: <aCNXpHegnr4_FjfT@mai.linaro.org>
-References: <20250506022232.2587186-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="ImR3Veu6"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 87F0D1305EF;
+	Tue, 13 May 2025 16:31:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
+	t=1747146669; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=kTGtXYGRQL2cWLSakDL/RGJFBLjrVwjbgAU6H+932/4=;
+	b=ImR3Veu6J/nE220woGoGu6PNkF3kLxvnZkxbQE/4KldytbKqDsZOUZnoMnhiG9MRVrfKIM
+	VqYElVmt7vf03EstKHvnKxJM0zRU1ESnlzK4jub1UdD1wxkRXT0nUT2sSPy0VH0RoMAVwM
+	qGRIopZd9ZWhZ87RIUlADZXFP864Oe0PlxZhIDW03lqHG3naBM6Y9adfBbf6NzZKFpetrR
+	kTeQR80uS4xtTKq9l7P9Cf1f3RLuZjdgcgMkKu+Macr5Pq89s6TWqai9/Me57vWmCF52VJ
+	d1uQrVS5HwyFhnxjJRHT0xV2jc50gCDCAj7OlZ/CGne8VFez8xuJDXOzXexKRA==
+Message-ID: <45166de2-8504-484d-90f6-6ef97c650b61@cjdns.fr>
+Date: Tue, 13 May 2025 16:31:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022232.2587186-1-robh@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v5 0/7] Add EcoNet EN751221 MIPS platform support
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
+References: <20250507134500.390547-1-cjd@cjdns.fr>
+ <aCNWM5Xq7wnHVCrc@mai.linaro.org>
+Content-Language: en-US
+From: Caleb James DeLisle <cjd@cjdns.fr>
+In-Reply-To: <aCNWM5Xq7wnHVCrc@mai.linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, May 05, 2025 at 09:22:31PM -0500, Rob Herring wrote:
-> Convert the Conexant Digicolor SoCs Timer binding to DT schema format.
-> It's a straight-forward conversion.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
 
-Applied, thanks!
+On 13/05/2025 16:24, Daniel Lezcano wrote:
+> On Wed, May 07, 2025 at 01:44:53PM +0000, Caleb James DeLisle wrote:
+>> EcoNet MIPS SoCs are big endian machines based on 34Kc and 1004Kc
+>> processors. They are found in xDSL and xPON modems, and contain PCM
+>> (VoIP), Ethernet, USB, GPIO, I2C, SPI (Flash), UART, and PCIe.
+>>
+>> The EcoNet MIPS SoCs are divided broadly into two families, the
+>> EN751221 family based on the 34Kc, and the EN751627 family based on
+>> the 1004Kc. Individual SoCs within a family are very similar, only
+>> with different peripherals.
+>>
+>> This patchset adds basic "boots to a console" support for the EN751221
+>> family and adds SmartFiber XP8421-B, a low cost commercially available
+>> board that is useful for testing and development.
+>>
+>> Note that Airoha (AN7523, AN7581) is similar to EcoNet in terms of
+>> peripherals, and for historical reasons Airoha chips are sometimes
+>> referred to with the EN75xx prefix. However this is a different
+>> platform because Airoha chips are ARM based.
+>>
+>> This patchset is against mips-next.
+>>
+>> v4 -> v5
+>> * 2/7 clocksource/drivers: Add EcoNet Timer HPT driver:
+>>    * Improve explanation of HPT timer in changelog
+>>    * Move pr_info to pr_debug per recommendation
+>>    * Remove pointless debug on spurious interrupt
+>>    * Small code-style change
+> Shall I pick the clocksource + bindings changes through my tree ?
+>
+I'm new here so I don't know what that means for the merges which
+will happen later, but I don't see any reason to do otherwise.
 
--- 
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Thanks,
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Caleb
+
+
