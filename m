@@ -1,110 +1,158 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7AB2144C7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CC018E362;
+	Tue, 13 May 2025 09:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127710; cv=none; b=BbLOph0AB8ssV8i9UAV2LL9jJL3mBUF1vCqslsIA5aQW+YvEp4BDo/3a5y2ZH0skfToAxa3ybBmAU9uZ7YfAvItueGvUUHrZ/hQvZnxKfOJi6B3kDONzaGM9kUzIsYZNAfcZn/X414+0/mjM6o19YWMImf+1gh0S3iNtoTRC0Mg=
+	t=1747127756; cv=none; b=X9PKv5wqx62pYDeL7nU76wTHHiIFkmMbPB1PjY2x7y7c0uuA/HuoRDjLszbkZwe8/HXLZzcCJIySbSW1AryIbK5DuDXaoyVtrQ0mCVz0h7+eY5RHp+2Yhw6MlzcqR7RhMEg7WpUW9/4Mo2cDsR157SbZswOrrJDjRWG7P9HiNoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127710; c=relaxed/simple;
-	bh=W06RFHPV8gonnsmgauUbgxPzser5B7x04G1quNKfCEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sW5T05ucdTyrgL82m00D+r2z7PY5kQ9IacIv7+kaTHGxTJ0uYYhY2DsyQizuyeFN+cqtWGrsbe4S3WHWsylQfa8A347aWAo0spjrErAuKA/PrDo2EQ4PSZp8BEyH8atXbJYrkW2bPJXscukQ8N+o0YhiPMdfd/7IJwXOAS55Av8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nfi8nwt/; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nfi8nwt/"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54fd1650b83so2955207e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747127706; x=1747732506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jAi9rrC5F3j79jXbmUzojQw3jaZE4Bz634vHF8LgQG8=;
-        b=nfi8nwt/P7ekgP9NWzXr6wPMOgiCLtCZEX5G6Vic0bG06xGlKxt1EZeNRRqfRVjsBQ
-         Oz+3IEXvrj1AMrto3DSMlWEe6igUX48AJmmPkQC2iuYP5g37ZPsfSN0LUQ2PLSWcNK+q
-         2GUckCnQ8UKDo2t4nTszF7+WNR7QnFBRglQ9txIACU8EcFOS7W7G+77iFf5WENCPQQuY
-         tcxjQVpFsRstsVjZELXgJG6QgLj9TofZhRyF0p5NrxkmGuV6YfAD0LbGrPyDqhX3D+C5
-         5/SxB+tKpsfVenlzf91+Ivxv0+Nh4CmSdR21YJBec4YyvxfVETMajP+I83ylD4cCIk7n
-         5EWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747127706; x=1747732506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jAi9rrC5F3j79jXbmUzojQw3jaZE4Bz634vHF8LgQG8=;
-        b=aGNRK66qbMcOnHGA+ycDJG6/XE4xx4tLFM5Yx33VWidP2+jGX+6XvxG7WcrFCvymSL
-         ORQkMoVtsvam5RWTuwccNXhqpeHaT1YIXmLV3p02z5n73/UpIjoyRbPysieZ1aDJxQe/
-         x4SAe9dff31sG3222IhFOMSzpZXif4qGXm/fvoC4iFVjtGlsdsb1qn6Tsu79z5/yPs6X
-         rFywOf+Jo6BQzjCAUssmKYoiyxJJX5GcG4t3zjjhFvUHjJZtFwJjTAIAkKDzF9uCdBPq
-         1WrKDKdSRm2LZOPGkYjzrY/78V9k7NBCoMDLhiAop3IxgBvQAEMH9nS4otAa0bhr0Iic
-         J1pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdoCVIm0AqQ/qB7gr8TpWNZ3IVXho4j51RGKf+zX2cLSeXd7oFyWHSrCZOupji9aJ8uRZ7ykXw2adsC0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhL2gYXvg0NmU5OY+8bn3ANWO+deKGqR7Yh/vXU9XN88N2D0rC
-	9JkBS4S1xo2TUZ6Ad2lFiBKXjKCm8YhWkjlWuTEJ41Yp7b3UknGRxbk14Pjbqb0NNWauWMwnOSy
-	erazk036hWrIdn6xNFlioXBI8oa6SK4vmz8daJw==
-X-Gm-Gg: ASbGnctC3bC9hFZgSz+0M/5vZRaj0D1fThUDiWGSa5inuSuuoTARTMzSLVnzMZajwkb
-	f/vweVmcjDOV0H1F8XyB85pYOUZY+cwv8WmLchmRoMpbZwFNg0yVl7qyG3GrOMCcX/K4foU2S4K
-	by+T3RqzFlrznjheivHRFPFmabncSNTQhS
-X-Google-Smtp-Source: AGHT+IG5Frmll3jan8XW4q+c/ZaO7HyTn73Ya+M5QP0nrAUGDePv5va3dllLSktvNB1+Cx7B6+76W/dccZj2jM4v9L4=
-X-Received: by 2002:a05:6512:228b:b0:545:154:52b0 with SMTP id
- 2adb3069b0e04-54fc67c95e9mr6259507e87.22.1747127706188; Tue, 13 May 2025
- 02:15:06 -0700 (PDT)
+	s=arc-20240116; t=1747127756; c=relaxed/simple;
+	bh=L36Sf6u/RDbBIgdHmhUm9WdOwooC5Gpp6K8/pGAS6us=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CImahyDBXn4m3d9Y/Vpkh6eOCRKM1hcFiM7HT2hZ1jqJ8U8vqmARgyCBRzazGCEPFJBxa0fNQDGqHCr01j2owXzp3NQLlexFMILsq2ivn4RgW+veg1f/7DYEnx8Aw27p2TqpcN+4ycZatROgWAB7IAkglVormEpCykkChXzjhyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A734168F;
+	Tue, 13 May 2025 02:15:43 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 925F23F673;
+	Tue, 13 May 2025 02:15:50 -0700 (PDT)
+Message-ID: <c5a74dfe-68e2-48f1-9bbb-06db8e62ffea@arm.com>
+Date: Tue, 13 May 2025 10:15:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428-csl42x-v2-0-e8056313968f@nxp.com> <20250428-csl42x-v2-9-e8056313968f@nxp.com>
-In-Reply-To: <20250428-csl42x-v2-9-e8056313968f@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 11:14:54 +0200
-X-Gm-Features: AX0GCFvRRz_CuxUgIsjJYkT-hxEyuMzIQVYUiGbnvV1LNLCfN6Vvua5kol4mBmU
-Message-ID: <CACRpkdbBKo8Qp5em+CngJOAQF+FPohfsi_V2SLUpNEsim=XykQ@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+To: Catalin Marinas <catalin.marinas@arm.com>,
+ Ryan Roberts <ryan.roberts@arm.com>
+Cc: Will Deacon <will@kernel.org>,
+ =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ yang@os.amperecomputing.com, corbet@lwn.net, jean-philippe@linaro.org,
+ robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+ paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
+ maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
+ oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
+ ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com,
+ jsnitsel@redhat.com, smostafa@google.com, kevin.tian@intel.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+ <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+ <20250509134904.GA5707@willie-the-truck> <aB4nqtMJuvvp7Vwm@arm.com>
+ <015746d7-ca46-4978-a441-09fba781fdd4@arm.com>
+ <4709ff5a-f89c-426e-ae95-f8356808f4f5@arm.com>
+ <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com> <aCIiwrA_MOeVhFre@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <aCIiwrA_MOeVhFre@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 4:11=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+On 12/05/2025 17:33, Catalin Marinas wrote:
+> On Mon, May 12, 2025 at 02:35:01PM +0100, Ryan Roberts wrote:
+>> On 12/05/2025 14:24, Suzuki K Poulose wrote:
+>>> On 12/05/2025 14:07, Ryan Roberts wrote:
+>>>> On 09/05/2025 17:04, Catalin Marinas wrote:
+>>>>> On Fri, May 09, 2025 at 02:49:05PM +0100, Will Deacon wrote:
+>>>>>> I wonder if we could treat it like an erratum in some way instead? That
+>>>>>> is, invert things so that CPUs which _don't_ have BBML2_NOABORT are
+>>>>>> considered to have a "BBM_CONFLICT_ABORT" erratum (which we obviously
+>>>>>> wouldn't shout about). Then we should be able to say:
+>>>>>>
+>>>>>>     - If any of the early CPUs don't have BBML2_NOABORT, then the erratum
+>>>>>>       would be enabled and we wouln't elide BBM.
+>>>>>>
+>>>>>>     - If a late CPU doesn't have BBML2_NOABORT then it can't come online
+>>>>>>       if the erratum isn't already enabled.
+>>>>>>
+>>>>>> Does that work? If not, then perhaps the cpufeature/cpuerrata code needs
+>>>>>> some surgery for this.
+>>>>>
+>>>>> Ah, I should have read this thread in order. I think we can treat this
+>>>>> as BBML2_NOABORT available as default based on ID regs and use the
+>>>>> allow/deny-list as an erratum.
+>>>>
+>>>> Just to make sure I've understood all this, I think what you are both saying is
+>>>> we can create a single capability called ARM64_HAS_NO_BBML2_NOABORT of type
+>>>> ARM64_CPUCAP_LOCAL_CPU_ERRATUM. Each CPU will then check it has BBML2 and is in
+>>>> the MIDR allow list; If any of those conditions are not met, the CPU is
+>>>> considered to have ARM64_HAS_NO_BBML2_NOABORT.
+>>>
+>>> I guess we need two caps.
+>>>
+>>> 1. SYSTEM cap -> ARM64_HAS_BBML2. Based on the ID registers
+>>> 2. An erratum -> ARM64_BBML2_ABORTS. Based on BBLM2==1 && !in_midr_list()
+>>
+>> I don't think we *need* two caps; I was suggesting to consider both of these
+>> conditions for the single cap. You are suggesting to separate them. But I think
+>> both approaches give the same result?
+>>
+>> I'm easy either way, but keen to understand why 2 caps are preferred?
+> 
+> I guess it's easier to reason about than a single, negated property but
+> the result should be identical. With two properties we can easily
+> implement the idreg override like nobbml2 since this works on the
+> sanitised ID regs. But we could also implement this differently, no need
+> to rely on the ID regs.
+> 
+> Stepping back a bit, we know that the MIDR allow-list implies
+> BBML2_NOABORT (and at least BBML2 as in the ID regs). In theory, we need
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
->  - Use devm_gpiod_get_optional to get GPIO descriptor with default
->    polarity GPIOD_OUT_LOW, set consumer name.
->  - Use gpiod_set_value_cansleep to configure output value.
->
-> Checking the current driver using legacy GPIO API, the
-> reset value is first output HIGH, then LOW, then HIGH.
->
-> Checking the datasheet, the device remains in Power-down state until
-> RESET pin is brought high.
->
-> Since the driver has been here for quite long time and no complain on
-> the reset flow, still follow original flow when using GPIOD
-> descriptors.
->
-> Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
-> example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong.
-> And the binding use reset-gpio as example, not same as driver using
-> "cirrus,reset-gpio", and there is no in-tree DTS has the device,
-> so all should be fine with this patch.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Please be aware that BBML2_NOABORT midr list may not always imply BBLM2 
+in ID registers (e.g., AmpereOne. But the plan is to fixup the per cpu
+ID register - struct cpuinfo_arm64 - for such cores at early boot,
+individually, before it is used for sanitisation of the system wide
+copy).
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yours,
-Linus Walleij
+> something like a SYSTEM_FEATURE which is the conjunction of all the
+> early CPUs. However, such system-level cap is only checked after all the
+> early CPUs booted _and_ only on the sanitised ID regs rather than MIDR.
+> 
+> We need a LOCAL_CPU feature behaviour to be called on each CPU but still
+> have the conjunction of early CPUs, more like the system one. It should
+> be permitted for late CPUs to have but not optional if already enabled.
+> 
+> So how about we introduce a WEAK_BOOT_CPU_FEATURE which gets enabled by
+> the boot CPU if it has it _but_ cleared by any secondary early CPU if it
+> doesn't (and never enabled by secondary CPUs). When the features are
+> finalised, we know if all early CPUs had it. In combination with
+> PERMITTED_FOR_LATE_CPU, we'd reject late CPUs that don't have it.
+
+That could work, but it introduces this "clearing" a capability, which
+we don't do at the moment.
+
+We had an offline discussion about this some time ago, with Mark
+Rutland. The best way to deal with this is to change the way we compute
+capabilities. i.e.,
+
+
+1. Each boot CPU run through all the capabilities and maintain a per-cpu
+    copy of the state.
+2. System wide capabilities can then be constructed from the all early
+    boot CPU capability state (e.g., ANDing all the state from all CPUs
+    for SCOPE_SYSTEM or ORing for LOCAL_CPU).
+
+But this requires a drastic change to the infrastructure.
+
+> 
+> I think if we can get the above, it would be the cleaner option than
+> trying to bend our minds around double negations like !NO_BBLM2_NOABORT.
+
+Agree, every time I come back to the thread, I have to write down the
+check and stare at it for a minute to agree with what it does. That said
+it may be ideal solution for the short term. Or stick to what we do in
+the patch currently, until we implement per-cpu capability proposal.
+
+Cheers
+Suzuki
+
+> 
+
