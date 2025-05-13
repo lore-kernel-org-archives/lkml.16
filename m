@@ -1,105 +1,145 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F175835963;
-	Tue, 13 May 2025 00:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F50D35963;
+	Tue, 13 May 2025 00:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747097432; cv=none; b=M24OV655kKYh7/5gnqoLXejRa6PVOB3WDg+6EeL7coraLpbPDa9Hddsd6WQFDwD59v2CFLGHfGDvh3fFJzIXmhTzBSb0O7UejN9W6azfVsaEo0SMcIhljBafVkUGNz5SzmMCMfbqUJeLKIK7aFBb1Yovql5qUsjQVthRhuS9I/I=
+	t=1747097509; cv=none; b=OUG6baajAyiooVWd7WbERNk0Yeb6RKd/lMKSzQEeGccKvU7ak4VXG5yPu8LhWfVaqxMWAsIRHVrTC17HQGqJWIJEZ/uqVTddg5Bk4V3KYlmnNwxNOdqhJM9rUwClRtjkQanhsGj8LcUdz0iZvra5iQlJ/pX+FbBwwtnr1JNCl3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747097432; c=relaxed/simple;
-	bh=pKJ3zzQ2o+0ek73CqN7VAD01BuP66vpZIIDFYMfhxik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RR2RZxTHilIeil7ASU6oM9hKCLfA9YF1AYfU241pI948rfz4GSga1Esms8LfVMj7wlONsmdF+labbDbh6VGf0nSOc3VxaL1FS4cmE/ypXDZzJVGkXEu6qWZNH9wgspuL3NG66m3GNx2SpDwPN15lpry7WKoNS94D9JY7Flf9MaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQEPzcGo; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747097509; c=relaxed/simple;
+	bh=dykArHGaxyt4Kxg8tkLURPYvkMUtVE3+EydPHwxxRFA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iSwTY2tZu7NnEk3yIg9+UZbi6ypBdcyPghqagKynnfQCNuffjpJlp4p90SQbFfaMuhUUtOyMXMCIjMJtszUbmPzxCNJyUP/HF1gqd1MFgPX9h9t0n9/U4sZu1Cnc5NMJJFGnqYGfLhFliU96Ynvrh4FbEM4I0Gz+IBI9gID0Xus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cyf0HtwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQEPzcGo"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85dac9728cdso141084239f.0;
-        Mon, 12 May 2025 17:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747097430; x=1747702230; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pFExgw6I64CfiBILuJYy3YAdnSGdTUqnVjigSWHrhlk=;
-        b=QQEPzcGomExo/5cgtYKivWhVO9MXN2aQAW1kxk0Yu45yZaxS4k+ZGnVvZ0SEL1VxeI
-         itBn+KqyUrNoe/mwzoQsCngpTvfOiAcyZSETVGsB+z5SloAeVM0w+27ay/vQck+E+xX6
-         zhzxZN4glxX711hZV3vciRaTWKSLi58CivdiDcSDqileEiLGTR7fOWeCLFbsDr4xgJ9q
-         sa/5aSpxz8PWPiz61Um3HBeO21X/KLUuSZTpKmKIA6q43oeUM0l1b10gRKvq3I3KIvP5
-         fXoC8slzvj7cT+4FAYzKxsmEfR5uuZu2vG0PK94OnIA0ZXuMulkdYuXdQZjhYKPeVdxR
-         nZtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747097430; x=1747702230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pFExgw6I64CfiBILuJYy3YAdnSGdTUqnVjigSWHrhlk=;
-        b=T7aU2jKwdMKqPJisUBZltRdAgsTlgC75Qx1G9UFss9qEtCbZIb/wMyPldGX6lunRIk
-         P9AqPL/aTRUgBb1nKPAwsqSm2I1K4GJ4lZVtCwXAfYdaOcohSLNIHi5k8QMgroKbHYde
-         xCR+cmXc279SEnOUadgCJvrFAYjYhTdUcPZMVy9aclR3WoSo+ZkNXODFStTxE4Qq+SAs
-         S1trdN9pRzOd1lHIzgkuhu5ApuLj/UJyTVd0AbJMzOUQnZyytp8w9Ud3DHJfdWrW0Iny
-         M7bnLWcBlbRvMHx7EcZD4V8yTC2aqMFHg3f/40IjdOkBeJnZItsvtKxfWZeF9znSGXW4
-         rfbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtMYAlcif9Un+Zijij+CxYVWaFxiBP/y1nrqxB9AOnnFfTvwN3XTbZglzQr6/bn0g1TVdzfmQxhV8=@vger.kernel.org, AJvYcCVfFmxjcwZXaEnGUPfpK0bPOnaSMUMOO9nC2y8YNHrR5LercDZzqLycg8I+7y2pajkDnlg2/D4noAqesXs/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5c3E3Wh0YgBlGlTBcwziDTsPILz78QQkyxAq5yeiGZLDDQOLX
-	Y9OPsAuWfJl63Q2VwzhYuyzRZTnzjcta9M5DFMvRwfNeJol0l5G1J/bn04q68R4d4Ugq/q7kik6
-	o7rpJKneRXmLBcaduoKP4V4+v5i52ttTN3Jg=
-X-Gm-Gg: ASbGnctwdyNchmay6KdgUExy4OtrNkCDz3mYuB/KSYs9eqkVgbeQNXa4WCb77Y1wrST
-	cbFr+l0MmLhKjk42OZOpjnjarZOq64NizrTqyvxkz1uaASUiOuHkbcmN9Gekf8W6UTxMWNIhHJm
-	t5T+1TVNA//P1K8IG+Oh1MjS0PBASquH/f
-X-Google-Smtp-Source: AGHT+IHg1M2nc8+AJQ2gyRTnCOW1RGBKSDLedExyUbzzJBOgk/rK/+JPsywaFblhSvrc696dqyzd8z+SAAgyUECzWu8=
-X-Received: by 2002:a05:6e02:188d:b0:3d8:1d7c:e190 with SMTP id
- e9e14a558f8ab-3da7e1e7416mr180384915ab.7.1747097429935; Mon, 12 May 2025
- 17:50:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cyf0HtwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7548CC4CEE7;
+	Tue, 13 May 2025 00:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747097508;
+	bh=dykArHGaxyt4Kxg8tkLURPYvkMUtVE3+EydPHwxxRFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cyf0HtwHystq8hcaqSIMC2f5usGGtKTyF7Vch/ZSM6x+fIcxyZ8OzdoHpZVxLGkZo
+	 tr0P5ywCN2vHhW6V3BUt0H3JJtKOCA3udcBJ6Z3ffrur4mgJiGOE/NPr6mr1gRUdao
+	 iSEN3YxngfNxkJ7vomun2M9tocuYpdoBRz3TcUsA=
+Date: Mon, 12 May 2025 17:51:47 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 1/5] relayfs: support a counter tracking if per-cpu
+ buffers is full
+Message-Id: <20250512175147.925bcdcd5f6cfa71def08bb0@linux-foundation.org>
+In-Reply-To: <20250512024935.64704-2-kerneljasonxing@gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-2-kerneljasonxing@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
- <aCGR4EOcWRK6Rgfv@smile.fi.intel.com> <aCIL0zZvf1fvTahk@infradead.org>
-In-Reply-To: <aCIL0zZvf1fvTahk@infradead.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 13 May 2025 08:49:53 +0800
-X-Gm-Features: AX0GCFvYJrRX6jNEfyngKE_7qQIdJXCJWq9aLLm48eKkDFEPwUalY3JU0sUNA_Q
-Message-ID: <CAL+tcoCJxoiGi=Ea1KCG4_ri2=GbNhhVhEV5anMLyai6qg2zeA@mail.gmail.com>
-Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net, linux-doc@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux@treblig.org, viro@zeniv.linux.org.uk, 
-	Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 10:55=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Mon, May 12, 2025 at 09:14:56AM +0300, Andy Shevchenko wrote:
-> > Also note, we usually do not care about the out-of-tree users. The main=
- Q here
-> > why are they out-of-tree for so long time?
->
-> We do not care.  If some of this ever gets submitted it can add the
-> needed helpers back.
->
-> This entire discussion is silly.
->
+On Mon, 12 May 2025 10:49:31 +0800 Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-I'm surprised how you described it....
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Add 'full' field in per-cpu buffer structure to detect if the buffer is
+> full, which means: 1) relayfs doesn't intend to accept new data in
+> non-overwrite mode that is also by default, or 2) relayfs is going to
+> start over again and overwrite old unread data when kernel module has
+> its own subbuf_start callback to support overwrite mode. This counter
+> works for both overwrite and non-overwrite modes.
+> 
+> This counter doesn't have any explicit lock to protect from being
+> modified by different threads at the same time for the better
+> performance consideration. In terms of the atomic operation, it's not
+> introduced for incrementing the counter like blktrace because side
+> effect may arise when multiple threads access the counter simultaneously
+> on the machine equipped with many cpus, say, more than 200. As we can
+> see in relay_write() and __relay_write(), the writer at the beginning
+> should consider how to use the lock for the whole write process, thus
+> it's not necessary to add another lock to make sure the counter is
+> accurate.
+> 
+> Using 'pahole --hex -C rchan_buf vmlinux' so you can see this field just
+> fits into one 4-byte hole in the cacheline 2.
 
-Now relay works like a filesystem which helps out-of-tree users
-transfer a large amount of data efficiently. it's totally not like
-other pure dead code. I meant what the trouble of just leaving it
-untouched in the kernel could be?
+Does this alter blktrace output?  If so is that backward-compatible
+(and do we care).  Is there any blktrace documentation which should be
+updated?
 
-Let me put in a simpler way, two options, 1) just clean up, 2) keep it
-and help so-called 'out-of-tree' users even if you don't care. I don't
-figure out what the difficulty of keeping it is :S
+Also, please check Documentation/filesystems/relay.rst and see if any
+updates should be made to reflect the changes in this patchset.
 
-It seems that turning it back to a filesystem again is the only way to
-stop debate, then no one would clean up its dead code and reckon it's
-obsolete any more :S
+I'm not really clear on the use cases of this counter - perhaps you can
+be more verbose about this in the changelog.
+
+> diff --git a/include/linux/relay.h b/include/linux/relay.h
+> index f80b0eb1e905..022cf11e5a92 100644
+> --- a/include/linux/relay.h
+> +++ b/include/linux/relay.h
+> @@ -28,6 +28,14 @@
+>   */
+>  #define RELAYFS_CHANNEL_VERSION		7
+>  
+> +/*
+> + * Relay buffer error statistics dump
+> + */
+> +struct rchan_buf_error_stats
+> +{
+> +	unsigned int full;		/* counter for buffer full */
+> +};
+
+Why a struct?
+
+>  /*
+>   * Per-cpu relay channel buffer
+>   */
+> @@ -43,6 +51,7 @@ struct rchan_buf
+>  	struct irq_work wakeup_work;	/* reader wakeup */
+>  	struct dentry *dentry;		/* channel file dentry */
+>  	struct kref kref;		/* channel buffer refcount */
+> +	struct rchan_buf_error_stats stats; /* error stats */
+
+Could simply use
+
+	unsigned int full;
+
+here?
+
+Also, the name "full" implies to me "it is full".  Perhaps "full_count"
+would be better.
+
+>  	struct page **page_array;	/* array of current buffer pages */
+>  	unsigned int page_count;	/* number of current buffer pages */
+>  	unsigned int finalized;		/* buffer has been finalized */
+> diff --git a/kernel/relay.c b/kernel/relay.c
+> index 5aeb9226e238..b5db4aa60da1 100644
+> --- a/kernel/relay.c
+> +++ b/kernel/relay.c
+> @@ -252,8 +252,13 @@ EXPORT_SYMBOL_GPL(relay_buf_full);
+>  static int relay_subbuf_start(struct rchan_buf *buf, void *subbuf,
+>  			      void *prev_subbuf)
+>  {
+> +	int buf_full = relay_buf_full(buf);
+> +
+> +	if (buf_full)
+> +		buf->stats.full++;
+
+I don't understand the changelog's description of this, sorry.
+
+Is it saying "this operation is protected by a lock"?  If so, please
+specifically state which lock this is.
+
+Or is it saying "we don't care if this races because the counter will
+be close enough".  If so then maybe so, but things like KCSAN will
+probably detect and warn and then people will want to address this.
+
+
