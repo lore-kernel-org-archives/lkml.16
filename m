@@ -1,127 +1,91 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEA978F43;
-	Tue, 13 May 2025 22:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9081878F43;
+	Tue, 13 May 2025 22:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175570; cv=none; b=iOws+2Hot0jPsrBMOoSOoD90O3/ymYl19aenKfEN3hASQwY6pWPTrZPtljToFrzfy7B+Q4mv1HpcXbZon6hwaVfiT85Kmeanh5kT6o+28jC8IRboF1ftdcnlnZqJmHbLddVlxIgRt5MZ6hwWH4V2EsTnnLs6BnZGpIrJUZhws90=
+	t=1747175627; cv=none; b=JNTCnblLqF3LLavTkLwqG+jv5aFQq8biHEk8gdr2X67Amr6k+sLDxG2H0DYxGnprdAdcaRxxoaqM542GWKviAZ9Tt4A2CWPDXMxNGTuACXyVLPQ5LSYW7J6TIW7iZ1OrDFMbZXDs/ea6nyf6WGalKk041XNYqUvZn8BaiuAIxQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175570; c=relaxed/simple;
-	bh=+3XGKK5tSVsAG22kTR01LPisOgKQ8LKsZXwmHszxcxg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eLobgYen1R1Dq5P5gvURBuPHGs5U/OBq8hzoYz+PlhyDM2l9+Pv95h866d86p2Gw0GLrlm1zkksH+tpXGoMbpfOJqo9r9BeCQC3DkdrLD/4REkiXw/Mi0x1As7vJtHo84TM9SK+D+Xxvi7lqqztvSiBQS8S+QnDUULr5NtwzyQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIjoSA1X; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747175627; c=relaxed/simple;
+	bh=YUNyQIe2U9PIChTRWi/w1n2BI+PrjEJrqXJnOcNN0QI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Xpy49KPKywiCoU6N1yColfsWQqEiN9oQSOOM/UyZPfycpRMwFage52oIISp4fC4NZEZgIGzlTLDbCGapj9ytj+A5AS9Gcek+CN9tn2wl1bd+qZ7NVKbo4txnC5sdzPVZiXztTOg5VjRDVsTgs5AKiIGR7+mfLszynZ3EMB8WMvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xgmm++rC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ylCeGvmb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIjoSA1X"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b4907a28so917457f8f.2;
-        Tue, 13 May 2025 15:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747175567; x=1747780367; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GOO3+D38PGP2XKKbxPd24Ou4JSZM80XieSsvghMwa6E=;
-        b=aIjoSA1XtOiCCp5zdAvy+GcFYApso3NSe50rN9mlgje5lxArWouMPnIRJ7170yBEgu
-         wR0l0AhqzgMYoW7aslesVMB5UMPcdAOtV166TFqWpVrObdxzbRbQcMEkr44QpFgQxiZT
-         H3CGQNsUbSK1XFkpwvwMtneQv7bMBKofwoK95c1ctoE2G9+D3afVyD5XBjBmu3u3iNdg
-         /7kpsMdjJjxtSKjumDNjl/3yLMB9hzVqQ4rruwwJAszdnEyztV9XHh75lnpi6MjosfQG
-         HGdvXnNnIJ3VSDA9ZwUqHK3S+ZeYx4evf4mQ9sc+Ho3lQvSo8vGeSQpvXwrFCEK4WpVi
-         JGfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747175567; x=1747780367;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GOO3+D38PGP2XKKbxPd24Ou4JSZM80XieSsvghMwa6E=;
-        b=FfdQpAnY1/cIKdeXTcfTX5FE63FG3uZV+seH+X2WO0wbEnBp3DbGOifovowqe6adV8
-         0KNGUyzJ7pbp+2gyEJkFGLHcCF1Xi2n7aFwtvmEzWDaDidULnnSAiPkbEzNtvL5dhf10
-         1ghcH3RthQ0xiKxb7PQwCh6C29q3srudlDKBKRa9cYOxkZlAPQ1YW/RXmFk5+FqFjfGF
-         d8pPYzFIsDMcvfo4ilHdEhRkobno2bKz4Vv/U/D6JtYmpxxRK7YRRXWXvfvVq4uY6vGf
-         guvb+467nPphM+qPbL+ZR3VDnqTnOYAIrOcFk1ZakdiQRCNNGras5xhBFBspQDwDBtZf
-         tAFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTLJN90fAFJg+NN32g91SG4RtYWbZhSY2p0/ZlbfErvHkfFr9+IvJt43ckO7CkS0jeymZb708migyvgwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYJlDxQJcwcvLwPUfgW2BD4V7jhLM3JGZ2h/bqaEQg4pHhFDMX
-	ukisVLI4u6s66ULNZlqFZMl48p3c4N4m8aZQrPbeJTyQJ86J0gHB
-X-Gm-Gg: ASbGnctgCjXeCG6mRTWShjh7irjFyDYd/5AJkGnOS6c4Xam6eRpUUZRESvwT6SJsre3
-	JsEmTh3V0FhRgdIJOWEOyM0C6n8JcSta5LhssZOsBO8FdVoaCTbo1qO/b30tTp8H+Nw4vuY0nyK
-	rf3HVfU9NCXfpiYFc1fiKHP9SvZoP2VivLhfw3i81XTA4yONKc8187VgkrLD37+pdZymdfjZVec
-	KEQFHCEsy5NqJWBR/0s72y9vOrfCHEhFQyJHa21GgRJvquGa2mxXo8QMw1wojpjm+cvR8M0Hh9L
-	Sze9W4++Jj4+RJGhcDCfLCJzeXs5viSfaPO0DWcbR7INM49ebVkREc7uKvDAbYyRJQEve3xTUeb
-	EXS98o6YceOKz
-X-Google-Smtp-Source: AGHT+IFXJLpwx5PB9w07pxqndJCIjz+5sTL3g4V+/2gtwJv10YxYnXtbMmFVW1vbDCGtifs54FlzCA==
-X-Received: by 2002:a05:600c:350e:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-442f2190f43mr2271575e9.6.1747175566477;
-        Tue, 13 May 2025 15:32:46 -0700 (PDT)
-Received: from localhost.localdomain ([102.44.114.188])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368d1csm3849195e9.8.2025.05.13.15.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 15:32:46 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-X-Google-Original-From: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
-To: shuah@Kernel.org,
-	skhan@linuxfoundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
-Subject: [PATCH] selftests: ir_decoder: Convert header comment to proper multi-line block
-Date: Wed, 14 May 2025 01:32:42 +0300
-Message-Id: <20250513223242.304716-1-Abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xgmm++rC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ylCeGvmb"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747175623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SBu6jOiYhKDCfpRwEEfnOMMozIrEopxusl8R7L65TRE=;
+	b=Xgmm++rCS5or8sQP/V7FV/7I+gu417wa64wrkUW9S4eApJbYYv5izpvXL5MMT+OVgLxsP6
+	hDkmUzmeK3eLTvoiMSQQYCUnGC948WCuRu8UAb9upD9pyHiKqPqktl0O79sKs61w+rUCg0
+	b575qo2yKoIvXORefoPqA1FnlvXXUf7ZzTwRZj44JIEfraet4gt/DwlEgxNoKpPkVW09mH
+	wfJULnEir8zySqw/lrsdqdthDup5E+ALI0F1awUycTjZnj6lpZJ9hodhQIh/6+nAxwx4nj
+	CiBFGwYAI/4os7x/QlrEn7RkuQuCgDEyxWrnx7ioVUyXcqkszJwgG57LI/92oQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747175623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SBu6jOiYhKDCfpRwEEfnOMMozIrEopxusl8R7L65TRE=;
+	b=ylCeGvmb66S/kbdelfb34eDz/rLFmMWgKMuM+s29oM1cPIpq4R3C1s5iqkgKhT3zueuwrC
+	Tkpj96byw+nnTjDw==
+To: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org
+Cc: Bert Karwatzki <spasswolf@web.de>, linux-next@vger.kernel.org,
+ llvm@lists.linux.dev, Johannes Berg <johannes.berg@intel.com>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+In-Reply-To: <20250513164807.51780-1-spasswolf@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de>
+Date: Wed, 14 May 2025 00:33:39 +0200
+Message-ID: <87h61ojg3g.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The test file for the IR decoder used single-line  comments at the top
-to document its purpose and licensing, which is inconsistent with the style
-used throughout the Linux kernel.
+On Tue, May 13 2025 at 18:48, Bert Karwatzki wrote:
+>> 
+>> I'll now start a bisection where I revert 76a853f86c97 where possible in
+>> order to find the remaining bugs.
+>
+> The second bisection (from v6.15-rc6 to next-20250512) is finished now:
+>
+> This commit leads to lockups and kernel panics after
+> watching ~5-10min of a youtube video while compiling a kernel,
+> reverting it in next-20250512 is possible:
+> 76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
+> This commit leads to the boot failure, reverting leads to the
+> compile error it is supposed to fix:
+> 97f4b999e0c8 ("genirq: Use scoped_guard() to shut clang up")
 
-in this patch i converted the file header to a proper multi-line comment block
-(/*) that aligns with standard kernel practices. This improves
-readability, consistency across selftests, and ensures the license and
-documentation are clearly visible in a familiar format.
+I really have a hard time to understand what you are trying to explain
+here. 'This commit leads..' is so unspecified that I can't make any
+sense of it.
 
-No functional changes have been made.
+Also please make sure that you have commit b5fcb6898202 ("genirq: Ensure
+flags in lock guard is consistently initialized") in your tree when
+re-testing. That's fixing another subtle (AFAICT clang only) problem in
+the guard conversion. If it's not in next yet, you can just merge
 
-Signed-off-by: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
----
- tools/testing/selftests/ir/ir_loopback.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
 
-diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
-index f4a15cbdd5ea..2de4a6296f35 100644
---- a/tools/testing/selftests/ir/ir_loopback.c
-+++ b/tools/testing/selftests/ir/ir_loopback.c
-@@ -1,14 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
--// test ir decoder
--//
--// Copyright (C) 2018 Sean Young <sean@mess.org>
--
--// When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
--// will send this IR to the receiver side, where we try to read the decoded
--// IR. Decoding happens in a separate kernel thread, so we will need to
--// wait until that is scheduled, hence we use poll to check for read
--// readiness.
--
-+/* Copyright (C) 2018 Sean Young <sean@mess.org>
-+ * 
-+ * Selftest for IR decoder 
-+ *
-+ *
-+ * When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
-+ * will send this IR to the receiver side, where we try to read the decoded
-+ * IR. Decoding happens in a separate kernel thread, so we will need to
-+ * wait until that is scheduled, hence we use poll to check for read
-+ * readiness.
-+*/
- #include <linux/lirc.h>
- #include <errno.h>
- #include <stdio.h>
--- 
-2.25.1
+into next or wait for the next next integration.
+
+Thanks
+
+        tglx
+
+
+
 
