@@ -1,158 +1,245 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA98E1F0E50;
-	Tue, 13 May 2025 19:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B528F514
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747165927; cv=none; b=NL7DnVB9aPz1AR/yTAbOe/23fSU5wZH2Eiy5jhvEW0g8aL4c17mS55+aThHWr5+82JfX2VFWZlf21suhmsLiU8p0nqVtRreObZMYeBuXKGbry6o+1pHIrSVPky7EJ//NgYHjc1kM8UexptFYPhf09Ye7OZgm2Vl74BHm9IQ8Jp8=
+	t=1747166034; cv=none; b=hcB8JuVaR3K5nkdWm1Uv2AH70+zlwf8OF41LTtVLiPqY7cRtkcBwvdb9dtu7iw/ygmEQl6hgn03fuQMm7x4p6uv1hBjtJoZyrsTo7pQc+jQHZsgmb18oJ1BiPvmKwwbtMMviD0e8cS+vTLML1n45adwQtB+OqU5q44sF9kFcI0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747165927; c=relaxed/simple;
-	bh=wDKLVHcaFWJvD80XRm4s+U6HKYt0lP4FyZVjvthChIA=;
+	s=arc-20240116; t=1747166034; c=relaxed/simple;
+	bh=jMpC6+nTKGYxh9FKwRMUXnHVG/DDLVXrGxDoqwaLuBk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=flBeC576sCfShOwIYbLNAPR+3T9OKZl8RKZbPval4m/MBVPJRrheq2DDgQPbcZmo0SBTvk1TjZEcRwEujSwzUani95bVEXfKWS/Thi81VLWdwUTohxdJO08E9DuDL/NiXSsWQl/nBFVjBuCa+rRQlR9mjejj7mVYSU5vFUaoToE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2jjEciC; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=WLmpX5XH/hB31TN5Zc7Hp9mD3p/AqdexuO/AI/Z5vkB3f6UbIUZhqxJt8qwdTCFCDhE4RZ1sC3S5hPLsiJogxRi5+KW9Xy6nvr0XoU/YbBtAzh7j+f8oXRIKbzmYp98DP9Wbe2bqchly0iEa+slIkxe8QHyvqExLjWPpxYx7Swo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ii84YzWu; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2jjEciC"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5fcc96b6a64so7482203a12.0;
-        Tue, 13 May 2025 12:52:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747165924; x=1747770724; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EPKRGQ6ZTLCpIXOor5B3gE08zTZPi+lkFI2gMZtKNWQ=;
-        b=S2jjEciCRcR5vGjRSz1i1EpchiOGa4+Zr6MbpeTHvMqW9OMSEjDLPaoQbMzypOepOw
-         VIy2XVGKPD2cznwfOOsFFvmpLeFXCNW9CSIW+aOgy+nfCssYO0vowEOPdFj1Ghy8Qd3D
-         6vBZQxyI9m/NRa8ADSWwbLNMnbFtI9cQ2aIn9z2CLKoEhtlZAiN8/PrTli6/ybhu2Y67
-         tBxeWECnvMuM8XRnz0LXs1shWV+lik4LbJcaPo7ap1eQMPMz9KLafcbjpDNp8+ofYTs1
-         /yLG0x+5KRqvCRSwFoXDLQL9irwJwyGjNoIpAwQ1XhBZAFSnr7RGRFwlnzobsPViqhnY
-         R4BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747165924; x=1747770724;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EPKRGQ6ZTLCpIXOor5B3gE08zTZPi+lkFI2gMZtKNWQ=;
-        b=ELrmI26FFG6X5Q9SfxAsLB989iAj797OxtP3D2wp0/cfDAEJEmCCTA0HApQG8aCf5Q
-         Ajq94/BA+NV7UVG8n8MQGSEHF9BLAzPSQM7Z0+yBalV4viFqbwi0JQq4U5fVu7VYBslh
-         kIeTVMtF10zvkPDSwnqzOQ5ieJ43qWXVrhhNiZhRBeVlsFgyhD+uFAzlixyh3793/pL4
-         bR1j2uWAA8hiI6VKkFgYboM+ixRHJXBZDc3qFjHmMcei7WEONjFM2L5fqa/Y+rBduv83
-         Vy2jcBLpw747chryrfFLGg+DRpu5YPLh4Lak8wu0iKWo8n6OKpR7/s1KNk+GIZtzuDER
-         It4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWWojO3vvemmqKWx6P3I+q8fQQg8gxe8M1qpG7RQ02x8xQEDJdw3GENJ+PcaDRV9BqDAIEzFZOy6nk0eQA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVg9G/wpKiH5OiCCqxOng0jKYrlBpBCCEgZHPe95VxKt+QWcF7
-	hUtOo2c1Ok7rlCDoEJLNpU+TXLxGeiAPsloqN/8hhOr/IkS997Sb
-X-Gm-Gg: ASbGncvG5aTbjIJ/L+Nf6J1KmXVsGb6zCaHVd668f9YsgoIAa+I6iSDnHbkRA1Sep4k
-	6a3Ik198Jf2GWUUIUhVDetSubENNKlaGxbU5xPR/fsf6+jPNry11mLMXsT0zOm9SiMlI4h46kE3
-	viHYhFPJmINDsh2iVoSKXmgySKMaQ55qxWFiHdfQwKomvnLHLf5zCiZn0fbfCSmyuAY3S1WJM2U
-	Gk4+zPIT4Jh+MYQHponBTN85AnEU+JSglcf6XAsJC77N4Db7Ug9/4UUKvEDwjgnrhGIipSu4aeW
-	79qVhcDX944w4vTaGKJZvJJm8WulBYveggN1x/YFEP0pW/JhbYID84bE5lolCjv1
-X-Google-Smtp-Source: AGHT+IEiFRYEfLJINFIWkhwduyVSeg0GKORGlrbshmeJjh33oH/QgGIMWgxSku3B+cM7D1WHcVI98Q==
-X-Received: by 2002:a05:6402:4309:b0:5de:39fd:b2f5 with SMTP id 4fb4d7f45d1cf-5ff986a68aamr343658a12.1.1747165923761;
-        Tue, 13 May 2025 12:52:03 -0700 (PDT)
-Received: from [192.168.0.131] ([194.183.54.57])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cbe4993sm7626580a12.9.2025.05.13.12.52.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 12:52:03 -0700 (PDT)
-Message-ID: <5d34aec7-5027-4575-b860-afdf7b2c0757@gmail.com>
-Date: Tue, 13 May 2025 21:52:01 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ii84YzWu"
+Message-ID: <4ef4472b-62a5-43f6-bd16-d6e0ace2335a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747166020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JYP7x1zvO/0xeI6ty3KByabRtirdkevOlW1UhJHVsvg=;
+	b=Ii84YzWuLnEvAwapfSdu42QhvO5nByoj0vYOwk0+wRWbcWfXuVQsG155uOXWQBqmECPgUb
+	OCs7zEqoHuCrFEGw6lBxcWh9WS/LUzJcQyzhbj5flMURVa2xi6LguZuVmyqnWR7638FJdC
+	4gjm4stZu9r71q7Bw1qQpnROYum+5oQ=
+Date: Tue, 13 May 2025 20:53:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-To: Johan Adolfsson <johan.adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+Subject: Re: [PATCH v4] ptp: ocp: Limit signal/freq counts in show/store
+ functions
+To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
+ richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250511154235.101780-1-maimon.sagi@gmail.com>
 Content-Language: en-US
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-In-Reply-To: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250511154235.101780-1-maimon.sagi@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Johan,
-
-On 5/6/25 12:39, Johan Adolfsson wrote:
-> mc_subled used for multi_index needs well defined array indexes,
-> to guarantee the desired result, optionally use reg for that.
+On 11.05.2025 16:42, Sagi Maimon wrote:
+> The sysfs show/store operations could access uninitialized elements
+> in the freq_in[] and signal_out[] arrays, leading to NULL pointer
+> dereferences. This patch introduces u8 fields (nr_freq_in,
+> nr_signal_out) to track the number of initialized elements, capping
+> the maximum at 4 for each array. The show/store functions are updated
+> to respect these limits, preventing out-of-bounds access and ensuring
+> safe array handling.
 > 
-> If devicetree child nodes is processed in random or reverse order
-> you may end up with multi_index "blue green red" instead of the expected
-> "red green blue".
-> If user space apps uses multi_index to deduce how to control the leds
-> they would most likely be broken without this patch if devicetree
-> processing is reversed (which it appears to be).
-> 
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts has reg set
-> but I don't see how it can have worked without this change.
-> 
-> If reg is not set, the previous behavior is kept, index will be in
-> the order nodes are processed.
-> 
-> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
 > ---
-> Since devicetree nodes are (sometimes?) processed in reverse order,
-> support reg as the actual multi_index index so yo get well defined
-> color order presented in the multi_index file.
-> Not sure if reusing reg for this is the correct way or if another
-> property such as "multi_index" or similar should be used instead.
-> Looks like reg is used for similar things at least.
-> Or should the whole "reverse the devicetree" problem be fixed instead?
+> Addressed comments from Vadim Fedorenko:
+>   - https://www.spinics.net/lists/netdev/msg1090730.html
+> Changes since v3:
+>   - in signal/freq show routine put constant string "UNSUPPORTED" in
+>     output instead of returning error.
 > ---
->   drivers/leds/leds-lp50xx.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c
-> index 02cb1565a9fb..48db024081f5 100644
-> --- a/drivers/leds/leds-lp50xx.c
-> +++ b/drivers/leds/leds-lp50xx.c
-> @@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
->   			return -ENOMEM;
->   
->   		fwnode_for_each_child_node(child, led_node) {
-> +			int multi_index = num_colors;
->   			ret = fwnode_property_read_u32(led_node, "color",
->   						       &color_id);
->   			if (ret) {
-> @@ -483,8 +484,15 @@ static int lp50xx_probe_dt(struct lp50xx *priv)
->   				dev_err(priv->dev, "Cannot read color\n");
->   				return ret;
->   			}
-> +			ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
-> +			if (ret) {
-> +				multi_index = num_colors;
-
-Why not to fail if 'reg' parsing fails?
-It is marked required in DT bindings [0].
-
-> +			} else if (multi_index >= LP50XX_LEDS_PER_MODULE) {
-> +				dev_warn(priv->dev, "reg %i out of range\n", multi_index);
-> +				multi_index = num_colors;
-> +			}
->   
-> -			mc_led_info[num_colors].color_index = color_id;
-> +			mc_led_info[multi_index].color_index = color_id;
->   			num_colors++;
->   		}
->   
-> 
 > ---
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> change-id: 20250225-led-fix-444fb544584a
+>   drivers/ptp/ptp_ocp.c | 40 +++++++++++++++++++++++++++++++++-------
+>   1 file changed, 33 insertions(+), 7 deletions(-)
 > 
-> Best regards,
+> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> index 2ccdca4f6960..14b4b3bebccd 100644
+> --- a/drivers/ptp/ptp_ocp.c
+> +++ b/drivers/ptp/ptp_ocp.c
+> @@ -315,6 +315,8 @@ struct ptp_ocp_serial_port {
+>   #define OCP_BOARD_ID_LEN		13
+>   #define OCP_SERIAL_LEN			6
+>   #define OCP_SMA_NUM			4
+> +#define OCP_SIGNAL_NUM			4
+> +#define OCP_FREQ_NUM			4
+>   
+>   enum {
+>   	PORT_GNSS,
+> @@ -342,8 +344,8 @@ struct ptp_ocp {
+>   	struct dcf_master_reg	__iomem *dcf_out;
+>   	struct dcf_slave_reg	__iomem *dcf_in;
+>   	struct tod_reg		__iomem *nmea_out;
+> -	struct frequency_reg	__iomem *freq_in[4];
+> -	struct ptp_ocp_ext_src	*signal_out[4];
+> +	struct frequency_reg	__iomem *freq_in[OCP_FREQ_NUM];
+> +	struct ptp_ocp_ext_src	*signal_out[OCP_SIGNAL_NUM];
+>   	struct ptp_ocp_ext_src	*pps;
+>   	struct ptp_ocp_ext_src	*ts0;
+>   	struct ptp_ocp_ext_src	*ts1;
+> @@ -378,10 +380,12 @@ struct ptp_ocp {
+>   	u32			utc_tai_offset;
+>   	u32			ts_window_adjust;
+>   	u64			fw_cap;
+> -	struct ptp_ocp_signal	signal[4];
+> +	struct ptp_ocp_signal	signal[OCP_SIGNAL_NUM];
+>   	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
+>   	const struct ocp_sma_op *sma_op;
+>   	struct dpll_device *dpll;
+> +	int signals_nr;
+> +	int freq_in_nr;
+>   };
+>   
+>   #define OCP_REQ_TIMESTAMP	BIT(0)
+> @@ -2697,6 +2701,8 @@ ptp_ocp_fb_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+>   	bp->eeprom_map = fb_eeprom_map;
+>   	bp->fw_version = ioread32(&bp->image->version);
+>   	bp->sma_op = &ocp_fb_sma_op;
+> +	bp->signals_nr = 4;
+> +	bp->freq_in_nr = 4;
+>   
+>   	ptp_ocp_fb_set_version(bp);
+>   
+> @@ -2862,6 +2868,8 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+>   	bp->fw_version = ioread32(&bp->reg->version);
+>   	bp->fw_tag = 2;
+>   	bp->sma_op = &ocp_art_sma_op;
+> +	bp->signals_nr = 4;
+> +	bp->freq_in_nr = 4;
+>   
+>   	/* Enable MAC serial port during initialisation */
+>   	iowrite32(1, &bp->board_config->mro50_serial_activate);
+> @@ -2888,6 +2896,8 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+>   	bp->flash_start = 0xA00000;
+>   	bp->eeprom_map = fb_eeprom_map;
+>   	bp->sma_op = &ocp_adva_sma_op;
+> +	bp->signals_nr = 2;
+> +	bp->freq_in_nr = 2;
+>   
+>   	version = ioread32(&bp->image->version);
+>   	/* if lower 16 bits are empty, this is the fw loader. */
+> @@ -3190,6 +3200,9 @@ signal_store(struct device *dev, struct device_attribute *attr,
+>   	if (!argv)
+>   		return -ENOMEM;
+>   
+> +	if (gen >= bp->signals_nr)
+> +		return -EINVAL;
+> +
+>   	err = -EINVAL;
+>   	s.duty = bp->signal[gen].duty;
+>   	s.phase = bp->signal[gen].phase;
+> @@ -3247,6 +3260,10 @@ signal_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   	int i;
+>   
+>   	i = (uintptr_t)ea->var;
+> +
+> +	if (i >= bp->signals_nr)
+> +		return sysfs_emit(buf, "UNSUPPORTED\n");
+> +
+>   	signal = &bp->signal[i];
 
-[0] Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+I've checked the code again. Jakub is right, there is no need to modify
+singal/seconds/frequency show/set functions. Now I'm not quite sure how is it
+possible to reach this functions with unsupported input? You export a specific
+set of attributes for your card:
 
--- 
-Best regards,
-Jacek Anaszewski
+static const struct ocp_attr_group adva_timecard_groups[] = {
+	{ .cap = OCP_CAP_BASIC,	    .group = &adva_timecard_group },
+	{ .cap = OCP_CAP_BASIC,	    .group = &ptp_ocp_timecard_tty_group },
+	{ .cap = OCP_CAP_SIGNAL,    .group = &fb_timecard_signal0_group },
+	{ .cap = OCP_CAP_SIGNAL,    .group = &fb_timecard_signal1_group },
+	{ .cap = OCP_CAP_FREQ,	    .group = &fb_timecard_freq0_group },
+	{ .cap = OCP_CAP_FREQ,	    .group = &fb_timecard_freq1_group },
+	{ },
+};
 
+It has only freq1, freq2, gen1, gen2 attributes exported to sysfs. How can it
+happen that you can change freq3 or gen3?
+
+The only problem I see is in the summary output - that should be addressed with
+this patch (well, you've done it already).
+
+>   
+>   	count = sysfs_emit(buf, "%llu %d %llu %d", signal->period,
+> @@ -3359,6 +3376,9 @@ seconds_store(struct device *dev, struct device_attribute *attr,
+>   	u32 val;
+>   	int err;
+>   
+> +	if (idx >= bp->freq_in_nr)
+> +		return -EINVAL;
+> +
+>   	err = kstrtou32(buf, 0, &val);
+>   	if (err)
+>   		return err;
+> @@ -3381,6 +3401,9 @@ seconds_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   	int idx = (uintptr_t)ea->var;
+>   	u32 val;
+>   
+> +	if (idx >= bp->freq_in_nr)
+> +		return sysfs_emit(buf, "UNSUPPORTED\n");
+> +
+>   	val = ioread32(&bp->freq_in[idx]->ctrl);
+>   	if (val & 1)
+>   		val = (val >> 8) & 0xff;
+> @@ -3402,6 +3425,9 @@ frequency_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   	int idx = (uintptr_t)ea->var;
+>   	u32 val;
+>   
+> +	if (idx >= bp->freq_in_nr)
+> +		return -EINVAL;
+> +
+>   	val = ioread32(&bp->freq_in[idx]->status);
+>   	if (val & FREQ_STATUS_ERROR)
+>   		return sysfs_emit(buf, "error\n");
+> @@ -4008,7 +4034,7 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+>   {
+>   	struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+>   	struct ptp_ocp_signal *signal = &bp->signal[nr];
+> -	char label[8];
+> +	char label[16];
+>   	bool on;
+>   	u32 val;
+>   
+> @@ -4031,7 +4057,7 @@ static void
+>   _frequency_summary_show(struct seq_file *s, int nr,
+>   			struct frequency_reg __iomem *reg)
+>   {
+> -	char label[8];
+> +	char label[16];
+>   	bool on;
+>   	u32 val;
+>   
+> @@ -4175,11 +4201,11 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
+>   	}
+>   
+>   	if (bp->fw_cap & OCP_CAP_SIGNAL)
+> -		for (i = 0; i < 4; i++)
+> +		for (i = 0; i < bp->signals_nr; i++)
+>   			_signal_summary_show(s, bp, i);
+>   
+>   	if (bp->fw_cap & OCP_CAP_FREQ)
+> -		for (i = 0; i < 4; i++)
+> +		for (i = 0; i < bp->freq_in_nr; i++)
+>   			_frequency_summary_show(s, i, bp->freq_in[i]);
+>   
+>   	if (bp->irig_out) {
+
+---
+pw-bot:cr
