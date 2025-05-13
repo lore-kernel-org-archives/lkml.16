@@ -1,125 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8194B1E5B9E;
-	Tue, 13 May 2025 14:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE14D1AF0A7;
+	Tue, 13 May 2025 14:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147186; cv=none; b=opoV6AdIyv6C66uhu3UIRwrgKFMT4q14q/wsQkLq88mpSZ+wPNTuiGqAqrNeYrQPpopDYkRCzYKu5AXZiM9EFiQ1rUVulP+jFg6ovPgqo6QEoP5aZGBedga2otfpYpQpqzD8GEl4+rTD7OFcDlX+JbavIGjw/zPciuKZFq4YzLg=
+	t=1747147288; cv=none; b=RI6yZvsHZtziQI7GRiS5XvB3l/owIgg8A0/IdXlWt9Qzc5GyxvP1CyDiSPZSd1xtoej7IqSemAJPSyYicJayXCcKUclsxyEHm/N1SiYIFPz8USDFakI2/ntsriJ/raZcwffSauNFePqsJ9DrvPA7JMAeAJFThxWYxECVhMY5ENM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147186; c=relaxed/simple;
-	bh=PEDSbWPKZrAI4l87D8/IK5YIvcTjwzk9nO/2u32S7yc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3pL9sEEO1o6uQkFMiVXd5E8ByiGs1n1cPRjKeTkeXDJCNtDR3MKq53dh16gWEJ+g3lQ+gAmI8DPpc4iuAN+oPKM53045WNau0r9pSDH59dAHhBqCxRJUHw3SJ0oDFuHxIGDVr38scmtcIwDy2g3C0tRrZSBl49vJxbd54Z86EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7/yAH93; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747147288; c=relaxed/simple;
+	bh=9rek26u3z9azmwOQJIZVAvbpbRZcwrSvVWLI/781IIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nMWAzHnCwvR/orsu8NGLMwvSwlP7VICmepSf6sMEBw8Y1D5tQli+pBLYJk/NqJ56M6VkKV2ULGMZgBIUDqjGT2NIvUaf1VyvG6eiW4N4aMGqHd6UvbmWa+gDuO0NHjPIpbhC6GVWdXGzM7mDIVr+zYffEaRGE6xBHG9x6jJCpmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGfsG26f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7/yAH93"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6C8C4CEE4;
-	Tue, 13 May 2025 14:39:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGfsG26f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E73C4CEE4;
+	Tue, 13 May 2025 14:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747147186;
-	bh=PEDSbWPKZrAI4l87D8/IK5YIvcTjwzk9nO/2u32S7yc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o7/yAH93F/HJIQ0rlT28egWdPTGsssUyd8dLsTzcLU1JUd4bGH7FioygWll/ySvXm
-	 AI4eCyvBDg2aeuGS8xkWBog6ipdDOhpqNu1b6NX3SnPAXt4amlsnXfq0tXsAdhos0w
-	 Qt8zcgZsxIHbfZllTxPLPYQTzubAA4m7DkNplhHcgcbZp8WjhaWaIahzdWp/EBhNys
-	 GY2XVi4nH0x9m4u1srz+1Z/CfZNWtcMiHkbv/M17/3J5cy04tCdnH+1LyJqvllEn+x
-	 FPJiLeLlb4BoDR9+lLqMuzfhWjDjQXaP6o6AnINw0mCpgXN9p52R1gxWteWdPfefTH
-	 d2asXwNSB5sWA==
-Date: Tue, 13 May 2025 15:39:42 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add ROHM BD79100G
-Message-ID: <20250513-unpaid-detection-f45c9a06b4c6@spud>
-References: <cover.1747123883.git.mazziesaccount@gmail.com>
- <7deb4b69795c298ba51c9b198bc87000ad35cc9b.1747123883.git.mazziesaccount@gmail.com>
- <20250513-coconut-reconfirm-b90590efeb45@spud>
+	s=k20201202; t=1747147288;
+	bh=9rek26u3z9azmwOQJIZVAvbpbRZcwrSvVWLI/781IIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nGfsG26f/rgdzMXctx0MglLJybNp+KWifX6SJ136P6pW3LpTXKI6UHRPvbqdn8gCQ
+	 wsuGO387b9knuH5ITzA6E4CLjpKJPu7jZfh68e2JBLooX1Q0DefAfNKjtJt4ravwhn
+	 mCijz7ggSDagZH1eG9ETQmArV3xy00Y6TL/CMlZ9J1WQJ6eejFrdHRxvZy0bwN7H0H
+	 FUJqhmL2gHuKqOU7bgiyJDWwLJaaZh8FFhX2z1a+RYyjmImL8WNkrAHgNEK2KHWTZz
+	 EI49b7rHqPxyLgd7MPT8QENtb0FWgeudX+mmzO+QpuF61BxV1/nI5JeY4AtaK7ka6P
+	 b8ZJ9KuSJ2VVA==
+Date: Tue, 13 May 2025 07:41:27 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v10 02/13] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250513074127.5b64fc6e@kernel.org>
+In-Reply-To: <20250513114409.6aae3eb9@kmaincent-XPS-13-7390>
+References: <20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com>
+	<20250506-feature_poe_port_prio-v10-2-55679a4895f9@bootlin.com>
+	<20250508201041.40566d3f@kernel.org>
+	<20250513114409.6aae3eb9@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ATzWI0fTp0b5znvq"
-Content-Disposition: inline
-In-Reply-To: <20250513-coconut-reconfirm-b90590efeb45@spud>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 13 May 2025 11:44:09 +0200 Kory Maincent wrote:
+> > >  attribute-sets:
+> > >    -
+> > > @@ -1528,6 +1534,18 @@ attribute-sets:
+> > >          name: hwtstamp-flags
+> > >          type: nest
+> > >          nested-attributes: bitset
+> > > +  -
+> > > +    name: pse-ntf
+> > > +    attr-cnt-name: __ethtool-a-pse-ntf-cnt    
+> > 
+> > please use -- instead of underscores  
+> 
+> All the other attributes are using underscore in this property.
+> Are you sure about this?
 
---ATzWI0fTp0b5znvq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 13, 2025 at 03:39:11PM +0100, Conor Dooley wrote:
-> On Tue, May 13, 2025 at 11:26:27AM +0300, Matti Vaittinen wrote:
-> > The ROHM BD79100G is a 12-bit ADC which can be read over SPI. Device has
-> > no MOSI pin. ADC results can be read from MISO by clocking in 16 bits.
-> > The 4 leading bits will be zero, last 12 containig the data.
->=20
-> I think it is probably worth mentioning why a rohm device is going into
-> this binding (clone?) and that the 12-bit thing is a differentiator that
-> is why you're not using a fallback.
-
-Sent too soon, meant to say: with that
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
->=20
-> >=20
-> > Device has only VCC supply pin, which acts also as a VFS, determining t=
-he
-> > voltage for full 12-bits. Specifying it is mandatory.
-> >=20
-> > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml =
-b/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
-> > index 44c671eeda73..10fb6e14c2d0 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
-> > @@ -46,6 +46,7 @@ properties:
-> >        - ti,ads7867
-> >        - ti,ads7868
-> >        - lltc,ltc2314-14
-> > +      - rohm,bu79100g
-> > =20
-> >    reg:
-> >      maxItems: 1
-> > @@ -96,6 +97,7 @@ allOf:
-> >                - ti,adc121s
-> >                - ti,ads7866
-> >                - ti,ads7868
-> > +              - rohm,bu79100g
-> >      then:
-> >        required:
-> >          - vcc-supply
-> > --=20
-> > 2.49.0
-> >=20
->=20
->=20
-
-
-
---ATzWI0fTp0b5znvq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCNZrQAKCRB4tDGHoIJi
-0jJ+AQD8KIvz7dHXlcRaaMq7tYvBbLSTZqPSi6ZmY4VCGJ5gKAD+PD34qn/neQjb
-218u4O88q/9iICBLxkuwwJ6CipJVmgU=
-=vRFd
------END PGP SIGNATURE-----
-
---ATzWI0fTp0b5znvq--
+yessir, we're trying to guide everyone to use -- these days.
+We should probably s/_/-/ all the existing cases which don't
+result in codegen changes.
