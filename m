@@ -1,183 +1,211 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87E31D555;
-	Tue, 13 May 2025 15:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8AF15ECDF;
+	Tue, 13 May 2025 15:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148443; cv=none; b=rheEF3IJwAvQgVEDoCpILvhos/MdSPuVD8BS8A5apYh59nNmg4ENWI6gnRj0fq6zFoP559nayupeYJPZZPq382vPq59HazooMAX+xgk7Svr+/13lA1w4rEV2yQxlEFfVB/LgLxnZ4EXgiB5xOfCKO+58icv5RlyytJbCSKgE3aY=
+	t=1747148479; cv=none; b=CLizLbBHi3ror4l8PBpLUuF+V3fwiWEXvSocay4B9qQhYsKeOoWAXLwkUmGBY0z3bWRoyWZV7ZAgDo6epTsJBQLZ+TQZfLqCwyBemoXjlWoXSR3Fyv6ok8NmKn4IpuL3N21Vqe8cebig9ZKGU9ZCZaHeP/5xFIZVZjt4SLiHAp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148443; c=relaxed/simple;
-	bh=Lucx0KH9MaH/7UpmN5KbkNHQmkYf5YHbGDtSWRCjDiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sm5f0FYzVuqmVZVeG2pq6XJysNbGj7h+r51DbzLhwtddtT7Mlib6QAObwfWxLSzqTvuyaC+UnRrbFVoy+liSViukGP0rVMRZUXjGX7F7MAZLOEATNTfKvxCu/JO2EZg9kHZlP5rW18qB+EPZaHFBEWfASujyWPJbNkha/JXkYFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DOrhuriI; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=REGEktdO reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1747148479; c=relaxed/simple;
+	bh=WOCgooOqNHfVitxFGiwPrHiUXsFevFjpNNsnb/a7uXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4WD8W+gadrt1Z4CkI10eHZmjOefLBzkARztOFa7hRq59BbILuxZ5aucPyL81/KpgZd0fr94eWQ65++HBZwEUGflz7V/NkVSFZ8BtoCcx0lEA09G2Z70eL/6nT1/nPyFM+u5wRZdJMnHTOpUV2zqwf1z6kXMJMkd2SUnEGdqUtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AsCqCO8U; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DOrhuriI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="REGEktdO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1747148439; x=1778684439;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gh2NMO7qJrdv3iG60qbGVCR0O4srfdQABWtiiWuAUlw=;
-  b=DOrhuriI8a4Nw3OlNGY+cL+LEFaxdENf6Y6X/C1aA2F+AgGjDUYqkrDR
-   3O1OxznGt/Fb1DjI1J5mYbQ53xMY8PSi7lRnxSxW4NP565lgjqaDXvxPl
-   XEPDnSHmeJfgMwkIBvzN07gIV+1HozxvR7HHh/4kIl60goxSPmdQabn+o
-   NEf94gEpO7F9Selb0yB6vDbHtrKyPveDI5Fp4uPyDFo9CAqF7jfwXtb1X
-   2wIKO26vQheVJpo1QOviSS0OR1uNlg77pg+Wowv+QrNEFnaZQhhjcV7lR
-   QqL8D0JW2pQIFeSb4AVc97WHY+1pa6dMT0SjU4awDH8F5VDQoll2Kvehx
-   A==;
-X-CSE-ConnectionGUID: BWWvUYNuSImKxyj+5+dKgg==
-X-CSE-MsgGUID: 2iIUzI4OSQKYJDou9ZNbKg==
-X-IronPort-AV: E=Sophos;i="6.15,285,1739833200"; 
-   d="scan'208";a="44051266"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 13 May 2025 17:00:31 +0200
-X-CheckPoint: {68235E8E-25-3689CF63-CB8C500E}
-X-MAIL-CPID: 8AF5C25384C644D3101B75723DB32111_3
-X-Control-Analysis: str=0001.0A006375.68235E91.0079,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4E6FB166837;
-	Tue, 13 May 2025 17:00:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1747148426;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gh2NMO7qJrdv3iG60qbGVCR0O4srfdQABWtiiWuAUlw=;
-	b=REGEktdOJSZB22vxLke68pavWt63t07eXLNHdPVOsHqS+kedsJ7991/Gup3ZFTdO6yuVrZ
-	WxnhB7OgzS8x/KPu70JHOi7gfOuJxq+nBJhXWiIm7mCS71GPqU4rqiVSW4kXl4iKdM6TLY
-	kbzHPyiMUYPa1wYzqbIEwbFkFTLE9ycxO1qZInz5U5WnDe0oPa5ZaWmT0cWikYL0fmn93k
-	vqkxai4ooXNPGs2VrhnkNLwOTVWIMVJQQ8UbYheLbpwV4hzBPESIGq/YVCwjhL5D4zKoHu
-	+iStl/v1wasjLk9KQs3/X9lshXEUQ6uTSS5bE9eQlTCewudBw8itNWY7Ah2Xyg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Esben Haabendal <esben@geanix.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] pinctrl: freescale: Enable driver if platform is enabled.
-Date: Tue, 13 May 2025 17:00:09 +0200
-Message-ID: <20250513150010.600656-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AsCqCO8U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=mE88zcY2X1p4mvw+nTu0FWHvQdAVxVuWNqjWxk7qu9I=;
+	b=AsCqCO8UJkR9X5Ckmm1k+1vNpSX7uQnwpbi/9IgvOJZE5n9bZ/L5IgYffmkDVt
+	YCkvcnDZq9b0G4/3XNnA1R8iuEpItnXEeo/Ikp/n5VgqXenRjLXmnjZ4zmJKsZqk
+	bhD2VKhJb9vqEMVxKpE+8Bh8qMmhiUFCAhqYmPeQCc2II=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wBHsFiBXiNovmmgBA--.7222S2;
+	Tue, 13 May 2025 23:00:18 +0800 (CST)
+Message-ID: <3cf413ee-b70f-4bd1-8a43-3e64fdd5bff9@163.com>
+Date: Tue, 13 May 2025 23:00:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] PCI: rockchip-host: Refactor IRQ handling with info
+ arrays
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: shawn.lin@rock-chips.com, lpieralisi@kernel.org, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250509155402.377923-1-18255117159@163.com>
+ <20250509155402.377923-4-18255117159@163.com>
+ <20250513104020.GC2003346@rocinante>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250513104020.GC2003346@rocinante>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-CM-TRANSID:_____wBHsFiBXiNovmmgBA--.7222S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Jw1rKr4fAw1DGr1fJFykAFb_yoWxJw4xpw
+	48tFnrAr4UXr1xZ3sIyF98J3WrJrnI9aykCw15G3y7A3Wvvwn0gF1jvF9xGw1IgFWDXw4I
+	9w47WFn7CF4UCFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIiihUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwRMo2gjWgSfUwAAsp
 
-The pinctrl drivers are not enabled in defconfig. Instead of listing
-each driver in the defconfig, enable then by default if the platform/soc
-support is enabled as well.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v2:
-* default pinctrl driver depending on SoC support
 
-The discussion at [1] resulted it is better to default SoC-specific pinctrl
-drivers to thei SoC support instead of adding to defconfig or selecting
-pinctrl.
+On 2025/5/13 18:40, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+> Thank you for the patch and the proposed changes.
+> 
+>> Replace repetitive if-conditions for IRQ status checks with structured
+>> arrays (`pcie_subsys_irq_info` and `pcie_client_irq_info`) and loop-based
+>> logging. This simplifies maintenance and reduces code duplication.
+> [...]
+>> +static const struct rockchip_irq_info pcie_subsys_irq_info[] = {
+>> +	{ PCIE_CORE_INT_PRFPE,
+>> +	  "parity error detected while reading from the PNP receive FIFO RAM" },
+>> +	{ PCIE_CORE_INT_CRFPE,
+>> +	  "parity error detected while reading from the Completion Receive FIFO RAM" },
+>> +	{ PCIE_CORE_INT_RRPE,
+>> +	  "parity error detected while reading from replay buffer RAM" },
+>> +	{ PCIE_CORE_INT_PRFO, "overflow occurred in the PNP receive FIFO" },
+>> +	{ PCIE_CORE_INT_CRFO,
+>> +	  "overflow occurred in the completion receive FIFO" },
+>> +	{ PCIE_CORE_INT_RT, "replay timer timed out" },
+>> +	{ PCIE_CORE_INT_RTR,
+>> +	  "replay timer rolled over after 4 transmissions of the same TLP" },
+>> +	{ PCIE_CORE_INT_PE, "phy error detected on receive side" },
+>> +	{ PCIE_CORE_INT_MTR, "malformed TLP received from the link" },
+>> +	{ PCIE_CORE_INT_UCR, "Unexpected Completion received from the link" },
+>> +	{ PCIE_CORE_INT_FCE,
+>> +	  "an error was observed in the flow control advertisements from the other side" },
+>> +	{ PCIE_CORE_INT_CT, "a request timed out waiting for completion" },
+>> +	{ PCIE_CORE_INT_UTC, "unmapped TC error" },
+>> +	{ PCIE_CORE_INT_MMVC, "MSI mask register changes" },
+>> +};
+>> +
+>> +static const struct rockchip_irq_info pcie_client_irq_info[] = {
+>> +	{ PCIE_CLIENT_INT_LEGACY_DONE, "legacy done" },
+>> +	{ PCIE_CLIENT_INT_MSG, "message done" },
+>> +	{ PCIE_CLIENT_INT_HOT_RST, "hot reset" },
+>> +	{ PCIE_CLIENT_INT_DPA, "dpa" },
+>> +	{ PCIE_CLIENT_INT_FATAL_ERR, "fatal error" },
+>> +	{ PCIE_CLIENT_INT_NFATAL_ERR, "Non fatal error" },
+>> +	{ PCIE_CLIENT_INT_CORR_ERR, "correctable error" },
+>> +	{ PCIE_CLIENT_INT_PHY, "phy" },
+>> +};
+>> +
+>>   static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
+>>   {
+>>   	u32 status;
+>> @@ -411,47 +450,11 @@ static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
+>>   	if (reg & PCIE_CLIENT_INT_LOCAL) {
+>>   		dev_dbg(dev, "local interrupt received\n");
+>>   		sub_reg = rockchip_pcie_read(rockchip, PCIE_CORE_INT_STATUS);
+>> -		if (sub_reg & PCIE_CORE_INT_PRFPE)
+>> -			dev_dbg(dev, "parity error detected while reading from the PNP receive FIFO RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CRFPE)
+>> -			dev_dbg(dev, "parity error detected while reading from the Completion Receive FIFO RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RRPE)
+>> -			dev_dbg(dev, "parity error detected while reading from replay buffer RAM\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_PRFO)
+>> -			dev_dbg(dev, "overflow occurred in the PNP receive FIFO\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CRFO)
+>> -			dev_dbg(dev, "overflow occurred in the completion receive FIFO\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RT)
+>> -			dev_dbg(dev, "replay timer timed out\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_RTR)
+>> -			dev_dbg(dev, "replay timer rolled over after 4 transmissions of the same TLP\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_PE)
+>> -			dev_dbg(dev, "phy error detected on receive side\n");
+>>   
+>> -		if (sub_reg & PCIE_CORE_INT_MTR)
+>> -			dev_dbg(dev, "malformed TLP received from the link\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_UCR)
+>> -			dev_dbg(dev, "Unexpected Completion received from the link\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_FCE)
+>> -			dev_dbg(dev, "an error was observed in the flow control advertisements from the other side\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_CT)
+>> -			dev_dbg(dev, "a request timed out waiting for completion\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_UTC)
+>> -			dev_dbg(dev, "unmapped TC error\n");
+>> -
+>> -		if (sub_reg & PCIE_CORE_INT_MMVC)
+>> -			dev_dbg(dev, "MSI mask register changes\n");
+>> +		for (int i = 0; i < ARRAY_SIZE(pcie_subsys_irq_info); i++) {
+>> +			if (sub_reg & pcie_subsys_irq_info[i].bit)
+>> +				dev_dbg(dev, "%s\n", pcie_subsys_irq_info[i].msg);
+>> +		}
+>>   
+>>   		rockchip_pcie_write(rockchip, sub_reg, PCIE_CORE_INT_STATUS);
+>>   	} else if (reg & PCIE_CLIENT_INT_PHY) {
+>> @@ -473,29 +476,12 @@ static irqreturn_t rockchip_pcie_client_irq_handler(int irq, void *arg)
+>>   	u32 reg;
+>>   
+>>   	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
+>> -	if (reg & PCIE_CLIENT_INT_LEGACY_DONE)
+>> -		dev_dbg(dev, "legacy done interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_MSG)
+>> -		dev_dbg(dev, "message done interrupt received\n");
+>>   
+>> -	if (reg & PCIE_CLIENT_INT_HOT_RST)
+>> -		dev_dbg(dev, "hot reset interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_DPA)
+>> -		dev_dbg(dev, "dpa interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_FATAL_ERR)
+>> -		dev_dbg(dev, "fatal error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_NFATAL_ERR)
+>> -		dev_dbg(dev, "non fatal error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_CORR_ERR)
+>> -		dev_dbg(dev, "correctable error interrupt received\n");
+>> -
+>> -	if (reg & PCIE_CLIENT_INT_PHY)
+>> -		dev_dbg(dev, "phy interrupt received\n");
+>> +	for (int i = 0; i < ARRAY_SIZE(pcie_client_irq_info); i++) {
+>> +		if (reg & pcie_client_irq_info[i].bit)
+>> +			dev_dbg(dev, "%s interrupt received\n",
+>> +				pcie_client_irq_info[i].msg);
+> 
+> Why do you think that this is better?
+> 
+> Other patches in this series seem sensible, but this one does not stands
+> out as something that needs to be changed.
+> 
 
-[1] https://lore.kernel.org/all/20250507124414.3088510-1-alexander.stein@ew.tq-group.com/
+Dear Krzysztof
 
- drivers/pinctrl/freescale/Kconfig | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thank you very much for your reply.
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 4c420b21b804d..18962bc93b87d 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -21,6 +21,7 @@ config PINCTRL_IMX_SCMI
- config PINCTRL_IMX_SCU
- 	tristate
- 	depends on IMX_SCU || COMPILE_TEST
-+	default IMX_SCU
- 	select PINCTRL_IMX
- 
- config PINCTRL_IMX1_CORE
-@@ -159,6 +160,7 @@ config PINCTRL_IMX8MM
- 	tristate "IMX8MM pinctrl driver"
- 	depends on OF
- 	depends on SOC_IMX8M || COMPILE_TEST
-+	default SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mm pinctrl driver
-@@ -167,6 +169,7 @@ config PINCTRL_IMX8MN
- 	tristate "IMX8MN pinctrl driver"
- 	depends on OF
- 	depends on SOC_IMX8M || COMPILE_TEST
-+	default SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mn pinctrl driver
-@@ -175,6 +178,7 @@ config PINCTRL_IMX8MP
- 	tristate "IMX8MP pinctrl driver"
- 	depends on OF
- 	depends on SOC_IMX8M || COMPILE_TEST
-+	default SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mp pinctrl driver
-@@ -183,6 +187,7 @@ config PINCTRL_IMX8MQ
- 	tristate "IMX8MQ pinctrl driver"
- 	depends on OF
- 	depends on SOC_IMX8M || COMPILE_TEST
-+	default SOC_IMX8M
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8mq pinctrl driver
-@@ -191,6 +196,7 @@ config PINCTRL_IMX8QM
- 	tristate "IMX8QM pinctrl driver"
- 	depends on OF
- 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
-+	default ARCH_MXC
- 	select PINCTRL_IMX_SCU
- 	help
- 	  Say Y here to enable the imx8qm pinctrl driver
-@@ -199,6 +205,7 @@ config PINCTRL_IMX8QXP
- 	tristate "IMX8QXP pinctrl driver"
- 	depends on OF
- 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
-+	default ARCH_MXC
- 	select PINCTRL_IMX_SCU
- 	help
- 	  Say Y here to enable the imx8qxp pinctrl driver
-@@ -207,6 +214,7 @@ config PINCTRL_IMX8DXL
- 	tristate "IMX8DXL pinctrl driver"
- 	depends on OF
- 	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
-+	default ARCH_MXC
- 	select PINCTRL_IMX_SCU
- 	help
- 	  Say Y here to enable the imx8dxl pinctrl driver
-@@ -215,6 +223,7 @@ config PINCTRL_IMX8ULP
- 	tristate "IMX8ULP pinctrl driver"
- 	depends on OF
- 	depends on ARCH_MXC || COMPILE_TEST
-+	default ARCH_MXC
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx8ulp pinctrl driver
-@@ -239,6 +248,7 @@ config PINCTRL_IMX93
- 	tristate "IMX93 pinctrl driver"
- 	depends on OF
- 	depends on ARCH_MXC || COMPILE_TEST
-+	default SOC_IMX9
- 	select PINCTRL_IMX
- 	help
- 	  Say Y here to enable the imx93 pinctrl driver
--- 
-2.43.0
+In the interrupt handling function: rockchip_pcie_subsys_irq_handler, 
+personally, I think the amount of code can be simplified and it looks 
+more concise.
+
+There are many repetitive "interrupt received" print messages in the 
+interrupt handling function: rockchip_pcie_client_irq_handler. My 
+original intention was to simplify it.
+
+If you think it's not necessary, I will drop this patch.
+
+Best regards,
+Hans
 
