@@ -1,126 +1,113 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB70628F3;
-	Tue, 13 May 2025 03:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCBB79D0;
+	Tue, 13 May 2025 03:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747108166; cv=none; b=iPoWJ4/W1+xsoq/Fyt8q7NdWsBe0wGj4xR/F2/XgvKa5SQgMQFpdCTX12Av9caXqp6e2MeYJPaIRiQ2+0sVwecF38HK6HyrCAgg9co+TJN9LCBjVu+bETu3AOB6JUTPr8fPEk19BaSv1xAInp8gQS/8J8PmFye6GvN23qdD7oa4=
+	t=1747108528; cv=none; b=qiB7n0RsABh3hLMD528QEP87kqoOEdf1lpakbJvoGPSOnb3PQK+UWI0RTr7MtWt3yZQK3Onq2/TNm4VSUjgfOKLg6wFVWaAGZRTAVBNMJ86tRfk9rs+YNJ+vsJpO8i5nF6fm7NxfbNwFXvfQszDvvBlfjX4Q4M0K4UYClJeZWj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747108166; c=relaxed/simple;
-	bh=B5emnEhV7rK6+h317wLkrvu0naAun4R/A9NHuDUw7EY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IyEm1DcP90VcCYVhOjlPiFYadC0om/TBDR/TiShCxTHwr1rje8faikIsFUhsgRk0AUTBJyRC1EVqkp/nmJPqDVKEDXFw3+WRA8zr3ID+/RTtGWicloqiBKJrm2xU6geiHj8JVNoQ3NZsTFD7s/HNsoGTvvPrXtj5TcRLxX2kV14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mq34X/uN; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747108528; c=relaxed/simple;
+	bh=/o2DtnkczH7KwZjfZ/Cxt9Wkjl+Y2Xl5hK0/Ol0LLAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jRc23aphtCiHEUA1vUBorlb2kkB3MbMYO5vpuXRDvaiu69o4H+Nc77uweOKhiQy8qg69DeMdnaA+921hsu7t+b6cJbwpG8prOQb0Ed71akImAS1AWeQchq3scGE60GAa5m+bDkTmCQJ/ak6+LrdIv3TQAvH0h+YdtF64GmBTfMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Gewzh6L1; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mq34X/uN"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-85e15dc801aso517579139f.2;
-        Mon, 12 May 2025 20:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747108164; x=1747712964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kelwimxw1J10EuWJN16N1wQc1iJ7Z8c/Be+MQbkhh30=;
-        b=Mq34X/uNJk3rHp+s1i+hkBiYIy/Hxil5rG2IuUVyGdApRGvZmoKo/uf5oHxkiU9wSY
-         Hf5OhrEWrGCVl3DxmjiuQa6HMzc59xCOpbTv4468ML48SAOT504BMebRLLqZXHp2XLpc
-         PYYBqmpZifg73FYkw7ngn0cWe2i0CRgFYqvMFjIftYIorg/7Df2ttfdqvWszzeGG1DDf
-         sKwehd+TtrYzGXkgBEY7AxJcQnufRq9EQr8m97cmnZxSrju4jTgI9Br+1/vLnknYOI9i
-         rIfqknNvdQsijsm7QgDoYlXNQeYGgKK/QorYhPhbamlBjq1hkGfTkG+TKuzuzTK5FGJr
-         lnFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747108164; x=1747712964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kelwimxw1J10EuWJN16N1wQc1iJ7Z8c/Be+MQbkhh30=;
-        b=QdogOdr6PKuhcEqKPkOJOMCp5suF4WothMCWfKQ/X3TMrk/hdJfbGUjOBCce90XZ1x
-         lNwptdqxWDaFPdbqIVwAs7eEWw5jagXXjEeQDCpbbwFuP5aY8+osRKQ3FYndCQOii1JN
-         geZoNvJuRbitOAJeSMSaCkJwAxYOo5+9SRCZE2OgVERChwYW+3pMLP3wEo4W+WOzfuky
-         9XEgXW+UEHvHnIAIC3m8ihvhnSd1/V7TmRaMA+JVAUlDzx2i8d1QfPW/PaDKRboXGEEi
-         kr/82fRou9jyg0mgYQH5KFAXZgc2TIT4k+beP4V3Yymc59sdXxb/fxpEX7lnmqcbcFM/
-         IfNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUx88gznZkm3ncmvUPYoXXKdf70qWpumNDW9qJaUxhMZ2qdzneVGOnnhOLwDz2gjZLmekeXJM2/eNVVrVJ19KPltZiA@vger.kernel.org, AJvYcCVPQ+vSVx3akGTrjYRjCCkfDhu8M1tSNAWmHO3KIxX6zHIyW99Pnryc3ZCsG9NXsZEdC/swGUkNvowIkA==@vger.kernel.org, AJvYcCX8nHsPXoxXj+oBMTuw0hgj9RPEmHP+17h6ECQDHr8jFTVLqnkyEF9RnLkPsRr1SGXIkiabRJtuAzmyPq7g@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJn8xvfobGLrKnXlsQ7raRvBT4F8uDfH+idnjF9ySgcWlXZiPS
-	vOSW6QyfWWTK1DIG5EWe/hO948dB+IYU8oQMp62jFWEl55MmBGMzmAvM7xYHg7n85BT80lSmEf3
-	mx6idINpHzUVusgaaH9wfaRs/h+c=
-X-Gm-Gg: ASbGncvj86SK4nh7uv5zPFRBxXbCzSNVZ3XmR3o8r7ZcglG++VxPQDWnVA0hSARwnra
-	U4iV6zhyCFfbjWSluph1u9xUQ+tFpo8WyiP6wamAoNVxnJTx1/h0nBghZFjFx4CxhKSOYMtbil3
-	ME93ecJKpyxgdbw7E0M7oEBFdVW2ZUuEqG
-X-Google-Smtp-Source: AGHT+IFjE4FbRR/B8od/jgDW1SV6SY3oauWIMT351boohnWbN7HnY+B9vHiMvhPZCtIpx+vClsUD+E5FWaAU6tEmsGk=
-X-Received: by 2002:a05:6e02:1fc6:b0:3d9:6485:3a03 with SMTP id
- e9e14a558f8ab-3da7e1e1905mr169654485ab.4.1747108163755; Mon, 12 May 2025
- 20:49:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gewzh6L1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747108522;
+	bh=tWVMjAO5RkJxMSaf6B38mDETfmsBO15qoaCMdSv9Vrk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Gewzh6L1S+NCnPWJ9JmvnSALE+XOmDlO5WyPv2gFClNMaMlp0nb/tjzUszSFWmnPu
+	 XSk+4GQ6qIaKW4/kzvZ7ls7/b1BdqIoPCnH/MyWuULep5u9NR9Jlfy+JxUIwLjuKh1
+	 e5hrQj+Claey7VwDs2qpej6rWx1zfMHM5EUS7uWPNFHA5RY4MyDU+gA7mbLIvts7QJ
+	 sbrlaqQmsRLJGQXw95WNviFmj8yTqGbFvQVBJHP/QS5TsynP4qq6FvvDMZL0gy6BuB
+	 UsnFbHShjZSFI6lun7vdGzN5Qn+pHAdx47pBE7njaP1foWt1wWT9FLXiJFJ36owxf1
+	 lexnX+D7FLBsA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxN0p1djtz4x5g;
+	Tue, 13 May 2025 13:55:22 +1000 (AEST)
+Date: Tue, 13 May 2025 13:55:21 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Danilo Krummrich <dakr@kernel.org>, Andreas Hindborg
+ <a.hindborg@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the drm-nova tree with the configfs
+ tree
+Message-ID: <20250513135521.44a26953@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
- <20250512024935.64704-3-kerneljasonxing@gmail.com> <20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
- <CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com>
- <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
- <CAL+tcoD+VrRfAGMjj=9uAbanMO=W+cW0xgxMzVwrpiTgagmQ2w@mail.gmail.com> <20250512204124.5f201b7bcc394f773f2d40b9@linux-foundation.org>
-In-Reply-To: <20250512204124.5f201b7bcc394f773f2d40b9@linux-foundation.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 13 May 2025 11:48:47 +0800
-X-Gm-Features: AX0GCFs2F_R-Ar4I-kMwOiHRqfkRg38oeoffIIbXFDYnprxeRzCgc0CI1SjEfdA
-Message-ID: <CAL+tcoAQ9MMXC1sMvFrdMhJWTooshODxoaz8Ew-hP5+V3TN9JA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics function
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/VVA=2yHFYQrXT02XcAyLpGK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/VVA=2yHFYQrXT02XcAyLpGK
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 11:41=E2=80=AFAM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Tue, 13 May 2025 10:26:45 +0800 Jason Xing <kerneljasonxing@gmail.com>=
- wrote:
->
-> > >
-> > > Maybe we don't need to check !chan either.  Can it be NULL here?
-> >
-> > It depends on how users call this. If users call this without
-> > initialization of chan, relay_dump() can avoid the crash. It works
-> > like kfree() which prevents the NULL object from being freed.
->
-> hm, OK.  Generally, I don't think that kernel code should be very
-> tolerant of bugs in the caller.  If the caller passes us bad stuff then
-> that's the caller's fault and the caller should be fixed.  If the
-> client code responds to bad input with a nice solid oops, then great!
-> The caller will get fixed.
+Hi all,
 
-I learned. Thanks. I will skip the check for that.
+Today's linux-next merge of the drm-nova tree got a conflict in:
 
->
-> > BTW, should I merge this commit [1] into the series in V2 so that you
-> > can easily review?
-> >
-> > [1]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing=
-@gmail.com/
->
-> That seems unrelated to this work so it seems inappropriate to combine
-> the two.
+  samples/rust/Makefile
 
-This series is built on top of [1].
+between commit:
 
->
-> I skipped [1] because I'm waiting for overall clarity on what's
-> happening with relay[fs].
+  1bfb10505156 ("rust: configfs: add a sample demonstrating configfs usage")
 
-Do you refer to this thread[2]? Well, that conversation/reply made me
-feel lost. I believe you've already seen that. If so, it seems we're
-working on the dead code together....
+from the configfs tree and commit:
 
-[2]: https://lore.kernel.org/all/70293376-71b0-4b9d-b3c1-224b640f470b@kerne=
-l.dk/
+  96609a1969f4 ("samples: rust: add Rust auxiliary driver sample")
 
-Thanks,
-Jason
+from the drm-nova tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc samples/rust/Makefile
+index b3c9178d654a,6a466afd2a21..000000000000
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@@ -8,7 -8,7 +8,8 @@@ obj-$(CONFIG_SAMPLE_RUST_DMA)			+=3D rust
+  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+=3D rust_driver_pci.o
+  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+=3D rust_driver_platform.o
+  obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+=3D rust_driver_faux.o
+ +obj-$(CONFIG_SAMPLE_RUST_CONFIGFS)		+=3D rust_configfs.o
++ obj-$(CONFIG_SAMPLE_RUST_DRIVER_AUXILIARY)	+=3D rust_driver_auxiliary.o
+ =20
+  rust_print-y :=3D rust_print_main.o rust_print_events.o
+ =20
+
+--Sig_/VVA=2yHFYQrXT02XcAyLpGK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgiwqkACgkQAVBC80lX
+0GwvMwf9GGmlyzLg7tZbhfyxZqPsJX6EA31tTLyI7vqMZZpMzYZWp4hbXUWcxjfw
+LtYTjlthQgnT4UJTZumOPmdSnWES1jiW42oBCbPFEO2r5zfPncSVH3AYH8aEw//t
+QMCfneuG0VgQ8NCTpvqElWUI4S71qJPkgs8Qj1zGo4c6i4isrdiAGsc5LUZJHWQB
+zm3G5GTdp5Q0TpOv/5BcusYtxDlFp7NwvkxPQM+9nV7vITAJb/XBHUB4XmCGIQPt
+YvypnIlfEPaPzgp+SI2l39YnarxVPmE44fuWfdNzmDcQ/ji8jtZyYuDPJcvAaUSK
+8gUk/6hnVzmEFzmYOKzU7Qoa1PplzA==
+=NJVB
+-----END PGP SIGNATURE-----
+
+--Sig_/VVA=2yHFYQrXT02XcAyLpGK--
