@@ -1,328 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851691C8601;
-	Tue, 13 May 2025 16:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A62A2BE7D6;
+	Tue, 13 May 2025 16:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154524; cv=none; b=CJX20+RnBtjDAWKwziJWx5ajNx7YwHUTUHPPirPl1rpJUGzuHKk10Rpazs97IBnJ/MArzfJfJETt8V75ZNwbcg+K0v3lUdS7FYh+CX3ynKPl0B9+pmUSIoSU3Aqo3RgO/MvnO8m8nDML1t0S0i4p++UtF62/h+vJufkFmX0HcY8=
+	t=1747154542; cv=none; b=QLI1O7/k/kDg8721zxEWp00gM7e3Sr7l81zmBoYwd8Y1bh3/jhLPAq0MbxnvomVELNyvDk9JsxBxGPLgLCHmACcKMpH4vI+nJhs4wxh+Q+2bAg5tdhSBWEa7+mS1M84kuiD5PoLm58JgoODICTcPJRRrEo+5Y02RrSB6eJPtFXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154524; c=relaxed/simple;
-	bh=/Ux1HyjQpDgAp9sU7Ea8h3m+O43EqtR+LSbkjZzf9sU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8o21YN1k/khbzu7we6aWfk5EFJRILjWVgr+DCjkjQomwSFFTIDxLiwE/KyoOsockSZ37ISkIh7VnPFQEySoePKjaY39vtBRycn2aiTOchdkbMRB5bZX8HNycOhq11uljeWa9tG8vdldXYZggZaQvVMVOI0bUPccbc1SILUfpvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJtyN6qz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJtyN6qz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43926C4CEE4;
-	Tue, 13 May 2025 16:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747154524;
-	bh=/Ux1HyjQpDgAp9sU7Ea8h3m+O43EqtR+LSbkjZzf9sU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJtyN6qzbU8Rs6/rCCgnuXBAtvewFagk5TAUVRxX1QPIN8TFuaQuMN3c1y9V4yX8C
-	 hx0bHCmFdTpoBmZ01k1kkc3770bCWN4vp4bPvV6htromxmClw9AajgKwMJCStCMsgk
-	 71MXDMB9kN1V1un54zvQk7W6T0yGYatEu5DfM0ufB7PKmWrG9Yx2Cd//04fY6iRb+n
-	 p8Zwd984PLAoRB837Tnx4vFoEIov7okdyLYuG6c+2q4VgnOotBWn9ABNIqvXFXrbQu
-	 vOVU9a9ggdng1Mc2fe2LWZn6DcRPolaiknLJK8epyNToqYRl5iZA9PFjV273r8uL0S
-	 NO7sEUgHO/CRw==
-Date: Tue, 13 May 2025 18:41:56 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 17/19] gpu: nova-core: compute layout of the FRTS
- region
-Message-ID: <aCN2VIIKYGcVtctN@pollux>
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-17-fcb02749754d@nvidia.com>
+	s=arc-20240116; t=1747154542; c=relaxed/simple;
+	bh=VKtTAYAcS0XyLcItJQfXWYeqY5msuzkNIZh0yUYxyvY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nbN1Cc+yo6gqWEEGwlnGmXcdpotXug0DP8h7RLMez9yVwjt577UCbh5a5yyiyAnYfvWV5Z6zfCx4ieGfYVGYWtt+CKT3LJPv3j/7MAC4WcSRsMwRel7rRi90AzaFGNB0gkq6aOar8HDp2+/YYM9uDDo++9g+vyEhmLyValGlqrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF11DC4CEE4;
+	Tue, 13 May 2025 16:42:19 +0000 (UTC)
+Received: from wens.tw (localhost [127.0.0.1])
+	by wens.tw (Postfix) with ESMTP id 585885F806;
+	Wed, 14 May 2025 00:42:17 +0800 (CST)
+From: Chen-Yu Tsai <wens@csie.org>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Andre Przywara <andre.przywara@arm.com>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+In-Reply-To: <20250501120631.837186-1-andre.przywara@arm.com>
+References: <20250501120631.837186-1-andre.przywara@arm.com>
+Subject: Re: [PATCH v2] clk: sunxi-ng: d1: Add missing divider for MMC mod
+ clocks
+Message-Id: <174715453733.4022265.13446217787280625298.b4-ty@csie.org>
+Date: Wed, 14 May 2025 00:42:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-nova-frts-v3-17-fcb02749754d@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Wed, May 07, 2025 at 10:52:44PM +0900, Alexandre Courbot wrote:
-> FWSEC-FRTS is run with the desired address of the FRTS region as
-> parameter, which we need to compute depending on some hardware
-> parameters.
+On Thu, 01 May 2025 13:06:31 +0100, Andre Przywara wrote:
+> The D1/R528/T113 SoCs have a hidden divider of 2 in the MMC mod clocks,
+> just as other recent SoCs. So far we did not describe that, which led
+> to the resulting MMC clock rate to be only half of its intended value.
 > 
-> Do this in a `FbLayout` structure, that will be later extended to
-> describe more memory regions used to boot the GSP.
+> Use a macro that allows to describe a fixed post-divider, to compensate
+> for that divisor.
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  drivers/gpu/nova-core/gpu.rs       |   4 ++
->  drivers/gpu/nova-core/gsp.rs       |   3 ++
->  drivers/gpu/nova-core/gsp/fb.rs    | 108 +++++++++++++++++++++++++++++++++++++
->  drivers/gpu/nova-core/nova_core.rs |   1 +
->  drivers/gpu/nova-core/regs.rs      |  27 ++++++++++
->  5 files changed, 143 insertions(+)
-> 
-> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-> index 4bf7f72247e5320935a517270b5a0e1ec2becfec..a3d96639706e808305cce66416778d2bf6e7e683 100644
-> --- a/drivers/gpu/nova-core/gpu.rs
-> +++ b/drivers/gpu/nova-core/gpu.rs
-> @@ -7,6 +7,7 @@
->  use crate::driver::Bar0;
->  use crate::falcon::{gsp::Gsp, sec2::Sec2, Falcon};
->  use crate::firmware::Firmware;
-> +use crate::gsp::fb::FbLayout;
->  use crate::regs;
->  use crate::util;
->  use crate::vbios::Vbios;
-> @@ -239,6 +240,9 @@ pub(crate) fn new(
->  
->          let _sec2_falcon = Falcon::<Sec2>::new(pdev.as_ref(), spec.chipset, bar, true)?;
->  
-> +        let fb_layout = FbLayout::new(spec.chipset, bar)?;
-> +        dev_dbg!(pdev.as_ref(), "{:#x?}\n", fb_layout);
-> +
->          let _bios = Vbios::new(pdev, bar)?;
->  
->          Ok(pin_init!(Self {
-> diff --git a/drivers/gpu/nova-core/gsp.rs b/drivers/gpu/nova-core/gsp.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..27616a9d2b7069b18661fc97811fa1cac285b8f8
-> --- /dev/null
-> +++ b/drivers/gpu/nova-core/gsp.rs
-> @@ -0,0 +1,3 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +pub(crate) mod fb;
-> diff --git a/drivers/gpu/nova-core/gsp/fb.rs b/drivers/gpu/nova-core/gsp/fb.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f28ded59469d52daf39e5d19c09efd7bf08fee92
-> --- /dev/null
-> +++ b/drivers/gpu/nova-core/gsp/fb.rs
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +use core::ops::Range;
-> +
-> +use kernel::prelude::*;
-> +
-> +use crate::driver::Bar0;
-> +use crate::gpu::Chipset;
-> +use crate::regs;
-> +
-> +fn align_down(value: u64, align: u64) -> u64 {
-> +    value & !(align - 1)
-> +}
+> [...]
 
-Can this go in the previous patch, i.e. "rust: num: Add an upward alignment
-helper for usize"?
+Applied to sunxi/clk-fixes-for-6.15 in local tree, thanks!
 
-> +
-> +/// Layout of the GPU framebuffer memory.
-> +///
-> +/// Contains ranges of GPU memory reserved for a given purpose during the GSP bootup process.
-> +#[derive(Debug)]
-> +#[expect(dead_code)]
-> +pub(crate) struct FbLayout {
-> +    pub fb: Range<u64>,
-> +
-> +    pub vga_workspace: Range<u64>,
-> +    pub bios: Range<u64>,
-> +
-> +    pub frts: Range<u64>,
+[1/1] clk: sunxi-ng: d1: Add missing divider for MMC mod clocks
+      commit: 98e6da673cc6dd46ca9a599802bd2c8f83606710
 
-Please remove the empty lines.
+Best regards,
+-- 
+Chen-Yu Tsai <wens@csie.org>
 
-> +}
-> +
-> +impl FbLayout {
-> +    pub(crate) fn new(chipset: Chipset, bar: &Bar0) -> Result<Self> {
-> +        let fb = {
-> +            let fb_size = vidmem_size(bar, chipset);
-> +
-> +            0..fb_size
-> +        };
-> +        let fb_len = fb.end - fb.start;
-
-Isn't this the same as fb_size? Why not just write it as
-
-	let fb_size = vidmem_size(bar, chipset);
-	let fb = 0..fb_size;
-
-> +
-> +        let vga_workspace = {
-> +            let vga_base = vga_workspace_addr(bar, fb_len, chipset);
-> +
-> +            vga_base..fb.end
-> +        };
-> +
-> +        let bios = vga_workspace.clone();
-
-Why? And why store the same thing twice in FbLayout? If it's really needed,
-clone it in the constructor below and add a comment why it's the same.
-
-> +
-> +        let frts = {
-> +            const FRTS_DOWN_ALIGN: u64 = 0x20000;
-> +            const FRTS_SIZE: u64 = 0x100000;
-> +            let frts_base = align_down(vga_workspace.start, FRTS_DOWN_ALIGN) - FRTS_SIZE;
-> +
-> +            frts_base..frts_base + FRTS_SIZE
-> +        };
-> +
-> +        Ok(Self {
-> +            fb,
-> +            vga_workspace,
-> +            bios,
-> +            frts,
-> +        })
-> +    }
-> +}
-
-I'd probably wrap those helpers below in
-
-	mod hal { ... }
-
-or even a new file fb/hal.rs to make their purpose obvious.
-
-> +/// Returns `true` if the display is disabled.
-> +fn display_disabled(bar: &Bar0, chipset: Chipset) -> bool {
-> +    if chipset >= Chipset::GA100 {
-> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_MAXWELL::read(bar).display_disabled()
-> +    } else {
-> +        regs::NV_FUSE_STATUS_OPT_DISPLAY_AMPERE::read(bar).display_disabled()
-> +    }
-> +}
-> +
-> +/// Returns the video memory size in bytes.
-> +fn vidmem_size(bar: &Bar0, chipset: Chipset) -> u64 {
-> +    if chipset >= Chipset::GA102 {
-
-Is GA102 intentional or should this also be GA100?
-
-> +        (regs::NV_PGC6_AON_SECURE_SCRATCH_GROUP_42::read(bar).value() as u64) << 20
-
-Why isn't this shift part of the register abstraction?
-
-> +    } else {
-> +        let local_mem_range = regs::NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE::read(bar);
-> +        let size =
-> +            (local_mem_range.lower_mag() as u64) << ((local_mem_range.lower_scale() as u64) + 20);
-
-Same here. Please make this part of the register abstraction as it is done in
-previous patches.
-
-> +
-> +        if local_mem_range.ecc_mode_enabled() {
-> +            size / 16 * 15
-> +        } else {
-> +            size
-> +        }
-> +    }
-> +}
-> +
-> +/// Returns the vga workspace address.
-> +fn vga_workspace_addr(bar: &Bar0, fb_size: u64, chipset: Chipset) -> u64 {
-> +    let base = fb_size - 0x100000;
-
-What's this offset? How do you guarantee that this never underflows?
-
-> +    let vga_workspace_base = if display_disabled(bar, chipset) {
-> +        regs::NV_PDISP_VGA_WORKSPACE_BASE::read(bar)
-> +    } else {
-> +        return base;
-> +    };
-> +
-> +    if !vga_workspace_base.status_valid() {
-> +        return base;
-> +    }
-> +
-> +    let addr = (vga_workspace_base.addr() as u64) << 16;
-
-Where does this shift come from? Shouldn't this be part of the register
-abstraction?
-
-> +    if addr < base {
-> +        fb_size - 0x20000
-
-What's this offset? Can this ever underflow?
-
-> +    } else {
-> +        addr
-> +    }
-> +}
-> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
-> index ff6d0b40c18f36af4c7e2d5c839fdf77dba23321..202e978e56f024de3ae8b178e65b63c2cea244e1 100644
-> --- a/drivers/gpu/nova-core/nova_core.rs
-> +++ b/drivers/gpu/nova-core/nova_core.rs
-> @@ -8,6 +8,7 @@
->  mod falcon;
->  mod firmware;
->  mod gpu;
-> +mod gsp;
->  mod regs;
->  mod util;
->  mod vbios;
-> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
-> index b5c6eeb6ed873a06b4aefcb375f4944eb0b20597..15ec9b7e69694ff198b5353d562fc1aff5eefd3f 100644
-> --- a/drivers/gpu/nova-core/regs.rs
-> +++ b/drivers/gpu/nova-core/regs.rs
-> @@ -53,6 +53,12 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
->      23:0    adr_63_40 as u32;
->  });
->  
-> +register!(NV_PFB_PRI_MMU_LOCAL_MEMORY_RANGE @ 0x00100ce0 {
-> +    3:0     lower_scale as u8;
-> +    9:4     lower_mag as u8;
-> +    30:30   ecc_mode_enabled as bool;
-> +});
-> +
->  /* PGC6 */
->  
->  register!(NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK @ 0x00118128 {
-> @@ -64,6 +70,27 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
->      31:0    value as u32;
->  });
->  
-> +register!(NV_PGC6_AON_SECURE_SCRATCH_GROUP_42 @ 0x001183a4 {
-> +    31:0    value as u32;
-> +});
-> +
-> +/* PDISP */
-> +
-> +register!(NV_PDISP_VGA_WORKSPACE_BASE @ 0x00625f04 {
-> +    3:3     status_valid as bool;
-> +    31:8    addr as u32;
-> +});
-> +
-> +/* FUSE */
-> +
-> +register!(NV_FUSE_STATUS_OPT_DISPLAY_MAXWELL @ 0x00021c04 {
-> +    0:0     display_disabled as bool;
-> +});
-> +
-> +register!(NV_FUSE_STATUS_OPT_DISPLAY_AMPERE @ 0x00820c04 {
-> +    0:0     display_disabled as bool;
-> +});
-> +
->  /* PFALCON */
->  
->  register!(NV_PFALCON_FALCON_IRQSCLR @ +0x00000004 {
-> 
-> -- 
-> 2.49.0
-> 
