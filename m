@@ -1,133 +1,77 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112151CD0C;
-	Tue, 13 May 2025 20:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1624B1DC9BB;
+	Tue, 13 May 2025 20:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747167079; cv=none; b=BGG2YmzQez497e1m4Y3TFZAswYa/vo1qxu9NTgNiVYNLciVd20K7KjBLJCWiJZhkmzhlEytALj6gwij/hZasp7Jd68YZuvV2+OYJ/jVUD2JLBNuThb9qFsQ4B5m+W2e6c++0EF9cEVwEk7fMO8yj60eeY2ABdS8/Xoeb5eBYYko=
+	t=1747167140; cv=none; b=OH+A1Wq4WlNOHW3eIT40jED5i8KB0V8ME0/fdhGQ4Gq1C7MdEMo57+zV1yyCV8vWEt6yYq0K++j/7osM6HKBt7ONf2kOshOPWDbqUdmD1nCiMsT7iiEGwPB0frl0HpcGZ88mqzPRC82FCcVk980O8DXIQAmEZ48fb3YFmKOlWmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747167079; c=relaxed/simple;
-	bh=gjUgppDr+4DpgDh8u28iizTAHW2k0i9Nc6jDwMykpqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D7aRhtiNJZwRz/mcu+qsYcfQJW1cQZ71TWF+OB/ZwpHBt4w6vkKXOhcWXA54jg+LLcnueX9FI68BW1vLtUwISvy1Jas/0M8MtbJU1lkQClgxr5Ud0VQg0tmGGJdyfBjbMfbrueqKkT0Ej1Mbsv0LaxCHjYXuNmLlaUQEh9jPeBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKLYzYmV; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKLYzYmV"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f54bba3e54so62327776d6.0;
-        Tue, 13 May 2025 13:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747167075; x=1747771875; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tF5j1rQdmb4dVKBXTK19MRRgnhCEFWZEWB8e/76g+FA=;
-        b=kKLYzYmVCOejjygbEGD/6oJfWSqsvI66MELBgjMyQ07CiLwSRT6WVO6TVYywvS0lWv
-         EzAqUNO86z4OwSok3zEdsHZCsmzLLlTOYMWKc+IZMqqqsqt7Isq0ywofYBPPQcMTdErq
-         cggJeMKT/PKrusQGrmg4sPpZlTutU/D1PMThjndduHeBk3pINV+RbJN2w6IzkLxhdysc
-         /YS98zgIr+Zd+4w1a6aAvD1/hRxti4oixgWaPnj1/FB2DxS6DKBW/Anqv5+2SN9Pu2/J
-         kT7tWZVYVVf9XEYkWEvMGA6Q7DAZZUibwVVipzrr1RMC+600X+ND4t02w++BYzQ9jrUf
-         TPGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747167075; x=1747771875;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tF5j1rQdmb4dVKBXTK19MRRgnhCEFWZEWB8e/76g+FA=;
-        b=HeZvFxfGF14Z//6ng7xLS2Yabfx429cjL+OnuKMsLfvN1tVbWOgOeO1KPwlRWA/J2f
-         kpUxPQKxffOPjCS2ewrTLEP4jy/OMpJWfzHZdPISq76WbfsOfrV/uulHPp2zzLp7M856
-         EVZA+bLqTIl9/DqQTIO0Z6Bvb3vAuZXP5ufCFX1ChkV2K4z7vuKJOJ9nWN9lwMdh5P2L
-         lfBELZXRTePjrPoduDkyd9yM/b429RE3fTrdJfLwFj2tYRz3jGWJbHhTcfVao1pnwoog
-         xTYPYWE4dO02InXahrtIELwQgGt0Arz4ZCdQTfhEM1fGT2htw4+FVUMchOsfXWx4er/D
-         dkxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnG31Mr8wOK/2ViCoJR03yX6kpGLZcD/Qse8pONX/z+mNQeyAGrjaMkDtOrdhyR+T5ZoLVwEu4io8=@vger.kernel.org, AJvYcCWoS+tqJ1pNRHNMWMta2vdO2pEOfpgrvrKWy+Sa7QbMOG5s7OM2S1b2einOlt80V97omxxZj14SZZMT@vger.kernel.org, AJvYcCXlQjja093/l3DNH7QvunuqkIcblStJ+gWF7pX5sXKUivxaszwChAuf5h47WiL1pDCZ4ZCumiRsRcg+D0MS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA11H14eoHrvyjg4zdsoI8BS7S+KwAlZ4updBk3j+lsEeV5J3v
-	jnhaJa0Ao+IfNtJTpD3zq5s/sJPWKHQMLb3n19iHDlRm3Y8Fby9M8iMWiKIh6zFjDVCkHUPIxU1
-	bFq3I8kW0Wgm3LNrq14Zdp1wT7R4=
-X-Gm-Gg: ASbGncsniEw8gWInTOz5ur0/ix2B8ChRgdb/klVBmV/p87HK7wKpD8HQWJ5GZQ7NjZL
-	FRI0pv4/1STVmOIq57y1ZkQgB9jSNCpPaLMQdLzpJZijqTyBOkosgEpeXXZKy+B8hIG7HHlS7rB
-	NwuGQnj0keD0iPDsX+t0zQ9Xe7+DmS5Ho=
-X-Google-Smtp-Source: AGHT+IFAXj8ieeEB8HV91rcVj1ko9QjNssRLChXSoKZxjbSN4sXJhngxOyj6TOZMni4KsqSfr7eK6jqZHoNRu9CLwvQ=
-X-Received: by 2002:a05:6214:519b:b0:6e6:6c39:cb71 with SMTP id
- 6a1803df08f44-6f896ef6c59mr11442306d6.45.1747167074815; Tue, 13 May 2025
- 13:11:14 -0700 (PDT)
+	s=arc-20240116; t=1747167140; c=relaxed/simple;
+	bh=9rMCJny3jQ2rtrYGCTQvdBydsovHwI4L37V+IO26vk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M/6DD8EtSXgZSY9jmIcs8qQt0CONuo0LDJmshBfJSk0lsvoO77exHDPfYsaf4TSIxhhFBumRuCYFP7XRf2j+wDXknjtiRYEN942KGeORtOQn0iqv5XR222VNnDRqW0PIjyl3CNi+y/7/PWxan3Eynq02zEkhh7CpL6HAHj8nJyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.143])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id CE4C9343463;
+	Tue, 13 May 2025 20:12:17 +0000 (UTC)
+Date: Tue, 13 May 2025 20:12:08 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
+	guodong@riscstar.com, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 5/6] reset: spacemit: define three more CCUs
+Message-ID: <20250513201208-GYA518096@gentoo>
+References: <20250512183212.3465963-1-elder@riscstar.com>
+ <20250512183212.3465963-6-elder@riscstar.com>
+ <ecf46fa3116690b85f51539edf7f6a47c612fca5.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510172509.2547273-1-ansuelsmth@gmail.com>
- <20250510172509.2547273-2-ansuelsmth@gmail.com> <084240c5-48aa-406a-9bbe-2f349f9c2509@oracle.com>
-In-Reply-To: <084240c5-48aa-406a-9bbe-2f349f9c2509@oracle.com>
-From: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
-Date: Tue, 13 May 2025 22:11:03 +0200
-X-Gm-Features: AX0GCFvqn1cVWBQbmoNskROEKnfBH2QCcLULy5fheXZiMdztNaMOcmZyFMrn8EU
-Message-ID: <CA+_ehUy+WSzRre+64KxeJKtOb_Et8HO=oMV+fNrGF5HHLzh3MA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] thermal: Add support for Airoha EN7581 thermal sensor
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecf46fa3116690b85f51539edf7f6a47c612fca5.camel@pengutronix.de>
 
-Il giorno mar 13 mag 2025 alle ore 21:50 ALOK TIWARI
-<alok.a.tiwari@oracle.com> ha scritto:
->
-> > + * the same addr is used for ADC volt and valid reading.
-> > + * In such case, VALID ADDR is used and volt addr is ignored.
-> > + */
-> > +#define   EN7581_RD_CTRL_DIFF                        BIT(0)
-> > +#define EN7581_TEMPADCVALIDMASK                      0x884
-> > +#define   EN7581_ADV_RD_VALID_POLARITY               BIT(5)
-> > +#define   EN7581_ADV_RD_VALID_POS            GENMASK(4, 0)
-> > +#define EN7581_TEMPADCVOLTAGESHIFT           0x888
-> > +#define   EN7581_ADC_VOLTAGE_SHIFT           GENMASK(4, 0)
-> > +/*
-> > + * Same values for each CTL.
-> > + * Can operate in:
-> > + * - 1 sample
-> > + * - 2 sample and make average of them
-> > + * - 4,6,10,16 sample, drop max and min and make avgerage of them
->
-> typo avgerage -> average
->
-> [...]
-> > +}
-> > +
-> > +static void airoha_thermal_setup_monitor(struct airoha_thermal_priv *priv)
-> > +{
-> > +     /* Set measure mode */
-> > +     writel(FIELD_PREP(EN7581_MSRCTL0, EN7581_MSRCTL_6SAMPLE_MAX_MIX_AVG4),
-> > +            priv->base + EN7581_TEMPMSRCTL0);
-> > +
-> > +     /*
-> > +      * Configure ADC valid reading addr
-> > +      * The AHB temp monitor system doesn't have direct access to the
-> > +      * thermal sensor. It does instead work by providing all kind of
-> > +      * address to configure how to access and setup an ADC for the
-> > +      * sensor. EN7581 supports only one sensor hence the
-> > +      * implementation is greatly simplified but the AHB supports
-> > +      * up to 4 different sensor from the same ADC that can be
->
-> "all kind of address" ->  "various addresses"
-> 4 different sensor -> 4 different sensors
->
-> > +      * switched by tuning the ADC mux or wiriting address.
->
-> typo wiriting -> writing
->
-> > +      *
-> > +      * We set valid instead of volt as we don't enable valid/volt
-> > +      * split reading and AHB read valid addr in such case.
-> > +      */
-> > +     writel(priv->scu_adc_res.start + EN7581_DOUT_TADC,
-> > +            priv->base + EN7581_TEMPADCVALIDADDR);
-> > +
->
+Hi Philipp,
 
-Thanks a lot for the spelling check. I can send a follow-up or resend this...
+On 11:21 Tue 13 May     , Philipp Zabel wrote:
+> On Mo, 2025-05-12 at 13:32 -0500, Alex Elder wrote:
+> > Three more CCUs on the SpacemiT K1 SoC implement only resets, not clocks.
+> > Define these resets so they can be used.
+> > 
+> > Signed-off-by: Alex Elder <elder@riscstar.com>
+> > ---
+> >  drivers/clk/spacemit/ccu-k1.c    | 24 +++++++++++++++
+> >  drivers/reset/reset-spacemit.c   | 51 ++++++++++++++++++++++++++++++++
+> >  include/soc/spacemit/k1-syscon.h | 30 +++++++++++++++++++
+> 
+> Could you split this into clk: and reset: parts? The reset changes are
+> 
+Do you have suggestion how we should merge the patch series in future?
+What I can think of 
+1) take patch 1, 2, 3 via clock tree, and provide an immutable tag
+2) pull the tag, and take all driver/reset via reset tree, and provide an immutable tag back?
+3) take the split part of drivers/clock/ in this one via clock tree
 
-Don't know what Daniel prefers.
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> regards
+> Philipp
+> 
+
+-- 
+Yixun Lan (dlan)
