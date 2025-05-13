@@ -1,102 +1,173 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAE71F5437;
-	Tue, 13 May 2025 10:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26342242D7B;
+	Tue, 13 May 2025 10:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130812; cv=none; b=AFS7YIIULteGWV07X6bimYPW7e4+kzuDfoPqk3Cm0fGhvDXMAGFsl9Olc5F8Ehu+18CN14KvltZnWBOIrnF5V20Lg83YkZw1RiHHRZcM3wukPsEjKCQ6VmEXyYxwF84txfKCzwVVhrjbDBbHP64v0QsA48nbqfFs05vQ02WNJ1A=
+	t=1747130868; cv=none; b=Nut5jM5jf1E/FCR+w/lwqoBprR9wBk7coSBoLdKzFM+Mu5fH4lw3MbAxSBaF5k+z9lgUGJGFVpCllx+PLdjUGloE39cO2uM5dgq03XoXiFsP3GS4FS3UY+AndFUFiGLuX2zjyoV1OxhugKUotxgBFNOdWXGlzPIfpOPjo8tmTCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130812; c=relaxed/simple;
-	bh=0vUeglwLr0sRnKHkXv9liSGcGW3532fdMSYsXVgQ9pY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uy04KTCMGIzTTPnB8hJRkI+Jd5acIRWmxb1x6+/4IvWZ1xKvcomtoMTnbixokVK3Q5md2xy3wTS2mf7wFL1W7SmdBxHTtxmLwcQSZ9ZmFl+epxtOPbEMZWAPDnYHJD+9hVwfJc3Dr4y1O4o2NDzuFsftAj3XON+CHNGTXU2Nfrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=guzNHVLD; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guzNHVLD"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5e39d1db2so353966185a.3;
-        Tue, 13 May 2025 03:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747130810; x=1747735610; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=esbxdNvjy4b/7wpZaEF1nYSaUdVOz5XoWiu+PSih66c=;
-        b=guzNHVLDBwCRgrI6XNijuth1wxzrfQow0kD+OWyxLBvWUAcfdpEmKLKo70eWTw04vv
-         gBKY1yIXgvizlK/l7GFgG9XI9lekN22oBp6MOYjgRNF/CbzI64rJHmAuQLSaOpCG321y
-         26drgodXKX5nqQcRE5y5QXz0PGqHC46E3ZUztUB4INuVUG+BU5nmXdVqMMq8fMhpL0ZG
-         vd8lQu6VZJdcxQDbqzSc4YdhjzsRoFv+kTQgmbwmL0dIYGM+lv8TAzaSu2nbp85ZLaf1
-         T+fyftIc4fpit+Nl1n4Unok3ifMbLwLaE+71qiAlSfZrbqflNkQbQWICqpx0u5KhQvEF
-         OsbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747130810; x=1747735610;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=esbxdNvjy4b/7wpZaEF1nYSaUdVOz5XoWiu+PSih66c=;
-        b=MN8YUBt/DtgefWWcQUPoVGK1rTnX5ZET4Ar6vCgWDEXrzyE3TOgsptlxAdgu+n6JkI
-         U1hQWztAY8jPA5N/CohUTk3Jt0QSubm35kmLhLrvVvh661nfsU64v8go5AkfW068eFqS
-         BlBAD/aMPFmry7JhUlAQ12q0HzKYEZbHRNUEsT9hR1Ybr9qlgWI3VDh35z9Tvrt5yWnW
-         MFam9Fnswb5/2qjp5pZxcMn+dwVKT0UkZqHSgD/uBFJmvnZx9KEkRFawtW5IJcCbGMct
-         lJBNturPK+7l/MTpwWpd98fizwQahDO3HXNIpf7Oxe2IxUPB/Lc9DY+Ctn5fLgaM0OKy
-         MqeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsoHyFWhqjuDoiVK2jTCMyyT8KdqYVDGksh0FeXcT4I6rndXeg6sxCTseNs+4RR0jtzNNm809KwjmuPEHV@vger.kernel.org, AJvYcCWcnm+uVxL9VTZxE0KkPhIfwbzgKBlnhEaKePFBBiG3iQetUoS9CCIktph4+qdzqOarMfkitgUxjzTE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt144VGZw+jTxnguQj0D/es2ZCvLe+tQfx8qhpLOWxce3mpgUO
-	OrYKqKGVg0WUSYMkYBaZ+23WxH6jXMAY801O14cw9dzDbSk9eJaaqaQPCg==
-X-Gm-Gg: ASbGncsT1kEa9esYw7qbMwPqQf4hmvOOKglQi6TT3j3/4BeKBUJw9Vv/bqONQ4UyO2/
-	YPHAxBx2PWCIuCzn7TcB+QUxNAMYyQM/hMmezX1OChvJpsX2KB1vMWO0QfZppwaNcDql3nT5htT
-	3MpMEyYYAbfsAEf7MdpeGstNw6t1lH5cBViQmZIYxj2lSYhIKYvMBDlaJ9ru+JipEbuO59hctXJ
-	il+iAhQjeAclvhTQxKHdaftXo0b37foPfNjLaXR0DPsN4D1Ijc1xfO0Qu4gQsVzZDGxba5gv3tP
-	+HVH/AtkJ9/+HCxOUyGs5CWO2cU=
-X-Google-Smtp-Source: AGHT+IHDCPxylkGBs5YFIF69NQPWPn69nrjCxDe9tRWkw+WoCwAjvrZ/m3yavqIX7i0p+MInqxI/eQ==
-X-Received: by 2002:a05:620a:248e:b0:7ca:cd16:8f52 with SMTP id af79cd13be357-7cd010d0fbemr2232965685a.12.1747130809769;
-        Tue, 13 May 2025 03:06:49 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00fdc5ebsm691892785a.79.2025.05.13.03.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 03:06:49 -0700 (PDT)
-Date: Tue, 13 May 2025 18:06:17 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, 
-	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
-Message-ID: <23yyxygtz72mbeebvzjdl2k3us5rjssgeg5k4wb4jvwrlj6bju@s6jxjwf5p6tx>
-References: <cover.1746811744.git.rabenda.cn@gmail.com>
- <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
- <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <CAAT7Ki9=ROP47hsugf3BS1nXr9oOPHWgjQoGfjAZiwHnXS19Pw@mail.gmail.com>
- <nrtzltuus47rjds3x54e72mtflvjh4najyqdjnagxq5etge5e7@vkikyxa5zf6k>
- <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1747130868; c=relaxed/simple;
+	bh=tb6fnFpucKzItJPP15tgDT3weF1MGwlqqKLWWoBgkgc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=HamhEoDf2AJzk8CvJ1w8ivxTgcitpAi5znC4wFcXFWuLAMWjQORXnVfIrAmQl15S4yE09pOifJ7GNaydGnz1yQ3mdEJchvPdGWnie9OSN5p6b5DokMxGLPYvFkEl0/YfEU8BdfdKrN+qXT5J00lXjHjtWUlsczgmeCpq6eypD/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-d8-682319edcf23
+From: Byungchul Park <byungchul@sk.com>
+To: linux-kernel@vger.kernel.org
+Cc: kernel_team@skhynix.com,
+	torvalds@linux-foundation.org,
+	damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	will@kernel.org,
+	tglx@linutronix.de,
+	rostedt@goodmis.org,
+	joel@joelfernandes.org,
+	sashal@kernel.org,
+	daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com,
+	johannes.berg@intel.com,
+	tj@kernel.org,
+	tytso@mit.edu,
+	willy@infradead.org,
+	david@fromorbit.com,
+	amir73il@gmail.com,
+	gregkh@linuxfoundation.org,
+	kernel-team@lge.com,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	mhocko@kernel.org,
+	minchan@kernel.org,
+	hannes@cmpxchg.org,
+	vdavydov.dev@gmail.com,
+	sj@kernel.org,
+	jglisse@redhat.com,
+	dennis@kernel.org,
+	cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	ngupta@vflare.org,
+	linux-block@vger.kernel.org,
+	josef@toxicpanda.com,
+	linux-fsdevel@vger.kernel.org,
+	jack@suse.cz,
+	jlayton@kernel.org,
+	dan.j.williams@intel.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	rodrigosiqueiramelo@gmail.com,
+	melissa.srw@gmail.com,
+	hamohammed.sa@gmail.com,
+	harry.yoo@oracle.com,
+	chris.p.wilson@intel.com,
+	gwan-gyeong.mun@intel.com,
+	max.byungchul.park@gmail.com,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	yskelg@gmail.com,
+	yunseong.kim@ericsson.com,
+	yeoreum.yun@arm.com,
+	netdev@vger.kernel.org,
+	matthew.brost@intel.com,
+	her0gyugyu@gmail.com
+Subject: [PATCH v15 01/43] llist: move llist_{head,node} definition to types.h
+Date: Tue, 13 May 2025 19:06:48 +0900
+Message-Id: <20250513100730.12664-2-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250513100730.12664-1-byungchul@sk.com>
+References: <20250513100730.12664-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0yTdxTG/b93qjWvHdFX0OBqjJlmKt5yCGLwFv/7sEWiUbO5bM14Y6tQ
+	sQUUE02LxSBYREwBQbFWUggUwWIydNYhBASJiIAVFFGqorVUEqCNVby0GL+c/PI8z3nOl8OR
+	sjt0BKdSp4oatSJJzkgoiXeG5Wfv3IXKFeUeOfgmsik4X2tjoOtKNQLbNT0B7pat8Mg/guDj
+	vfskFJm6EFwaekrCtdZBBI7KTAZ6Xs6EXt8oA+2mXAaOX65l4IFnkoCBwgICqu2/wjPrMAUd
+	+RYCitwMlBYdJ4LjDQEBaxULVt0icFWWsDA5FA3tg04aHI+XwrmyAQZuOtopaG1wEdBz4zwD
+	g7YvNHS0tlHgz4uErjNGGmreWRjw+K0kWH2jLHQ3mgloNc+GOkOw8MT4ZxruGBsJOFF+lYDe
+	/v8Q3Mp+ToDd5mSg2TdCQL3dRMKHihYErjwvC1mnAiyU6vMQ5GYVUmAYWAMf3wcvX5iIBv3F
+	OgpqPjlRfBy2ldkQbh4ZJbGh/hD+4HvIYIffTOG7FgFfL3nKYsOtxyw229NwfeUSfPmmm8CX
+	xnw0tledZLB9rIDFOd5eAr/r7GS3zftdsi5RTFKli5rl6/+WKCva9GxKseRwrc5C6dANLgdx
+	nMCvFspf/ZKDwqbQ3d1Oh5jhFwt9fQEyxOH8AqHeOBzUJRzJO6cLjy70o5DxA/+b8KLbQYWY
+	4hcJ92wmNsRSfo1QUFpHfiuNEqrrGqc4jF8rfKronMrLgpl8czUVKhX4s2FCS+Zd9tvCXOF2
+	ZR+Vj6RmNK0KyVTq9GSFKmn1MmWGWnV42T8Hku0o+F7Wo5N/NKCxru1NiOeQfIa0zf2jUkYr
+	0rUZyU1I4Eh5uFT/b1CSJioyjoiaA39p0pJEbROK5Cj5HOlK/6FEGb9XkSruF8UUUfPdJbiw
+	CB3amzB69fXppSXj468uBp4TEc9m+beO57oC6ifNO/3FE8d29eQZd/Qe3Bijznatjd2X3PDl
+	//7oPfOj5jtnp76tMJYlzNoUnmWYGRvTZooaHkrbTZnObZj+ZE9Gc4rsdqYkviPOe/pMzebr
+	xdt+wgnxpi2FnrO0bqBAgx1/rtI2HqU9ckqrVEQvITVaxVfKGFVYWgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSfUzMcRzH+/6e+3H2k/DDPJ2ap3nIHB9j+Eu/eRqThRlu9Zu7qavdVZyN
+	3amMKIlET66jK3eXztU8pLNWpNPk9CRJiJlTqXHXROKO+eez197v996ff94MHmQmpzJKVYKo
+	VsljpBRLsFtXJy/qnzJHsdTlGQtezykC8sutFLhuWhBYK/UYuB+Fw4uhPgQ/nz7DISfbhaDo
+	3WscKuu7EThKT1DQ8mEctHoHKHBmn6Eg+Vo5Bc97RzDoupSFgcW+Bd6YPhLQmGnEIMdNQV5O
+	MuY7nzAYNplpMOlCoac0l4aRd2Hg7G4noa7ASYKjcyFcKeyioNrhJKD+bg8GLVX5FHRbf5PQ
+	WN9AwFDGNHCdTyeh7IuRgt4hEw4m7wANzTUGDOoNk8CW4ms9+W2UhMfpNRicvH4Lg9aX9xE8
+	OPUWA7u1nYI6bx8GFfZsHH6UPELQk9FPQ+rZYRry9BkIzqReIiClSwY/v/s+F3jCQH/VRkDZ
+	r3a0fq1gLbQioa5vABdSKg4LP7xtlOAYMhDCEyMv3Mt9TQspDzppwWBPFCpKFwjXqt2YUPTV
+	Swp282lKsH/NooW0/lZM+NLURG+bvoddEy3GKJNE9ZK1B1hFSYOejr/MHinXGQkdqmLSUCDD
+	c8t5d7OT9DPFzeU7OoZxPwdzs/iK9I8+nWVwrn0M/6LgJfIbE7it/PtmB+Fnggvln1qzaT9L
+	OBmflWfD/5XO5C22mr8cyK3gf5U0/c0H+TKZBguRiVgDCjCjYKUqKVaujJEt1hxSaFXKI4uj
+	4mLtyLcg07GR83eRpyW8FnEMko6VNLhnK4JIeZJGG1uLeAaXBkv0d3ySJFquPSqq4/arE2NE
+	TS2axhDSyZKNkeKBIO6gPEE8JIrxovq/izGBU3VI/up4efSyeQONUYMBi5bWGkNWy/ZJZs4N
+	KWr9XHxxe8b4NXtD2Yljvn0/t/vCeodkU650tnMwYKUrf3TzKll1Q+fDyPm735jjDTuqbhco
+	89PSl+i0VqNHVTQxorvjctmGQrYtIswyY11qf9SuSu3gWXHG1eLltnm5zybsC+94uNC584aU
+	0CjkYQtwtUb+ByZCBgM9AwAA
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
-On Tue, May 13, 2025 at 05:59:23PM +0800, Chen Wang wrote:
-> 
-> On 2025/5/13 17:49, Inochi Amaoto wrote:
-> > On Tue, May 13, 2025 at 02:48:44PM +0800, Han Gao wrote:
-> > > I hope it is sg2042-x8evb.
-> > > 
-> > > Sophgo is also making EVB boards for sg2044.
-> > > 
-> > > I think a distinction needs to be made here.
-> > > 
-> > SG2044 evb has a formal name like srd3-10, but I think it should
-> > have a sg2044 prefix. as the name printing on the board has a
-> > sg2042 prefix.
-> sg2042 prefix? :)
+llist_head and llist_node can be used by very primitives. For example,
+dept for tracking dependencies uses llist in its header. To avoid header
+dependency, move those to types.h.
 
-Yeah, it prints SG2042_EVB_V2_0.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+---
+ include/linux/llist.h | 8 --------
+ include/linux/types.h | 8 ++++++++
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/llist.h b/include/linux/llist.h
+index 2c982ff7475a..3ac071857612 100644
+--- a/include/linux/llist.h
++++ b/include/linux/llist.h
+@@ -53,14 +53,6 @@
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ 
+-struct llist_head {
+-	struct llist_node *first;
+-};
+-
+-struct llist_node {
+-	struct llist_node *next;
+-};
+-
+ #define LLIST_HEAD_INIT(name)	{ NULL }
+ #define LLIST_HEAD(name)	struct llist_head name = LLIST_HEAD_INIT(name)
+ 
+diff --git a/include/linux/types.h b/include/linux/types.h
+index 49b79c8bb1a9..c727cc2249e8 100644
+--- a/include/linux/types.h
++++ b/include/linux/types.h
+@@ -204,6 +204,14 @@ struct hlist_node {
+ 	struct hlist_node *next, **pprev;
+ };
+ 
++struct llist_head {
++	struct llist_node *first;
++};
++
++struct llist_node {
++	struct llist_node *next;
++};
++
+ struct ustat {
+ 	__kernel_daddr_t	f_tfree;
+ #ifdef CONFIG_ARCH_32BIT_USTAT_F_TINODE
+-- 
+2.17.1
+
