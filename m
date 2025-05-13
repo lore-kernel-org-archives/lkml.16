@@ -1,99 +1,129 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA85347C7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F08A28CF7C;
+	Tue, 13 May 2025 12:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747137966; cv=none; b=oD7fKr69goANW0HII5nVNq1tcOq8UISXK02RHKQc7UtKLPUJVRUjqd5j0cldgmWvtfF6SF5YwSnFtUO7IdNGb2zqEdjaIeleSIi4uDSCvXOvnloCkJskfbji5cjFMrCaYO4+EtXrHlH1+LxIw8b9HZQQaFznDwvxRpt79mb9p1A=
+	t=1747138094; cv=none; b=pDVa51dRzzEUkfv1oVdh53imtQRC9qh4/bfN+S0sYTXKE8gjzUt9yeY4lUIa+0bbJD0HWeV2qBW1sIxzB+oRCx6BPoaAjUGvNQNUfuuMNicGQJ42uGvqBc1yP5uA9IKgwcXk2aIYC9js2VXpIqD4vSon8IByC11XOF2tooUowb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747137966; c=relaxed/simple;
-	bh=ZVXJY0WFp5OD5tS4jz0/e5PLTTFZVDR+TVRX3n9M8Hw=;
+	s=arc-20240116; t=1747138094; c=relaxed/simple;
+	bh=nqVdR12YYsEgA9wg1QecAZn4HrTlrPXWWZSXA3wGALI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wpx8G6u8Mg3A0+ZmQ4nMv/2EGVvegAgVf8jbjwBkg0FSZdEfZrdRtuXYv2c1DF/1xB/eTyukSckmcT1xDFQgPVzqHB3tmFWrllHClCU/F9SnaixGgI1sSHSpbb70CzILSM5sL91BmyfzOcX5kY3m0YvavD93lPtTcqBQx3ZF9jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-112-151.bstnma.fios.verizon.net [173.48.112.151])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54DC5oTT032707
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 08:05:50 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id D4C4F2E00DC; Tue, 13 May 2025 08:05:49 -0400 (EDT)
-Date: Tue, 13 May 2025 08:05:49 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org,
-        linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-Message-ID: <20250513120549.GA9943@mit.edu>
-References: <2025040820-REJECTED-6695@gregkh>
- <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh>
- <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
- <2025050924-marmalade-overfill-fc5a@gregkh>
- <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
- <20250509121036.GA92783@mit.edu>
- <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
- <20250512144402.GA200944@mit.edu>
- <CACT4Y+as-Uy_BUjLDxfNwC2+78U3kJdaaKL=vbUNMZH9VcLiGQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uRyQ/OpTZikoNEGeq8WILWDMT5BAmRqmGd5c5w7gYSRsVVGeF7GDSWxswEsm/fpvE9b0Es3tHiM78vfhXp6fD9yvB4BhNbrM0JmXSlOevzRXruyGCASawUsXqQlX6UFcVkvj2tkdtCPjnDIkCLwmJWSn5J+7pVh3ykVx9DP+EPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vE54ruPn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vE54ruPn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA81DC4CEE9;
+	Tue, 13 May 2025 12:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747138094;
+	bh=nqVdR12YYsEgA9wg1QecAZn4HrTlrPXWWZSXA3wGALI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vE54ruPnrf7doS5E2jmmYBdkmsTxo5FaflAHRDTNm3+f96CbeOAw5Y8y7vhbVyWJD
+	 Uz9mycdK2xwg7Pbhrg/UzEg42hQUhqMd7nE38Cv13JKcmwVMkxE4sPl/ygRcNAB/6L
+	 umR60O7gs/mGFegfMKRcOARPtLnnjMNrcOkGNzi1EfbI/FczzhegjEYUv3ePST8nW8
+	 lJUprhs8t2C8t219Ad/gJz8a/HYzR3hT8sls4ATQw8nmaPsmWoToSlVYEYlNH4k4hV
+	 8xGl0aUXxUBUOooxVvrpEOUXj69d4DwHpfoAgivvOu8+WOSJh79OnazbMK7vFofxnM
+	 FKAiqs9orucwA==
+Date: Tue, 13 May 2025 14:08:07 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, bluca@debian.org, 
+	alexander@mihalicyn.com, daan.j.demeyer@gmail.com, daniel@iogearbox.net, 
+	davem@davemloft.net, david@readahead.eu, edumazet@google.com, horms@kernel.org, 
+	jack@suse.cz, jannh@google.com, kuba@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, me@yhndnzj.com, 
+	netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
+	zbyszek@in.waw.pl
+Subject: Re: [PATCH v6 4/9] coredump: add coredump socket
+Message-ID: <20250513-agitation-tastatur-327692d0caf0@brauner>
+References: <CAMw=ZnRC7Okmew=rrEocFuFn8hhrcergHciPjxFPuG4c6qH_Bw@mail.gmail.com>
+ <20250513021626.86287-1-kuniyu@amazon.com>
+ <aCMJI-2goig2VBDX@gardel-login>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+as-Uy_BUjLDxfNwC2+78U3kJdaaKL=vbUNMZH9VcLiGQ@mail.gmail.com>
+In-Reply-To: <aCMJI-2goig2VBDX@gardel-login>
 
-On Tue, May 13, 2025 at 09:09:34AM +0200, Dmitry Vyukov wrote:
-> I just hoped for something at least somewhat stronger. Bugs flagged by
-> fsck won't require fixing in that model.
+On Tue, May 13, 2025 at 10:56:03AM +0200, Lennart Poettering wrote:
+> On Mo, 12.05.25 19:14, Kuniyuki Iwashima (kuniyu@amazon.com) wrote:
+> 
+> > > > Note this version does not use prefix.  Now it requires users to
+> > > > just pass the socket cookie via core_pattern so that the kernel
+> > > > can verify the peer.
+> > >
+> > > Exactly - this means the pattern cannot be static in a sysctl.d early
+> > > on boot anymore, and has to be set dynamically by <something>.
+> >
+> > You missed the socket has to be created dynamically by <something>.
+> 
+> systemd implements socket activation: the generic code in PID 1 can
+> bind a socket, and then generically forks off a process (or instances
+> of processes for connection-based sockets) once traffic is seen on
+> that socket. On a typical, current systemd system, PID 1 does this for
+> ~40 sockets by default. The code to bind AF_UNIX or AF_INET/AF_INET6
+> sockets is entirely generic.
+> 
+> Currently, in the existing systemd codebase coredumping is implemented
+> via socket activation: the core_pattern handler binary quickly hands
+> off the coredump fds to an AF_UNIX socket bound that way, and the
+> service behind that does the heavy lifting. Our hope is that with
+> Christian's work we can make the kernel deliver the coredumps directly
+> to the socket PID1 generically binds, getting rid of one middle man.
+> 
+> By requiring userspace to echo the SO_COOKIE value into the
+> core_pattern sysctl in a special formatting, you define a bespoke
+> protocol: it's not just enough to bind a socket (for which the generic
+> code in PID1 is good enough), and to write a fixed
+> string into a sysctl (for which the generic code in the current
+> /etc/sysctl.d/ manager, i.e. systemd-sysctl, works fine). But you
+> suddenly are asking from userspace, that some specific tool runs at
+> early boot, extracts the socket cookie from PID1 somehow, and writes
+> that into sysctl. We'd have to come up with a new tool for that, we
+> can no longer use generic tools. And that's the part that Luca doesn't
+> like.
+> 
+> To a large degree I agree with Luca about this. I would much prefer
+> Christian's earlier proposal (i.e. to simply define some prefix of
+> AF_UNIX abstract namespace addresses as requiring privs to bind),
+> because that would enable us to do generic handling in userspace: the
+> existing socket binding logic in PID 1, and the existing sysctl.d
+> handling in the systemd suite would be good enough to set up
+> everything for the coredump handling.
+> 
+> That said, I'd take what we can get. If enforcing privs on some
+> abstract namespace socket address prefix is not acceptable, then we
+> can probably make the SO_COOKIE proposal work (Luca: we'd just hook
+> some small tool into ExecStartPost= of the .socket unit, and make PID1
+> pass the cookie in some env var or so to it; the tool would then just
+> echo that env var into the sysctl with the fixed prefix). In my eyes,
+> it's not ideal though: it would mean the sysctl data on every instance
+> of the system system image would necessarily deviate (because the
+> socket cookie is going to be different), which mgmt tools won't like
+> (as you cannot compare sysctl state anymore), and we'd have a weak
+> conflict of ownership: right now most sysctl settings are managed by
+> /etc/sysctl.d/, but the core_pattern suddenly wouldn't be
+> anymore. This will create conflicts because suddenly two components
+> write to the thing, and will start fighting.
+> 
+> Hence: I'd *much* prefer Christian's original approach as it does not
+> have these issues. But I'll take what I can get, we can make the
+> cookie thing work, but it's much uglier.
+> 
+> I am not sure I understand why enforcing privs on some abstract
+> namespace socke address prefix is such an unacceptable idea though.
 
-Well, if you have the budget and the headcount to back up that hope,
-you know where to reach me.  Personally, I've hoped to win the lottery
-and own a private jet, but given that I'm not willing to pay the $$$
-for the private jet --- I fly economy.
+I prefer the prefix approach as well. It's clean, simple and is safe by
+itself and elegant. And it fits into the generic socket activation and
+system administration models. I mainly show-cased the cookie model as an
+elaborate workaround. It can be done but it's ugly and more difficult to
+use.
 
-Consider carabiners.  I have one that I use for fastening my keys to
-my belt loop or knapsack. But there are also carabiners that are
-certified for climbing.  If you try to use the former for climbing, it
-wouldn't be safe.  But the climbing carabiner is a lot more expensive
-and a lot heavier.
-
-As far as file systems are concerned, a hardened file system will be
-more expensive, and will have less performance.  But if you are using
-file systems in a data center, where the hard drive is in within the
-Trusted Computing Base, paying the costs for a hardened file system is
-silly.  And in fact, companies are not silly; I have yet to work for a
-company, including my current employer, which has been willing to
-invest in a hardened file system.
-
-Now, the good news is that there are ways we can use a non-hardened
-file system in a safe way.  You just to have the system enforce the
-constraint that the file system must be fsck'ed before mounting the
-file system.
-
-If you want to be even more paranoid (or the proprietary file system
-doesn't have a good fsck), you could mount the file system via a guest
-kernel running in a VM, where the VM is locked down using a seccomp
-sandbox, and which provides file system services via 9pfs to the host
-kernel.  9pfs is a remote file system which is easy to audit, and this
-is a key part of the security strategy used by gVisor.
-
-See?  Easy peasy!  And far cheaper than attempting to harden a file
-system.
-
-						- Ted
-
-P.S.  If some company wants the equivalent of a titanium carabiner,
-where we invest a huge amount of SWE effort in making a hardened file
-system which is as performant as possible, I'm certainly willing to
-work with such a team.  I haven't yet seen the business case where the
-ROI makes sense, but perhaps some company has a unique situation where
-such an investment makes sense.
-
+I do have one more idea how to solve this problem cleanly using regular
+socket paths that hopefully pleases everyone.
