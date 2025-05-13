@@ -1,539 +1,231 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACC32BD00C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1462BE104
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747151256; cv=none; b=kdI6y3T40TnlQmn73cRyqzE1BCcsUjRWdPBMlMpGftF8wnPBZyM0YsEb4Pi+HLVIxyM+qZVAel3U7hWhwGcl2sMCrRaQmVGMzC9fx/ddmCFhx/l1cv/FlYeAhlrV2cnsAxkb1I54zxG8KytivhbA0fmJcUaUtVW/bs+PlyneBHA=
+	t=1747151288; cv=none; b=PU3Y9kFdwRZdBsSzE7vW+5OyeKUtfIA61TJlbTPbnqcKBig30+bU8U55ULhdgvhNUJOLTi0j+kDk77TE+bAbADo9FSAhVTA5nTCjM5S920UxXWOvWF4Pr86KfwA0skfQGa0AxgVA0Ua9eKaXe19m0BEBzciGwHheTzg5akgVOnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747151256; c=relaxed/simple;
-	bh=LgWjVXLxMRmZWHXKYHj/TIb6AGXxEOc2zoBozKupXMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X6aS+Af6heZPi5xxHRT/g0ZNcEwEKLI0jlk/5RCJA0GFkk/UKtvyZ5uDcTOKN50m8+UFKsofETCRmGf9hJS4nRPONezp3aGZz/RoBiYopSmde96sbb8/02ZO2ZhoT/MunEXxJFfFVgSiut4ShVMqdaybCnB9Nxiau89IWt2x/do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dsyo08kx; arc=none smtp.client-ip=209.85.210.51
+	s=arc-20240116; t=1747151288; c=relaxed/simple;
+	bh=dyNwEit9yups5ifv4eTRkQcHDCrtAo3VPpnwS5Fm4pw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c5zZl350Aac/K3op6J3xc9x92NxPuGjFwdlGoccJ5t8TvGz8uq6sIFkXTHP9+rIf+rGWC1WMgkbxHaK4gPjgoYd1HDx1V56m9Cl2bPHYCRdtLKy/7UPPrvivPjM0UVXYl2yiMWHf06C1KMFw6bFDdw8gfvHfyr9zl8eISBPX1SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cFqucrgj; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dsyo08kx"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72c14235af3so3685075a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:47:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cFqucrgj"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a0b6773f8dso4769867f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747151252; x=1747756052; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jvqK9h8ZXoVcJjo3l2Osc+9QJUEe79cCes8JJ/MXKKI=;
-        b=dsyo08kxEXIy8UdqaDekBb2beEns+rvSvXKMgDuwGc49P0bpi6IwJM/LFdMu+j3V5X
-         0mih6ZDgHEbmMzmK/Wahlgpda/DKAKfTU0xWtH67nIKUw2WlLtKLGsDuNjw5ZLYF7bz3
-         YN09TGMEAGMH5HuAlf0UsFNXJHIYMQ9fSKT+ykrGIgjJIUnngrBrUEpmEanldqUDd4uh
-         h/7wmN1ljI89MYM1ZNFkXu1Yw70GIuPnJk+oCSmFjU5RYQW4688x0LhwHOvmGN06t4RD
-         BgBYfeM3SKFp/GRskDju2+K6olLvEDE2MOI9ndGXohpxypifDuyUMMAsi5StDdDXz0TI
-         sVKw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747151285; x=1747756085; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=twMFRJTKXRFBljK7BAdqD+Wqm66eVS8qvsxadlyE9g0=;
+        b=cFqucrgjM1fxHRvDk/v2jLvySNsd3kdfYNdL7W/Ret/1s8JWmE9qS1aHSSn+Ttdt9e
+         HcrelMPKdGyt+8sBs3TSYRJAAEFQWO6RpJMFDCT1/zFcNvYxvweMyOjP0jD/jH2fQhlx
+         9MVHKYMR6300Hh8q/BllIAQCbpxJdwuUW/4euI8mBuDUHvC5AfLhGrlEy89sUT4Rkty5
+         uyggUN33rJ75Opl/t96V+5OPUKn11cGZtidvr4eWU34ISUlol0fs6m+sfJIQ6QoYSTm2
+         aynjocZSdZrMhF2l8G4RnQ7QUZDqCqdwkOBPHC0fFlPhPNRWXvf2Q/e0epTO1i81jf6T
+         nPMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747151252; x=1747756052;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvqK9h8ZXoVcJjo3l2Osc+9QJUEe79cCes8JJ/MXKKI=;
-        b=iWPYhzMfdhHxFInsz4AHen02HFn3Xa4U4qgAe5zBBU5rm1zRrVwI8Esws7lg/a7W1C
-         2Pzf50HW0t2BqLpwZq3wi4gwGnYdjlFkdhPmOZRKQcx2kNUqM5Bk5xMkJVp6LYwmJE9K
-         pyfLFu1enHe+XdMY6PmjkJKdWj+Ww+T365vGTRj+meS5nsibnMYw9Gfy+8FmdDbeJhPT
-         jwFaxCdTh8/Rr0i5idC8sBO0WLWBA2cHdSsfIF/wRDuoUNE1lGwL+k0Jcpspd5e87hWT
-         I0FOyIu5tLDScIyo9WDkWloXblZmcLrBhpkGp4mQz25HmNW7NGylFWqhMK9Ssw6fSh/R
-         EhiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBLOM7/sA9MjudWEsKNE1WtCEu1g2K/czp1qPywIDfNbQPdcoxkyhg1rAbVEySvadXj/ZqGhTZnGuGlHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBF1ufff90dEuML2eADF3N8c3L6xwefwGNi5vLZ51pmzEIrfDV
-	b4OtAA5106WnF4CmFB+2mbTc6oEmDjAnasfSFSOYrq2qzCMm/3cQuZjb6XSOZgA=
-X-Gm-Gg: ASbGncvK0TfeuAlPdXlt2Hr4J9HR+lY57UydB0EDHcllAFmvlVeg7la+sQafiIZ3OR7
-	LgoZN6sA4uMy6TcRdCjRajz7GZT5DnwlMFdA2j9xpEeNRhG1KkeEEIH8XhH2HsL73jmFlpFYbfn
-	kBloGiKzcseObKyhRaywd+nvsA5YZPstfoVO10ReHFjgAJW3wweHsTjW3x9+IwhpPolk5KVhmKs
-	bI22twrSZY17wXQ9lseTMrNcqaLrhN45ONv2K31f/M6l0HDUDY7Eih9Vh8dNsJvKSTye9iYX1gk
-	G1eo7tADvHZL0UIlglUNb6N1BpTYZ4l6G6O2NZxE+NJn65vZIOUusha4BYPIdlLAIbNdgGzrKqi
-	IUwWyDNixN7tirMh3SRb7quw=
-X-Google-Smtp-Source: AGHT+IEDZtsdMIkMEjqjGIW2pZvIngRPUib7P8CaLk/cn2NBC/c3zT+CnAGOqZVaFiqMiE4gHHF9ow==
-X-Received: by 2002:a05:6830:3498:b0:72b:9506:8db6 with SMTP id 46e09a7af769-732269bd8f8mr9591947a34.6.1747151252251;
-        Tue, 13 May 2025 08:47:32 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d74:845a:15c:3fdc? ([2600:8803:e7e4:1d00:d74:845a:15c:3fdc])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732265f95c6sm1956222a34.63.2025.05.13.08.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 08:47:31 -0700 (PDT)
-Message-ID: <2ab9a6e2-a331-4995-8d42-00290bc825e7@baylibre.com>
-Date: Tue, 13 May 2025 10:47:30 -0500
+        d=1e100.net; s=20230601; t=1747151285; x=1747756085;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=twMFRJTKXRFBljK7BAdqD+Wqm66eVS8qvsxadlyE9g0=;
+        b=C2OURPSDgSgso0jSmq5mxbNR3IbqHf4ZelqyfpuBqN1zyj49FNSYpwpztPJLSZUGwn
+         aMPK4vM9Z5sc5KLyArXcmG4mldr9Mamjx6qrhLHZaRuSY61XqBPOThsO5HIGgM0I2RBE
+         A0NuUsJsKLSZY+M8iKzrQsBw+oMwes4rO8CoINpxVO3cxQ1l/tb/X/PGuj/PuW7kQbdC
+         CAK0p4cY4P/PkSOfK3PTNCOBCgfVYAJGAILMszl0AG71/+aV+ps2vcb3mWy9OeXymcTU
+         Bzo/6K/D9RtzkE23+WyhR71p6v4af4o5TKoz9Ou9bwZmEPMWsSS6T2vjZwmFTbnw9lTY
+         Kxpg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2GriHGtcv0p4+WPoTTlgK+lDsy4fbUi+olGn9/zwr9LS4cOKVXXwiPAiRcrgMLApzX3Km/AlB/S3v/lA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm2VLomq30pn+r2B14cycjvIiApagq9DuU5FMWkTvGO8Sr5lqE
+	8ikga3O9B1NAC8myZOfl+xC4bX6/qrOL71MPFbhsYUJ2z646YNXQGdHpCpk1784=
+X-Gm-Gg: ASbGncucaabgR3SNS+eScwei1rd0uoO1BkTRnnDN+QYN/GuwfsJCj6l7VmeTUR9a0Gn
+	+0yzRnfGERyvxbMyWagqdrB8mE+WO99AYaeMGlBh7hMFTjMeddDwEas2wnO7bU+jPhQVPiVVr/P
+	uAjAQfqfDYjpygu+bA2j3uKJicgCdD5HzrLM2vKQtq4+vJnDO46wvICB9QB0TdmH8Y92iWn/wqT
+	LnK8hkU+ZjHi4XYSlEuCW+/3T2HcHQfByzjwwRlKw21K47OdHM48gLpji0KGPYhv/wKCUDdBFuj
+	Dcya6UCAXH9wlMdnXiaIsklnbHiCTjhYInWNyblhLOvro279Qe8=
+X-Google-Smtp-Source: AGHT+IGwvBiWlgqbXuP8q12INpK112AxGYeN5PxjFrpvlMGtcULzZODQsT3BNuhxlCXGSL0e+o8cKg==
+X-Received: by 2002:a05:6000:1884:b0:3a2:2d6:4205 with SMTP id ffacd0b85a97d-3a202d6427cmr9422854f8f.47.1747151284596;
+        Tue, 13 May 2025 08:48:04 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:26f2:6152:bc18:9105])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f58f2fc4sm16882155f8f.56.2025.05.13.08.48.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 08:48:04 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,  linux-amlogic
+ <linux-amlogic@lists.infradead.org>,  khilman@baylibre.com,
+  martin.blumenstingl@googlemail.com,  sboyd@kernel.org,  daniels
+ <daniels@collabora.com>,  Daniel Stone <daniel@fooishbar.org>,
+  lumag@kernel.org,  robdclark <robdclark@gmail.com>,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: amlogic: Synchronous Abort with v6.15-rc6
+In-Reply-To: <714a719a-9e56-4158-a8ce-118b7ddb97b3@collabora.com> (Vignesh
+	Raman's message of "Tue, 13 May 2025 19:56:29 +0530")
+References: <eb9281cc-de91-48a4-bbd6-f67ddc67a9dd@collabora.com>
+	<b090cef6-5b9e-4149-872d-0316666f9e90@linaro.org>
+	<714a719a-9e56-4158-a8ce-118b7ddb97b3@collabora.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 13 May 2025 17:48:03 +0200
+Message-ID: <1j5xi4zf4c.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
- nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- marcelo.schmitt1@gmail.com
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
- <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 5/13/25 7:33 AM, Marcelo Schmitt wrote:
-> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
-> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> Change log v2 -> v3
-> 
-> [device tree changes]
-> - Removed unneeded allOf.
-> - Removed occurences of adi,sensor-type type re-declaration.
-> - Created type for the AD4170 channels, allowing to avoid dt doc repetition.
-> 
->  .../bindings/iio/adc/adi,ad4170.yaml          | 544 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 551 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> new file mode 100644
-> index 000000000000..0a06258b6631
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
-> @@ -0,0 +1,544 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4170 and similar Analog to Digital Converters
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converters.
-> +  Specifications can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4170-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4190-4.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad4195-4.pdf
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +$defs:
-> +  ad4170-channel:
-> +    type: object
-> +    $ref: /schemas/iio/adc/adc.yaml#
-> +    description:
-> +      Common properties for configuring AD4170 channels.
-> +
-> +    properties:
-> +      adi,reference-select:
-> +        description: |
-> +          Selects the reference source to use when converting on the specific
-> +          channel. Valid values are:
-> +          0: Differential reference voltage REFIN+ - REFIN−.
-> +          1: Differential reference voltage REFIN2+ - REFIN2−.
-> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
-> +          3: Analog supply voltage (AVDD) relative AVSS.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2, 3]
-Using strings instead of int for this and most of the other custom enums here
-would make them self-documenting and easier to use.
+On Tue 13 May 2025 at 19:56, Vignesh Raman <vignesh.raman@collabora.com> wr=
+ote:
 
-> +
-> +
-> +  sensor-node:
-> +    type: object
-> +    $ref: '#/$defs/ad4170-channel'
-> +    description:
-> +      The AD4170 and similar designs have features to aid interfacing with weigh
-> +      scale, RTD, and thermocouple sensors. Each of those sensor types requires
-> +      either distinct wiring configuration or external circuitry for proper
-> +      sensor operation and can use different AD4170 functionality on their
-> +      setups. A key characteristic of those external sensors is that they must
-> +      be excited either by voltage supply or by AD4170 excitation signals. The
-> +      sensor can then be read through a pair of analog inputs. These properties
-> +      describe external sensor circuitry connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Channel number. Connects the sensor to the channel with this number
-> +          of the device.
-> +        minimum: 1
-> +        maximum: 16
-> +
-> +      diff-channels:
-> +        description:
-> +          Defines the ADC input pins used to read sensor data. Only regular
-> +          analog input pins can be used.
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-> +
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: |
-> +          Type of sensor connected to the device. Depending on the sensor type
-> +          (weigh scale, RTD, or thermocouple) the values of sensor-node
-> +          properties have slightly different constraints. This property
-> +          specifies which particular external sensor is connected to the ADC so
-> +          the sensor-node properties can be properly parsed and verified. The
-> +          possible sensor types are:
-> +          0: weigh scale;
-> +          1: RTD;
-> +          2: thermocouple.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-This property seems reduandant since it has to match the node name.
+> Hi Neil,
+>
+> On 13/05/25 15:25, neil.armstrong@linaro.org wrote:
+>> Hi,
+>> On 13/05/2025 11:41, Vignesh Raman wrote:
+>>> Hi,
+>>>
+>>> The Amlogic Meson G12B (A311D) SoC board (meson-g12b-a311d-khadas- vim3)
+>>> fails to boot with the following logs,
+>>>
+>>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76210200
+>>>
+>>> 02:58:27.819: Starting kernel ...
+>>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
+>>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
+>>> 02:58:27.819: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
+>>> 02:58:27.819: elr: 00000000f2f26a48 lr : 00000000f2f26c88
+>>> 02:58:27.819: x0 : 00000000050fffc0 x1 : 0000000001004383
+>>> 02:58:27.819: x2 : 00000000f2f6a358 x3 : 000000000000003f
+>>> 02:58:27.819: x4 : 00000000f4fefffc x5 : 0000000000000010
+>>> 02:58:27.819: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
+>>> 02:58:27.819: x8 : 0000000000000008 x9 : 0000000000000001
+>>> 02:58:27.820: x10: 0000000000000010 x11: 0000000000000004
+>>> 02:58:27.820: x12: 00000000f4fefc00 x13: 0000000000000000
+>>> 02:58:27.820: x14: 00000000f4fefc00 x15: 0000000000000000
+>>> 02:58:27.820: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
+>>> 02:58:27.820: x18: 00000000f0f21d90 x19: 00000000050fffc0
+>>> 02:58:27.820: x20: 0000000000000000 x21: 000000007ffe9000
+>>> 02:58:27.820: x22: 0000000000001710 x23: 00000000f0f0e8c0
+>>> 02:58:27.820: x24: 0000000000000000 x25: 0000000000000000
+>>> 02:58:27.820: x26: 0000000000000000 x27: 0000000000000000
+>>> 02:58:27.820: x28: 00000000f0f4f790 x29: 00000000050fff60
+>>> 02:58:27.820: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
+>>> 02:58:27.820: Resetting CPU ...
+>>>
+>> Could you boot with earlycon enabled to at least have a clue of what's
+>> happening ?
+>
+> There is a synchronous abort right after 'Starting kernel...'. Maybe this
+> prevents any early console logs from appearing.
+>
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243455
 
-i.e. weighscale@... is is always adi,sensor-type = <0>; and so on.
+I've just tried to boot v6.15-rc1 on a vim3 (A311D). Booted fine.
 
-> +
-> +      adi,excitation-ac:
-> +        type: boolean
-> +        description:
-> +          Whether the external sensor has to be AC or DC excited.
-Description could be more clear than when omitted, it is DC excited.
+>
+> 13:54:02.013: =3D> setenv bootargs 'console=3DttyAML0,115200n8 root=3D/de=
+v/nfs rw
+> nfsroot=3D192.168.201.1:/var/lib/lava/dispatcher/tmp/18641665/extract-nfs=
+rootfs-h2fjsmdc,tcp,hard,v3
+> init=3D/init rootwait usbcore.quirks=3D0bda:8153:k earlycon=3Dmeson,0xff8=
+03000
+> keep_bootcon  ip=3Ddhcp'
+> 13:54:02.014: $ booti 0x1080000 - 0x1000000
+> 13:54:02.014: =3D> booti 0x1080000 - 0x1000000
+> 13:54:02.014: Moving Image from 0x1080000 to 0x1200000, end=3D5160000
+> 13:54:02.014: ## Flattened Device Tree blob at 01000000
+> 13:54:02.014:    Booting using the fdt blob at 0x1000000
+> 13:54:02.014: Working FDT set to 1000000
+> 13:54:02.014: ERROR: reserving fdt memory region failed (addr=3D5000000
+> size=3D300000 flags=3D4)
+> 13:54:02.014:    Loading Device Tree to 000000007ffe9000, end
+> 000000007ffff57c ... OK
+> 13:54:02.014: Working FDT set to 7ffe9000
+> 13:54:02.014: Starting kernel ...
+> 13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
+> 13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
+> 13:54:02.014: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
+> 13:54:02.014: elr: 00000000f2f26a48 lr : 00000000f2f26c88
+> 13:54:02.014: x0 : 00000000050fffc0 x1 : 0000000001004383
+> 13:54:02.014: x2 : 00000000f2f6a358 x3 : 000000000000003f
+> 13:54:02.014: x4 : 00000000f4fefffc x5 : 0000000000000010
+> 13:54:02.014: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
+> 13:54:02.014: x8 : 0000000000000008 x9 : 0000000000000001
+> 13:54:02.014: x10: 0000000000000010 x11: 0000000000000004
+> 13:54:02.014: x12: 00000000f4fefc00 x13: 0000000000000000
+> 13:54:02.014: x14: 00000000f4fefc00 x15: 0000000000000000
+> 13:54:02.014: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
+> 13:54:02.014: x18: 00000000f0f21d90 x19: 00000000050fffc0
+> 13:54:02.014: x20: 0000000000000000 x21: 000000007ffe9000
+> 13:54:02.014: x22: 0000000000001710 x23: 00000000f0f0e8c0
+> 13:54:02.014: x24: 0000000000000000 x25: 0000000000000000
+> 13:54:02.014: x26: 0000000000000000 x27: 0000000000000000
+> 13:54:02.014: x28: 00000000f0f566a0 x29: 00000000050fff60
+> 13:54:02.014: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
+> 13:54:02.014: Resetting CPU ...
+>
+> Successful logs with v6.14-rc7,
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76248143
+>
+>> BPI-M2S (A311D) is booting fine on v6.15-rc, see https://gitlab.com/
+>> amlogic-foss/abcd-linux-test/-/jobs/10004997032
+>> But perhaps something specific to the VIM3 is breaking, do you change the
+>> kernel config for the DRM ?
+>
+> Yes, we change the config. Please see the config used to build the kernel,
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243439/artifac=
+ts/file/artifacts/testing:arm64_config
+>
+> Regards,
+> Vignesh
+>
+>> Neil
+>>=20
+>>> The board boots successfully in v6.14-rc7, but the issue appears
+>>> starting from v6.15-rc1. These tests were run in drm-ci.
+>>>
+>>> On bisecting the kernel, the first bad commit identified by git biscet
+>>> is,
+>>>
+>>> 59c35416f4246aee66b5f5523fdc950b83325d82 is the first bad commit
+>>> commit 59c35416f4246aee66b5f5523fdc950b83325d82
+>>> Merge: 472863ab2aca e988adcb5dee
+>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Date:=C2=A0=C2=A0 Sat Mar 29 17:23:34 2025 -0700
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0 Merge tag 'clk-for-linus' of git://git.kernel.=
+org/pub/scm/linux/
+>>> kernel/git/clk/linux
 
-> +
-> +      adi,excitation-pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          Pins used to excite the sensor or external circuit that contains the
-> +          sensor. Thermocouples and RTD sensors are excited either with one
-> +          current source or with a pair of current sources to minimize the
-> +          excitation current mismatch and the excitation current drift matching
-> +          on the ADC. E.g. <0>; <1>; <0 1>. Load cell weigh scales may be
-> +          excited with one current source, a pair of excitation currents, or two
-> +          pairs of excitation currents. When four pins are defined, the first
-> +          two values specify the first pair and the last ones specify the second
-> +          pair of excitation currents. E.g. <0>; <0 1>; <0 1 2 3>.
-> +        items:
-> +          minimum: 0
-> +          maximum: 20
-> +
-> +      adi,excitation-current-microamp:
-> +        description:
-> +          Excitation current in microamperes to be output to each excitation pin
-> +          specified by adi,excitation-pins property. If not provided and
-> +          adi,excitation-ac is true, use predefined ACX1, ACX1 negated, ACX2,
-> +          and ACX2 negated signals to AC excite the bridge circuit. Those
-> +          singals are output on GPIO2, GPIO0, GPIO3, and GPIO1, respectively.
-> +        enum: [0, 10, 50, 100, 250, 500, 1000, 1500]
-> +        default: 0
-> +
-> +      adi,power-down-switch-pin:
-> +        description:
-> +          Number of the GPIO used as power-down switch for the bridge circuit.
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1]
-This isn't required, so what is the default if omitted?
+It is odd the first bad commit is a merge :/
 
-> +
-> +      adi,vbias:
-> +        type: boolean
-> +        description:
-> +          For unbiased thermocouple applications, the voltage generated by the
-> +          thermocouple must be biased around some DC voltage. When present, this
-> +          property specifies a bias voltage of (AVDD + AVSS)/2 to be applied as
-> +          common-mode voltage for the sensor.
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +      - bipolar
-> +      - adi,sensor-type
-> +      - adi,reference-select
-> +
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4170
-> +      - adi,ad4190
-> +      - adi,ad4195
-> +
-> +  avss-supply:
-> +    description:
-> +      Referece voltage supply for AVSS. If provided, describes the magnitude
-s/Referece/Reference/
+>>>
+>>> Please could you look into this issue. Thank you.
 
-> +      (absolute value) of the negative voltage supplied to the AVSS pin. Since
-> +      AVSS must be −2.625V minimum and 0V maximum, the declared supply voltage
-> +      must be between 0 and 2.65V. If not provided, AVSS is assumed to be at
-> +      system ground (0V).
-> +
-> +  avdd-supply:
-> +    description:
-> +      A supply of 4.75V to 5.25V relative to AVSS that powers the chip (AVDD).
-> +
-> +  iovdd-supply:
-> +    description: 1.7V to 5.25V reference supply to the serial interface (IOVDD).
-> +
-> +  refin1p-supply:
-> +    description: REFIN+ supply that can be used as reference for conversion.
-> +
-> +  refin1n-supply:
-> +    description: REFIN- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN- pin.
-> +
-> +  refin2p-supply:
-> +    description: REFIN2+ supply that can be used as reference for conversion.
-> +
-> +  refin2n-supply:
-> +    description: REFIN2- supply that can be used as reference for conversion. If
-> +      provided, describes the magnitude (absolute value) of the negative voltage
-> +      supplied to the REFIN2- pin.
-> +
-> +  spi-cpol: true
-> +
-> +  spi-cpha: true
-> +
-> +  interrupts:
-> +    maxItems: 1> +
-> +  interrupt-names:
-> +    description:
-> +      Specify which pin should be configured as Data Ready interrupt.
-> +    enum:
-> +      - sdo
-> +      - dig_aux1
-> +    default: sdo> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      Optional external clock source. Can specify either an external clock or
-> +      external crystal.
-> +
-> +  clock-names:
-> +    enum:
-> +      - ext-clk
-> +      - xtal
-> +    default: ext-clk
-Shouldn't there be a depedency that if clocks is given, then clock-names is requried.
+Assuming it is not something in CCF itself, 2 commits for this platform
+in the PR mentionned above:
 
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  clock-output-names:
-> +    maxItems: 1
-And if #clock-cells is given then clocks is forbidden.
+0079e77c08de clk: amlogic: g12a: fix mmc A peripheral clock
+8995f8f108c3 clk: amlogic: g12b: fix cluster A parent data
 
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
-> +      The first cell is for the GPIO number: 0 to 3.
-> +      The second cell takes standard GPIO flags.
-> +
-> +  ldac-gpios:
-> +    description:
-> +      GPIO connected to DIG_AUX2 pin to be used as LDAC toggle to control the
-> +      transfer of data from the DAC_INPUT_A register to the DAC.
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    $ref: '#/$defs/ad4170-channel'
-> +    unevaluatedProperties: false
-> +    description:
-> +      Represents the external channels which are connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          The channel number.
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      diff-channels:
-> +        description: |
-> +          This property is used for defining the inputs of a differential
-> +          voltage channel. The first value is the positive input and the second
-> +          value is the negative input of the channel.
-> +
-> +          Besides the analog input pins AIN0 to AIN8, there are special inputs
-> +          that can be selected with the following values:
-> +          17: Internal temperature sensor
-> +          18: (AVDD-AVSS)/5
-> +          19: (IOVDD-DGND)/5
-> +          20: DAC output
-> +          21: ALDO
-> +          22: DLDO
-> +          23: AVSS
-> +          24: DGND
-> +          25: REFIN+
-> +          26: REFIN-
-> +          27: REFIN2+
-> +          28: REFIN2-
-> +          29: REFOUT
-> +          For the internal temperature sensor, use the input number for both
-> +          inputs (i.e. diff-channels = <17 17>).
-> +        items:
-> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-> +                 26, 27, 28, 29]
+Checking the clock tree, those appears to work as intended, including
+the VIM3 platform.
 
-A Header file with macros for these would be nice since it seems like we
-have to use the higher-numbered ones a lot with the common-mode-channel
-properties in the examples.
+Maybe try reverting one or the other, see if that changes anything.
 
-> +
-> +      single-channel: true
-> +
-> +      common-mode-channel: true
-> +
-> +      bipolar: true
-> +
-> +      adi,buffered-positive:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the positive voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on positive reference inputs (REFIN+,
-> +          REFIN2+) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-> +
-> +      adi,buffered-negative:
-> +        description: |
-> +          Enable precharge buffer, full buffer, or skip reference buffering of
-> +          the negative voltage reference. Because the output impedance of the
-> +          source driving the voltage reference inputs may be dynamic, RC
-> +          combinations of those inputs can cause DC gain errors if the reference
-> +          inputs go unbuffered into the ADC. Enable reference buffering if the
-> +          provided reference source has dynamic high impedance output. Note the
-> +          absolute voltage allowed on negative reference inputs (REFIN-,
-> +          REFIN2-) is from AVSS − 50 mV to AVDD + 50 mV when the reference
-> +          buffers are disabled but narrows to AVSS to AVDD when reference
-> +          buffering is enabled or in precharge mode.
-> +          0: Reference precharge buffer.
-> +          1: Full Buffer.
-> +          2: Bypass reference buffers (buffering disabled).
-> +        $ref: /schemas/types.yaml#/definitions/uint8
-> +        enum: [0, 1, 2]
-> +        default: 1
-Could make a $def for these too to reduce duplication.
+>>>
+>>> Regards,
+>>> Vignesh
+>>=20
 
-Also another case where string type would make more sense.
-
-> +
-> +    required:
-> +      - reg
-
-reg is already required by adc.yaml
-
-> +
-> +    oneOf:
-> +      - required: [single-channel]
-
-Is there a default for common-mode-channel if it isn't required in this case?
-
-> +        properties:
-> +          diff-channels: false
-> +      - required: [diff-channels]
-> +        properties:
-> +          single-channel: false
-> +          common-mode-channel: false
-> +
-> +  "^weighscale@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: Weigh scale sensor.
-> +        const: 0
-> +
-> +      adi,excitation-pins: true
-> +
-> +  "^rtd@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: RTD sensor.
-> +        const: 1
-> +
-> +      adi,excitation-pins: true
-> +
-> +      adi,excitation-current-microamp: true
-> +
-> +    required:
-> +      - adi,excitation-pins
-> +      - adi,excitation-current-microamp
-> +
-> +  "^thermocouple@":
-> +    $ref: '#/$defs/sensor-node'
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      diff-channels: true
-> +      bipolar: true
-> +
-> +      adi,sensor-type:
-> +        description: Thermocouple sensor.
-> +        const: 2
-> +
-> +    required:
-> +      - adi,excitation-pins
-> +      - adi,excitation-current-microamp
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - avdd-supply
-> +  - iovdd-supply
-> +  - spi-cpol
-> +  - spi-cpha
-> +
-> +allOf:
-> +  # Some devices don't have integrated DAC
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - adi,ad4190
-> +              - adi,ad4195
-> +    then:
-> +      properties:
-> +        ldac-gpios: false
-> +
-> +unevaluatedProperties: false
-> +
-
-The patternProperties: section is so big, it would be nice to move these
-before it so the are closer to the properties they actually affect.
+--=20
+Jerome
