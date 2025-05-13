@@ -1,1029 +1,480 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADF01D515A;
-	Tue, 13 May 2025 15:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC671DED53;
+	Tue, 13 May 2025 15:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150395; cv=none; b=c0fet27TfS/NBGEf7T1u1HYMxMqR8YRQAmXkJtU2+murq1nPbu3uAC2H69f2Aa0oUJRWgku1DZRTc1ET1v3vH6eqVFl32Ct6+MC/C4gNhPqKsoehFrJqDVVnqlrlkKav5qRmHLuTUNwsIpXOhEF6F8hKIvAeKy6OcxU0dfn+U+E=
+	t=1747150534; cv=none; b=cI+JmJGWDalQ/S0byiXq38HnBoQu5ILWfFxZFxmhaED/nsqc89n7d5od+dQZ3+2ht5yK4tt2cVJ7ifYBClKVTOv4tu0WLyszL/DtslOUSsYij6yHmAYLBAq4gW68LgdNYZ9VEzLbQnDIZesgYoPTrt683KV7zwD27+KO20e0ShU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150395; c=relaxed/simple;
-	bh=0L0ta/wlm0dq53ckxKQTCiqhrdmFCTx9rhEHsMVYAWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WxDNe2fDf/Ll1lIC9kC9h0jQhy6NM94Nh69spplZRrPS0P1ZCdiBAh/dJFN+Yqn6PE56rzhmwhDUeAd+j0A8LbO177AhW306AQIh91TuQ1ueHxmqu0wiG1X2GratqOsL8yoW55iHfSGiQqV+gjooehsn0mCW5c1ysD0uXtCwH9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
-X-QQ-mid: zesmtpgz3t1747150254tccfd460a
-X-QQ-Originating-IP: 5BwiIbjefSPtvbwWKlmiZpkD0bSkJK/dCNUI3/jdxQQ=
-Received: from chainsx-ubuntu-server.lan ( [116.249.112.25])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 13 May 2025 23:30:53 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13202169640503006136
-EX-QQ-RecipientCnt: 11
-From: Hsun Lai <i@chainsx.cn>
-To: Fred Bloggs <f.blogs@napier.co.nz>
-Cc: Hsun Lai <i@chainsx.cn>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
-Date: Tue, 13 May 2025 23:30:44 +0800
-Message-Id: <20250513153044.167187-3-i@chainsx.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250513153044.167187-1-i@chainsx.cn>
-References: <20250513153044.167187-1-i@chainsx.cn>
+	s=arc-20240116; t=1747150534; c=relaxed/simple;
+	bh=44OVUKj9aCCP+vFyFhZVrsNIfAVDN0RpT8oZUPLFkOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dpKWdD8M4acnC8UlKtu5quo0DTi+OBSPqY0zJDclYoe9WJvqLCgzi2ZoEWoZYx0f4eApaJBapzQ0QVIylLVl5UeERTGtasADSgnfCCPi0xkimVUIY4JxrMXhvpa1RPrnuEFLU95xbRfdTvsf6fgkJQ5s8sE7I8u/EfLca96Hov0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=INZdqt9N; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="INZdqt9N"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DDMAuG009699;
+	Tue, 13 May 2025 15:35:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kIohhrMd+nU6vPfgQBkQMmlh2UxWEQxGX8bvFquaXVI=; b=INZdqt9NTcKukYl1
+	GhNqX+K0UTa2dK54VbHXJnzLyQBBvFxBvHYJh0xC+IV4/UynbULxW6SkHJB31s7N
+	f0AHz6QJjj7UHG8yUXZH3C93RcVfIdwiYtVYNdVj/UA93i3kluMuEBIxvx7Mwi8Z
+	iy0uWnz65Zw7FIrO5gmuRrohA9Z3hX1IYq1NiYFoVtyo5QDCFJyp2z7czcEsL+yo
+	puOx8MHFB4LAEUnLjSUEqgthZI4pjzBKXPz/q4rt160skQMGpifBz642E6mED9HE
+	MMLsLrCPOEFuqoHiN+3e1PVas7iQq8MhBg/bVJ96Lct7q/Y998576+VUX2QfBPzB
+	jFWVxA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hy160apw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:35:18 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54DFZI7C027230
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:35:18 GMT
+Received: from [10.50.14.169] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 13 May
+ 2025 08:35:13 -0700
+Message-ID: <007881c9-e03c-1473-d8eb-53fbad8c6a8e@quicinc.com>
+Date: Tue, 13 May 2025 21:05:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH next 2/2] spi: spi-qpic-snand: add support for 8 bits ECC
+ strength
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Gabor Juhos <j4g8y7@gmail.com>
+CC: Mark Brown <broonie@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Varadarajan Narayanan
+	<quic_varada@quicinc.com>,
+        Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250502-qpic-snand-8bit-ecc-v1-0-95f3cd08bbc5@gmail.com>
+ <20250502-qpic-snand-8bit-ecc-v1-2-95f3cd08bbc5@gmail.com>
+ <8aa3d4da-da3e-2af4-e0f9-cd56d6259d8f@quicinc.com>
+ <c1729d39-9f7f-4c6d-b8a4-72dfee4bfca5@gmail.com> <878qn2nsa0.fsf@bootlin.com>
+ <16195524-1f31-4968-a3fd-f3d24f1c4223@gmail.com> <87msbhezjf.fsf@bootlin.com>
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <87msbhezjf.fsf@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: ObFHHlrAm440TUTxsY3vcg6yfzcKjOEQ3Izm41tP/DNO1fWUAkBmIbH9
-	8o9MlhPYC4XM9tfvV4UbTVREQodZHDMLSNshrjcPm722T26Xob6qmzD4BX9XzkMfJIAVslj
-	biGnaUyk9uvD+GzZ3QXuBr3Y8JfXfITbGs+stPxrPUIaMfD9eP+GeQ4UAnB3ExqE7kvohYA
-	qJXq2B4Cgi/JaOXBwSFDFVe32hy0T5d0tbqS4+7grsX8NJhWlZLTAPIkTfsDSFjYZRJpvJx
-	pTiRzpd7qlE7tsXWBd6m3nenQWTVt+Dm3SS6Kuhe7S9UQtqvmzwuZiImdAU5jlPM+HShjF3
-	cqH7juil5YuTVIXShr0i4yIrnxhHh/EnWUS4jWJIibvAct+Q2SHkFbsX1v3Ku7TWt7rS0Bb
-	afFD8gLMxadiPn8qomTxm1OyNxpPHno8O0KQerY5mP1Am1EPw6+E+IuKO1yb6HsO2fh23jC
-	5Fr/HDlE3MKjG+8On6VVWclgyXUd/YNnpUlgXSENT3BI+x5097BpKPjt7fuZ1biUGeqyUoe
-	I+HePjIT4qdfXIhy0I7ISMnmv8qV5x1TChPzhAxCHWM4ZyUQxY/Z3HKIJ/18t/qBTprrr9Y
-	mMefRXy0FgVeNQb2Hk8s8nN23j3OVfrw0GXrxtPNjtPHJ+BWqTm36j04SZ5ohdpJMzp3cUu
-	p5H7mnnC0LkivB3GC21RoiTYTSQjBmGJyPO+/LZpoz/EbKVFfOVMDsBqWH4o7Ybe50MwXx+
-	N/dKXRCv5QMUhLmIOzJsvZ7Hd5T06/2SvMZW7X7MDHG9EEu8SYcuEdY5lDVhx8njr0xgOrq
-	SkNebzqKrHC/rsqgL4VJYVOpddnu/7cxIom/rHF5U99ArM+yZi4rAyHGmGh0zZPYOAAeju2
-	m3WMTzwo8WuqTp8P4JCfOWCipb9J1o3C3uRyer7NZmPYO4tqzSQUBoZ80QGXRtwjrrh9Ly4
-	nWO7WxVSSMM/2PD6wPblxtyyPSKKpWqPmMNwxlV1uScKxobOddx+e1Xnk
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: lRSNiKrrQczKJKabwzDqGFxTxKJ3a3dT
+X-Proofpoint-ORIG-GUID: lRSNiKrrQczKJKabwzDqGFxTxKJ3a3dT
+X-Authority-Analysis: v=2.4 cv=P9U6hjAu c=1 sm=1 tr=0 ts=682366b6 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8
+ a=FbdYzhkEbbHeyMIbgjQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE0OCBTYWx0ZWRfX54Ny+tzGCqN4
+ aevOOpSfeOZME0gJOM8fwpS494NBYJUXnjkgbG7a89ylVqCm2cZQmBZ0g/hJ+VZaG7bwSW01Rvh
+ T6dyodziDnB5HcrVIv1j2Jz5Ql7a0Im5bjBbnCA3Rb3dL5QJVuepangGlWj/ZH4aZLgCg9KtVU+
+ /+1g7LMb7gmStHYSVmGsepOJsag882mrt1GBzeXzWKez5S9RPPiAvxfmnwETM5CmbUYx+c7/CEh
+ fILJupHYH1cSiz0AnMDg2v5WC9Oa59IVqew9UDO6vhZLmB5r+3DW53l3Q08QMIT7auXFxFm6n6A
+ R94d+1U+DGw6GvFM/Ua92yNC3tgADoIUQ4EFezW390H/4WzI1za9KOSBRV5piBbqFkdrXakmV8P
+ kafIng1Swo0CFf1U53QN7j7G3yGRCPws18Gbl9fmKoVTo7nYXBN1WAAyrFZ6ut3ANJgg1Hq3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 suspectscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
+ phishscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130148
 
-The Firefly ROC-RK3588S-PC is a SBC based on the Rockchip RK3588s SoC.
 
-Link: https://wiki.t-firefly.com/en/Station-M3/index.html
 
-The device contains the following hardware that is tested/working:
- - 32 or 64GB eMMC
- - SDMMC card slot
- - Realtek USB WiFi 5/BT
- - NVME 2242 socket
- - 4 or 8GB of RAM
- - RTL8211 GbE
- - USB 3.0 port
- - USB 2.0 port
- - HDMI port
+On 5/13/2025 1:02 PM, Miquel Raynal wrote:
+> On 12/05/2025 at 22:19:05 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
+> 
+>> 2025. 05. 12. 10:32 keltezéssel, Miquel Raynal írta:
+>>> On 05/05/2025 at 15:21:52 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
+>>>
+>>>> 2025. 05. 05. 13:17 keltezéssel, Md Sadre Alam írta:
+>>>>>
+>>>>>
+>>>>
+>>
+>> [...]
+>>
+>>>> [   48.940586] ==================================================
+>>>> [   48.941112] mtd_nandbiterrs: MTD device: 0
+>>>> [   48.946811] mtd_nandbiterrs: MTD device size 268435456, eraseblock=131072,
+>>>> page=2048, oob=128
+>>>> [   48.950837] mtd_nandbiterrs: Device uses 1 subpages of 2048 bytes
+>>>> [   48.959448] mtd_nandbiterrs: Using page=0, offset=0, eraseblock=0
+>>>> [   48.969014] mtd_nandbiterrs: incremental biterrors test
+>>>> [   48.971596] mtd_nandbiterrs: write_page
+>>>> [   48.977594] mtd_nandbiterrs: rewrite page
+>>>> [   48.981277] mtd_nandbiterrs: read_page
+>>>> [   48.985247] mtd_nandbiterrs: verify_page
+>>>> [   48.988269] mtd_nandbiterrs: Successfully corrected 0 bit errors per subpage
+>>>> [   48.992327] mtd_nandbiterrs: Inserted biterror @ 0/5
+>>>> [   48.999428] mtd_nandbiterrs: rewrite page
+>>>> [   49.005508] mtd_nandbiterrs: read_page
+>>>> [   49.008836] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>>> [   49.011858] mtd_nandbiterrs: verify_page
+>>>> [   49.018061] mtd_nandbiterrs: Successfully corrected 1 bit errors per subpage
+>>>> [   49.022015] mtd_nandbiterrs: Inserted biterror @ 0/2
+>>>> [   49.029058] mtd_nandbiterrs: rewrite page
+>>>> [   49.034848] mtd_nandbiterrs: read_page
+>>>> [   49.038516] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>>> [   49.041545] mtd_nandbiterrs: verify_page
+>>>> [   49.047755] mtd_nandbiterrs: Successfully corrected 2 bit errors per subpage
+>>>> [   49.051702] mtd_nandbiterrs: Inserted biterror @ 0/0
+>>>> [   49.058760] mtd_nandbiterrs: rewrite page
+>>>> [   49.064565] mtd_nandbiterrs: read_page
+>>>> [   49.068203] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>>> [   49.071232] mtd_nandbiterrs: verify_page
+>>>> [   49.077432] mtd_nandbiterrs: Successfully corrected 3 bit errors per subpage
+>>>> [   49.081389] mtd_nandbiterrs: Inserted biterror @ 1/7
+>>>> [   49.088432] mtd_nandbiterrs: rewrite page
+>>>> [   49.094197] mtd_nandbiterrs: read_page
+>>>> [   49.097889] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>>> [   49.100919] mtd_nandbiterrs: verify_page
+>>>> [   49.107121] mtd_nandbiterrs: Successfully corrected 4 bit errors per subpage
+>>>> [   49.111077] mtd_nandbiterrs: Inserted biterror @ 1/5
+>>>> [   49.118137] mtd_nandbiterrs: rewrite page
+>>>> [   49.123892] mtd_nandbiterrs: read_page
+>>>> [   49.127576] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>>> [   49.130608] mtd_nandbiterrs: verify_page
+>>>> [   49.136808] mtd_nandbiterrs: Successfully corrected 5 bit errors per subpage
+>>>> [   49.140764] mtd_nandbiterrs: Inserted biterror @ 1/2
+>>>> [   49.147807] mtd_nandbiterrs: rewrite page
+>>>> [   49.153607] mtd_nandbiterrs: read_page
+>>>> [   49.157268] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>>> [   49.160294] mtd_nandbiterrs: verify_page
+>>>> [   49.166496] mtd_nandbiterrs: Successfully corrected 6 bit errors per subpage
+>>>> [   49.170452] mtd_nandbiterrs: Inserted biterror @ 1/0
+>>>> [   49.177498] mtd_nandbiterrs: rewrite page
+>>>> [   49.183253] mtd_nandbiterrs: read_page
+>>>> [   49.186974] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>>> [   49.189983] mtd_nandbiterrs: verify_page
+>>>> [   49.196194] mtd_nandbiterrs: Successfully corrected 7 bit errors per subpage
+>>>> [   49.200140] mtd_nandbiterrs: Inserted biterror @ 2/6
+>>>> [   49.207182] mtd_nandbiterrs: rewrite page
+>>>> [   49.212895] mtd_nandbiterrs: read_page
+>>>> [   49.216671] mtd_nandbiterrs: Read reported 3 corrected bit errors
+>>>> [   49.219670] mtd_nandbiterrs: verify_page
+>>>> [   49.225872] mtd_nandbiterrs: Successfully corrected 8 bit errors per subpage
+>>>> [   49.229827] mtd_nandbiterrs: Inserted biterror @ 2/5
+>>>> [   49.236871] mtd_nandbiterrs: rewrite page
+>>>> [   49.242629] mtd_nandbiterrs: read_page
+>>>> [   49.246348] mtd_nandbiterrs: error: read failed at 0x0
+>>>> [   49.249356] mtd_nandbiterrs: After 9 biterrors per subpage, read reported
+>>>> error -74
+>>>> [   49.257958] mtd_nandbiterrs: finished successfully.
+>>>> [   49.262029] ==================================================
+>>>> #
+>>>
+>>> This is not the intended behavior. The reporting is wrong and should
+>>> report an increasing number of bitflips instead of 1, 1, 1, 2, 2, 2, 2,
+>>> 3.
+>>>
+>>> With this behavior, wear levelling will not work correctly.
+>>>
+>>> This is not related to Gabor's changes, but I believe this should be
+>>> updated otherwise it does not make much sense to increase the strength.
+>>
+>> It still makes some sense. For example, the bootloader on my board uses 8 bits
+>> strength when it handles the NAND flash. Without supporting that, the kernel
+>> can't read the data written by the bootloader and vice versa.
+>>
+>>> Gabor, can you look into it? Both patches look fine otherwise, thanks a
+>>> lot!
+>>
+>> I have checked it. According to the code, the driver reads the reported values
+>> from a hardware register.
+>>
+>> Here is the result of another test but i have added some debug code to the
+>> driver so the output contains the hardware register values:
+>>
+>>    # insmod mtd_nandbiterrs dev=0
+>>    [   64.791395]
+>>    [   64.791423] ==================================================
+>>    [   64.791950] mtd_nandbiterrs: MTD device: 0
+>>    [   64.797592] mtd_nandbiterrs: MTD device size 268435456, eraseblock=131072, page=2048, oob=128
+>>    [   64.801779] mtd_nandbiterrs: Device uses 1 subpages of 2048 bytes
+>>    [   64.810313] mtd_nandbiterrs: Using page=0, offset=0, eraseblock=0
+>>    [   64.820832] mtd_nandbiterrs: incremental biterrors test
+>>    [   64.822452] mtd_nandbiterrs: write_page
+>>    [   64.828511] mtd_nandbiterrs: rewrite page
+>>    [   64.832270] mtd_nandbiterrs: read_page
+>>    [   64.836184] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.839091] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.847364] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.855694] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.864020] qcom_snand 79b0000.spi: corrected:0 failed:0 bitflips:0
+>>    [   64.872349] mtd_nandbiterrs: verify_page
+>>    [   64.878598] mtd_nandbiterrs: Successfully corrected 0 bit errors per subpage
+>>    [   64.882760] mtd_nandbiterrs: Inserted biterror @ 0/5
+>>    [   64.889793] mtd_nandbiterrs: rewrite page
+>>    [   64.895541] mtd_nandbiterrs: read_page
+>>    [   64.899228] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0201 erased_cw:00000002
+>>    [   64.902282] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.910549] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.918860] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.927206] qcom_snand 79b0000.spi: corrected:1 failed:0 bitflips:1
+>>    [   64.935552] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>    [   64.941789] mtd_nandbiterrs: verify_page
+>>    [   64.948043] mtd_nandbiterrs: Successfully corrected 1 bit errors per subpage
+>>    [   64.952042] mtd_nandbiterrs: Inserted biterror @ 0/2
+>>    [   64.959048] mtd_nandbiterrs: rewrite page
+>>    [   64.964815] mtd_nandbiterrs: read_page
+>>    [   64.968490] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0201 erased_cw:00000002
+>>    [   64.971586] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.979814] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.988131] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   64.996481] qcom_snand 79b0000.spi: corrected:1 failed:0 bitflips:1
+>>    [   65.004810] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>    [   65.011059] mtd_nandbiterrs: verify_page
+>>    [   65.017313] mtd_nandbiterrs: Successfully corrected 2 bit errors per subpage
+>>    [   65.021307] mtd_nandbiterrs: Inserted biterror @ 0/0
+>>    [   65.028319] mtd_nandbiterrs: rewrite page
+>>    [   65.034131] mtd_nandbiterrs: read_page
+>>    [   65.037862] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0201 erased_cw:00000002
+>>    [   65.040844] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.049069] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.057418] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.065763] qcom_snand 79b0000.spi: corrected:1 failed:0 bitflips:1
+>>    [   65.074082] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>    [   65.080341] mtd_nandbiterrs: verify_page
+>>    [   65.086584] mtd_nandbiterrs: Successfully corrected 3 bit errors per subpage
+>>    [   65.090574] mtd_nandbiterrs: Inserted biterror @ 1/7
+>>    [   65.097589] mtd_nandbiterrs: rewrite page
+>>    [   65.103374] mtd_nandbiterrs: read_page
+>>    [   65.107030] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0202 erased_cw:00000002
+>>    [   65.110120] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.118340] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.126689] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.135032] qcom_snand 79b0000.spi: corrected:2 failed:0 bitflips:2
+>>    [   65.143357] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>    [   65.149611] mtd_nandbiterrs: verify_page
+>>    [   65.155855] mtd_nandbiterrs: Successfully corrected 4 bit errors per subpage
+>>    [   65.159844] mtd_nandbiterrs: Inserted biterror @ 1/5
+>>    [   65.166860] mtd_nandbiterrs: rewrite page
+>>    [   65.172645] mtd_nandbiterrs: read_page
+>>    [   65.176301] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0202 erased_cw:00000002
+>>    [   65.179389] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.187611] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.195961] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.204289] qcom_snand 79b0000.spi: corrected:2 failed:0 bitflips:2
+>>    [   65.212623] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>    [   65.218858] mtd_nandbiterrs: verify_page
+>>    [   65.225139] mtd_nandbiterrs: Successfully corrected 5 bit errors per subpage
+>>    [   65.229102] mtd_nandbiterrs: Inserted biterror @ 1/2
+>>    [   65.236147] mtd_nandbiterrs: rewrite page
+>>    [   65.241899] mtd_nandbiterrs: read_page
+>>    [   65.245572] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0202 erased_cw:00000002
+>>    [   65.248635] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.256902] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.265234] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.273561] qcom_snand 79b0000.spi: corrected:2 failed:0 bitflips:2
+>>    [   65.281895] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>    [   65.288129] mtd_nandbiterrs: verify_page
+>>    [   65.294408] mtd_nandbiterrs: Successfully corrected 6 bit errors per subpage
+>>    [   65.298373] mtd_nandbiterrs: Inserted biterror @ 1/0
+>>    [   65.305413] mtd_nandbiterrs: rewrite page
+>>    [   65.311170] mtd_nandbiterrs: read_page
+>>    [   65.314843] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0202 erased_cw:00000002
+>>    [   65.317906] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.326170] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.334501] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.342833] qcom_snand 79b0000.spi: corrected:2 failed:0 bitflips:2
+>>    [   65.351164] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>    [   65.357399] mtd_nandbiterrs: verify_page
+>>    [   65.363680] mtd_nandbiterrs: Successfully corrected 7 bit errors per subpage
+>>    [   65.367643] mtd_nandbiterrs: Inserted biterror @ 2/6
+>>    [   65.374684] mtd_nandbiterrs: rewrite page
+>>    [   65.380445] mtd_nandbiterrs: read_page
+>>    [   65.384112] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0203 erased_cw:00000002
+>>    [   65.387177] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.395445] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.403769] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.412103] qcom_snand 79b0000.spi: corrected:3 failed:0 bitflips:3
+>>    [   65.420436] mtd_nandbiterrs: Read reported 3 corrected bit errors
+>>    [   65.426671] mtd_nandbiterrs: verify_page
+>>    [   65.432950] mtd_nandbiterrs: Successfully corrected 8 bit errors per subpage
+>>    [   65.436915] mtd_nandbiterrs: Inserted biterror @ 2/5
+>>    [   65.443958] mtd_nandbiterrs: rewrite page
+>>    [   65.449719] mtd_nandbiterrs: read_page
+>>    [   65.453386] qcom_snand 79b0000.spi: cw[0] flash:00003030 buffer:00ff0301 erased_cw:00000002
+>>    [   65.456448] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.464715] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.473041] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   65.481374] qcom_snand 79b0000.spi: corrected:0 failed:1 bitflips:3
+>>    [   65.489706] mtd_nandbiterrs: error: read failed at 0x0
+>>    [   65.495941] mtd_nandbiterrs: After 9 biterrors per subpage, read reported error -74
+>>    [   65.504609] mtd_nandbiterrs: finished successfully.
+>>    [   65.508700] ==================================================
+>>
+>>
+>> Basically, the driver reads the page as 4 codewords along with reading the
+>> register values after each. The reported values are coming from the low
+>> 5 bits of the 'buffer' values printed above. The layout of the register is
+>> barely documented in the driver, so the exact meaning of the bits is unknown.
+>>
+>> Despite that, I had an idea, so I have changed the code in the nandbiterrs
+>> module to insert only single bit error into a given byte. By doing the test
+>> with the modified module results in the following:
+>>
+>>    # insmod mtd_nandbiterrs dev=0
+>>    [   37.125416]
+>>    [   37.125444] ==================================================
+>>    [   37.125970] mtd_nandbiterrs: MTD device: 0
+>>    [   37.131764] mtd_nandbiterrs: MTD device size 268435456, eraseblock=131072, page=2048, oob=128
+>>    [   37.135695] mtd_nandbiterrs: Device uses 1 subpages of 2048 bytes
+>>    [   37.144314] mtd_nandbiterrs: Using page=0, offset=0, eraseblock=0
+>>    [   37.155047] mtd_nandbiterrs: incremental biterrors test
+>>    [   37.156481] mtd_nandbiterrs: write_page
+>>    [   37.162518] mtd_nandbiterrs: rewrite page
+>>    [   37.166298] mtd_nandbiterrs: read_page
+>>    [   37.170193] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.173111] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.181383] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.189708] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.198020] qcom_snand 79b0000.spi: corrected:0 failed:0 bitflips:0
+>>    [   37.206367] mtd_nandbiterrs: verify_page
+>>    [   37.212631] mtd_nandbiterrs: Successfully corrected 0 bit errors per subpage
+>>    [   37.216768] mtd_nandbiterrs: Inserted biterror @ 1/7
+>>    [   37.223809] mtd_nandbiterrs: rewrite page
+>>    [   37.229569] mtd_nandbiterrs: read_page
+>>    [   37.233244] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0201 erased_cw:00000002
+>>    [   37.236301] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.244571] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.252896] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.261227] qcom_snand 79b0000.spi: corrected:1 failed:0 bitflips:1
+>>    [   37.269560] mtd_nandbiterrs: Read reported 1 corrected bit errors
+>>    [   37.275795] mtd_nandbiterrs: verify_page
+>>    [   37.282075] mtd_nandbiterrs: Successfully corrected 1 bit errors per subpage
+>>    [   37.286039] mtd_nandbiterrs: Inserted biterror @ 3/7
+>>    [   37.293080] mtd_nandbiterrs: rewrite page
+>>    [   37.298877] mtd_nandbiterrs: read_page
+>>    [   37.302531] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0202 erased_cw:00000002
+>>    [   37.305572] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.313839] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.322169] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.330498] qcom_snand 79b0000.spi: corrected:2 failed:0 bitflips:2
+>>    [   37.338818] mtd_nandbiterrs: Read reported 2 corrected bit errors
+>>    [   37.345078] mtd_nandbiterrs: verify_page
+>>    [   37.351352] mtd_nandbiterrs: Successfully corrected 2 bit errors per subpage
+>>    [   37.355310] mtd_nandbiterrs: Inserted biterror @ 5/7
+>>    [   37.362352] mtd_nandbiterrs: rewrite page
+>>    [   37.368094] mtd_nandbiterrs: read_page
+>>    [   37.371814] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0203 erased_cw:00000002
+>>    [   37.374843] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.383111] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.391437] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.399769] qcom_snand 79b0000.spi: corrected:3 failed:0 bitflips:3
+>>    [   37.408089] mtd_nandbiterrs: Read reported 3 corrected bit errors
+>>    [   37.414351] mtd_nandbiterrs: verify_page
+>>    [   37.420616] mtd_nandbiterrs: Successfully corrected 3 bit errors per subpage
+>>    [   37.424581] mtd_nandbiterrs: Inserted biterror @ 7/7
+>>    [   37.431622] mtd_nandbiterrs: rewrite page
+>>    [   37.437419] mtd_nandbiterrs: read_page
+>>    [   37.441072] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0204 erased_cw:00000002
+>>    [   37.444114] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.452380] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.460708] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.469047] qcom_snand 79b0000.spi: corrected:4 failed:0 bitflips:4
+>>    [   37.477360] mtd_nandbiterrs: Read reported 4 corrected bit errors
+>>    [   37.483621] mtd_nandbiterrs: verify_page
+>>    [   37.489888] mtd_nandbiterrs: Successfully corrected 4 bit errors per subpage
+>>    [   37.493852] mtd_nandbiterrs: Inserted biterror @ 8/7
+>>    [   37.500893] mtd_nandbiterrs: rewrite page
+>>    [   37.506636] mtd_nandbiterrs: read_page
+>>    [   37.510342] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0205 erased_cw:00000002
+>>    [   37.513385] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.521652] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.529978] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.538297] qcom_snand 79b0000.spi: corrected:5 failed:0 bitflips:5
+>>    [   37.546643] mtd_nandbiterrs: Read reported 5 corrected bit errors
+>>    [   37.552896] mtd_nandbiterrs: verify_page
+>>    [   37.559161] mtd_nandbiterrs: Successfully corrected 5 bit errors per subpage
+>>    [   37.563123] mtd_nandbiterrs: Inserted biterror @ 10/7
+>>    [   37.570168] mtd_nandbiterrs: rewrite page
+>>    [   37.575956] mtd_nandbiterrs: read_page
+>>    [   37.579702] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0206 erased_cw:00000002
+>>    [   37.582743] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.591010] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.599354] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.607655] qcom_snand 79b0000.spi: corrected:6 failed:0 bitflips:6
+>>    [   37.616004] mtd_nandbiterrs: Read reported 6 corrected bit errors
+>>    [   37.622249] mtd_nandbiterrs: verify_page
+>>    [   37.628504] mtd_nandbiterrs: Successfully corrected 6 bit errors per subpage
+>>    [   37.632497] mtd_nandbiterrs: Inserted biterror @ 12/7
+>>    [   37.639524] mtd_nandbiterrs: rewrite page
+>>    [   37.645353] mtd_nandbiterrs: read_page
+>>    [   37.649047] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0207 erased_cw:00000002
+>>    [   37.652100] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.660367] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.668679] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.677029] qcom_snand 79b0000.spi: corrected:7 failed:0 bitflips:7
+>>    [   37.685358] mtd_nandbiterrs: Read reported 7 corrected bit errors
+>>    [   37.691607] mtd_nandbiterrs: verify_page
+>>    [   37.697861] mtd_nandbiterrs: Successfully corrected 7 bit errors per subpage
+>>    [   37.701852] mtd_nandbiterrs: Inserted biterror @ 14/7
+>>    [   37.708867] mtd_nandbiterrs: rewrite page
+>>    [   37.714683] mtd_nandbiterrs: read_page
+>>    [   37.718397] qcom_snand 79b0000.spi: cw[0] flash:00003020 buffer:00ff0208 erased_cw:00000002
+>>    [   37.721478] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.729718] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.738037] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.746433] qcom_snand 79b0000.spi: corrected:8 failed:0 bitflips:8
+>>    [   37.754719] mtd_nandbiterrs: Read reported 8 corrected bit errors
+>>    [   37.760972] mtd_nandbiterrs: verify_page
+>>    [   37.767218] mtd_nandbiterrs: Successfully corrected 8 bit errors per subpage
+>>    [   37.771214] mtd_nandbiterrs: Inserted biterror @ 17/7
+>>    [   37.778225] mtd_nandbiterrs: rewrite page
+>>    [   37.784054] mtd_nandbiterrs: read_page
+>>    [   37.787754] qcom_snand 79b0000.spi: cw[0] flash:00003030 buffer:00ff0301 erased_cw:00000002
+>>    [   37.790836] qcom_snand 79b0000.spi: cw[1] flash:00002020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.799076] qcom_snand 79b0000.spi: cw[2] flash:00001020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.807395] qcom_snand 79b0000.spi: cw[3] flash:00000020 buffer:00ff0200 erased_cw:00000002
+>>    [   37.815743] qcom_snand 79b0000.spi: corrected:0 failed:1 bitflips:8
+>>    [   37.824073] mtd_nandbiterrs: error: read failed at 0x0
+>>    [   37.830321] mtd_nandbiterrs: After 9 biterrors per subpage, read reported error -74
+>>    [   37.838993] mtd_nandbiterrs: finished successfully.
+>>    [   37.843068] ==================================================
+>>
+>> Interestingly enough, it reports the correct number of bit errors now.
+>> For me it seems, that the hardware reports the number of the corrected
+>> *bytes* instead of the corrected *bits*.
+> 
+> I doubt that, nobody counts bytes of errors.
+> 
+> You results are surprising. I initially though in favour of a software
+> bug, but then it looks even weirder than that. Alam?
+I have checked with HW team , the QPIC ECC HW engine reports the bit 
+error byte wise not bit wise.
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
+e.g
+     Byte0 --> 2-bitflips --> QPIC ECC counts 1 only
+     Byte1 --> 3-bitflips --> QPIC ECC counts 1 only
+     Byte2 --> 1-bitflips --> QPIC ECC counts 1 only
+     Byte3 --> 4-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
+     Byte4 --> 6-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
 
----
+Hope this can clearify the things now.
 
-Changes in v2:
-- Add support for Firefly ROC-RK3588S-PC
-- Fix rgmii delays
-
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 910 ++++++++++++++++++
- 2 files changed, 911 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index e63c3f5eb..dd6ae546d 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -182,6 +182,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-odroid-m2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-new file mode 100644
-index 000000000..3c0786d21
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-@@ -0,0 +1,910 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip,vop2.h>
-+#include <dt-bindings/usb/pd.h>
-+#include "rk3588s.dtsi"
-+
-+/ {
-+	model = "Firefly Station M3";
-+	compatible = "firefly,rk3588s-roc-pc", "rockchip,rk3588s";
-+
-+	aliases {
-+		ethernet0 = &gmac1;
-+		mmc0 = &sdhci;
-+		mmc1 = &sdmmc;
-+	};
-+
-+	analog-sound {
-+		compatible = "simple-audio-card";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hp_detect>;
-+		simple-audio-card,name = "rockchip,es8388";
-+		simple-audio-card,bitclock-master = <&masterdai>;
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&masterdai>;
-+		simple-audio-card,hp-det-gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
-+		simple-audio-card,mclk-fs = <256>;
-+		simple-audio-card,pin-switches = "Headphones";
-+		simple-audio-card,routing =
-+			"Headphones", "LOUT1",
-+			"Headphones", "ROUT1",
-+			"LINPUT1", "Microphone Jack",
-+			"RINPUT1", "Microphone Jack",
-+			"LINPUT2", "Onboard Microphone",
-+			"RINPUT2", "Onboard Microphone";
-+		simple-audio-card,widgets =
-+			"Microphone", "Microphone Jack",
-+			"Microphone", "Onboard Microphone",
-+			"Headphone", "Headphones";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s0_8ch>;
-+		};
-+
-+		masterdai: simple-audio-card,codec {
-+			sound-dai = <&es8388>;
-+			system-clock-frequency = <12288000>;
-+		};
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	hdmi-con {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi0_out_con>;
-+			};
-+		};
-+	};
-+
-+	fan: pwm-fan {
-+		compatible = "pwm-fan";
-+		cooling-levels = <60 100 140 160 185 220 255>;
-+		fan-supply = <&vcc12v_dcin>;
-+		pwms = <&pwm11 0 50000 1>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	leds: leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_gpio>;
-+
-+		power_led: power {
-+			label = ":power";
-+			linux,default-trigger = "heartbeat";
-+			default-state = "on";
-+			gpios = <&gpio1 RK_PD5 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		user_led: user {
-+			label = ":user";
-+			linux,default-trigger = "ir-user-click";
-+			default-state = "off";
-+			gpios = <&gpio3 RK_PB2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		user1_led: user1 {
-+			label = ":user1";
-+			default-state = "off";
-+			gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	vcc12v_dcin: regulator-vcc12v-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	vcc5v0_sys: regulator-vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_usbdcin: regulator-vcc5v0-usbdcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usbdcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_usb: regulator-vcc5v0-usb {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usb";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_usbdcin>;
-+	};
-+
-+	vcc3v3_pcie20: regulator-vcc3v3-pcie20 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_pcie20";
-+		regulator-always-on;
-+		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <5000>;
-+		gpio = <&gpio1 RK_PD7 GPIO_ACTIVE_HIGH>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_host: regulator-vcc5v0-host {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc5v0_host_en>;
-+		regulator-name = "vcc5v0_host";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vbus5v0_typec_pwr_en: vbus5v0-typec-pwr-en-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&typec5v_pwren>;
-+		regulator-name = "vbus5v0_typec_pwr_en";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+};
-+
-+&combphy0_ps {
-+	status = "okay";
-+};
-+
-+&combphy2_psu {
-+	status = "okay";
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_big0_s0>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu_big1_s0>;
-+};
-+
-+&gmac1 {
-+	clock_in_out = "output";
-+	phy-handle = <&rgmii_phy1>;
-+	phy-mode = "rgmii-id";
-+	pinctrl-0 = <&gmac1_miim
-+		     &gmac1_tx_bus2
-+		     &gmac1_rx_bus2
-+		     &gmac1_rgmii_clk
-+		     &gmac1_rgmii_bus>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu_s0>;
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+};
-+
-+&hdmi0_in {
-+	hdmi0_in_vp0: endpoint {
-+		remote-endpoint = <&vp0_out_hdmi0>;
-+	};
-+};
-+
-+&hdmi0_out {
-+	hdmi0_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&hdptxphy0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-0 = <&i2c0m2_xfer>;
-+	status = "okay";
-+
-+	vdd_cpu_big0_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big0_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	vdd_cpu_big1_s0: regulator@43 {
-+		compatible = "rockchip,rk8603", "rockchip,rk8602";
-+		reg = <0x43>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big1_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c2m0_xfer>;
-+
-+	vdd_npu_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_npu_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <950000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	hym8563: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
-+		#clock-cells = <0>;
-+		clock-output-names = "hym8563";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hym8563_int>;
-+	};
-+
-+	usbc0: usb-typec@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PD3 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usbc0_int>;
-+		vbus-supply = <&vbus5v0_typec_pwr_en>;
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			op-sink-microwatt = <1000000>;
-+			power-role = "dual";
-+			sink-pdos =
-+				<PDO_FIXED(5000, 1000, PDO_FIXED_USB_COMM)>;
-+			source-pdos =
-+				<PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
-+			try-power-role = "sink";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					usbc0_orien_sw: endpoint {
-+						remote-endpoint = <&usbdp_phy0_orientation_switch>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					dp_altmode_mux: endpoint {
-+						remote-endpoint = <&usbdp_phy0_dp_altmode_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+
-+&i2c3 {
-+	status = "okay";
-+
-+	es8388: audio-codec@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		clocks = <&cru I2S1_8CH_MCLKOUT>;
-+		AVDD-supply = <&vcc_3v3_s0>;
-+		DVDD-supply = <&vcc_1v8_s0>;
-+		HPVDD-supply = <&vcc_3v3_s0>;
-+		PVDD-supply = <&vcc_3v3_s0>;
-+		assigned-clocks = <&cru I2S1_8CH_MCLKOUT>;
-+		assigned-clock-rates = <12288000>;
-+		#sound-dai-cells = <0>;
-+	};
-+};
-+
-+&i2s0_8ch {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2s0_lrck
-+		     &i2s0_mclk
-+		     &i2s0_sclk
-+		     &i2s0_sdi0
-+		     &i2s0_sdo0>;
-+	status = "okay";
-+};
-+
-+&i2s5_8ch {
-+	status = "okay";
-+};
-+
-+&mdio1 {
-+	rgmii_phy1: ethernet-phy@1 {
-+		compatible = "ethernet-phy-id001c.c916";
-+		reg = <0x1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&rtl8211f_rst>;
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio0 RK_PD3 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&pcie2x1l1 {
-+	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
-+	vpcie3v3-supply = <&vcc3v3_pcie20>;
-+	status = "okay";
-+};
-+
-+&pd_gpu {
-+	domain-supply = <&vdd_gpu_s0>;
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	headphone {
-+		hp_detect: hp-detect {
-+			rockchip,pins = <1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	leds {
-+		leds_gpio: leds-gpio {
-+			rockchip,pins =
-+				/* led_user */
-+				<3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>,
-+				/* led_power */
-+				<1 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>,
-+				/* led_user1 */
-+				<3 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	rtl8211 {
-+		rtl8211f_rst: rtl8211f-rst {
-+			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		usbc0_int: usbc0-int {
-+			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		typec5v_pwren: typec5v-pwren {
-+			rockchip,pins = <1 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&pwm11 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm11m3_pins>;
-+	status = "okay";
-+};
-+
-+&saradc {
-+	vref-supply = <&vcc_1v8_s0>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	max-frequency = <200000000>;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	max-frequency = <150000000>;
-+	no-sdio;
-+	no-mmc;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc_3v3_s3>;
-+	vqmmc-supply = <&vccio_sd_s0>;
-+	status = "okay";
-+};
-+
-+&spi2 {
-+	status = "okay";
-+	assigned-clocks = <&cru CLK_SPI2>;
-+	assigned-clock-rates = <200000000>;
-+	num-cs = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2m2_cs0 &spi2m2_pins>;
-+
-+	pmic@0 {
-+		compatible = "rockchip,rk806";
-+		reg = <0x0>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>,
-+				<&rk806_dvs2_null>, <&rk806_dvs3_null>;
-+		spi-max-frequency = <1000000>;
-+		system-power-controller;
-+
-+		vcc1-supply = <&vcc5v0_sys>;
-+		vcc2-supply = <&vcc5v0_sys>;
-+		vcc3-supply = <&vcc5v0_sys>;
-+		vcc4-supply = <&vcc5v0_sys>;
-+		vcc5-supply = <&vcc5v0_sys>;
-+		vcc6-supply = <&vcc5v0_sys>;
-+		vcc7-supply = <&vcc5v0_sys>;
-+		vcc8-supply = <&vcc5v0_sys>;
-+		vcc9-supply = <&vcc5v0_sys>;
-+		vcc10-supply = <&vcc5v0_sys>;
-+		vcc11-supply = <&vcc_2v0_pldo_s3>;
-+		vcc12-supply = <&vcc5v0_sys>;
-+		vcc13-supply = <&vcc_1v1_nldo_s3>;
-+		vcc14-supply = <&vcc_1v1_nldo_s3>;
-+		vcca-supply = <&vcc5v0_sys>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		rk806_dvs1_null: dvs1-null-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs2_null: dvs2-null-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs3_null: dvs3-null-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun0";
-+		};
-+
-+		regulators {
-+			vdd_gpu_s0: dcdc-reg1 {
-+				regulator-name = "vdd_gpu_s0";
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <400>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_cpu_lit_s0: dcdc-reg2 {
-+				regulator-name = "vdd_cpu_lit_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_log_s0: dcdc-reg3 {
-+				regulator-name = "vdd_log_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <675000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vdd_vdenc_s0: dcdc-reg4 {
-+				regulator-name = "vdd_vdenc_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_ddr_s0: dcdc-reg5 {
-+				regulator-name = "vdd_ddr_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <675000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <850000>;
-+				};
-+			};
-+
-+			vcc_1v1_nldo_s3: vdd2_ddr_s3: dcdc-reg6 {
-+				regulator-name = "vdd2_ddr_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-min-microvolt = <1100000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_2v0_pldo_s3: dcdc-reg7 {
-+				regulator-name = "vdd_2v0_pldo_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <2000000>;
-+				};
-+			};
-+
-+			vcc_3v3_s3: dcdc-reg8 {
-+				regulator-name = "vcc_3v3_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vddq_ddr_s0: dcdc-reg9 {
-+				regulator-name = "vddq_ddr_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8_s3: dcdc-reg10 {
-+				regulator-name = "vcc_1v8_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			avcc_1v8_s0: pldo-reg1 {
-+				regulator-name = "avcc_1v8_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8_s0: pldo-reg2 {
-+				regulator-name = "vcc_1v8_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			avdd_1v2_s0: pldo-reg3 {
-+				regulator-name = "avdd_1v2_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_3v3_s0: pldo-reg4 {
-+				regulator-name = "vcc_3v3_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd_s0: pldo-reg5 {
-+				regulator-name = "vccio_sd_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			pldo6_s3: pldo-reg6 {
-+				regulator-name = "pldo6_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vdd_0v75_s3: nldo-reg1 {
-+				regulator-name = "vdd_0v75_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vdd_ddr_pll_s0: nldo-reg2 {
-+				regulator-name = "vdd_ddr_pll_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <850000>;
-+				};
-+			};
-+
-+			avdd_0v75_s0: nldo-reg3 {
-+				regulator-name = "avdd_0v75_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_0v85_s0: nldo-reg4 {
-+				regulator-name = "vdd_0v85_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_0v75_s0: nldo-reg5 {
-+				regulator-name = "vdd_0v75_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+
-+&tsadc {
-+	status = "okay";
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy2 {
-+	status = "okay";
-+};
-+
-+&u2phy3 {
-+	status = "okay";
-+};
-+
-+&u2phy2_host {
-+	phy-supply = <&vcc5v0_host>;
-+	status = "okay";
-+};
-+
-+&u2phy3_host {
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-0 = <&uart7m2_xfer>;
-+	status = "okay";
-+};
-+
-+&usbdp_phy0 {
-+	mode-switch;
-+	orientation-switch;
-+	sbu1-dc-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
-+	sbu2-dc-gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy0_orientation_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_orien_sw>;
-+		};
-+
-+		usbdp_phy0_dp_altmode_mux: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&dp_altmode_mux>;
-+		};
-+	};
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host0_xhci {
-+	extcon = <&u2phy0>;
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&vop {
-+	status = "okay";
-+};
-+
-+&vop_mmu {
-+	status = "okay";
-+};
-+
-+&vp0 {
-+	vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
-+		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
-+		remote-endpoint = <&hdmi0_in_vp0>;
-+	};
-+};
--- 
-2.34.1
-
+Thanks,
+Alam.
