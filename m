@@ -1,104 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2182D1AAA11;
-	Tue, 13 May 2025 14:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6068119CC3C;
+	Tue, 13 May 2025 14:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147694; cv=none; b=DrY07xXpRCkLsuIxOYef0K9XXS6k6S9sSlZujvELMYEW7dXONOt3LNOWjXQqJSsWMfbRP9NrxyigUFk61+H+cMyKAGYwMTTQc7SQzgalhyOnDzx1t7wf9ENYNYfnI/hC75NyefzJEYxdjLLZ3jPnQFAHr04nz8enHN4HGhhN8j4=
+	t=1747147705; cv=none; b=Ow9udJSz0NcjCDH1tHS1QCUO652D7g4VDJ6q8zcSVJPe8rE0IaEYO3bBe0fn5iC9B3zLdrUnAA4AA3c8EoPZGXk+dUbSWoTBvwNgC1VWIToEATmfe06I8D4r0jSr67HrPuIzbbHoamj/btSDIzd4emC9dAcPqujlL4nLLzV/L+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147694; c=relaxed/simple;
-	bh=205BCaVyRSbsSNhGQ3cxijmFDYnWUV7MVkki1g9g31Y=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Aj86A37jGyIYKUkf+mGCRtO/DeK4zxQGcV4lsnslOOEtqUD+yBN7/OVTvHKtGGEZDpmrRC87Bieug6gcSkoNc0gJvOfLQTDIGVEPLj5HpGlNHyJ3p3NjlGzvAgXvhFHLktLsU0N5F7P38/7R1055jimtsFYjp6IulHjs/PdZqnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e8wW2Uds; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B+GL6UFr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747147705; c=relaxed/simple;
+	bh=ZEHsK/pl83AFA+KsON97PcBfz2B89dbkobgNrfUKEXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=URF54Bm9XIOPjkSOSnUj5rqKSbH3YloVu7nKz6Q/sLfW+pC37Og6Bxywrh6Jkk8mGPkAh54hfcyE8/8ohg4A2sKYBMA0ddPU+4RDeg8lVkVIwU+tFJAC3ONGhJG6C/uuEeUF5+9N/m/PQEPzbvW0W0pEYrOgW1czCyDzQjdAShg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dF7JsoBj; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e8wW2Uds";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B+GL6UFr"
-Date: Tue, 13 May 2025 14:48:10 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747147691;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RpmFky+as3SuKb/nyMveDZHkNzuVClsmrv99R6AQnI=;
-	b=e8wW2UdsV4GJ3FJDpLtIMMUb+xDTo1PBVj/Aa2NmRbnzyHgAPvflVd8sOrcbaLfOxYyKA7
-	uldLtfneX4WFkBOiArLURxlOGm9xrXYc5M4EoXmK2zvD940XYbHK/jmtVqpZlnyrVZRBYJ
-	1GfCa0SOzP3YtJ2Z3m6nb5fjAeEg05BeS0B63vCuuDuv0IiicJJcf8bxcpRXXx0e+OHXQc
-	7PSgXngtB6mgw0VhBOgb+QLlVMaNnHz4QVzB8XBOheAscwmnLHobod9VjB7PmeZ+ug/j7n
-	0QX+Aly5Dkx9SpRGiRdUxam0cuktSEBWaN1An+C/smEdV8QP+99hwASQ8Ci5kA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747147691;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2RpmFky+as3SuKb/nyMveDZHkNzuVClsmrv99R6AQnI=;
-	b=B+GL6UFrn/3qKggTgoU0TuwPX+WN4zNTwKHhl84TL/ozl6RYAh0d8IPqge6AlfhPTzWskT
-	yCz2Np8TLfqsMjBA==
-From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] irqchip/econet-en751221: Switch to of_fwnode_handle()
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250513084739.2611747-1-jirislaby@kernel.org>
-References: <20250513084739.2611747-1-jirislaby@kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dF7JsoBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=ZkHNlzyKOuNRU1rQfh++4v9cbtgPf5srCgn02AubhOg=;
+	b=dF7JsoBjuVohn2pWlqveYMZq+zAdEecLOQ8WEeXEt6R2iKXuV8VUDKHj/1oZNp
+	UDc8ej2Y8x4rlIr5OMIsSNcOznpUN8uKttmNO/rGsK6dGcNtD9C0h41I0z6aTtWc
+	anAxpim01WZoy1l2N/U+IOo3OwVbthbs38e2rTMeSvK9k=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDX3XmNWyNog3x9BA--.5513S2;
+	Tue, 13 May 2025 22:47:41 +0800 (CST)
+Message-ID: <ec54f197-acfe-43f4-b5dd-d158d718c8e9@163.com>
+Date: Tue, 13 May 2025 22:47:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174714769007.406.11853381142097219255.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
+ bool
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+ manivannan.sadhasivam@linaro.org, cassel@kernel.org, robh@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250510160710.392122-1-18255117159@163.com>
+ <20250513102115.GA2003346@rocinante>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250513102115.GA2003346@rocinante>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX3XmNWyNog3x9BA--.5513S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrurWrCFW7Aw1DWFWxtF1rtFb_yoWfXrgEkr
+	95Ka47WF1xtrs7uF4rGrnakrWYkw4UZF4UJrW0vw1fJr95ur4SvF43Gr95W3WjqryvyF4D
+	CrWSqanI934Y9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUb38n5UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw9Mo2gjWMlg0wAAsG
 
-The following commit has been merged into the irq/drivers branch of tip:
 
-Commit-ID:     96a8cb6d28cebd51a286fe4a8782dc8492813ac4
-Gitweb:        https://git.kernel.org/tip/96a8cb6d28cebd51a286fe4a8782dc8492813ac4
-Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Tue, 13 May 2025 10:47:39 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 13 May 2025 16:39:03 +02:00
 
-irqchip/econet-en751221: Switch to of_fwnode_handle()
+On 2025/5/13 18:21, Krzysztof Wilczyński wrote:
+>> 1. PCI: dwc: Standardize link status check to return bool.
+>> 2. PCI: mobiveil: Refactor link status check.
+>> 3. PCI: cadence: Simplify j721e link status check.
+> 
+> Do not bother sending such cover letters.  This adds no value.
+> 
 
-of_node_to_fwnode() is an irqdomain's reimplementation of the
-"officially" defined of_fwnode_handle(). The former is in the process of
-being removed, so use the latter instead.
+Dear Krzysztof,
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250513084739.2611747-1-jirislaby@kernel.org
+Thank you very much for your reply. In my future work, I will make 
+improvements.
 
----
- drivers/irqchip/irq-econet-en751221.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-econet-en751221.c b/drivers/irqchip/irq-econet-en751221.c
-index fd65dfe..d83d5eb 100644
---- a/drivers/irqchip/irq-econet-en751221.c
-+++ b/drivers/irqchip/irq-econet-en751221.c
-@@ -286,7 +286,7 @@ static int __init econet_intc_of_init(struct device_node *node, struct device_no
- 
- 	econet_mask_all();
- 
--	domain = irq_domain_create_linear(of_node_to_fwnode(node), IRQ_COUNT,
-+	domain = irq_domain_create_linear(of_fwnode_handle(node), IRQ_COUNT,
- 					  &econet_domain_ops, NULL);
- 	if (!domain) {
- 		pr_err("%pOF: Failed to add irqdomain\n", node);
+
+> Please read the following:
+> 
+>    - https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+>    - https://kernelnewbies.org/PatchSeries
+> 
+>> ---
+>> Changes for RESEND:
+>> - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Resending a patch is not a place to add new tags.
+> 
+
+Sorry, this is also the first time I have done this. For other patches 
+in the future, I will do this in the new version.
+
+> Thank you!
+> 
+> 	Krzysztof
+
+
+Best regards,
+Hans
+
