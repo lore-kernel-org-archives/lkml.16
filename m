@@ -1,283 +1,164 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5F41E9B20;
-	Tue, 13 May 2025 09:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6D1E9B20;
+	Tue, 13 May 2025 09:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129068; cv=none; b=rZ57axVkyINDTYY7NfsnzKwWRGt1XN2w8/l5NleiojB7ni2CN6/Qu0+2Au32u66J4gPTAEeAOCaQdBDgcuQuFvVyL4S4Pa6Byn//OW4CN3i/1aqTn3VB/J1OllkkkrV6rz2YzanDAYSH5T/NrarSFFioSRySW7hvIkPAywZ7EkM=
+	t=1747129119; cv=none; b=CUPWI2mmhZtAMjMdIn4IxgYFSF8edpT5HRjl35hqKIm/8oWRzUFpJwUOz9+zuxOIkDVsIeXxOVSb4lluLy9UsOfxh4AWenkrZe8ak0pVZg2VTBCm+7R5lW+bMIhuIB1grB9ydux7vhevo8G9Wk9ofWglvt7qDdcJ4VR3mpGO3hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129068; c=relaxed/simple;
-	bh=Lr1pVpb2rHuhrjwAz0zQOAeEbwLdgRsuGuR46LBeZBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G7bze1aoP1N4X95yOVtxPU05ZlvBErNsi79SzUSDE6P6OuHhsF6Y32CU7/tz0I9SQPPkKVdrtY2cSPcXZ5Xrx1KpIiHfGNES5W/Y+10KR+GKs5baVVLIkY4+8P7IXXiKz7rXnaoq5Yzc7qkyskheodisUZJfIaSeBc7Uqoq9DZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=b1G4n0ea; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="b1G4n0ea"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=U+ZpehvvcmTWohtGykE+UckJpfgRzUA5dFrpuO4vHVM=; b=b1G4n0eatkpZAY1YkpVSyef3Wy
-	yEEPzvleFgxMeSQJcqryWn9d24a0vhRPv+6/lQ997vs4oQsK8YdAVODxhMJS/IsjbkWfqwTMQSDar
-	llHOU5MsNmGUE7PHu32IW0z8M3qhUHUMliBLKc/W/RPT5uCnt2p1UQEiPiErmG9XO3t0kRz6W9XUL
-	i47tbrH935VZCJ5x3sS1deLfsQUo9xt58zpn0liLUiUnzfdDfClPTgRCPgU0h+16xPbfN1i1F+iq+
-	uskJgUv/LvSjB+Zkn3LbzzbPelGcOpOw7gnXF4wbVpQjnQVRHJe3WzSNYQGxkynzqLhfHy0Ca02Ay
-	GnIIEPWg==;
-Received: from 114-44-249-145.dynamic-ip.hinet.net ([114.44.249.145] helo=gavin-HP-Z840-Workstation..)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uElzc-007Wrp-9M; Tue, 13 May 2025 11:37:40 +0200
-From: Gavin Guo <gavinguo@igalia.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	akpm@linux-foundation.org,
-	mike.kravetz@oracle.com,
-	kernel-dev@igalia.com,
-	Gavin Guo <gavinguo@igalia.com>,
-	stable@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>,
-	Florent Revest <revest@google.com>,
-	Gavin Shan <gshan@redhat.com>
-Subject: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and hugetlb_fault_mutex_table
-Date: Tue, 13 May 2025 17:34:48 +0800
-Message-ID: <20250513093448.592150-1-gavinguo@igalia.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747129119; c=relaxed/simple;
+	bh=kl+ZPdeu5I2yHm1i5u85PzkAjQGJvuytOsT8NxaSgU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GmG0SVlRgt95FLMz50aAxZh6ayyhq6CyWpWmVeRzLnbQNZrEFHJvLczSF9PlhUlwHW5seFbDGvkU+nlK0RPxBF4EFrzc8jgLUnFRyT2rHLXWXKymQ8ASz0yuwB2lk/eN7muU0HoxYppq3Uk6V+xchEHk4MICjjRReSeA+BFz9Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-524168b16d3so4095989e0c.0;
+        Tue, 13 May 2025 02:38:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747129115; x=1747733915;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4yUsNu9MK40dAHahbaghNZjNLMh96jg0t1dS4WtV4k=;
+        b=eIZeClo4y0Vw2WYRVw7tq/sJAbHIC5YJ+2JrHL8gXSkVS7hT84hOElRbYkg4Q9lH3w
+         qRYB4pfIMrN9YOpW7VvRTODdjFQnWercIt3W6WJGzi7UC6SMGDS9ghYp3i3iwldLS0yW
+         Qcx1JU6OeS/hCZk/MBtSypWQRI7S3rHb/5refVXmc1aEosJQMAmXOHImZBFFxhQtxZpv
+         GyDEu+r4KT6/mme9fP2ScCKJ2t6yTZxigVV3H/HJdiPbAOJpZhr0bMeB+kPdh/VsNG1k
+         fDinDFsgsX67Dlydhy6APkVhJgSVXa3lP2zjIApVvToDD/a+R/ood4LHOHleDs3AueZ0
+         7jnA==
+X-Forwarded-Encrypted: i=1; AJvYcCU69SM8axJ9FFo57xrA3beYLh4dbx5xrgqXCGUUrujA6ATn8DVD+gkMXknuoS7KC9jSOB4wF0e+Ark+AQo1@vger.kernel.org, AJvYcCVJ1IwTwZkIj07pM78FzQCjq2aEcIrAdFie6T9nCcT52hvgJET8iJVJK+4mh69BGGQILkbmgJEQU1638cG1@vger.kernel.org, AJvYcCVdNAa/xWEAdZPENMreptgiKszTGFRn0nP6U/x1ITJzGQKzWuT5YvWdLlEi25zltIIJKEtANV7+4750@vger.kernel.org, AJvYcCXkjw/A6K4mH/1ao0LnrkgiNdl8nbJPFTe/ykh/TYFG3EtmbIIAiFmboEG+N6IOS7ON8hqKoivqQ6KtYuHvs/Bbnhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzXrXqHJzr2AKhm4tpo3UiEKyQ7cYuhqRnmai053y5va+Ai34q
+	JDCv5F/aiR/8HtxeCUNNng4gtsumdH3cJfObguHF3gDNLXYOxu86gxuUqSR5
+X-Gm-Gg: ASbGncsDXqO27i28EN6/7CLkbWBwMiKBxwEL1yAvaGjXLb7o1fWTgcj8EL5efVz1iZN
+	n07uBoS8L82ECrmezWPP9mbM8svzN37bXl/uHOJMfxNoxvKBY+VD1DK2h+qJ/likCmoZ2NEpZUF
+	d0+MOUMC4eE+1ReKU3VPpsH5Yrz3wp+7pXECvGZvY2YdjRimetH0TA408hcx72gY8nu6EJzKEdx
+	MkPh0DS1m90iswkqyq8kOw3LfuxEMx2QrvaGoWdpXsyoD+4hmxaD/oGNxqZM4lmDMaGA8/QuL8X
+	PzKHfWQ/I9+wN+yBs3AOvc4S/L8W6kX9japjbfqbU+6Ocu1iMJW63MYEyEHjbtSK2p9iX3ID77k
+	PCbT3LPC3LaMa9Q==
+X-Google-Smtp-Source: AGHT+IH9lQC8XDAWvRYMD5b77U55oH862rJ3PAM0BUF5N/SveHMoiuGm9wOm9QbzXb3VXgJvrR8V5A==
+X-Received: by 2002:a05:6122:45a1:b0:52a:79fd:34bd with SMTP id 71dfb90a1353d-52c53b79005mr13666968e0c.4.1747129115180;
+        Tue, 13 May 2025 02:38:35 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c538a7135sm7066015e0c.42.2025.05.13.02.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 02:38:35 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4ddbb22503bso3913848137.2;
+        Tue, 13 May 2025 02:38:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7cJn7NkX/zIjnbG4S2fuuGgRlGcYu4BgThy2XxKcnQnFG5iCLScEHIyLNJ5a1lMDxfCiowFemmZH+PRaK@vger.kernel.org, AJvYcCV9V93aW2IxAj37lrk7u419hPMhdg6r8heOCnbXJR1MwX4AtaP2xGkThTJ4TRviO+iu9atJEq7HRDxFnsaUyw0FsyQ=@vger.kernel.org, AJvYcCW9F8SSExFju+HrBxzy7aDNBAFShNeInnu/Mv3LGRjMTcU0+xTEZnVqqoy5sn1e7Zv8RMDDj8mBR6N0@vger.kernel.org, AJvYcCXYm/vrqx3iuTYtJm1voEWzaJ5u7sM0ycid+XOIFGphZnX2iQAhmwYBoLKn0QJbiYnlyzLJZ9iOkFG9OVaJ@vger.kernel.org
+X-Received: by 2002:a05:6102:2c0f:b0:4db:154e:ad1d with SMTP id
+ ada2fe7eead31-4deed30e610mr14015694137.2.1747129114823; Tue, 13 May 2025
+ 02:38:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com> <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 May 2025 11:38:23 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX_SVtXjQ_c1w0=qcWHqc+68u_EkJuUjm7R+s4fOYoMBg@mail.gmail.com>
+X-Gm-Features: AX0GCFsAyfgiEIH1z8bVZTcEBqxdt93Espk-5SgrnQNg0i3hlG0QpBA704ogbD0
+Message-ID: <CAMuHMdX_SVtXjQ_c1w0=qcWHqc+68u_EkJuUjm7R+s4fOYoMBg@mail.gmail.com>
+Subject: Re: [PATCH v8 01/11] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The patch fixes a deadlock which can be triggered by an internal
-syzkaller [1] reproducer and captured by bpftrace script [2] and its log
-[3] in this scenario:
+Hi Thierry,
 
-Process 1                              Process 2
----				       ---
-hugetlb_fault
-  mutex_lock(B) // take B
-  filemap_lock_hugetlb_folio
-    filemap_lock_folio
-      __filemap_get_folio
-        folio_lock(A) // take A
-  hugetlb_wp
-    mutex_unlock(B) // release B
-    ...                                hugetlb_fault
-    ...                                  mutex_lock(B) // take B
-                                         filemap_lock_hugetlb_folio
-                                           filemap_lock_folio
-                                             __filemap_get_folio
-                                               folio_lock(A) // blocked
-    unmap_ref_private
-    ...
-    mutex_lock(B) // retake and blocked
+On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> At boot, the default clock is the PCLKM core lock (synchronous
+> clock, which is enabled by the bootloader).
+> For different baudrates, the asynchronous clock input must be used.
+> Clock selection is made by an internal register of RCSI.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-This is a ABBA deadlock involving two locks:
-- Lock A: pagecache_folio lock
-- Lock B: hugetlb_fault_mutex_table lock
+Thanks for your patch!
 
-The deadlock occurs between two processes as follows:
-1. The first process (let’s call it Process 1) is handling a
-copy-on-write (COW) operation on a hugepage via hugetlb_wp. Due to
-insufficient reserved hugetlb pages, Process 1, owner of the reserved
-hugetlb page, attempts to unmap a hugepage owned by another process
-(non-owner) to satisfy the reservation. Before unmapping, Process 1
-acquires lock B (hugetlb_fault_mutex_table lock) and then lock A
-(pagecache_folio lock). To proceed with the unmap, it releases Lock B
-but retains Lock A. After the unmap, Process 1 tries to reacquire Lock
-B. However, at this point, Lock B has already been acquired by another
-process.
+You forgot to CC the serial and DT maintainers.
 
-2. The second process (Process 2) enters the hugetlb_fault handler
-during the unmap operation. It successfully acquires Lock B
-(hugetlb_fault_mutex_table lock) that was just released by Process 1,
-but then attempts to acquire Lock A (pagecache_folio lock), which is
-still held by Process 1.
+> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> @@ -35,10 +35,14 @@ properties:
+>        - const: tei
+>
+>    clocks:
+> -    maxItems: 1
+> +    items:
+> +      - description: serial functional clock
 
-As a result, Process 1 (holding Lock A) is blocked waiting for Lock B
-(held by Process 2), while Process 2 (holding Lock B) is blocked waiting
-for Lock A (held by Process 1), constructing a ABBA deadlock scenario.
+The Hardware Manual calls this "operation clock".
 
-The solution here is to unlock the pagecache_folio and provide the
-pagecache_folio_unlocked variable to the caller to have the visibility
-over the pagecache_folio status for subsequent handling.
+> +      - description: default core clock
 
-The error message:
-INFO: task repro_20250402_:13229 blocked for more than 64 seconds.
-      Not tainted 6.15.0-rc3+ #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:repro_20250402_ state:D stack:25856 pid:13229 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- schedule_preempt_disabled+0x15/0x30
- __mutex_lock+0x75f/0xeb0
- hugetlb_wp+0xf88/0x3440
- hugetlb_fault+0x14c8/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0x61d/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0010:__put_user_4+0xd/0x20
- copy_process+0x1f4a/0x3d60
- kernel_clone+0x210/0x8f0
- __x64_sys_clone+0x18d/0x1f0
- do_syscall_64+0x6a/0x120
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x41b26d
- </TASK>
-INFO: task repro_20250402_:13229 is blocked on a mutex likely owned by task repro_20250402_:13250.
-task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- io_schedule+0x92/0x110
- folio_wait_bit_common+0x69a/0xba0
- __filemap_get_folio+0x154/0xb70
- hugetlb_fault+0xa50/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0xace/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0033:0x402619
- </TASK>
-INFO: task repro_20250402_:13250 blocked for more than 65 seconds.
-      Not tainted 6.15.0-rc3+ #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- io_schedule+0x92/0x110
- folio_wait_bit_common+0x69a/0xba0
- __filemap_get_folio+0x154/0xb70
- hugetlb_fault+0xa50/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0xace/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0033:0x402619
- </TASK>
+The Hardware Manual calls this "bus clock".
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/35:
- #0: ffffffff879a7440 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180
-2 locks held by repro_20250402_/13229:
- #0: ffff888017d801e0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x37/0x300
- #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_wp+0xf88/0x3440
-3 locks held by repro_20250402_/13250:
- #0: ffff8880177f3d08 (vm_lock){++++}-{0:0}, at: do_user_addr_fault+0x41b/0x1490
- #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_fault+0x3b8/0x2c30
- #2: ffff8880129500e8 (&resv_map->rw_sema){++++}-{4:4}, at: hugetlb_fault+0x494/0x2c30
+>
+>    clock-names:
+> -    const: fck # UART functional clock
+> +    items:
+> +      - const: async
 
-Link: https://drive.google.com/file/d/1DVRnIW-vSayU5J1re9Ct_br3jJQU6Vpb/view?usp=drive_link [1]
-Link: https://github.com/bboymimi/bpftracer/blob/master/scripts/hugetlb_lock_debug.bt [2]
-Link: https://drive.google.com/file/d/1bWq2-8o-BJAuhoHWX7zAhI6ggfhVzQUI/view?usp=sharing [3]
-Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
-Cc: <stable@vger.kernel.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Florent Revest <revest@google.com>
-Cc: Gavin Shan <gshan@redhat.com>
-Signed-off-by: Gavin Guo <gavinguo@igalia.com>
----
- mm/hugetlb.c | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+"async" is the name on the producer side, not the consumer side.
+"operation"?
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index e3e6ac991b9c..ad54a74aa563 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6115,7 +6115,8 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
-  * Keep the pte_same checks anyway to make transition from the mutex easier.
-  */
- static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
--		       struct vm_fault *vmf)
-+		       struct vm_fault *vmf,
-+		       bool *pagecache_folio_unlocked)
- {
- 	struct vm_area_struct *vma = vmf->vma;
- 	struct mm_struct *mm = vma->vm_mm;
-@@ -6212,6 +6213,22 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
- 			u32 hash;
- 
- 			folio_put(old_folio);
-+			/*
-+			 * The pagecache_folio needs to be unlocked to avoid
-+			 * deadlock and we won't re-lock it in hugetlb_wp(). The
-+			 * pagecache_folio could be truncated after being
-+			 * unlocked. So its state should not be relied
-+			 * subsequently.
-+			 *
-+			 * Setting *pagecache_folio_unlocked to true allows the
-+			 * caller to handle any necessary logic related to the
-+			 * folio's unlocked state.
-+			 */
-+			if (pagecache_folio) {
-+				folio_unlock(pagecache_folio);
-+				if (pagecache_folio_unlocked)
-+					*pagecache_folio_unlocked = true;
-+			}
- 			/*
- 			 * Drop hugetlb_fault_mutex and vma_lock before
- 			 * unmapping.  unmapping needs to hold vma_lock
-@@ -6566,7 +6583,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
- 	hugetlb_count_add(pages_per_huge_page(h), mm);
- 	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
- 		/* Optimization, do the COW without a second fault */
--		ret = hugetlb_wp(folio, vmf);
-+		ret = hugetlb_wp(folio, vmf, NULL);
- 	}
- 
- 	spin_unlock(vmf->ptl);
-@@ -6638,6 +6655,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 	struct hstate *h = hstate_vma(vma);
- 	struct address_space *mapping;
- 	int need_wait_lock = 0;
-+	bool pagecache_folio_unlocked = false;
- 	struct vm_fault vmf = {
- 		.vma = vma,
- 		.address = address & huge_page_mask(h),
-@@ -6792,7 +6810,8 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 
- 	if (flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
- 		if (!huge_pte_write(vmf.orig_pte)) {
--			ret = hugetlb_wp(pagecache_folio, &vmf);
-+			ret = hugetlb_wp(pagecache_folio, &vmf,
-+					&pagecache_folio_unlocked);
- 			goto out_put_page;
- 		} else if (likely(flags & FAULT_FLAG_WRITE)) {
- 			vmf.orig_pte = huge_pte_mkdirty(vmf.orig_pte);
-@@ -6809,10 +6828,14 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- out_ptl:
- 	spin_unlock(vmf.ptl);
- 
--	if (pagecache_folio) {
-+	/*
-+	 * If the pagecache_folio is unlocked in hugetlb_wp(), we skip
-+	 * folio_unlock() here.
-+	 */
-+	if (pagecache_folio && !pagecache_folio_unlocked)
- 		folio_unlock(pagecache_folio);
-+	if (pagecache_folio)
- 		folio_put(pagecache_folio);
--	}
- out_mutex:
- 	hugetlb_vma_unlock_read(vma);
- 
+> +      - const: bus
+>
+>    power-domains:
+>      maxItems: 1
+> @@ -58,11 +62,7 @@ unevaluatedProperties: false
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> -    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> -
+> -    aliases {
+> -        serial0 = &sci0;
+> -    };
 
-base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
--- 
-2.43.0
+While this change is good, it is not mentioned in the commit
+description.
 
+> +    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
+
+This has a hard dependency on "[PATCH v8 03/11] dt-bindings: clock:
+Add cpg for the Renesas RZ/T2H SoC".  To relax that dependency, you can
+s/R9A09G077_CLK_PCLKM/13/ below..
+
+>
+>      sci0: serial@80005000 {
+>          compatible = "renesas,r9a09g077-rsci";
+> @@ -72,7 +72,7 @@ examples:
+>                       <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+>                       <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+>          interrupt-names = "eri", "rxi", "txi", "tei";
+> -        clocks = <&cpg CPG_MOD 108>;
+> -        clock-names = "fck";
+> +        clocks = <&cpg CPG_MOD 108>, <&cpg CPG_CORE R9A09G077_CLK_PCLKM>;
+
+s/108/8/?
+
+> +        clock-names = "async", "bus";
+>          power-domains = <&cpg>;
+>      };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
