@@ -1,134 +1,198 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758BE1F92A;
-	Tue, 13 May 2025 22:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7151F03D9;
+	Tue, 13 May 2025 22:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747174550; cv=none; b=PPc+RpEeyuH77gYDKXCW5ER0jmQyeIk2W2ljQ/ec/CKyw6QCrsP1vuo8YAmmuxax0l4l/WiTZnDP0r9C8k5dcLJdtuE2QKPoYyqm43o97ut2LPi3ZH0AU5VPSwnms4EvcSoLDUS3nhqDi1SmbRyhfgjj2I+3+cb7OS9RHIfaoxw=
+	t=1747174633; cv=none; b=ZsAM248C3OY+56z/IK3xnht1rWLfHxzOXo0VoqgI9yszB8Xgw3+zTRZp31WFf9Ef2VPxDyo9izneS7G6Fx+LtyrhWz2CSckxLN4Wl8lNtF5GdWirUchf+3FmUcEF2FARJy2TvuvY1lTVYhOahqCObKRvt3SLcGHGGSXFOM0wbKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747174550; c=relaxed/simple;
-	bh=/6JGk2DoI6qFvLdA+3NLv30kEQpSMfwvorKLNIMJluk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dmjDv2M3G/yUY22n2AVEOuyj891cQT7ZQvfTkEUBhXWR1gIdzpw3uUDiR05UKqoHpwHXy2SPzIFBtMG7RQyF7AUFQBBfP2zizZyIa+ElXH/KjH+ZDmsehrAXydPQPrwTD9KComny5XUttaKcbUdoqP9RMT/NsGJ8M6bXIrEBIX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=QwG4SGSC; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1747174633; c=relaxed/simple;
+	bh=yNLqlPWASut9p1xEAFv4YgaFRmFtpdfW1XyDhbCPf5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nj5M4QkMFEAOPSUlLwbgPic1s8/F3v8tpmQiv/ApaMAIR0baEX3BSDP/+b9l8KlBh0kmOlIZVXOY1drv+9tQwZmub3oVV4P78LATqTBowfmpBFrLDHhfpm/vOyw8UYvbFszoLkTDcT2lNAXHzJMvuMUPxRoeAvcU8NHDkfTN/8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wx9K/XDN; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="QwG4SGSC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1747174533; x=1747779333; i=spasswolf@web.de;
-	bh=/6JGk2DoI6qFvLdA+3NLv30kEQpSMfwvorKLNIMJluk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QwG4SGSCK5aevOMdIURsAq9kUetkeW4CTIM48WKxYBODQsv4BCM9oirNYOP04Ce6
-	 EOnmo97fUDx6lyuvBWAXyZQRpGfejOTvs704rREXhXfXvS9xsqnvnLjBE3+mgcPfP
-	 8lEcMGmSP/Fh3P+29/AOQE2nFrvnvsj8Kdk3Dqm7p0bWCgQpd4OVlsPwesYQ29geZ
-	 +WeC4O5ctZcuLpDpcAv2Hykrm/zbAWjF3RFUJnDNUzTYhs6k3eIyAciQVQx2aDbru
-	 aEiegcRE/NVb7jaIqqMcteeb8nkCy683fHFkdDqJeDRpHnU1W7HtRR8F5mXPEJmcf
-	 jla7kZlcEposz524QQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
- (mrweb005 [213.165.67.108]) with ESMTPSA (Nemesis) id
- 1M6HG8-1uLagf1glM-0019ST; Wed, 14 May 2025 00:15:33 +0200
-From: Bert Karwatzki <spasswolf@web.de>
-To: linux-kernel@vger.kernel.org
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	linux-next@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Johannes Berg <johannes.berg@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when compiled with clang
-Date: Wed, 14 May 2025 00:15:29 +0200
-Message-ID: <20250513221530.2966-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: 20250513164807.51780-1-spasswolf@web.de
-References: 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wx9K/XDN"
+Date: Tue, 13 May 2025 15:17:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747174626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rahQYu1hjcaoMkOQ2Z62DrFUneDFZMeqj32rynYl3Ak=;
+	b=wx9K/XDNsqu6pyfaRN9KPelr685TgwkIZ1xr5mFHW+x3b9xZQLu1VZrf/0N2qg1XVpfB9O
+	0Hf3zWfQM3ZlD4p5dlaRY6pGJFUrKBK+9vQaQJjTOPRT8PivyYeNxB1GUui0ARnNei+Os6
+	I8+Ybr+04GBOUr87R0gPSswu14rvZx4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, 
+	Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Message-ID: <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+ <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+ <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+ <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+ <20250513114125.GE25763@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QbM8WIz0yz2M2XOuky6oi/SH1BqLt0DoQE3r1SGxkHNDE+nYO+o
- Z+MgfqWB1irJ2/wf7NhbprDk6okV6W1dRwvWOhIINzhxUiFykrZ8+9bG25+aBfQeLBxjs5f
- DD6UpOgi4hjeptdj8IcPmKHFxf7yljs/7K2WSgd6HBu2lmsYxBc0fIKpZ7fqnOBGn3r8t7Y
- oVnsqAg9ozs0CcFTnv73Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Lu/Gg/EVVtM=;zZgYsZTJLB6AiZLcYNgqMRQfgif
- 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
- bk2q1kAn96Yrc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513114125.GE25763@noisy.programming.kicks-ass.net>
+X-Migadu-Flow: FLOW_OUT
 
-commit 97f4b999e0c8 ("genirq: Use scoped_guard() to shut clang up") may me have been
-a false lead, I reverted the following commit in next-20250512 and the boot failure
-is still there.
+On Tue, May 13, 2025 at 01:41:25PM +0200, Peter Zijlstra wrote:
+> On Tue, May 13, 2025 at 09:15:23AM +0200, Vlastimil Babka wrote:
+> 
+> > >> > The initial prototype tried to make memcg charging infra for kernel
+> > >> > memory re-entrant against irq and nmi. However upon realizing that
+> > >> > this_cpu_* operations are not safe on all architectures (Tejun), this
+> > >> 
+> > >> I assume it was an off-list discussion?
+> > >> Could we avoid this for the architectures where these are safe, which should
+> > >> be the major ones I hope?
+> 
+> IIRC Power64 has issues here, 'funnily' their local_t is NMI safe.
+> Perhaps we could do the same for their this_cpu_*(), but ideally someone
+> with actual power hardware should do this ;-)
+> 
 
-73e2e0671c90 (HEAD -> clang_panic) Revert "genirq/manage: Convert to lock guards"
-ff2e5dfa1c21 Revert "genirq/manage: Rework irq_update_affinity_desc()"
-f2be1d787117 Revert "genirq/manage: Rework __irq_apply_affinity_hint()"
-bc2493e2bdef Revert "genirq/manage: Rework irq_set_vcpu_affinity()"
-8c1736260f99 Revert "genirq/manage: Rework __disable_irq_nosync()"
-dd529a9bc52d Revert "genirq/manage: Rework enable_irq()"
-75316d9120cf Revert "genirq/manage: Rework irq_set_irq_wake()"
-544ff63947f5 Revert "genirq/manage: Rework can_request_irq()"
-198028713b99 Revert "genirq/manage: Rework irq_set_parent()"
-70a3f6953491 Revert "genirq/manage: Rework enable_percpu_irq()"
-bcb28ca2603d Revert "genirq/manage: Rework irq_percpu_is_enabled()"
-5858d87ac7e3 Revert "genirq/manage: Rework disable_percpu_irq()"
-1a1f97a3dde0 Revert "genirq/manage: Rework prepare_percpu_nmi()"
-e249ccf0dde0 Revert "genirq/manage: Rework teardown_percpu_nmi()"
-9be3639bdde9 Revert "genirq: Remove irq_[get|put]_desc*()"
-942b93a1ee9c Revert "genirq/manage: Rework irq_get_irqchip_state()"
-8f731e7b7475 Revert "genirq/manage: Rework irq_set_irqchip_state()"
-5bb621187696 Revert "genirq: Use scoped_guard() to shut clang up"
-6539255c6012 Revert "wifi: free SKBTX_WIFI_STATUS skb tx_flags flag"
-edef45700477 (tag: next-20250512, origin/master, origin/HEAD, master) Add linux-next specific files for 20250512
+Is CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS the right config to
+differentiate between such archs? I see Power64 does not have that
+enabled.
+
+> > > Yes it was an off-list discussion. The discussion was more about the
+> > > this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
+> > > prefix and how I should prefer this_cpu_* over atomic_* for my series on
+> > > objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
+> > > not nmi safe for some archs and it would be better to handle nmi context
+> > > separately. So, I am not that worried about optimizing for NMI context
+> > 
+> > Well, we're introducing in_nmi() check and different execution paths to all
+> > charging. This could be e.g. compiled out for architectures where this_cpu*
+> > is NMI safe or they don't have NMIs in the first place.
+> 
+> Very few architectures one would care about do not have NMIs. Risc-V
+> seems to be the exception here ?!?
+> 
+> > > but your next comment on generic_atomic64_* ops is giving me headache.
+> > > 
+> > >> 
+> > >> > series took a different approach targeting only nmi context. Since the
+> > >> > number of stats that are updated in kernel memory charging path are 3,
+> > >> > this series added special handling of those stats in nmi context rather
+> > >> > than making all >100 memcg stats nmi safe.
+> > >> 
+> > >> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
+> > >> But AFAIU lib/atomic64.c has the generic fallback implementation for
+> > >> architectures that don't know better, and that would be using the "void
+> > >> generic_atomic64_##op" macro, which AFAICS is doing:
+> > >> 
+> > >>         local_irq_save(flags);                                          \
+> > >>         arch_spin_lock(lock);                                           \
+> > >>         v->counter c_op a;                                              \
+> > >>         arch_spin_unlock(lock);                                         \
+> > >>         local_irq_restore(flags);                                       \
+> > >> 
+> > >> so in case of a nmi hitting after the spin_lock this can still deadlock?
+> > >> 
+> > >> Hm or is there some assumption that we only use these paths when already
+> > >> in_nmi() and then another nmi can't come in that context?
+> > >> 
+> > >> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
+> > >> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
+> > >> irq_save+spin_lock. So can't we deadlock there?
+> > > 
+> > > I was actually assuming that atomic_* ops are safe against nmis for all
+> > > archs.
+> 
+> We have HAVE_NMI_SAFE_CMPXCHG for this -- there are architectures where
+> this is not the case -- but again, those are typically oddball archs you
+> don't much care about.
+> 
+> But yes, *64 on 32bit archs is generally not NMI safe.
+> 
+> > I looked at atomic_* ops in include/asm-generic/atomic.h and it
+> > > is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
+> > > cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
+> > > using arch_cmpxchg() instead. I will dig more.
+> 
+> Not many 32bit architectures have 64bit cmpxchg. We're only now dropping
+> support for x86 chips without CMPXCHG8b.
+> 
+
+As Vlastimil pointed out (last point), I don't think I will need 64bit
+cmpxchg, 32bit cmpxchg will be fine.
+
+> > Yeah I've found https://docs.kernel.org/core-api/local_ops.html and since it
+> > listed Mathieu we discussed on IRC and he mentioned the same thing that
+> > atomic_ ops are fine, but the later added 64bit variant isn't, which PeterZ
+> > (who added it) acknowledged.
+> > 
+> > But there could be way out if we could somehow compile-time assert that
+> > either is true:
+> > - CONFIG_HAVE_NMI=n - we can compile out all the nmi code
+> 
+> Note that in_nmi() is not depending on HAVE_NMI -- nor can it be. Many
+> architectures treat various traps as NMI-like, even though they might
+> not have real NMIs.
+> 
+> > - this_cpu is safe on that arch - we can also compile out the nmi code
+> 
+> There is no config symbol for this presently.
+
+Hmm what about CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS?
+
+> 
+> > - (if the above leaves any 64bit arch) its 64bit atomics implementation is safe
+> 
+> True, only because HPPA does not in fact have NMIs.
+
+What is HPPA?
+
+> 
+> > - (if there are any 32bit applicable arch left) 32bit atomics should be
+> > enough for the nmi counters even with >4GB memory as we flush them? and we
+> > know the 32bit ops are safe
+> 
+> Older ARM might qualify here.
+
+Thanks a lot Vlastimil & Peter for the suggestions. Let me summarize
+what I plan to do and please point out if I am doing something wrong:
 
 
-Bert Karwatzki
+#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || !defined(CONFIG_HAVE_NMI)
 
+// Do normal this_cpu* ops
+
+#elif defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
+
+// Do 32 bit atomic ops with in_nmi() checks
+
+#else
+
+// Build error or ignore nmi stats??
+
+#endif
+
+
+WDYT?
+
+(BTW Vlastimil, I might rebase send out the irq-safe series before this
+nmi one.)
+
+thanks,
+Shakeel
