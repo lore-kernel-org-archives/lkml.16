@@ -1,126 +1,109 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224ED1D52B;
-	Tue, 13 May 2025 12:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FBD286439
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140531; cv=none; b=tVo/jeaKXWJwDo7dH4AyMiqWfzc8zH9xdX3ObjCBSAI0RHRXLzVHOdtuCHyIdkJMFohJtIii52OYzcpyCFYyHdRiT+cvg2DGSyAmJpHFbw5NzTGN3ZznKxWEwJRMusLc9+eFgHzzawko1ZkHfQxuta6pbdcUKOzlxwfiItoxa5s=
+	t=1747140647; cv=none; b=Hj8hcNZmF20b4swIYJbXbmrOdr5omScGU2omMHcpHU1MZNMYjlAqgD63ggN9SS8YwYiRl6hqj2mwxsmEIUSpv4naEC063aIlCBAuYorYZVETnC4u/Aw/Nd8mTG/48FCnse1fdIb4WwWO5vWOZXV0/hSKM2PSWBbcF259fT+4jp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140531; c=relaxed/simple;
-	bh=IRMm+C+NtzCnQzW5ekgvU/LsZ5ZGYQm9QCLC9PLIH7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JtgY2nek0mPhiatCQJo+60EBXPXBr1uCSroiJnvYSXW5gESHXxhvYBtSLy/dPhgL0jLLpRWD9Rf63Z7MNJD+hyCorKgLF77NUim+UuHBFpxDabKe1ymRS6EKAsxK7sQKyrfWfvRtioqKHhwI68HOj5CMzJqKr6DMAjf3r0/sKgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HU9V43Ii; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747140647; c=relaxed/simple;
+	bh=cbkNHpfCazDp/U2uIDhXT83+u8gzdMCgbpu2J3wJRIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RnmNBLrL9wUekZlcaoq8OzhDZ0Q97uXyGiV0fpJJDrpbVPj0dZrI3sWO095huz9DRcS489UC1LJ8tQFCT/E7Rs64pIilR7uJFkBLVFkrodM00hWJH2HUtUDYzqKk3k6ajZFxhpVGyoJxVtCOdq8Rh1MqTShEaGydTWnVw1Htmqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=RVC0RZrL; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HU9V43Ii"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf680d351so38896135e9.0;
-        Tue, 13 May 2025 05:48:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="RVC0RZrL"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7cd0a7b672bso240258685a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747140528; x=1747745328; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a5TgOXyLSPHdmxHWX/DD9xraZLG6iwcHdcK24HBFLhk=;
-        b=HU9V43IipaRy17NuU15l1HKOr9KH9cnIT8fmvYJAZ9W+8sjyNhVs42ZHa0zWT2k9ne
-         YTgR2e1DMaO0CHolLi5icBnv2cQW3jv8OuE2MGOQO2bHZtG08GFAqtyBZr6r6T6Gg7PO
-         B5wTTpD8jWdgF+hB+HmVB25EogTv/OnBo1Pfg3/AzjSpC0yo2rfGkTBnzKkbPF9vhQHO
-         dtVYu0Vf+hGCbU0wJbcv9oIQOUdA5uQFBRKyk0CVFiTPWwBI4f2/7lEG0MTXiw6T5KtS
-         stbSz5ZLdBN3S8fLcms+FegHflcgDhRmjIs7QrQy5axmoprCV2+glY1UcFgIkDbwrFjb
-         LIUg==
+        d=ciq.com; s=s1; t=1747140645; x=1747745445; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6fIGxDjB0SYqfDID/zzJ+9sqlaZDZdlnVxHTIBP3fm0=;
+        b=RVC0RZrLA1j+1rc988RYMB/BOKcSbM8vAQoatix8JXJWQs0bdnqNIVfKal35JJGCFW
+         Idq5tAAoATfdmFD+LYT86DLzlhvXfb3iyXRvyQTGuaUS2PX8oZwmTAe5mXzLIi2aYmQK
+         w64BoibqR717T0w/e3av+r4vGiA+8ot1H/20JfNp/4tQsVoPq1/67NEeZkG6WV1GvYjc
+         z3mYlUnRHw5SBg770sbO4PjfJgVGIeuzQeS0nYXQ0OvA8pHbPzapd9MKUH8fJLdvBvCw
+         b+6H8SWuLgbuvOAnDMLGkTh8kv8meb9uAWxsj0zn9mcqNQJ9+CC39daOZDLyIcAqcvUS
+         df6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747140528; x=1747745328;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a5TgOXyLSPHdmxHWX/DD9xraZLG6iwcHdcK24HBFLhk=;
-        b=fx5pZI/P7/AXLu8rj/B28RUq7ZQ6kX8XUeJrhBeW3hbQQTWwbTonFvTSyTr+iah9zL
-         dyoqHeTTsPSrkn723HD/ibjUIT0iSicz21qSzJTjWX7ejfnPeXG6gUiUPtreBmafH+a4
-         gro++EaBdqOTmUnyyeQDPGzYjo0iFzbvpBwIpcuHh2U2whKj3QylmTzeewyT5yDvJ25l
-         KynbVVSQPwZbMo4mdHHmsaeBVqLAdEJ/6zgci6DfPc7NCSiGNW6tcBtm0hPSCLhd6HmT
-         940YlezRtdzVYSpfKjjHR+MUYgdLEEN+JaZ0cU/2NamgwuckoGeD/JkqmKIA66zdqyEF
-         944Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUzN3f7LJ8ncFq56vKwj5XqbUGpn2EtjHX3vqRLjT+XJuS3eGvNkTb9SomXcczQRLE0xD0Wy0EeOnNujYU=@vger.kernel.org, AJvYcCXbkYUYoGBVq7D79jF3bH88RIvCqiL9DRuPeOY5ZY8yNJ2FXdYsDnriaWGxqYf8l6AQhVMU6Wjq@vger.kernel.org
-X-Gm-Message-State: AOJu0YylawN83dRYNzUHqNa3klplQUb3zZuL7C6xtjPKWOQLB8ehX82A
-	qR4NMoE3+BskRBlG4b10IsQfwixy4ILj0eBciPV0KwU9Lf0+sYxb
-X-Gm-Gg: ASbGncsTHpH/YsFe1pmlhL1h69gUOp7MHJfB3bPlWKK4T4MljCa9q+3L/3ttd9EkWWb
-	4XIeqshA8TfFOwcvSMutY1KP/80Op52Xd497Fgfiqt84/+RBKcrsyVQM8XTnIhkGaqSIIAJJSwY
-	EwpVVcVzU429FQLo+LzD6aFvUnTbCX5K3zwigNoYE7T34CNDImTifkEJ2llF0mC8N+7Fo4GDfSn
-	TzrmtWTIuxFG3/ECy2gSaI+HtQUM2Y435SAuLDGyyZ6+EB5K/zx0gxAAs9Cqrxv/ezVokWMVQMg
-	6aksTholVGis/Il3dTWQ5A/cO1MfAroc2i42K1fupZD+XErILc+LLQOMH2RKQF53HHy/Ka2P
-X-Google-Smtp-Source: AGHT+IHBreVwaNTD250MP1ZhUthvVQWAn2cvlOqmyeNmqTywxz6tsH2Gn2/fdJuks7mp7pU/Wx6dDg==
-X-Received: by 2002:a5d:47a7:0:b0:3a0:9a02:565a with SMTP id ffacd0b85a97d-3a340d15421mr2730099f8f.3.1747140528111;
-        Tue, 13 May 2025 05:48:48 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.146.237])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d6858566sm165365765e9.32.2025.05.13.05.48.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 05:48:47 -0700 (PDT)
-Message-ID: <eae3e1a9-1d82-40b7-a835-978be4a6ef56@gmail.com>
-Date: Tue, 13 May 2025 13:49:56 +0100
+        d=1e100.net; s=20230601; t=1747140645; x=1747745445;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6fIGxDjB0SYqfDID/zzJ+9sqlaZDZdlnVxHTIBP3fm0=;
+        b=Vr652vMQORpwTgM1WHCsw+gQM+Bi786KSB9HtC6ftEA4SGjmpeGsoihHvX+8PtjgtN
+         Nd5cTv8/bvHr7s/2cD0pbEC13HwaX7XH4hTpBWxn9r5/8Xk2NWNmp4Ne2r4vGT7beUNz
+         XWMjiEBiSxZAo4v+4BooTfSa9NG79jB596sbGJfEE06LbDEL6yZIxEQPg2EyVsX2XGzI
+         DljkSJsNRHUMlRbcuIPin0AgFKp7pCS5W9GMmCfhkzwQH0N3A1H+LxQanTIirwH0fIJq
+         6MkcLxQFqAf8m1xcQ2g/EmW3kp4eNRqK2IuoNb47qh5a4GlW2gG/NFfIqeWsb9ptncj+
+         BucQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2wB7spFIOPfka8Bv+/qO46eJ9UPX/Uo55xgJTQTJiBel7qptxWEDT/9k3jDPP/D8ybblttDXk6AdbmqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmvPbPeIsrdZiTrFuiHN07wcvmjmAGEV7ojYQOO8puX3t02Kv0
+	tnntvLu7JniV5uMchC7mRd7JdyRqIFQAVPZL1LV7P/46T/6mFL8fw326ocs+pMlt6AOiUftkQaf
+	7LnjNdjKz/2hC5zMOoja7v5KqawAmL4kTqNhE+A==
+X-Gm-Gg: ASbGncs+fnnl8En45tSfWe5XThmL0GBGfYSEZ9C0TCeGtm9Pl3DlKZIIH8hN6d8hK3g
+	DgI60orv+SFUQnv+dZj+7p2TX7B1oNDfs/0gKbklzmHzvBqD5UVq0JPfa6e7VRBnVfBcHlKdmiR
+	U401nUj5xpAJ76+/xveLzyk6bzIITSM/OY
+X-Google-Smtp-Source: AGHT+IHBEdsF6gSFx1qwBk8MOhT+FX89ZCga3+pTyELVVHANhV/m9TZ/cnRgBn5szaUnkrhaLYyUlGiH0Cn/NnATxfw=
+X-Received: by 2002:a05:620a:4403:b0:7cd:92:9f48 with SMTP id
+ af79cd13be357-7cd0114f73dmr2851585985a.52.1747140644988; Tue, 13 May 2025
+ 05:50:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 01/19] netmem: rename struct net_iov to struct netmem_desc
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, edumazet@google.com,
- pabeni@redhat.com, vishal.moola@gmail.com
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-2-byungchul@sk.com>
- <ea4f2f83-e9e4-4512-b4be-af91b3d6b050@gmail.com>
- <20250512132939.GF45370@system.software.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250512132939.GF45370@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250512172041.624042835@linuxfoundation.org>
+In-Reply-To: <20250512172041.624042835@linuxfoundation.org>
+From: Brett Mastbergen <bmastbergen@ciq.com>
+Date: Tue, 13 May 2025 08:50:34 -0400
+X-Gm-Features: AX0GCFujP5y8odal_JrTQezDnw3_S4uS2-SeBQTOZ8FQ5LfW4rl2-L89_wnvi1c
+Message-ID: <CAOBMUvgh215jYs+YzZ6+MxM3VNGL1_ZQ-yx9k9Fjn7NxSdbXCA@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/12/25 14:29, Byungchul Park wrote:
-> On Mon, May 12, 2025 at 02:11:13PM +0100, Pavel Begunkov wrote:
->> On 5/9/25 12:51, Byungchul Park wrote:
->>> To simplify struct page, the page pool members of struct page should be
->>> moved to other, allowing these members to be removed from struct page.
->>>
->>> Reuse struct net_iov for also system memory, that already mirrored the
->>> page pool members.
->>>
->>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>> ---
->>>    include/linux/skbuff.h                  |  4 +--
->>>    include/net/netmem.h                    | 20 ++++++------
->>>    include/net/page_pool/memory_provider.h |  6 ++--
->>>    io_uring/zcrx.c                         | 42 ++++++++++++-------------
->>
->> You're unnecessarily complicating it for yourself. It'll certainly
->> conflict with changes in the io_uring tree, and hence it can't
->> be taken normally through the net tree.
->>
->> Why are you renaming it in the first place? If there are good
-> 
-> It's because the struct should be used for not only io vetor things but
-> also system memory.  Current network code uses struct page as system
+On Mon, May 12, 2025 at 1:58=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.29-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Not sure what you mean by "io vector things", but it can already
-point to system memory, and if anything, the use conceptually more
-resembles struct pages rather than iovec. IOW, it's just a name,
-neither gives a perfect understanding until you look up details,
-so you could just leave it net_iov. Or follow what Mina suggested,
-I like that option.
+Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
+Intel Core i7-12600H
 
-> memory descriptor but struct page fields for page pool will be gone.
-> 
-> So I had to reuse struct net_iov and I thought renaming it made more
-> sense.  It'd be welcome if you have better idea.
--- 
-Pavel Begunkov
+Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
 
+Thanks,
+Brett
