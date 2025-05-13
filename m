@@ -1,209 +1,151 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4021C28E;
-	Tue, 13 May 2025 07:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CCA1C28E;
+	Tue, 13 May 2025 07:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120326; cv=none; b=OUOU1LF8ckUFFWqOL2F1/0zqTnevD+2b8DdPEOKs95hxW1KlbTM2cuIQhQJYUgm4753D6zPls6ezr76bdGqqNjjxoPlsxWsuSZer9Gk+QlzBuUH9YXDV8Pv6xH/pg/QTl7udITmHEKMoPAOBg6cxnPeETeTNOEWWbOe2FxfF1dI=
+	t=1747120362; cv=none; b=QEqUVD2qWaFRyjQpLuI9X1pwTO/rY92e77uRJv0WRQf1jStamAqu80A1x2NgE7hE5Lbb+7CC7dsClpIPvx96KOaQd/T1ghtMMc4Cmkf9thtnY7BEkZ06kQ5XxO0GX/dsY342hXntSu3jYyuPMVKA+FXNvTbgAiot0+1xb+cmPx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120326; c=relaxed/simple;
-	bh=PFDsQGZBFReRJAVX+aMh2f4kUZlj/XLGAr4AA6TuYcA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uKSJF9kqamHuo79PyWA9ChYT6dwepqf6Ri7G/Miy8D/nYPkQ7PVM2rU4iffQLD0+TS2iUpNfdUBQd3S7M11k5Zs7qm3XPR49H7GKOeWFjRQslu9mPUO+3jTnsT3bkusGosWjwmztdYTx24A+860HkBSCe+EzfrkgCiepEesu8co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Srzn9WIy; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Srzn9WIy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7184443B51;
-	Tue, 13 May 2025 07:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747120321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kW436Zqw0Tr+zUxZcdzJxvQgLIggqW4FjaxNbWh15/c=;
-	b=Srzn9WIyN5mGzGLMRzxA3ka+j+fgZBLFC6ZRSPheczVUF9BqHS9g0ZYln15ivDOeq777Gb
-	AkZRtRBQ6BqCvBshFkdrBUstTcM7E67HtbTvuYcLI1atJ+TQZ9V8/5MCWcCgVonSRx/vjq
-	IE3xkHMmHXigcpavG1ciTGbRrOn/xUT9ENrTRQyeuPcEZAdf3Jyp2/OHcfoZZO8Toneva1
-	95VqRVppQK62xLMuWvub3WQC/fwH9FXqwwHSkiepS1nXvNBHkw8YVNuMmWwlqIcEgcOD31
-	aK+tqCHk3Af8GI6ReU/eKjZbjsUVIDPW3iR0TdoLdap+OlBOqzbqOkE71NG8qA==
-Message-ID: <1b358a4b-855d-4d4d-ac2d-9941461848ba@bootlin.com>
-Date: Tue, 13 May 2025 09:11:58 +0200
+	s=arc-20240116; t=1747120362; c=relaxed/simple;
+	bh=C5gMTCFYqUliZlVx/tFArqRF+j/MUdX1dUf54hkcFyg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=obWX3NwEvLe+85OTINIIDXZqGJzCNrq1TFS0coeZ9nZMoZ5nF25kYvFGR7MoWPooTSA2VYj5ilVVetMGiPAHrxMogL7m3BZ6ADGeRx2CbSvr1jdtZ5sjococQXG1y2kJGPONQpIAbdAXSB5tFoouXMwG4U8YIByd5miDw/eN7ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8CxvnLd8CJoJYLjAA--.43990S3;
+	Tue, 13 May 2025 15:12:29 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMAxHsfZ8CJo8E_NAA--.54217S2;
+	Tue, 13 May 2025 15:12:27 +0800 (CST)
+Subject: Re: [PATCH v9 0/5] Add Loongson Security Engine chip driver
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
+ linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+ <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <8e55801a-a46e-58d5-cf84-2ee8a733df9a@loongson.cn>
+Date: Tue, 13 May 2025 15:12:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [RFC v3 01/33] rust: drm: Add a small handful of fourcc bindings
-To: Lyude Paul <lyude@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
- Danilo Krummrich <dakr@kernel.org>, mcanal@igalia.com,
- Alice Ryhl <aliceryhl@google.com>, Maxime Ripard <mripard@kernel.org>,
- Simona Vetter <sima@ffwll.ch>, Daniel Almeida
- <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Asahi Lina <lina@asahilina.net>, open list <linux-kernel@vger.kernel.org>
-References: <20250305230406.567126-1-lyude@redhat.com>
- <20250305230406.567126-2-lyude@redhat.com>
+In-Reply-To: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250305230406.567126-2-lyude@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdefhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthejredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetudehheegkeethffglefgveduleeuheetjeehheekhfehieejvedugfefuedtteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgfkrfggieemvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehngdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehli
- hhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtggrnhgrlhesihhgrghlihgrrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhimhgrsehffhiflhhlrdgthh
-X-GND-Sasl: louis.chauvet@bootlin.com
+X-CM-TRANSID:qMiowMAxHsfZ8CJo8E_NAA--.54217S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAF4DKF17Gr13AFW5Gry3Awc_yoW5Zr43pF
+	45Cay5Cr4UJr47C3s3t34UCFy5Z3s3Jr9Fga9Fqw15ur9xAa47XrW7CFy7CFW7ZF1rGry2
+	vFZ7CF43u3W5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On 05/03/25 - 17:59, Lyude Paul wrote:
-> This adds some very basic rust bindings for fourcc. We only have a single
-> format code added for the moment, but this is enough to get a driver
-> registered.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> 
-> ---
-> V3:
-> * Drop FormatList and ModifierList
->   These aren't actually needed as pointed out by Louis Chauvet
-> * Add a constant for FORMAT_MOD_INVALID
->   I realized that we actually need this because the format list isn't
->   terminated with a 0 like I thought, and we can't pick this up
->   automatically through bindgen
-> * Split out the FormatInfo WIP
->   We'll want this someday, but not yet.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/drm/fourcc.rs | 21 +++++++++++++++++++++
->  rust/kernel/drm/mod.rs    |  1 +
->  2 files changed, 22 insertions(+)
->  create mode 100644 rust/kernel/drm/fourcc.rs
-> 
-> diff --git a/rust/kernel/drm/fourcc.rs b/rust/kernel/drm/fourcc.rs
-> new file mode 100644
-> index 0000000000000..62203478b5955
-> --- /dev/null
-> +++ b/rust/kernel/drm/fourcc.rs
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +
-> +//! DRM fourcc bindings.
-> +//!
-> +//! C header: [`include/uapi/drm/drm_fourcc.h`](srctree/include/uapi/drm/drm_fourcc.h)
-> +
-> +/// Return a fourcc format code.
-> +const fn fourcc_code(a: u8, b: u8, c: u8, d: u8) -> u32 {
-> +    (a as u32) | (b as u32) << 8 | (c as u32) << 16 | (d as u32) << 24
-> +}
-> +
-> +// TODO: We manually import this because we don't have a reasonable way of getting constants from
-> +// function-like macros in bindgen yet.
-> +#[allow(dead_code)]
-> +pub(crate) const FORMAT_MOD_INVALID: u64 = 0xffffffffffffff;
-> +
-> +// TODO: We need to automate importing all of these. For the time being, just add the single one
-> +// that we need
-> +
-> +/// 32 bpp RGB
-> +pub const XRGB888: u32 = fourcc_code(b'X', b'R', b'2', b'4');
 
-Two questions:
-- Can we implement fourcc_code(b"XR24"), so XR24 can be found with grep 
-without knowing the internals of rust bindings.
-- This is maybe "too much abstraction", I don't know what is the 
-expectation for the kernel, why not creating a FourCC type? This could 
-avoid confusion with other FourCC code from v4l2? This could also be 
-complex to automate the generation, so it is maybe a bad idea.
+在 2025/5/11 下午5:34, Huacai Chen 写道:
+> Hi, Qunqin,
+>
+> Where is the 2nd patch in V7?
 
-#[repr(transparent)]
-struct FourCC(u32);
+Hi, Huacai
 
-and then implement From<[u8; 4]> and From<u32>?
+I added "loongson se. c" and "loongson se. h" to the LOONGSON CRYPTO 
+DRIVER entry.
 
-Thanks,
-Louis Chauvet
+or should i add a separate entry for the mfd driver as done in v7?
 
-> diff --git a/rust/kernel/drm/mod.rs b/rust/kernel/drm/mod.rs
-> index c44760a1332fa..2c12dbd181997 100644
-> --- a/rust/kernel/drm/mod.rs
-> +++ b/rust/kernel/drm/mod.rs
-> @@ -5,5 +5,6 @@
->  pub mod device;
->  pub mod drv;
->  pub mod file;
-> +pub mod fourcc;
->  pub mod gem;
->  pub mod ioctl;
-> -- 
-> 2.48.1
-> 
-> 
+Thanks for your comments,
 
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Qunqin.
+
+>
+> Huacai
+>
+> On Tue, May 6, 2025 at 12:33 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
+>> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+>> accelerator engines. Each engine have its own DMA buffer provided
+>> by the controller. The kernel cannot directly send commands to the
+>> engine and must first send them to the controller, which will
+>> forward them to the corresponding engine. Based on these engines,
+>> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+>> as an engine.
+>>
+>> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
+>>
+>> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>>      are all encryption related drivers and SM2, SM3, and SM4 drivers
+>>      will be added to the crypto subsystem in the future, the base driver
+>>      need to be changed when adding these drivers. Therefore, it may be
+>>      more appropriate to place the base driver within the crypto
+>>      subsystem.
+>>
+>>      Removed complete callback in all drivers. Removed the concepts of
+>>      "channel", "msg" and "request" as they may be confusing. Used the
+>>      concepts of "egnine" and "command" may be better.
+>>
+>> v7: Addressed Huacai's comments.
+>>
+>> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>>
+>>      crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>>      ls6000se-rng.c ->loongson-rng.c
+>>
+>>      tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>>
+>> v5: Registered "ls6000se-rng" device in mfd driver
+>>
+>> Qunqin Zhao (5):
+>>    mfd: Add support for Loongson Security Engine chip controller
+>>    crypto: loongson - add Loongson RNG driver support
+>>    MAINTAINERS: Add entry for Loongson crypto driver
+>>    tpm: Add a driver for Loongson TPM device
+>>    MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>>
+>>   MAINTAINERS                            |   9 +
+>>   drivers/char/tpm/Kconfig               |   9 +
+>>   drivers/char/tpm/Makefile              |   1 +
+>>   drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+>>   drivers/crypto/Kconfig                 |   1 +
+>>   drivers/crypto/Makefile                |   1 +
+>>   drivers/crypto/loongson/Kconfig        |   5 +
+>>   drivers/crypto/loongson/Makefile       |   1 +
+>>   drivers/crypto/loongson/loongson-rng.c | 197 +++++++++++++++++++++
+>>   drivers/mfd/Kconfig                    |  11 ++
+>>   drivers/mfd/Makefile                   |   2 +
+>>   drivers/mfd/loongson-se.c              | 235 +++++++++++++++++++++++++
+>>   include/linux/mfd/loongson-se.h        |  52 ++++++
+>>   13 files changed, 602 insertions(+)
+>>   create mode 100644 drivers/char/tpm/tpm_loongson.c
+>>   create mode 100644 drivers/crypto/loongson/Kconfig
+>>   create mode 100644 drivers/crypto/loongson/Makefile
+>>   create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>>   create mode 100644 drivers/mfd/loongson-se.c
+>>   create mode 100644 include/linux/mfd/loongson-se.h
+>>
+>>
+>> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+>> --
+>> 2.45.2
+>>
+>>
+
