@@ -1,185 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7376CDF49
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7585A1E5716;
+	Tue, 13 May 2025 05:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747114274; cv=none; b=bEdwK/GkfivPJuXccvfShcsLEhdikqHi7nNvra3ZGVztPrw8p9Sft7Ig6aqje8noIb+dT1S6ZpYBJwkUsAkwKgYC8nhM5ToyKniMt7ijCyko6WjPaDgznBRevvK4Xiy3/5UyCdWjyd/RuuuSqlSaGDTb2CDItVlLdhz7pr1I47w=
+	t=1747114281; cv=none; b=CnkMQ0zqfHZuP6NGpef+VGZ9JywmOlbl5W2e2Z35mLFc268kFBeWZskcaONBh8n+/E+pdv4aUxfBE8ipz7cYoUv9jInBlU2l1p74AFCk6FdPL2aOu9WrJiCghdUPXUlXpDLZVbTMbH32hydHZlVP7EmJ7WTR4pp3JyZWZCsj4v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747114274; c=relaxed/simple;
-	bh=ZuMZa2xceHhI23AkpoN9E1cra7t+j+J+6HQ+KGqopwc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=QhYptAJsDE5cqAW+4dXrklgM4GNbNtmdbCjGMMwrKkHCmHgiBGEN6+gifinaAq1w+RD8LtH7GrQuw+Z0djalrHAz08Vs+4i4qZwAfMUTeQjfOw4bsWKf9qXN56v04kWTx9ZbP2ucFZyqjj/zcy3GB7BbSc+Rx8Hcu+rnB1hX2ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Io3Z/dGQ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747114281; c=relaxed/simple;
+	bh=VtWsJ5jxF5ditBS+PzMpbSYMYidoIRW8fVv6/2U8zto=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dmyfvO/d/LoeN1pWf7dWidKQ+sWCL0ccXCyaQB1fqPPjgttwhwmb4F93zV4NcjjndZoZfpeHEOtNV/gnu0Y+HSj6NvIvpGB5YQITR69tQ40a1B1+Vx5WMOnN7B9EGTORsh252StcF2DjPtNMi7ynKpah3O0E+IuME7vaBCCmnRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=AyOcLNrg; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Io3Z/dGQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747114273; x=1778650273;
-  h=date:from:to:cc:subject:message-id;
-  bh=ZuMZa2xceHhI23AkpoN9E1cra7t+j+J+6HQ+KGqopwc=;
-  b=Io3Z/dGQTSciEJWezzFFOLdlmXBNda2VDSwIVsJll4ODOq/G9J0H+/YZ
-   6xLN1iVNkhoIXYc9cncBWEDpNKyxUhNm71UF3zSaWd5gqH1hI4MOC7PLk
-   NsC8tFevX5wu4GrdZZ3LmZJEunYxJjuK1/rCgzEBxVjv32m8YKJeMPI/Z
-   XForIc/gcEw6pEpW+qpG0wAMqLm9S7WMKn2/kq31kbokctESkr6gmMvU7
-   tjQ3UnkryrqNOnsdYxdyp/Xp8/fVXTdE8LzKJkRqlBpcdAebNnmzcnVe3
-   irNE5NmEha3WC27YtiW1wdKAf1qjcyLYJUQ56FtLlmgOSQNqFTS0Y2AFb
-   w==;
-X-CSE-ConnectionGUID: f2nN5EW8T5+s8kpz2sLxhw==
-X-CSE-MsgGUID: C4ve7vcKTdSAq6QDOwbAow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="66346217"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="66346217"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:31:12 -0700
-X-CSE-ConnectionGUID: c3XnzzP2RdWIK3aF6znAgw==
-X-CSE-MsgGUID: uye+WaQYQvmv/kXhg0IXrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="168685163"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 12 May 2025 22:31:11 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEiEO-000Fjl-2o;
-	Tue, 13 May 2025 05:31:08 +0000
-Date: Tue, 13 May 2025 13:31:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- 199e2b193826957b5b2b5777abcb44078c5f66c0
-Message-ID: <202505131350.Uyq91saH-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="AyOcLNrg"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 257C0101F54F9;
+	Tue, 13 May 2025 07:31:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1747114276; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=AOoLpSlcMEI3x/GsGXxu7WykZ1/+A4nN7MIcD+H/+uQ=;
+	b=AyOcLNrgYSbYvX4wYgUv7mAVOse9uZXTb2e+Unl8AVKvxYEBs1D9iqL+oee+kyOUJMQeh0
+	p8TL9HQCLcGSTXMaQtY5jJwQO9bkdLR0tdV9uKejyTTl/I2RVZhXVcR+0gbCfS+TD3WQXt
+	WQBIMODdESc0ckXiMmWXI9zZZ8FiJZX117MsatlhANrhd6M2Ev4JBfYNLP2oe3PV8hZE/t
+	l4gLRaLVEmSC/r8zxEuRJDSVUEIRtFDUcsjYVJiXRvKd6xsn3/wSxqK2vNqEAS2vyP12ot
+	jisN+XZssVfk7xllsfE8hzFW3p42yDJtW2K/NE5Ct+138mhoEwrK7BLTv/V02w==
+Date: Tue, 13 May 2025 07:31:09 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v11 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250513073109.485fec95@wsk>
+In-Reply-To: <61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+References: <20250504145538.3881294-1-lukma@denx.de>
+	<20250504145538.3881294-5-lukma@denx.de>
+	<61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/NdXiA+ua5HLGGlUZSgHFP74";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: 199e2b193826957b5b2b5777abcb44078c5f66c0  Merge branch into tip/master: 'x86/urgent'
+--Sig_/NdXiA+ua5HLGGlUZSgHFP74
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 943m
+Hi Paolo,
 
-configs tested: 108
-configs skipped: 6
+> On 5/4/25 4:55 PM, Lukasz Majewski wrote:
+> > +		/* This does 16 byte alignment, exactly what we
+> > need.
+> > +		 * The packet length includes FCS, but we don't
+> > want to
+> > +		 * include that when passing upstream as it messes
+> > up
+> > +		 * bridging applications.
+> > +		 */
+> > +		skb =3D netdev_alloc_skb(pndev, pkt_len +
+> > NET_IP_ALIGN);
+> > +		if (unlikely(!skb)) {
+> > +			dev_dbg(&fep->pdev->dev,
+> > +				"%s: Memory squeeze, dropping
+> > packet.\n",
+> > +				pndev->name);
+> > +			pndev->stats.rx_dropped++;
+> > +			goto err_mem;
+> > +		} else {
+> > +			skb_reserve(skb, NET_IP_ALIGN);
+> > +			skb_put(skb, pkt_len);      /* Make room */
+> > +			skb_copy_to_linear_data(skb, data,
+> > pkt_len);
+> > +			skb->protocol =3D eth_type_trans(skb, pndev);
+> > +			napi_gro_receive(&fep->napi, skb);
+> > +		}
+> > +
+> > +		bdp->cbd_bufaddr =3D dma_map_single(&fep->pdev->dev,
+> > data,
+> > +						  bdp->cbd_datlen,
+> > +						  DMA_FROM_DEVICE);
+> > +		if (unlikely(dma_mapping_error(&fep->pdev->dev,
+> > +					       bdp->cbd_bufaddr)))
+> > {
+> > +			dev_err(&fep->pdev->dev,
+> > +				"Failed to map descriptor rx
+> > buffer\n");
+> > +			pndev->stats.rx_errors++;
+> > +			pndev->stats.rx_dropped++;
+> > +			dev_kfree_skb_any(skb);
+> > +			goto err_mem;
+> > +		} =20
+>=20
+> This is doing the mapping and ev. dropping the skb _after_ pushing the
+> skb up the stack, you must attempt the mapping first.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I've double check it - the code seems to be correct.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                          axs101_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250512    gcc-14.2.0
-arc                   randconfig-002-20250512    gcc-11.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250512    gcc-7.5.0
-arm                   randconfig-002-20250512    clang-17
-arm                   randconfig-003-20250512    gcc-6.5.0
-arm                   randconfig-004-20250512    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250512    gcc-7.5.0
-arm64                 randconfig-002-20250512    clang-21
-arm64                 randconfig-003-20250512    clang-21
-arm64                 randconfig-004-20250512    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250513    gcc-14.2.0
-csky                  randconfig-002-20250513    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250513    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250512    gcc-11
-i386        buildonly-randconfig-002-20250512    clang-20
-i386        buildonly-randconfig-003-20250512    clang-20
-i386        buildonly-randconfig-004-20250512    gcc-12
-i386        buildonly-randconfig-005-20250512    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250513    gcc-14.2.0
-loongarch             randconfig-002-20250513    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       m5249evb_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250513    gcc-10.5.0
-nios2                 randconfig-002-20250513    gcc-12.4.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250513    gcc-11.5.0
-parisc                randconfig-002-20250513    gcc-11.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                     mpc512x_defconfig    clang-21
-powerpc               randconfig-001-20250513    clang-21
-powerpc               randconfig-002-20250513    gcc-8.5.0
-powerpc               randconfig-003-20250513    clang-21
-powerpc64             randconfig-001-20250513    clang-21
-powerpc64             randconfig-003-20250513    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250512    gcc-7.5.0
-riscv                 randconfig-002-20250512    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250512    clang-18
-s390                  randconfig-002-20250512    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250512    gcc-11.5.0
-sh                    randconfig-002-20250512    gcc-9.3.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250512    gcc-10.3.0
-sparc                 randconfig-002-20250512    gcc-8.5.0
-sparc64               randconfig-001-20250512    gcc-6.5.0
-sparc64               randconfig-002-20250512    gcc-10.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250512    gcc-12
-um                    randconfig-002-20250512    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250512    gcc-12
-x86_64      buildonly-randconfig-002-20250512    gcc-12
-x86_64      buildonly-randconfig-003-20250512    clang-20
-x86_64      buildonly-randconfig-004-20250512    clang-20
-x86_64      buildonly-randconfig-005-20250512    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                          iss_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250512    gcc-12.4.0
-xtensa                randconfig-002-20250512    gcc-14.2.0
+This code is a part of mtip_switch_rx() function, which handles
+receiving data.
+
+First, on probe, the initial dma memory is mapped for MTIP received
+data.
+
+When we receive data, it is processed and afterwards it is "pushed" up
+to the network stack.
+
+As a last step we do map memory for next, incoming data and leave the
+function.
+
+Hence, IMHO, the order is OK and this part shall be left as is.
+
+>=20
+> > +static void mtip_free_buffers(struct net_device *dev)
+> > +{
+> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
+> > +	struct switch_enet_private *fep =3D priv->fep;
+> > +	struct sk_buff *skb;
+> > +	struct cbd_t *bdp;
+> > +	int i;
+> > +
+> > +	bdp =3D fep->rx_bd_base;
+> > +	for (i =3D 0; i < RX_RING_SIZE; i++) {
+> > +		skb =3D fep->rx_skbuff[i];
+> > +
+> > +		if (bdp->cbd_bufaddr)
+> > +			dma_unmap_single(&fep->pdev->dev,
+> > bdp->cbd_bufaddr,
+> > +					 MTIP_SWITCH_RX_FRSIZE,
+> > +					 DMA_FROM_DEVICE);
+> > +		if (skb)
+> > +			dev_kfree_skb(skb); =20
+>=20
+> I suspect that on error paths mtip_free_buffers() can be invoked
+> multiple consecutive times with any successful allocation in between:
+> skb will be freed twice. Likely you need to clear fep->rx_skbuff[i]
+> here.
+
++1 - I will add it with v12.
+
+>=20
+> Side note: this patch is way too big for a proper review: you need to
+> break it in multiple smaller ones, introducing the basic features
+> separately.
+>=20
+> Cheers,
+>=20
+> Paolo
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/NdXiA+ua5HLGGlUZSgHFP74
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgi2R0ACgkQAR8vZIA0
+zr22dAf7BLxjZukHTC/6XVODiBt97iljTiAjzfkSLa9WXpEue6HV1GmD6tkt3wnJ
+HdyON1QvZxs7JUywLFPzF6JgjFz6rxpTR/EpvshLzQOkyW991XrhmPyvHRvUCS2+
+hddDVP0K+6Nbo2EEmlkq3383XOZwPtP93pYieNwkzml9NDgY7tdxwl6fumWOX05c
+obTZQIo6zLfjjoK2alr3lqYke6CfmkJRl7o8/xhcu9Ju9hYIpJl1EPhePCn0ZcVq
+Pmorr7BxDgT1h0M/DnxyRC1RfzIhSekjIaL6+ZBzBWM5mYXy/oDO8jk1q6pS1lPP
+5WomLLwha1NwFG4Y8w+1Ll6gH++xTg==
+=g2d0
+-----END PGP SIGNATURE-----
+
+--Sig_/NdXiA+ua5HLGGlUZSgHFP74--
