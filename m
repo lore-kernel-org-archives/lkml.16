@@ -1,165 +1,315 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B56286439;
-	Tue, 13 May 2025 12:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3116286439
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140812; cv=none; b=JA/bh2tnZzifgi4QuE05ypqtmmkoeEs0nIp1CtXE47INtiM/1BSQjqaighg9PEDAjuJXXXhbp/8NGqZfw8e9xQJ1OuLiqx4euPCR93OJmtbIsN0M5DfSY5JqOMr1fyFrprGIWWPC9x/dysugTsTNrYd5LiTkr+EyhYC2NfTa/94=
+	t=1747140841; cv=none; b=ndKGf/xoyIF9v4jm/WAcYDOO4pjjRmR6eUHwMrMF2oNPTtJjguVZo1UWWTf/NLuDdam6h1cxciHNt3GAf5H3AHk9uiOtIfnRQyKyscP929HL6WleZnf+654utPVxgcTXvlkGFdTnLKiOpUItvbUi3L9aBILgcQ7DPt3yB3RN7vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140812; c=relaxed/simple;
-	bh=i14x7HK+wQByi+0aKyFzNcOhWac1lJuJhW5b260ntpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mumr5vF6jDD3Fy3Rp/6CfoRgl8B1iSwKyXB3b4kQ4TGyamHE7o9ukTPd6qj9zchptF83NIx2hW4cJkRbXwSp5MyPLshngHBysqThad7VV49/jdhnRpDrLvuKuTFzBPKAI4W7pfxFLdocyu9EtPuRb8JAgeFsMPEARRuXbLDT73Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QuXrkrSi; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747140841; c=relaxed/simple;
+	bh=61QsAw2XyTAMFFUPxXjAKuoMWgUzcbZBAetnPwxPvQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SYE5jhaN6N5AG8cVN1Lylubb80nYgAX0BHBqHvQZ8oQOv/IfZaNCOqocmn62E+9EQ18k4y3pX/T7KuKtLwQ40qdH+Xessvl78ngbw5nxFuEDj8UIP4fUoXWTl+67xwMvK9oGz45MOLK0Sgnu+dLz6c0s5JDHqkCA6lt4ZJP6wdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=b9dadrd3; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuXrkrSi"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad4ce8cc3c1so183121966b.2;
-        Tue, 13 May 2025 05:53:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="b9dadrd3"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476ab588f32so85890941cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747140809; x=1747745609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lhUsGW6Aej7UtwPk8Fo3WswAje2EzwjwJ+3T+imRPIA=;
-        b=QuXrkrSiJBAik3QaKSWS+HCnTCmriB79zSscrWJTudsfLcCdBYURl4R+C+rz0p88Al
-         y1SnyopHLPBjZk1IZI7/9BLTpiykvL+HgLYdzr9hW/O2soRNiM2KXYEIfWHGpShVSoj0
-         hw3YQ/aVmyF2kh4neaYC7LbQpW39YzqrKe9Ln0rVlJB9CFYktdTKyIhc9mpw3Cx5Y5JF
-         zGN25CitcI+6r1dMoYHxd6kbeIaV3OaHJpq5dw94jhIkTgMBFWc+hTcU4e/mzNNSF6Yp
-         r0EbycRgLUdjAJ3gwHmT1mxvsAVqBAWtIBd25OXgxuXr3uuhemqkzQxKkHAye9efZZAw
-         yrRg==
+        d=ieee.org; s=google; t=1747140838; x=1747745638; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cda+1VCsMzH6i03hToOmFegl/BDqthHHpn1YesTrXKw=;
+        b=b9dadrd3ydZZTFLj3fmQrcfFV3kk7TUaSCnhxWMwyveS3bdDvYTGD6HVIfrgksHWtS
+         TzvnNMU7myNMoQvoMN1qqvinwXjP8hOcr8x4hcj+3SsRueh7ezdyn6Rz/lnTSTNrhYsp
+         bHaIn/OMWAgGLKFcXmypSAfnEswrIaK56OECM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747140809; x=1747745609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lhUsGW6Aej7UtwPk8Fo3WswAje2EzwjwJ+3T+imRPIA=;
-        b=fk9n/0i5SHHGShj1aABH9XbUXj8VLnJ6hWskizdQ/Hv6+pvfLvJTiAtR1GIDAQ0SU6
-         8o4Mu5c6+8JMuvppWZ/HILHeh8Fi7sjXgQ7mtLefyMWCVypLu8pvfU53wqhqPjwDbOma
-         hleWf5TAmZRrQqBLkiyCQ55vNn2PbFRSsoGrJ54TSB6rZ8BTBKbSKK4+5Nb5J+bEWab8
-         M7OHcv9BLEuqfTusGLttzncsFS5ssQwKgGFwhENRWMw45jDIuM1DhjNEJwaJHTYvdE5+
-         y1RybgBw8vEx1JG+aWmuFvE1xLQquR8OP0EYaJv9cO/gUgjcGDbhuLQzfb+KaXSJH91H
-         5bNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7e6L9mnrLNooJ9RkHA6ife5t/gy9K25ybm6oqmgzLNPkxadcewB0Q84T3DvnsigKiwCvvyS4yIKQoxEU=@vger.kernel.org, AJvYcCU9mDM6H9T3sz3E554QZWqDrD5rf+qFMM7kw/ORDLPE+1evJYV9Pch539b5BhjgWzhA8Jy6rwz+R6CI@vger.kernel.org, AJvYcCUEDNWuYp/pxKalJXWWlVtzByDM8VpnkS4nFb5mjjSfTeVLfQIX6qLtO5R9zN/s7S37La6/MorrS3q9@vger.kernel.org, AJvYcCUUZcobAqzsK5VY+uEFVQQ7lUNMBHopNXhlDJUGmb2AivwVbTSxD1OeL1xLNunH7ymPjEuu0gYJ2ZCGOg==@vger.kernel.org, AJvYcCUq7yF5v72wOEhtTjmn+EUeTFbucWySHFISH6NMd5TehZIX5U/By+MmziKdpkfvNK8vanOQBR29mw==@vger.kernel.org, AJvYcCV08vqx9uqctDhNUHBlHsayXIP4bb5yrb4i472bEYgGkxrAbDcT7zCNXAP1kRKLnTvDUg2XhoVGvyVdcxiS@vger.kernel.org, AJvYcCVvUrHY5foOtwZ1BUZACwOSKJ/P5st1t1eXjV+nx2AMCQ/CT3gKhezSIA8fIoLY87ZL7SVOo+zzgzfrqpuGPw==@vger.kernel.org, AJvYcCWEgChK2604Cs0evHzTc6/05n6f/a+19uhiKBP7owG6oHz97yX4vgPeE1S/w13z27OUAPL+Nt/7wQ==@vger.kernel.org, AJvYcCWHFfMeaC5nxbtGT3oBViXoNCHuYxNxkHqUt6pxx2+xd7yfpxE1DzkRQo75SiEmpk1ID6I10Bt1ESbleg==@vger.kernel.org, AJvYcCWRekuiSXiiT/D559N5rQC8RIZ4ZgBFwsKO4WnCc0DSCBNpvVqrfN4NXBhQtr+sqRTESPb8NqquRB1pTw==@vger.kernel.org, AJvYcCX9zzBVchTPcWHRSkQgdLCbGa+qVaiP0Mz7gHPPRHIHoDz0fJ6ndyhSSBeI2EWwZRshzGlDTDsXF6ZNTd2vqIkdoKj/voAJ@vger.kernel.org, AJvYcCXL7+hGHVOMpQe9QxfWCmGTiLQF0ZvcyJc9HOrdCBWz3QltWhqE9S/uAzXi9u6lljMNL+yll1VOtWdiWzX+@vger.kernel.org, AJvYcCXMru4J2JwBr6AKU3hllsAf4fbuzRBxQN6HErSvZ7COW/hsvRTLry+q1FYYbFfLXHf3LotstNJ9ttlMA+EJCw==@vger.kernel.org, AJvYcCXMvsnBVLqpvPL68tOrZ8aD2pfaVy11gtH4/pkm6bZ5RLMhO+bL0nauXc1DBHaLDC1D/15JN8GlCUn6eg==@vger.kernel.org, AJvYcCXjfzn+oRwGRlQV1zQ1I4Hg/3+qNIjbrLmHuLga+e7y/rzGDP/4avrZJPfrqotEuOTUASZKQZO1rm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBy+xrGuTOo/BHoy2MF1yeFX5Fb7UUdoWy5+Go7SmeXOVhBDFr
-	+0jN+kq9uAGcJy+E6qzHrCzySZ+i3idSxVlzKpH5Lo0DddIHgHKs/t9dRLnYVfTEYI0OzHIFgLx
-	QE1o3gxc9o/qjMMxOZ6lJ5W3W8GI=
-X-Gm-Gg: ASbGncvgC5MxgfdU96tnDtzsnHzv0XYRKofolm7sto42gMHQcx5U/N/qLDD+WLUeLu6
-	JgaUFVTokmO1GuItT5jjFNEHv9BP4uCa+UbnlRqn+ZsBrPYWLpm3Cqre2dToPqB/FkWXhMHqEe3
-	P2TE4pHJXXqHODET9kcDOnwwvoPzJYuoQ3
-X-Google-Smtp-Source: AGHT+IE/b0BCD4zsWzgMefEsXbY+DbhCAD/XOG3dRDcg9jP4PpucFQp1j7NsiRF8Za5+3lLoqjezqR5fGVfm35+9pG4=
-X-Received: by 2002:a17:907:7617:b0:ad2:23fb:5a03 with SMTP id
- a640c23a62f3a-ad223fb7c87mr1075619066b.7.1747140808774; Tue, 13 May 2025
- 05:53:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747140838; x=1747745638;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cda+1VCsMzH6i03hToOmFegl/BDqthHHpn1YesTrXKw=;
+        b=DiDi85ryBd9U0dT30T8kPWemZg6cU3RRU+pwuBGCcM64iJnWvQh+Pqyp4ak5yy8kJu
+         A5i/bq2frdmWgWpDqBf1zXtUYQsFGfKSj4OtEfekrZ/1RAfTGYe122tq4UIZQXeZLG8h
+         ZPTsBMGfhe1ZdBKdnQEeKVJ95b4SB7170HXxXpBC4+e193Aj6BD2M/vqgYcNYHNvm0J4
+         Brp5UMPutGGVxZt295b06JzYfkwF/5uVaT63u26uyq+RK1ERE79afPU4ZjT3Dv40aBkC
+         aoyTOHyN20jWQ6nbVOeIN6//jW3SaS22Xw7LlhPdFteT4KKqRxz2Pf+vKrfFuX3gabOi
+         2wYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtgq7Dr6VSzJ2FVoPEx33nnjbVwDOJ6VZi4EEaTobPwfq4Z4drK6ZGQnsiDBiTJfjI+rQRlIdbb32qGWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPgcANwU+sbS+iofEpav1dUUn2XAGZWZILrO0rGcX92SAlhV6q
+	oyKheamLjOBknzxjAIOx83IPML/hNK/Zta/hLHKTAtYiDFo5ojLfGIoAYT0AZS8HcYhubBx4Olb
+	3nZMF
+X-Gm-Gg: ASbGncs6iDbqJtgETOAIr08rkphb2lDTQGnLfMjSh2HSuf7nPBbYHaSb8A0j632syVV
+	J0ggVDahWS34hCiJgxlTAxPQkuiqE97vOCieuuYU1IwkIP8lds1bH6AM8pma3zlja3ZkMDoO3Ph
+	KILtXVRELtJhywFIFNs+nSSm3RYnRZUTZ79KYsazC48YchRc1AvfhRwwikIx2lYz+8edOWLA+6k
+	unoLdRzZUySSsY6BAsjvuSnjWtw4qpf9cg1+ILSxo8purP2f8foOBW9m8m0Er7Z6psVmlSMVXaJ
+	8x024O9E6RP4FsYUfUFVDBwLvrODhGLkl1uY7knPtBUQuB6Pz/aE1m29+20oWQUOdv9IxEQSu5M
+	t5XnpH44ugA==
+X-Google-Smtp-Source: AGHT+IGm6HMrODZVoZv4JlFipQU0EQD19XT+C5zYjggkgoKVsT7cs6zEg6SKqMl5nBWyitUfKskuIQ==
+X-Received: by 2002:a05:622a:4a06:b0:494:6160:301e with SMTP id d75a77b69052e-4946160313dmr223153101cf.38.1747140837560;
+        Tue, 13 May 2025 05:53:57 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-4945259fa2bsm64173671cf.76.2025.05.13.05.53.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 05:53:56 -0700 (PDT)
+Message-ID: <c09105f0-17db-4179-be2e-cd96b7f282b7@ieee.org>
+Date: Tue, 13 May 2025 07:53:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org> <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
-In-Reply-To: <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 13 May 2025 14:53:17 +0200
-X-Gm-Features: AX0GCFu24ZFGPch6zxlVZkmp4exgi2YQWGGbqSjGo76MZv2IKCv94Wv0HRsT2OA
-Message-ID: <CAOQ4uxgOAxg7N1OUJfb1KMp7oWOfN=KV9Lzz6ZrX0=XRGOQrEQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr syscalls
-To: Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	=?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org, 
-	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: ipa: Make the SMEM item ID constant
+To: Konrad Dybcio <konradybcio@kernel.org>, Alex Elder <elder@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Luca Weiss <luca@lucaweiss.eu>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250512-topic-ipa_smem-v1-1-302679514a0d@oss.qualcomm.com>
+Content-Language: en-US
+From: Alex Elder <elder@ieee.org>
+In-Reply-To: <20250512-topic-ipa_smem-v1-1-302679514a0d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 11:53=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
->
-> On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
->
-> >
-> >       long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> >               struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> >       long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> >               struct fsxattr *fsx, size_t size, unsigned int at_flags);
->
-> I don't think we can have both the "struct fsxattr" from the uapi
-> headers, and a variable size as an additional argument. I would
-> still prefer not having the extensible structure at all and just
-> use fsxattr, but if you want to make it extensible in this way,
-> it should use a different structure (name). Otherwise adding
-> fields after fsx_pad[] would break the ioctl interface.
->
+On 5/12/25 1:07 PM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> It can't vary, stop storing the same magic number everywhere.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Are you are suggesting that we need to define this variant?:
+Good idea.
 
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -148,6 +148,17 @@ struct fsxattr {
-        unsigned char   fsx_pad[8];
- };
+Reviewed-by: Alex Elder <elder@kernel.org>
 
-+/*
-+ * Variable size structure for file_[sg]et_attr().
-+ */
-+struct fsx_fileattr {
-+       __u32           fsx_xflags;     /* xflags field value (get/set) */
-+       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-+       __u32           fsx_nextents;   /* nextents field value (get)   */
-+       __u32           fsx_projid;     /* project identifier (get/set) */
-+       __u32           fsx_cowextsize; /* CoW extsize field value (get/set=
-)*/
-+};
-+
+> ---
+>   drivers/net/ipa/data/ipa_data-v3.1.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v3.5.1.c |  1 -
+>   drivers/net/ipa/data/ipa_data-v4.11.c  |  1 -
+>   drivers/net/ipa/data/ipa_data-v4.2.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v4.5.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v4.7.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v4.9.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v5.0.c   |  1 -
+>   drivers/net/ipa/data/ipa_data-v5.5.c   |  1 -
+>   drivers/net/ipa/ipa_data.h             |  2 --
+>   drivers/net/ipa/ipa_mem.c              | 21 +++++++++++----------
+>   11 files changed, 11 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/net/ipa/data/ipa_data-v3.1.c b/drivers/net/ipa/data/ipa_data-v3.1.c
+> index e902d731776da784cdf312a301daefe54db1ef7f..65dba47291552dc8ef15fbb07e04d0510cb88e44 100644
+> --- a/drivers/net/ipa/data/ipa_data-v3.1.c
+> +++ b/drivers/net/ipa/data/ipa_data-v3.1.c
+> @@ -493,7 +493,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146bd000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00002000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v3.5.1.c b/drivers/net/ipa/data/ipa_data-v3.5.1.c
+> index f632aab56f4c346e5cfc406034fce1b4b5cc67b3..315e617a8eebecd3a00d1eeed4b978db2f2ba251 100644
+> --- a/drivers/net/ipa/data/ipa_data-v3.5.1.c
+> +++ b/drivers/net/ipa/data/ipa_data-v3.5.1.c
+> @@ -374,7 +374,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146bd000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00002000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v4.11.c b/drivers/net/ipa/data/ipa_data-v4.11.c
+> index c1428483ca34d91ad13e8875ff93ab639ee03ff8..f5d66779c2fb19464caa82bea28bf0a259394dc9 100644
+> --- a/drivers/net/ipa/data/ipa_data-v4.11.c
+> +++ b/drivers/net/ipa/data/ipa_data-v4.11.c
+> @@ -367,7 +367,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146a8000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00009000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v4.2.c b/drivers/net/ipa/data/ipa_data-v4.2.c
+> index 2c7e8cb429b9c2048498fe8d86df55d490a1235d..f5ed5d745aeb19c770fc9f1955e29d26c26794e0 100644
+> --- a/drivers/net/ipa/data/ipa_data-v4.2.c
+> +++ b/drivers/net/ipa/data/ipa_data-v4.2.c
+> @@ -340,7 +340,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146a8000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00002000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v4.5.c b/drivers/net/ipa/data/ipa_data-v4.5.c
+> index 57dc78c526b06c96439155f9c4133c575bdeb6ba..730d8c43a45c37250f3641ac2a4d578c6ad6414c 100644
+> --- a/drivers/net/ipa/data/ipa_data-v4.5.c
+> +++ b/drivers/net/ipa/data/ipa_data-v4.5.c
+> @@ -418,7 +418,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x14688000,
+>   	.imem_size	= 0x00003000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00009000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v4.7.c b/drivers/net/ipa/data/ipa_data-v4.7.c
+> index 41f212209993f10fee338e28027739a7402d5089..5e1d9049c62bd7a451669b1f3941e10661e078eb 100644
+> --- a/drivers/net/ipa/data/ipa_data-v4.7.c
+> +++ b/drivers/net/ipa/data/ipa_data-v4.7.c
+> @@ -360,7 +360,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146a8000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00009000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v4.9.c b/drivers/net/ipa/data/ipa_data-v4.9.c
+> index 4eb9c909d5b3fa813b800e9d16ca7d0d73651f2e..da472a2a2e2914ccb026654ccbaf8ffaf5a6d4f4 100644
+> --- a/drivers/net/ipa/data/ipa_data-v4.9.c
+> +++ b/drivers/net/ipa/data/ipa_data-v4.9.c
+> @@ -416,7 +416,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x146bd000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00009000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v5.0.c b/drivers/net/ipa/data/ipa_data-v5.0.c
+> index 050580c99b65cf178bcd5e90ef832d2288a1a803..bc5722e4b053114621c099273782cdc694098934 100644
+> --- a/drivers/net/ipa/data/ipa_data-v5.0.c
+> +++ b/drivers/net/ipa/data/ipa_data-v5.0.c
+> @@ -442,7 +442,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x14688000,
+>   	.imem_size	= 0x00003000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x00009000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/data/ipa_data-v5.5.c b/drivers/net/ipa/data/ipa_data-v5.5.c
+> index 0e6663e225333c1ffa67fa324bf430172789fd0c..741ae21d9d78520466f4994b68109e0c07409c1d 100644
+> --- a/drivers/net/ipa/data/ipa_data-v5.5.c
+> +++ b/drivers/net/ipa/data/ipa_data-v5.5.c
+> @@ -448,7 +448,6 @@ static const struct ipa_mem_data ipa_mem_data = {
+>   	.local		= ipa_mem_local_data,
+>   	.imem_addr	= 0x14688000,
+>   	.imem_size	= 0x00002000,
+> -	.smem_id	= 497,
+>   	.smem_size	= 0x0000b000,
+>   };
+>   
+> diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
+> index d88cbbbf18b749e22bb09b472dcfa59d44a9dca4..2fd03f0799b207833f9f2b421ce043534720d718 100644
+> --- a/drivers/net/ipa/ipa_data.h
+> +++ b/drivers/net/ipa/ipa_data.h
+> @@ -180,7 +180,6 @@ struct ipa_resource_data {
+>    * @local:		array of IPA-local memory region descriptors
+>    * @imem_addr:		physical address of IPA region within IMEM
+>    * @imem_size:		size in bytes of IPA IMEM region
+> - * @smem_id:		item identifier for IPA region within SMEM memory
+>    * @smem_size:		size in bytes of the IPA SMEM region
+>    */
+>   struct ipa_mem_data {
+> @@ -188,7 +187,6 @@ struct ipa_mem_data {
+>   	const struct ipa_mem *local;
+>   	u32 imem_addr;
+>   	u32 imem_size;
+> -	u32 smem_id;
+>   	u32 smem_size;
+>   };
+>   
+> diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
+> index dee985eb08cba29d5d7d6418ed6c187ce3d2fb5d..835a3c9c1fd47167da3396424a1653ebcae81d40 100644
+> --- a/drivers/net/ipa/ipa_mem.c
+> +++ b/drivers/net/ipa/ipa_mem.c
+> @@ -26,6 +26,8 @@
+>   /* SMEM host id representing the modem. */
+>   #define QCOM_SMEM_HOST_MODEM	1
+>   
+> +#define SMEM_IPA_FILTER_TABLE	497
+> +
+>   const struct ipa_mem *ipa_mem_find(struct ipa *ipa, enum ipa_mem_id mem_id)
+>   {
+>   	u32 i;
+> @@ -509,7 +511,6 @@ static void ipa_imem_exit(struct ipa *ipa)
+>   /**
+>    * ipa_smem_init() - Initialize SMEM memory used by the IPA
+>    * @ipa:	IPA pointer
+> - * @item:	Item ID of SMEM memory
+>    * @size:	Size (bytes) of SMEM memory region
+>    *
+>    * SMEM is a managed block of shared DRAM, from which numbered "items"
+> @@ -523,7 +524,7 @@ static void ipa_imem_exit(struct ipa *ipa)
+>    *
+>    * Note: @size and the item address are is not guaranteed to be page-aligned.
+>    */
+> -static int ipa_smem_init(struct ipa *ipa, u32 item, size_t size)
+> +static int ipa_smem_init(struct ipa *ipa, size_t size)
+>   {
+>   	struct device *dev = ipa->dev;
+>   	struct iommu_domain *domain;
+> @@ -545,25 +546,25 @@ static int ipa_smem_init(struct ipa *ipa, u32 item, size_t size)
+>   	 * The item might have already been allocated, in which case we
+>   	 * use it unless the size isn't what we expect.
+>   	 */
+> -	ret = qcom_smem_alloc(QCOM_SMEM_HOST_MODEM, item, size);
+> +	ret = qcom_smem_alloc(QCOM_SMEM_HOST_MODEM, SMEM_IPA_FILTER_TABLE, size);
+>   	if (ret && ret != -EEXIST) {
+> -		dev_err(dev, "error %d allocating size %zu SMEM item %u\n",
+> -			ret, size, item);
+> +		dev_err(dev, "error %d allocating size %zu SMEM item\n",
+> +			ret, size);
+>   		return ret;
+>   	}
+>   
+>   	/* Now get the address of the SMEM memory region */
+> -	virt = qcom_smem_get(QCOM_SMEM_HOST_MODEM, item, &actual);
+> +	virt = qcom_smem_get(QCOM_SMEM_HOST_MODEM, SMEM_IPA_FILTER_TABLE, &actual);
+>   	if (IS_ERR(virt)) {
+>   		ret = PTR_ERR(virt);
+> -		dev_err(dev, "error %d getting SMEM item %u\n", ret, item);
+> +		dev_err(dev, "error %d getting SMEM item\n", ret);
+>   		return ret;
+>   	}
+>   
+>   	/* In case the region was already allocated, verify the size */
+>   	if (ret && actual != size) {
+> -		dev_err(dev, "SMEM item %u has size %zu, expected %zu\n",
+> -			item, actual, size);
+> +		dev_err(dev, "SMEM item has size %zu, expected %zu\n",
+> +			actual, size);
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -659,7 +660,7 @@ int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
+>   	if (ret)
+>   		goto err_unmap;
+>   
+> -	ret = ipa_smem_init(ipa, mem_data->smem_id, mem_data->smem_size);
+> +	ret = ipa_smem_init(ipa, mem_data->smem_size);
+>   	if (ret)
+>   		goto err_imem_exit;
+>   
+> 
+> ---
+> base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+> change-id: 20250512-topic-ipa_smem-cee4c5bad903
+> 
+> Best regards,
 
-> I also find the bit confusing where the argument contains both
-> "ignored but assumed zero" flags, and "required to be zero"
-> flags depending on whether it's in the fsx_pad[] field or
-> after it. This would be fine if it was better documented.
->
-
-I think that is an oversight.
-The syscall should have required that fsx_pad is zero,
-same as patch 6/7 requires that unknown xflags are zero.
-
-If we change to:
-       error =3D copy_struct_from_user(&fsx, sizeof(struct
-fsx_fileattr), ufsx, usize);
-
-It will take care of requiring zero fsx_pad even if user calls the syscall =
-with
-sizeof(struct fsxattr).
-
-Thanks,
-Amir.
