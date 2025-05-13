@@ -1,272 +1,96 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE4C2BEC45
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233C429CE8;
+	Tue, 13 May 2025 17:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747155592; cv=none; b=ekBK5aevLJAH8CkM8yV4KJY2RcaDkyDF0j62vfX8tClHLGPsCDTcVbl6a/BYXONTu75UPf4j0lojY7EvNtL1mNNtFRW3hQCkzlIOgi4gSU46RFHGFmJYG3YTALf9DPpDXMIIpbFSWuFxJSrei9GQPZO8aC6N7Myqxz0Pc0YYvIw=
+	t=1747155671; cv=none; b=SRlVmMWQjCkWWpcvlS0KuaGSXN3gqR/QsdgBvFTM8SWrbrzCPvrZVUYxdWAIAhH+tzh++/oFAMIPFMnMt/HBGQkfVf9ZBbADc26anuIoNkBMYkv37KvXwHfHIEFy58OKrXuZ6PR+wEPnpblaCbAs0eW6K3okQIgOTNZep5UDKlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747155592; c=relaxed/simple;
-	bh=uTuyj40J4EzBIPZVOkVurxssgICHBMw5W/uQLUIwyzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IKS9XWyS6r8XXg2I9BobJ46rn7dO+4s+EF516zpkYyXuDLBqOY9HNW51DysqJIk795WWsy7RJnBJIz51JYLflQuBZrAoK0Ef3vm1WnvP+wTpVYMP3wyMfYb+gVMzSd5pk6rQvnGlafSd9SIVKS1p3+4srMUbdY8hMESUMfsD5Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sYdnMAgN; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747155671; c=relaxed/simple;
+	bh=KL7v0CO4UIR2kqWvkCdmkotvA3GHjTu2qidhkJQiM7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uNyhO70OQZ++Vrq3lOeiubQUQNupnNUnrsS9+sCdEJCEDN24gPgYgl9tG5KAtJELeRwmPWy/dcEr1Gg2RhZKbrLuGQq88So+7gj8MjMsQVQ0gC2zsurBeXSb3eYcyhAVAwGI2ph9ONHNCffNC3LpBPjFhX/GLwT0ulivk9I/UnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0nDm1Q3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sYdnMAgN"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72ecc0eeb8bso1455478a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747155589; x=1747760389; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5DfNtscBhbXFs2gyDNumFo8Rit0vQ0+JYgK+dk4/zzQ=;
-        b=sYdnMAgNrtbrpYcoRQcOzRxyRs1BOd1E7jx60EcFbdcWdCf6mMDRQQsQa3Mj84zsIY
-         O1opPIfR7vcWOdOvWFaS1CHu+7xpB7iww0+b4RdELTTJ+7jD0ZtXcQSVOO4lyPz2OyTo
-         EUobJk/dn0MCaVaLVxqU9xjkIXIku+FF4K3ATPb5er/wxAyghxOWM5U8/UBp4phSZ8p2
-         W3vcqFqMcAyDuxUYUQJGJ5gtYN0EeTcSnNYgza5uOwbBn0iOesIemHTKTAdLOwkSirrL
-         d8h+J8Xh1cet3RnfYCZfu4SzfnE2oDk3yLI/h2GoVXUepGSxzwBwkhWAMNftT1Bm2fwI
-         MU6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747155589; x=1747760389;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5DfNtscBhbXFs2gyDNumFo8Rit0vQ0+JYgK+dk4/zzQ=;
-        b=exVv5vGDmnRJbmUnSsS+7cKuZxBCWO+vZQDYknPDwSwpQfAwv/ZonXNmlf72kWmnza
-         O10u80qxYT1IQQtyKTQ9ZbhCD/s+064ZhZQBjHw/CvQU5dqVh6TRIBg0XPmYqLCdX7fp
-         BFGgXVc6Hy3NQYMdtwXQlsDpFf+5px2NF3zccfqtxKbsUxzVrc15BkTK5PXdWU6zSVO1
-         6SaDupQcyjPIfLJmHvj7gb3tiYnaG7g10sYPHsnroHKoNPAsDjHyPED3hr5fGscobL59
-         YiLB4jTZmherqUUqi7/Prg9HSm/mf/TTqjPDq5LcrqZMoG9w5Q6JV2Es7k7U7JBMaCDR
-         oTlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG4qYTunHcr+VAJdivBHupQdMh0wkv+enEwl8r5S18c4EkIaJ6vqP6DSa6+3YkYc5FDoHz+lnOMfWCFpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpEAxB11zHWkRQps+kPIZpRI3L+5ZQll51xXYIDG/Zidz35uW1
-	wmmFjTthjA2G14F4aVv9I9X5b+e82id+x2U4C7zh9gL1PDBZk1dgRIuXRgRAN0Y=
-X-Gm-Gg: ASbGnctlxA4TLVHMtVRpRjrr0H+GOLmxKqlMCn9Euh8YjpcteRydojguxk1tJ2JEYWo
-	SBqRTa8P+VbR9tiE4wmxnBVWUKabVOJP7h8nzU4CL7KiSNuX7La0diOuXQLgpaVuxwKyniLkBSU
-	/+2PSQot2zD/uC/j0or2Zv9GVUVjvFiEfyqxTepyDiAoUSPlVwls8bbtm/ppsG9WZs7LYUmDGUD
-	vIrhfiQYXhluaFdBXLzfrCfXEcob8+gjUWRo/ys0QPo/Wm3L7tPl+NjmfmSW5+lAaaFB/Ti5LBv
-	0+gYMwnCCbrLMU/Clxo/YKNEuRbc4k0w7oDnVGzeljxo6dw5AwgwQ++JXQhJGPr8DY4vNfQ2o8q
-	PcE/xQS2gLxQ5v6eXMLnlKRm6smxY2LvC9w==
-X-Google-Smtp-Source: AGHT+IFVNY2JHdN9LlKpbP4xRxpGp6jZeIWIg0v3ADYENavUt0i8wtRI/xezBkTrCrcnHm9IYiGWNw==
-X-Received: by 2002:a05:6830:6181:b0:72b:98d9:6b2d with SMTP id 46e09a7af769-734e13f2dc9mr10575a34.8.1747155588946;
-        Tue, 13 May 2025 09:59:48 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d74:845a:15c:3fdc? ([2600:8803:e7e4:1d00:d74:845a:15c:3fdc])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d59e1sm1987311a34.34.2025.05.13.09.59.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 09:59:48 -0700 (PDT)
-Message-ID: <af53ae18-d997-4afa-a3e5-7ff5f624bdc3@baylibre.com>
-Date: Tue, 13 May 2025 11:59:47 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0nDm1Q3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9910DC4CEE4;
+	Tue, 13 May 2025 17:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747155670;
+	bh=KL7v0CO4UIR2kqWvkCdmkotvA3GHjTu2qidhkJQiM7A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=E0nDm1Q3+QKZKT8MhJFHz04dLv2RwgRA4fEoTUB8QdK6t2Ezm8FBZzM94ksq8cXc8
+	 0EJNQhR7V4PkvslWDz/keVbe9yns7wjpTgXBegOjgoig2JGgjmJtSUdc1XDr5KkQwR
+	 Z1M6Yqxp0zyyq4O69hJJ+QVdr4qlZkqbS7b0mPwSpMaIQVbCMblAOFWE4VPRRJ4gP0
+	 51KT9KSXf3vclWj+qnVq9t7q8lCR6W4VPx9IuVO8UAreRGBss+EkhOWfLH/fet1Xwv
+	 avIS30+/dYBhuOomDG/csL6YKfTeYsXboLzXPdGI5oMYhBkOCb2oPHbW/rCoQ2ZwQo
+	 53bzK5c14mgxA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 438B7CE0908; Tue, 13 May 2025 10:01:10 -0700 (PDT)
+Date: Tue, 13 May 2025 10:01:10 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [BUG] sleeping function called from invalid context at
+ ./include/linux/sched/mm.h:321
+Message-ID: <8a3b5e43-5d2a-4205-a24e-27148c968278@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <a5c939c4-b123-4b2f-8a22-130e508cbcce@paulmck-laptop>
+ <87o6vxj6wu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] iio: adc: ad4170: Add clock provider support
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
- nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- marcelo.schmitt1@gmail.com
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
- <a0d049e5fbab5cdeff266da886fd765b2b0d1af1.1747083143.git.marcelo.schmitt@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <a0d049e5fbab5cdeff266da886fd765b2b0d1af1.1747083143.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6vxj6wu.ffs@tglx>
 
-On 5/13/25 7:35 AM, Marcelo Schmitt wrote:
-> The AD4170 chip can use an externally supplied clock at the XTAL2 pin, or
-> an external crystal connected to the XTAL1 and XTAL2 pins. Alternatively,
-> the AD4170 can provide its 16 MHz internal clock at the XTAL2 pin. Extend
-> the AD4170 driver so it effectively uses the provided external clock, if
-> any, or supplies its own clock as a clock provider.
-
-Is support for CLKDIV intentionally omitted? Might be worth mentioning
-if that is the case.
-
+On Tue, May 13, 2025 at 09:39:45AM +0200, Thomas Gleixner wrote:
+> On Mon, May 12 2025 at 16:47, Paul E. McKenney wrote:
+> > I ran this on x86 with clang version 19.1.7 (CentOS 19.1.7-1.el9).
+> >
+> > See below for the full splat.  The TINY02 and SRCU-T scenarios are unique
+> > in setting both CONFIG_SMP=n and CONFIG_PROVE_LOCKING=y.
+> >
+> > Bisection converges here:
+> >
+> > c836e5a70c59 ("genirq/chip: Rework irq_set_msi_desc_off()")
+> >
+> > The commit reverts cleanly, but results in the following build error:
+> >
+> > kernel/irq/chip.c:98:26: error: call to undeclared function 'irq_get_desc_lock'
+> >
+> > Thoughts?
 > 
-> Reviewed-by: Nuno Sá <nuno.sa@analog.com>
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
+> Smells like what the top commit of the irq/core branch fixes:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=irq/core
 
-...
+OK, that is this one:
 
-> @@ -329,6 +348,9 @@ struct ad4170_state {
->  	struct completion completion;
->  	int pins_fn[AD4170_NUM_ANALOG_PINS];
->  	u32 int_pin_sel;
-> +	struct clk_hw int_clk_hw;
-> +	struct clk *ext_clk;
+47af06c9d31f ("genirq: Consistently use '%u' format specifier for unsigned int variables")
 
-This isn't used outside of ad4170_clock_select() so can be made a local variable there.
+This is printk() format change, which seems unlikely, but what do I
+know?  Can't hurt to run a two-minute test...  Which fails.
 
-> +	unsigned int clock_ctrl;
->  	/*
->  	 * DMA (thus cache coherency maintenance) requires the transfer buffers
->  	 * to live in their own cache lines.
-> @@ -1656,6 +1678,120 @@ static int ad4170_parse_channels(struct iio_dev *indio_dev)
->  	return 0;
->  }
->  
-> +static struct ad4170_state *clk_hw_to_ad4170(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct ad4170_state, int_clk_hw);
-> +}
-> +
-> +static unsigned long ad4170_sel_clk(struct ad4170_state *st,
-> +				    unsigned int clk_sel)
-> +{
-> +	st->clock_ctrl &= ~AD4170_CLOCK_CTRL_CLOCKSEL_MSK;
-> +	st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK, clk_sel);
+Ah, you sent this email at 9:39AM your time, and that commit was queued
+at 9:34AM your time.  The top of the stack at 9:39AM was this one:
 
-Do we need to claim direct mode here to avoid poking registers during
-a buffered read?
+b5fcb6898202 ("genirq: Ensure flags in lock guard is consistently initialized")
 
-> +	return regmap_write(st->regmap, AD4170_CLOCK_CTRL_REG, st->clock_ctrl);
-> +}
-> +
-> +static unsigned long ad4170_clk_recalc_rate(struct clk_hw *hw,
-> +					    unsigned long parent_rate)
-> +{
-> +	return AD4170_INT_CLOCK_16MHZ;
-> +}
-> +
-> +static int ad4170_clk_output_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st = clk_hw_to_ad4170(hw);
-> +	u32 clk_sel;
-> +
-> +	clk_sel = FIELD_GET(AD4170_CLOCK_CTRL_CLOCKSEL_MSK, st->clock_ctrl);
-> +	return clk_sel == AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT;
-> +}
-> +
-> +static int ad4170_clk_output_prepare(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st = clk_hw_to_ad4170(hw);
-> +
-> +	return ad4170_sel_clk(st, AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT);
-> +}
-> +
-> +static void ad4170_clk_output_unprepare(struct clk_hw *hw)
-> +{
-> +	struct ad4170_state *st = clk_hw_to_ad4170(hw);
-> +
-> +	ad4170_sel_clk(st, AD4170_CLOCK_CTRL_CLOCKSEL_INT);
-> +}
-> +
-> +static const struct clk_ops ad4170_int_clk_ops = {
-> +	.recalc_rate = ad4170_clk_recalc_rate,
-> +	.is_enabled = ad4170_clk_output_is_enabled,
-> +	.prepare = ad4170_clk_output_prepare,
-> +	.unprepare = ad4170_clk_output_unprepare,
-> +};
-> +
-> +static int ad4170_register_clk_provider(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4170_state *st = iio_priv(indio_dev);
-> +	struct device *dev = indio_dev->dev.parent;
-> +	struct clk_init_data init = {};
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_COMMON_CLK))
+OK, early enabling of interrupts could be a bad thing, so I guess that I
+don't feel so bad about failing to have spotted the problem by inspection.
+And the test passes for both rcutorture scenarios, thank you!
 
-Driver depends on COMMON_CLK so isn't this dead code?
+I have to ask...  Will you be rebasing the fixes into the offending
+commits for bisectability?
 
-> +		return 0;
-> +
-> +	if (device_property_read_string(dev, "clock-output-names", &init.name)) {
-> +		init.name = devm_kasprintf(dev, GFP_KERNEL, "%pfw",
-> +					   dev_fwnode(dev));
-> +		if (!init.name)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	init.ops = &ad4170_int_clk_ops;
-> +
-> +	st->int_clk_hw.init = &init;
-> +	ret = devm_clk_hw_register(dev, &st->int_clk_hw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-> +					   &st->int_clk_hw);
-> +}
-> +
-> +static int ad4170_clock_select(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4170_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	int ret;
-> +
-> +	st->mclk_hz = AD4170_INT_CLOCK_16MHZ;
-
-Would make more sense to move this inside of the if (ret < 0) instead of
-writing over it later.
-
-> +	ret = device_property_match_property_string(dev, "clock-names",
-> +						    ad4170_clk_sel,
-> +						    ARRAY_SIZE(ad4170_clk_sel));
-> +	if (ret < 0) {
-> +		/* Use internal clock reference */
-> +		st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
-> +					     AD4170_CLOCK_CTRL_CLOCKSEL_INT_OUT);
-
-Seems like we would want to start in the AD4170_CLOCK_CTRL_CLOCKSEL_INT state.
-
-Also, could skip registering clock provider if #clock-cells is not present.
-
-> +		return ad4170_register_clk_provider(indio_dev);
-> +	}
-> +
-> +	/* Use external clock reference */
-> +	st->ext_clk = devm_clk_get_enabled(dev, ad4170_clk_sel[ret]);
-> +	if (IS_ERR(st->ext_clk))
-> +		return dev_err_probe(dev, PTR_ERR(st->ext_clk),
-> +				     "Failed to get external clock\n");
-> +
-> +	st->clock_ctrl |= FIELD_PREP(AD4170_CLOCK_CTRL_CLOCKSEL_MSK,
-> +				     AD4170_CLOCK_CTRL_CLOCKSEL_EXT + ret);
-> +
-> +	st->mclk_hz = clk_get_rate(st->ext_clk);
-> +	if (st->mclk_hz < AD4170_EXT_CLOCK_MHZ_MIN ||
-> +	    st->mclk_hz > AD4170_EXT_CLOCK_MHZ_MAX) {
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Invalid external clock frequency %u\n",
-> +				     st->mclk_hz);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int ad4170_parse_firmware(struct iio_dev *indio_dev)
->  {
->  	struct ad4170_state *st = iio_priv(indio_dev);
-> @@ -1663,7 +1799,13 @@ static int ad4170_parse_firmware(struct iio_dev *indio_dev)
->  	int reg_data, ret;
->  	unsigned int i;
->  
-> -	st->mclk_hz = AD4170_INT_CLOCK_16MHZ;
-> +	ret = ad4170_clock_select(indio_dev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to setup device clock\n");
-> +
-> +	ret = regmap_write(st->regmap, AD4170_CLOCK_CTRL_REG, st->clock_ctrl);
-> +	if (ret)
-> +		return ret;
-
-Why not just do the regmap_write() in ad4170_clock_select() to keep it all
-together?
-
->  
->  	for (i = 0; i < AD4170_NUM_ANALOG_PINS; i++)
->  		st->pins_fn[i] = AD4170_PIN_UNASIGNED;
-
+							Thanx, Paul
