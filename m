@@ -1,53 +1,57 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A7A214209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7AB2144C7
 	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127709; cv=none; b=PHP95ruaYssrSOJru7nryqq21bj8skBBOkbxkbFFgmjvDozOA/Ij0rGhutYdyItMe9Ta5zRQkgm6tMlJwzxgOZUcD2zN39Jm2uWUxcBGOLMvs7jXX2/d8VO094ve3pERjsseTB+fDXzRcZiBdcpJHrguKh/fuLqWEmYH415ixZo=
+	t=1747127710; cv=none; b=BbLOph0AB8ssV8i9UAV2LL9jJL3mBUF1vCqslsIA5aQW+YvEp4BDo/3a5y2ZH0skfToAxa3ybBmAU9uZ7YfAvItueGvUUHrZ/hQvZnxKfOJi6B3kDONzaGM9kUzIsYZNAfcZn/X414+0/mjM6o19YWMImf+1gh0S3iNtoTRC0Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127709; c=relaxed/simple;
-	bh=dCEwNwEt7AuPcFjOYYqXUKN9++me11ouKXeEDU4JZv0=;
+	s=arc-20240116; t=1747127710; c=relaxed/simple;
+	bh=W06RFHPV8gonnsmgauUbgxPzser5B7x04G1quNKfCEw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f6wvF2pMe0M5zBViT8ttRLjv1JJsSnsG3JTWaMVG2H9LamnX7W0wUDluTKWVBgXAoA4tXIlPnFzUMc3EZP8DxFt2jW7QQcZK832U3E8wp0r+t36xgSHCMCZLIHwAsGJYOGDw+QyvBVCOkO+Dlefl0YSjXLRsm3pJhInqxrntNIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Jdl0YN6z; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	 To:Cc:Content-Type; b=sW5T05ucdTyrgL82m00D+r2z7PY5kQ9IacIv7+kaTHGxTJ0uYYhY2DsyQizuyeFN+cqtWGrsbe4S3WHWsylQfa8A347aWAo0spjrErAuKA/PrDo2EQ4PSZp8BEyH8atXbJYrkW2bPJXscukQ8N+o0YhiPMdfd/7IJwXOAS55Av8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nfi8nwt/; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Jdl0YN6z"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4775ccf3e56so77790991cf.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nfi8nwt/"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54fd1650b83so2955207e87.2
         for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:15:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1747127707; x=1747732507; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ihrFZxGWgoMburH5YAF+Sr/kylX3rOORHrh4dczbaY=;
-        b=Jdl0YN6znOpsaNcr/4Y+IU+mukRJybWqwj9SA9se6mTBMEacbqPEIrp4xJOb7w4DZW
-         tF9u+FRecvrs2dwHP7vobbMcXp2vAGOxIh8+tPgNQ1bJPK9v42+J/b1D75lBzq3VTBAo
-         FkW/Vv5JpRL5FeQ2qILC9yAb4ZwluKicFPyp0=
+        d=linaro.org; s=google; t=1747127706; x=1747732506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAi9rrC5F3j79jXbmUzojQw3jaZE4Bz634vHF8LgQG8=;
+        b=nfi8nwt/P7ekgP9NWzXr6wPMOgiCLtCZEX5G6Vic0bG06xGlKxt1EZeNRRqfRVjsBQ
+         Oz+3IEXvrj1AMrto3DSMlWEe6igUX48AJmmPkQC2iuYP5g37ZPsfSN0LUQ2PLSWcNK+q
+         2GUckCnQ8UKDo2t4nTszF7+WNR7QnFBRglQ9txIACU8EcFOS7W7G+77iFf5WENCPQQuY
+         tcxjQVpFsRstsVjZELXgJG6QgLj9TofZhRyF0p5NrxkmGuV6YfAD0LbGrPyDqhX3D+C5
+         5/SxB+tKpsfVenlzf91+Ivxv0+Nh4CmSdR21YJBec4YyvxfVETMajP+I83ylD4cCIk7n
+         5EWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747127707; x=1747732507;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4ihrFZxGWgoMburH5YAF+Sr/kylX3rOORHrh4dczbaY=;
-        b=h/YPtQexri02V/JEhYJvbi3a/LzzXH7bp3mUXIbyFpmPC1J/LZ1ZavfFf8Yjwrxrvi
-         YCmut9GkrQwtKLufPhIoFFnY3fQuFyviqrzGvTNf9ejsD08pbORgklAmsStb0Yz1RTC+
-         EEfsmC6EX2R2amfOcpkHxDKG7W3ga6FVoc62gvs2BE8rfoyo51WNGLhbcAlME9XetHk3
-         4mQnxZ6ok1H0ZYFw1skuprQi/rmUOrd/fhAzvETrSC5xJc4A0lHGm0wkmegxcBNdBdL2
-         thBIzEKWH6s1boW55kBVQ29BVvi8xFlPgecWmr0CBNEaaNmOHhHl3CiHo+2y8Je903Pt
-         WIog==
-X-Forwarded-Encrypted: i=1; AJvYcCX/2S3aAXk7vwkJnrSXNeJs0WEGmP/q5n4oNCDgjz4VNdsVa3D9H6eHILPjRIsIKL578DuwnEic2BPExM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1asXmOu4gAkm1OfXFeW9GlLjakXrfFT1TUUFVRZ3Jj4DFSrJ/
-	zOeD+NcIUCaQGOzZKYNTCFgk4axq29n4sjbFKF+ePwDCiSlK2YQPNjpo/mwkYdgAgDrgOlYH3Cj
-	Mzet+zQ/U14hv7Viqq1VtVTwpg3yK2MvzfQ2zeQ==
-X-Gm-Gg: ASbGncvwh8C11OnpsoxOuu1mF68k1BexEUmcTGsQPu6w+x+nH787Gm4stY8gEgWNguP
-	ylV/hSVEzzCF2yFA0EvEQX8CF+oV8LWcUPLndapOAbiKSdxTPEiU0eqNjOvXTxMIQ/3wU+wQynX
-	DySk5fh1vIUt4H8K1hTbfvBTIKLmKLNz8=
-X-Google-Smtp-Source: AGHT+IE6dZiqGjVqQyApS4pbcBalFyHHbwwvSoEvnbF7u5bEK2A/GpSwhcwNVYs+CDOmzCE0rRDdqSfuQIhXOHmw+f0=
-X-Received: by 2002:a05:622a:1a93:b0:494:6eed:37b1 with SMTP id
- d75a77b69052e-4948732d7bdmr32223981cf.7.1747127706802; Tue, 13 May 2025
+        d=1e100.net; s=20230601; t=1747127706; x=1747732506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jAi9rrC5F3j79jXbmUzojQw3jaZE4Bz634vHF8LgQG8=;
+        b=aGNRK66qbMcOnHGA+ycDJG6/XE4xx4tLFM5Yx33VWidP2+jGX+6XvxG7WcrFCvymSL
+         ORQkMoVtsvam5RWTuwccNXhqpeHaT1YIXmLV3p02z5n73/UpIjoyRbPysieZ1aDJxQe/
+         x4SAe9dff31sG3222IhFOMSzpZXif4qGXm/fvoC4iFVjtGlsdsb1qn6Tsu79z5/yPs6X
+         rFywOf+Jo6BQzjCAUssmKYoiyxJJX5GcG4t3zjjhFvUHjJZtFwJjTAIAkKDzF9uCdBPq
+         1WrKDKdSRm2LZOPGkYjzrY/78V9k7NBCoMDLhiAop3IxgBvQAEMH9nS4otAa0bhr0Iic
+         J1pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdoCVIm0AqQ/qB7gr8TpWNZ3IVXho4j51RGKf+zX2cLSeXd7oFyWHSrCZOupji9aJ8uRZ7ykXw2adsC0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhL2gYXvg0NmU5OY+8bn3ANWO+deKGqR7Yh/vXU9XN88N2D0rC
+	9JkBS4S1xo2TUZ6Ad2lFiBKXjKCm8YhWkjlWuTEJ41Yp7b3UknGRxbk14Pjbqb0NNWauWMwnOSy
+	erazk036hWrIdn6xNFlioXBI8oa6SK4vmz8daJw==
+X-Gm-Gg: ASbGnctC3bC9hFZgSz+0M/5vZRaj0D1fThUDiWGSa5inuSuuoTARTMzSLVnzMZajwkb
+	f/vweVmcjDOV0H1F8XyB85pYOUZY+cwv8WmLchmRoMpbZwFNg0yVl7qyG3GrOMCcX/K4foU2S4K
+	by+T3RqzFlrznjheivHRFPFmabncSNTQhS
+X-Google-Smtp-Source: AGHT+IG5Frmll3jan8XW4q+c/ZaO7HyTn73Ya+M5QP0nrAUGDePv5va3dllLSktvNB1+Cx7B6+76W/dccZj2jM4v9L4=
+X-Received: by 2002:a05:6512:228b:b0:545:154:52b0 with SMTP id
+ 2adb3069b0e04-54fc67c95e9mr6259507e87.22.1747127706188; Tue, 13 May 2025
  02:15:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,76 +59,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs> <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs> <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
- <20250508155644.GM1035866@frogsfrogsfrogs>
-In-Reply-To: <20250508155644.GM1035866@frogsfrogsfrogs>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 13 May 2025 11:14:55 +0200
-X-Gm-Features: AX0GCFsg_IXaIo9w2jh-HmI1-M2cVqc9zT7I6qGhspawMoCH4j3pG6URFnq5ts0
-Message-ID: <CAJfpegt4drCVNomOLqcU8JHM+qLrO1JwaQbp69xnGdjLn5O6wA@mail.gmail.com>
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Luis Henriques <luis@igalia.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
+References: <20250428-csl42x-v2-0-e8056313968f@nxp.com> <20250428-csl42x-v2-9-e8056313968f@nxp.com>
+In-Reply-To: <20250428-csl42x-v2-9-e8056313968f@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 11:14:54 +0200
+X-Gm-Features: AX0GCFvRRz_CuxUgIsjJYkT-hxEyuMzIQVYUiGbnvV1LNLCfN6Vvua5kol4mBmU
+Message-ID: <CACRpkdbBKo8Qp5em+CngJOAQF+FPohfsi_V2SLUpNEsim=XykQ@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] ASoC: codec: cs42l52: Convert to GPIO descriptors
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 8 May 2025 at 17:56, Darrick J. Wong <djwong@kernel.org> wrote:
+On Mon, Apr 28, 2025 at 4:11=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+m> wrote:
 
-> Well right now my barely functional prototype exposes this interface
-> for communicating mappings to the kernel.  I've only gotten as far as
-> exposing the ->iomap_{begin,end} and ->iomap_ioend calls to the fuse
-> server with no caching, because the only functions I've implemented so
-> far are FIEMAP, SEEK_{DATA,HOLE}, and directio.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> So basically the kernel sends a FUSE_IOMAP_BEGIN command with the
-> desired (pos, count) file range to the fuse server, which responds with
-> a struct fuse_iomap_begin_out object that is translated into a struct
-> iomap.
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor with default
+>    polarity GPIOD_OUT_LOW, set consumer name.
+>  - Use gpiod_set_value_cansleep to configure output value.
 >
-> The fuse server then responds with a read mapping and a write mapping,
-> which tell the kernel from where to read data, and where to write data.
+> Checking the current driver using legacy GPIO API, the
+> reset value is first output HIGH, then LOW, then HIGH.
+>
+> Checking the datasheet, the device remains in Power-down state until
+> RESET pin is brought high.
+>
+> Since the driver has been here for quite long time and no complain on
+> the reset flow, still follow original flow when using GPIOD
+> descriptors.
+>
+> Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
+> example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong.
+> And the binding use reset-gpio as example, not same as driver using
+> "cirrus,reset-gpio", and there is no in-tree DTS has the device,
+> so all should be fine with this patch.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-So far so good.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The iomap layer is non-caching, right?   This means that e.g. a
-direct_io request spanning two extents will result in two separate
-requests, since one FUSE_IOMAP_BEGIN can only return one extent.
-
-And the next direct_io request may need to repeat the query for the
-same extent as the previous one if the I/O boundary wasn't on the
-extent boundary (which is likely).
-
-So some sort of caching would make sense, but seeing the multitude of
-FUSE_IOMAP_OP_ types I'm not clearly seeing how that would look.
-
-> I'm a little confused, are you talking about FUSE_NOTIFY_INVAL_INODE?
-> If so, then I think that's the wrong layer -- INVAL_INODE invalidates
-> the page cache, whereas I'm talking about caching the file space
-> mappings that iomap uses to construct bios for disk IO, and possibly
-> wanting to invalidate parts of that cache to force the kernel to upcall
-> the fuse server for a new mapping.
-
-Maybe I'm confused, as the layering is not very clear in my head yet.
-
-But in your example you did say that invalidation of data as well as
-mapping needs to be invalidated, so I thought that the simplest thing
-to do is to just invalidate the cached mapping from
-FUSE_NOTIFY_INVAL_INODE as well.
-
-Thanks,
-Miklos
+Yours,
+Linus Walleij
