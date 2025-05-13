@@ -1,88 +1,80 @@
-Received: from trager.us (trager.us [52.5.81.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378405695;
-	Tue, 13 May 2025 00:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE33151991
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747097996; cv=none; b=OkXXgo6mV+vWpKUVsZJX9vuJb1R7ByLaLsiJM9B4s3v3PG/Q2+drXtUYJHNmLk+TDBMYOH29dWUzHGqKiW1BLm0+Xpx7W/A4ZYV6r4Xp2kXopEAXNUPI4HWCp7QkBhABxWx8sO/Rjm1ke2XaZ8LlAUtV9xNKlgctRZ7d4aTZz74=
+	t=1747098539; cv=none; b=HrT0Gsja2sEr+0nZdO25JtQIqh/YG/3aOagNIJZjsn5lrrpNgmEZrcOqWO5Y58Qdb2SU4L6h119UcB9wyU5K1qzZ4sY+kc+288bHLH/tZro9yLP7xze3x8VXMZDQjNHg2PlmXoHFZ4fBuzGRAplakUltnGZsk0nP64XoB0NKWxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747097996; c=relaxed/simple;
-	bh=QijcsHL4yO/98JvNzuDTU3gbuRArHYMYfje6GRx7III=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ulTUljT+96nnugNl1Dwf+k2XV2JokQ1R5aZnbxMuc0zfkaku6s2myEMNwjJusdLBAE6kHm/jdFYbRYIa6qh/oDJ+3a8FIN+qZM8uSFbAHABdy6zdvKk4b+ALqVXJceFqyh/sTvxX6KdqpaHFdwYCOLsVkdxYQA++o75nZoaaE8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=[192.168.1.225])
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_128_GCM_SHA256:128)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uEdzj-0007Pf-BI; Tue, 13 May 2025 00:59:43 +0000
-Message-ID: <98876971-e4e0-44f1-8faf-f791bd7a4e4e@trager.us>
-Date: Mon, 12 May 2025 17:59:35 -0700
+	s=arc-20240116; t=1747098539; c=relaxed/simple;
+	bh=+WSu8zsEIV5f/3NjVgHOi62tswu6nL2Il99qHBko1Bc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IlElS+UPEHwO4EbcytRnE7qGZOgicdtNWCT3o5GJXCuuykW1dl0fvIJIUAbjAQG+EnfZSjNelzLIPRul4qZ3CZXhI+KlowomGWa82wbfJev4rEP4cg47EKmeq1MxoE6mxHT2RsuZuuMZlbpQzGaCf6TamSvY92umeqEdz/CUjrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yC2vG1xK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yC2vG1xK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F17C4CEE7;
+	Tue, 13 May 2025 01:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747098538;
+	bh=+WSu8zsEIV5f/3NjVgHOi62tswu6nL2Il99qHBko1Bc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yC2vG1xKra/v7YQBjQAuK84gRrB0wqIPdqGIoZDrKLS/IjMJguDcf2hoXBLqlgSfy
+	 DY/R4d5SGwrReUUzbXReWugWQx+J6y4/W/rlXCiYZ0/yBIQWN86Z5Mh/Pt9lUJVNUJ
+	 MrTV2mtk6/8E5TS0Qqh/Q4p0xeW9t2zFM2QFyEC0=
+Date: Mon, 12 May 2025 18:08:57 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: <jiang.kun2@zte.com.cn>
+Cc: <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
+ <bsingharora@gmail.com>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+ <xu.xin16@zte.com.cn>
+Subject: Re: [PATCH linux next] taskstats: fix struct taskstats breaks
+ backward  compatibility since version 15
+Message-Id: <20250512180857.59e7836290cb72dad9f3b5d3@linux-foundation.org>
+In-Reply-To: <20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn>
+References: <20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 2/5] eth: fbnic: Accept minimum anti-rollback
- version from firmware
-To: Jacob Keller <jacob.e.keller@intel.com>,
- Alexander Duyck <alexanderduyck@fb.com>, Jakub Kicinski <kuba@kernel.org>,
- kernel-team@meta.com, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Mohsin Bashir <mohsin.bashr@gmail.com>,
- Sanman Pradhan <sanman.p211993@gmail.com>, Su Hui <suhui@nfschina.com>,
- Al Viro <viro@zeniv.linux.org.uk>,
- Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250510002851.3247880-1-lee@trager.us>
- <20250510002851.3247880-3-lee@trager.us>
- <a406ecb3-a94d-47a7-bff8-becc6302a775@intel.com>
-Content-Language: en-US
-From: Lee Trager <lee@trager.us>
-In-Reply-To: <a406ecb3-a94d-47a7-bff8-becc6302a775@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/12/25 11:47 AM, Jacob Keller wrote:
+On Sat, 10 May 2025 15:54:13 +0800 (CST) <jiang.kun2@zte.com.cn> wrote:
 
->
-> On 5/9/2025 5:21 PM, Lee Trager wrote:
->> fbnic supports applying firmware which may not be rolled back. This is
->> implemented in firmware however it is useful for the driver to know the
->> minimum supported firmware version. This will enable the driver validate
->> new firmware before it is sent to the NIC. If it is too old the driver can
->> provide a clear message that the version is too old.
->>
-> This reminds me of the original efforts i had with minimum firmware
-> versions for the ice E810 hardware.
->
-> I guess for fbnic, you entirely handle this within firmware so there's
-> no reason to provide an interface to control this, and you have a lot
-> more control over verifying that the anti-rollback behavior is correct.
->
-> The definition for the minimum version is baked into the firmware image?
-> So once a version with this anti-rollback is applied it then prevents
-> you from rolling back to lower version, and can do a verification to
-> enforce this. Unlike the similar "opt-in" behavior in ice which requires
-> a user to first apply a firmware and then set the parameter, opening up
-> a bunch of attestation issues due to not being a single atomic operation.
+> Problem
+> ========
+> commit 658eb5ab916d ("delayacct: add delay max to record
+>  delay peak") - adding more fields
+> commit f65c64f311ee ("delayacct: add delay min to record
+>  delay peak") - adding more fields
+> commit b016d0873777 ("taskstats: modify taskstats version")
+>  - version bump to 15
+> 
+> Since version 15 (TASKSTATS_VERSION=15) the new layout of the
+> structure adds fields in the middle of the structure, rendering
+> all old software incompatible with newer kernels and software
+> compiled against the new kernel headers incompatible with older
+> kernels.
+> 
+> Solution
+> =========
+> move delay max and delay min to the end of taskstat, and bump
+> the version to 16 after the change
 
-Correct this is handled entirely in firmware. We use the normal firmware 
-update process when incrementing anti-rollback. During the updating 
-process firmware first validates that the new version number is >= to 
-the anti rollback version set in the SOTP. If not the update is 
-rejected. The drivers role is purely informational, it checks anti roll 
-back and provides devlink with a human readable error when necessary.
+Ah, there it it, thanks.
 
-When incrementing anti rollback the NIC first boots the new firmware. 
-Once it has validated it can boot the new firmware it increments the 
-anti roll back version in the SOTP automatically. This makes anti roll 
-back automatic and provides a way for us to abort the process if needed.
+I'll add cc:stable to request a backport.  I'll also add
 
+Fixes: 658eb5ab916d ("delayacct: add delay max to record delay peak")
+Fixes: f65c64f311ee ("delayacct: add delay min to record delay peak")
+
+which is odd, but gets the point across.  
+
+The patch won't exactly apply to those kernels because the version
+increment came later.  But I think that will be OK - the patch is
+applicable to the v6.14 kernel.
