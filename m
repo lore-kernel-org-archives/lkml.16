@@ -1,202 +1,220 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498762BAF7;
-	Tue, 13 May 2025 01:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747099986; cv=fail; b=vB2617GobHaCTjRzwIMtsJ8PY/jGvJ1BVIwV9jaX0B7GCJmUX6T2EsnF8gd0PgMjjl5UNuGxdoa6poqbBxxYOmrOv1ugUjDVvIYzCLwVkE01IXymyPgoRStLdYCgOtsV7Z2CDt2c6ME6SgrTglu52ZmEbPbE69rq3ewBS85yXGM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747099986; c=relaxed/simple;
-	bh=WLl1OrY6YDAmeAMOKN0bjM0h9k6IFQt9IPA2u3HVKrA=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=f1YK+49X3qhdPOqZXPyWsGXmElDLpW8xIhDuluSFAIsgp1ese+Bg4cT6PBZfvIv8ZL9qeP3uGR2533dx2ybLY0BQTOyUoOZ6bMYPVEpIfu/3/Yc9fFU/r40h3gA8D7p1aelOFn/WBFPj2+97KTQCsOwVDEdXbu8l3p/ALfJ4CMs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EF/eRAM/; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=MicKeI6u; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8589139CFA;
+	Tue, 13 May 2025 01:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747100294; cv=none; b=ObMPi2SklLy9KK28VzTsTP7VXeIphFTCtqhZqzWUOxXEaZY+RMPzrB0unVTPAaOPTO6JFOc0TRV/tVDKOnyRLwD546Rzn8DK8d4vY2mz0tFgM1QFzJcu/z/ID9+/Y4vjmNdzS525N2HoFqypnnenBj+yGOi1ujF5gWoj1+MmEYI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747100294; c=relaxed/simple;
+	bh=rMY8QKuKuEmCv9b2YVyG5lCTg1KwhM3ScRnRf/VnU2A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F9Cpg3xKb16CPE2u86HDfEo2b0DfhEFjxA9OYkqYqsAY0cXiQ0knT+AfWLRChhHJ+W8Ewk5REV1/CqIVhkH1qqRzag0RfeVGw95h/FGMYaUaBbuTr8I8bIqIU1inJxTvyEZNqlhiXFIJsN7QWvAJF1dLrvwTp0+B4jrUDdeTFpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHfjGUE1; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EF/eRAM/";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="MicKeI6u"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D1Bu63000704;
-	Tue, 13 May 2025 01:32:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=VeZcRYRYm4v+7vVNpC
-	um7RzsQ4DAy+106yLUpylruO0=; b=EF/eRAM/z+aHgJ/ZHwS1XJjVb3lEGQVShe
-	6zwU/loVUy7jlOy1ka+UTZgZRQMkJnp/5lZsJ907gNrApuNAIKEHSzGqVMnG4Scs
-	M6QYyLtI1ybsmZKWYehN926lp+ELD7kzUDhkhBqJf8rypn62usYTVI3mt/2tRrQg
-	p8d73skYn9hqkDHkmJ/qlLI6WQAoEeAV5ZXSVIT5eUHsG01OI9Hh8aQzrt+m3hqX
-	Cpj8KBnCgr4B9b5ri5VvEi06jx3uLxsN2QxY7A9h73pk8YKVU6V7wD+s2WFbii7U
-	ZYY2hOLdS+wvVmYrLXJY9y1JVXQBS1bVRzoHVlCnnS0PgFE8krkQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j0epkq1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 01:32:47 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54CNVaK9022325;
-	Tue, 13 May 2025 01:32:47 GMT
-Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013079.outbound.protection.outlook.com [40.93.1.79])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46hw8934mv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 01:32:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GM2YkiYGdpfJ8uTUgptOGj4pum0IXJc6dN43gKgcp7X1lfqpTjLTLClpUn36hpD/c3wZRIhdBnO9fRiz4v5JeFVmuerUAQqrTT/ObqUBSZuxQ811Gui9YXmOFPr/7vDL7OJqmwcwfm15NrIbU0teHMVvNOzANaMiJCZCjEOqYz+5UQntrWSob0Z30tEozXdfYP5eAXahWwC9hytuqd16nGMEzpcq1cWwYbY50pUdl1+NQmnbe54Fzqw3BCivMkBDJV1rEIM6BYoJhnWDc8wpv0NJLnTZaqqrd/459Zrd1YOeRNk4vAYYtf3TeAR/RGgwSOZO9xU3QPyWLIZZ39cK5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VeZcRYRYm4v+7vVNpCum7RzsQ4DAy+106yLUpylruO0=;
- b=IybKTaItsmJdwl31StJqgnzSU5Qy3xvgao5/UrYUcURqZWenN517zd3rHBIQEu9IKBcCZCH9uRC8SLbtQlHntsn1M7PzEaPH0oUkzFaOhjuNErvi7nMmHL2Mh6+cAW2K1G6soi1FxIAggw1op7LZMmOSYUGIJwR4nmJN2joCDQIxYq/XAR3Aa+3i3Ent+BZ0t1rFHDzLlaRgeAYBJgQE2mBkGyK0fPClJrSaY/c1EU52eJ3ch2lrpdTNJPGm2Pab8NgwFbfKrZXGKkxMwT3FZflrzDD1ByDtHbtq5g+3UbqfJnGD5nrHack4dUWWY7MwEd7icb6X+1K0nOZdn/hTpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHfjGUE1"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d93f4fe5baso19004815ab.2;
+        Mon, 12 May 2025 18:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VeZcRYRYm4v+7vVNpCum7RzsQ4DAy+106yLUpylruO0=;
- b=MicKeI6ut/kpqxfwCiufc7NmBpOPYT7nskPw53jUpQsqwQBSVDBD2c2DU/A+eMyFfk7ZxVxeAd3aoPQW9THHq4XHOJfpvQFTl1S30eRE8D1hjTIM/QmB0muN0uBVqlcUUh8tm2ipRRFRO3AFahQrdu5+zlNFSxfWiPeHFx0wwMc=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by DS7PR10MB5998.namprd10.prod.outlook.com (2603:10b6:8:9e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 01:32:44 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%6]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 01:32:44 +0000
-To: Kees Cook <kees@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Martin K. Petersen"
- <martin.petersen@oracle.com>,
-        Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patch in the kspp tree
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <202505090931.3467A425@keescook> (Kees Cook's message of "Fri, 9
-	May 2025 09:32:54 -0700")
-Organization: Oracle Corporation
-Message-ID: <yq1frh9s3e8.fsf@ca-mkp.ca.oracle.com>
-References: <20250509184846.3c7e359a@canb.auug.org.au>
-	<202505090931.3467A425@keescook>
-Date: Mon, 12 May 2025 21:32:42 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: BL0PR1501CA0022.namprd15.prod.outlook.com
- (2603:10b6:207:17::35) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+        d=gmail.com; s=20230601; t=1747100292; x=1747705092; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ItloyKp2wT3VEtFun2Jj5Eo9ey2aM5C1PK5HssRwl3k=;
+        b=LHfjGUE1dQzXhdP0mzKlgMH1AAUeSboa3ibgyUodJme/XWG27YnHNqvyH9G2Ca/ytT
+         JePFEhQT1WgtXlsVBI5n7wkItr8MP1wV2xeZ5HfMVma0yTsmLxrqysjY4L+zd7koPPtq
+         h8UJdH+lWmQhnPB7Na6pY5HP0RjIbeNNJgtv3h1+Ahc3a+U/8qsiHgsPLghAT7kAl0Cj
+         sCjzAXpSHDWc9lh6Owmv3Oeh09wLSV7VGmIRPDzUZHP4s0abgwL15AXoJ9NGMCKZeaZN
+         dLr8FuFtn9cdqLoy1D705UzUl42nqUetun/zFXiEZRV3b+yT1eVqcvjQwj6HVjee+tV5
+         a+sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747100292; x=1747705092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ItloyKp2wT3VEtFun2Jj5Eo9ey2aM5C1PK5HssRwl3k=;
+        b=r04NtqRzkiiQXhtlXucfXZ5rUzvO18QLvaUF0xCjjHvEgI3G1Z3b/0nhJ1mXEuVX1x
+         cwSiKmim/3R9Xi9J4SNest9NgaOSVTCtjCACQbSjwcyRzLsl7LiQaZLA/S4WZSICHzKx
+         33uouqM+ahf6a49Oe9OoLAzGCyxhJliAKSxNkJRpeImmTn3qoypgD89SLMS5lJVC4Bvd
+         Xf9OK1Gf9+b2kNP2B0kAYdHFTOkO72M0cHbP2ySrzMpqUaruXDp+7I+aP5rX9U+MudUm
+         NDqphDoh7SbKq6xWW/NC9ufLSiU9UBw64Is3jnjjEJuI5H3FFERvsY5Yk9bQaj5U82fP
+         VYWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvepPsCOj6dX0m7cdIa0VdV4U5jz0ZbnTRwEKxloeTeJdRLsxE8YDwMz7BaA64/TaosHAajgMw6e0Cp1vg@vger.kernel.org, AJvYcCVgg3kC777UtPfYkmqPyda2ORjsbZ6EXJ6tQ0HUuxN2O4/Hm+ZYy8hFtyzy++gX2BABgPfMvjDOCb9noc3wtBDkZQUk@vger.kernel.org, AJvYcCWgvLmmVJrqH9VUeAXDFaVm4mJfqPcWsPSoUl1Fu/j+FY9nHcz2GEa2vmlZP+QO5Zvoqouz4B3HYv/Lxw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC49V2Ox/1cs7VR8wOlGnwtRCASmFWhU4lvO2Bd/1D3PruVCTi
+	bJn271qu08+XijvG4DKNgOcg2fPI7xuJAYVg0mK62xDdmrwL4/6Aow0AYdh/qWcA0u0PL0M/LLw
+	v76v8s2Wkiylq74/Ki9IucMWdQBA=
+X-Gm-Gg: ASbGncvtf3zN4fkMqPQnZKlY/KDA6NgbmAcl1+BCdiFCgp/PtO/969Eubqt6Zos2YpI
+	rVP0r+Fxq/pA4te1MOA3r/DU0R+2H9rjAeV3F3qRzNncBH1MKGJ990709UK/HRSWR0AUqA0+viV
+	jcQflWZzXnvjoN5GSy/QNGuXU+I7+8YWUT
+X-Google-Smtp-Source: AGHT+IEv1YpUbXgDXULtYLVZnHNMU1Kaq+ATDb0MvJOs/GobAiWUqfb65TrkKLVCYjrMgY32QRRzPIYG0ZzVoTTQTcU=
+X-Received: by 2002:a92:c26d:0:b0:3d8:18d4:7bce with SMTP id
+ e9e14a558f8ab-3da7e1e23eamr172143355ab.2.1747100291724; Mon, 12 May 2025
+ 18:38:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|DS7PR10MB5998:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2ed20e4-d5b8-4353-d6c6-08dd91be0efd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?B+TBWiM9s8RSc/oFgcLjRfFo455C2HwJsCw0/kerpRUrw1x/xW2u6D9yAW4W?=
- =?us-ascii?Q?VJOHqrLVWzAY+C+GB+GZGUFegWqYsDxSpiRseJp5GBdRL/WLl79JOHtV+tz+?=
- =?us-ascii?Q?XNIEOsO+WfpJ4plJDj6aM5z3ME5e0gB4vBj4HrHwITbzJHTzP/RuxELUKpgB?=
- =?us-ascii?Q?YbQ8IoSpbnrjikAiOqW+eiYtY+LZdHhAq/0t4ByR5xrkYzallVv0dp9Hpdxn?=
- =?us-ascii?Q?a3EUTvDWMy2VrOxD9hxNTASWJKz63TW95hzUGVFs+SQLbqOjzWVN4FsOu9jQ?=
- =?us-ascii?Q?achX6AC9ofKLrRq2xFf45Z6Q3LqopGnaRRc6NiEyBPMQ0MxxULAjFH9zgUby?=
- =?us-ascii?Q?mUfTjf2LxCL3Q8ReGaPS95y1OOabThkEm6vilgWbLlE7OKW/rcNiY+67zuOG?=
- =?us-ascii?Q?799BGEJcRbaHe+H4sO0E4nLyfBH6qoCe6JwJcm3tNY0EZmimCCJQVufgzGJM?=
- =?us-ascii?Q?TJvQx2c0ieTdtbbLS6lD354PwsUjRhPjlwvUoLczgoGpwE7mQIo/ICiGtDsY?=
- =?us-ascii?Q?Pg8Pm3BBGYk7zy2pnNZJLxqZow81tTlPD2xd7xfAMr+PaIxM8KvXsb9/BLyY?=
- =?us-ascii?Q?ifn0Aifr6z3zKtqmS536NBmH410RMUshniK1vUjQuXhJkDLTuFhXhr7lXAhR?=
- =?us-ascii?Q?cr8Qp+q/fZAha5+JWlpaqbnkbs9qxNCQ8OYzDK/EaqCNWWprBpx+cpfLuP2U?=
- =?us-ascii?Q?PrS6BFJGO3jR/WL8gFzBatvRA69YiUN/WmEoG2Uncol4YgzvV95Gyf4YGHog?=
- =?us-ascii?Q?mcwIlaBKBG5qP0C464cerau/YKrhYuMiKzvWKdDicKsHhn7MgW1WLu8hAtPL?=
- =?us-ascii?Q?GqHgJqyWn+ZmqkQSp46cPyjwK9Of1drPeujIbiW+iiI5HOVR82pxuVBwBhfn?=
- =?us-ascii?Q?Fr+ekdzy65Tg6uBEvIHSNGK91LiB/L8TDYDVSLa94/uSrSWdUuq+n6Ef2s70?=
- =?us-ascii?Q?SmFKBbBodFRL+8KW5MsVRftbLZTVuc5MRIQfjvuZAA0G3ns2mpOoms6Qa0Of?=
- =?us-ascii?Q?jl9rSr8/e1UpO1qMgGOEN2pQBnEtDt1TDjRBbguaMJDyQ8tlnsLlNnZJkJWY?=
- =?us-ascii?Q?S0JVlSyK6k2S+51DTGeYmzNSaKjyuewQo7B54Oq8bsEtuDgZhVfMOzxgbARE?=
- =?us-ascii?Q?Uwmhi2IPxs3t7M0qvKbP99eBopl8TH6F2Cnr4Tp9Nd++p8MFxpobr8jfUSXo?=
- =?us-ascii?Q?vhVqbGEmaqRBQZ2GVDKDSwtbkGhljCvHHufgJfDGqiQhNH5ednWIsjf4BheE?=
- =?us-ascii?Q?pye1oHoPE4naROoLXb23G7CNXY/H6vdfVAqhscHHVXMNdQqcPNgGvRqrX34p?=
- =?us-ascii?Q?ubsrcWCyrO8H4X+j3PPs81C1Jk2UXCpO33R903DJcPfOJgj8B/Ku+3l2XC1+?=
- =?us-ascii?Q?QmdQpBKYw50c2anFdAjlW7dg7nCBWuoCtJmXNJ3YGhQSMbNqeoApE605Eusn?=
- =?us-ascii?Q?I3srIuscWtA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3MX3XTdP+z1lRFIAxcVtUda7hJKjWnljfRSX4EZZ7YMRq+zkT8WrDVYzmKf2?=
- =?us-ascii?Q?3V8kfBXq+ktZyhnGwsqYIN0SLcDyTFnCgd6ek+95hPl52fNlgELcCgL4OwXh?=
- =?us-ascii?Q?EXAfgyD0NXQK3u9zf7lICCgLI6MUBiUBgYXPTjKo7mok7bo8/8OHfHYt256O?=
- =?us-ascii?Q?UxYyeuzC9BD168BLnU6Wg7b3Dnep4iG9M2CmtXozjoiHlKFIXvH/otem0ba8?=
- =?us-ascii?Q?bZqUx+g78HVdRxAOBDLA8Ax48EocoErZuD0cqmEkJ8SrZcMrOpxtCBcql+Es?=
- =?us-ascii?Q?LHKHDwPIfUUtmhEAgpicXu/89A438MR46SYDaWzu7WzU565VTIVAntjEYpw8?=
- =?us-ascii?Q?EWs8GO3VNeKXYk/xhlk7a9/VzcNWN2LA+IlbVi6ttaveJoMYLOn9nprePtBf?=
- =?us-ascii?Q?DJHzJDAIEpUMFzddPhkzmd6A1N4AknA1udLXf8xlHG6EBXBQA2x/tkJUbuna?=
- =?us-ascii?Q?18+5SeIO1DErzvjJxLhFQJet8FI+XCFfsfPvCysKUdYm+KS4n9SLJpS10IKE?=
- =?us-ascii?Q?c2WSG3Qj8dzM8P6lPYKwHQ6IJPBxNuiGd2kWzBsHPUXYpW/VZ3QwnN5BpZzo?=
- =?us-ascii?Q?V6QP4j0FyKTsKePM9q8IMJMf5bPVprRzpFrIScpS5ONYSkqV9ceKj+Gdzb2i?=
- =?us-ascii?Q?o/HctdEsLTOtiBlpZqwAs10nSFbXr8Id4JEmZJOI7VVvvZVpCuYaVcBz9FSS?=
- =?us-ascii?Q?7zBDB0SkK8dL7lG+tYehmDt93Zo1DdP9m8fwYSkhTchsUPIPuYkP2aDhVK8o?=
- =?us-ascii?Q?nCPV2q32UBsFT9IY//+7rexUbkmzuzbp4A6okujIe9qkJN9nOZjoQKEH8FF1?=
- =?us-ascii?Q?EGyKIdPbuLHwthR9ez3g/B39OXCnEINcaHgzp6qp7N0YF48Fvh8zrHEmRJbP?=
- =?us-ascii?Q?+pRCY3t1Ej2yJnnHyLUqdbnsdJezRM53eMGJ2MTxOKuB4Ib/yNYjjMOFXy4o?=
- =?us-ascii?Q?UD09/Sic0fICkydpXRfwZpKeDEtqQZkkMaeGRTRdHbCbqgSClC2hzw0ZNhyF?=
- =?us-ascii?Q?tGT1gaaPldCX2OrcvO3zcks9/6/H0C8LJh5FLs/Lz58bndvFpY+IDBrL52yp?=
- =?us-ascii?Q?j7ovanav/pazlEIEf8ri0p9e1N4j8KDFH8xr2NtYVeQu7B5sZ6f/WZoiR7R2?=
- =?us-ascii?Q?tmW1T8E+jXskceu9sin8J+W8MpLYXGTRVmIa+3pl1vPfI2BEHaFrwefOJS8y?=
- =?us-ascii?Q?EYs5BrXtuzMKzXjMX1nKzY8aXK0XGXx3M7+sAjzcExeNAiJB/8xHm980mu8u?=
- =?us-ascii?Q?eKiCVR5fk49v8U43BEFz8vGUvDaoci6RJzX5lOUyMAiSacedqAnruIAWHmou?=
- =?us-ascii?Q?0JqeedZVzOFlZaU0798iOnwgCVNMu244yU/0YxYd7ds6imGCWEpLcGXqCs48?=
- =?us-ascii?Q?y3UcFOlheRwMYi+1s+WTTIr+dK1z6jY/LjKzwr28X8RtsrBQijLESvytj+Yq?=
- =?us-ascii?Q?8GRjEVhc78pSOuFGiTwUgV5ZbSKjOmj617P0wy9A4CkMFoJYTmLl9G/NC+7h?=
- =?us-ascii?Q?C8Rckevma3v5G3VVhl8Wue6wZUhTZGmbIPGJaCSoSOZeiRtvq9NJjGRY2zps?=
- =?us-ascii?Q?67EWJvbuQ1g6yimg8Q8OKqKxXkY22c2YJ5ehPGBWxDxkmukp4qsZhHePIwyM?=
- =?us-ascii?Q?Ag=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	j1aUnm0xzR8uhow88cjTeHnEcmeoQxYzmLBIZINmWCWgtcRkg4AivrfYYKCGPgnwn++gQcncUfeV+4V/W6EAN9lcJwuQtEFrmhVoY/B4SqDpMuPL5gbXaT6bO6OA0z2qDSMBrh5MV95UvZWjIgKMyGmhjE5htYMuTJrZeii7MtOTLUqHm4C6UrlA4UCMmBqOYDaWF8A/hh2jc52QCdnoNS5HxfMVZNPw40hWjrkn32SO3KM8QK9iru4R51izpejCiqxHvIKcEiwCsL4kuED3sGpsVttffdkL8pNtuDd/4FM+JEUQe5bdL91o27MgKu16NkhaU2cXJz0AxkUSrBQw8v8VzyS9hOFVeaY4uGrpu2PjyvWJk3/71qE/9PY0NFR5kLA7IliWAet74mYKn63tp+GgglsOO6kqrS2gD62IslhChIu8bg7tCipwXx8gu+jhnWvHG6mDJrXodntQ1s+rt45U4gWf2WwEQliengZSC5yaDOW/MWYddxv40RM5kTqltxP8s5/dpx5MJ+Le0x8x9NFeAlHrt16cJuDZ1OWURWyocJtOvolhiBQeRkESMfpBS156xWBx3cXsYGH0gKmRoJtMlYhLzbKy/CikquuQ0w0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2ed20e4-d5b8-4353-d6c6-08dd91be0efd
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 01:32:44.0090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OqEfHbdsdDvSs7smZpRV1sIUWZ+hO5nB56ZMFH3fuYYO8yXegf+BSi2iGQ4iP5V6jv/HcD1UqzCrmULT+EDyDPzhYtOoZ1iyC5XK2793y7k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5998
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- spamscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505130012
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDAxMiBTYWx0ZWRfX/8esFVdgQGjh G172vHd1iYJDe+q8SUiZOgx8Uk0iOAuC5kM+Mo9IZL3vE8sYfHeEi8Ghwktj+j08Yh4vENMxghz OWrQsNj8T+0zmA1PooRUo8jOKH4U0sYdl8giqTJTmaMr6yZ5GD0HbF3h6/7nVLZkE3SX/hqkt0J
- xGhM1LCSyhVm0IT+rN1xG15EznKEZrIZKynvAnZu+gjavqEL0CZv9Fn2nl01I86R+YvAyOIC544 wPNtXMelOU3sN3XNUWJCbfzVGLlkR3rdO69sfsBGq1jPV9N/6pZbE2JfwEhT1IKSFZ8YHD1JBxM wnItFm7FmgZM3jnr++DjXgNpUL5+xzMd1e5ecjaujRFRJDtPYsdhdGi7nCQr8FMrkOBjpr6eFPy
- inWedjdY6qv1O0c5neXvSvJbFhAVJsjojdk86bGAh+nUW482Wu9miDCxUeiWvfSU3heV4edP
-X-Authority-Analysis: v=2.4 cv=DO6P4zNb c=1 sm=1 tr=0 ts=6822a13f cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
- a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=w0Zju7iNEvkb610OYF0A:9
-X-Proofpoint-ORIG-GUID: BGZRftGSG1i8C0rhj6l3pGjHbW-rvPxu
-X-Proofpoint-GUID: BGZRftGSG1i8C0rhj6l3pGjHbW-rvPxu
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+ <20250512024935.64704-2-kerneljasonxing@gmail.com> <20250512175147.925bcdcd5f6cfa71def08bb0@linux-foundation.org>
+In-Reply-To: <20250512175147.925bcdcd5f6cfa71def08bb0@linux-foundation.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 13 May 2025 09:37:35 +0800
+X-Gm-Features: AX0GCFsRxo9BHC4YFMiDvpsa15eOQmRsONH6wMsXlKcF5AYgO_baKFV1J_NjUPA
+Message-ID: <CAL+tcoAgur5MNODLbGP2zRje8T22KgekwSOvxfLnKvGFupO9ag@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] relayfs: support a counter tracking if per-cpu
+ buffers is full
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-Hi Kees,
-
->>   d897dae472f2 ("scsi: qedf: Use designated initializer for struct qed_fcoe_cb_ops")
->> 
->> in the scsi-mkp tree.
+On Tue, May 13, 2025 at 8:51=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
 >
-> Yeah, I am carrying this and the qede patch since I need them for a
-> clean build in my tree. I might need to split my merge window into two
-> halves if I need to drop the duplicates.
+> On Mon, 12 May 2025 10:49:31 +0800 Jason Xing <kerneljasonxing@gmail.com>=
+ wrote:
+>
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > Add 'full' field in per-cpu buffer structure to detect if the buffer is
+> > full, which means: 1) relayfs doesn't intend to accept new data in
+> > non-overwrite mode that is also by default, or 2) relayfs is going to
+> > start over again and overwrite old unread data when kernel module has
+> > its own subbuf_start callback to support overwrite mode. This counter
+> > works for both overwrite and non-overwrite modes.
+> >
+> > This counter doesn't have any explicit lock to protect from being
+> > modified by different threads at the same time for the better
+> > performance consideration. In terms of the atomic operation, it's not
+> > introduced for incrementing the counter like blktrace because side
+> > effect may arise when multiple threads access the counter simultaneousl=
+y
+> > on the machine equipped with many cpus, say, more than 200. As we can
+> > see in relay_write() and __relay_write(), the writer at the beginning
+> > should consider how to use the lock for the whole write process, thus
+> > it's not necessary to add another lock to make sure the counter is
+> > accurate.
+> >
+> > Using 'pahole --hex -C rchan_buf vmlinux' so you can see this field jus=
+t
+> > fits into one 4-byte hole in the cacheline 2.
+>
+> Does this alter blktrace output?  If so is that backward-compatible
+> (and do we care).  Is there any blktrace documentation which should be
+> updated?
 
-I can just drop it. Your change won't conflict with anything currently
-in the SCSI pipeline for 6.16.
+Thanks for the review.
 
--- 
-Martin K. Petersen
+Surely no, I tested blktrace by running 'blktrace -d /dev/vda1' to
+verify the dropped field after the entire series applied. So it's
+compatible.
+
+>
+> Also, please check Documentation/filesystems/relay.rst and see if any
+> updates should be made to reflect the changes in this patchset.
+
+Right, will do it accordingly.
+
+>
+> I'm not really clear on the use cases of this counter - perhaps you can
+> be more verbose about this in the changelog.
+
+Will add more.
+
+The existing code 'blk_dropped_read' in blktrace might give you a
+hint. In real production, we sometimes encounter the case where the
+reader cannot consume the data as fast as possible, which leads to
+data loss.
+
+>
+> > diff --git a/include/linux/relay.h b/include/linux/relay.h
+> > index f80b0eb1e905..022cf11e5a92 100644
+> > --- a/include/linux/relay.h
+> > +++ b/include/linux/relay.h
+> > @@ -28,6 +28,14 @@
+> >   */
+> >  #define RELAYFS_CHANNEL_VERSION              7
+> >
+> > +/*
+> > + * Relay buffer error statistics dump
+> > + */
+> > +struct rchan_buf_error_stats
+> > +{
+> > +     unsigned int full;              /* counter for buffer full */
+> > +};
+>
+> Why a struct?
+
+It is because I'm going to add more counters related to the error
+information, like patch [4/5]. Does it make any sense?
+
+>
+> >  /*
+> >   * Per-cpu relay channel buffer
+> >   */
+> > @@ -43,6 +51,7 @@ struct rchan_buf
+> >       struct irq_work wakeup_work;    /* reader wakeup */
+> >       struct dentry *dentry;          /* channel file dentry */
+> >       struct kref kref;               /* channel buffer refcount */
+> > +     struct rchan_buf_error_stats stats; /* error stats */
+>
+> Could simply use
+>
+>         unsigned int full;
+>
+> here?
+>
+> Also, the name "full" implies to me "it is full".  Perhaps "full_count"
+> would be better.
+
+Got it. Makes sense to me.
+
+>
+> >       struct page **page_array;       /* array of current buffer pages =
+*/
+> >       unsigned int page_count;        /* number of current buffer pages=
+ */
+> >       unsigned int finalized;         /* buffer has been finalized */
+> > diff --git a/kernel/relay.c b/kernel/relay.c
+> > index 5aeb9226e238..b5db4aa60da1 100644
+> > --- a/kernel/relay.c
+> > +++ b/kernel/relay.c
+> > @@ -252,8 +252,13 @@ EXPORT_SYMBOL_GPL(relay_buf_full);
+> >  static int relay_subbuf_start(struct rchan_buf *buf, void *subbuf,
+> >                             void *prev_subbuf)
+> >  {
+> > +     int buf_full =3D relay_buf_full(buf);
+> > +
+> > +     if (buf_full)
+> > +             buf->stats.full++;
+>
+> I don't understand the changelog's description of this, sorry.
+>
+> Is it saying "this operation is protected by a lock"?  If so, please
+> specifically state which lock this is.
+>
+> Or is it saying "we don't care if this races because the counter will
+> be close enough".  If so then maybe so, but things like KCSAN will
+> probably detect and warn and then people will want to address this.
+>
+
+Sorry for the confusion. I meant the whole write process should
+perform with the lock protection which users are supposed to pay more
+attention to. User calls __relay_write which means he already
+considers the racy case, adding additional lock before writing. On the
+assumption that the whole write process is protected, there is no need
+to add any form of lock internally (even like atomic operations) to
+ensure the consistency of full_count.
+
+I will revise it in the next re-spin.
+
+Thanks,
+Jason
