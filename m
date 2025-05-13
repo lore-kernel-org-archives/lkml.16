@@ -1,112 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04C41E5B68;
-	Tue, 13 May 2025 10:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2A7248F63
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131196; cv=none; b=sRaipq4GX3DtQ2T4WbMjn48NgaWry+jKhl3AwMngBDOt76c+Tcfj767FAltZ4iVUmn4DOg8gO+CFrE7GCtg5Cc3myh5jdUaW1HZMysKMqilhBG2ZapjMyhTyMFBL/vk1VPWbZMdpfP6Q3NUiVpjUHE25o6CaaErNEiBzBJGZ/1Y=
+	t=1747131256; cv=none; b=C4BPCvR2qylXsHqr9Ih6xJZMUA5hmYiD3Ep4om7LtAbKa4SN4cEO1IEoBYm34ZUzAyNvoAvR1UEMb6X20YCxDJOCPdxevWaYCAQpFpOL+xiZEIUTrpjSfYTNMzUcPMrKN4+Bp7IArqz2qeOdbgTQfDADWHsqjtnwUzbhxKkENtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131196; c=relaxed/simple;
-	bh=kYkTufQiPM7Mtatuj5DfCpXt+i3k4zHtBsVPJmjrEbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wrzx3VZGJFAWZqpEIxaHbSfNfXSBkT+LWUOnXoJtivnjzyC59eodRetJS70jtUOjX+TWYmB/uFhbdCdZtrL9zknDqCklu3MagaBiY9mWP5HVQ6nDO4XsSs4P3PCZ3PNbKf8N4UcR1Zl1TCAlwFj297r6kTZ2TePAJpku58kiI6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZicVdULd; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747131256; c=relaxed/simple;
+	bh=ULrHUwBSa4Nx57f23106q1CX/Yt3c3c/zhOPpinKUyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RasZxWvfos0bsNSGrRsXUP8ouWJCTYI4oZ3HmIZa44TzmN/H6en2gv8We74wqwolPv1SMRZUYOV6OzD5WQdw4PQAjJlJqBM9io+wEL7hmT7+jlpZ/+x5Xo3KxKT0uWQBo6kwvzLoDfQvsX+qhmuiGhU7zA1ftPv/iCGw8xWdlZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vtgwdm/d; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZicVdULd"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2A5D740E0239;
-	Tue, 13 May 2025 10:13:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UspFaoVZok95; Tue, 13 May 2025 10:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747131186; bh=3jaTLwyVJAd7kpaIBag1pZe8FQx/fJxMxqj3xXgOETM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZicVdULdDzYCxvYZv6myjOO/wNmi+puzeJtm6kLJVp9Gym3mzmLGJtI590lpPTNoE
-	 plb5BpYilqPXwtJvuzVpTUEmSmfC/HmHDkQnGl0TY+Y4G9NZep69nI798gDFX6MTsQ
-	 Nf8rf73ms7AztdpEyFX1lrk+Df9EHDpbRTiUOdFJUqBI+CPFG+WYuNpheO8c5qnBuO
-	 /DqofQoX5WU1CiTNRXfTFGEEACSwQ596lzgbiMm5/6M/6Q7xcKc+WV3l4pHt21c5gT
-	 DUF/cl10Vv573J8eIkqnAhaIift1IOw+8Uyvac7uhHt9qV933FEextUixXwljSFa27
-	 D+K8uT6yDdqbFVsBk8QgjP8leqhPu2MStfhOmGb9dqO+Tvyum1xR0IZusrPumP0Ipm
-	 DtLMMdxAMTvwn07dCIXOlotVNFlw9fxJQo8V363F6ZsRWN9TiQ5MWWG3e7Ed8I3R6M
-	 r/DU9s8chDlrfy02Jt5m48YCF/j4ubg9rwF0goncZChH32q9W36kZ0743gvt1NOB7w
-	 kBHWDctkLC3fOsit4I4Hm68WmNewAa6ibRbbChEBsCLuQtg5MvaQQXcGz40QgeHvSQ
-	 sQr55Dzn3Jm0kg3D1kZgUEqXuD2DvfRF7fzi6fKA+ezFJy7gE7gBRTST+WYa5qt4kR
-	 hN0n9JBZDbV/ian+SlR4FtK4=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CDA6240E0264;
-	Tue, 13 May 2025 10:12:55 +0000 (UTC)
-Date: Tue, 13 May 2025 12:12:50 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vtgwdm/d"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442ea0b3a9fso602465e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747131252; x=1747736052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FmKO4iUFCtGPij5z8zMun04XAyBt8taBVw5kM26b2KE=;
+        b=Vtgwdm/dEhbENwJJWIIqTHAdVYs31McVV4WGQmCSFANVtpV7bWcZ2Z+2KBSBEjJTG0
+         48zhplxe96CZNui6rWFyzG9VLYJ/0GUOCefvg3chjErhcg7cB8c8B5wYuu2EdmieRgEa
+         L1OQpBc7ZCqDIWQUY5L2MK3gFKDB8cwNOu/Rwz7b0MbSm0LQBYmmn3Slud1ahNniQdtj
+         QW3y2C/Cj3jeBCZ6TuHGV7ZAA+kKLOgFSm41ip4HZNLpRwVhUZHphy4cHItbl3g3NE27
+         Hy2T4io7GXPilIM9T1UfjZikbTAMyhljl717fZhbV7h5gH70fk7Ua2GcjLMsN8u6UdoC
+         BFHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747131252; x=1747736052;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FmKO4iUFCtGPij5z8zMun04XAyBt8taBVw5kM26b2KE=;
+        b=gPIOm5ZI12TRICrvuCT5iQQRjrsMlT0Nkg7TvrFBvN/PpJ8omweOwrVFg4Jo8ud+4B
+         IFwwnAfulYoDGT1/Ld/81jri+dKFzzQ9jRdS+tMY/qHv5TO87O73ySnYjRl52+0tQkuM
+         fI8MZrI0ZdUTSOtlivoegSbkpq1I6CduynTT7DNgJyzc/H7pYFh6SKijaS8SFD7DVs/a
+         /Qs4GorptozWJcneUNMu3v1tv3RTn+vKfKHodhQ2shPyq/Y7TOaPTtP0DwQJgrCD9t7+
+         iVd4T/bmkwKI37j+3oXB0lBHE82RWxNnjnQixidWUuIx3242g6WxH8fZSpki7JW2UH2F
+         br8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXdEas6DB5EvzYWcnYr6OuZit8ZHsLEvsWGYvLqaAm67JHIP8MpxLHhoOtH96C8qSVj/QqQuSuePUxGj0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpym8ctVdHWPggUu46wWKXMhIa1k4IsxiaLPFAhQEw0O5lq6/x
+	Qp3GTOHfOpuWnxybAL/WeDDwOdCAP7PfWE5r61cS+fJLGUG1DOkVpqI0UQSPtO0=
+X-Gm-Gg: ASbGncvWlbpLx0D3AdS9ii2dgZMab6+JD7Cot3a8YELaPgIi6yRc8JDj9IvutyrslTr
+	EWjsVPqkRAvIMnfMizFiTbjhj2v8te0xMmFPkqj27qKDziIgsXRmrjJcSzuqujv+uEsFcrvS0AO
+	01M/u2vgu42ZZJvCswlNfGudV2OsC4bs+Nha3PtvdTYSar5QQdFUHXEJaoUzSF15G87H0PnAha/
+	nEVePrs0YfmLECusNZW5l/tI3fSsvieMOI+8EGJXuhOnt/kEuxk+5BIbflRnzb8OrXt0mCpag+G
+	HdX9APPtRbKkRYw3B8ffi9i8TSVmMejtOZI+01qWcsumhH/CEEESuxfC6bYmVVPmoGQ+dFbLQZ0
+	8npQLiEyM24kIwaKbEWctBAQ4VZpfraARt6aEwb4=
+X-Google-Smtp-Source: AGHT+IHK4ZgyRSwCAQUNKdc+qokxm+jDw3954HdRD4CSqDPQxvmPct2ZSvOSVpIzgIPcfnsOsH7saA==
+X-Received: by 2002:a05:600c:3513:b0:43b:ca39:a9b8 with SMTP id 5b1f17b1804b1-442d9c8e883mr49631055e9.2.1747131252406;
+        Tue, 13 May 2025 03:14:12 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7f18sm211920495e9.40.2025.05.13.03.14.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:14:11 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	linux-clk@vger.kernel.org,
+	Sylwester Nawrocki <snawrocki@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] clk: samsung: drivers for v6.16
+Date: Tue, 13 May 2025 12:14:08 +0200
+Message-ID: <20250513101407.22233-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCMYrgd9DDQl7G1W@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1778; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=ULrHUwBSa4Nx57f23106q1CX/Yt3c3c/zhOPpinKUyo=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoIxtvRkenr8845Ru9521lbcHxxw4cdwiBeV80j
+ l4nXPkerpeJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCMbbwAKCRDBN2bmhouD
+ 1+NbD/93RhWOMmoLrcMu+Ixi+i1CLAmMXhF5TyrC/rP1BMFqTHiOh3HfrwHoBpONqaPc1UagMkV
+ jwKMRPdVrwu7GX1TfnBORAtXoCgVRepVUHNvUKl1uKFmOJlS7t83YFfq2EdXy32Wjk9q31SjkVA
+ K+AtUHfNnDGk9hLDJZeJM7ZVsNlP6YUK80aZegURRAbcLVvIdXX67ogEsqsHtBNtWALr0kVmXFp
+ sDoToY0r1+o8v22bM687E+RBnlYmWBHTYcl75SLsHM0NCJY/FiPNxK7nbxzdLikikMFxFqnLxvA
+ jp64iju1RGqAe7vnFknUD3s/NcxnAFo7MXhSFY5J6wbJuK7/ruQWJGznhhLRi/rrT461bU03LOB
+ hV+WFiTuV7G/irrmngaaDG7yfmCx8AlWS2cY8tXCEQ1G7PDqcWGzXLKQqD20oOzbURRSdG5nFcE
+ 4HwQ2I5hy1zHJP6A8UYQM+XqEJ0Azgb5Y0XMdhU/vVEsz9IffzNli6k8LUkKKN4U6wkhmTIMW4z
+ Kn81iZKqidUbgwmTVRgW9uXQC/V09vYfAPYuAyunpV1luJaihbm3/S/Iozz7PK2A7s2mHrRmSUI
+ XsYZV6Z7c4RfJ80yxy2EJSUHCaayBiuX+gkTdZ3Voemy1nrM1iHEDe/q9hWxaQPfO1qbLFQsx/P N7L5dub2+QwjjoQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 13, 2025 at 12:02:22PM +0200, Ingo Molnar wrote:
-> I don't intend to rush it,
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-Thanks.
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-> That request for testing was ignored AFAICS. It's May 13 and still 
-> crickets.
+are available in the Git repository at:
 
-Not ignored - Tom and I are testing but we're busy as hell too.
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-clk-6.16
 
-> We also had SEV-SNP boot bugs pending since August 2024, that nobody 
-> but (eventually) AMD triggered.
+for you to fetch changes up to 81214185e7e1fc6dfc8661a574c457accaf9a5a4:
 
-Where?
+  clk: samsung: correct clock summary for hsi1 block (2025-05-12 08:30:06 +0200)
 
-> Ie. very few people outside of the vendor are testing SEV-SNP AFAICS, and
-> even vendor testing is sporadic ...
+----------------------------------------------------------------
+Samsung SoC clock drivers changes for 6.16
 
-Not true - SEV* testing happens on a daily basis.
+1. ExynosAutov920:
+ - Add CPU cluster CL0, CL1 and CL2 clock controllers.
+ - Fix HSI1 USBDRD clock parents.
 
-> Please ask AMD internally to get SEV-SNP tested more reliably. Testing 
-> this -v3 series would be a good start. Hint, hint. ;-)
+2. Minor cleanup for Exynos4 drivers.
 
-We test everything that goes into linux-next. We haven't started testing
-unreviewed patchsets yet because we don't do that - that stuff is moving.
+----------------------------------------------------------------
+Krzysztof Kozlowski (2):
+      Merge branch 'for-v6.16/dt-bindings-clk-samsung' into next/clk
+      Merge branch 'for-v6.16/dt-bindings-clk-samsung' into next/clk
 
-So if you want to merge something, just ping me or Tom and we'll test it. But
-you have to give us ample time to do so - you can't merge something which Ard
-sent *on the same day*.
+Pritam Manohar Sutar (1):
+      clk: samsung: correct clock summary for hsi1 block
 
-If you can't test it, you don't merge it but ask people to test it. You know
-that.
+Shin Son (5):
+      dt-bindings: clock: exynosautov920: add cpucl0 clock definitions
+      clk: samsung: exynosautov920: add cpucl0 clock support
+      dt-bindings: clock: exynosautov920: add cpucl1/2 clock definitions
+      clk: samsung: exynosautov920: add cpucl1/2 clock support
+      clk: samsung: exynosautov920: Fix incorrect CLKS_NR_CPUCL0 definition
 
-Thx.
+Varada Pavani (1):
+      clk: samsung: Use samsung CCF common function
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+ .../clock/samsung,exynosautov920-clock.yaml        |  69 +++++
+ drivers/clk/samsung/clk-exynos4.c                  |  74 +++--
+ drivers/clk/samsung/clk-exynosautov920.c           | 338 ++++++++++++++++++++-
+ include/dt-bindings/clock/samsung,exynosautov920.h |  51 ++++
+ 4 files changed, 499 insertions(+), 33 deletions(-)
