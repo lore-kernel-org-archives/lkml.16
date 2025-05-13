@@ -1,275 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532B82BF99E;
-	Tue, 13 May 2025 18:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7248C2BFC89;
+	Tue, 13 May 2025 18:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161676; cv=none; b=UxqfQFTGhQFp3Yopy1kVPu7vaQiJ06IiET8Zm6p8M/1xwAjPYSTgbwQWyC1M3mf1NZOtHZWLnGy+fKGze/sGc6/dm87U21cNEMX84rf4glkaOWUmdgXVWkib188kfc02boGgMbZcQnvL1Th4iRL/qO5uPUMax6nRfgYBltD5mXA=
+	t=1747161678; cv=none; b=LPcDAg87UfhpZV/5AF9b96YSTL39ZlShl/LMxS9NynHeev85mxaun58RkRl+8D617y8yjGDaoDfz+tTi5qPiBsAaS4fVChCTnEn7K6pIx/CvwfmPAC6o5I1gGRibEWFDhzizjBhG5D2O9Uuyx9dFu7HzsAYvblWrvdzrkkz5Lj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161676; c=relaxed/simple;
-	bh=fwLdh4lh2c6wtLPAbIew5p1xVy3GijcP3Tc2MCzNs1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FEPkehEBZwMpMguklkVVM1wDMBLgj2tyPWfvx0OGnpu1vtiCxrCUrJbPx32sd/lR2z2ZBvuXV8ZphggPtSV4ruELmZQKFJp0pYPWJBqnlqQQG++wgROF2HCwdTpXU8DW9WSUHGL/KzcWuyH3wQa3NV7t9alxvCJOBRPymEerxnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaH2/HCj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747161678; c=relaxed/simple;
+	bh=0Vx0RGr5U2h01qOU8kmTQ32BV8c1gQpHnYULlCyFrKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnvprfLQzyNrYAb4qJ6o5Nn4iVzHGV2ysOQDvZ9wQkAW+WRrkvgTA1eyHYUAqO4ctak1wRUkJWwBKmszgLhIGduSTBPLtdOp8/UkRzWc5RR1HieBr2lAJJM4pWBuyfOdzqGyrinDV4Jx2xCwLhwcUgRHaBSS95y1Buk7ktoMy/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGol99JP; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaH2/HCj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937CFC4CEE4;
-	Tue, 13 May 2025 18:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747161674;
-	bh=fwLdh4lh2c6wtLPAbIew5p1xVy3GijcP3Tc2MCzNs1I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CaH2/HCjKWzaYew92QlBEbX5Y8KvJJ4BEn+Wt2A49gJ1D4PYJBCiVosSt6PFP4lho
-	 o1SlV9I5CP8azVeCYrhqsS+hqrLFuOCtPRH0S0lMkHouA4qSVzkDK4hEfY/o94HLp0
-	 c3rwXSoA8mv6K6usZKDfBYw31eLs5G/12+jIq2slCZ4dzVvP8q6ABvaXwU1BuuJGLO
-	 V05dKC20c3SjV1Ds2+q+oQf+S5O8zn/RZ6xPOcgRSeVohQjANL8imVP7P0oUO6795Y
-	 MLmve4rUeImNXH2RVMmtyTpI0IqjTl7EJLnJ4XYYdmrNhBpKt8kgz+kZLDsqKXUH3w
-	 pwECwpIv3vo0w==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: crypto: Convert hisilicon,hip0{6,7}-sec to DT schema
-Date: Tue, 13 May 2025 13:41:10 -0500
-Message-ID: <20250513184111.3052281-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGol99JP"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad243cdbe98so555789666b.0;
+        Tue, 13 May 2025 11:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747161675; x=1747766475; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FS499Fn7cHcQwCrrxOMu/9J8ZlAq0sxjeTj28CB5LpQ=;
+        b=NGol99JP8UV/vbAsQg3dPzbbPlOsyqK7NkHC7THA7bd8hnFw08heTIR1jEv+7Q7TSn
+         XvXiWpWOyfnL6vsp/2zFFrJATBAsW/OXPyLbGEfSXPYMls7EnycxP0dKBMToIUoGfFH9
+         sMmKsZsdl/DIPNNOdM3zfSrG6EcfgFqQZaFiw532jtboPHW0oGo3oM6VasS37+K5+/bv
+         xSWevKteSs5wcblYF5pMn/OBl65fDFR3X+I/WI/5y3nVxb1Tl2r1BJ/WvPvboKGLYPdV
+         fAfmmLZVbi+VurFUmmA+REAIq5WNZjLv7rN6SfIDGDMEwFd8oHw4n0T5zWkwutG0D97w
+         unfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747161675; x=1747766475;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FS499Fn7cHcQwCrrxOMu/9J8ZlAq0sxjeTj28CB5LpQ=;
+        b=O/1Dm3DK+gJ4D5CPVWlQsZky5wHJ1GY7uzXUt93Z7kRsTAz7AnI0x2SwbgXMKtUM4h
+         tKwMjr9orzM1lKRqOUVJOU0oWSi1IRN4zKELOs/7OceMCciVrGvLIvCoHq2HIfktfJDu
+         +8liqccOtb3sPMeYSeBxOd/6F0F6Pq8ELhEgOr1MtDcXX8yLfkPwRnCJfzsXgG8ArEy/
+         9mkoMoDeCd/l/K9nf0/b55veTOkysZnIdzie4ycnH/PJ509+TfGnlRVpCULOlkXPzF68
+         dBh5JCorSX5weL/yPvspYWWAcX8ILom/zhb6xELsYaAoEagYtYTf+8x6PPfkk9H9DSp0
+         Mfwg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/kePY65PjSwMT0G/C1w+wraN61HvHAPy6u65N5JLN8t2FpyLNQy38mBVw6U2/NUB+DZJi6i8Zos88@vger.kernel.org, AJvYcCW/xzEp8bY/RoF3Ff2YGqvbUAuRz1Tx1a6iSQk1kp+LrY0tem/M1VAVcD1ZfhtBTLQ/L1LnBWsEEorj5VI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHYrUlPDYMP/FX9QE5bzqnCHNSiPnfrETk9tvgMaagxsouXmZ8
+	0JoWMJzeYezNRHddad12E+e+/A44WdVoWzshSvj6jJiBBjb9fIEO8QuX
+X-Gm-Gg: ASbGnctvht8Vm2EDLlr6WPI0hKc0x9PIyTr7653w5dZG9peIalaqYhivKwCspgtmjQU
+	oTDPyPM0JjUjA5eJHcWXq4ra5L9RwAe/Z0lVxeVJMDeizdfA0nD5yG6R/azzzEVQxds15j6uGgo
+	cHGY1+CAYeHW9D4q8shotDsw9OHzSqirj56vswZ3mesKgtUix2YxSJts9lNKEe6M6oLohMKBx+b
+	3ILZz4n0rGR/YubAllPJT/wQa8rX3kcMVfYc4G0PjVpSYeNUAS6NFqBDLl1XosJafDs09UD0YZH
+	aME53bWoJQDTyyeqRVQlOumfZtxywrgpudJXeA==
+X-Google-Smtp-Source: AGHT+IH3PPd9ftO39AWMLttPZb75S1WDHXts0rqYRxjlvJH1YaH7n0nG5Om9DTphFy6TaK663YRLfg==
+X-Received: by 2002:a17:907:1819:b0:ad2:2146:3b64 with SMTP id a640c23a62f3a-ad4f7517c86mr62823666b.39.1747161674514;
+        Tue, 13 May 2025 11:41:14 -0700 (PDT)
+Received: from p183 ([46.53.251.33])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad253036b37sm383736466b.7.2025.05.13.11.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 11:41:14 -0700 (PDT)
+Date: Tue, 13 May 2025 21:41:12 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] CodingStyle: recommend static_assert/_Static_assert
+Message-ID: <109fc6a3-0a7f-4439-8f66-48987809d333@p183>
+References: <20250509203430.3448-1-adobriyan@gmail.com>
+ <20250509203430.3448-6-adobriyan@gmail.com>
+ <2025051046-epidemic-broadways-d3cf@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2025051046-epidemic-broadways-d3cf@gregkh>
 
-Convert the HiSilicon HIP06/7 Security Accelerator binding to DT schema
-format. It's a straight forward conversion.
+On Sat, May 10, 2025 at 08:21:01AM +0200, Greg KH wrote:
+> On Fri, May 09, 2025 at 11:34:27PM +0300, Alexey Dobriyan wrote:
+> > Linux's BUG_ON is done backwards (condition is inverted).
+> > But it is a long story.
+> > 
+> > However C11/C23 allow to partially transition to what all normal
+> > programmers are used to, namely assert().
+> > 
+> > Deprecate BUILD_BUG_ON, recommend static_assert/_Static_assert.
+> > And then some day BUG_ON will be flipped as well.
+> 
+> Odd, why are you attempting to make all of these mandates without
+> actually changing the code itself first?
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/crypto/hisilicon,hip06-sec.yaml  | 134 ++++++++++++++++++
- .../bindings/crypto/hisilicon,hip07-sec.txt   |  67 ---------
- 2 files changed, 134 insertions(+), 67 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/crypto/hisilicon,hip06-sec.yaml
- delete mode 100644 Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
+If I do source code first, some people or checkpatch.pl will say code is
+not conformant!
 
-diff --git a/Documentation/devicetree/bindings/crypto/hisilicon,hip06-sec.yaml b/Documentation/devicetree/bindings/crypto/hisilicon,hip06-sec.yaml
-new file mode 100644
-index 000000000000..2bfac9d1c020
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/hisilicon,hip06-sec.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/hisilicon,hip06-sec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Hisilicon hip06/hip07 Security Accelerator
-+
-+maintainers:
-+  - Jonathan Cameron <Jonathan.Cameron@huawei.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - hisilicon,hip06-sec
-+      - hisilicon,hip07-sec
-+
-+  reg:
-+    items:
-+      - description: Registers for backend processing engines
-+      - description: Registers for common functionality
-+      - description: Registers for queue 0
-+      - description: Registers for queue 1
-+      - description: Registers for queue 2
-+      - description: Registers for queue 3
-+      - description: Registers for queue 4
-+      - description: Registers for queue 5
-+      - description: Registers for queue 6
-+      - description: Registers for queue 7
-+      - description: Registers for queue 8
-+      - description: Registers for queue 9
-+      - description: Registers for queue 10
-+      - description: Registers for queue 11
-+      - description: Registers for queue 12
-+      - description: Registers for queue 13
-+      - description: Registers for queue 14
-+      - description: Registers for queue 15
-+
-+  interrupts:
-+    items:
-+      - description: SEC unit error queue interrupt
-+      - description: Completion interrupt for queue 0
-+      - description: Error interrupt for queue 0
-+      - description: Completion interrupt for queue 1
-+      - description: Error interrupt for queue 1
-+      - description: Completion interrupt for queue 2
-+      - description: Error interrupt for queue 2
-+      - description: Completion interrupt for queue 3
-+      - description: Error interrupt for queue 3
-+      - description: Completion interrupt for queue 4
-+      - description: Error interrupt for queue 4
-+      - description: Completion interrupt for queue 5
-+      - description: Error interrupt for queue 5
-+      - description: Completion interrupt for queue 6
-+      - description: Error interrupt for queue 6
-+      - description: Completion interrupt for queue 7
-+      - description: Error interrupt for queue 7
-+      - description: Completion interrupt for queue 8
-+      - description: Error interrupt for queue 8
-+      - description: Completion interrupt for queue 9
-+      - description: Error interrupt for queue 9
-+      - description: Completion interrupt for queue 10
-+      - description: Error interrupt for queue 10
-+      - description: Completion interrupt for queue 11
-+      - description: Error interrupt for queue 11
-+      - description: Completion interrupt for queue 12
-+      - description: Error interrupt for queue 12
-+      - description: Completion interrupt for queue 13
-+      - description: Error interrupt for queue 13
-+      - description: Completion interrupt for queue 14
-+      - description: Error interrupt for queue 14
-+      - description: Completion interrupt for queue 15
-+      - description: Error interrupt for queue 15
-+
-+  dma-coherent: true
-+
-+  iommus:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - dma-coherent
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        crypto@400d2000000 {
-+            compatible = "hisilicon,hip07-sec";
-+            reg = <0x400 0xd0000000 0x0 0x10000
-+                  0x400 0xd2000000 0x0 0x10000
-+                  0x400 0xd2010000 0x0 0x10000
-+                  0x400 0xd2020000 0x0 0x10000
-+                  0x400 0xd2030000 0x0 0x10000
-+                  0x400 0xd2040000 0x0 0x10000
-+                  0x400 0xd2050000 0x0 0x10000
-+                  0x400 0xd2060000 0x0 0x10000
-+                  0x400 0xd2070000 0x0 0x10000
-+                  0x400 0xd2080000 0x0 0x10000
-+                  0x400 0xd2090000 0x0 0x10000
-+                  0x400 0xd20a0000 0x0 0x10000
-+                  0x400 0xd20b0000 0x0 0x10000
-+                  0x400 0xd20c0000 0x0 0x10000
-+                  0x400 0xd20d0000 0x0 0x10000
-+                  0x400 0xd20e0000 0x0 0x10000
-+                  0x400 0xd20f0000 0x0 0x10000
-+                  0x400 0xd2100000 0x0 0x10000>;
-+            interrupts = <576 4>,
-+                        <577 1>, <578 4>,
-+                        <579 1>, <580 4>,
-+                        <581 1>, <582 4>,
-+                        <583 1>, <584 4>,
-+                        <585 1>, <586 4>,
-+                        <587 1>, <588 4>,
-+                        <589 1>, <590 4>,
-+                        <591 1>, <592 4>,
-+                        <593 1>, <594 4>,
-+                        <595 1>, <596 4>,
-+                        <597 1>, <598 4>,
-+                        <599 1>, <600 4>,
-+                        <601 1>, <602 4>,
-+                        <603 1>, <604 4>,
-+                        <605 1>, <606 4>,
-+                        <607 1>, <608 4>;
-+            dma-coherent;
-+            iommus = <&p1_smmu_alg_a 0x600>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt b/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
-deleted file mode 100644
-index d28fd1af01b4..000000000000
---- a/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
-+++ /dev/null
-@@ -1,67 +0,0 @@
--* Hisilicon hip07 Security Accelerator (SEC)
--
--Required properties:
--- compatible: Must contain one of
--  - "hisilicon,hip06-sec"
--  - "hisilicon,hip07-sec"
--- reg: Memory addresses and lengths of the memory regions through which
--  this device is controlled.
--  Region 0 has registers to control the backend processing engines.
--  Region 1 has registers for functionality common to all queues.
--  Regions 2-18 have registers for the 16 individual queues which are isolated
--  both in hardware and within the driver.
--- interrupts: Interrupt specifiers.
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
--  bindings.
--  Interrupt 0 is for the SEC unit error queue.
--  Interrupt 2N + 1 is the completion interrupt for queue N.
--  Interrupt 2N + 2 is the error interrupt for queue N.
--- dma-coherent:  The driver assumes coherent dma is possible.
--
--Optional properties:
--- iommus: The SEC units are behind smmu-v3 iommus.
--  Refer to iommu/arm,smmu-v3.txt for more information.
--
--Example:
--
--p1_sec_a: crypto@400d2000000 {
--	compatible = "hisilicon,hip07-sec";
--	reg = <0x400 0xd0000000 0x0 0x10000
--	       0x400 0xd2000000 0x0 0x10000
--	       0x400 0xd2010000 0x0 0x10000
--	       0x400 0xd2020000 0x0 0x10000
--	       0x400 0xd2030000 0x0 0x10000
--	       0x400 0xd2040000 0x0 0x10000
--	       0x400 0xd2050000 0x0 0x10000
--	       0x400 0xd2060000 0x0 0x10000
--	       0x400 0xd2070000 0x0 0x10000
--	       0x400 0xd2080000 0x0 0x10000
--	       0x400 0xd2090000 0x0 0x10000
--	       0x400 0xd20a0000 0x0 0x10000
--	       0x400 0xd20b0000 0x0 0x10000
--	       0x400 0xd20c0000 0x0 0x10000
--	       0x400 0xd20d0000 0x0 0x10000
--	       0x400 0xd20e0000 0x0 0x10000
--	       0x400 0xd20f0000 0x0 0x10000
--	       0x400 0xd2100000 0x0 0x10000>;
--	interrupt-parent = <&p1_mbigen_sec_a>;
--	iommus = <&p1_smmu_alg_a 0x600>;
--	dma-coherent;
--	interrupts = <576 4>,
--		     <577 1>, <578 4>,
--		     <579 1>, <580 4>,
--		     <581 1>, <582 4>,
--		     <583 1>, <584 4>,
--		     <585 1>, <586 4>,
--		     <587 1>, <588 4>,
--		     <589 1>, <590 4>,
--		     <591 1>, <592 4>,
--		     <593 1>, <594 4>,
--		     <595 1>, <596 4>,
--		     <597 1>, <598 4>,
--		     <599 1>, <600 4>,
--		     <601 1>, <602 4>,
--		     <603 1>, <604 4>,
--		     <605 1>, <606 4>,
--		     <607 1>, <608 4>;
--};
--- 
-2.47.2
+I want to codify rules so my patches don't rejected due to silly
+reasons, due to the rules which don't make sense.
 
+> That's just asking for major churn for no good reason...
+
+Reason is there.
+
+static_assert() is better because it is in the standard, and
+Linux convention of inverting condition never made any sense.
+
+> Sorry, but this series makes no sense to me.
