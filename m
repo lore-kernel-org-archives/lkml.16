@@ -1,130 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654F51F151D;
-	Tue, 13 May 2025 13:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CF126868E;
+	Tue, 13 May 2025 13:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142493; cv=none; b=NQzXFLoR1egESL9MwWGQohGXdH8gIb1mAkF39CqWKyYgwfybcpzaDCn7lA9bCDNDYjEiPDmYWv2VOwuJ3K6IQ4Bs8JNGjcAah468vW+W0ZzRX7awJXOMDRqVJTS6JyTADKUhLymy38K8hbmPVoogkDN2tZNZo2ZJD97bqZUM+fk=
+	t=1747142560; cv=none; b=VJE+pTpJcIy9vyOGREFPYIkZ2gwQbdf3YUbt5HszsmlZR35dl/sgI5NjOqUUHJ7xPUeKDvf26m3H0D7G4aAiE8HLRHXA6Uh8o7ZRsdCAfK9jg9NrtAJbCasBbRs+iUHIX1Yw2xB2yqQdVSF8HEJoo+mXFa9U8gUj6e3uaB+ncso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142493; c=relaxed/simple;
-	bh=5dffDf9PmzYG0Regdsf+hGkrpIjHmeqazNk/TmzOfCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaaaceQmgEZvSF5q0TXNdIPHHpgBha2XKgBZamUEh78KZwXk1+U6hfp7jeMarTCaS8ZOPLUhxqGWrKfh6sDmx/w/MFZcc4/E2hbkU7jRYN4wO6vc9q/opb7akTFOxrvbVLCrEq+sx2mZQAwKq3+tBe28ASFDjozBKOHpcvqtvWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KiDYDaun; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747142560; c=relaxed/simple;
+	bh=AYBGImU4JxAuokQBi+yhBoIxIhu5mhSguQdQWa0LSrk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uquNxa7XCSSKnuoBmPmmWwaaDYu609CvJYEbLPnB7aWxt1Nrmg4SUKkLSY6VSDK/nVI9ewqvOfPxdkxFI1NLdULOHTH0S55gPSo8PkviFutTeg8id87doUaxomT6a0w/qeSvS1WX1PZkq2HFpYjnJmOuGzhcGIDfDO3wiMxid1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoTlH0rY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KiDYDaun"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747142492; x=1778678492;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5dffDf9PmzYG0Regdsf+hGkrpIjHmeqazNk/TmzOfCA=;
-  b=KiDYDaunmT2lqF8jJe4dbqQ71mhB8wsla5pujIBxrLnap862R+F80aKB
-   iU5zniezs/qYRTo0VttIRxV83kggI7LNVvhuXZRX21s/aOVT0+l3bzpRJ
-   8n6GWGfjoXBeO5gmUFu/RFHdnjC+ezi9Awx5p355Nv7tYNzRtlVuPRACz
-   zZfS2VxMrBO5c/S+xInHGtbLTBl8Q5I9hOEtEGA7xGnfhBzhKwmcq6UFF
-   YnICU0B6qhLmwdZD8nuLL/7HKD4dPJWK+M2Yw7HaGeWKXmQ0gG9O6UdUk
-   aULBT9iDDHZPllU+bu7e9Z7ia/u3vASRLZx6hntGedGnynf6LA0WbpqQa
-   A==;
-X-CSE-ConnectionGUID: X+Cqe41XSKmagkzmfuTJGA==
-X-CSE-MsgGUID: a7nbc20xTUKCBGHPU/mQbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="66537730"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="66537730"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:21:31 -0700
-X-CSE-ConnectionGUID: Qd7J/lAsQY+9a3S9ZfTPEQ==
-X-CSE-MsgGUID: HMxCdOBPQY+FmIGVVUcbdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="141756581"
-Received: from soc-5cg4396xfb.clients.intel.com (HELO [172.28.180.78]) ([172.28.180.78])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:21:28 -0700
-Message-ID: <dbc58b6f-b15e-42d9-b4d7-344b9ab53f74@linux.intel.com>
-Date: Tue, 13 May 2025 15:21:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoTlH0rY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A2CC4CEE4;
+	Tue, 13 May 2025 13:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747142559;
+	bh=AYBGImU4JxAuokQBi+yhBoIxIhu5mhSguQdQWa0LSrk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JoTlH0rY06mrVkLc3fdgAaE8v+P1iplak1yCHw1mrVS9y8wWG3L+Um5x0rDDcykhS
+	 WcpvNTySLARd+8counqcxajs9GNBoHJ9KCmJwoZVQwZHdoH806vDxg7Gpr8wddaVWW
+	 e2hh2goOAmDRRMJPOfdVby9Cat5ru8RDJhPYRtY1/AIe8+AL2K/eGg/UIUjzHQopjp
+	 hndlo7nUrJ0nVgntSbV9VqCfL+u9+KdTqbQP90D0abjUp13rwy+fZT/TtBaqp8o4eS
+	 iK2o6hMkCcWXvDY9uI17FXY0eUr9K7/LKFSWt3zonVR8BKD5T+qX+k7mgfg5UrrNrD
+	 U5DXK8aGoEUMw==
+Date: Tue, 13 May 2025 22:22:35 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250513222235.33fd1817970cd601b18e92cf@kernel.org>
+In-Reply-To: <CAL+tcoCThLOL1AKPamh2fpeDjYEqvEber0Eddc2ZVxi6VAYJkQ@mail.gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-3-kerneljasonxing@gmail.com>
+	<20250513185810.3d57dfe2a0c05784ddf8f0a9@kernel.org>
+	<CAL+tcoCThLOL1AKPamh2fpeDjYEqvEber0Eddc2ZVxi6VAYJkQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ixgbe/ipsec: use memzero_explicit() for stack SA structs
-To: Zilin Guan <zilin@seu.edu.cn>
-Cc: andrew+netdev@lunn.ch, anthony.l.nguyen@intel.com, davem@davemloft.net,
- edumazet@google.com, intel-wired-lan@lists.osuosl.org,
- jianhao.xu@seu.edu.cn, kuba@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com, przemyslaw.kitszel@intel.com
-References: <170f287e-23b1-468b-9b59-08680de1ecf1@linux.intel.com>
- <20250513122441.4065314-1-zilin@seu.edu.cn>
-Content-Language: pl, en-US
-From: Dawid Osuchowski <dawid.osuchowski@linux.intel.com>
-In-Reply-To: <20250513122441.4065314-1-zilin@seu.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2025-05-13 2:24 PM, Zilin Guan wrote:
-> OK, I will resend the patch to the iwl-net branch and include the Fixes
-> tag. Before I do that, I noticed that in ixgbe_ipsec_add_sa() we clear
-> the Tx SA struct with memset 0 on key-parsing failure but do not clear
-> the Rx SA struct in the corresponding error path:
+On Tue, 13 May 2025 18:32:29 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
+
+> Hi Masami,
 > 
-> 617     /* get the key and salt */
-> 618     ret = ixgbe_ipsec_parse_proto_keys(xs, rsa.key, &rsa.salt);
-> 619     if (ret) {
-> 620         NL_SET_ERR_MSG_MOD(extack,
->                                "Failed to get key data for Rx SA table");
-> 621         return ret;      /* <- no memzero_explicit() here */
-> 622     }
-> ...
-> 728     if (ret) {
-> 729         NL_SET_ERR_MSG_MOD(extack,
->                                "Failed to get key data for Tx SA table");
-> 730         memset(&tsa, 0, sizeof(tsa));
-> 731         return ret;      /* <- clears tsa on error */
-> 732     }
+> On Tue, May 13, 2025 at 5:58 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi Jason,
+> >
+> > On Mon, 12 May 2025 10:49:32 +0800
+> > Jason Xing <kerneljasonxing@gmail.com> wrote:
+> >
+> > > From: Jason Xing <kernelxing@tencent.com>
+> > >
+> > > In this version, only support dumping the counter for buffer full and
+> > > implement the framework of how it works. Users MUST pass a valid @buf
+> > > with a valid @len that is required to be larger than RELAY_DUMP_BUF_MAX_LEN
+> > > to acquire which information indicated by @flags to dump.
+> > >
+> > > RELAY_DUMP_BUF_MAX_LEN shows the maximum len of the buffer if users
+> > > choose to dump all the values.
+> > >
+> > > Users can use this buffer to do whatever they expect in their own kernel
+> > > module, say, print to console/dmesg or write them into the relay buffer.
+> > >
+> > > Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
+> > > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > > ---
+> > >  include/linux/relay.h | 10 ++++++++++
+> > >  kernel/relay.c        | 35 +++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 45 insertions(+)
+> > >
+> > > diff --git a/include/linux/relay.h b/include/linux/relay.h
+> > > index 022cf11e5a92..7a442c4cbead 100644
+> > > --- a/include/linux/relay.h
+> > > +++ b/include/linux/relay.h
+> > > @@ -31,6 +31,15 @@
+> > >  /*
+> > >   * Relay buffer error statistics dump
+> > >   */
+> > > +enum {
+> > > +     RELAY_DUMP_BUF_FULL = (1 << 0),
+> > > +
+> > > +     RELAY_DUMP_LAST = RELAY_DUMP_BUF_FULL,
+> > > +     RELAY_DUMP_MASK = (RELAY_DUMP_LAST - 1) | RELAY_DUMP_LAST
+> > > +};
+> > > +
+> > > +#define RELAY_DUMP_BUF_MAX_LEN 32
+> > > +
+> > >  struct rchan_buf_error_stats
+> > >  {
+> > >       unsigned int full;              /* counter for buffer full */
+> > > @@ -170,6 +179,7 @@ extern int relay_late_setup_files(struct rchan *chan,
+> > >                                 struct dentry *parent);
+> > >  extern void relay_close(struct rchan *chan);
+> > >  extern void relay_flush(struct rchan *chan);
+> > > +extern void relay_dump(struct rchan *chan, char *buf, int len, int flags);
+> > >  extern void relay_subbufs_consumed(struct rchan *chan,
+> > >                                  unsigned int cpu,
+> > >                                  size_t consumed);
+> > > diff --git a/kernel/relay.c b/kernel/relay.c
+> > > index b5db4aa60da1..0e675a77285c 100644
+> > > --- a/kernel/relay.c
+> > > +++ b/kernel/relay.c
+> > > @@ -810,6 +810,41 @@ void relay_flush(struct rchan *chan)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(relay_flush);
+> > >
+> > > +/**
+> > > + *   relay_dump - dump statistics of the specified channel buffer
+> > > + *   @chan: the channel
+> > > + *   @buf: buf to store statistics
+> > > + *   @len: len of buf to check
+> > > + *   @flags: select particular information to dump
+> > > + */
+> > > +void relay_dump(struct rchan *chan, char *buf, int len, int flags)
+> > > +{
+> > > +     unsigned int i, full_counter = 0;
+> > > +     struct rchan_buf *rbuf;
+> > > +     int offset = 0;
+> > > +
+> > > +     if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
+> > > +             return;
+> > > +
+> > > +     if (len < RELAY_DUMP_BUF_MAX_LEN)
+> > > +             return;
+> > > +
+> > > +     if (chan->is_global) {
+> > > +             rbuf = *per_cpu_ptr(chan->buf, 0);
+> > > +             full_counter = rbuf->stats.full;
+> > > +     } else {
+> > > +             for_each_possible_cpu(i) {
+> > > +                     if ((rbuf = *per_cpu_ptr(chan->buf, i)))
+> > > +                             full_counter += rbuf->stats.full;
+> > > +     }
+> > > +
+> > > +     if (flags & RELAY_DUMP_BUF_FULL)
+> > > +             offset += snprintf(buf, sizeof(unsigned int), "%u", full_counter);
+> > > +
+> > > +     snprintf(buf + offset, 1, "\n");
+> >
+> > Is there any reason to return the value as string?
+> > If it returns a digit value and the caller makes it a string,
+> > it could be more flexible for other use cases.
 > 
-> Both paths return immediately on key-parsing failure, should I add a
-> memzero_explicit(&rsa, sizeof(rsa)) before Rx-SA's return or remove the
-> memset(&tsa, ...) in the Tx-SA path to keep them consistent?
+> Thanks for the feedback.
+> 
+> I will remove the above one as you pointed out in the next revision.
+> And it seems unnecessary to add '\0' at the end of the buffer like
+> "*buf = '\0';"?
 
- From the code in ixgbe_ipsec_parse_proto_keys() it seems that copying 
-of the salt and key values occurs at the end of the function and only in 
-case of success, see below.
+Sorry, I think you missed my point. I meant it should be
 
----
-if (key_len == IXGBE_IPSEC_KEY_BITS) {
-	*mysalt = ((u32 *)key_data)[4];
-} else if (key_len != (IXGBE_IPSEC_KEY_BITS - (sizeof(*mysalt) * 8))) {
-	netdev_err(dev, "IPsec hw offload only supports keys up to 128 bits 
-with a 32 bit salt\n");
-	return -EINVAL;
-} else {
-	netdev_info(dev, "IPsec hw offload parameters missing 32 bit salt 
-value\n");
-	*mysalt = 0;
+/* Return the number of fullfilled buffer in the channel */
+size_t relay_full(struct rchan *chan);
+
+And keep the snprintf() in the blk_dropped_read() because that function
+is responsible for formatting the output.
+
+static ssize_t blk_dropped_read(struct file *filp, char __user *buffer,
+ 				size_t count, loff_t *ppos)
+{
+	struct blk_trace *bt = filp->private_data;
+	char buf[16];
+ 
+	snprintf(buf, sizeof(buf), "%zu\n", relay_full(bt->rchan));
+ 
+ 	return simple_read_from_buffer(buffer, count, ppos, buf, strlen(buf));
 }
-memcpy(mykey, key_data, 16);
 
-return 0;
----
+But the question is that what blk_subbuf_start_callback() counts
+is really equal to what the relay_full() counts, because it seems
+relay_full() just returns the current status of the channel, but
+bt->dropped is the accumlated number of dropping events.
 
-In my (limited) understanding the memset(&tsa, 0, ...) call in case of 
-error after the ixgbe_ipsec_parse_proto_keys() is redundant, as there is 
-nothing to clear in the tsa.key and tsa.salt. The rsa and tsa also 
-contain the pointer to the xfrm_state and I am unsure whether we should 
-clear that as well.
+This means that if the client (reader) reads the subbufs the
+number of full subbufs will be decreased, but the number of
+dropped event does not change.
 
-Please note that I do not have much experience with ipsec so take my 
-opinion with a grain of salt. Best for someone more experienced to assess.
+Can you recheck it?
 
-Thanks,
-Dawid
+Thank you,
 
 > 
-> Best Regards,
-> Zilin Guan
+> While at it, I'm thinking if I can change the return value of
+> relay_dump() to "how many bytes do we actually write into the buffer"?
+> Does it sound better?
+> 
+> Thanks,
+> Jason
+> 
+> >
+> > Thank you,
+> >
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(relay_dump);
+> > > +
+> > >  /**
+> > >   *   relay_file_open - open file op for relay files
+> > >   *   @inode: the inode
+> > > --
+> > > 2.43.5
+> > >
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
