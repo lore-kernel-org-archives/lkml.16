@@ -1,93 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81571B4159;
-	Tue, 13 May 2025 10:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB6923C4EC;
+	Tue, 13 May 2025 10:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130548; cv=none; b=khWlYfoAtZvy2Z66tidn7oz+r2H+2ow7rKBFjtMU+VYtaNO/IeJnUo/YdqUQAHmn3WB5mPaAzGKvSOeP04UB0yZg4qKhUPyohQVuY505XXCoCJ5LBhCaOdNZEDzipHFY4aqGnT5oM8XeKW3pVVNEAGmHgiMNeUgNoZ2PbYYaWUk=
+	t=1747130563; cv=none; b=UVrVdWWLPoSMujUZ3kX1ei5yCx09FR4uPINm03DyRxzW3dZBRCRKHvREbGElXvBau2ZsTIA5wrbk+zSGGDRIxK0+4tzcZQPyRhOLpqK/4dgimh3qTgQRiHPy2YETF/cOSS44XSqLt5uZNzmmJ+OTUKsGbNYL0PYj7bvoC0JiRFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130548; c=relaxed/simple;
-	bh=M7yC5gonucPh1l67fzVqttNOeD8QRYITN3RB/I7G3XQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eut6L7rBitDsFvJe5yfxvarFDab1FkGjTrlMnXG2XsoQM5U3X69LkHJ7AeMbD+uuGEFT+cmmt5w3eHxPXXZDeWJC5heoLAm4awdy2GUoUiR8r4397sA2MrzNulji/GJI2IWukHwj3If3m17x8YsSaz8GIyJeAz+OzOWRrKh2LLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B93nRF2F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B93nRF2F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167DCC4CEED;
-	Tue, 13 May 2025 10:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747130547;
-	bh=M7yC5gonucPh1l67fzVqttNOeD8QRYITN3RB/I7G3XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B93nRF2FEnevVm2OKxuN5M7Jwdgraa4JcjF78RgQvzVgQNPreorB9HgYh5Heoly+N
-	 lxVijv1t0n36BmQJg5Ez5OcERJ0B4aGllkRoesUkoN3kbsA1grVTBRIFoTV3G48UBb
-	 npuVCDrlqV6o1liJALhxMnw7rQosbKe7tIhTUsBl8/xihBDSzHvxj8OVzmFNq7uzDK
-	 XzVHo0hGKH9P770YqfQ0Sgn0EItEpMFDReClb9Lhaj6AofCrfaHTTUZo7+yryon6uD
-	 lqV6LjFLoiX9A1YuvIOCTllYlJ67HwagBqnywS5YxPznuQ9POhlBG+DlVClXJF8R1x
-	 T55NLATh6kzLw==
-Date: Tue, 13 May 2025 12:02:22 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <aCMYrgd9DDQl7G1W@gmail.com>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+	s=arc-20240116; t=1747130563; c=relaxed/simple;
+	bh=XOaSi5B/2MPi0ZolAxQSAyMx/S6PktLSRWiUKfgAWAM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Is64wTLO2t0FTVU3LHCeeAFD1GamnE4niqeaAWWCPLhkSu2A3QwRI2kjNUjJxs/u1S8MxnvZ698+5PPfeY08rO8SVnB7kVpnDnd2Q/BSK9Mx6XqcmEyhuGCPH4zUsFgiiSdV3sLUiWQ4h2OExw4wcuEWa/Kc6Mdt6qwVmK4sdR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f6dccdcadaso4270526b6e.2;
+        Tue, 13 May 2025 03:02:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747130560; x=1747735360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aLPcK3M4fHFXSHYEvDg/pvJ8s0/A80A92TKsHDLatZg=;
+        b=W2H7HCQVgzq3KEY5wCA7bWm/PyjW7alnZFg6HJfMs5bFjlqm1tH3Shg8bdejw9qnYc
+         TxEAxWrI+XfNYfk0+I54S8IVLpk8UJyzlBuV8k51PaW0tiiub3nfY+WF7FMEcn+DHwjF
+         glhi5Kim81WYsDv8a3RDXhN8v257iZJCCisbzhf3eF4gfFmY31F52wQPsFb0QILZzV3m
+         k402/puDWT2sEC7S3jqk9recKTpn/iqNQu4oCmZ1iZZcM8ILouOcmztqtnV+iVK+xene
+         gqIDmD7gRzXDYEVfdvXoLjRRAK2r7O//cc79DUxCAjeQaPgpyGVlPC/VJgN+EaAejC7Q
+         jlcg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6bYwTrTOlBQkHf2DagPpLNiVsohMU8MPiNMGFJvlyCFyZYdDD3KGnLqlMx7F7wje4+SiAScFEeoX1CZ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpWgDhqTAyGArbJz/mL0yYkmhtmXwszXnsm/EhkRWbu4fwPcLG
+	bhYkmwTUwMthf4mag3kpF+OayqUWIflb9EY2xnGpud1ugoF3naz7GzvP7CfEbgo=
+X-Gm-Gg: ASbGnctXxU1towyPixl38Gy1glyQYLkt1+uLs/KkEV8LIHi/LwOq441ic4gHB7RcrMh
+	KUpEG0xsgsAabnObOXD+3DcTPVrvpD5LHubwnzW6SsQuaKVMR4l3EvsoLEiwYUZujRYmpXxigp3
+	pLdpnUb1G/mu7dVdCKq3I82FzmryLZu+qsnZV0k4VF7TybMIuSly3jiZmwbR0qwZpbrZyIIr1vB
+	mh7I74zU39cyaYY7KvJLlNDgSb45WElhR6bQfRpz5v+wtOb5JjSlRGFjpibRh75PIXOjcaMSfkB
+	b7H5etHjYA6CIm8s0+zJjSKPMjpAE48nn9OiC/n1dyKPuAcKQDbfnA9pAqD2e3ijPn64r9+9ibb
+	y8IDtlqPVOhU=
+X-Google-Smtp-Source: AGHT+IFZ6nxbxPUXjKqsIZBUU0IJ9Oh3xgAmcnHaYyaJ8aGDxxXT+yXc7ObntfPZRIdH/Lqxwn7X4w==
+X-Received: by 2002:a05:620a:1988:b0:7c5:3da2:fc75 with SMTP id af79cd13be357-7cd010f78ebmr2161247285a.24.1747130549798;
+        Tue, 13 May 2025 03:02:29 -0700 (PDT)
+Received: from localhost.localdomain (ip171.ip-51-81-44.us. [51.81.44.171])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00fdc5f6sm689922085a.72.2025.05.13.03.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:02:29 -0700 (PDT)
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Miklos Szeredi <mszeredi@redhat.com>
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: Suppress unused variable warning
+Date: Tue, 13 May 2025 18:01:53 +0800
+Message-ID: <20250513100207.114000-1-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+When running `make kselftest`, the following compilation warning was encountered:
 
-* Borislav Petkov <bp@alien8.de> wrote:
+mount-notify_test.c: In function ‘fanotify_rmdir’:
+mount-notify_test.c:490:17: warning: ignoring return value of ‘chdir’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  490 |                 chdir("/");
+      |                 ^~~~~~~~~~
 
-> On Mon, May 12, 2025 at 09:08:35PM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > 
-> > !!! Boot tested on non-SEV guest ONLY !!!!
-> 
-> ...
-> 
-> > !!! Boot tested on non-SEV guest ONLY !!!!
-> > 
-> > Again, I will need to lean on Tom to determine whether this breaks
-> > SEV-SNP guest boot. As I mentioned before, I am still waiting for
-> > SEV-SNP capable hardware to be delivered.
-> 
-> Ingo, please do not rush this stuff in before Tom and I have tested it
-> successfully with SEV* guests.
-> 
-> Thanks!
+This patch addresses the warning by
+explicitly suppressing the unused result of the `chdir` function.
 
-I don't intend to rush it, but note that AMD's SEV-SNP testing is 
-lagging a *lot* at the moment: Ard asked for testing the -v2 series on 
-May 4:
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+ .../selftests/filesystems/mount-notify/mount-notify_test.c    | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-    https://lore.kernel.org/r/20250504095230.2932860-25-ardb+git@google.com
+diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+index 59a71f22fb118..de847e2b12017 100644
+--- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
++++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+@@ -487,7 +487,9 @@ TEST_F(fanotify, rmdir)
+ 	ASSERT_GE(ret, 0);
+ 
+ 	if (ret == 0) {
+-		chdir("/");
++		// Suppress -Wunused-result
++		// Ref: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66425#c34
++		(void) !chdir("/");
+ 		unshare(CLONE_NEWNS);
+ 		mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
+ 		umount2("/a", MNT_DETACH);
+-- 
+2.43.0
 
-That request for testing was ignored AFAICS. It's May 13 and still 
-crickets.
-
-We also had SEV-SNP boot bugs pending since August 2024, that nobody 
-but (eventually) AMD triggered. Ie. very few people outside of the 
-vendor are testing SEV-SNP AFAICS, and even vendor testing is sporadic 
-...
-
-Please ask AMD internally to get SEV-SNP tested more reliably. Testing 
-this -v3 series would be a good start. Hint, hint. ;-)
-
-Thanks!
-
-	Ingo
