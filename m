@@ -1,82 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20024150997;
-	Tue, 13 May 2025 09:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238A2201278;
+	Tue, 13 May 2025 09:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129705; cv=none; b=dC/9Af3GChWGLYf71VZiJVUZhl6heWlEhQti52UMG90nEpD/kmNPVRGt08Vj+iMEkiVJc7JsA8ch1mfBDh0V5+ocUVYGeWIXohWJN4w+i3s+pIh90p9bI970uX8Qg+D02Ug5XGsCqU3YUhiyXfeRzS0Z77gJF7akY9o02a4Yb4A=
+	t=1747129735; cv=none; b=avXweAheWlqa3v52kVqCKiYgORrKAj8/paaQXRC7kulT1hR/ay9Z4B0kJMiHyY2bwpyjBFSsoRUHuQuElo8m6ZVHasZiJAG3DIfv7iOhuP7hGGeUAFebasUl+PK2n4qFYy9/2Pp5M793fhVyTdOkXQoOxKdhl0h1ukg2HgQOMls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129705; c=relaxed/simple;
-	bh=VCClFDmWn98t6LGY59WiqwTKlWQSpuTu+3dions5oYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWe/vbGqaVbikE+Xoj1jCU8HUXt0KzXqgtuGR5romAgIjfr13MuFILq9ImiWsiwhlNeQ6urLA1hiO3J2naI7WRN0XcZcOw5PjKRoLhZ+1FD8rfHRCk2J/ghKyzigmf3jfU4++vyvRGdS3snNkzIIhl6Ke+GseLUTvdNL43OamUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ks3xn8mh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747129735; c=relaxed/simple;
+	bh=gbVfdS0/+BxgEuIBvwOkx71HWIkUx+Hx9hoqvnXwFPA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=o4LwOcFnNjknhTce5R4X55Fmj79ms3YymXfl/dgKelK+ruQbvG/pRI9hA4+EDaADLSlNOAqnRe9hqxtY63rl4CkLlC8TPbgnzy1DpXWjaFpZm6WrttD/4SuuQquTA08ThUyxT3rEaEOF3VxcsFJXbSWRSurc5Wuq8mCXgS5WEcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/+I40Fk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks3xn8mh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C44C4CEE4;
-	Tue, 13 May 2025 09:48:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/+I40Fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C84CBC4CEE4;
+	Tue, 13 May 2025 09:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747129704;
-	bh=VCClFDmWn98t6LGY59WiqwTKlWQSpuTu+3dions5oYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ks3xn8mh1X7cSFC1KOwcVIF+OO+y6b0Ag8d68qQn04X5kW7CMKhoM4lWd0o4yG+kc
-	 E2xeVPxbRc3SdnUPCky7X/XtlfEF/hLjGqWe7OL5VjKCtO7Qzd7IT0UuRNRQ7RmqeX
-	 1Z2RVvP9KAMHJwTndwxWw4KFhhj/QpSDPB6zcG1FhBtl3A1m+sZxIkbpPqy8lgH/sG
-	 JNsFw7sZo2CBD7k3Un3DH7UpQPVIwyLb6Mfos5Fh7PvJqOrPbrX0LCMPr0K/LERuF5
-	 3SP9kCFoogsdCNSZgueWGFi1Y5fmKpEB9R9aqs7s50yewlWBh+2LFz123uqyh4ndmD
-	 EzgWPsF1CgMSg==
-Date: Tue, 13 May 2025 11:48:19 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.1 00/92] 6.1.139-rc1 review
-Message-ID: <aCMVYwGTloaYW2u_@finisterre.sirena.org.uk>
-References: <20250512172023.126467649@linuxfoundation.org>
+	s=k20201202; t=1747129734;
+	bh=gbVfdS0/+BxgEuIBvwOkx71HWIkUx+Hx9hoqvnXwFPA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=S/+I40Fk05pgWnOzsmYFqbsnS/EniPyQGsyIbpgbfd/Ae9mWx14ugARZOBDKLNZ0s
+	 d4O0KfAZcuwWoxOYpHRWzNBh+Amp5LNzvuSr/RToFgQyz2uqFs2eJoaHuZTpx+nHFc
+	 eP7sJz2NYuLVj1ZOzKAX1OF5FG2HVIpDvZJxh9yfYBkAJEC6Y5cjpKvSEdzJCQgXMH
+	 cG8vLh234IqS1VwKI29GL8Bo4nmWiwDpyMCE4YX8HdBsHx52dvJtRuqIhOmPte2adK
+	 /GXUnHuZuVMWGztFxhd6CCRWWV5Qf5AYxshexI3k23cUpHmgabjCbxALUCBHYXOVlE
+	 iulsnetrPEAtg==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Alexandre Mergnat <amergnat@baylibre.com>, 
+ Amjad Ouled-Ameur <aouledameur@baylibre.com>, 
+ =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
+ Fabien Parent <fparent@baylibre.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org
+In-Reply-To: <20250502-mt8365-infracfg-nao-compatible-v1-1-e40394573f98@collabora.com>
+References: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
+ <20250502-mt8365-infracfg-nao-compatible-v1-1-e40394573f98@collabora.com>
+Subject: Re: (subset) [PATCH 1/2] dt-bindings: mfd: syscon: Add
+ mediatek,mt8365-infracfg-nao
+Message-Id: <174712973156.4137268.14056292856907058087.b4-ty@kernel.org>
+Date: Tue, 13 May 2025 10:48:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HvTXniaQ6ThjIWnf"
-Content-Disposition: inline
-In-Reply-To: <20250512172023.126467649@linuxfoundation.org>
-X-Cookie: Well begun is half done.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-b75d9
 
+On Fri, 02 May 2025 12:43:21 -0400, Nícolas F. R. A. Prado wrote:
+> The register space described by DT node of compatible
+> mediatek,mt8365-infracfg-nao exposes a variety of unrelated registers,
+> including registers for controlling bus protection on the MT8365 SoC,
+> which is used by the power domain controller through a syscon.
+> 
+> Add this compatible to the syscon binding.
+> 
+> [...]
 
---HvTXniaQ6ThjIWnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied, thanks!
 
-On Mon, May 12, 2025 at 07:44:35PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.139 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+[1/2] dt-bindings: mfd: syscon: Add mediatek,mt8365-infracfg-nao
+      commit: cbb005b91726ea1024b6261bc1062bac19f6d059
 
-Tested-by: Mark Brown <broonie@kernel.org>
+--
+Lee Jones [李琼斯]
 
---HvTXniaQ6ThjIWnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgjFWIACgkQJNaLcl1U
-h9BCUwf5AcQUMQH/YoT7PfcB4JFLTtR79WhEs4DtSX8Tg6MHnFGqnSuIKAzM/ERp
-Z9fz0awCn92QKzQTH8WLkZTBwMBVj1Qbg4KNBFJo5kLC3wsDHVsJGNVjHjiVOLkq
-XGfAODKABAXVVXKrCW11kkUuWl9GR7B7XcLOM59CBZSKUB3xd9ULZ2yVMkjoKC41
-A0Gygov8pWj30B+HpdB7YIx4ZehGruyBy/OP13qdW1n8OhcnvkbNV+HIGuVn/UeV
-RJ/b9er2k+AQVth7ZHX3K3zDILi8/ztd0GqbT1c2XU6GauXcCwe63cR3g6+mSXJR
-uwvU1ub5KkBwTOOEJRiLbHGh3yPgzQ==
-=AhpQ
------END PGP SIGNATURE-----
-
---HvTXniaQ6ThjIWnf--
