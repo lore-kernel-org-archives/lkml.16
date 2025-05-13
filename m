@@ -1,139 +1,121 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A574B1E520F;
-	Tue, 13 May 2025 05:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D28F1E5B9C
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747115582; cv=none; b=ArnFg9Pw+2RUlCvqKf7dOJSw8BfnMaVAZYMEdG+OHMdVYBchN6d3JakV2qVgTNcLhkhycFaCHJHyko6QFPjCBBQIXwLBgasrDuJJYsXCgZG3+XMjTBJxhunCHOEPwOOB8/5Ap+Ewqt1k9mFPCR06/jC+JSrcalvVSYfHrkYyExQ=
+	t=1747115615; cv=none; b=nMRntJcX7w97OvqhJug2/SH7m6Luj7NN6vtQEN+XTlcyoHu22gxmMLCWMBvpAG2Evca0ocxnyCVBgxwtHI1Wd4nVer/6YRD6Z7grvCWsTFRPGAArmU7+GBbgjDzBMzdtRscKtugX/7Upe3g0vxvVmxyKToyKbrmcYwUxDr7RDTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747115582; c=relaxed/simple;
-	bh=qzoEG/KSWyPHrzMMAY6A0/isDGnZiB/gJkrsON+qzwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KlB3awfJJOL1Mmj4WxfklLFOAGk8OwtnqEYC6ZCFwJYvofkRHOk0HGr297mIhWKBFJmlZzFpD1NkkcNrDYGkcwtGN/NUg8eWXRW2VemEEHUGR56MDTPJ0Xnoe9f8K+6H8UVu9u2GHIyY5GeDScSLijnxA1OW14eyjFXwBwvpOMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9LHC095; arc=none smtp.client-ip=209.85.166.171
+	s=arc-20240116; t=1747115615; c=relaxed/simple;
+	bh=jB+1NSGMzo+MjMb56ZSc0FpCP8SLNObWRnq7yTjSBIg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=r8SMF5LQof3n30mn3GBAv6xZvuNm9kgmJyQUBYwg/zORHpQBm86cwaD55N1BWUiX7Q38znSZaf3noM5GYSqbBFk2OxkkhaPDR5QibNaK9spe2oOdwXSWaZR8knybGTGryhgi8+qwz9wgJXOytvlovDSlrag9lYNuyEkjg15c30M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XnNLc/hc; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9LHC095"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d8020ba858so58123185ab.0;
-        Mon, 12 May 2025 22:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnNLc/hc"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2317d94c9cdso4220145ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 22:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747115578; x=1747720378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1UNv9BVa0wuw40fppKUR+rAamisYbCt010QW3EVI8dY=;
-        b=X9LHC0956XgfSG5eabE4yV1+gQFTSZRT8keckQ6HY54YHy89un7bY5SqXM9ozhoRxa
-         ReeNCOeCHzTbO+uwgWhhRAylKMZkfmEJnwmZd+Lt8N45QeGcV4JnKRTfWmISEz9fVzwW
-         Majuj9/qSKv6SA757SC0Ny+DnxS/Txu2WjiKQkMbzyPkYdxsQz4mg6NhFbQBE1yC+QvT
-         /q7JHnTx8MHyxHJO5XuvO6Z+4VS7FVoGrtbv1Gtdxm0v2VKlUYxbtnbScBZufvG1XzmW
-         kO93W97HWMax+0ybLhbgTBGXe6KbarMpB0S8ojAZ+hZshPOZgxxMAH0YjPeXyXSs4oN0
-         lDZQ==
+        d=gmail.com; s=20230601; t=1747115613; x=1747720413; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WNsyZBlrjZRlpcE1bXaf2I5YyPz0u8vhXL29PFihhZE=;
+        b=XnNLc/hcT9dbeG/bkJGmRuXl9pN7gZCWY0Gtvn8UaqKk4B8zY7LD1S7UXv8/FsnVUg
+         uwAg/+W4cWZLgfjyRvzvUblw76P1D6bsYtGQMhYZpvyPWtwo4QUV3VNfveUy1AXTjjas
+         NVXqkkve/nmfdnafou9oDzPrzKINWviu9WpnR6BrCwFEIsDvehp31rv5g7h1AQbsVkEn
+         hi/9uMqjN1KbKA0EplQLEqEEu6IWnC6cNYJmoUceoKrYFsXHMU36mc5RPtQou8odOB/7
+         4gFEVJ7fYQ8u2bnYSwpbXMRoqTGCC8YWBL/l/d+83TRMedbgJHIhfxN06wG/UoLN3MYX
+         JS4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747115578; x=1747720378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1UNv9BVa0wuw40fppKUR+rAamisYbCt010QW3EVI8dY=;
-        b=ITfo9wELtpCqh+4n1W4w7p9jaM4WO7nmFYSyUwpkmk4eE7HDD4moYr6kCVgEby7If4
-         tMQ1Yx2pfRKMVaqgpj3gQZWYI6GKtRroU91iDW/Te0JWsXYuvIpiGYK/h+WbC/T/HSg2
-         rh4WYYCyd0ys2WdVvv5g+RhlLVrf8ghCSCbxil/Q09U9k5JREJECLBXXX5wPTUXFHsZN
-         aNaaW3cyi25I5slYOxYqIVK3ozIOTvKo/fpIXueEU+Lhwp8c8fhPSL49hB2ImBSqHBr3
-         aRSnSJ0fDD4DmdCsMQOTY1caNzaZBfDtAGGl4b+YpCJzsDwvBSPjSG41RrhX0PumQJCh
-         PhvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUquVPe/SCjoi6BBekG+/uAYRfZphMUVBC2WUz3RwmVAVtt7QjQsaqrFN7a1TUHQC2lwpuILII2Qamrwg==@vger.kernel.org, AJvYcCVUuVhJcA5HMso+Cbz4KLSv3QlYm0UoYrZUTlmDLPGMD146PYnz/6v0K8Q0qT573vaDaO31MB/3S1fJhpST@vger.kernel.org, AJvYcCXki/xFv065AJsaOckq6LwVObLyNWEkZ9rX1Ug/+7k4USUOprdcFj4R3OBCJYLP26CpJjKU016Ko3FGInHCJsuRcPO0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1uMdqErRP3TF/CSdMxI3+ahrk9zuSTc4xqmJnmiCmbQ7kuJuT
-	fV4lLbTM3ZysM7TwEWf+As4oUAI1rAtwHBm5lFTBghSwWDT7hbp9uuKnygpqgqWd6CNv+ZQPmDO
-	oCltMSf0IRP6l9o0ZyGXEjrD+wqM=
-X-Gm-Gg: ASbGncuotTbFDEXDmNRyJDASKkxgmzCPxURMUePS0nG6U3AJRV+EL17CF8uHFIQvSju
-	uOPNXGmqH5pA71yZnI2eriAdMg/Nj1sbw7p6MvfwPaUYmDu05Y1pA2ZC5DHEvxS8fQzcZ2Rj1tr
-	/TDPvCB6gKAvPg0eSTC5wV7eKVvuaWncjv
-X-Google-Smtp-Source: AGHT+IG3hAXI4zZ0Ldsnxik78Vl6FoTPwK50ThHikc2cnUovntlaGx/YFJIOwEVPB3vcPgJY63ae+LGHOAWlwtG8Jhc=
-X-Received: by 2002:a05:6e02:2292:b0:3d0:4e0c:2c96 with SMTP id
- e9e14a558f8ab-3da7e1dd00amr175999105ab.2.1747115578565; Mon, 12 May 2025
- 22:52:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747115613; x=1747720413;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WNsyZBlrjZRlpcE1bXaf2I5YyPz0u8vhXL29PFihhZE=;
+        b=UIUhF/c3VqqhLxMqak8eCu7AIuM5BpY9N+M0lzTaAD2GUt5cKTIZbDfiBvdmLb66qU
+         TzpEnO4CUa5Cljehlltt8nlRe9dlzTx1CL1Byw+BaYDcLpft6zDEHjZp0MJewKCn0Wo8
+         VVUQ/jmdNpKsm+3ZuzGSptq3ywMVGBd93VVpaLnC5IqwigvksAmutrsZbz4q79Iv59FK
+         JCGdjC8EQGKg0Y1w95JunIZwGaeX8VyXatP0jawOyqg9JubY/TPl4SIRRjjCrN2UtiZq
+         6z09Ue6QABSl6KUP7Wr4ZTKD1eBmWOgWaeuwEmOWeFCpvLe2iS/bna1ChC3grFB4W0DS
+         aYYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUau0byIDrSWx6h+X4iDNzF7yEqPR0ck6Z22/UFaf3LLLLF2OuBg+N/qO7y42wF2VZJS1NxFUaDHtNRkxg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUf8OUmBiSiW0IwRarHQWG6TGhovyAJQJ8vq0yD39VbycQKmxQ
+	08uSikVhBd13DC22+aECbBp8XJi+K/Pq6kU0zBJNNzVad0u9vSIjP05dDwA3YZrXFOTJRN9Pv2Q
+	j0GsNkCI8p1kAAh+6XS4m7HUgDCZet5MyVQ0=
+X-Gm-Gg: ASbGnct4OAX7+RXP6DRv0MUoNjGQ+UOgGqkY1Gm22H/OjvNQynGAnyIzvYKyXjYTSqN
+	oBsadopd0ubHu1W9NXeCPbAbB0OD326AmSmB7BkOkG+IXPjW5Iqx4pxvjdXtaqicTAUOOGepP/+
+	YDFdfPD67fm1PxNKO4Yrx38dvSIPj42dX7
+X-Google-Smtp-Source: AGHT+IHOc8SXBuOLE9/iyqL8gXXnTqSTPtRR21+XgLdQcc71oLOwLLZ8JwQ7FB8OxioyLwjXMjTZMux/mq3GQJqBjCY=
+X-Received: by 2002:a17:903:988:b0:220:c63b:d93c with SMTP id
+ d9443c01a7336-22fc91aca1emr263133585ad.44.1747115613093; Mon, 12 May 2025
+ 22:53:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
- <20250512024935.64704-6-kerneljasonxing@gmail.com> <20250512175204.8faa5fd646da7247137db14b@linux-foundation.org>
-In-Reply-To: <20250512175204.8faa5fd646da7247137db14b@linux-foundation.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 13 May 2025 13:52:22 +0800
-X-Gm-Features: AX0GCFsxQg_UtKWDCvOgy-HP5BnemXBkwL31IwrPtx5Xmq4NlyGSASE3erfnXAE
-Message-ID: <CAL+tcoCN56fmQadhikyeg-PziM8OF7PitXufPR-rfGb1ko5Gcg@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] relayfs: uniformally use possible cpu iteration
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+From: Tanav Chinthapatla <tanavc01@gmail.com>
+Date: Tue, 13 May 2025 01:53:20 -0400
+X-Gm-Features: AX0GCFsHdIaazRy_QlZVSW3DrhT5qlEYmvBox6N8Eyt0rzr0kqKxYEMV0FvKf-0
+Message-ID: <CAPGyJDMv-N3HkdV4znQg=_i2owE2sbnRhzFem_Uv_15GjADBFQ@mail.gmail.com>
+Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="000000000000808d9f0634fe0dbf"
+
+--000000000000808d9f0634fe0dbf
+Content-Type: multipart/alternative; boundary="000000000000808d9d0634fe0dbd"
+
+--000000000000808d9d0634fe0dbd
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 8:52=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Mon, 12 May 2025 10:49:35 +0800 Jason Xing <kerneljasonxing@gmail.com>=
- wrote:
->
-> > From: Jason Xing <kernelxing@tencent.com>
-> >
-> > Use for_each_possible_cpu to create per-cpu relayfs file to avoid later
-> > hotplug cpu which doesn't have its own file.
->
-> I don't understand this.  Exactly what problem are we trying to solve?
->
-> > Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
-> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> > ---
-> >  kernel/relay.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/relay.c b/kernel/relay.c
-> > index 27f7e701724f..dcb099859e83 100644
-> > --- a/kernel/relay.c
-> > +++ b/kernel/relay.c
-> > @@ -519,7 +519,7 @@ struct rchan *relay_open(const char *base_filename,
-> >       kref_init(&chan->kref);
-> >
-> >       mutex_lock(&relay_channels_mutex);
-> > -     for_each_online_cpu(i) {
-> > +     for_each_possible_cpu(i) {
->
-> num_possible_cpus() can sometimes greatly exceed num_online_cpus(), so
-> this is an unfortunate change.  It would be better to implement the
-> hotplug notifier?
+Hi,
 
-For the record, the hotplug notifier has been retired by the commit
-530e9b76ae8f("cpu/hotplug: Remove obsolete cpu hotplug
-register/unregister functions"). And now in relay, a similar feature
-called hotplug state machine has already been implemented by the
-commit e6d4989a9ad1 ("relayfs: Convert to hotplug state machine"). So
-the relay has hotplug support.
+This patch fixes a checkpatch style issue in the rtl8723bs driver by
+correcting spacing around a '+' operator.
 
-Sorry for missing this point. I would drop this patch.
+The patch is attached to this email.
 
 Thanks,
-Jason
+Tanav Chinthapatla
 
->
-> >               buf =3D relay_open_buf(chan, i);
-> >               if (!buf)
-> >                       goto free_bufs;
-> > @@ -615,7 +615,7 @@ int relay_late_setup_files(struct rchan *chan,
-> >        * no files associated. So it's safe to call relay_setup_buf_file=
-()
-> >        * on all currently online CPUs.
-> >        */
-> > -     for_each_online_cpu(i) {
-> > +     for_each_possible_cpu(i) {
-> >               buf =3D *per_cpu_ptr(chan->buf, i);
-> >               if (unlikely(!buf)) {
-> >                       WARN_ONCE(1, KERN_ERR "CPU has no buffer!\n");
-> > --
-> > 2.43.5
+--000000000000808d9d0634fe0dbd
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<div><br></div><div>This patch fixes a checkpatch style=
+ issue in the rtl8723bs driver by correcting spacing around a &#39;+&#39; o=
+perator.=C2=A0</div><div><br></div><div>The patch is attached to this email=
+.</div><div><br>Thanks,<br>Tanav Chinthapatla<br></div></div>
+
+--000000000000808d9d0634fe0dbd--
+--000000000000808d9f0634fe0dbf
+Content-Type: application/octet-stream; 
+	name="0001-staging-rtl8723bs-fix-spacing-around-in-rtw_cmd.c.patch"
+Content-Disposition: attachment; 
+	filename="0001-staging-rtl8723bs-fix-spacing-around-in-rtw_cmd.c.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mam39x3s0>
+X-Attachment-Id: f_mam39x3s0
+
+RnJvbSAyNWFhMjRjN2NkZTdkZjU5MDE2NzRlYzA4MDkwOTkyYjE3YWZkNWI0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBUYW5hdiBDaGludGhhcGF0bGEgPHRhbmF2YzAxQGdtYWlsLmNv
+bT4KRGF0ZTogVHVlLCAxMyBNYXkgMjAyNSAwMDoxNjoyOSAtMDUwMApTdWJqZWN0OiBbUEFUQ0hd
+IHN0YWdpbmc6IHJ0bDg3MjNiczogZml4IHNwYWNpbmcgYXJvdW5kICcrJyBpbiBydHdfY21kLmMK
+ClNpZ25lZC1vZmYtYnk6IFRhbmF2IENoaW50aGFwYXRsYSA8dGFuYXZjMDFAZ21haWwuY29tPgot
+LS0KIGRyaXZlcnMvc3RhZ2luZy9ydGw4NzIzYnMvY29yZS9ydHdfY21kLmMgfCAyICstCiAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL3N0YWdpbmcvcnRsODcyM2JzL2NvcmUvcnR3X2NtZC5jIGIvZHJpdmVycy9zdGFnaW5n
+L3J0bDg3MjNicy9jb3JlL3J0d19jbWQuYwppbmRleCAxYzllOGIwMWQuLjk4ZDg5ZTgzNiAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3J0bDg3MjNicy9jb3JlL3J0d19jbWQuYworKysgYi9k
+cml2ZXJzL3N0YWdpbmcvcnRsODcyM2JzL2NvcmUvcnR3X2NtZC5jCkBAIC0xNjE5LDcgKzE2MTks
+NyBAQCBzdGF0aWMgdm9pZCBydHdfYnRpbmZvX2hkbChzdHJ1Y3QgYWRhcHRlciAqYWRhcHRlciwg
+dTggKmJ1ZiwgdTE2IGJ1Zl9sZW4pCiAJCWJ1ZlsxXSA9IDA7CiAJZWxzZSBpZiAoY21kX2lkeCA9
+PSBCVElORk9fQlRfQVVUT19SUFQpCiAJCWJ1ZlsxXSA9IDI7Ci0JaGFsX2J0Y29leF9CdEluZm9O
+b3RpZnkoYWRhcHRlciwgbGVuKzEsICZidWZbMV0pOworCWhhbF9idGNvZXhfQnRJbmZvTm90aWZ5
+KGFkYXB0ZXIsIGxlbiArIDEsICZidWZbMV0pOwogfQogCiB1OCBydHdfYzJoX3BhY2tldF93a19j
+bWQoc3RydWN0IGFkYXB0ZXIgKnBhZGFwdGVyLCB1OCAqcGJ1ZiwgdTE2IGxlbmd0aCkKLS0gCjIu
+MzQuMQoK
+--000000000000808d9f0634fe0dbf--
