@@ -1,103 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A125525C;
-	Tue, 13 May 2025 12:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409D321B199
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138891; cv=none; b=sjcCsWou4FWLO0//U5hsEY8Ijz0RnHxre74PlqSzrovJF1aOeD38EixWD9J7Z2zCLBlFDUwsbYPqwjgzv9sN1PBwfUosUElUZpD3MzDON98mrRTml5blb/GPVF/xXNsR7TuhTlx0FAKc0X30DEh1MNuh1cnuJFvrD8ERDhxY3PQ=
+	t=1747138941; cv=none; b=aOryiWS7upQqX0g2k9eBwjKWXtVxVz+kLHtzMQkzo0XHZ8bBEsC/ur/vYOO9aJFFK2nsKk7ehstu1A6LwXUdPS0f+zwbOpbTs5LLCqBd10MuKr7gX14eBnPvGFzcsgLbp77Bvjrt4xwx9Hatm9expI2FjiAJ3nfGUXxzPVUuLeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138891; c=relaxed/simple;
-	bh=Yd99bDXYuiczj4hfSvGvriMsbruLksA9MnpAor8YBSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qOB7U4Ib0J4qqiONcUG2RjzIDEpXpD14S3loNXthYZyMnwp/RbmbbEalXuMH9H5kVp+Zku9JbwGGIuLqTwvrcJacTft7K8m0TCFSl/AEREy96oRAasHBqxLefiptHODrlja+M+9ieoGRIZD/c5NONgfRmGucGsASNArUZ0WDM0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjI8c+Wr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747138941; c=relaxed/simple;
+	bh=3YbfeYjFKH3IJ2nqQzkl9zckrwJcT/qVhCY37SIrN+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MPub2mIs4qrTEve2lIct3+MbgXk1c5cHi6XUoZOXzDXey22eGaMr4KUNh+REvL1Bx7+F6EpWAU8dbHodsKz01fdvcKDYDuNDVaSs0f2VoZPIi/nTPqr6JaCddjcv5OcFeOoX3Vi90i7dEOVQJkSohdijjbteuIiv/RGp02pUGp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SYH1Rela; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjI8c+Wr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB100C4CEE4;
-	Tue, 13 May 2025 12:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747138890;
-	bh=Yd99bDXYuiczj4hfSvGvriMsbruLksA9MnpAor8YBSw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cjI8c+WrnDleOF9Hgo9N+DCxFXrtrWTK7Zxg63ED3Me789Z9lSp7/OsDLzjM3A4yu
-	 +RnudhXbwE00DgEih4o9DxF9akDQWlU3GfCZu0ObRAnTRgw3Gj+OdmRmZk7NB6daj5
-	 uR53q2UXCv8iwxkiEIedQVm70TGo42j96ra1OHwdSFaL4ye8edKxMngDAa49fNP2VH
-	 VgP370Ff3PMrqqIeaSudLfL+5RhDoET7ewNmHMOQZ8Ia5PDXAsgO90zproaxZa8pkS
-	 00wEPR3oKDRSvi32fDWxRIu/ZEfK3a636rGDNkK7mDK3weR+kXoQZrS5cQUdmJswJy
-	 EKLFcDwHsEsfA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>
-Subject: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in uprobe_unregister error path
-Date: Tue, 13 May 2025 14:21:25 +0200
-Message-ID: <20250513122125.1617722-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SYH1Rela"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747138939;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NT/xrfv5TBvzT3fT6ervznNFvl/oozjfVV92cittWdY=;
+	b=SYH1Rela9FW8JjOnf5q/BLWD6qe1BHs98+DQLCq0cO1jgu7Mx2nI5yxvlp+cngUory2JiP
+	btP6pSNWVbKSzqzf+dQ8mHU4RZarOOdCUX2AVz6DZ6Kv5NT5vFPVZaLAnZOPW76YQZGXg5
+	SfW3mqIxNH2ZYbuc8CCxXTHtFZlr+lU=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-MoWDOE8MPl26ge0BF8l44g-1; Tue,
+ 13 May 2025 08:22:15 -0400
+X-MC-Unique: MoWDOE8MPl26ge0BF8l44g-1
+X-Mimecast-MFC-AGG-ID: MoWDOE8MPl26ge0BF8l44g_1747138934
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D44E71801A14;
+	Tue, 13 May 2025 12:22:13 +0000 (UTC)
+Received: from [10.22.89.59] (unknown [10.22.89.59])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E95A21800359;
+	Tue, 13 May 2025 12:22:10 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Li Lingfeng <lilingfeng3@huawei.com>
+Cc: trondmy@kernel.org, anna@kernel.org, jlayton@kernel.org,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com,
+ yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Subject: Re: [PATCH v2] nfs: handle failure of nfs_get_lock_context in unlock
+ path
+Date: Tue, 13 May 2025 08:20:54 -0400
+Message-ID: <A447D4AD-9513-4128-945C-8161426D4C4A@redhat.com>
+In-Reply-To: <20250513074226.3362070-1-lilingfeng3@huawei.com>
+References: <20250513074226.3362070-1-lilingfeng3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Jiri Olsa <olsajiri@gmail.com>
+On 13 May 2025, at 3:42, Li Lingfeng wrote:
 
-There's error path that could lead to inactive uprobe:
+> When memory is insufficient, the allocation of nfs_lock_context in
+> nfs_get_lock_context() fails and returns -ENOMEM. If we mistakenly trea=
+t
+> an nfs4_unlockdata structure (whose l_ctx member has been set to -ENOME=
+M)
+> as valid and proceed to execute rpc_run_task(), this will trigger a NUL=
+L
+> pointer dereference in nfs4_locku_prepare. For example:
+>
+> BUG: kernel NULL pointer dereference, address: 000000000000000c
+> PGD 0 P4D 0
+> Oops: Oops: 0000 [#1] SMP PTI
+> CPU: 15 UID: 0 PID: 12 Comm: kworker/u64:0 Not tainted 6.15.0-rc2-dirty=
+ #60
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc=
+40
+> Workqueue: rpciod rpc_async_schedule
+> RIP: 0010:nfs4_locku_prepare+0x35/0xc2
+> Code: 89 f2 48 89 fd 48 c7 c7 68 69 ef b5 53 48 8b 8e 90 00 00 00 48 89=
+ f3
+> RSP: 0018:ffffbbafc006bdb8 EFLAGS: 00010246
+> RAX: 000000000000004b RBX: ffff9b964fc1fa00 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: fffffffffffffff4 RDI: ffff9ba53fddbf40
+> RBP: ffff9ba539934000 R08: 0000000000000000 R09: ffffbbafc006bc38
+> R10: ffffffffb6b689c8 R11: 0000000000000003 R12: ffff9ba539934030
+> R13: 0000000000000001 R14: 0000000004248060 R15: ffffffffb56d1c30
+> FS: 0000000000000000(0000) GS:ffff9ba5881f0000(0000) knlGS:00000000
+> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000000000000c CR3: 000000093f244000 CR4: 00000000000006f0
+> Call Trace:
+>  <TASK>
+>  __rpc_execute+0xbc/0x480
+>  rpc_async_schedule+0x2f/0x40
+>  process_one_work+0x232/0x5d0
+>  worker_thread+0x1da/0x3d0
+>  ? __pfx_worker_thread+0x10/0x10
+>  kthread+0x10d/0x240
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork+0x34/0x50
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+> Modules linked in:
+> CR2: 000000000000000c
+> ---[ end trace 0000000000000000 ]---
+>
+> Free the allocated nfs4_unlockdata when nfs_get_lock_context() fails an=
+d
+> return NULL to terminate subsequent rpc_run_task, preventing NULL point=
+er
+> dereference.
+>
+> Fixes: f30cb757f680 ("NFS: Always wait for I/O completion before unlock=
+")
+> Link: https://lore.kernel.org/all/21817f2c-2971-4568-9ae4-1ccc25f7f1ef@=
+huawei.com/
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> ---
+> Changes in v2:
+>   Add a comment explaining that error handling for ctx acquisition fail=
+ure
+>   is unnecessary.
+>
+>  fs/nfs/nfs4proc.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 970f28dbf253..e52e2ac1ab39 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7074,18 +7074,29 @@ static struct nfs4_unlockdata *nfs4_alloc_unloc=
+kdata(struct file_lock *fl,
+>  	struct nfs4_unlockdata *p;
+>  	struct nfs4_state *state =3D lsp->ls_state;
+>  	struct inode *inode =3D state->inode;
+> +	struct nfs_lock_context *l_ctx;
+>
+>  	p =3D kzalloc(sizeof(*p), GFP_KERNEL);
+>  	if (p =3D=3D NULL)
+>  		return NULL;
+> +	l_ctx =3D nfs_get_lock_context(ctx);
+> +	if (!IS_ERR(l_ctx)) {
+> +		p->l_ctx =3D l_ctx;
+> +	} else {
+> +		kfree(p);
+> +		return NULL;
+> +	}
+>  	p->arg.fh =3D NFS_FH(inode);
+>  	p->arg.fl =3D &p->fl;
+>  	p->arg.seqid =3D seqid;
+>  	p->res.seqid =3D seqid;
+>  	p->lsp =3D lsp;
+>  	/* Ensure we don't close file until we're done freeing locks! */
+> +	/*
+> +	 * Since the caller holds a reference to ctx, the refcount must be no=
+n-zero.
+> +	 * Therefore, error handling for failed ctx acquisition is unnecessar=
+y here.
+> +	 */
 
-  1) uprobe_register succeeds - updates instruction to int3 and
-     changes ref_ctr from 0 to 1
-  2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
-     is changed to 0 (it's not restored to 1 in the fail path)
-     uprobe is leaked
-  3) another uprobe_register comes and re-uses the leaked uprobe
-     and succeds - but int3 is already in place, so ref_ctr update
-     is skipped and it stays 0 - uprobe CAN NOT be triggered now
-  4) uprobe_unregister fails because ref_ctr value is unexpected
+I think the additional comment is unnecessary, but otherwise this looks c=
+orrect.
 
-Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
-which is the case when uprobe_unregister fails (int3 stays in place),
-but we have already updated refctr.
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-The new scenario will go as follows:
-
-  1) uprobe_register succeeds - updates instruction to int3 and
-     changes ref_ctr from 0 to 1
-  2) uprobe_unregister fails  - int3 stays in place and ref_ctr
-     is reverted to 1..  uprobe is leaked
-  3) another uprobe_register comes and re-uses the leaked uprobe
-     and succeds - but int3 is already in place, so ref_ctr update
-     is skipped and it stays 1 - uprobe CAN be triggered now
-  4) uprobe_unregister succeeds
-
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
-Please note it's based on mm-stable branch, because it has the
-latest uprobe_write_opcode rewrite changes.
-
- kernel/events/uprobes.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4c965ba77f9f..84ee7b590861 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 
- out:
- 	/* Revert back reference counter if instruction update failed. */
--	if (ret < 0 && is_register && ref_ctr_updated)
--		update_ref_ctr(uprobe, mm, -1);
-+	if (ret < 0 && ref_ctr_updated)
-+		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
- 
- 	/* try collapse pmd for compound page */
- 	if (ret > 0)
--- 
-2.49.0
+Ben
 
