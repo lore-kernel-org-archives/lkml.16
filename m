@@ -1,209 +1,103 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5C237717;
-	Tue, 13 May 2025 09:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35841E570D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129324; cv=none; b=be7aTniwv9Y4ZDYUFBGwc8wZasAWLdvh/UBwF8vFix4g3tYkoUt++DAt7n01sfWK0AMR/abPvHtfAE4XrS9joMK7WnC626jEXT/TrBEocvB9P7PaEwrRJmJ6+4zpRA4c8v6plTCzZ/sJGjuCSmWNm6kSq0wXK+3+dTfA1GJD+ZA=
+	t=1747129337; cv=none; b=r5gEXugfcZmP+FBBSA242JQo60vfLfL7RWGysuwyLRF9r3vRIlJpFP4hQYb30esa6370HPwjaIkpQXz5sLnlAHgUI6ln9jTvwqLcEbB0uURpnef0R2AJjUi1eqzyFQ2R8+kj/To7MLSvZLokVQS6N5XLGjIAQcBSnrrb5v18tBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129324; c=relaxed/simple;
-	bh=qBLNBy/gq445RAkBYHQEtoxXsl0N+NBg01MgE36mwbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IatMWohm+7aSZ5BoqWFLNY8DMSTOX1/lqJu43JWMOnPeJGyF526tLm51miObvx/g3hGRnKStL/gSDYCcp8HuGrV+gXIYAr4Kq5VNqGNUKIh9wy2gb564mtxmhZ5pqohJZQcHPUPsqeBGX8mhg6lmkDY5SAqzVD7j5i0nKM98ma0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VCiENWgH; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747129337; c=relaxed/simple;
+	bh=gbD9r76EgD8pOn38U6ofM7c5nj1E/khd6ekYQTBsaV4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=e8zjWSlF352tLDNGe4ghKwr0kEdNQEDyb5PjB5HALYbnpqx/RwiTm5UIDdcZdAKJBFYjrGjO75dIm9rmhx9DQeoWlwnjz4BRyagmVoczkg5qvIRGDMTKlZAUvLC8ih0ZEVTcMssaLyIbebXZfzi2nAnoC7Mq5EWCcEKxwy3ZE4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nk5mhCKc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VCiENWgH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=js5CdpYS9yFA/MzQbhixDBeZ4NnfAUqz+EhtbAMZ180=; b=VCiENWgHxoFeNq368K6MRyaFcu
-	ifPbpMsoCnYsfCxINGjEfCZPR63eukf0vd3F8365MwYkW9ssTdMgJiHqSyEuiC+MM0L4fr8iR3sUy
-	JgBjBvzhX9KWoSOE8UHs2LJhPytfs/x0nwp+nODRVq401eNDc8Txm3SkMZZjdLv7CqoDym7SL3ki3
-	bdsxAvFmyfAiGC1cXZXzHvwqyKXUzOX5tIqg5JpBTpDohty4f3tScHXyf3P8frhmCMmQEA9G78el7
-	CxNBqRbjBzCQPY3xCmon1LzemNW3e9LULkUYa2gmwcISrnX3fpJuMop/+hdTco5lg558EpUJmvbI3
-	8F5sqRMg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uEm95-0000000GuC2-3uRT;
-	Tue, 13 May 2025 09:41:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4F3E0300787; Tue, 13 May 2025 11:41:55 +0200 (CEST)
-Date: Tue, 13 May 2025 11:41:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, namhyung@kernel.org, irogers@google.com,
-	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, eranian@google.com,
-	ctshao@google.com, tmricht@linux.ibm.com
-Subject: Re: [RFC PATCH 01/15] perf: Fix the throttle logic for a group
-Message-ID: <20250513094155.GD25763@noisy.programming.kicks-ass.net>
-References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
- <20250506164740.1317237-2-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nk5mhCKc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747129326;
+	bh=gbD9r76EgD8pOn38U6ofM7c5nj1E/khd6ekYQTBsaV4=;
+	h=Date:From:Subject:To:Cc:From;
+	b=nk5mhCKc7dS6TXT8THcgYILVTXBh7d8n04xFmFy4szxn/XW2N+YltnKPsv0Pt7WMr
+	 EelKtucefOD4s6+7J7bD6R5i14/W2l9lbZAkwAI9W/NICd/NdkEtXscRDVXaWE4Dnx
+	 +fnuZgWpPRvHIBKwv7S54SHr1Ar1Da50PW4M79Y26Jvjk0gRSGcK/lsrTPrRqd3z/o
+	 S+CmU52dNKlkBEuWTku+Iyfg6co1Vqrzr3B7j2hPcQ2UBuNe7jfxgzaQmq8L4P2lTQ
+	 a1tbUdu8LbzPTerUVzCQDU/xNu6JXd1m/9DoH2O5GgSh2xmnBQ1O/MA3cMcljmDr+1
+	 fL8u3h0QcX6SA==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7759117E0E2D;
+	Tue, 13 May 2025 11:42:04 +0200 (CEST)
+Message-ID: <eb9281cc-de91-48a4-bbd6-f67ddc67a9dd@collabora.com>
+Date: Tue, 13 May 2025 15:11:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506164740.1317237-2-kan.liang@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+Subject: amlogic: Synchronous Abort with v6.15-rc6
+To: linux-amlogic <linux-amlogic@lists.infradead.org>
+Cc: neil.armstrong@linaro.org, khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, sboyd@kernel.org,
+ daniels <daniels@collabora.com>, Daniel Stone <daniel@fooishbar.org>,
+ lumag@kernel.org, robdclark <robdclark@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 09:47:26AM -0700, kan.liang@linux.intel.com wrote:
+Hi,
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a84abc2b7f20..eb0dc871f4f1 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2734,6 +2734,38 @@ void perf_event_disable_inatomic(struct perf_event *event)
->  static void perf_log_throttle(struct perf_event *event, int enable);
->  static void perf_log_itrace_start(struct perf_event *event);
->  
-> +static void perf_event_group_unthrottle(struct perf_event *event, bool start_event)
-> +{
-> +	struct perf_event *leader = event->group_leader;
-> +	struct perf_event *sibling;
-> +
-> +	if (leader != event || start_event)
-> +		leader->pmu->start(leader, 0);
-> +	leader->hw.interrupts = 0;
-> +
-> +	for_each_sibling_event(sibling, leader) {
-> +		if (sibling != event || start_event)
-> +			sibling->pmu->start(sibling, 0);
-> +		sibling->hw.interrupts = 0;
-> +	}
-> +
-> +	perf_log_throttle(leader, 1);
-> +}
-> +
-> +static void perf_event_group_throttle(struct perf_event *event)
-> +{
-> +	struct perf_event *leader = event->group_leader;
-> +	struct perf_event *sibling;
-> +
-> +	leader->hw.interrupts = MAX_INTERRUPTS;
-> +	leader->pmu->stop(leader, 0);
-> +
-> +	for_each_sibling_event(sibling, leader)
-> +		sibling->pmu->stop(sibling, 0);
-> +
-> +	perf_log_throttle(leader, 0);
-> +}
+The Amlogic Meson G12B (A311D) SoC board (meson-g12b-a311d-khadas-vim3) 
+fails to boot with the following logs,
 
-Urgh, this seems inconsistent at best.
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76210200
 
- - unthrottle will set interrupts to 0 for the whole group
- - throttle will set interrupts for leader
-   while the old code would set interrupts for event.
- - interrupts was written with event stopped, while now you consistently
-   write when started
- - both now issue perf_log_throttle() on leader, whereas previously it
-   was issued on event.
+02:58:27.819: Starting kernel ...
+02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
+02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
+02:58:27.819: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
+02:58:27.819: elr: 00000000f2f26a48 lr : 00000000f2f26c88
+02:58:27.819: x0 : 00000000050fffc0 x1 : 0000000001004383
+02:58:27.819: x2 : 00000000f2f6a358 x3 : 000000000000003f
+02:58:27.819: x4 : 00000000f4fefffc x5 : 0000000000000010
+02:58:27.819: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
+02:58:27.819: x8 : 0000000000000008 x9 : 0000000000000001
+02:58:27.820: x10: 0000000000000010 x11: 0000000000000004
+02:58:27.820: x12: 00000000f4fefc00 x13: 0000000000000000
+02:58:27.820: x14: 00000000f4fefc00 x15: 0000000000000000
+02:58:27.820: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
+02:58:27.820: x18: 00000000f0f21d90 x19: 00000000050fffc0
+02:58:27.820: x20: 0000000000000000 x21: 000000007ffe9000
+02:58:27.820: x22: 0000000000001710 x23: 00000000f0f0e8c0
+02:58:27.820: x24: 0000000000000000 x25: 0000000000000000
+02:58:27.820: x26: 0000000000000000 x27: 0000000000000000
+02:58:27.820: x28: 00000000f0f4f790 x29: 00000000050fff60
+02:58:27.820: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
+02:58:27.820: Resetting CPU ...
 
-IOW
+The board boots successfully in v6.14-rc7, but the issue appears 
+starting from v6.15-rc1. These tests were run in drm-ci.
 
-before:				after:
- event stops			 leader MAX_INTERRUPTS
- event MAX_INTERRUPTS		 event group stops
- event logs			 leader logs
+On bisecting the kernel, the first bad commit identified by git biscet is,
 
- event 0			 event group 0
- event starts			 event group starts
- event logs			 leader logs
+59c35416f4246aee66b5f5523fdc950b83325d82 is the first bad commit
+commit 59c35416f4246aee66b5f5523fdc950b83325d82
+Merge: 472863ab2aca e988adcb5dee
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Mar 29 17:23:34 2025 -0700
 
-Like said, a rather inconsistent and random collection of things.
+     Merge tag 'clk-for-linus' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
 
+Please could you look into this issue. Thank you.
 
-
-What's wrong with something simple like:
-
-static void perf_event_throttle(struct perf_event *event, bool start)
-{
-	event->hw.interrupts = 0;
-	if (start)
-		event->pmu->start(event, 0);
-	perf_log_throttle(event, 1);
-}
-
-static void perf_event_unthrottle(struct perf_event *event)
-{
-	event->pmu->stop(event, 0);
-	event->hw.interrupts = MAX_INTERRUPTS;
-	perf_log_throttle(event, 0);
-}
-
-static void perf_event_throttle_group(struct perf_event *event, bool start)
-{
-	struct perf_event *sibling, *leader = event->group_leader;
-
-	perf_event_throttle(leader, start);
-	for_each_sibling_event(sibling, leader)
-		perf_event_throttle(sibling, start);
-}
-
-static void perf_event_unthrottle_group(struct perf_event *event)
-{
-	struct perf_event *sibling, *leader = event->group_leader;
-
-	perf_event_unthrottle(leader);
-	for_each_sibling_event(sibling, leader)
-		perf_event_unthrottle(sibling);
-}
-
-That way:
-
-before:				after:
- event stops			 event group stops
- event MAX_INTERRUPTS		 event group MAX_INTERRUPTS
- event logs			 event group logs
-
- event 0			 event group 0
- event starts			 event group starts
- event logs			 event group logs
-
-All that was done before is still done - no change in behaviour for
-event. Its just that the rest of the group is now taken along for the
-ride.
-
-> @@ -6421,14 +6451,6 @@ static void __perf_event_period(struct perf_event *event,
->  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
->  	if (active) {
->  		perf_pmu_disable(event->pmu);
-> -		/*
-> -		 * We could be throttled; unthrottle now to avoid the tick
-> -		 * trying to unthrottle while we already re-started the event.
-> -		 */
-> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
-> -			event->hw.interrupts = 0;
-> -			perf_log_throttle(event, 1);
-> -		}
->  		event->pmu->stop(event, PERF_EF_UPDATE);
->  	}
->  
-> @@ -6436,6 +6458,12 @@ static void __perf_event_period(struct perf_event *event,
->  
->  	if (active) {
->  		event->pmu->start(event, PERF_EF_RELOAD);
-> +		/*
-> +		 * We could be throttled; unthrottle now to avoid the tick
-> +		 * trying to unthrottle while we already re-started the event.
-> +		 */
-> +		if (event->group_leader->hw.interrupts == MAX_INTERRUPTS)
-> +			perf_event_group_unthrottle(event, false);
->  		perf_pmu_enable(event->pmu);
->  	}
->  }
-
-This change seems random. Also, note that I'm kicking myself for the
-total lack of useful information in commit 1e02cd40f151.
-
-Notably, we're calling this from event_function_call(), this means we're
-having IRQs disabled and are running on the events CPU. How can we
-interact with the tick?
-
-
+Regards,
+Vignesh
