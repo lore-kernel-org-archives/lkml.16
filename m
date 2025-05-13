@@ -1,263 +1,722 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122022AF1C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4B92AF1C;
+	Tue, 13 May 2025 11:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136665; cv=none; b=iKwQF5BP3F7QVUyqaErY2Gm0dWYDEfQ3reQVDaXAbEF6qu3w0ionVwxuiK/SRELwGnuzsolinKx/qtkzOPWadl92IHlJ9oPAJOM0bwyfZn1oRxo63SuBgBFxXexbLszfL30dZFiO79+0hF9gBR+mQsbZLvRcea9Z7qPyVMuIpZM=
+	t=1747136675; cv=none; b=u4UvM6dzpu1MW5tvcMS+FXTnrT5GE2VFE5D6ZLSyeOGBDVgeo2nwrdIzjAw2w1aPDl/I7v5kIuxiCI7gC1HHqGai5mlHF5WqxK2YfqiIfKAi2yxCXKzsGvMoDisu0+2JXt4FRsnEEs3EOEPwCS15HqnBcM2qMFkDIciO9vdDRoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136665; c=relaxed/simple;
-	bh=VC14k84pFR6nXBV72INcxwmAY8e6x8FUnbFrr1FpdMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PlIoSu9duKv1rTHIbEBUbJK2skMBP5D2X70Rj+sOhaMt2PLcIIq71yc9e1NTEhdMBdU2y9B0LKseR4ZgFWW4DF1/U4jIGBd3MPBlEGJf2YICumZZ+vLq2VQJgCfc/Al93ph9BArx9KzsVCigPLYD/ezWcg3QYBZHsBlCWQHppiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JX+hH7DH; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JX+hH7DH"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6f891e93e97so6933566d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747136663; x=1747741463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jC7TEuWklRTXBAYZG2fvSOa9sOcDdZ2vgzw2hj2FjQ4=;
-        b=JX+hH7DHecDYBTh6W7+DFH8XQ99tluvzIr5EHPfoGBCn4XsHw57rxXbwCf5ql4EG8t
-         DUQ85mzCBuYQOsSxFbnw3HNSsq9+I5lFufJ0cA557VU8euje7Wfi7Gj5nBYjvRsOFQFh
-         tcnzH0tHvVN8izxTYSmzy0GIArWiytXtSxR30HZxKPeKkqRtrBLSJ0DTmyckdO783rO/
-         JVHJtLpy2mK9SrxDMs7SnObjx/9d3BsdRypWuAmJJQPTW/HaOv0AizA1fjBHEQdwPtC3
-         NxzGlTOcXNdM9b+ngpP+A/zSUHWQfyLcVK/F5XzGb27bbjRh6PrAATiK/Bk652qgwpu5
-         xYeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747136663; x=1747741463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jC7TEuWklRTXBAYZG2fvSOa9sOcDdZ2vgzw2hj2FjQ4=;
-        b=MpuyJE8uwIIc8S5A3UhPXAPKxL/6fYx4UUu74KsF+Z9jIJlzUF41urmS55r+3iSJda
-         y3+MWSC2GQ7WS2pKalgR81AS6+GXRuln37thi6PLxic/TZjOsM94VsdPyGBjGBuotydI
-         phemi71Sbs96iCfWP37/dvoYAPvJZdUMkHURw4+0ikxlFhrFHvKyd2uYIIoUTqJ1AxsB
-         e6fQrjZzLBddg1VUs8FNmAqmhLddFDJ9I8HY108BjjBnbhnUhnV0F7wI2U2kvu9VxDf+
-         qaKp605mf/sIrdOYwsgK6hxs+9ojlixNgqMIr+n0ii+pmxFlR1dMF5Ssb1gNcBZXVxPz
-         1IAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUy1ERKqGYLkELK/gd+ghIi0guOgMWcguk89uqZ90/p1U09p/sKnPl7F/kdfZpX7C+mR+voYOpWhTtwL+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0HeVdArB6s8W/TsqWY9Gv89AIToX9QnPoAgP4u9BI2Vld8cmp
-	YtoW/Fq39ztPWqwqHMFk/kChQkzPPAh9y9Z4Y/0Iwvqo3MLDyobBwFcyHPC95BPAoh5tnUV7lwk
-	i9Zy1TRXab1EXXS74yFUd6TCap+s=
-X-Gm-Gg: ASbGncvZ7roVP0JVjYMznUtLpaNqisVqLFKbYnqmBnoyvdLO3kQGM4yktaI4r6wTRaW
-	JskhGZQkUET+Bs1JA3LTqi9CjY7cA36TyUHBwBUWH6akk+PXT5aERximzNCf3GJ2an3FyiRfesC
-	jY9okv3V1KhnIc/Xxc46OWVRABtimxkLgVyw==
-X-Google-Smtp-Source: AGHT+IGIWw7kGW3HI3/WPmJVUXsuDAoFJmjiEhA4YYojwfVZK4Zc4fWOqql33Qk8RjAafMheO64TGaNRxXlg7k6moQs=
-X-Received: by 2002:a05:6214:262d:b0:6e4:4484:f35b with SMTP id
- 6a1803df08f44-6f6e481482emr224858976d6.30.1747136662714; Tue, 13 May 2025
- 04:44:22 -0700 (PDT)
+	s=arc-20240116; t=1747136675; c=relaxed/simple;
+	bh=qZWAKY2toC+KtZMMEb/RCN/W/JgxQaF9kuegy8qz8G4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TvRBOqrEGF6BEMrPRs0OPoLyaH5+f6YaDIms10aZ14zBP81knH2/hNCW7pkGgrIoqpJTA5Kdf/zgLA4+PLLluVxi4zRUx+UWNTo1R3Wfcpf74xXb20HoJsowHuBeAee7Qwbn6XBG/8owZYqx5QXCGt2Q20FI0/aiR4dX2Zf4xb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A604143AD2;
+	Tue, 13 May 2025 11:44:29 +0000 (UTC)
+Message-ID: <9e89bd41-db3c-46e8-86bd-4cca5d798a56@ghiti.fr>
+Date: Tue, 13 May 2025 13:44:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
- <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com> <279d29ad-cbd6-4a0e-b904-0a19326334d1@gmail.com>
- <CALOAHbCxhL=VM=E5UzNvQYZsrF4zdcQ1-49iEJ1UYvLsurtxCw@mail.gmail.com>
- <ebfca8f2-40e5-485a-a060-621aa3a22376@gmail.com> <CALOAHbDesDGyokKFSSr3hA1_WnFciQPXe_nboPq9v8OUPLv47g@mail.gmail.com>
- <20250509051328.GF323143@cmpxchg.org> <CALOAHbA617417UtcwMBJ9Zm_8BbAth57=ngN=tknw8h7nvCwNw@mail.gmail.com>
- <41e60fa0-2943-4b3f-ba92-9f02838c881b@redhat.com> <CALOAHbAvQDee2=5vsDqj77g5gAGdGpXFBbsC7tpKnCYEDZS3vw@mail.gmail.com>
- <20250509164654.GA608090@cmpxchg.org> <f691d2e0-5919-4581-8a24-1b543d798ae4@redhat.com>
- <8A18FB29-CC41-456F-A80E-807984691F0F@nvidia.com> <913bdc9b-a3c2-401c-99d0-18799850db9e@redhat.com>
- <13b68fa0-8755-43d8-8504-d181c2d46134@gmail.com>
-In-Reply-To: <13b68fa0-8755-43d8-8504-d181c2d46134@gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 13 May 2025 19:43:46 +0800
-X-Gm-Features: AX0GCFu4_oj4vmd6JVy6rgxsnCt-9EEvGCBGDNRUX6ZCWd7kFDohTmUXZwbH4No
-Message-ID: <CALOAHbAZ8rkeuJ_0Litax4FeyZjNbviURr6njuvuA93W66ZGcg@mail.gmail.com>
-Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	shakeel.butt@linux.dev, riel@surriel.com, baolin.wang@linux.alibaba.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com, 
-	ryan.roberts@arm.com, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: riscv: add misaligned access testing
+Content-Language: en-US
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>
+References: <20250512084650.985894-1-cleger@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250512084650.985894-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdegtddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeekkefftdeuhfdugeffgffhueduuedttdekkeffueekfedvjefhleeigeehieeijeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgtohhmmhhonhdrshgspdhfphhurdhssgenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegttddvgeemvgefgeeimeefjeekudemrgejieehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheptghlvghgvghrsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgv
+ ghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkshgvlhhfthgvshhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Sun, May 11, 2025 at 10:08=E2=80=AFPM Usama Arif <usamaarif642@gmail.com=
-> wrote:
->
->
->
-> On 11/05/2025 09:15, David Hildenbrand wrote:
-> > On 10.05.25 01:34, Zi Yan wrote:
-> >> On 9 May 2025, at 18:42, David Hildenbrand wrote:
-> >>
-> >>>>>>> - madvise
-> >>>>>>>     The sysadmin gently encourages the use of THP, but it is only
-> >>>>>>> enabled when explicitly requested by the application.
-> >>>>
-> >>>> And this "user mode" or "manual mode", where applications self-manag=
-e
-> >>>> which parts of userspace they want to enroll.
-> >>>>
-> >>>> Both madvise() and unprivileged prctl() should work here as well,
-> >>>> IMO. There is no policy or security difference between them, it's ju=
-st
-> >>>> about granularity and usability.
-> >>>>
-> >>>>>>> - never
-> >>>>>>>      The sysadmin discourages the use of THP, and "its use is onl=
-y permitted
-> >>>>>>> with explicit approval" .
-> >>>>
-> >>>> This one I don't quite agree with, and IMO conflicts with what David
-> >>>> is saying as well.
-> >>>
-> >>> Yeah ... "never" does not mean "sometimes" in my reality :)
-> >>>
-> >>>>
-> >>>>>> "never" so far means "no thps, no exceptions". We've had serious T=
-HP
-> >>>>>> issues in the past, where our workaround until we sorted out the i=
-ssue
-> >>>>>> for affected customers was to force-disable THPs on that system du=
-ring boot.
-> >>>>>
-> >>>>> Right, that reflects the current behavior. What we aim to enhance i=
-s
-> >>>>> by adding the requirement that "its use is only permitted with
-> >>>>> explicit approval."
-> >>>>
-> >>>> I think you're conflating a safety issue with a security issue.
-> >>>>
-> >>>> David is saying there can be cases where the kernel is broken, and
-> >>>> "never" is a production escape hatch to disable the feature until a
-> >>>> kernel upgrade for the fix is possible. In such a case, it doesn't
-> >>>> make sense to override this decision based on any sort of workload
-> >>>> policy, privileged or not.
-> >>>>
-> >>>> The way I understand you is that you want enrollment (and/or
-> >>>> self-management) only for blessed applications. Because you don't
-> >>>> generally trust workloads in the wild enough to switch the global
-> >>>> default away from "never", given the semantics of always/madvise.
-> >>>
-> >>> Assuming "never" means "never" and "always" means "always" ( crazy, r=
-ight? :) ), could be make use of "madvise" mode, which essentially means "V=
-M_HUGEPAGE" takes control?
-> >>>
-> >>> We'd need
-> >>>
-> >>> a) A way to enable THP for a process. Changing the default/vma settin=
-gs to VM_HUGEPAGE as discussed using a prctl could work.
-> >>>
-> >>> b) A way to ignore VM_HUGEPAGE for processes. Maybe the existing prct=
-l to force-disable THPs could work?
-> >>
-> >> This means process level control overrides VMA level control, which
-> >> overrides global control, right?
-> >>
-> >> Intuitively, it should be that VMA level control overrides process lev=
-el
-> >> control, which overrides global control, namely finer granularly contr=
-ol
-> >> precedes coarse one. But some apps might not use VMA level control
-> >> (e.g., madvise) carefully, we want to override that. Maybe ignoring VM=
-A
-> >> level control is what we want?
-> >
-> > Let's take a step back:
-> >
-> > Current behavior is
-> >
-> > 1) If anybody (global / process / VM) says "never" (never/PR_SET_THP_DI=
-SABLE/VM_NOHUGEPAGE), the behavior is "never".
->
-> Just to add here to the current behavior for completeness, if we have the=
- global system setting set to never,
-> but the global hugepage level setting set to madvise, we do still get a T=
-HP, i.e. if I have:
->
-> [root@vm4 vmuser]# cat /sys/kernel/mm/transparent_hugepage/enabled
-> always madvise [never]
-> [root@vm4 vmuser]# cat /sys/kernel/mm/transparent_hugepage/hugepages-2048=
-kB/enabled
-> always inherit [madvise] never
->
-> And then MADV_HUGEPAGE some region, it still gives me a THP.
->
-> >
-> > 2) In "madvise" mode, only "VM_HUGEPAGE" gets THP unless PR_SET_THP_DIS=
-ABLE is set. So per-process overrides per-VMA.
-> >
-> > 3) In "always" mode, everything gets THP unless per-VMA (VM_NOHUGEPAGE)=
- or per-process (PR_SET_THP_DISABLE) disables it.
-> >
-> >
-> > Interestingly, PR_SET_THP_DISABLE used to mimic exactly what I proposed=
- for the other direction (change default of VM_HUGEPAGE), except that it wo=
-uldn't modify already existing mappings. Worth looking at 1860033237d4. Not=
- sure if that commit was the right call, but it's the semantics we have tod=
-ay.
-> >
-> > That commit notes:
-> >
-> > "It should be noted, that the new implementation makes PR_SET_THP_DISAB=
-LE master override to any per-VMA setting, which was not the case previousl=
-y."
-> >
-> >
-> > Whatever we do, we have to be careful to not create more mess or incons=
-istency.
-> >
-> > Especially, if anybody sets VM_NOHUGEPAGE or PR_SET_THP_DISABLE, we mus=
-t not use THPs, ever.
-> >
->
->
-> I thought I will also summarize what the real world usecases are that we =
-want to solve:
->
-> 1) global system policy=3Dmadvise, process wants "always" policy for itse=
-lf: We can have different types of workloads stacked on the same host, some=
- of them benefit from always having THPs,
-> others will incur a regression (either its a performance regression or th=
-ey are completely memory bound and even a very slight increase in memory wi=
-ll cause them to OOM).
-> So we want to selectively have "always" set for just those workloads (pro=
-cesses). (This is how workloads are deployed in our (Metas) fleet at this m=
-oment.)
->
-> 2) global system policy=3Dalways, process wants "madvise" policy for itse=
-lf: Same reasoning as 1, just that the host has a different default policy =
-and we don't want the workloads (processes) that regress with always gettin=
-g THPs to do so.
-> (We hope this is us (meta) in the future, if a majority of workloads show=
- that they benefit from always, we flip the default host setting to "always=
-" and workloads that regress can opt-out and be "madvise".
-> New services developed will then be tested with always by default. Always=
- is also the default defconfig option upstream, so I would imagine this is =
-faced by others as well.)
->
-> 3) global system policy=3Dnever, process wants "madvise" policy for itsel=
-f: This is what Yafang mentioned in [1]. sysadmins dont want to switch the =
-global policy to madvise, but are willing to accept certain processes to ma=
-dvise.
-> But David mentioned in [2] that never means no thps, no exceptions and th=
-e only way to solve some issues in the past has been to disable THPs comple=
-tely.
+Hi Clément,
 
-The interpretation of never as "disable THPs completely" makes sense
-to me, as sysadmins need a guaranteed way to disable THP. If
-applications could still allocate THPs in never mode, it would
-frustrate sysadmins.
+On 12/05/2025 10:46, Clément Léger wrote:
+> This selftest tests all the currently emulated instruction (except for
+> the RV32 compressed ones which are left as a future exercise for a RV32
+> user). For the FPU instructions, all the FPU registers are tested.
+> This commit can be tested using
 
-For case 3), I agree with Johannes that introducing a new mode (e.g.,
-"blessed" or "bpf") would be ideal. This mode would allow per-task THP
-policy adjustments via BPF programs, defaulting to never when no BPF
-program is attached.
 
-[0]. https://lore.kernel.org/linux-mm/20250509164654.GA608090@cmpxchg.org/
+I guess something went wrong here. And the documentation patch 
+disappeared too. Can you add a changelog to the next version please?
 
---=20
-Regards
-Yafang
+Thanks,
+
+Alex
+
+
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>
+> ---
+>
+> Note: this test can be executed with the FWFT series [1] or using an SBI
+> firmware that delegates misaligned traps by default. If using QEMU,
+> you will need the patches mentionned at [2] so that misaligned accesses
+> will generate a trap.
+>
+> Link: https://lore.kernel.org/all/20250424173204.1948385-1-cleger@rivosinc.com/ [1]
+> Link: https://lore.kernel.org/all/20241211211933.198792-1-fkonrad@amd.com/ [2]
+>
+>
+>   tools/testing/selftests/riscv/Makefile        |   2 +-
+>   .../selftests/riscv/misaligned/.gitignore     |   1 +
+>   .../selftests/riscv/misaligned/Makefile       |  12 +
+>   .../selftests/riscv/misaligned/common.S       |  33 +++
+>   .../testing/selftests/riscv/misaligned/fpu.S  | 180 +++++++++++++
+>   tools/testing/selftests/riscv/misaligned/gp.S | 103 +++++++
+>   .../selftests/riscv/misaligned/misaligned.c   | 254 ++++++++++++++++++
+>   7 files changed, 584 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/.gitignore
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/Makefile
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/common.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/fpu.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/gp.S
+>   create mode 100644 tools/testing/selftests/riscv/misaligned/misaligned.c
+>
+> diff --git a/tools/testing/selftests/riscv/Makefile b/tools/testing/selftests/riscv/Makefile
+> index 099b8c1f46f8..95a98ceeb3b3 100644
+> --- a/tools/testing/selftests/riscv/Makefile
+> +++ b/tools/testing/selftests/riscv/Makefile
+> @@ -5,7 +5,7 @@
+>   ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>   
+>   ifneq (,$(filter $(ARCH),riscv))
+> -RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector
+> +RISCV_SUBTARGETS ?= abi hwprobe mm sigreturn vector misaligned
+>   else
+>   RISCV_SUBTARGETS :=
+>   endif
+> diff --git a/tools/testing/selftests/riscv/misaligned/.gitignore b/tools/testing/selftests/riscv/misaligned/.gitignore
+> new file mode 100644
+> index 000000000000..5eff15a1f981
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/.gitignore
+> @@ -0,0 +1 @@
+> +misaligned
+> diff --git a/tools/testing/selftests/riscv/misaligned/Makefile b/tools/testing/selftests/riscv/misaligned/Makefile
+> new file mode 100644
+> index 000000000000..1aa40110c50d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/Makefile
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2021 ARM Limited
+> +# Originally tools/testing/arm64/abi/Makefile
+> +
+> +CFLAGS += -I$(top_srcdir)/tools/include
+> +
+> +TEST_GEN_PROGS := misaligned
+> +
+> +include ../../lib.mk
+> +
+> +$(OUTPUT)/misaligned: misaligned.c fpu.S gp.S
+> +	$(CC) -g3 -static -o$@ -march=rv64imafdc $(CFLAGS) $(LDFLAGS) $^
+> diff --git a/tools/testing/selftests/riscv/misaligned/common.S b/tools/testing/selftests/riscv/misaligned/common.S
+> new file mode 100644
+> index 000000000000..8fa00035bd5d
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/common.S
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +.macro lb_sb temp, offset, src, dst
+> +	lb \temp, \offset(\src)
+> +	sb \temp, \offset(\dst)
+> +.endm
+> +
+> +.macro copy_long_to temp, src, dst
+> +	lb_sb \temp, 0, \src, \dst,
+> +	lb_sb \temp, 1, \src, \dst,
+> +	lb_sb \temp, 2, \src, \dst,
+> +	lb_sb \temp, 3, \src, \dst,
+> +	lb_sb \temp, 4, \src, \dst,
+> +	lb_sb \temp, 5, \src, \dst,
+> +	lb_sb \temp, 6, \src, \dst,
+> +	lb_sb \temp, 7, \src, \dst,
+> +.endm
+> +
+> +.macro sp_stack_prologue offset
+> +	addi sp, sp, -8
+> +	sub sp, sp, \offset
+> +.endm
+> +
+> +.macro sp_stack_epilogue offset
+> +	add sp, sp, \offset
+> +	addi sp, sp, 8
+> +.endm
+> diff --git a/tools/testing/selftests/riscv/misaligned/fpu.S b/tools/testing/selftests/riscv/misaligned/fpu.S
+> new file mode 100644
+> index 000000000000..d008bff58310
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/fpu.S
+> @@ -0,0 +1,180 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +#define CASE_ALIGN		4
+> +
+> +.macro fpu_load_inst fpreg, inst, precision, load_reg
+> +.align CASE_ALIGN
+> +	\inst \fpreg, 0(\load_reg)
+> +	fmv.\precision fa0, \fpreg
+> +	j 2f
+> +.endm
+> +
+> +#define flw(__fpreg) fpu_load_inst __fpreg, flw, s, s1
+> +#define fld(__fpreg) fpu_load_inst __fpreg, fld, d, s1
+> +#define c_flw(__fpreg) fpu_load_inst __fpreg, c.flw, s, s1
+> +#define c_fld(__fpreg) fpu_load_inst __fpreg, c.fld, d, s1
+> +#define c_fldsp(__fpreg) fpu_load_inst __fpreg, c.fldsp, d, sp
+> +
+> +.macro fpu_store_inst fpreg, inst, precision, store_reg
+> +.align CASE_ALIGN
+> +	fmv.\precision \fpreg, fa0
+> +	\inst \fpreg, 0(\store_reg)
+> +	j 2f
+> +.endm
+> +
+> +#define fsw(__fpreg) fpu_store_inst __fpreg, fsw, s, s1
+> +#define fsd(__fpreg) fpu_store_inst __fpreg, fsd, d, s1
+> +#define c_fsw(__fpreg) fpu_store_inst __fpreg, c.fsw, s, s1
+> +#define c_fsd(__fpreg) fpu_store_inst __fpreg, c.fsd, d, s1
+> +#define c_fsdsp(__fpreg) fpu_store_inst __fpreg, c.fsdsp, d, sp
+> +
+> +.macro fp_test_prologue
+> +	move s1, a1
+> +	/*
+> +	 * Compute jump offset to store the correct FP register since we don't
+> +	 * have indirect FP register access (or at least we don't use this
+> +	 * extension so that works on all archs)
+> +	 */
+> +	sll t0, a0, CASE_ALIGN
+> +	la t2, 1f
+> +	add t0, t0, t2
+> +	jr t0
+> +.align	CASE_ALIGN
+> +1:
+> +.endm
+> +
+> +.macro fp_test_prologue_compressed
+> +	/* FP registers for compressed instructions starts from 8 to 16 */
+> +	addi a0, a0, -8
+> +	fp_test_prologue
+> +.endm
+> +
+> +#define fp_test_body_compressed(__inst_func) \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +2:
+> +
+> +#define fp_test_body(__inst_func) \
+> +	__inst_func(f0); \
+> +	__inst_func(f1); \
+> +	__inst_func(f2); \
+> +	__inst_func(f3); \
+> +	__inst_func(f4); \
+> +	__inst_func(f5); \
+> +	__inst_func(f6); \
+> +	__inst_func(f7); \
+> +	__inst_func(f8); \
+> +	__inst_func(f9); \
+> +	__inst_func(f10); \
+> +	__inst_func(f11); \
+> +	__inst_func(f12); \
+> +	__inst_func(f13); \
+> +	__inst_func(f14); \
+> +	__inst_func(f15); \
+> +	__inst_func(f16); \
+> +	__inst_func(f17); \
+> +	__inst_func(f18); \
+> +	__inst_func(f19); \
+> +	__inst_func(f20); \
+> +	__inst_func(f21); \
+> +	__inst_func(f22); \
+> +	__inst_func(f23); \
+> +	__inst_func(f24); \
+> +	__inst_func(f25); \
+> +	__inst_func(f26); \
+> +	__inst_func(f27); \
+> +	__inst_func(f28); \
+> +	__inst_func(f29); \
+> +	__inst_func(f30); \
+> +	__inst_func(f31); \
+> +2:
+> +.text
+> +
+> +#define __gen_test_inst(__inst, __suffix) \
+> +.global test_ ## __inst; \
+> +test_ ## __inst:; \
+> +	fp_test_prologue ## __suffix; \
+> +	fp_test_body ## __suffix(__inst); \
+> +	ret
+> +
+> +#define gen_test_inst_compressed(__inst) \
+> +	.option arch,+c; \
+> +	__gen_test_inst(c_ ## __inst, _compressed)
+> +
+> +#define gen_test_inst(__inst) \
+> +	.balign 16; \
+> +	.option push; \
+> +	.option arch,-c; \
+> +	__gen_test_inst(__inst, ); \
+> +	.option pop
+> +
+> +.macro fp_test_prologue_load_compressed_sp
+> +	copy_long_to t0, a1, sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_load_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_prologue_store_compressed_sp
+> +.endm
+> +
+> +.macro fp_test_epilogue_store_compressed_sp
+> +	copy_long_to t0, sp, a1
+> +.endm
+> +
+> +#define gen_inst_compressed_sp(__inst, __type) \
+> +	.global test_c_ ## __inst ## sp; \
+> +	test_c_ ## __inst ## sp:; \
+> +		sp_stack_prologue a2; \
+> +		fp_test_prologue_## __type ## _compressed_sp; \
+> +		fp_test_prologue_compressed; \
+> +		fp_test_body_compressed(c_ ## __inst ## sp); \
+> +		fp_test_epilogue_## __type ## _compressed_sp; \
+> +		sp_stack_epilogue a2; \
+> +		ret
+> +
+> +#define gen_test_load_compressed_sp(__inst) gen_inst_compressed_sp(__inst, load)
+> +#define gen_test_store_compressed_sp(__inst) gen_inst_compressed_sp(__inst, store)
+> +
+> +/*
+> + * float_fsw_reg - Set a FP register from a register containing the value
+> + * a0 = FP register index to be set
+> + * a1 = addr where to store register value
+> + * a2 = address offset
+> + * a3 = value to be store
+> + */
+> +gen_test_inst(fsw)
+> +
+> +/*
+> + * float_flw_reg - Get a FP register value and return it
+> + * a0 = FP register index to be retrieved
+> + * a1 = addr to load register from
+> + * a2 = address offset
+> + */
+> +gen_test_inst(flw)
+> +
+> +gen_test_inst(fsd)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fsd)
+> +gen_test_store_compressed_sp(fsd)
+> +#endif
+> +
+> +gen_test_inst(fld)
+> +#ifdef __riscv_compressed
+> +gen_test_inst_compressed(fld)
+> +gen_test_load_compressed_sp(fld)
+> +#endif
+> diff --git a/tools/testing/selftests/riscv/misaligned/gp.S b/tools/testing/selftests/riscv/misaligned/gp.S
+> new file mode 100644
+> index 000000000000..f53f4c6d81dd
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/gp.S
+> @@ -0,0 +1,103 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +
+> +#include "common.S"
+> +
+> +.text
+> +
+> +.macro __gen_test_inst inst, src_reg
+> +	\inst a2, 0(\src_reg)
+> +	move a0, a2
+> +.endm
+> +
+> +.macro gen_func_header func_name, rvc
+> +	.option arch,\rvc
+> +	.global test_\func_name
+> +	test_\func_name:
+> +.endm
+> +
+> +.macro gen_test_inst inst
+> +	.option push
+> +	gen_func_header \inst, -c
+> +	__gen_test_inst \inst, a0
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro __gen_test_inst_c name, src_reg
+> +	.option push
+> +	gen_func_header c_\name, +c
+> +	 __gen_test_inst c.\name, \src_reg
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro gen_test_inst_c name
+> + 	__gen_test_inst_c \name, a0
+> +.endm
+> +
+> +
+> +.macro gen_test_inst_load_c_sp name
+> +	.option push
+> +	gen_func_header c_\name\()sp, +c
+> +	sp_stack_prologue a1
+> +	copy_long_to t0, a0, sp
+> +	c.ldsp a0, 0(sp)
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +.macro lb_sp_sb_a0 reg, offset
+> +	lb_sb \reg, \offset, sp, a0
+> +.endm
+> +
+> +.macro gen_test_inst_store_c_sp inst_name
+> +	.option push
+> +	gen_func_header c_\inst_name\()sp, +c
+> +	/* Misalign stack pointer */
+> +	sp_stack_prologue a1
+> +	/* Misalign access */
+> +	c.sdsp a2, 0(sp)
+> +	copy_long_to t0, sp, a0
+> +	sp_stack_epilogue a1
+> +	.option pop
+> +	ret
+> +.endm
+> +
+> +
+> + /*
+> + * a0 = addr to load from
+> + * a1 = address offset
+> + * a2 = value to be loaded
+> + */
+> +gen_test_inst lh
+> +gen_test_inst lhu
+> +gen_test_inst lw
+> +gen_test_inst lwu
+> +gen_test_inst ld
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c lw
+> +gen_test_inst_c ld
+> +gen_test_inst_load_c_sp ld
+> +#endif
+> +
+> +/*
+> + * a0 = addr where to store value
+> + * a1 = address offset
+> + * a2 = value to be stored
+> + */
+> +gen_test_inst sh
+> +gen_test_inst sw
+> +gen_test_inst sd
+> +#ifdef __riscv_compressed
+> +gen_test_inst_c sw
+> +gen_test_inst_c sd
+> +gen_test_inst_store_c_sp sd
+> +#endif
+> +
+> diff --git a/tools/testing/selftests/riscv/misaligned/misaligned.c b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> new file mode 100644
+> index 000000000000..8fa5ad1a93d1
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/misaligned/misaligned.c
+> @@ -0,0 +1,254 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Rivos Inc.
+> + *
+> + * Authors:
+> + *     Clément Léger <cleger@rivosinc.com>
+> + */
+> +#include <signal.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <linux/ptrace.h>
+> +#include "../../kselftest_harness.h"
+> +
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <float.h>
+> +#include <errno.h>
+> +#include <math.h>
+> +#include <string.h>
+> +#include <signal.h>
+> +#include <stdbool.h>
+> +#include <unistd.h>
+> +#include <inttypes.h>
+> +#include <ucontext.h>
+> +
+> +#include <sys/prctl.h>
+> +
+> +#define stringify(s) __stringify(s)
+> +#define __stringify(s) #s
+> +
+> +#define VAL16	0x1234
+> +#define VAL32	0xDEADBEEF
+> +#define VAL64	0x45674321D00DF789
+> +
+> +#define VAL_float	78951.234375
+> +#define VAL_double	567890.512396965789589290
+> +
+> +static bool float_equal(float a, float b)
+> +{
+> +	float scaled_epsilon;
+> +	float difference = fabsf(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabsf(a);
+> +	b = fabsf(b);
+> +	if (a > b)
+> +		scaled_epsilon = FLT_EPSILON * a;
+> +	else
+> +		scaled_epsilon = FLT_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +static bool double_equal(double a, double b)
+> +{
+> +	double scaled_epsilon;
+> +	double difference = fabsf(a - b);
+> +
+> +	// Scale to the largest value.
+> +	a = fabs(a);
+> +	b = fabs(b);
+> +	if (a > b)
+> +		scaled_epsilon = DBL_EPSILON * a;
+> +	else
+> +		scaled_epsilon = DBL_EPSILON * b;
+> +
+> +	return difference <= scaled_epsilon;
+> +}
+> +
+> +#define fpu_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_load_proto(flw, float);
+> +fpu_load_proto(fld, double);
+> +fpu_load_proto(c_flw, float);
+> +fpu_load_proto(c_fld, double);
+> +fpu_load_proto(c_fldsp, double);
+> +
+> +#define fpu_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(unsigned long fp_reg, void *addr, unsigned long offset, __type value)
+> +
+> +fpu_store_proto(fsw, float);
+> +fpu_store_proto(fsd, double);
+> +fpu_store_proto(c_fsw, float);
+> +fpu_store_proto(c_fsd, double);
+> +fpu_store_proto(c_fsdsp, double);
+> +
+> +#define gp_load_proto(__inst, __type) \
+> +extern __type test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_load_proto(lh, uint16_t);
+> +gp_load_proto(lhu, uint16_t);
+> +gp_load_proto(lw, uint32_t);
+> +gp_load_proto(lwu, uint32_t);
+> +gp_load_proto(ld, uint64_t);
+> +gp_load_proto(c_lw, uint32_t);
+> +gp_load_proto(c_ld, uint64_t);
+> +gp_load_proto(c_ldsp, uint64_t);
+> +
+> +#define gp_store_proto(__inst, __type) \
+> +extern void test_ ## __inst(void *addr, unsigned long offset, __type value)
+> +
+> +gp_store_proto(sh, uint16_t);
+> +gp_store_proto(sw, uint32_t);
+> +gp_store_proto(sd, uint64_t);
+> +gp_store_proto(c_sw, uint32_t);
+> +gp_store_proto(c_sd, uint64_t);
+> +gp_store_proto(c_sdsp, uint64_t);
+> +
+> +#define TEST_GP_LOAD(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < __type_size / 8; offset++) {			\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *) (buf + offset); \
+> +		memcpy(ptr, &val, sizeof(val));					\
+> +		val = test_ ## __inst(ptr, offset, val);			\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +
+> +TEST_GP_LOAD(lh, 16);
+> +TEST_GP_LOAD(lhu, 16);
+> +TEST_GP_LOAD(lw, 32);
+> +TEST_GP_LOAD(lwu, 32);
+> +TEST_GP_LOAD(ld, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_LOAD(c_lw, 32);
+> +TEST_GP_LOAD(c_ld, 64);
+> +TEST_GP_LOAD(c_ldsp, 64);
+> +#endif
+> +
+> +#define TEST_GP_STORE(__inst, __type_size)					\
+> +TEST(gp_load_ ## __inst)							\
+> +{										\
+> +	int offset, ret;							\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (offset = 1; offset < __type_size / 8; offset++) {			\
+> +		uint ## __type_size ## _t val = VAL ## __type_size;		\
+> +		uint ## __type_size ## _t *ptr = (uint ## __type_size ## _t *) (buf + offset); \
+> +		memset(ptr, 0, sizeof(val));					\
+> +		test_ ## __inst(ptr, offset, val);				\
+> +		memcpy(&val, ptr, sizeof(val));					\
+> +		EXPECT_EQ(VAL ## __type_size, val);				\
+> +	}									\
+> +}
+> +TEST_GP_STORE(sh, 16);
+> +TEST_GP_STORE(sw, 32);
+> +TEST_GP_STORE(sd, 64);
+> +#ifdef __riscv_compressed
+> +TEST_GP_STORE(c_sw, 32);
+> +TEST_GP_STORE(c_sd, 64);
+> +TEST_GP_STORE(c_sdsp, 64);
+> +#endif
+> +
+> +#define __TEST_FPU_LOAD(__type, __inst, __reg_start, __reg_end)			\
+> +TEST(fpu_load_ ## __inst)							\
+> +{										\
+> +	int ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +			void *load_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			memcpy(load_addr, &val, sizeof(val));			\
+> +			val = test_ ## __inst(fp_reg, load_addr, offset, val);	\
+> +			EXPECT_TRUE(__type ##_equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_LOAD(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 0, 32)
+> +#define TEST_FPU_LOAD_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_LOAD(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_LOAD(float, flw)
+> +TEST_FPU_LOAD(double, fld)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fld)
+> +TEST_FPU_LOAD_COMPRESSED(double, c_fldsp)
+> +#endif
+> +
+> +#define __TEST_FPU_STORE(__type, __inst, __reg_start, __reg_end)		\
+> +TEST(fpu_store_ ## __inst)							\
+> +{										\
+> +	int ret, offset, fp_reg;						\
+> +	uint8_t buf[16] __attribute__((aligned(16)));				\
+> +										\
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_NOPRINT);			\
+> +	ASSERT_EQ(ret, 0);							\
+> +										\
+> +	for (fp_reg = __reg_start; fp_reg < __reg_end; fp_reg++) {		\
+> +		for (offset = 1; offset < 4; offset++) {			\
+> +										\
+> +			void *store_addr = (buf + offset);			\
+> +			__type val = VAL_ ## __type ;				\
+> +										\
+> +			test_ ## __inst(fp_reg, store_addr, offset, val);	\
+> +			memcpy(&val, store_addr, sizeof(val));			\
+> +			EXPECT_TRUE(__type ## _equal(val, VAL_## __type));	\
+> +		}								\
+> +	}									\
+> +}
+> +#define TEST_FPU_STORE(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 0, 32)
+> +#define TEST_FPU_STORE_COMPRESSED(__type, __inst) \
+> +	__TEST_FPU_STORE(__type, __inst, 8, 16)
+> +
+> +TEST_FPU_STORE(float, fsw)
+> +TEST_FPU_STORE(double, fsd)
+> +#ifdef __riscv_compressed
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsd)
+> +TEST_FPU_STORE_COMPRESSED(double, c_fsdsp)
+> +#endif
+> +
+> +TEST_SIGNAL(gen_sigbus, SIGBUS)
+> +{
+> +	uint32_t *ptr;
+> +	uint8_t buf[16] __attribute__((aligned(16)));
+> +	int ret;
+> +
+> +	ret = prctl(PR_SET_UNALIGN, PR_UNALIGN_SIGBUS);
+> +	ASSERT_EQ(ret, 0);
+> +
+> +	ptr = (uint32_t *)(buf + 1);
+> +	*ptr = 0xDEADBEEFULL;
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	int ret, val;
+> +
+> +	ret = prctl(PR_GET_UNALIGN, &val);
+> +	if (ret == -1 && errno == EINVAL)
+> +		ksft_exit_skip("SKIP GET_UNALIGN_CTL not supported\n");
+> +
+> +	exit(test_harness_run(argc, argv));
+> +}
