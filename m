@@ -1,61 +1,126 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760211917ED;
-	Tue, 13 May 2025 06:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D751D1CA84;
+	Tue, 13 May 2025 06:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747118889; cv=none; b=sgLqB8gO7IVxoXFozNyAifxOqvoIO64v0l/ixCscnGjvxdwDF9zK0Zf9VJe2VDz0+uSXY47UskoomkbdriwTvbaH+C3iaU/ia70fmHtFnlVRYARySz/oS8koTeGm7v3XSeeTbdCvV4ioQbNNU3yNXCnVBr/dDDqhWLFljL++4ks=
+	t=1747118939; cv=none; b=p9nRBgge9NGtt1DYBfw6A35+OXTAy1PVe6G3I3FHpt7GKymNmsZh7i4xkmVY1eyvtvioSIsXqa1zfpyjxuVX6QKdhX2HVauMbbaeCWfUlRK4p5oN2IJLo4APRnMhNlhmCX/q9YTXJ1fx2L3zTWO69oc1rubbBkVm2yut3m8917Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747118889; c=relaxed/simple;
-	bh=4PLJJYQclSDJxAPd/I6fUc+pgL+dM5fCx2w9Ok0+7DQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cm/lCh8bzDkex3zMuOlk5gF0RrVf9qRjUEpIt4assXzwdd/5/kVSYXO+dcb6Ph6xBbhAL/C0n5BtBjbmnJ23+DafxiWsqwGsH3lZ5owvsb5TbOVnAZqjLPZ/S/WFmPKvW3v3dvQ/+tvRd04Jyt5OK5Cte+f6D0XyOPEFpPNTSdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6783168BEB; Tue, 13 May 2025 08:48:03 +0200 (CEST)
-Date: Tue, 13 May 2025 08:48:03 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, xni@redhat.com, colyli@kernel.org,
-	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-	song@kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-Message-ID: <20250513064803.GA1508@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-16-yukuai1@huaweicloud.com> <20250512051722.GA1667@lst.de> <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com> <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de> <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com> <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com>
+	s=arc-20240116; t=1747118939; c=relaxed/simple;
+	bh=iOjQPZ3jBEH+A7GPIhAofmRc4XXAqWG0KCzvFh/YLMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghce+s8EUnGosFtm7qTB0C3e+X7cWVuN2DE/jdIjEsMkInDNbIPOFwxjZrcnasHXSa47WH8xen4Lac9tdTz6iWpfqwnjLvLSv1X2ttB3Bsr1IZFpRcsA+5fDrLKrKXhc/zrigJ/99WTqkOBe5YZhpzDQBaBMSvM2h6VT3pe3+LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDQJFI03; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDQJFI03"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4ddb03095d3so2154186137.0;
+        Mon, 12 May 2025 23:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747118937; x=1747723737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FYk4j7CxjdKvx7rPEEhNb+Rwax5vZxTzKDR9+UW9Ueo=;
+        b=KDQJFI03vd2Dm/QFmh1FED62EBwdHgLZOihBvv29PB2WS7qUOkdRO6zEsFM1cm3+3k
+         AQktq65hjMb9kTQ4CFNzrR5twM2GL8tjJs6R70Pw2wndIbAwuHE5k9CnGL5san3TGIvY
+         nRYQQo0TS/igJtJ0CQ03DQlOESd/ivFPIAIO/OdYYhr8tW3KQ+Tit84Bcs59xBI3nJwU
+         ewjWZypl0233TaeYTWvwxVm4LwF1CJ3WX3gRx8S5EB3xPuBke29h6SIQoPcI0Ubkzs6N
+         v0EDX83Yeqsj0Db0HO0+fYq0hhzm/JVot76QQMAfG0H8pOfBQPVSfFLUCVJPQeYWmzAw
+         hUfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747118937; x=1747723737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FYk4j7CxjdKvx7rPEEhNb+Rwax5vZxTzKDR9+UW9Ueo=;
+        b=bVqMsp/CwqYbnkRC8K9SeODXnHpNBp22F5I3CTSL5V2V2OK4ciMydbKnaAvoYLGF0H
+         Ni+agHheyZe4YUKR0Ld6kiLYyjpbRalg1Rr124oLcFoDdGaxMlez9bMzWBpss5wdheIX
+         e2lwVPhOKzvs/rPRfxx6YO0M0L0yH2s1NVvxsw99vUEjXeIU9rJ4+JGSIhjrNoVgs8VD
+         THL9iJYZTNpafJjSRixRwxi/zGSaqjYC92rdbweEm2O0qbFUCX0+ZBKum9mrvOFnx9o2
+         aELgNjwv4KSO4xCy1ALYNMnOpP9DVcL4SaL8aL0xsvSY5vExzDZ1fOW6bniLroYRkWrw
+         0BzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVf2Yqtz4hXT72wtjshJkKyJ0w5E8BB1yKqlJxR0AofUhThaX7xrPoaf1E+RT76JTAAaBD8+rN0Noe3@vger.kernel.org, AJvYcCWusZXtQwMfG4lLAz1k6QpeiUTA51aPeZzoO6cNuOsVp+fVYwfjLoSdBsBBYQMZjoEZLtsfHbWsx5MMnAyI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT1f0J0Nf75kD/QoCXSW0RiT95kc/GV11sD6+YZbyS4r9YN1uZ
+	2jjwurq0ztWMKFHEv1GCVQx48QHTYR5zVl5whSfnfAJ/8ZXMijH8iYDbSUK4DzSaqbQ/dstSAfZ
+	8pP833CGTbpFBZsJkMMCXNyf3Lts=
+X-Gm-Gg: ASbGnctomV5GMguXb2O3Zp3xsXF4/2wycMJx8QUredd9URPG9rjx8C5BEBn3RM4xbcd
+	ded7DuHZ7+qqO0lNhsHVHqAD+BXyURfoUXPSAf2XiGRXi/mAb6u/rq2r6N9FZBMcII5AAe/w0Pc
+	ZchJMJX0yNoNKuYeBvUrs36boye406Z8E=
+X-Google-Smtp-Source: AGHT+IG1Lfo3qRxxG+d06P2OThy1PUAW+HmTxa7XW23ERubEx5mp17bOS5Sq9QFl3olPcQ5JCsTf6WYuihxd2eQtVjs=
+X-Received: by 2002:a05:6102:3c9f:b0:4dc:81c9:13b1 with SMTP id
+ ada2fe7eead31-4deed227f12mr14095269137.0.1747118936072; Mon, 12 May 2025
+ 23:48:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <cover.1746811744.git.rabenda.cn@gmail.com> <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
+ <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Tue, 13 May 2025 14:48:44 +0800
+X-Gm-Features: AX0GCFsgKP3_L5fxA6GXcGzKEQ8-JYRcBHDQtkNoE5k7A3nhuftzT0fylh2dtec
+Message-ID: <CAAT7Ki9=ROP47hsugf3BS1nXr9oOPHWgjQoGfjAZiwHnXS19Pw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
+To: Chen Wang <unicorn_wang@outlook.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, 
+	Chao Wei <chao.wei@sophgo.com>, sophgo@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 02:32:04PM +0800, Yu Kuai wrote:
-> However, for bitmap file case, bio is issued from submit_bh(), I'll have
-> to change buffer_head code and I'm not sure if we want to do that.
+I hope it is sg2042-x8evb.
 
-Don't bother with the old code, I'm still hoping we can replace it with
-your new code ASAP. 
+Sophgo is also making EVB boards for sg2044.
 
-> +       BIO_STACKED_META,       /* bio is metadata from stacked device */
+I think a distinction needs to be made here.
 
-I don't think that is the right name and description.  The whole point
-of the recursion avoidance is to to supported stacked devices by
-reducing the stack depth.  So we clearly need to document why that
-is not desirable for some very specific cases like reading in metadata
-needed to process a write I/O.  We should also ensure it doesn't
-propagate to lover stacked devices.
+Regards,
+Han
 
-In fact I wonder if a better interfaces would be one to stash away
-current->bio_list and then restore it after the call, as that would
-enforce all that.
+On Tue, May 13, 2025 at 7:35=E2=80=AFAM Chen Wang <unicorn_wang@outlook.com=
+> wrote:
+>
+>
+> On 2025/5/10 2:13, Han Gao wrote:
+> > Add DT binding documentation for the Sophgo x8 EVB board [1].
+> >
+> > Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG20=
+42-x8-EVB [1]
+> >
+> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > ---
+> >   Documentation/devicetree/bindings/riscv/sophgo.yaml | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/riscv/sophgo.yaml b/Docu=
+mentation/devicetree/bindings/riscv/sophgo.yaml
+> > index a14cb10ff3f0..ee244c9f75cc 100644
+> > --- a/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> > +++ b/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> > @@ -34,6 +34,7 @@ properties:
+> >         - items:
+> >             - enum:
+> >                 - milkv,pioneer
+> > +              - sophgo,sg2042-x8evb
+>
+> I wonder the product name is x8evb or sg2042-x8evb?
+>
+> The same question to x4evb.
+>
+> Regards,
+>
+> Chen
+>
+> >             - const: sophgo,sg2042
+> >
+> >   additionalProperties: true
