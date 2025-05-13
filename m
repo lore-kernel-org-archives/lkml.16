@@ -1,156 +1,103 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB99E2BE10C;
-	Tue, 13 May 2025 14:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EDAA19F40B;
+	Tue, 13 May 2025 14:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147317; cv=none; b=a4rbPG2h3UsqHdZX5k0jydfxZQBibH7EFmZf+BetsgwFq5fv49lU0YV/hV4T7v2AIxx1y0L8m/hBjTwQ/voWVSwnU48ylltqzSrzlLBgbW0IFFz2CvWhuYpasLNIpI4PQPJHasC+gk51ydXstgDEi2PP1gOHnLXLaKvq55mN4M0=
+	t=1747147339; cv=none; b=Scpm186AaulwYtZYlxN8km6NZqRAcc28CRcnsEfcXtkogH0DIKPQiJg7gZbYitZk/LRPvk2ZvLh1Vu+82hOj0sO+G2LxoxcySfJ99VIA9hKh3q0GbYeYp5QBGiV7m5tfz+5rq+xg+Thdq4rkJ1T6tDaTerFaMBMad0Pz+BdwUbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147317; c=relaxed/simple;
-	bh=Mfe/o/ujk7XvMhycJvGf6PnnNtj9TPRT+Cu0bPP1/H8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rWgmOVlasK6AJXzTbT091xuCRAehwyvphAg7tGb+JTNZTcmLkzlJec4UsNmuAPbk6uJuquZnS9/vJUv7v78aJB8UYVwSWIMbMYm6o83L76w1Jw2tzlxsrNeE92ANnERtO+YLcJ5lf2UeBxwrPQ1l6+6gn9sxfHytJatp19T2C0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDOkP5IG; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747147339; c=relaxed/simple;
+	bh=4KcevAX47uPd8DaXUGm9PtOGKEhO4cJO3Y3jn1NJaTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=ZfW67izWJZn+dc2Ro9m9BAssImPmyT7GgNowNLY8mCtVYEvOM1YWVlUp9NQHYC7jmjGhdW/dGvKQbWiDULhcjpE131t1WEhdOJwh2cVLIZ8tKyPUfqrJylGtqR/1fLwFDjO4err6KpCNqs0oXIikOJPlB/CDuIveOnPl50fShpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=hHg8Wc4B reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDOkP5IG"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so9191908a12.0;
-        Tue, 13 May 2025 07:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747147314; x=1747752114; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qzjcpGVlPiNhfCQy1SqonqHdDAwC7y+3thN4axNOI5o=;
-        b=nDOkP5IGD3KHdAx7v4wcp9JacGfByfez8C/lXu0gyHhjDtOfTM9WXCsu6aSkWYiGz/
-         MHXz36FyVcMAOeWI9NXjKuY3r/naTyqPagDIPD1IecqnxdBDFGJFSNH8ofGSaC0TmQxk
-         gXBkoZPpZp12dvndPfLnKOZXxRmcdufUCVkv0VZILZcETjGajI9UbMSVcCfuHcvtpVuT
-         JmfPwPfEkOxdBRdJUXCPn5JYGESSI/XGE3CjUsTL9gxBwKisLAC/h0ZSh0C3RMlBnsom
-         ystagC44LuXRb52fWKIH18Ci8OM51GDKG0LZzbdrJPoTFG5/Raw5YJ2UqZ8mWaA0oBSH
-         LW8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747147314; x=1747752114;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qzjcpGVlPiNhfCQy1SqonqHdDAwC7y+3thN4axNOI5o=;
-        b=mLkNS9fupIouGq8NxMWobtqTE/xAZZ7EKXaPRa+Z53Zaq7CQ5PKeFqg/2s9DWq28rT
-         7FTeEpu2t7i/+q0nlkyldKGDZPJDzOwx3TLTNZZlMZwUjf/Ti7opcrGjHQ9p5OyJgPVM
-         gjzF6P1I1FI6XucdFeUnTLRPswIVSF54xDe9pbx855/FQTWDsyjvWYFn/2L6mktVnwKx
-         aPWMNdMFOwfyNmrbbRkQtp9tTVsSStkW042y9eWsF0Y6DGMAFlMV2uJv0zT8KoOIMgKC
-         mxqN5W4AOSBNxVRA/C1ktQ7U455fxxNg2Q68gM6q3byP8YVwc+if+vXfMBEt7VtnWJqc
-         LA+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWsbbaQjoA9dZnmRyNrBHjaIBYMqMSBN+3VP0TYFYzzb/klV58spmjrdxJRPZns6Zqct9I7aQbx@vger.kernel.org, AJvYcCXWkqw5LBI763NR03jRR69uys2Jpd0i+u9x4moj3AUZp21V211TFFbv6ecvm7GFnrWU+mXofbtwEbTBHmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUnGcceNg7RTRxUPAOWNdMeLatanHqTSXpExmvj8iWQr91VYdk
-	tqowz4dw6q8xeoWNtUsRZYLHZ7qDXhQ/2ullEnmHtLP4oNnTWDOH
-X-Gm-Gg: ASbGncvT2AiWYCdze4H8ASpCOOj6as7YmP42oUV3W2TM0e3xti9Fb3XSZgdNsdJJuQO
-	iOL7nGahXCX4akUNdaTkD9bpq4ZQJ/9Y4jkyVwtHEVQid4ScjvUqY5GXBo6w22+lFK19Z67Oavl
-	LLdkF1wfIif3J98RnelRbPJb7fnd7TUr4VZ6FxMAILRNvA6UaVrqOnvSgjeN9Xn7i8sAzRXKHcU
-	cvVuzUwgKBH2y0T0Tg1kRk88Sb9Zc+B8ALqXCp6iTUUUdqvF+8/eHDg3e/a0tYQmubWyaSNXidN
-	tG5qqtsacne+32s6x/tfWjB6+tm5ASv4ygM21R/Bj73Fry6piCtzBp20+sTMHQ==
-X-Google-Smtp-Source: AGHT+IGa8HfcLnV5l28T4pdncKPX+8wlBf0z+xMRFl0KSOi65yCYhLtG1//h/VuXNDAMOEomitButw==
-X-Received: by 2002:a05:6402:234a:b0:5fe:6e0b:aefc with SMTP id 4fb4d7f45d1cf-5fe6e0bb0e6mr7542848a12.26.1747147313932;
-        Tue, 13 May 2025 07:41:53 -0700 (PDT)
-Received: from debian-vm.localnet ([2a01:4b00:d20c:cddd:20c:29ff:fe56:c86])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d700e56sm7301556a12.57.2025.05.13.07.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:41:53 -0700 (PDT)
-From: Zak Kemble <zakkemble@gmail.com>
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Zak Kemble <zakkemble@gmail.com>
-Subject: [PATCH 3/3] net: bcmgenet: expose more stats in ethtool
-Date: Tue, 13 May 2025 15:41:07 +0100
-Message-Id: <20250513144107.1989-4-zakkemble@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250513144107.1989-1-zakkemble@gmail.com>
-References: <20250513144107.1989-1-zakkemble@gmail.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="hHg8Wc4B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=CxhojO/kTZI9+TtamrY1UhMIFJL84NcI0rqn1Hi2Wm4=; b=h
+	Hg8Wc4ByXLEeP5l6AXrRSzU9/5cHqViebCSJ8H6KivvRHGvgSgXobzmafOGkVDti
+	dFpcx3//ahFel56Fs9Mh6QTa/2V7TXYQ5n/hLBXZ7M+SFWi7MBXevNM7Gp2HyND5
+	rSBclBpfbwhLyxIN0LE6C6MQAfQzLOyrwSJzoC+hkk=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-114 (Coremail) ; Tue, 13 May 2025 22:41:45 +0800
+ (CST)
+Date: Tue, 13 May 2025 22:41:45 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Alan Stern" <stern@rowland.harvard.edu>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513113817.11962-1-00107082@163.com>
+ <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
+X-NTES-SC: AL_Qu2fBf2fuEsr4yCRYOkZnEYQheY4XMKyuPkg1YJXOp80oyTWxTsHf19qHlLo1cmEJCmxkDi8TiBW9s9aZq9IW6koOKibP3HAyhtnfeHEjYaY
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:cigvCgD3v3sqWiNonJADAA--.29422W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBBMqmgjNKfPMQAFs9
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Expose more per-queue and overall stats in ethtool
-
-Signed-off-by: Zak Kemble <zakkemble@gmail.com>
----
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 29 ++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 80b1031da..ce224de45 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1029,6 +1029,10 @@ struct bcmgenet_stats {
- 			tx_rings[num].stats64, packets), \
- 	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_bytes", \
- 			tx_rings[num].stats64, bytes), \
-+	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_errors", \
-+			tx_rings[num].stats64, errors), \
-+	STAT_GENET_SOFT_MIB64("txq" __stringify(num) "_dropped", \
-+			tx_rings[num].stats64, dropped), \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_bytes", \
- 			rx_rings[num].stats64, bytes),	 \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_packets", \
-@@ -1036,7 +1040,23 @@ struct bcmgenet_stats {
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_errors", \
- 			rx_rings[num].stats64, errors), \
- 	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_dropped", \
--			rx_rings[num].stats64, dropped)
-+			rx_rings[num].stats64, dropped), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_multicast", \
-+			rx_rings[num].stats64, multicast), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_missed", \
-+			rx_rings[num].stats64, missed), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_length_errors", \
-+			rx_rings[num].stats64, length_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_over_errors", \
-+			rx_rings[num].stats64, over_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_crc_errors", \
-+			rx_rings[num].stats64, crc_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_frame_errors", \
-+			rx_rings[num].stats64, frame_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_fragmented_errors", \
-+			rx_rings[num].stats64, fragmented_errors), \
-+	STAT_GENET_SOFT_MIB64("rxq" __stringify(num) "_broadcast", \
-+			rx_rings[num].stats64, broadcast)
- 
- /* There is a 0xC gap between the end of RX and beginning of TX stats and then
-  * between the end of TX stats and the beginning of the RX RUNT
-@@ -1057,6 +1077,11 @@ static const struct bcmgenet_stats bcmgenet_gstrings_stats[] = {
- 	STAT_RTNL(rx_dropped),
- 	STAT_RTNL(tx_dropped),
- 	STAT_RTNL(multicast),
-+	STAT_RTNL(rx_missed_errors),
-+	STAT_RTNL(rx_length_errors),
-+	STAT_RTNL(rx_over_errors),
-+	STAT_RTNL(rx_crc_errors),
-+	STAT_RTNL(rx_frame_errors),
- 	/* UniMAC RSV counters */
- 	STAT_GENET_MIB_RX("rx_64_octets", mib.rx.pkt_cnt.cnt_64),
- 	STAT_GENET_MIB_RX("rx_65_127_oct", mib.rx.pkt_cnt.cnt_127),
-@@ -2408,6 +2433,8 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 		u64_stats_add(&stats->bytes, len);
- 		if (dma_flag & DMA_RX_MULT)
- 			u64_stats_inc(&stats->multicast);
-+		else if (dma_flag & DMA_RX_BRDCAST)
-+			u64_stats_inc(&stats->broadcast);
- 		u64_stats_update_end(&stats->syncp);
- 
- 		/* Notify kernel */
--- 
-2.39.5
-
+CgpBdCAyMDI1LTA1LTEzIDIyOjI1OjUwLCAiQWxhbiBTdGVybiIgPHN0ZXJuQHJvd2xhbmQuaGFy
+dmFyZC5lZHU+IHdyb3RlOgo+T24gVHVlLCBNYXkgMTMsIDIwMjUgYXQgMDc6Mzg6MTdQTSArMDgw
+MCwgRGF2aWQgV2FuZyB3cm90ZToKPj4gLS0tCj4+IENoYW5nZXM6Cj4+IDEuIFVzZSBjYWxsZXIn
+cyBtZW1fZmxhZ3MgaWYgYSBsYXJnZXIgbWVtb3J5IGlzIG5lZWRlZC4KPj4gVGhhbmtzIHRvIE9s
+aXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5jb20+J3MgcmV2aWV3Lgo+PiAtLS0KPj4gVVJCIG9i
+amVjdHMgaGF2ZSBsb25nIGxpZmVjeWNsZSwgYW4gdXJiIGNhbiBiZSByZXVzZWQgYmV0d2Vlbgo+
+PiBlbnF1ZXVlLWRlcXVldWUgbG9vcHM7IFRoZSBwcml2YXRlIGRhdGEgbmVlZGVkIGJ5IHNvbWUg
+aG9zdCBjb250cm9sbGVyCj4+IGhhcyB2ZXJ5IHNob3J0IGxpZmVjeWNsZSwgdGhlIG1lbW9yeSBp
+cyBhbGxvY2VkIHdoZW4gZW5xdWV1ZSwgYW5kCj4+IHJlbGVhc2VkIHdoZW4gZGVxdWV1ZS4gRm9y
+IGV4YW1wbGUsIG9uIGEgc3lzdGVtIHdpdGggeGhjaSwgc2V2ZXJhbAo+PiBtaW51dGVzIG9mIHVz
+YWdlIG9mIHdlYmNhbS9rZXlib2FyZC9tb3VzZSBoYXZlIG1lbW9yeSBhbGxvYyBjb3VudHM6Cj4+
+ICAgZHJpdmVycy91c2IvY29yZS91cmIuYzo3NSBbdXNiY29yZV0gZnVuYzp1c2JfYWxsb2NfdXJi
+IDY2MQo+PiAgIGRyaXZlcnMvdXNiL2hvc3QveGhjaS5jOjE1NTUgW3hoY2lfaGNkXSBmdW5jOnho
+Y2lfdXJiX2VucXVldWUgNDI0ODYzCj4+IE1lbW9yeSBhbGxvY2F0aW9uIGZyZXF1ZW5jeSBmb3Ig
+aG9zdC1jb250cm9sbGVyIHByaXZhdGUgZGF0YSBjYW4gcmVhY2gKPj4gfjFrL3MgYW5kIGFib3Zl
+Lgo+PiAKPj4gSGlnaCBmcmVxdWVudCBhbGxvY2F0aW9ucyBmb3IgaG9zdC1jb250cm9sbGVyIHBy
+aXZhdGUgZGF0YSBjYW4gYmUKPj4gYXZvaWRlZCBpZiB1cmIgdGFrZSBvdmVyIHRoZSBvd25lcnNo
+aXAgb2YgbWVtb3J5LCB0aGUgbWVtb3J5IHRoZW4gc2hhcmVzCj4+IHRoZSBsb25nZXIgbGlmZWN5
+Y2xlIHdpdGggdXJiIG9iamVjdHMuCj4+IAo+PiBBZGQgYSBtZW1wb29sIHRvIHVyYiBmb3IgaGNw
+cml2IHVzYWdlLCB0aGUgbWVtcG9vbCBvbmx5IGhvbGRzIG9uZSBibG9jawo+PiBvZiBtZW1vcnkg
+YW5kIGdyb3dzIHdoZW4gbGFyZ2VyIHNpemUgaXMgcmVxdWVzdGVkLgo+PiAKPj4gU2lnbmVkLW9m
+Zi1ieTogRGF2aWQgV2FuZyA8MDAxMDcwODJAMTYzLmNvbT4KPgo+SXQgc2hvdWxkIGJlIHBvc3Np
+YmxlIHRvIGRvIHdoYXQgeW91IHdhbnQgd2l0aG91dCB0b3VjaGluZyB0aGUgVVNCIGNvcmUgCj5j
+b2RlIGF0IGFsbCwgY2hhbmdpbmcgb25seSB4aGNpLWhjZC4gIFRoYXQncyB3aGF0IE1hdGhpYXMg
+aXMgc3VnZ2VzdGluZy4KPgo+SW5zdGVhZCBvZiBoYXZpbmcgYW4gVVJCIGtlZXAgb3duZXJzaGlw
+IG9mIGl0cyBleHRyYSBtZW1vcnkgYWZ0ZXIgaXQgCj5jb21wbGV0ZXMsIHhoY2ktaGNkIGNhbiBw
+dXQgdGhlIG1lbW9yeSBhcmVhIG9udG8gYSBmcmVlIGxpc3QuICBUaGVuIAo+bWVtb3J5IGFyZWFz
+IG9uIHRoZSBmcmVlIGxpc3QgY2FuIGJlIHJldXNlZCB3aXRoIGFsbW9zdCBubyBvdmVyaGVhZCB3
+aGVuIAo+VVJCcyBhcmUgZW5xdWV1ZWQgbGF0ZXIgb24uCgpJIGhhdmUgdG8gZGlzYWdyZWUsICB5
+b3VyIHN1Z2dlc3Rpb24gaGFzIG5vIG11Y2ggZGlmZmVyZW5jZSBmcm9tIHJlcXVlc3RpbmcgbWVt
+b3J5IGZyb20Kc3lzdGVtLCBsb2NrcyBhbmQgbWVtb3J5IHBvb2wgbWFuYWdlbWVudHMsIGFsbCB0
+aGUgc2FtZSBhcmUgbmVlZGVkLCB3aHkgYm90aGVyPwoKVGhlIHJlYXNvbiBJIGNob29zZSBVUkIg
+aXMgdGhhdCAgVVJCIGxpZmUgY3ljbGUgY29udGFpbnMgdGhlIHByaXZhdGUgZGF0YSdzIGxpZmVj
+eWNsZSwgCmFuZCBubyB0d28gSENEIGNhbiB0YWtlIG92ZXIgdGhlIHNhbWUgVVJCIGFzIHRoZSBz
+YW1lIHRpbWUuCgpJIHRoaW5rIHRoZSBtZW1vcnkgcG9vbCBoZXJlIGlzIG5vdCBhY3R1YWxseSBh
+IHBvb2wsICBvciBJIHNob3VsZCBzYXkgdGhlIG1lbXBvb2wgY29uc2lzdHMgb2YKcG9vbCBvZiBV
+UkJzLCBhbmQgZWFjaCBVUkIgaGF2ZSBvbmx5ICJzaW5nbGUgb25lIiBzbG90IG9mIG1lbSBwb29s
+IGluIGl0LgoKCj4KPlRoaXMgaWRlYSBjYW4gYmVjb21lIG1vcmUgZWxhYm9yYXRlIGlmIHlvdSBt
+YWludGFpbiBzZXBhcmF0ZSBmcmVlIGxpc3RzIAo+Zm9yIGRpZmZlcmVudCBkZXZpY2VzLCBvciBl
+dmVuIGZvciBkaWZmZXJlbnQgZW5kcG9pbnRzLCBvciBzb3J0IHRoZSBmcmVlIAo+bGlzdCBieSB0
+aGUgc2l6ZSBvZiB0aGUgbWVtb3J5IGFyZWFzLiAgQnV0IHRoZSBiYXNpYyBpZGVhIGlzIGFsd2F5
+cyB0aGUgCj5zYW1lOiBEb24ndCBjaGFuZ2UgdXNiY29yZSAoaW5jbHVkaW5nIHN0cnVjdCB1cmIp
+LCBhbmQgbWFrZSBnZXR0aW5nIGFuZCAKPnJlbGVhc2luZyB0aGUgZXh0cmEgbWVtb3J5IGFyZWFz
+IGhhdmUgZXh0cmVtZWx5IGxvdyBvdmVyaGVhZC4KCldoeSBpbXBsZW1lbnRzIGEgZGV2aWNlIGxl
+dmVsIG1lbW9yeSBwb29sIHdvdWxkIGhhdmUgZXh0cmVtZWx5IGxvdyBvdmVyaGVhZD8KV2h5ICBt
+YWtpbmcgY2hhbmdlcyB0byB1c2IgY29yZSBpcyBiYWQ/IFRoZSBpZGVhIGluIHRoaXMgdGhyZWFk
+IGlzIG1lYW50IGZvciBhbGwga2luZHMgb2YKaG9zdCBjb250cm9sbGVycywgeGhjaSBpcyB3aGF0
+IEkgaGF2ZSBpbiBteSBzeXN0ZW07IGkgdGhpbmsgc2ltaWxhciBjaGFuZ2VzIHdvdWxkIGJlbmVm
+aXQgb3RoZXIKSENzCgoKPgo+QWxhbiBTdGVybgo=
