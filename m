@@ -1,118 +1,122 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A790628F520
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3F21917C2;
+	Tue, 13 May 2025 14:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747146297; cv=none; b=ilsuqQhcArP1EqSXo5VKWy4VaN+qkgDWjgSm2I8neNQic/GW8oXWYQ6wL15v8j14tm2uGqW8j84s+wu4OS1EVAMVhvRpn/UezG4poCpLA3JOb4GORgiX8+QECNvHbxL6VzzmCL76cVNnjF12GtKeK28KW53pmUkD6m52VNdPsYc=
+	t=1747146352; cv=none; b=BiO4gZDFDTZTbq2PvT90RQV6aLhqLseTkc9YmI6xelJoDGbENcYIQTnWY/cYFzSJUhQQpHg/wbTfRTFfbj9VfpQgz/eR0+L89KaT873xDyBW9TG5h0aRRMy6+CJ9jdOeCGOEBz/53Vy36z8GI2x0JGBSBaRw6p0uoLDepk4Nc9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747146297; c=relaxed/simple;
-	bh=GxwcSYNe2p0XJBrJx4bSenouSf2vBwH0LKTpfUMyLn0=;
+	s=arc-20240116; t=1747146352; c=relaxed/simple;
+	bh=f/Le7tmJc5Ccb4iwGKUDyWwXoo1NuwynBheX6ecLNac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4jF+zKd+gP1Pv/kf4jKpy8wERMchJAfaLiTOvC88POcpHgC5j45b+7FxnYYTA/KwtBysG0P3Ms/mylvdeIIus2m3jihoBVDcMH1k0NwjkgsGypoit74jmq4rOIGSI+OFJJ1sjYOUFrBCK3m3xpFUFEPdy0o0Gv1OO83SJqGF1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GbbiUOd0; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qa19VPAJ93PRaIE4vn/m6ocNJgz676jd4Wpb3QxjBw3sRFLlWJpqf9aT29lCa8iFbItEJKbBYY4/EOPMn4I6Yf8MPj/GQ6ZB0iJdW0+nOwmrpTa53i2hJYRQxP1muvDte6DchwucqhVd5ilVgGE3iPIpzJkcJWlZ4gWShH4YhgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOsoj3tz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GbbiUOd0"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so5421995e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747146294; x=1747751094; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/NWh098gqRLftvvY4dIkjtdvgIAwUVSrP7NdWik+NTk=;
-        b=GbbiUOd0zktufQFK9LZO0f6IqfSKNNyks3R+IYGWOLbDrfHJeJ3WqDzARkp3llsvLB
-         iL1wnox3ggk7x9CUZXYGf5iNRZFT4qf3BvPxOFwWWoKLTXBpwF14g/iyI6oQ2McqM3xf
-         jMXov9f1UtvHF6v9DCYlbrZmOOpPHPiuZ3lDa439MgtgDTD1KgHkp9lrJCAlLcXHyAVz
-         2HdpIcPVmWIOc+thpXTvBmqKxgHl8NCby9wHY7vQhsHf8S4Xw9zdE+ztu8Fuf7LvMLZS
-         /MSnKxyLDv8XxtytFJ4l4wwM/YibtWaVobNTnkB9d0gzZguceEaSuKubnrLJ/H54bmNC
-         mT0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747146294; x=1747751094;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/NWh098gqRLftvvY4dIkjtdvgIAwUVSrP7NdWik+NTk=;
-        b=lHEbcKg/QZyngSeKzkPAaYVJPFU6X+i7+NP4vcHN070aVH/CkI9fc1+3LmQ/h9fH5P
-         SCBDaxeXGoe/FDhCdSghTVdK8UO2wkH67Hvl1DDsbObBX/HANkku5fEO0FeC3Zotd9H0
-         NHbaOE4m0Lc34svV5WVH+W7P5G3mr6ydWB22CkkoW6/J7xovWHIScLH2QwV/2kF7Uz4B
-         OpZ6a/ajVLH+REqIn9Hf2+U4KRaYiSfGC8atwjHeTqmMedLwq51x6rWX4gz1sDnob0J6
-         iePqP4aKsD2/XKkSh56kQlqoh34ZEcSZQMMygUl5dnqQmf8+/1EbXEGfrrToDVkj9tV+
-         p7Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkeBSh6ezo4WvLZcftu201FM5wUpkzdbSKxRBW8qok4Cz1+5NVFL4Uuq42Up3CiMMgTS0NaS0GLMFaBU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnRM9CpTL+pDW98E01/Fm6CLrrbxsH3H6lPtM6568Lqodq5GEJ
-	Iw5xPwhTMaC+whVmBcyMb6Qqw7y4UTRw1pG7qFcGYzKM+BPyTX3tPu3ay/EYAV0=
-X-Gm-Gg: ASbGnctF6Z+m5hIH+wWoQAMAkpbiYkh6TPb1aRMsrdn4nOLSKA36/51sgI4em+ypvBB
-	mIz5291mdrZHGXsyBMv7o8R2LWNm0wRjmrAkyFRe1vCb5yOHEEg7cVEKqK4cgCeFxxLLQty/TID
-	L095W1mr7IlKrh8HXAT/9zm/Z/Axprn6MSeSFbvXtnBwviJ0rLeL03RUp7MtEUG9RQ92IsL4thG
-	fBq4th1scEjpkB6VfOSdhNSf0mY6C5iPLS4KL7Jl9ZzF4zIa2JNa6fWyAqycai8CNRGvChRHVds
-	zcoYGLmE3ifbclLfcOiV6w6XQscutbor6IKpIwtWrwLfSiFAUDG/tLAbPLN7GxoxangPcdjhNB6
-	r+Xov+UCuQFrcKQ==
-X-Google-Smtp-Source: AGHT+IHHlX9t4nfJ+7hHMCJoNaC1yXBW+lGGwra9RnsLEfJITmGfdfvMv/X1F4SEEmKSiUDfR77dIg==
-X-Received: by 2002:a05:600c:4e44:b0:439:8c80:6af4 with SMTP id 5b1f17b1804b1-442d6d6b603mr171874205e9.19.1747146293972;
-        Tue, 13 May 2025 07:24:53 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ed666dc7sm23697575e9.18.2025.05.13.07.24.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:24:53 -0700 (PDT)
-Date: Tue, 13 May 2025 16:24:51 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Caleb James DeLisle <cjd@cjdns.fr>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 0/7] Add EcoNet EN751221 MIPS platform support
-Message-ID: <aCNWM5Xq7wnHVCrc@mai.linaro.org>
-References: <20250507134500.390547-1-cjd@cjdns.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOsoj3tz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBB13C4CEE4;
+	Tue, 13 May 2025 14:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747146351;
+	bh=f/Le7tmJc5Ccb4iwGKUDyWwXoo1NuwynBheX6ecLNac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hOsoj3tzgVml26AM9iHPVkzD1ElRNI9eTvGrELc3FHlUEoQYIefKIC+qtGKgNzj4e
+	 2LdDGHyeMSTKB2lMJ+/ZRYTBgaqMEZj3GcPtGdlyLRajGfqap95nO78IJeIJk8Wcu7
+	 G53kyD/14uLrdbKM69v+LkHUt2hwQwFzeTa2E7swjyTNj3FLBEQP5ty8FVAIBV/Qtp
+	 yArc4ZMHZIruHbKAoZR04txC5q4Jz8e8yDmLDB9b2RNggpVf5fZsEmgI7bEElvpJNC
+	 OY9XYgjJodr5r9oh+2FBdratdEIIEm/Lo9XXMGxMTBKzDJC6wcT3jhL2kuOplnc9Ye
+	 0d9LmAjDvaGhQ==
+Date: Tue, 13 May 2025 16:25:43 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 10/19] gpu: nova-core: add DMA object struct
+Message-ID: <aCNWZ4wX07nSOXSI@pollux>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-10-fcb02749754d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250507134500.390547-1-cjd@cjdns.fr>
+In-Reply-To: <20250507-nova-frts-v3-10-fcb02749754d@nvidia.com>
 
-On Wed, May 07, 2025 at 01:44:53PM +0000, Caleb James DeLisle wrote:
-> EcoNet MIPS SoCs are big endian machines based on 34Kc and 1004Kc
-> processors. They are found in xDSL and xPON modems, and contain PCM
-> (VoIP), Ethernet, USB, GPIO, I2C, SPI (Flash), UART, and PCIe.
+On Wed, May 07, 2025 at 10:52:37PM +0900, Alexandre Courbot wrote:
+> Since we will need to allocate lots of distinct memory chunks to be
+> shared between GPU and CPU, introduce a type dedicated to that. It is a
+> light wrapper around CoherentAllocation.
 > 
-> The EcoNet MIPS SoCs are divided broadly into two families, the
-> EN751221 family based on the 34Kc, and the EN751627 family based on
-> the 1004Kc. Individual SoCs within a family are very similar, only
-> with different peripherals.
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  drivers/gpu/nova-core/dma.rs       | 60 ++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/nova-core/nova_core.rs |  1 +
+>  2 files changed, 61 insertions(+)
 > 
-> This patchset adds basic "boots to a console" support for the EN751221
-> family and adds SmartFiber XP8421-B, a low cost commercially available
-> board that is useful for testing and development.
-> 
-> Note that Airoha (AN7523, AN7581) is similar to EcoNet in terms of
-> peripherals, and for historical reasons Airoha chips are sometimes
-> referred to with the EN75xx prefix. However this is a different
-> platform because Airoha chips are ARM based.
-> 
-> This patchset is against mips-next.
-> 
-> v4 -> v5
-> * 2/7 clocksource/drivers: Add EcoNet Timer HPT driver:
->   * Improve explanation of HPT timer in changelog
->   * Move pr_info to pr_debug per recommendation
->   * Remove pointless debug on spurious interrupt
->   * Small code-style change
+> diff --git a/drivers/gpu/nova-core/dma.rs b/drivers/gpu/nova-core/dma.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..9d90ae01d0044eaab4ddbc3eba216741d7a623ef
+> --- /dev/null
+> +++ b/drivers/gpu/nova-core/dma.rs
+> @@ -0,0 +1,60 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Simple DMA object wrapper.
+> +
+> +// To be removed when all code is used.
+> +#![expect(dead_code)]
+> +
+> +use core::ops::{Deref, DerefMut};
+> +
+> +use kernel::device;
+> +use kernel::dma::CoherentAllocation;
+> +use kernel::page::PAGE_SIZE;
+> +use kernel::prelude::*;
+> +
+> +pub(crate) struct DmaObject {
+> +    dma: CoherentAllocation<u8>,
+> +}
+> +
+> +impl DmaObject {
+> +    pub(crate) fn new(dev: &device::Device<device::Bound>, len: usize) -> Result<Self> {
+> +        let len = core::alloc::Layout::from_size_align(len, PAGE_SIZE)
+> +            .map_err(|_| EINVAL)?
+> +            .pad_to_align()
+> +            .size();
+> +        let dma = CoherentAllocation::alloc_coherent(dev, len, GFP_KERNEL | __GFP_ZERO)?;
+> +
+> +        Ok(Self { dma })
+> +    }
+> +
+> +    pub(crate) fn from_data(dev: &device::Device<device::Bound>, data: &[u8]) -> Result<Self> {
+> +        Self::new(dev, data.len()).map(|mut dma_obj| {
+> +            // SAFETY:
+> +            // - The copied data fits within the size of the allocated object.
+> +            // - We have just created this object and there is no other user at this stage.
+> +            unsafe {
+> +                core::ptr::copy_nonoverlapping(
+> +                    data.as_ptr(),
+> +                    dma_obj.dma.start_ptr_mut(),
+> +                    data.len(),
+> +                );
+> +            }
 
-Shall I pick the clocksource + bindings changes through my tree ?
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+This will be replaced with CoherentAllocation::write() I suppose? Please add a
+corresponding TODO.
