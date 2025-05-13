@@ -1,85 +1,85 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36FD145B25;
-	Tue, 13 May 2025 05:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCCD19597F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747114424; cv=none; b=GLw4kvpEDKeGzIxlBOTsu3V8avOyTNE08kIzOieaTTcb3wHrZiOOPALP+MigjwWQ8+XbQhhDMSM5l9WNzhcPZzJPf4gJ9gh12WiJH74S2ropCZJ7AZEkHNBHWwc7bPmGy040H4ZtnhhbDtES0UYguVcnLI7q+hMOupM9hPe9Y8Q=
+	t=1747114695; cv=none; b=j2zETApx0auKon8edMUc8C3wlu2dsLloewvsOXCKy6+toeMBv8f40VKkFoKApGmX7jDJg66QyYrez3+nkvLMvFp17VTZm6REtb0foG78nh1EjBDnPoDJ4f/LmA5EJV9/LbSj8AIqb9ruEeBF2Zt8nDagYs5NkG7nZDg5LegRjbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747114424; c=relaxed/simple;
-	bh=0t2qgpOwlmiwcivUP1+Ab7YO1v3OcpVmH/SDvga1764=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gjYRqhv+pyCqVxmrBmzSI8+3eN26Hv1v5pAZiDt4+mHCG3cpoJgq24RoDspIHvqxKDIkKFmv/zQlZfHZwOYYbuznOCIiQA2570QcLuIhcuB5QUBtyspRLIsgbBtOSLbJUEXE9ZQpoqB/zfTNRhGxX8hAIjrnscaeAFNmbw5m5eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=bxXomr4j; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1747114695; c=relaxed/simple;
+	bh=i+J9Ik2pi9xbkAKtxdEabZFN2JpPP5trKFNArRxuAuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UPO3lwdo6naMyHzuIMiB97gNDWJuiiCL3UxwO5A+zbwJHx3msopgKFq+NzGDh9kaZCslaUQ/Kv6tbnmd2lIhJEu59t0we/lyrAfQiBMf2wQXyHp+F0DLpW8ecCSw7qrjGYX8V9Wl09YGEjq+C8pLybWmOHYh/IgqEY9SKK1MmB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8eah8WU; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="bxXomr4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747114416;
-	bh=0t2qgpOwlmiwcivUP1+Ab7YO1v3OcpVmH/SDvga1764=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bxXomr4jtXjOlm8x/IU7MKClEJ0TIHk5yFoQqV8QMQLVGVOuttJqLVYvvV7X9OV/f
-	 WP552m5MJPAu1ejBLpN4FaFGHi4r5SEjoUQ1wwsSnIixwkc8k7yPdgP6xfiu4B/VS6
-	 ZzN2x32U936K4Kd+skps1gSJ+OuT/c18X4ToKtw0=
-Date: Tue, 13 May 2025 07:33:35 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Willy Tarreau <w@1wt.eu>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 00/14] kselftest harness and nolibc compatibility
-Message-ID: <03197313-559f-4e62-915b-ac04a55c9794@t-8ch.de>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <d8d36e51-9456-49a3-88c4-44cffdcc5c0a@t-8ch.de>
- <a699b6d0-f028-43d1-93c9-250b6c8c4a6b@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8eah8WU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747114694; x=1778650694;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=i+J9Ik2pi9xbkAKtxdEabZFN2JpPP5trKFNArRxuAuk=;
+  b=e8eah8WUC4OQk/zUf4Fv7EW/cgrOJwi0JMv3+3tCWPpO1kL754nEjQHI
+   OMrHk1gc58NRWXFwrCo1Z0ePH4g7L/gBd1NyVAjBh0rS0hOtWXCPhkdpe
+   AOrDXCz1CiaPITyE0WQuwOqZkYS+p9pGsTAPj0SqaOkYywlCKyKstr4el
+   2iog3GxUH/UdD0R8jsrMawxGGbkni8zckHyDuta2MpLffVW/UaDRLR15W
+   7WD8vrqJcYUhWHskTrbn+OmnA0eJqURk2mFVDPR9NlEQpOLTWERfkgKmm
+   iwZae/Ue0sEDRjwsbCjl+JTqsLZZaTvuStFij+kMa3z3g+HgEZnTusCeZ
+   A==;
+X-CSE-ConnectionGUID: hrpX+cW2Rk2yle28AqDHZA==
+X-CSE-MsgGUID: Vf/MdnECQFeXp1IYXWkKaA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="71450818"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="71450818"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 22:38:13 -0700
+X-CSE-ConnectionGUID: ZiF53FBiTc29dDxLFf6PEg==
+X-CSE-MsgGUID: dsa6mdrGSgONL9Efv21b3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="137625484"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 12 May 2025 22:38:11 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEiLB-000FkH-1c;
+	Tue, 13 May 2025 05:38:09 +0000
+Date: Tue, 13 May 2025 13:37:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [tip:x86/boot 6/10] vmlinux.o: warning: objtool:
+ __sev_es_nmi_complete+0x5a: call to __kcsan_check_access() leaves
+ .noinstr.text section
+Message-ID: <202505131323.rs2DCGPp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a699b6d0-f028-43d1-93c9-250b6c8c4a6b@linuxfoundation.org>
 
-On 2025-05-12 15:32:40-0600, Shuah Khan wrote:
-> On 5/10/25 00:54, Thomas Weißschuh wrote:
-> > Hi Shuah and Kees,
-> > 
-> > On 2025-05-05 17:15:18+0200, Thomas Weißschuh wrote:
-> > > Nolibc is useful for selftests as the test programs can be very small,
-> > > and compiled with just a kernel crosscompiler, without userspace support.
-> > > Currently nolibc is only usable with kselftest.h, not the more
-> > > convenient to use kselftest_harness.h
-> > > This series provides this compatibility by removing the usage of problematic
-> > > libc features from the harness.
-> > 
-> > I'd like to get this series into the next merge window.
-> > For that I'd like to expose it to linux-next through the nolibc tree.
-> > If you don't have the time for a review or issues crop up, I will drop
-> > the patches again.
-> > 
-> > Are you fine with that?
-> 
-> Didn't I respond to v13 saying you can include in your nolibc PR?
-> If I didn't here is my Reviewed-by.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
+head:   ed4d95d033e359f9445e85bf5a768a5859a5830b
+commit: a3cbbb4717e120f9e53fa7685909b310f7e99bf5 [6/10] x86/boot: Move SEV startup code into startup/
+config: x86_64-randconfig-103-20250513 (https://download.01.org/0day-ci/archive/20250513/202505131323.rs2DCGPp-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250513/202505131323.rs2DCGPp-lkp@intel.com/reproduce)
 
-You did ack v3. But as some patches changed, I wanted to reconfirm the
-new contents.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505131323.rs2DCGPp-lkp@intel.com/
 
-> > 
-> > The issues reported by Mark have been fixed and tests have been written
-> > for them.
-> 
-> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+All warnings (new ones prefixed by >>):
 
-Thanks!
-As most patches already carry your Ack, I transformed this Reviewed-by
-into an Acked-by for the two new patches for consistency.
+>> vmlinux.o: warning: objtool: __sev_es_nmi_complete+0x5a: call to __kcsan_check_access() leaves .noinstr.text section
 
-
-Thomas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
