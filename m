@@ -1,65 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D95012DD95;
-	Tue, 13 May 2025 20:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718211B4227;
+	Tue, 13 May 2025 20:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747169194; cv=none; b=ZMN/eJddLmpuaXLjfxMs+X7H2gEm0lfcHqXMrhp6NQQN7pvxsU/jzVFUY7uCyDuyiRnpZtWY44md+1K0RNAE7btgYv0tjR0OA8K/Hx6Hbgx4ntMNQMHQjGTx8wCbWc7pOleTFTB9soaLbigELvlXhz6zONV0+6whdCHcoTjk3H4=
+	t=1747169215; cv=none; b=ewZrBt25KDCrdQKVeBm3bFl/bAlCI7b1gci4hu/4jBE0DHPXmXMDAo+eIfnIsrggR95XZF+BecIFf3mHBjr9oUn2keLKazzXTGvQuyQ/BR5KOxKZ3DSGpP+AxuXQBn9ioqy9Q8Ygs6nIunCM9Z2ZiU5YB6CCZtNYsnm4bskdedY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747169194; c=relaxed/simple;
-	bh=iNYXwGdie6s9H3tf/OQ0GlhvsYZI0vpta/O/nlr0LRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxFmgbfnMjVmKdA3/oLC95AQip/vAmZZcYBYQyDOJ2p4tICnQvCev2/tSmUcEN0Cds0maV803253hYxoi91Ki0GeOFpVusqLCTQF7E8QoNBAe/E1qRPgJklkKXsV7+xp14abb8r4d2/k6ZZWKKJJRHQUy2ntd6t0oSZx7J//A64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJAGs9h7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747169215; c=relaxed/simple;
+	bh=4rS8kIjpSaUs/I/PlN++Dg/CWce8A2ho3C7mZqqX7As=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FFM4NYVmDpRjcszJameN+X3+O6JYi9qJtok3hDlzl6xYGwIj9dE2RdGdrQv0RLrAoOR3d7BZAUEldb0D+X7UiXPYdabv2gg8EV3QZnCg0/glWE9TKfj8IwPMJ5DRL7cb9c5wjuL54qg/jW8w6StSO/Q/HW126ApIRGub9Jua0mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9cLBUoE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJAGs9h7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E1DC4CEE4;
-	Tue, 13 May 2025 20:46:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9cLBUoE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F499C4CEE4;
+	Tue, 13 May 2025 20:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747169194;
-	bh=iNYXwGdie6s9H3tf/OQ0GlhvsYZI0vpta/O/nlr0LRA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bJAGs9h7G/jHx15vjirkpgmHB5q+SSHosWpyx5WbqLv1FIH8ys0wW2HyhJKHLrG1E
-	 urewg9KSpFMoxm1D8EG5zO9uqSeFrdDVSNxEwK38/rLMzvk3igF1ennA54C4LOdhIt
-	 5K+KLCSuHgihuAu8Nq2bhulNElCVopzHkTSevSWCx83wRUtHhY34XmmWbX9xw2V+eR
-	 tDKD3qublc22x98Vgjls8vMs7bKPGXPS8x4bef0zvS9WgKuGjWsD0WuPhZKyz33r4W
-	 RO+LpB8rl2vqFENiUATf3T3H2AGVdR/1YiTiUOh4ZmQHP3Kgox+ZZrUIU6Q+VtxW7q
-	 1EwiwwvN+BBgg==
-Date: Tue, 13 May 2025 17:46:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf test: Fix LBR test by ignoring idle task
-Message-ID: <aCOvp9CRhmdwD5yK@x1>
-References: <20250509213017.204343-1-namhyung@kernel.org>
- <CAP-5=fVQ1L2yD3F+XLg4-U57wVVDFhkfb3QRD34ie01JjmijJQ@mail.gmail.com>
+	s=k20201202; t=1747169213;
+	bh=4rS8kIjpSaUs/I/PlN++Dg/CWce8A2ho3C7mZqqX7As=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V9cLBUoEdGU740Kf84wUc+E0Jkxd76wBBGSNyYr9cyjroV47RUdEVEljzRJDUgLP4
+	 /RWXqLlKTVkMn9c8+EMiGwSH7XKoY+yItu1t1sfDOPzlLWAIzkYmzJ95fitxfKJRUn
+	 p3JwHCW5mXd28P9+snEONt0B02RbGRqrUCDeiXyq3OJMwCvbAGjTfZebdjLEeuvkDv
+	 O3JjyYKB/i1hvP/QV5BSIBwsIOdR8ofMbZZqcFRns6639rqTKBNE8Vo5F/+wO8HZfX
+	 g71xkQFOxW2DMiOCc3rwlhtnrfs1UMAG89H1t5LsT70c5FTn4L3BQA9lIjLjfxJrgI
+	 UYrgeCNGWEtYw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: x1e001de-devkit: USB retimers related fixes
+Date: Tue, 13 May 2025 21:46:38 +0100
+Message-ID: <174716895383.39748.703153321484020943.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-0-1c092f630b0c@linaro.org>
+References: <20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-0-1c092f630b0c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVQ1L2yD3F+XLg4-U57wVVDFhkfb3QRD34ie01JjmijJQ@mail.gmail.com>
 
-On Tue, May 13, 2025 at 07:58:07AM -0700, Ian Rogers wrote:
-> On Fri, May 9, 2025 at 2:30 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > I found 'perf record LBR tests' failing due to empty branch stacks.
 
-<SNIP>
+On Tue, 18 Mar 2025 17:50:33 +0200, Abel Vesa wrote:
+> These fixes align all the USB retimer related nodes on the Devkit with the
+> CRD and T14s.
+> 
+> This patchset is based on Johan's:
+> https://lore.kernel.org/all/20250318074907.13903-1-johan+linaro@kernel.org/
+> 
+> 
+> [...]
 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
- 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Applied, thanks!
 
-Thanks, applied to perf-tools-next,
+[1/2] arm64: dts: qcom: x1e001de-devkit: Describe USB retimers resets pin configs
+      commit: f76fdcd2550991c854a698a9f881b1579455fc0a
+[2/2] arm64: dts: qcom: x1e001de-devkit: Fix pin config for USB0 retimer vregs
+      commit: 635d0c8edf26994dc1dcbc09add9423aa61869b0
 
-- Arnaldo
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
