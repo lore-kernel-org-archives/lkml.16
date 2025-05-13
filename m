@@ -1,105 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EFD2A1BB;
-	Tue, 13 May 2025 07:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A1C2F50
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121443; cv=none; b=k+3kHKMOUlQFlyHMw4Bb/cUz6hxjFMcwZrYZa4OUeIfMei6L5eRFy2n25jz1AwGhNM7cQAswVZcc/DJmq2dc43Xq3T45coKo260VbXHX93ARKR4KBXqQjZQDOFMG68+ZrA1KxCD6SQdPASKtOp947sEq8xZReS01U+pJFKBkueM=
+	t=1747121492; cv=none; b=EIuqEofl1jnnKEQJtyVHMC1uBEAF7J7Lc6t8PadIshkNUeu8tFqWmbjMQvjpoCBjlHVobURvXvFrqwjGpewDAhptfCY9KLf5h8kQlOcYQAXaqrTDR/05SiCVXxZbNoN133upQVqJqpJv9yTvQcLaPxz4NkKfCY12loiz92JNzMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121443; c=relaxed/simple;
-	bh=e0W5zD3Z/rUIBfKIvoR8sZZ93vdqxvih8z26GrLG1eA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UQjq4eKQMiN6rE2MW8ZeVdaZy5/9C9z3FpK1ITuqp78aez2Ho0zJ5H2xcJzuwZeZa+xzRa98r0K4UVIRlCr1DxLoKnbEKjEYN/8AHvc1FGoW/PM/oJ4JCEDII1AQTgXpuQBSQP3VfKXMstgXrVq7y3xfSic3p1Mp3xAylLWbUnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nViPHHmF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747121492; c=relaxed/simple;
+	bh=Uwds5U8CPB2uxg3bG0f643E5G9j9RDtJjojz5eZ5dUg=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=E9ckQyZ7LbCDfujTN+3Zt1hxX3BSRGcOL/MVl21Upn2jf5y56LayZ0EACFN/kDzU+2vyb7oodnIYvr/rh0qhDOduXQK82bO6XKJNo+7W9S8WEs3XaM0LEkXErG0xna/cd4eH2ghNlNpxrFxpp8UFYDczfLquYskwGFddubV25Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IQl3PONd; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nViPHHmF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783A9C4CEE4;
-	Tue, 13 May 2025 07:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747121442;
-	bh=e0W5zD3Z/rUIBfKIvoR8sZZ93vdqxvih8z26GrLG1eA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nViPHHmFsRL5pagwe7eX8bDvNlcezCXzc5ulm9DKz1yZAjGk+Ryq2pjrI3MaTcA05
-	 ZfSpArxDwO3GlT3vF866LhzBQjqR1xUX1yZ9ywOdblU1nMY+LwMiAKrU5g0psDnemw
-	 AybwtVGmgz8i7Wp/fwsoFJ0UJf4Kj8icjUPSjEH+ce2n3DtlSbMpTh3VLtkys0vy6p
-	 HeL3njbnpPdthwqHdlqkfntFx0ijOY6viAoq1X0QrmHlpduoXAQx/Zsn4Q0+Udn98e
-	 LBlMR3+WcK1iQ1MmlDH/D/a3uvU2qeJIq/N+CAw8QtReOZ4HR1dfC4+qB663BT7NcS
-	 l8oQgHBNn8qPA==
-Date: Tue, 13 May 2025 09:30:39 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Max Kellermann <max.kellermann@ionos.com>, viro@zeniv.linux.org.uk, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: make several inode lock operations killable
-Message-ID: <20250513-gebilde-beglichen-e60708a46caf@brauner>
-References: <20250429094644.3501450-1-max.kellermann@ionos.com>
- <20250429094644.3501450-2-max.kellermann@ionos.com>
- <20250429-anpassen-exkremente-98686d53a021@brauner>
- <CAKPOu+8H11mcMEn5gQYcJs5BhTt8J8Cypz73Vdp_tTHZRXgOKg@mail.gmail.com>
- <20250512-unrat-kapital-2122d3777c5d@brauner>
- <hzrj5b7x3rvtxt4qgjxdihhi5vjoc5gw3i35pbyopa7ccucizo@q5c42kjlkly3>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IQl3PONd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1747121479; bh=BQhs76KSA++hoJDE7uOgOkp//yaIfVhLWDFlmS1nA7A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IQl3PONdjUZEHpMo9AwK3WlCk6ioMW8FSngbjnntzSmvWedPsor6IC91I72G/dLB2
+	 bCytb5BN3a7BuVdcB9QNchhIuirDilOk4zQSHBNbBMmsGLoiVEV+8/dV6dVJi3ESID
+	 8kNTNtD8VHk1+Ei0k92k7Y31yEmWJwJxFAGH0OWI=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszgpuc5-0.qq.com (NewEsmtp) with SMTP
+	id 5C91CE51; Tue, 13 May 2025 15:23:09 +0800
+X-QQ-mid: xmsmtpt1747120989t40vbqlba
+Message-ID: <tencent_28E8E99AEDE2CD6079AA6C042DC96F34940A@qq.com>
+X-QQ-XMAILINFO: N/WmRbclY25G7ka8scU2/01GllFp2FS+VUlawPOcfvwAQ5gEytPbmzByM+W2jS
+	 qUGRvWeG7DGlFqzIFlYNRrK8AZSdcp9uJByjsLeTMUfjzma2CpfCC/V0uAd04HfWYNXLkwPloDzf
+	 W3S03LRVKDRM2ju2LjhSHa5N7XJ7fRzZSG5ipMJto0uBql36PkbiQuH0NUtjSr+gJUeSdUfCSUqd
+	 PDlHm7s+oSt4XM+JPuN9f08loOh8UESi6zRevvUM5tgIjKtPN6M3AhAvU23V2I00GXQ8DW7h8vzx
+	 Z5fveReLQGemIYSDIK2MmAXqfwJGBnXzHaA7ol4K2YJI3x0nDsDGsR+8fQscG7GOAFKdX3gyGh6b
+	 4XZ16qwnwk6GgRSWkkQeStYPI7mxqVjlh4bhpyxH8IEbTHjc9hEx1fr3WVhVW5CETZoA6ilxdcOe
+	 9HLXTwJPVpbr8IxJwl/9B3jlMueIE++I7EFd1w3GGGyxcN3PkpRqn0m2faME/MHnjYokvcGnwCyr
+	 AU7qJEeddWW39m4uGqjtY08s4XHg8RYgLPIStfT1B7zW/Ku2w92IGZiMlhdZO+k7kYnQognm9vFM
+	 PXU8WPvDczCwr8nrkICA6V00v3HFoLgd3LtoxgY2UTZTMrmh0VLj91NAaGu0LRnH8Q+8uQ98QBDW
+	 WHkoBv87YbKn/0BxDw3fW39ja7h8hGPnDm+Sa6rprpe9axTaP3r0O1wd1RHYrchm8S4wvs7HOkpX
+	 i5zwpoXVuS05roNzjo048egbMM377LG7k9hT1CnwnSagy55epNE+N3EtEE63zSSldG7AyfR5OnUX
+	 A+GcFLxvoGSZqs+gieb/YEFgApqta5clyStj8AZGlTh5Q5whhX4LNB3FtdG76n1qeW4TFo34JqNb
+	 w7LeKBVbcBVMJqDP4B7zytF1NqCV9H3A9Psa91M+OhgUw+fuyl0qhTa5yZ+P4mSl3m1A7o3EXxmR
+	 th8U5Hoy/MW4yVpz49HE8vQrZeTGjKZ3eszYfXy2xM53CgDMIZfYDoh97SAncix+fe56j1+10=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
+Date: Tue, 13 May 2025 15:23:10 +0800
+X-OQ-MSGID: <20250513072309.2034679-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <681688da.050a0220.11da1b.001c.GAE@google.com>
+References: <681688da.050a0220.11da1b.001c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <hzrj5b7x3rvtxt4qgjxdihhi5vjoc5gw3i35pbyopa7ccucizo@q5c42kjlkly3>
 
-On Mon, May 12, 2025 at 07:33:13PM +0200, Jan Kara wrote:
-> On Mon 12-05-25 11:52:14, Christian Brauner wrote:
-> > On Tue, Apr 29, 2025 at 01:28:49PM +0200, Max Kellermann wrote:
-> > > On Tue, Apr 29, 2025 at 1:12 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > > > --- a/fs/read_write.c
-> > > > > +++ b/fs/read_write.c
-> > > > > @@ -332,7 +332,9 @@ loff_t default_llseek(struct file *file, loff_t offset, int whence)
-> > > > >       struct inode *inode = file_inode(file);
-> > > > >       loff_t retval;
-> > > > >
-> > > > > -     inode_lock(inode);
-> > > > > +     retval = inode_lock_killable(inode);
-> > > >
-> > > > That change doesn't seem so obviously fine to me.
-> > > 
-> > > Why do you think so? And how is this different than the other two.
-> > 
-> > chown_common() and chmod_common() are very close to the syscall boundary
-> > so it's very unlikely that we run into weird issues apart from userspace
-> > regression when they suddenly fail a change for new unexpected reasons.
-> > 
-> > But just look at default_llseek():
-> > 
-> >     > git grep default_llseek | wc -l
-> >     461
-> > 
-> > That is a lot of stuff and it's not immediately clear how deeply or
-> > nested they are called. For example from overlayfs in stacked
-> > callchains. Who knows what strange assumptions some of the callers have
-> > including the possible return values from that helper.
-> > 
-> > > 
-> > > > Either way I'd like to see this split in three patches and some
-> > > > reasoning why it's safe and some justification why it's wanted...
-> > > 
-> > > Sure I can split this patch, but before I spend the time, I'd like us
-> > > first to agree that the patch is useful.
-> > 
-> > This is difficult to answer. Yes, on the face of it it seems useful to
-> > be able to kill various operations that sleep on inode lock but who
-> > knows what implicit guarantees/expectations we're going to break if we
-> > do it. Maybe @Jan has some thoughts here as well.
-> 
-> So I think having lock killable is useful and generally this should be safe
-> wrt userspace (the process will get killed before it can notice the
-> difference anyway). The concern about guarantees / expectations is still
-> valid for the *kernel* code (which is I think what you meant above). So I
-> guess some audit of kernel paths that can end up calling ->llseek handler
-> and whether they are OK with the handler returning EINTR is needed. I
-> expect this will be fine but I would not bet too much on it :)
+#syz test
 
-Great. @Max you want to send an updated version where split into
-separate patches?
+diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
+index f44529b40989..855d66043b85 100644
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -1600,13 +1600,12 @@ static int cxusb_probe(struct usb_interface *intf,
+ 	struct dvb_usb_device *dvbdev;
+ 	int ret;
+ 
++	if (!cxusb_medion_check_intf(intf))
++		return -ENODEV;
++
+ 	/* Medion 95700 */
+ 	if (!dvb_usb_device_init(intf, &cxusb_medion_properties,
+ 				 THIS_MODULE, &dvbdev, adapter_nr)) {
+-		if (!cxusb_medion_check_intf(intf)) {
+-			ret = -ENODEV;
+-			goto ret_uninit;
+-		}
+ 
+ 		_cxusb_power_ctrl(dvbdev, 1);
+ 		ret = cxusb_medion_set_mode(dvbdev, false);
+
