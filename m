@@ -1,259 +1,294 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF5C3597A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5750C17BD3
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747096325; cv=none; b=Bvqb4zxFvr1lSNEfrjKRpN2jbWMhPdJshlpq34GlXaLv1zkMjV5lCbW+cA0hzGE3UKXhd88P/teCvV2yhDYALGXBB4p3lFCHFu6txnAomolVymZRnopQMYWzNbCgCi+OLMeN6o6uYYh0YqXKXLKzPnvPOwQNff5KnpkvdTeMjMQ=
+	t=1747096453; cv=none; b=JPK10qWYyj2Q5Z6QpeAZIOZPi5ff35NRyRfHPaS49DlRqZxd9YBFkBjM6rvEz/FLtjoYMgNG1e6SUAafSsI81XUSRdszY2igI6aUO/L0RoZFPj2xhwTFz1vA4nNanjozu0h22LgLVIZEXaEH4zHxdKrh9hLYSCOZ6acoeUMWM38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747096325; c=relaxed/simple;
-	bh=u/uZu3C4+NyyEXfW9P+uhf063yFrKN4Fw2RaqHmeoOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=khF87A6VuwSG88PbOGqR+f6vxGa9nxzNzUO+cqeTkHagyq4EDGrtocgM2sqWIC+pUT6szJhuYnuGrbMRGakLYtzaZcu4GNLcul9Q2VAGyp7375ldePPDDR6ju6J8bPOQD5r+8siDcz3wK1rhcSz/PxrPwfGAH2LUIKY1W5fH2Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LPU3H+XH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=neibz5P8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LPU3H+XH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=neibz5P8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747096453; c=relaxed/simple;
+	bh=fU7pBdKdDLvcMx8zh+viNeC2gR91xPbL999COyMNtfI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qifoMUMYTzBIdGutQghXXdk2CSF4EcHCB1lpnQFkO8f7zhXVxn20iQ4iKlVdqIAgZIbQpT7NbJwNHoUjf/gkhGhOW2IsKCp380RhIzO+HiGLPK0+VwqlFR4cEYP+Js3O8IaLS7ZxXqXywLFjMUgVZdgwJbKmUTZhZjP65z0poDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E7+A/sRU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LPU3H+XH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="neibz5P8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LPU3H+XH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="neibz5P8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A8B121F388;
-	Tue, 13 May 2025 00:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747096321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7+A/sRU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747096450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6cYvGIo/SGidr6VuJk7mvsrXECdnDKcAY8/+dzZH3Q0=;
-	b=LPU3H+XH4ALkmg5shnASRepdDwZnBoqnD6XkBVUwlmhaZiUhZVfDlZAZgy7YWzvVPK9MUG
-	nDp+iqFVP9UOJlszRSAY9gbMxQNJqfnTlFvkKidgPaf7CUHRQ4iFb4ApB5RFbAxkn/2o4B
-	rPGVHYrFiMYzW6dzmv+vM3RasCcJOXs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747096321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cYvGIo/SGidr6VuJk7mvsrXECdnDKcAY8/+dzZH3Q0=;
-	b=neibz5P88AMN4LCnzZDMl1piUaBMBHk+Kb6PNmHwvEpE80w8240RD/WLofjTmtL1A654GX
-	o1uiIq37aN75DEAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LPU3H+XH;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=neibz5P8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747096321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cYvGIo/SGidr6VuJk7mvsrXECdnDKcAY8/+dzZH3Q0=;
-	b=LPU3H+XH4ALkmg5shnASRepdDwZnBoqnD6XkBVUwlmhaZiUhZVfDlZAZgy7YWzvVPK9MUG
-	nDp+iqFVP9UOJlszRSAY9gbMxQNJqfnTlFvkKidgPaf7CUHRQ4iFb4ApB5RFbAxkn/2o4B
-	rPGVHYrFiMYzW6dzmv+vM3RasCcJOXs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747096321;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6cYvGIo/SGidr6VuJk7mvsrXECdnDKcAY8/+dzZH3Q0=;
-	b=neibz5P88AMN4LCnzZDMl1piUaBMBHk+Kb6PNmHwvEpE80w8240RD/WLofjTmtL1A654GX
-	o1uiIq37aN75DEAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DA79137E8;
-	Tue, 13 May 2025 00:32:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kkgWHgGTImj6ZwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 13 May 2025 00:32:01 +0000
-Date: Tue, 13 May 2025 02:32:00 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: dsterba@suse.cz, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Boris Burkov <boris@bur.io>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] btrfs: remove extent buffer's redundant `len`
- member field
-Message-ID: <20250513003200.GZ9140@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250505115056.1803847-1-neelx@suse.com>
- <20250505115056.1803847-2-neelx@suse.com>
- <20250505151817.GX9140@twin.jikos.cz>
- <CAPjX3FfbeGmPkXY1NDnecrtcLe5dqX7+vLOLGe3sdggUfS-WSg@mail.gmail.com>
+	bh=MuVgDh54fhNKdyszi5Ue5nINMoJxAHC1Wn8pfTLezZ8=;
+	b=E7+A/sRUhHUEQihYzYD/FUduoPFmD5WrsAS5XHAS8Sb7wjrF3LTcVLoenez9s2uPZJmRDg
+	UO3dFKs27+cEcOnzC9YOAmpWpNlRs/928KGDcNwrGm00bIPKhHmYpvNb8Tjx52PQq6YBdS
+	L5AJi86VWZc4GjqisxopxGXMSBZQf+o=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-8-9oaNBdm1Myasa68olPs2uA-1; Mon, 12 May 2025 20:34:06 -0400
+X-MC-Unique: 9oaNBdm1Myasa68olPs2uA-1
+X-Mimecast-MFC-AGG-ID: 9oaNBdm1Myasa68olPs2uA_1747096445
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f544cf3f6dso93833096d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 17:34:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747096445; x=1747701245;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MuVgDh54fhNKdyszi5Ue5nINMoJxAHC1Wn8pfTLezZ8=;
+        b=TWqheWVu4Xfd52Etx1PvFM13flDYdIWvXGnAbEvRKEjnLZqlLQZo0QTmh4ScOLg1qz
+         1SSv+xxSUfbM1XMJtd1cjmEepoLFipNTBrNyxgJyqaPNxZtSXRj6a0LS3G1hr1ZFxCrW
+         aOCCAH2DObmHOpOdHeWxKPSvWaIZ4VhlLrdhuZey7OC7mZCAlsCGppV29KC3RARExYYf
+         ybHvtye8UqEkZPRnoprnpnezreVCQCP5DdsIlEQvlJHG8a6/y/yKyYaMDXrANew/l6lN
+         EUz9l8tirKBgOjyfvN1RMA6LD2W01CFtd/qai8vpoF7OO2SuV9Zsj2vEHM31R5UCHOmZ
+         NRnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYHFDJSghIHb8Cw0SG4yAYhBU67fmed/ORY63+xuA0oDRG3aAwOL9hZ7JzH5qHEXy3cKTMhx6iDTMZT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYOg/igSdzlHG9BckhOrT8RfQHf5W4KH/WNnSn9Tebie4vxZUy
+	Q3jymUlm+3LysAJNQAyYwSwfoXuty0oICEeuGvjYdAPPL8R6e4WgmD9zldS/fGMn0ku89EteoZW
+	ZhSiHG6wE9E4eDmHGcmV96Z7p0HRX9nVU/1CxRQNlYuCDpRO0YBh0V+WC5+QNQg==
+X-Gm-Gg: ASbGnctwrnKFnKDIBqdRRNa9c26kAAhABU7R4pZz+KaPwKuF9sHonvDMiygR4zMjtuD
+	56mvY+pdGo8h1ogj6AwHQhXbotVGE/HdJOW+LFjtA+sr8OFs7KI11q1bXKKfsmW2hlEPHlHzuXm
+	QD1y7o0b1p+dp3AVlOszfXmXAlTr767QwPUkTHw4fN5UBGqR/iGsjmveSRrCUGPyS3I7lhr2jjo
+	OAezbb4kxqf0Kv8x/6UTVuhiErBqnmmpjZ+L+93HLefh73CXSZPC5+HaPkPyq3veFA4AEP+S1Fl
+	szJKiNomUmFgnWnepKBU882sersJBrfZFDy6sKzCS8pJiaSrGubV8QNMqSc=
+X-Received: by 2002:a05:6214:f03:b0:6f2:a4cf:5fd7 with SMTP id 6a1803df08f44-6f6e4848aa4mr231130876d6.45.1747096445495;
+        Mon, 12 May 2025 17:34:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF8aGvObkI3NF7VMdyY5mR4dqP88kLTJMkaUNYqYbYgo2VKQhOvw1mD6AuqFsDuxk5hHuobFw==
+X-Received: by 2002:a05:6214:f03:b0:6f2:a4cf:5fd7 with SMTP id 6a1803df08f44-6f6e4848aa4mr231130676d6.45.1747096445084;
+        Mon, 12 May 2025 17:34:05 -0700 (PDT)
+Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a0c5eesm59058176d6.61.2025.05.12.17.34.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 17:34:04 -0700 (PDT)
+Message-ID: <9ac64e89dc5467e15c397e7bc14f775c693f91d7.camel@redhat.com>
+Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
+ with access functions
+From: mlevitsk@redhat.com
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+ linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Date: Mon, 12 May 2025 20:34:03 -0400
+In-Reply-To: <aBuV7JmMU3TcsqFW@google.com>
+References: <20250416002546.3300893-1-mlevitsk@redhat.com>
+	 <20250416002546.3300893-2-mlevitsk@redhat.com>
+	 <aAgnRx2aMbNKOlXY@google.com>
+	 <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
+	 <aBuV7JmMU3TcsqFW@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPjX3FfbeGmPkXY1NDnecrtcLe5dqX7+vLOLGe3sdggUfS-WSg@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: A8B121F388
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.21
 
-On Mon, May 05, 2025 at 07:53:16PM +0200, Daniel Vacek wrote:
-> On Mon, 5 May 2025 at 17:18, David Sterba <dsterba@suse.cz> wrote:
-> >
-> > On Mon, May 05, 2025 at 01:50:54PM +0200, Daniel Vacek wrote:
-> > > Even super block nowadays uses nodesize for eb->len. This is since commits
-> > >
-> > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
-> > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
-> > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
-> > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
-> > >
-> > > With these the eb->len is not really useful anymore. Let's use the nodesize
-> > > directly where applicable.
-> >
-> > You haven't updated the changelog despite we had a discussion about the
-> > potential drawbacks, so this should be here. But I'm not convinced this
-> 
-> Right. That's because I was not sure we came to any conclusion yet. I
-> thought this discussion was still ongoing. I understand that so far
-> this is still all just a theory and any premature conclusions may be
-> misleading.
-> 
-> But yeah, I may write some kind of a warning or a disclaimer
-> mentioning the suspicion. Just so that it gets documented and it is
-> clear it was considered, even though maybe without a clear conclusion.
-> 
-> > is a good change. The eb size does not change so no better packing in
-> > the slab and the caching of length in the same cacheline is lost.
-> 
-> So to be perfectly clear, what sharing do you mean? Is it the
-> eb->start and eb->len you talking about? In other words, when getting
-> `start` you also get `len` for free?
+On Wed, 2025-05-07 at 10:18 -0700, Sean Christopherson wrote:
+> On Thu, May 01, 2025, mlevitsk@redhat.com=C2=A0wrote:
+> > On Tue, 2025-04-22 at 16:33 -0700, Sean Christopherson wrote:
+> > > > @@ -2653,11 +2654,17 @@ static int prepare_vmcs02(struct kvm_vcpu *=
+vcpu, struct vmcs12 *vmcs12,
+> > > > =C2=A0	if (vmx->nested.nested_run_pending &&
+> > > > =C2=A0	=C2=A0=C2=A0=C2=A0 (vmcs12->vm_entry_controls & VM_ENTRY_LOA=
+D_DEBUG_CONTROLS)) {
+> > > > =C2=A0		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
+> > > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
+> > > > +		new_debugctl =3D vmcs12->guest_ia32_debugctl;
+> > > > =C2=A0	} else {
+> > > > =C2=A0		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
+> > > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugc=
+tl);
+> > > > +		new_debugctl =3D vmx->nested.pre_vmenter_debugctl;
+> > > > =C2=A0	}
+> > > > +
+> > > > +	if (CC(!vmx_set_guest_debugctl(vcpu, new_debugctl, false))) {
+> > >=20
+> > > The consistency check belongs in nested_vmx_check_guest_state(), only=
+ needs to
+> > > check the VM_ENTRY_LOAD_DEBUG_CONTROLS case, and should be posted as =
+a separate
+> > > patch.
+> >=20
+> > I can move it there. Can you explain why though you want this? Is it be=
+cause of the
+> > order of checks specified in the PRM?
+>=20
+> To be consistent with how KVM checks guest state.=C2=A0 The two checks in=
+ prepare_vmcs02()
+> are special cases.=C2=A0 vmx_guest_state_valid() consumes a huge variety =
+of state, and
+> so replicating all of its logic for vmcs12 isn't worth doing.=C2=A0 The c=
+heck on the
+> kvm_set_msr() for guest_ia32_perf_global_ctrl exists purely so that KVM d=
+oesn't
+> simply ignore the return value.
+>=20
+> And to a lesser degree, because KVM assumes that guest state has been san=
+itized
+> after nested_vmx_check_guest_state() is called.=C2=A0 Violating that risk=
+s introducing
+> bugs, e.g. consuming vmcs12->guest_ia32_debugctl before it's been vetted =
+could
+> theoretically be problematic.
+>=20
+> > Currently GUEST_IA32_DEBUGCTL of the host is *written* in prepare_vmcs0=
+2.=C2=A0
+> > Should I also move this write to nested_vmx_check_guest_state?
+>=20
+> No.=C2=A0 nested_vmx_check_guest_state() verifies the incoming vmcs12 sta=
+te,
+> prepare_vmcs02() merges the vmcs12 state with KVM's desires and fills vmc=
+s02.
+>=20
+> > Or should I write the value blindly in prepare_vmcs02 and then check th=
+e value
+> > of 'vmx->msr_ia32_debugctl' in nested_vmx_check_guest_state and fail if=
+ the value
+> > contains reserved bits?=C2=A0
+>=20
+> I don't follow.=C2=A0 nested_vmx_check_guest_state() is called before pre=
+pare_vmcs02().
 
-Yes, basically.
+My mistake, I for some reason thought that nested_vmx_check_guest_state is =
+called from
+prepare_vmcs02(). Your explanation now makes sense.
 
-> Since the structure is 8 bytes aligned, they may eventually still end
-> up in two cachelines. Luckily the size of the structure is 0 mod 16 so
-> just out of the luck this never happens and they are always in the
-> same cache line. But this may break with future changes, so it is not
-> rock solid the way it is now.
 
-Yes, with structures not perfectly aligned to a cacheline (64B) there
-will be times when the access needs fetching two cachelines. With locks
-it can result in various cacheline bouncing patterns when various
-allocated structures are aligned to 8 bytes, giving 8 possible groups of
-"misaligned" structure instances.
+>=20
+> > > > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool =
+host_initiated)
+> > > > +{
+> > > > +	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_ini=
+tiated);
+> > > > +
+> > > > +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> > > > +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+> > > > +		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > > > +		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > > > +	}
+> > > > +
+> > > > +	if (invalid)
+> > > > +		return false;
+> > > > +
+> > > > +	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
+> > > > +					VM_EXIT_SAVE_DEBUG_CONTROLS))
+> > > > +		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+> > > > +
+> > > > +	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.eve=
+nt &&
+> > > > +	=C2=A0=C2=A0=C2=A0 (data & DEBUGCTLMSR_LBR))
+> > > > +		intel_pmu_create_guest_lbr_event(vcpu);
+> > > > +
+> > > > +	__vmx_set_guest_debugctl(vcpu, data);
+> > > > +	return true;
+> > >=20
+> > > Return 0/-errno, not true/false.
+> >=20
+> > There are plenty of functions in this file and KVM that return boolean.
+>=20
+> That doesn't make them "right".=C2=A0 For helpers that are obvious predic=
+ates, then
+> absolutely use a boolean return value.=C2=A0 The names for nested_vmx_che=
+ck_eptp()
+> and vmx_control_verify() aren't very good, e.g. they should be
+> nested_vmx_is_valid_eptp() and vmx_is_valid_control(), but the intent is =
+good.
+>=20
+> But for flows like modifying guest state, KVM should return 0/-errno.
+>=20
+> > e.g:=C2=A0
+> >=20
+> > static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+> > static inline bool vmx_control_verify(u32 control, u32 low, u32 high)
+> > static bool nested_evmcs_handle_vmclear(struct kvm_vcpu *vcpu, gpa_t vm=
+ptr)
+> > static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+> > 						=C2=A0struct vmcs12 *vmcs12)
+>=20
+> These two should return 0/-errno.
+>=20
+> =C2=A0
+> > static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+> > static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
+>=20
+> Probably should return 0/-errno, but nested_get_vmcs12_pages() is a bit o=
+f a mess.
 
-There's also a big assumption that the CPU cache prefetcher is clever
-enough to average out many bad patterns. What I try to do on the source
-code level is to be able to reason about the high level access patterns,
-like "used at the same time -> close together in the structure".
+I am not going to argue with you about this, let it be.
 
-> > In the assebly it's clear where the pointer dereference is added, using
-> > an example from btrfs_get_token_8():
-> >
-> >   mov    0x8(%rbp),%r9d
-> >
-> > vs
-> >
-> >   mov    0x18(%rbp),%r10
-> >   mov    0xd38(%r10),%r9d
-> 
-> I understand that. Again, this is what I originally considered. Not
-> all the functions end up like this but there are definitely some. And
-> by a rule of a thumb it's roughly half of them, give or take. That
-> sounds like a good reason to be concerned.
-> 
-> My reasoning was that the fs_info->nodesize is accessed by many so the
-> chances are it will be hot in cache. But you're right that this may
-> not always be the case. It depends. The question remains if that makes
-> a difference?
-> 
-> Another (IMO valid) point is that I believe the code will dereference
-> many other pointers before getting here so this may seem like a drop
-> in the sea. It's not like this was a tight loop scattering over
-> hundreds random memory addresses.
-> For example when this code is reached from a syscall, the syscall
-> itself will have significantly higher overhead then one additional
-> dereference. And I think the same applies when reached from an
-> interrupt.
-> Otherwise this would be visible on perf profile (which none of us
-> performed yet).
+>=20
+> > ...
+> >=20
+> >=20
+> > I personally think that functions that emulate hardware should return b=
+oolean
+> > values or some hardware specific status code (e.g VMX failure code) bec=
+ause
+> > the real hardware never returns -EINVAL and such.
+>=20
+> Real hardware absolutely "returns" granular error codes.=C2=A0 KVM even h=
+as informal
+> mappings between some of them, e.g. -EINVAL =3D=3D #GP, -EFAULT =3D=3D #P=
+F, -EOPNOTSUPP =3D=3D #UD,
+> BUG() =3D=3D 3-strike #MC.
+>=20
+> And hardware has many more ways to report errors to software. E.g. VMLAUN=
+CH can
+> #UD, #GP(0), VM-Exit, VMfailInvalid, or VMFailValid with 30+ unique reaso=
+ns.=C2=A0 #MC
+> has a crazy number of possible error encodings.=C2=A0 And so on and so fo=
+rth.
+>=20
+> Software visible error codes aside, comparing individual KVM functions to=
+ an
+> overall CPU is wildly misguided.=C2=A0 A more appropriate comparison woul=
+d be between
+> a KVM function and the ucode for a single instruction/operation.=C2=A0 I =
+highly, highly
+> doubt ucode flows are limited to binary yes/no outputs.
 
-Yeah and I don't intend to do so other than to verify your measurements
-and calims that this patch does not make things worse at least. The
-burden is on the patch submitter.
+I don't think you understood my point - I just pointed out that real hardwa=
+re will never return
+things like -EINVAL.
 
-> Still, I'd say reading the assembly is a good indication of possible
-> issues to be concerned with. But it's not always the best one. An
-> observed performance regression would be.
-> I'll be happy to conduct any suggested benchmarks. Though as you
-> mentioned this may be also picky on the used HW.
+I never have claimed that real hardware never does return error codes - it =
+of course does,=C2=A0
+like indeed VMX can return something like 77 different error codes.
 
-I'd say any contemporary hardware is good, I don't think the internal
-CPU algorithms of prefetching or branch predictions change that often. A
-difference that I would consider significant is 5% in either direction.
+So I said that functions that emulate hardware should return either boolean=
+ in case hardware
+only accepts/rejects the action, or hardware specific error codes, because
+I think that its a bit confusing to map hardware error codes and kernel err=
+or codes.
 
-> So even though we
-> don't see any regressions with our testing, one day someone may find
-> some if we merged this change. In which case we can always revert.
-> 
-> I have to say I'm pretty happy with the positive feedback from the
-> other reviewers. So far you're the only one raising this concern.
+In case of MSR write, hardware response is more or less boolean - hardware =
+either accepts
+the write or raises #GP.
 
-I don't dispute the feedback from others, the patch is not wrong on
-itself, it removes a redundant member. However I don't see it as a
-simple change because I also spent some time looking into that
-particular structure, shrinking size, member ordering and access
-patterns that I am questioning the runtime performance implications.
 
-My local eb->len removal patch is from 2020 and I decided not to send it
-because I was not able to prove to myself it'd be for the better. This
-is what I base my feedback on.
+Yes I understand that hardware can in theory also #UD, or silently ignore w=
+rite, etc,
+so I am not going to argue about this, let it be.
 
-> So how do we conclude this?
+AFAIK the KVM convention for msr writes is that 1 is GP, 0 success, and neg=
+ative value
+exits as a KVM internal error to userspace. Not very developer friendly IMH=
+O, there is
+a room for improvement here.
 
-I don't agree to add this patch due to the following main points:
+And I see that we now also have KVM_MSR_RET_UNSUPPORTED and KVM_MSR_RET_FIL=
+TERED.
 
-- no struct size change, ie. same number of objects in the slab
-- disputed cacheline behaviour, numbers showing improvement or not
-  making it worse needed
+Thanks for the review,
+Best regards,
+	Maxim Levitsky
 
-> If you don't want this cleanup I'd opt at least for rename eb->len
-> ==>> eb->nodesize.
+>=20
 
-This sounds like an unnecessary churn. 'length' related to a structure
-is natural, nodesize is a property of the whole filesystem, we're used
-to eb->len, I don't any benefit to increase the cognitive load.
