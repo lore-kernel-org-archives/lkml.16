@@ -1,133 +1,113 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FA0291166
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC7428640E;
+	Tue, 13 May 2025 13:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143631; cv=none; b=e9r9iBeBGq1ai0iWjyhPC1i5fKkbF0n8aiTqvtbrzomDFOK7xUuyrYCeXxZq3PwJvvyJQCJc1BqloXQoWqVBlt/3VJ0klLIE5/HFxic4LSHHJX3vl8qRcYxqHp5hsdrPPVscFO4X76n6HNT5Ed5QSCq2A5xTk59FOOouCY7x9nE=
+	t=1747143664; cv=none; b=Y4Tb3Zjzh6BFIaOeQZIHdxo/YAiglx+wbeKhzHnq4lAcQLECgEjRNf1pSaYz9r6BvCTebjyiSJL4aLYHU6yPcTqXRSSoCiFlPqr0UoqCQVUgduXu52Tfw/hYn82B+4QFy3Dkk02h4cFkS99HX0taOCt8JKN9X7xDGWoiFzrFXzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143631; c=relaxed/simple;
-	bh=BGaQ93izMEe02Cti68Vyan303ZMORdMe2po+7g1Hqbs=;
+	s=arc-20240116; t=1747143664; c=relaxed/simple;
+	bh=S00eQUskUp0D65XsF+o/OCXFi+oPqCIXuzNkGKHgNjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YuaKA9rIaVhxSEy8EU0zmGsUjUgg/RP2PJ8+mDiY9KgrnGpoUBr/e2iZF9STZDgZaFA8rkbrrM6JhqXbI4NgffSA7W9aYiG0Ut2U6Tziipw0W5nBK5mG+ASviqi+mgc1tkocFJGtQmPFNhgGWYwVFVHUBxqR55jpa/OdQATMf9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=th3RCQuY; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQGAwuuleQ2GzPqkvTISB2eSkiQe5pCQTtCbf2me8ZWqHupFSwnizqKumfs0tzCykxrmaDqa3V81Hsx33tUvuQ5q6TtFB6Yd/ST07sl4VhfcyCh6ESQvgVLQ1EFVX6kidYMsSjfQ6dqP2Ftshc2M8WKbv5M3UU3vFE41HTp29W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA03Tyxp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="th3RCQuY"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so32620785e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747143628; x=1747748428; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xEU9Mo6/UKsuuLc31/10/BvFN8LdhjlBi5jmqi672+k=;
-        b=th3RCQuY7ZtXYMOkZX71S5H7omzWwsaWnSG6C4IgAt1C2gXQsO/k6Sxr2tqYWMdLas
-         xHDlGaddzadiZoZQkyYkHJIHBT+G7Wx3J+yhuPeEUB1FRX98GM3RrW9vOf4CRtzp9T/B
-         t4jU1nDM8AKs45Oxh83eNegOzC2tAyGT5IliFXhkj4RVC2SLrYIFVyke2m2ski1b6LNM
-         gMbT9F81ycWWPMaHIP/xcWuQKWSwjRqrDNuk24LE3Eu/OVzs2B1OHVGZvsZGrilHCWVz
-         ySHiDYGJRTJZ4K0euz6+wGv+2en88cFhxCbXkZX6A0AxRiaI25prJCUFp2EIfyW5KBb1
-         v2pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747143628; x=1747748428;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xEU9Mo6/UKsuuLc31/10/BvFN8LdhjlBi5jmqi672+k=;
-        b=fnPsb8SmBJqatXbVeAAH6ELTe4lbBJM9bydqEjyvt3gz2+ho4v99K5kDClYcS+hQkj
-         1Wuqn30E5sz5h7ZnC39Nv9FyO4xQ3+eiwEqtKbmFNaZKjIZMdbJSZa1/nWlUKjNl8w2b
-         WORSUQUloQhY/1ZwB9VqmaQ7r/NjcII/7d0JpkY7LWXXN7IfoEWe7BazXjPHcZ4OBzeo
-         LZ0ruUyr071qMHqlQOP+t8IFfiJp/ZC9GHyGyHMtz3FbCjrwUhFtKyj8AI4rwmgYUbt1
-         6eTzxPtvx+6cQCy4ovqke48p+ppbQRa7PLEXaZtt8tW7Wfuks7OzG9WDu7Ete0euoZqi
-         BFDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKp7/i7mNJKTwXejMruBpc7irsPXhcKJXOh+2XN1Z0n+hGm1iUYjoCVnGLHC2lHQ3ew9Syn33aGsXWHk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTuUTyJYDdBXqFxOmIGISEqUutWuJ+bwxsvap4gVrYUEeCthFb
-	kUDS/Uiv+TDprkG3Uf/WFQnB9a3SVPmRawX14FoE8vpD3bfNm34pwwZd2xs8Pb0=
-X-Gm-Gg: ASbGncte7jZPI+AEKUN2v1wrEkPpI0hDQItkc3vjpE2J3yHQMRJSVGwXvYxbH+zM/KV
-	P1bZvEUdncVErdoE54+yVvxmdhcMg2fjr9eh76eFIrpznST9/DLGe7S9LjuiL5PgXvb3p+IP9J2
-	Gy2rEMzgbdL8cNLcSbFkFxSy5NpqD17Goh05QdX0wAXUXXQ0PMDONyzzQzRLXbs4CDyhO1xBIF5
-	05jNZcsfni4We+49FJ0jGOcVOeL32bKYSpKjQtIvSB4VTyOt8M9r3YBnwdn1M9EPm+nEI8OC3Yg
-	beFHkH6sd/4BCKVwzuYccVbCttSlQFqgfwQ2UCLYXAI99TRRLmvec+h6t1ZXbwsGdgTdKH+GkFo
-	XL4lNDLmAUv7WUw==
-X-Google-Smtp-Source: AGHT+IEfBwQJXAJ0BaJ2PDlgayikP86FW2WlI8LpQoXcFz5Q+W2Tz3IsJRQQT5R4meXuclvg4ooRLQ==
-X-Received: by 2002:a05:600c:b85:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-442d6ddd22emr128512155e9.33.1747143628084;
-        Tue, 13 May 2025 06:40:28 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7dd5sm209294255e9.35.2025.05.13.06.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:40:27 -0700 (PDT)
-Date: Tue, 13 May 2025 15:40:25 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] clocksource/drivers/timer-vt8500: Add watchdog
- functionality
-Message-ID: <aCNLyYtxmqqklBN8@mai.linaro.org>
-References: <20250507-vt8500-timer-updates-v2-0-65e5d1b0855e@gmail.com>
- <20250507-vt8500-timer-updates-v2-3-65e5d1b0855e@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA03Tyxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47246C4CEE4;
+	Tue, 13 May 2025 13:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747143664;
+	bh=S00eQUskUp0D65XsF+o/OCXFi+oPqCIXuzNkGKHgNjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sA03TyxpdSkLcwUQ6qaOB9Kn1Tplkuq75cj2Zf4bbNLaRdG+LXqWkFjj91hDS4zWs
+	 +tlyO0fPEGFlzjTNk01cKiEmKosvj0hwU17+nM7m77dDSIAdp9kpULZenwB21O0vyw
+	 wgJYKLIxf4rnLtTZbVXhR3sUmENZWweOs1NdHo+X9hX6KNxC+ulrptUkxmMb7ysg8Y
+	 +5ZlsMPZOb6uTT78QuRBIBJFUMP22YkTwXUx1GxB6tn9xF/RibgfQAwXr4dH/ZEW9V
+	 AaO93EmzvnPamQ0UydWpVQ74EW/eHcfM7e5yEfRZZDiSgTvo0GIhmzWo5QmsYk5ONl
+	 DeMdEv8DRHyrA==
+Date: Tue, 13 May 2025 14:40:55 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>
+Subject: Re: [PATCH iwl-next v3 00/15] Introduce iXD driver
+Message-ID: <20250513134055.GB3339421@horms.kernel.org>
+References: <20250509134319.66631-1-larysa.zaremba@intel.com>
+ <20250512124906.GA1417107@horms.kernel.org>
+ <aCH19kCiDI0GUs8s@soc-5CG4396X81.clients.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250507-vt8500-timer-updates-v2-3-65e5d1b0855e@gmail.com>
+In-Reply-To: <aCH19kCiDI0GUs8s@soc-5CG4396X81.clients.intel.com>
 
-On Wed, May 07, 2025 at 10:58:32AM +0400, Alexey Charkov wrote:
-> VIA/WonderMedia system timer IP can generate a watchdog reset when its
-> clocksource counter matches the value in the match register 0 and
-> watchdog function is enabled. For this to work, obvously the clock event
-> device must use a different match register (1~3) and respective interrupt.
+On Mon, May 12, 2025 at 03:21:58PM +0200, Larysa Zaremba wrote:
+> On Mon, May 12, 2025 at 01:49:06PM +0100, Simon Horman wrote:
+> > On Fri, May 09, 2025 at 03:42:57PM +0200, Larysa Zaremba wrote:
+> > > This patch series adds the iXD driver, which supports the Intel(R)
+> > > Control Plane PCI Function on Intel E2100 and later IPUs and FNICs.
+> > > It facilitates a centralized control over multiple IDPF PFs/VFs/SFs
+> > > exposed by the same card. The reason for the separation is to be able
+> > > to offload the control plane to the host different from where the data
+> > > plane is running.
+> > > 
+> > > This is the first phase in the release of this driver where we implement the
+> > > initialization of the core PCI driver. Subsequent phases will implement
+> > > advanced features like usage of idpf ethernet aux device, link management,
+> > > NVM update via devlink, switchdev port representors, data and exception path,
+> > > flow rule programming, etc.
+> > 
+> > Hi Larysa,
+> > 
+> > I am having a bit of trouble figuring out where to cleanly apply this
+> > series to. Could you help me out?
 > 
-> Check if at least two interrupts are provided by the device tree, then use
-> match register 1 for system clock events and match register 0 for watchdog
-> respectively.
-
-This code falls under the watchdog umbrella not in the clocksource. It
-is better to find a way to make the timer and the watchdog separated.
-
-The timer-gxp.c is dynamically allocating a watchdog platform device
-with the shared pointer to the timer counter. IMO, it is a good
-example to split this up.
-
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  drivers/clocksource/Kconfig        | 11 +++++++
->  drivers/clocksource/timer-vt8500.c | 61 ++++++++++++++++++++++++++++++++++----
->  2 files changed, 67 insertions(+), 5 deletions(-)
+> Tree did change quite a bit in a short span of time between me fetching and 
+> sending, sorry for the trouble.
 > 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 487c8525996724fbf9c6e9726dabb478d86513b9..8f5e41ff23386d9ecb46b38603dae485db71cfc7 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -181,6 +181,17 @@ config VT8500_TIMER
->  	help
->  	  Enables support for the VT8500 driver.
->  
-> +config VT8500_TIMER_WATCHDOG
-> +	bool "Enable VT8500 watchdog functionality"
-> +	depends on VT8500_TIMER
-> +	depends on WATCHDOG && WATCHDOG_CORE=y
+> The base commit is 10f540c09cf9 "ice: default to TIME_REF instead of TXCO on 
+> E825-C". In case you cannot access it, I have pushed the tree to my github.
+> 
+> https://github.com/walking-machine/linux/commits/ixd_phase1_iwl_v3
 
-if WATCHDOG_CORE=y then WATCHDOG=y because the first one can be
-enabled only if the second one is enabled.
+Thanks. I did not have that commit present locally, but I was able
+to fetch it from the URL above. And the series did indeed apply cleanly
+on top of it.
 
-[ ... ]
+> This version is probably much closer to what would be in dev-queue eventually, 
+> compared to a properly rebased one. Some patches were pulled out of dev-queue 
+> because of validation problems, but should be back pretty soon, as far as I 
+> know. Those patches are the reason why I have an additional fix in the github 
+> tree.
 
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Understood.
