@@ -1,87 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AD51DE4C3
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FD01DE4C3
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747106052; cv=none; b=pvsXptiCAXcSU04dKD4iukfqEovrsDL31yyagZEfRvvQAHY700THvH7+aLUt7Qc2yS7l3iDSvbBT2SBQiwsyffGgfE/02zK92J66GwAro3PZmQQvoO8/QpiRqMvahcF/hz9gH+4z3pbSSg08YImCkJGD2stSKYapcCMXB+DGDaU=
+	t=1747106061; cv=none; b=fnCDbMpJHr+VI/Xqrv+F3XQJL44aLPCPSxSuqOzYP53/x2H+d1LDPTdVLYnzw0nZq0fFM7I2FEBvt45shYBks2kTYwUly7vFWzTmX8+LuU/7aWddDx9ks3t2gv41sQbxpSrMPfM9/A0ZTOlSsIW2TUMeOX+OaiMflbTjmkCEa40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747106052; c=relaxed/simple;
-	bh=jeFqy7zKESSjHISNy8tS/rhzHwYLUa6cEV201i7Nzks=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=p4xHRXPE3GqcS8zgrkWpZWPhsccKQ4JHziCDy+LzQ8CNDg17qmSUXbLPJWUQ61kc295i0ayUHmqNMfazCDIt6/Kn8Abok3T2VjVrPa8Kg7JDvehbAHwui+R+ryyrlGdy0vKzJbeSnRaycEjQHdT39sVgjYt0dpF8lP1P9JHC5L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MLSvsplG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747106061; c=relaxed/simple;
+	bh=7sONA/V33xpobgeSmyIE5zKaplWdxKZgqzaN0mo3UjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RGfz5lOV7XmHRE9t3e9YTiDsoLAaiy/pIbMF9sEpFU53VoaYfTGAMS2NzB5yg9gKDrS5vM/kz4OvMr2k/g3X6Z1eS9a5UgKBHEIajxHrlM8m/eEWdeZEnUdY/Dj+sREij1JrgtFhUJ9ZB3tc/+R167XqBlhS+bAkD4J4wOC70Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nMEpv0pa; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MLSvsplG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3342BC4CEE7;
-	Tue, 13 May 2025 03:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747106049;
-	bh=jeFqy7zKESSjHISNy8tS/rhzHwYLUa6cEV201i7Nzks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MLSvsplGVO8OHx8goaLdPzja4JBmyQk/Mq62gXJ+ixRyRJFDZ+XPANipvuuoULo5h
-	 gN7v7dzD4DvcO5WrwxdFAU+T5NJI2bqfSGXD81I0ml294lc9HM570dpp1uW4VWEf/z
-	 FePhgHLFdOHtgAudqq+5FWAtUhYXlTM12YMLgYbA=
-Date: Mon, 12 May 2025 20:14:08 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, nh-open-source@amazon.com
-Subject: Re: [PATCH] kexec: Enable CMA based contiguous allocation
-Message-Id: <20250512201408.81acaf861581f6fb98e8a3b0@linux-foundation.org>
-In-Reply-To: <35f818e2cf3f15b7dc7028f543e0eea94c799efd.camel@infradead.org>
-References: <20250512225752.11687-1-graf@amazon.com>
-	<20250512165933.ad1dc7ec5872284b4b59f544@linux-foundation.org>
-	<35f818e2cf3f15b7dc7028f543e0eea94c799efd.camel@infradead.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nMEpv0pa"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747106058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AODqjUq8YBPAVfDEVDBp4w1/avIi3o3A3GYYWWucdOg=;
+	b=nMEpv0paVndzE8CayYRfrJko55+hok+VSNUS4tnLfpg19zLqu/PvnMnIxqCvJWjK48L3bJ
+	pgdw7Iur+sFTvXj2v9Wm4AgeQIsJIFY5CJhHjQVZ5kZpIc7+TLNW/z16Mp1RmWkUmKZHQW
+	31iyv5GGYhMMXu1kJxlCeCI14I5l6pk=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [RFC PATCH 5/7] memcg: make __mod_memcg_lruvec_state re-entrant safe against irqs
+Date: Mon, 12 May 2025 20:13:14 -0700
+Message-ID: <20250513031316.2147548-6-shakeel.butt@linux.dev>
+In-Reply-To: <20250513031316.2147548-1-shakeel.butt@linux.dev>
+References: <20250513031316.2147548-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 12 May 2025 19:02:20 -0700 David Woodhouse <dwmw2@infradead.org> wr=
-ote:
+Let's make __mod_memcg_lruvec_state re-entrant safe and name it
+mod_memcg_lruvec_state(). The only thing needed is to convert the usage
+of __this_cpu_add() to this_cpu_add(). There are two callers of
+mod_memcg_lruvec_state() and one of them i.e. __mod_objcg_mlstate() will
+be re-entrant safe as well, so, rename it mod_objcg_mlstate(). The last
+caller __mod_lruvec_state() still calls __mod_node_page_state() which is
+not re-entrant safe yet, so keep it as is.
 
-> > > =A0 2) More robust. Even if by accident some page is still in use for=
- DMA,
-> > > =A0=A0=A0=A0 the new kernel image will be safe from that access becau=
-se it resides
-> > > =A0=A0=A0=A0 in a memory region that is considered allocated in the o=
-ld kernel and
-> > > =A0=A0=A0=A0 has a chance to reinitialize that component.
-> >=20
-> >=20
->  > https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/>
->
-> >Is this known to be a problem in current code?
->=20
-> Oh $DEITY yes. The Arm Generic Interrupt Controller is, to quote a dear
-> friend, "a cautionary tale of how not to approach a hardware design".
->=20
-> It does a whole bunch of arbitrary DMA all over the place, and doesn't
-> even live behind an IOMMU. And doesn't *stop* doing DMA unless you ask
-> it *really* nicely; merely shutting down the offending high-level
-> components isn't always enough, because they might still to write back
-> some caches.
->=20
-> Here's one of the latest examples (not actually the one which has been
-> breaking kexec for us, as far as we know, but an example of the genre):
-> https://lore.kernel.org/all/20250512140909.3464-1-dssauerw@amazon.de/
->=20
-> So putting the new kernel into a physical memory region which was
-> considered 'free' by the previous kernel, as Alex explains, is actually
-> a very good defence-in-depth mechanism to protect against such issues.
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ mm/memcontrol.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-Lol, it sounds like you're having fun over there.
-
-Alexander, can you please repackage David's info to your taste and
-include it in the changelog?  Escalating the value of the patch from
-"might speed it up, don't know how much" to "addresses grievous
-real-world issues" is helpful to the patch's case!
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9e7dc90cc460..adf2f1922118 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -731,7 +731,7 @@ unsigned long memcg_page_state_local(struct mem_cgroup *memcg, int idx)
+ }
+ #endif
+ 
+-static void __mod_memcg_lruvec_state(struct lruvec *lruvec,
++static void mod_memcg_lruvec_state(struct lruvec *lruvec,
+ 				     enum node_stat_item idx,
+ 				     int val)
+ {
+@@ -743,16 +743,20 @@ static void __mod_memcg_lruvec_state(struct lruvec *lruvec,
+ 	if (WARN_ONCE(BAD_STAT_IDX(i), "%s: missing stat item %d\n", __func__, idx))
+ 		return;
+ 
++	if (WARN_ONCE(in_nmi(), "%s: called in nmi context for stat item %d\n",
++		      __func__, idx))
++		return;
++
+ 	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+ 	memcg = pn->memcg;
+ 
+ 	cpu = get_cpu();
+ 
+ 	/* Update memcg */
+-	__this_cpu_add(memcg->vmstats_percpu->state[i], val);
++	this_cpu_add(memcg->vmstats_percpu->state[i], val);
+ 
+ 	/* Update lruvec */
+-	__this_cpu_add(pn->lruvec_stats_percpu->state[i], val);
++	this_cpu_add(pn->lruvec_stats_percpu->state[i], val);
+ 
+ 	val = memcg_state_val_in_pages(idx, val);
+ 	memcg_rstat_updated(memcg, val, cpu);
+@@ -779,7 +783,7 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 
+ 	/* Update memcg and lruvec */
+ 	if (!mem_cgroup_disabled())
+-		__mod_memcg_lruvec_state(lruvec, idx, val);
++		mod_memcg_lruvec_state(lruvec, idx, val);
+ }
+ 
+ void __lruvec_stat_mod_folio(struct folio *folio, enum node_stat_item idx,
+@@ -2559,7 +2563,7 @@ static void commit_charge(struct folio *folio, struct mem_cgroup *memcg)
+ 	folio->memcg_data = (unsigned long)memcg;
+ }
+ 
+-static inline void __mod_objcg_mlstate(struct obj_cgroup *objcg,
++static inline void mod_objcg_mlstate(struct obj_cgroup *objcg,
+ 				       struct pglist_data *pgdat,
+ 				       enum node_stat_item idx, int nr)
+ {
+@@ -2570,7 +2574,7 @@ static inline void __mod_objcg_mlstate(struct obj_cgroup *objcg,
+ 	memcg = obj_cgroup_memcg(objcg);
+ 	if (likely(!in_nmi())) {
+ 		lruvec = mem_cgroup_lruvec(memcg, pgdat);
+-		__mod_memcg_lruvec_state(lruvec, idx, nr);
++		mod_memcg_lruvec_state(lruvec, idx, nr);
+ 	} else {
+ 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[pgdat->node_id];
+ 
+@@ -2901,12 +2905,12 @@ static void __account_obj_stock(struct obj_cgroup *objcg,
+ 		struct pglist_data *oldpg = stock->cached_pgdat;
+ 
+ 		if (stock->nr_slab_reclaimable_b) {
+-			__mod_objcg_mlstate(objcg, oldpg, NR_SLAB_RECLAIMABLE_B,
++			mod_objcg_mlstate(objcg, oldpg, NR_SLAB_RECLAIMABLE_B,
+ 					  stock->nr_slab_reclaimable_b);
+ 			stock->nr_slab_reclaimable_b = 0;
+ 		}
+ 		if (stock->nr_slab_unreclaimable_b) {
+-			__mod_objcg_mlstate(objcg, oldpg, NR_SLAB_UNRECLAIMABLE_B,
++			mod_objcg_mlstate(objcg, oldpg, NR_SLAB_UNRECLAIMABLE_B,
+ 					  stock->nr_slab_unreclaimable_b);
+ 			stock->nr_slab_unreclaimable_b = 0;
+ 		}
+@@ -2932,7 +2936,7 @@ static void __account_obj_stock(struct obj_cgroup *objcg,
+ 		}
+ 	}
+ 	if (nr)
+-		__mod_objcg_mlstate(objcg, pgdat, idx, nr);
++		mod_objcg_mlstate(objcg, pgdat, idx, nr);
+ }
+ 
+ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+@@ -3004,13 +3008,13 @@ static void drain_obj_stock(struct obj_stock_pcp *stock)
+ 	 */
+ 	if (stock->nr_slab_reclaimable_b || stock->nr_slab_unreclaimable_b) {
+ 		if (stock->nr_slab_reclaimable_b) {
+-			__mod_objcg_mlstate(old, stock->cached_pgdat,
++			mod_objcg_mlstate(old, stock->cached_pgdat,
+ 					  NR_SLAB_RECLAIMABLE_B,
+ 					  stock->nr_slab_reclaimable_b);
+ 			stock->nr_slab_reclaimable_b = 0;
+ 		}
+ 		if (stock->nr_slab_unreclaimable_b) {
+-			__mod_objcg_mlstate(old, stock->cached_pgdat,
++			mod_objcg_mlstate(old, stock->cached_pgdat,
+ 					  NR_SLAB_UNRECLAIMABLE_B,
+ 					  stock->nr_slab_unreclaimable_b);
+ 			stock->nr_slab_unreclaimable_b = 0;
+@@ -3050,7 +3054,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 
+ 	if (unlikely(in_nmi())) {
+ 		if (pgdat)
+-			__mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
++			mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
+ 		nr_pages = nr_bytes >> PAGE_SHIFT;
+ 		nr_bytes = nr_bytes & (PAGE_SIZE - 1);
+ 		atomic_add(nr_bytes, &objcg->nr_charged_bytes);
+-- 
+2.47.1
 
