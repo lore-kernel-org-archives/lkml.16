@@ -1,177 +1,103 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787A32BDC09
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF97A2BE0E2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150724; cv=none; b=cHaibBrJCwkeStb5cWe0SvWGBSgMj7RccxXix/cGhKuVJn39aWkQJA8d7VPe7z9flaBG+qfN6U3Yh21d1kMLs7k2I6wkrOCqSWso6OboJEEHcGrDQS2yMo/o5oC5VkGUJlDuggblEm3vdsFKExAUFhd6ZsR7N7RV3GO+mS/4/I0=
+	t=1747150734; cv=none; b=EA2+bcnbSCrGMfrYnyf0IHyquupavDUpSyrhPAOwhC3clGmZYwtbpVS5y65Se2aAwkgRK7cY13NKQUStVo4RIkuqm4wJvpEAk/7s2uFIZsEgOkBREjzNgNN2Rl3WkJykgj/ZsFI1fHhB6fjjrxjyLHsiGKXNuxUcBUJEoJvS7Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150724; c=relaxed/simple;
-	bh=+iXXgL4gr8KPYDv9/e7RFbUo5M19orzShFShoavpw88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=PmvqXaPxJAkFUpUaCAbc24nbWjeDLQZwRvmeQibBcYcKRplIMUain54rkvKmNjLD99lnXVQtWeI8e0Zkdbyh5UoQK7lRDDUr38jx1lb8ev5GYwJfVW54e7d5zk6Qj9iTsojAz+wxCXEbQEvKhRlCDCG3ub2yAYIUj60o5xUb1xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pvsJuyhn; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747150734; c=relaxed/simple;
+	bh=HciUJ0DRc6VWbkLdkDFkjwk4jXmAZ2zaDmGvimw1ftk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKGqxWvqG60On3TmZd8j3wUtyoZtUPT728R7KKbIQInZiLAXL0fNdFl2iH8wAWznoj/N4sH7MICgiMPvvtQ0Ij5FQNccrKnnOcwJBDFQYHiPqYy0qu0p+E3RZyZ5/w/W010Bz0Kk83242LFtDEs6v4PJn+ulBHngcMQ7CBYGg54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iNSC2bou; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvsJuyhn"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-48b7747f881so358761cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:38:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNSC2bou"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7396f13b750so6405612b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747150721; x=1747755521; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=89y90/kYEAF6o+kMHPOusZlookMeFzeAB2+XdecwNJU=;
-        b=pvsJuyhnthP36mpKtFRwOuGdagEFkSpcv5CG9cVRWKoO6+E+AjXyWrAodHH4ZxBUGQ
-         VaROaGwfeuDTVcDwXZrwm/kGSlboFRbky06MAHhNerZaNYYosvcfFjxrw5lQ0gsN8hve
-         NlRdSKM1qmnkrBnG9R61in2tfCgGkIJQdQ+UNE6/tjgcuilNN0hSnIDbUrzjuZDUrtK/
-         jmCK+Nj2daEBFWql6RNWaM9K9hnhHRLFcHSb5yyMzjNvmhO+Ubg2krUh8MP5zmVeiQJ+
-         PEt8zzdJ79zrOXUT49wsy2CNY6qIbw3Yf0tJjKUEKmgtLYUNUr8CBr63AAz3QkzrhzMv
-         BBnA==
+        d=gmail.com; s=20230601; t=1747150732; x=1747755532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b01lqOj1Q00qoSQQQOxAByXZieMfhjS49oQuDICweyQ=;
+        b=iNSC2boukHJMIOfjLbZ80Qeau8EvdHjraRSlKEPn8y0v0+N+fS4aVz6cIZTpOUz1LG
+         3h1cRjnyXLgFYuPRgUPJRioXdEnHDQbxTZBeKSruHadG6YGA5D91IkVKOQnw4VRtCM/R
+         deKeOtDtVpSkp7afTF/VcddFZzVCDeLkEtkyeNd4AF6UYu8jdWeSMuV+zt1yUu6BmMKq
+         m2/WIVpsX6C2NH3zySmyjR0Fipg1jtSlKziHSlg2V4VJ2qJYwtPqS1tatzelq4XTF6Rr
+         J6YYwAHpj0wd82UzzX0jVfvBPN3nXoTaPfwvfy3mmCofoTQVJ0dZrfVOEEZaSYDL/7NS
+         p3hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747150721; x=1747755521;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=89y90/kYEAF6o+kMHPOusZlookMeFzeAB2+XdecwNJU=;
-        b=LsglyXEmjuPlj5Eews5X2yS+wc9qLbXzEk0eKEka+2V26vVaxTyDCxzpiWe6MmXwZf
-         KUpClmAbcZqafLpr21OhTA+omA+iG73kDllkybE3mEkd3dkrfwRZsv+nFdF+iN0wunTR
-         c1CvirExo5VJ/u1ciz/kpI7pp3QAYBzy+NKK4iKKUtIFPE6Yh7upz3hiEvVH9MBi9WLV
-         Lyv95jW8wczTUoV2Ek0YZhzsFGpnG/N2Dq4FLTTWjBXZaAiA2PyDCxVE8HnkxVH94Xvy
-         ar0IAIY5zxpaeKcmC9YEiiR761kuQnQpg7356/Smgn6v7HvJrCYp3P9ezZlSf6d9YN8+
-         Hu3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVcQQJGkwmvX5TotUboDG6sOXQ1QkHv1Wl+BA92SDDMx/n/+kbwm+XWHtOab9CpuE8xZoNYQst5Ji4KoGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh72Nf6HHAEhMYfM2vWxTA1MNFSANAb+ILQ0sRhBg/5m8hij9K
-	CzSzjK7HqXAYIvcA4Jl8vdGZIZJfkpULL07qC9HdhQt62/oK6BljbAUepNP5oI7eItrR+9Ja1yE
-	YWCJrLGipebqzedct0ZebEkurkBckyucMpH/boQQO
-X-Gm-Gg: ASbGncu03v8NSzevDLIC5P+XVm9M5JA2PEkL4zgTfuLT9H2nMHi+QlRlxpBrU0k9FL9
-	dI394CZfGMPAqhAU8MElJRzBCXOXOkow9y1Xt7bRQTjabJprSUsVcoqmA1sWeCPOJ0tqXuHD9cs
-	NS31toqNOR5VBYOc9q5KQPLbrtndej6BbHLG/XoQF5Nmw1mN1GoKEn2elduJG4
-X-Google-Smtp-Source: AGHT+IEGe3y7C/3dEYNxkfLLRp1t4I353MK1YI+azNL4dTTRCLF/nBxhIhBEqvLjXbiBNaH44EYUd3wPgMy+iFeei/0=
-X-Received: by 2002:ac8:598d:0:b0:466:8c23:823a with SMTP id
- d75a77b69052e-494898efdb9mr3460091cf.17.1747150720836; Tue, 13 May 2025
- 08:38:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747150732; x=1747755532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b01lqOj1Q00qoSQQQOxAByXZieMfhjS49oQuDICweyQ=;
+        b=i5G8lQR7Gx+1V68d/k+aDEHZRrQDNDbcGdwJE2xwoijfwljMrag3/XBFhIs3X2J9mu
+         mdImLJUQ2TNof5kMrTndEwVrHNpiWgkkRCbbdt5zfzZ4iK3QbKz29JA/LOVOYCyKWPoL
+         wD+s0k8tf/jwHqeIVmAaQgS8xLVJBbdMmeKmvICB9jaD7rcwEOvYCmE4hZYpIRdKhQ8n
+         27R4675Gih0ZzX0KgQddpL5oXDnG0WWT3YVoBZHzPp3FW6iwXaUVGy+WzSgHBAo/nJlu
+         QkjpZMAdFchbrTAZ9QHXjVam+RuTdfmuNkL7her3Q9DecUlGcJML2p5O3kb7YgyfBs2X
+         okew==
+X-Gm-Message-State: AOJu0YxuBAcr5d7qgI4UB1flKv5pEbaFsZmzKfRIbBGxvh6faYjbnxio
+	FDuKrdTjvJ1IBPEGlpHquWBhXxKurCIyfGQvY5a0UC9//E59Isdu
+X-Gm-Gg: ASbGncty6mwElfsJVQQIRGTZu8sLdpybywkCSLdLLDG0bW0t9AtomHufNan0AFwL8FE
+	xGh7DNB6/kl3jKuJMPOpDAxhQviX5XUpqth9Yj5HP2FoV6HNoZk3MsoUkSfN9DcZNPzfaaki7B8
+	SdialS/KlEQgJ0kP5zPuowlK3ZC9RKwktXn2ASMAwfVJa+Z7OnkEiY/8u2mR3cu2HL6P26Y7zJs
+	gHCD/VKT0FkyURPxr8DzbzIReTnTNsEcSpXapyMXEfeI3OH/9dMBBjddBxkOal0HyK94tQMSVT6
+	cT9LxUxkj25CHW06I8+HQIlGhqpsfhjUjQyjo2fo5vOsdKRPkoM=
+X-Google-Smtp-Source: AGHT+IEhlY1+qEinI4hF7ZmWEnkpLawexR05Gigga7+soAtsGhsFTnlIcJGqvo3/htsCFQtIUb7PKw==
+X-Received: by 2002:a05:6a20:c791:b0:20f:953c:fb57 with SMTP id adf61e73a8af0-215abc7accbmr23502249637.42.1747150731703;
+        Tue, 13 May 2025 08:38:51 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237736db2sm8071748b3a.64.2025.05.13.08.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 08:38:51 -0700 (PDT)
+Date: Tue, 13 May 2025 11:38:49 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Yicong Yang <yangyicong@hisilicon.com>, Tejun Heo <tj@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH] topology: make for_each_node_with_cpus() O(N)
+Message-ID: <aCNniZdk-8JPBZpb@yury>
+References: <20250509162009.540506-1-yury.norov@gmail.com>
+ <aB41j_3g4KHnoXaz@gpd3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
- <d5d8fc74f02b89d6bec5ae8bc0e36d7853b65cda.1746792520.git.lorenzo.stoakes@oracle.com>
- <bfd5b4co3ha32m7z7fo7rm2uhaqcunn7zqgywonm54wi2iakpb@zogdqwo4722c>
-In-Reply-To: <bfd5b4co3ha32m7z7fo7rm2uhaqcunn7zqgywonm54wi2iakpb@zogdqwo4722c>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 13 May 2025 08:38:28 -0700
-X-Gm-Features: AX0GCFu_sNznUsLr1ugO_DiPLuhx2Qpcv2QmJwH3d9RiFtZ1VEMUc2w3eNQQQs0
-Message-ID: <CAJuCfpHCZS-goD88VhKU1ovuZbOnQk6aWBHnEPu2HsBxfT+xzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] mm/vma: remove mmap() retry merge
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB41j_3g4KHnoXaz@gpd3>
 
-On Tue, May 13, 2025 at 6:25=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250509 08:14]:
-> > We have now introduced a mechanism that obviates the need for a reattem=
-pted
-> > merge via the mmap_prepare() file hook, so eliminate this functionality
-> > altogether.
-> >
-> > The retry merge logic has been the cause of a great deal of complexity =
-in
-> > the past and required a great deal of careful manoeuvring of code to en=
-sure
-> > its continued and correct functionality.
-> >
-> > It has also recently been involved in an issue surrounding maple tree
-> > state, which again points to its problematic nature.
-> >
-> > We make it much easier to reason about mmap() logic by eliminating this=
- and
-> > simply writing a VMA once. This also opens the doors to future optimisa=
-tion
-> > and improvement in the mmap() logic.
-> >
-> > For any device or file system which encounters unwanted VMA fragmentati=
-on
-> > as a result of this change (that is, having not implemented .mmap_prepa=
-re
-> > hooks), the issue is easily resolvable by doing so.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > Reviewed-by: David Hildenbrand <david@redhat.com>
->
-> I have a few tests for the vma test suite that would test this path.
-> I'll just let them go.
->
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+On Fri, May 09, 2025 at 07:04:15PM +0200, Andrea Righi wrote:
+> Hi Yury,
+> 
+> On Fri, May 09, 2025 at 12:20:08PM -0400, Yury Norov wrote:
+> > From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> > 
+> > for_each_node_with_cpus() calls nr_cpus_node() at every iteration, which
+> > makes it O(N^2). Kernel tracks such nodes with N_CPU record in node_states
+> > array. Switching to it makes for_each_node_with_cpus() O(N).
+> 
+> Makes sense to me.
+> 
+> Maybe we should mention that previously we were only considering online
+> nodes with CPUs assigned. Now, we can include also offline nodes with CPUs
+> assigned (assuming it's possible)?
+> 
+> Semantically speaking, since the name doesn't include "online", it seems
+> more logical to ignore the state of the node. And if checking the online
+> state is required, the user can just use node_online() within the loop.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+OK. I'll take your comment and move the patch with bitmap-for-next, if
+no objections.
 
->
-> > ---
-> >  mm/vma.c | 14 --------------
-> >  1 file changed, 14 deletions(-)
-> >
-> > diff --git a/mm/vma.c b/mm/vma.c
-> > index 3f32e04bb6cc..3ff6cfbe3338 100644
-> > --- a/mm/vma.c
-> > +++ b/mm/vma.c
-> > @@ -24,7 +24,6 @@ struct mmap_state {
-> >       void *vm_private_data;
-> >
-> >       unsigned long charged;
-> > -     bool retry_merge;
-> >
-> >       struct vm_area_struct *prev;
-> >       struct vm_area_struct *next;
-> > @@ -2417,8 +2416,6 @@ static int __mmap_new_file_vma(struct mmap_state =
-*map,
-> >                       !(map->flags & VM_MAYWRITE) &&
-> >                       (vma->vm_flags & VM_MAYWRITE));
-> >
-> > -     /* If the flags change (and are mergeable), let's retry later. */
-> > -     map->retry_merge =3D vma->vm_flags !=3D map->flags && !(vma->vm_f=
-lags & VM_SPECIAL);
-
-Could we have a WARN_ON() here please? I know you took care of in-tree
-drivers but if an out-of-tree driver does this there will be no
-indication that it has to change its ways. I know we don't care about
-out-of-tree ones but they still exist, so maybe we can be nice here
-and issue a warning?
-
-> >       map->flags =3D vma->vm_flags;
-> >
-> >       return 0;
-> > @@ -2622,17 +2619,6 @@ static unsigned long __mmap_region(struct file *=
-file, unsigned long addr,
-> >       if (have_mmap_prepare)
-> >               set_vma_user_defined_fields(vma, &map);
-> >
-> > -     /* If flags changed, we might be able to merge, so try again. */
-> > -     if (map.retry_merge) {
-> > -             struct vm_area_struct *merged;
-> > -             VMG_MMAP_STATE(vmg, &map, vma);
-> > -
-> > -             vma_iter_config(map.vmi, map.addr, map.end);
-> > -             merged =3D vma_merge_existing_range(&vmg);
-> > -             if (merged)
-> > -                     vma =3D merged;
-> > -     }
-> > -
-> >       __mmap_complete(&map, vma);
-> >
-> >       return addr;
-> > --
-> > 2.49.0
-> >
+Thanks,
+Yury
