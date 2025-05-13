@@ -1,224 +1,131 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3871015533F;
-	Tue, 13 May 2025 16:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008551DE3C1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153570; cv=none; b=gRCi1SheV7JpqziVXdqTecn87y7peZo4hwVWLA1btuBN9nBZuSwNyqJxXc4Xjt8l9OeD1vheNS2Zu9qBE2wW1bNugXA5TEe7cIfOkuIR7mwhwK+79SxwjObF9i3MRw37hk7ezvMB72ablD3OgaIpnzduSli36w5DuJG7Bz/KDVU=
+	t=1747153629; cv=none; b=qBnkDuE10j48KSemFo9e7/iRGd9e82KvA2gWB+jM+burLF4R0OyuWJ2FsnKaIuz3i0Iwv0N221QoOtH61jaV+83c49aBDIsJ4G6U/9ecl8BA2I07K9J/cRiJRjD3E1k1znZp9s1B/YlZEaTF7HoqERNvs79JxDJL+zJeSgh0To0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747153570; c=relaxed/simple;
-	bh=ucbv3l84tWgXGi0rlflETogOjfVAuQ5EXpOjlMCc/5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UcwvQWZINShADTAsoM5wk/bJRXOzxRF9WseV4qDJ2pJxz6KF7g5tBiNbbfp745m2DDl/HJ1fG5bwxTZBdyPDROgPgjBXZYhZIXNavhEVkIu73F7P5+MbjryDwxDtzrzLZy9cKMKuM0idXGYw2sV8h9FvxI1KCjbr4WDCkKBWC8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mVLvBknl; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747153629; c=relaxed/simple;
+	bh=f11xxpBqASoIBdV7J+tFpMepaDu3cmruvi34LaWekeQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=av8LmWV89DvvSNM9MO42ZJJLdBz0ACOmggr60c4bX9v7GBsFDiip47TH04YLfa1BhdhZsOLiKFWN0Dy7l3PUKcfV+9hedUqCrQ7Zn+NLw3FIhbn3F/PeqNCnR+m9uU6c/Ap9eeiwYdI7xcot3Ult5eXHYurRqWpLfTiy5hR0Fzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pYFprkFm; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mVLvBknl"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A030F201DB19;
-	Tue, 13 May 2025 09:26:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A030F201DB19
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747153568;
-	bh=wbGqrd3jznqBXsIv/Ao7X40DXhDF0QHTHVA++O29sNg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mVLvBknlx5yLYMPJugWxKiBOr38hquABtNek1b13DVeX0j/rXqU+OxFcuS19rqOLQ
-	 cKK52KYmmG/UfCaS96dJkhId55AeAbp25e5IXO65LlDhSAI6kZZ5H4XOUp2vv/hGXU
-	 d0j6t0LmFEHtjeaRcPLgzFAJVQ0REtuPenELASy4=
-Message-ID: <96c66528-6149-4f5b-abb1-76b557f47927@linux.microsoft.com>
-Date: Tue, 13 May 2025 09:26:08 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pYFprkFm"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47666573242so221cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747153627; x=1747758427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NuQTz0TAR0J0k0d+kCbHLEjYkbcSIL6zDuG3L4sBNQ8=;
+        b=pYFprkFmTVWiK5IEwO9dD2rJqtjdCjbpSOr48W7x6kgM2TRaUCILbRgeWPeXLUZGup
+         3bo8f8Kk7IIl6Jq2OevhVGGIQFukgydBdwO0BrD+kRrHN3px6aQIOhl96rfBFKDv4u3Y
+         AsD1/75oZ77s9No72ynlwzESZrApDK3PwSivEEtBUfWeV4K8uIdi97JVT+Nu53g02oNl
+         Dk+x5b7Oei4hZ5lYjUtcbC60D9IzsYOQdXic2a+a4gGGmo1KrsdvJUSlZRbF7u8wznSv
+         jG9GG/5BgE7y8v26uj2Nqo/hhipqpCQuInanr+zYGWM8/wk2owjGNiumwS7Utw/JXgLK
+         trig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747153627; x=1747758427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NuQTz0TAR0J0k0d+kCbHLEjYkbcSIL6zDuG3L4sBNQ8=;
+        b=Sg+Y29MydO7lCs+uAjTqgOBRST5Uk4Psbl+wM+RDQy7Pfoax2u3SUIaw8jrAB2Jbgb
+         CL3m6sxtwYWu9kujw+Mca4m44KsRub+VoBaPJhY2Csuw/NL8TOmTiT1w5dT4b3RFTqr1
+         XTdUyEPlTpWkZf5P/UVc0fEUMoS1eQOItn8zVPjPETSMkgTjLN0tHcIAhOICe4t2QRIc
+         +zYaZw+e4gMWn8TgYqLdjgNNkwlBVEyVDo62VyKTqcfXzM1MnqbZ0K1UFGyjPjjo2Hhs
+         hfiPHOVcNPEwK3UXkF72KK7X6atndkCBRa/GC3y4MrmL9Qg4Tp57Lwj5IszLk1KESZQK
+         Zikg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNY9cRgGm7S6NEFt/YEGO2ZHYcUfu2MobU0tvFZkdcHjQcKBbusE6vyJ41eNIunI3rGJmUqwJD0uupdVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJGq30gEwMLRhbRBTVbmfACq2HpkxcrCG47NSVzzM3Pb6xvPr9
+	jHxq38tXxU88BRT1FDimoZPUP7rS+F/NhlH2ZWAAfZpInE/IcU1aXeWibT5QAuNWm7GkwkaPl6M
+	K0XE8fejs8GK0tE3leIyIG6BAT6jpBQuBnOixg3wb
+X-Gm-Gg: ASbGncttoNb8t99AuQOyjXX/PSRheCdV3rv+MS1nNVeRs7s0Kn3yaZ+a2LNnto8F2yu
+	0TmLpwvFkAEUD3y0TM5q6GzNgkyqM+D9MzTxsoMiv0a9ZD0ZRLrcTrIxe5RruXBZqg3K9BrKS/P
+	IuSOwfQ8C6BDQIpA0a4Ieqpz4gcO+Cy9d2P8+ITDN9R7FqVg/y1/sqBBtLlZu7
+X-Google-Smtp-Source: AGHT+IGX7Kqbc/9iS6oAhft81hs/6vUWLIjSWsLx/2g2xLA2lhit/YesUfUX8TJwqOvXCB7ryvQgeS0j4JHMcc4+Cdg=
+X-Received: by 2002:a05:622a:190a:b0:477:1f86:178c with SMTP id
+ d75a77b69052e-494880f4d18mr4807641cf.26.1747153626350; Tue, 13 May 2025
+ 09:27:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v2 2/4] drivers: hyperv: VMBus protocol
- version 6.0
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com, arnd@arndb.de, bp@alien8.de,
- catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- kys@microsoft.com, mingo@redhat.com, tglx@linutronix.de, wei.liu@kernel.org,
- will@kernel.org, x86@kernel.org, linux-hyperv@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org
-References: <20250511230758.160674-1-romank@linux.microsoft.com>
- <20250511230758.160674-3-romank@linux.microsoft.com>
- <d93bebbf-2e0d-4de4-a258-c32159dd1541@oracle.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <d93bebbf-2e0d-4de4-a258-c32159dd1541@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250416082405.20988-1-zhangtianyang@loongson.cn>
+ <aAYXP4f417_bx6Is@harry> <025e3f51-2ab5-bc58-5475-b57103169a82@loongson.cn>
+ <20250422171116.f3928045a13205dc1b9a46ea@linux-foundation.org>
+ <CAJuCfpHbXmjAr2Rt0Mo_i32hpGOyXnVtXUd4qFjXriH9eYFDkQ@mail.gmail.com> <20250510200740.b7de2408e40be7ad5392fed9@linux-foundation.org>
+In-Reply-To: <20250510200740.b7de2408e40be7ad5392fed9@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 13 May 2025 09:26:53 -0700
+X-Gm-Features: AX0GCFt6vJVoKJRdrVpwo3tcFnZXDX33w-FdV7zGJCqzg0tjXGvAgkiCFXMIJ4E
+Message-ID: <CAJuCfpFdC6hgFSPy3M2sagkFobWeCuxLdcWiyV5pnzB55dgjZg@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by cpuset race
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tianyang Zhang <zhangtianyang@loongson.cn>, Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>, 
+	Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, May 10, 2025 at 8:07=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Tue, 22 Apr 2025 17:22:04 -0700 Suren Baghdasaryan <surenb@google.com>=
+ wrote:
+>
+> > On Tue, Apr 22, 2025 at 5:11=E2=80=AFPM Andrew Morton <akpm@linux-found=
+ation.org> wrote:
+> > >
+> > > On Tue, 22 Apr 2025 20:10:06 +0800 Tianyang Zhang <zhangtianyang@loon=
+gson.cn> wrote:
+> > >
+> > > >
+> > > > ...
+> > > >
+> > > > >>
+> > > > >> Simultaneously starting multiple cpuset01 from LTP can quickly
+> > > > >> reproduce this issue on a multi node server when the maximum
+> > > > >> memory pressure is reached and the swap is enabled
+> > > > >>
+> > > > >> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> > > > >> ---
+> > > > > What commit does it fix and should it be backported to -stable?
+> > > > >
+> > > > > There's a new 'MEMORY MANAGEMENT - PAGE ALLOCATOR' entry (only in
+> > > > > Andrew's mm.git repository now).
+> > > > >
+> > > > > Let's Cc the page allocator folks here!
+> > > >
+> > > > We first identified this issue in 6.6.52-stable , and through root =
+cause
+> > > > analysis,
+> > > >
+> > > > it appears the problem may have existed for a significant period.
+> > > >
+> > > > However It is recommended that the fix should be backported to at l=
+east
+> > > > Linux kernel versions after 6.6-stable
+> > >
+> > > OK, thanks,
+> > >
+> > > This has been in mm-hotfixes-unstable for six days.  Hopefully we'll
+> > > see some review activity soon (please).
+> >
+> > I reviewed and provided my feedback but saw neither a reply nor a
+> > respin with proposed changes.
+>
+> OK, thanks.  Do you have time to put together a modified version of this?
 
-
-On 5/12/2025 2:49 AM, ALOK TIWARI wrote:
-> 
-> 
-> On 12-05-2025 04:37, Roman Kisel wrote:
->> The confidential VMBus is supported starting from the protocol
->> version 6.0 onwards.
->>
->> Update the relevant definitions, provide a function that returns
->> whether VMBus is condifential or not.
-> 
-> typo condifential -> confidential
-> 
->>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   drivers/hv/vmbus_drv.c         | 12 ++++++
->>   include/asm-generic/mshyperv.h |  1 +
->>   include/linux/hyperv.h         | 71 +++++++++++++++++++++++++---------
->>   3 files changed, 65 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->> index 1d5c9dcf712e..e431978fa408 100644
->> --- a/drivers/hv/vmbus_drv.c
->> +++ b/drivers/hv/vmbus_drv.c
->> @@ -56,6 +56,18 @@ static long __percpu *vmbus_evt;
->>   int vmbus_irq;
->>   int vmbus_interrupt;
->> +/*
->> + * If the Confidential VMBus is used, the data on the "wire" is not
->> + * visible to either the host or the hypervisor.
->> + */
->> +static bool is_confidential;
->> +
->> +bool vmbus_is_confidential(void)
->> +{
->> +    return is_confidential;
->> +}
->> +EXPORT_SYMBOL_GPL(vmbus_is_confidential);
->> +
->>   /*
->>    * The panic notifier below is responsible solely for unloading the
->>    * vmbus connection, which is necessary in a panic event.
->> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/ 
->> mshyperv.h
->> index 6c51a25ed7b5..96e0723d0720 100644
->> --- a/include/asm-generic/mshyperv.h
->> +++ b/include/asm-generic/mshyperv.h
->> @@ -377,6 +377,7 @@ static inline int hv_call_create_vp(int node, u64 
->> partition_id, u32 vp_index, u3
->>       return -EOPNOTSUPP;
->>   }
->>   #endif /* CONFIG_MSHV_ROOT */
->> +bool vmbus_is_confidential(void);
->>   #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
->>   u8 __init get_vtl(void);
->> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
->> index 1f310fbbc4f9..3cf48f29e6b4 100644
->> --- a/include/linux/hyperv.h
->> +++ b/include/linux/hyperv.h
->> @@ -265,16 +265,19 @@ static inline u32 hv_get_avail_to_write_percent(
->>    * Linux kernel.
->>    */
->> -#define VERSION_WS2008  ((0 << 16) | (13))
->> -#define VERSION_WIN7    ((1 << 16) | (1))
->> -#define VERSION_WIN8    ((2 << 16) | (4))
->> -#define VERSION_WIN8_1    ((3 << 16) | (0))
->> -#define VERSION_WIN10 ((4 << 16) | (0))
->> -#define VERSION_WIN10_V4_1 ((4 << 16) | (1))
->> -#define VERSION_WIN10_V5 ((5 << 16) | (0))
->> -#define VERSION_WIN10_V5_1 ((5 << 16) | (1))
->> -#define VERSION_WIN10_V5_2 ((5 << 16) | (2))
->> -#define VERSION_WIN10_V5_3 ((5 << 16) | (3))
->> +#define VMBUS_MAKE_VERSION(MAJ, MIN)    ((((u32)MAJ) << 16) | (MIN))
->> +#define VERSION_WS2008                    VMBUS_MAKE_VERSION(0, 13)
->> +#define VERSION_WIN7                    VMBUS_MAKE_VERSION(1, 1)
->> +#define VERSION_WIN8                    VMBUS_MAKE_VERSION(2, 4)
->> +#define VERSION_WIN8_1                    VMBUS_MAKE_VERSION(3, 0)
->> +#define VERSION_WIN10                    VMBUS_MAKE_VERSION(4, 0)
->> +#define VERSION_WIN10_V4_1                VMBUS_MAKE_VERSION(4, 1)
->> +#define VERSION_WIN10_V5                VMBUS_MAKE_VERSION(5, 0)
->> +#define VERSION_WIN10_V5_1                VMBUS_MAKE_VERSION(5, 1)
->> +#define VERSION_WIN10_V5_2                VMBUS_MAKE_VERSION(5, 2)
->> +#define VERSION_WIN10_V5_3                VMBUS_MAKE_VERSION(5, 3)
->> +#define VERSION_WIN_IRON                VERSION_WIN10_V5_3
->> +#define VERSION_WIN_COPPER                VMBUS_MAKE_VERSION(6, 0)
->>   /* Make maximum size of pipe payload of 16K */
->>   #define MAX_PIPE_DATA_PAYLOAD        (sizeof(u8) * 16384)
->> @@ -335,14 +338,22 @@ struct vmbus_channel_offer {
->>   } __packed;
->>   /* Server Flags */
->> -#define VMBUS_CHANNEL_ENUMERATE_DEVICE_INTERFACE    1
->> -#define VMBUS_CHANNEL_SERVER_SUPPORTS_TRANSFER_PAGES    2
->> -#define VMBUS_CHANNEL_SERVER_SUPPORTS_GPADLS        4
->> -#define VMBUS_CHANNEL_NAMED_PIPE_MODE            0x10
->> -#define VMBUS_CHANNEL_LOOPBACK_OFFER            0x100
->> -#define VMBUS_CHANNEL_PARENT_OFFER            0x200
->> -#define VMBUS_CHANNEL_REQUEST_MONITORED_NOTIFICATION    0x400
->> -#define VMBUS_CHANNEL_TLNPI_PROVIDER_OFFER        0x2000
->> +#define VMBUS_CHANNEL_ENUMERATE_DEVICE_INTERFACE        0x0001
->> +/*
->> + * This flag indicates that the channel is offered by the paravisor, 
->> and must
->> + * use encrypted memory for the channel ring buffer.
->> + */
->> +#define VMBUS_CHANNEL_CONFIDENTIAL_RING_BUFFER            0x0002
->> +/*
->> + * This flag indicates that the channel is offered by the paravisor, 
->> and must
->> + * use encrypted memory for GPA direct packets and additional GPADLs.
->> + */
->> +#define VMBUS_CHANNEL_CONFIDENTIAL_EXTERNAL_MEMORY        0x0004
->> +#define VMBUS_CHANNEL_NAMED_PIPE_MODE                    0x0010
->> +#define VMBUS_CHANNEL_LOOPBACK_OFFER                    0x0100
->> +#define VMBUS_CHANNEL_PARENT_OFFER                        0x0200
->> +#define VMBUS_CHANNEL_REQUEST_MONITORED_NOTIFICATION    0x0400
->> +#define VMBUS_CHANNEL_TLNPI_PROVIDER_OFFER                0x2000
->>   struct vmpacket_descriptor {
->>       u16 type;
->> @@ -621,6 +632,12 @@ struct vmbus_channel_relid_released {
->>       u32 child_relid;
->>   } __packed;
->> +/*
->> + * Used by the paravisor only, means that the encrypted ring buffers and
->> + * the encrypted external memory are supported
-> 
-> Clearly convey the purpose of the flag, similar to the previous one
-> For example ->"Indicates support for encrypted ring buffers and external 
-> memory, used exclusively by the paravisor."
-> 
-
-Will do, appreciate your help!!
-
->> + */
->> +#define VMBUS_FEATURE_FLAG_CONFIDENTIAL_CHANNELS    0x10
->> +
->>   struct vmbus_channel_initiate_contact {
->>       struct vmbus_channel_message_header header;
->>       u32 vmbus_version_requested;
->> @@ -630,7 +647,8 @@ struct vmbus_channel_initiate_contact {
->>           struct {
->>               u8    msg_sint;
->>               u8    msg_vtl;
->> -            u8    reserved[6];
->> +            u8    reserved[2];
->> +            u32 feature_flags; /* VMBus version 6.0 */
->>           };
->>       };
->>       u64 monitor_page1;
->> @@ -1002,6 +1020,11 @@ struct vmbus_channel {
->>       /* The max size of a packet on this channel */
->>       u32 max_pkt_size;
->> +
->> +    /* The ring buffer is encrypted */
->> +    bool confidential_ring_buffer;
->> +    /* The external memory is encrypted */
->> +    bool confidential_external_memory;
->>   };
-> 
-> Thanks,
-> Alok
-> 
-
--- 
-Thank you,
-Roman
-
+I think the code is fine as is. Would be good to add Fixes: tag but it
+will require some investigation to find the appropriate patch to
+reference here.
