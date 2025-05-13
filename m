@@ -1,77 +1,94 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861AE38DD1
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C540C1624C3
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747145439; cv=none; b=GIXGqfjuSFhfy0LsY2KMHEHNJ++A9EiRXaiZMfAYnw72U7aXMNOjRfQWdBrysuuVsIdml0IyUfNUVGAg+1vBOF8aiLIF6bWpVgFqmOqtsdRzp3CQBWOb1WqmRMK0iIifZkFXnDzPjRowS17zGJVoHjfNx0qb/R3I/iDbcPhlG4M=
+	t=1747145525; cv=none; b=mSNO3+GQaF0L0b7y4DjdRr4KdyfAil2MN7Nl9rOEQs2AzkwPrJmF3e/2z3S1QkZigdgkDanrGrRSED015YviTL/Ax6Nxwy0lonDdO6Qp/jUHPzyk5B1IulnL6e/1C7yB5GQIA4NOsphgheKuoz2/41b6gIA7Twy3wpIXWflCB5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747145439; c=relaxed/simple;
-	bh=RuHV0JP63FUbbTvqcpXUe1mpiQvpEiCoZ6sJCLI8njE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Vb9/jzn/3LonXVT8hFWNFAAOpVbDIyFD9I7hsGJ1a4Hg9g/HQ1FwjZPJwVfiZ7m2e4M7cphPdXdGLpNVREbMTfxS8sr3WmUGWT/JUv+yUR0c8Kd/ozIniYpcSNi8liYxsXy0pbIAyYuoV0jgQJaWInKE/VlHNPWOtHbIGphUI/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bRByksJT; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747145525; c=relaxed/simple;
+	bh=2xqvN5MZ0cpWW5I2C/Kd63LpkF2iAU47gBCPKJfXWlk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=k5QRmq+agPnjMAPKal1b2io9p7d43CgocsFvKLAr5gTfC9OxdcuKmL8w+8ffhR+aegohxB6wxIIRHG5DD+MSaNlCJhB+Sc/+eVpbBJYjKBXlfppzO+p9kMw66sxbOtwqgOkBHoXKx9ZlBy5Y1ijzl7IpfJtMsg3JpCEs8DQB/4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9X2Z4+p; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bRByksJT"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747145434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WJxlQK2BLgRievfiJv78ygfw01x+UGw/l/TDAlxIbio=;
-	b=bRByksJTllYyII1FKBTMUY/MK+KgwgVbDRWKIpowlDva0i7U+YGZ21lCB2I1cVjASFQjjI
-	3BoASqJrxPBPHCXDYEdFA6GlaVCQjlKbTrKg5eLMhs0KCeqBNRJaHGltS/1Ojx3kv08Fo8
-	to7EiawZtqOGCmYCgU07/RhdBHuWFRw=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9X2Z4+p"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so3557235a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747145523; x=1747750323; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=J3EOkbiprB+sAgxVEHkLRonbL3H46Q0tOtDWzJ5+klo=;
+        b=j9X2Z4+pSy+Y2YCHHG8kX62ATze7n0bI3ao6RL9BET6bKzwZYhfS6QEwW0fslPcx1i
+         uuL0xr6jkNaOH3C7Yr4viEogJZCVBykT8vkS5axYNw7ODAtfba3T8blJuw2+DcWpGFtl
+         +97LYnRiL9wor5IBiZd2bJdnFBAOKmkl6qMwiaL+j0ITbOq6Cdk5lbSJI47bhxmQsOth
+         N7pkUWYGfwNg/axrUgD7tFbqVldH2HzTZSCTRDH9hOVfBBNPZw//RKLhdmZItxujZFiz
+         QE/PBILQZ2CqB02RHRpMVqieic5u3jHcA6SW3wzYCZugKfMUiObqG/QIPIpSpEIs4PYt
+         6jKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747145523; x=1747750323;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J3EOkbiprB+sAgxVEHkLRonbL3H46Q0tOtDWzJ5+klo=;
+        b=NxUXxBQ5fRvjPH6hmpLadp54RQA+eFoFdzYkthK3D6Sd4ioHmzPlAmOLJ8KHv/lejm
+         kQ5KRYPuxLCly2kU6eIQlEAuoVRHBjANh9mhd+mr/X+BGuzBNM+CayQ7g/ZYpUFl/PD3
+         8qW+zLXR3Yi8weK9G+C7MxjiY+lpM/0VRnwTmcVZMF841RJ7Iksqbmg6JETNXRK8/dhR
+         rqSjQYQVcxOLmk4xWL8a765DyOSJk26PNl2nhg0aZq70ceY5OJbDGpexZY2iiZA322Qz
+         e+fYmGI/I+DFmA5cg6podD89JEvZX+3yD2+UPK+1iLt8nKrVdIq426oD+oQjlb7CzngG
+         yOEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnvT3mjzhtTO1oPQzufC+B0obnyO67D05lE/CnO/ncx26L6lw77eZUJdUIunF4aP6Te1sqRK5D/G/RPOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNQGlcmVNP3ov7CiTpi4Ac19O9nzmb4AdA5EXym5ouHZn8UkNK
+	YiFPPGVOYA6yK6Qaw3d3EMpUKDzpYyS5CHLZIQPHEnqK+YkdRncVQbm16w5j+VzXEkEQLJQSVpC
+	94TvPfQ/j+tnLDPiHTl2qTGdXZ5xPS4Iwo+c=
+X-Gm-Gg: ASbGncvv381UixQtZMZ1KWgH+hqM/Nmg+/gt1gfmqpHB2GwSXmITZQ6vn/NQDqTo04u
+	iazqVQ/EElSA5VdE0iA3oEEsR1b9Kid3DyTUs94X2Hf5/imyELDzu4qlwBYtowwx/qT5Gl/wZ96
+	Nr6MKDD8+NIOrPQ6+3HAxJytAFNjKWKxCQ
+X-Google-Smtp-Source: AGHT+IF45yksE+sO7g0bsyu+gCHTxSnOl+bOkwMK4/IOhUAdyfs8E4kWcc/D5Rr4ozrDkVRLAQcdu228FsL4WfrKTF4=
+X-Received: by 2002:a17:902:dacd:b0:22e:566f:bca7 with SMTP id
+ d9443c01a7336-22fc8b5192fmr239873545ad.17.1747145522940; Tue, 13 May 2025
+ 07:12:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH] powerpc: Transliterate author name and remove FIXME
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <774CD605-AE6F-4D37-AB50-B9676858CDFA@linux.dev>
-Date: Tue, 13 May 2025 16:10:21 +0200
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <504A9138-865E-4CB3-8E1C-E19C4B86F1D3@linux.dev>
-References: <20241110162139.5179-2-thorsten.blum@linux.dev>
- <87v7wuy3p5.fsf@mpe.ellerman.id.au>
- <55B1EE24-BEC9-4A8D-84B0-ED32FCC070A5@linux.dev>
- <87v7weodqn.fsf@mpe.ellerman.id.au>
- <d9e232bb-5069-4526-b781-f4e316bda95d@csgroup.eu>
- <774CD605-AE6F-4D37-AB50-B9676858CDFA@linux.dev>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+From: Tanav Chinthapatla <tanavc01@gmail.com>
+Date: Tue, 13 May 2025 10:11:51 -0400
+X-Gm-Features: AX0GCFvLU5dUzxQd5PLroCq5K8AVhqmL2OxGZEuBaeNQtpjBBfb8ofJBYjgj3yc
+Message-ID: <CAPGyJDMb0Ac7KtNc8AUTJ4E-Q4Vw-8JNoKWPMTFSuRU7QiFfdQ@mail.gmail.com>
+Subject: [PATCH v2] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 7. Jan 2025, at 13:16, Thorsten Blum wrote:
-> On 23. Nov 2024, at 11:19, Christophe Leroy wrote:
->> Isn't our file just a copy of the one from binutils ? Shouldn't we =
-adjust it based on commit =
-https://github.com/bminor/binutils-gdb/commit/2ce18a16268a ?
->=20
-> It looks like it's a copy and the name is spelled the same as in my =
-patch:
->=20
->  "Mimi Phuong-Thao Vo"
->=20
-> What's missing to get this merged?
+From 25aa24c7cde7df5901674ec08090992b17afd5b4 Mon Sep 17 00:00:00 2001
+From: Tanav Chinthapatla <tanavc01@gmail.com>
+Date: Tue, 13 May 2025 00:16:29 -0500
+Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
 
-Does it make sense to resubmit this or do we leave the name and the
-FIXME as is?
+Signed-off-by: Tanav Chinthapatla <tanavc01@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Thorsten
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c
+b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 1c9e8b01d..98d89e836 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -1619,7 +1619,7 @@ static void rtw_btinfo_hdl(struct adapter
+*adapter, u8 *buf, u16 buf_len)
+  buf[1] = 0;
+  else if (cmd_idx == BTINFO_BT_AUTO_RPT)
+  buf[1] = 2;
+- hal_btcoex_BtInfoNotify(adapter, len+1, &buf[1]);
++ hal_btcoex_BtInfoNotify(adapter, len + 1, &buf[1]);
+ }
 
+ u8 rtw_c2h_packet_wk_cmd(struct adapter *padapter, u8 *pbuf, u16 length)
+-- 
+2.34.1
