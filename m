@@ -1,160 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D316E54640;
-	Tue, 13 May 2025 00:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747097431; cv=none; b=sgJX0JA8OImvfcs5PKDz4jJNGR1bQE8ghIQbPRxmzVGisEDqjhN5gEtMengfm0XhA0hhCCHmWeNodt7fPmP9iFAm1pDTtNCFfjjqBSgNfEHV+ul53cdgb2zLBQq8uTx7jTkwdTFqyDbvVcsQWcQ8txCMRWFfnCE69o7S7rd42A4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747097431; c=relaxed/simple;
-	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HhqPO9YvOq3Fb745MlNxjJMQxZej31zBEWVdtbi3aWSTRXtXPubc3AvVycvG2Z/4v4Tj27n4fUY4MDqIKcn/67WoLejr7LsKpW7+EtwJ2ne203cc7zh8Wblrd8onBo0germu4kR5zoNvh8CxTOgqMl7MUm9JCTw/kduUatwbjlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFOc4aB9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFOc4aB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8357BC4CEE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F175835963;
 	Tue, 13 May 2025 00:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747097431;
-	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cFOc4aB9x+fPhg6DS2WHJaomYFCGxETDw8mFo4d66m+F56GW8oa16ZcfVDlBuq5Se
-	 QuiHoZL7gfjRfdCtMUxcCUHhYcKNuX3cvVgZZMrNEyGHWLdpCNW+KZ6G3CAYgRKG00
-	 MWyf/ZTN4LGw6OD3C3Bd1y6WPAKzo/2MPLNs+IAcTbmKOqnvkAjAVM3WAkKQrqNOKy
-	 xUnhFAHW7h2FcSSsh3CeM79lKds7LMalwSRtcowDWOjW6WPpXDGkffDamVgVXZeXd7
-	 BIPsqREv/1fhzBUhqAPrn5mVPwp7xc173NjIvQwo7FdBSytzaO09MtD/sLmixKCnMj
-	 y7mn5KdPbwV6g==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer when reboot
-Date: Tue, 13 May 2025 09:50:27 +0900
-Message-ID:  <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-User-Agent: StGit/0.19
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747097432; cv=none; b=M24OV655kKYh7/5gnqoLXejRa6PVOB3WDg+6EeL7coraLpbPDa9Hddsd6WQFDwD59v2CFLGHfGDvh3fFJzIXmhTzBSb0O7UejN9W6azfVsaEo0SMcIhljBafVkUGNz5SzmMCMfbqUJeLKIK7aFBb1Yovql5qUsjQVthRhuS9I/I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747097432; c=relaxed/simple;
+	bh=pKJ3zzQ2o+0ek73CqN7VAD01BuP66vpZIIDFYMfhxik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RR2RZxTHilIeil7ASU6oM9hKCLfA9YF1AYfU241pI948rfz4GSga1Esms8LfVMj7wlONsmdF+labbDbh6VGf0nSOc3VxaL1FS4cmE/ypXDZzJVGkXEu6qWZNH9wgspuL3NG66m3GNx2SpDwPN15lpry7WKoNS94D9JY7Flf9MaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQEPzcGo; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQEPzcGo"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85dac9728cdso141084239f.0;
+        Mon, 12 May 2025 17:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747097430; x=1747702230; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pFExgw6I64CfiBILuJYy3YAdnSGdTUqnVjigSWHrhlk=;
+        b=QQEPzcGomExo/5cgtYKivWhVO9MXN2aQAW1kxk0Yu45yZaxS4k+ZGnVvZ0SEL1VxeI
+         itBn+KqyUrNoe/mwzoQsCngpTvfOiAcyZSETVGsB+z5SloAeVM0w+27ay/vQck+E+xX6
+         zhzxZN4glxX711hZV3vciRaTWKSLi58CivdiDcSDqileEiLGTR7fOWeCLFbsDr4xgJ9q
+         sa/5aSpxz8PWPiz61Um3HBeO21X/KLUuSZTpKmKIA6q43oeUM0l1b10gRKvq3I3KIvP5
+         fXoC8slzvj7cT+4FAYzKxsmEfR5uuZu2vG0PK94OnIA0ZXuMulkdYuXdQZjhYKPeVdxR
+         nZtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747097430; x=1747702230;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pFExgw6I64CfiBILuJYy3YAdnSGdTUqnVjigSWHrhlk=;
+        b=T7aU2jKwdMKqPJisUBZltRdAgsTlgC75Qx1G9UFss9qEtCbZIb/wMyPldGX6lunRIk
+         P9AqPL/aTRUgBb1nKPAwsqSm2I1K4GJ4lZVtCwXAfYdaOcohSLNIHi5k8QMgroKbHYde
+         xCR+cmXc279SEnOUadgCJvrFAYjYhTdUcPZMVy9aclR3WoSo+ZkNXODFStTxE4Qq+SAs
+         S1trdN9pRzOd1lHIzgkuhu5ApuLj/UJyTVd0AbJMzOUQnZyytp8w9Ud3DHJfdWrW0Iny
+         M7bnLWcBlbRvMHx7EcZD4V8yTC2aqMFHg3f/40IjdOkBeJnZItsvtKxfWZeF9znSGXW4
+         rfbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtMYAlcif9Un+Zijij+CxYVWaFxiBP/y1nrqxB9AOnnFfTvwN3XTbZglzQr6/bn0g1TVdzfmQxhV8=@vger.kernel.org, AJvYcCVfFmxjcwZXaEnGUPfpK0bPOnaSMUMOO9nC2y8YNHrR5LercDZzqLycg8I+7y2pajkDnlg2/D4noAqesXs/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5c3E3Wh0YgBlGlTBcwziDTsPILz78QQkyxAq5yeiGZLDDQOLX
+	Y9OPsAuWfJl63Q2VwzhYuyzRZTnzjcta9M5DFMvRwfNeJol0l5G1J/bn04q68R4d4Ugq/q7kik6
+	o7rpJKneRXmLBcaduoKP4V4+v5i52ttTN3Jg=
+X-Gm-Gg: ASbGnctwdyNchmay6KdgUExy4OtrNkCDz3mYuB/KSYs9eqkVgbeQNXa4WCb77Y1wrST
+	cbFr+l0MmLhKjk42OZOpjnjarZOq64NizrTqyvxkz1uaASUiOuHkbcmN9Gekf8W6UTxMWNIhHJm
+	t5T+1TVNA//P1K8IG+Oh1MjS0PBASquH/f
+X-Google-Smtp-Source: AGHT+IHg1M2nc8+AJQ2gyRTnCOW1RGBKSDLedExyUbzzJBOgk/rK/+JPsywaFblhSvrc696dqyzd8z+SAAgyUECzWu8=
+X-Received: by 2002:a05:6e02:188d:b0:3d8:1d7c:e190 with SMTP id
+ e9e14a558f8ab-3da7e1e7416mr180384915ab.7.1747097429935; Mon, 12 May 2025
+ 17:50:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
+ <aCGR4EOcWRK6Rgfv@smile.fi.intel.com> <aCIL0zZvf1fvTahk@infradead.org>
+In-Reply-To: <aCIL0zZvf1fvTahk@infradead.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 13 May 2025 08:49:53 +0800
+X-Gm-Features: AX0GCFvYJrRX6jNEfyngKE_7qQIdJXCJWq9aLLm48eKkDFEPwUalY3JU0sUNA_Q
+Message-ID: <CAL+tcoCJxoiGi=Ea1KCG4_ri2=GbNhhVhEV5anMLyai6qg2zeA@mail.gmail.com>
+Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net, linux-doc@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, linux@treblig.org, viro@zeniv.linux.org.uk, 
+	Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, May 12, 2025 at 10:55=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+>
+> On Mon, May 12, 2025 at 09:14:56AM +0300, Andy Shevchenko wrote:
+> > Also note, we usually do not care about the out-of-tree users. The main=
+ Q here
+> > why are they out-of-tree for so long time?
+>
+> We do not care.  If some of this ever gets submitted it can add the
+> needed helpers back.
+>
+> This entire discussion is silly.
+>
 
-Rewind persistent ring buffer pages which have been read in the
-previous boot. Those pages are highly possible to be lost before
-writing it to the disk if the previous kernel crashed. In this
-case, the trace data is kept on the persistent ring buffer, but
-it can not be read because its commit size has been reset after
-read.
-This skips clearing the commit size of each sub-buffer and
-recover it after reboot.
+I'm surprised how you described it....
 
-Note: If you read the previous boot data via trace_pipe, that
-is not accessible in that time. But reboot without clearing (or
-reusing) the read data, the read data is recovered again in the
-next boot.
-Thus, when you read the previous boot data, clear it by
-`echo > trace`.
+Now relay works like a filesystem which helps out-of-tree users
+transfer a large amount of data efficiently. it's totally not like
+other pure dead code. I meant what the trouble of just leaving it
+untouched in the kernel could be?
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/ring_buffer.c |   55 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 3 deletions(-)
+Let me put in a simpler way, two options, 1) just clean up, 2) keep it
+and help so-called 'out-of-tree' users even if you don't care. I don't
+figure out what the difficulty of keeping it is :S
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1ca482955dae..a1014c8b8772 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
- 	*bpage = list_entry(p, struct buffer_page, list);
- }
- 
-+static inline void rb_dec_page(struct buffer_page **bpage)
-+{
-+	struct list_head *p = rb_list_head((*bpage)->list.prev);
-+
-+	*bpage = list_entry(p, struct buffer_page, list);
-+}
-+
- static struct buffer_page *
- rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -1866,9 +1873,10 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
- static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
--	struct buffer_page *head_page;
-+	struct buffer_page *head_page, *orig_head;
- 	unsigned long entry_bytes = 0;
- 	unsigned long entries = 0;
-+	bool zero_commit;
- 	int ret;
- 	int i;
- 
-@@ -1885,7 +1893,49 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
- 	local_set(&cpu_buffer->reader_page->entries, ret);
- 
--	head_page = cpu_buffer->head_page;
-+	orig_head = head_page = cpu_buffer->head_page;
-+
-+	/*
-+	 * Try to rewind the head so that we can read the pages which already
-+	 * read in the previous boot.
-+	 */
-+	zero_commit = false;
-+	rb_dec_page(&head_page);
-+	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-+
-+		/* Rewind until tail (writer) page. */
-+		if (head_page == cpu_buffer->tail_page ||
-+		    local_read(&head_page->write) /* under writing */)
-+			break;
-+
-+		/* Stop rewind if the page is invalid. */
-+		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-+		if (ret < 0)
-+			break;
-+
-+		/* Recover the number of entries. */
-+		local_set(&head_page->entries, ret);
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+		entries += ret;
-+		entry_bytes += rb_page_commit(head_page);
-+		/* If there are 2 zero commit pages, stop rewind. */
-+		if (rb_page_commit(head_page) == 0) {
-+			if (zero_commit)
-+				break;
-+			zero_commit = true;
-+		} else
-+			zero_commit = false;
-+	}
-+	/* The last rewind page must be skipped. */
-+	rb_inc_page(&head_page);
-+
-+	if (head_page != orig_head) {
-+		cpu_buffer->head_page = head_page;
-+		head_page = orig_head;
-+		if (zero_commit && rb_page_commit(head_page) == 0)
-+			rb_inc_page(&head_page);
-+	}
- 
- 	/* If both the head and commit are on the reader_page then we are done. */
- 	if (head_page == cpu_buffer->reader_page &&
-@@ -5346,7 +5396,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 */
- 	local_set(&cpu_buffer->reader_page->write, 0);
- 	local_set(&cpu_buffer->reader_page->entries, 0);
--	local_set(&cpu_buffer->reader_page->page->commit, 0);
- 	cpu_buffer->reader_page->real_end = 0;
- 
-  spin:
-
+It seems that turning it back to a filesystem again is the only way to
+stop debate, then no one would clean up its dead code and reckon it's
+obsolete any more :S
