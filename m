@@ -1,103 +1,132 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF97A2BE0E2
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249852BE0F9;
+	Tue, 13 May 2025 15:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150734; cv=none; b=EA2+bcnbSCrGMfrYnyf0IHyquupavDUpSyrhPAOwhC3clGmZYwtbpVS5y65Se2aAwkgRK7cY13NKQUStVo4RIkuqm4wJvpEAk/7s2uFIZsEgOkBREjzNgNN2Rl3WkJykgj/ZsFI1fHhB6fjjrxjyLHsiGKXNuxUcBUJEoJvS7Fw=
+	t=1747150840; cv=none; b=Aql6TjgsEScNtPCK70s1OpRMUCCibwoGI78XKhI1k6JkCHHh06ylVeZnuItXoMwLYQ9Jx9bcWjxQmGTrP1Olum6AAp8aYNNDeyWuL9MG3PY9Ku+8E5B9Q2rVZyn7fBKuBODv1QFN2vvNaylK+nxsPHzqV+ppLBPZZnN2i/2vMcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150734; c=relaxed/simple;
-	bh=HciUJ0DRc6VWbkLdkDFkjwk4jXmAZ2zaDmGvimw1ftk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKGqxWvqG60On3TmZd8j3wUtyoZtUPT728R7KKbIQInZiLAXL0fNdFl2iH8wAWznoj/N4sH7MICgiMPvvtQ0Ij5FQNccrKnnOcwJBDFQYHiPqYy0qu0p+E3RZyZ5/w/W010Bz0Kk83242LFtDEs6v4PJn+ulBHngcMQ7CBYGg54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iNSC2bou; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747150840; c=relaxed/simple;
+	bh=CA9HKh4zrFSNCYLEtZ0JCP1cKMnxrY99Mpg4RTowzeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TkYyJk/PuFKetPWsw8DJHz/nHHEOmjbiiIbduYnAzOokPdLu3XPR45JpMFvkfjvtpxnZsaFXSnWtAa4WW4aaL33enxcGFHRZplqg0ZFSF53vHpoVzSWPlpfLh8yQzlGdjfOnRZNXPwn7hzi0D/l31Rf1xSdnri9fI/sTBpH0LgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hxvAFFFb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNSC2bou"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7396f13b750so6405612b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747150732; x=1747755532; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b01lqOj1Q00qoSQQQOxAByXZieMfhjS49oQuDICweyQ=;
-        b=iNSC2boukHJMIOfjLbZ80Qeau8EvdHjraRSlKEPn8y0v0+N+fS4aVz6cIZTpOUz1LG
-         3h1cRjnyXLgFYuPRgUPJRioXdEnHDQbxTZBeKSruHadG6YGA5D91IkVKOQnw4VRtCM/R
-         deKeOtDtVpSkp7afTF/VcddFZzVCDeLkEtkyeNd4AF6UYu8jdWeSMuV+zt1yUu6BmMKq
-         m2/WIVpsX6C2NH3zySmyjR0Fipg1jtSlKziHSlg2V4VJ2qJYwtPqS1tatzelq4XTF6Rr
-         J6YYwAHpj0wd82UzzX0jVfvBPN3nXoTaPfwvfy3mmCofoTQVJ0dZrfVOEEZaSYDL/7NS
-         p3hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747150732; x=1747755532;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b01lqOj1Q00qoSQQQOxAByXZieMfhjS49oQuDICweyQ=;
-        b=i5G8lQR7Gx+1V68d/k+aDEHZRrQDNDbcGdwJE2xwoijfwljMrag3/XBFhIs3X2J9mu
-         mdImLJUQ2TNof5kMrTndEwVrHNpiWgkkRCbbdt5zfzZ4iK3QbKz29JA/LOVOYCyKWPoL
-         wD+s0k8tf/jwHqeIVmAaQgS8xLVJBbdMmeKmvICB9jaD7rcwEOvYCmE4hZYpIRdKhQ8n
-         27R4675Gih0ZzX0KgQddpL5oXDnG0WWT3YVoBZHzPp3FW6iwXaUVGy+WzSgHBAo/nJlu
-         QkjpZMAdFchbrTAZ9QHXjVam+RuTdfmuNkL7her3Q9DecUlGcJML2p5O3kb7YgyfBs2X
-         okew==
-X-Gm-Message-State: AOJu0YxuBAcr5d7qgI4UB1flKv5pEbaFsZmzKfRIbBGxvh6faYjbnxio
-	FDuKrdTjvJ1IBPEGlpHquWBhXxKurCIyfGQvY5a0UC9//E59Isdu
-X-Gm-Gg: ASbGncty6mwElfsJVQQIRGTZu8sLdpybywkCSLdLLDG0bW0t9AtomHufNan0AFwL8FE
-	xGh7DNB6/kl3jKuJMPOpDAxhQviX5XUpqth9Yj5HP2FoV6HNoZk3MsoUkSfN9DcZNPzfaaki7B8
-	SdialS/KlEQgJ0kP5zPuowlK3ZC9RKwktXn2ASMAwfVJa+Z7OnkEiY/8u2mR3cu2HL6P26Y7zJs
-	gHCD/VKT0FkyURPxr8DzbzIReTnTNsEcSpXapyMXEfeI3OH/9dMBBjddBxkOal0HyK94tQMSVT6
-	cT9LxUxkj25CHW06I8+HQIlGhqpsfhjUjQyjo2fo5vOsdKRPkoM=
-X-Google-Smtp-Source: AGHT+IEhlY1+qEinI4hF7ZmWEnkpLawexR05Gigga7+soAtsGhsFTnlIcJGqvo3/htsCFQtIUb7PKw==
-X-Received: by 2002:a05:6a20:c791:b0:20f:953c:fb57 with SMTP id adf61e73a8af0-215abc7accbmr23502249637.42.1747150731703;
-        Tue, 13 May 2025 08:38:51 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237736db2sm8071748b3a.64.2025.05.13.08.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 08:38:51 -0700 (PDT)
-Date: Tue, 13 May 2025 11:38:49 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Yicong Yang <yangyicong@hisilicon.com>, Tejun Heo <tj@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] topology: make for_each_node_with_cpus() O(N)
-Message-ID: <aCNniZdk-8JPBZpb@yury>
-References: <20250509162009.540506-1-yury.norov@gmail.com>
- <aB41j_3g4KHnoXaz@gpd3>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hxvAFFFb"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DDni6C032140;
+	Tue, 13 May 2025 15:40:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=CQfh1MzvC6iT6mM7lVHwgZXBAw8DRUvB7ncdS0TY2
+	e0=; b=hxvAFFFbkhqdWNx95+5jOo17Y6uIjiDUF7i8oTaX/TkUPk3FjUkX1Wjl+
+	y9t5ShYsSoAYgxO2faRcbywCasa2mSvTKs9Ylkx1mjVQPEoyeir2fAwlhnT77uKl
+	MrS4AxM58esi9zO8wNKw1uFULgqn7L71vIo2IGkNXx+EW78lrBUTzD5F3Bz51ctA
+	10wfAh6abnhyXwFvfr3yDVVB9plJNW+w4pDuxaOvU/1KGmIUtUTWRRpDEzMzoJ01
+	ZgN043TjpKI/NVgfuHQYqnxedrP/G8qZdZf6qJo20gkuqFJzvItSZOPWyBwODPOb
+	vpq/7kK7y6EXr5qPUSbOB3PokCSHg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m7a70jc6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:40:31 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54DFNlGl022147;
+	Tue, 13 May 2025 15:40:30 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m7a70jc1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:40:30 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBt8I0011552;
+	Tue, 13 May 2025 15:40:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jku2be14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:40:29 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DFeSHS52822340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 15:40:28 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E17F20102;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3AAFE20101;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id CCFCBE0609; Tue, 13 May 2025 17:21:02 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Daniel Axtens <dja@axtens.net>, Harry Yoo <harry.yoo@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v8 0/1] kasan: Avoid sleepable page allocation from atomic context
+Date: Tue, 13 May 2025 17:21:01 +0200
+Message-ID: <cover.1747149155.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB41j_3g4KHnoXaz@gpd3>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=K8ciHzWI c=1 sm=1 tr=0 ts=682367ef cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=M4n5Zv9w_bjhLjlc4U8A:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-GUID: DBBehTTBvX9qsC78fS4B-Pq9qcDH0x5W
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE0OCBTYWx0ZWRfX3Ro2qgunbtst YpiEJWshZEpwgFgNh6DUgLqham72fs4BvvKMKutOoHPSH07AlpYe7pQ5YCi2HdZ5nILC75uCiju IWYImiPzfWf3podYFZOjSls1rcOdgk72yDa3rolzKL4vg7MxTtRRzOD7Zs54dCpcFIWuxuu+EK0
+ QkIJ/BRGoGmhUCBjzaDyz1IMReBDty2ghHIQLCL1vaAhGz9JkAgbrDVty+dUOHB1jXN44t7HVJK cMtIYLYwLwmus3mL71kB6cl1K28JDvLF2O3KG8dkNu9dJXSM3ofh9geWQ4w/j6r7+O4igy6meEp 0nXf51BmQu16OcHzaLETtDpfMQ+PxaAqgY6hNFo+C5dr11+LBz1O0Gz/NEb1ZL+oousbZmNyN0g
+ kS3cSLrkhmXIK/w+vptnwdeTNCkhyZ72QS3kKi57VyvofCfZSG4SaN1iUvPpz4AIUvoDujXn
+X-Proofpoint-ORIG-GUID: eeJyLkhC8F1qa6Wbqxc-xE5X7ub4YSI3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=721
+ phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130148
 
-On Fri, May 09, 2025 at 07:04:15PM +0200, Andrea Righi wrote:
-> Hi Yury,
-> 
-> On Fri, May 09, 2025 at 12:20:08PM -0400, Yury Norov wrote:
-> > From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > 
-> > for_each_node_with_cpus() calls nr_cpus_node() at every iteration, which
-> > makes it O(N^2). Kernel tracks such nodes with N_CPU record in node_states
-> > array. Switching to it makes for_each_node_with_cpus() O(N).
-> 
-> Makes sense to me.
-> 
-> Maybe we should mention that previously we were only considering online
-> nodes with CPUs assigned. Now, we can include also offline nodes with CPUs
-> assigned (assuming it's possible)?
-> 
-> Semantically speaking, since the name doesn't include "online", it seems
-> more logical to ignore the state of the node. And if checking the online
-> state is required, the user can just use node_online() within the loop.
+Hi All,
 
-OK. I'll take your comment and move the patch with bitmap-for-next, if
-no objections.
+Chages since v7:
+- drop "unnecessary free pages" optimization
+- fix error path page leak
 
-Thanks,
-Yury
+Chages since v6:
+- do not unnecessary free pages across iterations
+
+Chages since v5:
+- full error message included into commit description
+
+Chages since v4:
+- unused pages leak is avoided
+
+Chages since v3:
+- pfn_to_virt() changed to page_to_virt() due to compile error
+
+Chages since v2:
+- page allocation moved out of the atomic context
+
+Chages since v1:
+- Fixes: and -stable tags added to the patch description
+
+Thanks!
+
+Alexander Gordeev (1):
+  kasan: Avoid sleepable page allocation from atomic context
+
+ mm/kasan/shadow.c | 77 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 14 deletions(-)
+
+-- 
+2.45.2
+
