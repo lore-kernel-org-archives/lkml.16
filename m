@@ -1,112 +1,126 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEEE2609EE;
-	Tue, 13 May 2025 13:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CC2609EE;
+	Tue, 13 May 2025 13:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747144142; cv=none; b=UgDfDXp8SPBCYFSMD+FRPlLKpNZtjrhF7j8ZldFcqvJoXBRQZfVT3DyNK4WSRXnmaMMy0/ChnxzjnZcphVpWaizULOJS53Xyiwrb5NjZorhd8KOAWhNsU87vdnRe7ZBDq5BSHsMos6FVg9xw+Ivpu1g1T+gWeesx2OqTGwowk7M=
+	t=1747144157; cv=none; b=u2TdFHH3bX+To6z6EwkxfuCgbtYAIBygLzFU7z8+03+/vMDALJfvujjRwVxcVNDWadxlU9xe/4hTeUoHJVL9RAdKAais6DyLISaqRFqA/x09xW0OY312NzHEbcUvFHJG+bdMtvJQJoGv6ty20Z/VhvPRG+V3XsdpmaU0g5QpORc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747144142; c=relaxed/simple;
-	bh=66K1JbMqUs/uAtCFl8H7jffaJzfrXLErWLllPJGfxBg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rSX+i3J7dmTGwDW62QBal+c0HQZ0YvKPUVRv7lVjYaIPonX4mMFMHyUfcOMryvYxj1zmN+Wa/fCWUjxOQBvc0wbJ0Ga+BRqE5ZYymcD5FmhF6dt2ATUiMDBInzjGV6ie3rA2s5h3I67KvVpzlnlYn5lSkIvXLo3MtQ0AYUZzoRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlY2s8bp; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747144157; c=relaxed/simple;
+	bh=x7HMU+Yc7rGpSFHM6soCkqQhLrHEzGWqmticcYTG2Mw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=uMJS15h7+PDCigIYgHA366jF+0MsXp+lK8G4yov4lzxt0E88rIbHEoKsY7aQ/+1TV5eNVxohNx8fpJ2rx+j6Gn4t1Y5KFDHiTkqpcplIwzyF8WLEsOQ4l1MDrUo6+ytVkXbj51ZPFOZxYE3VFP43mQXaQF0/RL1Ge2GglwTBLm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLsMeBpU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B/N5qUAk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlY2s8bp"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-708a853c362so51799377b3.2;
-        Tue, 13 May 2025 06:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747144139; x=1747748939; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vRGKXZwQGJQro116AeMOhbDlererh9+81RGekmuvRPY=;
-        b=MlY2s8bpC1tGdspacpRKXnQ5/E/rtwkh+3JNpX/2HyXxpPwW90jLTXr4Wnuw9r72Ot
-         ApWFuuMDH4vqSJK26jIVIXafJIEgtFHM2CoAMDgNNBBu1KuF/96MzjztEnv368tcU3p9
-         faF9e7I9F946Sm948y82Gbw0DcEDcTQhodb35t2YxHAGC3CG19+Fu/OcMsF6ZXEp70Df
-         RnH/PMFinuEGYrLd79kGR5DKfUXzWlrfHugr0M7YemqgGM6mLEHpGiu+auZ2K9icGr8X
-         LIVjpJ5zaghtgTkmMU76b36RbW9HA2c+a6s8JLIpjQlwb2RGuUvt3zVgY1c+q+sWtfVW
-         C8ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747144139; x=1747748939;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vRGKXZwQGJQro116AeMOhbDlererh9+81RGekmuvRPY=;
-        b=A/Qbav6wPCemSlcEtbM7YJKJE1p7SsS6DNkC5hhaMQMbGZxFcx+iXXd4pqAkjIV//R
-         OliJ05smns3EIiO04K2GJNDlBafkyW9iluXa+PU1PH0FPCJPpgEoopiN1nX7xzxXucT+
-         3L86YvhAl6zXlvxY91eVn6dvNNylZrxgMeknJm/WYPMAjIbF9kZ37SiyZQkO9sP7b4Zj
-         QV9gw2GAxRZsdzNGUFdYJ1gFDLEyKKUpIC/JoHcD9d8UhQdli5g3jrhYEtxNdQ9eq3kq
-         wjBviWJ6RmJEJuWz14Vk9q5QErIxCPq0CILO9iSDmBg0wcWGi5bdDWvYqqrBZ1WyFVL7
-         iEZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXn2AkgU65QunTL18xT5kXhY685BTf28ZI4ViI/RyXaEBnVdfEUxBQ0HRs5P+B0VShwijQfonzxqc8=@vger.kernel.org, AJvYcCXv6RqJT7ur8A32BeX03wJODoEzEwWXkjmMNzN0Nogz/P8vBuIllpDzpbJe5tlMfDbe161zDzslv/lJr6gP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR1vfvTRdRyxUNZ7kOXlBwblIm9bNBGu/GvPbO3+CD/A/2xhHT
-	AuY82R+l7duyZvO/c2xrOYeOfRmh/LKspCsUrvTh3nmt14xS1jmWvM9tM43QwEM1RF+BYnogPei
-	B4BnFLZkWOVX+LPFVz15pAhVNR4rLCADT
-X-Gm-Gg: ASbGncsAZkQGtGjTHnYTizeN2B5bwfWxG9auGNriaqjkAUdqHALXgn4Zb3PJjv3Sw2e
-	Y2DzubKL5Lh/ENudyY9Y/9e87oln6JtdV4DVVc4zQ8luVEApL2dSTiTy1AClibP2SVtYsqAK69L
-	OEn+RfT0uCWxbI1/WcIVlgJhdiB5XdisfSsg==
-X-Google-Smtp-Source: AGHT+IGlA8y0H8ilo+B/SfZsh3YCGU40HjNzOUtartX1Q6gfUIBMaqqYkCgV/PCefapPM90mcFSZ2kkWPWEgIj4O2/8=
-X-Received: by 2002:a05:690c:6181:b0:6fb:b1dd:a00d with SMTP id
- 00721157ae682-70a3fb0f629mr234222177b3.30.1747144139536; Tue, 13 May 2025
- 06:48:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLsMeBpU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B/N5qUAk"
+Date: Tue, 13 May 2025 13:49:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747144147;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IvbrM2HweCKbU7x8wJ6Z3IlRDGtX/OrbJSX2JVavmR0=;
+	b=sLsMeBpUQEIPVUmg9GY1UG5wfQa2rpsvs8ih/AaAk44R6DPl91FjmfdCyV0seNsMv3Hxlt
+	7L6+2cIh+kgzeM8yc6zCDIkutZzBCDsvYNPoTGqkBhymK7bRTyuAOU6gEb84mywM+7JhMj
+	HdXmmcvVhIlUoJV0FfY1rhdwqevY33A0CLG/Ck0h5ejljIG478QJap0J47M+u1h7BjjyZB
+	TYq5hySS2qtjd973iWtPncMP+R7+4qEBlu/8Y2JwrEg5rRsHpbHSlSKmcvRlKOHA0fCRHc
+	EPcAsXnminVsAn+Hxon9v6SIdEcSpvHU3ALUKhHqOddgcrwGFyY9mhVAdB+CFw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747144147;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IvbrM2HweCKbU7x8wJ6Z3IlRDGtX/OrbJSX2JVavmR0=;
+	b=B/N5qUAkOrULlOetzTKfkAu7Li3XtrbxnxMmXQacGnmD+MAUBhbi1qFMrxLFyhfumD7hje
+	SHc8Vo2i7L6BZHAg==
+From: "tip-bot2 for Guilherme G. Piccoli" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] clocksource: Fix the CPUs' choice in the watchdog
+ per CPU verification
+Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250323173857.372390-1-gpiccoli@igalia.com>
+References: <20250323173857.372390-1-gpiccoli@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: rujra <braker.noob.kernel@gmail.com>
-Date: Tue, 13 May 2025 19:18:47 +0530
-X-Gm-Features: AX0GCFvL1HU8odFxkZ26QKJDadh6mPRnHNzzEcLAIK37gZUd1JuUQfiZmpB1Rng
-Message-ID: <CAG+54Db5eJVogCLKr3y5W02-Ksn7ChTpzz+UJaeoXJxA_V-QtQ@mail.gmail.com>
-Subject: [PATCH] TASK :Linux Kernel Bug Fixing: Fixing Warning/Spelling checks
- on the rst file
-To: skhan@linuxfoundation.org, corbet@lwn.net
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174714414676.406.18250814688771473751.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-TASK : Documentation Task
-removed warnings and added "SPDX-License-Identifier: GPL-2.0"
-in starting of the file , also instead of using re-use , have used
-reuse.
+The following commit has been merged into the timers/core branch of tip:
 
-Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
-<rujrabhatt3@gmail.com>
+Commit-ID:     08d7becc1a6b8c936e25d827becabfe3bff72a36
+Gitweb:        https://git.kernel.org/tip/08d7becc1a6b8c936e25d827becabfe3bff72a36
+Author:        Guilherme G. Piccoli <gpiccoli@igalia.com>
+AuthorDate:    Sun, 23 Mar 2025 14:36:24 -03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 13 May 2025 15:38:55 +02:00
+
+clocksource: Fix the CPUs' choice in the watchdog per CPU verification
+
+Right now, if the clocksource watchdog detects a clocksource skew, it might
+perform a per CPU check, for example in the TSC case on x86.  In other
+words: supposing TSC is detected as unstable by the clocksource watchdog
+running at CPU1, as part of marking TSC unstable the kernel will also run a
+check of TSC readings on some CPUs to be sure it is synced between them
+all.
+
+But that check happens only on some CPUs, not all of them; this choice is
+based on the parameter "verify_n_cpus" and in some random cpumask
+calculation. So, the watchdog runs such per CPU checks on up to
+"verify_n_cpus" random CPUs among all online CPUs, with the risk of
+repeating CPUs (that aren't double checked) in the cpumask random
+calculation.
+
+But if "verify_n_cpus" > num_online_cpus(), it should skip the random
+calculation and just go ahead and check the clocksource sync between
+all online CPUs, without the risk of skipping some CPUs due to
+duplicity in the random cpumask calculation.
+
+Tests in a 4 CPU laptop with TSC skew detected led to some cases of the per
+CPU verification skipping some CPU even with verify_n_cpus=8, due to the
+duplicity on random cpumask generation. Skipping the randomization when the
+number of online CPUs is smaller than verify_n_cpus, solves that.
+
+Suggested-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Link: https://lore.kernel.org/all/20250323173857.372390-1-gpiccoli@igalia.com
 ---
- Documentation/process/adding-syscalls.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/time/clocksource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/process/adding-syscalls.rst
-b/Documentation/process/adding-syscalls.rst
-index 906c47f1a9e5..17652610450d 100644
---- a/Documentation/process/adding-syscalls.rst
-+++ b/Documentation/process/adding-syscalls.rst
-@@ -1,4 +1,4 @@
--
-+.. SPDX-License-Identifier: GPL-2.0
- .. _addsyscalls:
-
- Adding a New System Call
-@@ -117,7 +117,7 @@ then the flags argument should include a value
-that is equivalent to setting
- the timing window between ``xyzzy()`` and calling
- ``fcntl(fd, F_SETFD, FD_CLOEXEC)``, where an unexpected ``fork()`` and
- ``execve()`` in another thread could leak a descriptor to
--the exec'ed program. (However, resist the temptation to re-use the actual value
-+the exec'ed program. (However, resist the temptation to reuse the actual value
- of the ``O_CLOEXEC`` constant, as it is architecture-specific and is part of a
- numbering space of ``O_*`` flags that is fairly full.)
-
-@@ -378,7 +378,7 @@ the compatibility wrapper::
-     ...
-     555   x32      xyzzy     __x32_compat_sys_xyzzy
-
--If no pointers are involved, then it is preferable to re-use the 64-bit system
-+If no pointers are involved, then it is preferable to reuse the 64-bit system
- call for the x32 ABI (and consequently the entry in
- arch/x86/entry/syscalls/syscall_64.tbl is unchanged).
-
---
-2.43.0
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index bb48498..6a8bc7d 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -310,7 +310,7 @@ static void clocksource_verify_choose_cpus(void)
+ {
+ 	int cpu, i, n = verify_n_cpus;
+ 
+-	if (n < 0) {
++	if (n < 0 || n >= num_online_cpus()) {
+ 		/* Check all of the CPUs. */
+ 		cpumask_copy(&cpus_chosen, cpu_online_mask);
+ 		cpumask_clear_cpu(smp_processor_id(), &cpus_chosen);
