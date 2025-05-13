@@ -1,91 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFDF13A3F2;
-	Tue, 13 May 2025 00:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCC6125B2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747097526; cv=none; b=ayxbMABrsNBKoWFW+Z+ayP/hjJopUiTQapPREw+BMbIWUJ1d49MApLufmqJj+lugW2BK1b+U1JKLE1jN7vfDgtbqy9a7L8Oc5v6wG7nBMslk6ndhLlNgthMdUGskP9qoDemk3Rytu6POlxwKVyPWXnuGGq7jrmpMvComV3Q4W8M=
+	t=1747097710; cv=none; b=Ra6Y/45C0JBJIpS+zxRzj539j/nAqaWiiMz3sG9SCAPpGg/SnowKqUUGBibA4EAbT8NZPsRacVPyUxIV+4t2gUzSPZJAEhWsSJjcmeMoGu/AItEOJ9g21sL6ljVHPI3VhK5DYGatG4M9tTRyC6Si2XuAXp/BfYHuO6OZ1ZGRcrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747097526; c=relaxed/simple;
-	bh=O9o8/bvVIX+Q/y1eX04IGbKASaY13MNl+otnvwElV/I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rcMY80QM7nJmKA+FGxAQRaJ6okNZvz+V9Xj9UpYKtpfQ9MN9RzJfU46EALFJQCeAKanZr1cEG2a4IfVvbbU8aXexs1qFBkzZcD/ptxOKaU6xkzLipSKZo9MNCdt8ZTltSkahly+qeMo1BGG+eeEfcYcRuV+yVO4eauQCl7JQqkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bXEy6+qZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747097710; c=relaxed/simple;
+	bh=vGzp9x4b4Fsi/J2pVJA34Wo7DZDlbFJ8oSXHJgd18x4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LNDvHsMX+3uOpkj67s/tOhSnQfHywHhvC3ufMYVP6tzuowomb6rgz1Qbnfn+9p9XmZ8Qx30Poc5Ilo53E5KSrnGlKATC8znUPgEQGXWWQIH7M/FuTBWh/LOjcY9zrxL1iurMzJbd+WtVwK9wQ9FCS9bdJotxMfgoCopywvrISkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0NYrpOO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bXEy6+qZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C678C4CEEE;
-	Tue, 13 May 2025 00:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747097525;
-	bh=O9o8/bvVIX+Q/y1eX04IGbKASaY13MNl+otnvwElV/I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bXEy6+qZV7ia91hQjBEzsuWpR32xJLOOnOJ9lOHHiJZclgegci7Bnz4voyHeJFtQT
-	 NZY1o5s/8AG/4qGFWCz4cmj7pnZ7KvZXgdwdZwqXcyHjZsyS45dsi/UxiulFuqYQLf
-	 uiV2nYG+dnJu7zLmkMKN6I98KWC7ddjncFVrS3NA=
-Date: Mon, 12 May 2025 17:52:04 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
- <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Subject: Re: [PATCH v1 5/5] relayfs: uniformally use possible cpu iteration
-Message-Id: <20250512175204.8faa5fd646da7247137db14b@linux-foundation.org>
-In-Reply-To: <20250512024935.64704-6-kerneljasonxing@gmail.com>
-References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
-	<20250512024935.64704-6-kerneljasonxing@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0NYrpOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7868C4CEE7;
+	Tue, 13 May 2025 00:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747097710;
+	bh=vGzp9x4b4Fsi/J2pVJA34Wo7DZDlbFJ8oSXHJgd18x4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=K0NYrpOODAQmmrOrsK7Q21WJtxtDUR0CYGiUQ4A1FFQYax3Erbh0RMixoelyf9zJr
+	 89zyCpvCMtdehSlo+uZwdfBEIwNjtV4e/t8ZKYMwuhShtSHt41PLKlMaQyS95nqWUx
+	 qKzLQ+fyTLo6IGxzApzhprwV1CcImVwehjmk86wWiJj9v0UG7frV9FA8PSW33vXU8o
+	 PgBB5hwbV/TSkDZDqKdL9OSiWzIGDwSDV75FTW5D7xMh5Y2Quy4rdPGTmUGvAKS/SP
+	 GunAGMDkcMZyEyseSYDS/VHDk0Y8ZjcEd9ZMyGUPPIbQY4coAtqcQuifE45HvqbEIx
+	 OFcuVZMVcpfIg==
+Date: Mon, 12 May 2025 14:55:08 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [GIT PULL] sched_ext: Fixes for v6.15-rc6
+Message-ID: <aCKYbH3D3BYW8Hzy@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 12 May 2025 10:49:35 +0800 Jason Xing <kerneljasonxing@gmail.com> wrote:
+The following changes since commit bc08b15b54b8aadbc8a8f413271c07a3f4bead87:
 
-> From: Jason Xing <kernelxing@tencent.com>
-> 
-> Use for_each_possible_cpu to create per-cpu relayfs file to avoid later
-> hotplug cpu which doesn't have its own file.
+  sched_ext: Mark SCX_OPS_HAS_CGROUP_WEIGHT for deprecation (2025-04-08 08:53:52 -1000)
 
-I don't understand this.  Exactly what problem are we trying to solve?
+are available in the Git repository at:
 
-> Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
-> Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> ---
->  kernel/relay.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/relay.c b/kernel/relay.c
-> index 27f7e701724f..dcb099859e83 100644
-> --- a/kernel/relay.c
-> +++ b/kernel/relay.c
-> @@ -519,7 +519,7 @@ struct rchan *relay_open(const char *base_filename,
->  	kref_init(&chan->kref);
->  
->  	mutex_lock(&relay_channels_mutex);
-> -	for_each_online_cpu(i) {
-> +	for_each_possible_cpu(i) {
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.15-rc6-fixes
 
-num_possible_cpus() can sometimes greatly exceed num_online_cpus(), so
-this is an unfortunate change.  It would be better to implement the
-hotplug notifier?
+for you to fetch changes up to 428dc9fc0873989d73918d4a9cc22745b7bbc799:
 
->  		buf = relay_open_buf(chan, i);
->  		if (!buf)
->  			goto free_bufs;
-> @@ -615,7 +615,7 @@ int relay_late_setup_files(struct rchan *chan,
->  	 * no files associated. So it's safe to call relay_setup_buf_file()
->  	 * on all currently online CPUs.
->  	 */
-> -	for_each_online_cpu(i) {
-> +	for_each_possible_cpu(i) {
->  		buf = *per_cpu_ptr(chan->buf, i);
->  		if (unlikely(!buf)) {
->  			WARN_ONCE(1, KERN_ERR "CPU has no buffer!\n");
-> -- 
-> 2.43.5
+  sched_ext: bpf_iter_scx_dsq_new() should always initialize iterator (2025-05-07 06:24:07 -1000)
+
+----------------------------------------------------------------
+sched_ext: Fixes for v6.15-rc6
+
+A little bit invasive for rc6 but they're important fixes, pass tests fine
+and won't break anything outside sched_ext.
+
+- scx_bpf_cpuperf_set() calls internal functions that require the rq to be
+  locked. It assumed that the BPF caller has rq locked but that's not always
+  true. Fix it by tracking whether rq is currently held by the CPU and
+  grabbing it if necessary.
+
+- bpf_iter_scx_dsq_new() was leaving the DSQ iterator in an uninitialized
+  state after an error. However, next() and destroy() can be called on an
+  iterator which failed initialization and thus they always need to be
+  initialized even after an init error. Fix by always initializing the
+  iterator.
+
+- Remove duplicate BTF_ID_FLAGS() entries.
+
+----------------------------------------------------------------
+Andrea Righi (4):
+      sched_ext: Track currently locked rq
+      sched_ext: Fix missing rq lock in scx_bpf_cpuperf_set()
+      sched_ext: Remove duplicate BTF_ID_FLAGS definitions
+      sched_ext: Fix rq lock state in hotplug ops
+
+Tejun Heo (1):
+      sched_ext: bpf_iter_scx_dsq_new() should always initialize iterator
+
+ kernel/sched/ext.c      | 191 +++++++++++++++++++++++++++++++-----------------
+ kernel/sched/ext_idle.c |   2 +-
+ 2 files changed, 124 insertions(+), 69 deletions(-)
+
+
+-- 
+tejun
