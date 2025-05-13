@@ -1,101 +1,137 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB852BE7D0;
-	Tue, 13 May 2025 16:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F0014A8B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747152524; cv=none; b=IyRzkfNHgWEYH2Z02CDQh9KI0/Z6zxjR3d1IoG1o6DXQLKWiMCQXC7vNGLX7VZU+sRnhYf+YyHudD0PWoQ/M7twabuTNureN2HW3D9H/Um2wZ04MHDqpsq/6bwLA31AfQuU0Vm0VhB4suf0Pfqj1ArbkaK46B1/NmGyctN4HIV4=
+	t=1747152581; cv=none; b=FBIDn0qvUmUE1gtnFAiOOXNdN54an/qoYmHG0/YJuBl+xUgCOKGorR5sWWAmH8M6ZYAaFCF3oIdM2scpQrv6JFUbHHu+TSvXv/N1AHC7cyGC2IicBCewvPmHpTu3GYakk6oy+DvuEi858Q1yO5ZbLpiCeqml2mHa7xFrZVOorxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747152524; c=relaxed/simple;
-	bh=DevxbzaJdGN4aEHsLK3sy+B/hj7f8G4W1VdIOq0UMi8=;
+	s=arc-20240116; t=1747152581; c=relaxed/simple;
+	bh=XY/ek0gkSV8i6PpcG+cgSu2ZcZTY5tOvfvynocqr7Ko=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GA1ToDugrO7CLTkyEENOWDjxyW0clkGHKFA8+bIKsaZwb2zF3BvjETz/RQPHmN003+g4Uaj1qO1VYOx3ovEjE0hmuw150tC4VarH/p1mtggFPsMIjToyaOMFdWkpVYGSDRCgPT2f5TWvhvR5XG52eAH7UGlV5JJVmVLydSPatrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZiK1IRO; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=F6B8hTPU3clVDMBAzdTsDekK4MHq1G9mpJkQ7Ri0khHnp03TvtxDvLWSLs6nTznfsKYFiRWNDQ60PcAXqiLSS6qC4bzajBDplecL7N0p3CeTRPjfLuowQPoblbwc2ShYmaHe8ncYmbRepla0C55i9vSJXAKEzIPxDO2XmIqZzwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J17kZtrd; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZiK1IRO"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30c5478017dso3608572a91.2;
-        Tue, 13 May 2025 09:08:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J17kZtrd"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-327e9bee7e9so4019621fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747152522; x=1747757322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y50vnImwC+LxpdUfSXW6OdKZgsUczIq8Ez5/V5gG6c0=;
-        b=mZiK1IROSr/Cq+Wn3tBFvWBIJf+5mAdkNhzY7oTewIpzMTLTwNvTVDvb6Q3cOAt4Dm
-         9+lY5oyC/1WXCbOZWUi/isImOdVG4xuOeQ9qx5UoWbERKtM6E/xRZ4k+VotRfGG16zEZ
-         SQCGXtffvkT9o4sJ87WqgjVdVVEIFEWuiJAhia4hdBUkteoQoi/UcJM3sFkv/wLlxDRx
-         HbK9rcyMalDVu00NKZ0SEOF2MRzHhQ2UURvrCf1AZ7KJhg/ZJ1TUKE9yp6YgvrxBs2Bi
-         66JEZEgtSyzLsjdHX2aG7K0ANWBEiMybkmm8DGPgUiUAnx7VKlouAO2c7I/58fHqMHnm
-         ueog==
+        d=google.com; s=20230601; t=1747152578; x=1747757378; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xPcbPcD1WbFPE2vOJqMYs+044knJo30NqABeyI0uT8=;
+        b=J17kZtrdbUg5RgixPBWdnbRazCwferw+FOAY8z+85ngxVOmMxqdB1AIJM57/SKddhJ
+         eUsLOn0zwGtiOcQiVNqqBOAatK8b+bVUC+lVm9tSVNgY98vLelKD0w6AuTZEjl+e2zEJ
+         01GMQ8XFcfyoXS8FLpJSoywJR/MQ/bkJkJQZpsHmTZ52tOyYKs2PPToYaL5QdvWvvsee
+         abyjGk8+AgGz/dt/8kKjjIKR+rYxxN/D6LNmmkhMQ2cGikhCjbjIlZjp+Jyox6qdFXa6
+         8Y0OdiHFMO50TgnoYSD2G9vHyPIni4hM0KlQR4kPOZ+ZdQg58CQmOZLU/kGjaIUlrMPT
+         WFsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747152522; x=1747757322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y50vnImwC+LxpdUfSXW6OdKZgsUczIq8Ez5/V5gG6c0=;
-        b=Ecb/1zb8GuHxnnmu94/zeQUywX2Su8oQCE0kYYnqdohA+kvCIKodB2UYRGK0k9xg+o
-         WUWceLLRa91ZY3ATfBAwhIes+CcUiVSIf/H30J840bkGWe1+BoqJgQIpYJBfP6+vgpvD
-         /QF+JtsE9Q0p7Rk6mR8NzAhv37jQUQIihz8shJjI3MFbJSv5WjLx8gF1hskl5F6yZ0nQ
-         iObpC7PPfyj7Czc8V2khxVM/MQmb1h6U0gVsPB3KCKevNTeJOr8N8O8p6/gDqm6GGwiD
-         x/2UzQPfVz/J857PZa20RBdnk86bs9kRiTiLLpzmiWbHsrXFlX8IRU3V4rWr4NU6vv7h
-         7uNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUN7KSE/0hha+KnKF6W01PeCyS5tEu35YVTW64nvsChrRlsKUnG9clCFrdEr2mNT4RQqTt8JX8Gz2gl/g==@vger.kernel.org, AJvYcCURTzRK2Utw8KlOtbiN4T/npJW/CzVlC00oNMi8Cnj7vi3y5YVt/Q6YiuTMQPMU7HdbPeA=@vger.kernel.org, AJvYcCW1A5nHA+JhInlvKLwFCZgXvlN/KOsprLHaN3ZU9VedlSZ2E8UrbJfrPayhaG3Iv4JfTueYgyeM@vger.kernel.org, AJvYcCWaYoXP3/zm9ShLPyqQsTHzqrsaE8+HSEbWo53zxHroScVMdru3GA1xmuYlaq7Y60lFtAbM5XMCRNS3e1Ka@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX+d4ZfGytKxoTHKSCeFpaz715z9vOFQ7bkvxfJp8E3aze/Pi4
-	nU+xfwETEoUGGCs2uI4VW+7jGN7ku7DIgmO2pdo32a/Q+g4yD8Vg7+Q5wyePXW3BstgAiYA+yHP
-	26Ou836Ndf8daD0baUtWpCoWkC6DkKNMXXVQ=
-X-Gm-Gg: ASbGnct7mSkGrwvDpdtS8QbVIsplzy3rY0YmzqlFUXIGSIJaz/UN6rjiGTEB9vN7s1P
-	BOG3sQ1EslUTo6AW/9ioI1vxr8AgbZ/3QM/KtmJellCDDmKXFgOd8H3uMbNWOxh4Mdajt3VTMWm
-	nc6MrgJqld3eMT7NXw1qsdRp7hM99mNIsBqtlXlUPx46wsAnXi
-X-Google-Smtp-Source: AGHT+IGbymYnp+gH17n9X9N0PwR1T+xJNDOc/dcNR1jYpXmTu6RMYWMzXJRBYe0vfvuNdoIKoP4r+OVCOMkpgA7xsjk=
-X-Received: by 2002:a17:90b:4a:b0:2ff:7b28:a51a with SMTP id
- 98e67ed59e1d1-30e2e5d1acbmr234752a91.17.1747152522395; Tue, 13 May 2025
- 09:08:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747152578; x=1747757378;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2xPcbPcD1WbFPE2vOJqMYs+044knJo30NqABeyI0uT8=;
+        b=moR8Jrl6MwU6jtEvP3t5xWjT+7ZC8npB+QVI7R5hr37HPQYOhLkELYg88+BKfSUqqH
+         2qtZ7bXb+2rT+jnAjdJ6gk0NY1TqNZFJEejySF4apj8DMCOrYhGfN6O0AFMwEhmtTkyW
+         tY/oFzZy9eE510nkfSmpo7/r5273RpD+ku4HBrr20BJeZe9RV8Rv2u/NPIduQSrHXjlS
+         1NdNY5WftV//WXA4k8sqY+lPU03ype0Qs9U2J0SQ4aAI5TnVjB4cRvZugoGJpbuhEARO
+         wV96DGJX6HIbUmoP0RrLx915b8BoqbtkEqeVmTtTy0yvQki21sfRV6bb9m+ESwa8Ksy/
+         1+iA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8Wc7fcG24wVyGFe0pOt5P69u2Hh7/2ULTzFUAESpfRR0OeibYCI8zXu6SWt/evjyG6IHypU56MG+12wU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJlNW29YCx/O1IMawnhh/brW7d/damIX6EzZ3hqVS9nWvlzLDE
+	60GWlpb29+QPv4pLFeHv6Jv1Jwv0A2Mgdk8xhlnNKVGJHFLK8vhAR+8wzrTMwhgXw+6HAyR0Vqn
+	5vtebhyK8I3L02t94qL+McWsYx5pqYQxykJP/
+X-Gm-Gg: ASbGnctiIQReVmQiN4X6PRqCMPyvGp1uhHDe8NZcawHQrxVWaXBnR1m8Nv8JP0JExmM
+	7UwI9wPShvkzagfNEau0TbVNLYFvigIzK58xjnYY4JMGT4qu91YftJ+H31l1037eKd3/xZ5xAZQ
+	Rdej3w32CVwt/ydIG8Dai6urYSKG/0DOFFt/l7yD5VESaZsaWWGHVaok5JNM5JmlTIrA==
+X-Google-Smtp-Source: AGHT+IECXHDt0eLcxw25idhLX/8kFgRZr8EWUZbj/LbdzvWUQEcF7UvzYKjtWLoyArk/1sFSJ0f2IWsS7BNTbCOzhcs=
+X-Received: by 2002:a05:651c:885:b0:30d:e104:d64a with SMTP id
+ 38308e7fff4ca-326c46b2b7bmr73376971fa.38.1747152577424; Tue, 13 May 2025
+ 09:09:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184935.03464094@canb.auug.org.au>
-In-Reply-To: <20250512184935.03464094@canb.auug.org.au>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 13 May 2025 09:08:29 -0700
-X-Gm-Features: AX0GCFsrUtW7GLAQddVYSfJKgmTr6qJto8K9tjjBMIu_QrjzdpvtvV997lT4IPE
-Message-ID: <CAEf4BzaavLFXysuKrr6EJwKuGh6US+gprd71Mv1WraphpgGYaA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the bpf-next tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <2025040820-REJECTED-6695@gregkh> <20250509072033.1335321-1-dvyukov@google.com>
+ <2025050940-marrow-roundish-8b98@gregkh> <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
+ <2025050924-marmalade-overfill-fc5a@gregkh> <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
+ <20250509121036.GA92783@mit.edu> <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
+ <20250512144402.GA200944@mit.edu> <CACT4Y+as-Uy_BUjLDxfNwC2+78U3kJdaaKL=vbUNMZH9VcLiGQ@mail.gmail.com>
+ <20250513120549.GA9943@mit.edu>
+In-Reply-To: <20250513120549.GA9943@mit.edu>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 13 May 2025 18:09:24 +0200
+X-Gm-Features: AX0GCFvG059UfwJPZdMMMbtnK_PCOF6YmLs8bxPm__2O2ER2Feq-FUV5fuuH3Cw
+Message-ID: <CACT4Y+Y+E6xnOOJ8zwSdy09FT-OLPPYVFLvZsdpEOkYQ2vsTRg@mail.gmail.com>
+Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
+ filesystems with manually crafted filesystem
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org, 
+	linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 1:49=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
+On Tue, 13 May 2025 at 14:05, Theodore Ts'o <tytso@mit.edu> wrote:
 >
-> Hi all,
+> On Tue, May 13, 2025 at 09:09:34AM +0200, Dmitry Vyukov wrote:
+> > I just hoped for something at least somewhat stronger. Bugs flagged by
+> > fsck won't require fixing in that model.
 >
-> After merging the bpf-next tree, today's linux-next build (htmldocs)
-> produced this warning:
+> Well, if you have the budget and the headcount to back up that hope,
+> you know where to reach me.  Personally, I've hoped to win the lottery
+> and own a private jet, but given that I'm not willing to pay the $$$
+> for the private jet --- I fly economy.
 >
-> Documentation/bpf/bpf_iterators.rst:55: WARNING: Bullet list ends without=
- a blank line; unexpected unindent. [docutils]
+> Consider carabiners.  I have one that I use for fastening my keys to
+> my belt loop or knapsack. But there are also carabiners that are
+> certified for climbing.  If you try to use the former for climbing, it
+> wouldn't be safe.  But the climbing carabiner is a lot more expensive
+> and a lot heavier.
 >
-> Introduced by commit
+> As far as file systems are concerned, a hardened file system will be
+> more expensive, and will have less performance.  But if you are using
+> file systems in a data center, where the hard drive is in within the
+> Trusted Computing Base, paying the costs for a hardened file system is
+> silly.  And in fact, companies are not silly; I have yet to work for a
+> company, including my current employer, which has been willing to
+> invest in a hardened file system.
 >
->   7220eabff8cb ("bpf, docs: document open-coded BPF iterators")
+> Now, the good news is that there are ways we can use a non-hardened
+> file system in a safe way.  You just to have the system enforce the
+> constraint that the file system must be fsck'ed before mounting the
+> file system.
 
-Thanks for the heads up! This was fixed by Khaled in [0].
+Ted, have you read what this thread is about? :)
+I was talking only about images that fail fsck.
 
-  [0] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/comm=
-it/?id=3D79af71c5fe44f3973c666bab3e9e5845812d3b8b
+Re headcount, if we want that to ever happen, shouldn't we do what I proposed?
 
+If we downplay all of these, pretend these don't exist, and argue it's
+not important in any context, unsurprisingly nobody is willing to
+allocate a headcount to fix this "unimportant nothing".
+
+
+> If you want to be even more paranoid (or the proprietary file system
+> doesn't have a good fsck), you could mount the file system via a guest
+> kernel running in a VM, where the VM is locked down using a seccomp
+> sandbox, and which provides file system services via 9pfs to the host
+> kernel.  9pfs is a remote file system which is easy to audit, and this
+> is a key part of the security strategy used by gVisor.
 >
-> --
-> Cheers,
-> Stephen Rothwell
+> See?  Easy peasy!  And far cheaper than attempting to harden a file
+> system.
+>
+>                                                 - Ted
+>
+> P.S.  If some company wants the equivalent of a titanium carabiner,
+> where we invest a huge amount of SWE effort in making a hardened file
+> system which is as performant as possible, I'm certainly willing to
+> work with such a team.  I haven't yet seen the business case where the
+> ROI makes sense, but perhaps some company has a unique situation where
+> such an investment makes sense.
+>
