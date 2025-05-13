@@ -1,114 +1,164 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4B823C507
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C02F85B;
+	Tue, 13 May 2025 09:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130261; cv=none; b=mY/vwccQEE4dFyTFPsKhA7i0bafFtdgcSLXiMp1UOgb/F1Wl10UaQl+o42+Nlca8UlbQ4gA+GLwh/chX8U0qWjRaacyEGxn/yc1fLbP9EV39PlG7+CNTbL4Ksr/1mNqnrV2NKiIoFSoY4CiZVq+50I72XWE61FZNKnXAYphNPGk=
+	t=1747130294; cv=none; b=lAmjC0u+Sm8/q6VYfmm7+OZxNib3CC73vX6iuEDsPsI+6luVTz3zJFRjV9SsJFUS574P+EOYinoTDt5tWyV/f2KNwDmu2+mT53WS8UQPqptzPosJD5TTpMjJsE+9aIo2sletX5KudjKumeQlHtWewz+HbS3EQ+ZfBJEtPdcgDM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130261; c=relaxed/simple;
-	bh=JdAZyvEfFv+b3xCHhPfd7LcKXAFu9fTO6LCfNdrPf1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fiRqRRf81+D5GZc2j1Bm1G0QXSo9+cr5i/hl+6LeC5GfZ0Y1/aIHHJMkMxVXuGQr9zliKEEKUkYEt4B3JF5EtXpCsbXLVZC3vkfDmCV8dcpoO5YPy0s1Hq8RJUIxTnTXJKs/ixf5MuE6H5vyYyuvYP1uvC6naZNPOSwqrauaoQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=yEgiPzt7; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1747130294; c=relaxed/simple;
+	bh=CIStumLbA7h8G3wMXshXEHGNUXbJZDxIRH0X9c6sHTU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=keruMmktWKp8KoeOaxfgys/e8ooS7LailMVQwg+gavmyOPMA8CeAObhvjUvFsd3vldgVhYsaUAu3tV8t9h3Xea7spz33Ki/K+3FlPYwSlpBi66ThEGUTXUVEG7PmkF62QbW/52YiPBTf0w4gY6QSr9Qn0mxOTzfI/3K9yLl7Mss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lACNBNeA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="yEgiPzt7"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id EeT5uqNXjXshwEmOCuooBa; Tue, 13 May 2025 09:57:32 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id EmOCuEzZqjrgqEmOCu2h0H; Tue, 13 May 2025 09:57:32 +0000
-X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=6823178c
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3LSEtfVInsQZ+YidTGzY/S0vZoyti6cDV9ARJoZIG8w=; b=yEgiPzt7AiD03xiK+RpDOVWQ1c
-	821DDlHxcvGfMLdPsb79yLyZFlZ0LO2pMT7+X7sJ1T4/kuvJ95gdu7eEYrEPMXTLaxvItWaCNiPd5
-	GRZehdXG1PYNg9gNxz3+PWp9/5UiYhE8Pes+9sN9vUmEuLIMQuIwqTTNtJkPxD9Hp7hRznG6uWWE+
-	VO+b5qOA4gG+c66hc0sWMcrD8hV1xxcjmZGqUuJdWrF+3xXDcq750wJ/n1WWCrXnF2C2ms5cfwceU
-	/vSIMCh/evktmyQXJM+waxTGhLA7HUV84+eKyaF++LyfFchTLnTnTJtHF2q1AMFAHfyY+xF1wvW9Y
-	zywgKafw==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:40850 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uEmOB-00000003MnA-0Cyf;
-	Tue, 13 May 2025 03:57:31 -0600
-Message-ID: <5e868efd-e6bc-4577-b6c8-9bce69027a97@w6rz.net>
-Date: Tue, 13 May 2025 02:57:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lACNBNeA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1F3C4CEE4;
+	Tue, 13 May 2025 09:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747130293;
+	bh=CIStumLbA7h8G3wMXshXEHGNUXbJZDxIRH0X9c6sHTU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lACNBNeAFNJHMSbGN8Y0rEVZExrT2X3GN3yGaxx5LbGfACukoHjGdnWQ8MM3F2FJk
+	 3ulaYt0WnYZgFyRQH1Xru3j31iXdFhwvJh+L6/ym4Jou98Skp2Wd23AnqnYrFVpGwm
+	 dRWUN26sqgM6aTBRv/J3PC6xdiFFnQqSs4IdgqZetVS9EKO/S0JV6blwQ4kE1ONJeN
+	 BsCbPxgp0h4aylet1HJ8bC0+xu+rwNwikN2VcUtuccxOAqp5UkBQKkt3qhhMLDXYbP
+	 XZcutSYDosNt2D3e1yIyqqdFKQRSlJT+HD6AEMkB45TvWurcgPok+0cYP3EfcuAprr
+	 Wgf6mgQHOI1iQ==
+Date: Tue, 13 May 2025 18:58:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250513185810.3d57dfe2a0c05784ddf8f0a9@kernel.org>
+In-Reply-To: <20250512024935.64704-3-kerneljasonxing@gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-3-kerneljasonxing@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250512172027.691520737@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250512172027.691520737@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uEmOB-00000003MnA-0Cyf
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:40850
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfD+sBLQN+sQLD8JtR4ZOWMeLdeSxTPJ+/bKHAa5kszoT0hpbcfAq3DZs9VnA/ym3oMUIVw8JjhQXR2ld5RH6/WtlMpq77hSTq2jonRH9BNFTrVxYTadI
- fbDPAh6F6iPupWr3KdARSVmWKEbzhXjIL2yGUpuFFQNUrtgRBGWT4IbnOikzfH6Mc8Cd1RdxFSh3Hh7RjGt1wK4gxpA1YTQvjn8=
 
-On 5/12/25 10:44, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.91 release.
-> There are 113 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.91-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Jason,
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+On Mon, 12 May 2025 10:49:32 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-Tested-by: Ron Economos <re@w6rz.net>
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> In this version, only support dumping the counter for buffer full and
+> implement the framework of how it works. Users MUST pass a valid @buf
+> with a valid @len that is required to be larger than RELAY_DUMP_BUF_MAX_LEN
+> to acquire which information indicated by @flags to dump.
+> 
+> RELAY_DUMP_BUF_MAX_LEN shows the maximum len of the buffer if users
+> choose to dump all the values.
+> 
+> Users can use this buffer to do whatever they expect in their own kernel
+> module, say, print to console/dmesg or write them into the relay buffer.
+> 
+> Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> ---
+>  include/linux/relay.h | 10 ++++++++++
+>  kernel/relay.c        | 35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/include/linux/relay.h b/include/linux/relay.h
+> index 022cf11e5a92..7a442c4cbead 100644
+> --- a/include/linux/relay.h
+> +++ b/include/linux/relay.h
+> @@ -31,6 +31,15 @@
+>  /*
+>   * Relay buffer error statistics dump
+>   */
+> +enum {
+> +	RELAY_DUMP_BUF_FULL = (1 << 0),
+> +
+> +	RELAY_DUMP_LAST = RELAY_DUMP_BUF_FULL,
+> +	RELAY_DUMP_MASK = (RELAY_DUMP_LAST - 1) | RELAY_DUMP_LAST
+> +};
+> +
+> +#define RELAY_DUMP_BUF_MAX_LEN 32
+> +
+>  struct rchan_buf_error_stats
+>  {
+>  	unsigned int full;		/* counter for buffer full */
+> @@ -170,6 +179,7 @@ extern int relay_late_setup_files(struct rchan *chan,
+>  				  struct dentry *parent);
+>  extern void relay_close(struct rchan *chan);
+>  extern void relay_flush(struct rchan *chan);
+> +extern void relay_dump(struct rchan *chan, char *buf, int len, int flags);
+>  extern void relay_subbufs_consumed(struct rchan *chan,
+>  				   unsigned int cpu,
+>  				   size_t consumed);
+> diff --git a/kernel/relay.c b/kernel/relay.c
+> index b5db4aa60da1..0e675a77285c 100644
+> --- a/kernel/relay.c
+> +++ b/kernel/relay.c
+> @@ -810,6 +810,41 @@ void relay_flush(struct rchan *chan)
+>  }
+>  EXPORT_SYMBOL_GPL(relay_flush);
+>  
+> +/**
+> + *	relay_dump - dump statistics of the specified channel buffer
+> + *	@chan: the channel
+> + *	@buf: buf to store statistics
+> + *	@len: len of buf to check
+> + *	@flags: select particular information to dump
+> + */
+> +void relay_dump(struct rchan *chan, char *buf, int len, int flags)
+> +{
+> +	unsigned int i, full_counter = 0;
+> +	struct rchan_buf *rbuf;
+> +	int offset = 0;
+> +
+> +	if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
+> +		return;
+> +
+> +	if (len < RELAY_DUMP_BUF_MAX_LEN)
+> +		return;
+> +
+> +	if (chan->is_global) {
+> +		rbuf = *per_cpu_ptr(chan->buf, 0);
+> +		full_counter = rbuf->stats.full;
+> +	} else {
+> +		for_each_possible_cpu(i) {
+> +			if ((rbuf = *per_cpu_ptr(chan->buf, i)))
+> +				full_counter += rbuf->stats.full;
+> +	}
+> +
+> +	if (flags & RELAY_DUMP_BUF_FULL)
+> +		offset += snprintf(buf, sizeof(unsigned int), "%u", full_counter);
+> +
+> +	snprintf(buf + offset, 1, "\n");
 
+Is there any reason to return the value as string?
+If it returns a digit value and the caller makes it a string,
+it could be more flexible for other use cases.
+
+Thank you,
+
+> +}
+> +EXPORT_SYMBOL_GPL(relay_dump);
+> +
+>  /**
+>   *	relay_file_open - open file op for relay files
+>   *	@inode: the inode
+> -- 
+> 2.43.5
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
