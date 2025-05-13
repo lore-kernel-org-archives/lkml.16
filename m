@@ -1,138 +1,132 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DEA1C6FF4
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F95239E69;
+	Tue, 13 May 2025 10:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747132804; cv=none; b=G9dewpW25LZQ5oe8lNnh1U1ZyuDK/9fOo1BYJP0tia/tRPm5jHfUhi/tc+YerrY109fnEO35E4/wZvNXESO1XTAqkMx540gWLmk7XcUd4+bB09gKT+R58c1vpq4FRcrv0oBJRtsXmYWFTscwssPpsc+7zLEl6ge0x9h1gOAK7Ao=
+	t=1747132814; cv=none; b=XC2qrelNSkDGqhdZ/rYikGN6htcIqMo4dos0E5Upel0uld2QoUlEgipY//Gkk2JzBJZEFj7n1Mml0D7zlsND6YX+1Yq+Jqwfz6k8SACiTGdI977eidcfeZWdCTOtsxYBPA8TYfABPtGpshKv8lTsRlyMZEPvfvJFUSMstCfvLs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747132804; c=relaxed/simple;
-	bh=BeYsTuFMMF+78S8QItXZ34zWaQcnTv5lev10rCwVUnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kx6IH18eXNmk69jGiLgTiL44A8XxKNbUQUjsHSsSdblULIT0G8kznVKDVEoxcUlrouKfvtxOr1rsnkmvuA2EbSK8ZwFRrEDQ3ieOnSPmKXSA/4jN9uwgzFpfJEc8EHVnjMUVFCveXUEWINGw8Kn+ays8NXUZ4H9LmYv1l3iCKSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BRfR+8ok; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EPZMvxDK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BRfR+8ok; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=EPZMvxDK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747132814; c=relaxed/simple;
+	bh=2Fkgi7Va5VKMoSknzpuOJJ9QAUTUUc3KgzRl3TQ86Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZeoRS2Jarmf17GnBuV4plqwQpUiAA7ELV7zXsXgGH70V/x8TG53duNz3yyVJXFZkAt+9dgF8Z48/C6qQkXWHNXznBNBxfqUMUYSKgqbBkFRyMSTjG6dIAxSwXzFcy1cvJutfsNGq9RI46dXO4bRmNH2EyWbBQlv9cPji8fazwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQcv2VLY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BRfR+8ok";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EPZMvxDK";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BRfR+8ok";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="EPZMvxDK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 00D5421197;
-	Tue, 13 May 2025 10:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747132801; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyl6ikRgcExL5pzSCPRicYoK/SSI4/2yziLBcvu9oRo=;
-	b=BRfR+8okXd2l18KkyfpqZxh/vnpEu1Bl1LgGjgW+Rgd7ppHNa3tGd6cUyuS8zJY6B8Pgmx
-	GndbG3GfbSObsSwA1q+a4VRvpsqudw35hrHclJLG+XH2rvuRw4k48e+p/euLV5Qdn8RNw5
-	+QT5u3k3uBDNzNrPUUC5qLK2xeFm0zc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747132801;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyl6ikRgcExL5pzSCPRicYoK/SSI4/2yziLBcvu9oRo=;
-	b=EPZMvxDKyOnVnXBsttjlE584g5Yt4rVvf+V8ZaFPi9vi3zo7FdPrUgEaH5f1xxxWJ6bgVd
-	uDWPEQCnbrM/CHAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747132801; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyl6ikRgcExL5pzSCPRicYoK/SSI4/2yziLBcvu9oRo=;
-	b=BRfR+8okXd2l18KkyfpqZxh/vnpEu1Bl1LgGjgW+Rgd7ppHNa3tGd6cUyuS8zJY6B8Pgmx
-	GndbG3GfbSObsSwA1q+a4VRvpsqudw35hrHclJLG+XH2rvuRw4k48e+p/euLV5Qdn8RNw5
-	+QT5u3k3uBDNzNrPUUC5qLK2xeFm0zc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747132801;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyl6ikRgcExL5pzSCPRicYoK/SSI4/2yziLBcvu9oRo=;
-	b=EPZMvxDKyOnVnXBsttjlE584g5Yt4rVvf+V8ZaFPi9vi3zo7FdPrUgEaH5f1xxxWJ6bgVd
-	uDWPEQCnbrM/CHAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4D66137E8;
-	Tue, 13 May 2025 10:40:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yN2hM4AhI2hbIQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 13 May 2025 10:40:00 +0000
-Message-ID: <d015a0b1-498f-4b7b-97db-27c4d92e884d@suse.cz>
-Date: Tue, 13 May 2025 12:40:00 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQcv2VLY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1597C4CEED;
+	Tue, 13 May 2025 10:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747132813;
+	bh=2Fkgi7Va5VKMoSknzpuOJJ9QAUTUUc3KgzRl3TQ86Gg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lQcv2VLY31mHUvs7kc87jwSdLEVkBrEWO6WiSo4W3ug0qM5p4x22YP7DW+WoyVXbc
+	 bgNsbl2KBkNF9vZciAo5lz2W3ecJpgGYJlyNwheOXhtJfpYOnngCrWZS5adD2uiDJT
+	 lbsDPmSidM0MC+5ZwvvUr8Fi4SM1IgGRZw7tdXqG6ma169+Mmzt5w9XNBAWaBGSnh/
+	 IaCrdwLNdRdwtrF5NbsZ1hFRiGwk7BQFWjEzeCcRXOLrJgdaOylUit8rq34He/KM5l
+	 hS2PmDbWj/UeeZEgN713hwh6ctXWVMp4AFrJAWBLidvUSDj5HNlSUAypLuZ10Eh60k
+	 F1Fz4SdthN8dw==
+Date: Tue, 13 May 2025 11:40:09 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matthias Fend <matthias.fend@emfend.at>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bsp-development.geo@leica-geosystems.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/2] Support for Texas Instruments TPS6131X flash LED
+ driver
+Message-ID: <20250513104009.GJ2936510@google.com>
+References: <20250509-leds-tps6131x-v4-0-2c9563f5b67c@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 5/7] memcg: make __mod_memcg_lruvec_state re-entrant
- safe against irqs
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>,
- bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-References: <20250513031316.2147548-1-shakeel.butt@linux.dev>
- <20250513031316.2147548-6-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250513031316.2147548-6-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,linux.dev:email]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250509-leds-tps6131x-v4-0-2c9563f5b67c@emfend.at>
 
-On 5/13/25 05:13, Shakeel Butt wrote:
-> Let's make __mod_memcg_lruvec_state re-entrant safe and name it
-> mod_memcg_lruvec_state(). The only thing needed is to convert the usage
-> of __this_cpu_add() to this_cpu_add(). There are two callers of
-> mod_memcg_lruvec_state() and one of them i.e. __mod_objcg_mlstate() will
-> be re-entrant safe as well, so, rename it mod_objcg_mlstate(). The last
-> caller __mod_lruvec_state() still calls __mod_node_page_state() which is
-> not re-entrant safe yet, so keep it as is.
+On Fri, 09 May 2025, Matthias Fend wrote:
+
+> The TPS61310/TPS61311 is a flash LED driver with I2C interface. Its power
+> stage is capable of supplying a maximum total current of roughly 1500mA.
+> The TPS6131x provides three constant-current sinks, capable of sinking up
+> to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode. In torch mode
+> each sink (LED1, LED2, LED3) supports currents up to 175m
 > 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+> ---
+> Changes in v4:
+> - Added/removed/adjusted comments
+> - Use defines for register defaults
+> - Updated source format
+> - Check for error in torch refresh timer
+> - Return error from tps6131x_parse_node()
+> - Link to v3: https://lore.kernel.org/r/20250423-leds-tps6131x-v3-0-ca67d346a4ea@emfend.at
+> 
+> Changes in v3:
+> - Add comment for locking
+> - Drop handling based on CONFIG_V4L2_FLASH_LED_CLASS
+> - Stop if getting reset GPIO fails
+> - Optimize locks
+> - Fix type of num_channels (u32 -> int)
+> - Convert a remaining return sequence to dev_err_probe
+> - Link to v2: https://lore.kernel.org/r/20250318-leds-tps6131x-v2-0-bc09c7a50b2e@emfend.at
+> 
+> Changes in v2:
+> - Bindings: Extend device description
+> - Bindings: Drop unused address/size cells
+> - Bindings: Use fallback compatible 
+> - Bindings: Corrected minimum current for 50mA steps
+> - Bindings: Drop node label
+> - Fix name of REGISTER4 INDC shift define
+> - Save device instead i2c_client in private data
+> - Add comment for mutex
+> - Use macro to convert from uA to mA
+> - Use defines to describe initial register values
+> - Add safety delay during reset sequence
+> - Use fixed value enum to set the mode
+> - Renamed some local variables
+> - Re-sorted local variables
+> - Replaced ifdefs for V4L2_FLASH_LED_CLASS
+> - Improved some error messages
+> - Link to v1: https://lore.kernel.org/r/20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at
+> 
+> ---
+> Matthias Fend (2):
+>       dt-bindings: leds: add Texas Instruments TPS6131x flash LED driver
+>       leds: tps6131x: add support for Texas Instruments TPS6131X flash LED driver
+> 
+>  .../devicetree/bindings/leds/ti,tps61310.yaml      | 120 +++
+>  MAINTAINERS                                        |   7 +
+>  drivers/leds/flash/Kconfig                         |  11 +
+>  drivers/leds/flash/Makefile                        |   1 +
+>  drivers/leds/flash/leds-tps6131x.c                 | 815 +++++++++++++++++++++
+>  5 files changed, 954 insertions(+)
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+I get errors on apply:
 
+  WARNING: Message contains suspicious unicode control characters!
+         Subject: [PATCH v4 2/2] leds: tps6131x: add support for Texas Instruments TPS6131X flash LED driver
+            Line: + * Register contents after a power on/reset. These values ​​cannot be changed.
+            -----------------------------------------------------------------^
+            Char: ZERO WIDTH SPACE (0x200b)
+         If you are sure about this, rerun with the right flag to allow.
+
+FWIW, I also saw these in your mails:
+
+  > The values <200b><200b>are fixed because they are written directly to a register.
+  > In V1, I used an enum without values <200b><200b>and mapped it to the register value in
+  > a function. I was asked to omit this mapping and use the enum directly.
+
+Never seen this before.  Not sure what's going on.
+
+Please fix and resubmit.
+
+-- 
+Lee Jones [李琼斯]
