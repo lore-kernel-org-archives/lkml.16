@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38402BE0ED;
-	Tue, 13 May 2025 15:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8062C030F;
+	Tue, 13 May 2025 15:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149201; cv=none; b=E5HmflG53fWS9S+jKBLvtl4W9joCwqvV4Tu0XnlPI2qWwykSpbd3O3QpbQ7e9NxwBCYlYPcSte3hVEIoTeehIiq280wf/QayLkL6W6/k+Q1AnTgLojlevlQAyMP1uydz1hJ11BNmYkTojX4LTEFVy45B9ZxMRxqnvnn68ghKCuQ=
+	t=1747149202; cv=none; b=B/cr74VcZtGz+zCYujvtSyYvDGH02/YKPNwRQFyKni4qICG7tbjCZjzRlAVaQlh0BLaO6BBv2SadOITXE5krRBxZbvGR0fibSAfMLQCESZfblGXXKZfZmZV7p+A8FCmykBGpAZwKiDSEAWgpvfvFyQBXEr5I3K/AFM+hZrs1PQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747149201; c=relaxed/simple;
-	bh=7rlVhwwEK7pkxbrm97gviPqsq5eXgHWjvV7zgZ/ryjU=;
+	s=arc-20240116; t=1747149202; c=relaxed/simple;
+	bh=iD+Kcf0L16tFt0BYOWblZLMLXQ/SDxHWJWT4Krt2br0=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=m9VgQLHUF98x6DEmXKDr0sNxh1uoNVgPe14dw2o5SRt/glJ2HC+0k0MFM0DnISm7SVLlcT1ZacDBH9HNRoBaG9PseAk9tk/buDQfFdk54TXIJR8xB9JmApVgZKgx9ZpcrVmJRSVb41E0ZUDw2qCBZlaCUetllSnltShD5C9Xm1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JnqjwGYs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qAJMli80; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=sja1eUjWFh8wDaPgFBeJCegB3REh9MIaSCQAaGLTxeA9XbfM/sx33kVXELf5LzeeZ9yyLVfzRcaAknU+f0UXEpNSHgYZdhzqSrY5rEo/UGPzUfTOinZQpE20KQ155M4LNyJ9Jgl1z09Vzz39PQssGtfBCnaNvycYixoI4S9YWFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cYGZeexd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bcd/h5tn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JnqjwGYs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qAJMli80"
-Message-ID: <20250513145137.328165847@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cYGZeexd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bcd/h5tn"
+Message-ID: <20250513145137.446283287@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747149195;
+	s=2020; t=1747149199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=gX7iCiYfGsRnCTExZfiSGn2FqWTPgxe9dSFWPNxUFpM=;
-	b=JnqjwGYsicjKTm11h6ZHQLG/XWQbUnX1ZGRNnWpHzc66X+rLNe0gH1ugL9iSMjhpdc6afO
-	we55p6loqkNALj/P1dQsuiRI32WZ5RrgTVGuS0QRbT4MslSf9SQdhTgtfRgsC4hHSTrTvp
-	GTtCm91rCw/ebH14iZAg7k4tX2nlSWK/KYo9IdCWleD0BS5g+dD1h3o8KZSCY692yEB/b8
-	u8OHhKBEmM7VG3WmS75C/MDawaQsXVMTPjKQx/DLalEOoeD9R++KpYVQa5aLxCO2RTW6uV
-	4CLHFul5bMOtrZbEjt5ytS2SQhmFmyt5umGEHrD+S/Bw7k/MJTSvzXew2HHDDQ==
+	 references:references; bh=wK3kKijwAh9tE7s5X+OhXxFEfHd8a5JPnG7m6/+F1gk=;
+	b=cYGZeexdo3ogM0CruXYBBARqi4Pk2m3aGVgcGbi1cUlnAqjNEueL8SmPeyCvIky6+ueB+K
+	CS9bgJqdvALrYsaC76cof3Uuq/82NtexlybvITg8hzHGZTvIYr6dhqSCYzkKbocRZJpVob
+	Jc5Um+Ans1/Y0EZKsBMydj5LSdjU5gbAN3GmtMcavRAi7DfUSZeHO871+MwDpb4mk0+qgV
+	+pq6Rpn1IRR0ws/JLXpLDYr/41D1rzjNQMnzeBeUzay+2YJ18AmC1nPo9sZu/sdH9Gofx9
+	lpRcl4mwSlrd6G+gZ9DPl3da6Oi7clX1V3/h1RhwMzYzNEKszmVp7je0PDKf3w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747149195;
+	s=2020e; t=1747149199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=gX7iCiYfGsRnCTExZfiSGn2FqWTPgxe9dSFWPNxUFpM=;
-	b=qAJMli802AqcheEh48q9iwOEaFdFiSHfEGKer7k4Zmxuoo+d6aZBfVObm4uIsgPTrN0uw4
-	FcocIFbCv3BBP/DQ==
+	 references:references; bh=wK3kKijwAh9tE7s5X+OhXxFEfHd8a5JPnG7m6/+F1gk=;
+	b=Bcd/h5tncOafB/p7gkWzOKCV7z5793M5+uIm3/t+V9Rxs1WA4dlR/oFew3cCKWpXUAHKGP
+	LdtfL7q7e1dr78DQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -52,7 +52,7 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Alex Gieringer <gieri@linutronix.de>
-Subject: [patch 11/26] timekeeping: Add clock_valid flag to timekeeper
+Subject: [patch 13/26] timekeeping: Provide ktime_get_ntp_seconds()
 References: <20250513144615.252881431@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,61 +61,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 May 2025 17:13:15 +0200 (CEST)
+Date: Tue, 13 May 2025 17:13:18 +0200 (CEST)
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
-In preparation for supporting independent PTP clock timekeepers, add a
-clock valid field and set it to true for the system timekeeper.
+ntp_adjtimex() requires access to the actual time keeper per timekeeper
+ID. Provide an interface.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- include/linux/timekeeper_internal.h |    2 ++
- kernel/time/timekeeping.c           |    5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ kernel/time/timekeeping.c          |    9 +++++++++
+ kernel/time/timekeeping_internal.h |    3 +++
+ 2 files changed, 12 insertions(+)
 ---
---- a/include/linux/timekeeper_internal.h
-+++ b/include/linux/timekeeper_internal.h
-@@ -73,6 +73,7 @@ struct tk_read_base {
-  * @raw_sec:			CLOCK_MONOTONIC_RAW  time in seconds
-  * @clock_was_set_seq:		The sequence number of clock was set events
-  * @cs_was_changed_seq:		The sequence number of clocksource change events
-+ * @clock_valid:		Indicator for valid clock
-  * @monotonic_to_boot:		CLOCK_MONOTONIC to CLOCK_BOOTTIME offset
-  * @cycle_interval:		Number of clock cycles in one NTP interval
-  * @xtime_interval:		Number of clock shifted nano seconds in one NTP
-@@ -149,6 +150,7 @@ struct timekeeper {
- 	/* Cachline 3 and 4 (timekeeping internal variables): */
- 	unsigned int		clock_was_set_seq;
- 	u8			cs_was_changed_seq;
-+	u8			clock_valid;
- 
- 	struct timespec64	monotonic_to_boot;
- 
 --- a/kernel/time/timekeeping.c
 +++ b/kernel/time/timekeeping.c
-@@ -1660,11 +1660,12 @@ read_persistent_wall_and_boot_offset(str
- 	*boot_offset = ns_to_timespec64(local_clock());
+@@ -2622,6 +2622,15 @@ int do_adjtimex(struct __kernel_timex *t
+ 	return ret;
  }
  
--static __init void tkd_basic_setup(struct tk_data *tkd, enum timekeeper_ids tk_id)
-+static __init void tkd_basic_setup(struct tk_data *tkd, enum timekeeper_ids tk_id, bool valid)
- {
- 	raw_spin_lock_init(&tkd->lock);
- 	seqcount_raw_spinlock_init(&tkd->seq, &tkd->lock);
- 	tkd->timekeeper.id = tkd->shadow_timekeeper.id = tk_id;
-+	tkd->timekeeper.clock_valid = tkd->shadow_timekeeper.clock_valid = valid;
- }
++/*
++ * Invoked from NTP with the time keeper lock held, so lockless access is
++ * fine.
++ */
++long ktime_get_ntp_seconds(unsigned int id)
++{
++	return timekeeper_data[id].timekeeper.xtime_sec;
++}
++
+ #ifdef CONFIG_NTP_PPS
+ /**
+  * hardpps() - Accessor function to NTP __hardpps function
+--- a/kernel/time/timekeeping_internal.h
++++ b/kernel/time/timekeeping_internal.h
+@@ -45,4 +45,7 @@ static inline u64 clocksource_delta(u64
+ unsigned long timekeeper_lock_irqsave(void);
+ void timekeeper_unlock_irqrestore(unsigned long flags);
  
- /*
-@@ -1694,7 +1695,7 @@ void __init timekeeping_init(void)
- 	struct timekeeper *tks = &tk_core.shadow_timekeeper;
- 	struct clocksource *clock;
- 
--	tkd_basic_setup(&tk_core, TIMEKEEPER_CORE);
-+	tkd_basic_setup(&tk_core, TIMEKEEPER_CORE, true);
- 
- 	read_persistent_wall_and_boot_offset(&wall_time, &boot_offset);
- 	if (timespec64_valid_settod(&wall_time) &&
++/* NTP specific interface to access the current seconds value */
++long ktime_get_ntp_seconds(unsigned int id);
++
+ #endif /* _TIMEKEEPING_INTERNAL_H */
 
