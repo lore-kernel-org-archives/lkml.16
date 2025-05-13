@@ -1,152 +1,392 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125EF189912;
-	Tue, 13 May 2025 19:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8CC151991
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747163189; cv=none; b=iB7HLwOSreA/XJrNNKCS04oAoBNRen0yx6ZMi3vbw+61ypoFJDan4bpIav6U0o7lAutlrd7Z8412wfRNRLFfZMF/G/lu7ttc44XLuliGtVxhn2soumTvXhSzK+LAWI0g1jTkm57qYsxzC93+y97D8JzJCSCRte7Wrxb8K+Dvy6s=
+	t=1747163259; cv=none; b=YKPvgpt32LFsACqKHucub/ygY/jMmEnhyP+9vkC92qxRP5X7T3F8sjH6jkPKk+zxs80kYvFo3/NGfOyGN3aAuAQ8+CI5ZGp6cKCMxwDcNPahV1+AlYmRXKZBCW6X4IUEPFs1fc4gaVgIE7sVkj/OoAtoUbOF3kGd3JgFqRFg5aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747163189; c=relaxed/simple;
-	bh=64A9hAx5fUS6HZFZ0zh5mm7yxbI6pYTr/KuOjktkkK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKecgrLQ43lXg7p3JGSUHjNaUajmpExppeLF/e/rmfN9qgwi17HcXucyN4d2Ddn6S25XQ7t78vdXR/giSHFTNceAPQvjIwXc/v5G4kjUZMB+mGwYtsirRpozdFK2h6VQUDwdX1nLfQOtvby8QnDN1GHa/IcUUZ2TOvGlxjcz3cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBuepZeD; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747163259; c=relaxed/simple;
+	bh=BfIIdAmYgagg8bgmfKPMbA/yNS8HDi+q7tLjHe0l8yk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TZRygLcDDDMrp9bDbNlBjJKkr61eCnauGVtS+Ge7ijiNld9hcBYA8RX6OQqU6CKcykFTqJAl0cUwTjo3O/li285OhZUkP4WAeXLeT4HNgexrAL+EoS1GxJaQSCVP+GdKJLPyBd9sMEkOHt8Bqr2TB17S6EXjuIkrqdp1DabSbLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D8KHP6Rm; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBuepZeD"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5feb22e7d84so3218505a12.3;
-        Tue, 13 May 2025 12:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D8KHP6Rm"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e42641d7cso47145ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747163186; x=1747767986; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=co29tc+GT+eqlsOi86yB+IcGvOod/IK2VejV88ys+Dk=;
-        b=KBuepZeD+swvg3qXnhkJg0fgEootyNjV8P/opB3cWOS15xlKSHbgFWcBOyxGnIZv7i
-         TyteKg4H/fXOu6L7eLAQ7fGVTfCqUTyOCCgUPdiXDq5c2cOpJ2qq+5L0qY1v6tO0hKH6
-         eRBI04e7rZujs2DO63EHuN6+EVQUTOToH2BtZxY4sUXNxWaU8RsfXAk4pJWGma9GX1cl
-         If2Pa+bWs3u09VpbSZftsbKemvBKVM6ouaDO8x7dQ7eCeDSfgyfrLVxyDr/hldC/eWZ2
-         wv1foj2JB1IgAuHiYzQDpeU1CToeQrVjG7CttzeMbs4lBdwCyZ8Q8wxQ2+CaqN1VZ7Ko
-         0yig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747163186; x=1747767986;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747163256; x=1747768056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=co29tc+GT+eqlsOi86yB+IcGvOod/IK2VejV88ys+Dk=;
-        b=Ca4kHR4uGKMzFuqqlTqm1EkpludVVUx2wDCre6dg+5V5gx9+2KgLVcxwMwxxKTPxKl
-         i1UHED7ivDTgiWelE+hwzrOAAwfLYLt+h2csRvGHAR63nykXNf3z0SNacsikuZF2etjJ
-         8KDk093ym/a0mCYBOSvnch+U7Id9RZdEmzXpxjMwxuXw3AyG65KDMLXXw7sDkNz2kbwH
-         BtFc4isRre+BSdTWFmNA1C0YuTZPYehxfYRNoH98bJjGAiQhEHJ2l3RlT6kDQkkZQJS9
-         HF5Wbx3VRypU44mAJHE5kqGdnBOckYoi38vIk4MFLIIHuytMMIcEqQBXbNdf5voITYi4
-         vatQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYY97p8pnLoQgw6QxyIT0SP9T6q0QVGgC3CP5XDql3ZoUeTewbjsSKkqcVRVePePNDX/8EfZs89Z5OdgQ=@vger.kernel.org, AJvYcCUZAkaUr9SGxvuqN68QUBQ2IEG5iTSm2qSh297GWhgJHJrQKQuV+8I/ld70sa2ikNbN3Rhn2NO6jR24@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX24VBH7Q17ZizVCP/E9rDV2W0lPSuIYck14iPTlWwINYVJyPI
-	reCtkiS+Wvhk4QQA2R8zj2kqYTnKfzfYRFZa1stWy60f6WBlfx0=
-X-Gm-Gg: ASbGncsmle0ZMEmrw7UTaCoZhgJr52r21Dc3wOJmOAlLWT29H5ikTV6OR6pbC+frTHx
-	k59Mt2w+AOfNqhwnzdxKnP9zpFKjcy3LvauYZv98v+TUPu6eTDzN6HaKSAyXJN2YFDf2b5zIJls
-	Y5r8mSP8BM30CuhWce61t2u7sujGbqaEF5Xw8BdLZ4Aja646jrmFeKsBd7cj8Whb812U4qho2Da
-	kngszpiY3MS5mZMoHa+rubDy0KTFk3QBC3/x5AvwU82zoVM25ddhn0k19USp73OLyb2rKtKPfa/
-	Rxk4Xqa3z8YS7VA99u8qbdUK4VTICuTBBvh1pekdT+PbBJ9I
-X-Google-Smtp-Source: AGHT+IEAn4zNilh9gtCGy25sS+3wVKgKgkJ+RRlZbOxvWHIc4BOunvjks1MPZx1ngt4l/sYvgNDyOw==
-X-Received: by 2002:a05:6402:440b:b0:5ec:fb3d:f51f with SMTP id 4fb4d7f45d1cf-5ff988a5e8fmr266242a12.10.1747163186103;
-        Tue, 13 May 2025 12:06:26 -0700 (PDT)
-Received: from p183 ([46.53.251.33])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cbe5542sm7615052a12.5.2025.05.13.12.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 12:06:25 -0700 (PDT)
-Date: Tue, 13 May 2025 22:06:23 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, corbet@lwn.net,
-	workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] CodingStyle: flip the rule about curlies
-Message-ID: <d21af9bc-baec-4b13-b0e0-d02829822682@p183>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <20250509203430.3448-9-adobriyan@gmail.com>
- <2025051001-undertow-unsolved-3aee@gregkh>
- <433d5f82-3ca9-40b8-82e8-acd647f55d67@oss.qualcomm.com>
- <2025051204-runt-mobility-6fbc@gregkh>
+        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
+        b=D8KHP6RmzaIqO48wRKqFYB9BwWFrkilj62soDrrPMH2hCH1nJK8BchOncTkHEu8/jd
+         Z1AF6eNhYwlrMfyatLy/A7MTmTHqFFtad9vMQbqUf6/JXxcrAafrNhGww6UJwepjABf2
+         3ynraTBWsrTHUdAknrBFBOYs5wUsUW9i8Mr5T6hyKzSfDZPL+zvRzV/guGb+0OwFEM9e
+         WU0Hc3zPHvtw973WThutQAHdMAbyZk+dCnD+jzQqSaVR2DxmYL95nsBpFD3lSybBU+qh
+         TQFO+EbaYnfx/zBMhOwSyIFF9AdrCTUN62ZD9XQzO0ENMzYwqZLqyBtLXVunrTbXMt2D
+         tdRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747163256; x=1747768056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WEL74c2SOBaH5lHHG44gJaQWn8jnoJ1Naxq4P6yhI70=;
+        b=BWQoSl8H0yUNPUX84et2okhTFMvLfOxIn4mQygKI7jC8Vl7twYt09MPGUOAQu2lOWu
+         hJOKY3gs7UtAHSmYYR4iLxGQ6uOBht4BX7HzhMlSVlpmrGYg6G9Pbr8J/j8VekKSYLDG
+         TrXfi3Nih5kAAV2+8yf7HRUqvCUhD+GyZaofzdGqrpCAq5lqBi0HDGoVuHnP5V95dS0W
+         x2ttVmK6lTQaF6NuMURNE3jZNpqVF2/v35ZmXsOq1umcKceAwqxNyLbHpY9NB6BXqpzV
+         IqcWCiIsxejbnwsHUMOS9QWiadywDllYMFPBlilLhR6qBjXcJSkPH8V0jciR7LAWJoe9
+         a5eA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB7z43tlfJhWtI4BFOlYjp/cInUwbz9FmZdAab0Q5PIpUrYoHnwMvnBwLXrRRFEUdXD/e53ciDpqt0soo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwslnzJja3SK+XnJuicdTfxsbuVoCc7rgGBVbOIZ6tE0MtLiG+o
+	6RpynHqRTwQxOfsrw4eUK7QYCr58dPSpQGJ/XM4Hap03muQmgFAAG3yB13Y+y3TgQlqpX9grWHg
+	KteVjm+WjWspDLQevEluM1F/mAn2uJBT7zJRpIlB+
+X-Gm-Gg: ASbGncsTWdpqn2++5baNcBHGOP6+9NUDoaF4JpktkGZRNyh/IgsEqIFmh2BhPvGjXPK
+	H9btGwojsKCf7YeVbutuFpZkx+4MQLxAOBP0a2FZ5YXOfuZyKGpg8jSTpzV0DL8USArBhxyxU6G
+	4hzf+HNPqBIPUl404Nygcl9fD3UYDDc+c9CjcRUbAt1xpUbqXPL/oanvkvzLVv
+X-Google-Smtp-Source: AGHT+IFwdsPT6+6RkvJxXLy3zo+LPCFyRXTUHWRP+m7DkI1VtSOnHZRCHu1WV9UtnVz/sCV1SdFwGbfGlIKW4ECRDNg=
+X-Received: by 2002:a17:903:244a:b0:224:6c8:8d84 with SMTP id
+ d9443c01a7336-2319906cfb6mr449655ad.4.1747163256295; Tue, 13 May 2025
+ 12:07:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2025051204-runt-mobility-6fbc@gregkh>
+References: <20250512184700.11691-1-irogers@google.com> <20250512184700.11691-2-irogers@google.com>
+ <108f87fc28453adb52d6b8c2afd8d184e288a83e.camel@intel.com>
+ <CAP-5=fVaC662z2nJnTwBHMu-RE+9HkRmvSyNT5qB448+zw6e9Q@mail.gmail.com> <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
+In-Reply-To: <CAP-5=fW5gap1OOFiEq6Lrc500rDPx=h5UNwOF8mEg2LOgfBsew@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 May 2025 12:07:24 -0700
+X-Gm-Features: AX0GCFscnAabIE4jY1VGOomuoUWx0fFM4LdVeYZd19rTeRAhgOJVom0cEP2gKDs
+Message-ID: <CAP-5=fXr4bydqx5vXdFkJW99Asa3+Bzhk8AWnQc9_g8pywDaTg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Hybrid improvements for metric value
+ validation test
+To: "Falcon, Thomas" <thomas.falcon@intel.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, Stephane Eranian <eranian@google.com>
+Cc: "james.clark@linaro.org" <james.clark@linaro.org>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
+	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 06:56:56PM +0200, Greg KH wrote:
-> On Mon, May 12, 2025 at 09:43:10AM -0700, Jeff Johnson wrote:
-> > On 5/9/2025 11:18 PM, Greg KH wrote:
-> > > On Fri, May 09, 2025 at 11:34:30PM +0300, Alexey Dobriyan wrote:
-> > >> Require set of curlies {} in all if/else branches and all loops
-> > >> not matter how simple.
-> > > 
-> > > Sorry, but no, we are not going to change this long-term coding style
-> > > rule for no real reason at this point in time.
-> > 
-> > Is the infamous Apple SSL bug (CVE-2014-1266) a good reason?
+On Tue, May 13, 2025 at 10:26=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Mon, May 12, 2025 at 2:52=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Mon, May 12, 2025 at 1:30=E2=80=AFPM Falcon, Thomas <thomas.falcon@i=
+ntel.com> wrote:
+> > >
+> > > On Mon, 2025-05-12 at 11:47 -0700, Ian Rogers wrote:
+> > > > On my alderlake I currently see for the "perf metrics value validat=
+ion" test:
+> > > > ```
+> > > > Total Test Count:  142
+> > > > Passed Test Count:  139
+> > > > [
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_fetch_latency', 'tma_fetch_bandwidth', 'tma_frontend_bound']
+> > > >                         is [31.137028] in workload(s): ['perf bench=
+ futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_frontend_b=
+ound, tma_frontend_bound]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent',
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_memory_bound', 'tma_core_bound', 'tma_backend_bound']
+> > > >                         is [6.564442] in workload(s): ['perf bench =
+futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_backend_bo=
+und, tma_backend_bound]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent',
+> > > > Metric Relationship Error:      The collected value of metric ['tma=
+_light_operations', 'tma_heavy_operations', 'tma_retiring']
+> > > >                         is [57.806179] in workload(s): ['perf bench=
+ futex hash -r 2 -s']
+> > > >                         but expected value range is [tma_retiring, =
+tma_retiring]
+> > > >                         Relationship rule description: 'Sum of the =
+level 2 children should equal level 1 parent']
+> > > > Metric validation return with erros. Please check metrics reported =
+with errors.
+> > > > ```
+> > > > I suspect it is due to two metrics for different CPU types being
+> > > > enabled. Add a -cputype option to avoid this. The test still fails =
+with:
+> > > > ```
+> > > > Total Test Count:  115
+> > > > Passed Test Count:  114
+> > > > [
+> > > > Wrong Metric Value Error:       The collected value of metric ['tma=
+_l2_hit_latency']
+> > > >                         is [117.947088] in workload(s): ['perf benc=
+h futex hash -r 2 -s']
+> > > >                         but expected value range is [0, 100]]
+> > > > Metric validation return with errors. Please check metrics reported=
+ with errors.
+> > > > ```
+> > > > which is a reproducible genuine error and likely requires a metric =
+fix.
+> > >
+> > > Hi Ian, I tested this on my alder lake and an arrow lake. All tests, =
+including tma_l2_hit_latency,
+> > > pass on my end.
+> > >
+> > > Tested-by: Thomas Falcon <thomas.falcon@intel.com>
+> >
+> > Thanks Thomas! It should also work for core_lowpower on ArrowLake. I
+> > find some times that tma_l2_hit_latency passes for me. Trying a few
+> > more times I see other failures, but they all seem to be "No Metric
+> > Value Error" - perhaps these shouldn't fail the test. In the testing
+> > code we're passing '-a' for system wide profiling:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/perf/tests/shell/lib/perf_metric_validation.py?h=3Dperf-to=
+ols-next#n380
+> > I believe this is done so that counters for things like AVX will
+> > gather values. I wonder if the tma_l2_hit_latency something is
+> > happening due to scaling counts:
+> > ```
+> > $ sudo /tmp/perf/perf stat -M tma_l2_hit_latency -a sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> >      7,987,903,325      cpu_core/TOPDOWN.SLOTS/          #    210.2 %
+> > tma_l2_hit_latency       (87.27%)
+> >      3,131,119,398      cpu_core/topdown-retiring/
+> >                          (87.27%)
+> >      1,910,718,811      cpu_core/topdown-mem-bound/
+> >                          (87.27%)
+> >        481,456,610      cpu_core/topdown-bad-spec/
+> >                          (87.27%)
+> >      1,681,347,944      cpu_core/topdown-fe-bound/
+> >                          (87.27%)
+> >      2,798,109,902      cpu_core/topdown-be-bound/
+> >                          (87.27%)
+> >        365,736,554      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+> >                                   (87.27%)
+> >        327,668,588      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+> >                                  (87.30%)
+> >         12,744,464      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+> >                            (75.32%)
+> >      1,403,250,041      cpu_core/CPU_CLK_UNHALTED.THREAD/
+> >                           (87.65%)
+> >          6,657,480      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+> >                           (87.66%)
+> >     59,424,499,192      TSC
+> >         40,830,608      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+> >                           (62.46%)
+> >      1,461,544,380      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+> >                            (74.79%)
+> >      1,008,604,319      duration_time
+> >
+> >        1.004974560 seconds time elapsed
+> > ```
+> > The values in the parentheses is a scaling amount which should mean
+> > for event multiplexing but for hybrid the events aren't running when
+> > on the other core type, so we're seeing these odd multiplexing values
+> > and these are used to scale counts:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
+t.git/tree/tools/lib/perf/evsel.c?h=3Dperf-tools-next#n599
+> > I find when I run a benchmark rather than "sleep" the issue seems
+> > harder to reproduce.
+>
+> Ok chatting with Weilin and actually paying attention to warning
+> messages I think I see a problem. TSC (msr/tsc/) is aggregating data
+> across all CPUs (it is a software event and is a different performance
+> monitoring unit to cpu_core) while the counters are only on cpu_core.
+> So I think this means the TSC value is too large. However, even with
+> restricting the CPUs I see the >100% problem:
+> ```
+> $ perf stat -M tma_l2_hit_latency -C 0-15 -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>     27,985,670,146      cpu_core/TOPDOWN.SLOTS/          #    125.6 %
+> tma_l2_hit_latency       (87.22%)
+>      9,619,906,383      cpu_core/topdown-retiring/
+>                          (87.22%)
+>      2,333,124,385      cpu_core/topdown-mem-bound/
+>                          (87.22%)
+>      3,607,656,674      cpu_core/topdown-bad-spec/
+>                          (87.22%)
+>      9,839,779,867      cpu_core/topdown-fe-bound/
+>                          (87.22%)
+>      5,244,189,749      cpu_core/topdown-be-bound/
+>                          (87.22%)
+>        442,932,231      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/
+>                                   (87.24%)
+>        360,126,840      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/
+>                                  (87.63%)
+>         31,264,814      cpu_core/MEM_LOAD_RETIRED.L1_MISS/
+>                            (75.26%)
+>      4,761,244,040      cpu_core/CPU_CLK_UNHALTED.THREAD/
+>                           (87.63%)
+>         28,429,277      cpu_core/MEM_LOAD_RETIRED.L2_HIT/
+>                           (87.62%)
+>     33,863,490,835      TSC
+>         23,533,366      cpu_core/MEM_LOAD_RETIRED.FB_HIT/
+>                           (62.25%)
+>      3,158,155,632      cpu_core/CPU_CLK_UNHALTED.REF_TSC/
+>                            (74.63%)
+>      1,003,102,327      duration_time
+>
+>        1.001912038 seconds time elapsed
+> ```
+> So we still need to figure this one out. The multiplexing numbers
+> still worry me.
 
-Indeed.
+So I think the TSC bug is genuine, perhaps Kan has thoughts on how to
+restrict the cpu mask to just the core cpus. The tma_l2_hit_latency
+>100% bug appears to be global. I see the problem on a tigerlake:
+```
+$ perf stat --metric-no-threshold -M tma_l2_hit_latency -a sleep 1
 
-Thanks, curlies were inspired by this CVE but I forgot to mention it.
+Performance counter stats for 'system wide':
 
-> One bug in 2014 will require us to touch 30+ million lines of code?
+       46,745,378      MEM_LOAD_RETIRED.FB_HIT          #    105.8 %
+tma_l2_hit_latency
+    1,445,788,955      CPU_CLK_UNHALTED.REF_TSC
+    2,532,066,403      CPU_CLK_UNHALTED.THREAD
+   40,008,507,350      TSC
+       11,922,390      MEM_LOAD_RETIRED.L1_MISS
+        2,587,517      MEM_LOAD_RETIRED.L2_HIT
+    1,002,819,485      duration_time
 
-Nobody is proposing to reformat 30 mil lines at one commit
-(as much as I'd like it).
+      1.002198593 seconds time elapsed
+```
+Anyway, I think this patch series should land and we can worry about
+this metric and the hybrid problems separately.
 
-Old code will stay old, new code will be formatted per new rules.
+Thanks,
+Ian
 
-> Please be reasonable.
-
-I'm very reasonable. Each patch details rationale why specific style is
-better.
-
-> And everyone, remember _why_ we have a coding style.  It's not so much
-> the specifics of _what_ the coding style is,
-
-What? When was the last time you read it? It is very much about specifics:
-8 spaces, opening curly on the same line except at function scope,
-80 columns, recent rule about to format function attributes.
-
-It could have even more specific if there is pre-commit hook forcing
-formatting like commercial companies do.
-
-> one at all.  Don't argue the specifics of the coding style without a
-> really really good reason why, with real details and proof.
-
-What is "really really good"?
-
-How do you know when it is good reason or not?
-
-I think I have good reason: I programmed a little in another languages
-where some of the rules don't apply. In particular C++/Rust don't have
-a rule about declaring variables upfront. Nor does any popular programming
-language designed in the last 35 years (?).
-
-Such experience made me realize that linux-kernel CodingStyle in this
-regard is pointless at best and counter-productive. It was so obvious.
-
-> It took us a long time to increase the default line length, and that too
-> is still argued about for very good and valid reasons.
-
-It still 80 columns in CodingStyle.
-
-> That was discussed in detail, not just thrown at us like this patch series was.
-
-Oh come on. In Russia we say "not my first year of marriage".
-
-One of the unwritten rules of linux-kernel is to NEVER post [RFC]
-as it will be ignored, but to post a [PATCH] and Cc specific people
-to force a discussion.
-
-I don't want to look like a thief who sneaks in occasional declaration
-in the middle of a function or set of curlies and get yelled by compilers
-or maintainers (especially those armed with checkpatch.pl).
-
-I'll codify this first in CodingStyle, then delete relevant checks from
-checkpatch.pl (citing CodingStyle of course).
+> >
+> > > Thanks,
+> > > Tom
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  .../tests/shell/lib/perf_metric_validation.py   | 12 +++++++++---
+> > > >  tools/perf/tests/shell/stat_metrics_values.sh   | 17 +++++++++++--=
+----
+> > > >  2 files changed, 20 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b=
+/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > index 0b94216c9c46..dea8ef1977bf 100644
+> > > > --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+> > > > @@ -35,7 +35,8 @@ class TestError:
+> > > >
+> > > >
+> > > >  class Validator:
+> > > > -    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
+=3DFalse, datafname=3D'', fullrulefname=3D'', workload=3D'true', metrics=3D=
+''):
+> > > > +    def __init__(self, rulefname, reportfname=3D'', t=3D5, debug=
+=3DFalse, datafname=3D'', fullrulefname=3D'',
+> > > > +                 workload=3D'true', metrics=3D'', cputype=3D'cpu')=
+:
+> > > >          self.rulefname =3D rulefname
+> > > >          self.reportfname =3D reportfname
+> > > >          self.rules =3D None
+> > > > @@ -43,6 +44,7 @@ class Validator:
+> > > >          self.metrics =3D self.__set_metrics(metrics)
+> > > >          self.skiplist =3D set()
+> > > >          self.tolerance =3D t
+> > > > +        self.cputype =3D cputype
+> > > >
+> > > >          self.workloads =3D [x for x in workload.split(",") if x]
+> > > >          self.wlidx =3D 0  # idx of current workloads
+> > > > @@ -377,7 +379,7 @@ class Validator:
+> > > >
+> > > >      def _run_perf(self, metric, workload: str):
+> > > >          tool =3D 'perf'
+> > > > -        command =3D [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
+> > > > +        command =3D [tool, 'stat', '--cputype', self.cputype, '-j'=
+, '-M', f"{metric}", "-a"]
+> > > >          wl =3D workload.split()
+> > > >          command.extend(wl)
+> > > >          print(" ".join(command))
+> > > > @@ -443,6 +445,8 @@ class Validator:
+> > > >                  if 'MetricName' not in m:
+> > > >                      print("Warning: no metric name")
+> > > >                      continue
+> > > > +                if 'Unit' in m and m['Unit'] !=3D self.cputype:
+> > > > +                    continue
+> > > >                  name =3D m['MetricName'].lower()
+> > > >                  self.metrics.add(name)
+> > > >                  if 'ScaleUnit' in m and (m['ScaleUnit'] =3D=3D '1%=
+' or m['ScaleUnit'] =3D=3D '100%'):
+> > > > @@ -578,6 +582,8 @@ def main() -> None:
+> > > >      parser.add_argument(
+> > > >          "-wl", help=3D"Workload to run while data collection", def=
+ault=3D"true")
+> > > >      parser.add_argument("-m", help=3D"Metric list to validate", de=
+fault=3D"")
+> > > > +    parser.add_argument("-cputype", help=3D"Only test metrics for =
+the given CPU/PMU type",
+> > > > +                        default=3D"cpu")
+> > > >      args =3D parser.parse_args()
+> > > >      outpath =3D Path(args.output_dir)
+> > > >      reportf =3D Path.joinpath(outpath, 'perf_report.json')
+> > > > @@ -586,7 +592,7 @@ def main() -> None:
+> > > >
+> > > >      validator =3D Validator(args.rule, reportf, debug=3Dargs.debug=
+,
+> > > >                            datafname=3Ddatafile, fullrulefname=3Dfu=
+llrule, workload=3Dargs.wl,
+> > > > -                          metrics=3Dargs.m)
+> > > > +                          metrics=3Dargs.m, cputype=3Dargs.cputype=
+)
+> > > >      ret =3D validator.test()
+> > > >
+> > > >      return ret
+> > > > diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/=
+perf/tests/shell/stat_metrics_values.sh
+> > > > index 279f19c5919a..30566f0b5427 100755
+> > > > --- a/tools/perf/tests/shell/stat_metrics_values.sh
+> > > > +++ b/tools/perf/tests/shell/stat_metrics_values.sh
+> > > > @@ -16,11 +16,16 @@ workload=3D"perf bench futex hash -r 2 -s"
+> > > >  # Add -debug, save data file and full rule file
+> > > >  echo "Launch python validation script $pythonvalidator"
+> > > >  echo "Output will be stored in: $tmpdir"
+> > > > -$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "=
+${workload}"
+> > > > -ret=3D$?
+> > > > -rm -rf $tmpdir
+> > > > -if [ $ret -ne 0 ]; then
+> > > > -     echo "Metric validation return with erros. Please check metri=
+cs reported with errors."
+> > > > -fi
+> > > > +for cputype in /sys/bus/event_source/devices/cpu_*; do
+> > > > +     cputype=3D$(basename "$cputype")
+> > > > +     echo "Testing metrics for: $cputype"
+> > > > +     $PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir =
+-wl "${workload}" \
+> > > > +             -cputype "${cputype}"
+> > > > +     ret=3D$?
+> > > > +     rm -rf $tmpdir
+> > > > +     if [ $ret -ne 0 ]; then
+> > > > +             echo "Metric validation return with errors. Please ch=
+eck metrics reported with errors."
+> > > > +     fi
+> > > > +done
+> > > >  exit $ret
+> > > >
+> > >
