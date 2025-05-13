@@ -1,63 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F4228D8D7
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136142; cv=none; b=ihXtQlkzLlkgSwbaCyM6DMVhgR1yklJdxpuoPPZ67w5dIGBcw3qZLAykPMLtuqzPcgMPE2QPl5rXSIU5EZW31YscPQtPV+8aAdsJdnzameosn6h7JuJDWbFSIU8hjpmYpt6/EAhCUFYIUFEUtH4EB5yFN/bid456IJQsKwuNVII=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136142; c=relaxed/simple;
-	bh=qdqMHeXnEw1hwPK/CNFq9Bieu80j0aqXtJoit3+EJqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y9XkIDJQTcQUCzOOTf4gutfQ9++MiEVkc1LkI5s7rumR0P1tPw12jx2Z7uwuXpXeD13ymN91YlZ3+L33mA6DfWuwhdpfdDAhD2odqcbQ6IAnRtWqAP9+zHYhM1cv1i3hjzi3SnQ5jLNO5DdNDkk+u8s3KQOa11zP7V7+n58BJvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SROnTvkk; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B6124C67B;
+	Tue, 13 May 2025 11:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747136200; cv=pass; b=grnlNLIlvyH8nNPNosFDnEenmTnFvrnde8xYcqu0pLpTY/qqgZpScqAXpR5tXwefiFHc+3H4i/3OuIl/inx+7GshO13DmYN9JdNSoq1QM7MU+3unfEw1EIXC5kcLNWhzt4RDxVXdr1JlJ4C6fR6dicbVMNmeXKYE9YIGQ+xGwnM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747136200; c=relaxed/simple;
+	bh=f8tl4Fxf9bt+uosH7h+NE/cRfT43y8uNqF86p1OwRIg=;
+	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
+	 Content-Type; b=pPJ5YjflmLBG+i1jyhzuE+ix6R6CvZdtfCw+pcH/R6fSqUovm5YSVgmrBbG4xb70ggVC0s2m2hSsl9bOedsukMsv2WbV4KCm5bGVR5XJ0SsUiDEx+tQvLe9dizgetJN+fqw8YDDuuu0cbms4Aa6Nus8GBIFNsVxDHZZQsMf/6jc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=XGZsnQSz; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SROnTvkk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5AEC4CEEB;
-	Tue, 13 May 2025 11:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747136142;
-	bh=qdqMHeXnEw1hwPK/CNFq9Bieu80j0aqXtJoit3+EJqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SROnTvkkVMpPwIjpc57Ejxd/F+LCXRdP2KFDO0uxr/kPkEZNs7r65WO2qw1BIitZI
-	 3bLaa4r9N0sHNHsqXIdzrMRgClrMAB8Pe8GRWl1Bl79OMsmIJikyeSmJX3aC7df2CB
-	 UCIGIIlR/CpY9QH3sOcv6b6EEkciyJhZxC2WoZoLgBdurETsZTqrjV8iOfvbpBauev
-	 UzH3H0JeQodOiLvR3iXeFfB+1vJp5WQH6qGL7VuEhzQ6LDhdPO7Q8SWYdJbpqg7FWB
-	 8gMTCW2aGfWLBNQTEMMlmmpag7mre9xnWDEuJynkxXByvqYmHbPnU0COMOOXKeKw4T
-	 dwZElarLn8iug==
-Date: Tue, 13 May 2025 01:35:40 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
-	linux-kernel@vger.kernel.org, Chen Ridong <chenridong@huawei.com>
-Subject: Re: [PATCH] kernfs: Relax constraint in draining guard
-Message-ID: <aCMujId1_BMRtJFn@slm.duckdns.org>
-References: <20250505121201.879823-1-mkoutny@suse.com>
- <aBlJlqfAlayxfMc7@slm.duckdns.org>
- <yxzbobrza26uiezc3fpcvtsv64wnn5hkk3urmqhdox4ae2d6zs@lkznubanccwj>
+	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="XGZsnQSz"
+ARC-Seal: i=1; a=rsa-sha256; t=1747136170; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Mdo1/BbTWQ1VzvRxcvHt/6rj187KoYp/ifpK3qNUd9i0DCxoviSF3vQ2XxsxxsgCM2ewJqJhw2xbyuLOdUhMHRm4U2rIb5PeC8WMXOZK6suQyZHvDIm4cVc5jZAk/OVftv9T14Ld7uqNwkC3V+3TPwMspjE5l90htwVgpS3Tbqk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747136170; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vfj5Z8mlPycK5Gnm8O4QEUXehENTGHBpLm0BTWNLfWo=; 
+	b=ehut8gKAmpkQnIKG/d6vR6cBQigXYu3gNmU+KiHs2q5R8lVYhIkQT1o6GIJ8E4tPbL0o+NgTGPDGLNEo+djMrBIU4BKQ0ajPWp2mvPkpGH5FBR8YGHe5RUNBVk/4Eyu6aafitOG3vwiwavWp0P9W1K8Rv15ko/XHrxB9pJT3yX4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=pigmoral.tech;
+	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
+	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747136170;
+	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
+	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=vfj5Z8mlPycK5Gnm8O4QEUXehENTGHBpLm0BTWNLfWo=;
+	b=XGZsnQSzozd7clRgB2OXymPbI/TzS9xGy/PYrtogaSRt3Mp3lm/ly6tfOuzm3cwO
+	4c/B9+uOAOsjxDHKH/6dy74XjJ+fKV7ifFu5ZElKcv/YsyzfVPTX+/usOUA94yLvzk9
+	oi2v8S+QOa0F1ef4ZtfBwE9lXnSulNFNy5EU7m/w=
+Received: by mx.zohomail.com with SMTPS id 1747136165651670.6216762319889;
+	Tue, 13 May 2025 04:36:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yxzbobrza26uiezc3fpcvtsv64wnn5hkk3urmqhdox4ae2d6zs@lkznubanccwj>
+From: "Junhui Liu" <junhui.liu@pigmoral.tech>
+To: "Philipp Zabel" <p.zabel@pengutronix.de>, 
+	"Rob Herring" <robh@kernel.org>, 
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
+	"Conor Dooley" <conor+dt@kernel.org>
+In-Reply-To: <20250507-k230-reset-v3-0-c85240782ea5@pigmoral.tech>
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-riscv@lists.infradead.org>, 
+	"Conor Dooley" <conor.dooley@microchip.com>, 
+	"Chen Wang" <unicorn_wang@outlook.com>, 
+	"Junhui Liu" <junhui.liu@pigmoral.tech>
+Subject: Re: [PATCH v3 0/2] reset: canaan: add Kendryte K230 reset support
+Message-ID: <183f13147f01e0e8.b223d1615fe9988e.865998746eb323d6@Jude-Air.local>
+Date: Tue, 13 May 2025 11:35:59 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-On Tue, May 13, 2025 at 11:06:40AM +0200, Michal Koutný wrote:
-> On Mon, May 05, 2025 at 01:28:22PM -1000, Tejun Heo <tj@kernel.org> wrote:
-> ...
-> > Acked-by: Tejun Heo <tj@kernel.org>
-> 
-> Is it correct to expect Greg picking it through his repo?
+Hi Philipp,
 
-Yes, I think so.
+On 07/05/2025 21:25, Junhui Liu wrote:
+> This patch series add reset controller support for the Canaan Kendryte
+> K230 SoC.
+>=20
+> Tested on CanMV-K230-V1.1 board. Some of the HW_DONE and SW_DONE reset
+> type was tested by reseting the submodule and checking the reset
+> register value[1]. The CPU reset type was tested by a temporary rproc
+> driver[2][3].
+>=20
+> link: https://gist.github.com/pigmoral/cc45de673775575750ac7fe49d4456a2 [1=
+]
+> link: https://github.com/pigmoral/linux/tree/k230/rproc-cpu0 [2]
+> link: https://github.com/pigmoral/linux/tree/k230/rproc-cpu1 [3]
+>=20
+> ---
+> Changes in v3:
+> - Update copyright/license in driver and bindings headers
+> - Rename HS/LS to HISYS/LOSYS in DT bindings
+> - Add reset-timing notes at the top of reset-k230.c
+> - Replace long udelay(200) to fsleep(200) for HW_DONE paths
+> - Remove rstc->dev, store device in rstc->rcdev.dev
+> - Link to v2: https://lore.kernel.org/r/20250420-k230-reset-v2-0-f1b4a016e=
+438@pigmoral.tech
+>=20
+> Changes in v2:
+> - Turn to_k230_rst from macro to inline function
+> - Use guard to replace spin_lock_irqsave and spin_unlock_irqrestore
+> - Remove assert and deassert operations for self-clearing reset types,
+>   only reserve the reset operation
+> - Add delay to accommodate the reset time
+> - Remove blank line inside read-modify-write operations
+> - Remove redundant default case in enum switch
+> - Update copyright dates and my email address
+> - Link to v1: https://lore.kernel.org/r/20240924-k230-reset-v1-0-d0cdc1198=
+9eb@outlook.com
+>=20
+> ---
+> Junhui Liu (2):
+>       dt-bindings: reset: add support for canaan,k230-rst
+>       reset: canaan: add reset driver for Kendryte K230
+>=20
+>  .../devicetree/bindings/reset/canaan,k230-rst.yaml |  39 +++
+>  drivers/reset/Kconfig                              |   9 +
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-k230.c                         | 371 ++++++++++++++++=
++++++
+>  include/dt-bindings/reset/canaan,k230-rst.h        |  90 +++++
+>  5 files changed, 510 insertions(+)
+> ---
+> base-commit: 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+> change-id: 20250404-k230-reset-32987c6f0ed5
+>=20
+> Best regards,
 
-Thanks.
+I think this series is good to go, can you pick it and queue for 6.16?
 
--- 
-tejun
+Thanks!
+
+--=20
+Best regards,
+Junhui Liu
