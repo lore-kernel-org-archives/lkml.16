@@ -1,138 +1,109 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F50210F45
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5950A211499
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747126749; cv=none; b=TBEJBTihscudyC40h0x3/lEPCmRcJSk2vPKYZBk0PvoWJ2xewZXJpfldymmYA/IqTt2Amd37+t79sPtusi3iab9kHSh1PnaShXdn7D+HNabgw8EsYVdtWr1gRefewaEJAN3JqJdwRfCS4dIyOSrlSBCLg68TzzJeP2H5PkXyFaw=
+	t=1747126806; cv=none; b=Av4G4w76l2QfO6lDKLiBmz0S5efTSnQPzPhoPq1rkkQT/bHtkMZcJl+cfZ5uk1z/9L9rnKHel7UsXt3otVoSjUUbBsf06CTbml1b4lrCb4WmH9D2p5midW34HRCeEdzz/at0oxTT1Tj/Fet5ZYFdGBxa/NYCqoSQeqFuwXoIBOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747126749; c=relaxed/simple;
-	bh=qa4kqiTpeGYxQUkjn4Vg46+3YyeGMeZ8BvAbLPgq0Kk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bd9GHoM1u+JKO1PK2oiKc+snn4n+8CCbeQUWpXyPOOGrBhQYatWCoODGTc+qecCKYY0MHTcT700u/C0hiyUSjjIMNZzbWXMrH4lTMLpnvIf+DJlJhKszIfyB7y8nzkU5UyrqaGIe5fVOZVmdJ/tfOOLYPOd1xngNsnUZjIPcwMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0/tJdYJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vn1SCTmb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0/tJdYJy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vn1SCTmb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747126806; c=relaxed/simple;
+	bh=7FJCteWCfIbSLLE6R3OoAZZaPUH1UYwU2njFZe3VddE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ULbrO1HBb1/YXIQalaR3DjkjUNGWmmbGp4tNZL2Kg2nikGlwU2PxuB7uJyD2fCXKQNhmCVlkVlyhMRWLr+0drAObdCQomKjvUR4PXHN9ednDWpN9TwWYviWq8TDBkbUdLFqKRQppnKVU2rYYclwxsgOj8spQiLaBYN4gqce5We8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g4gafaXd; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0/tJdYJy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vn1SCTmb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0/tJdYJy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vn1SCTmb"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 294C51F6E6;
-	Tue, 13 May 2025 08:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747126746; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+7ge7H23NNrp0HwGiU2YsFV0gkeI6XlM3YTCbOsRiCo=;
-	b=0/tJdYJyr0V7aMfS3jSx5OEJaA7duHtDSkEN8IMbkqubQZ+vfbPlrDf9QLHUbZ89PLiuAd
-	+oijCgsrY1ptlnwlpapQ/99MLswmdicwvYneTHj1qyj396rxhvL53zwoDrliSBENGCzBSI
-	HFsaqyuN0gGtDCIQywMmaOMRX/6ORDo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747126746;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+7ge7H23NNrp0HwGiU2YsFV0gkeI6XlM3YTCbOsRiCo=;
-	b=Vn1SCTmbNAkDv5UT7JRLTXHCUOgABGvVulXvcK0zicra/Lo0BmIUgOexO6rcd9H380WoOt
-	Yu1zvFrqNmQXNWBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747126746; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+7ge7H23NNrp0HwGiU2YsFV0gkeI6XlM3YTCbOsRiCo=;
-	b=0/tJdYJyr0V7aMfS3jSx5OEJaA7duHtDSkEN8IMbkqubQZ+vfbPlrDf9QLHUbZ89PLiuAd
-	+oijCgsrY1ptlnwlpapQ/99MLswmdicwvYneTHj1qyj396rxhvL53zwoDrliSBENGCzBSI
-	HFsaqyuN0gGtDCIQywMmaOMRX/6ORDo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747126746;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+7ge7H23NNrp0HwGiU2YsFV0gkeI6XlM3YTCbOsRiCo=;
-	b=Vn1SCTmbNAkDv5UT7JRLTXHCUOgABGvVulXvcK0zicra/Lo0BmIUgOexO6rcd9H380WoOt
-	Yu1zvFrqNmQXNWBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11B57137E8;
-	Tue, 13 May 2025 08:59:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ka/BA9oJI2gKfQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 13 May 2025 08:59:06 +0000
-Date: Tue, 13 May 2025 10:59:01 +0200
-Message-ID: <874ixoubsa.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb-audio: Add sample rate quirk for Audioengine D1
-In-Reply-To: <20250512-audioengine-quirk-addition-v1-1-4c370af6eff7@heusel.eu>
-References: <20250512-audioengine-quirk-addition-v1-1-4c370af6eff7@heusel.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g4gafaXd"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso37313635e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747126802; x=1747731602; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J/sV5bReSJD3klljzGa19Hc4f5rzEgOUKX1lBy/6QCQ=;
+        b=g4gafaXdSRyGB4TTs/uvclXPRxjcrsB9srAhglZg29HZvKoz4bSSmJxtp82KDbz6nw
+         HINf6jdXI9U2PCCuOHu0LqsRPP63F2qewsoUIvbupIwg5eTPeaiQxLES7h3mLSNF6HnK
+         QVHhQthofLEfPAzsVnA1EDsgo4x/Evfbzyq1DXHKjt+HUKwUrHQVh49xvUiFlHQFvf1a
+         f6ZmEvb3IgcGDm0vOELCBogpYAhiU1jfsi1ZtvXKbWpFux2a/2uktmoDmUQYoAJXPOol
+         BJ8lqBJz4Z11m8DQUJtAezj8czLXmmTclcxHrOHHNeX0pkxnDiT0eNxvlejiBF42I6pk
+         moUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747126802; x=1747731602;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J/sV5bReSJD3klljzGa19Hc4f5rzEgOUKX1lBy/6QCQ=;
+        b=V60T097sDV/1OQiWfETIqFlKMpcJ2sQVRy60COeIS9u57X9DzVqqG3BtcLHbJ52nIX
+         0a6kBJeMCVYaeY/z8f733qYPPUxdx8PgkROmtyMbs9NmlhTep/furSkNXjyrat8Jnxyx
+         BQ658O+vyp1i8gjU6yuu1zyNSXFV9RwhJdvwwFVs9puRrSPBXhz95i7z8YTPhgivXmEs
+         9/bD29nJyd+AmOOnUJdZ9zl9jQos5skjkNuXma5p5So8jNK08ehohtVGmJaUQ2WZYF+e
+         Mqv4E2/sFIu8vh7mqsY7AvvFIXlz64wW5/JfnAobfSqv0+RqDzG7mqCwBHJpYGn3+HKb
+         XgBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPoHSvSM9rZveEXOuai2m6V727oY5hDLeiAzcIPefDEaYqWyEXrjpotRv4ukOolgBQUNl8NEumGvbXe4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfHYb7wTIVYel/LTIwl3i0P6hYE7hHrFwsMiI4Zdr9/Y7G7DE1
+	A/b2g5YOwila506+KI33qf5HrQMwfWCqI2hzT0s6KvTm6ILpoVT/CzVyz4z3jHA=
+X-Gm-Gg: ASbGncvLZkGOkXJqi5o2EU9mEe0hrXVagHsNaqgjMlTJoBfLM+mqqV0kibqz4tzTUYg
+	JbPSKO4lpjPKTmrK3/NZ1UbYAM7jF9oMd/ZbnyGVP6i2enq38sJI6QLhLJ9UUbRTbU+B6UWKv6h
+	62SoN8NZOpbW0lmBJirtZmXhfZpmB4zQbwGnWAkxH8ObgsXtP+hyL23gXUT7kqlLBeMkkzjjwF/
+	z9Wsd2/Eflpagy84oXxmd0brJFqHow85eac04D+2T23UhX4iwOFAWftHEG+2rA7W3Cj3vl5hBEb
+	clNhveRYA34vMOQpn/E1hY3w0riBmRTAtPD+T4ebmU3TXbtkjfSxnc4bBP8zLskasz7LUvY2JOo
+	KtCHnsOnS3bPiISAqjcs=
+X-Google-Smtp-Source: AGHT+IHNa6LdSLW0bGwyDavu41Wnn3O0fNNmTUGNaBgw+BMksPcYOfz9t377gEimfC/qQPa8Osxksw==
+X-Received: by 2002:a05:6000:430e:b0:3a0:b733:f255 with SMTP id ffacd0b85a97d-3a1f6484984mr12614588f8f.25.1747126802598;
+        Tue, 13 May 2025 02:00:02 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1335:3601:f121:69fe:935a:67bd? ([2001:a61:1335:3601:f121:69fe:935a:67bd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2961sm15400503f8f.45.2025.05.13.02.00.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 02:00:02 -0700 (PDT)
+Message-ID: <cd601d4f-566b-4fd1-b13e-b7bf8bb59507@suse.com>
+Date: Tue, 13 May 2025 11:00:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] USB: xhci: use urb hcpriv mempool for private data
+To: David Wang <00107082@163.com>, Oliver Neukum <oneukum@suse.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+ stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513055545.5738-1-00107082@163.com>
+ <875848ec-f92b-48a9-b5c2-792bb0121824@suse.com>
+ <1335f63c.7bea.196c8c53bef.Coremail.00107082@163.com>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <1335f63c.7bea.196c8c53bef.Coremail.00107082@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 12 May 2025 22:23:37 +0200,
-Christian Heusel wrote:
-> 
-> A user reported on the Arch Linux Forums that their device is emitting
-> the following message in the kernel journal, which is fixed by adding
-> the quirk as submitted in this patch:
-> 
->     > kernel: usb 1-2: current rate 8436480 is different from the runtime rate 48000
-> 
-> There also is an entry for this product line added long time ago.
-> Their specific device has the following ID:
-> 
->     $ lsusb | grep Audio
->     Bus 001 Device 002: ID 1101:0003 EasyPass Industrial Co., Ltd Audioengine D1
-> 
-> Link: https://bbs.archlinux.org/viewtopic.php?id=305494
-> Fixes: 93f9d1a4ac593 ("ALSA: usb-audio: Apply sample rate quirk for Audioengine D1")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Heusel <christian@heusel.eu>
+Hi,
 
-Thanks, applied now.
+On 13.05.25 10:31, David Wang wrote:
+  
+> No, I don't think which HC the URB was last used for concerns here.
+> A URB cannot be used by two HC at the same time, as long as this hold, I don't see reason
+>   worrying about who use this private data before.
+> 
+> This patch for xhci dose not assume which HC use the private data mempool  previously, nor
+> should other HCs.
 
+OK, I need to correct myself.
+Though I have to ask in the long run what happens
+if two HCDs need to allocate the mempool differently.
+But for now it will work.
 
-Takashi
+> Or, do I misunderstand your comments?
+
+No. The problem is with the first patch in the series.
+Basically you need to pass mem_flags from usb_submit_urb()
+to urb_hcpriv_mempool_zalloc() and use it.
+
+	Regards
+		Oliver
+
