@@ -1,169 +1,128 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED52F1EB18C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C481EA6F;
+	Tue, 13 May 2025 13:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141665; cv=none; b=uVfv7180iE4+lfgXu/ivIVMcbI0j1jzuBgvt+gLyZSgew6yxsmF6Omk4LAl/WIHx8sHguncDzzdczdbx+Va0uYGlaq3HzyaxFdktMilDVKZpFrs8pqWL2AcXjDXqE83iuPi+H8XbOm7YoNf5Fp0nmrlPLeLExP2TklQaq2dBlDs=
+	t=1747141745; cv=none; b=RuHTxCyUYXsmqnsq0GjQImsyyUigidJU0IXBpKarb0IylGMPJ00gOAOnmRtQ+c0nbfF55310v4PbNLWoq9cMZkPVex3OXjqqAR7cQ9J/bW7Qb70Uhz242rRSgGKVPhZg/aWHlX/E622mlAK73nQ9ds01e/tvaI87sBTg5TymDyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141665; c=relaxed/simple;
-	bh=Ybd4RyZ6Q9fP4KYnLHNO3QXakG7hkLzF4BM8ja5Q1TA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GmX/UnyMAJJ7fcx1a0eg5zqAPULInDQQcu90uGg1UQMQRfHx9SZU3iKfmbHuDDfLebNCD7wXPzWZaXjc/evoIwQDu/C14r9rfkvsp+s2KVeOZhtzMzVCWwm5is43RCDFJL+U3qR9SAlxueJzYhUCOttBMM1NXInE7Da+pGdL0qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xlSXEzJ6; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747141745; c=relaxed/simple;
+	bh=8mRp/db9GQsB9zml3gT1hejcawXdpZSLrcYkeOjydhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G887FOsJdXbHTzGEbTWjDX+uO/Vmbqm3fkyrbBHg4/Dv8yYlitA8JxRQff6jHQXToo/RAipoppP9N6LZ24CGSrEDdahNLb9q8kVj+Sig5uffIPrlKmy8geRLJrEMtehF7fm4uPRAV0xrdAJcjKFcjWySbuUBy7IOhgfxCRvP1cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dJB1jUbE; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xlSXEzJ6"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747141660;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dJB1jUbE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C60943AEF;
+	Tue, 13 May 2025 13:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747141741;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3sqdFiuw9KK4ySpL6GH6pVXMgrHBiQKjZIPht/9Z5G4=;
-	b=xlSXEzJ6ZKsq2An0162pwbTbTAj0Empjhjy5YH/LTn2NuO2l6iwumJaJHmKd5Bw+XB7hoG
-	VEsdRT0f9wNbSR4+fX0h9pdvShfMsXbiqSaMgW9Jp2DIOLshjjInjlfV7BP3HKnRVs3Ipk
-	9l0UjkMD39AZ8lTDK+P8aqNjGk8zdoE=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-modules@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2] params: Add support for static keys
-Date: Tue, 13 May 2025 09:07:32 -0400
-Message-ID: <20250513130734.370280-1-kent.overstreet@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8c82sCzN57Xp/rMC2k0R4691SeAEja9vwY487LmRAsM=;
+	b=dJB1jUbEdvLLep2ewCeZVcfz7OJQpDg9+pKS4PYIMIr+3THWZZ72Qqv3543e22OZEL94mL
+	HhEQ2+/o94zZpDzpMOsGqYcTZYyx0V0UG+DpNMOHkVBLqRJgEwQYbOAfmTsctFlenfpElG
+	JduKi/LcDrXkoBiGByDu1YZQLyNTtBW3p81VnlKVFXzAf0s+Sw1+msGeT6owAsoww2kVEP
+	y1r4F5JytjbisyeO2EkQPKB8Y3nRvrdlqNGV+UQbchNDLpVvAWV30VBqTXhu6v5qmKXcwX
+	jzNyBi6rBykWjxHelUBmthaAe5zkg+LrmC7R9Agfxt3Nx+sF9+ZdpHml7ZMy+w==
+Date: Tue, 13 May 2025 15:08:51 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Daniel Golle <daniel@makrotopia.org>,
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject: Re: [PATCH net-next v6 01/14] dt-bindings: net: Introduce the
+ ethernet-connector description
+Message-ID: <20250513150851.5678335e@kmaincent-XPS-13-7390>
+In-Reply-To: <20250507135331.76021-2-maxime.chevallier@bootlin.com>
+References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+	<20250507135331.76021-2-maxime.chevallier@bootlin.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdegudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudgrmeeiudemjehfkegtmegurgehjeemfeehsggsmegttdejudemiegsvdgsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdurgemiedumeejfhektgemuggrheejmeefhegssgemtgdtjedumeeisgdvsgdphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpt
+ hhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Static keys can now be a module parameter, e.g.
+On Wed,  7 May 2025 15:53:17 +0200
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-module_param_named(foo, foo.key, static_key_t, 0644)
+> The ability to describe the physical ports of Ethernet devices is useful
+> to describe multi-port devices, as well as to remove any ambiguity with
+> regard to the nature of the port.
+>=20
+> Moreover, describing ports allows for a better description of features
+> that are tied to connectors, such as PoE through the PSE-PD devices.
+>=20
+> Introduce a binding to allow describing the ports, for now with 2
+> attributes :
+>=20
+>  - The number of lanes, which is a quite generic property that allows
+>    differentating between multiple similar technologies such as BaseT1
+>    and "regular" BaseT (which usually means BaseT4).
+>=20
+>  - The media that can be used on that port, such as BaseT for Twisted
+>    Copper, BaseC for coax copper, BaseS/L for Fiber, BaseK for backplane
+>    ethernet, etc. This allows defining the nature of the port, and
+>    therefore avoids the need for vendor-specific properties such as
+>    "micrel,fiber-mode" or "ti,fiber-mode".
+>=20
+> The port description lives in its own file, as it is intended in the
+> future to allow describing the ports for phy-less devices.
+>=20
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> +description:
+> +  An Ethernet Connectr represents the output of a network component such=
+ as
 
-bcachefs is now using this.
+Connector
 
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Daniel Gomez <da.gomez@samsung.com>
-Cc: linux-modules@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- include/linux/jump_label.h  |  2 ++
- include/linux/moduleparam.h |  7 +++++++
- kernel/params.c             | 35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+)
+With this typo fixed:
+Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
 
-diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-index fdb79dd1ebd8..0fc9b71db56f 100644
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -107,6 +107,8 @@ struct static_key {
- #endif	/* CONFIG_JUMP_LABEL */
- };
- 
-+typedef struct static_key static_key_t;
-+
- #endif /* __ASSEMBLY__ */
- 
- #ifdef CONFIG_JUMP_LABEL
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index bfb85fd13e1f..11e8d5c57435 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -122,6 +122,7 @@ struct kparam_array
-  *	charp: a character pointer
-  *	bool: a bool, values 0/1, y/n, Y/N.
-  *	invbool: the above, only sense-reversed (N = true).
-+ *	static_key_t: same as bool, but updates a 'struct static_key'
-  */
- #define module_param(name, type, perm)				\
- 	module_param_named(name, name, type, perm)
-@@ -488,6 +489,12 @@ extern int param_set_bint(const char *val, const struct kernel_param *kp);
- #define param_get_bint param_get_int
- #define param_check_bint param_check_int
- 
-+/* A static key, which can only be set like a bool */
-+extern const struct kernel_param_ops param_ops_static_key_t;
-+extern int param_set_static_key_t(const char *val, const struct kernel_param *kp);
-+extern int param_get_static_key_t(char *buffer, const struct kernel_param *kp);
-+#define param_check_static_key_t(name, p) __param_check(name, p, struct static_key)
-+
- /**
-  * module_param_array - a parameter which is an array of some type
-  * @name: the name of the array variable
-diff --git a/kernel/params.c b/kernel/params.c
-index 2509f216c9f3..dd10ed125826 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -14,6 +14,7 @@
- #include <linux/overflow.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-+#include <linux/static_key.h>
- #include <linux/string.h>
- 
- #ifdef CONFIG_SYSFS
-@@ -412,6 +413,40 @@ const struct kernel_param_ops param_ops_bint = {
- };
- EXPORT_SYMBOL(param_ops_bint);
- 
-+int param_set_static_key_t(const char *val, const struct kernel_param *kp)
-+{
-+	/* Match bool exactly, by re-using it. */
-+	struct kernel_param boolkp = *kp;
-+	bool v;
-+	int ret;
-+
-+	boolkp.arg = &v;
-+
-+	ret = param_set_bool(val, &boolkp);
-+	if (ret)
-+		return ret;
-+	if (v)
-+		static_key_enable(kp->arg);
-+	else
-+		static_key_disable(kp->arg);
-+	return 0;
-+}
-+EXPORT_SYMBOL(param_set_static_key_t);
-+
-+int param_get_static_key_t(char *buffer, const struct kernel_param *kp)
-+{
-+	struct static_key *key = kp->arg;
-+	return sprintf(buffer, "%c\n", static_key_enabled(key) ? 'Y' : 'N');
-+}
-+EXPORT_SYMBOL(param_get_static_key_t);
-+
-+const struct kernel_param_ops param_ops_static_key_t = {
-+	.flags = KERNEL_PARAM_OPS_FL_NOARG,
-+	.set = param_set_static_key_t,
-+	.get = param_get_static_key_t,
-+};
-+EXPORT_SYMBOL(param_ops_static_key_t);
-+
- /* We break the rule and mangle the string. */
- static int param_array(struct module *mod,
- 		       const char *name,
--- 
-2.49.0
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8777,6 +8777,7 @@ R:	Russell King <linux@armlinux.org.uk>
+>  L:	netdev@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-class-net-phydev
+> +F:	Documentation/devicetree/bindings/net/ethernet-connector.yaml
+>  F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
+>  F:	Documentation/devicetree/bindings/net/mdio*
+>  F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
 
+You will need Russell acked-by for that.=20
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
