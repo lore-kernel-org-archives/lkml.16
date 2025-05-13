@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13BC165EFC;
-	Tue, 13 May 2025 13:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966971E5206;
+	Tue, 13 May 2025 13:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143212; cv=none; b=ZDhG7TS8YZRmMhv4JQy7GlMip1dyS2kh0Tkq33SYS9WCz0G1pJURiasfGGbQslY4TfSFChNDgYFeTRkqtX/mnfFy75++hofrDYd2qeTMHEs04pXJah9ju6UcsoGue+v0WMjIb4iA5W6BzSn4IO82dxl8eVN6TpJtiK0Q46IxO9Y=
+	t=1747143280; cv=none; b=GUAAMy4F/Myk9f+W1vs6ip4zGA/24KX4QP5y8fm4gXTGE+RYLYInH2paWY85hercIL5vQCZTRhsClGz+eJdkOC8Bxuv/knh6ukpV3lL8fVRsCAUfuBjDgDRjISQcd6K0VVKJSdZVP5mE66Fsw8y1qY1XJrMgG1HPlF2jnDUe27k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143212; c=relaxed/simple;
-	bh=XYAR3R6cfrMhKrxMr2Ow40tAPH5rEhUgCe2jClBz23s=;
+	s=arc-20240116; t=1747143280; c=relaxed/simple;
+	bh=JSePyDEvZ/8hHryeucDGmMSmtFHmNwIJp/oCesIJaEs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0HEP+2hc/S9uJEra4opW3vMS8Dngd9wgvvNGtX+PkW3wuM/rpylNBPy6gLwxlH5To5GKiVO0yB9Oy/RiMLk1RowNGM00wo9DtjZF5DumECUtVZSLMufzH6faV1E1Bjk8ClY6cPo7V3nn3oSH5qcm4TJNW+32JzkluYqSEjzYc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOzb4iLn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AiJPreeCpNaw9Ylwa5TdhR9H+yBpWKMRa/GfSiGrged5VHLADH3NOEUw9dWWM/VaCFPtFgkgnGxMCvOHgnzkjsUfHwfPKzymi9iAaLKp86iqHejQ71drtf8aOVr7oLRZspbWkV09LDZuFPIeg4ZUElR2q4ccgotq/OcUXevhLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+XMIFVF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOzb4iLn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB19C4CEED;
-	Tue, 13 May 2025 13:33:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+XMIFVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5459C4CEE4;
+	Tue, 13 May 2025 13:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747143211;
-	bh=XYAR3R6cfrMhKrxMr2Ow40tAPH5rEhUgCe2jClBz23s=;
+	s=k20201202; t=1747143280;
+	bh=JSePyDEvZ/8hHryeucDGmMSmtFHmNwIJp/oCesIJaEs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VOzb4iLnA7Y5Ds+AMG0/Js9ebVJqt6uvTs0KprecXUAd4F0MewDM+lczm2d2GX+MU
-	 mShqprcXg8ntL8zcbeHKoiz0+Kry7ZkK35/SPeCRduRwo+FyqSb0PdJrFtSJNvfpDa
-	 7CyiKFkQ+ePO9NlsdMmv1/NmCAcgrOiP70Z3CX4Cbu9D4DVtzaeINtR/CzKQ2byiI4
-	 87Z56UtYKN5HJeCOtRbgA0+3b01uia63eqogizMz1qmLjNusmqcaVJEVZmbz8u90TV
-	 wXYZbeKEfrOBLQg70qQstNiOiav33nROt/jDivkdN0vU+7tEHUpWCncYGGevUmsdds
-	 zdvNbj3NdQLvA==
-Message-ID: <afbdf05d-2306-40c8-bdcd-964d1d5d9865@kernel.org>
-Date: Tue, 13 May 2025 15:33:24 +0200
+	b=d+XMIFVF+FMbhdcQvFwpjah0SjladCBkXikKpHBVncIuJlm4XvXC/0jSl+2i3nbUQ
+	 epDbytG+BjHXag/MWQQcKlRPdwGYQW/0wHNGmkNGIuqyt8f4gDI3LirOUsaKIHW7DN
+	 zVwo/ceW+AvTSf+FkMPs6+6FMEWQ/dkg1zIdcgcV+dNQynMuZxwBHtwYnIUCU+PipE
+	 MJN2jgq5SNMA85EsizR4kahBg2fRaE4Lp4dOISzVnM0P9zVeUozWOZ+TqIB9/bSTtD
+	 7kiON6JhaQK4V9OmPQOqpxXPdmTDO1Bg0+rKljw/ySCILHx/yYa30GBaoyzW56Gopy
+	 vMtEZNZiGp/gw==
+Message-ID: <6a28f9bb-05fa-45ff-8c0b-790c0caf3252@kernel.org>
+Date: Tue, 13 May 2025 15:34:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,26 +35,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 16/19] dt-bindings: clock: imx8m-clock: add PLLs
-To: Abel Vesa <abel.vesa@linaro.org>,
- Dario Binacchi <dario.binacchi@amarulasolutions.com>,
- Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
- Peng Fan <peng.fan@nxp.com>, linux-amarula@amarulasolutions.com,
- Abel Vesa <abelvesa@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
+Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for
+ i.MX8M PLLs
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Shawn Guo <shawnguo2@yeah.net>
+Cc: Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
+ Peng Fan <peng.fan@nxp.com>, Stephen Boyd <sboyd@kernel.org>,
+ linux-amarula@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>,
+ Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
  Pengutronix Kernel Team <kernel@pengutronix.de>,
- Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ Abel Vesa <abel.vesa@linaro.org>
 References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
- <20250424062154.2999219-17-dario.binacchi@amarulasolutions.com>
- <20250509162546.GA3704130-robh@kernel.org>
- <CABGWkvq4a73hvCWG-P_+arc3R-pnr5NVfcGPDTGEoW1doPt2qg@mail.gmail.com>
- <aCNIKZrJmbpmeX+7@linaro.org>
+ <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
+ <CABGWkvrkVLRocFsZs9JLni4KDZCDyYDZxMzwA9AzAwipmUyTzQ@mail.gmail.com>
+ <aB3unsCzCFUkdp9i@dragon>
+ <CABGWkvqfyH=dcuw6EDZaFVVebj8SZhJF0P944+mmzL5YK3-Pug@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -100,74 +99,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aCNIKZrJmbpmeX+7@linaro.org>
+In-Reply-To: <CABGWkvqfyH=dcuw6EDZaFVVebj8SZhJF0P944+mmzL5YK3-Pug@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/05/2025 15:24, Abel Vesa wrote:
->>>>    clocks:
->>>> -    minItems: 6
->>>> -    maxItems: 7
->>>> +    minItems: 7
+On 09/05/2025 14:43, Dario Binacchi wrote:
 >>>
->>> Increasing the minimum entries looks like an ABI break to me. The .dts
->>> files not being in linux-next confirms that (from 0 warnings in
->>> mainline):
->>>
->>> arch/arm64/boot/dts/freescale:859:50
->>>     122  clock-controller@30380000 (fsl,imx8mm-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
->>>     120  clock-controller@30380000 (fsl,imx8mp-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
->>>      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clocks' is a required property
->>>      61  clock-controller@30360000 (fsl,imx8mm-anatop): 'clock-names' is a required property
->>>      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clocks' is a required property
->>>      60  clock-controller@30360000 (fsl,imx8mp-anatop): 'clock-names' is a required property
->>>      36  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[35], [36], [37], [38], [39], [40]] is too short
->>>      36  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[24], [25], [26], [27], [28], [29]] is too short
->>>      32  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[34], [35], [36], [37], [38], [39]] is too short
->>>      28  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[22], [23], [24], [25], [26], [27]] is too short
->>>      26  clock-controller@30380000 (fsl,imx8mn-ccm): clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
->>>      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clocks' is a required property
->>>      17  clock-controller@30360000 (fsl,imx8mq-anatop): 'clock-names' is a required property
->>>      14  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[44], [45], [46], [47], [48], [49]] is too short
->>>      14  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[23], [24], [25], [26], [27], [28]] is too short
->>>      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clocks' is a required property
->>>      13  clock-controller@30360000 (fsl,imx8mn-anatop): 'clock-names' is a required property
->>>      12  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[26], [27], [28], [29], [30], [31]] is too short
->>>      10  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[38], [39], [40], [41], [42], [43]] is too short
->>>       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[22], [23], [24], [25], [26], [27]] is too short
->>>       8  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[20], [21], [22], [23], [24], [25]] is too short
->>>       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[34], [35], [36], [37], [38], [39]] is too short
->>>       8  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[28], [29], [30], [31], [32], [33]] is too short
->>>       8  bcrmf@1 (brcm,bcm4329-fmac): $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
->>>       6  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[41], [42], [43], [44], [45], [46]] is too short
->>>       6  clock-controller@30380000 (fsl,imx8mn-ccm): clocks: [[24], [25], [26], [27], [28], [29]] is too short
->>>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[43], [44], [45], [46], [47], [48]] is too short
->>>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[40], [41], [42], [43], [44], [45]] is too short
->>>       4  clock-controller@30380000 (fsl,imx8mp-ccm): clocks: [[36], [37], [38], [39], [40], [41]] is too short
->>>       4  clock-controller@30380000 (fsl,imx8mm-ccm): clocks: [[35], [36], [37], [38], [39], [40]] is too short
->>>
->>> Please fix the binding or drop what's been applied so far.
+>>> Please check the remaining patches, as they are required for correctly
+>>> building the
+>>> ones merged by Abel. The kernel test robot has already reported build errors.
 >>
->> Abel and Shawn are already aware of the issue:
->>
->> https://lore.kernel.org/all/CABGWkvqfyH=dcuw6EDZaFVVebj8SZhJF0P944+mmzL5YK3-Pug@mail.gmail.com/
+>> I assume the remaining patches are DTS ones?
+> Yes
+>> If so, I do not see how
+>> clock drivers would require DTS change to build correctly.  Do you have
+>> a pointer to the reported build errors?
 > 
-> So Shawn suggested I pick up the dts patches from this series as well.
+> https://lore.kernel.org/oe-kbuild-all/202505090537.ss8RbFln-lkp@intel.com/
 > 
+> DTC compilation fails. I think it's because of the patch
+> [16/19] dt-bindings: clock: imx8m-clock: add PLLs
+> which was merged without the corresponding DTS changes.
 
-Sorry, I am against of it.
+NAK, why did you create patchset forcing DTS  to be put into the driver
+subsystem? It is even beyond ABI break.
 
-This patchset breaks the ABI. If platform maintainer is happy with ABI
-break, it is happy with all the complains from users, all boot failures,
-all the issues. The solution is not to put DTS into driver's subsystem.
-The solution would have been not to break ABI, but if that's ok for
-platform maintainer then live with the results: broken boots.
-
-DTS must go via arm-soc DTS branch.
-
-> I'm waiting for another -next to get merged and if there are still
-> issues, I'll ask Stephen to ignore the pull request I already sent.
-> 
 
 
 Best regards,
