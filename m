@@ -1,227 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000C928DF3E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2D928DB72;
+	Tue, 13 May 2025 12:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141125; cv=none; b=NcxbSbu6Lgl8pFzHJVNpVCma48ccHQPeOoOiQUhO0fR8DjppLIy8TCIYCwZU/9WPkHEHAUDvw4SVr/SOxNdT9LLmQAjH3qUGdfnfVF8O8PPVgW7pBmp4GSqtx9my+Ln2tK1kowF8kSD7RN8iwdiYPTtSoXPams4hPXAiK0Q1eus=
+	t=1747141125; cv=none; b=rqC6FbUU9RjDelPwBCmZsdi34tuo8dDX26z4aZm4OBtPFpxtO6eQHnqH3L9uCphkKUkyRqO/K9He9dBB98obGy3jPjpSCcMJZbrL+Dq7PMgggWtjyZzV11NWcX4p17O2GF1mLJXd7aEQhzOwNdLAtBtsYjP24GugyqORTvTzRmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747141125; c=relaxed/simple;
-	bh=Z78gwge9olO8D9fde+G5BAbP0ce4AiDRvCPRPGQjFNU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KY+jTV7S4pPcK2pi4NgwehsQQYuZYfbJnlTmPn/xyCtgrBK9d54QSdJCC5IMS/Vs2jb09+yp7hp4iY3a1KLnAjd9l95IQUHOeOIB8O0yQoPe5v5OpCGz92/7lvjONyDZcn1ebKEmarvepPultocdMhfP6tPTtRL4VHW/pQ0iJYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ppspl06h; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=2xIaivkbZl7DdZBmxs97N/RKaoCOHaz1NNoE7jjdeNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qVp1YIL1jwUt21rf7/Jy1WvrH0+s7Z7s6Ku5uIfBV3j8nLs0JZNA7G1aALAMKG5zu61825BghByJFk3mbhjF41LYE+XScuFKxBJZhCSxRasZ6t61gRLOlbSkMT1eJKdC9QV1qbbDTiWOr26PiiIYKdI37Cnlca36vhfeXjFA5ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HJa03EcJ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ppspl06h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747141121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8bhI625R2lq98x6byIS+a4+3fiYeduBC/yC/mt8T8JY=;
-	b=Ppspl06hxrCGf6kJbdlqBu1r+rN0TPMoboilIkMiZMJjerCFOdI+WqO/3CPKPr1ifGxNbK
-	3qcmPEilU8kkFR42AeqZ11ZOYmNMXTH5TTONqMBzpoMBSb1BmRD2mgbIKWLa6kNdydcEFq
-	nhEhX3RA8RHF7AZKVolnLugo1vdSB+A=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-MN5QBmPYNfWlYczWyI3rMw-1; Tue,
- 13 May 2025 08:58:37 -0400
-X-MC-Unique: MN5QBmPYNfWlYczWyI3rMw-1
-X-Mimecast-MFC-AGG-ID: MN5QBmPYNfWlYczWyI3rMw_1747141114
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E9CA180087B;
-	Tue, 13 May 2025 12:58:33 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.16])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51AB430001A1;
-	Tue, 13 May 2025 12:58:26 +0000 (UTC)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: x86@kernel.org,
-	linux-efi@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Peter Jones <pjones@redhat.com>,
-	Daniel Berrange <berrange@redhat.com>,
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Luca Boccassi <bluca@debian.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] x86/efi: Implement support for embedding SBAT data for x86
-Date: Tue, 13 May 2025 14:58:08 +0200
-Message-ID: <20250513125808.75510-3-vkuznets@redhat.com>
-In-Reply-To: <20250513125808.75510-1-vkuznets@redhat.com>
-References: <20250513125808.75510-1-vkuznets@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HJa03EcJ"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D7edHg019138;
+	Tue, 13 May 2025 12:58:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=tp3MLZ
+	KG7W7RFaoIcRBdhZwY4PyTxg2MSIoSNLmN+6A=; b=HJa03EcJYRaNtIVFYivMYr
+	komzX8EKc63Ha9FbmMMb5wDjlMjrELWY8WEWFC+1JXbexmwzu9uGS4eYgkCKfor+
+	MKfbguq5IiMxw270kSknPt36ztpf+KGduMJ0araV8iixWKKTYi3Zc5vGgW2z807f
+	14MtIu7b1JSbRZXus136GD2KxxvQlpBVo3bos920p8qE6MJ6SnKE5GQDes/eJZK0
+	++I/qpOaeaBus/eRqmP1qQP6LBpOTaMB3+B85VcrClSL4O2x6KORAXYKhUkXc2XI
+	ifFz7+rnV+BlpOvKkCn9ghJu1JAeGHcTKMm1cFVpsHWYMrQT/S2+laMOSifAXiWQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46kpp7c7qm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 12:58:39 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBG55W003781;
+	Tue, 13 May 2025 12:58:38 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jkbkjwha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 12:58:38 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DCwbx528312126
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 12:58:38 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CFB655805A;
+	Tue, 13 May 2025 12:58:37 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B472858060;
+	Tue, 13 May 2025 12:58:36 +0000 (GMT)
+Received: from [9.155.201.30] (unknown [9.155.201.30])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 13 May 2025 12:58:36 +0000 (GMT)
+Message-ID: <3bd33a06-f8e2-4901-ada1-e970d18afcd4@linux.ibm.com>
+Date: Tue, 13 May 2025 14:58:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20240902105656.1383858-1-senozhatsky@chromium.org>
+ <20240902105656.1383858-11-senozhatsky@chromium.org>
+ <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
+ <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
+ <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
+ <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
+Content-Language: en-US
+From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
+In-Reply-To: <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: OID9ya9tM6jNP4UBa0tR3CjUMnw5YYIm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEyMCBTYWx0ZWRfXwGe/IBl2fgcA LUPgZKVmYN1EYSp06KyPYbiP2liaz3/zY5INM/bhLx2YB/gR2WUFwlzVhc8DNAd054HkNrdZmAm GyDTww2ZDW2t4dRGfr0LE/CQZ9mRNvwBf0KPyLUlX+0OYGQhmc2wOzZV9jy9S/TnM1zfml4imh8
+ KidxaUGHzUEtMxl3PmnjaM8nuugB1w3fbFcgFklbT3IVCWMHE/boSnU42Nuuw8FrygyYetTCQ5K OTKIrM5hqeUy7BIk5gbyjDRcGeXsYdap5UQxacPEpQYwDDQNTm+gIEd1bahS+nKKxCbT5htPDR3 DZ+imPRTlLbKbqxYXkmPXXTlJPgGE3TGU3hOtcmik2punG7aQWgnPxS9RwYQhbWRtkWlSHpwwT5
+ KjS3d57a+eF6uTfB6GRyCzCBhyAdflr6w9lJiIh0ltT99ZI0mmT5dZLR+Tj5SUVEaYosdz9B
+X-Authority-Analysis: v=2.4 cv=ZY8dNtVA c=1 sm=1 tr=0 ts=682341ff cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pkiKMm3ovRzUbvQedLsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: OID9ya9tM6jNP4UBa0tR3CjUMnw5YYIm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 clxscore=1015 mlxscore=0 spamscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130120
 
-Similar to zboot architectures, implement support for embedding SBAT data
-for x86. Put '.sbat' section in between '.data' and '.text' as the former
-also covers '.bss' and '.pgtable' and thus must be the last one in the
-file.
+Hello,
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/boot/Makefile                 |  2 +-
- arch/x86/boot/compressed/Makefile      |  5 +++++
- arch/x86/boot/compressed/sbat.S        |  7 ++++++
- arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++
- arch/x86/boot/header.S                 | 31 ++++++++++++++++++--------
- drivers/firmware/efi/Kconfig           |  2 +-
- 6 files changed, 44 insertions(+), 11 deletions(-)
- create mode 100644 arch/x86/boot/compressed/sbat.S
+On 13.05.2025 07:41, Sergey Senozhatsky wrote:
+> Sorry for the delay,
+> 
+> On (25/05/09 17:18), Zaslonko Mikhail wrote:
+>>> When zram transitioned from Crypto API (scomp) to custom compression
+>>> API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
+>>>
+>>> crypto/deflate.c: DEFLATE_DEF_WINBITS	11
+>>>
+>>> which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
+>>>
+>>>> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
+>>>> verified that s390 hardware deflate acceleration works for zram devices
+>>>> with a deflate compression.
+>>>
+>>> If we define it as 15 on non-s390 machines, will there be any
+>>> consequences?  Increased memory usage?  By how much?
+>>
+>> On s390, setting windowBits to 15 would lead to zlib workarea size
+>> increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
+>> i.e. per online CPU. 
+>> On non-s390 machine, that impact will be about 115K per stream. 
+>> Increasing window size should improve deflate compression,
+>> although the compression speed might be affected. Couldn't find any
+>> relevant zlib benchmarks though.
+>>
+>> Not sure what other consequences might there be for zram. Do you see any?
+> 
+> The increased per-CPU memory usage is the only thing I can think of.
+> I guess for zram we could turn this into a run-time parameter, but for
+> Crypto API compile-time is the only option, I guess.
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 81f55da81967..5f7b52f0e7f5 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
- 
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
- 
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
- 
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index fdbce022db55..1441435869cc 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
- 
- vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
- vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-+vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
-+
-+ifdef CONFIG_EFI_SBAT
-+$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
-+endif
- 
- $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
- 	$(call if_changed,ld)
-diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
-new file mode 100644
-index 000000000000..838f70a997dd
---- /dev/null
-+++ b/arch/x86/boot/compressed/sbat.S
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Embed SBAT data in the kernel.
-+ */
-+	.pushsection ".sbat", "a", @progbits
-+	.incbin CONFIG_EFI_SBAT_FILE
-+	.popsection
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 3b2bc61c9408..587ce3e7c504 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -43,6 +43,14 @@ SECTIONS
- 		*(.rodata.*)
- 		_erodata = . ;
- 	}
-+#ifdef CONFIG_EFI_SBAT
-+	.sbat : ALIGN(0x1000) {
-+		_sbat = . ;
-+		*(.sbat)
-+		_esbat = ALIGN(0x1000);
-+		. = _esbat;
-+	}
-+#endif
- 	.data :	ALIGN(0x1000) {
- 		_data = . ;
- 		*(.data)
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index b5c79f43359b..a1568a33561a 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -179,15 +179,11 @@ pecompat_fstart:
- #else
- 	.set	pecompat_fstart, setup_size
- #endif
--	.ascii	".text"
--	.byte	0
--	.byte	0
--	.byte	0
--	.long	ZO__data
--	.long	setup_size
--	.long	ZO__data			# Size of initialized data
--						# on disk
--	.long	setup_size
-+	.ascii	".text\0\0\0"
-+	.long	textsize            		# VirtualSize
-+	.long	setup_size			# VirtualAddress
-+	.long	textsize			# SizeOfRawData
-+	.long	setup_size			# PointerToRawData
- 	.long	0				# PointerToRelocations
- 	.long	0				# PointerToLineNumbers
- 	.word	0				# NumberOfRelocations
-@@ -196,6 +192,23 @@ pecompat_fstart:
- 		IMAGE_SCN_MEM_READ		| \
- 		IMAGE_SCN_MEM_EXECUTE		# Characteristics
- 
-+#ifdef CONFIG_EFI_SBAT
-+	.ascii	".sbat\0\0\0"
-+	.long	ZO__esbat - ZO__sbat            # VirtualSize
-+	.long	setup_size + ZO__sbat           # VirtualAddress
-+	.long	ZO__esbat - ZO__sbat            # SizeOfRawData
-+	.long	setup_size + ZO__sbat           # PointerToRawData
-+
-+	.long	0, 0, 0
-+	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
-+		IMAGE_SCN_MEM_READ		| \
-+		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
-+
-+	.set	textsize, ZO__sbat
-+#else
-+	.set	textsize, ZO__data
-+#endif
-+
- 	.ascii	".data\0\0\0"
- 	.long	ZO__end - ZO__data		# VirtualSize
- 	.long	setup_size + ZO__data		# VirtualAddress
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index db8c5c03d3a2..16baa038d412 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -286,7 +286,7 @@ config EFI_SBAT
- 
- config EFI_SBAT_FILE
- 	string "Embedded SBAT section file path"
--	depends on EFI_ZBOOT
-+	depends on EFI_ZBOOT || (EFI_STUB && X86)
- 	help
- 	  SBAT section provides a way to improve SecureBoot revocations of UEFI
- 	  binaries by introducing a generation-based mechanism. With SBAT, older
--- 
-2.49.0
+With 'run-time parameter' you mean adding 'windowBits' as another deflate compression
+algorithm parameter for zram? Guess we could do this, using default value of 15 then.
 
+> 
+> Can you send a patch series (for zram and Crypto API) that sets
+> windowBits to 15?
+
+I can do it for zram. Not sure if Crypto should be changed as well. Or is it
+supposed to have the same compression defaults as zram?
+
+Thanks,
+Mikhail
