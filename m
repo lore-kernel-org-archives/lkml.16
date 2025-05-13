@@ -1,179 +1,106 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFF628E611;
-	Tue, 13 May 2025 12:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A8C292080;
+	Tue, 13 May 2025 12:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139700; cv=none; b=dtAPWupeDILyvoTon00pIe2BGc5UsNKa+3deB0WJLLnOJ8miZrWqliQurWdGR4+cbE+LEcQvTYRoXKchp4/Vqa3qjQF1oJNS+ulkWWhyIfz1u3sMhUEbYAryxHaduJXcR0vDGxzCnhYoS8IDJErzzB6fJ+UF8jiGO6iSYu1XYR8=
+	t=1747139706; cv=none; b=YIPjQ5o606Oa0tdjQmbzu5PDlWItsaq4M8m9LyI6EGzMtx17KfFHpjwuFcslJ6pfJKEDsN+1NCADFkz9BSc2oFBa632C/lkox+spka/rI1XJ/wFIbKu69413dZx4AsZOkfmrhVf1Bzqm5MZsXu2LvWz0J+SWdZEIbRHsH/WIA/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747139700; c=relaxed/simple;
-	bh=hBqY7u/JnFjJI/w3/g/c4OXToszQ46fwTlYxmxVH6dk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KrPNMxar265lRjBRmO6GHz54t+HGrcxhpfLbOHDvoEYGk8+rW1VybE5wy2z1cnsY6RhTcxOEAvrs73SR9nfuEe9aoYld8y6ULGaossaXh4SZh9JICW2UQ+dS//JVy/NmxVfXHgiW+xZKvUMuiF8+RTvEgKOHWOD5cKBlZeoGfX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=CpuwGsgE; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1747139706; c=relaxed/simple;
+	bh=ALZ1Y7eqeIWSLtwlNHJDTVrJdqlFq8VngIWKMheXNFw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GIrolWYNIAQS0SAg4BiX4QgVHea2d79CapBSRg/ZoXkx4AM9nLWFoqdBig8UNKrYp6JnzlQFBEIsajScvDQukzbkT+HH6PIPb+JBKr0jwWb5VehgTxAY5Ji76XPwZIrl06zXu0SUyid9qKKDiv3jJmTL4bS720lLLqpRXbYcAqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=C+rU7Uyx; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="CpuwGsgE"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBD59m008282;
-	Tue, 13 May 2025 08:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=MecMS
-	khtk5Z+MMSqon8pWjK1qRD4kS9uLF0Vm6JB3hs=; b=CpuwGsgEoyFjL/y05oHlP
-	7zNEK6XOgfrxgCE+zQEeEvwKnboFvg8miKY9UqjDAzypy6yoTQ1SeeCI9s5PQgb5
-	t8Fbr3qKM5S++MQxnBGu4vsN6zgIeg2OD3M38ssxYfzdcn3oIdkeEpvxt0K3w2T1
-	+taOiTa8jZkh02fzU6RQY4aZv2ifaeMdo5MMmnHPdYJQgX8K2Lvs8mu2DfasyDGG
-	nJOLB3Aq79ZMcsCHCEo4EQmGh6MWKaE/Airoa5mKi6TKarzcRezeQsdf/7svNC1u
-	JIfoGvdVtsjBrYDDmLeOZGGcga86oaFS0qPukuHXEqEINi3oN2xQzGUt9UdSkKHM
-	A==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46kx53aesr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 08:34:41 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54DCYeIB041010
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 13 May 2025 08:34:40 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 13 May 2025 08:34:40 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 13 May 2025 08:34:40 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 13 May 2025 08:34:40 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54DCYM1r007472;
-	Tue, 13 May 2025 08:34:25 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v3 03/10] iio: adc: ad4170: Add support for calibration gain
-Date: Tue, 13 May 2025 09:34:20 -0300
-Message-ID: <3d255162174ab160c3fd06af3c27360947c2a566.1747083143.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1747083143.git.marcelo.schmitt@analog.com>
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="C+rU7Uyx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=AChJjkRKBoBFtHqem4qBYNs6qVLL45ojY4c6NPKMb9o=; b=C+rU7Uyxy0fy+XvPUi/b9wBSH6
+	f1Oaq+JFoZ2kEvKBzeOGCfjDNTnBW5a59B3zdZrOthZUeT429bWEjQBlzWvj0+T9PhglztIC8ap6s
+	6zxt9HA2gkZ4MeMpCMr5dEkhu7vizKzZzcvj9iGpcnwrSryfSNoCkOTRa1mJs32s8l4c+sK0YZsuX
+	YydMsc6m0WdsWBnRMAMO6gECsuEjQpKetgBXN0S8A+eGe+crRgvQdNY43fTK/qnvGQXaWhUz+PsgE
+	igQS5oXPY9XRNbM6Abn69gvsFfQLvjinPX/Ocntl49AdxGiemwVb6GAMQ7unbobB2LqI3ULflJ4da
+	puEG9+IQ==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uEol6-007b70-8h; Tue, 13 May 2025 14:34:53 +0200
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Bernd Schubert <bernd@bsbernd.com>,  Laura Promberger
+ <laura.promberger@cern.ch>,  Dave Chinner <david@fromorbit.com>,  Matt
+ Harvey <mharvey@jumptrading.com>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  kernel-dev@igalia.com
+Subject: Re: [RFC PATCH v2] fuse: add optional workqueue to periodically
+ invalidate expired dentries
+In-Reply-To: <CAJfpeguD6jR7AQ=BWs-nKyT4ZV4d35KLM9UPZNzMd-SkcngmzQ@mail.gmail.com>
+	(Miklos Szeredi's message of "Tue, 13 May 2025 11:56:02 +0200")
+References: <20250415133801.28923-1-luis@igalia.com>
+	<CAJfpeguD6jR7AQ=BWs-nKyT4ZV4d35KLM9UPZNzMd-SkcngmzQ@mail.gmail.com>
+Date: Tue, 13 May 2025 13:34:47 +0100
+Message-ID: <87tt5o7kpk.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=a4sw9VSF c=1 sm=1 tr=0 ts=68233c61 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=s1qB4CsIdprNQQnv0OQA:9
-X-Proofpoint-ORIG-GUID: OecLo8QBvF6yxvGH-r1AeWdjWQvteiT_
-X-Proofpoint-GUID: OecLo8QBvF6yxvGH-r1AeWdjWQvteiT_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDExOSBTYWx0ZWRfX0fvxGeZTsq6H
- LmMDIsy7vkehmNs86dLtpPZl05swD8vXzA+FigZaSBhdMNB1xzNAJpWWSauryVaGhN3rsVsb/HW
- k3HT/2t57uf8cJFdHdriwN3vre15R2tr2s927T5HMHPqMr+UiTL8qs48R77DPXHgjB+ubcwJ7fF
- qFG3juiBgPu7BbPm/vMezpplZmwB5BARH2IltA6/vhqjFu0jGE+ymZQSO1JfXA7eF/X98HiTBGx
- LroblUkWmfT3jnKHDB+nBLmC5fHrPHyyyvf5sGiDTDRUIGOZtsUcc09MWSYm73fuG2dCikgB6AY
- CKUZeOiZf2tuvpfeT+6i4YuV/ExDWpWCPS235xR3nMyN39ND4VTxhfBdXY3jttCZkmyGve/pz/o
- j6+WRzQkEet/5s19cBzTwezG9/VpgBY8RzMIWuq78KL/9d/tdiwh4OQlWqa0BqHsw9HqUYuV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 spamscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505130119
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add support for ADC calibration gain configuration.
+Hi Miklos,
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-Change log v2 -> v3
-- New patch spun out of the base driver patch.
+On Tue, May 13 2025, Miklos Szeredi wrote:
 
- drivers/iio/adc/ad4170.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+> On Tue, 15 Apr 2025 at 15:38, Luis Henriques <luis@igalia.com> wrote:
+>
+>> +inval_wq=3DN
+>> +  Enable a workqueue that will periodically invalidate dentries that
+>> +  have expired.  'N' is a value in seconds and has to be bigger than
+>> +  5 seconds.
+>> +
+>
+> I don't think a mount option is needed.  Perhaps a module option knob
+> instead is sufficient?
 
-diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-index bf19b31095ee..1df214f7fdec 100644
---- a/drivers/iio/adc/ad4170.c
-+++ b/drivers/iio/adc/ad4170.c
-@@ -642,7 +642,8 @@ static const struct iio_chan_spec ad4170_channel_template = {
- 	.differential = 1,
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 			      BIT(IIO_CHAN_INFO_SCALE) |
--			      BIT(IIO_CHAN_INFO_OFFSET),
-+			      BIT(IIO_CHAN_INFO_OFFSET) |
-+			      BIT(IIO_CHAN_INFO_CALIBSCALE),
- 	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),
- 	.scan_type = {
- 		.realbits = 24,
-@@ -953,6 +954,9 @@ static int ad4170_read_raw(struct iio_dev *indio_dev,
- 		pga = FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
- 		*val = chan_info->offset_tbl[pga];
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		*val = setup->gain;
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1079,6 +1083,25 @@ static int ad4170_set_pga(struct ad4170_state *st,
- 	return 0;
- }
- 
-+static int ad4170_set_calib_gain(struct ad4170_state *st,
-+				 struct iio_chan_spec const *chan, int val)
-+{
-+	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
-+	struct ad4170_setup *setup = &chan_info->setup;
-+	u32 old_gain;
-+	int ret;
-+
-+	guard(mutex)(&st->lock);
-+	old_gain = setup->gain;
-+	setup->gain = val;
-+
-+	ret = ad4170_write_channel_setup(st, chan->address, false);
-+	if (ret)
-+		setup->gain = old_gain;
-+
-+	return ret;
-+}
-+
- static int __ad4170_write_raw(struct iio_dev *indio_dev,
- 			      struct iio_chan_spec const *chan, int val,
- 			      int val2, long info)
-@@ -1088,6 +1111,8 @@ static int __ad4170_write_raw(struct iio_dev *indio_dev,
- 	switch (info) {
- 	case IIO_CHAN_INFO_SCALE:
- 		return ad4170_set_pga(st, chan, val, val2);
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return ad4170_set_calib_gain(st, chan, val);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1114,6 +1139,8 @@ static int ad4170_write_raw_get_fmt(struct iio_dev *indio_dev,
- 	switch (info) {
- 	case IIO_CHAN_INFO_SCALE:
- 		return IIO_VAL_INT_PLUS_NANO;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
--- 
-2.47.2
+Sure, that should do the trick.  It'll still be set to zero by default
+(i.e. no periodic invalidation), and it won't be possible to tune it per
+mount.  Which is probably the right thing to do.
 
+>> +static void fuse_dentry_tree_add_node(struct dentry *dentry)
+>> +{
+>> +       struct fuse_conn *fc =3D get_fuse_conn_super(dentry->d_sb);
+>> +       struct dentry_node *dn, *cur;
+>> +       struct rb_node **p, *parent =3D NULL;
+>> +       bool start_work =3D false;
+>> +
+>> +       if (!fc->inval_wq)
+>> +               return;
+>> +
+>> +       dn =3D kmalloc(sizeof(*dn), GFP_KERNEL);
+>> +       if (!dn)
+>> +               return;
+>> +       dn->dentry =3D dget(dentry);
+>
+> A dentry ref without a vfsmount ref is generally bad idea.
+>
+> Instead of acquiring a ref, the lifetime of dn should be tied to that
+> of the dentry (hook into ->d_prune).
+>
+> So just put the rb_node in fuse_dentry and get rid of the "#if
+> BITS_PER_LONG >=3D 64" optimization.
+
+OK, this probably makes more sense.  I'll have a closer look at the
+details, but it seems to be a better option.  Thanks a lot for the
+suggestion.  I'll work on that for v3.
+
+Cheers,
+--=20
+Lu=C3=ADs
