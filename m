@@ -1,146 +1,126 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A791A239E96;
-	Tue, 13 May 2025 09:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2601E9B12;
+	Tue, 13 May 2025 09:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129424; cv=none; b=PbMmanhmVlz+xia59J8G/TO+hat78fgf5vC2SlV+dlkI2HyR3hWMyqqI/z8qm5SCFdkkdcqLtwT4IPctqAzk7ms+nB/MvXLzA80hs60EIkSLsoNsZxV0fHfIb8xaJCPDv2jhtF4V5eAi5jonwC9LWAPRNyI45z5OIUA7PYBU+Mk=
+	t=1747129463; cv=none; b=KAZJmjMpXeacp6noNX9ggRESHWo12rp6mt7Osl+Oh+R9vXqr8ttr6Ytp/PO21lapSs0IqH8vjiVb5IEyqRoodTrvDxM6/9YEc9I+jZ7AN9otpfE4zu8ybnSoZ0FLNfMdhcVHAOMYg2ZD9y/Nl360ItgASM/ilUfm8BgBa+0YrNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129424; c=relaxed/simple;
-	bh=B6INs+ab+G8y90eQLX78HEfzxVt6RXKWOK3/Dpg9xik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bygoJJY0u6r89LCywCJ8Ux4VvCTxO5AOfQND+ZmkC6TmaktowNPe0AuHgjSUeottpXehIdFrmFJiSY7ZX+4JWEWwC0GKxBNrwMe74gSwNGh6cviJmGVpo4n1VX6uOavSIZF4Up8q9ZyvPq7+2Z18Tvjh1e/Cxn8eiT+IB0SK3kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m2gqOBkC; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747129463; c=relaxed/simple;
+	bh=FCLE3Sish6sJWT92hus12ytHM+hbiyV8B6C7X2tTk8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q0SKZZqIIYsGfV4leKaQt9G8G1Cge3ZXC85u9u6t+DMPcaQhxvg57VB/iGcKyF9AD9JAiqLqDmSwcY3wqw3rZArdt9Eufkz9HQ+Yre7P82v8/rQ6OB1AnkLiOf6cpdaWkjHn2l1si0gm7hK+WxyPJFmRYIeq+d2elDPFXX2i8Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Gb+AFHD/; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2gqOBkC"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73712952e1cso5336918b3a.1;
-        Tue, 13 May 2025 02:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747129422; x=1747734222; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FveLRfI2XTkw1DlA/5/bt7HJXreSsKBNbe5njxTELig=;
-        b=m2gqOBkCK/C9Z3ri09w0ZQqXwOURE002ks5mn+vXwKyO7G+2L9oxJ9OKFnyfm+W6oW
-         qf4Emz7CjaZqNzRNxOIHCNmVZwkmu6aV6y3xobjFTsFEV/STOe+9zTiiaL+jjb2Vm/Eq
-         Yns+Unc1s/E9Ftj2KR/zVJhPhjYlSWGL5Sms0oKkCGRub/N+Cm2/zoje/FuxP8UhzRv3
-         PONqy94cJxWqS+nSNxEd83mY/C+unS3QHqh9WJtF5+4v/OOHBGKxQDIREi8LpFoEd8mQ
-         BPF9GhOJMm5//GUpmQexqLa+sHJIdoN5mCKRHSW2TP7WSJvXsMJuAqdJBuEhWIVSgbjw
-         0Big==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747129422; x=1747734222;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FveLRfI2XTkw1DlA/5/bt7HJXreSsKBNbe5njxTELig=;
-        b=wbnEArWbBd/fSkt3pUhhv8RFM928Upfbyk5xuK1WTpJQ1cMUKAG66UxMD0RX1pKPDa
-         1KQ5BFmqjEcvBUD5oiynM+ajwarxTA0mwTotH6NLdhX5Jg847stahLONrNs9TMbCfbKl
-         FXpU1mcittrZ1DfOzmeJFoKh9+T+NB61r/6v4Kt2ar4s477OayzYuvuQZRBdLkh93gUd
-         vGqk8IpNT1B1qZrWGgrFtoqOU+BrL4JZNU9lGQOkkyrn18RjzNSN87JnKz2F1DGFPuTC
-         TIsdD+jeUW0mAM4JZXH4W+NUDfYljDnFLLn9xvKxHDscWtUSCmz3fUKUJxmKKKcO1YQG
-         xYpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuZBQC4F557PtxQVMXkK/wBbKEkMzqp6AFgGd5e2rN5A3WYNMmDgC1Q29ESjjPDZ4wlqPXm4mD@vger.kernel.org, AJvYcCWQRyz0Ue1LUc+M+fWCWJE8uuN9yapTXOJTkSoSvadCiFQIC/wePB++SMlqmJggpFZicy4yWZRF9PxtjnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx29SCxccsNoNPESKuTINgd+YgU2HJjXHIMZlnpiMK3aH0zYfv
-	nziAEyO+GtVkxUv5aK9C+CfrvGpeJcBS4BMxEl4Br1JbBDTY+ocW
-X-Gm-Gg: ASbGnctVq4uAoY+u27MzDIzdu6WtJT5fTDBww+Dzxdvu1173DJ/xxCcAL34uIzhhBAq
-	misTwZ0UuWxZxFn4jLZYcHGA2xzV4H9u0OZoh0PJKtqXgThvzkbEHQqCJJ9ip7qM4M7Ht1GUjtU
-	67Th9nsbBI/QtwlJ8xA2RJL2Ppth6kx92FYFycjM+0hOIKAgV19ciq2brylJz5u4nf5Ug5ujgBy
-	ZI7B8OTP6Xly/oaaNQXumJhfulCRbsRy2lNDZorp8o/xzqjGAxaOzFInuaJT28nA6rfeN3gZqEA
-	gd6fNCW0Y7ic3iRxRLkac4y7xzDnBhw2SGcW0RrYdYDcJfwM9pFzIj1ZL6+kYPJyBHyi7rwBXcU
-	2eFMxm6wFphct3HoyCIYeICjid8y4moQiRsaZHg==
-X-Google-Smtp-Source: AGHT+IH4UzaiCuDy4Vm+20HRgmeVBDcwBJXOOE/MyeKZGNu95IoTGVedP5pvCI6B0wzOcZ8f06tXuw==
-X-Received: by 2002:a05:6a21:3384:b0:215:eb6b:8714 with SMTP id adf61e73a8af0-215eb6b882fmr4729730637.30.1747129421864;
-        Tue, 13 May 2025 02:43:41 -0700 (PDT)
-Received: from [192.168.1.24] (90-47-60-187.ftth.fr.orangecustomers.net. [90.47.60.187])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2349dd34edsm6866074a12.30.2025.05.13.02.43.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 02:43:41 -0700 (PDT)
-Message-ID: <b2087e45-3937-492e-a39b-de2591dab5b0@gmail.com>
-Date: Tue, 13 May 2025 11:43:36 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Gb+AFHD/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1D51D43AD2;
+	Tue, 13 May 2025 09:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747129452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mE82WGnbCCvrXYireTZju6owhNfokw4sOSCiM1zr2e0=;
+	b=Gb+AFHD/SQUWevkmVYSDlRjy1sAPR1xJFtl8IuFOYsKPvFDaGlLyRS/+edzz/eKYcNhqVa
+	XTZ/LnTmMSRlCk/JbadJLvCi4/8DvhJRO5zpIK3oCyK+9nJ/RSF7IuTKZ4u1tNpvPGBYjx
+	7zDV7gypVkZ0QKgfejatW4Reyf3/Ii2OeK7pWPd7Wy9cB6qwdpAcHXolibNz8QSOPkQNZs
+	BsPg8bY3eLUJM68KPbiPmM0nRdnKC38Yw2ZpRHj1IJgtxkbuos/Shn+AE+D48I1Vs1p1xn
+	/n6jcagI+T9Q7umwrQVduMCSm8cU5avN3pDHwS8Qd4DnjGiJ9DmEspk1FzBY3A==
+Date: Tue, 13 May 2025 11:44:09 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v10 02/13] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250513114409.6aae3eb9@kmaincent-XPS-13-7390>
+In-Reply-To: <20250508201041.40566d3f@kernel.org>
+References: <20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com>
+	<20250506-feature_poe_port_prio-v10-2-55679a4895f9@bootlin.com>
+	<20250508201041.40566d3f@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/92] 6.1.139-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250512172023.126467649@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250512172023.126467649@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdefkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
+On Thu, 8 May 2025 20:10:41 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
+> On Tue, 06 May 2025 11:38:34 +0200 Kory Maincent wrote:
+> > diff --git a/Documentation/netlink/specs/ethtool.yaml
+> > b/Documentation/netlink/specs/ethtool.yaml index c650cd3dcb80..fbfd2939=
+87c1
+> > 100644 --- a/Documentation/netlink/specs/ethtool.yaml
+> > +++ b/Documentation/netlink/specs/ethtool.yaml
+> > @@ -98,6 +98,12 @@ definitions:
+> >      name: tcp-data-split
+> >      type: enum
+> >      entries: [ unknown, disabled, enabled ]
+> > +  -
+> > +    name: pse-events
+> > +    type: flags
+> > +    name-prefix: ethtool-pse-event-
+> > +    header: linux/ethtool.h
+> > +    entries: [ over-current, over-temp ] =20
+>=20
+> please change this enum similarly to what I suggested on the hwts
+> source patch
 
-On 5/12/2025 7:44 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.139 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.139-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Ok.
+=20
+> >  attribute-sets:
+> >    -
+> > @@ -1528,6 +1534,18 @@ attribute-sets:
+> >          name: hwtstamp-flags
+> >          type: nest
+> >          nested-attributes: bitset
+> > +  -
+> > +    name: pse-ntf
+> > +    attr-cnt-name: __ethtool-a-pse-ntf-cnt =20
+>=20
+> please use -- instead of underscores
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+All the other attributes are using underscore in this property.
+Are you sure about this?
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+> > +			phydev =3D psec->attached_phydev;
+> > +			if (phydev->attached_dev) {
+> > +				netdev =3D phydev->attached_dev;
+> > +				netdev_hold(netdev, tracker, GFP_ATOMIC); =20
+>=20
+> GFP_KERNEL ?
 
+Oops indeed, small copy paste mistake.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
