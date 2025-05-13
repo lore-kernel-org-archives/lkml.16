@@ -1,124 +1,188 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47051E570D;
-	Tue, 13 May 2025 09:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEA41E570D;
+	Tue, 13 May 2025 09:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129230; cv=none; b=K9VTNvtiFESNhh/D4YYm0PD92tNzk9gCtIc6/2ebNfQH6pY9C3gx2fCtVcPmK7gHjfGVjcfwpv22dPCjx0iGNFCE/GMzp1VT3m+WreR0P8JUQX7/9H7eHFJigxU/DCuau7/Yme0IYhxg4n2V14JX28UrWDuR19A/L1HL0hTQ5y0=
+	t=1747129293; cv=none; b=IiMvEbLuwUWBLLAhfR9Zf6kbzmF1eSdtdAQeb58X4WY5ivWxGK6aBKNHDAus7Bt+MApVgd94mtSr/6CsMWa6Da54+acqHBzVnesy1dGnp5QOPyeipuBJZNwe9dPT3SnZAJrIkGBAudvL64j0a3AFz9V37SugZvXEKYRu0e/ufrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129230; c=relaxed/simple;
-	bh=1wIIwHD8c+CPmX9U6aGb2yK2udHw+4iA68GBonq3u8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WVow3SYiR06dFy/92Aqs0RM2pX9a/YC2LxV54Ozh+Sc195+lbpE6jMOQvVG9PfSM7ATOJY/xyN9PhJgK1UYY7xXsHWlE6eEzTiLuoGOPoTMk+rcKx6yuUPyGy9gsVIw9EisVfomutMR/09Av+eDH0ucQ1v72Q3KoS6/uHGJ22Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-878427f091eso1487001241.3;
-        Tue, 13 May 2025 02:40:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747129226; x=1747734026;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OLVlgbGY6C4NmUHQLVUAYE7yGL5LTr+dlKy+YPb+qSA=;
-        b=sJ0s32thJHSnsEAESTlHZrGbGBKypJu9ex9EqPPDJZgTJSMerD8xxv33x+LKou+fgD
-         V0mB5TwDu+gcpownkh0baokiNPziEnum+vVCx4EHV5KakCj/5KokUK9AYbjxMH37wbki
-         ++vC9GsOgGlE+Mym8c1rnQ2NH+QDsZvQdOHQ4eEzt2zWkgoYgmwFSQFkvxHyEQYxo8Yf
-         KojFpb/VyaxEgX4GMtd3w6X3z4N2zUCLdyiexUqYVOpa1fJINNzEhkIKcMMdbhl3OZEQ
-         DDfmR7A4NwtN7LB08ua+URU2BhAlAxgHOc8ggy9S6/CNnKinbEecLbYQ/RXV3CBcs+Wp
-         ed7g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/i5aTP4xrPnmx+tO6BN0UrEIHho71WH5nlsgKrqas2LFZ/BKdt6AfeubmPs5aCClJPrA90vqENgloU7iJ@vger.kernel.org, AJvYcCW1Ax0Iaqg/b8Jcn5EDUxS+2sMwuDklMRfGj97jkasF1slF2Dv3CCxMieMOvX7NJ6hu8cKXR2DwZOcC@vger.kernel.org, AJvYcCWmIl/fKiueg1LGwhG4ESX9wtKv0m2F7EfSlHZsJWFaxSHQaQDyx1J8h4figiUOlQt2WbTD4tnHvCKAOH2ePORLgHk=@vger.kernel.org, AJvYcCXwFp/FKH2W2jRa6OiukzXbWq56PnxOcEVf8PibYF5WEiwbyAc9so1IliB/oEmw4DqcZHHrrMJZHo+dl3vP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzA4FbOqXbguzZD9OFRyeIiS25/m8zB2/jSK3BriS+vjNFv1uf
-	Xr9vIfM8pI4S6jD947bO3SoHcKjPKUAiE7tQlDJ2eyRFQLkH+MKPg2EjdsGu
-X-Gm-Gg: ASbGncv3l5Z5mWuyk6OAC96ak0XVuOlu3FRrmx9YkktmCcI8NqLVkKP1fzGBEO7XptN
-	Wq/d2f17E5ypIkxRHDSedCh286t3Sqr7HtZgFXIUEaoHAM5usLjHzfRxP2MLBJwngkJxamWHm3/
-	7jwqQxSHKu8S5mi41G+SJwN5ypx34g8nrnkYnM48s4y1ZvvskLEQgCZdrbzyBeyereJ8vB1obhE
-	7qVQA8le55KzV2eqTSOWWlnYQsrbNQiZTkiFrz2VreWrrQXdmH0yxGRlIr+WAe6X3sfI7t+XhA7
-	N6ld7e4WPJyxX4oNwfZs+3+kkCY9ZGbPMcs8WIbTpeNLj9XaGWdAJqG3WcrCFwj7dCyeSAE802T
-	cI9pMV66NdNI47Q==
-X-Google-Smtp-Source: AGHT+IE3B47kPtK8UhqwT/tACvgvfC0ea5Y6FSrSPPQcx0GYHA1fSNMO5tJpBQ8T6/RG72IV5Gu0Bw==
-X-Received: by 2002:a05:6102:3c9f:b0:4dc:81c9:13b1 with SMTP id ada2fe7eead31-4deed227f12mr14340536137.0.1747129226568;
-        Tue, 13 May 2025 02:40:26 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c565cc6d9sm6903223e0c.5.2025.05.13.02.40.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 02:40:26 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87843d9d40bso1416458241.2;
-        Tue, 13 May 2025 02:40:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFiX+I2UryBDfV3ADIRhZPl5jf8QwltmhpIqnZ2WwmCagXg5It/OgFQTWgiwIRKABjwBai0wWi54A2Dqpl@vger.kernel.org, AJvYcCUMvGh3DFVfZg8EWbgraosHGbUvOZXqBD3UwIPsBD1D4gU27gWxBIrWRfg4LgBz/M9elgfITtYXoFVa@vger.kernel.org, AJvYcCUccVMbPGoJVG1OUl1UB9W+ds59DKhT+WD6hI7K2KhTQmPeYnSBdpXzHMYubdF8VNpvSvQ5fbAjfMjBy7JQBl1t0lY=@vger.kernel.org, AJvYcCUl7VsP4vYrWbj9LHkHd2lmNlNM0jssXV8RwcStpjSqdosiGj4T0FiCl6/ptz6FsRydoDDV7+i/2arK+9a4@vger.kernel.org
-X-Received: by 2002:a05:6102:2c02:b0:4de:81a:7d49 with SMTP id
- ada2fe7eead31-4deed351e14mr13783445137.8.1747129226114; Tue, 13 May 2025
- 02:40:26 -0700 (PDT)
+	s=arc-20240116; t=1747129293; c=relaxed/simple;
+	bh=9LpchjhiZX+DBZ6lMeGJvFj12PZytbaMZ9VCzKNnWKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5B/Q0QeyF5jS2TtxrjiVbPHTfR2/lXJmBIqW5Q8qH1IXOjoVXXYaON3NxsBD21dnTraothZBADinzLACxWZ8baqSn36pXN2v5ze56/70+WYqqRDWi7DYyxHrqVkj3Zs5pvMOQoz4aP4+N6F+ci2gLXZDd5uMbqMr1qKP/+E0yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBQFW/OS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBQFW/OS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D74C4CEE4;
+	Tue, 13 May 2025 09:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747129293;
+	bh=9LpchjhiZX+DBZ6lMeGJvFj12PZytbaMZ9VCzKNnWKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBQFW/OSWl0JKCgO3wU5Zev4svkXFf7hg1hXf5vz/dafM3maiJzs1pvZB4PggT3J7
+	 4Fgb0P+P3LbyvaBBr+NTPBk5toNUyb87sBxZfI029TpdTVwCYABse2TcYvVL3TzZRe
+	 9C4BxfZkhY6ir7IctfItjKlVifYGxX11uT+x8kHAsC7aCQrQyotU+baHY2Z0qsG4XD
+	 Vg9Gu0DWBjjxzBIlamIYcZ9EPvglCZ2lXw9NX7+y5wXevRIfDjRe3oukq9hP9DTrSd
+	 jegikYcugiinVo0isHFxAPJLdkQ+V3E8WpGg+7wZWeF7zzIkfEjiL7pChb+hsn8aX5
+	 OCNDfyrLDoADg==
+Date: Tue, 13 May 2025 10:41:26 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev@vger.kernel.org,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v7 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+Message-ID: <20250513094126.GF2936510@google.com>
+References: <20250507124358.48776-1-ivecera@redhat.com>
+ <20250507124358.48776-9-ivecera@redhat.com>
+ <CAHp75Ven0i05QhKz2djYx0UU9E9nipb7Qw3mm4e+UN+ZSF_enA@mail.gmail.com>
+ <2e3eb9e3-151d-42ef-9043-998e762d3ba6@redhat.com>
+ <aBt1N6TcSckYj23A@smile.fi.intel.com>
+ <20250507152609.GK3865826@google.com>
+ <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
- <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com> <20250509185858.GA3933854-robh@kernel.org>
-In-Reply-To: <20250509185858.GA3933854-robh@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 May 2025 11:40:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUBo98nA4=VVVe2YDeFTKFx+ynuDox_tV17cmGw2acLAg@mail.gmail.com>
-X-Gm-Features: AX0GCFtDW9XhFJSnWBy8wJPJMO9llEfB3d8gRYXObtTzIaElJDfhlG-xRp6Jb2A
-Message-ID: <CAMuHMdUBo98nA4=VVVe2YDeFTKFx+ynuDox_tV17cmGw2acLAg@mail.gmail.com>
-Subject: Re: [PATCH v8 01/11] dt-bindings: serial: Added secondary clock for
- RZ/T2H RSCI
-To: Rob Herring <robh@kernel.org>
-Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, thierry.bultel@linatsea.fr, 
-	linux-renesas-soc@vger.kernel.org, paul.barker.ct@bp.renesas.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b095ffb9-c274-4520-a45e-96861268500b@redhat.com>
 
-Hi Rob,
+On Mon, 12 May 2025, Ivan Vecera wrote:
 
-On Fri, 9 May 2025 at 20:59, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Apr 29, 2025 at 10:19:43AM +0200, Thierry Bultel wrote:
-> > At boot, the default clock is the PCLKM core lock (synchronous
-> > clock, which is enabled by the bootloader).
-> > For different baudrates, the asynchronous clock input must be used.
-> > Clock selection is made by an internal register of RCSI.
-> >
-> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-> > ---
-> >  .../bindings/serial/renesas,rsci.yaml          | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> > index ea879db5f485..aa2428837a2f 100644
-> > --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
-> > @@ -35,10 +35,14 @@ properties:
-> >        - const: tei
-> >
-> >    clocks:
-> > -    maxItems: 1
-> > +    items:
-> > +      - description: serial functional clock
-> > +      - description: default core clock
-> >
-> >    clock-names:
-> > -    const: fck # UART functional clock
-> > +    items:
-> > +      - const: async
-> > +      - const: bus
->
-> This is an ABI change. You can't just drop 'fck' without good reasons.
+> On 07. 05. 25 5:26 odp., Lee Jones wrote:
+> > On Wed, 07 May 2025, Andy Shevchenko wrote:
+> > 
+> > > On Wed, May 07, 2025 at 03:56:37PM +0200, Ivan Vecera wrote:
+> > > > On 07. 05. 25 3:41 odp., Andy Shevchenko wrote:
+> > > > > On Wed, May 7, 2025 at 3:45 PM Ivan Vecera <ivecera@redhat.com> wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > > +static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+> > > > > > +       { .channel = 0, },
+> > > > > > +       { .channel = 1, },
+> > > > > > +       { .channel = 2, },
+> > > > > > +       { .channel = 3, },
+> > > > > > +       { .channel = 4, },
+> > > > > > +};
+> > > > > 
+> > > > > > +static const struct mfd_cell zl3073x_devs[] = {
+> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 0),
+> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 1),
+> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 2),
+> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 3),
+> > > > > > +       ZL3073X_CELL("zl3073x-dpll", 4),
+> > > > > > +};
+> > > > > 
+> > > > > > +#define ZL3073X_MAX_CHANNELS   5
+> > > > > 
+> > > > > Btw, wouldn't be better to keep the above lists synchronised like
+> > > > > 
+> > > > > 1. Make ZL3073X_CELL() to use indexed variant
+> > > > > 
+> > > > > [idx] = ...
+> > > > > 
+> > > > > 2. Define the channel numbers
+> > > > > 
+> > > > > and use them in both data structures.
+> > > > > 
+> > > > > ...
+> > > > 
+> > > > WDYM?
+> > > > 
+> > > > > OTOH, I'm not sure why we even need this. If this is going to be
+> > > > > sequential, can't we make a core to decide which cell will be given
+> > > > > which id?
+> > > > 
+> > > > Just a note that after introduction of PHC sub-driver the array will look
+> > > > like:
+> > > > static const struct mfd_cell zl3073x_devs[] = {
+> > > >         ZL3073X_CELL("zl3073x-dpll", 0),  // DPLL sub-dev for chan 0
+> > > >         ZL3073X_CELL("zl3073x-phc", 0),   // PHC sub-dev for chan 0
+> > > >         ZL3073X_CELL("zl3073x-dpll", 1),  // ...
+> > > >         ZL3073X_CELL("zl3073x-phc", 1),
+> > > >         ZL3073X_CELL("zl3073x-dpll", 2),
+> > > >         ZL3073X_CELL("zl3073x-phc", 2),
+> > > >         ZL3073X_CELL("zl3073x-dpll", 3),
+> > > >         ZL3073X_CELL("zl3073x-phc", 3),
+> > > >         ZL3073X_CELL("zl3073x-dpll", 4),
+> > > >         ZL3073X_CELL("zl3073x-phc", 4),   // PHC sub-dev for chan 4
+> > > > };
+> > > 
+> > > Ah, this is very important piece. Then I mean only this kind of change
+> > > 
+> > > enum {
+> > > 	// this or whatever meaningful names
+> > > 	..._CH_0	0
+> > > 	..._CH_1	1
+> > > 	...
+> > > };
+> > > 
+> > > static const struct zl3073x_pdata zl3073x_pdata[ZL3073X_MAX_CHANNELS] = {
+> > >         { .channel = ..._CH_0, },
+> > >         ...
+> > > };
+> > > 
+> > > static const struct mfd_cell zl3073x_devs[] = {
+> > >         ZL3073X_CELL("zl3073x-dpll", ..._CH_0),
+> > >         ZL3073X_CELL("zl3073x-phc", ..._CH_0),
+> > >         ...
+> > > };
+> > 
+> > This is getting hectic.  All for a sequential enumeration.  Seeing as
+> > there are no other differentiations, why not use IDA in the child
+> > instead?
+> 
+> For that, there have to be two IDAs, one for DPLLs and one for PHCs...
 
-This is fine, as there are no users yet.
-The initial DT bindings were written based on a limited understanding of
-the device.  Let's hope our current understanding is less limited ;-)
+Sorry, can you explain a bit more.  Why is this a problem?
 
-Gr{oetje,eeting}s,
+The IDA API is very simple.
 
-                        Geert
+Much better than building your own bespoke MACROs.
+
+> The approach in my second reply in this thread is simpler and taken
+> in v8.
+> 
+> <cite>
+> +#define ZL3073X_PDATA(_channel)			\
+> +	(&(const struct zl3073x_pdata) {	\
+> +		.channel = _channel,		\
+> +	})
+> +
+> +#define ZL3073X_CELL(_name, _channel)				\
+> +	MFD_CELL_BASIC(_name, NULL, ZL3073X_PDATA(_channel),	\
+> +		       sizeof(struct zl3073x_pdata), 0)
+> +
+> +static const struct mfd_cell zl3073x_devs[] = {
+> +	ZL3073X_CELL("zl3073x-dpll", 0),
+> +	ZL3073X_CELL("zl3073x-dpll", 1),
+> +	ZL3073X_CELL("zl3073x-dpll", 2),
+> +	ZL3073X_CELL("zl3073x-dpll", 3),
+> +	ZL3073X_CELL("zl3073x-dpll", 4),
+> +};
+> </cite>
+> 
+> Lee, WDYT?
+> 
+> Thanks,
+> Ivan
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
