@@ -1,180 +1,109 @@
-Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B23380;
-	Tue, 13 May 2025 12:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D7F7483;
+	Tue, 13 May 2025 12:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139436; cv=none; b=dpceBtkQGt7ws/Zg3Vp7f9NRo5ij1+twPgFQn80eYBMYFs+b6/MYKz3pTJs5S/XrHo15cLjYboKM2vy+9ikFmRnxNG3vg02gfdWn2CnkqMq7JJiAUo9iKkRUOlm61NLhn+rdF/D2DN8N+Elbun4rHo9DKtg0A8G+fQPPwJqnk4U=
+	t=1747139580; cv=none; b=mzcaKKJP1cHiMkOhfLFCaFeqJg2MwqVZtOr+jCfZW1NZ7KBnYVdHwhFpP9ycib9eda1AYTB6XO3aqpFvKReLpi1AoVq8/DX0A24GgxKgAq+eOOv20rLS7o5IpJJzJbeL1lm7mZUIYSglSEqMvW5aaF2L9RsLV2wX9KI6iAjMvtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747139436; c=relaxed/simple;
-	bh=DH3q+gvmK+JHm790T6SJo+cbL7DWVBmvxmNvVPukUZs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mJR/jsP2V1Td3U3jGSA9YyFTxpjHku3Yir9EhyXwT15agi9LNtYxy9rQ3fvFV1Q53Mj2K32gPVo9YfFgCqkl/FXkLY/6ca/RqqywZIWpoOdV1pu7r18rhKWKr1XJRLfK4FIwDcWgiO7jHFnJm31BKhNx9ba33YvdyHdsaGcmzDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w003.hihonor.com (unknown [10.68.17.88])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4ZxbP54dSwzYly8F;
-	Tue, 13 May 2025 20:28:41 +0800 (CST)
-Received: from a005.hihonor.com (10.68.18.24) by w003.hihonor.com
- (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
- 2025 20:30:29 +0800
-Received: from a010.hihonor.com (10.68.16.52) by a005.hihonor.com
- (10.68.18.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
- 2025 20:30:29 +0800
-Received: from a010.hihonor.com ([fe80::7127:3946:32c7:6e]) by
- a010.hihonor.com ([fe80::7127:3946:32c7:6e%14]) with mapi id 15.02.1544.011;
- Tue, 13 May 2025 20:30:29 +0800
-From: wangtao <tao.wangtao@honor.com>
-To: =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>,
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
-	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>, "jstultz@google.com"
-	<jstultz@google.com>, "tjmercier@google.com" <tjmercier@google.com>
-CC: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	s=arc-20240116; t=1747139580; c=relaxed/simple;
+	bh=mLMzTDvVEsw75/6eFnr/1KEDw3sumrUGXyc25RczOGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T52zaqPW0XTvEzJNf6jbi7FXhcJ8/P4Jt19C6p2Nrf8p0Fu5JFi6IIMx8hqsWrrW4Ogxtz5C7b1h2SnfdrJ8GuV8KC10YfofIkOAprRJXqj/zRUxe1e5jfrqLbSRCZ5cCHL0FE4YHszglLLh2ObjR37gl+V/W5YV1cCR9YUvVu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=sjemz6n5; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sjemz6n5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=ikO6NxPSIIjD1kUAHzPCWxeEkTOjGoN0DmnRySn4PCk=; b=sj
+	emz6n58GPUmWdFVzAHRjKI2dWuI0rPQE8SL/5bYfGaf3w24mGVb9f0MujMpWRRsD0Uf3JyFv5eIVp
+	+S43WT3eawgxo08pQ0i2Yjr8Sx3wlWf9hSC9Jm8lJCuaesVHG56wUYi9WlyHQ/d7Um/fp9Ef8n6c4
+	Upwr265iTWTKWnU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEooK-00CS0n-Mk; Tue, 13 May 2025 14:32:40 +0200
+Date: Tue, 13 May 2025 14:32:40 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>
+Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"dqfext@gmail.com" <dqfext@gmail.com>,
+	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"edumazet@google.com" <edumazet@google.com>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"wangbintian(BintianWang)" <bintian.wang@honor.com>, yipengxiang
-	<yipengxiang@honor.com>, liulu 00013167 <liulu.liu@honor.com>, "hanfeng
- 00012985" <feng.han@honor.com>
-Subject: RE: [PATCH 2/2] dmabuf/heaps: implement DMA_BUF_IOCTL_RW_FILE for
- system_heap
-Thread-Topic: [PATCH 2/2] dmabuf/heaps: implement DMA_BUF_IOCTL_RW_FILE for
- system_heap
-Thread-Index: AQHbw+qMldEo/aUx7kiLwLLmDDhXfrPP52GAgACTfSA=
-Date: Tue, 13 May 2025 12:30:29 +0000
-Message-ID: <5b68b2a50d48444b93d97f5d342f37c8@honor.com>
-References: <20250513092803.2096-1-tao.wangtao@honor.com>
- <fdc8f0a2-5b2f-4898-8090-0d7b888c15d8@amd.com>
-In-Reply-To: <fdc8f0a2-5b2f-4898-8090-0d7b888c15d8@amd.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"daniel@makrotopia.org" <daniel@makrotopia.org>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+Subject: Re: [PATCH net-next v2 3/3] net: phy: mediatek: add driver for
+ built-in 2.5G ethernet PHY on MT7988
+Message-ID: <8b67fa4c-a07a-4941-ba7b-23d4e1104451@lunn.ch>
+References: <20250219083910.2255981-1-SkyLake.Huang@mediatek.com>
+ <20250219083910.2255981-4-SkyLake.Huang@mediatek.com>
+ <Z7WleP9v6Igx2MjC@shell.armlinux.org.uk>
+ <74ce0275952a9c60af87ded9d64ca7301fd69d0f.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <74ce0275952a9c60af87ded9d64ca7301fd69d0f.camel@mediatek.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXN0aWFuIEvDtm5p
-ZyA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBNYXkgMTMsIDIw
-MjUgNzozMiBQTQ0KPiBUbzogd2FuZ3RhbyA8dGFvLndhbmd0YW9AaG9ub3IuY29tPjsgc3VtaXQu
-c2Vtd2FsQGxpbmFyby5vcmc7DQo+IGJlbmphbWluLmdhaWduYXJkQGNvbGxhYm9yYS5jb207IEJy
-aWFuLlN0YXJrZXlAYXJtLmNvbTsNCj4ganN0dWx0ekBnb29nbGUuY29tOyB0am1lcmNpZXJAZ29v
-Z2xlLmNvbQ0KPiBDYzogbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnOyBkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnOyBsaW5hcm8tDQo+IG1tLXNpZ0BsaXN0cy5saW5hcm8ub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiB3YW5nYmludGlhbihCaW50aWFuV2FuZykg
-PGJpbnRpYW4ud2FuZ0Bob25vci5jb20+OyB5aXBlbmd4aWFuZw0KPiA8eWlwZW5neGlhbmdAaG9u
-b3IuY29tPjsgbGl1bHUgMDAwMTMxNjcgPGxpdWx1LmxpdUBob25vci5jb20+OyBoYW5mZW5nDQo+
-IDAwMDEyOTg1IDxmZW5nLmhhbkBob25vci5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8y
-XSBkbWFidWYvaGVhcHM6IGltcGxlbWVudA0KPiBETUFfQlVGX0lPQ1RMX1JXX0ZJTEUgZm9yIHN5
-c3RlbV9oZWFwDQo+IA0KPiBPbiA1LzEzLzI1IDExOjI4LCB3YW5ndGFvIHdyb3RlOg0KPiA+IFN1
-cHBvcnQgZGlyZWN0IGZpbGUgSS9PIG9wZXJhdGlvbnMgZm9yIHN5c3RlbV9oZWFwIGRtYS1idWYg
-b2JqZWN0cy4NCj4gPiBJbXBsZW1lbnRhdGlvbiBpbmNsdWRlczoNCj4gPiAxLiBDb252ZXJ0IHNn
-X3RhYmxlIHRvIGJpb192ZWMNCj4gDQo+IFRoYXQgaXMgdXN1YWxseSBpbGxlZ2FsIGZvciBETUEt
-YnVmcy4NClt3YW5ndGFvXSBUaGUgdGVybSAnY29udmVydCcgaXMgbWlzbGVhZGluZyBpbiB0aGlz
-IGNvbnRleHQuIFRoZSBhcHByb3ByaWF0ZSBwaHJhc2luZyBzaG91bGQgYmU6IENvbnN0cnVjdCBi
-aW9fdmVjIGZyb20gc2dfdGFibGUuDQpBcHByZWNpYXRlIHlvdXIgZmVlZGJhY2suDQo+IA0KPiBS
-ZWdhcmRzLA0KPiBDaHJpc3RpYW4uDQo+IA0KPiA+IDIuIFNldCBJT0NCX0RJUkVDVCB3aGVuIE9f
-RElSRUNUIGlzIHN1cHBvcnRlZCAzLiBJbnZva2UNCj4gPiB2ZnNfaW9jYl9pdGVyX3JlYWQoKS92
-ZnNfaW9jYl9pdGVyX3dyaXRlKCkgZm9yIGFjdHVhbCBJL08NCj4gPg0KPiA+IFBlcmZvcm1hbmNl
-IG1ldHJpY3MgKFVGUyA0LjAgZGV2aWNlIEA0R0IvcywgQXJtNjQgQ1BVIEAxR0h6KToNCj4gPg0K
-PiA+IHwgTWV0cmljICAgICAgICAgICAgIHwgICAgMU1CIHwgICAgOE1CIHwgICAgNjRNQiB8ICAg
-MTAyNE1CIHwgICAzMDcyTUIgfA0KPiA+IHwtLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tOnwt
-LS0tLS0tOnwtLS0tLS0tLTp8LS0tLS0tLS0tOnwtLS0tLS0tLS0NCj4gPiB8LS0tLS0tLS0tLS0t
-LS0tLS0tLS18OnwNCj4gPiB8IEJ1ZmZlciBSZWFkICh1cykgICB8ICAgMTY1OCB8ICAgOTAyOCB8
-ICAgNjkyOTUgfCAgMTAxOTc4MyB8ICAyOTc4MTc5IHwNCj4gPiB8IERpcmVjdCBSZWFkICh1cykg
-ICB8ICAgIDcwNyB8ICAgMjY0NyB8ICAgMTg2ODkgfCAgIDI5OTYyNyB8ICAgOTM3NzU4IHwNCj4g
-PiB8IEJ1ZmZlciBSYXRlIChNQi9zKSB8ICAgIDYwMyB8ICAgIDg4NiB8ICAgICA5MjQgfCAgICAg
-MTAwNCB8ICAgICAxMDMyIHwNCj4gPiB8IERpcmVjdCBSYXRlIChNQi9zKSB8ICAgMTQxNCB8ICAg
-MzAyMiB8ICAgIDM0MjUgfCAgICAgMzQxOCB8ICAgICAzMjc2IHwNCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IHdhbmd0YW8gPHRhby53YW5ndGFvQGhvbm9yLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJp
-dmVycy9kbWEtYnVmL2hlYXBzL3N5c3RlbV9oZWFwLmMgfCAxMTgNCj4gPiArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMTggaW5zZXJ0aW9ucygrKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hLWJ1Zi9oZWFwcy9zeXN0ZW1faGVhcC5j
-DQo+ID4gYi9kcml2ZXJzL2RtYS1idWYvaGVhcHMvc3lzdGVtX2hlYXAuYw0KPiA+IGluZGV4IDI2
-ZDVkYzg5ZWExNi4uZjdiNzFiOTg0M2FhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZG1hLWJ1
-Zi9oZWFwcy9zeXN0ZW1faGVhcC5jDQo+ID4gKysrIGIvZHJpdmVycy9kbWEtYnVmL2hlYXBzL3N5
-c3RlbV9oZWFwLmMNCj4gPiBAQCAtMjAsNiArMjAsOCBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgv
-c2NhdHRlcmxpc3QuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiAgI2luY2x1
-ZGUgPGxpbnV4L3ZtYWxsb2MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2J2ZWMuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L3Vpby5oPg0KPiA+DQo+ID4gIHN0YXRpYyBzdHJ1Y3QgZG1hX2hlYXAg
-KnN5c19oZWFwOw0KPiA+DQo+ID4gQEAgLTI4MSw2ICsyODMsMTIxIEBAIHN0YXRpYyB2b2lkIHN5
-c3RlbV9oZWFwX3Z1bm1hcChzdHJ1Y3QgZG1hX2J1Zg0KPiAqZG1hYnVmLCBzdHJ1Y3QgaW9zeXNf
-bWFwICptYXApDQo+ID4gIAlpb3N5c19tYXBfY2xlYXIobWFwKTsNCj4gPiAgfQ0KPiA+DQo+ID4g
-K3N0YXRpYyBzdHJ1Y3QgYmlvX3ZlYyAqc3lzdGVtX2hlYXBfaW5pdF9idmVjKHN0cnVjdA0KPiBz
-eXN0ZW1faGVhcF9idWZmZXIgKmJ1ZmZlciwNCj4gPiArCQkJc2l6ZV90IG9mZnNldCwgc2l6ZV90
-IGxlbiwgaW50ICpucl9zZWdzKSB7DQo+ID4gKwlzdHJ1Y3Qgc2dfdGFibGUgKnNndCA9ICZidWZm
-ZXItPnNnX3RhYmxlOw0KPiA+ICsJc3RydWN0IHNjYXR0ZXJsaXN0ICpzZzsNCj4gPiArCXNpemVf
-dCBsZW5ndGggPSAwOw0KPiA+ICsJdW5zaWduZWQgaW50IGksIGsgPSAwOw0KPiA+ICsJc3RydWN0
-IGJpb192ZWMgKmJ2ZWM7DQo+ID4gKwlzaXplX3Qgc2dfbGVmdDsNCj4gPiArCXNpemVfdCBzZ19v
-ZmZzZXQ7DQo+ID4gKwlzaXplX3Qgc2dfbGVuOw0KPiA+ICsNCj4gPiArCWJ2ZWMgPSBrdmNhbGxv
-YyhzZ3QtPm5lbnRzLCBzaXplb2YoKmJ2ZWMpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghYnZl
-YykNCj4gPiArCQlyZXR1cm4gTlVMTDsNCj4gPiArDQo+ID4gKwlmb3JfZWFjaF9zZyhzZ3QtPnNn
-bCwgc2csIHNndC0+bmVudHMsIGkpIHsNCj4gPiArCQlsZW5ndGggKz0gc2ctPmxlbmd0aDsNCj4g
-PiArCQlpZiAobGVuZ3RoIDw9IG9mZnNldCkNCj4gPiArCQkJY29udGludWU7DQo+ID4gKw0KPiA+
-ICsJCXNnX2xlZnQgPSBsZW5ndGggLSBvZmZzZXQ7DQo+ID4gKwkJc2dfb2Zmc2V0ID0gc2ctPm9m
-ZnNldCArIHNnLT5sZW5ndGggLSBzZ19sZWZ0Ow0KPiA+ICsJCXNnX2xlbiA9IG1pbihzZ19sZWZ0
-LCBsZW4pOw0KPiA+ICsNCj4gPiArCQlidmVjW2tdLmJ2X3BhZ2UgPSBzZ19wYWdlKHNnKTsNCj4g
-PiArCQlidmVjW2tdLmJ2X2xlbiA9IHNnX2xlbjsNCj4gPiArCQlidmVjW2tdLmJ2X29mZnNldCA9
-IHNnX29mZnNldDsNCj4gPiArCQlrKys7DQo+ID4gKw0KPiA+ICsJCW9mZnNldCArPSBzZ19sZW47
-DQo+ID4gKwkJbGVuIC09IHNnX2xlbjsNCj4gPiArCQlpZiAobGVuIDw9IDApDQo+ID4gKwkJCWJy
-ZWFrOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCSpucl9zZWdzID0gazsNCj4gPiArCXJldHVybiBi
-dmVjOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHN5c3RlbV9oZWFwX3J3X2ZpbGUo
-c3RydWN0IHN5c3RlbV9oZWFwX2J1ZmZlciAqYnVmZmVyLCBib29sDQo+IGlzX3JlYWQsDQo+ID4g
-KwkJYm9vbCBkaXJlY3RfaW8sIHN0cnVjdCBmaWxlICpmaWxwLCBsb2ZmX3QgZmlsZV9vZmZzZXQs
-DQo+ID4gKwkJc2l6ZV90IGJ1Zl9vZmZzZXQsIHNpemVfdCBsZW4pDQo+ID4gK3sNCj4gPiArCXN0
-cnVjdCBiaW9fdmVjICpidmVjOw0KPiA+ICsJaW50IG5yX3NlZ3MgPSAwOw0KPiA+ICsJc3RydWN0
-IGlvdl9pdGVyIGl0ZXI7DQo+ID4gKwlzdHJ1Y3Qga2lvY2Iga2lvY2I7DQo+ID4gKwlzc2l6ZV90
-IHJldCA9IDA7DQo+ID4gKw0KPiA+ICsJaWYgKGRpcmVjdF9pbykgew0KPiA+ICsJCWlmICghKGZp
-bHAtPmZfbW9kZSAmIEZNT0RFX0NBTl9PRElSRUNUKSkNCj4gPiArCQkJcmV0dXJuIC1FSU5WQUw7
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJYnZlYyA9IHN5c3RlbV9oZWFwX2luaXRfYnZlYyhidWZm
-ZXIsIGJ1Zl9vZmZzZXQsIGxlbiwgJm5yX3NlZ3MpOw0KPiA+ICsJaWYgKCFidmVjKQ0KPiA+ICsJ
-CXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCWlvdl9pdGVyX2J2ZWMoJml0ZXIsIGlzX3Jl
-YWQgPyBJVEVSX0RFU1QgOiBJVEVSX1NPVVJDRSwgYnZlYywNCj4gbnJfc2VncywgbGVuKTsNCj4g
-PiArCWluaXRfc3luY19raW9jYigma2lvY2IsIGZpbHApOw0KPiA+ICsJa2lvY2Iua2lfcG9zID0g
-ZmlsZV9vZmZzZXQ7DQo+ID4gKwlpZiAoZGlyZWN0X2lvKQ0KPiA+ICsJCWtpb2NiLmtpX2ZsYWdz
-IHw9IElPQ0JfRElSRUNUOw0KPiA+ICsNCj4gPiArCXdoaWxlIChraW9jYi5raV9wb3MgPCBmaWxl
-X29mZnNldCArIGxlbikgew0KPiA+ICsJCWlmIChpc19yZWFkKQ0KPiA+ICsJCQlyZXQgPSB2ZnNf
-aW9jYl9pdGVyX3JlYWQoZmlscCwgJmtpb2NiLCAmaXRlcik7DQo+ID4gKwkJZWxzZQ0KPiA+ICsJ
-CQlyZXQgPSB2ZnNfaW9jYl9pdGVyX3dyaXRlKGZpbHAsICZraW9jYiwgJml0ZXIpOw0KPiA+ICsJ
-CWlmIChyZXQgPD0gMCkNCj4gPiArCQkJYnJlYWs7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJa3Zm
-cmVlKGJ2ZWMpOw0KPiA+ICsJcmV0dXJuIHJldCA8IDAgPyByZXQgOiAwOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgaW50IHN5c3RlbV9oZWFwX2RtYV9idWZfcndfZmlsZShzdHJ1Y3QgZG1h
-X2J1ZiAqZG1hYnVmLA0KPiA+ICsJCQlzdHJ1Y3QgZG1hX2J1Zl9yd19maWxlICpiYWNrKQ0KPiA+
-ICt7DQo+ID4gKwlzdHJ1Y3Qgc3lzdGVtX2hlYXBfYnVmZmVyICpidWZmZXIgPSBkbWFidWYtPnBy
-aXY7DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArCV9fdTMyIG9wID0gYmFjay0+ZmxhZ3MgJiBE
-TUFfQlVGX1JXX0ZMQUdTX09QX01BU0s7DQo+ID4gKwlib29sIGRpcmVjdF9pbyA9IGJhY2stPmZs
-YWdzICYgRE1BX0JVRl9SV19GTEFHU19ESVJFQ1Q7DQo+ID4gKwlzdHJ1Y3QgZmlsZSAqZmlscDsN
-Cj4gPiArDQo+ID4gKwlpZiAob3AgIT0gRE1BX0JVRl9SV19GTEFHU19SRUFEICYmIG9wICE9DQo+
-IERNQV9CVUZfUldfRkxBR1NfV1JJVEUpDQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwlp
-ZiAoZGlyZWN0X2lvKSB7DQo+ID4gKwkJaWYgKCFQQUdFX0FMSUdORUQoYmFjay0+ZmlsZV9vZmZz
-ZXQpIHx8DQo+ID4gKwkJCSFQQUdFX0FMSUdORUQoYmFjay0+YnVmX29mZnNldCkgfHwNCj4gPiAr
-CQkJIVBBR0VfQUxJR05FRChiYWNrLT5idWZfbGVuKSkNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsN
-Cj4gPiArCX0NCj4gPiArCWlmICghYmFjay0+YnVmX2xlbiB8fCBiYWNrLT5idWZfbGVuID4gZG1h
-YnVmLT5zaXplIHx8DQo+ID4gKwkJYmFjay0+YnVmX29mZnNldCA+PSBkbWFidWYtPnNpemUgfHwN
-Cj4gPiArCQliYWNrLT5idWZfb2Zmc2V0ICsgYmFjay0+YnVmX2xlbiA+IGRtYWJ1Zi0+c2l6ZSkN
-Cj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArCWlmIChiYWNrLT5maWxlX29mZnNldCArIGJh
-Y2stPmJ1Zl9sZW4gPCBiYWNrLT5maWxlX29mZnNldCkNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsN
-Cj4gPiArDQo+ID4gKwlmaWxwID0gZmdldChiYWNrLT5mZCk7DQo+ID4gKwlpZiAoIWZpbHApDQo+
-ID4gKwkJcmV0dXJuIC1FQkFERjsNCj4gPiArDQo+ID4gKwltdXRleF9sb2NrKCZidWZmZXItPmxv
-Y2spOw0KPiA+ICsJcmV0ID0gc3lzdGVtX2hlYXBfcndfZmlsZShidWZmZXIsIG9wID09DQo+IERN
-QV9CVUZfUldfRkxBR1NfUkVBRCwgZGlyZWN0X2lvLA0KPiA+ICsJCQlmaWxwLCBiYWNrLT5maWxl
-X29mZnNldCwgYmFjay0+YnVmX29mZnNldCwgYmFjay0NCj4gPmJ1Zl9sZW4pOw0KPiA+ICsJbXV0
-ZXhfdW5sb2NrKCZidWZmZXItPmxvY2spOw0KPiA+ICsNCj4gPiArCWZwdXQoZmlscCk7DQo+ID4g
-KwlyZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCBzeXN0ZW1faGVh
-cF9kbWFfYnVmX3JlbGVhc2Uoc3RydWN0IGRtYV9idWYgKmRtYWJ1ZikgIHsNCj4gPiAgCXN0cnVj
-dCBzeXN0ZW1faGVhcF9idWZmZXIgKmJ1ZmZlciA9IGRtYWJ1Zi0+cHJpdjsgQEAgLTMwOCw2DQo+
-ICs0MjUsNw0KPiA+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1hX2J1Zl9vcHMgc3lzdGVtX2hl
-YXBfYnVmX29wcyA9IHsNCj4gPiAgCS5tbWFwID0gc3lzdGVtX2hlYXBfbW1hcCwNCj4gPiAgCS52
-bWFwID0gc3lzdGVtX2hlYXBfdm1hcCwNCj4gPiAgCS52dW5tYXAgPSBzeXN0ZW1faGVhcF92dW5t
-YXAsDQo+ID4gKwkucndfZmlsZSA9IHN5c3RlbV9oZWFwX2RtYV9idWZfcndfZmlsZSwNCj4gPiAg
-CS5yZWxlYXNlID0gc3lzdGVtX2hlYXBfZG1hX2J1Zl9yZWxlYXNlLCAgfTsNCj4gPg0KDQo=
+On Tue, May 13, 2025 at 10:12:04AM +0000, SkyLake Huang (黃啟澤) wrote:
+> On Wed, 2025-02-19 at 09:33 +0000, Russell King (Oracle) wrote:
+> > 
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> > 
+> > 
+> > On Wed, Feb 19, 2025 at 04:39:10PM +0800, Sky Huang wrote:
+> > > +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
+> > > +{
+> > > +     struct pinctrl *pinctrl;
+> > > +     int ret;
+> > > +
+> > > +     /* Check if PHY interface type is compatible */
+> > > +     if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL)
+> > > +             return -ENODEV;
+> > > +
+> > > +     ret = mt798x_2p5ge_phy_load_fw(phydev);
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > 
+> > Firmware should not be loaded in the .config_init method. The above
+> > call will block while holding the RTNL which will prevent all other
+> > network configuration until the firmware has been loaded or the load
+> > fails.
+> > 
+> > Thanks.
+> > 
+> > --
+> > RMK's Patch system:
+> > https://urldefense.com/v3/__https://www.armlinux.org.uk/developer/patches/__;!!CTRNKA9wMg0ARbw!iV-1ViPFsUV-lLj7aIycan8nery6sQO3t6mkpdlb_GW8hswhxc4ejJozxqkU3s2WzxSizs4kfdC77yr7HGGRIuU$
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> Actually, I wrote fw loading flow in .probe. However, during boot time,
+> .probe is called at very early stage (about the first 2s after booting
+> into Linux Kernel). At that time, filesystem isn't ready yet and phy
+> driver can't locate /lib/firmware/mediatek/mt7988/i2p5ge-phy-pmb.bin.
+
+Tell Dracut or whatever you are using to build the initramfs to
+include the firmware. That is what MODULE_FIRMWARE() is for.
+
+	Andrew
