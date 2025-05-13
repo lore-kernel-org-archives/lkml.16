@@ -1,165 +1,107 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570014C6C;
-	Tue, 13 May 2025 03:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5F64C6C;
+	Tue, 13 May 2025 03:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747105809; cv=none; b=mNb4KwxxwcllGL7ts1mj3z2hDEaX7LgVoW/zdqN+ZraEnvvtVijMZsb3keapVosy+iBmwUn1zDfVacDK6y2dQfqK1G8p5JNtiYW305TPSexxhhRj1UAC/btcYt4gtY7BW3+wJ9nfUdIk3lcNOAaolHwj701sBD+FZC8ztnnaiqc=
+	t=1747105843; cv=none; b=Hw7A2QWtrQfl74Z27JVlg7RtsEjzinN6i4Pjc0pI2khwXy8vIrjjJWUfdaWHAdisGdSvmYNO3V1oh5hwSrQcuXm5SRFD5eFlHT0TH1XTZFEU/Wy7hgL6M10mXo7jCaMnF5o7H7yyEBPz2kMv7huP5K0sHvgTE4tCuJlG9HR2sCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747105809; c=relaxed/simple;
-	bh=lH9Mx4aVs4QQtZHGvkMYU9LCJDzgEoPHIgTniA52CBM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BrpGztU+Dv0DA7Bnkwblzu9DBllKrlq5MrCXYthil9S7EI1gfY14pYarky4Znpf8Jt/qzTAAs7tmE9y8aF8J9r6/yyvetwOeTyVnljO5sb0bV4moHgd0KmyxpKRwPpRaTLYow3WOOf52FaCNEDl+iXAntqYchZM/usYNMfU2EHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ilUedrp1; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747105843; c=relaxed/simple;
+	bh=hh8W8SFL2O5tLYPxqifp5xrBtBcma9ivlfB8ylnUYQM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=gWNXXCcAMiTIegWz44mio0OTh72ensIq/dGsZOr4WdCscovoiDFotoK2LmCZMzNw07sQT/WL1Je4+88ApKgQX1uqtWShLzpq6q48wxhzFx7UDl1cFjRBtLO1Hel/0AcZSVQrzVtrIyw3Gq1RaU4jWPXKZBUmtE0ABUVsqlK+m04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ek/xfUdt; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ilUedrp1"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54D38fmY2070298
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 12 May 2025 20:08:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54D38fmY2070298
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747105728;
-	bh=mMlBb0BhCT8cgj/QPGAe6BmWLayngDK0aCi6bXxWAxs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ilUedrp1KQEpFltXo2qH2WlCyKt6rS0/cdWH8Mjz80doC3Pry6HnSy054kC0Gk2mB
-	 GjtsTuztaVpPJNloE0umqKtIn0xynOPD6Vti01YLEGAnmVr7AZlPrsYINCZdmME6YT
-	 EkzNqOmab2N+sFEn8jeoan0StC9se19rV5fljP2AygaXCjSnZrouX2eZyKwkum84Qw
-	 3DOV7zrQnV+qplUyK1/BVHFIlYoNK5Kgrrpx7BAesdNtVfcy0zMfM2/tAaLmheycar
-	 OxQ3aIbLLjwdws1bge8rTdCrByIBZWpWRdX+2hRArSDL3Va0d5joMKPONGl0z1qpKm
-	 MwXWm9MwpY6/w==
-Message-ID: <8c17a14f-9f2f-4b67-9c6c-1a40fcfae000@zytor.com>
-Date: Mon, 12 May 2025 20:08:40 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ek/xfUdt"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30a9cd61159so4823925a91.1;
+        Mon, 12 May 2025 20:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747105841; x=1747710641; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:subject:cc:to:from
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DcuJtm+iInMJ4xEpzdwpahbYr7IroCfNfGVeO9DKr0A=;
+        b=ek/xfUdtGnKCeCy5bEErt32CTQdQr3H7w5hBOg4xV2wf6FHm3zOde05wAePXUrYeuN
+         pbT7jzVKIjO0kZ1knYNhmlqo4pWUCIOz9VkjIRry4L+4HnQKTQ+jJnjtfY+eA14FKfq4
+         8b/FpsI4EX+p/PVBj52/1cy1Af2x/M1D0jaAiNcLy7ddi1q89gJj5jKvckFv/pEzJhz7
+         ExVZ3Pulb8zNbnKdqVzlUUKoIRGAJmM3Ur4fE9CEJ7JcxV/xpZoLR+bud1DWE1nWtuvJ
+         kv7rX6iet0GHxunp02a19Nv6M+zW4sZ0XaZxjeqa5ugbQy3eFKaxl5oLK5SAPyzwpnR7
+         M+6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747105841; x=1747710641;
+        h=content-transfer-encoding:mime-version:date:subject:cc:to:from
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DcuJtm+iInMJ4xEpzdwpahbYr7IroCfNfGVeO9DKr0A=;
+        b=b6pO2SNMjA3qLPOQYrqiEyJAAFT+e4QYspCiyfTmWriI84DdWmaqDrC/PKP6j/dcrz
+         jBN83Y4swhVSTnCT0zF6ZvgCH5gzUDnvHDB6vO/2CCNcXraigAhdJDhnjzYaVAp+hAEX
+         9Lgbg7qldPunUnP1rYlsAitxAmlVDhsbkFfFsEstuxSX8H7VIupvLmmzepkw4JCjv+4N
+         0h2OIGGIFq6CwTGc96BiUQdp/MjdRazo2Q0qHtEXl1rfkoG7SHInWO1sy2/T/vDpwTXQ
+         k+tIMv4ng6gJ/muB52meZkmkLuLcJhsqxm5bKl79bVOqR6H+BatiUe8Tu5M2HPiUgctY
+         Tbrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHr+ICtWdtmrA+IszRbpZcrAFYssqEeh5F8alFDY9vAQXlMgmy3IcAsVpMpoqb42ttAmbp6eP06P+Spk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaE0uENH37dUacfGY6o/BNv95tBl3W3YBNB8S3ZjqPqjO9wS9b
+	cGdRa63eri5gEsd2CSQfvSVlvOOZnWCN3nsgcYH6csIBnrb9IWntxVpdag==
+X-Gm-Gg: ASbGncstSeTO/LCNK4lyr2OQ4CAjo14VuZ2LjxfGgBYgqnc2t+iTRyj/1alAH3/Uf8i
+	ijBAyyPHRdF3qTDjXBnSQ7cC0JR5wtPFBv80pvX+iQpxLKrpHCsR4ndOhdweVEDqjKl+FWrc4fH
+	4KzlC5Ea+AzyU1Z8mYvhmjuvdD+lJmm+sse8Cqcmbwq7LrlXC46Nt0/jPG6R90FuahxNvA078wJ
+	gpY5wpt11yvBTlHaO8U1uds1ftGY0kYU0/ndSb+EbHQYYKMlrp1ELwhgUuauJlKsAvpyR5CW0Li
+	BXTN1M/zJZPYkrfr4pV7QjHuctgM3KWvYhbJpRTINq82/Pvlie3pPeqqFx0TPA+uVTLLc+91
+X-Google-Smtp-Source: AGHT+IG1fT6TiYe3pTrZKUSJyBs6nE+x+ZjDtyWth+bx63s94p++vD/MoGUkW74HUXfleYGKFUeLcw==
+X-Received: by 2002:a17:90b:240c:b0:2ff:556f:bf9 with SMTP id 98e67ed59e1d1-30e0daf825bmr1697698a91.4.1747105840515;
+        Mon, 12 May 2025 20:10:40 -0700 (PDT)
+Received: from dea88b1475bb.. (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2453f50b67sm5082852a12.55.2025.05.12.20.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 20:10:40 -0700 (PDT)
+Message-ID: <6822b830.050a0220.27a24d.d064@mx.google.com>
+X-Google-Original-Message-ID: <20250513031010.267994-1-LeoWang>
+From: leo.jt.wang@gmail.com
+X-Google-Original-From: LeoWang
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	george.kw.lee@fii-foxconn.com,
+	leo.jt.wang@fii-foxconn.com
+Subject: [PATCH 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
+Date: Tue, 13 May 2025 11:10:09 +0800
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/16] x86/cpu: Enumerate the LASS feature bits
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Xiongwei Song <xiongwei.song@windriver.com>,
-        Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Alexey Kardashevskiy <aik@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-        Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
-        Breno Leitao <leitao@debian.org>,
-        Rick Edgecombe
- <rick.p.edgecombe@intel.com>,
-        Yian Chen <yian.chen@intel.com>, Alexei Starovoitov <ast@kernel.org>,
-        Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
-        Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-        Huang Shijie <shijie@os.amperecomputing.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-References: <20240710160655.3402786-1-alexander.shishkin@linux.intel.com>
- <20240710160655.3402786-2-alexander.shishkin@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240710160655.3402786-2-alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/10/2024 9:06 AM, Alexander Shishkin wrote:
-> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-> index c492bdc97b05..76c7d362af94 100644
-> --- a/arch/x86/include/asm/disabled-features.h
-> +++ b/arch/x86/include/asm/disabled-features.h
-> @@ -22,12 +22,14 @@
->   # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
->   # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
->   # define DISABLE_PCID		0
-> +# define DISABLE_LASS		0
->   #else
->   # define DISABLE_VME		0
->   # define DISABLE_K6_MTRR	0
->   # define DISABLE_CYRIX_ARR	0
->   # define DISABLE_CENTAUR_MCR	0
->   # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
-> +# define DISABLE_LASS		(1<<(X86_FEATURE_LASS & 31))
->   #endif /* CONFIG_X86_64 */
->   
+From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-You don't need to add DISABLE_LASS, because you don't make the LASS code
-optional at build time, i.e., you don't have CONFIG_X86_LASS.
+Document the new compatibles used on Meta Clemente.
 
->   #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-> @@ -146,7 +148,7 @@
->   #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
->   			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
->   #define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
-> -#define DISABLED_MASK13	0
-> +#define DISABLED_MASK13	(DISABLE_LASS)
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+---
+ Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-The exact same mistake I made ;)
+diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+index a3736f134130..4416a40dcd86 100644
+--- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
++++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+@@ -81,6 +81,7 @@ properties:
+               - asus,x4tf-bmc
+               - facebook,bletchley-bmc
+               - facebook,catalina-bmc
++              - facebook,clemente-bmc
+               - facebook,cloudripper-bmc
+               - facebook,elbert-bmc
+               - facebook,fuji-bmc
+-- 
+2.43.0
 
-https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/
-
->   #define DISABLED_MASK14	0
->   #define DISABLED_MASK15	0
->   #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
-
-     Xin
