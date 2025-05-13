@@ -1,261 +1,113 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD5A28D8D2;
-	Tue, 13 May 2025 13:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C728640E;
+	Tue, 13 May 2025 13:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143478; cv=none; b=Pqg7s4zjbqHRyPLqtN1HfTlqVfvuqS2pqdg4kG/JWxExrCkpd4ib6GTxdscQIkoNYBUrGOB7s95hkWkBrr1oOf5o4tt2ybLh1CxifkRpLqSYT07sslGjgNm/9ifRyNEfkU4dOylS/tqcBmC6A1Enav68LAkw82fBhnYjsC/UWCc=
+	t=1747143546; cv=none; b=B7ydVMG7tD93Q+bLo17AtgAMwwwfO7cn+ykGyDNRFYbIXc+EWVOpyrCdKeUGMY2U7sq7nZBmglZkBSl1FaNSnSt9EFW/EW/rvCZcimlUGOscOTvWc0nXJQNOVHmBnhuuy+EW7b20vj0ZF9CyNXMOmiYur4I/t9jVGHavQfJ3mDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143478; c=relaxed/simple;
-	bh=0+HtaGrGaoLqr3qhDtv2IdWE8bgfBKdmZ+r7KFwBP08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QDWmFha6OGIzq6FKlcHk3x3IVqLfUH2IjLsWYA+UexRxCAjbD8BqmYxmkGdjtUyhNcyYv/5W67/QNfUg+fYI/msIfV6CrE2GmonnbsumDDh9D4EUNV0vvIwUlQOJyA3r8cDiVRsJbwQbNvEY8fOpr/umhLxX3ZSIVwhRcGx6vvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQ11HkF6; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1747143546; c=relaxed/simple;
+	bh=w/zWZ92yzc6YUkiZeb6+MrsktIw7OQGZTLwAU32pCxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YJSuf/Sg1I5bREko0MkBXoB1rNL9/zwjomq+bQHK68GmLMSyd51mSA6+iXLnmszXZemnV502raijZnwh5Siu50/TntYpotMxqHSxNJ5PSf33iSWgSnTiFJhmXOGLHMjvNqkBXYYINZ/ovb139YZEHCHqxbj+GK/mVlI+9+0IWUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQ11HkF6"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74019695377so4098587b3a.3;
-        Tue, 13 May 2025 06:37:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747143475; x=1747748275; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mm3KpWP1Rf7uSeuMqKX9HM7cqL/7satZxR0/tskkBws=;
-        b=dQ11HkF6//vEbPXjVFd1+o1jzI8Y9O5J4Bm6c+mp5fWLHwoko5aB+FOml0+/jWLgkO
-         Oku+/sfbw3YyckMVcvzKqKfR8hx4NVthBuyLq+TcKw26TAS3h4ysu4uFUWMZcS665iEx
-         zchB8hsGyTfI7OFI00LoAqad7bFpaP5Jhc7ZjTOD9Jzj1iNJx7sWhQJcfkT6c/C9PZ4N
-         3rDJp0uyCeVQILI6UYNfNgwUGfttfsh63c+YYE9vjd2iKXNS2JCQlTMY/KgCF5AdyKs/
-         HOJ6JfsOPFRNhsso/X+AdyUorthucISZXVtD1MkbPUaJYF7BDqolrV6cFBY81XEGskX4
-         thWA==
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-879ed601971so1363432241.1;
+        Tue, 13 May 2025 06:39:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747143475; x=1747748275;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mm3KpWP1Rf7uSeuMqKX9HM7cqL/7satZxR0/tskkBws=;
-        b=cCFvfgePtNxc0fY5M92MJnfWmubSyOmEDxtlYFcWqnbdajjXfN+/EMLjPcez982pQ2
-         sCL1if/bq6+mgS+29cqjSfffB/C/YKWGVS3KTQ2sk0942p04w28TqJLiw6EK+6bTLn7O
-         ondnVcph8lMN+QmzHU26tVb6SuKjMPRz0v1hpuKeH3PBqcE2/ldKI5JiBUhVn0uMC2Jr
-         knQGTPH9VjX/1nyJzbfOvQ6LxMuoPwbNCZQ8RAPQAFrrOgc5L/UIWWmBYFoWv0Zkhsqm
-         6Oc3VVRq4xeLR3dzyoybfunMXurlihoxbPPg6I63YYExhEZzkVLMyXy5Fyl//6HzJxC7
-         rYCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAyJSOGCW7zctMJk3Xk0qqHS3vamVPj1IOlhhDA2ab16PxpcgHfNjykqro/JQZkbwbMPnAWxw0MRexLFA=@vger.kernel.org, AJvYcCVNaNSsxQnM46DOANesLnE7Ggsdb+c2uFh6tfmcVXyK1hU3Z004inahkaTNKqrI7d5On7h0iACKFIgajvhq93JgkUo=@vger.kernel.org, AJvYcCXX8rWeBwfwV6k5FQVVs3/7IjW5yGCF6PiAwQglNw1UvyBJvRu1eP5OBe61GDjo7TxzpPJaz+/9jQx3JYQbbUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdL6r4ByOHsmgw1Xa80a8H1Qcg4PYe31mfVyRkKcq9gyQ+tLbo
-	14geteLZKwShqG9wZ2i2IGVc6qsaJVNzz7kDjUVhXwlClG3uPeZd
-X-Gm-Gg: ASbGncub988+UUx8GxGSjxarii6/67qe66q+lruuBi6nVoyvA3jCYsypiirYa8VHwS7
-	dzoZGJ6QqqoXWJraopHYspICRiiWQri4azWlX0Hs4xip5bFMsZ5GpmrcragT+5VwUZQVV3R+D8D
-	SX+KzpVlfQGCxQVV62MV4sN5X+slu80n+Hq5wjKH3yoU5JDOaLKM70vwv+Uy9W6W0XrpMomLbMe
-	Inaa69WZwegaxclm7RCfH4acbso5iV+7W59G7hOygHTeioQuyLju7Oz/X2B0Ra6LJ5aVzKPop7O
-	lxfkZVVUectVuENzTDEHe63qHKj7Y6P+Wlf6wtSl10RIlW/5nJCiZ/Pi/HLnr0RXpf+rdmYLUYG
-	7jJwuB373EDwGUbusT7SUFN+G
-X-Google-Smtp-Source: AGHT+IHpuPjA3MNTlH9t6DnGWKdjCy50qsZI97/whW8qfdcp4muFJ2Yu3JwYtRCkGxpO+WcpLld45g==
-X-Received: by 2002:a05:6a00:4f8c:b0:736:55ec:ea8b with SMTP id d2e1a72fcca58-7423c05f1dcmr25293787b3a.24.1747143475208;
-        Tue, 13 May 2025 06:37:55 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a38bf3sm7972694b3a.133.2025.05.13.06.37.53
+        d=1e100.net; s=20230601; t=1747143542; x=1747748342;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=otMogSOyvc+azXfG2zQ9PW31C7giKBuO4YtLeGYVjBA=;
+        b=SqGGDyPLacpX72rLCoeLCPJg9F4qq2oSu6kkkYGuMd0jZpgOBgZ9HFvlkjxSpeWqRE
+         6e1ULszt+p04y4Hlo1BN06ULANgjNOF2rv/3xpD+9ZrazsRkFWGREWuE+m4DxCdR2Q88
+         pgAmQEzndr/buwaqd9IjXG5Qlh0ui4jeLJrri7gaUV+K8bCznJCVDy6ZuuXLeJrgSs75
+         aaufdmZT+kqdTMrGaQ1UgO02GQQ+Afmf7bT3bjGwxbVu8FY2rgelb+ZU/xO8NHrM67gG
+         hYHp43eKcwEEwDhZmYWz4hQ30ibW1hQsynAx8KP/o0RmjqosJ22hNHi5icWBY4QtnqZl
+         DOrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN/a6T8ePNUKQp7/VIDa9m4B+LH855PYdG8KQAAsx8TE5m1D2zbDme1Dm+JW/f4G/nwCf+sXeqMN1OZAmp@vger.kernel.org, AJvYcCWKrIlspR0nv1RVe91gHIYkSYHvT0e6AO4jHR8kCGGlBBy727MGG53hj0vUTZQKQW0mchCd3+xxer9YoNGVPVFKhbw=@vger.kernel.org, AJvYcCXISG+VUqWB5MEn8/2+NsXR6IfLnyHKDGXd7uOCn5GPJxsJ9iECUIsFxLQ/AANZyYtPMPFG/xpJH/Wn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz8/MF1p7s8WzwX4Xhq8BpB9B/7LKNEB0a0tRcU96D1kfGAXpm
+	0flzt3KDU8HlIMvLVIUj5wu0TbdrcZjg6/Pgxp0oyaEKzSb/jLsSeL2WWgCS
+X-Gm-Gg: ASbGncs1xNnrx4wEiFcSWzJZWjGGEYP3km3hE++fHPlVY1rWpyNSuwTXtXjCL3sHkFx
+	r+pxIiw0xALyGLEOh2KlKHJZVZ/YEKzUSviMX536eYHXYdgnGksaYy0L9txyVcTrR3tDNrMvEb0
+	PfH/fwO+siyPkxPwWs5BcgIr932jqNrDyaU4BPxx0d+FNA1leJIvc8LgbYeC3CuUGTB/vDiO5us
+	fRswxkhRqtOWgKQlFDSZDQjvhMT7fGWC3EN5BxO0iaWyuIz8Y85Invw8mts+xkgvPUePektYqaN
+	5kel6LvdnEm7gG5gzQW5QQ05RLwJZHHDTWf82UpAf+p+R8Mzrs4gRIl4oUxenHtK58jtcivqU6z
+	y3LRbRuwI2tqhlA==
+X-Google-Smtp-Source: AGHT+IE/EhzF6TBjNH4i+Mqkn+GleNMj3ux/pNzFWLyvHinHSG31SQd/lhemIZBXjY1SFs5unwgGSw==
+X-Received: by 2002:a05:6102:4b19:b0:4c1:76a4:aee4 with SMTP id ada2fe7eead31-4deed3d366fmr15206965137.19.1747143542495;
+        Tue, 13 May 2025 06:39:02 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea857f73fsm6732930137.3.2025.05.13.06.39.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 06:37:54 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <64390424-5c79-4354-a08b-b6ff7638903e@roeck-us.net>
-Date: Tue, 13 May 2025 06:37:53 -0700
+        Tue, 13 May 2025 06:39:02 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4def2473a58so1493523137.2;
+        Tue, 13 May 2025 06:39:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjuxD8wLOWI4tW2LKEsZlzh8BajIaj5Q4rhbFpNgQ37XR6M640T7YPpt71AM9bxSv/fAQPsyPreGxE3Ws/KOyqLnY=@vger.kernel.org, AJvYcCVr2Ara8s/YlI3skt7dnmM/yqGvwFkob3De+lktzFsQq1sSvbFCI7d5vB220shJUL0m0+Jj8iqhXc3u@vger.kernel.org, AJvYcCXiRrulHUUDPQJXZIa3QVM2tqYGtx23XlTxySwiFCFL7zoSH4XcZq4FXNfCdRLK9ksBVxFlRM+nuAEXBq3f@vger.kernel.org
+X-Received: by 2002:a05:6102:4a92:b0:4da:fc9d:f0c with SMTP id
+ ada2fe7eead31-4deed35dc84mr15321354137.12.1747143542024; Tue, 13 May 2025
+ 06:39:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] watchdog: s3c2410_wdt: Increase max timeout value of
- watchdog
-To: Sangwook Shin <sw617.shin@samsung.com>, krzk@kernel.org,
- alim.akhtar@samsung.com, wim@linux-watchdog.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kyunghwan Seo <khwan.seo@samsung.com>
-References: <20250513094711.2691059-1-sw617.shin@samsung.com>
- <CGME20250513095656epcas2p258caa7e4c94ff04ccce72f51b2ba81f4@epcas2p2.samsung.com>
- <20250513094711.2691059-2-sw617.shin@samsung.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250513094711.2691059-2-sw617.shin@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com> <20250429081956.3804621-11-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250429081956.3804621-11-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 May 2025 15:38:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUw9GNv1_jtjnfjL1x38-Snhdie41s5=9DZhQA5NMjVtA@mail.gmail.com>
+X-Gm-Features: AX0GCFsLHBRN64p-uZIQMVjwi0yO7Y1WSMGqfYnyWXgWneRfxfyFamwGYreAKAE
+Message-ID: <CAMuHMdUw9GNv1_jtjnfjL1x38-Snhdie41s5=9DZhQA5NMjVtA@mail.gmail.com>
+Subject: Re: [PATCH v8 10/11] arm64: dts: renesas: Add initial support for
+ renesas RZ/T2H eval board
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/13/25 02:47, Sangwook Shin wrote:
-> Increase max_timeout value from 55s to 3665038s (1018h 3min 58s) with
-> 38400000 frequency system if the system has 32-bit WTCNT register.
-> 
-> cat /sys/devices/platform/10060000.watchdog_cl0/watchdog/watchdog0/max_timeout
-> 3665038
-> 
-> [    0.208763][    T1] s3c2410-wdt 10060000.watchdog_cl0: Heartbeat: count=1099511400000, timeout=3665038, freq=300000
-> [    0.208767][    T1] s3c2410-wdt 10060000.watchdog_cl0: Heartbeat: timeout=3665038, divisor=256, count=1099511400000 (fffffc87)
-> [    0.208799][    T1] s3c2410-wdt 10060000.watchdog_cl0: starting watchdog timer
-> [    0.208969][    T1] s3c2410-wdt 10060000.watchdog_cl0: watchdog active, reset enabled, irq disabled
-> 
-> If system has 32-bit WTCNT, add QUIRK_HAS_32BIT_MAXCNT to its quirk flags, then
-> it will operation with 32-bit counter. If not, with 16-bit counter like previous.
-> 
-> Signed-off-by: Sangwook Shin <sw617.shin@samsung.com>
-> Signed-off-by: Kyunghwan Seo <khwan.seo@samsung.com>
+Hi Thierry,
+
+On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Add the initial device tree for the RZ/T2H evaluation board.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 > ---
->   drivers/watchdog/s3c2410_wdt.c | 30 ++++++++++++++++++++++--------
->   1 file changed, 22 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index bdd81d8074b2..a13768a11f20 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-> @@ -34,6 +34,7 @@
->   #define S3C2410_WTCLRINT	0x0c
->   
->   #define S3C2410_WTCNT_MAXCNT	0xffff
-> +#define S3C2410_WTCNT_MAXCNT_32	0xffffffff
->   
->   #define S3C2410_WTCON_RSTEN		BIT(0)
->   #define S3C2410_WTCON_INTEN		BIT(2)
-> @@ -119,6 +120,10 @@
->    * %QUIRK_HAS_DBGACK_BIT: WTCON register has DBGACK_MASK bit. Setting the
->    * DBGACK_MASK bit disables the watchdog outputs when the SoC is in debug mode.
->    * Debug mode is determined by the DBGACK CPU signal.
-> + *
-> + * %QUIRK_HAS_32BIT_MAXCNT: WTDAT and WTCNT are 32-bit registers. With these
-> + * 32-bit registers, larger values to be set, which means that larger timeouts
-> + * value can be set.
->    */
->   #define QUIRK_HAS_WTCLRINT_REG			BIT(0)
->   #define QUIRK_HAS_PMU_MASK_RESET		BIT(1)
-> @@ -126,6 +131,7 @@
->   #define QUIRK_HAS_PMU_AUTO_DISABLE		BIT(3)
->   #define QUIRK_HAS_PMU_CNT_EN			BIT(4)
->   #define QUIRK_HAS_DBGACK_BIT			BIT(5)
-> +#define QUIRK_HAS_32BIT_MAXCNT			BIT(6)
->   
->   /* These quirks require that we have a PMU register map */
->   #define QUIRKS_HAVE_PMUREG \
-> @@ -378,9 +384,13 @@ static inline unsigned long s3c2410wdt_get_freq(struct s3c2410_wdt *wdt)
->   static inline unsigned int s3c2410wdt_max_timeout(struct s3c2410_wdt *wdt)
->   {
->   	const unsigned long freq = s3c2410wdt_get_freq(wdt);
-> +	unsigned long max_cnt = S3C2410_WTCNT_MAXCNT;
-> +
-> +	if ((wdt->drv_data->quirks & QUIRK_HAS_32BIT_MAXCNT))
-> +		max_cnt = S3C2410_WTCNT_MAXCNT_32;
->   
-> -	return S3C2410_WTCNT_MAXCNT / (freq / (S3C2410_WTCON_PRESCALE_MAX + 1)
-> -				       / S3C2410_WTCON_MAXDIV);
-> +	return max_cnt * (S3C2410_WTCON_PRESCALE_MAX + 1)
-> +				* S3C2410_WTCON_MAXDIV / freq;
+> Changes v7->v8:
+>   - removed loco clock
+>   - fixed checkpatch warning
 
-This will overflow if the build is a 32-bit build with sizeof(long) == 4.
-The previous calculation did not have that problem. If there was a secondary
-reason to change the calculation, please submit a second patch with that change
-and explanation on its own.
+Thanks for the update!
 
-Thanks,
-Guenter
+> --- a/arch/arm64/boot/dts/renesas/Makefile
+> +++ b/arch/arm64/boot/dts/renesas/Makefile
+> @@ -152,6 +152,7 @@ dtb-$(CONFIG_ARCH_R9A09G011) += r9a09g011-v2mevk2.dtb
+>
+>  dtb-$(CONFIG_ARCH_R9A09G047) += r9a09g047e57-smarc.dtb
+>
+> +dtb-$(CONFIG_ARCH_R9A09G077) += r9a09g077m44-rzt2h-evk.dtb
 
->   }
->   
->   static int s3c2410wdt_disable_wdt_reset(struct s3c2410_wdt *wdt, bool mask)
-> @@ -534,9 +544,10 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
->   {
->   	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
->   	unsigned long freq = s3c2410wdt_get_freq(wdt);
-> -	unsigned int count;
-> +	unsigned long count;
->   	unsigned int divisor = 1;
->   	unsigned long wtcon;
-> +	unsigned int max_cnt = S3C2410_WTCNT_MAXCNT;
->   
->   	if (timeout < 1)
->   		return -EINVAL;
-> @@ -544,7 +555,7 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
->   	freq = DIV_ROUND_UP(freq, 128);
->   	count = timeout * freq;
->   
-> -	dev_dbg(wdt->dev, "Heartbeat: count=%d, timeout=%d, freq=%lu\n",
-> +	dev_dbg(wdt->dev, "Heartbeat: count=%lu, timeout=%d, freq=%lu\n",
->   		count, timeout, freq);
->   
->   	/* if the count is bigger than the watchdog register,
-> @@ -552,16 +563,19 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
->   	   actually make this value
->   	*/
->   
-> -	if (count >= 0x10000) {
-> -		divisor = DIV_ROUND_UP(count, 0xffff);
-> +	if ((wdt->drv_data->quirks & QUIRK_HAS_32BIT_MAXCNT))
-> +		max_cnt = S3C2410_WTCNT_MAXCNT_32;
-> +
+Please preserve alphabetical sort order.
 
-I think it would make sense to store max_cnt in struct s3c2410_wdt instead
-of recalculating it repeatedly during runtime.
+>  dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h44-rzv2h-evk.dtb
+>  dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h48-kakip.dtb
 
-> +	if (count > max_cnt) {
-> +		divisor = DIV_ROUND_UP(count, max_cnt);
->   
-> -		if (divisor > 0x100) {
-> +		if (divisor > (S3C2410_WTCON_PRESCALE_MAX + 1)) {
+The rest LGTM, so with the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-That is another change that seems unrelated to this patch. Note that inner
-the ( ) s unnecessary.
+Gr{oetje,eeting}s,
 
->   			dev_err(wdt->dev, "timeout %d too big\n", timeout);
->   			return -EINVAL;
->   		}
->   	}
->   
-> -	dev_dbg(wdt->dev, "Heartbeat: timeout=%d, divisor=%d, count=%d (%08x)\n",
-> +	dev_dbg(wdt->dev, "Heartbeat: timeout=%d, divisor=%d, count=%lu (%08lx)\n",
->   		timeout, divisor, count, DIV_ROUND_UP(count, divisor));
->   
->   	count = DIV_ROUND_UP(count, divisor);
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
