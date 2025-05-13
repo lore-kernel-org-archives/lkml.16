@@ -1,164 +1,129 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9F670838
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EAC1C9B9B;
+	Tue, 13 May 2025 16:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154601; cv=none; b=WrOPlNcqfGqDS0rhpMjBsqLstEwykOANQ/UKXx/VLPY5rWuNNhgwUi73nXdb2CIPkcMuGzs8Xpg2gLiz3Q7eweawRPnj1/WtcGJ5kOoWjIKqbJm+ls4nnm7pT6QXT9Iip1o/QMXVWiVoQh8sAlQAchl6SFXhQ6W2lYC6wnNYcm0=
+	t=1747154644; cv=none; b=l1/yfySzWZnwzrB9DVmHZgE45jW8Zvn/qkdQ+GiwF2IKmgN0UgHu4tONpqH8YWLMsGKlLgTZoKNqInRRumI0K9mty2ShwcQjH4JBwju48pNWur/mtorc8542SjPKtXnrN4hFWatth+eXuSeJIJgrKDeGBUe68LXDhu2c7KKI5xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154601; c=relaxed/simple;
-	bh=+W4TV0sTX95v75nkcscF8K+yngw5GjXkV9rhsDRFnu0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SJaJbqdg0TIgwEJbk9nxo0fKfLg9zxSQe3saAAiMznJtZyoAShx5azGrtJkGnw6yTTowUAKe78jy21OtFehHgr7/sX5BsplHt4dJscdVyKqV9wPJNhxzmKjK0zornv9ER2xg7RGyZyUmEvcQOAmQCG1w/pSmtxfGLAGySv42w6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x/J5RWCg; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747154644; c=relaxed/simple;
+	bh=XL8qu73G3NGvUHj6ADq7BcnT6u+oxB7gWtMQeQF5ayQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=obL1z9FvsEdvA6KgGAF2YE15NXir90Sb3jvtYk1TWqDqYjfaMANIaDx1b5Na7pTgcKhlWpYVZhFgEDCl54Jgjf2IdCU6vh4uCxi6YO33vdKrGgMHGiyCq6pBN/10XppeSm3QKVVoVSREb5JfnOELMQhVM1PxBfJqTy4/GV6vLCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XIQaGR8U; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x/J5RWCg"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso50a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:43:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIQaGR8U"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf89f81c5so5141355e9.2;
+        Tue, 13 May 2025 09:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747154598; x=1747759398; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=heTvZeZKBDMFCc+tl4VLXOpKgOKmSz4ZD8f3fu37cZM=;
-        b=x/J5RWCgY19OdxPCn/8lfRBI/gJmAscR2tJPOg1NJwn4qgNIxTppKlyRxHvNzFuWcX
-         u7CUYlOZO/oTQLEe2FSp8eCXeeA4BP7RBE7J/FjWbf7/b/rz2L9SLPEcAP5BR+SdS9FQ
-         Dlm2EY11oFu8Cacv0avnE7/jk50H0iRuAgXSykGstv163X8RvA9iaiJVbUx4jqkM8xA0
-         Q7ZD8hVMPA9hSIyAiYhvUm0SoiO8um6A0fAkJjKqyFM96zO3N9WKaZJcLVednjHcAE8d
-         TsvujITqwlkPfXa2pdV6ygwNaCcNvCd2K9PaeK4iuG5zKRRK3r0hVBqiOxsNnhMXieAL
-         9LBg==
+        d=gmail.com; s=20230601; t=1747154641; x=1747759441; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A/kRqYaGohmL+rCJZtloL3u0VjOq+d/hFBIY4Q6MI5o=;
+        b=XIQaGR8URWtpBDw2e4X667RKfLfpoFjO6lT+4LH1F+7HuUNSHuTbYP7uq7HPqktj3o
+         m8/iTVpnJgDwpUfgWUT0m5r7485qnfVakif6XA3Yru43GUMLiMj4x6AgcEq+yRXqBHxi
+         /TCiRJmwx7jle4UDM8h3W+R5KoHKtXd+v3Q75yHmPul2nvFb9oj07ZGjAazkEokOVEcn
+         qD0+7cDr8l0x52jnPsN4nuOUMzVFUA8wuqWyAaiFIgeTQ9heoA+Ry5V5Idz2VWKqp/Jb
+         tiWhTTs9bplM51iP1wK+iVUf3G+kNwaZL50sRHXsC9kZb1e3MECshVm1NxhhDONRlfWt
+         /Uqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747154598; x=1747759398;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=heTvZeZKBDMFCc+tl4VLXOpKgOKmSz4ZD8f3fu37cZM=;
-        b=nRTuwrrmUWYd+QqXzbcvs1kFWdKheFoSRwvMbd0LcekmgRgcQy18TmSkHOuROzZ4U9
-         LmFMdXtsobfSbgk9B8P9GiADq1Eo+upzS9beryQnOYgOQIL6orW3adbBYZrcZW2FHbxY
-         3C9/C0mX96Glo0u6tj1WIxMO5ZAn+nS1LY8wqUWR5qn31UO3CVxy0VWpZnqhj8yay7Le
-         rYrFpEh7LTmdWHrgxPTlCX07903MJnRotWWpzBLshIhUyo+f7nsnLF/JkjMh0u2LBGhl
-         g2xKq84qli3RIRSd4DukejhextB+oe6pfnHH0/btKIwA9QPkFprMW7zILpa8cDTK1ILZ
-         BHdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVclQChGJjkzeP63VTRfMFoo/+G8o1Igj5bvUS0vHGV2jvN7p/GgmKqSKA9r3tihrq0q60yS7jukQpi8PI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyWRQ3J4lDfeAnHbwavRkk/PlrUv76QVnBCjbiqwR4Jg7imUr9
-	XCOMjTE9V6hpd22Ftjo2shxF4ufROu5xIWPddAwZtSQaM5f/rMsEaCLyaJKW/eHMPtr45f8O/YV
-	Rl+a3yV5LH5utb3U/zkHxokFm2CcwdP4DFG/UUjsf
-X-Gm-Gg: ASbGncsjIsnCdPzM0l9FhYLE1mWvM5JxSnmXSWroV8KAmG0rB7aQS98m9mpqSTuGiLF
-	mVHzpMVEhwUpLSNKozE8wKN4iqCS4pHTl+DPRTnUZId6xYVotiJxXAb75OHkdQXK4shk5s0EdX4
-	VPULgjTrDn8HvqKHdqvMcqLTUo0AbBSZzOp+mUbz8t5Zprt1zDYOS7mbiOI4f5
-X-Google-Smtp-Source: AGHT+IFeEf+wYDiQSLYXA8vSEx5H+GjNIVfh7GSbHCZEImJ0hwAtol1+2PH0Y5WNR8LdkXYys4dD0Jo0Elwhr8KUVVA=
-X-Received: by 2002:a05:6402:b2e:b0:5fd:2041:88f7 with SMTP id
- 4fb4d7f45d1cf-5ff2a33cf76mr130110a12.2.1747154597587; Tue, 13 May 2025
- 09:43:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747154641; x=1747759441;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A/kRqYaGohmL+rCJZtloL3u0VjOq+d/hFBIY4Q6MI5o=;
+        b=JtHPLIFQbPw2hnCix6kCMixPyHSZSvOyY3HOtWmNHVVqb40UBZLYOTyhj31zA3yLyx
+         NebzrAlOo+l0e4htEZ3fhj+eZXPePC8PVfm+SsXI0/zfkcX+LQ/q/EMr0NdQD9bXxejL
+         fvqaUsPok/y7XLintd+hBvflZqHoZWGMwaAxPB/HoSr8D/EvvmvT+QTekipTXZv28XxW
+         Q/AsbspLtgF1h/QMdO1HMWurEuQk1duhXq1zK9Jln4rFPsM48NYw+qS0NW4VPBmCON6a
+         8yfKbbJqmy2cFHIo1gkceXHbs4VHl2urB02QmMk+w/zcmpHJ2FYI1l5j09jIQpBpxFXF
+         JwDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYNPMT2MjdEjGuWJy1lJpriIJ7E1vVGb8tWC3ycrXKsabUV1fU0U2RD2yGh0BM99ktvttEbRwU+9qW@vger.kernel.org, AJvYcCXEX9iQcgZN9Rymjm9xJ/7XnvacG4gTU40JxWkUILM+Oz3WxEXpqhpwjXK5/W5bvvFLIly98GiC@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz2DqAoIFkP/+IWMg7kwlftEGLsmFsWUoU8fzT7f8kTEnl+W3j
+	tvK4wAWJb0+cbxMLYmidGIFyoDITOQrK26XsJo/rVOh/7+RKxUvQ
+X-Gm-Gg: ASbGnctn6bml7l503qTi/oHVW37PqzoSr8seAjFzWjUIdt/5yP8v3fwv24HmEt+z6+R
+	RxuiMGbW1iJpMPSk4/IdY67yJrUOJUqlXK9xQv6ulNT0VZnLvCVaPni+vl5PL4tpsjMGJcqSxBi
+	CB0fylXoP9j2olNgKxYZPZzompugGrgW4NRJCKJdplt0ZBDC+wAmlX/2ogEefJwW3u9rNM1McUN
+	782e4sqlCbKmf5ykmpT01W6m8ynTUsRIpu0nSKpMlqM/6aLrq+xKXM035kRp9HXItdbpndu1mwm
+	g91PQQMkpwm6hJhgj0wC7T/byy4swi/OZ3yG87wSAIIVb6UxqjZVG56Gl7FrFmpBJnjDwygMeey
+	PSVmhMqYno3q5nfUwqaI=
+X-Google-Smtp-Source: AGHT+IFMWq4dGQNjFikqi9SiU5l4zVjghlCpgyAzg2C2XLU1zbw34nP91iiVFBwACRU/PcSac4Jp8w==
+X-Received: by 2002:a05:600c:358f:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-442f20bae5amr175275e9.2.1747154640856;
+        Tue, 13 May 2025 09:44:00 -0700 (PDT)
+Received: from [192.168.0.18] (cable-94-189-140-39.dynamic.sbb.rs. [94.189.140.39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d67d5c7bsm176462675e9.4.2025.05.13.09.43.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 09:43:59 -0700 (PDT)
+Message-ID: <53a86990-0aa5-4816-a252-43287f3451b8@gmail.com>
+Date: Tue, 13 May 2025 18:43:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6819bfbb.050a0220.a19a9.0007.GAE@google.com> <CAG48ez2pOt_Zf28CnLbVCzo1uBhWfqUjgh4fzDaQo+qceM6kSQ@mail.gmail.com>
- <CAG48ez1BGFn7jw+FYZJxRyyjnR+rrqx1AtNQoR_Jup3tZ-dADQ@mail.gmail.com> <CANpmjNP7Ktjq3gUGKqQKgn1tbNZLj2ALRNvF-ZcERZ42KRD6Aw@mail.gmail.com>
-In-Reply-To: <CANpmjNP7Ktjq3gUGKqQKgn1tbNZLj2ALRNvF-ZcERZ42KRD6Aw@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 13 May 2025 18:42:41 +0200
-X-Gm-Features: AX0GCFtCpxRj54oeo16LCjjTC2SyZKIbrjHlloWMXBSOgMNNMebHrFeou52UKTI
-Message-ID: <CAG48ez2_u9F5YX9TNyLACyzyGq=sK8YTH+nOdPe4f4DZumLYNg@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isize_extended
-To: Marco Elver <elver@google.com>
-Cc: syzkaller <syzkaller@googlegroups.com>, 
-	syzbot <syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, hughd@google.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/1] kasan: Avoid sleepable page allocation from atomic
+ context
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Daniel Axtens <dja@axtens.net>,
+ Harry Yoo <harry.yoo@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+ stable@vger.kernel.org
+References: <cover.1747149155.git.agordeev@linux.ibm.com>
+Content-Language: en-US
+From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+In-Reply-To: <cover.1747149155.git.agordeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 10:52=E2=80=AFPM Marco Elver <elver@google.com> wro=
-te:
-> On Mon, 12 May 2025 at 20:33, 'Jann Horn' via syzkaller-bugs
-> <syzkaller-bugs@googlegroups.com> wrote:
-> >
-> > On Mon, May 12, 2025 at 7:44=E2=80=AFPM Jann Horn <jannh@google.com> wr=
-ote:
-> > > On Tue, May 6, 2025 at 9:52=E2=80=AFAM syzbot
-> > > <syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com> wrote:
-> > > > HEAD commit:    01f95500a162 Merge tag 'uml-for-linux-6.15-rc6' of =
-git://g..
-> > > > git tree:       upstream
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D17abbb6=
-8580000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6154604=
-431d9aaf9
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D189d4742d=
-07e937d68ea
-> > > > compiler:       Debian clang version 20.1.2 (++20250402124445+58df0=
-ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> > > [...]
-> > > > IMPORTANT: if you fix the issue, please add the following tag to th=
-e commit:
-> > > > Reported-by: syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com
-> > > >
-> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > BUG: KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isi=
-ze_extended
-> > >
-> > > I think this is a problem with the KCSAN implementation.
-> > >
-> > > This is a race between writing to a userspace-owned page and reading
-> > > from a userspace-owned page.
-> > >
-> > > This kind of pattern should be fairly trivial to trigger: If userspac=
-e
-> > > tells the kernel to read from a GUP'd page or pagecache on one thread=
-,
-> > > and simultaneously tells the kernel to write to the same page on
-> > > another thread, we'll get a data race. This is not really a kernel
-> > > data race; it is more like a userspace race whose memory accesses
-> > > happen to go through the kernel.
-> > >
-> > > So I think the fix would be for KCSAN to ignore anything in such
-> > > pages. The hard part is, I'm not sure how to tell what kind of page
-> > > we're dealing with from the kernel, some MM people might know...
-> >
-> > Or alternatively, if we really do want data_race() operations around
-> > any memset() or memcpy() on userspace-controlled pages, I guess we'd
-> > have to pepper a lot of those around the kernel.
-> >
-> > Also, I didn't really think about some of what I wrote here - we
-> > certainly wouldn't want to ignore unannotated accesses to some struct
-> > located in pagecache that userspace can concurrently write to.
-> >
-> > Maybe it would actually make sense to do the opposite of what I said
-> > to some extent, special-case userspace-mapped pages such that KCSAN
-> > _always_ alerts on plain access to them...
-> >
-> > > distinguishing normal pagecache/anon pages from other pages might be
-> > > doable, but I guess it probably gets hard when thinking about
-> > > driver-allocated pages that were mapped into userspace vs
-> > > driver-allocated pages that are used internally in the driver...
->
-> There have been cases where user space was doing something unsafe, and
-> KCSAN caught it. While technically it's user space's bug to keep,
-> KCSAN is still telling us something's wrong here.
->
-> In the past we'd just ignore these bugs (never release them from
-> syzbot), but I think we recently changed the rules for some of these
-> to be sent to the mailing list. They can safely be ignored if deemed
-> "user space is doing something stupid".
->
-> I do think we want to surface such issues in one-off testing
-> scenarios. However, in the fuzzing/CI context it's not so helpful, so
-> we might need a way to suppress them. If there's a way to tell by
-> looking at the stacktrace, we could teach syzbot to ignore such data
-> races entirely.
 
-Hmm. I think it probably requires a kernel config flag then, I don't
-think you can easily filter by stacktrace. In fuzzing builds you could
-maybe do some basic checks on the folio to see if it's pagecache, an
-anon folio, or a folio mapped into userspace... that would filter out
-_most_ but not all cases.
+
+On 5/13/25 5:21 PM, Alexander Gordeev wrote:
+> Hi All,
+> 
+> Chages since v7:
+> - drop "unnecessary free pages" optimization
+> - fix error path page leak
+> 
+> Chages since v6:
+> - do not unnecessary free pages across iterations
+> 
+
+
+Have you looked at boot failure report from kernel test robot ?
+https://lkml.kernel.org/r/202505121313.806a632c-lkp@intel.com
+
+I think the report is for v6 version, but I don't see evidence that it was
+addressed, so the v8 is probably affected as well?
+
+
+> Chages since v5:
+> - full error message included into commit description
+> 
+> Chages since v4:
+> - unused pages leak is avoided
+> 
+> Chages since v3:
+> - pfn_to_virt() changed to page_to_virt() due to compile error
+> 
+> Chages since v2:
+> - page allocation moved out of the atomic context
+> 
+> Chages since v1:
+> - Fixes: and -stable tags added to the patch description
+> 
+> Thanks!
+> 
+> Alexander Gordeev (1):
+>   kasan: Avoid sleepable page allocation from atomic context
+> 
+>  mm/kasan/shadow.c | 77 ++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 63 insertions(+), 14 deletions(-)
+> 
+
