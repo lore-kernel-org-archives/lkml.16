@@ -1,247 +1,147 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849991E9B1D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C371E491B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747119996; cv=none; b=VS7xmZvc3FfA7H+kb69OHs0D7gVkiC6x5BKTFNYCUJ3YXSf37aZRwYE4NDiVoJs6c/Cbjh92UqdypbrD8LSk39G5iGBw0crr2evR6lU8+45ZNug5iyZE+1XsNw5uPlJBb8E7fyTQ9Y3poXQqFTTRZmi6IIEVidmLKbVpps3PAls=
+	t=1747120166; cv=none; b=YYq8Y1xGG3tvdTpmfLAoNC+b+HX3CHWh/KhZ+QCpV1yhx4twO8O2vE4oSYRlc5fLbgyK4MQe+jxFa7xZP7VJ8tgvdltYKOVCTyzcveyk3GPCL2eRaFNjL7kIXIBFmQw5nuWYD6lzQfS4dYXGlnHTTgtfh4AIHeScMb1F4uloeYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747119996; c=relaxed/simple;
-	bh=HrY8RXQw+0LoYZLU9N77Uq02JLsXugCfMucRRJyH5LQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QhgoZdbEspw2D1rtFektfe1qU8SSNI5Ma7BzT/jeNPSI5QVxq1xU4cYjl8VpvuzUNwuw/XWSsC6FFlqGhcAb01ab75oIeZmNK4Eih+S2aZ5Iwv7gwCbeEJxb+8kzF0bhvGy5XrELg7O71qdcqhwyY99fJYk7iJM26xkhK7HRLgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bKSqtD8M; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bKSqtD8M; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747120166; c=relaxed/simple;
+	bh=twHcmA7LUXTu4ZuLwMdsdfHh+CfPFxHnUVLG+BwD4io=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOtqhV50kgk7sipxM16oto16CEHitXD5VSJuLdDvSn8DqIWGmAMuJdPXutliyBbaKU6QVPjTJyUufOJXzv+7eAau5A4eWu7OlEVO+na2wuseJj2kuXJZTJP+QxQqGPWhT8Qz5srdis+Ey70HxeCkYeWaMSrsWL69JQnl6U7RnKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iIAA6+dt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bKSqtD8M";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bKSqtD8M"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 91E932119D;
-	Tue, 13 May 2025 07:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747119992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iIAA6+dt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747120163;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E4RNMeAGwPkYmbKq0c3z5PMFjKyvJtYRCxiTSBCv/aM=;
-	b=bKSqtD8MjCEm030QMcGkVEzSveBlUpyIUZrpXPxgYGa3R1qfDbeLYB8splD9c26SUFr8WI
-	4mKM228sn7mbbklJANpSnBchocjH9SIBZUrhpdxUFF76X54AfG9GqNC7Te9hJZ2dWeXLOj
-	CNHkWEeg+zUfIhV+U7jQMQuuQbMX3Jo=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=bKSqtD8M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747119992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E4RNMeAGwPkYmbKq0c3z5PMFjKyvJtYRCxiTSBCv/aM=;
-	b=bKSqtD8MjCEm030QMcGkVEzSveBlUpyIUZrpXPxgYGa3R1qfDbeLYB8splD9c26SUFr8WI
-	4mKM228sn7mbbklJANpSnBchocjH9SIBZUrhpdxUFF76X54AfG9GqNC7Te9hJZ2dWeXLOj
-	CNHkWEeg+zUfIhV+U7jQMQuuQbMX3Jo=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4BA8B1365D;
-	Tue, 13 May 2025 07:06:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zH7jEHjvImhNUwAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Tue, 13 May 2025 07:06:32 +0000
-Message-ID: <1767e6d3757f824039b4f799157d262a8dd74ced.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Mikulas Patocka <mpatocka@redhat.com>, Christoph Hellwig
- <hch@infradead.org>
-Cc: Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev,
- hreitz@redhat.com, 	snitzer@kernel.org, bmarzins@redhat.com,
- linux-kernel@vger.kernel.org
-Date: Tue, 13 May 2025 09:06:31 +0200
-In-Reply-To: <8e009e40-a1d2-5eea-3930-f81446b16722@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-		 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-		 <8e009e40-a1d2-5eea-3930-f81446b16722@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	bh=ictuYZNb6FVZjqSx9xqiqhjaQBRlicpN74huBXSGg4Q=;
+	b=iIAA6+dtgI91+4KslGqU3XdH1l5rELUcfoeLdmudYbEqETKRfybthB9rWhjU8PG9HSIEoA
+	H1Q0ZpGB2smzLea2cZAwKgYSTnHT7RTqD8HcU2fNTs1A3LWQUb+4YaeW0NGcQRxm01fMMv
+	Hx0g46yF2UXgUpDQtr5MJ3SMhJsaQgY=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-169-vPT9oiIaO9GSwoIEeULQ7w-1; Tue, 13 May 2025 03:09:21 -0400
+X-MC-Unique: vPT9oiIaO9GSwoIEeULQ7w-1
+X-Mimecast-MFC-AGG-ID: vPT9oiIaO9GSwoIEeULQ7w_1747120160
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e76805fecso77129115ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:09:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747120160; x=1747724960;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ictuYZNb6FVZjqSx9xqiqhjaQBRlicpN74huBXSGg4Q=;
+        b=VNVe2jtc93J2VzdQGNy81OfoCoUL6fnK5ynbpinX3lcb5p5qfMMUgR2sO3E6ZWzxNg
+         gLdw0IixQ7apbyy1R4xqhYKg0V0OuIPX5kpAkIQ0j9rRXVeBDLdIuHf3l5FIf4tGFDT9
+         Uxm/VeVpC6PxEk2eORUImZGGUEy5//sJHAB0GAGgPp4FOe02u02h1k9EVPVj6XE4/L49
+         PAxRyb3Yx7ynunzOzBumvYcCo4LNnot4H7YP4eAvJue2G0w3xn4+1QenkTmze7Ay16kZ
+         pcMqdSJNZIBfrAxEsOpgOxztYEQ0hqzjhlX9iWiXlsGA45VnjOpKz75vEsEyfKxWc/bA
+         4w6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgwElBamQBeU3NiP6PR5nKSFhGCrF3NCtdhBTZmJfxN9O/KSbrHhhsTLfER1GW68rgpuZEvFeh1fFqc6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEApmQqnWqC6mETlQX/LDYzfjS9o9lAkhwsmh2cJsNMKGyKJDv
+	w2fzFzInqde5IpNIsA7K91iynaf7/GGydBetVd6wCqmZn7DJK1EmWQ04kMf+3EJyefl5pVumQhV
+	z4qcDZX9/OJcQla5sY+nbsAxkrPO5L5exJxX25QcmzYeCnvuqrKwE69BsfSPkZLKgRC1qWQ==
+X-Gm-Gg: ASbGncvpcEcG0Gi77Ve8wdaOLefpCnjvriAhBTvtYMm19wC6d+02e93AUZwScHa79wB
+	L1HOp6FSMTsi1yHX5Ba0RUdKY6/tnGDuV8nyC8ymMHCWHV8y7vgbCAhs5eHz5o5Dxw8V93SYtWx
+	lgf/lr2ukezST+LHuEJs4Qm/Q+46+sagGvJfa3PheW/kk7kZ3mjEv6UgUrjtmVLxasI9LCleAXp
+	ntgvm1Kc/FSk6luzGaVgjuBvSM+NFfedCGC4r6Tjm0xgsQo5tptY+OTNN6QzKOFT+sF+I1yJr8=
+X-Received: by 2002:a05:6214:224a:b0:6e8:f770:5045 with SMTP id 6a1803df08f44-6f6e4801da4mr283868136d6.28.1747120149024;
+        Tue, 13 May 2025 00:09:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHE6qp6nrOSTcG+29z71S/WIjLeU7OplRtOWMeb0fjKhF4V91wQ9LbTTAnYfdMSFrrXtZqgw==
+X-Received: by 2002:a05:622a:2290:b0:494:7835:1013 with SMTP id d75a77b69052e-49478351232mr90416531cf.36.1747120132570;
+        Tue, 13 May 2025 00:08:52 -0700 (PDT)
+Received: from redhat.com ([5.28.174.83])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49458d378b7sm56066541cf.14.2025.05.13.00.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 00:08:51 -0700 (PDT)
+Date: Tue, 13 May 2025 03:08:48 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com,
+	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL
+ VHOST_FORK_FROM_OWNER
+Message-ID: <20250513030744-mutt-send-email-mst@kernel.org>
+References: <20250421024457.112163-1-lulu@redhat.com>
+ <20250421024457.112163-5-lulu@redhat.com>
+ <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
+ <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
+ <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com>
+ <20250429065044-mutt-send-email-mst@kernel.org>
+ <CACGkMEteBReoezvqp0za98z7W3k_gHOeSpALBxRMhjvj_oXcOw@mail.gmail.com>
+ <20250430052424-mutt-send-email-mst@kernel.org>
+ <CACGkMEub28qBCe4Mw13Q5r-VX4771tBZ1zG=YVuty0VBi2UeWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 91E932119D
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Action: no action
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACGkMEub28qBCe4Mw13Q5r-VX4771tBZ1zG=YVuty0VBi2UeWg@mail.gmail.com>
 
-Hello Mikulas,
+On Tue, May 13, 2025 at 12:08:51PM +0800, Jason Wang wrote:
+> On Wed, Apr 30, 2025 at 5:27 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Wed, Apr 30, 2025 at 11:34:49AM +0800, Jason Wang wrote:
+> > > On Tue, Apr 29, 2025 at 6:56 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Tue, Apr 29, 2025 at 11:39:37AM +0800, Jason Wang wrote:
+> > > > > On Mon, Apr 21, 2025 at 11:46 AM Jason Wang <jasowang@redhat.com> wrote:
+> > > > > >
+> > > > > > On Mon, Apr 21, 2025 at 11:45 AM Jason Wang <jasowang@redhat.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Apr 21, 2025 at 10:45 AM Cindy Lu <lulu@redhat.com> wrote:
+> > > > > > > >
+> > > > > > > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
+> > > > > > > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
+> > > > > > > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
+> > > > > > > > is disabled, and any attempt to use it will result in failure.
+> > > > > > >
+> > > > > > > I think we need to describe why the default value was chosen to be false.
+> > > > > > >
+> > > > > > > What's more, should we document the implications here?
+> > > > > > >
+> > > > > > > inherit_owner was set to false: this means "legacy" userspace may
+> > > > > >
+> > > > > > I meant "true" actually.
+> > > > >
+> > > > > MIchael, I'd expect inherit_owner to be false. Otherwise legacy
+> > > > > applications need to be modified in order to get the behaviour
+> > > > > recovered which is an impossible taks.
+> > > > >
+> > > > > Any idea on this?
+> > > > >
+> > > > > Thanks
+> >
+> > So, let's say we had a modparam? Enough for this customer?
+> > WDYT?
+> 
+> Just to make sure I understand the proposal.
+> 
+> Did you mean a module parameter like "inherit_owner_by_default"? I
+> think it would be fine if we make it false by default.
+> 
+> Thanks
 
-On Mon, 2025-05-12 at 15:46 +0200, Mikulas Patocka wrote:
-> Hi
->=20
->=20
-> On Thu, 8 May 2025, Martin Wilck wrote:
->=20
-> > Hello Kevin,
-> >=20
-> > [I'm sorry for the previous email. It seems that I clicked "send"
-> > in
-> > the wrong window].
-> >=20
-> > On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
-> > > Multipath cannot directly provide failover for ioctls in the
-> > > kernel
-> > > because it doesn't know what each ioctl means and which result
-> > > could
-> > > indicate a path error. Userspace generally knows what the ioctl
-> > > it
-> > > issued means and if it might be a path error, but neither does it
-> > > know
-> > > which path the ioctl took nor does it necessarily have the
-> > > privileges
-> > > to
-> > > fail a path using the control device.
-> >=20
-> > Thanks for this effort.
-> >=20
-> > I have some remarks about your approach. The most important one is
-> > that
-> > the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous
-> > command.
-> > It sends IO to possibly broken paths and waits for it to complete.
-> > In
-> > the common error case of a device not responding, this might cause
-> > the
-> > code to hang for a long time in the kernel ioctl code path, in
-> > uninterruptible sleep (note that these probing commands will be
-> > queued
->=20
-> Normal reads and writes would also hang in an uninterruptible sleep
-> if a=20
-> path stops responding.
+I think we should keep it true by default, changing the default
+risks regressing what we already fixes. The specific customer can
+flip the modparam and be happy.
 
-Right. That's why multipathd uses TEST UNIT READY if supported by the
-storage, and either aio or separate I/O threads to avoid the main
-thread being blocked, and generally goes to great lengths to make sure
-that misbehaving storage hardware can cause no freeze.
-
-The way I read Kevin's code, you'd queue up additional IO in the same
-context that had submitted the original failing IO. I realize that qemu
-uses asynchronous IO, but AFAIK the details depend on the qemu options
-for the individual VM, and it isn't clear to me whether or not
-DM_MPATH_PROBE_PATHS_CMD can bring the entire VM to halt.
-
-> >  [...]
-> >=20
-> > I am wondering whether the DM_MPATH_PROBE_PATHS_CMD ioctl is
-> > necessary
-> > at all. Rather than triggering explicit path probing, you could
-> > have
-> > dm-mpath "handle" IO errors by failing the active path for "path
-> > errors". That would be similar to my patch set from 2021 [1], but
-> > it
-> > would avoid the extra IO and thus the additional risk of hanging in
-> > the
-> > kernel.
->=20
-> What exactly do you mean? You say "you could have dm-mpath 'handle'
-> IO=20
-> errors by failing the active path for "path errors".
-
-What I meant was that dm-mpath could call fail_path() in case of an
-error, using a similar mechanism to the block IO code path.
-
-> Christoph doesn't want dm-mpath can't look at the error code - so dm-
-> mpath=20
-> doesn't know if path error occured or not.=C2=A0
-
-My impression from the previous discussion was that Christoph mainly
-objected to SG_IO requests being retried in the kernel [1], not so much
-to the inspection of the error code by device mapper.
-
-I may have misunderstood this of course. Adding Christoph into the loop
-so that he can clarify what he meant.=20
-
-> qemu could look at the error=20
-> code, but qemu doesn't know which path did the SG_IO go through - so
-> it=20
-> can't instruct qemu to fail that path.
->=20
-> One of the possibility that we discussed was to add a path-id to
-> SG_IO, so=20
-> that dm-mpath would mark which path did the SG_IO go through and qemu
-> could instruct dm-mpath to fail that path. But we rejected it as
-> being=20
-> more complicated than the current approach.
-
-If we discuss extending SG_IO itself, it might be easier to have it
-store the blkstatus_t somewhere in the sg_io_hdr. More about that idea
-in my reply to Kevin.
-
-Regards,
-Martin
-
-[1] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
-
-
-> > Contrary to my set, you wouldn't attempt retries in the kernel, but
-> > leave this part to qemu instead, like in the current set. That
-> > would
-> > avoid Christoph's main criticism that "Failing over SG_IO does not
-> > make
-> > sense" [2].
-> >=20
-> > Doing the failover in qemu has the general disadvantage that qemu
-> > has
-> > no notion about the number of available and/or healthy paths; it
-> > can
-> > thus only guess the reasonable number of retries for any given I/O.
-> > But
-> > that's unavoidable, given that the idea to do kernel-level failover
-> > on
-> > SG_IO is rejected.
-> >=20
-> > Please let me know your thoughts.
-> >=20
-> > Best Regards
-> > Martin
-> >=20
-> > [1]
-> > https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
-> > [2] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
->=20
-> Mikulas
+> >
+> > --
+> > MST
+> >
 
