@@ -1,250 +1,264 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892061AF0CE
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747111055; cv=none; b=qtNqRuc8vJHEY885yY0T3OsOdCqo6ly+WmZF1E+iYKoHPy6wU74+iNkDhLhLmezKfim/ZsriQ5KKs9Nsdh4pKFZDgC6rUp/kXkIRb9pTbZDy7Dv6lRg48dHy5X0GO9uacNH9rSrPz9jTsmiYpf0gno+d9F51SpsWO5JBf4ap/qw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747111055; c=relaxed/simple;
-	bh=QKhxlMJf9DwcDasJT9MxJxi2H37PpU+ef3sypRqtMlM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=R9/8gjS3PE6T3qzosKlyb3uZX+8QyGRG4chGqZXLreNVNCU9Qn6R2SQgasMQdp3dSJv5+1zw5/U8mlErRxa4N7JFLLjOruvvKDY9yVg9zizRSHKpSWs1cVJm8yOlla3nHmDUq/6GxsK67OHlg7dZsg4ysAVbi0JduvpB8flcQW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da6f284ca5so109436225ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:37:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747111052; x=1747715852;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HerpZjjRvJPDZiVjyr+jH4mDrVVxRA8dJ6nQxvYN7yQ=;
-        b=ZxIyULwxg491msrpog+8wqt7EQ1UpdbQK/czsE7IDt8xsrhMeqncNlWTwdN0mNr2x7
-         BxtPfLyJAlBQmrSKd/Rg6NLcFuRFXgUxXF0CWIjIXDk9XGKUOmeyA8TzX8hmgqeD5RTq
-         QwLp8pvg2cDuGYpCn09DfyKTfWToubhtCUoIo4WHxef6e+hx2gBsOA5zlOPFtphekDKY
-         qqzBQyOxnAXWC6lpolRxyjt+G27+EuZlz++rxlY/OkLhiQsfY6KErXoUzXKrfka99uhJ
-         MoKFDUtUwVN3lZBpRPfGrV99s3E8NfPEomS6JkZ019uczmJS1fKFcdfoLe28B6bAcJ/E
-         rFXA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0cvBv0XXBEnggviHL0UmNB0MXNHY5q2Q40DxdljRnhbPyqqmlfLAtnhZUxlXg+PkRl0bW8W3KQo4HkE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/xtRpoirZXA+kqgTUP7v9qaSmfjMGlrGHiG2WNmTgFFvPcqAW
-	lXIWEQ5qvKhW0nHsfbnNXU1eksltoRDyoWOExnLxn4Tz9HeDlPDTXS5Oh/4/IlB8qzRrYjlTR2L
-	aqwlJpC4SsGIPxEMPbHpuVeqZqNr9TVsoD8TntuSQnLPjq6lhzqgbP7Y=
-X-Google-Smtp-Source: AGHT+IF4tMY+pPPj6hdS7OW+dMmVK6vEG6jfSwPOLSBcQ3udOfnpkmA8nbX+dGOeGEv0p/v5mup1L6s21CbnZQZEymE3icvtBWWE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C19195;
+	Tue, 13 May 2025 04:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747111590; cv=fail; b=AgaMQPLcyTG6QHr++f57Q32fgETlTn+iZFFfSOFfL38FJmhRniJxSsGvmaS1sxJUNGjXxjcgsHR353MuJfkeMG2P7RHoXs/wBBBMLU2LKcmkZCHQy/PWD3LiGn8fHrS9Nm612tOAWnsECwf6E0QM+3MBPEOeCzDfLnTbZWamNtI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747111590; c=relaxed/simple;
+	bh=u2Tm9tM5fu/GJdy8DfLPQsc9BiRJ6KnbHmSy6VbCgNE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tYWmuopmH2YhhOOrmZ5aDr0Y3gNq4UAuJyF4mBioRotLPuqP9spMV4+6kE75enIEwv4sWIQDApi5z4RMA5BHtI8JRyQw2h7La+vVRy+Y72ApzCd1ysV110wmo8gu0JnKLp5av3KVKtXmW9UclS5bKnViEYpSMErRjmGqCMNdwfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mut+sQDH; arc=fail smtp.client-ip=40.107.94.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mut+sQDH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xpg9Z3nA9gRGDqRyRyFEPsN7Ga0Z4qR7Rcs8w7pWX85nMPae1ErkuSbQ7Kj/YkLrMqrUzg+jtMtx4gheDyVEYFZKJzvITHQuwVOzCAsJ+ylVidR7StN0SkH7iDiHIYW3GCZfUeocj9AQJM+k6KvvNKa4rQkTyGfce9bMY533iSuCZ4KqgEzCQMc7Yqx7ghqxqX2oWPgAD7pBNYZocEyvKai7cv4mJikycW5rWiZGG7bt3jrE0o+GGGJ68XcG3qiNtWRQJAXN+6xO3P+8cD7+JqVNFqyUeMA2ZbgC3OFv4XgG3Pk8FLfskoBszNPo09VXaC6lregQEHzblsoADhTMDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=88Gg+bAjse+24EWgwIgPEjhYKAuzdcAk+ZfKATHVE+U=;
+ b=p/mM3H6npY1URn+ZsP+GUn1X8SE/5gIp8ZH4j/A6xG7QtHYY+16pUm8fKTvdZVNUJvmvY/ycnGsPMGWLwv99cIdWm9FBmsym01MIxfJPdQ9cMw1N00C3Tuhf1+7nDg4c3OSJhJxJqj7VvJ+X0CTLnB0vj9E7iANHmujmACnSlvT5Yi4aJTRWMQm/LMeopLRcXr148TVCW4TR1sooYyUFgjH9wiBDz1f/sHMiHSKl9fG683GLxeijN99pfBuWKEK+ujqdt/Ok/R88mY9yvqis+ED6+9q5UTf+JSJu804m2gJdP187nuw+GgVCwtkOjvTP4g/R+j/5WjXngY9HIx/ouA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=88Gg+bAjse+24EWgwIgPEjhYKAuzdcAk+ZfKATHVE+U=;
+ b=Mut+sQDHqleUO2dxgemprSYjo4W8DllTQxZRLSvBJTdCw03xuSMQs/YOd5cFwqKbsnH3/YYdPAzcniENAyJRWzYAqcoi51rx4f0sufdEudsx0IIzNvw/y9PxiigcK0K13w8moxVBiH4yIIqBTi2gF/L+ra1P2RtSUbu0R1oP1Fw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
+ by BL1PR12MB5948.namprd12.prod.outlook.com (2603:10b6:208:39b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
+ 2025 04:46:23 +0000
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48%3]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 04:46:23 +0000
+Message-ID: <25fbb9a5-496a-4c70-bd54-2a285391fca5@amd.com>
+Date: Tue, 13 May 2025 06:46:18 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] KVM: SEV: Disable SEV-SNP support on initialization
+ failure
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+ pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, thomas.lendacky@amd.com, shuah@kernel.org,
+ prsampat@amd.com
+Cc: pgonda@google.com, nikunj@amd.com, michael.roth@amd.com,
+ sraithal@amd.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev
+References: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+Content-Language: en-US
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0165.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ba::20) To IA1PR12MB8189.namprd12.prod.outlook.com
+ (2603:10b6:208:3f0::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:218a:b0:3d8:20f0:4006 with SMTP id
- e9e14a558f8ab-3da7e1e60a7mr156472475ab.4.1747111041909; Mon, 12 May 2025
- 21:37:21 -0700 (PDT)
-Date: Mon, 12 May 2025 21:37:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6822cc81.050a0220.f2294.00e8.GAE@google.com>
-Subject: [syzbot] [net?] BUG: sleeping function called from invalid context in dev_set_promiscuity
-From: syzbot <syzbot+53485086a41dbb43270a@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|BL1PR12MB5948:EE_
+X-MS-Office365-Filtering-Correlation-Id: d54ece97-ebcb-4402-ac5c-08dd91d91c9a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dWROTm1zbUJ4RzIydktvZWRtaVBsTUEvRE9xZGhkTFhZSWlyRTB4SG1hSEhm?=
+ =?utf-8?B?SzBtNlpWTS9JSUpuZXZ3aCt5eW9NakNaWm0ybkorczkzT0ZTbS90T1J1SS9F?=
+ =?utf-8?B?b2xUaXM5SnVZSEVHdWRzb1ljRGUzN05TYytRNTc0SWdkck9NU0EybGdIZUwz?=
+ =?utf-8?B?K1ZWRmo0T0JBNU5MbUZZRjdCK21DbTB6TlA2c2x2Y1hPVVJXUURkcWMxUEh2?=
+ =?utf-8?B?U3dmWU50ejBheUNKaHlHaU5DUXovci9qR0NWalh5byt0Z3FJK1QxeTB5NlRG?=
+ =?utf-8?B?MU1QS3NURlZXdXEvdzZHZ2prN213eVpONmRhZjluOWJ6OFhDSW9aYVA1WFE4?=
+ =?utf-8?B?UTYxSVhJanpId0hpcDg1bmkreHpyUys3SEREN2ppcFlMNnV0eTdtOUQzV0E1?=
+ =?utf-8?B?cU9TQytxd0VsbFZFcy9GRjZjREhWY1RtdDh0L2xURVhzelJudGhlbkFBQUpO?=
+ =?utf-8?B?L3ZrTXBNNTN3VXRNQ3pUOWpiODVxTk9YNnY0WVdPOEdZVnE5ZUREK1ZGQ1J0?=
+ =?utf-8?B?am1DbnlOYkZtWGg4dkVhVVczTVQwSnNqeHdORnRXei92Q1djK2JlNnR3Tktv?=
+ =?utf-8?B?NGZmZnJiWnVNblFLK2libFJPTS8wWVF5dVJOTEpXcHFaRXFUbnVRL3hoVWxx?=
+ =?utf-8?B?akxvRDhFbWt4ZmkvdFZvVjFhTDNMRnJvcUJiWkdGc3d6YXNiT04rbkFaRDJ4?=
+ =?utf-8?B?OWUyNDZyMllNRVdoSTJycmd6Mnd1aVlSek5NYkFlNzhIVm5vVkFIZFAxM01W?=
+ =?utf-8?B?TXFORE9aaG5hV0V0SytYajJNeFU1QkRoOXNFcmdQaVd3S3l2TWJWTG9pMmNk?=
+ =?utf-8?B?b2pONEZoeG4xRE85b2xUL0pmL2pqOGt1djlYazBaSEF4U0FhUmNITVc0TkVs?=
+ =?utf-8?B?OUVnR2xic2puT2phZExUd3dYZXFGREk5YjV6ZHd4Y0p6dmp3OWwxR2xxVXZC?=
+ =?utf-8?B?VVFrT09ySTVsbytrWE1KOU9UeDVjSFdNdjNkZ2VURk1HRVQvU0JGWXJRREE4?=
+ =?utf-8?B?OFhvcGRUNlVLdDJxT2g0bjR2RDE2MWltQjZMaExhdXdFcFltVG43ZXlvZWN2?=
+ =?utf-8?B?ZG4zRERHcTVJbUVpYWJjaFJjT1ZDMzVDTzBoU1UrT3doSXZaaDNTSzE4YmNq?=
+ =?utf-8?B?RHN6blpWaXBxV1JvYVY5eW5oQ00wVEVyOTBwalNxMktab2IzZXdiSFVsQXVV?=
+ =?utf-8?B?T3BtL3BEdG9QbzdSSHd0b1QweEREcUxTZmo2Y25IeE85SWpRNUhIYmplaGFa?=
+ =?utf-8?B?UDN3VTg3bG5BS2paS0V6Yks4MkZKL0ZiWDJ3R0NDWWN0enNWbTZjMmxpSmQ4?=
+ =?utf-8?B?Q3BNcE5ZQVU0bGl4TytFVXQ1ZFNVR3BNVEJKT1BHOXRKQ3ljbDIxNksra1Vj?=
+ =?utf-8?B?anZmcUE1WFc4dFNSeVBid2FPanpuSjkxNHhHVHY0YlMxdFA0d1pjN0lYN2hU?=
+ =?utf-8?B?ZlBwODVza3dyMGVxaWZUOU9YMVBsSWdLcU1kT1pycmhUbEdxUHBnRDBqSVZq?=
+ =?utf-8?B?TXpDZWhvSm9EWGlpaDhoeHJxckJkZ3VUdjZlNHYxQXBuOUVjZDQvLzRsR1Vu?=
+ =?utf-8?B?c3VtWmFzQW9iRXdMbjBBK3ZxV2tIWEhsY1lRZ1ZHdFd4aFZlbktScFVuOVlR?=
+ =?utf-8?B?OE5HR296L29IdktrbG5MTGNYQ2JGZCtFVmpJUGJtT0g0MFpIR3YwQzdTTk9V?=
+ =?utf-8?B?eHFaSUFoQVlNU0xhc2VodlRla3F3WDhuNGFhS0dvZ0o5VGN1QU0yVTQ5VWZu?=
+ =?utf-8?B?Z1ArTXUvS3pHWGNCZ1RldGlBdVBoSVZueXNIaVM0d1gyUFhHOS9nOG9rRXFv?=
+ =?utf-8?B?NjdaVVU4eWJHWHdqdlZ3S2JmYU1LMHRMS0V3V1hEa3hZT2h1bnRLdGdQK3U2?=
+ =?utf-8?B?aVpSd2VxeTkrYTZCRmloTUdMSmNOd2FJcFRIQS85SlF3TzVlSHk4WFYyUU1R?=
+ =?utf-8?B?QjVnUmZTT3IybllJejF4YjgxTGRJRW5LNkh4QWh3RkFyY014V1QxT1Q5MmVZ?=
+ =?utf-8?B?RXpYNEFmUjBRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MVNsMVJnSkk0TTN0Ulg2aDNZbXUwaHpXbFB4akpLQWtiQng1WUY4anZhQ2pH?=
+ =?utf-8?B?WG9VOTBodXd5S1Vob1JFeDhEM2RZNFNFelBkVWsxWGtlRFMxck9HVEkzajJW?=
+ =?utf-8?B?Tjk2aHBhWmRQT0UxYXZoNkIzYkxKdklRTzU1dEtNdW1jZzNncjZjWWdjY29t?=
+ =?utf-8?B?VkpqN29hdWR0NlBYQ20rMndCRFVDbjNEOExuclRyMkdVcFVNYjJpM0svbHpF?=
+ =?utf-8?B?T2VmRFZHMVdZRlh4VmJidWplb3phWWIrWkhjbFhYOUFQeE9OUDd2MHk0d0F6?=
+ =?utf-8?B?eDBZV2ZlNXA4SUgvUE5ubGRxcG9iK2ZvK2V3ZSt0N0pYU2xKVEpYSFlaeXlS?=
+ =?utf-8?B?TGZJZ09EL3MxbHFqTHYvdFFjMjdmNCtVWHNGVmRXcFF4TjB3VDdibDRRSkE1?=
+ =?utf-8?B?UU5oWWhua3V6NGFnVEk5bFYvcjJaQWxlNlYvaUhibkYrZmZCTEt4ZWdnVi9w?=
+ =?utf-8?B?Vi9ZTzB5TU14eGFBTlBtbVBBbndTN0kvMDBudm81ck55bms3d2RDaURkREFs?=
+ =?utf-8?B?ck00c015aW03L3J0bU1DNzJ5c3hPbnZrSVNMVGExQW4xT1JVU1dxM0VnL1M4?=
+ =?utf-8?B?RWlCdHlaWnpFc1ZYZ1ZhMm0xVG1lZ0FXdTVMNjVNUXJ0bTFwa0RlQkZkV1E1?=
+ =?utf-8?B?UXpvVURUUWhFaytDakowejVmZTU1Q043SllVNHcxNnpvenRWYnhvM3NXSW91?=
+ =?utf-8?B?ZThyT3lPcWx3TnhHNFZqZXlTM0w5Z3NBMWoxczFXSUIrUE9FaFYzSHBZY2lt?=
+ =?utf-8?B?SVNtS0pyWE5qQzlsdnZ4MEtKRlB2amM1akNDVUNneFhBVDVqTHB6L2U1QzVl?=
+ =?utf-8?B?YzcyVWw3bjFnRW96TTMzcE5uWlI0cXNzc3F2a3FPNDNMYnVBUkd5TmRpN3hR?=
+ =?utf-8?B?eGtOOGd3eURkRFhqV1JwbllyTk5vSUtZTjh6c2NMZ3NqMW4rRmlZUjdVY0lx?=
+ =?utf-8?B?OElpMHM2a0FlRVpWWjJFdzQ1SkFydGJaZllocno0dlNTNFBRV0p3NVZJaFdl?=
+ =?utf-8?B?bEpBUXlFNGNTS0pMWHU0VEVQa0duWFlEdEMyaW5tLzFCSlF4SGQ0Ry9yNU9N?=
+ =?utf-8?B?Rkdyd2VlVWN2Vm54VVRtQS90TThkQjZSSWFwdUp3Q3hlbUpNWTd0amZjL215?=
+ =?utf-8?B?NEFQSUxWUWg2aTlWenFXbjJjVmFjclltZGtJQnhhVHZLdGEya2twZ3ZUL3NV?=
+ =?utf-8?B?RzhXY05IQ3Aza3F2WGYwWDdMNkJESzhTTUR0clUvcTY4N3NVUWQ1TEtOQ1dq?=
+ =?utf-8?B?YVpFaXVINWNaY21yemJ6ck1MUVRjb2hOK3VCY3VaVlJMRXI5S2swOXNsOHJK?=
+ =?utf-8?B?TjdUNU04bmF6NVMrci85Z3VYcmNFaDI1dGxOS0JneDhQbStHSDJwbkk2Y0Nl?=
+ =?utf-8?B?RDdTOU1WeW50TmhMRnZtYk92ZzllazdxYXQ5MjZ5ZlU1L0lENnl5ZzhvNXVZ?=
+ =?utf-8?B?ekN5ZXdoK0hOU0M2VHZRVmduK2Y2UUY3a0xVNG9HdFhOWXQxdkVpbEhQOUdz?=
+ =?utf-8?B?R0hJUnpHZFdwNHQxeU1ZNldNcHg4SjBiNTcrSXpNV0dLVFg0SjFjOVRqSzdn?=
+ =?utf-8?B?cEVNekRTekswZXNSUm94a0xBeGV0WStjL3loVE5FRkNhdk5HU2RWVkx0bTlp?=
+ =?utf-8?B?eXNTN1RSUlRsaUUxOFRvdVlTdC9idjZJWHFuNzErZ2prWHFyYWdqU0JTZDhD?=
+ =?utf-8?B?WWVZNUFDMVhnOU1XM3BjdUg2VjNkTGtnajlzUVFmVmJIMm50ZDJxbTZucDNp?=
+ =?utf-8?B?a1p3Wjl6Z3BVZ0sxSDMramp0U1dmb01na0tSOHoyRFpLZzZkQXdySWhPVlZn?=
+ =?utf-8?B?ZmRReUNVWkwwbGlMMXVlcDRkRlBjYnZuZURrYTFEZlR6eElaVk5GdklaNzdN?=
+ =?utf-8?B?TSs0K1lyQkNBNndCQWpPVnBNWHk5RWJJcytZcTFhMUcva05BaFp2c3c1N2h6?=
+ =?utf-8?B?MlRiZnF5c0hvYmZDNnNhTzRJcEtqcHFTVHhnQ0JsbVhpWmFCK2pvVWwyTFFu?=
+ =?utf-8?B?bUszaHg1TldGU09RQ0ZsZC9Fd2lSeWRSOVdCUUxrSEZqMlpteEJ3dXJpckdw?=
+ =?utf-8?B?T2ZscUhQU3lsZ1ZzeFNUQTRlSUpGeVRseDJ4VmxlRENvejRIcXl3UGZRSXNj?=
+ =?utf-8?Q?9eAXqSPykBu/t1f58/ccrcWog?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d54ece97-ebcb-4402-ac5c-08dd91d91c9a
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 04:46:23.3159
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pMrd5aUaCNbPJzpqzuMlmh7X1v9HQbn3tOQnpAasd4OickIsLtIBWkJ8e1soyT2lIoEBbOqojR4ARyyuxOclCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5948
 
-Hello,
+On 5/13/2025 12:16 AM, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> During platform init, SNP initialization may fail for several reasons,
+> such as firmware command failures and incompatible versions. However,
+> the KVM capability may continue to advertise support for it.
+> 
+> The platform may have SNP enabled but if SNP_INIT fails then SNP is
+> not supported by KVM.
+> 
+> During KVM module initialization query the SNP platform status to obtain
+> the SNP initialization state and use it as an additional condition to
+> determine support for SEV-SNP.
+> 
+> Co-developed-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Pratik R. Sampat <prsampat@amd.com>
+> Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-syzbot found the following issue on:
+LGTM
 
-HEAD commit:    82f2b0b97b36 Linux 6.15-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=173c62f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1e4dff0626333635
-dashboard link: https://syzkaller.appspot.com/bug?extid=53485086a41dbb43270a
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> ---
+>   arch/x86/kvm/svm/sev.c | 44 +++++++++++++++++++++++++++++++++---------
+>   1 file changed, 35 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index dea9480b9ff6..8c3b12e3de8c 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2935,6 +2935,33 @@ void __init sev_set_cpu_caps(void)
+>   	}
+>   }
+>   
+> +static bool is_sev_snp_initialized(void)
+> +{
+> +	struct sev_user_data_snp_status *status;
+> +	struct sev_data_snp_addr buf;
+> +	bool initialized = false;
+> +	int ret, error = 0;
+> +
+> +	status = snp_alloc_firmware_page(GFP_KERNEL | __GFP_ZERO);
+> +	if (!status)
+> +		return false;
+> +
+> +	buf.address = __psp_pa(status);
+> +	ret = sev_do_cmd(SEV_CMD_SNP_PLATFORM_STATUS, &buf, &error);
+> +	if (ret) {
+> +		pr_err("SEV: SNP_PLATFORM_STATUS failed ret=%d, fw_error=%d (%#x)\n",
+> +		       ret, error, error);
+> +		goto out;
+> +	}
+> +
+> +	initialized = !!status->state;
+> +
+> +out:
+> +	snp_free_firmware_page(status);
+> +
+> +	return initialized;
+> +}
+> +
+>   void __init sev_hardware_setup(void)
+>   {
+>   	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
+> @@ -3039,6 +3066,14 @@ void __init sev_hardware_setup(void)
+>   	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+>   
+>   out:
+> +	if (sev_enabled) {
+> +		init_args.probe = true;
+> +		if (sev_platform_init(&init_args))
+> +			sev_supported = sev_es_supported = sev_snp_supported = false;
+> +		else if (sev_snp_supported)
+> +			sev_snp_supported = is_sev_snp_initialized();
+> +	}
+> +
+>   	if (boot_cpu_has(X86_FEATURE_SEV))
+>   		pr_info("SEV %s (ASIDs %u - %u)\n",
+>   			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+> @@ -3065,15 +3100,6 @@ void __init sev_hardware_setup(void)
+>   	sev_supported_vmsa_features = 0;
+>   	if (sev_es_debug_swap_enabled)
+>   		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
+> -
+> -	if (!sev_enabled)
+> -		return;
+> -
+> -	/*
+> -	 * Do both SNP and SEV initialization at KVM module load.
+> -	 */
+> -	init_args.probe = true;
+> -	sev_platform_init(&init_args);
+>   }
+>   
+>   void sev_hardware_unsetup(void)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/900b6a747850/disk-82f2b0b9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1d41ddb74da5/vmlinux-82f2b0b9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eb555785f64f/bzImage-82f2b0b9.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+53485086a41dbb43270a@syzkaller.appspotmail.com
-
-team0 (unregistering): left promiscuous mode
-team_slave_0: left promiscuous mode
-team_slave_1: left promiscuous mode
-bond0: left promiscuous mode
-bond_slave_0: left promiscuous mode
-bond_slave_1: left promiscuous mode
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
-in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 14644, name: syz.2.10383
-preempt_count: 0, expected: 0
-RCU nest depth: 1, expected: 0
-2 locks held by syz.2.10383/14644:
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dellink+0x331/0x710 net/core/rtnetlink.c:3556
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: team_change_rx_flags+0x29/0x330 drivers/net/team/team_core.c:1781
-CPU: 1 UID: 0 PID: 14644 Comm: syz.2.10383 Not tainted 6.15.0-rc6-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- __might_resched+0x495/0x610 kernel/sched/core.c:8818
- __mutex_lock_common kernel/locking/mutex.c:578 [inline]
- __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
- netdev_lock include/linux/netdevice.h:2751 [inline]
- netdev_lock_ops include/net/netdev_lock.h:42 [inline]
- dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:285
- bond_set_promiscuity drivers/net/bonding/bond_main.c:922 [inline]
- bond_change_rx_flags+0x219/0x690 drivers/net/bonding/bond_main.c:4732
- dev_change_rx_flags net/core/dev.c:9145 [inline]
- __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
- team_change_rx_flags+0x1b3/0x330 drivers/net/team/team_core.c:1785
- dev_change_rx_flags net/core/dev.c:9145 [inline]
- __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
- hsr_del_port+0x25e/0x2d0 net/hsr/hsr_slave.c:233
- hsr_netdev_notify+0x827/0xb60 net/hsr/hsr_main.c:104
- notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
- call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
- call_netdevice_notifiers net/core/dev.c:2228 [inline]
- unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11970
- rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
- rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
- rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
- netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8a8538e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f8a8298f038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f8a855b6320 RCX: 00007f8a8538e969
-RDX: 0000000000000000 RSI: 0000200000000200 RDI: 0000000000000008
-RBP: 00007f8a85410ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f8a855b6320 R15: 00007f8a856dfa28
- </TASK>
-
-=============================
-[ BUG: Invalid wait context ]
-6.15.0-rc6-syzkaller #0 Tainted: G        W          
------------------------------
-syz.2.10383/14644 is trying to lock:
-ffff88805b68cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-ffff88805b68cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-ffff88805b68cd30 (&dev_instance_lock_key#20){+.+.}-{4:4}, at: dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:285
-other info that might help us debug this:
-context-{5:5}
-2 locks held by syz.2.10383/14644:
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
- #0: ffffffff8f2f6d08 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dellink+0x331/0x710 net/core/rtnetlink.c:3556
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #1: ffffffff8df3d860 (rcu_read_lock){....}-{1:3}, at: team_change_rx_flags+0x29/0x330 drivers/net/team/team_core.c:1781
-stack backtrace:
-CPU: 1 UID: 0 PID: 14644 Comm: syz.2.10383 Tainted: G        W           6.15.0-rc6-syzkaller #0 PREEMPT(full) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_lock_invalid_wait_context kernel/locking/lockdep.c:4831 [inline]
- check_wait_context kernel/locking/lockdep.c:4903 [inline]
- __lock_acquire+0xbcf/0xd20 kernel/locking/lockdep.c:5185
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
- netdev_lock include/linux/netdevice.h:2751 [inline]
- netdev_lock_ops include/net/netdev_lock.h:42 [inline]
- dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:285
- bond_set_promiscuity drivers/net/bonding/bond_main.c:922 [inline]
- bond_change_rx_flags+0x219/0x690 drivers/net/bonding/bond_main.c:4732
- dev_change_rx_flags net/core/dev.c:9145 [inline]
- __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
- team_change_rx_flags+0x1b3/0x330 drivers/net/team/team_core.c:1785
- dev_change_rx_flags net/core/dev.c:9145 [inline]
- __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
- netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
- dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
- hsr_del_port+0x25e/0x2d0 net/hsr/hsr_slave.c:233
- hsr_netdev_notify+0x827/0xb60 net/hsr/hsr_main.c:104
- notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
- call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
- call_netdevice_notifiers net/core/dev.c:2228 [inline]
- unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11970
- rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
- rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
- rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
- netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x219/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8a8538e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f8a8298f038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f8a855b6320 RCX: 00007f8a8538e969
-RDX: 0000000000000000 RSI: 0000200000000200 RDI: 0000000000000008
-RBP: 00007f8a85410ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f8a855b6320 R15: 00007f8a856dfa28
- </TASK>
-netdevsim netdevsim2 netdevsim0: left promiscuous mode
-team0 (unregistering): Port device team_slave_0 removed
-team0 (unregistering): Port device team_slave_1 removed
-team0 (unregistering): Port device bond0 removed
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
