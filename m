@@ -1,102 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA1D17A303;
-	Tue, 13 May 2025 14:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2182D1AAA11;
+	Tue, 13 May 2025 14:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747147686; cv=none; b=JYxNcX2soOmM6mPs9l7D3Njd5JKyVw7Oj585oHLOoCIBpAlOxVgtJepGgW/7nDTjTrPQEaaYqqhilAqi3ryzCGqEQMtyWRb3zS0ugT2RyQcaTeQkC2kK8KMAYMxAWcQUet6deD0TDA4/b7D0aWaHjthxQj6LgwfOs84RocDzQTc=
+	t=1747147694; cv=none; b=DrY07xXpRCkLsuIxOYef0K9XXS6k6S9sSlZujvELMYEW7dXONOt3LNOWjXQqJSsWMfbRP9NrxyigUFk61+H+cMyKAGYwMTTQc7SQzgalhyOnDzx1t7wf9ENYNYfnI/hC75NyefzJEYxdjLLZ3jPnQFAHr04nz8enHN4HGhhN8j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747147686; c=relaxed/simple;
-	bh=pu5WE5MuuUFAeE9gbNtjiSxtT2sr+B5hH8+yd9SPu+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUsD4TRD/j1ZlGieoJ4r1DnznaqU+WyyQ+ftrQnC/QhjVJuh1EXZEDHHktulpmesKKPk2CgVChWwqGWPhqK5JROzwST/PFuFCIuSDCRJP3V56yf75B50WXjWKRzxK+4NfiWNmfs50zwGtOK6eDmMBZiLL/W0XQYf2nq6yFt/UQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXswE7qB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747147694; c=relaxed/simple;
+	bh=205BCaVyRSbsSNhGQ3cxijmFDYnWUV7MVkki1g9g31Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Aj86A37jGyIYKUkf+mGCRtO/DeK4zxQGcV4lsnslOOEtqUD+yBN7/OVTvHKtGGEZDpmrRC87Bieug6gcSkoNc0gJvOfLQTDIGVEPLj5HpGlNHyJ3p3NjlGzvAgXvhFHLktLsU0N5F7P38/7R1055jimtsFYjp6IulHjs/PdZqnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e8wW2Uds; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B+GL6UFr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXswE7qB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEAFC4CEE9;
-	Tue, 13 May 2025 14:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747147685;
-	bh=pu5WE5MuuUFAeE9gbNtjiSxtT2sr+B5hH8+yd9SPu+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XXswE7qBVxvJqBIBBxdcEQuL74aFCEU9KM71rism1P8JnuSmssy/6/TFTTAvbGaxw
-	 JPTA4wMpezpkA5U0oTLN1aHN61ETWYNl3ieeGwlQlKIflxp5Y0HMJEWIDscgir9jty
-	 jXsZpDHd+mfQHiO7N7b4I9Ocn19oo8xLly5v2vdyy2V6wr5AVF4lSNRorzGvIzMEdx
-	 G6o9NQ5UmLCbYGyYNbeOExG+rmmuULqoRlJPcgGiBF2/ZBinjmy9AXMg81zTdZDlO4
-	 OyzVH6EayTgtR8v46yCr2dMHT7D2rhIkXUD+NVsYTk9El7BoEgh978jGyk5eHRRIeM
-	 SF6WSeGLywj9Q==
-Date: Tue, 13 May 2025 16:47:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 11/19] gpu: nova-core: register sysmem flush page
-Message-ID: <aCNbnWJKM_O8sLtP@pollux>
-References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
- <20250507-nova-frts-v3-11-fcb02749754d@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e8wW2Uds";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B+GL6UFr"
+Date: Tue, 13 May 2025 14:48:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747147691;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RpmFky+as3SuKb/nyMveDZHkNzuVClsmrv99R6AQnI=;
+	b=e8wW2UdsV4GJ3FJDpLtIMMUb+xDTo1PBVj/Aa2NmRbnzyHgAPvflVd8sOrcbaLfOxYyKA7
+	uldLtfneX4WFkBOiArLURxlOGm9xrXYc5M4EoXmK2zvD940XYbHK/jmtVqpZlnyrVZRBYJ
+	1GfCa0SOzP3YtJ2Z3m6nb5fjAeEg05BeS0B63vCuuDuv0IiicJJcf8bxcpRXXx0e+OHXQc
+	7PSgXngtB6mgw0VhBOgb+QLlVMaNnHz4QVzB8XBOheAscwmnLHobod9VjB7PmeZ+ug/j7n
+	0QX+Aly5Dkx9SpRGiRdUxam0cuktSEBWaN1An+C/smEdV8QP+99hwASQ8Ci5kA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747147691;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2RpmFky+as3SuKb/nyMveDZHkNzuVClsmrv99R6AQnI=;
+	b=B+GL6UFrn/3qKggTgoU0TuwPX+WN4zNTwKHhl84TL/ozl6RYAh0d8IPqge6AlfhPTzWskT
+	yCz2Np8TLfqsMjBA==
+From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/drivers] irqchip/econet-en751221: Switch to of_fwnode_handle()
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250513084739.2611747-1-jirislaby@kernel.org>
+References: <20250513084739.2611747-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-nova-frts-v3-11-fcb02749754d@nvidia.com>
+Message-ID: <174714769007.406.11853381142097219255.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 10:52:38PM +0900, Alexandre Courbot wrote:
-> A page of system memory is reserved so sysmembar can perform a read on
+The following commit has been merged into the irq/drivers branch of tip:
 
-NIT: Use imperative mood.
+Commit-ID:     96a8cb6d28cebd51a286fe4a8782dc8492813ac4
+Gitweb:        https://git.kernel.org/tip/96a8cb6d28cebd51a286fe4a8782dc8492813ac4
+Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
+AuthorDate:    Tue, 13 May 2025 10:47:39 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 13 May 2025 16:39:03 +02:00
 
-> it if a system write occurred since the last flush. Do this early as it
-> can be required to e.g. reset the GPU falcons.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  drivers/gpu/nova-core/gpu.rs  | 45 +++++++++++++++++++++++++++++++++++++++++--
->  drivers/gpu/nova-core/regs.rs | 10 ++++++++++
->  2 files changed, 53 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-> index a9fcf74717791dc7e23678869bf84f61e51873e2..c338da69ecbc2200f1ef3061a4d62971b021e3eb 100644
-> --- a/drivers/gpu/nova-core/gpu.rs
-> +++ b/drivers/gpu/nova-core/gpu.rs
-> @@ -3,6 +3,7 @@
->  use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
->  
->  use crate::devinit;
-> +use crate::dma::DmaObject;
->  use crate::driver::Bar0;
->  use crate::firmware::Firmware;
->  use crate::regs;
-> @@ -158,12 +159,32 @@ fn new(bar: &Bar0) -> Result<Spec> {
->  }
->  
->  /// Structure holding the resources required to operate the GPU.
-> -#[pin_data]
-> +#[pin_data(PinnedDrop)]
->  pub(crate) struct Gpu {
->      spec: Spec,
->      /// MMIO mapping of PCI BAR 0
->      bar: Devres<Bar0>,
->      fw: Firmware,
-> +    // System memory page required for flushing all pending GPU-side memory writes done through
-> +    // PCIE into system memory.
+irqchip/econet-en751221: Switch to of_fwnode_handle()
 
-Please make this a doc-comment.
+of_node_to_fwnode() is an irqdomain's reimplementation of the
+"officially" defined of_fwnode_handle(). The former is in the process of
+being removed, so use the latter instead.
+
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250513084739.2611747-1-jirislaby@kernel.org
+
+---
+ drivers/irqchip/irq-econet-en751221.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-econet-en751221.c b/drivers/irqchip/irq-econet-en751221.c
+index fd65dfe..d83d5eb 100644
+--- a/drivers/irqchip/irq-econet-en751221.c
++++ b/drivers/irqchip/irq-econet-en751221.c
+@@ -286,7 +286,7 @@ static int __init econet_intc_of_init(struct device_node *node, struct device_no
+ 
+ 	econet_mask_all();
+ 
+-	domain = irq_domain_create_linear(of_node_to_fwnode(node), IRQ_COUNT,
++	domain = irq_domain_create_linear(of_fwnode_handle(node), IRQ_COUNT,
+ 					  &econet_domain_ops, NULL);
+ 	if (!domain) {
+ 		pr_err("%pOF: Failed to add irqdomain\n", node);
