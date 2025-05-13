@@ -1,159 +1,127 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44143201268
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEA978F43;
+	Tue, 13 May 2025 22:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175268; cv=none; b=tlXfko7GLreDcZmCZW8EWhg9lFtpy0v7MIOJDYneP7KLlQ5PAxE2Vxq1vMEX5KD1wJ6AYRMz/BHfgMt105vydb3a035VOJ8gOs1DyQHB5Y832uQbZzHf4F7Llcwq/cCobMpjxBTv2+TkBkKq4b8rCNSpB0iA9pWLxs5wWzZc7BM=
+	t=1747175570; cv=none; b=iOws+2Hot0jPsrBMOoSOoD90O3/ymYl19aenKfEN3hASQwY6pWPTrZPtljToFrzfy7B+Q4mv1HpcXbZon6hwaVfiT85Kmeanh5kT6o+28jC8IRboF1ftdcnlnZqJmHbLddVlxIgRt5MZ6hwWH4V2EsTnnLs6BnZGpIrJUZhws90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175268; c=relaxed/simple;
-	bh=hV9dEfGvRpT7A/K+vjfSEDzaamdRUI6QA3Ijvf5dz+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pS97blg2yGrMvzCVdMWyltWS3334ZaPZQyo/dFRrnz3MCIa0fZcpUxRlbvdfI4lFLM9HejSeD2EfBka7eoT0of8mLMu/ZyGhKNF8zOWNDJKf8UHEABcRuCro+go20+4+UkNbTvxdDk+rJOcAgoK8y91u9yLvNQ7nCRq45V0burI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zv1MHfN/; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747175570; c=relaxed/simple;
+	bh=+3XGKK5tSVsAG22kTR01LPisOgKQ8LKsZXwmHszxcxg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eLobgYen1R1Dq5P5gvURBuPHGs5U/OBq8hzoYz+PlhyDM2l9+Pv95h866d86p2Gw0GLrlm1zkksH+tpXGoMbpfOJqo9r9BeCQC3DkdrLD/4REkiXw/Mi0x1As7vJtHo84TM9SK+D+Xxvi7lqqztvSiBQS8S+QnDUULr5NtwzyQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIjoSA1X; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zv1MHfN/"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e78fc91f2dfso4640434276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:27:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIjoSA1X"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b4907a28so917457f8f.2;
+        Tue, 13 May 2025 15:32:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747175266; x=1747780066; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d4BxEI90f+LuMJhBx2vC+R7qBMnsPOdwtq/dnJCZ35o=;
-        b=Zv1MHfN/DbT3TYiB3YWLab97P+mSGj3wVGE0vldMvxqCGSeqVaBbS0YF0BMvT+pVdl
-         YUUBDMffxf4RvynVxnokXW/n+46YfOrRIGdElDF6RQB78Ty4t2oxGWFXv5BkIDVPfyi5
-         ewOimruKVuN92vIyBwFwD4OwpjSgETpaUtCrbhLMjlbBBo3YaywGdsZNSSu8R/ltwgOu
-         7NBVm+qgnlP9AaV8DrlPf0aWZijCFh0UZxLb7Q9YbbmdovJ0ql4opzaEMTOu7uXN4ndo
-         vfEQyXw6A4y3PeOJD0yMNrlqy+hXn2BqlU25e6kbYaTalGnBRZGmYKinFeH39JIVbQid
-         hUmg==
+        d=gmail.com; s=20230601; t=1747175567; x=1747780367; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOO3+D38PGP2XKKbxPd24Ou4JSZM80XieSsvghMwa6E=;
+        b=aIjoSA1XtOiCCp5zdAvy+GcFYApso3NSe50rN9mlgje5lxArWouMPnIRJ7170yBEgu
+         wR0l0AhqzgMYoW7aslesVMB5UMPcdAOtV166TFqWpVrObdxzbRbQcMEkr44QpFgQxiZT
+         H3CGQNsUbSK1XFkpwvwMtneQv7bMBKofwoK95c1ctoE2G9+D3afVyD5XBjBmu3u3iNdg
+         /7kpsMdjJjxtSKjumDNjl/3yLMB9hzVqQ4rruwwJAszdnEyztV9XHh75lnpi6MjosfQG
+         HGdvXnNnIJ3VSDA9ZwUqHK3S+ZeYx4evf4mQ9sc+Ho3lQvSo8vGeSQpvXwrFCEK4WpVi
+         JGfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747175266; x=1747780066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d4BxEI90f+LuMJhBx2vC+R7qBMnsPOdwtq/dnJCZ35o=;
-        b=RC1MZ9Awq5jPyiS+StrmQFvWupkyWucMfYf8ISmhdP7xnWggVEWzCNOkOjixlP1ERT
-         WXbcFHAGQWholHbL4gQghRxf42piPhnXCP/HYn1mcLOKBBWX674GJ6C70zG9NOta0EKs
-         fT4QnZrJlTBJlsQCt34mdnVmhvEo4jEMwU62TdXZE2QlC7R+3AppOZfKJaIvxzC6Pd77
-         NCLx8vmMIYz4zRaVlMXsxBCZC6R2KKvidfSF80eXVTo6asffV6BZ/FHIr4d/3zzg+Wop
-         JI7JtSCqWzV5ZeJ1C/xE8/IMAEu52G5hXUZKwxhUmHIyhqsF/kezKD1npPdsXHWuPtJt
-         YS6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXszkiEeb0CFbrZLSNAp4XMrFR4B7pA4VhAyQ9NBcZsIfQrfN9K6PwfLAjTuJt5fvzwiBdLZOR4GVUm37M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjihigSEETcSDbMlw3uXinWBQytUPcEV+wp1heg/qFvuhjoPyz
-	OUDY5uG6Izo5dC+DTjX7Q8ZtuCsOGQGMScMp78o+y9uRGD2EvuarNHXvTpb0UOyajBs3NzZwI6e
-	w6Ma+sqRjEkBbxdPs1EESMmT7vn5PbEEbDI9i
-X-Gm-Gg: ASbGncvKyt8ImXcMHJ8+P7nwUp2ECnYxuSHereWHfJr+6G9xIFrM6Y/erllf4zQbgMR
-	BsB+B6KpKezMOSgPPzThcaMyiCKvnipWM8K4eaH2jQ0eN+8/UgG47ZbLKbvrhJ95Oft/zNdKMuf
-	vVue/60Haese0stIlbLrNU9ArlAkvkC/3+k5irE5GndHLGMI4rKa4E2pDUrkIIKRY=
-X-Google-Smtp-Source: AGHT+IHGGVAQ9j1MIS0WEDIVdUN3GUhfjFMvl4Az4pKzorsoWzipPARxrRCPUSiC/QTtB57wEmS/FD54NGpHgV2JQIk=
-X-Received: by 2002:a05:6902:218b:b0:e72:d449:72ed with SMTP id
- 3f1490d57ef6-e7b3d50495fmr1563601276.24.1747175265982; Tue, 13 May 2025
- 15:27:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747175567; x=1747780367;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GOO3+D38PGP2XKKbxPd24Ou4JSZM80XieSsvghMwa6E=;
+        b=FfdQpAnY1/cIKdeXTcfTX5FE63FG3uZV+seH+X2WO0wbEnBp3DbGOifovowqe6adV8
+         0KNGUyzJ7pbp+2gyEJkFGLHcCF1Xi2n7aFwtvmEzWDaDidULnnSAiPkbEzNtvL5dhf10
+         1ghcH3RthQ0xiKxb7PQwCh6C29q3srudlDKBKRa9cYOxkZlAPQ1YW/RXmFk5+FqFjfGF
+         d8pPYzFIsDMcvfo4ilHdEhRkobno2bKz4Vv/U/D6JtYmpxxRK7YRRXWXvfvVq4uY6vGf
+         guvb+467nPphM+qPbL+ZR3VDnqTnOYAIrOcFk1ZakdiQRCNNGras5xhBFBspQDwDBtZf
+         tAFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTLJN90fAFJg+NN32g91SG4RtYWbZhSY2p0/ZlbfErvHkfFr9+IvJt43ckO7CkS0jeymZb708migyvgwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYJlDxQJcwcvLwPUfgW2BD4V7jhLM3JGZ2h/bqaEQg4pHhFDMX
+	ukisVLI4u6s66ULNZlqFZMl48p3c4N4m8aZQrPbeJTyQJ86J0gHB
+X-Gm-Gg: ASbGnctgCjXeCG6mRTWShjh7irjFyDYd/5AJkGnOS6c4Xam6eRpUUZRESvwT6SJsre3
+	JsEmTh3V0FhRgdIJOWEOyM0C6n8JcSta5LhssZOsBO8FdVoaCTbo1qO/b30tTp8H+Nw4vuY0nyK
+	rf3HVfU9NCXfpiYFc1fiKHP9SvZoP2VivLhfw3i81XTA4yONKc8187VgkrLD37+pdZymdfjZVec
+	KEQFHCEsy5NqJWBR/0s72y9vOrfCHEhFQyJHa21GgRJvquGa2mxXo8QMw1wojpjm+cvR8M0Hh9L
+	Sze9W4++Jj4+RJGhcDCfLCJzeXs5viSfaPO0DWcbR7INM49ebVkREc7uKvDAbYyRJQEve3xTUeb
+	EXS98o6YceOKz
+X-Google-Smtp-Source: AGHT+IFXJLpwx5PB9w07pxqndJCIjz+5sTL3g4V+/2gtwJv10YxYnXtbMmFVW1vbDCGtifs54FlzCA==
+X-Received: by 2002:a05:600c:350e:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-442f2190f43mr2271575e9.6.1747175566477;
+        Tue, 13 May 2025 15:32:46 -0700 (PDT)
+Received: from localhost.localdomain ([102.44.114.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368d1csm3849195e9.8.2025.05.13.15.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 15:32:46 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+X-Google-Original-From: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+To: shuah@Kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+Subject: [PATCH] selftests: ir_decoder: Convert header comment to proper multi-line block
+Date: Wed, 14 May 2025 01:32:42 +0300
+Message-Id: <20250513223242.304716-1-Abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508141012.1411952-1-seanjc@google.com> <20250508141012.1411952-4-seanjc@google.com>
- <CADrL8HURpnXgN0ux4sUk0nVze=A6d488i_ztiZTwGZUdDMoTvg@mail.gmail.com> <aCNTnXf5qZ1MMSNi@google.com>
-In-Reply-To: <aCNTnXf5qZ1MMSNi@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Tue, 13 May 2025 15:27:09 -0700
-X-Gm-Features: AX0GCFsDGXmj7RlobLqWuUuE1IVN7eJdtvf1EE2cZW_PZqhmBNgwx1moW1K1BG0
-Message-ID: <CADrL8HUaofWTcV7X5b1AXEud03bC+gfZiecyFpux9m1tC25hOg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] KVM: Conditionally reschedule when resetting the
- dirty ring
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 13, 2025 at 7:13=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Mon, May 12, 2025, James Houghton wrote:
-> > On Thu, May 8, 2025 at 7:11=E2=80=AFAM Sean Christopherson <seanjc@goog=
-le.com> wrote:
-> > > ---
-> > >  virt/kvm/dirty_ring.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-> > > index e844e869e8c7..97cca0c02fd1 100644
-> > > --- a/virt/kvm/dirty_ring.c
-> > > +++ b/virt/kvm/dirty_ring.c
-> > > @@ -134,6 +134,16 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct=
- kvm_dirty_ring *ring,
-> > >
-> > >                 ring->reset_index++;
-> > >                 (*nr_entries_reset)++;
-> > > +
-> > > +               /*
-> > > +                * While the size of each ring is fixed, it's possibl=
-e for the
-> > > +                * ring to be constantly re-dirtied/harvested while t=
-he reset
-> > > +                * is in-progress (the hard limit exists only to guar=
-d against
-> > > +                * wrapping the count into negative space).
-> > > +                */
-> > > +               if (!first_round)
-> > > +                       cond_resched();
-> >
-> > Should we be dropping slots_lock here?
->
-> Could we?  Yes.  Should we?  Eh.  I don't see any value in doing so, beca=
-use in
-> practice, it's extremely unlikely anything will be waiting on slots_lock.
->
-> kvm_vm_ioctl_reset_dirty_pages() operates on all vCPUs, i.e. there won't =
-be
-> competing calls to reset other rings.  A well-behaved userspace won't be =
-modifying
-> memslots or dirty logs, and won't be toggling nx_huge_pages.
->
-> That leaves kvm_vm_ioctl_set_mem_attributes(), kvm_inhibit_apic_access_pa=
-ge(),
-> kvm_assign_ioeventfd(), snp_launch_update(), and coalesced IO/MMIO (un)re=
-gistration.
-> Except for snp_launch_update(), those are all brutally slow paths, e.g. r=
-equire
-> SRCU synchronization and/or zapping of SPTEs.  And snp_launch_update() is=
- probably
-> fairly slow too.
+The test file for the IR decoder used single-line  comments at the top
+to document its purpose and licensing, which is inconsistent with the style
+used throughout the Linux kernel.
 
-Okay, that makes sense.
+in this patch i converted the file header to a proper multi-line comment block
+(/*) that aligns with standard kernel practices. This improves
+readability, consistency across selftests, and ensures the license and
+documentation are clearly visible in a familiar format.
 
-> And dropping slots_lock only makes any sense for non-preemptible kernels,=
- because
-> preemptible kernels include an equivalent check in KVM_MMU_UNLOCK().
+No functional changes have been made.
 
-I'm not really sure what "equivalent check" you mean, sorry. For
-preemptible kernels, we could reschedule at any time, so dropping the
-slots_lock on a cond_resched() wouldn't do much, yeah. Hopefully
-that's partially what you mean.
+Signed-off-by: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+---
+ tools/testing/selftests/ir/ir_loopback.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> It's also possible that dropping slots_lock in this case could be a net n=
-egative.
-> I don't think it's likely, but I don't think it's any more or less likely=
- that
-> droppings slots_lock is a net positive.  Without performance data to guid=
-e us,
-> it'd be little more than a guess, and I really, really don't want to set =
-a
-> precedence of dropping a mutex on cond_resched() without a very strong re=
-ason
-> for doing so.
+diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
+index f4a15cbdd5ea..2de4a6296f35 100644
+--- a/tools/testing/selftests/ir/ir_loopback.c
++++ b/tools/testing/selftests/ir/ir_loopback.c
+@@ -1,14 +1,15 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// test ir decoder
+-//
+-// Copyright (C) 2018 Sean Young <sean@mess.org>
+-
+-// When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
+-// will send this IR to the receiver side, where we try to read the decoded
+-// IR. Decoding happens in a separate kernel thread, so we will need to
+-// wait until that is scheduled, hence we use poll to check for read
+-// readiness.
+-
++/* Copyright (C) 2018 Sean Young <sean@mess.org>
++ * 
++ * Selftest for IR decoder 
++ *
++ *
++ * When sending LIRC_MODE_SCANCODE, the IR will be encoded. rc-loopback
++ * will send this IR to the receiver side, where we try to read the decoded
++ * IR. Decoding happens in a separate kernel thread, so we will need to
++ * wait until that is scheduled, hence we use poll to check for read
++ * readiness.
++*/
+ #include <linux/lirc.h>
+ #include <errno.h>
+ #include <stdio.h>
+-- 
+2.25.1
 
-Fair enough.
-
-Also, while we're at it, could you add a
-`lockdep_assert_held(&kvm->slots_lock)` to this function? :) Not
-necessarily in this patch.
