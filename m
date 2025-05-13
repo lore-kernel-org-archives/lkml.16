@@ -1,132 +1,211 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8187F134CF
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C360113D2B2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142157; cv=none; b=iTKeSsomJzerIwzuwCaMptj6SVoAkKed5lX8Pq3y/x45XgGI3u8/QI5U1XmTJVFWbewv3Hs/78GCtLQrH6HDOflYFrhKaIMZTJPxsR30QAQAcwfq0xZJ/iK/esJ5PnZ/3bgPGUWEZZqfNtFcunKTt9QBHo1A4afv6s85sAZBGRk=
+	t=1747142177; cv=none; b=u41Baf/G1e0RyuJJjPFsg+FCZJwzvVor+9wkvxg/Y1vaX7kW1ESpVwidQaO2nZsNpKDO6gr+6j5Omf5nOrIQxWfDCD81f3LgXFLs4aJ6lLgSbrIsHbmHsgFtCIihh2CizmuAeS0C1b1lrpu4Wz2hJkmvo9mP+dRQf1Nz62I0Dr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142157; c=relaxed/simple;
-	bh=hRylyn1PcQVlg10HiqmNfXqVxRHV0X3JGOuwCnjPmdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SsXdheUaPmjPcgGDzsP54kNarUSLKxMg0/pAQMIX7LKwnuFZBAs7kjd0B5JfTX+dIskqpscit0A120u+8uD5vW1zwYf+BeYSftv+BxmDUsT0pHKPdL5orbI6hhAc/SgnYuarl6pTzaI/8Ym5eu+2rW7ZGEh7AOiEwSk2Ugk0RDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gVvTLMBh; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747142177; c=relaxed/simple;
+	bh=dc1EvFdByajZoUd7bPWEy3aTiCwvIbfqMrCdk76T0rM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2WQA9CHlMRcNAJYQl3OsVk5mM82JoZa+OSuJmys2jp9l7FUQMdJ72i3ggN05nT7rzhTde5S/J6mo8ME93IGPFF4WYv8CSZtD2oPJR+Y5n2WB16ORdG49RbbWX9XlzMkQXfs4lxgd6+JUuwFWSuskt2uzlIgcFLhWm/CaVUzVOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fXT5cKYA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gVvTLMBh"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so58284395e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747142154; x=1747746954; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TPY3rRdUVBrXW+v2nzRIA0l1VDmPMKxlLUGaAoh0kXU=;
-        b=gVvTLMBhVx0qH1Q2Q2Sb8T+pCzhIs/kLhJBXKz0vcE+A+kmDWiiBBksdfjS1emlogH
-         oOdWHfhYxNPoUPzsohIFLd07d2jKKabNbzlYOXVplos4h4R7Cix+sfZTqA64hyvEaTf/
-         KA1wzHq7uwBMgLejo/bMyRQtgLN7UJOnPp6sNSsuWj2NyMkKAGLB0KkNIViv0MM/a9bb
-         DNZILVi9RM7qrFntEIBUTnIhzq83y4+yvFPOV8N62TUytq4pWtJXUenzf7Uc37vQLrmj
-         7T9HOxiacvbX9q+fIGDzJaHhgINnRzFku0zE7DouSqMGc9Rl6phfNY3xFAB82+lJIxiR
-         VxZA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fXT5cKYA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747142174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5lK2aUXXFM24jrUuqUNjXmhdY+CHae+0dmeoTkQXG4c=;
+	b=fXT5cKYAaQ2uHZLCYANpQxZFOZMYvR3ja4zQ7qZPKRSieg8K7QEOPsJBRX9+t3wm0MXnqK
+	dLKbvIq6w3VK+zmDrUCTV0SHoEsaq5tAjlO217Z3QLiesfpJdxz/uouszPkT+8tERD7dyC
+	ySzdL5c1m+REanybCc252OcofnO+xPo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-Pb-EsgMSOnmffwH0FtTKdw-1; Tue, 13 May 2025 09:16:11 -0400
+X-MC-Unique: Pb-EsgMSOnmffwH0FtTKdw-1
+X-Mimecast-MFC-AGG-ID: Pb-EsgMSOnmffwH0FtTKdw_1747142170
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso40765425e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:16:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142154; x=1747746954;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TPY3rRdUVBrXW+v2nzRIA0l1VDmPMKxlLUGaAoh0kXU=;
-        b=Uv5FUjcJUAnBKtviCwfW1VMwtyJng2Mx+/eQPNZikx0JlSjtguRBHbwE9KjXxM897B
-         l7DWAXRIm1Rtut0w3rQk4BTcflBN6H3XbHE6UEeuHYi3K4RNYm6FttgEioHzR9OAJ7ek
-         GRC65qi7DhL1V2IRUeo9/C7obeuUSO0LU5bpWNKLNg6P0XEfA5MiZMmmZ6lQut5yGEgY
-         n1kY/6VHmqQzZEJb59I4s/paPzHQQDZPbtDfWQVjQOCoLE/Qh0rmfBfuvv9/JaXhqAtN
-         sUUTTM1WZ8tARdg1jzf6v4SQRMInn8i2tFy9TBd+iBpON1zIdlpLCyAuWBCGYsXmfCSg
-         FU6w==
-X-Forwarded-Encrypted: i=1; AJvYcCU3KKyAIrmZlPTdSfnxItPO4P8bap0K6iRrDquWAX2K/6RYR1nvFF6aRfTq5KLa0x2En1FvktPbAGzNglk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA47ahZzpPNrT4fgqAFs1Gkpk7bONgjFKaVj89k40DAF7w5wnG
-	I13OlaeVEV5fTi+h7wg4CjO+pp/ZoTD1qewzN0kKr3AqCjKHbss269A8v+rAY9Q=
-X-Gm-Gg: ASbGnctmALyCkuVkQlGHMBDa4xHPxLg/C7X5jQiy2t5JRGhXJFD4CRwAsEvw8+Rx3dG
-	eLapR9JkSdUWU3vUyLGXm974iy4rRU4RtG77PD5Xac47UkYqAMaNw9CUMWmOHC69kQvCLKoo2Aa
-	kmpXnNJ6pt4vx8I/vg9uNm9MzzqKLP4UOMuIHG+k0nfqhtg0UcdtXy4UPj5BhiyLH2uAum0FIh3
-	ssVMU0qNEQpBA1oyyPzQeiDtXEH85CN6UU14svwONyLN5802kYK+j0iEA8jmpJiWb/Xhsce/qWZ
-	sYDVPGu0x9VSvg7QmKDazBhQ44xBN4x0OlfvvI0Wd7t9Q1HdnUlBXjday7J1o1DRPJFO8MTcQ5Z
-	L4cjQ6D9pHRqGwd/GifN0ahCd
-X-Google-Smtp-Source: AGHT+IF45Z3/yPJnSPxFe0jDPVCInZwQAAhswNv4Px26NKFArlJLvwKRwbJZn6KBm6BZg6uGp+I+6Q==
-X-Received: by 2002:a05:600c:3e0f:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442e1093222mr108939215e9.24.1747142153624;
-        Tue, 13 May 2025 06:15:53 -0700 (PDT)
-Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f3c2sm210290765e9.15.2025.05.13.06.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:15:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH 00/12] gpio: convert more GPIO chips to using new value setters - part 3 for v6.16
-Date: Tue, 13 May 2025 15:15:51 +0200
-Message-ID: <174714214927.9467.6551553602169960677.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
-References: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
+        d=1e100.net; s=20230601; t=1747142170; x=1747746970;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5lK2aUXXFM24jrUuqUNjXmhdY+CHae+0dmeoTkQXG4c=;
+        b=NwHUxnpCGIbp1qdS6xksRP8+JDiDNNy8jLolnDWqxBShyECge5uQB/J1cit0IzwRAE
+         +cs2ZQFKsjt7iCCuWPk1hlHRBqg5JLsW5aTyQCdcWMyXcWAcpCgO174mQq49KNZTVfI8
+         jMdYLH2K7wss+rQWFR3oAUagQP1jQMnnLDVJvzk8zE1HR23EV+xQWYV+DdVfAHVAx4xW
+         +/wJTx+/OW6ieTAKmJWnFWju3MJdpQjSBcHSTuqAo07DpoBhYHo/hU0w77qCj6bKdU9g
+         4WfpsMNUX9yZkUfl4rD3a+1LNmKZWV03smLT+NDalLtt67lJK45m01j2wCdZ/QXj7dr9
+         LRyA==
+X-Gm-Message-State: AOJu0YzXgdxPWCwEaXzPtucO4ZBougbZ1fxksLtgad2Ej3ybozmW/bGz
+	XDqIf6ACq54LZlDrE1yXxrpoq3/BKn2ZxjEDgzOpwAtd37Ui9BrMpl9Ya+Dw8wR00QRJubjdozs
+	HTGGRcOYgLEt5ds6UqIR7+auvrf3Pzf+G+PoUP+qOyJcLLyhcuxaaNsnV9+G4xA==
+X-Gm-Gg: ASbGncsEOoVqSel25dpbUhBwNtEk/I6hvp0D7t2APDYlgkiG+Zw3mqQULwjHgo3VPlP
+	plVBRm4UzXj9ubUdIPQJf0aS0VpihXx4c8nZs+O7hI0M4vqa677Mi5eFvILnVkxSC4i+kIdOtMh
+	1ad6RB5mseg+vdcfzK2ZiVsDx2NOoBNLY8IGFUD9D/TZlBpVFRk/SuyUu1noJpOR1fHObIWK09M
+	S+1y1fVX4nqYbYFbS4WAvkLXoHjHuQtceL9Ha2ScNXg7cyAS0atDl5T6eslmCSe0c3NRunN5Ruj
+	zsj6vmyVlBkYTarIpm40oVAhJmt2oZsDXOQ5FFyeY9u5O5IvhXmDa5TNKOLnUoQp6su7LuM2/Cy
+	rnZigH7lxgIbZq2vwv1TAf+FeWMjLO4UL/1021jA=
+X-Received: by 2002:a05:600c:608c:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442d6dbbd6cmr141286055e9.22.1747142170038;
+        Tue, 13 May 2025 06:16:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGeRzfDrwIycfq9a6Yco8QlNMnfOIsdHECdmUa8WqAn0Qia0p9wrag/isuPcxnBtSVbdOdr7Q==
+X-Received: by 2002:a05:600c:608c:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442d6dbbd6cmr141285665e9.22.1747142169593;
+        Tue, 13 May 2025 06:16:09 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34? (p200300d82f4d1a004fdf53e21a36ba34.dip0.t-ipconnect.de. [2003:d8:2f4d:1a00:4fdf:53e2:1a36:ba34])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d146af31sm203932935e9.17.2025.05.13.06.16.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 06:16:09 -0700 (PDT)
+Message-ID: <60b3386e-dbb1-4fe9-bc38-d62eba4d9c50@redhat.com>
+Date: Tue, 13 May 2025 15:16:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in
+ uprobe_unregister error path
+To: Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250513122125.1617722-1-jolsa@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250513122125.1617722-1-jolsa@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Tue, 06 May 2025 11:01:43 +0200, Bartosz Golaszewski wrote:
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts another round of GPIO controllers.
+On 13.05.25 14:21, Jiri Olsa wrote:
+> From: Jiri Olsa <olsajiri@gmail.com>
 > 
+
+Thanks for debugging.
+
+> There's error path that could lead to inactive uprobe:
 > 
-> [...]
+>    1) uprobe_register succeeds - updates instruction to int3 and
+>       changes ref_ctr from 0 to 1
+>    2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+>       is changed to 0 (it's not restored to 1 in the fail path)
+>       uprobe is leaked
+>    3) another uprobe_register comes and re-uses the leaked uprobe
+>       and succeds - but int3 is already in place, so ref_ctr update
+>       is skipped and it stays 0 - uprobe CAN NOT be triggered now
+>    4) uprobe_unregister fails because ref_ctr value is unexpected
+> 
+> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+> which is the case when uprobe_unregister fails (int3 stays in place),
+> but we have already updated refctr.
+> 
+> The new scenario will go as follows:
+> 
+>    1) uprobe_register succeeds - updates instruction to int3 and
+>       changes ref_ctr from 0 to 1
+>    2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+>       is reverted to 1..  uprobe is leaked
+>    3) another uprobe_register comes and re-uses the leaked uprobe
+>       and succeds - but int3 is already in place, so ref_ctr update
+>       is skipped and it stays 1 - uprobe CAN be triggered now
+>    4) uprobe_unregister succeeds
+> 
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
 
-Applied, thanks!
+If it's in mm-stable, we should have
 
-[01/12] gpio: lp873x: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/30d15b8949828811e9df3dafc12e3d523ed6e154
-[02/12] gpio: lp87565: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/978d23c1db9a303f2fab817de28087ada5859a9a
-[03/12] gpio: lpc18xx: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/4f71abfef92d9e302c7c62744fa806076b3ba819
-[04/12] gpio: lpc32xx: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/1a7b6b536d509203325bccd88ae42499b45f5765
-[05/12] gpio: madera: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/2e6b7f5ffe08d42196b31322e6443a9874c79a03
-[06/12] gpio: max3191x: remove unused callbacks
-        https://git.kernel.org/brgl/linux/c/75e80b69e1367b95a98107fc38351b5b865c568c
-[07/12] gpio: max730x: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/1938913798082cd284ab59afcdf68c2bb5ba1686
-[08/12] gpio: max732x: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/66a6d0e5a77889cbec98152dadda70dd79f1678c
-[09/12] gpio: max77620: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/8f9da4401b82faa788b663402ea699ccfd756597
-[10/12] gpio: mb86s7x: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/dff5a31dcbd260eb61f0128876910809f04f1e3b
-[11/12] gpio: mc33880: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/51227589e8388b452b4315907d2de5f7d5a06e87
-[12/12] gpio: ml-ioh: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/d3f960365b8c35449d22b780383dc9b40d96203e
+Fixes: ...
 
-Best regards,
+here
+
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+> Please note it's based on mm-stable branch, because it has the
+> latest uprobe_write_opcode rewrite changes.
+> 
+>   kernel/events/uprobes.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4c965ba77f9f..84ee7b590861 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>   
+>   out:
+>   	/* Revert back reference counter if instruction update failed. */
+> -	if (ret < 0 && is_register && ref_ctr_updated)
+> -		update_ref_ctr(uprobe, mm, -1);
+> +	if (ret < 0 && ref_ctr_updated)
+> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+
+
+Hm, but my patch essentially did here
+
+         /* Revert back reference counter if instruction update failed. */
+-       if (ret && is_register && ref_ctr_updated)
++       if (ret < 0 && is_register && ref_ctr_updated)
+                 update_ref_ctr(uprobe, mm, -1);
+
+So how come this wasn't a problem before?
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cheers,
+
+David / dhildenb
+
