@@ -1,109 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762E32BEC41
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0305979D0;
+	Tue, 13 May 2025 16:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153803; cv=none; b=Cn+b7/gHIJweFQ3al/8Cfg2/5rfGTvJ7aWCEsJw965DtC4JwOUOdOyqALibPLm8NkjXDbrG08u8zbs58RFWCCnRiG2XMBwQlQRwn1BVrK3JotQoaatf78zyROjA4s7GYJR5FlgmxofMM1slyTHAzmbgpgmTygs0lR5Lo9YdR48M=
+	t=1747153898; cv=none; b=f9d5Yc2wpuKYU5cPuDlTnwDqf626SyCfsmEtdj40/0FRGJ6X6w6PrGyXGo7u5W7wXdXy0IXUOH5VzaNO90Xz3/YaOjlhtrD0cAIUqMk8dlhP7NgNRmB4DWLsB+H/N9f+zsLQhPk++wLcaLPcwtCJknwE+Ux7j5lZDAZDdxsOmVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747153803; c=relaxed/simple;
-	bh=Jy2ZClgn9VEZaW82iC3qPWb7i5tVsDKsNOqhIwl2Ywk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qNVi6g7LQzZdewEFyt2tYyR0ooJAJnr/yWmZuZ1oqRtgz9mg2WOjaEYUphdoULy4T4XBA6t2ykBcY04nQDeK80oV/+wDUBbd3rt3O2iOdu6qnzkqQw/3kotTOUuqsH6TZpi+3CV+Ue0eNSZNbf+9W0HutrlpYcRtMB5grDz+1ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VJ//vUwr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747153898; c=relaxed/simple;
+	bh=aBUoZJFpEpmEz0s0BhTVSS3PEUvzBXAhyJZAXhfePm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jjIvkWtYnXZoU10fYtFSxYKQQIxk792QWx0rJlaePKFWM9s7Wu2q7CkHJVHsWoH4hTvfZe/74wioODA/b21LLOE+YT5yAYSuTtzgnYp7PANtRlE5HjYmcjxXe5Xi5jltcvkwR7XhBxWcsnNnj91X2ivy9W1kmFOgrs6+777A55A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PxGNd/Dd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VJ//vUwr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747153800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hcoqX5R2MqgY9J6AEcj0986EY9xMkUtFOKieofckVl0=;
-	b=VJ//vUwruMuAi6iPhNqABCBrIOMt8DNmZxeAo+sponcy9bs5C867v6jmA4MqZ3SQX4HZes
-	GdKWXAQVAN5zc6J0ypLLdBM6JCGPYgAaoLwkf40JsKLOMkLuv79LNdN2dslmJnSutcufQA
-	M/XQxN8Text34gLvdxF/SFa6WfJxB5U=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-laBsb9sjMnaB-jyEDSvZkA-1; Tue,
- 13 May 2025 12:29:57 -0400
-X-MC-Unique: laBsb9sjMnaB-jyEDSvZkA-1
-X-Mimecast-MFC-AGG-ID: laBsb9sjMnaB-jyEDSvZkA_1747153795
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 77F7D1956087;
-	Tue, 13 May 2025 16:29:55 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBBAA19560A3;
-	Tue, 13 May 2025 16:29:54 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 54DGTrpd3643051
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 12:29:53 -0400
-Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 54DGTpwa3643050;
-	Tue, 13 May 2025 12:29:51 -0400
-Date: Tue, 13 May 2025 12:29:51 -0400
-From: Benjamin Marzinski <bmarzins@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Hannes Reinecke <hare@suse.de>, Kevin Wolf <kwolf@redhat.com>,
-        Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
-        hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCNzf7MJa-hLQpmv@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <aCLe5UT2kfzI96TQ@infradead.org>
- <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
- <aCLjPLCztuXhgpnA@infradead.org>
- <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
- <aCLrbz3bRLwUbA8p@infradead.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PxGNd/Dd"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5B716201DB28;
+	Tue, 13 May 2025 09:31:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B716201DB28
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747153896;
+	bh=xeNP9qTG4NblI43yV9gDsR1NWq0U1vL5VHxMC8sh8Ak=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PxGNd/DdbrmBW7NsLSjWGWpIQwTV5jQXEIrAyEsEvUtoZo91/T7H8HFZ5U+7WAKE8
+	 e/EgCpq2DQYeg+7CgV4P+eS2XizEApZfcH24R6hkNyEoAmvcRya+7SItd9iodwFLNI
+	 Z66jY48yWnl7EOg9vSwruk0X6yHKwqaeLDB0bAdA=
+Message-ID: <a7ad48ca-2346-4039-a3a9-f93317b2d1a1@linux.microsoft.com>
+Date: Tue, 13 May 2025 09:31:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCLrbz3bRLwUbA8p@infradead.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v2 3/4] arch: hyperv: Get/set SynIC
+ synth.registers via paravisor
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com, arnd@arndb.de, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ kys@microsoft.com, mingo@redhat.com, tglx@linutronix.de, wei.liu@kernel.org,
+ will@kernel.org, x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org
+References: <20250511230758.160674-1-romank@linux.microsoft.com>
+ <20250511230758.160674-4-romank@linux.microsoft.com>
+ <323ecc55-d829-4c74-8cb6-7b3a77dd3351@oracle.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <323ecc55-d829-4c74-8cb6-7b3a77dd3351@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 11:49:19PM -0700, Christoph Hellwig wrote:
-> On Tue, May 13, 2025 at 08:32:12AM +0200, Hannes Reinecke wrote:
-> > Reservations and stuff.
+
+
+On 5/12/2025 2:39 AM, ALOK TIWARI wrote:
 > 
-> They should use the kernel persistent reservation API.
-
-Currently QEMU isn't sending Persistent Reservation requests to
-multipath devices at all. It's sending those directly to the underlying
-scsi devices. The issue here is with all the other SCSI commands that
-users want to send to their SCSI passthrough device that is actually a
-multipath device on top of a number of SCSI paths. They expect to
-get back the actual sense and status information, so QEMU needs to
-send them via SG_IOs.
-
-Without reading that sense and status information in kernel, the
-multipath target can't know if it needs to fail a path and retry the
-ioctl down a different path. QEMU can read this information, but it
-doesn't know what path the multipath device send the ioctl down. This
-patch just gives users a way to check the paths in the active pathgroup
-(which all should be able to handle IO) and fail those that can't.
-While QEMU is the driver of this, it's completely general functionality.
-
--Ben
-
 > 
-> > There are customer who use GPFS ...
+> On 12-05-2025 04:37, Roman Kisel wrote:
+>> +/*
+>> + * Not every paravisor supports getting SynIC registers, and
+>> + * this function may fail. The caller has to make sure that this 
+>> function
+>> + * runs on the CPU of interest.
+>> + */
 > 
-> Supporting illegal binary only modules that is already enough of a
-> reason to NAK this.
+> Title and Intent: Clearly state the purpose of the function in the first 
+> sentence
+> /*
+>   * Attempt to get the SynIC register value.
+>   *
+>   * Not all paravisors support reading SynIC registers, so this function
+>   * may fail. The caller must ensure that it is executed on the target
+>   * CPU.
+>   *
+>   * Returns: The SynIC register value or ~0ULL on failure.
+>   * Sets err to -ENODEV if the provided register is not a valid SynIC
+>   * MSR.
+>   */
+> 
+>> +u64 hv_pv_get_synic_register(unsigned int reg, int *err)
+>> +{
+>> +    if (!hv_is_synic_msr(reg)) {
+>> +        *err = -ENODEV;
+>> +        return !0ULL;
+>> +    }
+>> +    return native_read_msr_safe(reg, err);
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_pv_get_synic_register);
+>> +
+>> +/*
+>> + * Not every paravisor supports setting SynIC registers, and
+>> + * this function may fail. The caller has to make sure that this 
+>> function
+>> + * runs on the CPU of interest.
+>> + */
+> 
+> ditto.
+> 
+>> +int hv_pv_set_synic_register(unsigned int reg, u64 val)
+>> +{
+>> +    if (!hv_is_synic_msr(reg))
+>> +        return -ENODEV;
+>> +    return wrmsrl_safe(reg, val);
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_pv_set_synic_register);
+> 
+
+Indeed, I wrote a bit of a novel in the comments which might be
+distracting and making it harder to find the point :)
+
+Ought to be more conscious of the reader's perhaps constrained
+time budget. I'll restructure that as you suggested!
+
+> Thanks,
+> Alok
+> 
+
+-- 
+Thank you,
+Roman
 
