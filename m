@@ -1,124 +1,95 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56AB1B0409
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8057133F7
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172887; cv=none; b=SefQnYS4cfPl5A8tKrbyYutwbWLFE3+OQfxfX1eHf0y3JLlWFm0sENBMAxPDUnwmHaU6ggaUqcaQGQlY0m7alnNRdn7iadZAi54WN1G5PJjC0AHM5JZmyfhlbwXtnD0CuUMk9iGPMARBuMDAbl3fAbyFIkg1PPAqtGehXh9EH20=
+	t=1747173163; cv=none; b=hHwNUgf6TtdjCM5Vq8+t2DgJAjyKj44wp9ZUTUj8j8LYvFElxKpijRbGyBA7MjyT21KAr6LmR+Wv1WLbSeKMjShHwoiqWIyZX46qk9iz1Ik2uPaLOhW1mczqBB3sBu+BXOJVJpa328RrvgRmtOtipYnNPHXPvq3tyNgP2+TBbnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172887; c=relaxed/simple;
-	bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
+	s=arc-20240116; t=1747173163; c=relaxed/simple;
+	bh=LK3lAuBjsNAIlEIkMYgMLyfpdUyaTRXeTgNgmUeBqIs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rrf2Sf0K1WWqaBEK/XKTsvHalwrX8ncpJayDzptXBrIpNSMtW1VpAWk83nu2HduHXaXUYS6fIXSRWCAQCl5sXV+koU7f8UyTB6X8nBG1mGV7ESzA92aFB2FCHQNfTUB1g4eI88KMe7NnfFMu6Oqfbll4e2RiQgPiPFmszeAFBhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X8V7pgnB; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=n52owv8QerWLVC4bvvFFJyqtabzGhZI7snLxPzbMJmS5z24NaQ0AGotgkPE2fn0iX/Iv1NHLSp4Ke0biU9ESnYFu1cKMY1AnF/fumped2y2R9lzK/weQbi9KHhWW0Gzz5Q0MyniAiLzS/2eLA+eaYWe8+GJbxgj866dkvjdQQ38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vy3vUjta; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X8V7pgnB"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e1eafa891so64175ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:48:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vy3vUjta"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so58573911fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747172885; x=1747777685; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747173158; x=1747777958; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
-        b=X8V7pgnBH7ps++IOxXnTrN9yjBAUYocMo9Z5qTyjFIw+rlmqZX8EQb38EeRm+03MGB
-         B8OCOr6yi+DGnUF30pdJNNkcFYM/vfS2jyRauIgy7UqXh3AFQ9cbrERao7WV6aE5mgSB
-         KOj91koSc9Px/Ouuh8YETGValXz9LoDoY9IT2rA0NF751kGemDviM5aKMdUKOkvCOVUQ
-         EOlgc2JxrePPB7LL+T895UkxJICyVuJtKyHGT4jd2ijuudZ51r6jOStpdnNUO+S8I0WQ
-         fOID76fVBdnVhQ8As1e5aKjsQe0M+g/4y9c8B28u1jVQjMzlKLgP64o49g7DPU7tJ2IO
-         mwAw==
+        bh=FMrFM87rAmuG/UnGteKviZfWZXINuxFQCsV17IJbRWA=;
+        b=Vy3vUjtaBSYbHKvxHCWL6vZplv5HYHnlnxdyvpO4ey+/LoUsOjexPq8hNhjyK60PDo
+         M2FKlDTNvgTEfO+2qik/yuA7Ay6GwM6JmpLKA6IKDNmifvVcJcEbUbhpbqmWicpepjrx
+         Q6zgweWYx4UDco0uksumT12Nmf3mFtgVY3UOjVIdRjeJMDShKNSovyygEtEGirmo8B4N
+         OXWHpUsi9JR0dWpzEOCm7MnowRKbajRlWfmInvcNCaQsn4wyhBpj0lFd/t6lkXcGpDIZ
+         /830+f0rmljgkA585HkvsyoZokqdWVmQwQIs5fQhfxxdeSH/tem4A8J2db7I4mYk6keJ
+         KIIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747172885; x=1747777685;
+        d=1e100.net; s=20230601; t=1747173158; x=1747777958;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Go5+klD8HkKk7Li1unDEFaCuNXVJsJzv7y6c6Dnpxg0=;
-        b=PUvKR5qpMV4LTH92yoe7q7JSn/8HVZ7FddZsj37VpmdTcnbDhvnEMOGlgHVKeEVxyL
-         tjSAXx0HOIgYIl+rczZyre/ehcQFva2PBs5tJQlv+I8gInzojTB9FPywXzKxipZZT12y
-         CdlgdFC45Y7ya/dVV48t0DaNOI4X8tlgYq37rKKTTWJHLuwQ4V50HdZhTTse4lUPNe+q
-         /D1NQ8c5UhKXV8B2hTTymNsEwv+dKvkudIuKQ3fxsywOi5maXK9+xwnTofBxOVUzJ3xa
-         e0L1E/XC9plQ+UVLkedKaSrvMQsxjNo+gwR+QKHHrEjMw+pc1lOFjj9C+8JJpVdJb15z
-         XOFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkb1/CmK2mXW7K08AdOJ+L7iuOswgozepnzcLIR+j+DD2xxF6z8cbxFT1BG+uC818Z/5Yk7cc+rL9y2VI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJSEqpWQ506XnFUR/A37PGfD+0Mvkuzk+X2TugYtqAoN840pEI
-	wfn2ACiNAz3e1nEfHkn1yZB0NTaEUHVRUJ6pn4nMJKTg2X+L6EG5KYmkGXjDdUf2orwZ4Sr8e7C
-	TNBPeM3EEW7eA7Lta9QM22yrAw81JTANNxkmRR4tm
-X-Gm-Gg: ASbGnctAskITwGdeoABpY31hXiM9Ccgzw23iM8NUIpya0soELMomIjGIjI2eH9mwyNA
-	XXy5Ot9T2A3N8KxnPR3DRqWv+AEB/YV6UbSAp75F+cDGkpu2s6VQ88ej9qeQZWIGBWOKPYSGBfe
-	BMPfjOwO7hk5Yev952boyvzZSBi/1+Ln/HojSVV4Z2RjANNi5EgLPxxpjsmKdwDw==
-X-Google-Smtp-Source: AGHT+IGWnW2WGxzwBbXWKiTn3MvoWiCD0XtTUgC4Dyy6a5CfSo+75wPjhsjn9A6aqbNxMFJ5cC9rThSPTVN3I4JESDE=
-X-Received: by 2002:a17:902:f708:b0:21f:3f5c:d24c with SMTP id
- d9443c01a7336-23198fb5195mr1065335ad.0.1747172884970; Tue, 13 May 2025
- 14:48:04 -0700 (PDT)
+        bh=FMrFM87rAmuG/UnGteKviZfWZXINuxFQCsV17IJbRWA=;
+        b=op7kbqk9fESKSKcIGbCHUrrznOL92JSmVROx9Sf2usWHau4pkmAqr4KN99MZonWEnZ
+         YXA5caGeH2XltEP8a0KefdMUHHhpPW6qxbLNoAA2k5L5smKF3KEHblJ947hIF06qN4mD
+         uE73c9nYdxnD8IHOwmV65SlWK0jHmOoKMq1WPygC2p+vSf+5mX1kvCZMzfjZf04bRhyf
+         VNKElJPfZbcHyi89dPxBeKjcvDNSDnIP3yLTrapplh5p7rRccBzekPyJZOhOkUsDAwMe
+         5oSLfg8rNlLrJqYTvsS537nqyRTLZcaB7VMubjlqdevAi/Vy0JchA1Z0Akf2/LFSp9fl
+         W9KA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu034arr+jHhpzGFq/n9rCq8h0cpbwlP0va+Uh1eiHobQ/2gbGQ1r5qJnNgfwVb9dhXbpKhlrcwjeCrvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5NYgOTnCB4mfVORxkk7mKkmZyi3MjDpdC0B6R1JeYH/io98Bh
+	eCG/vcZpDe3CteIDk0eIKe9oZ7d8NPYlqVBg/5iMcngDvuQOdCPY4z7A1d4gRVL9WGB09rOv2L7
+	lrU/eJ2dyaUUEPeh1/b3qnZ4p49/EXkspAfpncA==
+X-Gm-Gg: ASbGncsE3b4XOsJrCe0jQdjG+Rxj3vrgjfzNTyU5FhgG5uqxzL6azdj5I31Gy13ucFF
+	SAW8r7QKxbUV7MGFLZFahMmuVwp6VPLwUOb00gDoeMmxQ04T38CtXfwJxxdYYli8eKwpdxwuqYX
+	KoUmsf3iuLq6oQ5Jf2P/TSj0+V1QWCbHrE
+X-Google-Smtp-Source: AGHT+IHdxGQUgnLEP34p77bnggpFFcybep3eX0SRsxItjT7bGVq1s7hLEPXvIi67p9M416/+sOFwds+OUhyOtC4jV3I=
+X-Received: by 2002:a2e:a545:0:b0:30b:cceb:1e71 with SMTP id
+ 38308e7fff4ca-327ed0d64b0mr3515771fa.9.1747173158581; Tue, 13 May 2025
+ 14:52:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512055748.479786-1-gautam@linux.ibm.com> <20250512055748.479786-5-gautam@linux.ibm.com>
- <CAP-5=fWb-=hCYmpg7U5N9C94EucQGTOS7YwR2-fo4ptOexzxyg@mail.gmail.com>
- <aCI0oDBSz86S9fz-@x1> <CAP-5=fVYXRzQjRzcDX0aJv5yg3bwDO+PWHfP-Laig0s3cnzcaQ@mail.gmail.com>
- <aCOwnUUVKx798Uza@x1> <CAP-5=fXK9Jru+ZqeTSuaTmOTmpF3JDHDswUOcmdOyLSP1Go_Gg@mail.gmail.com>
- <aCO2nJG8i3S6vUid@x1>
-In-Reply-To: <aCO2nJG8i3S6vUid@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 May 2025 14:47:52 -0700
-X-Gm-Features: AX0GCFvwPjF_wCWYPn7MYZ-YTSuih7Z6FiFjJVGe-Qu4_P_r0R8eZp_JhA1M6xk
-Message-ID: <CAP-5=fX8xkO8jXqvgksTF_5m+gknhZ2p1NuPZ_Lb0fzbDMDJ=A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf python: Add counting.py as example for
- counting perf events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, namhyung@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maddy@linux.ibm.com
+References: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250509150114.299962-2-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 May 2025 23:52:27 +0200
+X-Gm-Features: AX0GCFuybBjzXgbZgpkhrGy02_JvRvbutbRLwY2ZvnnqoSf9SNzjLph5-OzDFPA
+Message-ID: <CACRpkdYwTcHh5LZ7j94LbGYv7BnTCtrJO33j17YbP6s_s3TeVg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: Drop unused aml_pctl_find_group_by_name()
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-amlogic@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 2:16=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, May 13, 2025 at 01:59:28PM -0700, Ian Rogers wrote:
-> > On Tue, May 13, 2025 at 1:50=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > [snip]
-> > > Right, I like the effort he is making into having perf more usable in
-> > > python, and I encourage him to think about the issues you raised so t=
-hat
-> > > we can come to some good abstractions.
-> >
-> > Thanks Arnaldo, can we be tolerant to API changes in the python from a
-> > "regression" point-of-view? Like avoiding the notion of indices?
->
-> But correct me if I am missing something, aren't indices only introduced
-> with this new patchset?
+On Fri, May 9, 2025 at 5:01=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Checking the code I think you're right. Unless you do something like
-the range loop:
-```
- for thread in range(len(thread_map)):
-```
-so I think we'd all prefer indices not to be a part of the python API.
-On the C side we can get indices via helpers like perf_cpu_map__idx,
-which will introduce O(log N) overhead - thread map is missing this
-currently I believe. For compatibility a CPU and thread should remain
-an int.
-
-Thanks,
-Ian
-
-> - Arnaldo
+> aml_pctl_find_group_by_name() is not used anywhere, as reported by W=3D1
+> clang build:
 >
-> > Presumably such a fix would also need fixing in all the perf python
-> > scripts, but the external users I worry about. My sense is the number
-> > of external users is minimal, for example, toplev I don't believe is a
-> > user [1].
-> >
-> > Ian
-> >
-> > [1] https://github.com/andikleen/pmu-tools
+>   pinctrl-amlogic-a4.c:600:2: error: unused function 'aml_pctl_find_group=
+_by_name' [-Werror,-Wunused-function]
+>
+> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Patch applied!
+
+Yours,
+Linus Walleij
