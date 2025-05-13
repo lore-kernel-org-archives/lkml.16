@@ -1,257 +1,174 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7252A1AA;
-	Tue, 13 May 2025 14:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3B62A1AA
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747145826; cv=none; b=VCJZ6qeubMfCeVE4k+fw90zJIxrnmlHxeqU+bqrXvvlVo001uOtIjmyVx2GT4iJEm2Yob3nMjzsRN95eekziSfFSvpyKLbse/PpGG9s8IPFfrGLcz4DYTUudQ4J3MpsFngljFKB/9O3kGOvXwEiKarFpnOeiNwLJw3sJQI8pLMo=
+	t=1747145884; cv=none; b=REDZDyQOPjMEj6FG6PTv+06utJ8ziiAuvnxvdNsKhp/erZs7xGWSp7EXDeI4gyssDWLovB4RNM5RfPIYVFeVAE4QuCRmxiwUlRpz40k4PD07fUAgpK2vy+xptYMCBLdtseJ56twafHCjeW5qLXP5N1OBgUVTM62XzRSRy3JIY6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747145826; c=relaxed/simple;
-	bh=dUt5Yoj/CuRSCNF7k5sM6Y1Mw1AHK9WYieBsxERQSA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6W/SaiC/elrLIzcSIqijpF24Bd/gth8pp1oLlnZ7ll4pPUfTkeqe5FsI1rjEiAmbyJs4aF74b+t8P79IDEn0UCR/x+VvJ3atFJZoYIHazNRJHI0FRt/iuXfjM9EKek+O5lz33FVwFLBAfmDK2NQq9LYP6edhhRHWoHxkdePUEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DsCZC0cn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747145884; c=relaxed/simple;
+	bh=0vVZ9uZv4N+z1CabtlXF1uBHTuuTeXd2ojcUCJ5trIE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Yoe6bHIXiN6rx/b2GbRWFNOAi58WhGFv0CMLg52HDgQIzOlDIXydX7l8LmpgFjD0/Wuy9bvaUOTtiRhHmCuyXzuGqzHv4s8lmhxRJoTfBt20voHFGdeECnVUymlPGq82VMT1l+4Ywr6OYuKLhi9zXyz0ZjKCfToHw1py/Mkyly4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MVyf4ht4; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DsCZC0cn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 26CC840E0239;
-	Tue, 13 May 2025 14:16:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qgClZEYW3rL2; Tue, 13 May 2025 14:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747145809; bh=DWv6vIb3P8azTiTE58CA2Zo51utZhYiUCVuJc8sWrd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DsCZC0cnYAG35oPdywNSk1aAiDwh5rkFcjjgNqTrQ8DZB7yE6+J+m8SUpfJi7iHtt
-	 RjFSM6xCyW/CZNwjNOzJ0Y6dvAb2qyE6WKtkujTjFi2rqv1yUcNX1ivlYh0FYdIDTP
-	 7nSAGlQPfkyZV4MSD1+dIAUoudiMEMS3YpEWPs5fScrGtp1Q06m52owO2AezwWmnn+
-	 sdGfE8eO2cJQ41s3aP+yheR5kVDmUbq6WgLHpLT/ClVxPrVwDg9pvQ8cUPDtDN1AF8
-	 CWha9MSj33vOyHLqtbMXw8RfaxQ6enOqQZsvGi+5fiQdLTw7DVnIlwTvVGVcaN6BfE
-	 D4TZKMF90lMUavNz0G6pBEN78Vptv2GatpjPn8E873rQokgZ9PAm5kk7IwMC4Mfe/K
-	 8CPsuofQSMCLeP3MmljevpNJozyKDbjSZWSZxoJvTOcFpT3t+Z0r8d8uDscKk5FB2M
-	 r8fOgqdLTvu1MBUzlNwRpo9lUvB4QfC5U907+uurru9CKWcRqlQtDfPG7JE93Mxm//
-	 DacRaXofDHCD/7lJbgJh3WSIHfT7VZI6vCFyUiafuKJ2uwRAlXuBhslMUgl2WTYwlU
-	 Cj3GQQXk4ZaKyeSvyAxQ7H+5hajy35mchZWqJQO8oKGBlmkzkJGpjlMFV78upJRgvy
-	 VMvKIwhuZf3omzjXZ4rqyEFM=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D000D40E01ED;
-	Tue, 13 May 2025 14:16:38 +0000 (UTC)
-Date: Tue, 13 May 2025 16:16:33 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com>
- <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
- <aCMraFZ2yJQNyHf3@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MVyf4ht4"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-442dc6f0138so15594025e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747145880; x=1747750680; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzhZRrqUU4KfVs0I1M4dfZB+MArRCTM32K6j0BNb1Yg=;
+        b=MVyf4ht4lY8Do/R26NL4e6B+wmitgn8lsHqNtcc+k9pWXwGXZyiovZj9ArqHH6EMBo
+         jjW3BnE1+6tIPYNjgs42qfCsFvTk9N6ivBDmzNiKiponQgsaRIR23vUKbBrh34JAQgXl
+         KzyZM1YIQ7tfbDlS/Cplxpexg63IIzRtjCFPUsbxJkmO0s4N2A8LhCL6N3EVaXJjtDMO
+         tgY5Z/CVoUMAP6gO9A8WkFPj30S5zTuy+Qc7HZIgQPb+v7E25J2Yl+FaJkWfY5PdrbZz
+         iHI43pOlit2oQ1OsJiQ88fxYIel1L0vvjL6IhCkOCSBIi1dVovtzbGb9uf5f6MLSzyzX
+         cbcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747145880; x=1747750680;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzhZRrqUU4KfVs0I1M4dfZB+MArRCTM32K6j0BNb1Yg=;
+        b=keuLtFiSsBOECHS7w3/xuMw9aT9wEE/yG6/Uzj3CD+tb/ezBBp/f+0gEZ3l16weWjP
+         SnAFNmKuKs7lM1zopTGcw9lw7fr4QQZz28CgNzJvp3pQLZyNC9EcALoxTnO8O1OxyNp/
+         g0bwAJVhTxdL7rGM4XG4l0nwTL4kXCPoztuSbSlZD28JOnTJwNus7XezXiFXjuofKAfE
+         y5R/Fc3KBrrXIhUYHqUK3TtFrDcxoM+rq9fDyRb5HUKuwuKCJzZhWjmeOjXcf2op2M2W
+         7lDL14U+krRrXnnUe7VC3LgiRIAdyCjOkWG0rr5jFvmztf2HFhuaVZwNT7zaxUVxn8IL
+         1CWA==
+X-Gm-Message-State: AOJu0YzNiIte6AnKb66OOKocEU1d+Ayvu6xfwl2ySEGXGx6S0dCCOfy9
+	xXjRQ1KKz0kL7ereR05VS6K4PXEzZWRlUJrHF0fXNkO21gCtTXjw72hhfNZyK/IKUsfsTGAXK3x
+	uwspoSq6rwYVzsQcS30kflk/PN2rKG9qgpAnl00Idg3L8WXhK5HOiSGQl1UxTBsBU1KSoYKwN0A
+	orpsi7yUj9C/YJyo2V3hwYZeaoQ6SZVw==
+X-Google-Smtp-Source: AGHT+IEcNP9o4w0XpqRgycv3AvhCjpvOJ8idOILkXTyqG3mrXZAI840xHguuVsB0WukhbTL/zIaKvDDf
+X-Received: from wmcn15.prod.google.com ([2002:a05:600c:c0cf:b0:43c:fe64:2de3])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:b85:b0:43d:fa58:700e
+ with SMTP id 5b1f17b1804b1-442d6ddd22emr129801015e9.33.1747145880685; Tue, 13
+ May 2025 07:18:00 -0700 (PDT)
+Date: Tue, 13 May 2025 16:17:45 +0200
+In-Reply-To: <20250512190834.332684-23-ardb%2Bgit%40google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCMraFZ2yJQNyHf3@gmail.com>
+Mime-Version: 1.0
+References: <20250512190834.332684-23-ardb%2Bgit%40google.com>
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3735; i=ardb@kernel.org;
+ h=from:subject; bh=4uNgR2G1votCZZ2OYep52ckeNUP6192/vly7oEiUnY8=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUM5pDPuH+/hhjWp17KmVnW772v8GfznX9NHmTyrcwx/9
+ nY96/PqKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABN5HM7IsMF9y6rrBbXLV7F/
+ 6xM4pWO1t0SauZprybRZd9u1T5n9i2D4KzT7iZrSdK6UpfbbdkqVFFqmFWbstG/w0q15Kfbnids WVgA=
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250513141744.905614-2-ardb+git@google.com>
+Subject: [PATCH] fixup! x86/sev: Share implementation of MSR-based page state change
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Ingo Molnar <mingo@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 13, 2025 at 01:22:16PM +0200, Ingo Molnar wrote:
-> Yeah, so the problem is that SEV* is hardware that basically no active 
-> tester outside of the vendor (AMD) owns and is testing against 
-> development trees AFAICS.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-I don't think you even know what you're talking about. Hell, I only recently
-gave you the 101 on SEV because you asked me on IRC.
+This is a fixup for the mentioned patch in principle but it applies to
+the end of the v3 series so all subsequent conflicts have already been
+resolved.
 
-So no, not even close. If you had bothered to ask a search engine of your
-choosing, you would've known better.
+Without it, PVALIDATE will be passed the PA instead of the VA, which
+will break if the early page state API is used after the 1:1 mapping is
+unmapped.
 
-All the cloud vendors have it and we are getting bug reports and fixes from
-them and everyone else that's using it. You could've seen that by doing a git
-log on the SEV files in the kernel even.
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/boot/compressed/sev.c      | 6 +++---
+ arch/x86/boot/startup/sev-shared.c  | 8 ++++----
+ arch/x86/boot/startup/sev-startup.c | 2 +-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-> I did a quick Git search, and here are a few examples:
-> 
-> For example, this commit from last summer:
-> 
->   6c3211796326 ("x86/sev: Add SNP-specific unaccepted memory support")
-> 
-> ... was only fixed recently:
-> 
->   d54d610243a4 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
-
-Because we pretty much test with huge-page aligned memory sizes...  memory
-acceptance tracks pages at the 2mb level. It will accept memory if there is an
-unaccepted memory EFI entry that isn't 2mb aligned at the start or end.
-
-So when you have a 4G guest or 16G guest you don't have that. If you specify
-4095M for the guest memory, then it will trigger. And since that was done
-before SEV was initialized (at least in the EFI stub path, not the
-decompressor path) things just didn't work.
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 79309944cb19..f1600b57ff0d 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -55,7 +55,7 @@ void snp_set_page_private(unsigned long paddr)
+ 		return;
  
-> Or this commit from June 2024:
-> 
->   34ff65901735 ("x86/sev: Use kernel provided SVSM Calling Areas")
-> 
-> ... was only fixed a few days ago:
-> 
->   f7387eff4bad ("x86/sev: Fix operator precedence in GHCB_MSR_VMPL_REQ_LEVEL
->   macro")
-
-That was "fixed" because we never had to run a multi-VMPL level setup in Linux
-yet as we run Linux guests differently with that respect. So we couldn't have
-hit it even if we wanted to.
-
-And even in the SVSM testing, Linux never requests a non-zero VMPL, and so it
-wasn't caught during testing. Linux will always request VMPL0.
-
-There is a lot of testing of the guest code with Coconut-SVSM and it is
-a scenario that doesn't exist.
-
-> Or this commit from June 2024:
-> 
->   fcd042e86422 ("x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0")
-> 
-> ... was fixed a few weeks ago:
-> 
->   8ed12ab1319b ("x86/boot/sev: Support memory acceptance in the EFI stub under SVSM")
-
-That's a fix for the above fix d54d610243a4 which relates to the multiple VMPL
-thing which we don't do (yet) in Linux.
-
-> Ie. bugfix latencies here were 10+ months.
-
-While doing your git search, did you check my reaction time when fixes are
-sent too?
-
-Or you decided to find some random patches with Fixes: tags pointing to SEV
-code?
-
-Or are you saying our crystal ball of what's broken is not working fast
-enough?
-
-Lemme see:
-
-https://lore.kernel.org/r/c0af2efa-aea4-43aa-b1da-46ac4c50314b@amd.com
-
-This is only the latest test report I requested.
-
-So no, we test the hell of it and as much as possible. What you claim here is
-dumbfounded and completely false.
-
-> Note that two of those fixes were from Ard who is working on further 
-> robustifying the startup code - a much needed change.
-
-Really? Much needed huh?
-
-Please do explain why is it much needed?
-
-Because the reason Ard is doing it is a different one but maybe
-I misunderstood him...
-
-> Ie. when Ard is asking for SEV-SNP testing for WIP series, which he did 
-> 10+ days ago, you should not ignore it
-
-More unfounded claims. Here's Tom and me ignoring it:
-
-https://lore.kernel.org/r/836eb6be-926b-dfb4-2c67-f55cba4a072b@amd.com
-https://lore.kernel.org/r/20250507095801.GNaBsuqd7m15z0kHji@fat_crate.local
-https://lore.kernel.org/r/20250508110800.GBaByQkJwmZlihk6Xp@fat_crate.local
-https://lore.kernel.org/r/f4750413-a2e6-15c4-7fa5-2595b509500b@amd.com
-https://lore.kernel.org/r/20250505160346.GJaBjhYp09sLZ5AyyJ@fat_crate.local
-https://lore.kernel.org/r/20250505164759.GKaBjrv5SI4MX_NiX-@fat_crate.local
-
-Nah, this is not ignoring - this is Tom and me rushing to see whether
-something broke because *you* applied stuff on the same day without waiting
-for any review!
-
-This is basically you doing whatever the hell you like and not even asking
-people working on that code.
-
-And you completely ignored my requests on IRC to wait with that code a bit so
-that we can take a look.
-
-> ... or if you do ignore his request for testing, you should not complain
-> about the changes being merged eventually, once they pass review & testing
-> on non-SEV platforms.
-
-What review?
-
-Show me.
-
-Commit-ID:     bd4a58beaaf1f4aff025282c6e8b130bdb4a29e4
-Gitweb:        https://git.kernel.org/tip/bd4a58beaaf1f4aff025282c6e8b130bdb4a29e4
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Sun, 04 May 2025 11:52:31 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 04 May 2025 15:27:23 +02:00
-
-What review do you expect to see in 3 hours on a Sunday?!?!
-
-> If you didn't have time to personally test Ard's -v2 series since May 
-> 2, that's OK
-
-It was May 4th, it was a Sunday. And you can see my replies on the next
-days.
-
-> I can merge these proposed changes in an RFT branch so that it gets tested
-
-How about you wait first for those patches to be reviewed like every other
-patchset on lkml and then take them?
-
-I mean, normal review process. Remember?
-
-The thing we all are supposed to do...
-
-> In other words: please no "gatekeeping".
-
-Sorry, zero gatekeeping here.
-
-> Please don't force Ard into a catch-22 situation where he cannot test the
-> patches on SEV-SNP, but you are blocking these x86 startup code changes on
-> the grounds that they weren't tested on SEV-SNP ...
-
-I'm helping Ard to get and setup a SEV machine. And I'm testing too.
-
-If you had asked, you would've learned all that but you haven't.
-
-> This request for testing was ignored AFAICS.
-
-Review, then test. As always. You know that.
-
-I keep telling you that but I don't think you're hearing me - you just do
-whatever the hell you like.
-
-> Sure: -v2 was sent more than 10 days ago, and the testing request was 
-> ignored AFAICS. Do 10 days count as 'ample time'?
-
-I am reviewing. I can't just drop everything and concentrate only on this.
-
-Hell, that set is not even ready yet:
-
-https://lore.kernel.org/r/CAMj1kXH5C6FzMyrki_23TTk_Yma5NJdHTo-nv4DmZoz_qaGbVQ@mail.gmail.com
-
-Now you tell me: why are *YOU* in such a hurry with that set?
-
+ 	msr = sev_es_rd_ghcb_msr();
+-	__page_state_change(paddr, SNP_PAGE_STATE_PRIVATE,
++	__page_state_change(paddr, paddr, SNP_PAGE_STATE_PRIVATE,
+ 			    (struct svsm_ca *)boot_svsm_caa_pa,
+ 			    boot_svsm_caa_pa);
+ 	sev_es_wr_ghcb_msr(msr);
+@@ -69,7 +69,7 @@ void snp_set_page_shared(unsigned long paddr)
+ 		return;
+ 
+ 	msr = sev_es_rd_ghcb_msr();
+-	__page_state_change(paddr, SNP_PAGE_STATE_SHARED,
++	__page_state_change(paddr, paddr, SNP_PAGE_STATE_SHARED,
+ 			    (struct svsm_ca *)boot_svsm_caa_pa,
+ 			    boot_svsm_caa_pa);
+ 	sev_es_wr_ghcb_msr(msr);
+@@ -100,7 +100,7 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
+ 	u64 msr = sev_es_rd_ghcb_msr();
+ 
+ 	for (phys_addr_t pa = start; pa < end; pa += PAGE_SIZE)
+-		__page_state_change(pa, SNP_PAGE_STATE_PRIVATE,
++		__page_state_change(pa, pa, SNP_PAGE_STATE_PRIVATE,
+ 				    (struct svsm_ca *)boot_svsm_caa_pa,
+ 				    boot_svsm_caa_pa);
+ 	sev_es_wr_ghcb_msr(msr);
+diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
+index 77b34ab6c7d8..5ab171120448 100644
+--- a/arch/x86/boot/startup/sev-shared.c
++++ b/arch/x86/boot/startup/sev-shared.c
+@@ -590,8 +590,8 @@ static void pvalidate_4k_page(unsigned long vaddr, unsigned long paddr,
+ 	}
+ }
+ 
+-static void __page_state_change(unsigned long paddr, enum psc_op op,
+-			        struct svsm_ca *caa, u64 caa_pa)
++static void __page_state_change(unsigned long vaddr, unsigned long paddr,
++				enum psc_op op, struct svsm_ca *caa, u64 caa_pa)
+ {
+ 	u64 val;
+ 
+@@ -600,7 +600,7 @@ static void __page_state_change(unsigned long paddr, enum psc_op op,
+ 	 * state change in the RMP table.
+ 	 */
+ 	if (op == SNP_PAGE_STATE_SHARED)
+-		pvalidate_4k_page(paddr, paddr, false, caa, caa_pa);
++		pvalidate_4k_page(vaddr, paddr, false, caa, caa_pa);
+ 
+ 	/* Issue VMGEXIT to change the page state in RMP table. */
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+@@ -616,7 +616,7 @@ static void __page_state_change(unsigned long paddr, enum psc_op op,
+ 	 * consistent with the RMP entry.
+ 	 */
+ 	if (op == SNP_PAGE_STATE_PRIVATE)
+-		pvalidate_4k_page(paddr, paddr, true, caa, caa_pa);
++		pvalidate_4k_page(vaddr, paddr, true, caa, caa_pa);
+ }
+ 
+ /*
+diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
+index 21424157819c..023a157e8563 100644
+--- a/arch/x86/boot/startup/sev-startup.c
++++ b/arch/x86/boot/startup/sev-startup.c
+@@ -57,7 +57,7 @@ early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+ 	paddr_end = paddr + (npages << PAGE_SHIFT);
+ 
+ 	while (paddr < paddr_end) {
+-		__page_state_change(paddr, op, caa, caa_pa);
++		__page_state_change(vaddr, paddr, op, caa, caa_pa);
+ 
+ 		vaddr += PAGE_SIZE;
+ 		paddr += PAGE_SIZE;
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0.1045.g170613ef41-goog
 
-https://people.kernel.org/tglx/notes-about-netiquette
