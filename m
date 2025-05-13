@@ -1,87 +1,108 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4F81EB19B;
-	Tue, 13 May 2025 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456C2242D6E;
+	Tue, 13 May 2025 10:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747131679; cv=none; b=WFijC69yfdlupfnjx9QXFj7JkmizU9q5gtZf8GFh2a5kSgjVdvmIjYewBMzLGeFiMu1zaUc56pkWUHfnML/vSFfEIiVLarZ3N/I+BnXCaNBrn123HpCiUQiIEfoy7W8TrMht5fYOKAUbVSG796MVGOaNZ/YZnpGFM/xE77Dk9yc=
+	t=1747131708; cv=none; b=KbExgEux4gJR8TWPjc6OOGAh1enHtPohxGj6dtaEpnHUzEbIftPLF3LLtXi++i8zKRVx0ov+I4TvtEhGGxNh+nbSuh6+8Wpu+wmNaKgQ6r/J39ZoeqwqzLP1h1JZKuJoqB4fBLtBhEtF0t5Q6SbJP2mBfR8ETuXhqwWTnpUngwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747131679; c=relaxed/simple;
-	bh=5k3H8rwpLdmQL1SHziRgURu4VBLFsW+PKQaG5J6e3XE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F5wjv/2gwE+xU308lfvaSHulcSA4HgGFmsgeBzP9N17RJWuVlYG+S38mQJI98+gdi0rNgFKzk6/Ocvo+lTwuQDCbYe7Is8apMlnnYMGZ9T6RcIFNLZq1OyXp9Bxesq3K1sfRQmEsxjruj5Wz3IUXSqv77MT2kqSnQ037fm6iGAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22fbbf9c01bso44187135ad.3;
-        Tue, 13 May 2025 03:21:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747131677; x=1747736477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=njM07VIPu3r+t/AQ2+dkXYP6XTyMcpVf8bqEy0SVLZ4=;
-        b=aaGIts4uYA2Y6Wtv6/0BTnxKaFIkRvPH9sfozwCEYdhLlJPCB2FdEpXQNhDsvNAVN7
-         0rQJtuvDB+69OrTLqm2HYmEldFegoEZVgnmw+g7/RXiVBr8buYsSyLDl3EYPAstN4OUU
-         p3v5GhYI0JpwrZSdZ+fBkmO8iAB4XSohgWTu9FqUGm/twOFrJmUExgkiO9SHmbnFZCs3
-         9qMDwYE4ZXyBI0/6HPBzd97QKkRugvokeM6D0AQ2o0KBx2+YUeLENM6uPfG7/IJuyrhY
-         LF3INslopFl0PungRMpd/K1FPIXihnxxpcGtfEXO1CZZOVOm6YdSeSSHOQ3niYzkJDlU
-         5TqA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0vyyN5Sy9eJ/V1My9sC7z8ZaEmPSJO/NHYWBeuacUsddi5Y8llBoJnZ9+/0CnmAsi1aNUx2feBp1a@vger.kernel.org, AJvYcCVJSKVhhdju4WRKTaLh0yrqW378bZRokbL+eMziR4PTLDswNYXgFuqoj1mlTH84f58xN3Kx2/2xI6tcE4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaiVaSmHj+pdJOPnlbCvd6dhX3VC40g/zFyxV0NEo/VxGAWVI0
-	OP0woy4/1Bsni8AEluHnck+8Hpv2kj0CBICrvvGAOdxuedqd8FsY
-X-Gm-Gg: ASbGncswpckOZBoy1M/WZKilbKLTexlBr6VB1K6ktI7s9PowUSM9XjkIknpV9b7JfC+
-	8lVcNrbhLpyC8UNeQc19saLu8JMUrLX3FmM42aqe5UAQuocF67yo1QfoIKQyke3skJ9kCNnHwZI
-	aa6E3HxfSEjWRkvsAeN8ROQm5LbcmQxcimbYTN2jVViqAJxct8OSwjsxyV8rLkzNBxNMW1Z72L7
-	ip7OTmori1x+98VAsxi0FfAE1IYvQHopDCRpEXg0TspY8vo/htaTpCIM/VWQtpGJ1TpAIrpYbHM
-	VvfUAAPRc0uB21snJpOX7VgqUVC7G3w/0gaaf+2cmG5xyiV4xhnGq3k+htLBpWAPVH5gKtp0S29
-	MVqMzci/Msg==
-X-Google-Smtp-Source: AGHT+IHw0oqsi9/lZxlgy6Nx0dfe5Y1kDXC/F8TzYcgf+XHHBpKOKueHQq/VSm9ky9VEjewdCpx4vA==
-X-Received: by 2002:a17:902:d4d1:b0:223:4d7e:e52c with SMTP id d9443c01a7336-22fc8b19402mr270413195ad.5.1747131676938;
-        Tue, 13 May 2025 03:21:16 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22fc82bfad1sm78199535ad.250.2025.05.13.03.21.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 03:21:16 -0700 (PDT)
-Date: Tue, 13 May 2025 19:21:15 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org, cassel@kernel.org,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
- bool
-Message-ID: <20250513102115.GA2003346@rocinante>
-References: <20250510160710.392122-1-18255117159@163.com>
+	s=arc-20240116; t=1747131708; c=relaxed/simple;
+	bh=dOQWz25dS34yvdvO5uyg0AwAWBLYuSARUWFPOZoI11U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HkYeMXTRpv0JJlacaSv3KPHKzH7qbANjb83hGoaS99jUC3WAx5llj1+83tbwXMEhjBMRrs8mVgpjFBy433Tdsw50Hp95U6CBda0H5G1cYRzudNnVxgmnCXzE5bIoTGyf966FFxL+Sfw5fF6LiMC+nfKddM58aMrNikLduB1yjKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=wYWctxyg; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="wYWctxyg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=yEvYQVQMta1tXdnC2rpzqGhHGx2V/UWxFK3Z6l0dfoQ=;
+	t=1747131707; x=1748341307; b=wYWctxygCCiRU9Z77TejxBqtckQo5UnlUrJ9viXbMyavOjn
+	qNJekXnc8EQF6DbeA6MrdyNK3CWb+21wB0BpNDoj6pWXQMu9/CIF2H8FZ25QF59Ci1MTNCEywIYls
+	aXeQyTaqtlr+529KyW0en51Z28Q4TLnwlocOLYNjWC310dCjhhE5nJ+swtspgHEBVVqJjdHqXxyHO
+	XGf1doaom3r6YbB3oHYsRDkyozMACvOv1GVaY79Bwvbudv/tppq1GkcBVE1p/DNuLnnrebjeWJyjS
+	H6ctF005gSTxYIVveKgdeRC/AyrYW737tl4olev3Oo5HR6FeMbFVpRcMclzAmUnQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uEmlb-00000005T1G-3LaJ;
+	Tue, 13 May 2025 12:21:43 +0200
+Message-ID: <296b9aa887022258f8ec8e4f352822c24b41ab82.camel@sipsolutions.net>
+Subject: Re: [PATCH wireless-next 1/2] wifi: mac80211: validate SCAN_FLAG_AP
+ in scan request during MLO
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 13 May 2025 12:21:43 +0200
+In-Reply-To: <26a9e68d-bce6-4bba-871d-13e2aeee3fed@oss.qualcomm.com>
+References: <20250513-bug_fix_mlo_scan-v1-0-94235bb42fbe@oss.qualcomm.com>
+	 <20250513-bug_fix_mlo_scan-v1-1-94235bb42fbe@oss.qualcomm.com>
+	 <16499ad8e4b060ee04c8a8b3615fe8952aa7b07b.camel@sipsolutions.net>
+	 <26a9e68d-bce6-4bba-871d-13e2aeee3fed@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250510160710.392122-1-18255117159@163.com>
+X-malware-bazaar: not-scanned
 
-> 1. PCI: dwc: Standardize link status check to return bool.
-> 2. PCI: mobiveil: Refactor link status check.
-> 3. PCI: cadence: Simplify j721e link status check.
+On Tue, 2025-05-13 at 15:47 +0530, Aditya Kumar Singh wrote:
+> On 5/13/2025 12:47 PM, Johannes Berg wrote:
+> > On Tue, 2025-05-13 at 09:26 +0530, Aditya Kumar Singh wrote:
+> > >=20
+> > > -		if (sdata->deflink.u.ap.beacon &&
+> > > +		if ((sdata->deflink.u.ap.beacon ||
+> > > +		     ieee80211_num_beaconing_links(sdata)) &&
+> > >=20
+> >=20
+> > Do we even still need the deflink check? Seems like
+> > num_beaconing_links() _should_ return 1 anyway even though it currently
+> > doesn't, and we need to fix that?
+>=20
+> If the ieee80211_num_beaconing_links() is modified then deflink check is=
+=20
+> not required. Do you want to me to send a clean up for that function=20
+> first or would take this and later the clean up part?
 
-Do not bother sending such cover letters.  This adds no value.
+Given that you're targeting wireless-next for all, I guess I'd prefer
+you clean up ieee80211_num_beaconing_links() first? But no strong
+preferences.
 
-Please read the following:
+> > Also seems the VLAN carrier handling is broken.
+> With this patch? Or in general you are saying? HWSIM test cases seems to=
+=20
+> be working fine for me with this series applied. May be there is no test=
+=20
+> case to make it evident?
 
-  - https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-  - https://kernelnewbies.org/PatchSeries
+Oh, I meant in general.
 
-> ---
-> Changes for RESEND:
-> - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+So here I looked at callers of ieee80211_num_beaconing_links(), and many
+of them seemed wrong because it doesn't handle non-MLO? But now that I
+look again, I'm actually wrong, it simply always returns 0 for non-MLO,
+but the comparisons are for <=3D1 which makes that ... OK but unexpected I
+guess.
 
-Resending a patch is not a place to add new tags.
 
-Thank you!
+But still - also unrelated to this patch - the VLAN handling here seems
+wrong?
 
-	Krzysztof
+        if (ieee80211_num_beaconing_links(sdata) <=3D 1)
+                netif_carrier_on(dev);
+
+        list_for_each_entry(vlan, &sdata->u.ap.vlans, u.vlan.list)
+                netif_carrier_on(vlan->dev);
+
+Shouldn't that loop be inside the ieee80211_num_beaconing_links() if?
+Also on the netif_carrier_off() side? At least someone was fixing VLAN
+vs. MLO recently, so maybe that needs fixes too.
+
+johannes
