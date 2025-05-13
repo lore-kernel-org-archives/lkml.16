@@ -1,192 +1,142 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0EF28C87C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C1D1F1524
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747134659; cv=none; b=r6IxnBI7w0T3KKHy0mMIkNxjs/rLu7+aFyo+VtD/QZrEl2Zf17tYMl+VIpTmcX+adrtjudyeWnn0Fm4yHzB2VzftIAmDCezhBCf45AHtJJ9TXfEPf9d+SOsomYxEMHCwvmzby/P5oN2hge/+boHzn4o3tAJOK2D1UORLdR9LLr0=
+	t=1747134734; cv=none; b=TqnfSL3kKbz1TtSVe8hh8UAiT9Aj/MS7H3b1ugdZO0y7yip06dHwkpFOYiCZyKu99jzHl/bj5xFQ7cxZk4bPshAbQueEzMzF8J2AeIiaTcsmJcFH4k6Z8X2g2h0ffkY3x6qa+pMPCDyoO6fywa7LZJavqVSbVG+3YzLwAmqjzHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747134659; c=relaxed/simple;
-	bh=G/Iuvk97lCj/ysnGeDq5y/E/uY+SQmDZiycYuE0QgTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AUS3epLT5dDCMOncMImpGBZwd5WYILpaeQa9Vxi7vYmV82CN3ycO+5n31F4fcUgF05FKQxToePHj4eJV9DOUiTzsBShRUwfQTZ9LqvMMdQEDi9jLVqY6xjwazvRTt1BOpRBtZk5FHKY09Apyk3SLlkzns8GC7vDrrtNyZvbpYOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LxFMMsdA; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747134734; c=relaxed/simple;
+	bh=M9P7VRjiur5eiBsdHWVXIbYdrgK+gj/vR98rbxJXJ2k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gSOslGoCt/GWSPd1G/V96IVtRegCAOcNUcF+TlZRX7RfZo2YMW8dT56QWlZcNSG1cl/9fP+mZQPfoOGsM/0M8dbh4GCaXlsOssQikxyt0VF+6MWi8ytBXQTM4A4RhqdHsZrNjdvsOBiW/kBp9/mPjJmGmxk/IY8HXPM+Xt7P5kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WloXRm6Q; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LxFMMsdA"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac34257295dso922351466b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:10:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WloXRm6Q"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442d472cf84so25438645e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747134656; x=1747739456; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ih47wa8lOcapFnPoJK//XfeRJyzOSt0KNDPZDlIyojo=;
-        b=LxFMMsdA+unHEy0luz9ADhLKIm319iUBUARgLnrwf87H22y/UsBCvKhCbIfen2dPxz
-         ifJR9ahExQ+MmqxpyqOkdXZ095fTIzMPyqsQMxeGip7DZbvzonE4+wWIqvhKIdDFNqBS
-         gQ3tZFDOwogzxw27+2yMDMK+Yt/hDQv2ASsx6FpR7JZSQQu48/dny5Ci6QBWBVLuswz3
-         TdhMIAvn4azyoY9YuEiChCuLstDScOiBYk5pQx5hE2uSFReEhDp27OfK6LjAweFdAQ6k
-         CNNDT80TtklC5PtY1MM0YSNd3KyJ5jXqEuDPZL/RJN/6uBY6rufpUhjvZatYcHmkuYLc
-         iJzg==
+        d=google.com; s=20230601; t=1747134731; x=1747739531; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ngcvtqpR9Tn8jFsVifDyueNdjhYIsQYD3EAF0jbHFh8=;
+        b=WloXRm6QgFPyPb8vRS0X1jGCjzqVqFVMLe0Kq5qzG+VdMr2U+DQhSaCBTFFxESCMJ1
+         4xKbbwp2tXFU2i8fpGMbMLa/UUuIabGrHC21rsaoZuQYM/yay1+vPL7fGc+EZ/dRUdko
+         I/7W1qInzrP/6hIFNb8RMjDulKoqk8gtQFinnV3kRuwj9FXSNKacGSPZjW9Du5Ycr8vM
+         8zd1CM0RiB41B/RMN1OR1YRbUa9r9RH2Hj30Q0eQ2ZdYVEJDDBFOK5sJHN/B0vOBII+W
+         2Rc0u179nES+5bs3uZug+I8btMOSsYDnNAsgjXi8WtNNbND/0t7/u08BfkdVvXVdu5Lm
+         k24A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747134656; x=1747739456;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ih47wa8lOcapFnPoJK//XfeRJyzOSt0KNDPZDlIyojo=;
-        b=Ea/jlYbL9hV6wMpMqBima9iuD3KlXBI53TQxmfNLKx48A5b0Gkd7WgjpJApkZE/Wt4
-         u55AkwIWNg7E1DwFprqTXGKKNYOIEP5WdbULKyUoV+Rn6Iinf2RVviwgZKt1YU4XUzJF
-         x4KowFqyfqSdr9FG7glErSujCl/3XTgHLCfEjdoH1jhLulw/pbGggKgtLqpyS2zjm2IW
-         umkAohFfgv59cKoFj6q45uWjCszu6Fq7IKzYPo4QizuBpFrpBlKhnPFFtZ57tH0m/7Y+
-         LTU8wCTStZKL8dZUfyVQwmZFOgGrZLZrqp1JBYHjZcfrNRX1QRa94CDf6ITBmdECPtf9
-         ThBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUx98xMssLvKM9JJJO8sFHBTY2rYKGRbAud6xFkfhxlbpSfC3rxFIXWdPF8tYtOhIwzUQHCsfliQhEylEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzly07hnOn/ulq9HhXIeJAxEWgp3Kn2VFVHvMDhQ15dznDnHtY
-	W/20yQPC8+hfA0Eo1761+7ypGZ0yQ6IJ8UCULX7s9jsOmvrcCpWGQhkOlsEOv05KQ2ybj8YWAQV
-	K
-X-Gm-Gg: ASbGncvqjWK1Ue74KLZfpR4FFvLN9Gjj7bgqYfjLjmHjyDqMz2dD4WEvVBlyJwFfpEs
-	we5ldxBgItUhyCZ3Hay6gOFhQMSMEHMOBFqqQQ7ZD1BBzM7TWCSPEa6T5J4Ewg9fq/cSrbqnSIU
-	OZ/xDaZqIjSc2zdosgeHq0Hw6h966ni8yeAnlE3fG+oIydkUKLXBGzd3cnFo9M2A3+3V2w4/r0x
-	KFT897GRopMAlw9Z1tmj+vtWojUpF3b8dzGxbdRV+56MG+x/uzQy6W+2oAIy6alpqfUT+7Q+ec1
-	Ai10yWCA9K76zhLUFjA6NM4vaqu1PK3aTrRbvcajW7yTrmEXm/xHum8=
-X-Google-Smtp-Source: AGHT+IG/1KGBzYEjomD9ooGdFK5Z+PWpP4n15tO0ehecLA0mQwOQvBEHF+6qJupAbbVt/rBjAG8RAA==
-X-Received: by 2002:a17:906:99cf:b0:ad2:39a9:f1aa with SMTP id a640c23a62f3a-ad239aa04e2mr1057420766b.47.1747134655593;
-        Tue, 13 May 2025 04:10:55 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.133.65])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad24121e992sm496096766b.14.2025.05.13.04.10.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 04:10:55 -0700 (PDT)
-Message-ID: <efcca734-2c80-43e3-b347-2af39f811502@suse.com>
-Date: Tue, 13 May 2025 14:10:54 +0300
+        d=1e100.net; s=20230601; t=1747134731; x=1747739531;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ngcvtqpR9Tn8jFsVifDyueNdjhYIsQYD3EAF0jbHFh8=;
+        b=qAxvR8H+iJjK1lCeWkFmjKDN3GOB8g80+R95Ye4fHizZGA3Y2hG12D3UYyeA62O9+w
+         y6pbx9S43MBvGNOIyyua8aOR5g3uNjbH2JmuANDibvgCwgJnZqqWnThzVVibfAxbHk/R
+         1Znf9VvuABf6TLjGfq5bHvkMbiQmu21Fo+S9QIM/UvXXntJDZEl27IS9S/vtWJaHIOb5
+         AecjWqTOzH2bKaZR3RjCGjM+P1Vu/oZXAnI+gEpGUapGnL/v+yHrDfvkdOhtonwPRY9T
+         seJiSqU+QTUzGqKHo4rwCfpuexD8RmK9wc0vxwBeUNh/bo33Qw4Zzzx0X2QjlZVZNJi9
+         56Qw==
+X-Gm-Message-State: AOJu0Yzyfj03glio0hGH3neRNbanvpc+Osk0wprvSVLuoBDaOD1VUJn9
+	Gr9bDvzFW5a/VJBNyduLy3oj14mTWU81P0jM/NxSMR5lphUqRWiF4kTzUdI9MJgzpPPSUlfZuLC
+	TGMSjDgdEr1ATQmJJWand6LuZz2xpjC4coveQCPvEVInXyqYvSJ8Y/oeuQ9cXfOBmRRTvO7fvLR
+	H316VsGM56bYRDPAs6uhpfyf9rNQTE1Q==
+X-Google-Smtp-Source: AGHT+IF3MWu4KeYYq8hq4QObOlcoZzORSwnxHyD5HOpqIr/iLmn0q1hoGsBAZXGJXde6NxFh+UJHvHPF
+X-Received: from wmqe12.prod.google.com ([2002:a05:600c:4e4c:b0:43d:47b9:bedd])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1550:b0:441:c1ea:ac35
+ with SMTP id 5b1f17b1804b1-442d6d64ad8mr151723355e9.18.1747134730686; Tue, 13
+ May 2025 04:12:10 -0700 (PDT)
+Date: Tue, 13 May 2025 13:11:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Allow individual features to be locked down
-To: Paul Moore <paul@paul-moore.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: linux-security-module@vger.kernel.org, serge@hallyn.com, kees@kernel.org,
- linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
- linux-coco@lists.linux.dev
-References: <20250321102422.640271-1-nik.borisov@suse.com>
- <CAHC9VhSpgzde_xRiu9FApg59w6sR1FUWW-Pf7Ya6XG9eFHwTqQ@mail.gmail.com>
- <67f69600ed221_71fe2946f@dwillia2-xfh.jf.intel.com.notmuch>
- <68226ad551afd_29032945b@dwillia2-xfh.jf.intel.com.notmuch>
- <CAHC9VhSyz2MqMjnHFbTiMqYvhAFZf162ZabnSsyyCQEZj-V9=g@mail.gmail.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <CAHC9VhSyz2MqMjnHFbTiMqYvhAFZf162ZabnSsyyCQEZj-V9=g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3583; i=ardb@kernel.org;
+ h=from:subject; bh=iPNFYXxPwV7mBvJmmEiXtkP/28HwPYJoMx3uTro64pM=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNZ498r1gkMaibGjhsSfrc/fLdD8eyuf8tMtRzq79Tsm
+ hGenGfQUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACYyyZuR4czthXu2JPux/t7e
+ mMZWxq7973jO9L3/Kg++U3q4avkuln6G//X23Kt6WgwWyR/fJ/emo8ZMum+3jtvJd7uf/1tWahr 1kgsA
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250513111157.717727-8-ardb+git@google.com>
+Subject: [RFC PATCH v2 0/6] x86: Robustify pgtable_l5_enabled()
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+
+From: Ard Biesheuvel <ardb@kernel.org>
+
+This is a follow-up to the discussion at [0], broken out of that series
+so we can progress while the SEV changes are being reviewed and tested.
+
+The current implementation of pgtable_l5_enabled() is problematic
+because it has two implementations, and source files need to opt into
+the correct one if they contain code that might be called very early.
+Other related global pseudo-constants exist that assume different values
+based on the number of paging levels, and it is hard to reason about
+whether or not all memory mapping and page table code is guaranteed to
+observe consistent values of all of these at all times during the boot.
+Case in point: currently, KASAN needs to be disabled during alternatives
+patching because otherwise, it will reliably produce false positive
+reports due to such inconsistencies.
+
+This v2 drops the early variant entirely, and makes the existing late
+variant, which is based on cpu_feature_enabled(), work as expected in
+all cases by tweaking the CPU capability code so that it permits setting
+the 5-level paging capability from assembler before calling the C
+entrypoint of the core kernel.
+
+Runtime constants were considered for PGDIR_SHIFT and PTRS_PER_P4D but
+were found unsuitable as they do not support loadable modules, and so
+they are replaced with expressions based on pgtable_l5_enabled(). Earlier
+patching of alternatives based on CPU capabilities may be feasible, but
+whether or not this improves performance is TBD. In any case, doing so
+from the startup code is unlikely to be worth the added complexity.
+
+Build and boot tested using QEMU with LA57 emulation.
+
+[0] https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
+
+Cc: Ingo Molnar <mingo@kernel.org>
+cc: Linus Torvalds <torvalds@linux-foundation.org>
+
+Ard Biesheuvel (6):
+  x86/boot: Defer initialization of VM space related global variables
+  x86/cpu: Use a new feature flag for 5 level paging
+  x86/cpu: Allow caps to be set arbitrarily early
+  x86/boot: Set 5-level paging CPU cap before entering C code
+  x86/boot: Drop the early variant of pgtable_l5_enabled()
+  x86/boot: Drop 5-level paging related variables and early updates
+
+ arch/x86/boot/compressed/misc.h                  |  8 +++---
+ arch/x86/boot/compressed/pgtable_64.c            | 12 ---------
+ arch/x86/boot/startup/map_kernel.c               | 24 +----------------
+ arch/x86/boot/startup/sme.c                      |  9 -------
+ arch/x86/include/asm/cpufeature.h                | 12 ++++++---
+ arch/x86/include/asm/cpufeatures.h               |  1 +
+ arch/x86/include/asm/page_64.h                   |  2 +-
+ arch/x86/include/asm/pgtable_64_types.h          | 25 ++++--------------
+ arch/x86/kernel/alternative.c                    | 12 ---------
+ arch/x86/kernel/asm-offsets.c                    |  8 ++++++
+ arch/x86/kernel/asm-offsets_32.c                 |  9 -------
+ arch/x86/kernel/cpu/common.c                     | 27 +++-----------------
+ arch/x86/kernel/head64.c                         | 20 +++++----------
+ arch/x86/kernel/head_64.S                        | 15 +++++++++++
+ arch/x86/kvm/x86.h                               |  4 +--
+ arch/x86/mm/kasan_init_64.c                      |  3 ---
+ drivers/iommu/amd/init.c                         |  4 +--
+ drivers/iommu/intel/svm.c                        |  4 +--
+ tools/testing/selftests/kvm/x86/set_sregs_test.c |  2 +-
+ 19 files changed, 61 insertions(+), 140 deletions(-)
 
 
-
-On 5/13/25 01:01, Paul Moore wrote:
-> On Mon, May 12, 2025 at 5:41 PM Dan Williams <dan.j.williams@intel.com> wrote:
->> Dan Williams wrote:
->>> Paul Moore wrote:
->>>> On Fri, Mar 21, 2025 at 6:24 AM Nikolay Borisov <nik.borisov@suse.com> wrote:
->>>>>
->>>>> This simple change allows usecases where someone might want to  lock only specific
->>>>> feature at a finer granularity than integrity/confidentiality levels allows.
->>>>> The first likely user of this is the CoCo subsystem where certain features will be
->>>>> disabled.
->>>>>
->>>>> Nikolay Borisov (2):
->>>>>    lockdown: Switch implementation to using bitmap
->>>>>    lockdown/kunit: Introduce kunit tests
->>>>
->>>> Hi Nikolay,
->>>>
->>>> Thanks for the patches!  With the merge window opening in a few days,
->>>> it is too late to consider this for the upcoming merge window so
->>>> realistically this patchset is two weeks out and I'm hopeful we'll
->>>> have a dedicated Lockdown maintainer by then so I'm going to defer the
->>>> ultimate decision on acceptance to them.
->>>
->>> The patches in this thread proposed to selectively disable /dev/mem
->>> independent of all the other lockdown mitigations. That goal can be
->>> achieved with more precision with this proposed patch:
->>>
->>> http://lore.kernel.org/67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.com.notmuch
->>
->> Just wanted to circle back here and repair the damage I caused to the
->> momentum of this "lockdown feature bitmap" proposal. It turns out that
->> devmem maintainers are not looking to add yet more arch-specific hacks
->> [1].
->>
->>      "Restricting /dev/mem further is a good idea, but it would be nice
->>       if that could be done without adding yet another special case."
->>
->> security_locked_down() is already plumbed into all the places that
->> confidential VMs may need to manage userspace access to confidential /
->> private memory.
->>
->> I considered registering a new "coco-LSM" to hook
->> security_locked_down(), but that immediately raises the next question of
->> how does userspace discover what is currently locked_down. So just teach
->> the native lockdown LSM how to be more fine-grained rather than
->> complicate the situation with a new LSM.
-> 
-> Historically Linus has bristled at LSMs with alternative
-> security_locked_down() implementations/security-models, therefore I'd
-> probably give a nod to refining the existing Lockdown approach over a
-> new LSM.
-> 
-> Related update, there are new Lockdown maintainers coming, there is
-> just an issue of sorting out some email addresses first.  Hopefully
-> we'll see something on-list soon.
-> 
-
-
-So I guess the most sensible way forward will be to resend these 2 
-patches after the new maintainer has been officially announced?
+base-commit: ed4d95d033e359f9445e85bf5a768a5859a5830b
+-- 
+2.49.0.1045.g170613ef41-goog
 
