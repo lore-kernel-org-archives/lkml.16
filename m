@@ -1,122 +1,122 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638752581
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB189202C48;
+	Tue, 13 May 2025 22:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747174475; cv=none; b=Owi/3bXB07FXTwpTz0c/EzdtIwO1urr5ySKgyrsY0dIGU4kdmTBRt+/w2wRsBoznDHPVa6F4PMqMcHViOzLQaxuZ4HZluRIz+xaKVFq4A+heaPn4tajKwD0j4NDuIFPQdiNoxeQ66xtxMMDNEha4WceRU5yMa2dl4ms2P/fDGqI=
+	t=1747174492; cv=none; b=A3jtuqG/8rpLkQ6dzMKiYsQ9KAExLFpmRbA5sQeaN/rwOyu1J+Hlg29Ixb0pnUWZTHExldpC0AP0y2KGn6V2yEwP+VROjdEXSMeqxRJS77DWCoIunjopVir0mXddE/41QzWYW5jgIPUaKf3+ReotNMoNFyKpTTobPs6RN9dexS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747174475; c=relaxed/simple;
-	bh=vhrkQkIyemUKp8fVxGYyNtHLYIR+hrU6/oUo8F80CPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pv17VplGbALRwZC38M+A8C6G7ACSvDST12KbORv6Ynrdcw5cHT0hyAyhihmtRs0ldcDK0byipxlfXjbm/T54NGfZN32/K897aAseKwxX0iYMZUpbcDRpCz19yxAr90F7BctZmhZeCsZSl9bynk3L1Du9vnMdlC/hlhHhrRj2mP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=chXfOkEM; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747174492; c=relaxed/simple;
+	bh=maKoMyNUptWEACg33q1vpy/GSFWTvEqnX6P66Eb3NJE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WMkr9/G7ULCweHEfu+RdrXnx01I7zxnw3Fv2U+TvGdcalYQ2uEgDiJvMMWvLs9m0lhgP7HVltj4APuH6tm9uvWQG1CUMPF629t6lNKMCxEgQANo3ArgiAwCBkI+Rgk+/cPD0pJxHocMErNL1UGH0boVoh448Ip7ViRjRlOmUHfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TO9JqyCU; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chXfOkEM"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54fd1650b83so4005902e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:14:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TO9JqyCU"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b3f62d1aso757195f8f.1;
+        Tue, 13 May 2025 15:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747174471; x=1747779271; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mqRbrvay4EnmVnivzBlX8Lw52BNBODi2l2MrzYeUfbs=;
-        b=chXfOkEMELL+idf2V028b8JwFQWEj4Zhk6bzKybKjK7k+ph89tCH22nDQSiN2j5hr4
-         L3qykDd+x19bV5bv8+ArvVV/aWGwMK8AFNMwoC28/0Oh6BEBsrpJhaBsCzSFvLyYTsUD
-         WjSO5PsLPXImJZ9ZvfybV0qpB3jUgR16Ex1mPlNZ00aq+NZUsJOhQQrCZLXqixNqGSrk
-         R46o8o/TNEqqbBnhvjSFL4uVKY9YGzKEZFnhBGvaOsdV11G6RiWzc90QP14hFfgG2Ze5
-         AUmav4F1R7KE/8IBCdEz+cDhxmvk4BBuIMnST6czVtKaKz+1JZHhSCO41WtmR11n05mM
-         qyog==
+        d=gmail.com; s=20230601; t=1747174489; x=1747779289; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z6twoJszxPLDnRSsZ54kwRwjtDyPeTyb0lPKYWaATxI=;
+        b=TO9JqyCU9HhsftWOLKM1s5vaYvUmJPGgcy6aGR2annZ4CpnldgZn6a9mSBVVmV7JFe
+         kYaH806cLuie7X/szBMqwb1mw8pAp+gw58tiWnGJziRWEFaYqeUlimk3iz9DTPXYQbeu
+         zZK1cFPRo/nE4+wbpnKaz2kvduK/2dx26XXw6lTlREFvYDMFslnM7IvU1e2gGL7ZkHOf
+         M/TowDDm8ClBJN7Kyu2jrTjYvQUCQMkkqQjiTsx4xmKf4NKXeK2y1GxunhTXGG0KVRye
+         IartBV4tYsgz1nCJpev4euXNu13HA8frZswnm2CR0+L0WovhYYhcF++0GFO7YFbUKsfX
+         6HeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747174471; x=1747779271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqRbrvay4EnmVnivzBlX8Lw52BNBODi2l2MrzYeUfbs=;
-        b=MYD4tYtIS+VO2RLyulFq430SYfocQgVWgUM/cDHi/rb1O/38XOQC1omQWHt0G3gl+n
-         XS4Gq3ywK4DKE/UZGLm4TOoul7zI35wFjFoM1IYZQf2I6TfZEJBZBCG6CAFt3A2UrPaM
-         9tmQ/9xRU3a/PR6qgrxiQ8xEJLdf91B9hB6OVg+9mgchqQ+sGrl+5JgcgdByJJc9sn6P
-         lIVtUNN4gps7k9oiorvU8gNm1/445qgHnizIWkwJhupml4ywrZGUE0FsAziQr6onZNWP
-         fnbfXfprgWufXNl0INjzL8t3VS5px6dZQO1Xp1F2k45hJg3iB6qjCwsUFOISvlacLi8v
-         kuMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIv7rWIip9iFHSjIvtemthvykGduP6sSMIfUOJEnyzb9JylfjsuiuLE+lBOOQGjPmG1vcQdCCeADDD8MY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywagi+7tAPxXOZLg/5q800CtCNOjmFCKsOU+y8cAQytTmJ3L+h+
-	DnlWa98Yz6wO6Dp4wIvViP7tsExQg4dWz3rSTesqUe7XyI8NZFGhUOM0jzaqnsavo/UT4wVD71N
-	tfdjDveOy96sDhAAmhGB5B0xD01AZ6CM2qKgfHg==
-X-Gm-Gg: ASbGnct6/BTL02LbL/68SKtleBk3mCq04pxYEjBmhqQl+T/xBitRh8ADKSG3rDwsjDP
-	Bc7US60K0SdvY9oqDoSzukWtnwNHctU+yTsCcCHaOdm0tqeqgUpF8JIZbF79InKRdSTyEoUx+e1
-	RmDDuDRM2o0fwSr1x6vWSUHSkHX4mZMOjl
-X-Google-Smtp-Source: AGHT+IEI/A53XKPhHlqbguLvNcAKp8W6Ajoh+iCoRNvpdC948ccI/NdQGUU5EzWJOfpFednMMrqlFQs4TL82VUi3Fgo=
-X-Received: by 2002:a05:6512:660b:b0:549:4a2d:30af with SMTP id
- 2adb3069b0e04-550d5fadfd0mr272022e87.25.1747174471470; Tue, 13 May 2025
- 15:14:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747174489; x=1747779289;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z6twoJszxPLDnRSsZ54kwRwjtDyPeTyb0lPKYWaATxI=;
+        b=JRj64fKTMQoN+8aUXuDfsjI6gvN4+nLGkKB26sOS3Wc1Ak+UtDpJrZwJBn/C6II0pK
+         WlYKgxl5/1lEWJ315A6lrIyi4WhOy2xyh0R9scDD5BQm4rnTkU2YRTLPTOr70KD/MVaU
+         i+fovwAv0QeCV4+xYVYqJjLci1ig3Fcm7ZHgKSKmaWryKxPz6NhKg1mafvYokEVQvb/+
+         16VzSABsYX2M64hHhC6mfGDZihLtGvYwKvtRapUHzjhj1OHApNNEz41cSVzVVqROCy4e
+         U02rIU1FNwYZuk23GIR2+8NXwHvJgQ56FA/PhLd8cagfbrfTK4PtJ/SdjHUI6tqR90jN
+         KdZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKW3t99ivbRyNoramkhE+nPgGTy5x2O7iUeTx4a8nSBDk/VZtPLK5JVu7K72is1iJitiekGjyQOa6VcDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycTKNn34Wth4I/qZIOgexcT6VjngCXpTzdekveQPFBnuoyrEh/
+	JIo7YsY0nAuzNZS8tqdUyfJpoH25n2wPer7n0q1pN7c9GnHEsI3P
+X-Gm-Gg: ASbGncuhdxuFZkSbqaYi/RsaQFeN9AOEEz3e59kXqPRPUsu5tu9JHSx0C3WYIfH2KB7
+	9eEfX/A88MPGSxA2vz2622Gr+Xwe9JCSu2TAYng4+77spID7aDTj8czvEZooj4Wk2Tn2zCyAxgS
+	V8TTNwmtAT3hiEJnHRejxfFuL8SY6hgnQdFCf329Fv/MDH4LWj8Q5tjoQNV/mAf+4wiCBCjBsrq
+	FYWJS4/aXHv5itfAbvK/pvKLXGpiV0Te+aHzFszoGX5XRsN0Inncahabwt+UxuuTba4j39QBJ1s
+	SvFuTVytKHVhO4i+oXXPeWibizHUlm9kTBhlLIKn4PGX6N+qit6oRnIFw9gsP/phpd8zylryLzg
+	l5t0Slrqko3/k
+X-Google-Smtp-Source: AGHT+IHgrMjW9Ba1gwxGTJLcFIR6YYXzawIfwNKz16y8Eau2B+r2Bk5p9TNdYT7x/IbG5+ngKJe5SQ==
+X-Received: by 2002:a05:6000:240a:b0:3a2:133:b1a4 with SMTP id ffacd0b85a97d-3a3499454c3mr257125f8f.13.1747174488910;
+        Tue, 13 May 2025 15:14:48 -0700 (PDT)
+Received: from localhost.localdomain ([102.44.114.188])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3951a97sm3194375e9.23.2025.05.13.15.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 15:14:48 -0700 (PDT)
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+X-Google-Original-From: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+To: shuah@Kernel.org,
+	skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+Subject: [PATCH] selftests: acct: fix grammar and clarify output messages
+Date: Wed, 14 May 2025 01:14:26 +0300
+Message-Id: <20250513221426.303691-1-Abdelrahmanfekry375@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
- <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
- <CACMJSesqtkorg1akuXjMa9U1fe60aDhfGOSB_T6mX5CtCYDwtg@mail.gmail.com>
- <CACRpkdbDNbEpNOLT31+8Jb_fdvnROOtONxFc0hxCFa5AotSwTw@mail.gmail.com> <CAD=FV=XiGJ1uV_s35dwCYwdzoAj4ycXOYRyDZMGLOM9+JY668A@mail.gmail.com>
-In-Reply-To: <CAD=FV=XiGJ1uV_s35dwCYwdzoAj4ycXOYRyDZMGLOM9+JY668A@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 14 May 2025 00:14:20 +0200
-X-Gm-Features: AX0GCFuWZfUikEIaDZtRnObf0sfQM_9zpw_U81pI7XLMffgTeVp1Ek5AnjAJnSs
-Message-ID: <CACRpkdZ_GP3hz1yM+cJk_6U5-tshgnRau1WKdx8PNgoMOZmcHQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
-To: Doug Anderson <dianders@chromium.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 13, 2025 at 5:08=E2=80=AFPM Doug Anderson <dianders@chromium.or=
-g> wrote:
-> On Tue, May 13, 2025 at 2:27=E2=80=AFAM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> >
-> > Hi Dmitry,
-> >
-> > thanks for your patch!
-> >
-> > On Tue, May 6, 2025 at 7:28=E2=80=AFPM Bartosz Golaszewski
-> > <bartosz.golaszewski@linaro.org> wrote:
-> > > On Sat, 3 May 2025 at 07:32, Dmitry Baryshkov
-> > > <dmitry.baryshkov@oss.qualcomm.com> wrote:
-> >
-> > > > +       /*
-> > > > +        * hog pins are requested before registering GPIO chip, don=
-'t crash in
-> > > > +        * gpiochip_line_is_valid().
-> > > > +        */
-> > > > +       if (!chip->gpiodev)
-> > > > +               return 0;
-> > > > +
-> > >
-> > > I really dislike you dereferencing gpiodev here which is (implicitly,
-> > > I know...) very much a private structure for GPIOLIB. Can we move thi=
-s
-> > > into gpiochip_line_is_valid() itself?
-> >
-> > I agree with Bartosz. Patch gpiochip_line_is_valid() so everyone
-> > can benefit from the extended check.
->
-> Any chance we can get a solution landed sooner rather than later?
-> Every time I test mainline I have to account for this bug or my device
-> crashes at bootup. ;-)
+This patch improves the clarity and grammar of output messages in the acct()
+selftest. Minor changes were made to user-facing strings and comments to make
+them easier to understand and more consistent with the kselftest style.
 
-Normally at this point in the development cycle only super-crititcal
-patches go to the -rc (v6.15) but I trust you more than most so I take
-it this is one of those, so we will need to funnel this to Torvalds as
-soon as there is an acceptable patch.
+Changes include:
+- Fixing grammar in printed messages and comments.
+- Rewording error and success outputs for clarity and professionalism.
+- Making the "root check" message more direct.
 
-Yours,
-Linus Walleij
+These updates improve readability without affecting test logic or behavior.
+
+Signed-off-by: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+---
+ tools/testing/selftests/acct/acct_syscall.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/acct/acct_syscall.c b/tools/testing/selftests/acct/acct_syscall.c
+index 87c044fb9293..2c120a527574 100644
+--- a/tools/testing/selftests/acct/acct_syscall.c
++++ b/tools/testing/selftests/acct/acct_syscall.c
+@@ -22,9 +22,9 @@ int main(void)
+ 	ksft_print_header();
+ 	ksft_set_plan(1);
+ 
+-	// Check if test is run a root
++	// Check if test is run as root
+ 	if (geteuid()) {
+-		ksft_exit_skip("This test needs root to run!\n");
++		ksft_exit_skip("This test must be run as root!\n");
+ 		return 1;
+ 	}
+ 
+@@ -52,7 +52,7 @@ int main(void)
+ 	child_pid = fork();
+ 
+ 	if (child_pid < 0) {
+-		ksft_test_result_error("Creating a child process to log failed\n");
++		ksft_test_result_error("Failed to create child process for logging\n");
+ 		acct(NULL);
+ 		return 1;
+ 	} else if (child_pid > 0) {
+-- 
+2.25.1
+
