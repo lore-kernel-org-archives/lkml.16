@@ -1,138 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923319AD8C
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DF441C7F;
+	Tue, 13 May 2025 02:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747103147; cv=none; b=X0jbzKqclaNpsxNDY8zPizHCieGYUwisQuWKORa+xluMoVcDCGE0qoa89ZLy6LZj1z8pNNpO7NZ+s+XwLTJxvIxgJ0vwlJTPhYHUZVwtAw/Ow9o6FryubY+tztNRlFNoOsPfuF4McNrjyekTIQS9iS0fFiL4yAGHUuLdpuUwbwY=
+	t=1747103244; cv=none; b=k+HcYtWkOwN+Ur+ULVBlx9oX3F1ksZ6Cng5hsZ1tZ8vs67TZbWSVVI8wiZ0KEVEy3OVprP8m/J8L9ehKRTrBquJhwUnh2v9Rh3aWHtPIijmkt3zhQnOwxW9tmbe0S1Da6A29TarkBrAjklsezBOf3DR/8xTiXyijhxz8JN7k56Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747103147; c=relaxed/simple;
-	bh=0sh163gF+PxcUY1J/bfW/DhYUxjGTqPg/dyisHzYQd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GjlpW7M1nJhGrv4bkzEIRr0Yl7GcHzuCrtCDqVPWaZaOKswbw+rOaybcZVc/zu0pP3Wzbk9a3Cd1+bvcaw7UV+mtcxlGl2J+s+RjER6kpwyYsu2e9PyJG3ZNZpqhLnT767RYZ33zKDsWzkulDVw1giF3jQ7+fK1RVCY/rYdHcQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MJ4Kpht8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747103244; c=relaxed/simple;
+	bh=98a6Snc/NXc0TR9PbEOFzsCdszqsYw9UelW69TWeBR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1RuaWUiwtehIxn074Xt1MKMXT4cXvqWaSMSo8XE6xzl5Z+s+GvyqQ05Qf0FRJ3PpUPhauE55lq0naPS3LCYfyKJoW6Xax7cRy8xGaOYTs0nJZy/fd8wRSmu8fMYxUB0iAdQWzsk22htZ9j5Fm84FzxmUEMye7UuF4/Hn6AgjhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTOcduti; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MJ4Kpht8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747103143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9dgrXsZWA0vbbTnvHkNfRPIocb/HknSgCRHsF+qYBSQ=;
-	b=MJ4Kpht8j2vfOBJjnDRUW34kYOe0Azis9xD+cycBQDHRptjj/OWt+jlmLAHfdYB9IjamCZ
-	8zYtn0/UCWSVmb+n7r4MYmt4Zn3EJgIs43KiNRvQyoDi7Majd8sxyTGAwzuTnjDn5Pqs/p
-	hFJsQFo/016NL+/Q++CN1oxNcyWgo0Q=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-206-8D2PfANRNYa9xv62jUJf4g-1; Mon,
- 12 May 2025 22:25:39 -0400
-X-MC-Unique: 8D2PfANRNYa9xv62jUJf4g-1
-X-Mimecast-MFC-AGG-ID: 8D2PfANRNYa9xv62jUJf4g_1747103136
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F27E71800258;
-	Tue, 13 May 2025 02:25:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 972F01953B82;
-	Tue, 13 May 2025 02:25:33 +0000 (UTC)
-Date: Tue, 13 May 2025 10:25:26 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com
-Subject: Re: [PATCH] ima: Kdump kernel doesn't need IMA to do integrity
- measurement
-Message-ID: <aCKtlthQWnq+xyat@MiWiFi-R3L-srv>
-References: <20250502200337.6293-1-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTOcduti"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-861b1f04b99so138093039f.0;
+        Mon, 12 May 2025 19:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747103242; x=1747708042; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=azq0tGUBdBCpe+b8W3cDnCoHuYkgjMlpC0CbksCxYv0=;
+        b=KTOcduti2X8HMMMfngP988ohN5FKLlY++FAcXLsErwDc4TEr5p01f289WtWz+SQ4vI
+         VqQUiUCmsMig9HRo+Pz1mkeCDaPqAEKAzGphu53YjJR9Y9jdq50Lu8tmKrO00pXvuOPz
+         j+NO4Ceb7BUqIpMGw5MN2iW4/gc5SGlUWFvEGHrvIY5A9m5oV9UNnPzeVRom9IxdggsL
+         FyGOTWvGrvpAbAAno95FfU236urxARHwENMzyJPkyacqhbGyd1EDmLickYoWfssMBWK6
+         iy+huLb1HD54eyyP/weJIUWX5kNvmeMwVW0xyOjX+nIiqWSNGMFgKKohRd91D67yVn8x
+         NWuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747103242; x=1747708042;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=azq0tGUBdBCpe+b8W3cDnCoHuYkgjMlpC0CbksCxYv0=;
+        b=iFRUniXpEN3oCOkYa2mbduAEbwPvsVPuoK3PjqxXl3suE+GPjq/PNctB/4uJ0OdvyG
+         Kqj78cZQmxbHZo2s3oNdc2f3nu122Yj6JuFFnRIHHjBT//Arp5j3fCSH3uEj7kRRXbW6
+         qKeaSuO8zHKz8+M3uNJdbWLx6dN6nrpzqlUa5VncPFk4xCj2MkOTTfVO1eCHxO/HIBRE
+         s9ZGcA9St1zTsO3q07y7M2UWKxBQPyc0F17HQdaiaXU/ktQ0o0B+Hiw5kPGHG9udQw8h
+         yA78nMDsJkLhMKBpaincDq6NOUiWJuSv+fAZ/PHupas5uRdw7ZLH199uBqy2xVSyVu91
+         A0IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4/mNUuVt0VQ9CQDrKcgrcBzN+Iql4h76Zkc9/Z5Dmytz0yPTpPUzCJ0VC15s61m19UjdTwS3p0mU8Vw==@vger.kernel.org, AJvYcCXNbvWTqYlO+zgocf5B+Pi/IAk3a8V1LT1O9ZaRo4j/dpZtYEuwF68TLzllImrwsQAvpuA44toQLUAOiT2K/Z8M/nmA@vger.kernel.org, AJvYcCXgDcxQeXvwmfJ3hOiddwIcnxp+f0W+qmyd+g9OJpHVGC2YdaXd/pR35wj2n1leJWO9PkFc+39L3xaci9P5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP2Bn5UF0QHumPIS4YmzT7KbI2E44GEgdHzsDmcjr+SRRdnbJA
+	MEDNfjecCh2k5Jb++FgYm8C/V7WEmhDvrT2cZZtl5dD/SY2txghEdUmPIZtXQCV87Uhd3Frusiz
+	kbaMbUT9ILDIiEvsP5Wwwjo743qhnRq0YYIO1EA==
+X-Gm-Gg: ASbGnctkFeRmQBEqWj5vJAPAiGpuMiTmKRPctya4kjVgJmdz6gvWebO/h3+N29h72Ia
+	WH8/oxn83ueojdl+CFI8PDM/pmqb9AyPUDpyiArgyf02Met2C3H2l2lcXkJdI0w5UP1JGG36ZJu
+	oZpWRmVoJ4PL0lDw0JLvQOBXgn4xgW6gY=
+X-Google-Smtp-Source: AGHT+IFfqqqM0qYp1RV8b6+aJrLmSHYVs776COusec5YkuRmhO78WWK5gbTx99FVP7Iy1g3PjpggMOHyAQxltVnIERQ=
+X-Received: by 2002:a05:6e02:1a8d:b0:3d8:1d2d:60b0 with SMTP id
+ e9e14a558f8ab-3da7e1e26e9mr165032355ab.5.1747103242248; Mon, 12 May 2025
+ 19:27:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502200337.6293-1-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+ <20250512024935.64704-3-kerneljasonxing@gmail.com> <20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
+ <CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com> <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
+In-Reply-To: <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 13 May 2025 10:26:45 +0800
+X-Gm-Features: AX0GCFt-It6JU-VSizNKEH2nMqzT2SRUTafCnyqDEsiL8cxKunhyC1lIzE3Gk_U
+Message-ID: <CAL+tcoD+VrRfAGMjj=9uAbanMO=W+cW0xgxMzVwrpiTgagmQ2w@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics function
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05/02/25 at 01:03pm, steven chen wrote:
-> From: Steven Chen <chenste@linux.microsoft.com>
-> 
-> Kdump kernel doesn't need IMA to do integrity measurement.
-> Hence the measurement list in 1st kernel doesn't need to be copied to
-> kdump kenrel.
-> 
-> Here skip allocating buffer for measurement list copying if loading
-> kdump kernel. Then there won't be the later handling related to
-> ima_kexec_buffer.
-> 
-> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_kexec.c | 3 +++
->  1 file changed, 3 insertions(+)
+On Tue, May 13, 2025 at 10:04=E2=80=AFAM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Tue, 13 May 2025 09:48:15 +0800 Jason Xing <kerneljasonxing@gmail.com>=
+ wrote:
+>
+> > > > +{
+> > > > +     unsigned int i, full_counter =3D 0;
+> > > > +     struct rchan_buf *rbuf;
+> > > > +     int offset =3D 0;
+> > > > +
+> > > > +     if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
+> > > > +             return;
+> > > > +
+> > > > +     if (len < RELAY_DUMP_BUF_MAX_LEN)
+> > > > +             return;
+> > >
+> > > So we left the memory at *buf uninitialized but failed to tell the
+> > > caller this.  The caller will then proceed to use uninitialized memor=
+y.
+> > >
+> > > It's a programming error, so simply going BUG seems OK.
+> >
+> > Are you suggesting that I should remove the above check because
+> > developers should take care of the length of the buffer to write
+> > outside of the relay_dump function? or use this instead:
+> > WARN_ON_ONCE(len < RELAY_DUMP_BUF_MAX_LEN);
+> > ?
+>
+> It's a poor interface - it returns uninitialized data while not
+> alerting the caller to this.  You'll figure something out ;)
+>
+> Perhaps
+>
+>         BUG_ON(len < RELAY_DUMP_BUF_MAX_LEN);
 
-I applied this patch on top of below IMA patchset, and did a test.
-[PATCH v13 0/9] ima: kexec: measure events between kexec load and execute
+I'm unsure if BUG_ON is appropriate here since technically speaking
+it's not a bug. For now, only sizeof(u32) is used in the buffer.
 
-When I loaded kdump kernel as below with '-d' specified:
+>         *buf =3D '\0';
+>         if (!chan || (flags & ~RELAY_DUMP_MASK))
+>                 return;
+>
+> We don't need to check for !buf - the oops message contains the same info=
+.
 
-/sbin/kexec -s -d -p --command-line=BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.0-rc6+ ro console=ttyS0,115200N81 irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 acpi_no_memhotplug transparent_hugepage=never nokaslr hest_disable novmcoredd cma=0 hugetlb_cma=0 pcie_ports=compat disable_cpu_apicid=0 --initrd=/boot/initramfs-6.15.0-rc6+kdump.img /boot/vmlinuz-6.15.0-rc6+
+Got it. Thanks.
 
-I can see that this patch works to skip copying measurement list to kdump
-kernel as expected..
+>
+> Maybe we don't need to check !chan either.  Can it be NULL here?
 
-=====Without this patch===
-[48522.060422] kexec_file: kernel: 000000006fbcb87f kernel_size: 0xe99200
-[48522.067742] PEFILE: Unsigned PE binary
-[48522.094849] ima: kexec measurement buffer for the loaded kernel at 0x6efff000.
-[48522.102982] crash_core: Crash PT_LOAD ELF header. phdr=00000000cae5d7e6 vaddr=0xffff8da640100000, paddr=0x100000, sz=0x5af00000 e_phnum=67 p_offset=0x100000
-......snip...
-=====
+It depends on how users call this. If users call this without
+initialization of chan, relay_dump() can avoid the crash. It works
+like kfree() which prevents the NULL object from being freed.
 
-=====With this patch applied====
-[ 2101.704125] kexec_file: kernel: 0000000046d8985c kernel_size: 0xeab200
-[ 2101.711436] PEFILE: Unsigned PE binary
-[ 2101.734752] crash_core: Crash PT_LOAD ELF header. phdr=000000006fc83a51 vaddr=0xffff899480100000, paddr=0x100000, sz=0x5af00000 e_phnum=67 p_offset=0x100000
-......snip...
-=====> 
+BTW, should I merge this commit [1] into the series in V2 so that you
+can easily review?
 
-My only concern is the patch subject is not very sepcific, it better
-relfect the exact action taken in this patch, like:
+[1]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@gma=
+il.com/
 
-ima: do not copy measurement list to kdump kernel
-
-Other than above concern, please feel free to add my:
-
-Tested-by: Baoquan He <bhe@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 38cb2500f4c3..7362f68f2d8b 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	void *kexec_buffer = NULL;
->  	int ret;
->  
-> +	if (image->type == KEXEC_TYPE_CRASH)
-> +		return;
-> +
->  	/*
->  	 * Reserve extra memory for measurements added during kexec.
->  	 */
-> -- 
-> 2.43.0
-> 
-
+Thanks,
+Jason
