@@ -1,326 +1,191 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2066.outbound.protection.outlook.com [40.107.22.66])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2D22BEC2A;
-	Tue, 13 May 2025 16:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153223; cv=fail; b=JrkXejcJOkoVZmZz5rmrlDyYWi1dFL8rLQLRA9kIgK7Jhg6qLxn8FylI27+idpDicoxpRAiWE/O9DiQspewIWjhCov7Pvd/kR2BT1z1SwhERbrTorzKbaQS4PpHN4czNOc9ckjzJeb0nZY6MmG1VeQdqa3aev/Nqeqnmeh7aPeY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747153223; c=relaxed/simple;
-	bh=RVF5ViFcozAy+CfIIu9Gua1PQr91xsgjVwm/TuHwqE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S61oIe+6qQJQICP5nozLmhRn+7Isqu/jC2TCOnE7hYBNsUkuUcTWGJlUNEF4uOS1subuS6zv28l7k6u/QOrJOKJppf5qlAeN4EAU+HFeZtUg4xl6iDF52HgfE4bqOrcjInp3XBtM4bwnP35aGGviHeloqzrB32gxV4iHPuG1sQM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=DTsx7kB/; arc=fail smtp.client-ip=40.107.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355562BF3DE
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747153232; cv=none; b=tCEV8raDhTici8+aUFLhfj7z2YYbG+qs+5nC8nW3/PyPlv35E4mhyhKVmKfFJDgCkHOkGJoyw7DsAC54gGnyn6rgOzqxvWYmMQej+3jd3ptkZ3D8k3Hk5sM8qZQPzIkgmWUWLymHpcvdMkVYwRxV8fnPn/1DEyB5TadTvFeKeAs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747153232; c=relaxed/simple;
+	bh=p6PCSkSdSaZ/NJpmcH4VjI/9YpSMDFDuXD6Vn7ggxi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jrb3APCehcLG6fHQJzN3xnrgRyZmDMLhEVr1TaZsa2RAlw0WdUqtQewcPCyUBpUKY+qGgnivHTjgl8naQVW+uOqESJBZDmjNSpvhcvSf8QOogfoMsG5qjREWHPS8iNPdGIdSGDqfTWdT72CkniJEDNGxQKinE1tMtr1+SWGAtYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQr27ZOk; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="DTsx7kB/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CPUxBzcxbMF+1dvJMcg8SrCjbkHScFEZ6j7cvZPPh30skQS95EhZGjMAsmUzkSh37vkn2nNTQbX3/uqkYhKyBJXvUvHPnKgjsdN1PdscMVb9NxasSWOMdoIpf7Z9BwEGzGk+ePwyC110fK/xmuS/yLiHxfDi7TDGKM6141aFRlBRSWEkS14eyNMQ57CF2M4BTTy+VIcZSijLQbRDCXTBVRMkhczcAcyPY7ZJqMLP7kSrMfy31GYXtJ5ghyvv8wTOACXILCiyUjfGlhhydOO+UrQcPxekGbmlr1QP50Zc6k/dmhNaesw8Hgew/nSTGqwwC9PDJWTI8VEqu9/Pnl5/9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JfYly4m1xhrA/vLI1EL5BqOEJed0LZ5VAJbT7NH/gjY=;
- b=k+Om9u4lnMiqrZW1XPQ0D9AFSkyab+4Jkb2Wr8GzNdunnmIoQ5vDw0k8JaiCnXOBtB8Zr8pJPELiwNQXG797W/Il0FxmNRqeE365uVt6ZwS5PsPnn9fdgV+0sw9Qt6b2j5m0G5FJBPQcEAsaq5tlWKZfsc2sR/ZN/RXV3zx+mWHp/EC1e5pEJzTI0uqU6ShSag6aFBKWYQUZTeoWv2Gnap9fLg4zz/q7ckJlM8tz6EdURHtXvHuDIItqExP9mij6ZBXU0R1XNNt+jAHfCjuDMaRH5z3anWAsAerzZrAfLG8NWkz4YT5pmoyutc1le0TLK/J0u9zXpo9UwxvKtW65BQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfYly4m1xhrA/vLI1EL5BqOEJed0LZ5VAJbT7NH/gjY=;
- b=DTsx7kB/Rv33U87q0D/0xZq73oVJgIiIJuCR7VZ0KGtiWchqlAT4ljSyRRIe5fgHb6DkKccT9qkJGdC+8ioyvFVzrgKwvuy8txVKJ05957qL6nbZ2xpZMGvBtt7HxbVB+wTt5qs+UJh+76SzmabpE5bKDzZxt7nSibD4U0+V2uRFB0JV8FvUbVD2x/9ze/7d/HVw4DPE/MVsxEasu6wQZ4Heq0srTjp8F2RQOhMLjezDCYsCXqrLkvvfAadYyvR1jRdwE3EGegbFOGt3Ap7RECQ0svJ83nA+bypn+L+giuAzikC8293VZc/H2UoD6DpZKZObCo+DghDcl00QsvWS8A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from DB6PR03MB3062.eurprd03.prod.outlook.com (2603:10a6:6:36::19) by
- AM9PR03MB6724.eurprd03.prod.outlook.com (2603:10a6:20b:280::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 16:20:18 +0000
-Received: from DB6PR03MB3062.eurprd03.prod.outlook.com
- ([fe80::b201:e423:f29:53b]) by DB6PR03MB3062.eurprd03.prod.outlook.com
- ([fe80::b201:e423:f29:53b%4]) with mapi id 15.20.8678.033; Tue, 13 May 2025
- 16:20:18 +0000
-From: Markus Burri <markus.burri@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Markus Burri <markus.burri@mt.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manuel Traut <manuel.traut@mt.com>,
-	Marek Vasut <marex@denx.de>,
-	linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Markus Burri <markus.burri@bbv.ch>
-Subject: [PATCH v3 5/7] rtc-rv8803: extend sysfs to read status
-Date: Tue, 13 May 2025 18:19:20 +0200
-Message-Id: <20250513161922.4064-6-markus.burri@mt.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250513161922.4064-1-markus.burri@mt.com>
-References: <20250513161922.4064-1-markus.burri@mt.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI1P293CA0019.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:3::16) To DB6PR03MB3062.eurprd03.prod.outlook.com
- (2603:10a6:6:36::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQr27ZOk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747153231; x=1778689231;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p6PCSkSdSaZ/NJpmcH4VjI/9YpSMDFDuXD6Vn7ggxi4=;
+  b=BQr27ZOkoK4raFM7M3toAS4kvy17SaX2pQdpzXL7T4KPzlteqE43ltKX
+   4omoc4/cJH1t+CBHdV92ctUx89cqdNLHiYlUVzQuHJ8YUn6L2rrgkefhS
+   ApgWINyiZs5eBRQzIlN61xk4LGEzRtlTC3PMPLlKCeEgORmhqrYa3yGI3
+   k2ZCsSdI97W/D0BEDm0thEEW0RZ/FmUJapEZCSRhYK9gtmsZi20FKCqh8
+   BdXFXv8kg6jZWAzjHLErKWmNQuxvVGodcvD98wRDHsDWfGC5fo5VK3QYB
+   VmL+/rz3H0XdD5XLfEm06QgujZCO44B/TWl2tdydZOy53CHaJVC0QhsvN
+   w==;
+X-CSE-ConnectionGUID: EPE9V0t/Rx6X5TIxQpH9EA==
+X-CSE-MsgGUID: lTunyx8CSWmllolkcvk6RQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48887654"
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="48887654"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:20:29 -0700
+X-CSE-ConnectionGUID: tVCcoLQWSXuG6JUNJY1H9Q==
+X-CSE-MsgGUID: 2H6nEzQwRmqkphMJf6o3/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="142712431"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:20:28 -0700
+Date: Tue, 13 May 2025 09:20:26 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Drew Fustini <dfustini@baylibre.com>
+Subject: Re: [PATCH v4 12/31] fs/resctrl: Improve handling for events that
+ can be read from any CPU
+Message-ID: <aCNxSjUEFREUS8zG@agluck-desk3>
+References: <20250429003359.375508-1-tony.luck@intel.com>
+ <20250429003359.375508-13-tony.luck@intel.com>
+ <e818906f-b03a-474b-8a6b-d291cf1a74fe@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB6PR03MB3062:EE_|AM9PR03MB6724:EE_
-X-MS-Office365-Filtering-Correlation-Id: 411e08e4-56b3-4833-65e9-08dd923a0d66
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nVr6Jbtg8aH5Z20LYtqyaJnLJO3JfezAYclNz0Rva56GOIeX0OxB0Im7FC4j?=
- =?us-ascii?Q?9C3o5cY+ODbAOUNVO+f5Myhfmir+TNdcWbaNu9yY6A9bSalDAvZXdv2FVwJA?=
- =?us-ascii?Q?Rvu3p77JziwjkNFHBfKxhLPP5/POwgZ62OgCm+OLhb/xjx1WGI+RksZBWELM?=
- =?us-ascii?Q?a/VeWdkDbOAdk8Lv1EwxSnRoA5la/hzPRC3DaoFKmRdzbkUWfQbP2Vw5j7gS?=
- =?us-ascii?Q?/0K+OZL3GaqU98WVXzYMw479Uufe3MPDHRFzgiavUcTk85PQhXiBTVyOtzs6?=
- =?us-ascii?Q?TeTbkNO3HwveNJGVWbSasHIQ0pcLXAljU7SgNeDU1R+V9nh+Q8cF81NFvpCN?=
- =?us-ascii?Q?217ZCe+klSsq6MBAyPTLK6ewRSOoBa50pTZ+mypBiz6QKHyIJE5uZtIwWp3Z?=
- =?us-ascii?Q?IKnD3WeDRlsEkxCiYKc6ukVzlBCTPCFzJHqfeYDA2FVJNQSg8IuOTMaUUYUX?=
- =?us-ascii?Q?uP361HfgU8lQAq8+4jvsviGi8/aeF7royztJ6EF1N9jlPcqA4jlyXmmQEfgt?=
- =?us-ascii?Q?N/VDcPsFxtC9Bnh3qluwSEOVIKAo9lPcKouGh0iFTH/pBpTIyQYfBSMdwY29?=
- =?us-ascii?Q?G1gx2/eQKLm/x25yKagkTbOBELjLdIhKykcAZw5rqsgdeiToxbgZtZeCtdU8?=
- =?us-ascii?Q?KaRl80cy7VH7NPC896Ue7vfg3Jbcu0wKz4yJQojVGgm/xfdqA0WWACThK+uU?=
- =?us-ascii?Q?atnd5BQeiBBuwWDtK2gz+mkEZ/Xwq2sA67FuDllA8pLbZJaCH1LEjUGonNCF?=
- =?us-ascii?Q?GJZBo+TBK9DynojJG1uOoOfsnTuV213gHuw5GoaBl/NLfjbUPwv8pAYtLjM7?=
- =?us-ascii?Q?QLc62zYzmght6fJxY5FoEST4R2tcxxA76s68z6x+RyZblTsH5Nqvv2LPYiSp?=
- =?us-ascii?Q?mqTwPRmr3hKRNxJar1udKrwQvi0hbmb2HFGbNswAu5g+opKcjQO/wif4k07q?=
- =?us-ascii?Q?VplWE1HlNG12gt7+9AKakaMMd+JUDp37XRe1zVwwb8UfQSKez9s9A3c6ux66?=
- =?us-ascii?Q?N3e8gK43l6pI6VCpjijAp0dCSqS6kRQVHdfKh8wrYM5vMrYJynL2S7mwUFh6?=
- =?us-ascii?Q?U4bhQTBlQrZapkMbPfpkRod4EkE/dXN446RJqXPAsgoZvgOP/b/tHJMbTjD7?=
- =?us-ascii?Q?0Qh+NP+unI7f0aQA2wAgNrUlwPz73/MEbT1KvWfHV1+MAtk3ongi2lI1JkgT?=
- =?us-ascii?Q?XWXDVOfm/Qp2w/92Kf7qQ2ERmVfVEKvTOvZnd6cPpPFIGyEzvEaFRVim0L3X?=
- =?us-ascii?Q?lKdNCB5KYhuY83OJqoCWRCPSELhfdc6RAoWwjTqwy3ErGaeYVYQuU57wYMVt?=
- =?us-ascii?Q?iz9KajYvz94G4rV68IZJqPT5iGJxSzLSwZUtrIQb0fdJ8C9Hv6MMMURrMPi/?=
- =?us-ascii?Q?6tSctwOGyM/Q8zq8m1/I3bF8d2OmlT4nncU9oBiMb8w7yJdZ20nm3OwuzFuS?=
- =?us-ascii?Q?dCnnc3nMNY0bFsiydbK08NTI0O1HqCNY6O+Km4ArnGCy47D+Xod19Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR03MB3062.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?opfNaTWlnl15YNfyNPv4nd4yDb0qSrKjjAksIfv7pSSprgZoanQPibvrK+8H?=
- =?us-ascii?Q?S0mT0VFRNdopFPf7WLXeUKok2q6ddz6vfgnYZDM7G3MpuNQtvmuq0FmAKvX7?=
- =?us-ascii?Q?/qqPIGbmrIBCI5n1Aj+4JGDyf6piiirs508obg/fbeS+GadpS1LrGTBNCE4O?=
- =?us-ascii?Q?9AMbiPdMwBo/SavsJAXtie7MSmt5XKHcY3F6ZxqzMGP9/y4SoLBxpexRdjqU?=
- =?us-ascii?Q?yfZowzbTFlOPzJASqk7WeQmrSIPeTm8OvC1DA3pOrhaSGQ/RfP/9P5v8hgcy?=
- =?us-ascii?Q?JMskg58i+AccdC9Dyr8qOqoLyUuHw7/RImoPrnQ3EG34WwzKtG4k2vRSzBnh?=
- =?us-ascii?Q?ogdkLkaP3kwOmt85/zKqDD67mS0YRfSUXoK5kDeJf3kCTncfAw409LIRcQOZ?=
- =?us-ascii?Q?FUngM36fO3Lt9BmyCk1xk/dpyvPwOINDCBF3BgsvP0OtRW73GtMQMsFn7Qf9?=
- =?us-ascii?Q?V4vYyMuourYoCK3Io5t4h5ie90oztYKaelPAJdOfDrTjL1Y0LY1L+/LaECfA?=
- =?us-ascii?Q?94ORKdoxi3whdS7/xBOconyEGKo1EPWp9bFdCWfdjR1pb8veJW1o+BJhxn8k?=
- =?us-ascii?Q?+srk+PdLg/GoAUx7KEn/0VkHwMSOy47pXd8WBaaVLnDJTfvi2yAXXQS2zDua?=
- =?us-ascii?Q?9iMiL08iDOBnYzt6+gpQnMjm4txF6P1eAdriNSW3bkV2NTaDhiRid6FAD9OJ?=
- =?us-ascii?Q?Gwk6PDwAfaYKLHsf5cqQyEiuGziDHthCi4QQpDrIsgw3LUlf7xFUjsDApu09?=
- =?us-ascii?Q?1f7utTbXFStr0hU8FUyvnXMKkWd7T/2UvL+QL2S5WeguzcJi1BKVjKgQqo4v?=
- =?us-ascii?Q?SCPFlBqwEn/61rChNOmG7B9CwGKI1HaoDPBeX7uVQ5hd9sOLFD2asnMwIkfy?=
- =?us-ascii?Q?IYFIHThvI2RWNnYvxoxcU8GQLrTXGNkRnwkVYbC6z9Vqxr6PjbuLjWqU9EGf?=
- =?us-ascii?Q?fr79HaYO85Z4dMsdSltaKTbsGXzjCFivhLKIQybo+mOQsMS1KjHReVUsJ4u+?=
- =?us-ascii?Q?OLitIy3zCTWF3YyxcCLPDHklzYKaADg09zSNltsPg5ArrGkydsG2u84kDqbo?=
- =?us-ascii?Q?pHDD24UI+ZTlz1M4g5B489LaPVPfyrblg7/paL/9DJri0Gg/61wAKwcO2Pnb?=
- =?us-ascii?Q?T273cU6fJ8Bhy74qdajwDsq4dXIxBdfKH3B1yU000X/aFYqgqa0vYH0PSUlk?=
- =?us-ascii?Q?HdFzxVgpl8MUeuPDCytQPYO5fcyOmek1V3nx6acfxCxBh97L4VSQL0DoqebN?=
- =?us-ascii?Q?pZmX6YJDEi1F/Vd9YkbqilSGqxTKzQJYAeB1YrvFoNP15iN/1bQ+t70mvkjE?=
- =?us-ascii?Q?29fBtS/pjSD6FMSXTbI7q+2oQGLl+n0jBV8l3j0yS/At24HwJf3SLbG8F8E6?=
- =?us-ascii?Q?U4CGxsbiiFl4Bv3gSL3jFf0xCVdEsFKnLCG5ugq/OuVzsZIBb3rYa9vNkLXB?=
- =?us-ascii?Q?RYgIIBUVirwxbo/Cnxp1wwLDXUCI5FXAi1YsgCkE4yBgjLS/99GEHtMq8ToH?=
- =?us-ascii?Q?XqltrBRYnvyo5Hpbj9n+HuVOPiwzAaDESvoxM8272HVxWDkYMq1TfjiFfNK7?=
- =?us-ascii?Q?bOXg5MKn+eQrE8CB7tzsGtKTosC5ZTUWgXXsnwYX?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 411e08e4-56b3-4833-65e9-08dd923a0d66
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR03MB3062.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 16:20:18.8336
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hFvmcTdWkNuTxYsi+SNdAVyuz+TCIv7KfNOkTk1JgFFddiGfIuBhRc+dnjhSzNSunVxYsEdEuoWznl3bDrtAWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR03MB6724
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e818906f-b03a-474b-8a6b-d291cf1a74fe@intel.com>
 
-Add sysfs functionality to read the status and configuration.
-The functions provide the number of stored timestamp events, the current
-EVIN pin configuration and the enabled/disabled status.
+On Tue, May 13, 2025 at 11:19:23AM +0800, Chen, Yu C wrote:
 
-Signed-off-by: Markus Burri <markus.burri@mt.com>
-Reviewed-by: Manuel Traut <manuel.traut@mt.com>
----
- .../ABI/testing/sysfs-class-rtc-tamper        |   8 ++
- drivers/rtc/rtc-rv8803.c                      | 106 ++++++++++++++++++
- 2 files changed, 114 insertions(+)
+Thanks for the bug report.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-rtc-tamper b/Documentation/ABI/testing/sysfs-class-rtc-tamper
-index 2fd6578a6bd9..b3aa73c81c6b 100644
---- a/Documentation/ABI/testing/sysfs-class-rtc-tamper
-+++ b/Documentation/ABI/testing/sysfs-class-rtc-tamper
-@@ -26,3 +26,11 @@ KernelVersion:	6.13
- Contact:	Markus Burri <markus.burri@mt.com>
- Description:	(WO) Attribute to trigger an internal timestamp event
- 		Write a '1' to trigger an internal event and store a timestamp.
-+
-+What:		/sys/class/rtc/rtcX/tamper/status
-+Date:		January 2025
-+KernelVersion:	6.13
-+Contact:	Markus Burri <markus.burri@mt.com>
-+Description:	(RO) Attribute to read configuration and status for EVINx and buffer.
-+		Provide the number of stored timestamp events, the current EVIN pin configuration
-+		and the enabled/disabled status.
-diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
-index 8f9bcce6351c..d4b1e04c97de 100644
---- a/drivers/rtc/rtc-rv8803.c
-+++ b/drivers/rtc/rtc-rv8803.c
-@@ -84,8 +84,11 @@
- 
- #define RX8901_EVNT_INTF		0x47
- 
-+#define RX8901_BUF_OVWF			0x4F
-+
- #define NO_OF_EVIN			3
- 
-+#define EVIN_FILTER_FACTOR		125
- #define EVIN_FILTER_MAX			40
- 
- enum rv8803_type {
-@@ -116,6 +119,26 @@ struct cfg_val_txt {
- 	bool hide;
- };
- 
-+static const struct cfg_val_txt pull_resistor_txt[] = {
-+	{ "no", no },
-+	{ "PU/500k", pull_up_500k },
-+	{ "PU/1M", pull_up_1M },
-+	{ "PU/10M", pull_up_10M },
-+	{ "PD/500k", pull_down_500k },
-+	{ "no", 0b101, 1 },
-+	{ "no", 0b110, 1 },
-+	{ "no", 0b111, 1 },
-+	{ NULL }
-+};
-+
-+static const struct cfg_val_txt trigger_txt[] = {
-+	{ "falling", falling_edge },
-+	{ "rising", rising_edge },
-+	{ "both", both_edges },
-+	{ "both", 0b11, 1 },
-+	{ NULL }
-+};
-+
- static const struct cfg_val_txt trg_status_txt[] = {
- 	{ "EVIN1", BIT(5) },
- 	{ "EVIN2", BIT(6) },
-@@ -632,6 +655,16 @@ static int rv8803_nvram_read(void *priv, unsigned int offset,
- 	return 0;
+> get warning like below:
+> BUG: using smp_processor_id() in preemptible [00000000] code: mount/1595
+> caller is __mon_event_count+0x2e/0x1e0
+> 2483 [ 2095.332850] Call Trace:
+> 2484 [ 2095.332861]  <TASK>
+> 2485 [ 2095.332872]  dump_stack_lvl+0x55/0x70
+> 2486 [ 2095.332887]  check_preemption_disabled+0xbf/0xe0
+> 2487 [ 2095.332902]  __mon_event_count+0x2e/0x1e0
+> 2488 [ 2095.332918]  mon_event_count+0x2a/0xa0
+> 2489 [ 2095.332934]  mon_add_all_files+0x202/0x270
+> 2490 [ 2095.332953]  mkdir_mondata_subdir+0x1bf/0x1e0
+> 2491 [ 2095.332970]  ? kcore_update_ram.isra.0+0x270/0x270
+> 2492 [ 2095.332985]  mkdir_mondata_all+0x9d/0x100
+> 2493 [ 2095.333000]  rdt_get_tree+0x336/0x5d0
+> 2494 [ 2095.333014]  vfs_get_tree+0x26/0xf0
+> 2495 [ 2095.333028]  do_new_mount+0x186/0x350
+> 2496 [ 2095.333044]  __x64_sys_mount+0x101/0x130
+> 2497 [ 2095.333061]  do_syscall_64+0x54/0xd70
+> 2498 [ 2095.333075]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Hmmm. You are right, but I didn't see this. Perhaps it only shows
+if CONFIG_DEBUG_PREEMPT is set?
+
+> Maybe avoid getting the CPU at all in __mon_event_count() if
+> evt->any_cpu is true?
+> 
+> thanks,
+> Chenyu
+> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+> index d9364bee486e..32385c811a92 100644
+> --- a/fs/resctrl/monitor.c
+> +++ b/fs/resctrl/monitor.c
+> @@ -358,12 +358,15 @@ static struct mbm_state *get_mbm_state(struct
+> rdt_l3_mon_domain *d, u32 closid,
+> 
+>  static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+>  {
+> -       int cpu = smp_processor_id();
+>         struct rdt_l3_mon_domain *d;
+>         struct mbm_state *m;
+> -       int err, ret;
+> +       int err, ret, cpu;
+>         u64 tval = 0;
+> 
+> +       /*only CPU sensitive event read cares about which CPU to read from
+> */
+> +       if (!rr->evt->any_cpu)
+> +               cpu = smp_processor_id();
+> 
+> tele
+
+I might fix with a helper just in case some compiler doesn't keep track
+and issues a "may be used before set" warning.
+
+-Tony
+
+
+diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+index ddfc1c5f60d6..6041cb304624 100644
+--- a/fs/resctrl/monitor.c
++++ b/fs/resctrl/monitor.c
+@@ -356,9 +356,24 @@ static struct mbm_state *get_mbm_state(struct rdt_l3_mon_domain *d, u32 closid,
+ 	return states ? &states[idx] : NULL;
  }
  
-+static char *cfg2txt(const struct cfg_val_txt *cfg, u8 value)
++static bool cpu_on_wrong_domain(struct rmid_read *rr)
 +{
-+	do {
-+		if (cfg->val == value)
-+			return cfg->txt;
-+	} while (++cfg && cfg->txt);
++	cpumask_t *mask;
 +
-+	return NULL;
++	if (rr->evt->any_cpu)
++		return false;
++
++	/*
++	 * When reading from a specific domain the CPU must be in that
++	 * domain. Otherwise the CPU must be one that shares the cache.
++	 */
++	mask = rr->d ? &rr->d->hdr.cpu_mask : &rr->ci->shared_cpu_map;
++
++	return !cpumask_test_cpu(smp_processor_id(), mask);
 +}
 +
- static int rv8803_ts_event_write_evin(int evin, struct rv8803_data *rv8803,
- 				      enum evin_pull_resistor pullup_down,
- 				      enum evin_trigger trigger, int filter)
-@@ -935,14 +968,87 @@ static ssize_t trigger_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
+ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+ {
+-	int cpu = smp_processor_id();
+ 	struct rdt_l3_mon_domain *d;
+ 	struct mbm_state *m;
+ 	int err, ret;
+@@ -373,11 +388,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+ 	}
  
-+static ssize_t status_show(struct device *dev, struct device_attribute *attr,
-+			   char *buf)
-+{
-+	int evin_en, evin_cfg, evin_flt, buf1_cfg, buf1_stat, buf_ovwf;
-+	int i;
-+	int offset = 0;
-+	u8 ev_pullupdown[NO_OF_EVIN];
-+	u8 ev_trigger[NO_OF_EVIN];
-+	int ev_filter[NO_OF_EVIN];
-+
-+	struct i2c_client *client = to_i2c_client(dev->parent);
-+	struct rv8803_data *rv8803 = dev_get_drvdata(dev->parent);
-+
-+	scoped_guard(mutex, &rv8803->flags_lock) {
-+		evin_en = rv8803_read_reg(client, RX8901_EVIN_EN);
-+		if (evin_en < 0)
-+			return evin_en;
-+
-+		for (i = 0; i < NO_OF_EVIN; ++i) {
-+			evin_cfg = rv8803_read_reg(client, evin_cfg_regs[i]);
-+			evin_flt = rv8803_read_reg(client, evin_flt_regs[i]);
-+			if (evin_cfg < 0 || evin_flt < 0)
-+				return -EIO;
-+
-+			ev_pullupdown[i] = FIELD_GET(RX8901_EVENTx_CFG_PUPD, evin_cfg);
-+			ev_trigger[i] = FIELD_GET(RX8901_EVENTx_CFG_POL, evin_cfg);
-+			ev_filter[i] = EVIN_FILTER_FACTOR * evin_flt;
-+		}
-+
-+		buf1_cfg = rv8803_read_reg(client, RX8901_BUF1_CFG1);
-+		buf1_stat = rv8803_read_reg(client, RX8901_BUF1_STAT);
-+		buf_ovwf = rv8803_read_reg(client, RX8901_BUF_OVWF);
-+		if (buf1_stat < 0 || buf1_stat < 0 || buf_ovwf < 0)
-+			return -EIO;
-+	}
-+
-+	offset += sprintf(buf + offset, "Mode: %s\n\n",
-+			  FIELD_GET(BIT(6), evin_en) ? "direct" : "fifo");
-+	offset += sprintf(buf + offset, "Event config:\n");
-+	offset += sprintf(buf + offset, "  %-13s  %-7s %-7s %-7s\n", "", "EVIN1", "EVIN2", "EVIN3");
-+	offset += sprintf(buf + offset, "  %-13s  %-7ld %-7ld %-7ld\n", "Enable",
-+			  FIELD_GET(BIT(0), evin_en), FIELD_GET(BIT(1), evin_en),
-+			  FIELD_GET(BIT(2), evin_en));
-+	offset += sprintf(buf + offset, "  %-13s  %-7ld %-7ld %-7ld\n", "Capture",
-+			  FIELD_GET(BIT(3), evin_en), FIELD_GET(BIT(4), evin_en),
-+			  FIELD_GET(BIT(5), evin_en));
-+
-+	offset += sprintf(buf + offset, "  %-13s  %-7s %-7s %-7s\n", "Pull-resistor",
-+			  cfg2txt(pull_resistor_txt, ev_pullupdown[0]),
-+			  cfg2txt(pull_resistor_txt, ev_pullupdown[1]),
-+			  cfg2txt(pull_resistor_txt, ev_pullupdown[2]));
-+	offset += sprintf(buf + offset, "  %-13s  %-7s %-7s %-7s\n", "Edge",
-+			  cfg2txt(trigger_txt, ev_trigger[0]),
-+			  cfg2txt(trigger_txt, ev_trigger[1]),
-+			  cfg2txt(trigger_txt, ev_trigger[2]));
-+	offset += sprintf(buf + offset, "  %-13s  %-7d %-7d %-7d\n\n", "Filter [ms]",
-+			  ev_filter[0], ev_filter[1], ev_filter[2]);
-+
-+	offset += sprintf(buf + offset, "Buffer config:\n");
-+	offset += sprintf(buf + offset, "  %-13s  %-10s\n", "Mode",
-+			  (FIELD_GET(BIT(6), buf1_cfg) ? "overwrite" : "inhibit"));
-+	offset += sprintf(buf + offset, "  %-13s  %-10s\n", "Status",
-+			  (FIELD_GET(BIT(7), buf1_stat) ? "full" : "free"));
-+	offset += sprintf(buf + offset,  "  %-13s  %-10ld\n", "Overrun",
-+			  (FIELD_GET(BIT(4), buf_ovwf)));
-+	offset += sprintf(buf + offset,  "  %-13s  %-10ld\n", "No of data",
-+			  (FIELD_GET(GENMASK(5, 0), buf1_stat)));
-+
-+	return offset;
-+}
-+
- static DEVICE_ATTR_WO(enable);
- static DEVICE_ATTR_ADMIN_RO(read);
- static DEVICE_ATTR_WO(trigger);
-+static DEVICE_ATTR_RO(status);
+ 	if (rr->d) {
+-		/*
+-		 * Unless this event can be read from any CPU, check
+-		 * that execution is on a CPU in the domain.
+-		 */
+-		if (!rr->evt->any_cpu && !cpumask_test_cpu(cpu, &rr->d->hdr.cpu_mask))
++		if (cpu_on_wrong_domain(rr))
+ 			return -EINVAL;
+ 		rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid,
+ 						 rr->evt->evtid, &tval, rr->arch_mon_ctx);
+@@ -389,11 +400,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+ 		return 0;
+ 	}
  
- static struct attribute *rv8803_rtc_event_attrs[] = {
- 	&dev_attr_enable.attr,
- 	&dev_attr_read.attr,
- 	&dev_attr_trigger.attr,
-+	&dev_attr_status.attr,
- 	NULL
- };
+-	/*
+-	 * Unless this event can be read from any CPU, check that
+-	 * execution is on a CPU that shares the cache.
+-	 */
+-	if (!rr->evt->any_cpu && !cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
++	if (cpu_on_wrong_domain(rr))
+ 		return -EINVAL;
  
--- 
-2.39.5
-
+ 	/*
