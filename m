@@ -1,73 +1,35 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9C6212FA2
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C9C157A55;
+	Tue, 13 May 2025 22:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747176509; cv=none; b=Vz2+nZJI/KECRaWEaLmafQ2MRfGn/vQetciL1fnwJFUogS3GCRw5V0lmmsUu9zjvp2nbWyYf6TdWk7dbYNeJU2AKuLrSgHQiLwkOsw+TAQM3sv2y6uQ6bk2PPLwTnEBBsWkJpwdEqQPQ1uzRsD2x5qLh6d0aaAt+27zG9F7ni5w=
+	t=1747176592; cv=none; b=P8fK3ICfrQUMIM+VqkN7COD59KRxFvdmSTC9CDWue74/BvnWmBLuL5wtsOZK8jZZUVXyiNRRJGjNlcveDjtjlrbsyUAe1kWWbHgPI0pDk18ZUGG7tAbHcK47kyauWyqtmCJ9+wMOdE+kwPcGHIkxD9kdbRD+vHtrW61ou7lOJEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747176509; c=relaxed/simple;
-	bh=U601SMudynNSsZjIuOIkDQ3ktITnRD+m5nt3VRuNJf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WoEG+FNY1Gr/MsgXptmf5zSAYkQEAxec64qis1HuUrcHNeuHiv7Wtij1Vc7Jl4ljBBcPhVMNlDkSVZaCX7JcULCvsLZuiDaGsF+LHTBOd/RlSGAYw671Q+J+/UamIGTIE/0U+1FKFDa11gmY7GYvEvqP4XbTk1UZPZ7pKZSPBIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=J/3hxZiC; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747176592; c=relaxed/simple;
+	bh=2b5sWhBlD59bEzSlsX6RDsHKs2/EwTFMcRedAGr7dws=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Jv6cTi+HZ98Y7NinwhjV3zayTJ82Nolm5xNiYYSdG0tIVYWrpy6lqHEK/+uQ4fhGZa/MZdtgT7kWY+z/Gq3KrpuAFIcePYE3btdNh7PwQLHXb7H0DxNjZSmzkiRkZSoLtYHz6/kDpYwOBHQ2DxWmwqrjzuKO9LvXiNP8uKtnS/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3lGQlm7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J/3hxZiC"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-740b3a18e26so5431856b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747176507; x=1747781307; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FkLyMTbGlJXb7d4nD6pFtOPSL5QHuutzi+7fasvDY2o=;
-        b=J/3hxZiCz7gpBArqzrYVWC0eiAo24Q4XsK21X5/lrnjx39N4SbbcQRyY4PMnxkMlZs
-         940SRggrJdgjreN+t1J0qVv4ZAptwvTc9eNVFS20qJe868TxrnBJPSeioCQYX0HiNxd8
-         tcBqTXR1ZBjbidQt0rWkwmLLbWb0e6ynv/GUM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747176507; x=1747781307;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FkLyMTbGlJXb7d4nD6pFtOPSL5QHuutzi+7fasvDY2o=;
-        b=bbwV+HXX9sEwgemj3UlYoKH/3K/zWBngOVgs3rQvZRWGW4I5bCzAnbbqMWxBrHCNAK
-         0tLf/jdT94dZ2FBwFxaiV2gdba7X3dmUIlUbsZSlVncqeLVxxW/Sbj9otGLVmuvh4+xt
-         biEIJurun4vezd33i8mAeKKN4oW9scXpoRycYb9KuDsYzyYC1/4IShuS1kZH0U0vxT8v
-         gNs5dEBpC3AxFUBtzrM1sjdUiMklcvwJYvGYjUk4n37htRR8X4f3tT/FR74whAGI1QWs
-         3ka6xRjF9C0rwZnYUHszOut4xhMs2VD4UtySfU8sMybaoYAUFAstsbOaY4SUY+pfu++N
-         r0lA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvGwHnrf8Xc1GB7Ip+tnBu2C9Hp5MCbvNOSB6OjhSZ2ztDv+mVcSXOxp2JWe5BBeMmiS3s0k6h9dQ/ck4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTjpOzNrHem8C+2ybLRzGeFLNUAv/t+WhMMag5sgzcwpwfcPsr
-	qk2/9NLV3CSv3puf5WWYcMMA2gTipcJZqq2EBugX9zavFhNe8+jdjM5qJBEMkkDIlBFji+w+iGk
-	=
-X-Gm-Gg: ASbGncv+A7jX1RDYE29zcQDFV8zlOLL8bnnR+IUTC4ba0n7/ptLt35HFwf+aTSnZpq3
-	2ij/Uy2TfSZRG4qZBGNOi3qcEHfh39X4qaXmvc/h9uqJpAM2hf0hQinY/ZeHnvAuXC7mqjB3LET
-	3siFPoncFHd2HQZnvZgzgPCQJn54b8/oFxLIw5xz+21OLJK8Qs9YcY2x5qdWwzzbtgyk+44rvGf
-	UsTvUA4xVzP3Ahs8FFtX/R9Rv+FZC+9XLEd8RewUX920SP0XHwEE+FUQBMT8iXoOsHk3CcmMMoi
-	GZaOrVQQ8BXJOgWQm75iGv3UdA0/isf57Kzu1hTwqRW4gxV93C8EwulOks7aAEWz+dOLw5MyoXi
-	N+iw/wbuq4t0qpg==
-X-Google-Smtp-Source: AGHT+IHblR3/2uQG5jNf6U7wWEdXn5/JlkesMPjg6q8xTPdedpMsJPq8+hDnn83rmw7qGoVjmmbNmg==
-X-Received: by 2002:a05:6a00:b85:b0:739:3f55:b23f with SMTP id d2e1a72fcca58-742892cd549mr1629461b3a.14.1747176507038;
-        Tue, 13 May 2025 15:48:27 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:b0a6:1dea:5306:7727])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237a1149asm8212317b3a.118.2025.05.13.15.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 15:48:26 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Tsai Sung-Fu <danielsftsai@google.com>,
-	linux-kernel@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 2/2] genirq: Retain disable depth across irq shutdown/startup
-Date: Tue, 13 May 2025 15:42:38 -0700
-Message-ID: <20250513224402.864767-3-briannorris@chromium.org>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-In-Reply-To: <20250513224402.864767-1-briannorris@chromium.org>
-References: <20250513224402.864767-1-briannorris@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3lGQlm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8385EC4CEE4;
+	Tue, 13 May 2025 22:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747176591;
+	bh=2b5sWhBlD59bEzSlsX6RDsHKs2/EwTFMcRedAGr7dws=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=G3lGQlm7XuLzug6FQD12Ge6xK+MEOJpYHyy0t0h34ppGm11vwnuV+5MjCz83Zg281
+	 +HYiXZ79N1RfqvJL4PpQ0tZPeLQ3wEvOUwZiSVuCMfn9k0XQ8bGVZ6FyhCT8ipuf7u
+	 RKFsTQseMrdApBul0VtE5kpjj/jxFVV9lfNvnDEoZ5RFHG9k2Hf5OWUTHXKFz4BTQQ
+	 snVB7+1QO5W3x2N2JjAmM+l7G0P6kulJK//USORQXywMRf6S3iN6DHhgvu3nmFXB1i
+	 Y3RCSEr5KNeAqBMP7hnvmqktdbtlFYfiWolB2qChWIE1mi63d3bd7R2uP0ikZXZyXN
+	 LcWbAnOvYXHUg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B75380DBE8;
+	Tue, 13 May 2025 22:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,66 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] docs: networking: timestamping: improve stacked PHC
+ sentence
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174717662903.1815639.442567872632505480.git-patchwork-notify@kernel.org>
+Date: Tue, 13 May 2025 22:50:29 +0000
+References: <20250512131751.320283-1-vladimir.oltean@nxp.com>
+In-Reply-To: <20250512131751.320283-1-vladimir.oltean@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, kory.maincent@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, richardcochran@gmail.com, vadim.fedorenko@linux.dev,
+ willemdebruijn.kernel@gmail.com, kernelxing@tencent.com,
+ linux-kernel@vger.kernel.org
 
-If an IRQ is shut down and restarted while it was already disabled, its
-depth is clobbered and reset to 0. This can produce unexpected results,
-as:
-1) the consuming driver probably expected it to stay disabled and
-2) the kernel starts complaining about "Unbalanced enable for IRQ N" the
-   next time the consumer calls enable_irq()
+Hello:
 
-This problem can occur especially for affinity-managed IRQs that are
-already disabled before CPU hotplug. I captured these failures in kunit
-tests irq_shutdown_depth_test and irq_cpuhotplug_test.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Perform a naive increment/decrement instead of clobbering the count to
-0/1.
+On Mon, 12 May 2025 16:17:51 +0300 you wrote:
+> The first paragraph makes no grammatical sense. I suppose a portion of
+> the intended sentece is missing: "[The challenge with ] stacked PHCs
+> (...) is that they uncover bugs".
+> 
+> Rephrase, and at the same time simplify the structure of the sentence a
+> little bit, it is not easy to follow.
+> 
+> [...]
 
-Tested via kunit:
+Here is the summary with links:
+  - [net] docs: networking: timestamping: improve stacked PHC sentence
+    https://git.kernel.org/netdev/net/c/d5c17e36549c
 
-  tools/testing/kunit/kunit.py run 'irq_test_cases*' --arch x86_64 --qemu_args '-smp 2'
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-I'm not very confident this is a fully correct fix, as I'm not sure I've
-grokked all the startup/shutdown logic in the IRQ core. This probably
-serves better as an example method to pass the tests in patch 1.
-
- kernel/irq/chip.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 36cf1b09cc84..cc6d2220ceae 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -272,7 +272,9 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
- 	const struct cpumask *aff = irq_data_get_affinity_mask(d);
- 	int ret = 0;
- 
--	desc->depth = 0;
-+	desc->depth--;
-+	if (desc->depth)
-+		return 0;
- 
- 	if (irqd_is_started(d)) {
- 		irq_enable(desc);
-@@ -290,6 +292,7 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
- 			ret = __irq_startup(desc);
- 			break;
- 		case IRQ_STARTUP_ABORT:
-+			desc->depth++;
- 			irqd_set_managed_shutdown(d);
- 			return 0;
- 		}
-@@ -322,7 +325,7 @@ void irq_shutdown(struct irq_desc *desc)
- {
- 	if (irqd_is_started(&desc->irq_data)) {
- 		clear_irq_resend(desc);
--		desc->depth = 1;
-+		desc->depth++;
- 		if (desc->irq_data.chip->irq_shutdown) {
- 			desc->irq_data.chip->irq_shutdown(&desc->irq_data);
- 			irq_state_set_disabled(desc);
+You are awesome, thank you!
 -- 
-2.49.0.1045.g170613ef41-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
