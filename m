@@ -1,155 +1,224 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E11213E7B;
-	Tue, 13 May 2025 13:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27E5213E7B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141568; cv=none; b=mHDKCvoF+Le1ezBPq0XAeKFH6ef88l/lHcMmMiN+mH+tOjdjbohoepjA6mAtc/erKIzyILuMPf12yhDtVKhMAgk2fkpItpvitb//hw1Rv5JxE4k7RIdZhLJZVISL4snan/fAUEY7EH7WNoq77jntKQsJ4/RUZBwUcJpLV3+9hfw=
+	t=1747141576; cv=none; b=U8Lh55/huBN8A6DHPrEDBIOV4xvKD0AtA1VjhzVzHjS8/zDLgdyvkdR4KjGxMVdVtnJDEOadlU/0qdwg8klphzcX8wscZqj0bvdFN+hDdj+ie1HVVQTvlwb1KdI5I+DqrWYz1Tt15xQriiQOc1WwinzwRLJ9iZTlgZ70HkfCaJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141568; c=relaxed/simple;
-	bh=4fLD3IdpP6vVXk5/ruBLYk1VyIiGZZJk/ofEm9ybJRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NoxqzNqeYJRbm7WXcCa9WSdVDD3Y+X5S/+jbQHmRQnnimF5+/ZKvJF55lq5NmtgNSLpWZKJXOo+77C2WdQ5mB9+ylhmFO5sZRmvK9RwJOxlDLj4Tx6O633WP5S30bq/fvOG+IiOlMkOkk1WaIQWwD6LmbcAig+zDYPtblT/RBlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1uTxtXd; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747141576; c=relaxed/simple;
+	bh=nlNv4cukRiEA7mYjp8K+ut2J3mbaew4EsmrIFGrjkUM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iUVfudgmrQ0kXiXRm0ZyOe3DYREE0tyF4nCu8E5g+JxcgnicrahhNsDZaN7HQrwdcAzpabnnB1Jv9P8uhIdJsl6eWN6KBpxMQv64agWvjXt4Qk0r4XHO91+q/MfXk/TbTnt+9f7G2Y+g4l5Yb7Ea5qiWlxEKsKx+hFfdWSnxZkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fq9HIJpp; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1uTxtXd"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so60229885e9.3;
-        Tue, 13 May 2025 06:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747141565; x=1747746365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRH4yaq02O4BeoAY/f143mbK8AEXX3uy5ZGAgLBp4KM=;
-        b=b1uTxtXdEL1CpB9GB9s/MxPZooV74EiNWTkmBIyRmFx+WivrFCOa31emAxZgdeByUH
-         czRXlcm3yilGhLl1kGSUoAqxcne7UjheRZi0kTY8/yq2YvVfu6JRQGLBlEZyjxH4sYOI
-         rSLXo291wCzaOmXcmip3uHWqkB0oey1pho3SWBHQOwwCr5FimFbe+vpno0Y+fAwEVlyq
-         In2Y/DlZy2y4pw2aNnqhsZjST0k7nS8oSTlwe3cUTI6pBkOOkE6fVoY4NC8psJElB57Z
-         PlQPwg3H1S4EtNzF7nNHbjDGwmznBQ7RJdHAmWpft7GSeq8Jj1kBVJDJ/kZiSmADtgKu
-         +1LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141565; x=1747746365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZRH4yaq02O4BeoAY/f143mbK8AEXX3uy5ZGAgLBp4KM=;
-        b=vXYwy691JWJQHFtl0Ygndj5I8rCES7a9XSF0fspTgv3RY6ZnVeKdcJcDdb3ZTFX9Sj
-         mVCvhzmPvIqs9p1RuDvl5T49e4XVvQXIIRbY3b8tGJZLRr0Q3dsFtV1Y+ZbZle6H2pbg
-         PzPYqepL5InfO/4SQHBoxxTT9ng1vEMpb2p7WWBCuykqlQe+pTM4Coi+DHFj8lbRvxP3
-         lYVdFDteCz75EYI/l/ZAAhWzpKaR/Jz9F9ud67kPFAWG2vawZFQuj0t4xzUitOXd99YF
-         ILG1DtyZoIu0XMXxkWJGI9B19/fXYFhUiujrDUOJQrLajaTzPFv9YktxGVbx440YJpjD
-         47NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQj1AqNjfbShJPeuBRR3he6ldDnjmFw0bNnvQY+vKJkHrsnC70XiQJejxrW2R5eo5N6PEshIobFQ==@vger.kernel.org, AJvYcCUrRoHuvBMJm6MewTz/+ucP/USOSWhzs5fzWYIE/NME0hpo+9bpBGfFEZpbpeskJGmUQEL6v8v00phQMYwVvOJT9P51aAHZ@vger.kernel.org, AJvYcCV27BitRMclAabnLBhxFlC5YeIAslDtiKTshl3PW1YyZI47djPROpw+zdaTiOH5RSOdjwC1OaL43oQhtN26@vger.kernel.org, AJvYcCW6EPEpNpkBvbs3cJLTH0heEhkSKJOp/R3K8vHwSlwvglRX9LEsn0J7iruVwib3glPZPrw15CSWF0VOw6lMNzKG@vger.kernel.org, AJvYcCX4PoeikKYvo5jEogD3efWqeZzBBGontK9LesojPOw2vFsuJm+xt50XGzg/ENaG8M46uTlqoZPuARooAAIN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJvl3MzTPi5ZAFCws0LAeGyXtUW8Fhhadv9dYhEsiK17KslpIP
-	H97BNdG6N2/WnKbUFEqIAGUtaz9ocvcxhxj7YIpq1ELAfrnuPi8Q
-X-Gm-Gg: ASbGnctw8DIkJfG6mnWVAdBH/y9iPaqqCc2bbEgsTDLyx/71U2QYvbDFsqolt3UZ78g
-	GsSMOVNRr3bOh7ALwEGrI63K1tymd6XsOr1pBCM/FUi1yUXoDul56rpZuJ/JGBsxkb1GfXfejqq
-	ZVkHfML2YZWRVvl3lfVrjOT7FdR22YDzzmcw1Hp1eCDYK3RtQ554pBO4UQt8uieT6IEwrWUbonD
-	qq31RS3UQEM1oontSWYViBVfHm8pbx9PIFbEtTYwQvBLQ8CPjBFQffNSu/H43OSaPXU3M71OoZ2
-	yNTUTL4IaAdJHYJxOSgEHL1AxKW2TKzUIFgSIaPpD0YJDyN1Op/tzT5Gi/wy4HyF
-X-Google-Smtp-Source: AGHT+IEHBhhE7TvsAD/FnNo4BJJ0fgMjXWx6eOMY8JlawqVvxffhuMX7kttizQAJ+g7X01ahmWKKUQ==
-X-Received: by 2002:a05:600c:3587:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-442d6dd216fmr140842115e9.27.1747141561377;
-        Tue, 13 May 2025 06:06:01 -0700 (PDT)
-Received: from f (cst-prg-88-99.cust.vodafone.cz. [46.135.88.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f3c2sm209934765e9.15.2025.05.13.06.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:06:00 -0700 (PDT)
-Date: Tue, 13 May 2025 15:05:45 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Jorge Merlino <jorge.merlino@canonical.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andy Lutomirski <luto@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
-	Richard Haines <richard_c_haines@btinternet.com>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Xin Long <lucien.xin@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Todd Kjos <tkjos@google.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Prashanth Prahlad <pprahlad@redhat.com>, Micah Morton <mortonm@chromium.org>, 
-	Fenghua Yu <fenghua.yu@intel.com>, Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, oleg@redhat.com
-Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
-Message-ID: <h65sagivix3zbrppthcobnysgnlrnql5shiu65xyg7ust6mc54@cliutza66zve>
-References: <20221006082735.1321612-1-keescook@chromium.org>
- <20221006082735.1321612-2-keescook@chromium.org>
- <20221006090506.paqjf537cox7lqrq@wittgenstein>
- <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
- <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fq9HIJpp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747141574; x=1778677574;
+  h=date:from:to:cc:subject:message-id;
+  bh=nlNv4cukRiEA7mYjp8K+ut2J3mbaew4EsmrIFGrjkUM=;
+  b=Fq9HIJppzDy1o9h+QlJlhZwXdZOG1ecGQ6qMhmxbXefJ+fo6BOqd03Ef
+   lUQP9Uc6h0py28EDhWae2Hl3YSRaU2RXG1GS6KImKCHBpAu8Ku4XYdaVr
+   onUzluPAniSXiPmCunb/Utnbd6kWRIK7UEY7AlxN2d2SsUDJTAc1SbZ34
+   0by7RnnGxOu7GM80huc+kAnD4Em0O2z8wvKk1Ier68oznT1sG/jO1Oynb
+   K4fft8uGbU+GFT0lDxEwgUQSkU0/LBHiAvFVcVWyLel3hVhoHV+VDTAKz
+   X6xds8YHJMNLeVm+fTazpllBomp2Z7eq62SvubOhXQ4W7Beyd5Vw1u7e2
+   Q==;
+X-CSE-ConnectionGUID: hhFnQuE3SSuj0gAD//xnCg==
+X-CSE-MsgGUID: 4uXwF/R8TY2QbEMkAXX7AQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48678961"
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="48678961"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:06:13 -0700
+X-CSE-ConnectionGUID: +XaTO6XXR8+6v6d1pb8i1A==
+X-CSE-MsgGUID: d5jRGD8hR5KcW9mpVvaIVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="142891082"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 13 May 2025 06:06:12 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uEpKk-000G3z-0J;
+	Tue, 13 May 2025 13:06:10 +0000
+Date: Tue, 13 May 2025 21:05:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/mtrr] BUILD SUCCESS
+ 824c6384e8d9275d4ec7204f3f79a4ac6bc10379
+Message-ID: <202505132147.YrbDOUic-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org>
 
-On Thu, Oct 06, 2022 at 08:25:01AM -0700, Kees Cook wrote:
-> On October 6, 2022 7:13:37 AM PDT, Jann Horn <jannh@google.com> wrote:
-> >On Thu, Oct 6, 2022 at 11:05 AM Christian Brauner <brauner@kernel.org> wrote:
-> >> On Thu, Oct 06, 2022 at 01:27:34AM -0700, Kees Cook wrote:
-> >> > The check_unsafe_exec() counting of n_fs would not add up under a heavily
-> >> > threaded process trying to perform a suid exec, causing the suid portion
-> >> > to fail. This counting error appears to be unneeded, but to catch any
-> >> > possible conditions, explicitly unshare fs_struct on exec, if it ends up
-> >>
-> >> Isn't this a potential uapi break? Afaict, before this change a call to
-> >> clone{3}(CLONE_FS) followed by an exec in the child would have the
-> >> parent and child share fs information. So if the child e.g., changes the
-> >> working directory post exec it would also affect the parent. But after
-> >> this change here this would no longer be true. So a child changing a
-> >> workding directoro would not affect the parent anymore. IOW, an exec is
-> >> accompanied by an unshare(CLONE_FS). Might still be worth trying ofc but
-> >> it seems like a non-trivial uapi change but there might be few users
-> >> that do clone{3}(CLONE_FS) followed by an exec.
-> >
-> >I believe the following code in Chromium explicitly relies on this
-> >behavior, but I'm not sure whether this code is in active use anymore:
-> >
-> >https://source.chromium.org/chromium/chromium/src/+/main:sandbox/linux/suid/sandbox.c;l=101?q=CLONE_FS&sq=&ss=chromium
-> 
-> Oh yes. I think I had tried to forget this existed. Ugh. Okay, so back to the drawing board, I guess. The counting will need to be fixed...
-> 
-> It's possible we can move the counting after dethread -- it seems the early count was just to avoid setting flags after the point of no return, but it's not an error condition...
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mtrr
+branch HEAD: 824c6384e8d9275d4ec7204f3f79a4ac6bc10379  x86/mtrr: Check if fixed-range MTRRs exist in mtrr_save_fixed_ranges()
 
-I landed here from git blame.
+elapsed time: 1326m
 
-I was looking at sanitizing shared fs vs suid handling, but the entire
-ordeal is so convoluted I'm confident the best way forward is to whack
-the problem to begin with.
+configs tested: 147
+configs skipped: 129
 
-Per the above link, the notion of a shared fs struct across different
-processes is depended on so merely unsharing is a no-go.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-However, the shared state is only a problem for suid/sgid.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-19
+arc                              alldefconfig    gcc-14.2.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-19
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-19
+arm                          exynos_defconfig    gcc-14.2.0
+arm                         lpc18xx_defconfig    gcc-14.2.0
+arm                           tegra_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250513    clang-21
+csky                  randconfig-002-20250513    clang-21
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-19
+hexagon               randconfig-001-20250513    clang-21
+hexagon               randconfig-002-20250513    clang-21
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250513    clang-20
+i386        buildonly-randconfig-002-20250513    clang-20
+i386        buildonly-randconfig-003-20250513    clang-20
+i386        buildonly-randconfig-004-20250513    clang-20
+i386        buildonly-randconfig-005-20250513    clang-20
+i386        buildonly-randconfig-005-20250513    gcc-12
+i386        buildonly-randconfig-006-20250513    clang-20
+i386        buildonly-randconfig-006-20250513    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250513    gcc-12
+i386                  randconfig-002-20250513    gcc-12
+i386                  randconfig-003-20250513    gcc-12
+i386                  randconfig-004-20250513    gcc-12
+i386                  randconfig-005-20250513    gcc-12
+i386                  randconfig-006-20250513    gcc-12
+i386                  randconfig-007-20250513    gcc-12
+i386                  randconfig-011-20250513    gcc-12
+i386                  randconfig-012-20250513    gcc-12
+i386                  randconfig-013-20250513    gcc-12
+i386                  randconfig-014-20250513    gcc-12
+i386                  randconfig-015-20250513    gcc-12
+i386                  randconfig-016-20250513    gcc-12
+i386                  randconfig-017-20250513    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250513    clang-21
+loongarch             randconfig-002-20250513    clang-21
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250513    clang-21
+nios2                 randconfig-002-20250513    clang-21
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250513    clang-21
+parisc                randconfig-002-20250513    clang-21
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc               randconfig-001-20250513    clang-21
+powerpc               randconfig-002-20250513    clang-21
+powerpc               randconfig-003-20250513    clang-21
+powerpc64             randconfig-001-20250513    clang-21
+powerpc64             randconfig-003-20250513    clang-21
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                      rts7751r2d1_defconfig    gcc-14.2.0
+sh                           se7750_defconfig    gcc-14.2.0
+sh                           se7780_defconfig    gcc-14.2.0
+sh                   secureedge5410_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250512    gcc-12
+x86_64      buildonly-randconfig-001-20250513    gcc-12
+x86_64      buildonly-randconfig-002-20250512    gcc-12
+x86_64      buildonly-randconfig-002-20250513    gcc-12
+x86_64      buildonly-randconfig-003-20250512    clang-20
+x86_64      buildonly-randconfig-003-20250513    gcc-12
+x86_64      buildonly-randconfig-004-20250512    clang-20
+x86_64      buildonly-randconfig-004-20250513    gcc-12
+x86_64      buildonly-randconfig-005-20250512    clang-20
+x86_64      buildonly-randconfig-005-20250513    gcc-12
+x86_64      buildonly-randconfig-006-20250512    clang-20
+x86_64      buildonly-randconfig-006-20250513    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250513    clang-20
+x86_64                randconfig-002-20250513    clang-20
+x86_64                randconfig-003-20250513    clang-20
+x86_64                randconfig-004-20250513    clang-20
+x86_64                randconfig-005-20250513    clang-20
+x86_64                randconfig-006-20250513    clang-20
+x86_64                randconfig-007-20250513    clang-20
+x86_64                randconfig-008-20250513    clang-20
+x86_64                randconfig-071-20250513    clang-20
+x86_64                randconfig-072-20250513    clang-20
+x86_64                randconfig-073-20250513    clang-20
+x86_64                randconfig-074-20250513    clang-20
+x86_64                randconfig-075-20250513    clang-20
+x86_64                randconfig-076-20250513    clang-20
+x86_64                randconfig-077-20250513    clang-20
+x86_64                randconfig-078-20250513    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                          rhel-9.4-func    clang-20
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
 
-Here is my proposal: *deny* exec of suid/sgid binaries if fs_struct is
-shared. This will have to be checked for after the execing proc becomes
-single-threaded ofc.
-
-While technically speaking this does introduce a change in behavior,
-there is precedent for doing it and seeing if anyone yells.
-
-With this in place there is no point maintainig ->in_exec or checking
-the flag.
-
-There is the known example of depending on shared fs_struct across exec.
-Hopefully there is no example of depending on execing a suid/sgid binary
-in such a setting -- it would be quite a weird setup given that for
-security reasons the perms must not be changed.
-
-The upshot of this method is that any breakage will be immediately
-visible in the form of a failed exec.
-
-Another route would be to do the mandatory unshare but only for
-suid/sgid, except that would have a hidden failure (if you will).
-
-Comments?
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
