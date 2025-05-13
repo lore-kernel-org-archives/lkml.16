@@ -1,47 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A60128ECCE;
-	Tue, 13 May 2025 12:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFF628E611;
+	Tue, 13 May 2025 12:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139700; cv=none; b=VVMdk0ld4oBWBKh3doIQAuWACodvNYdAFiWYk7xHhBzpXhPKHwgx5TPZzAp/UyN6134SJsHDXIvR9+mGa8b6+PH6PdSOhlCosspI/lS9JkYm8wzwG8vVMTtgdGnbrb8GAM+DSzdmbh/w19M/cp75EeLyuiC/M5SnBPKRyrI/hq0=
+	t=1747139700; cv=none; b=dtAPWupeDILyvoTon00pIe2BGc5UsNKa+3deB0WJLLnOJ8miZrWqliQurWdGR4+cbE+LEcQvTYRoXKchp4/Vqa3qjQF1oJNS+ulkWWhyIfz1u3sMhUEbYAryxHaduJXcR0vDGxzCnhYoS8IDJErzzB6fJ+UF8jiGO6iSYu1XYR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747139700; c=relaxed/simple;
-	bh=u2hoH0if4XlY924RAc8QSz9rFsWWAX5jfbtK7C9L0z4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P7/2QGY0WdCkb+IzFgcz5NlXooWbKW95APh8GXfYlXtPx4HpibqekrJKhE2b8m1falV+PsGi6LIO7l2a71YnJ0WUPLocp8YqxXxsmIO9Td9UlVrJO3kmf9MRrWkPAzDiHbDTXZhzt9NIh+zVa7/IC7mSeO9eZm6/X+KPpgyjh7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWXJF/nd; arc=none smtp.client-ip=10.30.226.201
+	bh=hBqY7u/JnFjJI/w3/g/c4OXToszQ46fwTlYxmxVH6dk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KrPNMxar265lRjBRmO6GHz54t+HGrcxhpfLbOHDvoEYGk8+rW1VybE5wy2z1cnsY6RhTcxOEAvrs73SR9nfuEe9aoYld8y6ULGaossaXh4SZh9JICW2UQ+dS//JVy/NmxVfXHgiW+xZKvUMuiF8+RTvEgKOHWOD5cKBlZeoGfX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=CpuwGsgE; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWXJF/nd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D304DC4CEF3;
-	Tue, 13 May 2025 12:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747139699;
-	bh=u2hoH0if4XlY924RAc8QSz9rFsWWAX5jfbtK7C9L0z4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CWXJF/nd1+fVMyET8fNK5vodONP93mwjpYLAQqZ8Qv9bbC7zAUR9sMCp8zfwks0PI
-	 TaUD7c2F7zJ2e1gUivbrTBi1E4V7jgjEc8iHl1s6ceaFx+7dfHFpHjPDPVOubKsZU3
-	 +fgcmay+TXke23jZgOeGMiMc5G3CJ21GM0RwsP7491Bb2GjvHjUACXIvyPYbkZheMP
-	 GSpZF5sQW+hsrUOeTei0HjzMr+F+7e8yVYJByJo1/WIxet9Qxdr62D2am5w6GcEOH8
-	 iaX+S+aIQItKPdq9JIOmikCsuWWl7jGkfkAIqzs56gpsDK8Ykxgq6NB5PXZ4JNQN0J
-	 wImLnAPfJpyRA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] ALSA: qc_audio_offload: try to reduce address space confusion
-Date: Tue, 13 May 2025 14:34:42 +0200
-Message-Id: <20250513123442.159936-4-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250513123442.159936-1-arnd@kernel.org>
-References: <20250513123442.159936-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="CpuwGsgE"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBD59m008282;
+	Tue, 13 May 2025 08:34:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=MecMS
+	khtk5Z+MMSqon8pWjK1qRD4kS9uLF0Vm6JB3hs=; b=CpuwGsgEoyFjL/y05oHlP
+	7zNEK6XOgfrxgCE+zQEeEvwKnboFvg8miKY9UqjDAzypy6yoTQ1SeeCI9s5PQgb5
+	t8Fbr3qKM5S++MQxnBGu4vsN6zgIeg2OD3M38ssxYfzdcn3oIdkeEpvxt0K3w2T1
+	+taOiTa8jZkh02fzU6RQY4aZv2ifaeMdo5MMmnHPdYJQgX8K2Lvs8mu2DfasyDGG
+	nJOLB3Aq79ZMcsCHCEo4EQmGh6MWKaE/Airoa5mKi6TKarzcRezeQsdf/7svNC1u
+	JIfoGvdVtsjBrYDDmLeOZGGcga86oaFS0qPukuHXEqEINi3oN2xQzGUt9UdSkKHM
+	A==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46kx53aesr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 08:34:41 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54DCYeIB041010
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 13 May 2025 08:34:40 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 13 May 2025 08:34:40 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Tue, 13 May 2025 08:34:40 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 13 May 2025 08:34:40 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54DCYM1r007472;
+	Tue, 13 May 2025 08:34:25 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v3 03/10] iio: adc: ad4170: Add support for calibration gain
+Date: Tue, 13 May 2025 09:34:20 -0300
+Message-ID: <3d255162174ab160c3fd06af3c27360947c2a566.1747083143.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,108 +72,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=a4sw9VSF c=1 sm=1 tr=0 ts=68233c61 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=s1qB4CsIdprNQQnv0OQA:9
+X-Proofpoint-ORIG-GUID: OecLo8QBvF6yxvGH-r1AeWdjWQvteiT_
+X-Proofpoint-GUID: OecLo8QBvF6yxvGH-r1AeWdjWQvteiT_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDExOSBTYWx0ZWRfX0fvxGeZTsq6H
+ LmMDIsy7vkehmNs86dLtpPZl05swD8vXzA+FigZaSBhdMNB1xzNAJpWWSauryVaGhN3rsVsb/HW
+ k3HT/2t57uf8cJFdHdriwN3vre15R2tr2s927T5HMHPqMr+UiTL8qs48R77DPXHgjB+ubcwJ7fF
+ qFG3juiBgPu7BbPm/vMezpplZmwB5BARH2IltA6/vhqjFu0jGE+ymZQSO1JfXA7eF/X98HiTBGx
+ LroblUkWmfT3jnKHDB+nBLmC5fHrPHyyyvf5sGiDTDRUIGOZtsUcc09MWSYm73fuG2dCikgB6AY
+ CKUZeOiZf2tuvpfeT+6i4YuV/ExDWpWCPS235xR3nMyN39ND4VTxhfBdXY3jttCZkmyGve/pz/o
+ j6+WRzQkEet/5s19cBzTwezG9/VpgBY8RzMIWuq78KL/9d/tdiwh4OQlWqa0BqHsw9HqUYuV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ phishscore=0 spamscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505130119
 
-From: Arnd Bergmann <arnd@arndb.de>
+Add support for ADC calibration gain configuration.
 
-uaudio_transfer_buffer_setup() allocates a buffer for the subs->dev
-device, and the returned address for the buffer is a CPU local virtual
-address that may or may not be in the linear mapping, as well as a DMA
-address token that is accessible by the USB device, and this in turn
-may or may not correspond to the physical address.
-
-The use in the driver however assumes that these addresses are the
-linear map and the CPU physical address, respectively. Both are
-nonportable here, but in the end only the virtual address gets
-used by converting it to a physical address that gets mapped into
-a second iommu.
-
-Make this more explicit by pulling the conversion out first
-and warning if it is not part of the linear map, and using the
-actual physical address to map into the iommu in place of the
-dma address that may already be iommu-mapped into the usb host.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 ---
- sound/usb/qcom/qc_audio_offload.c | 32 ++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+Change log v2 -> v3
+- New patch spun out of the base driver patch.
 
-diff --git a/sound/usb/qcom/qc_audio_offload.c b/sound/usb/qcom/qc_audio_offload.c
-index c4dde2fa5a1f..46379387c9a5 100644
---- a/sound/usb/qcom/qc_audio_offload.c
-+++ b/sound/usb/qcom/qc_audio_offload.c
-@@ -78,9 +78,9 @@ struct intf_info {
- 	size_t data_xfer_ring_size;
- 	unsigned long sync_xfer_ring_va;
- 	size_t sync_xfer_ring_size;
--	unsigned long xfer_buf_iova;
-+	dma_addr_t xfer_buf_iova;
- 	size_t xfer_buf_size;
--	phys_addr_t xfer_buf_dma;
-+	dma_addr_t xfer_buf_dma;
- 	u8 *xfer_buf_cpu;
- 
- 	/* USB endpoint information */
-@@ -1018,11 +1018,12 @@ static int uaudio_transfer_buffer_setup(struct snd_usb_substream *subs,
- 					struct mem_info_v01 *mem_info)
- {
- 	struct sg_table xfer_buf_sgt;
-+	dma_addr_t xfer_buf_dma;
- 	void *xfer_buf;
- 	phys_addr_t xfer_buf_pa;
- 	u32 len = xfer_buf_len;
- 	bool dma_coherent;
--	unsigned long iova;
-+	dma_addr_t xfer_buf_dma_sysdev;
- 	u32 remainder;
- 	u32 mult;
- 	int ret;
-@@ -1045,29 +1046,38 @@ static int uaudio_transfer_buffer_setup(struct snd_usb_substream *subs,
- 		len = MAX_XFER_BUFF_LEN;
+ drivers/iio/adc/ad4170.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+index bf19b31095ee..1df214f7fdec 100644
+--- a/drivers/iio/adc/ad4170.c
++++ b/drivers/iio/adc/ad4170.c
+@@ -642,7 +642,8 @@ static const struct iio_chan_spec ad4170_channel_template = {
+ 	.differential = 1,
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+ 			      BIT(IIO_CHAN_INFO_SCALE) |
+-			      BIT(IIO_CHAN_INFO_OFFSET),
++			      BIT(IIO_CHAN_INFO_OFFSET) |
++			      BIT(IIO_CHAN_INFO_CALIBSCALE),
+ 	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),
+ 	.scan_type = {
+ 		.realbits = 24,
+@@ -953,6 +954,9 @@ static int ad4170_read_raw(struct iio_dev *indio_dev,
+ 		pga = FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
+ 		*val = chan_info->offset_tbl[pga];
+ 		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_CALIBSCALE:
++		*val = setup->gain;
++		return IIO_VAL_INT;
+ 	default:
+ 		return -EINVAL;
  	}
- 
--	xfer_buf = usb_alloc_coherent(subs->dev, len, GFP_KERNEL, &xfer_buf_pa);
-+	/* get buffer mapped into subs->dev */
-+	xfer_buf = usb_alloc_coherent(subs->dev, len, GFP_KERNEL, &xfer_buf_dma);
- 	if (!xfer_buf)
- 		return -ENOMEM;
- 
-+	/* Remapping is not possible if xfer_buf is outside of linear map */
-+	xfer_buf_pa = virt_to_phys(xfer_buf);
-+	if (WARN_ON(!page_is_ram(PFN_DOWN(xfer_buf_pa)))) {
-+		ret = -ENXIO;
-+		goto unmap_sync;
-+	}
- 	dma_get_sgtable(subs->dev->bus->sysdev, &xfer_buf_sgt, xfer_buf,
--			xfer_buf_pa, len);
--	iova = uaudio_iommu_map(MEM_XFER_BUF, dma_coherent, xfer_buf_pa, len,
--			      &xfer_buf_sgt);
--	if (!iova) {
-+			xfer_buf_dma, len);
-+
-+	/* map the physical buffer into sysdev as well */
-+	xfer_buf_dma_sysdev = uaudio_iommu_map(MEM_XFER_BUF, dma_coherent,
-+					       xfer_buf_pa, len, &xfer_buf_sgt);
-+	if (!xfer_buf_dma_sysdev) {
- 		ret = -ENOMEM;
- 		goto unmap_sync;
- 	}
- 
--	mem_info->dma = xfer_buf_pa;
-+	mem_info->dma = xfer_buf_dma;
- 	mem_info->size = len;
--	mem_info->iova = PREPEND_SID_TO_IOVA(iova, uaudio_qdev->data->sid);
-+	mem_info->iova = PREPEND_SID_TO_IOVA(xfer_buf_dma_sysdev, uaudio_qdev->data->sid);
- 	*xfer_buf_cpu = xfer_buf;
- 	sg_free_table(&xfer_buf_sgt);
- 
+@@ -1079,6 +1083,25 @@ static int ad4170_set_pga(struct ad4170_state *st,
  	return 0;
- 
- unmap_sync:
--	usb_free_coherent(subs->dev, len, xfer_buf, xfer_buf_pa);
-+	usb_free_coherent(subs->dev, len, xfer_buf, xfer_buf_dma);
- 
- 	return ret;
  }
+ 
++static int ad4170_set_calib_gain(struct ad4170_state *st,
++				 struct iio_chan_spec const *chan, int val)
++{
++	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
++	struct ad4170_setup *setup = &chan_info->setup;
++	u32 old_gain;
++	int ret;
++
++	guard(mutex)(&st->lock);
++	old_gain = setup->gain;
++	setup->gain = val;
++
++	ret = ad4170_write_channel_setup(st, chan->address, false);
++	if (ret)
++		setup->gain = old_gain;
++
++	return ret;
++}
++
+ static int __ad4170_write_raw(struct iio_dev *indio_dev,
+ 			      struct iio_chan_spec const *chan, int val,
+ 			      int val2, long info)
+@@ -1088,6 +1111,8 @@ static int __ad4170_write_raw(struct iio_dev *indio_dev,
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_SCALE:
+ 		return ad4170_set_pga(st, chan, val, val2);
++	case IIO_CHAN_INFO_CALIBSCALE:
++		return ad4170_set_calib_gain(st, chan, val);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1114,6 +1139,8 @@ static int ad4170_write_raw_get_fmt(struct iio_dev *indio_dev,
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_SCALE:
+ 		return IIO_VAL_INT_PLUS_NANO;
++	case IIO_CHAN_INFO_CALIBSCALE:
++		return IIO_VAL_INT;
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
-2.39.5
+2.47.2
 
