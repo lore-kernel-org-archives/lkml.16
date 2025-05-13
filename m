@@ -1,141 +1,119 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D21C68F;
-	Tue, 13 May 2025 19:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF611C68F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747165538; cv=none; b=BdBo4IphgTouDiuikS7nz63Jr4UuZG/Vnqnfu1XVMa3wUuO0NX4akJJqzYGwLVRZi/HahE0bAdpR3UZFeEs7ipqC4y+ZuvQ0Qp+3wgAr4aXtvgsTq20f3um8is1VceofHEPbXCap8P2fhcP8ltm1RfDGq1S8W6yUj3G6k3//GHg=
+	t=1747165607; cv=none; b=F4SjE+Ztw6SzEg4lkeaPmZSwz54Hr67qHL+3q1sSoYStOxCK2fqQvp+4hLPsTx2LP6hamebBdXRH0jUjb9yzjFKDUVxFt0GinMU7p1PMIm9s9u3qZ892K4fPUTnLL/50A20R1ELahY50FRPgKISDIefnUV5hn6xE0tPvV+4LUN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747165538; c=relaxed/simple;
-	bh=lBNW4zBEM/j0MNmjok1bPUGiuM3R19Ura4s/36Eu2xg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWK23yD1eyH8rRh4zEx9Ol4IbKGoR4N3vZhN0KnCwXNCSwd7k0AGWlPUzD8yKa/D2d3dFgwuvsG9Dc3YUrnzThAZ4o7YNqEg9cPSEQgSJDbAMrP+ahIxdWDJMGQp4lpO3JJNDAPa6jxqkbWXAlLLhFxoJoAvD+8K+qs0D6aSMtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=e0i0fjmv; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1747165607; c=relaxed/simple;
+	bh=MszmKtBNtjS/mCXs9S5eoJis8nie5o+i/1key2F4EpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tTNb85w7qPIzhLusJxk4Ya860m7fIttWwFhU4xBq+H0cx4+3I1X1fyZxDz9ex2k8cfyFLdFZSdMDkk/6x4RW2QZ8wwKUGQbsjOjqBGgID/DBkht+Ic5rMmAt2+ZA0i0Pj7U2YcZKOSTgX3i6M7QP3Xr0MK2CzgjbcOwYEhpqBFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=iE6bub0D; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="e0i0fjmv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1747165512; x=1747770312; i=w_armin@gmx.de;
-	bh=lBNW4zBEM/j0MNmjok1bPUGiuM3R19Ura4s/36Eu2xg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=e0i0fjmv34Udj2xdPZzLuiK3+kjCjkLOsNM4PM45QALG2PnavBuczwngIL2p+QE7
-	 56s0PytMXE3tV5CNo1VQNvYXKtlMNtS2Bvh+X6fJAlE/b0FSwo+jFPFaRjYGTCktC
-	 j3Xm1yGXV8ozIfAX+IcmlhL0/6hAXRfU792guplynRCuW3ao1xuse1zFjXFU/T+zR
-	 NAScHq+knnF8ryskpcGL3ANh5cdjlpsZWL49g3XhFjyKLq8MlUF1dFd76BF6WF9uL
-	 YVYDxJ9fE4hnuaAo8LlkEgyFhQsWoo0mbl4429w0wnMAMaXDc59jVuGD48ZPvF/d0
-	 D9zCfYkLz9izC+H/8Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1McpJg-1unRMj1yN8-00ZOIG; Tue, 13
- May 2025 21:45:11 +0200
-Message-ID: <e69097c9-b9f4-456e-ad38-955a5511c414@gmx.de>
-Date: Tue, 13 May 2025 21:45:09 +0200
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="iE6bub0D"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6f54036c4b9so60870346d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1747165604; x=1747770404; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Gfow+0jLuuX+jpDPFCaVboVDazQRdjtB0gETvpjt9w=;
+        b=iE6bub0DTWAtC297gUbFgS9sBUm2+JTh2uqjUS3Y+Ud8vrLrIZVU/ij/k0dZlgnFod
+         dXcdS89R43Lc3fe+4ljKfo9at6OFgd3ZPq1wVG3LQmf5L9JIdJoIUxLOkmzAaOZpIKdd
+         mPIhw1s7B0z1h1G2m5xfhYCrpzLb8OSEMTzaJK/l02Bq+l3DcQQVJ8ZNrU42pqaDTbOJ
+         rXjiJmxIKHW3FmLGH3XDT2tHecwm5xHCpXPypQvWOHmRh3hicuEsc5rqnqO4PUCRbZPc
+         XpP3fmHSkOTjSWg+0Z+m3SshYfS83VmvjhyKvttNLyKnRtMyCqPnBUD3MElv9h4VArMW
+         EDfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747165604; x=1747770404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Gfow+0jLuuX+jpDPFCaVboVDazQRdjtB0gETvpjt9w=;
+        b=vWtVCF7zTDqJRZE7LN93mAO002JOySIzhWOURUM6I+vC0Sm220R0w1vFux3v3PTgYw
+         f5PLmJahrY403884kxdymkhBUygCXIsN+X5UfN/9B99sL4ZmnaiU7qmM37mRmnA6tYwu
+         +oTsGzXIL8i3UnoVoWtaSrgBX4MGrWboftshcqFjt/4XgAhjqWQ8Gj/wX71M9gW8WY0u
+         dojl+GjPTmS22zY4e5Me2e1qavVKF9JbLJtfv9vl4afxS90g+mXnhgdtaHRuFR5BWKKb
+         kRYrWAxk2RMQFtaaVL9BoyvRenTXrhKSqOOqu4PzEDOKb4xUMECmj9FjSlK14vY+I6QB
+         oFjA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8BSQic2vUzG5ydwPeB0QzEJ0hx+U6oc9uNwRiJZnjTYrZMmbdA73NjV/nmuvhXKdZ73nn6/90Ma8qiDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmpngDOWIE+ij8mqE9AetlChtvMvHeV78cdQ5kS9OvXgW7K1A3
+	tJA8iZSRsSswuv9UA+POLlgA/gYG4cvJh4BPzYUsFv+ktH4bL64QdC844klqHVlSMBf/Ep1qoj8
+	=
+X-Gm-Gg: ASbGncsbi1kjL8Nfo4pqr4wXFErb1wTCGMk1xvwsOcddA+YTCX7uVDcOhzlLC7Ne2qg
+	uTstCe1lMrcdreG4g7toK+Ah/Lb8/qP+r79s0s+kl/fzKE2ZtcDpGwLXUrX53DcxM715wiira0l
+	x5wktHpbcLzscdIA/P44x9zQm99++y7xghLgtRu6PbKQvh2fPoaYx57ljMRnYnbo0tsCrcgIQdF
+	JEzvHiMnM8bVoT3Kzwu4xcpN9zM5usZl2ZJoGNNjmQseCBEeXMOY35pyFNjI4GAmrg/AmM3vXVv
+	QKA1cti3KzK9S2i0/5dsFH7s5uafhcKxADxf4+FIoWIzPEnTaepWil8zP97UyQDdx5shjyp3e1f
+	bsuntyincUJO+XtEdILh5FozcZQ12oiqmBt8f5hxNYbky
+X-Google-Smtp-Source: AGHT+IEQ1s26wkUIF5mIfJy/X2WZMgbORKbbBrxgLhKcXjfhLXPfNrdW83rnhJVDuRATHDAgFIYlmw==
+X-Received: by 2002:a05:6214:1bcb:b0:6f5:dd5:a594 with SMTP id 6a1803df08f44-6f896dfb53emr11435646d6.5.1747165604259;
+        Tue, 13 May 2025 12:46:44 -0700 (PDT)
+Received: from rowland.harvard.edu (nat-65-112-8-28.harvard-secure.wrls.harvard.edu. [65.112.8.28])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e39e09b4sm70419606d6.6.2025.05.13.12.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 12:46:43 -0700 (PDT)
+Date: Tue, 13 May 2025 15:46:41 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+Message-ID: <110b763e-30c3-4e2a-b06c-339e086a48fd@rowland.harvard.edu>
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513113817.11962-1-00107082@163.com>
+ <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
+ <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
+ <b334ef97-1f79-4dd9-98f6-8fd7f360101e@rowland.harvard.edu>
+ <40618da9.b062.196ca805193.Coremail.00107082@163.com>
+ <ed0c2f75-f97b-4cad-ad35-78361edf142b@rowland.harvard.edu>
+ <3aed7b55.b165.196caf9f5ec.Coremail.00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/10] platform/x86: msi-wmi-platform: Add unlocked
- msi_wmi_platform_query
-To: Kurt Borja <kuurtb@gmail.com>, Antheas Kapenekakis <lkml@antheas.dev>,
- platform-driver-x86@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20250511204427.327558-3-lkml@antheas.dev>
- <D9UFCPLQHE5V.UH1BAK279S5M@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <D9UFCPLQHE5V.UH1BAK279S5M@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:pi1mn3z5OJXqF8HqmChRnn5Ha1H32diW21bOPLkxrBDPPE2O1e1
- MWhEqWuA0mTCSHbnUjH+8G5wD+WXXpfh3CM5OUEwYKhsOsx/AAFA50Q1/dRm4p9f0aCb1nd
- 6RY7PZZdOqF/L70LYmxp+b/gOIu/NlPKnwXqDtspNzwfir11wICYdOqGS+it6B1cE5CyiDT
- 4O3gOQsz9CBsyoW1W87lA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nKRyWvidPKQ=;XNaDZ9xV0MDeADKPKuTnVPHR7Y+
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3aed7b55.b165.196caf9f5ec.Coremail.00107082@163.com>
 
-Am 12.05.25 um 21:21 schrieb Kurt Borja:
+On Wed, May 14, 2025 at 02:48:21AM +0800, David Wang wrote:
+> It is not an "extra" memory area,  the memory is needed by HC anyway, the memory pool just cache it.
+> And about not freeing memory until URB released,  you seems forgot that we are talking 
+> about "memory pool" .  A URB only used once could be considered a memory pool never used.
+> 
+> If your memory pool approach would not  "waste" memory, I would  rather happy to learn.
 
-> On Sun May 11, 2025 at 5:44 PM -03, Antheas Kapenekakis wrote:
->> This driver requires to be able to handle transactions that perform
->> multiple WMI actions at a time. Therefore, it needs to be able to
->> lock the wmi_lock mutex for multiple operations.
->>
->> Add msi_wmi_platform_query_unlocked() to allow the caller to
->> perform the WMI query without locking the wmi_lock mutex, by
->> renaming the existing function and adding a new one that only
->> locks the mutex.
->>
->> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> You only use msi_wmi_platform_query_unlocked() to protect the
-> fan_curve/AP state right?
->
-> If that's the case I think we don't need it. AFAIK sysfs reads/writes
-> are already synchronized/locked, and as I mentioned in Patch 10, I don't
-> think you need this variant in probe/remove either.
->
-> I'd like to hear more opinions on this though.
->
-The reason why we want such a function is that sometimes we need to perform
-read-modify-write operations over the WMI interface, forcing us to prevent
-other clients from calling a WMI method.
+Here's a simple example to illustrate the point.  Suppose a driver uses 
+two URBs, call them A and B, but it never has more than one URB active 
+at a time.  Thus, when A completes B is submitted, and when B completes 
+A is submitted.
 
-Thanks,
-Armin Wolf
+With your approach A and B each have their own memory area.  With my 
+approach, a single memory area is shared between A and B.  Therefore my 
+approach uses less total memory.
 
+Now, I admit this pattern is probably not at all common.  Usually if a 
+driver is going to reuse an URB, it resubmits the URB as soon as the URB 
+completes rather than waiting for some other URB to complete.  Drivers 
+generally don't keep many unused URBs just sitting around -- although 
+there may be exceptions, like a driver for a media device when the 
+device isn't running.
+
+> I want to mention the purpose of this patch again:  
+> A lot of "private data" allocation could be avoided if  we use a "mempool" to cache and reuse those memory.
+> And use URB as the holder is a very simple way to implement this,. 
+> 
+> And to add , base on my memory profiling, URB usage is very efficient. I think it is a very good candidate to hold
+> private data cache for HCs.
+
+All right.  I withdraw any objection to your patches.
+
+Alan Stern
