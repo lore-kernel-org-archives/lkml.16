@@ -1,113 +1,162 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C728640E;
-	Tue, 13 May 2025 13:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE96D28640E;
+	Tue, 13 May 2025 13:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143546; cv=none; b=B7ydVMG7tD93Q+bLo17AtgAMwwwfO7cn+ykGyDNRFYbIXc+EWVOpyrCdKeUGMY2U7sq7nZBmglZkBSl1FaNSnSt9EFW/EW/rvCZcimlUGOscOTvWc0nXJQNOVHmBnhuuy+EW7b20vj0ZF9CyNXMOmiYur4I/t9jVGHavQfJ3mDw=
+	t=1747143551; cv=none; b=O3YggUW94MZxaoVEAa6yL0QYwbn2Ysxkt5WND38QCxpYC0IfLvNGjQ2UGLjaX0inANj5y2GntIxPQGqkitskP8zI3PvtXxYQZ7hz/f6lKlhpfVPu3lfLDH8btuN6o2oV3RBlO2UO5NoGW9Zo5F9+h7qEeCqRniHj5WAMnc4SC6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143546; c=relaxed/simple;
-	bh=w/zWZ92yzc6YUkiZeb6+MrsktIw7OQGZTLwAU32pCxo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YJSuf/Sg1I5bREko0MkBXoB1rNL9/zwjomq+bQHK68GmLMSyd51mSA6+iXLnmszXZemnV502raijZnwh5Siu50/TntYpotMxqHSxNJ5PSf33iSWgSnTiFJhmXOGLHMjvNqkBXYYINZ/ovb139YZEHCHqxbj+GK/mVlI+9+0IWUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-879ed601971so1363432241.1;
-        Tue, 13 May 2025 06:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747143542; x=1747748342;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=otMogSOyvc+azXfG2zQ9PW31C7giKBuO4YtLeGYVjBA=;
-        b=SqGGDyPLacpX72rLCoeLCPJg9F4qq2oSu6kkkYGuMd0jZpgOBgZ9HFvlkjxSpeWqRE
-         6e1ULszt+p04y4Hlo1BN06ULANgjNOF2rv/3xpD+9ZrazsRkFWGREWuE+m4DxCdR2Q88
-         pgAmQEzndr/buwaqd9IjXG5Qlh0ui4jeLJrri7gaUV+K8bCznJCVDy6ZuuXLeJrgSs75
-         aaufdmZT+kqdTMrGaQ1UgO02GQQ+Afmf7bT3bjGwxbVu8FY2rgelb+ZU/xO8NHrM67gG
-         hYHp43eKcwEEwDhZmYWz4hQ30ibW1hQsynAx8KP/o0RmjqosJ22hNHi5icWBY4QtnqZl
-         DOrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVN/a6T8ePNUKQp7/VIDa9m4B+LH855PYdG8KQAAsx8TE5m1D2zbDme1Dm+JW/f4G/nwCf+sXeqMN1OZAmp@vger.kernel.org, AJvYcCWKrIlspR0nv1RVe91gHIYkSYHvT0e6AO4jHR8kCGGlBBy727MGG53hj0vUTZQKQW0mchCd3+xxer9YoNGVPVFKhbw=@vger.kernel.org, AJvYcCXISG+VUqWB5MEn8/2+NsXR6IfLnyHKDGXd7uOCn5GPJxsJ9iECUIsFxLQ/AANZyYtPMPFG/xpJH/Wn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz8/MF1p7s8WzwX4Xhq8BpB9B/7LKNEB0a0tRcU96D1kfGAXpm
-	0flzt3KDU8HlIMvLVIUj5wu0TbdrcZjg6/Pgxp0oyaEKzSb/jLsSeL2WWgCS
-X-Gm-Gg: ASbGncs1xNnrx4wEiFcSWzJZWjGGEYP3km3hE++fHPlVY1rWpyNSuwTXtXjCL3sHkFx
-	r+pxIiw0xALyGLEOh2KlKHJZVZ/YEKzUSviMX536eYHXYdgnGksaYy0L9txyVcTrR3tDNrMvEb0
-	PfH/fwO+siyPkxPwWs5BcgIr932jqNrDyaU4BPxx0d+FNA1leJIvc8LgbYeC3CuUGTB/vDiO5us
-	fRswxkhRqtOWgKQlFDSZDQjvhMT7fGWC3EN5BxO0iaWyuIz8Y85Invw8mts+xkgvPUePektYqaN
-	5kel6LvdnEm7gG5gzQW5QQ05RLwJZHHDTWf82UpAf+p+R8Mzrs4gRIl4oUxenHtK58jtcivqU6z
-	y3LRbRuwI2tqhlA==
-X-Google-Smtp-Source: AGHT+IE/EhzF6TBjNH4i+Mqkn+GleNMj3ux/pNzFWLyvHinHSG31SQd/lhemIZBXjY1SFs5unwgGSw==
-X-Received: by 2002:a05:6102:4b19:b0:4c1:76a4:aee4 with SMTP id ada2fe7eead31-4deed3d366fmr15206965137.19.1747143542495;
-        Tue, 13 May 2025 06:39:02 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea857f73fsm6732930137.3.2025.05.13.06.39.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 06:39:02 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4def2473a58so1493523137.2;
-        Tue, 13 May 2025 06:39:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjuxD8wLOWI4tW2LKEsZlzh8BajIaj5Q4rhbFpNgQ37XR6M640T7YPpt71AM9bxSv/fAQPsyPreGxE3Ws/KOyqLnY=@vger.kernel.org, AJvYcCVr2Ara8s/YlI3skt7dnmM/yqGvwFkob3De+lktzFsQq1sSvbFCI7d5vB220shJUL0m0+Jj8iqhXc3u@vger.kernel.org, AJvYcCXiRrulHUUDPQJXZIa3QVM2tqYGtx23XlTxySwiFCFL7zoSH4XcZq4FXNfCdRLK9ksBVxFlRM+nuAEXBq3f@vger.kernel.org
-X-Received: by 2002:a05:6102:4a92:b0:4da:fc9d:f0c with SMTP id
- ada2fe7eead31-4deed35dc84mr15321354137.12.1747143542024; Tue, 13 May 2025
- 06:39:02 -0700 (PDT)
+	s=arc-20240116; t=1747143551; c=relaxed/simple;
+	bh=msob1qipX3+JtDxisx9UwJX1EHZgMW1H2/X4woFM/wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ictDEUiQhJRdRuq4j924DEZ+biXwdYahEezatzQWKAmLl4Lx1LejtxVcN2CrWdpQt5xJDRr4lMwZQfrJLlvZMo+UAQvyafV0X8U6dmx0K/xbAClCb2iPV0ZXt+nFWDrMk/x2b0ymVnH7h5O5uLk/mX7aAGjWPS0cbHjASPPYxMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fxu/sVpo; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fxu/sVpo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747143550; x=1778679550;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=msob1qipX3+JtDxisx9UwJX1EHZgMW1H2/X4woFM/wk=;
+  b=Fxu/sVpoMttpulczGwVtxNwYojabnbdQZk6QYdKgGIUzutCABwz8sv5G
+   LMtx8Chg9xI5O525BOFYBGYwH7oKcSqZ0vCF1d+wEF2gkvrWuSkogcxaV
+   SS1nTx4NFXz8nglmyXLYNxWA2ic9dCDgEpReYlgYex3wGL+2IrGtqO4Hy
+   gripm3Ogho6e5nXd57LmI6OX9lBcGRjnY6afN3xSzprUC2MxphbbtvU7Z
+   37747hb/j2ShTc0Hd4fIrsoyEZei0JJk8Bdjp/9sdLMMDqIJC46mPRKSk
+   wW9NebOrjsbXskJb3DcH79DaNf2SV3erztQ9jBrOpWzde9wTOFdAv3eGx
+   w==;
+X-CSE-ConnectionGUID: dDKLXlc3QQyO+y5Sanmkww==
+X-CSE-MsgGUID: NugCQfIzRvmshIzAMDpnmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="36615448"
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="36615448"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:39:09 -0700
+X-CSE-ConnectionGUID: r3WxKfrgSp6+nGbmN2CTuA==
+X-CSE-MsgGUID: k3lOBvBySteJTy+gX2ylGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="137635515"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa006.jf.intel.com with SMTP; 13 May 2025 06:39:06 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 13 May 2025 16:39:05 +0300
+Date: Tue, 13 May 2025 16:39:05 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Cosmo Chou <chou.cosmo@gmail.com>
+Cc: badhri@google.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cosmo.chou@quantatw.com
+Subject: Re: [PATCH v2] usb: typec: tcpm: Use configured PD revision for
+ negotiation
+Message-ID: <aCNLeX1k34BSgPOV@kuha.fi.intel.com>
+References: <20250513130834.1612602-1-chou.cosmo@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com> <20250429081956.3804621-11-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250429081956.3804621-11-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 May 2025 15:38:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUw9GNv1_jtjnfjL1x38-Snhdie41s5=9DZhQA5NMjVtA@mail.gmail.com>
-X-Gm-Features: AX0GCFsLHBRN64p-uZIQMVjwi0yO7Y1WSMGqfYnyWXgWneRfxfyFamwGYreAKAE
-Message-ID: <CAMuHMdUw9GNv1_jtjnfjL1x38-Snhdie41s5=9DZhQA5NMjVtA@mail.gmail.com>
-Subject: Re: [PATCH v8 10/11] arm64: dts: renesas: Add initial support for
- renesas RZ/T2H eval board
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513130834.1612602-1-chou.cosmo@gmail.com>
 
-Hi Thierry,
-
-On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Add the initial device tree for the RZ/T2H evaluation board.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+On Tue, May 13, 2025 at 09:08:34PM +0800, Cosmo Chou wrote:
+> Initialize negotiated_rev and negotiated_rev_prime based on the port's
+> configured PD revision (rev_major) rather than always defaulting to
+> PD_MAX_REV. This ensures ports start PD communication using their
+> appropriate revision level.
+> 
+> This allows proper communication with devices that require specific
+> PD revision levels, especially for the hardware designed for PD 1.0
+> or 2.0 specifications.
+> 
+> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
 > ---
-> Changes v7->v8:
->   - removed loco clock
->   - fixed checkpatch warning
+> Change log:
+> 
+> v2:
+>   - Add PD_CAP_REVXX macros and use switch-case for better readability.
+> 
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 29 +++++++++++++++++++++++++----
+>  1 file changed, 25 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 8adf6f954633..48e9cfc2b49a 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -313,6 +313,10 @@ struct pd_data {
+>  	unsigned int operating_snk_mw;
+>  };
+>  
+> +#define PD_CAP_REV10	0x1
+> +#define PD_CAP_REV20	0x2
+> +#define PD_CAP_REV30	0x3
+> +
+>  struct pd_revision_info {
+>  	u8 rev_major;
+>  	u8 rev_minor;
+> @@ -4665,6 +4669,25 @@ static void tcpm_set_initial_svdm_version(struct tcpm_port *port)
+>  	}
+>  }
+>  
+> +static void tcpm_set_initial_negotiated_rev(struct tcpm_port *port)
+> +{
+> +	switch (port->pd_rev.rev_major) {
+> +	case PD_CAP_REV10:
+> +		port->negotiated_rev = PD_REV10;
+> +		break;
+> +	case PD_CAP_REV20:
+> +		port->negotiated_rev = PD_REV20;
+> +		break;
+> +	case PD_CAP_REV30:
+> +		port->negotiated_rev = PD_REV30;
+> +		break;
+> +	default:
+> +		port->negotiated_rev = PD_MAX_REV;
+> +		break;
+> +	}
+> +	port->negotiated_rev_prime = port->negotiated_rev;
+> +}
 
-Thanks for the update!
+Do we need this? Couldn't you just add one to rev_major?
 
-> --- a/arch/arm64/boot/dts/renesas/Makefile
-> +++ b/arch/arm64/boot/dts/renesas/Makefile
-> @@ -152,6 +152,7 @@ dtb-$(CONFIG_ARCH_R9A09G011) += r9a09g011-v2mevk2.dtb
->
->  dtb-$(CONFIG_ARCH_R9A09G047) += r9a09g047e57-smarc.dtb
->
-> +dtb-$(CONFIG_ARCH_R9A09G077) += r9a09g077m44-rzt2h-evk.dtb
+        port->negotiated_rev = port->pd_rev.rev_major + 1;
+        port->negotiated_rev_prime = port->pd_rev.rev_major + 1;
 
-Please preserve alphabetical sort order.
+Or am I missing something?
 
->  dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h44-rzv2h-evk.dtb
->  dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h48-kakip.dtb
+thanks,
 
-The rest LGTM, so with the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>  static void run_state_machine(struct tcpm_port *port)
+>  {
+>  	int ret;
+> @@ -4782,8 +4805,7 @@ static void run_state_machine(struct tcpm_port *port)
+>  		typec_set_pwr_opmode(port->typec_port, opmode);
+>  		port->pwr_opmode = TYPEC_PWR_MODE_USB;
+>  		port->caps_count = 0;
+> -		port->negotiated_rev = PD_MAX_REV;
+> -		port->negotiated_rev_prime = PD_MAX_REV;
+> +		tcpm_set_initial_negotiated_rev(port);
+>  		port->message_id = 0;
+>  		port->message_id_prime = 0;
+>  		port->rx_msgid = -1;
+> @@ -5048,8 +5070,7 @@ static void run_state_machine(struct tcpm_port *port)
+>  					      port->cc2 : port->cc1);
+>  		typec_set_pwr_opmode(port->typec_port, opmode);
+>  		port->pwr_opmode = TYPEC_PWR_MODE_USB;
+> -		port->negotiated_rev = PD_MAX_REV;
+> -		port->negotiated_rev_prime = PD_MAX_REV;
+> +		tcpm_set_initial_negotiated_rev(port);
+>  		port->message_id = 0;
+>  		port->message_id_prime = 0;
+>  		port->rx_msgid = -1;
+> -- 
+> 2.43.0
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+heikki
