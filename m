@@ -1,124 +1,139 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C2F1E7C08;
-	Tue, 13 May 2025 06:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3D11E9917
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747116571; cv=none; b=PF07Sp5pR7r/WFTmeCnOLrVv463JF+wrkMFzfu/VajZeq9F9mBXbKMZh6W3YqnloN0u3mq++KPUxGbQuxfmzWr5c7ubPmMv/xvjjHLzboG5fNaRrQLfH7/zGcb8HRqf4JcIYVjYg+itg989jNFvp0SBqfnWWD2D7szphCeP8ca4=
+	t=1747116589; cv=none; b=L1G6qeLK+T3DPtAzogZOlKKEFN2JQyUFlegSpXOGIqfUoUzL8ScCiU7MxZlUFqLKQKAgBoBOIiVxk6Cu6b7jWzVj0yMTkc+1vFCebTufufUEJi9NVBDjeT3Vx5c18kwPrD5ytWpmVMHaQmTXewRPBtHUnadNKWg/+HrjV8maEcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747116571; c=relaxed/simple;
-	bh=DBAUxqh2hy8YWYEFdl3dKLIh+4+WUnk78OJrN/k/deY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zh8n1e/8pJ2nF0B1vnbHIJSldNviUEhMzeTTcVTaZy2FrHWQkK0QslPBTpQ5TgMEWoWspCqVl4lA7Dm5D0sRY6XerOvf9EMwVjUCtZt4AbGaxgpa68UUOnORfoDKLLKeY94HxGoNpdfDPjuyEiw2Rn+aILHQXuFBFBS/VvPVhYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OXL6USZh; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1747116589; c=relaxed/simple;
+	bh=SiAJOcPhF5ZcvLR80Kj3eWSNASMiANtxhQCs1FVKI/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EDkRFqVKW22A8sPTLQwD+oShjJSDUPAn5430r0aASbJKd0z7cd1Xf/EUpCr0rqw1yhAQz9q0ZX6mIdNgKew7scJidB7IDL7hdojXIIBoi7eL0cgba4JHKwC9os7+DaILg9gT07X+BgqLVC3VSgtH8RCRMBgtIweGrzdskJCRKDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MMRN3fHd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1qd3F3bG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MMRN3fHd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1qd3F3bG; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OXL6USZh"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CIOSFA002657;
-	Mon, 12 May 2025 23:09:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=LTcavfpOP7R4BqtVts9MdBa87
-	U8Ph1y46o7oytL7FNY=; b=OXL6USZhfEU3wDSoGpfIZKspcY9t7/bXhBiURoCu7
-	sw/gUDJH3H0xoH4NYjOsEaS3hqoByB55QS6FPy8JRltt1hXoyS6r9oXeJ/OMiIHz
-	6WG/k3XxxBfVELuoMQ8JTW/yYK0H+ut7a484YnLVZZ8eYOH041x/zI5FtVCrOuao
-	yusL8WpA61fOUgEa1sx1HvpH21xzpzYDoeyb4JzU6YwbWHPet1RcMjI1WVtdB76b
-	CtxReFNt1zamUfW0ZOI4rBOeCZPfbN3YJ8gdSNf4Wi3LKFYGjndQEtiiMr23CxvO
-	2surSxZ+X7RxQ+URzK4Gw4ZkdMMNQ4AiqXnbxHqZlT0EA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46kp7ms5kf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 May 2025 23:09:11 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 12 May 2025 23:09:10 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 12 May 2025 23:09:10 -0700
-Received: from optiplex (unknown [10.28.34.253])
-	by maili.marvell.com (Postfix) with SMTP id AE0B43F7077;
-	Mon, 12 May 2025 23:09:00 -0700 (PDT)
-Date: Tue, 13 May 2025 11:38:59 +0530
-From: Tanmay Jagdale <tanmay@marvell.com>
-To: Simon Horman <horms@kernel.org>
-CC: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
-        <andrew+netdev@lunn.ch>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <bbhushan2@marvell.com>, <bhelgaas@google.com>,
-        <pstanner@redhat.com>, <gregkh@linuxfoundation.org>,
-        <peterz@infradead.org>, <linux@treblig.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <rkannoth@marvell.com>, <sumang@marvell.com>,
-        <gcherian@marvell.com>
-Subject: Re: [net-next PATCH v1 04/15] octeontx2-af: Handle inbound inline
- ipsec config in AF
-Message-ID: <aCLh-9EchqDFeW66@optiplex>
-References: <20250502132005.611698-1-tanmay@marvell.com>
- <20250502132005.611698-5-tanmay@marvell.com>
- <20250507091918.GZ3339421@horms.kernel.org>
- <20250507092832.GA3339421@horms.kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MMRN3fHd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1qd3F3bG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MMRN3fHd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1qd3F3bG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6F85E1F387;
+	Tue, 13 May 2025 06:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747116586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iQl2xd5pYmgmS7e1vmtjBQXxxTTpVuRRCi7wCMozpqY=;
+	b=MMRN3fHdGN6GkBgaqdXY5CLZnCLKqj/DKdkxhCdGJ5tqPAOInfkneSyFHA2+GXngIk5S+X
+	MaN/VSdUbHrvBXFGB4bfEQ4jyK0aPalIGkQcvKu8GqXrTnRdA8/9cVkRKyVRmLD6gWggKS
+	L3KMsMQ2ArA8NScaKMnYP0UslKKDg+M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747116586;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iQl2xd5pYmgmS7e1vmtjBQXxxTTpVuRRCi7wCMozpqY=;
+	b=1qd3F3bGOSSQKJZivplnLnZH2NcorMMH268x/J6hf/6J+PkHzFu5EzUWH0V06kf5sV+tsD
+	kgDx5rsb2jE0LnCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747116586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iQl2xd5pYmgmS7e1vmtjBQXxxTTpVuRRCi7wCMozpqY=;
+	b=MMRN3fHdGN6GkBgaqdXY5CLZnCLKqj/DKdkxhCdGJ5tqPAOInfkneSyFHA2+GXngIk5S+X
+	MaN/VSdUbHrvBXFGB4bfEQ4jyK0aPalIGkQcvKu8GqXrTnRdA8/9cVkRKyVRmLD6gWggKS
+	L3KMsMQ2ArA8NScaKMnYP0UslKKDg+M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747116586;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iQl2xd5pYmgmS7e1vmtjBQXxxTTpVuRRCi7wCMozpqY=;
+	b=1qd3F3bGOSSQKJZivplnLnZH2NcorMMH268x/J6hf/6J+PkHzFu5EzUWH0V06kf5sV+tsD
+	kgDx5rsb2jE0LnCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19822137E8;
+	Tue, 13 May 2025 06:09:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jYShBCriImiJQAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 13 May 2025 06:09:46 +0000
+Message-ID: <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
+Date: Tue, 13 May 2025 08:09:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250507092832.GA3339421@horms.kernel.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDA1NSBTYWx0ZWRfX8HgQU5K6rkNp UUJ2SbYIcR+KLtR1L4k0WdRjh7ClPtRyTKw2NaBjZacih/+8Q2J8SVRrmzb837mMcsECC7G0c7S A8XTjpAU+eMo80z3nC1bivKxo9jFg8yT2pYbah6e2HZyk6Bw9big+/7BsvfSRr0w1pZRnAOAgpT
- k/d1kmwfCDO7gJLdKqtLxZXDQI6md7oLpzBpseaBt+Z9VSu7Ho49hsOXmtxiH/03SckmJDcOyNN myJryKm42N5wTzXuwHydi4Ha1CalLArOlgN0SvWXvyE6P1CGsUBT+vo5/TZvv7CBcpj5Gxnr0TJ rX/UVqB6si306ihjIejk5cmQYRwdHTEy9qir4ARcNxqOyoNurhrCk3fOGuTUhz83B8sBMt81ufF
- rQCZH5Y8ZaI8ZQLTBD3PdJzzU0J7n4sfJswilQ9q0ZoZOc40h81l1JkpHxl2VdFXtzrNU/MD
-X-Proofpoint-GUID: nxpD1rjwKRq7ByMbXYvpALJydRp9jkFW
-X-Authority-Analysis: v=2.4 cv=YsYPR5YX c=1 sm=1 tr=0 ts=6822e207 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=M5GUcnROAAAA:8 a=FGfcEKYBuW_uT_4AAXsA:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22 a=lhd_8Stf4_Oa5sg58ivl:22
-X-Proofpoint-ORIG-GUID: nxpD1rjwKRq7ByMbXYvpALJydRp9jkFW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+To: Christoph Hellwig <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>
+Cc: Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
+ hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
+ bmarzins@redhat.com, linux-kernel@vger.kernel.org
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <aCLe5UT2kfzI96TQ@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Score: -4.30
 
-Hi Simon,
+On 5/13/25 07:55, Christoph Hellwig wrote:
+> On Mon, May 12, 2025 at 05:18:43PM +0200, Kevin Wolf wrote:
+>> Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
+>> doesn't even necessarily know that it's dealing with a multipath device,
+>> so it just has to blindly try the ioctl and see if it works.
+> 
+> Why is qemu even using SG_IO to start with?
+> 
+To be able to forward SCSI commands.
 
-On 2025-05-07 at 14:58:32, Simon Horman (horms@kernel.org) wrote:
-> On Wed, May 07, 2025 at 10:19:18AM +0100, Simon Horman wrote:
-> > On Fri, May 02, 2025 at 06:49:45PM +0530, Tanmay Jagdale wrote:
-> > > From: Bharat Bhushan <bbhushan2@marvell.com>
-> 
-> ...
-> 
-> > > diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> > > index 5e6f70ac35a7..222419bd5ac9 100644
-> > > --- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> > > +++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-> > > @@ -326,9 +326,6 @@ static int cptpf_handle_vf_req(struct otx2_cptpf_dev *cptpf,
-> > >  	case MBOX_MSG_GET_KVF_LIMITS:
-> > >  		err = handle_msg_kvf_limits(cptpf, vf, req);
-> > >  		break;
-> > > -	case MBOX_MSG_RX_INLINE_IPSEC_LF_CFG:
-> > > -		err = handle_msg_rx_inline_ipsec_lf_cfg(cptpf, req);
-> > > -		break;
-> > >  
-> > >  	default:
-> > >  		err = forward_to_af(cptpf, vf, req, size);
-> > 
-> > This removes the only caller of handle_msg_rx_inline_ipsec_lf_cfg()
-> > Which in turn removes the only caller of rx_inline_ipsec_lf_cfg(),
-> > and in turn send_inline_ipsec_inbound_msg().
-> > 
-> > Those functions should be removed by the same patch that makes the changes
-> > above.  Which I think could be split into a separate patch from the changes
-> > below.
-> 
-> Sorry for not noticing before I sent my previous email,
-> but I now see that those functions are removed by the following patch.
-> But I do think this needs to be re-arranged a bit to avoid regressions
-> wrt W=1 builds.
-Yes, I agree. Will rearrange the code blocks in the next version.
+Cheers,
 
-Thanks,
-Tanmay
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
