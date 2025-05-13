@@ -1,127 +1,336 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359631E9B07
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BF6323D;
+	Tue, 13 May 2025 06:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117437; cv=none; b=YF/rabJfAeyaZkziJly1PdJsmDZM4sJ5bcEZGt3HNs0Mn9qkL6Iq/IwCG+9FwvlvSbst/fvMF0mYiC/lPugGCTuaeP8+DtSCuF+j7vwpOw8OYBQ8jdmPTMxbNuvJpHiqgdtIf5aC6QWHm9PheloxrqK4Ff79p9y9YF+wTSU7C+A=
+	t=1747117523; cv=none; b=aWP7Da7u1fC6MgSYiuoW8cXEtYFNg2EER/Rg4hrd+wvJauTJfWtLEamm5sAiZcpVOMR7UFvt50puD69hrK70cyuvM81V0aAq7jaCB/H4g6E9By/D1yrS6pm08xaIGMjdtywi9R/WfjRbRMH+sVTb7aweXcwrX9mzFGYSzRSuEWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117437; c=relaxed/simple;
-	bh=NWDL4ww3BQl/HzMVL3Bws9NyNng7ta9aYTnl0hs9Srg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WTPXRKqQGNBcsGncPrt7/P8eeAlT5R1LUXpqAD8Hdv3lRgodPJDxAnPmy3ZiXGwYuFZMqDVE9Ki66IMGecCGQKOYy2ZgY+VxXf/wU9Yy9hOwwpPgHnN68ooz4j6sUJhuYPKLc6mXtNFLZc+MrAOY7g3Zz4Mz967qyThAE/Sd/QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=gioOl9Hu; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1747117523; c=relaxed/simple;
+	bh=AHumA6Yr6/pS8vAr/ck3sCQM3vY1g7wA8pe6gTh3RMg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3DG4JIRNozM5+cwABlFCRxm1m/L7uqDgqKiTJTGjAtgPlS4Z+7vnzktv0R/l6KR36EamO3YEEuE7C1bBrVutFTq5HxW73vrm4OiP9ksBhYsF8rqXCHje00BHi3lpIEm4VytkrpMJbs9kR7b5dc7DoRuCQeBbCBrv+WBy89xr2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egJdDsGq; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="gioOl9Hu"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73712952e1cso5199371b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 23:23:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egJdDsGq"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3fa6c54cc1aso3592756b6e.1;
+        Mon, 12 May 2025 23:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1747117435; x=1747722235; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1747117520; x=1747722320; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4Xe4uYghntGHOIEC3/13sie1Qhs4ut1BoBFJ4y42rbE=;
-        b=gioOl9HueOoo+fAbm9efI7fx1oKwy3vyGzy+7wCsqLBA8D2Fqc8O9rFW5IrcV0RUcu
-         8PssdqvhprsqZ8DiqYINK7DyTz8sqKr9eusgHs5ut6MN/LM24dsq/XfcmdjJYUTgbhdI
-         NuzwV7p6yrc8EIEoYgp/KJspyvVdM59lTI5eT+AAKp/JUPxcS02MQP2QlaO0sLm3vPhy
-         5ycUzOcNRgaPGAY588MfCeGJEzFzS27B6BwClhqePvGgSPjRkjI7rO1AthTo1TRxiruB
-         8otXPJKAnY+4fcRd0kA/48ovlBGm1MRwYPzI0VRAyG1uyjYob+3sZQIgksOFfgankAf0
-         wNNw==
+        bh=+d7AiXMLoB/R6GaZCR9iO4bJ1gIgBKIWJfItI2aaeUM=;
+        b=egJdDsGqVpEJTR7UA+Upt4hlblmQ2G70xjKcSR0Ebx8dg5Xkl33K2UO8eBCC16U1Op
+         cqRpPRM9DdF8XObVQW6fupAiEmuqxpYgQ/e5BlmNeJvk/Oyx4GQ4sSrBbn+pJigRcMje
+         vrlh97kHsQqiMA9hsPS8pyvtTaJF2X09ipm/6w0zpOt9KH9c1XEixfb8GRWjvpt9erZL
+         msPKF5wS/Ym+4KsTpGYccmqel6x6vZcm36sb0L2fonDMCsI5PFrSF4K+qhCMLemHOH28
+         IChLLRi8mPFqEC5M8VmK7/nJSsMpuS93S3tF1zDsEGZMQooOM1hkqyoaitSzD5YLEScZ
+         NjcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747117435; x=1747722235;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4Xe4uYghntGHOIEC3/13sie1Qhs4ut1BoBFJ4y42rbE=;
-        b=UwSxCN8AEFb7W5b6j4mWJeFhN/8jFHGwsCCxF7qcep+Fk3Clg8l5kPr30filppRvo/
-         FG9QZDgf1/LHTrsJJ4aP8Hzs0O467mt+JCefrk4tQVn+cGKgS+O5awCktBVWbzr6rOWw
-         cQm+v0kW6/COwppTTpFLVPKJtZzFVF0SZNVR08tU+AvdDslO0q9qMJo0B90WwYBK1jmb
-         xSN3x7Yv4gzinaEK2LkBmG31GRS4wjzGaRTucsC2hpJWpfPLAtgbLwDEhdU8kNN5d7iH
-         b/VnnxKSrpqhiWHMzH0cIDCqvtL6mEFgamanbv/vjtkvhY99Mj2GAu0qb1D6yIYPImEg
-         nPvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3Ej9XvuFnw6kC/3rvIUIiICSYT1ZVwOW4RI5ecANRi70NfA1fcFjCuS7+/ZhwDc+qx+JhsjehK0+f5wY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzGJh9hU5xNlBx5KiKUjnMlnNm7obsGGcRQEp/evIbgwL+8Jpu
-	jPmHfydqFm7kK6oR9mU7TwDH+EMLevgpWhKHzjGc5lRGICrdIwiuIdsslxAk47U=
-X-Gm-Gg: ASbGncu1WxXGKwyHmI141x9nxgw1VnufOJI3x/ApikKp746xYgAvVifS+voocoMR9/G
-	3Kszw6RFjFnfIAcgRmyb2Hspr0ItGN+yQHbGS95F+LLUew+u0U0RD0yOKrCTatAjFQ2kyA4apNf
-	fMCkiwDmDLtO2D7X1wu9cG+D5GLP9AiNk9UPiSZBu4Gqs4d3NCmViihrNzuv9JYHeGRMefHlrx4
-	WT/2e4QC/dgOHnVhfhi4UigvVpYVHnWlOAHFr//otpLUTI52Prf53Pb6umznPsYcopOSiJC19NJ
-	k4QjSo4Ot4kCAHk7GsEo5QY/uD+wR5SOn8OSCffXbmFthnYNNd7mjH8yjEvPEnOI
-X-Google-Smtp-Source: AGHT+IGaYQuRICfs2SknzMpxDQM2zuaFYRjcuLtZoCaPh500iOYbo4XJp56Xa+ir6JeYYEIEzfycdw==
-X-Received: by 2002:a05:6a00:4652:b0:740:6f69:8d94 with SMTP id d2e1a72fcca58-7423b3f12e7mr22633670b3a.0.1747117435423;
-        Mon, 12 May 2025 23:23:55 -0700 (PDT)
-Received: from [10.54.24.77] ([143.92.118.3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a1088csm6987174b3a.113.2025.05.12.23.23.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 23:23:55 -0700 (PDT)
-Message-ID: <bf9a3230-26b9-40f7-aff0-99c802fb7764@shopee.com>
-Date: Tue, 13 May 2025 14:23:50 +0800
+        d=1e100.net; s=20230601; t=1747117520; x=1747722320;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+d7AiXMLoB/R6GaZCR9iO4bJ1gIgBKIWJfItI2aaeUM=;
+        b=PcBiXvGjN3GxmWAeACoJRpx1JOd3QbkgZh2BWZPGC3Y17HXe9k/xuXh5UgoXZDrh5s
+         C8HonRtEiXLwNt1v6A5+70/2+DwO/Yo+QpXHbGHW2xEKNjpLFNlFR4mgEKXYG+A4EHcK
+         FT4Dzr15myGzE1P+tFk2QXUzblHrzNiGJoHTGK9VPosXyuuv8Xrjv7ctK3JN2o4lR63R
+         8DgWFNvR3H5yTYd0SZnttWWS8Gm/U848F61Jl6cX+ZJlTr6RMljrGmhDtxeZeCiuiAng
+         87LKlN/V4BAGXt7xBPClBCECVjKxcyqulf/v0g/PXwb2CrrSecdleIAqjbZ+T6V1XD8n
+         QI9A==
+X-Forwarded-Encrypted: i=1; AJvYcCU77wjQM+z/lk+/X5OXRbRhtl81Vft+j0NRySPk6txKesmq+TukXGkD7r52cycLu8tCFI7k4y8P@vger.kernel.org, AJvYcCUh5Gn21l0Kh84xKXCz4AXWyO6Mq2FAln66fqa1yzzBu4za8+h0ccSGabGtOACvguY9MBjIxQs/yNrvQQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvWS6VPRWLOgAJPB9xrnKLW8CoOQACqmL0R8apD+p/ebk8MJyM
+	FfvNXILLMVKnUHTfRUdfTonosmjYys9HHrr2h/NCP/qVEtDeZLVdFOFNis+pRIBOOBzxSXvJPWH
+	IP4zjRriT0ZI92WQUT716h9p9JjDhfxO+gPpofA==
+X-Gm-Gg: ASbGncuwQXILZVj2lGkbBDG70fdrcOpTk+SP0maAhcXxwwg5vEcgtaEVwl3Xp0R33fl
+	m0BijQAXgEWNlH5UFnlR9CEBsGpsS8876Gq21yVau3Q3wKpCAt53itwu6evd7JPoiuRiH0qDgEK
+	aOal0f1u3XPeoBt0LHmaE1+RsIqczQiSaZI6nq5yK3DGhIVH0=
+X-Google-Smtp-Source: AGHT+IG0k9n49cOjh73xTLTAVsRne2xlZWGuWDYYRqk0/LfFX1W3pBb5d3DQiusB5b+lH51H0KyvWCzJsuMO6T8mKkc=
+X-Received: by 2002:a17:902:cf07:b0:224:24d3:6103 with SMTP id
+ d9443c01a7336-22fc8e995a8mr296351835ad.35.1747117509885; Mon, 12 May 2025
+ 23:25:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: i40e: How the packets will be processed when status_error_len is
- 0
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <0c8bf3f2-1620-420e-8858-fe1c2ff5a8e9@shopee.com>
- <CAL+tcoAYvN20aMz-WYFEUeBypS8yMJ53YgdMUHCX6FCr__qT9A@mail.gmail.com>
-From: Haifeng Xu <haifeng.xu@shopee.com>
-In-Reply-To: <CAL+tcoAYvN20aMz-WYFEUeBypS8yMJ53YgdMUHCX6FCr__qT9A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250512172044.326436266@linuxfoundation.org> <32c592ea-0afd-4753-a81d-73021b8e193c@heusel.eu>
+In-Reply-To: <32c592ea-0afd-4753-a81d-73021b8e193c@heusel.eu>
+From: Luna Jernberg <droidbittin@gmail.com>
+Date: Tue, 13 May 2025 08:24:57 +0200
+X-Gm-Features: AX0GCFtNwSVq55Z4HzqwiHR_CnV-BQg0ApDjFN6fcXXXh16PBFZM7YxQnupqCXg
+Message-ID: <CADo9pHh6WZruG7XCO74RBbXRcd8d1KktTZAhG4FNXzv6ZpjVHA@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+To: Christian Heusel <christian@heusel.eu>, Luna Jernberg <droidbittin@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	Ray Wu <ray.wu@amd.com>, Wayne Lin <Wayne.Lin@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Yeah getting that too
 
 
+[   21.463202] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.464700] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.466133] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.467631] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.469127] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.470631] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.472127] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.473624] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.475130] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.476631] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.478127] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.479624] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.481126] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.482623] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.484130] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.485630] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.487127] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.488630] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.490125] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.491633] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.493120] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.494642] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.496128] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.497632] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.499128] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.500633] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.502130] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.503631] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.505126] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.506629] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.508127] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   21.509647] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: AUX reply
+command not ACK: 0x01.
+[   22.259286] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.259935] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.260583] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.261234] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.261883] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.262533] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.263185] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.263835] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.264481] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.265128] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.265771] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.266323] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.266970] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.267616] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.268270] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.268918] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.269567] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.270213] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.270857] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.271506] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.272154] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.272802] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.273450] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.274097] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.274745] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.275393] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.276039] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.276682] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.277274] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.277916] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.278563] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   22.279210] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.335457] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.336103] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.336745] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.337387] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.338029] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.338676] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.339271] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.339922] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.340570] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.341216] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.341864] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.342512] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.343159] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.343806] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.344456] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.345279] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.345929] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.346579] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.347232] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.347878] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.348526] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.349173] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.349816] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.350458] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.351100] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.351743] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.352390] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.353039] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.353685] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.354273] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.354920] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
+[   27.355567] amdgpu 0000:08:00.0: amdgpu: [drm] amdgpu: DP AUX transfer f=
+ail:4
 
-On 2025/5/13 14:13, Jason Xing wrote:
-> On Tue, May 13, 2025 at 12:08 PM Haifeng Xu <haifeng.xu@shopee.com> wrote:
->>
->> Hi all,
->>
->>         If the packets arrive at the rx and then raise soft irq to handle it, but in i40e_clean_rx_irq, status_error_len is 0 and return.
-> 
-> Directly "return"? What version of I40E are you looking at?
 
-stable kenrel 5.15.162,
+but other then that it seems to work
 
-i40e_clean_rx_irq
-...
-	qword = le64_to_cpu(rx_desc->wb.qword1.status_error_len);
-	...
-	size = (qword & I40E_RXD_QW1_LENGTH_PBUF_MASK) >>
-		       I40E_RXD_QW1_LENGTH_PBUF_SHIFT;
-	if (!size)
-		break;
-...
-
-if status_error_len is 0, the i40e_clean_rx_irq returns 0.
-> 
->>         The data isn't fetchted from the rx buffer, so the how the packets arrive at the rx will be processed?
-> 
-> In i40e_clean_rx_irq(), packets are one by one constructed into the
-> sk_buff and then passed to the stack by napi_gro_receive().
-> 
-> AFAIK, common drivers implement nearly the same scenario.
-> 
-> 
-> Thanks,
-> Jason
-> 
-> 
->>
->>         FYI, the every rx/tx queue has been bounded to one cpu(64 queues, 64 cpus).
->>
->> Thanks!
->>
-
+Den tis 13 maj 2025 kl 07:26 skrev Christian Heusel <christian@heusel.eu>:
+>
+> On 25/05/12 07:37PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.14.7 release.
+> > There are 197 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> > Anything received after that time might be too late.
+>
+> Hello everyone,
+>
+> I have noticed that the following commit produces a whole bunch of lines
+> in my journal, which looks like an error for me:
+>
+> > Wayne Lin <Wayne.Lin@amd.com>
+> >     drm/amd/display: Fix wrong handling for AUX_DEFER case
+>
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0x0=
+1.
+> amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+>
+> this does not seem to be serious, i.e. the system otherwise works as
+> intended but it's still noteworthy. Is there a dependency commit missing
+> maybe? From the code it looks like it was meant to be this way =F0=9F=A4=
+=94
+>
+> You can find a full journal here, with the logspammed parts in
+> highlight:
+> https://gist.github.com/christian-heusel/e8418bbdca097871489a31d79ed166d6=
+#file-dmesg-log-L854-L981
+>
+> Cheers,
+> Chris
