@@ -1,94 +1,146 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C540C1624C3
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388E1DF277
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747145525; cv=none; b=mSNO3+GQaF0L0b7y4DjdRr4KdyfAil2MN7Nl9rOEQs2AzkwPrJmF3e/2z3S1QkZigdgkDanrGrRSED015YviTL/Ax6Nxwy0lonDdO6Qp/jUHPzyk5B1IulnL6e/1C7yB5GQIA4NOsphgheKuoz2/41b6gIA7Twy3wpIXWflCB5g=
+	t=1747145633; cv=none; b=DkNQwJ/As2HT3h0jBGKmMDojENkKMUIg23bqs6ijVPh1Du1BQ8B0npQMEgw2ireXLenpTpb7FEddhPO+sPhk8mBHgCQx2Wu5pLFrD9KQ4QZn4czbzdznf9oPIFim4KeS442Ka17Dpih1Fb7BjB2YKEOwdU1pewkjKVwHbhMVIAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747145525; c=relaxed/simple;
-	bh=2xqvN5MZ0cpWW5I2C/Kd63LpkF2iAU47gBCPKJfXWlk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=k5QRmq+agPnjMAPKal1b2io9p7d43CgocsFvKLAr5gTfC9OxdcuKmL8w+8ffhR+aegohxB6wxIIRHG5DD+MSaNlCJhB+Sc/+eVpbBJYjKBXlfppzO+p9kMw66sxbOtwqgOkBHoXKx9ZlBy5Y1ijzl7IpfJtMsg3JpCEs8DQB/4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9X2Z4+p; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747145633; c=relaxed/simple;
+	bh=71k1cSyZVTbOS1tH1mlJ2LOGRFzFLK01tbuwTjlLE7E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hrinl/OcTsMBNEWzpUDWTrVX6rbNXT6Eb008dEhzQvUiIameTPcuhpJAfvEYvRjfA17h4LOu/FjZX6abIGJQqaYvOQlm3QSz+C7tk6FtiK1Ln0bjTAOZR2+XySRRWxEV6sJvrDzXh9drxto9qFP2xUbqyMm3wiZ81jD++aOBKcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGuvO6n8; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9X2Z4+p"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so3557235a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGuvO6n8"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab5d34fdbso5202721a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747145523; x=1747750323; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=J3EOkbiprB+sAgxVEHkLRonbL3H46Q0tOtDWzJ5+klo=;
-        b=j9X2Z4+pSy+Y2YCHHG8kX62ATze7n0bI3ao6RL9BET6bKzwZYhfS6QEwW0fslPcx1i
-         uuL0xr6jkNaOH3C7Yr4viEogJZCVBykT8vkS5axYNw7ODAtfba3T8blJuw2+DcWpGFtl
-         +97LYnRiL9wor5IBiZd2bJdnFBAOKmkl6qMwiaL+j0ITbOq6Cdk5lbSJI47bhxmQsOth
-         N7pkUWYGfwNg/axrUgD7tFbqVldH2HzTZSCTRDH9hOVfBBNPZw//RKLhdmZItxujZFiz
-         QE/PBILQZ2CqB02RHRpMVqieic5u3jHcA6SW3wzYCZugKfMUiObqG/QIPIpSpEIs4PYt
-         6jKA==
+        d=google.com; s=20230601; t=1747145631; x=1747750431; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HQPIZXjJimDteydfajh9qmCSJFtgL60BxuT4DLlRNjY=;
+        b=nGuvO6n8toLYnuFKt1YbdXex1KuI6iCV1Vz8EhxqFrWzXTheyzUFIaXOvi5o5JiMUo
+         DJJW/Ty5FVe9ZXsEWlywpQRD6/ByGG18SWaR10KlyPpXSc9kzSpL12nGsOecwieMp0un
+         kdLELthZnoMROND21BVQPFOCAd7jebxmBJP00EUO1MNOZiQWhTwSST7k3UGgVvdJw7LZ
+         julp/sUHfeaE9k59pcrCJPjCETX17r88kwgjTdLr34Wxm4d5IHWI+9h52btjxt5+tP1A
+         dIdqkwd+mSKHCW7w4HNuQ3BIcmqJSEtEmfHxWwb8E99OvTuGmIIBpp4ftfp2K23NoJbt
+         x3dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747145523; x=1747750323;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J3EOkbiprB+sAgxVEHkLRonbL3H46Q0tOtDWzJ5+klo=;
-        b=NxUXxBQ5fRvjPH6hmpLadp54RQA+eFoFdzYkthK3D6Sd4ioHmzPlAmOLJ8KHv/lejm
-         kQ5KRYPuxLCly2kU6eIQlEAuoVRHBjANh9mhd+mr/X+BGuzBNM+CayQ7g/ZYpUFl/PD3
-         8qW+zLXR3Yi8weK9G+C7MxjiY+lpM/0VRnwTmcVZMF841RJ7Iksqbmg6JETNXRK8/dhR
-         rqSjQYQVcxOLmk4xWL8a765DyOSJk26PNl2nhg0aZq70ceY5OJbDGpexZY2iiZA322Qz
-         e+fYmGI/I+DFmA5cg6podD89JEvZX+3yD2+UPK+1iLt8nKrVdIq426oD+oQjlb7CzngG
-         yOEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnvT3mjzhtTO1oPQzufC+B0obnyO67D05lE/CnO/ncx26L6lw77eZUJdUIunF4aP6Te1sqRK5D/G/RPOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNQGlcmVNP3ov7CiTpi4Ac19O9nzmb4AdA5EXym5ouHZn8UkNK
-	YiFPPGVOYA6yK6Qaw3d3EMpUKDzpYyS5CHLZIQPHEnqK+YkdRncVQbm16w5j+VzXEkEQLJQSVpC
-	94TvPfQ/j+tnLDPiHTl2qTGdXZ5xPS4Iwo+c=
-X-Gm-Gg: ASbGncvv381UixQtZMZ1KWgH+hqM/Nmg+/gt1gfmqpHB2GwSXmITZQ6vn/NQDqTo04u
-	iazqVQ/EElSA5VdE0iA3oEEsR1b9Kid3DyTUs94X2Hf5/imyELDzu4qlwBYtowwx/qT5Gl/wZ96
-	Nr6MKDD8+NIOrPQ6+3HAxJytAFNjKWKxCQ
-X-Google-Smtp-Source: AGHT+IF45yksE+sO7g0bsyu+gCHTxSnOl+bOkwMK4/IOhUAdyfs8E4kWcc/D5Rr4ozrDkVRLAQcdu228FsL4WfrKTF4=
-X-Received: by 2002:a17:902:dacd:b0:22e:566f:bca7 with SMTP id
- d9443c01a7336-22fc8b5192fmr239873545ad.17.1747145522940; Tue, 13 May 2025
- 07:12:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747145631; x=1747750431;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HQPIZXjJimDteydfajh9qmCSJFtgL60BxuT4DLlRNjY=;
+        b=Ef7InxQmzg5VIM6zHMuDl2OpPi/cF7yNdImkKt3GO4Ri9RYYYfa27E9IzIpAsHcGZs
+         w0hcnD3CJxWvq/lsloP/cw9WwBodX32eLiRWb+NOGyTEN4YQq+FoIYKaSXfboWzXO0AV
+         hztzguM+N+lBhrS88pPspCfLaCg1Lma9eNSB2Ag6UaAlninhtA95VsZyuv9IRdNGxMHk
+         15cC9RIkE8jNJ6Qb9ebPwaSaVSSeoaujbWNXrJbS8v9KGYoFzPZtLEN5WgTB3r2x5vgA
+         ot7VBIUQQIKGyS1d9luSOhIc1n0Op8Dnra1r3kwTYsPjrrhrXtq6r/3fH6KKnrBLGBbd
+         FIew==
+X-Forwarded-Encrypted: i=1; AJvYcCWgXV6zD0kI3elghfNt9gFLcatRDLs8zMQIx71Vkr61v0cPi+S7C3pbrjMlNZYUxTogqLJUOUmHnnfAFmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrE8qeKM0QtT2rDR8sqGQAdejY4oXbimrtR6DGveQuXs7+t6Po
+	2UxdZi4JEFzQpKNDYmFFMtxwqdQsOjxpjJvIiV2iYvifgDdRHYW5csbuEvDamrRSGB7VcoNhGgL
+	Wxw==
+X-Google-Smtp-Source: AGHT+IGVw03ZwNv354mGFU9Pl/PFszB28i4M15oqcxUWbfuLwkD+ig2nSbKABqmyGr9RhF5lU4cTa8w9VmU=
+X-Received: from pjbnd16.prod.google.com ([2002:a17:90b:4cd0:b0:2fc:11a0:c549])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:558f:b0:2ea:a9ac:eee1
+ with SMTP id 98e67ed59e1d1-30c3cefb7a6mr29813429a91.10.1747145631366; Tue, 13
+ May 2025 07:13:51 -0700 (PDT)
+Date: Tue, 13 May 2025 07:13:49 -0700
+In-Reply-To: <CADrL8HURpnXgN0ux4sUk0nVze=A6d488i_ztiZTwGZUdDMoTvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Tanav Chinthapatla <tanavc01@gmail.com>
-Date: Tue, 13 May 2025 10:11:51 -0400
-X-Gm-Features: AX0GCFvLU5dUzxQd5PLroCq5K8AVhqmL2OxGZEuBaeNQtpjBBfb8ofJBYjgj3yc
-Message-ID: <CAPGyJDMb0Ac7KtNc8AUTJ4E-Q4Vw-8JNoKWPMTFSuRU7QiFfdQ@mail.gmail.com>
-Subject: [PATCH v2] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250508141012.1411952-1-seanjc@google.com> <20250508141012.1411952-4-seanjc@google.com>
+ <CADrL8HURpnXgN0ux4sUk0nVze=A6d488i_ztiZTwGZUdDMoTvg@mail.gmail.com>
+Message-ID: <aCNTnXf5qZ1MMSNi@google.com>
+Subject: Re: [PATCH v2 3/5] KVM: Conditionally reschedule when resetting the
+ dirty ring
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-From 25aa24c7cde7df5901674ec08090992b17afd5b4 Mon Sep 17 00:00:00 2001
-From: Tanav Chinthapatla <tanavc01@gmail.com>
-Date: Tue, 13 May 2025 00:16:29 -0500
-Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
+On Mon, May 12, 2025, James Houghton wrote:
+> On Thu, May 8, 2025 at 7:11=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
+> > ---
+> >  virt/kvm/dirty_ring.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
+> > index e844e869e8c7..97cca0c02fd1 100644
+> > --- a/virt/kvm/dirty_ring.c
+> > +++ b/virt/kvm/dirty_ring.c
+> > @@ -134,6 +134,16 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct k=
+vm_dirty_ring *ring,
+> >
+> >                 ring->reset_index++;
+> >                 (*nr_entries_reset)++;
+> > +
+> > +               /*
+> > +                * While the size of each ring is fixed, it's possible =
+for the
+> > +                * ring to be constantly re-dirtied/harvested while the=
+ reset
+> > +                * is in-progress (the hard limit exists only to guard =
+against
+> > +                * wrapping the count into negative space).
+> > +                */
+> > +               if (!first_round)
+> > +                       cond_resched();
+>=20
+> Should we be dropping slots_lock here?
 
-Signed-off-by: Tanav Chinthapatla <tanavc01@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could we?  Yes.  Should we?  Eh.  I don't see any value in doing so, becaus=
+e in
+practice, it's extremely unlikely anything will be waiting on slots_lock.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index 1c9e8b01d..98d89e836 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -1619,7 +1619,7 @@ static void rtw_btinfo_hdl(struct adapter
-*adapter, u8 *buf, u16 buf_len)
-  buf[1] = 0;
-  else if (cmd_idx == BTINFO_BT_AUTO_RPT)
-  buf[1] = 2;
-- hal_btcoex_BtInfoNotify(adapter, len+1, &buf[1]);
-+ hal_btcoex_BtInfoNotify(adapter, len + 1, &buf[1]);
- }
+kvm_vm_ioctl_reset_dirty_pages() operates on all vCPUs, i.e. there won't be
+competing calls to reset other rings.  A well-behaved userspace won't be mo=
+difying
+memslots or dirty logs, and won't be toggling nx_huge_pages.
 
- u8 rtw_c2h_packet_wk_cmd(struct adapter *padapter, u8 *pbuf, u16 length)
--- 
-2.34.1
+That leaves kvm_vm_ioctl_set_mem_attributes(), kvm_inhibit_apic_access_page=
+(),
+kvm_assign_ioeventfd(), snp_launch_update(), and coalesced IO/MMIO (un)regi=
+stration.
+Except for snp_launch_update(), those are all brutally slow paths, e.g. req=
+uire
+SRCU synchronization and/or zapping of SPTEs.  And snp_launch_update() is p=
+robably
+fairly slow too.
+
+And dropping slots_lock only makes any sense for non-preemptible kernels, b=
+ecause
+preemptible kernels include an equivalent check in KVM_MMU_UNLOCK().
+
+It's also possible that dropping slots_lock in this case could be a net neg=
+ative.
+I don't think it's likely, but I don't think it's any more or less likely t=
+hat
+droppings slots_lock is a net positive.  Without performance data to guide =
+us,
+it'd be little more than a guess, and I really, really don't want to set a
+precedence of dropping a mutex on cond_resched() without a very strong reas=
+on
+for doing so.
+
+> It seems like we need to be holding slots_lock to call kvm_reset_dirty_gf=
+n(),
+> but that's it. Userspace can already change the memslots after enabling t=
+he
+> dirty ring, so `entry->slot` can already be stale, so dropping slots_lock=
+ for
+> the cond_resched() seems harmless (and better than not dropping it).
