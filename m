@@ -1,73 +1,71 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F969433C8;
-	Tue, 13 May 2025 18:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE868479;
+	Tue, 13 May 2025 18:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161220; cv=none; b=jEVjQH78AjK4vCGdPIrXQUOi7YEo6ggz6hRA3KCQnN/ptyM4Xt+W1zgZWtv6P3ySD8rO9oLea1TvJrq3azlcrdKYU82gl0HUI4p7/eY576+h9PgKiRBApUwR1TLhmk0WIhrFQ+FxEcFa068JbS530wIs2McOkiWg/h8mmIUKlY4=
+	t=1747161278; cv=none; b=AnxkLoDSp45Tq15rvIr6XeS4A9VB2XukigztTxjNdjcs0XXGMvHtqKEXG+Sqqje2f7DwDiEyim5jpAmiVCzkVySfjdknXUg+9kEQJSzbpY98ERqdtQdlujYv+cWkA7aVFsDGkPnheG3PiMj+qZCWaJzwt55ZMb1vOL/FSSQk7To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161220; c=relaxed/simple;
-	bh=pCNjvJNNIpDcdyWqKg9PC8JJsReIlWaCZWdgKkbgFMk=;
+	s=arc-20240116; t=1747161278; c=relaxed/simple;
+	bh=ARjKxv54xqwWx1r1xsT0LxS3Dw+4Wx4YErSoJo8TbAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktGs5TyD57VTev0blgXsWR13RFxHk1T7B6nvER5pNYiKjpXOqr7H+ZMFqvx1et68DUCCcgqe8MClLkKK+C5BTxAr3UHwNjFtRlq1nNDIGnDJs0Y0IK5zyZFoCmWOX9yYjV+iHQY5vCfx/AUnM6DI/fHCnsj5rnWTRUPh8nWQVGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOxVvYNJ; arc=none smtp.client-ip=209.85.218.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4l2CtQKPR1mm5v0XEbzPj9Y52GSwuqT1izvdGf37znOpT5oj85q8cWL3poFhHzJ/pqc6NKRRvJotxp4KenbGalZXjcd+0ximMQhb1bNZrqH907R+DkI484ooU2CeG/UBWC4/7VhE5rC74Zxuki4LGg8LfN1j9zAePXtZ00M/ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zpo4S3Go; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOxVvYNJ"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad221e3e5a2so705922266b.1;
-        Tue, 13 May 2025 11:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zpo4S3Go"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad4d5bb4d0eso242940766b.1;
+        Tue, 13 May 2025 11:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747161217; x=1747766017; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747161275; x=1747766075; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JfDa9t4hEIBTyss+7mzoHYQVAYN390QGITj9KuYaQKs=;
-        b=BOxVvYNJNwCTzFCb9dCXea056u1wAdcFVwKLh1VXTiGQlT0jo4LWNe4ASsoarCCx36
-         WARiiy1u3GgvmcGuz5DKiWEfT2afVCvM2QWRlfdqJbrB3xsJSTaQ9IAmpCR5vb2h1rqz
-         jKvv2XsD8t9bWw3/w3yxnmspfmvDkYKqppKWJxjh7SlsSK72nFwLKxNrOtfiTmOlmvUG
-         luLGOxxNWJ+0DOVvBk7TcfLosiaLEnqoJ1/lk5yjIWdlSuor3I68OVMkki/gD8UhCAOG
-         Gm5xe2zoBjdTt+9bg31vYJ/hbsylCP4t6TK/HFnxfuJctSOWivNjGGP1F+h9AGm8uZRe
-         kBCA==
+        bh=4LHpvWACDMKbZxhtHwigNldj0+/UXgYOK5RwmFQbLoU=;
+        b=Zpo4S3GouDx2T3f192oxZ/ehVyb4W7cM3wxbTz2OyQA6c1z4aKbhNBY6yPSzpeSbAs
+         f5p+hOWQ1Uvy1gqgUzEEMiI1nhSGadd1JeMtb997ids9di19C03hYiUXoU/eSH3ABb4g
+         4DyxMy55nScmRHwlnaPJnrFJoqZbJw7Yfk77zq4h7OXv9jfkoE9l4uk7dG7LsbcgrSAo
+         uhv6KSi4XgQr1Mc8rNt7qlUmmSJzOX2dFGFS8snzMzuSnuCKDuLkvE9MXpZk9v/efiN7
+         TK1WDZoAwnZ8tjOfLTQ2PRA/cPGXXDRn1gSzr6Q0kQhtq/NMpdMeQtP22EDyVfJZ9fHx
+         +4xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747161217; x=1747766017;
+        d=1e100.net; s=20230601; t=1747161275; x=1747766075;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JfDa9t4hEIBTyss+7mzoHYQVAYN390QGITj9KuYaQKs=;
-        b=M+H4BS6Wi/SOGJwSMq3WO5GK5LBIoFbFLon2R/a/IOFaYbxLobbOyeABxvf8WdUKSB
-         UN75wRothgcjp7UA81HfYYEuvbBnepXsifYKOKjz6dEYytp6c7V+WcshvSiW7OXM3O0i
-         yYLy7X+8g3WPIMf+7rwD4VJUYeN/C1G4mzauS2dAHFdnJsmfiDqKqBJl3fW56WsbUXWd
-         HfChrAqylQV0fvRtg2/+addvIjBYFclRPm8Kip2tcrYy2hVHtFuKwGiv7m15pZIo3YTd
-         CPbaAlg07dCdKXKRUMgM7Oq+24QSmFvQCo5Ah63y5NaKsyaPyBgCm/cnqJPi276wAepV
-         Hrsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0FDL71PQ9oqn0IhaFYlJf/cnEwSVPnmx5ADeGUaMULDppP2HnzqS0j7nKLmiwPpkq4oABbza0EbAq@vger.kernel.org, AJvYcCWh6r2P4nEZN7j2aiFRL3rnmMXiB4RFbOupHZF1v423wNz6nnkVncgcoOIr5PoTknmeIjwdQ/FpkIxrL/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwULQdjTNYpRt+ZN6Oz89mlVIcGVmg6CmDuF2jYIl3O0fz10WdN
-	nG4WoMsBFky1VOIZ2BTBqvA1ZI8sBDu4djpVnYmi4h4GlkKBFrg=
-X-Gm-Gg: ASbGncskIYg8TVFugyL3h5+7uV80z8sS4RtgnV2NCWOH/LapfTUqeMUqmocM3GEvto6
-	pl5vkZ5vrVOv1mnyaRWKvJr+4EVGYVOft2k/fnaNJbzMJntO7w/vTds83Ae40H2nyW+8hIRzsLU
-	1/7dViqEZVJoWzbd6YPwuUNKPnfh+PWskDiEo+sYsowS5s7Oa0dBcFiEx9vthjzPiQr6ylmdtyY
-	nigv3oL6YoCIGWr7VWyPdrnBWR6sOjtzKcIWbRXzWkqM8ApGSu1acs5q2LczcZsGO3nEOKWJdfB
-	YBfrFMPfgd/w8a++B67ytZZu3ioXhaY/U82OqQ==
-X-Google-Smtp-Source: AGHT+IE9OrPBNnHUSy6rPAxXm7QZ08ZqjnOSuQwzNArV7PbI3vT0P6NOybGASVf/yDMkUvfSxl5fhw==
-X-Received: by 2002:a17:907:6a0f:b0:ad2:1cba:cf84 with SMTP id a640c23a62f3a-ad4f727081emr48477266b.39.1747161216449;
-        Tue, 13 May 2025 11:33:36 -0700 (PDT)
+        bh=4LHpvWACDMKbZxhtHwigNldj0+/UXgYOK5RwmFQbLoU=;
+        b=vw/zjhGCFpiDouwvKhz29VEwu36qYvyNvMmhR52cpSxCauCfy/JmRtwAbSmbMvgWMT
+         eqOEaDyNoBRGM7avLj6mRdHuuHgVqoUmcyxyAZwE/QScEv1pCMjs0JCNtcZrELvjB6vw
+         cpaNxZOI+/Om97oy5km3JQFvD69kpfZZV8nNDEwDq90rwsgK4AXY3M51DNBWPYziK18T
+         NqYiFR27JbWvkw2F8mk5KvTE06WXH122EPUXHS24fp1f2fLmWKk7jQZs2LL0HVw75fko
+         b6R2+54X24hu2LZ+xYvd8tR0QYbFG24/eyxc73vf8/sUTofNHEnJQgccFI/sIcLRKjio
+         ZPgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn+vlCZMEc+M7hS/Zc5Aw8JSTKmzsu/XDPDb4JD+usv2bwkIsnq4jKHU1yMFCMrGkwAv1CbICLfo384QI=@vger.kernel.org, AJvYcCXLge2c6eIVyUjYksc5frbKqAEYagKHcDVMKfCz/KSidK0lvtsobHLP+SESseqng2BmDoU4Okhrj0nW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHWXyZnq1wQubOppcqaoGV3CHKR5nUYumtK7z/2BpZua9MRbhq
+	3wuXIMmkY/268de9mbXUKYnOrfV5mwtYlPd7ymf+VP3fFukpob0=
+X-Gm-Gg: ASbGncv9jbyW7vZdhUvJGDfY4w2AAmTlMAkr2EMtfkGYQHL72vGkmpIPa/4AU0KGehQ
+	H0QODUEoqP326Ot1nAqpYer9WDreSNTXeLNk++m4aY8IKeeyPaw5vnSrXWzM643pQwExoD4S94U
+	mY64Eb4ZKR8+XmTTd7mdQWZee/6Hk21wuswpwpjllxpnkzB4zqA65owEtxak7F/E+gq+OrybCrV
+	fFw69ezOJ6S8V9WLHmnmS7GKT2zPkyGATrTfJWNPhkd98F9kPKcpkFD0oh10Zq1mLuOE7P9FE7z
+	ExecFSu+LTM17qtum4Qd8suBtTDCL4ufV2by4g==
+X-Google-Smtp-Source: AGHT+IEiHH6U9Fl+KuK+HfKK7LIIFYL2TeI1tlJtTlj9ScQtFHXONW2RMPZa0Ome346zfxM9WemJgw==
+X-Received: by 2002:a17:907:3da4:b0:ad2:5220:b478 with SMTP id a640c23a62f3a-ad4f7147208mr66923766b.10.1747161275033;
+        Tue, 13 May 2025 11:34:35 -0700 (PDT)
 Received: from p183 ([46.53.251.33])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad219746730sm828452366b.94.2025.05.13.11.33.35
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192c8f98sm830772666b.10.2025.05.13.11.34.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 11:33:36 -0700 (PDT)
-Date: Tue, 13 May 2025 21:33:34 +0300
+        Tue, 13 May 2025 11:34:34 -0700 (PDT)
+Date: Tue, 13 May 2025 21:34:33 +0300
 From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
- symlink
-Message-ID: <0e43117a-d92c-4563-ad2d-de6cbd02e986@p183>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] CodingStyle: mention "typedef struct S {} S;" if
+ typedef is used
+Message-ID: <55373914-e6e3-490f-9d79-5321f908701e@p183>
 References: <20250509203430.3448-1-adobriyan@gmail.com>
- <87frhcsrva.fsf@trenco.lwn.net>
- <77f03295-df5d-4bc0-9a61-5be829969662@p183>
- <20250513041249.GF2023217@ZenIV>
+ <20250509203430.3448-4-adobriyan@gmail.com>
+ <2025051041-hardness-effects-89f0@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,15 +74,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250513041249.GF2023217@ZenIV>
+In-Reply-To: <2025051041-hardness-effects-89f0@gregkh>
 
-On Tue, May 13, 2025 at 05:12:49AM +0100, Al Viro wrote:
-> On Mon, May 12, 2025 at 07:08:53PM +0300, Alexey Dobriyan wrote:
+On Sat, May 10, 2025 at 08:18:53AM +0200, Greg KH wrote:
+> On Fri, May 09, 2025 at 11:34:25PM +0300, Alexey Dobriyan wrote:
+> > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > ---
+> >  Documentation/process/coding-style.rst | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
 > 
-> > I split them like referendum ballots to see where the consensus at and
-> > not have big single discussion thread.
-> 
-> Just in case - consensus would look like a lot of replies in support and not
-> simply the lack of replies, right?
+> We can't take patches without any changelog text, sorry.
 
-Well, it is l-k, so absence of NAKs counts as OK.
+The changelog is in the patch itself but OK.
