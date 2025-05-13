@@ -1,231 +1,275 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21AFA241684
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D7C213259
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747132964; cv=none; b=cy8uvdt3a62nardTJlYA8ZzJLDQ884OJq1N8t1BeRE3PjXgpbWLWaNyVHLtfNYHBtWoRKh+mU5vJfbPysLpGvLfJW0uD3Go3AtedhPvuN9pvLS9JzY+H7EuxFCRzsETUOBt2vHjEuyUc2trGircFwGzCMRHp5fO8Ml3Ww/hFO8M=
+	t=1747132998; cv=none; b=d9PNTwHNfx/sUtupGmNvutiDKI4QhKLLYqquuxRoo6XCuxxL/nm5a8um0iCBgthXiKs8/gwZ+7TmoP4WaFX2RKK2GhJFoUClBXl/0l+IxPXFKuLN++KTpRMpmxucnVR5+u/DWKLTf1abepCofu46E4Mhr7OCSbHDEHWgyEih/F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747132964; c=relaxed/simple;
-	bh=o/UyHQPYQZ6azV31PTvrRNh+FU3zzn1pxv7r+yuwzbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ozMurwXrkyzZ87CukR0Ht0vz6+5rl57ZSw2WYy/wfa0NX71NztMJrt13pidg4Wn80BbAmRaoObh6YBreKuC3k/AHvUBx48NVN3yL22iZHuiLSqqDaRWlHzpbQzPcFS3TSORln5J+7+CCwZYXTQIlaDd/6Y1fU38/5uBnnzfs/1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62CB9168F;
-	Tue, 13 May 2025 03:42:30 -0700 (PDT)
-Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16B7B3F5A1;
-	Tue, 13 May 2025 03:42:39 -0700 (PDT)
-Message-ID: <ead19392-a8d3-4c1e-95db-d5cbf40c66fa@arm.com>
-Date: Tue, 13 May 2025 11:42:38 +0100
+	s=arc-20240116; t=1747132998; c=relaxed/simple;
+	bh=IaYOh3FvIMYreE3X0cfXpIjVfC0DOQm+8LIadSgDHtA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PuGsWwMZDJdxwUbJfRIUax30gsj1hx8j2WTxwAoSl8i0c/i6Q9uRiNvXLis8ifldd+dXcxRapi85DLmcq4K7VSk9r17XYD3Sqd7kIumpMsGFcQZLg8KVHa1DeLSacgpIJiqUqN1++Fm8IB6RC2Z9neBJDVvJxOv4rSCQ8hrDg1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b86lF3XJ; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b86lF3XJ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5ff8f218c44so69081a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747132994; x=1747737794; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnkKSLMFWirkV+KBeE/kgA5LXY+hN4q4xgGq0GY+0SI=;
+        b=b86lF3XJtHTArKEOWkrlOg8ffjLqGDJgcb+j4O9vIEnrLbkSSPcv5qlYiNSFR9TobZ
+         VjknaclDGSxV0UoxfvyXOoUJMrzIysDfbPSw3klKgtLhPEdDru6onFZTWDPnsik91uJt
+         Abtx4TbV9i9ytg0HRRkQ+ZCr+XVzwshEl+KFp1bY2VJem8+4B5m4f/ve4oFuR8bFsX2W
+         +qTglAkSwEtWfk3B/y/pY1K0R0W7GOpFDRXrNz6TBIGPZPEG4WOkL8frVLu6tvolhVrz
+         7bFip2Jn4ftnz0kYjNeotmjVAREWszPcbhzNK6ilyI+TR7xSP9nqzLT/Tp9PU4Cgw+mo
+         Q3XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747132994; x=1747737794;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BnkKSLMFWirkV+KBeE/kgA5LXY+hN4q4xgGq0GY+0SI=;
+        b=Jy2ycbXcsHLK9nlf9tTp1wtVBygrJJuxwS0hief2nrcsG/VOR0mlWfdN/dLTg4m4Up
+         RnfJaszEjkpBvomyKEjpsl0ToT9niY3fiUCsf+InEs2KQSjUsPTTwEs2Shmlv7s4/Lny
+         YLcbNcSB0ILTXf0CsmOfrkCBulSaUpkh1KzXZWBtaqouoKmd1N8XTT/xdt552ZNuZgFq
+         ln+vnKo8zWHiBYpAlTl1Kf4P0P8C+vK1TADwiRq9RN+2c/bfWLyI5O0RA2iXfq9iNOHi
+         +LI612N5/CoYTPHX1Svs7WZ8shaJg8eW2cPx70XaBoRaYyPMuCYFgWqr9PSoPmC09fKp
+         2T3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV8bn2eWcUXsRaccVTrIiL0ywBxdVFYG/KD23qoTdTJuuwBqBwSIygAlQzMglVifyly6yqHVnfQiDxUFG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZf6BRR1Xlu/1JI8AgtmXZAA58sVLzP0InZlW8qXYAXCN2Ib6F
+	oN9w00hh/p0/ZibNwlglinBAN+PBX3Jzr2hC9XWEC0kLKDE8Oh6/SaMM2m6rpOpw4tLNe18kK55
+	QgbPnAeZf4FvuM4qlxZxD4Yrxf6TGy7dC/SQQOg==
+X-Gm-Gg: ASbGncvvFQRwrBlbBi0hUXs8HnA6OQgvEvyJks5D3bGvgqELQW0ahrrPsUmmS4D0kU9
+	vX2zAaaQM8WyHfdO0VTf21cFUHHKoMi6P7DE4m1/YFbac55bG7vTYg8NYlv9/Hy/yJ5yhWgB5eP
+	HyXSv94uBfsWTErFgKrREWlYbn7bXsQfA=
+X-Google-Smtp-Source: AGHT+IGrEchgHdLMUdss9BMWal8Z3yNsvOyPjVCzLRtDEx7FbGA7IUNrVWSkAmFM65s2vxpF9pz5d+T+4rAjGExeqNg=
+X-Received: by 2002:a17:907:97c1:b0:ad2:404d:cade with SMTP id
+ a640c23a62f3a-ad2404dcd9cmr1040764266b.27.1747132994353; Tue, 13 May 2025
+ 03:43:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: Add overrride for MPAM
-To: Xi Ruoyao <xry111@xry111.site>, James Morse <james.morse@arm.com>,
- Marc Zyngier <maz@kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Mingcong Bai <jeffbai@aosc.io>
-References: <20250402031603.35411-1-xry111@xry111.site>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20250402031603.35411-1-xry111@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250505115056.1803847-1-neelx@suse.com> <20250505115056.1803847-2-neelx@suse.com>
+ <20250505151817.GX9140@twin.jikos.cz> <CAPjX3FfbeGmPkXY1NDnecrtcLe5dqX7+vLOLGe3sdggUfS-WSg@mail.gmail.com>
+ <20250513003200.GZ9140@twin.jikos.cz>
+In-Reply-To: <20250513003200.GZ9140@twin.jikos.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Tue, 13 May 2025 12:43:03 +0200
+X-Gm-Features: AX0GCFtoBq_P5Ys1TUxPoFoovKd2t5qxLf-JglFhrBAXlnnCoYTcZWqLFMO-rAc
+Message-ID: <CAPjX3FdNLjLGQ+0oyZgYOHAy0QxkEcycr86WQt9UyiLjXw5uJA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] btrfs: remove extent buffer's redundant `len`
+ member field
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	Boris Burkov <boris@bur.io>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Tue, 13 May 2025 at 02:32, David Sterba <dsterba@suse.cz> wrote:
+>
+> On Mon, May 05, 2025 at 07:53:16PM +0200, Daniel Vacek wrote:
+> > On Mon, 5 May 2025 at 17:18, David Sterba <dsterba@suse.cz> wrote:
+> > >
+> > > On Mon, May 05, 2025 at 01:50:54PM +0200, Daniel Vacek wrote:
+> > > > Even super block nowadays uses nodesize for eb->len. This is since commits
+> > > >
+> > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
+> > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
+> > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
+> > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
+> > > >
+> > > > With these the eb->len is not really useful anymore. Let's use the nodesize
+> > > > directly where applicable.
+> > >
+> > > You haven't updated the changelog despite we had a discussion about the
+> > > potential drawbacks, so this should be here. But I'm not convinced this
+> >
+> > Right. That's because I was not sure we came to any conclusion yet. I
+> > thought this discussion was still ongoing. I understand that so far
+> > this is still all just a theory and any premature conclusions may be
+> > misleading.
+> >
+> > But yeah, I may write some kind of a warning or a disclaimer
+> > mentioning the suspicion. Just so that it gets documented and it is
+> > clear it was considered, even though maybe without a clear conclusion.
+> >
+> > > is a good change. The eb size does not change so no better packing in
+> > > the slab and the caching of length in the same cacheline is lost.
+> >
+> > So to be perfectly clear, what sharing do you mean? Is it the
+> > eb->start and eb->len you talking about? In other words, when getting
+> > `start` you also get `len` for free?
+>
+> Yes, basically.
+>
+> > Since the structure is 8 bytes aligned, they may eventually still end
+> > up in two cachelines. Luckily the size of the structure is 0 mod 16 so
+> > just out of the luck this never happens and they are always in the
+> > same cache line. But this may break with future changes, so it is not
+> > rock solid the way it is now.
+>
+> Yes, with structures not perfectly aligned to a cacheline (64B) there
+> will be times when the access needs fetching two cachelines. With locks
+> it can result in various cacheline bouncing patterns when various
+> allocated structures are aligned to 8 bytes, giving 8 possible groups of
+> "misaligned" structure instances.
+>
+> There's also a big assumption that the CPU cache prefetcher is clever
+> enough to average out many bad patterns. What I try to do on the source
+> code level is to be able to reason about the high level access patterns,
+> like "used at the same time -> close together in the structure".
 
+That makes sense. The closer they are the higher the chance they end
+up in the same cacheline if the object itself is free of alignment.
 
-On 4/2/25 04:12, Xi Ruoyao wrote:
-> As the message of the commit 09e6b306f3ba ("arm64: cpufeature: discover
-> CPU support for MPAM") already states, if a buggy firmware fails to
-> either enable MPAM or emulate the trap as if it were disabled, the
-> kernel will just fail to boot.  While upgrading the firmware should be
-> the best solution, we have some hardware of which the vendor have made
-> no response 2 months after we requested a firmware update.  Allow
-> overriding it so our devices don't become some e-waste.
-> 
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> Cc: Mingcong Bai <jeffbai@aosc.io>
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
-> 
-> [v1]->v2:
-> - Handle the override and initialize EL2 mpam in finalise_el2_state
-> - Move info->mpamidr assignment to {init,update}_cpu_features
-> 
-> [v1]: https://lore.kernel.org/linux-arm-kernel/20250401055650.22542-1-xry111@xry111.site/
-> 
->   .../admin-guide/kernel-parameters.txt         |  3 +++
->   arch/arm64/include/asm/el2_setup.h            | 24 ++++++++-----------
->   arch/arm64/kernel/cpufeature.c                |  8 +++++--
->   arch/arm64/kernel/cpuinfo.c                   |  7 ++++--
->   arch/arm64/kernel/pi/idreg-override.c         |  2 ++
->   5 files changed, 26 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 3435a062a208..4f2caa706268 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -458,6 +458,9 @@
->   	arm64.nomops	[ARM64] Unconditionally disable Memory Copy and Memory
->   			Set instructions support
->   
-> +	arm64.nompam	[ARM64] Unconditionally disable Memory Partitioning And
-> +			Monitoring support
-> +
->   	arm64.nomte	[ARM64] Unconditionally disable Memory Tagging Extension
->   			support
->   
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index ebceaae3c749..777190ec2b5e 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -294,19 +294,6 @@
->   .Lskip_gcs_\@:
->   .endm
->   
-> -.macro __init_el2_mpam
-> -	/* Memory Partitioning And Monitoring: disable EL2 traps */
-> -	mrs	x1, id_aa64pfr0_el1
-> -	ubfx	x0, x1, #ID_AA64PFR0_EL1_MPAM_SHIFT, #4
-> -	cbz	x0, .Lskip_mpam_\@		// skip if no MPAM
-> -	msr_s	SYS_MPAM2_EL2, xzr		// use the default partition
-> -						// and disable lower traps
-> -	mrs_s	x0, SYS_MPAMIDR_EL1
-> -	tbz	x0, #MPAMIDR_EL1_HAS_HCR_SHIFT, .Lskip_mpam_\@	// skip if no MPAMHCR reg
-> -	msr_s	SYS_MPAMHCR_EL2, xzr		// clear TRAP_MPAMIDR_EL1 -> EL2
-> -.Lskip_mpam_\@:
-> -.endm
-> -
->   /**
->    * Initialize EL2 registers to sane values. This should be called early on all
->    * cores that were booted in EL2. Note that everything gets initialised as
-> @@ -324,7 +311,6 @@
->   	__init_el2_stage2
->   	__init_el2_gicv3
->   	__init_el2_hstr
-> -	__init_el2_mpam
->   	__init_el2_nvhe_idregs
->   	__init_el2_cptr
->   	__init_el2_fgt
-> @@ -371,6 +357,16 @@
->   #endif
->   
->   .macro finalise_el2_state
-> +	check_override id_aa64pfr0, ID_AA64PFR0_EL1_MPAM_SHIFT, .Linit_mpam_\@, .Lskip_mpam_\@, x1, x2
-> +
-> +.Linit_mpam_\@:
-> +	msr_s	SYS_MPAM2_EL2, xzr		// use the default partition
-> +						// and disable lower traps
-> +	mrs_s	x0, SYS_MPAMIDR_EL1
-> +	tbz	x0, #MPAMIDR_EL1_HAS_HCR_SHIFT, .Lskip_mpam_\@  // skip if no MPAMHCR reg
-> +	msr_s   SYS_MPAMHCR_EL2, xzr		// clear TRAP_MPAMIDR_EL1 -> EL2
-> +
-> +.Lskip_mpam_\@:
->   	check_override id_aa64pfr0, ID_AA64PFR0_EL1_SVE_SHIFT, .Linit_sve_\@, .Lskip_sve_\@, x1, x2
->   
->   .Linit_sve_\@:	/* SVE register access */
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 9c4d6d552b25..44dcc0037ec2 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -88,6 +88,7 @@
->   #include <asm/mte.h>
->   #include <asm/hypervisor.h>
->   #include <asm/processor.h>
-> +#include <asm/ptrace.h>
-Unused include?
->   #include <asm/smp.h>
->   #include <asm/sysreg.h>
->   #include <asm/traps.h>
-> @@ -1191,8 +1192,10 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
->   		cpacr_restore(cpacr);
->   	}
->   
-> -	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0))
-> +	if (id_aa64pfr0_mpam(read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1))) {
-> +		info->reg_mpamidr = read_cpuid(MPAMIDR_EL1);
->   		init_cpu_ftr_reg(SYS_MPAMIDR_EL1, info->reg_mpamidr);
-> +	}
->   
->   	if (id_aa64pfr1_mte(info->reg_id_aa64pfr1))
->   		init_cpu_ftr_reg(SYS_GMID_EL1, info->reg_gmid);
-> @@ -1443,7 +1446,8 @@ void update_cpu_features(int cpu,
->   		cpacr_restore(cpacr);
->   	}
->   
-> -	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0)) {
-> +	if (id_aa64pfr0_mpam(read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1))) {
-> +		info->reg_mpamidr = read_cpuid(MPAMIDR_EL1);
->   		taint |= check_update_ftr_reg(SYS_MPAMIDR_EL1, cpu,
->   					info->reg_mpamidr, boot->reg_mpamidr);
->   	}
-> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> index 285d7d538342..1c114f97bf1e 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -494,8 +494,11 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
->   	if (id_aa64pfr0_32bit_el0(info->reg_id_aa64pfr0))
->   		__cpuinfo_store_cpu_32bit(&info->aarch32);
->   
-> -	if (id_aa64pfr0_mpam(info->reg_id_aa64pfr0))
-> -		info->reg_mpamidr = read_cpuid(MPAMIDR_EL1);
-> +	/*
-> +	 * info->mpamidr deferred to {init,update}_cpu_features because we
-> +	 * don't want to read it (and trigger a trap on buggy firmware) if
-> +	 * using an aa64pfr0_el1 override to unconditionally disable MPAM.
-> +	 */
-nit: info->mpamidr is info->reg_mpamidr
->   
->   	if (IS_ENABLED(CONFIG_ARM64_SME) &&
->   	    id_aa64pfr1_sme(info->reg_id_aa64pfr1)) {
-> diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
-> index c6b185b885f7..836e5a9b98d0 100644
-> --- a/arch/arm64/kernel/pi/idreg-override.c
-> +++ b/arch/arm64/kernel/pi/idreg-override.c
-> @@ -127,6 +127,7 @@ static const struct ftr_set_desc pfr0 __prel64_initconst = {
->   	.fields		= {
->   	        FIELD("sve", ID_AA64PFR0_EL1_SVE_SHIFT, pfr0_sve_filter),
->   		FIELD("el0", ID_AA64PFR0_EL1_EL0_SHIFT, NULL),
-> +		FIELD("mpam", ID_AA64PFR0_EL1_MPAM_SHIFT, NULL),
->   		{}
->   	},
->   };
-> @@ -246,6 +247,7 @@ static const struct {
->   	{ "rodata=off",			"arm64_sw.rodataoff=1" },
->   	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
->   	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
-> +	{ "arm64.nompam",		"id_aa64pfr0.mpam=0" },
->   };
->   
->   static int __init parse_hexdigit(const char *p, u64 *v)
+> > > In the assebly it's clear where the pointer dereference is added, using
+> > > an example from btrfs_get_token_8():
+> > >
+> > >   mov    0x8(%rbp),%r9d
+> > >
+> > > vs
+> > >
+> > >   mov    0x18(%rbp),%r10
+> > >   mov    0xd38(%r10),%r9d
+> >
+> > I understand that. Again, this is what I originally considered. Not
+> > all the functions end up like this but there are definitely some. And
+> > by a rule of a thumb it's roughly half of them, give or take. That
+> > sounds like a good reason to be concerned.
+> >
+> > My reasoning was that the fs_info->nodesize is accessed by many so the
+> > chances are it will be hot in cache. But you're right that this may
+> > not always be the case. It depends. The question remains if that makes
+> > a difference?
+> >
+> > Another (IMO valid) point is that I believe the code will dereference
+> > many other pointers before getting here so this may seem like a drop
+> > in the sea. It's not like this was a tight loop scattering over
+> > hundreds random memory addresses.
+> > For example when this code is reached from a syscall, the syscall
+> > itself will have significantly higher overhead then one additional
+> > dereference. And I think the same applies when reached from an
+> > interrupt.
+> > Otherwise this would be visible on perf profile (which none of us
+> > performed yet).
+>
+> Yeah and I don't intend to do so other than to verify your measurements
+> and calims that this patch does not make things worse at least. The
+> burden is on the patch submitter.
 
+Totally. I'll run some profiles to see if anything significant is
+visible. Not sure what workload to use though? I guess fio would be a
+good starting point?
 
-There is a typo in your summary, s/overrride/override/.
+Though we agreed that this also depends on the actual HW used.
+Whatever numbers I present, if my CPU is fast enough and my storage is
+slow enough, I'll hardly ever find any issue. I think this needs more
+broader testing than just one's claims that this is OK for me
+(provided my results would suggest so).
 
-I have checked that with the boot parameter, arm64.nompam, that kvm sees 
-  ID_AA64PFR0.MPAM sanitized to 0 and 1 without. Also, that on top of 
-[1] that I see /sys/fs/resctrl without the boot parameter and don't with it.
+So how about pushing this to misc-next to get some broader testing and
+see if there are any issues in the bigger scope?
 
-Tested-by: Ben Horgan <ben.horgan@arm.com>
+> > Still, I'd say reading the assembly is a good indication of possible
+> > issues to be concerned with. But it's not always the best one. An
+> > observed performance regression would be.
+> > I'll be happy to conduct any suggested benchmarks. Though as you
+> > mentioned this may be also picky on the used HW.
+>
+> I'd say any contemporary hardware is good, I don't think the internal
+> CPU algorithms of prefetching or branch predictions change that often. A
+> difference that I would consider significant is 5% in either direction.
 
-I note that there is an mpam version 0.1 with ID_AA64PFR0.MPAM=0 and
-ID_AA64PFR1.MPAM_Frac=1 but I see no need to make any changes based on this.
+I meant the storage part rather than the CPU. Though the CPUs also
+differ in cache sizes between consumer and server parts.
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/log/?h=mpam/snapshot/v6.15-rc3
+> > So even though we
+> > don't see any regressions with our testing, one day someone may find
+> > some if we merged this change. In which case we can always revert.
+> >
+> > I have to say I'm pretty happy with the positive feedback from the
+> > other reviewers. So far you're the only one raising this concern.
+>
+> I don't dispute the feedback from others, the patch is not wrong on
+> itself, it removes a redundant member. However I don't see it as a
+> simple change because I also spent some time looking into that
+> particular structure, shrinking size, member ordering and access
+> patterns that I am questioning the runtime performance implications.
 
-Thanks,
+With that experience, would you suggest any other tests than fio where
+a performance change could be visible? Something I can focus on?
 
-Ben
+> My local eb->len removal patch is from 2020 and I decided not to send it
+> because I was not able to prove to myself it'd be for the better. This
+> is what I base my feedback on.
 
+I understand. Let's see what we can do about it.
+
+> > So how do we conclude this?
+>
+> I don't agree to add this patch due to the following main points:
+>
+> - no struct size change, ie. same number of objects in the slab
+
+Right. That makes sense as the original idea was about code cleanup
+and not about reducing the struct size in terms of bytes.
+I did not think a cleanup needs to be justified by reducing the struct
+size. Even without that I believe it's still a good cleanup.
+The struct is still reduced by one member (with a new hole now).
+Moreover with the followup patch the size is actually reduced at least
+for -rt configs by filling the new hole so that the later hole is not
+created at all. This wins 8 bytes for -rt. Not much and maybe not
+worth it. Or is it?
+
+That said, as long as the removed member was not meant to cache the
+fs-wide value for performance reasons. I did not see any documentation
+or code comments suggesting that's the case (even you're not able to
+tell for sure) and so I thought it may be fine to remove this eb->len
+field.
+Which brings us to the point below.
+
+> - disputed cacheline behaviour, numbers showing improvement or not
+>   making it worse needed
+
+I'll look into this. As I said, any hints are welcome otherwise I'll
+start with fio and I'll compare the perf profiles of some functions
+which access the data. Let me know if I can do anything better than
+that, please.
+
+> > If you don't want this cleanup I'd opt at least for rename eb->len
+> > ==>> eb->nodesize.
+>
+> This sounds like an unnecessary churn. 'length' related to a structure
+> is natural, nodesize is a property of the whole filesystem, we're used
+> to eb->len, I don't any benefit to increase the cognitive load.
+
+Now, our points of view differ here. For someone new to the codebase,
+I need to carry on the additional information that eb->len actually
+means the nodesize. In other words without digging this detail up the
+code just hides that fact.
+Since it's always set to nodesize, it does not really mean 'length' as
+in any arbitrary length, like 12345 bytes.
+And that's what I was trying to clean up. See? Does it make sense?
+Also that's why as an alternative I suggested renaming the member if
+removing it is not really favorable.
+
+And I thought it can also have implications maybe at some places when
+you realize that what's being used in the expression as eb->len really
+means the fs-wide nodesize.
+
+After all, with this insight I realized that the buffer_tree is
+inefficient as we're wasting the slots using the tree really sparsely.
+Since there are no shorter ebs, those empty slots can never be filled.
+
+So using the right name actually makes sense, IMO. For code clarity.
+But I can also understand your point and I can get used to it. It just
+does not feel right to me, but it's not a big deal. I just mentioned
+it to know others' POV and explain the intention one way or the other.
