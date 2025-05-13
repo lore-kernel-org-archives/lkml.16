@@ -1,78 +1,84 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6844D253F1B
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4592728C5A5
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747134149; cv=none; b=NCNqaPuXueNCqq7HN6yzQiRtXsMOPzNOraCiObzHj5NkoJ1oWU1zLNpl0k5pTKBZNTu3OWB/65FEk3z7rEF7aAj9wdJYhsjk5VdD+JONxzqO84RlK435HlHtuAYlgYJTieywymh9YWrQUB7lNuHE16b97Q+5i+x3HfdYCy/+PYk=
+	t=1747134151; cv=none; b=eVlm6CXgSYcuNRs7wNhV3B/PQjMbbc7oWaGwKSlSdceuEkInSHEJRBMm279K4dhM4gcqJUks+5xkdPQ0XiZkvJRcbDg2XECnlj3bTXCvDEGe79zpM3Z+qsXDMhsDsRYMLnoD27lcs/qaaHUz8+4Fe5oSPjjrrh7KqlqlvSwSHeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747134149; c=relaxed/simple;
-	bh=7C7FBJUy24pQwhj2ko07VwT/gjAy69DojfL+YvpqFQs=;
+	s=arc-20240116; t=1747134151; c=relaxed/simple;
+	bh=mssKbIoY65LmLl/b0fCd0FyJzxFycEEFgEHhfJY3hHs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EpLi2tQEWj/3QzngLJdsMIF+tYmm8lQADwIQNJndhWr3VgdHoBqU1uuoeM5enLspT1LNXYte1V3KPPHT4Dd0tfvzcSlzuL4SwUGsDHjRYu121xzYHM6Gl4dOhRiH1fHiB9aRHbxXkKEtPmtj4MU+3qyV83hVD4mzAZb665gkSZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kU9tSSJC; arc=none smtp.client-ip=209.85.128.41
+	 MIME-Version:Content-Type; b=FivwlmDEWqYz0PcvgfbEcQ1lKUo6ZoZYOTkTsthxbn+6mlbZzZQhbXDF/ZviW0cRh4yhqf5zOKmjIuftdc1YVwHAfV8rQxos2AOWkWF0AVGa4P9H2RGKlVIb48dj8QOodAprZcQIshgoMLrmpSl2nxh+WwlmZ/7VGctqGlMOozo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EMoLE7XP; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kU9tSSJC"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-441c99459e9so36904415e9.3
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EMoLE7XP"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0bdcd7357so3775154f8f.1
         for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:02:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747134145; x=1747738945; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747134146; x=1747738946; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hIuQRYwFH70ryKEjus/+ycj00Kxpege6lANQjndQh/I=;
-        b=kU9tSSJCDzPt31hjYnEV1dE7WlPnVyEPUVhZKleyyeAb4euJ0cMr51AG4A1qxm4bCR
-         rFaGFML1ExSQ334c3qVEIVYL16NamxDb72K7OvHEFx2r/MqHR3YcrTb4+vTnRowKPG4L
-         3Tq0hE6JV02Vcv4eRGWO1kobxgnVeZcWqb06mgiN7oGL7DIq7QfNUX+5jKpbsTRm9cPg
-         XNPh3Ch2UtRL1WLw2XMBXHjhGF/IAyPHVWNmey/PD1tDKzkC4qKwGZI+JpgkjKUqncW2
-         7QjeaMQyn5xgXiMz+6N3O43nz9yDcNCE8SBOz7/alcfKFE7T7tk5sgfDtQQ8u9ETv1Na
-         3bxQ==
+        bh=o26ZWiTP9c7iIOQX7GPOxDhZLUi1kJ7hn4K0Nn53HKc=;
+        b=EMoLE7XPE3TTmkTn9bTQyZREiIRRGX7YVuqCWkphzI9ddUp97JommvmRhnOeydvBAj
+         5uYo2197zoJvfViND81fRgVY9vn2k2iNuzcmZWZZFBA7dJcrrYmJiJNOq69n7mFrpd/r
+         aRfIYYx0A9LaU3rMyYBThw/E9nw+83fs3APRrDdoTAKZdl8rAjrnQ/xCTOrm/3s3Oj6n
+         M6am0bYek9vV7wDwNQsBudi1TEGSO7GkAA3Xz2ULryoHMI17a8npEM/rZF0mvfefoyvA
+         q6bdqH2TR++reOoqgKQ2aEh7IOlzs+y1Nr01J5xCohyO1cOIliELvgIVqfJdJ69sHnua
+         pSww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747134145; x=1747738945;
+        d=1e100.net; s=20230601; t=1747134146; x=1747738946;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hIuQRYwFH70ryKEjus/+ycj00Kxpege6lANQjndQh/I=;
-        b=L5+miygRJg260wh4hadtu0WqcJy2kzLi7iWXkE9XMMleEeAZ6ypkfPClbr4Q0l2UXw
-         ksvN47SW2TWPO4FxhsOpprxmceHCYBkBc3XcC4eEJUOLj7imZsKSonp+rN5lytoIH8EI
-         1OfGVLQwmuIQrWWJQPQGQjCYYReu4amKOYrapDXSdo4TztMlR2MawdfG1PSUg/8jY4ji
-         WAltXby6RfFiGVrS6yDajsFFd/EyUI8QOWw9W+YdrLX3JRbswI2ADRbLxs1CuogLRbIg
-         02lq7p2stKyC6J23w0DYH5UxentCO/MfLVbjdhiCxtlxABlix5+4hJMX3TYhqJi/XW4a
-         ZOWA==
-X-Gm-Message-State: AOJu0Yxg33jbRgiNl+yXhx1hHLMNEGoL1y7zM88X1vCkgAbZgDb8wHMV
-	On2Sckl5KjH1Bg3aRIdUAHPBRCAVfFay4Q22rt0bHVq9Bmta0CYJobVnN2Mr2xX7sE8NB0NQz4+
-	b8bA=
-X-Gm-Gg: ASbGnctK9P5t9vKMIiFLrLTF9JiZhk/z5ZwnW72jC7RiCWABoK5gNlZDT+jE2duJAar
-	km3P3e41t6u3e2v/5MVzCrHs/tVON4Ag8M+WPO8sFtUZk77vP/1Op4UYiDeoQ1y1zgUI6k86dUi
-	72QPy1o9ngwXdu6gBGTxCeyTx28nYAxhTTN/Q+pPq/XR8qfRz+lDACXqwHqo47QHcQp24WUMMgb
-	zxR7wUJgDmrw5XetM7oynhnWzhCPyGW8yvK11AXOnabYzDi6sGN6QC7NFEXsyw1N6mc5QlAynpe
-	383ACQdTlkztaawSk298j2RcLY9Ffe0zXSGamJ37eZVo2xG/kOHtmGYBinWIXfvj+oaWaPEEnx5
-	OqrsdxqbQ/N5bzL02oe8wFNRi
-X-Google-Smtp-Source: AGHT+IEzayTDLNTwYtqIT+B5aLrYmeyR5WNydDtXjj4rAfErOhIW1EDdBLfpwZ9AflrAt4ElBdrCuw==
-X-Received: by 2002:a05:600c:8212:b0:442:d5dd:5b4b with SMTP id 5b1f17b1804b1-442d6de0e29mr170363815e9.31.1747134145222;
-        Tue, 13 May 2025 04:02:25 -0700 (PDT)
+        bh=o26ZWiTP9c7iIOQX7GPOxDhZLUi1kJ7hn4K0Nn53HKc=;
+        b=PiZ6mDG9r5RWehUXN8qlsb5SZQRHxawZowca/IvvFgB3qDhWN5/BfbmjRp6zAnC2s4
+         ykTHg27pWRiugsdCt1Vd7bPXu7yOaXQY71nwL1wwKhf8PTKdwY8wFa6/NbEsxi0SmsIY
+         0H7FjeoS0PIrG3m93cKiPFCHhyKuMbGHKRGLS08PfsZjyJTphWgCaXocsPTizVetg+S/
+         E8C5m/6g7q7CbyTKAEHL0+0VVF33d5aMlm/98Icl0YQL4G+oj5RIEIR9kSGR27vlzjQu
+         5LIfvtGoF5ql35+xviZl+V6pO+5IdBo9Xc2oa8zCpf5UGUHmqWA7Kc6QDrzGuhrkor2O
+         LJ4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV1x7TdWs7OWtcwheV275pTqE6IXyLKCxvTbjbsl7Q10j7Jg8RZOFFNpGTir+rgUnVIWYb7Rls0iPCgCBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyUXZ1wYw67PxxvsH96VdpYvdRnHjjkXUMzsoUdx9eeTLAIHpR
+	SOVtnVdgKG2WUUzbGXktYNCGs2WMqS+j29DxdvK/hYLcaPkZxFrXNx8KLY+y3Wc=
+X-Gm-Gg: ASbGnct/6mBrBv/RiA3g95M0uSVN8/iMTd7mvBf0B3lBW1lMw7n3Aur7P+8W3PnacRT
+	lRuTnXw/DxP9ClGM4a+GJnUpQK9W2bQc9f9Tbsb4azkk3BVoHmOH7OQ7riWzNDWaHaKg6NjjjL/
+	KOppf1sTU09P5owUT/E3kn3dQw1G82gKXYhWbhYWWsKNY+h5xxVf4OHZCaIupy5tUS4UDv69GuQ
+	X31teRAX6C+C8ZzEy7ZgPrzhcV0rq1hMziRYlUGkmc4weGu63+UGaeI/DYlZtVKSEtYjRJZjqNz
+	l3ZWtfvWwP1f6LFQVG+8JcP2HAsQ7GrTRT2cvXQjSdCBWljwmjcXbMMb+E5EWcZ3SSRTKLjOj7w
+	FV75EF7mJqAByh3UUGhMrq9hJ
+X-Google-Smtp-Source: AGHT+IEFFJTx+ExeQ0LxjZrLVtDg/lSkbV461KmtV93IzN3+6IjslOyP/QaT3NmsrWAQb9LLcZHxEw==
+X-Received: by 2002:a05:6000:4287:b0:39f:7e99:5e8c with SMTP id ffacd0b85a97d-3a1f64c0df2mr14090834f8f.51.1747134146531;
+        Tue, 13 May 2025 04:02:26 -0700 (PDT)
 Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2ca47sm15851252f8f.73.2025.05.13.04.02.24
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2ca47sm15851252f8f.73.2025.05.13.04.02.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 04:02:24 -0700 (PDT)
+        Tue, 13 May 2025 04:02:26 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-kernel@vger.kernel.org,
-	Markus Burri <markus.burri@mt.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Francesco Dolcini <francesco@dolcini.it>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
 	linux-gpio@vger.kernel.org,
-	Markus Burri <markus.burri@bbv.ch>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1] gpio: fix potential out-of-bound write
-Date: Tue, 13 May 2025 13:02:19 +0200
-Message-ID: <174713408244.11101.2931169841658120912.b4-ty@linaro.org>
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Marek Vasut <marek.vasut@gmail.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	stable@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v3] gpio: pca953x: fix IRQ storm on system wake up
+Date: Tue, 13 May 2025 13:02:20 +0200
+Message-ID: <174713408243.11101.5617298935758722435.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250509150459.115489-1-markus.burri@mt.com>
-References: <20250509150459.115489-1-markus.burri@mt.com>
+In-Reply-To: <20250512095441.31645-1-francesco@dolcini.it>
+References: <20250512095441.31645-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,21 +91,24 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Fri, 09 May 2025 17:04:59 +0200, Markus Burri wrote:
-> Check that the input size does not exceed the buffer size.
-> If a caller write more characters, count is truncated to the max available
-> space in "simple_write_to_buffer".
-> Write a zero termination afterwards.
+On Mon, 12 May 2025 11:54:41 +0200, Francesco Dolcini wrote:
+> If an input changes state during wake-up and is used as an interrupt
+> source, the IRQ handler reads the volatile input register to clear the
+> interrupt mask and deassert the IRQ line. However, the IRQ handler is
+> triggered before access to the register is granted, causing the read
+> operation to fail.
 > 
+> As a result, the IRQ handler enters a loop, repeatedly printing the
+> "failed reading register" message, until `pca953x_resume()` is eventually
+> called, which restores the driver context and enables access to
+> registers.
 > 
+> [...]
 
-I tweaked the subject line: should have been: "gpio: virtuser: ...".
+Applied, thanks!
 
-Also: you sent it as v1 but it was in fact v2, please keep the series
-numbering even when splitting patches out of a bigger one.
-
-[1/1] gpio: fix potential out-of-bound write
-      https://git.kernel.org/brgl/linux/c/7118be7c6072f40391923543fdd1563b8d56377c
+[1/1] gpio: pca953x: fix IRQ storm on system wake up
+      https://git.kernel.org/brgl/linux/c/3e38f946062b4845961ab86b726651b4457b2af8
 
 Best regards,
 -- 
