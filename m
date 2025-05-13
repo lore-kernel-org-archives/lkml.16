@@ -1,303 +1,326 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2080.outbound.protection.outlook.com [40.107.21.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896E2BEC32;
-	Tue, 13 May 2025 16:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153242; cv=fail; b=CUkCiERjvJELUTUAn/jhH3VD3xpaHeqWE5LUGl/hxQdyC/WxLzoKnxVy+1VimNyMXvTnhcEi1mDy2+DELj80MLbUuLVZ0+4ChqM/DkZh9Ze3peu/9W7ASRcVAWZJkQoCCWUuvp56/ROukcUm62M3AZTtR5Q/9sxN4bbVGXIU33A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747153242; c=relaxed/simple;
-	bh=aVaCa6knYN3wdv4Qh7BCP9ztlsu9/+EjuxJRf2UeVR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Qj5aE/zE9V1yiCowB6Rtc1cBASi9wDXBGU719F6b74AgHm7nqnaoDVrrZ8Ei1j7CGQTa+6jiR3x3wFU+Nr9Wy8m03XBdG+PtAmvy45VIo5sEjwbhMPZTKMJ5JENi/ktfqd5u9yC6cA6zeFAwhLU+kU5bpRCybQHl64CEv+ujeUQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=XUg3Dy5f; arc=fail smtp.client-ip=40.107.21.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B9F28DF08;
+	Tue, 13 May 2025 16:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747153267; cv=none; b=LJFgl6rXf546X0GpED8lxwihsJkhKvnWxZwIiTC3ilYc7xi0+NsWD25TEemVj3epjiSxlwi1Ur12IsbrYIA1ODAy5gDt2rakxHf/0Ny2fAPx48KtkXe3cZdRbzGsPYY1v7e7yUsWwm8cEnxd0JxBrUL6fvyTeyBlcTfqy/WFpeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747153267; c=relaxed/simple;
+	bh=xclisS5BkvPZHchwV0BGySrX4fYAWqdhAIyu73hj/tU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RmzGmpQH4hOXtJV7923j7LpRhEdKVzllMjo98mMtisdNqJ5i1YSRJ7ZSHOxZZ4z9QzTWGmEfvGhMSGQqMyck5VWDjjiWp1eAGHoo+5qCvDiwfllRpAjyrsbQoNxOWAehxS6LnwsfMO/ND00pB/tbBZJj0sCUoLHEFTKW8UGcAZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lladFSDR; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="XUg3Dy5f"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ay80PEHyrAWwluB7C9VST50xAI4i0dx00FARUdhq38RxxwpNuUUKQZ5wicnpsyMM7EyXKyohnBI1CyurjjHNXX0hK14Rl6pGLU+aJGAba8G6TRjIuzZSn/GJyPJhVRTvqkjWexInaUEMags8JFVeuPRY5Z4OZjZmB0JT6RDpww9AaznP8Y/QmMHOez6D9K51P+CA8tAD+2qcqqd9vnekTmjkNLm4RwLASvHqEY2jFj63dxaYpNKkQVQMs0fxXOFbrRPB0BpQPILhg6zcQFoPlVoy86Wa6uUEkXs0H9MZrrOKBenh9IaM9bqR1DrO9SKRcACa2N2RkLaaiSImK0U3AA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Ai0RgXeyZkcJ6jlUzXDtzGNrbj997/g/dZPMiNZkUk=;
- b=pEJRgH9tDsPtBCkfeYD4vrmO5dqMxd75D5O0gOyU08n0HF4fjJNF/qsHIuD/lsRukDe00bTV6+mUV8G/KAaIXFmPlsNfTAz7xJxaiGxXy7pPGeXS4vC+frDmUy1CDWr5YncutUlCTdQdse6B1QcZTD0tOwV7befEcoRGndy2ceIpsdXGDEdMMQJSz38OE79lmK7Bcbql4E12k+ig8QlaeQ2DtXjiz4+9ylblx3z8huh8EoiyAQ8LsU3xaF4O7+laJAVT7c6HPLXOD2eIBsz3rRiVrpHey+DOsad2iFYZTkR+iZwBG1uZUvqn6cNtmpz6ujGOfkvVn9TliQs+07E/qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Ai0RgXeyZkcJ6jlUzXDtzGNrbj997/g/dZPMiNZkUk=;
- b=XUg3Dy5ftwxRR4DcuGskJHwG978yXVJFKdYb6ZRDRiJUE5vCx+IH9aH4Jg05K7j45Q3zSopc7kD4vMF6RiNh6IrBYqQ4GAw14kq5DSqcVNOwUjtgPb1ax7uMYbwGTAfjezgqM/+FdlvIwdBVOSn7Y84xRBGuEpU9PIopMvEDqQCu6dNVgku0AchO2YtDTzJczVIvkDNqUuhqv8WpnV0aG5CCjnQToxK7qASa7FC37y2RO2y3XFbDRrHDdYQOBhW6xEhRIE0mvJrwiR1Y4LzfLgZv5+qK7GfV5D3pgk4YIiZBXRT6L23b7ZoN8NxGFAvQbCp2Jin3EUIFjxP23om5GA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from DB6PR03MB3062.eurprd03.prod.outlook.com (2603:10a6:6:36::19) by
- AM9PR03MB6724.eurprd03.prod.outlook.com (2603:10a6:20b:280::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 16:20:37 +0000
-Received: from DB6PR03MB3062.eurprd03.prod.outlook.com
- ([fe80::b201:e423:f29:53b]) by DB6PR03MB3062.eurprd03.prod.outlook.com
- ([fe80::b201:e423:f29:53b%4]) with mapi id 15.20.8678.033; Tue, 13 May 2025
- 16:20:37 +0000
-From: Markus Burri <markus.burri@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Markus Burri <markus.burri@mt.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manuel Traut <manuel.traut@mt.com>,
-	Marek Vasut <marex@denx.de>,
-	linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Markus Burri <markus.burri@bbv.ch>
-Subject: [PATCH v3 7/7] rtc-rv8803: make tamper function configurable via dt
-Date: Tue, 13 May 2025 18:19:22 +0200
-Message-Id: <20250513161922.4064-8-markus.burri@mt.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250513161922.4064-1-markus.burri@mt.com>
-References: <20250513161922.4064-1-markus.burri@mt.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI1P293CA0001.ITAP293.PROD.OUTLOOK.COM (2603:10a6:290:2::8)
- To DB6PR03MB3062.eurprd03.prod.outlook.com (2603:10a6:6:36::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lladFSDR"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30a93117e1bso7673527a91.1;
+        Tue, 13 May 2025 09:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747153265; x=1747758065; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+E16I8vzEmd9DjLSjm9FsQflL/9sYtnGL2OMd5s3O6A=;
+        b=lladFSDRo6lFS2e1wEs+KieWvE38B3fFMASPslCI7RvaYEXblNcuvMYswtF/aylfvp
+         izEc85Tkz7pobdh5Vm413EFt2GgM72CQl3dORzSvVNLTOn7EenFu0jEOd0hycwPt9+Uz
+         FtBUX0gUhaJRMzW+oCR0j212mEyRBpEv/hTQrWdaluJYel2JELDbw8kwrJn0elSrLfMq
+         9nQHPxOcGD06BtSwCF9TksbPAbF3E0H0cDLvBkSnMQXoNyiG47KhmjUcRouIosXCd7ot
+         o45akIadIP2bAG3KeN2Y9drsDjz6I4Qf+neHqtgJTfJwHhzj7qdv12Q0aJq3gZ6AY9aw
+         OxLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747153265; x=1747758065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+E16I8vzEmd9DjLSjm9FsQflL/9sYtnGL2OMd5s3O6A=;
+        b=EVlJBC4cu4GpuB6J6Ps9LdDPVVoImng332JjxGSN9XG12szSsUs71I6oVpt8e30Lph
+         A7G6TIT9RyEspN/FASO11vQHTPYtFUGZQ72EX6mHBhBgcz4JResGPKrhGzDB77kCsQau
+         hOpcyfgh2uzCfCJyd2+bIpGoGaSKl7ECgUpFkscde3L5S8Vwqp2pc4B+e3hoa9ayIbUw
+         GzBWNRRUgiVUznv9xKs38gsB2oGyzTIfS43Pe3dXIa5t8mj9BaE6VxRgHlGk2aMHioZS
+         u2dIlELxSOZeUlATCcBW6wVD9Cr1zA5KbTgUtiLZfmypSNsESeMyPrk19oW/P3WPqsqL
+         NDbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMQ69hew6Ainw1i5XBAOfNS0cAxYKtpBIUpQaf9BpvPtp1cq8QoMRgbBrwlxJL5zaEP9A=@vger.kernel.org, AJvYcCWi7S4Z/9v7skhYEcLjKy65capth7uSZ04Y9L0N5wjRug7CIOXkb16bfnp6MePDyHK2ticeGZztBHF5Ysgv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzojHvP6H/0iTrV1ZxMO0aLvPpZcPlwO+KIWg6RohWB7ERubv3s
+	olXCmjDaXQO2J0aSPN243MIao9kxryXJFh4JKpubdDBRJC0a1unmKjBEG5kycV8DUtBISC4bkKw
+	OMwWVDrjBJBrEM88Ri7Zla0MQD5c=
+X-Gm-Gg: ASbGncvUOwabC6jVrFMCpKQPY5DvysjBXkQO0qAtRmSwoD1KBX/ckeFUiD9+6hnlxLU
+	/Kzas8nLzIRGhL5SxXyzS+OlyzrxT8a+yHpUbvFaUGOXnSqQUKwD5qPRyqODf0ZupsoK7/C9mLB
+	UP394PUymu9uZ/7WVd5vT7KLYT7uw85f3D7tWAgAJWZjt0u4Rr
+X-Google-Smtp-Source: AGHT+IFka4H8eoa7OVpKTOIIXdcuhtfU+/+l3e9nrDdI3J/0gI91v7zfBkYr6HXhC8D4L2jkbsH5fq45jqOUJK9sTgY=
+X-Received: by 2002:a17:90a:ec8d:b0:2ff:53ad:a0ec with SMTP id
+ 98e67ed59e1d1-30e2e5d1a30mr257426a91.21.1747153264931; Tue, 13 May 2025
+ 09:21:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB6PR03MB3062:EE_|AM9PR03MB6724:EE_
-X-MS-Office365-Filtering-Correlation-Id: 42b54211-cf84-4c49-dc7b-08dd923a1866
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pn0M2fnd4Xvm7+lF4RoEiixFUxu6q1bdQJdqNDB3Wicpfv2Qw9XEnwkZH2ET?=
- =?us-ascii?Q?LhQcPSFu0SalZS2sEo6IdxViB0wrbF09yS+9vzCyzi8D5zmxqCZt+NbESDPm?=
- =?us-ascii?Q?HABDIPHIM2EU5arrRlaFzq3pLncvuqT6+v3d1OI+i30NvriLjrH+COJVTYFQ?=
- =?us-ascii?Q?5OWr7aeX9ZxGvwhF/bhlb+JRt9HxCKfxexNwb+OwA3eHYKdBeOhnIWrX7RSG?=
- =?us-ascii?Q?dYs3HGE7S7Ixhe1pYdPQBzgVka1DeF6gNxpDi0Ls3+7cm1qAz3cBEetF+N4F?=
- =?us-ascii?Q?s3Ch0YkuuoWtedoy8BBY3cozkbpseji/4rUXFdEnAZoV6GxTNMnTYNLQMPpb?=
- =?us-ascii?Q?IkOGkH0ShrrwlDWFqu60aTS6zc5HfwysXmPNg3yzcD5xqeZnkDCRTAyqE43L?=
- =?us-ascii?Q?KGjvmsSJdFIB1KdJ47TXxcdQKHv9j3VDFenEnfG+BcmYE8d+y9IXe1dxjh/O?=
- =?us-ascii?Q?lLOCZF7xpW5Sk1crsZir0/b4SC1NYD6rYeWlYIUZ/Msx+zlAuqdmfm3OZxXI?=
- =?us-ascii?Q?Dxtv9eLJC8y5Mm6YGmyOaaXqKNb+FCulS+W1ZSv++eLBjeC5o55a3sKydWjS?=
- =?us-ascii?Q?3+9D60FXG6qJFvVWDrHVpeqXMw2tD/xZomGAxBW6B82JjjqUj9Q8DJA7FCgF?=
- =?us-ascii?Q?gEkKxh8Ca370q45BCEwAn7+dv6IPl8WcIOpss8tlr3fvX5GyexKglTj9lnWP?=
- =?us-ascii?Q?uakp1KLhpHvUbY/v7FvnGhm4NLeb6zd42xu+f2sSBNJ6bM+qNqsmsWFW+qOV?=
- =?us-ascii?Q?laFaDjPKpHkqtCqiQpOTYjX+Iyw+1T+sOJtOcI0IB2ZadWrTGigRMoz/QI3C?=
- =?us-ascii?Q?R3/A7UC5qbQF/CRmG5AWtxrBwS1JL3lzaimtoRWuTAJ7OdulRzCH+MFj/yaV?=
- =?us-ascii?Q?JxB4atCeBiAZbDTnzWgV0Zl0XfN0zs3Kcwj91bH3oeJqK2znJpy/pvRc4jtZ?=
- =?us-ascii?Q?6iObT7qAtg/Gt1lJrQqCQHE7VZpXSSOyGF/Lu9hbVII2CR+XPZSluZdGiX/9?=
- =?us-ascii?Q?e1kFMC7nog4SJJXxQy0WEAlN6QOihO0UJQ0iIZtN2nlAiIUXO7OdkRUtHgY9?=
- =?us-ascii?Q?YWCZRMEgeN0GJFLKSnujF/0mm7I/1cBX3ngI2cilFYTAG5+/Y5ekoV6rUhme?=
- =?us-ascii?Q?CWODGKH+Zem85w+8XmfAcNMkURu9TzgkweKzfKMKWHhseFPtck6RCNts2rMA?=
- =?us-ascii?Q?jglDSEb7oJKGbg4bLzcSkyLh5mpVIr/Gs4Ik6LIvJkimTXndJOA2FqJdmLqT?=
- =?us-ascii?Q?kq6I4d/TZ/6yua+G8WNFeQFbCx3UnqeX/aLKisSIqF2av+YQ9Gp+T3aoMn5O?=
- =?us-ascii?Q?V3nUF/+S9fWfQVRXYj9fxVbft6Z2bvfGq4nm5q5w0NseuYTglv0Xf+JwGVhm?=
- =?us-ascii?Q?0AvLReiTlT1kdWhbvihOHQC3QSxfVHHpeJARFG3X49SE6aVjCwX2gSicqLdS?=
- =?us-ascii?Q?DMIcAAOgvgiaZNg7PSeNWILuqONzSvKxEvMtGZu4Iq63ReYft944vw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR03MB3062.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QzcF3Gp8M6eWhEtOfNtXA42Il3/ZuFTfdJCe07R/FM0cbqGP6Eddmz5G6cPy?=
- =?us-ascii?Q?GlSEGdvtNlEHENFgaHJ+crexDmCKT5H7ni5laufA1hAruHuMUsY7kxcyNQWc?=
- =?us-ascii?Q?fku5KiiqWChKhVIr96M1Q36ui7DI3ahPovDDRnY5z4OGFqcj6jokdZa2qC6t?=
- =?us-ascii?Q?64OccYuGAxiqema1WeChvQo6K9ZTGYUFf4AE0i0of/kBVV7SSTAAVO4mwZMQ?=
- =?us-ascii?Q?ugtG3pKDoQRvSHvYx2aWCJGeFo2kLnGNPNIsHx//VhCN8i6zVlANK9lWxLcX?=
- =?us-ascii?Q?VbecHbL1BRepUjOdcSpXzUFw6jdTXehJV+PDkW70b+FdsYWiMO71CcywkJXm?=
- =?us-ascii?Q?D+6HL//zBEr8HbNnIf6nA+MItCkhfdnnMB8SH9El3ZC7f1Ni7PORGmEuM7n3?=
- =?us-ascii?Q?Ta3I3gMqmZ909bET0vlh2CPCgT3kpOfxJqrqQw6Q10L6gpMz+V6cUpWkS8Xh?=
- =?us-ascii?Q?1OtYFnk4oUzzNJtA6NSD8TgOXD5Mb1pMeN3Alxir/OfY55nCAFPXN+dQ4wxC?=
- =?us-ascii?Q?c0K7JBBaNTSpgyUzcBe3hw939hrpTPeVDI8chnPdiBHuOr0Yb4HaowigWhTv?=
- =?us-ascii?Q?V72s/snmcrgULVGAi2V5w+BdTlauWeAgN+e3IzAM1FPHbcC29llQFM0rc9nP?=
- =?us-ascii?Q?YY931SvH1drCJEoZr+9DhGMyLTn0rXd0vibOOhJX0uSyJUmJ3wZaDPaB8yud?=
- =?us-ascii?Q?9NxXDZyRHghlXs+Up1osQF8Qp6b/cMXV+QtpT+DMPji6oxK3dYIzeQDujVG5?=
- =?us-ascii?Q?G52uG64vqA3vkW1Gi4k1Su0COvjAunVGuRz/yLX82Jk/Qdx4AKWgi9g4y8KR?=
- =?us-ascii?Q?91VQKNHCE7JmNXVJhLiP6a9W18+RNvcq02ngElXzJGVFR6cKr9qO+m+k73FC?=
- =?us-ascii?Q?OkuXrVMbHkO6ztVXqJLq2roOp8JOn+gfHneFl/PWmIeWyAoTyK21Dcwqi5Yh?=
- =?us-ascii?Q?KEVd3CU1N1jgls3jpurCLtRws0LFlYsbwlAnvzV3gMuS85GXFG09/dlKkpUZ?=
- =?us-ascii?Q?yFWbQuJaHqu3hyh+iE07B9PGzehuBXOc7BApilyK7V5JJ0iSQZAsfD1q+h7a?=
- =?us-ascii?Q?RJNcA79BXwl3lWhJdJIy9hFHVhwo30xjoH5nKNQ6ZgStXA727kDop6qppnp9?=
- =?us-ascii?Q?mfDycP/BWOojMEXSwPWXY922aWXMnqeO7NkMJ+mzEqcOJiIxW0mITXjiJbaq?=
- =?us-ascii?Q?kORUhKIGw4FNYtQHWWwm2mIHgqMGlnr7Y+0EB248uMBlPb0QlXDIFqwxPScx?=
- =?us-ascii?Q?RNpgw0MfdTy4RFl/Or3J8G0L6+5OOUNN4F3VrBE4E4i0pjN86tYxYKMICzA2?=
- =?us-ascii?Q?aaWYhYezI6ae9mdVhHOrYLAQuByTTXNSywSW1z7TyzyqxX65YgEWzKi6QtFc?=
- =?us-ascii?Q?OWeTnyBfTreZ44CfDKo58aS9v5vIC+MI2GOAjJ7hnE7quEJA0kNcxa9efFO/?=
- =?us-ascii?Q?HhSKOgcc/iuM5K0i9rb/FaSEs2AT6hwRhQpjST1pfkmJAEACiKu9Zhhoyr7A?=
- =?us-ascii?Q?K46ay+Hi5VHm5Q7g6A7V+omAseeIPiLMLQ1bpzX3ZN/SHqth6RXYHLSaqges?=
- =?us-ascii?Q?nBCfRFQrMsh4tqG6q36sVHrjzO95zZcsnhDd7jrB?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42b54211-cf84-4c49-dc7b-08dd923a1866
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR03MB3062.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 16:20:37.2338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zcbuanuju9DftRg0xODpTt7W5YPqPQoda/o2Mvr6aI1/DNQnEdS5T/zuzJW0d7IyCzTN9jtlaKR2vlkZl+B4EA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR03MB6724
+References: <68213ddf.050a0220.f2294.0045.GAE@google.com> <CAEf4BzbsmHonD-G45-Jo8RQHPjDYEz-Nwx0MGtsk427tgsqGkg@mail.gmail.com>
+ <CACT4Y+YpBHXXjU6rPBtB7_-5BvxqZUHW8i6YjOa6twoR=2u1aA@mail.gmail.com>
+In-Reply-To: <CACT4Y+YpBHXXjU6rPBtB7_-5BvxqZUHW8i6YjOa6twoR=2u1aA@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 13 May 2025 09:20:52 -0700
+X-Gm-Features: AX0GCFtpo4CEO8cKHEVoVAl0Khf5cvl0XCIEYr5QnU_XW5ohDEqZYOc_E01IGZU
+Message-ID: <CAEf4BzbqrLhB6OmkuqNQMkFQFYzbW1-abUni2vdX0N5mwaQvjA@mail.gmail.com>
+Subject: Re: [syzbot] [bpf?] KASAN: vmalloc-out-of-bounds Write in
+ vrealloc_noprof (2)
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: syzbot <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com>, 
+	Linux Memory Management List <linux-mm@kvack.org>, andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This settings are configurable in the device-tree:
-  - for the input pins: input resistor, trigger edge, de-jitter filter
-  - for the buffer: overwrite or inhibit mode for the FIFO
+On Tue, May 13, 2025 at 1:13=E2=80=AFAM Dmitry Vyukov <dvyukov@google.com> =
+wrote:
+>
+> On Tue, 13 May 2025 at 00:52, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
+ wrote:
+> >
+> > On Sun, May 11, 2025 at 5:16=E2=80=AFPM syzbot
+> > <syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.k=
+ernel..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D16b1b2bc5=
+80000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D91c351a0f=
+6229e67
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D659fcc0678e=
+5a1193143
+> > > compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef=
+89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> > >
+> > > Unfortunately, I don't have any reproducer for this issue yet.
+> > >
+> > > Downloadable assets:
+> > > disk image (non-bootable): https://storage.googleapis.com/syzbot-asse=
+ts/d900f083ada3/non_bootable_disk-707df337.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/bc3944720ea5/vm=
+linux-707df337.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/7bc2f45ae2=
+3f/bzImage-707df337.xz
+> > >
+> > > IMPORTANT: if you fix the issue, please add the following tag to the =
+commit:
+> > > Reported-by: syzbot+659fcc0678e5a1193143@syzkaller.appspotmail.com
+> > >
+> > > syz.0.0 uses obsolete (PF_INET,SOCK_PACKET)
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > BUG: KASAN: vmalloc-out-of-bounds in vrealloc_noprof+0x396/0x430 mm/v=
+malloc.c:4093
+> > > Write of size 4064 at addr ffffc9000efa1020 by task syz.0.0/5317
+> > >
+> >
+> > A while back I sent a fix for kasan handling of vrealloc ([0]), but
+> > this issue came back even with my changes in [0]. Can anyone from mm
+> > side take a look at vrealloc_noprof() and see if we are missing
+> > anything else to convince KASAN that we are using vrealloc()
+> > correctly?
+> >
+> > Seems like kasan_poison_vmalloc() + kasan_unpoison_vmalloc() dance
+> > isn't covering all cases? Or am I missing something? It's doubtful
+> > that there is any BPF-side bug in using kvrealloc().
+> >
+> >   [0] https://lore.kernel.org/linux-mm/20241126005206.3457974-1-andrii@=
+kernel.org/
+>
+> Hi Andrii,
+>
+> The report flags the very memset that's visible in this patch chunk, righ=
+t?
+> https://lore.kernel.org/linux-mm/20241126005206.3457974-1-andrii@kernel.o=
+rg/
+> Unless I am missing something obvious, the unpoison is added _after_
+> the memset, so it can't help. The unpoison should be done _before_ the
+> memset.
 
-Signed-off-by: Markus Burri <markus.burri@mt.com>
----
- drivers/rtc/rtc-rv8803.c | 89 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 86 insertions(+), 3 deletions(-)
+So that's the case when we realloc to a size that's smaller than
+previously alloc'ed vma. So presumably the previous allocation should
+have unpoisoned that. But I think you are right, there is a disconnect
+between requested size of allocation (which doesn't have to be a
+multiple of PAGE_SIZE), and actual page size-aligned VMA size. We
+don't seem to keep track of the original requested memory size.
 
-diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
-index d4b1e04c97de..de28f7846dd7 100644
---- a/drivers/rtc/rtc-rv8803.c
-+++ b/drivers/rtc/rtc-rv8803.c
-@@ -113,6 +113,11 @@ enum evin_trigger {
- 	both_edges = 0b10,
- };
- 
-+enum evin_buffer_mode {
-+	inhibit = 0,
-+	overwrite = 1,
-+};
-+
- struct cfg_val_txt {
- 	char *txt;
- 	u8 val;
-@@ -163,6 +168,15 @@ static const u8 evin_flt_regs[] = {
- 	RX8901_EVIN3_FLT
- };
- 
-+struct tamper_cfg {
-+	struct {
-+		u8 pull_resistor;
-+		u8 trigger;
-+		u8 filter;
-+	} evin[NO_OF_EVIN];
-+	u8 buffer_mode;
-+};
-+
- struct rv8803_data {
- 	struct i2c_client *client;
- 	struct rtc_device *rtc;
-@@ -170,6 +184,7 @@ struct rv8803_data {
- 	u8 ctrl;
- 	u8 backup;
- 	u8 alarm_invalid:1;
-+	struct tamper_cfg tamper_cfg;
- 	enum rv8803_type type;
- };
- 
-@@ -772,7 +787,10 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr, c
- 
- 	/* 3. set EVENTx pull-up edge trigger and noise filter */
- 	for (i = 0; i < NO_OF_EVIN; ++i) {
--		ret = rv8803_ts_event_write_evin(i, rv8803, pull_up_1M, falling_edge, 0);
-+		ret = rv8803_ts_event_write_evin(i, rv8803,
-+						 rv8803->tamper_cfg.evin[i].pull_resistor,
-+						 rv8803->tamper_cfg.evin[i].trigger,
-+						 rv8803->tamper_cfg.evin[i].filter);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -790,10 +808,11 @@ static ssize_t enable_store(struct device *dev, struct device_attribute *attr, c
- 	}
- 
- 	/*
--	 * 5. set BUF1 inhibit and interrupt every 1 event
-+	 * 5. set BUF1 inhibit/overwrite mode and interrupt every 1 event
- 	 *    NOTE: BUF2-3 are not used in FIFO-mode
- 	 */
--	ret = rv8803_write_reg(client, RX8901_BUF1_CFG1, 0x01);
-+	reg_mask = 0x01 | FIELD_PREP(BIT(6), rv8803->tamper_cfg.buffer_mode);
-+	ret = rv8803_write_reg(client, RX8901_BUF1_CFG1, reg_mask);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1091,6 +1110,66 @@ static int rx8900_trickle_charger_init(struct rv8803_data *rv8803)
- 					 flags);
- }
- 
-+static int rx8900_tamper_init(struct rv8803_data *rv8803)
-+{
-+	int i;
-+	int err;
-+	u8 flags;
-+	struct device_node *of_tamper;
-+	struct i2c_client *client = rv8803->client;
-+	struct tamper_cfg *tamper_cfg = &rv8803->tamper_cfg;
-+
-+	rv8803->tamper_cfg.buffer_mode = inhibit;
-+	for (i = 0; i < NO_OF_EVIN; ++i) {
-+		tamper_cfg->evin[i].pull_resistor = pull_up_1M;
-+		tamper_cfg->evin[i].trigger = falling_edge;
-+		tamper_cfg->evin[i].filter = 0;
-+	}
-+
-+	of_tamper = of_get_child_by_name(client->dev.of_node, "tamper");
-+	if (of_tamper) {
-+		u32 node_value;
-+
-+		if (of_property_read_u32(of_tamper, "buffer-mode", &node_value))
-+			tamper_cfg->buffer_mode = node_value;
-+
-+		for (i = 0; i < NO_OF_EVIN; ++i) {
-+			char of_evin_name[10];
-+			u32 evin_val[3];
-+
-+			snprintf(of_evin_name, sizeof(of_evin_name), "evin-%d", i + 1);
-+			if (!of_property_read_u32_array(of_tamper, of_evin_name, evin_val,
-+							ARRAY_SIZE(evin_val))) {
-+				tamper_cfg->evin[i].pull_resistor = evin_val[0];
-+				tamper_cfg->evin[i].trigger = evin_val[1];
-+				tamper_cfg->evin[i].filter = evin_val[2];
-+			}
-+		}
-+		of_node_put(of_tamper);
-+	}
-+
-+	scoped_guard(mutex, &rv8803->flags_lock) {
-+		err = rv8803_read_reg(client, RX8901_BUF1_CFG1);
-+		if (err < 0)
-+			return err;
-+		flags = (err & ~BIT(6)) | FIELD_PREP(BIT(6), tamper_cfg->buffer_mode);
-+		err = rv8803_write_reg(client, RX8901_BUF1_CFG1, flags);
-+		if (err < 0)
-+			return err;
-+	}
-+
-+	for (i = 0; i < NO_OF_EVIN; ++i) {
-+		err = rv8803_ts_event_write_evin(i, rv8803,
-+						 tamper_cfg->evin[i].pull_resistor,
-+						 tamper_cfg->evin[i].trigger,
-+						 tamper_cfg->evin[i].filter);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- /* configure registers with values different than the Power-On reset defaults */
- static int rv8803_regs_configure(struct rv8803_data *rv8803)
- {
-@@ -1232,6 +1311,10 @@ static int rv8803_probe(struct i2c_client *client)
- 		return err;
- 
- 	if (rv8803->type == rx_8901) {
-+		err = rx8900_tamper_init(rv8803);
-+		if (err)
-+			return err;
-+
- 		err = rtc_add_group(rv8803->rtc, &rv8803_rtc_sysfs_event_files);
- 		if (err)
- 			return err;
--- 
-2.39.5
+So yes, a simple "fix" would be to temporarily unpoison and memset.
+I'll send a patch, don't know if mm/kasan folks would have any better
+suggestions. Thanks for suggestion, Dmitry!
 
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3ed720a787ec..93b4c1758498 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -4089,8 +4089,11 @@ void *vrealloc_noprof(const void *p, size_t
+size, gfp_t flags)
+         */
+        if (size <=3D old_size) {
+                /* Zero out spare memory. */
+-               if (want_init_on_alloc(flags))
++               if (want_init_on_alloc(flags)) {
++                       kasan_unpoison_vmalloc(p + size, old_size - size,
++                                              KASAN_VMALLOC_PROT_NORMAL);
+                        memset((void *)p + size, 0, old_size - size);
++               }
+                kasan_poison_vmalloc(p + size, old_size - size);
+                kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
+                return (void *)p;
+
+(note, the diff formatting will be butchered courtesy of gmail, so
+don't try to actually apply that)
+
+>
+>
+> > > CPU: 0 UID: 0 PID: 5317 Comm: syz.0.0 Not tainted 6.15.0-rc5-syzkalle=
+r-00038-g707df3375124 #0 PREEMPT(full)
+> > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debia=
+n-1.16.3-2~bpo12+1 04/01/2014
+> > > Call Trace:
+> > >  <TASK>
+> > >  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+> > >  print_address_description mm/kasan/report.c:408 [inline]
+> > >  print_report+0xb4/0x290 mm/kasan/report.c:521
+> > >  kasan_report+0x118/0x150 mm/kasan/report.c:634
+> > >  check_region_inline mm/kasan/generic.c:-1 [inline]
+> > >  kasan_check_range+0x29a/0x2b0 mm/kasan/generic.c:189
+> > >  __asan_memset+0x22/0x50 mm/kasan/shadow.c:84
+> > >  vrealloc_noprof+0x396/0x430 mm/vmalloc.c:4093
+> > >  push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
+> > >  do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
+> > >  do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
+> > >  do_check_main kernel/bpf/verifier.c:22867 [inline]
+> > >  bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
+> > >  bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
+> > >  __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
+> > >  __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
+> > >  __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
+> > >  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
+> > >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> > >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+> > >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > RIP: 0033:0x7f649c58e969
+> > > Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 =
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f=
+0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> > > RSP: 002b:00007f649d4dd038 EFLAGS: 00000246 ORIG_RAX: 000000000000014=
+1
+> > > RAX: ffffffffffffffda RBX: 00007f649c7b5fa0 RCX: 00007f649c58e969
+> > > RDX: 0000000000000048 RSI: 00002000000017c0 RDI: 0000000000000005
+> > > RBP: 00007f649c610ab1 R08: 0000000000000000 R09: 0000000000000000
+> > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> > > R13: 0000000000000000 R14: 00007f649c7b5fa0 R15: 00007fff542287e8
+> > >  </TASK>
+> > >
+> > > The buggy address belongs to the virtual mapping at
+> > >  [ffffc9000ef81000, ffffc9000efa3000) created by:
+> > >  kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
+> > >
+> > > The buggy address belongs to the physical page:
+> > > page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x3ffd0 pf=
+n:0x3efe5
+> > > flags: 0x4fff00000000000(node=3D1|zone=3D1|lastcpupid=3D0x7ff)
+> > > raw: 04fff00000000000 0000000000000000 dead000000000122 0000000000000=
+000
+> > > raw: 000000000003ffd0 0000000000000000 00000001ffffffff 0000000000000=
+000
+> > > page dumped because: kasan: bad access detected
+> > > page_owner tracks the page as allocated
+> > > page last allocated via order 0, migratetype Unmovable, gfp_mask 0x10=
+2cc2(GFP_HIGHUSER|__GFP_NOWARN), pid 5317, tgid 5316 (syz.0.0), ts 82587533=
+383, free_ts 81110216781
+> > >  set_page_owner include/linux/page_owner.h:32 [inline]
+> > >  post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1718
+> > >  prep_new_page mm/page_alloc.c:1726 [inline]
+> > >  get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
+> > >  __alloc_pages_slowpath+0x2fe/0xcc0 mm/page_alloc.c:4509
+> > >  __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4983
+> > >  alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
+> > >  alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
+> > >  alloc_pages_noprof+0xa9/0x190 mm/mempolicy.c:2392
+> > >  vm_area_alloc_pages mm/vmalloc.c:3591 [inline]
+> > >  __vmalloc_area_node mm/vmalloc.c:3669 [inline]
+> > >  __vmalloc_node_range_noprof+0x8fe/0x12c0 mm/vmalloc.c:3844
+> > >  __kvmalloc_node_noprof+0x3a0/0x5e0 mm/slub.c:5034
+> > >  kvrealloc_noprof+0x82/0xe0 mm/slub.c:5109
+> > >  push_insn_history+0x184/0x650 kernel/bpf/verifier.c:3874
+> > >  do_check+0x597/0xd630 kernel/bpf/verifier.c:19450
+> > >  do_check_common+0x168d/0x20b0 kernel/bpf/verifier.c:22776
+> > >  do_check_main kernel/bpf/verifier.c:22867 [inline]
+> > >  bpf_check+0x13679/0x19a70 kernel/bpf/verifier.c:24033
+> > >  bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2971
+> > >  __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5834
+> > >  __do_sys_bpf kernel/bpf/syscall.c:5941 [inline]
+> > >  __se_sys_bpf kernel/bpf/syscall.c:5939 [inline]
+> > >  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5939
+> > > page last free pid 82 tgid 82 stack trace:
+> > >  reset_page_owner include/linux/page_owner.h:25 [inline]
+> > >  free_pages_prepare mm/page_alloc.c:1262 [inline]
+> > >  free_unref_folios+0xb81/0x14a0 mm/page_alloc.c:2782
+> > >  shrink_folio_list+0x3053/0x4e90 mm/vmscan.c:1552
+> > >  evict_folios+0x417b/0x5110 mm/vmscan.c:4698
+> > >  try_to_shrink_lruvec+0x705/0x990 mm/vmscan.c:4859
+> > >  shrink_one+0x21b/0x7c0 mm/vmscan.c:4904
+> > >  shrink_many mm/vmscan.c:4967 [inline]
+> > >  lru_gen_shrink_node mm/vmscan.c:5045 [inline]
+> > >  shrink_node+0x3139/0x3750 mm/vmscan.c:6016
+> > >  kswapd_shrink_node mm/vmscan.c:6867 [inline]
+> > >  balance_pgdat mm/vmscan.c:7050 [inline]
+> > >  kswapd+0x1675/0x2970 mm/vmscan.c:7315
+> > >  kthread+0x70e/0x8a0 kernel/kthread.c:464
+> > >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+> > >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> > >
+> > > Memory state around the buggy address:
+> > >  ffffc9000efa0f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >  ffffc9000efa0f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > >ffffc9000efa1000: 00 00 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+> > >                                ^
+> > >  ffffc9000efa1080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+> > >  ffffc9000efa1100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >
+> > >
+> > > ---
+> > > This report is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this issue. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > >
+> > > If the report is already addressed, let syzbot know by replying with:
+> > > #syz fix: exact-commit-title
+> > >
+> > > If you want to overwrite report's subsystems, reply with:
+> > > #syz set subsystems: new-subsystem
+> > > (See the list of subsystem names on the web dashboard)
+> > >
+> > > If the report is a duplicate of another one, reply with:
+> > > #syz dup: exact-subject-of-another-report
+> > >
+> > > If you want to undo deduplication, reply with:
+> > > #syz undup
+> >
+> > --
+> > You received this message because you are subscribed to the Google Grou=
+ps "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send =
+an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion visit https://groups.google.com/d/msgid/syzkall=
+er-bugs/CAEf4BzbsmHonD-G45-Jo8RQHPjDYEz-Nwx0MGtsk427tgsqGkg%40mail.gmail.co=
+m.
