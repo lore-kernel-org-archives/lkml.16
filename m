@@ -1,170 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F4F746E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846201AF0CE;
+	Tue, 13 May 2025 16:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747155429; cv=none; b=sH0E6yjo11EVWZn1qYK19v1G0a22CLazm2rZPUHXbYszxEBhgw+OYcWUzv/2dgNm/upEt3ht1YJeCh/Hl0aNfj5SCpuazYcCq0qPcwvzAhcP/HEl48SKZM7ukXIVFdTifuaXcLk/fbChpyfsL2xxav367mFCxw4h6kBLAp/1RX4=
+	t=1747155572; cv=none; b=mfSje5VqCFtMPKMZXRLTs+GC8G3EK1vmIRyUpR0dmc7cUC4+bncLd+WYiwawQ+96w8ci7g8d3sio9MvV+yh9zHAGYZtGxY3gmfVkrEm6WcqBcawaiJR0Kal5Kt73mCZOIg8T5IFmzH1cSyfN3MgyjO0Ax4+n7Gde9vohKox8MjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747155429; c=relaxed/simple;
-	bh=JWrqgbhSVjp869QlKpaF59H6vIKgWU55jf2VuycE1nE=;
+	s=arc-20240116; t=1747155572; c=relaxed/simple;
+	bh=JKn5JUNSPQnoUID7X6py4mf39Q8/q4+b7LFzorRC/YA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LOv2nNlh34UXpPLMqcYg7/YP+1Vixh50Ew69fQS54EosWzZh8ZJy6wU5ai7AFf49yHadO4yG4ouOfJHHLpsUZpqhcJzYLocTP8A3/ACSjFDL5WbaPFMp1ZYEDHq4H/Ru7zi3CEAyub9gYKD7aRj2aAFjziVmw3wV59VAkFrfuvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K2Ab+RGi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=oJ9lQsNnzkOd1pdrOzTw7esW/05jwGMoBPx1Mw57Bmi8RmpGPrD2YX4WREzM/vRmuw0zZHoO0m6Vd2ecDCy8gaoewk3lSkd3wLCW2R6TOpqY+aXSVunssa0iy0+DebEd23Y7k0q96iwswWrPLMREc5gfXRVjHteQwrcZRYjgImo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=N4EtAS0l; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2Ab+RGi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747155425;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=63WRIgDQHqTbRieYwfCwwrLx6wS523NHtWp2FK/n1Fk=;
-	b=K2Ab+RGibk3dnTOWcp11w5yJxv/Zs2iJ0b9cb37/irILwQCk1yyY+2P1+W9Wuu9+U88kqs
-	cwvqz1P1YlIrVWOpV9fT6JDszySWBBATLVnVr5DIkCmw4oRr5BOYvtjmGcKgqE4+1hh43M
-	htSCHilpDlpFfza8ZhAV81+TQOhJq/8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-gvOMSkf9Pd20MyGnYj3xqw-1; Tue, 13 May 2025 12:57:02 -0400
-X-MC-Unique: gvOMSkf9Pd20MyGnYj3xqw-1
-X-Mimecast-MFC-AGG-ID: gvOMSkf9Pd20MyGnYj3xqw_1747155421
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so33419225e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:57:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="N4EtAS0l"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1f8c85562so2979978f8f.1;
+        Tue, 13 May 2025 09:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1747155569; x=1747760369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RZjOMb5om57dmJRgoIxDIvEHKMEbYGpwwXOt5lNMlrw=;
+        b=N4EtAS0lDs3r9LBYW3Yb1X2FMmu8NuIELFE64R4oPJRzhPVTpMrIVESAU/PeX4t3jg
+         wtRCwgO8wnhp0S2ZEkYYnAq1C4UozBimZAvCW+vQ1czYc+n7OhXbx8qoa+akvfaSYQ9T
+         1AYOCAmndTRIBK+BA3l8Dg1/wZm5QY2nIP+1rpsL/lS7zG8bTPdFRcE5K6sUVABOsUze
+         PMandbixPlZZybm6QkzjkJ/WgvBmzZbJplOoXD2tY7ybeJBBefNBwQ8vqMlONwXfdLaE
+         tsdreuQxAOyrYMH50XQ5ckQRpqomEGWQfZ4saykQMASWXiss3vQfs51VTxg6hutIYO7R
+         VLoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747155421; x=1747760221;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=63WRIgDQHqTbRieYwfCwwrLx6wS523NHtWp2FK/n1Fk=;
-        b=W89xCpazJmOosTzWr7RsslCdiPvasRTvu4fqJwnic/TEZVRbC0yuNu70u54B8n88qM
-         M+myGRUKl15wjTaAYCEbPceFzbmCiJrEeonSlIAptGjwI3v8jsQ4eq7ESP0/NpNLopZE
-         KfZwegLjYGAg8y0etwakVbfBZEUyhrf1uRRC9UkHVnRg7pN9y+ecgmk3xRW+jKCRBdSk
-         n9Ky46h7oIP58hjEm6bOmMvhO+TlJ2kjBWU3MjOwh6tviHb4SPUNO5mBwYmxQ7SjEl3J
-         jj/zPUabbVDm8mqsEhEBeZaSgRfC+0ljtf60YMNYxYI9S1xnzOW4JMAeurffP1r7hAMG
-         iEOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkVRzDp7e2+IS3OnIFklBlm4nS4aVT5Jde43//nv+PxkQu4eLwbiYiyqGS6z8zMlFDtuHmi4donB0GeZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOJbH2ygZV7ZQCnvB2PC+SuQA/pnymODZMP8H3CZBGJC21Dnmp
-	H6kTtX1NfvG9dprGk7NV0oAhurqvc41n4LDfZVi79PLPdcxkwLV34sarXkPdV/SuiyD/ZcQn6E0
-	CZej0GwX69fOS/0N65T63xX3t6I/y0E9NFfoGAM5tKoiJuqQ4OAVOQgfz2mNUwg==
-X-Gm-Gg: ASbGncuncBPPPswYtNyg8UuojtzbEgLDQrjqhRI8JoU3CvzetSJFbAXkv1On10saZYy
-	PIJC7dHF0Y7KT2LgLpHbUgZtjniKgoqhf8ehfiSmPwtey19vB67M6hQV8qunEVG9EJjoL73N2ya
-	V1zHYVBO4MMkgV0W5xPQ/6iIo7Rda6jJa1VVI7pF0Jb+Zta0DT3XiOz6ltrzEphi2n5lwvRTP9A
-	Hq9h93k511gt9Pj1pzJPmEep1/h2+vuZOdcDm7xj3fpPpdA/JB7qz+LXUV46B7YcKT3iCoURqzd
-	0pvC4pdAOFeo3c1OuBe3GO4HtEUNFrw/ONY1dUD15Q==
-X-Received: by 2002:a05:600c:1c19:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-442f216cf82mr334675e9.28.1747155421163;
-        Tue, 13 May 2025 09:57:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCzyGvfwnd0ItLcTJxsBo1pzFOm+AJLTCQwg4bRjS6dNbGP6+Eir2W8mdTb6z9qn9/dq9+cg==
-X-Received: by 2002:a05:600c:1c19:b0:43c:efed:732c with SMTP id 5b1f17b1804b1-442f216cf82mr334555e9.28.1747155420830;
-        Tue, 13 May 2025 09:57:00 -0700 (PDT)
-Received: from [192.168.3.141] (p57a1af41.dip0.t-ipconnect.de. [87.161.175.65])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687bdd6sm172558905e9.38.2025.05.13.09.56.59
+        d=1e100.net; s=20230601; t=1747155569; x=1747760369;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RZjOMb5om57dmJRgoIxDIvEHKMEbYGpwwXOt5lNMlrw=;
+        b=JjbyKnpAlG0zOLtVO5AqUUkf7OV2k6Gmm+amQhtACqEHhNJZEwfZFPEoXEs5LnWYTi
+         d3/KVpp1o/ap/J/9NEMUbOnMlNPIZTVx059fQ9+sJspbOaBE8m47YCv6OIlLZb0RsGvK
+         brwDysIs8ZODibC2FcSfDbozZwoJO5xegbNWpE6gGA4YzUYQ1pkJM5Ay/LUyU0tuQh1j
+         POeCF3+Rtb4Kvo5k5uQj9v5aP2NxRQL9wu+Zsze0z9BkdNJSTxs0DFHnrCjSO2bvn0NP
+         JgBj9jMlKxIszbO9FXLh7TI7T+hjm5Q97S6w22levqngD2kSuvHnSpMFHYA3geKHbGck
+         wSCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVa5wSwiFeSfjRrHBvldMzKCgMn2oFoimJF66XrmJ506FQD+NCzfjDTfw5WVOOl9o7vsC2MgVADFYQtN1M=@vger.kernel.org, AJvYcCWUrPYIrLNkVPtY13UGDPvcJ0E27lhCXMNOXL1PiqTeERaIaIEBoumVJm07aa9xujK48LJA7Y/p@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFxPVm7pGSZ3gJy1fQLMcWoL62SHPEF57r9s07eDkiWjYKExhP
+	hpoxcaUWzKPwYQEZk/T5c1acZE0WvEoKPOfnmtBJCAVuWgUZ3Gk=
+X-Gm-Gg: ASbGncuk9yGLSEtVnrAfH1qtWD2TBjNLvA19e0zDEMCOAzeOurr4o1ZyCTvMhX5i9EB
+	GV7q9mCjmndbYbO4wM4uYvQs3qIYT9q74FtK1EjaxfbR2cZfXhAVXz7Wi5nuRxo22lCekFKq9qW
+	sO+IAQRkTyzyeX3T98+QzFLEEgOqSkE4HkqzV/Zf++Iz5FOyX0+WosACSh3VE+rVyxzTzwaj5uH
+	FuuQnhnU84SP/AaiGasV469DcKktuD7wOeUzcFqGJfCw0t0JdQ/n6XwNCxtT1+4+101O36/dR4W
+	M9tum0OftetG4hJkG8zKajdxR3ZV2X+6Bo5l/bkA/BBzKXKjvs0RiPkQijTaKXSHJ7WDLQ700/4
+	IqlCvyX6thUcMYI0YwEdIs/oycxI=
+X-Google-Smtp-Source: AGHT+IFhwISbP27MyrHpLdvwM3SbZp+KgRuLNu2E6DunVvbQvlOIlBVqXXd3IdXUeECrOpl7XSpB9w==
+X-Received: by 2002:a05:6000:1445:b0:3a2:ffbe:89d5 with SMTP id ffacd0b85a97d-3a34991e01bmr14060f8f.43.1747155568548;
+        Tue, 13 May 2025 09:59:28 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac006.dip0.t-ipconnect.de. [91.42.192.6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf1bsm17013992f8f.72.2025.05.13.09.59.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 09:57:00 -0700 (PDT)
-Message-ID: <e1d01068-238c-4fe3-98ce-5c44753b321f@redhat.com>
-Date: Tue, 13 May 2025 18:56:59 +0200
+        Tue, 13 May 2025 09:59:27 -0700 (PDT)
+Message-ID: <17062792-a294-4eaf-b827-22785940957b@googlemail.com>
+Date: Tue, 13 May 2025 18:59:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in
- uprobe_unregister error path
-To: Oleg Nesterov <oleg@redhat.com>, Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250513122125.1617722-1-jolsa@kernel.org>
- <aCNpbPuY6FI1Aiyx@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aCNpbPuY6FI1Aiyx@redhat.com>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172041.624042835@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250512172041.624042835@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13.05.25 17:46, Oleg Nesterov wrote:
-> On 05/13, Jiri Olsa wrote:
->>
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->>   
->>   out:
->>   	/* Revert back reference counter if instruction update failed. */
->> -	if (ret < 0 && is_register && ref_ctr_updated)
->> -		update_ref_ctr(uprobe, mm, -1);
->> +	if (ret < 0 && ref_ctr_updated)
->> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> 
-> And just in case, I agree this has nothing to do with the recent changes from David.
+Am 12.05.2025 um 19:43 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-BTW, I stumbled over this when doing the rework.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Back then, I was wondering if this is to handle the case where 
-un-registering effectively fails because someone MADV_DONTNEED'ed the page.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-But, we only perform the update_ref_ctr() after verify_opcode(), so that 
-does not apply.
 
-With proper Fixes:
-
-Acked-by: David Hildenbrand <david@redhat.com>
+Beste Grüße,
+Peter Schneider
 
 -- 
-Cheers,
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-David / dhildenb
-
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
