@@ -1,122 +1,122 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796AA1EFF80;
-	Tue, 13 May 2025 07:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57631E491B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120178; cv=none; b=ivLnz0mNznFeEKs9vabkbzpAejiIy+rO4xXhIOJUT8Evo9kwUkAc3xQ93LzB6w69sjkt4rve/BQZaVRbVwWeDyMQ2O0D0Gn6QCuBz9q8A9XAGALciOpDtciQBetnerjKKB/AUdkSv7XzjD9rII4nK+jGo+tS88BtSIjyoo+KBuk=
+	t=1747120191; cv=none; b=u6Tf8ORyK7eNbOy7yjPoJnjt6GjoLuz0+0snKDXBtJhkwwepFeI8ewoAH0oAmEHQHz9oTkly6brwpWUJZ9qPhe5TU4ERZmrLQn2dJUXOxFDww28sla70JT4jpy4dG6+bEF7Pzngk218Fuy3yarjEGfoxaqNpep4L0yPn8dSL+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120178; c=relaxed/simple;
-	bh=BnLUvLhL2FvhqqoA6EoGOn9aCbdj9hV/DYOi3xUwBGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9IUv+NSSA3k2UA9l5QaKbDsXC0IS75Wdbk6UngOLbngYtXo0WTM0GPfG6fRMgtyF/M29UXQZvW3KDyTju0ws7NQDd4vCw9JyAAv37GGzvYLbLx665cHfSlsiITZ4nEQTsyqOYE56MxAdJ3nfOT6SosEwkumLg9oDs8HrUJwzY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RTsOUb9g; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747120191; c=relaxed/simple;
+	bh=1mpZ6Al8VYmH30IhbiQcuHYfik/qwiV++F2e9dsh+xg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rRLDcD0ZKkO/BTTlDQh6TmQn+tJKGX2827NWZ7jUXyQV4yYSyQyBf6lF92jDy1cpMwI++eFO+LpW2PIkNvifhqCRG19JDe367blrFW1E6LWGg59TPLl9x+TsUCg447Z4C3/Md707i7GgLU/CIT/vSk9bgnqEAb8vn54a3aB3Hh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sLnx7Gm+; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RTsOUb9g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wYBg36SmVUgDeEoMpeszFvbRSHm137CPtQZZ7RUh710=; b=RTsOUb9g6LhcXhntIWMwMkACvH
-	tvlfxTGnHbrW6+gk3tEZtcl2RG0HuAnIdoVRxYyKwGb/AlCNosGlLKz5ApbZ7mR/rMX5+ZoYKHASW
-	LtxemB0jBC32hPjOz1hsVkvU1+Ztwd9ziYfES/w05HIrOrXAUy9mFKLDIM5HxPh/eEbE+BnVM+h3Z
-	ibbvZ9d4wm0nRlC2L8gkTcLGUDtR2oqV0LcBrvTovTBQ2q1s6jHJzHVpzPkaJx58GaxO6m+08bj7T
-	zBKUSFypJxTFsCjKZJIbRw83+cFgAYnGiUen7PNhCo1e2KIkVvkVys0uYBU7Ho7MiGx6fDjygfh0t
-	r1vl7Tmw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uEjlP-0000000GtLS-1ilu;
-	Tue, 13 May 2025 07:09:19 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C704630066A; Tue, 13 May 2025 09:09:18 +0200 (CEST)
-Date: Tue, 13 May 2025 09:09:18 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
- conditional locking
-Message-ID: <20250513070918.GB25763@noisy.programming.kicks-ass.net>
-References: <20250507093224.GD4439@noisy.programming.kicks-ass.net>
- <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
- <20250508110043.GG4439@noisy.programming.kicks-ass.net>
- <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
- <20250509104028.GL4439@noisy.programming.kicks-ass.net>
- <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
- <20250512105026.GP4439@noisy.programming.kicks-ass.net>
- <20250512182559.GB25891@noisy.programming.kicks-ass.net>
- <20250512185817.GA1808@noisy.programming.kicks-ass.net>
- <CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLnx7Gm+"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-326b49bed68so55467021fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747120188; x=1747724988; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dU26nCKlfqylO1Ro80i/l9QTXUmMjT1iaV5kMUWcm5k=;
+        b=sLnx7Gm+nNI1HPMEO1ZTtGnqiLCyRENn0FrsKuU1TJAjrTIMK1wzT27e5t9Oq7uvA/
+         CE+QDD9MrtdLwY2Clkwr3ZhZZ54f6Obgtl8q04sTQoGrT3j3vJse9tkpyGaM3HieGByL
+         OqrM8l5Aj+yUnXAV1K1N4xqre35uQoE3dlXJOMNfbPoXmwh399QJ0+1XYYOBg4BgpGdL
+         nQQabuJuGn9jzPJUL8cqoGDeK711aG9p8DgonrWxT0KHuZWkW1LYLAjSn+LiWCzTlRkD
+         Civz4nRL1OCxdbQXJ0VkMbdLJCvkEHzd0j66VA7ahXK6EyhihxCkamZavz4swIBp2/Hk
+         fr0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747120188; x=1747724988;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dU26nCKlfqylO1Ro80i/l9QTXUmMjT1iaV5kMUWcm5k=;
+        b=M2xuNnLN0OPXUbRykbCTanUlKhD+yV6GOZacefVYaGvvtEWTRivvl87quzc4Sz8PoD
+         PM58OF608xHeIxgBlcVNrvUXssKrN/HFhDibUMO+amj3yl+jElBv3cmODH9W5YQFHElL
+         8SvE/kof/wAh4rYzVUTxrODQStj9gmW6NNU9RA1KtWecKiHl+QykzlcP45kIS30tTrkb
+         DqkUDEunpPcXrOTYcgrbicoEPafwkaNX+9EcfbVvD0LF1NZOYTPUi0QSb9BSLxdTyuZ+
+         rGCUc64LIhFzqvBvdfRl3obARzU5rMtbN5vcma/qmgmsrFdy0VBWFcTts1cUxfIiG/D0
+         orfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeELwILrG4hvCXzggzGtSd4oV1h1wEsEIJdSZCKcpfdguQfBXLVEGrrWhcyxgQn8gZ+wbGJTJr95W4EvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyImAJqWWpV7hxjjJ6OdozO0oC4RnDGa1fFRmHKd5PLdNNDzFzZ
+	xhFLSvbtdsHsJ+TrzoQt3BCbs/askO4AYvwDqXIBEHIIHyAdFLnfNW/qmMWNBymNcG1nbfafc0B
+	dZYtAnYn8neS8Cev88ALmcjm60UYEHsiY781n
+X-Gm-Gg: ASbGncuWq4x9s7U8Arir9jW1aVvz+wPKDXwcO918uliie75tBSEkRAOXE+6sa/VPAXM
+	oOeYMGFhEyRqFVDd+SCge2vJl5VLcvaSg03xlJPdzMzyUQQ9onqM/rvE8CZx300k+wrUtb8Z5XT
+	utJBl45mGGg2g9O1BncgXofwPomkTevuqoedRSsPaEMQ6ovgMo5AWQX2eD/rCaYk4Lwg==
+X-Google-Smtp-Source: AGHT+IEQGCUFG8F2adClWkyfpolaZAHpKzA+AxlgXgeCauF/fMcfoLSm4Fl/E23VOtN8xwg7rRFe2SlvA0thNxp+hLk=
+X-Received: by 2002:a2e:b8c5:0:b0:30c:518e:452 with SMTP id
+ 38308e7fff4ca-326c456a617mr54822011fa.13.1747120187684; Tue, 13 May 2025
+ 00:09:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
+References: <2025040820-REJECTED-6695@gregkh> <20250509072033.1335321-1-dvyukov@google.com>
+ <2025050940-marrow-roundish-8b98@gregkh> <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
+ <2025050924-marmalade-overfill-fc5a@gregkh> <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
+ <20250509121036.GA92783@mit.edu> <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
+ <20250512144402.GA200944@mit.edu>
+In-Reply-To: <20250512144402.GA200944@mit.edu>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 13 May 2025 09:09:34 +0200
+X-Gm-Features: AX0GCFu8VqDkOeuDOaDyQhiTD0oxexAYp7ClLOraLP5sW2t4hTFgnOk2mc388x4
+Message-ID: <CACT4Y+as-Uy_BUjLDxfNwC2+78U3kJdaaKL=vbUNMZH9VcLiGQ@mail.gmail.com>
+Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
+ filesystems with manually crafted filesystem
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org, 
+	linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 12, 2025 at 01:39:19PM -0700, Linus Torvalds wrote:
-> On Mon, 12 May 2025 at 11:58, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > > GCC is 'stupid' and this generates atrocious code. I'll play with it.
-> >
-> > PRE:
-> >     bf9e:       48 85 db                test   %rbx,%rbx
-> >     bfa1:       74 1a                   je     bfbd <foo+0x5d>
-> >     bfa3:       48 81 fb 00 f0 ff ff    cmp    $0xfffffffffffff000,%rbx
-> >     bfaa:       77 11                   ja     bfbd <foo+0x5d>
-> >
-> > POST:
-> >     bf9e:       48 8d 43 ff             lea    -0x1(%rbx),%rax
-> >     bfa2:       48 3d ff ef ff ff       cmp    $0xffffffffffffefff,%rax
-> >     bfa8:       77 11                   ja     bfbb <foo+0x5b>
-> 
-> I'm not convinced that's actually an improvement.
-> 
-> Yes, it's one less instruction, and three bytes shorter. But it uses
-> an extra register, so now it might make surrounding code much worse by
-> making register allocation have a harder time.
+On Mon, 12 May 2025 at 16:44, Theodore Ts'o <tytso@mit.edu> wrote:
+> > This is not even about auto-mount. Let's say I am mounting a flash
+> > drive that you gave me, how do I ensure it's a safe image to mount?
+> > Removable media, portable drives, and some use cases related to
+> > mounting images stored in local files either deal with images with
+> > unknown origin, or can't provide 100% guarantee that the image wasn't
+> > tempered with.
+>
+> From my perspective, the answer is simple.
+>
+> You run fsck -y on the file system image.  If fsck.FSTYP isn't capable
+> of sanitizding the file system image to make it be safe, then that
+> should be considered a security bug for fsck.FSTYP, and should be
+> reported as such.
+>
+> Does the user not have the latest version of fsck?  Well, they should.
+> If they don't have the latest version of the kernel, or any other
+> system software in the TCB, then they could be unsafe.  And that's on
+> the user.
+>
+> > Question of resources for fixing is orthogonal to classification of an
+> > issue (if it's a bug or not, if it's a security issue or not).
+>
+> No, but the resources available should inform the trust model, and
+> assuming that users should be able to blindly insert any random USB
+> thumb drive, or blindly mounting any untrusted file system image, is
+> not a trust model that is realistic.
+>
+> If you want a different trust model, then give me the resources.
+> Otherwise, don't try to impose an unfunded mandate on me.  Because I
+> will ignore you, for the sake of my mental health if nothing else.
 
-I was going for the one less branch, but yeah, register pressure :/
-Typically this is at the end of a scope, and I was hoping this is where
-you have free regs etc.
+So the current model is that anybody who may have access to the image
+is considered the same level of trust as loading unsigned modules,
+right?
 
-> If you *really* care about this, I think you should realize that the
-> non-error case is a valid kernel pointer.
-> 
-> And we could add some architecture-specific function to check for "is
-> this a valid non-NULL and non-error pointer" with a fallback to the
-> generic case.
-> 
-> Because then on a platform like x86, where kernel pointers are always
-> negative, but not *as* negative as the error pointers, you can check
-> for that with a single compare.
-> 
-> The logic is "add MAX_ERRNO, and if it's still negative, it wasn't
-> NULL and it wasn't ERR_PTR".
-> 
-> And while 'add' needs a destination register, 'sub' with the negated
-> value does not, and is called 'cmp'.
-> 
-> So I think you can do that with
-> 
->         cmp $-MAX_ERRNO,...
->         js ...
-> 
-> Sadly, I can't seem to get gcc to generate that code. But I didn't try
-> very hard.
+I just hoped for something at least somewhat stronger. Bugs flagged by
+fsck won't require fixing in that model.
 
-And so try I must :-)
+It's not necessarily about a completely "random USB thumb drive".
+There may be some level of trust + the image passes fsck. E.g. handout
+material on workshops (when one needs to distribute X GB to N people,
+conference wifi may be not the best option).
+Or, insider risk inside of a company where an image is prepared by
+another employee.
