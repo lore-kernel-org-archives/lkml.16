@@ -1,152 +1,161 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 583D52BF96B;
-	Tue, 13 May 2025 18:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE252BF964
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162125; cv=none; b=Zv38mKJ0RFVr5A6xhHXXg0zeRVTxBQ54vxsBOWvrst6ADlxQ41O56W+yJSA/T+cHql4tDNAGeVShfujorvWzwouB4b4VskctzazfuSNXatqm+7Ck9VyOqlrDz7OLSHTNkf1pxbEUXdOAtsOyKrQ/+gcwxeWO8PFBYK0ACLruj7w=
+	t=1747162193; cv=none; b=NpKK5OS32bzFuNwPnDW9OOH1xZLL4KXTd4BRVVELZwEMyQ8aigig/YDDZ79d31lHSx4RR1OBOGWiCdYlUzCPZabvb9U5ppHNsjEn3cIvzD3w9QotvEC5EpIGiXUYEHN8m+HzDj2dhDQF6p8vKydFzPJU44sssvqs9BAZiZRLe7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162125; c=relaxed/simple;
-	bh=IKX7mVUZ/7u8tuGCUbtieZOFM2TzCKbQU9MJ0WCaJBk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=iSqpkRUSUC0TvuNcNnH/Or3YzIz+1TuHI3IlR0lKDGZ2CJGoKYuC9+8dFKO0QgavD0oiUfQZKmxpmZkG4dSTX5ygxyHP8xneqpNt9I5+4sfTLsNSEm4pzRyv27h0VWUCLjnyqd45z1oQHCtPA2FbOhDPJjtlvHM/jOkWT6mN+qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=TpzyOAFl reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747162193; c=relaxed/simple;
+	bh=7jV0gWLhUYLAfF5n95PURVvMxbGLkMaUPNgufE+LH40=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WXS+h4b8q3kyrVOiImgMJI5ZuJkpSZV1N9qHi9Am+KH+Pr8RJKeP2eXdZvQd+a3qnkCWDuZJLtlwORBanKF0KPHtbEADmqT+GogG0k7sKn9mtnlxHGO/V3CWHMX8d1rU0zPhipN/gbxJMqrIcuT97uAj32n3LW1xKw3YK+nAJH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TDVamqxT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="TpzyOAFl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=RWNTE90aG7EUPx1iaMWuFa2Ik/5xjdwz+oa9ogYlhH8=; b=T
-	pzyOAFlz8txz8sryNeuMHVV+roWZOtkZPpyZwltOu/dk9ONEyZfsp5KTMh1/SYjp
-	R4zJXo1Q3Oo80/tcULpe4KQRpiqLv0FO4r2ceeGAoAkZ/Xr0Xo8Lwp0IUQd+T/EF
-	Ur3XC+NPvaOeSPo0xRVCUqszVItGm8w6Q3Yk8mqBBc=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-140 (Coremail) ; Wed, 14 May 2025 02:48:21 +0800
- (CST)
-Date: Wed, 14 May 2025 02:48:21 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Alan Stern" <stern@rowland.harvard.edu>
-Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <ed0c2f75-f97b-4cad-ad35-78361edf142b@rowland.harvard.edu>
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513113817.11962-1-00107082@163.com>
- <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
- <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
- <b334ef97-1f79-4dd9-98f6-8fd7f360101e@rowland.harvard.edu>
- <40618da9.b062.196ca805193.Coremail.00107082@163.com>
- <ed0c2f75-f97b-4cad-ad35-78361edf142b@rowland.harvard.edu>
-X-NTES-SC: AL_Qu2fBf2dvUkr5yKaZOkZnEYQheY4XMKyuPkg1YJXOp80hyXTwyEaeXBZH1Xa7cOGEi2SvxeuTRJxycpYZol+WIO1UzmJW6aaRZ2q+CtseJfx
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TDVamqxT"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIU1Ia006516
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:49:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ur9/QT3f4NlSVORj6iKHoh
+	GpLAR+WNwm5SSazTAarpQ=; b=TDVamqxTGbcl3NkeGqGoC9M6ehkZzyeuo1fV9+
+	nmvINUnjQxyC3HP0pOaU0f5v1sht2Cvo9fli/KKDHXP3YcffPcNaDgKM1ZAd/3P7
+	BVtApOQ1kSQTkRUdHXNLpKxrkV48gQHfVMy6fC0arge1LJREH9/shPWVcZMUC+Qt
+	4Cx+4Xv+ZEdyojfRerdefaASD2yvYjHWqMjLyY3sP6AciaB85GTSj2LE9T6g8gQT
+	vG4Baocv2fPEpaSXhTPy/MlsWyngUolKLrVzBdSXR267xFmfx+uBkUpO6qFZNCJU
+	Ndt83Jw8DfxHdipAKoCK7P0wwmY1RXiKTK9GxU+gb/tuvSgQ==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcyg2j5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:49:50 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f6f06890e2so111993696d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:49:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747162189; x=1747766989;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ur9/QT3f4NlSVORj6iKHohGpLAR+WNwm5SSazTAarpQ=;
+        b=fE/IrWg1HCTG0Bv4gdLopTfkXiKRSisQDgqPqrf76SqeSRQ11IKJv1Lw4diPguF57V
+         qd3Urvx3VghxUWOEQHnJpqX67V30QtVNB/Vc9/ELwC3Pv06QK7Mr0EFAKq/+kmoluCsi
+         uSPTDKLOICYeysfyhoVVz8Ws9EzciCk4HVyrQnDenCSMBEEJjV7uaLpK0DQn9ITRviTR
+         0AfAsO+NJZZwoJCnIErXumNTcqEpAorviZJSLkAR0jp2smy/R+zGJ+xJy0mZSmi1CwrX
+         YA+9eN+P2/R2nAiIjshNRQw69VFNwZW8wI6Rk67Eq15RIlbaI35fbhw+fBE4pIEKXhvB
+         nd0w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2LhZPwV8dOedL0bZdJ85ew7Du+gqAHtZ3PuEhxin0Q/DkGW81UQ1clYEsJv1JV0+iqfYH80+l0FB4uCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN/0on/ZRtAGUZ2m/YH2Uah4xk9z9J5JzKzZNb3a8vq34U9vCp
+	/UhheYCBMIHiJN9oLnlI87hNUGaQE5wV2FXNgSujiPkj7XpwercVhcFvwYB+Lpv01jIreC47rIs
+	/+MnYfyctqPQQTCJ5Y6u+H16pMTTgiI8pXs1pYhiKuHQ0lPzepUlFBtFcPvymEcM=
+X-Gm-Gg: ASbGnctJa7Rsu8j/F35bIxyDGxjos7xr09fmUwu2bYaIXOzI0+igFqH8vaRIYtfawq8
+	moHIO/qajSu1dR28cDsU1OdBIrNRaQ+rFYDHOyt3qGr4PnZaixB/3hA5z/7+pyS+aSO7pw9gU8X
+	D5YIZ3QSE2Gh6HrV3TNMAGTGmZkplMsB1tTrctVKeAnUXUx6bJwgPcja8kWf+s6fSZ/Zh700EXq
+	GL0M+6Jj2AvmZ9Et8ESUVcKTEw6SGxa/6q9FoxJpQ6rZU4zXz17emFSmhDw/zyWC7vPtAalgfmV
+	Ss9v3QGGZrLAqqXBKpUj2CSlve5cPIL86VZ7VTHA86w1yi2pxBfsbhLs2xrpstreLlV2GKKPqdt
+	Qmmvp8/hAplWeK+uTxBaaOx8a
+X-Received: by 2002:ad4:4ea8:0:b0:6e8:9021:9090 with SMTP id 6a1803df08f44-6f896e57104mr7119826d6.26.1747162189241;
+        Tue, 13 May 2025 11:49:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYnx9KwLkHl8XFIlHZ3IWinoz3V+RESVtbgcJ3yCiSuf6iNbP/S+IwmwOZLbJQYeQ1xuPiMA==
+X-Received: by 2002:ad4:4ea8:0:b0:6e8:9021:9090 with SMTP id 6a1803df08f44-6f896e57104mr7119496d6.26.1747162188881;
+        Tue, 13 May 2025 11:49:48 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6e08sm1967837e87.120.2025.05.13.11.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 11:49:47 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Tue, 13 May 2025 21:49:47 +0300
+Subject: [PATCH] drm: ci: skip msm_mapping@shadow on SM8350
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3aed7b55.b165.196caf9f5ec.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:jCgvCgDnv_32kyNoWp0DAA--.22865W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkA1MqmgjkNKYBAAAsu
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250513-msm-ci-fixes-v1-1-baba185529a2@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAEqUI2gC/x3LTQqAIBBA4avErBvwBwm7SrQInWoWWjgQgXj3p
+ OXH41UQKkwC81Ch0MPCV+7Q4wDh3PJByLEbjDJOOW0xScLAuPNLgpamQMb5qKOHvtyF/tCPZW3
+ tA6h3V79eAAAA
+X-Change-ID: 20250513-msm-ci-fixes-3e7ce259d1d9
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Helen Koike <helen.fornazier@gmail.com>,
+        Vignesh Raman <vignesh.raman@collabora.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1333;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=7jV0gWLhUYLAfF5n95PURVvMxbGLkMaUPNgufE+LH40=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoI5RLxylC+eSk8QHj68u4toWVFFh7POdzPeK1z
+ GHJsIszJW6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCOUSwAKCRCLPIo+Aiko
+ 1c6+CACUeWGBzYCTAfwvVZeYBUtwdgNnLgXwOMBBLBRRT68ZEkTSaSQ3uRcCWam/prkEliXHBn4
+ kETx+C9CZT8Y320rLBoI7rQq2YH2m2OytziosPDB3XKe4PMrTwlqfINfkJu4TsDjv+qldaybpxG
+ vMn2yLEuIzGO0kRcFS40BD1yBKXVhmMVeBp9SkSahTivWwnyts+f3E7pwMJCDPz/vKgxi8PnF/4
+ +P/dy95wXvT/it4EVzNyKXP2serWeeiWf6uwWEdMPC4SFbbMt9s1Bbl0Eba7PMOxP1moqUtPbsO
+ C1hp+FZQcxX2YH9r8fS7rU4SU9YHH7UpNHZDbxeisCuhU6zx
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-GUID: Tow0LYbWt4sZwZOuStGiM7hOqhU7FscY
+X-Proofpoint-ORIG-GUID: Tow0LYbWt4sZwZOuStGiM7hOqhU7FscY
+X-Authority-Analysis: v=2.4 cv=JszxrN4C c=1 sm=1 tr=0 ts=6823944e cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8 a=HB0QJ2FYAIsZ-nyMV3gA:9
+ a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE3OSBTYWx0ZWRfX9xs+OIWfhTu7
+ A5SVv1Y6iKh2imqtxKT+xl+W+kumQX93kOeYcJVSbbigkwALfy6Qy7BAA1QQh17VPW6Eahsa8y3
+ mvUnIj1M7Pn8shwRy8+0ey596tagJNoav8qjhR8eNVWRjsVwJDn+Yo9FXXEjBr1gouZhc/gm6sj
+ D9D99DYuK8TeXXYRVgpoZUIiIVq2bt0RZ8L47fnYpE4NVzJUMNfInNlGDLX9KQIPj5DjYEJYtcv
+ l8tgI1nCyk0yNABjsMYxa8wVI/8iro+8vYGczJnZB0K5FAqfPFdIO+t0uNgXtxpP7SXtvEJEpeo
+ 7uZSlPaJ4mJuVEirOgOKksDX8G+PjspnLxDYo4UIYOFdiJXvfukywCvTooayfYQgTLl6UGsZ8Ru
+ ndMvBEWq0tnDBbkWYov9QuJ3kbyfYEOdwbTSadnDSauFxPmUQ8yPN7a/IuWeNs7bOsgFmDKB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=738 bulkscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505130179
 
-CgpBdCAyMDI1LTA1LTE0IDAyOjIxOjE1LCAiQWxhbiBTdGVybiIgPHN0ZXJuQHJvd2xhbmQuaGFy
-dmFyZC5lZHU+IHdyb3RlOgo+T24gV2VkLCBNYXkgMTQsIDIwMjUgYXQgMTI6MzU6MjlBTSArMDgw
-MCwgRGF2aWQgV2FuZyB3cm90ZToKPj4gCj4+IEF0IDIwMjUtMDUtMTMgMjM6Mzc6MjAsICJBbGFu
-IFN0ZXJuIiA8c3Rlcm5Acm93bGFuZC5oYXJ2YXJkLmVkdT4gd3JvdGU6Cj4+ID4+IEkgaGF2ZSB0
-byBkaXNhZ3JlZSwgIHlvdXIgc3VnZ2VzdGlvbiBoYXMgbm8gbXVjaCBkaWZmZXJlbmNlIGZyb20g
-cmVxdWVzdGluZyBtZW1vcnkgZnJvbQo+PiA+PiBzeXN0ZW0sIGxvY2tzIGFuZCBtZW1vcnkgcG9v
-bCBtYW5hZ2VtZW50cywgYWxsIHRoZSBzYW1lIGFyZSBuZWVkZWQsIHdoeSBib3RoZXI/Cj4+ID4K
-Pj4gPlRoZXJlIGFyZSB0d28gZGlmZmVyZW5jZXMuICBGaXJzdCwgeGhjaS1oY2QgYWxyZWFkeSBo
-YXMgaXRzIG93biBsb2NrIAo+PiA+dGhhdCBpdCBhY3F1aXJlcyB3aGVuIGVucXVldWluZyBvciBk
-ZXF1ZXVpbmcgVVJCcywgc28gbm8gYWRkaXRpb25hbCAKPj4gPmxvY2tzIHdvdWxkIGJlIG5lZWRl
-ZC4gIFNlY29uZCwgY29tcGxpY2F0ZWQgbWVtb3J5IHBvb2wgbWFuYWdlbWVudCBpc24ndCAKPj4g
-Pm5lY2Vzc2FyeTsgdGhlIG1hbmFnZW1lbnQgY2FuIGJlIGV4dHJlbWVseSBzaW1wbGUuICAoRm9y
-IGV4YW1wbGUsIAo+PiA+TWF0aGlhcyBzdWdnZXN0ZWQganVzdCByZXVzaW5nIHRoZSBtb3N0IHJl
-Y2VudGx5IHJlbGVhc2VkIG1lbW9yeSBhcmVhIAo+PiA+dW5sZXNzIGl0IGlzIHRvbyBzbWFsbC4p
-Cj4+IAo+PiBNeSBwYXRjaCBhbHNvIGp1c3QgcmV1c2UgbWVtb3J5LCAgaW4gYSBzaW1wbGVyIHdh
-eSBJIHdvdWxkIGFyZ3VlLi4uLgo+Cj5JIGRpZG4ndCBzYXkgeW91ciBhcHByb2FjaCB3YXNuJ3Qg
-c2ltcGxlLiAgSSBzYWlkIHRoYXQgbXkgYXBwcm9hY2ggaGFzIAo+dmVyeSBsb3cgb3ZlcmhlYWQs
-IGEgbG90IGxvd2VyIHRoYW4gdGhlIGV4aXN0aW5nIGNvZGUsIHdoZXJlYXMgeW91IHNhaWQgCj5t
-eSBhcHByb2FjaCAiaGFzIG5vIG11Y2ggZGlmZmVyZW5jZSIgZnJvbSB0aGUgZXhpc3RpbmcgY29k
-ZS4KPgo+PiA+PiA+VGhpcyBpZGVhIGNhbiBiZWNvbWUgbW9yZSBlbGFib3JhdGUgaWYgeW91IG1h
-aW50YWluIHNlcGFyYXRlIGZyZWUgbGlzdHMgCj4+ID4+ID5mb3IgZGlmZmVyZW50IGRldmljZXMs
-IG9yIGV2ZW4gZm9yIGRpZmZlcmVudCBlbmRwb2ludHMsIG9yIHNvcnQgdGhlIGZyZWUgCj4+ID4+
-ID5saXN0IGJ5IHRoZSBzaXplIG9mIHRoZSBtZW1vcnkgYXJlYXMuICBCdXQgdGhlIGJhc2ljIGlk
-ZWEgaXMgYWx3YXlzIHRoZSAKPj4gPj4gPnNhbWU6IERvbid0IGNoYW5nZSB1c2Jjb3JlIChpbmNs
-dWRpbmcgc3RydWN0IHVyYiksIGFuZCBtYWtlIGdldHRpbmcgYW5kIAo+PiA+PiA+cmVsZWFzaW5n
-IHRoZSBleHRyYSBtZW1vcnkgYXJlYXMgaGF2ZSBleHRyZW1lbHkgbG93IG92ZXJoZWFkLgo+PiA+
-PiAKPj4gPj4gV2h5IGltcGxlbWVudHMgYSBkZXZpY2UgbGV2ZWwgbWVtb3J5IHBvb2wgd291bGQg
-aGF2ZSBleHRyZW1lbHkgbG93IG92ZXJoZWFkPwo+PiA+Cj4+ID5CZWNhdXNlIHRoZW4gZ2V0dGlu
-ZyBvciByZWxlYXNpbmcgbWVtb3J5IGFyZWFzIGZyb20gdGhlIHBvb2wgY291bGQgYmUgCj4+ID5j
-YXJyaWVkIG91dCBqdXN0IGJ5IG1hbmlwdWxhdGluZyBhIGNvdXBsZSBvZiBwb2ludGVycy4KPj4g
-Cj4+IEEgY291cGxlIG9mIHBvaW50ZXJzIG1hbmlwdWxhdGlvbj8gYW5kIGl0IHdvdWxkIGJlIHNp
-bXBsZXIgdGhhbiBhIHJldXNhYmxlIGJ1ZmZlciBpbiBVUkI/Cj4+ICBJIGRvdWJ0IHRoYXQuCj4K
-PkkgZGlkbid0IHNheSBwb2ludGVyIG1hbmlwdWxhdGlvbiB3YXMgc2ltcGxlciB0aGFuIGEgcmV1
-c2FibGUgYnVmZmVyLiAgSSAKPnNhaWQgdGhhdCBpdCB3YXMgdmVyeSBsb3cgb3ZlcmhlYWQsIGlu
-IG9yZGVyIHRvIGFuc3dlciB5b3VyIHF1ZXN0aW9uOiAKPiJXaHkgaW1wbGVtZW50cyBhIGRldmlj
-ZSBsZXZlbCBtZW1vcnkgcG9vbCB3b3VsZCBoYXZlIGV4dHJlbWVseSBsb3cgCj5vdmVyaGVhZD8i
-CgpOb3cgSSBmZWVscyBpdCAgYmVjb21lcyBhIHdvcmRpbmcgZ2FtZSAuLi4uLgo+Cj4+IFRoZXJl
-IHdvdWxkIGJlIGxvdHMgb2YgZGV0YWlscyBuZWVkcyB0byBjb25zaWRlciwgIGRldGFpbCBpcyBk
-ZXZpbCBhbmQgdGhhdCB3aHkgd2UgcHJlZmVyIHNpbXBsZXIgc29sdXRpb24sCj4+IEkganVzdCBk
-b24ndCB1bmRlcnN0YW5kLCB5b3Ugc2VlbXMgaW1wbHkgdGhhdCBteSBwYXRjaCBpcyBub3Qgc2lt
-cGxlLCBjb3VsZCB5b3UgZWxhYm9yYXRlIG1vcmUgb24gaXQsCj4+IG9yIGl0IGlzIGp1c3QgdGhh
-dCBpbiBteSBtaW5kLCBtYWtlIGNoYW5nZXMgdG8gInVzYiBjb3JlIiBpcyBhIGJpZyBuby1ubyEK
-Pgo+TmVpdGhlciBvbmUuCj4gIAo+SG93ZXZlciwgeW91IGhhdmUgZm9yZ290dGVuIGFib3V0IG9u
-ZSB0aGluZzogV2l0aCB5b3VyIHBhdGNoLCBlYWNoIFVSQiAKPm1haW50YWlucyBvd25lcnNoaXAg
-b2YgYSBtZW1vcnkgYXJlYSBldmVuIHdoZW4gdGhlIFVSQiBpcyBub3QgaW4gdXNlLiAgCj5XaXRo
-IHRoZSBleGlzdGluZyBjb2RlLCB0aGF0IG1lbW9yeSBpcyBmcmVlZCB3aGVuIHRoZSBVUkIgaXMg
-bm90IGluIHVzZSwgCj5hbmQgd2l0aCBteSBhcHByb2FjaCB0aGUgbWVtb3J5IGlzIHNoYXJlZCBh
-bW9uZyBVUkJzLgo+Cj5JbiB0aGlzIHdheSwgeW91ciBwYXRjaCB3aWxsIHVzZSBtb3JlIG1lbW9y
-eSB0aGFuIHRoZSBleGlzdGluZyBjb2RlIG9yIAo+bXkgYXBwcm9hY2guICBUaGUgcXVlc3Rpb24g
-dG8gYW5zd2VyIGlzIHdoaWNoIGlzIGJldHRlcjogVXNpbmcgbW9yZSAKPm1lbW9yeSAoeW91ciBw
-YXRjaCkgb3IgdXNpbmcgbW9yZSB0aW1lICh0aGUgYWxsb2NhdGlvbnMgYW5kIAo+ZGVhbGxvY2F0
-aW9ucyBpbiB0aGUgZXhpc3RpbmcgY29kZSBvciBteSBhcHByb2FjaCk/Cj4KPj4gPklmIEkgd2Vy
-ZSByZWRlc2lnbmluZyBMaW51eCdzIGVudGlyZSBVU0Igc3RhY2sgZnJvbSB0aGUgYmVnaW5uaW5n
-LCBJIAo+PiA+d291bGQgY2hhbmdlIGl0IHNvIHRoYXQgVVJCcyB3b3VsZCBiZSBkZWRpY2F0ZWQg
-dG8gcGFydGljdWxhciBob3N0IAo+PiA+Y29udHJvbGxlcnMgYW5kIGVuZHBvaW50IHR5cGVzIC0t
-IG1heWJlIGV2ZW4gdG8gcGFydGljdWxhciBlbmRwb2ludHMuICAKPj4gPlRoZXkgd291bGQgY29u
-dGFpbiBhbGwgdGhlIGFkZGl0aW9uYWwgbWVtb3J5IHJlcXVpcmVkIGZvciB0aGUgSENEIHRvIHVz
-ZSAKPj4gPnRoZW0sIGFsbCBwcmUtYWxsb2NhdGVkLCBzbyB0aGF0IGR5bmFtaWMgYWxsb2NhdGlv
-biB3b3VsZCBub3QgYmUgbmVlZGVkIAo+PiA+ZHVyaW5nIG5vcm1hbCB1c2UuICAoVGhlIGdhZGdl
-dCBzdWJzeXN0ZW0gYmVoYXZlcyB0aGlzIHdheSBhbHJlYWR5LikKPj4gPgo+PiA+U3VjaCBhIGRy
-YXN0aWMgY2hhbmdlIGlzbid0IGZlYXNpYmxlIGF0IHRoaXMgcG9pbnQsIGFsdGhvdWdoIHdoYXQg
-eW91IAo+PiA+YXJlIHN1Z2dlc3RpbmcgaXMgYSBzdGVwIGluIHRoYXQgZGlyZWN0aW9uLiAgSW4g
-dGhlIGVuZCBpdCBjb21lcyBkb3duIAo+PiA+dG8gYSB0aW1lL3NwYWNlIHRyYWRlb2ZmLCBhbmQg
-aXQncyB2ZXJ5IGRpZmZpY3VsdCB0byBrbm93IHdoYXQgdGhlIGJlc3QgCj4+ID5iYWxhbmNlIGlz
-Lgo+PiBEcmFzdGljIGNoYW5nZT8gRG8geW91IG1lYW4gbWFrZSBjaGFuZ2UgdG8gVVNCIGNvcmU/
-Cj4KPk5vLCBJIG1lYW50IHJlZGVzaWduaW5nIHRoZSBlbnRpcmUgVVNCIHN0YWNrLiAgSXQgd291
-bGQgcmVxdWlyZSBjaGFuZ2luZyAKPmFsbCB0aGUgVVNCIGRyaXZlcnMgdG8gYWxsb2NhdGUgVVJC
-cyBkaWZmZXJlbnRseSBmcm9tIHRoZSB3YXkgdGhleSBkbyAKPm5vdy4gIEFuZCBjaGFuZ2luZyBl
-dmVyeSBIQyBkcml2ZXIgdG8gcHJlYWxsb2NhdGUgdGhlIG1lbW9yeSBpdCBuZWVkcyB0byAKPnBl
-cmZvcm0gdHJhbnNmZXJzLiAgSSB0aGluayB5b3UgY2FuIGFncmVlIHRoYXQgd291bGQgYmUgYSBw
-cmV0dHkgZHJhc3RpYyAKPmNoYW5nZS4KPgo+PiAgQmVjYXVzZSBjb3VudGluZyBieQo+PiBsaW5l
-cyBvZiBjaGFuZ2VzIGluIHRoaXMgcGF0Y2gsIEkgZmVlbCBteSBwYXRjaCBpcyBxdWl0ZSBzaW1w
-bGUgYW5kIGVmZmljaWVudC4KPj4gSSBhbHNvIGRvbid0IGdldCB5b3VyIHRpbWUvc3BhY2UgdHJh
-ZGVvZmYgaGVyZSwgIGFyZSB5b3UgdGFsa2luZyBhYm91dCBteSBwYXRjaD8KPj4gb3IgeW91IHdl
-cmUganVzdCB0YWxraW5nIGEgc29sdXRpb24gaW4geW91ciBtaW5kLi4uLgo+Cj5Cb3RoLiAgU2Vl
-IG15IGNvbW1lbnQgYWJvdmUuCj4KPj4gVGhpcyBwYXRjaCBvbmx5IG5lZWRzIGEgcG9pbnRlciBh
-bmQgYSBzaXplIGluIFVSQiwgYW5kIFVSQiBvYmplY3QgYWxsb2NhdGVkIGluIGEgc2xvdyBwYWNl
-Li4uCj4KPkl0IGFsc28gbmVlZHMgYW4gZXh0cmEgbWVtb3J5IGFyZWEgdGhhdCBpcyBhbGxvY2F0
-ZWQgdGhlIGZpcnN0IHRpbWUgdGhlIAo+VVJCIGlzIHVzZWQsIGFuZCBpcyBub3QgZGVhbGxvY2F0
-ZWQgdW50aWwgdGhlIFVSQiBpcyBkZXN0cm95ZWQuICBZb3UgCj5zZWVtIHRvIGJlIGlnbm9yaW5n
-IHRoaXMgZmFjdC4KPgo+QWxhbiBTdGVybgoKSXQgaXMgbm90IGFuICJleHRyYSIgbWVtb3J5IGFy
-ZWEsICB0aGUgbWVtb3J5IGlzIG5lZWRlZCBieSBIQyBhbnl3YXksIHRoZSBtZW1vcnkgcG9vbCBq
-dXN0IGNhY2hlIGl0LgpBbmQgYWJvdXQgbm90IGZyZWVpbmcgbWVtb3J5IHVudGlsIFVSQiByZWxl
-YXNlZCwgIHlvdSBzZWVtcyBmb3Jnb3QgdGhhdCB3ZSBhcmUgdGFsa2luZyAKYWJvdXQgIm1lbW9y
-eSBwb29sIiAuICBBIFVSQiBvbmx5IHVzZWQgb25jZSBjb3VsZCBiZSBjb25zaWRlcmVkIGEgbWVt
-b3J5IHBvb2wgbmV2ZXIgdXNlZC4KCklmIHlvdXIgbWVtb3J5IHBvb2wgYXBwcm9hY2ggd291bGQg
-bm90ICAid2FzdGUiIG1lbW9yeSwgSSB3b3VsZCAgcmF0aGVyIGhhcHB5IHRvIGxlYXJuLgoKSSB3
-YW50IHRvIG1lbnRpb24gdGhlIHB1cnBvc2Ugb2YgdGhpcyBwYXRjaCBhZ2FpbjogIApBIGxvdCBv
-ZiAicHJpdmF0ZSBkYXRhIiBhbGxvY2F0aW9uIGNvdWxkIGJlIGF2b2lkZWQgaWYgIHdlIHVzZSBh
-ICJtZW1wb29sIiB0byBjYWNoZSBhbmQgcmV1c2UgdGhvc2UgbWVtb3J5LgpBbmQgdXNlIFVSQiBh
-cyB0aGUgaG9sZGVyIGlzIGEgdmVyeSBzaW1wbGUgd2F5IHRvIGltcGxlbWVudCB0aGlzLC4gCgpB
-bmQgdG8gYWRkICwgYmFzZSBvbiBteSBtZW1vcnkgcHJvZmlsaW5nLCBVUkIgdXNhZ2UgaXMgdmVy
-eSBlZmZpY2llbnQuIEkgdGhpbmsgaXQgaXMgYSB2ZXJ5IGdvb2QgY2FuZGlkYXRlIHRvIGhvbGQK
-cHJpdmF0ZSBkYXRhIGNhY2hlIGZvciBIQ3MuCgoKRGF2aWQgIAoKCg==
+The msm_mapping@shadow test fails on SM8350, which means that the write
+might get through (hopefully not though). Disable the test completely
+for now until we can fix the issue.
+
+Link: https://gitlab.freedesktop.org/drm/msm/-/issues/77
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
+index 9450f2a002fd7e68f0f674ac6ac84aeebf28347f..a8b535abc8ef0d996d0c73ece1c7a9622250928e 100644
+--- a/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
++++ b/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
+@@ -210,3 +210,8 @@ msm/msm_mapping@ring
+ # [  229.752499] CPU features: 0x18,00000017,00200928,4200720b
+ # [  229.758095] Memory Limit: none
+ # [  229.761291] ---[ end Kernel panic - not syncing: softlockup: hung tasks ]---
++
++# Protection doesn't seem to be enforced, don't perform write which might get through
++# https://gitlab.freedesktop.org/drm/msm/-/issues/77
++msm/msm_mapping@shadow
++
+
+---
+base-commit: 8f5264d302e803e7ef82a61f9632a0d2ef67413f
+change-id: 20250513-msm-ci-fixes-3e7ce259d1d9
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
