@@ -1,86 +1,97 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A1C2F50
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832EF1F03EA
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121492; cv=none; b=EIuqEofl1jnnKEQJtyVHMC1uBEAF7J7Lc6t8PadIshkNUeu8tFqWmbjMQvjpoCBjlHVobURvXvFrqwjGpewDAhptfCY9KLf5h8kQlOcYQAXaqrTDR/05SiCVXxZbNoN133upQVqJqpJv9yTvQcLaPxz4NkKfCY12loiz92JNzMs=
+	t=1747121496; cv=none; b=rqi0h3T9/qypgXF4hmLu1P1sJ74CY9yr0a7QhOzr5OPUPxhxnYB48tK47YigHLSpt2ud3BhChikW95h0SzUq51iIiyB8exIOzbXWtWf54VKuNVTvsLAZONl5vre9+QUyeMdqW7LD7lUqNf1xQF2LY4Bsqcj9NvCVmqbrRt1TzA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121492; c=relaxed/simple;
-	bh=Uwds5U8CPB2uxg3bG0f643E5G9j9RDtJjojz5eZ5dUg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=E9ckQyZ7LbCDfujTN+3Zt1hxX3BSRGcOL/MVl21Upn2jf5y56LayZ0EACFN/kDzU+2vyb7oodnIYvr/rh0qhDOduXQK82bO6XKJNo+7W9S8WEs3XaM0LEkXErG0xna/cd4eH2ghNlNpxrFxpp8UFYDczfLquYskwGFddubV25Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IQl3PONd; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1747121496; c=relaxed/simple;
+	bh=9odgTkdLCas6jYuMTaJIc0B6Y2SJdn8562yIGJ420z4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQqNIujmXaBWK3wJXhMkXEdlcir0MsP6oYWMeSQBwIzEiZPBB+/UM3nUBv02bWaj8ZymHh74kc6DNVB40PPrfwjfVwy83L3o9jVVU0KddtFpj8j7oVUUK1rGBoUTTog+wkPL4P/xkDlyXH8c925QZ1gJsDNKtTT7J3UPKmFmQeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=au352SAD; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IQl3PONd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1747121479; bh=BQhs76KSA++hoJDE7uOgOkp//yaIfVhLWDFlmS1nA7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IQl3PONdjUZEHpMo9AwK3WlCk6ioMW8FSngbjnntzSmvWedPsor6IC91I72G/dLB2
-	 bCytb5BN3a7BuVdcB9QNchhIuirDilOk4zQSHBNbBMmsGLoiVEV+8/dV6dVJi3ESID
-	 8kNTNtD8VHk1+Ei0k92k7Y31yEmWJwJxFAGH0OWI=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszgpuc5-0.qq.com (NewEsmtp) with SMTP
-	id 5C91CE51; Tue, 13 May 2025 15:23:09 +0800
-X-QQ-mid: xmsmtpt1747120989t40vbqlba
-Message-ID: <tencent_28E8E99AEDE2CD6079AA6C042DC96F34940A@qq.com>
-X-QQ-XMAILINFO: N/WmRbclY25G7ka8scU2/01GllFp2FS+VUlawPOcfvwAQ5gEytPbmzByM+W2jS
-	 qUGRvWeG7DGlFqzIFlYNRrK8AZSdcp9uJByjsLeTMUfjzma2CpfCC/V0uAd04HfWYNXLkwPloDzf
-	 W3S03LRVKDRM2ju2LjhSHa5N7XJ7fRzZSG5ipMJto0uBql36PkbiQuH0NUtjSr+gJUeSdUfCSUqd
-	 PDlHm7s+oSt4XM+JPuN9f08loOh8UESi6zRevvUM5tgIjKtPN6M3AhAvU23V2I00GXQ8DW7h8vzx
-	 Z5fveReLQGemIYSDIK2MmAXqfwJGBnXzHaA7ol4K2YJI3x0nDsDGsR+8fQscG7GOAFKdX3gyGh6b
-	 4XZ16qwnwk6GgRSWkkQeStYPI7mxqVjlh4bhpyxH8IEbTHjc9hEx1fr3WVhVW5CETZoA6ilxdcOe
-	 9HLXTwJPVpbr8IxJwl/9B3jlMueIE++I7EFd1w3GGGyxcN3PkpRqn0m2faME/MHnjYokvcGnwCyr
-	 AU7qJEeddWW39m4uGqjtY08s4XHg8RYgLPIStfT1B7zW/Ku2w92IGZiMlhdZO+k7kYnQognm9vFM
-	 PXU8WPvDczCwr8nrkICA6V00v3HFoLgd3LtoxgY2UTZTMrmh0VLj91NAaGu0LRnH8Q+8uQ98QBDW
-	 WHkoBv87YbKn/0BxDw3fW39ja7h8hGPnDm+Sa6rprpe9axTaP3r0O1wd1RHYrchm8S4wvs7HOkpX
-	 i5zwpoXVuS05roNzjo048egbMM377LG7k9hT1CnwnSagy55epNE+N3EtEE63zSSldG7AyfR5OnUX
-	 A+GcFLxvoGSZqs+gieb/YEFgApqta5clyStj8AZGlTh5Q5whhX4LNB3FtdG76n1qeW4TFo34JqNb
-	 w7LeKBVbcBVMJqDP4B7zytF1NqCV9H3A9Psa91M+OhgUw+fuyl0qhTa5yZ+P4mSl3m1A7o3EXxmR
-	 th8U5Hoy/MW4yVpz49HE8vQrZeTGjKZ3eszYfXy2xM53CgDMIZfYDoh97SAncix+fe56j1+10=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
-Date: Tue, 13 May 2025 15:23:10 +0800
-X-OQ-MSGID: <20250513072309.2034679-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <681688da.050a0220.11da1b.001c.GAE@google.com>
-References: <681688da.050a0220.11da1b.001c.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="au352SAD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso10036017a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747121493; x=1747726293; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pmyTnoNmo8CKChb6T5xGX5uYcPPcN5SMIuL2HmFELKk=;
+        b=au352SADxvJQEUsjrHbyA60katGPMe/fM4mgU5c5vezLBAUhLXf2+sJETBo1Ut5CIO
+         UKBKZnRgESoGOR/jpbWg3Qa32eMGJXvl3xMmaKE6uuacco0d8tc4mSN3ie6ZSlUoKOsF
+         SXvCYN7QMyBj+7E+64C9iskwprYwbeAdId1JC1zdqzLhIRQvL2G+x39NcL2epJbWj9UV
+         opf3qyCxyEjYLyTUNmhcDXZrEUv7z3kJtTbOWqSO5jV/HZMODc8gE48V+DJIs1XqDISn
+         ncStnTWEsW/1NcuhRwN03dSsox7E4wQl52kgYtZY93eoaz+lIl20FFyNW9h9v+KYkOS+
+         /NGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747121493; x=1747726293;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmyTnoNmo8CKChb6T5xGX5uYcPPcN5SMIuL2HmFELKk=;
+        b=wCnHLbWpTXEvLc6QVsxnL0g9zPorKPKYkEIF1ITpRRkfwPS5WC/1h2iCjvYwyXYFoz
+         xAAUmdWBTG6NvOYEFr3F3DdFIr/O6iWWJUOU9iHMf3wPuopd6r1Pd/67VQ2xleIm4hY5
+         721+96HVh1LAKPFyCumv7QrEdIy9vJ5WNYroFwjN5YgYYglEmR0TY1z/jRN4Ugtp1zlU
+         e/JlqDfcgoUIzjuKJKQX5wFnNSmdE0Tv7E2lXhSk4KHTaf7Qy9Elh/fUH+7hECq6xRYF
+         pMyfZS/llqecZt7AMfWELHcq+YFk3dFwbYGjcZ2pXGhenZBuovG1hzT1qiw4jHRB1F8E
+         AN5w==
+X-Gm-Message-State: AOJu0YzKS9Z0WYI8hMWFus/OrpWOi9bfGd6Ety9WW5ulnBW2iynXo/Pn
+	D7ZAVAilbudbnwnrcI40LPqgikRF9weAIg3f2+qseklLtooyMk5OheAnO282Ts0=
+X-Gm-Gg: ASbGnctr7y3U0TuILAhdHvGSGURwQDjgVvKE9ybMAM3XWr0W7np51IsATlNuN0mjhV/
+	W83QEIAvOVqYLBi3KP1IkT9KFFtAeR/SQvnFUdbx4fwQg7FN+StlzU9+F3Pgd4AAgPPCe9ra3MI
+	kr43W5gD66n2+pezWzxP+nHcUQGgCZdkQqYpurfQd4yLDeKSn5yYT0BWtULtYCHXeQikfd1FLWW
+	t6nMMfRnVrfddvddCblzmmm/XmvgtziP7r1Yjq1PBmvSLEB1seSUqVOLrghc6zTPMREsV6D6hpw
+	I8xMolGCv7HnS+6HUF2nKmcUQf9gQx12f5xoZsVnmyDtsVrUQyQ+ECKI5kY=
+X-Google-Smtp-Source: AGHT+IHYo5ZWNOMKOctGcx3IT4yhd2NNp54tPQ3YePoiduR8lNWblfaka6Ofu9rG8GuCsbQdjLrzOg==
+X-Received: by 2002:a05:6402:510d:b0:5fa:8737:387d with SMTP id 4fb4d7f45d1cf-5fca0759af7mr13997390a12.10.1747121492381;
+        Tue, 13 May 2025 00:31:32 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d73fdd0sm6880355a12.81.2025.05.13.00.31.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 00:31:31 -0700 (PDT)
+Message-ID: <899031a3-6946-4cca-b2e7-a6caa9f840c6@tuxon.dev>
+Date: Tue, 13 May 2025 10:31:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Signed-off-by missing for commit in the at91 tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Nicolas Ferre <nicolas.ferre@atmel.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250513072951.192e1213@canb.auug.org.au>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250513072951.192e1213@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-#syz test
+Hi, Stephen,
 
-diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-index f44529b40989..855d66043b85 100644
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -1600,13 +1600,12 @@ static int cxusb_probe(struct usb_interface *intf,
- 	struct dvb_usb_device *dvbdev;
- 	int ret;
- 
-+	if (!cxusb_medion_check_intf(intf))
-+		return -ENODEV;
-+
- 	/* Medion 95700 */
- 	if (!dvb_usb_device_init(intf, &cxusb_medion_properties,
- 				 THIS_MODULE, &dvbdev, adapter_nr)) {
--		if (!cxusb_medion_check_intf(intf)) {
--			ret = -ENODEV;
--			goto ret_uninit;
--		}
- 
- 		_cxusb_power_ctrl(dvbdev, 1);
- 		ret = cxusb_medion_set_mode(dvbdev, false);
+On 13.05.2025 00:29, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   7f0132d21261 ("ARM: dts: microchip: sama7g54_curiosity: Add fixed-partitions for spi-nor flash")
+> 
+> is missing a Signed-off-by from its committer.
+> 
+
+I fixed it. Thank you for reporting!
+
+Claudiu
 
