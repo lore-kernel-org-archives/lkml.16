@@ -1,120 +1,427 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3860F1B3950;
-	Tue, 13 May 2025 18:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9D428C5B5;
+	Tue, 13 May 2025 18:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162460; cv=none; b=bTC/h0Dc4ZzWm6NN8dd1csLD9WQHP/NPpoybtLn/CH+uXkm1n1y33SOuLHl3fbZCdHzGryXTKhWENtHW3WqW1xpGNL5Mm0s2y7G56uXlKli5NTt7F9/QvwQo3TpQ8VQhT1//qORXThGgb7GFH04uAYocr8oYz0zs34MqmfGyiAM=
+	t=1747162526; cv=none; b=McAFwLy36u1Aw0p2YFCNrXNoYukJIcLP5TwLR2nFjSYRSjJst62fa9JYpGm0etdNg01pFbx3DKuQvCgOBtQJyGuQW266VfDv/piyE2YBtH63m6braNtwYoHyAoHigmcR5tHJ6ErbJ1Ct/lCOW0tb/fHMY8id1gTi3QCpimgtOj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162460; c=relaxed/simple;
-	bh=TLRX0NYatTL0PJSe078O7p/z59MMPYCCiyhZgw4UkuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpqZDYl8I3Qs9kEZGkSQlINps8VxeIHJVHuA/8PRwrmO6BVk0CcfGvkkKbvUjyxfjtFQPwxypqDFd4/UA3UsL9fEPBCKeAbvtyvV4/puxJgRjnbTcN/ZAQBYF2YwJ/tP6V6xHqQ8Tfc+vwWHJWlBljIvc3gUIGDaN72DpebIZy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GuattY+4; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747162526; c=relaxed/simple;
+	bh=TTguu2JbGIVMAcxK9kEuwkfQx6NzLLY6u6wufqE0xJA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNTnGVGROBG84+edcUc2AdaXHI0xx5yHhZ440zEstMIIM9pPGanHw0SdxkEyh5d/jz4jyZpypdHSuRGjaHsQCIF4wIccz45AEb7KQcgCk80mVJtBu8xg2iNOCcRBvscbWipf/j2XiwiBGqm2+yWjuEY16bJSVVavocH/RvOhdHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXrjRVmi; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GuattY+4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747162459; x=1778698459;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TLRX0NYatTL0PJSe078O7p/z59MMPYCCiyhZgw4UkuE=;
-  b=GuattY+4upt0Fja9PQkSxdIUdlk70bBh6kh2wilfZ3Ds4l5lfLiQ3Nzm
-   0MAud/h2UN42qDKJ75O8vVZDGvaLjdTGoALa1XYp1C4OJqRWfBCePnq8+
-   5poShQ3gaNH9JW0JMrw/xZuIBO4yPBvqnI+EX0ZxZjct4gIIRoeYRGGOe
-   YZvyxlp+WPWQL+391MtGwMBbQ+DfKouNWcmDsFNPs/cSm7glKdHU0lGCv
-   btp8z0WP82L38sg0ke/ySA3tdMQAp6PrRw361Fl6TwIEdIblMh/6pvswC
-   n+v8NZFZPPVNBjgFUFKKhSrLXYkJxxEyQo8e4ZsIvUi4Xi0MuNidbnja5
-   A==;
-X-CSE-ConnectionGUID: g06DDdEYTzOvKtvwN/F5Rg==
-X-CSE-MsgGUID: 0z5H0MwhTT6vEQoOKwDSOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="60367405"
-X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
-   d="scan'208";a="60367405"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 11:54:18 -0700
-X-CSE-ConnectionGUID: W4d8EqtnRyiemLAk4n7Adw==
-X-CSE-MsgGUID: 2Q37bHp0RTiDbaKtHqpDrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
-   d="scan'208";a="137661877"
-Received: from lbogdanm-mobl3.ger.corp.intel.com (HELO [10.124.221.92]) ([10.124.221.92])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 11:54:19 -0700
-Message-ID: <688ec9f5-b59a-46c0-97d9-f4d0635fac6e@intel.com>
-Date: Tue, 13 May 2025 11:54:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXrjRVmi"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b074d908e56so4080647a12.2;
+        Tue, 13 May 2025 11:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747162523; x=1747767323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yk2y5YGo2DOU0RNvY2gdG/DmHVLPW3IlR/rIS3h+Kt0=;
+        b=gXrjRVmiDpW1/E77I7IoEknqzyfFWPCeF8fXCKmSwpQ4BAgSU9xZVGm1VG6QLTIgkM
+         Tb25fzyHsUkzupbTpyDJIhJ11hygu0RIc5xUTjf3a5lMYvrZl0Bv8TrXDVEEdhjYUYZ9
+         /5Ll05gyk+5Gg5VFV7Dk+TK4Q8bEumjqsKXdoXJScR6tT4Xvmv+yXZg2kWNL5+LsJxAA
+         8bY013ZszvMZ+GIi1hjDkK3bKiTaV4/GnYc6a+qX5KhRUEwdKrjTIjDZXBEOP5Q44vU3
+         ueOr3C0yWmLJHaDsHgELWO/btVSu0LU/vRGgePEB7nigenqkrhScTco5YpYfSxNfS0hn
+         lLbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747162523; x=1747767323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yk2y5YGo2DOU0RNvY2gdG/DmHVLPW3IlR/rIS3h+Kt0=;
+        b=SidcGSkMuE0Yhb2ScGdgyeAnlPLgKF0tqyPBKVKxa/j1R7qfXXRiiw6Z7qv+YOIr7p
+         tbtqKSZi+y65SQbrdrOcSUzCYw7RsK2QhoJlBDcoW6NCsVPQO92ZtQ0xmQEp5rzrzA5k
+         pRF3hslTJRRKRODrWxnZ5Pk0InyqYlF3ASJ/uzacdtalh5n9RZUWa46TiHO/UzuWVpjm
+         1weXWtIBbgZKraWXIxrO2oWWqKYkUTqCctJagPgRkDVBqrgA1oIeaBpDiFf2HGHjaZV5
+         bj7oNIBvGE4rdHhZ9uTsTq8oZJ3U77W4dMmx08g9Nx7Wv/MSShs5JY/MsCVuXxcvSe/8
+         xSVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBYHsFiQ2/VRhvMjTX6ICnuUIks2H1BCT7VdLL2fbelco2XMviXM0vsUqV1U6xe9Rde+hH0UMOtZWtyyd0@vger.kernel.org, AJvYcCUNgwxqjNFsrLAYEy6bTsEkyEKzUpsyrYtJBEWm4K+0kREHWqWgI/u6/efywQQjDxM6riRzes1Tii4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2zwlfSYT/a4WBcv3AXBWdJZ2u2ZLawX3OIveA58okcArut7gx
+	ndfQ5Q7/3bNJvUykJUbO6CmVnYrXqNx5A4w9VSOYP8cMXV4BiN6B
+X-Gm-Gg: ASbGncujg6U657gn6iTZhnbZkevYyO67reYhGEemKFEDTTVI1Cm9WnYs3SU68Ul4zFb
+	z73SVoOmPzRGk++9sJoQ73uomSghoaBtUp1pmi+gmFtThcTQkcFHjFq67pJrztDGrqimEU3chg+
+	cfuLkalyvL8t3rDb6v8t6s0szSKBcoO95aJeF4/JfX/m0KvAs65B7ER8k9zw4F91gX/2vZvmyHA
+	jHQ/q6JSBDiSR8UEvNPYJiTakbmblry+g/l9iheXYJVr4zIdZv08JFQRynsoisnWDMbsnPzrAP5
+	dAzZpFq4/7PfHEQ8KJ+I9i8jhzeMIL7bue92wRS7qyjyUY9z5SZevK5q
+X-Google-Smtp-Source: AGHT+IHLQwRReCgY7aIOeHAJHQYMI0cmXrzU8dOlD/MEy0lLlC2uKYx60wgDrNylciSFyZbiYMPCsA==
+X-Received: by 2002:a17:903:120c:b0:215:8d49:e2a7 with SMTP id d9443c01a7336-231983e5c25mr5787055ad.50.1747162523433;
+        Tue, 13 May 2025 11:55:23 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82720a3sm84989285ad.149.2025.05.13.11.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 11:55:22 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 13 May 2025 11:55:20 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Fan Ni <nifan.cxl@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>, anisa.su887@gmail.com
+Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Message-ID: <aCOVmOTerf9_XFyP@debian>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+ <Z_0v-iFQpWlgG7oT@debian>
+ <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/its: Fix build errors when CONFIG_MODULES=n
-To: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-References: <20250513025839.495755-1-ebiggers@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250513025839.495755-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
 
-On 5/12/25 19:58, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Mon, Apr 14, 2025 at 09:37:02PM -0500, Ira Weiny wrote:
+> Fan Ni wrote:
+> > On Sun, Apr 13, 2025 at 05:52:08PM -0500, Ira Weiny wrote:
+> > > A git tree of this series can be found here:
+> > > 
+> > > 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
+> > > 
+> > > This is now based on 6.15-rc2.
+> > > 
+> > > Due to the stagnation of solid requirements for users of DCD I do not
+> > > plan to rev this work in Q2 of 2025 and possibly beyond.
+> > > 
+> > > It is anticipated that this will support at least the initial
+> > > implementation of DCD devices, if and when they appear in the ecosystem.
+> > > The patch set should be reviewed with the limited set of functionality in
+> > > mind.  Additional functionality can be added as devices support them.
+> > > 
+> > > It is strongly encouraged for individuals or companies wishing to bring
+> > > DCD devices to market review this set with the customer use cases they
+> > > have in mind.
+> > 
+> > Hi Ira,
+> > thanks for sending it out.
+> > 
+> > I have not got a chance to check the code or test it extensively.
+> > 
+> > I tried to test one specific case and hit issue.
+> > 
+> > I tried to add some DC extents to the extent list on the device when the
+> > VM is launched by hacking qemu like below,
+> > 
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 87fa308495..4049fc8dd9 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -826,6 +826,11 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+> >      QTAILQ_INIT(&ct3d->dc.extents);
+> >      QTAILQ_INIT(&ct3d->dc.extents_pending);
+> >  
+> > +    cxl_insert_extent_to_extent_list(&ct3d->dc.extents, 0,
+> > +                                     CXL_CAPACITY_MULTIPLIER, NULL, 0);
+> > +    ct3d->dc.total_extent_count = 1;
+> > +    ct3_set_region_block_backed(ct3d, 0, CXL_CAPACITY_MULTIPLIER);
+> > +
+> >      return true;
+> >  }
+> > 
+> > 
+> > Then after the VM is launched, I tried to create a DC region with
+> > commmand: cxl create-region -m mem0 -d decoder0.0 -s 1G -t
+> > dynamic_ram_a.
+> > 
+> > It works fine. As you can see below, the region is created and the
+> > extent is showing correctly.
+> > 
+> > root@debian:~# cxl list -r region0 -N
+> > [
+> >   {
+> >     "region":"region0",
+> >     "resource":79725330432,
+> >     "size":1073741824,
+> >     "interleave_ways":1,
+> >     "interleave_granularity":256,
+> >     "decode_state":"commit",
+> >     "extents":[
+> >       {
+> >         "offset":0,
+> >         "length":268435456,
+> >         "uuid":"00000000-0000-0000-0000-000000000000"
+> >       }
+> >     ]
+> >   }
+> > ]
+> > 
+> > 
+> > However, after that, I tried to create a dax device as below, it failed.
+> > 
+> > root@debian:~# daxctl create-device -r region0 -v
+> > libdaxctl: __dax_regions_init: no dax regions found via: /sys/class/dax
+> > error creating devices: No such device or address
+> > created 0 devices
+> > root@debian:~# 
+> > 
+> > root@debian:~# ls /sys/class/dax 
+> > ls: cannot access '/sys/class/dax': No such file or directory
 > 
-> Fix several build errors when CONFIG_MODULES=n, including the following:
+> Have you update daxctl with cxl-cli?
 > 
-> ../arch/x86/kernel/alternative.c:195:25: error: incomplete definition of type 'struct module'
->   195 |         for (int i = 0; i < mod->its_num_pages; i++) {
+> I was confused by this lack of /sys/class/dax and checked with Vishal.  He
+> says this is legacy.
+> 
+> I have /sys/bus/dax and that works fine for me with the latest daxctl
+> built from the ndctl code I sent out:
+> 
+> https://github.com/weiny2/ndctl/tree/dcd-region3-2025-04-13
+> 
+> Could you build and use the executables from that version?
+> 
+> Ira
 
-Thanks for sending this:
+Hi Ira,
+Here are more details about the issue and reasoning.
 
-Acked-by: Dave Hansen <dave.hansen@intel.com>
 
+# ISSUE: No dax device created
+
+## What we see: No Dax device is created after creating the dc region
+<pre>
+fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --dcd-test mem0
+Load cxl drivers first
+ssh root@localhost -p 2024 "modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem"
+
+Module                  Size  Used by
+dax_pmem               12288  0
+device_dax             16384  0
+nd_pmem                24576  0
+nd_btt                 28672  1 nd_pmem
+dax                    57344  3 dax_pmem,device_dax,nd_pmem
+cxl_pmu                28672  0
+cxl_mem                12288  0
+cxl_pmem               24576  0
+libnvdimm             217088  4 cxl_pmem,dax_pmem,nd_btt,nd_pmem
+cxl_pci                28672  0
+cxl_acpi               24576  0
+cxl_port               16384  0
+cxl_core              368640  7 cxl_pmem,cxl_port,cxl_mem,cxl_pci,cxl_acpi,cxl_pmu
+ssh root@localhost -p 2024 "cxl enable-memdev mem0"
+cxl memdev: cmd_enable_memdev: enabled 1 mem
+{
+  "region":"region0",
+  "resource":79725330432,
+  "size":2147483648,
+  "interleave_ways":1,
+  "interleave_granularity":256,
+  "decode_state":"commit",
+  "mappings":[
+    {
+      "position":0,
+      "memdev":"mem0",
+      "decoder":"decoder2.0"
+    }
+  ]
+}
+cxl region: cmd_create_region: created 1 region
+sn=3840
+cxl-memdev0
+sn=3840
+Choose OP: 0: add, 1: release, 2: print extent, 9: exit
+Choice: 9
+Do you want to continue to create dax device for DC(Y/N):y
+daxctl create-device -r region0
+error creating devices: No such device or address
+created 0 devices
+daxctl list -r region0 -D
+
+Create dax device failed
+</pre>
+
+## What caused the issue: Resources present before probing
+
+<pre>
+...
+[   14.251500] cxl_core:cxl_region_probe:3571: cxl_region region0: config state: 0
+[   14.254129] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: -6
+[   14.256536] cxl_core:devm_cxl_add_region:2535: cxl_acpi ACPI0017:00: decoder0.0: created region0
+[   14.281676] cxl_core:cxl_port_attach_region:1169: cxl region0: mem0:endpoint2 decoder2.0 add: mem0:decoder2.0 @ 0 next: none nr_eps: 1 nr_targets: 1
+[   14.286254] cxl_core:cxl_port_attach_region:1169: cxl region0: pci0000:0c:port1 decoder1.0 add: mem0:decoder2.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
+[   14.290995] cxl_core:cxl_port_setup_targets:1489: cxl region0: pci0000:0c:port1 iw: 1 ig: 256
+[   14.294161] cxl_core:cxl_port_setup_targets:1513: cxl region0: pci0000:0c:port1 target[0] = 0000:0c:00.0 for mem0:decoder2.0 @ 0
+[   14.298209] cxl_core:cxl_calc_interleave_pos:1880: cxl_mem mem0: decoder:decoder2.0 parent:0000:0d:00.0 port:endpoint2 range:0x1290000000-0x130fffffff pos:0
+[   14.303224] cxl_core:cxl_region_attach:2080: cxl decoder2.0: Test cxl_calc_interleave_pos(): success test_pos:0 cxled->pos:0
+[   14.307522] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
+[   14.319576] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
+[   14.322918] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
+[   14.326102] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+[   14.329523] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
+[   14.333141] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
+[   14.336172] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
+[   14.342736] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
+[   14.345447] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x7fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
+[   14.350198] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
+[   14.354574] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
+[   14.357876] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
+[   14.361361] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
+[   14.395020] cxl dax_region0: Resources present before probing
+...
+</pre>
+
+## Workaround (not a fix)
+
+By chasing why the devres link list is not empty, or when add_dr() is called,
+I located the code that caused the issue. The below hack is used to confirm
+the issue is caused by the devm_add_action_or_reset() function call.
+
+<pre>
+diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+index 4dc0dec486f6..26daa7906717 100644
+--- a/drivers/cxl/core/extent.c
++++ b/drivers/cxl/core/extent.c
+@@ -174,6 +174,7 @@ static int online_region_extent(struct region_extent *region_extent)
+                goto err;
+ 
+        dev_dbg(dev, "region extent HPA %pra\n", &region_extent->hpa_range);
++       return 0;
+        return devm_add_action_or_reset(&cxlr_dax->dev, region_extent_unregister,
+                                        region_extent);
+</pre> 
+
+## Output
+
+<pre>
+fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --run --create-topo
+Info: back memory/lsa file exist under /tmp/host0 from previous run, delete them Y/N(default Y): 
+Starting VM...
+QEMU instance is up, access it: ssh root@localhost -p 2024
+fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --dcd-test mem0
+Load cxl drivers first
+ssh root@localhost -p 2024 "modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem"
+
+Module                  Size  Used by
+dax_pmem               12288  0
+device_dax             16384  0
+nd_pmem                24576  0
+nd_btt                 28672  1 nd_pmem
+dax                    57344  3 dax_pmem,device_dax,nd_pmem
+cxl_pmem               24576  0
+cxl_pmu                28672  0
+cxl_mem                12288  0
+libnvdimm             217088  4 cxl_pmem,dax_pmem,nd_btt,nd_pmem
+cxl_pci                28672  0
+cxl_acpi               24576  0
+cxl_port               16384  0
+cxl_core              368640  7 cxl_pmem,cxl_port,cxl_mem,cxl_pci,cxl_acpi,cxl_pmu
+ssh root@localhost -p 2024 "cxl enable-memdev mem0"
+cxl memdev: cmd_enable_memdev: enabled 1 mem
+cxl region: cmd_create_region: created 1 region
+{
+  "region":"region0",
+  "resource":79725330432,
+  "size":2147483648,
+  "interleave_ways":1,
+  "interleave_granularity":256,
+  "decode_state":"commit",
+  "mappings":[
+    {
+      "position":0,
+      "memdev":"mem0",
+      "decoder":"decoder2.0"
+    }
+  ]
+}
+sn=3840
+cxl-memdev0
+sn=3840
+Choose OP: 0: add, 1: release, 2: print extent, 9: exit
+Choice: 2
+cat /tmp/qmp-show.json|ncat localhost 4445
+{"QMP": {"version": {"qemu": {"micro": 90, "minor": 2, "major": 9}, "package": "v6.2.0-28065-g3537a06886-dirty"}, "capabilities": ["oob"]}}
+{"return": {}}
+{"return": {}}
+{"return": {}}
+Print accepted extent info:
+0: [0x0 - 0x10000000]
+In total, 1 extents printed!
+Print pending-to-add extent info:
+In total, 0 extents printed!
+Choose OP: 0: add, 1: release, 2: print extent, 9: exit
+Choice: 9
+Do you want to continue to create dax device for DC(Y/N):y
+daxctl create-device -r region0
+[
+  {
+    "chardev":"dax0.1",
+    "size":268435456,
+    "target_node":1,
+    "align":2097152,
+    "mode":"devdax"
+  }
+]
+created 1 device
+daxctl list -r region0 -D
+[
+  {
+    "chardev":"dax0.1",
+    "size":268435456,
+    "target_node":1,
+    "align":2097152,
+    "mode":"devdax"
+  }
+]
+ssh root@localhost -p 2024 "daxctl reconfigure-device dax0.1 -m system-ram"
+[
+  {
+    "chardev":"dax0.1",
+    "size":268435456,
+    "target_node":1,
+    "align":2097152,
+    "mode":"system-ram",
+    "online_memblocks":2,
+    "total_memblocks":2,
+    "movable":true
+  }
+]
+reconfigured 1 device
+RANGE                                  SIZE  STATE REMOVABLE   BLOCK
+0x0000000000000000-0x000000007fffffff    2G online       yes    0-15
+0x0000000100000000-0x000000027fffffff    6G online       yes   32-79
+0x0000001290000000-0x000000129fffffff  256M online       yes 594-595
+
+Memory block size:       128M
+Total online memory:     8.3G
+</pre>
+
+
+
+fan
+> 
+> > 
+> > The dmesg shows the really_probe function returns early as resource
+> > presents before probe as below,
+> > 
+> > [ 1745.505068] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
+> > [ 1745.506063] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
+> > [ 1745.506953] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+> > [ 1745.507911] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
+> > [ 1745.508958] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
+> > [ 1745.509843] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
+> > [ 1745.511748] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
+> > [ 1745.512626] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x3fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
+> > [ 1745.514143] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
+> > [ 1745.515485] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
+> > [ 1745.516576] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
+> > [ 1745.517768] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
+> > [ 1745.524984] cxl dax_region0: Resources present before probing
+> > 
+> > 
+> > btw, I hit the same issue with the previous verson also.
+> > 
+> > Fan
+> 
+> [snip]
