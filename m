@@ -1,102 +1,153 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9258D26AFB;
-	Tue, 13 May 2025 07:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D273F1E5207;
+	Tue, 13 May 2025 07:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122240; cv=none; b=DClyPAWggFEjyhvmI31AbIRd6I/30x6TFyebRaiLFic2Ed7Sf3ymjau33j4ot+D5pLLhGOB7Qyg21u23BPkvLzNxxXg7Nc79y/g0AguPQ3zZr97KtD1kp8Pk66f+M2WxJHFEmrtOTgyQg2IOh4tdA6KIkWSpGMeh9hJBbnAyUq4=
+	t=1747122239; cv=none; b=clrfc33YljdNOPeE0nBw9+XZIi8SggvPKiHmDqJR4esEfBr4H2cUVqJaMUL294AIMu/ZA/XHNwVHrCnwIuL4iTKaMPW+W9oRP2UUfYbFvbfuaV0fcwDzAkik5Cuvg/PPW1eyCdMbiQI2oIGezxclHZQj01bAqG3kZrjjK+qSX+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122240; c=relaxed/simple;
-	bh=h++75clzys47eBFuF7l+Mxc5y6MYCu91Gsf4i1cCO3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l4XHoQS+T+Xjwiuad5xBWw5/RacF0zgSX/q/7CjcvvQUUWCTvg7+TaeE0fEffTplEc6GTtnd3DxVa/HYvf/p/l3TnZZO6vKosi6gg+vErUNx2eHDTHdNbUMC+x5GyHENkz0JYtql/bsxO+losxh/k1MAsmjDK8gzfy3Zu3n4qOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4c4e1f16833so1854556137.0;
-        Tue, 13 May 2025 00:43:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747122236; x=1747727036;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9px7yMYPHcOtAwKGdYxPAkCFxVsMD5aB3ekj+hfP2Uk=;
-        b=cvDrzkcXgef9fSW24AH969NHvAVzaN/yRZO23Tnv7CGiqn1mE9CjNoxQs5Q9xnOmuC
-         qef7kfSVwj5hkBq1HSZmmT/TWJttehO2KtjXrAPuw2Hq4qGtWgk5IJMpT2855wxTKJ3L
-         Qbc2Xuu7JJ8MsAHI1PH0JO1b6CVFSjJSgvG3uiIUlw+8ZHro8WcBVySxM87Ho/4fmqRM
-         BkMlkvEWjXVQ0p6gtqxIUDk1odQIOp8EpYG1qucc0z2IzvN4jMnqmzPMSQpU/aIhX2Fx
-         Ri5NcHvj39u1BLj36ZsDW2cnBcoXdZ6fHtqnuzUepa0FiTsAT0uy4awuca117BsCTSPs
-         BSjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNGbn541IBIfCH+bLAacu9GVpiKVp3GO7Sx+Xd2epJwCUEou1K1bErcHxFSH7yKOrvnCNAWdeTYKS4@vger.kernel.org, AJvYcCVWXdKCnnE6dtTewAyYODPhVXr+NRZO3cISJFuZAivIWUnJM6HNcqktP5o6mI78v4OLDoazdHkg2Wy6merx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMbaF8b3BU9wBBqQMPDm/FiFqA62bN+cwAApNuJqosBhX/mawy
-	K2qcUugVYNXltklR5zq7Tz4Mek+p9dwAOje7KSilhC6PX0tYr1HQE8n4o27u
-X-Gm-Gg: ASbGnct4Y4LhSG6uxEAVksq4FaJ2pn38D5dVgehGCl2af0BWnaKNvy/fGyb+LpV4SHl
-	lhE85cPjn40taEee7QecWyTRoz4hBM0qJ7+adCWnXqksbSPkXCqmcNxf0k+xMEwQfQbiYLT7Ss2
-	CObzwU0vVvoQJrPQ0svpVnAFrRSKJGD36fI0NnQfnZQFo1HQKiWxo9AMz9SjO5fO/FOH1M0pR99
-	8PUD8bhaF9BHhA6WTMlLkYMfRauXwJstF+dlIYK4xadCy90Z1R/3FcQqCQBjy4ngQTZ6CeuJdgT
-	PR8OxI112HUOvoYaWGKA02v+Ay0maDQsO8jvEZqlAVP7364ZMLVUROUsy06fcOvgUPFksqxcIYz
-	yDkgcwoFaEJHCZd9HcnHx9A7E
-X-Google-Smtp-Source: AGHT+IF5oPBPBEvlNoqyJYbAhnk8fbdWqmhquvqSousCX257tzKjtek26LgmbTqOxgk974FKBZtdAg==
-X-Received: by 2002:a05:6102:2b8e:b0:4c2:20d3:a125 with SMTP id ada2fe7eead31-4deed33cf89mr13508003137.8.1747122236468;
-        Tue, 13 May 2025 00:43:56 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4df3fe369b7sm4672333137.16.2025.05.13.00.43.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 00:43:56 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso1331293241.2;
-        Tue, 13 May 2025 00:43:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMLev7BDy3hwZP/hb0Iz98agPHPB2WdA1m0MNWh9/S+fuVU02NKcslbj0OjrSqLJq+Qz+iilDt8NRX@vger.kernel.org, AJvYcCVy4b10Vdow+YjsPqc7eTYMILn4MA4Fc2SmdvA2KNg7ZzSD5NP7yycATvJAqfOw350RH8ui9w9W75Fbbwfy@vger.kernel.org
-X-Received: by 2002:a05:6102:91a:b0:4da:e6e9:1f56 with SMTP id
- ada2fe7eead31-4deed3e926dmr12879431137.23.1747122235875; Tue, 13 May 2025
- 00:43:55 -0700 (PDT)
+	s=arc-20240116; t=1747122239; c=relaxed/simple;
+	bh=05PSGXPxm8T4uMcfkw55dhfsSpGEmeGikCGoTlmDtMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RtvLSdQszpzOHQG5ZBIJCifiZc7hlLkKmOzFszI6gj0hxtyUmBBUwcl4/JqYJoSpMfF/pXXF7oJSVkUx4WparU81cibZQPcZP6s/TjGbRPVJ0+EHRCSErrBP98nfeQiMnGkYptpypHSjvIdeQdMeOjQuHcMhLWWQ5M8yahEokQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3SWsk3s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3SWsk3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32D1C4CEE4;
+	Tue, 13 May 2025 07:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747122239;
+	bh=05PSGXPxm8T4uMcfkw55dhfsSpGEmeGikCGoTlmDtMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H3SWsk3se2ELFISRDHFZRYT1BU1LkCsETW7FY8H4zIaWqeq5WFwi4GTqVqb25y6y1
+	 jPBZfSlSZ+gL3rEDzaHXdDOUxSbpkuDeOnJ+1xb6xJWUBwrAoAuSfNM3Tu+Xg1ZMgT
+	 8Uk5NJIvhkQsZeTSvinD+KTnTrT+s1W00j2/kuHN0XfmJB+Fld9v7iQv73Zg5y5bBn
+	 voK21xcUG7kYJG7bjQ+tQrXgHC+NfU7civ0zCJaV+OmF3ak//Ax5HsMWoi40XB0Jt2
+	 /Ge9m1RWW1krdcWmiy7CmSqYLs3xC7jyFIs1Xnd3MS/JVALwPzkt/kq61uwtFxmGFi
+	 xUWbhr7HhCk3Q==
+Message-ID: <732fb2d3-5843-41bc-8c62-915193815b08@kernel.org>
+Date: Tue, 13 May 2025 09:43:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505144809.1291619-1-robh@kernel.org>
-In-Reply-To: <20250505144809.1291619-1-robh@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 May 2025 09:43:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWncKNK6PWckippu69MBhLq+zACbEbfowkWfTK7M2_q_g@mail.gmail.com>
-X-Gm-Features: AX0GCFujJPju3_lxCoE4JcDCtIZA51Q7ofr6KjChwZUjyBr-akmvlJ7H2HyD46c
-Message-ID: <CAMuHMdWncKNK6PWckippu69MBhLq+zACbEbfowkWfTK7M2_q_g@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert chrp,open-pic
- to DT schema
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ARM: dts: aspeed: clemente: add Meta Clemente BMC] ARM: dts:
+ aspeed: clemente: add Meta Clemente BMC
+To: leo.jt.wang@gmail.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ george.kw.lee@fii-foxconn.com, leo.jt.wang@fii-foxconn.com
+References: <6821dbe7.170a0220.3b15e.ab77@mx.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <6821dbe7.170a0220.3b15e.ab77@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Rob,
+On 12/05/2025 13:30, leo.jt.wang@gmail.com wrote:
+> From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> 
+>     Add linux device tree entry for Meta(Facebook) Clemente compute-tray
+>     BMC using AST2600 SoC.
 
-On Mon, 5 May 2025 at 16:53, Rob Herring (Arm) <robh@kernel.org> wrote:
-> Convert the Open PIC interrupt controller binding to schema format.
->
-> While the Linux kernel supports the "open-pic" compatible, that's not
-> used in any upstream .dts file. It used for "device_type" though. Add
-> "fsl,mpic" compatible which was not documented.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thanks for your patch, which is now commit 45168cd2df5019cf
-("dt-bindings: interrupt-controller: Convert chrp,open-pic to DT
-schema") in dt-rh/for-next.
+Not really Linux coding style. Do you see existing patches with above
+format - indentation?
 
-FTR, the real Open Firmware in CHRP LongTail also used the full
-"chrp,open-pic" compatible value.
-http://g33rt.be/migrated/Linux/PPC/pci/mac-ioAT2/open-picAT40000/
+> 
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> ---
+>  arch/arm/boot/dts/aspeed/Makefile             |    1 +
+>  .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1269 +++++++++++++++++
+>  2 files changed, 1270 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> 
+> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+> index b3170fdd3096..9d0a465cbb36 100644
+> --- a/arch/arm/boot/dts/aspeed/Makefile
+> +++ b/arch/arm/boot/dts/aspeed/Makefile
+> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-delta-ahe50dc.dtb \
+>  	aspeed-bmc-facebook-bletchley.dtb \
+>  	aspeed-bmc-facebook-catalina.dtb \
+> +	aspeed-bmc-facebook-clemente.dtb \
+>  	aspeed-bmc-facebook-cmm.dtb \
+>  	aspeed-bmc-facebook-elbert.dtb \
+>  	aspeed-bmc-facebook-fuji.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> new file mode 100644
+> index 000000000000..0313150841e1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> @@ -0,0 +1,1269 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2021 Facebook Inc.
+> +/dts-v1/;
+> +
+> +#include "aspeed-g6.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +#include <dt-bindings/usb/pd.h>
+> +#include <dt-bindings/leds/leds-pca955x.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/i2c/i2c.h>
+> +
+> +/ {
+> +	model = "Facebook Clemente BMC";
+> +	compatible = "facebook,clemente-bmc", "aspeed,ast2600";
 
-Gr{oetje,eeting}s,
 
-                        Geert
+Missing binding or was there saeparate patch exactly for that? But why
+separate?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
