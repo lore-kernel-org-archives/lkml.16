@@ -1,187 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6333321C9F6;
-	Tue, 13 May 2025 09:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB72226D19
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128822; cv=none; b=EaQ6sIYN7J6ALTf8nVup2WwvP0YGIRa3Kl7VDV5Cs6qd0Wamatae9O3zaiuizFejh85exjgX0Es2c5Iub/ACFIQzA4hRfkcDmfAsvlIASGJbvkm+OvJht+XP/sVNSmPheOa6zTLg7QlsXRP7v/lw6UNLymnNhvaH26Bmw6SZvdA=
+	t=1747128849; cv=none; b=NANl3mFXzyDv4wQMDm59sh3I6i8+iKWcsszcyjCNyGOGKGYxIoME0RMP0Ie68Uv2A9lgzJKutptdaL8WU6M6bLKATUeDCFv35I3Bac9dAx4fL2lwm1w8SQLDbR8O+saKlrDMFoKXm4y2MlFSW7588fVhTziZJxOtf2oX08GfD+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128822; c=relaxed/simple;
-	bh=Sj/IHno6JWyo/c+Z7kQKRTXDflepGjZuWMaOcKv6Oug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+cSXbZIBxkUKzMkjcPugei7xBoRn5fRI5yVupjZ9rHA7xLZnHgSDkXu1gdxu+jz3E2HBCb3TNj+WDYBzN+UNDlKQOE3j7h+NtivZ1JumDY0EDW6DtBSiDszcsAvomkDRmSubMZZalNiboNUNkSosver4LvmuWAknQnswPBkRj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwpRdnqF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747128849; c=relaxed/simple;
+	bh=tUgWNobTErAVo6QgwR8zeq6EqfrQmZtSn01zmDBaNVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ncDrqloNgClMauo/K2j4/NkfaWNZlYVAGx+1y19dFWDQBJNmb8jIMNhtO94P2D33Hl4AKsdxSzzaEq14iYF2YvUYrgZGVu5S1ZQE6sGzGOsZyoaiORZkic90JWXi5VTzFat/THC54DkLyNqTg5VrdB/LI8Wghsp/icPNYb0oVAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ielAvCyD; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwpRdnqF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6F1C4CEED;
-	Tue, 13 May 2025 09:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747128820;
-	bh=Sj/IHno6JWyo/c+Z7kQKRTXDflepGjZuWMaOcKv6Oug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VwpRdnqF1vbf3WQEgBMxS5eDUhabPvoP9kBABb252GrK65RCn6Qotc0n9Vl80lUbg
-	 mO3NxPNneEOE+mzt6xq7LHpPqmyo0lCeuHamRtc+vhHAF6poT3vtSzdHn2/PN/v5r3
-	 DqTBmUy+DedX3zOdRNcY8ZpSdc1UX6jogYEBsnBpWvLDdWnBtcCcEc7/cB2E2/zn8m
-	 ZHCFmqCs7N6gl0+l61zYweHamJ+hSKZt/2Xfndy2dyCxeyZdG1tKyY6MY43mDaA5va
-	 fp/Rr+4ga0CJQOguzV6+T3279gl6MqMbGFc8JwDrz6mrzX2wLSvfchdr0sAKGl5lxH
-	 aTm+FtWh7khng==
-Date: Tue, 13 May 2025 11:33:38 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] pwm: tiehrpwm: ensure clock and runtime PM are
- enabled if hardware is active
-Message-ID: <xuprgpxmzbdi6yq74xpzpsuzytpuy7x5ektq2pt3l4vd7f2rhw@gpsxqzrhljg6>
-References: <20250419195555.78933-1-rafael.v.volkmer@gmail.com>
- <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ielAvCyD"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a1f9791a4dso2216016f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747128846; x=1747733646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKLjJkkOmyMYol3wkL9rwm97Nlx9Que+3BhS5/1Vn8M=;
+        b=ielAvCyDCeE7UEzvzXNWQfQ+m4JkLr5Uag16tvAVKJktlIVslHwrCnkd7fjjKtxlUh
+         qWojPE8Po8/lWYFSQXslL2q++Svrl3m8BDoaLId3sAqaKD/puJqbqif87jwrM3RcXEzW
+         x7IxUMrxNhaJeIWnxrkwGaWtUY3uIND2ADQSgX5Je4mAxSXwworqaxQvtSAmaPHpCK6E
+         dQRwKBoqT6s6Z8fdap9EhDbxJtrgkMEnXie8tuQ4BJEW8kJTTTJSWWGd/+LH6xoPs5dF
+         Opz4cPvVjpNd+o6kmkOonggXb0KZ2vm4FcVD807YeezzzA04YwmxbW6pN0Ru77+OS6Zr
+         lMpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747128846; x=1747733646;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rKLjJkkOmyMYol3wkL9rwm97Nlx9Que+3BhS5/1Vn8M=;
+        b=HxiQQCNlIWwc7yeMDEOTz0m+Lm1Cl0aryl2ms1bQVJJ7yLWinrNleNOb1qwLFVsPAu
+         WKivvfNA5cmZkYKoQLc4Vg2GUCGQrAmuLT9YEFf095o2Ca/hGysJsvCCgjHQUCwx4f6k
+         Os/0UPG70tRUkorT+jpuXhDCXITLia/LX7QHOMHsWRKqdV4PJJLLFAaNAiIm/D8Ddsqk
+         +FeBOOiY2B5DliYO4nDNWndly+GaSS8KSHGOdGX+VAeZNn/BeeQ0qFX77IFQjQtowx4V
+         aO34thZTCHvMJxs6qDszdhQBQ4ewG5K3atqknbz3G8svTOXQ4MjmqJiEoOJz4tb1MJiF
+         B1wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrvtrLGG5lKQ7Z814ozCSfLDCE8HYxUV9TBxDz4s90oxH6x60MijXa8sWZswjQpzcdzfU7huZ9I9W0UmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOKGfqxnA3WDYzq8smMSluC4eBg+bTRFCoIL/GVxD5zVIGoUXN
+	hdWBNnxTR4wOnc3Blx9QNOFKSzkrGx3L/VYI8htGlSch1zPZW0ZdjXyL550SHw==
+X-Gm-Gg: ASbGncuxG2lflz25+yboiV1bUqRYaNdSyP7f+ynMNzZlSTzSrrNzhHbbBWJLuywlx0l
+	vuO5HX7887Yri1Q4RVQmudB9QMWZ47nRFzmyzyUny3sgXgTzeJEK3Mhm7Iu85+2RrCKlr/W2usO
+	vgd4qMe+farl3s1FWUAm+1DVibblpKX1na8OtkOog5a8s4NVAc73+fhRHXAw8SJno/ewNnM7iRG
+	2jwpFu3nhnrawByibOzED9es64FWPciFZ+eb/Rs9JEf3lCH72xENzp3jCLk5pxYPFbo7TIX0Upw
+	7QfE0A2R7lVpfBWf5XwbHgSX26inqc20PWbVxYyEx44/mYTJH1by+nXgE8hHCEcq4wQ0zlBYpOr
+	/OznABXScFiTysRYCJZ9lyyCOG9J1ria5klcEgQEu/noE
+X-Google-Smtp-Source: AGHT+IFcpAPpjaQ7VrhkL7JIJO04SMSGcJ+6baco8/3c5mXgfHi1+GY2RUNB/Q5DM6k/88scdTeyeg==
+X-Received: by 2002:a05:6000:2481:b0:3a0:ad5a:58f5 with SMTP id ffacd0b85a97d-3a1f6429677mr11857079f8f.8.1747128846006;
+        Tue, 13 May 2025 02:34:06 -0700 (PDT)
+Received: from thinkpad.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2c8sm15609738f8f.61.2025.05.13.02.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 02:34:05 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	cassel@kernel.org,
+	robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return bool
+Date: Tue, 13 May 2025 10:33:59 +0100
+Message-ID: <174712882946.9059.1080501209546808704.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250510160710.392122-1-18255117159@163.com>
+References: <20250510160710.392122-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="alstrvmifjlefene"
-Content-Disposition: inline
-In-Reply-To: <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
---alstrvmifjlefene
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 3/4] pwm: tiehrpwm: ensure clock and runtime PM are
- enabled if hardware is active
-MIME-Version: 1.0
+On Sun, 11 May 2025 00:07:07 +0800, Hans Zhang wrote:
+> 1. PCI: dwc: Standardize link status check to return bool.
+> 2. PCI: mobiveil: Refactor link status check.
+> 3. PCI: cadence: Simplify j721e link status check.
+> 
 
-Hello Rafael,
+Applied, thanks!
 
-On Sat, Apr 19, 2025 at 04:58:30PM -0300, Rafael V. Volkmer wrote:
-> During probe, if the hardware is already active, it is not guaranteed
-> that the clock is enabled. To address this, ehrpwm_pwm_probe() now
-> checks whether the PWM is enabled and ensures that the necessary
-> resources are initialized.
->=20
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 46 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index cde331a73696..23530d53e177 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -583,15 +583,50 @@ static int ehrpwm_pwm_probe(struct platform_device =
-*pdev)
->  {
->  	struct device_node *np =3D pdev->dev.of_node;
->  	struct ehrpwm_pwm_chip *pc;
-> +	struct pwm_device *pwm;
-> +	struct pwm_state state;
->  	struct pwm_chip *chip;
->  	struct clk *clk;
-> +	bool tbclk_enabled;
->  	int ret;
-> =20
-> +	u16 aqcsfrc_reg, aqctl_reg;
-> +
-> +	u8 csf_bits;
-> +
->  	chip =3D devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
->  	if (IS_ERR(chip))
->  		return PTR_ERR(chip);
->  	pc =3D to_ehrpwm_pwm_chip(chip);
-> =20
-> +	pwm =3D &chip->pwms[0];
-> +
-> +	if (pwm->hwpwm =3D=3D 0) {
+[1/3] PCI: dwc: Standardize link status check to return bool
+      commit: f46bfb1d3c6a601caad90eb3c11a1e1e17cccb1a
+[2/3] PCI: mobiveil: Refactor link status check
+      commit: 0a9d6a3d0fd1650b9ee00bc8150828e19cadaf23
+[3/3] PCI: cadence: Simplify j721e link status check
+      commit: 1a176b25f5d6f00c6c44729c006379b9a6dbc703
 
-This is always true. And actually a lowlevel driver shouldn't need=20
-chip->pwms at all.
-
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
-> +	} else {
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
-> +	}
-> +
-> +	if (csf_bits)
-> +		state.enabled =3D false;
-> +	else if (aqctl_reg)
-> +		state.enabled =3D true;
-> +	else
-> +		state.enabled =3D false;
-> +
-> +	if (state.enabled) {
-> +		ret =3D clk_enable(pc->tbclk);
-> +		if (ret) {
-> +			dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-> +			goto err_pwmchip_remove;
-> +		}
-> +		tbclk_enabled =3D true;
-> +	}
-
-You don't check the 2nd PWM, this is needed however. You even need to
-call pm_runtime_get_sync() twice if both PWMs are on.
-
->  	clk =3D devm_clk_get(&pdev->dev, "fck");
->  	if (IS_ERR(clk)) {
->  		if (of_device_is_compatible(np, "ti,am33xx-ecap")) {
-> @@ -626,6 +661,15 @@ static int ehrpwm_pwm_probe(struct platform_device *=
-pdev)
->  		return ret;
->  	}
-> =20
-> +	if (state.enabled) {
-> +		ret =3D pm_runtime_get_sync(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err_probe(&pdev->dev, ret, "pm_runtime_get_sync() failed");
-> +			clk_disable_unprepare(pc->tbclk);
-> +			goto err_pwmchip_remove;
-> +			}
-
-indention inconsistency.
-
-> +	}
-> +
->  	ret =3D pwmchip_add(chip);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> @@ -637,6 +681,8 @@ static int ehrpwm_pwm_probe(struct platform_device *p=
-dev)
-> =20
->  	return 0;
-> =20
-> +err_pwmchip_remove:
-> +		pwmchip_remove(chip);
-
-That's wrong. When the `goto err_pwmchip_remove` is taken, pwmchip_add
-wasn't called yet.
-
->  err_clk_unprepare:
->  	clk_unprepare(pc->tbclk);
-> =20
-
-Best regards
-Uwe
-
---alstrvmifjlefene
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgjEe8ACgkQj4D7WH0S
-/k6WcQf6As9HDrKAdYQLfhoEDviF9oYxaq/KdEpvdNj9bgEeiByBs+vxJQywhXEq
-2GPqdCjZCwCwzMdSAWbE3GKIzHk4ylCz+PMul8KETGZ0F6hR6174vfQcEq4hFoQs
-0Kq9vuyi089QAdESMCx+7Hw+4Bt8TV0Zh088OPXTVsPLUxdFEoHN3+MDwKdXjQTc
-+RSsFXTsWJCruaExFFPHfRhu4JQi/Rmz6TMhHmxqh5zYM5egIVarb08STEseJA/h
-bybbmrvgwqtRkA1iOMQdkM8WiQ2JnEx88HIKFKxnFgrj4pTs6UyU1NOfKnky3upK
-e8SnM02mWCA0MjEEq3LB68B7dvU6WQ==
-=nTAZ
------END PGP SIGNATURE-----
-
---alstrvmifjlefene--
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
