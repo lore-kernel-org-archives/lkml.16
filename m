@@ -1,107 +1,146 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45550286439
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC900171CD;
+	Tue, 13 May 2025 12:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140874; cv=none; b=TwwQXCuYnEBCaV/EfS8DTR3nqEhDsT+h6vPtfKC9PrY1fwPvyGkumtK+bentkka7w4PnQalUetwdEc6VuPvR4yEJzPSgm6s01zjIc2AGDYiS6TMLeLvS/rPaH6+kwJzEHAFUzyayvnShiywscH8y+ukFqr8EwOgWSp6ybqEHPjY=
+	t=1747140907; cv=none; b=JebkVM449pXo4/jO6eUo9Hcsf4KyGajF7ijXF7eNkeL/cbEOPGkGbohSYAUgMp6IEoapyijMNxr9sIWF6bvzehnFQUlwrMrhHXKqH2yJ4OJ/dMswm3MmBrZ+5hxtYAd1suA5Gok4H84mgweEKdmz21AHyenvsHEVNLYvRAT2HSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140874; c=relaxed/simple;
-	bh=FldTC7QPzO/JuYsWl1oV51mqVB8rbH1BdDCuwPf3AX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SsQS8p/a/8wcjAq8JB4xxwsZ6oDZDM6lCH+5maP32wrK8l1QH2seGmtJ59TM/cst+qJ5dd5jG6IK2cRgwvQ3IqB6h+SZLPYktolMBy1MTB10zHzy4wIEy/zvSp0WixGSoh9rY3+JPu0v8Cuqd6FpmOArsorIG7vaNMSgEI7inqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IBjDClJE; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747140907; c=relaxed/simple;
+	bh=aVB2C3FDKUw+f78CChzpnXoxjn+33ek/tLNE7/EMYZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MED/L+wjxnzcWsKE81FtBjfcbLnWNF5ZsRpPfKJcMjRG06tAbw26ieJDo80iEIrNsUmko13bkTc1UqF/VsBa0jMPL6yPAsBtIbUrcTIZWlJFVeNYiFditWGsu7EVW5jbT4+fQkQNZdvDQCM7WRta9ds5vhe1bJcGwVMLxw5va0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsuVQst+; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBjDClJE"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e98f73850so6448768e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:54:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsuVQst+"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30c7306890dso3843505a91.1;
+        Tue, 13 May 2025 05:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747140869; x=1747745669; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f6OgU1k6A4H6ei9goCYDt4Oj811juJ96ljNmi3AbJV0=;
-        b=IBjDClJEpm0vNhQ4L94lnHelAUHxiXLqCnDPMhWKMlflmIVS++Ne/4mZTMUivviHHU
-         x+WkJQPSb8RTSUlGNCpzAKhSFlECxozKfHGzJpgZ8K0EB7YpyiZddR04/wvpW8LcYOHD
-         fXW5Av0z7rou18ZN+riFWXV6iBocEPpZx3J87L7B/V73Y07eWzc3QLwi9Ap7uFz2cOex
-         0eHZEmpsiHO+aox36YglnakUkPmkANcKy56eMmOZ/W9qpaY3++F+cEp2m6v7EvknmM5k
-         8FS/qS7EaGZDuTupCpUp5Ia7sV1eMUAT+kSg6HRaMMUxwejLrU2MtSwkq/uY7fQ+EuKJ
-         ABSw==
+        d=gmail.com; s=20230601; t=1747140905; x=1747745705; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EN9fI41SwUNEvRIBPpCmbmrqn5bUWQsOT/anNGrdqFk=;
+        b=jsuVQst+SCln/NO2Yan+CPH3h9/O7eqJWvr+vLpisJPpRCYcpNmWrWU9u6uy7OIuQ+
+         F84n/6M/45oBYOJK+H3w3shkiBCBVrOG+9fRWavMFCbX3hSqSpkuaxXQd0e5JDEJEzAU
+         rQp4950u8xe+d9s824nDGqGgyUyW3whmQiZ6NvcY3mOtEDNDHkg58rj9lNpONH0L8Xde
+         p1LuDhIRH8fEldWfA/iTvr+FhnY3BlxgFdnbwbf7gGQekpKRCGyby3Na21HclNCW+NC2
+         CfMpFtiBDkqA5Pfl3IxUtbBxwGUG03flcNtGN5O8WB0GTYsOsad5FnhISRExvoHJAxek
+         9L+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747140869; x=1747745669;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f6OgU1k6A4H6ei9goCYDt4Oj811juJ96ljNmi3AbJV0=;
-        b=S3zUccOzkRSmxsrcyC4BS8CqMBKMhKmrIpFfy3a/reLVl+A2c/DiR0L/OVvD2HtawT
-         hCaAxNyA6IR57MBrSWBf8nxromJex8KCL51XXZh8wGZhCRjer7wpjZa9tvBn49rduyhK
-         TSK5hUpeG+PiONemPYaxxKJ7NxB6PfetslHp7zTX9eO+gi/qTObG9IgHsSS07GtLVMF+
-         3t/6wxwJg9/0C2q/d4O780LIfszFuAyBXsmvFex+euaweZDu0BFltQz/3MRRYXOxNYSx
-         Ks6ZMeSxULgG8NMTbeKXFedYA7Q4keFFMLjsUsBu5Fc8UkVu+22pxBBbOg4yR99TR2rb
-         z53w==
-X-Forwarded-Encrypted: i=1; AJvYcCVocMbZG9JS7rSf702+yW1fFqAy8gwMHq0p8iw3209OnUaNBXqCGBpydT5X8mLZQjJ63VZ1NFGvOYH2kX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywacw4Llad9TdFQhMw/jJ7p7dQ74Iy0WrK+9A6pj0C3/5q8YI0w
-	cYr8O0CG9sZLOqONQajP2Q5x8qtSA4nycQFDnQmHRu/fqf/PgietRFo80KnXRXdFPSnv31rE2Lp
-	fY/BH1Y/KS/PQx6jFPyzU6qw0T83ahrEm9QMDdg==
-X-Gm-Gg: ASbGncsyrUOfOLwIakW0hzeoMIUb1l7b5PRMPGGJ0QiRP+qrHyxOREvFBoySgbIlvMP
-	kcjCU14CnZQRklB3UJktd2yeOhgfsjpW+7Hg4fT/aEmL9pSEtvhcDGJJnxnqe66BHsw+L5fQiuc
-	W4fNwjiBa5tyxDSs/0KKqALSGjO/hAUyiIRnWOVruJKBw=
-X-Google-Smtp-Source: AGHT+IFIqmhHDo8vb7POzdyLwF7ZPulGmRIq/MhufmURuwlm8UfvslfSSIYa2FrwrYENtbF5p5QmKMmvXbe1e8Aw0JE=
-X-Received: by 2002:a2e:be89:0:b0:30b:fd28:a771 with SMTP id
- 38308e7fff4ca-326c43ed095mr69143841fa.0.1747140869246; Tue, 13 May 2025
- 05:54:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747140905; x=1747745705;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EN9fI41SwUNEvRIBPpCmbmrqn5bUWQsOT/anNGrdqFk=;
+        b=JkrgcsGqZD2XimOeC2qgLpitmD4dMjF5XoLmo3a9dNdtKnLpPWyiB0X2otFrOyCYTs
+         BO1VwcblnK8p+h5F8WcFFc4wSmvPjeEauAlgBQOOkw282N0iyzq573SU1MtDMp0FZgVT
+         r3d5/1z1+3o+eAT0d+ZoviehJNWUdB1n1Mv1w+h8VxAzumHkXuCohKW/kjMgJEt0+mMP
+         SKGNmvj62hztl8zBQtK0eQw+JyvS63DZsE9DvV2oumAzYT2164F5DBFh1lQl2pWXXxJx
+         ZpbyfBOulMglCo71LKRsIU2endEjKmGTNLQrP3hPhFKiDiLJWpG6AgOY1XXfrcD3RptT
+         5u6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUnu3gaL8nOhSrnd+WGGSH+oQADF+y4AN1lwCizLzZqf/IFs80x5nfmTCuPRjNyFCHuuypr8BCFlBEv58=@vger.kernel.org, AJvYcCXBG4yB5WkI6Jsq7yD3rJjSClmxRK62cM30eQWdtinSzJ+wBQn9IJpgPkadYV41vJipnPPQcWgE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR/y6rU4xk7aFVXL6arHV4VCpOXeGJvoMHfHlXj3KCjhiBAQxO
+	kE3etA/fcYBd7hw2VCNBxXsRHgWzF7wzsQfyZIEOpA9HClnjD5rh
+X-Gm-Gg: ASbGncuekuFdPP9WvjjqOpl57eV7dOrp5WBS4YXeLn3K1b88NywniwVSGsjXE96OoRG
+	BBGpkCNK/jQhkpfr19PPYUw0qjyNqasX03FbGcqgE7fWx/ntvftllKTkgDeJ/qDYgoHbu+nXjcT
+	pOvhzbzpoYRbPJ7wXru/QebtSriDxDdVxngpQwIdfBuGXyEtlvnhJRb0T6nedu+tJ5oMnDcnSrX
+	i/R1GSIg+KF5C1VxqCGq9iC+8oSYFePZqYPqUbSXt/NeyKp7+klxUA1FVuDInLkN8GgoGH7LYw3
+	952AwTf5UVM4u1i7zj9avhPHbtszsFBxzCqF4LltP/8/zKspX1tOFOMVhRPkAThBBqlUdqfBHa9
+	hlX4z0bFA569o2h10O7EmleSoFWHp6Itp3ho2kg==
+X-Google-Smtp-Source: AGHT+IEwvl+MJeoRrUjahOBnEcQiVj2a8Jmt/6h75M6MpzvP3HWVLL2ES27iCHaasx3CiubgowebNA==
+X-Received: by 2002:a17:90b:3908:b0:2f8:49ad:4079 with SMTP id 98e67ed59e1d1-30c3cc1106dmr24791390a91.6.1747140904825;
+        Tue, 13 May 2025 05:55:04 -0700 (PDT)
+Received: from [192.168.1.24] (90-47-60-187.ftth.fr.orangecustomers.net. [90.47.60.187])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e11e81788sm602945a91.1.2025.05.13.05.55.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 05:55:04 -0700 (PDT)
+Message-ID: <b5cfa725-d3ed-4c77-beb7-3eec065580e7@gmail.com>
+Date: Tue, 13 May 2025 14:54:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-csl42x-v3-0-e9496db544c4@nxp.com> <20250506-csl42x-v3-3-e9496db544c4@nxp.com>
-In-Reply-To: <20250506-csl42x-v3-3-e9496db544c4@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 14:54:17 +0200
-X-Gm-Features: AX0GCFsrWir3tfYihH5SvRkpnFH_pjBd6oI5teeB7olEtOSu9RNDEIYNOTiuEtM
-Message-ID: <CACRpkdZj1j+mUA40+pdVz83UUqSR4Gow6Z6u5yQn48MCA7cQRw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] ASoC: codec: cs42l56: Convert to GPIO descriptors
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172044.326436266@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250512172044.326436266@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 6, 2025 at 9:31=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
->  - Use devm_gpiod_get_optional to get GPIO descriptor with default
->    polarity GPIOD_OUT_LOW, set consumer name.
->  - Use gpiod_set_value_cansleep to configure output value.
->
-> Checking the current driver using legacy GPIO API, the
-> nreset value is first output HIGH, then LOW, then HIGH.
->
-> Checking the datasheet, nreset is should be held low after power
-> on, when nreset is high, it starts to work.
->
-> Since the driver has been here for quite long time and no complain on
-> the nreset flow, still follow original flow when using GPIOD
-> descriptors.
->
-> Commit 944004eb56dc ("gpiolib: of: add a quirk for reset line for Cirrus
-> CS42L56 codec") added quirks, so the gpio request API will work as before=
-.
->
-> Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
-> example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong. There is
-> no in-tree DTS has the device, so all should be fine.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+On 5/12/2025 7:37 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.7 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
