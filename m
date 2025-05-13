@@ -1,52 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B10C1CBA18;
-	Tue, 13 May 2025 14:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5417578;
+	Tue, 13 May 2025 14:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148211; cv=none; b=MJ/J7YcZ95RnklM8DJqWvtUrJT5adKfbN5RRCeZrvzibRfAKURx9IWdsX90s2JDjq544o+uPFbK3yVRy/zzkBVL+EZjpcurqTK1eNQNUzGKe7dzOShGqH/3D+0pCsAo0SSn+Y8j4F13mZ4uzgqEOZXpfYEVYuosI3EsP2zHUjt4=
+	t=1747148253; cv=none; b=Y1YQ3wYai4jJpqZhExp+zBqoJX0n+TFeMs/ihzikaa13pwBrzZYLpY1i34BSmLfEdlNdURpGvtdZy0tFVXTZ5KOZkmm0FCc/p1/DkwtunPT5oaARTn42Eg3lJAiNenWUAsOfI2q5cos76hmw+/OS5/5YnJN4xBe10e3vi85uTx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148211; c=relaxed/simple;
-	bh=G1gp9yONhEgvkHR26g6lrD7nBU87I9WeFbqJ/fmG4bY=;
+	s=arc-20240116; t=1747148253; c=relaxed/simple;
+	bh=ozJSIVhrsVZSmArvo5SbSNaFcz2ivHX7lRhpN1fzzp8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2VBqwNNK1fhY0+rb1wAcirBGRpil2PLwuGlUxkXGYus6qYdF5U2HyFowr7y9H/JA2UvYJo8hlzakZzoIxojyKz2NG0jpxSzBJmCBs4V5nkZWdR1oKESeRxacInQFadKm/fgYf75/6qrUVMjMoH9UDN2XcHH4X8/xx3FCEzgs6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcCAYwHd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcCAYwHd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278EFC4CEED;
-	Tue, 13 May 2025 14:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747148211;
-	bh=G1gp9yONhEgvkHR26g6lrD7nBU87I9WeFbqJ/fmG4bY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jcCAYwHdhaFrw+Gn8jiJizJKLVeV0gO4ocCUx3g+Hwv+8CosvaMLV7TC2CAKI/6EO
-	 fSc/OV3II0JPzham4cs4rIH+hZPLkDaF9BN1TPcyThCsMz7tGfi3edua94ypbSUtRq
-	 hwj7UoClWZViULMB5qJrvWWx0npF+XS2fyHk2yHDVPUxavzNLoNO61yHkAq05U9b6E
-	 pM+ZlJuxFcYp9ESPpc97xFVsJATNVravn3rz49dDxUrT068eJ2rQBad9o16Y81MBdT
-	 mDsCbtKl9pwQMd3L/k1zfLHoX+7KQC6VkC9cUS+fZpIdy09oDOiGUjMCbfpoPM7QQe
-	 kLu7L07+jHUXA==
-Date: Tue, 13 May 2025 15:56:43 +0100
-From: Will Deacon <will@kernel.org>
-To: perlarsen@google.com
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, sebastianene@google.com,
-	lpieralisi@kernel.org, arve@android.com, qwandor@google.com,
-	kernel-team@android.com, armellel@google.com, perl@immunant.com,
-	jean-philippe@linaro.org, ahomescu@google.com, tabba@google.com,
-	qperret@google.com, james.morse@arm.com,
-	Ayrton Munoz <ayrton@google.com>
-Subject: Re: [PATCH v3 2/3] KVM: arm64: Bump the supported version of FF-A to
- 1.2
-Message-ID: <20250513145642.GB9443@willie-the-truck>
-References: <20250513-virtio-msg-ffa-v3-0-d66c76ff1b2c@google.com>
- <20250513-virtio-msg-ffa-v3-2-d66c76ff1b2c@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VK1XosP/FhUyn1S4gVf/qdEPO+/IONhuOpE/WPxeGs/URelXyLN4U2sABSCzc0WN4K+7ItOI6nEDTPeq8B6i+K3K1cli8Ch1A8YsPWfQzmOZMGS6SWTFFTrqBc/gGp56Y++cxqg10PDxIZoCSh5yUfNohhQK0K7God9ipUCRXGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74248a3359fso3654082b3a.2;
+        Tue, 13 May 2025 07:57:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747148250; x=1747753050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6KoZB2ihq3FKh16QI7sEuRE5275JyuaBBVfjNn/0xug=;
+        b=mGiT5PXdq1oAq/Sxm8+8wEAkV0gCvK01EIlBI8whfPAvLDjviiG1/CD9q2ctm/1vAH
+         HdTk/iP90t8cxQkwGi4uh3OmDOfY4oXSDM868ilsL4Zmmdl03mXwm6bB8Hs2NJNWbCMN
+         5Eh6ZwhTe/C1xPjqgq27Q9JUOj2ju6ZlEBcxh3eyo8fOhy7f5eCXOw6tZq7NV+DqaERk
+         74sCXa/q4V1OIJGBbxevxb6QpWgnyTdolnaKVA+2HOM3+oPlfcIlIGMLlf4qBItb9D4/
+         ThjDz5WrT0EjwHQMQxYDFoEkJ1i+5x35qdQTHWE6Ag5uAlLQM4xB1I9NR+PqiFR2DSV9
+         4LfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4yGpunYe/BG21Urde44yFlf2OFosXpsieYKojmwgcAdfT/n083vkvtGVSu4RwPPA9yV63mauPDE2DdVc=@vger.kernel.org, AJvYcCWqEl4T0X+vC04A6ujjCZKxG5MaqwwJRbBXHRRkKjYYdZlpJgiqgEJrEbeIt5079feARYnA5Hxl9CXT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIHk3uATqILtZ4ltwYjvAbNHGaStqZ8Yp4GarncWgRHo4q8YfO
+	Xxcq0j2n4JTxDrXYk/aZrZ1jElUV0DmmGprBh9eeY5H+0URUr99i
+X-Gm-Gg: ASbGncvKR2bmFZP5NSDbbneCZygg8Z6CObAr9SUV7FLoKf+TufOr585t+cccx5CFGp5
+	UF+dLAD+kfNio7CgZLZnVLLi7/jrgL1uF53Hef2iYPc7bed7wT61b5MHFuF6TH3nqwRXhmzQisu
+	2JXTHpqnCIQdCzafVNIPbq1W/ecvYiCF3zHJ7JLGkAB85R6oHZUI0HQXYLTvb6Xj/h5kummtFgD
+	Yt/niWsHepvdfAwdMGLLHW/rBfE78HMyeeR2ccGM8eDheHJRLZKEM+vTEfin1UsiXdeT8LIj5e/
+	6CKxNsMZu36WHkVyF4BWHU97FRQ9tRTFuG8BYKcvzH4srZiy5OCWcoZZfkQHgh0oIUFagIF4tu+
+	nm7X2TlY5OQ==
+X-Google-Smtp-Source: AGHT+IFt2WrEJiIvBzwd9L2NKr3vlxlESO+fODgKM7hvHRDVcFkoN9TAMo39vDPjw72Ho2gP9wyO3g==
+X-Received: by 2002:a05:6a00:1d0a:b0:736:a7ec:a366 with SMTP id d2e1a72fcca58-7423be8695fmr21744996b3a.9.1747148250086;
+        Tue, 13 May 2025 07:57:30 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74237728345sm8106683b3a.58.2025.05.13.07.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 07:57:29 -0700 (PDT)
+Date: Tue, 13 May 2025 23:57:28 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
+ bool
+Message-ID: <20250513145728.GA3513600@rocinante>
+References: <20250510160710.392122-1-18255117159@163.com>
+ <20250513102115.GA2003346@rocinante>
+ <aCNLl-Kq0DPwm2Iq@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,156 +65,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250513-virtio-msg-ffa-v3-2-d66c76ff1b2c@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <aCNLl-Kq0DPwm2Iq@ryzen>
 
-On Tue, May 13, 2025 at 06:28:31AM +0000, Per Larsen via B4 Relay wrote:
-> From: Per Larsen <perlarsen@google.com>
+Hello,
+
+> > > Changes for RESEND:
+> > > - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Resending a patch is not a place to add new tags.
 > 
-> FF-A version 1.2 introduces the DIRECT_REQ2 ABI. Bump the FF-A version
-> preferred by the hypervisor as a precursor to implementing the 1.2-only
-> FFA_MSG_SEND_DIRECT_REQ2 and FFA_MSG_SEND_RESP2 messaging interfaces.
+> While I realize that:
+> https://docs.kernel.org/process/submitting-patches.html#don-t-get-discouraged-or-impatient
 > 
-> We must also use SMCCC 1.2 for 64-bit SMCs if hypervisor negotiated FF-A
-> 1.2, so ffa_set_retval is updated and a new function to call 64-bit smcs
-> using SMCCC 1.2 with fallback to SMCCC 1.1 is introduced.
-> 
-> Update deny-list in ffa_call_supported to mark FFA_NOTIFICATION_* and
-> interfaces added in FF-A 1.2 as unsupported lest they get forwarded.
-> 
-> Co-developed-by: Ayrton Munoz <ayrton@google.com>
-> Signed-off-by: Ayrton Munoz <ayrton@google.com>
-> Signed-off-by: Per Larsen <perlarsen@google.com>
-> Signed-off-by: Per Larsen <perl@immunant.com>
-> ---
->  arch/arm64/kvm/hyp/include/nvhe/ffa.h |  1 +
->  arch/arm64/kvm/hyp/nvhe/Makefile      |  1 +
->  arch/arm64/kvm/hyp/nvhe/ffa.c         | 88 ++++++++++++++++++++++++++++++++---
->  include/linux/arm_ffa.h               |  1 +
->  4 files changed, 85 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/ffa.h b/arch/arm64/kvm/hyp/include/nvhe/ffa.h
-> index 146e0aebfa1c7c9834c75a9a29bf87eb6f94f436..02def6fe51f5079b12c168585e12f862211c4c91 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/ffa.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/ffa.h
-> @@ -13,5 +13,6 @@
->  
->  int hyp_ffa_init(void *pages);
->  bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id);
-> +u32 ffa_get_hypervisor_version(void);
+> states:
+> """
+> "RESEND" only applies to resubmission of a patch or patch series which
+> have not been modified in any way from the previous submission.
+> """
 
-No need to expose this outside of ffa.c (i.e. we can make the function
-definition 'static').
+Yes, I would often take verbiage of this document verbatim, but..
 
->  #endif /* __KVM_HYP_FFA_H */
-> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-> index b43426a493df5a388caa920e259cc8c54d118a1b..95404ff16dac0389f45a3ee2c13a93b3ebebaf6d 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
-> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-> @@ -27,6 +27,7 @@ hyp-obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o host.o
->  	 cache.o setup.o mm.o mem_protect.o sys_regs.o pkvm.o stacktrace.o ffa.o
->  hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
->  	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
-> +hyp-obj-y += ../../../kernel/smccc-call.o
->  hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
->  hyp-obj-y += $(lib-objs)
->  
-> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> index 2c199d40811efb5bfae199c4a67d8ae3d9307357..403fde6ca4d6ec49566ef60709cedbaef9f04592 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> @@ -101,6 +101,55 @@ static void ffa_set_retval(struct kvm_cpu_context *ctxt,
->  	cpu_reg(ctxt, 1) = res->a1;
->  	cpu_reg(ctxt, 2) = res->a2;
->  	cpu_reg(ctxt, 3) = res->a3;
-> +
-> +	/*
-> +	 * Other result registers must be zero per DEN0077A but SMC32/HVC32 must
-> +	 * preserve x8-x30 per DEN0028.
-> +	 */
-> +	cpu_reg(ctxt, 4) = 0;
-> +	cpu_reg(ctxt, 5) = 0;
-> +	cpu_reg(ctxt, 6) = 0;
-> +	cpu_reg(ctxt, 7) = 0;
+> I would assume that this only refers to the commit log and code,
+> and that picking up tags has to be an acceptable exception.
 
-I don't think it's safe to zero these registers unconditionally. AFAICT,
-R4-R7 were only allocated as result registers in SMCCC v1.2 and the
-definition of 'struct arm_smccc_res' reflects that. If we blindly zero
-these registers in the calling CPU context, we could end up corrupting
-state that the compiler expects the asm containing the SMC instruction
-to preserve.
+The above comment prompted me to inquire with a more senior maintainers,
+purely as I was curious what the opinions/preferences would be. And, as
+such, the replies I've got were:
 
-> @@ -628,6 +677,20 @@ static bool ffa_call_supported(u64 func_id)
->  	case FFA_RXTX_MAP:
->  	case FFA_MEM_DONATE:
->  	case FFA_MEM_RETRIEVE_REQ:
-> +	/* Optional notification interfaces added in FF-A 1.1 */
-> +	case FFA_NOTIFICATION_BITMAP_CREATE:
-> +	case FFA_NOTIFICATION_BITMAP_DESTROY:
-> +	case FFA_NOTIFICATION_BIND:
-> +	case FFA_NOTIFICATION_UNBIND:
-> +	case FFA_NOTIFICATION_SET:
-> +	case FFA_NOTIFICATION_GET:
-> +	case FFA_NOTIFICATION_INFO_GET:
+  - No, follow the documentation
+  - I don't care, really
+  - It's OK, make sure to pick the tag, if it makes sense
 
-Please can you send this part as a separate patch? I think we'll be
-passing these FFA_NOTIFICATION_ calls straight through to TZ as it
-stands, which could result in unpleasant behaviours and might be
-something we want to plug in the stable kernels irrespective of support
-for v1.2.
+So, wide spectrum of answers.  As such, I take it as, "it's up to the
+maintainer", for lack of less ambiguous answers.
 
-> +	/* Unimplemented interfaces added in FF-A 1.2 */
-> +	case FFA_MSG_SEND_DIRECT_REQ2:
-> +	case FFA_MSG_SEND_DIRECT_RESP2:
-> +	case FFA_CONSOLE_LOG:
-> +	case FFA_PARTITION_INFO_GET_REGS:
-> +	case FFA_EL3_INTR_HANDLE:
->  		return false;
->  	}
->  
-> @@ -680,7 +743,7 @@ static int hyp_ffa_post_init(void)
->  	if (res.a0 != FFA_SUCCESS)
->  		return -EOPNOTSUPP;
->  
-> -	switch (res.a2) {
-> +	switch (res.a2 & FFA_FEAT_RXTX_MIN_SZ_MASK) {
->  	case FFA_FEAT_RXTX_MIN_SZ_4K:
->  		min_rxtx_sz = SZ_4K;
->  		break;
-> @@ -861,6 +924,18 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
->  	return true;
->  }
->  
-> +u32 ffa_get_hypervisor_version(void)
+> If I take myself as an example, I would not be happy if I spent time
+> reviewing a large patch series, but because the maintainers somehow
+> missed that series, so the patch author has to RESEND it (without
+> picking up tags), my Reviewed-by tags get lost.
 
-As above, this can be static.
+While it's not about making you happy, I agree, that trying to preserve the
+tag might be the correct approach here.  As such, I will adopt this approach,
+whereas with other it might vary.
 
-> +{
-> +	u32 version = 0;
-> +
-> +	hyp_spin_lock(&version_lock);
-> +	if (has_version_negotiated)
+Thank you!
 
-This looks a bit weird to me. We should just be able to use
-'hyp_ffa_version' directly because kvm_host_ffa_handler() checks
-'has_version_negotiated' already (with smp_load_acquire()).
-
-The weird case is when negotiation has _not_ completed:
-
-
-        if (func_id != FFA_VERSION &&
-            !smp_load_acquire(&has_version_negotiated)) {
-                ffa_to_smccc_error(&res, FFA_RET_INVALID_PARAMETERS);
-                goto out_handled;
-        }
-
-	...
-out_handled:
-	ffa_set_retval(host_ctxt, &res);
-
-
-This is odd because we're now trying to return an error due to the
-version not being negotiated, but we need the version to return the
-error. How are we supposed to handle that per the spec?
-
-Will
+	Krzysztof
