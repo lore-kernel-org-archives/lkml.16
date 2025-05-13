@@ -1,208 +1,105 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4CEDF49;
-	Tue, 13 May 2025 06:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052E9C120;
+	Tue, 13 May 2025 06:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117654; cv=none; b=AWtaNXD3FxJXGkU0Y/4DZPcvfCNn2iYWTwRAjK0DQP5/MPEtS+VVJXoGZjK/00UTd+DKCXCrTG6Gl3Q2qfHf1Ck2TGtj7hNHVM9KUaQ0Rgav4WHY+wj6SkHpukbZyZys4xnsq3G7DPgGsi3b27IeRiidVC9aT3sL9Gu2y8aKwNk=
+	t=1747117741; cv=none; b=CSNhM4ou3xGibUGthQHtBcAI4T0+G8vlmpzytvFD8zeGExxKpV2OBWBtdLgNEZ5Cbasf+HE6c4vgNKj4RnSXY9yKb8IpYdBWZhAxRCqk40fYjbNY729cT9pTI49pY2l+1XwvO+4CDaCDiG1xjitFl5/AXgtHV2o5BGXmnWhtVfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117654; c=relaxed/simple;
-	bh=NTyhw2Sxrc2FRoeNUdP0aniN1vvCdiMHWpOBLku//+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h90qj+juehtrrLnG7dWig7gXfIOKrRdAZPjK4Bo5pGJuoFAbCz7fJBX7WeTp3FYwCwp+kU22Zo4vVUmBOEy9V7RWxhTgxM/LYXGzR9dDVLDYofmRSa5Zsyv+uYzOCGP2vJ3lOpgSjtu6AYqZgYXmhh+pRzsMcVfnzM938Gmbyr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mf/B0kFF; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747117741; c=relaxed/simple;
+	bh=CS2K4IBTS8BkewmPKf8FL6tLALwgWKThVfrXRfxYC+8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MVTXPgKXzqHf1tPPZF1RAnB0YR0OBFRRldLf75hAJIQ8wH/zLDwRgHUw0lgiOH5o5eOvn4MQP7YxtFEWSHF2jKCLbWZndeqvHWWWG+KsYsMq/w68vTFT2M96CrffpssF0WnKtb+Y+7gc/XvzFZOt7SQyuL4WYZRDcqqU5jvX6mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dqm0UN82; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mf/B0kFF"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 254242117449; Mon, 12 May 2025 23:27:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 254242117449
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747117652;
-	bh=cC2JhmOqv91IV0Hp0w7gkJeK2Cjeqx/4eBqdSgpnygk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mf/B0kFF966OBH69THTGBU/0xKE+7M3ANOR9RORRp7mN2mOWK81ZiCKGtpXgR8/Fj
-	 FLvu8rqvD1Lu4ozNy60jJq3yFxP18B0XKYY97SO8GEkrzMg8dSpHYwXzmrBEezl557
-	 YhKo8GbEBgDybZikbVezJBCvNDdHwHkoNFxDbasg=
-Date: Mon, 12 May 2025 23:27:32 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	hawk@kernel.org, tglx@linutronix.de, andrew+netdev@lunn.ch,
-	kotaranov@microsoft.com, horms@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next,v3] net: mana: Add handler for hardware
- servicing events
-Message-ID: <20250513062732.GA32721@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dqm0UN82"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81838C4CEED;
+	Tue, 13 May 2025 06:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747117740;
+	bh=CS2K4IBTS8BkewmPKf8FL6tLALwgWKThVfrXRfxYC+8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Dqm0UN82QsfC4IQP/Cp66v3A1+Ww/WMaecVYDP4VjXCwpB3PAqxXIdYKQ31lj2bC6
+	 g3YdR99MU4ZMe+Tc44aqWBGRC9BD5nq3a9N5tJ1poXYgvDqUrtUkHXRAaSt4nni0UF
+	 lP6psQWqFDko3jhH8QfJBioRZdbI1rZeX+geLEH930tpEIJchSBMQmGYux68a49iea
+	 SEC63Gqe5N2+Dzw9lF5Js+VMnOciEeOUbz/N6u+wP0oApZLxr54DcLfVehzik7RaNd
+	 WfMmzJaU+9h7VzMXD/maBUJuQ8UhUlsU6JXbEDnD7OJ6xkO6sQzpCRKv+B2T4jUwyB
+	 nE/lxI14+gryA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C62AC3ABD9;
+	Tue, 13 May 2025 06:29:00 +0000 (UTC)
+From: Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org>
+Date: Tue, 13 May 2025 06:28:30 +0000
+Subject: [PATCH v3 1/3] KVM: arm64: Restrict FF-A host version
+ renegotiation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250513-virtio-msg-ffa-v3-1-d66c76ff1b2c@google.com>
+References: <20250513-virtio-msg-ffa-v3-0-d66c76ff1b2c@google.com>
+In-Reply-To: <20250513-virtio-msg-ffa-v3-0-d66c76ff1b2c@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, sebastianene@google.com, 
+ lpieralisi@kernel.org, arve@android.com, qwandor@google.com, 
+ kernel-team@android.com, armellel@google.com, perl@immunant.com, 
+ jean-philippe@linaro.org, ahomescu@google.com, tabba@google.com, 
+ qperret@google.com, james.morse@arm.com, Per Larsen <perlarsen@google.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747117739; l=1163;
+ i=perlarsen@google.com; s=20250508; h=from:subject:message-id;
+ bh=Prs9vwH1PpI7boVTkM9t7dd2Gj6IXNMISFZbJ9u0HHQ=;
+ b=iD3MoRDcl6vsNTRQcIKy81Aq/kHV0QjJvlLIp932eUrLbxYG5Q8loKlRusWWZDX7lgiC6r6kh
+ mqLFZjkse+hA86wrqJ46kG7NDve/h1wBZyoRavVqXmupHV3UmqOlBhP
+X-Developer-Key: i=perlarsen@google.com; a=ed25519;
+ pk=jjc/Ta4VmrLRmMoahP6d1mBcKzvWU+nsmdtYe2oS2kQ=
+X-Endpoint-Received: by B4 Relay for perlarsen@google.com/20250508 with
+ auth_id=402
+X-Original-From: Per Larsen <perlarsen@google.com>
+Reply-To: perlarsen@google.com
 
-On Mon, May 12, 2025 at 12:57:54PM -0700, Haiyang Zhang wrote:
-> To collaborate with hardware servicing events, upon receiving the special
-> EQE notification from the HW channel, remove the devices on this bus.
-> Then, after a waiting period based on the device specs, rescan the parent
-> bus to recover the devices.
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> v3:
-> Updated for checkpatch warnings as suggested by Simon Horman.
-> 
-> v2:
-> Added dev_dbg for service type as suggested by Shradha Gupta.
-> Added driver cap bit.
-> 
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 64 +++++++++++++++++++
->  include/net/mana/gdma.h                       | 11 +++-
->  2 files changed, 73 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..3102bd2b875b 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -352,11 +352,55 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
->  }
->  EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
->  
-> +#define MANA_SERVICE_PERIOD 10
-> +
-> +struct mana_serv_work {
-> +	struct work_struct serv_work;
-> +	struct pci_dev *pdev;
-> +};
-> +
-> +static void mana_serv_func(struct work_struct *w)
-> +{
-> +	struct mana_serv_work *mns_wk;
-> +	struct pci_bus *bus, *parent;
-> +	struct pci_dev *pdev;
-> +
-> +	mns_wk = container_of(w, struct mana_serv_work, serv_work);
-> +	pdev = mns_wk->pdev;
-> +
-> +	if (!pdev)
-> +		goto out;
-> +
-> +	bus = pdev->bus;
-> +	if (!bus) {
-> +		dev_err(&pdev->dev, "MANA service: no bus\n");
-> +		goto out;
-> +	}
-> +
-> +	parent = bus->parent;
-> +	if (!parent) {
-> +		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-> +		goto out;
-> +	}
-> +
-> +	pci_stop_and_remove_bus_device_locked(bus->self);
-> +
-> +	msleep(MANA_SERVICE_PERIOD * 1000);
-> +
-> +	pci_lock_rescan_remove();
-> +	pci_rescan_bus(parent);
-> +	pci_unlock_rescan_remove();
-> +
-> +out:
-> +	kfree(mns_wk);
-> +}
-> +
->  static void mana_gd_process_eqe(struct gdma_queue *eq)
->  {
->  	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
->  	struct gdma_context *gc = eq->gdma_dev->gdma_context;
->  	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
-> +	struct mana_serv_work *mns_wk;
->  	union gdma_eqe_info eqe_info;
->  	enum gdma_eqe_type type;
->  	struct gdma_event event;
-> @@ -400,6 +444,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
->  		eq->eq.callback(eq->eq.context, eq, &event);
->  		break;
->  
-> +	case GDMA_EQE_HWC_FPGA_RECONFIG:
-> +	case GDMA_EQE_HWC_SOCMANA_CRASH:
-> +		dev_dbg(gc->dev, "Recv MANA service type:%d\n", type);
-> +
-> +		if (gc->in_service) {
-> +			dev_info(gc->dev, "Already in service\n");
-> +			break;
-> +		}
-> +
-> +		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
-> +		if (!mns_wk)
-> +			break;
-> +
-> +		dev_info(gc->dev, "Start MANA service type:%d\n", type);
-> +		gc->in_service = true;
-> +		mns_wk->pdev = to_pci_dev(gc->dev);
-> +		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
-> +		schedule_work(&mns_wk->serv_work);
-> +		break;
-> +
->  	default:
->  		break;
->  	}
-> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-> index 228603bf03f2..d0fbc9c64cc8 100644
-> --- a/include/net/mana/gdma.h
-> +++ b/include/net/mana/gdma.h
-> @@ -58,8 +58,9 @@ enum gdma_eqe_type {
->  	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
->  	GDMA_EQE_HWC_INIT_DATA		= 130,
->  	GDMA_EQE_HWC_INIT_DONE		= 131,
-> -	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
-> +	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
->  	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
-> +	GDMA_EQE_HWC_SOCMANA_CRASH	= 135,
->  	GDMA_EQE_RNIC_QP_FATAL		= 176,
->  };
->  
-> @@ -388,6 +389,8 @@ struct gdma_context {
->  	u32			test_event_eq_id;
->  
->  	bool			is_pf;
-> +	bool			in_service;
-> +
->  	phys_addr_t		bar0_pa;
->  	void __iomem		*bar0_va;
->  	void __iomem		*shm_base;
-> @@ -558,12 +561,16 @@ enum {
->  /* Driver can handle holes (zeros) in the device list */
->  #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
->  
-> +/* Driver can self reset on EQE notification */
-> +#define GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE BIT(14)
-> +
->  #define GDMA_DRV_CAP_FLAGS1 \
->  	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
->  	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
->  	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
->  	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
-> -	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-> +	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-> +	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE)
->  
->  #define GDMA_DRV_CAP_FLAGS2 0
->  
-> -- 
-> 2.34.1
+From: Per Larsen <perlarsen@google.com>
 
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Prevent the host from re-negotiating a lesser minor version with the
+hypervisor. Once the hypervisor negotiates a version, that should
+remain locked in. Fix the current behaviour by returning NOT_SUPPORTED
+to avoid the FF-A interoperability rules with lesser minor versions that
+allow the host version to downgrade.
+
+Signed-off-by: Per Larsen <perlarsen@google.com>
+Signed-off-by: Per Larsen <perl@immunant.com>
+---
+ arch/arm64/kvm/hyp/nvhe/ffa.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+index 3369dd0c4009f84ad3cf9481c747bdc57a162370..2c199d40811efb5bfae199c4a67d8ae3d9307357 100644
+--- a/arch/arm64/kvm/hyp/nvhe/ffa.c
++++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+@@ -712,7 +712,10 @@ static void do_ffa_version(struct arm_smccc_res *res,
+ 
+ 	hyp_spin_lock(&version_lock);
+ 	if (has_version_negotiated) {
+-		res->a0 = hyp_ffa_version;
++		if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(hyp_ffa_version))
++			res->a0 = FFA_RET_NOT_SUPPORTED;
++		else
++			res->a0 = hyp_ffa_version;
+ 		goto unlock;
+ 	}
+ 
+
+-- 
+2.49.0.1045.g170613ef41-goog
+
+
