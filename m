@@ -1,66 +1,66 @@
-Received: from mail-ot1-f97.google.com (mail-ot1-f97.google.com [209.85.210.97])
+Received: from mail-il1-f225.google.com (mail-il1-f225.google.com [209.85.166.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5482116F6
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50057212FA2
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747176023; cv=none; b=nPWgtlvlfMnOwj8pi7XdtLbB4tL0f6hs/sdDnD9sGFL7T8lN92sAl3hgTX/LO4m+aRteOmqLx/L5L9BJtk4NAcZgm9KMhJUKsDhDivuEzTdGwcSKOB0oVq/M2JBn1xHI8JPFdmyywiqfmmZYuxI8oqzOMEZhBN2LS/BB3Bk0EI0=
+	t=1747176025; cv=none; b=Ti3fJ6SP5L5qdMLkPnV1O2vO72w4Ijtv3NGiCGz0sBevCmf0R23fTy9Kx3Ka7ZNqyZnSPtmCNUD2zy5ZnDXcoNQy0GZnI6t0erbKZyqOlKUDfqVz8Vifmq0lOrPclYCQKwBYytlUCa9nh6NTPsjsx9Mr8gaMEnXAs5ie2IrFgJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747176023; c=relaxed/simple;
-	bh=d6pdZYRYGRbs/WEFIyypEGtUlCAolvymMF/KwvfNyRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=Ja3OWxPChuWlkkRU/bPknh7cO1AC9fSM6RBhxC0WycaD1fshDtf6erLkKh23soVyxfBzuAb1Ob2nWlgcZwecbPjyoHf/8YMXQo65/TQCq23w9YJFXB1Uf27HKF1EndW0kdH+xLl+b8tDdiQBHSTbGXJ/9hXOzPo120loqG1oNoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Y8nLf22J; arc=none smtp.client-ip=209.85.210.97
+	s=arc-20240116; t=1747176025; c=relaxed/simple;
+	bh=N8+JaNAPUEsEhD1kcQ+A6IjxJ8jGt6gpQewAibANcq8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=QlIunl4AOv2z2nFYAj0GnXmKI91B43/KtPkSbw8jraQOTMVKSdF6ayDAjqinELg8ZRcsL3zZAUya0EsOIHMu1/MbXT6m7hb971Y6s71I5mjqA1rHK1ksJjhKHwv12TiAX0+GJhjUOEFCQ3lENHMBLekRr2haewNIT3RhTCCSv+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=bikl8v/d; arc=none smtp.client-ip=209.85.166.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Y8nLf22J"
-Received: by mail-ot1-f97.google.com with SMTP id 46e09a7af769-72c27166ab3so4418829a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:40:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="bikl8v/d"
+Received: by mail-il1-f225.google.com with SMTP id e9e14a558f8ab-3da739653b2so21396365ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:40:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747176020; x=1747780820;
+        d=1e100.net; s=20230601; t=1747176021; x=1747780821;
         h=content-transfer-encoding:references:in-reply-to:message-id:date
          :subject:cc:to:from:dkim-signature:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RSXcNK9afbZfDS02iEQ039LRO1YK/rtmQ05CWBqOFLE=;
-        b=vsPWxfN9774bUcGwth7IP+PO99mt67NisOs8rol9EiMt6wAHuZttooI+bWXMwjgbEX
-         qsuGbnIMTMCCDORce+7QhON7KsSoqLlo23gccWD5+RzHPBrwveMsMGQY0NESKUcigEJE
-         ynwoKD602gYdPfj/DvHF1n/2dlIkmfKmBL0d7KCW/nSFjYfhJvfYdHKxiPZHikia/fKY
-         DxoSUU29CpZbVkj8njvoOBbUJTZessNxztbf55SVY1GesDrlgtA3A9HyEy27dm+PNNsc
-         Ojzqw4E5QKW3z+oh+LHFKc47VypBO/qbDSV2pDAeQVTC8LM0heSsZEt2ITkY/cY5IzeV
-         CYjg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3Bp9Vi51YDTQqhQA4RbP6OF1aIMtdwGi0se9qcaerYdxWSr8Ao5QPSBMbVzE2ZZTXAZ1GGPx3ta8Qavg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS13SmRxEyGmTomksIUrUhGRtXcMDyeZYcb+ukCqGc7pjYZ5di
-	Fap3qXRIo8O7rlGmYfCMcXv0yMPDkFaJ8HLTaWMSEzcNx5fGtCmofjDzbZDKFDQ55AvJroBg5Gq
-	CDLL1BR54bSghUaWAImSwisq6BbRavA==
-X-Gm-Gg: ASbGnctfOajp9XAQEDZrjNJ3bvcK2bZQcEw/3etdNA84ju0JiwywbhAcaWVa/QCRrBd
-	9JIv+klwCiuNJyLjTQ+wF5u7mV+b0CqOz/L/AqYyRBbFSWr5Y7xe1Ze/jKntNg0R4dPAQoteqGd
-	R2/eq4ONaquiOCK/GwYU8utU0viUEznKzyL/F6CJUOXZ4GJGzpn0+yxITD7vZXHWVaHvilcJTZp
-	GtQyU4HqI6UnJI2JbuzEP060PwhqeZmJC+AqKukyb3ntqJ+bRH0fnJWT1wFz3SsQBnKhitx1XUq
-	5yR/r7yzK97rUnA5tzhvq+c=
-X-Google-Smtp-Source: AGHT+IFw4unP4TtYCivnsEjLNivZRwen5oTYduVSjB3bBq5EZtnvuAolbMdZu0cxcPIEN54gp8SoPF72SJFn
-X-Received: by 2002:a05:6830:6015:b0:72b:f997:19c4 with SMTP id 46e09a7af769-734e1579a25mr728416a34.26.1747176020382;
-        Tue, 13 May 2025 15:40:20 -0700 (PDT)
+        bh=32ZBz3FCAeqAihSO9T1d8nkx6GezZ2lSPWDyzjR2Oh4=;
+        b=UBloyTcmbynET69KsQ0oQLVNAQ196txY+FA5PrLZ91JGgNH1V+VmYLFX0firA+RIvd
+         oFrRiqCoChkX+qV6Z00qjPSYdXgDSyCfduydwuloYaXVtf+zJ7kHzN2BgLyohUi7wsOp
+         Gxabey75Me1T0McxAFooRLmUrmw2fbMSyFLoRCb+zGi0IkXDIaYiHUHmg224Yfs0Anl2
+         VR/wRmAUGychotuHh3pAereaHZ7jZzMSQ4BSN2Qo75Vwjr7jRD09me6TxBojeqXH7K9d
+         t1VeLE7/xe8dumWV/7Nq60E8euGfyMO/ZR8qFpCxfyluW9Q4ZcvN2UaQONQMh1ZC75AW
+         f8Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrnf8xXA7n09EmNiSXszf+aKcBwZ9E3VrV6O1ByrCuShgl284wkegcrwM9otI2PNea3jN/sZo6HslZq7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yykzi8UBkHAkEflEzMAaqeCztGDv7pIYS5MQISbC7z7uP6IRwL4
+	OZqPjIq5nR20Pxi8cpSBP/OHnhQ0IWjKbcUbP6ejJFJfh7sHVdsv3sqOvEHKmGmw6v1eT7SyTmj
+	VX0TjJ0SNAYPF+1pG1E3Xcc8QtayDjQ==
+X-Gm-Gg: ASbGnctJvTjkSg5xBRa2Ja0AaijrbMFunAswAw2dxhCHawSJc5+UTxt3XG29ShDIMxR
+	UzHg8PZXq+NPNDM33/UQcDh5m+qcm1VkONGuSOkAj15wGYjfDp5MaRWpfcoxeHbzEi8/xShVN5o
+	8Rv3onzM0gUHKpvhlvNDUf90Ri+/2/Gjwnjr1dGpPyxd/8cLRakgJhFWrJVVlt1NQnZzdr3+lYf
+	/avnWrO8skUY+Y4mxWJCr4SxDnk7mhdXcbbi44fgy3Y0c+e7Z2uLXyHm1rl5/fn9glF03gdDq4a
+	bumAKhJ+Bjj+ey6vOu4wq/g=
+X-Google-Smtp-Source: AGHT+IGlvTOo0NYuA6nAIG0JEAZZnvY/kK/JYrWqsh38s5L960gyueBNO+EP2KRNqda2PybMP39jIg6412nw
+X-Received: by 2002:a05:6e02:17c6:b0:3d8:8900:9a30 with SMTP id e9e14a558f8ab-3db6f806e44mr15360375ab.20.1747176021081;
+        Tue, 13 May 2025 15:40:21 -0700 (PDT)
 Received: from smtp.aristanetworks.com ([74.123.28.25])
-        by smtp-relay.gmail.com with ESMTPS id 46e09a7af769-732265b6624sm336246a34.11.2025.05.13.15.40.20
+        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4fa2262eba5sm164310173.62.2025.05.13.15.40.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 15:40:20 -0700 (PDT)
+        Tue, 13 May 2025 15:40:21 -0700 (PDT)
 X-Relaying-Domain: arista.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
 	s=Arista-A; t=1747176019;
-	bh=RSXcNK9afbZfDS02iEQ039LRO1YK/rtmQ05CWBqOFLE=;
+	bh=32ZBz3FCAeqAihSO9T1d8nkx6GezZ2lSPWDyzjR2Oh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y8nLf22JYSSZzUgIGcjeKAfu8JLFvmD7chCGdWHp0zh8t5XS8oQaRXDtROquAv3fy
-	 nnIWd8zhH22TvPkDhOeygWMant5PK+UFtDAkDEefvAaqZfi5RPmdZtR2uE1yLJGxAU
-	 dXuMVRMSPe6V1oAGCubGnm0pqVh7OGqJtd28RjUJPyPsl/CGzKqTXoOMQtg0LYhdWL
-	 N/Gw9tEZNEYcqD/MsRD1ekaVEzrskDOtKYsISiZd2Lh5Si1FS44cCBkd8b1HEmmiyU
-	 BZh2Q4v9+WjRFTLK4WgJiwu9u3NREdxMq2QzYkkIbEb5bGbHqnkLFB2Yf+U1zhm7v8
-	 OHyBW9UaiEXTg==
+	b=bikl8v/dcbkKUkRCRYvBfwVpWSxyIqr4ANUOxi0MGeijzEMXp2eX4hmzO+AK0Wuu1
+	 GCcU81rWQ+ysb0DbO9RKE0vz35NF+780inAm4E/ksI/1I56Zb5aC0V46RrBIlfZtiJ
+	 Vr9fuWPaqgRx7lXte2OMwRxAz70BWAS+ztgF8OSVmFFE21EYMtmUGdG52Xks/FfS9F
+	 3VbC2tZb+WPsf1Daa/WXTfBZ83bsvCnnJ2luAyCz/Va1BYqtaAFpo9dYPl5Ck8X2l+
+	 KCdlEwTx/d+xoqa/sqAChc+fJ5aPJXJoGR9Q1rAui7z016oRtW0cJBTDTDftQhEsUn
+	 Rvd2ioccLPBDA==
 Received: from mpazdan-home-zvfkk.localdomain (mpazdan-home-zvfkk.sjc.aristanetworks.com [10.244.171.242])
-	by smtp.aristanetworks.com (Postfix) with ESMTP id 6CC5E10023F;
+	by smtp.aristanetworks.com (Postfix) with ESMTP id 6919B10023B;
 	Tue, 13 May 2025 22:40:19 +0000 (UTC)
 Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
-	id 67FC940B24; Tue, 13 May 2025 22:40:19 +0000 (UTC)
+	id 61F8D40B22; Tue, 13 May 2025 22:40:19 +0000 (UTC)
 X-SMTP-Authentication: Allow-List-permitted
 X-SMTP-Authentication: Allow-List-permitted
 From: Marek Pazdan <mpazdan@arista.com>
@@ -85,12 +85,11 @@ Cc: aleksander.lobakin@intel.com,
 	pabeni@redhat.com,
 	przemyslaw.kitszel@intel.com,
 	willemb@google.com
-Subject: [Intel-wired-lan] [PATCH net-next v2 2/2] ice: add qsfp transceiver reset, interrupt and presence pin control
-Date: Tue, 13 May 2025 22:40:01 +0000
-Message-ID: <20250513224017.202236-2-mpazdan@arista.com>
-In-Reply-To: <20250513224017.202236-1-mpazdan@arista.com>
+Subject: [PATCH net-next v2 1/2] ethtool: qsfp transceiver reset, interrupt and presence pin control
+Date: Tue, 13 May 2025 22:40:00 +0000
+Message-ID: <20250513224017.202236-1-mpazdan@arista.com>
+In-Reply-To: <6f127b5b-77c6-4bd4-8124-8eea6a12ca61@lunn.ch>
 References: <6f127b5b-77c6-4bd4-8124-8eea6a12ca61@lunn.ch>
- <20250513224017.202236-1-mpazdan@arista.com>
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -98,240 +97,577 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Add get/set implenentation for ethtool's module management signal
-API.
-Examples:
-ethtool --get-module-mgmt-signal eth16 type reset
-reset: low
+Common Management Interface Specification defines
+Management Signaling Layer (MSL) control and status signals. This change
+provides API for following signals status reading:
+- signal allowing the host to request module reset (Reset)
+- signal allowing the host to detect module presence (Presence)
+- signal allowing the host to detect module interrupt (Int)
+Additionally API allows for Reset signal assertion with
+following constraints:
+- reset cannot be asserted if firmware update is in progress
+- if reset is asserted, firmware update cannot be started
+- if reset is asserted, power mode cannot be get/set
+In all above constraint cases -EBUSY error is returned.
 
-ethtool --get-module-mgmt-signal eth16 type int
-reset: low
-
-ethtool --get-module-mgmt-signal eth16 type present
-reset: high
-
-sudo ethtool --set-module-mgmt-signal eth16 type reset value high
-ethtool --get-module-mgmt-signal eth16 type reset
-reset: high
-
-sudo ethtool --set-module-mgmt-signal eth16 type reset value low
-ethtool --get-module-mgmt-signal eth16 type reset
-reset: low
-
-Ice driver gets link event notification when module gets restarted.
-There is 'ice_handle_link_event' which handles the notification and
-updates link status information.
+After reset, module will set all registers to default
+values. Default value for Page0 byte 93 register is 0x00 what implies that
+module power mode after reset depends on LPMode HW pin state.
+If software power mode control is required, bit 0 of Page0 byte93 needs
+to be enabled.
+Module reset assertion implies failure of every module's related
+SMBus transactions. Device driver developers should take this into
+consideration if driver provides API for querying module's related data.
+One example can be HWMON providing module temperature report.
+In such case driver should monitor module status and in time of reset
+assertion it should return HWMON report which informs that temperature
+data is not available due to module's reset state.
+The same applies to power mode set/get. Ethtool API has already
+checking for module reset state but similar checking needs to be
+implemented in the driver if it requests power mode for other
+functionality.
+Additionally module reset is link hitful operation. Link is brought down
+when reset is asserted. If device driver doesn't provide functionality
+for monitoring transceiver state, it needs to be implemented in parallel
+to get/set_module_mgmt_signal API. When module reset gets deasserted,
+transceiver process reinitialization. The end of reinitialization
+process is signalled via Page 00h Byte 6 bit 0 "Initialization complete
+flags". If there is no implementation for monitoring this bit in place,
+it needs to be added to bring up the link after transceiver
+initialization is complete.
 
 Signed-off-by: Marek Pazdan <mpazdan@arista.com>
 ---
- drivers/net/ethernet/intel/ice/ice.h         |  6 ++
- drivers/net/ethernet/intel/ice/ice_common.c  | 21 +++++
- drivers/net/ethernet/intel/ice/ice_common.h  |  1 +
- drivers/net/ethernet/intel/ice/ice_ethtool.c | 94 ++++++++++++++++++++
- drivers/net/ethernet/intel/ice/ice_main.c    |  1 +
- drivers/net/ethernet/intel/ice/ice_type.h    |  2 +-
- 6 files changed, 124 insertions(+), 1 deletion(-)
+ Documentation/netlink/specs/ethtool.yaml |  48 +++++
+ include/linux/ethtool.h                  |  29 ++-
+ include/uapi/linux/ethtool.h             |  29 +++
+ net/ethtool/module.c                     | 230 +++++++++++++++++++++--
+ net/ethtool/netlink.c                    |  20 ++
+ net/ethtool/netlink.h                    |   3 +
+ 6 files changed, 347 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
-index fd083647c14a..3b95a69140e8 100644
---- a/drivers/net/ethernet/intel/ice/ice.h
-+++ b/drivers/net/ethernet/intel/ice/ice.h
-@@ -195,6 +195,12 @@
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index c650cd3dcb80..38eebbe18f55 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -1528,6 +1528,24 @@ attribute-sets:
+         name: hwtstamp-flags
+         type: nest
+         nested-attributes: bitset
++  -
++    name: module-mgmt
++    attr-cnt-name: __ethtool-a-module-mgmt-cnt
++    attributes:
++      -
++        name: unspec
++        type: unused
++        value: 0
++      -
++        name: header
++        type: nest
++        nested-attributes: header
++      -
++        name: type
++        type: u8
++      -
++        name: value
++        type: u8
  
- #define ice_pf_src_tmr_owned(pf) ((pf)->hw.func_caps.ts_func_info.src_tmr_owned)
+ operations:
+   enum-model: directional
+@@ -2384,3 +2402,33 @@ operations:
+           attributes: *tsconfig
+         reply:
+           attributes: *tsconfig
++    -
++      name: module-mgmt-get
++      doc: Get module management signal status.
++
++      attribute-set: module-mgmt
++
++      do: &module-mgmt-get-op
++        request:
++          attributes:
++            - header
++            - type
++        reply:
++          attributes: &module-mgmt
++            - header
++            - type
++            - value
++      dump: *module-mgmt-get-op
++    -
++      name: module-mgmt-set
++      doc: Set module management signal state.
++
++      attribute-set: module-mgmt
++
++      do:
++        request:
++          attributes: *module-mgmt
++    -
++      name: module-mgmt-ntf
++      doc: Notification for change in module management signal status.
++      notify: module-mgmt-get
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 8210ece94fa6..d5dd238b4b61 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -126,6 +126,7 @@ enum ethtool_supported_ring_param {
  
-+enum ice_mgmt_pin {
-+	ICE_MGMT_PIN_RESET = 0,
-+	ICE_MGMT_PIN_INT,
-+	ICE_MGMT_PIN_PRESENT
+ struct net_device;
+ struct netlink_ext_ack;
++struct ethtool_module_mgmt_params;
+ 
+ /* Link extended state and substate. */
+ struct ethtool_link_ext_state_info {
+@@ -626,6 +627,19 @@ struct ethtool_module_power_mode_params {
+ 	enum ethtool_module_power_mode mode;
+ };
+ 
++/**
++ * struct ethtool_module_mgmt_params - module management signal parameters
++ * @type: The management signal type of the MSL (Management Signaling Layer) signal
++ *		connecting host with the plug-in module to be set or get.
++ * @value: The management signal value of the MSL signal connecting host with
++ *		the plug-in module. It is filled by user for set operation or by
++ *		the driver for get operation.
++ */
++struct ethtool_module_mgmt_params {
++	enum ethtool_module_mgmt_signal_type type;
++	enum ethtool_module_mgmt_signal_value value;
 +};
 +
- enum ice_feature {
- 	ICE_F_DSCP,
- 	ICE_F_PHY_RCLK,
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 59df31c2c83f..2d643a7cc90f 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -6096,3 +6096,24 @@ u32 ice_get_link_speed(u16 index)
+ /**
+  * struct ethtool_mm_state - 802.3 MAC merge layer state
+  * @verify_time:
+@@ -985,6 +999,11 @@ struct kernel_ethtool_ts_info {
+  *	plugged-in.
+  * @set_module_power_mode: Set the power mode policy for the plug-in module
+  *	used by the network device.
++ * @get_module_mgmt_signal: Get the MSL (Management Signaling Layer) signal
++ *	value for the plug-in module used by network device. MSL layer
++ *	description is included in CMIS Common Management Interface Specification.
++ * @set_module_mgmt_signal: Set the MSL (Management Signaling Layer) output
++ *	signal value for the plug-in module used by network device, if plugged-in.
+  * @get_mm: Query the 802.3 MAC Merge layer state.
+  * @set_mm: Set the 802.3 MAC Merge layer parameters.
+  * @get_mm_stats: Query the 802.3 MAC Merge layer statistics.
+@@ -1146,6 +1165,12 @@ struct ethtool_ops {
+ 	int	(*set_module_power_mode)(struct net_device *dev,
+ 					 const struct ethtool_module_power_mode_params *params,
+ 					 struct netlink_ext_ack *extack);
++	int	(*get_module_mgmt_signal)(struct net_device *dev,
++					  struct ethtool_module_mgmt_params *params,
++					  struct netlink_ext_ack *extack);
++	int	(*set_module_mgmt_signal)(struct net_device *dev,
++					  const struct ethtool_module_mgmt_params *params,
++					  struct netlink_ext_ack *extack);
+ 	int	(*get_mm)(struct net_device *dev, struct ethtool_mm_state *state);
+ 	int	(*set_mm)(struct net_device *dev, struct ethtool_mm_cfg *cfg,
+ 			  struct netlink_ext_ack *extack);
+@@ -1179,13 +1204,15 @@ int ethtool_virtdev_set_link_ksettings(struct net_device *dev,
+  * @rss_lock:		Protects entries in @rss_ctx.  May be taken from
+  *			within RTNL.
+  * @wol_enabled:	Wake-on-LAN is enabled
+- * @module_fw_flash_in_progress: Module firmware flashing is in progress.
++ * @module_fw_flash_in_progress:	Module firmware flashing is in progress.
++ * @module_reset_asserted:		Module reset signal is asserted.
+  */
+ struct ethtool_netdev_state {
+ 	struct xarray		rss_ctx;
+ 	struct mutex		rss_lock;
+ 	unsigned		wol_enabled:1;
+ 	unsigned		module_fw_flash_in_progress:1;
++	unsigned		module_reset_asserted:1;
+ };
  
- 	return ice_aq_to_link_speed[index];
- }
+ struct phy_device;
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 84833cca29fe..097b81334798 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -756,6 +756,35 @@ enum ethtool_module_power_mode {
+ 	ETHTOOL_MODULE_POWER_MODE_HIGH,
+ };
+ 
++/**
++ * enum ethtool_module_mgmt_signal_type - plug-in module discrete
++ *	status hardware signals for management as per CMIS spec.
++ * @ETHTOOL_MODULE_MGMT_RESET: Signal allowing the host to request
++ *	a module reset.
++ * @ETHTOOL_MODULE_MGMT_INT: Signal allowing the module to assert
++ *	an interrupt request to the host.
++ * @ETHTOOL_MODULE_MGMT_PRESENT: Signal allowing the module to signal
++ *	its presence status to the host.
++ */
++enum ethtool_module_mgmt_signal_type {
++	ETHTOOL_MODULE_MGMT_RESET = 1,
++	ETHTOOL_MODULE_MGMT_INT,
++	ETHTOOL_MODULE_MGMT_PRESENT,
++};
 +
 +/**
-+ * ice_set_has_gpios - Sets availability of SDP GPIO pins.
-+ * @hw: pointer to the HW structure
-+ *
-+ * This function sets availability of GPIO software defined pins
-+ * (SDP) which are connected to transceiver slots and are used
-+ * for transceiver control.
++ * enum ethtool_module_mgmt_signal_value - Value of plug-in module
++ *	hardware signal status for management signaling
++ *	as specified in CMIS spec.
++ * @ETHTOOL_MODULE_MGMT_SIGNAL_LOW: Signal low value.
++ * @ETHTOOL_MODULE_MGMT_SIGNAL_HIGH: Signal high value.
++ *	for reset signal when plug-in module is not inserted.
 + */
-+bool ice_set_has_gpios(struct ice_hw *hw)
-+{
-+	if (hw->vendor_id != PCI_VENDOR_ID_INTEL)
-+		return false;
++enum ethtool_module_mgmt_signal_value {
++	ETHTOOL_MODULE_MGMT_SIGNAL_LOW = 1,
++	ETHTOOL_MODULE_MGMT_SIGNAL_HIGH,
++};
 +
-+	switch (hw->device_id) {
-+	case ICE_DEV_ID_E810C_QSFP:
+ /**
+  * enum ethtool_c33_pse_ext_state - groups of PSE extended states
+  *      functions. IEEE 802.3-2022 33.2.4.4 Variables
+diff --git a/net/ethtool/module.c b/net/ethtool/module.c
+index 4d4e0a82579a..d0ae2c1e0966 100644
+--- a/net/ethtool/module.c
++++ b/net/ethtool/module.c
+@@ -23,6 +23,24 @@ struct module_reply_data {
+ #define MODULE_REPDATA(__reply_base) \
+ 	container_of(__reply_base, struct module_reply_data, base)
+ 
++static bool module_busy(const struct ethtool_netdev_state *state,
++			struct netlink_ext_ack *extack)
++{
++	if (state->module_fw_flash_in_progress) {
++		if (extack)
++			NL_SET_ERR_MSG(extack,
++				       "Module firmware flashing is in progress");
 +		return true;
-+	default:
-+		return false;
 +	}
++	if (state->module_reset_asserted) {
++		if (extack)
++			NL_SET_ERR_MSG(extack,
++				       "Module reset is in progress");
++		return true;
++	}
++	return false;
 +}
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
-index 9b00aa0ddf10..b64629b1d60d 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.h
-+++ b/drivers/net/ethernet/intel/ice/ice_common.h
-@@ -304,4 +304,5 @@ ice_aq_write_i2c(struct ice_hw *hw, struct ice_aqc_link_topo_addr topo_addr,
- int ice_get_pca9575_handle(struct ice_hw *hw, u16 *pca9575_handle);
- int ice_read_pca9575_reg(struct ice_hw *hw, u8 offset, u8 *data);
- bool ice_fw_supports_report_dflt_cfg(struct ice_hw *hw);
-+bool ice_set_has_gpios(struct ice_hw *hw);
- #endif /* _ICE_COMMON_H_ */
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index 7c2dc347e4e5..bf6a803729d4 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -3848,6 +3848,96 @@ ice_get_channels(struct net_device *dev, struct ethtool_channels *ch)
- 	ch->max_other = ch->other_count;
++
+ /* MODULE_GET */
+ 
+ const struct nla_policy ethnl_module_get_policy[ETHTOOL_A_MODULE_HEADER + 1] = {
+@@ -38,11 +56,8 @@ static int module_get_power_mode(struct net_device *dev,
+ 	if (!ops->get_module_power_mode)
+ 		return 0;
+ 
+-	if (dev->ethtool->module_fw_flash_in_progress) {
+-		NL_SET_ERR_MSG(extack,
+-			       "Module firmware flashing is in progress");
++	if (module_busy(dev->ethtool, extack))
+ 		return -EBUSY;
+-	}
+ 
+ 	return ops->get_module_power_mode(dev, &data->power, extack);
  }
+@@ -120,11 +135,8 @@ ethnl_set_module_validate(struct ethnl_req_info *req_info,
+ 	if (!tb[ETHTOOL_A_MODULE_POWER_MODE_POLICY])
+ 		return 0;
  
-+/**
-+ * ice_get_module_mgmt_signal - get module management signal status
-+ * @dev: network interface device structure
-+ * @params: ethtool module management signal params
-+ * @extack: extended ACK from the Netlink message
-+ *
-+ * Returns -EIO if AQ command for GPIO get failed, otherwise
-+ * returns 0 and current status of requested signal in params.
-+ */
-+static int
-+ice_get_module_mgmt_signal(struct net_device *dev,
-+			   struct ethtool_module_mgmt_params *params,
-+			   struct netlink_ext_ack *extack)
+-	if (req_info->dev->ethtool->module_fw_flash_in_progress) {
+-		NL_SET_ERR_MSG(info->extack,
+-			       "Module firmware flashing is in progress");
++	if (module_busy(req_info->dev->ethtool, info->extack))
+ 		return -EBUSY;
+-	}
+ 
+ 	if (!ops->get_module_power_mode || !ops->set_module_power_mode) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack,
+@@ -176,6 +188,204 @@ const struct ethnl_request_ops ethnl_module_request_ops = {
+ 	.set_ntf_cmd		= ETHTOOL_MSG_MODULE_NTF,
+ };
+ 
++/* MODULE_MGMT_GET */
++struct module_mgmt_req_data {
++	struct ethnl_req_info base;
++	struct ethtool_module_mgmt_params mgmt;
++};
++
++#define MODULE_MGMT_REQINFO(__req_base) \
++	container_of(__req_base, struct module_mgmt_req_data, base)
++
++struct module_mgmt_reply_data {
++	struct ethnl_reply_data	base;
++	struct ethtool_module_mgmt_params mgmt;
++};
++
++#define MODULE_MGMT_REPDATA(__reply_base) \
++	container_of(__reply_base, struct module_mgmt_reply_data, base)
++
++const struct nla_policy ethnl_module_mgmt_get_policy[ETHTOOL_A_MODULE_MGMT_TYPE + 1] = {
++	[ETHTOOL_A_MODULE_MGMT_HEADER] = NLA_POLICY_NESTED(ethnl_header_policy),
++	[ETHTOOL_A_MODULE_MGMT_TYPE] =
++		NLA_POLICY_RANGE(NLA_U8, ETHTOOL_MODULE_MGMT_RESET,
++				 ETHTOOL_MODULE_MGMT_PRESENT),
++};
++
++static int module_mgmt_get(struct net_device *dev,
++			   struct module_mgmt_reply_data *data,
++			   const struct genl_info *info)
 +{
-+	struct ice_netdev_priv *np = netdev_priv(dev);
-+	struct ice_pf *pf = np->vsi->back;
-+	struct ice_hw *hw = &pf->hw;
-+	u16 gpio_handle = 0; /* SOC/on-chip GPIO */
-+	bool value;
-+	int ret = 0;
++	const struct ethtool_ops *ops = dev->ethtool_ops;
++	struct netlink_ext_ack *extack = info ? info->extack : NULL;
 +
-+	if (hw->has_module_mgmt_gpio) {
-+		switch (params->type) {
-+		case ETHTOOL_MODULE_MGMT_RESET:
-+			ret = ice_aq_get_gpio(hw, gpio_handle,
-+					      ICE_MGMT_PIN_RESET, &value, NULL);
-+			break;
-+		case ETHTOOL_MODULE_MGMT_INT:
-+			ret = ice_aq_get_gpio(hw, gpio_handle,
-+					      ICE_MGMT_PIN_INT, &value, NULL);
-+			break;
-+		case ETHTOOL_MODULE_MGMT_PRESENT:
-+			ret = ice_aq_get_gpio(hw, gpio_handle,
-+					      ICE_MGMT_PIN_PRESENT, &value, NULL);
-+			break;
-+		default:
-+			dev_dbg(ice_pf_to_dev(pf), "Incorrect management signal requested: %d\n",
-+				params->type);
-+			return -EINVAL;
-+		}
-+	} else {
++	if (!ops->get_module_mgmt_signal)
 +		return -EOPNOTSUPP;
-+	}
 +
-+	if (ret == 0) {
-+		params->value = value ? ETHTOOL_MODULE_MGMT_SIGNAL_HIGH :
-+			ETHTOOL_MODULE_MGMT_SIGNAL_LOW;
-+	}
++	return ops->get_module_mgmt_signal(dev, &data->mgmt, extack);
++}
++
++static int module_mgmt_parse_request(struct ethnl_req_info *req_info, struct nlattr **tb,
++				     struct netlink_ext_ack *extack)
++{
++	struct module_mgmt_req_data *req_data = MODULE_MGMT_REQINFO(req_info);
++
++	if (!tb[ETHTOOL_A_MODULE_MGMT_TYPE])
++		return -EINVAL;
++	req_data->mgmt.type = nla_get_u8(tb[ETHTOOL_A_MODULE_MGMT_TYPE]);
++
++	return 0;
++}
++
++static int module_mgmt_prepare_data(const struct ethnl_req_info *req_base,
++				    struct ethnl_reply_data *reply_base,
++				    const struct genl_info *info)
++{
++	struct module_mgmt_reply_data *data = MODULE_MGMT_REPDATA(reply_base);
++	struct module_mgmt_req_data *req = MODULE_MGMT_REQINFO(req_base);
++	struct net_device *dev = reply_base->dev;
++	int ret;
++
++	if (!info || !info->attrs[ETHTOOL_A_MODULE_MGMT_TYPE])
++		return -EINVAL;
++	req->mgmt.type = nla_get_u8(info->attrs[ETHTOOL_A_MODULE_MGMT_TYPE]);
++	data->mgmt.type = req->mgmt.type;
++
++	ret = ethnl_ops_begin(dev);
++	if (ret < 0)
++		return ret;
++
++	ret = module_mgmt_get(dev, data, info);
++	if (ret < 0)
++		goto out_complete;
++
++out_complete:
++	ethnl_ops_complete(dev);
 +	return ret;
 +}
 +
-+/**
-+ * ice_set_module_mgmt_signal - set module management signal config
-+ * @dev: network interface device structure
-+ * @params: ethtool module management signal params
-+ * @extack: extended ACK from the Netlink message
-+ *
-+ * Returns -EIO if AQ command for GPIO set failed, otherwise
-+ * returns 0.
-+ */
-+static int
-+ice_set_module_mgmt_signal(struct net_device *dev,
-+			   const struct ethtool_module_mgmt_params *params,
-+			   struct netlink_ext_ack *extack)
++static int module_mgmt_reply_size(const struct ethnl_req_info *req_base,
++				  const struct ethnl_reply_data *reply_base)
 +{
-+	struct ice_netdev_priv *np = netdev_priv(dev);
-+	struct ice_pf *pf = np->vsi->back;
-+	struct ice_hw *hw = &pf->hw;
-+	u16 gpio_handle = 0; /* SOC/on-chip GPIO */
-+	bool value = params->value == ETHTOOL_MODULE_MGMT_SIGNAL_HIGH ? true : false;
-+	int ret = 0;
++	struct module_mgmt_reply_data *data = MODULE_MGMT_REPDATA(reply_base);
++	int len = 0;
 +
-+	if (hw->has_module_mgmt_gpio) {
-+		switch (params->type) {
-+		case ETHTOOL_MODULE_MGMT_RESET:
-+			ret = ice_aq_set_gpio(hw, gpio_handle,
-+					      ICE_MGMT_PIN_RESET, value, NULL);
-+			break;
-+		default:
-+			dev_dbg(ice_pf_to_dev(pf), "Incorrect management signal requested: %d\n",
-+				params->type);
-+			return -EINVAL;
-+		}
-+	} else {
++	if (data->mgmt.type)
++		len += nla_total_size(sizeof(u8));	/* _MODULE_MGMT_TYPE */
++
++	if (data->mgmt.value)
++		len += nla_total_size(sizeof(u8));	/* _MODULE_MGMT_VALUE */
++
++	return len;
++}
++
++static int module_mgmt_fill_reply(struct sk_buff *skb,
++				  const struct ethnl_req_info *req_base,
++				  const struct ethnl_reply_data *reply_base)
++{
++	struct module_mgmt_reply_data *data = MODULE_MGMT_REPDATA(reply_base);
++
++	if (data->mgmt.type &&
++	    nla_put_u8(skb, ETHTOOL_A_MODULE_MGMT_TYPE,
++		       data->mgmt.type))
++		return -EMSGSIZE;
++
++	if (data->mgmt.value &&
++	    nla_put_u8(skb, ETHTOOL_A_MODULE_MGMT_VALUE, data->mgmt.value))
++		return -EMSGSIZE;
++
++	if (data->mgmt.type == ETHTOOL_MODULE_MGMT_RESET) {
++		req_base->dev->ethtool->module_reset_asserted =
++			(data->mgmt.value == ETHTOOL_MODULE_MGMT_SIGNAL_HIGH) ? 1 : 0;
++	}
++
++	return 0;
++}
++
++/* MODULE_MGMT_SET */
++const struct nla_policy ethnl_module_mgmt_set_policy[ETHTOOL_A_MODULE_MGMT_VALUE + 1] = {
++	[ETHTOOL_A_MODULE_MGMT_HEADER] = NLA_POLICY_NESTED(ethnl_header_policy),
++	[ETHTOOL_A_MODULE_MGMT_TYPE] =
++		NLA_POLICY_RANGE(NLA_U8, ETHTOOL_MODULE_MGMT_RESET,
++				 ETHTOOL_MODULE_MGMT_PRESENT),
++	[ETHTOOL_A_MODULE_MGMT_VALUE] =
++		NLA_POLICY_RANGE(NLA_U8, ETHTOOL_MODULE_MGMT_SIGNAL_LOW,
++				 ETHTOOL_MODULE_MGMT_SIGNAL_HIGH),
++};
++
++static int
++ethnl_module_mgmt_validate(struct ethnl_req_info *req_info,
++			   struct genl_info *info)
++{
++	const struct ethtool_ops *ops = req_info->dev->ethtool_ops;
++	struct netlink_ext_ack *extack = info ? info->extack : NULL;
++	struct nlattr **tb = info->attrs;
++
++	if (!tb[ETHTOOL_A_MODULE_MGMT_TYPE] || !tb[ETHTOOL_A_MODULE_MGMT_VALUE])
++		return 0;
++
++	if (req_info->dev->ethtool->module_fw_flash_in_progress) {
++		if (extack)
++			NL_SET_ERR_MSG(extack, "Module firmware flashing is in progress");
++		return -EBUSY;
++	}
++
++	if (!ops->get_module_mgmt_signal || !ops->set_module_mgmt_signal) {
++		if (extack)
++			NL_SET_ERR_MSG_ATTR(extack,
++					    tb[ETHTOOL_A_MODULE_MGMT_TYPE],
++					    "Setting module management signal is not supported by this device");
 +		return -EOPNOTSUPP;
 +	}
 +
-+	return ret;
++	return 1;
 +}
 +
- /**
-  * ice_get_valid_rss_size - return valid number of RSS queues
-  * @hw: pointer to the HW structure
-@@ -4815,6 +4905,8 @@ static const struct ethtool_ops ice_ethtool_ops = {
- 	.set_fecparam		= ice_set_fecparam,
- 	.get_module_info	= ice_get_module_info,
- 	.get_module_eeprom	= ice_get_module_eeprom,
-+	.get_module_mgmt_signal	= ice_get_module_mgmt_signal,
-+	.set_module_mgmt_signal = ice_set_module_mgmt_signal,
++static int
++ethnl_module_mgmt_set(struct ethnl_req_info *req_info, struct genl_info *info)
++{
++	struct netlink_ext_ack *extack = info ? info->extack : NULL;
++	struct ethtool_module_mgmt_params mgmt = {};
++	struct ethtool_module_mgmt_params mgmt_new;
++	const struct ethtool_ops *ops;
++	struct net_device *dev = req_info->dev;
++	struct nlattr **tb = info->attrs;
++	int ret;
++
++	ops = dev->ethtool_ops;
++
++	mgmt_new.type = nla_get_u8(tb[ETHTOOL_A_MODULE_MGMT_TYPE]);
++	mgmt.type = mgmt_new.type;
++	mgmt_new.value = nla_get_u8(tb[ETHTOOL_A_MODULE_MGMT_VALUE]);
++	ret = ops->get_module_mgmt_signal(dev, &mgmt, extack);
++	if (ret < 0)
++		return ret;
++
++	if (mgmt.value == mgmt_new.value)
++		return 0;
++
++	ret = ops->set_module_mgmt_signal(dev, &mgmt_new, extack);
++
++	return ret < 0 ? ret : 1;
++}
++
++const struct ethnl_request_ops ethnl_module_mgmt_request_ops = {
++	.request_cmd		= ETHTOOL_MSG_MODULE_MGMT_GET,
++	.reply_cmd		= ETHTOOL_MSG_MODULE_MGMT_GET_REPLY,
++	.hdr_attr		= ETHTOOL_A_MODULE_MGMT_HEADER,
++	.req_info_size		= sizeof(struct module_mgmt_req_data),
++	.reply_data_size	= sizeof(struct module_mgmt_reply_data),
++
++	.parse_request		= module_mgmt_parse_request,
++	.prepare_data		= module_mgmt_prepare_data,
++	.reply_size		= module_mgmt_reply_size,
++	.fill_reply		= module_mgmt_fill_reply,
++
++	.set_validate		= ethnl_module_mgmt_validate,
++	.set			= ethnl_module_mgmt_set,
++	.set_ntf_cmd		= ETHTOOL_MSG_MODULE_MGMT_NTF,
++};
++
+ /* MODULE_FW_FLASH_ACT */
+ 
+ const struct nla_policy
+@@ -386,10 +596,8 @@ static int ethnl_module_fw_flash_validate(struct net_device *dev,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	if (dev->ethtool->module_fw_flash_in_progress) {
+-		NL_SET_ERR_MSG(extack, "Module firmware flashing already in progress");
++	if (module_busy(dev->ethtool, extack))
+ 		return -EBUSY;
+-	}
+ 
+ 	if (dev->flags & IFF_UP) {
+ 		NL_SET_ERR_MSG(extack, "Netdevice is up, so flashing is not permitted");
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 977beeaaa2f9..10dc56830943 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -400,6 +400,8 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
+ 	[ETHTOOL_MSG_MM_SET]		= &ethnl_mm_request_ops,
+ 	[ETHTOOL_MSG_TSCONFIG_GET]	= &ethnl_tsconfig_request_ops,
+ 	[ETHTOOL_MSG_TSCONFIG_SET]	= &ethnl_tsconfig_request_ops,
++	[ETHTOOL_MSG_MODULE_MGMT_GET]	= &ethnl_module_mgmt_request_ops,
++	[ETHTOOL_MSG_MODULE_MGMT_SET]	= &ethnl_module_mgmt_request_ops,
  };
  
- static const struct ethtool_ops ice_ethtool_safe_mode_ops = {
-@@ -4837,6 +4929,8 @@ static const struct ethtool_ops ice_ethtool_safe_mode_ops = {
- 	.set_ringparam		= ice_set_ringparam,
- 	.nway_reset		= ice_nway_reset,
- 	.get_channels		= ice_get_channels,
-+	.get_module_mgmt_signal	= ice_get_module_mgmt_signal,
-+	.set_module_mgmt_signal = ice_set_module_mgmt_signal,
+ static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
+@@ -755,6 +757,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
+ 	[ETHTOOL_MSG_MODULE_NTF]	= &ethnl_module_request_ops,
+ 	[ETHTOOL_MSG_PLCA_NTF]		= &ethnl_plca_cfg_request_ops,
+ 	[ETHTOOL_MSG_MM_NTF]		= &ethnl_mm_request_ops,
++	[ETHTOOL_MSG_MODULE_MGMT_NTF]	= &ethnl_module_mgmt_request_ops,
  };
  
- /**
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index d390157b59fe..02b9809561e1 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -5294,6 +5294,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	hw->port_info = NULL;
- 	hw->vendor_id = pdev->vendor;
- 	hw->device_id = pdev->device;
-+	hw->has_module_mgmt_gpio = ice_set_has_gpios(hw);
- 	pci_read_config_byte(pdev, PCI_REVISION_ID, &hw->revision_id);
- 	hw->subsystem_vendor_id = pdev->subsystem_vendor;
- 	hw->subsystem_device_id = pdev->subsystem_device;
-diff --git a/drivers/net/ethernet/intel/ice/ice_type.h b/drivers/net/ethernet/intel/ice/ice_type.h
-index 0aab21113cc4..e88075ae4c8a 100644
---- a/drivers/net/ethernet/intel/ice/ice_type.h
-+++ b/drivers/net/ethernet/intel/ice/ice_type.h
-@@ -895,7 +895,7 @@ struct ice_hw {
- 	u32 psm_clk_freq;
- 	u64 debug_mask;		/* bitmap for debug mask */
- 	enum ice_mac_type mac_type;
--
-+	bool has_module_mgmt_gpio;	/* has GPIO for module management */
- 	u16 fd_ctr_base;	/* FD counter base index */
+ /* default notification handler */
+@@ -856,6 +859,7 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
+ 	[ETHTOOL_MSG_MODULE_NTF]	= ethnl_default_notify,
+ 	[ETHTOOL_MSG_PLCA_NTF]		= ethnl_default_notify,
+ 	[ETHTOOL_MSG_MM_NTF]		= ethnl_default_notify,
++	[ETHTOOL_MSG_MODULE_MGMT_NTF]	= ethnl_default_notify,
+ };
  
- 	/* pci info */
+ void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
+@@ -1294,6 +1298,22 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.policy = ethnl_tsconfig_set_policy,
+ 		.maxattr = ARRAY_SIZE(ethnl_tsconfig_set_policy) - 1,
+ 	},
++	{
++		.cmd	= ETHTOOL_MSG_MODULE_MGMT_GET,
++		.doit	= ethnl_default_doit,
++		.start	= ethnl_default_start,
++		.dumpit	= ethnl_default_dumpit,
++		.done	= ethnl_default_done,
++		.policy = ethnl_module_mgmt_get_policy,
++		.maxattr = ARRAY_SIZE(ethnl_module_mgmt_get_policy) - 1,
++	},
++	{
++		.cmd	= ETHTOOL_MSG_MODULE_MGMT_SET,
++		.flags	= GENL_UNS_ADMIN_PERM,
++		.doit	= ethnl_default_set_doit,
++		.policy = ethnl_module_mgmt_set_policy,
++		.maxattr = ARRAY_SIZE(ethnl_module_mgmt_set_policy) - 1,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index ec6ab5443a6f..e200f8193328 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -437,6 +437,7 @@ extern const struct ethnl_request_ops ethnl_plca_status_request_ops;
+ extern const struct ethnl_request_ops ethnl_mm_request_ops;
+ extern const struct ethnl_request_ops ethnl_phy_request_ops;
+ extern const struct ethnl_request_ops ethnl_tsconfig_request_ops;
++extern const struct ethnl_request_ops ethnl_module_mgmt_request_ops;
+ 
+ extern const struct nla_policy ethnl_header_policy[ETHTOOL_A_HEADER_FLAGS + 1];
+ extern const struct nla_policy ethnl_header_policy_stats[ETHTOOL_A_HEADER_FLAGS + 1];
+@@ -489,6 +490,8 @@ extern const struct nla_policy ethnl_module_fw_flash_act_policy[ETHTOOL_A_MODULE
+ extern const struct nla_policy ethnl_phy_get_policy[ETHTOOL_A_PHY_HEADER + 1];
+ extern const struct nla_policy ethnl_tsconfig_get_policy[ETHTOOL_A_TSCONFIG_HEADER + 1];
+ extern const struct nla_policy ethnl_tsconfig_set_policy[ETHTOOL_A_TSCONFIG_MAX + 1];
++extern const struct nla_policy ethnl_module_mgmt_get_policy[ETHTOOL_A_MODULE_MGMT_TYPE + 1];
++extern const struct nla_policy ethnl_module_mgmt_set_policy[ETHTOOL_A_MODULE_MGMT_VALUE + 1];
+ 
+ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info);
 -- 
 2.45.2
 
