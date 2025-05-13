@@ -1,224 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222CB2BEC2F
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7D12BEC3E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747159764; cv=none; b=NPC8VjRzhmVUbj6m2GxTujxcd+RfQNs9cbPtosOOwup7QCsmUrQIQn8Vm879uK0CbJ+yVdWJU5sBkAT6W3Y6nZxSBTjXtbY/S6adFS++6bZ+zmBBB+HG5/Tdls8YEbkRUb9FpATGaK4yPmawhBwJ/YDPhqInYRImJy2a5T7OlP8=
+	t=1747159781; cv=none; b=VJuM1w6IBotnejKdx19eYcvfL81vlxK/39WAy0BKvBA0kNU+THTAVYrJkHFK75dBN/O65MuOp+QNSE8mBG8mtO8fGxTOm7d+H51zf48mk65APQO2qVBp3/zf2433iYbMm+j/WoG9xvIEkZgKbnK6y1bzJqOJ7MceqUetyoHPvlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747159764; c=relaxed/simple;
-	bh=y6FyTOrryxqsZyhvx5jnt21SOMn4MMX/6nM16WUR55A=;
+	s=arc-20240116; t=1747159781; c=relaxed/simple;
+	bh=uiNLVpjjVEPJ514Y0QpySaJKz1m3PBF6s0hrPIFPLHk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uR1EALBhf2d+tFoZNAVYLd+qLmiw3r+QpO7OWls+Nl847lQYO2+7Dh6adfTkC9twCHSoNuKzMBlrdrD0tfeThfNy8kW+Kg/lUuM3m0MdKI6gQUkKi8aOENQpf0kQ5+0cLKr6DtQ6DpnHAFyRsCgfRQjKJRo1ydmT/cnD8c8HWpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oh0XpH36; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hyqlLDJkFIXUfN5Lnx60n+1mo3nBCzMqOpLcrZccwf3DEKICmjMLhnlq+d3uSnWejhSrnM37jnTcur4LrfelbkOpGdZykrt9rwBMJBcIzGtbk5jngD8e1m+qSE+gwZzwy6KGNOJ6X14B+PQ2ZUgXBkk4f6oplQYOV9RM8CeHZOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NK5qxc+N; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oh0XpH36"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747159760;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NK5qxc+N"
+Date: Tue, 13 May 2025 11:09:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747159777;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YNMocb49YwKkQlzCF1mYy+YEqKi321BJUdcZHDQPRzI=;
-	b=Oh0XpH36KYpKcd7NYCcYDrRFoOAeKw5Uw8AFNqhw0Z4hogtMZuKrItPmopdFMr523DVgz7
-	riOVZU5YX3U1AJqBul5Q4nyUkuvs/Jz13pHW8YKRw1NysjMyUkUQHTLii197wmyQqOfWrc
-	OIxgwSMms3gDFcxYXgY0Kj+PF215Kfc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-1QA8j8jPNqSUrBMM73mDuA-1; Tue,
- 13 May 2025 14:09:17 -0400
-X-MC-Unique: 1QA8j8jPNqSUrBMM73mDuA-1
-X-Mimecast-MFC-AGG-ID: 1QA8j8jPNqSUrBMM73mDuA_1747159756
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67A77195DE38;
-	Tue, 13 May 2025 18:09:16 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CDF2130001A1;
-	Tue, 13 May 2025 18:09:15 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 54DI9Eo83648763
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 14:09:14 -0400
-Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 54DI9DeZ3648762;
-	Tue, 13 May 2025 14:09:13 -0400
-Date: Tue, 13 May 2025 14:09:13 -0400
-From: Benjamin Marzinski <bmarzins@redhat.com>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
-        dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
-        snitzer@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCOKyZU5T8HxGzM_@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
+	bh=Vv+FYo0F71tS4hoW14bBVNzWUW6bVJMvqDmpJmWU8uw=;
+	b=NK5qxc+N9KbpV7A9sskYymD/Y/qFYeyIOYkIqp8eVhxVMCF9CP++QsCUmcFROxS9kCjx4y
+	peu0FilNvu3/3rvrw2CaQ/hX/vq5L3hC191u+jSXPgAFJiYaz0WCeS/mzfI6yHxRTd59mS
+	idEKvwVvwgQuqhmEw5NNq35UhpGTmYk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [RFC PATCH 1/7] memcg: memcg_rstat_updated re-entrant safe
+ against irqs
+Message-ID: <besg7pkhxa35fskaqcte2cplnkvr4nfpfivp6emc37ghkmdlmt@sdmuejz5u63d>
+References: <20250513031316.2147548-1-shakeel.butt@linux.dev>
+ <20250513031316.2147548-2-shakeel.butt@linux.dev>
+ <fbcc9892-838c-4156-8ece-94793c00a1c6@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <fbcc9892-838c-4156-8ece-94793c00a1c6@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 08:30:55AM +0200, Hannes Reinecke wrote:
-> On 5/12/25 17:18, Kevin Wolf wrote:
-> > Am 08.05.2025 um 15:51 hat Martin Wilck geschrieben:
-> > > Hello Kevin,
-> > > 
-> > > [I'm sorry for the previous email. It seems that I clicked "send" in
-> > > the wrong window].
-> > > 
-> > > On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
-> > > > Multipath cannot directly provide failover for ioctls in the kernel
-> > > > because it doesn't know what each ioctl means and which result could
-> > > > indicate a path error. Userspace generally knows what the ioctl it
-> > > > issued means and if it might be a path error, but neither does it
-> > > > know
-> > > > which path the ioctl took nor does it necessarily have the privileges
-> > > > to
-> > > > fail a path using the control device.
-> > > 
-> > > Thanks for this effort.
-> > > 
-> > > I have some remarks about your approach. The most important one is that
-> > > the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
-> > > It sends IO to possibly broken paths and waits for it to complete. In
-> > > the common error case of a device not responding, this might cause the
-> > > code to hang for a long time in the kernel ioctl code path, in
-> > > uninterruptible sleep (note that these probing commands will be queued
-> > > after other possibly hanging IO). In the past we have put a lot of
-> > > effort into other code paths in multipath-tools and elsewhere to avoid
-> > > this kind of hang to the extent possible. It seems to me that your set
-> > > re-introduces this risk.
+On Tue, May 13, 2025 at 12:22:28PM +0200, Vlastimil Babka wrote:
+> On 5/13/25 05:13, Shakeel Butt wrote:
+> > The function memcg_rstat_updated() is used to track the memcg stats
+> > updates for optimizing the flushes. At the moment, it is not re-entrant
+> > safe and the callers disabled irqs before calling. However to achieve
+> > the goal of updating memcg stats without irqs, memcg_rstat_updated()
+> > needs to be re-entrant safe against irqs.
 > > 
-> > That's a fair point. I don't expect this code to be fully final, another
-> > thing that isn't really optimal (as mentioned in the comment message) is
-> > that we're not probing paths in parallel, potentially adding up timeouts
-> > from multiple paths.
+> > This patch makes memcg_rstat_updated() re-entrant safe against irqs.
+> > However it is using atomic_* ops which on x86, adds lock prefix to the
+> > instructions. Since this is per-cpu data, the this_cpu_* ops are
+> > preferred. However the percpu pointer is stored in struct mem_cgroup and
+> > doing the upward traversal through struct mem_cgroup may cause two cache
+> > misses as compared to traversing through struct memcg_vmstats_percpu
+> > pointer.
 > > 
-> > I don't think this is a problem of the interface, though, but we can
-> > improve the implementation keeping the same interface.
-> > 
-> > Maybe I'm missing something, but I think the reason why it has to be
-> > uninterruptible is just that submit_bio_wait() has the completion on the
-> > stack? So I suppose we could just kmalloc() some state, submit all the
-> > bios, let the completion callback free it, and then we can just stop
-> > waiting early (i.e. wait_for_completion_interruptible/killable) and let
-> > the requests complete on their own in the background.
-> > 
-> > Would this address your concerns or is there another part to it?
-> > 
-> Not really. There are two issues which ultimately made us move away
-> from read I/O as path checkers:
+> > NOTE: explore if there is atomic_* ops alternative without lock prefix.
 > 
-> - Spurious timeouts due to blocked or congested submission
-> - Error handling delays and stalls
+> local_t might be what you want here
+> https://docs.kernel.org/core-api/local_ops.html
 > 
-> When using normal read/write functions for path checking you are
-> subjected to normal I/O processing rules, ie I/O is inserted
-> at the end of the submission queue. If the system is busy the
-> path checker will time out prematurely without ever having reached
-> the target. One could avoid that by extending the timeout, but that
-> would make the path checker unreliable.
-
-I get your complaint in general, but this interface is just giving users
-the ability to probe the active pathgroup by sending normal IOs to its
-paths.  Presumably, they won't use it if they are already sending normal
-IOs to the multipath device, since this is just duplicating the effect
-of those IOs. 
- 
-> But the real issue is error handling. Path checker are precisely there
-> to check if the path is healthy, and as such _will_ be subjected
-> to error handling (or might even trigger error handling itself).
-> The thing about error handling is that you can only return affected
-> commands once error handling is complete, as only then you can be
-> sure that no DMA is pending on the buffers and one can free/re-use
-> the associated pages.
-> On SCSI error handling can be an _extremely_ lengthy affair
-> (we had reports for over one hour), and the last thing you want is
-> to delay your path checker for that time.
-
-I can send a patch that will keep probe_active_paths() from holding the
-work_mutex. This means that probe_active_paths() won't delay
-multipath_message(), so the path checkers will not be effected by this.
-
-> (And besides, I didn't even mention the third problem with I/O-based
-> path checkers, namely that the check entirely the wrong thing; we
-> are not interested whether we can do I/O, we are interested in whether
-> we can send commands. In the light of eg ALUA these are two very
-> different things.)
-
-I actually disagree with this. There are issues with IO based checkers,
-but in general, what we care about is paths being able to do IO, not
-sending commands. All the improvements on the directio checker were made
-because we still need it. For instance, some SCSI devices will claim
-they are usable when you run a SCSI Test Unit Ready command, but they
-aren't able to actually handle IO. These paths will have their state
-ping-pong back and forth as multipathd restores them and the kernel uses
-them and immeditately fails them again. The solution is often to switch
-multipathd to the directio checker, since it verifies that the path can
-actually handle IO. It's problematic when dealing with paths that need
-to be initialized before accepting IO, but that's why this patch only
-checks the paths in the active pathgroup. 
- 
-> > > Apart from that, minor observations are that in patch 2/2 you don't
-> > > check whether the map is in queueing state, and I don't quite
-> > > understand why you only check paths in the map's active path group
-> > > without attempting a PG failover in the case where all paths in the
-> > > current PG fail.
-> > 
-> > Ben already fixed up the missing check.
-> > 
-> > Not attempting PG failover was also his suggestion, on the basis that it
-> > would be additional work for no real benefit when you can only submit
-> > requests for the current PG anyway. If userspace retries the SG_IO, it
-> > will already pick a different PG, so having the kernel do the same
-> > doesn't really improve anything.
-> > 
-> Precisely.
+> Or maybe just add __percpu to parent like this?
 > 
-> I think the best way forward here is to have a 'post_ioctl' handler
-> (much like we have a pre_ioctl handler nowadays).
-> This would check the return code from the ioctl, and invalidate the
-> current path if there was an I/O error.
-> That way the user can resubmit the ioctl, until all paths are exhausted.
-> For that to work we need to agree on two error codes, one for
-> 'path failed, retry' and one for 'path failed, no retry possible'.
-> Resetting path status will be delegated to multipathd, but then that's
-> its main task anyway.
-
-Isn't this basically the idea that Martin had, here:
-https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
-
-If this was acceptable, I would be all for it. But we often can't even
-tell if an SG_IO has failed without decoding the scsi status/sense data,
-and that got shot down when Martin posted patches to do it. Thus, we
-have a general solution that has nothing to do with SG_IO ioctls and
-will work for any type of path device, any time a user wants to verify
-the state of the active paths.
-
--Ben
-
-> Cheers,
+> struct memcg_vmstats_percpu {
+> ...
+>         struct memcg_vmstats_percpu __percpu *parent;
+> ...
+> }
 > 
-> Hannes
-> -- 
-> Dr. Hannes Reinecke                  Kernel Storage Architect
-> hare@suse.de                                +49 911 74053 688
-> SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-> HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+> Yes, it means on each cpu's struct memcg_vmstats_percpu instance there will
+> be actually the same value stored (the percpu offset) instead of the
+> cpu-specific parent pointer, which might seem wasteful. But AFAIK this_cpu_*
+> is optimized enough thanks to the segment register usage, that it doesn't
+> matter? It shouldn't cause any extra cache miss you worry about, IIUC?
+> 
+> With that I think you could refactor that code to use e.g.
+> this_cpu_add_return() and this_cpu_xchg() on the stats_updates and obtain
+> the parent "pointer" in a way that's also compatible with these operations.
+> 
 
+Thanks, I will try both of these and see which one looks better.
+
+> That is unless we want also nmi safety, then we're back to the issue of the
+> previous series...
+
+Nah just irq safety for now and thanks a lot of quick feedback and
+review.
