@@ -1,184 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E08249620
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5177DA95;
+	Tue, 13 May 2025 18:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162308; cv=none; b=lBgSQMwX8/WNOzxFSElCK/R5Em52p/Y3gKtcbb2sQwhoC8f+S73hJjh50ZnjM5vsbBCSIp6O1cExAPAn0wq/3iIMfLU51lUg4/10+Rr1FomlEb3pDK/68aDQobo5yZY8E18Ehn4GtX7AX8WuKrXhZME7ES1q+K8Kiy1zsRfILAo=
+	t=1747162354; cv=none; b=mQbhU/SEeptKVUbnoblw07ITuBUVYcL40Nl33HTt6FFyqPK4YqVw97ZjsdbS997kD3KxmE9EuI2Wk7XYShgBJfLYF2UY+1F7nC0auqDnqg8uwUPfpesYWrfzGyurXniileX73wMpbKrvKECtds9zr0KnslZFqe2OBRtfaQ0/PQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162308; c=relaxed/simple;
-	bh=8aF340dgmVwMplRdL4mqUGNXBthPtGz9cX7S0m3V9yY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lgTG0WamAcUVslFpi91jYFpIzJiR5Czt2R2I1NKZnlGOgxUNIqfXsrfRUwBMwe3zwZR0NRTjXxWFNqOj7zBZK9ud9KeN/g0xrWdnaxP0qNDZW9bmjfZrL0+3gaLvw8AJVJjVWSiQO8XnQ4KzftqWhBHRD/UBWp7YIHpmH9o0OPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GXbIUyHY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747162354; c=relaxed/simple;
+	bh=YLqKvbJCg1Us+vo5VKDiuGKuk0BCiR8J2Bb1OtlOiCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=shq+DQBSYsgO0uKg7ZeBIkh4mjclz1acOySagYXFcwgZF2z0CntvZjCSBd318W+BKdHzyLo44GLZmNwH9elUUdGkKgTD8Q/yaJU0rjJ3x1C0h3FaeED+YeZv9SIJTXrBhofHxM6xVBvPkWpJOvZdx376JzO48AkRrDZCMlfRFps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RFK9lrXn; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GXbIUyHY"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIWMjj032632
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=spJV8R8Bs+sSlbQ8ehRNXH
-	ZILSzp5Uy8JZHgSPrWiv8=; b=GXbIUyHYlAsbf6jVpJqiOe6Phh4ElBlYzJLAwq
-	ysariO3UGI6TChpuL6dGHd++bOyYxfaIDetkA7KlbAYwAkQFKzCsRi6QHiH3zfcS
-	vZUfyfBtQBh4pPi8u4Lq93XVBxNmJKaZ9Ce+AKV4QaLhpjVTeTNBRNs5j05AKuAj
-	XhPjsWGYFg89nZI/ajBQ41GwG2T2zjBnNJMYkVJGtsdNMR/rbYlAcMfN4Il0mv2I
-	tgRKGnfFR/H8EiVNUqDtdG2Bj/W/iu8jk52iP+PluDCr6npI5Zr88aBFStTwzzjk
-	h4qbPqZs/NO+Ny7ENpqWesvMCLfnC1H+6FrIASPs3JricA8w==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnr2mt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:51:46 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b94827so971501785a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 11:51:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFK9lrXn"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47691d82bfbso108794241cf.0;
+        Tue, 13 May 2025 11:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747162352; x=1747767152; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3nMKYT0ZC7ThA5iDPskxAlh1th6SMKR9W7nbl70Hakc=;
+        b=RFK9lrXnNU0DUbbuDm5peb1pb8nOt7/lEtsFsrTMU5lUMqdbGLsdgYHDVK0feto/Cl
+         aINjMceOUjcgNWnCwr5dx/zjKWbr7PRfqm3sYDeY+d9iIgZzH2Dvagu8pYJ94bREUNXP
+         itY9Ztedn8+TEZ+fbHd+TisGsDfOUDcFZYUttxM7BvKan2s5AomrwGYxQx/p9a0UsHeL
+         jjoJ6ULkUGgRm/4iWwCUWU0k/DT+Ve0cg1aeicb9EdRZKazK/g/sj7sPw7SAhFATlpq3
+         0TLMz3jyTKs2nr5ERxYaj+Rs011HMVf9scWfM7ZSxy7IVvaZ7B7hQDbe06pNOZqcWGEG
+         wLPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747162305; x=1747767105;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=spJV8R8Bs+sSlbQ8ehRNXHZILSzp5Uy8JZHgSPrWiv8=;
-        b=JEl5pXcXKAK/R4Am8xXUaglMo4lZ3eHNkw8UvOM97WQ7tzyXYFhBV1U3AJEkHHZCeX
-         Gfmm5+WjKK2jXgGj4yHTi7+Ohd77BafutwdiIKQuWTiqyz1Fb5WFJW9A+VKCuCgHYiqo
-         J9pbCzip37pWDA4HLWULmOjXQoQJMtP5amGS5Ye/eiK1GfNS071RCdXtuY244HWsKPFl
-         5L1W5xoGo/3uCBIH6s0xIu5y7zlF6218jLHmqI34hIkwSxIdxsanjIj5L521voTAsObD
-         IcyEdXraDLNJ4Q8yZh/O8KdRa0wFNUjoWkqsMwTYGxpUTqFjjuPMO2g0ZHDBluWXZC6m
-         o7tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnmx7dg89UZ0VHhwP3viaNoaYUGVzbNuoWDe+uqFs+9QreOXULIALegxrC1Wpvz6KAZMlRptUcveH7vJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL83ka03BFyZByuIp/0vVTVLZ+x958JDmltMORqdYhQlV7oLIL
-	GPtpqfgxj0Ux6p9paL2U2h+9Uf8ZvanbDRsk57t5u5mP4Qx82nO37RZDrTbJfd2vzyy7oyVf9AH
-	J1QH+XwX0fSvUEwCOUxoPH5R8sDFSB6kC2PFz3XJ5DGGzYYzLhiBQ8UlqtkQvBNk=
-X-Gm-Gg: ASbGncsWMb78BG6xtcl1AyPmsmCdqRr6CvGq5WINlQTHcvFOLq6IclAMfjzqc1tpBnX
-	gytZPUaoR92Q7donK97VHH7VxM8/E/zr2YErAockPACOsuNnmfLRQ5fTT6bhDRbK90hSkhoZkI1
-	29IDRWapvu8m2eU2qQbLWgatFc4YOUSkMZMMWS/YSByElcKxG7OM/q2d/ZYpWPKH4o2Z3W/ODK1
-	pZ+AzNTVlbIlXCS52BccfAKXLYbX8lSpJE+9cioB1ddITiaE2mcpG0kirCzvlfRGt4EH8gnfeKK
-	oFE8KFJ81r2hNf/LrrNKWG/+lcUmOBZlvBshcPLr5Y9yELRu7mpjTYNOMCebyukD8ofUVatZj5t
-	f0z1PC/fZu3+xD0g23Tc5BPzO
-X-Received: by 2002:a05:620a:4551:b0:7c5:3b3b:c9da with SMTP id af79cd13be357-7cd28847654mr136577985a.40.1747162305184;
-        Tue, 13 May 2025 11:51:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKPB9Lqd5DHIDqIUSv2k1KGjQ6LFo1CTuDOZKsPaobR2sbUqTntY/YEFbpxxNxBcCiVDzTVw==
-X-Received: by 2002:a05:620a:4551:b0:7c5:3b3b:c9da with SMTP id af79cd13be357-7cd28847654mr136573085a.40.1747162304785;
-        Tue, 13 May 2025 11:51:44 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64bf86fsm1958205e87.178.2025.05.13.11.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 11:51:43 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Tue, 13 May 2025 21:51:41 +0300
-Subject: [PATCH] drm/ci: disable sdm845 devices
+        d=1e100.net; s=20230601; t=1747162352; x=1747767152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3nMKYT0ZC7ThA5iDPskxAlh1th6SMKR9W7nbl70Hakc=;
+        b=OO+t5zOeZMASkXAkLiqHHd7fQ1T3jbUMo/msPWgIONn6grYrL2KlYebMxbWgRJorY4
+         0wShm6aL8KHIYUHVgkiJeWDnoxr/gCQQGAOMF7F9aEpx9SHyLgx6G+I/ZK/Q8voonWBw
+         rEpd6Kypmw9GPuDCFHcQNwf0DmoaQVIqkReVV1quV+/EAMYN8BkJuphecCYP9LiRJC2D
+         DmcJSVGObF1bL36zJEb+zr1AMSB0gC6+sbqW8c3T18x158KjvWT0H0rd3LEEgUfbd1Bv
+         O56xxsL13Io0WFMPGhg2to18fMrGZPORVkx3RvMTGf5+V7s+KQPenhx0FVIf/+ZNNuNg
+         0O5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXHeoGpnpm4W3HHuVcU1pOxkXZYzwNBIQNuhKn5cQV9Fyzc8ZD/jg/+DcyISRXYOV6YiDOmFK04VsMHd1pc@vger.kernel.org, AJvYcCXoyG8MY3SGHmSXgjQ0vC+jIXXv1Xvqhnj9jUl0VnLgFQwPGykuzR6VirJVCfdbBh59thkMjX7X8y9yPFST@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTZAME3OCJwU3ChdoJ9dRI009i49nYKce+3o5OTtBOAf/Cpjyk
+	0Z63N3pAjn9t1lOWJfA6qyC9UjrtoMjTcT8r/G5zK2XFiGVs9bAVPqPaKpt+KeUCFsdyKulIe7s
+	ti6rGIbBQOEhv663GXGGRhPvZmZY=
+X-Gm-Gg: ASbGncuh92qd/80l0w3DKR+SHQ0IegP/XiheMDrX6zucqZo7xvPa74ra4inflUz8m9U
+	VevAPmLsjUgB10pbibcF8AgrM5xzoiZA33NT7gp6TIhOjyW87NzxCi7B/UjzvO6lpFq67oilAqq
+	rNWfHCuNqeZGURdQU/iEnX1JyAcCWrr2dP
+X-Google-Smtp-Source: AGHT+IEOkn6Sl/r23wxwAf3KLFAVdmt8PeT0S2jSe4ss+3PbeSYwN+wLvFx2QZnC9oB0lXXCiJnU/RPpUIewEBJxgRk=
+X-Received: by 2002:a05:622a:410d:b0:494:848e:d703 with SMTP id
+ d75a77b69052e-49495ca4f3dmr9260291cf.30.1747162351842; Tue, 13 May 2025
+ 11:52:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250513-ci-disable-sdm845-v1-1-9c3ca7d0f24b@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIALyUI2gC/x3MSwqAMAwA0atI1gY0taJeRVzUNmrAHw2IIN7d4
- vItZh5QjsIKXfZA5EtUjj2hzDPwi9tnRgnJQAXZwpYGvWAQdePKqGFrKouTd1Qb2xK1DlJ3Rp7
- k/p/98L4fjmeyXGMAAAA=
-X-Change-ID: 20250513-ci-disable-sdm845-fca26359229a
-To: Helen Koike <helen.fornazier@gmail.com>,
-        Vignesh Raman <vignesh.raman@collabora.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1591;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=8aF340dgmVwMplRdL4mqUGNXBthPtGz9cX7S0m3V9yY=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoI5S+1K1S5sW7YKw4EMKuEMPH6y1TiYRpCvxYJ
- tEhQgDB/s+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaCOUvgAKCRCLPIo+Aiko
- 1YMoB/0VrkkVQfRm3u7sOkHUgXVMQO4ygTDFfTGsUywrYYNzd7dvsEWrEs9myvn9POsj60lOkdS
- gmy55JITDFOdBESpZh05xg8ufrSYfPoYS5x+TXeWdcwHm2fqLrCbv9FsPZ1R7XN9meoKucdnYMc
- /A33AN946aNu2TzHmHl1BQE1zySRhw8HusxPDhxC3X9hc9Q3N481VdcTx12+4v3tfygxIB2PHsG
- FMgrsxaCF1Ls9pxeehzWXvp6OfKuPDPzwnIdU0C2s85M6JLq0RZWg28D9m/TLsMrKiC3cUnxPsf
- VY1jMTNV+7e3DZX37sdiM/aCVRlRU4eVSMeUwG3L117dT0NQ
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: OOyr7Fr5dQQ6IqdxvKuB4D8WsG1POAp3
-X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=682394c2 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=O38deLNlhEFyGSD7h7sA:9 a=QEXdDO2ut3YA:10
- a=s5zKW874KtQA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE4MCBTYWx0ZWRfX9E1w1sZi3m7/
- +Ru5kfeioTZ5dXGEMuKujXnk5ADqZQmc6Ri81Khd/knqgP6fXu4S2a5H58CmRtrk4yjNmJEmjys
- JbGAZAj3aeuzTATGPFQgjbUuP45n9GblwBnK9fAsekbFpZGguumLGl6EPU3QYkoADbdupy6t+hp
- 0GtZYC28h2iDtu5uvp4fpAuTyDfXgBC7rn10zsiSYR2LrXQLhFvbMnAlJ/slSm/ziw52C0uHZbc
- IUZHAJpL3DCGZlIN1QZc36rxwfnNbDPzcoMbXz7S+/3SiOvFFkDcJ4tRPUh70l9w1A9Pc38zRLT
- vu/T4MKvAWYQuZvg5pilWL+M32yJ+sD2WH5Jk/8W3HnpE0nWZlKFl0effuYNOSEntoYV7dlO8ER
- JAJpinne7+w0VtdOYuuorvwPavMHASQqHhYKUV3SeenS3XU5kliC4/gW7Zy/02JrErla4CVH
-X-Proofpoint-GUID: OOyr7Fr5dQQ6IqdxvKuB4D8WsG1POAp3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=577 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505130180
+References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
+ <CAOQ4uxjDwk6NA_UKiJuXfyY=2G33rruu3jr70pthFpBBbSgp1A@mail.gmail.com> <CAJfpegvEYUgEbpATpQx8NqVR33Mv-VK96C+gbTag1CEUeBqvnA@mail.gmail.com>
+In-Reply-To: <CAJfpegvEYUgEbpATpQx8NqVR33Mv-VK96C+gbTag1CEUeBqvnA@mail.gmail.com>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Tue, 13 May 2025 11:52:20 -0700
+X-Gm-Features: AX0GCFs6ewtIyYM1WARmr2VDGdo0IYurS-hAVg27gXMCBfR_WcFJ4d72i6l9ocI
+Message-ID: <CAJnrk1ZxpOBENHk3Q1dJVY78RSdE+PtFR8UpYukT0dLJv3scHw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] fuse: Expose more information of fuse backing
+ files to userspace
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Amir Goldstein <amir73il@gmail.com>, chenlinxuan@uniontech.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The SDM845 Cheeza runners are currently offline. Disable them until they
-come back again.
+On Fri, May 9, 2025 at 6:23=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu> w=
+rote:
+>
+> On Fri, 9 May 2025 at 09:36, Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> > This is not the case with displaying conn, because lsof is not designed
+> > to list fuse conn.
+> >
+> > Is there a way for userspace to get from conn to fuse server pid?
+>
+> Define "server pid".
+>
+> One such definition would be
+>
+>  "A fuse server is a process that has an open file descriptor
+> referring to a /dev/fuse instance."
+>
+> This definition allows a mapping between tasks and fuse connections to
+> be established.  Note that this is not a 1:1 mapping.  Multiple
+> processes could have the same fuse fd (or a clone) open and one
+> process could have multiple different connections associated with it.
+>
+> This might be sufficient for lsof if it can find out the connection
+> number from the fd.  E.g. adding "fuse_connection: N" to fdinfo would
+> work, I think.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/ci/test.yml | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+For getting from conn to fuse server pid, what about adding the server
+pid to fuse's sysfs info? This use case has come up a few times in
+production where we've encountered a stuck server and have wanted to
+identify its pid. I have a patch on a branch I need to clean up and
+send out for this, but it adds a new "info" file to
+/sys/fs/fuse/connections/*/ where libfuse can write any identifying
+info to that file like the server pid or name. If the connection gets
+migrated to another process then libfuse is responsible for modifying
+that to reflect the correct info.
 
-diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 84a25f0e783b6ca7f8a993c709d5a0fc86bf18d3..cc685833e8d2747dd21dc9a549c3d405431de8d0 100644
---- a/drivers/gpu/drm/ci/test.yml
-+++ b/drivers/gpu/drm/ci/test.yml
-@@ -180,19 +180,19 @@ msm:apq8096:
-   script:
-     - ./install/bare-metal/fastboot.sh || exit $?
- 
--msm:sdm845:
--  extends:
--    - .baremetal-igt-arm64
--  stage: msm
--  parallel: 6
--  variables:
--    DEVICE_TYPE: sdm845-cheza-r3
--    DRIVER_NAME: msm
--    BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
--    GPU_VERSION: sdm845
--    RUNNER_TAG: google-freedreno-cheza
--  script:
--    - ./install/bare-metal/cros-servo.sh || exit $?
-+#msm:sdm845:
-+#  extends:
-+#    - .baremetal-igt-arm64
-+#  stage: msm
-+#  parallel: 6
-+#  variables:
-+#    DEVICE_TYPE: sdm845-cheza-r3
-+#    DRIVER_NAME: msm
-+#    BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
-+#    GPU_VERSION: sdm845
-+#    RUNNER_TAG: google-freedreno-cheza
-+#  script:
-+#    - ./install/bare-metal/cros-servo.sh || exit $?
- 
- msm:sm8350-hdk:
-   extends:
+Thanks,
+Joanne
 
----
-base-commit: 8f5264d302e803e7ef82a61f9632a0d2ef67413f
-change-id: 20250513-ci-disable-sdm845-fca26359229a
-
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
+>
+> Thanks,
+> Miklos
+>
