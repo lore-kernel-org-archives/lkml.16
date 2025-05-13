@@ -1,118 +1,78 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D3111EFF89;
-	Tue, 13 May 2025 07:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1E21EDA04
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120870; cv=none; b=PghFV6n9ecT+lxk1/z4Loe4XwOkxJUbwqt7482qn2RsTv5Nxe5OK7E1DiVXFohxGTR+NlorWQpRhLdGxqvFODJiZd4opaJl4ZIytnuj1pqThU3JHdYYNrwHWEeWfGhaEAfZc7YLgIgkWNoWXOcpMVZbcAPhoDVD00h+K8OGDF/A=
+	t=1747120876; cv=none; b=C1xAtVcXYl9h+FnZxMrXSXlGPoEY35Xgxhn2R6ab3NQt3DPR8fJ9uQXDWd6MIWptviuQau3Chio6FvkoiW8iTyq0rhEtjFYWqmoKS04w6oYoD/EyzP/4ebxfDeAu74cfkix6Q2VhOZN/Q1uz9JAK8wYhVYhxM+rfaDDDtgc0r8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120870; c=relaxed/simple;
-	bh=yj51drKVlwDLsjkAZzJZty2Bp0QzpA0GLqtNmCscr4w=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZJCLWxsq5DYLupBSPK9s/fWV/Y7V99dt4jW19+4rnxZGPG9NefWg+8VuiYbg1PXhQJo11Zwxb/kE2PZV0WQsh3D4lbTN+0Unbna0pNEj6JzyFTZcYbtir9yWGn+FaHXOQ7l3GAGGyO4vAeIQNXd+w02pA6gGdqQJ5eoIQkA4tuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8DxbKzg8iJojobjAA--.43654S3;
-	Tue, 13 May 2025 15:21:04 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMAxjhvc8iJon1XNAA--.17820S2;
-	Tue, 13 May 2025 15:21:02 +0800 (CST)
-Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
-To: jarkko@kernel.org, Stefano Garzarella <sgarzare@redhat.com>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- peterhuewe@gmx.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <20250506031947.11130-5-zhaoqunqin@loongson.cn>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <e5f868d2-295d-b1ab-904a-9e5c032037f0@loongson.cn>
-Date: Tue, 13 May 2025 15:20:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1747120876; c=relaxed/simple;
+	bh=PLFaKLspSKToI3oqLpHdbvqIWaZvRsqCO8+SeTZd87U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gWTCmgLI3/bCIlCjQy2lEuY0SCEWodHYIArHP37j/gcvepT//fG5Olr00z9SbEIwc5dFRYuoT2pIDeVfrepPd+MtqQP8d/8FUIPaI4rUAZqR8nmJ+Ny59yYjnvhdlXUQzs9MH2ClR5ngoMPQHh+caWzREfWB5FXs5TLpfzr1RKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=gL97HjRe; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="gL97HjRe"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476f4e9cf92so44338241cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1747120873; x=1747725673; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PLFaKLspSKToI3oqLpHdbvqIWaZvRsqCO8+SeTZd87U=;
+        b=gL97HjRet5Mr5ftzdY4oHXdcf61sHnOiRXx8stWd7KnxN76vS7YuUXWDkvJ1Du3xNn
+         jOEudV089dHHWxkOq9mktYe4nWX14OT5DMPisHZMvY/Fr8UZPLdHCy6YfeIfKJX9xb81
+         Wvdf3fW9MykoLIXA8V7lMpAX0Z6WLylH9igY4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747120873; x=1747725673;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PLFaKLspSKToI3oqLpHdbvqIWaZvRsqCO8+SeTZd87U=;
+        b=kqgCAiRNd4UqNg8IFUPwog9ua62Vtqzjb1oFcs9eDb+nJbLUN3fYGI8N91h7V9i69i
+         F7s1BZ8kSVCJEN1+bWEgMbZ7Ozqx7dMSue3au+eEZA7ZrCCx0Zay7qWzFZlorn75mZ8E
+         FSgCGoa6DvyHbApJFy7DsrtASJGbiHE/mO5/B5pWXGVmZnAiIvu3hmD8g6iBT7zTQOPJ
+         rjtrxSpw3sdBgnSaqta6wlB2pmzXEtNSSauqjmJ145wEQO15G9cOuGwSaDFc7OPOPWIa
+         32qvZ3yBqdWKu5eHAl5fZHt5IrWlm1HZwemuNI/POzB9JXKTHhYSH27AXme6Tm8bN5C2
+         cbVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYUGdGI0c3pCr6rGMdM94d34GFbnedSRSWkFPIXB41IgGTxuwL+wdLzslxPsCiU43N+LHsoNLa31F+z9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw86xIHixxBDyeAGPXnfh3/lpgGF97rbLu3Wyr3E9covgKUl5Gw
+	cnzrmaHzxFWjQXQWraOA6Y5LU1YQDYhvtUhXzuQulo4wWDEWr7JK5+VlP4OERxb4q/Nv7JYV6u2
+	m/zasnrkO3ZBP2igxv6+gWAgCWRpNce/XhCZDzdLwwiVPewO6
+X-Gm-Gg: ASbGncuDqmbtFS+eVBRLNlB1LsYaHrNVYUZsVHer5XX6EDWJ3BmJypfsQYlpYLSD5P8
+	ml6wgiTbPdOL5ms6ZcZDQlpKChmiCHsCwsE1i9+5+NsRypxiLJEvz88cVLQ9A3int/CtWVWdXqM
+	+4WppkcG5VGzUsDI1gqY9DPHfKiuaAJ0k=
+X-Google-Smtp-Source: AGHT+IF0jKCY6qBfrrbWJutfc3aUfMOlMt2zBXsEqu/zkNv0mZoBUk28w6GwEr1MaUwndic1EXLiRZCU9DSDvgZx0mg=
+X-Received: by 2002:ac8:7d51:0:b0:477:5d31:9c3f with SMTP id
+ d75a77b69052e-494527d4685mr283612521cf.42.1747120872990; Tue, 13 May 2025
+ 00:21:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250506031947.11130-5-zhaoqunqin@loongson.cn>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMAxjhvc8iJon1XNAA--.17820S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uF1UJFyruFW3Gw15Kw1ktFc_yoW8ArykpF
-	WfAa1UCF45Ar1UCws8JrW5A3ya9r93Gr1Dua9Fy347GF1DA3s5G34Uurn7Xw18Ar4DGr1I
-	gFWkuF4093WqkFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
+References: <20250513042049.63619-2-chenlinxuan@uniontech.com>
+In-Reply-To: <20250513042049.63619-2-chenlinxuan@uniontech.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 13 May 2025 09:21:01 +0200
+X-Gm-Features: AX0GCFseOYu9DYFE8yAl84-gPqgQft2sZTfecQhV4mIznFelrLabrsX9eiIzL6E
+Message-ID: <CAJfpeguWa-gWj-2WBWY=UVXATHKvAPKYMj7nbxTTg-_=0+hOxw@mail.gmail.com>
+Subject: Re: [PATCH] fs: fuse: add dev id to /dev/fuse fdinfo
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-Hi, Jarkko and Stefano
-
-ÔÚ 2025/5/6 ÉÏÎç11:19, Qunqin Zhao Ð´µÀ:
-> Loongson Security Engine supports random number generation, hash,
-> symmetric encryption and asymmetric encryption. Based on these
-> encryption functions, TPM2 have been implemented in the Loongson
-> Security Engine firmware. This driver is responsible for copying data
-> into the memory visible to the firmware and receiving data from the
-> firmware.
+On Tue, 13 May 2025 at 06:21, Chen Linxuan <chenlinxuan@uniontech.com> wrote:
 >
-> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v9: "tpm_loongson_driver" --> "tpm_loongson"
->      "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+> This commit add fuse connection device id to
+> fdinfo of opened /dev/fuse files.
 >
-...
-> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> Related discussions can be found at links below.
 
-if (cmd_ret->data_len > count)
-         return -EIO;
+Applied thanks.
 
-> +
-> +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> +
-> +	return cmd_ret->data_len;
-> +}
-> +
-> +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +{
-> +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> +
-if (count > tpm_engine->buffer_size)
-
-         return -E2BIG;
-
-> +	cmd->data_len = count;
-> +	memcpy(tpm_engine->data_buffer, buf, count);
-> +
-> +	return loongson_se_send_engine_cmd(tpm_engine);
-> +}
-
-Thanks for your comments,
-
-Qunqin.
-
+Miklos
