@@ -1,174 +1,370 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8670B145B25;
-	Tue, 13 May 2025 06:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F7B145B25;
+	Tue, 13 May 2025 06:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747116563; cv=none; b=GzFwBsqa76LAqO28gGluoSKVazJk8y8gXDsyv9LyQpBRaTGJWY1vrz0nZpoZA5XRKAEIPCnt/K4Q/xZHwbxnElcqBVkBOZfS1PITWoy3spGkilnuNmRtjnCwIFFJxO6AvmrlKLBMR8eAhp8ttovazndPbk8nUNcHBnmpS4Td8EE=
+	t=1747116569; cv=none; b=mhNwdGK0KpCdfArHh7T6WOJI3V3QvF6TnB8ftAYFF3hisVzwTtw0XT9D9BQ6ecK52oNzBp9ILo3ChG0bUE2ksyK/lcRd80lPAgU4/fLHIt62emc0uwFXxx/pv2Ll/m95jIYnZFMrWBPlbmYyqpZUi5UzbUBfJ1m6WqE0H5eUwaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747116563; c=relaxed/simple;
-	bh=7Shj3TynYH3Ax3WVtWO7/ahsDboc5cBLI7lZsL/U5x4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1AnaKnB58gFwbuwb5r1Ukky8uF64CC//ncPEltbCq/k8nkjbEloefDiEYr++NV3kx/n6IoHMe3O2ZOEpjuSBqsXH0NUZI9IERyQq6Bj5DeLGovpC30NWYpJTg7eY4v44dylqyGLU5sM9ib60T2gv/u2fSLPNbwv/0nOPNLSC4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WblQuV4Y; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747116569; c=relaxed/simple;
+	bh=sFh2ICeB4mznTP4Bfry/I+dPTE8ZXXQmZmNZVTM9oeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LU9cX5svjxm/T3/yYN8HmQ8xeo4+FeCFfkLgTx/J5N5pqfOKadt96u9IRxqlLGWMmpciF2rsS4pn4KtoUED/F1gjnuRFI0oWnYX7P7cpblOMw2h2B3+7NL9357hVWJSlV+fItrFFOawI+GK0jYLp+elnVYhqNy2w1SOdqKuQnHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=XgIlxJAC; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WblQuV4Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747116561; x=1778652561;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7Shj3TynYH3Ax3WVtWO7/ahsDboc5cBLI7lZsL/U5x4=;
-  b=WblQuV4YioZ5aPLgz5FXEnJw9zwNDsR4m1FzltCPnDxuU+lYI6FYPTtP
-   vJWTX2vvwGFsxbzZj7vbmqMe6PRs5zXfaCbA0wP055mTFF1tnNxNbyDJV
-   jL68c3DgOuJqkFK8qjzqYYBgCCk3ce1rw9AzEKBP+R8xBZAZZOvSI6h8G
-   SziXp7LmDT4ptkMpv3LYAiaxvm97dpr/IWXvyZGI+3QyydehzVLbWl2Fb
-   KjzFtdVoNpg0O2ehrDVbGBqDxj88r/OdeqLxv97RCKNb/TFs2Xw0n+SmV
-   n4Of7qlq9P/tG+Gnn9bZYuAzHUIICm9Hxf25G8YxBKfB2s1oyKr2K0KGS
-   A==;
-X-CSE-ConnectionGUID: 2O2VnweZTxOShsaS3q1Jmw==
-X-CSE-MsgGUID: uCY3Z6NzSRuehBHr3OH8Dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59946153"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="59946153"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 23:09:18 -0700
-X-CSE-ConnectionGUID: F/RkKAVdR+uEqg+kpHIj9w==
-X-CSE-MsgGUID: aBk6m8uIRu+yed48tgUznQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="160866799"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 12 May 2025 23:09:14 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEipE-000FlJ-1L;
-	Tue, 13 May 2025 06:09:12 +0000
-Date: Tue, 13 May 2025 14:09:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>, Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alok Tiwari <alok.a.tiwari@oracle.com>
-Subject: Re: [PATCH v9 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
-Message-ID: <202505131340.eLNt4D5G-lkp@intel.com>
-References: <20250508235217.12256-7-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="XgIlxJAC"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B21DD101F54F9;
+	Tue, 13 May 2025 08:09:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1747116564; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=MncshJ1N3nQkNK52N5FTaCdNEcC11NmMuRNRJmKFpY8=;
+	b=XgIlxJACCVW018Pi0FgvOmE3ybj/A0gfvBO5sbPbBVtV3RlD3DCEvISmFRHrg/u5mfvWxp
+	R8GDDioBVq6Kl3fcH9G/gZr1OlsvkjkMW95Zx9T4EGjHq34AXnR8ES0uOpOMk8z3QYpk0/
+	YmNPkIUkcdgsm2NTbRLDju8qDA5pWD6XJLiTR/efIjqFkzF+b3QK3blk3pQI45EZTucwii
+	nAjwYFmkVTQSwZZEcWiIjhaDT2a1u4UZOcxeIbfnLQaFSBl/M9n4hH6pJ5BL/Pop36cEcX
+	cJvh/pjNbllhD77gopHErZZGvDRcV8fLoPYogdLlgC3OboQb3AoijmoY85J55g==
+Date: Tue, 13 May 2025 08:09:20 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
+Subject: Re: [net-next v11 1/7] dt-bindings: net: Add MTIP L2 switch
+ description
+Message-ID: <20250513080920.7c8a2a06@wsk>
+In-Reply-To: <20250512164025.GA3454904-robh@kernel.org>
+References: <20250504145538.3881294-1-lukma@denx.de>
+	<20250504145538.3881294-2-lukma@denx.de>
+	<20250512164025.GA3454904-robh@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508235217.12256-7-derekjohn.clark@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/szb2u=yuhhNpm=y0AkbX6Qf";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Derek,
+--Sig_/szb2u=yuhhNpm=y0AkbX6Qf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build errors:
+Hi Rob,
 
-[auto build test ERROR on amd-pstate/linux-next]
-[also build test ERROR on amd-pstate/bleeding-edge linus/master v6.15-rc6 next-20250512]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> On Sun, May 04, 2025 at 04:55:32PM +0200, Lukasz Majewski wrote:
+> > This patch provides description of the MTIP L2 switch available in
+> > some NXP's SOCs - e.g. imx287.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+> >=20
+> > ---
+> > Changes for v2:
+> > - Rename the file to match exactly the compatible
+> >   (nxp,imx287-mtip-switch)
+> >=20
+> > Changes for v3:
+> > - Remove '-' from const:'nxp,imx287-mtip-switch'
+> > - Use '^port@[12]+$' for port patternProperties
+> > - Drop status =3D "okay";
+> > - Provide proper indentation for 'example' binding (replace 8
+> >   spaces with 4 spaces)
+> > - Remove smsc,disable-energy-detect; property
+> > - Remove interrupt-parent and interrupts properties as not required
+> > - Remove #address-cells and #size-cells from required properties
+> > check
+> > - remove description from reg:
+> > - Add $ref: ethernet-switch.yaml#
+> >=20
+> > Changes for v4:
+> > - Use $ref: ethernet-switch.yaml#/$defs/ethernet-ports and remove
+> > already referenced properties
+> > - Rename file to nxp,imx28-mtip-switch.yaml
+> >=20
+> > Changes for v5:
+> > - Provide proper description for 'ethernet-port' node
+> >=20
+> > Changes for v6:
+> > - Proper usage of
+> >   $ref: ethernet-switch.yaml#/$defs/ethernet-ports/patternProperties
+> >   when specifying the 'ethernet-ports' property
+> > - Add description and check for interrupt-names property
+> >=20
+> > Changes for v7:
+> > - Change switch interrupt name from 'mtipl2sw' to 'enet_switch'
+> >=20
+> > Changes for v8:
+> > - None
+> >=20
+> > Changes for v9:
+> > - Add GPIO_ACTIVE_LOW to reset-gpios mdio phandle
+> >=20
+> > Changes for v10:
+> > - None
+> >=20
+> > Changes for v11:
+> > - None
+> > ---
+> >  .../bindings/net/nxp,imx28-mtip-switch.yaml   | 149
+> > ++++++++++++++++++ 1 file changed, 149 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> >=20
+> > diff --git
+> > a/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> > b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> > new file mode 100644 index 000000000000..35f1fe268de7 --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> > @@ -0,0 +1,149 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR
+> > BSD-2-Clause) +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/nxp,imx28-mtip-switch.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
+> > +
+> > +maintainers:
+> > +  - Lukasz Majewski <lukma@denx.de>
+> > +
+> > +description:
+> > +  The 2-port switch ethernet subsystem provides ethernet packet
+> > (L2)
+> > +  communication and can be configured as an ethernet switch. It
+> > provides the
+> > +  reduced media independent interface (RMII), the management data
+> > input
+> > +  output (MDIO) for physical layer device (PHY) management.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nxp,imx28-mtip-switch
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  phy-supply:
+> > +    description:
+> > +      Regulator that powers Ethernet PHYs.
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: Register accessing clock
+> > +      - description: Bus access clock
+> > +      - description: Output clock for external device - e.g. PHY
+> > source clock
+> > +      - description: IEEE1588 timer clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: ipg
+> > +      - const: ahb
+> > +      - const: enet_out
+> > +      - const: ptp
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: Switch interrupt
+> > +      - description: ENET0 interrupt
+> > +      - description: ENET1 interrupt
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: enet_switch
+> > +      - const: enet0
+> > +      - const: enet1
+> > +
+> > +  pinctrl-names: true
+> > +
+> > +  ethernet-ports:
+> > +    type: object
+> > +    $ref:
+> > ethernet-switch.yaml#/$defs/ethernet-ports/patternProperties =20
+>=20
+> 'patternProperties' is wrong. Drop.
+>=20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-driver-Documentation/20250509-075718
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
-patch link:    https://lore.kernel.org/r/20250508235217.12256-7-derekjohn.clark%40gmail.com
-patch subject: [PATCH v9 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
-config: i386-randconfig-002-20250513 (https://download.01.org/0day-ci/archive/20250513/202505131340.eLNt4D5G-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250513/202505131340.eLNt4D5G-lkp@intel.com/reproduce)
+When I do drop it, then
+make dt_binding_check DT_SCHEMA_FILES=3Dnxp,imx28-mtip-switch.yaml
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505131340.eLNt4D5G-lkp@intel.com/
+shows:
 
-All errors (new ones prefixed by >>):
+nxp,imx28-mtip-switch.example.dtb: switch@800f0000: ethernet-ports:
+'oneOf' conditional failed, one must be fixed:
 
->> drivers/platform/x86/lenovo-wmi-other.c:510:8: error: call to undeclared function 'MKDEV'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     510 |                                           MKDEV(0, 0), NULL, "%s-%u",
-         |                                           ^
-   1 error generated.
+'ports' is a required property=20
+'ethernet-ports' is a required property
+        from schema $id:
+        http://devicetree.org/schemas/net/nxp,imx28-mtip-switch.yaml#
+
+We do have ethernet-ports:
+and we do "include" ($ref)
+https://elixir.bootlin.com/linux/v6.14.6/source/Documentation/devicetree/bi=
+ndings/net/ethernet-switch.yaml#L77
+
+which is what we exactly need.
+
+> > +    additionalProperties: true =20
+>=20
+> Drop.
+>=20
+
+When removed we do have:
+nxp,imx28-mtip-switch.example.dtb: switch@800f0000: Unevaluated
+properties are not allowed ('ethernet-ports' was unexpected)
+
+or=20
+
+nxp,imx28-mtip-switch.yaml: ethernet-ports: Missing
+additionalProperties/unevaluatedProperties constraint
+
+Depending if I do remove 'patternProperties' above.
+
+To sum up - with the current code, the DT schema checks pass. It also
+looks like the $ref for ethernet-switch is used in an optimal way.
+
+I would opt for keeping the code as is for v12.
+
+> > +
+> > +    patternProperties:
+> > +      '^ethernet-port@[12]$':
+> > +        type: object
+> > +        additionalProperties: true
+> > +        properties:
+> > +          reg:
+> > +            items:
+> > +              - enum: [1, 2]
+> > +            description: MTIP L2 switch port number
+> > +
+> > +        required:
+> > +          - reg
+> > +          - label =20
+>=20
+> 'label' shouldn't ever be required because s/w shouldn't care what
+> the value is.
+
+Ok, I will remove it for v12.
+
+>=20
+> > +          - phy-mode
+> > +          - phy-handle
+> > +
+> > +  mdio:
+> > +    type: object
+> > +    $ref: mdio.yaml#
+> > +    unevaluatedProperties: false
+> > +    description:
+> > +      Specifies the mdio bus in the switch, used as a container
+> > for phy nodes. +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +  - interrupt-names
+> > +  - mdio
+> > +  - ethernet-ports
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include<dt-bindings/interrupt-controller/irq.h>
+> > +    #include<dt-bindings/gpio/gpio.h>
+> > +    switch@800f0000 {
+> > +        compatible =3D "nxp,imx28-mtip-switch";
+> > +        reg =3D <0x800f0000 0x20000>;
+> > +        pinctrl-names =3D "default";
+> > +        pinctrl-0 =3D <&mac0_pins_a>, <&mac1_pins_a>;
+> > +        phy-supply =3D <&reg_fec_3v3>;
+> > +        interrupts =3D <100>, <101>, <102>;
+> > +        interrupt-names =3D "enet_switch", "enet0", "enet1";
+> > +        clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+> > +        clock-names =3D "ipg", "ahb", "enet_out", "ptp";
+> > +
+> > +        ethernet-ports {
+> > +            #address-cells =3D <1>;
+> > +            #size-cells =3D <0>;
+> > +
+> > +            mtip_port1: ethernet-port@1 {
+> > +                reg =3D <1>;
+> > +                label =3D "lan0";
+> > +                local-mac-address =3D [ 00 00 00 00 00 00 ];
+> > +                phy-mode =3D "rmii";
+> > +                phy-handle =3D <&ethphy0>;
+> > +            };
+> > +
+> > +            mtip_port2: ethernet-port@2 {
+> > +                reg =3D <2>;
+> > +                label =3D "lan1";
+> > +                local-mac-address =3D [ 00 00 00 00 00 00 ];
+> > +                phy-mode =3D "rmii";
+> > +                phy-handle =3D <&ethphy1>;
+> > +            };
+> > +        };
+> > +
+> > +        mdio_sw: mdio {
+> > +            #address-cells =3D <1>;
+> > +            #size-cells =3D <0>;
+> > +
+> > +            reset-gpios =3D <&gpio2 13 GPIO_ACTIVE_LOW>;
+> > +            reset-delay-us =3D <25000>;
+> > +            reset-post-delay-us =3D <10000>;
+> > +
+> > +            ethphy0: ethernet-phy@0 {
+> > +                reg =3D <0>;
+> > +            };
+> > +
+> > +            ethphy1: ethernet-phy@1 {
+> > +                reg =3D <1>;
+> > +            };
+> > +        };
+> > +    };
+> > --=20
+> > 2.39.5
+> >  =20
 
 
-vim +/MKDEV +510 drivers/platform/x86/lenovo-wmi-other.c
 
-   493	
-   494	/**
-   495	 * lwmi_om_fw_attr_add() - Register all firmware_attributes_class members
-   496	 * @priv: The Other Mode driver data.
-   497	 *
-   498	 * Return: Either 0, or an error code.
-   499	 */
-   500	static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
-   501	{
-   502		unsigned int i;
-   503		int err;
-   504	
-   505		priv->ida_id = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
-   506		if (priv->ida_id < 0)
-   507			return priv->ida_id;
-   508	
-   509		priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
- > 510						  MKDEV(0, 0), NULL, "%s-%u",
-   511						  LWMI_OM_FW_ATTR_BASE_PATH,
-   512						  priv->ida_id);
-   513		if (IS_ERR(priv->fw_attr_dev)) {
-   514			err = PTR_ERR(priv->fw_attr_dev);
-   515			goto err_free_ida;
-   516		}
-   517	
-   518		priv->fw_attr_kset = kset_create_and_add("attributes", NULL,
-   519							 &priv->fw_attr_dev->kobj);
-   520		if (!priv->fw_attr_kset) {
-   521			err = -ENOMEM;
-   522			goto err_destroy_classdev;
-   523		}
-   524	
-   525		for (i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
-   526			err = sysfs_create_group(&priv->fw_attr_kset->kobj,
-   527						 cd01_attr_groups[i].attr_group);
-   528			if (err)
-   529				goto err_remove_groups;
-   530	
-   531			cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
-   532		}
-   533		return 0;
-   534	
-   535	err_remove_groups:
-   536		while (i--)
-   537			sysfs_remove_group(&priv->fw_attr_kset->kobj,
-   538					   cd01_attr_groups[i].attr_group);
-   539	
-   540		kset_unregister(priv->fw_attr_kset);
-   541	
-   542	err_destroy_classdev:
-   543		device_unregister(priv->fw_attr_dev);
-   544	
-   545	err_free_ida:
-   546		ida_free(&lwmi_om_ida, priv->ida_id);
-   547		return err;
-   548	}
-   549	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/szb2u=yuhhNpm=y0AkbX6Qf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgi4hAACgkQAR8vZIA0
+zr2PiQf/cfG3+ozsR1UCw0lSG/JLHOpz0LUFMjubElolzz4TEfNW4ErqdBptFyNQ
+rna1NkbRl3YTxViqoBnYVyOrR3lAN25+rPAieJdWZYeKc4BOTkXVh5faZHGTQlPX
+IIHNuHnoLny6vJ8Qod38+mMiQL5LYMVVmNhq5PwxuqfTswcrEKaGp7o9AgTUL0CE
+zTzV2ah6nKRuOPTCOzpo2MJCFd0FxebpgqCHxvusVUyi+uzpy6Jl7sCHdN5Rlpb9
+9tETECoKMAxFLpoVePSYKRLdpdYJDUeSHwU1jZrm3eANglKtstNLyelNBr5MvBeQ
+0iT8FnR49zccvtTNAq2duXAbBUVbIw==
+=Cvzg
+-----END PGP SIGNATURE-----
+
+--Sig_/szb2u=yuhhNpm=y0AkbX6Qf--
