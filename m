@@ -1,185 +1,125 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8177E1CBEAA;
-	Tue, 13 May 2025 15:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94B1244666
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148763; cv=none; b=E/BuTxFyW75aEDdaAKwcPF+qgDKCOOFKo/fZkgRNuwOCtMPX+RaeMbqdRVjJt/FRYlXPlVb8SVhNRMYN7sX+4Aj2vZcA7dG1Xp1wGqlQbiFVzLjCp4INDmG5O4XSTSk8NzRY0Uyrp1hLfKPL479BRiZCNcOrQ7xaNUJz7/v7nAw=
+	t=1747148892; cv=none; b=B/tdjyuzPbLfxU+ksiQn2l3jej0EXXscvJA8ii2kCP1Y3s57TCexYVTPbSbxkEEY881e3iEbWxgkOg8E03JpzYw3Fxdyw6x7rAobpxoirGaajBGHuo4kCnLnVSkmN59MWWHZqtlX9CAKDbtT1DbLknYWh/huICgRGF8wgPcUHN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148763; c=relaxed/simple;
-	bh=5P8qcpYaDnBEjOSLmxabj43vSitY9NQ3IJhXdJxSVZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iq+ZxMnlfWh9LESeJPV5P36KF9J829qevgDOfRMhL2gcGux06lR+P5sz8HekoUeuN0IjYr0wqYRhyrotacyB/eqtu1ZCseN7Pzk58bFJ8mL7mir+J+RSW2G0n+JlAOMxntOvBgP5xitFvdpmOJ2jM8Gc9io/B1DhcSQ/2TjsPMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=AIU85UpF; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1747148892; c=relaxed/simple;
+	bh=cyC24FKRZ7v1DWNmkTR+FPbI5tSVDOpMoBY0cH2e8cU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FjFQLpzjZ5SHLuRvc9lduNiK0kT3UzKd6bL+efQ4rdc3p7vY//cgTAH7PRbGEOviHaE70XgjWJUzetNuwAH0ArKw7COwpOt7QfeXGmEuQ2sJsZgCP+i9c7CzgluOxRaWBaAz/X4xsm1+2b7X0diAQX7M+L4HNcASwWL+k+3guAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RaXJ8MdG; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="AIU85UpF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=39bn3xk0Q75/p6z3qnAmNSpcXd8S/ZEQ0QV03qD/MaU=; b=AIU85UpFy9HfLAFaxI9Up0boxk
-	e9imu3J7aIVXC9K4DiHNYwFIz+GjY5u3SurXxDfKanIWfzTdyLRm8QQWwlXuuyQbtr6iG/9ajvUIP
-	z1gvnRM661wz/7Qixvjc4eghmguVGtxJ72ZBX4RRPCyoZucC3jgKSEDkXzztd6QPZfJmNzJUpMP+J
-	5FeJ6485TNPwWnSka/wcDRcBhkTcVdL52pcc9Ep44iLPDyVd1qlBEtYiVGhCxOxj967f+8ta+8MS5
-	xrbXGNY/O2Lu5ek7mq2ycJMjxM8eupBTldURHNFR2Ip/+06GsvZq3fFRVMceRiMkpgf5ixk5tukcW
-	5hRLoOxQ==;
-Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uErCf-0008UM-9E; Tue, 13 May 2025 17:05:57 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- quentin.schulz@cherry.de, krzk+dt@kernel.org, devicetree@vger.kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] Add two board-families from Theobroma-Systems
-Date: Tue, 13 May 2025 17:05:56 +0200
-Message-ID: <3311886.aV6nBDHxoP@diego>
-In-Reply-To: <174679984943.3368422.9645324507043955723.robh@kernel.org>
-References:
- <20250508150955.1897702-1-heiko@sntech.de>
- <174679984943.3368422.9645324507043955723.robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RaXJ8MdG"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30c54b40112so2785077a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747148887; x=1747753687; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XC0wSA5fBRbT0vh1GnpF7biy8ZuXb9lHcS4DgbOrdhY=;
+        b=RaXJ8MdGfS8YejZwFEu7L/kXgCD6v5p70W0NECUlKt6cZ3Xvfxdj/h1rZH1pbN3vvR
+         x+ApH2mf9GnnP0VRi0ENuYWqycvvxM5w1hYBwdrS3TO8ybGB64J/2lMzlL2yNrO20N1d
+         9z02+PtIAoMxKD7B9TKBjveo8G5xRlZspbYQY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747148887; x=1747753687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XC0wSA5fBRbT0vh1GnpF7biy8ZuXb9lHcS4DgbOrdhY=;
+        b=GNrjkTQrhU5mMKsJX8N0cHw5oGjb/AA6OTje1axstpL0oLpxD4LnuA7E2cBzzyd5dn
+         3ZUKEof0nPF+BZJKbyAn2wo4eHqVQwvjw6o3f04usjTL9KcXzYyjqU/9MM7AZKOpvcHp
+         rIJrGIFKMpE4/rq+9qWvyq7Gqct5gIFjfwGyOfDQIvDWpTWDmJZfH/F1pLFY0Qra24SU
+         qkgxhpANgiou8j+o+FW9mwp420S5F6KhZLIEPL8Rvu/oGBArxvYdxXBrxzXjttrh1z5t
+         46LcCN3uxoBCG+4SVez0u6ibp8I4HlAp2RCta7GxJyOqHLtzVICl0G5PVhIZGI5nHyu9
+         gnMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDIublMUuYqVIAPbGBesaXffYWWwb/26sj28+VpFVZauwkCjFh2UxrztMV/s1SJM99VpP9SlxE/X03kis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpF7erAtCx6bgqCZ6m2Xg/WvucFc4x7oyJ8RoImgrtiKSuAKYa
+	kIXNU9YX/JtvVtR7S2Ab/OqcWspckTdcM7CB1MCrSA6tZcu3yy81dXmrFHuuLvDo0g/ZmXmmAo4
+	=
+X-Gm-Gg: ASbGncsw6MaXwpOkHQ2GgB7sGo8XJKymU53+X3o2WpSTbtC2Blfy2q6fW4D92BbSw1u
+	P5a2mWZwhQXZYlwITGsT/Lti53lB4+CN4fKk2Wclzfdx3nkj2f/BoRboZYFIm3m1SUnbQVLjma7
+	YNLjUi5j/c2xXDMFXMU3JxftcI2lLN+NiobrJqnrut9NfvRLYxqM/jdL2KFap9FR5/9fGOg06y2
+	zgpDGPoqcXi8gws2JGMaHxXHjV2PAKQcBZ0To66aIfNv1vN6PHjHqzKG39+X/E8qQOsFAwU3En+
+	2B8cNKVdBo4yMmm/01HkAK+06IujtdMpIawxCEv45lwiNgEn1fe2XqVj3g9CWc2tSSpkxptJcHV
+	ZFSK/1+Ajf0Go0cZ9ong=
+X-Google-Smtp-Source: AGHT+IHZSypCtZx2vgmJVKCm8F/Qf5B0UUAOmMCRLp1kmksnqfBnVfF4QXfzPE/L791yrjKiPIs7fg==
+X-Received: by 2002:a17:90b:394a:b0:2ee:90a1:5d42 with SMTP id 98e67ed59e1d1-30c3b909ab6mr34545195a91.0.1747148886696;
+        Tue, 13 May 2025 08:08:06 -0700 (PDT)
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com. [209.85.214.169])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b23519901f1sm7391616a12.68.2025.05.13.08.08.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 08:08:05 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22fbbf9c01bso47439785ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:08:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWlPQtsQHexywJp2WuuAipwOAS+GIw4e5h1jsjspD2E1+jarsMtHFeMcXcE3HTPivCpdRJFo9JYJM8/4aM=@vger.kernel.org
+X-Received: by 2002:a17:903:2344:b0:22f:b327:a720 with SMTP id
+ d9443c01a7336-22fc918fe81mr229546365ad.39.1747148884248; Tue, 13 May 2025
+ 08:08:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
+ <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
+ <CACMJSesqtkorg1akuXjMa9U1fe60aDhfGOSB_T6mX5CtCYDwtg@mail.gmail.com> <CACRpkdbDNbEpNOLT31+8Jb_fdvnROOtONxFc0hxCFa5AotSwTw@mail.gmail.com>
+In-Reply-To: <CACRpkdbDNbEpNOLT31+8Jb_fdvnROOtONxFc0hxCFa5AotSwTw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 13 May 2025 08:07:51 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XiGJ1uV_s35dwCYwdzoAj4ycXOYRyDZMGLOM9+JY668A@mail.gmail.com>
+X-Gm-Features: AX0GCFs4uZMLXjCSAO0m1e3AtYaXg0I7KL7nfpg18FrQ59BKSujflfXbgJMJkH8
+Message-ID: <CAD=FV=XiGJ1uV_s35dwCYwdzoAj4ycXOYRyDZMGLOM9+JY668A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Freitag, 9. Mai 2025, 16:16:58 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Rob Herring (Arm):
->=20
-> On Thu, 08 May 2025 17:09:49 +0200, Heiko Stuebner wrote:
-> > Both the Cobra and PP1516 boards are based around the PX30 SoC and can =
-be
-> > found with a variety of display options.
-> >=20
-> > As new boards should not use the deprecated snps,reset-* properties
-> > in the gmac node, I also added a core mdio-node for the gmac and
-> > converted the Theobroma Ringneck board over.
-> >=20
-> > Testing with the new node both before and after converting Ringneck
-> > showed the board finding its network both when booting locally and
-> > from the tftp/nfs.
-> >=20
-> >=20
-> > Heiko Stuebner (6):
-> >   arm64: dts: rockchip: add basic mdio node to px30
-> >   arm64: dts: rockchip: move reset to dedicated eth-phy node on ringneck
-> >   dt-bindings: arm: rockchip: add PX30-Cobra boards from Theobroma
-> >     Systems
-> >   arm64: dts: rockchip: add px30-cobra base dtsi and board variants
-> >   dt-bindings: arm: rockchip: add PX30-PP1516 boards from Theobroma
-> >     Systems
-> >   arm64: dts: rockchip: add px30-pp1516 base dtsi and board variants
-> >=20
-> >  .../devicetree/bindings/arm/rockchip.yaml     |  18 +
-> >  arch/arm64/boot/dts/rockchip/Makefile         |   6 +
-> >  .../rockchip/px30-cobra-ltk050h3146w-a2.dts   |  39 ++
-> >  .../dts/rockchip/px30-cobra-ltk050h3146w.dts  |  39 ++
-> >  .../dts/rockchip/px30-cobra-ltk050h3148w.dts  |  39 ++
-> >  .../dts/rockchip/px30-cobra-ltk500hd1829.dts  |  58 ++
-> >  arch/arm64/boot/dts/rockchip/px30-cobra.dtsi  | 570 +++++++++++++++++
-> >  .../rockchip/px30-pp1516-ltk050h3146w-a2.dts  |  39 ++
-> >  .../dts/rockchip/px30-pp1516-ltk050h3148w.dts |  39 ++
-> >  arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi | 601 ++++++++++++++++++
-> >  .../boot/dts/rockchip/px30-ringneck.dtsi      |  22 +-
-> >  arch/arm64/boot/dts/rockchip/px30.dtsi        |   6 +
-> >  12 files changed, 1473 insertions(+), 3 deletions(-)
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146=
-w-a2.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146=
-w.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148=
-w.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd182=
-9.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h314=
-6w-a2.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h314=
-8w.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi
-> >=20
-> > --
-> > 2.47.2
-> >=20
-> >=20
-> >=20
->=20
->=20
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
->=20
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
->=20
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
->=20
->   pip3 install dtschema --upgrade
->=20
->=20
-> This patch series was applied (using b4) to base:
->  Base: attempting to guess base-commit...
->  Base: tags/v6.15-rc1-1-g59529bbe642d (exact match)
->=20
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
->=20
-> New warnings running 'make CHECK_DTBS=3Dy for arch/arm64/boot/dts/rockchi=
-p/' for 20250508150955.1897702-1-heiko@sntech.de:
->=20
-> arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dtb: panel@0 (leadte=
-k,ltk500hd1829): 'port' does not match any of the regexes: '^pinctrl-[0-9]+=
-$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-500hd1829.yaml#
-> arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dtb: panel@0 (leadte=
-k,ltk050h3148w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+=
-$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-050h3146w.yaml#
-> arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3148w.dtb: panel@0 (leadt=
-ek,ltk050h3148w): 'port' does not match any of the regexes: '^pinctrl-[0-9]=
-+$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-050h3146w.yaml#
-> arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dtb: panel@0 (leadte=
-k,ltk050h3146w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+=
-$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-050h3146w.yaml#
-> arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3146w-a2.dtb: panel@0 (le=
-adtek,ltk050h3146w-a2): 'port' does not match any of the regexes: '^pinctrl=
-=2D[0-9]+$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-050h3146w.yaml#
-> arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dtb: panel@0 (lea=
-dtek,ltk050h3146w-a2): 'port' does not match any of the regexes: '^pinctrl-=
-[0-9]+$'
-> 	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk=
-050h3146w.yaml#
->=20
+Hi,
 
-this is handled by the already applied changes to the panel bindings:
-dt-bindings: display: ltk500hd1829: add port property [0]
-dt-bindings: display: ltk050h3146w: add port property [1]
+On Tue, May 13, 2025 at 2:27=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> Hi Dmitry,
+>
+> thanks for your patch!
+>
+> On Tue, May 6, 2025 at 7:28=E2=80=AFPM Bartosz Golaszewski
+> <bartosz.golaszewski@linaro.org> wrote:
+> > On Sat, 3 May 2025 at 07:32, Dmitry Baryshkov
+> > <dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> > > +       /*
+> > > +        * hog pins are requested before registering GPIO chip, don't=
+ crash in
+> > > +        * gpiochip_line_is_valid().
+> > > +        */
+> > > +       if (!chip->gpiodev)
+> > > +               return 0;
+> > > +
+> >
+> > I really dislike you dereferencing gpiodev here which is (implicitly,
+> > I know...) very much a private structure for GPIOLIB. Can we move this
+> > into gpiochip_line_is_valid() itself?
+>
+> I agree with Bartosz. Patch gpiochip_line_is_valid() so everyone
+> can benefit from the extended check.
 
+Any chance we can get a solution landed sooner rather than later?
+Every time I test mainline I have to account for this bug or my device
+crashes at bootup. ;-)
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
-mit/?id=3De782ac936941cff4c5580bb5cc2ec0e91468068c
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
-mit/?id=3Dbf0636f4348e098e2338eebbe42d7780c58a1195
-
-
-
+-Doug
