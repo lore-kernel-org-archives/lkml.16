@@ -1,136 +1,126 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67FC24397A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243DA1DED6D;
+	Tue, 13 May 2025 13:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142232; cv=none; b=nhatdqVizVeGmybv5j/RulXlv6SGYchZz8OrYvipGzrGQp/skvcjNG2+t122vclP59q1+esEkvRelVyGS5NTcNrST57eHcrm1TE7gHAVv3shKQgRGpFzWxvIhLPDYpLpvRH3b5KScIGTtfNphy8ch8VXYLOSQGeRlhuG2E40UUM=
+	t=1747142265; cv=none; b=CljZAgzqn1RL8iuKcgUUcbJHy5bBFABwSMDRuT8Wv8iEd/QbJ4IkEuNBfrYZ3upXfs/LBW8Kd60eFiJmcDdWgxPLqGzm4h7lO+Scq3oazSh13QHxBRJPaSg/65IF/pCNXcS8IRsNHW3sXJ5n7T0QZ7TlbAu+/of1WGuoHubqmQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142232; c=relaxed/simple;
-	bh=HCxtUhV0n5ObKOhNbl1mM0TaQS12Gee1diWbIonF2TM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InUtuyxtqMbR+m44clRVaydK/EJQQkZvNJOqHqH51WxUcNXggcDazjiWWKLGaWWgKU+IFmgb1FxduCdS/56/oRTHpsij2cydpf2hxyavYF/jZXcm5pgZNikmIwbx84YsrdyUYOpYBE7OUXSUkYUZrgNOoXmGX2dtagSsBEIhjNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pRULYFbC; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRULYFbC"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf680d351so39099175e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747142229; x=1747747029; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSKROeG6WIpVx9D960CzNibMdBJ6VLFhrNLL+i7WoQo=;
-        b=pRULYFbC9AVSyNz2e360366ONMG75W4ysygYHU7YSQxD2xdrnJZPMDutdBHmuLpD/G
-         xhhnr6EJzCIrl0S7MLCg6fsUSJ5cjG1XIVJqKDHcT+lDqt6WidgHTeqpeMmY0YaLU+Ja
-         KnG3rfvc3f5rr5z4L/MPVji6Q3XMGh+5j0dwhui89ccMHrCRiU9jiunTyA+KCwne0etu
-         TpxwFAwgZpMH8UemlzHJsfzeb6gqqNA2jd75NAaOYBg6N5x/UKdytHLOoGGSM6uammZ1
-         OH4JS2pg1xAz6QAl2pAYlHIyqu9NYUmwWs9uPyDoXGgxFB1vV6mzv1fBad3RGfcFEnPb
-         YPxg==
+	s=arc-20240116; t=1747142265; c=relaxed/simple;
+	bh=XPhAVW7nrR8wzdPpqqQMTJtsR7CbV4OJLpPZbauNjxE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YcUlXVGYPdRhnYRjWdDvqspHE0ZeH7GbKszOUdStcQT4EwhTDlKwNHoFuYu3rMd7iv7ynbt67EGxDWLnTECGo9ns+IVaeKuXdO3FhUABKJPcgVmU41RcGQ7uqct3UOS0oEhS3Pt1VeUR5s5wHenTNWqDNPOpI80n9qmpjltSAP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c53b9d66fdso840786485a.3;
+        Tue, 13 May 2025 06:17:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142229; x=1747747029;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fSKROeG6WIpVx9D960CzNibMdBJ6VLFhrNLL+i7WoQo=;
-        b=hwPXr0kzlTkTUkJ47KlFwZAQVo3+0ae9dI9pkJ4qPGYFwQAn+rZ5hcjRsGRK/rhPyN
-         Xkrk4RIqh98ELye35En7fxt2oXa19Me+x3wey21zIW8hhgAne798y7eaiSks+pzLzFWB
-         neAA7n4C9azercHZOlE1cKnWM/SzTsMs5qExBsADmP+gHcKuyZIXtHQE0pnIdvmuBSlg
-         EPhhZMwfNq/l8ff4s1G3ui4pYhsXfWLVcaN/TgpLgjTTuXSVvuCY0wNEV7l7jYZ/G2SD
-         HMjsd2ys9gZ/9vHS99erfswVwE36JlgUFAdP8SVgU/10hHNHS6CFLnLhC/gqI6xKT5fu
-         fmng==
-X-Forwarded-Encrypted: i=1; AJvYcCUXfMuFpbKiJjpoomoUTn5XGBwkP5clRU0dIIT6zTyaiLnBi/pmS/ETqGj7dGqWNYEq47GjyFlIac8yO3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb+79XXj/So3QvPIif9UTQUp5Tm86k++J2L5l5EwfUxsXaqNBH
-	gyNeuVhpLps47Zaeu+kjI7HI2IujEPV5RZCyXyZReOpASlNFyTS9HWP44wMHe3M=
-X-Gm-Gg: ASbGncvpPYZ8L0J0krHfW14QXnKlBCEvw+d5olwgQNLaW/I7TBkqWLfQVJAAUeHtTGX
-	PDV4/soDmopaS6AYbKdVm5KFjtpKqvTS+YB4g0fdlpuDdzQxDdh3asTa6z32llPVABBXsCZfWZf
-	M812GMSSgDpt6vEk+a6yw7IcBl9LegcgMjEIuK9+CK/PBEQwdvRHDQ/DzD6fH65+QtD5RIkeKPQ
-	Q7eH9UgEcx9fM6UNBb3T+Oia8hHr9hPjRuWILOL5MV+37x/SgP000SDbB4F03/X6yE0qbY5wQk2
-	SNv4ybj4CiGzob/XnQWvqa1Q3Hq7oh/1hvQBVXFWqhAcVMuN2gIm7IKLF3IltDvxv5B8O9R7wCZ
-	MicPHkwi1lw==
-X-Google-Smtp-Source: AGHT+IEXNErNLH6JYcRZtXPTKbltNSbK20Unh3nfkeGF/m82+yZaCLAyjteYTaGHlJ6/REhSJrcoqw==
-X-Received: by 2002:a05:600c:1d86:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-442eac9ddb4mr30238655e9.4.1747142229046;
-        Tue, 13 May 2025 06:17:09 -0700 (PDT)
-Received: from linaro.org (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebd47d39sm18740035e9.1.2025.05.13.06.17.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:17:08 -0700 (PDT)
-Date: Tue, 13 May 2025 14:16:59 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
- for clock-controller
-Message-ID: <aCNGSwL7043GoJBz@linaro.org>
-References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
- <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
- <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+        d=1e100.net; s=20230601; t=1747142262; x=1747747062;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EkiL2mrEZZwE/y1tC5rTFjuEboDte7NmK20xqnMc/Wg=;
+        b=wDNqiH4rl3UJrHmNoM+odFW6+/w3hXSD5Mcf8/z56fhpIi2u+FSxkR7Hzv3RTlieaO
+         CDO9bCkAE9E+6LvNISvcaLu6KGmZocvJwPsnz+WOKGMCWnK8LTAxrarnoXsvJFfEFrsW
+         sWjmpmN8QEoLYUsdfN0kmR4EP4xc0EZVjNVPmPHXML5C4tpUaCdmWPYzevODGiDqly6K
+         61hngbdVJL5y5a0FgPpBO14MuhfVOhAabfPVVeRkU/BvG5xxZk1IqMCFwzPld1cT9FFx
+         RY4O+ukfyJYdy8xBxvRVZ772dBjWqn3AMhQ4MOg0rAqEbdUKq9LQEUwZ+JWer6oH4o4g
+         iPZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7E/tbnm7vZkLlOk0F4+htnu37pEMUIhG2xOhDKjfbTMkTrP6EmMdaGQbx5BFlmpeCyiMSvBhNO64nEanJ9USwJ2o=@vger.kernel.org, AJvYcCUqF4rYNCMxQBR7Uvv0utZ2m+IdmWP6eiBN8DNqIGtYmH5y2FI3dLI2MxJKLmJMNbjlhHi4VNhsx9FDj3+S@vger.kernel.org, AJvYcCUtraYnmJ408crmsp2dbzwr/1W+8bJJC2o1Pd+b7mS2JhgMkS29V5dsFHRyImJp1xIG9nuHFVjHcszFsoxM@vger.kernel.org, AJvYcCWHlZnA/W6TculK6QnPG1GezFUSmGr3CTuTpJsKMexzG+ux2z26U4Gmwxljuh0ulFp3Y6MqvO6LZjA7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqsWZQeAWuAJwkvFPE7s1W1zioTC0B+oxJPeB2J/Fn6H0YjNZX
+	vGgE7RaldGuu4f9Wa/ASpIAGBgsD9teR0g84on+cYD/ZYGKyjrR53twL0qWH
+X-Gm-Gg: ASbGncv1xET3o1dE+LYSCoqQO9p1RONCDfJjz+xaOIunqC6Q/OeXiOKFLagC5+Fl8j/
+	axlC//R6tu3Y9KGqMBcb3EjM7IQghE/ygUGTEhP5j/j4y61mE5FCCA1CHAQShbW6TwqYnohK4OF
+	eYQeE6kwhUFOwYf4q55LiGQybH0GMdt/8ZK64XmFY6d34DaF1TNSUvXy9GCGNC2YMJP664T5MBe
+	SRsv/cfjm0RrvUlT5KbGiReqMm6rHaIMKV+8WTpop6h3XSRvl3xQzp25MqDWjajZcaDR5yj2CIt
+	j5cGsAC+sAaxsYbOkNzIskhE8M0Ah2yM1iTPtzAXHgEzlexvSEeIq5+HjfzgOr/e1Y+uFHMnYmE
+	YSPKmEIKR0G6dPOKm2A==
+X-Google-Smtp-Source: AGHT+IHvJ8dEfKcNnXMABz10UaeeT69HP8Lk1wxbD9iD0qaf48/IS1MSPT0RnbBEjYoxj3+GAFAkCA==
+X-Received: by 2002:a05:620a:2a0c:b0:7c0:c046:7c6b with SMTP id af79cd13be357-7cd01178ec3mr2272929985a.53.1747142262532;
+        Tue, 13 May 2025 06:17:42 -0700 (PDT)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f98908sm702015585a.52.2025.05.13.06.17.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 06:17:42 -0700 (PDT)
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4774193fdffso98559661cf.1;
+        Tue, 13 May 2025 06:17:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2SDZPO0SMbkblp4BROnw8Zn/VvdN0k9LyId7Vx1rjBEzLVvPSFbtQID6DSEstQmK7m1+Xs3r5iT7f@vger.kernel.org, AJvYcCUeATIqHoJIv50COYOddQ6NCKDS4h/JdawObz6/l0n54rKhVJXVftJMq8PwJ3/MZNg4LeBcNRStl24NQf0GiNm0qkw=@vger.kernel.org, AJvYcCW8KuQZUBGQgWmbvpXlEPdbaxHskH70X5vYR+QE+w+ij9VjiiR39Wmso7il9RuxCimvn0HEk2SFqQtlmvtS@vger.kernel.org, AJvYcCWVQjoj/sK+gAvBXBdYO1tTR0q9zS2d4/JXoLh+SlUIAOBz8sKAynrveYdhdNRgj5eiQPmhq627rH2Y/NoZ@vger.kernel.org
+X-Received: by 2002:a05:622a:30d:b0:476:6b20:2cef with SMTP id
+ d75a77b69052e-494527b841fmr261435331cf.41.1747142261724; Tue, 13 May 2025
+ 06:17:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com>
+ <20250429081956.3804621-2-thierry.bultel.yh@bp.renesas.com> <CAMuHMdX_SVtXjQ_c1w0=qcWHqc+68u_EkJuUjm7R+s4fOYoMBg@mail.gmail.com>
+In-Reply-To: <CAMuHMdX_SVtXjQ_c1w0=qcWHqc+68u_EkJuUjm7R+s4fOYoMBg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 May 2025 15:17:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUxKs=4tUg8iNFDUFdZVSmXz8SvZsDnbjvmbQ_FBsRhwQ@mail.gmail.com>
+X-Gm-Features: AX0GCFv5UTlUTi8kd_Gbxa0jm4WghU13zL99Rsuwl_OkDeiWAjs1riAGF7hi30E
+Message-ID: <CAMuHMdUxKs=4tUg8iNFDUFdZVSmXz8SvZsDnbjvmbQ_FBsRhwQ@mail.gmail.com>
+Subject: Re: [PATCH v8 01/11] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 11, 2025 at 05:48:11PM -0500, Bjorn Andersson wrote:
-> On Tue, May 06, 2025 at 03:10:08PM +0200, Stephan Gerhold wrote:
-> > APCS "global" is sort of a "miscellaneous" hardware block that combines
-> > multiple registers inside the application processor subsystem. Two distinct
-> > use cases are currently stuffed together in a single device tree node:
-> > 
-> >  - Mailbox: to communicate with other remoteprocs in the system.
-> >  - Clock: for controlling the CPU frequency.
-> > 
-> > These two use cases have unavoidable circular dependencies: the mailbox is
-> > needed as early as possible during boot to start controlling shared
-> > resources like clocks and power domains, while the clock controller needs
-> > one of these shared clocks as its parent. Currently, there is no way to
-> > distinguish these two use cases for generic mechanisms like fw_devlink.
-> > 
-> > This is currently blocking conversion of the deprecated custom "qcom,ipc"
-> > properties to the standard "mboxes", see e.g. commit d92e9ea2f0f9
-> > ("arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM"):
-> >   1. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
-> >   2. The clock controller inside &apcs1_mbox needs
-> >      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
-> >   3. &rpmcc is a child of remoteproc &rpm
-> > 
-> > The mailbox itself does not need any clocks and should probe early to
-> > unblock the rest of the boot process. The "clocks" are only needed for the
-> > separate clock controller. In Linux, these are already two separate drivers
-> > that can probe independently.
-> > 
-> 
-> Why does this circular dependency need to be broken in the DeviceTree
-> representation?
-> 
-> As you describe, the mailbox probes and register the mailbox controller
-> and it registers the clock controller. The mailbox device isn't affected
-> by the clock controller failing to find rpmcc...
-> 
+Hi Thierry,
 
-That's right, but the problem is that the probe() function of the
-mailbox driver won't be called at all. The device tree *looks* like the
-mailbox depends on the clock, so fw_devlink tries to defer probing until
-the clock is probed (which won't ever happen, because the mailbox is
-needed to make the clock available).
+On Tue, 13 May 2025 at 11:38, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
+> <thierry.bultel.yh@bp.renesas.com> wrote:
+> > At boot, the default clock is the PCLKM core lock (synchronous
+> > clock, which is enabled by the bootloader).
+> > For different baudrates, the asynchronous clock input must be used.
+> > Clock selection is made by an internal register of RCSI.
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
-them anyway, but fact is that we need to split this up in order to avoid
-warnings and have the supplies/consumers set up properly. Those device
-links are created based on the device tree and not the drivers.
+> > --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> > @@ -35,10 +35,14 @@ properties:
+> >        - const: tei
+> >
+> >    clocks:
+> > -    maxItems: 1
+> > +    items:
+> > +      - description: serial functional clock
+>
+> The Hardware Manual calls this "operation clock".
+>
+> > +      - description: default core clock
+>
+> The Hardware Manual calls this "bus clock".
+>
+> >
+> >    clock-names:
+> > -    const: fck # UART functional clock
+> > +    items:
+> > +      - const: async
+>
+> "async" is the name on the producer side, not the consumer side.
+> "operation"?
+>
+> > +      - const: bus
 
-Thanks,
-Stephan
+Actually there can be a third optional clock, just like on all other
+variants except for SCIFA/SCIFB: the external SCK pin.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
