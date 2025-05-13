@@ -1,126 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CC2609EE;
-	Tue, 13 May 2025 13:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82214242931;
+	Tue, 13 May 2025 13:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747144157; cv=none; b=u2TdFHH3bX+To6z6EwkxfuCgbtYAIBygLzFU7z8+03+/vMDALJfvujjRwVxcVNDWadxlU9xe/4hTeUoHJVL9RAdKAais6DyLISaqRFqA/x09xW0OY312NzHEbcUvFHJG+bdMtvJQJoGv6ty20Z/VhvPRG+V3XsdpmaU0g5QpORc=
+	t=1747144192; cv=none; b=izFQPDCnDqwfRDTcGl14QCjnv5ALQco6B2kn17ufq9rXhUPGEwnD8oTG42gB+yLupVlXQYtF72YQ5RY5Xgr5afPczsHsfGlKndEgbwGg0ugjdrVpBKrIluKLCCNyM6xNKAugAZGsdQ/VduJSfl1+LLVvTMon+b6Y79XbzA1MvBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747144157; c=relaxed/simple;
-	bh=x7HMU+Yc7rGpSFHM6soCkqQhLrHEzGWqmticcYTG2Mw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uMJS15h7+PDCigIYgHA366jF+0MsXp+lK8G4yov4lzxt0E88rIbHEoKsY7aQ/+1TV5eNVxohNx8fpJ2rx+j6Gn4t1Y5KFDHiTkqpcplIwzyF8WLEsOQ4l1MDrUo6+ytVkXbj51ZPFOZxYE3VFP43mQXaQF0/RL1Ge2GglwTBLm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sLsMeBpU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B/N5qUAk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747144192; c=relaxed/simple;
+	bh=iXce77Zxe0hJqfiwEb6FAIjbqHrEaQ2HlNz9uvNBDUQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=shaqKQSch/hnBmR6shtVlGsWysab/1GrmAQetgY6dCdPp4ximDJ6cuAhVwBM0fMOAMgnMZAAW4ybdAMeu9iiOy0RALhjeIfh8yKIe58+uwBq4jTPV+9ZpMdDmd157tHIAJ5xHZ10xsBg/7Y0dNPV/UAqufZ+nuEWJm+BD8JZAOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Deoz/43t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sLsMeBpU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B/N5qUAk"
-Date: Tue, 13 May 2025 13:49:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747144147;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IvbrM2HweCKbU7x8wJ6Z3IlRDGtX/OrbJSX2JVavmR0=;
-	b=sLsMeBpUQEIPVUmg9GY1UG5wfQa2rpsvs8ih/AaAk44R6DPl91FjmfdCyV0seNsMv3Hxlt
-	7L6+2cIh+kgzeM8yc6zCDIkutZzBCDsvYNPoTGqkBhymK7bRTyuAOU6gEb84mywM+7JhMj
-	HdXmmcvVhIlUoJV0FfY1rhdwqevY33A0CLG/Ck0h5ejljIG478QJap0J47M+u1h7BjjyZB
-	TYq5hySS2qtjd973iWtPncMP+R7+4qEBlu/8Y2JwrEg5rRsHpbHSlSKmcvRlKOHA0fCRHc
-	EPcAsXnminVsAn+Hxon9v6SIdEcSpvHU3ALUKhHqOddgcrwGFyY9mhVAdB+CFw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747144147;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IvbrM2HweCKbU7x8wJ6Z3IlRDGtX/OrbJSX2JVavmR0=;
-	b=B/N5qUAkOrULlOetzTKfkAu7Li3XtrbxnxMmXQacGnmD+MAUBhbi1qFMrxLFyhfumD7hje
-	SHc8Vo2i7L6BZHAg==
-From: "tip-bot2 for Guilherme G. Piccoli" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource: Fix the CPUs' choice in the watchdog
- per CPU verification
-Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250323173857.372390-1-gpiccoli@igalia.com>
-References: <20250323173857.372390-1-gpiccoli@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Deoz/43t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA732C4CEE4;
+	Tue, 13 May 2025 13:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747144192;
+	bh=iXce77Zxe0hJqfiwEb6FAIjbqHrEaQ2HlNz9uvNBDUQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Deoz/43tY8IQC8vU47bA0UzoagE1pIqJg8dq0GUUUuDt1/CWtHwjZrcY8ifhBlFtO
+	 emuOJMENOeaxnhiu2+LgDRHN1VvQH18uwxEabwVShb0HrHb5m2JERJPnfu7ehjbgHS
+	 NifbKMYrOoydZD0QKHoGl1Ego89C+5c8hS/XXCNyAmBwa1Rssi+vq3P1Eq8n+llrHn
+	 SAsO/kvkP1Seb3icFkgPfGHHYr4zn6GgIDE4u/OY+IqNjjR8svFZHJEWymJ9dFByYC
+	 awa5BZ3IJKvWBk4KMo2/srEcabXRqBLNJMfm0GRU4rRvEKvzF3sUva0NvcNwVW99df
+	 l8LUH5H8lUeNQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD4A39D61FF;
+	Tue, 13 May 2025 13:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174714414676.406.18250814688771473751.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: dsa: b53: prevent standalone from trying to forward
+ to other ports
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174714422950.1672299.16837840764503369784.git-patchwork-notify@kernel.org>
+Date: Tue, 13 May 2025 13:50:29 +0000
+References: <20250508091424.26870-1-jonas.gorski@gmail.com>
+In-Reply-To: <20250508091424.26870-1-jonas.gorski@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+Hello:
 
-Commit-ID:     08d7becc1a6b8c936e25d827becabfe3bff72a36
-Gitweb:        https://git.kernel.org/tip/08d7becc1a6b8c936e25d827becabfe3bff72a36
-Author:        Guilherme G. Piccoli <gpiccoli@igalia.com>
-AuthorDate:    Sun, 23 Mar 2025 14:36:24 -03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 13 May 2025 15:38:55 +02:00
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-clocksource: Fix the CPUs' choice in the watchdog per CPU verification
+On Thu,  8 May 2025 11:14:24 +0200 you wrote:
+> When bridged ports and standalone ports share a VLAN, e.g. via VLAN
+> uppers, or untagged traffic with a vlan unaware bridge, the ASIC will
+> still try to forward traffic to known FDB entries on standalone ports.
+> But since the port VLAN masks prevent forwarding to bridged ports, this
+> traffic will be dropped.
+> 
+> This e.g. can be observed in the bridge_vlan_unaware ping tests, where
+> this breaks pinging with learning on.
+> 
+> [...]
 
-Right now, if the clocksource watchdog detects a clocksource skew, it might
-perform a per CPU check, for example in the TSC case on x86.  In other
-words: supposing TSC is detected as unstable by the clocksource watchdog
-running at CPU1, as part of marking TSC unstable the kernel will also run a
-check of TSC readings on some CPUs to be sure it is synced between them
-all.
+Here is the summary with links:
+  - [net] net: dsa: b53: prevent standalone from trying to forward to other ports
+    https://git.kernel.org/netdev/net/c/4227ea91e265
 
-But that check happens only on some CPUs, not all of them; this choice is
-based on the parameter "verify_n_cpus" and in some random cpumask
-calculation. So, the watchdog runs such per CPU checks on up to
-"verify_n_cpus" random CPUs among all online CPUs, with the risk of
-repeating CPUs (that aren't double checked) in the cpumask random
-calculation.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-But if "verify_n_cpus" > num_online_cpus(), it should skip the random
-calculation and just go ahead and check the clocksource sync between
-all online CPUs, without the risk of skipping some CPUs due to
-duplicity in the random cpumask calculation.
 
-Tests in a 4 CPU laptop with TSC skew detected led to some cases of the per
-CPU verification skipping some CPU even with verify_n_cpus=8, due to the
-duplicity on random cpumask generation. Skipping the randomization when the
-number of online CPUs is smaller than verify_n_cpus, solves that.
-
-Suggested-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Link: https://lore.kernel.org/all/20250323173857.372390-1-gpiccoli@igalia.com
----
- kernel/time/clocksource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index bb48498..6a8bc7d 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -310,7 +310,7 @@ static void clocksource_verify_choose_cpus(void)
- {
- 	int cpu, i, n = verify_n_cpus;
- 
--	if (n < 0) {
-+	if (n < 0 || n >= num_online_cpus()) {
- 		/* Check all of the CPUs. */
- 		cpumask_copy(&cpus_chosen, cpu_online_mask);
- 		cpumask_clear_cpu(smp_processor_id(), &cpus_chosen);
