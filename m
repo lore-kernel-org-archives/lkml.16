@@ -1,97 +1,78 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6421DFDB9
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E132B1548C;
+	Tue, 13 May 2025 03:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747106092; cv=none; b=RO/HMHXn3cQZRfLoT6DSbMLluJj3EJnp/7v8JYEy6L8HLmPoSfiM4wKj3K7OTW4ouzuyfGd93Q1oMAFvMqpMPdHk5ayyekcoL0BSWa/NluYSE2A4GHMYugk7VYW0fEL2TZ+kkoRdrQByXb70QN3vVVJd5WKgt3of7VCpstS+fxc=
+	t=1747106355; cv=none; b=atpcbCuRkhaPPaWEUnfHZTUDsUMMGWeqJPfu6qOnOSFbBU1yjIHwk2EdtR5L71+Mgm2dGM/KpWipb65Nl7QjzHe1UlcZn3x6vfJ9z51+DUOFKFpClaIhYnSm3rqSW+BGBuWIKVxIUmGfVIaZXbIdShXLCFM0oR6vvY1AxoWDprc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747106092; c=relaxed/simple;
-	bh=bq4n+CapkiEufHmuXYXMnRfxZsa90fHutL5r54oLDFw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UBsTpzVLXRCo20nD2ndkOSD2V3c6FuNjDgVTCoNpxiX/ruAtrYeoyKbKbN1YSbcyHoVDZudjn4nSdODXUHqAecy3KDB0/yDDZAkyjMxRsdX/17lMxWvMF+liWrNgfphUq5JediKVWH91edho+5aQtBwHCgOvKNIt7az0ye5Re8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VHLI3S18; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747106355; c=relaxed/simple;
+	bh=cewvoZrkJRWzz9sOFmqGO8qc4hsNBY8nqx/F6G+sYAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVMMU1yVhnYYFrp5gqFBvTXpYk1Q2RBxXaxqfYIzuTM+eLgmBqSYFE3Mkud3X6R3S3QZEL/Jv93vSmBG81Iy3fsfJENKv1T0zK5HGDFpKUMW3JgXwPLX5G6Ko/mfd4jFVgobg+kZqgcNolJHjXa573gcXOA3zUQzyh1tHnx2mAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MjX1FF5L; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VHLI3S18"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747106089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FByBL+Uk6nVPajbs5jWaOtV9bA6rKUCuGTge/ypRKI4=;
-	b=VHLI3S18C0ilRJtHPuy5DdQfm7qGScWd+9hI+WlIJvZueihhycJEFqGZU2rpRElPW0R7dG
-	eRrrEvnQdBtAUsWD0dya+31904+ICeO+NjH2WCcHY18grx/0I+CEACOvkXQojrVYoAv2gN
-	mjw9+y9HBGPc9spYYkZCsrqOavp9eyE=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [RFC PATCH 7/7] memcg: no stock lock for cpu hot-unplug
-Date: Mon, 12 May 2025 20:13:16 -0700
-Message-ID: <20250513031316.2147548-8-shakeel.butt@linux.dev>
-In-Reply-To: <20250513031316.2147548-1-shakeel.butt@linux.dev>
-References: <20250513031316.2147548-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MjX1FF5L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0M9epOa8EtgjN2hW41pzy7m/2PgNBY8TSfcb2WsZvPU=; b=MjX1FF5LbtkTgftofXkp6yM9P+
+	xouhn+xC60S5db9RZdilVzmmsNVs+qNMVOp3Tbwoko5X4EVP4Gge1OMUb/kgC2iemlSUJo3cQVUyq
+	wcg0y8K4WPElB9b9uX/+6Xe/PcaXCZf9j3jMtu45Hb8JRsOA7PKnYVoO/RQtY84xG4X5dJMLS+eA6
+	9XgyWUZIP+Zg+7gcv8REaSMgAqRvgqrNxPaCI+4O4NPSMRPNTaL1AeaCoIt4qw1IuDk3LVm6COX+g
+	ucxrpxpf/CrHaMuGsIMKiP1nA60nCFq800uEFgltjtyLlsH+9XTVv7mVSX5xiNbvAJLIv8F/1rBKs
+	PWLtIbzg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEgAZ-0000000AU2i-4AqK;
+	Tue, 13 May 2025 03:19:04 +0000
+Date: Tue, 13 May 2025 04:19:03 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Byungchul Park <byungchul@sk.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	almasrymina@google.com, ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+	ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	edumazet@google.com, pabeni@redhat.com, vishal.moola@gmail.com
+Subject: Re: [RFC 19/19] mm, netmem: remove the page pool members in struct
+ page
+Message-ID: <aCK6J2YtA7vi1Kjz@casper.infradead.org>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-20-byungchul@sk.com>
+ <aB5DNqwP_LFV_ULL@casper.infradead.org>
+ <20250512125103.GC45370@system.software.com>
+ <aCII7vd3C2gB0oi_@casper.infradead.org>
+ <20250513014200.GA577@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513014200.GA577@system.software.com>
 
-Previously on the cpu hot-unplug, the kernel would call
-drain_obj_stock() with objcg local lock. However local lock was not
-neede as the stock which was accessed belongs to a dead cpu but we kept
-it there to disable irqs as drain_obj_stock() may call
-mod_objcg_mlstate() which required irqs disabled. However there is no
-need to disable irqs now for mod_objcg_mlstate(), so we can remove the
-lcoal lock altogether from cpu hot-unplug path.
+On Tue, May 13, 2025 at 10:42:00AM +0900, Byungchul Park wrote:
+> Just in case, lemme explain what I meant, for *example*:
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+I understood what you meant.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index af7df675d733..539cd76e1492 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2060,16 +2060,8 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
- 
- static int memcg_hotplug_cpu_dead(unsigned int cpu)
- {
--	struct obj_stock_pcp *obj_st;
--
--	obj_st = &per_cpu(obj_stock, cpu);
--
--	/* drain_obj_stock requires objstock.lock */
--	local_lock(&obj_stock.lock);
--	drain_obj_stock(obj_st);
--	local_unlock(&obj_stock.lock);
--
- 	/* no need for the local lock */
-+	drain_obj_stock(&per_cpu(obj_stock, cpu));
- 	drain_stock_fully(&per_cpu(memcg_stock, cpu));
- 
- 	return 0;
--- 
-2.47.1
+> In here, operating on struct netmem_desc can smash _mapcount and
+> _refcount in struct page unexpectedly, even though sizeof(struct
+> netmem_desc) <= sizeof(struct page).  That's why I think the place holder
+> is necessary until it completely gets separated so as to have its own
+> instance.
 
+We could tighten up the assert a bit.  eg
+
+static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
+
+We _can't_ shrink struct page until struct folio is dynamically
+allocated.  The same patch series that dynamically allocates folio will
+do the same for netmem and slab and ptdesc and ...
