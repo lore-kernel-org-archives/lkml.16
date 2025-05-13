@@ -1,113 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAF41E5B94;
-	Tue, 13 May 2025 07:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BE71F12F8
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122591; cv=none; b=URFxxIC+sV5NTM595YjVU8CxeE7/Cn0sU2fqnioetpItBnukas/xiypj+zGC62/T7Gdg8yqn5Q/01ZSqC7E8NDvS6oU+eHxu2ep91aX/UC1fGZjeu5jrWevkNU9Hk9bTPrP4aZwt88sF6ofittY3yi/JbNllTgKnnNpKn+Znqkk=
+	t=1747122625; cv=none; b=EdM7eNAFMdAa2NU3GDf3SotMIN4rcsWQPI1XDnek+7qEpRPDf/3wfgNUiPz+M1fY1W+wLqoXAvvQV124d5pJSRmF+kYqIk8lan579x9AvGJCxkjUakN0d+ZSHisZF+14y4h4sb40aRSSbfUHueVkqHQecIgW9uKXlGzqYJX8ytQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122591; c=relaxed/simple;
-	bh=z+XKwlKxvho0rlpEIn0bjoCqOXNrPIEWodnNK5WbJJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYViPWda8p+NEHHCvzN5Yo8bR6JbL4Ii672Z9Z0pMn4FTV1XVG0Uxrv+PkVOotsqVM4yvlvEVuT6I5h3N+4JMBMTdZTMdIAOXrsGPfCtMmWuLBXjChnVjfTIYZbeJLOX5XdSwx6o4Hz1+wNrEs/F9ypg53zmL+9VhUETCKpw1uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICyfMrK8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747122625; c=relaxed/simple;
+	bh=krU1Sg3RCwMKkG2EHCWcfC+xnsb9o2PFUa/MAVSJCEQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PBBEJqhrOWMYMVhijgvV5h/eTo0zkhjVmE5c1hsvvrr7oGz6U21aHELesZRY6pRM6eC1yjsOjhFOuauUhTp77Kb+vHKNSHyI00nItCtkSBNwE3r0FEOvfby+fO8IscvtyhtAld5kaci7wzOTFjLj3Cws86pm4fmFLyOQx6GHzDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WyfEMidx; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICyfMrK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE39EC4CEE4;
-	Tue, 13 May 2025 07:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747122590;
-	bh=z+XKwlKxvho0rlpEIn0bjoCqOXNrPIEWodnNK5WbJJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ICyfMrK8mhiA/OukQgVVroae9K1GoFJUvWMzgTt2E9VSNfkJVyx/BiJXh7hDwRupN
-	 vQugGeWqM/CZbN07jv+GX+v7HG44hoBoz7j1e/xSsj/MrkgkUaxC8Vw0zpZT6eeXFR
-	 5pDKYrmSzylrdVyA6z2oLJNWxwsu9Af9MqA46swDCjseS7ly4YQ6W7qzvB90G9vcKN
-	 gMPsr6tcbDpNY+sLEN8fVVA1Fe8zFmpd9TUPkKiRRjfBxBjA4oUQh/ABIb0I+ai1VE
-	 T6A0zExe59APk/1qaqjF8GO+BWLk9cBZFzQs2DCDYTAXkhKk1Slpx2OsT44RbP5ASH
-	 fZ8VPCWKfD5EQ==
-Date: Tue, 13 May 2025 09:49:43 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org, 
-	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 07/12] Input: sysrq: mv sysrq into drivers/tty/sysrq.c
-Message-ID: <ddkgmitslawut5zmeinxvuiwsfzxx5ysn5gtuvruemnnrhicwn@lkpckufsinum>
-References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
- <20250509-jag-mv_ctltables_iter2-v1-7-d0ad83f5f4c3@kernel.org>
- <202505091010.F2F8C676@keescook>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WyfEMidx"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad2216ef31cso613479466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747122621; x=1747727421; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mbx15P5bR+V1GlX7KV4xE3K+3/1ghgzLSbo/fj+Lw3M=;
+        b=WyfEMidxE48pECEG6aHQbPwQnLVKTEdjFrg1li7A3F3GYQNpoBQQA+l6W1agUMRMA1
+         cE+pquGXDNC/9aoe9BZPDl3tIKyWCbgAhfOgpbtGrU6Bq+UO5upr0J5fu5tfFVY6kPaq
+         Gkx7JOvh90Fyk3QjL6ksYZCBJk/FIbvxp4vDa5/IwvwxqVk/2dOrrMEY2gmbGSljaPkB
+         c28aAeImvtFnNVBBNgQh/StItLNMCYLvRSslGyBS1866PHeBqiqC8AoESybLUiI4K7IN
+         hoUd8RoN0E3Hz6o44q4RuFtBTtAxlVl0RYpLD9st6f7Q93TpJT0dwa/02jXHkuBw51xF
+         /tcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747122621; x=1747727421;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mbx15P5bR+V1GlX7KV4xE3K+3/1ghgzLSbo/fj+Lw3M=;
+        b=pdK3TgKteibRFMmJ9V+y6E9jZMhhr000QMyteNqlt4hhh7gYBjXAt2Qcm0ZUoIUDDc
+         V3ikOhQ00yAPg56tJoEsSOydc4sCWIxh/ThSOx/MdzOdm/1cHLN+XvF+Cmj8s7bx/jqZ
+         A/gCJN7mXgk8I8u2Zl9I+6TYdmi6ipyA4YCFm+cwvHQjN3l8MjyHgA7cB4Or37MGLraC
+         1QcVkEF+lwor0b/v5LtLqaHPDetpgfMByK8/ELgqx3iy6HUUT2QXFx+6fO2N/552FyWW
+         n0259Vqs+xvP3GAvrqc9+2gNpdzwXZ6iyugx/tlKEg0urWmBkaG0KH20Cls4TyC8x7z8
+         IAbA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0FD7RKEpCIQkNi3XpdC4ePPyImL4D9Ujw2HzI/4ZvZPFVTVoLzFxgr+inOHirer2/+4A7evFzyxbchos=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1rmShC/FMd/FL7Ge6jhIo5JnMlNfdu2ko2eejpj0/LDcuxuA
+	+J7RrBsY3sQpKRrIOWbwLzYhoGLQqJgkNMRS6AjFjpdCYdrptLbezVfI8ag8eXI/HkH2SHNSr+6
+	V0xdZ0v4G7WnTl2f5cxpllVBDHN/iNXhLSz1NSQ==
+X-Gm-Gg: ASbGnctS8t4kT2KK2A+i/gMu1KMyw+HDACwYwUjIdxQ2kLL8V0Ck2+JqO5On96PBmqu
+	OKIGAgGidpCcB+ddJNJsTFce7donKpvD3bJG7A3aNOwU1L7Yf2Ai9KpF+dYSN/XhjOs1COb5qfq
+	DrE9Cao2LKRZHrb5n7F0SqTfayXNNADU0=
+X-Google-Smtp-Source: AGHT+IESJNifxjTIWbN+YaTvGiDVixINiLHP3D+SQIGf0ilJ+WDW4SxVXcU8CZ4FaumUN8fK3f7r4RyGjM5M61BADus=
+X-Received: by 2002:a17:907:3f1b:b0:ad2:51d8:7930 with SMTP id
+ a640c23a62f3a-ad251d87b27mr699367966b.12.1747122621134; Tue, 13 May 2025
+ 00:50:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4m4abidfdrbxi5yd"
-Content-Disposition: inline
-In-Reply-To: <202505091010.F2F8C676@keescook>
+References: <20250512132850.2973032-1-neelx@suse.com> <20250512175353.GA3472716@zen.localdomain>
+In-Reply-To: <20250512175353.GA3472716@zen.localdomain>
+From: Daniel Vacek <neelx@suse.com>
+Date: Tue, 13 May 2025 09:50:10 +0200
+X-Gm-Features: AX0GCFvpOlnDoiBFJ9GVPix74qGApiZGAyvW8-mPyHiTR65notxoBWDkhFW8lGU
+Message-ID: <CAPjX3FeEvwkKWPB+DqZYufmjyAuyXxzHmtL+S6z7o971=yMxWw@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: correct the assert for subpage case
+To: Boris Burkov <boris@bur.io>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 12 May 2025 at 19:53, Boris Burkov <boris@bur.io> wrote:
+>
+> On Mon, May 12, 2025 at 03:28:50PM +0200, Daniel Vacek wrote:
+> > The assert is only true in !subpage case. We can either fix it this way
+> > or completely remove it.
+> >
+> > This fixes and should be folded into:
+> >       btrfs: fix broken drop_caches on extent buffer folios
+> >
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+>
+> I would lean towards removing it, personally. But LGTM, thanks.
 
---4m4abidfdrbxi5yd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good. Let's remove it then. Will you amend your patch?
 
-On Fri, May 09, 2025 at 10:10:28AM -0700, Kees Cook wrote:
-> On Fri, May 09, 2025 at 02:54:11PM +0200, Joel Granados wrote:
-> > Move both sysrq ctl_table and supported sysrq_sysctl_handler helper
-> > function into drivers/tty/sysrq.c. Replaced the __do_proc_dointvec in
-> > helper function with do_proc_dointvec as the former is local to
-> > kernel/sysctl.c.
->=20
-> nit: do_proc_dointvec_minmax
-Thx. I even added a small comment to the commit message to clarify:
-```
-Move both sysrq ctl_table and supported sysrq_sysctl_handler helper
-function into drivers/tty/sysrq.c. Replaced the __do_proc_dointvec in
-helper function with do_proc_dointvec_minmax as the former is local to
-kernel/sysctl.c. Here we use the minmax version of do_proc_dointvec
-because do_proc_dointvec is static and calling do_proc_dointvec_minmax
-with a NULL min and max is the same as calling do_proc_dointvec.
-```
-
-I'll also put a comment in the code to make sure that a min max is not
-added by mistake.
-
-Best
-
---=20
-
-Joel Granados
-
---4m4abidfdrbxi5yd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmgi+ZcACgkQupfNUreW
-QU+v4Qv/efXaubw/UZ0/uYrlHOJZg+VxZvyldRdbiHjo3Ub408gh2trrRYtceCsY
-ICssy3kBVRggr7y+KLqjXZZOVoAz8/PVXR38X+6FozTLuSpwrtIY0vLeXeew7GU0
-kwYWrcn+MtqfBuo32INYySExZJs7/NoQLVqGwQrPIdRhuM/N/srMoe/uGeMwQnhl
-mLdzg3jlOdcYSxbKj6bdCMBg/2qHTWIv9iVQfdRNy3bALXOmvGJNlHBgd2qROsyg
-T7Y78uAfyz2h/mnTrRi0JxjssYLfjFQLoy2+Y/KBwonDdAyRRRQg6na93jB+DJWs
-Veq4CcLz5XA4OfxXNPosQYtrfzKUahzQSiwGvOq4F+fNhp2JrHf3jYmojoC2pPSN
-e0AV2jZBVk7Y+gkyeEkYgEF9A7AtHqFXLlCc5wovR/dYG8seSJWLuaVkphB0oXdC
-QK0b1e9pm6iy1k5xhRhP7KZCcoqynySk816gPhatZI0ARh0+5YJT8D2TEJYkCvJx
-IoAnZ+8h
-=dHUN
------END PGP SIGNATURE-----
-
---4m4abidfdrbxi5yd--
+> Reviewed-by: Boris Burkov <boris@bur.io>
+>
+> > ---
+> >  fs/btrfs/extent_io.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > index 80a8563a25add..3b3f73894ffe2 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -3411,7 +3411,7 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+> >                       continue;
+> >               }
+> >
+> > -             ASSERT(!folio_test_private(folio));
+> > +             ASSERT(!btrfs_meta_is_subpage(fs_info) && !folio_test_private(folio));
+> >               folio_put(folio);
+> >               eb->folios[i] = NULL;
+> >       }
+> > --
+> > 2.47.2
+> >
