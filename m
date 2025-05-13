@@ -1,134 +1,218 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9205695;
-	Tue, 13 May 2025 07:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B78178F4B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120453; cv=none; b=NDX81ZazuNcazW8mqY6IMvmttDLUl0GrPm02B7V9wJtxOZZFTvFSwYcMp7yVmLBmUq3Q9JoTOGNKOj2erPqbxEph0z2rUr+C7jPPhFoY4uDGH9LYjme3J2O8bu5egnXyCSQW3o+wcKEvl3nH/FMLY9MyMmXVa87lxZvWa92godg=
+	t=1747120527; cv=none; b=otdSF0VvhQZReLVXf8f9isdrfug3KLJl8QFNBE3aK/iq5sc2rJRWHhexZ2I+ummqF3e12AR4peU5fJxmHwosxgEGoNwaHRflebp6f/WyMpD5e+u/a/NrK9I9AazWj5eU4UGFMeFS04iEFQYzDgVBOi+wUGdVDdtU3rlnfc1hh1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120453; c=relaxed/simple;
-	bh=K3drLE2Oi+IvVbndZqChwht2avF2P5gnpQVpowPrJUE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=C6NGTEnaOFk/zr5B0UOqoChg4cnaiUUsvcqXZNtEoYPFLik8udvw4s9TkC3YValWRsel6bC0bvf7s68RDeG0tk8iA8M4jtPfVL8s1r5RC9A52Oq5SD0kLOiGP2s9Imy75u7oqC173gOGTnXwCbj2Q4o+y4vXyBVZ7L6EjWHrNvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZxSPb0dc6z4f3lVX;
-	Tue, 13 May 2025 15:13:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4A98D1A0F87;
-	Tue, 13 May 2025 15:14:05 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe1878SJofX8SMQ--.8827S3;
-	Tue, 13 May 2025 15:14:05 +0800 (CST)
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
- <20250512011927.2809400-16-yukuai1@huaweicloud.com>
- <20250512051722.GA1667@lst.de>
- <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
- <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de>
- <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com>
- <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com>
- <20250513064803.GA1508@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com>
-Date: Tue, 13 May 2025 15:14:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747120527; c=relaxed/simple;
+	bh=jVZ5/2j32r5gSro7eUI5O2QTGiEFQ0aQT1niktiUiGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0zUygbXHrwf6lyW7QxAbpl/BMycUbx8Q4iGoVDSQDPh5Dyn81TadYPbnXiBClhueZH+pM1h8TjIBhWsYLExCO0XURj0MlYNHpRn5s/rjFiOV8oukBx6QZmtXQ+UAsD4AXR8Nr8l/e7m04SDvjO1XFvIFlfpdzs8vI8vZ3U0xqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2ROraWs7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=p0MMbgRl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2ROraWs7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=p0MMbgRl; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2ROraWs7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="p0MMbgRl";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2ROraWs7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="p0MMbgRl"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 447B01F443;
+	Tue, 13 May 2025 07:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747120524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=be8oLaF1XY+ew3NrcaBsZrwtLFQ8Y+wmaaeGX1M5udQ=;
+	b=2ROraWs7n7h8YDCl7bDSG0oIj+Cp+2cg0DPODFWCnbfdYwjSLEMsUAXWHkhExob9HSav53
+	7heEoJS9XabZoDlnx4ALiNtc2xJ1J7v0Yi1Mb3NjL1RFFpBt7CaKSlwZIFpS7qYiLoDYDJ
+	w4JwIciqwPCSp6Mv8cI1ydsaPNDVxxg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747120524;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=be8oLaF1XY+ew3NrcaBsZrwtLFQ8Y+wmaaeGX1M5udQ=;
+	b=p0MMbgRlMPZl8K82MK4rdhKr93W8rKYimUD6vBwRNDQRO7CUrXOKiewqO0K5dWALz44m1Y
+	DkIVOHi56A1xQ8Cg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2ROraWs7;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=p0MMbgRl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747120524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=be8oLaF1XY+ew3NrcaBsZrwtLFQ8Y+wmaaeGX1M5udQ=;
+	b=2ROraWs7n7h8YDCl7bDSG0oIj+Cp+2cg0DPODFWCnbfdYwjSLEMsUAXWHkhExob9HSav53
+	7heEoJS9XabZoDlnx4ALiNtc2xJ1J7v0Yi1Mb3NjL1RFFpBt7CaKSlwZIFpS7qYiLoDYDJ
+	w4JwIciqwPCSp6Mv8cI1ydsaPNDVxxg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747120524;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=be8oLaF1XY+ew3NrcaBsZrwtLFQ8Y+wmaaeGX1M5udQ=;
+	b=p0MMbgRlMPZl8K82MK4rdhKr93W8rKYimUD6vBwRNDQRO7CUrXOKiewqO0K5dWALz44m1Y
+	DkIVOHi56A1xQ8Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F31981365D;
+	Tue, 13 May 2025 07:15:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id S4mxLYvxImjwVgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 13 May 2025 07:15:23 +0000
+Message-ID: <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+Date: Tue, 13 May 2025 09:15:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250513064803.GA1508@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXe1878SJofX8SMQ--.8827S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr48Ww4xJryDGrWDZry7Jrb_yoW8WF45pr
-	WrKan7Grs8GrsFqF1xZa43WFyrKFWvvrZ8JayrW3WrGw4jvrn5XF4rKFySy3ZrAr1kG3Wv
-	qr1ftrn8Ca1UZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org,
+ linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Meta kernel team <kernel-team@meta.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Peter Zijlstra <peterz@infradead.org>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+ <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+ <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 447B01F443
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.51
 
-Hi,
-
-ÔÚ 2025/05/13 14:48, Christoph Hellwig Ð´µÀ:
-> On Tue, May 13, 2025 at 02:32:04PM +0800, Yu Kuai wrote:
->> However, for bitmap file case, bio is issued from submit_bh(), I'll have
->> to change buffer_head code and I'm not sure if we want to do that.
+On 5/12/25 21:12, Shakeel Butt wrote:
+> I forgot to CC Tejun, so doing it now.
 > 
-> Don't bother with the old code, I'm still hoping we can replace it with
-> your new code ASAP.
-
-Agreed :)
+> On Mon, May 12, 2025 at 05:56:09PM +0200, Vlastimil Babka wrote:
+>> On 5/10/25 01:28, Shakeel Butt wrote:
+>> > BPF programs can trigger memcg charged kernel allocations in nmi
+>> > context. However memcg charging infra for kernel memory is not equipped
+>> > to handle nmi context. This series adds support for kernel memory
+>> > charging for nmi context.
+>> > 
+>> > The initial prototype tried to make memcg charging infra for kernel
+>> > memory re-entrant against irq and nmi. However upon realizing that
+>> > this_cpu_* operations are not safe on all architectures (Tejun), this
+>> 
+>> I assume it was an off-list discussion?
+>> Could we avoid this for the architectures where these are safe, which should
+>> be the major ones I hope?
 > 
->> +       BIO_STACKED_META,       /* bio is metadata from stacked device */
+> Yes it was an off-list discussion. The discussion was more about the
+> this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
+> prefix and how I should prefer this_cpu_* over atomic_* for my series on
+> objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
+> not nmi safe for some archs and it would be better to handle nmi context
+> separately. So, I am not that worried about optimizing for NMI context
+
+Well, we're introducing in_nmi() check and different execution paths to all
+charging. This could be e.g. compiled out for architectures where this_cpu*
+is NMI safe or they don't have NMIs in the first place.
+
+> but your next comment on generic_atomic64_* ops is giving me headache.
 > 
-> I don't think that is the right name and description.  The whole point
-> of the recursion avoidance is to to supported stacked devices by
-> reducing the stack depth.  So we clearly need to document why that
-> is not desirable for some very specific cases like reading in metadata
-> needed to process a write I/O.  We should also ensure it doesn't
-> propagate to lover stacked devices.
+>> 
+>> > series took a different approach targeting only nmi context. Since the
+>> > number of stats that are updated in kernel memory charging path are 3,
+>> > this series added special handling of those stats in nmi context rather
+>> > than making all >100 memcg stats nmi safe.
+>> 
+>> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
+>> But AFAIU lib/atomic64.c has the generic fallback implementation for
+>> architectures that don't know better, and that would be using the "void
+>> generic_atomic64_##op" macro, which AFAICS is doing:
+>> 
+>>         local_irq_save(flags);                                          \
+>>         arch_spin_lock(lock);                                           \
+>>         v->counter c_op a;                                              \
+>>         arch_spin_unlock(lock);                                         \
+>>         local_irq_restore(flags);                                       \
+>> 
+>> so in case of a nmi hitting after the spin_lock this can still deadlock?
+>> 
+>> Hm or is there some assumption that we only use these paths when already
+>> in_nmi() and then another nmi can't come in that context?
+>> 
+>> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
+>> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
+>> irq_save+spin_lock. So can't we deadlock there?
 > 
-> In fact I wonder if a better interfaces would be one to stash away
-> current->bio_list and then restore it after the call, as that would
-> enforce all that.
+> I was actually assuming that atomic_* ops are safe against nmis for all
+> archs. I looked at atomic_* ops in include/asm-generic/atomic.h and it
+> is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
+> cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
+> using arch_cmpxchg() instead. I will dig more.
 
-Yes, following change can work as well.
+Yeah I've found https://docs.kernel.org/core-api/local_ops.html and since it
+listed Mathieu we discussed on IRC and he mentioned the same thing that
+atomic_ ops are fine, but the later added 64bit variant isn't, which PeterZ
+(who added it) acknowledged.
 
-Just wonder, if the array is created by another array, and which is
-created by another array ...  In this case, the stack depth can be
-huge. :(  This is super weird case, however, should we keep the old code
-in this case?
+But there could be way out if we could somehow compile-time assert that
+either is true:
+- CONFIG_HAVE_NMI=n - we can compile out all the nmi code
+- this_cpu is safe on that arch - we can also compile out the nmi code
+- (if the above leaves any 64bit arch) its 64bit atomics implementation is safe
+- (if there are any 32bit applicable arch left) 32bit atomics should be
+enough for the nmi counters even with >4GB memory as we flush them? and we
+know the 32bit ops are safe
 
-Thanks,
-Kuai
-
-  static void bitmap_unplug(struct mddev *mddev, bool sync)
-  {
-         struct bitmap *bitmap = mddev->bitmap;
-+       struct bio_list *bio_list = NULL;
-
-         if (!bitmap)
-                 return;
-
--       if (sync)
--               __bitmap_unplug(bitmap);
--       else
--               bitmap_unplug_async(bitmap);
-+       if (current->bio_list) {
-+               bio_list = current->bio_list;
-+               current->bio_list = NULL;
-+       }
-+
-+       __bitmap_unplug(bitmap);
-+
-+       current->bio_list = bio_list;
-  }
-
-> .
+> I also have the followup series on objcg charging without irq almost
+> ready. I will send it out as rfc soon.
 > 
+> Thanks a lot for awesome and insightful comments.
+> Shakeel
 
