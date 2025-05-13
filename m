@@ -1,113 +1,123 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2814828366;
-	Tue, 13 May 2025 01:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A7C28366;
+	Tue, 13 May 2025 01:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747099281; cv=none; b=hGlQfer+qzxRaRncQDA6mFv7PvSEcrBnP47cisxDxQDLX1qQo46iQ0SkscVUC8VzUDMtZhRSd7OvjqV/v0p7xYveB0lz0VVGk3tn0JE5rw2WFvpa2SDkZoXkumDPow6ET92U4bf2U3bewAwZiaFaJQiNtHiQ7UrFKHCGzU4j7DQ=
+	t=1747099569; cv=none; b=Rewajh0MAj4hIBpFzUuPpYpKvBIhdv1fXnpbozUchHmX+iUdbZD2H5X90BNs5RBSb61ShurH2jPwK8xff4paNcMhK8fJJfXoF2iz27timsd5VWDFbDj5Hd+auy0pz5x3MAAORg6ftbU1AeJRiQyn3rN+mGutLsUKUUFcdjJaN7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747099281; c=relaxed/simple;
-	bh=+zXFHp+zs7okALBFZfHmltCz3nqOH4MQBGvpJBntwaY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=iRpB3+NuiTeY4eD/vSgNYJ/kx/y68VWZMeF1mHrGw+a2JBiA7dA3e+HnBhjbUb1jdE1C9qSZHlE37bcfzL0FNypzuXXCfixir5jMnjZ9nV7k6n58QliVdeTzw1MpH7NQ9wMq1N5Wgs6/nzbcU3i7MiMU+6XlT8g5Caw3cFIjDYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=Co1n7HhM; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+	s=arc-20240116; t=1747099569; c=relaxed/simple;
+	bh=eKcHTXzvmztc5eqDmcOxsw9eHj/ztfSsGBQlW2xyDzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NFhcW+uV/jSQyncd4kbucUcMxGJiNSWDruIsbM7EJJfLDfVLHZkrwQFYMDzy0XfDvoCBes7nbIWbhKq8cPVAsQHXGPCXOht5YpXKr05dLrMxEURimTrpF454OLZQdUM5jQP8U/2thnnQm6DhkxkPpk1tstxyp+dZlsg6TNlMs3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vsk033Sv; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="Co1n7HhM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1747099212;
-	bh=sx0QPXnSaLIf4F34i9zHng6KtwZzILwK0rjOsdgpCTc=;
-	h=From:To:Subject:Date:Message-Id;
-	b=Co1n7HhMer8FJlSY9wEQbv7GPvFZf/ZJmY5ZKsmh9Qcjgh3ilo2+j9VAsQ3o/IZvS
-	 Jw+RjyP1i8c4Fpj01luMmECgDyxgwWx3Y85cA7ffZKL8s1cKKhHn+Eu+/BkONJsNbo
-	 EG8GAt3qjwWro6K8biikU2bKEf7paevU9MmpTOWg=
-X-QQ-mid: zesmtpgz8t1747099209t919a02de
-X-QQ-Originating-IP: 5vhkHeA2dWXXDt212fbrUzKzkNBcuE37BFyAXXTQglI=
-Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 13 May 2025 09:20:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14605522553798699493
-From: Chaoyi Chen <kernel@airkyi.com>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] Convert Rockchip CDN DP binding to yaml
-Date: Tue, 13 May 2025 09:19:02 +0800
-Message-Id: <20250513011904.102-1-kernel@airkyi.com>
-X-Mailer: git-send-email 2.17.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MxdW4jxL6NvXQoGjJXfegqbg1k50qSDlLw4rve6vJXOuUogvtaDcDkc/
-	KWnLXy/+T+NkJ+Izy6Z46f1fWP/dPjVv8e7irs6piqewz3yy8enrSTNAQ+0zCKsNZ4dbxHL
-	ujLnAZ3jIAFUI7t3BosbH3LbUB3tBapDrkVumWTLVBiqg+XpauhYALlJ7Qsl27bTrUUhs6T
-	rlVrFl682kRAJQPWC1fjChxxmE+w3ZdE8x5tfSBTsAF4/34XpdrlV3F2A8kvkdH2qnYtadx
-	Wm6/OWXIYhwrY1uNqdYqDBhQ+xX6HS0psQCc2LpRZp4M5UIJQQ3s6p8K/xArjCHDR+Nw1tj
-	8ioF5lM20/wFuAPGxadFHhDQTbmllcUEwt30KIrCXSsgkwZ83VipnXst96YxsR49aCpyEZF
-	OskKu2luiOX3lbIhcMZsgHPm9BURDVVrC4UARmIlm98DnxjavBaffA9Ro75WFfhwYUh4/kB
-	iTpxOGvvvLOkyz7dE/4HySdCOHs6iG9jZEoD6MoQiqRrlhPnvM8Gb2HEkistD9JOL2RAfTq
-	TEwQmeZ1I0FTqgYKNZswZMVZj3OdBHwc1jlDquIkLUo2lhXgOyW+Vqo+8/Gd5TIxa8XyQZO
-	9QGHyj1SeD7U14Sm+3Jyl34s3/EXfOKvxcolPNVF2Jhcq5XIBIsw5+GurGFMY5hjKB6y17I
-	nG2l2wjJMaGqDa5xQAY0S96j6c94nlnAVyYZ3C8QhDbm0rEu0AZjXvF3HJie+g3vBiWn592
-	p0XZSnt14AoyzHZm8JWeBjhplcI68tIc4LPOoCmWccwP6dOKYg2b9SWbuy9T6HFchtuEdIa
-	TY/jcFzpcIxWZ8oOMi5QAYf8d93m4/bG3oebLDT751XYGk2vb2Vo9wi1ifWX6Gypmma+azs
-	yIVtsllBzQL0lbSRw5MtKn1s0PiV/XFRT+io00QCUkU3RI51faJnG9sex0ZumtoodOL8je0
-	nT88DxQEJA3cjFzfhszIP2ASIC6yyC2y8ftqqAi0zSYjRZA==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vsk033Sv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747099569; x=1778635569;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=eKcHTXzvmztc5eqDmcOxsw9eHj/ztfSsGBQlW2xyDzc=;
+  b=Vsk033SvFnb/nKfojtweB9T1Dvgxslm5wHO7WNg/cb03DrghwTPLkIJs
+   sq+F6wTgyvJV2k1hRAUoLOPFRmKXq6Xds+lSzKiitmvSiGjxZBStg+XB6
+   T1WGCtuj8Wsg+QmoTAFjchamPL10CkKYlJ29ZsfSgLUUB3LY1JpwRM6DO
+   TNfDBfpwdvWTDGlWc31rom8UI9gNcjwRmWQYpH30zweJD/hoLonL36bO6
+   UkUymaOQkwNkM36QfDohsncqIiomIgDK015nE462vtG+Aogcd+4d6Pac+
+   p9qLwCbWCzkgirXm2yw8QVKxhpuYQMqsjVfp2z0QAsDfFLi8LNyeKQB6Q
+   w==;
+X-CSE-ConnectionGUID: PPNyX98uT7+KAXgsrgI11Q==
+X-CSE-MsgGUID: J0280pdHTyu31BksoliiDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48616481"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="48616481"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 18:26:08 -0700
+X-CSE-ConnectionGUID: bfgqR1ARS+2WDHsEy8DMKA==
+X-CSE-MsgGUID: +aLSIoJlQZCKT73aFX3u6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="141586322"
+Received: from unknown (HELO [10.238.1.183]) ([10.238.1.183])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 18:26:03 -0700
+Message-ID: <71228787-1cbc-4287-87a3-cda9aabcca3f@linux.intel.com>
+Date: Tue, 13 May 2025 09:25:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] KVM: Bound the number of dirty ring entries in a
+ single reset at INT_MAX
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>
+References: <20250508141012.1411952-1-seanjc@google.com>
+ <20250508141012.1411952-2-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250508141012.1411952-2-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-This series convert cdn-dp-rockchip.txt to yaml.
 
-PATCH 1 try to improve coding style on the existing rk3399 cdn-dp
-node.
-PATCH 2 try to convert cdn-dp-rockchip.txt to yaml.
+On 5/8/2025 10:10 PM, Sean Christopherson wrote:
+> Cap the number of ring entries that are reset in a single ioctl to INT_MAX
+> to ensure userspace isn't confused by a wrap into negative space, and so
+> that, in a truly pathological scenario, KVM doesn't miss a TLB flush due
+> to the count wrapping to zero.  While the size of the ring is fixed at
+> 0x10000 entries and KVM (currently) supports at most 4096, userspace is
+> allowed to harvest entries from the ring while the reset is in-progress,
+> i.e. it's possible for the ring to always have harvested entries.
+>
+> Opportunistically return an actual error code from the helper so that a
+> future fix to handle pending signals can gracefully return -EINTR.
+>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Fixes: fb04a1eddb1a ("KVM: X86: Implement ring-based dirty memory tracking")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   include/linux/kvm_dirty_ring.h |  8 +++++---
+>   virt/kvm/dirty_ring.c          | 10 +++++-----
+>   virt/kvm/kvm_main.c            |  9 ++++++---
+>   3 files changed, 16 insertions(+), 11 deletions(-)
+>
+> diff --git a/include/linux/kvm_dirty_ring.h b/include/linux/kvm_dirty_ring.h
+> index da4d9b5f58f1..ee61ff6c3fe4 100644
+> --- a/include/linux/kvm_dirty_ring.h
+> +++ b/include/linux/kvm_dirty_ring.h
+> @@ -49,9 +49,10 @@ static inline int kvm_dirty_ring_alloc(struct kvm *kvm, struct kvm_dirty_ring *r
+>   }
+>   
+>   static inline int kvm_dirty_ring_reset(struct kvm *kvm,
+> -				       struct kvm_dirty_ring *ring)
+> +				       struct kvm_dirty_ring *ring,
+> +				       int *nr_entries_reset)
+>   {
+> -	return 0;
+> +	return -ENOENT;
+>   }
+>   
+>   static inline void kvm_dirty_ring_push(struct kvm_vcpu *vcpu,
+> @@ -82,7 +83,8 @@ int kvm_dirty_ring_alloc(struct kvm *kvm, struct kvm_dirty_ring *ring,
+>    * called with kvm->slots_lock held, returns the number of
+>    * processed pages.
+>    */
+The comment should be updated as well, since the return value is not the
+number of processed pages now.
 
-Changes in v3:
-- Link to V2: https://lore.kernel.org/all/20250509070247.868-1-kernel@airkyi.com/
-- Add more description about phy/extcon
-- Fix some coding style
 
-Changes in v2:
-- Link to V1: https://lore.kernel.org/all/20250508064304.670-1-kernel@airkyi.com/
-- Rename binding file name to match compatible
-- Add more description about grf/phy/extcon
-- Fix coding style
-
-Chaoyi Chen (2):
-  arm64: dts: rockchip: Improve coding style for rk3399 cdn_dp
-  dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
-
- .../display/rockchip/cdn-dp-rockchip.txt      |  74 --------
- .../rockchip/rockchip,rk3399-cdn-dp.yaml      | 165 ++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-base.dtsi |  10 +-
- 3 files changed, 174 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
-
---
-2.49.0
-
+> -int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring);
+> +int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+> +			 int *nr_entries_reset);
+>   
+[...]
