@@ -1,180 +1,394 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2055.outbound.protection.outlook.com [40.107.21.55])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D267A1F473A;
-	Tue, 13 May 2025 08:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123743; cv=fail; b=oS5wt35qCpgxxhMRkJGbvVXHQsd2fiGVTPWAo+0S6fd+cxL8shpB95J9WGnN4nyc5qzcln8QXfHK/edyaoQqR12j9QtTaBCWbqkbtO3BoYgygteCxvBDhdC/MP7cKXPzQ3VFM0JMLHpdonixmb/5xC+J7n3ZCAhfJnPRRJEP5HI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123743; c=relaxed/simple;
-	bh=0EE2lJ25n6pK8dKBrsB6nrQwngahHJQmKK+GwvHMKhM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pKDqYT5Uo5KxDjQiQtcFQHa9Pw8k6XbKwmzKxvpTSEWcgAInuJ3dySqoFdDhFzGzKD4M5KzHIKnoqCMM5XGuZ1zRxmQrChEGbyavMLlEU7TVZjBQ8hJSBzoYH1Fg5qww7s8LiZXUAi897Hr7c+UeZEgXls6UW9ohrafJDomLEac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=dAj9zqz9; arc=fail smtp.client-ip=40.107.21.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC51A93D;
+	Tue, 13 May 2025 08:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747123860; cv=none; b=HamZdP/EUpSS/x7+g+uU5LcfqtnCl1WsMSdYYiKMT/kIDXjMKpLtpmm0mT0hmWOcU5goOHzoWXQHdEIDBu01130uAfAxV5TZxDVJWAsan+jzR/kewwqIXi6mlyP902VpJh/Ykvqt9SsbDmstz3yLRo1NVJUxXiICxXFJ2GIk/dM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747123860; c=relaxed/simple;
+	bh=fkUQRYSyF+mG5SBzJ/i86h9zvzY1mY8LunPCmxE17ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EptCBjWs4+VPoqX5f5n+6MdzWRbqWKMQqMuJCmWQrHM6tfEU7xxs7BEPNhv4w7pnmSM3tt/CQj8YdQidkyT6xGiOmnISLCLpT5MO4n9lIeoPlkBpArQYj8xeqdGBhpI/Gh3wrO+vCvpXH6SoBXUetCW1Y6mLmxvGh7+UAZd+aug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=YzdREFzB; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="dAj9zqz9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IyGcRXyUUeV7UDOn7VYV1E28SaaGeHOgVguCE4PO351Jm3Mm9Rv3T2KM6hhJIPHZc2ecN/XwdCzB22OITq27cXOVN0hPn2+FYZeS/w/HMCQ9Rcj4hYaSx/foxtaWzyapenyGTc1wEjN0GvJ5lpUCYduzUwyyYOjN4gtlBczDX/RwDyQuy2174KrkpSsLeMQFBkHdYIRcvOR4cLVDp2R+y3RotVYN7Fen6QXZW54P4qrkqEnRFagcPkTnTfsTviVwT5PQIM0WTMFowVWBcQ4ack0JnvE+n8ckClzkZwuw+Ovo2bLECVNLGXkY8lDJTQ+c4LRxWDbfvXdFVHeKWGqrRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wp5SzzqgjVhxP+eg2p6gn/m2RSBZ/3oOaPHq4ckOsTk=;
- b=A4DQr0JfnE3/0g3bMwgiqOq5BvUU/o+ujwhNy0vlnXLM7kfiFAI8HmxHyULH4GraTEGHhIPqAHJgHV34QDnbJx9qj5N7CcVUcVkVPBFEmhhunvnXfg0BAXTKHWTyZHfj2cZPk7mCU6ZI4LKfOuT7IK2TAdDZp+T/AkxISEQJEwcuq/6lS4OkrigGlKzm2DwUhYkGA65oMfwbpaVV/XkuaiSgt+nIzmJf3OIXU0vKJ73VJT8swf+LGLJVf9iMFQce1Fp+uxiZA0TusSFkkZKVZ5hPnMDzjJtAEHgr+RGv/w9lqVhfQvIN45Tl+pGPS8nWCyrPRDHgETTj6Wa6YeM22A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wp5SzzqgjVhxP+eg2p6gn/m2RSBZ/3oOaPHq4ckOsTk=;
- b=dAj9zqz9q7EXuDvZBnjl+lrpNwGh9ZIVF5biBkxemBsUh/9FhX2QcFs/RHFFE7Ya6Uqt0t/5CPAdKuE1N6euaH+slVIFFf5K0vtDpWHH9W5fb9qkvoabSBim3RnC6zeZdxwYyET4sILAmbNr53kXWkUEVmkkS92owoBoaLB3B6Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by PA2PR04MB10409.eurprd04.prod.outlook.com (2603:10a6:102:415::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 13 May
- 2025 08:08:56 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 08:08:56 +0000
-Message-ID: <bed267de-2e62-439d-9e2c-5629e2d7d187@cherry.de>
-Date: Tue, 13 May 2025 10:08:54 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] dt-bindings: arm: rockchip: add PX30-PP1516 boards
- from Theobroma Systems
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Heiko Stuebner <heiko.stuebner@cherry.de>
-References: <20250508150955.1897702-1-heiko@sntech.de>
- <20250508150955.1897702-6-heiko@sntech.de>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250508150955.1897702-6-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: WA0P291CA0021.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::25) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="YzdREFzB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1747123850; x=1747728650; i=quwenruo.btrfs@gmx.com;
+	bh=BefIrXmnX0MAUFQydxcjpGCrYpZjN/wYqojnc5aasZo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=YzdREFzBxRyZU6ujDaF/AXhjh0xosq/jnhfWbdegP9xPlfJgB+5/M+bDlZD3ZnkO
+	 lwhlbWSg4OnwdkjCX0aGOFUSEQ8M0Yt44GXmna6N/5N/FTJmBgurDJMFxN08IeJn4
+	 HMA+is2VhaoG4vUQ7dJkg/Yn4QQkEZ2jX7P4S3/80g8P9NJg4/p4ggti9aTj91mhp
+	 xbtZGRumtcHOPBdih3ePk7AAzu+L73fqLPH0908cU9vUof5NFM3aVT9g3/2+3eiCw
+	 VqxJifN9eXNE4atStdFC9tJvsrIJstdHWGn6164xk7oakSWcTgGRA5OPYKVFvRMhA
+	 NLPBNgKd6ZESlz84GA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MJE6F-1uYCLi499P-00MehF; Tue, 13
+ May 2025 10:10:50 +0200
+Message-ID: <cb826215-bfa4-4294-9dfe-8f2378d99348@gmx.com>
+Date: Tue, 13 May 2025 17:40:45 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|PA2PR04MB10409:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ccdeeb6-ca12-4427-72ef-08dd91f56842
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cHFGZ2dyYXRMWi82bWxtdVRNTitrN0lTSlI3Z1p3eHYwN3I3aWhxN1MveFFy?=
- =?utf-8?B?bXVFUWpYUHhnZGxPL0E0bVBIY0w1dDA4ajZwZzVUY0lvcFB4UWVSWU1SSHRS?=
- =?utf-8?B?WU53TUpPR0Q2cmpUV0ZQaDBldjdJbG9jcjJsWitmeVpJR0Q5Z1BlUTdMRXR0?=
- =?utf-8?B?QUZuYWJjakVqdTZaNFhDanU2R1JjSmI5RE90MXAyZWFHeGw4eS9RYTYrZkpE?=
- =?utf-8?B?blRYMTRlYzNSd1A0U1dhRWZDV3RIdmFLdHh0UHc4am5xVzZzZHA4eXBkRUE1?=
- =?utf-8?B?b0ZNT3pkQ0ZoOUNsMHhSblY3QVJhbC84NnJvbEhQMWRKY0dpT1ljRWhqSDVq?=
- =?utf-8?B?UTB1bG10cHRnRDQ5R0lYQzhhOWtkTVZUZjJXa3hKZHRSUFBLTTJndVhqYkZD?=
- =?utf-8?B?NU1GQVVnYmRrZmhWMnEwcDlNcUNXMjh4ZlA2dnc3dDQzQWRRaTgxZFpNWkRG?=
- =?utf-8?B?R1dMZnJRVi9DUU9SRnVHSlJWVlRHWGNWR2M1SkdPdnpqbkt1cGpud29EUUpC?=
- =?utf-8?B?Y0dZTEFlK2llRUJaOENEVDdHZVkxd2E0RGtOOVJ1UytQZ08vbjFsaVVLTk5w?=
- =?utf-8?B?QWZ4cDB2YlBvbVJJTkl1Wkg3ZmI5cEM2SDlhb1FDMCtzZ3A5aXdYdjFNMUZo?=
- =?utf-8?B?L2JBREV6VUZDMnpQZ1dseFFLekJNdkNVTUFGbjNxZ1MyOVR6aDhDMmppZitF?=
- =?utf-8?B?WFk0TXlScWVhOWNLS1lILzBQekFlVjhya1A0OThOa1FhWGtrMnprTktHYm1J?=
- =?utf-8?B?L0pKemN1UFd1SXBnSUlHTGhhSzdXQmlvUGxZell1bGdvblRUSTZNdmg3NmxN?=
- =?utf-8?B?bW9RaFFPRURabS8zd0QvTUl5Y2pkUzV2VWxjVVIzZ2ZUNEZvc3NDaWxPTmI3?=
- =?utf-8?B?SXhUQlVtUC8wSjhndDNxNVJCQXZBS25RVzAwM1F0a0Qvb0F4YzhBN0lNTUl1?=
- =?utf-8?B?NVVjSFppaVlYSzlIWkhpRlpOOS85bFBsWk9UOERScFhiR1VoM0JJaTdCOFhp?=
- =?utf-8?B?aFNqS0FiQjJWOHNFREpPWFd1dWc4dDJMOEVzK2xQUVpTM0MrTm1RTEFISC9H?=
- =?utf-8?B?SGdVYlZXV3ZHckNJSExLejhMd1pzNXpHNHFJY1hCR1V0aDNONDRCUWZycWVB?=
- =?utf-8?B?aTJuSHcxcGp5VHNqQWg5dVJsK09iOGorcXJmVXViMEpZeS9ZdTJmbUZoeWk5?=
- =?utf-8?B?Nm5zaXFMWTM4dXFwT0M4YytjbDF5cUFSZTVvbVVqVHRINU1MUmd6cE5wRUF1?=
- =?utf-8?B?YkIvS29hK2JGaVFmZWRjc3NPd1EvaDR1ZDZCVmdwNXZxV0NVeDIxVkVwcUpj?=
- =?utf-8?B?b1cwenMveUczUUQ1L1BaYkgybzhRRlBsTW5tMVpZTFJWMmhLQ21NVTNVSzVn?=
- =?utf-8?B?Z29LWlZlTVIxVGNNSTVGNk92ekZ0czY5QjRadWRqR1BFYXY5ME5WY05hKzkw?=
- =?utf-8?B?cmkxd1hQQzVncmVmK3RVVjRUL1c3TnBTbWhiSmVQUW4vUCtUQlQrN3NnSjBV?=
- =?utf-8?B?Um9oWkJ5dXUyNklQY3k4NjE5MTlEWkc5aERDREoyZXFXei8xOUhyYnl6SThZ?=
- =?utf-8?B?QXR4aU5YeXRoaDYzSGdNaS9oWHg2OUNQZXdtdjkzM2V1YXZIQnpJeTY3T3o4?=
- =?utf-8?B?d1dGK0Fqb25yRlp5MDNTakEvcFB4MVJZbkpabDRZNDFQN0xjZXVPdjhoWWNB?=
- =?utf-8?B?NUdXSThweWREaSt0bmQ5dFFXaWxwOXRZbi9qQjdCbzNIRFZjbGlWckpYV29R?=
- =?utf-8?B?aVBWbjFTREZpcHpRZHdRdXEranV4MDF0SndNb3F3dHdhVUlkaVdsckh3OGNp?=
- =?utf-8?B?cFgvUVNmMyt6bUVrcVJIWXBGSEVmdXlYaG1sRHhubS9FNktaeFVvNU5TbTk3?=
- =?utf-8?B?Y24wN1RRRTZmcDUxUGJyeFY4ei9OSlFlUzFaQU5Zb3YzMnZOYzcxTTMxVUZC?=
- =?utf-8?Q?2EqvpOyc/xQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MTM1NUw5TzJQQldRbzlQaU5NdFJxVHhUVTYxTTJHSjNVTnMyR0hCc2hXVVlJ?=
- =?utf-8?B?N24welVUdzJBNkhxUVU1c25QWnliUmRwc2RuNXVvbmgwa0JKRkhlakFtU1N2?=
- =?utf-8?B?em80VFVtSzJNN0N6MUFWSHo0L2VJL3dTV2J4Tm9qWVdiVmtQS3BBOE53bE95?=
- =?utf-8?B?MnBxVy90a0luYXdXb3JtQVNjOU9BLzVjcGJUSlNjZnZQaE15eVVhcmpKZk9t?=
- =?utf-8?B?ZDM0dE14ZFNUS2hyTGtpZkdTSGhSOGo3TzByaFdoQWpEU1R5enlRMFJMUmpp?=
- =?utf-8?B?MDlkNXJHcStCZlFZNHpnS0JHVlowb0VDblZURzFJQzVnT2dyYzBuc3Q2SEI2?=
- =?utf-8?B?L3dHcjM1YnhwR3FqakNFMFBDTkJkQlRHS1FDVXBqaEdod0RWaWhOT3lXTVZq?=
- =?utf-8?B?VkV4YUNrWUpjV3A1Y3lZdk0xbW41RGZOWkEyVS90VXA4TDc0MnpwZHFyRUlw?=
- =?utf-8?B?ZWttN3p3REdrU1Z0N1dtL3dlVFd4c0lqRjUrQjVQUGJiVmdSRERUVEp1UkJD?=
- =?utf-8?B?OWRLSVM4OXZCZE13bS94QStlSzFHOU9LVDdYY2FLUDFBZmtCUW83Q0wzT3d1?=
- =?utf-8?B?R0dCNU95T2tJME1jTTJ2Z2ViK3k1bE5hU2pJcFNURGtYcWhBOWxyczZOcUFV?=
- =?utf-8?B?b2NocUhydUxFWU5xTDFTcEhmUkI1VkJ5SFNxWDR2VkxLTUhsR21Zdk9sQmdo?=
- =?utf-8?B?dXVSaXhPY3NMbVcydWVVakpwUHJYNjdJOFg4aDY3b0hyd0dCWm1XZTMxRHYr?=
- =?utf-8?B?OXUrSnpuaHVEanlMTnBsQy8zZzhDWGl2TkF5dTl6VjdHLzI1Qml4cTdEQW1p?=
- =?utf-8?B?R0gxcHI2SVNVMUFuak1wMUo4MFYyandjMSt6TllhZkFDcTlxTFVkUWZPVkJQ?=
- =?utf-8?B?YXd1MmhTMzRjYmt1czd3Q2dlelJlS2ljdDEzTWFqcENYbldPOGo2eHFjZ3d4?=
- =?utf-8?B?RW5JcXQwRytlYkVuU0NEbkNGWFA2em9idXZDNExtcVFuTFFGM0xuRDhYOFE1?=
- =?utf-8?B?eExBaEcvMVJDQktuSVdiWHZBaG1lZnFiK3dtU0UwcWwvTGxJZ0lYdkpCM25N?=
- =?utf-8?B?MmZoNDdCQS8yUE81N1lIWVZWYmI1WkdXcnBoaUx2dzRuMWxBYVR5RkJhbUlK?=
- =?utf-8?B?RDliMzVRUXBsWFZ4dkhad21uZ2F1QVp6Z1ZBdU9hZHRDRGV1WXlmaXpERE5a?=
- =?utf-8?B?Z3l4RDdBdEt6c29rLzFWVzBBWVZHbzMvRXFtR2p2UkhhUEhSaWVzWVRBS1Zi?=
- =?utf-8?B?WDg4R21PSmpob1kwMENLUURQQ3RMVDNsa2wrbTlpLzkxMWhhc3Nsc2Q5VCtY?=
- =?utf-8?B?ZTdBTWNyME5Ca2dxb21MOTJVclVhOERWV1QrZEUwcUJyU0srR1ZJMjEvTnlx?=
- =?utf-8?B?YjZxbVJzYkkyWjhaVkxTdHhsZWpYQTFaL05xNHA1c1cyVkM4MkF4RjhoZTVG?=
- =?utf-8?B?Y0JFM3pYQldUYmNNdWk2UHhaZGdTWFFPaTZlbDFjNGZjakJ3Uk4wNGFOdlhP?=
- =?utf-8?B?UUxHWk5xQ1hpUmFIb2JlUVdWRHB4b0VDODNnbzVzb0ZGcFpGK3RGWGdGa1JB?=
- =?utf-8?B?OXZkZ2xQejk3Wml4VnVBSG5TQWtkT1pwN0h5VnFyam5vbFhZL0tDU0czR29s?=
- =?utf-8?B?R1k5Z3ZZRW1JZXRKdUxLa3h2WXJLMHVLamtJY211OW9Edm44THRHS3ErT1hV?=
- =?utf-8?B?WWU1VXREd211R0hTY0ZGQUZHQVBkVlBsdzMyVjFrZ2Q4a3pSZndzcHVONm1K?=
- =?utf-8?B?blRKeHgwWU56N1lCamJqM2h6TTNkQy9WcENpelBRMFAvc0dJY25zc1NpN1pG?=
- =?utf-8?B?NlhKNzBGNnp6UGtlQXl0SWRqR2hhV2dDcy9CbGhLRTRkOC9XVEowdzNqeFVr?=
- =?utf-8?B?Uk90aXBqbkFvNS96TFpWNDQ4QzloZVczblJNZ2N6bU9RamxGQVVjRW12aG1q?=
- =?utf-8?B?ZEYwbkZ5WGZXV2trdmxrRkgwcTI1ZjJVZWtwZ29JWGhab2xaL0E4QTBhc0h2?=
- =?utf-8?B?SCtISUM3MGRtZjEvL0dRTDRpMU1yTjJuMGVJU1dwL3BKUmZEYk44bVZXejJX?=
- =?utf-8?B?R1MrNXNoOFI2Qm5PRXpob05ESHpDTWxhQmNTNStmQ3o4a1BncC9YTXpkUzVJ?=
- =?utf-8?B?dWtLeDliUzZPRFdXZDIrV3dKU0NrY1hIQmd0VXR0V1kzaFN2d0RKbWhDTzF2?=
- =?utf-8?B?R2c9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ccdeeb6-ca12-4427-72ef-08dd91f56842
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 08:08:56.0916
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mnxbkD2bzbGUIEikU25lFKPU+JJ0cZmBwxo/OUlo0zmeM2jJnO8ul3awtDsNL3xdZt+tlg+waI6SYRmNeFlnerusK5ESSq7pXgKdC3exV1k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10409
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: index buffer_tree using node size
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250512172321.3004779-1-neelx@suse.com>
+ <4b29d4b8-c823-44d0-8647-a53a09e20b5f@gmx.com>
+ <CAPjX3FdJGfHarYMjVyR7qzKowbiauepcOMDJjDRt6Rs-5w0pHA@mail.gmail.com>
+Content-Language: en-US
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
+ sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
+ xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
+ naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
+ tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
+ 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
+ VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
+ CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
+ B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
+ Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
+ +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
+ HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
+In-Reply-To: <CAPjX3FdJGfHarYMjVyR7qzKowbiauepcOMDJjDRt6Rs-5w0pHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kp6UVoX20YUnxlQN8nUZ/HOsuTuXP6EJ79+FI7Xf6DyJWkUa2Wu
+ NW+Cm5coBGxQXhTsnbbdsl5tlTp8aUBC2y1zXhh54Dasa4GyOQYPG65CSnhyot4o5DqMKPz
+ 7AVkvPiaf66HsQTxFmcjkfu8aUsyrhybFuHVz1XAfHnNUyvy9v8POVUuqG3WSrCKFAjV4bo
+ OhHjmTMhT5/ZOAxqF12Tg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:hat0rEPBKbQ=;9SZPiUY2yuR5o8A3RTBO2b2XJu4
+ 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
+ EBvA1YLSKTO7u1KaAdpVl7qNkeiQW6XCfZ
 
-Hi Heiko,
 
-On 5/8/25 5:09 PM, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
-> 
-> PP1516 are Touchscreen devices built around the PX30 SoC and companion
-> devices to PX30-Cobra, again with multiple display options.
-> 
-> The devices feature an EMMC, OTG port and a 720x1280 display with a
-> touchscreen and camera
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+=E5=9C=A8 2025/5/13 17:35, Daniel Vacek =E5=86=99=E9=81=93:
+> On Tue, 13 May 2025 at 00:44, Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
+>>
+>>
+>>
+>> =E5=9C=A8 2025/5/13 02:53, Daniel Vacek =E5=86=99=E9=81=93:
+>>> So far we are deriving the buffer tree index using the sector size. Bu=
+t each
+>>> extent buffer covers multiple sectors. This makes the buffer tree rath=
+er sparse.
+>>>
+>>> For example the typical and quite common configuration uses sector siz=
+e of 4KiB
+>>> and node size of 16KiB. In this case it means the buffer tree is using=
+ up to
+>>> the maximum of 25% of it's slots. Or in other words at least 75% of th=
+e tree
+>>> slots are wasted as never used.
+>>>
+>>> We can score significant memory savings on the required tree nodes by =
+indexing
+>>> the tree using the node size instead. As a result far less slots are w=
+asted
+>>> and the tree can now use up to all 100% of it's slots this way.
+>>>
+>>> Signed-off-by: Daniel Vacek <neelx@suse.com>
+>>
+>> I'm fine with this change, but I still believe, we should address
+>> unaligned tree blocks before doing this.
+>=20
+> Yeah, we discussed it on chat. But giving it another thought I
+> realized that the ebs don't overlap each other. Well, I think they do
+> not, right?
+>=20
+> That means they are always nodesize apart. So no matter what
+> alignment/offset each one always falls into a dedicated tree slot. It
+> can never happen that two neighboring ebs would fall into the same
+> slot. Hence I think we're safe here with this regard.
 
-Thanks!
-Quentin
+Oh, this is indeed a brilliant trick/hack.
+
+Yes, even with unaligned tree blocks, we can still get unique index by=20
+doing eb->start >> nodesize_shift.
+
+Mind to add this part into the commit message?
+
+In that case, it looks good to me.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+
+Thanks,
+Qu
+
+>=20
+>> As this requires all tree blocks are nodesize aligned.
+>=20
+> Does it? I don't think that's correct. Am I missing something?
+>=20
+>> If we have some metadata chunks which starts at a bytenr that is not
+>> node size aligned, all tree blocks inside that chunk will not be
+>> nodesize aligned and causing problems.
+>=20
+> As explained above, I don't really see any problems. But then again, I
+> may be missing something. Let me know, please.
+>=20
+>> Thanks,
+>> Qu
+>>
+>>> ---
+>>>    fs/btrfs/disk-io.c   |  1 +
+>>>    fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+>>>    fs/btrfs/fs.h        |  3 ++-
+>>>    3 files changed, 18 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+>>> index 5bcf11246ba66..dcea5b0a2db50 100644
+>>> --- a/fs/btrfs/disk-io.c
+>>> +++ b/fs/btrfs/disk-io.c
+>>> @@ -3395,6 +3395,7 @@ int __cold open_ctree(struct super_block *sb, st=
+ruct btrfs_fs_devices *fs_device
+>>>        fs_info->delalloc_batch =3D sectorsize * 512 * (1 + ilog2(nr_cp=
+u_ids));
+>>>
+>>>        fs_info->nodesize =3D nodesize;
+>>> +     fs_info->node_bits =3D ilog2(nodesize);
+>>>        fs_info->sectorsize =3D sectorsize;
+>>>        fs_info->sectorsize_bits =3D ilog2(sectorsize);
+>>>        fs_info->csums_per_leaf =3D BTRFS_MAX_ITEM_SIZE(fs_info) / fs_i=
+nfo->csum_size;
+>>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+>>> index 4d3584790cf7f..80a8563a25add 100644
+>>> --- a/fs/btrfs/extent_io.c
+>>> +++ b/fs/btrfs/extent_io.c
+>>> @@ -1774,7 +1774,7 @@ static noinline_for_stack bool lock_extent_buffe=
+r_for_io(struct extent_buffer *e
+>>>         */
+>>>        spin_lock(&eb->refs_lock);
+>>>        if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &eb->bflags)) {
+>>> -             XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_inf=
+o->sectorsize_bits);
+>>> +             XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_inf=
+o->node_bits);
+>>>                unsigned long flags;
+>>>
+>>>                set_bit(EXTENT_BUFFER_WRITEBACK, &eb->bflags);
+>>> @@ -1874,7 +1874,7 @@ static void set_btree_ioerr(struct extent_buffer=
+ *eb)
+>>>    static void buffer_tree_set_mark(const struct extent_buffer *eb, xa=
+_mark_t mark)
+>>>    {
+>>>        struct btrfs_fs_info *fs_info =3D eb->fs_info;
+>>> -     XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->secto=
+rsize_bits);
+>>> +     XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_=
+bits);
+>>>        unsigned long flags;
+>>>
+>>>        xas_lock_irqsave(&xas, flags);
+>>> @@ -1886,7 +1886,7 @@ static void buffer_tree_set_mark(const struct ex=
+tent_buffer *eb, xa_mark_t mark)
+>>>    static void buffer_tree_clear_mark(const struct extent_buffer *eb, =
+xa_mark_t mark)
+>>>    {
+>>>        struct btrfs_fs_info *fs_info =3D eb->fs_info;
+>>> -     XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->secto=
+rsize_bits);
+>>> +     XA_STATE(xas, &fs_info->buffer_tree, eb->start >> fs_info->node_=
+bits);
+>>>        unsigned long flags;
+>>>
+>>>        xas_lock_irqsave(&xas, flags);
+>>> @@ -1986,7 +1986,7 @@ static unsigned int buffer_tree_get_ebs_tag(stru=
+ct btrfs_fs_info *fs_info,
+>>>        rcu_read_lock();
+>>>        while ((eb =3D find_get_eb(&xas, end, tag)) !=3D NULL) {
+>>>                if (!eb_batch_add(batch, eb)) {
+>>> -                     *start =3D (eb->start + eb->len) >> fs_info->sec=
+torsize_bits;
+>>> +                     *start =3D (eb->start + eb->len) >> fs_info->nod=
+e_bits;
+>>>                        goto out;
+>>>                }
+>>>        }
+>>> @@ -2008,7 +2008,7 @@ static struct extent_buffer *find_extent_buffer_=
+nolock(
+>>>                struct btrfs_fs_info *fs_info, u64 start)
+>>>    {
+>>>        struct extent_buffer *eb;
+>>> -     unsigned long index =3D start >> fs_info->sectorsize_bits;
+>>> +     unsigned long index =3D start >> fs_info->node_bits;
+>>>
+>>>        rcu_read_lock();
+>>>        eb =3D xa_load(&fs_info->buffer_tree, index);
+>>> @@ -2114,8 +2114,8 @@ void btrfs_btree_wait_writeback_range(struct btr=
+fs_fs_info *fs_info, u64 start,
+>>>                                      u64 end)
+>>>    {
+>>>        struct eb_batch batch;
+>>> -     unsigned long start_index =3D start >> fs_info->sectorsize_bits;
+>>> -     unsigned long end_index =3D end >> fs_info->sectorsize_bits;
+>>> +     unsigned long start_index =3D start >> fs_info->node_bits;
+>>> +     unsigned long end_index =3D end >> fs_info->node_bits;
+>>>
+>>>        eb_batch_init(&batch);
+>>>        while (start_index <=3D end_index) {
+>>> @@ -2151,7 +2151,7 @@ int btree_write_cache_pages(struct address_space=
+ *mapping,
+>>>
+>>>        eb_batch_init(&batch);
+>>>        if (wbc->range_cyclic) {
+>>> -             index =3D (mapping->writeback_index << PAGE_SHIFT) >> fs=
+_info->sectorsize_bits;
+>>> +             index =3D (mapping->writeback_index << PAGE_SHIFT) >> fs=
+_info->node_bits;
+>>>                end =3D -1;
+>>>
+>>>                /*
+>>> @@ -2160,8 +2160,8 @@ int btree_write_cache_pages(struct address_space=
+ *mapping,
+>>>                 */
+>>>                scanned =3D (index =3D=3D 0);
+>>>        } else {
+>>> -             index =3D wbc->range_start >> fs_info->sectorsize_bits;
+>>> -             end =3D wbc->range_end >> fs_info->sectorsize_bits;
+>>> +             index =3D wbc->range_start >> fs_info->node_bits;
+>>> +             end =3D wbc->range_end >> fs_info->node_bits;
+>>>
+>>>                scanned =3D 1;
+>>>        }
+>>> @@ -3037,7 +3037,7 @@ struct extent_buffer *alloc_test_extent_buffer(s=
+truct btrfs_fs_info *fs_info,
+>>>        eb->fs_info =3D fs_info;
+>>>    again:
+>>>        xa_lock_irq(&fs_info->buffer_tree);
+>>> -     exists =3D __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info-=
+>sectorsize_bits,
+>>> +     exists =3D __xa_cmpxchg(&fs_info->buffer_tree, start >> fs_info-=
+>node_bits,
+>>>                              NULL, eb, GFP_NOFS);
+>>>        if (xa_is_err(exists)) {
+>>>                ret =3D xa_err(exists);
+>>> @@ -3353,7 +3353,7 @@ struct extent_buffer *alloc_extent_buffer(struct=
+ btrfs_fs_info *fs_info,
+>>>    again:
+>>>        xa_lock_irq(&fs_info->buffer_tree);
+>>>        existing_eb =3D __xa_cmpxchg(&fs_info->buffer_tree,
+>>> -                                start >> fs_info->sectorsize_bits, NU=
+LL, eb,
+>>> +                                start >> fs_info->node_bits, NULL, eb=
+,
+>>>                                   GFP_NOFS);
+>>>        if (xa_is_err(existing_eb)) {
+>>>                ret =3D xa_err(existing_eb);
+>>> @@ -3456,7 +3456,7 @@ static int release_extent_buffer(struct extent_b=
+uffer *eb)
+>>>                 * in this case.
+>>>                 */
+>>>                xa_cmpxchg_irq(&fs_info->buffer_tree,
+>>> -                            eb->start >> fs_info->sectorsize_bits, eb=
+, NULL,
+>>> +                            eb->start >> fs_info->node_bits, eb, NULL=
+,
+>>>                               GFP_ATOMIC);
+>>>
+>>>                btrfs_leak_debug_del_eb(eb);
+>>> @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(str=
+uct folio *folio)
+>>>    {
+>>>        struct btrfs_fs_info *fs_info =3D folio_to_fs_info(folio);
+>>>        struct extent_buffer *eb;
+>>> -     unsigned long start =3D folio_pos(folio) >> fs_info->sectorsize_=
+bits;
+>>> +     unsigned long start =3D folio_pos(folio) >> fs_info->node_bits;
+>>>        unsigned long index =3D start;
+>>> -     unsigned long end =3D index + (PAGE_SIZE >> fs_info->sectorsize_=
+bits) - 1;
+>>> +     unsigned long end =3D index + (PAGE_SIZE >> fs_info->node_bits) =
+- 1;
+>>>        int ret;
+>>>
+>>>        xa_lock_irq(&fs_info->buffer_tree);
+>>> diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+>>> index cf805b4032af3..8c9113304fabe 100644
+>>> --- a/fs/btrfs/fs.h
+>>> +++ b/fs/btrfs/fs.h
+>>> @@ -778,8 +778,9 @@ struct btrfs_fs_info {
+>>>
+>>>        struct btrfs_delayed_root *delayed_root;
+>>>
+>>> -     /* Entries are eb->start / sectorsize */
+>>> +     /* Entries are eb->start >> node_bits */
+>>>        struct xarray buffer_tree;
+>>> +     int node_bits;
+>>>
+>>>        /* Next backup root to be overwritten */
+>>>        int backup_root_index;
+>>
+>=20
+
