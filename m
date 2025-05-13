@@ -1,128 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153D2BE7C3
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241982BE7B8;
+	Tue, 13 May 2025 15:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149228; cv=none; b=QwbPr3DKXSLsV3YoqWYxDYbbjAHJRrh0ceYD+BO1a4yySSlAerRWocoj3cOpG6wzFBtZo8T8TfksIeqT3s2fAuyMqSQi+L3u2/L+ibGiUrTzQQniAkQKyv+stOr/NEYO43QNY3/mhOZPOJDn1/0rKZTPjznbb/AHy1nxi4yC8gE=
+	t=1747149228; cv=none; b=uqyCArUmZUgWeylJFasH1J1HHUgN/oU2rRp3eyuBB/k9WJIDEbeoHZtF6j77fQ0rXGyciJBp5yKmwIQXTCqn147fxpV3V2jjgaGvxAZDaRcOon9UjZ2k8YTFUiYPh8VJViNUe6lxn+SNt5DavYWHcajKQjBWQl4baYr7AeAj/+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747149228; c=relaxed/simple;
-	bh=0V1M6KuFop81SJ8+EHB3ZWjFOFBi21Xwe5ztjsvCLko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HR3OL9h5el/6BNP5o29ub3gFcWiNlotYnWOgeA1LAEt8n9WVuE2H7S8eIp/1FG3XM/2YMft/1WO6xx17QXupmsg73O5uCSdAFTQjuVFToR/ODwh4WZ5KR5X5OgBULmbsRzJM2/CRdaDAsAOjOQ6+7hRhqyTU3UbY0X7GR271I44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efCJ6K5l; arc=none smtp.client-ip=10.30.226.201
+	bh=41v7R615ZjWO7LUc2GvrJB6a77p2xlm3SbRtu9DjoEY=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=hGKr7TGIp+Nr3Z5mtFmLcbbQ2HNTsK2/CP9f+LylTDHp35DNcJ+BR9csnaoJBvYbKcBPguRjSx/GFM8BeC6nt80hCGMaXPbWsB3C8DDpDDE16Zw44+wakte5zNqGkGdulS3R/xlEBnrGdq/JSUCj0aUea9PNSk6axe+qfFAoLYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DMkNnoqY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wrsEkRGd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efCJ6K5l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76ED9C4CEE9
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747149227;
-	bh=0V1M6KuFop81SJ8+EHB3ZWjFOFBi21Xwe5ztjsvCLko=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=efCJ6K5lAN3R/XIUVc1rW0Y1khuBuf/Jx3SUFznVs4uwb6WGePdGR5oSP50hJBRRK
-	 V+jH0e5CFXVHttL6NVXuMAGsU5DiqnWp+mUN4v2ignIO04+wakS57oy5L5yKisKPk0
-	 Rg9lZIdfuc1sMWAo2K7ZNuvHBPTVcEG5JIwv32HgI/FFunCbj70+QX1+NhruRqe/0S
-	 BM2UGZcYOGWaDBhQ3lgHS8oFttvWBkRqGP9VNfMJYMUQxTz+f218vtyT05wcqX6FfA
-	 6nXIPZzqxGl/gNguAAFb99eg8Id7pQm6jLSkNdEYxQ40FR4aKcglUdCShyQJb5jabg
-	 btORsg4w9r77g==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbf52aad74so11593385a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:13:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVfX4wOR6JMKKWIOIgG2VrjmtmIfykLL2ovDxUnHU72vUzFHUe7MZyE7PjKSATv0KDcCVgB+vtLmGgCrWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXMdfQ4lpw5jBIIVFYb8LgT1+tqn/708hWTdD955Wpn6ntOEEz
-	L8wp1QHtvKJJpMaZWMQ97MP9h/QflpWc96g/HFA9w2wMeBwIRhxd/zyM2hw3kGBev4roJLF70C/
-	e6+l+9ldVAIRQHj8JNAuXrnHyxxs=
-X-Google-Smtp-Source: AGHT+IHaD7lU1YCxRBoo95f7oQlI76x/yV7S8UFkaFpH7WJO+fktLU7TSXceHUVVZiDmF0sbJfwV9GmZ9lL1a0YH3xg=
-X-Received: by 2002:a05:6402:3603:b0:5ff:8b36:f3fb with SMTP id
- 4fb4d7f45d1cf-5ff8b36f9b9mr1226436a12.11.1747149226014; Tue, 13 May 2025
- 08:13:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DMkNnoqY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wrsEkRGd"
+Message-ID: <20250513145138.212062332@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747149225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=C/nM/U5FRwaKrJBXZ75yUzC1wtA3Or236TCJmRmP5DU=;
+	b=DMkNnoqYgQEe1rVzPnNkHzukFoOaWhepgv0FcX74b4P36xUtV+Eb5v9vP0FoQRMP3fTWM4
+	mV19RLhrPko7tTfxeWlmWWLEGJu09p8dAujukhwBD6rwQHTENp2MtERfhqo5TIJKCUlxoS
+	KPtS+9TzG9Ta6BTETVSDcMIxuNfa+1vdkcfddQBkhOXfC0qTUpWbKSXeZDiTMqeFq81Xkh
+	N31QvJwh79fsLD88R68Aft3FDIlov7Djo0Tw8luodFdU2RBExF2RWNNYPNSfHWDZKA0SXa
+	XSxFhYjn69vk+TVln+Mr1wGPTH7xiizuqpfGACaf7F/FnBwbEDSpd9PL8RQj1Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747149225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=C/nM/U5FRwaKrJBXZ75yUzC1wtA3Or236TCJmRmP5DU=;
+	b=wrsEkRGdB5n8wpG+GCkszFKbZ6zRdPejuIf7pcn9CK8JiiB3kGQCvImxMAAmYONUvDeJVv
+	m3qjrLzbgAdbvaCA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: netdev@vger.kernel.org,
+ Richard Cochran <richardcochran@gmail.com>,
+ Christopher Hall <christopher.s.hall@intel.com>,
+ David Zage <david.zage@intel.com>,
+ John Stultz <jstultz@google.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Miroslav Lichvar <mlichvar@redhat.com>,
+ Werner Abt <werner.abt@meinberg-usa.com>,
+ David Woodhouse <dwmw2@infradead.org>,
+ Stephen Boyd <sboyd@kernel.org>,
+ =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Kurt Kanzenbach <kurt@linutronix.de>,
+ Nam Cao <namcao@linutronix.de>,
+ Alex Gieringer <gieri@linutronix.de>
+Subject: [patch 26/26] timekeeping: Provide interface to control independent
+ PTP clocks
+References: <20250513144615.252881431@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513092116.25979-1-yangtiezhu@loongson.cn> <20250513092116.25979-3-yangtiezhu@loongson.cn>
-In-Reply-To: <20250513092116.25979-3-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 13 May 2025 23:13:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4AgHQs4pMqGqe7WfwCA+u7mO3U+=hcm8ZWk5DQHhsO1w@mail.gmail.com>
-X-Gm-Features: AX0GCFtoeZ9Hy0PeIDQU_MUPstbhRADp9w_YmUK1vV3ob9gBtP8Rhi6fDltdOtk
-Message-ID: <CAAhV-H4AgHQs4pMqGqe7WfwCA+u7mO3U+=hcm8ZWk5DQHhsO1w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: uprobe: Remove redundant code about resume_era
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 13 May 2025 17:13:44 +0200 (CEST)
 
-Hi, Tiezhu,
+Independent PTP clocks are disabled by default and attempts to access them
+fail.
 
-On Tue, May 13, 2025 at 5:21=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> arch_uprobe_skip_sstep() returns true if instruction was emulated,
-> that is to say, there is no need to single step for the emulated
-> instructions, it will point to the destination address directly
-> after the exception, so the resume_era related code is redundant,
-> just remove them.
->
-> Fixes: 19bc6cb64092 ("LoongArch: Add uprobes support")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/include/asm/uprobes.h | 1 -
->  arch/loongarch/kernel/uprobes.c      | 7 +------
->  2 files changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/includ=
-e/asm/uprobes.h
-> index 99a0d198927f..025fc3f0a102 100644
-> --- a/arch/loongarch/include/asm/uprobes.h
-> +++ b/arch/loongarch/include/asm/uprobes.h
-> @@ -15,7 +15,6 @@ typedef u32 uprobe_opcode_t;
->  #define UPROBE_XOLBP_INSN      __emit_break(BRK_UPROBE_XOLBP)
->
->  struct arch_uprobe {
-> -       unsigned long   resume_era;
->         u32     insn[2];
->         u32     ixol[2];
->         bool    simulate;
-> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/upro=
-bes.c
-> index 0ab9d8d631c4..6022eb0f71db 100644
-> --- a/arch/loongarch/kernel/uprobes.c
-> +++ b/arch/loongarch/kernel/uprobes.c
-> @@ -52,11 +52,7 @@ int arch_uprobe_post_xol(struct arch_uprobe *auprobe, =
-struct pt_regs *regs)
->
->         WARN_ON_ONCE(current->thread.trap_nr !=3D UPROBE_TRAP_NR);
->         current->thread.trap_nr =3D utask->autask.saved_trap_nr;
-> -
-> -       if (auprobe->simulate)
-> -               instruction_pointer_set(regs, auprobe->resume_era);
-> -       else
-> -               instruction_pointer_set(regs, utask->vaddr + LOONGARCH_IN=
-SN_SIZE);
-> +       instruction_pointer_set(regs, utask->vaddr + LOONGARCH_INSN_SIZE)=
-;
-This seems wrong. If in the simulate case, regs->csr_era has already
-pointed to the correct destination address, then here we should only
-handle the non-simulate case.
+Provide an interface to enable/disable them at run-time.
 
-Huacai
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ Documentation/ABI/stable/sysfs-kernel-time-ptp |    6 +
+ kernel/time/timekeeping.c                      |  125 +++++++++++++++++++++++++
+ 2 files changed, 131 insertions(+)
 
->
->         return 0;
->  }
-> @@ -86,7 +82,6 @@ bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe=
-, struct pt_regs *regs)
->
->         insn.word =3D auprobe->insn[0];
->         arch_simulate_insn(insn, regs);
-> -       auprobe->resume_era =3D regs->csr_era;
->
->         return true;
->  }
-> --
-> 2.42.0
->
->
+--- /dev/null
++++ b/Documentation/ABI/stable/sysfs-kernel-time-ptp
+@@ -0,0 +1,6 @@
++What:		/sys/kernel/time/ptp/<ID>/enable
++Date:		May 2025
++Contact:	Thomas Gleixner <tglx@linutronix.de>
++Description:
++		Controls the enablement of independent PTP clock
++		timekeepers.
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -14,6 +14,7 @@
+ #include <linux/sched/loadavg.h>
+ #include <linux/sched/clock.h>
+ #include <linux/syscore_ops.h>
++#include <linux/sysfs.h>
+ #include <linux/clocksource.h>
+ #include <linux/jiffies.h>
+ #include <linux/time.h>
+@@ -2900,6 +2901,130 @@ const struct k_clock clock_ptp = {
+ 	.clock_adj		= ptp_clock_adj,
+ };
+ 
++static void ptp_clock_enable(unsigned int id)
++{
++	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
++	struct tk_data *tkd = ptp_get_tk_data(id);
++	struct timekeeper *tks = &tkd->shadow_timekeeper;
++
++	/* Prevent the core timekeeper from changing. */
++	guard(raw_spinlock_irq)(&tk_core.lock);
++
++	/*
++	 * Setup the PTP clock assuming that the raw core timekeeper clock
++	 * frequency conversion is close enough. PTP userspace has to
++	 * adjust for the deviation via clock_adjtime(2).
++	 */
++	guard(raw_spinlock_nested)(&tkd->lock);
++
++	/* Remove leftovers of a previous registration */
++	memset(tks, 0, sizeof(*tks));
++	/* Restore the timekeeper id */
++	tks->id = tkd->timekeeper.id;
++	/* Setup the timekeeper based on the current system clocksource */
++	tk_setup_internals(tks, tkr_raw->clock);
++
++	/* Mark it valid and set it live */
++	tks->clock_valid = true;
++	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
++}
++
++static void ptp_clock_disable(unsigned int id)
++{
++	struct tk_data *tkd = ptp_get_tk_data(id);
++
++	guard(raw_spinlock_irq)(&tkd->lock);
++	tkd->shadow_timekeeper.clock_valid = false;
++	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
++}
++
++static DEFINE_MUTEX(ptp_clock_mutex);
++
++static ssize_t ptp_clock_enable_store(struct kobject *kobj, struct kobj_attribute *attr,
++				      const char *buf, size_t count)
++{
++	/* Lazy atoi() as name is "0..7" */
++	int id = kobj->name[0] & 0x7;
++	bool enable;
++
++	if (!capable(CAP_SYS_TIME))
++		return -EPERM;
++
++	if (kstrtobool(buf, &enable) < 0)
++		return -EINVAL;
++
++	guard(mutex)(&ptp_clock_mutex);
++	if (enable == test_bit(id, &ptp_timekeepers))
++		return count;
++
++	if (enable) {
++		ptp_clock_enable(CLOCK_PTP + id);
++		set_bit(id, &ptp_timekeepers);
++	} else {
++		ptp_clock_disable(CLOCK_PTP + id);
++		clear_bit(id, &ptp_timekeepers);
++	}
++	return count;
++}
++
++static ssize_t ptp_clock_enable_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	unsigned long active = READ_ONCE(ptp_timekeepers);
++	/* Lazy atoi() as name is "0..7" */
++	int id = kobj->name[0] & 0x7;
++
++	return sysfs_emit(buf, "%d\n", test_bit(id, &active));
++}
++
++static struct kobj_attribute ptp_clock_enable_attr = __ATTR_RW(ptp_clock_enable);
++
++static struct attribute *ptp_clock_enable_attrs[] = {
++	&ptp_clock_enable_attr.attr,
++	NULL,
++};
++
++static const struct attribute_group ptp_clock_enable_attr_group = {
++	.attrs = ptp_clock_enable_attrs,
++};
++
++static int __init tk_ptp_sysfs_init(void)
++{
++	struct kobject *ptpo, *tko = kobject_create_and_add("time", kernel_kobj);
++
++	if (!tko) {
++		pr_warn("Unable to create /sys/kernel/time/. POSIX PTP clocks disabled.\n");
++		return -ENOMEM;
++	}
++
++	ptpo = kobject_create_and_add("ptp_clocks", tko);
++	if (!ptpo) {
++		pr_warn("Unable to create /sys/kernel/time/ptp_clocks. POSIX PTP clocks disabled.\n");
++		kobject_put(tko);
++		return -ENOMEM;
++	}
++
++	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++) {
++		char id[2] = { [0] = '0' + (i - TIMEKEEPER_PTP), };
++		struct kobject *clk = kobject_create_and_add(id, ptpo);
++
++		if (!clk) {
++			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d\n",
++				i - TIMEKEEPER_PTP);
++			return -ENOMEM;
++		}
++
++		int ret = sysfs_create_group(clk, &ptp_clock_enable_attr_group);
++
++		if (ret) {
++			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d/enable\n",
++				i - TIMEKEEPER_PTP);
++			return ret;
++		}
++	}
++	return 0;
++}
++late_initcall(tk_ptp_sysfs_init);
++
+ static __init void tk_ptp_setup(void)
+ {
+ 	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++)
+
