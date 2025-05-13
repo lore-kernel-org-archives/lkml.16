@@ -1,155 +1,158 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B312BCF6D;
-	Tue, 13 May 2025 15:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108A728371
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150330; cv=none; b=Yu3gDUjQ4Uc0uxbRTaxtrR1w+qULmKfXCAZyM0SJHmx5m/P1QqwqpBn4BJ2LUAtB/s5sKvh/PxRzOPZqnsoao4nOauYDKPfFEpAW+D61Qx9TmUKphHzCtqvIjiNYkovI6UsNj4wPHpk8Rdip/y2ORJRJDjRv1frQb/Ait6s51Wc=
+	t=1747150347; cv=none; b=QJhwQI640JR8GvK7HLyKn+bio9/Jo2K//rZ1AaSSGD27O8yAAwYbXRiEmPYxdrFM0cIg0Wgrt97BktynwabEQU2YFvr7YdzqERYQIdyL1QlruZO9an5+9wgaB4Qs9VrwVUcpeY/Yag5U9unF7N/EVLr7c9VTIVnnRxpHXZUMASY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150330; c=relaxed/simple;
-	bh=B8t0Z7HWPCpMrecC6Is9GRe2xqOIlUpL1iNnf7OJUk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=N2+ZJUKWaMMr2EAnHlOKBXRdCDFnqK+zoV1TKa36EAPvFVCdCoLozvj9QZRXlE5RlMaoj7iZGkC3TJorJURmE5QWCJFnLnsVpJw82bWveyjqyzG9nILI8ex3OLndX2mtyLSeWB+29AwVdcyVA49WeRbL31RAu3I8fqko1WMDuzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IcLS/IgQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747150347; c=relaxed/simple;
+	bh=MVkr3QWAI/X4Ew1h+MJOSNkV7y4pQmb/XzRFIHYUEwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Fg1AubWxOvEqjuFTU3hiIO4RhHgsiCEFkZydTsOmjrxOSesXg73W52yNoAJBO6Qdi2+j+PG82qpBEzTW0hpv/AbVCZMrSUwdKTuCm4hnyhCp4JbcJgX58VZoOAAnbCpMC9dYbkpiFjxzt8lhZXQgKFj7GgSZLzdM6o7/OQX0gus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0p1asKpy; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IcLS/IgQ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DDMLCR012669;
-	Tue, 13 May 2025 15:31:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PxNGkPwqf4jFKyBd+vcrwJOzNsytgO6jsGrOuaIb9gw=; b=IcLS/IgQ3br9kThE
-	tZany4kbp8qRehTskrCS3dz2Au8p4Je9QiCxlJ/7RICTRiJKvA8YBITCNquTHwAL
-	Hg5Dk0GA6lNGl/D1PtvFYxdNsmBouq1U7AeEURVAhtcFmOcKiQ5Fkj5RIrFAEqd3
-	YrTfGs2E7ZdGogWcKflXvpgBNT/pr66IVmP23J5jeeAk2VjrhF6++qd5vAYaQfF6
-	DsmxLlmbO/yYOR/+rNeChcCo7smCoxffXTJxkzuDDke5hiM0GgEAPRyVXthF7S3O
-	pXkMQBzYOqPfD9wfHh2f77TyYLjpgx7qxFpwJv8bSxoHRpEuDD/vQBVUV0/u/mBh
-	PLSi0w==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hwt989aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 15:31:49 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54DFVTu3006696
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 15:31:29 GMT
-Received: from [10.216.46.67] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 13 May
- 2025 08:31:23 -0700
-Message-ID: <1db93ab7-3974-49a7-8816-a495ed52888f@quicinc.com>
-Date: Tue, 13 May 2025 21:01:20 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0p1asKpy"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-47e9fea29easo375291cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747150345; x=1747755145; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g7GIEqlT6VpngqlG/9UDc8Z0jwZJiLiyfG5vtoML09U=;
+        b=0p1asKpy0gdYPt8rKvMPBvIYt+hH6T75HDvurqPBy3/dtF7yZbZwHJoHyZ+BqEHhsU
+         a8Ud1rJVmsngDQGu0Ng+hnNed2VxboEmjrQqP1LYReloyx2On3/tfWICIbvFdjo1Udxc
+         us5claWoM2H/1P3055lzUcDx8qPhcj3tijur8bdAB62FJcEiaGacS5YhjPHHE5rtRr+J
+         +sJUSF7wBpWm+4I9iQYnnCufsZrArMcv+BFMxKjUZEEICvrZPTtzmBy8ZUQIZIQxbtXS
+         givyRksKCm/nLLSIEPNCqxS/gbzNWtxqk4i90UljK1RRtUSVZevUuO9RDf0AIj8k2HEp
+         +/2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747150345; x=1747755145;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g7GIEqlT6VpngqlG/9UDc8Z0jwZJiLiyfG5vtoML09U=;
+        b=rKsBsbP/67N7QE6FXxwI9umNKZmg9fzSMMHsFKKEG9XRAEnAOH5OoSFIhex+7Bbkd5
+         Y7Jw4+G2v1dOv+ADgSlT38AUKS9Trd9BXc/Wokd0/igQHpuDhHzjlp4+nlf11Kfae1NO
+         mjBD04+ruy4Ltf7pf2Zue5c9kdIUuyRJidfN+6fyAF4ToZB10CUfrizwFPr5Sg0EhKyP
+         QTA1CdACPO8BTIAxKgZIXcOzl0d2H23XStNHVDH5gfUnqG1x642A+5sD1iB0R8aYtlI9
+         kvX8pWTP3zYKJppxiGvUJ9KSZ6Te89wYsB1WXxmeN48lECxwkSQsl6i8Jqw9ax53X28k
+         Txuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgreI9Hj086C6VhKGMD+gDaDYjXqJ/IyPpQDXsGEnnoRCh42n6+XxbD9VgRrZzOLWr2c78tzmJYjIpeA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMBzPc1IdAEkUaLT5zT6xO1I67nEx01AU0CnZZ6xdZ6AHqIbpP
+	VSADnTB72zEbdWlsQhnkDn1e0sOHgKyFbSYjGTh5XqCALsBmhK/Ud/X/QNtNI18G/pm7v1VdPol
+	q+9Qg36qVRLHChCVYxYztnWCycahYBHuFlOGukzKu
+X-Gm-Gg: ASbGncvTYv5oEGQ3+lql8wxNePU2z9pgThEXG1scbi7a+PTvNsvG2dtg8Kg8PpIlNQk
+	Zw6326tG8GGqxKpm7jq4DC53KILJAGku+ELwMrB3BdTb5NuD/xjuCXdFjOVElWqvQ7bBvvBd6C1
+	GidRYg7oKsBiuq9nLZWS9SWfV3j0dCvEZ8gQ+F0H7XXCJ9wMSyjppgPTsFmNgM
+X-Google-Smtp-Source: AGHT+IGaQOJh2WGLgdgVaUkWCSRwxWI0zOQtCZRpqIPwC1f/xENNQg6z8FkZS2+QDmtcgov4WAX0uJ0FkCBKDw2bCo0=
+X-Received: by 2002:ac8:5d93:0:b0:494:58a3:d3e6 with SMTP id
+ d75a77b69052e-494880c8030mr4064571cf.26.1747150344392; Tue, 13 May 2025
+ 08:32:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Rob Clark
-	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>
-References: <20250509-a623-gpu-support-v4-0-d4da14600501@quicinc.com>
- <20250509-a623-gpu-support-v4-2-d4da14600501@quicinc.com>
- <24173d3b-272d-4cfd-8519-ad5c9cf7c555@oss.qualcomm.com>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <24173d3b-272d-4cfd-8519-ad5c9cf7c555@oss.qualcomm.com>
+References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
+ <0f758474fa6a30197bdf25ba62f898a69d84eef3.1746792520.git.lorenzo.stoakes@oracle.com>
+ <lbykhkt4sjfb2l4mexgnzq7zumauvi5ycxua666ixvxns4w3qp@pgbo2krrtu2d>
+In-Reply-To: <lbykhkt4sjfb2l4mexgnzq7zumauvi5ycxua666ixvxns4w3qp@pgbo2krrtu2d>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 13 May 2025 08:32:11 -0700
+X-Gm-Features: AX0GCFuKZoSDkdrM5SwPBVnmxK9uYRCIyU-gKUoqlLzfyT7RC4ZlWav-ftNZMDo
+Message-ID: <CAJuCfpFfoPHgUcu_-S4wXVxGpEGgTH_mLpgVO5UhtDG5+L3b2A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mm: secretmem: convert to .mmap_prepare() hook
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE0OCBTYWx0ZWRfX4qnxRPIIwT/N
- uqRTXu/TL260pxU5SPjhrztjudmqs4QFhyZezSSivLVupY1YxxXLZGp+4jf6Lr5beNmCylr+yvy
- e6NIrr2BzQ/5kq/AeQfDJHFOc+IfBaHdfGUFk/sdq5gjfawILhmnIyvRKYckyILFqkxWdZmpgHF
- qU8EHPNFkhTrD1LLPBSocQf6lg1fbwTotpqLAT62p6YnTKGdtbMl9fJAgDuJZXHH5+g7i0kXB3b
- 85XxY1ala4pqskEVTHDIEyX+bu4kXDqkQ+sVuwFZuDQO/wvD0YjJ/XcT9qfrNuBOo8swRNjH1HF
- 7qOwqsxXSoP2Q9mwq/jvMlxIIG3Kqoi00C7bOzzfdbtdfxln6zZ1+3xRcHHrDqIECtP/58KGx9G
- H9L+pQv8gYEw+wCckpbbgOxEQHFO/rJxxCTNAn7ROVuXkuKS7oFLyeRFHLm4QtyoyugMGF/n
-X-Proofpoint-ORIG-GUID: 0Rh83Zr8MejUAvZDE7Zt2TGAPBBSHPXD
-X-Proofpoint-GUID: 0Rh83Zr8MejUAvZDE7Zt2TGAPBBSHPXD
-X-Authority-Analysis: v=2.4 cv=a58w9VSF c=1 sm=1 tr=0 ts=682365e5 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=sOY6sp4eF24iVwk-jeYA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505130148
+Content-Transfer-Encoding: quoted-printable
 
-On 5/13/2025 2:18 AM, Konrad Dybcio wrote:
-> On 5/9/25 9:21 AM, Akhil P Oommen wrote:
->> From: Jie Zhang <quic_jiezh@quicinc.com>
->>
->> Add gpu and gmu nodes for qcs8300 chipset.
->>
->> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
->> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
->> ---
-> 
-> 
->>  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 91 +++++++++++++++++++++++++++++++++++
->>  1 file changed, 91 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> index 40771b062e8d7010dd93d7cc7b3db73cfa16bfdb..1dbccb9a0c75366aa6986b6adb4feb6164ee8845 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> @@ -2660,6 +2660,97 @@ serdes0: phy@8909000 {
->>  			status = "disabled";
->>  		};
->>  
->> +		gpu: gpu@3d00000 {
->> +			compatible = "qcom,adreno-623.0", "qcom,adreno";
->> +			reg = <0x0 0x03d00000 0x0 0x40000>,
-> 
-> I haven't noticed it up until now.. this should be moved up in the file
-> to sort the nodes by unit address (the serdes node above is 0x089.., gpu
-> is 0x03d..)
+On Tue, May 13, 2025 at 6:23=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250509 08:14]:
+> > Secretmem has a simple .mmap() hook which is easily converted to the ne=
+w
+> > .mmap_prepare() callback.
+> >
+> > Importantly, it's a rare instance of an driver that manipulates a VMA w=
+hich
+> > is mergeable (that is, not a VM_SPECIAL mapping) while also adjusting V=
+MA
+> > flags which may adjust mergeability, meaning the retry merge logic migh=
+t
+> > impact whether or not the VMA is merged.
+> >
+> > By using .mmap_prepare() there's no longer any need to retry the merge
+> > later as we can simply set the correct flags from the start.
+> >
+> > This change therefore allows us to remove the retry merge logic in a
+> > subsequent commit.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-Looks like GPUCC block got misplaced too. Will fix.
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-> 
-> Otherwise, please check if there are freq fuses on this platform, if not,
-> feel free to add:
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Thanks. We have the SKU related data available. We will add those too in
-the next revision.
-
--Akhil
-> 
-> Konrad
-> 
-
+>
+> > ---
+> >  mm/secretmem.c | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/mm/secretmem.c b/mm/secretmem.c
+> > index 1b0a214ee558..589b26c2d553 100644
+> > --- a/mm/secretmem.c
+> > +++ b/mm/secretmem.c
+> > @@ -120,18 +120,18 @@ static int secretmem_release(struct inode *inode,=
+ struct file *file)
+> >       return 0;
+> >  }
+> >
+> > -static int secretmem_mmap(struct file *file, struct vm_area_struct *vm=
+a)
+> > +static int secretmem_mmap_prepare(struct vm_area_desc *desc)
+> >  {
+> > -     unsigned long len =3D vma->vm_end - vma->vm_start;
+> > +     const unsigned long len =3D desc->end - desc->start;
+> >
+> > -     if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) =3D=3D 0)
+> > +     if ((desc->vm_flags & (VM_SHARED | VM_MAYSHARE)) =3D=3D 0)
+> >               return -EINVAL;
+> >
+> > -     if (!mlock_future_ok(vma->vm_mm, vma->vm_flags | VM_LOCKED, len))
+> > +     if (!mlock_future_ok(desc->mm, desc->vm_flags | VM_LOCKED, len))
+> >               return -EAGAIN;
+> >
+> > -     vm_flags_set(vma, VM_LOCKED | VM_DONTDUMP);
+> > -     vma->vm_ops =3D &secretmem_vm_ops;
+> > +     desc->vm_flags |=3D VM_LOCKED | VM_DONTDUMP;
+> > +     desc->vm_ops =3D &secretmem_vm_ops;
+> >
+> >       return 0;
+> >  }
+> > @@ -143,7 +143,7 @@ bool vma_is_secretmem(struct vm_area_struct *vma)
+> >
+> >  static const struct file_operations secretmem_fops =3D {
+> >       .release        =3D secretmem_release,
+> > -     .mmap           =3D secretmem_mmap,
+> > +     .mmap_prepare   =3D secretmem_mmap_prepare,
+> >  };
+> >
+> >  static int secretmem_migrate_folio(struct address_space *mapping,
+> > --
+> > 2.49.0
+> >
