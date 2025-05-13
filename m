@@ -1,106 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D6A21ADB5;
-	Tue, 13 May 2025 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD8721C17B;
+	Tue, 13 May 2025 09:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127986; cv=none; b=n9MMp8dPKWI4f5sqG4NRdUEtnv/niyA0qUDWdFxW22A4cTvh7sbfdKgeInmLfyrBwAvvJPLETe4ZA6JP54sL9krFHdA/cYVAECtfQJPkB32lF7G6m6VqGCDPO52czkvKR4zlMsHIT35qwTAS99bOY/nkUa8WAkbZKYctSumV2ow=
+	t=1747127990; cv=none; b=aFwzJAhGqQwMGmBAQ205USgd44UKj7u199ob3xqXnEAB2Qm1QYoDgp6t4t951B8IEHCBwUKZ8p8xy2J4F/2TQib/eg92wSXl2BVUFa4Gcst8MKCRkwvy/vwv+0qqppgLsyXblmzfI6i5joeRk4EhKgsiRIWKrZaQzuVTWyQUw2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127986; c=relaxed/simple;
-	bh=5YrABFzbKb8Src/u5OGMIShsQQLYX37Y/4zalAnMTa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UI9czNUJWj6BG7JbSM7BgDwrpGUwfg2Rn4LAZgVT5nCWjvYgnuw1MTq1XW4loreCqfGZSsA2J8J8BCv2q5FeHC8GfQrrIG8CJ2etUMNTg+IDfHJ0qk3Scc8WvbeGJGxK7IHMlZk2y5ggGlGbtoA98HcjVuu8wtPPMQzQSqmGCqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0522168F;
-	Tue, 13 May 2025 02:19:32 -0700 (PDT)
-Received: from [10.57.90.222] (unknown [10.57.90.222])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E603F673;
-	Tue, 13 May 2025 02:19:41 -0700 (PDT)
-Message-ID: <56655ac1-a650-43d8-8080-a03c250474d3@arm.com>
-Date: Tue, 13 May 2025 10:19:40 +0100
+	s=arc-20240116; t=1747127990; c=relaxed/simple;
+	bh=F+9+GV6PR4vz3HrC1iJgRo/ICi0mkT4spMSTxAe5JUc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uIwyXSt016Hgy8V1NMnlvmFtVrVVDrxc4yu2/DR9a5GU//cvldpqClv1Xn/ra1dUMxuCHSSlNSjGWVdxyyQjU1XCBR1kBqIZVEKhCsXrpBwh9nvBGyUXo5vH7GFf3R5DO3tCYa7C19QoTkuNAZRheND7qr0hsYqmj4V8+lXw98A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=JzNYpOwX; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JzNYpOwX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747127988; x=1778663988;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F+9+GV6PR4vz3HrC1iJgRo/ICi0mkT4spMSTxAe5JUc=;
+  b=JzNYpOwXuStUgCprOi+dL+6afWw3HCPKzBMcZQhIz0yfpV6BZiBu7X27
+   yzNTetaR81/Ae1zLdvtVMTrTWOtSgopmChJzLLec8yoT9wpX93f8Q76XA
+   nr65abDJtbkSMqv4B2VzitepBtvUFkUwaKI/wMKduegz4rUTbDITrXpXi
+   BqcOMaDbpc9kGsN6T5VojoSS3kYmHJTNrqCDNBVxvVTdkRAJ4YN4mHVU2
+   zjBd1PwMXI+xzgHoAlmk0d7IhhuwGev15wr4t7LW8CAqZQa3L/pTFf0mU
+   m8hdNMjU/klaq8jEJEJD91KmRnwVdpH1puOTmnirBrd9awY3hEAZSa9Pc
+   Q==;
+X-CSE-ConnectionGUID: 4la2DOakSDynwZsvbJGMbg==
+X-CSE-MsgGUID: tY78326VT2eXjS8LPxCs9g==
+X-IronPort-AV: E=Sophos;i="6.15,284,1739862000"; 
+   d="scan'208";a="209027473"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 May 2025 02:19:47 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 13 May 2025 02:19:17 -0700
+Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 13 May 2025 02:19:13 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <vaibhaavram.tl@microchip.com>, <kumaravel.thiagarajan@microchip.com>,
+	<arnd@arndb.de>, <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+	<brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <unglinuxdriver@microchip.com>
+CC: <rengarajan.s@microchip.com>
+Subject: [PATCH v1 char-misc-next 0/2] Add GPIO Hot reset and Wakeup Support
+Date: Tue, 13 May 2025 14:45:55 +0530
+Message-ID: <20250513091557.3660-1-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] binfmt_elf: Move brk for static PIE even if ASLR
- disabled
-Content-Language: en-GB
-To: Kees Cook <kees@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Ali Saidi <alisaidi@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20250502001820.it.026-kees@kernel.org>
- <87f80506-eeb3-4848-adc9-8a030b5f4136@arm.com>
- <a786b348-7622-4c62-bfdc-f04e05066184@arm.com>
- <202505121340.7CA14D4C@keescook>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <202505121340.7CA14D4C@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 12/05/2025 21:40, Kees Cook wrote:
-> On Mon, May 12, 2025 at 04:17:12PM +0100, Ryan Roberts wrote:
->> Hi Andrew,
->>
->>
->> On 02/05/2025 11:01, Ryan Roberts wrote:
->>> On 02/05/2025 01:18, Kees Cook wrote:
->>>> In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
->>>> direct loader exec"), the brk was moved out of the mmap region when
->>>> loading static PIE binaries (ET_DYN without INTERP). The common case
->>>> for these binaries was testing new ELF loaders, so the brk needed to
->>>> be away from mmap to avoid colliding with stack, future mmaps (of the
->>>> loader-loaded binary), etc. But this was only done when ASLR was enabled,
->>>> in an attempt to minimize changes to memory layouts.
->>>>
->>>> After adding support to respect alignment requirements for static PIE
->>>> binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
->>>> for static PIE"), it became possible to have a large gap after the
->>>> final PT_LOAD segment and the top of the mmap region. This means that
->>>> future mmap allocations might go after the last PT_LOAD segment (where
->>>> brk might be if ASLR was disabled) instead of before them (where they
->>>> traditionally ended up).
->>>>
->>>> On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
->>>> a static PIE, has alignment requirements that leaves a gap large enough
->>>> after the last PT_LOAD segment to fit the vdso and vvar, but still leave
->>>> enough space for the brk (which immediately follows the last PT_LOAD
->>>> segment) to be allocated by the binary.
->>>>
->>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->>>> ***[brk will go here at fffff7ffa000]***
->>>> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
->>>>
->>>> After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
->>>> implementation"), the arm64 vvar grew slightly, and suddenly the brk
->>>> collided with the allocation.
->>>>
->>>> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /sbin/ldconfig.real
->>>> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
->>>> ***[oops, no room any more, vvar is at fffff7ffa000!]***
->>>> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
->>>> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
->>>> fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
->>
->> This change is fixing a pretty serious bug that appeared in v6.15-rc1 so I was
->> hoping it would make it into the v6.15 final release. I'm guessing mm is the
->> correct route in? But I don't currently see this in linus's tree or in any of
->> your mm- staging branches. Is there still time to get this in?
-> 
-> I'll be sending it to Linus this week. I've been letting it bake in
-> -next for a while just to see if anything shakes out.
+This patch series adds the support for GPIO Hot reset from C0 device
+revisions. In addition, GPIO Wakeup support is added using irq_set_wake.
 
-Sorry, Kees - my bad! For some reason, I thought this would go via the mm tree.
-Thanks again for jumping on this.
+Rengarajan S (2):
+  misc: microchip: pci1xxxx: Add PCIe Hot reset disable support for Rev
+    C0 and later devices
+  misc: microchip: pci1xxxx: Add GPIO Wakeup Support
+
+ .../misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c   | 92 +++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+
+-- 
+2.25.1
+
