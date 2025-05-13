@@ -1,108 +1,98 @@
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020BEDF42;
-	Tue, 13 May 2025 17:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DCA5DF42;
+	Tue, 13 May 2025 17:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157114; cv=none; b=tbOF9QHhS/PJ8Jv2I34pkru4MsarJo64vSe3NN0z+gRvWFMm68a50znDP/3eQ/30t+wcW1K5D3+cGHIPIdasQgtAYz52YvkvUM8Hz49oJSJtnu4KUoTG5cTSf2PUwQMTe+uQyFdsovX1a6Gd/DsqoRkU0cJuTbkDdXtmY0TReUA=
+	t=1747157134; cv=none; b=tPV2pVQXEeS8eoD0MnQgJYhHsBQPZnyYuSeQt1hZyixdrMVljptmtBQg9WqtnMTZs2QxQmq6TzT5J5c1GEMveCbOspU0iMQRW5Uuw4XRPlrDn4jO+qFfAhWpbIqIeppdiPPrjdCnI48NUU5Y33l3kIIf40GGYzb3hW+1NmD1b4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157114; c=relaxed/simple;
-	bh=IFGesWu8EPkRFamvLT8Ku7fGJSEuc1LYK5DITrBQpQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mm7rIep1vatp8Pi3pzIHhZr9CVcJi2W8Mr05UsCs7KoFIqYby8A37nuj++7cqwtsL/F7J+xEhU6yhV4MLAqmKl3nWuuAaD5vwyt0NhrtbQhxSGwFgOuvckrtODYD7dXgbJMjUH907AI0CJiWyCx0wLUhMFlMp0KJ+xAr/3xJ8o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=REjfedeQ; arc=none smtp.client-ip=80.12.242.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="REjfedeQ"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id EtMDu3N4Z5ZigEtMDu4cj2; Tue, 13 May 2025 19:23:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1747157038;
-	bh=JxrYbBfhgO630RmLTb4Fo45Q/Dzy/Nis+MpX2vxscwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=REjfedeQT6+WYDVQklmIm5CtTtskRglDj1hFS7VCHj0ymXHMturEjJ2LFcc77Eivu
-	 +JZIVwXzw2IUFjFHQNLHdCu6wV55tecrtf9l1HBbsCL5aOgtjq+yyWiQ8wS7Bju9Rg
-	 etVviCAWVHzaNKKkIqiQ0kumzcFk6SSadeZ89M+doid4bf6wQQDw4/wLAqSOUTeO3m
-	 6au2xacazT2bSgtNdYn90F7/UtATC5nF1wmXZTWHhpix8lel9SyV4oNWIacbzdYxsS
-	 yyUTu1AgEJsG7ubdAW5GhHRAFjXkj68siKhxtxKPySZukDhpR4WAltBcJmxnSe10FC
-	 TOYe2wnOb3p4Q==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 13 May 2025 19:23:58 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <b0fd1c29-4f5b-41e0-a113-2b24527e5e73@wanadoo.fr>
-Date: Tue, 13 May 2025 19:23:56 +0200
+	s=arc-20240116; t=1747157134; c=relaxed/simple;
+	bh=KwBHwUKbPrI8zFSIj23WEdv0CSSQb5m1yVfuhttKX9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gj24hB+JViPcU8efULffv2pFK5KnRnsS9I9UOW28CRCqeV6emdcMX+8gw5R9WTMBeL4y1YgTcP/s6Bfy7jNaI0lVuPf35YM/mO9AZPj1ui0HAlKb4T77+46ll6GXuTAOWjimdbGtAV1Y50yEhPDTJKiVyW807RNHLTV79nP9TCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E6562247;
+	Tue, 13 May 2025 10:25:21 -0700 (PDT)
+Received: from bogus (unknown [10.57.45.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFBB13F63F;
+	Tue, 13 May 2025 10:25:29 -0700 (PDT)
+Date: Tue, 13 May 2025 18:25:28 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Peng Fan <peng.fan@oss.nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: firmware: imx95-scmi: Allow linux,
+ code for protocol@81
+Message-ID: <20250513-whimsical-almond-quoll-e3ad5b@sudeepholla>
+References: <20241104085622.177781-1-alexander.stein@ew.tq-group.com>
+ <20250409-heavenly-sceptical-ara-bceeb9@sudeepholla>
+ <20250409160029.GE27988@nxa18884-linux>
+ <2804473.mvXUDI8C0e@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] i2c: amd-isp: Add ISP i2c-designware driver
-To: "Nirujogi, Pratap" <pnirujog@amd.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org,
- mlimonci@amd.com, krzk@kernel.org
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dantony@amd.com,
- Venkata Narendra Kumar Gutta <vengutta@amd.com>
-References: <20250424184952.1290019-1-pratap.nirujogi@amd.com>
- <fc126869-15f4-48f1-a44c-30c45f8dd2ec@wanadoo.fr>
- <b7a5e00a-a744-4824-bfac-fd9caed1726b@amd.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <b7a5e00a-a744-4824-bfac-fd9caed1726b@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2804473.mvXUDI8C0e@steina-w>
 
-Le 13/05/2025 à 00:24, Nirujogi, Pratap a écrit :
-> Hi CJ,
+On Tue, May 13, 2025 at 05:37:36PM +0200, Alexander Stein wrote:
+> Hi Sudeep,
 > 
-> On 5/9/2025 3:11 AM, Christophe JAILLET wrote:
->>
->> Le 24/04/2025 à 20:49, Pratap Nirujogi a écrit :
->>> The camera sensor is connected via ISP I2C bus in AMD SOC
->>> architectures. Add new I2C designware driver to support
->>> new camera sensors on AMD HW.
-
-...
-
->>> +static void amd_isp_dw_i2c_plat_remove(struct platform_device *pdev)
->>> +{
->>> +     struct dw_i2c_dev *isp_i2c_dev = platform_get_drvdata(pdev);
->>> +
->>> +     pm_runtime_get_sync(&pdev->dev);
->>> +
->>> +     i2c_del_adapter(&isp_i2c_dev->adapter);
->>
->> Usually, this match a corresponding i2c_add_adapter().
->>
->> For my own understaning, in which function/calls path is it hidden?
->> Is it needed here?
->>
->> CJ
->>
-> i2c_add_adapter() in this case gets called in probe. Please refer the 
-> below call sequence for details.
+> Am Mittwoch, 9. April 2025, 18:00:29 CEST schrieb Peng Fan:
+> > Hi Sudeep,
+> > 
+> > On Wed, Apr 09, 2025 at 01:31:58PM +0100, Sudeep Holla wrote:
+> > >On Wed, Apr 09, 2025 at 08:18:29PM +0800, Peng Fan wrote:
+> > >> + SCMI maintainer, Sudeep and Cristian
+> > >> 
+> > >> On Wed, Apr 09, 2025 at 12:59:50PM +0200, Alexander Stein wrote:
+> > >> >Hi,
+> > >> >
+> > >> >Am Montag, 4. November 2024, 09:56:21 CEST schrieb Alexander Stein:
+> > >> >> BBM protocol supports a single power button, supported by driver
+> > >> >> imx-sm-bbm-key.c. By default this is KEY_POWER, but can also be overwritten
+> > >> >> using linux,code. Add a reference to this schema and add linux,code as a
+> > >> >> supported property.
+> > >> >> 
+> > >> >> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > >> >
+> > >> >Is there any other feedback or things to do here?
+> > >> 
+> > >> I see Rob already gave R-b.
+> > >> 
+> > >> Not sure this should go through Shawn's or Sudeep's tree.
+> > >> 
+> > >
+> > >I am fine either way. Peng, just let me know if you want to pick this up.
+> > 
+> > Not my patch :)
+> > 
+> > Since scmi driver changes go through your tree, the binding changes
+> > should follow same.
+> > 
+> > It would be good that if you could pick it up. 
 > 
-> amd_isp_dw_i2c_plat_probe()-> i2c_dw_probe()-> i2c_dw_probe_master()-> 
-> i2c_add_numbered_adapter()-> i2c_add_adapter()
-> 
-> Thanks,
-> Pratap
+> A gentle ping.
 > 
 
-Thanks for your feed-back.
+Sorry I missed Peng's response. I have already sent my PR for v6.16
+Since there is no driver changes, I thought it would be routed elsewhere.
+See if Rob or Shawn can pick it up for v6.16, else I can pick it up for
+v6.17, sorry for that.
 
-Maybe having a i2c_dw_remove() which undoes i2c_dw_probe() could help?
-
-or, if feasable, having i2c_del_adapter() be called by a 
-devm_add_action_or_reset()? (note that i2c_dw_probe_master() already 
-uses a devm_ function)
-
-CJ
-
+-- 
+Regards,
+Sudeep
