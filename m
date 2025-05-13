@@ -1,92 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2951E9B34;
-	Tue, 13 May 2025 21:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1662D1E9B34
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172047; cv=none; b=EOUBHEgX7kbaBOnuQ3fLDck69gRuSMfvZdERlXbaiZD6FoiJdhwijZC+wM5iuvmpAGZRZiJfQIBkMZjVYG6LLn1ypKTxVS3GVSoNzoOO/LmGdS07oIGbl7Sy3FKF+FiCGKqJYYOkyM+hTiinUy97juKdcbewKIu1jIwdQQsPVnw=
+	t=1747172229; cv=none; b=kdIjkIiDoNPYKkOeoh9RGHUZlMud/hpsF5uq1HvEzP3GEejUaBuzTUQ1EjFn9zGrSR4zcR00ShUbyfTdrSCz1FLQBdoArUFO6G+memg/O1qXk2QIv2T4yaUMgrqK8ASeNrD0Yvfy46dfEVURyJhvebTn38/206yGZMhoCnUzrmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172047; c=relaxed/simple;
-	bh=+88zOYnvDFvxjqE/Y5p6i3D0kIHC3vjAVXfBRRI6uC4=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Tr8uQHyUPFZbu5S/MA600cp2uPcLqBq1CmGVT/E1FlUyA18Eqc2jZEMOexETDqv02o5VY37WxnClc7aqyxwCVYJnHEW8rYHppI1BNUz0f99zQ6P+dMvstMR1eKUSreELCC2iz6W9ly5t+4cBj7uhC8SzSJ1hj0A1MH7e0jjnM8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZw4cAGr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747172229; c=relaxed/simple;
+	bh=PO/ZnToiSQshroU62YU04Jbjh5HO510+sm2n/R7pJeA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h9XxmHIMnBLT50hqQKNOiEHas1ZqGXKKbdx67jHOxhKYdm9sJd9h0vCYtT+gnmI2mSsQEBHzhpqpuyaERZ0NRjWuaAJSZHD2vuhwZfbYyz/hjfc/AWN8Aakebn9Sa6T6OQAAzHPq5WdKoqckaQU09jcYvCCLdUXNAl6DbACXhko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DTW7a0zr; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZw4cAGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A63C4CEE4;
-	Tue, 13 May 2025 21:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747172047;
-	bh=+88zOYnvDFvxjqE/Y5p6i3D0kIHC3vjAVXfBRRI6uC4=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QZw4cAGrXnSwAKANm1o5Y3J0p5WweuPSkV8pVZxIJ56kIj32UTuTNkhFAlpCpCKXL
-	 rI/78bnkIYHbTh+gjaRfdIRC1U0HvvV+S+ongG0s3tJ9ABVpRzr7JDYP+tGkYVAIbd
-	 sWc4cKmIf8oiVyDjklHDAa5E2t0zgpFef2Z1xVaXQKik3ggcBNNHyrtmjBZ1qaPD11
-	 vI1rrJM5aL/PGlAPft+t0KDtAVLsOI8Zi9RF8IRggf0I30e5ncbFwJbQpv6YTxuNTa
-	 BOPn2i71dlKG2HoQiiUxwKJEbpeNf8o/gjIvG0hKpa/RJ3ALRxGaDrj3308rMPw/+7
-	 XwYeEN+euzrEg==
-Date: Tue, 13 May 2025 16:34:04 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DTW7a0zr"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fc8c68dc9fso5144744a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1747172225; x=1747777025; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PpGt0/4BlhEjF3LhxkoQUInU9xlE4Lld7uIpl3WRJ5c=;
+        b=DTW7a0zrgyKgo4ABlEzTsAZmvnL3ehXNIha2LPqr9qW+vW+lQCRPYku3q+d8B4n+07
+         H60UaBeSoinvt/OQ8Sy2y3sU8Cujh2fbPhl6jgzYKrHX07L6xoH3/81f423vINdLokWV
+         SR1Zvg51o8TELpNKKknnYS3vYxaDGPga+K0F8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747172225; x=1747777025;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PpGt0/4BlhEjF3LhxkoQUInU9xlE4Lld7uIpl3WRJ5c=;
+        b=NrFZ2y+9tR+lTkBHwC0QV+nFEzljESsGuwCDehx9crt9/uS6RY3KdPaeZPlLkGsqM8
+         aoBeyACURl9nEACfpjov1BYnKDj8z5ZX/jWkV7beAke5IDI9D+69pAFTbrNJkdGw6AyT
+         0fndd63BBN5fSubB8VJOHGFaF/RnLZn25eWc4KVDSB7itnh5U61E7+KaTb3JhpQ+ROO6
+         JxBzmFKHMC4gFaseugeiTztBKq0OM25VgtG5UC7PQM+r6d8r4H3RYWVOXidz8XG62dfN
+         yylLPhpMCuAv/0gi3CQLYq6NT/MjAWCP7nP44VJC/n87tUbQE6qJDhGALbbTiLbOpEpn
+         wEBA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6OhtZBG8XeCXhrdnEBk4BwiDBbmhNLTlEzFUns+arxSrOHkm4IeNgnjUDWK0jO7KBq2azGg7CHbq8QOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIaoWG1qC7ohPawyMGTIR7jJN9htoQEnpTC+TeztarktRPP1OJ
+	zDovhJRS2PEBbynuDxUao/yjCR/qYpAMM1CkmGp3LLww4iBGjWhma3GQQmwncC1BEGXpIqblwYA
+	mpKRWmQ==
+X-Gm-Gg: ASbGncvHacGBzfqrhKAfxRanVcN7Bi7L8nAid0RAQBbQ7sSxViHzMPln3sL6wpgyG+t
+	snH6Bx+8iV4MwXGp8m6j1KIYVUGoSZKSSa01K3I4A1ZMpIL35p6IL8mfUyGQnXETKPc6osPRj1a
+	NVOhbpKctiVPMpgzMvdmsjjBFaUMkWp3P0yI2+Rg6vXyxzBdKs3UPfd4k8fm3nDoEB/n1Ta5W7R
+	Fd5QVIDRzfpzNQ2GtrvX4Iu5Rju4V8ypee8CjeYredp6thMyKB5+2N6QRiQUbgie0hqbyYQlKlS
+	LImur7VPoJWyaeyI80aFetFAVcb4ZKCypnazrj5pK4Q3xTjqXO0ZDl93LHP2gh9K6nQCQnrpW+i
+	bRMCbVa+wnF2tYK219WvninHIFMZs2i6OwZgU
+X-Google-Smtp-Source: AGHT+IFvzEWUyLQL1c09wlzGxFBF0SukLOK6wo7IumKNhBWeSHln1p2cxagllAv2TDSOKbk39cJamA==
+X-Received: by 2002:a05:6402:90b:b0:5f6:23b1:ab4b with SMTP id 4fb4d7f45d1cf-5ff98a22459mr566105a12.30.1747172225123;
+        Tue, 13 May 2025 14:37:05 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d70ec1esm7729848a12.78.2025.05.13.14.37.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 14:37:04 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5fc8c68dc9fso5144716a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:37:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWVQo++3iqNnsRmdiZc8l+CJDIDqNUXa/5WfavPPbnZFsR4o23VXOJh45q7XjBDHU2z8r2gIGINyZfFCUU=@vger.kernel.org
+X-Received: by 2002:a05:6402:5208:b0:5f7:8e59:15d7 with SMTP id
+ 4fb4d7f45d1cf-5ff988c0538mr505870a12.1.1747172223719; Tue, 13 May 2025
+ 14:37:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Roger Quadros <rogerq@kernel.org>, 
- linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
- Tony Lindgren <tony@atomide.com>, Conor Dooley <conor+dt@kernel.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Kevin Hilman <khilman@baylibre.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250513184148.3053317-1-robh@kernel.org>
-References: <20250513184148.3053317-1-robh@kernel.org>
-Message-Id: <174717204490.3717333.9556861729299597344.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: crypto: Convert ti,omap4-des to DT schema
+References: <20250513025839.495755-1-ebiggers@kernel.org> <688ec9f5-b59a-46c0-97d9-f4d0635fac6e@intel.com>
+ <49808711-a5af-488a-9fd1-246c4da10100@intel.com>
+In-Reply-To: <49808711-a5af-488a-9fd1-246c4da10100@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 13 May 2025 14:36:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh-eB38UMFNna8svJy+=pS2=PHQ8f9-_8wVrVG2wh0zeA@mail.gmail.com>
+X-Gm-Features: AX0GCFt2gxwB0LdDLQ3EofXx6pOOcaJcwz4xjs3v92rWAEBosi4IjQfmpE37OT0
+Message-ID: <CAHk-=wh-eB38UMFNna8svJy+=pS2=PHQ8f9-_8wVrVG2wh0zeA@mail.gmail.com>
+Subject: Re: [PATCH] x86/its: Fix build errors when CONFIG_MODULES=n
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 13 May 2025 at 13:32, Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> Linus, could you pick this one up directly, please?
 
-On Tue, 13 May 2025 13:41:47 -0500, Rob Herring (Arm) wrote:
-> Convert the TI OMAP DES binding to DT schema format.
-> 
-> Drop "ti,hwmods" as it is not actually used for this binding. Only
-> OMAP2 platforms are using it.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../devicetree/bindings/crypto/omap-des.txt   | 30 ---------
->  .../bindings/crypto/ti,omap4-des.yaml         | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
->  create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-> 
+Done. Thanks,
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/ti,omap4-des.example.dtb: des@480a5000 (ti,omap4-des): 'ti,hwmods' is a required property
-	from schema $id: http://devicetree.org/schemas/ti,omap4-des.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250513184148.3053317-1-robh@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+                 Linus
