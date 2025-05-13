@@ -1,39 +1,33 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ADE1F0E49
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33CFEC5;
+	Tue, 13 May 2025 07:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122285; cv=none; b=fOhns+IZK/ZdX+euezVC+taaOF6RJowCQEpRcR7V3x0/LGsvOUV2jUUY0p2u+ozHUW1p06c5gTkzVYHVO62N5shN78IWW6S18EV4cmlDC2N9/X8HWtvGUPxR5bmcNZspYAnim43GGh4wJMIJWP5tX8OgnceSUySwcVSQ/kFxwwQ=
+	t=1747122296; cv=none; b=gs2WkSTEAjxj6tPw8kx7aGaQobDEYUSd5xqWSp6H29LtIiEzf2XDThVMloRuqpjS1vtbxUnyGM2819Io2lLzMz/SXh0GATDzyZop3XzqhDhysvWjcLvZRJnVS9uz0a02eq52cFeOMNZEB6MFZoAl2SebRHYSpXzduUUnzskAI8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122285; c=relaxed/simple;
-	bh=YwGpHnyVkHWD1TtoCdBiRnRMQlH9gUlJOKF36JGgCD0=;
+	s=arc-20240116; t=1747122296; c=relaxed/simple;
+	bh=XhHpleA0OzZhqpa3rjrh6RL90cUK1WoFGX417izBmjg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TcTBvfqJmG2yuzdFaiL3hRtwzsKIHkfIPacMj7ueY+b1iHn3SQHjCSjP0S8ZAU70qIStg+MezYpVP4XTMDzpR0edUmSuMfnBKxxxUIEm43K21hlKEC6PKvs5b8C+HebcwitkRXL96uUMxC8BEtBXGm7z/Lc4Ln5O1ZRv7hLZWuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=T6wPeUBX; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	 In-Reply-To:Content-Type; b=mG4Hxsw5BeT1MG0l/VpODo5JwYfQt9DnCqRJb1L/GR1id+tiWwj5RabrzGgcxaSAOaA2FbXxasD4QHjRj6cmC7M1uvq6YTOlk0INEj9B/id+43cP9kYNoCoBLAK9LkF/yS8uauS4CzfW6mmL5t4sylNWxFCwSRYAvzBEBQnx/0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lv1IzLJS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="T6wPeUBX"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54D7i2Hq2223737
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 13 May 2025 00:44:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54D7i2Hq2223737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747122244;
-	bh=iTnNWYX2obU2wqvg9Uxp4/8y/l3QJ3cSHicHW0YLUMU=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lv1IzLJS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82282C4CEE4;
+	Tue, 13 May 2025 07:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747122295;
+	bh=XhHpleA0OzZhqpa3rjrh6RL90cUK1WoFGX417izBmjg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T6wPeUBXmVZWSZhZUOIDpcsrS2otEO6JGtz1qMkJLlGRVR72Q54uO4jsCdgt4rj4T
-	 iOuyG+8jFrEg+B4yQKF6XzuhTK0q9q/OPlc2PraMY2ZKpE/y9efNUWXIiDU46sbf/h
-	 xWYyM1N7vNC0+1CmBGyRBuVm+vCRbRTVVtL/J9CmHH6GQLrhpKGWKNR91PMG1Q4RgL
-	 2tXQfuBBn+5LBa+l+qSoZ0r+AqZyIKPRar8E7z7HyIZ4i2zhrZUzyI2dhfRGnd0QZd
-	 j6ep7OfZNzFNbzf2XHS9K1HZMqdPSsP+nigSi2C7trSIED3gqVXArqNa9N5QpjsWfF
-	 0MBt3SSYQQM8w==
-Message-ID: <2365af70-d36f-4663-b819-59d886936ef5@zytor.com>
-Date: Tue, 13 May 2025 00:44:02 -0700
+	b=Lv1IzLJSPASGDbptJtX+eiszvazDe2Hvhd8sSg/ePoxgJtrnBHWY+qdXM83MXEqFd
+	 tzsxvYbgClJ8I5f0oz9qZxuvnT+M8cAWhTFp5ybmUmFr8tBHj+QNAQYQNkeEJpMdQL
+	 nAEB2ernE4oCIfxUIG3AUYea8AGht/YR8fasEMx+D+KJ/Z4jhBAH1SW70VwrHWY8Jb
+	 fiRtwNZa+GCpiVNNuiJXBKmdJIQwykp9v+OCJZLn99wLCdG2HtaZt61SDUUk29TWaR
+	 LQq+N713ma/a0IvYyMHf+2E6Z7IZWWFzpcU6NxS1loiLtmm3bc4V+scia5oGc45tks
+	 e+vX9oiJVHTSg==
+Message-ID: <8199958e-fd77-4037-9909-181bfa21e92c@kernel.org>
+Date: Tue, 13 May 2025 09:44:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,219 +35,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        virtualization@lists.linux.dev
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
+To: leo.jt.wang@gmail.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ george.kw.lee@fii-foxconn.com, leo.jt.wang@fii-foxconn.com
+References: <6822b830.050a0220.27a24d.d064@mx.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <6822b830.050a0220.27a24d.d064@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/12/2025 4:20 AM, Jürgen Groß wrote:
-> On 09.05.25 10:18, Xin Li wrote:
->> On 5/6/2025 2:20 AM, Juergen Gross wrote:
->> I'm trying to evaluate how to add the immediate form MSR instructions
->> on top of this patch set.  And I'm close to get it done.
+On 13/05/2025 05:10, leo.jt.wang@gmail.com wrote:
+> From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 > 
-> There is something to consider when running as a Xen PV guest, ...
-
-Andrew said he doens't plan to expose WRMSRNS to PV guests, and doesn't
-expect MSR_IMM to be useful in a PV guest either, which I fully agree.
->>>
->>> Note that in the Xen PV case the RDMSR/WRMSR patching must not happen
->>> even as an intermediate step, as this would clobber the indirect call
->>> information needed when patching in the direct call for the Xen case.
->>
->> Good point!
+> Document the new compatibles used on Meta Clemente.
 > 
-> ... as this still needs to be true.
-> 
-> There are 2 different ways to deal with this:
-> 
-> 1. When running as a Xen PV guest disable X86_FEATURE_WRMSRNS and
->     ASM_WRMSRNS_IMM (e.g. in xen_init_capabilities()).
-> 
-> 2. Buffer the original instruction before patching in apply_alternatives()
->     in order to avoid the sequence limitation above (see attached patch).
-> 
->> Deciding whether to retain the pvops MSR API is the responsibility of
->> the x86 maintainers, who are the ones experiencing the challenges of 
->> maintaining the code.
-> 
-> Well, I'm the PV ops maintainer, so it is basically me who needs to deal
-> with this. OTOH I do understand that diagnosis of problems with PV ops is
-> more complicated than without.
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> ---
+>  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Indeed, significant improvements continue to be implemented.
+<form letter>
+This is a friendly reminder during the review process.
 
-> 
->>
->> tglx said @https://lore.kernel.org/lkml/87y1h81ht4.ffs@tglx/:
->>
->>  > I fundamentaly hate adding this to the PV infrastructure. We don't
->>  > want more PV ops, quite the contrary.
->>
->> That is the reason I took a different direction, i.e., removing the
->> pvops MSR APIs.  But if your approach is cleaner, they may prefer it.
-> 
-> In the end it isn't adding additional PV ops interfaces. It is modifying
-> existing ones.
-> 
->>
->>> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/ 
->>> paravirt.h
->>> index a463c747c780..df10b0e4f7b8 100644
->>> --- a/arch/x86/include/asm/paravirt.h
->>> +++ b/arch/x86/include/asm/paravirt.h
->>> @@ -175,24 +175,72 @@ static inline void __write_cr4(unsigned long x)
->>>       PVOP_VCALL1(cpu.write_cr4, x);
->>>   }
->>> -static inline u64 paravirt_read_msr(u32 msr)
->>> +static __always_inline u64 paravirt_read_msr(u32 msr)
->>>   {
->>> -    return PVOP_CALL1(u64, cpu.read_msr, msr);
->>> +    EAX_EDX_DECLARE_ARGS(val, low, high);
->>
->> This is under CONFIG_PARAVIRT_XXL, thus CONFIG_XEN_PV and CONFIG_X86_64,
->> therefore we don't need to consider 32-bit at all, no?
-> 
-> Right. OTOH the macros are there, so why not use them?
-> 
-> In the end I'm fine to open code the 64-bit case here.
-> 
+It looks like you received a tag and forgot to add it.
 
-Here is a patch I cooked.  I added an ALTERNATIVE() hack because the new 
-instructions can't be more than 6 bytes long.  But with the patch you
-just sent, it shouldn't be needed.
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
 
-diff --git a/arch/x86/include/asm/paravirt.h 
-b/arch/x86/include/asm/paravirt.h
-index df10b0e4f7b8..82ffc11d6f1f 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -177,18 +177,20 @@ static inline void __write_cr4(unsigned long x)
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
 
-  static __always_inline u64 paravirt_read_msr(u32 msr)
-  {
--	EAX_EDX_DECLARE_ARGS(val, low, high);
-+	u64 val;
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
 
-  	PVOP_TEST_NULL(cpu.read_msr);
-  	asm volatile("1: "ALTERNATIVE_2(PARAVIRT_CALL,
-  					"rdmsr", ALT_NOT_XEN,
-  					ALT_CALL_INSTR, ALT_XENPV_CALL)
-+		     ALTERNATIVE("", "shl $0x20, %%rdx; or %%rdx, %%rax", ALT_NOT_XEN)
-  		     "2:\n"
-  		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
--		     : EAX_EDX_RET(val, low, high), ASM_CALL_CONSTRAINT
--		     : paravirt_ptr(cpu.read_msr), "c" (msr));
-+		     : "=a" (val), ASM_CALL_CONSTRAINT
-+		     : paravirt_ptr(cpu.read_msr), "c" (msr)
-+		     : "rdx");
-
--	return EAX_EDX_VAL(val, low, high);
-+	return val;
-  }
-
-  static __always_inline void paravirt_write_msr(u32 msr, u64 val)
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index ea3d7d583254..cacd9c37c3bd 100644
-@@ -1204,20 +1206,20 @@ __visible u64 xen_read_msr(u32 msr)
-
-  	return xen_do_read_msr(msr, xen_msr_safe ? &err : NULL);
-  }
-+
-  #define PV_PROLOGUE_MSR_xen_read_msr	"mov %ecx, %edi;"
--#define PV_EPILOGUE_MSR_xen_read_msr	\
--	"mov %rax, %rdx; mov %eax, %eax; shr $0x20, %rdx;"
-+#define PV_EPILOGUE_MSR_xen_read_msr
-  PV_CALLEE_SAVE_REGS_MSR_THUNK(xen_read_msr);
-
--__visible void xen_write_msr(u32 msr, u32 low, u32 high)
-+__visible void xen_write_msr(u32 msr, u64 val)
-  {
-  	int err;
-
--	xen_do_write_msr(msr, (u64)high << 32 | low,
--			 xen_msr_safe ? &err : NULL);
-+	xen_do_write_msr(msr, val, xen_msr_safe ? &err : NULL);
-  }
-+
-  #define PV_PROLOGUE_MSR_xen_write_msr	\
--	"mov %ecx, %edi; mov %eax, %esi;"
-+	"mov %ecx, %edi; mov %rax, %rsi;"
-  #define PV_EPILOGUE_MSR_xen_write_msr
-  PV_CALLEE_SAVE_REGS_MSR_THUNK(xen_write_msr);
-
-
-
->>> +__visible int xen_write_msr_safe(u32 msr, u32 low, u32 high)
->>
->> I think we can avoid splitting this u64 into two u32.
-> 
-> This is related to the native WRMSR interface. The WRMSR needs to be
-> able to be replaced by the call of the Xen specific function.
-> 
-> I could handle this in the prologue helpers, but I'd prefer to keep
-> those helpers as small as possible.
-
-The above patch makes PV_EPILOGUE_MSR_xen_read_msr empty, because only
-RDMSR needs to convert edx:eax into a 64-bit register, and the code is
-added into paravirt_read_msr() already.
-
-For xen_write_msr(), the change is simple enough.
-
-Thanks!
-     Xin
+Best regards,
+Krzysztof
