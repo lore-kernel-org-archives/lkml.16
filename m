@@ -1,157 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DEF1531E8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EA228ECE8;
+	Tue, 13 May 2025 13:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143294; cv=none; b=FOgAzH2gug1Gk1d4SFpxRsEQ1slLo+GrUfMT6EBBhiNu1WmceCh2FjiHlaLg4LoxvwgYqbGSMgVCXHOyDN8K4jhSdfsdM16M0OiNimVF+0mxMAQFWBpxbT+SHny3/mp1agfOIVXWlfvvWGzRifShF9xCa+bWiOcNPPk1zXJdGkg=
+	t=1747143303; cv=none; b=HkcAwgqAxdgpl7ohWM+yp1+ltuNqVt6MrS5fmxX8AWElVO5Vak2BuImp4pL8tDs4ERyghYGsJIk/r2I0Rh50MhAyyhIhY/3hOOVjxdp6Mtrvsw6/1MJs0ucFk6f45LtQlh5LCeRmq9ffVLKx+2P7SWv7mpBdTGWjScNordVQdCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143294; c=relaxed/simple;
-	bh=HiQAI9qA2+tr2vuBq7mJuDVHFurHRbktX1OJdzD37Xk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=R8pd261j2dZGRljzC8RIerClqNttj0N6EGK+qxkqMfgyoBYenASXONio9Owm2hv8R/8aB+flJ5ay5y3OIK7oErG7k/uuYaneakWw0pSs5YmQ2DCGdijW0pT3BQBleh9tWoGYndKv8HwzI4N84ZeeSuxjaVzczpCr00h7z3nhfP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rZQXxGbO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5OLeFq/q; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jtOQQdTX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PqcjWPEQ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rZQXxGbO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5OLeFq/q";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jtOQQdTX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PqcjWPEQ"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E263621187;
-	Tue, 13 May 2025 13:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747143291; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6J2+rvITsi5fqZ9/xhX64s08wLNi9ATpSHwWOtdqUQ4=;
-	b=rZQXxGbOFvjtZfdW9nvJtW9GmYh8X7j/lQahq1p//LqOED5LZvRkREbwg8hbQB+82Q2lTM
-	aFXeEBbkiHzSCHJ9S/4/hfOEXNBNyQMJ0TOifDhkDT46EAP5zLi1BjbtuWJF/D8W2qnNE5
-	rPBLuY4BO7KlL/16W3Ox83D0DswVeDQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747143291;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6J2+rvITsi5fqZ9/xhX64s08wLNi9ATpSHwWOtdqUQ4=;
-	b=5OLeFq/qA22HJMWrxHkzMaD+dwxXl8aYRQoHxHpi/AWVLAqqFZc/GqKbQffhW3aoT+rWmV
-	EbEg8wLbJV3PRCDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747143290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6J2+rvITsi5fqZ9/xhX64s08wLNi9ATpSHwWOtdqUQ4=;
-	b=jtOQQdTXYc5Rr3gZ0dOZN9kzqfD462iiRXPE3g86DRBz0WV4gGggXKZV51jJ5wImAq1qYf
-	3Gdq39scbecU+kmirjMJB2gzvviVPYUv9N0dLJWJN3b+LgGCvJ/tr37vKbrhbyfO1HpciK
-	DSqln5oULOJ3qXj47wLkunhCyvjyfKk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747143290;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6J2+rvITsi5fqZ9/xhX64s08wLNi9ATpSHwWOtdqUQ4=;
-	b=PqcjWPEQKLB4lsqAPlR8exdc5o38xr5q0jQyhxQJgGYaDH6AOakr2JWnQX2DJnSzC+n75p
-	rFcxESK0Iae23aBA==
-Date: Tue, 13 May 2025 15:34:50 +0200 (CEST)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc: linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Josh Poimboeuf <jpoimboe@redhat.com>, mingo@kernel.com, 
-    juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-    dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-    mgorman@suse.de, vschneid@redhat.com, jpoimboe@kernel.org, 
-    jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com, 
-    Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] sched,livepatch: Untangle cond_resched() and
- live-patching
-In-Reply-To: <20250509113659.wkP_HJ5z@linutronix.de>
-Message-ID: <alpine.LSU.2.21.2505131529080.19621@pobox.suse.cz>
-References: <20250509113659.wkP_HJ5z@linutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	s=arc-20240116; t=1747143303; c=relaxed/simple;
+	bh=P9nYdxJ07dCIy7FODfo1LjoFbgIG6vlkstSo/eDqIQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HrXqaVpD8wNynQ9fbE2gm5BU0dS0SVJNxk7SOdecH91A0xY3cSwN5tkE+3ZeZ/q5lTqzwrnOSvhC+9UVjS/Jk+6KGaM3PdFfSTgo/ffXS99WxZ8fuBqJPstFGnDOk+jbCizXVr/xdaTZQoG2ogHm+Idj0PMnyhJZjdvt5WV2zsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7301c227512so4543038a34.2;
+        Tue, 13 May 2025 06:35:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747143300; x=1747748100;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jv6f8gJJ3Yc5GMRZNr5+hOES3UZ81AyIQwF4NsF0AJc=;
+        b=hjC1xFpDhIvXvoQh8fMCr/XxpPStqGzzcZ3nILYlGzMutNxmSHRhMBUPt6P9i7di86
+         +iVRxIYG39uzHRccfC784Y7Yz6EVH7bnCVKmwlAYEYEiK9UXSc3vx8JLjJ+vs9VQHT58
+         8i/hTF4P/f8Kju/GLVFLIsY/iNHVNyzaEE9k8JARUjneThAq3UFwoLkNfyUS5Coo8RkC
+         3EnCC/Fbk19nQGlTCyWn0vbH3dhdiokJcpTv/ujWxpzG22cyyEPGmlksKt8k+FSMEUHU
+         mVXFXd+V+k6hKagJbsyAFHxLJ7coj7d6QVrnNZwibyOorNTwO4llsPqEyKUkPPqNCWPG
+         N+9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUJVFmNJwgHPH8j+tNIEcKVKkBi7CXTYsgS8C1QnP4um91YkSbFZEjG4aSojREKzuSKhITTpTr3UbGR@vger.kernel.org, AJvYcCUgfST8DACGjdhWTXXjkMJfabuDKJnrV/lFznTar31g9nHk2p7E/KFMtg2yVH2eUvOphakX9BGY60nP44/c01LTqJg=@vger.kernel.org, AJvYcCWshNT9nkMOod5Tc8kBgiEFlnKthwHp8I/F0P3Un67HSW86WzivCrln3jJFPDNSQ38ZnQCx/+NDvdZSDas2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyntvZUtPoZfeHFHr9X9nHx5eTztJrAdvE36vL7m6lCXI174my+
+	S7xInaI4bVik9jZtmRmOzO47xaTij8fKg34L3ZVgAlb+1g/fegXvxc+bh2AV
+X-Gm-Gg: ASbGncuJ5hQqgrpKdcBQYiV3su09dHJVMKor6HO3a+S7spMg9Zp+IX7boJlcN5mYcG8
+	6cWA52YyofDUhEYNgEzeNplc9g2l/fUuvUWqk7NM29r0VXLVysZSkZPxOuGB/dvnsx14Yk6MVTe
+	yDvb7myDVm7b3xzANoHdtvxNI/GSdnPXfqwZFtG7IHiiwKUVmQnrSLkNzsTx0p1yTtisywTSjwr
+	TXCPjsdHIaqwj+LhEyPLoeY77RZLcxVImnShCffNardOklKSb/FS37A1Y5qxEDGqNMbL66jNyYg
+	A4OsKg2m7vZBFybs1aHzcEPK4FynQxHez7IrmjhBRyEDDiS5NkwKqMw+A6pMSC04sTjlHbqqmXi
+	0aCOyaDVz1QtG/VEFOg==
+X-Google-Smtp-Source: AGHT+IEXrKXVjdWSxQ2/PfQw7h1kJZEQwVhRVSvBKEwQFt46xteS0M5FTXzMxwcCEB4t83jO9FpIoA==
+X-Received: by 2002:ad4:5aa5:0:b0:6f5:436:9e46 with SMTP id 6a1803df08f44-6f6e47c77eemr263562336d6.15.1747143288938;
+        Tue, 13 May 2025 06:34:48 -0700 (PDT)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e39f47a0sm67725536d6.39.2025.05.13.06.34.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 06:34:48 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c56a3def84so597210285a.0;
+        Tue, 13 May 2025 06:34:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4q0aYbg2RxhGjYAbdvS3RYBF+7eWyZDTh3wH6A1j85QaGG821mSj4ORZymEixiEgeWBZiRNNuTVDd@vger.kernel.org, AJvYcCUegcfY5pVekNxYSl94n2wZ5kqg6b/IoDoYA6f2q46STAthss2dMTi/eANRR5TL5U/iZDAj9jvhx4pZoMW5@vger.kernel.org, AJvYcCWzGcOmhuM6+zKvbBWxDht+AWCWZeLqyzcaH2Q1FgAvl0ryly6Rch1cT9kK+7OtWzm5ZFPdtqHeNGQZrHhKKcit/qI=@vger.kernel.org
+X-Received: by 2002:a05:620a:d8b:b0:7cd:cd:44f9 with SMTP id
+ af79cd13be357-7cd01150239mr2964417485a.36.1747143288365; Tue, 13 May 2025
+ 06:34:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,infradead.org:email]
+References: <20250429081956.3804621-1-thierry.bultel.yh@bp.renesas.com> <20250429081956.3804621-10-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250429081956.3804621-10-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 13 May 2025 15:34:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUe8RNNWfNJzFcbA_3u8FF7HzBjs46i+D17HNWNevCXkg@mail.gmail.com>
+X-Gm-Features: AX0GCFucQszMqvG72vWmxfOCBykVdyFfTWc_NisAFrCmnPaaKPxj_OlYSmxOhdE
+Message-ID: <CAMuHMdUe8RNNWfNJzFcbA_3u8FF7HzBjs46i+D17HNWNevCXkg@mail.gmail.com>
+Subject: Re: [PATCH v8 09/11] arm64: dts: renesas: Add initial support for
+ renesas RZ/T2H SoC
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi Thierry,
 
-thanks for the updated version.
+On Tue, 29 Apr 2025 at 10:20, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Add the initial dtsi for the RZ/T2H Soc:
+>
+> - gic
+> - armv8-timer
+> - cpg clock
+> - sci0 uart
+>
+> also add arch/arm64/boot/dts/renesas/r9a09g077m44.dtsi, that keeps
+> all 4 CPUs enabled, for consistency with later support of -m24
+> and -m04 SoC revisions, that only have 2 and 1 Cortex-A55, respectively,
+> and that will use /delete-node/ to disable the missing CPUs.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> ---
+> Changes v7->v8:
+>   - removed loco clock
+>   - added sci0 secondary clock
 
-On Fri, 9 May 2025, Sebastian Andrzej Siewior wrote:
+Thanks for your patch!
 
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> With the goal of deprecating / removing VOLUNTARY preempt, live-patch
-> needs to stop relying on cond_resched() to make forward progress.
-> 
-> Instead, rely on schedule() with TASK_FREEZABLE set. Just like
-> live-patching, the freezer needs to be able to stop tasks in a safe /
-> known state.
-> 
-> Compile tested only.
+LGTM (modulo the comments on the RSCI and CPG bindings), so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-livepatch selftests pass and I also ran some more.
- 
-> [bigeasy: use likely() in __klp_sched_try_switch() and update comments]
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Gr{oetje,eeting}s,
 
-Acked-by: Miroslav Benes <mbenes@suse.cz>
+                        Geert
 
-A nit below if there is an another version, otherwise Petr might fix it 
-when merging.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> @@ -365,27 +356,20 @@ static bool klp_try_switch_task(struct task_struct *task)
->  
->  void __klp_sched_try_switch(void)
->  {
-> +	/*
-> +	 * This function is called from __schedule() while a context switch is
-> +	 * about to happen. Preemption is already disabled and klp_mutex
-> +	 * can't be acquired.
-> +	 * Disabled preemption is used to prevent racing with other callers of
-> +	 * klp_try_switch_task(). Thanks to task_call_func() they won't be
-> +	 * able to switch to this task while it's running.
-> +	 */
-> +	lockdep_assert_preemption_disabled();
-> +
-> +	/* Make sure current didn't get patched */
->       if (likely(!klp_patch_pending(current)))
->                return;
-
-This last comment is not precise. If !klp_patch_pending(), there is 
-nothing to do. Fast way out. So if it was up to me, I would remove the 
-line all together.
-
-Miroslav
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
