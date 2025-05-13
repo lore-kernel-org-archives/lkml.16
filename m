@@ -1,167 +1,247 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B41D1E9B06;
-	Tue, 13 May 2025 07:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747119811; cv=fail; b=MNdQDdnMjl46rYg5hjVuhneZVp55+inLrdan+XRjfgE7qUJsLKo776mXQ70of5q35YcqfbsjwZQ9iE9D76iMxiS/lrfZhyOPc18jXtlDbE9ndnnzHqEsN58YaErP6GvejltnwayTbhcq/1g6ipSDKoOXWLG7Mp2OJG5yIa5dRlU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747119811; c=relaxed/simple;
-	bh=sAPaGNbmcNaZ2FjSmVeLeKEeXH5DChwSRCnidHOGLMY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ujzpjik9Yh1fT9Z90K3BHlayeyRUh6Mc7RQwuxBDluh2KjTzmgBRuIvCKlS/7RUkMlCsem/3ygmk2xwKTpAwKDNhQiwqknX0QUXJzqvrdPzVYQmorlVrb4TTbfOoU/ZNxXEtp0hWedqxgBZkZZ9BggPY6lAeNRrKh4O83djasMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rMM1aotC; arc=fail smtp.client-ip=40.107.92.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849991E9B1D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747119996; cv=none; b=VS7xmZvc3FfA7H+kb69OHs0D7gVkiC6x5BKTFNYCUJ3YXSf37aZRwYE4NDiVoJs6c/Cbjh92UqdypbrD8LSk39G5iGBw0crr2evR6lU8+45ZNug5iyZE+1XsNw5uPlJBb8E7fyTQ9Y3poXQqFTTRZmi6IIEVidmLKbVpps3PAls=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747119996; c=relaxed/simple;
+	bh=HrY8RXQw+0LoYZLU9N77Uq02JLsXugCfMucRRJyH5LQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QhgoZdbEspw2D1rtFektfe1qU8SSNI5Ma7BzT/jeNPSI5QVxq1xU4cYjl8VpvuzUNwuw/XWSsC6FFlqGhcAb01ab75oIeZmNK4Eih+S2aZ5Iwv7gwCbeEJxb+8kzF0bhvGy5XrELg7O71qdcqhwyY99fJYk7iJM26xkhK7HRLgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bKSqtD8M; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bKSqtD8M; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rMM1aotC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VljALCcS7k1Zwx5gUhm2fFNQk/KitPf+Yk9QexrAFHJDMEghDufgaN8DOUAwnwJ494fim5fDOTMuaH4mMQm2wQJ50AD2YwR5HrCk/2PA9AKRsEL1GOyg+j6vv8Ej3zaH2wO0o9VikelR8lRKc5c7Xdl2jQBS4HEFkszbIlH/6iKaNkxaNQ9hQYYbzEpZZQnU1rLBCAEBcZhmtib7ONXvQjxs0UXiONtWFS0da9d0X5bjj5BvhR8nRSGaWfTlwOyg8vI3GcgiNs4fo7KZaHcZd8LWFvt1BFg0BGNPiQZQ7eWLdnrzcuxGklxsPJbb6BzXtn4gbF22hRBNxqsCxG9GVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
- b=B2/4LqC8r6gJbusMOU+s21HYTenh4zQBIUC2A8cxTGcFfR8MbHsTn0puTlIi+79BxWvUzq7YKb8uYF0A6ZtqUEqj5cnBu+MlDUSPZriaeQm31g2v6ggrqAUp+iTUOcg91JH5oYwoMzFGcb9CZql8kIYKoKhjW3K4qtOB4RpCTV098Z2bmehWk4QI166OSVSGhddbWSwRJK7iMxp/hzORCFaw2Uapu+/ZR7NeHjLQRLFS2sgB8Kno7x3V9ltryNkrtMcYlg8B96nFJln8DciisiXsDlDOoDLmAuraW3kJ6IcfOYbZtQPLR7Jr+lbPlbM9Fro7s8tCsYtxYb7WpeERtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
- b=rMM1aotCRA5aILlpqTgMICzDfvCxrIQr5jJ+vfPwCJSEibNJ4G/djP74lBWnyNabPU9HpWG5xkip5uGfIxgN4jmhJv1Id36tQDjc/gXYPTyGLp6TiTX3qxMS1Z2tIcOoRTCaPC0h3wtF1Uj01xXuGtf0hl8QfKXpJNK1l52fMjo=
-Received: from SJ0PR05CA0041.namprd05.prod.outlook.com (2603:10b6:a03:33f::16)
- by MN0PR12MB5714.namprd12.prod.outlook.com (2603:10b6:208:371::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
- 2025 07:03:25 +0000
-Received: from SJ5PEPF000001E9.namprd05.prod.outlook.com
- (2603:10b6:a03:33f:cafe::1a) by SJ0PR05CA0041.outlook.office365.com
- (2603:10b6:a03:33f::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Tue,
- 13 May 2025 07:03:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001E9.mail.protection.outlook.com (10.167.242.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Tue, 13 May 2025 07:03:24 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 13 May
- 2025 02:03:23 -0500
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 13 May 2025 02:03:21 -0500
-From: Devendra K Verma <devverma@amd.com>
-To: <devverma@amd.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<manivannan.sadhasivam@linaro.org>, <michal.simek@amd.com>,
-	<vkoul@kernel.org>
-Subject: [RESEND PATCH v2] dmaengine: dw-edma: Add HDMA NATIVE map check
-Date: Tue, 13 May 2025 12:33:14 +0530
-Message-ID: <20250513070314.577823-1-devverma@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bKSqtD8M";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bKSqtD8M"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 91E932119D;
+	Tue, 13 May 2025 07:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747119992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E4RNMeAGwPkYmbKq0c3z5PMFjKyvJtYRCxiTSBCv/aM=;
+	b=bKSqtD8MjCEm030QMcGkVEzSveBlUpyIUZrpXPxgYGa3R1qfDbeLYB8splD9c26SUFr8WI
+	4mKM228sn7mbbklJANpSnBchocjH9SIBZUrhpdxUFF76X54AfG9GqNC7Te9hJZ2dWeXLOj
+	CNHkWEeg+zUfIhV+U7jQMQuuQbMX3Jo=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=bKSqtD8M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747119992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E4RNMeAGwPkYmbKq0c3z5PMFjKyvJtYRCxiTSBCv/aM=;
+	b=bKSqtD8MjCEm030QMcGkVEzSveBlUpyIUZrpXPxgYGa3R1qfDbeLYB8splD9c26SUFr8WI
+	4mKM228sn7mbbklJANpSnBchocjH9SIBZUrhpdxUFF76X54AfG9GqNC7Te9hJZ2dWeXLOj
+	CNHkWEeg+zUfIhV+U7jQMQuuQbMX3Jo=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4BA8B1365D;
+	Tue, 13 May 2025 07:06:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zH7jEHjvImhNUwAAD6G6ig
+	(envelope-from <mwilck@suse.com>); Tue, 13 May 2025 07:06:32 +0000
+Message-ID: <1767e6d3757f824039b4f799157d262a8dd74ced.camel@suse.com>
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+From: Martin Wilck <mwilck@suse.com>
+To: Mikulas Patocka <mpatocka@redhat.com>, Christoph Hellwig
+ <hch@infradead.org>
+Cc: Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev,
+ hreitz@redhat.com, 	snitzer@kernel.org, bmarzins@redhat.com,
+ linux-kernel@vger.kernel.org
+Date: Tue, 13 May 2025 09:06:31 +0200
+In-Reply-To: <8e009e40-a1d2-5eea-3930-f81446b16722@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+		 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+		 <8e009e40-a1d2-5eea-3930-f81446b16722@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: devverma@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E9:EE_|MN0PR12MB5714:EE_
-X-MS-Office365-Filtering-Correlation-Id: b7854359-826f-441b-6a05-08dd91ec412d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gCzrw6wTxjd87Q61jdgrkkhvMxCOlZd4Ps1AaEoCZdmDqEbjefG4AC1R+R5n?=
- =?us-ascii?Q?liZfmCQc026XcyNx6pFshdlOz7KMueTR6YL3GJQSPQhrwwZfpLwLfA5fNRWR?=
- =?us-ascii?Q?FjNJB17ZA13SUOmKPikS/+qrzgrxrqx2SOFpY7ptZShaqyu0B9QEeA56Mzdf?=
- =?us-ascii?Q?1yDPv9TCB+0aac/DunKEWE9xncpNuN3iOtYQSIH0Ijw6b26LeBGLu9aFLjZ4?=
- =?us-ascii?Q?VdPGbsob+pUM7ExeNfMSomtP8U05P0gItiZwdIlRiZRdrkK53hPQFEL0NHZd?=
- =?us-ascii?Q?/30e8haAwAIl+Kl0HHtRSNTEvIaAHExiEZpWFQjVfUv1AZMZ50cGUJYZfsgB?=
- =?us-ascii?Q?dCv4h/W6LdtZLGmTKZrbF99+bpHPiiIO6AQh2IxZmpLHteI9J3Dyin4HuWL5?=
- =?us-ascii?Q?+ja9qGtTnL/OIWTs9oBvKmxGoSOXZudUsI2EDwFig/M7Z1rbpJdGoMD69Ivk?=
- =?us-ascii?Q?UazI/+wDS2UbXF7mUJAjkWBP3YuV2yAH+p20HfsPdztQaz/yRAdR8cInMbOs?=
- =?us-ascii?Q?i0OO7TeyVJvKncpUN3o9kT8g0DHGfEpbKT2/rsp2MeRzlZ7Ii37xuarTQHrJ?=
- =?us-ascii?Q?DZoJgjjK0dedFkAmYWn+GusJeZ6AGV5lzM0cFrvEsQt1IY3fIqbImItYHh//?=
- =?us-ascii?Q?/4pZsZLcayAmuh9SIRESbzPHVpRG+8zyaR6gfHBqSN1xIPkJymjGIld+tzzO?=
- =?us-ascii?Q?rbjBxOOhZ2KqRMlNqZd8Rj3CNkue9bNBQ8PPTirCs6vr4VmkBD7Fsu7wWLs+?=
- =?us-ascii?Q?GQ6BljWQjIHJDR/dRTNKBju2p3kIoqx+3UKl9tts2aRSv3uykLZzAOob9xYj?=
- =?us-ascii?Q?o8RuPwSXS7N/+iMR3/v7DYirOFi+4GnJje3r15B0xVwXMpHpgDZ/uzYDPtuf?=
- =?us-ascii?Q?udRtubmALJ4G7BzTZXEkEXHjJID/yg4MAxKsxs5jIzlEEVnqepIkraDuAfen?=
- =?us-ascii?Q?qwA0fnAMsK8C7LkkcMlKL4tCj6tB2tVe+c/XRyD8VKPDucElriRkcKHa0kr7?=
- =?us-ascii?Q?YdjsS+SsBmEnPPTKJBhlHoup8r4ynWl5nOunoEmG7IfYlFjh8R83B+UBNh5u?=
- =?us-ascii?Q?GMIX61h3u7eOnO/VDGrD+VlF5g0BFYl68PbkRoLVlgLdu/ela5xdflZc5Bhz?=
- =?us-ascii?Q?qyvecj1n9v7B0rN9uD1igFmJvrIBPMOYemd6PfQaeG/+JZTQmRZyDUnJtxBn?=
- =?us-ascii?Q?dxX4pN1G9WQKoC6U3ZuX+7IeekUfu6tGhtDYA0if5XKMlT6gN3hdpm49TUyJ?=
- =?us-ascii?Q?hJOn69RNsnJsz7QqmBgN4ks92fGBGcZPsY1tWra8LdEQkyIeJSfG6qqtO+xa?=
- =?us-ascii?Q?gZzHBvwPsxlVrehzEzJJCCdDr8mGRQpRB0n0cALY1Uieur+EuNbwGQokeE4F?=
- =?us-ascii?Q?WKLbNKTRsUby61+Juw6s31gc2zMUOdWvdObRGfpAOl/ZUKMSgt1rGbmh3cZJ?=
- =?us-ascii?Q?m9hMIei2ttrF6Mqfj21Q3s4Dlb4a2t2UXlJbkcwN5kG0Lu0iN3OdEfm+z5Cb?=
- =?us-ascii?Q?qX297P2kPEsg7T5862MF3A+AjSREbpFdaPEY?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 07:03:24.7063
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7854359-826f-441b-6a05-08dd91ec412d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001E9.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5714
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 91E932119D
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:dkim];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
 
-The HDMA IP supports the HDMA_NATIVE map format as part of Vendor-Specific
-Extended Capability. Added the check for HDMA_NATIVE map format.
-The check for map format enables the IP specific function invocation
-during the DMA ops.
+Hello Mikulas,
 
-Signed-off-by: Devendra K Verma <devverma@amd.com>
----
-Changes in v2
-Addressed the review comments and added the 'Debug info' for
-HDMA_NATIVE in dw_edma_pcie_probe().
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Mon, 2025-05-12 at 15:46 +0200, Mikulas Patocka wrote:
+> Hi
+>=20
+>=20
+> On Thu, 8 May 2025, Martin Wilck wrote:
+>=20
+> > Hello Kevin,
+> >=20
+> > [I'm sorry for the previous email. It seems that I clicked "send"
+> > in
+> > the wrong window].
+> >=20
+> > On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
+> > > Multipath cannot directly provide failover for ioctls in the
+> > > kernel
+> > > because it doesn't know what each ioctl means and which result
+> > > could
+> > > indicate a path error. Userspace generally knows what the ioctl
+> > > it
+> > > issued means and if it might be a path error, but neither does it
+> > > know
+> > > which path the ioctl took nor does it necessarily have the
+> > > privileges
+> > > to
+> > > fail a path using the control device.
+> >=20
+> > Thanks for this effort.
+> >=20
+> > I have some remarks about your approach. The most important one is
+> > that
+> > the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous
+> > command.
+> > It sends IO to possibly broken paths and waits for it to complete.
+> > In
+> > the common error case of a device not responding, this might cause
+> > the
+> > code to hang for a long time in the kernel ioctl code path, in
+> > uninterruptible sleep (note that these probing commands will be
+> > queued
+>=20
+> Normal reads and writes would also hang in an uninterruptible sleep
+> if a=20
+> path stops responding.
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 1c6043751dc9..49f09998e5c0 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -136,7 +136,8 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
- 	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
- 	if (map != EDMA_MF_EDMA_LEGACY &&
- 	    map != EDMA_MF_EDMA_UNROLL &&
--	    map != EDMA_MF_HDMA_COMPAT)
-+	    map != EDMA_MF_HDMA_COMPAT &&
-+	    map != EDMA_MF_HDMA_NATIVE)
- 		return;
- 
- 	pdata->mf = map;
-@@ -291,6 +292,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", chip->mf);
- 	else if (chip->mf == EDMA_MF_HDMA_COMPAT)
- 		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", chip->mf);
-+	else if (chip->mf == EDMA_MF_HDMA_NATIVE)
-+		pci_dbg(pdev, "Version:\tHDMA Native (0x%x)\n", chip->mf);
- 	else
- 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
- 
--- 
-2.43.0
+Right. That's why multipathd uses TEST UNIT READY if supported by the
+storage, and either aio or separate I/O threads to avoid the main
+thread being blocked, and generally goes to great lengths to make sure
+that misbehaving storage hardware can cause no freeze.
+
+The way I read Kevin's code, you'd queue up additional IO in the same
+context that had submitted the original failing IO. I realize that qemu
+uses asynchronous IO, but AFAIK the details depend on the qemu options
+for the individual VM, and it isn't clear to me whether or not
+DM_MPATH_PROBE_PATHS_CMD can bring the entire VM to halt.
+
+> >  [...]
+> >=20
+> > I am wondering whether the DM_MPATH_PROBE_PATHS_CMD ioctl is
+> > necessary
+> > at all. Rather than triggering explicit path probing, you could
+> > have
+> > dm-mpath "handle" IO errors by failing the active path for "path
+> > errors". That would be similar to my patch set from 2021 [1], but
+> > it
+> > would avoid the extra IO and thus the additional risk of hanging in
+> > the
+> > kernel.
+>=20
+> What exactly do you mean? You say "you could have dm-mpath 'handle'
+> IO=20
+> errors by failing the active path for "path errors".
+
+What I meant was that dm-mpath could call fail_path() in case of an
+error, using a similar mechanism to the block IO code path.
+
+> Christoph doesn't want dm-mpath can't look at the error code - so dm-
+> mpath=20
+> doesn't know if path error occured or not.=C2=A0
+
+My impression from the previous discussion was that Christoph mainly
+objected to SG_IO requests being retried in the kernel [1], not so much
+to the inspection of the error code by device mapper.
+
+I may have misunderstood this of course. Adding Christoph into the loop
+so that he can clarify what he meant.=20
+
+> qemu could look at the error=20
+> code, but qemu doesn't know which path did the SG_IO go through - so
+> it=20
+> can't instruct qemu to fail that path.
+>=20
+> One of the possibility that we discussed was to add a path-id to
+> SG_IO, so=20
+> that dm-mpath would mark which path did the SG_IO go through and qemu
+> could instruct dm-mpath to fail that path. But we rejected it as
+> being=20
+> more complicated than the current approach.
+
+If we discuss extending SG_IO itself, it might be easier to have it
+store the blkstatus_t somewhere in the sg_io_hdr. More about that idea
+in my reply to Kevin.
+
+Regards,
+Martin
+
+[1] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
+
+
+> > Contrary to my set, you wouldn't attempt retries in the kernel, but
+> > leave this part to qemu instead, like in the current set. That
+> > would
+> > avoid Christoph's main criticism that "Failing over SG_IO does not
+> > make
+> > sense" [2].
+> >=20
+> > Doing the failover in qemu has the general disadvantage that qemu
+> > has
+> > no notion about the number of available and/or healthy paths; it
+> > can
+> > thus only guess the reasonable number of retries for any given I/O.
+> > But
+> > that's unavoidable, given that the idea to do kernel-level failover
+> > on
+> > SG_IO is rejected.
+> >=20
+> > Please let me know your thoughts.
+> >=20
+> > Best Regards
+> > Martin
+> >=20
+> > [1]
+> > https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
+> > [2] https://lore.kernel.org/all/20210701075629.GA25768@lst.de/
+>=20
+> Mikulas
 
