@@ -1,522 +1,257 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1462BF3EA
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D45145B25;
+	Tue, 13 May 2025 18:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161604; cv=none; b=ixHi9kZaYxBByaZY64vPwuZ004mb/KOzv1T8KFvWzADK1sL/rVH1fWWJm+J7zfMJRz5tUY3m9szVRjlPzfLFFJoym8KHWEK4TiF5Smv7u3RZVqRdeMyv38KIgYPG1k/Xm9Zi4aiSg67qDmzaX8zj7L9OhOP8QbuonnXRyxEDn3s=
+	t=1747161640; cv=none; b=p3O7Y7EHdc59y+AZZYUIwKCvIhTQ/MjMCy1aeHtBdnz1u2CPi2eRlZ/9NAj5JZ4lrO77rKxp5D2at2+tZljN0NMuN08c+TkCEV5D1r/e2QM/DcJD46U0R+4Oq0eN61ryEey4uA3grlZfvXUXo/y1CztlnK8l2BMibZZkF7nfq64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161604; c=relaxed/simple;
-	bh=Inlve9B27G/udqVfkpo+fqAYRJJBogL+t7oOgfg2yNQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hUJL/uIHtQMsTa3T9PA09MIJ9dDgHKBce6EhT2ASBggrLujCuW4VBOPopl2tfk5Y5UtwxK0eDH2ORh/+qr+ZmGdTWAvySq3GTbcWGi237zWkXMvDV1cWjFHm23YV2Z+Ig+Pt2KFJrqyAKLMT3Dh6lClGQGDuGrJ//BURLoNGDpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Bg0JHItn; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1747161640; c=relaxed/simple;
+	bh=Vs2C3qOUbRBwvYmS5MjM0iD2wHG0dHWNUgMPIk3Zu70=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PIO4opJzJJJu/F63C1Ywdc6hUoZLLgkf0OpjkOfbsuhBM2F3SGtfxsNw0YFNVXgOJg+U4mwPzP5auBBOgfQR7MqwjU5ZmhrefUfl7A5Ig/Tgq8SvOde+8wuAtl7li50rr/INnHBKTfrc34El49NVzYtxFMvB7AXNvRrR5uIm0VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTnW/qEr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Bg0JHItn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747161603; x=1778697603;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xQlODAc+F1Mjzr3iD1pMBijNuo39nDz1Foa9ysrTKZU=;
-  b=Bg0JHItn36WjO+WLNoPyJ3JLuioqZ5b86eAPjPaTjjZ+lI1/wzW2hCMW
-   ntWL/G6FbQmUB89bzTYSoLHyC7BANe7n5F+r+W/cnvEJ+r/ieSgI1QZSH
-   wTONO6hNxhtExXxkLHkXoyRMMLkLKiOUE3W72Mox9VjBKTbOkZ2CGQNbA
-   QrV09LMM4U7Fk2PGsjkQomF1vKpbSzgnWkVhzwB87xx/XlqsbhmctC2xt
-   3fs0oIApYlHNKrQ+/B3ONReXdo/cvA/jRETGmb+8rgCbh1DOE2wYUIWq9
-   VGr0WehUFapnc0s3hcPT5OvFrO+Zn7UCmnTXOhLbCf0Q65EB5lkKk1av1
-   w==;
-X-IronPort-AV: E=Sophos;i="6.15,285,1739836800"; 
-   d="scan'208";a="520096534"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 18:02:33 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:59787]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.234:2525] with esmtp (Farcaster)
- id 2a6dff77-943e-4bbd-8ead-72bed80543cb; Tue, 13 May 2025 18:02:32 +0000 (UTC)
-X-Farcaster-Flow-ID: 2a6dff77-943e-4bbd-8ead-72bed80543cb
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 13 May 2025 18:02:32 +0000
-Received: from dev-dsk-graf-1a-90d01eec.eu-west-1.amazon.com (172.19.99.218)
- by EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 13 May 2025 18:02:30 +0000
-From: Alexander Graf <graf@amazon.com>
-To: <kexec@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	<nh-open-source@amazon.com>
-Subject: [PATCH v3] kexec: Enable CMA based contiguous allocation
-Date: Tue, 13 May 2025 18:02:29 +0000
-Message-ID: <20250513180229.7494-1-graf@amazon.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTnW/qEr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A031C4CEE4;
+	Tue, 13 May 2025 18:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747161639;
+	bh=Vs2C3qOUbRBwvYmS5MjM0iD2wHG0dHWNUgMPIk3Zu70=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gTnW/qErJnYV2LqRR/j1WWPpDFFgRA7vs3cghFfNzBNW0gC6ZFKzFSOiDm+nu4grW
+	 k4T8x0z9QU4QnQuff554CZ9pFPD67bSgrOKGwHnI0d+CjtwzCGEjEr0J6C8hSdOudY
+	 dMNgpeL0eElx304doApj2bv4PFPNL2y3redG4TCA4oBhUPLPIZKDtc3PTIvNq5zVw5
+	 iozHg5R82YzLFc0euhDXsgnfvOx61KAKN3rTp7fPpjY2Q7SR0/yAKZRhND58ux93DQ
+	 eSCuFVH0H/eECADZ6cNITL15shchx7sB3yve6euwIaTSWlMNEiIbeTgFNIyYJ95DB8
+	 b9pvBL1JcE3nA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+	Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Gaurav Jain <gaurav.jain@nxp.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: crypto: fsl,sec-v4.0: Add fsl,sec-v6.0
+Date: Tue, 13 May 2025 13:40:28 -0500
+Message-ID: <20250513184030.3051100-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-When booting a new kernel with kexec_file, the kernel picks a target
-location that the kernel should live at, then allocates random pages,
-checks whether any of those patches magically happens to coincide with
-a target address range and if so, uses them for that range.
+The fsl,sec-v6.0 binding is the same as the fsl,sec-v4.0 binding, so add
+it to the existing schema and drop the old .txt binding.
 
-For every page allocated this way, it then creates a page list that the
-relocation code - code that executes while all CPUs are off and we are
-just about to jump into the new kernel - copies to their final memory
-location. We can not put them there before, because chances are pretty
-good that at least some page in the target range is already in use by
-the currently running Linux environment. Copying is happening from a
-single CPU at RAM rate, which takes around 4-50 ms per 100 MiB.
+The compatibles in the .txt binding don't match the 1 user. Follow the
+user for the schema.
 
-All of this is inefficient and error prone.
-
-To successfully kexec, we need to quiesce all devices of the outgoing
-kernel so they don't scribble over the new kernel's memory. We have seen
-cases where that does not happen properly (*cough* GIC *cough*) and hence
-the new kernel was corrupted. This started a month long journey to root
-cause failing kexecs to eventually see memory corruption, because the new
-kernel was corrupted severely enough that it could not emit output to
-tell us about the fact that it was corrupted. By allocating memory for the
-next kernel from a memory range that is guaranteed scribbling free, we can
-boot the next kernel up to a point where it is at least able to detect
-corruption and maybe even stop it before it becomes severe. This increases
-the chance for successful kexecs.
-
-Since kexec got introduced, Linux has gained the CMA framework which
-can perform physically contiguous memory mappings, while keeping that
-memory available for movable memory when it is not needed for contiguous
-allocations. The default CMA allocator is for DMA allocations.
-
-This patch adds logic to the kexec file loader to attempt to place the
-target payload at a location allocated from CMA. If successful, it uses
-that memory range directly instead of creating copy instructions during
-the hot phase. To ensure that there is a safety net in case anything goes
-wrong with the CMA allocation, it also adds a flag for user space to force
-disable CMA allocations.
-
-Using CMA allocations has two advantages:
-
-  1) Faster by 4-50 ms per 100 MiB. There is no more need to copy in the
-     hot phase.
-  2) More robust. Even if by accident some page is still in use for DMA,
-     the new kernel image will be safe from that access because it resides
-     in a memory region that is considered allocated in the old kernel and
-     has a chance to reinitialize that component.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
-
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
+ .../bindings/crypto/fsl,sec-v4.0.yaml         |  10 +-
+ .../devicetree/bindings/crypto/fsl-sec6.txt   | 157 ------------------
+ 2 files changed, 9 insertions(+), 158 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/crypto/fsl-sec6.txt
 
-v1 -> v2:
-
-  - Clarify patch description
-  - Move cma pointer out of kexec_segment. That is a sneaky UAPI struct we
-    can not modify. Fixes non kexec_file path
-  - Coding style
-  - Move memset(0) to only clear remainder
-  - Move kexec_alloc_contig() into kexec_locate_mem_hole(). Makes the code
-    flow easier to read.
-  - Sanitize return values
-
-v2 -> v3:
-
-  - Fix refactoring bug which meant we never exercised the new code path
----
- arch/riscv/kernel/elf_kexec.c |   1 +
- include/linux/kexec.h         |  10 ++++
- include/uapi/linux/kexec.h    |   1 +
- kernel/kexec.c                |   2 +-
- kernel/kexec_core.c           | 100 +++++++++++++++++++++++++++++++---
- kernel/kexec_file.c           |  47 +++++++++++++++-
- kernel/kexec_internal.h       |   2 +-
- 7 files changed, 152 insertions(+), 11 deletions(-)
-
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index e783a72d051f..d81647c98c92 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -109,6 +109,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
- 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
- 	kbuf.top_down = false;
-+	kbuf.cma = NULL;
- 	ret = arch_kexec_locate_mem_hole(&kbuf);
- 	if (!ret) {
- 		*old_pbase = lowest_paddr;
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index c8971861521a..7821b23bd1e9 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -75,6 +75,12 @@ extern note_buf_t __percpu *crash_notes;
- 
- typedef unsigned long kimage_entry_t;
- 
-+/*
-+ * This is a copy of the UAPI struct kexec_segment and must be identical
-+ * to it because it gets copied straight from user space into kernel
-+ * memory. Do not modify this structure unless you change the way segments
-+ * get ingested from user space.
-+ */
- struct kexec_segment {
- 	/*
- 	 * This pointer can point to user memory if kexec_load() system
-@@ -169,6 +175,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
-  * @buf_min:	The buffer can't be placed below this address.
-  * @buf_max:	The buffer can't be placed above this address.
-  * @top_down:	Allocate from top of memory.
-+ * @cma:	CMA page if the buffer is backed by CMA.
-  */
- struct kexec_buf {
- 	struct kimage *image;
-@@ -180,6 +187,7 @@ struct kexec_buf {
- 	unsigned long buf_min;
- 	unsigned long buf_max;
- 	bool top_down;
-+	struct page *cma;
- };
- 
- int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
-@@ -310,6 +318,7 @@ struct kimage {
- 
- 	unsigned long nr_segments;
- 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
-+	struct page *segment_cma[KEXEC_SEGMENT_MAX];
- 
- 	struct list_head control_pages;
- 	struct list_head dest_pages;
-@@ -331,6 +340,7 @@ struct kimage {
- 	 */
- 	unsigned int hotplug_support:1;
- #endif
-+	unsigned int no_cma:1;
- 
- #ifdef ARCH_HAS_KIMAGE_ARCH
- 	struct kimage_arch arch;
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 5ae1741ea8ea..8958ebfcff94 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -27,6 +27,7 @@
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
- #define KEXEC_FILE_DEBUG	0x00000008
-+#define KEXEC_FILE_NO_CMA	0x00000010
- 
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index a6b3f96bb50c..28008e3d462e 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -152,7 +152,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 		goto out;
- 
- 	for (i = 0; i < nr_segments; i++) {
--		ret = kimage_load_segment(image, &image->segment[i]);
-+		ret = kimage_load_segment(image, i);
- 		if (ret)
- 			goto out;
- 	}
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 3e62b944c883..b5b680dd1796 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -40,6 +40,7 @@
- #include <linux/hugetlb.h>
- #include <linux/objtool.h>
- #include <linux/kmsg_dump.h>
-+#include <linux/dma-map-ops.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
- 	kimage_free_pages(page);
- }
- 
-+static void kimage_free_cma(struct kimage *image)
-+{
-+	unsigned long i;
-+
-+	for (i = 0; i < image->nr_segments; i++) {
-+		struct page *cma = image->segment_cma[i];
-+		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
-+
-+		if (!cma)
-+			continue;
-+
-+		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
-+		dma_release_from_contiguous(NULL, cma, nr_pages);
-+		image->segment_cma[i] = NULL;
-+	}
-+
-+}
-+
- void kimage_free(struct kimage *image)
- {
- 	kimage_entry_t *ptr, entry;
-@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
- 	/* Free the kexec control pages... */
- 	kimage_free_page_list(&image->control_pages);
- 
-+	/* Free CMA allocations */
-+	kimage_free_cma(image);
-+
- 	/*
- 	 * Free up any temporary buffers allocated. This might hit if
- 	 * error occurred much later after buffer allocation.
-@@ -716,9 +738,69 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 	return page;
- }
- 
--static int kimage_load_normal_segment(struct kimage *image,
--					 struct kexec_segment *segment)
-+static int kimage_load_cma_segment(struct kimage *image, int idx)
-+{
-+	struct kexec_segment *segment = &image->segment[idx];
-+	struct page *cma = image->segment_cma[idx];
-+	char *ptr = page_address(cma);
-+	unsigned long maddr;
-+	size_t ubytes, mbytes;
-+	int result = 0;
-+	unsigned char __user *buf = NULL;
-+	unsigned char *kbuf = NULL;
-+
-+	if (image->file_mode)
-+		kbuf = segment->kbuf;
-+	else
-+		buf = segment->buf;
-+	ubytes = segment->bufsz;
-+	mbytes = segment->memsz;
-+	maddr = segment->mem;
-+
-+	/* Then copy from source buffer to the CMA one */
-+	while (mbytes) {
-+		size_t uchunk, mchunk;
-+
-+		ptr += maddr & ~PAGE_MASK;
-+		mchunk = min_t(size_t, mbytes,
-+				PAGE_SIZE - (maddr & ~PAGE_MASK));
-+		uchunk = min(ubytes, mchunk);
-+
-+		if (uchunk) {
-+			/* For file based kexec, source pages are in kernel memory */
-+			if (image->file_mode)
-+				memcpy(ptr, kbuf, uchunk);
-+			else
-+				result = copy_from_user(ptr, buf, uchunk);
-+			ubytes -= uchunk;
-+			if (image->file_mode)
-+				kbuf += uchunk;
-+			else
-+				buf += uchunk;
-+		}
-+
-+		if (result) {
-+			result = -EFAULT;
-+			goto out;
-+		}
-+
-+		ptr    += mchunk;
-+		maddr  += mchunk;
-+		mbytes -= mchunk;
-+
-+		cond_resched();
-+	}
-+
-+	/* Clear any remainder */
-+	memset(ptr, 0, mbytes);
-+
-+out:
-+	return result;
-+}
-+
-+static int kimage_load_normal_segment(struct kimage *image, int idx)
- {
-+	struct kexec_segment *segment = &image->segment[idx];
- 	unsigned long maddr;
- 	size_t ubytes, mbytes;
- 	int result;
-@@ -733,6 +815,9 @@ static int kimage_load_normal_segment(struct kimage *image,
- 	mbytes = segment->memsz;
- 	maddr = segment->mem;
- 
-+	if (image->segment_cma[idx])
-+		return kimage_load_cma_segment(image, idx);
-+
- 	result = kimage_set_destination(image, maddr);
- 	if (result < 0)
- 		goto out;
-@@ -787,13 +872,13 @@ static int kimage_load_normal_segment(struct kimage *image,
- }
- 
- #ifdef CONFIG_CRASH_DUMP
--static int kimage_load_crash_segment(struct kimage *image,
--					struct kexec_segment *segment)
-+static int kimage_load_crash_segment(struct kimage *image, int idx)
- {
- 	/* For crash dumps kernels we simply copy the data from
- 	 * user space to it's destination.
- 	 * We do things a page at a time for the sake of kmap.
- 	 */
-+	struct kexec_segment *segment = &image->segment[idx];
- 	unsigned long maddr;
- 	size_t ubytes, mbytes;
- 	int result;
-@@ -858,18 +943,17 @@ static int kimage_load_crash_segment(struct kimage *image,
- }
- #endif
- 
--int kimage_load_segment(struct kimage *image,
--				struct kexec_segment *segment)
-+int kimage_load_segment(struct kimage *image, int idx)
- {
- 	int result = -ENOMEM;
- 
- 	switch (image->type) {
- 	case KEXEC_TYPE_DEFAULT:
--		result = kimage_load_normal_segment(image, segment);
-+		result = kimage_load_normal_segment(image, idx);
- 		break;
- #ifdef CONFIG_CRASH_DUMP
- 	case KEXEC_TYPE_CRASH:
--		result = kimage_load_crash_segment(image, segment);
-+		result = kimage_load_crash_segment(image, idx);
- 		break;
- #endif
- 	}
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index fba686487e3b..916beae68fb6 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -27,6 +27,7 @@
- #include <linux/kernel_read_file.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
-+#include <linux/dma-map-ops.h>
- #include "kexec_internal.h"
- 
- #ifdef CONFIG_KEXEC_SIG
-@@ -230,6 +231,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		ret = 0;
- 	}
- 
-+	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
-+
- 	if (cmdline_len) {
- 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
- 		if (IS_ERR(image->cmdline_buf)) {
-@@ -406,7 +409,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
- 			      ksegment->memsz);
- 
--		ret = kimage_load_segment(image, &image->segment[i]);
-+		ret = kimage_load_segment(image, i);
- 		if (ret)
- 			goto out;
- 	}
-@@ -632,6 +635,39 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
- 
-+static int kexec_alloc_contig(struct kexec_buf *kbuf)
-+{
-+	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
-+	unsigned long mem;
-+	struct page *p;
-+
-+	/* User space disabled CMA allocations, bail out. */
-+	if (kbuf->image->no_cma)
-+		return -EPERM;
-+
-+	p = dma_alloc_from_contiguous(NULL, nr_pages, get_order(kbuf->buf_align), true);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	pr_debug("allocated %zu DMA pages at 0x%lx", nr_pages, page_to_boot_pfn(p));
-+
-+	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-+
-+	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
-+		/* Our region is already in use by a statically defined one. Bail out. */
-+		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
-+		dma_release_from_contiguous(NULL, p, nr_pages);
-+		return -EBUSY;
-+	}
-+
-+	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
-+	kbuf->cma = p;
-+
-+	arch_kexec_post_alloc_pages(page_address(p), (int)nr_pages, 0);
-+
-+	return 0;
-+}
-+
- /**
-  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
-  * @kbuf:	Parameters for the memory search.
-@@ -648,6 +684,13 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
- 		return 0;
- 
-+	/*
-+	 * Try to find a free physically contiguous block of memory first. With that, we
-+	 * can avoid any copying at kexec time.
-+	 */
-+	if (!kexec_alloc_contig(kbuf))
-+		return 0;
-+
- 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
- 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
- 	else
-@@ -693,6 +736,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	/* Ensure minimum alignment needed for segments. */
- 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
- 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
-+	kbuf->cma = NULL;
- 
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
- 	ret = arch_kexec_locate_mem_hole(kbuf);
-@@ -705,6 +749,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
-+	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
- 	kbuf->image->nr_segments++;
- 	return 0;
- }
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index d35d9792402d..29e6cebe0c43 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -10,7 +10,7 @@ struct kimage *do_kimage_alloc_init(void);
- int sanity_check_segment_list(struct kimage *image);
- void kimage_free_page_list(struct list_head *list);
- void kimage_free(struct kimage *image);
--int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
-+int kimage_load_segment(struct kimage *image, int idx);
- void kimage_terminate(struct kimage *image);
- int kimage_is_destination_range(struct kimage *image,
- 				unsigned long start, unsigned long end);
+diff --git a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+index f0c4a7c83568..75afa441e019 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
++++ b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+@@ -38,7 +38,9 @@ properties:
+   compatible:
+     oneOf:
+       - items:
+-          - const: fsl,sec-v5.4
++          - enum:
++              - fsl,sec-v5.4
++              - fsl,sec-v6.0
+           - const: fsl,sec-v5.0
+           - const: fsl,sec-v4.0
+       - items:
+@@ -93,6 +95,12 @@ patternProperties:
+     properties:
+       compatible:
+         oneOf:
++          - items:
++              - const: fsl,sec-v6.0-job-ring
++              - const: fsl,sec-v5.2-job-ring
++              - const: fsl,sec-v5.0-job-ring
++              - const: fsl,sec-v4.4-job-ring
++              - const: fsl,sec-v4.0-job-ring
+           - items:
+               - const: fsl,sec-v5.4-job-ring
+               - const: fsl,sec-v5.0-job-ring
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec6.txt b/Documentation/devicetree/bindings/crypto/fsl-sec6.txt
+deleted file mode 100644
+index 73b0eb950bb3..000000000000
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec6.txt
++++ /dev/null
+@@ -1,157 +0,0 @@
+-SEC 6 is as Freescale's Cryptographic Accelerator and Assurance Module (CAAM).
+-Currently Freescale powerpc chip C29X is embedded with SEC 6.
+-SEC 6 device tree binding include:
+-   -SEC 6 Node
+-   -Job Ring Node
+-   -Full Example
+-
+-=====================================================================
+-SEC 6 Node
+-
+-Description
+-
+-    Node defines the base address of the SEC 6 block.
+-    This block specifies the address range of all global
+-    configuration registers for the SEC 6 block.
+-    For example, In C293, we could see three SEC 6 node.
+-
+-PROPERTIES
+-
+-   - compatible
+-      Usage: required
+-      Value type: <string>
+-      Definition: Must include "fsl,sec-v6.0".
+-
+-   - fsl,sec-era
+-      Usage: optional
+-      Value type: <u32>
+-      Definition: A standard property. Define the 'ERA' of the SEC
+-          device.
+-
+-   - #address-cells
+-       Usage: required
+-       Value type: <u32>
+-       Definition: A standard property.  Defines the number of cells
+-           for representing physical addresses in child nodes.
+-
+-   - #size-cells
+-       Usage: required
+-       Value type: <u32>
+-       Definition: A standard property.  Defines the number of cells
+-           for representing the size of physical addresses in
+-           child nodes.
+-
+-   - reg
+-      Usage: required
+-      Value type: <prop-encoded-array>
+-      Definition: A standard property.  Specifies the physical
+-          address and length of the SEC 6 configuration registers.
+-
+-   - ranges
+-       Usage: required
+-       Value type: <prop-encoded-array>
+-       Definition: A standard property.  Specifies the physical address
+-           range of the SEC 6.0 register space (-SNVS not included).  A
+-           triplet that includes the child address, parent address, &
+-           length.
+-
+-   Note: All other standard properties (see the Devicetree Specification)
+-   are allowed but are optional.
+-
+-EXAMPLE
+-	crypto@a0000 {
+-		compatible = "fsl,sec-v6.0";
+-		fsl,sec-era = <6>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		reg = <0xa0000 0x20000>;
+-		ranges = <0 0xa0000 0x20000>;
+-	};
+-
+-=====================================================================
+-Job Ring (JR) Node
+-
+-    Child of the crypto node defines data processing interface to SEC 6
+-    across the peripheral bus for purposes of processing
+-    cryptographic descriptors. The specified address
+-    range can be made visible to one (or more) cores.
+-    The interrupt defined for this node is controlled within
+-    the address range of this node.
+-
+-  - compatible
+-      Usage: required
+-      Value type: <string>
+-      Definition: Must include "fsl,sec-v6.0-job-ring".
+-
+-  - reg
+-      Usage: required
+-      Value type: <prop-encoded-array>
+-      Definition: Specifies a two JR parameters:  an offset from
+-           the parent physical address and the length the JR registers.
+-
+-   - interrupts
+-      Usage: required
+-      Value type: <prop_encoded-array>
+-      Definition:  Specifies the interrupts generated by this
+-           device.  The value of the interrupts property
+-           consists of one interrupt specifier. The format
+-           of the specifier is defined by the binding document
+-           describing the node's interrupt parent.
+-
+-EXAMPLE
+-	jr@1000 {
+-		compatible = "fsl,sec-v6.0-job-ring";
+-		reg = <0x1000 0x1000>;
+-		interrupts = <49 2 0 0>;
+-	};
+-
+-===================================================================
+-Full Example
+-
+-Since some chips may contain more than one SEC, the dtsi contains
+-only the node contents, not the node itself.  A chip using the SEC
+-should include the dtsi inside each SEC node.  Example:
+-
+-In qoriq-sec6.0.dtsi:
+-
+-	compatible = "fsl,sec-v6.0";
+-	fsl,sec-era = <6>;
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-
+-	jr@1000 {
+-		compatible = "fsl,sec-v6.0-job-ring",
+-			     "fsl,sec-v5.2-job-ring",
+-			     "fsl,sec-v5.0-job-ring",
+-			     "fsl,sec-v4.4-job-ring",
+-			     "fsl,sec-v4.0-job-ring";
+-		reg	   = <0x1000 0x1000>;
+-	};
+-
+-	jr@2000 {
+-		compatible = "fsl,sec-v6.0-job-ring",
+-			     "fsl,sec-v5.2-job-ring",
+-			     "fsl,sec-v5.0-job-ring",
+-			     "fsl,sec-v4.4-job-ring",
+-			     "fsl,sec-v4.0-job-ring";
+-		reg	   = <0x2000 0x1000>;
+-	};
+-
+-In the C293 device tree, we add the include of public property:
+-
+-	crypto@a0000 {
+-		/include/ "qoriq-sec6.0.dtsi"
+-	}
+-
+-	crypto@a0000 {
+-		reg = <0xa0000 0x20000>;
+-		ranges = <0 0xa0000 0x20000>;
+-
+-		jr@1000 {
+-			interrupts = <49 2 0 0>;
+-		};
+-
+-		jr@2000 {
+-			interrupts = <50 2 0 0>;
+-		};
+-	};
 -- 
-2.34.1
-
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+2.47.2
 
