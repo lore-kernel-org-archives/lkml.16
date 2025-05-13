@@ -1,111 +1,135 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3592BEC2E;
-	Tue, 13 May 2025 19:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747164422; cv=none; b=XXPOzv8yMijf5aRVCcTJ/yEnMmNXBGXJGQUsSamJBh4wqNrOCOM3nz3daib9eIehbgyoZMqWPu+MSmlh4MOeNOtvyf08Edwv7AybVyV8Art8XQAg7T4cYcw6pDlQwehGYEFWL9Kmg2ojA93YvtCTIAZFUMwdAVnCzXnn1+OUpJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747164422; c=relaxed/simple;
-	bh=sxa/prH5hNdWqoNn9frg0ARcUx+mIrBF2G1dxXjD2j8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qvmssS9Wsn706Uv1uoeEa5VhQDWu0wzgZgwY/k4rpUEKUYj299gZun7KaaLlI/OwIl3WdVSGA40QmyQx2GMrOjQTw9+2L3mQj+vfr55SF3MNbSGBfTmmMkM9m8EXgSx0m8Mp5T/piZs7aNTqqkt4U6abakgFhuy6zASQ786Pao0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVe7CnqG; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94572191F92
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747164486; cv=pass; b=YXRi/T/phZKn371O3sI7inVRA3NRchuPIwz99htcq0muxrnO+a13u61Ykm6UYOv0trW9f+94K55R26bLYbBg1YwftxFPOpM1xe98Wwavdy6hWkHpMjh3bNXtMwEmoKZOe2mZvoOa3JLv3DhjAJ450kjGhsftdDwoGrJyUKjyZis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747164486; c=relaxed/simple;
+	bh=Y/ZCM/H05SRHIka/ioMPxnPRHoczWNfftP5JTqSrtPU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=a2+Or2fqxBlheloAkzqBgPuBvoctAxXHZg5KbQnl0mQdSuwcM1QgswMNt2zN+oFgacPufTysFAupQEQiKagiXzn3EHWmiKV6CHWA3FPZf9fGGb3a1G9rtYSTTGQsYfL287RLLuEtyjNUA1/Y/Hfci4KhceodrQqqM/JHHFOAlqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b=AZNnjI6J; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVe7CnqG"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b291093fso133240f8f.0;
-        Tue, 13 May 2025 12:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747164419; x=1747769219; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OE9JQzi+/SgWFaUtA3nS2GLJcK6WZU2GyasTp+Ernb0=;
-        b=CVe7CnqG+uYFZOIt9gnxMiTgyTOn5+8jJmXqf/63Zc5mBkmWGe2pjS8AkVunaZyrK2
-         ZVODN5xFr5Nmfgb1AQoUAgFqnn+OGnTaQ7vln0D2b2ba0Rn8IcCSYW6LgkvsX+4OHh3n
-         ZGrJh6ARQiZYGZysUgFt2/MSvyKezLFoqzupz7Z3F4Mj7Ryw16ne5kahgLHpm9RYCURy
-         G4Q0A6lRJdG0Il+Qg+IIPkW4fmj4gC0B7zkD2SnuhS/4peaslSKZg994gd9JTLVfbhJP
-         CxOPIYqyW3qW2IFaZ4FUooGJQiNJEFqz60Qy14st+844Ws4UFFkhR5PJWghGgFrqj/g/
-         LrlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747164419; x=1747769219;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OE9JQzi+/SgWFaUtA3nS2GLJcK6WZU2GyasTp+Ernb0=;
-        b=ZTEzCPnc+mx7m6qInBxaDrZpaZF9GGJl6ITLYK6Ak+YnysSotwwIKI6AaXCj/XBMAx
-         CXVsKD3HeKtuZuOJ+zHBgKDmvSR6NjnaJG0j3sI50bXm4RytgDxHk5aIyVK+JkYV7Ivi
-         xA5YiJe5URJsqbRY6LBzd1r9LJPUGsXAUnesVFCeZRNes6iG6fJ1Xj4qtTCuG0RVSofG
-         V34SuXyLYuvzeBaNRF98Ji/DNXTNl/vOj/8atLwqHOm9D6MtLLE2FoLtsgnBPl8/7rt7
-         mwGxhY4nHaH/cGvTy9ZysWHOnJWINhERE+o8bdlnRM6M7/AapO60aulvZmaaP2uOY+vk
-         vp5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV8LAVi8JSGIQACqvL/Q00ymEESISr/o6UF2vdHak/rS5YqEujxOeTPqUV5Cnbou6deaZXJR8mANH2fzBY=@vger.kernel.org, AJvYcCWSKFAAhWS8hT8TguZD9qTZHcjKgq/WNoTe42HnCzlJNbCaYSDqAi1O9PcG+BKZ5UqBw5VZYqqy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkqTaJSOifiDllRZTU/RURzALg23rjQyc2Y3aPCRN4SYiKTY5V
-	M/Xbj7J9Ho1uHkSM9RSEpnBV6TENx6/d/acWdFKN11kvtDhyjL5uloZU4h/n+mRcKepApCNOA6h
-	mMxF6bJCh1y/Aj5nlJzYEz/gP//TGITvwtko=
-X-Gm-Gg: ASbGncvhiQRQSMEwYzCeqDXVnlurT/+gjtbgqAr8US7j+5NvZXP9Q1p0YM4l4Krn0vt
-	nXooYgrV5Xb6bwBmBW2oOmNi/JszKrbgbb3CSpR2h9ejZ5zQJur0hcTqs4J+bCKAg5PK4C5E+as
-	jZMbtfLsawFwf97R5N6YvM9hiU9FGLBJcRulyNWoECyErSE9uiYU0iDve7XEqGMa662qMyFjWVG
-	IIp4g==
-X-Google-Smtp-Source: AGHT+IGRCMWiPYMni2MtmodQU1dny8pskt5D+U0g7V8aWc5CsS7j8NkOpaZOIgzjx4i26vlsiCp1tjoCB0AR5Io1bLQ=
-X-Received: by 2002:a05:6000:228a:b0:3a0:b735:2ee6 with SMTP id
- ffacd0b85a97d-3a348dba36amr746979f8f.20.1747164418918; Tue, 13 May 2025
- 12:26:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=gus@collabora.com header.b="AZNnjI6J"
+ARC-Seal: i=1; a=rsa-sha256; t=1747164456; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IXrbKlgUDukRoxiVJSaQyCPki00XA62YdmkD5hxrWEHZ9oKazB0bS6yGCAiT18vo+9A+X/MbUWTX8Ab5lnPNLIZHgdG4/nE+AJeyZOrXoXLDbm+ldX3TMgBS+ZJq5bYiOsMJcNET6JYx/XkYSOyvt6OfF7CazTf3WBweliaEcLw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747164456; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9tbZcwB99l3bTSF7aDT1aqUbj7yf9LIKPKmFqRnHdI4=; 
+	b=kYJctRJ1iJ6YXBAo+YOIvy7u/ekhcAWhiI2JvZLTv/izF3c+LkwvzX8JJrelZGue+IkQUF6v93lhETq9EKcdRq4kfGo5/Nl+CCs5bT09c/lup8k7W0rGzagyrk7g4Q2Gk6/dVojMh8y0Zzs3mnpXG4R6/uTYMoy0RMK+OReJhJg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=gus@collabora.com;
+	dmarc=pass header.from=<gus@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747164456;
+	s=zohomail; d=collabora.com; i=gus@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=9tbZcwB99l3bTSF7aDT1aqUbj7yf9LIKPKmFqRnHdI4=;
+	b=AZNnjI6JE1Xq8vT3hlHE9rVxer/rKK/fFHlIE547Enpv/3ZJgG3GBMcPEZd1mXmA
+	v/jcbplbNXL+se3x9sMZDWm6WpcQPAGzPoDjq9xyIkoXh2ebKjM5j25VwPGkxxwRRPp
+	ejNjuip4Lx1xFeV7aQDt/RGtywLu0e0uAbJ1XZxM=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 174716445573577.4013798745209; Tue, 13 May 2025 12:27:35 -0700 (PDT)
+Date: Tue, 13 May 2025 16:27:35 -0300
+From: Gustavo Padovan <gus@collabora.com>
+To: "Luis Chamberlain" <mcgrof@kernel.org>
+Cc: "Song Liu" <song@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kdevops" <kdevops@lists.linux.dev>,
+	"Jim Zemlin" <jzemlin@linux-foundation.org>,
+	"Konstantin Ryabitsev" <mricon@kernel.org>,
+	=?UTF-8?Q?=22Javier_Gonz=C3=A1lez=22?= <javier.gonz@samsung.com>,
+	"Greg Marsden" <greg.marsden@oracle.com>, "Tso Ted" <tytso@mit.edu>,
+	"Alexei Starovoitov" <ast@kernel.org>,
+	"Daniel Borkmann" <daniel@iogearbox.net>,
+	"kernelci lists.linux.dev" <kernelci@lists.linux.dev>,
+	"Greg KH" <gregkh@linuxfoundation.org>,
+	"Jakub Kicinski" <kicinski@meta.com>, "sashal" <sashal@kernel.org>
+Message-ID: <196cb1de31b.ef78ff442883955.7374847682594204868@collabora.com>
+In-Reply-To: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
+References: <Z_6bxZUiodrE45HJ@bombadil.infradead.org>
+Subject: Re: The future of kernel-patches-daemon - folding under LF?
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512101521.1350-1-zakkemble@gmail.com> <20250513094501.GX3339421@horms.kernel.org>
-In-Reply-To: <20250513094501.GX3339421@horms.kernel.org>
-From: Zak Kemble <zakkemble@gmail.com>
-Date: Tue, 13 May 2025 20:26:47 +0100
-X-Gm-Features: AX0GCFvhtl1MTrCbJ0tOViZBQ_pjwZtMZHzJqcpbLCptQgjfF2Xoqq26Dj7ciX8
-Message-ID: <CAA+QEuT0tPd0Qxjy0LP2zXhRhAe_bRv5omFPaFdbHVzoBAO-Yw@mail.gmail.com>
-Subject: Re: [PATCH v2] net: bcmgenet: tidy up stats, expose more stats in ethtool
-To: Simon Horman <horms@kernel.org>
-Cc: Doug Berger <opendmb@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-Hey Simon, sorry I'm still figuring out mailing lists lol. This v2 was
-submitted after the kernel test bot had replied about a warning, but
-before anyone else had a chance to reply. Latest version is here
-https://lore.kernel.org/all/20250513144107.1989-1-zakkemble@gmail.com/
+Hello,
 
-On Tue, 13 May 2025 at 10:45, Simon Horman <horms@kernel.org> wrote:
->
-> On Mon, May 12, 2025 at 11:15:20AM +0100, Zak Kemble wrote:
-> > This patch exposes more statistics counters in ethtool and tidies up the
-> > counters so that they are all per-queue. The netdev counters are now only
-> > updated synchronously in bcmgenet_get_stats instead of a mix of sync/async
-> > throughout the driver. Hardware discarded packets are now counted in their
-> > own missed stat instead of being lumped in with general errors.
-> >
-> > Changes in v2:
-> > - Remove unused variable
-> > - Link to v1: https://lore.kernel.org/all/20250511214037.2805-1-zakkemble%40gmail.com
->
-> Hi Zak,
->
-> nit: These days it is preferred to put Changes information, such as the
->      above, below the scissors ("---"). That way it is available to
->      reviewers (thanks!) and will appear in mailing list archives and so
->      on. But is omitted in git history as the commit message is
->      truncated at the scissors.
->
-> >
-> > Signed-off-by: Zak Kemble <zakkemble@gmail.com>
->
-> This does not appear to address the review of Andrew and Florian of v1.
-> I think the way forwards is to engage with them on the preferred way
-> forwards. Or somehow note that you have done so.
->
-> --
-> pw-bot: changes-requested
+I missed this discussion, so sorrry for coming in late.
+
+
+---- On Tue, 15 Apr 2025 14:47:49 -0300 Luis Chamberlain <mcgrof@kernel.org> wrote ---
+
+ > Song, 
+ >  
+ > We're starting to rely on kernel-patches-deamon (kpd in short) [0] for quite a 
+ > bit of  linux-kernel subsystems and have integrated it on kdevops for them [1] 
+ > [2]. We already use it for the modules subsystem but even then that runs into 
+ > hiccups every now and then and we just have to restart it. For smaller 
+ > subsystems we've started to experiment with lei based patchwork solutions, we 
+ > started with the firmware loader, and the hope was that if that works we could 
+ > move on to memory management to leverage the automation of tests we have for 
+ > xarray, maple tree, and vmas. The lei patchwork instance which kernel.org admins 
+ > have helped us with works well, however kpd doesn't yet work with it [3], so we 
+ > can't even get that off the ground yet. In the meantime, we've been instead 
+ > relying on linux-next tags to test other subsystems like memory management so we 
+ > avoid regressions that way, instead of testing patches while on the mailing 
+ > list. But we do want to get to the point we can test things proactively for 
+ > different subsystems. 
+ >  
+ > While we could look for alternatives I think we need to face the fact that we 
+ > need more kpd love. I'm convinced that the only way to scale Linux kernel-ci 
+ > work is by dividing and conquering and those can contribute to different 
+ > components do so, and kpd fits well right in, but I think we need to start 
+ > thinking about scaling it beyond just Meta. While we could just try to 
+ > contribute to it to fix lingering bugs I've noted my first issue with it, 
+ > requring CLA [4], and I don't think it makes sense to fork it from Meta. kpd the 
+ > sort of specialized daemon that also can take time to learn and believe at this 
+ > point it might make sense if kpd can be part of the LF covered toolbox we can 
+ > get support for. Ie, make it an LF project and see if we can get more help with 
+ > the sort of pipelines that fit both Meta and the kernel community. 
+
+If we are talking about folding under the LF, then KernelCI[0] is really the place for that.
+Part of the project mission is to be an umbrella for different project around testing
+and validation for the Linux kernel community. Not only that, but support the ecosystem
+by driving the creation of common stardands that can facilitate the communication
+between different test/CI systems across the community.
+
+We really need to move towards a more aligned testing story across the board, so all
+systems can expand the value they add
+
+I am happy to chat more about this.
+
+Best,
+
+- Gus
+
+[0] https://kernelci.org/
+
+
+ >  
+ > Let me know your thoughts. 
+ >  
+ > [0] https://github.com/facebookincubator/kernel-patches-daemon 
+ > [1] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/README.md 
+ > [2] https://github.com/linux-kdevops/kdevops/blob/main/docs/kernel-ci/kernel-ci-kpd.md 
+ > [3] https://lkml.kernel.org/r/CAB=NE6X5mJJmcXjEkHyE=2f1CCA5fDDEjMFH_aMArrhom2qO8Q@mail.gmail.com 
+ > [4] https://github.com/facebookincubator/kernel-patches-daemon/issues/62 
+ >  
+ >   Luis 
+ > 
+
