@@ -1,81 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E93227586
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C4D1F12F4;
+	Tue, 13 May 2025 13:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747144706; cv=none; b=lqhAVlKFCd+rbte4RVvI9SzbtY8Nli6sBvIdHfzo/ZICmtuuHlPXyx/GBrk+L2inPuzoppa5JUzYAoWm8rOnPuq/iOIXuPI1DmPbRodoJHKIPX+Hj1Cny5cUUJDaWwb6h9sLE+5r0CqjVC+vC5+4IBy3SIkg/cd+nYefJbW0r9w=
+	t=1747144780; cv=none; b=ZygPLdxSIVYRW/3RS5hfnHdzkLQUDPwXMQwAMQM+5imOw1Cr17sxrGkKnZCCsls8grrXM2gU+yp4wBy9Pf8HB1JJaAW8wwvf6nZE1RP6XIiDbklG2DoLxOCJAfHywewPZF7OelU3oG8Vw/UTT5S/zJSf6VhxiIEW+xwqY1otfNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747144706; c=relaxed/simple;
-	bh=DT2puAqqGRYJ86uM1ZdtR9j4iIoQ7OJyLvoBz/7ueYc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 Cc:Content-Type; b=Z6avhSB7fP1hDLKGqG4MVCSUoHdjf7dUbksTFKqI0QtoD9pfXbTpiOtILTpRBhvMrnZKXKU+1bM3zRS/JTIcfWzhmliZ3kExMBEkfWqQfdHkoy7TRHFEq4Gy6qrPqfYQ/Gp6kgnWzVVvl7P6CLZGNBjb/lrHAPIrTsyi6L2+xr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkpKe4JD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747144780; c=relaxed/simple;
+	bh=uupRQJKR5302NtGuYUnRSSAUi44AgE1Gm0o6msWcW54=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=momB2cRB4eFUbd+ZNu/7HhOK82SJ7rtKTyScSNRzijY7/K+h6SJocdOxfwiTs5jCKbaWq7kubsFv3tycpPQ+vS3/20IydSkj/FCEb271RXEsgNNv1fu1TDeRVklFJQ+NRV9nc7FGop5Grm1+1jONxrVYSR5CzWeDQZiZMwD6bfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQVxzcsW; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkpKe4JD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8F9C4AF0B
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747144706;
-	bh=DT2puAqqGRYJ86uM1ZdtR9j4iIoQ7OJyLvoBz/7ueYc=;
-	h=References:In-Reply-To:From:Date:Subject:Cc:From;
-	b=IkpKe4JDIdHGxN2xeRP+7jWhRJayfL6uQndEMWSiM5thUkLfA7YcZn62at210YT6P
-	 ZD7b6Bes61QoJhexGoj53Lv+qWFJWtSWal5eBoeouCKx0seIktTn1jkBKmmJuS3s2z
-	 VJ7HWQ4BYaiu+tZlYC5pj0B9LOIoRd1ikIYBukaFzDEQpBBx9R2d9TBHeBnu85a6ks
-	 kmswYq5lpirq8jNvgzPOmTRG501BXu9n++K3GNfDa+WrYX2itWsORdiNetEeH4hkzS
-	 Dmc7pjj2/B4oPLtJVtdUdO7GaB5Cjwqx2babaWOIT/sgK9VI9ailnrcBmV/hSK8RXT
-	 cgcrg4k8tpCSw==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-326d823304fso25223881fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:58:26 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yz9FkeN8hY1+T/1Ui/tQMQtlVyfYeSP0TLDjt3pwkPqng8r3VhI
-	YG2oBoMdCFtypJU0IlVKtpgoOpSV+xrgbwWzO49t+J4CqSp/xN6Jc+iTAWX8Q3P6W+ivo0vYUfK
-	cxLJhyiGeyJRKm13aBX6OHkTPBIU=
-X-Received: by 2002:a05:651c:210a:b0:308:eb34:103a with SMTP id
- 38308e7fff4ca-326c46813c6mt81209401fa.28.1747144704565; Tue, 13 May 2025
- 06:58:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQVxzcsW"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70b50e0566fso25429867b3.0;
+        Tue, 13 May 2025 06:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747144778; x=1747749578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SxHPphgXbWdm5nbT9IaJtyapq7Mq0HF46NjBnfggMmc=;
+        b=aQVxzcsWeancnsXzEFNkeQcnqThDgfAIqaqcGJweX64pa3RazRtGfZmWdLohxzR/SC
+         /Ik5k6V6CQxVFkxCvIqnZExmaWemKyG3iMXHHv02b+6G5eO/jfvTMqkeOM7Tk1+uLHS7
+         /ypCVMB/NgcS7O86BrUuFO1Lhmm+ofrp7r9pvJKGc/zjEJ2Q41fMv3IXraEmvKDO68zU
+         OIZD3onw9g78VMWTbG7XDg58s5huWh11+yk7hhRx1VBvsLBuz9b7Fdw0HGXSSyQafL7q
+         F1tqHCImadsC+r8dO3WLiV8zawZocT6aopXNRNnRQhpS2qJeipKGLMX2ApsHSAU753LN
+         eAyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747144778; x=1747749578;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SxHPphgXbWdm5nbT9IaJtyapq7Mq0HF46NjBnfggMmc=;
+        b=a+YuTVDKRAAHF3h+9uwJ0yjxD1dZWvg4KkUB9rFnUs7Nun/yS1ZfmePf1+UF+3pc7W
+         95XVU2ISfW5m9QylfSS2AaAhJLKFrnavd7rRNv+QQf1d2GhBrOn06ngxkP7PSKxrJzwb
+         8d4hsOldSPN1cDw2YnI9ok4+uWqegwJE0rlhdsAGI3jDlybWeDRVv1bd4BEj/7KzoKnf
+         rU0/2TDJGui6e0+vURausN+/21oGGmSJAba3E61W6Y8OjjjgAWqXcbRAjvCmGZ+hdSfQ
+         tKh1Iqhq1JrwbkqePsAxR+q0VwiXBl4bNLonWzshz0o8txUC0/wDwYYB/Rb7urmN+TAc
+         XlJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXil74GqI7ygzQjkC2RvFn1oVYR2Jw7vdkRx8LiUsXPpvPisn5owLj5RXxUPy/9IIcpVNK+WOO7Ccg61/76@vger.kernel.org, AJvYcCXvZta5YZJRZHnAGaE6oBk26vpQSnJOmLm6zQO0BDSGSA/ZpBoJMJ4JUggjhtWSZpq3cQgnavlUaHEr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU31lKt8REOYG9n8uh6uf3XGg39Qw+WHIk3aYAAxtbdqCjPXdu
+	PfDkdN+kEhLSjMx25G+/HEl6NXDZfbkOIH58yA15IyQIA1VWNwm3WSPDvg==
+X-Gm-Gg: ASbGncsPL1Apxd9Kd8uMvvDpgUdbOOFBz07PIkP7ENoS9sId95oxRQWklv7gaQtviki
+	C5abwTZ/+dybXpAtZlq7QdCupmtPl6tfuKl5i6sMb/C4xoYuTT86SNuUk0/0fRuo4CWtBlkr9dh
+	nXgP0VQEhTYOrAeHkZT5oMXHmJ2TK2Z8jfHBXE2nfPbg2mHPnZDraQts/sFMy5Ad7LW4ZsOP4Dn
+	eFEI2/UX7+fGKZWCXsqehfCxtWzxJc730HxDBy4Vpvms98X6ypI+7jCLNgCRldFPlztqx/Psw93
+	tCUICrtF8lftbtQB/9N/AZK3sErK69JkOUzW4f/2OYgTf2yQKy4=
+X-Google-Smtp-Source: AGHT+IHHNeRb5OLaGj6qAjtuql5TdNI/3gNeh0Ot5Zvdx+MoysAHOVc6WPZPIR8ztl4F1Alzh3G7ZA==
+X-Received: by 2002:a05:690c:4d08:b0:702:52fb:4629 with SMTP id 00721157ae682-70a3fb123ccmr221926307b3.23.1747144777713;
+        Tue, 13 May 2025 06:59:37 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:71::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9eccd9sm24474957b3.97.2025.05.13.06.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 06:59:37 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: "Huang, Ying" <ying.huang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	gourry@gourry.net,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Tue, 13 May 2025 06:59:33 -0700
+Message-ID: <20250513135935.2914896-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <87tt5puw21.fsf@DESKTOP-5N7EMDA>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-32-ardb+git@google.com>
- <CAMj1kXH5C6FzMyrki_23TTk_Yma5NJdHTo-nv4DmZoz_qaGbVQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXH5C6FzMyrki_23TTk_Yma5NJdHTo-nv4DmZoz_qaGbVQ@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 13 May 2025 14:58:13 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE_aQm7w05Mck0umYzA8uH+fPb_FoJjO3XyB5NdznveeQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv6f3yl3-9AjZqDf1RNZHGIOD9S7UgBg_hQmhBxEoniGVxa1RI9wHJvPJM
-Message-ID: <CAMj1kXE_aQm7w05Mck0umYzA8uH+fPb_FoJjO3XyB5NdznveeQ@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 09/21] x86/sev: Pass SVSM calling area down to
- early page state change API
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 at 14:55, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Mon, 12 May 2025 at 20:11, Ard Biesheuvel <ardb+git@google.com> wrote:
-> >
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > The early page state change API is mostly only used very early, when
-> > only the boot time SVSM calling area is in use. However, this API is
-> > also called by the kexec finishing code, which runs very late, and
-> > potentially from a different CPU (which uses a different calling area).
-> >
-> > To avoid pulling the per-CPU SVSM calling area pointers and related SEV
-> > state into the startup code, refactor the page state change API so the
-> > SVSM calling area virtual and physical addresses can be provided by the
-> > caller.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->
-> This patch is broken - I'll send a followup fix asap.
+On Tue, 13 May 2025 09:41:10 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
 
-... or actually, the one before it.
+> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+> 
+> > On Mon, 12 May 2025 09:35:16 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
+> >
+> >> Hi, Joshua,
+> >> 
+> >> Joshua Hahn <joshua.hahnjy@gmail.com> writes:
+> >> 
+> >> [snip]
+> >> 
+> >> > @@ -3707,8 +3720,12 @@ static void wi_state_free(void)
+> >> >  	kfree(&wi_group->wi_kobj);
+> >> >  }
+> >> >
+> >> > +static struct kobj_attribute wi_auto_attr =
+> >> > +	__ATTR(auto, 0664, weighted_interleave_auto_show,
+> >> > +			   weighted_interleave_auto_store);
+> >> > +
+> >> >  static void wi_cleanup(void) {
+> >> > -	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
+> >> > +	sysfs_remove_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+> >> 
+> >> If we use wi_auto_attr directly here, we can remove auto_kobj_attr field
+> >> from struct sysfs_wi_group?
+> >
+> > Hi Ying, thank you for this comment. I should have caught it as well.
+> > Removing the last users / setters doesn't seem complicated.
+> >
+> > Andrew, I'm very sorry -- do you think you can fold this fixlet in as well?
+> > This is a minor change that removes the only users of this variable.
+> >
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index d5ae36d2eda8..8581cc861945 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3543,7 +3543,6 @@ struct iw_node_attr {
+> >  struct sysfs_wi_group {
+> >         struct kobject wi_kobj;
+> >         struct mutex kobj_lock;
+> > -       struct kobj_attribute auto_kobj_attr;
+> >         struct iw_node_attr *nattrs[];
+> >  };
+> >
+> > @@ -3833,7 +3832,6 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+> >         err = sysfs_create_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
+> >         if (err)
+> >                 goto err_put_kobj;
+> > -       wi_group->auto_kobj_attr = wi_auto_attr
+> >
+> >         for_each_online_node(nid) {
+> >                 if (!node_state(nid, N_MEMORY))
+> >
+> > Thank you both, I hope you have a great day!
+> 
+> Thanks!  LGTM, please feel free to add my
+> 
+> Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
+
+Thank you Ying, really appreciate all of your feedback throughout this
+series. I hope you have a great day!
+Joshua
+
+> 
+> ---
+> Best Regards,
+> Huang, Ying
