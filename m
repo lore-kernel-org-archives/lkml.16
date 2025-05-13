@@ -1,269 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF384433C8;
-	Tue, 13 May 2025 12:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A80228DB6E
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139667; cv=none; b=GDNcXJZ86LVjPBvQizv3en6OWKV/vUCS0voX1+TbxyTnwBvGeXSNqPqPM/fkikllNcCFhMftmsZuDfKNOQlkmcMYdUQnTHynhh0fzBMrAOPBaQCxcVVlxuYMCnB6CdW/8QdviPRQOCknm/GtFBL1PY5/kEeh1HAQIFV0Q6F3m3M=
+	t=1747139683; cv=none; b=ew1e26qtMg9j5rDJpJjoVaT7NjKPNjoPyKBFaLyicHyQIKcJ0yYVO9WIqqjbsVOieinieKZ7brxzE+Y9NL/0djmCLI6B4+LRuJ++LKlcIkWhShbs8xaPgfd0McVjt8wRcpSAXi/MXr9nwNBdrip4BUE7W8/1LbAaFBzWKnQZnKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747139667; c=relaxed/simple;
-	bh=L/PKo1bvenxOX5KxfcuFokTk98eNQn0t0+hcfoQIZ+g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N4WVhTvggyD4HTraLjeyHEMJLlX/GuC7+9n7C1v01t2yToSvjncIOcePpJeqV1yzq6VKx4O+mixNy4gZXrtr22Qgus+c68ruobyWIz3kJY8QQBINZHrNWn1RB4CH6w8MLeYLEGw/Nab20gia06a/XqQsfNoa2kN0/xR0ckqzrEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiPJzKfq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747139683; c=relaxed/simple;
+	bh=C6g26+a8+4FWdWFM6DToFTTtYFPKxuXSuqUWlbI9vLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HraW7PSALDdNppg8GewNInmgZ+bjSmoU5+PeDvb/Wjxuf2nnsqKGVtADOCcVqByjTee/WZnzJm9/h+JeRCuQU5snUUpJMJCGvnzqakUi/sX3l3GPv78KA/6NFVpI2sfcapt6jbGICVGl5le1CBVAv0GXOE/4WSICa882IiviFeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=BFGZlNco; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiPJzKfq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56608C4CEE9;
-	Tue, 13 May 2025 12:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747139667;
-	bh=L/PKo1bvenxOX5KxfcuFokTk98eNQn0t0+hcfoQIZ+g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SiPJzKfqX8CSp3O+1dElMFyF23WNGHD6OcJSJrhMjwM7aD2D3soDn6LnqwD//vEt6
-	 uELacpOeutJooDFeHe/sdIdKHN37axBQ6IszCeAd2hS+gkI54gve5pBGwH0AMr2n2t
-	 pEYSTlZ5hEpMhamQxF1JxmhE+oIAWFmKE/Jm6jyuNEN2rMccO396EoL8+Se+xvdrWV
-	 13GYhD2XqR/Wi6m60MP6FRWJGcHQKKBfhPFsOV0PrCIzubdl5TZxEOmCMztTyBTlDy
-	 uSnXrUwAyTd03ZdrIFd/9wGLxcGvpNgA5pOVBN5JXM/VGqI38H5ZZBY6YloGISK/rw
-	 Nb/C+wZ9wq6JA==
-Message-ID: <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Invoke tracking callbacks only after
- initialization is complete
-From: Jeff Layton <jlayton@kernel.org>
-To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
- neilb@suse.de, 	neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
- tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Tue, 13 May 2025 07:34:25 -0500
-In-Reply-To: <20250513074305.3362209-1-lilingfeng3@huawei.com>
-References: <20250513074305.3362209-1-lilingfeng3@huawei.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="BFGZlNco"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso37870965e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747139678; x=1747744478; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tHvaWLNRQYIypczjqy5l/3kyXpFgu36gZsSsUPB0g3w=;
+        b=BFGZlNcodhFIGG95tBF8ZHeHAy1SwtQqzOgi4U3aLowrzUHuGkoZbFYFUltuPHYVdY
+         X2+7GfmurVn2WtjAqbdE8ASX93ptUroC1IidHL/GEOgoMQkXKNKZY8VFCkSA9Jlxy6Vl
+         BbUGIjUQcQr+43F+ez0AAcjJVBqyjDwO6p2zEoKhQxdfx0vnPpClilPDVFUkxfjUXPxG
+         jU5ATcSjOSd+VqeoNEqhTN2JrU+fVPGK8MJlOhh+eLhGZE98Z6SC2yq+pF36GRhowKpH
+         o56EvyfcdUMrpPml0fO7ULeDSAq0yBHb/cp0n1hnc5srfSAuyhSFt+HfDQUnEHXtEzOG
+         5U6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747139678; x=1747744478;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tHvaWLNRQYIypczjqy5l/3kyXpFgu36gZsSsUPB0g3w=;
+        b=wSVtgkfZKb9liHrZmpr8wAzLKZT+KMwkGUBrElz/r4tvJIDEXjrE5pwc4t+WM+zpZp
+         3CETbhhIdci8xCdcYamRvXqlZwqOL88HnD5rejClybqzXi6cgAE1V2UNyH9asmrfzYg3
+         TwwkM7zfpdNbkpCmtfWMVyZSCy2ooDwuG1q8OcgZhtOW4uJPYb4gBW7d2amX0OOa75+p
+         PijAN4h3XRevH6g3L71a3MnEfoC90x41+v9ESOyCKhB0JijiruyprGJKCvrnN4xtt2EE
+         0eFxA6qZXvRkq7NyX2V6CqrWBvg4qoccAjP9rA9qJB0XdSj1bl6sDI9UMD3TYUJ8XcIZ
+         hyJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdz/LBuK+Q3FDPAVdpvJaamzf2e7QmyuK76Dt0606a5cDMo1LPhw+/d6byFrXRmGa+OK36cTqc40lx6ng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyasqPOydgTS5FzIRjH/2Q8UorZ2ZkyIXiGgv3ig/VwwO14zu6v
+	UOSiXl5XxfnR4oSKiX+esLu3cEu6dopkwT17CRw4Ur3mh7gLN2iLuxnr6d5aM2c=
+X-Gm-Gg: ASbGnctr1jsF/yCOmptEiVcbx/TAd5bTktIwwNwGCCqLUhhIW3ofBfxwOu7Ek2wq0vx
+	tu5KQ4wBe3ruPhemWuCI8rVYXBiqmfysL3p8dqb7EvNfrKS6ZA7tx6NjpjaSbt92pL+w9NNbWRX
+	jFGJDvo0HGEfB4KNBBkqywJ30xAO4M8FTxuDi77OdesdUJkXOUyaMxYu5EE7kTqcikcz3vcjQuJ
+	WDACaF+EskXYLZYDE8iVyqObWrCLRZgm5U2ilG7dIjo4bzLWRKy707FIECl43rfMrpWF/v18CrN
+	us26Pf3rqwyfO9eXIPQ7SV677IOx9p5SpPoqJIM1i29u6Zgdx8MR/f+RTMXxV5I3iZs=
+X-Google-Smtp-Source: AGHT+IF0EETx+h4w6PCBRf8i2YG0WKTnteIW6fnBPI7UNFnIyzB7TOmxHpmZzzr0n8N9bYJM5uBJpg==
+X-Received: by 2002:a05:6000:4287:b0:3a0:b635:ea40 with SMTP id ffacd0b85a97d-3a1f64a3e3dmr14843773f8f.55.1747139677671;
+        Tue, 13 May 2025 05:34:37 -0700 (PDT)
+Received: from [192.168.157.194] ([213.233.104.159])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57de087sm16321473f8f.16.2025.05.13.05.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 05:34:36 -0700 (PDT)
+Message-ID: <53999471-277b-4621-abfd-b4c25761b3da@tuxon.dev>
+Date: Tue, 13 May 2025 15:34:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] clk: renesas: rzg2l-cpg: Add support for MSTOP in
+ clock enable/disable API
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250410140628.4124896-4-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdUv6+KFuobDzzmKFOH6PvwU0RFzd1M9WrEZ-yzESBahkw@mail.gmail.com>
+ <e77c85de-4542-44e1-af2e-f63f72602ff8@tuxon.dev>
+ <CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-05-13 at 15:43 +0800, Li Lingfeng wrote:
-> Checking whether tracking callbacks can be called based on whether
-> nn->client_tracking_ops is NULL may lead to callbacks being invoked
-> before tracking initialization completes, causing resource access
-> violations (UAF, NULL pointer dereference). Examples:
->=20
-> 1) nfsd4_client_tracking_init
->    // set nn->client_tracking_ops
->    nfsd4_cld_tracking_init
->     nfs4_cld_state_init
->      nn->reclaim_str_hashtbl =3D kmalloc_array
->     ... // error path, goto err
->     nfs4_cld_state_shutdown
->      kfree(nn->reclaim_str_hashtbl)
->                                       write_v4_end_grace
->                                        nfsd4_end_grace
->                                         nfsd4_record_grace_done
->                                          nfsd4_cld_grace_done
->                                           nfs4_release_reclaim
->                                            nn->reclaim_str_hashtbl[i]
->                                            // UAF
->    // clear nn->client_tracking_ops
->=20
-> 2) nfsd4_client_tracking_init
->    // set nn->client_tracking_ops
->    nfsd4_cld_tracking_init
->                                       write_v4_end_grace
->                                        nfsd4_end_grace
->                                         nfsd4_record_grace_done
->                                          nfsd4_cld_grace_done
->                                           alloc_cld_upcall
->                                            cn =3D nn->cld_net
->                                            spin_lock // cn->cn_lock
->                                            // NULL deref
->    // error path, skip init pipe
->    __nfsd4_init_cld_pipe
->     cn =3D kzalloc
->     nn->cld_net =3D cn
->    // clear nn->client_tracking_ops
->=20
-> After nfsd mounts, users can trigger grace_done callbacks via
-> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
-> in error paths, this causes access violations.
->=20
-> Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl)=
-,
-> introducing a flag to indicate whether tracking initialization has
-> completed and checking this flag before invoking callbacks may be better.
->=20
-> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->  fs/nfsd/netns.h       |  1 +
->  fs/nfsd/nfs4recover.c | 13 +++++++++----
->  2 files changed, 10 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 3e2d0fde80a7..dbd782d6b063 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -113,6 +113,7 @@ struct nfsd_net {
-> =20
->  	struct file *rec_file;
->  	bool in_grace;
-> +	bool client_tracking_init_done;
->  	const struct nfsd4_client_tracking_ops *client_tracking_ops;
-> =20
->  	time64_t nfsd4_lease;
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index c1d9bd07285f..6c27c1252c0e 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
->  		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n",=
- status);
->  		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_C=
-LIENT_TRACKING.\n");
->  		nn->client_tracking_ops =3D NULL;
-> +		nn->client_tracking_init_done =3D false;
-> +	} else {
-> +		nn->client_tracking_init_done =3D true;
->  	}
-> +
+Hi, Geert,
 
-The problem seems real (theoretically at least), but I'm not a fan of
-this fix.
+On 09.05.2025 15:34, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Fri, 9 May 2025 at 12:54, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+>> On 07.05.2025 18:42, Geert Uytterhoeven wrote:
+>>> On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>
+>>>> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
+>>>> module has one or more MSTOP bits associated with it, and these bits need
+>>>> to be configured along with the module clocks. Setting the MSTOP bits
+>>>> switches the module between normal and standby states.
+>>>>
+>>>> Previously, MSTOP support was abstracted through power domains
+>>>> (struct generic_pm_domain::{power_on, power_off} APIs). With this
+>>>> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
+>>>>
+>>>> Previous Order:
+>>>> A/ Switching to Normal State (e.g., during probe):
+>>>> 1/ Clear module MSTOP bits
+>>>> 2/ Set module CLKON bits
+>>>>
+>>>> B/ Switching to Standby State (e.g., during remove):
+>>>> 1/ Clear CLKON bits
+>>>> 2/ Set MSTOP bits
+>>>>
+>>>> However, in some cases (when the clock is disabled through devres), the
+>>>> order may have been (due to the issue described in link section):
+>>>>
+>>>> 1/ Set MSTOP bits
+>>>> 2/ Clear CLKON bits
+>>>>
+>>>> Recently, the hardware team has suggested that the correct order to set
+>>>> the MSTOP and CLKON bits is:
+>>>>
+>>>> Updated Order:
+>>>> A/ Switching to Normal State (e.g., during probe):
+>>>> 1/ Set CLKON bits
+>>>> 2/ Clear MSTOP bits
+>>>>
+>>>> B/ Switching to Standby State (e.g., during remove):
+>>>> 1/ Set MSTOP bits
+>>>> 2/ Clear CLKON bits
+>>>>
+>>>> To prevent future issues due to incorrect ordering, the MSTOP setup has
+>>>> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
+>>>> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
+>>>> from the RZ/G3S HW manual.
+>>>>
+>>>> Additionally, since multiple clocks of a single module may be mapped to a
+>>>> single MSTOP bit, MSTOP setup is reference-counted.
+>>>>
+>>>> Furthermore, as all modules start in the normal state after reset, if the
+>>>> module clocks are disabled, the module state is switched to standby. This
+>>>> prevents keeping the module in an invalid state, as recommended by the
+>>>> hardware team.
+>>>>
+>>>> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>
+>>> Thanks for your patch!
+>>>
+>>>> --- a/drivers/clk/renesas/rzg2l-cpg.c
+>>>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> 
+>>>> +/* Need to be called with a lock held to avoid concurrent access to mstop->refcnt. */
+>>>> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
+>>>> +                                            bool standby)
+>>>> +{
+>>>> +       struct rzg2l_cpg_priv *priv = clock->priv;
+>>>> +       struct mstop *mstop = clock->mstop;
+>>>> +       bool update = false;
+>>>> +       u32 value;
+>>>> +
+>>>> +       if (!mstop)
+>>>> +               return;
+>>>> +
+>>>> +       value = MSTOP_MASK(mstop->conf) << 16;
+>>>> +
+>>>> +       if (standby) {
+>>>> +               unsigned int criticals = 0;
+>>>> +
+>>>> +               for (u8 i = 0; i < clock->num_shared_mstop_clks; i++) {
+>>>
+>>> unsigned int
+>>>
+>>>> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
+>>>> +
+>>>> +                       if (clk->critical)
+>>>> +                               criticals++;
+>>>> +               }
+>>>> +
+>>>> +               /* Increment if clock is critical, too. */
+>>>> +               if (clock->critical)
+>>>> +                       criticals++;
+>>>
+>>> If clock->shared_mstop_clks[] would include the current clock, then
+>>> (a) this test would not be needed, and
+>>
+>> Agree!
+>>
+>>> (b) all clocks sharing the same mstop could share a single
+>>>     clock->shared_mstop_clks[] array.
+>>
+>> I'll look into this but I'm not sure how should I do it w/o extra
+>> processing at the end of registering all the clocks. FWICT, that would
+>> involve freeing some shared_mstop_clks arrays and using a single reference
+>> as the shared_mstop_clks[] is updated after every clock is registered. Can
+>> you please let me know if this what you are thinking about?
+> 
+> Currently, when detecting two clocks share the same mstop,
+> you (re)allocate each clock's shared_mstop_clks[], and add the
+> other clock:
+> 
+>     rzg2l_cpg_add_shared_mstop_clock(priv->dev, clock, clk);
+>     rzg2l_cpg_add_shared_mstop_clock(priv->dev, clk, clock);
+> 
+> Instead, call rzg2l_cpg_add_shared_mstop_clock() once, and modify
+> rzg2l_cpg_add_shared_mstop_clock() to not only realloc the target's
+> shared_mstop_clks[], but also loop over all its existing entries,
+> and update their shared_mstop_clks[] pointers.
+I tried this approach but w/o complicated further the code I can't keep
+track of whether the "to be updated" (not reallocated) shared_mstop_clks[]
+pointers were previously updated pointers or devm_krealloc()'ed ones. I
+need this to properly free the unused arrays. Calling devm_kfree() on a
+non-devres resource triggers a WARN_ON() for each call.
 
-If the problem is as you say, then why not just delay the setting of
-the client_tracking_ops until there is a method that works. IOW, set a
-temporary variable with an ops pointer and only assign
-client_tracking_ops at the end of the function/
+Because of this I prepared a new version where the duplicated lists are
+freed after all the mod clocks were initialized. I'll publish it soon.
 
-Would that also fix this issue?
-=20
->  	return status;
->  }
-> =20
-> @@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
->  {
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> =20
-> +	nn->client_tracking_init_done =3D false;
->  	if (nn->client_tracking_ops) {
->  		if (nn->client_tracking_ops->exit)
->  			nn->client_tracking_ops->exit(net);
-> @@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> -	if (nn->client_tracking_ops)
-> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->  		nn->client_tracking_ops->create(clp);
->  }
-> =20
-> @@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> -	if (nn->client_tracking_ops)
-> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->  		nn->client_tracking_ops->remove(clp);
->  }
-> =20
-> @@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> -	if (nn->client_tracking_ops)
-> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->  		return nn->client_tracking_ops->check(clp);
-> =20
->  	return -EOPNOTSUPP;
-> @@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
->  void
->  nfsd4_record_grace_done(struct nfsd_net *nn)
->  {
-> -	if (nn->client_tracking_ops)
-> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
->  		nn->client_tracking_ops->grace_done(nn);
->  }
-> =20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Thank you,
+Claudiu
