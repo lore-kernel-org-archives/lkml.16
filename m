@@ -1,427 +1,565 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9D428C5B5;
-	Tue, 13 May 2025 18:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6748F58
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747162526; cv=none; b=McAFwLy36u1Aw0p2YFCNrXNoYukJIcLP5TwLR2nFjSYRSjJst62fa9JYpGm0etdNg01pFbx3DKuQvCgOBtQJyGuQW266VfDv/piyE2YBtH63m6braNtwYoHyAoHigmcR5tHJ6ErbJ1Ct/lCOW0tb/fHMY8id1gTi3QCpimgtOj8=
+	t=1747162854; cv=none; b=nY45mFrGY1iNXAOMKwKmAy4kmHt/kmA6N4Fu9kbMTup4efAwEBcDwma+a3OX6cFYf3W0AXuYtGEMng/RZPmDxDx0p8ugxHeCEIE4vKhGvAVcUZo0Y2kXUQctAoQEApmj8HqUf2JIjm+4guIEGSkkgk6GKiX7740ASdGPFAEEOh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747162526; c=relaxed/simple;
-	bh=TTguu2JbGIVMAcxK9kEuwkfQx6NzLLY6u6wufqE0xJA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VNTnGVGROBG84+edcUc2AdaXHI0xx5yHhZ440zEstMIIM9pPGanHw0SdxkEyh5d/jz4jyZpypdHSuRGjaHsQCIF4wIccz45AEb7KQcgCk80mVJtBu8xg2iNOCcRBvscbWipf/j2XiwiBGqm2+yWjuEY16bJSVVavocH/RvOhdHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXrjRVmi; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747162854; c=relaxed/simple;
+	bh=M4+9RD18/zXOu/etGZGkDEvhcKUDpM2gBTMbL9UT9NQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cku/dF1LEpD4SU7/j156gqo0MwfRBV9mK6F1vm3oRVx8JdsGhF/XjjqAxc01xSPEs4gyTxLKSPmIIqilX9cwzB9NHQ1dSas3jcItF5EOIBmHoLaFwiU5oJ6i00RJq5q2MEkwUQptimZfIJcko9YlnMWldsIklCtMDPJPVT1aW9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rlahlFo3; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXrjRVmi"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b074d908e56so4080647a12.2;
-        Tue, 13 May 2025 11:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rlahlFo3"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-48b7747f881so63121cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:00:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747162523; x=1747767323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yk2y5YGo2DOU0RNvY2gdG/DmHVLPW3IlR/rIS3h+Kt0=;
-        b=gXrjRVmiDpW1/E77I7IoEknqzyfFWPCeF8fXCKmSwpQ4BAgSU9xZVGm1VG6QLTIgkM
-         Tb25fzyHsUkzupbTpyDJIhJ11hygu0RIc5xUTjf3a5lMYvrZl0Bv8TrXDVEEdhjYUYZ9
-         /5Ll05gyk+5Gg5VFV7Dk+TK4Q8bEumjqsKXdoXJScR6tT4Xvmv+yXZg2kWNL5+LsJxAA
-         8bY013ZszvMZ+GIi1hjDkK3bKiTaV4/GnYc6a+qX5KhRUEwdKrjTIjDZXBEOP5Q44vU3
-         ueOr3C0yWmLJHaDsHgELWO/btVSu0LU/vRGgePEB7nigenqkrhScTco5YpYfSxNfS0hn
-         lLbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747162523; x=1747767323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747162851; x=1747767651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Yk2y5YGo2DOU0RNvY2gdG/DmHVLPW3IlR/rIS3h+Kt0=;
-        b=SidcGSkMuE0Yhb2ScGdgyeAnlPLgKF0tqyPBKVKxa/j1R7qfXXRiiw6Z7qv+YOIr7p
-         tbtqKSZi+y65SQbrdrOcSUzCYw7RsK2QhoJlBDcoW6NCsVPQO92ZtQ0xmQEp5rzrzA5k
-         pRF3hslTJRRKRODrWxnZ5Pk0InyqYlF3ASJ/uzacdtalh5n9RZUWa46TiHO/UzuWVpjm
-         1weXWtIBbgZKraWXIxrO2oWWqKYkUTqCctJagPgRkDVBqrgA1oIeaBpDiFf2HGHjaZV5
-         bj7oNIBvGE4rdHhZ9uTsTq8oZJ3U77W4dMmx08g9Nx7Wv/MSShs5JY/MsCVuXxcvSe/8
-         xSVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBYHsFiQ2/VRhvMjTX6ICnuUIks2H1BCT7VdLL2fbelco2XMviXM0vsUqV1U6xe9Rde+hH0UMOtZWtyyd0@vger.kernel.org, AJvYcCUNgwxqjNFsrLAYEy6bTsEkyEKzUpsyrYtJBEWm4K+0kREHWqWgI/u6/efywQQjDxM6riRzes1Tii4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2zwlfSYT/a4WBcv3AXBWdJZ2u2ZLawX3OIveA58okcArut7gx
-	ndfQ5Q7/3bNJvUykJUbO6CmVnYrXqNx5A4w9VSOYP8cMXV4BiN6B
-X-Gm-Gg: ASbGncujg6U657gn6iTZhnbZkevYyO67reYhGEemKFEDTTVI1Cm9WnYs3SU68Ul4zFb
-	z73SVoOmPzRGk++9sJoQ73uomSghoaBtUp1pmi+gmFtThcTQkcFHjFq67pJrztDGrqimEU3chg+
-	cfuLkalyvL8t3rDb6v8t6s0szSKBcoO95aJeF4/JfX/m0KvAs65B7ER8k9zw4F91gX/2vZvmyHA
-	jHQ/q6JSBDiSR8UEvNPYJiTakbmblry+g/l9iheXYJVr4zIdZv08JFQRynsoisnWDMbsnPzrAP5
-	dAzZpFq4/7PfHEQ8KJ+I9i8jhzeMIL7bue92wRS7qyjyUY9z5SZevK5q
-X-Google-Smtp-Source: AGHT+IHLQwRReCgY7aIOeHAJHQYMI0cmXrzU8dOlD/MEy0lLlC2uKYx60wgDrNylciSFyZbiYMPCsA==
-X-Received: by 2002:a17:903:120c:b0:215:8d49:e2a7 with SMTP id d9443c01a7336-231983e5c25mr5787055ad.50.1747162523433;
-        Tue, 13 May 2025 11:55:23 -0700 (PDT)
-Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82720a3sm84989285ad.149.2025.05.13.11.55.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 11:55:22 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 13 May 2025 11:55:20 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Fan Ni <nifan.cxl@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>, anisa.su887@gmail.com
-Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <aCOVmOTerf9_XFyP@debian>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <Z_0v-iFQpWlgG7oT@debian>
- <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
+        bh=4cUc9T2sHnhCYBHfb8AJ1s8PRRU4wPBZSZvKKfXSRps=;
+        b=rlahlFo3wX/2UmqQ5dXgo3HosHbtBmxmdohIjQPSEd3P3uPcR8ka16ejnwG8sangm7
+         kZDFtfAMan4ILmTMJIWlF38+/ddEKSJ9/WzsjRz+w89/RWAibP6tUIrxYQzx9B+Cqi4/
+         NxthpJA/IVvIJZ7+9JRbsMbt1cAfaANJ5f97ZkN2Cb7VHUskpp4+Y/lSmNdj1BR8j6Jg
+         Onvqfgj0DKzguc7VNdXEVGO3YsVFA9IGQSDWj89D9AAKXqFOwVONvyKb86cHtHDAE76i
+         TsyN6yFnVwTS/WDEnV3nFlOG5Gi+e718he87SHY03cucyb0IGlQTCQ0wWZj6uYDkGVgh
+         bWUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747162851; x=1747767651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4cUc9T2sHnhCYBHfb8AJ1s8PRRU4wPBZSZvKKfXSRps=;
+        b=evv/kPfkr5GcxnoWkp/4DThV33QxZJZ/y/hX7UInnL76s6skf58ZPw1096susD1CIz
+         65KwNyhF316qzYCrjCBbzszg810ocT9dSnUe3a60cLaQDfwXDRKcwhLx9c0hdY2VBJeI
+         odZy2p1GMjwQCfglDZ0ptcbKMHQxQgnN60Zb9Woar2syu88tOPOTQnIqnDfc+cWcduly
+         Vd/Xj9JBNWiOtiFOvehKbODr3sy/qEQbv0cWBl3TSiyseGeNmEKiwhe2OMKVBswYSHmm
+         wjho5UOhNgPgjBDShF97WdPkxatZXGplDmo/cZb2jefLWqEvXBZ1XMMXxD7lFuJzO3GQ
+         DbZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnNfkw4SAuUIHo6gQXtXyDhb3lIRVA18adKpAhlyUkxvqAviCoc4KifkYGnMV+/kTTP1MELfgNV09OT5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3PnrCI0+XuS8yXM1RRYuLwURnwCPY9WRcyBoasFnQrxel05BI
+	muCi3a13t3gbs9oZnTzsE3zNi1sWc3FoogIimZ/GjkJ5e9/asfzlEIOaPxGU819UfYPOIONMLxa
+	e9vMspjtz3mAfPVLeOFRWv20FeDMywfssCdjMfbCU
+X-Gm-Gg: ASbGncvTBWu/GdReV5jkN/SQuOayae3zwMqD+QiA2bR+wcrQ4FkbATGD4DrMIiBZGWj
+	9FOZWQRYcHt/EqNQKHBnNvQh2Du3N3F2dlFs98eklQxrDQTLoXHG8Yczc/ySTapI3PL/xsNPEf5
+	1Wy/6nael6msIjRX5Nuz0xJvUXToNlaDjUW+XAdGqVvk5izrmUIKxsYdAl4bk=
+X-Google-Smtp-Source: AGHT+IHIKxFKnYmT7IGRz0JawhPrOlYLXAymk6k9Ex2k3r1NtbxvtVMqrroa2IFQgSnZ6itwt7r5Ft9gYT/iBifR14Q=
+X-Received: by 2002:a05:622a:1985:b0:48a:42fa:78fa with SMTP id
+ d75a77b69052e-494960f071emr529341cf.2.1747162850152; Tue, 13 May 2025
+ 12:00:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
+References: <20250422181729.2792081-1-salomondush@google.com>
+In-Reply-To: <20250422181729.2792081-1-salomondush@google.com>
+From: Salomon Dushimirimana <salomondush@google.com>
+Date: Tue, 13 May 2025 12:00:39 -0700
+X-Gm-Features: AX0GCFt8Xij1w9xEGbNc7rpNW3CsAjKZFjw-fsARhcPUzW4tP9lQ7Ibj2FTl6sU
+Message-ID: <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
+To: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 09:37:02PM -0500, Ira Weiny wrote:
-> Fan Ni wrote:
-> > On Sun, Apr 13, 2025 at 05:52:08PM -0500, Ira Weiny wrote:
-> > > A git tree of this series can be found here:
-> > > 
-> > > 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
-> > > 
-> > > This is now based on 6.15-rc2.
-> > > 
-> > > Due to the stagnation of solid requirements for users of DCD I do not
-> > > plan to rev this work in Q2 of 2025 and possibly beyond.
-> > > 
-> > > It is anticipated that this will support at least the initial
-> > > implementation of DCD devices, if and when they appear in the ecosystem.
-> > > The patch set should be reviewed with the limited set of functionality in
-> > > mind.  Additional functionality can be added as devices support them.
-> > > 
-> > > It is strongly encouraged for individuals or companies wishing to bring
-> > > DCD devices to market review this set with the customer use cases they
-> > > have in mind.
-> > 
-> > Hi Ira,
-> > thanks for sending it out.
-> > 
-> > I have not got a chance to check the code or test it extensively.
-> > 
-> > I tried to test one specific case and hit issue.
-> > 
-> > I tried to add some DC extents to the extent list on the device when the
-> > VM is launched by hacking qemu like below,
-> > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 87fa308495..4049fc8dd9 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -826,6 +826,11 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> >      QTAILQ_INIT(&ct3d->dc.extents);
-> >      QTAILQ_INIT(&ct3d->dc.extents_pending);
-> >  
-> > +    cxl_insert_extent_to_extent_list(&ct3d->dc.extents, 0,
-> > +                                     CXL_CAPACITY_MULTIPLIER, NULL, 0);
-> > +    ct3d->dc.total_extent_count = 1;
-> > +    ct3_set_region_block_backed(ct3d, 0, CXL_CAPACITY_MULTIPLIER);
-> > +
-> >      return true;
-> >  }
-> > 
-> > 
-> > Then after the VM is launched, I tried to create a DC region with
-> > commmand: cxl create-region -m mem0 -d decoder0.0 -s 1G -t
-> > dynamic_ram_a.
-> > 
-> > It works fine. As you can see below, the region is created and the
-> > extent is showing correctly.
-> > 
-> > root@debian:~# cxl list -r region0 -N
-> > [
-> >   {
-> >     "region":"region0",
-> >     "resource":79725330432,
-> >     "size":1073741824,
-> >     "interleave_ways":1,
-> >     "interleave_granularity":256,
-> >     "decode_state":"commit",
-> >     "extents":[
-> >       {
-> >         "offset":0,
-> >         "length":268435456,
-> >         "uuid":"00000000-0000-0000-0000-000000000000"
-> >       }
-> >     ]
-> >   }
-> > ]
-> > 
-> > 
-> > However, after that, I tried to create a dax device as below, it failed.
-> > 
-> > root@debian:~# daxctl create-device -r region0 -v
-> > libdaxctl: __dax_regions_init: no dax regions found via: /sys/class/dax
-> > error creating devices: No such device or address
-> > created 0 devices
-> > root@debian:~# 
-> > 
-> > root@debian:~# ls /sys/class/dax 
-> > ls: cannot access '/sys/class/dax': No such file or directory
-> 
-> Have you update daxctl with cxl-cli?
-> 
-> I was confused by this lack of /sys/class/dax and checked with Vishal.  He
-> says this is legacy.
-> 
-> I have /sys/bus/dax and that works fine for me with the latest daxctl
-> built from the ndctl code I sent out:
-> 
-> https://github.com/weiny2/ndctl/tree/dcd-region3-2025-04-13
-> 
-> Could you build and use the executables from that version?
-> 
-> Ira
+Hi James and Martin
 
-Hi Ira,
-Here are more details about the issue and reasoning.
+I wanted to follow up on this patch! It's a decently sized patch, so
+it might take some time, but I'd love to hear your thoughts and
+address any feedback!!
+
+Thank you,
+Salomon Dushimirimana
+
+Salomon Dushimirimana
 
 
-# ISSUE: No dax device created
-
-## What we see: No Dax device is created after creating the dc region
-<pre>
-fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --dcd-test mem0
-Load cxl drivers first
-ssh root@localhost -p 2024 "modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem"
-
-Module                  Size  Used by
-dax_pmem               12288  0
-device_dax             16384  0
-nd_pmem                24576  0
-nd_btt                 28672  1 nd_pmem
-dax                    57344  3 dax_pmem,device_dax,nd_pmem
-cxl_pmu                28672  0
-cxl_mem                12288  0
-cxl_pmem               24576  0
-libnvdimm             217088  4 cxl_pmem,dax_pmem,nd_btt,nd_pmem
-cxl_pci                28672  0
-cxl_acpi               24576  0
-cxl_port               16384  0
-cxl_core              368640  7 cxl_pmem,cxl_port,cxl_mem,cxl_pci,cxl_acpi,cxl_pmu
-ssh root@localhost -p 2024 "cxl enable-memdev mem0"
-cxl memdev: cmd_enable_memdev: enabled 1 mem
-{
-  "region":"region0",
-  "resource":79725330432,
-  "size":2147483648,
-  "interleave_ways":1,
-  "interleave_granularity":256,
-  "decode_state":"commit",
-  "mappings":[
-    {
-      "position":0,
-      "memdev":"mem0",
-      "decoder":"decoder2.0"
-    }
-  ]
-}
-cxl region: cmd_create_region: created 1 region
-sn=3840
-cxl-memdev0
-sn=3840
-Choose OP: 0: add, 1: release, 2: print extent, 9: exit
-Choice: 9
-Do you want to continue to create dax device for DC(Y/N):y
-daxctl create-device -r region0
-error creating devices: No such device or address
-created 0 devices
-daxctl list -r region0 -D
-
-Create dax device failed
-</pre>
-
-## What caused the issue: Resources present before probing
-
-<pre>
-...
-[   14.251500] cxl_core:cxl_region_probe:3571: cxl_region region0: config state: 0
-[   14.254129] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: -6
-[   14.256536] cxl_core:devm_cxl_add_region:2535: cxl_acpi ACPI0017:00: decoder0.0: created region0
-[   14.281676] cxl_core:cxl_port_attach_region:1169: cxl region0: mem0:endpoint2 decoder2.0 add: mem0:decoder2.0 @ 0 next: none nr_eps: 1 nr_targets: 1
-[   14.286254] cxl_core:cxl_port_attach_region:1169: cxl region0: pci0000:0c:port1 decoder1.0 add: mem0:decoder2.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
-[   14.290995] cxl_core:cxl_port_setup_targets:1489: cxl region0: pci0000:0c:port1 iw: 1 ig: 256
-[   14.294161] cxl_core:cxl_port_setup_targets:1513: cxl region0: pci0000:0c:port1 target[0] = 0000:0c:00.0 for mem0:decoder2.0 @ 0
-[   14.298209] cxl_core:cxl_calc_interleave_pos:1880: cxl_mem mem0: decoder:decoder2.0 parent:0000:0d:00.0 port:endpoint2 range:0x1290000000-0x130fffffff pos:0
-[   14.303224] cxl_core:cxl_region_attach:2080: cxl decoder2.0: Test cxl_calc_interleave_pos(): success test_pos:0 cxled->pos:0
-[   14.307522] cxl region0: Bypassing cpu_cache_invalidate_memregion() for testing!
-[   14.319576] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
-[   14.322918] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
-[   14.326102] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-[   14.329523] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
-[   14.333141] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
-[   14.336172] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
-[   14.342736] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
-[   14.345447] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x7fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
-[   14.350198] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
-[   14.354574] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
-[   14.357876] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
-[   14.361361] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
-[   14.395020] cxl dax_region0: Resources present before probing
-...
-</pre>
-
-## Workaround (not a fix)
-
-By chasing why the devres link list is not empty, or when add_dr() is called,
-I located the code that caused the issue. The below hack is used to confirm
-the issue is caused by the devm_add_action_or_reset() function call.
-
-<pre>
-diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-index 4dc0dec486f6..26daa7906717 100644
---- a/drivers/cxl/core/extent.c
-+++ b/drivers/cxl/core/extent.c
-@@ -174,6 +174,7 @@ static int online_region_extent(struct region_extent *region_extent)
-                goto err;
- 
-        dev_dbg(dev, "region extent HPA %pra\n", &region_extent->hpa_range);
-+       return 0;
-        return devm_add_action_or_reset(&cxlr_dax->dev, region_extent_unregister,
-                                        region_extent);
-</pre> 
-
-## Output
-
-<pre>
-fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --run --create-topo
-Info: back memory/lsa file exist under /tmp/host0 from previous run, delete them Y/N(default Y): 
-Starting VM...
-QEMU instance is up, access it: ssh root@localhost -p 2024
-fan@smc-140338-bm01:~/cxl/linux-dcd$ cxl-tool.py --dcd-test mem0
-Load cxl drivers first
-ssh root@localhost -p 2024 "modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem"
-
-Module                  Size  Used by
-dax_pmem               12288  0
-device_dax             16384  0
-nd_pmem                24576  0
-nd_btt                 28672  1 nd_pmem
-dax                    57344  3 dax_pmem,device_dax,nd_pmem
-cxl_pmem               24576  0
-cxl_pmu                28672  0
-cxl_mem                12288  0
-libnvdimm             217088  4 cxl_pmem,dax_pmem,nd_btt,nd_pmem
-cxl_pci                28672  0
-cxl_acpi               24576  0
-cxl_port               16384  0
-cxl_core              368640  7 cxl_pmem,cxl_port,cxl_mem,cxl_pci,cxl_acpi,cxl_pmu
-ssh root@localhost -p 2024 "cxl enable-memdev mem0"
-cxl memdev: cmd_enable_memdev: enabled 1 mem
-cxl region: cmd_create_region: created 1 region
-{
-  "region":"region0",
-  "resource":79725330432,
-  "size":2147483648,
-  "interleave_ways":1,
-  "interleave_granularity":256,
-  "decode_state":"commit",
-  "mappings":[
-    {
-      "position":0,
-      "memdev":"mem0",
-      "decoder":"decoder2.0"
-    }
-  ]
-}
-sn=3840
-cxl-memdev0
-sn=3840
-Choose OP: 0: add, 1: release, 2: print extent, 9: exit
-Choice: 2
-cat /tmp/qmp-show.json|ncat localhost 4445
-{"QMP": {"version": {"qemu": {"micro": 90, "minor": 2, "major": 9}, "package": "v6.2.0-28065-g3537a06886-dirty"}, "capabilities": ["oob"]}}
-{"return": {}}
-{"return": {}}
-{"return": {}}
-Print accepted extent info:
-0: [0x0 - 0x10000000]
-In total, 1 extents printed!
-Print pending-to-add extent info:
-In total, 0 extents printed!
-Choose OP: 0: add, 1: release, 2: print extent, 9: exit
-Choice: 9
-Do you want to continue to create dax device for DC(Y/N):y
-daxctl create-device -r region0
-[
-  {
-    "chardev":"dax0.1",
-    "size":268435456,
-    "target_node":1,
-    "align":2097152,
-    "mode":"devdax"
-  }
-]
-created 1 device
-daxctl list -r region0 -D
-[
-  {
-    "chardev":"dax0.1",
-    "size":268435456,
-    "target_node":1,
-    "align":2097152,
-    "mode":"devdax"
-  }
-]
-ssh root@localhost -p 2024 "daxctl reconfigure-device dax0.1 -m system-ram"
-[
-  {
-    "chardev":"dax0.1",
-    "size":268435456,
-    "target_node":1,
-    "align":2097152,
-    "mode":"system-ram",
-    "online_memblocks":2,
-    "total_memblocks":2,
-    "movable":true
-  }
-]
-reconfigured 1 device
-RANGE                                  SIZE  STATE REMOVABLE   BLOCK
-0x0000000000000000-0x000000007fffffff    2G online       yes    0-15
-0x0000000100000000-0x000000027fffffff    6G online       yes   32-79
-0x0000001290000000-0x000000129fffffff  256M online       yes 594-595
-
-Memory block size:       128M
-Total online memory:     8.3G
-</pre>
-
-
-
-fan
-> 
-> > 
-> > The dmesg shows the really_probe function returns early as resource
-> > presents before probe as below,
-> > 
-> > [ 1745.505068] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
-> > [ 1745.506063] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
-> > [ 1745.506953] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-> > [ 1745.507911] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
-> > [ 1745.508958] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
-> > [ 1745.509843] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
-> > [ 1745.511748] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
-> > [ 1745.512626] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x3fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.514143] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
-> > [ 1745.515485] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.516576] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.517768] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
-> > [ 1745.524984] cxl dax_region0: Resources present before probing
-> > 
-> > 
-> > btw, I hit the same issue with the previous verson also.
-> > 
-> > Fan
-> 
-> [snip]
+On Tue, Apr 22, 2025 at 11:17=E2=80=AFAM Salomon Dushimirimana
+<salomondush@google.com> wrote:
+>
+> Adds a new function scsi_emit_error(), called when a command is placed
+> back on the command queue for retry by the error handler, or when a
+> command completes.
+>
+> The scsi_emit_error() function uses the kobject_uevent_env() mechanism
+> to emit a KOBJ_CHANGE event with details about the SCSI error.
+>
+> The event has the following key/value pairs set in the environment:
+> - SDEV_ERROR: Always set to 1, to distinguish disk errors
+>   from media change events, which have SDEV_MEDIA_CHANGE=3D1
+> - SDEV_ERROR_RETRY: 0 if this is an error in the completion
+>   path in scsi_io_completion(), 1 if the command is going to be
+>   placed back on the queue
+> - SDEV_ERROR_RESULT: Host byte of result code
+> - SDEV_ERROR_SK: Sense key
+> - SDEV_ERROR_ASC: Additional sense code
+> - SDEV_ERROR_ASCQ: Additional sense code qualifier
+>
+> Error events are filtered under specific conditions:
+> - DID_BAD_TARGET: Avoids uevent storms if a removed device is repeatedly
+>   accessed and is not responding.
+> - DID_IMM_RETRY: Avoids reporting temporary transport errors where the
+>   command is immediately retried. This is a temporary error that should
+>   not be forwarded to userspace.
+>
+> scsi_emit_error() can be invoked from vairous atomic contexts, where
+> sleeping is not permitted, so GFP_ATOMIC is used to ensure allocations
+> can safely occur in these contexts.
+>
+> A per-device ratelimiting mechanism is added to prevent flooding
+> userspace during persistent error conditions. The ratelimit is checked
+> before scheduling the event work.
+>
+> Signed-off-by: Salomon Dushimirimana <salomondush@google.com>
+> ---
+>  drivers/scsi/Kconfig       |  17 +++++++
+>  drivers/scsi/scsi_error.c  |  66 ++++++++++++++++++++++++
+>  drivers/scsi/scsi_lib.c    | 100 ++++++++++++++++++++++++++++++++-----
+>  drivers/scsi/scsi_priv.h   |   1 +
+>  drivers/scsi/scsi_scan.c   |   4 ++
+>  drivers/scsi/scsi_sysfs.c  |   2 +
+>  include/scsi/scsi_device.h |  22 +++++++-
+>  7 files changed, 199 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+> index 5a3c670aec27d..36a156ad6afd2 100644
+> --- a/drivers/scsi/Kconfig
+> +++ b/drivers/scsi/Kconfig
+> @@ -240,6 +240,23 @@ config SCSI_SCAN_ASYNC
+>           Note that this setting also affects whether resuming from
+>           system suspend will be performed asynchronously.
+>
+> +config SCSI_ERROR_UEVENT
+> +       bool "Enable SCSI error uevent reporting"
+> +       depends on SCSI
+> +       default n
+> +       help
+> +         If enabled, the SCSI mid-layer will emit kobject uevents when
+> +         SCSI commands fail or are retried by the error handler. These
+> +         events provide details about the error, including the command
+> +         result (host byte), sense key (SK), additional sense code (ASC)=
+,
+> +         additional sense code qualifier (ASCQ), and whether the command
+> +         is being retried (SDEV_ERROR_RETRY=3D1) or finally failing beca=
+use
+> +         of error in completion path (SDEV_ERROR_RETRY=3D0).
+> +
+> +         Events are filtered for certain conditions (e.g., DID_BAD_TARGE=
+T,
+> +         DID_IMM_RETRY) and are also ratelimited per device to prevent
+> +         excessive noise.
+> +
+>  config SCSI_PROTO_TEST
+>         tristate "scsi_proto.h unit tests" if !KUNIT_ALL_TESTS
+>         depends on SCSI && KUNIT
+> diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+> index 376b8897ab90a..327a012f328ff 100644
+> --- a/drivers/scsi/scsi_error.c
+> +++ b/drivers/scsi/scsi_error.c
+> @@ -2227,6 +2227,9 @@ void scsi_eh_flush_done_q(struct list_head *done_q)
+>                                 scmd_printk(KERN_INFO, scmd,
+>                                              "%s: flush retry cmd\n",
+>                                              current->comm));
+> +#ifdef CONFIG_SCSI_ERROR_UEVENT
+> +                               scsi_emit_error(scmd);
+> +#endif
+>                                 scsi_queue_insert(scmd, SCSI_MLQUEUE_EH_R=
+ETRY);
+>                                 blk_mq_kick_requeue_list(sdev->request_qu=
+eue);
+>                 } else {
+> @@ -2595,3 +2598,66 @@ bool scsi_get_sense_info_fld(const u8 *sense_buffe=
+r, int sb_len,
+>         }
+>  }
+>  EXPORT_SYMBOL(scsi_get_sense_info_fld);
+> +
+> +/**
+> + * scsi_emit_error - Emit an error event.
+> + *
+> + * May be called from scsi_softirq_done(). Cannot sleep.
+> + *
+> + * @cmd: the scsi command
+> + */
+> +void scsi_emit_error(struct scsi_cmnd *cmd)
+> +{
+> +       struct scsi_sense_hdr sshdr;
+> +       u8 result, sk, asc, ascq;
+> +       int sense_valid;
+> +       int retry;
+> +
+> +       if (unlikely(cmd->result)) {
+> +               result =3D host_byte(cmd->result);
+> +               if (result =3D=3D DID_BAD_TARGET ||
+> +                   result =3D=3D DID_IMM_RETRY)
+> +                       /*
+> +                        * Do not report an error upstream, the situation=
+ is
+> +                        * not stable. Will report once the IO really fai=
+ls.
+> +                        */
+> +                       return;
+> +               sk =3D 0;
+> +               asc =3D 0;
+> +               ascq =3D 0;
+> +
+> +               if (result =3D=3D DID_OK) {
+> +                       sense_valid =3D scsi_command_normalize_sense(cmd,=
+ &sshdr);
+> +                       if (!sense_valid) {
+> +                               /*
+> +                                * With libata, this happens when the err=
+or
+> +                                * handler is called but the error causes=
+ are
+> +                                * not identified yet.
+> +                                */
+> +                               return;
+> +                       }
+> +
+> +                       sk =3D sshdr.sense_key;
+> +                       asc =3D sshdr.asc;
+> +                       ascq =3D sshdr.ascq;
+> +
+> +                       /*
+> +                        * asc =3D=3D 0 && ascq =3D=3D 0x1D means "ATA pa=
+ss through
+> +                        * information available"; this is not an error, =
+but
+> +                        * rather the driver returning some data.
+> +                        */
+> +                       if (sk =3D=3D NO_SENSE ||
+> +                           (sk =3D=3D RECOVERED_ERROR &&
+> +                            asc =3D=3D 0x0 &&
+> +                            ascq =3D=3D 0x1D)) {
+> +                               return;
+> +                       }
+> +               }
+> +
+> +               retry =3D (!scsi_noretry_cmd(cmd) &&
+> +                        cmd->retries > 0 &&
+> +                        cmd->retries <=3D cmd->allowed);
+> +               sdev_evt_send_error(cmd->device, GFP_ATOMIC,
+> +                                   retry, result, sk, asc, ascq);
+> +       }
+> +}
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index 0d29470e86b0b..2a2fae00e9f1c 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1029,6 +1029,9 @@ static int scsi_io_completion_nz_result(struct scsi=
+_cmnd *cmd, int result,
+>                 result =3D 0;
+>                 *blk_statp =3D BLK_STS_OK;
+>         }
+> +#ifdef CONFIG_SCSI_ERROR_UEVENT
+> +       scsi_emit_error(cmd);
+> +#endif
+>         return result;
+>  }
+>
+> @@ -1544,6 +1547,9 @@ static void scsi_complete(struct request *rq)
+>                 scsi_finish_command(cmd);
+>                 break;
+>         case NEEDS_RETRY:
+> +#ifdef CONFIG_SCSI_ERROR_UEVENT
+> +               scsi_emit_error(cmd);
+> +#endif
+>                 scsi_queue_insert(cmd, SCSI_MLQUEUE_EH_RETRY);
+>                 break;
+>         case ADD_TO_MLQUEUE:
+> @@ -2559,43 +2565,77 @@ EXPORT_SYMBOL(scsi_device_set_state);
+>   */
+>  static void scsi_evt_emit(struct scsi_device *sdev, struct scsi_event *e=
+vt)
+>  {
+> -       int idx =3D 0;
+> -       char *envp[3];
+> +       struct kobj_uevent_env *env;
+> +
+> +       env =3D kzalloc(sizeof(struct kobj_uevent_env), GFP_KERNEL);
+> +       if (!env)
+> +               return;
+>
+>         switch (evt->evt_type) {
+>         case SDEV_EVT_MEDIA_CHANGE:
+> -               envp[idx++] =3D "SDEV_MEDIA_CHANGE=3D1";
+> +               if (add_uevent_var(env, "SDEV_MEDIA_CHANGE=3D1"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_INQUIRY_CHANGE_REPORTED:
+>                 scsi_rescan_device(sdev);
+> -               envp[idx++] =3D "SDEV_UA=3DINQUIRY_DATA_HAS_CHANGED";
+> +               if (add_uevent_var(env, "SDEV_UA=3DINQUIRY_DATA_HAS_CHANG=
+ED"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_CAPACITY_CHANGE_REPORTED:
+> -               envp[idx++] =3D "SDEV_UA=3DCAPACITY_DATA_HAS_CHANGED";
+> +               if (add_uevent_var(env, "SDEV_UA=3DCAPACITY_DATA_HAS_CHAN=
+GED"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED:
+> -              envp[idx++] =3D "SDEV_UA=3DTHIN_PROVISIONING_SOFT_THRESHOL=
+D_REACHED";
+> +               if (add_uevent_var(env,
+> +                       "SDEV_UA=3DTHIN_PROVISIONING_SOFT_THRESHOLD_REACH=
+ED"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_MODE_PARAMETER_CHANGE_REPORTED:
+> -               envp[idx++] =3D "SDEV_UA=3DMODE_PARAMETERS_CHANGED";
+> +               if (add_uevent_var(env, "SDEV_UA=3DMODE_PARAMETERS_CHANGE=
+D"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_LUN_CHANGE_REPORTED:
+> -               envp[idx++] =3D "SDEV_UA=3DREPORTED_LUNS_DATA_HAS_CHANGED=
+";
+> +               if (add_uevent_var(env,
+> +                       "SDEV_UA=3DREPORTED_LUNS_DATA_HAS_CHANGED"))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
+> -               envp[idx++] =3D "SDEV_UA=3DASYMMETRIC_ACCESS_STATE_CHANGE=
+D";
+> +               if (add_uevent_var(env,
+> +                       "SDEV_UA=3DASYMMETRIC_ACCESS_STATE_CHANGED"))
+> +                       goto exit;
+> +               break;
+> +       case SDEV_EVT_ERROR:
+> +               if (add_uevent_var(env, "SDEV_ERROR=3D1"))
+> +                       goto exit;
+> +               if (add_uevent_var(env, "SDEV_ERROR_RETRY=3D%u",
+> +                                       evt->error_evt.retry))
+> +                       goto exit;
+> +               if (add_uevent_var(env, "SDEV_ERROR_RESULT=3D%u",
+> +                                       evt->error_evt.result))
+> +                       goto exit;
+> +               if (add_uevent_var(env, "SDEV_ERROR_SK=3D%u",
+> +                                       evt->error_evt.sk))
+> +                       goto exit;
+> +               if (add_uevent_var(env, "SDEV_ERROR_ASC=3D%u",
+> +                                       evt->error_evt.asc))
+> +                       goto exit;
+> +               if (add_uevent_var(env, "SDEV_ERROR_ASCQ=3D%u",
+> +                                       evt->error_evt.ascq))
+> +                       goto exit;
+>                 break;
+>         case SDEV_EVT_POWER_ON_RESET_OCCURRED:
+> -               envp[idx++] =3D "SDEV_UA=3DPOWER_ON_RESET_OCCURRED";
+> +               if (add_uevent_var(env, "SDEV_UA=3DPOWER_ON_RESET_OCCURRE=
+D"))
+> +                       goto exit;
+>                 break;
+>         default:
+>                 /* do nothing */
+>                 break;
+>         }
+>
+> -       envp[idx++] =3D NULL;
+> +       kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, env->env=
+p);
+>
+> -       kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, envp);
+> +exit:
+> +       kfree(env);
+>  }
+>
+>  /**
+> @@ -2693,6 +2733,7 @@ struct scsi_event *sdev_evt_alloc(enum scsi_device_=
+event evt_type,
+>         case SDEV_EVT_LUN_CHANGE_REPORTED:
+>         case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
+>         case SDEV_EVT_POWER_ON_RESET_OCCURRED:
+> +       case SDEV_EVT_ERROR:
+>         default:
+>                 /* do nothing */
+>                 break;
+> @@ -2724,6 +2765,41 @@ void sdev_evt_send_simple(struct scsi_device *sdev=
+,
+>  }
+>  EXPORT_SYMBOL_GPL(sdev_evt_send_simple);
+>
+> +/**
+> + *     sdev_evt_send_error - send error event to uevent thread
+> + *     @sdev: scsi_device event occurred on
+> + *     @gfpflags: GFP flags for allocation
+> + *     @retry: if non-zero, command failed, will retry, otherwise final =
+attempt
+> + *     @result: host byte of result
+> + *     @sk: sense key
+> + *     @asc: additional sense code
+> + *     @ascq: additional sense code qualifier
+> + *
+> + *     Assert scsi device error event asynchronously.
+> + */
+> +void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags,
+> +                        u8 retry, u8 result, u8 sk, u8 asc, u8 ascq)
+> +{
+> +       struct scsi_event *evt;
+> +
+> +       evt =3D sdev_evt_alloc(SDEV_EVT_ERROR, gfpflags);
+> +       if (!evt) {
+> +               sdev_printk(KERN_ERR, sdev, "error event eaten due to OOM=
+: retry=3D%u result=3D%u sk=3D%u asc=3D%u ascq=3D%u\n",
+> +                           retry, result, sk, asc, ascq);
+> +               return;
+> +       }
+> +
+> +       evt->error_evt.retry =3D retry;
+> +       evt->error_evt.result =3D result;
+> +       evt->error_evt.sk =3D sk;
+> +       evt->error_evt.asc =3D asc;
+> +       evt->error_evt.ascq =3D ascq;
+> +
+> +       if (___ratelimit(&sdev->error_ratelimit, "SCSI error"))
+> +               sdev_evt_send(sdev, evt);
+> +}
+> +EXPORT_SYMBOL_GPL(sdev_evt_send_error);
+> +
+>  /**
+>   *     scsi_device_quiesce - Block all commands except power management.
+>   *     @sdev:  scsi device to quiesce.
+> diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
+> index 9fc397a9ce7a4..8519b563e2feb 100644
+> --- a/drivers/scsi/scsi_priv.h
+> +++ b/drivers/scsi/scsi_priv.h
+> @@ -101,6 +101,7 @@ int scsi_eh_get_sense(struct list_head *work_q,
+>                       struct list_head *done_q);
+>  bool scsi_noretry_cmd(struct scsi_cmnd *scmd);
+>  void scsi_eh_done(struct scsi_cmnd *scmd);
+> +extern void scsi_emit_error(struct scsi_cmnd *scmd);
+>
+>  /* scsi_lib.c */
+>  extern void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmn=
+d *cmd);
+> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+> index 4833b8fe251b8..5c311dfc501c3 100644
+> --- a/drivers/scsi/scsi_scan.c
+> +++ b/drivers/scsi/scsi_scan.c
+> @@ -310,6 +310,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scs=
+i_target *starget,
+>         mutex_init(&sdev->inquiry_mutex);
+>         INIT_WORK(&sdev->event_work, scsi_evt_thread);
+>         INIT_WORK(&sdev->requeue_work, scsi_requeue_run_queue);
+> +       ratelimit_state_init(&sdev->error_ratelimit, 5 * HZ, 10);
+>
+>         sdev->sdev_gendev.parent =3D get_device(&starget->dev);
+>         sdev->sdev_target =3D starget;
+> @@ -363,6 +364,9 @@ static struct scsi_device *scsi_alloc_sdev(struct scs=
+i_target *starget,
+>
+>         scsi_change_queue_depth(sdev, depth);
+>
+> +       /* All devices support error events */
+> +       set_bit(SDEV_EVT_ERROR, sdev->supported_events);
+> +
+>         scsi_sysfs_device_initialize(sdev);
+>
+>         if (shost->hostt->sdev_init) {
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index d772258e29ad2..20a537490e9f2 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -1025,6 +1025,7 @@ DECLARE_EVT(capacity_change_reported, CAPACITY_CHAN=
+GE_REPORTED)
+>  DECLARE_EVT(soft_threshold_reached, SOFT_THRESHOLD_REACHED_REPORTED)
+>  DECLARE_EVT(mode_parameter_change_reported, MODE_PARAMETER_CHANGE_REPORT=
+ED)
+>  DECLARE_EVT(lun_change_reported, LUN_CHANGE_REPORTED)
+> +DECLARE_EVT(error, ERROR)
+>
+>  static ssize_t
+>  sdev_store_queue_depth(struct device *dev, struct device_attribute *attr=
+,
+> @@ -1345,6 +1346,7 @@ static struct attribute *scsi_sdev_attrs[] =3D {
+>         REF_EVT(soft_threshold_reached),
+>         REF_EVT(mode_parameter_change_reported),
+>         REF_EVT(lun_change_reported),
+> +       REF_EVT(error),
+>         NULL
+>  };
+>
+> diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+> index 68dd49947d041..5485d3b5853e2 100644
+> --- a/include/scsi/scsi_device.h
+> +++ b/include/scsi/scsi_device.h
+> @@ -64,7 +64,8 @@ enum scsi_scan_mode {
+>  };
+>
+>  enum scsi_device_event {
+> -       SDEV_EVT_MEDIA_CHANGE   =3D 1,    /* media has changed */
+> +       SDEV_EVT_MEDIA_CHANGE   =3D 0,    /* media has changed */
+> +       SDEV_EVT_ERROR          =3D 1,    /* command failed */
+>         SDEV_EVT_INQUIRY_CHANGE_REPORTED,               /* 3F 03  UA repo=
+rted */
+>         SDEV_EVT_CAPACITY_CHANGE_REPORTED,              /* 2A 09  UA repo=
+rted */
+>         SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED,       /* 38 07  UA repo=
+rted */
+> @@ -79,6 +80,19 @@ enum scsi_device_event {
+>         SDEV_EVT_MAXBITS        =3D SDEV_EVT_LAST + 1
+>  };
+>
+> +struct scsi_error_event {
+> +       /* A retry event */
+> +       u8 retry;
+> +       /* Host byte */
+> +       u8 result;
+> +       /* Sense key */
+> +       u8 sk;
+> +       /* Additional sense code */
+> +       u8 asc;
+> +       /* Additional sense code qualifier */
+> +       u8 ascq;
+> +};
+> +
+>  struct scsi_event {
+>         enum scsi_device_event  evt_type;
+>         struct list_head        node;
+> @@ -86,6 +100,9 @@ struct scsi_event {
+>         /* put union of data structures, for non-simple event types,
+>          * here
+>          */
+> +       union {
+> +               struct scsi_error_event error_evt;
+> +       };
+>  };
+>
+>  /**
+> @@ -269,6 +286,7 @@ struct scsi_device {
+>                                 sdev_dev;
+>
+>         struct work_struct      requeue_work;
+> +       struct ratelimit_state  error_ratelimit;
+>
+>         struct scsi_device_handler *handler;
+>         void                    *handler_data;
+> @@ -474,6 +492,8 @@ extern struct scsi_event *sdev_evt_alloc(enum scsi_de=
+vice_event evt_type,
+>  extern void sdev_evt_send(struct scsi_device *sdev, struct scsi_event *e=
+vt);
+>  extern void sdev_evt_send_simple(struct scsi_device *sdev,
+>                           enum scsi_device_event evt_type, gfp_t gfpflags=
+);
+> +extern void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags=
+,
+> +       u8 retry, u8 result, u8 sk, u8 asc, u8 ascq);
+>  extern int scsi_device_quiesce(struct scsi_device *sdev);
+>  extern void scsi_device_resume(struct scsi_device *sdev);
+>  extern void scsi_target_quiesce(struct scsi_target *);
+> --
+> 2.49.0.805.g082f7c87e0-goog
+>
