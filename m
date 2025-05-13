@@ -1,108 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43C72BE7B8;
-	Tue, 13 May 2025 17:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD4F1C84D5;
+	Tue, 13 May 2025 17:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157994; cv=none; b=Q+bQas/Y3SAwtIv41ESx3AdXJTK77v8TzOTIKiV8SDegviNJx0atI2C88unCdGE43/q56rtDYkcJggO0LmJijPHG1ElMZz97gn8Zan3VIlaXkTuQ+3XGSU3aDjJP8cqICxLgwJZxxK5yCBNbVACd1wFE4VuA6F/SmpoOG8nVBfQ=
+	t=1747158038; cv=none; b=mn/vpKJTqod7eMYFnUfzgqbLli2xqK3c55iUayBdSSRFmGjK8OT0XcnSf2J+RhVwKsv/IXb6ca7TLYU0ObSXyCyYQ1CMEyB8eIoVJm7k/W0EOkkDHS/yUD1xJu4QGt9lujOiBC0CQZMNuysfQxBDRIF/EJJkzv+zqrNlm0QR6Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157994; c=relaxed/simple;
-	bh=JBO2B5TsA/L/+cT743TpVRtjxPkZzQj3g9iV6SmgWdU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ulVkuKD0VWUm0fIW7ANhiXi4WW8nuhVHNaYsUdh5bUUbrSvofjDrPdh7NtFQJLroRnszK2N3yYT56AQVMAVc3Ay5SwT2nEVAtpwfL9I//wa9lj4gNWVWYsz+XkbUra1s8wSp1juSyWqJx4x9Tp83WyAm+oHg/d+DUzvS+CYhUSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICU9Bwsr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747158038; c=relaxed/simple;
+	bh=t0/XpU4JadBJ6GwKFenplEEaSC5kW1qBslh+Bi3T1kw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pbpICbJ1AtdLrByyTGTKibhu1kVv2GBTn5OwtjB8WFj2/jBqndx4s66khA7abSOVTeyoDRrxNVH0OsWopyN2cU6Uo/kPy7r/PNTWxOQx1o4kjxLPVwnLcT3xgGi941JetLbTOwYP9MG7YVxH0n6WytashQitVBJ/l2hQtAShcEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Er91PvWy; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICU9Bwsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F131C4CEEF;
-	Tue, 13 May 2025 17:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747157994;
-	bh=JBO2B5TsA/L/+cT743TpVRtjxPkZzQj3g9iV6SmgWdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ICU9BwsrkBrWF9miapRGUzk4Op3TI2eFx9bvawrI1BbnAGaaqJSzaTDUHBzLMgrBE
-	 0dS2fuAjBAoAFPg+UdmOPLdU8pSKNJ5DiuN1B6q9BrdiQkytjP1jCWm8SMWGDYV+AH
-	 eFXPdXeg4hpjiy3YXtZbIS6XYNCbUVyHsZwX6HhjyjWGzsAUYGQJZF4ohkVBe6+GEZ
-	 Q/2sbroNDjn+TRk56DZmimIzFtNb+9ko0sNazsQeZygousU6BR5PfkaTdgZ9Th91pi
-	 csVnDR4yJALC83b1Q59z5mdAM0hKqkQOU1qxGXTYPnurzZztQSUmMxZ6MSMiXwVvJg
-	 jo3t+BLKSAEuQ==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so12375238a12.1;
-        Tue, 13 May 2025 10:39:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUiwnEGuPTz76lzArcK+XmWa8wbtfP/yGFz5CfdMOmOdgqX7b9s33nMPj6erAfoRFIMGI6l8fKFafM=@vger.kernel.org, AJvYcCXFpguxo8aElipOLD6FWnv7QOJCNqYdOm4K+QEoyh/yuwlheDeXIqUeCnlk8QqQIA/q/edInN7XR5/CxJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAKRNE4beQ5hv6b97VyeJb7WJ/Jrn475ZwyDQ/A8NMBLw/O9Z9
-	+eNizQLy84awPySXfjNqANVNEeX8nGo1hlBH2lWqBXGt97Xt8CtD3FSakZRdPsv7LQ+HFogJ/I6
-	vgTQcgsRelOow5ZbRn0QMoIUmk7I=
-X-Google-Smtp-Source: AGHT+IGWyrCNV45055zfuZ/3xIJ/yyJb5GmdMzMjElfcOOsmbymHqModFVVA/oMQQmd4ODkorO8kcqIIENhXcbuGs7s=
-X-Received: by 2002:a17:907:d084:b0:ad2:5525:f28e with SMTP id
- a640c23a62f3a-ad4f747d6d8mr46163266b.39.1747157993157; Tue, 13 May 2025
- 10:39:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Er91PvWy"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747158032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=irfEXLRw0ePs++TyHy3Fjxp4dBF0FDMvktUtW0vNle4=;
+	b=Er91PvWyG3UWI/YZeVJk6w7xuxXsoKWTWlIMFXqE2iiM/bQsCjGydokq5f3OoaXsb01m3w
+	1vWQwbH6IU976N3JmZG6bLSGFDTHO4Rzu7Cr8gko/3wwXcT16IqZw2jr670kSiK4W08LDI
+	XVgzUvwv/pKaDl/TQr6Vw9PHQbfQGdo=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] powerpc/rtas: Replace one-element array with flexible array member
+Date: Tue, 13 May 2025 19:40:01 +0200
+Message-ID: <20250513174003.335857-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421030020.3108405-1-zhenglifeng1@huawei.com> <20250421030020.3108405-3-zhenglifeng1@huawei.com>
-In-Reply-To: <20250421030020.3108405-3-zhenglifeng1@huawei.com>
-From: Chanwoo Choi <chanwoo@kernel.org>
-Date: Wed, 14 May 2025 02:39:15 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH1-CRv-7Uf-vSqocC_QZQ4HRXOV9OyP_LJie3g3KcczSw@mail.gmail.com>
-X-Gm-Features: AX0GCFvOtAQ6ppkOqqnywQzE-DGYzkrp9_WXdL5pO8TqcK7IIfxro6X41AcFS6A
-Message-ID: <CAGTfZH1-CRv-7Uf-vSqocC_QZQ4HRXOV9OyP_LJie3g3KcczSw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] PM / devfreq: Limit max_freq with scaling_min_freq
-To: Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, 
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
-	yubowen8@huawei.com, cenxinghai@h-partners.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Replace the deprecated one-element array with a modern flexible array
+member in the struct rtas_error_log and add the __counted_by_be()
+compiler attribute to improve access bounds-checking via
+CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
 
-Applied it. Thanks.
+No functional changes intended.
 
-On Mon, Apr 21, 2025 at 12:00=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.=
-com> wrote:
->
-> Limit max_freq in devfreq_get_freq_range() with scaling_min_freq to avoid
-> showing an unreachable freq when reading it.
->
-> Use macro clamp to simplify code.
->
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->  drivers/devfreq/devfreq.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 98657d3b9435..2810c84b9f8a 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -152,11 +152,8 @@ void devfreq_get_freq_range(struct devfreq *devfreq,
->                                 (unsigned long)HZ_PER_KHZ * qos_max_freq)=
-;
->
->         /* Apply constraints from OPP interface */
-> -       *min_freq =3D max(*min_freq, devfreq->scaling_min_freq);
-> -       *max_freq =3D min(*max_freq, devfreq->scaling_max_freq);
-> -
-> -       if (*min_freq > *max_freq)
-> -               *min_freq =3D *max_freq;
-> +       *max_freq =3D clamp(*max_freq, devfreq->scaling_min_freq, devfreq=
-->scaling_max_freq);
-> +       *min_freq =3D clamp(*min_freq, devfreq->scaling_min_freq, *max_fr=
-eq);
->  }
->  EXPORT_SYMBOL(devfreq_get_freq_range);
->
-> --
-> 2.33.0
->
->
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/powerpc/include/asm/rtas-types.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
+index 9d5b16803cbb..5d40d187b965 100644
+--- a/arch/powerpc/include/asm/rtas-types.h
++++ b/arch/powerpc/include/asm/rtas-types.h
+@@ -42,8 +42,9 @@ struct rtas_error_log {
+ 	 */
+ 	u8		byte3;			/* General event or error*/
+ 	__be32		extended_log_length;	/* length in bytes */
+-	unsigned char	buffer[1];		/* Start of extended log */
+-						/* Variable length.      */
++
++	/* Start of extended log, variable length */
++	unsigned char	buffer[] __counted_by_be(extended_log_length);
+ };
+ 
+ /* RTAS general extended event log, Version 6. The extended log starts
+-- 
+2.49.0
 
---=20
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
