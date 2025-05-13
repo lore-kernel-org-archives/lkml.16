@@ -1,93 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAFE645;
-	Tue, 13 May 2025 04:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F61189B91;
+	Tue, 13 May 2025 04:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747110741; cv=none; b=i1Xvro7707BGkZngLFkYLhVFHOETrEPUtJoh+ZqhCahGjN9/R8i0zc2C7IO0m/jCFBaO4RWegoOnhFjCsuPBjXXM+d+8wEZUHGXE703HRrelk7tIVZj8XLRkmd7tD8cBb3pxA9M+55GC2qMQLiwtBwN/wwR7iskCOJw0+Yxe9WI=
+	t=1747110778; cv=none; b=eZBXY6Oi/XEnXS3jI+Aa//6ex+5gpogNdyLnjvpzkPk4Wcw78yhOcbv6ST+/GxhWrbSdccKTpsAg8w5Knsjq4M3qSM7da6Bwk3MoHGz2ROtcuNzrgyjzQB6ppK4EIHIQS63wsNYPhM3Bn8/yvyhvkGikcyHJ+8aLL76oC9ZMxaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747110741; c=relaxed/simple;
-	bh=o8iDR24xbfL2rsSEZ1sJwX09SCwQcDR0mH7BGnJxXTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GIdWbtiEbKt/elGqo+jLehS/E237It50sThL3C0jx4C/InG000CCABSqs2ZEByIriwTU2x2+iD+A1HCChoOJRmej+4QUO0e55y56zSNNHHCdZ00H6ucYoNRsl4lmQ5zmj1lpmZH8Fs953xVC06s7YGVOW3VlBn94DnX8ieAHn/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jp/PB0wb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747110778; c=relaxed/simple;
+	bh=glsXX3NzTpFART/SNkif/stFqryAJrvuV/l81shnKKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IvTxTndepQndbUnDZ3FkFcyeY4gCTCBXc2cDS+8zLvM2SyoC4TYRbo3RamRZyIOm6fp32Y4s00APM8DcvrhG5gxNiLLGxJ3UP+hZbTb906c6C/nEpudqh6mEulUFYk8vE1j8RTVAVYMH13c007FqQDr8he2DPrmLhQEEJ0uRTQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=WyjtLEW7; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jp/PB0wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F36C4CEE4;
-	Tue, 13 May 2025 04:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747110740;
-	bh=o8iDR24xbfL2rsSEZ1sJwX09SCwQcDR0mH7BGnJxXTY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jp/PB0wbu/U0ldGVMj0Hg4Bm2D/hxbRB4lwitABmGC/PcTp/RSNP2+O2C3xW3dS3m
-	 xJYmR1qD0wNRGTglEpsN2EwI65j5y1bfzQ2Gw6fxEr9n6OpPuOegIYGkQcFBzUM//D
-	 RJr8JvwsAOW2kmy7c48rP6R3jzH0vtPjIC5Wt+0WwWR7YjuKOTj6hiq98evbWIVWFh
-	 OBacBqvb2bn/pNtNyWVS5aSz1tJ9ALsBoUcPrBqke4Jp1Wh7UlkX25sQ1XABaypKSz
-	 j91i1G0yYktMt5/5hkG1c6xMI8pzVDIMonsN6eo/T0R5HJrIsIfNXyA5Ds6tXwa65p
-	 iLLk+LbogdWew==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-326bb1d3e34so46379571fa.3;
-        Mon, 12 May 2025 21:32:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGLFbMWiX1JC0UnKFBBW8ZTmHCfP3QgoJ1C8IBlqQc9j93kgOWbrZPc+Hz4tA1Oh+dSFNlDpL0SLL3I2z8@vger.kernel.org, AJvYcCVFsGz/4EWQxkbK51fbuGuNBODTmI9fluJ3ty9eKQ3RBOS4xDFwlhoOJ0dN75uqTfkAH60kj4SoGV8y@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/15p5Zsk1sNOPSILnxXW8o0uZU9RiPE0WwOW/bYwFYjdH9qM1
-	Fhcosld6St1jU96GxAXWTCK5CcEIxVKWbTgNwzCNW9FgpjQOl5Qxp7jJOqPqOJM5PnPpKBpfq6/
-	CG2nrMUlLJoOUS4Gs+Q1IXk5sC54=
-X-Google-Smtp-Source: AGHT+IHY3Llz5XOMjuFiZGd6z8ODSxNXGVT2ITgUXCWdNVkKPJBf6NobM4kFbwChnI57esXwLkFHoJlFRngRGP7klFw=
-X-Received: by 2002:a05:651c:150c:b0:30b:9813:b011 with SMTP id
- 38308e7fff4ca-326c4627e6bmr85553211fa.28.1747110739185; Mon, 12 May 2025
- 21:32:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WyjtLEW7"
+Received: from [10.95.65.22] (unknown [167.220.238.86])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D26FF201DB08;
+	Mon, 12 May 2025 21:32:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D26FF201DB08
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747110770;
+	bh=OV7kXzu/atLmoHnZAxCd7MLuce+mPeBMNERqD4Xjfzw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WyjtLEW76E+J/gkzzyr6+pABFvVF3nASn5qsVLuF0/7ui4XAkcxXmyo7nzmDanu8f
+	 oxXpmMwL8SvQKvbDAFnEM5VD62nHkzuCWCQ+pzlhV4OdCTj0GE3SLh4jwkFnzoMknw
+	 yowXCjPnpe24qqhY2PocC3peU/QTSyNAneOkB+CE=
+Message-ID: <686e2f6b-2032-4485-b84b-1ae9bddb9341@linux.microsoft.com>
+Date: Tue, 13 May 2025 10:02:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241222002957.2582212-1-masahiroy@kernel.org>
- <CAK7LNATVrJLPQSCVTxKARm_4wk=Piem1ZHMA-8c8CfaZPs0H7Q@mail.gmail.com> <CAMo8BfKgLgWiTVre_zSy3SMm-tJySgmJpVDphtE7C1kFZsuwZw@mail.gmail.com>
-In-Reply-To: <CAMo8BfKgLgWiTVre_zSy3SMm-tJySgmJpVDphtE7C1kFZsuwZw@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 13 May 2025 13:31:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATT0=TOT0jjC_vfS5Wi+oaenutRnVair5rbCqfPmRDpDw@mail.gmail.com>
-X-Gm-Features: AX0GCFu2ziBT3SNUDUoAYSyWCSywDwx_UoslA3wU5oJaUWKy-mUBeIyvV5Qj8H8
-Message-ID: <CAK7LNATT0=TOT0jjC_vfS5Wi+oaenutRnVair5rbCqfPmRDpDw@mail.gmail.com>
-Subject: Re: [PATCH] xtensa: migrate to the generic rule for built-in DTB
-To: Max Filippov <jcmvbkbc@gmail.com>
-Cc: Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 17, 2025 at 1:27=E2=80=AFPM Max Filippov <jcmvbkbc@gmail.com> w=
-rote:
->
-> On Sun, Mar 16, 2025 at 1:37=E2=80=AFPM Masahiro Yamada <masahiroy@kernel=
-.org> wrote:
-> >
-> > On Sun, Dec 22, 2024 at 9:30=E2=80=AFAM Masahiro Yamada <masahiroy@kern=
-el.org> wrote:
-> > >
-> > > Commit 654102df2ac2 ("kbuild: add generic support for built-in boot
-> > > DTBs") introduced generic support for built-in DTBs.
-> > >
-> > > Select GENERIC_BUILTIN_DTB to use the generic rule.
-> > >
-> > > To keep consistency across architectures, this commit also renames
-> > > CONFIG_BUILTIN_DTB_SOURCE to CONFIG_BUILTIN_DTB_NAME.
-> > >
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> >
-> > Ping?
->
-> Thanks, applied to my xtensa tree.
-> Sorry for the delay.
->
-
-This has not been available in Linus' tree yet.
-
-Will you send a pull request in the next merge window?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] Drivers: hv: Introduce mshv_vtl driver
+To: Saurabh Singh Sengar <ssengar@microsoft.com>,
+ KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc: Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20250512140432.2387503-1-namjain@linux.microsoft.com>
+ <20250512140432.2387503-3-namjain@linux.microsoft.com>
+ <KUZP153MB1444CF7C66D521208B0CAC76BE97A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <KUZP153MB1444CF7C66D521208B0CAC76BE97A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---=20
-Best Regards
-Masahiro Yamada
+
+On 5/12/2025 7:42 PM, Saurabh Singh Sengar wrote:
+> 
+>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+>> Expose devices and support IOCTLs for features like VTL creation,
+>> VTL0 memory management, context switch, making hypercalls,
+>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+>> messages and channel events in VTL2 etc.
+>>
+>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>> ---
+>>   drivers/hv/Kconfig          |   21 +
+>>   drivers/hv/Makefile         |    7 +-
+>>   drivers/hv/mshv_vtl.h       |   52 +
+>>   drivers/hv/mshv_vtl_main.c  | 1783
+>> +++++++++++++++++++++++++++++++++++
+>>   include/hyperv/hvgdk_mini.h |   81 ++
+>>   include/hyperv/hvhdk.h      |    1 +
+>>   include/uapi/linux/mshv.h   |   82 ++
+>>   7 files changed, 2026 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/hv/mshv_vtl.h
+>>   create mode 100644 drivers/hv/mshv_vtl_main.c
+>>
+>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>> index eefa0b559b73..05f990306d40 100644
+>> --- a/drivers/hv/Kconfig
+>> +++ b/drivers/hv/Kconfig
+>> @@ -72,4 +72,25 @@ config MSHV_ROOT
+>>
+>>   	  If unsure, say N.
+>>
+>> +config MSHV_VTL
+>> +	tristate "Microsoft Hyper-V VTL driver"
+>> +	depends on HYPERV && X86_64
+>> +	depends on TRANSPARENT_HUGEPAGE
+>> +	depends on OF
+> 
+> I am aware that OpenHCL works only with DeviceTree and hence we have to
+
+yes, that was the reason for keeping it.
+
+> enable CONFIG_OF, but I am not aware of any dependency in this driver, why
+> we need to enable CONFIG_OF by this driver.
+> 
+> We can always enable CONFIG_OF separately in OpenHCL kernel configs. Please check.
+> 
+> - Saurabh
+
+But this is right, I'll remove it. Just FYI, rest of the configs and
+header files are required for it to compile.
+
+
+Regards,
+Naman
