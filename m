@@ -1,27 +1,27 @@
 Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCEC242D6E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F0E23E35D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129826; cv=none; b=lv8zXK4uG5dQry9d35FVh88NJupne1H47d1ZT0PRjI9xwFq8o475l0PIPMeqGnCSH+GrmjlubDW/ESKA970SDjWyDitUAK7nfpJ8QqXNu3qqz3usWKK9UwYIwBZpJX8ptfryptzDb2LK70qdZVTOXiUgmxo04PIVM9qOkzhbu44=
+	t=1747129844; cv=none; b=PSmcmQRIFL9800YA0kSGxzpG9MhgjSfzslGR3Qitykzpwk5lW6PJbSl0ICg+8vI7hoFo6Pj6k9IryP+oOJQsQGkz4b5K+36zOnPeqUVnWvKT3harLfehMj2CKufJa1n1hK2pmaKt3Y6bssedHgZhx5TXmgwh0pYP518atSbPYuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129826; c=relaxed/simple;
-	bh=63SOELCORMxrKVDUUIzKKFTRBqKDHRIy+LUddzrAvg4=;
+	s=arc-20240116; t=1747129844; c=relaxed/simple;
+	bh=2YncXzplbke0CiVuENDEMM/YVb58EgApc++U9eqskQA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sf6sdngIwNJhiCO5ZM/hzY2eR57Pzxu59zqzgD7OjoxOJStOprLcDkZ+jpWKUDxqSTgdisN0nSGdjAsSWgCw42VvJeLhZSgHD/eEKl//P89hURSHB9WKuyQUcxapPUIbvb71xf27HouW2sDbGODLBELxXXBzehbKQFe8YoiYXd8=
+	 MIME-Version:Content-Type; b=l/1WOrWc9cKYHr5yAZGum64W5NVLOlJaSsuJmnm/GVtiizdwvuagSMF6VJ8HIYF12OYHYkpkbD+hY3I8is6g+Lzg1GFgrpTXb3L9EvgomMvhZz9uwS6CRDar91BDlJKGmLvn4iUFHCmDe8PgKs616agEJDIMXAsUwBR6ZMgxV6Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
 Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 54D9nshY044934
+	by Atcsqr.andestech.com with ESMTPS id 54D9nnDD044857
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 17:49:54 +0800 (+08)
+	Tue, 13 May 2025 17:49:49 +0800 (+08)
 	(envelope-from ben717@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
  (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Tue, 13 May 2025
- 17:49:54 +0800
+ 17:49:49 +0800
 From: Ben Zong-You Xie <ben717@andestech.com>
 To:
 CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
@@ -30,10 +30,12 @@ CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
         <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
-        Ben Zong-You Xie <ben717@andestech.com>
-Subject: [PATCH v3 8/9] riscv: dts: andes: add Voyager board device tree
-Date: Tue, 13 May 2025 17:49:32 +0800
-Message-ID: <20250513094933.1631493-9-ben717@andestech.com>
+        Ben Zong-You Xie <ben717@andestech.com>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: [PATCH v3 4/9] dt-bindings: interrupt-controller: add Andes machine-level software interrupt controller
+Date: Tue, 13 May 2025 17:49:28 +0800
+Message-ID: <20250513094933.1631493-5-ben717@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250513094933.1631493-1-ben717@andestech.com>
 References: <20250513094933.1631493-1-ben717@andestech.com>
@@ -48,75 +50,95 @@ Content-Type: text/plain
 X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54D9nshY044934
+X-MAIL:Atcsqr.andestech.com 54D9nnDD044857
 
-Introduce the device tree support for Voyager development board.
+Add the DT binding documentation for Andes machine-level software
+interrupt controller.
 
-Currently only support booting into console with only uart,
-other features will be added later.
+In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
+second time with all interrupt sources tied to zero as the software
+interrupt controller (PLICSW). PLICSW can generate machine-level software
+interrupts through programming its registers.
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
 ---
- arch/riscv/boot/dts/Makefile                |  1 +
- arch/riscv/boot/dts/andes/Makefile          |  2 ++
- arch/riscv/boot/dts/andes/qilai-voyager.dts | 28 +++++++++++++++++++++
- 3 files changed, 31 insertions(+)
- create mode 100644 arch/riscv/boot/dts/andes/Makefile
- create mode 100644 arch/riscv/boot/dts/andes/qilai-voyager.dts
+ .../andestech,plicsw.yaml                     | 54 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
 
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index 64a898da9aee..3b99e91efa25 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- subdir-y += allwinner
-+subdir-y += andes
- subdir-y += canaan
- subdir-y += microchip
- subdir-y += renesas
-diff --git a/arch/riscv/boot/dts/andes/Makefile b/arch/riscv/boot/dts/andes/Makefile
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
 new file mode 100644
-index 000000000000..c545c668ef70
+index 000000000000..eb2eb611ac09
 --- /dev/null
-+++ b/arch/riscv/boot/dts/andes/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_ANDES) += qilai-voyager.dtb
-diff --git a/arch/riscv/boot/dts/andes/qilai-voyager.dts b/arch/riscv/boot/dts/andes/qilai-voyager.dts
-new file mode 100644
-index 000000000000..fa7d2b32a9b4
---- /dev/null
-+++ b/arch/riscv/boot/dts/andes/qilai-voyager.dts
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2025 Andes Technology Corporation. All rights reserved.
-+ */
++++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/andestech,plicsw.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include "qilai.dtsi"
++title: Andes machine-level software interrupt controller
 +
-+/ {
-+	model = "Voyager";
-+	compatible = "andestech,voyager", "andestech,qilai";
++description:
++  In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
++  second time with all interrupt sources tied to zero as the software interrupt
++  controller (PLIC_SW). PLIC_SW directly connects to the machine-mode
++  inter-processor interrupt lines of CPUs, so RISC-V per-CPU local interrupt
++  controller is the parent interrupt controller for PLIC_SW. PLIC_SW can
++  generate machine-mode inter-processor interrupts through programming its
++  registers.
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++maintainers:
++  - Ben Zong-You Xie <ben717@andestech.com>
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++properties:
++  compatible:
++    items:
++      - enum:
++          - andestech,qilai-plicsw
++      - const: andestech,plicsw
 +
-+	memory@400000000 {
-+		device_type = "memory";
-+		reg = <0x4 0x00000000 0x4 0x00000000>;
-+	};
-+};
++  reg:
++    maxItems: 1
 +
-+&uart0 {
-+	status = "okay";
-+};
--- 
++  interrupts-extended:
++    minItems: 1
++    maxItems: 15872
++    description:
++      Specifies which harts are connected to the PLIC_SW. Each item must points
++      to a riscv,cpu-intc node, which has a riscv cpu node as parent.
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts-extended
++
++examples:
++  - |
++    interrupt-controller@400000 {
++      compatible = "andestech,qilai-plicsw", "andestech,plicsw";
++      reg = <0x400000 0x400000>;
++      interrupts-extended = <&cpu0intc 3>,
++                            <&cpu1intc 3>,
++                            <&cpu2intc 3>,
++                            <&cpu3intc 3>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a0ccac1cca29..645d7137cb07 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20728,6 +20728,7 @@ F:	include/linux/irqchip/riscv-imsic.h
+ RISC-V ANDES SoC Support
+ M:	Ben Zong-You Xie <ben717@andestech.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+ F:	Documentation/devicetree/bindings/riscv/andes.yaml
+
+ RISC-V ARCHITECTURE
+--
 2.34.1
-
