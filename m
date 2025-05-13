@@ -1,162 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE96D28640E;
-	Tue, 13 May 2025 13:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB428640E;
+	Tue, 13 May 2025 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747143551; cv=none; b=O3YggUW94MZxaoVEAa6yL0QYwbn2Ysxkt5WND38QCxpYC0IfLvNGjQ2UGLjaX0inANj5y2GntIxPQGqkitskP8zI3PvtXxYQZ7hz/f6lKlhpfVPu3lfLDH8btuN6o2oV3RBlO2UO5NoGW9Zo5F9+h7qEeCqRniHj5WAMnc4SC6w=
+	t=1747143580; cv=none; b=McdGFz7D1v55pQlvwuPIkCsRh3twXyNZ1fBWxjmTFC8+IjMPFGAylGu3Q2PZCc3ahafsgSiV8fhK6WmEKfC1BrMCYz3nMttPGKydyAr9f8a7119v4LYkXczGvAUpcO0mOWgHQHLuFCCJmw159aagXijxgFNY1/rLwnC02NZUV5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747143551; c=relaxed/simple;
-	bh=msob1qipX3+JtDxisx9UwJX1EHZgMW1H2/X4woFM/wk=;
+	s=arc-20240116; t=1747143580; c=relaxed/simple;
+	bh=x4d59fbZ6X9rBfTcqBtwPRFZoK7UoseJZVn6GZygBM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ictDEUiQhJRdRuq4j924DEZ+biXwdYahEezatzQWKAmLl4Lx1LejtxVcN2CrWdpQt5xJDRr4lMwZQfrJLlvZMo+UAQvyafV0X8U6dmx0K/xbAClCb2iPV0ZXt+nFWDrMk/x2b0ymVnH7h5O5uLk/mX7aAGjWPS0cbHjASPPYxMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fxu/sVpo; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=f03D56oD6bctRgGTSkgB6K/8f1bRzbYi8y5p3Pexv8klhgConvkLWG8OjH1rA8YRtoFAzR+v18Wn+2ykj6n5FTs431iIWOG1+sfgzJUlqX1yHV3ISlflRqsNK+TBlpGEtN+dgdkhT+lkWMOu77Rd+JbLz5RCaAjnryVvuN+jrn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+jFVjqA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fxu/sVpo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747143550; x=1778679550;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=msob1qipX3+JtDxisx9UwJX1EHZgMW1H2/X4woFM/wk=;
-  b=Fxu/sVpoMttpulczGwVtxNwYojabnbdQZk6QYdKgGIUzutCABwz8sv5G
-   LMtx8Chg9xI5O525BOFYBGYwH7oKcSqZ0vCF1d+wEF2gkvrWuSkogcxaV
-   SS1nTx4NFXz8nglmyXLYNxWA2ic9dCDgEpReYlgYex3wGL+2IrGtqO4Hy
-   gripm3Ogho6e5nXd57LmI6OX9lBcGRjnY6afN3xSzprUC2MxphbbtvU7Z
-   37747hb/j2ShTc0Hd4fIrsoyEZei0JJk8Bdjp/9sdLMMDqIJC46mPRKSk
-   wW9NebOrjsbXskJb3DcH79DaNf2SV3erztQ9jBrOpWzde9wTOFdAv3eGx
-   w==;
-X-CSE-ConnectionGUID: dDKLXlc3QQyO+y5Sanmkww==
-X-CSE-MsgGUID: NugCQfIzRvmshIzAMDpnmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="36615448"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="36615448"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 06:39:09 -0700
-X-CSE-ConnectionGUID: r3WxKfrgSp6+nGbmN2CTuA==
-X-CSE-MsgGUID: k3lOBvBySteJTy+gX2ylGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="137635515"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa006.jf.intel.com with SMTP; 13 May 2025 06:39:06 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 13 May 2025 16:39:05 +0300
-Date: Tue, 13 May 2025 16:39:05 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Cosmo Chou <chou.cosmo@gmail.com>
-Cc: badhri@google.com, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cosmo.chou@quantatw.com
-Subject: Re: [PATCH v2] usb: typec: tcpm: Use configured PD revision for
- negotiation
-Message-ID: <aCNLeX1k34BSgPOV@kuha.fi.intel.com>
-References: <20250513130834.1612602-1-chou.cosmo@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+jFVjqA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13C4C4CEE4;
+	Tue, 13 May 2025 13:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747143579;
+	bh=x4d59fbZ6X9rBfTcqBtwPRFZoK7UoseJZVn6GZygBM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+jFVjqAP1rX82EQwPK/SLrflccRtQQkVMnGmM0VhfgHMT6K2pcbRWVFIm2AebsWL
+	 LG7tnoggsI5C4wA4P9t3mgqWw8AAQAxeAC6saO7t0TGNH+U7L8K/Wk0ktYc+/q0FVR
+	 8ByB2oI4bs08AASWF4vN/I90pF1VrvdLFEQpJnBCLbQgN9/L5z59iZ+s1HjH6GwzZF
+	 u08UJbitIHUZKH1HwUhz8U8g609eOzYSPVzDCOrzg7rdLKMKc4KVv1VUxhcVKdBF9d
+	 o3cU5aRJ/mMktwmvaQp3Xc8m8551J53caq1kj59k0wg+KljavLmKqGi+ArFV4lI+yq
+	 oSuTCFUW9mKAw==
+Date: Tue, 13 May 2025 15:39:35 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 0/3] Standardize link status check to return
+ bool
+Message-ID: <aCNLl-Kq0DPwm2Iq@ryzen>
+References: <20250510160710.392122-1-18255117159@163.com>
+ <20250513102115.GA2003346@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250513130834.1612602-1-chou.cosmo@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250513102115.GA2003346@rocinante>
 
-On Tue, May 13, 2025 at 09:08:34PM +0800, Cosmo Chou wrote:
-> Initialize negotiated_rev and negotiated_rev_prime based on the port's
-> configured PD revision (rev_major) rather than always defaulting to
-> PD_MAX_REV. This ensures ports start PD communication using their
-> appropriate revision level.
+Hello Krzysztof,
+
+On Tue, May 13, 2025 at 07:21:15PM +0900, Krzysztof Wilczyński wrote:
+> > ---
+> > Changes for RESEND:
+> > - add Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> This allows proper communication with devices that require specific
-> PD revision levels, especially for the hardware designed for PD 1.0
-> or 2.0 specifications.
-> 
-> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
-> ---
-> Change log:
-> 
-> v2:
->   - Add PD_CAP_REVXX macros and use switch-case for better readability.
-> 
-> ---
->  drivers/usb/typec/tcpm/tcpm.c | 29 +++++++++++++++++++++++++----
->  1 file changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-> index 8adf6f954633..48e9cfc2b49a 100644
-> --- a/drivers/usb/typec/tcpm/tcpm.c
-> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> @@ -313,6 +313,10 @@ struct pd_data {
->  	unsigned int operating_snk_mw;
->  };
->  
-> +#define PD_CAP_REV10	0x1
-> +#define PD_CAP_REV20	0x2
-> +#define PD_CAP_REV30	0x3
-> +
->  struct pd_revision_info {
->  	u8 rev_major;
->  	u8 rev_minor;
-> @@ -4665,6 +4669,25 @@ static void tcpm_set_initial_svdm_version(struct tcpm_port *port)
->  	}
->  }
->  
-> +static void tcpm_set_initial_negotiated_rev(struct tcpm_port *port)
-> +{
-> +	switch (port->pd_rev.rev_major) {
-> +	case PD_CAP_REV10:
-> +		port->negotiated_rev = PD_REV10;
-> +		break;
-> +	case PD_CAP_REV20:
-> +		port->negotiated_rev = PD_REV20;
-> +		break;
-> +	case PD_CAP_REV30:
-> +		port->negotiated_rev = PD_REV30;
-> +		break;
-> +	default:
-> +		port->negotiated_rev = PD_MAX_REV;
-> +		break;
-> +	}
-> +	port->negotiated_rev_prime = port->negotiated_rev;
-> +}
+> Resending a patch is not a place to add new tags.
 
-Do we need this? Couldn't you just add one to rev_major?
+While I realize that:
+https://docs.kernel.org/process/submitting-patches.html#don-t-get-discouraged-or-impatient
 
-        port->negotiated_rev = port->pd_rev.rev_major + 1;
-        port->negotiated_rev_prime = port->pd_rev.rev_major + 1;
+states:
+"""
+"RESEND" only applies to resubmission of a patch or patch series which
+have not been modified in any way from the previous submission.
+"""
 
-Or am I missing something?
+I would assume that this only refers to the commit log and code,
+and that picking up tags has to be an acceptable exception.
 
-thanks,
+If I take myself as an example, I would not be happy if I spent time
+reviewing a large patch series, but because the maintainers somehow
+missed that series, so the patch author has to RESEND it (without
+picking up tags), my Reviewed-by tags get lost.
 
->  static void run_state_machine(struct tcpm_port *port)
->  {
->  	int ret;
-> @@ -4782,8 +4805,7 @@ static void run_state_machine(struct tcpm_port *port)
->  		typec_set_pwr_opmode(port->typec_port, opmode);
->  		port->pwr_opmode = TYPEC_PWR_MODE_USB;
->  		port->caps_count = 0;
-> -		port->negotiated_rev = PD_MAX_REV;
-> -		port->negotiated_rev_prime = PD_MAX_REV;
-> +		tcpm_set_initial_negotiated_rev(port);
->  		port->message_id = 0;
->  		port->message_id_prime = 0;
->  		port->rx_msgid = -1;
-> @@ -5048,8 +5070,7 @@ static void run_state_machine(struct tcpm_port *port)
->  					      port->cc2 : port->cc1);
->  		typec_set_pwr_opmode(port->typec_port, opmode);
->  		port->pwr_opmode = TYPEC_PWR_MODE_USB;
-> -		port->negotiated_rev = PD_MAX_REV;
-> -		port->negotiated_rev_prime = PD_MAX_REV;
-> +		tcpm_set_initial_negotiated_rev(port);
->  		port->message_id = 0;
->  		port->message_id_prime = 0;
->  		port->rx_msgid = -1;
-> -- 
-> 2.43.0
 
--- 
-heikki
+Kind regards,
+Niklas
