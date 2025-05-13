@@ -1,127 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33CFEC5;
-	Tue, 13 May 2025 07:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97137A93D;
+	Tue, 13 May 2025 07:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122296; cv=none; b=gs2WkSTEAjxj6tPw8kx7aGaQobDEYUSd5xqWSp6H29LtIiEzf2XDThVMloRuqpjS1vtbxUnyGM2819Io2lLzMz/SXh0GATDzyZop3XzqhDhysvWjcLvZRJnVS9uz0a02eq52cFeOMNZEB6MFZoAl2SebRHYSpXzduUUnzskAI8Y=
+	t=1747122408; cv=none; b=umpdDBJp194Uv6nrfdoZ6aBL7AvVX/yvZPh1ZzkrWSeOgqaFXLVFTLPmlZXp1wMhkrH1XfSdBlI6LAO/ndiiXyQ8Sy8Y3HFSEePGikznJ4ddHmLTgq4uZaXsTAnefIuM4IGgNk8tDO3Zh7uWWCt19qB129TcbPUQnhd56U8ZAXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122296; c=relaxed/simple;
-	bh=XhHpleA0OzZhqpa3rjrh6RL90cUK1WoFGX417izBmjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mG4Hxsw5BeT1MG0l/VpODo5JwYfQt9DnCqRJb1L/GR1id+tiWwj5RabrzGgcxaSAOaA2FbXxasD4QHjRj6cmC7M1uvq6YTOlk0INEj9B/id+43cP9kYNoCoBLAK9LkF/yS8uauS4CzfW6mmL5t4sylNWxFCwSRYAvzBEBQnx/0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lv1IzLJS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747122408; c=relaxed/simple;
+	bh=8FBiqhN5H35RaYROUBev4SesBXxxx5NEMaLO+Qky6aQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=U76yQ4SjjeU5Tq5n+IOnVW3ZcgA8Sf/2tk7s+GA3CkB/QPW23kib9gDnzqiahFYKW1DbUC/JBi0Z4HYgPLA+c0QtzKdgfGMueshkyte44c2YcEsd5XuQTv2++5IldLDgfWP6jzdLmAZJzyinJTF0y6Erf/E0yIhHFD+K6jgJN58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nd6wse+Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XSKuUMrw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lv1IzLJS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82282C4CEE4;
-	Tue, 13 May 2025 07:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747122295;
-	bh=XhHpleA0OzZhqpa3rjrh6RL90cUK1WoFGX417izBmjg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Lv1IzLJSPASGDbptJtX+eiszvazDe2Hvhd8sSg/ePoxgJtrnBHWY+qdXM83MXEqFd
-	 tzsxvYbgClJ8I5f0oz9qZxuvnT+M8cAWhTFp5ybmUmFr8tBHj+QNAQYQNkeEJpMdQL
-	 nAEB2ernE4oCIfxUIG3AUYea8AGht/YR8fasEMx+D+KJ/Z4jhBAH1SW70VwrHWY8Jb
-	 fiRtwNZa+GCpiVNNuiJXBKmdJIQwykp9v+OCJZLn99wLCdG2HtaZt61SDUUk29TWaR
-	 LQq+N713ma/a0IvYyMHf+2E6Z7IZWWFzpcU6NxS1loiLtmm3bc4V+scia5oGc45tks
-	 e+vX9oiJVHTSg==
-Message-ID: <8199958e-fd77-4037-9909-181bfa21e92c@kernel.org>
-Date: Tue, 13 May 2025 09:44:50 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nd6wse+Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XSKuUMrw"
+Date: Tue, 13 May 2025 07:46:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747122404;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mbk6bgKEKCMg9tpzobjGkIX/TElNPj9RwXo/ZFwMz8=;
+	b=Nd6wse+Z4XK31NOzX9JGPhzFp3y/JXn0dXYDvC2Sjba/250UkHJdQsAYkG04c1XZzXp7qT
+	ueZ3OTDzDdN0G4cu64S8kkHiE1BvM0c7ZatMzjvCb+bjRw/Y9hmn3bLQ0hk3HfR50NOgRH
+	4YWZhqXQ/862TEA6p9d5HLoPfozx1WnknJNsrt23Op8LORbpbeelHqSQUVqfVAXgA5Zi1z
+	7BSh/RM63Om92fnjq9N//CVO3n4nZShdZAFTVfx+0ZWQqIFMpuZLUCjN1cf1o34JaMa8YL
+	AtkoB4o45Q45ugSfRc0nROMS5sD4+B1NPCo4PmLLOC3nCWU+9Wdz54d+sOP8UQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747122404;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mbk6bgKEKCMg9tpzobjGkIX/TElNPj9RwXo/ZFwMz8=;
+	b=XSKuUMrw8+SGMZFdd/LaDTP4paQ4Xjg+BWyOAxw8NW08HIqKtbgk/2hBfVBOt+KCfTX92W
+	HZ58FNNBIlsswQDw==
+From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq: Consistently use '%u' format specifier for
+ unsigned int variables
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250509154643.1499171-1-andriy.shevchenko@linux.intel.com>
+References: <20250509154643.1499171-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
-To: leo.jt.wang@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- george.kw.lee@fii-foxconn.com, leo.jt.wang@fii-foxconn.com
-References: <6822b830.050a0220.27a24d.d064@mx.google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <6822b830.050a0220.27a24d.d064@mx.google.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174712240369.406.8331862858808951704.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 13/05/2025 05:10, leo.jt.wang@gmail.com wrote:
-> From: Leo Wang <leo.jt.wang@fii-foxconn.com>
-> 
-> Document the new compatibles used on Meta Clemente.
-> 
-> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
-> ---
->  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
->  1 file changed, 1 insertion(+)
+The following commit has been merged into the irq/core branch of tip:
 
-<form letter>
-This is a friendly reminder during the review process.
+Commit-ID:     47af06c9d31fe558493de4e04f9a07847dc4992f
+Gitweb:        https://git.kernel.org/tip/47af06c9d31fe558493de4e04f9a07847dc4992f
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Fri, 09 May 2025 18:46:42 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 13 May 2025 09:43:32 +02:00
 
-It looks like you received a tag and forgot to add it.
+genirq: Consistently use '%u' format specifier for unsigned int variables
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+There are three cases in the genirq code when the irq, as an unsigned
+integer variable, is converted to text representation by sprintf().
+In two cases it uses '%d' specifier which is for signed values. While
+it's not a problem right now, potentially it might be in the future
+in case too big (> INT_MAX) number will appear there.
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+Consistently use '%u' format specifier for @irq which is declared as
+unsigned int in all these cases.
 
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250509154643.1499171-1-andriy.shevchenko@linux.intel.com
 
-Best regards,
-Krzysztof
+---
+ kernel/irq/debugfs.c | 2 +-
+ kernel/irq/proc.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index 9004a17..3d6a5b3 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -230,7 +230,7 @@ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
+ 	if (!irq_dir || !desc || desc->debugfs_file)
+ 		return;
+ 
+-	sprintf(name, "%d", irq);
++	sprintf(name, "%u", irq);
+ 	desc->debugfs_file = debugfs_create_file(name, 0644, irq_dir, desc,
+ 						 &dfs_irq_ops);
+ }
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 94eba9a..29c2404 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -309,7 +309,7 @@ static bool name_unique(unsigned int irq, struct irqaction *new_action)
+ 
+ void register_handler_proc(unsigned int irq, struct irqaction *action)
+ {
+-	char name [MAX_NAMELEN];
++	char name[MAX_NAMELEN];
+ 	struct irq_desc *desc = irq_to_desc(irq);
+ 
+ 	if (!desc->dir || action->dir || !action->name || !name_unique(irq, action))
+@@ -345,7 +345,7 @@ void register_irq_proc(unsigned int irq, struct irq_desc *desc)
+ 		return;
+ 
+ 	/* create /proc/irq/1234 */
+-	sprintf(name, "%d", irq);
++	sprintf(name, "%u", irq);
+ 	desc->dir = proc_mkdir(name, root_irq_dir);
+ 	if (!desc->dir)
+ 		return;
