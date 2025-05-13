@@ -1,122 +1,127 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8B31A3A8D;
-	Tue, 13 May 2025 20:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB181A3A8D;
+	Tue, 13 May 2025 20:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747168318; cv=none; b=M7FvdZJN5xQeZt0mPRYRANUC4hhhnpZHWG7RJPsIMPdk72Bmyf/qt+/wmw/UJaszAT48mOuLEYAFp2iMUQjv4UWyv/vqgxZD5E85ZtSdzL8Qa+lcYdJImDILwAUR8sITVmwYslff6+tubo1wqcazS3C6N+nxRu+R1an+4pOsRDY=
+	t=1747168333; cv=none; b=pagZYc+mh3VcGYcTwoYSSl2E2QHyBW+FQG54+aJz3Fhey+B2PTPuehohGW1sxpaebB5wmueCZBf8na0yU9yblg+y2IBYjKq+KXMZxawmKJetl9o/vd+uZZmlHu8iqMWIDvwvbIjGYZfIgIV+HFX9z9wGtVc0a5p2JJOOMY8E5Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747168318; c=relaxed/simple;
-	bh=jfRrkp9lyFao9Pp5oLQGET38LS9Y36udY/vg3tP6iQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bj+eyHF2B6ymqxMDqhhpjxQ3U1Nj9/2XK10hrvYx3m1gtr82JfdEQifk/WGoeRgoBCDSevlF/z4JxqGaQjuGchWwTPBSDnzf44SizEsyHPbsAAFqjj5dw4wbdhB5LwYjZaW3RTxdbHVoKpnVCILPPjo0XqXt6CqJwaZsRDj8SWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvaZGEKl; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747168333; c=relaxed/simple;
+	bh=9ClAyXFYyf/KimdcllxUlZHEyjDVlPIU7gojGLCxE8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GsFy/hTxM2TznFV9DSEX5s1IGqnz02nNDyEro9+nhdQT4aNMBzdjwbuzZ+6Dhee6Uzd9nlBjSFxwu86BNM+GhxZ6Gv6Kp/oMWh68o1jEObv/2c0KIA3gjcD12DEUghYsIJ9G8HwPPMLogoIuP4hG7sQHoGFSb99Fnp8kzKzRpN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwyzt79s; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvaZGEKl"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad2452e877aso556196066b.3;
-        Tue, 13 May 2025 13:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747168315; x=1747773115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WCZ2i6E0I6gwRQJDyVBo1njeILo9WXLxHiX21CXlaCc=;
-        b=XvaZGEKlJvy1HHULWaR5U/QXynbX+3IjkFvrPgs/f2f8JuqozR4z2uPv8B71CR357v
-         OdxFZ/lhQMRVDwI7cZRtMrWF1i3Q+wUx+NbEnry0KECazC3ClvLMdgZTH+sOtukaEbFi
-         TTSReEf+/tKxm4AUFs3kyzw0Ym0941GSBdBgRgMe/T85OJmLg43NY2arqLNfZ2c3di2V
-         OaNKQ8QDfTg9KuFqAEfreoSjm7ipkomB9+H0SYL1lOWIBdBJFjb/sAoxGPeGoNCxVuYr
-         tdAtDCAGoy05RhzaPY43bLJQkNUbfA+TD0yY38cACeDM8s+vfmiSHl85kNjK/L6rpcoy
-         pHYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747168315; x=1747773115;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WCZ2i6E0I6gwRQJDyVBo1njeILo9WXLxHiX21CXlaCc=;
-        b=Ps8ruM7wHeYmCNg+l7NvoHb2UGVKd0Idiw93fuXu8yaIrdK+a8UpkIU5ZY7eLOw3Vc
-         k+NjCwhCRYKOraFfeGUXl5eWEBW7caPK68lvMBU1qN0aFXfQyCsgjGuMhsPt+wUqiGnC
-         CCniJYaQTH7FsG2uBtiN6hHGzrtvcD2eJLrDNvPuG2GwM5WvyV0m7vnfUkVRV7Sj3Ad3
-         9/dCa3pR9hrJnPOXHs2oVlRYADR35S/I9vj6gEnupP5/ihlwvpRTpAh5xkxBEoZ+CFHv
-         xRaTSfGS8OR62H/VKAo6ETT0+Rml1G1+BIuFn7eBe4ULPqECDZFLd2/wwip5QU1CkEmf
-         UWvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX08Vihbke2BAO28IJpEC9mPaDwhCgfLvztSa/bTqJnvaroxQWKnlYTx3Kaqrv5BSx+NKWJhxzaMS1O@vger.kernel.org, AJvYcCX3OWApLgksW/llpb7F8aieV6CospQBoFJNQwF4ZElFbC0Ss2S3zsB68W2FJljPSBMstJrrxMVNPHxy0xJ9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrDIfrYK9nRuTQ/P4yycTqMzdL7FnPI+dsw1PQw1ku5eio3Ide
-	swrhE6AdSU9JGVpTJdglV/Hx6E5hWwMqLX1E4ZxnvmFXujNxk8Ty
-X-Gm-Gg: ASbGncvMXWx5kjtkSwNdHirXGgHQZlhVr13G/2CRk3L2unYsW2c9vuT1MlTJko6Yaj5
-	qNRUDgVTF9tF8AohzDFF5OPp1TnHSp1d+VvCDIqjPm5lsR6cxlFkMtaPHJ+ynuvTPuWPHgMKKtd
-	+hebmC49i4EFTqsCgsjzZIBeCadlC5oO2vftPyFpwo6MEfjZZi2S/rJjQBv4PqmyBmg+58vzWw0
-	x/IUAP8oWQ1zskOj16tme1sj2JIKRK9DnM3r/PgbnxCk+2YJQ7wlQ7zff/3wjSTJZnKUVGX6uBD
-	OgYs6x1RTiWas2zOBM5Pm0ufd3kX3xtGQ6qSNo00J/LKFziO+ulBVLCguDjhgQU0
-X-Google-Smtp-Source: AGHT+IHjQ1dMS6usnLiHaz4sXCz7Jck/zY0kS9uEoTI505F+c6LZUIo6wME/2RdA32p259FKoLkbrQ==
-X-Received: by 2002:a17:907:7d8e:b0:ad2:50ef:4930 with SMTP id a640c23a62f3a-ad4f715a442mr96322466b.33.1747168315249;
-        Tue, 13 May 2025 13:31:55 -0700 (PDT)
-Received: from giga-mm.. ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad2192c8508sm819349766b.9.2025.05.13.13.31.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 13:31:54 -0700 (PDT)
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	sophgo@lists.linux.dev
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: dts: sophgo: cv18xx: Add RTCSYS device node
-Date: Tue, 13 May 2025 22:31:25 +0200
-Message-ID: <20250513203128.620731-1-alexander.sverdlin@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwyzt79s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747168331; x=1778704331;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=9ClAyXFYyf/KimdcllxUlZHEyjDVlPIU7gojGLCxE8Q=;
+  b=bwyzt79s/0VSUCuKJm9ldXYzSDrfTUHlIleaB09nh0KCjretkno+aYrw
+   LEza8PGW0TAi0rr8YGeUCXwdNIwTKEpk4X1Xs2+Pt5QtQW+YNkGy4+1D0
+   H91oUBuEp2N8FAc65gb1Ax/grVHkzrLvKWWsQl6zf6CwIreGlEiAAiXCX
+   f+ReuDW00baPncW8CRj1/gvm3tDn3N7aws6wPwHkABd/unc7a1DC0RECX
+   Olv4sudc3SWuVYNhZHhlPH4A5Iz0AW7ZXJUPP3Sm5H1E6INnd/VkOum4M
+   5umA536Ru+ToNI+IQ8F2UXjq/mqPBvPjBg5zSg7uUXY2OJH4UapjF9tFd
+   w==;
+X-CSE-ConnectionGUID: 09i1iwByReWPYlQ29aR7aw==
+X-CSE-MsgGUID: ybqYYjbeTDSUcgkl9P385g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="59670931"
+X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
+   d="scan'208";a="59670931"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 13:32:10 -0700
+X-CSE-ConnectionGUID: HFvewhuwRYWMPaJnooLFBw==
+X-CSE-MsgGUID: 2X4MJv+6S1ypdKI7a53a+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,286,1739865600"; 
+   d="scan'208";a="142702055"
+Received: from lbogdanm-mobl3.ger.corp.intel.com (HELO [10.124.221.92]) ([10.124.221.92])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 13:32:10 -0700
+Message-ID: <49808711-a5af-488a-9fd1-246c4da10100@intel.com>
+Date: Tue, 13 May 2025 13:32:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/its: Fix build errors when CONFIG_MODULES=n
+From: Dave Hansen <dave.hansen@intel.com>
+To: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+References: <20250513025839.495755-1-ebiggers@kernel.org>
+ <688ec9f5-b59a-46c0-97d9-f4d0635fac6e@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <688ec9f5-b59a-46c0-97d9-f4d0635fac6e@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add the RTCSYS MFD node: in Cvitek CV18xx and its successors RTC Subsystem
-is quite advanced and provides SoC power management functions as well.
+On 5/13/25 11:54, Dave Hansen wrote:
+> On 5/12/25 19:58, Eric Biggers wrote:
+>> From: Eric Biggers <ebiggers@google.com>
+>>
+>> Fix several build errors when CONFIG_MODULES=n, including the following:
+>>
+>> ../arch/x86/kernel/alternative.c:195:25: error: incomplete definition of type 'struct module'
+>>   195 |         for (int i = 0; i < mod->its_num_pages; i++) {
 
-The SoC family also contains DW8051 block (Intel 8051 compatible CPU core)
-and an associated SRAM. The corresponding control registers are mapped into
-RTCSYS address space as well.
+Linus, could you pick this one up directly, please? The thread has acks
+from a few folks already.
 
-Link: https://github.com/sophgo/sophgo-doc/tree/main/SG200X/TRM
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
----
- arch/riscv/boot/dts/sophgo/cv180x.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The normal x86/urgent branch doesn't have this bug yet and I don't want
+to merge the existing pile of fixes with your tree at a completely
+random point.
 
-diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-index ed06c3609fb2..280c45bd3b3d 100644
---- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-@@ -307,5 +307,17 @@ dmac: dma-controller@4330000 {
- 			snps,data-width = <2>;
- 			status = "disabled";
- 		};
-+
-+		rtc@5025000 {
-+			compatible = "sophgo,cv1800b-rtc", "syscon";
-+			reg = <0x5025000 0x2000>;
-+			interrupts = <SOC_PERIPHERAL_IRQ(1) IRQ_TYPE_LEVEL_HIGH>,
-+				     <SOC_PERIPHERAL_IRQ(2) IRQ_TYPE_LEVEL_HIGH>,
-+				     <SOC_PERIPHERAL_IRQ(3) IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "alarm", "longpress", "vbat";
-+			clocks = <&clk CLK_RTC_25M>,
-+				 <&clk CLK_SRC_RTC_SYS_0>;
-+			clock-names = "rtc", "mcu";
-+		};
- 	};
- };
--- 
-2.49.0
-
+Oh, and you called it ... "done without public testing" strikes again.
