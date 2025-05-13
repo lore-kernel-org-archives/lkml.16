@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A568C2BF97A;
-	Tue, 13 May 2025 15:13:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809F22BEC39;
+	Tue, 13 May 2025 15:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747149197; cv=none; b=q6gzkRFpFN12bkBwb248gK05DaYU5IWDi2Okvi6m/6ez6uMsttZ/ywXdNTXK1tOODnu9OdnzHB0+BuxTXGjTtw9DhUdsQNYhA7e1sxaxZeGaAgQIoyTjy1kl2z39/s8mhovhxJYUMEOgL13HiwwHIwH+ESZrorI7lf7+eK6vApg=
+	t=1747149199; cv=none; b=YDvVuxW9mpSkp5ETosFHv1vYjcmmulJ/81qZ6a2eEq5PHtuowkJbL5iB51YFa9itTzQ/x4OF4QwSWl4qgZBS90Q+rbKdNNnZhsWWy3uSffzeMxna6aMlENbwn6GUiuWDRudzfLypae6WeCZP7NeH/ILNOEfBKhwpwHvg20ZbHdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747149197; c=relaxed/simple;
-	bh=cQGO/ovmi8i2iRU2Z3kxXxA6wSOAvbYSAmle/UPq1gg=;
+	s=arc-20240116; t=1747149199; c=relaxed/simple;
+	bh=VlpD/aEqQPqlO9v6Lb2z2stYvqmnHu9mvPbwUMFbbhs=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=WIshCPiH4kc2nQuVgDg3P278/7XGSsl/8+VH89Q8wUwP0E3v06FLDf3VVkvF4MHrAY3xAbaGZ4mS/5Etmi0oGGQUklPxEN/olvXn3XJzplM/AXtoasOhljnY7ykdYzzKuvPr37w5e2u5juF1CtZkJO7fySzcvVNGSgb0RlVo0t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JJXFwiG+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G1SVjBGk; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=lcsLrunBwBipap07H4k7sNvjfScBXFQHD/iAnGg4/fMH803NhIyGUzFAwGdHuSsSb9f37ufj/aU2I5IMfUbMng5Cx9kXPf5kJ3G+aqKKaCYwvOmzd4EU2r2oRv2YiGBpzgQ4m320iKwAdiPdSdJTcLBk7+gYjwAFW9Iz09gs+Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=erpG3n5K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pS1ZUyeC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JJXFwiG+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G1SVjBGk"
-Message-ID: <20250513145137.269189575@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="erpG3n5K";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pS1ZUyeC"
+Message-ID: <20250513145136.968343429@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747149194;
+	s=2020; t=1747149184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=TEV58ThXX4TBUZI1Gy/a/wWIqOz+0plScOcb5MlAa40=;
-	b=JJXFwiG++gZucr3fnGMd8TIVzC11VmBYMU1gcng2pmXLNe0VvbsLtDTiq87G/a61XXJig9
-	p94+WwFj+wlDALl31tqq03HPgvKitwt06k8vBNJ5AITWBZ3KE3pDIik2yFskV8bz8KHhfq
-	xxT9w3PMljuxw+3mWIHTO0c4NigVxKl651J2rFEI2qhY3oeqfxoKV6Iy3+41WJhIddVSOt
-	g5JHpPlaWVVliJ5HcA6lRIm3XUQoawp6UqYMwQtv1HnzUrTB3Gz9Yt8XYuIyz1u54MVuPv
-	jT0pci9P6AUOqNrlPHV0PTz5KII+E3Xyl919ULbrEAHHaoz2nJDn+YUvSKxPoQ==
+	 references:references; bh=XPHajFVCZoXQl/Q8ekCokP2ZDch4oKNZfnysGAyLhao=;
+	b=erpG3n5K2Z3RhUIhzFJ8R3wNIpHAxnzp7ooKt3R/NTiey3iPrW6Wf8LMLrAJPglS+JfxEK
+	kWuzuLaXHr4OWCnzeyCkq1FFVbIAcUKMUwK2LMrLlCqcAVI2kejmhggQRZoiXGnUFiPpXq
+	Pi1BmtO19Q3ZxqxW6wLIZ8RO1c0OPDitRMMbLRmWfl9uYnxwzwt7De5PUCE79Iujis7sAk
+	11JznXNGW9muXuM0CNk9CLaXRy3JH21vahSsUwEh49tBHn2t6HqMo1r3X5Qskj3DmrJPPF
+	lZqoQZ2BcifdrNgNwK3AaB9n1tGwuMH/17ifsK3XykcQb/pIxsjm/aI2wezwTw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747149194;
+	s=2020e; t=1747149184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=TEV58ThXX4TBUZI1Gy/a/wWIqOz+0plScOcb5MlAa40=;
-	b=G1SVjBGkQM5qzWAvLjNqX+JHx6zSCi+j/vqjgoOxVSdFPQSPuTU6QFprenN3dO4D9RNYt/
-	ELrZ3Ja6guEAJQAg==
+	 references:references; bh=XPHajFVCZoXQl/Q8ekCokP2ZDch4oKNZfnysGAyLhao=;
+	b=pS1ZUyeCa0qJwlATcj2MM9izfMFJO5sakqrVo9qZUHjZF4dfrk/KnOOW/5nzv5dIuypny4
+	67gmrxXBMN4Io9Bg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -52,7 +52,7 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Alex Gieringer <gieri@linutronix.de>
-Subject: [patch 10/26] timekeeping: Prepare timekeeping_update_from_shadow()
+Subject: [patch 05/26] time: Introduce PTP clocks
 References: <20250513144615.252881431@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,41 +61,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 13 May 2025 17:13:13 +0200 (CEST)
+Date: Tue, 13 May 2025 17:13:04 +0200 (CEST)
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-Don't invoke the VDSO and paravirt updates when utilized for independent
-PTP clocks. This is a temporary workaround until the VDSO and paravirt
-interfaces have been worked out.
+To support per PTP clock timekeeping and the related user space interfaces,
+it's required to define a clock ID range for them.
 
+Reserve 8 PTP clock IDs after the regular timekeeping clock ID space.
+
+This is the maximum number of PTP clocks the kernel can support. The actual
+number of supported clocks depends obviously on the presence of PTP devices
+and might be constraint by the available VDSO space.
+
+Add the corresponding timekeeper IDs as well.
+
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- kernel/time/timekeeping.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ include/linux/timekeeper_internal.h |    6 ++++++
+ include/uapi/linux/time.h           |   10 ++++++++++
+ kernel/time/Kconfig                 |    3 +++
+ 3 files changed, 19 insertions(+)
 ---
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -683,13 +683,15 @@ static void timekeeping_update_from_shad
+--- a/include/linux/timekeeper_internal.h
++++ b/include/linux/timekeeper_internal.h
+@@ -14,10 +14,16 @@
+ /**
+  * timekeeper_ids - IDs for various time keepers in the kernel
+  * @TIMEKEEPER_CORE:	The central core timekeeper managing system time
++ * @TIMEKEEPER_PTP:	The first PTP timekeeper
++ * @TIMEKEEPER_PTP_LAST:The last PTP timekeeper
+  * @TIMEKEEPERS_MAX:	The maximum number of timekeepers managed
+  */
+ enum timekeeper_ids {
+ 	TIMEKEEPER_CORE,
++#ifdef CONFIG_POSIX_PTP_CLOCKS
++	TIMEKEEPER_PTP,
++	TIMEKEEPER_PTP_LAST = TIMEKEEPER_PTP + MAX_PTP_CLOCKS - 1,
++#endif
+ 	TIMEKEEPERS_MAX,
+ };
  
- 	tk_update_leap_state(tk);
- 	tk_update_ktime_data(tk);
-+	tk->tkr_mono.base_real = tk->tkr_mono.base + tk->offs_real;
+--- a/include/uapi/linux/time.h
++++ b/include/uapi/linux/time.h
+@@ -64,6 +64,16 @@ struct timezone {
+ #define CLOCK_TAI			11
  
--	update_vsyscall(tk);
--	update_pvclock_gtod(tk, action & TK_CLOCK_WAS_SET);
-+	if (tk->id == TIMEKEEPER_CORE) {
-+		update_vsyscall(tk);
-+		update_pvclock_gtod(tk, action & TK_CLOCK_WAS_SET);
+ #define MAX_CLOCKS			16
++
++/*
++ * PTP clock support. PTP clocks are dynamically configured by associating
++ * a clock ID to a PTP device. The kernel can support up to 16 PTP clocks,
++ * but the actual limit depends on architecture constraints vs. VDSO.
++ */
++#define	CLOCK_PTP			MAX_CLOCKS
++#define	MAX_PTP_CLOCKS			8
++#define CLOCK_PTP_LAST			(CLOCK_PTP + MAX_PTP_CLOCKS - 1)
++
+ #define CLOCKS_MASK			(CLOCK_REALTIME | CLOCK_MONOTONIC)
+ #define CLOCKS_MONO			CLOCK_MONOTONIC
  
--	tk->tkr_mono.base_real = tk->tkr_mono.base + tk->offs_real;
--	update_fast_timekeeper(&tk->tkr_mono, &tk_fast_mono);
--	update_fast_timekeeper(&tk->tkr_raw,  &tk_fast_raw);
-+		update_fast_timekeeper(&tk->tkr_mono, &tk_fast_mono);
-+		update_fast_timekeeper(&tk->tkr_raw,  &tk_fast_raw);
-+	}
+--- a/kernel/time/Kconfig
++++ b/kernel/time/Kconfig
+@@ -57,6 +57,9 @@ config POSIX_CPU_TIMERS_TASK_WORK
+ 	bool
+ 	default y if POSIX_TIMERS && HAVE_POSIX_CPU_TIMERS_TASK_WORK
  
- 	if (action & TK_CLOCK_WAS_SET)
- 		tk->clock_was_set_seq++;
++config POSIX_PTP_CLOCKS
++	def_bool POSIX_TIMERS && PTP_1588_CLOCK
++
+ config LEGACY_TIMER_TICK
+ 	bool
+ 	help
 
