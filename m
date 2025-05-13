@@ -1,175 +1,103 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D2B2770B;
-	Tue, 13 May 2025 22:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DFF74C14
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747174004; cv=none; b=IYfTieUpVko371Pp5hpY18Q7pj3v683yfpSd/VL1za12VHJt/25STaokYi4a+5YezrAndM5xKc944O8rt5cbchxFmYy8RJr7QjF72vjYnd+0PkulFyfYKJg5K8TK+RWw70vI0X9OKUxoiV33Chv8/CZFu4LGJPd7kNK4iWlFD7U=
+	t=1747174018; cv=none; b=etB6GPbVZGCrjFtuFOq1TFvwHgGygTtSCLaCgxwAvPcQCXyXF7is2H2VfDT2bUhVBPen0HZrgOUH8bpbqm7TYPPgH5DSa4WxgJtXNq+1CnoMbOcXelV3Ug5O2ghKQTjRMNweAikdN/Ibcr2i0goZZaWmDKxVUu8ZjrwNLcPKhMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747174004; c=relaxed/simple;
-	bh=dhav+Y0q2M9Ebn6kPMy4OqurNV5qty5UNjwoOYXPJwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxINzJxzLuXXuDjGRXDMeL/O8ub19chXx06wXY2WBidIm4MWPBG7qEm52AvRBGH/dlaDaSrH8L/E1McC+vfX7bz+pBD1OauzzcEW0aTx025cAJ0YMRtf4+zDa+EJNpjune7i4kuqKoOhSrouJyNK99Kr8Pv0Bxl/d/54aTtowVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYQF76dI; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747174018; c=relaxed/simple;
+	bh=HJUbc8XFSo4inTWDWL2BbRGsV67lAcWx6XLDZ8xVz3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=COud6MuHoMKlQgxzq2vAiQhqFMrrR4k7DlshkWPHApXqf2wCVmAJKrU0J0KCHEmkrgD42rbPID00r6CAA49KGXi+rmM/yNHeY5QraTT5QQLZFb1Rvj90kPsZYz4Q1kcg3PSXpl0q0yHK+W7s4ra4Ar8mQEGjQiDPx2xV1vYr9r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bAtjNIDV; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYQF76dI"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da6fb115a6so53558955ab.1;
-        Tue, 13 May 2025 15:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747174002; x=1747778802; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3NSr3zCVYmv0aPTkXL+9a8Y73rmWDloOCZ1MASrXE/Q=;
-        b=SYQF76dINTuKIy9F3UxZMA134hEuZjbfAcjEoWvrUDKYdSO6TunT+x1+zLmsPqFpg4
-         dHyr03zN/QIC7LoXK5n6lIim3WZcZky3vvyAaos0GAKirlnaXSNoYVMNzzbB8JmuIUap
-         Z2INzYu8kx8v2tRfAgS6rJTQ7rZYMA3WMkv9tYYZZT+CmgPEmSAcBSrbC/jTz3PjUVom
-         w3Sn+Nu9wITPbW+AtFOtsZNJgLgHsV65TPItmWYGwon/nHqBRmoxdL57ygabR+o/tKDx
-         UBDEiNaQr6M3FWlHikdXPu1VBhZuf5fGzq5TOVc48Kd2y/kxRKYFpmPFpKwxpp6Y7gDE
-         mT+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747174002; x=1747778802;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3NSr3zCVYmv0aPTkXL+9a8Y73rmWDloOCZ1MASrXE/Q=;
-        b=Vbu/eJHRAuKwSyGPo1GKhIUzRoMHhu4BWUZmfPsc2YJmnaJrzHUIlVA2urP06V85r/
-         wRKiqqHTMAvTMhACByr/+LYgOve1pUckNym+MJtd6RTRuPk0itEV5On/TWldYF4i2qv3
-         pxMNiHRV9SE7JyW2Ud8uEoFeigigxP5dYbDE9L1Z2EagD3Xr5Qt5bI50nt0AwnDEQles
-         mznFbVZgkl1lQcbu9/MTwelXmBmsfcdpD3BEtvycgsAHMp3Lxd6EGjORs+E3sX2PD2UY
-         N38kMEQnr35GFkaGXjxSwZ3aEBezRIkFjAWG03bh8MJ9JZItBPAG2YjhsawFGpG9ATgQ
-         GGCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVanYcnX5ZTNkK1CgksIeF8AeJHOG98vpMJry58qK5C2aGxfnugx24jtGLyzqGNHFSuywHaJp96OOBPC8Qq@vger.kernel.org, AJvYcCX3jydLLMjsKcb0NfJ1zzjo4cAiTWP32XKwwrWFue6vq2blxBPE4U46ot0zxKJyV0/0z5hXQ9zYFRTDQIg8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsPqOLk0YulCTGo74DdK37SZDaNxyq+aodJJBCu0303l/nzwF7
-	uHxOwXEbXO64Dx/6aPQfQTFKczjEz8TNv1pULzXtkAJvGDePVs5BwbQhXrhVXQpyRtq91nQk95K
-	LNph+15B9W2nTqN/AmyOYX+HjPQE=
-X-Gm-Gg: ASbGncvGgb2Td1juDIt7cXjlcgnGWBOH6YuNiY2rGLpig7nZvQ8Lx+Xbws5Vy09HvQ9
-	vw4V8xR7vYFW1t6Hj2tyUimsyeWM0eEnNrcZaL+SBWUsPhxelM1viQYxD00ZafxMTVhQuN2TZvT
-	7mzs9SVU26sWaXMCFjzKoOoBZZf6JXO0SBxgn1SfV6e1/DZR8duppp2WFA7utsXwE=
-X-Google-Smtp-Source: AGHT+IHH8XMbXywE7+ILVKsYc3F5InxyGAMPOhQYjsvCcY4gyCKCsqusIh3q+72eHNXy24eHEUamlkcX0NT6vD5p55w=
-X-Received: by 2002:a05:6e02:17cc:b0:3d9:43fe:8e49 with SMTP id
- e9e14a558f8ab-3db6f7a54bfmr16529165ab.8.1747174001762; Tue, 13 May 2025
- 15:06:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bAtjNIDV"
+Received: from [IPV6:2601:646:8081:9485:bead:f147:c6d9:7c6c] ([IPv6:2601:646:8081:9485:bead:f147:c6d9:7c6c])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54DM6LEK2620903
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 13 May 2025 15:06:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54DM6LEK2620903
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747173983;
+	bh=pVJey196wmXfz/Fc7Q8KpALZShnAXjVdqGYKSki2z/4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bAtjNIDVkVdBhO05i7E8ssdB5BubxzM1D21/L9ZhJE/juGyluK1WeQSy54XMCBnoB
+	 kEBliOBns9ZwlK9p6fJwqBUxXJRA6IK4WDZ2pUen2iZ/1thRsdhhhTvIBJFalywAww
+	 TbDDNhNdDK9hJfNPHW0ATOELTxiyCfH+FoIgwN2CjYDzVHAtMzbACmL43dfxuiqk2Z
+	 QolWGWIwDaMN2TqnevTUFBjO9kccOoYIugO42WoXdSPdy/+1oD6yEgTdxeqHZWYuZo
+	 att3/m888qcoWEhLOQ4TppQkZZFHoggam1n8YpylS4Q8ynFD49Hlt/Ftca+ekLSL/R
+	 NFGdRyuKV9RsA==
+Message-ID: <9995c81d-1366-445d-8232-bede33ce68af@zytor.com>
+Date: Tue, 13 May 2025 15:06:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com>
- <20250508-topic-ubwc_central-v1-4-035c4c5cbe50@oss.qualcomm.com>
- <CAF6AEGtcoMZ+WiW5_BA4NFpLZsoOrDbkY4xyvENGoS2FQVwQxw@mail.gmail.com>
- <5c3d3682-8378-486d-8af1-4b884b81f3d0@oss.qualcomm.com> <CAF6AEGvmEP4oGytfsCHYDCtOUDYq68y=vS7fu0jzP+=oajeq9g@mail.gmail.com>
- <b7bd0f7a-854b-4464-abd6-51f932ee2998@oss.qualcomm.com>
-In-Reply-To: <b7bd0f7a-854b-4464-abd6-51f932ee2998@oss.qualcomm.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 13 May 2025 15:06:18 -0700
-X-Gm-Features: AX0GCFsyH0dODUBB_8dHA6zkgfgnHu6B6D4Rxp3wAqz4e7AWlwmSCMHzcPSjotw
-Message-ID: <CAF6AEGuDBdmyS+N4pR3gEYz0mSLkKqYZjCASk8am2atdGKq5UA@mail.gmail.com>
-Subject: Re: [PATCH RFT 04/14] drm/msm/a6xx: Get a handle to the common UBWC config
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+ <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
+ <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
+ <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+ <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+ <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
+ <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
+ <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk>
+ <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de>
+ <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk>
+ <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local>
+ <alpine.DEB.2.21.2505121810040.46553@angie.orcam.me.uk>
+ <CAADWXX8+-=pcOUeu_cwX_vkkkGp6jn0GQLUhZX8MxGGRjKz=Lg@mail.gmail.com>
+ <a719b6ec1ccba2ecad7421a2cdf1660d1be16888.camel@physik.fu-berlin.de>
+ <alpine.DEB.2.21.2505131735170.46553@angie.orcam.me.uk>
+ <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 10:00=E2=80=AFAM Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 5/9/25 3:52 PM, Rob Clark wrote:
-> > On Fri, May 9, 2025 at 5:31=E2=80=AFAM Konrad Dybcio
-> > <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>
-> >> On 5/8/25 8:41 PM, Rob Clark wrote:
-> >>> On Thu, May 8, 2025 at 11:13=E2=80=AFAM Konrad Dybcio <konradybcio@ke=
-rnel.org> wrote:
-> >>>>
-> >>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>
-> >>>> Start the great despaghettification by getting a pointer to the comm=
-on
-> >>>> UBWC configuration, which houses e.g. UBWC versions that we need to
-> >>>> make decisions.
-> >>>>
-> >>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>> ---
-> >>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 16 ++++++++++++++--
-> >>>>  drivers/gpu/drm/msm/adreno/adreno_gpu.c |  6 ++++++
-> >>>>  drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +++
-> >>>>  3 files changed, 23 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm=
-/msm/adreno/a6xx_gpu.c
-> >>>> index b161b5cd991fc645dfcd69754b82be9691775ffe..89eb725f0950f3679d62=
-14366cfbd22d5bcf4bc7 100644
-> >>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>> @@ -585,8 +585,13 @@ static void a6xx_set_cp_protect(struct msm_gpu =
-*gpu)
-> >>>>         gpu_write(gpu, REG_A6XX_CP_PROTECT(protect->count_max - 1), =
-protect->regs[i]);
-> >>>>  }
-> >>>>
-> >>>> -static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>>> +static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>>>  {
-> >>>> +       /* Inherit the common config and make some necessary fixups =
-*/
-> >>>> +       gpu->common_ubwc_cfg =3D qcom_ubwc_config_get_data();
-> >>>
-> >>> This does look a bit funny given the devm_kzalloc() below.. I guess
-> >>> just so that the ptr is never NULL?
-> >>
-> >> Yeah, would you prefer this is changed?
-> >
-> > I think having an all zeros ubwc cfg isn't really going to work
-> > anyways, so probably drop the kzalloc().  Or if there is a case that
-> > I'm not thinking of offhand where it makes sense to have an all 0's
-> > cfg, then add a comment to avoid future head scratching, since
-> > otherwise it looks like a bug to be fixed.
->
-> So my own lack of comments bit me.
->
-> Without the allocation this will fall apart badly..
-> I added this hunk:
->
-> ---------------------
-> /* Inherit the common config and make some necessary fixups */
-> common_cfg =3D if (IS_ERR(common_cfg))
->         return ERR_PTR(-EINVAL);
->
-> *adreno_gpu->ubwc_config =3D *common_cfg;
-> ---------------------
->
-> to get the common data but take away the const qualifier.. because
-> we still override some HBB values and we can't yet fully trust the
-> common config, as the smem getter is not yet plumbed up.
+On 5/13/25 15:02, Linus Torvalds wrote:
+> On Tue, 13 May 2025 at 14:55, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+>>
+>>   Hmm, a .mailmap artifact perhaps
+> 
+> Ahh, indeed. I was looking at commit feea1db26e5b ("[PATCH] defxx: Use
+> irqreturn_t for the interrupt handler") from 2005, but yes, the raw
+> commit information has your linux-mips address, and it's just that
+> "git log" will translate it to something much newer...
+> 
+> But I really don't think we've ever been *so* strict about pgp keys
+> having all the proper pgp key signature chains. Yes, it's the normal
+> rule and the regular way people identify themselves, but nothing
+> should ever be mindlessly black-and-white.
 
-So I get that common_ubwc_cfg is the const thing without fixups (and
-agree that it should say const), and ubwc_config is the fixed up
-thing.  But don't see how that necessitates the zeroalloc.  Couldn't
-you just:
+Having the discussion with Maciej offlist.
 
+The issue here is obviously not that Maciej is qualified to have a 
+kernel.org account (I consider that to be a given), but that we need to 
+avoid a "Jia Tan" incident.
 
-  if (!IS_ERR_OR_NULL(adreno_gpu->common_ubwc_cfg)
-    adreno_gpu->ubwc_config =3D *adreno_gpu->common_ubwc_cfg;
+	-hpa
 
-> I can add a commit discarding all the HBB overrides (matching or not)
-> or we can keep the zeroalloc around for some time (i'd rather keep
-> the function returning const so that when things are ready nobody gets
-> to poke at the source of *truth*)
-
-We can keep the overrides to start (although the goal should be to
-remove them).. but qcom_ubwc_config_get_data() not finding anything
-seems like more or less a fatal condition.
-
-BR,
--R
