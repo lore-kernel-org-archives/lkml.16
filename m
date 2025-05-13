@@ -1,110 +1,194 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592721D47B4;
-	Tue, 13 May 2025 14:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4AB27FB39;
+	Tue, 13 May 2025 14:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747144882; cv=none; b=J2jyRrk9WI6kqpRAwbqrlbFHrn0ZGqnLiZSdNX92vPN3WTsC+duvIYSCdMWrLczEnhSCFtsDfHIOBzNCy1vJ98U14IMPTO4GNeKQj3uXLjmzcqMO6PArfvTIKudsqSM2a8Ior+tRlQVwOE4j9LTZQvsD7vWWGiSZppJ1T0fhV0s=
+	t=1747144883; cv=none; b=YRyEccW/i88J1BRd8SHsR9/U4Q3jtvtuPVl8E76+W8QyfEomdms/O/FeskDjRAA7rfSig1YnYKBu61Ydo8tnXiVcAWeRBXKQaLCFTTw4gHPeH69dnrC/Sc6Ldva0wNn/TX3Y7fTYZ8bqHT3A0aOU+x2V1hbwAB3dlGj8GSxolcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747144882; c=relaxed/simple;
-	bh=jUGK0MnhCfAAXhuEwPjCMG6LHrz012CuJWOJ/DmpeVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QP/yzvipFA8/UcZkh9Yb3CThR26oTG0nfz5D5UTEG1IdBnpm9xKxc3kVA5CcSLdpuRM01JSHNcOz+BxKO6tZ6faAf7mVkDo5v0iCWQHbSgdmJBiFI0SHbFcDYHLNTKK1hKAX8QTZTOJZLs14YOwgpZes2MUwHUl6/Ec/dYmapRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2ubNbqy; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747144883; c=relaxed/simple;
+	bh=v6Rm2EsNBVuAl6TS+dj1EgQWTYT0Iby5wb5SCwSNQ9g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vCLxCP6L1vGHMfu0DJDK+P8PtgDXfpi1vCbMXGSWMF49/Cdfg9fiXOC7lxrVtl8vy9CSytdatNDpA9tyxHqwzaBQa8ysOgkKgGRz5pgnwY7YJ5d66ol2uXsq/7yZNwOghN/ehn2QXll3u0HHznK2CzCxVTWKbaF1FUGjNNBXPgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZxQtcR4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2ubNbqy"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70a23f4fe8bso52183767b3.2;
-        Tue, 13 May 2025 07:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747144880; x=1747749680; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=myBVHObkWyQY3+5UnR6s4iPAJCP05aofkHzUTmt6WZw=;
-        b=I2ubNbqyEShEa4+dW0/e2xidIbRMNDpFlWycCNLYBKhwrSz3pCBMm+4GAF1fSlkAn6
-         ulaJ3F6SMPYGE1HoBaeOvWkyQJh6Z1xuPmbgnFQJw22+2kS4SDXu5wbuY6Quo4epKM60
-         CaPeeRYjg12vwnlHu1U/C2QA30EAmF0bLDlnHRKaDSUbE48TTT1gPevniRClaB4boQZV
-         8z9YOm1H4AJ4fCEmKKoCEt1vHIuZ3T5/i6awWK23R45i1FWdZx3B4AGT7O4rKytVKGpM
-         jtfZMWC4ba3HhB8DelVaGWk3yE5fVJQBRGNTJtVCyUPHAQx8H5r01+GQtcbVCRXd94k6
-         tm5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747144880; x=1747749680;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=myBVHObkWyQY3+5UnR6s4iPAJCP05aofkHzUTmt6WZw=;
-        b=OglZTuNyZuLxLjvpLyLM/WIJfG9wKtNjsQzSHXsZ8FtSiHoGjZGzFrLxPM69o+CU5O
-         nsMxcJwpBOLHHuazrvtVkjwKfwpNn1DFAFtKPlqDXTrgvxOld0fc6P3xvoG11soUZGHm
-         oNcn8CwxqMgZnEhtVxybxj2N4OSLvUphy1SxA0xTko63QKGRA8qA0kTeNOI3OlSN7rC2
-         oSxMCV0olId0OdLwX/+lzCSwmMeP11CE3yhpVw8MVO+l/b1iuKGTnAhV8W30TUbhrVNS
-         87Urqlo0e/zWor29Wo6FeKF5ifeIcEFc1ujlYCqf0q7QkH1DaKrOtu+zrq2lGkHBpMQI
-         JS9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUgPpnLwEZpDaSc+Q/bwu84uGgrRE3x6EIiEa/Iv/QMgTNh/B1HXrhH6bFO8+IrrfJ+3fTO6/y4653E@vger.kernel.org, AJvYcCVfQBM5z+hrTZt93XtSZrPBZCCfxL5dnl6wXR9WLo4OVrtPKjQmVHsiAy97noAVx/moRWXmV9i7rmXe8M1W@vger.kernel.org
-X-Gm-Message-State: AOJu0YxayhPY22BoZ0HKarWQRlgb7/WE6czr7hDykMsy5FM81NMep427
-	rwJ2n9nmYXevof9YTfRHwZq+uQizjNywXnzDkxzLOUxrQtJgbVkd
-X-Gm-Gg: ASbGncuBwE79TuVovhf/VntrtgTulO2PxUiGcJMNQJRaInstDZOcntY1I6kpqzne2r+
-	BoIIYbA0U4oXt/2+6ixf+LgU0yXn5yXPRafJkvfEOl5pcGHSjhvmn4RjO3Tx1Djaz/XAW5N4V4c
-	qFO52iXUuCL145oRHYSwemGtfMiz43IQQoTsmPU2Pb0S4TZvlS0W0oBx0aReOxFHEVMUQxXvxZS
-	/tCZg1gve4g5CNpsVGmyGM8hYWyCnV5l5MFpFv8lQKi6dFMnRFtenuAQKD3gykZJAFSaTlS4vHv
-	2DfSVrArqjAWZWW0tCCVsvqs11lpn41+GWKumEQcnmAiOw+p46o=
-X-Google-Smtp-Source: AGHT+IFiZKthq2Ml6dSOkF0GGY8tdqtCnFKdhFM8W3K+YKPqOfB/ANdvWqEZJk5f0YHttBzxu1gXNA==
-X-Received: by 2002:a05:690c:640d:b0:705:750d:c359 with SMTP id 00721157ae682-70a3fb36f8amr245436137b3.32.1747144879834;
-        Tue, 13 May 2025 07:01:19 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:73::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9cbcfesm24338287b3.69.2025.05.13.07.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 07:01:19 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Huang, Ying" <ying.huang@linux.alibaba.com>,
-	gourry@gourry.net,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Tue, 13 May 2025 07:01:17 -0700
-Message-ID: <20250513140117.2925329-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250512152944.eab80697d7404a803f9f65e6@linux-foundation.org>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZxQtcR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02A9C4CEE9;
+	Tue, 13 May 2025 14:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747144882;
+	bh=v6Rm2EsNBVuAl6TS+dj1EgQWTYT0Iby5wb5SCwSNQ9g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EZxQtcR4ph0vkw7ikUX3c3CAB6v+eQVzr3qIDlvRDcziv2s5bBkhhaoVnOuRfzJyj
+	 S5Hci/qa0OoTL7/D/roCg6VR3Q+ligKXGIWR5wEOQ97EvKhweh8dQ4+5aEgL17iqMP
+	 3fBIGP0LJ3fHhZY4bTB+g3VSyEmNDiUksrO3ODKpcHn2dEg4ToQjCtHjErpQjUkuKd
+	 OtZup+TjT1kBkRZ3mRVJWT6OIzYeUlOPlxt+sfpS4otUX5RrTxJqoUzUBH+4bAKk+Z
+	 NRkEXmePxe8PD7QLY6aumvcmpebFTCyhlxWww/N7yLkzJT2NFM1HcPoOfvzGM5vJsA
+	 +MmfoZaP0nfmA==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2d071fcd89bso2022182fac.3;
+        Tue, 13 May 2025 07:01:22 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxFDJV+UxcSRc/kOnRBdck1b0hiPuNPjZAGIJaCTXJrisWB/YE2
+	M7vTo+T4OiASfcSBPsKNE+DXQajaC31QsK3+AUT7ylc6H/UqGa5nlAq6Pzn8rbxDJUDyB9MBdpM
+	jUe98c6KbtmtcGxrzV1r5KY5IWOY=
+X-Google-Smtp-Source: AGHT+IH7Fv0nO3ps9l44Deuibp7LvKppm8chuSm6AFepZ8q20wlIH8lneFlf9aFpFkWUm78CukuKszd9bhPMZzk5MJI=
+X-Received: by 2002:a05:6870:ac11:b0:2d5:1894:8c29 with SMTP id
+ 586e51a60fabf-2dba435d651mr8383878fac.23.1747144880719; Tue, 13 May 2025
+ 07:01:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2999205.e9J7NaK4W3@rjwysocki.net> <CAJZ5v0jLpKEgAodWx8G0k127vMUe-J1rGkCEreRP7a1dQXT2vA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jLpKEgAodWx8G0k127vMUe-J1rGkCEreRP7a1dQXT2vA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 13 May 2025 16:01:08 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gcgMJ-qihgc3_OF4djxAy8K0i-cmnjRe4AQrc_YEu4DQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtctmpLuypFLtk5Ny2JrEMqafth8YnYP7vVwtioEKYPgbRKcct9jYOiFec
+Message-ID: <CAJZ5v0gcgMJ-qihgc3_OF4djxAy8K0i-cmnjRe4AQrc_YEu4DQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] cpufreq: intel_pstate: Enable EAS on hybrid
+ platforms without SMT
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, 
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+	Pierre Gondois <pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 12 May 2025 15:29:44 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+On Tue, May 13, 2025 at 2:51=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Tue, May 6, 2025 at 10:49=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.=
+net> wrote:
+> >
+> > Hi Everyone,
+> >
+> > This is a new (and most likely final) version of
+> >
+> > https://lore.kernel.org/linux-pm/3344336.aeNJFYEL58@rjwysocki.net/
+> >
+> > The most significant difference between it and the above is that schedu=
+til is
+> > now required for EAS to be enabled, like on the other platforms using E=
+AS,
+> > which means that intel_pstate needs to operate in the passive mode in o=
+rder
+> > to use it (the most straightforward way to switch it over to the passiv=
+e mode
+> > is to write "passive" to /sys/devices/system/cpu/intel_pstate/status).
+> >
+> > Accordingly, the changes that were needed for EAS to work without sched=
+util are
+> > not needed any more, so there is one patch less in the series because o=
+f that
+> > and patch [5/7] is simpler than its previous version because some chang=
+es made
+> > by it are not necessary any more.
+> >
+> > Another patch that has been dropped is
+> >
+> > https://lore.kernel.org/linux-pm/1964444.taCxCBeP46@rjwysocki.net/
+> >
+> > because it didn't take CPU online into account properly and it is not e=
+ssential
+> > for the current hardware anyway.
+> >
+> > There is a new patch, [7/7], which adds CAS/EAS/hybrid support descript=
+ion to
+> > the intel_pstate admin-guide documentation.
+> >
+> > The following paragraph from the original cover letter still applies:
+> >
+> > "The underlying observation is that on the platforms targeted by these =
+changes,
+> > Lunar Lake at the time of this writing, the "small" CPUs (E-cores), whe=
+n run at
+> > the same performance level, are always more energy-efficient than the "=
+big" or
+> > "performance" CPUs (P-cores).  This means that, regardless of the scale=
+-
+> > invariant utilization of a task, as long as there is enough spare capac=
+ity on
+> > E-cores, the relative cost of running it there is always lower."
+> >
+> > The first 2 patches depend on the current cpufreq material queued up fo=
+r 6.16
+> > in linux-pm.git/linux-next (and in linux-next proper) and are not reall=
+y
+> > depended on by the rest of the series, but I've decided to include them=
+ into
+> > this series because they have been slightly updated since the previous =
+version,
+> > mostly to take review feedback into account (I'm going to queue them up=
+ for
+> > 6.16 shortly because they don't appear to be objectionable).
+> >
+> > The next 2 patches (Energy Model code changes) were reviewed previously=
+, but
+> > they are only needed because of patch [5/7].
+> >
+> > Patch [5/7] has not changed much except that some changes made by the p=
+revious
+> > version have been dropped from it.  Also its changelog has been updated=
+.  It
+> > causes perf domains to be registered per CPU and in addition to the pri=
+mary cost
+> > component, which is related to the CPU type, there is a small component
+> > proportional to performance whose role is to help balance the load betw=
+een CPUs
+> > of the same type.
+> >
+> > The expected effect is still that the CPUs of the "low-cost" type will =
+be
+> > preferred so long as there is enough spare capacity on any of them.
+> >
+> > Patch [6/7] has been updated to walk all of the cache leaves and look f=
+or
+> > the ones with level equal to 3 because the check used in the previous v=
+ersion
+> > does not always work.
+> >
+> > The documentation patch, [7/7], is new.
+> >
+> > Please refer to the individual patch changelogs for details.
+>
+> This series along with the fix at
+>
+> https://lore.kernel.org/linux-pm/2806514.mvXUDI8C0e@rjwysocki.net/
+>
+> is now present in the experimental/intel_pstate/eas-final brangh in
+> linux-pm.git:
+>
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/l=
+og/?h=3Dexperimental/intel_pstate/eas-final
+>
+> and it has been added to the bleeding-edge branch for 0-day build testing=
+.
 
-> On Mon, 12 May 2025 07:25:10 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
-> 
-> > Andrew, I'm very sorry -- do you think you can fold this fixlet in as well?
-> 
-> No probs.
-> 
-> In future, something a little more formal would be preferred, so I
-> don't have to write your changelog and forge your Signed-off-by:!
+In order to test it, the kernel needs to be compiled with
+CONFIG_ENERGY_MODEL set.
 
-Hi Andrew,
+If at least some cores in the system are SMT-capable, SMT needs to be
+turned off (either in the BIOS setup or by passing nosmt to the kernel
+in the command line).
 
-Sorry about that! I'll keep that in mind in the future : -)
-Thank you for being patient and helping us with this patch.
-I hope you have a great day!
+Finally, schedutil needs to be the cpufreq governor which requires
+intel_pstate to operate in the passive mode (schedutil is the default
+governor in that case).  The most straightforward way to switch it
+into the passive mode is to write "passive" to
+/sys/devices/system/cpu/intel_pstate/status (it may also be started in
+the passive mode as described in
+https://www.kernel.org/doc/html/latest/admin-guide/pm/intel_pstate.html).
 
-Joshua
+Note that you can compare the default non-EAS configuration of
+intel_pstate to the one with EAS enabled by switching it between the
+"active" and "passive" modes via sysfs (no reboots needed).
+
+Thanks!
