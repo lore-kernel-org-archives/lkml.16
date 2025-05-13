@@ -1,647 +1,182 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011039.outbound.protection.outlook.com [52.103.68.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703AE2459F9;
-	Tue, 13 May 2025 09:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130372; cv=none; b=cXI3VxhaYSyEnwtuvcSgTa7owAyUMM7EWlmb9plV/EX/mbRNsfHBRe5NZMEoiVmTFUUjDHftdCrVlVzfI54qNcgjZ9n7nl7TJXQ9s0ky7cA8ppAPnZW0zC/IwfDEMeglxGyrueL4+ndmdD0AhXnxnGSOLeFfsZM5OtWLgO3+dpw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130372; c=relaxed/simple;
-	bh=yzMSitsqfhhknfUJ11NwuquorZc0f5v+3569fGjuXcc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=tyYBmjHsspjgN9CsIKG/eczG4f2irwEiuxcpAOrWMUV9xp3jgWUS2p5EALrZ/9tTlotx72c5xflffZo8LEbjV+8DYsvLh8LmBU4EC0FF4stkY87Od0IKVL38LnuoRTmgbKNJwzhqEqiiw2oVcSHNN7W5++53IRUg1nyAw2hm0Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K1t4lj9U; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C524F241665;
+	Tue, 13 May 2025 09:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747130376; cv=fail; b=X90+nIS8XXHQ4uYGV3GNMsEL5lN89g1owLwaiWXJR9QoFJaten5ZK51uw/V4j9BN3fflNlX/fZ/uNIX9TE5XBvNfHU+NH2fEclKSZbVxSUkyCyequTx3ZbbWbFda5lggIIDEueJojTXTYANyf5fV9VHHhJL2NWVy+n//c+o4l9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747130376; c=relaxed/simple;
+	bh=T3Z8tJxUkZYiooR3ra5FEDltMnN6sBngZFEatGT/3KM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EDcDTJjxxejcFjnHA9L8SPkWJBZu0npHG62uOBKG1oRTMif1FHVNJBMADHIIWJbjT902xtQCkvL77FKIDNa6HdlGAWU96OOm1pGPtrA8OpaMo1zfGo5bFjJknX/LOyu9GF1YFbl5aKAe8moGx7nHnpPzglZXw3G7EedUYB4ffO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=YZRyJke0; arc=fail smtp.client-ip=52.103.68.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K1t4lj9U"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D71P7Y023824;
-	Tue, 13 May 2025 09:59:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bd8hLR8X9VciYwzp64B8QPqIye2Otnc6P8Z1EViygaU=; b=K1t4lj9U+FPGHUkO
-	blYsPtZPAgi2EhZuo6KAgSDXTQbzE4o8z3l58i03x9muxSVtiQR+iiw0GP4+ijPB
-	4wK6RPwjhmT5XAM1Ad93BNKezK51PTUH+XjzurUwTRaT5Q3g6jzWSG7iGBmR+3by
-	fNEKkB8yW9Pfal9q3nBbCC9bzRvaXzLmo/I8z412bMMn/NneIhvrzKT4K2sI61Cx
-	08ZzCPGDMFo4Ft/rM8SgOpNhMycGJJq2iHNqyZdNSkGrWZyf89BlEarmO1+VX7Sy
-	LX4z2W1cEQC+8lWSQdNej+Ap/+wgrFMci3iabQEcJyO4/a6PIXEuRKrLtI8aZhPg
-	VqDrRQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46hx4k7adn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 09:59:17 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54D9xFfu017795
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 09:59:15 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 13 May 2025 02:59:09 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Tue, 13 May 2025 17:58:27 +0800
-Subject: [PATCH net-next v4 07/14] net: ethernet: qualcomm: Initialize PPE
- queue settings
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="YZRyJke0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gSuhugHdgY7btZBXVOpKbDOX1Kmp26r7IP6FJF+Yvuz2NmZJunyK81j9oBWmhcwqr2xIbZz+BtEDBqYCNOdTBrd1in6MhGmCMReqDt66tVd42LKGAoIYN8Y3x4SRPJ7GFTuM0WFyfMGc4Dhq1lk8uoQXPl7EKIL2PH0wyBSGn0sU9CZP0YBCs+yvBQ9y2Dcr5hLFlKPeMWPYStIOIITLv9KEnx+EqRzxvx6F6SeNBiERw6bdv3ilRmGK9BtXyvIKf8mVdWifqFHY+Kx/g501FwU+ZbaCDGGErNe8wCT3IMyl0118YgRbNnW8vvlhDgvqO1IaD83idaVwxrR7kwRI3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6E8MvLMr2SfoOmNkHW64wbmwEJbY5tlcCW2mXjci+40=;
+ b=foaag2//ljCO41rLTlIDr4YsT3F7eAovLek7uaNniywIgun+9FjDOnfHfIc7jNAn4mI8WUzX5hFYE0ZNQfHagTpuHHO2mU66iT2rXBncoDmDk4AOrjoohtlV6Uvb+P2yFxEw+fLjoPzegY9f35DQjx8j5z01crhXGsD8D+ykTpmY6S4ccYZvoPv+FOPqXCLQIBFdqfpz22CZTfEzoxDphhcwiQzIDSacXUuxCwuRuUy1EGj6T7fKphDJff37OXbRsRv5PXFDyDCtqkU4sBvSlpirY6yIQWNZDPYujPNQVMBl+9ShUKxulu6Scqi2/dFjj5gqxUNB958eU62XgxqdUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6E8MvLMr2SfoOmNkHW64wbmwEJbY5tlcCW2mXjci+40=;
+ b=YZRyJke0BDgofrOHfizA6oiLxDXYZ6UVdPhTFui7oSp1UqOsqxlvb55h20TiWnV4kgrbrLF05ss8GsCepvwnt1Hvnp0n4theIPI2IIi3LZzexeSEGsWKUMYnq2xrfdbdMDMYw8/DSK3ptMuLONJBG5XL+lWqGA+OfGjlSqVlqWJvpnyVOLQUtvwvZ5olyggboUjuoyuCpB/2N2rHzy1UM6f4sCtNPg273UE9ee7LArMkhtei+9m/ytmT7eyNuyLaqWQWC69B3aZ+AG4hPbPSDNC5gxddhvUm/0pLfizYh/W1sKgoJSsDbRL/HY5L34vwBNU07PoeujER8PEhmHFM5Q==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN3P287MB1381.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:193::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 13 May
+ 2025 09:59:27 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 09:59:26 +0000
+Message-ID:
+ <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Tue, 13 May 2025 17:59:23 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
+To: Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>,
+ devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>,
+ sophgo@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1746811744.git.rabenda.cn@gmail.com>
+ <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
+ <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+ <CAAT7Ki9=ROP47hsugf3BS1nXr9oOPHWgjQoGfjAZiwHnXS19Pw@mail.gmail.com>
+ <nrtzltuus47rjds3x54e72mtflvjh4najyqdjnagxq5etge5e7@vkikyxa5zf6k>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <nrtzltuus47rjds3x54e72mtflvjh4najyqdjnagxq5etge5e7@vkikyxa5zf6k>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SGAP274CA0011.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::23)
+ To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <29f9d65d-9c93-4fa0-8e47-e62cff7be0ed@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250513-qcom_ipq_ppe-v4-7-4fbe40cbbb71@quicinc.com>
-References: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
-In-Reply-To: <20250513-qcom_ipq_ppe-v4-0-4fbe40cbbb71@quicinc.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Lei Wei <quic_leiwei@quicinc.com>,
-        Suruchi Agarwal
-	<quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>,
-        "Simon
- Horman" <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>, Luo Jie <quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747130311; l=16401;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=yzMSitsqfhhknfUJ11NwuquorZc0f5v+3569fGjuXcc=;
- b=DBWlwZw9Zp2i7npfCjEMwyVjTUqJXseX+RITSjKQ8s3PKZxV1E0M0TZAGrvemifY7sHhsnxfa
- RXHDb7jwCH9BA097kqEF7aBW7tCNEC8P+SuWQwI7oOHzamo5jf2IpKN
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ReqQC0tv c=1 sm=1 tr=0 ts=682317f5 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=PNRkUbp5dbSH4Vkeo0cA:9 a=CNskAabLYMlJ57OS:21 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: TgJBpECQ619BXv38SP-TTtfef7U8IliY
-X-Proofpoint-ORIG-GUID: TgJBpECQ619BXv38SP-TTtfef7U8IliY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDA5NCBTYWx0ZWRfXxHB25Rcwy4NE
- w7kprKz7w2vmwqtp8xSkf6k2LZLCm8VayXM2WmelLXaEPhxSOoD61M2QByStg0y/X3htJo/VEFF
- lMNt3VeVJL+MUEhcan3xlJYXPjdUMkNk+4LiTpJJ8VXrynn6ThT6WXy8vlsDd9zSX+YXRjqWVwI
- A6DTn7Eg7DlbiTIskq05Ga/LqxJSb7zTcVkX/800pPkWPg+7RuFsDq1dfMYUNJCQdIV+kz/THeX
- N1r3mN6oKJhQenTyDJ10RM9JEQ/CMzbimk/Uca0xRnu9IblzunuU6BZ/5bU50VRoI5JkXG/uovu
- PMjnTjCNUI9vDsy5ZPH1I4ymy7be+go1N6U0K1ZRwgqQniAJORhVlvSpZ3zGgKfAXPLWOReWwRA
- LZN7pOfFhaAcKDpz09olO4xya7/OfTIrmFaH635JoUetERjx+0njUCRFuusyBE6cw8ZsTb2p
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_07,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505130094
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN3P287MB1381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12252802-92ed-4ea8-c82d-08dd9204d85e
+X-MS-Exchange-SLBlob-MailProps:
+	Cq7lScuPrnoSu68Y5FdRDlCPOBk43FEt+26GliOreA2ldnvtxRZskCdP6YSQ1AozMCvwcSgaYKVxRW9imP6zeE4toyOeQM5KuTIrEj8mJeKjE7Fp+mBxkp3rggEN/7LyOeY/LwvlNbbzfUWfb3XaLD0C+JgZre6Zqou6yjIWhOyvwg9qZZU6VBPxEvbzcfH7fCH+aT8zKOvzCOaeIaZUqRAU/riHfuFfVZLhm5lmDhqhR3nVo/f2GuiFrBuy1FcbnVATTSOT+oFFnZ1J97DEPHMx6UA/tFWoEn1lGwsFyDVzJnRfBGK0S+0JubAXmf+WbnEbvn3Gw4X7a3EZpG+TNs5QyolNuapaQg03gcW8l+qIeETPPZrwYJv0f5AMa2pGRFC8t13NkFNWfLKiNeRbR+ltQM5zlzy2fc15nzstFh6+ySH01gPAIuAQ/u5CS2yOK4Xg0X/MYqIKw+/v25YAhvoQg3tzAjoxd9zALajb059Ytv7liOuN6P0f4lXNk1EPTjm4M+ejgM4kHEF+phVSMt1jIzyFpYq7ydBm0BZVMjJTKqxKmSdHV//pIZ7fbHOp4q3CZlhbjLNSS1rPWuNwW0+T1adq4yHeAsyWo2bDbePTw/BGvyBGQGLGrS9bFojO6XCIt/Gc1IRydLWoR2A8EtiA7qCoNiMy2scYglKcyRLycSRuOCiV5mCE1fuAxGkeoHvVTC3EcR+qnOu3cSBUoVrPMY5CTLtoOjBPxZUV8boSkVNEeSmff2dEfXMWbl/x8yxztl9nJ2E=
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799009|461199028|6090799003|7092599006|8060799009|19110799006|5072599009|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VklUOFVGR1BpV2huUEIwbm02S0pzbE5FbFVNVFdVcGltS3hicGpjQ1E4bmhL?=
+ =?utf-8?B?cXNMMjBMNmdtRVFlbFdWQU5PbnhjdWVwK3dTb2k1eHpmWEliY1ZDMjhmNTdK?=
+ =?utf-8?B?bWVTRnRXU2xDM3YyMDhFSW1abjd1V2tlUDNSYkVKNHFUUmZVLzg3NXpnYmlw?=
+ =?utf-8?B?TkdnalFqaHo3NU55QytpL1liZXlBU2RWbktUSE9JZmZsQlcxZEtzN2J6RmJr?=
+ =?utf-8?B?ZXZWRVc4ZVZnam5zd0poZXVuY2kyTUJWL2lzb1FDTCsyRGJsODI2RUJVOEVt?=
+ =?utf-8?B?K0ZEQ1lkQzZwUktROVRyWXBOMXUzMFd0SUpuVUxLcVRHUDRzMFZXS0N3VXE2?=
+ =?utf-8?B?YWc2K0dEdEFIZWdFYkVjYTNSWE16ejRkeUZPSTRtVkdVTU5mWENteVdtaERY?=
+ =?utf-8?B?dEorbDFRZzU5aGFsYWtvLzgrZGg2MXk1TDA2ckZCMTZMQmQ4RFFmMmJUZTU0?=
+ =?utf-8?B?UGVWL0dlNlFVUWRQNkcvelVuaUJldkN2OWxydlkrWmUzcm91N0dqWlNnUVY1?=
+ =?utf-8?B?UmRDT1U2NHAwUlBSOXNaMk5oL2JsaE1Zc2pMeXlpZkk2WkxhbU9pQ2hrQXhw?=
+ =?utf-8?B?QllJK3RCaXZiQzZpNTloaU5XME84Y0tJVVZkbkJtR0oxaG9JS2tGeE5SWnkw?=
+ =?utf-8?B?U3REeUhPb0RucVgwTFBDNGNWOFhxWGVuMEtVNFlJVlBtNWNLdDk0eW1GOG83?=
+ =?utf-8?B?MlRBbytvc1U2Q3lDWnMwcDhJRUVFYmNFaWRqOFc1WURTVlhRRXU0UlBMRHVO?=
+ =?utf-8?B?bUx5NzRaaXRwczlEVEpqamRQRDhxVkFoWGFyRFpZQ09GSkxhS3pFbWdISUxu?=
+ =?utf-8?B?T25jSUZwa3FnZ2FyWE1XcjF2OHBuWUhLd1ZGMHZ4Wmk5M1FGM3VYaUk1Ry9V?=
+ =?utf-8?B?MUQvSEROQXNtWWVuRjZSQUN6c0lQbThCa2lKZ3N1N2RkdTU3LzlHZHNBcmI5?=
+ =?utf-8?B?U0ZyV3RrMitvaXIwdXdMOVpER3ZSME5RNEdickFtZFpsd3p5SHo4RGw4U3hD?=
+ =?utf-8?B?cC83a3plWkROTmUrNEQ3RytybHZtT2hSSEEzQ0hONldXcG14Rm5ZY09KR2VR?=
+ =?utf-8?B?S2NLTmV0ZGFxd09PWUxwUlhOSjRjTEpxRjA3dTVDaER4KzdPTlZoU2poNDMz?=
+ =?utf-8?B?OGlDSnI0TWlNaXNpbVBUYmVVNGhnQjRtaTJhK2lrbVplVzFCQmdCek5OOGcw?=
+ =?utf-8?B?R2tMQzJXVEZOeGxvaGo4SXhXSHZxQWxlQ3N1amxvRHFxTThmb1VXYnA3d1BH?=
+ =?utf-8?B?bFJNSittYUV6aE1VZm5XWGgrWm03SWd5a1lFdWtkTHhPQ29ob3laamQ3d2NF?=
+ =?utf-8?B?NTVGQVNleVV2bGRWYW01K1ZYUkFyS0phcWNPaHZsVGc0dWRoU3F0MnRadDBV?=
+ =?utf-8?B?WHRpd2M5VG9YMnlNOVlKeDdzVkNXOVVmTVQrSzA4Ymlnc0ZQUjdsalFxNXhu?=
+ =?utf-8?B?L2hMTG04dkN1ZkVYb0VnT2czN3JQMUthUUlONExYOXlKZldxVlpSVHhETkw5?=
+ =?utf-8?B?R3pwTEdVbVRrZlpsNTM4UjJUQVVrSzNodWUyVmh2dVZUOXRjQ2RGbGtVaGdz?=
+ =?utf-8?B?a3d4QT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NlFucnJFZm1ybUljTjNSS2VYWE5oVCtHVHVpVWRNRFlrTG1ULzAwZnRtVkFK?=
+ =?utf-8?B?c0xEQlhtR3czcmU0SGFHUi9iaXdnSWhsUFptd2ZhM3YzK05oNmVUS3U1NnFH?=
+ =?utf-8?B?M3RzVlE4MlVxNlhXbE1uYnFVanRQaVZXekMrYzBqOHIxdGluaEt5bmoxN2Vy?=
+ =?utf-8?B?RzF3a0R2WWVUeGlSQm1SZlFOQlF5MTlycHduelhUTE94QTBoTmJqWHNzTDJJ?=
+ =?utf-8?B?REZsUUNQTmFEbkRYRlFtWFpZSWo1WWNRcW1zVVhic1VhRGxIbFNFeDRCdU9y?=
+ =?utf-8?B?S05kaGxENDZVWnNqRmk3NnBIMDZxdVZUYTBhT1FSZGdFZDNFVUgyTGFtWDRV?=
+ =?utf-8?B?b0FoeFlraXB2V3YwNksvYmVBWVhKQUFRQU94L1JSRkVWSFRlTXVzK29nc3JH?=
+ =?utf-8?B?YUxjV2xMemVRSWthb01haUVTaWU0U2k1a1lYbXJ2UDhXVFl1S096SmFxZVVu?=
+ =?utf-8?B?TFFrbEdnN2ZiM0w5dTBMNHZMc2JZMUEyUEd1QUZ2TnVUTDc2b1VtZlJMc3Bz?=
+ =?utf-8?B?QkFuaC9uRzBjY2JtUXRteTdrZ2RuK3ZKLytwcjRUZTNuWDlFQTh6UWorM0dy?=
+ =?utf-8?B?R2xUZ0lZQkE4UG8vSDM2em9nRWxwbGt4VWZycmhnZjZkOUVndllLelU4WThY?=
+ =?utf-8?B?RlFVZ1A2NUNBNDgwa3BuSHM1djY1eVJLbUlGQitNZkpRb2lNMG96RmphY00x?=
+ =?utf-8?B?ejVPaU0yMU4zdWFPZEw2OVpEaFRUd2ZPQktyWUVLbkY0LzcvNkt1OVlLaGRK?=
+ =?utf-8?B?b2c1M0lmUEg2QVRsZHZOOERXZkU3cnMvUEE3ZHM0VnRiMTlPRFZ0VnBOdEtz?=
+ =?utf-8?B?ZFFrSytSYlN1c0VVeEJxOW4vbHF0VVFRRWZ0YjkwU05pY3pqcituOUY3OUNx?=
+ =?utf-8?B?blh1YTJHQlBkYWhaVThkSzdPNGpDOGNPWGluQ3hGcnlkOVRPOHBTWlQxWkMx?=
+ =?utf-8?B?OFdYS2tmazZSeFdkSkUwZnRjSjBTWSt1b3FhY3VscytZSUZKa3Q3RzFvN29J?=
+ =?utf-8?B?TlFtdm0wUy9sN0ZZSDJXNVRsUkowOE01N292bi9LdjkyYUd2RWZqNmpFZStD?=
+ =?utf-8?B?SWNiTWw2ZlE1dlFESVo5ZjU1RkJiQmxGNnYzdlFhaFhLMmcrUmlqZ1NMbjBZ?=
+ =?utf-8?B?TVRBb0xtczRTeE9wWldISGlvYm5DY0VYbVdtaVpnR0kzcjFaYS9jMjlyczds?=
+ =?utf-8?B?cGpRS1M5Q3BpdklmdVJiYWJGR0loNS9rbDJaSmZBNzVaVnJ5TEN3RVRlY2pQ?=
+ =?utf-8?B?Nk91VzEyNDRBSzhkblMxamRqREwyQXRKV3o5aitWUGdwMmV6VDl0SWhobnl6?=
+ =?utf-8?B?T09DUjJzUGY2SU55U3FDK0V3UytVUnV0a3dxQVludW9FODIxc1l0WnJsWUpN?=
+ =?utf-8?B?OGxiZUVSV3IzTTBOMXI3NHJIRGZWOHp6bmNOc0JuMFRSdG56TzRSVkhqZXE0?=
+ =?utf-8?B?dldlT0gwb0R3S3hCVTJDTTk1cUp0cjNQQnhKTTI4dkhZM1dtTnkvUjhVZTNs?=
+ =?utf-8?B?OERnT1FuNllhN1JwSzQxdHh3WTJCdmFjMU41ampGSzhuR3ZoR1NvQkZQaUJu?=
+ =?utf-8?B?S1FRK2R2OTV6bEhyZzhRV2FyMGdMNWkzQXQ4MThOWTVGZHpKT2hLWHpHMEZ1?=
+ =?utf-8?B?azlZNlNzTTdYdG1JbGU1NkV6WVdBemwrTVlLV0JuR0lWWllBVUM0eG8rcHdE?=
+ =?utf-8?B?ZjRYeHFtNDVSNXlPUjVGcnAxdVlzMlFIUVhsbCtjQ0tqUnRIaEZYeGRYcEIv?=
+ =?utf-8?Q?8H73jM0rUzpBarwgwLbNVU9hHIkBBrx+UYxweKs?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12252802-92ed-4ea8-c82d-08dd9204d85e
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 09:59:26.8505
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB1381
 
-Configure unicast and multicast hardware queues for the PPE
-ports to enable packet forwarding between the ports.
 
-Each PPE port is assigned with a range of queues. The queue ID
-selection for a packet is decided by the queue base and queue
-offset that is configured based on the internal priority and
-the RSS hash value of the packet.
+On 2025/5/13 17:49, Inochi Amaoto wrote:
+> On Tue, May 13, 2025 at 02:48:44PM +0800, Han Gao wrote:
+>> I hope it is sg2042-x8evb.
+>>
+>> Sophgo is also making EVB boards for sg2044.
+>>
+>> I think a distinction needs to be made here.
+>>
+> SG2044 evb has a formal name like srd3-10, but I think it should
+> have a sg2044 prefix. as the name printing on the board has a
+> sg2042 prefix.
+sg2042 prefix? :)
+>
+> But there is something needed to be checked, like whether the "x8evb"
+> should be "evb-1.0" and "x4evb" should be "evb-2.0".
+>
+> Regards,
+> Inochi
 
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- drivers/net/ethernet/qualcomm/ppe/ppe_config.c | 356 ++++++++++++++++++++++++-
- drivers/net/ethernet/qualcomm/ppe/ppe_config.h |  63 +++++
- drivers/net/ethernet/qualcomm/ppe/ppe_regs.h   |  21 ++
- 3 files changed, 439 insertions(+), 1 deletion(-)
+Agreed. To avoid confusion, it is best not to define the official 
+product name yourself, but to confirm with the vendor (here is sophgo) 
+or have them provide it, just like "srd3-10", we contacted sophgo's 
+marketing staff and they provided it.
 
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-index fe2d44ab59cb..e7b3921e85ec 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.c
-@@ -138,6 +138,34 @@ struct ppe_scheduler_port_config {
- 	unsigned int drr_node_id;
- };
- 
-+/**
-+ * struct ppe_port_schedule_resource - PPE port scheduler resource.
-+ * @ucastq_start: Unicast queue start ID.
-+ * @ucastq_end: Unicast queue end ID.
-+ * @mcastq_start: Multicast queue start ID.
-+ * @mcastq_end: Multicast queue end ID.
-+ * @flow_id_start: Flow start ID.
-+ * @flow_id_end: Flow end ID.
-+ * @l0node_start: Scheduler node start ID for queue level.
-+ * @l0node_end: Scheduler node end ID for queue level.
-+ * @l1node_start: Scheduler node start ID for flow level.
-+ * @l1node_end: Scheduler node end ID for flow level.
-+ *
-+ * PPE scheduler resource allocated among the PPE ports.
-+ */
-+struct ppe_port_schedule_resource {
-+	unsigned int ucastq_start;
-+	unsigned int ucastq_end;
-+	unsigned int mcastq_start;
-+	unsigned int mcastq_end;
-+	unsigned int flow_id_start;
-+	unsigned int flow_id_end;
-+	unsigned int l0node_start;
-+	unsigned int l0node_end;
-+	unsigned int l1node_start;
-+	unsigned int l1node_end;
-+};
-+
- /* There are total 2048 buffers available in PPE, out of which some
-  * buffers are reserved for some specific purposes per PPE port. The
-  * rest of the pool of 1550 buffers are assigned to the general 'group0'
-@@ -701,6 +729,111 @@ static const struct ppe_scheduler_port_config ppe_port_sch_config[] = {
- 	},
- };
- 
-+/* The scheduler resource is applied to each PPE port, The resource
-+ * includes the unicast & multicast queues, flow nodes and DRR nodes.
-+ */
-+static const struct ppe_port_schedule_resource ppe_scheduler_res[] = {
-+	{	.ucastq_start	= 0,
-+		.ucastq_end	= 63,
-+		.mcastq_start	= 256,
-+		.mcastq_end	= 271,
-+		.flow_id_start	= 0,
-+		.flow_id_end	= 0,
-+		.l0node_start	= 0,
-+		.l0node_end	= 7,
-+		.l1node_start	= 0,
-+		.l1node_end	= 0,
-+	},
-+	{	.ucastq_start	= 144,
-+		.ucastq_end	= 159,
-+		.mcastq_start	= 272,
-+		.mcastq_end	= 275,
-+		.flow_id_start	= 36,
-+		.flow_id_end	= 39,
-+		.l0node_start	= 48,
-+		.l0node_end	= 63,
-+		.l1node_start	= 8,
-+		.l1node_end	= 11,
-+	},
-+	{	.ucastq_start	= 160,
-+		.ucastq_end	= 175,
-+		.mcastq_start	= 276,
-+		.mcastq_end	= 279,
-+		.flow_id_start	= 40,
-+		.flow_id_end	= 43,
-+		.l0node_start	= 64,
-+		.l0node_end	= 79,
-+		.l1node_start	= 12,
-+		.l1node_end	= 15,
-+	},
-+	{	.ucastq_start	= 176,
-+		.ucastq_end	= 191,
-+		.mcastq_start	= 280,
-+		.mcastq_end	= 283,
-+		.flow_id_start	= 44,
-+		.flow_id_end	= 47,
-+		.l0node_start	= 80,
-+		.l0node_end	= 95,
-+		.l1node_start	= 16,
-+		.l1node_end	= 19,
-+	},
-+	{	.ucastq_start	= 192,
-+		.ucastq_end	= 207,
-+		.mcastq_start	= 284,
-+		.mcastq_end	= 287,
-+		.flow_id_start	= 48,
-+		.flow_id_end	= 51,
-+		.l0node_start	= 96,
-+		.l0node_end	= 111,
-+		.l1node_start	= 20,
-+		.l1node_end	= 23,
-+	},
-+	{	.ucastq_start	= 208,
-+		.ucastq_end	= 223,
-+		.mcastq_start	= 288,
-+		.mcastq_end	= 291,
-+		.flow_id_start	= 52,
-+		.flow_id_end	= 55,
-+		.l0node_start	= 112,
-+		.l0node_end	= 127,
-+		.l1node_start	= 24,
-+		.l1node_end	= 27,
-+	},
-+	{	.ucastq_start	= 224,
-+		.ucastq_end	= 239,
-+		.mcastq_start	= 292,
-+		.mcastq_end	= 295,
-+		.flow_id_start	= 56,
-+		.flow_id_end	= 59,
-+		.l0node_start	= 128,
-+		.l0node_end	= 143,
-+		.l1node_start	= 28,
-+		.l1node_end	= 31,
-+	},
-+	{	.ucastq_start	= 240,
-+		.ucastq_end	= 255,
-+		.mcastq_start	= 296,
-+		.mcastq_end	= 299,
-+		.flow_id_start	= 60,
-+		.flow_id_end	= 63,
-+		.l0node_start	= 144,
-+		.l0node_end	= 159,
-+		.l1node_start	= 32,
-+		.l1node_end	= 35,
-+	},
-+	{	.ucastq_start	= 64,
-+		.ucastq_end	= 143,
-+		.mcastq_start	= 0,
-+		.mcastq_end	= 0,
-+		.flow_id_start	= 1,
-+		.flow_id_end	= 35,
-+		.l0node_start	= 8,
-+		.l0node_end	= 47,
-+		.l1node_start	= 1,
-+		.l1node_end	= 7,
-+	},
-+};
-+
- /* Set the PPE queue level scheduler configuration. */
- static int ppe_scheduler_l0_queue_map_set(struct ppe_device *ppe_dev,
- 					  int node_id, int port,
-@@ -832,6 +965,149 @@ int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
- 					      port, scheduler_cfg);
- }
- 
-+/**
-+ * ppe_queue_ucast_base_set - Set PPE unicast queue base ID and profile ID
-+ * @ppe_dev: PPE device
-+ * @queue_dst: PPE queue destination configuration
-+ * @queue_base: PPE queue base ID
-+ * @profile_id: Profile ID
-+ *
-+ * The PPE unicast queue base ID and profile ID are configured based on the
-+ * destination port information that can be service code or CPU code or the
-+ * destination port.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int ppe_queue_ucast_base_set(struct ppe_device *ppe_dev,
-+			     struct ppe_queue_ucast_dest queue_dst,
-+			     int queue_base, int profile_id)
-+{
-+	int index, profile_size;
-+	u32 val, reg;
-+
-+	profile_size = queue_dst.src_profile << 8;
-+	if (queue_dst.service_code_en)
-+		index = PPE_QUEUE_BASE_SERVICE_CODE + profile_size +
-+			queue_dst.service_code;
-+	else if (queue_dst.cpu_code_en)
-+		index = PPE_QUEUE_BASE_CPU_CODE + profile_size +
-+			queue_dst.cpu_code;
-+	else
-+		index = profile_size + queue_dst.dest_port;
-+
-+	val = FIELD_PREP(PPE_UCAST_QUEUE_MAP_TBL_PROFILE_ID, profile_id);
-+	val |= FIELD_PREP(PPE_UCAST_QUEUE_MAP_TBL_QUEUE_ID, queue_base);
-+	reg = PPE_UCAST_QUEUE_MAP_TBL_ADDR + index * PPE_UCAST_QUEUE_MAP_TBL_INC;
-+
-+	return regmap_write(ppe_dev->regmap, reg, val);
-+}
-+
-+/**
-+ * ppe_queue_ucast_offset_pri_set - Set PPE unicast queue offset based on priority
-+ * @ppe_dev: PPE device
-+ * @profile_id: Profile ID
-+ * @priority: PPE internal priority to be used to set queue offset
-+ * @queue_offset: Queue offset used for calculating the destination queue ID
-+ *
-+ * The PPE unicast queue offset is configured based on the PPE
-+ * internal priority.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int ppe_queue_ucast_offset_pri_set(struct ppe_device *ppe_dev,
-+				   int profile_id,
-+				   int priority,
-+				   int queue_offset)
-+{
-+	u32 val, reg;
-+	int index;
-+
-+	index = (profile_id << 4) + priority;
-+	val = FIELD_PREP(PPE_UCAST_PRIORITY_MAP_TBL_CLASS, queue_offset);
-+	reg = PPE_UCAST_PRIORITY_MAP_TBL_ADDR + index * PPE_UCAST_PRIORITY_MAP_TBL_INC;
-+
-+	return regmap_write(ppe_dev->regmap, reg, val);
-+}
-+
-+/**
-+ * ppe_queue_ucast_offset_hash_set - Set PPE unicast queue offset based on hash
-+ * @ppe_dev: PPE device
-+ * @profile_id: Profile ID
-+ * @rss_hash: Packet hash value to be used to set queue offset
-+ * @queue_offset: Queue offset used for calculating the destination queue ID
-+ *
-+ * The PPE unicast queue offset is configured based on the RSS hash value.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int ppe_queue_ucast_offset_hash_set(struct ppe_device *ppe_dev,
-+				    int profile_id,
-+				    int rss_hash,
-+				    int queue_offset)
-+{
-+	u32 val, reg;
-+	int index;
-+
-+	index = (profile_id << 8) + rss_hash;
-+	val = FIELD_PREP(PPE_UCAST_HASH_MAP_TBL_HASH, queue_offset);
-+	reg = PPE_UCAST_HASH_MAP_TBL_ADDR + index * PPE_UCAST_HASH_MAP_TBL_INC;
-+
-+	return regmap_write(ppe_dev->regmap, reg, val);
-+}
-+
-+/**
-+ * ppe_port_resource_get - Get PPE resource per port
-+ * @ppe_dev: PPE device
-+ * @port: PPE port
-+ * @type: Resource type
-+ * @res_start: Resource start ID returned
-+ * @res_end: Resource end ID returned
-+ *
-+ * PPE resource is assigned per PPE port, which is acquired for QoS scheduler.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int ppe_port_resource_get(struct ppe_device *ppe_dev, int port,
-+			  enum ppe_resource_type type,
-+			  int *res_start, int *res_end)
-+{
-+	struct ppe_port_schedule_resource res;
-+
-+	/* The reserved resource with the maximum port ID of PPE is
-+	 * also allowed to be acquired.
-+	 */
-+	if (port > ppe_dev->num_ports)
-+		return -EINVAL;
-+
-+	res = ppe_scheduler_res[port];
-+	switch (type) {
-+	case PPE_RES_UCAST:
-+		*res_start = res.ucastq_start;
-+		*res_end = res.ucastq_end;
-+		break;
-+	case PPE_RES_MCAST:
-+		*res_start = res.mcastq_start;
-+		*res_end = res.mcastq_end;
-+		break;
-+	case PPE_RES_FLOW_ID:
-+		*res_start = res.flow_id_start;
-+		*res_end = res.flow_id_end;
-+		break;
-+	case PPE_RES_L0_NODE:
-+		*res_start = res.l0node_start;
-+		*res_end = res.l0node_end;
-+		break;
-+	case PPE_RES_L1_NODE:
-+		*res_start = res.l1node_start;
-+		*res_end = res.l1node_end;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int ppe_config_bm_threshold(struct ppe_device *ppe_dev, int bm_port_id,
- 				   const struct ppe_bm_port_config port_cfg)
- {
-@@ -1167,6 +1443,80 @@ static int ppe_config_scheduler(struct ppe_device *ppe_dev)
- 	return ret;
- };
- 
-+/* Configure PPE queue destination of each PPE port. */
-+static int ppe_queue_dest_init(struct ppe_device *ppe_dev)
-+{
-+	int ret, port_id, index, q_base, q_offset, res_start, res_end, pri_max;
-+	struct ppe_queue_ucast_dest queue_dst;
-+
-+	for (port_id = 0; port_id < ppe_dev->num_ports; port_id++) {
-+		memset(&queue_dst, 0, sizeof(queue_dst));
-+
-+		ret = ppe_port_resource_get(ppe_dev, port_id, PPE_RES_UCAST,
-+					    &res_start, &res_end);
-+		if (ret)
-+			return ret;
-+
-+		q_base = res_start;
-+		queue_dst.dest_port = port_id;
-+
-+		/* Configure queue base ID and profile ID that is same as
-+		 * physical port ID.
-+		 */
-+		ret = ppe_queue_ucast_base_set(ppe_dev, queue_dst,
-+					       q_base, port_id);
-+		if (ret)
-+			return ret;
-+
-+		/* Queue priority range supported by each PPE port */
-+		ret = ppe_port_resource_get(ppe_dev, port_id, PPE_RES_L0_NODE,
-+					    &res_start, &res_end);
-+		if (ret)
-+			return ret;
-+
-+		pri_max = res_end - res_start;
-+
-+		/* Redirect ARP reply packet with the max priority on CPU port,
-+		 * which keeps the ARP reply directed to CPU (CPU code is 101)
-+		 * with highest priority queue of EDMA.
-+		 */
-+		if (port_id == 0) {
-+			memset(&queue_dst, 0, sizeof(queue_dst));
-+
-+			queue_dst.cpu_code_en = true;
-+			queue_dst.cpu_code = 101;
-+			ret = ppe_queue_ucast_base_set(ppe_dev, queue_dst,
-+						       q_base + pri_max,
-+						       0);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		/* Initialize the queue offset of internal priority. */
-+		for (index = 0; index < PPE_QUEUE_INTER_PRI_NUM; index++) {
-+			q_offset = index > pri_max ? pri_max : index;
-+
-+			ret = ppe_queue_ucast_offset_pri_set(ppe_dev, port_id,
-+							     index, q_offset);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		/* Initialize the queue offset of RSS hash as 0 to avoid the
-+		 * random hardware value that will lead to the unexpected
-+		 * destination queue generated.
-+		 */
-+		for (index = 0; index < PPE_QUEUE_HASH_NUM; index++) {
-+			ret = ppe_queue_ucast_offset_hash_set(ppe_dev, port_id,
-+							      index, 0);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- int ppe_hw_config(struct ppe_device *ppe_dev)
- {
- 	int ret;
-@@ -1179,5 +1529,9 @@ int ppe_hw_config(struct ppe_device *ppe_dev)
- 	if (ret)
- 		return ret;
- 
--	return ppe_config_scheduler(ppe_dev);
-+	ret = ppe_config_scheduler(ppe_dev);
-+	if (ret)
-+		return ret;
-+
-+	return ppe_queue_dest_init(ppe_dev);
- }
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-index f28cfe7e1548..6553da34effe 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_config.h
-@@ -8,6 +8,16 @@
- 
- #include "ppe.h"
- 
-+/* There are different table index ranges for configuring queue base ID of
-+ * the destination port, CPU code and service code.
-+ */
-+#define PPE_QUEUE_BASE_DEST_PORT		0
-+#define PPE_QUEUE_BASE_CPU_CODE			1024
-+#define PPE_QUEUE_BASE_SERVICE_CODE		2048
-+
-+#define PPE_QUEUE_INTER_PRI_NUM			16
-+#define PPE_QUEUE_HASH_NUM			256
-+
- /**
-  * enum ppe_scheduler_frame_mode - PPE scheduler frame mode.
-  * @PPE_SCH_WITH_IPG_PREAMBLE_FRAME_CRC: The scheduled frame includes IPG,
-@@ -42,8 +52,61 @@ struct ppe_scheduler_cfg {
- 	enum ppe_scheduler_frame_mode frame_mode;
- };
- 
-+/**
-+ * enum ppe_resource_type - PPE resource type.
-+ * @PPE_RES_UCAST: Unicast queue resource.
-+ * @PPE_RES_MCAST: Multicast queue resource.
-+ * @PPE_RES_L0_NODE: Level 0 for queue based node resource.
-+ * @PPE_RES_L1_NODE: Level 1 for flow based node resource.
-+ * @PPE_RES_FLOW_ID: Flow based node resource.
-+ */
-+enum ppe_resource_type {
-+	PPE_RES_UCAST,
-+	PPE_RES_MCAST,
-+	PPE_RES_L0_NODE,
-+	PPE_RES_L1_NODE,
-+	PPE_RES_FLOW_ID,
-+};
-+
-+/**
-+ * struct ppe_queue_ucast_dest - PPE unicast queue destination.
-+ * @src_profile: Source profile.
-+ * @service_code_en: Enable service code to map the queue base ID.
-+ * @service_code: Service code.
-+ * @cpu_code_en: Enable CPU code to map the queue base ID.
-+ * @cpu_code: CPU code.
-+ * @dest_port: destination port.
-+ *
-+ * PPE egress queue ID is decided by the service code if enabled, otherwise
-+ * by the CPU code if enabled, or by destination port if both service code
-+ * and CPU code are disabled.
-+ */
-+struct ppe_queue_ucast_dest {
-+	int src_profile;
-+	bool service_code_en;
-+	int service_code;
-+	bool cpu_code_en;
-+	int cpu_code;
-+	int dest_port;
-+};
-+
- int ppe_hw_config(struct ppe_device *ppe_dev);
- int ppe_queue_scheduler_set(struct ppe_device *ppe_dev,
- 			    int node_id, bool flow_level, int port,
- 			    struct ppe_scheduler_cfg scheduler_cfg);
-+int ppe_queue_ucast_base_set(struct ppe_device *ppe_dev,
-+			     struct ppe_queue_ucast_dest queue_dst,
-+			     int queue_base,
-+			     int profile_id);
-+int ppe_queue_ucast_offset_pri_set(struct ppe_device *ppe_dev,
-+				   int profile_id,
-+				   int priority,
-+				   int queue_offset);
-+int ppe_queue_ucast_offset_hash_set(struct ppe_device *ppe_dev,
-+				    int profile_id,
-+				    int rss_hash,
-+				    int queue_offset);
-+int ppe_port_resource_get(struct ppe_device *ppe_dev, int port,
-+			  enum ppe_resource_type type,
-+			  int *res_start, int *res_end);
- #endif
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-index a1982fbecee7..5996fd40eb0a 100644
---- a/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe_regs.h
-@@ -164,6 +164,27 @@
- #define PPE_BM_PORT_FC_SET_PRE_ALLOC(tbl_cfg, value)	\
- 	FIELD_MODIFY(PPE_BM_PORT_FC_W1_PRE_ALLOC, (tbl_cfg) + 0x1, value)
- 
-+/* The queue base configurations based on destination port,
-+ * service code or CPU code.
-+ */
-+#define PPE_UCAST_QUEUE_MAP_TBL_ADDR		0x810000
-+#define PPE_UCAST_QUEUE_MAP_TBL_ENTRIES		3072
-+#define PPE_UCAST_QUEUE_MAP_TBL_INC		0x10
-+#define PPE_UCAST_QUEUE_MAP_TBL_PROFILE_ID	GENMASK(3, 0)
-+#define PPE_UCAST_QUEUE_MAP_TBL_QUEUE_ID	GENMASK(11, 4)
-+
-+/* The queue offset configurations based on RSS hash value. */
-+#define PPE_UCAST_HASH_MAP_TBL_ADDR		0x830000
-+#define PPE_UCAST_HASH_MAP_TBL_ENTRIES		4096
-+#define PPE_UCAST_HASH_MAP_TBL_INC		0x10
-+#define PPE_UCAST_HASH_MAP_TBL_HASH		GENMASK(7, 0)
-+
-+/* The queue offset configurations based on PPE internal priority. */
-+#define PPE_UCAST_PRIORITY_MAP_TBL_ADDR		0x842000
-+#define PPE_UCAST_PRIORITY_MAP_TBL_ENTRIES	256
-+#define PPE_UCAST_PRIORITY_MAP_TBL_INC		0x10
-+#define PPE_UCAST_PRIORITY_MAP_TBL_CLASS	GENMASK(3, 0)
-+
- /* PPE unicast queue (0-255) configurations. */
- #define PPE_AC_UNICAST_QUEUE_CFG_TBL_ADDR	0x848000
- #define PPE_AC_UNICAST_QUEUE_CFG_TBL_ENTRIES	256
-
--- 
-2.34.1
+Chen
 
