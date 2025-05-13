@@ -1,123 +1,76 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527DE1E885A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9601E885A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120678; cv=none; b=J/GNBQDSVOBl3y9sqD8YAyvLQFbCVDPFKU0CMQMgFkOpwLxWCTCvLtHE5N7l21zLNdIZeODUxMohHA+BtPb3tjCcflQc60FFTRVWQIovJMs8ekR4fIJJo0aQUXXvLO0D4X106ag78CLBNtHCkH8NSHM3nuUmwPgcnyWaEVPSe8g=
+	t=1747120817; cv=none; b=Tu1ZtBieNAGOkBbwkd3gAxS6FCoekZ7otibKISTKCEXrlfx+6Boqf+uEHqiwkoFRbwVnTOGlHfv0hNEh3o9/7ruxo5AaafdhOzFcLEyh8hMQ56cVSejSFjxDGyi3FDw6wRbw1EHnnD2/cRcz77BpaHZLxtl66fJSe9MQXljWORs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120678; c=relaxed/simple;
-	bh=xvzoV0iC/YctRZfGcRgdGlhugaW2Vr1q1SDlXESDq+k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jMcanXmwmXXcWslBZsGGtX9VFpEOqoSAHhollADvP3jMg/5H8DGBuCqwifaOAXMb3o0td93rwMK9VS5/0pbyO1GDkjMFXspuV8Bi8hC4rzPEVgHoanwVmW2JGXnNWvQIUK3PTqKhdKhnazNdT3VrKbANb/03VC8AbVuCubsbOr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZDhAe/Fw; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZDhAe/Fw"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54D7HTOn3007472
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 02:17:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747120649;
-	bh=UxNwJ+d0HodrpLSe63Wt0or4AAJJKcfodnYCzI/WscY=;
-	h=From:To:CC:Subject:Date;
-	b=ZDhAe/Fw8Ahpkx6nmiQ3k3K8K//iqMr4RTcVcaVZX5r1LycGIPo/k8+3utY2Qf33i
-	 2Q5N5sCRMFQIKgSjRY9h8PS50en0uNTy2ubViTAZf/2ugpy3Qa+jzZMApN2AsVn5pn
-	 9WhORdkI7NFqKiBjhwHxN0Zbkk/80y0DOyJxnG0g=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54D7HTlF066715
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 13 May 2025 02:17:29 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
- May 2025 02:17:29 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 13 May 2025 02:17:29 -0500
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.59])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54D7HPTO114273;
-	Tue, 13 May 2025 02:17:25 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <tiwai@suse.de>
-CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <13564923607@139.com>, <13916275206@139.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <jesse-ji@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>,
-        kernel test robot
-	<lkp@intel.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Fix the symbol was not declare warning reported by kernel test robot
-Date: Tue, 13 May 2025 15:17:21 +0800
-Message-ID: <20250513071721.1090-1-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+	s=arc-20240116; t=1747120817; c=relaxed/simple;
+	bh=z89cV37A1BzKVH5waNhFO0vTDICN0cpfkHVfKGEx1HM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=D7//grbciWGSMrhwo6nvKc1iiSlF6kP57uDqxRmQKkPD+s15t+iEC54gEB2fR3yzJoEfncQtYTPxQTdE3ILDTvL5F0WUk8BfkQoPVRiQDR5E95+TMPhj/u3YNz83CEfPGa6Q4R/xhI8p9w6Rt8CrmnCVXBC3v3FW8Ryyoh7tpvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.214.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22fafbbe51fso75470185ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:20:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747120814; x=1747725614;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MeRMeXbTDrvhPp+1BOYIczfNEGi+t+SLBi0QtIycPH8=;
+        b=LGlgwCXGt0a5jQLjMuei/3G/8q5D+dCMnw7fWBa68SepQSSBLu8ztfecqffyX1TmP+
+         cR/uk8rqgs5jZJGiW1xj61OV6doA0ExkT1F2rqj5oZhHBJFV0Mirm7lOrJpsdovI3nmB
+         2LiGStfCVh4EofptfAZ6yvBv5lBTfCif/Vx81huKVClKZdojiAlhvoBmuGgf6eQAcg/b
+         0JP8O8CUN2b+0sdL664e6cJCYt/ahro5MXC1Q4gCwDk3lJderVIgGPfFPOqdsGE5ir5R
+         ZgVl5w6me6qYmU3pbeKA6FgkYLfIYfHJTnUtrbfbImdLikpQuOD56qH1aYFTUBb5tm3f
+         ky4A==
+X-Forwarded-Encrypted: i=1; AJvYcCURUG6h/FTh0zezeSyyXVHUIrWGkTPPLqeLzRnNl8KZyr6Zew5g0Fabds/MFL3NXPfw7Oc5VoZ8ShaOYiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG49sP/98Oc0mtJZ378gBTKXWSv1OxN9l0XcAyflLyKxFLuBkq
+	8xxkLGMemoQfNr2aIG3fPlHLHRUX8AcLL7KTy0zRZdDOYjJPOI3P5JWcRiIEMYBPFdV4uH1o7ek
+	7+qsk172tkuDbG+WrU6VRaa45+RyLtsdeadyvZtN0MGZ88as/mz39T0E=
+X-Google-Smtp-Source: AGHT+IHkvnZLGzM8GIvS9rpIvhqGG29wKFa6dseqNcftKL44TEPKgL2MlP8nj1Ok1QbFjPtxMGKC9Y40GMBfMMynzFPAV6dx7ANM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Received: by 2002:a05:6e02:1fc6:b0:3d8:1b25:cc2 with SMTP id
+ e9e14a558f8ab-3da7e1e34b0mr191437605ab.8.1747120803765; Tue, 13 May 2025
+ 00:20:03 -0700 (PDT)
+Date: Tue, 13 May 2025 00:20:03 -0700
+In-Reply-To: <tencent_B0F292D9064049B26EFC6ECACC8227E4C606@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6822f2a3.050a0220.f2294.0120.GAE@google.com>
+Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
+From: syzbot <syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-After commit 28a09d9e42c5 ("ALSA: hda/tas2781: Create an independent lib
-to save the shared parts for both SPI and I2C driver") created a separated
-lib for both hda-i2c and hda-spi driver, which caused this issue.
-sparse warnings: (new ones prefixed by >>)
->> sound/pci/hda/tas2781_hda_spi.c:496:25: sparse: sparse: symbol
-   'tas2781_snd_ctls' was not declared. Should it be static?
->> sound/pci/hda/tas2781_hda_spi.c:505:25: sparse: sparse: symbol
-   'tas2781_prof_ctl' was not declared. Should it be static?
->> sound/pci/hda/tas2781_hda_spi.c:512:25: sparse: sparse: symbol
-   'tas2781_dsp_ctls' was not declared. Should it be static?
+Hello,
 
-Fixes: 28a09d9e42c5 ("ALSA: hda/tas2781: Create an independent lib to save the shared parts for both SPI and I2C driver")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505130420.vr9yDI3k-lkp@intel.com/__;!!G3vK!URphGMMfZ2erCLfJdETofl0O1mTSydDLLJ6inMIYWYUDUKYef_IuLvI7pnYj3Mx-4LRIi4BJEw$
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+syzbot tried to test the proposed patch but the build/boot failed:
 
----
-v1:
- - | Reported-by: kernel test robot <lkp@intel.com>
-   | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505130420.vr9yDI3k-lkp@intel.com/__;!!G3vK!URphGMMfZ2erCLfJdETofl0O1mTSydDLLJ6inMIYWYUDUKYef_IuLvI7pnYj3Mx-4LRIi4BJEw$
----
- sound/pci/hda/tas2781_hda_spi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+drivers/media/usb/dvb-usb/cxusb.c:1668:13: error: invalid storage class for function 'cxusb_disconnect'
+drivers/media/usb/dvb-usb/cxusb.c:2389:27: error: initializer element is not constant
+drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: invalid storage class for function 'cxusb_driver_init'
+./include/linux/compiler.h:286:52: error: initializer element is not constant
+drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: invalid storage class for function 'cxusb_driver_exit'
+drivers/media/usb/dvb-usb/cxusb.c:2393:19: error: initializer element is not constant
+drivers/media/usb/dvb-usb/cxusb.c:2400:1: error: expected declaration or statement at end of input
 
-diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_spi.c
-index 50b82ecabb90..e0f8603c4854 100644
---- a/sound/pci/hda/tas2781_hda_spi.c
-+++ b/sound/pci/hda/tas2781_hda_spi.c
-@@ -493,7 +493,7 @@ static int tas2781_force_fwload_put(struct snd_kcontrol *kcontrol,
- 	return change;
- }
- 
--struct snd_kcontrol_new tas2781_snd_ctls[] = {
-+static struct snd_kcontrol_new tas2781_snd_ctls[] = {
- 	ACARD_SINGLE_RANGE_EXT_TLV(NULL, TAS2781_AMP_LEVEL, 1, 0, 20, 0,
- 		tas2781_amp_getvol, tas2781_amp_putvol, amp_vol_tlv),
- 	ACARD_SINGLE_RANGE_EXT_TLV(NULL, TAS2781_DVC_LVL, 0, 0, 200, 1,
-@@ -502,14 +502,14 @@ struct snd_kcontrol_new tas2781_snd_ctls[] = {
- 		tas2781_force_fwload_put),
- };
- 
--struct snd_kcontrol_new tas2781_prof_ctl = {
-+static struct snd_kcontrol_new tas2781_prof_ctl = {
- 	.iface = SNDRV_CTL_ELEM_IFACE_CARD,
- 	.info = tasdevice_info_profile,
- 	.get = tasdevice_get_profile_id,
- 	.put = tasdevice_set_profile_id,
- };
- 
--struct snd_kcontrol_new tas2781_dsp_ctls[] = {
-+static struct snd_kcontrol_new tas2781_dsp_ctls[] = {
- 	/* Speaker Program */
- 	{
- 		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
--- 
-2.43.0
+
+Tested on:
+
+commit:         e9565e23 Merge tag 'sched_ext-for-6.15-rc6-fixes' of g..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca17f2d2ba38f7a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=0dcc341ee61fc9e4032f
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1509e2f4580000
 
