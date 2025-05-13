@@ -1,95 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666702367B8
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A125525C;
+	Tue, 13 May 2025 12:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138790; cv=none; b=Qw3q0s+hMZ9YxpJdWk3YS5hq4Rvieu6CJLNA1E5Z8ECJJCe8R4faGcXIosBEotBNPIgFdnaxB4/BbkmNa67S35LDlGpZxS9UcveiIcQoKzqpPeXxm3vzDuvrCkCn4+ha/d05iCaZuLiLUJk1u8OHq0HzIfUxcRh/ejiAkYqU2SI=
+	t=1747138891; cv=none; b=sjcCsWou4FWLO0//U5hsEY8Ijz0RnHxre74PlqSzrovJF1aOeD38EixWD9J7Z2zCLBlFDUwsbYPqwjgzv9sN1PBwfUosUElUZpD3MzDON98mrRTml5blb/GPVF/xXNsR7TuhTlx0FAKc0X30DEh1MNuh1cnuJFvrD8ERDhxY3PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138790; c=relaxed/simple;
-	bh=PvFrR2MAq2o+yd9APHGuH71FjKQ9+0afcA1dVCja6iA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YWJuFOyp3y9T/0iIayM8OM3s37tK5lolwjDCekUOHrO6JrWUD36cPgXUdZWr5VwVJmTrkMkjTxz+v3orn2BPEfbTH/WaUb5XEAGxbvCa+BXdgaGhRX688IGvYWTNSsXMwkugMHJ9DFAbA0cpn1TUnqzPMShZPU60E1KVfdzQ7TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0s1/nYd; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747138891; c=relaxed/simple;
+	bh=Yd99bDXYuiczj4hfSvGvriMsbruLksA9MnpAor8YBSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qOB7U4Ib0J4qqiONcUG2RjzIDEpXpD14S3loNXthYZyMnwp/RbmbbEalXuMH9H5kVp+Zku9JbwGGIuLqTwvrcJacTft7K8m0TCFSl/AEREy96oRAasHBqxLefiptHODrlja+M+9ieoGRIZD/c5NONgfRmGucGsASNArUZ0WDM0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjI8c+Wr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0s1/nYd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747138788; x=1778674788;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=PvFrR2MAq2o+yd9APHGuH71FjKQ9+0afcA1dVCja6iA=;
-  b=O0s1/nYdcdlOitVX/COgnXEibxp+uai9j6giJaSzj3rq8NAk6tOeLERp
-   iEp841F9+dcKvs0Kc3GesOyxxb81w9gkNItU+EMDdDBdbu1GqftQfaZK+
-   bNy6Evg3Y2IKM5gvo0PJexNd4mJgCVIHrzwrMCS/lNyutR7JoAowuqW2p
-   h3PX+Uldj2uTmIrduK+Oi/FwKefE4KwqiqBS5KPm47TciFIoVyhEo7gv+
-   uGDOqlKPnacmkJQHoMA5RE3/+qj0HrKZwzHM7mk4Nm8PZTWurTByeEKIV
-   3VQgn8t2xxnMhMNHflOwVKdOQ5Zp9+Yf4moFBQCzVaGblY+TNW632U4Dg
-   w==;
-X-CSE-ConnectionGUID: unz45pT/QKm6j+VCmo8+Xg==
-X-CSE-MsgGUID: Gj9YgJFyTzCjJRGTEEDXXw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52788521"
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="52788521"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 05:19:47 -0700
-X-CSE-ConnectionGUID: 3NPLvGBRRAK/n33hhJDhew==
-X-CSE-MsgGUID: GJHOJSAyTsOFFP5L/Qaxww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="138618720"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.175])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 05:19:44 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-In-Reply-To: <CAN9Xe3R87TmEzeTEFnhxAZyqdRYNSnPLcGqWATpyt4CHeYdGkg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250331-b4-panel-refcounting-v4-0-dad50c60c6c9@redhat.com>
- <20250331-b4-panel-refcounting-v4-2-dad50c60c6c9@redhat.com>
- <87y0vkw8ll.fsf@intel.com>
- <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
- <87o6wfwcef.fsf@intel.com> <20250505-slim-bizarre-marten-a674ac@houat>
- <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <CAN9Xe3R87TmEzeTEFnhxAZyqdRYNSnPLcGqWATpyt4CHeYdGkg@mail.gmail.com>
-Date: Tue, 13 May 2025 15:19:41 +0300
-Message-ID: <87msbgitya.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjI8c+Wr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB100C4CEE4;
+	Tue, 13 May 2025 12:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747138890;
+	bh=Yd99bDXYuiczj4hfSvGvriMsbruLksA9MnpAor8YBSw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cjI8c+WrnDleOF9Hgo9N+DCxFXrtrWTK7Zxg63ED3Me789Z9lSp7/OsDLzjM3A4yu
+	 +RnudhXbwE00DgEih4o9DxF9akDQWlU3GfCZu0ObRAnTRgw3Gj+OdmRmZk7NB6daj5
+	 uR53q2UXCv8iwxkiEIedQVm70TGo42j96ra1OHwdSFaL4ye8edKxMngDAa49fNP2VH
+	 VgP370Ff3PMrqqIeaSudLfL+5RhDoET7ewNmHMOQZ8Ia5PDXAsgO90zproaxZa8pkS
+	 00wEPR3oKDRSvi32fDWxRIu/ZEfK3a636rGDNkK7mDK3weR+kXoQZrS5cQUdmJswJy
+	 EKLFcDwHsEsfA==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>
+Subject: [PATCH mm-stable] uprobes: Revert ref_ctr_offset in uprobe_unregister error path
+Date: Tue, 13 May 2025 14:21:25 +0200
+Message-ID: <20250513122125.1617722-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 May 2025, Anusha Srivatsa <asrivats@redhat.com> wrote:
-> I get that embedding drm_panel within intel_panel which is embedded
-> within intel_connector, which also embeds drm_connector and so on can
-> get confusing to use. But Jani,
-> about drm_panel_follower , which is the panel that is following the
-> intel_panel? Is it the associated
-> touchscreen if any or some other device?
+From: Jiri Olsa <olsajiri@gmail.com>
 
-Touchscreen, it's stuff under investigation, WIP. Needs a bunch more
-stuff, but just trying to ensure drm_panel doesn't become a blocker
-right off the bat.
+There's error path that could lead to inactive uprobe:
 
+  1) uprobe_register succeeds - updates instruction to int3 and
+     changes ref_ctr from 0 to 1
+  2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+     is changed to 0 (it's not restored to 1 in the fail path)
+     uprobe is leaked
+  3) another uprobe_register comes and re-uses the leaked uprobe
+     and succeds - but int3 is already in place, so ref_ctr update
+     is skipped and it stays 0 - uprobe CAN NOT be triggered now
+  4) uprobe_unregister fails because ref_ctr value is unexpected
 
-BR,
-Jani.
+Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+which is the case when uprobe_unregister fails (int3 stays in place),
+but we have already updated refctr.
 
+The new scenario will go as follows:
 
+  1) uprobe_register succeeds - updates instruction to int3 and
+     changes ref_ctr from 0 to 1
+  2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+     is reverted to 1..  uprobe is leaked
+  3) another uprobe_register comes and re-uses the leaked uprobe
+     and succeds - but int3 is already in place, so ref_ctr update
+     is skipped and it stays 1 - uprobe CAN be triggered now
+  4) uprobe_unregister succeeds
+
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+Please note it's based on mm-stable branch, because it has the
+latest uprobe_write_opcode rewrite changes.
+
+ kernel/events/uprobes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4c965ba77f9f..84ee7b590861 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 
+ out:
+ 	/* Revert back reference counter if instruction update failed. */
+-	if (ret < 0 && is_register && ref_ctr_updated)
+-		update_ref_ctr(uprobe, mm, -1);
++	if (ret < 0 && ref_ctr_updated)
++		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+ 
+ 	/* try collapse pmd for compound page */
+ 	if (ret > 0)
 -- 
-Jani Nikula, Intel
+2.49.0
+
