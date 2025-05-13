@@ -1,109 +1,177 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E50242D77
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787A32BDC09
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150700; cv=none; b=YAWRYK1xEcYC1pgpaBv7zgK9ltPhAInD1IFhYf7tzVnKBrp6089cMhStDzBAp3OZo5qnvByEs7obTVtvuIEcrj5hUIL0rW3zYGcoRqcNtsszADs32GUq+ep+7FXhOpEV/j9lXatXIH440OOZGI6Uvk0Jak9RwEC2u8VxB/H6PCE=
+	t=1747150724; cv=none; b=cHaibBrJCwkeStb5cWe0SvWGBSgMj7RccxXix/cGhKuVJn39aWkQJA8d7VPe7z9flaBG+qfN6U3Yh21d1kMLs7k2I6wkrOCqSWso6OboJEEHcGrDQS2yMo/o5oC5VkGUJlDuggblEm3vdsFKExAUFhd6ZsR7N7RV3GO+mS/4/I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150700; c=relaxed/simple;
-	bh=skG39v1xIReFqwyoMt3cIkLz1te5hylA+XNsvd74YW0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=d5Iu3yvDEv6IfZFq0bxRJHviGZw9TH55AXP/8zGvj97Kf6Y+moJxUI9mfHfW5m31W82QE5QYaMDvk7zFgLNDKaKpKZ1xpqy+Sh5Q0v1V0JhzqGDss4u1SBlcPaDE/jWg0o/B5Icd/KaQPAZiY2/BIx0EAfl1KPz5bl03qAg/d94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=p9JGB16a; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747150724; c=relaxed/simple;
+	bh=+iXXgL4gr8KPYDv9/e7RFbUo5M19orzShFShoavpw88=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=PmvqXaPxJAkFUpUaCAbc24nbWjeDLQZwRvmeQibBcYcKRplIMUain54rkvKmNjLD99lnXVQtWeI8e0Zkdbyh5UoQK7lRDDUr38jx1lb8ev5GYwJfVW54e7d5zk6Qj9iTsojAz+wxCXEbQEvKhRlCDCG3ub2yAYIUj60o5xUb1xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pvsJuyhn; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="p9JGB16a"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DDx9qo003335;
-	Tue, 13 May 2025 17:38:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=S0lXHtXZiBNe2UA5zB9pQM
-	WlV9t4LIkccdodCgquO/A=; b=p9JGB16a4j66mxFLU3vLFy8QHAp3DtF+cNhAk0
-	c4d3mHbEs6GyXdmRMHj08EkDk5LvYCYsONNUTmKdf6K34Hb7kS1RCXDERHkK8gCQ
-	kCtd5/XcUnp9IJyAs+O7t5S1VpxZjV5Ngh/WKLicCvO7tE5htIBF71HSnb6F+pbj
-	MRxtFmsWHSHV1urhK4yxFnaojJF+EWig7cJyKiLtFYbufdRP9MlBglWaBkOB3xUn
-	Ugs66fKGuWDXzPZWHmrOpfYLWQOZmMu8e6azSrAHnGkDigH0xsxpBjGvayIT3+i5
-	V/fMiDsSRAoe7TA4u4qU18U8aWd4z0jVxcAOZRZg+lPnXCwA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46huxacqp5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 17:38:07 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E936C40045;
-	Tue, 13 May 2025 17:36:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 66CE2A2A2E5;
-	Tue, 13 May 2025 17:34:38 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 13 May
- 2025 17:34:38 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Tue, 13 May 2025 17:34:31 +0200
-Subject: [PATCH] memory: stm32_omm: Fix error handling in
- stm32_omm_disable_child()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvsJuyhn"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-48b7747f881so358761cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747150721; x=1747755521; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=89y90/kYEAF6o+kMHPOusZlookMeFzeAB2+XdecwNJU=;
+        b=pvsJuyhnthP36mpKtFRwOuGdagEFkSpcv5CG9cVRWKoO6+E+AjXyWrAodHH4ZxBUGQ
+         VaROaGwfeuDTVcDwXZrwm/kGSlboFRbky06MAHhNerZaNYYosvcfFjxrw5lQ0gsN8hve
+         NlRdSKM1qmnkrBnG9R61in2tfCgGkIJQdQ+UNE6/tjgcuilNN0hSnIDbUrzjuZDUrtK/
+         jmCK+Nj2daEBFWql6RNWaM9K9hnhHRLFcHSb5yyMzjNvmhO+Ubg2krUh8MP5zmVeiQJ+
+         PEt8zzdJ79zrOXUT49wsy2CNY6qIbw3Yf0tJjKUEKmgtLYUNUr8CBr63AAz3QkzrhzMv
+         BBnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747150721; x=1747755521;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=89y90/kYEAF6o+kMHPOusZlookMeFzeAB2+XdecwNJU=;
+        b=LsglyXEmjuPlj5Eews5X2yS+wc9qLbXzEk0eKEka+2V26vVaxTyDCxzpiWe6MmXwZf
+         KUpClmAbcZqafLpr21OhTA+omA+iG73kDllkybE3mEkd3dkrfwRZsv+nFdF+iN0wunTR
+         c1CvirExo5VJ/u1ciz/kpI7pp3QAYBzy+NKK4iKKUtIFPE6Yh7upz3hiEvVH9MBi9WLV
+         Lyv95jW8wczTUoV2Ek0YZhzsFGpnG/N2Dq4FLTTWjBXZaAiA2PyDCxVE8HnkxVH94Xvy
+         ar0IAIY5zxpaeKcmC9YEiiR761kuQnQpg7356/Smgn6v7HvJrCYp3P9ezZlSf6d9YN8+
+         Hu3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVcQQJGkwmvX5TotUboDG6sOXQ1QkHv1Wl+BA92SDDMx/n/+kbwm+XWHtOab9CpuE8xZoNYQst5Ji4KoGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh72Nf6HHAEhMYfM2vWxTA1MNFSANAb+ILQ0sRhBg/5m8hij9K
+	CzSzjK7HqXAYIvcA4Jl8vdGZIZJfkpULL07qC9HdhQt62/oK6BljbAUepNP5oI7eItrR+9Ja1yE
+	YWCJrLGipebqzedct0ZebEkurkBckyucMpH/boQQO
+X-Gm-Gg: ASbGncu03v8NSzevDLIC5P+XVm9M5JA2PEkL4zgTfuLT9H2nMHi+QlRlxpBrU0k9FL9
+	dI394CZfGMPAqhAU8MElJRzBCXOXOkow9y1Xt7bRQTjabJprSUsVcoqmA1sWeCPOJ0tqXuHD9cs
+	NS31toqNOR5VBYOc9q5KQPLbrtndej6BbHLG/XoQF5Nmw1mN1GoKEn2elduJG4
+X-Google-Smtp-Source: AGHT+IEGe3y7C/3dEYNxkfLLRp1t4I353MK1YI+azNL4dTTRCLF/nBxhIhBEqvLjXbiBNaH44EYUd3wPgMy+iFeei/0=
+X-Received: by 2002:ac8:598d:0:b0:466:8c23:823a with SMTP id
+ d75a77b69052e-494898efdb9mr3460091cf.17.1747150720836; Tue, 13 May 2025
+ 08:38:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAIZmI2gC/x2MQQqAIBAAvyJ7TjDTQ30lQirX2oMaKlFEf086D
- sPMAxkTYYaBPZDwpEwxVGgbBus+hw052coghdRCtx3PxXfSRO+No8uU+4gcrVuUm1Vv0UINj4T
- V/dNxet8PcNgQXGQAAAA=
-X-Change-ID: 20250513-stm32_omm_fix_typo-edfb4fa49ded
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Christophe Kerello <christophe.kerello@foss.st.com>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Patrice Chotard
-	<patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
+ <d5d8fc74f02b89d6bec5ae8bc0e36d7853b65cda.1746792520.git.lorenzo.stoakes@oracle.com>
+ <bfd5b4co3ha32m7z7fo7rm2uhaqcunn7zqgywonm54wi2iakpb@zogdqwo4722c>
+In-Reply-To: <bfd5b4co3ha32m7z7fo7rm2uhaqcunn7zqgywonm54wi2iakpb@zogdqwo4722c>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 13 May 2025 08:38:28 -0700
+X-Gm-Features: AX0GCFu_sNznUsLr1ugO_DiPLuhx2Qpcv2QmJwH3d9RiFtZ1VEMUc2w3eNQQQs0
+Message-ID: <CAJuCfpHCZS-goD88VhKU1ovuZbOnQk6aWBHnEPu2HsBxfT+xzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] mm/vma: remove mmap() retry merge
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix stm32_omm_toggle_child_clock() return value test, we should exit
-only on non zero value.
+On Tue, May 13, 2025 at 6:25=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250509 08:14]:
+> > We have now introduced a mechanism that obviates the need for a reattem=
+pted
+> > merge via the mmap_prepare() file hook, so eliminate this functionality
+> > altogether.
+> >
+> > The retry merge logic has been the cause of a great deal of complexity =
+in
+> > the past and required a great deal of careful manoeuvring of code to en=
+sure
+> > its continued and correct functionality.
+> >
+> > It has also recently been involved in an issue surrounding maple tree
+> > state, which again points to its problematic nature.
+> >
+> > We make it much easier to reason about mmap() logic by eliminating this=
+ and
+> > simply writing a VMA once. This also opens the doors to future optimisa=
+tion
+> > and improvement in the mmap() logic.
+> >
+> > For any device or file system which encounters unwanted VMA fragmentati=
+on
+> > as a result of this change (that is, having not implemented .mmap_prepa=
+re
+> > hooks), the issue is easily resolvable by doing so.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+>
+> I have a few tests for the vma test suite that would test this path.
+> I'll just let them go.
+>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-Fixes: 8181d061dcff ("memory: Add STM32 Octo Memory Manager driver")
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
- drivers/memory/stm32_omm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
-diff --git a/drivers/memory/stm32_omm.c b/drivers/memory/stm32_omm.c
-index 8523d9601af20fc8fe74cceea84e63d253cafec1..79ceb1635698f6bc8bd4a39fdeaced1ec318e1f6 100644
---- a/drivers/memory/stm32_omm.c
-+++ b/drivers/memory/stm32_omm.c
-@@ -164,7 +164,7 @@ static int stm32_omm_disable_child(struct device *dev)
- 	u8 i;
- 
- 	ret = stm32_omm_toggle_child_clock(dev, true);
--	if (!ret)
-+	if (ret)
- 		return ret;
- 
- 	for (i = 0; i < omm->nb_child; i++) {
+>
+> > ---
+> >  mm/vma.c | 14 --------------
+> >  1 file changed, 14 deletions(-)
+> >
+> > diff --git a/mm/vma.c b/mm/vma.c
+> > index 3f32e04bb6cc..3ff6cfbe3338 100644
+> > --- a/mm/vma.c
+> > +++ b/mm/vma.c
+> > @@ -24,7 +24,6 @@ struct mmap_state {
+> >       void *vm_private_data;
+> >
+> >       unsigned long charged;
+> > -     bool retry_merge;
+> >
+> >       struct vm_area_struct *prev;
+> >       struct vm_area_struct *next;
+> > @@ -2417,8 +2416,6 @@ static int __mmap_new_file_vma(struct mmap_state =
+*map,
+> >                       !(map->flags & VM_MAYWRITE) &&
+> >                       (vma->vm_flags & VM_MAYWRITE));
+> >
+> > -     /* If the flags change (and are mergeable), let's retry later. */
+> > -     map->retry_merge =3D vma->vm_flags !=3D map->flags && !(vma->vm_f=
+lags & VM_SPECIAL);
 
----
-base-commit: 0169a24036848cf18205301673259bb6879eef97
-change-id: 20250513-stm32_omm_fix_typo-edfb4fa49ded
+Could we have a WARN_ON() here please? I know you took care of in-tree
+drivers but if an out-of-tree driver does this there will be no
+indication that it has to change its ways. I know we don't care about
+out-of-tree ones but they still exist, so maybe we can be nice here
+and issue a warning?
 
-Best regards,
--- 
-Patrice Chotard <patrice.chotard@foss.st.com>
-
+> >       map->flags =3D vma->vm_flags;
+> >
+> >       return 0;
+> > @@ -2622,17 +2619,6 @@ static unsigned long __mmap_region(struct file *=
+file, unsigned long addr,
+> >       if (have_mmap_prepare)
+> >               set_vma_user_defined_fields(vma, &map);
+> >
+> > -     /* If flags changed, we might be able to merge, so try again. */
+> > -     if (map.retry_merge) {
+> > -             struct vm_area_struct *merged;
+> > -             VMG_MMAP_STATE(vmg, &map, vma);
+> > -
+> > -             vma_iter_config(map.vmi, map.addr, map.end);
+> > -             merged =3D vma_merge_existing_range(&vmg);
+> > -             if (merged)
+> > -                     vma =3D merged;
+> > -     }
+> > -
+> >       __mmap_complete(&map, vma);
+> >
+> >       return addr;
+> > --
+> > 2.49.0
+> >
