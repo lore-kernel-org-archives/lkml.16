@@ -1,124 +1,272 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271BE14A8B;
-	Tue, 13 May 2025 16:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346962BEC2B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747152509; cv=none; b=puJVGvhKYNFz6U/0EoC37VsfqnEOo88r7zVyc4XWOGNJqwaO8FaK4/PgdcrzCLen3dYSFDJ9RlFyWWu8lg4srtZEVGZEVeL04oi4BMQxvv2QoXK81l02T3zGsVX9cbk++LoVZ3bUSjn1qGpLTgMkxFRRTgnhcNCeI6feoXeGkL4=
+	t=1747152516; cv=none; b=DZXSUnsMsKgBSZk61aWRYNMqgg82j5T0ZZVkRcd7zJafjZIee9wUKfaXYJg/4U5uenLSOATk1wK0BRRMeCB/UbGFiPKk7NMEKvfrKhKVQ+9bfyjhZOc+AKqTTio2e/8zFMTIv47NROHP043UntxzY5WfY5VqkSsMyQdEU2c60Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747152509; c=relaxed/simple;
-	bh=lXLXq0c3RiyAPCrSXiaOWb3qdU+9+Mzs8QTTwctlBuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k/+gvrYDV6y/H6EnPHc7AYHofezG2vGhKKa4zIdfSghB3ldW65+i+1RpgyDB07KeDNsTMTllQ708W47wfvVAmKjtw/oOiU/L4rUKoAm9bLzKcxpngbE+CmTiXlgsrHaM2N0hwJ3p4nUOIm8rjOI8UrAHs0xTtHU/mgCMvM/qD4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSmSKq7G; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747152516; c=relaxed/simple;
+	bh=/Vb4sd+3hcM5Me2MdG5VzqnOvvov6MQZnukrsT0Iuac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UDQ8JtGoGezBgW1wOgsqtFPzitXxy5IL/PToaYUeNzHEpdClBp8N4bHl2Kn5esqnzDn4140NWWtxYHG5pM503lgUYLnnQw4eUmCZmNjtvk+iuMRJcL9fxkEoDvcwERuchw4uNwdQUlm7vzLkCUHCm/GM54HNvcFQZiHLGH567dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cQgcxTg+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O4Etl99W; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cQgcxTg+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O4Etl99W; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSmSKq7G"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47686580529so68622331cf.2;
-        Tue, 13 May 2025 09:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747152507; x=1747757307; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AN4mliRZzMBrbopGFJvTRuuBl/xk9aFHZyNZB0Spr1g=;
-        b=aSmSKq7Gn5T+G/axlq6j46rHRBgnUqAzxCuEsD5n0U/Uz6iH/cRQLL6ff5qBuKSs5X
-         5oDKbhIfREaSqOeVE7R8wOUKlc5f0UVX3YbZNV0qRrdGC0OMIUOLaqS5/UibBBGXxdwp
-         fWirI3akyBzblvAa6Ylgsu/rMv4nj/R3m42NsuqHy+MnkZ9jtdX97F0Vo1oGGTO+dVqk
-         ktSgniWvhePwnhP3Lr8NKcqqFNRTSUzquchncvS2SVU7iJCN8dkrq1I+2eP3HOr1584Q
-         sc8FTjIbj78pDyVNYe1WktQi4mJRRtS0IqB8M9J/Yyw1017loFkfO4z2VaVOjNYE27Zl
-         M5iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747152507; x=1747757307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AN4mliRZzMBrbopGFJvTRuuBl/xk9aFHZyNZB0Spr1g=;
-        b=s+uXS+EFU8eUAwKPvXXng722WEiGt33CALllXNqH+vYa73ackKuvyDLcpsdFxCHXTt
-         h8EfjhlJC3OCFyv2Mw1h+comHXKKC85hct1KWihBA5PS3z6cPulpYY4GM6DyEW+OtcTk
-         gJ8EqwuAXNnmvieQc8zj9M9g0tl4x/HxyCqvE/jKNoZfnvIb7ZoYaktjf+WiTLV9dEjT
-         LfGo4N6rlqv5c8Sl3fIwfRsF1hZl93avR2kW8C8qdVW9sI4DACF/s+eQpdcH85MZekm6
-         z2rs9hBAe8Po7DYUZ4vBJ/ndEV+rQ42MCPoNMtPEg5LH6snkJuspUrt+j6iTXEIDjkyk
-         9f6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXQmO2bPJ0Wta+27rP9r8gQUJ5Mb93Db+fNCtO8HJWL+pthpa8m0q9vjIoxeyzEf5xnwRGlfOLddVZP@vger.kernel.org, AJvYcCXx80WUrHKLP0wQ77WgCKATtF5b8a5F6Jq0oc/PaSLRHHFzl+FLVvLCJwhJ50CNMWqu/7+NVVqn2Gwyc36r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjPodIsL/k/ZXi62v9tNgLi3pY1yXXVz2dTGyXyTXk6R1BFNAL
-	tTy2mb8vX0YU2myHlWFbjIT948gzMRtZWi4aDk0j5jRTSANqL2W6NRwsPHjTmnw7PhDmiq/AtDD
-	smVK1CU7oI/sVWTan8lTYfzE79I4=
-X-Gm-Gg: ASbGnctCB4rNNhPLQ7LT+//FHxLle/41emZGJGOuYTQhVf5QBtgf+zq5goT+wYffPml
-	6Qor/60DT+lvD3WLHICm3O4QkEEWXyUBA85ikc/GrvbHFuWJnHti9dDeV6MBhUrg6CJ4PXsUOsO
-	xUQ8jK73u9FYGNNvqa+PjdW2xVDiIJWwpQfdmmzm2qUnOTnIzHZrK4yjB9qHzf+PY9
-X-Google-Smtp-Source: AGHT+IE26qRcDzjLWk2tHG/kJHrPsKiSz2MOY61Ty7j3aEFGcynoA5b6w5pOfe5KgAmrxejxGAraPScNp/dww8vXp4w=
-X-Received: by 2002:a05:622a:2587:b0:476:98d6:141c with SMTP id
- d75a77b69052e-49495c8eb2emr572421cf.18.1747152503726; Tue, 13 May 2025
- 09:08:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cQgcxTg+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O4Etl99W";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cQgcxTg+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O4Etl99W"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3FCE0211AC;
+	Tue, 13 May 2025 16:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747152511; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBvtkgHlz5SobIfyPxIXYeeroBpFTJXa2BoBZCQAARY=;
+	b=cQgcxTg+InItRrJ/Jo2FeGn2PTozXt8Vlb9Z2WsRtvbIvm0tDBXx9aLB3QR6aM4ihhltRW
+	nayHZa/04MV15cc1ajIK+fNqp9oWc40qtt608ybwGErE/yP6NrlC9Zqo8m6ITlQObcfxTF
+	WfBFk+mvCWGMdgi7POZjK0lZ4668P2Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747152511;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBvtkgHlz5SobIfyPxIXYeeroBpFTJXa2BoBZCQAARY=;
+	b=O4Etl99WSKMRAFEfXcI2fqjvmTC9t+ntOo5upyppAGpQ5UADNQtgaNiR3uOq69mViVW+rl
+	zzxW90OhyV812SBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747152511; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBvtkgHlz5SobIfyPxIXYeeroBpFTJXa2BoBZCQAARY=;
+	b=cQgcxTg+InItRrJ/Jo2FeGn2PTozXt8Vlb9Z2WsRtvbIvm0tDBXx9aLB3QR6aM4ihhltRW
+	nayHZa/04MV15cc1ajIK+fNqp9oWc40qtt608ybwGErE/yP6NrlC9Zqo8m6ITlQObcfxTF
+	WfBFk+mvCWGMdgi7POZjK0lZ4668P2Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747152511;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBvtkgHlz5SobIfyPxIXYeeroBpFTJXa2BoBZCQAARY=;
+	b=O4Etl99WSKMRAFEfXcI2fqjvmTC9t+ntOo5upyppAGpQ5UADNQtgaNiR3uOq69mViVW+rl
+	zzxW90OhyV812SBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 221531365D;
+	Tue, 13 May 2025 16:08:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id A9/SB39uI2gAFAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 13 May 2025 16:08:31 +0000
+Message-ID: <1724b59a-0c3a-482c-b141-b5611665d1f4@suse.cz>
+Date: Tue, 13 May 2025 18:08:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-via_vt8500_timer_binding-v3-1-88450907503f@gmail.com> <aCNqCrBqGSxRGMKd@mai.linaro.org>
-In-Reply-To: <aCNqCrBqGSxRGMKd@mai.linaro.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Tue, 13 May 2025 20:08:12 +0400
-X-Gm-Features: AX0GCFvMOIyMn5-4bO-1Iaea5F4lOX7lux6P---Bu9eSzNlomYJ5PbHB5oe4jbM
-Message-ID: <CABjd4YyQ1wg4Esd0ZGO-2+WGXkzrqfbhxLMWJ9N8eXTDr4BBgg@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: timer: via,vt8500-timer: Convert to YAML
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] slab: add opt-in caching layer of percpu sheaves
+Content-Language: en-US
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
+ <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
+ <20250425-slub-percpu-caches-v4-1-8a636982b4a4@suse.cz>
+ <aBAmi38oWka6ckjk@harry>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <aBAmi38oWka6ckjk@harry>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.cz:mid,suse.cz:email]
+X-Spam-Score: -4.30
 
-On Tue, May 13, 2025 at 7:49=E2=80=AFPM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On Tue, May 06, 2025 at 04:16:32PM +0400, Alexey Charkov wrote:
-> > Rewrite the textual description for the VIA/WonderMedia timer
-> > as YAML schema.
-> >
-> > The IP can generate up to four interrupts from four respective match
-> > registers, so reflect that in the schema.
-> >
-> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> > Changes in v3:
-> > - Added Rob's review tag (thanks Rob)
-> > - Rebased on top of next-20250506 to pull in MAINTAINERS updates
-> > - Link to v2: https://lore.kernel.org/r/20250418-via_vt8500_timer_bindi=
-ng-v2-1-3c125568f028@gmail.com
-> >
-> > Changes in v2:
-> > - split out this binding change from the big series affecting multiple
-> >   subsystems unnecessarily (thanks Rob)
-> > - added description for the four possible interrupts (thanks Rob)
-> > - added overall description of the IC block
-> >
-> > Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-6-f9af6=
-89cdfc2@gmail.com/
-> > ---
->
-> The patch does not apply.
->
-> --- MAINTAINERS
-> +++ MAINTAINERS
-> @@ -3467,6 +3467,7 @@ F:        Documentation/devicetree/bindings/hwinfo/=
-via,vt8500-scc-id.yaml
->  F:     Documentation/devicetree/bindings/i2c/i2c-wmt.txt
->  F:     Documentation/devicetree/bindings/interrupt-controller/via,vt8500=
--intc.yaml
->  F:     Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
->
->         ^^^^^^ those bindings are not in my tree
+On 4/29/25 03:08, Harry Yoo wrote:
+> On Fri, Apr 25, 2025 at 10:27:21AM +0200, Vlastimil Babka wrote:
+>> Specifying a non-zero value for a new struct kmem_cache_args field
+>> sheaf_capacity will setup a caching layer of percpu arrays called
+>> sheaves of given capacity for the created cache.
+>> 
+>> Allocations from the cache will allocate via the percpu sheaves (main or
+>> spare) as long as they have no NUMA node preference. Frees will also
+>> put the object back into one of the sheaves.
+>> 
+>> When both percpu sheaves are found empty during an allocation, an empty
+>> sheaf may be replaced with a full one from the per-node barn. If none
+>> are available and the allocation is allowed to block, an empty sheaf is
+>> refilled from slab(s) by an internal bulk alloc operation. When both
+>> percpu sheaves are full during freeing, the barn can replace a full one
+>> with an empty one, unless over a full sheaves limit. In that case a
+>> sheaf is flushed to slab(s) by an internal bulk free operation. Flushing
+>> sheaves and barns is also wired to the existing cpu flushing and cache
+>> shrinking operations.
+>> 
+>> The sheaves do not distinguish NUMA locality of the cached objects. If
+>> an allocation is requested with kmem_cache_alloc_node() (or a mempolicy
+>> with strict_numa mode enabled) with a specific node (not NUMA_NO_NODE),
+>> the sheaves are bypassed.
+>> 
+>> The bulk operations exposed to slab users also try to utilize the
+>> sheaves as long as the necessary (full or empty) sheaves are available
+>> on the cpu or in the barn. Once depleted, they will fallback to bulk
+>> alloc/free to slabs directly to avoid double copying.
+>> 
+>> The sheaf_capacity value is exported in sysfs for observability.
+>> 
+>> Sysfs CONFIG_SLUB_STATS counters alloc_cpu_sheaf and free_cpu_sheaf
+>> count objects allocated or freed using the sheaves (and thus not
+>> counting towards the other alloc/free path counters). Counters
+>> sheaf_refill and sheaf_flush count objects filled or flushed from or to
+>> slab pages, and can be used to assess how effective the caching is. The
+>> refill and flush operations will also count towards the usual
+>> alloc_fastpath/slowpath, free_fastpath/slowpath and other counters for
+>> the backing slabs.  For barn operations, barn_get and barn_put count how
+>> many full sheaves were get from or put to the barn, the _fail variants
+>> count how many such requests could not be satisfied mainly  because the
+>> barn was either empty or full.
+> 
+>> While the barn also holds empty sheaves
+>> to make some operations easier, these are not as critical to mandate own
+>> counters.  Finally, there are sheaf_alloc/sheaf_free counters.
+> 
+> I initially thought we need counters for empty sheaves to see how many times
+> it grabs empty sheaves from the barn, but looks like barn_put
+> ("put full sheaves to the barn") is effectively a proxy for that, right?
 
-This series is based on next-20250506. Happy to rebase onto 6.15-rc1,
-but these will result in a (trivial) conflict when merging the
-different trees into -next and to master. Please let me know if that's
-better.
+Mostly yes, the free sheaves in barn is mainly to make the "replace full
+with empty" easy, but if that fails because there's no empty sheaves, the
+fallback with allocating an empty sheaf should still be successful enough
+that tracking it in detail doesn't seem that useful.
 
-Best regards,
-Alexey
+>> Access to the percpu sheaves is protected by local_trylock() when
+>> potential callers include irq context, and local_lock() otherwise (such
+>> as when we already know the gfp flags allow blocking). The trylock
+>> failures should be rare and we can easily fallback. Each per-NUMA-node
+>> barn has a spin_lock.
+>> 
+>> When slub_debug is enabled for a cache with sheaf_capacity also
+>> specified, the latter is ignored so that allocations and frees reach the
+>> slow path where debugging hooks are processed.
+>> 
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> ---
+> 
+> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+
+Thanks!
+
+> LGTM, with a few nits:
+
+I've applied them, thanks. Responding only to one that needs it:
+
+>> +static __fastpath_inline
+>> +bool free_to_pcs(struct kmem_cache *s, void *object)
+>> +{
+>> +	struct slub_percpu_sheaves *pcs;
+>> +
+>> +restart:
+>> +	if (!local_trylock(&s->cpu_sheaves->lock))
+>> +		return false;
+>> +
+>> +	pcs = this_cpu_ptr(s->cpu_sheaves);
+>> +
+>> +	if (unlikely(pcs->main->size == s->sheaf_capacity)) {
+>> +
+>> +		struct slab_sheaf *empty;
+>> +
+>> +		if (!pcs->spare) {
+>> +			empty = barn_get_empty_sheaf(pcs->barn);
+>> +			if (empty) {
+>> +				pcs->spare = pcs->main;
+>> +				pcs->main = empty;
+>> +				goto do_free;
+>> +			}
+>> +			goto alloc_empty;
+>> +		}
+>> +
+>> +		if (pcs->spare->size < s->sheaf_capacity) {
+>> +			swap(pcs->main, pcs->spare);
+>> +			goto do_free;
+>> +		}
+>> +
+>> +		empty = barn_replace_full_sheaf(pcs->barn, pcs->main);
+>> +
+>> +		if (!IS_ERR(empty)) {
+>> +			stat(s, BARN_PUT);
+>> +			pcs->main = empty;
+>> +			goto do_free;
+>> +		}
+> 
+> nit: stat(s, BARN_PUT_FAIL); should probably be here instead?
+
+Hm, the intention was that no, because when PTR_ERR(empty) == -ENOMEM, we
+try alloc_empty_sheaf(), and that will likely succeed, and then
+__pcs_install_empty_sheaf() will just force the put full sheaf (and record a
+BARN_PUT), because we already saw that we're not over capacity. But now I
+see I didn't describe it as a scenario for the function's comment, so I will
+add that.
+
+But technically we should also record stat(s, BARN_PUT_FAIL) when that
+alloc_empty_sheaf() fails, but not when we "goto alloc_empty" from the "no
+spare" above. Bit icky but I'll add that too.
+
+>> +
+>> +		if (PTR_ERR(empty) == -E2BIG) {
+>> +			/* Since we got here, spare exists and is full */
+>> +			struct slab_sheaf *to_flush = pcs->spare;
+>> +
+>> +			stat(s, BARN_PUT_FAIL);
+>> +
+>> +			pcs->spare = NULL;
+>> +			local_unlock(&s->cpu_sheaves->lock);
+>> +
+>> +			sheaf_flush_unused(s, to_flush);
+>> +			empty = to_flush;
+>> +			goto got_empty;
+>> +		}
+> 
+
+
