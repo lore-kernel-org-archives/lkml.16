@@ -1,68 +1,123 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9631EB180;
-	Tue, 13 May 2025 07:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527DE1E885A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120678; cv=none; b=hlXVwMX2GHW8JDTE+XCdBXYp3lD+z6936wWN0Tb9RR8I6iXEboj4ZMyaY5k9OrUer6X0sPOH7tFi3C6k9R6tIME8jbYuq+KB8HoZBxnSlhPRohg3znmEIbEvBz4YOT1MTbPBrQKKCZrE3LFqsqP+bpzrGdT6wKD8W9WUjrkyN/E=
+	t=1747120678; cv=none; b=J/GNBQDSVOBl3y9sqD8YAyvLQFbCVDPFKU0CMQMgFkOpwLxWCTCvLtHE5N7l21zLNdIZeODUxMohHA+BtPb3tjCcflQc60FFTRVWQIovJMs8ekR4fIJJo0aQUXXvLO0D4X106ag78CLBNtHCkH8NSHM3nuUmwPgcnyWaEVPSe8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747120678; c=relaxed/simple;
-	bh=V5FNwPI2kQgLu1dX+l5kRapdnptiYaNrbywLNE+PKeQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=huLDab3M6dK3aILefbzLNQ1mzMDMilmJSSW3aOj9Zdj11xepUyVSVRUUnZE8bIDLhMnNpoioREeHVcgaSdHn5tzfCwvsmyTuZp9RrTFZxbEOZpThTiY74C+bzWinNMp5g6HNxGUFKz3YxskFkoSnrOREkJ/LmJ5t3E50GvYmgh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=dExfaAKW; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	bh=xvzoV0iC/YctRZfGcRgdGlhugaW2Vr1q1SDlXESDq+k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jMcanXmwmXXcWslBZsGGtX9VFpEOqoSAHhollADvP3jMg/5H8DGBuCqwifaOAXMb3o0td93rwMK9VS5/0pbyO1GDkjMFXspuV8Bi8hC4rzPEVgHoanwVmW2JGXnNWvQIUK3PTqKhdKhnazNdT3VrKbANb/03VC8AbVuCubsbOr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZDhAe/Fw; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="dExfaAKW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=usLtNPHMdMJU1a6dRfum36pLhpdLH95VE6zNtQnTF30=;
-	t=1747120676; x=1748330276; b=dExfaAKWXmrNj7qCteHnTXeHJB0w+QGhSBjt2X4RCNXMTVc
-	H8gEwY5g19IQtGktMSi9Ru+gXdgA46HXEQZ5b3i2O2QWY7gFpm9l6bhJcrMj6+/YYe5/xnIRg9P/R
-	nDzS4pD4NbUrgghImtPrj+bPdQR1ylhK7flOcxnqFALbN8GFRCkSaX4C8d9+aNTYAPo8LIoNOGbTx
-	VCqQ1RGmMf4W+slgNfrF8eLRalwJi2F6k15ZbCqwkeKrg1GkD3CuqUMejYp2N/ltX3sIYQ0eyfSwO
-	npiLDAp4JE2u4fQU3feMrfpr5IRHU5xdw0zQ9cZwUZiFogW8fboTxMEg4Yrww5Rg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uEjtb-00000005Ix1-2ZER;
-	Tue, 13 May 2025 09:17:47 +0200
-Message-ID: <16499ad8e4b060ee04c8a8b3615fe8952aa7b07b.camel@sipsolutions.net>
-Subject: Re: [PATCH wireless-next 1/2] wifi: mac80211: validate SCAN_FLAG_AP
- in scan request during MLO
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 13 May 2025 09:17:46 +0200
-In-Reply-To: <20250513-bug_fix_mlo_scan-v1-1-94235bb42fbe@oss.qualcomm.com>
-References: <20250513-bug_fix_mlo_scan-v1-0-94235bb42fbe@oss.qualcomm.com>
-	 <20250513-bug_fix_mlo_scan-v1-1-94235bb42fbe@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZDhAe/Fw"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54D7HTOn3007472
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 02:17:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747120649;
+	bh=UxNwJ+d0HodrpLSe63Wt0or4AAJJKcfodnYCzI/WscY=;
+	h=From:To:CC:Subject:Date;
+	b=ZDhAe/Fw8Ahpkx6nmiQ3k3K8K//iqMr4RTcVcaVZX5r1LycGIPo/k8+3utY2Qf33i
+	 2Q5N5sCRMFQIKgSjRY9h8PS50en0uNTy2ubViTAZf/2ugpy3Qa+jzZMApN2AsVn5pn
+	 9WhORdkI7NFqKiBjhwHxN0Zbkk/80y0DOyJxnG0g=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54D7HTlF066715
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 13 May 2025 02:17:29 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
+ May 2025 02:17:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 13 May 2025 02:17:29 -0500
+Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.59])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54D7HPTO114273;
+	Tue, 13 May 2025 02:17:25 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <13564923607@139.com>, <13916275206@139.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <jesse-ji@ti.com>,
+        Shenghao Ding <shenghao-ding@ti.com>,
+        kernel test robot
+	<lkp@intel.com>
+Subject: [PATCH v1] ALSA: hda/tas2781: Fix the symbol was not declare warning reported by kernel test robot
+Date: Tue, 13 May 2025 15:17:21 +0800
+Message-ID: <20250513071721.1090-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, 2025-05-13 at 09:26 +0530, Aditya Kumar Singh wrote:
->=20
-> -		if (sdata->deflink.u.ap.beacon &&
-> +		if ((sdata->deflink.u.ap.beacon ||
-> +		     ieee80211_num_beaconing_links(sdata)) &&
->=20
+After commit 28a09d9e42c5 ("ALSA: hda/tas2781: Create an independent lib
+to save the shared parts for both SPI and I2C driver") created a separated
+lib for both hda-i2c and hda-spi driver, which caused this issue.
+sparse warnings: (new ones prefixed by >>)
+>> sound/pci/hda/tas2781_hda_spi.c:496:25: sparse: sparse: symbol
+   'tas2781_snd_ctls' was not declared. Should it be static?
+>> sound/pci/hda/tas2781_hda_spi.c:505:25: sparse: sparse: symbol
+   'tas2781_prof_ctl' was not declared. Should it be static?
+>> sound/pci/hda/tas2781_hda_spi.c:512:25: sparse: sparse: symbol
+   'tas2781_dsp_ctls' was not declared. Should it be static?
 
-Do we even still need the deflink check? Seems like
-num_beaconing_links() _should_ return 1 anyway even though it currently
-doesn't, and we need to fix that?
+Fixes: 28a09d9e42c5 ("ALSA: hda/tas2781: Create an independent lib to save the shared parts for both SPI and I2C driver")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505130420.vr9yDI3k-lkp@intel.com/__;!!G3vK!URphGMMfZ2erCLfJdETofl0O1mTSydDLLJ6inMIYWYUDUKYef_IuLvI7pnYj3Mx-4LRIi4BJEw$
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-Also seems the VLAN carrier handling is broken.
+---
+v1:
+ - | Reported-by: kernel test robot <lkp@intel.com>
+   | Closes: https://urldefense.com/v3/__https://lore.kernel.org/oe-kbuild-all/202505130420.vr9yDI3k-lkp@intel.com/__;!!G3vK!URphGMMfZ2erCLfJdETofl0O1mTSydDLLJ6inMIYWYUDUKYef_IuLvI7pnYj3Mx-4LRIi4BJEw$
+---
+ sound/pci/hda/tas2781_hda_spi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-johannes
+diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_spi.c
+index 50b82ecabb90..e0f8603c4854 100644
+--- a/sound/pci/hda/tas2781_hda_spi.c
++++ b/sound/pci/hda/tas2781_hda_spi.c
+@@ -493,7 +493,7 @@ static int tas2781_force_fwload_put(struct snd_kcontrol *kcontrol,
+ 	return change;
+ }
+ 
+-struct snd_kcontrol_new tas2781_snd_ctls[] = {
++static struct snd_kcontrol_new tas2781_snd_ctls[] = {
+ 	ACARD_SINGLE_RANGE_EXT_TLV(NULL, TAS2781_AMP_LEVEL, 1, 0, 20, 0,
+ 		tas2781_amp_getvol, tas2781_amp_putvol, amp_vol_tlv),
+ 	ACARD_SINGLE_RANGE_EXT_TLV(NULL, TAS2781_DVC_LVL, 0, 0, 200, 1,
+@@ -502,14 +502,14 @@ struct snd_kcontrol_new tas2781_snd_ctls[] = {
+ 		tas2781_force_fwload_put),
+ };
+ 
+-struct snd_kcontrol_new tas2781_prof_ctl = {
++static struct snd_kcontrol_new tas2781_prof_ctl = {
+ 	.iface = SNDRV_CTL_ELEM_IFACE_CARD,
+ 	.info = tasdevice_info_profile,
+ 	.get = tasdevice_get_profile_id,
+ 	.put = tasdevice_set_profile_id,
+ };
+ 
+-struct snd_kcontrol_new tas2781_dsp_ctls[] = {
++static struct snd_kcontrol_new tas2781_dsp_ctls[] = {
+ 	/* Speaker Program */
+ 	{
+ 		.iface = SNDRV_CTL_ELEM_IFACE_CARD,
+-- 
+2.43.0
+
