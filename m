@@ -1,164 +1,189 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011032.outbound.protection.outlook.com [52.103.68.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A139C28851A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B74328D85A;
 	Tue, 13 May 2025 11:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136499; cv=none; b=S5MNcsDX7iufJyQ6LbGw6KuZ/0l0pIgXcW1c4a2PIvzSthT+910LOkSR3u8r440QXmRLyOCpP5gFW78TpkgHyV9LqoEWiw9t3B+FLofz2LD9Yg/F4fys+GoJGfAMRZPogxu0U06fHSzEZWXPrxNQ9yIIwfy9eUwBtOMcZC0VlOw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747136499; cv=fail; b=uEExQvzpFElrnXvrq8fqz1jaEr5PBm/WxIJaQ0PeKxzwKSr5qP8mR1LqPPXj9zhSwb7+2glsGbNh1BZl9qbPVefxqAKJaQQZBHRxsi7cwnqOWzABRKBMLLoT5+5g3X/DHnXW6reGIhInJYwFH9SkcPw0h5GXwl/+II7EeP2Wouw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747136499; c=relaxed/simple;
-	bh=uFX2rO3cWJmwi6vvHQkw3PfdS9uLgLh/X0Ve8XYCvpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lmRroCf4CMqNZ9Y9NrkGSAslFobnmcY2Wwpu9gQ3FL9zcJA8nE171mdzUfQxCCmB35OLGvUSLPS7ECYij/HRxZ8CRzf/1JQ8gz+3WQa5zwzYJkPOYw3JnN/rRiwWHM4HVtSjkAeYOK6x2rJiWZbNeqJmcnALKsJMB9z0pA9Mhv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=u+zoIWHe; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	bh=s1u7hkrV6AtEVFRDyNUNj3diHtwWhSre7+A8RkUPVb8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iZBGTyHL80GYNJBL5t650Oyv0EKm3MEAgR0Tusv3JWU6pctEV2XgCzRam4axRMQn1O0tCA3TN9FzUmqdCn5qx+1zFxxQbzH8zqxkvOuayc0oJ8n8pYjQG4SSDDcR6pcnkqcyjMsrNNGsA3ISAju1SCuyw8r6Mw1DyeFOfY0zyU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=t7K3TCqK; arc=fail smtp.client-ip=52.103.68.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u+zoIWHe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BLCbEb2NTTzv4/ODVyjqYAPhHDxBZDeZKEtBF7viCvw=; b=u+zoIWHef6JFSMGtTvvxGch/iJ
-	awCg/a3tBJSi76YIT0JHmabu6gBZHE7JjSzk5Qvmnfm59gMkRP7Lo0ZTpQEPeDijYGq10YWfM7onf
-	IFSBjnUnhDQbdr+dld3GHJB3G/OiA5UQD8uUwLjwfB1E8gXVDaVFZUc/iIo4bkYI/f4ezMiYW4BXh
-	aGzQ3SocmH5QgN5qnFGoZdjDtZnbbs82Gi845Bghn0Fiwa/BVdoCA9RfXBparJWErWzNgmq5NCmFr
-	PVzj+37HcJq3ak06M7Qyn35+jMadKBfgIr6GGvPg9DJV6b9pYRAZdpCjxsFLmmT9sSpcz8YDSgRuu
-	NfKBM76g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEo0k-0000000ArbM-31WB;
-	Tue, 13 May 2025 11:41:26 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2ABD930066A; Tue, 13 May 2025 13:41:26 +0200 (CEST)
-Date: Tue, 13 May 2025 13:41:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
-Message-ID: <20250513114125.GE25763@noisy.programming.kicks-ass.net>
-References: <20250509232859.657525-1-shakeel.butt@linux.dev>
- <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
- <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
- <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="t7K3TCqK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oBnA7fLvMFk1gjlbElX6yVxu6NmW8II/7cLp+tNYqu2SZvApRry9Vkq3Hz+Zbx54LhSoBcqwkg+QprlvcSpAgYLEF8DxlX/79Ai4AeY0htmyiKpuPI6QBuQRIMBGND24sVArXySbKKhGcY+RxUip+h9l8m+uv82U+hJQSJtfPgBTgXx1X1JM2s/4y7NToNK9AaCh4R31YDWUeAuOtzh/51g9aptwgOoKcI1iANMpkmWjvlQ3oU4SL2bfH4mCdv2cjXf2FdaWwMu5bqz/Tlf+HpFi0NxrzjZ/ISEBB3E2ZwmjJroGMYAqp94r3UtaaXeYiPhpzLhESv5oqm5G5Nz4JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s1u7hkrV6AtEVFRDyNUNj3diHtwWhSre7+A8RkUPVb8=;
+ b=SbcKWSnQ0WVq9WbaB8i9a8fFeq42xcOYSrd33HxnWQG7PL82zDb00YlpQErYjnRq4MFlLugmSHU/FbrYAJK20fheLerGTBIvqtBMTG3ExD3uHZRLthwbjUmL6kst9tWNtOFqBCete4SWhJrBFIvt0sKH4NErywOAUQYa01kPXs+GXyBvePY3/aacU5l4ggrdkOX/LE66M2tGINfLGVk3W0nctYZdIAP7IIWoEa5HdFMY+xDwO9z78kD7tLtoKT65RkTv7vwk4lD5G31oRjqiBS5XhkW3KYtb/qDVCgCaNLyc7GIU3wxBzwRvbg3LSMaM1tLHowEDOphuQ5GPyKuL9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s1u7hkrV6AtEVFRDyNUNj3diHtwWhSre7+A8RkUPVb8=;
+ b=t7K3TCqKEKBpHJM/TR/l8W/VlqOEdp7TeZAxjcOp0xnaguv/VGsCQOqftOKGdoY3r7yTIspeSHy4cNIYf5QbnkJ4exmtMqg+hVIQp02fFlRysl4asz18YChW5Gk0rQBitWgIC3HEeugE+Qgxp/scH0lR19YSTCkB526fh4+qKJ+7e+10LYQhuR72sSFbUtX6LBwBeQ81DS5SttW6YBOeu70GDEtNFw6beu5vAhXWjEnZiGdBHMLmpg8zztog12WHaoZsxHa70XVXI6G/4yA43jSqVTKA5EE6NmAH7lVDVD8wxqSDL2dqRglhxKv+3UHVQh/w5+em3W/ziVeGFxBOQg==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN0PR01MB6716.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:77::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 13 May
+ 2025 11:41:28 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 11:41:28 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Nick Chan <towinchenmi@gmail.com>
+CC: =?utf-8?B?IEVybmVzdG8gQS4gRmVybsOhbmRleiA=?=
+	<ernesto.mnd.fernandez@gmail.com>, Yangtao Li <frank.li@vivo.com>,
+	"ethan@ethancedwards.com" <ethan@ethancedwards.com>, "asahi@lists.linux.dev"
+	<asahi@lists.linux.dev>, "brauner@kernel.org" <brauner@kernel.org>,
+	"dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"ernesto@corellium.com" <ernesto@corellium.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "jack@suse.cz" <jack@suse.cz>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+	"sven@svenpeter.dev" <sven@svenpeter.dev>, "tytso@mit.edu" <tytso@mit.edu>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "willy@infradead.org"
+	<willy@infradead.org>, "slava@dubeyko.com" <slava@dubeyko.com>,
+	"glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>
+Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
+ support
+Thread-Topic: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
+ support
+Thread-Index: AQHbwyNzqehbet5hqkK4n55fUDPpSLPPqC8AgABMRYCAAH0xwg==
+Date: Tue, 13 May 2025 11:41:28 +0000
+Message-ID:
+ <PN3PR01MB9597DA4A452F730A3E0412E6B896A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+ <20250512101122.569476-1-frank.li@vivo.com> <20250512234024.GA19326@eaf>
+ <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com>
+In-Reply-To: <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|PN0PR01MB6716:EE_
+x-ms-office365-filtering-correlation-id: 53f54abd-e93b-4aa7-5cf1-08dd92131974
+x-ms-exchange-slblob-mailprops:
+ znQPCv1HvwVu6ov8hlKZu5ytU8AWxKlxgdBoX7e/5c5NULbcr3Vsww2fZtDK6cJJ3QnTqT2bvlZWYrOcwBE2GZGEKFAuUsfIhBMdTr2x4vgrEacrkp5fkClNRi5wqoKslCkWZjYHAKc5G/Xz9fj/b2nivv1KQ6GiLmbU9digk65TicJIDirO4O3fRfnVNSXGnI1zn1NL3JpJVv3GAoAIx5fUYnvbuPGRbN/v4LVwaPw7OVH/HZA1RvJ5a4nV475ZfiPAaHnQq1ZGy52fY/ikcLWfwEmkk8eyW3yUnPKW6A4wr40vA/8ZqDJ9JciXePOVZRDuZvMzYhTHpVoVyA2tztXKKyv3V6fVyiRMXjNUBGUSG+blqDTcboUUVsKGt17E7fEPdI5Tefbu8vpthjkW59niqd6ioSBYsGjhrygEI/UWQiMAgrnBB0i+L2HvmaOpmnYBiij9gs1zM8/4st3tv/WjREdpEvJPrbf5Bd94nsDbfROXGDdkX79cDGFLTeU4UF6wDtMmDRdcxXK4yKiBcZJJ7Ga96i8VmfloIRM6Lz+sQXiIce5bNh8gMken2tCzHykj+3n34M3V20E4k7SUGj6kW5HMFeOFIdgcZQFqcAL03b6tc3ZGt6UwqaGmEWtAmVuj6DBACoMtew+TMnAAxUFQEgu5ueE0UVerMAABHl25PdkS3rcnn+asIRxmMbIaowdFaHHZfp4Vv4mb9JRIsdoJ1cI/AVny7xq4CmiBpPBk9ag0vRTp95Zfv/f2mtedtesgXFwnf7w=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|7092599006|8060799009|8062599006|15080799009|19110799006|6072599003|461199028|3412199025|440099028|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?bllQMUVmN1ZiNHA1TEJaajhyTjFpZXhNcEpEOUtBVDdXWllUdkl5aGtNeGlW?=
+ =?utf-8?B?RFN6WEFCb09TYjVyc1lKenFDTHZTYjB6Q3Fobm05SzRPSENEK1NVM1hlYnkz?=
+ =?utf-8?B?czJCVkpienJhQ3BQekZoV2xsclZKSEVvd2VSRStGSmNxbEpXL3czV3lmZ1ho?=
+ =?utf-8?B?Vm5UL2htTllPQ0FBaHVIdkNQcWNQOUxweUJkcjhxWHFnY0oreVU4UEYwY2ZU?=
+ =?utf-8?B?dG5iTzV1eG9HTlhIQVAwWHM0MzRFVjJBdG5iTFRPa29CNHpLbnB5bWhodDAv?=
+ =?utf-8?B?b0xZcEtsSWc5VXVNbHpyempWQXBlcU80eVBFQXpiVFJ4ZTJoRWo5WDViK2Uy?=
+ =?utf-8?B?SWVOZysvNE0vQWp3bHY3UzByaHBkeHlkenJYb0ppclJ5U1Y0TGQ3WnhCSUoy?=
+ =?utf-8?B?bDhHVklyVkd5M2FkcHpVWUFpZGJzblplMVZyK1QxSHVmMW9yRVZHRTVaUjFM?=
+ =?utf-8?B?RzlrdjJJenBEVE5CWHExOFgrTE1rZ1oxejRaQTU0VURsK2FTbkJaakl6dmVt?=
+ =?utf-8?B?WFRlR2tBb3htdFJJR0tqUldoMUFqZjIrYjNXV0haaW5mUHRXWXcyNzBtMWZG?=
+ =?utf-8?B?c0dMbC8xd0htZjY4WXhqTHBKR212bDg1MUdURWZqYzJpNnUzMVlaTTRkSlBZ?=
+ =?utf-8?B?OEE4eHFWNVM4dWlvcm1VS1hDUjhZbjRWVGF2ZzFsaDhFaEs0MUMzaXpFckkr?=
+ =?utf-8?B?UzZtUEJFaENsbktTekRwNGp0UTZhekt4dlhBMDdUTTJ3UXkxUHh3OEdHT1p3?=
+ =?utf-8?B?d2NqWFZxcU1ZbGpsWks2TnJkNEZSU1FFODZRaFRPeG5kU3NGU29iem1vbjhh?=
+ =?utf-8?B?emtQM3Vuc2ZTdWNyQm10cDQvZ2dhdnlHTklHQ09CeDZCWVBZR3d4dGVpQk1R?=
+ =?utf-8?B?dFM0V1lHd2JPZE9oTng5VmFCWVk5QTBwWFBjckpVdUs2ejU5UXJjdXRIdzV5?=
+ =?utf-8?B?d2F5NUsvelh4UGpQTUMzcXZXRGhwOENXYkhjUHluYlIwS2VwYXBEY1IrMzla?=
+ =?utf-8?B?N2dMTUNNVDNaK3Y4N3Q5QVhXRjFNUVZmbDBuSS9SdyticnRWd2xEVkVpQnVD?=
+ =?utf-8?B?YXIzSkU0d2tXRkFKMDNIa2pMdHdtVmYvdklrQk01Q0FYb1hDK2ErczBUUUx0?=
+ =?utf-8?B?aTVOamFPY3V3SVRvZTdYeE83RXRjamNKOTJ5QWg3Mm8yTkYvNDVVdVlScFhv?=
+ =?utf-8?B?cW5IcTY0SDhieEVXRElYQzI2NHZZVFV2dnF6Y29RRzhicDdMNFJLUVovVlov?=
+ =?utf-8?B?NEUwRkpCaVdmdlIvUnV3Q2F4T2g5WTR0UnBlWUFvbWE2NjRxd2lIQUZrMzQr?=
+ =?utf-8?B?T3F3R2FCWkJid3prak1KVCtoa1lWM0wrbXBodVNvS2RmMzk1VUFHSjN3M1cw?=
+ =?utf-8?B?OEpwbjR1SzNGbzNZZFpuWEsvVzN4dHFaNzQ4L2NCNDJWa1lOSWRWaVZXN3h6?=
+ =?utf-8?B?OTJTTzE3bmhJYUFMM0Zpd1VENFNvdjl3N2J1ZWU1Wlhra2JBQzBvanFPdVNQ?=
+ =?utf-8?B?alV5cGtsbmFQY3pXcm43Tk5oSmhEbXRINVRmb1Jsck5hZ3k2TG1iVjFsRzFq?=
+ =?utf-8?B?RnF0Zz09?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aHRxaGhTYlRVUDBOV2FWcXRMQjdwdjFtaCtwUnluMk9RdUFjWnlGeWIyTVE4?=
+ =?utf-8?B?c1lURmR1QTM4dnJ5aDFudlJkMEFOazBOV3dEclhPeXVhSldQSDd2Z09VSUM2?=
+ =?utf-8?B?eGtUaElLSXY1NjZUcWhLbkxjaW11VmN0SG9kdEl0Y1o5bnlNeHlIK3lVTjVX?=
+ =?utf-8?B?TDFGZEhmdUVlTHNzQmlQMGQ1cVV5SjJLVHVqckRhY25Ic0FvL0hWY1ZMYWhI?=
+ =?utf-8?B?bll3NjJUc21qUVJuMVk0VFFLOFEzOXVXSzRwazlNNEtMNHpNSi9BUEhqSE8w?=
+ =?utf-8?B?QTV1RjZnL1pLMUxnSjFjMGtTZkV1amZnTVFJOHpiQlZZN29qTzhIdDlITjZF?=
+ =?utf-8?B?Z1F0Q09OTkhqd1FzRkpYUGw3NjQvT0hDMGpBZGFkVkpYT1hHVnJmL0V0Nncv?=
+ =?utf-8?B?TjFwYU91aFZENFJqazg0OWFhcU1IQS9oY0xnMGEwVzM1VWJ4T2JUVVhKNnVp?=
+ =?utf-8?B?L0ZFWGorcVRDUDlLREhWSkx0aWJONStoZm5oK0NxNlBsN2dwclY3d012Ukcv?=
+ =?utf-8?B?dnJKM2ZzUXV5ODY3Yy9nNFpiWkZFenJiTXN6SVJlWEI2bG5Hd2c3cDRsU0th?=
+ =?utf-8?B?VkNwb21wLzV6Zm9KSW5xczJiOVBPSXhUZHpLUlJOYzFGd3FYZ21XRUhpNmNt?=
+ =?utf-8?B?NXlFMG52d2pxQnFJamNWMU0zNU9KdkY5VUt5UFpzcmdtNCtQU1k5aWxhaTdr?=
+ =?utf-8?B?eHJ1dkhQTzJ4TmNHbVljWGF0djNyd0dXNXdiUVJ6OXFCODI3Z2d0ZXhKcE50?=
+ =?utf-8?B?clJjSm8zaWU0Y0FCbE8zVGl2Qm1INFNPN0hsOWZaemlVUXN2aXgydTdOK3R3?=
+ =?utf-8?B?WFdNdWVqbk5OVDBYN0l4K003dURDK0tPSVZRR1lXZTVBUnFwV1hQdmY5cE1p?=
+ =?utf-8?B?YXE3aWROck9vZjMvRXNLR1BCN3BTWnNxUEUyRXU2UDJYcno3czhQQ0xmYVJk?=
+ =?utf-8?B?M1RpM0F6ZDN4dU9VUCtiOHN6S0MrWjFNbTRQamFxVnNXVTVZbHdHRm8rT0R0?=
+ =?utf-8?B?ZXgxSXoyeDFyM1JYSms4Zml5UTB5Um02N3lFVW1Jd2NhcG9rOXcyV2lCcDZ5?=
+ =?utf-8?B?ZTB1anJ0ZmgzdDBWS0RoQlZUMHRXdVN4U3VES2ZZRDB5TFpyVEM2QTRKZkxQ?=
+ =?utf-8?B?Zk1vQUVVZzRxenBScUxhS0Q4cmdXeXlOY2hwWmpCVy9GQm5udzgyeGl6OE1v?=
+ =?utf-8?B?M2ZmU3ZtVDF3UjJGUkIzZjNETTlXV0ZFclRVdW1TU3BZS0hMQkJBWkdudnhE?=
+ =?utf-8?B?ZnFlMkVVbWZKTWRPSmFpSWI2K0pKMms3UEUwbmpUMXRNMnVBd2VjMFhjRjd2?=
+ =?utf-8?B?ZTQyQjZ5SHZwUlpnS0J4SHhkeldRSG5GUEhvY0tOd003clZ6M0RnUmV1OUFD?=
+ =?utf-8?B?TURTQXlINnQ0OXk1b2RJTldPRmJqY0Y0OVVVVVpsUjJZTDRXSTFFRmNsWEo5?=
+ =?utf-8?B?L1ppTldDK2hZN0hnRk1VdHRrL1hNUngwbVd3TzBKakErV3lNdXVQZjJOaWFO?=
+ =?utf-8?B?K3hYQ2U1NmpyUjFQR3gxK0preEFZWkpPNXJ6TjlENXNMZ3BZSkVlZUNyd2pM?=
+ =?utf-8?B?YmE5RjlmZkFVOTZ4bm9mNEpSRU1GUjYyR3J6WTZ0MUszcjhkWUk5WlV2Ykd3?=
+ =?utf-8?B?UjEzVFpKZnZRR0V4VUordkJrTERlWDJzUVZoSWlPV0ZqdWxmL0lYM0tiS0E2?=
+ =?utf-8?B?K3g3V0dyYURjdnBoQWM4KzBHdDZlQmpncHA1UXJNRjZWSlR0MVUvZDNJZEZZ?=
+ =?utf-8?Q?Nk7GoPjjF2HQyqKtuc=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53f54abd-e93b-4aa7-5cf1-08dd92131974
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2025 11:41:28.5209
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB6716
 
-On Tue, May 13, 2025 at 09:15:23AM +0200, Vlastimil Babka wrote:
-
-> >> > The initial prototype tried to make memcg charging infra for kernel
-> >> > memory re-entrant against irq and nmi. However upon realizing that
-> >> > this_cpu_* operations are not safe on all architectures (Tejun), this
-> >> 
-> >> I assume it was an off-list discussion?
-> >> Could we avoid this for the architectures where these are safe, which should
-> >> be the major ones I hope?
-
-IIRC Power64 has issues here, 'funnily' their local_t is NMI safe.
-Perhaps we could do the same for their this_cpu_*(), but ideally someone
-with actual power hardware should do this ;-)
-
-> > Yes it was an off-list discussion. The discussion was more about the
-> > this_cpu_* ops vs atomic_* ops as on x86 this_cpu_* does not have lock
-> > prefix and how I should prefer this_cpu_* over atomic_* for my series on
-> > objcg charging without disabling irqs. Tejun pointed out this_cpu_* are
-> > not nmi safe for some archs and it would be better to handle nmi context
-> > separately. So, I am not that worried about optimizing for NMI context
-> 
-> Well, we're introducing in_nmi() check and different execution paths to all
-> charging. This could be e.g. compiled out for architectures where this_cpu*
-> is NMI safe or they don't have NMIs in the first place.
-
-Very few architectures one would care about do not have NMIs. Risc-V
-seems to be the exception here ?!?
-
-> > but your next comment on generic_atomic64_* ops is giving me headache.
-> > 
-> >> 
-> >> > series took a different approach targeting only nmi context. Since the
-> >> > number of stats that are updated in kernel memory charging path are 3,
-> >> > this series added special handling of those stats in nmi context rather
-> >> > than making all >100 memcg stats nmi safe.
-> >> 
-> >> Hmm so from patches 2 and 3 I see this relies on atomic64_add().
-> >> But AFAIU lib/atomic64.c has the generic fallback implementation for
-> >> architectures that don't know better, and that would be using the "void
-> >> generic_atomic64_##op" macro, which AFAICS is doing:
-> >> 
-> >>         local_irq_save(flags);                                          \
-> >>         arch_spin_lock(lock);                                           \
-> >>         v->counter c_op a;                                              \
-> >>         arch_spin_unlock(lock);                                         \
-> >>         local_irq_restore(flags);                                       \
-> >> 
-> >> so in case of a nmi hitting after the spin_lock this can still deadlock?
-> >> 
-> >> Hm or is there some assumption that we only use these paths when already
-> >> in_nmi() and then another nmi can't come in that context?
-> >> 
-> >> But even then, flush_nmi_stats() in patch 1 isn't done in_nmi() and uses
-> >> atomic64_xchg() which in generic_atomic64_xchg() implementation also has the
-> >> irq_save+spin_lock. So can't we deadlock there?
-> > 
-> > I was actually assuming that atomic_* ops are safe against nmis for all
-> > archs.
-
-We have HAVE_NMI_SAFE_CMPXCHG for this -- there are architectures where
-this is not the case -- but again, those are typically oddball archs you
-don't much care about.
-
-But yes, *64 on 32bit archs is generally not NMI safe.
-
-> I looked at atomic_* ops in include/asm-generic/atomic.h and it
-> > is using arch_cmpxchg() for CONFIG_SMP and it seems like for archs with
-> > cmpxchg should be fine against nmi. I am not sure why atomic64_* are not
-> > using arch_cmpxchg() instead. I will dig more.
-
-Not many 32bit architectures have 64bit cmpxchg. We're only now dropping
-support for x86 chips without CMPXCHG8b.
-
-> Yeah I've found https://docs.kernel.org/core-api/local_ops.html and since it
-> listed Mathieu we discussed on IRC and he mentioned the same thing that
-> atomic_ ops are fine, but the later added 64bit variant isn't, which PeterZ
-> (who added it) acknowledged.
-> 
-> But there could be way out if we could somehow compile-time assert that
-> either is true:
-> - CONFIG_HAVE_NMI=n - we can compile out all the nmi code
-
-Note that in_nmi() is not depending on HAVE_NMI -- nor can it be. Many
-architectures treat various traps as NMI-like, even though they might
-not have real NMIs.
-
-> - this_cpu is safe on that arch - we can also compile out the nmi code
-
-There is no config symbol for this presently.
-
-> - (if the above leaves any 64bit arch) its 64bit atomics implementation is safe
-
-True, only because HPPA does not in fact have NMIs.
-
-> - (if there are any 32bit applicable arch left) 32bit atomics should be
-> enough for the nmi counters even with >4GB memory as we flush them? and we
-> know the 32bit ops are safe
-
-Older ARM might qualify here.
+DQoNCj4gT24gMTMgTWF5IDIwMjUsIGF0IDk6NDPigK9BTSwgTmljayBDaGFuIDx0b3dpbmNoZW5t
+aUBnbWFpbC5jb20+IHdyb3RlOg0KPiANCj4g77u/DQo+PiBFcm5lc3RvIEEuIEZlcm7DoW5kZXog
+5pa8IDIwMjUvNS8xMyDmuIXmmag3OjQwIOWvq+mBkzoNCj4+IEhpIFlhbmd0YW8sDQo+PiANCj4+
+PiBPbiBNb24sIE1heSAxMiwgMjAyNSBhdCAwNDoxMToyMkFNIC0wNjAwLCBZYW5ndGFvIExpIHdy
+b3RlOg0KPj4+IEknbSBpbnRlcmVzdGVkIGluIGJyaW5naW5nIGFwZnMgdXBzdHJlYW0gdG8gdGhl
+IGNvbW11bml0eSwgYW5kIHBlcmhhcHMNCj4+PiBzbGF2YSBhbmQgYWRyaWFuIHRvby4NCj4+IERv
+IHlvdSBoYXZlIGFueSBwYXJ0aWN1bGFyIHVzZSBjYXNlIGluIG1pbmQgaGVyZT8gSSBkb24ndCBt
+aW5kIHB1dHRpbmcgaW4NCj4+IHRoZSB3b3JrIHRvIGdldCB0aGUgZHJpdmVyIHVwc3RyZWFtLCBi
+dXQgSSBkb24ndCB3YW50IHRvIGJlIGZpZ2h0aW5nIHBlb3BsZQ0KPj4gdG8gY29udmluY2UgdGhl
+bSB0aGF0IGl0J3MgbmVlZGVkLiBJJ20gbm90IGV2ZW4gc3VyZSBhYm91dCBpdCBteXNlbGYuDQo+
+IA0KPiBUaGVzZSBhcmUgdGhlIHVzZSBjYXNlcyBJIGNhbiB0aGluayBvZjoNCj4gDQo+IA0KPiAx
+LiBXaGVuIHJ1bm5pbmcgTGludXggb24gQXBwbGUgU2lsaWNvbiBNYWMsIGFjY2Vzc2luZyB0aGUg
+eEFSVCBBUEZTIHZvbHVtZSBpcyByZXF1aXJlZCBmb3IgZW5hYmxpbmcgc29tZSBTRVANCj4gZnVu
+Y3Rpb25hbGl0aWVzLg0KPiANCj4gMi4gV2hlbiBydW5uaW5nIExpbnV4IG9uIGlQaG9uZSwgaVBh
+ZCwgaVBvZCB0b3VjaCwgQXBwbGUgVFYgKGN1cnJlbnRseSB0aGVyZSBhcmUgQXBwbGUgQTctQTEx
+IFNvQyBzdXBwb3J0IGluDQo+IHVwc3RyZWFtKSwgcmVzaXppbmcgdGhlIG1haW4gQVBGUyB2b2x1
+bWUgaXMgbm90IGZlYXNpYmxlIGVzcGVjaWFsbHkgb24gQTExIGR1ZSB0byBzaGVuYW5pZ2FucyB3
+aXRoIHRoZSBlbmNyeXB0ZWQNCj4gZGF0YSB2b2x1bWUuIFNvIHRoZSBzYWZlIGlzaCB3YXkgdG8g
+c3RvcmUgYSBmaWxlIHN5c3RlbSBvbiB0aGUgZGlzayBiZWNvbWVzIGEgdXNpbmcgbGludXgtYXBm
+cy1ydyBvbiBhIChwb3NzaWJseQ0KPiBmaXhlZCBzaXplKSB2b2x1bWUgdGhhdCBvbmx5IGhhcyBv
+bmUgZmlsZSBhbmQgdGhhdCBmaWxlIGlzIHVzZWQgYXMgYSBsb29wYmFjayBkZXZpY2UuDQo+IA0K
+PiAoZG8gbm90ZSB0aGF0IHRoZSBtYWluIHN0b3JhZ2UgZG8gbm90IGN1cnJlbnRseSB3b3JrIHVw
+c3RyZWFtIGFuZCBJIG9ubHkgaGF2ZSBzdG9yYWdlIHdvcmtpbmcgb24gQTExIGRvd25zdHJlYW0p
+DQo+IA0KPiAzLiBPYnZpb3VzbHksIGFjY2Vzc2luZyBNYWMgZmlsZXMgZnJvbSBMaW51eCB0b28s
+IG5vdCBzdXJlIGhvdyBiaWcgb2YgYSB1c2UgY2FzZSB0aGF0IGlzIGJ1dCBhcHBhcmVudGx5IGl0
+IGlzDQo+IGJpZyBlbm91Z2ggZm9yIGhmc3BsdXMgdG8gY29udGludWUgcmVjZWl2ZSBwYXRjaGVz
+IGhlcmUgYW5kIHRoZXJlLg0KPj4gDQoNCkknbGwgYWRkIGEgbnVtYmVyIDQNCg0KNC4gTW91bnRp
+bmcgdGhlIG1hY09TIHJlY292ZXJ5IHBhcnRpdGlvbiBtYWtlcyBnZXR0aW5nIHRoZSB3aWZpIGZp
+cm13YXJlIG11Y2ggZWFzaWVyIGZvciBUMiBNYWNzIG9uIExpbnV4Lg0K
