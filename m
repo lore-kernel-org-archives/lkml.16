@@ -1,154 +1,121 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2477D1E5B97
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEFE136337;
+	Tue, 13 May 2025 23:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747177677; cv=none; b=C9GLgu5L484uLl9wYqzDR/OrpHmM5f1QYWBzeqnwSb5xRznHqCOLuYZpVKBLzfd3vw9D6a9uoOt3+WHRTxlT1ZjhzQaxvbZZhLrj+6Ufgo3NqGcGtDe1yhg1vtX8mQ66R1tY3XxNqa9nwwVN9l1CoLt2OlvJTnKhG2JGhqHZ90c=
+	t=1747177777; cv=none; b=rsBrtGdV8iBYccRS5+rtrKJ7dIsydL2iNb7I1hr7FUvrulD3taG0m5/PvH6wHAiCOEg98zzmBx/hJZVfTkrxZgWgPrAyB9RyM2cVfzTfFJwkT21876FwFxw8sqZxGdR98N1+5ykz03+4KcZy7TzROqMLtuDPo7AxvjZlR9j+C+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747177677; c=relaxed/simple;
-	bh=3z3zk5nEwkdkXxKrLTyUiKBjpFVZOfep51OZ+gg+Cjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mx5FhBVRyzFCysfcKiZ4aX3PUnfkQ/KTpn7gqT4Lf0kDqCoJNCMMSiC9/b/vDx00Fz2m91R56KRe3nnqVVvLMapTeU+gjthZjvYx/l1dU3Yb3J6LEg/DH421DATUE9quc1NJxng/1APMG923I3zKw+TJmMoevxBwH3H6eIHCzEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=grMfeyn1; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747177777; c=relaxed/simple;
+	bh=0uUSQkAKe1c8c9K4WhFW8meHssUZMjO6h9KlXfj/3pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PNmj2mQpdmIDWWpzPE5hsuMT2aeME5OYlO3d9M1fpT+/cyrcEhpkANmoK3ns6MkIBmhfULw8mG2YvU3yQvLcPZ+Qztvw+GYQnCmIZZUNkI3SlO6VvKkfCsbnu0kE2kn7vQaJFsc4gyQYOm+RTTnlQvF4OqhzRiM45UoseB8egho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GabFUoqT; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="grMfeyn1"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7081165a238so49065207b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 16:07:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GabFUoqT"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30a9718de94so5968439a91.0;
+        Tue, 13 May 2025 16:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747177675; x=1747782475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SLiRsf9mmaNyekeLjq4HRAp81aLdDloUOkxmHepBBjM=;
-        b=grMfeyn1zHbkxl9qUVb/J/CBZ7y/CcAHMGpYJYo/E1qyrvvXX3MBWrBIvS7ginNXno
-         X+wJddJmGjRyuzXYu7oJgXMCQP7nsTNVs+2OXcm03alTZ5CjZqJmpeQQ9fFukkUAQdOh
-         tbN+weJJNQxJUdLDSJ3jESfd/D5QNTtkyb0qs718rxC9zgDqT/gom5rLXJD4AYetJ6N6
-         EUhD0KXwyWiL+VPOU+2KWRCx46rTHqBwhbt/OM0UdM+GDlvwtyV6x/kxIpuoi+Gsdq4b
-         7yNo51d4acuERdV5vM8QfkJuaGPAc5DqYx78hTFTVMg0Nd6cVJVHgou+rUhvOsfw5lK3
-         qnaA==
+        d=gmail.com; s=20230601; t=1747177776; x=1747782576; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R+mxhHcPr+TvZqZf0aVFhNrCdir+u6TUHiL5kEkrMXg=;
+        b=GabFUoqTpJ8XvPok34AwfZhkz9GzAlHuOsG02XC/8bnPa6kA6zTbTINjj8pz4K4Qrg
+         1mHH02pq6IQlQIWm9npWqagfetb5jFR53ZuxcolZlTNY7/Ef4A8T/k6bosWqJYqzQZNF
+         py2geUB2tYKbsN0SheUB9cpCsRoJhcqflw3JRUm3Cg33cVViY5iqP1FeOdPH3m7AXfF8
+         lxo5WyAlG8kYwh3yMd540kLqJwwjbFlQiIZNzy55OMICGJFoDbnRxMZHVGfmkanODuy9
+         sE4yaTQYufkDVjqXDZVWrLHpJUBs3DQlf/C5ACFwIutwn/ZcfgVjTY+X1Iw85Omf1fdT
+         J5hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747177675; x=1747782475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SLiRsf9mmaNyekeLjq4HRAp81aLdDloUOkxmHepBBjM=;
-        b=T7f9YHNekO88qPffkoJaijYZf1AE5JIJGReoAE44Owy1vhGgWYwru1lKTGis0IupPU
-         vJ3zwYMIXpcQOSa2h25xhFkK6XnfBk/pCZJuXno345Y6q8bX0gp0/lhMBVDTjlL1znNN
-         1xQhnLOUBUwDnNnq9oSNsAo6AVLla50qA/KafGh4AQALecvxu6YfLMUgYzKnE74a/Ggc
-         C9VSAnGZDgJcIaCvVggjM9F1A0v2hNEZRF/i2hT0Ws6hL0W/tSdIGztyPNTXrTscFp8D
-         r0fZ8BwlBMblNDxHxrzEo6uq6cWaLzwD1v+w6hPiBykF1vInwPn9apuFi4+gILHB5biE
-         gmPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXssWpTju6iXVy7IAI8B286HXhzgdUkw86g8nrZjDzb5ST3A2XUc14MX7NJJMDzasTpAymFPAbXkxuhwvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbwC4EyjA4DALvCc/+fE74jDVnl8T5IWTfc8nNU3uYtqHmEG/P
-	vznwGU6OnJ9WGJO4xJn6h3zanyCoVIGveferCnzJFFSsmtpiSR7mFMEft7cBboh5Rbsuy+ZGaK4
-	j3xrZWEeD8CciJaX5qFcjHhtg4Gw16EWX+VZqqEqDRM28UpU=
-X-Gm-Gg: ASbGncuJ2tw1MH+LFqbxvOYWOtE0aVIf/RvJBE/9kPQnarqI7BDD2fVvoUuyhWKsrH7
-	Kq/iQT/HzBH5j41ZzK6+U1kze/oBRp3vb58XH7J+FS6DdcXqWaJst5R9pszvQPzppuXc8R9AJeQ
-	DnkB4CjTO9+J5dQISiETu8LxVPTv4Fen6WFz24uN75LAw=
-X-Google-Smtp-Source: AGHT+IGhTpj3O+FiLhnN3AWPcKuSZTnCWxc7WDOiqjDHrZHTR+PRISZuqqVr4/p0XzcrEiV+ZNppAndOSCDZ8ZRycu4=
-X-Received: by 2002:a05:690c:6a09:b0:709:1bf8:f7a6 with SMTP id
- 00721157ae682-70c7f2221cbmr21127307b3.28.1747177674988; Tue, 13 May 2025
- 16:07:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747177776; x=1747782576;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+mxhHcPr+TvZqZf0aVFhNrCdir+u6TUHiL5kEkrMXg=;
+        b=Y8oYJYCaLPC/idQ1Fu7ywdrGRvNNgGqe1SOt7rUEFzqoeFwUTI5u+2KORvYqjQx5LQ
+         j+bGsA041l/wpLvoo0/5oCLAYj5glOSvOLXfzJAcRBerkuU3qOZlcUMW1lkyQcDkpdHL
+         asSQK5ovD8wXWwJbIGhJuMQUs0I4Fbu/q+8qzPawoQpC0i9n9zzsLlyzeZMo+nLDdt17
+         KTU839oLyND2mNz6DFKCLZWCGbrTs5HJmPVWaYjw9STCui31+0W3YHhSlwMMYQ9BdRgL
+         pI9AIy5t3QlzYMEAigDSkVzhQde8Rddayi3XjSzcs5EhgDP/Im83rMlhgkk9SM++RAPx
+         Abyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUs8o5LlhyoTj3AtiiymgNDAmhTrf0IAykppyedzVxHipSafaxVL80r+gP/JfaZuWVGLYEUaX9QrvdiC3g=@vger.kernel.org, AJvYcCVNwMZ26vzGqUHMSPUUTSAEOdjYV7K34mB9yZSzIQaUjEreDhUi0D7UoeIEs7vTtgSuGYzqyfEqzDbx2A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDV2aXGIJwRhDAx6WbSPbsekX5rqfMLdTBOIdIaLVL74MQYuOI
+	1mp5tIJInQ51F+koB8Pm4VKd6mmiweUDYZm0skG/TF4nuD8rG041
+X-Gm-Gg: ASbGncsPV6N3LcUPVZ3MzCoB2QJUbow/3X5RzVciZP10NCTSvb7OBW8giC6CzlZhL6Y
+	hLdQKuSlCR9avoXJAgkYEM3gzRsp/l9BuB2pStADB7iS2mKglJHxJWQSuy6kJJHk8SAnR25MMHR
+	N8c/yBTA5zhmmsW/kUA0ygSLGBZk+hBwB0IBMQHm5AlqyPC2dZdyHbM+XaDiDm2KGTruiWT8t47
+	dvz5PBjX0AwNjXB1tz0bflQxZIFcyTw6t/mGuoqF46U3CQjGYcQD1ZLx41W3BL9AutRE9KeHg95
+	VMBvtoTVgTgXEXE19Yh0r13myoVQZZMB68yXd0waHROq4BJZ/h8=
+X-Google-Smtp-Source: AGHT+IHrL8Z6RQnvzJXvyvY25K4u5b1f4H/BpBsbC5LnWuYDIGCWgBMC9bTkCAR9RY+qKFYik25qsw==
+X-Received: by 2002:a17:90a:d650:b0:2fa:157e:c790 with SMTP id 98e67ed59e1d1-30e2e5d6114mr1878597a91.5.1747177775412;
+        Tue, 13 May 2025 16:09:35 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e3349d50bsm147145a91.45.2025.05.13.16.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 16:09:34 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 41F1342439C7; Wed, 14 May 2025 06:09:32 +0700 (WIB)
+Date: Wed, 14 May 2025 06:09:32 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <aCPRLHg46GP0_Pse@archie.me>
+References: <20250513154845.7c03dbe2@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321102422.640271-1-nik.borisov@suse.com> <CAHC9VhSpgzde_xRiu9FApg59w6sR1FUWW-Pf7Ya6XG9eFHwTqQ@mail.gmail.com>
- <67f69600ed221_71fe2946f@dwillia2-xfh.jf.intel.com.notmuch>
- <68226ad551afd_29032945b@dwillia2-xfh.jf.intel.com.notmuch>
- <CAHC9VhSyz2MqMjnHFbTiMqYvhAFZf162ZabnSsyyCQEZj-V9=g@mail.gmail.com> <efcca734-2c80-43e3-b347-2af39f811502@suse.com>
-In-Reply-To: <efcca734-2c80-43e3-b347-2af39f811502@suse.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 13 May 2025 19:07:44 -0400
-X-Gm-Features: AX0GCFs5o9YdzJl9n7dGDDnhmYchki1Q9uiYa8B0jg4gN191K-_7nF2pfZ1OB2I
-Message-ID: <CAHC9VhRyKtyROAwTSdRv+UmLSwat-Vxiu-BqM+1DwnYv2r1ejA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Allow individual features to be locked down
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-security-module@vger.kernel.org, 
-	serge@hallyn.com, kees@kernel.org, linux-kernel@vger.kernel.org, 
-	kirill.shutemov@linux.intel.com, linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="X6G5xsf+9iNdz6KE"
+Content-Disposition: inline
+In-Reply-To: <20250513154845.7c03dbe2@canb.auug.org.au>
+
+
+--X6G5xsf+9iNdz6KE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 7:10=E2=80=AFAM Nikolay Borisov <nik.borisov@suse.c=
-om> wrote:
-> On 5/13/25 01:01, Paul Moore wrote:
-> > On Mon, May 12, 2025 at 5:41=E2=80=AFPM Dan Williams <dan.j.williams@in=
-tel.com> wrote:
-> >> Dan Williams wrote:
-> >>> Paul Moore wrote:
-> >>>> On Fri, Mar 21, 2025 at 6:24=E2=80=AFAM Nikolay Borisov <nik.borisov=
-@suse.com> wrote:
-> >>>>>
-> >>>>> This simple change allows usecases where someone might want to  loc=
-k only specific
-> >>>>> feature at a finer granularity than integrity/confidentiality level=
-s allows.
-> >>>>> The first likely user of this is the CoCo subsystem where certain f=
-eatures will be
-> >>>>> disabled.
-> >>>>>
-> >>>>> Nikolay Borisov (2):
-> >>>>>    lockdown: Switch implementation to using bitmap
-> >>>>>    lockdown/kunit: Introduce kunit tests
-> >>>>
-> >>>> Hi Nikolay,
-> >>>>
-> >>>> Thanks for the patches!  With the merge window opening in a few days=
-,
-> >>>> it is too late to consider this for the upcoming merge window so
-> >>>> realistically this patchset is two weeks out and I'm hopeful we'll
-> >>>> have a dedicated Lockdown maintainer by then so I'm going to defer t=
-he
-> >>>> ultimate decision on acceptance to them.
-> >>>
-> >>> The patches in this thread proposed to selectively disable /dev/mem
-> >>> independent of all the other lockdown mitigations. That goal can be
-> >>> achieved with more precision with this proposed patch:
-> >>>
-> >>> http://lore.kernel.org/67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.=
-com.notmuch
-> >>
-> >> Just wanted to circle back here and repair the damage I caused to the
-> >> momentum of this "lockdown feature bitmap" proposal. It turns out that
-> >> devmem maintainers are not looking to add yet more arch-specific hacks
-> >> [1].
-> >>
-> >>      "Restricting /dev/mem further is a good idea, but it would be nic=
-e
-> >>       if that could be done without adding yet another special case."
-> >>
-> >> security_locked_down() is already plumbed into all the places that
-> >> confidential VMs may need to manage userspace access to confidential /
-> >> private memory.
-> >>
-> >> I considered registering a new "coco-LSM" to hook
-> >> security_locked_down(), but that immediately raises the next question =
-of
-> >> how does userspace discover what is currently locked_down. So just tea=
-ch
-> >> the native lockdown LSM how to be more fine-grained rather than
-> >> complicate the situation with a new LSM.
-> >
-> > Historically Linus has bristled at LSMs with alternative
-> > security_locked_down() implementations/security-models, therefore I'd
-> > probably give a nod to refining the existing Lockdown approach over a
-> > new LSM.
-> >
-> > Related update, there are new Lockdown maintainers coming, there is
-> > just an issue of sorting out some email addresses first.  Hopefully
-> > we'll see something on-list soon.
->
-> So I guess the most sensible way forward will be to resend these 2
-> patches after the new maintainer has been officially announced?
+On Tue, May 13, 2025 at 03:48:45PM +1000, Stephen Rothwell wrote:
+> diff --cc Documentation/admin-guide/hw-vuln/index.rst
+> index ce296b8430fc,cf1511145927..000000000000
+> --- a/Documentation/admin-guide/hw-vuln/index.rst
+> +++ b/Documentation/admin-guide/hw-vuln/index.rst
+> @@@ -23,4 -23,4 +23,5 @@@ are configurable at compile, boot or ru
+>      gather_data_sampling
+>      reg-file-data-sampling
+>      rsb
+>  +   indirect-target-selection
+> +    old_microcode
 
-Possibly, or at least bump the thread to get it some fresh attention.
+The resolution LGTM.
+
+Thanks.
 
 --=20
-paul-moore.com
+An old man doll... just what I always wanted! - Clara
+
+--X6G5xsf+9iNdz6KE
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaCPRJgAKCRD2uYlJVVFO
+o0uKAP4oOyW1A027V6px2VPwT/NHhkeU4xenNDfDE4URAiFyFwD/aI8SjAi5pyLL
+ByS/ClAeKhO61K5FIyGT89v0Icm3Vw8=
+=hfum
+-----END PGP SIGNATURE-----
+
+--X6G5xsf+9iNdz6KE--
