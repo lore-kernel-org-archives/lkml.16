@@ -1,171 +1,216 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65971DFD96
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 04:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41A117578;
+	Tue, 13 May 2025 04:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747108805; cv=none; b=oQNzBBc3kNFqQc3Y+3/nC8OKiQHFmk7vDo6AAz2C+0kZAwizBS71uQLaMhpYj+Slf9h4GgDtli1/hgoUA2KXk/j1MktBo1A/K62QFs3LOnTn48FJeRb8gpzgl4CScAKbDj5c1cJE8TAG3mbW8Q0DfUP4XUOdYTW5O+oakzHzwaE=
+	t=1747109003; cv=none; b=rPmhIcPFs9fBeY1Ve3CnxivdeFXofKBIgGrSU9a3iwNy1mCt1SLSmzGndAmKFAxIhDidZp+k94M55YgQI74E18mbczKnhhjFvlahOIs2UXR3w9XZHQVe6xHR0NH7AYrP9HaPcT5BdJYUpWzGW94ChIxyAKsLXWPjyyJFU589tEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747108805; c=relaxed/simple;
-	bh=rzks3wkUnLf+6qfz2WP3nqrT3TFPFhieC+o6l4ZsTVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WuG2ENVdllFHuWcwXq9BhroH9qrbvIwVZLlj1hj2+sQuylTx731U5x7Dfm7WghspAy84RobxVoLCoCpKHjc+EJD2AevpeMPrCxtKZWsgHrI0pWRqQwfXdgXOgBpsp9LCj1hNDdnvGq4WouFpIKTiwcY3Mkk3D9vw/9qvSGcewmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lIzzXDsB; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747109003; c=relaxed/simple;
+	bh=D63mIX1uEjiZbr7YvIdYOs9REFfIzl+pwZg3OQ9KMxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ioG2A7Oygal2ZG6pNWPZ6+xAls5SiuT5i+yysCF1NZBoTp035UcQIOIUMmUzIx3lguKxxn+wjdxFPMnzbyP4SezZy+vPYH2sJ5W1bjhRTjgsaRawYh8TUE+woKtiLu1lEXvISD0E84scNDCgCoCcKWFu7AJnei6p2GjOr3QnCDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T72mnacQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lIzzXDsB"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22e16234307so54795255ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 12 May 2025 21:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747108803; x=1747713603; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/gdTvcfAWXkwUQEOSCNN9+8zrnQzItlUJAzqD2wmz+E=;
-        b=lIzzXDsBx+XqdpRMautAB61bob0Vt2yD4lA7bpxi8IhDk6Q2wO3vAbvc9rh85vJQKA
-         zDQ32ZU7TCiycDMulGZKO/2+XiWgnTYFRxAegFsEP+LaxM6bA7w86KdiBL3D/E89AwR1
-         bZg+VXdaKVerKqFAKUFvCS3Wduk3wvUnWpPbrQAnHPtvLAnvaXLBG4IJ7DXxwMJcA8+I
-         1tz6zbVUhyLN27N+q2SLe7oD2wNhaGCSzLTzQNI9kJOY06OdQNiGt1nNwQ5P6N8ll4n2
-         WxW1+568GmSnH8fAtzO3YVgzIGIflG4lCUSpSMKVtZkmb8sNKmL4/Us2Mk9yCNDg7sa7
-         Ml9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747108803; x=1747713603;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/gdTvcfAWXkwUQEOSCNN9+8zrnQzItlUJAzqD2wmz+E=;
-        b=fUqSAh3tldmw8u3F5WA7w8Tn+JcEeRdMpYTL9k3gZ2mTqbbBZ/viWgW6BkkCP13eSt
-         ZcjjcMlk1hIMXbBtRoDBdUATT+GDmS9WmJ8xw1MNRcChg677YfXhHrW6pOfBxGxGNpSx
-         IQPu7TO7C5Jg/E7p2fxmgO8RFdTS/s3n6uFDVe73n/g0Xu4DO4OfpqivJYWPQVrqiZDf
-         azGgchCWami2QLGjpKb0EMdHz6VIsp9av7Zh+XB9ZZTlNNyh8gcn01afXCfLly/g1+My
-         ui6+rU/qh1qMy8l/a43kegCapGBJ385ZACIQu8xsy0iNiXPlJ0Z7vT1VBqbtXuHVjXSw
-         STHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGCizbLqKlvT1f9D+0O56+0PHguIph9eEpZaDnirrkSBmle+iLwgc5EOjzYadf8r95R5X8f/MPHKDlKN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIB1ObmbwfaxT5WFraL0XNjK3yqXc3AgqgSu+sGQcgiSmE3ZOb
-	PJ/A6Za4Khio2CLuGcjiy4RhmHMK05cNWP7Ubi5IxKYVtS3f8SoKHFgDZDQ6KfI=
-X-Gm-Gg: ASbGncvXYiDlSKfM6xuQMIbitcRhpBfvZk2f4NIxRa2zTCrbEqnJD6FGZ6llTgq/Rku
-	1bAyAxD5SEPsniBz48Y9rdy40/XM6mKAxQVs7uIhzWllQjrttn0HJV2/Iic6JNHBTaYDJdBNn/+
-	FyoWW5hDFB8LB/j7F/N9jbZCKq5pSK+M/eQ4oJNr9kVhoFdMiKpUrPG3aL73OkKkLVOsh5PEw/6
-	eCamuo28bq0pFOUQWMXlyrl/9TtM2VTaUH0YxpbE5PRvjSQJUIoq5YyX8LVZOTyFJJq/vXYaMhv
-	cZasShmtKBtO49BJkbRdu5POFwo+muZbn+Q=
-X-Google-Smtp-Source: AGHT+IFqyunXW2Qn+DGBfVnG0/oobrE4llwuiyed02E6Cy0NHv/lsNmYSzpnwlSbbP0qxQ7qQXjisA==
-X-Received: by 2002:a17:903:32d1:b0:223:807f:7f92 with SMTP id d9443c01a7336-2317cb4f087mr24910615ad.20.1747108800729;
-        Mon, 12 May 2025 21:00:00 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc829eb27sm70292695ad.208.2025.05.12.20.59.58
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 12 May 2025 21:00:00 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com
-Cc: lizhe.67@bytedance.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	muchun.song@linux.dev
-Subject: [PATCH] vfio/type1: optimize vfio_pin_pages_remote() for hugetlbfs folio
-Date: Tue, 13 May 2025 11:57:30 +0800
-Message-ID: <20250513035730.96387-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T72mnacQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0F1C4CEE4;
+	Tue, 13 May 2025 04:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747109002;
+	bh=D63mIX1uEjiZbr7YvIdYOs9REFfIzl+pwZg3OQ9KMxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T72mnacQywhUKudxJVYfCFotqqgLmTr6zkKKG21MPYk4l9tFIEYadNqdM/JiWcBvy
+	 sTNNYHNjwRSjKEeMeibeJ6jFeaY0rUiKq0g4vjmIEpxmo2QXp4Ii3GqIpRqSejjdZd
+	 y11IHvkSOdD1kcjt8EjhyFRHakmshuHPcAO24djvCEWWkBo8gdP/LmmRxb44Z+sOcQ
+	 gFP1kEF7MzrE81wCWpfirHrFbbitq4zLrf0WfnuQo/CLvKYjmgv7uT6Mv1fFn/Mky+
+	 dxj4HsMYoorakKZ0BPBMT+h47bb3mjLEacVPBey7ORgLOnLJ7caxd9FDVfpV8GI/ZF
+	 drwbXvwsZS5iQ==
+Date: Mon, 12 May 2025 21:03:21 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <John@groves.net>
+Cc: Miklos Szeredi <miklos@szeredi.hu>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Luis Henriques <luis@igalia.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+Message-ID: <20250513040321.GO1035866@frogsfrogsfrogs>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+ <20250424143848.GN25700@frogsfrogsfrogs>
+ <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
+ <20250428190010.GB1035866@frogsfrogsfrogs>
+ <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+ <aytnzv4tmp7fdvpgxdfoe2ncu7qaxlp2svsxiskfnrvdnknhmp@uu4ifgc6aj34>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aytnzv4tmp7fdvpgxdfoe2ncu7qaxlp2svsxiskfnrvdnknhmp@uu4ifgc6aj34>
 
-From: Li Zhe <lizhe.67@bytedance.com>
+On Mon, May 12, 2025 at 02:51:45PM -0500, John Groves wrote:
+> On 25/05/06 06:56PM, Miklos Szeredi wrote:
+> > On Mon, 28 Apr 2025 at 21:00, Darrick J. Wong <djwong@kernel.org> wrote:
+> > 
+> > > <nod> I don't know what Miklos' opinion is about having multiple
+> > > fusecmds that do similar things -- on the one hand keeping yours and my
+> > > efforts separate explodes the amount of userspace abi that everyone must
+> > > maintain, but on the other hand it then doesn't couple our projects
+> > > together, which might be a good thing if it turns out that our domain
+> > > models are /really/ actually quite different.
+> > 
+> > Sharing the interface at least would definitely be worthwhile, as
+> > there does not seem to be a great deal of difference between the
+> > generic one and the famfs specific one.  Only implementing part of the
+> > functionality that the generic one provides would be fine.
+> 
+> Agreed. I'm coming around to thinking the most practical approach would be
+> to share the GET_FMAP message/response, but to add a separate response
+> format for Darrick's use case - when the time comes. In this patch set, 
+> that starts with 'struct fuse_famfs_fmap_header' and is followed by the 
+> approriate extent structures, serialized in the message. Collectively 
+> that's an fmap in message format.
 
-When vfio_pin_pages_remote() is called with a range of addresses that
-includes hugetlbfs folios, the function currently performs individual
-statistics counting operations for each page. This can lead to significant
-performance overheads, especially when dealing with large ranges of pages.
+Well in that case I might as well just plumb in the pieces I need as
+separate fuse commands.  fuse_args::opcode is u32, there's plenty of
+space left.
 
-This patch optimize this process by batching the statistics counting
-operations.
+> Side note: the current patch set sends back the logically-variable-sized 
+> fmap in a fixed-size message, but V2 of the series will address that; 
+> I got some help from Bernd there, but haven't finished it yet.
+> 
+> So the next version of the patch set would, say, add a more generic first
+> 'struct fmap_header' that would indicate whether the next item would be
+> 'struct fuse_famfs_fmap_header' (i.e. my/famfs metadata) or some other
+> to be codified metadata format. I'm going here because I'm dubious that
+> we even *can* do grand-unified-fmap-metadata (or that we should try).
+> 
+> This will require versioning the affected structures, unless we think
+> the fmap-in-message structure can be opaque to the rest of fuse. @miklos,
+> is there an example to follow regarding struct versioning in 
+> already-existing fuse structures?
 
-The performance test results for completing the 8G VFIO IOMMU DMA mapping,
-obtained through trace-cmd, are as follows. In this case, the 8G virtual
-address space has been mapped to physical memory using hugetlbfs with
-pagesize=2M.
+/me is a n00b, but isn't that a simple matter of making sure that new
+revisions change the structure size, and then you can key off of that?
 
-Before this patch:
-funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+> > > (Especially because I suspect that interleaving is the norm for memory,
+> > > whereas we try to avoid that for disk filesystems.)
+> > 
+> > So interleaved extents are just like normal ones except they repeat,
+> > right?  What about adding a special "repeat last N extent
+> > descriptions" type of extent?
+> 
+> It's a bit more than that. The comment at [1] makes it possible to understand
+> the scheme, but I'd be happy to talk through it with you on a call if that
+> seems helpful.
+> 
+> An interleaved extent stripes data spread across N memory devices in raid 0
+> format; the space from each device is described by a single simple extent 
+> (so it's contigous), but it's not consumed contiguously - it's consumed in 
+> fixed-sized chunks that precess across the devices. Notwithstanding that I 
+> couldn't explain it very well when we talked about it at LPC, I think I 
+> could make it pretty clear in a pretty brief call now.
+> 
+> In any case, you have my word that it's actually quite elegant :D
+> (seriously, but also with a smile...)
 
-After this patch:
-funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
+Admittedly the more I think about the interleaving in famfs vs straight
+block mappings for disk filesystems, the more I think they ought to be
+separate interfaces for code that solves different problems.  Then both
+our codebases will remain relatively cohesive.
 
-Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
----
- drivers/vfio/vfio_iommu_type1.c | 49 +++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+> > > > But the current implementation does not contemplate partially cached fmaps.
+> > > >
+> > > > Adding notification could address revoking them post-haste (is that why
+> > > > you're thinking about notifications? And if not can you elaborate on what
+> > > > you're after there?).
+> > >
+> > > Yeah, invalidating the mapping cache at random places.  If, say, you
+> > > implement a clustered filesystem with iomap, the metadata server could
+> > > inform the fuse server on the local node that a certain range of inode X
+> > > has been written to, at which point you need to revoke any local leases,
+> > > invalidate the pagecache, and invalidate the iomapping cache to force
+> > > the client to requery the server.
+> > >
+> > > Or if your fuse server wants to implement its own weird operations (e.g.
+> > > XFS EXCHANGE-RANGE) this would make that possible without needing to
+> > > add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
+> > 
+> > Wouldn't existing invalidation framework be sufficient?
+> > 
+> > Thanks,
+> > Miklos
+> 
+> My current thinking is that Darrick's use case doesn't need GET_DAXDEV, but
+> famfs does. I think Darrick's use case has one backing device, and that should
+> be passed in at mount time. Correct me if you think that might be wrong.
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 0ac56072af9f..bafa7f8c4cc6 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -337,6 +337,30 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
- 	return NULL;
- }
- 
-+/*
-+ * Find a random vfio_pfn that belongs to the range
-+ * [iova, iova + PAGE_SIZE * npage)
-+ */
-+static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
-+		dma_addr_t iova, unsigned long npage)
-+{
-+	struct vfio_pfn *vpfn;
-+	struct rb_node *node = dma->pfn_list.rb_node;
-+	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
-+
-+	while (node) {
-+		vpfn = rb_entry(node, struct vfio_pfn, node);
-+
-+		if (end_iova <= vpfn->iova)
-+			node = node->rb_left;
-+		else if (iova > vpfn->iova)
-+			node = node->rb_right;
-+		else
-+			return vpfn;
-+	}
-+	return NULL;
-+}
-+
- static void vfio_link_pfn(struct vfio_dma *dma,
- 			  struct vfio_pfn *new)
- {
-@@ -670,6 +694,31 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 				iova += (PAGE_SIZE * ret);
- 				continue;
- 			}
-+
-+		}
-+		/* Handle hugetlbfs page */
-+		if (likely(!disable_hugepages) &&
-+				folio_test_hugetlb(page_folio(batch->pages[batch->offset]))) {
-+			if (pfn != *pfn_base + pinned)
-+				goto out;
-+
-+			if (!rsvd && !vfio_find_vpfn_range(dma, iova, batch->size)) {
-+				if (!dma->lock_cap &&
-+				    mm->locked_vm + lock_acct + batch->size > limit) {
-+					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-+						__func__, limit << PAGE_SHIFT);
-+					ret = -ENOMEM;
-+					goto unpin_out;
-+				}
-+				pinned += batch->size;
-+				npage -= batch->size;
-+				vaddr += PAGE_SIZE * batch->size;
-+				iova += PAGE_SIZE * batch->size;
-+				lock_acct += batch->size;
-+				batch->offset += batch->size;
-+				batch->size = 0;
-+				continue;
-+			}
- 		}
- 
- 		/*
--- 
-2.20.1
+Technically speaking iomap can operate on /any/ block or dax device as
+long as you have a reference to them.  Once I get more of the plumbing
+sorted out I'll start thinking about how to handle multi-device
+filesystems like XFS which can put file data on more than 1 block
+device.
 
+I was thinking that the fuse server could just send a REGISTER_DEVICE
+notification to the fuse driver (I know, again with the notifications
+:)), the kernel replies with a magic cookie, and that's what gets passed
+in the {read,write,map}_dev field.
+
+Right now I reconfigured fuse2fs to present itself as a "fuseblk" driver
+so that at least we know that inode->i_sb->s_bdev is a valid pointer.
+It turns out to be useful because the kernel sends FUSE_DESTROY commands
+synchronously during unmount, which avoids the situation where umount
+exits but the block device still can't be opened O_EXCL because the fuse
+server program is still exiting.  It may be useful for some day wiring
+up some of the block device ops to fuse servers.  Though I think it
+might conflict with CONFIG_BLK_DEV_WRITE_MOUNTED=y
+
+I just barely got directio writes and pagecache read/write working
+through iomap today, though I'm still getting used to the fuse inode
+locking model and sorting through the bugs. :)
+
+(I wonder how nasty would it be to pass fds to the fuse kernel driver
+from fuseblk servers?)
+
+> Famfs doesn't necessarily have just one backing dev, which means that famfs
+> could pass in the *primary* backing dev at mount time, but it would still
+> need GET_DAXDEV to get the rest. But if I just use GET_FMAP every time, I
+> only need one way to do this.
+> 
+> I'll add a few more responses to Darrick's reply...
+
+Hehhe onto that message go I.
+
+--D
+
+> 
+> Thanks,
+> John
+> 
+> [1] https://github.com/cxl-micron-reskit/famfs-linux/blob/c57553c4ca91f0634f137285840ab25be8a87c30/fs/fuse/famfs_kfmap.h#L13
+> 
+> 
