@@ -1,162 +1,209 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92D428ECCB;
-	Tue, 13 May 2025 13:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4785314A8B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141749; cv=none; b=AFTvYKj15DftKgleWC3whv1fbR51U5xNCV0h6eHDaMM8cofN3GMRfNwDxfW6+B68OAz71XF46Hdn3TtaKu2V/NwHj2S/P2k2JbAQ+8rbxYZm22kG1wF3//Uzz3iCH3BGSu8JcTgRgYHq9GYvW1fWrfyjUzRLkPMrBmLjyyKYXOw=
+	t=1747141800; cv=none; b=q9/ksX+4hXsB+zsfZ6IEPzn1B4q6gYfB1QTfnTTg4kLCcjVWbfYcggGRQOXp0ucHa9wv1VZK/A3YxayUukW2S6HktuuX4+/VYc2c6/X78e3EFbY1COXuNnSabntejlQE5ZIvrctkqaf9YR1MuZJFKS4G9MS5TjGgaDKu7s/79/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141749; c=relaxed/simple;
-	bh=5/Y6EJVmF4DB+oWCs6oaK0sniE4Ne4EigB/OJbPea9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s4YZ67XBfLeEdJrQ5OHy7cBNHuaGf7mTUd2GrEy4oVGXtTOyAUy6u4eAaCJbW/bGPSQKHk/RK7NSXi4fNMzO7afQmspVp7LP3xjKxXR15HXfBgyjna7NjMeeR1P4/UsgzUBM69o+N8Cs7mKfF6CUNXktmSgMdf5jwbI35DSjkLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NiQlxZiP; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747141800; c=relaxed/simple;
+	bh=jfCoKS4Br98qE8qMWlnXf8J24ypY3RI8HsC6GR76r4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XG+HmOWpJT8iT5buVnmEUhRGcJVx/KQ+C0tbmIOXyq8Bw/d1seLFOMALkrEOVk7DbTKn0vEuMkaQhaxlxgIAk8PtXpU2jsKppi/oxayxpLeS2n3ej8nTrgh/V9KCp2QzTmP9Z3WkR/HP4xqc2uULb+tdEUOv08iy2ec4TeUcl5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BgFcqkIz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiQlxZiP"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-741b3e37a1eso4477303b3a.1;
-        Tue, 13 May 2025 06:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747141747; x=1747746547; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8IPebdiQyz6+b4I6llbGi3nXjR0k6+4GTE2l/0cCeM=;
-        b=NiQlxZiPNpv63bijowMa+4I1JrFWlDwiJoQN9IMea98XMjiM5cN3+sSvP6I2Njj+th
-         vattxHOz8R3hKin8hGcgPrpIkDlIL+9dbwNyYdE35Th18qfOSyfI1EOnynWaIy5NsA26
-         s3e85mIkWRaFiMqXHdMEGyfBsoXBnAWnvMSHz7LS/vycUTVA2msu9zCe0BeHToI8/Av4
-         1csw8dewu7VLiI5+2u/cXJdNzQuECXRKMPketPO4wy9nJTIciK0WGXjdSyboTt/dSE07
-         WNhfqzcAJW7bcoFNXeM+jd1y3fPoHze6N7JU4G3ciw3idV7M4x6i4dkWml+X9a+hGL5W
-         DuIQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BgFcqkIz"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D9m1XM023156
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:09:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dgqQjoXn/mz0+0JWmqaVq0Nb/xIIVOaxCiU1TbW7BVQ=; b=BgFcqkIzTxWWbobU
+	wwihS5T660k7P57/l/N+Aktm/klgf8K5wF/bCO3yxOR6D4EOWUvkOnpqRbuFrPJR
+	tIG7MlCRMPdMMnim4lrWlzmWmzefdHJCsyOEMMsN1yILIGfX1RWvzfLaWGMCnxI1
+	SE0XwMMLjHeIsM5WuJ/FI9yGC5bJ6jpQqTR0nLa7iq5yJ/OF9mMjeOBZR5WLCCHT
+	3afO4dDtPVtU6oZ5tXG1El0kMtJILDbrx8yndvpf2GmW0sN+g+ui360TVndQLNwi
+	OqPwFNamWtJj7SVEdsrUnAfwR8iEZ1jLmz83V95kEZP7LAwsmXHZt0PhGpzn6ecn
+	9zE93g==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46kcfemau3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:09:56 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54be4b03aso148118185a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:09:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747141747; x=1747746547;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B8IPebdiQyz6+b4I6llbGi3nXjR0k6+4GTE2l/0cCeM=;
-        b=oRLsAGLGVQm2ZSfvpt9V7V3ylpuP4ZXo27gGfHy0YeYSuHGgYhZh9sHlQ7DwKdumhJ
-         335YreIJHo/nWHqtTcBeon6K2BPb3g2qrUn5bttzln+Xek6UCX+ZIw/gQXF4g+nmXVq4
-         bF2DzEtvf3851Q7EcIXpGSmt3Qi+wj5GLEqi8mzVDo5hLtnkL2xEXDpphtZw05o0frgL
-         sGnUEIRty3Dk95/uMC05aSINWN6KNmsw7FLC1wYpL9Fi3zvlVHqs8c3tCD0rXGWvY3Qt
-         lNI93ZqxW/mpw3HK1uDLp2TmoyNlbSCXLd5ZxY2Fv/ve6+AImAHpXA0HhNTRsUNqUxlk
-         GwVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAJdiCVyjubEsV553b/fS0Cb3tdTjMzU2r+Rssg9jnriw7wgPpt+Ek2VXwTRU0+I1NIaZ3hUd9+0zwKTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOSTgRSl9BQF/pSzknPM28d43ysMx3JmT/B2UScT60SEi+Qbf8
-	77dIfsZPRq82ssNKxfDV2U/MjdIqyymeHGafw9Ki3toKf+ug+abJ
-X-Gm-Gg: ASbGncuYFwKm2uq1MrLjyCHNiRioi4L0nTsB1Ypovrhh8uSzmBFPF03L+M3kWaQO7Q6
-	wkd+sV+8ZvRtp8/ihJqa68nc7wRJK3lslDzmSSbIN29xoXKTv+WKEV3XshYBsj/25drfowpCgr3
-	AMeksbZ9R6TDias5PC5GZxbLRjWkJ3hhvkSPcSbKaPzg37KQnwv4HapBvl9dPQeH0Q2QMp55iQC
-	KQvl9GIYp8RezaQd3B6KiIHexiQvO7M/2a9UYs88NjI0r/Py0HDIgfnow2KURMLQ2WTw4ahkF8S
-	4BTSnMC5zOge7nvKbRVRlHb8C7MvVFiIuNkSFvjAAk8H0ijXYP4IAMEnUD0MSVtrw4TJ4ZRRu0G
-	N/vTbnbzlfI46W+xfaQtB38YvQzOhgdfvPjHg1bWfBnrS60fAUvDk
-X-Google-Smtp-Source: AGHT+IFQ3m4yCK+ppMcpl0QJccpa/po7ZnPQFvbBYq1xVipSJv4daPLsHxqkhFVZMg9x/w5RDCKieA==
-X-Received: by 2002:a17:903:32d0:b0:22e:421b:49b1 with SMTP id d9443c01a7336-22fc91aea35mr280650885ad.48.1747141747042;
-        Tue, 13 May 2025 06:09:07 -0700 (PDT)
-Received: from cosmo-ubuntu-2404.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc75469e0sm80248185ad.48.2025.05.13.06.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 06:09:06 -0700 (PDT)
-From: Cosmo Chou <chou.cosmo@gmail.com>
-To: badhri@google.com,
-	heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chou.cosmo@gmail.com,
-	cosmo.chou@quantatw.com
-Subject: [PATCH v2] usb: typec: tcpm: Use configured PD revision for negotiation
-Date: Tue, 13 May 2025 21:08:34 +0800
-Message-ID: <20250513130834.1612602-1-chou.cosmo@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1747141796; x=1747746596;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dgqQjoXn/mz0+0JWmqaVq0Nb/xIIVOaxCiU1TbW7BVQ=;
+        b=EgGy3Qz08nucFanQ7cwbDbsOmE9Nezcmz296IvxHQjfV0jQrm8pYof/8gfre0OuSl3
+         X9C9GgSa38/n3GJ6y/K4RoZ+ludItO1CnwEDESFo6z4wswkIvTIffRiRTbpFfouRTaHM
+         vwOBEUBfpcAxlc5Kx3U00bzFNFJ1DdEnbvvPvblyXj7/1cUWlESjFnHS3vQekMZKvfxP
+         POrDMO5sCBKxMjdcGtN9/CtOcYZslbV50PQqv6as9/A+H6YurZ38AIkppdMur/3C6ewL
+         0nVjHx1ZHdx0hyIZgHdY/ztXKjYYpCpsd3U7bAi0lIbsJHkEPwFQSY9QUG39M3gIcrJp
+         yyow==
+X-Forwarded-Encrypted: i=1; AJvYcCWzAyJ7vbkFwCH7NpualP75pn3h3QCRok3kKHaPcFugKNceRgVnAhSmkaIM0fP3rukRx5xyM4OjplffikA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxgmkUC7dRqzM0Usu/NvmLNBoPaV7ZzgF2uMNwtSoWOwQb9lHO
+	b3BtR6sAYttha6tVf4bU9NskHAH5XXiWl+z/B+fON5qx7OWl6v0Y8xsRHDMz9Q6maHkQ/2IE4Dg
+	xNgtFAYMiMh+A7zBfFX4jIn5Ud6asSmLmMimrrAiDbK+QlCPFicb9ZHtqCSvFX4k=
+X-Gm-Gg: ASbGncsYK4TL9cS9/pgTmMZ57l5Xv2gYWsJ/tB7MTBcVfpunrSRB4EIlQ39VDcel0jZ
+	83qHhNIph+be85YHfaNI7cBUTTiQq1PctlVY/BZEWKTmwOYld2vBIYYMkvQp3wttBynBE5Ej1Ll
+	DT34Lyf49ZdIqRaFmDYY8hnko3S3V8Y3JmCR53O1WXYoYblPM7XOiJk0WM6NuL8fmkYxBqhZtBR
+	Hm7KlINrfPJk/ccBwf5mC97fwSscnFBmoVLS4Lw/avb7bPZArBwQArwjsnoRXhhoPfda1tpBEF/
+	sY1JY7xoCUF/iXZo2LCjRJobGJwE3z+IaxW+Wbw03qNPJvwvVFFpM62WszkjWv2BIA==
+X-Received: by 2002:a05:620a:4621:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7cd01209dcbmr1133995085a.5.1747141795985;
+        Tue, 13 May 2025 06:09:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdFtK9juUmc0ai1W7MGI4fFewuXp29EYzh0Mnsqifnw7jvpAjmStbjPMKlcmyqOWJnBAZi1g==
+X-Received: by 2002:a05:620a:4621:b0:7c3:cccc:8790 with SMTP id af79cd13be357-7cd01209dcbmr1133993485a.5.1747141795533;
+        Tue, 13 May 2025 06:09:55 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad22ba47376sm658958666b.53.2025.05.13.06.09.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 06:09:55 -0700 (PDT)
+Message-ID: <3f346bdc-81a4-4620-9a31-25c41d591c58@oss.qualcomm.com>
+Date: Tue, 13 May 2025 15:09:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
+To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
+        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srini@kernel.org, quic_ekangupt@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        "Bharath Kumar (QUIC)" <quic_bkumar@quicinc.com>,
+        "Chenna Kesava Raju (QUIC)" <quic_chennak@quicinc.com>
+References: <20250502011539.739937-1-alexey.klimov@linaro.org>
+ <10f69da3-6f94-4249-a8f3-459dc48fa5e1@oss.qualcomm.com>
+ <D9R4NCKH46WP.14C8F7W4M58ZQ@linaro.org>
+ <3c0fea8d-0715-40e6-bed9-e0961bf034e0@oss.qualcomm.com>
+ <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <bb68da04-ef52-4172-8b6e-f4027bcc2786@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEyNSBTYWx0ZWRfX0+llliz7msk8
+ 3WdAb6fQGIiaYqFsNtX/9oQEJ5oTHdIc0s1Majr3rYWI5Mojyx9R7OkH8DE0PPPxIZkxPwfGw5m
+ BFX+VgUhkk8D7i4sCdiqErExlOCQotW+Bz64MdAMJiAq0C/tmoblsqSXDXDPpQoz9myCYuArfK6
+ c/i4OmdFizQS0qDNjn8PL0wpxGu+TYVbli62e6XHgezS5ovDTMammdo/L2OzQ83RLA1esXAQkGK
+ sgT1wYsglMBbBWFTGuZe5H3Wt7HlqXjszUPEQj3tvFRhsh39TyaJDIo+gdESppg0YMUuxsY1OO6
+ h0OZJpbijCEmzrpaLQXFWdSWXPbBGSCJCy6ySq2Th2V7SzDe6PjiCA+QHi/7K2QE7Ij24GMALNF
+ vpFlosHMxNwJ0OZplWKBCxctZqFq9ibMySVRsGSBTv3D6Og26f7XQEYp1aXekWr7oN6jxHjo
+X-Proofpoint-ORIG-GUID: 0DLJ5uZh1ORtR1IKFxNhl__Gzfm2ahd9
+X-Authority-Analysis: v=2.4 cv=asuyCTZV c=1 sm=1 tr=0 ts=682344a4 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
+ a=KKAkSRfTAAAA:8 a=UvE4O2ndLqCJbkWAjTIA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: 0DLJ5uZh1ORtR1IKFxNhl__Gzfm2ahd9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505130125
 
-Initialize negotiated_rev and negotiated_rev_prime based on the port's
-configured PD revision (rev_major) rather than always defaulting to
-PD_MAX_REV. This ensures ports start PD communication using their
-appropriate revision level.
+On 5/9/25 5:42 AM, Ekansh Gupta wrote:
+> 
+> 
+> On 5/9/2025 4:27 AM, Konrad Dybcio wrote:
+>> On 5/9/25 12:20 AM, Alexey Klimov wrote:
+>>> On Fri May 2, 2025 at 10:38 AM BST, Konrad Dybcio wrote:
+>>>> On 5/2/25 3:15 AM, Alexey Klimov wrote:
+>>>>> While at this, also add required memory region for fastrpc.
+>>>>>
+>>>>> Tested on sm8750-mtp device with adsprpdcd.
+>>>>>
+>>>>> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
+>>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>>>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>>>> ---
+>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
+>>>>>  1 file changed, 70 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> index 149d2ed17641..48ee66125a89 100644
+>>>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> @@ -7,6 +7,7 @@
+>>>>>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
+>>>>>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
+>>>>>  #include <dt-bindings/dma/qcom-gpi.h>
+>>>>> +#include <dt-bindings/firmware/qcom,scm.h>
+>>>>>  #include <dt-bindings/interconnect/qcom,icc.h>
+>>>>>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
+>>>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
+>>>>>  			reg = <0x0 0xff800000 0x0 0x800000>;
+>>>>>  			no-map;
+>>>>>  		};
+>>>>> +
+>>>>> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
+>>>>> +			compatible = "shared-dma-pool";
+>>>>> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
+>>>>> +			alignment = <0x0 0x400000>;
+>>>>> +			size = <0x0 0xc00000>;
+>>>>> +			reusable;
+>>>>> +		};
+>>>>>  	};
+>>>>>  
+>>>>>  	smp2p-adsp {
+>>>>> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
+>>>>>  						};
+>>>>>  					};
+>>>>>  				};
+>>>>> +
+>>>>> +				fastrpc {
+>>>>> +					compatible = "qcom,fastrpc";
+>>>>> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
+>>>>> +					label = "adsp";
+>>>>> +					memory-region = <&adsp_rpc_remote_heap_mem>;
+>>>> IIUC the driver only considers this on the sensor DSP
+>>> Memory region is required for audio protection domain + adsprpdcd as far as I know.
+>> next-20250508
+>>
+>> rmem_node = of_parse_phandle(rdev->of_node, "memory-region", 0);
+>> if (domain_id == SDSP_DOMAIN_ID && rmem_node) {
+>> 	// ...
+>> }
+>>
+>> maybe some driver changes are still pending?
+> 
+> Would like to add some more details here:
+> 
+> Memory region is required for audio PD for dynamic loading and remote heap memory
+> requirements. Some initial memory(~2MB) is allocated initially when audio daemon
+> is getting attached[1] and this memory is added to audio PD memory pool.
+> 
+> Additionally, if there is some additional memory requirement from audio PD, the
+> PD can request for more memory using remote heap request[2]
+> 
+> The support for SDSP was added sometime back[3] to support SDSP usecases on some old
+> platform as there were no dedicated context banks for SDSP there. On recent platforms,
+> context banks are available wherever SDSP is supported. 
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1273
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/misc/fastrpc.c#n1884
+> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/fastrpc.c?id=c3c0363bc72d4d0907a6d446d7424b3f022ce82a
 
-This allows proper communication with devices that require specific
-PD revision levels, especially for the hardware designed for PD 1.0
-or 2.0 specifications.
+Ok, this was mildly confusing given there's specific "normal" region
+handling, but the DMA allocator takes care of this one
 
-Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
----
-Change log:
-
-v2:
-  - Add PD_CAP_REVXX macros and use switch-case for better readability.
-
----
- drivers/usb/typec/tcpm/tcpm.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 8adf6f954633..48e9cfc2b49a 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -313,6 +313,10 @@ struct pd_data {
- 	unsigned int operating_snk_mw;
- };
- 
-+#define PD_CAP_REV10	0x1
-+#define PD_CAP_REV20	0x2
-+#define PD_CAP_REV30	0x3
-+
- struct pd_revision_info {
- 	u8 rev_major;
- 	u8 rev_minor;
-@@ -4665,6 +4669,25 @@ static void tcpm_set_initial_svdm_version(struct tcpm_port *port)
- 	}
- }
- 
-+static void tcpm_set_initial_negotiated_rev(struct tcpm_port *port)
-+{
-+	switch (port->pd_rev.rev_major) {
-+	case PD_CAP_REV10:
-+		port->negotiated_rev = PD_REV10;
-+		break;
-+	case PD_CAP_REV20:
-+		port->negotiated_rev = PD_REV20;
-+		break;
-+	case PD_CAP_REV30:
-+		port->negotiated_rev = PD_REV30;
-+		break;
-+	default:
-+		port->negotiated_rev = PD_MAX_REV;
-+		break;
-+	}
-+	port->negotiated_rev_prime = port->negotiated_rev;
-+}
-+
- static void run_state_machine(struct tcpm_port *port)
- {
- 	int ret;
-@@ -4782,8 +4805,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		typec_set_pwr_opmode(port->typec_port, opmode);
- 		port->pwr_opmode = TYPEC_PWR_MODE_USB;
- 		port->caps_count = 0;
--		port->negotiated_rev = PD_MAX_REV;
--		port->negotiated_rev_prime = PD_MAX_REV;
-+		tcpm_set_initial_negotiated_rev(port);
- 		port->message_id = 0;
- 		port->message_id_prime = 0;
- 		port->rx_msgid = -1;
-@@ -5048,8 +5070,7 @@ static void run_state_machine(struct tcpm_port *port)
- 					      port->cc2 : port->cc1);
- 		typec_set_pwr_opmode(port->typec_port, opmode);
- 		port->pwr_opmode = TYPEC_PWR_MODE_USB;
--		port->negotiated_rev = PD_MAX_REV;
--		port->negotiated_rev_prime = PD_MAX_REV;
-+		tcpm_set_initial_negotiated_rev(port);
- 		port->message_id = 0;
- 		port->message_id_prime = 0;
- 		port->rx_msgid = -1;
--- 
-2.43.0
-
+Konrad
