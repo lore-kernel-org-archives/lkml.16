@@ -1,126 +1,136 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E483527EC7D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FDC253F1B;
+	Tue, 13 May 2025 11:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747133989; cv=none; b=AvBWyjAicOmZnaVaOtVui47Bx/AaO35Mfh5XYeek3aysyBbgfp7O9L8Uf4rmFIQnGBD5jSR108RD77ng3D2UWAKOA4x4qXZzS4hT+63lfMenmTvreEZtnFvFjS3KEg/deJ71KyoLEefKMMptdK5JAyLRq0vbnIoY8dbgc18oozI=
+	t=1747134046; cv=none; b=C3ziGa45nvFwSeljw1+ydaS+IYmHJ5BlmtS3Qf6Qfhk9FMY/ahbflSMRq+lSRFPjy3HaTR66zzDu/EJCo4W74yh30759OjXcyZE6R+dvjcBKqZBQ8Di57iG+ypuJPwN9Jc+Y24VVVglgsDHVdzgVoICjWZuBVrQpF5oaugiPq3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747133989; c=relaxed/simple;
-	bh=GAD0kFJ5YJ2FK8mLZ5w9P8zRKTWeWXXWX86RwPrS390=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxnZRZUy1zjn595dmtyNP+C5+dVnh1EJuO+TFpqEINUOZAFwEghGPwfBg809ney2u4IbRO37+ZlA/YCtIpXl0N5x5WSWxwy/S7mOz+t06/2Nnghu+MidHFmK/F2D2DV7Ryt9BjnoBrQcCLsTUjba3PdUJRmn5k83/i5ZHyHWFVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQUXizoj; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747134046; c=relaxed/simple;
+	bh=lvcch2mjqXy76M4SgxMLancG3LIVTkAgw1v67xAKb60=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gc4Riumk9Inw7yNENIp82p0uGGrXhpHR45aNqG/nAq4rQtjdGdU1d6wfl9PtrQkqnIQVNsQKsYlTv9jTILrwdwrIlqLH2ZoZWVDsiHjsbwjRXfT1wrvcdbiviq+zEi48uvNzY+2Z5iPXsDCnHW7Xpd2Qq8vTR6suyjgMWAtOOQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1SPvY58l; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQUXizoj"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b5b90b7aso636687f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747133986; x=1747738786; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvRmj826ad4QUb971cjwKbsd9avSTJmnW3hYgxwozQA=;
-        b=jQUXizoj0s8tXQLdH4D/428a8dG6y31jd0Ts82QycPUYpPMD8QOTcNSaNsD9QXGqaQ
-         N7EJtnF/1sXZ+zyAGfVvTU8Z6AvWpTWtUAx+JQi1hBU8L1FgaW945syqGhi5yYbOVACd
-         AmTHpIHncEHrWfjd+0C69PC2qRfCv+6OYYECgUPn4uBhDiN8OcctKblOtSrnew00cew/
-         MnB6jv+0/OiDLxKijrCOXcxtXmKGAkB7vEpo/LQu+dFQrMqyJsIO0AtO+yjWK1Czfptg
-         StKYg/o4Tx3IBVCG1uF2QLgQp10cJX9kBUPW7eF2lGkZG3Al3BNUybnyRqWC9j7rZ21t
-         CzGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747133986; x=1747738786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IvRmj826ad4QUb971cjwKbsd9avSTJmnW3hYgxwozQA=;
-        b=MKfx9m1uwxbfqUG2CWQAFqonOoDKrWo9SROSHv7BRwlDlTkQ/lhzD5SWih5YTnJnzh
-         p/n3StmSf5YwyBt9lredo8VA72h3XCLWDFEujQsaJEW3Y4tLaRE3zfKtMSN7j28FdlB4
-         Uwua42YVcyZcx8+tHZs6oLswKZx9t0W/5V9fmF32RgQ6yBXIFnhJWvU6LfRU5oT1Nuqw
-         k9UMQqEyVoVCjfAypD00A/FELqjRCK4nz0kPAUn1GZrJIjt4v9UURx3Dp9lbCLSoXQMt
-         TbIo79BnUjGsGZIZ4x6+G5qtYyJzpdbEt+E3FwjyRu/ebfhkj1TFp9oDEZjeRzqi8uRi
-         iVpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0KtRZV18ElR6ubfqu8I15uyXfgmibR4pGVtzr2qwe0c28NhSKzO24qdjhrSuy6ZckasIrMzMQEcSAxws=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+CXscSyv0Wmrd8WHypZHign1n1DeZb6wmRAVhxFVvI0197nvQ
-	8B1RsC42SfFjXVqbrNjqoylzNXyc5hn9a0FjgCWTu05Xrd7QsxE4TuAd+YQyJYQ=
-X-Gm-Gg: ASbGncvGDoIyOvd/unuPega+lZOvrnzcBs7ZUxBOOQSNzR2nY2CxolWCxOpourY263P
-	c2SAtJ104x0sflN0qezBmHjCdYP5OPKLbkZdHZJQs6460fEjTxARALtEmJSr2bKzutn8T31rOua
-	D/juTsF12vNXjgmkjK+alof3GJ5Kc5RPd7y7pF5e37yCUkvRZJDFhyrmh7DujYTznvIO9tU7h77
-	Ap5xwrweMy2CMfH9BKP9wHDufPW2K6brxtocvTKWh00+xqyesAGUwqoS/icDkuy3m5jP7E1wULv
-	rFvNMucmz+O8PrWQ4URvwGxvBByJ6d6vtugxWs9bXHEHhkNOthCcTtU/QMOFNs5OgnEXhu4dpuO
-	1W00xBgY3TxVOAmnUf3iHjIRmqVsMMbK8cvTqzQ0=
-X-Google-Smtp-Source: AGHT+IG5fKMxvjjltTJpP1VGWjmB/2GOQg7Z1BsjigMi3Gmj35E8GZ5+qOXlM4koXQ1T7HjcmVC4nw==
-X-Received: by 2002:a05:6000:40df:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a1f6423590mr4776881f8f.2.1747133986123;
-        Tue, 13 May 2025 03:59:46 -0700 (PDT)
-Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f3afdsm16078670f8f.60.2025.05.13.03.59.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 03:59:45 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Sylwester Nawrocki <snawrocki@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: samsung: drivers for v6.16
-Date: Tue, 13 May 2025 12:59:41 +0200
-Message-ID: <20250513105941.28448-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1SPvY58l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747134044; x=1778670044;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lvcch2mjqXy76M4SgxMLancG3LIVTkAgw1v67xAKb60=;
+  b=1SPvY58lg6QaGq3tg5MKMEH0UOBJBAnn1tbJaQ7qZNh7lbO5vyfRQbMP
+   3uBOsM/rKg2W4Dq9QkvGwOlQTxnzPeRUARNUfVSYUWUBHPuKSjqI13WDK
+   GsnYroktT62HhIFX88+TzpRxw6LfEZGyiyqgbaseW6TMs/ZNxFBr/9K+a
+   uWCsA4sdKDNWMxXgX/JsV7w385tSFtDEY10w0NzW/s7J4p+rNlY9O9WcV
+   QzFMZnX5qnoYBP71FQJCnauBRKlCqqO0GIMyKL+TKfVlOuxmlbnlIPtW1
+   z/tL99GNL9MwzcotFCPBYHXhPYCzOo8oSCxKADrogQA4KeyVhcgQC0OB1
+   A==;
+X-CSE-ConnectionGUID: m/qCGXO7RluFvhk37YiHlQ==
+X-CSE-MsgGUID: Ef1fQOjqRNOhE8dLMRoNgA==
+X-IronPort-AV: E=Sophos;i="6.15,285,1739862000"; 
+   d="asc'?scan'208";a="42045275"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 May 2025 04:00:43 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 13 May 2025 04:00:41 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44 via Frontend
+ Transport; Tue, 13 May 2025 04:00:38 -0700
+Date: Tue, 13 May 2025 11:59:38 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+CC: Conor Dooley <conor@kernel.org>, Vishwaroop A <va@nvidia.com>,
+	<krzk@kernel.org>, <broonie@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
+	<skomatineni@nvidia.com>, <ldewangan@nvidia.com>, <kyarlagadda@nvidia.com>,
+	<smangipudi@nvidia.com>, <bgriffis@nvidia.com>, <linux-spi@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 RESEND 1/2] dt-bindings: spi: tegra: Document IOMMU
+ property for Tegra234 QSPI
+Message-ID: <20250513-implode-half-0c3ffcf6d3f5@wendy>
+References: <20250509165409.311912-1-va@nvidia.com>
+ <20250512-observant-rental-21927c85c709@spud>
+ <904d3e89-a540-4edd-b748-15e13c431c17@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=GAD0kFJ5YJ2FK8mLZ5w9P8zRKTWeWXXWX86RwPrS390=;
- b=owEBbAKT/ZANAwAKAcE3ZuaGi4PXAcsmYgBoIyYeXGYfRXBpOgZAbyMyM0G0gXfP7x4rVhaNG
- ZNlW5kBi1aJAjIEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCMmHgAKCRDBN2bmhouD
- 1/mMD/QJrD+uVxskUSpR2WCT2iO2+zMLNh2Y105Wpicr6Ppz9U1EayRxH/yzRm4FqlVITLwSXPi
- J7Wutiaf6sSE2g+LRG5mvicN5kctLn6jeKpgtCr7chJmHsffzJ24bC4MPO77a84H/0pItzLZYss
- W5bzXLsjUr8VMg/22ALBMREsx+wfGlD5wzSXf/eTXoPaIWktsTOaSMC6UQ1+kC5zLgUZHXVJdW3
- wf4gOksiN+SxVyQw1831nBdb4d3o68a5HtWw/q620FAkMOmKrur4T2Jow9E2eAaC3xjcE46cynw
- m/FXrz42LMv6FeI+6oPdkx1gn00Eeg4pM2LRIyTK9htDCTkC5DvNZvOwTbvobADJgAxopW8riR1
- 9yEWXP0hQOTaoLnmWmatCcKRPhvFh3mScZ7aWEML5Vh/AVRVe/2vA2tyPqBi9kxePyQbTJjAKiE
- PkRTZ7gAgGxy2W6y4oXv85TbJgt7FYIQknSg4xPjnmkhrAcOXi77Q7hGQxDwh0bJzxL4bwgBikx
- ZO2Zh5Yi2T2TzlEffmT/iaq5GtwUtRkOdwuK6byXJJpRAL6GFlyAVKdXqxtRJzLR1EncdtF9c2i
- x3BO0yWGmDqHJXPZ6Ge0SoVyGhmn4vq+eo5UsX+5n6NqJwlqI5f+3YqjebieP9OZmVRz21iaKm1 VIdZZ7f5Bry/C
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SQ4dyVdvUUBL1DBR"
+Content-Disposition: inline
+In-Reply-To: <904d3e89-a540-4edd-b748-15e13c431c17@nvidia.com>
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+--SQ4dyVdvUUBL1DBR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+On Tue, May 13, 2025 at 11:19:05AM +0100, Jon Hunter wrote:
 
-are available in the Git repository at:
+> > > +  - $ref: spi-controller.yaml#
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          const: nvidia,tegra234-qspi
+> >=20
+> > > +    then:
+> > > +      properties:
+> > > +        iommus: true
+> >=20
+> > This is a NOP, no?
+> > Just invert the case above and drop a clause.
+>=20
+>=20
+> Yes that's true. So just to confirm, your preference is this ...
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.y=
+aml
+> b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
+> index 04d3b1a47392..c45511e9a9ed 100644
+> --- a/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
+> +++ b/Documentation/devicetree/bindings/spi/nvidia,tegra210-quad.yaml
+> @@ -74,11 +74,13 @@ allOf:
+>    - if:
+>        properties:
+>          compatible:
+> -          const: nvidia,tegra234-qspi
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra210-qspi
+> +              - nvidia,tegra186-qspi
+> +              - nvidia,tegra194-qspi
+> +              - nvidia,tegra241-qspi
+>      then:
+> -      properties:
+> -        iommus: true
+> -    else:
+>        properties:
+>          iommus: false
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.16
+You can just invert the condition directly with a not:,
+so "if: properties: compatible: not: contains:" should do the trick.
 
-for you to fetch changes up to a30692b4f81ba864cf880d57e9cc6cf6278a2943:
+--SQ4dyVdvUUBL1DBR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  pinctrl: samsung: Add filter selection support for alive bank on gs101 (2025-04-08 20:57:51 +0200)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v6.16
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCMmGgAKCRB4tDGHoIJi
+0mpYAP9DLyt4yjrQ7chZQTnXz8nDNpruXL9jHhFsNskUDttvUgEAuMvvEbdUg9tK
+EZQ2UODgjqyj9QFYSS7svBf4/g1GjAM=
+=vXPi
+-----END PGP SIGNATURE-----
 
-Refactor the driver suspend and resume to handle Google GS101 EINT GPIO
-pin banks and add the alive pin bank for that SoC.
-
-----------------------------------------------------------------
-Peter Griffin (4):
-      pinctrl: samsung: refactor drvdata suspend & resume callbacks
-      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
-      pinctrl: samsung: add gs101 specific eint suspend/resume callbacks
-      pinctrl: samsung: Add filter selection support for alive bank on gs101
-
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  52 ++---
- drivers/pinctrl/samsung/pinctrl-exynos.c       | 300 +++++++++++++++----------
- drivers/pinctrl/samsung/pinctrl-exynos.h       |  28 ++-
- drivers/pinctrl/samsung/pinctrl-samsung.c      |  21 +-
- drivers/pinctrl/samsung/pinctrl-samsung.h      |   8 +-
- 5 files changed, 255 insertions(+), 154 deletions(-)
+--SQ4dyVdvUUBL1DBR--
