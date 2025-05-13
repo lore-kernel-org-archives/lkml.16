@@ -1,122 +1,209 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57631E491B
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 07:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4021C28E;
+	Tue, 13 May 2025 07:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120191; cv=none; b=u6Tf8ORyK7eNbOy7yjPoJnjt6GjoLuz0+0snKDXBtJhkwwepFeI8ewoAH0oAmEHQHz9oTkly6brwpWUJZ9qPhe5TU4ERZmrLQn2dJUXOxFDww28sla70JT4jpy4dG6+bEF7Pzngk218Fuy3yarjEGfoxaqNpep4L0yPn8dSL+k0=
+	t=1747120326; cv=none; b=OUOU1LF8ckUFFWqOL2F1/0zqTnevD+2b8DdPEOKs95hxW1KlbTM2cuIQhQJYUgm4753D6zPls6ezr76bdGqqNjjxoPlsxWsuSZer9Gk+QlzBuUH9YXDV8Pv6xH/pg/QTl7udITmHEKMoPAOBg6cxnPeETeTNOEWWbOe2FxfF1dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120191; c=relaxed/simple;
-	bh=1mpZ6Al8VYmH30IhbiQcuHYfik/qwiV++F2e9dsh+xg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rRLDcD0ZKkO/BTTlDQh6TmQn+tJKGX2827NWZ7jUXyQV4yYSyQyBf6lF92jDy1cpMwI++eFO+LpW2PIkNvifhqCRG19JDe367blrFW1E6LWGg59TPLl9x+TsUCg447Z4C3/Md707i7GgLU/CIT/vSk9bgnqEAb8vn54a3aB3Hh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sLnx7Gm+; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747120326; c=relaxed/simple;
+	bh=PFDsQGZBFReRJAVX+aMh2f4kUZlj/XLGAr4AA6TuYcA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uKSJF9kqamHuo79PyWA9ChYT6dwepqf6Ri7G/Miy8D/nYPkQ7PVM2rU4iffQLD0+TS2iUpNfdUBQd3S7M11k5Zs7qm3XPR49H7GKOeWFjRQslu9mPUO+3jTnsT3bkusGosWjwmztdYTx24A+860HkBSCe+EzfrkgCiepEesu8co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Srzn9WIy; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLnx7Gm+"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-326b49bed68so55467021fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 00:09:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747120188; x=1747724988; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dU26nCKlfqylO1Ro80i/l9QTXUmMjT1iaV5kMUWcm5k=;
-        b=sLnx7Gm+nNI1HPMEO1ZTtGnqiLCyRENn0FrsKuU1TJAjrTIMK1wzT27e5t9Oq7uvA/
-         CE+QDD9MrtdLwY2Clkwr3ZhZZ54f6Obgtl8q04sTQoGrT3j3vJse9tkpyGaM3HieGByL
-         OqrM8l5Aj+yUnXAV1K1N4xqre35uQoE3dlXJOMNfbPoXmwh399QJ0+1XYYOBg4BgpGdL
-         nQQabuJuGn9jzPJUL8cqoGDeK711aG9p8DgonrWxT0KHuZWkW1LYLAjSn+LiWCzTlRkD
-         Civz4nRL1OCxdbQXJ0VkMbdLJCvkEHzd0j66VA7ahXK6EyhihxCkamZavz4swIBp2/Hk
-         fr0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747120188; x=1747724988;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dU26nCKlfqylO1Ro80i/l9QTXUmMjT1iaV5kMUWcm5k=;
-        b=M2xuNnLN0OPXUbRykbCTanUlKhD+yV6GOZacefVYaGvvtEWTRivvl87quzc4Sz8PoD
-         PM58OF608xHeIxgBlcVNrvUXssKrN/HFhDibUMO+amj3yl+jElBv3cmODH9W5YQFHElL
-         8SvE/kof/wAh4rYzVUTxrODQStj9gmW6NNU9RA1KtWecKiHl+QykzlcP45kIS30tTrkb
-         DqkUDEunpPcXrOTYcgrbicoEPafwkaNX+9EcfbVvD0LF1NZOYTPUi0QSb9BSLxdTyuZ+
-         rGCUc64LIhFzqvBvdfRl3obARzU5rMtbN5vcma/qmgmsrFdy0VBWFcTts1cUxfIiG/D0
-         orfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeELwILrG4hvCXzggzGtSd4oV1h1wEsEIJdSZCKcpfdguQfBXLVEGrrWhcyxgQn8gZ+wbGJTJr95W4EvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyImAJqWWpV7hxjjJ6OdozO0oC4RnDGa1fFRmHKd5PLdNNDzFzZ
-	xhFLSvbtdsHsJ+TrzoQt3BCbs/askO4AYvwDqXIBEHIIHyAdFLnfNW/qmMWNBymNcG1nbfafc0B
-	dZYtAnYn8neS8Cev88ALmcjm60UYEHsiY781n
-X-Gm-Gg: ASbGncuWq4x9s7U8Arir9jW1aVvz+wPKDXwcO918uliie75tBSEkRAOXE+6sa/VPAXM
-	oOeYMGFhEyRqFVDd+SCge2vJl5VLcvaSg03xlJPdzMzyUQQ9onqM/rvE8CZx300k+wrUtb8Z5XT
-	utJBl45mGGg2g9O1BncgXofwPomkTevuqoedRSsPaEMQ6ovgMo5AWQX2eD/rCaYk4Lwg==
-X-Google-Smtp-Source: AGHT+IEQGCUFG8F2adClWkyfpolaZAHpKzA+AxlgXgeCauF/fMcfoLSm4Fl/E23VOtN8xwg7rRFe2SlvA0thNxp+hLk=
-X-Received: by 2002:a2e:b8c5:0:b0:30c:518e:452 with SMTP id
- 38308e7fff4ca-326c456a617mr54822011fa.13.1747120187684; Tue, 13 May 2025
- 00:09:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Srzn9WIy"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7184443B51;
+	Tue, 13 May 2025 07:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747120321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kW436Zqw0Tr+zUxZcdzJxvQgLIggqW4FjaxNbWh15/c=;
+	b=Srzn9WIyN5mGzGLMRzxA3ka+j+fgZBLFC6ZRSPheczVUF9BqHS9g0ZYln15ivDOeq777Gb
+	AkZRtRBQ6BqCvBshFkdrBUstTcM7E67HtbTvuYcLI1atJ+TQZ9V8/5MCWcCgVonSRx/vjq
+	IE3xkHMmHXigcpavG1ciTGbRrOn/xUT9ENrTRQyeuPcEZAdf3Jyp2/OHcfoZZO8Toneva1
+	95VqRVppQK62xLMuWvub3WQC/fwH9FXqwwHSkiepS1nXvNBHkw8YVNuMmWwlqIcEgcOD31
+	aK+tqCHk3Af8GI6ReU/eKjZbjsUVIDPW3iR0TdoLdap+OlBOqzbqOkE71NG8qA==
+Message-ID: <1b358a4b-855d-4d4d-ac2d-9941461848ba@bootlin.com>
+Date: Tue, 13 May 2025 09:11:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025040820-REJECTED-6695@gregkh> <20250509072033.1335321-1-dvyukov@google.com>
- <2025050940-marrow-roundish-8b98@gregkh> <CACT4Y+aiQcbHfj2rB6pGKevUbUoYwrHMu+aC-xh0BCKE8D-8sQ@mail.gmail.com>
- <2025050924-marmalade-overfill-fc5a@gregkh> <CACT4Y+ZqToLK5R__x8O1ZctsG3wQtRn36JWF2MPRYqY+Zy_CUA@mail.gmail.com>
- <20250509121036.GA92783@mit.edu> <CACT4Y+Z8ANddFCpNHvNqq6u6=s_aWoYPwu_1HmH19OWeLBi47A@mail.gmail.com>
- <20250512144402.GA200944@mit.edu>
-In-Reply-To: <20250512144402.GA200944@mit.edu>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 13 May 2025 09:09:34 +0200
-X-Gm-Features: AX0GCFu8VqDkOeuDOaDyQhiTD0oxexAYp7ClLOraLP5sW2t4hTFgnOk2mc388x4
-Message-ID: <CACT4Y+as-Uy_BUjLDxfNwC2+78U3kJdaaKL=vbUNMZH9VcLiGQ@mail.gmail.com>
-Subject: Re: REJECTED: CVE-2025-0927: heap overflow in the hfs and hfsplus
- filesystems with manually crafted filesystem
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, cve@kernel.org, 
-	linux-cve-announce@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Subject: Re: [RFC v3 01/33] rust: drm: Add a small handful of fourcc bindings
+To: Lyude Paul <lyude@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
+ Danilo Krummrich <dakr@kernel.org>, mcanal@igalia.com,
+ Alice Ryhl <aliceryhl@google.com>, Maxime Ripard <mripard@kernel.org>,
+ Simona Vetter <sima@ffwll.ch>, Daniel Almeida
+ <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Asahi Lina <lina@asahilina.net>, open list <linux-kernel@vger.kernel.org>
+References: <20250305230406.567126-1-lyude@redhat.com>
+ <20250305230406.567126-2-lyude@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250305230406.567126-2-lyude@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdefhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthejredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetudehheegkeethffglefgveduleeuheetjeehheekhfehieejvedugfefuedtteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghloheplgfkrfggieemvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehngdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehli
+ hhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtggrnhgrlhesihhgrghlihgrrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhimhgrsehffhiflhhlrdgthh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Mon, 12 May 2025 at 16:44, Theodore Ts'o <tytso@mit.edu> wrote:
-> > This is not even about auto-mount. Let's say I am mounting a flash
-> > drive that you gave me, how do I ensure it's a safe image to mount?
-> > Removable media, portable drives, and some use cases related to
-> > mounting images stored in local files either deal with images with
-> > unknown origin, or can't provide 100% guarantee that the image wasn't
-> > tempered with.
->
-> From my perspective, the answer is simple.
->
-> You run fsck -y on the file system image.  If fsck.FSTYP isn't capable
-> of sanitizding the file system image to make it be safe, then that
-> should be considered a security bug for fsck.FSTYP, and should be
-> reported as such.
->
-> Does the user not have the latest version of fsck?  Well, they should.
-> If they don't have the latest version of the kernel, or any other
-> system software in the TCB, then they could be unsafe.  And that's on
-> the user.
->
-> > Question of resources for fixing is orthogonal to classification of an
-> > issue (if it's a bug or not, if it's a security issue or not).
->
-> No, but the resources available should inform the trust model, and
-> assuming that users should be able to blindly insert any random USB
-> thumb drive, or blindly mounting any untrusted file system image, is
-> not a trust model that is realistic.
->
-> If you want a different trust model, then give me the resources.
-> Otherwise, don't try to impose an unfunded mandate on me.  Because I
-> will ignore you, for the sake of my mental health if nothing else.
+On 05/03/25 - 17:59, Lyude Paul wrote:
+> This adds some very basic rust bindings for fourcc. We only have a single
+> format code added for the moment, but this is enough to get a driver
+> registered.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> 
+> ---
+> V3:
+> * Drop FormatList and ModifierList
+>   These aren't actually needed as pointed out by Louis Chauvet
+> * Add a constant for FORMAT_MOD_INVALID
+>   I realized that we actually need this because the format list isn't
+>   terminated with a 0 like I thought, and we can't pick this up
+>   automatically through bindgen
+> * Split out the FormatInfo WIP
+>   We'll want this someday, but not yet.
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  rust/kernel/drm/fourcc.rs | 21 +++++++++++++++++++++
+>  rust/kernel/drm/mod.rs    |  1 +
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 rust/kernel/drm/fourcc.rs
+> 
+> diff --git a/rust/kernel/drm/fourcc.rs b/rust/kernel/drm/fourcc.rs
+> new file mode 100644
+> index 0000000000000..62203478b5955
+> --- /dev/null
+> +++ b/rust/kernel/drm/fourcc.rs
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +
+> +//! DRM fourcc bindings.
+> +//!
+> +//! C header: [`include/uapi/drm/drm_fourcc.h`](srctree/include/uapi/drm/drm_fourcc.h)
+> +
+> +/// Return a fourcc format code.
+> +const fn fourcc_code(a: u8, b: u8, c: u8, d: u8) -> u32 {
+> +    (a as u32) | (b as u32) << 8 | (c as u32) << 16 | (d as u32) << 24
+> +}
+> +
+> +// TODO: We manually import this because we don't have a reasonable way of getting constants from
+> +// function-like macros in bindgen yet.
+> +#[allow(dead_code)]
+> +pub(crate) const FORMAT_MOD_INVALID: u64 = 0xffffffffffffff;
+> +
+> +// TODO: We need to automate importing all of these. For the time being, just add the single one
+> +// that we need
+> +
+> +/// 32 bpp RGB
+> +pub const XRGB888: u32 = fourcc_code(b'X', b'R', b'2', b'4');
 
-So the current model is that anybody who may have access to the image
-is considered the same level of trust as loading unsigned modules,
-right?
+Two questions:
+- Can we implement fourcc_code(b"XR24"), so XR24 can be found with grep 
+without knowing the internals of rust bindings.
+- This is maybe "too much abstraction", I don't know what is the 
+expectation for the kernel, why not creating a FourCC type? This could 
+avoid confusion with other FourCC code from v4l2? This could also be 
+complex to automate the generation, so it is maybe a bad idea.
 
-I just hoped for something at least somewhat stronger. Bugs flagged by
-fsck won't require fixing in that model.
+#[repr(transparent)]
+struct FourCC(u32);
 
-It's not necessarily about a completely "random USB thumb drive".
-There may be some level of trust + the image passes fsck. E.g. handout
-material on workshops (when one needs to distribute X GB to N people,
-conference wifi may be not the best option).
-Or, insider risk inside of a company where an image is prepared by
-another employee.
+and then implement From<[u8; 4]> and From<u32>?
+
+Thanks,
+Louis Chauvet
+
+> diff --git a/rust/kernel/drm/mod.rs b/rust/kernel/drm/mod.rs
+> index c44760a1332fa..2c12dbd181997 100644
+> --- a/rust/kernel/drm/mod.rs
+> +++ b/rust/kernel/drm/mod.rs
+> @@ -5,5 +5,6 @@
+>  pub mod device;
+>  pub mod drv;
+>  pub mod file;
+> +pub mod fourcc;
+>  pub mod gem;
+>  pub mod ioctl;
+> -- 
+> 2.48.1
+> 
+> 
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
