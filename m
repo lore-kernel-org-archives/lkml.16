@@ -1,52 +1,52 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3E11EB1B5
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE7C20C484
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747172795; cv=none; b=YKEcBplCV1mDjOMW3Vj2R1kXwV6dZ2naMRlPDJhgV2JMOFB2fhkg+L2Hpwa+2nUarlwXhT6z/W1BtGmQKQ1PxfIG+XDwA+mfhbOCmQ5AlyNgd3AFxuwxTy9AwxVZq6NLfVcISKx7j4BK2OQliwfB5AmcbaGc+IUc6sp31y6jEik=
+	t=1747172797; cv=none; b=mweZMtMe9ojRrf1+f+f4pcEn89UnrJ00nm/k4OozNnNZ9suckBFzz0fn/7rgR3pIW/Klqp55rptx47sFz2SvmdPtoRV6BX14HPcqQuWOHXBE5UwCxic9AwVuWGgN1BXMosFh2XuF3lubVqj1RF5NZRQvd9AVyKS7qw342bp9lgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747172795; c=relaxed/simple;
-	bh=Hvp3nU+HjLeWs761iA7FXQjwIa2uP2Ctm8FYDl4ullI=;
+	s=arc-20240116; t=1747172797; c=relaxed/simple;
+	bh=dMxkB/Amgm39mRKWuYEQ2bBhP+VIS7OEzCC03PxhBq8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nSzTzXW3nbeUhpye+RugxSf+8xhjrsZpiDba2L5Ht22FtLdnhZpGO1JsFlt1HrlOdTkSu/HXGOcqxXBpPsY4Y5k6q4nlxWQtcV94QAVUO4PdtV1Zg5H15gg1UmnF/nNKH6xWCmOoejkCJqIbJ9oj5sAOGzMb5mUAzw5nS2Vqsq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WVJGRlxK; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=QpZYeLiI+M1XbDJPIU6JdUCtORB7oU7d7M5NfJKpFALn6bybMprrzqbw9I+OVV+h1VBhYGsqhv1HulSg6R1ftOlPs8+fLkKCfvgHAhQqxOHmDeMsByHzuAjW6WNK24AtfERthkLvZqf+pa59Uvk4dIx0CfT6YqHhx1Rt6OndN0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DrfMPayQ; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WVJGRlxK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DrfMPayQ"
 Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DL0lIf021616;
-	Tue, 13 May 2025 21:46:00 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DL0l8g021615;
+	Tue, 13 May 2025 21:46:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=ynYPe
-	KlKONZVtL6WidNA+27i1VPQsBZGopRVJY9HXyw=; b=WVJGRlxKbdSDskKRYipXs
-	Bi/lZ+Bn8bYGfuQlBm4j5d+3RpO+pbTJgvwhcNME9Ujy4/lchOh0nDOxsD2UObLK
-	/hN7wyBwzsCCJGODoyThH5kqQn7gELAOgSntLameMRX1E2g/67umyU60FzGJr3gR
-	b2b5851yY0N71oh5YLnoHlvwnP7q1XrQjPofajZeX1YkQxu6gsDw1YEq28s7Hp5X
-	P3i72yhYrxDvbdjEEsA+GSrFRKFR9I3D4JJFWKViRZuP/kRuEBkZc60bHqpxkA+w
-	2pZpeCrZBY1sQGvAS7sWozFuUteWm7mH2A/4k4vdxKdLkRQYjODEFTdNZX+OMfnt
-	g==
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=FeIq8
+	56bcHjC00EZD3ha87tR0WyB1diqHSx9HB1jnDo=; b=DrfMPayQaS1KU3esxNRju
+	kebAN0YVdagIUH3K1apgiCalehATk77seR1WJRei7dsDj5MlQMeS+s+/r17rG/sa
+	bXn1mBFQveUNN4iDru0j64pzxsHBzo37+NACgdk/BFzEe3Q+ivTvT28Mh8798i5p
+	N1AAk+L5wSECa1K1zUH0DFsaoddIf4hM6Ndpk7DUnN5AQr/bn7PP2/y0JcjwldkW
+	hYs9E4sgebdCqsE7VeeYrrZgyOYLeyeKJ/I0hgIT/NdDO3Y1lptSOUYjQ//YU1Yj
+	03ubYbfIta8SzC72gy8SIcI1reFqgmT3JwuDy2bBSQI4vrC38N4JH7zMKWphmbkk
+	w==
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46mbcmgat0-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46mbcmgat2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 21:46:00 +0000 (GMT)
+	Tue, 13 May 2025 21:46:02 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54DLQjeN001890;
-	Tue, 13 May 2025 21:45:59 GMT
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54DLQjeP001890;
+	Tue, 13 May 2025 21:46:02 GMT
 Received: from psang-work.osdevelopmeniad.oraclevcn.com (psang-work.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.35])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mc4yv943-3
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mc4yv943-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 13 May 2025 21:45:59 +0000
+	Tue, 13 May 2025 21:46:02 +0000
 From: Prakash Sangappa <prakash.sangappa@oracle.com>
 To: linux-kernel@vger.kernel.org
 Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
         tglx@linutronix.de, bigeasy@linutronix.de, kprateek.nayak@amd.com
-Subject: [PATCH V4 2/6] Sched: Indicate if thread got rescheduled
-Date: Tue, 13 May 2025 21:45:50 +0000
-Message-ID: <20250513214554.4160454-3-prakash.sangappa@oracle.com>
+Subject: [PATCH V4 4/6] Sched: Add scheduler stat for cpu time slice extension
+Date: Tue, 13 May 2025 21:45:52 +0000
+Message-ID: <20250513214554.4160454-5-prakash.sangappa@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250513214554.4160454-1-prakash.sangappa@oracle.com>
 References: <20250513214554.4160454-1-prakash.sangappa@oracle.com>
@@ -64,124 +64,84 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxs
  suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505070000
  definitions=main-2505130206
-X-Proofpoint-ORIG-GUID: HVbylk16ERiHEGxsuCkMG3AF2jRQuj0K
-X-Authority-Analysis: v=2.4 cv=f+RIBPyM c=1 sm=1 tr=0 ts=6823bd98 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=O1hS_E6ypt93dt2FiYsA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDIwNSBTYWx0ZWRfX+L7MOWJvFTgK Htfz7MD9r/885+fud1RFh4atJaju49pihhNj+HrUB44zryHCYuEo9UseF9/YZp6NpydMpHXkxxL HR8+fHNs1mnxb3+WRkezzP8hrTq2sh2966ACTUAitchHrGmwaL+/R6adn1hURhnK+QSNDVwkbjq
- S9rUubaENnAYLmPTjMLeDx0h+9pw2mED/oiMQIe5QVBC+t2Wc4q+K240I4D5tHkH7ADp02arguR SMdxDGCgJ6JbIU1Wdr/NX0v7DWM3mdBVMMmxIosQvUcKFx46Fj5bPbeqNuutZ+fdw3Vdc4qcqMh +YgIh2KkYgg83dUeqmjnyInE13u4U6bpK/CLlp6dh2TnoLXwsLmEFnurY0PzKgenur0U+aH7Ugt
- 8Xism+J1TVp81X04tBBcK4TAiwekiH4kiRlJzau6oDINvLSw0k6cyRLmCFoAd3Hd6PsrC9mr
-X-Proofpoint-GUID: HVbylk16ERiHEGxsuCkMG3AF2jRQuj0K
+X-Proofpoint-ORIG-GUID: Ifzoe-T7iBWx5m7dX-pzDVY50XpyzFdP
+X-Authority-Analysis: v=2.4 cv=f+RIBPyM c=1 sm=1 tr=0 ts=6823bd9a b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=HM_RregbEbY-m7O0KLoA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDIwNSBTYWx0ZWRfX+0AVgNjn0+co sxCD2insB0oBCR0H/PZ0kZ3Z145UpzYypC5ni8QAyk+ZQOO0s1xozja2y00j/7MrEKSmuPlA/V+ 7euUIMRx/+PD2xl6g+V4qNw5HUopO4ImSqNygXAseJsymlGYEKXKm9X0h9bXC2u4SrViBIpdV1k
+ Wf590N5z9SFX869UrQ/PErJPSRVDSlTkdb0nu6/3giqr77sySnG10FZKAEbK7SBDNZyYMgAwHKC gaLTxTws1F7JWYwu30pT2yVpA+CZTMhL7pMr7MmoRUvEqrGV4WVSThfn1tR33PQS7dmAg/cEzqz vNmgdBLbftloRsmvl4gPsNBfIKjyHIGFTTf20lAF8csli87EmTOZdXVzmogKcoa0ahPJu91a6sn
+ 1qrla3EmUKg2XWvoh4BKOpK+R5VbNIVzWCUu0pMU0AOXG7Q/X8KhBu7BkLxvRPT5uj8ee06y
+X-Proofpoint-GUID: Ifzoe-T7iBWx5m7dX-pzDVY50XpyzFdP
 
-Use a bit in rseq flags to indicate if the thread got rescheduled
-after the cpu time extension was graned. The user thread can check this
-flag before calling sched_yield() to yield the cpu.
+Add scheduler stat to record number of times the thread was granted
+cpu time slice extension.
 
 Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 ---
- include/linux/sched.h     |  2 ++
- include/uapi/linux/rseq.h | 10 ++++++++++
- kernel/rseq.c             | 20 ++++++++++++++++++++
- kernel/sched/core.c       |  3 +--
- 4 files changed, 33 insertions(+), 2 deletions(-)
+ include/linux/sched.h | 2 ++
+ kernel/rseq.c         | 1 +
+ kernel/sched/core.c   | 5 +++++
+ kernel/sched/debug.c  | 1 +
+ 4 files changed, 9 insertions(+)
 
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 14bf0508bfca..71e6c8221c1e 100644
+index c279232ca6a2..8cf756e80ae9 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -2256,12 +2256,14 @@ unsigned long sched_cpu_util(int cpu);
- extern bool rseq_delay_resched(void);
- extern void rseq_delay_resched_fini(void);
- extern void rseq_delay_resched_tick(void);
-+extern void rseq_delay_schedule(void);
+@@ -340,6 +340,7 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
+ extern void hrtick_local_start(u64 delay);
++extern void update_stat_preempt_delayed(struct task_struct *t);
  
- #else
+ /* wrapper function to trace from this header file */
+ DECLARE_TRACEPOINT(sched_set_state_tp);
+@@ -563,6 +564,7 @@ struct sched_statistics {
+ 	u64				nr_wakeups_affine_attempts;
+ 	u64				nr_wakeups_passive;
+ 	u64				nr_wakeups_idle;
++	u64				nr_preempt_delay_granted;
  
- static inline bool rseq_delay_resched(void) { return false; }
- static inline void rseq_delay_resched_fini(void) { }
- static inline void rseq_delay_resched_tick(void) { }
-+static inline void rseq_delay_schedule(void) { }
- 
- #endif
- 
-diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-index 25fc636b17d5..f4813d931387 100644
---- a/include/uapi/linux/rseq.h
-+++ b/include/uapi/linux/rseq.h
-@@ -27,6 +27,7 @@ enum rseq_cs_flags_bit {
- 	RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT	= 1,
- 	RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT	= 2,
- 	RSEQ_CS_FLAG_DELAY_RESCHED_BIT		= 3,
-+	RSEQ_CS_FLAG_RESCHEDULED_BIT		= 4,
- };
- 
- enum rseq_cs_flags {
-@@ -38,6 +39,9 @@ enum rseq_cs_flags {
- 		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
- 	RSEQ_CS_FLAG_DELAY_RESCHED		=
- 		(1U << RSEQ_CS_FLAG_DELAY_RESCHED_BIT),
-+	RSEQ_CS_FLAG_RESCHEDULED		=
-+		(1U << RSEQ_CS_FLAG_RESCHEDULED_BIT),
-+
- };
- 
- /*
-@@ -135,6 +139,12 @@ struct rseq {
- 	 *     Request by user thread to delay preemption. With use
- 	 *     of a timer, kernel grants extra cpu time upto 30us for this
- 	 *     thread before being rescheduled.
-+	 * - RSEQ_CS_FLAG_RESCHEDULED
-+	 *     Set by kernel if the thread was rescheduled in the extra time
-+	 *     granted due to request RSEQ_CS_DELAY_RESCHED. This bit is
-+	 *     checked by the thread before calling sched_yield() to yield
-+	 *     cpu. User thread sets this bit to 0, when setting
-+	 *     RSEQ_CS_DELAY_RESCHED to request preemption delay.
- 	 */
- 	__u32 flags;
- 
+ #ifdef CONFIG_SCHED_CORE
+ 	u64				core_forceidle_sum;
 diff --git a/kernel/rseq.c b/kernel/rseq.c
-index dba44ca9f624..9355654e9b38 100644
+index 44d0f3ae0cd3..c4bc52f8ba9c 100644
 --- a/kernel/rseq.c
 +++ b/kernel/rseq.c
-@@ -504,6 +504,26 @@ void rseq_delay_resched_tick(void)
- #endif
+@@ -475,6 +475,7 @@ bool rseq_delay_resched(void)
+ 		return false;
+ 
+ 	t->sched_time_delay = 1;
++	update_stat_preempt_delayed(t);
+ 
+ 	return true;
  }
- 
-+void rseq_delay_schedule(void)
-+{
-+#ifdef CONFIG_SCHED_HRTICK
-+	struct task_struct *t = current;
-+	u32 flags;
-+
-+	if (t->sched_time_delay) {
-+		t->sched_time_delay = 0;
-+		if (!t->rseq)
-+			return;
-+		if (copy_from_user_nofault(&flags, &t->rseq->flags,
-+                        sizeof(flags)))
-+                        return;
-+                flags |= RSEQ_CS_FLAG_RESCHEDULED;
-+                copy_to_user_nofault(&t->rseq->flags, &flags,
-+                        sizeof(flags));
-+	}
-+#endif
-+}
-+
- #ifdef CONFIG_DEBUG_RSEQ
- 
- /*
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8c8960245ec0..86583fb72914 100644
+index 31928cbcd907..880368756b48 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6734,8 +6734,7 @@ static void __sched notrace __schedule(int sched_mode)
- picked:
- 	clear_tsk_need_resched(prev);
- 	clear_preempt_need_resched();
--	if (IS_ENABLED(CONFIG_RSEQ))
--		prev->sched_time_delay = 0;
-+	rseq_delay_schedule();
- 	rq->last_seen_need_resched_ns = 0;
+@@ -938,6 +938,11 @@ void hrtick_local_start(u64 delay)
+ 	rq_unlock(rq, &rf);
+ }
  
- 	is_switch = prev != next;
++void update_stat_preempt_delayed(struct task_struct *t)
++{
++	schedstat_inc(t->stats.nr_preempt_delay_granted);
++}
++
+ static void hrtick_rq_init(struct rq *rq)
+ {
+ #ifdef CONFIG_SMP
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 4cba21f5d24d..6b753f56c312 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -1216,6 +1216,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 		P_SCHEDSTAT(nr_wakeups_affine_attempts);
+ 		P_SCHEDSTAT(nr_wakeups_passive);
+ 		P_SCHEDSTAT(nr_wakeups_idle);
++		P_SCHEDSTAT(nr_preempt_delay_granted);
+ 
+ 		avg_atom = p->se.sum_exec_runtime;
+ 		if (nr_switches)
 -- 
 2.43.5
 
