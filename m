@@ -1,154 +1,186 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A8D20D4F2
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF301E5B9D
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 13:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747142811; cv=none; b=iFU1RPfQMon4xGGUPrgE+ZO5OrsNiGRneNVlIj6iv4V0dXTkMUIfw/aZarnuDSRFmVO1JJSvY7NEJuXQLN2BjM+VlxgmGf37GJN8GjI81ByrzXMjjU2NAZXVBPmEWEZKzPpbT6gSrPOpDFHRhjcMbx0nS+oIYDM2TIBz5Jtkmao=
+	t=1747142860; cv=none; b=HuT4KzB1FFkQb5ayTVtVTsvq3NhgHetLvqWgWO4Qz9zJsFE8BxIxkXc7PXUAdmvtxxA1f+rlIhzt64TL/7Jle2Zv8/zO8/0jubuBNDGXr7Bj2CZK3p3oMVxMexvctnYkH0sEg85POEwEOFluAIKC1qgzN9NcSByNU6ad+MdKfcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747142811; c=relaxed/simple;
-	bh=avXa4CzgTRa1CXLtPFQwyy1iUXu+y9DyvpT7RS3bkE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KIH3K+6FnDKEg2pi1pHbYhdzFkD5liwmT63PmQWxUWZmEuZD4rShgByDttNw8auIfm3c9VAHOrPvyMVdZ9kVA7P1qOMaEM7Lo2vCF+14e4yiPME5FJPZYlqcH205kwKyyGmD0UvcssKUDBIuMazTwJL6guqg7BJ2F81TlOY+nGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=kOF85VoE; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747142860; c=relaxed/simple;
+	bh=3HZDNSsySLcYjBmp2gu11rkhmj8MkD4BWfB1jE7vJj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3wMqxee0qfvjN3lBYlT0cbsbNGx1WfunwFecR3/kdV3WXX2Ink3VTyVCHvDS5D4wiFOMshSxZdN4Gr64JyO/5kG+GFwCi+hppsgVQWZWf1PzKBL4uc/nTaMWGaZJ6N3RXD/o26Yh1zEuK+19W06Tx1ppdIhPrS5puxg9IfD/n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eZwZiRj1; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="kOF85VoE"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-8644aa73dfcso145557539f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eZwZiRj1"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbc736f0c7so249072a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747142809; x=1747747609; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HhCoZuBkamztSe85E1nHmVRUFjyVRRB1qVkbWNxRjXg=;
-        b=kOF85VoEHzohnVnGZ0g48smAl5fLKJlB51d0y0/irg8MepOeajnqBvVEfsumQsW8Id
-         tyK96YcJGe0lDZnRYQe95FkvOiMuar9tvOMWx5ZpO5P23r8RrYi0XOYcGvXN9HujJaqw
-         XsdyYYJOFKd8MdAVXFJtVo+rLPnMrC1WUpuQuVWfgVAKgoEw6QeKoI1HJR72oElEbSPT
-         0NmJ2rksXkRZIWEmQL6QG/d0MmcEFYQ0vTfefdQ+7Bd1OULnAUO+ajqnvpumM+QiYXYb
-         U/DAX5NBdbLi6Uq7yJdNvlf8ZniMv4Ejz5eVS/mMqdtKWAhb7Ff7gqT512ncfJP/S1eo
-         vEVQ==
+        d=suse.com; s=google; t=1747142856; x=1747747656; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bx2xkk3Bz8tw5WPgfF/a1dWI5bQmmRzpw2eUIdK+74g=;
+        b=eZwZiRj190XFPFIp+spKcVmTwBSgNFUJAZ9FvWgxPboaIff5kfGboFQMRVaIBWat6H
+         oo3lcWFdII5xqbgP653UfyQEQqsLlV1LrAmnP+b3vXU2FKOHI6M6vtHqdnUhfrqAoq1s
+         bXW0umbUVF3wv4V/JX3SFomkCM4EuRRIMiKTEwRf66AR74qxg9AunrC4Kf0AZiCq/HxP
+         T3ZhB4uHJFDuJmr+butKMoEwtFFc9YHU/GTt2fmGQpDphGgZjDTGzMD3FQKRVt2+cpmc
+         d5PuHuY/kyustjzJpfZGm9OW2j9K/UdmYPgWEC6lZJXpG1QgrmUAxzoUXthi6a+xF7Ej
+         y89g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747142809; x=1747747609;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HhCoZuBkamztSe85E1nHmVRUFjyVRRB1qVkbWNxRjXg=;
-        b=FxLaczPY0dFH8VQJ9fg1W4licuD5cu37bXLOlfYmo095q7bfNp0BHrwAoNby3Gjf8e
-         fgxRugmcDqSOGNBv84DF6SZ27nmzmHJSoR1kltdRUP8oyNdTXbbVbCk7S9dCMlmwQT7D
-         OaJsjmaHsqn3b2h0k4T2YVquv09IdldR46dlt0CwigNMfV2EKOGTDMddWKWEmrHrChx+
-         SyqbWzk0p00pTwLQsfWhQJ4gF7QI1xujOWMMqMUGV4Nhy8uqkobfKia/R+n8JLGhb/rJ
-         7vAVnUY6jQbo7grDp/6+pa+keyNFlmQzzkbh6n6SkIGDp0dhLlZlu3sbeKjhhsWGBkxy
-         RpzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCHbDIaIio3MqWBhzFLrs5WBH56+YUxQt29MmOXOrqx9e7IDzYDOHicQbjURLYY3OKt11z3uoXYjCnoKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyZTfqLOt0riuOM9fy4e6oo7PIBvJ/erevYeUHHTzWSVavSTMy
-	NQfEiR68UxOGcTp/WZYG33rLGL4y2r1/7cUvrsGVgfuvJW2XDQXt8ZS4FQhQMZU=
-X-Gm-Gg: ASbGncuERBeQYjImpTnEzNWAMSZ5Yiq2C2jNNaTjCMUeRgEoc1cKoa+DlReOCqolYCl
-	dTLAZlGu0RX+fVLlTsq3bcBaw/JTR9qaDtHush1c+MNThoKyKBvb7TeJw3lwnJM9qlAE9mCJUD7
-	ECDgNL7Plq+Dg4qybfYl/5nXx4Eh17qlCtVC/WpecTzQjqTxaeANcNs2SeH+NHLwPsmVw3v3fdH
-	V52joaG0PNcJpG0cHZL0TMWWCK+qD344x3PeZTGLj12ZW2WGYnliC046C3aIfoc9eZ2rJk8bhcI
-	c4ezNRF8SnwwJTr6GULzly2TvHm5I8stdJKP4W/MONn7zNQ=
-X-Google-Smtp-Source: AGHT+IHxMPTHetOq0Rkf6JYLZUfNRLNzTjYNetEJrIfuukLDFQJkMsEpufw4HAJKkcR1FnnOy795Nw==
-X-Received: by 2002:a05:6602:6d05:b0:867:47af:5df with SMTP id ca18e2360f4ac-8676338d48dmr1775119939f.0.1747142809073;
-        Tue, 13 May 2025 06:26:49 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8676359ba34sm225989239f.17.2025.05.13.06.26.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 06:26:48 -0700 (PDT)
-Message-ID: <4ee5429c-7bb6-4c92-ad28-8e0d8454d4b0@kernel.dk>
-Date: Tue, 13 May 2025 07:26:47 -0600
+        d=1e100.net; s=20230601; t=1747142856; x=1747747656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bx2xkk3Bz8tw5WPgfF/a1dWI5bQmmRzpw2eUIdK+74g=;
+        b=u4YqyJNN9h46VJx2QkrJ+Bu663Sij2+lQ8xPqP8hR0ImEgwASXyi7t1umWMxH2oPFm
+         7vESfM/84IYnnvJm7eNDI3ZP847PIj0TFlzUnErao5pKbQ2/yaQS0iRjrw4LMGzobubx
+         ugJaL0pXOMVa+Asosg7sInc1O9if4pidxRffTq8t2NGbJOGdO0ARdHuKIm3BaZqYcoUC
+         cuYv1r7/YnNmM+447qA2IAtoVdFySuRXAz9Z+zxhd+47Qt8Q82g0YyyYJaEylthOXxr+
+         AEgmfFf1nXwqiNj+gTFu2Mt3FfVYgIfJ2keZERTzLQGKYcjzFGrWfu5hrmQ1Joz+yZGi
+         jUyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXe3AfMt2ZsuLxUFHMrosKfS+MgrRinI3L5EIvIa8R+Rjj/jcdzj0ni/z41/k09fo818XJOOn80/xaHXWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwzYrOaILWh+QHh4cQyXKB3JiR4W64eoIiHGNzBcdOsQQwR9ee
+	tT2ibeCFmRIpehub1ckDwM1oJ3KPv6Xtew46ZdICSCD6USjNAh7sGFQLTY0rG3I=
+X-Gm-Gg: ASbGncvZIg2XB9LeyLxl892Q3ToMpjRVJeI91qVzFekYgQaNwtDE2CPZE2RQFADjm0U
+	0J42QxnvqjSW7XUXlOBi6bgdVIh7B88IUTVE/wxMomRwVCP2a30dUYCa15GqQu9xmc2n+PNnUGX
+	dN15EkeQ1NyqZMhHko7ts7jR0EP5ipKfWRhDX/j+CzXkk9pkGfn6G6//npHNqQPkKAghqZnOS5X
+	uzyDz6D5UvQT/n5eib6Ug7dS+B0H6KyepqJ7y5wasX3+AOQGmalaM+EVN0vMoRWfw0IaKKxxuwP
+	CsAiYXXPos5MyCuxB6kEuxQwfdOqhdfT/Wp/eEIH431UHnk7oLJNuAh1Sswyr+Kb
+X-Google-Smtp-Source: AGHT+IHU5ybrCbcUdcSbKf7cjQTUJzhUPZPEg4zehxsbNDzJ1celWBU9t6XALcVn8lNjCaTQkYDyFQ==
+X-Received: by 2002:a05:6402:3548:b0:5fb:1bd8:2f95 with SMTP id 4fb4d7f45d1cf-5fca11de17cmr13126709a12.29.1747142855983;
+        Tue, 13 May 2025 06:27:35 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ff8c016a16sm331292a12.2.2025.05.13.06.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 06:27:35 -0700 (PDT)
+Date: Tue, 13 May 2025 15:27:33 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: Feng Tang <feng.tang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	mhiramat@kernel.org, llong@redhat.com,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v1 0/3] generalize panic_print's dump function to be used
+ by other kernel parts
+Message-ID: <aCNIxWaPVHywfek2@pathway.suse.cz>
+References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
+ <20250511184617.85d5fe22fde831c1edb8321c@linux-foundation.org>
+ <aCFnjmRWwBjgV2Hv@U-2FWC9VHC-2323.local>
+ <1a5bc420-c716-4d0b-b767-32adf32f4958@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, corbet@lwn.net,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- linux@treblig.org, viro@zeniv.linux.org.uk
-References: <CAL+tcoCVjihJc=exL4hJDaLFr=CrMx=2JgYO_F_m12-LP9Lc-A@mail.gmail.com>
- <aCGR4EOcWRK6Rgfv@smile.fi.intel.com> <aCIL0zZvf1fvTahk@infradead.org>
- <CAL+tcoCJxoiGi=Ea1KCG4_ri2=GbNhhVhEV5anMLyai6qg2zeA@mail.gmail.com>
- <70293376-71b0-4b9d-b3c1-224b640f470b@kernel.dk>
- <CAL+tcoC9ioDpM93nHpoUS9icqG+pZvZU6mCEz1HbCrENrPeKwQ@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <CAL+tcoC9ioDpM93nHpoUS9icqG+pZvZU6mCEz1HbCrENrPeKwQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a5bc420-c716-4d0b-b767-32adf32f4958@linux.dev>
 
-On 5/12/25 8:17 PM, Jason Xing wrote:
-> On Tue, May 13, 2025 at 9:49?AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 5/12/25 6:49 PM, Jason Xing wrote:
->>> On Mon, May 12, 2025 at 10:55?PM Christoph Hellwig <hch@infradead.org> wrote:
->>>>
->>>> On Mon, May 12, 2025 at 09:14:56AM +0300, Andy Shevchenko wrote:
->>>>> Also note, we usually do not care about the out-of-tree users. The main Q here
->>>>> why are they out-of-tree for so long time?
->>>>
->>>> We do not care.  If some of this ever gets submitted it can add the
->>>> needed helpers back.
->>>>
->>>> This entire discussion is silly.
->>>>
->>>
->>> I'm surprised how you described it....
->>>
->>> Now relay works like a filesystem which helps out-of-tree users
->>> transfer a large amount of data efficiently. it's totally not like
->>> other pure dead code. I meant what the trouble of just leaving it
->>> untouched in the kernel could be?
->>>
->>> Let me put in a simpler way, two options, 1) just clean up, 2) keep it
->>> and help so-called 'out-of-tree' users even if you don't care. I don't
->>> figure out what the difficulty of keeping it is :S
->>
->> I think Christoph's email was quite clear, and I also said _exactly_ the
->> same thing in an email two days ago: we never EVER keep code in
->> kernel that isn't used by in-kernel code. Period. It's not a debate,
->> this is the law, if you will. It's a core principle because it allows
->> the kernel to be maintainable, rather than need to care about out of
->> tree code when changes are made. Similarly, we don't have a kernel API,
->> not even at the source level.
->>
->> This is one of the core tenets of the Linux kernel, and all in-tree code
->> must follow those. If you have aspirations of maintaining the relay code
->> going forward, you need to fully understand that. Either the dead code
->> goes, or the out-of-tree code that uses it must be merged. There's no
->> in-between.
+On Mon 2025-05-12 16:23:30, Lance Yang wrote:
 > 
-> Thanks for clarifying this to me.
 > 
-> At the moment, it seems the relay is still alive because of blktrace.
-> It looks like two options for me who wish to enhance the relay feature
-> in the long run:
-> 1) merge the networking trace feature that relies on relay.
-> 2) turn it into a file system
+> On 2025/5/12 11:14, Feng Tang wrote:
+> > Hi Andrew,
+> > 
+> > Thanks for the review!
+> > 
+> > On Sun, May 11, 2025 at 06:46:17PM -0700, Andrew Morton wrote:
+> > > On Sun, 11 May 2025 16:52:51 +0800 Feng Tang <feng.tang@linux.alibaba.com> wrote:
+> > > 
+> > > > When working on kernel stability issues, panic, task-hung and
+> > > > software/hardware lockup are frequently met. And to debug them, user
+> > > > may need lots of system information at that time, like task call stacks,
+> > > > lock info, memory info etc.
+> > > > 
+> > > > panic case already has panic_print_sys_info() for this purpose, and has
+> > > > a 'panic_print' bitmask to control what kinds of information is needed,
+> > > > which is also helpful to debug other task-hung and lockup cases.
+> > > > 
+> > > > So this patchset extract the function out, and make it usable for other
+> > > > cases which also need system info for debugging.
+> > > > 
+> > > > Locally these have been used in our bug chasing for stablility issues
+> > > > and was helpful.
+> > > 
+> > > Truth.  Our responses to panics, oopses, WARNs, BUGs, OOMs etc seem
+> > > quite poorly organized.  Some effort to clean up (and document!) all of
+> > > this sounds good.
+> > > 
+> > > My vote is to permit the display of every scrap of information we can
+> > > think of in all situations.  And then to permit users to select which of
+> > > that information is to be displayed under each situation.
 > 
-> Seems option #2 is a more generic way to go?
+> Completely agreed. The tricky part is making a global knob that works for
+> all situations without breaking userspace, but it's a better system-wide
+> approach ;)
+> 
+> > 
+> > Good point! Maybe one future todo is to add a gloabl system info dump
+> > function with ONE global knob for selecting different kinds of information,
+> > which could be embedded into some cases you mentioned above.
+> 
+> IMHO, for features with their own knobs, we need:
+> a) The global knob (if enabled) turns on all related feature-level knobs,
+> b) while still allowing users to manually override individual knobs.
+> 
+> Something like:
+> 
+> If SYS_PRINT_ALL_CPU_BT (global knob) is on, it enables
+> hung_task_all_cpu_backtrace
+> for hung-task situation automatically. But users can still disable it via
+> hung_task_all_cpu_backtrace.
 
-Seems to me like option 1 would be the way to go. There's no point
-making something generic just for the sake of it, and particularly not
-if the goal is just to enable some out-of-tree use cases. That's not the
-kernel way...
+I am all for unifying the options for printing debug information
+in various emergency situations. I am just not sure whether we really
+want to do the same in all situations.
 
-> From the bottom of my heart, I really don't want to lose any 'unused'
-> parts in the relay because there are still more unused functions...
+Some lockup detectors tries to be more clever, for example:
 
-I don't understand that part - the code is managed by git, it'll be in
-history forever. There's no losing, it's very much still there. If you
-or someone else needs to bring it back, it's _trivial_ to do so.
+  + RCU stall detector prints backtraces only from CPUs which are
+    involved in the stall, see print_other_cpu_stall().
 
-Being hesitant to remove code for sentimental reasons is a mistake. The
-more code removed, the less to maintain. Win win.
+  + Workqueues watchdog shows backtraces from tasks which are
+    preventing forward progress, see show_cpu_pool_hog().
 
--- 
-Jens Axboe
+And stalls are about scheduling (disabled preemption, disabled IRQ,
+deadlocks, too long uninterruptible sleep). OOM is about memory
+usage. Oops is about an invalid memory access. WARNs() are
+completely random stuff.
+
+Also I am afraid of printing too much information when the system
+is supposed to continue running. It would make sense to print it in
+nbcon_cpu_emergency_enter()/exit() context which disables
+preemption. And it might cause softlockups on its own.
+
+Finally, I wonder whether ftrace_dump() might cause a livelock when ftrace
+is adding new messages in parallel.
+
+The situation is much easier during panic() because the system is
+going to die() anyway, non-panic CPUs are stopped, ...
+
+That said, I could understand that people might want to see as much
+information as possible when the console is fast and the range of
+possible problems is big.
+
+Anyway, I have added few more people into Cc who are interested into
+the various watchdogs.
+
+And there is parallel initiative which tries to unify the loglevel or
+somehow make the filtering easier, see
+https://lore.kernel.org/r/20250424070436.2380215-1-senozhatsky@chromium.org
+
+Best Regards,
+Petr
