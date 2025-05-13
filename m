@@ -1,60 +1,117 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E344315F;
-	Tue, 13 May 2025 04:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261901C8601;
+	Tue, 13 May 2025 04:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747109576; cv=none; b=j9Ito122ZSWDzPcgDqurDc8sGZ+BAmvGVhKBiJ5rKsZL/vlmVO7RJiupT1BZC7FGwLVsGdu8iNprUahSkuk73mAE0bkCygmBziWT6gWfVvuQxEP/S9rf5G1ybxhPZlRj4HT6iB88J3ppR1ijyjcaPGQ+l5+rRT4M9HSTQ2CO0LI=
+	t=1747109610; cv=none; b=akqyr9MWUAOOhrB/lR5wYWb+eCmZ236odiYEai8xwKmgYuSbxRQ0KX0w0BUo5FuuQuFEPuA14Te3dXVymEzJf18VF3NS9XG5jegA3GaZomdkjPesrmQLoZjgCkwrIcinlCbHyb/OVCQ4uaW3jnw0UU3tfuTVM8kDJrJ/BglDXXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747109576; c=relaxed/simple;
-	bh=CVBf2Mg4fRVpOI0Gqu7cZQhJtLArYC/0vPRQrIV2x+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPg3XZ7usY0fLS9F7Uio33W3ExQZmK+Nqe+y46cSxad3DRFnveqKLK2RYIRPbqZTlPTfyQCAitZtrG/GDWBRC0lh1+hZlBdLqzMYKLXSVu9UV54JOwb9thsYR7dJ+FJ/hts6ZeDbReEM9TDwaVvR8lYLViwWxrF7GsGgBN+T8sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=WT2BOIVj; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747109610; c=relaxed/simple;
+	bh=KHjKIBGHL4wjWHdIdm73DojxepCxwvz5ASk6vdDbV9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W0sgLnSP+V7qbxDofjd0n5yhEYi43DdVGEL7vtTP+c5v7SZipcvDKSIhUY/fVa2NRamCdIxKSe6VyKrSiy6EhBv5GUTR4m9+SzTqTXVP2S9nHgRGgOrTVVuT5h2IPw1jjNwDWb2aPr/lgcYQFRbNllGXxeWnthcnUa5FvgFavoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnZ4g3PJ; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="WT2BOIVj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=CVBf2Mg4fRVpOI0Gqu7cZQhJtLArYC/0vPRQrIV2x+w=; b=WT2BOIVjlTvBdp/CEi4+sDXql+
-	zBLf6oTdXwIprPpkur9GIK0X2eS2sFYpkEJjnNMTRyJl0hN3lr9ontQfDhtqKFN+CQnmNFcopHJXx
-	l76oVJvV2X7MvGZ8DuNkRs6zKqqNZkalZFV2yvGcq3RQJhQm43S45jgeEks5j36Gv0tozRChSGXsh
-	3PumLj2Ab65Te/XWYnlkR3JKKkBuRvIW57dVYwoqZDoTOjb0Gw9/k1EQUHWXG7onyDcbmf0Eoxo27
-	1Jqmn3/vmxBvyQNgOrgpzEW0cHmPJJ6Q0kjDY9NLKrA8sqmiJfZ1cERLIauOPXxSgINsA3FiB2c09
-	l3Zg1jAw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEh0b-000000011Vl-3sUY;
-	Tue, 13 May 2025 04:12:50 +0000
-Date: Tue, 13 May 2025 05:12:49 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
- symlink
-Message-ID: <20250513041249.GF2023217@ZenIV>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <87frhcsrva.fsf@trenco.lwn.net>
- <77f03295-df5d-4bc0-9a61-5be829969662@p183>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnZ4g3PJ"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so3246500a12.0;
+        Mon, 12 May 2025 21:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747109608; x=1747714408; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KHjKIBGHL4wjWHdIdm73DojxepCxwvz5ASk6vdDbV9Y=;
+        b=NnZ4g3PJOPcbpDNE+hgGo6SA9SDzNFa+qCwfHdePiITVVyk0KnO+mWKZaZkoefW0Zi
+         8bo8GIC1949HEh33lOa1eC9lllZTRlD4yAn6t/tMhlhf2I2d6q3CF2AhMCrW+cTQqusQ
+         pKOFq3pB2ov3ywuJ3V6aPSWS2CJ06KJEIGN0mpfTkPZY2aHUTGCg/Apz9JeJm+b8RX7d
+         4VIQsuueaOhqiMRAaocUx+rTpLUtoh2iO3YaC3c3C5Ep96szNbCCIXcE/GBWkw6r5QWI
+         RfWkokRg0MJP25N/SdXQhUvKUYw5Zf+3/7HHWSb4EiScbIMirB9CFiF3cdss18arRhD5
+         PLdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747109608; x=1747714408;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KHjKIBGHL4wjWHdIdm73DojxepCxwvz5ASk6vdDbV9Y=;
+        b=KimE460u3dqi7eJERIvGM95EKEyHcs4hlsZd4+FwBn8dwvaHXgihGFaTp9I4yGcGJq
+         6xHdZhq6iQRp6FDOcfLHH1Qpgu+SnA4GHsu+QJZl7cXXLvhkJMho3OQ+aDj6gXpbTqtq
+         PDBLABFDUtgPyEgJZjzfyZre8/z/dcJ2yDP7/r/etZxrdoVFxJLOXA6k3CQCKnVxX9Ui
+         BNV00nZoI5ew0FLXJZniWQx42CYqg4L6inwYyU4wn6qTQbhdY34TmwsgszANhsClkXRu
+         g8WKLolaRLF5K2E5Gb12ymZxtYlNCOG8SGeYwUOkAd+n5FW70tWxyOHOzRFEWbSjSGnW
+         v2yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMaplOWSWxwF/WURXEMnhUbJ0cKYifS7VeOjbfRm92ZohchRyiP0+/G/t08CSEbPG5w5J5Ywcp77H+SihY@vger.kernel.org, AJvYcCXR5rZhyFbQumTWkeoiMWOjmViCVltObBATWAsN8OAJ22Tq9d2g+/GaqHH8/+Z9JmdYAyObt3s7DSGhElU1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSRhcZ4ss6XWn2XzFOu085z389kClt9rKdEvFVoGpU2ob1WUDa
+	DNV5rnRaoNngDhxSNz5tbn2/B0OdCYPJRA5A5GWlaNCgMUc2BbcW
+X-Gm-Gg: ASbGncuRnrwee2U+OMn913V8cK49xi8MT8wMw5bYM8zQJUsew8hbuV13+jKSuga2fn+
+	kTib1Ucj2nLUVvsI11ngaIR/T9XrFRvuQq3EAkJe3CDrLw/ytDlWEMC/KcgtD6rmWiX1qyeCayP
+	htpFYd1GcSp/v1kxqQJbU2U191nNaTV1mrnw0pXZkW6kHqISXtwSkmG/a5ZMHgze65VplcEZz0k
+	60Ds+xX3vjknihje+qd0DbIz+dFg1Wq71TqThScApSVDbOL6v72CGTJ6iHV/vipuiVC3wrNte93
+	jdjt+oRdyfxoGlyj1o+ovufxptKWZVfjQIs5B0Zj5Em+AN2Gbf+6yB3ZtxzAAxnO0hPH2/e7pvY
+	PRNRMXamnjw==
+X-Google-Smtp-Source: AGHT+IF//IySUWtF5x77D5Y817BbS9vkvkGU6if72KKsO3a3004HV8sEsb3ehsXq7IQ9p9jDXcxGeQ==
+X-Received: by 2002:a17:902:ce92:b0:223:47d9:1964 with SMTP id d9443c01a7336-22fc918e49bmr261778865ad.34.1747109608308;
+        Mon, 12 May 2025 21:13:28 -0700 (PDT)
+Received: from [192.168.0.123] ([59.188.211.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7549112sm71143995ad.38.2025.05.12.21.13.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 21:13:27 -0700 (PDT)
+Message-ID: <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com>
+Date: Tue, 13 May 2025 12:13:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77f03295-df5d-4bc0-9a61-5be829969662@p183>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
+ support
+To: =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?=
+ <ernesto.mnd.fernandez@gmail.com>, Yangtao Li <frank.li@vivo.com>
+Cc: ethan@ethancedwards.com, asahi@lists.linux.dev, brauner@kernel.org,
+ dan.carpenter@linaro.org, ernesto@corellium.com, gargaditya08@live.com,
+ gregkh@linuxfoundation.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ sven@svenpeter.dev, tytso@mit.edu, viro@zeniv.linux.org.uk,
+ willy@infradead.org, slava@dubeyko.com, glaubitz@physik.fu-berlin.de
+References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+ <20250512101122.569476-1-frank.li@vivo.com> <20250512234024.GA19326@eaf>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250512234024.GA19326@eaf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 07:08:53PM +0300, Alexey Dobriyan wrote:
 
-> I split them like referendum ballots to see where the consensus at and
-> not have big single discussion thread.
+Ernesto A. Fernández 於 2025/5/13 清晨7:40 寫道:
+> Hi Yangtao,
+>
+> On Mon, May 12, 2025 at 04:11:22AM -0600, Yangtao Li wrote:
+>> I'm interested in bringing apfs upstream to the community, and perhaps
+>> slava and adrian too.
+> Do you have any particular use case in mind here? I don't mind putting in
+> the work to get the driver upstream, but I don't want to be fighting people
+> to convince them that it's needed. I'm not even sure about it myself.
 
-Just in case - consensus would look like a lot of replies in support and not
-simply the lack of replies, right?
+These are the use cases I can think of:
+
+
+1. When running Linux on Apple Silicon Mac, accessing the xART APFS volume is required for enabling some SEP
+functionalities.
+
+2. When running Linux on iPhone, iPad, iPod touch, Apple TV (currently there are Apple A7-A11 SoC support in
+upstream), resizing the main APFS volume is not feasible especially on A11 due to shenanigans with the encrypted
+data volume. So the safe ish way to store a file system on the disk becomes a using linux-apfs-rw on a (possibly
+fixed size) volume that only has one file and that file is used as a loopback device.
+
+(do note that the main storage do not currently work upstream and I only have storage working on A11 downstream)
+
+3. Obviously, accessing Mac files from Linux too, not sure how big of a use case that is but apparently it is
+big enough for hfsplus to continue receive patches here and there.
+>
+> Ernesto
+>
+Nick Chan
