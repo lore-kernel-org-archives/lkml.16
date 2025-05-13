@@ -1,260 +1,140 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4A6145B25;
-	Tue, 13 May 2025 18:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094C61E5200
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161854; cv=none; b=Uf2szNJbxSqhJwPxWXnyC57LIAgEUc5vX5VFQg9dr1iDw7v82TfGxllvOi/+jj34PFav84+8QqlXnFcDuma3gSi1SoYOan9aOANgXXht4zkkjoSGGkOtXiwZLlDnSmOwoChaQYjDEKfrq5Bys8EdDOrEXrPCGy0KzvLU3RxvgqU=
+	t=1747161903; cv=none; b=kIyFdmb5iDoYaSSAqs87+QbmHtxI2Ws6db9LcJk8VL2Xa5bvAfvG6w1lXDUz+UaYQX/FOE63OFLkKjBPOgKTBwUS3ICMSuJRX9QM0icNQ6motrWNBQwBvNSgpiv9DQU7/2vghFCo+hC0YoMA14uAzNY9xyiZoKhT5GquK1N8VrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161854; c=relaxed/simple;
-	bh=reLz897hVz05HvXtHa9lTriiIjTIaDJtuS3Ke0IaOSg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qAU1Wo95qmCvV12HzuTgQEos533gFGWm9UHaDxf/8IoXwhtjf8oAhQ7I8TuHQEGdAdn4AyLElW4KUySSZhqDtMtngFerLb5mffQG30GpT9EGIx8umPCI/6UnnaFBHlPKN7CgCEF8vLxFjW20iNJVVgMwmiz7+0VhYr2VBEQStwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=N1MArj0D; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1747161903; c=relaxed/simple;
+	bh=WGMe5h5gpDaOx6b4s7hIfYdfZRqiF+ZmTxyxQHN1eUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QXJW6Fx2JTkyay3CO7GRUTKkACeSsoqjnytzmpvSe9ANbxQP4+aYGGxIzO93PfP3Mj264E92yAYWUpmF05mrYMuekna0Ea2nq9+jURbLNjV6D1NGmmzgU/WuQtJNyldlesS1TYHILOKPK6K4DsgevnKRhMaJJw0oWTK1rPilWAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vJ6nDT00; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="N1MArj0D"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=/OBINtI0SAZP2fUdQnW19FOxjYjmq02Jp24p47V1i4U=; b=N1MArj0DxnQLp1gnjOJp7tC7Yi
-	9upVlge54nLsV6IlChGDVcNBfiltmQWCdo7msRylE6vERsX8YOWC566zrpDtt2BRdQJ80VBhwAbMC
-	6vGnv2yUYRLGHo+ciUKU8b9Y56fziOS5LCBa2HqAoJird5xIlQMbVpv7HI265ICDT+T9EAGRmYpAt
-	9mNmOGzJcm1Aq8tKeWhG855fyQaEL38UBnXHMVn21/sFIb2PM15uvPvyvQiJwaE84w8Dql9BLUzyP
-	cfn9ngGz78gBZrHxUpOAJMJfnFLIDH0M87ajaIYlaBKH772g9+3eJyGhk8N7nG9vHMxM+MzxbZ4X3
-	y6Bj3Xnw==;
-Received: from [61.8.147.169] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uEubM-0003sw-Um; Tue, 13 May 2025 20:43:41 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Fred Bloggs <f.blogs@napier.co.nz>, Hsun Lai <i@chainsx.cn>
-Cc: Hsun Lai <i@chainsx.cn>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org
-Subject:
- Re: [PATCH v1 3/3] arm64: dts: rockchip: add DTs for Sakura Pi RK3308B
-Date: Tue, 13 May 2025 20:43:39 +0200
-Message-ID: <2678259.iZASKD2KPV@phil>
-In-Reply-To: <20250513163515.177472-4-i@chainsx.cn>
-References:
- <20250513163515.177472-1-i@chainsx.cn> <20250513163515.177472-4-i@chainsx.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vJ6nDT00"
+Message-ID: <bb2a379e-c701-4b50-932a-20dcfbb0ebea@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747161888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v02MlTjPuKP4Y2/Qe6D/comJgBivOdHhNOC4o8MeDjc=;
+	b=vJ6nDT005BmhxrNYGRvgIO27rdBpIdn0ygjz1B3IGq9kYoPpRsGiZ3iVRFkTdKnew/D7s8
+	1V3JyVzOhj77HQPocNG+eJ6pyuGYyGTQTqkojHPO1hGqkRtik13SSX2567/RPy+PoULIJ5
+	ENGe3Fe1y2vg27H+ZLguzuobLSOW51k=
+Date: Tue, 13 May 2025 14:44:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [net-next PATCH v4 08/11] net: phylink: add .pcs_link_down PCS OP
+To: Christian Marangi <ansuelsmth@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ llvm@lists.linux.dev
+References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
+ <20250511201250.3789083-9-ansuelsmth@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250511201250.3789083-9-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+On 5/11/25 16:12, Christian Marangi wrote:
+> Permit for PCS driver to define specific operation to torn down the link
+> between the MAC and the PCS.
+> 
+> This might be needed for some PCS that reset counter
 
-Am Dienstag, 13. Mai 2025, 18:35:14 Mitteleurop=C3=A4ische Sommerzeit schri=
-eb Hsun Lai:
+Counters must be preserved across link u/down.
 
-> +	vcc5v0_sys: vcc5v0-sys {
+> or require special
+> reset to correctly work if the link needs to be restored later.
 
-preferred node-names for regulators is regulator-foo, so here please
-regulator-vcc5v0-sys (phandle can stay as it is).
+Can you describe this in more detail?
 
-Same for all the other fixed-/pwm- regulators below.
+> On phylink_link_down() call, the additional phylink_pcs_link_down() will
+> be called before .mac_link_down to torn down the link.
 
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc5v0_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +	};
+tear
+
+> PCS driver will need to define .pcs_link_down to make use of this.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/net/phy/phylink.c | 8 ++++++++
+>  include/linux/phylink.h   | 2 ++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 1a4df0d24aa2..39cd15e30598 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -1009,6 +1009,12 @@ static void phylink_pcs_link_up(struct phylink_pcs *pcs, unsigned int neg_mode,
+>  		pcs->ops->pcs_link_up(pcs, neg_mode, interface, speed, duplex);
+>  }
+>  
+> +static void phylink_pcs_link_down(struct phylink_pcs *pcs)
+> +{
+> +	if (pcs && pcs->ops->pcs_link_down)
+> +		pcs->ops->pcs_link_down(pcs);
+> +}
 > +
-> +	vdd_core: vdd-core {
-> +		compatible =3D "pwm-regulator";
-> +		pwms =3D <&pwm0 0 5000 1>;
-> +		regulator-name =3D "vdd_core";
-> +		regulator-min-microvolt =3D <827000>;
-> +		regulator-max-microvolt =3D <1340000>;
-> +		regulator-init-microvolt =3D <1015000>;
-> +		regulator-settling-time-up-us =3D <250>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		pwm-supply =3D <&vcc5v0_sys>;
-> +	};
+>  static void phylink_pcs_disable_eee(struct phylink_pcs *pcs)
+>  {
+>  	if (pcs && pcs->ops->pcs_disable_eee)
+> @@ -1686,6 +1692,8 @@ static void phylink_link_down(struct phylink *pl)
+>  
+>  	phylink_deactivate_lpi(pl);
+>  
+> +	phylink_pcs_link_down(pl->pcs);
 > +
-> +	vdd_log: vdd-log {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vdd_log";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <1050000>;
-> +		regulator-max-microvolt =3D <1050000>;
-> +		vin-supply =3D <&vcc5v0_sys>;
-> +	};
-> +
-> +	vcc_ddr: vcc-ddr {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc_ddr";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <1500000>;
-> +		regulator-max-microvolt =3D <1500000>;
-> +		vin-supply =3D <&vcc5v0_sys>;
-> +	};
-> +
-> +	vcc_1v8: vcc-1v8 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc_1v8";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <1800000>;
-> +		vin-supply =3D <&vcc_io>;
-> +	};
-> +
-> +	vcc_io: vcc-io {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc_io";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		vin-supply =3D <&vcc5v0_sys>;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vcc5v0_otg: vcc5v0-otg {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc5v0_otg";
-> +		regulator-always-on;
-> +		gpio =3D <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&otg_vbus_drv>;
-> +		vin-supply =3D <&vcc5v0_sys>;
-> +	};
-> +
-> +};
+>  	pl->mac_ops->mac_link_down(pl->config, pl->act_link_an_mode,
+>  				   pl->cur_interface);
+>  	phylink_info(pl, "Link is Down\n");
+> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+> index c5496c063b6a..8b3d1dfb83a1 100644
+> --- a/include/linux/phylink.h
+> +++ b/include/linux/phylink.h
+> @@ -494,6 +494,7 @@ struct phylink_pcs {
+>   * @pcs_an_restart: restart 802.3z BaseX autonegotiation.
+>   * @pcs_link_up: program the PCS for the resolved link configuration
+>   *               (where necessary).
+> + * @pcs_link_down: torn down link between MAC and PCS.
 
+ops documentation should use imperative verbs.
 
-> +&i2c1 {
+You are also missing the longer documentation below.
 
-empty i2c controller? I guess it is routed to the external pins?
-If so, could use a comment explaining that.
-
-
-> +/* SPI0 for external gpio pin */
-> +&spi0 {
-> +	status =3D "okay";
-> +
-> +	spi_dev@0 {
-> +		compatible =3D "spidev";
-
-having a generic spidev is not allowed. If there is an actual
-device connected there, it should have a real compatible.
-If that isn't a real device, this could be handled in an overlay.
-
-
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <0x2faf080>;
-> +	};
-> +};
-> +
-> +/* SPI1 for ws2812*/
-> +&spi1 {
-> +	status =3D "okay";
-> +
-> +	spi_dev@0 {
-> +		compatible =3D "spidev";
-
-same as above, please no generic spidev
-
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <0x2faf080>;
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&rtc_32k>;
-> +
-> +	usb {
-
-please sort these nodes alphabetically
-
-> +		otg_vbus_drv: otg-vbus-drv {
-> +			rockchip,pins =3D <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	sdio-pwrseq {
-> +		wifi_enable_h: wifi-enable-h {
-> +			rockchip,pins =3D <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	wifi {
-> +		wifi_host_wake: wifi-host-wake {
-> +			rockchip,pins =3D <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +	};
-> +
-> +	bluetooth {
-> +		bt_reg_on: bt-reg-on {
-> +			rockchip,pins =3D <4 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		bt_wake_host: bt-wake-host {
-> +			rockchip,pins =3D <4 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		host_wake_bt: host-wake-bt {
-> +			rockchip,pins =3D <4 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +};
-> +
-> +&pwm0 {
-> +	status =3D "okay";
-
-status as last property
-
-> +	pinctrl-0 =3D <&pwm0_pin_pull_down>;
-> +};
-> +
-> +&saradc {
-> +	vref-supply =3D <&vcc_1v8>;
-> +	status =3D "okay";
-> +};
-> +
-> +&pwm3 {
-
-please sort phandles alphabetically
-
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-
-same
-
-> +	status =3D "okay";
-> +};
-
-
-Thanks
-Heiko
-
+>   * @pcs_disable_eee: optional notification to PCS that EEE has been disabled
+>   *		     at the MAC.
+>   * @pcs_enable_eee: optional notification to PCS that EEE will be enabled at
+> @@ -521,6 +522,7 @@ struct phylink_pcs_ops {
+>  	void (*pcs_an_restart)(struct phylink_pcs *pcs);
+>  	void (*pcs_link_up)(struct phylink_pcs *pcs, unsigned int neg_mode,
+>  			    phy_interface_t interface, int speed, int duplex);
+> +	void (*pcs_link_down)(struct phylink_pcs *pcs);
+>  	void (*pcs_disable_eee)(struct phylink_pcs *pcs);
+>  	void (*pcs_enable_eee)(struct phylink_pcs *pcs);
+>  	int (*pcs_pre_init)(struct phylink_pcs *pcs);
 
