@@ -1,160 +1,102 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98BA2472A2;
-	Tue, 13 May 2025 10:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1712566F3;
+	Tue, 13 May 2025 10:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747130880; cv=none; b=WQPMfvypT1oHmf+9mzH92COqC93R3Cob4wUOaeKFTyRBuDVApR2FdPgwWrBelaJ28VC2CPYUmQpzKocmjSbkOO1B72uB5N2YonA4yNjdwxcnLMXZlpii2Nw6D1dYYmcPHLLmX9n7BpbIxR4L0Hh0OXhcU680O0sbas7AHm0gQn0=
+	t=1747130879; cv=none; b=dvwzXTZSuOH5VrkpTbo5gFSxcNYHFE5ke8dO5D81V2s1TBvFfzVMK+GVs7vihLetD3stvx7+AQ541KesTSpzOEOllPsu527OGMQeVT4PWNAd1+ahBjME9fUiiytZfczpkvdeW7QZABGXhb9Yp4P8Wdg7bjSA+baa5BdCe1d6F6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747130880; c=relaxed/simple;
-	bh=+bd9WiorYKiALUTe/ZE9Twmt5uX3p97amk10CfbvR3w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=A+kW/oAnwgiO5a66VsNS0bR3miysfDLgrEyeP7kVYtLlwI0fdBdm2+AVc/1nvL5Hq/TXJT7OaXuEEoBN4201qNzIZuwUfoMkpdY7peVMmsaCxywqq7ryYYaapfO1b1x0ldddQx3tn7dVGJP2dgwmjtVTyDOyUfdKrYhuSv8CTgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-bc-682319efd1c9
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com,
-	torvalds@linux-foundation.org,
-	damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	will@kernel.org,
-	tglx@linutronix.de,
-	rostedt@goodmis.org,
-	joel@joelfernandes.org,
-	sashal@kernel.org,
-	daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com,
-	johannes.berg@intel.com,
-	tj@kernel.org,
-	tytso@mit.edu,
-	willy@infradead.org,
-	david@fromorbit.com,
-	amir73il@gmail.com,
-	gregkh@linuxfoundation.org,
-	kernel-team@lge.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	mhocko@kernel.org,
-	minchan@kernel.org,
-	hannes@cmpxchg.org,
-	vdavydov.dev@gmail.com,
-	sj@kernel.org,
-	jglisse@redhat.com,
-	dennis@kernel.org,
-	cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	vbabka@suse.cz,
-	ngupta@vflare.org,
-	linux-block@vger.kernel.org,
-	josef@toxicpanda.com,
-	linux-fsdevel@vger.kernel.org,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	dan.j.williams@intel.com,
-	hch@infradead.org,
-	djwong@kernel.org,
-	dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com,
-	harry.yoo@oracle.com,
-	chris.p.wilson@intel.com,
-	gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com,
-	boqun.feng@gmail.com,
-	longman@redhat.com,
-	yskelg@gmail.com,
-	yunseong.kim@ericsson.com,
-	yeoreum.yun@arm.com,
-	netdev@vger.kernel.org,
-	matthew.brost@intel.com,
-	her0gyugyu@gmail.com
-Subject: [PATCH v15 16/43] dept: apply sdt_might_sleep_{start,end}() to hashed-waitqueue wait
-Date: Tue, 13 May 2025 19:07:03 +0900
-Message-Id: <20250513100730.12664-17-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250513100730.12664-1-byungchul@sk.com>
-References: <20250513100730.12664-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbWxLYRTHPc+9vfe2W7mp4dokrCISYsxbTgTxzfVBQiyREKGxS8tWS0ut
-	QqzMwmYzYkb3otusm62zapdg1plJy2ammL3Ziw2jsa1JaZltaL18Ofnlf05+53w4DCF7LIpk
-	VOrDgkatSJBTElIyEl68xDt7vnJZmmcF+L+eJSG/2kKB+1YlAkuNAYPHuRE6AsMIxp89JyA3
-	x42gaKCXgBpXHwJH+SkKXr2fCm1+LwVNORkUnC6ppuDF5wkMPVcuYai0bYZ+8xAJT7OLMeR6
-	KMjLPY2D5ROGMXMFDeaUBTBYbqRhYiAWmvraReDoXgzXCnsoqHM0keC6O4jhVW0+BX2WXyJ4
-	6npCQiArCtwXM0VQNVpMweeAmQCz30vDywYTBpdpJlhTg8K0Lz9F8DizAUPajdsY2rruI6g/
-	+xaDzdJOwSP/MAa7LYeAH2VOBINZIzScOT9GQ54hC0HGmSskpPasgvHvwc0FX2PBcN1KQtVk
-	O9qwjrcUWhD/aNhL8Kn2o/wP/2uKdwRMJN9czPH3jL00n1rfTfMm2xHeXr6IL6nzYL7I5xfx
-	topzFG/zXaL59JE2zI+2ttJb5uyQrI0XElQ6QbN0/R6JsqblHErqZ5JL3NVECuqn0pGY4diV
-	XH1zM/2fzfkdOMQUu5Dr7BwjQhzBzuPsmUOidCRhCLY9jOso6EKhxnR2F/cx51twiGFIdgFn
-	rFsTiqXsaq529DL665zLVVob/njEwXyyrJUMsYxdxWWbKsmQk2PzxNwnb+m/I2ZzD8s7yWwk
-	NaEpFUimUusSFaqElTFKvVqVHLP3UKINBd/LfGJi513kc29rRCyD5OHSJ55opUyk0Gn1iY2I
-	Ywh5hNRwJxhJ4xX6Y4Lm0G7NkQRB24iiGFI+S7o8cDRexu5XHBYOCkKSoPnfxYw4MgUV+JbH
-	dOOZb23fdq8wLcObwkY/tGie6QXdjO3c1QvjTm1/n6+77rnOaU802Pf3nlpYFmWMc4cZ4yI2
-	zXtXWhW9xeHYU3U72Vo6YFFPmV94IGMopWjxzshbJ2upaeFOe7TsuLWLQeM7urY+SDp4TO/p
-	cbW8nvXxzU28Txx3efqkS05qlYrYRYRGq/gNiTI3HFoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSaUxTaRSG/e5OnZorEuZaBpcaYoJRbLTkRI3RH4YvY9x+mWhUGr3SKqBt
-	gQEnZsACCk4ZIFaUzQqmIBTBC4mo1BAQlMGpnQFBHRYlE5SwNKm0yubYavxz8uR5T97z53Bk
-	8G1awekSk0RDoiZeycgo2d6tpvXu5Wu0G689Cwfv9CUKSuvtDLju1CKwN2UQMNYRA/2+CQRz
-	fz0nocjiQnDz7SAJTZ1DCBzVFxjo+W8J9HrdDHRZLjNgqqxn4O/xeQIGrhYSUCvtgWHbKAXd
-	+RUEFI0xUFJkIvzjPQEzthoWbOkRMFJdzML8WxV0DfXR0F7WRYPj9Tq4Xj7AQIuji4LO5hEC
-	eh6UMjBk/5+G7s6nFPjywsBVYKahbqqCgXGfjQSb183CP61WAjqtodCQ6W/N/vCZhifmVgKy
-	b90loPfVQwSPLr0hQLL3MdDunSCgUbKQMFvVgWAkb5KFrN9nWCjJyENwOesqBZkDapj75L9c
-	Nq2CjBsNFNQt9KEd27G93I5w+4SbxJmNv+BZ7wsGO3xWCv9ZIeD7xYMsznz0msVWKRk3Vkfi
-	ypYxAt/0eGks1eQwWPIUsjh3spfAU04nuz/8kGzbCTFelyIaorbHyrRNz3LQ2WEutdJVT6aj
-	YSYXBXECv1mwlfYTAWb4tcLLlzNkgEP4VUKjeZTORTKO5PsWC/1lr1AgWMYfEd5ZPvqXOI7i
-	I4Tili0BLeejhQdTV9C3zpVCbUPr154gv1+oclIBDubVQr61lspHMitaVINCdIkpCRpdvHqD
-	8bQ2LVGXuuH4mQQJ+R/Idn6+oBlN98S0IZ5Dyh/kT8dWa4NpTYoxLaENCRypDJFn3PMr+QlN
-	2jnRcOaYITleNLahMI5S/ij/+aAYG8zHaZLE06J4VjR8TwkuSJGOemP36mN/XVOfE6XYvdNd
-	MJv0+Ld9o58GTbtMSdez1Qqp3FO1Y1P/+cowZ2iJc8483nQy7l/T0j+OvtEYXO/xqfCIuslU
-	H5+1UGg5YNHXqc3RoioibtnhA4rd637Sb5WSFSuizfootapDf3Em9JS+NCbV45mOjvFNpH92
-	bLrWvVxJGbUaVSRpMGq+AKEJfCU8AwAA
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1747130879; c=relaxed/simple;
+	bh=zHHPe2RlT3alVG++pzwYl1p0dat//Yfu/0wYDLnttxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvYQU5veKVAn2Dbq9quWpAHu1xEup20cijF9inToPmPsj8iBN6GsIKCrEk4Ew81fksBYJA40+ArReLi8v4emrX2GTAI5keE+E4wo/s10yziicdQzm+CXvAPlrZgaqEwzguYvIwtb2hNoQrxAOBmy+/90UpD5ErLj2Tn0D8BnIkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hMyycpyt; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMyycpyt"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4768f90bf36so58757751cf.0;
+        Tue, 13 May 2025 03:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747130876; x=1747735676; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xxTCWdoxxph2uKRlpdzs8tMyten2c/Vtkg5n7lhhiZs=;
+        b=hMyycpytx7XRafWItRyjMfGc8B3xbUh4NaTaUkGCQ9kjeG+AR+cCg1FW+OH1RT5QtD
+         rkpGfaXSZwj0pjUnxnDsaJQxlFvUU0NA+le69ZM5nEt5vjzq1xOmr+V3+pm3pfDxSIbj
+         B24uhqFIVHnbQqTO2QfQZHSJsGXL72mNVj71TJMEEEe+g8GNnEDadEYyNyF8CgInXpIn
+         VseYWYmd9uuk0t65uzxv8O0puB/QNUJR1gaYU71YkkNrwvrAzW//7qoTrd60VDF64Pu8
+         dBziTX5mCSf08FunalzXJskc29IG6vxHlRCs3yqC+WRQHM678SG52MpNOKE46s4M4Eii
+         RK+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747130876; x=1747735676;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xxTCWdoxxph2uKRlpdzs8tMyten2c/Vtkg5n7lhhiZs=;
+        b=UoND/t3rumIrCNvMQP4f5QkNm/fj8Zqqeb0aLP84CbMrm25APolZxgjrtYmNBWA/Ud
+         iE1HM//b/wK8pGk3/1i19eNDQuEoNc/o8KxSzA+QRT6ZKqvsV2blX+2tExzR4V9c6DE7
+         q9SMtG6hbXmZ+4Jae1E/a2AZnNWFZdhzkkfMq4rT5E3DAIdY1J+l29O64MqGw8zDULZb
+         FEE29kJU89cGBCce7TroDZbXoa5ggkcp7mgR8DvQaWb0UaWDipIrF3Njvm04CQInvcWX
+         ntX/ZeCs3+P+85ck6dxofJsjkOLoRyswo/1HLIYfDbBwRw/glZZwBxFxF8AXs0c5AdNj
+         ypvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeg0unAKF4tx9lNFtTUolVkKXHOBB5WoJmJdTaOanwh0zWoWrU6YRyBdgYnqBzr1ypjrgtCdSA8Jr3@vger.kernel.org, AJvYcCXAUc0A6GJzXC+i+7HWuTpuPdRPWLK/r1pm/ProNSmK2UymgG/MN0AXIQvx4fzQ1hBnnkuUsEa3/KxknxnR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHMClzD0+HrJBpIOU+XcQLzQHOK+ZFUtzc4bBC6Wfftv8Rfi8T
+	qr4HaFJ6kqjlTlAu7rfGbkuRUGvVGwBTf2ClSuPJ1fgPYdlVjsw6
+X-Gm-Gg: ASbGnctQlpw0T7lHrhkteIGA2zd20s5jUUqrU3MUVYHgJPma/1NxgJyrcjyxjmQOYgP
+	g/99r1bUMN0s1AeuAPNGdjo765x57lxV6JzlT+BIMoWHZ57ToH8Ju1+lX7w8ov41tRTjdqmraJC
+	zv5etI1+s1OW2oDbHmkOLTHVdI3vg1F4THKosKOdO8CHzDfln9acKKBfMWzZDOqGW4OqSMzXfes
+	3kyd8KNPzrlj6eZ/U8X8kqbNFx2OYTL580ePpGJ59UgY4bFofeVYiXYahKDUu5ivcmRdcb4vW7I
+	GpPvVdycO6y7VNyhSMzTCStnX60=
+X-Google-Smtp-Source: AGHT+IH2nYMxmNh6Mi7SbRh4cdJMyyTGclEOl+xdQXn3Xj59qNVfbigfG60vlKhSQo/mjolVBqJhqQ==
+X-Received: by 2002:a05:622a:406:b0:476:a969:90c5 with SMTP id d75a77b69052e-49452761774mr194593351cf.24.1747130875543;
+        Tue, 13 May 2025 03:07:55 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4945259f42esm63437641cf.78.2025.05.13.03.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:07:55 -0700 (PDT)
+Date: Tue, 13 May 2025 18:07:24 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Chen Wang <unicorn_wang@outlook.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, 
+	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: riscv: add Sophgo x8 EVB bindings
+Message-ID: <ya3mpue6pndlzkmr6bouyrqldysmsfcu36b6lwrgbnvo2xw5ru@7ugamdke32nh>
+References: <cover.1746811744.git.rabenda.cn@gmail.com>
+ <59c175c7bccbd4b5ad241c39b66b0303e0facf81.1746811744.git.rabenda.cn@gmail.com>
+ <MA0P287MB22621824B2FD5E2A64006174FE97A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+ <CAAT7Ki9=ROP47hsugf3BS1nXr9oOPHWgjQoGfjAZiwHnXS19Pw@mail.gmail.com>
+ <nrtzltuus47rjds3x54e72mtflvjh4najyqdjnagxq5etge5e7@vkikyxa5zf6k>
+ <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MA0P287MB2262F586320C31A7F887B5CEFE96A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
-Make dept able to track dependencies by hashed-waitqueue waits.
+On Tue, May 13, 2025 at 05:59:23PM +0800, Chen Wang wrote:
+> 
+> On 2025/5/13 17:49, Inochi Amaoto wrote:
+> > On Tue, May 13, 2025 at 02:48:44PM +0800, Han Gao wrote:
+> > > I hope it is sg2042-x8evb.
+> > > 
+> > > Sophgo is also making EVB boards for sg2044.
+> > > 
+> > > I think a distinction needs to be made here.
+> > > 
+> > SG2044 evb has a formal name like srd3-10, but I think it should
+> > have a sg2044 prefix. as the name printing on the board has a
+> > sg2042 prefix.
+> sg2042 prefix? :)
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- include/linux/wait_bit.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
-index 9e29d79fc790..179a616ad245 100644
---- a/include/linux/wait_bit.h
-+++ b/include/linux/wait_bit.h
-@@ -6,6 +6,7 @@
-  * Linux wait-bit related types and methods:
-  */
- #include <linux/wait.h>
-+#include <linux/dept_sdt.h>
- 
- struct wait_bit_key {
- 	unsigned long		*flags;
-@@ -257,6 +258,7 @@ extern wait_queue_head_t *__var_waitqueue(void *p);
- 	struct wait_bit_queue_entry __wbq_entry;			\
- 	long __ret = ret; /* explicit shadow */				\
- 									\
-+	sdt_might_sleep_start(NULL);					\
- 	init_wait_var_entry(&__wbq_entry, var,				\
- 			    exclusive ? WQ_FLAG_EXCLUSIVE : 0);		\
- 	for (;;) {							\
-@@ -274,6 +276,7 @@ extern wait_queue_head_t *__var_waitqueue(void *p);
- 		cmd;							\
- 	}								\
- 	finish_wait(__wq_head, &__wbq_entry.wq_entry);			\
-+	sdt_might_sleep_end();						\
- __out:	__ret;								\
- })
- 
--- 
-2.17.1
-
+You are right, I have make a mistake.
