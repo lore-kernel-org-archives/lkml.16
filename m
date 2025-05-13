@@ -1,96 +1,121 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16C21DB12E
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD4217FAC2;
+	Tue, 13 May 2025 09:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747127875; cv=none; b=EJZzKn/bHohijOENAxIw4x3fcrRyVDfhZqyKZ/JVZKVjdVMF63uqjAlq05CG6NVrwvV/zQAbll6Pfc5yL2UIxqRQC6bEZrzrWFrUQ5hwUChTsw07b/5SAHObBgyUXYUzMj0FcaiJITADf/i7nMcABPCEqI2l3qa9i+Zf2inLmk4=
+	t=1747127885; cv=none; b=mwn52zcRfQycERCkRu0FMQC6xCt8W7x51gmbG2n36WJOBQvJa+LXxPASBnP8n1fcRvQ7ld/EzpMY16FbX3cKSmbVyTtw7Pwg8jSvew7XefLR8ay9FepRzXBrS5sJq6mBD8SswY26w749+0gwSQ1+ze4Ic5cWXxggDCMlc/ixPPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747127875; c=relaxed/simple;
-	bh=fYj5KQcmLHEMEZBytxHFM2PZV8baZG30rM4LCErfAUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gdXYS5fX1pwJuguJtuMfuLLXzyVxdZTnQZtD3BR5XXTSu5q+RXusMuuIdJlTfm7YmPtm+nwe4gukgKLZcz3UZ/e2/0kdbVUsAJxfkBYFZ1zcyNRSbVqjQHVgBcrc4NxqcSAeAFJdIsAQHEldxMwquzzMctbbzGxCB9oI8BRnRzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rpZhtYvG; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747127885; c=relaxed/simple;
+	bh=OZJPGrjursZMHwmHj5u/k8EH2OvZh4oaVXSEFgcgksQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fwT6vsx8bJy5nH6YZSi/mKuF9EYzvWW5snLJn1bchyedcRGZmGX+FrDHSyDf5ylvDK3+8WLzdY+nwfRaMkqURjj6/XeFasoUqv4y6qAc8CC2zIMu+r9vf88qJ3awRtLoctvSJj/fPq7ZnnpAAMci2EZ2j2WJvq/KXbDYzuxAq0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eXAn8lg+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rpZhtYvG"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-326c1f3655eso41347801fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747127871; x=1747732671; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fYj5KQcmLHEMEZBytxHFM2PZV8baZG30rM4LCErfAUA=;
-        b=rpZhtYvGCX1OdO9DcHoF55s92TPmzmY6DdTVtCEqd334WBobDLW3RPPl2JdKKR8kDy
-         m7u1SrMSaPk0qSf5R9gSpL3lvIuDZm3Tfw+X08M9S8i2gvwSYoXljbSPk1JyJS2+B3RE
-         Gvg1jLkF/tqcIheNbEVn4ZzH3AHNOVU+UwIccJ3kdz4Mpr2DtlQmd80M2uHfiXgmjDQo
-         wt0HKMmFtQThRVfh0dGFUAZ9Rq5nzPTI/vZqL58ucAx5bVqB8GC2bprcdvFn8ApkMUQS
-         TAOY+tXSfA/Byvx+CqitUk0tG7PzcMLIU05ogojXI3FLXaYYkqV8IZwDJDbElRJRnMp1
-         3i5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747127871; x=1747732671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fYj5KQcmLHEMEZBytxHFM2PZV8baZG30rM4LCErfAUA=;
-        b=F9Yd3quSVfV10geO3hobNhoZNF2VCCQil0IUjHH8IJrt7zQzSZ9bidrslqHDaDdxSt
-         aSlYXK7Jj/JhU4vLB2CeSCpMiTQGGlHCGQcCnFGDHxMFNvxUPVHLCTMn8VKLaylOrI5q
-         TkMjQz6Ttxy0CjCcG7kmjDllfyK2l/qpuWaQRCAxa2D2gYAmoZAKU5OKXY3jPH+nNAW2
-         XwEMj0r9UclN+2GmT3Y7xWtOBJprG3UKMuh3rCewPdE1LAf0Ce4Ygyk0NIr+Lx9M3piZ
-         jXRIHZYK76WvDlayBE785Q/u4nDwVeggRxxnrFK1ZrYnC2WImtOMPDdGRCmk1YYGGrEl
-         nYDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQggbfdsjZMw17Ml22tjN9YIaDvXnQWVDSE8ydGJ5AVwuTwXPFl0kRxPcZZk+HMmAl4tTY2gHG/aDQRoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi7TZOSbUxs3VoETzpxotq7OTJ6ckioDP35XaDkwBAszts6UbS
-	q22IRndvyIhTujpt78woBRS3AtYVnDRDF3LP+7031tEOOmMue3KBVagg8qjZxSS1NBJgdKVO+K6
-	AJ1D3UwJ/sXEgyGvR3wC+mWtFJ9jPGdv1Xs0FKQ==
-X-Gm-Gg: ASbGncsoyzwh1/5yHNkYtDI5OUxQ9iu8qZBOLtb33rtNGLoDtIkeNBD4eC9vbwBNqEa
-	1ZTIJzMSFcvf9FifAc3jByhLx/+nIRmo6tzjCnTa2AiHJWJYhnI2vXGmFWweaYWRRaQBOyd1QYH
-	wWRY73+kedDdvhPcif4fOhgOFjOSpgIMTRmBnXyuQgVbg=
-X-Google-Smtp-Source: AGHT+IGF5AAEtxjDLnWwB2KhlBfA9BpWe7QwP/k4X0BBbK9pCsdG9d1Hz5QqjrJe/oAyVtJZCXkbt+hJdfoDbRz+p5M=
-X-Received: by 2002:a2e:a542:0:b0:308:e54d:61b1 with SMTP id
- 38308e7fff4ca-326c4686abamr73346771fa.34.1747127871028; Tue, 13 May 2025
- 02:17:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eXAn8lg+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747127884; x=1778663884;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OZJPGrjursZMHwmHj5u/k8EH2OvZh4oaVXSEFgcgksQ=;
+  b=eXAn8lg+8TcQParhx4p2OVZXUnSM2mTOdpL2xPFEkmIQmSyyrswchTBQ
+   71zwCv40D6RLMjAyTguDoBtAyrJ7G9utTSbwjrdO8DN+tKd284dxnvxW8
+   zDXW73KPoXS+c4iZwwHirEPh53EUSO/KbkeE4xdzSWfS4vAEBPj5gwkxu
+   q/KfWJFts7uVgQ7PzotAquKV4hBD4hU7szDF4jDdV7okC7i6FsiZFP941
+   oRN2oKatxSx//o6hZXqfpNEQVBCN9OKpo5nYYXhxMxLziyAQHgypK47Ju
+   zXO+5EvLgFTdRsLxhqTsxyTpgTlct49uleY5HiJTx7Yuvb14Ye2BJnnIG
+   A==;
+X-CSE-ConnectionGUID: tea5VF+GRTatC3dhYzLSnA==
+X-CSE-MsgGUID: R7JQ51KjQ4SOxMpyN8h5KA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="48889202"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="48889202"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 02:17:57 -0700
+X-CSE-ConnectionGUID: YdHt/kCyTsKIP5+72c6mhw==
+X-CSE-MsgGUID: a9W1Fs1aQliG979NGbbLrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="138161553"
+Received: from unknown (HELO [10.238.1.183]) ([10.238.1.183])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 02:17:55 -0700
+Message-ID: <458bb0e1-ed50-449c-b884-a825eb09b7fe@linux.intel.com>
+Date: Tue, 13 May 2025 17:17:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-max77759-mfd-v8-0-72d72dc79a1f@linaro.org> <20250429-max77759-mfd-v8-5-72d72dc79a1f@linaro.org>
-In-Reply-To: <20250429-max77759-mfd-v8-5-72d72dc79a1f@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 11:17:40 +0200
-X-Gm-Features: AX0GCFvKQMhZ-KOCmIthKIc7OzU6GLwrFz4eRraag3cmXbQnfR3YMu1flp3ZUNg
-Message-ID: <CACRpkdZUTJX4ht3CTN6AuEVRgbM38Bs_kLj2yx_NwrRCryE-uw@mail.gmail.com>
-Subject: Re: [PATCH v8 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srini@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] KVM: Check for empty mask of harvested dirty ring
+ entries in caller
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>
+References: <20250508141012.1411952-1-seanjc@google.com>
+ <20250508141012.1411952-5-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250508141012.1411952-5-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 10:22=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@=
-linaro.org> wrote:
 
-> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> Port Controller (TCPC), NVMEM, and a GPIO expander.
+
+On 5/8/2025 10:10 PM, Sean Christopherson wrote:
+> When resetting a dirty ring, explicitly check that there is work to be
+> done before calling kvm_reset_dirty_gfn(), e.g. if no harvested entries
+> are found and/or on the loop's first iteration, and delete the extremely
+> misleading comment "This is only needed to make compilers happy".  KVM
+> absolutely relies on mask to be zero-initialized, i.e. the comment is an
+> outright lie.  Furthermore, the compiler is right to complain that KVM is
+> calling a function with uninitialized data, as there are no guarantees
+> the implementation details of kvm_reset_dirty_gfn() will be visible to
+> kvm_dirty_ring_reset().
 >
-> This driver supports the GPIO functions using the platform device
-> registered by the core MFD driver.
+> While the flaw could be fixed by simply deleting (or rewording) the
+> comment, and duplicating the check is unfortunate, checking mask in the
+> caller will allow for additional cleanups.
 >
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> Opportunisticaly drop the zero-initialization of cur_slot and cur_offset.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Opportunisticaly -> Opportunistically
 
-Yours,
-Linus Walleij
+
+> If a bug were introduced where either the slot or offset was consumed
+> before mask is set to a non-zero value, then it is highly desirable for
+> the compiler (or some other sanitizer) to yell.
+>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Yan Zhao <yan.y.zhao@intel.com>
+> Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   virt/kvm/dirty_ring.c | 44 ++++++++++++++++++++++++++++++++++---------
+>   1 file changed, 35 insertions(+), 9 deletions(-)
+>
+[...]
+>   
+> -	kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+> +	/*
+> +	 * Perform a final reset if there are harvested entries that haven't
+> +	 * been processed, which is guaranteed if at least one harvested was
+> +	 * found.  The loop only performs a reset when the "next" entry can't
+> +	 * be batched with "current" the entry(s), and that reset processes the
+"current" the entry(s) -> the "current" entry(s) ?
+
+> +	 * _current_ entry(s), i.e. the last harvested entry, a.k.a. next, will
+> +	 * always be left pending.
+> +	 */
+> +	if (mask)
+> +		kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+>   
+>   	/*
+>   	 * The request KVM_REQ_DIRTY_RING_SOFT_FULL will be cleared
+
