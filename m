@@ -1,104 +1,176 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8027A1F03EB;
-	Tue, 13 May 2025 07:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C274315E;
+	Tue, 13 May 2025 07:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121571; cv=none; b=eVucg1aZwvNy1zLd8jLLH+nGz+TZwsd9NK2zZW4OJkjhW0c9Q2tlRLR5XBD7QctuCCkJWWUsqz2jAVJA99hnoQwjDnPaArY4zNe069R6VzHuIohmcUIwCediZ3GZqlB5WVeDUWb2G9J0POiJIHrphgX+6ZNt17LNX9HVUWIG4+8=
+	t=1747121609; cv=none; b=OK6tE3Wn8RmaaVe7hcx3jEL3twH1WBbsheu4gmYwrWsXtg5TtmcGWyO5g36ZhGEkMRzuZojHigtGiBXNCFUJMoYQL30a97zKvY8cmziGTwX6ZMTdaCM+yfFSK5VfyVVeAjW6vPSnzb1OMfYuonJLp9i5Vr44mvJkCSKtMCTnETY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121571; c=relaxed/simple;
-	bh=WAJxgDOvWdcx9erm9qegXnyQi7Djc/seW2uy6WNttuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLmBhVLi8VT0w6koO19bEr2rBUvWAuDS9JenPkgxNXscVcVUUcOb+q541siOXhUQLV08yJaDGkCoH25u2KbIIi1XbFE4JI83HYlM7MPnpaxqMS/s53qLKnIOb39Jc2bfcWy48BgVdB8SXNPF4hbiiBVmPcESLG4Q9akWSU+/BH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.186])
-	by gateway (Coremail) with SMTP id _____8AxmnGc9SJonYzjAA--.42933S3;
-	Tue, 13 May 2025 15:32:44 +0800 (CST)
-Received: from [127.0.0.1] (unknown [223.64.68.186])
-	by front1 (Coremail) with SMTP id qMiowMBxHBua9SJoBV3NAA--.17956S2;
-	Tue, 13 May 2025 15:32:42 +0800 (CST)
-Message-ID: <6f47e397-8877-4412-bebd-0314a6b46908@loongson.cn>
-Date: Tue, 13 May 2025 15:32:41 +0800
+	s=arc-20240116; t=1747121609; c=relaxed/simple;
+	bh=oydnFwFzyvTFZLytjGu4FLOFoRfASVhdPt5sskdlZPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E/ZrQwHzlUuGaHtfyGcTxFRDPXA3Fa24/HAWubz+wKwcAnApYmKcarAiB/wsNup6f7r+5btGIoRlC0DTZ85x5owSA2NlEi638C8dxHTpIXyIOc9BngBHF7fy7Gj5UESwMtWnAZMV9G+d7rTFPRhZ7W8pWCNO9yzU1PZfo9lGwNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1cuC8NK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1cuC8NK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38272C4CEE4;
+	Tue, 13 May 2025 07:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747121608;
+	bh=oydnFwFzyvTFZLytjGu4FLOFoRfASVhdPt5sskdlZPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h1cuC8NKAbWGk5N4z9eoNPIQ6NBkZHWfTFBOMG6WcDqpnNYaelJWfkZf82BqvkDSl
+	 P/SajPouty4fKsU9symCU24kVd6HIGfDEqjl8fysrHGn06p2mqEb6M0ny0gYBoxxBk
+	 KeV2K9sjGbcqfaahL5nhnRXWUj06irpfg80ARwqSV7eG2SqwwBAwTjvK/K/HmYNC+3
+	 ClsSUW2zxuP5+BIRP9Uh8Sg+1e8cC47UVPi/e6Hv3UN5bc6ttmhPXS1uHrb7nlx2Hl
+	 1bxJvfmr+aeiyc8BpGfu5tpnm9UEP2MWYHDM53CjBoe7hXKGFQZU+2v+E1qoSj2UG6
+	 EapmAmIgZLQyQ==
+Date: Tue, 13 May 2025 09:33:23 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org, 
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 09/12] sysctl: move cad_pid into kernel/pid.c
+Message-ID: <hqklj5woeb3hl3n4btn6xognyw63tkp7x2ht6dkw52nmhwfioo@ssagrmnhg2bu>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-9-d0ad83f5f4c3@kernel.org>
+ <202505091200.FC2683DD@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] rtc: loongson: Add missing alarm notifications for
- ACPI RTC events
-To: Liu Dalin <liudalin@kylinsec.com.cn>, alexandre.belloni@bootlin.com,
- wangming01@loongson.cn
-Cc: chenhuacai@kernel.org, gaojuxin@loongson.cn, git@xen0n.name,
- jiaxun.yang@flygoat.com, keguang.zhang@gmail.com, lixuefeng@loongson.cn,
- linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250429062736.982039-1-liudalin@kylinsec.com.cn>
- <20250509084416.7979-1-liudalin@kylinsec.com.cn>
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <20250509084416.7979-1-liudalin@kylinsec.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMBxHBua9SJoBV3NAA--.17956S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw4kZr4Dur1fKrW3Xw45twc_yoW8Wr4DpF
-	ZxC3Wq9rsYqr4Uua4DA34UurW3u3yfGrWDWFsrtasY9F9Fy3WDXr4rtFy8Jrs7ury5Xa1a
-	q3Wv9FW5GF1qkagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvlb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1l
-	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
-	v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
-	x2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87
-	Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZF
-	pf9x07jepB-UUUUU=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5fouo2tqrgcca44q"
+Content-Disposition: inline
+In-Reply-To: <202505091200.FC2683DD@keescook>
 
 
-On 2025/5/9 16:44, Liu Dalin wrote:
-> When an application sets and enables an alarm on Loongson RTC devices,
-> the alarm notification fails to propagate to userspace because the
-> ACPI event handler omits calling rtc_update_irq().
->
-> As a result, processes waiting via select() or poll() on RTC device
-> files fail to receive alarm notifications.
->
-> The ACPI interrupt is also triggered multiple times. In loongson_rtc_handler,
-> we need to clear TOY_MATCH0_REG to resolve this issue.
->
-> Fixes: 09471d8f5b39 ("rtc: loongson: clear TOY_MATCH0_REG in loongson_rtc_isr()")
-> Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
-> Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
-Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->   drivers/rtc/rtc-loongson.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-> index 97e5625c064c..2ca7ffd5d7a9 100644
-> --- a/drivers/rtc/rtc-loongson.c
-> +++ b/drivers/rtc/rtc-loongson.c
-> @@ -129,6 +129,14 @@ static u32 loongson_rtc_handler(void *id)
->   {
->   	struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
->   
-> +	rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-> +
-> +	/*
-> +	 * The TOY_MATCH0_REG should be cleared 0 here,
-> +	 * otherwise the interrupt cannot be cleared.
-> +	 */
-> +	regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
-> +
->   	spin_lock(&priv->lock);
->   	/* Disable RTC alarm wakeup and interrupt */
->   	writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
-Thanks.
-Binbin
+--5fouo2tqrgcca44q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 09, 2025 at 12:01:24PM -0700, Kees Cook wrote:
+> On Fri, May 09, 2025 at 02:54:13PM +0200, Joel Granados wrote:
+> > Move cad_pid as well as supporting function proc_do_cad_pid into
+> > kernel/pic.c. Replaced call to __do_proc_dointvec with proc_dointvec
+> > inside proc_do_cad_pid which requires the copy of the ctl_table to
+> > handle the temp value.
+> >=20
+> > This is part of a greater effort to move ctl tables into their
+> > respective subsystems which will reduce the merge conflicts in
+> > kernel/sysctl.c.
+> >=20
+> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> > ---
+> >  kernel/pid.c    | 32 ++++++++++++++++++++++++++++++++
+> >  kernel/sysctl.c | 31 -------------------------------
+> >  2 files changed, 32 insertions(+), 31 deletions(-)
+> >=20
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> > index 4ac2ce46817fdefff8888681bb5ca3f2676e8add..bc87ba08ae8b7c67f3457b3=
+1309b56b5d90f8c52 100644
+> > --- a/kernel/pid.c
+> > +++ b/kernel/pid.c
+> > @@ -717,6 +717,29 @@ static struct ctl_table_root pid_table_root =3D {
+> >  	.set_ownership	=3D pid_table_root_set_ownership,
+> >  };
+> > =20
+> > +static int proc_do_cad_pid(const struct ctl_table *table, int write, v=
+oid *buffer,
+> > +		size_t *lenp, loff_t *ppos)
+> > +{
+> > +	struct pid *new_pid;
+> > +	pid_t tmp_pid;
+> > +	int r;
+> > +	struct ctl_table tmp_table =3D *table;
+> > +
+> > +	tmp_pid =3D pid_vnr(cad_pid);
+> > +	tmp_table.data =3D &tmp_pid;
+> > +
+> > +	r =3D proc_dointvec(&tmp_table, write, buffer, lenp, ppos);
+> > +	if (r || !write)
+> > +		return r;
+> > +
+> > +	new_pid =3D find_get_pid(tmp_pid);
+> > +	if (!new_pid)
+> > +		return -ESRCH;
+> > +
+> > +	put_pid(xchg(&cad_pid, new_pid));
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct ctl_table pid_table[] =3D {
+> >  	{
+> >  		.procname	=3D "pid_max",
+> > @@ -727,6 +750,15 @@ static const struct ctl_table pid_table[] =3D {
+> >  		.extra1		=3D &pid_max_min,
+> >  		.extra2		=3D &pid_max_max,
+> >  	},
+> > +#ifdef CONFIG_PROC_SYSCTL
+> > +	{
+> > +		.procname	=3D "cad_pid",
+> > +		.data		=3D NULL,
+>=20
+> nit: this is redundant, any unspecified member will be zero-initialized.
+Thx. Changed it locally, but will not resend for this.
+>=20
+> Regardless:
+>=20
+> Reviewed-by: Kees Cook <kees@kernel.org>
+=2E..
+> > -		.data		=3D NULL,
+> > -		.maxlen		=3D sizeof (int),
+> > -		.mode		=3D 0600,
+> > -		.proc_handler	=3D proc_do_cad_pid,
+> > -	},
+> >  #endif
+> >  	{
+> >  		.procname	=3D "overflowuid",
+> >=20
+> > --=20
+> > 2.47.2
+> >=20
+> >=20
+>=20
+> --=20
+> Kees Cook
+
+--=20
+
+Joel Granados
+
+--5fouo2tqrgcca44q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmgi9bkACgkQupfNUreW
+QU9gYwv9HmmGGJZHXMl5xZnY6+FsJWyyJPwiDmBpHKqnKUS42gx1LYy2Q2iMzgFt
+YcxKJxmpLBMq0zNs1c7WNKOBf/3YXplkC/1ZGQPADy/fPhZIqjoZgE9IY7rlPuRW
+ZqHGdVvpT6hjyjx9buwt+BAt7LbMZFrpH+KgqIy27NUu6icIQiZv5p1QTqHW4/MP
+mwk0aJcMZnCExOxBdRgKDzhiQRnKFgDZcbM2QeOLuuPZsLA/rPQA5UxlnXVGJ82s
+1bm/UR896mg8Ziq42SuV2yl9S4cT/mNKoNgxTtVAOrNYajc5mcjQPalvDCitBQTk
+L9ieGsR6I/+jYgJVCoc9vHuYkJuX7B52HcHH2rC/9bmSKqr1ea7xFcG7eA3iViJz
+rQzlj+z9wxfi+81TJSPXsUZmFkFhKXaZNQEgt7rhjtwiv2aafkFpOp6vN7dlrkrW
+OyvLd59uapsslRXXBAlyqMbnHEhg69c/Pqk5bup1Cj5WU4zhK2OmMk3sR2Vu80cD
+/fMGl+l+
+=zOoe
+-----END PGP SIGNATURE-----
+
+--5fouo2tqrgcca44q--
