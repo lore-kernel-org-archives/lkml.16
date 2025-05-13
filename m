@@ -1,85 +1,118 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920D623F296
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE14238C3F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747132925; cv=none; b=NdExE+bKXV8rtUMj3LpOfHQjKh2IUX9IGvS1M2XEZwAzuZbwEH6lIdxAN8zQt3wnQv+xSOZc0N5zA1U7Zqn8XPSS+/kYWYw1GCF5CdCgNFTfsqtuz5DsDnn4V3yrMvT+dT9VwPVId1qgG3TMfGXkf6169fOIkRwElmVJ4CiPHLc=
+	t=1747132947; cv=none; b=KM0xkBJ4MZ47RRRD2ImYUL+v26ROkCBS+lBbEROT4pD39FbFKyOFqnZQr4U2Mc4PLq8wOPdJPgGejdUWWStqknzm4XVpLyx5mK4//FVqyqvatJfEPRsmRr+x1PP+fOGi52okNy/i1na6t/Vg5SaWY1mdQ971JjKfD6/e3fZ1AdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747132925; c=relaxed/simple;
-	bh=PpkLE4bdcSVatVRZIRFo2nmrSWSvduXDyMtAL26tOmA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n2bYyBgzn9FQawF6vGsbWWWFWLpvOd3PxeGsJ2ETFV1hV6peoRjjBFv9Que+REPfAKroNH+vaXQJrg+DEa6VdwgFlojpSunfcrrgwhSbFyMXMyxQokfTjxvPgn5o0YVs2r0Uq4baXIIr8C7C+rOwxE54VJvZ1QGqz3EHYPxft0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=In1hmpun; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1747132947; c=relaxed/simple;
+	bh=pSmfcyWrGiF4xpTJTeN86T0ysr03H5rq6eBj1nDatnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lEAgf9uXlXND7K0kyCv3Lgae6A2XgmzChan+bpKTU9GtLXung9NiWoE7GWFWNQN3FIrOCpUwRZ3t4hzwyFZ/P23jtUMIJUpLKGbMKW4R3tZxaZVPwadGDlsLz2tf2qrdceHnPOKkXcmLrmx3DuPWehi0599Uw0IVsGOa0CkPsI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HwiQqqBX; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="In1hmpun"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad257009e81so309799166b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:42:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HwiQqqBX"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ea0b3b46so914955e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1747132921; x=1747737721; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PpkLE4bdcSVatVRZIRFo2nmrSWSvduXDyMtAL26tOmA=;
-        b=In1hmpunk4Os8dUk4GFed1tGGAF2PYZMTgKfG+JrHvHw0r+zu1ERRf/faYbXcntjlG
-         McBN7H5lbX3uNTfT6VqhWRhiu6j1Twp+hfxG7pTiM4O4sMdYHeMExswAflzuki2+bQNC
-         Lt7oO7ywkyLmbDg3nw//EkVX3zN6W/YCim3fepJbK4sF0BZPm3NYvujzZWrmCVgmHLYj
-         F1vKdtIEQWNy9xsorbjhJ2qWZENniIVugTnnO5OArADmCXmxNakdxsQEg+NHzVuiok4W
-         2teeRlCY2kxCEH5i/JLepi0lnx4fyBVwVMs+W2QLSWZu5M0gYbRN7mS8TOlFgnN90QIU
-         LQvQ==
+        d=linaro.org; s=google; t=1747132943; x=1747737743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yg1c07mHuEVEndX1mN4EPyk/YfVVe6WLz5FXdYEWUKk=;
+        b=HwiQqqBXnSYV986xr9Y/ql/EZbdLFMd9KcUdy31uqIzZFA6jHwt2WH5SqjkWYugbZS
+         2MRTKPGLw+pS72syJeKquxHetuuGs711hmi0vHap6+jiGjNoPNhrydAvX9kO1Cb/lh6v
+         JUTXmJn9kNKaF5oY+7Ec0fwWgoKFWVoOEX0zfU5ZTBS3OdC7uajm+yMzSuMLc+xS7UYF
+         gujRgvjBH4olfF5GOouvGF+5HcfDLLjvvhQhqjTLGC/DRAZgEZnbPzSZaBgkwXbTgYQB
+         Y0JskSxisMITL8We5ZTnUoCvKatoFErhuQqJWq3KFRcqwUeSvn2kBiaIshvi534kLO8R
+         Mxyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747132921; x=1747737721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PpkLE4bdcSVatVRZIRFo2nmrSWSvduXDyMtAL26tOmA=;
-        b=ujoKJORPUOr2hheqBT/OKYyBqS8RCSFdLUTZU0xRkVO+ZiKKiUDiYwCuCcedImLKUx
-         e9lABkW65A+8898f44pRTRoyddfOJqK0wombec7ak8vNBIlzFCtkdhat6qWxh44Bpzvj
-         UUXmkPCHbf6MwnKVcMqhxs7ojvltTr1CfI7S4mnJocVrpAXTzqegwCUO+gCghGiofkFA
-         n5+QfK7ji6KY7hYHzlKJDxq9a+E3Gb0YuTfsfVYJTNGHi2+BH6eFaMCYmD3arFgOKUUZ
-         ElFJU3H4R2LWvCQYT+SlF6szhS0hnv1rrWq34iau6toPhT1xD0xZZ9ONoik2DNiZXsJs
-         8wRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyZpwy7bG9mwezBV/FzanociVyvwpGH82Ib21PFYf94OTAaw3VU7dPOqp+08qaRqN7TAarOl6UzrLsXPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn0QMvlmGIAde+RPDck7lhyr9ZJXbrBBu2mIAU6uMjplFdSHqC
-	rJuhtUnJFlrhMpzRGkGabIekWENUUxUuPyoSgz3I+rokTUC8sWyi7cU6BYf3bf1PseF/rSsog0q
-	XN7tRAqGSDKPPvERlAebfTk7v1TOpY4m3R+tzSQ==
-X-Gm-Gg: ASbGncsoE4xfEW/4rP9a9ygBuq04KIHvKmKCTX795tfsHN2e6V9PCf3T/TnEC2ZHu9Z
-	evyZFCWAMDKAqy8UNzwGs1L10TMdSDR1Eq70rVtpUrWoGGgJNOJUSXlwwtyY3OnWx3laDEEL7Dr
-	k+Q2Z9RbtqccwF99uomC9CdQrqC+tFOxnwdw8+Kyg0vW2XHYrkPvdOGOzN/zK2FQ==
-X-Google-Smtp-Source: AGHT+IG/QGsGyv4Ia4Wsh2r1sJHTSLLfE8cawvhW9uxg8cG6FnAm+n/draAgvW12YWHrgqzue3NkOhUdqobga1cF4p8=
-X-Received: by 2002:a17:907:94d1:b0:ad2:46b2:78ad with SMTP id
- a640c23a62f3a-ad246b2859emr938581966b.24.1747132920838; Tue, 13 May 2025
- 03:42:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747132943; x=1747737743;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yg1c07mHuEVEndX1mN4EPyk/YfVVe6WLz5FXdYEWUKk=;
+        b=Lnwsryvduz3KbnTU2RaYg8qKGph+EuV1W9OnytXFhvbnIebGryZWk+C3jExF6NIg0w
+         oNv+jibsGaqJkFaZvdmUJ+YzEJAcjXzDYA68QFDueVSwY5g2MgMrmgYoLJGgJKkauH6i
+         0bY1ceFCQENPdxv/Ce6GgInByiIfPfK6HDIsmX1ksmUDBMuo+btOZ1ki5Zuk7GlipEBl
+         3TJIUXa+NRAPz+jMTNX/9XyxrPPjInHDLFHHZaFodkIkNfxeDg3u1DF/a38M06oHKeUh
+         F/CHdELtP5dPxqVvE5k2ynDF1TKuMWpmfUwSclQR0ZVAa5BdtJTykMd8SdkoC9Lo7Gh2
+         jcQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOsOs2rINlslFIsT6OXjOBEM2WvpXfsPPA8JLxQvlhEPd+QoqYvn4eRN2hci6IOGbimtjiAmQjXGmFGBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSNCA18DLGWEa/VN9cglwtdQbFADzu0yTyMuAZyVQVEX9Yd4Xs
+	lG1Ho53oVcSpNWSOOT7XQqWUw/B1zWKuzXdiu9alv1rDnT7bGqQWUfpHmFGPe/A=
+X-Gm-Gg: ASbGncsF189+lFMV9U+EJ0cJp0PeLJ+z1TRvoFyu4BSjGCYvyy4DRXmDerRjR/ui7Cb
+	hccIj7nbhyB/D0OkBLE9pDy588OTvIB41JQ2hQVKMgyBBuHuuMrbLgIjSRjO8/xuzCa/9NHFULS
+	iAWuOb4tqrSZq7+xgC+DsEh5gryEnXWYjLj2vBBvEHEK3Gf40syPFdLZx9hixg1BdOmMXDtKF0u
+	lpHig40iDtkgVAaDNJ2KjQmffqWD2ACO+jPd/hgouhwAf57GRHGP085Fe+zRzMCjUWPYZOsjKeR
+	VVDyjKQDf1ZoWZr+//S35uvwxTp8Gd2Vxx446yATzJg1VVgKVO6QknTbb+vz34vTAsdU40GrKqG
+	GgmLj1+RUrvL6uqPb4UOH10mbxrwVhProoKjq6CA=
+X-Google-Smtp-Source: AGHT+IFoNiPxCt+CMN4614Hku32Rt1pWZtS1Ab8LgzEA8q/WGFVYaj4V1uUDGQcXU9uLbt/oeGpLVg==
+X-Received: by 2002:a5d:648f:0:b0:3a0:ba77:fde with SMTP id ffacd0b85a97d-3a1f64589camr4267133f8f.8.1747132942873;
+        Tue, 13 May 2025 03:42:22 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442d687ae10sm161002435e9.37.2025.05.13.03.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 03:42:22 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	soc@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL 1/3] arm64: dts: Cleanup DTS for v6.16
+Date: Tue, 13 May 2025 12:42:15 +0200
+Message-ID: <20250513104216.25803-4-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429094644.3501450-1-max.kellermann@ionos.com>
- <20250429094644.3501450-2-max.kellermann@ionos.com> <20250429-anpassen-exkremente-98686d53a021@brauner>
- <CAKPOu+8H11mcMEn5gQYcJs5BhTt8J8Cypz73Vdp_tTHZRXgOKg@mail.gmail.com>
- <20250512-unrat-kapital-2122d3777c5d@brauner> <hzrj5b7x3rvtxt4qgjxdihhi5vjoc5gw3i35pbyopa7ccucizo@q5c42kjlkly3>
- <20250513-gebilde-beglichen-e60708a46caf@brauner>
-In-Reply-To: <20250513-gebilde-beglichen-e60708a46caf@brauner>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 13 May 2025 12:41:49 +0200
-X-Gm-Features: AX0GCFsICYnXFz6P4pIL3Hd1gP1nSyyWhZq2AVrnY-GWc43m-lXrhBG4S3e-bbk
-Message-ID: <CAKPOu+97-ZXA=rr6DbbLKFb1KoJSG7_dwgjRjJ2KXah45=8z3g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fs: make several inode lock operations killable
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1132; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=pSmfcyWrGiF4xpTJTeN86T0ysr03H5rq6eBj1nDatnc=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoIyII5bO9UDNY2UW41YhzGm3W79e2lPorMhsUM
+ 8laVWkGUX6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCMiCAAKCRDBN2bmhouD
+ 18KQD/9duw6hJzlxO6+orDMVLJW8i9K8mDq48xhYYD9+R3ihDIi4P0VwpwYzTj1V9UGm62DpLQ1
+ TbVa4C+bY6Kbs9ZzECfRFcJjHsowemsuuxSTB3juYMXN6gtZmrplovDL+vSRZqtlr1kKQ8dTYB3
+ Lk2QQ1SPFsBxsAghduP0jhgtecoLh/BfM0piYXXhL2LtYaOV/ZYQVL3USecXb5gdEbBmcW8Dh4+
+ QOhSl2NTx4cKibXliq18QZa74cDUdPVOFyoJp54xu2YdlQAUTSodJs9hzZAAg+0kKOTKZisvzaQ
+ xI1Kvn16BVz2c2vAdkEDj4ldOk8MD7o5eHN0/uiZiRACZBducpnUW1fvBWGKvMlXJ6zBOmGaygf
+ DNrXGI4m/sDJKfV0YVSDH+lnWexQk6cn+3tL/kS+Nr9+xmVPEKOVry3kqlpfbPDMOW7c4XJPulJ
+ bdKm4tMUQIyxja3vOvsZbH5m5D/JLzlC5y9wEm8gqpPkS3GmCIgHf/5fOMe5W1LJbDAEnpIS6lo
+ akRuP1GMrDwesERkU7c50LPyO95SMWPIN8PFIaAiBroR326pTIAg9tugvdEoGW+dRj3Cov0JxN5
+ 8zMa/TlEt+HKeOBQdScbgr+b1yl2z3r1ODgttSs8vbjqMDv2hUqUDPoOfuTAQ8UCI0qyC8Q7PcB JLuiWgou0/eQqdg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 13, 2025 at 9:30=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
-> Great. @Max you want to send an updated version where split into
-> separate patches?
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-So this is about fear of not-so-perfect existing code calling this.
-Yes, will post splitted v2 today.
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/dt64-cleanup-6.16
+
+for you to fetch changes up to 04e7638dd64af20e4e81b7569abea9673e337098:
+
+  arm64: tegra: tegra210-p2894: Align GPIO hog node name with preferred style (2025-05-05 21:22:25 +0200)
+
+----------------------------------------------------------------
+Minor improvements in ARM64 DTS for v6.16
+
+Two cleanups which were missed on mailing lists - align GPIO node names
+with DT bindings for Mediatek mt7622 and Nvidia Tegra210-p2894.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (2):
+      arm64: dts: mediatek: mt7622: Align GPIO hog name with bindings
+      arm64: tegra: tegra210-p2894: Align GPIO hog node name with preferred style
+
+ arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts | 2 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2894.dtsi           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
