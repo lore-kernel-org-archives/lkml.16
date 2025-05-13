@@ -1,86 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57641E9B03;
-	Tue, 13 May 2025 09:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20024150997;
+	Tue, 13 May 2025 09:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129652; cv=none; b=OlC07b2App+9D3e3bOjEOpsfj1KfD7GzsWda9eJx4Axh4erZJvh71ZARAVhMxCKAGCX8L6NS2iL7hCyBYdC/vk7RvWqNXEv14/WpPpfZUeaepvRtQkSHusm+PnzxlgZXDW2qiiKr1+OYUkuw0U657YVx2NDnQwyoF2BFSeHm7Gc=
+	t=1747129705; cv=none; b=dC/9Af3GChWGLYf71VZiJVUZhl6heWlEhQti52UMG90nEpD/kmNPVRGt08Vj+iMEkiVJc7JsA8ch1mfBDh0V5+ocUVYGeWIXohWJN4w+i3s+pIh90p9bI970uX8Qg+D02Ug5XGsCqU3YUhiyXfeRzS0Z77gJF7akY9o02a4Yb4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129652; c=relaxed/simple;
-	bh=xdZRAhNT35b5XbONWZpeY/LWsNXSL4jD++flhQxZj+U=;
+	s=arc-20240116; t=1747129705; c=relaxed/simple;
+	bh=VCClFDmWn98t6LGY59WiqwTKlWQSpuTu+3dions5oYk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pm5uiGVoPodNDvAGNksMZYCTkG9gyyhFipLbisGCvghFaQOBPmX6pnWKf0Z18ei7GU54Uh1Qs5DKUnW9F693XkkuclXs71ADn98Yz40beJF+wMRG44rX1Glvlgp0oyaZ+bG/dtyPBrWi/lNAh4s5ajSfvpF4MvghqZP9yZ4vrZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDL938PQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWe/vbGqaVbikE+Xoj1jCU8HUXt0KzXqgtuGR5romAgIjfr13MuFILq9ImiWsiwhlNeQ6urLA1hiO3J2naI7WRN0XcZcOw5PjKRoLhZ+1FD8rfHRCk2J/ghKyzigmf3jfU4++vyvRGdS3snNkzIIhl6Ke+GseLUTvdNL43OamUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ks3xn8mh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDL938PQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB88C4CEE4;
-	Tue, 13 May 2025 09:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks3xn8mh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C44C4CEE4;
+	Tue, 13 May 2025 09:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747129651;
-	bh=xdZRAhNT35b5XbONWZpeY/LWsNXSL4jD++flhQxZj+U=;
+	s=k20201202; t=1747129704;
+	bh=VCClFDmWn98t6LGY59WiqwTKlWQSpuTu+3dions5oYk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDL938PQADFWvv1iYObPBQQN0mxoiEw+n1aZ8rwiWW8ckHeMPhXAUvnyuFTUmMctt
-	 RBYOwvDyXj5YbwOSseS5nNUvOi4A7ylzUidJgq6CBqJePPoTrMfznVqr7WRkXzKoUS
-	 4qCva9J5YLTaHQqM5kYbrnV+hSKlLnBXLGmdjDwQmPkviDNHQC8pP8+io4yKK9KW9f
-	 9t9+hATyYNXCrRZTlFtCuHijFlFpGl4aX3IPcmImJ6HqJUXrY9+c6+LkFZZi26OQ2Y
-	 zrYQ7iAC1XD/wdWROWl960ipCy7gn56+DxRvNj7HbxTgTUvTT8MSdXtWqSfyfWXGQu
-	 by6UdqRUqPF/A==
-Date: Tue, 13 May 2025 10:47:26 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: Remove node variables that are unused with
- CONFIG_OF=n
-Message-ID: <20250513094726.GG2936510@google.com>
-References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
+	b=ks3xn8mh1X7cSFC1KOwcVIF+OO+y6b0Ag8d68qQn04X5kW7CMKhoM4lWd0o4yG+kc
+	 E2xeVPxbRc3SdnUPCky7X/XtlfEF/hLjGqWe7OL5VjKCtO7Qzd7IT0UuRNRQ7RmqeX
+	 1Z2RVvP9KAMHJwTndwxWw4KFhhj/QpSDPB6zcG1FhBtl3A1m+sZxIkbpPqy8lgH/sG
+	 JNsFw7sZo2CBD7k3Un3DH7UpQPVIwyLb6Mfos5Fh7PvJqOrPbrX0LCMPr0K/LERuF5
+	 3SP9kCFoogsdCNSZgueWGFi1Y5fmKpEB9R9aqs7s50yewlWBh+2LFz123uqyh4ndmD
+	 EzgWPsF1CgMSg==
+Date: Tue, 13 May 2025 11:48:19 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 00/92] 6.1.139-rc1 review
+Message-ID: <aCMVYwGTloaYW2u_@finisterre.sirena.org.uk>
+References: <20250512172023.126467649@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HvTXniaQ6ThjIWnf"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
+In-Reply-To: <20250512172023.126467649@linuxfoundation.org>
+X-Cookie: Well begun is half done.
 
-On Thu, 08 May 2025, Nathan Chancellor wrote:
 
-> A recent cleanup introduced a few instances of -Wunused-variable in
-> configurations without CONFIG_OF because of_fwnode_handle() does not
-> reference its argument in that case:
-> 
->   drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
->   drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
->     679 |         struct                  device_node *node = dev->of_node;
->         |                                              ^~~~
->   drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
->   drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
->     659 |         struct device_node *node = chip->dev->of_node;
->         |                             ^~~~
->   drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
->   drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
->     576 |         struct device_node *node = i2c->dev.of_node;
->         |                             ^~~~
-> 
-> Use the value of these variables as the argument to of_fwnode_handle()
-> directly, clearing up the warnings.
-> 
-> Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->  drivers/mfd/88pm860x-core.c | 5 ++---
->  drivers/mfd/max8925-core.c  | 5 ++---
->  drivers/mfd/twl4030-irq.c   | 5 ++---
->  3 files changed, 6 insertions(+), 9 deletions(-)
+--HvTXniaQ6ThjIWnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Doesn't apply.  Which base commit / repo / branch are you using?
+On Mon, May 12, 2025 at 07:44:35PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.139 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
--- 
-Lee Jones [李琼斯]
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--HvTXniaQ6ThjIWnf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgjFWIACgkQJNaLcl1U
+h9BCUwf5AcQUMQH/YoT7PfcB4JFLTtR79WhEs4DtSX8Tg6MHnFGqnSuIKAzM/ERp
+Z9fz0awCn92QKzQTH8WLkZTBwMBVj1Qbg4KNBFJo5kLC3wsDHVsJGNVjHjiVOLkq
+XGfAODKABAXVVXKrCW11kkUuWl9GR7B7XcLOM59CBZSKUB3xd9ULZ2yVMkjoKC41
+A0Gygov8pWj30B+HpdB7YIx4ZehGruyBy/OP13qdW1n8OhcnvkbNV+HIGuVn/UeV
+RJ/b9er2k+AQVth7ZHX3K3zDILi8/ztd0GqbT1c2XU6GauXcCwe63cR3g6+mSXJR
+uwvU1ub5KkBwTOOEJRiLbHGh3yPgzQ==
+=AhpQ
+-----END PGP SIGNATURE-----
+
+--HvTXniaQ6ThjIWnf--
