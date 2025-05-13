@@ -1,98 +1,107 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7F71E570D
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1312F20E6E7
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128524; cv=none; b=pjmNsORQd3cR4wQvR6x5t28042eK4QRYP7QSVe5DGhkH8PhfaonpofSl3ZgDa2h1KqPLiHY9moq1Q7Ip8dBMmK0GAsdL9UJEBDwVbSqHYOLlaAK/9T8kLPanR9bdVzEKxT557MijdGaEpRhurscoF/h2WnAyWh8jGq6/QYSDLuw=
+	t=1747128562; cv=none; b=ShkZgoFofUQs2+1WI0AjMu+V9EUYo8DiqylA0qOLI4SkoISPmO4YP5jueO05ucEBtw6GNgXDvM2CnByQz9RzK8EUrlnGqGtqwqQafAu79CJxVGw1Aha1KmXt1Y0KbAlDC0CcAtV4GSQLVhPirWuyFKoVPsxWsW6r4ZFqYob/D6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128524; c=relaxed/simple;
-	bh=sdWO6ko67mqTWcGMEtMgDVXtVTLim084V1a605JGgT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkDqC9v9I/AZSiXWRSxIF7/y0Jn0820YiMok4dO2cbdv2S2WLQgy135+uMvxVVI8GoeZJ3ueCVpajLdNpkSXWqSj6t13Ta4IWdJM2YEjA8QXB/oiQXxsU8y3B5GmEP3W8ogbogp9E0X2kBm1Pt/4hxBxjXgApqyxNSsusxRHaIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xtXHVIrE; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747128562; c=relaxed/simple;
+	bh=8O7CUj/TgXcdonn9vBDT5qTqdIn+fJHSMgChw4LhMjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q0sczwTKB8X8aaGzMHjuBK+Gzv9CrH+1Mj1d5QJhVpwTkh6alao+CS0dBCZIqL67aFIqSNkrJ3MZS6BYIOfWi0U7/TdLU+sne7FtPSJiki349PF96UGNOTrZBHdYF/EXXZOpW14trG8NWWmpDrzCW8/kWycgsdNmZEIxDZ62E3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X8HqYb3T; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xtXHVIrE"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b10956398so4905405e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 02:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747128519; x=1747733319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JBWoBdG3lbXFBJdWTyceAqfFC9xtnHUxGj7C5Wu4R/Y=;
-        b=xtXHVIrEJxQpK/jITVVUxFeYQH6C6fVt+60KftrSUEpcV+ZgECys7tjl33Recxr7ZX
-         L7cAZzCkuXLXDSq+UBPQxzDwe3EAx6RXkgsGPDSMgJFAPpWug//zhfP9EQ1mMmr089lk
-         ON7zUSjCE1WIPfjfoRXGxeJ3Tw4BeKLG9ig0T4ZLxNikNCJ4OQYaGQUXooFKybdpY/T7
-         AMm8SHkM9O2FjGJUt8Ci3XHtWKPFztGf1DCdGpPN0gnxkn7sbr5Fz7WtbZo851wbXmpS
-         MPDbRY7FwNXBVIJp6/xsgRe24iiSqb0qly7RXgUHdobJjCtrq3hpnrZV91xj2d8Cghkv
-         FdsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747128519; x=1747733319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JBWoBdG3lbXFBJdWTyceAqfFC9xtnHUxGj7C5Wu4R/Y=;
-        b=H0j4l2CxoeGAnMi41DiH9s+jY5JE8t1FXM77jp50QW1TC/oC45xTBGoTBT54pbRTxp
-         MhWDpADWNShOlP+JziXzvuR2WnQTTWYkLgPwEhiScRgEj6yIJacUlQAbtJfZj1Ok7uVg
-         LjGDK/6VdHSEe/RZ0LFXY8FqTYhQHukcxWQt7WiUgc/QgC6t6BpRodva8qlGiLQmVUmi
-         LqIGG0b1PU0BfHiJs3wNskk6A69hSwIRXj0JJcKud4X/jMHJzrcVyo6lHgjWDF4kP/0J
-         qOLLhcCr97P3vUUPzMpDw8iId957uxL+00vAhG01qhqNUzOBsTnrFc+Y1YiVwZ4eHic9
-         n/BA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBuw0o2zBGPya0YF94hVBGTocgtmyojNwTX+uJNrY/YDRPVFxx+iCKPuxIboJ8j0YLKxIyCLiH+lNGAnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSgns5L3LG0+eY13c3Dg8shzrePe02Vc3tm014EpxMT3yMIT2T
-	jLE4S4IATgvGD2RY0kGoC4zKUdT7AcYILGOPVmfE0giaEc9oTa4w5+/4/Z7nS0CJTGECj6/5L7L
-	Yu+BWkBQJ7unnAUvt3XJslR8yCveobWOYMrFp7Q==
-X-Gm-Gg: ASbGncvZ154gxfZauM2AKx/rm50vSMS/lvxtJqDUm4VwRlZ07u8HzUKoVpxeiUjqUKE
-	LqhEAjJy+mQ45jUAqf8AvVaK6FFdTIZR0VzSDHIQdXtyi7WbG4XM5cafE3PKYP9s98AAr1YSG8L
-	XAp0R9ihvjHHDrSvu/TvPNjNm6k8k7TtK7
-X-Google-Smtp-Source: AGHT+IGPsCaQsVwlbGypFhudSFOc2s4QHLHTEndYHt5ArHEoc7abTls+1/mAIN2RUHgXYU7cdExwVaSdPdvNIIu+maw=
-X-Received: by 2002:a05:6512:1385:b0:549:6030:a720 with SMTP id
- 2adb3069b0e04-550d0c09efbmr969887e87.23.1747128519475; Tue, 13 May 2025
- 02:28:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8HqYb3T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747128560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=93t4tFkIyPCogX7UwUqjdNFHzcw9/x4QgZzmXcOPlSo=;
+	b=X8HqYb3TI7JgDhFqXD1+i8yUddYAsvNmMka87R2sp63BneTtdKvHN2PoXlEEsfJ3dA2iEB
+	lcheWQsNegrmaA3a8Vccu27U5YkRrM6CK2Te73PBhGoPHcFUG1fX/P6LhZ0phdNzz3kv1/
+	S2lRkX090B+APVWqqhufZN1gNwCRrBE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-D5izl036PjW_6LLqymc3TA-1; Tue,
+ 13 May 2025 05:29:17 -0400
+X-MC-Unique: D5izl036PjW_6LLqymc3TA-1
+X-Mimecast-MFC-AGG-ID: D5izl036PjW_6LLqymc3TA_1747128555
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7F5F51955DB2;
+	Tue, 13 May 2025 09:29:15 +0000 (UTC)
+Received: from redhat.com (unknown [10.45.224.238])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E8BD1953B82;
+	Tue, 13 May 2025 09:29:12 +0000 (UTC)
+Date: Tue, 13 May 2025 11:29:09 +0200
+From: Kevin Wolf <kwolf@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
+	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
+	bmarzins@redhat.com, linux-kernel@vger.kernel.org,
+	pbonzini@redhat.com
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCMQ5S-gI6vZJxmq@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+ <aCLe5UT2kfzI96TQ@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
-In-Reply-To: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 11:28:28 +0200
-X-Gm-Features: AX0GCFu5WhS-D41dmYNwbrb5PKy-0pktNjYekORF361g_nOjHNY4p6UTBXBPCbc
-Message-ID: <CACRpkdbcm3AkcT9SxWfEYz1tsZQSLMUgY5nmTD9_iEq3Xs+shw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: qcom: several fixes for the pinctrl-msm code
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Josh Cartwright <joshc@codeaurora.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Doug Anderson <dianders@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCLe5UT2kfzI96TQ@infradead.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Dmitry,
+Am 13.05.2025 um 07:55 hat Christoph Hellwig geschrieben:
+> On Mon, May 12, 2025 at 05:18:43PM +0200, Kevin Wolf wrote:
+> > Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
+> > doesn't even necessarily know that it's dealing with a multipath device,
+> > so it just has to blindly try the ioctl and see if it works.
+> 
+> Why is qemu even using SG_IO to start with?
 
-On Sat, May 3, 2025 at 7:32=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
+How else would you do SCSI passthrough?
 
-> Fix/rework several issues in the pinctrl-msm common code. The most
-> important fix is the one for the gpio-hog handling.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> Dmitry Baryshkov (4):
->       pinctrl: qcom: don't crash on enabling GPIO HOG pins
->       pinctrl: qcom: switch to devm_register_sys_off_handler()
->       pinctrl: qcom: switch to devm_gpiochip_add_data()
->       pinctrl: qcom: drop msm_pinctrl_remove()
+Ok, from your replies to Hannes I understand an implicit message, you
+wouldn't. But I don't think that's really an answer, at least not for
+all users.
 
-Nice work, since it is core stuff it'd be great if Bjorn could take a look
-at the next iteration too. (I'd suggest to ping him on IRC.)
+Yes, I'll give you that in the long term, we might be able to move some
+passthrough users away from it by using more specific interfaces like
+for persistent reservations (though see below). But for example, it's
+also used for vendor-specific commands and I don't see how Linux could
+ever provide more specific interfaces than SG_IO for those.
 
-Yours,
-Linus Walleij
+But it's even about more than just accessing commands that aren't
+otherwise accessible. Mapping a SCSI response from the device to a
+single errno and back into SCSI status for the guest isn't lossless.
+QEMU's scsi-block device actually started off using normal I/O for reads
+and writes and using SG_IO only for things that aren't covered by normal
+I/O. But then those had to be changed to SG_IO, too, so that the guest
+would actually see the full SCSI status. Things the commit message
+mentions are unit attention codes and handling RESERVATION CONFLICT
+correctly (which made me unsure above if the more specific interface for
+reservations could actually be used to fully get rid of SG_IO). For more
+context, I'm adding Paolo who actually made that change back then. He
+may remember the concrete bug(s) this fixed.
+
+So if you want the guest device to behave mostly the same as your host
+device, I don't really see any way around SCSI passthrough and therefore
+SG_IO.
+
+Kevin
+
