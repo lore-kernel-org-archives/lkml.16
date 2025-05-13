@@ -1,74 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8D623957D;
-	Tue, 13 May 2025 09:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47071E9B12
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747129367; cv=none; b=JUaAyp3dGE70np+YsjpSgBG/WnbCggzNVtgw4vbdwuLdbJMs0XY6FQInwXuGDLhk7fxNA58pzxRjcmXrBtrsHtaVZJ0qEA3Emp08oTQBSwVXz6MDgd/SIG39/X6fpZqwoyIVVr9SfpA4FY0N+4VOQtmJFz6lkRW14TLQxtdtzQ8=
+	t=1747129418; cv=none; b=E/eqFpptouT29y8iBEWZ7B+zDWUScF0rT5aQWOqfOdovLph7DPt6NcrQWgvRjXxXD1ZYGVsFEgw6nS30V1xLiuvFF1NGb2Zmko06FYq+nWIO5FknFQfm/yYp5sbFFQjA7DwI7yZ3HrI80mNsQvuvqbYE3kDQrECe59CKALg416Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747129367; c=relaxed/simple;
-	bh=voImH08ceWASipDZx0JT6UoRg/umXIqv96hJuk2ZoIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DM2da/c71OJ1Rvr6zTtG8c+eKKeZXOmXdUh0mzIPQ6+y+NLO1KjJFfSqE1Ex+o1HDjprxM2i1FjNVz/NQx7UqSNdVuEh2KNe9pWqnhOLjMsYvDPkmjT2fyo5RfbsJkBbbX63JUFdN+yCTVTs7QstoBM6wKcayULyApnhHBH8mso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPly17IZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747129418; c=relaxed/simple;
+	bh=R0ZublMzHi0L5F2UjZoV4w0MqxHy5eMAtevtdRGQY9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZVGbw1DeM2VLTCcx8RonDe6yEWAckndBzcfWR+0HFWF473jaZXxUQCvFuMrvndplKKodmo/uXU2wKlgWxzthYrqanpo3QNa0n7wsC6wPmWsqVw6Y5bVbVYrTxLnDgPCIcEd5Aw01aDS3/UHWBJzB6rZxvAIsGgGEvowyRfcbu8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=DX9UobXb; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPly17IZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789D1C4CEE4;
-	Tue, 13 May 2025 09:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747129366;
-	bh=voImH08ceWASipDZx0JT6UoRg/umXIqv96hJuk2ZoIg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PPly17IZebiIES6CfyLl9R0DoBModaujtVLWuZVNkUHb//0u/cIyiS3wPvx/LyCKe
-	 1/Vu9Uv4PgQD0M4obzONLlgEHHWjcT4ZliE6utv49K8YGMHT4X6KvTtEybg0qNAf+F
-	 dw7fQyR0/oBsKL3nTgm7TYwyWdpmbzsWQlGu6JxYOjRx6dNktfjuZG+IULOKc+DuIa
-	 nz6KWV8RMCpJQYGOa4+8F89UXjsFRMVv/GdvZWO5+ucnDcePCip/03qKCnQWWGc0bD
-	 RaLz5DUV15towaXsFMHIz1MbHVBcK7ZQ+gCKEekRu3Z39A/x41c/d71nCIjKQxPk09
-	 kNo3FoAReJqzA==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-326c1f3655eso41565891fa.1;
-        Tue, 13 May 2025 02:42:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWelOAc5gYKH8tyBpWiSse+c11IFsWJjKcG1Jn+YFLvAZ1pYxtM4Okzndlahc/zXRtoet2+kOgRF3mPZlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS1W88phL5gJcMEfgcTYczAaHF+czQBfNXfvZViktLSFkbTON+
-	zrVHyBoBVXoklKrqG6jw2dNOvQsOup/yknMRQbHRY5LZHbkANMApx4zkfnH6Pmuca3gCo8jJSb6
-	fWJQW5FDG27qsZ1VN8zs7ZOnUrdU=
-X-Google-Smtp-Source: AGHT+IFD6j1C5tKbtO724hL+I6M1AcwsOqMV6s7nR4IP2n5/vXsDfOQgumoLSWXTbao69qSBzjHB2PYT2z1fNEspzTU=
-X-Received: by 2002:a05:651c:b14:b0:30c:b2c:edb6 with SMTP id
- 38308e7fff4ca-326c45902fbmr53014191fa.18.1747129364888; Tue, 13 May 2025
- 02:42:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="DX9UobXb"
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTPS
+	id Eji3uFMWCVkcREm99uTqbT; Tue, 13 May 2025 09:41:59 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id Em98uja6dRxIGEm99utYq1; Tue, 13 May 2025 09:41:59 +0000
+X-Authority-Analysis: v=2.4 cv=N/viFH9B c=1 sm=1 tr=0 ts=682313e7
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=mi1f88HNeYx7h5VBROdUl3nH+OWMQScvPND+LUs4vEE=; b=DX9UobXbZMX2Wg2K7y5eebV3ns
+	vf9xH4EDijfaiLZDWO1YZTr/JCrUvgY1yNnDiVagX3shZqVsQsFacmtomcEw+c1I08k9PLk9ie99a
+	vxJflzsfE09E5bNaPw2hRfIhbAGZhN6AE3xRz84Eg73jrOKhh6Pl06P8EkpUifEUA5vMg5m/YTLBo
+	sBgA+yCrh6sXJXoJ595qu2ie3uZ5SDs5TvTP4x7gKsu4+lJbkI5EXHu4LLhz819k0hf+V+SJTvfDN
+	Lg1AdSilCKgG6nqKHaWCPf2KAlHig/RQ9qI2pNK9xMeJoS2hnPDVEsZh1jAbEwm2Gz0wBIzdu55CY
+	707XvNMw==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:51786 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uEm97-00000003Gwe-3AWM;
+	Tue, 13 May 2025 03:41:57 -0600
+Message-ID: <f17c341e-4618-48b7-aa08-eed73c24afff@w6rz.net>
+Date: Tue, 13 May 2025 02:41:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513022115.39109-1-ebiggers@kernel.org>
-In-Reply-To: <20250513022115.39109-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 13 May 2025 10:42:32 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXG3p98HX6HtPmm48D2fc=46WuVBTYfZiykszWRDQ85Abg@mail.gmail.com>
-X-Gm-Features: AX0GCFukPEDav3-AdX_4_4b3b9R3F_XW9w91H_FYC0QO7qXP6vIvhj1fwlc1JOs
-Message-ID: <CAMj1kXG3p98HX6HtPmm48D2fc=46WuVBTYfZiykszWRDQ85Abg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] lib/crc16: unexport crc16_table and crc16_byte()
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250512172044.326436266@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250512172044.326436266@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uEm97-00000003Gwe-3AWM
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:51786
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLbxAk1cWASR+gSYDfRu2oHJ4Pskn0o0kCkrPpZxXdTfH7umpPS30EyB8MjBtYy0XNuRkAOK3yW9mdZSAslJgf7JURZtGFV6JGGo0Oh6K4MmlhoVIOd9
+ C9Pl1/cKBhdO+UqmBLPGVErKgWhuCBiiYFp2Bs+1iNw/Gh16sEJbRfLWSlcOU6WZnSjJ+70wp0p+Sn4W1jzf7jVkpKV+r2Yghd4=
 
-On Tue, 13 May 2025 at 03:22, Eric Biggers <ebiggers@kernel.org> wrote:
+On 5/12/25 10:37, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.7 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> This series removes the only caller of crc16_byte() outside lib/crc16.c,
-> then folds crc16_table and crc16_byte() into lib/crc16.c.  I'm planning
-> to apply this to the crc tree.
+> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> Anything received after that time might be too late.
 >
-> Eric Biggers (2):
->   w1: ds2406: use crc16() instead of crc16_byte() loop
->   lib/crc16: unexport crc16_table and crc16_byte()
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
 >
->  drivers/w1/slaves/w1_ds2406.c | 12 ++----------
->  include/linux/crc16.h         |  9 +--------
->  lib/crc16.c                   |  9 ++++-----
->  3 files changed, 7 insertions(+), 23 deletions(-)
+> thanks,
 >
+> greg k-h
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+
+Tested-by: Ron Economos <re@w6rz.net>
+
