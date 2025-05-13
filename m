@@ -1,225 +1,224 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D710C1E0083;
-	Tue, 13 May 2025 18:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747159684; cv=fail; b=KbPRYtCE/rKbdQu6066HlMMuL82KWdkfIFTxbi4JwCLdrHYAYEQw4AvgMNn6mOOYHaQJtJmwXoTSbRW0C00tXdFHQrLCwgENq1RnPgM+0psuotZn/0dK9APUCFaHcB8UhfxL2ofjEp9mafhYcpZm76hvMBhWMA+WDLvDK336pY8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747159684; c=relaxed/simple;
-	bh=DiVLv+CSvvDcBHzAG3fHCH4KWWn0H2YJ7pROAHmfZB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uJaPVt0Z2rNRkhDx+theJNfqp/k1X6JuBoEZOENdabXUHuuJ8Xcbyn9ramihRHLFzy+wLtAj1TI1FrILThETm04o3mOMCUJbZffG726S2iYTGLoelKafLxxsRWWCFqxk19Cl4IvHI18BtaDS8562vL1AoIv0rGqV8r3156odMws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=H+85oZrd; arc=fail smtp.client-ip=40.107.94.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222CB2BEC2F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747159764; cv=none; b=NPC8VjRzhmVUbj6m2GxTujxcd+RfQNs9cbPtosOOwup7QCsmUrQIQn8Vm879uK0CbJ+yVdWJU5sBkAT6W3Y6nZxSBTjXtbY/S6adFS++6bZ+zmBBB+HG5/Tdls8YEbkRUb9FpATGaK4yPmawhBwJ/YDPhqInYRImJy2a5T7OlP8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747159764; c=relaxed/simple;
+	bh=y6FyTOrryxqsZyhvx5jnt21SOMn4MMX/6nM16WUR55A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uR1EALBhf2d+tFoZNAVYLd+qLmiw3r+QpO7OWls+Nl847lQYO2+7Dh6adfTkC9twCHSoNuKzMBlrdrD0tfeThfNy8kW+Kg/lUuM3m0MdKI6gQUkKi8aOENQpf0kQ5+0cLKr6DtQ6DpnHAFyRsCgfRQjKJRo1ydmT/cnD8c8HWpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oh0XpH36; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="H+85oZrd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dFyA350pd+xJ1898x2N8XfkdBsZuidIaeVWh8p2lWkIctNdebaf2zy+DSINMCFifsjroyvAmVkSIotK6qVDCO5aDk2riOlPFKuvVCYDWy+n4gBo78teNxGKfgmOt5we9k53+MPx/GMaTIv8il9iCoGnxDMI/XDWOXpWlNEPT9i0CnH41xI3SkQlUc9Z7A14lI9X4vu3CU/Q9sjvhWHqAMUsd3rRJzapGFjHkEmw4M7tYheIwm7bbDKX3++YpLOh8qlXdaiqBehmdAruRuLhLrQIY4Dqxc1Afq6/lnsdqg/Z2vm/Zx8fp+VDAFysb+zWUuSwhjskttEz9A3LYotundA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dBBm6Yv/AfS4cDh/NLwLrtXaosVnqfDThvjk4GNLciM=;
- b=L+Ind297TIbb9pLg1k/oJ9XkN2d02Wdykrn7Bueek4BDXfgSD22HV5OHS44bYvmVPRMcYDt3qNgEXxcExR6K+q/rob80cW7sSRLevFzIH/WYH8ExEnMD/c3EzH4dpByF5cacNPXQQXlSm0DDc7TdxwVdBXiS7B53zGn504NJJrL1Owi1buzGbr+ieHKLfVrKqay8xoiUpqXunNQmiXd8sdCphYZDdHOdhY8lNzdWVFaCkQMrrj4rf39ysrCymU/2akLy5lFDN1oLL6FLxuQOI5cApfimGMexcV3jMaxwyNMrPAk5GZQAGG/CK+5c11Qw8J2V+whc+dxIa8x3fgIbuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBBm6Yv/AfS4cDh/NLwLrtXaosVnqfDThvjk4GNLciM=;
- b=H+85oZrdxGfvzEG4TF7AX7fJDVBNimzYeE/eyIGKKqHrzXqN1qvY5qKwFLilyzVhVRiRLXbSGnGm4JKZx4ekgU7MhjM68qCzX6ykKILlMsSRLZaRzMOmkimNmZ41G4qHthBlP/TGVNY17AL80yWbcTyFfNEhbQW9PxNqNm7YZa9kt27O0Yw458NR3xRAjSQgV23O9z8BnWOcP1lv/Kxe7134OV1kTp2PjOXl8GgQCiC+6tqt20yOKGl/Cbchhr5zj9Qfpwu3oe5fHe5XR4h33NIX5Jay7b06rYPC3P6wwNylAfuQtTtvEw3fCOt603h+rnnngY/cOvLECUsuZ+1Gvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by MW4PR12MB7240.namprd12.prod.outlook.com (2603:10b6:303:226::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Tue, 13 May
- 2025 18:07:59 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8722.027; Tue, 13 May 2025
- 18:07:59 +0000
-Date: Tue, 13 May 2025 14:07:57 -0400
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, ttabi@nvidia.com,
-	acourbot@nvidia.com, jhubbard@nvidia.com, apopple@nvidia.com
-Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-Message-ID: <20250513180757.GA1295002@joelnvbox>
-References: <20250502140237.1659624-1-ojeda@kernel.org>
- <20250502140237.1659624-2-ojeda@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502140237.1659624-2-ojeda@kernel.org>
-X-ClientProxiedBy: MN2PR10CA0015.namprd10.prod.outlook.com
- (2603:10b6:208:120::28) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oh0XpH36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747159760;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YNMocb49YwKkQlzCF1mYy+YEqKi321BJUdcZHDQPRzI=;
+	b=Oh0XpH36KYpKcd7NYCcYDrRFoOAeKw5Uw8AFNqhw0Z4hogtMZuKrItPmopdFMr523DVgz7
+	riOVZU5YX3U1AJqBul5Q4nyUkuvs/Jz13pHW8YKRw1NysjMyUkUQHTLii197wmyQqOfWrc
+	OIxgwSMms3gDFcxYXgY0Kj+PF215Kfc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-410-1QA8j8jPNqSUrBMM73mDuA-1; Tue,
+ 13 May 2025 14:09:17 -0400
+X-MC-Unique: 1QA8j8jPNqSUrBMM73mDuA-1
+X-Mimecast-MFC-AGG-ID: 1QA8j8jPNqSUrBMM73mDuA_1747159756
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 67A77195DE38;
+	Tue, 13 May 2025 18:09:16 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CDF2130001A1;
+	Tue, 13 May 2025 18:09:15 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 54DI9Eo83648763
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 14:09:14 -0400
+Received: (from bmarzins@localhost)
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 54DI9DeZ3648762;
+	Tue, 13 May 2025 14:09:13 -0400
+Date: Tue, 13 May 2025 14:09:13 -0400
+From: Benjamin Marzinski <bmarzins@redhat.com>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
+        dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+        snitzer@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCOKyZU5T8HxGzM_@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+ <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW4PR12MB7240:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39ed9f64-3ed3-4e61-2a89-08dd9249181c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZqQHIcZEZs8n132VToEW8Ds2IyzTkqSPi/QeCH0ZNJpQesClN39Y1NaE9gYT?=
- =?us-ascii?Q?SjI8VFi2S+cVGhO1wD1vBcwp8QkH7Z97KM3ECouQ6FbhV3M2s/dfBJq3ktbP?=
- =?us-ascii?Q?HpkPI035pwS3RGDa2jpzhz3nW3CYiQSVv8PJ9hFpQmf69rJFF7TvBeSmQhlN?=
- =?us-ascii?Q?ir9OPn+0Oa+QUO19zjmGmoJvDeZq8IxiBUfDl5XNTAXsO15/X7WPXgBbJFCB?=
- =?us-ascii?Q?01fsSt1GAi3i9t4JVv5GuctrNFJdo71/q0qo14U7Yimi2vY7NLxkCpL1IKXW?=
- =?us-ascii?Q?7DWMazKgl/Oro7+vuzx64y3o/nDm4ytoVsEQFJIRn7aC87i+PgHbwQ4QXA3e?=
- =?us-ascii?Q?2gdiAesPECkgM8fjMrcKEzXjUrxrGmcIcWLe8uedWSdfXsePCvkGUi8jz3dI?=
- =?us-ascii?Q?qgwzbVAwWYcp7zfEwDN57MY2WZDLJ0GJzjV2RcZo4jFoXhmjD/s1M2Lz/22f?=
- =?us-ascii?Q?j1LrfRVn0JVf/ljrm9oEFT/ByYhmmPKIuW+wHZZoiVWC6qxkKsH11mdfdRlJ?=
- =?us-ascii?Q?RbKb/+qTmETsaveCZPolnyGhcBmARlqN0YCyv2qjlcnPqwQgVfYdeS8vnLVB?=
- =?us-ascii?Q?1rocxjV3wW7AFalTXN1XOCzQxE9CfW5E53IlQNsfN6jDtzyQUxtSkDZ6MeoV?=
- =?us-ascii?Q?OFgTdtB8azWmBZ9XSTmQKqBayjYTF+vykryzB+SEKDEn3/I6PrL0Ok7yrnVw?=
- =?us-ascii?Q?ZF5t0MdGepbvAJ6UCUuiVzlHZGZ3xe7VRhWCPSc11niKNF5Mn7NuXFyEF7mn?=
- =?us-ascii?Q?hHmga34G0WoRLor5GdkVq9epE5kJHMPAh7uPo199+amhds5d6WTyr9v5DfAd?=
- =?us-ascii?Q?7ByDZoBWm1gDLQ3LNNMx9PccaqLAJL+oywJqqT75xV09u1gFlItZh65OhudF?=
- =?us-ascii?Q?DeIozsnIDvYZ+w30vSyvYo/X1lIF1QyisS+GoJ00bL+2j6Y/okRNZfVQGmIV?=
- =?us-ascii?Q?BQztlLm6+giOIjGYbvC9fmE3Bp11VLOFE6t+MIjHFpulbBT0GwTa2k9qO9uj?=
- =?us-ascii?Q?RCAhYn3M3cTW4PI6smJAlFOp/izIJ9w4ND8VZo1xX7GfY+iEhV9HKEwZFuzn?=
- =?us-ascii?Q?Ax65IxY7juk9JJByYaQoxgxirxreNTSXjcxcKej5qC2fEFPrali3nd+x/S7b?=
- =?us-ascii?Q?Yvx6jakGlWNgZ3S3RIirQn2YUsF5QvlI1SWKRLqdjzcxNepC0xIF/4oA5GnG?=
- =?us-ascii?Q?Ikb3VigiuUH8K5fN+kwx+6WqN/ObBvjhucTeC5au0pAsxJflK4NOaaBgcgER?=
- =?us-ascii?Q?Mh6Q6yXYK4BsfI0t7FNWMTROMRn6Q9mXNtPIIekBmw1YxwZHdFTl9ec8xnw9?=
- =?us-ascii?Q?tlPsClcrIt2nn3dLvCsA9YshXqVE7oGRapYYEtL3UXPwYeQudymRlWiBxcw6?=
- =?us-ascii?Q?is3nfvIpXTYXFhEmoU4uLprZh3Pu2n57tTsF8P8jRdaFGSzzXveneb3K4BZf?=
- =?us-ascii?Q?2u7CMFfEJz0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KcA1i6RksMvuYXQzUuBnB1hLNOR9xVCUwgGINVjHCOJE7cwvCZHAwUERxGkV?=
- =?us-ascii?Q?K46ermCgIVaP1WYBt2xlWaHDCApP86TWao2l11MtnqRRSWgO9gaY0Ed//fad?=
- =?us-ascii?Q?rn2fLMsqYIrT6ahJPJEOKe2j6ASuoVl6l9Jff7a3njDqwIya2zCgxA+qQWhp?=
- =?us-ascii?Q?mO/RvhSAFFHxcTqKKPQSBsqbmykvbI6S2/JWQRo8osIaHVrsxEy58O25czJR?=
- =?us-ascii?Q?L66U/3mggyjjB+nLwlCUj2eKVlgmtc3MVNdwsAnWfoYTEs8tifnBpwG5Hz7d?=
- =?us-ascii?Q?7bn7287pc9u1xdU8pt9Jnb8LF06lqpkSBTj2ogQ4zkc1PnLAuezV2oo9dyhC?=
- =?us-ascii?Q?/1J4uZ9K0BDmXdc4ZgtRlVNPO5lrfbqjcXlZJnfeJH1zwEMyRx9iF6qYlmnz?=
- =?us-ascii?Q?UQN0qnJJ9tXHPmw94HUPqq/wPulYF4ohcKfbHJX8AD95dgcbeoc7eovS4SYo?=
- =?us-ascii?Q?ekFpdBH4ll8DrGYr+y5ZkjW/jGYhKeQ15As/BmLN9NpJ5bJ/ZM1zs6Y0w23u?=
- =?us-ascii?Q?6cGktpYO3Shgeb7cvQJbdtollE9reOoP8VqWfjcujjW/tlms3XXrCrXRPu7G?=
- =?us-ascii?Q?YgtMtCT5ms9FXuqwI+sLMKph4rtiKBi6K3Pk+LrUn3e1TXissx+m5Yjr4Chd?=
- =?us-ascii?Q?3j0E8QI1W1eR5bdAS+/ygWH2FRzWbJ2K2+9SQCQSQUFptbuE3pBzdklqvPao?=
- =?us-ascii?Q?s594ebyoOKLc6vML+ikoAsFlzprOJ3NEXwi+BeOEfZJBzrN2S3a5kgckDTK/?=
- =?us-ascii?Q?tnrrBB/PwRZg21jcVkMYJGbKg/4tTfZEcSLXfST/juqkoEc8qbOBmtNzeYZ6?=
- =?us-ascii?Q?jrNMHiZc3nL6EpJWxhVnkKYDetRFmuHeOQ1NlJ7Pi5ABweGlWWpQGPgluG4G?=
- =?us-ascii?Q?19oQpyEc/7YJj+XWz2JU2DbrdoAoGQ9Rd1x6oEqlsTYP+jh7oKJRxh7m1FT2?=
- =?us-ascii?Q?m3KdHaHMiC4UkfQJkAbcJveKyw/uL2DGVdT7EPBQ5TyoXNGj7y3IqNx+XcQI?=
- =?us-ascii?Q?F1I4MIv6ao3Hw1wHQNKtoxvTErMPfFsQirwKqtNjsLNLHOP98ccPY5U5pbDK?=
- =?us-ascii?Q?gmlAk2P2dLCism+TP2Qmh13qb/ruxrHX6sfTE/x+FMNdZr8xTfeJXH15uG2t?=
- =?us-ascii?Q?JiY6CSS415A/KOOXd4sAhKFgekn2l+msTWGw7NbJUN4pZtVsYoxSXGEKOpXZ?=
- =?us-ascii?Q?Tx5gs82kI2frDpLr5Jo5U9MdWeQDuX2+ejW292HvxNuemACkqZml+Txn29o/?=
- =?us-ascii?Q?jm3vpeCBCsG0V8/684iYURV9y/PqE+ItuKhOuhFoTCa/WnIpRkCtwnDyeOKz?=
- =?us-ascii?Q?GnSOxO+8sxng5ZSpGJiEOg+5pZ9UGiRYinrVXNGOi+x337fUtMjox1MWDM4Y?=
- =?us-ascii?Q?Dl5eZ/FJduO+vTU0hgcj3aWU6jzHv1Z3YQPxgzu2EjPgCgTn+Y2v+demTzBC?=
- =?us-ascii?Q?HYQ7FrUCoIljOp3oAcEZoJceJFUYXYzFo5R1oS6foX1Xidk/xaVpPJcirKb0?=
- =?us-ascii?Q?8t3fWwlI/wHTOlqLn/A1X+fvy5Y/rYerBu3rZJGQKU3rkPv4Vdn10wP8omEq?=
- =?us-ascii?Q?ozibz+Nv0wPOWk1tSrQiRce6oWxWhHAkY40C6bhU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39ed9f64-3ed3-4e61-2a89-08dd9249181c
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 18:07:59.2981
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zXASC+rILuoL1VjrLD557BnYhvOITc//O80VthKHcH9CO998Rc0yQt5o/oZnTWUA/mDzgHG8AvnHSRbCz/ysFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7240
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hello Miguel,
-
-On Fri, May 02, 2025 at 04:02:33PM +0200, Miguel Ojeda wrote:
-> Starting with Rust 1.87.0 (expected 2025-05-15), `objtool` may report:
+On Tue, May 13, 2025 at 08:30:55AM +0200, Hannes Reinecke wrote:
+> On 5/12/25 17:18, Kevin Wolf wrote:
+> > Am 08.05.2025 um 15:51 hat Martin Wilck geschrieben:
+> > > Hello Kevin,
+> > > 
+> > > [I'm sorry for the previous email. It seems that I clicked "send" in
+> > > the wrong window].
+> > > 
+> > > On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
+> > > > Multipath cannot directly provide failover for ioctls in the kernel
+> > > > because it doesn't know what each ioctl means and which result could
+> > > > indicate a path error. Userspace generally knows what the ioctl it
+> > > > issued means and if it might be a path error, but neither does it
+> > > > know
+> > > > which path the ioctl took nor does it necessarily have the privileges
+> > > > to
+> > > > fail a path using the control device.
+> > > 
+> > > Thanks for this effort.
+> > > 
+> > > I have some remarks about your approach. The most important one is that
+> > > the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
+> > > It sends IO to possibly broken paths and waits for it to complete. In
+> > > the common error case of a device not responding, this might cause the
+> > > code to hang for a long time in the kernel ioctl code path, in
+> > > uninterruptible sleep (note that these probing commands will be queued
+> > > after other possibly hanging IO). In the past we have put a lot of
+> > > effort into other code paths in multipath-tools and elsewhere to avoid
+> > > this kind of hang to the extent possible. It seems to me that your set
+> > > re-introduces this risk.
+> > 
+> > That's a fair point. I don't expect this code to be fully final, another
+> > thing that isn't really optimal (as mentioned in the comment message) is
+> > that we're not probing paths in parallel, potentially adding up timeouts
+> > from multiple paths.
+> > 
+> > I don't think this is a problem of the interface, though, but we can
+> > improve the implementation keeping the same interface.
+> > 
+> > Maybe I'm missing something, but I think the reason why it has to be
+> > uninterruptible is just that submit_bio_wait() has the completion on the
+> > stack? So I suppose we could just kmalloc() some state, submit all the
+> > bios, let the completion callback free it, and then we can just stop
+> > waiting early (i.e. wait_for_completion_interruptible/killable) and let
+> > the requests complete on their own in the background.
+> > 
+> > Would this address your concerns or is there another part to it?
+> > 
+> Not really. There are two issues which ultimately made us move away
+> from read I/O as path checkers:
 > 
->     rust/core.o: warning: objtool: _R..._4core9panicking9panic_fmt() falls
->     through to next function _R..._4core9panicking18panic_nounwind_fmt()
+> - Spurious timeouts due to blocked or congested submission
+> - Error handling delays and stalls
 > 
->     rust/core.o: warning: objtool: _R..._4core9panicking18panic_nounwind_fmt()
->     falls through to next function _R..._4core9panicking5panic()
+> When using normal read/write functions for path checking you are
+> subjected to normal I/O processing rules, ie I/O is inserted
+> at the end of the submission queue. If the system is busy the
+> path checker will time out prematurely without ever having reached
+> the target. One could avoid that by extending the timeout, but that
+> would make the path checker unreliable.
 
-We are seeing a similar issue with the patch [1]:
+I get your complaint in general, but this interface is just giving users
+the ability to probe the active pathgroup by sending normal IOs to its
+paths.  Presumably, they won't use it if they are already sending normal
+IOs to the multipath device, since this is just duplicating the effect
+of those IOs. 
+ 
+> But the real issue is error handling. Path checker are precisely there
+> to check if the path is healthy, and as such _will_ be subjected
+> to error handling (or might even trigger error handling itself).
+> The thing about error handling is that you can only return affected
+> commands once error handling is complete, as only then you can be
+> sure that no DMA is pending on the buffers and one can free/re-use
+> the associated pages.
+> On SCSI error handling can be an _extremely_ lengthy affair
+> (we had reports for over one hour), and the last thing you want is
+> to delay your path checker for that time.
 
-  RUSTC [M] drivers/gpu/nova-core/nova_core.o
-drivers/gpu/nova-core/nova_core.o: warning: objtool:
-<nova_core::vbios::PciAtBiosImage as
-core::convert::TryFrom<nova_core::vbios::BiosImageBase>>::try_from() falls
-through to next function <nova_core::vbios::FwSecBiosImage>::fwsec_header()
+I can send a patch that will keep probe_active_paths() from holding the
+work_mutex. This means that probe_active_paths() won't delay
+multipath_message(), so the path checkers will not be effected by this.
 
-The code in concern is implementing try_from():
-+
-+impl TryFrom<BiosImageBase> for PciAtBiosImage {
-+    type Error = Error;
-+
-+    fn try_from(base: BiosImageBase) -> Result<Self> {
+> (And besides, I didn't even mention the third problem with I/O-based
+> path checkers, namely that the check entirely the wrong thing; we
+> are not interested whether we can do I/O, we are interested in whether
+> we can send commands. In the light of eg ALUA these are two very
+> different things.)
 
-I dumped the codegen [2] for this function and at the end of the codegen, there
-is a call instruction to to the fwsec_header() function.
-
-Any thoughts on how to fix the warning?
-
-thanks,
-
- - Joel
-
-[1] https://lore.kernel.org/all/20250420-nova-frts-v1-13-ecd1cca23963@nvidia.com/
-[2] https://paste.debian.net/1374516/
-
-
-> The reason is that `rust_begin_unwind` is now mangled:
+I actually disagree with this. There are issues with IO based checkers,
+but in general, what we care about is paths being able to do IO, not
+sending commands. All the improvements on the directio checker were made
+because we still need it. For instance, some SCSI devices will claim
+they are usable when you run a SCSI Test Unit Ready command, but they
+aren't able to actually handle IO. These paths will have their state
+ping-pong back and forth as multipathd restores them and the kernel uses
+them and immeditately fails them again. The solution is often to switch
+multipathd to the directio checker, since it verifies that the path can
+actually handle IO. It's problematic when dealing with paths that need
+to be initialized before accepting IO, but that's why this patch only
+checks the paths in the active pathgroup. 
+ 
+> > > Apart from that, minor observations are that in patch 2/2 you don't
+> > > check whether the map is in queueing state, and I don't quite
+> > > understand why you only check paths in the map's active path group
+> > > without attempting a PG failover in the case where all paths in the
+> > > current PG fail.
+> > 
+> > Ben already fixed up the missing check.
+> > 
+> > Not attempting PG failover was also his suggestion, on the basis that it
+> > would be additional work for no real benefit when you can only submit
+> > requests for the current PG anyway. If userspace retries the SG_IO, it
+> > will already pick a different PG, so having the kernel do the same
+> > doesn't really improve anything.
+> > 
+> Precisely.
 > 
->     _R..._7___rustc17rust_begin_unwind
+> I think the best way forward here is to have a 'post_ioctl' handler
+> (much like we have a pre_ioctl handler nowadays).
+> This would check the return code from the ioctl, and invalidate the
+> current path if there was an I/O error.
+> That way the user can resubmit the ioctl, until all paths are exhausted.
+> For that to work we need to agree on two error codes, one for
+> 'path failed, retry' and one for 'path failed, no retry possible'.
+> Resetting path status will be delegated to multipathd, but then that's
+> its main task anyway.
+
+Isn't this basically the idea that Martin had, here:
+https://lore.kernel.org/all/20210628151558.2289-1-mwilck@suse.com/
+
+If this was acceptable, I would be all for it. But we often can't even
+tell if an SG_IO has failed without decoding the scsi status/sense data,
+and that got shot down when Martin posted patches to do it. Thus, we
+have a general solution that has nothing to do with SG_IO ioctls and
+will work for any type of path device, any time a user wants to verify
+the state of the active paths.
+
+-Ben
+
+> Cheers,
 > 
-> Thus add the mangled one to the list so that `objtool` knows it is
-> actually `noreturn`.
-> 
-> See commit 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
-> for more details.
-> 
-> Alternatively, we could remove the fixed one in `noreturn.h` and relax
-> this test to cover both, but it seems best to be strict as long as we can.
-> 
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned in older LTSs).
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  tools/objtool/check.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 3a411064fa34..b21b12ec88d9 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -227,6 +227,7 @@ static bool is_rust_noreturn(const struct symbol *func)
->  	       str_ends_with(func->name, "_4core9panicking19assert_failed_inner")			||
->  	       str_ends_with(func->name, "_4core9panicking30panic_null_pointer_dereference")		||
->  	       str_ends_with(func->name, "_4core9panicking36panic_misaligned_pointer_dereference")	||
-> +	       str_ends_with(func->name, "_7___rustc17rust_begin_unwind")				||
->  	       strstr(func->name, "_4core9panicking13assert_failed")					||
->  	       strstr(func->name, "_4core9panicking11panic_const24panic_const_")			||
->  	       (strstr(func->name, "_4core5slice5index24slice_") &&
-> --
-> 2.49.0
+> Hannes
+> -- 
+> Dr. Hannes Reinecke                  Kernel Storage Architect
+> hare@suse.de                                +49 911 74053 688
+> SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+> HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+
