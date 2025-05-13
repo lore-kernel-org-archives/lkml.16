@@ -1,69 +1,175 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB34A1EB5D9;
-	Tue, 13 May 2025 06:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F851624DE;
+	Tue, 13 May 2025 06:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747118962; cv=none; b=Sq0HX1OUS7Nh7d+wrOrNUFjjZOiwBjg2y61t52Q3Tog7AQivTlk3Sd/MjiNjPXFP6kREyncT8fsMtnD8IJdP78yX4cIbdJKpZeYdYf0Cc46QA9Pagc5qioqnvQV+S93JEVnSNJzrkPQ+EZU9iSL68VejUzLit9BrcxkREcq5SS0=
+	t=1747118992; cv=none; b=PBcvqheohypV1BDByS/YrO6gopTYab2KtlGX2lUXU03mhuUFp3OM1/r6UqIx92fZqJC7UDMjePItfIrQjjm+tqzKSycL35uahA41m8ggEUadvS6zIkY1HrBVfSHacgou1KGk0fnlMXEoMaxeLd1wpqAQIMoqvx7FuquryQa4jqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747118962; c=relaxed/simple;
-	bh=x0/WdrsnEvGkx9YQtnTq1nO9ZJNK/fgD5O5yDF39WHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CYl+cBJXYGtUuVSM2IfSEyVxgc1dNjXoblkgrboS+Gx0oEUtbW/lcem+qpAEBijGMQk6VaYMmYqmsG+XAeT4/zUVfDCPHEeATM9dOiis1sN0mMvLRvUMZXk+4rYOI97kNGIK54FQva9SkD6tIcPjCEW5Ko7flrr4troJJihqZMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=X9nbZpjS; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1747118992; c=relaxed/simple;
+	bh=BXWB8zNavMAl3WMTjnI7LufQdPvdSW2k0ZKKtaKjfZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=taUWmUZHVaR1PKnknYNZHWgsJ75BqHSn2uXRy/nitJVUoIOrghP2Z8TyEsBuNpf0n1uXGii522V6zgUjfGgcsNTk2H0I4SHrOXMlyhhONQJMSjdI9g8j9NwBO/tj5cFMA825dAKP5J7AbRDYTwhEmSFRyQ1jWWI1xWexfQqf27A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YED6rAlb; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X9nbZpjS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=x0/WdrsnEvGkx9YQtnTq1nO9ZJNK/fgD5O5yDF39WHY=; b=X9nbZpjSDAUkY3XKfzTetXI3GU
-	2w907KpHsHi0U4OjkBd6mGrpxoL0s8m67m7qjgIq6bKkFnr/nUUixBnS+cG2lRpD44iSX4ydZ0NEv
-	7s4ObjnIoq93Cqyub51zKdjwBJndVlr1DFkQ1WH/C4foGvBRqC4P8AeKSSDd3YvDosYQx8Gum0O68
-	YYDvUZRAN+qjMEnU7NDqUoglt+dVHwEyiCEPA6QXi2NFC6FdhW7ZSOP7U1hAKWvHs5D6i+fPkPYto
-	VYVpzf3yaqfvvUj34m9udmKLxDny+sWSVQcCnXqJZxGEhWa9Ei7p0FjPkz730A7RrsOt2uY9L7hvc
-	t2TSnn6Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEjS3-0000000BXto-0h6U;
-	Tue, 13 May 2025 06:49:19 +0000
-Date: Mon, 12 May 2025 23:49:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Christoph Hellwig <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>,
-	Martin Wilck <mwilck@suse.com>, dm-devel@lists.linux.dev,
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-	bmarzins@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCLrbz3bRLwUbA8p@infradead.org>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <aCLe5UT2kfzI96TQ@infradead.org>
- <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
- <aCLjPLCztuXhgpnA@infradead.org>
- <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YED6rAlb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747118986;
+	bh=4EOFzNASd2caVAAQ1gSVE9u1ytolKtCfb8RI2m0uwDo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YED6rAlb9YT/GIY774fqCXXqYC4qEj0BIVXHkfeVyy//ZwKJLbIYS2y0fAUJAf7EF
+	 V6QaqtGkl6KmGuH66JPrfwGeOlmsgb9Z8HTdWAD9wq6J0KV4nbJ/GXqjgHB7LnRgK9
+	 iVt8oo+HE4PJT5ErorenlNM0l1/IbWUn/M+HXYjfsnlfstpAACJwJVBP8VVpARAKeg
+	 Gqfw4JsRWOXbOrfMkCwW60hk1WAvaD5hn1jp5/99udsG0b07yDpZ031JPhAQfASCBJ
+	 HLA52VtiZKRy691dJkla5F575w2r/iI9Lb/kO9V1113qZjL29QG+703eqqSKgoNt8t
+	 8s+aQlKjVwbIQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxRt163v1z4wbx;
+	Tue, 13 May 2025 16:49:45 +1000 (AEST)
+Date: Tue, 13 May 2025 16:49:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Pawan Gupta
+ <pawan.kumar.gupta@linux.intel.com>
+Subject: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20250513164944.462eec63@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="Sig_/cS1NLVhcu5+AeH+R=ZW56Vk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, May 13, 2025 at 08:32:12AM +0200, Hannes Reinecke wrote:
-> Reservations and stuff.
+--Sig_/cS1NLVhcu5+AeH+R=ZW56Vk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-They should use the kernel persistent reservation API.
+Hi all,
 
-> There are customer who use GPFS ...
+Today's linux-next merge of the tip tree got a conflict in:
 
-Supporting illegal binary only modules that is already enough of a
-reason to NAK this.
+  arch/x86/kernel/cpu/common.c
 
+between commit:
+
+  159013a7ca18 ("x86/its: Enumerate Indirect Target Selection (ITS) bug")
+
+from Linus' tree and commit:
+
+  4e2c719782a8 ("x86/cpu: Help users notice when running old Intel microcod=
+e")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/kernel/cpu/common.c
+index 0ff057ff11ce,34efb9d2519a..000000000000
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@@ -1325,32 -1320,42 +1327,68 @@@ static bool __init vulnerable_to_rfds(u
+  	return cpu_matches(cpu_vuln_blacklist, RFDS);
+  }
+ =20
+ +static bool __init vulnerable_to_its(u64 x86_arch_cap_msr)
+ +{
+ +	/* The "immunity" bit trumps everything else: */
+ +	if (x86_arch_cap_msr & ARCH_CAP_ITS_NO)
+ +		return false;
+ +	if (boot_cpu_data.x86_vendor !=3D X86_VENDOR_INTEL)
+ +		return false;
+ +
+ +	/* None of the affected CPUs have BHI_CTRL */
+ +	if (boot_cpu_has(X86_FEATURE_BHI_CTRL))
+ +		return false;
+ +
+ +	/*
+ +	 * If a VMM did not expose ITS_NO, assume that a guest could
+ +	 * be running on a vulnerable hardware or may migrate to such
+ +	 * hardware.
+ +	 */
+ +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ +		return true;
+ +
+ +	if (cpu_matches(cpu_vuln_blacklist, ITS))
+ +		return true;
+ +
+ +	return false;
+ +}
+ +
++ static struct x86_cpu_id cpu_latest_microcode[] =3D {
++ #include "microcode/intel-ucode-defs.h"
++ 	{}
++ };
++=20
++ static bool __init cpu_has_old_microcode(void)
++ {
++ 	const struct x86_cpu_id *m =3D x86_match_cpu(cpu_latest_microcode);
++=20
++ 	/* Give unknown CPUs a pass: */
++ 	if (!m) {
++ 		/* Intel CPUs should be in the list. Warn if not: */
++ 		if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL)
++ 			pr_info("x86/CPU: Model not found in latest microcode list\n");
++ 		return false;
++ 	}
++=20
++ 	/*
++ 	 * Hosts usually lie to guests with a super high microcode
++ 	 * version. Just ignore what hosts tell guests:
++ 	 */
++ 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++ 		return false;
++=20
++ 	/* Consider all debug microcode to be old: */
++ 	if (boot_cpu_data.microcode & BIT(31))
++ 		return true;
++=20
++ 	/* Give new microcode a pass: */
++ 	if (boot_cpu_data.microcode >=3D m->driver_data)
++ 		return false;
++=20
++ 	/* Uh oh, too old: */
++ 	return true;
++ }
++=20
+  static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+  {
+  	u64 x86_arch_cap_msr =3D x86_read_arch_cap_msr();
+
+--Sig_/cS1NLVhcu5+AeH+R=ZW56Vk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgi64gACgkQAVBC80lX
+0GxYaAf+NdKpcNTo7rSBgTj3XHWhGBTcR8A0fASJY4jphE7sE5sVa6Y6MreMlpqI
+3lZ3+wHAwRYR67mf5RV75cbct37wcDO/w8SJUzb6x7OppOii/aOGStFZeYiOE0ik
+manfGTp0Yvs960eVt4MHM4QfK7yLBc8hXjZOBr662kRaw43tTTeoNyC4qQ5G6fH2
+a6OiRnvhFFxrmwm0t9LqYx/3S87tct7IiSMckV3PsweNduT0D6qSiCj99pqxPwMC
+egRZsF8HJx5DlxHuPWa1XCxWnqgtxW3rx+3VNZQx1IOiV8lpv6kDq7VQ7081F62n
+GazrDCRpHZozXS0oL51i7CGtJw74Ew==
+=YTnK
+-----END PGP SIGNATURE-----
+
+--Sig_/cS1NLVhcu5+AeH+R=ZW56Vk--
