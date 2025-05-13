@@ -1,235 +1,176 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08115E56A
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386EF18DB20;
+	Tue, 13 May 2025 01:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747100919; cv=none; b=sSlmPyoqdI/Bk8IMkNjAWoowF29dJ+f33jCnhPixbc518Tbrh7aFUspfgyC1A1lKInujihvPslhNEF+7glM6rSUT9RZVag/NwNJoDMWZ2t/EYuP+dsXqI9/XzwUu09uXGJXWi/Ssv8VFb/rX9lVoCn4nU9Fw/YjV3oi9q9RabhM=
+	t=1747100933; cv=none; b=aeRZRNF/JED0HHzPZZZ66bEU2+QSF6+HgY5N42fRloTas7xUZ4UqybujxTwpN4TKzJF59uu14ccLBZU63/3ZaSI+2iNMIbLfXvnwuFP/pTqcUgAel3TmPTa46M7VHGPNRF2NG1FfIY1gNiXOW9dBpAkbi3w7DBpadZTdRDfgR3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747100919; c=relaxed/simple;
-	bh=xDK93dk0SiVRT64vlt0meQ6sSmQAfsmPy68IEnF0/Lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KssGvsvaedi2gT749f7bQYRI4kFBmx7o8lFkMBSv2/QZE78lgGcUDoWFAYNJGt1ACfFcosnbWNgy04gEDlrT3YFd4lgdwT5i6DnmveXD9Rw2v6YHW+RHnDfDbCG+NeaHM9p5i0V84CF7j2fdEJ7/wlVwjOISSgISxW08W9DXZkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZxK9z2BZHz4f3kvh
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:48:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 795FD1A19CB
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 09:48:33 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP2 (Coremail) with SMTP id Syh0CgBXYGPvpCJowpSbMA--.9792S2;
-	Tue, 13 May 2025 09:48:33 +0800 (CST)
-Message-ID: <d3f27222-7262-4f04-8c80-329852bc251e@huaweicloud.com>
-Date: Tue, 13 May 2025 09:48:31 +0800
+	s=arc-20240116; t=1747100933; c=relaxed/simple;
+	bh=x3TOf3D2FWDM+vKIdsFexUN5txpyfGA8qZQSZAZ1u7E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fXcNvWW4gnU7ETHrY+TC36386cIfXD4TAD650Nb88PSU1pttHmOLrJqwM2+GFjbY7VJQ59PmSjwk7kLl5dimIhiwKalmQ7IyAAlUHyavrEJBVC+t9lhJSsMWlg6tVYCP3ixTsnlwt2ku98TNzijrvnbkUkx8sep6PcC68E6KoQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Grat5Sfy; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Grat5Sfy"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d817bc6eb0so26565515ab.1;
+        Mon, 12 May 2025 18:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747100931; x=1747705731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SW1vH0Jzp28bsUcst3vDejenUL61vJR3lM75Rj7bO1E=;
+        b=Grat5SfyhmbSMZ/eU15gvjdR6iW2yLIqCNo9KGoNK4xDCIzDhZKqSu9VjUtP7b/maE
+         0Trua0qAVJ6tLHIeio2/sMJkXiQmUNNe8OGBmOZEppwR77+Vwr9zIHSTxnXicAp3p6yc
+         +g29MxL7SMejQPgJctaM5HrupRagJhVY3d/zuw3h/nvRgFBx92GNmHCFZOFO/GBWBTEy
+         XMD6jGaeZHw5RKOD0atkwRl74zrkIOZSI59e2hKu59VAs9tPiXiHGcKGL6o178/HojfE
+         L2ZqD4ybgh2eeKtsh2QCXXb24bgEIbadyLuR5QPd6Ct56mWbJ1yR/LSVMO+RaoS70SDA
+         S2sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747100931; x=1747705731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SW1vH0Jzp28bsUcst3vDejenUL61vJR3lM75Rj7bO1E=;
+        b=evb1kwXAiMn27Yt6fCZn0HwzpcSlThKHws39i6NQDNLz8otFQztsbR6QMVsGExhkxw
+         a2c+TgjDvodKKrBflDAVXwtIXBmXbV+av5E7khK757CkzNzApWm8H7h4qEIT0YSC1/w0
+         A3BbtUV9G9YlG86dzW4MuefWwdvbwlmfp7LicEbbHrxErfzmxjARSY4udpQzgUNyG02W
+         SgHOoQzoYru5+XAuNulAlbGaDAahjBzjclaA6fC0dkZ+MksBrWvA6WMyJWhcJvTznvWg
+         4OjPIu831po0j08LOCnkwqjeg5AIaTKUwge3id1o+yzOEN3ZQ/qSWaFCmw7+w/tPj75n
+         FcKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKysogt+pWFX+qhOWWMmSLxEtOg9sBmA7EakYufGs7cNITRDfSoyrsriF1QsrHTpGlCEYMQjKf1EnPv1nL@vger.kernel.org, AJvYcCXgGqNAcdMNMXZYHkuuNOwdzG+gIyy76I2tiLNt654Rsk7R7/4lPOoWZfNSP2Di+ebtiplu7Ub1g6NQ7YFbpDH5exfS@vger.kernel.org, AJvYcCXmFKlTUNgL7C2U8n1wcuK9yaElKCHObtV+oIPPXYaIKIJmvYp/i/WeIOZpgDUAzoXEHK566Hx/3IBAfg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdNVZj+0CNji3n9QipCKUOl+l779LYF6+iRB3DKNqK2EFVrij2
+	7PtDpM7OLez+BAdAW4wxs4a0AUriZyroRhD5wvrUTmV00yrq3Lhe8KjiUyt4l+RKWus2JmB44w9
+	bdIIwyqvFEs+P/H5Jh5ZfD5MVINc=
+X-Gm-Gg: ASbGncth5lg2zWdIsh6phxKmJDP2GTJ1rVW72QD6H+3fW+3oY+Owl16QV55nzI4DGn4
+	lfXWCo4+wCynbhegyS+qbg/ilXa0s1qb86l8Y9IivdK2NnWRFGsORUfFmlSdSbhjGZHefyu3Ala
+	VIpzwk0ItGQx8WXW834LxcXYnKdAW7gARV
+X-Google-Smtp-Source: AGHT+IHtCZvGHP0FlostcRVpw3BIL1zFyR5i25Fiv+uh+LoyA8D4ZkHvT9+lvD5OKFqShdni0Nm68GpXZBc1Y2DkqSE=
+X-Received: by 2002:a05:6e02:152e:b0:3d0:47cf:869c with SMTP id
+ e9e14a558f8ab-3da7e21350fmr163199335ab.19.1747100931046; Mon, 12 May 2025
+ 18:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC next v2 0/5] ucount: add rlimit cache for ucount
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: paulmck@kernel.org, legion@kernel.org, roman.gushchin@linux.dev,
- brauner@kernel.org, tglx@linutronix.de, frederic@kernel.org,
- peterz@infradead.org, oleg@redhat.com, joel.granados@kernel.org,
- viro@zeniv.linux.org.uk, lorenzo.stoakes@oracle.com, avagin@google.com,
- mengensun@tencent.com, linux@weissschuh.net, jlayton@kernel.org,
- ruanjinjie@huawei.com, kees@kernel.org, linux-kernel@vger.kernel.org,
- lujialin4@huawei.com, Chen Ridong <chenridong@huawei.com>
-References: <20250509072054.148257-1-chenridong@huaweicloud.com>
- <20250509131849.112545d60dd7bb2d28c3b966@linux-foundation.org>
- <20250512104828.hjVjvmT3@linutronix.de>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20250512104828.hjVjvmT3@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXYGPvpCJowpSbMA--.9792S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jry8AFWrGw4kuw4kGF4UJwb_yoWxJr4rpF
-	W8ta45Ary8JF93t34kJ3y8t34Fk347CrZ8Ga15Gw1fCwnIyFnYgw17KrWYvF9Ikrn3Gw1a
-	q3yq9ayqkF1qqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+ <20250512024935.64704-3-kerneljasonxing@gmail.com> <20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
+In-Reply-To: <20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 13 May 2025 09:48:15 +0800
+X-Gm-Features: AX0GCFu3dnfm7WHKsdIPBdU5to--emIww-Hx9wLCflP5g0dm6SEaFE2ROEHeUQM
+Message-ID: <CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics function
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 13, 2025 at 8:51=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Mon, 12 May 2025 10:49:32 +0800 Jason Xing <kerneljasonxing@gmail.com>=
+ wrote:
+>
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > In this version, only support dumping the counter for buffer full and
+> > implement the framework of how it works. Users MUST pass a valid @buf
+> > with a valid @len that is required to be larger than RELAY_DUMP_BUF_MAX=
+_LEN
+> > to acquire which information indicated by @flags to dump.
+> >
+> > RELAY_DUMP_BUF_MAX_LEN shows the maximum len of the buffer if users
+> > choose to dump all the values.
+> >
+> > Users can use this buffer to do whatever they expect in their own kerne=
+l
+> > module, say, print to console/dmesg or write them into the relay buffer=
+.
+> >
+> > ...
+> >
+> > +/**
+> > + *   relay_dump - dump statistics of the specified channel buffer
+> > + *   @chan: the channel
+> > + *   @buf: buf to store statistics
+> > + *   @len: len of buf to check
+> > + *   @flags: select particular information to dump
+> > + */
+> > +void relay_dump(struct rchan *chan, char *buf, int len, int flags)
+>
+> `size_t' is probably a more appropriate type for `len'.
+>
+> > +{
+> > +     unsigned int i, full_counter =3D 0;
+> > +     struct rchan_buf *rbuf;
+> > +     int offset =3D 0;
+> > +
+> > +     if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
+> > +             return;
+> > +
+> > +     if (len < RELAY_DUMP_BUF_MAX_LEN)
+> > +             return;
+>
+> So we left the memory at *buf uninitialized but failed to tell the
+> caller this.  The caller will then proceed to use uninitialized memory.
+>
+> It's a programming error, so simply going BUG seems OK.
 
+Are you suggesting that I should remove the above check because
+developers should take care of the length of the buffer to write
+outside of the relay_dump function? or use this instead:
+WARN_ON_ONCE(len < RELAY_DUMP_BUF_MAX_LEN);
+?
 
-On 2025/5/12 18:48, Sebastian Andrzej Siewior wrote:
-> On 2025-05-09 13:18:49 [-0700], Andrew Morton wrote:
->> On Fri,  9 May 2025 07:20:49 +0000 Chen Ridong <chenridong@huaweicloud.com> wrote:
->>
->>> The will-it-scale test case signal1 [1] has been observed. and the test
->>> results reveal that the signal sending system call lacks linearity.
->>> To further investigate this issue, we initiated a series of tests by
->>> launching varying numbers of dockers and closely monitored the throughput
->>> of each individual docker. The detailed test outcomes are presented as
->>> follows:
->>>
->>> 	| Dockers     |1      |4      |8      |16     |32     |64     |
->>> 	| Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
->>>
->>> The data clearly demonstrates a discernible trend: as the quantity of
->>> dockers increases, the throughput per container progressively declines.
->>> In-depth analysis has identified the root cause of this performance
->>> degradation. The ucouts module conducts statistics on rlimit, which
->>> involves a significant number of atomic operations. These atomic
->>> operations, when acting on the same variable, trigger a substantial number
->>> of cache misses or remote accesses, ultimately resulting in a drop in
->>> performance.
->>
->> Did you consider simply turning that atomic_t counter into a
->> percpu_counter?
-> 
-> That sounds like a smaller change. Also, do these 1…64 docker container
-> play signal ping-pong or is there a real workload behind it?
-> 
-> Sebastian
+>
+> > +     if (chan->is_global) {
+> > +             rbuf =3D *per_cpu_ptr(chan->buf, 0);
+> > +             full_counter =3D rbuf->stats.full;
+> > +     } else {
+> > +             for_each_possible_cpu(i) {
+>
+> I'm thinking that at this stage in the patch series, this should be
+> for_each_online_cpu(), then adjust that in patch [5/5].
 
-Hi Andrew and Sebastian,
+Point taken. Will change it.
 
-Thanks for your prompt reply. I'm currently conducting a "will-it-scale"
-test on a 384-core machine configured to run up to 64 Docker
-containers(max num). Even with just 32 containers, the throughput drops
-by 53%, which indicates significant scaling challenges.
+>
+> > +                     if ((rbuf =3D *per_cpu_ptr(chan->buf, i)))
+> > +                             full_counter +=3D rbuf->stats.full;
+> > +     }
+> > +
+> > +     if (flags & RELAY_DUMP_BUF_FULL)
+> > +             offset +=3D snprintf(buf, sizeof(unsigned int), "%u", ful=
+l_counter);
+>
+> This seems strange.  sizeof(unsigned int) has nothing to do with the
+> number of characters which are consumed by expansion of "%u"?
 
-Your suggestion about using percpu_counter was spot on. I've since
-implemented a demo to benchmark its performance. Here's the code I wrote
-for testing:
+Sorry, my bad. It should be:
+offset +=3D snprintf(buf, len, "%u", full_counter);
 
-static void do_dec_rlimit_put_ucounts(struct ucounts *ucounts,
-@@ -281,10 +289,10 @@ static void do_dec_rlimit_put_ucounts(struct
-ucounts *ucounts,
- {
-        struct ucounts *iter, *next;
-        for (iter = ucounts; iter != last; iter = next) {
--               long dec = atomic_long_sub_return(1, &iter->rlimit[type]);
--               WARN_ON_ONCE(dec < 0);
-+               percpu_counter_sub(&iter->rlimit[type], 1);
-+
-                next = iter->ns->ucounts;
--               if (dec == 0)
-+               if (percpu_counter_compare(&iter->rlimit[type], 0) == 0)
-                        put_ucounts(iter);
-        }
- }
-@@ -295,36 +303,40 @@ void dec_rlimit_put_ucounts(struct ucounts
-*ucounts, enum rlimit_type type)
- }
+Passing 'len' as the second parameter.
 
- long inc_rlimit_get_ucounts(struct ucounts *ucounts, enum rlimit_type type,
--                           bool override_rlimit)
-+                           bool override_rlimit, long limit)
- {
-        /* Caller must hold a reference to ucounts */
-        struct ucounts *iter;
-        long max = LONG_MAX;
--       long dec, ret = 0;
-+       long ret = 0;
-+
-+       if (override_rlimit)
-+               limit = LONG_MAX;
+Thanks,
+Jason
 
-        for (iter = ucounts; iter; iter = iter->ns->ucounts) {
--               long new = atomic_long_add_return(1, &iter->rlimit[type]);
--               if (new < 0 || new > max)
-+               max = min(limit, max);
-+
-+               if (!percpu_counter_limited_add(&iter->rlimit[type],
-max, 1)) {
-+                       ret = -1;
-                        goto dec_unwind;
--               if (iter == ucounts)
--                       ret = new;
-+               }
-                if (!override_rlimit)
-                        max = get_userns_rlimit_max(iter->ns, type);
-                /*
-                 * Grab an extra ucount reference for the caller when
-                 * the rlimit count was previously 0.
-                 */
--               if (new != 1)
-+               if (percpu_counter_compare(&iter->rlimit[type], 1) != 0)
-                        continue;
--               if (!get_ucounts(iter))
-+               if (!get_ucounts(iter)) {
-+                       ret = 0;
-                        goto dec_unwind;
-+               }
-        }
--       return ret;
-+       return 1;
- dec_unwind:
--       dec = atomic_long_sub_return(1, &iter->rlimit[type]);
--       WARN_ON_ONCE(dec < 0);
-        do_dec_rlimit_put_ucounts(ucounts, iter, type);
--       return 0;
-+       return ret;
- }
-
-As shown in demo code, the current implementation retrieves ucounts
-during the initial rlimit increment and releases them when the rlimit
-hits zero. This mechanism was introduced with the commits:
-
-  fda31c50292a5062332fa0343c084bd9f46604d9 signal: avoid double atomic
- counter increments for user accounting
-
-  d64696905554e919321e31afc210606653b8f6a4   Reimplement
-RLIMIT_SIGPENDING on top of ucounts
-
-  15bc01effefe97757ef02ca09e9d1b927ab22725 ucounts: Fix signal ucount
-refcounting
-
-It means that we have to requires summing all percpu rlimit counters
-very time we increment or decrement the rlimit and this is expensive.
-
-Running the demo code in a single Docker container yielded a throughput
-of 73,970 —significantly lower than expected. Performance profiling via
-perf revealed:__percpu_counter_sum is the primary performance bottleneck.
-
-+   97.44%     0.27%  signal1_process    [k] entry_SYSCALL_64_after_hwframe
-+   97.13%     1.96%  signal1_process    [k] do_syscall_64
-+   91.54%     0.00%  signal1_process    [.] 0x00007fb905c8d13f
-+   78.66%     0.03%  signal1_process    [k] __percpu_counter_compare
-+   78.63%    68.18%  signal1_process    [k] __percpu_counter_sum
-+   45.17%     0.37%  signal1_process    [k] syscall_exit_to_user_mode
-+   44.95%     0.20%  signal1_process    [k] __x64_sys_tgkill
-+   44.51%     0.40%  signal1_process    [k] do_send_specific
-+   44.16%     0.07%  signal1_process    [k] arch_do_signal_or_restart
-+   43.03%     0.37%  signal1_process    [k] do_send_sig_info
-+   42.08%     0.34%  signal1_process    [k] __send_signal_locked
-+   40.87%     0.03%  signal1_process    [k] sig_get_ucounts
-+   40.74%     0.44%  signal1_process    [k] inc_rlimit_get_ucounts
-+   40.55%     0.54%  signal1_process    [k] get_signal
-+   39.81%     0.07%  signal1_process    [k] dequeue_signal
-+   39.00%     0.07%  signal1_process    [k] __sigqueue_free
-+   38.94%     0.27%  signal1_process    [k] do_dec_rlimit_put_ucounts
-+    8.60%     8.60%  signal1_process    [k] _find_next_or_bit
-
-However, If we can implement a mechanism to unpin ucounts for signal
-pending operations (eliminating the need for get/put refcount
-operations), the percpu_counter approach should effectively resolve this
-scalability issue. I am trying to figure this out, and if you have any
-ideas, please let know, I will do test.
-
-Thank you for your guidance on this matter.
-
-Best regards,
-Ridong
-
+>
+> > +
+> > +     snprintf(buf + offset, 1, "\n");
+> > +}
+> > +EXPORT_SYMBOL_GPL(relay_dump);
+> > +
+> >  /**
+> >   *   relay_file_open - open file op for relay files
+> >   *   @inode: the inode
+>
