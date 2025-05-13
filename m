@@ -1,171 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5232949EE;
-	Tue, 13 May 2025 12:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97BE20DD51;
+	Tue, 13 May 2025 12:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138422; cv=none; b=mKWVQmI+KZeZnCPekk83GxgY+HrDuC93iCG+bCoorFoGlyEBUeGGDj3L1ruP+IP9wJJ4TEXmubS5hHOlT9zyOSAxc/KsH1TpWIYYHPZnBQGgYtv6XtkEt4jGlvhKiAtkG296AUaPfi4DJeLKKyevD/FZa6lrCXvTTc6R8vEOuug=
+	t=1747138524; cv=none; b=Rr+UO/lw6vY7tqfhhE4c38vGl/SEJrYBaztSAkieIwvyKmBQogw4MYBjjFd6jwIvM8kFy+fLskMEurxpImLLC/elsLbVou40QI7qYnNiWMGTV5Iuaw5Eqq/wd6pqS2SOmZKIPnchCJ59o8BcsObtaRzhXmd7wQCMvlPpbnqT0oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138422; c=relaxed/simple;
-	bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fors6e5GQkYMdFppHrP9FcyLX9Arj8Y/JaQNWkvGIVfWdE++A3M3sSN0lBwHmpbtAVtL7z0HkFGZ8P0PauT3oTl2OPlCwjESjgT86CxpbZjf13pIWRin7FUdfzv6a0ZCnATQiUaqxVznBwEL/ydClw6Ob+595Ulp7A/T+wgqgoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLwRJf1j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747138524; c=relaxed/simple;
+	bh=idUfsrQz4c6EAsJ61Lq5mzmfS9aeS/MECofu2KJDb1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MzFLi6fehW42w/TwnldJgCym+Gne75uncNVwI/jLAg3vYMU1fYOI0HaxBdqdUsP+JdIgTbqrbARGtYzlXTGuyTi05/aLsoiOF+gUGeYNTVR5HluRD2LlqrnO9mbTnhcoWlwHV3KOppI1MFFhqQYdtAGNm2vlfVdCI059DwpA56Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnypvhNr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLwRJf1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C42C4CEED;
-	Tue, 13 May 2025 12:13:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnypvhNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B342C4CEE4;
+	Tue, 13 May 2025 12:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747138421;
-	bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FLwRJf1jmtUTqKQ1ZqOx+AL2WFWng6nSP5vGIKq6T5POLAS1D9WD1su1Q9N3+nMfM
-	 3xd+SBgCXU9qpS7DcQJ3nonbFC33lrjFE2+yrnWVrmPjknl1GL/rD/xzDf+G2l8Dh7
-	 2hvnxP6lcB+5sKvLMOabIfw4sJzgq5wXhPMBfpgrbkOtKJFV/FoULKt47KsGD8Qi5F
-	 1i8MwTwnmd6IEPA0RkRVRmXsioqzp172QYi6YdKcTvG6MZDAWxzVpPnrCSY+QHQp1U
-	 owzrzTYjdSXli3I2JiIsnh0PNOpg3FIstGOUFlkGyg6hAQ5KihNJo0Xjl0GZHseLHE
-	 Oqtd6S7qzZyaQ==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Tue, 13 May 2025 15:13:13 +0300
-Subject: [PATCH net-next v3 9/9] net: ethernet: ti: am65-cpsw: remove
- cpsw_ale_classifier_setup_default()
+	s=k20201202; t=1747138524;
+	bh=idUfsrQz4c6EAsJ61Lq5mzmfS9aeS/MECofu2KJDb1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PnypvhNrpMfQY13NqEm+v3dGZQaDT9RrOzjNpzu5ZexvD5a8i4aaQHNy6qaBtW6Re
+	 zQJ5P0+GEZ7DJbuOe0oihM/SKmSBnu/Efjqfqf9lChGf+MK1LM/auFwEPaDRGDEL7W
+	 m1D8Gc/7vi+5fwa7a9Y2tQkGaWo85VP0i8n44iFm6SfsuDZ1D6mQ3aYuHqtmUt64OA
+	 m0byRgs/EMIDOfL7J8fsUfaImyXULMSbZjQLrJdduuhDIgNgz4i+J5zPxwKlNa0GIM
+	 6eHvmwDA+xVHk1vpRGCYup/VuuHzWAt4k+S7hBcHR2TwbGCPF1IEzeax5opSqIi4MY
+	 xlqB8rYz23uqQ==
+Date: Tue, 13 May 2025 14:15:16 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 01/19] rust: dma: expose the count and size of
+ CoherentAllocation
+Message-ID: <aCM31J-B8aOf8Dg2@pollux>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-1-fcb02749754d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250513-am65-cpsw-rx-class-v3-9-492d9a2586b6@kernel.org>
-References: <20250513-am65-cpsw-rx-class-v3-0-492d9a2586b6@kernel.org>
-In-Reply-To: <20250513-am65-cpsw-rx-class-v3-0-492d9a2586b6@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
-Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4075; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBoIzdVB4WXViRkjB3Jb++fDQlgdp+LKDPvtZ9eo
- JvMC/tFiBmJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCaCM3VQAKCRDSWmvTvnYw
- k8GvD/95hZrLtiVBx3XYimlYjCpf3d9qx2ku1Fu1ijpbJbQhLwvoTx25wfwFdaBZUsnkRNZe+5p
- piOpy9Ibuf6Uzdu6bVoUKTEA89Uv0VubC6XxHdRU184MS7Xy4ig69aDjx5DBGX2gkiF1MyXGGxe
- tlkHj3K+2RtLqK5Ca8aP6T4zqIjiwBxkGqiy8Xs7T+iN+U2FrIEuWRT/MZZ+yKbCmMIxRDrxmL+
- eStiEwgD7qbqlGVzN34mTMWB/qfp9apZxvjYDGVQ20Lwkh/kXVZrWgdQu80ppQ3m9IoD5ggahYT
- MkW5WM6/RH/arjFtDheRBJqr32fNipa5SLcexlRcXDDCpn7oEabZK2jLVf9mFcHOK6QF289zMI0
- yarzgMiBIAPmVd8KfgkaDy1ZvzbGqh/HZkS4hk5yNho/8nwoPvsN/n+Bchc0uB/7JT/in0Wvq+7
- 0wldCz31ri6y8yycuVoqe3zfOmKMchg80Ek0W9nCW/h3rW1zxk1loVYXX7vcnUShS91P2Zem65a
- mJ7AJeGChLwbF9RzeSH+lJhIkgqFL0bxA14m8ECB0TamZslrhHYWIzfLCTCW0d5014thvbduMAD
- o30FslKFeAXwULEheAosA/V4j5TO5SKPqE0ZehV5gpbJ+B7d94+L0Ey30KzNonTtx5G4ucpC10W
- PGXjEdN8sc1lmYg==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507-nova-frts-v3-1-fcb02749754d@nvidia.com>
 
-The RX classifier can now be configured by user using ethtool -N.
-So drop cpsw_ale_classifier_setup_default().
+On Wed, May 07, 2025 at 10:52:28PM +0900, Alexandre Courbot wrote:
+> These properties are very useful to have and should be accessible.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/dma.rs | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index 605e01e35715667f93297fd9ec49d8e7032e0910..18602d771054fceb80c29278b1945254312ed7c6 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -201,6 +201,20 @@ pub fn alloc_coherent(
+>          CoherentAllocation::alloc_attrs(dev, count, gfp_flags, Attrs(0))
+>      }
+>  
+> +    /// Returns the number of elements `T` in this allocation.
+> +    ///
+> +    /// Note that this is not the size of the allocation in bytes, which is provided by
+> +    /// [`Self::size`].
+> +    pub fn count(&self) -> usize {
+> +        self.count
+> +    }
+> +
+> +    /// Returns the size in bytes of this allocation.
+> +    pub fn size(&self) -> usize {
+> +        // This is guaranteed not to overflow as the same operation has been done in `alloc_attrs`.
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c |  3 --
- drivers/net/ethernet/ti/cpsw_ale.c       | 52 --------------------------------
- drivers/net/ethernet/ti/cpsw_ale.h       |  1 -
- 3 files changed, 56 deletions(-)
+Please make this an invariant of CoherentAllocation and refer to that instead.
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index cdb83ae54656..0523c81a2a54 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2497,9 +2497,6 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
- 		}
- 	}
- 
--	/* setup classifier to route priorities to flows */
--	cpsw_ale_classifier_setup_default(common->ale, common->rx_ch_num_flows);
--
- 	return 0;
- 
- err_request_irq:
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 0cd27a6fe575..ba639d87706b 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -1695,58 +1695,6 @@ void cpsw_ale_policer_reset(struct cpsw_ale *ale)
- 		cpsw_ale_policer_reset_entry(ale, i);
- }
- 
--/* Default classifier is to map 8 user priorities to N receive channels */
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch)
--{
--	int pri, idx;
--
--	/* Reference:
--	 * IEEE802.1Q-2014, Standard for Local and metropolitan area networks
--	 *    Table I-2 - Traffic type acronyms
--	 *    Table I-3 - Defining traffic types
--	 * Section I.4 Traffic types and priority values, states:
--	 * "0 is thus used both for default priority and for Best Effort, and
--	 *  Background is associated with a priority value of 1. This means
--	 * that the value 1 effectively communicates a lower priority than 0."
--	 *
--	 * In the table below, Priority Code Point (PCP) 0 is assigned
--	 * to a higher priority thread than PCP 1 wherever possible.
--	 * The table maps which thread the PCP traffic needs to be
--	 * sent to for a given number of threads (RX channels). Upper threads
--	 * have higher priority.
--	 * e.g. if number of threads is 8 then user priority 0 will map to
--	 * pri_thread_map[8-1][0] i.e. thread 1
--	 */
--
--	int pri_thread_map[8][8] = {   /* BK,BE,EE,CA,VI,VO,IC,NC */
--					{ 0, 0, 0, 0, 0, 0, 0, 0, },
--					{ 0, 0, 0, 0, 1, 1, 1, 1, },
--					{ 0, 0, 0, 0, 1, 1, 2, 2, },
--					{ 0, 0, 1, 1, 2, 2, 3, 3, },
--					{ 0, 0, 1, 1, 2, 2, 3, 4, },
--					{ 1, 0, 2, 2, 3, 3, 4, 5, },
--					{ 1, 0, 2, 3, 4, 4, 5, 6, },
--					{ 1, 0, 2, 3, 4, 5, 6, 7 } };
--
--	cpsw_ale_policer_reset(ale);
--
--	/* use first 8 classifiers to map 8 (DSCP/PCP) priorities to channels */
--	for (pri = 0; pri < 8; pri++) {
--		idx = pri;
--
--		/* Classifier 'idx' match on priority 'pri' */
--		cpsw_ale_policer_read_idx(ale, idx);
--		regmap_field_write(ale->fields[POL_PRI_VAL], pri);
--		regmap_field_write(ale->fields[POL_PRI_MEN], 1);
--		cpsw_ale_policer_write_idx(ale, idx);
--
--		/* Map Classifier 'idx' to thread provided by the map */
--		cpsw_ale_policer_thread_idx_enable(ale, idx,
--						   pri_thread_map[num_rx_ch - 1][pri],
--						   1);
--	}
--}
--
- #define HOST_PORT_NUM 0
- 
- /* Clear Policer and associated ALE table entries */
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index dbc095397389..5c9614730998 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -223,7 +223,6 @@ int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
- int cpsw_ale_vlan_del_modify(struct cpsw_ale *ale, u16 vid, int port_mask);
- void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
- 			      bool add);
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch);
- void cpsw_ale_policer_reset(struct cpsw_ale *ale);
- int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
- 			       struct cpsw_ale_policer_cfg *cfg);
-
--- 
-2.34.1
-
+> +        self.count * core::mem::size_of::<T>()
+> +    }
+> +
+>      /// Returns the base address to the allocated region in the CPU's virtual address space.
+>      pub fn start_ptr(&self) -> *const T {
+>          self.cpu_addr
+> 
+> -- 
+> 2.49.0
+> 
