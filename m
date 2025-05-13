@@ -1,167 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A27725745A;
-	Tue, 13 May 2025 12:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573A525745A
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140728; cv=none; b=poGqos3zph9dRUqN9scrZi53EjNumOyCtXt0H4KyWyvmZZ06vpwc1otJWXN/ogbxqq1SsHHeV1RdMtjHgxxsNoB4gk4CeRnTmUmDeyLckc88pJ2j9DAV9E9LLlM/zN4yWzMpQ2MMsR+1swrS8Up25uyZTyhKf/Oh8M5vgFaTjgs=
+	t=1747140757; cv=none; b=AbGzJdeyW2uVRoJluxxWFiEVFIfF7F4T95r/YzKFix4SLuuo8cV1sZnGwCyKLTeW4vfIFb+VFTbkDw6NcLEEqHsHbfUQZc5cS4T72eXsM5fzrumaJNo4K7wl01GiruTDdbtGusgdvIN357YA3h+YbF6myPeWA5B0CX+mFyoFAG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140728; c=relaxed/simple;
-	bh=MaUY3vRS+RfPHnzj7olOTdKpd1Z31CQY6kp8pcFliJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lRM0hBlTrggexOvuy1qTlLQiaXA88dE4xQ/QPWXQ8fCTyhC2q9JtF57lmIzVPO0fZIkMtK0i4FLxoVXVEYzGNo38tf9P0BkptKQ1aOv/5aDhWfB2cz7W29uWtSs/OO166DejFYerqlTI4j8vapnc8N2nfR45Kdha2UW5C8W7ICc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VeeH4mUO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747140757; c=relaxed/simple;
+	bh=nJhsyHoM8NB2Q1Qo/KLQehaUO1pFjUQPV+faNu30m68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pf3ql/UTqHSDcTk37SH/H7g91g0C8zgdwt8Razsg3wyVui5bP+33lXmMd0gEoAViMbC/A3L2Nuyfoh32/KYOg3WjRCadLqLX4Oqh4k3wpMYMImbz0724dYNSLFDjon0JFONNiGMic98bRPsBjrzRV8NRSqaN7r9M2FSmSJ6xSKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a5m32YKp; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VeeH4mUO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39CEC4CEF1;
-	Tue, 13 May 2025 12:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747140728;
-	bh=MaUY3vRS+RfPHnzj7olOTdKpd1Z31CQY6kp8pcFliJs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VeeH4mUORI2lEwLhJY62l2S1TB9YD1d1wMpyPslRH3+wkK7dy47Ef0Lenmic2d6Zn
-	 iBGfG9GkjjhAfdC2C5Zz9Rhfu0RoPg7aEjE82wWKLBqnBBSceHhGaW4c/7ZZgKoa73
-	 RdKJHruGj8HEUP1eMTnUABeaDlfxlOQT7OcX/iefM/67u5eLrjQrnLHtKV34X9hPkB
-	 jJSS3CYZt7WVYQgvvdqx5eBCX5XNoEyrBw47xskqnjSHtMGX2sKpnz5f3DELtuoDpf
-	 V5Tdsx9oyB49Fd0K5M/RQPxmn9Rgh3IkpntNaVb4zvLP/Wy8dy+Qs6UZzbTEKN991z
-	 SH5uUdXjLXbIw==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c2ada8264aso4693060fac.2;
-        Tue, 13 May 2025 05:52:07 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzI7txZoYuv2Kd39oUGr+NMOFL1O3htNchaX+0XBVsXgYCRK+Ty
-	MAbD+lnIISiV2pfCl2UqUfAC8KnRjFKxczQdOx90o8uQxwIA4klLvmEzewms5uO/yjoM82NhRua
-	oANxk0+4QbWEuOVBC1rAowl7twW4=
-X-Google-Smtp-Source: AGHT+IGYYdGUhzSYNwacciHBfNMGXNDI9cq5mpKXjS2lGp7KMnM6sm7RsEVMgf32N2G6iyLgap6f3+/uk7RKaIt9ufg=
-X-Received: by 2002:a05:6870:219b:b0:2ba:11d5:ad64 with SMTP id
- 586e51a60fabf-2dba43603e9mr9587134fac.23.1747140727197; Tue, 13 May 2025
- 05:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5m32YKp"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so41223955e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747140753; x=1747745553; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovgqc7rC+0i7F6t3MyfCH1QXEeImfFeRKV44bs3pIag=;
+        b=a5m32YKpFpOAdpW3xs7gycMIIjos2P5K3Vo0Kmblais5yVFHECUBcEuzd2haBV4+G6
+         1TuhdC0PCjrgWtMTfWByDsNPMN8Q+4zqX83boN2u7kOvqBk2I6F4NuA9WW7P5xQ1JYpd
+         ezQTa8ODxZAfkmoeEtuSEZkIaJaHo5ratmP51TauBLUZTOo/VNazfML1M2ddg23LE+2D
+         crvXCANCtnkpRITRezd23ivGhHeuEkfYaANPv+v2Zj9Gqnp4NbTb5UdnIQcMLTtj1TlE
+         TTVMtXum662BaT/XAWhb9dZpkYu+6H6oMsjoeaBzsfxNoftJ/5cqTfQSeaG8nCkcvCF6
+         Dywg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747140753; x=1747745553;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovgqc7rC+0i7F6t3MyfCH1QXEeImfFeRKV44bs3pIag=;
+        b=SOJIVB4LVh4RdVNCEgrknd4RlK8TK75BwNzlB1/MApgaPVIrCZjQLU8A2xFaJd/g20
+         i/aeN/i5CshsL0OmUlduYRtw0lRkPSFgikXezMVLbAKmKMwtTHdAepE/M7nrEpYPGGzb
+         QQxp9qNSQBlnmjDt9hgu7euAmacPFxH2Ea9x8bO+MZS8XSGeRP/FjVDpMVEkD28DVZIl
+         NdVcFPljwsDRq/tHd65pvx8GMjIAb8coBtLcf4As01IxLPINyhrnEmOZn5lgY0WN0txT
+         a+9+erXriIpAcQZAdr2Ag9NkHiK9YxxMKdk8Qrp3wR/9nEn7Ad1YQWhhDIjdpP71O4Rz
+         3j4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEEh1N8rgszLvNMHGJuhRRTKAIDSQBn888uGI7LoJICITErM9CVV0V4jDO0Iikg+YYZL8bHP3h6kxxzVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxybZNFkMnzDdKUOpXuOg3NWiOupFIuViZjr9ThhjL0h72Nnx43
+	NshcBbd9w19YHG2KBfAz/yT2EC90XQSEfWGsYkmXDZVwuZWsjiVs
+X-Gm-Gg: ASbGncs46rLuwBv0nmSMDMnMUsGPG2y7l+n617O6T5nr1SL4NFTkOSKjWJxJP/+vwCm
+	EIvDS493dEes3gB0zNDod5+F8J1v7eBgYKWgkPa1IdMaHrhAsCQWmhFeqponqruoALacJyPaEXJ
+	RN3Df4KzUBWH7Pvbnq2Vzc+RgT5Dt2veT/hgv+bBMdSdRC+PPrRFJtlS/obHgNmmGa5UEfP50G2
+	b44ULGtvHtq2PVlrk9SIlEdHMMvGidiuJJWBcslxXcI3+iWfVpSM6fw+AwF7mmpBuabYXmt2v7F
+	VcA+a6FTT/TXIEw2SekrgTflC3Nz3hW6Vct6h9nHLFwZhmypL3/you8p/bNzGlH4ibtusQgoGlU
+	QY7Hx+lkNeZ5iVDALslWT1R4zc8NT7DosAM/e6MrceRo=
+X-Google-Smtp-Source: AGHT+IFf2bg52RNZJGo+rHY7+s+82rwvjasfaCxzOtsKjPH7EPA41e/9YLFWhnk4k4f0C/ZQm+pFYQ==
+X-Received: by 2002:a05:600c:444c:b0:43d:5ec:b2f4 with SMTP id 5b1f17b1804b1-442d6d3dcc8mr174303035e9.10.1747140753345;
+        Tue, 13 May 2025 05:52:33 -0700 (PDT)
+Received: from toolbox (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd328455sm215109515e9.2.2025.05.13.05.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 05:52:33 -0700 (PDT)
+Date: Tue, 13 May 2025 14:52:31 +0200
+From: Max Krummenacher <max.oss.09@gmail.com>
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: dianders@chromium.org, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
+	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com,
+	jonas@kwiboo.se, jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	kieran.bingham+renesas@ideasonboard.com,
+	linux-kernel@vger.kernel.org, devarsht@ti.com
+Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+Message-ID: <aCNAjz1wt2lPukXv@toolbox>
+References: <20250508115433.449102-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2999205.e9J7NaK4W3@rjwysocki.net>
-In-Reply-To: <2999205.e9J7NaK4W3@rjwysocki.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 13 May 2025 14:51:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jLpKEgAodWx8G0k127vMUe-J1rGkCEreRP7a1dQXT2vA@mail.gmail.com>
-X-Gm-Features: AX0GCFuWF3KsflArHF8v3e4Wq0Z-32SforuMJQxYpdwHQbT4FcgxJqP_KciZ5bQ
-Message-ID: <CAJZ5v0jLpKEgAodWx8G0k127vMUe-J1rGkCEreRP7a1dQXT2vA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] cpufreq: intel_pstate: Enable EAS on hybrid
- platforms without SMT
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, 
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508115433.449102-1-j-choudhary@ti.com>
 
-On Tue, May 6, 2025 at 10:49=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
-t> wrote:
->
-> Hi Everyone,
->
-> This is a new (and most likely final) version of
->
-> https://lore.kernel.org/linux-pm/3344336.aeNJFYEL58@rjwysocki.net/
->
-> The most significant difference between it and the above is that scheduti=
-l is
-> now required for EAS to be enabled, like on the other platforms using EAS=
-,
-> which means that intel_pstate needs to operate in the passive mode in ord=
-er
-> to use it (the most straightforward way to switch it over to the passive =
-mode
-> is to write "passive" to /sys/devices/system/cpu/intel_pstate/status).
->
-> Accordingly, the changes that were needed for EAS to work without schedut=
-il are
-> not needed any more, so there is one patch less in the series because of =
-that
-> and patch [5/7] is simpler than its previous version because some changes=
- made
-> by it are not necessary any more.
->
-> Another patch that has been dropped is
->
-> https://lore.kernel.org/linux-pm/1964444.taCxCBeP46@rjwysocki.net/
->
-> because it didn't take CPU online into account properly and it is not ess=
-ential
-> for the current hardware anyway.
->
-> There is a new patch, [7/7], which adds CAS/EAS/hybrid support descriptio=
-n to
-> the intel_pstate admin-guide documentation.
->
-> The following paragraph from the original cover letter still applies:
->
-> "The underlying observation is that on the platforms targeted by these ch=
-anges,
-> Lunar Lake at the time of this writing, the "small" CPUs (E-cores), when =
-run at
-> the same performance level, are always more energy-efficient than the "bi=
-g" or
-> "performance" CPUs (P-cores).  This means that, regardless of the scale-
-> invariant utilization of a task, as long as there is enough spare capacit=
-y on
-> E-cores, the relative cost of running it there is always lower."
->
-> The first 2 patches depend on the current cpufreq material queued up for =
-6.16
-> in linux-pm.git/linux-next (and in linux-next proper) and are not really
-> depended on by the rest of the series, but I've decided to include them i=
-nto
-> this series because they have been slightly updated since the previous ve=
-rsion,
-> mostly to take review feedback into account (I'm going to queue them up f=
-or
-> 6.16 shortly because they don't appear to be objectionable).
->
-> The next 2 patches (Energy Model code changes) were reviewed previously, =
-but
-> they are only needed because of patch [5/7].
->
-> Patch [5/7] has not changed much except that some changes made by the pre=
-vious
-> version have been dropped from it.  Also its changelog has been updated. =
- It
-> causes perf domains to be registered per CPU and in addition to the prima=
-ry cost
-> component, which is related to the CPU type, there is a small component
-> proportional to performance whose role is to help balance the load betwee=
-n CPUs
-> of the same type.
->
-> The expected effect is still that the CPUs of the "low-cost" type will be
-> preferred so long as there is enough spare capacity on any of them.
->
-> Patch [6/7] has been updated to walk all of the cache leaves and look for
-> the ones with level equal to 3 because the check used in the previous ver=
-sion
-> does not always work.
->
-> The documentation patch, [7/7], is new.
->
-> Please refer to the individual patch changelogs for details.
+Hi
 
-This series along with the fix at
+On Thu, May 08, 2025 at 05:24:33PM +0530, Jayesh Choudhary wrote:
+> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
+> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
+> call which was moved to other function calls subsequently.
+> Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
+> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
+> state always return 1 (always connected state)
+> 
+> Also, with the suspend and resume calls before every register access, the
+> bridge starts with disconnected state and the HPD state is reflected
+> correctly only after debounce time (400ms). However, adding this delay
+> in the detect function causes frame drop and visible glitch in display.
+> 
+> So to get the detect utility working properly for DP mode without any
+> performance issues in display, instead of reading HPD state from the
+> register, rely on aux communication. Use 'drm_dp_dpcd_read_link_status'
+> to find if we have something connected at the sink.
+> 
+> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
+> 
+> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
+> Cc: Max Krummenacher <max.krummenacher@toradex.com>
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+> 
+> v1 patch link which was sent as RFC:
+> <https://patchwork.kernel.org/project/dri-devel/patch/20250424105432.255309-1-j-choudhary@ti.com/>
+> 
+> Changelog v1->v2:
+> - Drop additional property in bindings and use conditional.
+> - Instead of register read for HPD state, use dpcd read which returns 0
+>   for success and error codes for no connection
+> - Add relevant history for the required change in commit message
+> - Drop RFC subject-prefix in v2 as v2 is in better state after discussion
+>   in v1 and Max's mail thread
+> - Add "Cc:" tag 
+> 
+> This approach does not make suspend/resume no-op and no additional
+> delay needs to be added in the detect hook which causes frame drops.
+> 
+> Here, I am adding conditional to HPD_DISABLE bit even when we are
+> not using the register read to get HPD state. This is to prevent
+> unnecessary register updates in every resume call.
+> (It was adding to latency and leading to ~2-3 frame drop every 10 sec)
+> 
+> Tested and verified on TI's J784S4-EVM platform:
+> - Display comes up
+> - Detect utility works with a couple of seconds latency.
+>   But I guess without interrupt support, this is acceptable.
+> - No frame-drop observed
+>  
+> Discussion thread for Max's patch:
+> <https://patchwork.kernel.org/project/dri-devel/patch/20250501074805.3069311-1-max.oss.09@gmail.com/>
+> 
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index 60224f476e1d..9489e78b6da3 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -352,8 +352,10 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
+>  	 * change this to be conditional on someone specifying that HPD should
+>  	 * be used.
+>  	 */
+> -	regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
+> -			   HPD_DISABLE);
+> +
+> +	if (pdata->bridge.type == DRM_MODE_CONNECTOR_eDP)
+> +		regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
+> +				   HPD_DISABLE);
+>  
+>  	pdata->comms_enabled = true;
+>  
+> @@ -1194,13 +1196,14 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
+>  {
+>  	struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
+>  	int val = 0;
+> +	u8 link_status[DP_LINK_STATUS_SIZE];
+>  
+> -	pm_runtime_get_sync(pdata->dev);
+> -	regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
+> -	pm_runtime_put_autosuspend(pdata->dev);
+> +	val = drm_dp_dpcd_read_link_status(&pdata->aux, link_status);
+>  
+> -	return val & HPD_DEBOUNCED_STATE ? connector_status_connected
+> -					 : connector_status_disconnected;
+> +	if (val < 0)
+> +		return connector_status_disconnected;
+> +	else
+> +		return connector_status_connected;
+>  }
+>  
+>  static const struct drm_edid *ti_sn_bridge_edid_read(struct drm_bridge *bridge,
+> -- 
+> 2.34.1
+> 
 
-https://lore.kernel.org/linux-pm/2806514.mvXUDI8C0e@rjwysocki.net/
+This fixes the issues I have with detecting a not connected monitor on
+boot.
 
-is now present in the experimental/intel_pstate/eas-final brangh in
-linux-pm.git:
+As my HW has enable under software control but the power supplies not there
+seem to be an issue to properly bring up the bridge after a disconnect and
+then reconnect. I can work around that in the device tree by not adding the
+optional enable gpio.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log=
-/?h=3Dexperimental/intel_pstate/eas-final
-
-and it has been added to the bleeding-edge branch for 0-day build testing.
-
-Thanks!
+As such on a HW with a DP connector and a DP monitor:
+Tested-by: Max Krummenacher <max.krummenacher@toradex.com>
