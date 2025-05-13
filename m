@@ -1,139 +1,240 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2320D286A1;
-	Tue, 13 May 2025 06:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6500B286A1
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117833; cv=none; b=LAqh1KCqXSSRVnonRZwEk0SU3efDO4tDe5F87KDcZ1o9lwtoq2xTTVFjy2rCX0pb1oUtU9ohWSHNdZInuOSNZ8oUa9hxLy/XwnA2oubZlrAdF+so52BZRpXil2mBRjE5UxKwIwMJzE3jLyN5uAP3wgOpICAr19DeeFJ5G81xiTg=
+	t=1747117860; cv=none; b=gyrwy214vMx/BRPdoL8r09uhsS9itHuqpznYqFjran43PfKkvSb/+PVqU3MngOFcbLd4jH10+PQNalnUHd/XB5GPuTnIQj+rCtVGPI4e8PBTmTjO9PMtdEzEuRP28hb/UbZtdL7O1BQ8Ge1NICZ/WkitNO4FsAoxXO6uqDs43t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117833; c=relaxed/simple;
-	bh=qsPeyMu38DJb/GKVWha5I6LxEG3eOawAAd39Sj+pjZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kb1urVE6DiN0S63r9vYFOXnY2DT9YDu7fIXeJ+vJMnvQ1BaklKu0euaDGQjPYFOlvGBzVtRJ4owaF6AqVuCn55RqQ+mmKuqzYiMQWIzpBzbkIZMJwkuNDnXlkK6BLvan7eDUQKHPQH8goGKc0BX/6y2j9B/VgUyeS7v1kQYPqto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=MGceBvKs; arc=none smtp.client-ip=117.135.210.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1747117860; c=relaxed/simple;
+	bh=aZBL4GBTXVH/XcCa0nhyLI3hav2EGhWlligqqBckACI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z0kf5M6t9Gc4V1qACFEdK9i2D4t3XXCUDRXBwax7EmwCFD4dIKUKeyXholXSd6EBSYLSktHNiAnGDJw408UlVmP0AryQVfR+OfJNN4XKhkpkHVXI2d00VZoar82z2ZB18ot82JP3v9L19UikyPl/vy3LJ4C4M/DKZCtly0qgAuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQQxuheK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZC6wYFni; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lQQxuheK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZC6wYFni; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="MGceBvKs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=FA
-	nOl1rN79wdkEyXITWOwxgUUQ49yT5NL82Q+xLR0VM=; b=MGceBvKs4QOA57FtIE
-	nghtLqhpGgHEGHs4yEs01XGESYxAHsMS2jSpxnRAQ0xO9wQ+yquy/B5pVcFFswEC
-	B2rrGHbQy5gsn7EDSFWdIJDs8C4V/Ng3xrUchf3Y3TAJ8RTs6Qi4Rc2ZSfHIG8Yn
-	MySMKhSRiUVj+WG5VzBCIxWRs=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3v0tg4yJolyPXAA--.32121S2;
-	Tue, 13 May 2025 14:14:58 +0800 (CST)
-From: Liwei Sun <sunliweis@126.com>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liwei Sun <sunliweis@126.com>
-Subject: [PATCH] Bluetooth: btusb: Add new VID/PID 13d3/3584 for MT7922
-Date: Tue, 13 May 2025 14:13:54 +0800
-Message-ID: <20250513061353.13521-2-sunliweis@126.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQQxuheK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZC6wYFni";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lQQxuheK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZC6wYFni"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 78B9D211A2;
+	Tue, 13 May 2025 06:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747117856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
+	b=lQQxuheKUsh61PzojAfA/oIL3zgzDtf9NU2OKg1r+UM6VhaRNvSr3FJ6EfGwQFvIWpJ42n
+	GWmQOliYUb1t92w42FHjXguq/x0NyOO82Zj/FEAdIldoR+OSxw5yZldLlO3VlaClAC3lOI
+	dVfNUD5v/ue+KZqbqBZZo/ZdtTf3ico=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747117856;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
+	b=ZC6wYFniyoAzOK84hHfcGLeWQai9U4b5O8PdmByr5eNNuDR2og2II1wmBzBq8MEG0bvDSk
+	nv5ZtibE6C3+sFAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lQQxuheK;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZC6wYFni
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747117856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
+	b=lQQxuheKUsh61PzojAfA/oIL3zgzDtf9NU2OKg1r+UM6VhaRNvSr3FJ6EfGwQFvIWpJ42n
+	GWmQOliYUb1t92w42FHjXguq/x0NyOO82Zj/FEAdIldoR+OSxw5yZldLlO3VlaClAC3lOI
+	dVfNUD5v/ue+KZqbqBZZo/ZdtTf3ico=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747117856;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j2cbLjWTSbGNj0XNwnqUpsQPLn+Rd8LAjJ9qDnJPUSs=;
+	b=ZC6wYFniyoAzOK84hHfcGLeWQai9U4b5O8PdmByr5eNNuDR2og2II1wmBzBq8MEG0bvDSk
+	nv5ZtibE6C3+sFAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12360137E8;
+	Tue, 13 May 2025 06:30:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jpDpASDnImgSRwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 13 May 2025 06:30:56 +0000
+Message-ID: <ecff74ca-f3a5-4848-8836-54f1d7810aca@suse.de>
+Date: Tue, 13 May 2025 08:30:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+To: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>
+Cc: dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+ snitzer@kernel.org, bmarzins@redhat.com, linux-kernel@vger.kernel.org
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <aCIRUwt5BueQmlMZ@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3v0tg4yJolyPXAA--.32121S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGw4UCrW5Xr4xJryrCw45KFg_yoWrAFyfpF
-	n5t3Z8XryIgF1jqrnIyw1rAayFg3s7W342k3Zrtw13XFWrAan7J3WUArWfXFs2kr4ag3ZY
-	qF1Du3yrKr15GrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEcdj9UUUUU=
-X-CM-SenderInfo: xvxqzxpzhl2qqrswhudrp/1tbiEwJLW2giZBVnkwABsP
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 78B9D211A2
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
 
-A new variant of MT7922 wireless device has been identified.
-The device introduces itself as MEDIATEK MT7922,
-so treat it as MediaTek device.
-With this patch, btusb driver works as expected:
-[    3.151162] Bluetooth: Core ver 2.22
-[    3.151185] Bluetooth: HCI device and connection manager initialized
-[    3.151189] Bluetooth: HCI socket layer initialized
-[    3.151191] Bluetooth: L2CAP socket layer initialized
-[    3.151194] Bluetooth: SCO socket layer initialized
-[    3.295718] Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20241106163512
-[    4.676634] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-[    4.676637] Bluetooth: BNEP filters: protocol multicast
-[    4.676640] Bluetooth: BNEP socket layer initialized
-[    5.560453] Bluetooth: hci0: Device setup in 2320660 usecs
-[    5.560457] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
-[    5.619197] Bluetooth: hci0: AOSP extensions version v1.00
-[    5.619204] Bluetooth: hci0: AOSP quality report is supported
-[    5.619301] Bluetooth: MGMT ver 1.23
-[    6.741247] Bluetooth: RFCOMM TTY layer initialized
-[    6.741258] Bluetooth: RFCOMM socket layer initialized
-[    6.741261] Bluetooth: RFCOMM ver 1.11
+On 5/12/25 17:18, Kevin Wolf wrote:
+> Am 08.05.2025 um 15:51 hat Martin Wilck geschrieben:
+>> Hello Kevin,
+>>
+>> [I'm sorry for the previous email. It seems that I clicked "send" in
+>> the wrong window].
+>>
+>> On Tue, 2025-04-29 at 18:50 +0200, Kevin Wolf wrote:
+>>> Multipath cannot directly provide failover for ioctls in the kernel
+>>> because it doesn't know what each ioctl means and which result could
+>>> indicate a path error. Userspace generally knows what the ioctl it
+>>> issued means and if it might be a path error, but neither does it
+>>> know
+>>> which path the ioctl took nor does it necessarily have the privileges
+>>> to
+>>> fail a path using the control device.
+>>
+>> Thanks for this effort.
+>>
+>> I have some remarks about your approach. The most important one is that
+>> the DM_MPATH_PROBE_PATHS_CMD ioctl appears to be a dangerous command.
+>> It sends IO to possibly broken paths and waits for it to complete. In
+>> the common error case of a device not responding, this might cause the
+>> code to hang for a long time in the kernel ioctl code path, in
+>> uninterruptible sleep (note that these probing commands will be queued
+>> after other possibly hanging IO). In the past we have put a lot of
+>> effort into other code paths in multipath-tools and elsewhere to avoid
+>> this kind of hang to the extent possible. It seems to me that your set
+>> re-introduces this risk.
+> 
+> That's a fair point. I don't expect this code to be fully final, another
+> thing that isn't really optimal (as mentioned in the comment message) is
+> that we're not probing paths in parallel, potentially adding up timeouts
+> from multiple paths.
+> 
+> I don't think this is a problem of the interface, though, but we can
+> improve the implementation keeping the same interface.
+> 
+> Maybe I'm missing something, but I think the reason why it has to be
+> uninterruptible is just that submit_bio_wait() has the completion on the
+> stack? So I suppose we could just kmalloc() some state, submit all the
+> bios, let the completion callback free it, and then we can just stop
+> waiting early (i.e. wait_for_completion_interruptible/killable) and let
+> the requests complete on their own in the background.
+> 
+> Would this address your concerns or is there another part to it?
+> 
+Not really. There are two issues which ultimately made us move away
+from read I/O as path checkers:
 
-lspci output:
-04:00.0 Network controller: MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+- Spurious timeouts due to blocked or congested submission
+- Error handling delays and stalls
 
-USB information:
-T:  Bus=01 Lev=01 Prnt=01 Port=04 Cnt=02 Dev#=  3 Spd=480  MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3584 Rev= 1.00
-S:  Manufacturer=MediaTek Inc.
-S:  Product=Wireless_Device
-S:  SerialNumber=000000000
-C:* #Ifs= 3 Cfg#= 1 Atr=e0 MxPwr=100mA
-A:  FirstIf#= 0 IfCount= 3 Cls=e0(wlcon) Sub=01 Prot=01
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=125us
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-I:  If#= 1 Alt= 6 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  63 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  63 Ivl=1ms
-I:  If#= 2 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=8a(I) Atr=03(Int.) MxPS=  64 Ivl=125us
-E:  Ad=0a(O) Atr=03(Int.) MxPS=  64 Ivl=125us
-I:* If#= 2 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=8a(I) Atr=03(Int.) MxPS= 512 Ivl=125us
+When using normal read/write functions for path checking you are
+subjected to normal I/O processing rules, ie I/O is inserted
+at the end of the submission queue. If the system is busy the
+path checker will time out prematurely without ever having reached
+the target. One could avoid that by extending the timeout, but that
+would make the path checker unreliable.
 
-Signed-off-by: Liwei Sun <sunliweis@126.com>
----
-Resending this email due to format issues. Apologies for my previous
-mistakes.
+But the real issue is error handling. Path checker are precisely there
+to check if the path is healthy, and as such _will_ be subjected
+to error handling (or might even trigger error handling itself).
+The thing about error handling is that you can only return affected
+commands once error handling is complete, as only then you can be
+sure that no DMA is pending on the buffers and one can free/re-use
+the associated pages.
+On SCSI error handling can be an _extremely_ lengthy affair
+(we had reports for over one hour), and the last thing you want is
+to delay your path checker for that time.
 
- drivers/bluetooth/btusb.c | 2 ++
- 1 file changed, 2 insertions(+)
+(And besides, I didn't even mention the third problem with I/O-based
+path checkers, namely that the check entirely the wrong thing; we
+are not interested whether we can do I/O, we are interested in whether
+we can send commands. In the light of eg ALUA these are two very
+different things.)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 5012b5ff92c8..9850272e83ef 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -678,6 +678,8 @@ static const struct usb_device_id quirks_table[] = {
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x13d3, 0x3568), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x13d3, 0x3584), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x13d3, 0x3605), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x13d3, 0x3607), .driver_info = BTUSB_MEDIATEK |
+>> Apart from that, minor observations are that in patch 2/2 you don't
+>> check whether the map is in queueing state, and I don't quite
+>> understand why you only check paths in the map's active path group
+>> without attempting a PG failover in the case where all paths in the
+>> current PG fail.
+> 
+> Ben already fixed up the missing check.
+> 
+> Not attempting PG failover was also his suggestion, on the basis that it
+> would be additional work for no real benefit when you can only submit
+> requests for the current PG anyway. If userspace retries the SG_IO, it
+> will already pick a different PG, so having the kernel do the same
+> doesn't really improve anything.
+> 
+Precisely.
 
-base-commit: 7a13c14ee59d4f6c5f4277a86516cbc73a1383a8
+I think the best way forward here is to have a 'post_ioctl' handler
+(much like we have a pre_ioctl handler nowadays).
+This would check the return code from the ioctl, and invalidate the
+current path if there was an I/O error.
+That way the user can resubmit the ioctl, until all paths are exhausted.
+For that to work we need to agree on two error codes, one for
+'path failed, retry' and one for 'path failed, no retry possible'.
+Resetting path status will be delegated to multipathd, but then that's
+its main task anyway.
+
+Cheers,
+
+Hannes
 -- 
-2.49.0
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
