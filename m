@@ -1,142 +1,159 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E4B20C461;
-	Tue, 13 May 2025 22:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44143201268
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175145; cv=none; b=B4W6i/gqrO2QucwRcHntEahYd3tXoaeXV97Hs0eu+fcX9LcJkpPs8XosPshY2+jxbeREOV5bQkniuggHS6KSRi45L+dEN2C22kD0MQhuBNB8sIbdzRyZPnudLlFLvOkftotVCvGygQuYnXpD5g08R37UhTrY1TGtydE2MNwp/KY=
+	t=1747175268; cv=none; b=tlXfko7GLreDcZmCZW8EWhg9lFtpy0v7MIOJDYneP7KLlQ5PAxE2Vxq1vMEX5KD1wJ6AYRMz/BHfgMt105vydb3a035VOJ8gOs1DyQHB5Y832uQbZzHf4F7Llcwq/cCobMpjxBTv2+TkBkKq4b8rCNSpB0iA9pWLxs5wWzZc7BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175145; c=relaxed/simple;
-	bh=rf3JppW/78wO/r4B/y0eX4WT7rbL9KH6NSFoGLZ/3Fg=;
+	s=arc-20240116; t=1747175268; c=relaxed/simple;
+	bh=hV9dEfGvRpT7A/K+vjfSEDzaamdRUI6QA3Ijvf5dz+4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZF5qupP4w3u3CRCVHgBiSWy0sGOCg5I96L/jwyFVZ06Lc2xDpcc3b+mZ+lbqtT8YQpuvM48rFcO796Xzs/FDjTwdCZgKQtadkIEac77AfS4BrL1CQtXHw/rLrjDEIW9fqaNUSQ2x00cKPa8kCfuQlAM/imRYZlVM7gfBd9NEOk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W94iHPgP; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pS97blg2yGrMvzCVdMWyltWS3334ZaPZQyo/dFRrnz3MCIa0fZcpUxRlbvdfI4lFLM9HejSeD2EfBka7eoT0of8mLMu/ZyGhKNF8zOWNDJKf8UHEABcRuCro+go20+4+UkNbTvxdDk+rJOcAgoK8y91u9yLvNQ7nCRq45V0burI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zv1MHfN/; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W94iHPgP"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a108684f90so3753202f8f.1;
-        Tue, 13 May 2025 15:25:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zv1MHfN/"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e78fc91f2dfso4640434276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:27:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747175142; x=1747779942; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747175266; x=1747780066; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wAwr1O0koPzIlKh8epOygSIaJtugVEfkRrBmy7awSbw=;
-        b=W94iHPgPJz/INngo0cRpnhtWyjCUrDSuU969bPC3SZCkg4QLlB4bUabuaMGw9vB2YL
-         rFZXONTEsy/ATGwR8a3B0C1vEeNvHQdu6JroeCBXsU5Axsfgc88XkaCZKDcvY/ycc/RS
-         FW0lA72pKufLy+rIikDlmaYdhGzy7r5mEIWSwrcoPdSGY3CAc7dZeGJ5Tg8PQEmiA/xx
-         rklBm4KvN6ZJZcwBc4ApKGCUMPIIR7URNvN1sIh8qcOLuQeKB2ogbGwcpJpMUDd6ZAhe
-         Czjl8Smd3cosAGUXYrCcLWJL2+zGsmVRDfRdlEGWfTMkZNr5WZnqbXJom2X7GdoQRfqP
-         FMxw==
+        bh=d4BxEI90f+LuMJhBx2vC+R7qBMnsPOdwtq/dnJCZ35o=;
+        b=Zv1MHfN/DbT3TYiB3YWLab97P+mSGj3wVGE0vldMvxqCGSeqVaBbS0YF0BMvT+pVdl
+         YUUBDMffxf4RvynVxnokXW/n+46YfOrRIGdElDF6RQB78Ty4t2oxGWFXv5BkIDVPfyi5
+         ewOimruKVuN92vIyBwFwD4OwpjSgETpaUtCrbhLMjlbBBo3YaywGdsZNSSu8R/ltwgOu
+         7NBVm+qgnlP9AaV8DrlPf0aWZijCFh0UZxLb7Q9YbbmdovJ0ql4opzaEMTOu7uXN4ndo
+         vfEQyXw6A4y3PeOJD0yMNrlqy+hXn2BqlU25e6kbYaTalGnBRZGmYKinFeH39JIVbQid
+         hUmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747175142; x=1747779942;
+        d=1e100.net; s=20230601; t=1747175266; x=1747780066;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wAwr1O0koPzIlKh8epOygSIaJtugVEfkRrBmy7awSbw=;
-        b=PkFg+ktOKngMwKFbBoitHafYWlJUpYTexVzvdmIe7fym0XYQRysgR8drK3tGHn+XBe
-         zISSDcH5Yx/LX5leYlJkYoZI0nAbNcvOx2ahXcVeaOsCBQSJliW2iLHKBQHoVTI8z33w
-         W3FONirhkdjBnLQRStIRGhjUrGXTA9nhodz/+1XCFx2dtrGChhApDQXmbWlYpFt16pSC
-         s0kWcUnmzocM+iPjLA7eMXHy1zv3Jz06tdrvL7WdEd7JUQowbkHDtx/sI3yKTu4Ssq3v
-         vgZHwS1TMN+p1ivxQUzifg5n9p4WyczDqDLUxk1JrmJ5NYXNBiYSot0jMkF3jw1j82l4
-         Do+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUSTbNd9SGY1uEFZNzWEpoZPQWNDpjTtWUDQ7/p4g5TLcumPsuzF5zrV8Cp9QJPZgytaTA=@vger.kernel.org, AJvYcCUh8SmE56CWg0Z3wY61BPIIYPhoSZdT5n//iDeuBmGhndOVBEl40EmVXi5Q8pF2cGr00uSs+Pw2Og==@vger.kernel.org, AJvYcCXZ6RgE7ONlGdYLS4uKSjDapGRe43cntP+dD1960Vx55jSj24wb0/V+yxE3Ecp6fHylR/95tS6qjHbERopB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+2xpPKY9cXwGFyl/aEKVU05ACEJiOAjzQlYGCDp8BaDVkYP/P
-	p7HNUeWbidrjiXeRlSppAqKMPuWSyIkAWJF3cUkxmUeldO5kFlHaCvM8WU/sLq24YYvZH8xXmAZ
-	Kl6dd3lEAXDXF4jmSWsk5D2UUcPk=
-X-Gm-Gg: ASbGncvGrKpNRVcFWOOtilzbFfw0ERNRN4jL8Gt3CygJGqqqmbptKCFGH1UhHHHOBMF
-	DZSLVyAf/Bmjl5h3aOjsSXhwCTQ5i5l7qAN1GjUaPzq+KB5iv6gYPKOoCOxD8M9Plg+2WvLC3rC
-	pbpXQKd7H18KOwTOKgpw90dwPf/GhpJOzpGBRcb6GALe7WeHH7ZfzhHZNYZ1Bv8w==
-X-Google-Smtp-Source: AGHT+IGCSV1CW2V8g3e0buvKmCKp4+U6DS5ChJ8qy9B6coY/qGEWuanukGv1ONA7/0rEN2Xci8nFgq7f5PO+enTp454=
-X-Received: by 2002:a05:6000:430d:b0:3a0:b4f1:8bd1 with SMTP id
- ffacd0b85a97d-3a3499532b6mr669366f8f.52.1747175141983; Tue, 13 May 2025
- 15:25:41 -0700 (PDT)
+        bh=d4BxEI90f+LuMJhBx2vC+R7qBMnsPOdwtq/dnJCZ35o=;
+        b=RC1MZ9Awq5jPyiS+StrmQFvWupkyWucMfYf8ISmhdP7xnWggVEWzCNOkOjixlP1ERT
+         WXbcFHAGQWholHbL4gQghRxf42piPhnXCP/HYn1mcLOKBBWX674GJ6C70zG9NOta0EKs
+         fT4QnZrJlTBJlsQCt34mdnVmhvEo4jEMwU62TdXZE2QlC7R+3AppOZfKJaIvxzC6Pd77
+         NCLx8vmMIYz4zRaVlMXsxBCZC6R2KKvidfSF80eXVTo6asffV6BZ/FHIr4d/3zzg+Wop
+         JI7JtSCqWzV5ZeJ1C/xE8/IMAEu52G5hXUZKwxhUmHIyhqsF/kezKD1npPdsXHWuPtJt
+         YS6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXszkiEeb0CFbrZLSNAp4XMrFR4B7pA4VhAyQ9NBcZsIfQrfN9K6PwfLAjTuJt5fvzwiBdLZOR4GVUm37M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjihigSEETcSDbMlw3uXinWBQytUPcEV+wp1heg/qFvuhjoPyz
+	OUDY5uG6Izo5dC+DTjX7Q8ZtuCsOGQGMScMp78o+y9uRGD2EvuarNHXvTpb0UOyajBs3NzZwI6e
+	w6Ma+sqRjEkBbxdPs1EESMmT7vn5PbEEbDI9i
+X-Gm-Gg: ASbGncvKyt8ImXcMHJ8+P7nwUp2ECnYxuSHereWHfJr+6G9xIFrM6Y/erllf4zQbgMR
+	BsB+B6KpKezMOSgPPzThcaMyiCKvnipWM8K4eaH2jQ0eN+8/UgG47ZbLKbvrhJ95Oft/zNdKMuf
+	vVue/60Haese0stIlbLrNU9ArlAkvkC/3+k5irE5GndHLGMI4rKa4E2pDUrkIIKRY=
+X-Google-Smtp-Source: AGHT+IHGGVAQ9j1MIS0WEDIVdUN3GUhfjFMvl4Az4pKzorsoWzipPARxrRCPUSiC/QTtB57wEmS/FD54NGpHgV2JQIk=
+X-Received: by 2002:a05:6902:218b:b0:e72:d449:72ed with SMTP id
+ 3f1490d57ef6-e7b3d50495fmr1563601276.24.1747175265982; Tue, 13 May 2025
+ 15:27:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509232859.657525-1-shakeel.butt@linux.dev> <20250509232859.657525-5-shakeel.butt@linux.dev>
-In-Reply-To: <20250509232859.657525-5-shakeel.butt@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 13 May 2025 15:25:31 -0700
-X-Gm-Features: AX0GCFu-xAuvef9BfHGE2CGCgnqITmOEvaYA7dWvW7qUfVnFWb0NhsjFDSFfKcA
-Message-ID: <CAADnVQ+8w7huzJFqqm40KVetnQC-SoFKSMjq2uJHEHuAkCR7YA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] memcg: make objcg charging nmi safe
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf <bpf@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, 
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Meta kernel team <kernel-team@meta.com>
+References: <20250508141012.1411952-1-seanjc@google.com> <20250508141012.1411952-4-seanjc@google.com>
+ <CADrL8HURpnXgN0ux4sUk0nVze=A6d488i_ztiZTwGZUdDMoTvg@mail.gmail.com> <aCNTnXf5qZ1MMSNi@google.com>
+In-Reply-To: <aCNTnXf5qZ1MMSNi@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Tue, 13 May 2025 15:27:09 -0700
+X-Gm-Features: AX0GCFsDGXmj7RlobLqWuUuE1IVN7eJdtvf1EE2cZW_PZqhmBNgwx1moW1K1BG0
+Message-ID: <CADrL8HUaofWTcV7X5b1AXEud03bC+gfZiecyFpux9m1tC25hOg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] KVM: Conditionally reschedule when resetting the
+ dirty ring
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 9, 2025 at 4:29=E2=80=AFPM Shakeel Butt <shakeel.butt@linux.dev=
-> wrote:
+On Tue, May 13, 2025 at 7:13=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
 >
-> To enable memcg charged kernel memory allocations from nmi context,
-> consume_obj_stock() and refill_obj_stock() needs to be nmi safe. With
-> the simple in_nmi() check, take the slow path of the objcg charging
-> which handles the charging and memcg stats updates correctly for the nmi
-> context.
+> On Mon, May 12, 2025, James Houghton wrote:
+> > On Thu, May 8, 2025 at 7:11=E2=80=AFAM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+> > > ---
+> > >  virt/kvm/dirty_ring.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
+> > > index e844e869e8c7..97cca0c02fd1 100644
+> > > --- a/virt/kvm/dirty_ring.c
+> > > +++ b/virt/kvm/dirty_ring.c
+> > > @@ -134,6 +134,16 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct=
+ kvm_dirty_ring *ring,
+> > >
+> > >                 ring->reset_index++;
+> > >                 (*nr_entries_reset)++;
+> > > +
+> > > +               /*
+> > > +                * While the size of each ring is fixed, it's possibl=
+e for the
+> > > +                * ring to be constantly re-dirtied/harvested while t=
+he reset
+> > > +                * is in-progress (the hard limit exists only to guar=
+d against
+> > > +                * wrapping the count into negative space).
+> > > +                */
+> > > +               if (!first_round)
+> > > +                       cond_resched();
+> >
+> > Should we be dropping slots_lock here?
 >
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
->  mm/memcontrol.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> Could we?  Yes.  Should we?  Eh.  I don't see any value in doing so, beca=
+use in
+> practice, it's extremely unlikely anything will be waiting on slots_lock.
 >
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index bba549c1f18c..6cfa3550f300 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2965,6 +2965,9 @@ static bool consume_obj_stock(struct obj_cgroup *ob=
-jcg, unsigned int nr_bytes,
->         unsigned long flags;
->         bool ret =3D false;
+> kvm_vm_ioctl_reset_dirty_pages() operates on all vCPUs, i.e. there won't =
+be
+> competing calls to reset other rings.  A well-behaved userspace won't be =
+modifying
+> memslots or dirty logs, and won't be toggling nx_huge_pages.
 >
-> +       if (unlikely(in_nmi()))
-> +               return ret;
-> +
->         local_lock_irqsave(&obj_stock.lock, flags);
->
->         stock =3D this_cpu_ptr(&obj_stock);
-> @@ -3068,6 +3071,15 @@ static void refill_obj_stock(struct obj_cgroup *ob=
-jcg, unsigned int nr_bytes,
->         unsigned long flags;
->         unsigned int nr_pages =3D 0;
->
-> +       if (unlikely(in_nmi())) {
-> +               if (pgdat)
-> +                       __mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
-> +               nr_pages =3D nr_bytes >> PAGE_SHIFT;
-> +               nr_bytes =3D nr_bytes & (PAGE_SIZE - 1);
-> +               atomic_add(nr_bytes, &objcg->nr_charged_bytes);
-> +               goto out;
-> +       }
+> That leaves kvm_vm_ioctl_set_mem_attributes(), kvm_inhibit_apic_access_pa=
+ge(),
+> kvm_assign_ioeventfd(), snp_launch_update(), and coalesced IO/MMIO (un)re=
+gistration.
+> Except for snp_launch_update(), those are all brutally slow paths, e.g. r=
+equire
+> SRCU synchronization and/or zapping of SPTEs.  And snp_launch_update() is=
+ probably
+> fairly slow too.
 
+Okay, that makes sense.
 
-Now I see what I did incorrectly in my series and how this patch 4
-combined with patch 3 is doing accounting properly.
+> And dropping slots_lock only makes any sense for non-preemptible kernels,=
+ because
+> preemptible kernels include an equivalent check in KVM_MMU_UNLOCK().
 
-The only issue here and in other patches is that in_nmi() is
-an incomplete condition to check for.
-The reentrance is possible through kprobe or tracepoint.
-In PREEMP_RT we will be fully preemptible, but
-obj_stock.lock will be already taken by the current task.
-To fix it you need to use local_lock_is_locked(&obj_stock.lock)
-instead of in_nmi() or use local_trylock_irqsave(&obj_stock.lock).
+I'm not really sure what "equivalent check" you mean, sorry. For
+preemptible kernels, we could reschedule at any time, so dropping the
+slots_lock on a cond_resched() wouldn't do much, yeah. Hopefully
+that's partially what you mean.
 
-local_trylock_irqsave() is cleaner and works today,
-while local_lock_is_locked() hasn't landed yet, but if we go
-is_locked route we can decouple reentrant obj_stock operation vs normal.
-Like the if (!local_lock_is_locked(&obj_stock.lock))
-can be done much higher up the stack from
-__memcg_slab_post_alloc_hook() the way I did in my series,
-and if locked it can do atomic_add()-style charging.
-So refill_obj_stock() and friends won't need to change.
+> It's also possible that dropping slots_lock in this case could be a net n=
+egative.
+> I don't think it's likely, but I don't think it's any more or less likely=
+ that
+> droppings slots_lock is a net positive.  Without performance data to guid=
+e us,
+> it'd be little more than a guess, and I really, really don't want to set =
+a
+> precedence of dropping a mutex on cond_resched() without a very strong re=
+ason
+> for doing so.
+
+Fair enough.
+
+Also, while we're at it, could you add a
+`lockdep_assert_held(&kvm->slots_lock)` to this function? :) Not
+necessarily in this patch.
