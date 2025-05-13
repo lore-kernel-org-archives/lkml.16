@@ -1,243 +1,464 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557161B3950
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747160274; cv=fail; b=bdZb27drolato8Wd5O3m/fnuYJt4Nw0JQMpKhHbcqif6IeqlS+fusiWggc9oOPXdcCNDoHd5tFIRxGagMZarCbllq/uOdKeH1kXU8DqQ+QaWOa37heF6mLmaqoVIX3mfGWuib7WWqSrpKqjOyVH27CNKR3rzANCxsG+aJjUQc2U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747160274; c=relaxed/simple;
-	bh=oRqsQWT+pHMC6cnnWYxEMOVellq+VrmaCZwFoJN/0No=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KZwsbYRt29OP55x52tLX5CljgTFbYppQU7RSUS62C58iumTarkFFvP0zkvLV5/M8YpJp5lPGyiDEULH6mXujk2PxwqimMje5qxmHSZ7V6alQ6oyeZP5FTjFQpusrbeP3v/5GuXgfhX+kHXxEuc47hyelTxvttNNyB8CMIhjbp6o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oIhw1WRZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=AvOmOmCh; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDF92AD0B
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747160294; cv=none; b=rcAGUgFIhngV8K44KjhDREgVkAUKSkMKl/QiDXbuPXa/Luba1xKaj1mPvYo/pPea58UPXyC7E91ZKGRGlUU7Yalabcj5xCV3GYUllpsIgTfvR1bVX73uQE+RqqrPH5b1Synf7l0mgxrhqDK/OcL0tSj9gDDOvpAzkfRPlLZok2Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747160294; c=relaxed/simple;
+	bh=HBeE+0wW+om85cfwNdDKrlxMpD223ZWbB4T/sjnTmUo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sXH4IkhAX5WCfDdqYIJQMCsToz28TYmO1kow5Ty9qX3hKs6o5b3ZwJH9miszLzLJOfbi5e2Q43318RZJAi0wVEU93N3yLnlueIK6RBmeoups3BUxhVVhJkMZ2fTEVISgBi5SaLqV6cnrjgCYJCfo/+CuR/vo7hU+QAASrAlJTUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qPlyclbu; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oIhw1WRZ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="AvOmOmCh"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DCHgGt027156;
-	Tue, 13 May 2025 18:17:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=WDk7eeVVp596PGt6+1
-	AALLfRGtbZwlNcyafVprbxD9E=; b=oIhw1WRZy3SLcfBFBYfSEYuZc//cOhRwNu
-	V5BC3NanwNhutN2P1sN41B1iUFwRyXUOSPobeOWRZ5rsx8koLhS6zfPx6wj6PckG
-	GC+2e3PsNEmHdVewuiSWgjOaU0JGAUiQBr3Y5owAyOi9ijTjGXoIBrYuND3xys+G
-	rwVrFeiqjiUbmhp9YEepNcH2miKWGBYMv2GTA+5X1OK24KSW57LQDtUTaeGuRj2h
-	eL6phrsw9dP3urxoJYTX9iI+LBqzhiaNfxQbsvANG2FlaLgpFu9HU27DWr5qbswM
-	BuZVTVuUpVOJ0jWZxPBbwY27n0Gak7PXzWJ4QDmbaVNsC+UlM/iA==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j13r5ftf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 18:17:35 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54DHUfKf022301;
-	Tue, 13 May 2025 18:17:35 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010022.outbound.protection.outlook.com [40.93.12.22])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46hw8a33by-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 18:17:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=al8WwzDcDMhEZowTEwqd3wgHWirv4bpf6rE4qHSGKW65nJey7HTe/8DZ7zMi864oiQCqAUzgUHSbMYVqXnjPtOPUSIv99sB2+RYYvn6ARunJVrOMnLo/UYyAraQ0B0DAB7jZJYLPGhiGMNP9LZ+tSFniEqtXIMijc+IslGPzNT1ZWCGoPq5FepFeByISxzOmnoGEcudzRiBTqZvHfStj4do1nVVyulY04jz+qVntBtLCUND6EtDlXNzua73oHI3sVWn9XjYE2OUc0D41yEMDYqOQd9FJZ9ixh4zy9lXVvY4ljWKqf+C+XB600UIu0xqIJkZdaI2EIVNm/SPjN1hDwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WDk7eeVVp596PGt6+1AALLfRGtbZwlNcyafVprbxD9E=;
- b=e7PKE6dXpRv5sfXLVALTwmE52ME2ar4wmUmCj30AterS3tO4wmelFPcfJwhqzX7WjXv5XhT55+NJzJml63RbuAhUj3IW0OXUYtfyElrYhfhNxohoRD1N/c/7c308P8uSr8zU4ayEFvaPWq8YQmx6wuD/JIeHGxzUDVxKZl9qadRWWFNo444nO8gpv/zTi/g9jGFSdQyGw8zpDZsNF5pas9+CVE5R6W/WjiC5H95YAVEL6RZO3XuaHmHdi7ir1K9AqUXnVb8rviFG4q9ojpSEF/8Ha+vgIL1ssvZcfJGuaE0/HkXptf/Xf8vr43iHBh3y6kpEplbA4ylHclujy+hDbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDk7eeVVp596PGt6+1AALLfRGtbZwlNcyafVprbxD9E=;
- b=AvOmOmChXr6JffUgnEOKs/cyz8D3wvcBUIh6liREToI5DuZjd4vsGPgyw8uotldWZOUIAzeD7UskKcGEPacYFtA7+KWv8jrPTXTDD1ZKZWh0I7Uj28iSIs4ESwcJ11SYZr3vx3zby7BGrZy/BOKyyNZbHemgiUZU8gsK54qefCc=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CYYPR10MB7569.namprd10.prod.outlook.com (2603:10b6:930:bb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 13 May
- 2025 18:17:30 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8699.022; Tue, 13 May 2025
- 18:17:30 +0000
-Date: Tue, 13 May 2025 19:17:27 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, xu xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] MAINTAINERS: add mm ksm section
-Message-ID: <783a848c-f9f0-4f2c-8d6f-46d2765d80f7@lucifer.local>
-References: <20250513161758.136402-1-lorenzo.stoakes@oracle.com>
- <dd10e199-e5de-4c4c-a524-68091973de7d@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd10e199-e5de-4c4c-a524-68091973de7d@redhat.com>
-X-ClientProxiedBy: LO4P123CA0500.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1ab::19) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qPlyclbu"
+Message-ID: <5d004048-ef8f-42ad-8f17-d1e4d495f57f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747160288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VergU86i4ALqHioN7prEA0AAZk9+sq3Anjg1pRxRhn4=;
+	b=qPlyclbuJUlY7oA1oyMI6KtiOFLQQSlpFZTLSvv7LtOlknSkR0ugZM5yzrkqmDrUA6nA7F
+	chAbq7FK2QjJfTS8ASDxGJBEdcEMRF3Ozp/TQU43p9LTaEQ+zHFfiseu+E64QEUNbA4MOk
+	OCOzXqR7SQ05S0U4iEqYyWWuWVAf2QE=
+Date: Tue, 13 May 2025 14:18:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CYYPR10MB7569:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79fbd137-a4fc-4ef0-4571-08dd924a6c63
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?03uSH5OS7HOiS7ai2WNysVxASLhsW1qEXSPk/0Hwe1xqB66ypHSEQfF/2gqe?=
- =?us-ascii?Q?e6Nn9s8tZ8RpJH88PgL7aeZx/NCKVMWIo19tLRFfCo7zIlfGbPDvM+tRVsbM?=
- =?us-ascii?Q?VbkKZ+3TpPyyKp0GC77aedpM0JsYRNN7SnpcyIpjmKPax526cydnruO//oMp?=
- =?us-ascii?Q?BM6fyoJmplq9IpZDweY3RL6xHqo4GIfGkPwSBc9Lx8YTPHZaP2IlNEg7pjHH?=
- =?us-ascii?Q?NXrbnmGijTHcpzu2PWKpKM/1e3EcgPobGJbCc3jB8b4Z6spyCTp7X7+XqjfP?=
- =?us-ascii?Q?Kcfz8UI4Pqlai3Y5qtgylBA9/usqaM/ML2Rk2dtk97iQ1jci3U/h6IVlJF4t?=
- =?us-ascii?Q?1/wgR3kKPiXZu1aseZM0zRTbdVgp6RU8lhmMNwB6CEm+RNpCXijpyMCzNsT/?=
- =?us-ascii?Q?SKVE0Jo8fmkcp2X3iW6W3nGZ9t6GqYDk9s39D3xeiO+InU1FZrQWTPbySfsg?=
- =?us-ascii?Q?DptHZse33Ogr679Gb/SfCKgAqaJlNOOEPxm12YSl/FJM0vsWMrQhgLvNyRnU?=
- =?us-ascii?Q?PKpfkl2wbqjBs2wu2KlWjD4i/w2uWfjRYaF4TGmPcEfMREa55bnhhHnKA1IX?=
- =?us-ascii?Q?5gTyzg6BR1rk4iCpu5ibsZbkMrp81CAihkR/b2cj9FPB4tNm69DGN7YvUytl?=
- =?us-ascii?Q?YEmOVVWtZFwXCnOC4mWhmYAalcoVnKeRb5bs3mdbLdm+nwLdJd2J2UdcJZgh?=
- =?us-ascii?Q?Oy4YTGmDBz8hmi49JAigeeDivqq/1UCA6ueOp5b2fP1jzflACZYLarh6wS2M?=
- =?us-ascii?Q?/O5f0CqcykIXmh5ts1jzH42+hH13FX27xcYB8SzaK8pQaiAXiq1PzXxGlgwP?=
- =?us-ascii?Q?sRvItzICqtYJs/GB6GvJRgNXm/tT4UCUlXF+6hDSCBMIe2CFVxv0TP4mzb99?=
- =?us-ascii?Q?v7KQXJIDdFjhd8piis0k4xkHZYmiFcOosqrZuU6RZ1+Ie5Bvf3XwxHX+QECy?=
- =?us-ascii?Q?bwqXrdh1qfYm1KiUIAN+yc5XuXeGcsv4qTOyf1WXkiBKrVg5mKejpTYR/pOt?=
- =?us-ascii?Q?hFnxw7q4KfXRdfe4OQzMMDDFuSWduxjWQXy1eDhjSo6XCO4qkiUGWgkTmFH+?=
- =?us-ascii?Q?nObIST41uAG9kZzwNK2Z8qz96fmlqHqJOJpiVIXAqsSlxKjnQgiZW9JfA0ac?=
- =?us-ascii?Q?fhi+pOoq3zXwY2Y2/WNvQVy2Qb/X2n5wWchHWgpDb5kLsqQQhPvF3yJlt3nr?=
- =?us-ascii?Q?0kXjwXcB8HSTA2gnOVSUCM7ih/ihfFdpZx96W1eDDfWIqR2uWld1gDyuN8Lt?=
- =?us-ascii?Q?GLVjl6Vz6+tvKhU6o1d/xWelvCG+CHXsX7NjnP5bKx/w6KAIznOwFEWmpmmD?=
- =?us-ascii?Q?Ln+NTZ5icvw4f4VCC+pDn54bRwXbYxEWTL7DCJL/jHxmiIq40c4xY0Q8Dm1E?=
- =?us-ascii?Q?3lorLjo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?V/kH3TYBBrg2aclCPsUrINUCB+iIFDXLu10WwrwKW4qUaxr5wGQ5T+odYGpA?=
- =?us-ascii?Q?6LkDYwJH5lK2SMxUQuOgzTrYlS+DT8iGtdjk1TDQWJmRuXfq06gDqVTbQCRN?=
- =?us-ascii?Q?8/l2bnAQGlRNHxAMD8S3yxxoZ5p7p6k3e8wNr7Ku/LdRKLtc6iYw3rljsbFZ?=
- =?us-ascii?Q?RddkkyRrQCLNFXdwx+4wMWHU0RuwwUusdtMcCu0Vj+eNnamR7QaiKrpScfqB?=
- =?us-ascii?Q?vrH2S+LwKhNzZwrO8Y1cvwS030hR3JwoEJQBhL5bxhPMsBgQVPePHq2L+0bP?=
- =?us-ascii?Q?O/VRiEPpgJva1oC5og9dyY836M+iuT27/Vn+gUpGj9TbgcT1UzFJaArZfWEo?=
- =?us-ascii?Q?zKlTCaRdPKdfrHSzDWhEzNj1zjQGaJR5Wg88MBa1PiOs1+wQkddTDikdv9rH?=
- =?us-ascii?Q?/QH+eDMAtqWrfrr+dwHbWPYzQst4Okd/R/5qQd/k/B715GuUiGftk7QkggLk?=
- =?us-ascii?Q?k4oKuhb0fr5fgT0WLueCVja0fufNjJqWGbRsHho1qbG6n7tJsbYyL+k6cpBt?=
- =?us-ascii?Q?bnoyL9hUOb09x8HFwrbVplqbJDcKk5ni96dCv4PCfBRKnDE38/kxGvcCHkDH?=
- =?us-ascii?Q?bY1/jm+GPZrW25U1A3g+BJ4viHtiB/WImIXr4MpFRLPCmfkg7gVNVdIoRKip?=
- =?us-ascii?Q?c06UV1MPmGfbBEiNvsnfUNut36MOl058wM+crR8n1zeyMext99sFx3Z1EkGB?=
- =?us-ascii?Q?J9BFsxuOewHlJW6qEI/ogHeuXNZxBDlDtJuQ88jgVdkj4sneENEzonARBa8x?=
- =?us-ascii?Q?48q85ijvvy1U//vnKZn0iZQ0FdznBNaLgIXmJVMXnLu5NhNdCHqzx+PYYGZZ?=
- =?us-ascii?Q?UrAtB9DA32/HazhkPk6MBBGKlf+df3+uQxWr1HJ6VFddCPXpQiEZE5MYOPfc?=
- =?us-ascii?Q?1n0GfDhhziDAkQiTt1ab9Lkv7rgdIL8B4hFIADjhWtSChKZhYjsvNEM9EXS9?=
- =?us-ascii?Q?1nVC2La2piEGAC80fh+Tbt8emE7ycXuP0Abgo/BGsYNpIIHT4EnsT5k7bQ4D?=
- =?us-ascii?Q?XXOH3Mnz6UBX+yljyQwWMP8/FkMyrWfJImBqApwPiApKnwPi/xbfSYrVcGsY?=
- =?us-ascii?Q?Vm7xOv98Y8Oixdxk+tgEf06TLgMNmXknGJHq2J8qbSrhR1isP4I3/QxiAZ5v?=
- =?us-ascii?Q?zf8xZJEPBUtlhw7SgTHJkHVfBnG6WesxIeiF0gM+mmf/768shNqZGwGte+dl?=
- =?us-ascii?Q?TrZT7qISKE65O84scLgoBuYpq68F6XZdy3rDSRCB1N7c0sN2uUsr5B31SeK4?=
- =?us-ascii?Q?3kzixmZ0OQ4NXNFgwJ/g0QaWmHhum1nSUF41WVvoJYWWweD3fvXaLT/hqhi2?=
- =?us-ascii?Q?UPsSJVp07mw7666LwQiLTrZDb45q9V0A7fL4R5BT5oXdWlOao1e23ggRluaq?=
- =?us-ascii?Q?DqyA9QOslJH+UtEiGN69nVITX+dRtgfiRujsRvFL50uSfvJADwR54rLmz9CS?=
- =?us-ascii?Q?0Jx+GvNL8tyeKT+g/LYMxKSQgWaO9KiM70PT6Opblr91snE1lSClw/9d1x74?=
- =?us-ascii?Q?uC8n8ikTj++VFFKl5/dSjNT1teidUDlpY40vuTQkHNRIHwlgpOeLeOeQiVsy?=
- =?us-ascii?Q?k5h2XZEEJy/0My5Did8r/twozIJo3ZbLNTFefwtmBLKOcl73Ikj2VYG8ncAN?=
- =?us-ascii?Q?lw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	P0X6pZCeZQh6l5h70C15RjgYXw50++kLke8egW8FMG7DSnIgvJ3AHgPy8IJOqCF0JK2oaS7uUVibE0z5Obn+8i6ogLI2I6DLfCMLaJC15s7XNKKvDTaptOMHRq/yiO+7uTYZnu0aBq60g3JzEQhL2GZsQGV7dG2lxeBThzNbKhjIik+KkTRzBU9Stvn2Px2DB3CmJWZSGTo2Ny+6G+yqOSirBOP7tiA752kDR7MQJhcawlaImmwIRVYyDPDLgDGsNf+HxCft7bXSht2QctFLFs5tKpBTFO8p8L7EHLxBv13BvTT7SLjwFBLAa38I8OK4QSooh2m9hTkxdN9FzSmkN8y/k/R80sYcZhqLeOSddSE1skBbI1qMZ8oW8TuF1M7oKVXcA6cK3lCboxbgZnw2wjlCfyBHwQCGW8d2uVoF2m/Lbs+p8L9Xsb29KfrATxW95nDAoRgFS0d/RcYMKQf1x9wuxtqx3gNnANt4Lcv2YmiOsA87FDKUmSoE1FuWLfhh/7uKQ3ELcZ4ey26F7il+Io2Qc5uh2z62rCV2azy6uOP2EU+QwYFncTQBfe5uOCHJC+Y8EqJVnG2fr6lNkKoya7711O1llDth1w71ShyVzho=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79fbd137-a4fc-4ef0-4571-08dd924a6c63
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 18:17:30.0976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PXsYjSnMrGzCDcgHFvDs1LNTl49ca3WsE6bAaOr6M4X8rgx6SYJ7Ofxe37tAzUYb9lglNnEQM2/YSQFf0WRVEYhKHHx6iJxfFBe/fSjpGsU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR10MB7569
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- spamscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505130173
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE3NCBTYWx0ZWRfX0je216qOGxOH 4OGljYCpR/OK3vUlvJpya5YdBQHw7tl0YYWSLVexNtE0YOF0v5t2TbUF939rWUKw1rOBgP+ltTp WaUa/keImtwnG9/RC5YiDnl9VV0hJICaYUns3YkdiPRWnhphde3VEBb/7VJ4KCuJn+umctsEIVK
- 7IkPpWP89wYiXkS7DZ6EV4fQzytY3GCUaHbpAdmpWXX8zzXJJKwMCG1/sk1yZhrRiYoQ+7GDZcr lwmKgEhHlXy3mzkhDwdrAgOxYpOQtWPcJz7gY193FyFhgoS9mKiFxpM4AdgKTHNd8DQxfYpZIid OYSd3Dsafm2TVGM73NThhbpGLHh78sLaVM4A+rTfLRxxrsK2M2eGd4qmOOsMOY0njUP9HgzlB7A
- 5djQJRYPUtkviyiN/j+ludgWMhmCf/w7MCRzR9SqsLbmX+FhPuzSlKICBHy/C/Ls9YIfiCOa
-X-Proofpoint-GUID: YBRRPQAyTjazdPz6GpNBmJcLRb129TnC
-X-Proofpoint-ORIG-GUID: YBRRPQAyTjazdPz6GpNBmJcLRb129TnC
-X-Authority-Analysis: v=2.4 cv=M6hNKzws c=1 sm=1 tr=0 ts=68238cc0 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
- a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=1-S1nHsFAAAA:8 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=1RTuLK3dAAAA:8 a=naES7JBLLK4CkZDVlM4A:9 a=CjuIK1q_8ugA:10 a=gK44uIRsrOYWoX5St5dO:22 a=HkZW87K1Qel5hWWM3VKY:22
- a=kRpfLKi8w9umh8uBmg1i:22
+Subject: Re: [net-next PATCH v4 03/11] net: phylink: introduce internal
+ phylink PCS handling
+To: Christian Marangi <ansuelsmth@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ llvm@lists.linux.dev
+References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
+ <20250511201250.3789083-4-ansuelsmth@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250511201250.3789083-4-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 06:52:27PM +0200, David Hildenbrand wrote:
-> On 13.05.25 18:17, Lorenzo Stoakes wrote:
-> > As part of the ongoing efforts to sub-divide memory management
-> > maintainership and reviewership, establish a section for Kernel Samepage
-> > Merging (KSM) and add appropriate maintainers and reviewers.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > ---
-> >
-> > REVIEWERS NOTES:
-> >
-> > I took a look through git blame, past commits, etc. and came up with what
-> > seems to be a reasonable list of people here, if you don't feel you ought
-> > to be here, or if you feel anybody is missing (including yourself!) let me
-> > know :)
-> >
-> > David has kindly already agreed to be co-maintainer for this section.
-> >
-> >   MAINTAINERS | 15 +++++++++++++++
-> >   1 file changed, 15 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 80aa09f2e735..5ea2020acf84 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15567,6 +15567,21 @@ W:	http://www.linux-mm.org
-> >   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> >   F:	mm/gup.c
-> >
-> > +MEMORY MANAGEMENT - KSM (Kernel Samepage Merging)
-> > +M:	Andrew Morton <akpm@linux-foundation.org>
-> > +M:	David Hildenbrand <david@redhat.com>
-> > +R:	xu xin <xu.xin16@zte.com.cn>
-> > +R:	Chengming Zhou <chengming.zhou@linux.dev>
->
-> I don't see a single RB from Chengming Zhou, and a single one from xu xin
-> ... :)
+On 5/11/25 16:12, Christian Marangi wrote:
+> Introduce internal handling of PCS for phylink. This is an alternative
+> to .mac_select_pcs that moves the selection logic of the PCS entirely to
+> phylink with the usage of the supported_interface value in the PCS
+> struct.
+> 
+> MAC should now provide an array of available PCS in phylink_config in
+> .available_pcs and fill the .num_available_pcs with the number of
+> elements in the array. MAC should also define a new bitmap,
+> pcs_interfaces, in phylink_config to define for what interface mode a
+> dedicated PCS is required.
+> 
+> On phylink_create() this array is parsed and a linked list of PCS is
+> created based on the PCS passed in phylink_config.
+> Also the supported_interface value in phylink struct is updated with the
+> new supported_interface from the provided PCS.
+> 
+> On phylink_start() every PCS in phylink PCS list gets attached to the
+> phylink instance. This is done by setting the phylink value in
+> phylink_pcs struct to the phylink instance.
+> 
+> On phylink_stop(), every PCS in phylink PCS list is detached from the
+> phylink instance. This is done by setting the phylink value in
+> phylink_pcs struct to NULL.
+> 
+> phylink_validate_mac_and_pcs(), phylink_major_config() and
+> phylink_inband_caps() are updated to support this new implementation
+> with the PCS list stored in phylink.
+> 
+> They will make use of phylink_validate_pcs_interface() that will loop
+> for every PCS in the phylink PCS available list and find one that supports
+> the passed interface.
+> 
+> phylink_validate_pcs_interface() applies the same logic of .mac_select_pcs
+> where if a supported_interface value is not set for the PCS struct, then
+> it's assumed every interface is supported.
+> 
+> A MAC is required to implement either a .mac_select_pcs or make use of
+> the PCS list implementation. Implementing both will result in a fail
+> on MAC/PCS validation.
+> 
+> phylink value in phylink_pcs struct with this implementation is used to
+> track from PCS side when it's attached to a phylink instance. PCS driver
+> will make use of this information to correctly detach from a phylink
+> instance if needed.
+> 
+> The .mac_select_pcs implementation is not changed but it's expected that
+> every MAC driver migrates to the new implementation to later deprecate
+> and remove .mac_select_pcs.
 
-Yeah sorry this is fuzzy but git blame mm/ksm.c for 2025 gives you _very little_
-activity in general, a series fro Xu and a series from yourself :) Xu's series
-was... acked by you :P
+This introduces a completely parallel PCS selection system used by a
+single driver. I don't think we want the maintenance burden and
+complexity of two systems in perpetuity. So what is your plan for
+conversion of existing drivers to your new system?
 
-Equally with Chengming based on other files listed here, I went and checked to
-see if there were substantive series as a sort of 'fuzzy matcher' which might
-imply a review interest here, and see there did seem to be some.
+DSA drivers typically have different PCSs for each port. At the moment
+these are selected with mac_select_pcs, allowing the use of a single
+phylink_config for each port. If you need to pass PCSs through
+phylink_config then each port will needs its own config. This may prove
+difficult to integrate with the existing API.
 
-But obviously if anybody feels any entry here is inappropriate, or on the other
-hand anybody was missed off, more than happy to rectify on the un-RFC!
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/net/phy/phylink.c | 147 +++++++++++++++++++++++++++++++++-----
+>  include/linux/phylink.h   |  10 +++
+>  2 files changed, 139 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index ec42fd278604..95d7e06dee56 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -59,6 +59,9 @@ struct phylink {
+>  	/* The link configuration settings */
+>  	struct phylink_link_state link_config;
+>  
+> +	/* List of available PCS */
+> +	struct list_head pcs_list;
+> +
+>  	/* What interface are supported by the current link.
+>  	 * Can change on removal or addition of new PCS.
+>  	 */
+> @@ -144,6 +147,8 @@ static const phy_interface_t phylink_sfp_interface_preference[] = {
+>  
+>  static DECLARE_PHY_INTERFACE_MASK(phylink_sfp_interfaces);
+>  
+> +static void phylink_run_resolve(struct phylink *pl);
+> +
+>  /**
+>   * phylink_set_port_modes() - set the port type modes in the ethtool mask
+>   * @mask: ethtool link mode mask
+> @@ -499,22 +504,59 @@ static void phylink_validate_mask_caps(unsigned long *supported,
+>  	linkmode_and(state->advertising, state->advertising, mask);
+>  }
+>  
+> +static int phylink_validate_pcs_interface(struct phylink_pcs *pcs,
+> +					  phy_interface_t interface)
+> +{
+> +	/* If PCS define an empty supported_interfaces value, assume
+> +	 * all interface are supported.
+> +	 */
+> +	if (phy_interface_empty(pcs->supported_interfaces))
+> +		return 0;
+> +
+> +	/* Ensure that this PCS supports the interface mode */
+> +	if (!test_bit(interface, pcs->supported_interfaces))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  static int phylink_validate_mac_and_pcs(struct phylink *pl,
+>  					unsigned long *supported,
+>  					struct phylink_link_state *state)
+>  {
+> -	struct phylink_pcs *pcs = NULL;
+>  	unsigned long capabilities;
+> +	struct phylink_pcs *pcs;
+> +	bool pcs_found = false;
+>  	int ret;
+>  
+>  	/* Get the PCS for this interface mode */
+>  	if (pl->mac_ops->mac_select_pcs) {
+> +		/* Make sure either PCS internal validation or .mac_select_pcs
+> +		 * is used. Return error if both are defined.
+> +		 */
+> +		if (!list_empty(&pl->pcs_list)) {
+> +			phylink_err(pl, "either phylink_pcs_add() or .mac_select_pcs must be used\n");
+> +			return -EINVAL;
+> +		}
+> +
 
->
-> In any case, for my M :
->
-> Acked-by: David Hildenbrand <david@redhat.com>
+This validation should be done in phylink_create.
 
-Thanks!
+>  		pcs = pl->mac_ops->mac_select_pcs(pl->config, state->interface);
+>  		if (IS_ERR(pcs))
+>  			return PTR_ERR(pcs);
+> +
+> +		pcs_found = !!pcs;
+> +	} else {
+> +		/* Check every assigned PCS and search for one that supports
+> +		 * the interface.
+> +		 */
+> +		list_for_each_entry(pcs, &pl->pcs_list, list) {
+> +			if (!phylink_validate_pcs_interface(pcs, state->interface)) {
+> +				pcs_found = true;
+> +				break;
+> +			}
+> +		}
+>  	}
+>  
+> -	if (pcs) {
+> +	if (pcs_found) {
+>  		/* The PCS, if present, must be setup before phylink_create()
+>  		 * has been called. If the ops is not initialised, print an
+>  		 * error and backtrace rather than oopsing the kernel.
+> @@ -526,13 +568,10 @@ static int phylink_validate_mac_and_pcs(struct phylink *pl,
+>  			return -EINVAL;
+>  		}
+>  
+> -		/* Ensure that this PCS supports the interface which the MAC
+> -		 * returned it for. It is an error for the MAC to return a PCS
+> -		 * that does not support the interface mode.
+> -		 */
+> -		if (!phy_interface_empty(pcs->supported_interfaces) &&
+> -		    !test_bit(state->interface, pcs->supported_interfaces)) {
+> -			phylink_err(pl, "MAC returned PCS which does not support %s\n",
+> +		/* Recheck PCS to handle legacy way for .mac_select_pcs */
+> +		ret = phylink_validate_pcs_interface(pcs, state->interface);
+> +		if (ret) {
+> +			phylink_err(pl, "selected PCS does not support %s\n",
+>  				    phy_modes(state->interface));
+>  			return -EINVAL;
+>  		}
+> @@ -937,12 +976,22 @@ static unsigned int phylink_inband_caps(struct phylink *pl,
+>  					 phy_interface_t interface)
+>  {
+>  	struct phylink_pcs *pcs;
+> +	bool pcs_found = false;
+>  
+> -	if (!pl->mac_ops->mac_select_pcs)
+> -		return 0;
+> +	if (pl->mac_ops->mac_select_pcs) {
+> +		pcs = pl->mac_ops->mac_select_pcs(pl->config,
+> +						  interface);
+> +		pcs_found = !!pcs;
+> +	} else {
+> +		list_for_each_entry(pcs, &pl->pcs_list, list) {
+> +			if (!phylink_validate_pcs_interface(pcs, interface)) {
+> +				pcs_found = true;
+> +				break;
+> +			}
+> +		}
+> +	}
+>  
+> -	pcs = pl->mac_ops->mac_select_pcs(pl->config, interface);
+> -	if (!pcs)
+> +	if (!pcs_found)
+>  		return 0;
+>  
+>  	return phylink_pcs_inband_caps(pcs, interface);
+> @@ -1228,10 +1277,36 @@ static void phylink_major_config(struct phylink *pl, bool restart,
+>  			pl->major_config_failed = true;
+>  			return;
+>  		}
+> +	/* Find a PCS in available PCS list for the requested interface.
+> +	 * This doesn't overwrite the previous .mac_select_pcs as either
+> +	 * .mac_select_pcs or PCS list implementation are permitted.
+> +	 *
+> +	 * Skip searching if the MAC doesn't require a dedicaed PCS for
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+dedicated
+
+> +	 * the requested interface.
+> +	 */
+> +	} else if (test_bit(state->interface, pl->config->pcs_interfaces)) {
+> +		bool pcs_found = false;
+> +
+> +		list_for_each_entry(pcs, &pl->pcs_list, list) {
+> +			if (!phylink_validate_pcs_interface(pcs,
+> +							    state->interface)) {
+> +				pcs_found = true;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (!pcs_found) {
+> +			phylink_err(pl,
+> +				    "couldn't find a PCS for %s\n",
+> +				    phy_modes(state->interface));
+>  
+> -		pcs_changed = pl->pcs != pcs;
+> +			pl->major_config_failed = true;
+> +			return;
+> +		}
+>  	}
+>  
+> +	pcs_changed = pl->pcs != pcs;
+> +
+>  	phylink_pcs_neg_mode(pl, pcs, state->interface, state->advertising);
+>  
+>  	phylink_dbg(pl, "major config, active %s/%s/%s\n",
+> @@ -1258,10 +1333,12 @@ static void phylink_major_config(struct phylink *pl, bool restart,
+>  	if (pcs_changed) {
+>  		phylink_pcs_disable(pl->pcs);
+>  
+> -		if (pl->pcs)
+> -			pl->pcs->phylink = NULL;
+> +		if (pl->mac_ops->mac_select_pcs) {
+> +			if (pl->pcs)
+> +				pl->pcs->phylink = NULL;
+>  
+> -		pcs->phylink = pl;
+> +			pcs->phylink = pl;
+> +		}
+>  
+>  		pl->pcs = pcs;
+>  	}
+> @@ -1797,8 +1874,9 @@ struct phylink *phylink_create(struct phylink_config *config,
+>  			       phy_interface_t iface,
+>  			       const struct phylink_mac_ops *mac_ops)
+>  {
+> +	struct phylink_pcs *pcs;
+>  	struct phylink *pl;
+> -	int ret;
+> +	int i, ret;
+>  
+>  	/* Validate the supplied configuration */
+>  	if (phy_interface_empty(config->supported_interfaces)) {
+> @@ -1813,9 +1891,21 @@ struct phylink *phylink_create(struct phylink_config *config,
+>  
+>  	mutex_init(&pl->state_mutex);
+>  	INIT_WORK(&pl->resolve, phylink_resolve);
+> +	INIT_LIST_HEAD(&pl->pcs_list);
+> +
+> +	/* Fill the PCS list with available PCS from phylink config */
+> +	for (i = 0; i < config->num_available_pcs; i++) {
+> +		pcs = config->available_pcs[i];
+> +
+> +		list_add(&pcs->list, &pl->pcs_list);
+> +	}
+
+Why do we have a separate linked list if we are getting all the PCSs
+in an array at configuration time? From what I can tell there is no
+dynamic configuration of PCSs.
+
+>  
+>  	phy_interface_copy(pl->supported_interfaces,
+>  			   config->supported_interfaces);
+> +	list_for_each_entry(pcs, &pl->pcs_list, list)
+> +		phy_interface_or(pl->supported_interfaces,
+> +				 pl->supported_interfaces,
+> +				 pcs->supported_interfaces);
+>  
+>  	pl->config = config;
+>  	if (config->type == PHYLINK_NETDEV) {
+> @@ -1894,10 +1984,16 @@ EXPORT_SYMBOL_GPL(phylink_create);
+>   */
+>  void phylink_destroy(struct phylink *pl)
+>  {
+> +	struct phylink_pcs *pcs, *tmp;
+> +
+>  	sfp_bus_del_upstream(pl->sfp_bus);
+>  	if (pl->link_gpio)
+>  		gpiod_put(pl->link_gpio);
+>  
+> +	/* Remove every PCS from phylink PCS list */
+> +	list_for_each_entry_safe(pcs, tmp, &pl->pcs_list, list)
+> +		list_del(&pcs->list);
+> +
+>  	cancel_work_sync(&pl->resolve);
+>  	kfree(pl);
+>  }
+> @@ -2374,6 +2470,7 @@ static irqreturn_t phylink_link_handler(int irq, void *data)
+>   */
+>  void phylink_start(struct phylink *pl)
+>  {
+> +	struct phylink_pcs *pcs;
+>  	bool poll = false;
+>  
+>  	ASSERT_RTNL();
+> @@ -2400,6 +2497,10 @@ void phylink_start(struct phylink *pl)
+>  
+>  	pl->pcs_state = PCS_STATE_STARTED;
+>  
+> +	/* link available PCS to phylink struct */
+> +	list_for_each_entry(pcs, &pl->pcs_list, list)
+> +		pcs->phylink = pl;
+> +
+>  	phylink_enable_and_run_resolve(pl, PHYLINK_DISABLE_STOPPED);
+>  
+>  	if (pl->cfg_link_an_mode == MLO_AN_FIXED && pl->link_gpio) {
+> @@ -2444,6 +2545,8 @@ EXPORT_SYMBOL_GPL(phylink_start);
+>   */
+>  void phylink_stop(struct phylink *pl)
+>  {
+> +	struct phylink_pcs *pcs;
+> +
+>  	ASSERT_RTNL();
+>  
+>  	if (pl->sfp_bus)
+> @@ -2461,6 +2564,14 @@ void phylink_stop(struct phylink *pl)
+>  	pl->pcs_state = PCS_STATE_DOWN;
+>  
+>  	phylink_pcs_disable(pl->pcs);
+> +
+> +	/* Drop link between phylink and PCS */
+> +	list_for_each_entry(pcs, &pl->pcs_list, list)
+> +		pcs->phylink = NULL;
+> +
+> +	/* Restore original supported interfaces */
+> +	phy_interface_copy(pl->supported_interfaces,
+> +			   pl->config->supported_interfaces);
+>  }
+>  EXPORT_SYMBOL_GPL(phylink_stop);
+>  
+> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+> index 30659b615fca..ef0b5a0729c8 100644
+> --- a/include/linux/phylink.h
+> +++ b/include/linux/phylink.h
+> @@ -150,12 +150,16 @@ enum phylink_op_type {
+>   *		     if MAC link is at %MLO_AN_FIXED mode.
+>   * @supported_interfaces: bitmap describing which PHY_INTERFACE_MODE_xxx
+>   *                        are supported by the MAC/PCS.
+> + * @pcs_interfaces: bitmap describing for which PHY_INTERFACE_MODE_xxx a
+> + *		    dedicated PCS is required.
+>   * @lpi_interfaces: bitmap describing which PHY interface modes can support
+>   *		    LPI signalling.
+>   * @mac_capabilities: MAC pause/speed/duplex capabilities.
+>   * @lpi_capabilities: MAC speeds which can support LPI signalling
+>   * @lpi_timer_default: Default EEE LPI timer setting.
+>   * @eee_enabled_default: If set, EEE will be enabled by phylink at creation time
+> + * @available_pcs: array of available phylink_pcs PCS
+> + * @num_available_pcs: num of available phylink_pcs PCS
+>   */
+>  struct phylink_config {
+>  	struct device *dev;
+> @@ -168,11 +172,14 @@ struct phylink_config {
+>  	void (*get_fixed_state)(struct phylink_config *config,
+>  				struct phylink_link_state *state);
+>  	DECLARE_PHY_INTERFACE_MASK(supported_interfaces);
+> +	DECLARE_PHY_INTERFACE_MASK(pcs_interfaces);
+>  	DECLARE_PHY_INTERFACE_MASK(lpi_interfaces);
+>  	unsigned long mac_capabilities;
+>  	unsigned long lpi_capabilities;
+>  	u32 lpi_timer_default;
+>  	bool eee_enabled_default;
+> +	struct phylink_pcs **available_pcs;
+> +	unsigned int num_available_pcs;
+>  };
+>  
+>  void phylink_limit_mac_speed(struct phylink_config *config, u32 max_speed);
+> @@ -469,6 +476,9 @@ struct phylink_pcs {
+>  	struct phylink *phylink;
+>  	bool poll;
+>  	bool rxc_always_on;
+> +
+> +	/* private: */
+> +	struct list_head list;
+>  };
+>  
+>  /**
