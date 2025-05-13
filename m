@@ -1,176 +1,134 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434271D555
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 15:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A48C2BDC09;
+	Tue, 13 May 2025 15:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747150646; cv=none; b=k6CK0d3047swgNnN7SC9LjF9kvQhdPP1b3d2fc0Dm+TQxHz0s+dQ2eMuNjfsQdLjNvv5hdn/Eg/KPrQT215XE6wDXkt1UFf1VuQz0uwqDtJDPU9LoSrvakb9LGzRs9tmAErwsa6UI4xEr8K8t20+labWsq+JXRfybaZTIWhwrBo=
+	t=1747150669; cv=none; b=sjprl1n5pPn00pLQutwU0Qz45p54TnEheeoKrUUVygOcLRTtKz7HEXjS7a1BOch54qlAc2Nx3aFR+2uSJ6S6gcrPl9YRVcQkt+UNUSqhYaGKNKgaE02S4WvqL+ldRgILQOF8Cj9nSUb+gffcDCzKfsFfY32lZhAIxnlhf/tqsy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747150646; c=relaxed/simple;
-	bh=CTtDbeWwdllOOJFC6Uy8ygOqbtnJf22JPHMG6jug4UE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCDeme4mn76PUO44ddK7p6bJWBqMQ9bkVe1YHsc3RxFHw3Wt8IgrxrrVkGdJdXa6G6WqAhQIjnaYWNuiQdI5sh00ytmJnaQ2T51id2MJlyBB2y1bSpdl28n92idcDfcnMM5ZOfF6PIj8M0B7wH7QoKWY8ZaIWXQ2ZXIJWkXnOWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=uZnzP3Vq; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1747150669; c=relaxed/simple;
+	bh=KJS9CxnNPpheLNaZ7imhBbfapJj0YpC6MwYgWpp3x9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BczZtaPmdNoOIuEwWHX/xfCzMdZFVSk6GsKi+tQdB+YTbnSZcxkDZw/aVJBs0kOOjeJGE16Rt6aTE/pCKVnCkgRD5qFyMDEmi2RnZv+Edu8R1OB3XDhheDozuvvTMJzgwDjMEXs7v0sclf+2GrvKPz/Dm//vSdN6ltTUlS2/O9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=KIkS7YAC; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=HFuFRpRT reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="uZnzP3Vq"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f0ad744811so42694136d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:37:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="KIkS7YAC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="HFuFRpRT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1747150643; x=1747755443; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NFGbIoM56oY9CYSlck5qbHpuQ4uA8AlSWoOsJXQxQnQ=;
-        b=uZnzP3Vqldfp6S/mKh4emO+FxOi+DjPNrQofYIRKgTxEYMOps2iJ2NB2JqdpMcQVcT
-         ICWmxvCgf64vrPxEhnN/lJfPiim8y25lbegciZZKwBdNBvvydiaVgVXwifij/1ohU6bB
-         9TpkHPwprdVGT3NbaFquz/Epzs4U0Zz8DNtfLaGhZr3rij+SQUB2radEPwQU/qh5x0/r
-         t6LoE5pzUO6hsOZ598gKdgAEMyDKcjO/QBuI+fAyaoxurwsLP76ormN4jkUqDJ9Mtw9n
-         CdHrLOZWbLqAkNTPjJh0UdiEWi6CFdOzhD7keZLmDMupJXpX05RG2ScW1zNSnBHhD+dL
-         /xJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747150643; x=1747755443;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NFGbIoM56oY9CYSlck5qbHpuQ4uA8AlSWoOsJXQxQnQ=;
-        b=Q/RKIvr0dbqBoBk5Ybt7ZLNKL2Vpt3Fzyfe2a5I5njKpbeswKItn2TBLUtoc8cY0FJ
-         EtBNOalErDI1D2mGyXrgfI+UAL81/wFDmnhn+3Yf9eZJ7cSz1xDHZlmSy4UyJ5a0uDEs
-         TxMD7ZVjMo14OrICkLU7HbAPi6qCGjV3gr1gUDJCrZrKgB4Zfi2zNZ6DjT4Oujtqyna3
-         wpTvn0JqNvpaC9RS3J8g9L4GF9M/3KP95q4+GiTwIvZHsjjNjDi5X0tated/9U41txDj
-         VTVu9qyKx1Kl/62+6ZTy4SLiCJ3l2VM/XdDxIfybmOndkFQcNh98QT6wJjg1Ypn26pfD
-         TXwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ/77OQz3nKgAaRtu2WkJ6xUe04UfeOnSZQKYLMUoytPBr1qsxm9bL4qlTIngbwhA9Ou8/CMDUyphSEag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznknLIzfUx3mhhcJ4TN08Rb0o8Z0ZYhqHThOh4laER0sjw0iLO
-	jKi/uY3VyQXFWZDKxKeXPWbBUDQrtTkUKkk1pZYDruyq6Y+hmyE2vVFRWpvaMA==
-X-Gm-Gg: ASbGncteJ/bXC2JvlBT7QNmzqrm3FdIbh07dmGnxtVbBcZRWi0zz+kboVZmQvssaVRn
-	o5tUJ4Bo2M7d+y4aQYKi5ogzoWec3VMPPeSTFC8siUwHQ7HF2VRjKL7DEK0GseMdcZGwQpKqIN0
-	wf/H6OPUVRhdWPB1zpt8IrfK4gXxq45Op2EFcAfMYBBmApCFGcgL13VfkWFfHuUaARJVBoU7gHq
-	55p28KCfkarR0xi0e+/fzu0k8u6axmTj0AhX3vS57K4Or3+3fKcFYNkzMPZ/uUYPv8FOZtNUp3h
-	xp4vAuef8DDn2joMJDfnT1iqEMThUdEHunsMCOLaBAn72h7qWS4GvTKMQ3sZA6vV+2ZBQg==
-X-Google-Smtp-Source: AGHT+IEHksdm/pCnn1uQwnUiWMrycBmsekx8bStKKlWjCJife5ySIwj7iwgMGAClNr2Csvd7UdE+Dg==
-X-Received: by 2002:a05:6214:f2c:b0:6f5:41b8:47ed with SMTP id 6a1803df08f44-6f6e470e2fdmr303779196d6.0.1747150643015;
-        Tue, 13 May 2025 08:37:23 -0700 (PDT)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a0c93esm68146846d6.60.2025.05.13.08.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 08:37:22 -0700 (PDT)
-Date: Tue, 13 May 2025 11:37:20 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: David Wang <00107082@163.com>
-Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, oneukum@suse.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-Message-ID: <b334ef97-1f79-4dd9-98f6-8fd7f360101e@rowland.harvard.edu>
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513113817.11962-1-00107082@163.com>
- <8c963ad0-a38f-4627-be11-80ccb669d006@rowland.harvard.edu>
- <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1747150666; x=1778686666;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KJS9CxnNPpheLNaZ7imhBbfapJj0YpC6MwYgWpp3x9s=;
+  b=KIkS7YACYh2ZQWoE10sEKRuXGQCgPvT7YL2V4+XFRjHm7fT8OPxermad
+   eIOgajaldjj4eGdf/+TrNAmIauvE8Z0/FEzpU+OqOseMGTNDUFc20jeOd
+   jc39SAGajrwUDjz5rceE1MBJQ2S1vM2xbeXuRFf6p9P7fxjNizD5jZENt
+   cXos+YYu7Y3yx+uogSxeGBWikTPD2DCr6Nq5iTNBrpNrMW8F4NNom8Zrv
+   e28+vTomGrY1vXJo/xI0A1L+OtRbcZVgyjX+O/tf8q8n9tAZC99k3BGvc
+   pFRlDMjUsDm3IaX0KI0v5hyJkzLqhz38OKFU2DJz2QkioXf9JMeP2jhWh
+   Q==;
+X-CSE-ConnectionGUID: irKwGYMGTE2318TjCJsHnQ==
+X-CSE-MsgGUID: BXWXh5dpQIGK8etu1WtVMg==
+X-IronPort-AV: E=Sophos;i="6.15,285,1739833200"; 
+   d="scan'208";a="44052047"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 13 May 2025 17:37:42 +0200
+X-CheckPoint: {68236746-13-BF62DDF1-CB8BF55F}
+X-MAIL-CPID: 5B6CDACB2F8209EED8054BD55E19D0AC_1
+X-Control-Analysis: str=0001.0A006375.68236749.006B,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 46BD4160AF7;
+	Tue, 13 May 2025 17:37:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1747150658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KJS9CxnNPpheLNaZ7imhBbfapJj0YpC6MwYgWpp3x9s=;
+	b=HFuFRpRT09roncsuKn6WsddpIpCTW8yJlMynj4Wdev+hKN2OyOYgWCbAFjw2h3Ip/1h6I+
+	BksszSj8dEdQfTpeHKOl2yQANX2EH2M9zGZUb06HDc6qVwL5kSNXLqIZpovZJUgDhafjMF
+	ZCAXh9MuJl3Hhn3ODi3lJCTdO65eQu+S+blHfaSlG1bhfdyx/GHcn/j/sdtbjzqhuOsa+T
+	f7Jd5IuqFsw1ZiofwSl237aeBKcYcL341MXH/MBsHQ15PsVa81VdAoaQ1jzUDfSZVGiWnw
+	wL7lYzb+62ZZ0j1E1PGnN5+Ctvplw8TJedZ2+129YaR0P9o7fp3nNWSjsLsUvQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Peng Fan <peng.fan@oss.nxp.com>,
+ Cristian Marussi <cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: firmware: imx95-scmi: Allow linux,
+ code for protocol@81
+Date: Tue, 13 May 2025 17:37:36 +0200
+Message-ID: <2804473.mvXUDI8C0e@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250409160029.GE27988@nxa18884-linux>
+References:
+ <20241104085622.177781-1-alexander.stein@ew.tq-group.com>
+ <20250409-heavenly-sceptical-ara-bceeb9@sudeepholla>
+ <20250409160029.GE27988@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69accee9.accf.196ca18308a.Coremail.00107082@163.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, May 13, 2025 at 10:41:45PM +0800, David Wang wrote:
-> 
-> 
-> At 2025-05-13 22:25:50, "Alan Stern" <stern@rowland.harvard.edu> wrote:
-> >On Tue, May 13, 2025 at 07:38:17PM +0800, David Wang wrote:
-> >> ---
-> >> Changes:
-> >> 1. Use caller's mem_flags if a larger memory is needed.
-> >> Thanks to Oliver Neukum <oneukum@suse.com>'s review.
-> >> ---
-> >> URB objects have long lifecycle, an urb can be reused between
-> >> enqueue-dequeue loops; The private data needed by some host controller
-> >> has very short lifecycle, the memory is alloced when enqueue, and
-> >> released when dequeue. For example, on a system with xhci, several
-> >> minutes of usage of webcam/keyboard/mouse have memory alloc counts:
-> >>   drivers/usb/core/urb.c:75 [usbcore] func:usb_alloc_urb 661
-> >>   drivers/usb/host/xhci.c:1555 [xhci_hcd] func:xhci_urb_enqueue 424863
-> >> Memory allocation frequency for host-controller private data can reach
-> >> ~1k/s and above.
-> >> 
-> >> High frequent allocations for host-controller private data can be
-> >> avoided if urb take over the ownership of memory, the memory then shares
-> >> the longer lifecycle with urb objects.
-> >> 
-> >> Add a mempool to urb for hcpriv usage, the mempool only holds one block
-> >> of memory and grows when larger size is requested.
-> >> 
-> >> Signed-off-by: David Wang <00107082@163.com>
+Hi Sudeep,
+
+Am Mittwoch, 9. April 2025, 18:00:29 CEST schrieb Peng Fan:
+> Hi Sudeep,
+>=20
+> On Wed, Apr 09, 2025 at 01:31:58PM +0100, Sudeep Holla wrote:
+> >On Wed, Apr 09, 2025 at 08:18:29PM +0800, Peng Fan wrote:
+> >> + SCMI maintainer, Sudeep and Cristian
+> >>=20
+> >> On Wed, Apr 09, 2025 at 12:59:50PM +0200, Alexander Stein wrote:
+> >> >Hi,
+> >> >
+> >> >Am Montag, 4. November 2024, 09:56:21 CEST schrieb Alexander Stein:
+> >> >> BBM protocol supports a single power button, supported by driver
+> >> >> imx-sm-bbm-key.c. By default this is KEY_POWER, but can also be ove=
+rwritten
+> >> >> using linux,code. Add a reference to this schema and add linux,code=
+ as a
+> >> >> supported property.
+> >> >>=20
+> >> >> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> >> >
+> >> >Is there any other feedback or things to do here?
+> >>=20
+> >> I see Rob already gave R-b.
+> >>=20
+> >> Not sure this should go through Shawn's or Sudeep's tree.
+> >>=20
 > >
-> >It should be possible to do what you want without touching the USB core 
-> >code at all, changing only xhci-hcd.  That's what Mathias is suggesting.
-> >
-> >Instead of having an URB keep ownership of its extra memory after it 
-> >completes, xhci-hcd can put the memory area onto a free list.  Then 
-> >memory areas on the free list can be reused with almost no overhead when 
-> >URBs are enqueued later on.
-> 
-> I have to disagree,  your suggestion has no much difference from requesting memory from
-> system, locks and memory pool managements, all the same are needed, why bother?
+> >I am fine either way. Peng, just let me know if you want to pick this up.
+>=20
+> Not my patch :)
+>=20
+> Since scmi driver changes go through your tree, the binding changes
+> should follow same.
+>=20
+> It would be good that if you could pick it up.=20
 
-There are two differences.  First, xhci-hcd already has its own lock 
-that it acquires when enqueuing or dequeuing URBs, so no additional 
-locks would be needed.  Second, complicated memory pool management isn't 
-necessary; the management can be extremely simple.  (For example, 
-Mathias suggested just reusing the most recently released memory area 
-unless it is too small.)
+A gentle ping.
 
-> The reason I choose URB is that  URB life cycle contains the private data's lifecycle, 
-> and no two HCD can take over the same URB as the same time.
-> 
-> I think the memory pool here is not actually a pool,  or I should say the mempool consists of
-> pool of URBs, and each URB have only "single one" slot of mem pool in it.
-> 
-> 
-> >
-> >This idea can become more elaborate if you maintain separate free lists 
-> >for different devices, or even for different endpoints, or sort the free 
-> >list by the size of the memory areas.  But the basic idea is always the 
-> >same: Don't change usbcore (including struct urb), and make getting and 
-> >releasing the extra memory areas have extremely low overhead.
-> 
-> Why implements a device level memory pool would have extremely low overhead?
+Best regards
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-Because then getting or releasing memory areas from the pool could be 
-carried out just by manipulating a couple of pointers.
 
-Some fraction of the time, URBs are created on demand and destroyed upon 
-completion.  Your approach would not save any time for these URBs, 
-whereas my suggested approach would.  (This fraction probably isn't very 
-large, although I don't know how big it is.)
-
-> Why  making changes to usb core is bad? The idea in this thread is meant for all kinds of
-> host controllers, xhci is what I have in my system; i think similar changes would benefit other
-> HCs
-
-Those other HC drivers would still require changes.  They could be 
-changed to support my scheme as easily as your scheme.
-
-If I were redesigning Linux's entire USB stack from the beginning, I 
-would change it so that URBs would be dedicated to particular host 
-controllers and endpoint types -- maybe even to particular endpoints.  
-They would contain all the additional memory required for the HCD to use 
-them, all pre-allocated, so that dynamic allocation would not be needed 
-during normal use.  (The gadget subsystem behaves this way already.)
-
-Such a drastic change isn't feasible at this point, although what you 
-are suggesting is a step in that direction.  In the end it comes down 
-to a time/space tradeoff, and it's very difficult to know what the best 
-balance is.
-
-I'm not saying that your approach is bad or wrong, just that there are 
-other possibilities to consider.
-
-Alan Stern
-
-Alan Stern
