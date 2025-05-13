@@ -1,101 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599D51D6DB4;
-	Tue, 13 May 2025 06:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D57191F92
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747117335; cv=none; b=rFiMnCvXI/+WmDH8FMq5GvLRf3V+gU+moGaKIik6pF+afWTbfCJIoeehlTE6nS6zKO6FZsOer6/eGsCr3OPN+bqRtuTk4qBatq+R3mfiAv3yrHyhD+nofWRfNIhDqoUbJhhnTocQ8eVbvov0nf+rW7fKRZKg+iMBffsMIFAy908=
+	t=1747117434; cv=none; b=cAz8C3uw1RbWOGFUgXVWvFlmpzkpYXRSzZzawF74RNW4o9z9fEtCWZm1eemBYu/1qEr7e+3T6bBcrLnJdo/KTtmVsfXfTZqCpPCYHIfo7nBAth56xSVzxhtUohHSEP7dki+bqT5orWIPSoGT/7t/MhrDE6G8AeeChEIiYz6EfVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747117335; c=relaxed/simple;
-	bh=F1Dc+MvNAUMUR1sJ7kUFlsLn2WNtlz1OKvBBhuM5kL0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mr+HnJxfO7OqqpipgeENgR79jrCu3Aumcj+npLZ+bbNq0n7ld2NcxzMmPC3P/6qkqe7sJA+mvXRr5y4WSbMJQVwMFA2YtjwMVamvyDHHIry9WDi73z0/rqIsepIjibEoc5BkTxdQF5nZp7nL+yMxTaJjOfcgJ4lIHza6jgn6elg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q/zd0tS2; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747117434; c=relaxed/simple;
+	bh=SbAsF4jObTssV5tAsLSukZD5RH2gQWdLvFumb8MT8DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2WwNSIrTwBTxBjVQYZiutINNcM2wVdH2GNfmpxOsDpIZByA3ADqADhArSvMjVL/4KuMKEL+dJNV4HmDfs+1KUIL3hzwnnrAeUaylWmzMaSNpU1iSYmhw82zUvtZTRkrzZZTs4LIQHJLFJdRXdFQH/jDjc0rxfDznVQjNr+pttM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SumWJy9m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q/zd0tS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747117334; x=1778653334;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=F1Dc+MvNAUMUR1sJ7kUFlsLn2WNtlz1OKvBBhuM5kL0=;
-  b=Q/zd0tS2bkwoEnTMBrWBBlINtqWFuTGWk1upj5nrhWrDzjXRELOe/MIW
-   RZPE2sElVcOtzSJw44f7vBKK1ocQVyjC+GpBJajU0QvWnayYym+Vs6TGV
-   Knk2oSkax3q8PGpeDlRm0mK3beOo172T+BLgVh3gzaqTVE1LSv13aJgdk
-   pIQqqzpRFRwcepCFR6KjkriPZsWcz68DRxjEuaqyUGTrflRyrZRrJhVLz
-   Q601QPn7lxv8ZjVpWZQzbkpYxzNVUf3ey52WkUWGEG+xkMrYm9OA6hq0K
-   ZzkRXvCOdiElnwcu3AiMfPaUdCu+fLwoSkKeuyRdwKWHGdK+ariaGemk0
-   w==;
-X-CSE-ConnectionGUID: Q3nu4yxmQtewYVs3csuTnA==
-X-CSE-MsgGUID: tyfI+G9YTymvAcKot80qBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59582992"
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="59582992"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 23:22:13 -0700
-X-CSE-ConnectionGUID: f4OsESHLRUGcubGHkai75g==
-X-CSE-MsgGUID: mzq1OOppSn+X0tOak6kzAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
-   d="scan'208";a="142785867"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO [10.245.246.168]) ([10.245.246.168])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 23:22:09 -0700
-Message-ID: <bfb8e9a6-92c1-4079-aec0-b1ad2b245c70@linux.intel.com>
-Date: Tue, 13 May 2025 09:23:22 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SumWJy9m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0840EC4CEE4;
+	Tue, 13 May 2025 06:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747117434;
+	bh=SbAsF4jObTssV5tAsLSukZD5RH2gQWdLvFumb8MT8DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SumWJy9mL/itK8sk6Xa7573kABN892lpS+S8yMhszSg9OHtrqi5Ga46lEW9b5lH2K
+	 TnLpHdMUcjxK21nq+CDGdzW0wsAoBSedzODZ+EzMbnvd5QIjTHb+VdhV9hYmTIUp9n
+	 DfCJ7j74muD9NY/BJ64MX1nH9mNfesgteYh1wZq3ZV++dcXsMtUlQw0/XjcEIk67L1
+	 6yScED1XN7SLMB+2boycHAvZAv8LK19ePeBTy3iMIobMzoiWUDP9jMOvchItVLNdlu
+	 UE7volyAw+kmcbMBQ9dVBM3OZ2ho3HebP33U/XiY/sdeHvVVrqxHkr9MXZ47mUdQXz
+	 U0kB/a5+jUzPQ==
+Date: Tue, 13 May 2025 09:23:47 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Johannes Weiner <hannes@cmpxchg.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
+Message-ID: <aCLlc7V5XbUYIQ7v@kernel.org>
+References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
+ <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
+ <c4258dfd-14ee-411a-9fa7-c4a1fa4fad1c@redhat.com>
+ <aBshiBX_N6hhExmS@pc636>
+ <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] ASoC/SOF/PCI/Intel: add Wildcat Lake support
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- lgirdwood@gmail.com, broonie@kernel.org
-Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
- guennadi.liakhovetski@linux.intel.com, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250508180240.11282-1-peter.ujfalusi@linux.intel.com>
- <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <0b01a3ae-4766-490e-939d-1d16c2748644@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13a32f52-dc5c-45ef-b45a-585586868509@lucifer.local>
 
++cc Johannes
 
-
-On 12/05/2025 15:59, Pierre-Louis Bossart wrote:
+On Wed, May 07, 2025 at 10:23:34AM +0100, Lorenzo Stoakes wrote:
+>
+> > > > (looks at vmscan.c)
+> > >
+> > > Current maintainers (mm/unstable) on 20 biggest files in mm, Andrew is
+> > > implicit:
+> > >
+> > >  $ find mm -name "*.c" -type f | xargs wc -l | sort -n -r | head -20
+> > >  198195 total
+> > >    7937 mm/hugetlb.c		# Muchun
+> > >    7881 mm/slub.c		# Christoph/David/Vlastimil
+> > >    7745 mm/vmscan.c		#
 > 
->> The audio IP in Wildcat Lake (WCL) is largely identical to the one in
->> Panther Lake, the main difference is the number of DSP cores, memory
->> and clocking.
->> It is based on the same ACE3 architecture.
->>
->> In SOF the PTL topologies can be re-used for WCL to reduce duplication
->> of code and topology files. 
+> This is, as Andrew rightly points out, a key one, I will have a look around
+> the git history and put something together here. I'm not sure if we will
+> get an M here, but at least can populate some reviewers.
+
+I remember Johannes doing a lot of work in vmscan, let's volunteer him :)
+ 
+> Cheers, Lorenzo
 > 
-> Is this really true? I thought topology files are precisely the place where a specific pipeline is assigned to a specific core. If the number of cores is lower, then a PTL topology could fail when used on a WCL DSP, no?
-
-Yes, that is true, however for generic (sdw, HDA) topologies this is not
-an issue as we don't spread the modules (there is no customization per
-platform).
-When it comes to product topologies, they can still be named as PTL/WCL
-if needed and have tailored core use.
-
-It might be that WCL will not use audio configs common with PTL, in that
-case we still can have sof-wcl-* topologies if desired.
-
-Fwiw, in case of soundwire we are moving to a even more generic function
-topology split, where all SDW device can us generic function fragments
-stitched together to create a complete topology.
-Those will have to be compatible with all platforms, so wide swing of
-core use cannot be possible anymore.
 
 -- 
-Péter
-
+Sincerely yours,
+Mike.
