@@ -1,118 +1,85 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2321D1EEA27;
-	Tue, 13 May 2025 06:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C1F1EFF91
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747119284; cv=none; b=PpjSSALhtGSUSqmsiQwmVnbaYyW6jLG0kZ4wxMOfa/aH539od4+UTHwI0h4HQ2MrkpA/3z7X2+CSblsG5pWoraXiBGbq+7NRw0kDksSiRoqzRKzn4PPb2zkfG7SdorbFcXDhkNLcCXL/Dsmy8cvrC0D2aDzj0V4EjU183MQj+Uw=
+	t=1747119334; cv=none; b=oE1hEZNzjFEDW0ROyFzPT+NNqFNUGg8pJ4R2Zsc/Rdt2zGYWeIeU6x2WEwEU9d8SdQsbYiHO22Xi3CTzboo8LLWu/RnGEO1a5HSw3lygo65fV7YsTwDjTWeqk/ZV4pTfMK5WnJ/HSDizTIE6mYGllUHsWE0vMnh3/gYlSVQtj+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747119284; c=relaxed/simple;
-	bh=3lq2oL9GsVxb1GiLT60wR3AyAvnRalU2RVB6UUD+NzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=P1A03fkvOu8mTxUrIgYNrgtYL5N93j1O70Zv05RLINCgVwyKvX+MfVawrvH3iv+3Zddl6K6elhWx51Z6gAmDo4FutdasJyUhNOoYH+00Ke85neXXI0cdpPvtKQQOPKufeYycsMMlr2D75NqS9JTji1lUyZxDuc3nOBpn4RapfQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZVTifdf8; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747119334; c=relaxed/simple;
+	bh=RFRKORYw+oBsVVymOsfYwDTVsOy6s2BlD0OXLsv0IlU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ZRdFyLqh94AT/Effm10BXwCTkI4OblElk3iiZUVsaeGUX35h6rFgYdaxLEgoC25vhvIO3OC5P7tRFns3ygvfEQSMe5+pdd8TTCVoJ771geMgn7kZ5XM+llClfzX0ZhZC4E5BNZpYb1D/9HVMPfBymqLNPCXosF1HCVja1sf9Jak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Zv2w8mFE; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZVTifdf8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747119280;
-	bh=hvf5ATy0fFe52vTGcnpMAnQ0jfOolBYJyvtWRgw/ocM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZVTifdf8nqWwz5HJSvhfbUwDNl/CsdEq2oL9bY6Gjd7Ca7evlqFzYI7/xjE6LKLKe
-	 X6hRI1FtKyD95rQMxoLdtIlpfCvswnRYt5gAEGC2i2KhhLgmVtFNiglr50tKe3/Ier
-	 OnIvuahHmJRcR+os9qVGqwCQvxDcFRt2ZJYPyjF9ejuKD6Op6bjLQa5CL55/7laL6n
-	 FH9sbkJphEmCqaqGbcytP3R5eQlP13cPwZmSbySH2OFNNZxHncgflG0ZFqfG0gg6jI
-	 fF177A+Tu2FiTvW0543kd8No+T+IpF7BvXlx53XQpe/HWP3aCACkvu0hWPOGT7mz8j
-	 bDWN2rRJruPKg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxRzh08b4z4wcr;
-	Tue, 13 May 2025 16:54:39 +1000 (AEST)
-Date: Tue, 13 May 2025 16:54:39 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Subject: linux-next: manual merge of the tip tree with Linus' tree
-Message-ID: <20250513165439.762fd52f@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Zv2w8mFE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1747119024; bh=wCXqL/mfMeFmKnM3cRRks03v3ecnOZNlY8v1chne8gI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Zv2w8mFEK5lDljIv+SCXV7NmOUDrpCdFrTzqnv7xEnXdLmflfRP20wkNUs4MwL1x6
+	 ihWXbQ2U7qNigh0HZlUMnj0x7H9EO4GPPXg8imPcCvSWVW0icEoH3/CS4dO6//7r11
+	 y/U45P2MXQkwemSSIeQ5646O8VbrikDJTew4bsSs=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszgpua8-0.qq.com (NewEsmtp) with SMTP
+	id C9700865; Tue, 13 May 2025 14:50:23 +0800
+X-QQ-mid: xmsmtpt1747119023tv6naac0z
+Message-ID: <tencent_B0F292D9064049B26EFC6ECACC8227E4C606@qq.com>
+X-QQ-XMAILINFO: Mdc3TkmnJyI/l9IJaLYVELDIqTfX+UbiciBeXb9zsaQEVPasQLn1L1vWEjLKPW
+	 MzblroRe/3/54Lc/p5Msw74W5tiiucCAanaJI2gRE9rlWykw/f55u5cmFursHjLmfOH9m3Ntgc7g
+	 naBbPFCDpajr5wJ0ijcdEvQQ5rgSk67y0w1jKkjTf43i0tuvSbTyBKt4eTnZNgpDS0lz2wNfgWNC
+	 J6vAUvanhHtYAD/OCRLQf991CYuNhRBgY5v6l3ki5Q4l+e9x4j6WCXIrGoaFyT7BBnu9yHZLxQxH
+	 mCVyqlRjTJqG4G9jdGwJopNho/hrUDkAFp3rUGXQycUUgM0Nfqz4boTtXxaytQQAb4hMz6puAOaN
+	 YhMUwXqhFtpBzbE4EP5dtwP9WB9FwRBDr9gCaXbU02Okgab6O2JnQ5W1ikhR3CFPD9v56EQZPOKP
+	 WYU/SQVK6fJqGp+Cq/ju7S/JG7JQcVSJh0PYcMHHeVHy4l/Oums5C+v2tCf+QjoOHMI8UwtsFoGt
+	 kgFLRz4qHjbV51/jAsUBwRcRQvNUaIYYr4aOVL+DA7FlzTbHd05IaZ277BHPDFglcwoEeE8P/LkJ
+	 LMzY1C+0xOlo4Cc0ngYks/LSGEFZ00AIcTivWsDSzNEOcr12KO4gjBMlFYMDTvxlmw0U6Bby+2oK
+	 EjjEktlW/Y00AiqE7mHslIWyDsC/p0OugrK6ynBjM2yhjyObWuw3fw2cf6DwD3etNKhLK0PLeOuj
+	 a/JjS0ZZ2ZfIVTLJ1F+YyEdgovWws9nmpH3KcPP6WRsD4TA9YFu1WJOTQkS7xvRxiW3edmnD6H2/
+	 Rxrqbuhd//Mpj0HEIhvtMNX1Rg7QJ5tbKj+7kaRWCvQu/q7Rz49s8n6WJ9Q4P0iJ9il/S9sndXqA
+	 H52ZFBnp6yPvgR+Vhz0/ABGy2/8b/QYQ5NeMyK+k/ru0js14uKTh8qF4HRLtB/Zw==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
+Date: Tue, 13 May 2025 14:50:23 +0800
+X-OQ-MSGID: <20250513065022.2004159-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <681688da.050a0220.11da1b.001c.GAE@google.com>
+References: <681688da.050a0220.11da1b.001c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=+.yWPI5UtgeTtcbpifk7Kz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/=+.yWPI5UtgeTtcbpifk7Kz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+#syz test
 
-Hi all,
+diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
+index f44529b40989..855d66043b85 100644
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -1600,13 +1600,12 @@ static int cxusb_probe(struct usb_interface *intf,
+ 	struct dvb_usb_device *dvbdev;
+ 	int ret;
+ 
++	if (!cxusb_medion_check_intf(intf)) {
++		return -ENODEV;
++
+ 	/* Medion 95700 */
+ 	if (!dvb_usb_device_init(intf, &cxusb_medion_properties,
+ 				 THIS_MODULE, &dvbdev, adapter_nr)) {
+-		if (!cxusb_medion_check_intf(intf)) {
+-			ret = -ENODEV;
+-			goto ret_uninit;
+-		}
+ 
+ 		_cxusb_power_ctrl(dvbdev, 1);
+ 		ret = cxusb_medion_set_mode(dvbdev, false);
 
-Today's linux-next merge of the tip tree got a conflict in:
-
-  include/linux/cpu.h
-
-between commit:
-
-  f4818881c47f ("x86/its: Enable Indirect Target Selection mitigation")
-
-from Linus' tree and commit:
-
-  4e2c719782a8 ("x86/cpu: Help users notice when running old Intel microcod=
-e")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/cpu.h
-index 3aa955102b34,1f5cfc4cc04f..000000000000
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@@ -78,8 -78,8 +78,10 @@@ extern ssize_t cpu_show_gds(struct devi
-  extern ssize_t cpu_show_reg_file_data_sampling(struct device *dev,
-  					       struct device_attribute *attr, char *buf);
-  extern ssize_t cpu_show_ghostwrite(struct device *dev, struct device_attr=
-ibute *attr, char *buf);
- +extern ssize_t cpu_show_indirect_target_selection(struct device *dev,
- +						  struct device_attribute *attr, char *buf);
-+ extern ssize_t cpu_show_old_microcode(struct device *dev,
-+ 				      struct device_attribute *attr, char *buf);
- =20
-  extern __printf(4, 5)
-  struct device *cpu_device_create(struct device *parent, void *drvdata,
-
---Sig_/=+.yWPI5UtgeTtcbpifk7Kz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgi7K8ACgkQAVBC80lX
-0GyKLAf7BzpAeBOSCReyAWZNxjYLaG6J+ioHDria6Z1wT8BxObZ/JYZZ7WSvxEZW
-kTJEk1Aglt7Xkn+iHRXCZKraOL/A7fi17e4rwUHFlBNjmicmRDN0On3hG/3ugILI
-6zzHSAkEqRA7cigX+PQCvoAYpUYN+2gJpN8qgzjJ661Pfjdpcnu4u57zLcz7i2mK
-+++hM56ThK28aiFsdfSv0unTO8qz2OKGf18YF+iGnGGhgUP/42rzPe4ULrQDO9y2
-5P9jT06dKVwTleyyYNRMEPl9AH2PpcyBj+svk/6SeLAKuJze1LOgxJfI3JcMOjLY
-CGfth1SFV9eiWf3X3DQZ/mBMD5+UGw==
-=McRj
------END PGP SIGNATURE-----
-
---Sig_/=+.yWPI5UtgeTtcbpifk7Kz--
