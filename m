@@ -1,139 +1,89 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9061D1991B6;
-	Tue, 13 May 2025 02:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F63419924D;
+	Tue, 13 May 2025 02:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747101831; cv=none; b=ekBZ9q1BgKuuARMmwC8xVhpkTfW1baiXmvgTy5sUsFEgBNcR96nQiD+s17RTjwfNhqr7CEWSyeUVIHVVhWxq2hciryBA/lVm+FC3jhAhWXo8SO8MqzG+GJ+zffL+uQqhr5Xjbi+TXlwy9x5VZHJHBdk0Iy5dIw59O56S81pBYcs=
+	t=1747101869; cv=none; b=UHaES/RUaMxwshhmT1++bQAhXIdIcOK8cJqWxWJxbbxDdIqwqIBx+NUB/oqpugvnId4z5T8YlD/xBxCFxfU1/igK368QfiWKt0u9Gxt6tGX5vmaSuezhLGXYzuSCAUfdxACJC2tOKuBtWXz+jzf7DNkiDqw2Fi2BJ/G1IRoO1Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747101831; c=relaxed/simple;
-	bh=XYskIFC2tOBYmejTzdGp9nF7259cG3gviinn5sZH5cY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ek/I0mpCDlchpywAZHnNw+j8436hzlSbO4C8GmFhntW14losWJ15MhzQ8YU///fF709zp6NDwqqS1poybMo+u5JMU3J7Fz6neIBPOKS7dkZlO/f+o2JU7mO6YDwZ5qM7WX+2g3jG/yTYWR8lUDhv+FxpijpPWY3HvtDcE3r6ouA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PR7WWy/p; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747101869; c=relaxed/simple;
+	bh=j7lJShPXDvLRqpViinwmB8b87z+E5ER6/vsnTG72xwo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HUkMa1nmGl5Kr//HZJ8NLcKPEa/gdI15wCZUWxuGWfbuC8UaA38jayOrU0FWQiZ/cov8xoROe0dr1HCjmEppl2wvIouR9sK+H7vnAzmZ4w025SuIvIgDhftwN5wq7gv7RDvlZL1CVhIB96Y/KjvRCmGi0yaVH8slv/2fzzpGcQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=p/mIrb42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PR7WWy/p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747101823;
-	bh=b+Bp2oHxj5LLFKHbv1vZUzjEF5UmkR6Oe+dWbBhT9vQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PR7WWy/poxJwqMw0Bni2Zk6Br0NsooAWzvyanwB2lxmfoiV4GKSTOWSrBNbLCUzM6
-	 w+w5/xgebHQp2C02TqB5yU0jrOHz4PyFUwXM/Md87xTZ9pjzkJbOzlSHoXnflZJO70
-	 JhQLKdgLs+NRHF1xKvKWc8TKyTF4e++5O/1Fy3843v6ySdj2QsdahIiVNug92RlP6W
-	 nO8t9elCpwnIo5wSrZDBXl4tIlgE7a8QLtTbLuKtQ+eCBo3+uk9dTr3Y/G+zI6kdyK
-	 i2iROyGsosl3hiC20wB/vtG0bdV4P4SgafFWoeXgW9igZoNl3/hytaLEOkc+suaq5/
-	 PEKOv3X41XIuA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxKWz2czdz4wbY;
-	Tue, 13 May 2025 12:03:43 +1000 (AEST)
-Date: Tue, 13 May 2025 12:03:42 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Viresh Kumar <viresh.kumar@linaro.org>, Andreas Hindborg
- <a.hindborg@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the cpufreq-arm tree with the configfs
- tree
-Message-ID: <20250513120342.10988bf5@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="p/mIrb42"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A03C4CEE7;
+	Tue, 13 May 2025 02:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747101868;
+	bh=j7lJShPXDvLRqpViinwmB8b87z+E5ER6/vsnTG72xwo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p/mIrb42A4bCdFbqWXAXHXoaxl6ZHd+zxG6jCyS4khDKCOy/ly4qvKlqHSyFWMJop
+	 qx3wjilWIvJTX1Xg6SYkVqL4p81CNErg98rRMrqWaPMgil55/S96ArjcOqZnTFAD9Y
+	 f8xU04fa2mWCo2iQb0ghFCELUoX0+rCob3a2kY98=
+Date: Mon, 12 May 2025 19:04:27 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250512190427.b7fb67f6b78fd8699ea2811d@linux-foundation.org>
+In-Reply-To: <CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-3-kerneljasonxing@gmail.com>
+	<20250512175156.7d3d4db53d40c7a34c1f68d6@linux-foundation.org>
+	<CAL+tcoDk2TFwAWPwBN+dQQ+guxe71F_R1rFX_f9wozjPpujBAQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//0duqlb9+NPldqUWC0E4f/o";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_//0duqlb9+NPldqUWC0E4f/o
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Tue, 13 May 2025 09:48:15 +0800 Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-Today's linux-next merge of the cpufreq-arm tree got conflicts in:
+> > > +{
+> > > +     unsigned int i, full_counter = 0;
+> > > +     struct rchan_buf *rbuf;
+> > > +     int offset = 0;
+> > > +
+> > > +     if (!chan || !buf || flags & ~RELAY_DUMP_MASK)
+> > > +             return;
+> > > +
+> > > +     if (len < RELAY_DUMP_BUF_MAX_LEN)
+> > > +             return;
+> >
+> > So we left the memory at *buf uninitialized but failed to tell the
+> > caller this.  The caller will then proceed to use uninitialized memory.
+> >
+> > It's a programming error, so simply going BUG seems OK.
+> 
+> Are you suggesting that I should remove the above check because
+> developers should take care of the length of the buffer to write
+> outside of the relay_dump function? or use this instead:
+> WARN_ON_ONCE(len < RELAY_DUMP_BUF_MAX_LEN);
+> ?
 
-  rust/bindings/bindings_helper.h
-  rust/kernel/lib.rs
+It's a poor interface - it returns uninitialized data while not
+alerting the caller to this.  You'll figure something out ;)
 
-between commit:
+Perhaps
 
-  446cafc295bf ("rust: configfs: introduce rust support for configfs")
+	BUG_ON(len < RELAY_DUMP_BUF_MAX_LEN);
+	*buf = '\0';
+	if (!chan || (flags & ~RELAY_DUMP_MASK))
+		return;
 
-from the configfs tree and commits:
+We don't need to check for !buf - the oops message contains the same info.
 
-  6fa5ce832520 ("rust: cpumask: Add initial abstractions")
-  5feb286e16f4 ("rust: clk: Add helpers for Rust code")
-  3044627e1494 ("rust: cpu: Add from_cpu()")
-  254df142ab42 ("rust: cpufreq: Add initial abstractions for cpufreq framew=
-ork")
+Maybe we don't need to check !chan either.  Can it be NULL here?
 
-from the cpufreq-arm tree.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc rust/bindings/bindings_helper.h
-index 1a532b83a9af,7c1d78f68076..000000000000
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@@ -10,7 -10,9 +10,10 @@@
-  #include <linux/blk-mq.h>
-  #include <linux/blk_types.h>
-  #include <linux/blkdev.h>
-+ #include <linux/clk.h>
- +#include <linux/configfs.h>
-+ #include <linux/cpu.h>
-+ #include <linux/cpufreq.h>
-  #include <linux/cpumask.h>
-  #include <linux/cred.h>
-  #include <linux/device/faux.h>
-diff --cc rust/kernel/lib.rs
-index 354eb1605194,871fcdc09b35..000000000000
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@@ -42,8 -42,12 +42,14 @@@ pub mod alloc
-  pub mod block;
-  #[doc(hidden)]
-  pub mod build_assert;
-+ #[cfg(CONFIG_COMMON_CLK)]
-+ pub mod clk;
- +#[cfg(CONFIG_CONFIGFS_FS)]
- +pub mod configfs;
-+ pub mod cpu;
-+ #[cfg(CONFIG_CPU_FREQ)]
-+ pub mod cpufreq;
-+ pub mod cpumask;
-  pub mod cred;
-  pub mod device;
-  pub mod device_id;
-
---Sig_//0duqlb9+NPldqUWC0E4f/o
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgiqH4ACgkQAVBC80lX
-0GyS6wf+KaPN0h31fN1rGKePx2NBAj/vVmw1vbXI2UyaYqZR9hdoADluO3iEXzy0
-rMG26hx2AiF0xgYWN7Wq5Tr4PBtvo9ocImKlbTiWvtV426m9numc53649XwcatpB
-Ro9Tg6nSbPrj9QKApLC4XDJHxjJ0jq1flE3Mzm9YVeptHVdqYkgxLsEs8AcCscyj
-FUOkWHCZ2+wj1GBqRGZhvP1vxy7VIADCdBJGWf43KUJZ0XmfPX8Ma89JQB4LA9PJ
-dXxdEiXTqMfJfcRG+BBcDPrwkBnz9QLIMIb0h5cvQqfG45XeACRO5kn1tBuqrwoV
-wguVzLJqIjeXqDU0LRxN81BPnJM5Sw==
-=yVzb
------END PGP SIGNATURE-----
-
---Sig_//0duqlb9+NPldqUWC0E4f/o--
