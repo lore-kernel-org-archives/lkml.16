@@ -1,139 +1,114 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC7CA93D;
-	Tue, 13 May 2025 08:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C941F5424
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 08:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747123870; cv=none; b=W3vrwUMcCvo3v04eD2BLOp8xC5e1mNPm2oGqWUZk8YkW7/fSCTtWLMZrqWv/tjAYUH7CTJvsenSEUah6SOX+9GxzRrqEwjHHgCEAles+xUn4hwWO75cRjrOelAvoXczDJs4DOHjF6PG0VnE8EEiFGZGd58/ziVhv4j/Sejo3dhQ=
+	t=1747123885; cv=none; b=rc8vLRbzLvnyVJIhrdCQ3JkIAku1vXtc2XbDeOwBpPeqIn7dLmJqXzzIikLsKnZ7VHMZrmLUEODZ6jXNTcTkEJdnkc+l3GxfC7j551rnQ217i5zkQ8ZwTLBjbGT7urcLRUNt/0neULnw+HQPdhfcrHSBOaR3QYk79xteY49jacs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747123870; c=relaxed/simple;
-	bh=MM1LpBhM1yC3INK9Qp+qRlKTzWYK6iqm4Jjmr9Ur1LM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IEoVd5kbYI5/ooph/BQG6HWjvMza8hKhU2iPv2zHdKpFIWo7kQgf1p9qe+RdcxkkIolfzEQ7U1PDpqoYdXvLh7sTEdWeaeMPDUks82TxPxASuRea4gZDd24XHSUhefTTlkXJGfKMI07W5+8/WOsGmrAa61kXmOxpDzC8h7h72mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c9376c4dbaso600663485a.0;
-        Tue, 13 May 2025 01:11:08 -0700 (PDT)
+	s=arc-20240116; t=1747123885; c=relaxed/simple;
+	bh=eLK2Yhsn+VZRa/Ep05rtZaSS2grqQRKnXKLj2vKbQqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n3nB4CEBjdKO4/4xL65516NMYQnMGQNlzohGv1szyvU/UTn7JWzV8YbxL2M/MBJlmJMFyQUojGcAzosRQ3wVWYkF4I6oIQBWLj8oVsV0Lp8kD72mM+dDLC5sGZQrDkfq5j5L1KmaEYvqzkFUgvMFXNEgcdvKYNfQcxdi/dBhqZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aweRqgm2; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aweRqgm2"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so38839045e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 01:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747123881; x=1747728681; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hvGnGy8q2OiAbegAf3KJYMp0rpcNQnC+vXgXl0BA3Ss=;
+        b=aweRqgm2fhRBCdSolDdmOEWXOdhooI4yfXJFMgUyCu8ZjfUJsy6+8SQK8a7oW7OJp2
+         TTvtfzSWvKNDNkkGosPllvJ2fY6AQ0LOui7ujrxjmzuYsSjpplQG6WqgfxvgRe/H3LEP
+         y4oM1OmXDeoEYd00JfpAQccSJl6r7rEYhfH1o7fg4LIUSuOT5Zxn7DAbplsyD9/4QyXx
+         4o98u1Z1EhhWQ2hLXqhnb7ghfpJi7HrPRoK69lVbw43NZ9AnGnrJGN+dJPddHSLRPUGz
+         RMbA94TcN06VtbLI4JPnZYNX5wfoCF1dfLKhO3HNyBSLgogBjt37MXEWdHEHJIHpUNTx
+         mkOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747123867; x=1747728667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5rCtnbZWFEyClftfNf+97GB/L/vNpKwxy5TFS7AwepY=;
-        b=VGbb9e2GYHripd9ylCCZSKlpsQXEngFvwO9SkrdBofjuWu3kErZP9R51WXdgYsIKhV
-         Dg24Cs5d3/Ud4+XsOcy6cvsOLwVlz8qotY63r6hJNeR5A6Jc6FF5a9OZtXeKKVvwQqw+
-         U75lLgFM1taoOyHt7/KqF4Q4yOZ365zkx/ynwuhQHOCMvY1QCL2Vup2xfFeu4/h7/DNX
-         5TtGImsFzLC3fuoU76pzYh9PUthynOXKOuWoM0v4EICnfb7LHFYn0kigxo/qLWg1VZiB
-         nZQdC/HR8fJImpIjV3PZ8q4dkX+MyidfGsHynbEL4rRV33rkx30kGsIzSPGcGFvpufX/
-         Ar6g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7jVpf6cpQQ1O/+RYcLAhqSyFSzH+qkCfqaOm+kKGXNVoOeNQXHT+e5bUek+3ucro9rv/ZkLJsgxzL@vger.kernel.org, AJvYcCUNO51Rg2NKgbQ2pzPKu8DXQof/TCRTj+TZJlXMf9vS4/VwWxtSaN4bb4rjhL6ckfOwN5Z3g0MfVExk4kww@vger.kernel.org, AJvYcCXYUXKwpwbnBO6K3FiMq2/VSdXGy6mDV4liJZRRR8BLINj1TKHKKH+vaTC0S7vqmaSOkynrnBlkw1m8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGFy5r5c+JVJBaPJv7D/6mR+Z56IIUoFhKaKuCsnCOqGTuBRQe
-	Qyw5+I7yvhcd+S3lCNUYCKRuMOFKdVHoytrXBGUnj68xhjw6ufZnwfeKDaLJ
-X-Gm-Gg: ASbGnctGVpmJ65ZSHRYD2RDjIJdsBpkIJRfTJujJazKe7p98lbbyciqEXGG5Z82WuID
-	SCDYG0sIX0Xlr7mjmlhNt/kiFdw5b7dij8oncGIIiqEPd6pp2ZT+u3Xeeh//vwz1ClfTNCN4QIU
-	3y560MMiAD/a9uKlu9JXsCY36hf4d6x+Aui49qHd8y0pM0g+Gpbxc7PHi7x7jhDFgH51npx31r1
-	oAglwh4U39gd12B32EHhfbQWvIMTA0os9t9Y9Ao9plZpcE98k0X6i7bDXDJYbkkLzCRqVlp+dcg
-	9rVQIdnklKKk383pUBE18i9S7XJEHQrjim+V76+aXaKNCTefAAW3iYkp7Hq8+c9NblYiu0dITLn
-	49zpev0iSJgrHPg==
-X-Google-Smtp-Source: AGHT+IHlXqUOWm0WgsbW/F9Ow1+qrr9RECUNiEfQy23xXhLmkGr5MkdPZjJB/+/S/sbA8kB+qoE8VA==
-X-Received: by 2002:a05:6122:1d02:b0:52a:654e:bd98 with SMTP id 71dfb90a1353d-52c8892c3c5mr2119092e0c.0.1747123856327;
-        Tue, 13 May 2025 01:10:56 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c65600d9csm4984631e0c.33.2025.05.13.01.10.55
+        d=1e100.net; s=20230601; t=1747123881; x=1747728681;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hvGnGy8q2OiAbegAf3KJYMp0rpcNQnC+vXgXl0BA3Ss=;
+        b=F6V3HtCyZ5NAaVN7wlPN6oBDX7Ohc9Qc6f5YPV+VYSb5QGATtTY7qWAVfw0jpX9I+o
+         +2FKc1ckvnI3k4Dfp/gRk6GxSsamyar/7inglBdd7ka8aepJFVwJ5FUbffZXS0Ge+rMe
+         C4vos+dsYiTZPWr9y23kpcMofQZucfoA/eOq78ykuDF3ShZ2zMo/zG7gMRC8Ov2tdney
+         QA/erYSs1d/21PidQCOjJ70LkkvhlqIOyTFxD8cxf/3xKY1ZXURoov1FRstxqikVKYLY
+         2UVUYLf75iASbC3mjqJImBeK/aX6pxV/PqeUhcsHnUeRtENLvQOzqfAzhd0bBQGtoZMg
+         jdkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0mrBKf/VFSM1jeeyuwll+dJLDT0qePFlGh7V6yCukb6FqhiIr1cTb2MV8zMeNV4O2pq7Io6jjvnfWbX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLJNiOoz8jAsykCSSltMGg/kUJd5or28wYD4YkJyUZcZEnHCWV
+	xxE9ITK/9tLml5R5QKZdPBgl3hQpVKeIy/PL6IPwsEu2mk1KypKkNwk1z+1sB0Y=
+X-Gm-Gg: ASbGnctmZhXF/Cawkl+fx2bntq31BU/o8vN1tqFJOfJn221P5dYbTwn+3lajhLWc3LA
+	V5GxMkGnHW/p6U2Do/ZTEMGPKidl3KffZMS1ccKr+oEoPml6bwEGlMpiu2F6dDKFpMJtgIh8sTN
+	cgA51e9WpYJbP82qDWAce5KqYQHXLTG19HGz0JOimPy2YHMFAE2jyGu4X+aQCRdEoy2Mg5CgOxf
+	0SyobLFFLbfR3aBWXFhTyDw1KDuUhBBaVNZn2iZQ/Ik3tsJB5pVfElcAmAbUzBE2yNIP6VgJGWw
+	r10DVS/n4hnWbTdpZhTLGVa7cnW5Wwai6rxammADSAy9w9HN0eYi+sYTydPI2vg+ozZhV+iLG1Y
+	8Wuk1qltve4hVqINaba4rJ0q9PwG8qg==
+X-Google-Smtp-Source: AGHT+IFzj8clXhFhkyT0sQTuL5gbJ8zzjhwvoolehVcngTmUcthDp886cy7p+L6lZGuPae/gEMtNwQ==
+X-Received: by 2002:a05:600c:3f0f:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-442d6ddd73cmr140591975e9.30.1747123881469;
+        Tue, 13 May 2025 01:11:21 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1335:3601:f121:69fe:935a:67bd? ([2001:a61:1335:3601:f121:69fe:935a:67bd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f3c2sm199830195e9.15.2025.05.13.01.11.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 01:10:55 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d6fd581f4so4143545241.1;
-        Tue, 13 May 2025 01:10:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/FbpUm7D9FanKDXa+bp+kcUxhTBKWT7DvSi/uBuSPHjDaljjwJFUauWJo870B1CQitsZY5KNy8Dq27s/N@vger.kernel.org, AJvYcCWIeGIhmUcPpDsnVTwFHiFoJO3+T2w9VynY4iQK8y4863iY0C8NIOzRMc55d3Q1sCiRC5ktdJsqCfH1@vger.kernel.org, AJvYcCX5g5lfbLtWbS9u2gYmOGxUitIQMrOkvT/iladJvRfsRY18zCy/kx8btvH6LyY/3kK31FUUjAYMnxEW@vger.kernel.org
-X-Received: by 2002:a05:6122:3207:b0:523:6eef:af62 with SMTP id
- 71dfb90a1353d-52c88afe8b8mr1778704e0c.4.1747123855105; Tue, 13 May 2025
- 01:10:55 -0700 (PDT)
+        Tue, 13 May 2025 01:11:21 -0700 (PDT)
+Message-ID: <48d5cae9-ff7c-4076-8b71-8c16bcf00443@suse.com>
+Date: Tue, 13 May 2025 10:11:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aCGPuKtfprIvwADa@smile.fi.intel.com> <20250512173800.6767-1-trannamatk@gmail.com>
-In-Reply-To: <20250512173800.6767-1-trannamatk@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 13 May 2025 10:10:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWiTLbazxfe0joujONfLTQXT73WE=sq5F-4dwOq463b4g@mail.gmail.com>
-X-Gm-Features: AX0GCFvxUbYICZnIC49acrtXEhbKJaNQ34KnJ9GMWMjpL7F8L3vH5lZ8JuyNYOU
-Message-ID: <CAMuHMdWiTLbazxfe0joujONfLTQXT73WE=sq5F-4dwOq463b4g@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix
- LED driver
-To: Nam Tran <trannamatk@gmail.com>
-Cc: andy@kernel.org, lee@kernel.org, pavel@ucw.cz, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, christophe.jaillet@wanadoo.fr, 
-	corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, florian.fainelli@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+To: David Wang <00107082@163.com>, mathias.nyman@intel.com,
+ gregkh@linuxfoundation.org
+Cc: stern@rowland.harvard.edu, surenb@google.com, kent.overstreet@linux.dev,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250512150724.4560-1-00107082@163.com>
+ <20250513055447.5696-1-00107082@163.com>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250513055447.5696-1-00107082@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Nam,
+Hi,
 
-On Mon, 12 May 2025 at 19:38, Nam Tran <trannamatk@gmail.com> wrote:
-> On Mon, 12 May 2025 Andy Shevchenko wrote:
-> > On Sat, May 10, 2025 at 02:48:02PM +0700, Nam Tran wrote:
-> > > On Thu, 8 May 2025 Lee Jones wrote:
-> > > > On Thu, 08 May 2025, Andy Shevchenko wrote:
-> > > > > On Thu, May 8, 2025 at 5:27=E2=80=AFPM Nam Tran <trannamatk@gmail=
-.com> wrote:
-> > > > > > On Thu, 8 May 2025 Lee Jones wrote:
-> > > > > > > On Thu, 08 May 2025, Andy Shevchenko wrote:
->
-> ...
->
-> > > I think setting PWM also same as brightness_set API. However, there a=
-re
-> > > many PWM config for a LED and it is one of other config to make auton=
-omous mode work.
-> > > Therefore, standard led API can use in some use cases only.
-> > >
-> > > Please see the link below for a better visualization of how to config=
-ure the LP5812.
-> > > https://dev.ti.com/gallery/view/LED/LP581x/ver/0.10.0/
-> >
-> > To me it sounds like you should start from the small steps, i.e. do not
-> > implement everything at once. And starting point of the 4 RGB LEDs soun=
-ds
-> > the best approach to me. Then, if needed, you can always move on with
-> > fancy features of this hardware on top of the existing code.
->
-> Thanks for the suggestion.
-> I understand your point and agree that starting with standard LED APIs is=
- the preferred approach.
+On 13.05.25 07:54, David Wang wrote:
+> URB objects have long lifecycle, an urb can be reused between
+> enqueue-dequeue loops; The private data needed by some host controller
+> has very short lifecycle, the memory is alloced when enqueue, and
+> released when dequeue. For example, on a system with xhci, several
+> minutes of usage of webcam/keyboard/mouse have memory alloc counts:
+>    drivers/usb/core/urb.c:75 [usbcore] func:usb_alloc_urb 661
+>    drivers/usb/host/xhci.c:1555 [xhci_hcd] func:xhci_urb_enqueue 424863
+> Memory allocation frequency for host-controller private data can reach
+> ~1k/s.
 
-i.e. a drivers/leds/ driver.
+First of all, thank you for trying to tackle this long running issue.
 
-> However, the LP5812 hardware offers more advanced features, and I=E2=80=
-=99d like to support end users all
-> features as shown in the link: https://dev.ti.com/gallery/view/LED/LP581x=
-/ver/0.10.0/.
-> It is easy for end user to investigate and use driver.
->
-> If I want to keep the current driver interface to meet this expectation, =
-would it be acceptable
-> to move it to the misc subsystem to better support the hardware?
+> @@ -77,6 +78,7 @@ struct urb *usb_alloc_urb(int iso_packets, gfp_t mem_flags)
+>   	if (!urb)
+>   		return NULL;
+>   	usb_init_urb(urb);
+> +	urb->hcpriv_mempool_flags = mem_flags;
 
-I guess you can add custom sysfs controls for the advanced features
-on top of the drivers/leds/ driver?
+No. You cannot do this. The flags you pass to usb_alloc_urb()
+depend on the context you call it in. For example, if you are
+allocating it while holding a spinlock, ou need to use GFP_ATOMIC
 
-Gr{oetje,eeting}s,
+But that may or may not be the same context you submit the URB in.
+Recording mem_flags here makes no sense.
 
-                        Geert
+	Regards
+		Oliver
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
