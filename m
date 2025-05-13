@@ -1,58 +1,123 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2691F0E20;
-	Tue, 13 May 2025 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2E1E5207;
+	Tue, 13 May 2025 07:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747122190; cv=none; b=oLaroz+gS8DbzaC5bKdGTNaq7vDN/Uzi1RhnVHasCc/6y+wPS+H44iMy10JX6gDGp3Ew0VCIhY+7W7Xsszmh10allp99pcb7WgTxiiFi9xFNO6uzGoqFv+g3wDXIxzcaIpSJ5dla7c4oDrweSYX3qCiLualKJMS9SGysZnW7zDQ=
+	t=1747122200; cv=none; b=VSJnatwz0HuF1Z+6xuKHxSwI6IVwiZFq3MLWyml05NjH5DGe0syt808lSejW93HZ9+rtdzSac4THo6iTB/wrXbxRDvCjqw5zK2oOfTUaAlI14DbJ+LGsXw/Es/XfRebAAWHvNCqi7bfZzon0+zS0jIvczaFLsc1i0pqQJtXs9Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747122190; c=relaxed/simple;
-	bh=w4B1ltj8LagoePaHqXTe8flh/f45AYpyZfW68YSvziY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lE9BKZPLgS3s5emjwdCHS7Joz7i7Oa5oZUBEtifhPSHqd15dkrODsBZ24hPKRsjTqSZzgAxlX/FQ+OE1ZN9GkLRRg0af4Y6VRivsp6mGZVELzqjJ8lBsy4G0m1OP70q1nIgMkLWGuTleZvk4Xlw152NexBq4xbVX5aysspvWl3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 46EAC67373; Tue, 13 May 2025 09:43:04 +0200 (CEST)
-Date: Tue, 13 May 2025 09:43:04 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, xni@redhat.com, colyli@kernel.org,
-	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-	song@kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
- dirty bits and clear bits
-Message-ID: <20250513074304.GA2696@lst.de>
-References: <20250512011927.2809400-1-yukuai1@huaweicloud.com> <20250512011927.2809400-16-yukuai1@huaweicloud.com> <20250512051722.GA1667@lst.de> <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com> <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de> <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com> <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com> <20250513064803.GA1508@lst.de> <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com>
+	s=arc-20240116; t=1747122200; c=relaxed/simple;
+	bh=jolsXHXKcmam1GMy6yynZRDnDDKcH0YQBj1q8mdncu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LlL48gsFKqmwFWcSESizvlQ05Axw4h3nYgDbknEwi0AvoPEVD2d0Qd50CJlTEqEq8MnJVxyW2sO14IzK1Y3ejUv4v74v2OSDYzglwyClCUebBPi9pfyGR8S1tcnVFGlGVGRQD13u03IZYfagkO0TToaWR0jdGxyIK60hR1mYs7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoYGeyAA; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoYGeyAA"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1d8c09674so2752290f8f.1;
+        Tue, 13 May 2025 00:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747122195; x=1747726995; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fG8oqj+Wp78YD53lMG3NWPJMEgG7b7UFy7qM2sNYujM=;
+        b=OoYGeyAAVV5eNvpgduPOelqJH975lQ5TiiSVm+i2kZVhoEd8vnp5u9niUOS0giUOly
+         uoiZRnmioisFCKnpg6uXv6uXaaUZLDnycttyry5YG0hpMdsuFp2D7Btx8fN3CfF3Zq58
+         aHzlc5R8E3zNBUNiafnUh8iU8rfr5oVZo4ZbzkirTmnSiiW6wp3T90tWIWn1maPSZz9E
+         2w5cLs16sqyD9TiUPsuB1VQ//9wb4I4geXb10dH0Kld0DQugg/nGWG9qlkAM83NVwbZW
+         pZON9516mYSECpj8+zJXpyIMjvO4g8OUTPAQQegxRom622n5IeXCGLW8HigzFUeRCi2s
+         Zn9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747122195; x=1747726995;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fG8oqj+Wp78YD53lMG3NWPJMEgG7b7UFy7qM2sNYujM=;
+        b=MAPtQVNZ3qJ9flHy6JekgdLI/Jv4ZMB4tNFawgHtASHAkD//bh+Y40cWd5lhQcwiBQ
+         OXfwcYmpYONOAL9vzxbP3RkQQu6h3dhPGJ3IpkmSK6AWcb3k3i7XqdkbDUCiqaov8g+g
+         GE8iPyJ3nL8ERwdy2tm8YKBSMqYNP8MUtfFv/Lvxplqu4GZPhBHiZnsloZrXi1qCKDjb
+         xje303mLbSAOSdX/SftS2Ue5Bcgkb3OKxLH1KEF5cUzqKMe2xgbqpaVC+44Ocqg8gQCh
+         fPX/pw7DogtWW/QiMtmBqarJi+Xgomc/rTI43BmrUsTLHXZf8ziUxb67KUxl951zzok6
+         Nigw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOTASAAOVhgDJ/jw1MPJmOlzR2Cq5H0396IvNk3P0e0GRjuTcrEJZ+paJOASVIjV/Kv13+g4Z8OVw7@vger.kernel.org, AJvYcCXO/h9L2z23ldAoR78ELjqFDyxwn7Yxu9HURlm5yQDt+5oxebXVB4PxTFFG514PSbr8zugj8scUgdQ+p3V2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIaa2tcV2IGbv4uJstIqOWPzqDlh4oJtCBjacOS/DmuqwwcLEV
+	iQ2ZlioUdBpQ7RL2263Ywznzcl517ehDCHt94ERGvoa9OFYansOBpuAp5bw1h7WFDL/aNQFbgr/
+	0dhNC1q3E8SXnJcI2JUbnoaEXn7g=
+X-Gm-Gg: ASbGncuNtAKU98b1Kfy75i47DDPE1s1fNU5+qFsDcT/k7kwlfu9J7AX8wM9lcy0OozU
+	vnYQ3iASk/ehTwOK+BSXbDfgotnNJrxph7LBZlIzbKLSMs1PtFhluuODy3ubbT51A+s2gvfnIeV
+	lK/qU52z7uqGvC1AkiP8aeDl0EwDniL3bpevJW2NxT3yQVAw==
+X-Google-Smtp-Source: AGHT+IEZGFUBGfpFWoH02PF3w4asX5yVpyJ9KxOfndhTR3c9CFgfuFIy472TCk4Qb3+UWsnv0YDG9mgYiKqGQ6eYoMg=
+X-Received: by 2002:a05:6000:430e:b0:3a0:b5ec:f05f with SMTP id
+ ffacd0b85a97d-3a1f6482aabmr12175878f8f.39.1747122195541; Tue, 13 May 2025
+ 00:43:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20250512-daily-saga-36a3a017dd42@spud> <20250512-sphere-plenty-8ce4cd772745@spud>
+In-Reply-To: <20250512-sphere-plenty-8ce4cd772745@spud>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 13 May 2025 08:42:48 +0100
+X-Gm-Features: AX0GCFuqAHW_El1GmwQL0ffwl-eOvi3d0MKWaPdlKXmQfFMsGd_d4EiSnbBSRgQ
+Message-ID: <CA+V-a8tgkNd92USA99UtgydA7F6BdYYB=eBXF7VNR_4h6ViOzA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: dts: renesas: add specific RZ/Five cache compatible
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>, Ben Zong-You Xie <ben717@andestech.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 03:14:03PM +0800, Yu Kuai wrote:
-> Yes, following change can work as well.
+On Mon, May 12, 2025 at 2:48=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
 >
-> Just wonder, if the array is created by another array, and which is
-> created by another array ...  In this case, the stack depth can be
-> huge. :(  This is super weird case, however, should we keep the old code
-> in this case?
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> When the binding was originally written, it was assumed that all
+> ax45mp-caches had the same properties etc. This has turned out to be
+> incorrect, as the QiLai SoC has a different number of cache-sets.
+>
+> Add a specific compatible for the RZ/Five for property enforcement and
+> in case there turns out to be additional differences between these
+> implementations of the cache controller.
+>
+> Acked-by: Ben Zong-You Xie <ben717@andestech.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Yeah, that's a good question.  Stacking multiple arrays using bitmaps
-on top of each other is weird.  But what if other block remappers
-starting to use this for other remapping and they are stacked?  That
-seems much more likely unfotunately, so maybe we can't go down this
-route after all, sorry for leading you to it.
+Cheers,
+Prabhakar
 
-So instead just write a comment documenting why you switch to a
-different stack using the workqueue.
+> diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boo=
+t/dts/renesas/r9a07g043f.dtsi
+> index e0ddf8f602c79..a8bcb26f42700 100644
+> --- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> +++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
+> @@ -143,7 +143,8 @@ plic: interrupt-controller@12c00000 {
+>         };
+>
+>         l2cache: cache-controller@13400000 {
+> -               compatible =3D "andestech,ax45mp-cache", "cache";
+> +               compatible =3D "renesas,r9a07g043f-ax45mp-cache", "andest=
+ech,ax45mp-cache",
+> +                            "cache";
+>                 reg =3D <0x0 0x13400000 0x0 0x100000>;
+>                 interrupts =3D <SOC_PERIPHERAL_IRQ(476) IRQ_TYPE_LEVEL_HI=
+GH>;
+>                 cache-size =3D <0x40000>;
+> --
+> 2.45.2
+>
+>
