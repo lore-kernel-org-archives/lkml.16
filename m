@@ -1,98 +1,107 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286CE28E564
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45550286439
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 12:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747140847; cv=none; b=KbiEd2GuLQZ+IV6B5ALpI/YuWhdlvuwlQjY1+fpDV3wb9SO1S2tlB6iOoSr11rIsx/432vKLaeNAhxelqnPdk8lBg6WcgJ52Kp4dw+ck3IAkCVAsD6J57e/WPbqODwkKnwPMZ9jMviswCHE8DdKNBrI0UvLZLRtpon5kAz9gJYQ=
+	t=1747140874; cv=none; b=TwwQXCuYnEBCaV/EfS8DTR3nqEhDsT+h6vPtfKC9PrY1fwPvyGkumtK+bentkka7w4PnQalUetwdEc6VuPvR4yEJzPSgm6s01zjIc2AGDYiS6TMLeLvS/rPaH6+kwJzEHAFUzyayvnShiywscH8y+ukFqr8EwOgWSp6ybqEHPjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747140847; c=relaxed/simple;
-	bh=n5DNtYUI843g0yIiLjFDVuZwRILHtDU6heRbq8kkdJQ=;
+	s=arc-20240116; t=1747140874; c=relaxed/simple;
+	bh=FldTC7QPzO/JuYsWl1oV51mqVB8rbH1BdDCuwPf3AX4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NR8YGhu4TVoB2fbpbIVdQBEJh8iQhAHdiDoID6nxB4oE1cez0gIhub76AcuETx09GT7q86pjq8xYevsRC6oaSrI+NO7k7HNUcMl6dUKlrxpOTje72BLZ8GQmh1B9GZ7ZJK8WEky/goltpxHk6VmA/WZCKFAjqr9D2NBTwh20Rg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UXb9KiRK; arc=none smtp.client-ip=209.85.208.171
+	 To:Cc:Content-Type; b=SsQS8p/a/8wcjAq8JB4xxwsZ6oDZDM6lCH+5maP32wrK8l1QH2seGmtJ59TM/cst+qJ5dd5jG6IK2cRgwvQ3IqB6h+SZLPYktolMBy1MTB10zHzy4wIEy/zvSp0WixGSoh9rY3+JPu0v8Cuqd6FpmOArsorIG7vaNMSgEI7inqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IBjDClJE; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXb9KiRK"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3104ddb8051so59346671fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:54:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IBjDClJE"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e98f73850so6448768e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 05:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747140843; x=1747745643; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747140869; x=1747745669; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n5DNtYUI843g0yIiLjFDVuZwRILHtDU6heRbq8kkdJQ=;
-        b=UXb9KiRK1Mtk9YdgOh+42d6H9idbQx84M1YAAZ5IzgtH2EZR8jVbedfnrWmmCwqHHk
-         9CDf/1dlixns3zmA7zJpRwgFp+x9kBwnPZC6TmVAVjnBKzGgeMkr+B8JjOoOTxheNJN2
-         A0/W7WRk4faW4QTxLTQSaWNoxanijP+LGRJfIej0VwubSkXh30WDHv0a7mNBCD23Vwmt
-         FDjJYL7JC/pr/sR1AOSk1ov3bhotZgrA16vU1aSmYvF8rZ31mx3/Y55voj0MzisrgJ8z
-         w8F4AMKHIviet5eKkB7jF/DPx3tnxrldK8roph7EXTUX9Yq5sjXcW3+arxw7oFo+zb3O
-         hhNw==
+        bh=f6OgU1k6A4H6ei9goCYDt4Oj811juJ96ljNmi3AbJV0=;
+        b=IBjDClJEpm0vNhQ4L94lnHelAUHxiXLqCnDPMhWKMlflmIVS++Ne/4mZTMUivviHHU
+         x+WkJQPSb8RTSUlGNCpzAKhSFlECxozKfHGzJpgZ8K0EB7YpyiZddR04/wvpW8LcYOHD
+         fXW5Av0z7rou18ZN+riFWXV6iBocEPpZx3J87L7B/V73Y07eWzc3QLwi9Ap7uFz2cOex
+         0eHZEmpsiHO+aox36YglnakUkPmkANcKy56eMmOZ/W9qpaY3++F+cEp2m6v7EvknmM5k
+         8FS/qS7EaGZDuTupCpUp5Ia7sV1eMUAT+kSg6HRaMMUxwejLrU2MtSwkq/uY7fQ+EuKJ
+         ABSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747140843; x=1747745643;
+        d=1e100.net; s=20230601; t=1747140869; x=1747745669;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n5DNtYUI843g0yIiLjFDVuZwRILHtDU6heRbq8kkdJQ=;
-        b=sjMBXpiGPkgfcCOGI2LwCesTJeCHsl3ujmutru/Vgg23JbDb3/7TgTh9+YM68aLxRy
-         ls4yEB3Rz0PqJhC0H7AwaxZhzoYaUxaPJ+U0VRKB1fIs2hu6qP7tz75F357oBQZdUM/s
-         0pGyFkW7y9/bQY+dxsjD4Lnkg0t4nlxi/044XCEK6s/afAfOquK2jYt9PXqQRkiXmviI
-         dbCEtvnWQyioEtGlDdnnzo/qdor3dovuvZdp7dMRj6OA3pCXgClWVOcQA1xIohgrg82J
-         NFeix+/W01g46zTrV1tgdwO/9wPlTqz8qKWK0FnUbJSxcFDUJ3InMHdgCDrv9ZO0OOSh
-         Jirw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoq65HL7Gtpbj3RFZobO7La8feuGZrYbe6phXCoyERSKOx0nNRWe7bpk/WKqpMLLTd3Rbv2tPQt2bpHxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdKv0pMj3+aMflC7JJ8ng4v18vunadQ2dZlWOA/d0avUyybhIo
-	pcgZmR+Z/t1VRFWSPOmyU6aTeExnTSUJYCDy1LvQH0LKrp7AnQTJIawqk6lVa3DfkjNtlG4nuqR
-	JODTYKJAniqpB/+NpDQlIaYrysIRBrEMWC69zZw==
-X-Gm-Gg: ASbGncvQNKytFVCEhPHnSOoo86epiV1DLyRafv53Gn9mB+VDhzcPs9lxqI9OhbUSyO+
-	H9Vr+iKyWxF+YNPj9v3J2k66Clw2cWhcLPQvdZaoZIqaT63obdtNvHBNe/IH6QQ7Lg8DfRXSn0R
-	VBjUghubdJdGXh6RT/ZFHBDoEf76IrmPXi
-X-Google-Smtp-Source: AGHT+IFZsPaNB7cQG5TO5oVxZDZD/YN8ybgCpE8L4Y5f1+vnu87em/ryPwHwzngIjpOkdu6PynjrJ2CQaef5h80Qtm0=
+        bh=f6OgU1k6A4H6ei9goCYDt4Oj811juJ96ljNmi3AbJV0=;
+        b=S3zUccOzkRSmxsrcyC4BS8CqMBKMhKmrIpFfy3a/reLVl+A2c/DiR0L/OVvD2HtawT
+         hCaAxNyA6IR57MBrSWBf8nxromJex8KCL51XXZh8wGZhCRjer7wpjZa9tvBn49rduyhK
+         TSK5hUpeG+PiONemPYaxxKJ7NxB6PfetslHp7zTX9eO+gi/qTObG9IgHsSS07GtLVMF+
+         3t/6wxwJg9/0C2q/d4O780LIfszFuAyBXsmvFex+euaweZDu0BFltQz/3MRRYXOxNYSx
+         Ks6ZMeSxULgG8NMTbeKXFedYA7Q4keFFMLjsUsBu5Fc8UkVu+22pxBBbOg4yR99TR2rb
+         z53w==
+X-Forwarded-Encrypted: i=1; AJvYcCVocMbZG9JS7rSf702+yW1fFqAy8gwMHq0p8iw3209OnUaNBXqCGBpydT5X8mLZQjJ63VZ1NFGvOYH2kX8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywacw4Llad9TdFQhMw/jJ7p7dQ74Iy0WrK+9A6pj0C3/5q8YI0w
+	cYr8O0CG9sZLOqONQajP2Q5x8qtSA4nycQFDnQmHRu/fqf/PgietRFo80KnXRXdFPSnv31rE2Lp
+	fY/BH1Y/KS/PQx6jFPyzU6qw0T83ahrEm9QMDdg==
+X-Gm-Gg: ASbGncsyrUOfOLwIakW0hzeoMIUb1l7b5PRMPGGJ0QiRP+qrHyxOREvFBoySgbIlvMP
+	kcjCU14CnZQRklB3UJktd2yeOhgfsjpW+7Hg4fT/aEmL9pSEtvhcDGJJnxnqe66BHsw+L5fQiuc
+	W4fNwjiBa5tyxDSs/0KKqALSGjO/hAUyiIRnWOVruJKBw=
+X-Google-Smtp-Source: AGHT+IFIqmhHDo8vb7POzdyLwF7ZPulGmRIq/MhufmURuwlm8UfvslfSSIYa2FrwrYENtbF5p5QmKMmvXbe1e8Aw0JE=
 X-Received: by 2002:a2e:be89:0:b0:30b:fd28:a771 with SMTP id
- 38308e7fff4ca-326c43ed095mr69137661fa.0.1747140843144; Tue, 13 May 2025
- 05:54:03 -0700 (PDT)
+ 38308e7fff4ca-326c43ed095mr69143841fa.0.1747140869246; Tue, 13 May 2025
+ 05:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-correct_gpio_ranges-v3-0-49a7d292befa@quicinc.com>
-In-Reply-To: <20250506-correct_gpio_ranges-v3-0-49a7d292befa@quicinc.com>
+References: <20250506-csl42x-v3-0-e9496db544c4@nxp.com> <20250506-csl42x-v3-3-e9496db544c4@nxp.com>
+In-Reply-To: <20250506-csl42x-v3-3-e9496db544c4@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 May 2025 14:53:51 +0200
-X-Gm-Features: AX0GCFvfxiAiOF97d_g8FaMONqLX8vuoL3GFla71xwbaspfDFQXlOOP7NTUarN0
-Message-ID: <CACRpkda57USe-6zkYKsOfKZcfZx-0DBa-dP2OxkoGsy+tLfHxA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Correct the number of GPIOs in gpio-ranges for
- QCS615 and QCS8300
-To: Lijuan Gao <quic_lijuang@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jingyi Wang <quic_jingyw@quicinc.com>, kernel@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Date: Tue, 13 May 2025 14:54:17 +0200
+X-Gm-Features: AX0GCFsrWir3tfYihH5SvRkpnFH_pjBd6oI5teeB7olEtOSu9RNDEIYNOTiuEtM
+Message-ID: <CACRpkdZj1j+mUA40+pdVz83UUqSR4Gow6Z6u5yQn48MCA7cQRw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/9] ASoC: codec: cs42l56: Convert to GPIO descriptors
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 6, 2025 at 8:23=E2=80=AFAM Lijuan Gao <quic_lijuang@quicinc.com=
+On Tue, May 6, 2025 at 9:31=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
 > wrote:
 
-> The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
-> through the GPIO framework. It is expected to be wired to the reset pin
-> of the primary UFS memory so that the UFS driver can toggle it.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> The UFS_RESET pin is exported as GPIOs in addtion to the real GPIOs. The
-> QCS615 TLMM pin controller has GPIOs 0-122, so correct the gpio-rangs to
-> 124. The QCS8300 TLMM pin controller has GPIOs 0-132, so correct the
-> gpio-rangs to 134.
+> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
+>  - Use devm_gpiod_get_optional to get GPIO descriptor with default
+>    polarity GPIOD_OUT_LOW, set consumer name.
+>  - Use gpiod_set_value_cansleep to configure output value.
 >
-> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
-
-Patches applied for v6.16!
-
-Yours,
-Linus Walleij
+> Checking the current driver using legacy GPIO API, the
+> nreset value is first output HIGH, then LOW, then HIGH.
+>
+> Checking the datasheet, nreset is should be held low after power
+> on, when nreset is high, it starts to work.
+>
+> Since the driver has been here for quite long time and no complain on
+> the nreset flow, still follow original flow when using GPIOD
+> descriptors.
+>
+> Commit 944004eb56dc ("gpiolib: of: add a quirk for reset line for Cirrus
+> CS42L56 codec") added quirks, so the gpio request API will work as before=
+.
+>
+> Per datasheet, the DTS polarity should be GPIOD_ACTIVE_LOW. The binding
+> example use value 0(GPIOD_ACTIVE_HIGH) which seems wrong. There is
+> no in-tree DTS has the device, so all should be fine.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
