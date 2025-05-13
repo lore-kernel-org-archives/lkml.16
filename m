@@ -1,119 +1,209 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFC37482;
-	Tue, 13 May 2025 00:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BD1805B;
+	Tue, 13 May 2025 00:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747094941; cv=none; b=tvPr+refxP/9BevvHTgfq3IRyMlNUzQo/Qxkz/NKBe8VGKveJ1A/w/tpUlUKgsUhlvZGtRwvuhQpU5xXKaFrZn4tlAZ0nNhnge8nsvYGkdnxAxPw00ZZdnof2S15yMwq2gzNeedwHwGbS5UKwmGBfFQVqqFxfH05S9QwYagZx28=
+	t=1747094946; cv=none; b=ViYpSbcTd3BGFFZYpEYFTCUq97Znn/WN1ooECcfgmUyQrOuY68qg1r1TJwbLCQgRONw4hNcf0CWveKKmOv5x3OxT++jP2OcpKkJRK9n6iOTUFLwApjC8ev9I/aVoLzUzpnT9w5WQ//VuDRsiC9uCAB/IGSGbXcba1ALhIJM8xmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747094941; c=relaxed/simple;
-	bh=btui7WTriYwWwDaipfsN6n9UimydyKvuy3FhpjdcGQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O0NKgSUE8h/WHBwjALAg30eSC02kXfk4ppdtIRoh8oPZGwdLbrIlvPG2CbhIT5HC6TUjDEL8kPdgAarnwEz4TW0AvjB04yL1iPsCjJMBcd/vUzPFMKzerZt0n0PfoZG7X3Vx96V88o1bxwlDoEC/ttwI7FKuYb11qnQ3SZc8Yjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gUtZx3G9; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747094946; c=relaxed/simple;
+	bh=7ZtSxivjoK3M9fH9frt+xHwAgujTa7ewgoWYcEHRngQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lK4byBSjEZGl3u8zSLWomF8ZJ0q6LFq9nRDz3UrL/PMN5pVwiy1lMFf5KyqZyF0howRDqU6CqosHBfPwXWscYAwxN/Q2CDa7YO64fC5fCgOjgbsED7Gw/SIi7DAlorgqTWK2tZ2jHhhUZPiREFXgLWKCBKPECbAgdZ7x/t+XToo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcfzYnTT; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUtZx3G9"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf680d351so35596305e9.0;
-        Mon, 12 May 2025 17:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747094937; x=1747699737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z0usMcMWdY8lq5FVni3HwlJ8NWBna50dNtlKJxA0fhc=;
-        b=gUtZx3G9lD2AXSLkpq25clKd9O4oNGWhOPkW0W8346vFvSrHzp/3mIO6eKYpVORXN1
-         ArljCztyZfF1GaehiacKtjx+kRoBf/HGp3hWYlhnNryQVwi6dwIQzymL0YMcrHZiLKIq
-         PX5Z5Wue+jj/vetKMlEWQ1pfLtAhsU7AEiX0hEDviR7qeqGn1eC0EuaOUnKj5ESGa+9u
-         g5dD/M0TWccR5Y0wpKTt/wDKmRZ7F884jGRJrgLcRLMjMMnGZA4mSoQ7Q5VKiVjDd+ED
-         cKk/n3zw68exjOfB5fDuj36ADoBUYwFSafWlFyWNHWZF1PomdjTZEoB/y2dZmfFrpVWR
-         N4Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747094937; x=1747699737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z0usMcMWdY8lq5FVni3HwlJ8NWBna50dNtlKJxA0fhc=;
-        b=Yv0jRlKcHIhAmHcL+6MTSi2w8WHKbY1EnM38jVvvsMoVnjcWqeHP7GCQZREtWiylxr
-         BX0zhW/NVdnz49h8DQeYUU0cO/Zv2/19hizJ/PUG9/oRS16Nq9GwZR3zTl+kVKOTAXNR
-         jJmZmL0EGR76vimL3RuLCD8vWQXdnp+CqeixcTsWwfyv22H3bPSaRzBRHUwGdKRCtavm
-         CNoNLzDvtUZe87q0RzPfdCcbvL3gBQJVo9M6gmAnIaXH7GJZeifI8S5amOclpDv4RP6+
-         BMUUGa/AuG5oSdeNtahMR3Yf3+1346mv/bjAc5FqIum5PjgqsfRi2aF054HoVKosbBp8
-         GntA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2ThUkhw9lL6bFY8n7A2L/bbpOgVF53od1ealkxe6gQcRhxa98IvYCrsAJBZc1qFvgRGKa9NAP4c4lLx4LSPiz@vger.kernel.org, AJvYcCU8WI/zcKmaJ1pYVQT2bfj0QHPyQIMlm9xE8zMC9+G8ooHbCua3L4RCAsHj4NkdpDv/X1vI3URT@vger.kernel.org, AJvYcCUIDES5z9wJqsh+2pHKUSbg2vr22oOM0znXwoKP/r4Y8gtEruOkNaydGiqyLsaj2IIxMUdgHpiGBH0UKJv8@vger.kernel.org, AJvYcCUgudH/w2Ny81UXtWBgob5iTenFVOedRpwPEJxpgrsp49IHYk/e9dWTFMqFWMPs5+vc8gWz1ZPJj7vcEQ==@vger.kernel.org, AJvYcCWESUZFTtvz14Nsr4u3ZX8rH/1qP9si4sF7RhqrvBjHgQn36BTcdTOnNaPXnLeflFPnqic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZslhwCbmwNAAma1rkptuOh82U626By0zyIvzMeeKtQIWGZnU/
-	hyJ6L/XeBRi4RHhciyfmgn5zXWxN12T14yuATjTd8HwavK60a8UgOYhmr8OF4KFvmzt3Zz8ju6S
-	+31XcztSyMqo8YNYumAq2CGJWRrE=
-X-Gm-Gg: ASbGncvU/zYt5Rfquo2IIdh1ywnoFQt1dQ+uN2LaKluXE270T+JESgf8+wKO83JNqxC
-	kchs8ZeYirqq/NPd8g5yEXo5hR5In9fVa8+QDTXed1I/5g5aTDf/JqCtDH/n4wM3noodwM2SaoD
-	LmDU68BqNVyJMpJPm7L3ckp4oZkDaZUrLuJ8Fh+ivt21y0aDNWYGOhevqPyx/P5XWKJ39oeuxR
-X-Google-Smtp-Source: AGHT+IG6Hz90vyaSCvuZEEStO56/EfmLm4jy+VPkC+7LSgTl2r4zMMUWiNmhZdoBi9DUh7+CwrGSoK2927YgvRKWh68=
-X-Received: by 2002:a05:6000:3110:b0:3a0:b817:2d7a with SMTP id
- ffacd0b85a97d-3a340d34576mr996553f8f.29.1747094936767; Mon, 12 May 2025
- 17:08:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcfzYnTT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747094944; x=1778630944;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7ZtSxivjoK3M9fH9frt+xHwAgujTa7ewgoWYcEHRngQ=;
+  b=TcfzYnTTl2Xo830J8AoM/Nq4I0Q2sAu8mAMMuqWebosa9qVeIXTEQFco
+   4g8ZbmhksGKGE1aC9ysIyA9boIDv3oFFKA2cj+KF54I6d/e2m+D8x04LS
+   uVdCQsI2S3GRJiZPHEup35hbmfxIfJDMhl3fG7xr2b15bqEiCd4FFTfd0
+   CitvmjnHI1mZKk5PGv/OXTFHeGuz6Ih7qTPo3I4OsbssNf7son1jG2Z1V
+   qJclDzo453iSyg+pox1pHgKarKxt+BKoTh5ZIM3H5OGqTaPXrZgVnX4jn
+   NG+qOYWIE37fCOvqh04WXWvnc4tJuqbTq2ENG5aQ1QHhxsI5zPfPTN4fe
+   g==;
+X-CSE-ConnectionGUID: ddVq+PXkRFyPzp3Keg24uQ==
+X-CSE-MsgGUID: 005j1EzzTCePd9TyUWkw6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="60255183"
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="60255183"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 17:09:03 -0700
+X-CSE-ConnectionGUID: vx8DaHZKTM6lKYNLqr0TuQ==
+X-CSE-MsgGUID: nRaBNcnFQtmSyh1F8YdDcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
+   d="scan'208";a="142711631"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.233]) ([10.124.220.233])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 17:09:03 -0700
+Message-ID: <0c753b5b-37e9-4f72-a27a-acd5b64752aa@intel.com>
+Date: Mon, 12 May 2025 17:09:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512091511.2029269-1-skb99@linux.ibm.com> <2025051204-numbness-nephew-05f9@gregkh>
-In-Reply-To: <2025051204-numbness-nephew-05f9@gregkh>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 12 May 2025 17:08:45 -0700
-X-Gm-Features: AX0GCFtDKtwoUVfexcyHhD6lveCvM6KUQViwhMY0AsbIsdBYJejqhW-l-fzvCHU
-Message-ID: <CAADnVQLbkUGTdF6SpNp-LiPwuNSa_vtsSHwXucXa44ecShhstw@mail.gmail.com>
-Subject: Re: [RESEND PATCH] selftests/bpf: Fix bpf selftest build warning
-To: Greg KH <gregkh@linuxfoundation.org>, 
-	Network Development <netdev@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: Saket Kumar Bhaskar <skb99@linux.ibm.com>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Mykola Lysenko <mykolal@fb.com>, "Song, Yoong Siang" <yoong.siang.song@intel.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/17] cxl: docs/linux - overview
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, corbet@lwn.net
+References: <20250512162134.3596150-1-gourry@gourry.net>
+ <20250512162134.3596150-8-gourry@gourry.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250512162134.3596150-8-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 12, 2025 at 2:23=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, May 12, 2025 at 02:45:11PM +0530, Saket Kumar Bhaskar wrote:
-> > On linux-next, build for bpf selftest displays a warning:
-> >
-> > Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
-> > differs from latest version at 'include/uapi/linux/if_xdp.h'.
-> >
-> > Commit 8066e388be48 ("net: add UAPI to the header guard in various netw=
-ork headers")
-> > changed the header guard from _LINUX_IF_XDP_H to _UAPI_LINUX_IF_XDP_H
-> > in include/uapi/linux/if_xdp.h.
-> >
-> > To resolve the warning, update tools/include/uapi/linux/if_xdp.h
-> > to align with the changes in include/uapi/linux/if_xdp.h
-> >
-> > Fixes: 8066e388be48 ("net: add UAPI to the header guard in various netw=
-ork headers")
-> > Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> > Closes: https://lore.kernel.org/all/c2bc466d-dff2-4d0d-a797-9af7f676c06=
-5@linux.ibm.com/
-> > Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> > Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-> > ---
-> >
-> > [RESEND]:
-> >  - Added Fixes and Tested-by tag.
-> >  - Added Greg as receipent for driver-core tree.
->
-> Why?  Commit 8066e388be48 ("net: add UAPI to the header guard in various
-> network headers") is not in that tree/branch, so why do I need it?
 
-Certainly not driver-core.
 
-Please resend with [PATCH net-next] and cc netdev.
+On 5/12/25 9:21 AM, Gregory Price wrote:
+> Add type-3 device configuration overview that explains the probe
+> process for a type-3 device from early-boot through memory-hotplug.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  Documentation/driver-api/cxl/index.rst        |   3 +-
+>  .../driver-api/cxl/linux/overview.rst         | 103 ++++++++++++++++++
+>  2 files changed, 105 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
+> 
+> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+> index 6a5fb7e00c52..bc2228c77c32 100644
+> --- a/Documentation/driver-api/cxl/index.rst
+> +++ b/Documentation/driver-api/cxl/index.rst
+> @@ -30,9 +30,10 @@ that have impacts on each other.  The docs here break up configurations steps.
+>     platform/example-configs
+>  
+>  .. toctree::
+> -   :maxdepth: 1
+> +   :maxdepth: 2
+>     :caption: Linux Kernel Configuration
+>  
+> +   linux/overview
+>     linux/access-coordinates
+>  
+>  
+> diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
+> new file mode 100644
+> index 000000000000..648beb2c8c83
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/linux/overview.rst
+> @@ -0,0 +1,103 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +========
+> +Overview
+> +========
+> +
+> +This section presents the configuration process of a CXL Type-3 memory device,
+> +and how it is ultimately exposed to users as either a :code:`DAX` device or
+> +normal memory pages via the kernel's page allocator.
+> +
+> +Portions marked with a bullet are points at which certain kernel objects
+> +are generated.
+> +
+> +1) Early Boot
+> +
+> +  a) BIOS, Build, and Boot Parameters
+> +
+> +    i) EFI_MEMORY_SP
+> +    ii) CONFIG_EFI_SOFT_RESERVE
+> +    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
+> +    iv) nosoftreserve
+> +
+> +  b) Memory Map Creation
+> +
+> +    i) EFI Memory Map / E820 Consulted for Soft-Reserved
+> +
+> +      * CXL Memory is set aside to be handled by the CXL driver
+> +
+> +      * Soft-Reserved IO Resource created for CFMWS entry
+> +
+> +  c) NUMA Node Creation
+> +
+> +    * Nodes created from ACPI CEDT CFMWS and SRAT Proximity domains (PXM)
+> +
+> +  d) Memory Tier Creation
+> +
+> +    * A default memory_tier is created with all nodes.
+> +
+> +  e) Contiguous Memory Allocation
+> +
+> +    * Any requested CMA is allocated from Online nodes
+> +
+> +  f) Init Finishes, Drivers start probing
+> +
+> +2) ACPI and PCI Drivers
+> +
+> +  a) Detects PCI device is CXL, marking it for probe by CXL driver
+> +
+> +3) CXL Driver Operation
+> +
+> +  a) Base device creation
+> +
+> +    * root, port, and memdev devices created
+> +    * CEDT CFMWS IO Resource creation
+> +
+> +  b) Decoder creation
+> +
+> +    * root, switch, and endpoint decoders created
+> +
+> +  c) Logical device creation
+> +
+> +    * memory_region and endpoint devices created
+> +
+> +  d) Devices are associated with each other
+> +
+> +    * If auto-decoder (BIOS-programmed decoders), driver validates
+> +      configurations, builds associations, and locks configs at probe time.
+> +
+> +    * If user-configured, validation and associations are built at
+> +      decoder-commit time.
+> +
+> +  e) Regions surfaced as DAX region
+> +
+> +    * dax_region created
+> +
+> +    * DAX device created via DAX driver
+> +
+> +4) DAX Driver Operation
+> +
+> +  a) DAX driver surfaces DAX region as one of two dax device modes
+> +
+> +    * kmem - dax device is converted to hotplug memory blocks
+> +
+> +      * DAX kmem IO Resource creation
+> +
+> +    * hmem - dax device is left as daxdev to be accessed as a file.
+> +
+> +      * If hmem, journey ends here.
+> +
+> +  b) DAX kmem surfaces memory region to Memory Hotplug to add to page
+> +     allocator as "driver managed memory"
+> +
+> +5) Memory Hotplug
+> +
+> +  a) mhp component surfaces a dax device memory region as multiple memory
+> +     blocks to the page allocator
+> +
+> +    * blocks appear in :code:`/sys/bus/memory/devices` and linked to a NUMA node
+> +
+> +  b) blocks are onlined into the requested zone (NORMAL or MOVABLE)
+> +
+> +    * Memory is marked "Driver Managed" to avoid kexec from using it as region
+> +      for kernel updates
+
