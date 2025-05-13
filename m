@@ -1,108 +1,355 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842F228C5AF;
-	Tue, 13 May 2025 11:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084B628D8D6;
+	Tue, 13 May 2025 11:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747136391; cv=none; b=oQg/r0AjT+lD54vYekPtVNE7MVcFS6pqBWmpQKo2b5zEZmBW+tCGR1UvW5hx9zMp93B72zf8gTChWiRkpD6sMZjObpPbf/ZKRp3xtuviIviNRSia79WfE2mhf9Bo9EdcQSpAa48yZkVujm8PrXL+W7Wn1Yf1A+ZdWOrMylsA1uE=
+	t=1747136439; cv=none; b=dPi5IY1vXHjyhi+au1dIW3X+9jDWvsy88iekOYGj8CODR2ju8BAt828kkUMOdydAYOH2MwC4igkWQg4Xr+KgjFAt6paWb91vpKdQJG4TbakOv+rS7XChwpX1KVmllas4cBmSXMgvGMkHh7WAQ1b9YYVIVdNcNT5DM1vXqkyCP+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747136391; c=relaxed/simple;
-	bh=kNT8fQ1sCfHXSprcogGJmSSqrboRbv5c9tc4C1sfofc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HoRBys3brEKoRmvG+xky+vgz2EeTiqtvDGY2ltP2MhBkFILOSj8XR/0NCgjA8bkCwdtcZtbZl0gJBDl8AP6DhRTytMfAwHQ4x9HcwBEDtkKo93hbM0T6UQw2PtZ/ncjk/DkeloPoGf9tbNADSG6/BCfMLsVjpHx/3+1Y2qf64ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=MdVihagh; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1747136439; c=relaxed/simple;
+	bh=V7a/PzOmjn0F1bRnmlp8qgxSqkLNuoCpToPbb82W0ew=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LFjGcoZTXev712UzOfLPxhXiGpudCpmUs26sWu/o9CjtiAss1b/ApUGufLrevz/8cFWYjEyzv9za2qONpDrmlXiLHUahxcdkmXvTc6Ek176YJie7P36jNIV6pBK6hlncyZ/U/2tKrektycOyIzWfO7+UQPP2HQuDYOVNeLEuaIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a7zNWt2u; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MdVihagh"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a064a3e143so3154990f8f.3;
-        Tue, 13 May 2025 04:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1747136388; x=1747741188; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kaFnDrgYgykdtxL/lmy+IZqOZa2/HPvZV0a+ILjXC1c=;
-        b=MdVihaghe8tF9sg95W25rHem1FJLV9eQ+sGgloatAUUftjxZXBAZwf8FDwk40HjJdB
-         AqPR3jL2r0R9vqjIWul6zc03K2+hq4sFAmv9/o/CIy+h3TK1Mdcu/Ki74TAgpO3+WJDf
-         OpmVjMDWqRsAfeQHumd/OGBbQeR8oFeeHb+5iA26FCub16A2dSJWOu0jIk6j9rlK2WUr
-         Rpi+ssY6HOPvPoufvlx9rTJV9n4+eRAC8/1n3W5c08cx+OjkOtZDkfdTaRdqDNX62h1K
-         huModw0WpKBUW7rgXqTGVhhoYy6RtDzjclBhwfcFukSHIhGlV6cuNe0ycHD9qjB+0Df6
-         EgZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747136388; x=1747741188;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kaFnDrgYgykdtxL/lmy+IZqOZa2/HPvZV0a+ILjXC1c=;
-        b=fqxgDV4fO4J0E86iuswZrFrK7iCeUPu2EAKBwKRqkYwVqvPx2wuk07n5gZ76RySQhB
-         alE8izWBQXzTd84zCTaFflqxhzjlXtPK/SHRrZapaO3iV/rIXU07SmTj+7J5kuHIyoXy
-         uyyWlAgHFxRj4Fpc7it4nPzlmf2OMC38dNE+yLOIDY6IJBHbUtQow2DoY9gy3KcYAyFz
-         2M9jQTuvIbOSMlaC0kt1BXkkkm1B85J9TuE5OxvNaU9+Fw8Ukss9YtmhzI+nR24iLnAK
-         RAitOSYDUEwZk122i8DiX5Zicqf/RUD27pFdcIXqkbANNsqWmzioipJQ1R86ffDfgrg7
-         dDsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcxysTc7AoTfBXT+MFV6UKuoGs0cmBsTvDI+0pnn2/bZv7LNVxNG2oBm2/G7gfuPgCEJIzEYzVKqi8fA4=@vger.kernel.org, AJvYcCWNADPxRL04qlCRNuCg2+/+PFvSYeR6n3+tkE2EJeVcfktUhPsxRhGn0X4SjKqnikbSe9T9P+Aw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWliGHmy26vnxvnI/w9cFWvVuxbbzpfmktiPcLTwAHziF9anFm
-	bomEmDfHQZr0cz/L2FSPEmbzxBM49Z133tugiXYk81F2010DW6E=
-X-Gm-Gg: ASbGnctMV+YnWtRI8Iz/Q2nTyjWparFRS5adUtheyh1OcLQmygNhJiLckG6Lhb+X4Ik
-	u4nAoP1p4ctDmq5SfD9wkEQNwwYNPp1UJNs8ojmsKARzIvq7T1Ty9BRHEv20g4Z833rMQiQVyvL
-	lvR3wtVS0hNu/MzprS70UUBwDtJ2vER+w8SMZcs9Rlug2SBCv9V31n70Q1XgHdL179GJtmmpGpz
-	zZgfgPSqrllbj/1Sxl1lJCPYtc4ps3+fkRiMHRiOQzRfSruGImIVlXxmYt1wCIayu3sQZ4yLgte
-	M9M350KKVxG4iAdguRYHuUpXGypJhTJzbFmKa0I7CVQMTbEDQ26PS3Nw5pHqc9x0YxHkRZxL3h7
-	SxjibbY5EGtP4cZO9ftxHkznzNJg=
-X-Google-Smtp-Source: AGHT+IEplDFuN2dh3lCZVBALO+XGKlSlWYb5rOawb7A5PX/PlKHh+e4UJH03tKOvimPZ+ksur0fgpA==
-X-Received: by 2002:a05:6000:402a:b0:3a1:f5c7:c50 with SMTP id ffacd0b85a97d-3a1f6488071mr12005690f8f.47.1747136387506;
-        Tue, 13 May 2025 04:39:47 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac006.dip0.t-ipconnect.de. [91.42.192.6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4cc2esm16248093f8f.90.2025.05.13.04.39.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 04:39:46 -0700 (PDT)
-Message-ID: <3bc38f30-b340-433f-8732-954214e41fa2@googlemail.com>
-Date: Tue, 13 May 2025 13:39:45 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a7zNWt2u"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA43943AD4;
+	Tue, 13 May 2025 11:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747136435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TGGvlGblmCJVXjBO0yQXRi3U7VXpElH4T00qOtEqcZA=;
+	b=a7zNWt2uthvfWjUVDEdqvNXm9Q5p66cBuO7GN+aAnxhLV/Ch05TYsfAOnukYP6UNjxjroT
+	uFKdL+4pQaCY0VnQGKOqkQH1cOn1taYarBOIzrCz6/VpD+brB8zyFnAb0SvWZHhtC5I8lD
+	SFaxwwXZL369mimet+KhoO4y2Sr2FPEwKVilHkPHcyjiF47NlS+c6gOCXf3OYitL5ZjU8s
+	AELqTa/WNcoEb68CTipwYArli7t/dgGBJ9on4WijAC/NZY9LMccbBOI13NfsixjxZDWMmx
+	e4XG71ZgAi54oOWWSDeT06CC+mdhMv32mbs/UI+omyHOimS3NLG2MTomcQlYMA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 13 May 2025 13:40:22 +0200
+Subject: [PATCH net-next v3] net: Add support for providing the PTP
+ hardware source in tsinfo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 00/92] 6.1.139-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250512172023.126467649@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250512172023.126467649@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250513-feature_ptp_source-v3-1-84888cc50b32@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAKUvI2gC/23N3QrCIBwF8FcJrzOmc23rqveIGH78bULpUCeLs
+ XdP7CKCXR4O53dWFMAbCOhyWJGHZIJxNof6eEBy5PYB2KicEa1oUzHSYQ08zh6GKU5DcLOXgJV
+ mvO9kz0jdozycPGizFPSGLERsYYnonpvRhOj8u7wlUvovTJs9OBFMsKRKQyuo6AS7Cufi09iTd
+ K8CJvpDmuq8i9CMKJBE1qQjvIV/ZNu2DyR495MFAQAA
+X-Change-ID: 20250418-feature_ptp_source-df4a98c94139
+To: Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, 
+ Donald Hunter <donald.hunter@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Xing <kernelxing@tencent.com>, 
+ Richard Cochran <richardcochran@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ "Russell King (Oracle)" <linux@armlinux.org.uk>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdegtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgfeegveefvefgfeegueeluefgheegfeejkedtudduvdfhteekvdfgfeeluefgueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudgrmeeiudemjehfkegtmehfjeekrgemfhelvghfmeekkegttdemieefsghfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdurgemiedumeejfhektgemfhejkegrmehflegvfhemkeektgdtmeeifegsfhdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrv
+ gguhhgrthdrtghomhdprhgtphhtthhopehrihgthhgrrhgutghotghhrhgrnhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepkhgvrhhnvghlgihinhhgsehtvghntggvnhhtrdgtohhmpdhrtghpthhtohepfihilhhlvghmuggvsghruhhijhhnrdhkvghrnhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Am 12.05.2025 um 19:44 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.139 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Multi-PTP source support within a network topology has been merged,
+but the hardware timestamp source is not yet exposed to users.
+Currently, users only see the PTP index, which does not indicate
+whether the timestamp comes from a PHY or a MAC.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Add support for reporting the hwtstamp source using a
+hwtstamp-source field, alongside hwtstamp-phyindex, to describe
+the origin of the hardware timestamp.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Remove HWTSTAMP_SOURCE_UNSPEC enum value as it is not used at all.
 
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Change in v3:
+- Move hwtstamp_source enum from uapi/linux/ethtool.h to ethtool.yaml specs.
+- Add few include of ethtool_netlink_generated.h header.
+- Link to v2: https://lore.kernel.org/r/20250506-feature_ptp_source-v2-1-dec1c3181a7e@bootlin.com
 
-Beste Grüße,
-Peter Schneider
+Change in v2:
+- Move hwtstamp_source enum from uapi/linux/net_tstamp.h to
+  uapi/linux/ethtool.h
+- Remove HWTSTAMP_SOURCE_UNSPEC enum value.
+- Made a few change in net/ethtool/common.c to report the source only
+  if get_ts_info does not return an error and if there is a hardware
+  timestamp with a phc index.
+- Link to v1: https://lore.kernel.org/r/20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com
+---
+ Documentation/netlink/specs/ethtool.yaml       | 26 +++++++++++++++++++++++
+ include/linux/ethtool.h                        |  5 +++++
+ include/linux/net_tstamp.h                     |  7 +------
+ include/uapi/linux/ethtool_netlink_generated.h | 14 +++++++++++++
+ net/ethtool/common.c                           | 29 +++++++++++++++++++++-----
+ net/ethtool/tsinfo.c                           | 23 ++++++++++++++++++++
+ 6 files changed, 93 insertions(+), 11 deletions(-)
 
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index c650cd3dcb80bc93c5039dc8ba2c5c18793ff987..881e483f32e18f77c009f278bd2d2029c30af352 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -98,6 +98,23 @@ definitions:
+     name: tcp-data-split
+     type: enum
+     entries: [ unknown, disabled, enabled ]
++  -
++    name: hwtstamp-source
++    enum-name: hwtstamp-source
++    name-prefix: hwtstamp-source-
++    type: enum
++    entries:
++      -
++        name: netdev
++        doc: |
++          Hardware timestamp comes from a MAC or a device
++          which has MAC and PHY integrated
++        value: 1
++      -
++        name: phylib
++        doc: |
++          Hardware timestamp comes from one PHY device
++          of the network topology
+ 
+ attribute-sets:
+   -
+@@ -896,6 +913,13 @@ attribute-sets:
+         name: hwtstamp-provider
+         type: nest
+         nested-attributes: ts-hwtstamp-provider
++      -
++        name: hwtstamp-source
++        type: u32
++        enum: hwtstamp-source
++      -
++        name: hwtstamp-phyindex
++        type: u32
+   -
+     name: cable-result
+     attr-cnt-name: __ethtool-a-cable-result-cnt
+@@ -1981,6 +2005,8 @@ operations:
+             - phc-index
+             - stats
+             - hwtstamp-provider
++            - hwtstamp-source
++            - hwtstamp-phyindex
+       dump: *tsinfo-get-op
+     -
+       name: cable-test-act
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 117718c2481439d09f60cd596012dfa0feef3ca8..5e0dd333ad1fb39a74dc4317d6886b4224ea661c 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -19,6 +19,7 @@
+ #include <linux/netlink.h>
+ #include <linux/timer_types.h>
+ #include <uapi/linux/ethtool.h>
++#include <uapi/linux/ethtool_netlink_generated.h>
+ #include <uapi/linux/net_tstamp.h>
+ 
+ #define ETHTOOL_MM_MAX_VERIFY_TIME_MS		128
+@@ -830,6 +831,8 @@ struct ethtool_rxfh_param {
+  * @so_timestamping: bit mask of the sum of the supported SO_TIMESTAMPING flags
+  * @phc_index: device index of the associated PHC, or -1 if there is none
+  * @phc_qualifier: qualifier of the associated PHC
++ * @phc_source: source device of the associated PHC
++ * @phc_phyindex: index of PHY device source of the associated PHC
+  * @tx_types: bit mask of the supported hwtstamp_tx_types enumeration values
+  * @rx_filters: bit mask of the supported hwtstamp_rx_filters enumeration values
+  */
+@@ -838,6 +841,8 @@ struct kernel_ethtool_ts_info {
+ 	u32 so_timestamping;
+ 	int phc_index;
+ 	enum hwtstamp_provider_qualifier phc_qualifier;
++	enum hwtstamp_source phc_source;
++	int phc_phyindex;
+ 	enum hwtstamp_tx_types tx_types;
+ 	enum hwtstamp_rx_filters rx_filters;
+ };
+diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+index ff0758e88ea1008efe533cde003b12719bf4fcd3..f4936d9c2b3c281270c90a395ea5b9d088b221a3 100644
+--- a/include/linux/net_tstamp.h
++++ b/include/linux/net_tstamp.h
+@@ -4,6 +4,7 @@
+ #define _LINUX_NET_TIMESTAMPING_H_
+ 
+ #include <uapi/linux/net_tstamp.h>
++#include <uapi/linux/ethtool_netlink_generated.h>
+ 
+ #define SOF_TIMESTAMPING_SOFTWARE_MASK	(SOF_TIMESTAMPING_RX_SOFTWARE | \
+ 					 SOF_TIMESTAMPING_TX_SOFTWARE | \
+@@ -13,12 +14,6 @@
+ 					 SOF_TIMESTAMPING_TX_HARDWARE | \
+ 					 SOF_TIMESTAMPING_RAW_HARDWARE)
+ 
+-enum hwtstamp_source {
+-	HWTSTAMP_SOURCE_UNSPEC,
+-	HWTSTAMP_SOURCE_NETDEV,
+-	HWTSTAMP_SOURCE_PHYLIB,
+-};
+-
+ /**
+  * struct hwtstamp_provider_desc - hwtstamp provider description
+  *
+diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
+index 30c8dad6214e9a882f1707e4835e9efc73c3f92e..95f2cffc042f22a893ba2efd19aa69136c538e55 100644
+--- a/include/uapi/linux/ethtool_netlink_generated.h
++++ b/include/uapi/linux/ethtool_netlink_generated.h
+@@ -37,6 +37,18 @@ enum ethtool_tcp_data_split {
+ 	ETHTOOL_TCP_DATA_SPLIT_ENABLED,
+ };
+ 
++/**
++ * enum hwtstamp_source
++ * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from a MAC or a device
++ *   which has MAC and PHY integrated
++ * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one PHY device of the
++ *   network topology
++ */
++enum hwtstamp_source {
++	HWTSTAMP_SOURCE_NETDEV = 1,
++	HWTSTAMP_SOURCE_PHYLIB,
++};
++
+ enum {
+ 	ETHTOOL_A_HEADER_UNSPEC,
+ 	ETHTOOL_A_HEADER_DEV_INDEX,
+@@ -401,6 +413,8 @@ enum {
+ 	ETHTOOL_A_TSINFO_PHC_INDEX,
+ 	ETHTOOL_A_TSINFO_STATS,
+ 	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER,
++	ETHTOOL_A_TSINFO_HWTSTAMP_SOURCE,
++	ETHTOOL_A_TSINFO_HWTSTAMP_PHYINDEX,
+ 
+ 	__ETHTOOL_A_TSINFO_CNT,
+ 	ETHTOOL_A_TSINFO_MAX = (__ETHTOOL_A_TSINFO_CNT - 1)
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 49bea6b45bd5c1951ff1a52a9f30791040044d10..eb253e0fd61b5d84c0d5d6c24e19e665b6182f2f 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -921,9 +921,18 @@ int ethtool_get_ts_info_by_phc(struct net_device *dev,
+ 
+ 		phy = ethtool_phy_get_ts_info_by_phc(dev, info, hwprov_desc);
+ 		if (IS_ERR(phy))
+-			err = PTR_ERR(phy);
+-		else
+-			err = 0;
++			return PTR_ERR(phy);
++
++		/* Report the phc source only if we have a real
++		 * phc source with an index.
++		 */
++		if (info->phc_index >= 0) {
++			info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
++			info->phc_phyindex = phy->phyindex;
++		}
++		err = 0;
++	} else if (!err && info->phc_index >= 0) {
++		info->phc_source = HWTSTAMP_SOURCE_NETDEV;
+ 	}
+ 
+ 	info->so_timestamping |= SOF_TIMESTAMPING_RX_SOFTWARE |
+@@ -947,10 +956,20 @@ int __ethtool_get_ts_info(struct net_device *dev,
+ 
+ 		ethtool_init_tsinfo(info);
+ 		if (phy_is_default_hwtstamp(phydev) &&
+-		    phy_has_tsinfo(phydev))
++		    phy_has_tsinfo(phydev)) {
+ 			err = phy_ts_info(phydev, info);
+-		else if (ops->get_ts_info)
++			/* Report the phc source only if we have a real
++			 * phc source with an index.
++			 */
++			if (!err && info->phc_index >= 0) {
++				info->phc_source = HWTSTAMP_SOURCE_PHYLIB;
++				info->phc_phyindex = phydev->phyindex;
++			}
++		} else if (ops->get_ts_info) {
+ 			err = ops->get_ts_info(dev, info);
++			if (!err && info->phc_index >= 0)
++				info->phc_source = HWTSTAMP_SOURCE_NETDEV;
++		}
+ 
+ 		info->so_timestamping |= SOF_TIMESTAMPING_RX_SOFTWARE |
+ 					 SOF_TIMESTAMPING_SOFTWARE;
+diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
+index 8130b406ef107f7311cba15c5aafba3ba82bb5a3..8c654caa6805a5727f479d5438d7a4a2786b8d52 100644
+--- a/net/ethtool/tsinfo.c
++++ b/net/ethtool/tsinfo.c
+@@ -160,6 +160,12 @@ static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
+ 		/* _TSINFO_HWTSTAMP_PROVIDER */
+ 		len += nla_total_size(0) + 2 * nla_total_size(sizeof(u32));
+ 	}
++	if (ts_info->phc_source) {
++		len += nla_total_size(sizeof(u32));	/* _TSINFO_HWTSTAMP_SOURCE */
++		if (ts_info->phc_phyindex)
++			/* _TSINFO_HWTSTAMP_PHYINDEX */
++			len += nla_total_size(sizeof(u32));
++	}
+ 	if (req_base->flags & ETHTOOL_FLAG_STATS)
+ 		len += nla_total_size(0) + /* _TSINFO_STATS */
+ 		       nla_total_size_64bit(sizeof(u64)) * ETHTOOL_TS_STAT_CNT;
+@@ -259,6 +265,16 @@ static int tsinfo_fill_reply(struct sk_buff *skb,
+ 
+ 		nla_nest_end(skb, nest);
+ 	}
++	if (ts_info->phc_source) {
++		if (nla_put_u32(skb, ETHTOOL_A_TSINFO_HWTSTAMP_SOURCE,
++				ts_info->phc_source))
++			return -EMSGSIZE;
++
++		if (ts_info->phc_phyindex &&
++		    nla_put_u32(skb, ETHTOOL_A_TSINFO_HWTSTAMP_PHYINDEX,
++				ts_info->phc_phyindex))
++			return -EMSGSIZE;
++	}
+ 	if (req_base->flags & ETHTOOL_FLAG_STATS &&
+ 	    tsinfo_put_stats(skb, &data->stats))
+ 		return -EMSGSIZE;
+@@ -346,6 +362,11 @@ static int ethnl_tsinfo_dump_one_phydev(struct sk_buff *skb,
+ 	if (ret < 0)
+ 		goto err;
+ 
++	if (reply_data->ts_info.phc_index >= 0) {
++		reply_data->ts_info.phc_source = HWTSTAMP_SOURCE_PHYLIB;
++		reply_data->ts_info.phc_phyindex = phydev->phyindex;
++	}
++
+ 	ret = ethnl_tsinfo_end_dump(skb, dev, req_info, reply_data, ehdr);
+ 	if (ret < 0)
+ 		goto err;
+@@ -389,6 +410,8 @@ static int ethnl_tsinfo_dump_one_netdev(struct sk_buff *skb,
+ 		if (ret < 0)
+ 			goto err;
+ 
++		if (reply_data->ts_info.phc_index >= 0)
++			reply_data->ts_info.phc_source = HWTSTAMP_SOURCE_NETDEV;
+ 		ret = ethnl_tsinfo_end_dump(skb, dev, req_info, reply_data,
+ 					    ehdr);
+ 		if (ret < 0)
+
+---
+base-commit: 9f607dc39b6658ba8ea647bd99725e68c66071b7
+change-id: 20250418-feature_ptp_source-df4a98c94139
+
+Best regards,
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
