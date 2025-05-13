@@ -1,72 +1,59 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3185428DB63;
-	Tue, 13 May 2025 12:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55EB23957D;
+	Tue, 13 May 2025 12:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747139880; cv=none; b=rngOeRllV5+zq1dQt6BsGWqAJdc+Rz4/8gkjVV1uoObAb96Ds7tWHD7FhrWeDh0HBv3RtlEpLfoJ1TRR9V6ZAuEUMMXHJRj9poUuUEDsKbkH99QLf06fqiUjob45z4p0q3NyL0cZwxXhuaa/LvwXQ6VTCEPBPqO3ULCU+Qkn9DI=
+	t=1747139914; cv=none; b=MXh8iXWIBt9pEoHikRvJrDLCAPsCbbPIMJnJstrzjFceo+Bb0bkUoCF2PawAUpf67ShgTRi9ZC8EucvCqgTLmcNfirByXu4sVnrq4brwWrjhu6gR0mdrkfb3IZJs4eJlFUX6lDhoVEmnQp0MTPUOBM/qamHe5L+TZHLr0EIbh7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747139880; c=relaxed/simple;
-	bh=fjt+b6ZDxmU1+/5wktcdrba2wnmNrI/kMPory0RQIiY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UxgiPmXkfXH60bR5a8+DZC+EUD7OB4vraO5qeCGBTpkcxRkefFPmVljku612XZE4GfjXMGjWPNilW8dTEczS1jonAnMpUWfXAGaendh37wPiPZwoPDgxt2H2Wc7j4ghVu5QIqCyPgvqANqrFoh434ktm7Eab0YNwN50CEJ9Jufk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=j3xc4JWN; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747139914; c=relaxed/simple;
+	bh=lltMBHwdq1/L13SaJBhPOXp4jeaBDkH/p3zUYLQ1D38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YgA40nrzMhnQJbKbBRqeSdCYX8C/3tcqriFj8vlldkRT+iF2fOyYvgcWunP4xV82uCzxg0ibTr4TRp4gYXfUafCJ8GyxeSNpf0gLijvIutomWuhydJp0Yp3MPSkHNEvFJD+l/Z3q8gS+6DaVcIIZKZxtCBZVtGgQ/BupUCly0EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NOQRx7XT; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="j3xc4JWN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=X4
-	MJ/+6JtBMPbPuF59vBpYEq/KbfS0ifDdhTXR1Gy3s=; b=j3xc4JWN6ERkBKFlFY
-	yjGhpPqXYcnL9e1cQsjPvLgj8a23t/LNTb1ZrU9VnBccaRDVuCbPu8iREY5SfqTf
-	I35+O1/EExv5u+08KFPPEDYxhA4jh3nQHXvdy2RxXbEQvmYnMehaQJQblCQXMyNK
-	v0cKdUM2rTDH+MdHHENxXwDGU=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDnD+wMPSNoW6TvAA--.61727S4;
-	Tue, 13 May 2025 20:37:38 +0800 (CST)
-From: Yuanjun Gong <ruc_gongyuanjun@163.com>
-To: Sebastian Reichel <sre@kernel.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Yuanjun Gong <ruc_gongyuanjun@163.com>
-Subject: [PATCH 1/1] power: return the correct error code
-Date: Tue, 13 May 2025 20:37:32 +0800
-Message-Id: <20250513123732.3041577-1-ruc_gongyuanjun@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NOQRx7XT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=IhcSVT0ilThLTEqD751qEwwwjKQxPdQ/g5IW8iOJnYo=; b=NOQRx7XTuoWUjZfRP5o5Wstmex
+	gr38zDZCcGap0v5IKV9arZyd1u8H0b/FM7OA43lGWEWAYIpM/SHW/D33/CJJ5Py6TbFMw3w5b/al2
+	a9yDwQIp8lgGHYABQ1Cv599sS1w0/trmB0ctEXHkrh+Qp4h9v9OqeAQlotRpN/POvPQI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uEotg-00CS3N-90; Tue, 13 May 2025 14:38:12 +0200
+Date: Tue, 13 May 2025 14:38:12 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: leo.jt.wang@gmail.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	george.kw.lee@fii-foxconn.com, leo.jt.wang@fii-foxconn.com
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
+Message-ID: <bebe4a75-0d7d-424e-a217-dfea710b3262@lunn.ch>
+References: <20250513031010.267994-1-LeoWang>
+ <6822b851.050a0220.27a24d.d071@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgDnD+wMPSNoW6TvAA--.61727S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKF45tF4Dtr4xGFyDAw47Jwb_yoWDCwbEka
-	4xK3s7trs0gr1fKr1Uur17Zr15u34DWwn2qayvqwsxKa17Cw45tr1xuFn3ZF47Aw4fAFWq
-	gFZ0yrWfZFy8GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_VbyPUUUUU==
-X-CM-SenderInfo: 5uxfsw5rqj53pdqm30i6rwjhhfrp/1tbiUQNM5WgjNy2N8AAAsX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6822b851.050a0220.27a24d.d071@mx.google.com>
 
-In POWER_SUPPLY_PROP_MODEL_NAME branch of max1720x_battery_get_property(),
-program would return -ENODEV out of FIELD_GET error, but it's better also
-considering the error code returned by regmap_read() in case it fails.
+> +&mac0 {
+> +	status = "disabled";
+> +	/* phy-mode = "rgmii-rxid"; */
 
-Signed-off-by: Yuanjun Gong <ruc_gongyuanjun@163.com>
----
- drivers/power/supply/max1720x_battery.c | 2 ++
- 1 file changed, 2 insertions(+)
+Did i already say this is probably wrong?
 
-diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
-index ea3912fd1de8..12ecb1f40fe1 100644
---- a/drivers/power/supply/max1720x_battery.c
-+++ b/drivers/power/supply/max1720x_battery.c
-@@ -426,6 +426,8 @@ static int max1720x_battery_get_property(struct power_supply *psy,
- 		break;
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		ret = regmap_read(info->regmap, MAX172XX_DEV_NAME, &reg_val);
-+		if (ret)
-+			return ret;
- 		reg_val = FIELD_GET(MAX172XX_DEV_NAME_TYPE_MASK, reg_val);
- 		if (reg_val == MAX172XX_DEV_NAME_TYPE_MAX17201)
- 			val->strval = max17201_model;
--- 
-2.25.1
-
+	Andrew
