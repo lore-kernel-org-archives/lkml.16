@@ -1,76 +1,63 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AA92C033F;
-	Tue, 13 May 2025 19:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6A41F0E50
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747165821; cv=none; b=X2Y1DJ6HC4LvVqSapU2Zc+/9xz2WaVEbRsvHByoJ4hUIrz3KSu0pn2juBYOUAMrOETZWiSw00i5oKXbEbXHKqS5zFYsjoYGFc8ciCNwW+SaiANAhI3XEY/x51xPmCYyMmj3L1VTJ2OjD4wE20wyhhHgcovkDglKjSmP9m6IpLMY=
+	t=1747165920; cv=none; b=BY91vGaX60OSYGzfVDOIDijTlav29E3DuWmRaPKcmybNyHBpKf6U7/p0iRDa7kqHge0sbYt32HCa140CS836IRAXJn5CpfvkLT03ZW3W4qleYtIv5dRrx5tzMDydURVXNFCaL8/bbm4j9ZhN0Xy+rucNqYWTddwv6ymw1nUSj7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747165821; c=relaxed/simple;
-	bh=BdiAPi41+n6IgIprGo+gdL28FCyx4j/abNEqeyMMNcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cdaB59DfV/g3VYcxvK78xGhmbXWaLkhHhsmHvXR8w9whAskPr6TngSXJ4PJbtQ0nOgVJXJ7Jhz38B9wwoHCT2gVdrNDcqJoAX4YCzpXQVjNKU8ySXWz9mtSDN30TnkYC81P0ZImpFyEKVhyp56EXoACSMY+NNwAKWXZno2ukB70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=nm2zaUZm; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747165920; c=relaxed/simple;
+	bh=BmP4sjdlnLVzDfJQ+Xio1A2TiBwS9TDlGhBRIXPWUmw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UwbukVKJPLhD6nKxQz/CRIhlrd3Uzi2B2Pg1+UX8q4oKwVldeJydRi63Bu1R84gXEFoXFY0Ju2M8QDmXtTFkE8jIxbsnZdHRyB86IHUP882YboN/eN8Au4Nr36+0rN/j3GxCa3IrU7zgfZT5NHgfpZrDAfslbA3h2ABAvLWo8r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjiLQDBS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="nm2zaUZm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xBX3BVNMa6IV68uHVwNRfoDz3Q9NSwuileV1QH3idjE=; b=nm2zaUZmSYQ6iFHiM1DiYQrIQw
-	elZ10i2Ag1jNkQ+2pOe5tWtkf+cdgME+a7OPup9AvmvYL84mwtVBA5BMJ2yhdXhAY5qi+jRK7tWjK
-	Yl71pO+HlBryIab1CuMICHVlffprDYZBrGz++ntdm2avM5bMTstB+bIHJuBMQWB+tkyCzb24YgOiE
-	8HEx0c2bieByL5mDpU/X0o5K1WOfgI7UwZJMxmg7rxcQkNHG6y7QpqVASPeNwtfdCVu5ytwL+wv94
-	CZUN2LiraalbB7Lm/rGkyPqQNHt5mAgV+NfXyW2ZoxFlpUCaI05H19hYwufg3PJM3u824CUjzT/qR
-	d3n4EcOQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uEvdo-00000004Byz-279G;
-	Tue, 13 May 2025 19:50:16 +0000
-Date: Tue, 13 May 2025 20:50:16 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
- symlink
-Message-ID: <20250513195016.GI2023217@ZenIV>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <87frhcsrva.fsf@trenco.lwn.net>
- <77f03295-df5d-4bc0-9a61-5be829969662@p183>
- <20250513041249.GF2023217@ZenIV>
- <0e43117a-d92c-4563-ad2d-de6cbd02e986@p183>
- <20250513190429.GH2023217@ZenIV>
- <da087640-494a-4803-b770-10758393bd80@p183>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjiLQDBS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45209C4CEE4;
+	Tue, 13 May 2025 19:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747165920;
+	bh=BmP4sjdlnLVzDfJQ+Xio1A2TiBwS9TDlGhBRIXPWUmw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=XjiLQDBSUhbBQMLr/wUzEdVBy6KdAZ4s1O0+0lt/qCbTqP73NFi4H4OP7guNVj/DR
+	 o3XDpOHoA6kzEBs99uT0hKDpp0GpD8C+lxDOZGuRYo1/8kIRsiEC9It+Lk+kAhJxj5
+	 zu5yd1rmsRZhsPhoEhKT8K7xsqB49CS5JdICCm60ULMU2X+ILeWD7GB5PPA2f7pYQK
+	 srYtx3GokMRB75knCuvIiyjR57AgcVNgi223yjR3/ZoBYUd9bsZLd9J1KZqN08LEaA
+	 dGH0B9IjdDCYtf1rbaRip8lKDtiZDvwUcBdMDeFNKvX6dUbBV0GdKsxv9miQCdzbeA
+	 XtA01lY0As7iw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB14B380DBE8;
+	Tue, 13 May 2025 19:52:38 +0000 (UTC)
+Subject: Re: [GIT PULL] probes: Fixes for v6.15-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250514000144.f10ca2b6b996e10c6ff177d6@kernel.org>
+References: <20250514000144.f10ca2b6b996e10c6ff177d6@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250514000144.f10ca2b6b996e10c6ff177d6@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-fixes-v6.15-rc6
+X-PR-Tracked-Commit-Id: fd837de3c9cb1a162c69bc1fb1f438467fe7f2f5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 405e6c37c89ef0df2bfc7a988820a3df22dacb1b
+Message-Id: <174716595753.1774750.17717611983817031051.pr-tracker-bot@kernel.org>
+Date: Tue, 13 May 2025 19:52:37 +0000
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Breno Leitao <leitao@debian.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Paul Cacheux <paulcacheux@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da087640-494a-4803-b770-10758393bd80@p183>
-Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, May 13, 2025 at 10:26:12PM +0300, Alexey Dobriyan wrote:
+The pull request you sent on Wed, 14 May 2025 00:01:44 +0900:
 
-> Right now it is clear that Greg objects but I personally think
-> his counter-argument is weak.
-> 
-> He is basically saying that LOC count is too much so Linux should stick
-> to how things were always have been even if "old style" is objectively
-> inferior.
+> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git probes-fixes-v6.15-rc6
 
-Objectively by which metrics?  You are trying to force your personal
-preferences upon everybody else, doing that on a list most of us
-are not even subscribed to.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/405e6c37c89ef0df2bfc7a988820a3df22dacb1b
 
-You are trying to change an equivalent of build artifact, without
-bothering to change the source it is derived from.  That file is
-*not* a mechanism for changing reality; it codifies the existing
-general agreement between the states of wetware in developers.
-And if you are interested in changing these states of wetware,
-l-k is the wrong place for that.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
