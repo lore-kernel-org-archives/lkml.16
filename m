@@ -1,120 +1,153 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C5A1EFF91
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7A618EAB
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 06:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747119422; cv=none; b=ledZu6RVj/GzObjj/8hH0+GNHStBdvUjLvWe3gtcvAJwYOKIAjSV0IlW4xMVQU+rzuLwNVicb3xa5Wch5VNUz5I+6az4hj5+JSLCmkOoCS4jjcnv4V2WSG2uOf0nXpX7ScMURzB8u7D5g52C90r6DLVHxrQQaoTKqRJjpAnoDSg=
+	t=1747119443; cv=none; b=jK5Gsi81thgwOIDbZjVkr9mHBN3rkW9/NQVCcI0gxiwegMUxF3VA7wVH1EXqFeJHNnJjsNotSBNZEUJoRCMVGvnsRBgbUttQ/DE8PgCmyZ/iYl4/g+Snl8wn6sxADdjc+u/pOWxsfWgNis3DvRECFBaTgdR2T06oeuxHampoj4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747119422; c=relaxed/simple;
-	bh=Dh9AMqhnrzb0RXR0iT0Tl/MFCe8p8yETj9Lmh/S/31w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GI1WPJU5pxYQuEBSuGqKGI99OALnU88lvJ7nw6lFV0t+EgQlwi47mEJDxGnKoeTM4UN/dLabdllZNEcvEiDsPph9SH87Zo2/Q3kISNfq2xvNmJDTE4W5uEtAvKWXVNRI0XfFG/2hqlK8kV12rV3izXpIVwlv3J57J4AXU+5tKKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dqamJ/yB; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747119443; c=relaxed/simple;
+	bh=wWBSbQEhRhPMzGf67h4+e4/npWtlFLmds1lYZF9ydfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GlayXwGfKMTDjDV7ypqz+YuUTxhXSmOjxdnU9uXGOaKBYBIsbBqYfpEn8o+ib0fT6b7IGa1WWJaVK0UuVyMYpXBHtE4LlcOivp3sGrZeGM/1eBKdIInwsqQ2XaJzS4f5eoTQUnUzrdeBKo2WMHtJ2B7Z7x5Juwsh3qci7ig/Ptg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QEXSuvJO; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dqamJ/yB"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54D6tvIA2197001
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 12 May 2025 23:55:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54D6tvIA2197001
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747119359;
-	bh=kL/OhRm5sWyxLOSQqQ8XEjxmBfy03Niwiuryt5Xm6Es=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dqamJ/yBhApfjc3OSDMpxZXHHxEdMYXgbitAxwexwrXqBBWQc0yk/OmlsqGJNFVQ4
-	 qZRWx/K8oPirfZq1mxMCZ+ev6j10g1Mqu95ZiSR/dEL/jUrv4Fw8B5GFQSL0h+la0n
-	 j4M1P324FaSysqpxlMMUn4o83KG6jZTbRk6IdBkm/7TewUllVvgrGYm8XxbE3z4n1p
-	 TFogrcSgYoGnB1GiEa9LvJECv/MGp9pmgpLFqaVPKlUtjpL1MJKmzijVAhC+VIpioB
-	 diyDOWH5m8MwScIvrgCAO3Z2o/1fccOqjq1cb1/fPsXu76MuCerX9E9kxv+eMMFF8a
-	 fTyhY9Dcqf9nQ==
-Message-ID: <16f87dc6-75d6-4731-ac8e-fafc6e84478a@zytor.com>
-Date: Mon, 12 May 2025 23:55:57 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QEXSuvJO"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747119435; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=edxi2BtbIftkD9Lsw4c9tFqAnSMnCehdjxij2qYlJH4=;
+	b=QEXSuvJOmCeruRXV9rWKcRYZ9EPxPPdgX47DbvnUDfZixpJhvVluHYvS455Eqhd7aIBseGI90rkeluQd/MfsgpdCFqB2IobeXuiOeBKW5d1PVTOfhiUDE95OQLr7TTte9pyfvxo6FJBst2RPGboRER8wuB7XXM5X63kySglRbKA=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WaVI5CS_1747119433 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 13 May 2025 14:57:14 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	ziy@nvidia.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: khugepaged: decouple SHMEM and file folios' collapse
+Date: Tue, 13 May 2025 14:56:35 +0800
+Message-ID: <ce5c2314e0368cf34bda26f9bacf01c982d4da17.1747119309.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        virtualization@lists.linux.dev
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
-        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
- <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
- <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com>
- <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/12/2025 11:06 PM, Jürgen Groß wrote:
-> On 13.05.25 07:55, Xin Li wrote:
->> On 5/12/2025 4:24 AM, Juergen Gross wrote:
->>> Now with the mentioned patch really attached. :-)
->>>
->>
->> Does it allow patching with an instruction more than 6 bytes long?
->>
->> The immediate form MSR instructions are 9 bytes long.
-> 
-> Yes, shouldn't be a problem.
-> 
+Originally, the file pages collapse was intended for tmpfs/shmem to merge
+into THP in the background. However, now not only tmpfs/shmem can support
+large folios, but some other file systems (such as XFS, erofs ...) also
+support large folios. Therefore, it is time to decouple the support of
+file folios collapse from SHMEM.
 
-Excellent, I will give it a try.
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+Changes from RFC:
+ - Add acked tag from David. Thanks.
+ - Remove CONFIG_SHMEM in khugepaged.h file.
+---
+ include/linux/khugepaged.h |  8 --------
+ mm/Kconfig                 |  2 +-
+ mm/khugepaged.c            | 13 ++-----------
+ 3 files changed, 3 insertions(+), 20 deletions(-)
+
+diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+index 1f46046080f5..b8d69cfbb58b 100644
+--- a/include/linux/khugepaged.h
++++ b/include/linux/khugepaged.h
+@@ -15,16 +15,8 @@ extern void khugepaged_enter_vma(struct vm_area_struct *vma,
+ 				 unsigned long vm_flags);
+ extern void khugepaged_min_free_kbytes_update(void);
+ extern bool current_is_khugepaged(void);
+-#ifdef CONFIG_SHMEM
+ extern int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 				   bool install_pmd);
+-#else
+-static inline int collapse_pte_mapped_thp(struct mm_struct *mm,
+-					  unsigned long addr, bool install_pmd)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ static inline void khugepaged_fork(struct mm_struct *mm, struct mm_struct *oldmm)
+ {
+diff --git a/mm/Kconfig b/mm/Kconfig
+index d4fd40f56178..79237842f7e2 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -898,7 +898,7 @@ config THP_SWAP
+ 
+ config READ_ONLY_THP_FOR_FS
+ 	bool "Read-only THP for filesystems (EXPERIMENTAL)"
+-	depends on TRANSPARENT_HUGEPAGE && SHMEM
++	depends on TRANSPARENT_HUGEPAGE
+ 
+ 	help
+ 	  Allow khugepaged to put read-only file-backed pages in THP.
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index ebcd7c8a4b44..cdf5a581368b 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1464,7 +1464,6 @@ static void collect_mm_slot(struct khugepaged_mm_slot *mm_slot)
+ 	}
+ }
+ 
+-#ifdef CONFIG_SHMEM
+ /* folio must be locked, and mmap_lock must be held */
+ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 			pmd_t *pmdp, struct folio *folio, struct page *page)
+@@ -2353,14 +2352,6 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
+ 	trace_mm_khugepaged_scan_file(mm, folio, file, present, swap, result);
+ 	return result;
+ }
+-#else
+-static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
+-				    struct file *file, pgoff_t start,
+-				    struct collapse_control *cc)
+-{
+-	BUILD_BUG();
+-}
+-#endif
+ 
+ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 					    struct collapse_control *cc)
+@@ -2436,7 +2427,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 			VM_BUG_ON(khugepaged_scan.address < hstart ||
+ 				  khugepaged_scan.address + HPAGE_PMD_SIZE >
+ 				  hend);
+-			if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
++			if (!vma_is_anonymous(vma)) {
+ 				struct file *file = get_file(vma->vm_file);
+ 				pgoff_t pgoff = linear_page_index(vma,
+ 						khugepaged_scan.address);
+@@ -2782,7 +2773,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 		mmap_assert_locked(mm);
+ 		memset(cc->node_load, 0, sizeof(cc->node_load));
+ 		nodes_clear(cc->alloc_nmask);
+-		if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
++		if (!vma_is_anonymous(vma)) {
+ 			struct file *file = get_file(vma->vm_file);
+ 			pgoff_t pgoff = linear_page_index(vma, addr);
+ 
+-- 
+2.43.5
+
