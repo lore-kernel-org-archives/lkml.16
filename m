@@ -1,205 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F746210F44;
-	Tue, 13 May 2025 09:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A28E21FF22;
+	Tue, 13 May 2025 09:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747128446; cv=none; b=ZWd2AnwX2amRKuAuYIcTN10LCzHR6i8TC5prBIJmyUDnIAm6Ac0aI7Wg8S+fguZ1mJ5kk9Sib/k0v8A/RI0FFniRunu3mHpjFDDrNEQuopmvfbiM3ZFHI0g1/g1SxP6MudrCWWwyD7gW21w87V5k2Vko7Khr8z9ymBD7BSeat0g=
+	t=1747128460; cv=none; b=kMY/6LM8kGKOO93OgzAlCGI0xmZ8agOrFiJh3kmz58iMFHqNeH2BcVwLpsuBiHelMw6bguXiCGcAapz0GO3R3VO3ogtMjXH8478cXBnn5EBSIgofR/cMDif0ncnC4HswDO7faRxWDtLN16IEMuMa4O/pEXTL9EnEhIw+kiQT/gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747128446; c=relaxed/simple;
-	bh=Wg06r22yGHw69tTIasp8otwWawX8Zrx13Gm/NsTM7Cw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BNma8kZ6W4puuXvJWO0x9SuWp+VaoxMIaQmvJBt2ufU4vCUmpKhUQ87tfY/aeQzohArwlDdAZ4Gv3yl8yCA/5NjBAbjDw3xzbAfoczGMKsu06iNvhywJAlhTryEhe8TL2EpnnSbqbI2xO7YlwmyEJNGQs5njp8dA37sIgYcUh3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXOU5tqT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747128460; c=relaxed/simple;
+	bh=qQ1Xl9OeIC7tmpYfxlEHSJMzlkn339EhffkvrA20+Z8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ekSR9/9AAGrCseYcgeaDHYjplH7SZnGeOKInrRmJ6fu7bVkjRDYrqxCIqG+FlTIooZmKBYuu5I24yK24cWW5U7C/qQwZNUkajCg/fEv7ZQSsV6c6Uy8QOaFu4CCtxBp+nWTEeBFJJ3ZuAyTFK0t8t9w20LnJmvm1cIAQMXtCxm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gYC5USjh; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXOU5tqT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911ECC4CEE4;
-	Tue, 13 May 2025 09:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747128445;
-	bh=Wg06r22yGHw69tTIasp8otwWawX8Zrx13Gm/NsTM7Cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GXOU5tqTKTQ3t/0vHaE4JWvwxAWoB0ZmFNE1dtIbU15cbRGFohh4TtKYEDmSdNssG
-	 am042avuucvbAyB/Y48h7JJfhSeDCcso5SgQCr/77VlRyeRAhOnBVCYf2nOmZ6XJnv
-	 ttJ3QC9x3P16UDLAfBjTALn8OoGwRVmzLHk4DjNzWApxortuMpt7GNsRcjbT0sI01S
-	 IbPChFCT5UtvaGBL87DesezQ+bOtmwW4FrehqSJ1L/u+NS1hvSdvCWU+P+XsLhPqTa
-	 9X/Lj+KxAlqfdb9tEeksLQncleQsywzbHFNuOTg82fO1nd5fKT+2vhgNsjnbS+XLb2
-	 2SymKu+QCMIHg==
-Date: Tue, 13 May 2025 11:27:23 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] pwm: tiehrpwm: add get_state function to retrieve
- PWM channel state
-Message-ID: <iguu6qhympqyoyxxqwwlyceg4qk2pwqodwfvwh2q45z5hqkqdv@zinbt6go5rqn>
-References: <20250419194835.77860-1-rafael.v.volkmer@gmail.com>
- <20250419195555.78933-1-rafael.v.volkmer@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gYC5USjh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747128459; x=1778664459;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qQ1Xl9OeIC7tmpYfxlEHSJMzlkn339EhffkvrA20+Z8=;
+  b=gYC5USjh+SV1ArN2STnQ2OgtCRP/4iPLqOVJMbRvBbLmh7d2yzAHUKi4
+   /uYe743hvQAgbhvHCubMlCecNWwybICXJjCwXabtGPlIfukIMjjhqUCZ8
+   Zu6y8vP2JvCLhrh+UjsJoW8EfIaO8dLkiTGpoG0rlNkUmsJOBb8zRp0rc
+   1pVaqB8ykgDC36ZL4yRyvoMC405bkjTw/PKy4bVMeFcv2vJ5PlAy2ILwR
+   YIXOjzdiKMjFcItFkwDSnmmDH7wzrFCidKwnvJqAm3kK1N/wWyfAfTO3Y
+   PQC/d7GqRBVa+cjqAkRJAqKgakClB57I9C7JoXgNLZzdMZIHPndRwiNR4
+   A==;
+X-CSE-ConnectionGUID: n8C3EoRjQL6y8qJPMBHiRw==
+X-CSE-MsgGUID: TfLiL8SkQMSIp0/v95QP1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="49128820"
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="49128820"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 02:27:38 -0700
+X-CSE-ConnectionGUID: iDqGChQvRi+ArYgcLuNRUA==
+X-CSE-MsgGUID: EzMIU7fsTLGGO3x7pPVdxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,284,1739865600"; 
+   d="scan'208";a="142411317"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO [10.245.244.214]) ([10.245.244.214])
+  by orviesa003.jf.intel.com with ESMTP; 13 May 2025 02:27:36 -0700
+Message-ID: <76b2a5ae-31b1-4627-aa59-8ff023654c3d@intel.com>
+Date: Tue, 13 May 2025 12:27:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gdjj4z3ymrkqaokk"
-Content-Disposition: inline
-In-Reply-To: <20250419195555.78933-1-rafael.v.volkmer@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] USB: core/xhci: add a buffer in urb for host controller
+ private data
+To: David Wang <00107082@163.com>, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ surenb@google.com, kent.overstreet@linux.dev
+References: <20250512150724.4560-1-00107082@163.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@intel.com>
+In-Reply-To: <20250512150724.4560-1-00107082@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi David
 
---gdjj4z3ymrkqaokk
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/4] pwm: tiehrpwm: add get_state function to retrieve
- PWM channel state
-MIME-Version: 1.0
-
-Hello Rafael,
-
-On Sat, Apr 19, 2025 at 04:55:55PM -0300, Rafael V. Volkmer wrote:
-> The ehrpwm driver was missing a get_state function, which is required
-> to properly retrieve the current state of the PWM channel. Add the
-> ehrpwm_get_state() function, allowing users to query the enabled state,
-> period, duty cycle, and polarity of the PWM output.
->=20
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+On 12.5.2025 18.07, David Wang wrote:
 > ---
->  drivers/pwm/pwm-tiehrpwm.c | 97 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 1ead1aa91a1a..cde331a73696 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -68,7 +68,9 @@
->  #define AQCTL_ZRO_MASK	GENMASK(1, 0)
->  #define AQCTL_PRD_MASK	GENMASK(3, 2)
->  #define AQCTL_CAU_MASK	GENMASK(5, 4)
-> +#define AQCTL_CAD_MASK	GENMASK(7, 6)
->  #define AQCTL_CBU_MASK	GENMASK(9, 8)
-> +#define AQCTL_CBD_MASK	GENMASK(11, 10)
-> =20
->  /* common action codes (2=E2=80=91bit) */
->  #define AQCTL_FRCLOW	1
-> @@ -470,9 +472,104 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
->  	return err;
->  }
-> =20
-> +static int ehrpwm_get_state(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +			    struct pwm_state *state)
-> +{
-> +	int ret =3D 0;
-> +
-> +	struct ehrpwm_pwm_chip *pc =3D NULL;
-> +
-> +	/* Registers */
-> +	u16 aqcsfrc_reg, aqctl_reg, tbprd_reg, cmpa_reg;
-> +
-> +	/* Bits */
-> +	u8 csf_bits;
-> +
-> +	/* Values */
-> +	u64 period_cycles, duty_cycles;
-> +
-> +	/* Actions */
-> +	u8 up_action, down_action;
-> +
-> +	pc =3D to_ehrpwm_pwm_chip(chip);
-> +
-> +	/*
-> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-> +	 */
-> +	if (pwm->hwpwm =3D=3D 0) {
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
-> +	} else {
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
-> +	}
-> +
-> +	if (csf_bits)
-> +		state->enabled =3D false;
-> +	else if (aqctl_reg)
-> +		state->enabled =3D true;
-> +	else
-> +		state->enabled =3D false;
+> I was checking memory allocation behaviors (via memory profiling[1]),
+> when I notice a high frequent memory allocation in xhci_urb_enqueue, about
+> 250/s when using a USB webcam. If those alloced buffer could be kept and
+> reused, lots of memory allocations could be avoid over time.
+> 
+> This patch is just a POC, about 0/s memory allocation in xhci with this
+> patch, when I use my USB devices, webcam/keyboard/mouse.
 
-if (csf_bits || !aqctl_reg) {
-	state->enabled =3D false;
-	return 0;
-}
+Thanks for looking at this, this is something that obviously needs more
+attention
 
-?
-=09
-> +
-> +	tbprd_reg =3D readw(pc->mmio_base + TBPRD);
-> +	period_cycles =3D (u64)tbprd_reg + 1u;
-> +
-> +	/*
-> +	 * period (in ns) =3D (period_cycles * 1e9) / clk_rate
-> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-> +	 */
-> +	state->period =3D DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, pc->cl=
-k_rate);
-> +
-> +	cmpa_reg =3D readw(pc->mmio_base + CMPA);
-> +	duty_cycles =3D cmpa_reg;
+> 
+> A dynamic cached memory would be better: URB keep host controller's
+> private data, if larger size buffer needed for private data, old buffer
+> released and a larger buffer alloced.
+> 
+> I did not observe any nagative impact with xhci's 250/s allocations
+> when using my system, hence no measurement of how useful this changes
+> can make to user. Just want to collect feedbacks before putting more
+> effort.
+> 
 
-duty_cycles =3D readw(pc->mmio_base + CMPA);
+I think we can make a xhci internal solution that doesn't affect other hosts
+or usb core.
 
-and drop the otherwise unused cmpa_reg.
+How about adding a list of struct urb_priv nodes for every usb device, or maybe
+even per endpoint? i.e. to struct xhci_virt_device or  struct xhci_virt_ep.
 
-I would expect that you need to read CMPB for hwpwm =3D=3D 1?
+Add size and list_head entries to struct urb_priv.
 
-I see the naming is consistent with ehrpwm_pwm_config, but I'd prefer
-period_ticks and duty_ticks over period_cycles and duty_cycles. Then
-it's clear that the unit is clock ticks and not ns.
+In xhci_urb_enqueue() pick the first urb_priv node from list if it exists and is
+large enough, otherwise just allocate a new one and set the size.
 
-> +	/*
-> +	 * duty_cycle (in ns) =3D (duty_cycles * 1e9) / clk_rate
-> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-> +	 */
-> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, pc->=
-clk_rate);
-> +
-> +	/*
-> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-> +	 */
-> +	if (pwm->hwpwm =3D=3D 0) {
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
-> +		up_action =3D FIELD_GET(AQCTL_CAU_MASK, aqctl_reg);
-> +		down_action =3D FIELD_GET(AQCTL_CAD_MASK, aqctl_reg);
-> +	} else {
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
-> +		up_action =3D FIELD_GET(AQCTL_CBU_MASK, aqctl_reg);
-> +		down_action =3D FIELD_GET(AQCTL_CBD_MASK, aqctl_reg);
-> +	}
+When giving back the URB zero everything in the struct urb_priv except the size,
+and add it to the list.
 
-When you send a new revision, please start a new thread.
+When the device is freed there shouldn't be any nodes left in the list, but if
+there are then warn and free them.
 
-Best regards
-Uwe
+Isoc transfers are the ones with odd urb_priv sizes. If we have a per device or
+per endpoint urb_priv list then sizes will match better.
 
---gdjj4z3ymrkqaokk
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks
+Mathias
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgjEHgACgkQj4D7WH0S
-/k6moAf/cQFPZ4ZF9AmccXdb9k8uDXklzqySktF6cFaaZT+Gds3GYfSV/dL+kgZ9
-hLgUjt6l0nvChDTUSUp2HXLrYqYaW1HPKKlgujHWTdzQi6I8c5Jm19mMWmkP1Foh
-YqakAuZlDXbBrBCOjYOwCJMEsQ98qvf09aVIYsIrxseCNVga1kYYHZzDTbY9Us/I
-64VLyjyPANQ/+4StOsX7y5SCF7on6fiIVxWeX2JOjLB7PX/NtDZ/tFQ7lJ9TxqhK
-ZFoUKJIyfKxtecQ3YdfKHNONTnoTfOI+NkXoMqWeeQ+YTK1jrkoB06Ofw7GEggXz
-AvkIPyGVdhmyz+k/961d16hgfmMrvw==
-=8q+T
------END PGP SIGNATURE-----
-
---gdjj4z3ymrkqaokk--
