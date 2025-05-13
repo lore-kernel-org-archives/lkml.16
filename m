@@ -1,108 +1,108 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1398D18DB18
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43C72BE7B8;
+	Tue, 13 May 2025 17:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157650; cv=none; b=pJVZQ9SjudQ0JcJ+M4pZszvzDqwtsOw2pp5hcFu4L7RthhtyfgvDlYdvIGh+Jq8hdBsqRPX57agsKNmPjKwvUsXB3SwT4WCapZw8bI0SmDaflvFcgr503mS5S1p3DlvHhsDHMQBoq3M+UH3SgKysU1xkU69dpx9MOHBRHdLtSaM=
+	t=1747157994; cv=none; b=Q+bQas/Y3SAwtIv41ESx3AdXJTK77v8TzOTIKiV8SDegviNJx0atI2C88unCdGE43/q56rtDYkcJggO0LmJijPHG1ElMZz97gn8Zan3VIlaXkTuQ+3XGSU3aDjJP8cqICxLgwJZxxK5yCBNbVACd1wFE4VuA6F/SmpoOG8nVBfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157650; c=relaxed/simple;
-	bh=ORgTGq0r7wJyiDFtwXEgoHBuy3lcDA/b8RLDPsQ9cJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lAStgD0fE7ShYe1l8BBoFrrQ7SpqMrt58Mtda3+5o7ZXWZmibgjrX/IPdCmA5CYE38LJUEZUlClhKOmBbA1sNrEcNS9SiHyvGa4e9vcrtAzsvqaTzHkd2oiFKXBwLbBAraFuoSf6bGPHRA5IyAiDSqbMWw9w+3E17qV0YSiEk70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q4SGPOlG; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747157994; c=relaxed/simple;
+	bh=JBO2B5TsA/L/+cT743TpVRtjxPkZzQj3g9iV6SmgWdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ulVkuKD0VWUm0fIW7ANhiXi4WW8nuhVHNaYsUdh5bUUbrSvofjDrPdh7NtFQJLroRnszK2N3yYT56AQVMAVc3Ay5SwT2nEVAtpwfL9I//wa9lj4gNWVWYsz+XkbUra1s8wSp1juSyWqJx4x9Tp83WyAm+oHg/d+DUzvS+CYhUSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICU9Bwsr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q4SGPOlG"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476af5479feso70120101cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747157646; x=1747762446; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/yHcz6mMYEIJbmi3MxPPcq/Bqop867905UG+HusUSuA=;
-        b=Q4SGPOlGmaFLR5N0nLVwdhkX5EiH9Ohde38uQJWaQp69xAXKViPsAegHT0ZKVARlDk
-         cd2tAhMaeMP2jJgyIzeBuDD8jWlNiGJpUB886JmIAdPAVIgmr4H7W6z19Er0glbndU2p
-         a29y19CkU5Kyg8za4Su1AqgBXE7jITYNTpeO0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747157646; x=1747762446;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/yHcz6mMYEIJbmi3MxPPcq/Bqop867905UG+HusUSuA=;
-        b=kbJAnnlFMYPhl/Dyt+0GHHYZMBy7psWudtE/p7cY801YmIa61tBa21rnWo+u6FuG50
-         cT3k9UOOoHIE7rS2WKJIiPFZzA0HhJhGjyz4gwIkLQWudVAv4fMDCF4A7ECwZxCp6O7P
-         aYgUtbbqZe3LduMkW9GfeELNpgbLEmchGIRKuwWhLm8Rjxlau84UBlV1D0jE0135dNV3
-         ECdLSB9r53xXx5XVJEcNoXdOm4BIMI4s8mFOkykHOtLZfdhNTfL+M1B72wdGG8yaAuLB
-         8a+cboyfBT2kd+qzzP5Vy7X8t9DPEFh6FtaWMRdNte4/zW/GEkip5Nd0dP/fUmp1lAWv
-         941Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKe/VhzeWsxktgQtbbUG9EMsE4ZD0MZmDfN6DPEPZNFGqWJU2a7Xhm8Sj6G5DWERhl4Sdrnj7cnGqYXRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUt+XeHyQKYxQ/9rnbRAVCCeL6JANWngC8PpxkrUPLu+IWSoZs
-	5Gnl1H+S2u2QE6q+lGd1ksCpkCXMXvaK0xJHQY8bo6hkx83GDlCI9otZBH3k+qm9SUx45jswzFB
-	q
-X-Gm-Gg: ASbGnctcilKMsV2xwcUJ29h6Jq/1hnCpjQRGSCGTu4WTlg4bZFI4z1rCiDNvQLShmEK
-	8H2xBLwRcQBw8cHx+txjszuuxq1cAwcjdrxVrTTTFY/rCafKgeqVnbfSO0UeqhUNqmtIIq5z8em
-	hPFt5sGvUnRgqttXll0pfX3ndRgylJmoh3UwJdHn1qj7v0SJlq6E70fo1t4D03lJOglB2sIafgF
-	bQ2rS8S4z9+xO0+XRTGCSJNq26IJb3yC2wgF6YSHM+PhGU5jkKTIYHRyCOVi44JT74EZFRAjF9Q
-	va4xMhRMo4vV4R4biNyyPg0NcOKxZTRr5o/oAXtNN5dy2jay5IFed9m/wtpQLg==
-X-Google-Smtp-Source: AGHT+IHnUVXnn/cpedUFGgvCl0xpvLpgIL/c/z6hDeUnR2wDQyCd57P1RCSfX1X7sblLh0kPIHFq+A==
-X-Received: by 2002:a05:6e02:1887:b0:3d6:d145:2ffb with SMTP id e9e14a558f8ab-3db6f80b0c0mr5126025ab.21.1747157635105;
-        Tue, 13 May 2025 10:33:55 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fa22658dd0sm2157241173.114.2025.05.13.10.33.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 10:33:54 -0700 (PDT)
-Message-ID: <08f7e5bc-1a20-45ed-9334-3c2f90504b83@linuxfoundation.org>
-Date: Tue, 13 May 2025 11:33:53 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICU9Bwsr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F131C4CEEF;
+	Tue, 13 May 2025 17:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747157994;
+	bh=JBO2B5TsA/L/+cT743TpVRtjxPkZzQj3g9iV6SmgWdU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ICU9BwsrkBrWF9miapRGUzk4Op3TI2eFx9bvawrI1BbnAGaaqJSzaTDUHBzLMgrBE
+	 0dS2fuAjBAoAFPg+UdmOPLdU8pSKNJ5DiuN1B6q9BrdiQkytjP1jCWm8SMWGDYV+AH
+	 eFXPdXeg4hpjiy3YXtZbIS6XYNCbUVyHsZwX6HhjyjWGzsAUYGQJZF4ohkVBe6+GEZ
+	 Q/2sbroNDjn+TRk56DZmimIzFtNb+9ko0sNazsQeZygousU6BR5PfkaTdgZ9Th91pi
+	 csVnDR4yJALC83b1Q59z5mdAM0hKqkQOU1qxGXTYPnurzZztQSUmMxZ6MSMiXwVvJg
+	 jo3t+BLKSAEuQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so12375238a12.1;
+        Tue, 13 May 2025 10:39:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiwnEGuPTz76lzArcK+XmWa8wbtfP/yGFz5CfdMOmOdgqX7b9s33nMPj6erAfoRFIMGI6l8fKFafM=@vger.kernel.org, AJvYcCXFpguxo8aElipOLD6FWnv7QOJCNqYdOm4K+QEoyh/yuwlheDeXIqUeCnlk8QqQIA/q/edInN7XR5/CxJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAKRNE4beQ5hv6b97VyeJb7WJ/Jrn475ZwyDQ/A8NMBLw/O9Z9
+	+eNizQLy84awPySXfjNqANVNEeX8nGo1hlBH2lWqBXGt97Xt8CtD3FSakZRdPsv7LQ+HFogJ/I6
+	vgTQcgsRelOow5ZbRn0QMoIUmk7I=
+X-Google-Smtp-Source: AGHT+IGWyrCNV45055zfuZ/3xIJ/yyJb5GmdMzMjElfcOOsmbymHqModFVVA/oMQQmd4ODkorO8kcqIIENhXcbuGs7s=
+X-Received: by 2002:a17:907:d084:b0:ad2:5525:f28e with SMTP id
+ a640c23a62f3a-ad4f747d6d8mr46163266b.39.1747157993157; Tue, 13 May 2025
+ 10:39:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/54] 5.15.183-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250512172015.643809034@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250512172015.643809034@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250421030020.3108405-1-zhenglifeng1@huawei.com> <20250421030020.3108405-3-zhenglifeng1@huawei.com>
+In-Reply-To: <20250421030020.3108405-3-zhenglifeng1@huawei.com>
+From: Chanwoo Choi <chanwoo@kernel.org>
+Date: Wed, 14 May 2025 02:39:15 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH1-CRv-7Uf-vSqocC_QZQ4HRXOV9OyP_LJie3g3KcczSw@mail.gmail.com>
+X-Gm-Features: AX0GCFvOtAQ6ppkOqqnywQzE-DGYzkrp9_WXdL5pO8TqcK7IIfxro6X41AcFS6A
+Message-ID: <CAGTfZH1-CRv-7Uf-vSqocC_QZQ4HRXOV9OyP_LJie3g3KcczSw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] PM / devfreq: Limit max_freq with scaling_min_freq
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, 
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
+	yubowen8@huawei.com, cenxinghai@h-partners.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/12/25 11:29, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.183 release.
-> There are 54 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.183-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi,
 
-Compiled and booted on my test system. No dmesg regressions.
+Applied it. Thanks.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+On Mon, Apr 21, 2025 at 12:00=E2=80=AFPM Lifeng Zheng <zhenglifeng1@huawei.=
+com> wrote:
+>
+> Limit max_freq in devfreq_get_freq_range() with scaling_min_freq to avoid
+> showing an unreachable freq when reading it.
+>
+> Use macro clamp to simplify code.
+>
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/devfreq/devfreq.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 98657d3b9435..2810c84b9f8a 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -152,11 +152,8 @@ void devfreq_get_freq_range(struct devfreq *devfreq,
+>                                 (unsigned long)HZ_PER_KHZ * qos_max_freq)=
+;
+>
+>         /* Apply constraints from OPP interface */
+> -       *min_freq =3D max(*min_freq, devfreq->scaling_min_freq);
+> -       *max_freq =3D min(*max_freq, devfreq->scaling_max_freq);
+> -
+> -       if (*min_freq > *max_freq)
+> -               *min_freq =3D *max_freq;
+> +       *max_freq =3D clamp(*max_freq, devfreq->scaling_min_freq, devfreq=
+->scaling_max_freq);
+> +       *min_freq =3D clamp(*min_freq, devfreq->scaling_min_freq, *max_fr=
+eq);
+>  }
+>  EXPORT_SYMBOL(devfreq_get_freq_range);
+>
+> --
+> 2.33.0
+>
+>
 
-thanks,
--- Shuah
+
+--=20
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
