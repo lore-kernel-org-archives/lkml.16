@@ -1,275 +1,183 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D7C213259
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C72A23CEFF
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 10:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747132998; cv=none; b=d9PNTwHNfx/sUtupGmNvutiDKI4QhKLLYqquuxRoo6XCuxxL/nm5a8um0iCBgthXiKs8/gwZ+7TmoP4WaFX2RKK2GhJFoUClBXl/0l+IxPXFKuLN++KTpRMpmxucnVR5+u/DWKLTf1abepCofu46E4Mhr7OCSbHDEHWgyEih/F8=
+	t=1747133043; cv=none; b=oTB8G9Y0309oMXWcWFPlyL7V2bVq2n+yQmsZwruOLH9TCO5bVtaWY0y/kM4ckIPBBPX9NoppPQU3isZIKu4gCI5DzzlxYYrmoEVKYt7tOCsdSZUL306kCWgx6rtU8RntmQ7lTYuYCb8p4/Fc1cSxSJhP8sAXXIFMd3sQUBawGX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747132998; c=relaxed/simple;
-	bh=IaYOh3FvIMYreE3X0cfXpIjVfC0DOQm+8LIadSgDHtA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PuGsWwMZDJdxwUbJfRIUax30gsj1hx8j2WTxwAoSl8i0c/i6Q9uRiNvXLis8ifldd+dXcxRapi85DLmcq4K7VSk9r17XYD3Sqd7kIumpMsGFcQZLg8KVHa1DeLSacgpIJiqUqN1++Fm8IB6RC2Z9neBJDVvJxOv4rSCQ8hrDg1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=b86lF3XJ; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747133043; c=relaxed/simple;
+	bh=JOMeqyEoDj4vkesUvdnVnpqlFYDHJBvDc1WYqwSSUOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CsCEjUKdeMHXKHGdSCxu82n7qvld+hMM0wPOYy51Etnbr9R5VKrWaoqMS8oJaJuRPvhrfLWLDUcXEc14JEUw4g8tBqTFcikhD9woKWms+qXvOIlNOvmIJzTu3Q0hzhmsYhLrsWPc8tQ21iJHlxdddbvcfjDLbaa7cKDA3Oqdyw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g0SavODX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UOOyyqUY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=g0SavODX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UOOyyqUY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="b86lF3XJ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5ff8f218c44so69081a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 03:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747132994; x=1747737794; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BnkKSLMFWirkV+KBeE/kgA5LXY+hN4q4xgGq0GY+0SI=;
-        b=b86lF3XJtHTArKEOWkrlOg8ffjLqGDJgcb+j4O9vIEnrLbkSSPcv5qlYiNSFR9TobZ
-         VjknaclDGSxV0UoxfvyXOoUJMrzIysDfbPSw3klKgtLhPEdDru6onFZTWDPnsik91uJt
-         Abtx4TbV9i9ytg0HRRkQ+ZCr+XVzwshEl+KFp1bY2VJem8+4B5m4f/ve4oFuR8bFsX2W
-         +qTglAkSwEtWfk3B/y/pY1K0R0W7GOpFDRXrNz6TBIGPZPEG4WOkL8frVLu6tvolhVrz
-         7bFip2Jn4ftnz0kYjNeotmjVAREWszPcbhzNK6ilyI+TR7xSP9nqzLT/Tp9PU4Cgw+mo
-         Q3XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747132994; x=1747737794;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BnkKSLMFWirkV+KBeE/kgA5LXY+hN4q4xgGq0GY+0SI=;
-        b=Jy2ycbXcsHLK9nlf9tTp1wtVBygrJJuxwS0hief2nrcsG/VOR0mlWfdN/dLTg4m4Up
-         RnfJaszEjkpBvomyKEjpsl0ToT9niY3fiUCsf+InEs2KQSjUsPTTwEs2Shmlv7s4/Lny
-         YLcbNcSB0ILTXf0CsmOfrkCBulSaUpkh1KzXZWBtaqouoKmd1N8XTT/xdt552ZNuZgFq
-         ln+vnKo8zWHiBYpAlTl1Kf4P0P8C+vK1TADwiRq9RN+2c/bfWLyI5O0RA2iXfq9iNOHi
-         +LI612N5/CoYTPHX1Svs7WZ8shaJg8eW2cPx70XaBoRaYyPMuCYFgWqr9PSoPmC09fKp
-         2T3w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8bn2eWcUXsRaccVTrIiL0ywBxdVFYG/KD23qoTdTJuuwBqBwSIygAlQzMglVifyly6yqHVnfQiDxUFG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZf6BRR1Xlu/1JI8AgtmXZAA58sVLzP0InZlW8qXYAXCN2Ib6F
-	oN9w00hh/p0/ZibNwlglinBAN+PBX3Jzr2hC9XWEC0kLKDE8Oh6/SaMM2m6rpOpw4tLNe18kK55
-	QgbPnAeZf4FvuM4qlxZxD4Yrxf6TGy7dC/SQQOg==
-X-Gm-Gg: ASbGncvvFQRwrBlbBi0hUXs8HnA6OQgvEvyJks5D3bGvgqELQW0ahrrPsUmmS4D0kU9
-	vX2zAaaQM8WyHfdO0VTf21cFUHHKoMi6P7DE4m1/YFbac55bG7vTYg8NYlv9/Hy/yJ5yhWgB5eP
-	HyXSv94uBfsWTErFgKrREWlYbn7bXsQfA=
-X-Google-Smtp-Source: AGHT+IGrEchgHdLMUdss9BMWal8Z3yNsvOyPjVCzLRtDEx7FbGA7IUNrVWSkAmFM65s2vxpF9pz5d+T+4rAjGExeqNg=
-X-Received: by 2002:a17:907:97c1:b0:ad2:404d:cade with SMTP id
- a640c23a62f3a-ad2404dcd9cmr1040764266b.27.1747132994353; Tue, 13 May 2025
- 03:43:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g0SavODX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UOOyyqUY";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="g0SavODX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UOOyyqUY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 04F1A211A7;
+	Tue, 13 May 2025 10:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747133040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gqRhh12uOMrMoumVgK2eTFLenrim4mZSK8O3H6qWdK0=;
+	b=g0SavODXjGqhOM+54LKGeEX+N06siCnd4d/LYlfGVwgYBCp+mUBpkKwFLrjN0jeBZcnjbk
+	LLaEkqZTsVfbdbFzhqUXmnpELZBifkFb4cMOicXpnva1X53M8/WofvnV5p1DMKIz04xNCZ
+	yYZ5kOdpODl+rcm/EUnlLAVw50XaOzw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747133040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gqRhh12uOMrMoumVgK2eTFLenrim4mZSK8O3H6qWdK0=;
+	b=UOOyyqUYcB0ETv5/lI/kHyjlthOL60FvbOeuYcyRiDZB9sGaLjc5uUA2WCKkkn835Ms+g3
+	HwAnvXY+2WXrKSAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=g0SavODX;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=UOOyyqUY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747133040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gqRhh12uOMrMoumVgK2eTFLenrim4mZSK8O3H6qWdK0=;
+	b=g0SavODXjGqhOM+54LKGeEX+N06siCnd4d/LYlfGVwgYBCp+mUBpkKwFLrjN0jeBZcnjbk
+	LLaEkqZTsVfbdbFzhqUXmnpELZBifkFb4cMOicXpnva1X53M8/WofvnV5p1DMKIz04xNCZ
+	yYZ5kOdpODl+rcm/EUnlLAVw50XaOzw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747133040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gqRhh12uOMrMoumVgK2eTFLenrim4mZSK8O3H6qWdK0=;
+	b=UOOyyqUYcB0ETv5/lI/kHyjlthOL60FvbOeuYcyRiDZB9sGaLjc5uUA2WCKkkn835Ms+g3
+	HwAnvXY+2WXrKSAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB18A137E8;
+	Tue, 13 May 2025 10:43:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ICtiOW8iI2jPIgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 13 May 2025 10:43:59 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 34C6DA0AFB; Tue, 13 May 2025 12:43:51 +0200 (CEST)
+Date: Tue, 13 May 2025 12:43:51 +0200
+From: Jan Kara <jack@suse.cz>
+To: Nick Chan <towinchenmi@gmail.com>
+Cc: 
+	Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>, Yangtao Li <frank.li@vivo.com>, ethan@ethancedwards.com, 
+	asahi@lists.linux.dev, brauner@kernel.org, dan.carpenter@linaro.org, 
+	ernesto@corellium.com, gargaditya08@live.com, gregkh@linuxfoundation.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	sven@svenpeter.dev, tytso@mit.edu, viro@zeniv.linux.org.uk, willy@infradead.org, 
+	slava@dubeyko.com, glaubitz@physik.fu-berlin.de
+Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
+ support
+Message-ID: <itb4w3r7ypoitotmazkdkkz6tg4xewr26ffupm563aiwogarmc@prntwvbjksyb>
+References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+ <20250512101122.569476-1-frank.li@vivo.com>
+ <20250512234024.GA19326@eaf>
+ <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505115056.1803847-1-neelx@suse.com> <20250505115056.1803847-2-neelx@suse.com>
- <20250505151817.GX9140@twin.jikos.cz> <CAPjX3FfbeGmPkXY1NDnecrtcLe5dqX7+vLOLGe3sdggUfS-WSg@mail.gmail.com>
- <20250513003200.GZ9140@twin.jikos.cz>
-In-Reply-To: <20250513003200.GZ9140@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Tue, 13 May 2025 12:43:03 +0200
-X-Gm-Features: AX0GCFtoBq_P5Ys1TUxPoFoovKd2t5qxLf-JglFhrBAXlnnCoYTcZWqLFMO-rAc
-Message-ID: <CAPjX3FdNLjLGQ+0oyZgYOHAy0QxkEcycr86WQt9UyiLjXw5uJA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] btrfs: remove extent buffer's redundant `len`
- member field
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Boris Burkov <boris@bur.io>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com>
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 04F1A211A7
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	FREEMAIL_CC(0.00)[gmail.com,vivo.com,ethancedwards.com,lists.linux.dev,kernel.org,linaro.org,corellium.com,live.com,linuxfoundation.org,suse.cz,vger.kernel.org,svenpeter.dev,mit.edu,zeniv.linux.org.uk,infradead.org,dubeyko.com,physik.fu-berlin.de];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Action: no action
 
-On Tue, 13 May 2025 at 02:32, David Sterba <dsterba@suse.cz> wrote:
->
-> On Mon, May 05, 2025 at 07:53:16PM +0200, Daniel Vacek wrote:
-> > On Mon, 5 May 2025 at 17:18, David Sterba <dsterba@suse.cz> wrote:
-> > >
-> > > On Mon, May 05, 2025 at 01:50:54PM +0200, Daniel Vacek wrote:
-> > > > Even super block nowadays uses nodesize for eb->len. This is since commits
-> > > >
-> > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
-> > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
-> > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
-> > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
-> > > >
-> > > > With these the eb->len is not really useful anymore. Let's use the nodesize
-> > > > directly where applicable.
-> > >
-> > > You haven't updated the changelog despite we had a discussion about the
-> > > potential drawbacks, so this should be here. But I'm not convinced this
+On Tue 13-05-25 12:13:23, Nick Chan wrote:
+> 
+> Ernesto A. Fernández 於 2025/5/13 清晨7:40 寫道:
+> > Hi Yangtao,
 > >
-> > Right. That's because I was not sure we came to any conclusion yet. I
-> > thought this discussion was still ongoing. I understand that so far
-> > this is still all just a theory and any premature conclusions may be
-> > misleading.
-> >
-> > But yeah, I may write some kind of a warning or a disclaimer
-> > mentioning the suspicion. Just so that it gets documented and it is
-> > clear it was considered, even though maybe without a clear conclusion.
-> >
-> > > is a good change. The eb size does not change so no better packing in
-> > > the slab and the caching of length in the same cacheline is lost.
-> >
-> > So to be perfectly clear, what sharing do you mean? Is it the
-> > eb->start and eb->len you talking about? In other words, when getting
-> > `start` you also get `len` for free?
->
-> Yes, basically.
->
-> > Since the structure is 8 bytes aligned, they may eventually still end
-> > up in two cachelines. Luckily the size of the structure is 0 mod 16 so
-> > just out of the luck this never happens and they are always in the
-> > same cache line. But this may break with future changes, so it is not
-> > rock solid the way it is now.
->
-> Yes, with structures not perfectly aligned to a cacheline (64B) there
-> will be times when the access needs fetching two cachelines. With locks
-> it can result in various cacheline bouncing patterns when various
-> allocated structures are aligned to 8 bytes, giving 8 possible groups of
-> "misaligned" structure instances.
->
-> There's also a big assumption that the CPU cache prefetcher is clever
-> enough to average out many bad patterns. What I try to do on the source
-> code level is to be able to reason about the high level access patterns,
-> like "used at the same time -> close together in the structure".
+> > On Mon, May 12, 2025 at 04:11:22AM -0600, Yangtao Li wrote:
+> >> I'm interested in bringing apfs upstream to the community, and perhaps
+> >> slava and adrian too.
+> > Do you have any particular use case in mind here? I don't mind putting in
+> > the work to get the driver upstream, but I don't want to be fighting people
+> > to convince them that it's needed. I'm not even sure about it myself.
+> 
+> These are the use cases I can think of:
+> 
+> 
+> 1. When running Linux on Apple Silicon Mac, accessing the xART APFS
+> volume is required for enabling some SEP functionalities.
+> 
+> 2. When running Linux on iPhone, iPad, iPod touch, Apple TV (currently
+> there are Apple A7-A11 SoC support in upstream), resizing the main APFS
+> volume is not feasible especially on A11 due to shenanigans with the
+> encrypted data volume. So the safe ish way to store a file system on the
+> disk becomes a using linux-apfs-rw on a (possibly fixed size) volume that
+> only has one file and that file is used as a loopback device.
+> 
+> (do note that the main storage do not currently work upstream and I only have storage working on A11 downstream)
+> 
+> 3. Obviously, accessing Mac files from Linux too, not sure how big of a use case that is but apparently it is
+> big enough for hfsplus to continue receive patches here and there.
 
-That makes sense. The closer they are the higher the chance they end
-up in the same cacheline if the object itself is free of alignment.
+I can see that accessing APFS filesystem is useful at times. But the
+question is: why do we need it in the kernel? Why isn't a FUSE driver
+enough? Because for relatively niche usecase like this that is a much more
+acceptable (and easier to maintain) choice.
 
-> > > In the assebly it's clear where the pointer dereference is added, using
-> > > an example from btrfs_get_token_8():
-> > >
-> > >   mov    0x8(%rbp),%r9d
-> > >
-> > > vs
-> > >
-> > >   mov    0x18(%rbp),%r10
-> > >   mov    0xd38(%r10),%r9d
-> >
-> > I understand that. Again, this is what I originally considered. Not
-> > all the functions end up like this but there are definitely some. And
-> > by a rule of a thumb it's roughly half of them, give or take. That
-> > sounds like a good reason to be concerned.
-> >
-> > My reasoning was that the fs_info->nodesize is accessed by many so the
-> > chances are it will be hot in cache. But you're right that this may
-> > not always be the case. It depends. The question remains if that makes
-> > a difference?
-> >
-> > Another (IMO valid) point is that I believe the code will dereference
-> > many other pointers before getting here so this may seem like a drop
-> > in the sea. It's not like this was a tight loop scattering over
-> > hundreds random memory addresses.
-> > For example when this code is reached from a syscall, the syscall
-> > itself will have significantly higher overhead then one additional
-> > dereference. And I think the same applies when reached from an
-> > interrupt.
-> > Otherwise this would be visible on perf profile (which none of us
-> > performed yet).
->
-> Yeah and I don't intend to do so other than to verify your measurements
-> and calims that this patch does not make things worse at least. The
-> burden is on the patch submitter.
-
-Totally. I'll run some profiles to see if anything significant is
-visible. Not sure what workload to use though? I guess fio would be a
-good starting point?
-
-Though we agreed that this also depends on the actual HW used.
-Whatever numbers I present, if my CPU is fast enough and my storage is
-slow enough, I'll hardly ever find any issue. I think this needs more
-broader testing than just one's claims that this is OK for me
-(provided my results would suggest so).
-
-So how about pushing this to misc-next to get some broader testing and
-see if there are any issues in the bigger scope?
-
-> > Still, I'd say reading the assembly is a good indication of possible
-> > issues to be concerned with. But it's not always the best one. An
-> > observed performance regression would be.
-> > I'll be happy to conduct any suggested benchmarks. Though as you
-> > mentioned this may be also picky on the used HW.
->
-> I'd say any contemporary hardware is good, I don't think the internal
-> CPU algorithms of prefetching or branch predictions change that often. A
-> difference that I would consider significant is 5% in either direction.
-
-I meant the storage part rather than the CPU. Though the CPUs also
-differ in cache sizes between consumer and server parts.
-
-> > So even though we
-> > don't see any regressions with our testing, one day someone may find
-> > some if we merged this change. In which case we can always revert.
-> >
-> > I have to say I'm pretty happy with the positive feedback from the
-> > other reviewers. So far you're the only one raising this concern.
->
-> I don't dispute the feedback from others, the patch is not wrong on
-> itself, it removes a redundant member. However I don't see it as a
-> simple change because I also spent some time looking into that
-> particular structure, shrinking size, member ordering and access
-> patterns that I am questioning the runtime performance implications.
-
-With that experience, would you suggest any other tests than fio where
-a performance change could be visible? Something I can focus on?
-
-> My local eb->len removal patch is from 2020 and I decided not to send it
-> because I was not able to prove to myself it'd be for the better. This
-> is what I base my feedback on.
-
-I understand. Let's see what we can do about it.
-
-> > So how do we conclude this?
->
-> I don't agree to add this patch due to the following main points:
->
-> - no struct size change, ie. same number of objects in the slab
-
-Right. That makes sense as the original idea was about code cleanup
-and not about reducing the struct size in terms of bytes.
-I did not think a cleanup needs to be justified by reducing the struct
-size. Even without that I believe it's still a good cleanup.
-The struct is still reduced by one member (with a new hole now).
-Moreover with the followup patch the size is actually reduced at least
-for -rt configs by filling the new hole so that the later hole is not
-created at all. This wins 8 bytes for -rt. Not much and maybe not
-worth it. Or is it?
-
-That said, as long as the removed member was not meant to cache the
-fs-wide value for performance reasons. I did not see any documentation
-or code comments suggesting that's the case (even you're not able to
-tell for sure) and so I thought it may be fine to remove this eb->len
-field.
-Which brings us to the point below.
-
-> - disputed cacheline behaviour, numbers showing improvement or not
->   making it worse needed
-
-I'll look into this. As I said, any hints are welcome otherwise I'll
-start with fio and I'll compare the perf profiles of some functions
-which access the data. Let me know if I can do anything better than
-that, please.
-
-> > If you don't want this cleanup I'd opt at least for rename eb->len
-> > ==>> eb->nodesize.
->
-> This sounds like an unnecessary churn. 'length' related to a structure
-> is natural, nodesize is a property of the whole filesystem, we're used
-> to eb->len, I don't any benefit to increase the cognitive load.
-
-Now, our points of view differ here. For someone new to the codebase,
-I need to carry on the additional information that eb->len actually
-means the nodesize. In other words without digging this detail up the
-code just hides that fact.
-Since it's always set to nodesize, it does not really mean 'length' as
-in any arbitrary length, like 12345 bytes.
-And that's what I was trying to clean up. See? Does it make sense?
-Also that's why as an alternative I suggested renaming the member if
-removing it is not really favorable.
-
-And I thought it can also have implications maybe at some places when
-you realize that what's being used in the expression as eb->len really
-means the fs-wide nodesize.
-
-After all, with this insight I realized that the buffer_tree is
-inefficient as we're wasting the slots using the tree really sparsely.
-Since there are no shorter ebs, those empty slots can never be filled.
-
-So using the right name actually makes sense, IMO. For code clarity.
-But I can also understand your point and I can get used to it. It just
-does not feel right to me, but it's not a big deal. I just mentioned
-it to know others' POV and explain the intention one way or the other.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
