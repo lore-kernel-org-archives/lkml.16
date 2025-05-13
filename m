@@ -1,151 +1,134 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CCA1C28E;
-	Tue, 13 May 2025 07:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9205695;
+	Tue, 13 May 2025 07:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747120362; cv=none; b=QEqUVD2qWaFRyjQpLuI9X1pwTO/rY92e77uRJv0WRQf1jStamAqu80A1x2NgE7hE5Lbb+7CC7dsClpIPvx96KOaQd/T1ghtMMc4Cmkf9thtnY7BEkZ06kQ5XxO0GX/dsY342hXntSu3jYyuPMVKA+FXNvTbgAiot0+1xb+cmPx0=
+	t=1747120453; cv=none; b=NDX81ZazuNcazW8mqY6IMvmttDLUl0GrPm02B7V9wJtxOZZFTvFSwYcMp7yVmLBmUq3Q9JoTOGNKOj2erPqbxEph0z2rUr+C7jPPhFoY4uDGH9LYjme3J2O8bu5egnXyCSQW3o+wcKEvl3nH/FMLY9MyMmXVa87lxZvWa92godg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747120362; c=relaxed/simple;
-	bh=C5gMTCFYqUliZlVx/tFArqRF+j/MUdX1dUf54hkcFyg=;
+	s=arc-20240116; t=1747120453; c=relaxed/simple;
+	bh=K3drLE2Oi+IvVbndZqChwht2avF2P5gnpQVpowPrJUE=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=obWX3NwEvLe+85OTINIIDXZqGJzCNrq1TFS0coeZ9nZMoZ5nF25kYvFGR7MoWPooTSA2VYj5ilVVetMGiPAHrxMogL7m3BZ6ADGeRx2CbSvr1jdtZ5sjococQXG1y2kJGPONQpIAbdAXSB5tFoouXMwG4U8YIByd5miDw/eN7ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8CxvnLd8CJoJYLjAA--.43990S3;
-	Tue, 13 May 2025 15:12:29 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMAxHsfZ8CJo8E_NAA--.54217S2;
-	Tue, 13 May 2025 15:12:27 +0800 (CST)
-Subject: Re: [PATCH v9 0/5] Add Loongson Security Engine chip driver
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca,
- linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <8e55801a-a46e-58d5-cf84-2ee8a733df9a@loongson.cn>
-Date: Tue, 13 May 2025 15:12:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	 In-Reply-To:Content-Type; b=C6NGTEnaOFk/zr5B0UOqoChg4cnaiUUsvcqXZNtEoYPFLik8udvw4s9TkC3YValWRsel6bC0bvf7s68RDeG0tk8iA8M4jtPfVL8s1r5RC9A52Oq5SD0kLOiGP2s9Imy75u7oqC173gOGTnXwCbj2Q4o+y4vXyBVZ7L6EjWHrNvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZxSPb0dc6z4f3lVX;
+	Tue, 13 May 2025 15:13:39 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 4A98D1A0F87;
+	Tue, 13 May 2025 15:14:05 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe1878SJofX8SMQ--.8827S3;
+	Tue, 13 May 2025 15:14:05 +0800 (CST)
+Subject: Re: [PATCH RFC md-6.16 v3 15/19] md/md-llbitmap: implement APIs to
+ dirty bits and clear bits
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250512011927.2809400-1-yukuai1@huaweicloud.com>
+ <20250512011927.2809400-16-yukuai1@huaweicloud.com>
+ <20250512051722.GA1667@lst.de>
+ <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com>
+ <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de>
+ <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com>
+ <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com>
+ <20250513064803.GA1508@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com>
+Date: Tue, 13 May 2025 15:14:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H58WqEnqG3gJ1iJMrVaJ-okPJweLYwS1odJx4zAP41XpA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20250513064803.GA1508@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMAxHsfZ8CJo8E_NAA--.54217S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAF4DKF17Gr13AFW5Gry3Awc_yoW5Zr43pF
-	45Cay5Cr4UJr47C3s3t34UCFy5Z3s3Jr9Fga9Fqw15ur9xAa47XrW7CFy7CFW7ZF1rGry2
-	vFZ7CF43u3W5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
+X-CM-TRANSID:gCh0CgAXe1878SJofX8SMQ--.8827S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr48Ww4xJryDGrWDZry7Jrb_yoW8WF45pr
+	WrKan7Grs8GrsFqF1xZa43WFyrKFWvvrZ8JayrW3WrGw4jvrn5XF4rKFySy3ZrAr1kG3Wv
+	qr1ftrn8Ca1UZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
-åœ¨ 2025/5/11 ä¸‹åˆ5:34, Huacai Chen å†™é“:
-> Hi, Qunqin,
->
-> Where is the 2nd patch in V7?
+ÔÚ 2025/05/13 14:48, Christoph Hellwig Ð´µÀ:
+> On Tue, May 13, 2025 at 02:32:04PM +0800, Yu Kuai wrote:
+>> However, for bitmap file case, bio is issued from submit_bh(), I'll have
+>> to change buffer_head code and I'm not sure if we want to do that.
+> 
+> Don't bother with the old code, I'm still hoping we can replace it with
+> your new code ASAP.
 
-Hi, Huacai
+Agreed :)
+> 
+>> +       BIO_STACKED_META,       /* bio is metadata from stacked device */
+> 
+> I don't think that is the right name and description.  The whole point
+> of the recursion avoidance is to to supported stacked devices by
+> reducing the stack depth.  So we clearly need to document why that
+> is not desirable for some very specific cases like reading in metadata
+> needed to process a write I/O.  We should also ensure it doesn't
+> propagate to lover stacked devices.
+> 
+> In fact I wonder if a better interfaces would be one to stash away
+> current->bio_list and then restore it after the call, as that would
+> enforce all that.
 
-I added "loongson se. c" and "loongson se. h" to the LOONGSON CRYPTO 
-DRIVER entry.
+Yes, following change can work as well.
 
-or should i add a separate entry for the mfd driver as done in v7?
+Just wonder, if the array is created by another array, and which is
+created by another array ...  In this case, the stack depth can be
+huge. :(  This is super weird case, however, should we keep the old code
+in this case?
 
-Thanks for your comments,
+Thanks,
+Kuai
 
-Qunqin.
+  static void bitmap_unplug(struct mddev *mddev, bool sync)
+  {
+         struct bitmap *bitmap = mddev->bitmap;
++       struct bio_list *bio_list = NULL;
 
->
-> Huacai
->
-> On Tue, May 6, 2025 at 12:33â€¯PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
->> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
->> accelerator engines. Each engine have its own DMA buffer provided
->> by the controller. The kernel cannot directly send commands to the
->> engine and must first send them to the controller, which will
->> forward them to the corresponding engine. Based on these engines,
->> TPM2 have been implemented in the chip, then let's treat TPM2 itself
->> as an engine.
->>
->> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
->>
->> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
->>      are all encryption related drivers and SM2, SM3, and SM4 drivers
->>      will be added to the crypto subsystem in the future, the base driver
->>      need to be changed when adding these drivers. Therefore, it may be
->>      more appropriate to place the base driver within the crypto
->>      subsystem.
->>
->>      Removed complete callback in all drivers. Removed the concepts of
->>      "channel", "msg" and "request" as they may be confusing. Used the
->>      concepts of "egnine" and "command" may be better.
->>
->> v7: Addressed Huacai's comments.
->>
->> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
->>
->>      crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
->>      ls6000se-rng.c ->loongson-rng.c
->>
->>      tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
->>
->> v5: Registered "ls6000se-rng" device in mfd driver
->>
->> Qunqin Zhao (5):
->>    mfd: Add support for Loongson Security Engine chip controller
->>    crypto: loongson - add Loongson RNG driver support
->>    MAINTAINERS: Add entry for Loongson crypto driver
->>    tpm: Add a driver for Loongson TPM device
->>    MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
->>
->>   MAINTAINERS                            |   9 +
->>   drivers/char/tpm/Kconfig               |   9 +
->>   drivers/char/tpm/Makefile              |   1 +
->>   drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
->>   drivers/crypto/Kconfig                 |   1 +
->>   drivers/crypto/Makefile                |   1 +
->>   drivers/crypto/loongson/Kconfig        |   5 +
->>   drivers/crypto/loongson/Makefile       |   1 +
->>   drivers/crypto/loongson/loongson-rng.c | 197 +++++++++++++++++++++
->>   drivers/mfd/Kconfig                    |  11 ++
->>   drivers/mfd/Makefile                   |   2 +
->>   drivers/mfd/loongson-se.c              | 235 +++++++++++++++++++++++++
->>   include/linux/mfd/loongson-se.h        |  52 ++++++
->>   13 files changed, 602 insertions(+)
->>   create mode 100644 drivers/char/tpm/tpm_loongson.c
->>   create mode 100644 drivers/crypto/loongson/Kconfig
->>   create mode 100644 drivers/crypto/loongson/Makefile
->>   create mode 100644 drivers/crypto/loongson/loongson-rng.c
->>   create mode 100644 drivers/mfd/loongson-se.c
->>   create mode 100644 include/linux/mfd/loongson-se.h
->>
->>
->> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
->> --
->> 2.45.2
->>
->>
+         if (!bitmap)
+                 return;
+
+-       if (sync)
+-               __bitmap_unplug(bitmap);
+-       else
+-               bitmap_unplug_async(bitmap);
++       if (current->bio_list) {
++               bio_list = current->bio_list;
++               current->bio_list = NULL;
++       }
++
++       __bitmap_unplug(bitmap);
++
++       current->bio_list = bio_list;
+  }
+
+> .
+> 
 
