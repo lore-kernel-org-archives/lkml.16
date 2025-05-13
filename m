@@ -1,140 +1,156 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25ED33F7;
-	Tue, 13 May 2025 21:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F81F0E20
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 21:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747173211; cv=none; b=EzMBEl0X1jDy9XT+7ZFGGjOfigka6HMLain0z+/oW1qb6Th3nXnDNMEiR4nCoVdb/NtqW+zkH7tkQD8/B9jKR2tEkvhOtUp2T+oZ8oU0F1+UqGlKDmoaRmN+9pVDUmUTa9qT00d63acAmuDtqCMbFIll77oSeP+Ti2p1NB4YVjk=
+	t=1747173232; cv=none; b=hQDP9B/vUvwjMLxpE3k3A1UZxlIhlzD0ohAdYd7GCm1/NSzFTX27axeP3NUXO4XABXjR2Q8rYANnDC3t1doTBbvqpP5ikijDlLdZIdvQnhfJPVILibfLZwrPbyrmwQQ9q+AhDmX7KQTSh7668FfN+G34mpylF6jOyWosrriW96s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747173211; c=relaxed/simple;
-	bh=gZD1X07ma/dG1ZFre1+w0/ui2O8NhnYzvubmwxqG1y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z729WgF3FkYttKAFTbN2QSsURZbzr2VKxSlNggf9Q3Rr308pmIakxKXQQe072vbYoqlIzjtKDhvvsxF0fYe6VGaQfHjD6Nc7M6PEYwRIx+uGUtBE1QHAITNdjJAjeys5vCef/uPS6eelx17FvNuYOv0xTpCCfXpv92x0/BmVar0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GwleEq6M; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747173232; c=relaxed/simple;
+	bh=71pgvnqAw3UA+IpyU+Dy5uOMDBAifp/mgVuOv7x8aPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pj7PNj6nOzOsurRaS4unKtRPlb5uRL9wz85pGSP55OBKnrZnrCSqAoa3rHw7tEtoVXOwRrFk9RNZEiqNZ0BK4mCzBpWjp/sm1e64QUlHfomchJr2GXuz+F1Zingyk5+xixVeL4pwe5FyyeDPvHwLw0lpF0xhniiPRVJg66Y+ckE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=WGZu9e8a; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GwleEq6M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=fbMajz8w3X/FLDkTx5Qc3ESHcp1c0CTxTYL/fxwaRn4=; b=Gw
-	leEq6MF+u8X6Hy8d2Uzp48BSKqc2Bu4Ntfo3CNuoT3hYDHSE3h/PSY7dB//ZYaVtkgi8Z2D7ypidA
-	4MISDxhk5X1e7b33HrhsN6uL3nyjEoWtrNTRY7qYi+MfARWlf2kvHgO3eTDkABnK3wUnP4uEkyL+c
-	R0UfmvjMF7d7TQc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uExYs-00CV9F-U9; Tue, 13 May 2025 23:53:18 +0200
-Date: Tue, 13 May 2025 23:53:18 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Silicon Labs Kernel Team <linux-devel@silabs.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	greybus-dev@lists.linaro.org
-Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
-Message-ID: <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
-References: <20250512012748.79749-1-damien.riegel@silabs.com>
- <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
- <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="WGZu9e8a"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so678677139f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 14:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1747173229; x=1747778029; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IoLEEBUGNiFTOGCb4OTLcURUXHh0Is7POKT/aDTs3Qk=;
+        b=WGZu9e8atDc/sjVAmpq5f7gFtBHgPWfqzehsK1UXXyjWe4QmnRnyB8Po3vrNhZPSfm
+         2BIeqQW6HBet3Cyp/ytwDYrWMPNhADO99434FPaOsyD6jqzW9y8yvGhqYYqeqv+uUhnB
+         bKUNv8323dvEfxhH31I8kYPe5TCN1q3i+dZDp0BRF0m6qmt9elQ8TvpSOy/unDXrsScA
+         DSm+IHoK1jxCHnnqgJXz0IWkGFu47txnf8LiUZ+Xp4WXqdBvksLbA7gC7NH9z7yJEPAC
+         rxSNv2c/IiUU7E13V4DKSt2j7h+LV6s5CQUunwOA/xVLowaf+ORs63SG7qP8ncSKkeRC
+         tT0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747173229; x=1747778029;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IoLEEBUGNiFTOGCb4OTLcURUXHh0Is7POKT/aDTs3Qk=;
+        b=BL134lmnMBUteJ+B4Jdt2XSHiREkwq7Hu1pI70Fff4O5kF+FEUDh/tSTQR30J3Ci7y
+         8CPAVK6O0yPvF75F44MMyDYGz/xLdtBTKGHQ4H76dVJV9+S2ooDyq7gatye8A1oUzMEM
+         qdjXGgwNhtmgleh/Ak0vXNDwtHf6frgKGuQOnctV62USoVk3dHxKqbAKTpV4RFlpaApk
+         Ej3UvDtzA1fzuZuAjCHU8XMVvImqpTHJis1dprZFphaOuTQzQHzm9eq4jvgs8dyXOv32
+         Q0+qK3trNpSnp0tojxvKEwEFLbtNM7M9UFb8svCeh+uYr6tsAlpRTvCGMhQob2Pga2Oa
+         xn4g==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Qt3MlqvC8ZizIv2VjJMDwSiY3YGCT2oXwubAAWYkrYtWyjO446UPPXYCYDag4ltEndfPzCMIUc3HHSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDov4u50t3G7x85kH+Eg1Obp6lEOrOTT7N2ZWTKr4d28gNOa7K
+	dpdv6WiNNL6tI8dvTAoJ7aGDoG80tdMasq/A44fJIS3R4tdFpsksBuHR+iwjyGY=
+X-Gm-Gg: ASbGnctl2cRiIgqdWL7H9EXkM/Evf9AigUrSUyibx58aFBdte66aV3b9/8rlTjvU21Y
+	J0nnNyWnPz2gjNWc3Ka9GMIxgoeKG1EH36JFOP+10TVMz0GC+9rp7W94re+H3TVwaZPvGVBvISn
+	bQs2IfQtGOVMS5xxbimGuKmqCi6Dsy+uvcLytfxYkZ6NIePI8LHI4ahaFCdrGAZrbp0dCIogUJQ
+	9yyXHU8N3oZKF2wDH/SZS/S0t4yQUT77oYvw90QZNyamSaT2ZeAGLhcX9Ow1XKkTkKXgeeld1kg
+	lCQte12BuE9QY/ODkTkD70zHT8spEKkW6mBDAID4toMqnwnjozFl3LpBT4WTORLbaqhwJ/dspr0
+	SkFJYCX3yxIK42kR0863SPfCZ
+X-Google-Smtp-Source: AGHT+IGDBUqBNV1+C83bdeHkvMMC/RIROVFW0hAND3S6eCYJOwvoQKB1LZmfPoy/YugMmgpVIC3HiA==
+X-Received: by 2002:a05:6602:3944:b0:85b:58b0:7ac9 with SMTP id ca18e2360f4ac-86a08e3dc6emr93279839f.10.1747173229345;
+        Tue, 13 May 2025 14:53:49 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-867636e0dedsm239622539f.32.2025.05.13.14.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 14:53:48 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: heylenay@4d2.org,
+	inochiama@outlook.com,
+	guodong@riscstar.com,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/6] reset: spacemit: add K1 reset support
+Date: Tue, 13 May 2025 16:53:38 -0500
+Message-ID: <20250513215345.3631593-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
 
-On Tue, May 13, 2025 at 05:15:20PM -0400, Damien Riégel wrote:
-> On Mon May 12, 2025 at 1:07 PM EDT, Andrew Lunn wrote:
-> > On Sun, May 11, 2025 at 09:27:33PM -0400, Damien Riégel wrote:
-> >> Hi,
-> >>
-> >>
-> >> This patchset brings initial support for Silicon Labs CPC protocol,
-> >> standing for Co-Processor Communication. This protocol is used by the
-> >> EFR32 Series [1]. These devices offer a variety for radio protocols,
-> >> such as Bluetooth, Z-Wave, Zigbee [2].
-> >
-> > Before we get too deep into the details of the patches, please could
-> > you do a compare/contrast to Greybus.
-> 
-> Thank you for the prompt feedback on the RFC. We took a look at Greybus
-> in the past and it didn't seem to fit our needs. One of the main use
-> case that drove the development of CPC was to support WiFi (in
-> coexistence with other radio stacks) over SDIO, and get the maximum
-> throughput possible. We concluded that to achieve this we would need
-> packet aggregation, as sending one frame at a time over SDIO is
-> wasteful, and managing Radio Co-Processor available buffers, as sending
-> frames that the RCP is not able to process would degrade performance.
-> 
-> Greybus don't seem to offer these capabilities. It seems to be more
-> geared towards implementing RPC, where the host would send a command,
-> and then wait for the device to execute it and to respond. For Greybus'
-> protocols that implement some "streaming" features like audio or video
-> capture, the data streams go to an I2S or CSI interface, but it doesn't
-> seem to go through a CPort. So it seems to act as a backbone to connect
-> CPorts together, but high-throughput transfers happen on other types of
-> links. CPC is more about moving data over a physical link, guaranteeing
-> ordered delivery and avoiding unnecessary transmissions if remote
-> doesn't have the resources, it's much lower level than Greybus.
+This series adds reset controller support for the SpacemiT K1 SoC.
+A SpacemiT reset controller is implemented as an auxiliary device
+associated with a clock controller (CCU).  A new header file
+holds definitions used by both the clock and reset drivers.
 
-As is said, i don't know Greybus too well. I hope its Maintainers can
-comment on this.
+This code builds upon the clock controller driver from Haylen Chu.
 
-> > Also, this patch adds Bluetooth, you talk about Z-Wave and Zigbee. But
-> > the EFR32 is a general purpose SoC, with I2C, SPI, PWM, UART. Greybus
-> > has support for these, although the code is current in staging. But
-> > for staging code, it is actually pretty good.
-> 
-> I agree with you that the EFR32 is a general purpose SoC and exposing
-> all available peripherals would be great, but most customers buy it as
-> an RCP module with one or more radio stacks enabled, and that's the
-> situation we're trying to address. Maybe I introduced a framework with
-> custom bus, drivers and endpoints where it was unnecessary, the goal is
-> not to be super generic but only to support coexistence of our radio
-> stacks.
+No code has changed in this version, however two patches were
+reworked while trying to separate the clock from the reset code:
+  - Patch 4 is new, and consists of clock code that was previously
+    found in patch 5 in v9
+  - Patch 5 is now the result of squashing together two patches
+    from v9 (what remained of patch 5 squashed into patch 4)
 
-This leads to my next problem.
+*** Stephen, because of various dependencies between the reset
+    and clock code in this series, would you be willing to take
+    patches 1-5 through the clock tree?  Philipp agreed this
+    would be simplest and said he would ACK this.
+*** Yixun, I am expecting the DTS changes in patch 6 will go
+    through your tree.
 
-https://www.nordicsemi.com/-/media/Software-and-other-downloads/Product-Briefs/nRF5340-SoC-PB.pdf
-Nordic Semiconductor has what appears to be a similar device.
+This series is based on the "for-next" branch in the SpacemiT
+repository:
+  https://github.com/spacemit-com/linux/tree/for-next
 
-https://www.microchip.com/en-us/products/wireless-connectivity/bluetooth-low-energy/microcontrollers
-Microchip has a similar device as well.
+All of these patches are available here:
+  https://github.com/riscstar/linux/tree/outgoing/reset-v10
 
-https://www.ti.com/product/CC2674R10
-TI has a similar device.
+					-Alex
 
-And maybe there are others?
+Between version 9 and version 10:
+  - Reviewed-by tags have been added to all patches
+  - Patches 4 and 5 are changed as described above
 
-Are we going to get a Silabs CPC, a Nordic CPC, a Microchip CPC, a TI
-CPC, and an ACME CPC?
+Here is version 9 of this series.
+  https://lore.kernel.org/lkml/20250512183212.3465963-1-elder@riscstar.com/
 
-How do we end up with one implementation?
+All other history is available at that link, so I won't reproduce
+it again here.
 
-Maybe Greybus does not currently support your streaming use case too
-well, but it is at least vendor neutral. Can it be extended for
-streaming?
+Alex Elder (6):
+  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
+  soc: spacemit: create a header for clock/reset registers
+  clk: spacemit: set up reset auxiliary devices
+  clk: spacemit: define three reset-only CCUs
+  reset: spacemit: add support for SpacemiT CCU resets
+  riscv: dts: spacemit: add reset support for the K1 SoC
 
-And maybe a dumb question... How do transfers get out of order over
-SPI and SDIO? If you look at the Open Alliance TC6 specification for
-Ethernet over SPI, it does not have any issues with ordering.
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
+ drivers/clk/spacemit/Kconfig                  |   1 +
+ drivers/clk/spacemit/ccu-k1.c                 | 239 +++++++-------
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-spacemit.c                | 296 ++++++++++++++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 128 ++++++++
+ include/soc/spacemit/k1-syscon.h              | 160 ++++++++++
+ 9 files changed, 754 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/reset/reset-spacemit.c
+ create mode 100644 include/soc/spacemit/k1-syscon.h
 
-	 Andrew
+
+base-commit: 3f7ca16338830d8726b0b38458b2916b3b303aad
+-- 
+2.45.2
 
