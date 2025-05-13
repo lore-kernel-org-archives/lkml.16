@@ -1,86 +1,62 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5235E1A0BE1;
-	Tue, 13 May 2025 02:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD57186295;
+	Tue, 13 May 2025 02:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747102829; cv=none; b=TnVbsVxus5NecpKR4nfZ8ubt0gJ+L5lUTvD5uyLfTelLK4JIPVaYIDJOZcSZ+Mji/Uw/+IFtcFYp7ecvdetgt2gndcvdE7+J6K/xsZbpbeNBodWe4EkBnlvkrp3xG4gIMIHHCmoqC8sr2rrW9pw2af3X7dmV7iQkias1ew/HILY=
+	t=1747102924; cv=none; b=VtbbEw0inlSfsgdioj20s6eMFHX6oRmoE5W+yvhpkc5h763YSPLvHGFDOcImmgegVof1adGGjQTG9crqb+HuG2VOzstT6pzM7WYL2M1dbfnp+nrSkWhTBJ9chBIp3yFvhwcLVHQGSPWnnzRd3pESEWPoDulz+EJnJIhZy8VTOxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747102829; c=relaxed/simple;
-	bh=JAanfZMOtwsqXeD+6OrWTkCqDhu/Aon0zMRClqTvMsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ShTxXgMzQ0/2yhCyeoNqanLKM9oSSQviJjph1bNHwNsy6xixuRSwe0ivhswbNg8FpSSHVuTQ+SO6YY1swXCqBOT4UqLrTgrHV30ES07XdffJoxPXU+mxZz3LfhTGdCcbHliSqa5LZ4Kt9OGeOgZF9Zr7QPdBVlG0pUO0PQ0V7mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=T15SkYH+; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747102924; c=relaxed/simple;
+	bh=OvvDRRMFCxKSwydz4/Ws9K33Q9ka0Cl51MMbVyD9k6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sLO84fS4ww9yZlpJtXf4LtOhYi4ezFXFydPZWV/IaCqpL0h7//45Qzu94RDwJhtjE9NhSF0LUsyjjOLyKZndoDjMHM18TyC4M7d/WU5Y78fxwKrO8FG8shrZeAxZtaRBqfySAufXqVUNiABBFYu/aqLWZegxvF+jsfv76B8nSio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJrTGS1+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="T15SkYH+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=VC8c/hCCyLIee4T1jsT8LH8tRvXKqOjAliJfp7OM6yw=; b=T15SkYH+mVJJiFAeghMWWlKYjw
-	iVA2hk1kdKJm5g01GNwX9XxDFOXr7a7PWQn5TKf/FSvjMQfp6VGVWIaXGG1K8mvMNJDi00pwKQmvg
-	szNigqTjbXJtGHKhbeZkdVc503kzl/KqpIo5JGDEbEdSH4o9E5AjSs50PynS97hOA4HRjqwWLD1Tl
-	/y852HBVPrU2texaLPnnfWV5Rkc7BwCSyMZWACE6aDmmlk85xOXrkwJhXN+I/zwi9mNS9A8BU9JiF
-	cWixxRdpSlyKxqnNIgw9IvaaOpIsy4R1TTEVdzItPcWMR550BcJuYTuuhXcyekV10/uK60dOdK7bX
-	43dAyxvA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uEfFB-005dqV-1j;
-	Tue, 13 May 2025 10:19:46 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 13 May 2025 10:19:45 +0800
-Date: Tue, 13 May 2025 10:19:45 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Cc: dakr@kernel.org, lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sui Jingfeng <sui.jingfeng@linux.dev>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: Re: [RFC PATCH 0/2] scatterlist rust bindings
-Message-ID: <aCKsQSob4TNDZb99@gondor.apana.org.au>
-References: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJrTGS1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF405C4CEE7;
+	Tue, 13 May 2025 02:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747102924;
+	bh=OvvDRRMFCxKSwydz4/Ws9K33Q9ka0Cl51MMbVyD9k6s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sJrTGS1+T7CrtWYQCS8Q9iNKDBMudlSeenaw9XRUwq5fBtBJSs/lUkBYliRvE0v7x
+	 ik1317DICw/2aAhtviM5O953+a4JUPbmebLf1KScdAOwLRwYAj8RnnwJUZzSjVLjef
+	 g27J4Si+urkPMpH3w1R2MDMrbVtnL/6+tgveBFn0ucGWITPCkAIvGM8gPxP9KbDH6G
+	 FgJ16jxmRJRf2Q86xT6Gd+4BgYGf0+YyqBwtz8HqsN6eFr6cVL4vlgtuqdIBY83MjN
+	 LTuhOK5J8H0uIvzlpIUtDuIyBYpU8o6U8ggGCMNGavIHK6hkjvBRPEPpIAwJmpTQiV
+	 i0iw8KC914hXw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 0/2] lib/crc16: unexport crc16_table and crc16_byte()
+Date: Mon, 12 May 2025 19:21:13 -0700
+Message-ID: <20250513022115.39109-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 12:53:26PM +0300, Abdiel Janulgue wrote:
->
-> Some questions still need to be resolved, which mostly come from
-> the DeviceSGTable::dma_map() function. Primarily, what if you call
-> bindings::dma_map_sgtable() on an already mapped sg_table? From my
-> experiments it doesn't seem to do anything and no indication is returned if
-> the call succeeded or not. Should we save the "mapping info" to a list
-> everytime we call DeviceSGTable::dma_map more than once?
+This series removes the only caller of crc16_byte() outside lib/crc16.c,
+then folds crc16_table and crc16_byte() into lib/crc16.c.  I'm planning
+to apply this to the crc tree.
 
-You should cc Christoph Hellwig on the DMA mapping API.
+Eric Biggers (2):
+  w1: ds2406: use crc16() instead of crc16_byte() loop
+  lib/crc16: unexport crc16_table and crc16_byte()
 
-Cheers,
+ drivers/w1/slaves/w1_ds2406.c | 12 ++----------
+ include/linux/crc16.h         |  9 +--------
+ lib/crc16.c                   |  9 ++++-----
+ 3 files changed, 7 insertions(+), 23 deletions(-)
+
+
+base-commit: e8d72b766adcde14188e68968f3cd05f4321691d
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.49.0
+
