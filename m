@@ -1,176 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11020086.outbound.protection.outlook.com [52.101.56.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3262BF994;
-	Tue, 13 May 2025 18:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747161719; cv=none; b=XmHJbbuu+WJcEiUFs2H2p1fmTyyQOOWWNW4nyHcUFkjAjFK64JgEAAq3LTcpqnUFtOaWC/Eyw45sXI1/A68zLaaRCObRmOrS4tNVZTGoYoR1tHwfuXZpZgtynuY40V/Ngb80rU44VRJgTXJP7Aq/xj5vRDI1Y4W5wGo0jiv1C4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747161719; c=relaxed/simple;
-	bh=CFT91F82VT+EMpgHl6KazJBs+hD3rAz6luZG0Q16PP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJeqAt1F62rCn0bIucth426EWa7Ea5cI7xY0a1xfTmyp1LoSL45p2yNEh+YtW0oKD0dGwEii+OJeERPqDIZY+wK5bRVmS3WpzlKvx9JF4bqZTG3YySt7bD8uZA+wFyYoAksmK3K8qs7HKtvUP0UTdr2DtWElRSwFmRLimBAaFgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l660l9PJ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330FC2BF99F
+	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 18:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747161774; cv=fail; b=Lggey5EHtDSDnl8ukwmodZt8oymxtAdiDWMuDssD2wxpqY5/lJ4EGwLsO2FOVnm450l7jk4P8EZBP45wy1Ki9OVQCDGXuLkxbF79kOr8ugmG6pW0J8/okv3dpgmtSiDOtG0xc37+i1AywpiW4+XVXCHoTfrzQwJM4t6FBP6Oefc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747161774; c=relaxed/simple;
+	bh=Lw5JJT4O40xpvbYnxtKkVHIzpbK2Bmg0tItI87JkwdI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=WP465aJjlW3AzM2kT1JRVnOqJsNBSZhrjIgY6nOKwuvUycJmBFKOwRbWJ18ZPtmfjBCZc9P69FoKV0JsuLLz+upkNZrF9BfKhBchgM/yc8T5tc9hjKlv2uckRbj+tdhmvniljVgHxr4LD6Up3iyEAcAg0jRW2DEvW/2tz70Kbsg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=Y61F/xVf; arc=fail smtp.client-ip=52.101.56.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l660l9PJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D05EC4CEE4;
-	Tue, 13 May 2025 18:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747161717;
-	bh=CFT91F82VT+EMpgHl6KazJBs+hD3rAz6luZG0Q16PP8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l660l9PJO7esFL7D5tNaC7iNaaXBMciO+GnJc8rjnmeu/I8AbcVhIe4cf3JslO6Yk
-	 GVbZJdKyHYqsKeZVsbSoe+nOPwZikJ67SQGFURnWHOdHKdlOqEDS+0CFZS1O+x/9Pb
-	 99SiSwZesEBkHcNfyQNXsygCsaqkiXrqR8NeBPZoKbsv1SXeWsac/C7nGFjIev8kbR
-	 TJHIfiqmD3VvtEsFVvR4LY8ymuvxnT4kOlaxkZgWy56pFrgsMvP8DJVu1V7G+VjcPz
-	 j7W+y7dyDH/YorbSnp/hmr/DBt003JN8ppwLhBnYl4m3wVaALol3CrtFeCL1ReBm7Y
-	 dLzvcpvkv0zlg==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>
-Cc: linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: crypto: Convert ti,omap4-des to DT schema
-Date: Tue, 13 May 2025 13:41:47 -0500
-Message-ID: <20250513184148.3053317-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="Y61F/xVf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=djEgHBcmrS6eFNe9C52WQlzf2ro1iiplGrtqN2poC0F6tVkqaC3tN2P/LjZSdUEzJiwUtAAsFT/3cLgA8PB6xXRUAeqnwTZXiQzoQsTig5u5wuh2bWSZAZ1A2kdIGR5jtMT3T6gfky+WZ1jJg9W2Fsh1c10mBduxWAlOxGKXBEq4qS8Ab9RQSSTWuCR+fV7+pGfsvgTlBVe7gvBcyf18LXvj4RxxxmXv2oZkxNqIonR2TGOtPMv9NumL07aUzv0zs/PJps67HU4Djj+vqhgW6t7Ex57KfbQV2385CqFZ+5/C/5YK4cZvwWi/6iJJAbHnBCcacb4lhF/gc1cS2KagFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DPiumYPiRXYE6k2i+1V4bztMS18VaaozxVEnJ+hn27M=;
+ b=jwIl+ofaC3xSgbfCNPjCOZUH8+Zi1gdz74u2Nnmg4LePA9+1DwUgFJ+IOBbIpnUXm+MjMBygvsC+m71btBrN8hpjb5RGR30rzk0qtlExnu0VwdX98v30S6H9KTHGyjJGRwE56zl/UT31StLLGA6tyqfyqdoqgYgeavMEd+Wr0Pp+wWgXznAU2JlpgDJY5efnYEj3pgnxjOV8FaINij7bvvX8pLntm/A7hcLu8LnNlveKJy3dw+dhKVx4DgR1JFSHxKyXp2z1pnvlVLNtoraPjmgAABdo697jsTYIfDAJD/Dy4b89kLe5bwETLjQ7TilVzZMq4e66fm18g9DMGJiulg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DPiumYPiRXYE6k2i+1V4bztMS18VaaozxVEnJ+hn27M=;
+ b=Y61F/xVf9qiTZCOVl1osZAAjNZMFna6iVK+MNzYjVEt0Rtjyx+7DpEEqKYqrAajID5woQdwu93EfEy4VlQEdZ3e+tgP7yj0C0vq7iKVtROn7q1vnlrRUdsb3WFN2GOpPEQUwkY7TlNnM4XkEvS3iJzNNwljTENwJquLsUCW5Z/4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
+ MW6PR01MB8221.prod.exchangelabs.com (2603:10b6:303:248::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.28; Tue, 13 May 2025 18:42:46 +0000
+Received: from LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9%5]) with mapi id 15.20.8722.027; Tue, 13 May 2025
+ 18:42:46 +0000
+From: D Scott Phillips <scott@os.amperecomputing.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, James Clark
+ <james.clark@linaro.org>, James Morse <james.morse@arm.com>, Joey Gouly
+ <joey.gouly@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Marc Zyngier
+ <maz@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, "Rob Herring  (Arm)" <robh@kernel.org>, Shameer
+ Kolothum <shameerali.kolothum.thodi@huawei.com>, Shiqi Liu
+ <shiqiliu@hust.edu.cn>, Will Deacon <will@kernel.org>, Yicong Yang
+ <yangyicong@hisilicon.com>, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] arm64: errata: Work around AmpereOne's erratum
+ AC04_CPU_23
+In-Reply-To: <aB3UBSQYtTveKPlh@linux.dev>
+References: <20250508210009.428998-1-scott@os.amperecomputing.com>
+ <aB3UBSQYtTveKPlh@linux.dev>
+Date: Tue, 13 May 2025 11:42:42 -0700
+Message-ID: <86ecwsgxnh.fsf@scott-ph-mail.amperecomputing.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SN7P222CA0022.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::7) To LV2PR01MB7792.prod.exchangelabs.com
+ (2603:10b6:408:14f::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|MW6PR01MB8221:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad27ea66-be27-45f7-564d-08dd924df3d5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?//g6+iHks4PqlabVv7WnjD8Gi9PrrdyBfeJ8+5hYOMq3T15JGqQxhXmGOb+O?=
+ =?us-ascii?Q?dEzoe/YpnPtMm6SmSscXJLhALe/T4U9MMM0ZOjCylEfLnNB52cpsKYK7ASrW?=
+ =?us-ascii?Q?mb7NwrQNLlishDXz1DGubfQT6SOvxjuSYE1KdX5Pk4qVkD7ZzbxrBTl6TsUf?=
+ =?us-ascii?Q?RI7XiTsAqKPZ6RVm5WC56N2p4kDmlVYt7X0i6/2t6fv6zYMDV1yUox6C4QsT?=
+ =?us-ascii?Q?BOgSKDaURxa1DXLrAyCJ81xXA6M5U09zUfy5YzRHxF0+L/BdI/K13i08LVLH?=
+ =?us-ascii?Q?fpqIm+CeD2jWAMQnxoaOfZHZZG4tI6u+KE7VN+ZuILMY84DRo+8DYgknMofB?=
+ =?us-ascii?Q?5rWYbr6xXC+RIahg1YBqBZ6Lavvs+PziU0htTWtq0rgp0LA5vVLgFC1J9aGX?=
+ =?us-ascii?Q?kYwZkNhou9fq0PNzosUxeRG1j+f7FKKpv0GyXqiVSGvEvcuR/Igy+85W0hSg?=
+ =?us-ascii?Q?ld2+91/1hvzEd6P58XfWfxZZp6cpjBaeKhZVE71vUSk6/1Wu5sabLCUg25O3?=
+ =?us-ascii?Q?YBDNjXZpBLCxkuu3C4Cc0Mrkdg/iQqZeHyrlPlhwsYvcY5SrCtZq3KONv9f3?=
+ =?us-ascii?Q?pZ8sUH0rbJccWcJQegKtdr4uYRTaUkfHSt5Z+pVTG9C84kw9/R4/njGyfqDu?=
+ =?us-ascii?Q?QJvTWltkrnZliv3msibnkXnQ08j0OcO4XHToEpwDtjrKaneZN+Ncb94MaCkV?=
+ =?us-ascii?Q?egcQXC66UPgSf6TMHyA2csqdObhiFmcjGoJWwKbPeemF6eoT+6+6/VEh6DYx?=
+ =?us-ascii?Q?CbDm1RGSIgh1V5WYaOEFIoqd1N6UVgJAiqIJ9SPZod7LqkMGmOy5PRvx51Bf?=
+ =?us-ascii?Q?C8UaLjaqjYcPgyu15ULNJcD94KfoEWkwSsRFLGav9zC/WHkZ3BrSjo5tfymO?=
+ =?us-ascii?Q?6X5fN76ibFCfvbkVg/P7l5vdOLDmhkHh13BhmYIBijXhPV7RfI+sO3zBiPgM?=
+ =?us-ascii?Q?Pnr045+T4AIJbIqruJnz0KF9T7ACYrudXD1Q9k6FQsOlAV8pDlNQ2KONkm05?=
+ =?us-ascii?Q?aiL08uIZrPKdPVdbTswePKEYS6KPrQEHMli3rGuA8pCsEzdMPzT0Lo1diVi5?=
+ =?us-ascii?Q?zRNmjhI+DKNzibEL1zg7ROdoe/YpVKN5gar3GsA46sh4Yuh4/Se2GFHEbRCI?=
+ =?us-ascii?Q?SnhMKQ4FzK0EGRzebemZ9s3ryLGRRU2fH0G9LRzJE5EJocC8u/yakQsnKqxS?=
+ =?us-ascii?Q?asls1dQS3hUKu/BJodt0bnPNhIf04V758PF0gQdlNeiLfIrXF/sR2GElSAsF?=
+ =?us-ascii?Q?YdCT11pCuDV9zIFgJkU5XhljtWFpLFQXXxKeuVQEf2UbcFC0m90NPJn9lJpX?=
+ =?us-ascii?Q?BRQoU6c8lFvucRkKR6iuQd87xRM1bGiDztdDX//6v5Ax2DsaUV4RJNCl8+mj?=
+ =?us-ascii?Q?/tNe1E3bSGiq+VLMpYLrLVAItNDTODUlQ3FcrjuUyvF6AY3CevbKO1FITIw/?=
+ =?us-ascii?Q?04PdIkiuUkQL/BdH2DHJ1QWrOhx1cuQGjm8h6RULXKHYxNi9FTMkQA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kzyrmAiUR3vEhkwD8Ln0xwGhwnTe0RaAuLgyVVl/RQWMLvD0jm9C4pIp6v9n?=
+ =?us-ascii?Q?JyVoTMhBrpiVm+wIIgzwvI7jgnAl27T0ZyXlKyU4IAbpV8x0fo8z8MsOczQc?=
+ =?us-ascii?Q?JF/yzzfeXZBo5qIlSI/cYKSCpZLkoOd3LywKhsYzcUmE/VGWSCwXtoaucoA6?=
+ =?us-ascii?Q?YTLnrB3+rFC2YywszNQzCeXmWEMtKy9ju2j2Eh5ElXAWYxiPg8Jg05aQ2RY3?=
+ =?us-ascii?Q?kzyZQGPECBl+74jmjkpu06Pgzw12ptR3bVyLCdmSlInD9kP8Jyuo2Bj68Fzx?=
+ =?us-ascii?Q?4wRQEuDdyScJDxk9Xm6Un60g+1Qb1L/iL/6oUYtyBGVW2sHpS1G4ke3bgz7w?=
+ =?us-ascii?Q?B8n8eG/gCDDvdt8KoHea6n7aKKC9TyMj8msz6zIfyqtDaGsSWtcY7tD6KJmP?=
+ =?us-ascii?Q?PT8GGB+7hc3q0N+xv3h56rWGuEFihwsaL98RCbt9LAx0/U41MGtAPCjYTFMa?=
+ =?us-ascii?Q?7Us6Fv90ZrryQEvo7As1c51iAQieCqPcRcfTrLlTRZGERhrNwPh1NTjk9CEu?=
+ =?us-ascii?Q?eKi0i6Ek85MDuje4FsstwY4aGdsuA6DQHFMYNgqs12t/k8YvVVVRtPTw5CPl?=
+ =?us-ascii?Q?SgUs7WM6UC4oFHJtSSjYtsaDC3DPpx8WEips8fyKy15+TUIp3ByrVQFh5cL8?=
+ =?us-ascii?Q?InoPJnQjx43FPhzCAO1ZHWF/v0P7XGBXW1WAVlFtL8ICVS4c0nWAUvlwuXQc?=
+ =?us-ascii?Q?b/KMainhLN3g2p1ghOfGbaWMux2eNvPE6Jjw5j2x7ordp4Ye35C/ksYy2ZMH?=
+ =?us-ascii?Q?GVXHD5z+RJaxAuwzrr8hSkXl108x1VEkDsKCLwokjHKdC2CU7ppxoHf2HD7m?=
+ =?us-ascii?Q?1UflTlWPz5E+XDxHC6Nqkdy8PvgY4mNUsbiAHIYAFIU8CbvcZYOk8pvr8jCS?=
+ =?us-ascii?Q?qlDv7BA4tTw6Cv81Y4/RsXOyi1ewPd75sEisWPvTrP50/MR3SDty+MWEKaOn?=
+ =?us-ascii?Q?BnfceSIrKJ6XlVi7Cqdkfwj3NUpo5oQmmNRFe48QBDBBsu0DB6zirbX3dEYA?=
+ =?us-ascii?Q?XwHoZEfCcmiw780zoKZLwHhD4OUrBLMy5/8rMNhtPZhx0E19gdUKNF8Hp2q7?=
+ =?us-ascii?Q?JvHOJQwZ+fixdzQas/InoXuLQFL5EGJSomN1auLTRepgdFw8pyzSV5ONWoVI?=
+ =?us-ascii?Q?6J54J1MNyZ04gCVOI8msmdXRUkiHcGSj5olEdOxWh78WEtYpAxznNfwOHbqa?=
+ =?us-ascii?Q?lMMPbs7clhFtt9pI/zsjXJY9rqvrtVMLYCY0xJ0MskOFis6rWPID4yfDMGk7?=
+ =?us-ascii?Q?Up37K3Ty7VsHWpvuI916qrp0ITNvYaMcafQPtJhtZEQNhBZ3InpJdPoFMcvT?=
+ =?us-ascii?Q?1geOwvGIGwkE+/oomwNu1hSPq4E5nmL8CG6I3g2IAp+YkKovtuu/JE8EHn/B?=
+ =?us-ascii?Q?qVKwg6IvYNEsy64N6cdrdUeNgx00VcjrKPiw4rzF/VU96sQAYq/q/yFb5u7w?=
+ =?us-ascii?Q?BUDVDqaPZZrDuHaif9FV8EqMIIhiL2g2d+H92qjxxxR4owgT2Ul1K6YvatSa?=
+ =?us-ascii?Q?3kHshcEjK0LlAIBqBDFpOdtlKRNO4ShlWScJejXl8iowdCV9yJHHiqqmeGsT?=
+ =?us-ascii?Q?9dwVYP1KxQuRmPolVxvf4XH+Ic11p1TqRZX/QCEK7P0Qm5VnrBVmaF5+VdER?=
+ =?us-ascii?Q?Ln0qW7hNnUNkbF+hQCf0dPA=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad27ea66-be27-45f7-564d-08dd924df3d5
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2025 18:42:45.9601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gt1usOhnXm099EfriLV+hBhBrxY1l6+TYx0GtpQN/y7pteb81Eb6h5/lPDKyyYg//AiFDk5WOtqRJ2qET9cT7NopKQvyNc7fB+7IiaxDuimv6NvL2dWwpatkTADvpB2J
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR01MB8221
 
-Convert the TI OMAP DES binding to DT schema format.
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-Drop "ti,hwmods" as it is not actually used for this binding. Only
-OMAP2 platforms are using it.
+> Hey D Scott,
+>
+> On Thu, May 08, 2025 at 02:00:09PM -0700, D Scott Phillips wrote:
+>> On AmpereOne AC04, updates to HCR_EL2 can rarely corrupt simultaneous
+>> translations for data addresses initiated by load/store instructions.
+>> Only instruction initiated translations are vulnerable, not translations
+>> from prefetches for example. A DSB before the store to HCR_EL2 is
+>> sufficient to prevent older instructions from hitting the window for
+>> corruption, and an ISB after is sufficient to prevent younger
+>> instructions from hitting the window for corruption.
+>> 
+>> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
+>
+> Overall looks good, still needs an entry in Documentation/arch/arm64/silicon-errata.rst
+> which Marc noted in v2.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/crypto/omap-des.txt   | 30 ---------
- .../bindings/crypto/ti,omap4-des.yaml         | 66 +++++++++++++++++++
- 2 files changed, 66 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-
-diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
-deleted file mode 100644
-index e8c63bf2e16d..000000000000
---- a/Documentation/devicetree/bindings/crypto/omap-des.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--OMAP SoC DES crypto Module
--
--Required properties:
--
--- compatible : Should contain "ti,omap4-des"
--- ti,hwmods: Name of the hwmod associated with the DES module
--- reg : Offset and length of the register set for the module
--- interrupts : the interrupt-specifier for the DES module
--- clocks : A phandle to the functional clock node of the DES module
--           corresponding to each entry in clock-names
--- clock-names : Name of the functional clock, should be "fck"
--
--Optional properties:
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--	Documentation/devicetree/bindings/dma/dma.txt
--	Each entry corresponds to an entry in dma-names
--- dma-names: DMA request names should include "tx" and "rx" if present
--
--Example:
--	/* DRA7xx SoC */
--	des: des@480a5000 {
--		compatible = "ti,omap4-des";
--		ti,hwmods = "des";
--		reg = <0x480a5000 0xa0>;
--		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
--		dmas = <&sdma 117>, <&sdma 116>;
--		dma-names = "tx", "rx";
--		clocks = <&l3_iclk_div>;
--		clock-names = "fck";
--	};
-diff --git a/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml b/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-new file mode 100644
-index 000000000000..11a028cf8902
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ti,omap4-des.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP4 DES crypto Module
-+
-+maintainers:
-+  - Aaro Koskinen <aaro.koskinen@iki.fi>
-+  - Andreas Kemnade <andreas@kemnade.info>
-+  - Kevin Hilman <khilman@baylibre.com>
-+  - Roger Quadros <rogerq@kernel.org>
-+  - Tony Lindgren <tony@atomide.com>
-+
-+properties:
-+  compatible:
-+    const: ti,omap4-des
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+dependencies:
-+  dmas: [ dma-names ]
-+
-+required:
-+  - compatible
-+  - ti,hwmods
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    des@480a5000 {
-+        compatible = "ti,omap4-des";
-+        reg = <0x480a5000 0xa0>;
-+        interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&l3_iclk_div>;
-+        clock-names = "fck";
-+        dmas = <&sdma 117>, <&sdma 116>;
-+        dma-names = "tx", "rx";
-+    };
--- 
-2.47.2
-
+Ah, sorry for missing that and making you repeat yourself. I'll fix
+that.
