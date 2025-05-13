@@ -1,102 +1,221 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0741A83E2;
-	Tue, 13 May 2025 14:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA711C701A;
+	Tue, 13 May 2025 14:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747148115; cv=none; b=uhtZZDS6NI8woztlbxcQZ4imwqOU9ArZJ7yCIT9jY41FElXit+yunS3J8Ooc2ZRmw4FIaIGcYVKgPP9/0VDo5EqrvhUFmq7D/d2U9/cTX3Wi0HtDndYrvF+iFp29O0UlAiLQP0cVBrypgwS1nxEncdd63oek5vJ+tEm2NoeDtXk=
+	t=1747148127; cv=none; b=gAoHXd8lwTlpyycAMXYPpDRCZTKa+Nkqw9GW7TQlgux0mZOARxmmLUuyMBSRg4ruloK/qtF+2jpBEjNVKWiAYXCRSma2z8TEd9KkuzM2RU0TPGto8szQMm3m/3VryZs918q+z0c9tz7deQ0l0SJ49z44WcFbLVH7//AQCVpxoAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747148115; c=relaxed/simple;
-	bh=xF0FR3rPcOBGp88yQz2/gAEWMOvIBDpTeMGj3UrPZoc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GNMInxchZ5Cj6np9ZlmQQiCv6YYLQxSqwJvQhTg9WUw3/PVBxt3CFNi6WfZ8aLBjXpferrCAKMl7k6nb9lzEau1rRLmsRH6ssyt8+yLiXFBr4pxmB/Dai3PXWKdGn+CEhNifXa3iKPcfH+7dEAfSCJ4+tSd6F9RdqtsCM2+HOZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=zr7WqQ6v; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1747148127; c=relaxed/simple;
+	bh=Pyya90VltnrLC0B716Je0xNS94BZ+Qszup8DumxnMIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pCWmDZ4Y3633emJSldlVdM3IfZ514n8XrGCgWlf7JtI2WrbsYrHt/2w2at4yJ7KUAueF/si4D3PR8aaMw5I14f4jZPmr38YXD0OAT05Yyb5PIjEx+oPA3vy2yz8HHGwoWpe86sPdFWfXAFAcmcEXUs6e4jQUrdlxndX1gIsvXNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1zlyvKX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="zr7WqQ6v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1747147803;
-	bh=vBwPAS74bANjhaoHDiOSBCA9pMoLahUbwD6Y8CSTj64=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=zr7WqQ6vLFpyChvw7pDqeJaKGgmQdsWXKIpBq9BJoHvQDYkX1++U7xYKmEoRU4l0R
-	 ORzm+aEIE4T6CIVdeG7PBC2hj05r45S0eIindIO0YAMNvd4KyUovPbpuBVNr91phJQ
-	 nDnDTkZpuYdLTWPF4pi8rdFs+6u2n7NnuC8QwJFE=
-Received: from [192.168.3.9] ([221.200.22.204])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id C7BB22AA; Tue, 13 May 2025 22:49:59 +0800
-X-QQ-mid: xmsmtpt1747147799tw9xxxoiy
-Message-ID: <tencent_8AACB6DF7CFB7A9826455C093C0903B15207@qq.com>
-X-QQ-XMAILINFO: OIJV+wUmQOUAf2UFzEHsFZSYYq4PEi+fUZaybgZnx8ZUEF9jFksjOdQTSAf1Ig
-	 WRj7hd9aqX6VeNnen9UmrJOnrqGPuOZ9D1bXwIdM/1O0GEiSVndKRLE+bAPLd5xK/rLM37gb0uH7
-	 Xgk4uo3jDZl/DoqXK7sCPCJ9giUCAwi7ASHybmn4K/AUt4IKNq0SfF33lFRxLEO8Cs8XTC691mht
-	 bTwTtBMLbcmo0zu2WLEL+Uwz/KQrwA1+DjRRTV0uPkKSLd2EDXxr5qdGO3BpUzVg0qO+smbhYZUn
-	 hupDAxGHtGZ1wl3PB2VFBFnsbnvQIzbi9t/txyknnl1J7gJ8PHcl54OyY22lrzuLvgnNViByfEax
-	 1tWIIAqgQAJnWXSZ9NV4KFxoJUn2BLiIWyCHPuADj4sO/9IknAXtAss+94xMDkZmQogK2OqhhDau
-	 hVo5O6ZvR0iKBGdHMx7Pb1l/1rxBlEjRZPr1DgNVHOrncC8OxafOVtGM+GKINDpPCDCQ6B8bMYKL
-	 c+yLCUoh0YpS2DxJRZ/J0H/xLoyv+ioo79K3uM3WzaI22Sbmm510vwZMMPebKuutCctEQXNDjyxK
-	 NPQZvC/kWxxTd/twih84iuEo210v9khUWzDEUX/p/UViVUHGAcxEEvpgyBQRAVjqgiOo4pTz4EwV
-	 ApNo1sysQw8Gne8U5+VD0nxIbGpANqZ/9RlhL8fN3HMN5cT0lTNuykHoTRH/N091lIqcHXiEHKCI
-	 H0yJHSNeYXQn934qHif7MV2TqdONEEhApa+1edI/TiHaLAvt41afonpBvvbTWNS/BV/uJgHGzSvn
-	 B0WLdDgvtgw2ras0QFn3wv52nfQYbrKAbfZjMCluGifIXlDqFIaEo2rBqQAJMjOIIpkLMPqO/Rzi
-	 MDlE85HjjdmK+1vU0jffUiNX23VefUULmEcmbb2PPn7WTGm0H3XuJk3Z9chbnRy0YlczyeuBlgaF
-	 7y9wC6prmFKUOjWxLDxl4SxufDl8Wi
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-OQ-MSGID: <8b8d4368-286b-4f2a-a189-22591a99d1cb@foxmail.com>
-Date: Tue, 13 May 2025 22:49:59 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1zlyvKX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42CFFC4CEE4;
+	Tue, 13 May 2025 14:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747148127;
+	bh=Pyya90VltnrLC0B716Je0xNS94BZ+Qszup8DumxnMIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W1zlyvKXRzhR/IYM6vzjs+fbY48Hz5qdZLLSGgn1TqDTYUSFAHLY4V2aRDfsvHNMG
+	 1ijUBTgtLiLnN7rL5KOU35SPi7cQuWH4h0dACKBFvjFMEZTmWasw8xyRuXEqU4c8l8
+	 Zm6Hwz8MJCbnAp8eaZOikKOee9bJvCjrfDhLXAYRlzQE0vHNw10LVeWqr+l2kac7tO
+	 AvX7AUuctKzSx09inTCdGRADssuXh9xlbNLM1y6kSMmGjqZ8flLDsONOjfEDxIHQyN
+	 9iLdR+oSooj7u+aYc2iJHrMmeALQXLIbjTQ4cK/VLyPajrf51dUT8LxpkAdrb5U0EL
+	 bLow5fI/yl3GA==
+Date: Tue, 13 May 2025 15:55:20 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+Cc: Michael Tretter <m.tretter@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Gaosheng Cui <cuigaosheng1@huawei.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+	Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH 3/5] dt-bindings: media: allegrodvt: add decoder
+ dt-bindings for Gen3 IP
+Message-ID: <20250513-earache-cesspool-6d08e2cfb73a@spud>
+References: <20250513083609.328422-1-yassine.ouaissa@allegrodvt.com>
+ <20250513083609.328422-4-yassine.ouaissa@allegrodvt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
- diffing object files
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>,
- live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
- Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
- Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
- Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
-Content-Language: en-US
-From: laokz <laokz@foxmail.com>
-In-Reply-To: <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2i/8aIx86r3PFwP0"
+Content-Disposition: inline
+In-Reply-To: <20250513083609.328422-4-yassine.ouaissa@allegrodvt.com>
 
-On 5/10/2025 4:17 AM, Josh Poimboeuf wrote:
+
+--2i/8aIx86r3PFwP0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 13, 2025 at 10:35:48AM +0200, Yassine Ouaissa wrote:
+> Add compatible for video decoder on allegrodvt Gen 3 IP.
+>=20
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+> ---
+>  .../bindings/media/allegrodvt,al300-vdec.yaml | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allegrodvt,al=
+300-vdec.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/allegrodvt,al300-vde=
+c.yaml b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> new file mode 100644
+> index 000000000000..4218892d6950
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/allegrodvt,al300-vdec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#define sym_for_each_reloc(elf, sym, reloc)				\
-> +	for (reloc = find_reloc_by_dest_range(elf, sym->sec,		\
-> +					      sym->offset, sym->len);	\
-> +	     reloc && reloc_offset(reloc) <  sym->offset + sym->len;	\
-> +	     reloc = rsec_next_reloc(sym->sec->rsec, reloc))
+> +title: Allegro DVT Video IP Decoder Gen 3
+> +
+> +maintainers:
+> +  - Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
+> +
+> +description:
+> +  The al300-vdec represents the latest generation of Allegro DVT IP deco=
+ding
+> +  technology, offering significant advancements over its predecessors.
+> +  This new decoder features enhanced processing capabilities with improv=
+ed
+> +  throughput and reduced latency.
+> +
+> +  Communication between the host driver software and the MCU is implemen=
+ted
+> +  through a specialized mailbox interface mechanism. This mailbox system
+> +  provides a structured channel for exchanging commands, parameters, and
+> +  status information between the host CPU and the MCU controlling the co=
+dec
+> +  engines.
+> +
+> +properties:
+> +  compatible:
+> +    const: allegrodvt,al300-vdec
 
-This macro intents to walk through ALL relocations for the 'sym'. It 
-seems we have the assumption that, there is at most one single 
-relocation for the same offset and find_reloc_by_dest_range only needs 
-to do 'less than' offset comparison:
+Other than the vendor prefix, this looks mostly okay - from the
+perspective of someone unaware of this type of this device.
+Just some minor comments from me.
 
-	elf_hash_for_each_possible(reloc, reloc, hash,
-				   sec_offset_hash(rsec, o)) {
-		if (reloc->sec != rsec)
-			continue;
-		if (reloc_offset(reloc) >= offset &&
-		    reloc_offset(reloc) < offset + len) {
-less than ==>		if (!r || reloc_offset(reloc) < reloc_offset(r))
-					r = reloc;
+> +
+> +  reg:
+> +    items:
+> +      - description: The registers
 
-Because if there were multiple relocations for the same offset, the 
-returned one would be the last one in section entry order(hash list has 
-reverse order against section order), then broken the intention.
+The registers for what exactly?
 
-Right?
+> +      - description: the MCU APB register
 
-Thanks,
-laokz
+0x80000 is rather a large space for a single register!
 
+> +
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: apb
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: MCU clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mcu_clk
+
+s/_clk//, since that part is obvious.
+
+> +
+> +  memory-region:
+> +    maxItems: 1
+> +
+> +  firmware-name:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: False
+> +
+> +examples:
+> +  - |
+> +    axi {
+> +        #address-cells =3D <2>;
+> +        #size-cells =3D <2>;
+> +
+> +        ald300@a0120000 {
+
+The standard node name here I believe is "video-decoder".
+
+> +            compatible =3D "allegrodvt,al300-vdec";
+> +            reg =3D <0 0xa0120000 0 0x10000>,
+> +                  <1 0x80000000 0 0x80000>;
+
+Please keep things consistently in hex here please.
+
+> +            reg-names =3D "regs", "apb";
+> +            interrupts =3D <0 96 4>;
+
+If this is 3 different interrupts, format as "<0>, <96>, <4>".
+Otherwise, consider importing whatever header provides definitions for
+these things.
+
+> +            clocks =3D <&mcu_clock_dec>;
+> +            clock-names =3D "mcu_clk";
+> +            firmware-name =3D "al300_vdec.fw";
+> +        };
+> +    };
+> +
+> +...
+> --=20
+> 2.30.2
+>=20
+
+--2i/8aIx86r3PFwP0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCNdWAAKCRB4tDGHoIJi
+0pMqAQCxvmLsenCJpwac0iKVtQVMEpWT6ORRwFiX8dorea9EdwEAma4QR2QByMgU
+6q2ezL9VUKNRkqw2Ug7xP+MFydgZUAM=
+=55nJ
+-----END PGP SIGNATURE-----
+
+--2i/8aIx86r3PFwP0--
