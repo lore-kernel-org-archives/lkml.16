@@ -1,222 +1,345 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4239A14F70
-	for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 17:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2F114F70;
+	Tue, 13 May 2025 17:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747158448; cv=none; b=oHqP7Lx4AXXOApwc5hzysZClrIx8JZLXAHfsbApRUlYWhmXzauRFrKftAO16qgjOjui07Gi91NpwSyjJkfLjioWqL4Ope6Th1VowLDKPEGuuh0iz6knA0al3J9G3NJL7G5kkv/Y8GvNfDfC3MnwLhP7x6TbTebFA36JqhnYNvZk=
+	t=1747158507; cv=none; b=jnH2kS+ieP3R19OUT3s3K30/QQToqYfX9bpsa0W3wMVZspi6Wj436COb+7OM9Tvb03K+X7Y9xdnHw2txaXVu1PTZ6uJCWA1+bYuo0nx4BbYxayq1x/rLUiLY23uf0bVTWICbDIa0I6uMKqF85T2CwJPQNkQq2a/wQNAjT9Eqtq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747158448; c=relaxed/simple;
-	bh=VsYavGNsEkHJxAbGXotgGBBtjHEq8v/B0o05ULr5pXU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=irUMEQV8PD7BAAw+HkSUiIz61ffWlMnIfh7ZHId5G9MftErB2lw2+q/YmNOxqbuLp6yFKfG+MCJkwBAY8AP+MDoAYgnSveKvODgysWfQOyuXp6m1ctAcZ8+GacXidlgO0AGKNfv2cm8Xc5VEfjcvc6fKzet0UuTnjKk6hEJ3UiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1867B14BF;
-	Tue, 13 May 2025 10:47:13 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 52CB63F63F;
-	Tue, 13 May 2025 10:47:22 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: gregkh@linuxfoundation.org,
-	arve@android.com,
-	tkjos@android.com,
-	maco@android.com,
-	joel@joelfernandes.org,
-	brauner@kernel.org,
-	mllamas@google.com,
-	surenb@google.com
-Cc: linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	Yeoreum Yun <yeoreun.yun@arm.com>,
-	Yunseong Kim <ysk@kzalloc.com>
-Subject: [PATCH] driver/android/binderfs: fix race for binderfs' devices list
-Date: Tue, 13 May 2025 18:47:19 +0100
-Message-Id: <20250513174719.3096063-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747158507; c=relaxed/simple;
+	bh=KCfVrXdf4OfEkcBnxFVlnMqXF4j1TxdUVc3t+4kDFkY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=glXK2lv6j4z3KpYZoCgnLmycAqTvAfA4tnTFfgp2XLLa6KpSlrsuqQcER1JCuc3pnHhERioy78/i/vpMqv8swb3nGtsg7fCNZ92v0HgOFe/6ev5lFuO0DJt+/YEa+JIg1PXKQ2fd1HikZivqlvt7dFsZokSphbryrZyaZDzYKcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3ndhZtl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3ndhZtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3298EC4CEE4;
+	Tue, 13 May 2025 17:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747158506;
+	bh=KCfVrXdf4OfEkcBnxFVlnMqXF4j1TxdUVc3t+4kDFkY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=F3ndhZtlJ1YJCLKsx1Ie35HzbawaXUdz6KOGDBokKRCZ7NFzw/HVP0OrWBSa7DlWR
+	 yAx3b57960bevAV8BXTfGE6xEB5zjSruCx2ay1HI8GM/ssRy6RG1OTMGThTMivCdX2
+	 TMUoqosyl3RNonxGig/R3ZMVdXmidA/YGTWjwv7evuXQzohIHEbp+gsJ9YNZaFdvQ2
+	 /Z0jaHsEp4GiNNC9hiKtGHeYZpxEYGYX9oSf4zCCMFHpzUBOHLCZYrkrKbMQUAeauo
+	 55nVuULfokGhzybP3Ba/YZdef4SjQIVePTtWs/wgtcSgXsfdt3Nxl6obv7jFeuCYeh
+	 /0Pdn4t4c8I3Q==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: [PATCH v4 00/26] Arm GICv5: Host driver implementation
+Date: Tue, 13 May 2025 19:47:53 +0200
+Message-Id: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMqFI2gC/23QQQ6CMBAF0KuYrq1ph7aCK+9hXACdQqOh2mKjI
+ dzdgiZKdPkneT/5M5CA3mIgu9VAPEYbrOtSEOsVqduya5BanTIBBpIJltPG1lHS1oWebkVhMq5
+ Kg7kgCVw8Gnufyw7HlFsbeucfc3fk0/VvTeSUUW5A6UooaXK9P6Hv8LxxviFTT4QvC2JhIVkpJ
+ Oq6NIxD9WOzj5VMLWyWrEKtZVmA0axY2PE1yOP1lp7Sv1eN4xPZz6CJMgEAAA==
+X-Change-ID: 20250408-gicv5-host-749f316afe84
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.14.2
 
-binderfs' devices list is global list and can be accesed by multi-thread
-while unmount binder device.
-Since there is no proper locking, it can meet datarace problem.
-for example it's one of case reported UAF while binderfs_evict_inode()
-removes binder device:
+Implement the irqchip kernel driver for the Arm GICv5 architecture,
+as described in the GICv5 beta0 specification, available at:
 
-sudo ./stress-ng --binderfs 8 --binderfs-ops 10000 -t 15 \
-  --pathological --timestamp --tz --syslog --perf --no-rand-seed \
-  --times --metrics --klog-check --status 5 -x smi -v --interrupts --change-cpu
+https://developer.arm.com/documentation/aes0070
 
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492292] '=================================================================='
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492301] 'BUG: KASAN: slab-use-after-free in binderfs_evict_inode+0x32c/0x338'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492309] 'Write of size 8 at addr ffff0000e48c3c08 by task stress-ng-binde/2960'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492312] ''
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492315] 'CPU: 7 UID: 0 PID: 2960 Comm: stress-ng-binde Not tainted 6.15.0-rc6+ #12 PREEMPT(full) '
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492319] 'Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492321] 'Call trace:'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492322] ' show_stack+0x40/0xa8 (C)'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492327] ' dump_stack_lvl+0xd4/0x130'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492330] ' print_report+0x164/0x550'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492334] ' kasan_report+0xbc/0x1c8'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492339] ' __asan_report_store8_noabort+0x24/0x50'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492343] ' binderfs_evict_inode+0x32c/0x338'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492348] ' evict+0x2c4/0x6e0'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492351] ' iput+0x408/0x748'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492354] ' dentry_unlink_inode+0x268/0x520'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492358] ' __dentry_kill+0x17c/0x5c8'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492362] ' shrink_dentry_list+0x154/0x548'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492366] ' shrink_dcache_parent+0x16c/0x508'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492370] ' shrink_dcache_for_umount+0x9c/0x378'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492375] ' generic_shutdown_super+0x74/0x428'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492380] ' kill_litter_super+0x84/0xe8'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492384] ' binderfs_kill_super+0x48/0xc8'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492389] ' deactivate_locked_super+0xc0/0x200'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492393] ' deactivate_super+0x10c/0x160'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492398] ' cleanup_mnt+0x1ac/0x3a8'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492402] ' __cleanup_mnt+0x2c/0x58'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492407] ' task_work_run+0x14c/0x280'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492411] ' do_notify_resume+0x24c/0x2e0'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492415] ' el0_svc+0x13c/0x150'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492420] ' el0t_64_sync_handler+0x134/0x160'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492425] ' el0t_64_sync+0x1b8/0x1c0'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492428] ''
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492428] 'Allocated by task 2961:'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492430] ' kasan_save_stack+0x40/0x80'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492434] ' kasan_save_track+0x24/0x58'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492437] ' kasan_save_alloc_info+0x44/0x88'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492441] ' __kasan_kmalloc+0x108/0x110'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492444] ' __kmalloc_cache_noprof+0x18c/0x408'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492448] ' binderfs_binder_device_create.isra.0+0x1c4/0xce0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492452] ' binder_ctl_ioctl+0x36c/0x4f0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492456] ' __arm64_sys_ioctl+0x174/0x1c8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492459] ' invoke_syscall+0xec/0x2b0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492461] ' el0_svc_common.constprop.0+0x1ec/0x280'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492464] ' do_el0_svc+0x50/0x90'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492466] ' el0_svc+0x58/0x150'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492469] ' el0t_64_sync_handler+0x134/0x160'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492473] ' el0t_64_sync+0x1b8/0x1c0'
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492475] ''
-stress-ng: 19:36:34.39 error: [2957] klog-check: error: [113.492476] 'Freed by task 2961:'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492478] ' kasan_save_stack+0x40/0x80'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492481] ' kasan_save_track+0x24/0x58'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492484] ' kasan_save_free_info+0x50/0xb8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492488] ' __kasan_slab_free+0x70/0xc0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492492] ' kfree+0x144/0x478'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492494] ' binderfs_evict_inode+0x228/0x338'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492498] ' evict+0x2c4/0x6e0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492500] ' iput+0x408/0x748'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492502] ' dentry_unlink_inode+0x268/0x520'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492505] ' __dentry_kill+0x17c/0x5c8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492509] ' shrink_dentry_list+0x154/0x548'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492512] ' shrink_dcache_parent+0x16c/0x508'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492516] ' shrink_dcache_for_umount+0x9c/0x378'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492520] ' generic_shutdown_super+0x74/0x428'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492524] ' kill_litter_super+0x84/0xe8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492528] ' binderfs_kill_super+0x48/0xc8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492532] ' deactivate_locked_super+0xc0/0x200'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492536] ' deactivate_super+0x10c/0x160'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492540] ' cleanup_mnt+0x1ac/0x3a8'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492544] ' __cleanup_mnt+0x2c/0x58'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492547] ' task_work_run+0x14c/0x280'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492551] ' do_notify_resume+0x24c/0x2e0'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492554] ' el0_svc+0x13c/0x150'
-stress-ng: 19:36:34.39 info:  [2957] klog-check: warning: [113.492558] ' el0t_64_sync_handler+0x134/0x160'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492561] ' el0t_64_sync+0x1b8/0x1c0'
-stress-ng: 19:36:34.40 error: [2957] klog-check: error: [113.492564] ''
-stress-ng: 19:36:34.40 error: [2957] klog-check: error: [113.492564] 'The buggy address belongs to the object at ffff0000e48c3c00\x0a which belongs to the cache kmalloc-rnd-14-512 of size 512'
-stress-ng: 19:36:34.40 error: [2957] klog-check: error: [113.492567] 'The buggy address is located 8 bytes inside of\x0a freed 512-byte region [ffff0000e48c3c00, ffff0000e48c3e00)'
-stress-ng: 19:36:34.40 error: [2957] klog-check: error: [113.492569] ''
-stress-ng: 19:36:34.40 error: [2957] klog-check: error: [113.492570] 'The buggy address belongs to the physical page:'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492572] 'page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1248c0'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492575] 'head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492577] 'flags: 0x17fffc000000040(head|node=0|zone=2|lastcpupid=0x1ffff)'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492580] 'page_type: f5(slab)'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492583] 'raw: 017fffc000000040 ffff0000c001d540 dead000000000122 0000000000000000'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492586] 'raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492588] 'head: 017fffc000000040 ffff0000c001d540 dead000000000122 0000000000000000'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492591] 'head: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492593] 'head: 017fffc000000003 fffffdffc3923001 00000000ffffffff 00000000ffffffff'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492596] 'head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008'
-stress-ng: 19:36:34.40 info:  [2957] klog-check: warning: [113.492597] 'page dumped because: kasan: bad access detected'
+The GICv5 architecture is composed of multiple components:
 
-To resolve this, add proper locking for binder_devices hlist.
+- one or more IRS (Interrupt Routing Service)
+- zero or more ITS (Interrupt Translation Service)
+- zero or more IWB (Interrupt Wire Bridge)
 
-Signed-off-by: Yeoreum Yun <yeoreun.yun@arm.com>
-Reported-by: Yunseong Kim <ysk@kzalloc.com>
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+The GICv5 host kernel driver is organized into units corresponding
+to GICv5 components.
+
+The GICv5 architecture defines the following interrupt types:
+
+- PPI (PE-Private Peripheral Interrupt)
+- SPI (Shared Peripheral Interrupt)
+- LPI (Logical Peripheral Interrupt)
+
+This series adds sysreg entries required to automatically generate
+GICv5 registers handling code, one patch per-register.
+
+This patch series is split into patches matching *logical* entities,
+to make the review easier.
+
+Logical entities:
+
+- PPI
+- IRS/SPI
+- LPI/IPI
+- SMP enablement
+- ITS
+
+The salient points of the driver are summarized below.
+
+=============
+1. Testing
+=============
+
+Patchset tested with an architecturally compliant FVP model with
+the following setup:
+
+- 1 IRS
+- 1 and 2 ITSes
+- 1 and 2 IWBs
+
+configured with different parameters that vary the IRS(IST) and
+ITS(DT/ITT) table levels and INTID/DEVICEID/EVENTID bits.
+
+A Trusted-Firmware (TF-A) prototype was used for device tree
+bindings and component initializations.
+
+================
+2. Driver design
+================
+
+=====================
+2.1 GICv5 DT bindings
+=====================
+
+The DT bindings attempt to map directly to the GICv5 component
+hierarchy, with a top level node corresponding to the GICv5 "system",
+having IRS child nodes, that have in turn ITS child nodes.
+
+The IWB is defined in a separate schema; its relationship with the ITS
+is explicit through the msi-parent property required to define the IWB
+deviceID.
+
+===================
+2.2 GICv5 top level
+===================
+
+The top-level GICv5 irqchip driver implements separate IRQ
+domains - one for each interrupt type, PPI (PE-Private Peripheral
+Interrupt), SPI (Shared Peripheral Interrupt) and LPI (Logical
+Peripheral Interrupt).
+
+The top-level exception handler routes the IRQ to the relevant IRQ
+domain for handling according to the interrupt type detected when the
+IRQ is acknowledged.
+
+All IRQs are set to the same priority value.
+
+The driver assumes that the GICv5 components implement enough
+physical address bits to address the full system RAM, as required
+by the architecture; it does not check whether the physical address
+ranges of memory allocated for IRS/ITS tables are within the GICv5
+physical address range.
+
+Components are probed by relying on the early DT irqchip probing
+scheme. The probing is carried out hierarchically, starting from
+the top level.
+
+The IWB driver has been reworked to match an MBIgen like interface,
+that is now being fixed, code fixing it was taken from this branch,
+driver was rebased on top of it:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/msi-prepare-teardown
+
+=============
+2.3 GICv5 IRS
+=============
+
+The GICv5 IRS driver probes and manages SPI interrupts by detecting their
+presence and by providing the top-level driver the information required
+to set up the SPI interrupt domain.
+
+The GICv5 IRS driver also parses from firmware Interrupt AFFinity ID
+(IAFFID) IDs identifying cores and sets up IRS IRQ routing.
+
+The GICv5 IRS driver allocates memory to handle the IRS tables.
+
+The IRS LPI interrupts state is kept in an Interrupt State Table (IST)
+and it is managed through CPU instructions.
+
+The IRS driver allocates the IST table that, depending on available HW
+features can be either 1- or 2-level.
+
+If the IST is 2-level, memory for the level-2 table entries
+is allocated on demand (ie when LPIs are requested), using an IRS
+mechanism to make level-1 entry valid on demand after the IST
+has already been enabled.
+
+Chunks of memory allocated for IST entries can be smaller or larger than
+PAGE_SIZE and are required to be physically contiguous within an IST level
+(i.e. a linear IST is a single memory block, a 2-level IST is made up of a
+block of memory for the L1 table, whose entries point at different L2 tables
+that are in turn allocated as memory chunks).
+
+LPI INTIDs are allocated in software using an IDA. IDA does not support
+allocating ranges, which is a bit cumbersome because this forces us
+to allocate IDs one by one where the LPIs could actually be allocated
+in chunks.
+
+An IDA was chosen because basically it is a dynamic bitmap, which
+carries out memory allocation automatically.
+
+Other drivers/subsystems made different choices to allocate ranges,
+an IDA was chosen since it is part of the core kernel and an IDA
+range API is in the making.
+
+IPIs are implemented using LPIs and a hierarchical domain is created
+specifically for IPIs using the LPI domain as a parent.
+
+arm64 IPI management core code is augmented with a new API to handle
+IPIs that are not per-cpu interrupts and force the affinity of the LPI
+backing an IPI to a specific and immutable value.
+
+=============
+2.4 GICv5 ITS
+=============
+
+The ITS driver reuses the existing GICv3/v4 MSI-parent infrastructure
+and on top builds an IRQ domain needed to enable message based IRQs.
+
+ITS tables - DT (device table) and ITT (Interrupt Translation Table) are
+allocated according to the number of required deviceIDs and eventIDs on
+a per device basis. The ITS driver relies on the kmalloc() interface
+because memory pages must be physically contiguous within a table level
+and can be < or > than PAGE_SIZE.
+
+=============
+2.5 GICv5 IWB
+=============
+
+The IWB driver has been reworked to match an MBIgen like interface,
+that is now being fixed, code fixing it was taken from this branch,
+driver was rebased on top of it:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/msi-prepare-teardown
+
+===================
+3. Acknowledgements
+===================
+
+The patchset was co-developed with T.Hayes and S.Bischoff from
+Arm - thank you so much for your help.
+
+A big thank you to M.Zyngier for his fundamental help/advice.
+
+If you have some time to help us review this series and get it into
+shape, thank you very much.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 ---
- drivers/android/binder.c          | 8 ++++++++
- drivers/android/binder_internal.h | 8 +++++++-
- drivers/android/binderfs.c        | 2 +-
- 3 files changed, 16 insertions(+), 2 deletions(-)
+Changes in v4:
+- Added IWB new driver version based on MBIgen interface
+- Added MSI alloc flag
+- Rebased against git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/msi-prepare-teardown
+- Made more coding style updates to comply with tip-maintainer
+  guidelines
+- Updated PPI type handling
+- Updated devicetree bindings
+- Fixed includecheck warning
+- Link to v3: https://lore.kernel.org/r/20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 5fc2c8ee61b1..6bb06d231a78 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -79,6 +79,7 @@ static HLIST_HEAD(binder_deferred_list);
- static DEFINE_MUTEX(binder_deferred_lock);
+Changes in v3:
+- Reintroduced v1 patch split to simplify review
+- Reworked IRS/ITS iopoll loop, split in atomic/non-atomic
+- Cleaned-up IRS/ITS code with macros addressing review comments
+- Dropped IWB driver waiting for IRQ core code to be fixed for DOMAIN_BUS_WIRED_TO_MSI
+  https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+- Moved headers to arch/arm64 and include/linux/irqchip
+- Reworked GSB barriers definition
+- Added extensive GSB/ISB barriers comments
+- Limited error checking on IRS/ITS code - introduced couple of fatal
+  BUG_ON checks
+- Link to v2: https://lore.kernel.org/r/20250424-gicv5-host-v2-0-545edcaf012b@kernel.org
 
- static HLIST_HEAD(binder_devices);
-+static DEFINE_SPINLOCK(binder_devices_lock);
- static HLIST_HEAD(binder_procs);
- static DEFINE_MUTEX(binder_procs_lock);
+Changes in v2:
+- Squashed patches [18-21] into a single logical entity
+- Replaced maple tree with IDA for LPI IDs allocation
+- Changed coding style to tip-maintainer guidelines
+- Tried to consolidate poll wait mechanism into fewer functions
+- Added comments related to _relaxed accessors, barriers and kmalloc
+  limitations
+- Removed IPI affinity check hotplug callback
+- Applied DT schema changes requested, moved IWB into a separate schema
+- Fixed DT examples
+- Fixed guard() usage
+- Link to v1: https://lore.kernel.org/r/20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org
 
-@@ -6929,9 +6930,16 @@ const struct binder_debugfs_entry binder_debugfs_entries[] = {
+---
+Lorenzo Pieralisi (25):
+      dt-bindings: interrupt-controller: Add Arm GICv5
+      arm64/sysreg: Add GCIE field to ID_AA64PFR2_EL1
+      arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
+      arm64/sysreg: Add ICC_ICSR_EL1
+      arm64/sysreg: Add ICC_PPI_HMR<n>_EL1
+      arm64/sysreg: Add ICC_PPI_ENABLER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}ACTIVER<n>_EL1
+      arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
+      arm64/sysreg: Add ICC_CR0_EL1
+      arm64/sysreg: Add ICC_PCR_EL1
+      arm64/sysreg: Add ICC_IDR0_EL1
+      arm64/sysreg: Add ICH_HFGRTR_EL2
+      arm64/sysreg: Add ICH_HFGWTR_EL2
+      arm64/sysreg: Add ICH_HFGITR_EL2
+      arm64: Disable GICv5 read/write/instruction traps
+      arm64: cpucaps: Rename GICv3 CPU interface capability
+      arm64: cpucaps: Add GICv5 CPU interface (GCIE) capability
+      arm64: Add support for GICv5 GSB barriers
+      irqchip/gic-v5: Add GICv5 PPI support
+      irqchip/gic-v5: Add GICv5 IRS/SPI support
+      irqchip/gic-v5: Add GICv5 LPI/IPI support
+      irqchip/gic-v5: Enable GICv5 SMP booting
+      irqchip/gic-v5: Add GICv5 ITS support
+      irqchip/gic-v5: Add GICv5 IWB support
+      arm64: Kconfig: Enable GICv5
 
- void binder_add_device(struct binder_device *device)
- {
-+	guard(spinlock)(&binder_devices_lock);
- 	hlist_add_head(&device->hlist, &binder_devices);
- }
+Marc Zyngier (1):
+      arm64: smp: Support non-SGIs for IPIs
 
-+void binder_del_device(struct binder_device *device)
-+{
-+	guard(spinlock)(&binder_devices_lock);
-+	hlist_del_init(&device->hlist);
-+}
-+
- static int __init init_binder_device(const char *name)
- {
- 	int ret;
-diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-index 6a66c9769c6c..424b2a6443e5 100644
---- a/drivers/android/binder_internal.h
-+++ b/drivers/android/binder_internal.h
-@@ -584,8 +584,14 @@ struct binder_object {
-  * Add a binder device to binder_devices
-  * @device: the new binder device to add to the global list
-  *
-- * Not reentrant as the list is not protected by any locks
-  */
- void binder_add_device(struct binder_device *device);
+ .../interrupt-controller/arm,gic-v5-iwb.yaml       |   78 ++
+ .../bindings/interrupt-controller/arm,gic-v5.yaml  |  202 ++++
+ MAINTAINERS                                        |   10 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/include/asm/barrier.h                   |    3 +
+ arch/arm64/include/asm/el2_setup.h                 |   45 +
+ arch/arm64/include/asm/smp.h                       |   24 +-
+ arch/arm64/include/asm/sysreg.h                    |   71 +-
+ arch/arm64/kernel/cpufeature.c                     |   17 +-
+ arch/arm64/kernel/smp.c                            |  156 ++-
+ arch/arm64/tools/cpucaps                           |    3 +-
+ arch/arm64/tools/sysreg                            |  495 +++++++-
+ drivers/irqchip/Kconfig                            |   12 +
+ drivers/irqchip/Makefile                           |    5 +-
+ drivers/irqchip/irq-gic-common.h                   |    2 -
+ ...3-its-msi-parent.c => irq-gic-its-msi-parent.c} |    3 +-
+ drivers/irqchip/irq-gic-its-msi-parent.h           |   13 +
+ drivers/irqchip/irq-gic-v3-its.c                   |    3 +-
+ drivers/irqchip/irq-gic-v5-irs.c                   |  818 +++++++++++++
+ drivers/irqchip/irq-gic-v5-its.c                   | 1205 ++++++++++++++++++++
+ drivers/irqchip/irq-gic-v5-iwb.c                   |  285 +++++
+ drivers/irqchip/irq-gic-v5.c                       | 1076 +++++++++++++++++
+ drivers/irqchip/irq-gic.c                          |    2 +-
+ include/asm-generic/msi.h                          |    1 +
+ include/linux/irqchip/arm-gic-v5.h                 |  396 +++++++
+ 25 files changed, 4857 insertions(+), 69 deletions(-)
+---
+base-commit: 7c651847bdce43bd9fdfc4311ccbe271c06968ed
+change-id: 20250408-gicv5-host-749f316afe84
 
-+/**
-+ * Del a binder device from binder_devices
-+ * @device: the binder device to be removed from the global list
-+ *
-+ */
-+void binder_del_device(struct binder_device *device);
-+
- #endif /* _LINUX_BINDER_INTERNAL_H */
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 94c6446604fc..a0779a8338d7 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -274,7 +274,7 @@ static void binderfs_evict_inode(struct inode *inode)
- 	mutex_unlock(&binderfs_minors_mutex);
-
- 	if (refcount_dec_and_test(&device->ref)) {
--		hlist_del_init(&device->hlist);
-+		binder_del_device(device);
- 		kfree(device->context.name);
- 		kfree(device);
- 	}
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Best regards,
+-- 
+Lorenzo Pieralisi <lpieralisi@kernel.org>
 
