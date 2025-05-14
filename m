@@ -1,165 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEEB22D7BF;
-	Wed, 14 May 2025 21:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC600221F25
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747256421; cv=none; b=iz2VJhdom7bTqSQzcLOEyCQVM6End52buKPGgeCmKDJQMCbWSTDZ8KbXMgmLy13oWlJwEB9tm3HVCSVXmCc2xAVlIhXZK9bMH0cRa1ItfwFMHAj4Ww4ag/Ij3mXIB2CPm1HCLwXvg1pBr6MMWOl+FWXFBWWfIzS1NzqaWbX4YDQ=
+	t=1747256521; cv=none; b=XjVWYjtqgO4juz5KZ3IPnwN4yyFF3rxYRc6I1COcsoCOjSBCnyLFtRG+PdEaYKca+//sls5A/JREvx14KTSio1hGiLV3p2wWdDoo2bBNj8+4dUtsIWDrn3RT/Vu4z2Tsum+Y6zQukzIFqqhb3CZNScVuy4s7b6oDSXjVWPqu440=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747256421; c=relaxed/simple;
-	bh=XnznhJhuk6zXlvzmK9mMxFBwsL2VmJ/Mxxl8DajyVUU=;
+	s=arc-20240116; t=1747256521; c=relaxed/simple;
+	bh=7kRcjXDfm6wDX6rNHVswCUa2HG4onyXmUA2idPVePyY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MiiJRjE8BWcurpsHIDqKQ+gtN0MvIY8YSW/xb/1mei5cwW1Z+T57jyLMfP8WoT7/apw1/9YtYCPp3kuxdEXAEWSnnSbPuMFveBwXoltwOiH9iDx452Tbe8axYY1IkdNw1SSb1rqvlT+K5CIReroalprPyLjNaZThZ+3rkgnnuTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2GXJlzz; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BoeyeYKpUI4ri6o+EJMC8cxy638dLnY6YJlsKd3wrCCep4HUM/oiPYGCP6/oVHLNyFO0PQthCH/inSuO8nlBdSc1jQ6cxKfqiOeakC9svuJZf/fPIIIyOGdbBkj4/FaBKKFknUko+Hm1xoonPf/4x345Cyv/jadLC00h9qfE060=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=B/v93FmO; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2GXJlzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CCE9C4CEF4;
-	Wed, 14 May 2025 21:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747256420;
-	bh=XnznhJhuk6zXlvzmK9mMxFBwsL2VmJ/Mxxl8DajyVUU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m2GXJlzzZ3DcMGe5d5vupazK/2jueAV1szn5X3Xil6n/XAMSotwGSaBAGAPY2auE/
-	 IoZwk0Q+M3hxGtA+4RpGGdgi9Bf7BZEMacxhnrapqQVCL3jlbvLnAJtcuKld+l3w1l
-	 aGtTH88W23ZGTLzQggyrcNBcogsBSJ4sHmrygbuTBi14Jv9RILus0vxa7GOfxyLvNU
-	 dU8lSKB2nDExIyHxdpCVMZIxEVLqG30kUBAfxrOKf2b5EOF85oJ6QK1EZAj6DUqoGU
-	 y/V35NsteEa9OWYwQMDK1WTHf+0uBClAa6fHumlR7spVIyDUCyHIm5uyMTVXNxcyB0
-	 V1tuLBBZVJXCA==
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7cd0a7b672bso13526585a.2;
-        Wed, 14 May 2025 14:00:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrLLujAFuof1yLTdUSjkO6wV+3469EjYX6nqLB+KfJus7ib8aapKgse9mzKTwD2WCT+7k=@vger.kernel.org, AJvYcCX8+scPdY06EQkV85B5poxQ7pdzGfg00qTsf/ysyygzlxwYXJiDbETIEcRG71xX63BTiEPI71QLHmUBdVZ1@vger.kernel.org, AJvYcCXRp92JTnvKj+fE3new14x9fUmpjWNNOT/R0X6qDFczckiWsc5nnVcHSSAiN9W14RcuZpDQbHJXM2gGkDI=@vger.kernel.org, AJvYcCXUi8H2AZhLf0uHQBsRAvMrtdrK1MnRf2Bwc2XZJ0g8paeiUm53BEE+NZecAADCRv/Qx+LsE87Yoxk8J57hqoK+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0ip46W8q2J+JoMltY3oWoX+DOoGvGWgyqoxFyUW/umXKX/HIS
-	jzmvVO3dZ90X78tQ+euDWX3ICWWJWwGx7zutbrTYY5Vi5ZIyCzqO128Fo6BdpQPNP2HzUJgXl0/
-	9aVtSJDiqc/F4GEBn6i+TgZUo4O8=
-X-Google-Smtp-Source: AGHT+IEhk7L+lq3nvFFbRnQz3zzW13v/TUfQdGY8T5liXifuEFN1njdktgiHu8lQDra2Hjw2x4vIHEc90h2a4f2wyjU=
-X-Received: by 2002:a05:6214:29ea:b0:6f5:46b0:7d11 with SMTP id
- 6a1803df08f44-6f896eacaa6mr95493576d6.36.1747256418120; Wed, 14 May 2025
- 14:00:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="B/v93FmO"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30ab344a1d8so313085a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747256518; x=1747861318; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OqchgTdHTyjs5ScPdT62o65cQnPzkkTwJlrZ4hmq6Bs=;
+        b=B/v93FmOZ4UnaCNzaDcbFQ5RnL5kfMIR4raNCX6fpJoN1/4d/Ye7H+9rUabfVIQQVp
+         7E+eCb/cLF6HoTiMHzJLoWtk219KpbBBo3LhEAVs1F4P0Ka8PmZcrDXCuVC9b73fN+BO
+         9WbhgC8XyKY4ur3jPtOvmyPBf4l5vmQCGHgWqPlpznaf2VqUBp2nldLmUcsnHYrqdUv9
+         66hTcV1PWD215Yulzf+UAzxRIjEfiSSBer4+fBAWPuEe0QujukgrzbSldki5FVldizpA
+         D9Uc4PsTBFDK/sG0qboYO++v/OteaLJZ5xWrwno9Z8Grji1n1GmcTGkiZ2eN0/1dxzxi
+         yDww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747256518; x=1747861318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OqchgTdHTyjs5ScPdT62o65cQnPzkkTwJlrZ4hmq6Bs=;
+        b=EPKgpi5CP6cz8T485x39yrzAUqmq81KGvQyzFEJAG0WxlGlYttXb48rVrtou4qWPME
+         CtLs0LhO8TVleGg9+1MWWGmyGKhdG6XEt0v3/kcbu2TMSzcYdh6KmyGFD9aTNx9axRPA
+         OrVb+Dq3BJFgJXpjhnK+U49oLrQmnT5fIDtZqQo8OnYSp4MCkfySXNHEnqecSgNbQ31d
+         3ehEqM7r666K7fLE9qzFdXNeBCURi1aRuPAghyyXqEySh1fMyvng0JsAW3hFifkgGqHg
+         z16OEadLddncOs+qYYOFwpzsD0i++arUYFpXlhuWlcOUZqmConNVcwXDJV+SnOI04U+W
+         qu+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVk5PpZmmwMScrMAlYii4ezDiO8mOE+T1Ae4SueY9/H8FNiudRnHqLpuvERMt4KgokEKIPbCfNn29yUS00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzayMiERpJD4y0VzDXdObturs6Bc0fBiJ55TJ+sjQGYznlOE2wD
+	a7Vi0QGbvOziqWDWBU4zRSrLuW5KcOd2mWXxGaQw2MC3NGwSapr3hsV9hr+TECtE2hdDfgJb+k0
+	iLAcmMveqHmeJVAMgOkH1K9c5iwnhL3xmjMFl7w==
+X-Gm-Gg: ASbGncu7XQv0/QaGM2cKfyunGMkx420rizU/39P3MudjwJ6WKgjxdoDhejbrjt21Cmn
+	F03WFi96dQ2mDs6lJ7rse3cwrCRgR9rDQdOUV2BvoFTmZSYCH9xOq2aOmUSEIKQiYXl2E6bwxs5
+	f2Q8dq98UQdatJHcTiCVNIx6OmbsYga5M=
+X-Google-Smtp-Source: AGHT+IGYtWvln6Vge4DD/b8/a37hqJvAAC7E46KvEmNXhfMJrQcWms3WMqWIhs4CNOJ5GERxgioGT+LfF4aLuzg8mgI=
+X-Received: by 2002:a17:90a:d2d0:b0:2ee:f550:3848 with SMTP id
+ 98e67ed59e1d1-30e2e583ee6mr7135070a91.5.1747256518169; Wed, 14 May 2025
+ 14:01:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513163601.812317-1-tjmercier@google.com> <20250513163601.812317-6-tjmercier@google.com>
-In-Reply-To: <20250513163601.812317-6-tjmercier@google.com>
-From: Song Liu <song@kernel.org>
-Date: Wed, 14 May 2025 14:00:06 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW50mA3hhirHBiZ2miBeC0uAN=KxyYKBJ_hHgmFx-cvaNw@mail.gmail.com>
-X-Gm-Features: AX0GCFuntU3ESTAS15kAsHIf6pG-Tbi7KiDkSGJvlMEE3mBjavdb8gFnDOzUmFQ
-Message-ID: <CAPhsuW50mA3hhirHBiZ2miBeC0uAN=KxyYKBJ_hHgmFx-cvaNw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v6 5/5] selftests/bpf: Add test for open coded dmabuf_iter
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com, shuah@kernel.org
+References: <20250513-fix_scounteren_vs-v1-1-c1f52af93c79@rivosinc.com> <CAAhSdy2LbLwRxuFVtMrrcTTD5NCxVCGLy4o=ZUowxT_9DXGqBA@mail.gmail.com>
+In-Reply-To: <CAAhSdy2LbLwRxuFVtMrrcTTD5NCxVCGLy4o=ZUowxT_9DXGqBA@mail.gmail.com>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Wed, 14 May 2025 14:01:46 -0700
+X-Gm-Features: AX0GCFuPU3_CZzMOt6Sp9bohA_uEiLWy733kJmW5xL5q5LKhEWdxzONolY_B8xQ
+Message-ID: <CAHBxVyHXJYDWbfY7FAEBB0S0ZG2+ka6KpWpd7+NO9jhApxav5g@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: KVM: Disable instret/cycle for VU mode by default
+To: Anup Patel <anup@brainfault.org>
+Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 9:36=E2=80=AFAM T.J. Mercier <tjmercier@google.com>=
- wrote:
+On Wed, May 14, 2025 at 3:55=E2=80=AFAM Anup Patel <anup@brainfault.org> wr=
+ote:
 >
-> Use the same test buffers as the traditional iterator and a new BPF map
-> to verify the test buffers can be found with the open coded dmabuf
-> iterator.
+> On Wed, May 14, 2025 at 12:13=E2=80=AFPM Atish Patra <atishp@rivosinc.com=
+> wrote:
+> >
+> > The KVM virtualizes PMU in RISC-V and disables all counter access excep=
+t
+> > TM bit by default vi hstateen CSR. There is no benefit in enabling CY/T=
+M
+> > bits in scounteren for the guest user space as it can't be run without
+> > hcounteren anyways.
+> >
+> > Allow only TM bit which matches the hcounteren default setting.
+> >
+> > Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> > ---
+> >  arch/riscv/kvm/vcpu.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> > index 60d684c76c58..873593bfe610 100644
+> > --- a/arch/riscv/kvm/vcpu.c
+> > +++ b/arch/riscv/kvm/vcpu.c
+> > @@ -146,8 +146,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+> >         if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
+> >                 return -ENOMEM;
+> >
+> > -       /* By default, make CY, TM, and IR counters accessible in VU mo=
+de */
+> > -       reset_csr->scounteren =3D 0x7;
+> > +       /* By default, only TM should be accessible in VU mode */
+> > +       reset_csr->scounteren =3D 0x2;
 >
-> Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Acked-by: Song Liu <song@kernel.org>
-> ---
->  .../testing/selftests/bpf/bpf_experimental.h  |  5 +++
->  .../selftests/bpf/prog_tests/dmabuf_iter.c    | 41 +++++++++++++++++++
->  .../testing/selftests/bpf/progs/dmabuf_iter.c | 38 +++++++++++++++++
->  3 files changed, 84 insertions(+)
+> Let's remove this as well because the Linux SBI PMU driver
+> does initialize scounteren correctly.
 >
-> diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testi=
-ng/selftests/bpf/bpf_experimental.h
-> index 6535c8ae3c46..5e512a1d09d1 100644
-> --- a/tools/testing/selftests/bpf/bpf_experimental.h
-> +++ b/tools/testing/selftests/bpf/bpf_experimental.h
-> @@ -591,4 +591,9 @@ extern int bpf_iter_kmem_cache_new(struct bpf_iter_km=
-em_cache *it) __weak __ksym
->  extern struct kmem_cache *bpf_iter_kmem_cache_next(struct bpf_iter_kmem_=
-cache *it) __weak __ksym;
->  extern void bpf_iter_kmem_cache_destroy(struct bpf_iter_kmem_cache *it) =
-__weak __ksym;
+
+But other guests may not. I thought time should be a basic one that
+should be allowed by default.
+
 >
-> +struct bpf_iter_dmabuf;
-> +extern int bpf_iter_dmabuf_new(struct bpf_iter_dmabuf *it) __weak __ksym=
-;
-> +extern struct dma_buf *bpf_iter_dmabuf_next(struct bpf_iter_dmabuf *it) =
-__weak __ksym;
-> +extern void bpf_iter_dmabuf_destroy(struct bpf_iter_dmabuf *it) __weak _=
-_ksym;
-> +
->  #endif
-> diff --git a/tools/testing/selftests/bpf/prog_tests/dmabuf_iter.c b/tools=
-/testing/selftests/bpf/prog_tests/dmabuf_iter.c
-> index dc740bd0e2bd..6c2b0c3dbcd8 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/dmabuf_iter.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/dmabuf_iter.c
-> @@ -219,14 +219,52 @@ static void subtest_dmabuf_iter_check_default_iter(=
-struct dmabuf_iter *skel)
->         close(iter_fd);
->  }
->
-> +static void subtest_dmabuf_iter_check_open_coded(struct dmabuf_iter *ske=
-l, int map_fd)
-> +{
-> +       LIBBPF_OPTS(bpf_test_run_opts, topts);
-> +       char key[DMA_BUF_NAME_LEN];
-> +       int err, fd;
-> +       bool found;
-> +
-> +       /* No need to attach it, just run it directly */
-> +       fd =3D bpf_program__fd(skel->progs.iter_dmabuf_for_each);
-> +
-> +       err =3D bpf_prog_test_run_opts(fd, &topts);
-> +       if (!ASSERT_OK(err, "test_run_opts err"))
-> +               return;
-> +       if (!ASSERT_OK(topts.retval, "test_run_opts retval"))
-> +               return;
-> +
-> +       if (!ASSERT_OK(bpf_map_get_next_key(map_fd, NULL, key), "get next=
- key"))
-> +               return;
-> +
-> +       do {
-> +               ASSERT_OK(bpf_map_lookup_elem(map_fd, key, &found), "look=
-up");
-> +               ASSERT_TRUE(found, "found test buffer");
-
-This check failed once in the CI, on s390:
-
-Error: #89/3 dmabuf_iter/open_coded
-9309 subtest_dmabuf_iter_check_open_coded:PASS:test_run_opts err 0 nsec
-9310 subtest_dmabuf_iter_check_open_coded:PASS:test_run_opts retval 0 nsec
-9311 subtest_dmabuf_iter_check_open_coded:PASS:get next key 0 nsec
-9312 subtest_dmabuf_iter_check_open_coded:PASS:lookup 0 nsec
-9313 subtest_dmabuf_iter_check_open_coded:FAIL:found test buffer
-unexpected found test buffer: got FALSE
-
-But it passed in the rerun. It is probably a bit flakey. Maybe we need some
-barrier somewhere.
-
-Here is the failure:
-
-https://github.com/kernel-patches/bpf/actions/runs/15002058808/job/42234864=
-754
-
-To see the log, you need to log in GitHub.
-
-Thanks,
-Song
-
-> +       } while (bpf_map_get_next_key(map_fd, key, key));
-> +}
-
-[...]
+> Regards,
+> Anup
