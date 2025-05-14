@@ -1,60 +1,60 @@
 Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCC8219A93
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1444521E0B7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211116; cv=none; b=dS14YIjdtU5gz9tVpeBwkpG5YL9tgFcISZSbjcEqhzdDm/dz0loDh5RNKjRm7PekWQH3qb7uUjUPWcOLUT8JjTGu+zCp7kf7MCMzWqLGTbSLT6GwjOrNN0nCSr2KaDiMFsi+qpG04kSHyaOzE98th1Lxe49bn9oVpyAXSFdPMxc=
+	t=1747211118; cv=none; b=eHWQpLK2vyqjokxBwbnB/5XxkBbBeHTG1mKG75610G2MnCt6g1hfLq6ahJaCDhBP4+rHjalgE3q9aU5p1X7PyDR+/KISfVzLIMi7459/8dc6sgp1SwaqDi7SLEui2JmetGEOSgXOOYIC6K4fnhu5JavroFkU0uoikm6qS/knJVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211116; c=relaxed/simple;
-	bh=uiM6JF5iJm5AA3IbWqccn6aF5CeCQk9Fp9a1aKYnJ5M=;
+	s=arc-20240116; t=1747211118; c=relaxed/simple;
+	bh=VuPsb9OXhGwndn/qTWajYUOCGIqhS428Kk9CJNyTJy0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LHtNDISxSGvBfHXR8jf+5Cv531qRdjez1zZALhfqVr8Kx7FvSOOArsv4VGvoLuG2fZ4InVoKatB4Xzz+/u/TGXXdk0xZp3ZSZV4cJ0fEx+aduml/mH8SsdhbkPN0Ydi0jrCxXKWvpQJMJ+XKDQjFFXeweQgRiWiIobVINh40vzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=aGfC4uLB; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version; b=PSqnBCy9TdpFMPl/TTYGp5cxXMVEQf2BjaLP2fkbSijSyk/wcTaxpXlL8aiVys1sGBucbJRAYmWJdq5JR+8Z86T35ZJ1rnUJvt4bOL/1gH7Buo6g3Rn5yV2CfeYacWfhBdhkkxuWRe0WwCSrHp4dXpOomRjLFYXSR5qy/ojyLA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=aFQul6C5; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="aGfC4uLB"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ede096d73so44978945e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:25:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="aFQul6C5"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso66554285e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1747211113; x=1747815913; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1747211114; x=1747815914; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=APXOpnkKR2dL3UO348/Gsh5gr4ZIHC6LxJe7czOv/OQ=;
-        b=aGfC4uLBO+kz6PsptkrrgZtb1QrVkbKHOsoVdOc3VQS4YCY8iX433LWmwiSIFTMPSm
-         lh6CGqDTyLW5oyFMhZlTPihEF5L536YuMZFBCyIBa2Lpl+p32bZbGIO/EDD+B/NitHyT
-         FRdFoN6/s+hVrouHl250M6+9qupPV9Pz9K5Nk=
+        bh=L2agCRR6IRGaR3EtCVbw6MISEmkDLJru9ZVgwOeM9qk=;
+        b=aFQul6C5qjAFFI3JzW39LeqGtQFAXxYPBD1dE+KenmlhAV2OnvUi3p2YvBe1DyPojd
+         lN199qg0vwp7JOqaAkp1mitPe3q1K3LzLzwQ848uYpjyGXJWD2b6VZF/29UwVe4Z2cEO
+         0Q9IR9B2xzJjhGKNWJkrFnG4tF/mgHJnNiRQk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747211113; x=1747815913;
+        d=1e100.net; s=20230601; t=1747211114; x=1747815914;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=APXOpnkKR2dL3UO348/Gsh5gr4ZIHC6LxJe7czOv/OQ=;
-        b=OOHz12Li1//xLeAdx701YDrrl+zHKwEYNz3NLbLic/igYXArwrxxZGO+Jl5Xje8fXb
-         gYoiKDIwOePqfMuCsyeVkXQJzzhGgLHAoT+jPZQXM13woWquebGvGgW1/TUDa4cVmRy8
-         YYrE4jVYXp86E00R1J8d4Fi1LRHz06EHWsXpd3rIDDhrJTKQeQ2Yp4sY3BWZelLRlTpU
-         LYPHX2LAj0zKJoIF4lW/pU7ofyJwA3M5jBBgOtKzprUv4+hPyMbIlnnXbAsMgKeZP30O
-         +n3H7IK8HQyeYm9PIUBmbynXj4KFHJQfzHbEwjjTm0n+rIgSu2njk2Ab74Rnin7bf/9e
-         zYfA==
-X-Gm-Message-State: AOJu0YyGLe2uP+Wevw9JnUKIw4ggI7ZpYyUs5e1ePbMHErQCnZ6GfRuE
-	9gX+f75wJHXi+yG5FyMgaOwwLI1q00qUUI3IPVoiIImFrgjRBGaHvR6M72GApiRtErtIYd/DrBJ
-	M/+E=
-X-Gm-Gg: ASbGnctNdnvRjbuOnbCZ1XYZlMUzRdOOI70F+Pol4klwP72k6a38W1NZd7q3wdCPXAY
-	Fpax43yv3iCE+TGxqT9IPknrHm3hav+WdbmauY1yGe54emZejRPCoEk3UkcGobnX9sBhcR2ZhPt
-	Iog3NhcrtV44DrrlT84daYegIgRZknmDJUdXRRMMzymjFWrdp3vLv/g1M4ugtRPVQy2PEcy7/Yg
-	CfqXE2ZrSEFIJxaDIj0UY0J/TnKcl+5T+jTbHM31GbUlZjVx+WU/K9Ns50o6/EXhFerC/iNOsjx
-	8BEtKh5fy2QpMcTaL9gD1c60kIvaGHfyI2fk3agqYKbuWPNsnG2Ex1ujn/2ytTcyTxBTwUikW9Z
-	PsQnrBoHeJNFXmO242XNkWXMozyUtseexXCvakeUJPhg=
-X-Google-Smtp-Source: AGHT+IFPJ0BA1CsQj8STL33YJFdXEivrOIUNuDI5cLI9H+T44prBBCXb/RtByLVzJ5qOgclAySopgQ==
-X-Received: by 2002:a05:600c:a378:b0:43c:f050:fed3 with SMTP id 5b1f17b1804b1-442f20d9d37mr19135815e9.11.1747211112873;
-        Wed, 14 May 2025 01:25:12 -0700 (PDT)
+        bh=L2agCRR6IRGaR3EtCVbw6MISEmkDLJru9ZVgwOeM9qk=;
+        b=sIrTNBJC4oEhRI8qo2CXjw17m167OhQFz59uG1zjqDaoLNmnPI4CfDaBRACc3enpQJ
+         QxU+VtCh45YEFJlMGUwkVsy4N/bC74BQCKdIxW1DZNNyMhH+fUGORc5tTlrbBI6hlGq2
+         Y8ePlC8i6Hq4TwOP8dQYSmtEFGzex4Wnhdn/NwQl5QERXbe+RF3OWQ6w9CxkZWkyT2s1
+         4B1o3OtvUnTbxUOIwPDchRb4wHUeECZXlaEh6ZYD7tghTUiOzMB/UOXq2SQUQU0kweMZ
+         R7aepD4qTj/xgXpXkSGpZVP73n6KwVZIYJK1zX02XFB1qN2vR2BT3GayU2VCIaienn1Q
+         StPw==
+X-Gm-Message-State: AOJu0YyUMCv8Cmm3mVsObjXIiV6MvQUEDZkmm8gcfpF0v7I9RnCzp2F6
+	PyjqqPwcba9yeauv/mSw2z8fMJW2FcVnZEbUhfwPbdthNzdwgZqBmiSgGn+vjDuM86kgCGbfDSL
+	5KJA=
+X-Gm-Gg: ASbGncvhbyMHh4kTh2GCPZfAs5cFcCQcANgVl2UUWWbyX8Kmewx1MX6Cq8YYnjCO/oW
+	3QPlWFr7uQEr8SBQV9XIFHWmjlU6qs6IPaUNu/rckWeLGV5YRYI/kNcHn7xEwuo9tN+Msfv6vLw
+	6FlpbH+I5+g5pmZ2xIG0Oga3WKwVJn+YJN1vn+xTc/t2w5f+ljxwHH3h1bF9mJbztXgGuAJC1+3
+	cMP91+qxlbnAfs+TtunNrgN6Nm8oNkTWdG0AJilphDikLCrZS44gI7jSrOoOQKAYUHo0KsunXJn
+	U+abgvG9OrZCgIb9pJhEsqaZip8NZ7iMdwA7VMtsxpFqfAN/kLYunnC7m4XatgvwFeKCs20Cd+r
+	zQuOIKIXBVAla8xVxQdLctlL6PPuw2Md2XtRbu1gpoow=
+X-Google-Smtp-Source: AGHT+IHVtazkKOvjOJrOfm04DNRArnB952epM/1Ur7L3bzWPScmWVjAQPWu02+n0E7WC/TG7fAuzAQ==
+X-Received: by 2002:a05:600c:34cf:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-442f21683cemr21843635e9.20.1747211114278;
+        Wed, 14 May 2025 01:25:14 -0700 (PDT)
 Received: from dario-ThinkPad-T14s-Gen-2i.client.m3-hotspots.de ([46.189.28.43])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebda7d2csm30987365e9.3.2025.05.14.01.25.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebda7d2csm30987365e9.3.2025.05.14.01.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 01:25:12 -0700 (PDT)
+        Wed, 14 May 2025 01:25:13 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: Simon Holesch <simon.holesch@bshg.com>,
@@ -73,9 +73,9 @@ Cc: Simon Holesch <simon.holesch@bshg.com>,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/9] arm64: dts: imx8mn-bsh-smm-s2-common: Define suspend voltage threshold
-Date: Wed, 14 May 2025 10:24:55 +0200
-Message-ID: <20250514082507.1983849-2-dario.binacchi@amarulasolutions.com>
+Subject: [PATCH 2/9] arm64: dts: imx8mn-bsh-smm-s2-common: Leave regulator under hw state machine
+Date: Wed, 14 May 2025 10:24:56 +0200
+Message-ID: <20250514082507.1983849-3-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
 References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
@@ -89,44 +89,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Michael Trimarchi <michael@amarulasolutions.com>
 
-Voltage threshold should be adjust according to the worst case.
+Let regulator to be controlled by hardware state machine.
 
 Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 ---
 
- .../boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi  | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-index bbb07c650da9..5a1ec2f6a552 100644
+index 5a1ec2f6a552..0d343ffdb7f9 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-@@ -105,6 +105,12 @@ buck1_reg: BUCK1 {
+@@ -144,6 +144,7 @@ buck4_reg: BUCK4 {
+ 				regulator-max-microvolt = <3300000>;
  				regulator-boot-on;
  				regulator-always-on;
- 				regulator-ramp-delay = <1250>;
-+
-+				/* enable autosuspend threshold */
-+				rohm,dvs-run-voltage = <850000>;
-+				rohm,dvs-idle-voltage = <850000>;
-+				rohm,dvs-suspend-voltage = <850000>;
 +				rohm,no-regulator-enable-control;
  			};
  
- 			buck2_reg: BUCK2 {
-@@ -115,6 +121,11 @@ buck2_reg: BUCK2 {
+ 			buck5_reg: BUCK5 {
+@@ -153,6 +154,7 @@ buck5_reg: BUCK5 {
+ 				regulator-max-microvolt = <1995000>;
  				regulator-boot-on;
  				regulator-always-on;
- 				regulator-ramp-delay = <1250>;
-+
-+				/* enable autosuspend threshold */
-+				rohm,dvs-run-voltage = <960000>;
-+				rohm,dvs-idle-voltage = <860000>;
 +				rohm,no-regulator-enable-control;
  			};
  
- 			buck3_reg: BUCK3 {
+ 			buck6_reg: BUCK6 {
+@@ -162,6 +164,7 @@ buck6_reg: BUCK6 {
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
++				rohm,no-regulator-enable-control;
+ 			};
+ 
+ 			ldo1_reg: LDO1 {
 -- 
 2.43.0
 
