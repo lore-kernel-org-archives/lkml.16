@@ -1,67 +1,95 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A60272E65;
-	Wed, 14 May 2025 10:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C3F270ECD;
+	Wed, 14 May 2025 10:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220275; cv=none; b=sfWp60OJcTTd6ggSKypq0Q9GoVJv25BvWf9Wn5GGtO4LBZ+pwYin03hb091Qj0Ee+vsHW9ma3W8lxqy1wQTrgvZRIdr1Hgj7eYxwRG+xSpHvHBXBj0jcMxPBEwPeIPKr/Z9Acg83HdreG5VlMP/LQ9hTlp7T8uSd4qi+qd8Hp3U=
+	t=1747220309; cv=none; b=mNiNCYu7BLScDMJK1cK4RwmD+RTGPN6RhTxzS32itKjw/qo7jncSdl2SdlZnu6O/sxWGoyAj+AojUbIcukjqiXQSjxuYqfmqgpQi+b8gMwecWK+FyRsHVFfUFbD17aHDl/O+/6O0lskBz5FqXcGK7s6zv7kdhbqNlfEi6R0OuJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220275; c=relaxed/simple;
-	bh=EtTDuzZtRgjnMS6W217d5y+YKypcFEPFOMPh6xeQARU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PEMszpHzfOKoYes1X1lEMhrgIex2zCqswrAM+Tc1E00BrXdXo/KezF259V9dYPGQ4TgWoZQgHQ6cZujn/1JEO/xnyJwW96QqchsiaWDXHXLfw0qobqZ2jqB0BwT6Y7B+9kZDa0v7zT022r4m0nwTpf6KwYsZZAYlWNfHtFFRGIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=OUjQoCVK; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1747220309; c=relaxed/simple;
+	bh=RUNW4w9FVJL1+Usey6e+ojTSS/JUX+Bi29r9OQXiPAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C6rohjKt+ucOq0+j8gxrJ/ggvu+Z3KCQM/KE7bbgeOG9kqs2rWrMdXskNHfPyhRGQTFIXQQOfHG/OgUE8e+ry+3cNk/NyLHDdxnAQQFOCjEOG3uwrtilkcNPAiavwkFBSMxRo5XFTujBU7m+UeYNd4wZnHVPmmEjMjqmlmZf1sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PT30+mGw; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OUjQoCVK"
-X-UUID: 44b1027e30b211f0813e4fe1310efc19-20250514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+cKQ+3lzotKN4mEFBqwaY+q0XUCpuo5fqL038dEMJqM=;
-	b=OUjQoCVKVhCGzCLhJcgL7BRZRTKpH4nTi2seRUJ7nssgmT4h21mE+ua6IrolWoH0qBoSxrprtqwmNH85IDyXy9DLE4w/F/7jD60Wp/9fuvNKixpvEZqvFzDUhOItGZuNHfH57TzD/mxHhu8NX6vzFcXRNM40IlARW0EPT7qPT6Q=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:7adaa7a9-e7ca-494a-a1f3-46aa2919e144,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:ea73fabf-eade-4d5b-9f81-31d7b5452436,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 44b1027e30b211f0813e4fe1310efc19-20250514
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 8711607; Wed, 14 May 2025 18:57:46 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 14 May 2025 18:57:43 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 14 May 2025 18:57:43 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	balika011 <balika011@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, Sky Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v3 1/2] net: phy: mediatek: Sort config and file names in Kconfig and Makefile
-Date: Wed, 14 May 2025 18:57:37 +0800
-Message-ID: <20250514105738.1438421-2-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250514105738.1438421-1-SkyLake.Huang@mediatek.com>
-References: <20250514105738.1438421-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PT30+mGw"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-607dceb1afdso4141933eaf.3;
+        Wed, 14 May 2025 03:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747220307; x=1747825107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C73+/+k71y7rpMEG4ZBk7iq66KMxdwH82HY220kVGsw=;
+        b=PT30+mGwktzgBF5mvWvGjWZ5lj3u5RTArHDtS5Bmxfu/L56wtUKA4OJVZaZkM1g+Fj
+         72umSYXMoFyKkEo3COGuRU35eJcy/GyjZ3ITKw1T+bskJUT64AFXyM/m9d0Mjn6CMlp9
+         tinr2jLBpFm2Dpt/MeQ+prz2o5aWDEH/PbHkQNFvMXCBr38CPgTzFGe1iuEePQGOzbY4
+         IrEgTDbRlpy0Egypfjrplk++2HVk+IVCpMlw3T6EI5b82/vcBBjpdH24+HATIzP5Yeih
+         vCdSkIweq66VOcJI+zSylHilCNilpapltoYYqBuywmBsa7eOI6WUJqFee7HbyNI0D+My
+         D2YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747220307; x=1747825107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C73+/+k71y7rpMEG4ZBk7iq66KMxdwH82HY220kVGsw=;
+        b=G76htMUwEfvR0+oFe2ANaRDMNS7JpMxKO4edJOmqThKJJ+BhCUB9pC5grY9k7m8E7f
+         M3gVMn1Mk0U/9a6O52nONayIvIPcCqNUjnsX1whKK8JL1OeeNJdeSDx4c+JaF3Zh2E8h
+         o0MIaoMGCtrlRnyOJYzV1LjBmSv+46/CH1PbvY4JFsIPuH+NqHtGFQNKVmzXZVRO+ht0
+         11cguv3BuwdyL+3N9VkGfmXeaHayMdN+wlvZ78lLNuNE8tMbGK7bQim6tADKENcJ+DxH
+         Yoed/MU35ZxuRJRlyEWIsla8l2HkAY50CpkmYgYJGBRTD7Wn4iFZyNMmd/jXESUvfFZS
+         03aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa311HRZbV1xvAPdGkPYUYoWITZ69PEyH9NynGWaIaGRZX2wpS22GHwbXo51XCo0R3rZ2qPMN2Hn+3kz6QZuo=@vger.kernel.org, AJvYcCWmJ0zbvlcHhsUjfgqfC+Fn2omdMz5bWz98JMgev3ZizSB3QNQJ0GUjijWHgD6+8EARxC5bM6nXru7kg4c=@vger.kernel.org, AJvYcCXZ7FMpduNChcqGo+AKgVOvGDxLjerVFEx9nRlRJdasqnBjpIJ/TV+38tkRmshEG0ShSlyAPfohZd8+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnlLciHdXS6af1hnSJITsyByOdd3HC+8dR9eET9e5or7pdrmFl
+	4EkMxBCPUGcBNdM52UzouzscIQsrlVVZULUYwzYrRMtySrxZyiTv
+X-Gm-Gg: ASbGncuOYKpTlghQ3kzucB8TORuqx8ypF9LmNyP5QfgO8YklkcIvdVuUmAu3vH+DlRe
+	eqMrlyvngdhYHyKyo2/j8BSNgnPWrUHcSMWc4VNundL9WG+F9CEecL/YYf6KIVzUJpp4IbLpvlR
+	6RGiBAf/FGwSq+ERFVViEldK8As7/K3sXXxI1EAoYLKccq1VDX4dQRmPhEADXNsEzEDvXnMgO47
+	SrGIYB+0O4W7oEe99/yhkrZPZf7OCarphypc7KQ8wiZmmtEh0FTY+JM91PYF6Y6UHgcm3O/c3bU
+	ZFFS1XANpvo6sgAKSQZ7WqygfVm5JJAYLn0fHkLebTkHrmChi0a2+CMwf06nJwv/mU+m1xVhMxS
+	zgFwJvi2ALaVmI3ic05ZTC3c=
+X-Google-Smtp-Source: AGHT+IH5rbBVbJfVaX8PQXrPTnS8jh4TFSktnCqyB8PVszPAz+uSMgqHz+BpZJQHRVKPA8CKVmLw9w==
+X-Received: by 2002:a05:6870:4150:b0:2da:843d:e530 with SMTP id 586e51a60fabf-2e32b051a3amr1631804fac.2.1747220306876;
+        Wed, 14 May 2025 03:58:26 -0700 (PDT)
+Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
+        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-2dba060be9esm2654535fac.10.2025.05.14.03.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 03:58:26 -0700 (PDT)
+From: Andrew Ballance <andrewjballance@gmail.com>
+To: dakr@kernel.org,
+	a.hindborg@kernel.org,
+	airlied@gmail.com,
+	akpm@linux-foundation.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	andrewjballance@gmail.com,
+	andriy.shevchenko@linux.intel.com,
+	arnd@arndb.de,
+	benno.lossin@proton.me,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	daniel.almeida@collabora.com,
+	fujita.tomonori@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	kwilczynski@kernel.org,
+	me@kloenk.dev,
+	ojeda@kernel.org,
+	raag.jadav@intel.com,
+	rafael@kernel.org,
+	simona@ffwll.ch,
+	tmgross@umich.edu
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	nouveau@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v2 0/6] rust: add support for port io
+Date: Wed, 14 May 2025 05:57:28 -0500
+Message-ID: <20250514105734.3898411-1-andrewjballance@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,71 +97,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-From: Sky Huang <skylake.huang@mediatek.com>
+currently the rust `Io` type maps to the c read{b, w, l, q}/write{b, w, l, q}
+functions and have no support for port io. this can be a problem for pci::Bar
+because the pointer returned by pci_iomap can be either PIO or MMIO [0].
 
-Sort config and file names in Kconfig and Makefile in
-drivers/net/phy/mediatek/ according to sequence in MAINTAINERS.
+this patch series splits the `Io` type into `Io`, and `MMIo`. `Io` can be
+used to access PIO or MMIO. `MMIo` can only access memory mapped IO but
+might, depending on the arch, be faster than `Io`. and updates pci::Bar,
+so that it is generic over Io and, a user can optionally give a compile
+time hint about the type of io. 
 
-Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/Kconfig  | 28 ++++++++++++++--------------
- drivers/net/phy/mediatek/Makefile |  2 +-
- 2 files changed, 15 insertions(+), 15 deletions(-)
+Link: https://docs.kernel.org/6.11/driver-api/pci/pci.html#c.pci_iomap [0]
 
-diff --git a/drivers/net/phy/mediatek/Kconfig b/drivers/net/phy/mediatek/Kconfig
-index 4308002bb82c..3abf23e37b4b 100644
---- a/drivers/net/phy/mediatek/Kconfig
-+++ b/drivers/net/phy/mediatek/Kconfig
-@@ -1,18 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config MTK_NET_PHYLIB
--	tristate
--
--config MEDIATEK_GE_PHY
--	tristate "MediaTek Gigabit Ethernet PHYs"
--	select MTK_NET_PHYLIB
--	help
--	  Supports the MediaTek non-built-in Gigabit Ethernet PHYs.
--
--	  Non-built-in Gigabit Ethernet PHYs include mt7530/mt7531.
--	  You may find mt7530 inside mt7621. This driver shares some
--	  common operations with MediaTek SoC built-in Gigabit
--	  Ethernet PHYs.
--
- config MEDIATEK_GE_SOC_PHY
- 	tristate "MediaTek SoC Ethernet PHYs"
- 	depends on ARM64 || COMPILE_TEST
-@@ -26,3 +12,17 @@ config MEDIATEK_GE_SOC_PHY
- 	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
- 	  present in the SoCs efuse and will dynamically calibrate VCM
- 	  (common-mode voltage) during startup.
-+
-+config MTK_NET_PHYLIB
-+	tristate
-+
-+config MEDIATEK_GE_PHY
-+	tristate "MediaTek Gigabit Ethernet PHYs"
-+	select MTK_NET_PHYLIB
-+	help
-+	  Supports the MediaTek non-built-in Gigabit Ethernet PHYs.
-+
-+	  Non-built-in Gigabit Ethernet PHYs include mt7530/mt7531.
-+	  You may find mt7530 inside mt7621. This driver shares some
-+	  common operations with MediaTek SoC built-in Gigabit
-+	  Ethernet PHYs.
-diff --git a/drivers/net/phy/mediatek/Makefile b/drivers/net/phy/mediatek/Makefile
-index 814879d0abe5..ff13205d614f 100644
---- a/drivers/net/phy/mediatek/Makefile
-+++ b/drivers/net/phy/mediatek/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mtk-ge-soc.o
- obj-$(CONFIG_MTK_NET_PHYLIB)		+= mtk-phy-lib.o
- obj-$(CONFIG_MEDIATEK_GE_PHY)		+= mtk-ge.o
--obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mtk-ge-soc.o
+changes in v2:
+  - remove `PortIo`
+  - typo fixes
+  - squash "fixup" patches so that patches will not introduce build fails
+  - move some changes across patches so that build will not fail
+  - changes macro define in rust/helpers/io.c to use full rust name
+  - specialize `io_backend` for the x86 case
+  - do not modify lib/iomap.c
+  - rebased on v6.15-rc6
+
+Link to v1: https://lore.kernel.org/rust-for-linux/20250509031524.2604087-1-andrewjballance@gmail.com/  
+
+Andrew Ballance (3):
+  rust: io: add new Io type
+  rust: io: add from_raw_cookie functions
+  rust: pci: make Bar generic over Io
+
+Fiona Behrens (3):
+  rust: helpers: io: use macro to generate io accessor functions
+  rust: io: make Io use IoAccess trait
+  rust: io: implement Debug for IoRaw and add some doctests
+
+ drivers/gpu/nova-core/driver.rs |   4 +-
+ drivers/gpu/nova-core/regs.rs   |   1 +
+ rust/helpers/io.c               | 112 ++----
+ rust/kernel/devres.rs           |   4 +-
+ rust/kernel/io.rs               | 645 +++++++++++++++++++++++---------
+ rust/kernel/pci.rs              | 101 +++--
+ samples/rust/rust_driver_pci.rs |   6 +-
+ 7 files changed, 595 insertions(+), 278 deletions(-)
+
+
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
 -- 
-2.45.2
+2.49.0
 
