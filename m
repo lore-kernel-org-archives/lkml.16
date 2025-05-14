@@ -1,130 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7C21FF60E;
-	Wed, 14 May 2025 09:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DA41FF60E;
+	Wed, 14 May 2025 09:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215144; cv=none; b=pmY7BnFPiALntB4bwxNOreMAI7t3dXBJIqVo9RmCKKQD5fVEq3huLszw8g8IjaJBTfQRZ8Fg7JddWh5tmo1fzeIuamUsnRlHFSaAT23JfYW23RgGgVh+7fVxBWVa9bkv9PF8SHjjOSjaVZ6RwNhx/+Y+9PDfwTjO2+DeJZiKODQ=
+	t=1747215177; cv=none; b=B/AzAwtyvEzo2WlFwhS1fTTzbSA2FPbV4sZ3la2LkWXPIlOMO/iGAxBsnzEfS8Y9v/YWugkzWbTkwoQuivhjGJZfzGjBuWyO9DDTiLL1HcBSGeVZTzzylJTksj4n2xLUHEVodFdqaInccD7geGZ9cw9NtzFvKvOpHC1ch7Lnz/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215144; c=relaxed/simple;
-	bh=OsCI+SEfMW/es4yIxIl67MqpGQd1arTAgfmC5tthM/o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Qd1k/2LXI0SnN/uGEN4xutktUO6hSuZILs8QytsTgFsRbiCZnXpQw/CiPte5ZpFmvy3Rt713X7voEjCX6hWdO+D1zUZFqm4voVaSJymutL8xypVGiqSI1dPJVB7dLOEMoh8fTY6ua1AsgaM9B0SKFm1WhmicWY085V4bXn4x6tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOYq9BuH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747215177; c=relaxed/simple;
+	bh=wgcDSzjE3z4wvyTjp53d7JEM1bigTEH6sNQEmXZAFnM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PTrbzeO50wlqRmTXimeqTBpo+lQ5B9ayho5l9+2f8AU5qhLfhLkgNGN5/Tvvveoe6TeFJiVHXHnIOlz3oza0CVrOWJjcYOI3SCLRYY7dvFEnqYAwPYHgtaNDpePfR/OMD1o5XH/ea0IBqoONnwRqs8AjvP5/8gIUPC7jX3ble4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=REUcSlsD; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOYq9BuH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22583C4CEE9;
-	Wed, 14 May 2025 09:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215143;
-	bh=OsCI+SEfMW/es4yIxIl67MqpGQd1arTAgfmC5tthM/o=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=IOYq9BuHy+XUHlHP9+BfK9AEUSgQWF/kgBjJLWyXIFqg2kWAcd+HYj0q2Y79hI20O
-	 GA3H6TYlRDjcm/J+FbNpr/hEQjdwUfeBET+RNWSLI6xNEW3JmzzoZ6q/ty9I/7Hoph
-	 Lg3e9gAdKXMkVyDZt7FjqYFxVvp7xl8LdiPPIldcECwwlmQvTm2wb+RIf2dTvimuRF
-	 vAcvVyMPe1IWRudxByjLlFrDQ+4wkzWJ+GfLqbCcDLDGgAQGZFqX8Q3wat8vJgSINK
-	 PrRVJ+Yy+WX+mskIeeraESU4s8dXzu+Ky+tX6CTVI6mSHqQ0Lb3UgcAPWiGRrukaz9
-	 9sHAClmj5slFA==
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="REUcSlsD"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vt3p023085;
+	Wed, 14 May 2025 11:32:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	apPuGix0U1l8NbuF2RfEV7srsEyy+YpkXLnEoKgNuME=; b=REUcSlsDCyI8Hyf1
+	Dx5Y5boK9tw1Of6eJxcNtODLpy/xFNDPh/YLxIBUnW7KGAKOruHD7IUgQSjI4S7i
+	CBVc0zCDej1aWz31I9mo/NeQ3/eVjsNJnJ1iIdKHCnSfvbxIOxrPrvIzfrYt/P2e
+	nrrwse+lwg2bwLxhLn4qU7Z0sWttRjd/lJ671EWcDAWey286hEKr27RTU384YVMo
+	UIt+RNh+MkahVlKYt0jc4HsIZo+pHIJ/JalIXzCu1wfGqvKSgPFFsaGTFY6qpuyU
+	Fd3/Ro2LO3nrED4ScbRf0eonPqPp5JZH4xxm0YkeMbEH5nS9yulK0pv3kI7MDrJs
+	WrLA3w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdxtwvq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:32:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A901540054;
+	Wed, 14 May 2025 11:31:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EC64DB4C73F;
+	Wed, 14 May 2025 11:30:15 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:30:15 +0200
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:30:14 +0200
+Message-ID: <5268ec60-ae2e-425e-a4af-a55cb0c3a1f9@foss.st.com>
+Date: Wed, 14 May 2025 11:30:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 11:32:19 +0200
-Message-Id: <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Oliver Mangold" <oliver.mangold@pm.me>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Asahi Lina" <lina@asahilina.net>
-X-Mailer: aerc 0.20.1
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
- <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
-In-Reply-To: <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] counter: stm32-timer-cnt: add support for
+ stm32mp25
+To: <jic23@kernel.org>, <wbg@kernel.org>
+CC: <alexandre.torgue@foss.st.com>, <lee@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <ukleinek@kernel.org>
+References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+ <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
-On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
-> +/// Types that may be owned by Rust code or borrowed, but have a lifetim=
-e managed by C code.
-> +///
-> +/// It allows such types to define their own custom destructor function =
-to be called when
-> +/// a Rust-owned reference is dropped.
-> +///
-> +/// This is usually implemented by wrappers to existing structures on th=
-e C side of the code.
+On 1/10/25 10:19, Fabrice Gasnier wrote:
+> Add support for STM32MP25 SoC. There are new counter modes that may be
+> implemented in later. Still, use newly introduced compatible to handle
+> this new HW variant and avoid being blocked with existing compatible
+> in SoC dtsi file. Modes supported currently still remains compatible.
+> New timer 20 has encoder capability, add it to the list.
+> 
+> Acked-by: William Breathitt Gray <wbg@kernel.org>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> ---
+>  drivers/counter/stm32-timer-cnt.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-The docs should mention `AlwaysRefCounted` and when to use it instead of
-this trait. We should probably also backlink from `AlwaysRefCounted` to
-`Ownable`.
+Hi,
 
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that:
-> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that ow=
-ned reference exists (i.e.
-> +///   until the [`release()`](Ownable::release) trait method is called).
+The first patches of this series have been merged.
 
-I don't immediately understand what this means. How about "Any value of
-type `Self` needs to be stored as [`Owned<Self>`]."? And then ask in
-`Owned::from_raw` for a pointer that is valid indefinitely (or at least
-until `release` is called).
+I'm not sure who shall pick this one ? (I think there's no dependency).
+Or do I need to resend it separately ?
 
-> +/// - That the C code follows the usual mutable reference requirements. =
-That is, the kernel will
-> +///   never mutate the [`Ownable`] (excluding internal mutability that f=
-ollows the usual rules)
-> +///   while Rust owns it.
+Please advise,
+BR,
+Fabrice
 
-I feel like this requirement is better put on the `Owned::from_raw`
-function.
-
-> +pub unsafe trait Ownable {
-> +    /// Releases the object (frees it or returns it to foreign ownership=
-).
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the object is no longer referenced afte=
-r this call.
-> +    unsafe fn release(this: NonNull<Self>);
-> +}
-> +
-> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] or `&mut Own=
-ed<T>` Rust reference
-> +/// may be dereferenced into a `&mut T`.
-
-The "A subtrait of Ownable that asserts" sounds a bit clumsy to me, how
-about "Type where [`Owned<Self>`] derefs to `&mut Self`."?
-
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that access to a `&mut T` is safe, implying=
- that it is okay to call
-> +/// [`core::mem::swap`] on the `Ownable`. This excludes pinned types (me=
-aning: most kernel types).
-
-I don't like that we put this requirement here, since it's actually
-something that should be asserted by `Owned::from_raw`.
-The reason for that is that anyone can call `Owned::from_raw` with a
-pointer pointing to `Self` and there is no safety requirement on that
-function that ensures the correctness of the `DerefMut` impl.
-
-> +pub unsafe trait OwnableMut: Ownable {}
-
-I don't like the name, but at the same time I also have no good
-suggestion :( I'll think some more about it.
-
----
-Cheers,
-Benno
+> 
+> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> index e75b69476a00..3d3384cbea87 100644
+> --- a/drivers/counter/stm32-timer-cnt.c
+> +++ b/drivers/counter/stm32-timer-cnt.c
+> @@ -669,12 +669,14 @@ static void stm32_timer_cnt_detect_channels(struct device *dev,
+>  	dev_dbg(dev, "has %d cc channels\n", priv->nchannels);
+>  }
+>  
+> -/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 */
+> -#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7))
+> +/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 TIM20 */
+> +#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7) | \
+> +					 BIT(19))
+>  
+>  static const char * const stm32_timer_trigger_compat[] = {
+>  	"st,stm32-timer-trigger",
+>  	"st,stm32h7-timer-trigger",
+> +	"st,stm32mp25-timer-trigger",
+>  };
+>  
+>  static int stm32_timer_cnt_probe_encoder(struct device *dev,
+> @@ -846,6 +848,7 @@ static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
+>  
+>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
+>  	{ .compatible = "st,stm32-timer-counter", },
+> +	{ .compatible = "st,stm32mp25-timer-counter", },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, stm32_timer_cnt_of_match);
