@@ -1,129 +1,146 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A027BF6C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17E1275106
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747230725; cv=none; b=nqlGsfbysVD+tUgOvgmyTXgAZQvZQlxD1b/x081/6CqOpXDC8bfVv6x7s3q0HJSzQh5lZVxbSpWmycjhnerfZ9LdMwH86TD8HEZerVV8igbD03RQMm/J6zm7s/SI3GCYe4XFx3ngfvE5R3i3kysHKmTfqG4f53fgXp7jqDEm4D4=
+	t=1747230760; cv=none; b=oK1mcV11U/03XsIBEnOoOog9NuuiQROmlTQiJaxmjdjf3pgc9GrzWzlpkerSvDODxwlYJ1+JUD9ZbsFNekeGGO3JA5Urf+2GDylbKgrkzbb6Y6ht/CBI5oshTM05nF0nsNYy7IOPXg14OC4FiDwgiKmo5pP7Ln4LFzFIziMc6LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747230725; c=relaxed/simple;
-	bh=yAktS0IcTttm+5igPEE95jdF3S5CsNJvlNvqBV1C72Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+Z1Lp7TBbnJXhReV9Gf7OHvutLCb8mNNFBO6WjRHblvGXMreZZ9RsuA/1YyOlffAjzhczOyn0O+HgGnmZdv3Zud/o8bSlMGks0flSoAx9yLTRCCc+e3QRUECUTIUyLx2IWhGcyvp08IPanMII7N9eLqvciVNQjMptIrZyF06HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VaW0tDVl; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747230760; c=relaxed/simple;
+	bh=sk9+Hmx76K9353/YSJ7f5CerbKr8aapCJIG+K320SkM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=itSSMF3j89Gjgp+zw5ryhErk2+yHC/YP9btpgvnyBxMjucWw1ldLEEw/lc8rGjc+u6hiQEEy4F3vW3f3WgebFuty240kj1umAo6EeCeQkvP0/mjxcAqX3Qj00TVz+stOAOd9B1SZbn1UN3hAYL+ykZYE8JA/lyCFLdvbhIhmHiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lLkhrenp; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VaW0tDVl"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so4631415e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747230721; x=1747835521; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pzH7d+l+7UapIjPhhBZ1DFv41GO7ARQVP3TgvTdkaus=;
-        b=VaW0tDVlP2msl6IIsUXEtC8x98BfNSvU3VSAzkOw60lY9q0y65L7QadJqVMUUS9PeL
-         tvXyRLgygl21IwiN2uBrRA1RWDG8YWRpnUQNV1CtFr5302IkFjUhzoFKqK+IIaVK3203
-         DueEoMRm0XK060JhlGh5XZbYAWlUqo5t2JXaDR7+CCUsBkaN61nQBr693Mw1pltkSXK1
-         K+rXvpyIMKlSUk7N1vz2Dc/jBl9jkqTDyxi/X+py/dT8AAamunczXDDuAEr0nac4ZA7K
-         GL+bsp4e4rmTsnZoLN4pnCdQa7m3eWkrJZvlxEJpq3UdjFeQ7xYw/r/miWsKCs2ckMkq
-         wEZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747230721; x=1747835521;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pzH7d+l+7UapIjPhhBZ1DFv41GO7ARQVP3TgvTdkaus=;
-        b=M2G7yMXuWUSJk2bebWwX2zTAewnqgXuZPNq7Ls2CvqrKhoVaMVaXRVI/qQcrTmBeD9
-         zLT7l9QLGUv+RJxzRmSJMDyqpektnrxfMr67xaFC8xtIhCPihIfe8Yo78n25+Tq7X6Ne
-         iBbAb7egqqbNekV+w+TBih9AfwtJ9++T6IRX0c+Yxh4D1EqWv/nhEaNAEJSQozsLWwre
-         pQ0Kmxvv04ZizW3fr8c9BnsGAJ9eUr3B5pdWUiGXEomX/3LG1r/sJE6RP77nSiDfUvcP
-         Y+1NBPuxXzNpjN2d+VVqwluN3hxxyyI83WYJMaqbCuJjT8Q/WeymplljNJuFMExHvAvm
-         9lyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGQo+vRXEhDx80eX3cG7TAW4JbuXL7EB7tI3qurS5zEm2P+L69Cr42ZgMWEGVrSzdQGnwS3d6bUleDIS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhy5D6TGfB6Qzo7jJ5mdwIn2CZlJxeyLyDCP18/IdJxZRg65JE
-	rNpy3OZYsgHKz9xwA5WVcvuKRMdL+vAL/Sf7m9hCCUduGkp7MW7tGSdEiEPtV0eME4GZcVvQhYm
-	zH5jlvQ==
-X-Gm-Gg: ASbGncsevFMGgRbOPFqmZow6VPZ9R9h1bofNNutMLbVv4h2bZjlo0q5FcFiGdd4Pr/B
-	jSW8e8/6lBsdyRldE1fRSuOO1m2LhcRTikybk+8cuGcYrzxAjPiqqlJ4hyDmEcxFMpb2g8DDhTr
-	dhmmFfyDs9p+Z/75TG6MDyjTbQZvPBLTGtpLGq6LCcExUHmOtJEc5BtvFA/Qz/zVTXtQPnjP8VH
-	8V1FS48ZbFr24t0NkokL46QCCVJOu1RAGL80MltelV2LkqrqtHbAWxlgKp4dbkQHCY+cJPr0k1I
-	EpGtbxd68fDZp8k3rft0Hm30MSDxRP3sM+6ZXbZKOJcYM6qFL881agHXuW9fh5r0X1/SIp7s8gb
-	gSWHsrMApz2cJ
-X-Google-Smtp-Source: AGHT+IFj9i5QTyKcpRv7+tejxsKkLmxlMRzgDUG9rJki22dIq9ouqJs9twLL4571+qHl8gfmhK4eAA==
-X-Received: by 2002:a05:600c:8707:b0:439:9434:4f3b with SMTP id 5b1f17b1804b1-442f1a42318mr38467255e9.8.1747230721455;
-        Wed, 14 May 2025 06:52:01 -0700 (PDT)
-Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f397b6fbsm31591395e9.39.2025.05.14.06.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 06:52:00 -0700 (PDT)
-Message-ID: <b4c704d9-c94e-4e89-b3ed-f715bef4e379@linaro.org>
-Date: Wed, 14 May 2025 15:51:58 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lLkhrenp"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250514135234epoutp01c6a00b2e00ee8b9f6d3a8235cc2bad6c~-aR07ZmQC3198031980epoutp01G
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:52:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250514135234epoutp01c6a00b2e00ee8b9f6d3a8235cc2bad6c~-aR07ZmQC3198031980epoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747230754;
+	bh=fS6WP64nxk5RGLAeXo0j9rsjSAjpHA9bB1CIdrtYv24=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=lLkhrenpf4Ang8OJcMujjFvGUsmln4m5a0oWv9u2tKHHC8Q+egyTspbQWDmdF0+iX
+	 ZG2sijOPbFyVC0MAD4gfvJG5qqJrnqOBvgggrIh+RQSVkoGt3q2lN9Xrx1vsecUSwd
+	 qJLNgnGpZgebvt0EJedbmnQecu88JePj0s30AGEU=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250514135233epcas5p2cd9c912a0768e52b0bb584a54b97caca~-aR0NkYDl1501215012epcas5p2p;
+	Wed, 14 May 2025 13:52:33 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZyFCN0GBvz3hhT3; Wed, 14 May
+	2025 13:52:32 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250514095233epcas5p3f51037e71e60a1e690709f8497606385~-XAQ6OqjD2612726127epcas5p3Q;
+	Wed, 14 May 2025 09:52:33 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250514095233epsmtrp1fbfec6ef430e6f4547e13f7a873b93dd~-XAQ3FzyG1927519275epsmtrp1D;
+	Wed, 14 May 2025 09:52:33 +0000 (GMT)
+X-AuditID: b6c32a52-40bff70000004c16-01-682467e1cbba
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5E.35.19478.1E764286; Wed, 14 May 2025 18:52:33 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250514095230epsmtip2a60aed22479ca7753f78aa377417c155~-XAOEOn-v1808418084epsmtip2i;
+	Wed, 14 May 2025 09:52:30 +0000 (GMT)
+From: Raghav Sharma <raghav.s@samsung.com>
+To: krzk@kernel.org, s.nawrocki@samsung.com, cw00.choi@samsung.com,
+	alim.akhtar@samsung.com, mturquette@baylibre.com, sboyd@kernel.org,
+	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
+	sunyeal.hong@samsung.com, shin.son@samsung.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	dev.tailor@samsung.com, chandan.vn@samsung.com, karthik.sun@samsung.com,
+	Raghav Sharma <raghav.s@samsung.com>
+Subject: [PATCH v2 0/3] Add clock support for CMU_HSI2
+Date: Wed, 14 May 2025 15:32:11 +0530
+Message-Id: <20250514100214.2479552-1-raghav.s@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] Add EcoNet EN751221 MIPS platform support
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Caleb James DeLisle <cjd@cjdns.fr>, linux-mips@vger.kernel.org,
- tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, benjamin.larsson@genexis.eu,
- linux-mediatek@lists.infradead.org
-References: <20250507134500.390547-1-cjd@cjdns.fr>
- <aCNWM5Xq7wnHVCrc@mai.linaro.org> <aCNhVw7oMRhHQNq_@alpha.franken.de>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <aCNhVw7oMRhHQNq_@alpha.franken.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsWy7bCSvO7DdJUMgztrFC0ezNvGZjHhS4TF
+	mr3nmCyuf3nOanFvxzJ2i/lHzrFaNM54w2Rx/vwGdotNj6+xWnzsucdqcXnXHDaLGef3MVlc
+	POVqcWyBmMX3lXcYLY6cecFs8X/PDnaLw2/aWS3+XdvIYjH5+FpWi6Zl65kcRD3e32hl99g5
+	6y67x6ZVnWwem5fUe/RtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfGu8ehBW/4Kv6v2MzewLie
+	p4uRk0NCwESib/Vi1i5GLg4hge2MEl8+HWSBSEhI7Pv/mxHCFpZY+e85O0TRW0aJ9xMPMoMk
+	2AS0JK5sf8cGkhAR6GKSOPfvFVg3s8BOJomV6yVAbGEBM4llV9aCxVkEVCV6zs9kArF5Bawl
+	blzvhdomL7H/4FlmiLigxMmZT6DmyEs0b53NPIGRbxaS1CwkqQWMTKsYRVMLinPTc5MLDPWK
+	E3OLS/PS9ZLzczcxgqNFK2gH47L1f/UOMTJxMB5ilOBgVhLhvZ6lnCHEm5JYWZValB9fVJqT
+	WnyIUZqDRUmcVzmnM0VIID2xJDU7NbUgtQgmy8TBKdXANN8ieoat3X+PUqv5T9+yX46yWOGQ
+	HnJvxnfP13qP5IzEJe/kK+f3/F///LV+1ifVnjIPhzCxxTLMK9SX9TXuvsniW7i4ckb8HKfE
+	Td86dlj5++1SFDu6+a/woY5o3qppWdyC0u81d2gvYZSza7n7jnH/qbSjniEbeZ7f35G7YF/7
+	p2/PL+kuedCfdav5q/LXxqdVj/YWdeY0fWnxEDEXFYv3ndwz4+LiymKez22RUyNr/I13rutf
+	1MDjXnJD59acx2p/9l2ds+f+kbNq9SLOZj6vGdxv5jkk7xVpqNRpU2Y+nbFso6zfW3aZFrb9
+	LAl/XhxrrO29qHsj3n5DiczR48tvRj4ofSe7yYJp9dY5SizFGYmGWsxFxYkAP1DrSAUDAAA=
+X-CMS-MailID: 20250514095233epcas5p3f51037e71e60a1e690709f8497606385
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-543,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250514095233epcas5p3f51037e71e60a1e690709f8497606385
+References: <CGME20250514095233epcas5p3f51037e71e60a1e690709f8497606385@epcas5p3.samsung.com>
 
-On 5/13/25 17:12, Thomas Bogendoerfer wrote:
-> On Tue, May 13, 2025 at 04:24:51PM +0200, Daniel Lezcano wrote:
->> On Wed, May 07, 2025 at 01:44:53PM +0000, Caleb James DeLisle wrote:
->>> EcoNet MIPS SoCs are big endian machines based on 34Kc and 1004Kc
->>> processors. They are found in xDSL and xPON modems, and contain PCM
->>> (VoIP), Ethernet, USB, GPIO, I2C, SPI (Flash), UART, and PCIe.
->>>
->>> The EcoNet MIPS SoCs are divided broadly into two families, the
->>> EN751221 family based on the 34Kc, and the EN751627 family based on
->>> the 1004Kc. Individual SoCs within a family are very similar, only
->>> with different peripherals.
->>>
->>> This patchset adds basic "boots to a console" support for the EN751221
->>> family and adds SmartFiber XP8421-B, a low cost commercially available
->>> board that is useful for testing and development.
->>>
->>> Note that Airoha (AN7523, AN7581) is similar to EcoNet in terms of
->>> peripherals, and for historical reasons Airoha chips are sometimes
->>> referred to with the EN75xx prefix. However this is a different
->>> platform because Airoha chips are ARM based.
->>>
->>> This patchset is against mips-next.
->>>
->>> v4 -> v5
->>> * 2/7 clocksource/drivers: Add EcoNet Timer HPT driver:
->>>    * Improve explanation of HPT timer in changelog
->>>    * Move pr_info to pr_debug per recommendation
->>>    * Remove pointless debug on spurious interrupt
->>>    * Small code-style change
->>
->> Shall I pick the clocksource + bindings changes through my tree ?
-> 
-> please do, I'll take the remaining patches.
+This series adds clock support for the CMU_HSI2 block.
+
+Patch[1/3]: dt-bindings: clock: exynosautov920: add hsi2 clock definitions
+        - Adds DT binding for CMU_HSI2 and clock definitions
+
+Patch[2/3]: clk: samsung: exynosautov920: add block hsi2 clock support
+        - Adds CMU_HSI2 clock driver support
+
+Patch[3/3]: arm64: dts: exynosautov920: add CMU_HSI2 clock DT nodes
+        - Adds dt node for CMU_HSI2
+
+Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
+---
+Changes in v2:
+- Added cover letter with the patches
+- Submit the patches as a series as they are inter-dependent
+  as pointed by Krzysztof Kozlowski
+
+Links to v1:
+[1/3]: https://lore.kernel.org/all/20250509132414.3752159-1-raghav.s@samsung.com/
+[2/3]: https://lore.kernel.org/all/20250509131210.3192208-1-raghav.s@samsung.com/
+[3/3]: https://lore.kernel.org/all/20250509125646.2727393-1-raghav.s@samsung.com/
+
+I also got warning about build failure from robot
+Link: https://lore.kernel.org/all/202505100814.gnMY3LoZ-lkp@intel.com/ 
+
+As the fix is  just a new version of
+the same patch/commit, there is NO need to add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505100814.gnMY3LoZ-lkp@intel.com/
+
+So for now, not adding Reported-by: tag
+
+Raghav Sharma (3):
+  dt-bindings: clock: exynosautov920: add hsi2 clock definitions
+  clk: samsung: exynosautov920: add block hsi2 clock support
+  arm64: dts: exynosautov920: add cmu_hsi2 clock DT nodes
+
+ .../clock/samsung,exynosautov920-clock.yaml   | 29 +++++++-
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi | 17 +++++
+ drivers/clk/samsung/clk-exynosautov920.c      | 72 +++++++++++++++++++
+ .../clock/samsung,exynosautov920.h            |  9 +++
+ 4 files changed, 125 insertions(+), 2 deletions(-)
 
 
-Applied patch 1 et 2, thanks!
-
-
+base-commit: aa94665adc28f3fdc3de2979ac1e98bae961d6ca
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.34.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
