@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABB225C703
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B069125D1FD
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266237; cv=none; b=DAONtRcAG5W3Pj9r9TK1CWZ30DNbmYlmg7e1dUzMJPbA+oA725Jb/rMEO4DqOT2p9MEqVjDzzBBz54hZPBtnNTKXtBPoj9920pvwpXyVA0d5wemsO7h+lvKUPoXqHwlzznphEOwv6t6vqX6Gzt2SrYmO6oy99nURyNUjpnZW56Q=
+	t=1747266240; cv=none; b=BUp0oDZNK++ZQcivVjxkZql/I9NkwPVs6BWg0igyoeV4uPZBpgWyXFIurd++QDF9wq5EEb3tGWQZ82GMcGyM1QsAKsWCwNkDZop62B7cFQpJ/vAPRMI4+j5k3NJgk61BG/DSMyCcWEVLijFf7emNVe+bWfDk+/Q+Q0JMgKx5FTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266237; c=relaxed/simple;
-	bh=IMiKEMd6OxkBoCNVWLOzENvmPQZSLrc1NWT7HaivxWo=;
+	s=arc-20240116; t=1747266240; c=relaxed/simple;
+	bh=102GvifG4zt1ttrSz67mMu9EOxHXu/R1+sbn9BQTSZg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JlpCMwUC2M6GKrqHXF441sd6mGWnaB28+ZlVq0M53QQ6lYMukmh4k7z0hMrDCCVDOHFvwtjpz/m1fSO0D/LIR50zfFK7vBHJ3QAwAzaa9DlDabAvOECZqZBeizeNF3JZNL3iMwsuL6pgHRoIYKtBn+EH3wyLjt4MQ00hnJPRI60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lWpVxQE4; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=MPpNLVud1I1CZKp/wiya60bDe8MvrEPFMAfCzIIcR2TWmIbcpBALEd5WjRb73kgHS7fDGKmoNPJUBV6FGkVoyLyFfXPwWBIyhKvT+3oa4clsiOtJl2Ny5pIPm92mRSLTP+PZhKhVCp9oryfdUcs27Fg3D97lHhPN6bBBwzskHpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N+4E1C+O; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWpVxQE4"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74292762324so272254b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+4E1C+O"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e45821fd7so3487065ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266235; x=1747871035; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266238; x=1747871038; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuq1bEexdRhfFEX1jCABHc+UNgsIInH8N9P0pZ09IXA=;
-        b=lWpVxQE4i8lmzDx5Y94IGz4ODljbyX6Edr1/iYC4JCNTqGAzQ6GikucSHNnRdq0k9N
-         wODK+Rtr5JQD3u7Q4n1hTrv1wMtqWIsI6jlbUXvyaBIzUK1CVwoWo00ULPQ5LC/wZqiS
-         /bz3GW6jBJR7jEyjvg4tIouNzElyQ9t89PXCO6piR8SqKWCbJX3JZRXVQIbVHhmGrzTR
-         EXveltb979x2WHXeqroFn69h5lENXc+dbWBkAiJzhre355kM2mZbge3awmsRNQ2huF6w
-         A/wQlyKBLnINIQSFc6jVv4srKLs4mHAC1wZXBUH4Ml4webkymYKUtL1aKuFuz6lkdWst
-         nnyw==
+        bh=pmGFcMqll2ZECWkoZDuet36vvCpdEEo2q3JYb5OCRKk=;
+        b=N+4E1C+O66u/2AsRaBgT91MJS9ng42C+9NjRXQ3YNyKU42nyuFhpbcN/JwWuKvlEPU
+         en9fcu8azoG/a1PQ9ifKcy0UelB0dOwmMHBEn3F8BobX7Y0NcbQu84cWord+3mL4H/ln
+         xiQIdnqLrpcgCGVHBFog50fU327p7AhtoEDvulCt5TV1Ze50XVp/fOCRUloIh8ssPVQ5
+         QIVgG7r7e36Z6YwJl7QyeK0b4B+WCmU4koDKATAzizKCStQeElL5CQBd25B78Mmo1UDa
+         xfPtDymGbD34ZlOi7ghcLmQfbgRHlM3lNj5NTX7DORFiAHu4VCebVNrob22VaWRdbc6f
+         K2XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266235; x=1747871035;
+        d=1e100.net; s=20230601; t=1747266238; x=1747871038;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuq1bEexdRhfFEX1jCABHc+UNgsIInH8N9P0pZ09IXA=;
-        b=YM6/rjz9+L301VYu6XCqCurpaXvDYvsi0KZn/c/7mnqQ7800vb7/vJ6h+nosdnOKYq
-         60czeVxN1SxfthZGqaq0bi0EguwSR26QK0mbhZOtNp+7XEdcwMIE7V+C9TgC2ZC8qnDg
-         s8S7hBCs5WwxApKc5nq7OQMUBS7qMyI//lOh7akNvytks8R9naB7Aa6SslRnnOaYQnwe
-         Ctghxy4O4mf/mfbNoLO5VuDkMOk0smmNzaRUbbX4iS0rbP9n6JIxbUr6fqFem8MsuUF2
-         lwtRa0W1Y+n6xGsAI00B+L8fThOZo9SLWeTcrv0BRziwdjjI4rWQhZ5xNjZPg+UOj3+h
-         IzJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfyStszW/vnyyn+ucqcgsCQ58576hb06eHc9bJOGXvCMgIY3iP5jWPS11lQh8yOMhGd7OF0sRJKdRzECE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRCh9LREEdQrh0pndmcSwF9yCdmaF770mI1WMkRwLLP3p4ItGL
-	HGKbu4iC8vLCHFGp6ozNM5KomS1PEtid5dHDPhbnj9FwGET1kvXAID/6Se58FXJBTmN3QKDgZEj
-	5KkThgLwJ02eTvpjsxxHDZQ==
-X-Google-Smtp-Source: AGHT+IEP7NX45yVSRggtsTELkRXbv8SEWvt+7ORsl2x8HhwmdlC6ogf+zGJHadz5Krd2YgHwh61qzF+l2O1bbO5BGw==
-X-Received: from pfmv16.prod.google.com ([2002:a62:a510:0:b0:736:3cd5:ba3f])
+        bh=pmGFcMqll2ZECWkoZDuet36vvCpdEEo2q3JYb5OCRKk=;
+        b=DJCgROdP5ugMuWknl+l8x30YAfkilGlc59Mhf+WgUKo/pLs2KQagPzKHIfvX1vTHMQ
+         Is8+EkhswW+qoN5Os797nqE2AU4rnBwkeLaiBPZ59leYsM33qD+Lfez2Lbful7DQc/fE
+         HV6WN81Qmp2z/DDeo8mb+4h671xpIDOX4LOZJUs518zVsFGv2u8uX1zvTlcqQAm+Rr8d
+         Iz90GSuucEJ6wROfywCVZErj1Bu1gHZFXHkaK48NNmk7zhcJX7/bODhXiSx4Ie6l/h89
+         KAbYVcTCqquDrD2hslLt2SAtm1W5TOGL6wxWD9mQDRLBBSQ+kS/iZd1g/1q06vZeyHGu
+         IAZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzloIRZta1/ae6z7lI/WWQlxtRt8v8jHlvqOz8QrQx9SO1fxePvYxBi/WC9LKrTSov9HEmvgXtdtd9Zww=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo4QUSl824taSvHoMbneWq+Hhx4cWmAW+f+U/270OpFNBUBgdZ
+	wUEVapzUNUuP/4lMUZf+x+I1zb3PPhu0Um49Iy1KAj49qRx01WGjxzYVdGCj+Dif9RwP7IOZKUO
+	IIAOMFff2wOYJNzSviLaJ3A==
+X-Google-Smtp-Source: AGHT+IGyG3aK+TPRgSsxWpjag/A4ruHzJ2SmD21jLoxWwmPBfdNpP7Yc+Ypfwlkx2TEetNXBaMC3rrsf4RqZeQwBkA==
+X-Received: from pjbsz11.prod.google.com ([2002:a17:90b:2d4b:b0:308:7499:3dfc])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:181c:b0:740:9d7c:aeb9 with SMTP id d2e1a72fcca58-74289377cb0mr7546070b3a.21.1747266234724;
- Wed, 14 May 2025 16:43:54 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:16 -0700
+ 2002:a17:903:228a:b0:223:60ce:2451 with SMTP id d9443c01a7336-231b5e26004mr6306905ad.15.1747266237995;
+ Wed, 14 May 2025 16:43:57 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:18 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <a7a0eb4053059731f70c18d4aa4736b6cf1b4e35.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 37/51] filemap: Pass address_space mapping to ->free_folio()
+Message-ID: <625bd9c98ad4fd49d7df678f0186129226f77d7d.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 39/51] KVM: guest_memfd: Merge and truncate on fallocate(PUNCH_HOLE)
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -93,234 +93,191 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
 	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
 	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com, Mike Day <michael.day@amd.com>
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-From: Elliot Berman <quic_eberman@quicinc.com>
+Merge and truncate on fallocate(PUNCH_HOLE), but if the file is being
+closed, defer merging to folio_put() callback.
 
-The plan is to be able to support multiple allocators for guest_memfd
-folios. To allow each allocator to handle release of a folio from a
-guest_memfd filemap, ->free_folio() needs to retrieve allocator
-information that is stored on the guest_memfd inode.
-
-->free_folio() shouldn't assume that folio->mapping is set/valid, and
-the mapping is well-known to callers of .free_folio(). Hence, pass
-address_space mapping to ->free_folio() for the callback to retrieve
-any necessary information.
-
-Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
-Suggested-by: David Hildenbrand <david@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Change-Id: I8bac907832a0b2491fa403a6ab72fcef1b4713ee
-Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
-Tested-by: Mike Day <michael.day@amd.com>
+Change-Id: Iae26987756e70c83f3b121edbc0ed0bc105eec0d
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- Documentation/filesystems/locking.rst |  2 +-
- Documentation/filesystems/vfs.rst     | 15 +++++++++------
- fs/nfs/dir.c                          |  9 +++++++--
- fs/orangefs/inode.c                   |  3 ++-
- include/linux/fs.h                    |  2 +-
- mm/filemap.c                          |  9 +++++----
- mm/secretmem.c                        |  3 ++-
- mm/vmscan.c                           |  4 ++--
- virt/kvm/guest_memfd.c                |  3 ++-
- 9 files changed, 31 insertions(+), 19 deletions(-)
+ virt/kvm/guest_memfd.c | 76 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 68 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index 0ec0bb6eb0fb..c3d7430481ae 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -263,7 +263,7 @@ prototypes::
- 	sector_t (*bmap)(struct address_space *, sector_t);
- 	void (*invalidate_folio) (struct folio *, size_t start, size_t len);
- 	bool (*release_folio)(struct folio *, gfp_t);
--	void (*free_folio)(struct folio *);
-+	void (*free_folio)(struct address_space *, struct folio *);
- 	int (*direct_IO)(struct kiocb *, struct iov_iter *iter);
- 	int (*migrate_folio)(struct address_space *, struct folio *dst,
- 			struct folio *src, enum migrate_mode);
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index ae79c30b6c0c..bba1ac848f96 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -833,7 +833,7 @@ cache in your filesystem.  The following members are defined:
- 		sector_t (*bmap)(struct address_space *, sector_t);
- 		void (*invalidate_folio) (struct folio *, size_t start, size_t len);
- 		bool (*release_folio)(struct folio *, gfp_t);
--		void (*free_folio)(struct folio *);
-+		void (*free_folio)(struct address_space *, struct folio *);
- 		ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
- 		int (*migrate_folio)(struct mapping *, struct folio *dst,
- 				struct folio *src, enum migrate_mode);
-@@ -1011,11 +1011,14 @@ cache in your filesystem.  The following members are defined:
- 	clear the uptodate flag if it cannot free private data yet.
- 
- ``free_folio``
--	free_folio is called once the folio is no longer visible in the
--	page cache in order to allow the cleanup of any private data.
--	Since it may be called by the memory reclaimer, it should not
--	assume that the original address_space mapping still exists, and
--	it should not block.
-+	free_folio is called once the folio is no longer visible in
-+	the page cache in order to allow the cleanup of any private
-+	data.  Since it may be called by the memory reclaimer, it
-+	should not assume that the original address_space mapping
-+	still exists at folio->mapping. The mapping the folio used to
-+	belong to is instead passed for free_folio to read any
-+	information it might need from the mapping. free_folio should
-+	not block.
- 
- ``direct_IO``
- 	called by the generic read/write routines to perform direct_IO -
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index bd23fc736b39..148433f6d9d4 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -55,7 +55,7 @@ static int nfs_closedir(struct inode *, struct file *);
- static int nfs_readdir(struct file *, struct dir_context *);
- static int nfs_fsync_dir(struct file *, loff_t, loff_t, int);
- static loff_t nfs_llseek_dir(struct file *, loff_t, int);
--static void nfs_readdir_clear_array(struct folio *);
-+static void nfs_free_folio(struct address_space *, struct folio *);
- static int nfs_do_create(struct inode *dir, struct dentry *dentry,
- 			 umode_t mode, int open_flags);
- 
-@@ -69,7 +69,7 @@ const struct file_operations nfs_dir_operations = {
- };
- 
- const struct address_space_operations nfs_dir_aops = {
--	.free_folio = nfs_readdir_clear_array,
-+	.free_folio = nfs_free_folio,
- };
- 
- #define NFS_INIT_DTSIZE PAGE_SIZE
-@@ -230,6 +230,11 @@ static void nfs_readdir_clear_array(struct folio *folio)
- 	kunmap_local(array);
- }
- 
-+static void nfs_free_folio(struct address_space *mapping, struct folio *folio)
-+{
-+	nfs_readdir_clear_array(folio);
-+}
-+
- static void nfs_readdir_folio_reinit_array(struct folio *folio, u64 last_cookie,
- 					   u64 change_attr)
- {
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index 5ac743c6bc2e..884cc5295f3e 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -449,7 +449,8 @@ static bool orangefs_release_folio(struct folio *folio, gfp_t foo)
- 	return !folio_test_private(folio);
- }
- 
--static void orangefs_free_folio(struct folio *folio)
-+static void orangefs_free_folio(struct address_space *mapping,
-+				struct folio *folio)
- {
- 	kfree(folio_detach_private(folio));
- }
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0fded2e3c661..9862ea92a2af 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -455,7 +455,7 @@ struct address_space_operations {
- 	sector_t (*bmap)(struct address_space *, sector_t);
- 	void (*invalidate_folio) (struct folio *, size_t offset, size_t len);
- 	bool (*release_folio)(struct folio *, gfp_t);
--	void (*free_folio)(struct folio *folio);
-+	void (*free_folio)(struct address_space *mapping, struct folio *folio);
- 	ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
- 	/*
- 	 * migrate the contents of a folio to the specified target. If
-diff --git a/mm/filemap.c b/mm/filemap.c
-index bed7160db214..a02c3d8e00e8 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -226,11 +226,11 @@ void __filemap_remove_folio(struct folio *folio, void *shadow)
- 
- void filemap_free_folio(struct address_space *mapping, struct folio *folio)
- {
--	void (*free_folio)(struct folio *);
-+	void (*free_folio)(struct address_space*, struct folio *);
- 
- 	free_folio = mapping->a_ops->free_folio;
- 	if (free_folio)
--		free_folio(folio);
-+		free_folio(mapping, folio);
- 
- 	folio_put_refs(folio, folio_nr_pages(folio));
- }
-@@ -820,7 +820,8 @@ EXPORT_SYMBOL(file_write_and_wait_range);
- void replace_page_cache_folio(struct folio *old, struct folio *new)
- {
- 	struct address_space *mapping = old->mapping;
--	void (*free_folio)(struct folio *) = mapping->a_ops->free_folio;
-+	void (*free_folio)(struct address_space *, struct folio *) =
-+		mapping->a_ops->free_folio;
- 	pgoff_t offset = old->index;
- 	XA_STATE(xas, &mapping->i_pages, offset);
- 
-@@ -849,7 +850,7 @@ void replace_page_cache_folio(struct folio *old, struct folio *new)
- 		__lruvec_stat_add_folio(new, NR_SHMEM);
- 	xas_unlock_irq(&xas);
- 	if (free_folio)
--		free_folio(old);
-+		free_folio(mapping, old);
- 	folio_put(old);
- }
- EXPORT_SYMBOL_GPL(replace_page_cache_folio);
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index c0e459e58cb6..178507c1b900 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -152,7 +152,8 @@ static int secretmem_migrate_folio(struct address_space *mapping,
- 	return -EBUSY;
- }
- 
--static void secretmem_free_folio(struct folio *folio)
-+static void secretmem_free_folio(struct address_space *mapping,
-+				 struct folio *folio)
- {
- 	set_direct_map_default_noflush(&folio->page);
- 	folio_zero_segment(folio, 0, folio_size(folio));
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 3783e45bfc92..b8add4d0cf18 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -788,7 +788,7 @@ static int __remove_mapping(struct address_space *mapping, struct folio *folio,
- 		xa_unlock_irq(&mapping->i_pages);
- 		put_swap_folio(folio, swap);
- 	} else {
--		void (*free_folio)(struct folio *);
-+		void (*free_folio)(struct address_space *, struct folio *);
- 
- 		free_folio = mapping->a_ops->free_folio;
- 		/*
-@@ -817,7 +817,7 @@ static int __remove_mapping(struct address_space *mapping, struct folio *folio,
- 		spin_unlock(&mapping->host->i_lock);
- 
- 		if (free_folio)
--			free_folio(folio);
-+			free_folio(mapping, folio);
- 	}
- 
- 	return 1;
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 24d270b9b725..c578d0ebe314 100644
+index cb426c1dfef8..04b1513c2998 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -1319,7 +1319,8 @@ static void kvm_gmem_invalidate(struct folio *folio)
- static inline void kvm_gmem_invalidate(struct folio *folio) {}
+@@ -859,6 +859,35 @@ static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
+ 	return ret;
+ }
+ 
++static long kvm_gmem_merge_truncate_indices(struct inode *inode, pgoff_t index,
++					   size_t nr_pages)
++{
++	struct folio *f;
++	pgoff_t unused;
++	long num_freed;
++
++	unmap_mapping_pages(inode->i_mapping, index, nr_pages, false);
++
++	if (!kvm_gmem_has_safe_refcount(inode->i_mapping, index, nr_pages, &unused))
++		return -EAGAIN;
++
++	f = filemap_get_folio(inode->i_mapping, index);
++	if (IS_ERR(f))
++		return 0;
++
++	/* Leave just filemap's refcounts on the folio. */
++	folio_put(f);
++
++	WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
++
++	num_freed = folio_nr_pages(f);
++	folio_lock(f);
++	truncate_inode_folio(inode->i_mapping, f);
++	folio_unlock(f);
++
++	return num_freed;
++}
++
+ #else
+ 
+ static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
+@@ -874,6 +903,12 @@ static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
+ 	return 0;
+ }
+ 
++static long kvm_gmem_merge_truncate_indices(struct inode *inode, pgoff_t index,
++					   size_t nr_pages)
++{
++	return 0;
++}
++
  #endif
  
--static void kvm_gmem_free_folio(struct folio *folio)
-+static void kvm_gmem_free_folio(struct address_space *mapping,
-+				struct folio *folio)
+ #else
+@@ -1182,8 +1217,10 @@ static long kvm_gmem_truncate_indices(struct address_space *mapping,
+  *
+  * Removes folios beginning @index for @nr_pages from filemap in @inode, updates
+  * inode metadata.
++ *
++ * Return: 0 on success and negative error otherwise.
+  */
+-static void kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
++static long kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
+ 						  pgoff_t index,
+ 						  size_t nr_pages)
  {
- 	folio_clear_unevictable(folio);
+@@ -1191,19 +1228,34 @@ static void kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
+ 	long num_freed;
+ 	pgoff_t idx;
+ 	void *priv;
++	long ret;
  
+ 	priv = kvm_gmem_allocator_private(inode);
+ 	nr_per_huge_page = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+ 
++	ret = 0;
+ 	num_freed = 0;
+ 	for (idx = index; idx < index + nr_pages; idx += nr_per_huge_page) {
+-		num_freed += kvm_gmem_truncate_indices(
+-			inode->i_mapping, idx, nr_per_huge_page);
++		if (mapping_exiting(inode->i_mapping) ||
++		    !kvm_gmem_has_some_shared(inode, idx, nr_per_huge_page)) {
++			num_freed += kvm_gmem_truncate_indices(
++				inode->i_mapping, idx, nr_per_huge_page);
++		} else {
++			ret = kvm_gmem_merge_truncate_indices(inode, idx,
++							      nr_per_huge_page);
++			if (ret < 0)
++				break;
++
++			num_freed += ret;
++			ret = 0;
++		}
+ 	}
+ 
+ 	spin_lock(&inode->i_lock);
+ 	inode->i_blocks -= (num_freed << PAGE_SHIFT) / 512;
+ 	spin_unlock(&inode->i_lock);
++
++	return ret;
+ }
+ 
+ /**
+@@ -1252,8 +1304,10 @@ static void kvm_gmem_zero_range(struct address_space *mapping,
+  *
+  * Removes full (huge)pages from the filemap and zeroing incomplete
+  * (huge)pages. The pages in the range may be split.
++ *
++ * Return: 0 on success and negative error otherwise.
+  */
+-static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
++static long kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
+ 					  loff_t lend)
+ {
+ 	pgoff_t full_hpage_start;
+@@ -1263,6 +1317,7 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
+ 	pgoff_t start;
+ 	pgoff_t end;
+ 	void *priv;
++	long ret;
+ 
+ 	priv = kvm_gmem_allocator_private(inode);
+ 	nr_per_huge_page = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+@@ -1279,10 +1334,11 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
+ 		kvm_gmem_zero_range(inode->i_mapping, start, zero_end);
+ 	}
+ 
++	ret = 0;
+ 	if (full_hpage_end > full_hpage_start) {
+ 		nr_pages = full_hpage_end - full_hpage_start;
+-		kvm_gmem_truncate_inode_aligned_pages(inode, full_hpage_start,
+-						      nr_pages);
++		ret = kvm_gmem_truncate_inode_aligned_pages(
++			inode, full_hpage_start, nr_pages);
+ 	}
+ 
+ 	if (end > full_hpage_end && end > full_hpage_start) {
+@@ -1290,6 +1346,8 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
+ 
+ 		kvm_gmem_zero_range(inode->i_mapping, zero_start, end);
+ 	}
++
++	return ret;
+ }
+ 
+ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+@@ -1298,6 +1356,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+ 	pgoff_t start = offset >> PAGE_SHIFT;
+ 	pgoff_t end = (offset + len) >> PAGE_SHIFT;
+ 	struct kvm_gmem *gmem;
++	long ret;
+ 
+ 	/*
+ 	 * Bindings must be stable across invalidation to ensure the start+end
+@@ -1308,8 +1367,9 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+ 	list_for_each_entry(gmem, gmem_list, entry)
+ 		kvm_gmem_invalidate_begin_and_zap(gmem, start, end);
+ 
++	ret = 0;
+ 	if (kvm_gmem_has_custom_allocator(inode)) {
+-		kvm_gmem_truncate_inode_range(inode, offset, offset + len);
++		ret = kvm_gmem_truncate_inode_range(inode, offset, offset + len);
+ 	} else {
+ 		/* Page size is PAGE_SIZE, so use optimized truncation function. */
+ 		truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
+@@ -1320,7 +1380,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+ 
+ 	filemap_invalidate_unlock(inode->i_mapping);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
 -- 
 2.49.0.1045.g170613ef41-goog
 
