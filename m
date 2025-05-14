@@ -1,35 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308A525760;
-	Wed, 14 May 2025 00:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9440219E0;
+	Wed, 14 May 2025 00:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747182593; cv=none; b=rsVuxnUDPrdHjJQwaCAQJ/mb3egM4xEZMLtJVQPeS+aDKXrud6xDITI04+u3TrrXhNnpuLVCYQjozqCoUyRZVvW23c2z2nxIJv8JrF0PxBwThWFCyaGvteQxo00yQjG2/+xFlaQ8uHQDSfvUuKJQxIAb1TIWk+6os0BwutPHSBg=
+	t=1747182626; cv=none; b=eAQ2STtAOcDa/VlQs/xkRIhbIAHaaABLMTiLaEhfx/7+uQ7lO7pLgjrTQtX0vz3IMdrP20cxapya1VPh6TcpxB/cwezc2NptwiXFXg2ZSwFpUjmCF9p7ku9lUxzCFLrY56ys1d60XXRdvsX1DWreJNtS/IZV1zJ9lcteo2RrJaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747182593; c=relaxed/simple;
-	bh=/tWBXSqBsWK0/0++UUW/l22Ugc9piDNSl+WPBk5asaM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pXrPyNcD9DRkb+/eNTdhFBNZOMRsiY9CpBVLoFNBI0rDyqweN3YQLzbw6DjQ6ZX51cc+eqlM8nDEdxERySvvZ6AXOXBq6NhQJ6WyQCp2tJrXX4tzVPqEp5V7BfB3y95pBIimKLFjFMn0kjWkNzQ2wCX/kneGALcvTM6XlvY3Sy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyFI1H6O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyFI1H6O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5A9C4CEE4;
-	Wed, 14 May 2025 00:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747182592;
-	bh=/tWBXSqBsWK0/0++UUW/l22Ugc9piDNSl+WPBk5asaM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tyFI1H6OV0ovpBXd7X9NKQ/k0APzXbrdWfs3DrUtEn9drb1cntrWu/UGcLzIxTNnt
-	 VYSKiLq7iJNCj7dGUVRJ7Ih9Y8GdCILgtJbsOeUBmA8VYztqKUMSNcXe7UMTe5Ly2F
-	 ga+EFitGAhiHDXCNB46zZhmlp/89HoMpUWWHIs7TMkdqlwjxwtT8qvLyR/BtWQeqP/
-	 EpF0uWdVHZpsUCLvwhmIawS7fPj55/xinSbiywnO5hmWsIF5NvepaWs2T082ld2XFw
-	 ubOOQkEPntr172a2/hFcrjf7X2BCpcsnwf6tAcY0N7eWy/Jwf7PKJqJw4fcf14Ggoz
-	 tN30NfM3NsStA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 341AD380DBE8;
-	Wed, 14 May 2025 00:30:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1747182626; c=relaxed/simple;
+	bh=qcJlSkPCiOGZSrlEbQQaWQaj/ShWUe1nOf8dqaN2sSM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hZZBQqkZ373gTOXlo39+iTzOgoQP/AfjLp6fCmiGjIw9ngiONf4tHjMlHWYdA/ZYz+hbpd5/YbThZNZ54VurveX700Sj8+cQADH1SnLiACPuLa9tWeVVhRxAAoypW/cE//FU27qRw+3ILYLQSp/Z751PfmNxvJEUZhNm9M50VoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgCHJpUY5CNofLR4AA--.14402S2;
+	Wed, 14 May 2025 08:30:18 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH 0/2] Add driver support for ESWIN eic7700 SoC reset controller
+Date: Wed, 14 May 2025 08:29:45 +0800
+Message-Id: <20250514002945.415-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,44 +36,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] qlcnic: fix memory leak in
- qlcnic_sriov_channel_cfg_cmd()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174718263001.1832687.7775702578018906906.git-patchwork-notify@kernel.org>
-Date: Wed, 14 May 2025 00:30:30 +0000
-References: <20250512044829.36400-1-abdun.nihaal@gmail.com>
-In-Reply-To: <20250512044829.36400-1-abdun.nihaal@gmail.com>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: shshaikh@marvell.com, horms@kernel.org, manishc@marvell.com,
- GR-Linux-NIC-Dev@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- sucheta.chakraborty@qlogic.com, rajesh.borundia@qlogic.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-CM-TRANSID:TQJkCgCHJpUY5CNofLR4AA--.14402S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4fuF4xJF4kKw43Kry5twb_yoW8WrW7pF
+	45CF13Krn8ZFZ7Xan3Ja10kr4fAa1ftrWY9rs2g3W7X398JF1rJr13tF15ZF9rAw18XryS
+	qF1ag34j9FyjyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHCJQUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-Hello:
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+	Add support for the reset functionality in the Linux kernel.
+	The driver provides basic functionality to manage and control
+	the reset signals for the eic7700 series chips, which are part of
+	the Eswin SoC family.
 
-On Mon, 12 May 2025 10:18:27 +0530 you wrote:
-> In one of the error paths in qlcnic_sriov_channel_cfg_cmd(), the memory
-> allocated in qlcnic_sriov_alloc_bc_mbx_args() for mailbox arguments is
-> not freed. Fix that by jumping to the error path that frees them, by
-> calling qlcnic_free_mbx_args(). This was found using static analysis.
-> 
-> Fixes: f197a7aa6288 ("qlcnic: VF-PF communication channel implementation")
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-> 
-> [...]
+	The driver integrates with the Linux reset subsystem, allowing kernel
+	code to trigger resets on the hardware and ensuring proper handling of
+	reset events.
 
-Here is the summary with links:
-  - [net,v2] qlcnic: fix memory leak in qlcnic_sriov_channel_cfg_cmd()
-    https://git.kernel.org/netdev/net/c/9d8a99c5a7c7
+	Features:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+	 Implement support for the ESWIN eic7700 SoC reset controller.
+	 Provide API to manage reset signals for the eic7700 series SoC.
+	 Integrate with the Linux reset subsystem for consistency and
+	 scalability.
 
+	Supported chips:
+	 ESWIN eic7700 series SoC.
+
+	Test:
+	 The tests tested on the Sifive HiFive Premier P550 (which uses the EIC7700 SoC),
+	 including system boot, networking, EMMC, display, and other peripherals.
+	 The drivers of these modules all use the reset module,
+	 so the verifies that this clock driver patch is working properly.
+
+Xuyang Dong (2):
+  dt-bindings: reset: eswin: Documentation for eic7700 SoC
+  reset: eswin: Add eic7700 reset driver
+
+ .../bindings/reset/eswin,eic7700-reset.yaml   |  57 +++
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-eic7700.c                 | 249 ++++++++++
+ .../dt-bindings/reset/eswin,eic7700-reset.h   | 460 ++++++++++++++++++
+ 5 files changed, 776 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/eswin,eic7700-reset.yaml
+ create mode 100644 drivers/reset/reset-eic7700.c
+ create mode 100644 include/dt-bindings/reset/eswin,eic7700-reset.h
+
+--
+2.17.1
 
