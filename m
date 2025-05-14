@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D12827466E;
-	Wed, 14 May 2025 11:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D03E21770D;
+	Wed, 14 May 2025 11:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223770; cv=none; b=UItkz3ncCVH/+KF2tCLQIiuCtvJYDSMtMV4YnSe9mFOsxdhzfXJ/01r4HfYq6ausHomUbYH27XeyvHwZdUpzlE8RqKzucIUDSxGegU0F0MnpQPraNsGOS+2nCSiGVdBBIQ1WK2fRcbh6P8o9kFsJCcTkCTx77+5Zv8iWzTcI4Io=
+	t=1747223770; cv=none; b=fZXwF6QOgXkGH7fmBjt2SaF0OQF04US5H8GFotUsetIqA9K97/dHoD11FlkUwrDMzhU6s/bZr2wor/f0edJZ4i1V5OMMTeqSUeYvfUb6Ix/lPHgiey10YuM06EOATB8Ycmho//hKRZoap0Oit1I3vjBU0fjj3wAEkIHe7WAw6JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747223770; c=relaxed/simple;
-	bh=FxUj0Q3Hbzzlo9vltMkfS3G/1BLac1smAJqfGR4/wdg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SfzpVANfdMG9EXsGi/jpSKvtkZwU3fAuk+qRi1fhv7Y9RzATDBMOUSClIfuCabAiQmlbwIYpBpKLYkff9eK7NL8ByDYx0LrGJurL56JxLIuefw1kE18UVEEh1nTqIPzSqwWxH1YZN+Tf0iYeARyn70v8rDuGdGy/DROA9FCUENc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgBbZQJF; arc=none smtp.client-ip=10.30.226.201
+	bh=03qO4U7yeAMiNm8NqrhsDiQX3XmavNIEE2Y1aHqZjhQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=K4LJWDbp6A4uJ7LOePF9wSu7WSgkoE6OTLBSYSufgY3oNRTkMEV5ZNrZtcdKKdcnjh7Ura34M47nm/5O2MeWEpSVFUOvxwe//VWH8gY2Hib8JNvM2eCr27rv8nRxCf2oKzR/mZza49RCHnVISSDL4ctOnouEPhWMaauujh1z1/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAMSzKpg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgBbZQJF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C009FC4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAMSzKpg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DA9A4C4CEEF;
 	Wed, 14 May 2025 11:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747223769;
-	bh=FxUj0Q3Hbzzlo9vltMkfS3G/1BLac1smAJqfGR4/wdg=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=GgBbZQJFmW7VlTZ1fu2WUMqOP6sdxbuXUGXqDBWMOma+t+8cpBiTy4w1WFeRzeA72
-	 k0G0Bg60UetylV4HHOvdWYGcC5F7GpkbibqzS4Jd76d/0Vhsg3hglkGmhPPvON8cuz
-	 ioSdfOwKbJANZDCzDXrSxGVXnlGGUAaCr8VdOk3SzVgVwYFNDXkTWXoju+0rCkjbWT
-	 Loh9Xal05rdIvrNTknk7CFzhMjd/owA4Z7OkAKrxKUm8MVPbm0SLMaJLutcJp+83JP
-	 rKODGm5wl8vo/76Wz4rgXd5oQJnG2Vwoa1ar6zHwW9EOIgN2PoYamfM4+KavFVcT4b
-	 ei+sTAXKWE6Hw==
+	bh=03qO4U7yeAMiNm8NqrhsDiQX3XmavNIEE2Y1aHqZjhQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=fAMSzKpgasPE1vP13EZmdRVW0RR8kBprF5+4OXR5/BGoCUfbcl1WXU0EbuoF6E3QZ
+	 ccHsP/2AoqSjDeoGBGm9V9aPkrxmSkuaNju0N8ouiN7LW5JC6Twi5JTNYkZFDqPQlY
+	 37ypGLWsloOricYhzMrvPCBHlEQfHrc3OEKS8x9bKaj7ijzbhig9mItaksrSssA3C1
+	 eQxdOGpNCcfAWtgBwl6JaBWqJxvMZMmtO2rpw3eKHWokKbxxgT17Q1JD+LmS2JARsI
+	 LSNDpEX1uilkJAf6S7FL3NO5gCzss/lv5LD0czlQX89R0/nOSIX/CHt/NMGMpRJbuc
+	 PDwko8NGrs8GA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01E9C3ABD8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79F0C3ABCC;
 	Wed, 14 May 2025 11:56:09 +0000 (UTC)
 From: Alejandro Enrique via B4 Relay <devnull+alejandroe1.geotab.com@kernel.org>
-Subject: [PATCH 0/2] Add u-blox,neo-m9 compatible
-Date: Wed, 14 May 2025 13:55:53 +0200
-Message-Id: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
+Date: Wed, 14 May 2025 13:55:54 +0200
+Subject: [PATCH 1/2] dt-bindings: gnss: add u-blox,neo-9m compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,21 +40,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMqEJGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0MT3dKkCt1cS11zg5Q0g7QUi2QTiyQloOKCotS0zAqwQdGxtbUAwmY
- FzVgAAAA=
-X-Change-ID: 20250514-ubx-m9-70df0fd8c48b
+Message-Id: <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
+References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
+In-Reply-To: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
 To: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Alejandro Enrique <alejandroe1@geotab.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747223768; l=668;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747223768; l=746;
  i=alejandroe1@geotab.com; s=20250514; h=from:subject:message-id;
- bh=FxUj0Q3Hbzzlo9vltMkfS3G/1BLac1smAJqfGR4/wdg=;
- b=Fclj0erYWxoN7IjKp0yeMD6wAsRkETKDIqX3C3DQKPx96XyFgVi7V3R6LRMCKld0+U3kWJPmT
- 7Dl3VW5yMMpBik9K5deywSu4j0cPHsf5mmvqZvuKiZDrCSOrGe/9QGe
+ bh=3xJpnPbRisAKL2+dPmneQBdkYHGq5g2cneB0rP+Fuic=;
+ b=63IpCvQdkbBYkX0QTX0yjWJPaRm8LjZ6cUlPCKhvTUdIEoLLNVv0Vw08upHRK3rV/fghhc+QD
+ Q1JftRbJlOlCW3069s5l46Y8yLR1FmfPU4uVd/P9BCdocsGqBINdEjE
 X-Developer-Key: i=alejandroe1@geotab.com; a=ed25519;
  pk=xzHMPbqczL/tMsjXr26iLoHwIzLveHVnT+GIU4p1k38=
 X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
@@ -62,24 +61,29 @@ X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
 X-Original-From: Alejandro Enrique <alejandroe1@geotab.com>
 Reply-To: alejandroe1@geotab.com
 
-This series just add the compatible string for u-blox NEO-9M module. I
-have tested the driver with such a module and it is working fine. 
+From: Alejandro Enrique <alejandroe1@geotab.com>
+
+Add compatible for u-blox NEO-9M GPS module.
 
 Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
 ---
-Alejandro Enrique (2):
-      dt-bindings: gnss: add u-blox,neo-9m compatible
-      gnss: ubx: add u-blox,neo-m9 compatible
-
  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 1 +
- drivers/gnss/ubx.c                                        | 1 +
- 2 files changed, 2 insertions(+)
----
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250514-ubx-m9-70df0fd8c48b
+ 1 file changed, 1 insertion(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8156a72170965929bb7e 100644
+--- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
++++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+@@ -22,6 +22,7 @@ properties:
+       - u-blox,neo-6m
+       - u-blox,neo-8
+       - u-blox,neo-m8
++      - u-blox,neo-m9
+ 
+   reg:
+     description: >
+
 -- 
-Alejandro Enrique <alejandroe1@geotab.com>
+2.34.1
 
 
