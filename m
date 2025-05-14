@@ -1,121 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D740E2153D8;
-	Wed, 14 May 2025 22:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE2522577C;
+	Wed, 14 May 2025 22:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747260280; cv=none; b=dhwMPkH54szJuhLOHTDfAf3KnTKEnWSWtznrCdZ0vCtvWztH50RQvSOzF1Eyh7xpWvReIA3JTVYXb5SsOnCrfq7bTdehpLDnVGCi3DXoDzI0M/GyHRVs6QROYykYQODpdJthwIzU37PajcWYi6x52wF4JoItB3HIsyLpsvZTp3M=
+	t=1747260280; cv=none; b=j14oSrAuG4U7o9Azd8y7VpJzLKsTvoPJCOKqm6sMh1AGm3WmaLQZadOb8qQtraCMzUWThXhTUM6Db4h5QP0XJ2MlwRm4LC3wQ+D0p8D0E1M28h2n67PrQsKwu02tobDPPIot5WrC3IiIcdUoxNudp1jLFQaIwbtYtQO15Tg7ax4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747260280; c=relaxed/simple;
-	bh=WF46UsPN75VDjMGLBPpKqGhF8yXGNp/YIhfAlM9Ro+U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IG9u3ra5NFGEVdrBHRcHQtpmnHG4ef4xR5e3rfXCp/TO7WkVLWGAIf2YSBSAqz9CAMokQM27dt/FvOY7jX1bw7cWdQfD47TSvt24gsUYy9FlhqVS5Mg0hojgjPpO+u/g++QjcKCA1PmNUNN03lmnsqKl4DMnyBP/gLLeElwCqtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUdZ7K0j; arc=none smtp.client-ip=10.30.226.201
+	bh=VF/6ptY3YAA/WhG9VLCXpoTM5T1oQlAmB00KMlDK8LQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+56FoJMKU2GVwND4mZgAO6kTNdOkREUqRQYcTsbgElOEd09e1xAeX+uVpE6smdP/uC9CIE5nDHf2syLfJXrxhiYD4g1SLYKJBCdYyianKKq+Uq5OJUPK78uegtudNWPZMCNCVpy7j/0ZwWt4oTU+T3skLw8YsGRfp1SkPym2fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZvDOd5I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUdZ7K0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B48C4CEE3;
-	Wed, 14 May 2025 22:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZvDOd5I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FFF9C4CEED;
+	Wed, 14 May 2025 22:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747260279;
-	bh=WF46UsPN75VDjMGLBPpKqGhF8yXGNp/YIhfAlM9Ro+U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PUdZ7K0j17nsI5ayN7DSVjltWpYjm6oTU1mp9NUMsiQ9ampYAeKPhPeTt5brHKqQh
-	 b1YCx1yrkI4VntLHgZSntgzZxTZm/caerNwwEbZfo3cmjqmUAAc+WZtu2wrI3aEliM
-	 ri/vW74f+MTIsZTTIZ9s9SYep4C/tnT4eUj+KgBI15odyyFD3ZMQTMMsWqMdoD3TBE
-	 BQo0NsjZUHoei2FKsRI6FKvdPXAoQNC2wdOgDR1y60rz7ozbuM8mS24iiXkbAH+g6f
-	 SGDX5xFhxlvhWX7rj2wfQa8CG5G5AJztoexZMQcmzdeXHoign0VYTe4epLf9WTRdY2
-	 WYn7RL2x4q9UA==
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 15 May 2025 00:03:41 +0200
-Subject: [PATCH v7 8/9] selftests/pidfd: add PIDFD_INFO_COREDUMP
- infrastructure
+	s=k20201202; t=1747260280;
+	bh=VF/6ptY3YAA/WhG9VLCXpoTM5T1oQlAmB00KMlDK8LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SZvDOd5IsEj3W7FooGL26wkWPwWGxk8bH/xzhj85q0rf1OJ0umY1BbrW2e2cubOq9
+	 FZbQ1zAV1yAdrPaWE658yaUur5UHhW85U8fQJNQI+eJmXigtQT+P77QHGj/zoMHVh9
+	 U8rQqKcZti+UbL9XHXJjj3VmMdqmm32ZrR40hEI4/elboe1ZSuNpjvimNHLBVz9LMw
+	 mGeYfLKOIl0+4MetZAh5uzPZYG8pEmSQRYi3x4pElF6d8o6b5aKGi/SDM9Vj1ySsBL
+	 5lXS3v3eRMGysVRbj6BDqp8WcIrUggMWqKiqDnbOtD641TOh0qjOsdbz2KT7je2B+R
+	 tMA7KQOKqYiNA==
+Date: Wed, 14 May 2025 17:04:38 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Ross Burton <ross.burton@arm.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Dongcheng Yan <dongcheng.yan@intel.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Liu Ying <victor.liu@nxp.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-staging@lists.linux.dev,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-media@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/19] dt-bindings: media: i2c: max96712: add support
+ for I2C ATR
+Message-ID: <174726027793.3124111.7562097751443784673.robh@kernel.org>
+References: <20250512212832.3674722-1-demonsingur@gmail.com>
+ <20250512212832.3674722-9-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-work-coredump-socket-v7-8-0a1329496c31@kernel.org>
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
-In-Reply-To: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
-To: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, 
- David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, 
- Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>, 
- Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-security-module@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>, 
- Alexander Mikhalitsyn <alexander@mihalicyn.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1381; i=brauner@kernel.org;
- h=from:subject:message-id; bh=WF46UsPN75VDjMGLBPpKqGhF8yXGNp/YIhfAlM9Ro+U=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSoCntKiHV/2tWx+UDRFq9PT75FCXS2rnSs5PT8MNHWi
- tPMcK1VRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEQKixkZ1mqXeZYdZTVnDI+1
- 0p/xf7HU1aasrZ6W2dVuX6avPCwby/DPxi1xptY83v/HVkpxXs2729aYl3PifPG23QrbV8S9cGr
- hAgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512212832.3674722-9-demonsingur@gmail.com>
 
-Add PIDFD_INFO_COREDUMP infrastructure so we can use it in tests.
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- tools/testing/selftests/pidfd/pidfd.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+On Tue, 13 May 2025 00:28:17 +0300, Cosmin Tanislav wrote:
+> MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
+> capable of connecting to a separate serializer. If these serializers
+> have the same CFG pins configuration, they will also have the same I2C
+> address, causing conflicts unless the deserializer changes the address
+> of the connected serializers.
+> 
+> The MAX96712 and MAX96724 support changing the I2C address of the
+> connected serializers.
+> 
+> Document this capability.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  .../bindings/media/i2c/maxim,max96712.yaml    | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
 
-diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-index 55bcf81a2b9a..887c74007086 100644
---- a/tools/testing/selftests/pidfd/pidfd.h
-+++ b/tools/testing/selftests/pidfd/pidfd.h
-@@ -131,6 +131,26 @@
- #define PIDFD_INFO_EXIT			(1UL << 3) /* Always returned if available, even if not requested */
- #endif
- 
-+#ifndef PIDFD_INFO_COREDUMP
-+#define PIDFD_INFO_COREDUMP	(1UL << 4)
-+#endif
-+
-+#ifndef PIDFD_COREDUMPED
-+#define PIDFD_COREDUMPED	(1U << 0) /* Did crash and... */
-+#endif
-+
-+#ifndef PIDFD_COREDUMP_SKIP
-+#define PIDFD_COREDUMP_SKIP	(1U << 1) /* coredumping generation was skipped. */
-+#endif
-+
-+#ifndef PIDFD_COREDUMP_USER
-+#define PIDFD_COREDUMP_USER	(1U << 2) /* coredump was done as the user. */
-+#endif
-+
-+#ifndef PIDFD_COREDUMP_ROOT
-+#define PIDFD_COREDUMP_ROOT	(1U << 3) /* coredump was done as root. */
-+#endif
-+
- #ifndef PIDFD_THREAD
- #define PIDFD_THREAD O_EXCL
- #endif
-@@ -150,6 +170,9 @@ struct pidfd_info {
- 	__u32 fsuid;
- 	__u32 fsgid;
- 	__s32 exit_code;
-+	__u32 coredump_mask;
-+	__u32 __spare1;
-+	__u64 coredump_cookie;
- };
- 
- /*
-
--- 
-2.47.2
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
