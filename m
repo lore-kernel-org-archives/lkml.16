@@ -1,139 +1,298 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68132205519;
-	Wed, 14 May 2025 10:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4705225A50;
+	Wed, 14 May 2025 10:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747219134; cv=none; b=E+xtGey3UP1Hs1VQvUj74P1vHIG7SEF3ND1YAneFcYi80tR/uV/RP/483X6LacLWL8KtennpnmiQOBZ3Jrb6Irax5p28y9tvXAQxz6JmVQgNeQcGZlEt3jEKLxhv4UAk6uOCmbbpwzQmBwQ03+MC+zLMs+31lc2yvaQeRND23Wk=
+	t=1747219175; cv=none; b=WTuovkCm6P7JendnxhpKmvtTsixpT/cTAKU6mkn8bQr0Uxkn9TG8Lm8wobaPE49Z69pQ6nDJz00gPg7X/R/hfw5cqvJMy2K5F0ehPt8pL/drC10fI8yq2awmHTDIfM7fbn5AYmhLP7uhMQzcExBHzE/xeX0MJhqlG0zfbR3J6TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747219134; c=relaxed/simple;
-	bh=QLH0gNrBQapb4DgKV7C9hWr0X48Qc8YYIoKa2VE6OQo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eontHHzPxbk/Exvd3RKfcra/ug3GPe//m29fNygnlnBmVBrtqln6ud5uqiz019PaNfpXSwhrchD/BNq/3HGNEn9foyOPm/hWc7DFld8IfJwokQM9zhZrSJqqceSfEywCGw6J35cbohnRmjgzkJAW5ow552mgOipz63MGt+0dE38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kqm9pMei; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747219175; c=relaxed/simple;
+	bh=jdaKOxD2qt2jrO1zGt5BuJsLgrxKO8Tjw4sVNPmGmNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqVwE/cWbmzjQ4PAfqXGomeD/Jq97yg5hYmwe4OhwsZXN4H1AZ33xj2RQksfTASwKAx5caWmELLx1nOZZngoWLNEEp0fbtNzFMAkCJu4j8B3bIhCjyo4sZN41vyIjChCv4wlsICwVW+crXMvWcuiqT89tdHY51Q4hb4L7p2Gt2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2sbotfm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kqm9pMei"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so8997830e87.1;
-        Wed, 14 May 2025 03:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747219130; x=1747823930; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u18rizJH6zQQVk6mtazUuj8QZQOQdRFQC+xxUzR/EJw=;
-        b=Kqm9pMeiPj6Vy61mLm6TXx3rgplHL0sZEkcO7olw2k2+B5FkMkUdW1Y5hiqPE3CEE1
-         iXwlLlB8pVAW+Wm1WXctJc51EgYTRJv6IAr21cOvieHrH/7qV1KSKgy9UKK+j+1u2YYR
-         71N3jwcHwpPaLC/IOCb8ZO0CHRe5C9V0wTyEmncccuNcIUIsq3t8FnJSPNdddu4egwln
-         auOYlhAQeqGsim42js5B5XnevPQGHBAbOhFfeyOgXkqzYzCPDpzDh8XErZ0E/lchU/10
-         ozXUoP1v00oOUY2+w2AgZ3fV7bq5kgT1/HrcCiztn+Q0Rjpns28oyplZV6rlJlRFzrYY
-         ce+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747219130; x=1747823930;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u18rizJH6zQQVk6mtazUuj8QZQOQdRFQC+xxUzR/EJw=;
-        b=NtXqGL8idsIndIeNhapQuXYssMRX+z5u+T0rHl/FeAxLDU65HZZW5MRwabMhvSuHLU
-         n2L7GIAuHIryJJfjDB74DgcGoZ3yuAURfMPgfV1kqXmRWiRF1nYDRGw2Vdw5TMDXjjT+
-         oHiMu/1W8DSFXUQQaio0lBDfNaDs5RdYkeX/NqKhPW1lUcfmwNG04s3vSD+rL+wzlZQ+
-         BEviyrTE8tMlik/ikKLC8W81Xl/3dmgWzN37yb9T/yW2icaFMgcnlW/ekS48KA2o91Bv
-         ZELOV0axsahMn4oCejog6a11OBu2kOyu2+7C4tc7NYKkO9xnatn7pcaFitUWUJ+gdVCF
-         ofNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHY77cPkgsguaDLRUF9y8ntQpBE1MqGrVEfAA4TMOkEklXjX46bQwHEF31EssZZpIan7oUUdb8@vger.kernel.org, AJvYcCWo+Bc78NQ3PVASVXdJo6Tzg6MEXzKYGnaFATo48vLdeq/XT33WlA4HZC9xLv4TraXXEhMI3wqOdMHmVqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ+m5vX9m7H+F48QgGA2ORNAXfPbXQa4n1WCfDGlvCbVODuiSu
-	UYbV98q5n1s4JpXZ3wstAUgn9+2XYC7yRFDScZsyXonJ+/PT2Skr
-X-Gm-Gg: ASbGncuu7YeKgj4d24vsujwNpfm82S6PtaW9cqbVeZd4Bt5tfBm3ohwD2yN8YvJfo4d
-	idCPJJL11+22VumO8pYkgnP/u15D1XnQMwyoxywXmWkswaYrqC0XaaJoFiQX8aIM9G7ieZ2Oh4d
-	ospSKVohCr/IcaMuLRPuCMw53GiJVkS3B1IL5ep4RPktNrobIdXdiMdhtJxsuZW4gzAw/ivLfa6
-	5mmao3ZusnCikR1BYN3PTZaXlryTM2LxfUPqUPjsTBNb11Wuks0mtdTybQKklNVNmWKRTQ4fllV
-	8/e+TYnG9rMLKq3nLb/4+kGDM7k5R4k2qvGd0lYbv4C3AqTKupTw6VKOWaaTbLXL2AHDVI+YZVa
-	J
-X-Google-Smtp-Source: AGHT+IFIIeAIX8+mI9Youa23uFVdTyrEGM2yaHMFY1grmhUQonUuDWo6/3mO/dKIWsCisjaqVpzwiA==
-X-Received: by 2002:a05:651c:505:b0:30b:a20d:1c06 with SMTP id 38308e7fff4ca-327ecf6b72bmr11420301fa.0.1747219130279;
-        Wed, 14 May 2025 03:38:50 -0700 (PDT)
-Received: from localhost.localdomain ([91.197.2.199])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326e19da2bcsm11535601fa.74.2025.05.14.03.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 03:38:49 -0700 (PDT)
-From: Andrey Kriulin <kitotavrik.s@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	NeilBrown <neilb@suse.de>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org,
-	Andrey Kriulin <kitotavrik.media@gmail.com>
-Subject: [PATCH v2] fs: minix: Fix handling of corrupted directories
-Date: Wed, 14 May 2025 13:38:35 +0300
-Message-ID: <20250514103837.27152-1-kitotavrik.s@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2sbotfm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF48C4CEE9;
+	Wed, 14 May 2025 10:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747219174;
+	bh=jdaKOxD2qt2jrO1zGt5BuJsLgrxKO8Tjw4sVNPmGmNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m2sbotfmS8yko3IJtk8XVsHgYCDFtBVsGhhCxwPZlon3shJEZXif2/gpZglkjaOir
+	 5ys+PFUjoRr4jsgRlDaOsQZ8dKT7+n2DQ97IGnxK6MKxTSqwiBvNA1sCaIc0FO4jKO
+	 R8HFtSJ2mxI+TZm+NI/LZfsx9yAGU8MaWB4qbVthLFocMpXaaVyE6mQ4dIoeH6AhS8
+	 AkaxffMkxGBqNEu15rfuGoFkQH+pKTh3/IlSITZBJzh79ateLjk3W2E0anKIbrcFy9
+	 ut4DKOO26SynEkltCKpjgN6/WkNXhY8oxCT6CZQty64AQ4cxjQ5O85YX3wNHLCYtA/
+	 WH8qs5ei9qPpA==
+Date: Wed, 14 May 2025 12:39:28 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 18/26] arm64: smp: Support non-SGIs for IPIs
+Message-ID: <aCRy4K/jvLr95GOp@lpieralisi>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+ <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
 
-If the directory is corrupted and the number of nlinks is less than 2
-(valid nlinks have at least 2), then when the directory is deleted, the
-minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-value.
+On Tue, May 13, 2025 at 07:48:11PM +0200, Lorenzo Pieralisi wrote:
 
-Make nlinks validity check for directory.
+[...]
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+>  /*
+>   * Called from the secondary holding pen, this is the secondary CPU entry point.
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 3b3f6b56e733039cad7ff5b8995db16a68f3c762..3f3712e47c94c62836fb89cd4bfb3595fbb41557 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -83,7 +83,26 @@ enum ipi_msg_type {
+>  
+>  static int ipi_irq_base __ro_after_init;
+>  static int nr_ipi __ro_after_init = NR_IPI;
+> -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
+> +
+> +struct ipi_descs {
+> +	struct irq_desc *descs[MAX_IPI];
+> +};
+> +
+> +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
+> +
+> +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
+> +
+> +static bool percpu_ipi_descs __ro_after_init;
+> +
+> +static int ipi_to_irq(int ipi, int cpu)
+> +{
+> +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
+> +}
+> +
+> +static int irq_to_ipi(int irq)
+> +{
+> +	return (irq - ipi_irq_base) % nr_ipi;
+> +}
+>  
+>  static bool crash_stop;
+>  
+> @@ -844,7 +863,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+>  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+>  			   prec >= 4 ? " " : "");
+>  		for_each_online_cpu(cpu)
+> -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
+> +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
+>  		seq_printf(p, "      %s\n", ipi_types[i]);
+>  	}
+>  
+> @@ -919,7 +938,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
+>  
+>  static void arm64_backtrace_ipi(cpumask_t *mask)
+>  {
+> -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
+> +	unsigned int cpu;
+> +
+> +	if (!percpu_ipi_descs)
+> +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
+> +	else
+> +		for_each_cpu(cpu, mask)
+> +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
+>  }
+>  
+>  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+> @@ -944,7 +969,7 @@ void kgdb_roundup_cpus(void)
+>  		if (cpu == this_cpu)
+>  			continue;
+>  
+> -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
+> +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
+>  	}
+>  }
+>  #endif
+> @@ -1013,14 +1038,21 @@ static void do_handle_IPI(int ipinr)
+>  
+>  static irqreturn_t ipi_handler(int irq, void *data)
+>  {
+> -	do_handle_IPI(irq - ipi_irq_base);
+> +	do_handle_IPI(irq_to_ipi(irq));
+>  	return IRQ_HANDLED;
+>  }
+>  
+>  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+>  {
+> +	unsigned int cpu;
+> +
+>  	trace_ipi_raise(target, ipi_types[ipinr]);
+> -	__ipi_send_mask(ipi_desc[ipinr], target);
+> +
+> +	if (!percpu_ipi_descs)
+> +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
+> +	else
+> +		for_each_cpu(cpu, target)
+> +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
+>  }
+>  
+>  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
+> @@ -1046,11 +1078,15 @@ static void ipi_setup(int cpu)
+>  		return;
+>  
+>  	for (i = 0; i < nr_ipi; i++) {
+> -		if (ipi_should_be_nmi(i)) {
+> -			prepare_percpu_nmi(ipi_irq_base + i);
+> -			enable_percpu_nmi(ipi_irq_base + i, 0);
+> +		if (!percpu_ipi_descs) {
+> +			if (ipi_should_be_nmi(i)) {
+> +				prepare_percpu_nmi(ipi_irq_base + i);
+> +				enable_percpu_nmi(ipi_irq_base + i, 0);
+> +			} else {
+> +				enable_percpu_irq(ipi_irq_base + i, 0);
+> +			}
+>  		} else {
+> -			enable_percpu_irq(ipi_irq_base + i, 0);
+> +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+>  		}
+>  	}
+>  }
+> @@ -1064,44 +1100,79 @@ static void ipi_teardown(int cpu)
+>  		return;
+>  
+>  	for (i = 0; i < nr_ipi; i++) {
+> -		if (ipi_should_be_nmi(i)) {
+> -			disable_percpu_nmi(ipi_irq_base + i);
+> -			teardown_percpu_nmi(ipi_irq_base + i);
+> +		if (!percpu_ipi_descs) {
+> +			if (ipi_should_be_nmi(i)) {
+> +				disable_percpu_nmi(ipi_irq_base + i);
+> +				teardown_percpu_nmi(ipi_irq_base + i);
+> +			} else {
+> +				disable_percpu_irq(ipi_irq_base + i);
+> +			}
+>  		} else {
+> -			disable_percpu_irq(ipi_irq_base + i);
+> +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
+>  		}
+>  	}
+>  }
+>  #endif
+>  
+> -void __init set_smp_ipi_range(int ipi_base, int n)
+> +static void ipi_setup_ppi(int ipi)
+> +{
+> +	int err, irq, cpu;
+> +
+> +	irq = ipi_irq_base + ipi;
+> +
+> +	if (ipi_should_be_nmi(irq)) {
+> +		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
+> +		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
+> +	} else {
+> +		err = request_percpu_irq(irq, ipi_handler, "IPI", &irq_stat);
+> +		WARN(err, "Could not request IRQ %d as IRQ, err=%d\n", irq, err);
+> +	}
+> +
+> +	for_each_possible_cpu(cpu)
+> +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
+> +
+> +	irq_set_status_flags(irq, IRQ_HIDDEN);
+> +}
+> +
+> +static void ipi_setup_lpi(int ipi, int ncpus)
+> +{
+> +	for (int cpu = 0; cpu < ncpus; cpu++) {
+> +		int err, irq;
+> +
+> +		irq = ipi_to_irq(ipi, cpu);
+> +
+> +		err = irq_force_affinity(irq, cpumask_of(cpu));
+> +
+> +		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
+> +
+> +		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
+> +				  &irq_stat);
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
-Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
----
-v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
-<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
-directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
+Heads-up, kbuild bot (sparse) barfed (correctly) at this, because the
+&irq_stat pointer does not match the request_irq() void *dev_id parameter
+signature (it is void __percpu *).
 
- fs/minix/inode.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Of course, the &irq_stat parameter is unused so this is harmless.
 
-diff --git a/fs/minix/inode.c b/fs/minix/inode.c
-index f007e389d5d2..d815397b8b0d 100644
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -517,6 +517,14 @@ static struct inode *V1_minix_iget(struct inode *inode)
- 		iget_failed(inode);
- 		return ERR_PTR(-ESTALE);
- 	}
-+	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
-+		printk("MINIX-fs: inode directory with corrupted number of links");
-+		if (!sb_rdonly(inode->i_sb)) {
-+			brelse(bh);
-+			iget_failed(inode);
-+			return ERR_PTR(-EUCLEAN);
-+		}
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
-@@ -555,6 +563,14 @@ static struct inode *V2_minix_iget(struct inode *inode)
- 		iget_failed(inode);
- 		return ERR_PTR(-ESTALE);
- 	}
-+	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
-+		printk("MINIX-fs: inode directory with corrupted number of links");
-+		if (!sb_rdonly(inode->i_sb)) {
-+			brelse(bh);
-+			iget_failed(inode);
-+			return ERR_PTR(-EUCLEAN);
-+		}
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
--- 
-2.47.2
+I would just pass NULL (because AFAICS irq_stat in the action handler is
+unused), the question is why are we passing &irq_stat in
+request_percpu_irq() if that's unused in ipi_handler() ?
 
+Was it used before and we removed its usage ? Should we clean it up
+for completeness ?
+
+Thanks,
+Lorenzo
+
+> +
+> +		WARN(err, "Could not request IRQ %d, err=%d\n", irq, err);
+> +
+> +		irq_set_status_flags(irq, (IRQ_HIDDEN | IRQ_NO_BALANCING_MASK));
+> +
+> +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
+> +	}
+> +}
+> +
+> +void __init set_smp_ipi_range_percpu(int ipi_base, int n, int ncpus)
+>  {
+>  	int i;
+>  
+>  	WARN_ON(n < MAX_IPI);
+>  	nr_ipi = min(n, MAX_IPI);
+>  
+> -	for (i = 0; i < nr_ipi; i++) {
+> -		int err;
+> -
+> -		if (ipi_should_be_nmi(i)) {
+> -			err = request_percpu_nmi(ipi_base + i, ipi_handler,
+> -						 "IPI", &irq_stat);
+> -			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
+> -			     i, err);
+> -		} else {
+> -			err = request_percpu_irq(ipi_base + i, ipi_handler,
+> -						 "IPI", &irq_stat);
+> -			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
+> -			     i, err);
+> -		}
+> -
+> -		ipi_desc[i] = irq_to_desc(ipi_base + i);
+> -		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+> -	}
+> -
+> +	percpu_ipi_descs = !!ncpus;
+>  	ipi_irq_base = ipi_base;
+>  
+> +	for (i = 0; i < nr_ipi; i++) {
+> +		if (!percpu_ipi_descs)
+> +			ipi_setup_ppi(i);
+> +		else
+> +			ipi_setup_lpi(i, ncpus);
+> +	}
+> +
+>  	/* Setup the boot CPU immediately */
+>  	ipi_setup(smp_processor_id());
+>  }
+> 
+> -- 
+> 2.48.0
+> 
