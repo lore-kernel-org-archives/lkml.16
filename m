@@ -1,171 +1,277 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011016.outbound.protection.outlook.com [52.101.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47E520C49E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220557; cv=none; b=kQPIsQDjpfvDmlCtBbBU+e/DmEHnvscvCQEbbeL5w44YJANwS1y1JKA0OEQGWrMQniAFCGbuJYzgADZLrXPkKpuYwkdZBLSeXKdyKcWHHsEid36/yQc9SEUefAiBz2du/lm9L/XncOvE3I7bIaPtrakB0O+Z1OxKk5NKMXgXbYI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220557; c=relaxed/simple;
-	bh=g6FsWqajrTcVSIHknD3zeLY9flfbWnzSw3aQFZLECpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmvCRlTGyrjdmDdQ9R216hwIjWsfsUXqPdqh8P6jWyqSPC1E5//vuy+7U2bq+hDd2yDGi1U/O3lc+KdIeMD+hPe7wdNFHRj+QzXy1bTTPrm10+Tf4CwI5o8ZYyRO3xLwyuUbUmXj95hXtxalKV5f93AaEPBgprXaIq7eqVDrlOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MmDo9w0y; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E4A46426
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.16
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747220722; cv=fail; b=abI8yyxFS7yOagFZWBse3y8AxaQj4usfHhoJM4mymCmG2c/8B78k+uZ72Fz7+tXS6bVhLVTL/b4OI6f4LeYe81Yb9/ibnmGnbgevL2Pg4VUSKQVcD8tuh+z3iA3VgCtefruKbrWenmfxC3Eyj4lyLIG0BPoUTSahmfbLIBd51+0=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747220722; c=relaxed/simple;
+	bh=5DBWJW5K9+9L7vdJTUq638dt1wLknylm9uYhPAEYbMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FNwIxMBMGd673LHUDqODgOH7hTgQsY1acziPYluO2DEweIY8OvVvdIs05KhMvFaG7C9EUOA2ufPqD7LIdD5SSXxykaKZLqc6nzIHlsnZhJKPN/MStAbBQhoxWgr3jyf4PJ1FHRDdVYZwyjjIL9dp5Ie5pFiexdUc5kwz/ZskAz8=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=S9QlzdJt; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=S9QlzdJt; arc=fail smtp.client-ip=52.101.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmDo9w0y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747220553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cav3Z4NY5VTBc23C/qTtaVoA8kEGEB5wAcjksldNIvE=;
-	b=MmDo9w0yz1Kn3sjpYTSSjD4KrGMy642rX6NeyGw0BXVGUAJtLpNr/jiSCs78/k6kPmZONb
-	1RW8FgVKyn4Xti1ZjFxpWYaJxj2Tcu+wyggyg2xIC+GcF3d775HpKZpGvBXNYkmv52waPk
-	mrns9bc03aeESHAE3VEXBSgaL59QP5U=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-gzlJ3Ov7PRqk52uoyaEkhQ-1; Wed, 14 May 2025 07:02:32 -0400
-X-MC-Unique: gzlJ3Ov7PRqk52uoyaEkhQ-1
-X-Mimecast-MFC-AGG-ID: gzlJ3Ov7PRqk52uoyaEkhQ_1747220551
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5fbfdf7d306so6122820a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:02:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747220551; x=1747825351;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cav3Z4NY5VTBc23C/qTtaVoA8kEGEB5wAcjksldNIvE=;
-        b=ihhhoBQLz3bTXidka3xzQCLHBwsVo+YoTv/0wVgIsySGN4fBGmmvlD5HyH2ib37cbs
-         jq/Q6sY7IXahhvjqt2hoDfVKen/Hq53/54vF7LsqKaVq1fKPTNGIj/tu7g3seCUcRtx2
-         UoQh0A0oOwGKQy1n8A5Edzx0pFGwCrA2ZlHD5X+bmjGmnMEKIbXroKoVhQGxew84RyPV
-         5GZl5w5N0IyAuRmkMQffCxlSyPj7+rMEsEhxR+8qdEsELCeA3Z3+t0WaE47EilCNcvfz
-         0k0pmB5hmvclE8k3Wf6MI8xijkKdxTCAbyvJMnEiB87/Ne3cuitQHTHlFStcyuu9vkIR
-         Y2YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPBR8/rXLfMXdvVig0lgsQKUvlVipRkLsBUC4o7rGdYty/EoAwqzl3em749Pl4GMqU4RaMsTNluPCQhgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+KJmfrzMQhp+Ny7WSClxRZk3Q7R1GVLEZWxVYO+M2j7QajNdM
-	KofBCGEJIlsavppVjF/GGtw2DaTVJSB6vaoaxgveiHjee+YNA5dzToPIsQFib9bx8Y32i86GTr9
-	oyEVj7jYH+D6KSECemMpLeuf3p7YkhUt9HWv3MUDCwq2S+Dr1Q/nBtLrCUdwv
-X-Gm-Gg: ASbGncuRqS0KaNg6khd8zpW8E8OI5qymY/QEQxAnt+mChV7WVBt9M7TN33iHZtFClJZ
-	xJGj7IM06b68jGAJ+fVw2159B1tTMlRgrd4tCTC6e8FX8aXgbosQdZhB8GS6/GP82HR9G6i4QHh
-	V3bXA5M41jkCBGpisu+43eEbIJfZUyxbe4CAtJs/q6rMVs8CK0yV1vgJ2wXR/zLIXOjagyjp3N0
-	EluIyF2vQZOoIBrW8anAp494aZcI2QI7VAjQOUgy1P59mOkbtamdobqUmuNMwtX3usRhEte4GlR
-	Aw==
-X-Received: by 2002:a05:6402:234d:b0:5f4:ade4:88c5 with SMTP id 4fb4d7f45d1cf-5ff988dd135mr2082959a12.34.1747220551008;
-        Wed, 14 May 2025 04:02:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEs3ORoNcv9GW9V4gupozuqWmYmwSxEEUINo5zQzLXzCm36ngPWceLYKaaZhwPfqmrqY5iYdA==
-X-Received: by 2002:a05:6402:234d:b0:5f4:ade4:88c5 with SMTP id 4fb4d7f45d1cf-5ff988dd135mr2082854a12.34.1747220550339;
-        Wed, 14 May 2025 04:02:30 -0700 (PDT)
-Received: from thinky ([2a0e:fd87:a051:1:e664:4a86:4c01:c774])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fe43357d45sm4879817a12.54.2025.05.14.04.02.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 04:02:29 -0700 (PDT)
-Date: Wed, 14 May 2025 13:02:13 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 2/7] lsm: introduce new hooks for setting/getting
- inode fsxattr
-Message-ID: <kgl5h2iruqnhmad65sonlvneu6mdj6jl3sd4aoc3us3lvrgviy@imce27t4nk2e>
-References: <20250512-xattrat-syscall-v5-0-4cd6821e8ff7@kernel.org>
- <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
- <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="S9QlzdJt";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="S9QlzdJt"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=FYzD8dytpH4qgBzB4i+sdXhhuV90jnalGMudnxzBc+K4/GSoYwT2Elan9739cAhZ7X7fKWur/UE0OePQj6ZRFe9iwl7NSjQV8NwKh7hew2MxIpee+4ZmultLsl4Sy0qZXqPeGg6ZuiCz6OiZ35HQuyzDbx93g5MvHf7JcIQvD09J+EY26jBcSKwZl+jWwuMEJb4B280z0hkHoyzXXuRnhCWxg444/y7Af08NtW3AqskeTOC5wD25dKpPbF667WEuZV3LbxZjYdKWRIqOOfq3RwsDdq1cg/HO81L5cNImmreOeGF5S+DSeQgg96E2EZPdfUeyq05/eA/Urfp4xYS+7w==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=82kWtSkOSE6l5n7S2Cwh/fiAPNrjl+oanLeB12VQk7Q=;
+ b=Hwn8X9kGL7wyWhKw6qUzY0eAoaAdprjo/Im+O5KzukPpWxBdxGiSBAlq1CF/CXYQ7UQoWYDAGAQ9K94jzI4JelUBXOoYMgkK4slJ10cOIYZZ/xRLi6pcyHiVBeAf1iLXTWGW/dPvMfLC4zZZIeY/W+r9ALlS7tVABDiD4IgCbDGMcHCVoosjCdyfBufq5AEvglteHCirmUvVBRDQ1G/6YfmhTgXI+rV1jWyV3L8t4hay8Hic9xo/mvqKUErYy/ieI+s+e53as+xNZg89WoJg1d0dCKp+3RxS0nYX5QSIze8SCnQ6SnLcMSmGgMNGkZZPmU/S5yObfWjiaEZBC6WReg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linaro.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=82kWtSkOSE6l5n7S2Cwh/fiAPNrjl+oanLeB12VQk7Q=;
+ b=S9QlzdJt68ZD+FMboWSlj4EUF+ajEQascEYwnTurSRSd+kJgoGL/FXQhBhDDIMoBrO13uA7sxXzqogRDaOZH5aav4Am2ISthtMvfaq+G8E8dOdC/HifZzf+WRx1oomF33hB+CAqGeBHBGS6i9KWuo+Kff3o/Vqgu6B8eCg4RdMo=
+Received: from AM0PR02CA0189.eurprd02.prod.outlook.com (2603:10a6:20b:28e::26)
+ by AM7PR08MB5447.eurprd08.prod.outlook.com (2603:10a6:20b:10b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
+ 2025 11:05:16 +0000
+Received: from AMS0EPF0000019D.eurprd05.prod.outlook.com
+ (2603:10a6:20b:28e:cafe::7) by AM0PR02CA0189.outlook.office365.com
+ (2603:10a6:20b:28e::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.18 via Frontend Transport; Wed,
+ 14 May 2025 11:05:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AMS0EPF0000019D.mail.protection.outlook.com (10.167.16.249) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
+ via Frontend Transport; Wed, 14 May 2025 11:05:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p7mrasDBi68U++J2241jm36Gxb1G1h6PpOxoJLC6dd7e5/s8AZ+NtLgNQh6lGiR5ENcl8xPTVV74OtYYQdcaxttl+9UDd4ijtZ1ehFjAWQnI4hh2zDCovIGVk4U3KEcLAV3naW+uIRVbRT0bUue2oU+02MMc+DGBcGATvF9lRrClu4zKPJ38xTguWV++MIytlflEt0RgQsOH2/RnGPGq4J/z0P10tYX1BlrhCcdSvfNJBDol/qCtvu/KzCk02yfGjEDZu5i9rFNbG1h85Dku9wh86+TwY6EWNHZKUuNnOl7JrWCDO//y3F5AWu3WxhlB7zWITdJEthH3PdpeboOGFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=82kWtSkOSE6l5n7S2Cwh/fiAPNrjl+oanLeB12VQk7Q=;
+ b=U3IA8zHXMkAHSmdz/ayPEmFHCZBrtMbBY6R9Qpxr45q7VTeQCkD5ZLppbiogXmi87JRtsVerlvtZ6xRpkWK4CMCVDug1V4e41nhj3A78OtA8UcqpQ4We76MIoNzFJOS3ZtknWpFi+dw/iUphTCtJ4jqaPIahgU0buNBQczAVH8SqzmPQwUbvya9gd43EpMnpa2flXcO0wx/fMxIgCEB9hGxnM1R84a/oyJ93hY58idEFcSnJHOj3Ka5al4GE2Ou89Ig8pkc5o0T46Hc5KbTWscQmgU2dYMqUL3LElhmkwXDX0Pq4M8NjozbTptz9DpZapXWOP8iD+6JW6rwoejs7ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=82kWtSkOSE6l5n7S2Cwh/fiAPNrjl+oanLeB12VQk7Q=;
+ b=S9QlzdJt68ZD+FMboWSlj4EUF+ajEQascEYwnTurSRSd+kJgoGL/FXQhBhDDIMoBrO13uA7sxXzqogRDaOZH5aav4Am2ISthtMvfaq+G8E8dOdC/HifZzf+WRx1oomF33hB+CAqGeBHBGS6i9KWuo+Kff3o/Vqgu6B8eCg4RdMo=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by GV2PR08MB8654.eurprd08.prod.outlook.com
+ (2603:10a6:150:b6::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 11:04:42 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%5]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 11:04:41 +0000
+Date: Wed, 14 May 2025 12:04:39 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] coresight: prevent deactivate active config while
+ enabling the config
+Message-ID: <aCR4x/+Wp8JoqG9P@e129823.arm.com>
+References: <20250513170622.3071637-1-yeoreum.yun@arm.com>
+ <20250513170622.3071637-2-yeoreum.yun@arm.com>
+ <20250513170622.3071637-3-yeoreum.yun@arm.com>
+ <20250513170622.3071637-4-yeoreum.yun@arm.com>
+ <20250514093019.GE26114@e132581.arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514093019.GE26114@e132581.arm.com>
+X-ClientProxiedBy: LO4P265CA0088.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2bc::7) To GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
+X-MS-TrafficTypeDiagnostic:
+	GV1PR08MB10521:EE_|GV2PR08MB8654:EE_|AMS0EPF0000019D:EE_|AM7PR08MB5447:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e53de63-61a7-49b4-fc98-08dd92d73451
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?+Ej+z1E7rdFlZ/axyeEAf4nY2vMOc3WyqchQJNrM8cTYwQxaQ8j2pkz3Dily?=
+ =?us-ascii?Q?HN/U3rl73xJ9lAZvD3S40wCOKhIA3JdeDJL3KKeWB6iSSfIhV4h/WN14V86y?=
+ =?us-ascii?Q?N5pJQqDohp7CUukhFFq6RY4GYGE3rk4nitc+5IqgHCfjyBcHXFi+8b5yAPqr?=
+ =?us-ascii?Q?fhgHgrxP1NmKSEGOJmd6E7kpGEQa3c83XKwZwfT+Nt4vRQQmEz/EYdZoA/lj?=
+ =?us-ascii?Q?rmwtF/3WORthV2oUIKK7tDaLSGOweKPCuNmOCU8dIleQbDlnIAf1Zb7XZO+g?=
+ =?us-ascii?Q?BFY1ufbIFinX3diSQ6aYGF5kx4G0w8zU8lNy2e2XgRJK1YikbKikG0lRRn0c?=
+ =?us-ascii?Q?3NL+2D3FrGPlKAywSaf++uj756GaHtQNFOnnaYmqAjZk736tcuD3abOCaImd?=
+ =?us-ascii?Q?hN3Xq0p1Zs7ed8YtHcny9tfJndTG30ZV+qE1OpISGX6NvZephDrdsDq8EVdD?=
+ =?us-ascii?Q?Cewqr6BOd6F/16gXn4gK5/cQQM9wug9MBrZM/XpXOas0VldIysWo3hLmbgnT?=
+ =?us-ascii?Q?jHyGlMTYoho1T9o0ZBV7XtDh3SJW+wu9pPQaA0Gsv59+vUHgLP0P9t2tNCSx?=
+ =?us-ascii?Q?/fX3qgxx5zr8hmZ6ryh4DMl7xMLZlc440COZYR/GV7GJdOnERTA+rAxuqy+/?=
+ =?us-ascii?Q?rjp6Yx8Z1NFD/z8jKvOZqFHq72JtYqZKnabQOnDeNVFBcMsvLc0f/oX9eYSx?=
+ =?us-ascii?Q?p0NwHPXn9c4Zue9ldSAYpvlt5WP+jJJzjRLy9MZqqI9iaZLtNeI+8JL+vwk+?=
+ =?us-ascii?Q?Nk5xQooPlaGYCzCE5hE8aKeajizU3qGaESnp9P/TzFfGHAqNbzne8+mFtzST?=
+ =?us-ascii?Q?XY7kU5c4k2E9XC4znsC229GcGPRj2cL4uXbHI/xzDZr1DGlGrsVTdeGLWzLa?=
+ =?us-ascii?Q?aNaTo3LN4YmLPjiwn0NbmK18UOcFNcUbSVrPoML9tcVtdnJ465Chipp93Vgr?=
+ =?us-ascii?Q?0EMyu1SupzKbSuE38cpoxapvIDkja2UT0PQIOCr5IYaTqKcGzB4CB6bBK4QY?=
+ =?us-ascii?Q?va7kYl9rypFycx68XbPXNaqSH2FkDTbk1tY4aQm63X57pMehOfH7u9H5ilWH?=
+ =?us-ascii?Q?KiEALF1HWnQWG/AdKId3pDiX8becMRnlXzBgpCEepjorTrq6gESEKIIpO+GX?=
+ =?us-ascii?Q?/4lW286gLXqs79EubauaybZ4P9KUpbWdRGSJDVILot8yLNvbaSbd8A/FUV2e?=
+ =?us-ascii?Q?ajg119nMTj1p61NJyR9TU9MsBRbsIzNIK3YfSVyq8J0YQ7MBj1f7oEd2SwIO?=
+ =?us-ascii?Q?9d9BOxSCjvj3OkvmPsOnCsgjYAnAj0x/jneCXwexvOl6FfOuNjT3exvKs9al?=
+ =?us-ascii?Q?xECwiAl2pgWrx6XbJnPP0PtPt6+ekAyWMIp+FZRJKeSBE5iTLHZqMA8NUxsb?=
+ =?us-ascii?Q?8FbU4VIHpFJkCbdzOMTvIHzTj8mJdC9m/00l7RRx9kNc+wFuIA=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB8654
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF0000019D.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	8d47d751-afd0-484b-f115-08dd92d7204c
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|36860700013|1800799024|82310400026|376014|14060799003;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nhuruNcz7Hg7OXnFu+J5a0Tqq++sxeKoF5+HpuGsCT9v8HycwqnjGOfVZ4a6?=
+ =?us-ascii?Q?B6zj3AgPB9SVBoiGLVeCDMzRRQzhFjYqWLAJ3b+oPBpav9kjG/flnF1g9GNw?=
+ =?us-ascii?Q?pm2sMnZizk+5N8YWTNOyUEDMzFihOKrEDZakyT+VVnp5KABkRww8p58EH1BR?=
+ =?us-ascii?Q?qEHuw+snrAzR3ZjbBaJcZ0i/f5BDwBfzk4O4FHBH6U8TvKnlgWU22b2I2wPN?=
+ =?us-ascii?Q?uBxKfgKRmlQkGalSKtsC4evfGpvY4HzvfFuG/oqHn1t8VAEenm1FL60U7bcB?=
+ =?us-ascii?Q?rP9VosHXeZGIjlGIiCMI1nKnhi3wcwZv7yLQwPumKNqavxVgp+DKA2c6ytjR?=
+ =?us-ascii?Q?TL4G9/15R/GSS64GOnffdEhUobqjAqWH/YOutC94RE4rhBVUozvfg/8AnOIp?=
+ =?us-ascii?Q?NAoDLvLays/7/t4L7xZYzxrBYv9H+nkcW2ymkr8Gn1wzstVukByL0SuQxXN7?=
+ =?us-ascii?Q?PnTuzlPujdnKdJff7GSC66QSBDjEUNp3ftSULwKcTBfdmwPBetUww3Trq6FS?=
+ =?us-ascii?Q?FIqe3VrCkJ5OeG5/GZuROpVzF2bTKHES2H7Ca/rIb4CagAuurKff0lf5sLaF?=
+ =?us-ascii?Q?uidWQh+VWxb6hmpEH9vzNrMOX+R5Ej/aFjNOFX70C+XDbGVpA7ee7VkAUQoV?=
+ =?us-ascii?Q?A68gSfrYE0WnCP0c695s4/xU5Q/M4MJP3bzFiGE3QUGY9FN5Mi7w87dJX4Ck?=
+ =?us-ascii?Q?hK8/VwP0HotHym6Qf4aMghwR2y76z2I1MEpEeMhN/UXtr1dyc2/D0g5GaWMn?=
+ =?us-ascii?Q?5K3PHJvB4RRd/DAxdTOcX+3H71km7Q9JdMxJnneWk/1HjURbjpk06Vg3iKS3?=
+ =?us-ascii?Q?YJlCAwsnAGrI1XODjv1lJIeeZ3Dt1jJ7pYcjq90mxAUdRS+YhwfL4UaRynId?=
+ =?us-ascii?Q?AP/AIxTWHVV0JnNJSHWnRTimJnj7y1UJ3r2aVS4no/0os8gw5J4wsxYow572?=
+ =?us-ascii?Q?YH+qK6g0WqH3qjYAWsUzUd+m+yfOQPlPl26MERlMUkvR35MSMsc+5nf8wzRl?=
+ =?us-ascii?Q?KgWcy2GEYcoRJjRb6H304OSsEsSDr1pK6QItkTHpwNIMy7j1q7DxM6gBJlI0?=
+ =?us-ascii?Q?vnU35/WxWRfEVnDoIqi4lYzkMnIpM24/oymBj0I6MyEjHKx0vX97xBv9ga0S?=
+ =?us-ascii?Q?ZN+scbWixP1grR7zPIuZIPXRAe9GsMScjz40In0wu092ScJhssOaQt9Ax6Mq?=
+ =?us-ascii?Q?DxR84ILGb9Bn0oH+cibauSOyTn2eCcL9+/W7w9e1WyaanMl4U4N+XcJI5RDF?=
+ =?us-ascii?Q?zwGUHc+NLkEWfhDxH2HvXcO00+b5xC+GD4sNP6nNYCTwCwlRWk0xDYP9BgSU?=
+ =?us-ascii?Q?Ic0oFODU4O3F+1oZ7JZzjTRxyIJIuoirWvO8e72Dv0784otFJ3f/QrgigaVH?=
+ =?us-ascii?Q?zP4iah+ux3/fnm8j/MyXBFqlOd5v0CPeAfqKNGLdL/BR9MUYqVXoO2IiBjwv?=
+ =?us-ascii?Q?bINrLgVMflzlzHjVwP55T7qnj034VTtC+2fObuQtsoY4rwtoO+LG+5+W7KQa?=
+ =?us-ascii?Q?PiqY9IjH8Qu74mk1I5aRImh+6IllUtwjY5yT?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(36860700013)(1800799024)(82310400026)(376014)(14060799003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 11:05:14.9036
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e53de63-61a7-49b4-fc98-08dd92d73451
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF0000019D.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5447
 
-On 2025-05-12 08:43:32, Casey Schaufler wrote:
-> On 5/12/2025 6:25 AM, Andrey Albershteyn wrote:
-> > Introduce new hooks for setting and getting filesystem extended
-> > attributes on inode (FS_IOC_FSGETXATTR).
+Hi Leo,
+
+> On Tue, May 13, 2025 at 06:06:22PM +0100, Yeoreum Yun wrote:
+> > While enable active config via cscfg_csdev_enable_active_config(),
+> > active config could be deactivated via configfs' sysfs interface.
+> > This could make UAF issue in below scenario:
 > >
-> > Cc: selinux@vger.kernel.org
-> > Cc: Paul Moore <paul@paul-moore.com>
+> > CPU0                                          CPU1
+> > (sysfs enable)                                load module
+> >                                               cscfg_load_config_sets()
+> >                                               activate config. // sysfs
+> >                                               (sys_active_cnt == 1)
+> > ...
+> > cscfg_csdev_enable_active_config()
+> > lock(csdev->cscfg_csdev_lock)
+> > // here load config activate by CPU1
+> > unlock(csdev->cscfg_csdev_lock)
 > >
-> > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> >                                               deactivate config // sysfs
+> >                                               (sys_activec_cnt == 0)
+> >                                               cscfg_unload_config_sets()
+> >                                               unload module
+> >
+> > // access to config_desc which freed
+> > // while unloading module.
+> > cscfg_csdev_enable_config
+> >
+> > To address this, use cscfg_config_desc's active_cnt as a reference count
+> >  which will be holded when
+> >     - activate the config.
+> >     - enable the activated config.
+> > and put the module reference when config_active_cnt == 0.
+> >
+> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 > > ---
-> >  fs/file_attr.c                | 19 ++++++++++++++++---
-> >  include/linux/lsm_hook_defs.h |  2 ++
-> >  include/linux/security.h      | 16 ++++++++++++++++
-> >  security/security.c           | 30 ++++++++++++++++++++++++++++++
-> >  4 files changed, 64 insertions(+), 3 deletions(-)
+> >  .../hwtracing/coresight/coresight-config.h    |  2 +-
+> >  .../hwtracing/coresight/coresight-syscfg.c    | 49 +++++++++++++------
+> >  2 files changed, 35 insertions(+), 16 deletions(-)
 > >
-> > diff --git a/fs/file_attr.c b/fs/file_attr.c
-> > index 2910b7047721..be62d97cc444 100644
-> > --- a/fs/file_attr.c
-> > +++ b/fs/file_attr.c
-> > @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
-> >  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
-> >  {
-> >  	struct inode *inode = d_inode(dentry);
-> > +	int error;
-> >  
-> >  	if (!inode->i_op->fileattr_get)
-> >  		return -ENOIOCTLCMD;
-> >  
-> > +	error = security_inode_file_getattr(dentry, fa);
-> > +	if (error)
-> > +		return error;
-> > +
-> 
-> If you're changing VFS behavior to depend on LSMs supporting the new
-> hooks I'm concerned about the impact it will have on the LSMs that you
-> haven't supplied hooks for. Have you tested these changes with anything
-> besides SELinux?
+> > diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+> > index b9ebc9fcfb7f..90fd937d3bd8 100644
+> > --- a/drivers/hwtracing/coresight/coresight-config.h
+> > +++ b/drivers/hwtracing/coresight/coresight-config.h
+> > @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
+> >   * @feats_csdev:references to the device features to enable.
+> >   */
+> >  struct cscfg_config_csdev {
+> > -	const struct cscfg_config_desc *config_desc;
+> > +	struct cscfg_config_desc *config_desc;
+> >  	struct coresight_device *csdev;
+> >  	bool enabled;
+> >  	struct list_head node;
+> > diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > index 5d194b9269f5..6d8c212ad434 100644
+> > --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> > +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > @@ -870,6 +870,25 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+> >
+> > +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc)
+>
+> I would like to change the return type to int, so the error is handled
+> within the function.  As a result, the caller _cscfg_activate_config()
+> does not need to explicitly return an error value.
 
-Sorry, this thread is incomplete, I've resent full patchset again.
-If you have any further comments please comment in that thread [1]
+I think it's not good since cscfg_config_desc_get() failed only when
+try_module_get() failed and its return type is "bool".
+also, If we make defines error type in here it would make different
+error code compared before this patch in some function
+(i.e) cscfg_csdev_enable_active_config() want to receive -EBUSY when
+cscfg_config_desc_get() failed but _cscfg_activate_config() want to
+return -EINVAL.
 
-I haven't tested with anything except SELinux, but I suppose if
-module won't register any hooks, then security_inode_file_*() will
-return 0. Reverting SELinux implementation of the hooks doesn't
-cause any errors.
+So I think it would be good to sustain current return type.
 
-I'm not that familiar with LSMs/selinux and its codebase, if you can
-recommend what need to be tested while adding new hooks, I will try
-to do that for next revision.
+>
+> Otherwise, the patch looks good to me.
 
-[1]: https://lore.kernel.org/linux-fsdevel/CAOQ4uxgOAxg7N1OUJfb1KMp7oWOfN=KV9Lzz6ZrX0=XRGOQrEQ@mail.gmail.com/T/#t
+Thanks ;)
 
--- 
-- Andrey
-
+--
+Sincerely,
+Yeoreum Yun
