@@ -1,81 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB3622759B;
-	Wed, 14 May 2025 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799AC225396;
+	Wed, 14 May 2025 09:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214416; cv=none; b=k5NLS+yAj1LY4ycGpiz5K+vK6StfqMUZ584kYA+6EXcsHo3AHpwiN4hjKQ65IjKx4/DKAghaKnwl2rJbavFuW6d+g2+DCpjiJ1QgI30nwbMxR7quN4bR2rt35ZISlGvYoQFJLSosJhZJyjPMjd0aYfiFXnedlXY1Q/fAhQUCvD4=
+	t=1747214445; cv=none; b=igT4FTo+uHDbNxBBBzOkp6I9I39q/P/0VQOYhBFibqLiD1sNWidsJF62HM59cUcBJAgDzf33LCea7dBvtDeG4Fsry72gBNmDkLuEetcc5TfVRVqvURRmUzvnEGbnc20iNVg7YgFV/r22tWg44pGYTE6OOWjfagbIqu8Buh+9sHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214416; c=relaxed/simple;
-	bh=Te/mzdTJQVi3tOLsA4uKcCRYE3xSnphzXRz0GtFpJg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LeJJHrncWv3VhIsC7EToyi/tWplQW43Nr9IiFdZbAXLkNMCArKwQzUi2M6MCUwUrRq0/D0w2uytPlHzPdW3Ax86YnjBk077CfaraTXNi1vQ02imot4AjDg2ySnlBIL8/FT0Ef515fga1G78gu1zA+q7B0+nNSLmRz7wJ+2f/iDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnmRo8LQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747214445; c=relaxed/simple;
+	bh=TFA5UCqoZOBLyWXrKjTKMdhmwyWraitvZuXZ5XtiJFM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iZxktBpic0756ovdBUhASh2tErQAur+iJ8XLMvyuS9wYZP3LhEsIXEJtjYNJ6cZMcm+gtJWpvZi+CFxroQevlua15GCE27qrnR6DETDQ8i6fnu8DMeJCDNSyAKk0lWa57ishfUVA1DC85cpRhBGNIl28PrdoCR/BswOINhIxQJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=W+t02VRK; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnmRo8LQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9663C4CEEB;
-	Wed, 14 May 2025 09:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747214414;
-	bh=Te/mzdTJQVi3tOLsA4uKcCRYE3xSnphzXRz0GtFpJg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pnmRo8LQpi5IKxRxe43nTenmpXHv74afXKw2XcytrIf3leNl/Kw2xr6E7ezyc7IyF
-	 HBUmsCgO/s76h5HuI41hcfZa/035ub2L04/N4HCR3v6EEybdUsoyRzTyZoyuzGuoOM
-	 zfyVSefVKyhr4eARe6kobUD5w34+Q9L6hHWfmQ84fG4CrmpnZPB8mMDLa2qisYw88X
-	 DuCU57Qms1U7/VwcX8gtJdwh3/LBkqLbLE1J+59yCLYCwCRcFbQ3ozqC7yOlxC0261
-	 0FKrDCVcoexTAG2eRIrTGrnsu23Kj8PDC1vdETTy++c4HZ7O/IsKxVFvNnurCkXHaG
-	 TcmgAZfp1pU2w==
-Date: Wed, 14 May 2025 11:20:07 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
-	pavel@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
-	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
-	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
-Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
- warnings
-Message-ID: <aCRgRxmO6rsR-0k3@gmail.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
- <aCRMT0TlpFvpRGYk@gmail.com>
- <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="W+t02VRK"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vs27023018;
+	Wed, 14 May 2025 11:20:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	CSDRpy0g7FYUyuE/pI0gvgKtAjh6WX9J/qcJX4BpsAA=; b=W+t02VRKZpQEW2t9
+	CnXlp5v+jwzUXexUp26zFdfW1UDKXxr6h0GLAJXRNMinE/oCgIy9JJXnj7T5bc59
+	PPyvEPOdtbzbefmJ6+Vn6L1sc4tz9FL3MnNvn2V16ywYkb7abNAaphHb2tLsTs9C
+	M4xJgijMTi3EDyHhb2Eo923372o3DJqYN7eWm/Z7WhUqoWDPuuq0YYzojBEwzIdL
+	WgQGfW9Gci+FUrHW1DK+oZEatLufkDq6+FtHLJszuD3FJxlJ4y+QSNV3KLAjw8Sg
+	Y8y5OV7GRXWQvKSVhmt/fkwE7iyxlFGiP1HjtwQAsQQN7H/5R+ygB+lQXxBxujZS
+	14RPAw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdxtudt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:20:14 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A0CB34004A;
+	Wed, 14 May 2025 11:18:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 54010B48757;
+	Wed, 14 May 2025 11:18:15 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:18:15 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 8/9] arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
+Date: Wed, 14 May 2025 11:15:29 +0200
+Message-ID: <20250514091530.3249364-9-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
+Add pcie_ep node to support STM32 MP25 PCIe driver based on the
+DesignWare PCIe core configured as Endpoint mode
 
-* Shivank Garg <shivankg@amd.com> wrote:
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> >> @@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-> >>  #ifdef CONFIG_X86_5LEVEL
-> >>  /**
-> >>   * p4d_set_huge - setup kernel P4D mapping
-> >> + * @p4d: Pointer to a p4d entry.
-> >> + * @addr: Virtual Address associated with p4d.
-> >> + * @prot: Protection bits to use.
-> > 
-> > How about using the same capitalization you already see in this 
-> > description?
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 7978fd640e1e..6d54ed9a1052 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -963,6 +963,21 @@ stmmac_axi_config_1: stmmac-axi-config {
+ 				};
+ 			};
+ 
++			pcie_ep: pcie-ep@48400000 {
++				compatible = "st,stm32mp25-pcie-ep";
++				reg = <0x48400000 0x100000>,
++				      <0x48500000 0x100000>,
++				      <0x48700000 0x80000>,
++				      <0x10000000 0x8000000>;
++				reg-names = "dbi", "dbi2", "atu", "addr_space";
++				clocks = <&rcc CK_BUS_PCIE>;
++				resets = <&rcc PCIE_R>;
++				phys = <&combophy PHY_TYPE_PCIE>;
++				access-controllers = <&rifsc 68>;
++				power-domains = <&CLUSTER_PD>;
++				status = "disabled";
++			};
++
+ 			pcie_rc: pcie@48400000 {
+ 				compatible = "st,stm32mp25-pcie-rc";
+ 				device_type = "pci";
+-- 
+2.34.1
 
-> Please review the revised patch with suggested changes.
-
-I think you misunderstood: why are you using 'p4d', while a line before 
-it's 'P4D'? It's an acronym, and only used lowercase when it's a local 
-variable. 'p4d is a pointer to a p4d entry' is doubly confusing in that 
-regard ...
-
-Same for PMD/PUD etc.
-
-Thanks,
-
-	Ingo
