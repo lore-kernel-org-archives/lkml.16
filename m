@@ -1,32 +1,32 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD28928C5BF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861E288506
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248171; cv=none; b=dVdo+yOl2dPKs2QkBy71T+x1ffVdHD2jTk0yAqxkL88KCap+z3xbe1cFghoHEDuYTmoAqH6QNXDGBA9RBKjtxhfFjjpYJxUBGzK9l6zDG13SYsMJga0Gfz7kWAVG1Y5za/BpKXdp7f+AzmtXUCcB0Ht2QNAd1yYZLXk1xSR6YUs=
+	t=1747248176; cv=none; b=Ewk5jcB6r9IrMkB9A2GIpCn2gk2H7GiABZMczjQwb/+uiVwmnIQ7ut20JlBYtGmQBuyOH/fJG2QlIpmwvksc2I9Z/PTGzkDd0N5xhhoaAJUA5Z2h0/+d7jn07gvKE1a8nUtkeX5cQCLsoBZf2FIo9TOQ15goGw6Re1Cz7uqaAwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248171; c=relaxed/simple;
-	bh=F3WEBTPiQLWz9cCb+hjP8Ux7u/ANXbxtzcyn85cfhmw=;
+	s=arc-20240116; t=1747248176; c=relaxed/simple;
+	bh=eOV34W3QxTAg9tNCEM3huHB/nJbyQjF4t6Sq0HwlHdM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sb0yatj5dzMu439A++76SXXUu/R9u6W1rZzOAUehqWRRfyydNMhS3tUsjg9ZCAlCKNGuOSWfFiVdnyeI4NKe92aa43dprk7w3dUK54sRp5L9eFu03w0yE3w5oMxqQLmGuX2KtTuQ7AqnfkDjWCkd1y8Hh+NdIuueVEH62n5l6QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XsH+sSP2; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=SCNDihsFWf89SfuBs1WLSD3dfU5Bv2r6QdhOI2Q+Pt82J7ag2ne59CMfjwesUdymf4QDHcvpidecvcqivN+5ONEa9k3+rJO3y2oXcurI1IAFOEdF9TyusxCJJI0pqF6+Zo7Yf8wkUUSSuUc2he/Rblpq6vsiS6/3bYlsIA2Cj3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z5+Yysz/; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XsH+sSP2"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z5+Yysz/"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747248167;
+	t=1747248171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tl4rUg93LkTokTk1IS4m9ISxrd6enFA07YnhN9En2KU=;
-	b=XsH+sSP2IqgV4b7JFzKmne3RJ7B8fs6sll5nB5jaO2ynnf01GgAFSgEyNXGG86e9Z7QQ1C
-	xAVYpXslEoie+4agb0gtbili30uXYuaShK5I8zmCyUoS39PXhQWaMMqSpDmDEFLEr7kO7A
-	tKA3XPMFfwrhihunQK+imHxFUbmwrx0=
+	bh=t4sog0H8PQnyhxh0qyypANz3qKaJTBcH3eV85qDti8s=;
+	b=Z5+Yysz/a0FdntBwdRVd8vs8HsgqhcPMP+VKoaKIvnPkLTDX4LkzhvGK1PfZ7VZPIKZMun
+	JBNzghWN4lIUeiS04Y8Rcd9V0puEcW7IGz7xPLlH0EmzJODv/2n91JroIJvlIakoJCqSkL
+	VAjiedXqXbQZ+nC5FqwmFn+0vYrU1DA=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>,
@@ -43,9 +43,9 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH v2 6/7] memcg: no stock lock for cpu hot-unplug
-Date: Wed, 14 May 2025 11:41:57 -0700
-Message-ID: <20250514184158.3471331-7-shakeel.butt@linux.dev>
+Subject: [PATCH v2 7/7] memcg: objcg stock trylock without irq disabling
+Date: Wed, 14 May 2025 11:41:58 -0700
+Message-ID: <20250514184158.3471331-8-shakeel.butt@linux.dev>
 In-Reply-To: <20250514184158.3471331-1-shakeel.butt@linux.dev>
 References: <20250514184158.3471331-1-shakeel.butt@linux.dev>
 Precedence: bulk
@@ -57,43 +57,95 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Previously on the cpu hot-unplug, the kernel would call
-drain_obj_stock() with objcg local lock. However local lock was not
-needed as the stock which was accessed belongs to a dead cpu but we kept
-it there to disable irqs as drain_obj_stock() may call
-mod_objcg_mlstate() which required irqs disabled. However there is no
-need to disable irqs now for mod_objcg_mlstate(), so we can remove the
-local lock altogether from cpu hot-unplug path.
+There is no need to disable irqs to use objcg per-cpu stock, so let's
+just not do that but consume_obj_stock() and refill_obj_stock() will
+need to use trylock instead to avoid deadlock against irq. One
+consequence of this change is that the charge request from irq context
+may take slowpath more often but it should be rare.
 
 Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 Acked-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/memcontrol.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ mm/memcontrol.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1071db0b1df8..04d756be708b 100644
+index 04d756be708b..e17b698f6243 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2025,17 +2025,8 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
- 
- static int memcg_hotplug_cpu_dead(unsigned int cpu)
+@@ -1882,18 +1882,17 @@ static void drain_local_memcg_stock(struct work_struct *dummy)
+ static void drain_local_obj_stock(struct work_struct *dummy)
  {
--	struct obj_stock_pcp *obj_st;
+ 	struct obj_stock_pcp *stock;
 -	unsigned long flags;
--
--	obj_st = &per_cpu(obj_stock, cpu);
--
--	/* drain_obj_stock requires objstock.lock */
+ 
+ 	if (WARN_ONCE(!in_task(), "drain in non-task context"))
+ 		return;
+ 
 -	local_lock_irqsave(&obj_stock.lock, flags);
--	drain_obj_stock(obj_st);
++	local_lock(&obj_stock.lock);
+ 
+ 	stock = this_cpu_ptr(&obj_stock);
+ 	drain_obj_stock(stock);
+ 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
+ 
+-	local_unlock_irqrestore(&obj_stock.lock, flags);
++	local_unlock(&obj_stock.lock);
+ }
+ 
+ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+@@ -2876,10 +2875,10 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 			      struct pglist_data *pgdat, enum node_stat_item idx)
+ {
+ 	struct obj_stock_pcp *stock;
+-	unsigned long flags;
+ 	bool ret = false;
+ 
+-	local_lock_irqsave(&obj_stock.lock, flags);
++	if (!local_trylock(&obj_stock.lock))
++		return ret;
+ 
+ 	stock = this_cpu_ptr(&obj_stock);
+ 	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
+@@ -2890,7 +2889,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 			__account_obj_stock(objcg, stock, nr_bytes, pgdat, idx);
+ 	}
+ 
+-	local_unlock_irqrestore(&obj_stock.lock, flags);
++	local_unlock(&obj_stock.lock);
+ 
+ 	return ret;
+ }
+@@ -2979,10 +2978,16 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 		enum node_stat_item idx)
+ {
+ 	struct obj_stock_pcp *stock;
+-	unsigned long flags;
+ 	unsigned int nr_pages = 0;
+ 
+-	local_lock_irqsave(&obj_stock.lock, flags);
++	if (!local_trylock(&obj_stock.lock)) {
++		if (pgdat)
++			mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
++		nr_pages = nr_bytes >> PAGE_SHIFT;
++		nr_bytes = nr_bytes & (PAGE_SIZE - 1);
++		atomic_add(nr_bytes, &objcg->nr_charged_bytes);
++		goto out;
++	}
+ 
+ 	stock = this_cpu_ptr(&obj_stock);
+ 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
+@@ -3004,8 +3009,8 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 		stock->nr_bytes &= (PAGE_SIZE - 1);
+ 	}
+ 
 -	local_unlock_irqrestore(&obj_stock.lock, flags);
 -
- 	/* no need for the local lock */
-+	drain_obj_stock(&per_cpu(obj_stock, cpu));
- 	drain_stock_fully(&per_cpu(memcg_stock, cpu));
- 
- 	return 0;
++	local_unlock(&obj_stock.lock);
++out:
+ 	if (nr_pages)
+ 		obj_cgroup_uncharge_pages(objcg, nr_pages);
+ }
 -- 
 2.47.1
 
