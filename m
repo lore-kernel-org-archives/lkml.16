@@ -1,96 +1,90 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1803115574E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D8642A80
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232180; cv=none; b=Wq/r29YhrdydHFgJPSKCXH2zUT7KN2JIBHDlHumpXmJCr4CK+656jN0P7PPYo3lJeXhe6ijH9Dp0UtGXUygReOiCZsEcUlQ7p6n20Fz1tvt89RrsCn5acD5O5+A3JEgI44fp3BR+n4/CXv01EEeYBZEEDPmxmpD1YqC5KNW/+To=
+	t=1747232191; cv=none; b=dLN+CKmRJ2kTMLZHe0MYYU8zO7gmMx9p8ezBVVg+O8H7lC/56VDsvFZtcbet8M3gJywZ5mR3zQr/PmTvDC+PjtbR0mANguJFrHRznLI/WlXVUbpPEyQvqXlt4CXVImgSk4O4CrzT7V3F6perzwNNQcz5iEZ40+OmgpoGGD2CnVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232180; c=relaxed/simple;
-	bh=26grGj1agecMz+PCvuHvclLshWUQzEmjBvBmS8cdWSg=;
+	s=arc-20240116; t=1747232191; c=relaxed/simple;
+	bh=dctgj7OI44hL4Z70amYhMFqF1v3D71Minb2zs5mQdHU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d5vED9wP2h/nz5jEYjL0b1bCRzt0vOHwcyIl118eJgbo7KCh7eNRlyJ6wLvCl3rtPnn+J6UFyGSGwcl61x6xkSYZ2fI9ILNurQMZJEm18z6a5LJUA+E2TQolzPtBnPIo96mncdo5i4BedORfPKGUSmbrXrDPe446IM4dOtF2lXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUA7Hbr0; arc=none smtp.client-ip=209.85.210.181
+	 To:Cc:Content-Type; b=bllxZmQJla/cHzZs3yxM3RrS+1lxwP6DY4+IQOKAAJSVxU0K5UgHIURfxsdUWx/U+7hbkXz5PEW7ZgGuQr1WnxJ1TdgDRh3TGw80b7rUPnqWdpQGShDCAab5NcZK6G5pI1TLvtzrmrp5PRt0dVIt9fg1gV2MW136Ih3EhSkSpiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AN9Fq1We; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUA7Hbr0"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7414c7e45acso815815b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:16:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN9Fq1We"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231b0ab8044so20845ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747232177; x=1747836977; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747232189; x=1747836989; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+9l/yJokrJezdTMly2gEBI61HIpT790BZH9nQ/918eA=;
-        b=dUA7Hbr0fsddlg970iSHYJxcxSQqKcMxOsj+qvO7RErPPmvJVgTWcMMGHxvV5WrWk0
-         zrbKQBHi7cP6K8H7r0eu8wgMFXUwkBeMQ9Pdj1rxHRBJyKkX+/rR4k4djT22WwQHmpRV
-         wjAMtQ7l2hHJacgwlCp/ntRrxFtIBAs1/o97NPUxF7fJYMFUxe1r/EJvxYO8vk611uKg
-         WhRkjEyUssQLsYsfMOtUUJOLgU8VV9e9w1MPCDz4SEihUzShIN6SkEsIaj4pmsZ4TOXO
-         oOvOEUYYJUkuyChhT5pLzueDB4yKR+LMFdolROi02P1ei0KM9/8KsKavDxslW60utOLe
-         YX0A==
+        bh=3n+16DpFOcpOhaliZB3idim37DYPJw0hjtvBfmuDl1M=;
+        b=AN9Fq1WeXjV82p5AFgB3GJZvj9Xg+bwrXtgVwGs8NFuDeNhmH5ETsb3XLd6U9DnHF2
+         cSlKxZ3lGV060fbJ0pUyGWtqvoyVOGi6/wTZz1kmo7mWjixD/Z7yc2tovslD3la5luuu
+         TnpQXKFt468DiWom/+ZvAsGL72cHHm+Fk1qt7sxtwvuazTpQ/D5R8B14jxtYW9ejvi2+
+         IlsdrK0Yq1EI14JKw6G7KUYgAgcHdVHlJpei5WaViCQN0IIVhqDtPMS0osO0doIxEPYz
+         uqZzzeIQSXUbCmnAF7btA2T/hEt0weSpIBzF/9WBdZbLBqOKX9GajKQKQyKwF/9QB+tw
+         GG7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747232177; x=1747836977;
+        d=1e100.net; s=20230601; t=1747232189; x=1747836989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+9l/yJokrJezdTMly2gEBI61HIpT790BZH9nQ/918eA=;
-        b=sVCeOshS08ZuqL3tF22JM12vU3duk4SOXzSOv1JZ2xpaOT59mIwoqLf5/F70gG/J3G
-         3yZiRYj7JRlWHeTpYtv0fYp4/jpSF+VgT16yz17MN19ldGuzDziuDmEaMQ8N7D4PSP6i
-         zakMC92tW+S1kftnl5udUSdwVcdz2erDrD1U930SyK3mQqNGrgnMv8rtivmgzFPXvkib
-         mmM9U1ueH0WDG8CgazA3wEuXVp35pAiUBr6Cso05NGaH82G2pO57qJKUoJDCTllvnYB2
-         xOm44fX5S+nxjeayv/pJWCLBn/akD8shD7W8Je4WLgrVzLIliwdOzWl81IqPvSdkGUVH
-         fLbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWo5AxGV81vsKU8Q5qvkMm5QmhuOvmskq9sI1olOGKiYnv1bFF71NNUL/PhlviKkXjOGqxmzKgkfgg7Z1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQMY9AJOloWTVSX870Pv/XqW8jIzrlrCnXCFG1HLs0S+L7Vmpe
-	H/ToxGvQIXCAlSbByEAzzPVcJC1QkiQdQKmE5F//6QXXwzmoDOXpAsqkBGwxvHJqad2rC9UDTCu
-	ZQcgPoWf2bJS7+lDxne7kycPDff0=
-X-Gm-Gg: ASbGncsTOcimRmlv5qUMmIln6tRshrZNxZG3jqImmi5cWmdCiiDKhNqaZMCQg02vwYh
-	rHABgsK4p6OleXXuUQHBW/NL31/PtrlIs9qu95/JZ4j7qBJg0bohgBLOkCU1xGw59hsahtYV8Z3
-	0nQcYYYfXzEPlbJJHmH6IZzi5teS3QiPCU
-X-Google-Smtp-Source: AGHT+IHtKxU0GEGaAeLVg/+ec50sLA3k6YKoCWcfCuiQT8vSKq7Gdewqx4zLExHIkduOo2EYU8VEwV70WujGnLmeMn0=
-X-Received: by 2002:a17:903:248:b0:215:435d:b41a with SMTP id
- d9443c01a7336-231980ce4d3mr20167045ad.1.1747232177142; Wed, 14 May 2025
- 07:16:17 -0700 (PDT)
+        bh=3n+16DpFOcpOhaliZB3idim37DYPJw0hjtvBfmuDl1M=;
+        b=BMHs023ced7sOyskdjbwyGtB9wtQf/z3UlIvP1BPkKwIQ/XVlcECv/exHmcUvJCV6T
+         rzbMgvbE6Wcbs87cZoqX3dtNl7pZJhHVXFJS3QFzdUBAWpZ6TBXonalKWvKkfFi87gre
+         LtfiiS46mUtJQPaxNJD8dTKZJwdgewZil6gBHdmNTttajDxOhFyoPMtJUfL2NSi652vy
+         w55p91RNrOebYr3Wgt9UUHfp8ja5aawXCkHVORQN1/YmTei/XBimNqf3ADHSbTcwQDj3
+         3kz0lv8h7OSFO5YP/fmNoUfcYLbKJDk1JnmzVT7Cwm6Rir6ueSz7rCk2LZj87Gv0+qYx
+         AVoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHufoMoTthhie5OKy8x5Oe7IQaQNRgZCbZ0imgA1Sj1gGt29f5m+SHqX58kn31s/9+IuIc9D6Fg94Rbvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytndWF88u7CGGgZ2Mpgze9ZvuDZ653iczsuHv6CFDc1zZp72R/
+	4PIqwIKVmtPHpdRDDI/NIxAUFeN31a/t3Ble8wAYmNTUf/EwnnoAd+diK9ePluTEIVDuI2GcrC9
+	9cAqHacFDZOHFBB4jGfXDpsUTb/Y=
+X-Gm-Gg: ASbGnct3b3zDqnxbuypaAhkEAHPSRvSSgdAvliNLdImMw6JCrKj/Akt0kTZ+FBIFdEh
+	4yav1ptz9YXtcx3oj8qNZ55N4W42BEGzkdHIkqZu3CnT/LLmsXvq81J43h5hzKq3mWQigsHloGU
+	tZgiDwLkTfdU6Oqk8G3jV0S9+I+uieVpRV
+X-Google-Smtp-Source: AGHT+IGgOLVHlFTGN9a0SvwGp9aOaUq0v2qKq+BNE0DOArgTcRewkV7J2kadBkn8RZHPlisNdGKLis3afd8TsAPJpdo=
+X-Received: by 2002:a17:903:1a6f:b0:22e:62da:2e58 with SMTP id
+ d9443c01a7336-2319812a735mr20961985ad.10.1747232189515; Wed, 14 May 2025
+ 07:16:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513234621.322283-1-Abdelrahmanfekry375@gmail.com>
-In-Reply-To: <20250513234621.322283-1-Abdelrahmanfekry375@gmail.com>
+References: <20250513233212.21186-1-contact@gvernon.com>
+In-Reply-To: <20250513233212.21186-1-contact@gvernon.com>
 From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 14 May 2025 10:16:05 -0400
-X-Gm-Features: AX0GCFvNZ6---Ox_xhZShkODoC-fkTW8iHJut3_i8L0kz1QSIWvS7bGXMuWlPGI
-Message-ID: <CADnq5_MAYSH0Cj6pfZFdPx8b_goJRFEeB61iW6bD_wON-GWxzg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd: fix kernel-doc parameter tag format
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
-	simona@ffwll.ch, skhan@linuxfoundation.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
+Date: Wed, 14 May 2025 10:16:18 -0400
+X-Gm-Features: AX0GCFukKcW8G7VG06CTXQGuzf_x_lHNu0hKnNMVT_ZvRA146nuD9ytPZqqbJCg
+Message-ID: <CADnq5_Nv1b+C-oaQi1hEq15T2fOZS0FiQ+RgOyQyOizC6hGuaA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Fix docs build warning
+To: George Anthony Vernon <contact@gvernon.com>
+Cc: airlied@gmail.com, simona@ffwll.ch, skhan@linuxfoundation.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 3:31=E2=80=AFAM Abdelrahman Fekry
-<abdelrahmanfekry375@gmail.com> wrote:
+On Wed, May 14, 2025 at 3:24=E2=80=AFAM George Anthony Vernon
+<contact@gvernon.com> wrote:
 >
-> The DC_HDCP_LC_ENABLE_SW_FALLBACK enum comment was missing the required
-> colon after the parameter name in its kernel-doc tag:
+> The kerneldoc comment for HGCP locality check debug mask was missing a
+> semicolon resulting in a documentation build warning. Correct it.
 >
->   * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, ...
->
-> Kernel-doc insists on the form @name: description. Adding the colon
-> eliminates the warning and ensures consistent extraction into Sphinx
-> documentation. No functional changes are made.
->
-> Signed-off-by: Abdelrahman Fekry <Abdelrahmanfekry375@gmail.com>
+> Signed-off-by: George Anthony Vernon <contact@gvernon.com>
 
 Thanks for the patch, but this was already fixed.
 
 Alex
+
 
 > ---
 >  drivers/gpu/drm/amd/include/amd_shared.h | 2 +-
@@ -113,5 +107,5 @@ ck FW
 >          */
 >         DC_HDCP_LC_ENABLE_SW_FALLBACK =3D 0x100000,
 > --
-> 2.25.1
+> 2.49.0
 >
