@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024B12701C5;
-	Wed, 14 May 2025 11:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEBA274FEB;
+	Wed, 14 May 2025 11:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223112; cv=none; b=USZcJlJoI+/KLoXJtOnUDXk9qjFmFdCV3D2yz+y+mCkBr3Fep5JnodXJ0DGazQ8HkwcggvymRTeWuptdPJcVmf34oVyXRE343PA2H4n7XhojNdHGxacRo6yNIzV6YR9dJh8qr1KPSr5bVVL5nUW1/75KB3ULgdfyeG3wDyA/ZKw=
+	t=1747223114; cv=none; b=Xug+1HTc8nIrV3bi58PkVrY3xNULq4gjRmA6xvWOJH55vQ6xck4/QLaV0KxXMSB1GlxbHqtA8CnDGnRBXTKuBm5bK6SPboQzvyWtU2E1tk/deriPU8LMg+8WNmEe89oseQh05HTQecaOsceaCUFRU96puvbQISW6S6GoIYIyGeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223112; c=relaxed/simple;
-	bh=ExcqgJJ6N4P7LcIRmzKY1pxYnvk0V9B7I8dKUQ0aCYY=;
+	s=arc-20240116; t=1747223114; c=relaxed/simple;
+	bh=z7rY0zdhiv1fdjfEUuq2oA9QOBX2CvO8RkZwhtXztAo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=j3G6zFzAp4sWxp59PD51slCfmeIMk8gVKoUQsW0OstuWAxJVquoC1IcExqriuVqHl8loPswxmteMKF0p3ZIr6FQQfRsImKBx9rnWsxzG0bgl1I8WYiBsw+RT2xneJT5JNNp9vWy+j1RGLl+OV7+/kAAdbjLjtiOdlPUkwygsySY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diQX9Pto; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=N/gBYlX5suZHEKOmp+mStrqLpFzI1qP2uvrLICvub+4I+f9ivw0POHhpqiW2HO34pzRQ40cRNQ/SKUf5TWgN0gb5LC99HIv/tZcjWUGm4mC5eS9XMP5il8nWAZyAguFIX+xkjxiAPeks5vUEBBE6eSpf/lOk8zQ08J8LCQmx9es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BygJkCj6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diQX9Pto"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFF1C4CEE9;
-	Wed, 14 May 2025 11:45:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BygJkCj6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA98C4CEEB;
+	Wed, 14 May 2025 11:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747223111;
-	bh=ExcqgJJ6N4P7LcIRmzKY1pxYnvk0V9B7I8dKUQ0aCYY=;
+	s=k20201202; t=1747223113;
+	bh=z7rY0zdhiv1fdjfEUuq2oA9QOBX2CvO8RkZwhtXztAo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=diQX9PtorWNmbG6bw//5Fx4zrrRUJvhp3kHrUyWVsIxzpEQdPK6YZDe9XcGMLd6Q6
-	 47bf2Q2Qtk/vA9CI8dTv/lWzdBovh4OuVps2YP59vyIbV+0DHKbgQN7eFYt9l5f3yW
-	 +lC8wEjJOWhyROskl51D9pnhRtxvEiOaZ4Fky+4y+mGYjwtWgp70/xbJXlvPwADTok
-	 magEVBwi1gIcrb6KHtP7fl3dsstgA5vpzaeH4gbbYnH/mzz/PzULidiPeTg78Ta+HG
-	 Ysw3IzH9M7lBG8okyybfTWSFfrfGdg4guUuEc0dKv39VEgOq+R4oFv1VHh9B9Nw7CS
-	 eRKXk+IFXAM5Q==
+	b=BygJkCj6rrDRG/P5sqpnHSf/3rQxZJ2mFETkWXIeGuerDYqy6cYh6CV/lK9giWh/g
+	 EzTSvfvQBgjGvO6aw+GGqFbx/UI0BaxZI3BBGMvf9oCD0JNIAbDe0G3M4rIt6rm8u7
+	 01fi8Ksn3B0OEV16ytQSUhJbLurW3mgCsR6usVyR7+xVjduKhvdnuneK2lCKh5MSHq
+	 TjPSYYQS8BciHOY2tK69+fhsprZEslqGvtHOpWXQjMYiYC7kt4RTa1Q/gJ/1qdYFGQ
+	 hKeqnaxfMnpgk+q8tuEFFGcpmXl+xDofV03eMxTmT9dcDNWYDcYawD2yk/vGtZqJUr
+	 XdJf3kNzAGPmw==
 From: Vinod Koul <vkoul@kernel.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
-References: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 0/2] Fix minor issue in SoundWire slave IRQ mapping
-Message-Id: <174722310984.91966.13044287872839649011.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 12:45:09 +0100
+To: linux-sound@vger.kernel.org, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, 
+ pierre-louis.bossart@linux.dev, bard.liao@intel.com, 
+ peter.ujfalusi@linux.intel.com
+In-Reply-To: <20250430074714.94000-1-yung-chuan.liao@linux.intel.com>
+References: <20250430074714.94000-1-yung-chuan.liao@linux.intel.com>
+Subject: Re: [PATCH 0/2] SoundWire/ASoC: Intel: Add suppoirt for printing
+ ACE3+ PVCCS (mic privacy) register in register dump
+Message-Id: <174722311156.91966.13329123879691612605.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 12:45:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,23 +49,25 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Tue, 29 Apr 2025 11:18:06 +0100, Charles Keepax wrote:
-> Currently there would be problems if multiple devices on the same bus
-> attempted to use SoundWire IRQ handling rather than the IRQ callback
-> mechanism. So far only cs42l43 uses this system so this hasn't caused
-> any problems.
+On Wed, 30 Apr 2025 15:47:12 +0800, Bard Liao wrote:
+> This series print the PVCCS register alongside with the other SHIM
+> registers in soundwire link register dump when ACE3 or newer is in use.
+> The change is mainly on the SoundWire tree. It would be better to go
+> through the SoundWire tree with Mark's Acked-by tag.
 > 
-> Thanks,
-> Charles
+> Peter Ujfalusi (2):
+>   soundwire: intel: Add awareness of ACE3+ microphone privacy
+>   ASoC: SOF: Intel: hda: Set the mic_privacy flag for soundwire with
+>     ACE3+
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] soundwire: bus: Simplify sdw_assign_device_num()
-      commit: 5b1a2927c4f63878d2c108cebad09358e69caa20
-[2/2] soundwire: bus: Add internal slave ID and use for IRQs
-      commit: aab12022b076f0b385b7a9a78e1161bd2df5d1e3
+[1/2] soundwire: intel: Add awareness of ACE3+ microphone privacy
+      commit: e1f3f5be9e8e730290ebe6d490383af4d77f0f38
+[2/2] ASoC: SOF: Intel: hda: Set the mic_privacy flag for soundwire with ACE3+
+      commit: d028b57b77f91e4643abd661640f345cd34522b6
 
 Best regards,
 -- 
