@@ -1,210 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7AE27780B;
-	Wed, 14 May 2025 11:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EB0270572;
+	Wed, 14 May 2025 11:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747222131; cv=none; b=I9166lDUjCfK51giovtaUq67+7rthi39x7WAYsObC88Bp5gCw2BQ4o91qhi//TQUhvL2R2E+LyKcgEjBJrT3e0dbF0BZoRMG7S7GQkQecfBXOES4hm9QqBKYfB1Ov4dR3Ag3UHdc93INTi0UoRAIeue30Tagj3RmUBNJ4uONyS0=
+	t=1747222190; cv=none; b=UgCNUfhoydhF4Sty0+ucc/QOuVEmm7Bxtcfruhk+ohkInWny6ZqgqKNUhufuKWWlK6n2oRHHVZasLu7Bz/dWj/wolLYgZKmZMyaQsdvVVP4sVudAAwGmhFNPw3EC+8TQLqRVua/mCWk8/3vFY8o/dSQ3A1Rz523OVu56OLmPcjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747222131; c=relaxed/simple;
-	bh=lWcMkKP5WjOJPIK1ZklGby3zm9tNmCc+vjZeevWrmDA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=So1qdKYECinbGRhTpnZyO04S2M8z6766cOqTnsCGKohIlxN90/KqQa7R9GtvVAn9MUbCXNZDFgPmkWhxI6OK/9Qm1DHWbRI1J2F+Yf0lCW2FtILEDTZq5fWVc/CCaSvpH5ytV+wjqdo3Xxkjb3gUlfrrchvOBsZvNPcm25u+fLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AC+NALNV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747222190; c=relaxed/simple;
+	bh=E4BSgJDVenYarAln03bgzuVa9WotPbGKy1KhI3IoiKo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G19/+14F/iaajfTC/ZZRDaStVDQw0a/J8JWZKOnHp4tLelxmsp6h9n7mycIc1PvGIv2rV+guJAhNQgHslubGwTdu4D4vX7sybzU9xGm+Q0xBHXct2+DOZ9vGEP9cMaIFAS7NS4TwUd1MrupqS+B06TtGUsrBb7XR9eUWeCmzBzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mFZgTON/; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AC+NALNV"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EAuuHD030337;
-	Wed, 14 May 2025 11:28:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FABUxBAB7ve6/Od0ovAZom4q3487/OGFf4YLme/fiAQ=; b=AC+NALNVzZlawFNV
-	h5iBJm4nKhtNRefUwOFmV8qzAnpinLWU77oDvRIiLDg/lT1bQbjGisE6u/BmUD9q
-	gHcJrulzcnDA8KEm/KjrmGiTH9Tnbu55sbOsDFQARQq1mTDEqwHjgTJ44FocZ7cJ
-	oYhb2mn4/aMZTOzlXLiib1i3/D+Db1smEngO+cicpVHNUQZBHonIcwby8yCNitr8
-	BixI2/GXcO6znE8YbE8HOe34P4IuTrkexfwoGk22D0j3torvtUF1HIDJyxirLVW4
-	TMAnm6MesUVtPzZChS/0D4uAY3bsfzfSA3R8VgMjIpyTMSeKKvL4zpuM0bePU7Mz
-	6knDsw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcntfua-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 11:28:45 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54EBSie2015868
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 11:28:44 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 14 May 2025 04:28:42 -0700
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Date: Wed, 14 May 2025 16:58:24 +0530
-Subject: [PATCH wireless-next 3/3] wifi: mac80211: Allow DFS/CSA on a radio
- if scan is ongoing on another radio
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mFZgTON/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747222188; x=1778758188;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=E4BSgJDVenYarAln03bgzuVa9WotPbGKy1KhI3IoiKo=;
+  b=mFZgTON/eS8SJQA0xaNBl5KwxBAbt+0DC/nTQLLV09RD6LeRdVdnf6xK
+   jlJXXe4ThKS/IOwCcXQGokYs8xXC8GMVl43t6OB6EPT9AZkdf0b1RRIWE
+   w+U2OTTKgGe2kh10tqlpiPKCO90ULn0hHZzmtMomCgT7H/qrqGhZmcy2L
+   otDLWkMvvbbxMJ/eLwvlmcA2vaMz9RswL8tgCbYDgMyquKANU7VMJhDm0
+   Fm94SE9/rPuSIBJO1qjAAja5POL6uYmNGCk6CBAfUsBhLaItjgAnR6Oj+
+   ffkXimWcWtN5RI3fx/K0s5q/6Klqp/9mSJZAngtpaKN6bY7ztVNWslnE8
+   w==;
+X-CSE-ConnectionGUID: Ir8g3+VyR5+B7NduZ7a21g==
+X-CSE-MsgGUID: h65dxn4iR3q221n7OfoThA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="49256829"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="49256829"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 04:29:47 -0700
+X-CSE-ConnectionGUID: PuwOQQLISMaId9IJUlIxpg==
+X-CSE-MsgGUID: VTo0qjriTzicmFIVnXHNqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="142043820"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.231])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 04:29:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 May 2025 14:29:42 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Move reset and restore related code to
+ reset-restore.c
+In-Reply-To: <aCRBFWHKa02Hu-ec@wunner.de>
+Message-ID: <7c8ebe5d-a5be-6aba-1b84-15dd2f32b52f@linux.intel.com>
+References: <20250512120900.1870-1-ilpo.jarvinen@linux.intel.com> <aCRBFWHKa02Hu-ec@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250514-mlo-dfs-acs-v1-3-74e42a5583c6@quicinc.com>
-References: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
-In-Reply-To: <20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Aditya
- Kumar Singh" <aditya.kumar.singh@oss.qualcomm.com>,
-        Raj Kumar Bhagat
-	<quic_rajkbhag@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5aDDtgtLu1q9DQPzOdBn8pIYhz6RSg_b
-X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=68247e6d cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=Mksv0VV1BSGs6I7ZarMA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDEwMSBTYWx0ZWRfX8v5nvwNvbql1
- UPsGjMLqnqEz8atvZFnGo0MXbbCPGeb7ZXQ5FriUvXlyVsfuKImKCGnsTWM2GzKnHldlXuLH0T0
- y7tShvCyUfQ0v5nIWAp4Qhov+f+GkHq2uXOf0wcQdujYXSPN+CkPgLQDjSWHGfFnccGL5+HVL/r
- 0HCDgvKJw+bqPqsOPxPEZb1m6HESS2JtVDN+2LFpWvT1p6GDYC5gVhVtK9Js7hgYxwaxtFD/vHu
- RCJwbGhDGuikLGCayzk95Ae0tcwzw0quCfGCyStZvP/VYsRjpEZ+qVijuRmFUIYLP08CeK3qb3G
- r1syUK9UarpIOS1f0Nnbk68gue7AtfWD5LF2ElsFs0859NpJ0V5X+pcS+G/p8xRi9glXB6GeVAV
- OtDfzm8zW2XjQJCRomibUq4ocuZvX0saSjVeK53iIFDaSH+ROcHOvlBa+YQ4A4qXo4imMwzR
-X-Proofpoint-GUID: 5aDDtgtLu1q9DQPzOdBn8pIYhz6RSg_b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505140101
+Content-Type: multipart/mixed; BOUNDARY="8323328-146288393-1747219295=:1054"
+Content-ID: <96a63802-2113-5547-8fe3-06ec88c45643@linux.intel.com>
 
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Currently, in multi-radio wiphy cases, if a scan is ongoing on one radio,
--EBUSY is returned when DFS or a channel switch is initiated on another
-radio. Because of this, an MLD AP with one radio (link) in an ongoing scan
-cannot initiate DFS or a channel switch on another radio (link).
+--8323328-146288393-1747219295=:1054
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <dfda58bc-098a-7139-d60e-4231d16e2767@linux.intel.com>
 
-In multi-radio wiphy cases, multiple radios are grouped under a single
-wiphy. Hence, if a scan is ongoing on one underlying radio and DFS or a
-channel switch is requested on a different underlying radio of the same
-wiphy, these operations can be allowed simultaneously.
+On Wed, 14 May 2025, Lukas Wunner wrote:
 
-Add logic to check the underlying radio used for the ongoing scan. If the
-radio on which DFS or a channel switch is requested is not being used for
-the scan, allow the operation; otherwise, return -EBUSY.
+> On Mon, May 12, 2025 at 03:08:57PM +0300, Ilpo J=E4rvinen wrote:
+> > There are quite many reset and restore related functions in pci.c that
+> > barely depend on the other functions in pci.c. Create reset-restore.c
+> > for reset and restore related logic to keep those 1k lines in one place=
+=2E
+> >=20
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> Hm, could I get a:
+>=20
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>=20
+> ... per:
+>=20
+> https://lore.kernel.org/r/Z7hZZNT5NHYncZ3c@wunner.de/
 
-Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
----
- net/mac80211/cfg.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 2 deletions(-)
+Ah, I hadn't even noticed you suggested it (I recall reading the first=20
+paragraph of that but not the last one which made the suggestion). I made=
+=20
+this patch first back in 2024 and have just sit on top of the change until=
+=20
+there seems to be reasonably conflict free window.
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 2cd8731d8275b2f67c1b1305ec0bafc368a4498a..b76598abfb76708468432b3ec082955d4820e4a3 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -3549,6 +3549,68 @@ static int ieee80211_set_bitrate_mask(struct wiphy *wiphy,
- 	return 0;
- }
- 
-+static bool
-+__ieee80211_is_scan_ongoing(struct wiphy *wiphy,
-+			    struct ieee80211_local *local,
-+			    struct cfg80211_chan_def *chandef)
-+{
-+	struct cfg80211_scan_request *scan_req;
-+	int chan_radio_idx, req_radio_idx;
-+	struct ieee80211_roc_work *roc;
-+	bool ret = false;
-+
-+	if (!list_empty(&local->roc_list) || local->scanning)
-+		ret = true;
-+
-+	if (wiphy->n_radio < 2)
-+		return ret;
-+
-+	/*
-+	 * Multiple HWs are grouped under same wiphy. If not scanning then
-+	 * return now itself
-+	 */
-+	if (!ret)
-+		return ret;
-+
-+	req_radio_idx = cfg80211_get_radio_idx_by_chan(wiphy, chandef->chan);
-+	if (req_radio_idx < 0)
-+		return true;
-+
-+	if (local->scanning) {
-+		scan_req = wiphy_dereference(wiphy, local->scan_req);
-+		/*
-+		 * Scan is going on but info is not there. Should not happen
-+		 * but if it does, let's not take risk and assume we can't use
-+		 * the hw hence return true
-+		 */
-+		if (WARN_ON_ONCE(!scan_req))
-+			return true;
-+
-+		return ieee80211_is_radio_idx_in_scan_req(wiphy, scan_req,
-+							  req_radio_idx);
-+	}
-+
-+	if (!list_empty(&local->roc_list)) {
-+		list_for_each_entry(roc, &local->roc_list, list) {
-+			chan_radio_idx =
-+				cfg80211_get_radio_idx_by_chan(wiphy,
-+							       roc->chan);
-+			/*
-+			 * The roc work is added but chan_radio_idx is invalid.
-+			 * Should not happen but if it does, let's not take
-+			 * risk and return true.
-+			 */
-+			if (chan_radio_idx < 0)
-+				return true;
-+
-+			if (chan_radio_idx == req_radio_idx)
-+				return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static int ieee80211_start_radar_detection(struct wiphy *wiphy,
- 					   struct net_device *dev,
- 					   struct cfg80211_chan_def *chandef,
-@@ -3562,7 +3624,7 @@ static int ieee80211_start_radar_detection(struct wiphy *wiphy,
- 
- 	lockdep_assert_wiphy(local->hw.wiphy);
- 
--	if (!list_empty(&local->roc_list) || local->scanning)
-+	if (__ieee80211_is_scan_ongoing(wiphy, local, chandef))
- 		return -EBUSY;
- 
- 	link_data = sdata_dereference(sdata->link[link_id], sdata);
-@@ -4054,7 +4116,7 @@ __ieee80211_channel_switch(struct wiphy *wiphy, struct net_device *dev,
- 
- 	lockdep_assert_wiphy(local->hw.wiphy);
- 
--	if (!list_empty(&local->roc_list) || local->scanning)
-+	if (__ieee80211_is_scan_ongoing(wiphy, local, &params->chandef))
- 		return -EBUSY;
- 
- 	if (sdata->wdev.links[link_id].cac_started)
+> >  drivers/pci/Makefile        |    4 +-
+> >  drivers/pci/pci.c           | 1015 +----------------------------------
+> >  drivers/pci/pci.h           |   10 +
+> >  drivers/pci/reset-restore.c | 1014 ++++++++++++++++++++++++++++++++++
+>=20
+> I'd prefer reset.c for succinctness.
 
--- 
-2.34.1
+I initially had reset.c but was worried the name is too narrow scoped,
+I can change back to reset.c.
 
+> That said, this patch conflicts with Mani's slot reset patches
+> which a lot of people seem to be interested in:
+>=20
+> https://lore.kernel.org/r/20250508-pcie-reset-slot-v4-0-7050093e2b50@lina=
+ro.org/
+>=20
+> Maybe it's better to give Mani's series the advantage and defer
+> this patch here to the next cycle.
+
+Fine for me but those conflicts looks quite simple. Next cycle will=20
+have its own share of conflicts, I'm sure :-).
+
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -69,15 +69,7 @@ struct pci_pme_device {
+> >   */
+> >  #define PCI_RESET_WAIT 1000 /* msec */
+>=20
+> I'd move PCI_RESET_WAIT, pci_dev_wait() and
+> pci_bridge_wait_for_secondary_bus() to reset.c as well.
+> Then pci_dev_d3_sleep() is the only function which is no longer static.
+
+Okay I'll move those as well but that static statement is not exactly=20
+true, I'll these need to do these as well:
+
+- move pci_bus_max_d3cold_delay() along with=20
+  pci_bridge_wait_for_secondary_bus() to keep that static, or turn that
+  into a non-static.
+
+- make pcie_wait_for_link_delay() non-static.
+
+--=20
+ i.
+--8323328-146288393-1747219295=:1054--
