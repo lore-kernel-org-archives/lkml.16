@@ -1,138 +1,115 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779F927702E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F9DAD5A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227986; cv=none; b=cOcWxtHRdk8l5du9jlIQ8GxJrQxHbk/e3uY2uTnqRrsCYDaC+LHKPo8cazMGRBIr7sT9orTpPzIZP/qQ8Ud80Db6tvZlO5jZLfgbsFzIeIL7oj90xPnjEq6O7XjWf0Nir+O14xH8QbUwl3p9Ei2DI4Z0blz3qSEHpuKifDt4YJg=
+	t=1747228033; cv=none; b=c3e3tKd5188RD3FW2yq6iwozU68NYynf9b7kzslr2tGJFqjqzlHdIlN7mUr8BFDLn4fLieRCLSHFtDkkL6OQXckTOfba8c5BYpv2wX7zoB1JPggS3CC9d6gMn7cEVXOgSQDisjS/tdH4j21+CbdfUrVe1M4IhsA/rQAzB1pupGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227986; c=relaxed/simple;
-	bh=LLFq3O0FdrDdvqxZRkBsqmZ5QAf1LxMqNh4TVhrgZ8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EoykM8PQ2LO+xcWRlaCjluzavoqUj/p23JgIBTgqzYZXpmpJNyTBQsboqH/I+ciQflE60yjiKfwJi0kRfepg84ZPKddW2Shqc0iIRrhIvs2piQcMugYps+ByL7y9c9xfv485XlH5WnfEfVLxJHcIlmbG7nn7MZi9VQZQctulVQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=trno/NzF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ImztO0JU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=trno/NzF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ImztO0JU; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="trno/NzF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ImztO0JU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="trno/NzF";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ImztO0JU"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9B8A31F791;
-	Wed, 14 May 2025 13:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747227982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m9DMDyPRjI6E5O11T+MLOWN5723elni8VGDnm6hILQU=;
-	b=trno/NzFZkvVtoXuotoZafl5G13MHelOy4wsITEGv+TRznz+MxLocI3Kzngt2PmWmQtO78
-	kNKhDJ1hB1GN2CiC5OBFno/MJtw9167JnKLKNVzs74jJuRcm1Zh+B7QKTtEHLzDTumNqHv
-	7FflBlKy727hlPzkgHwcTp2mzLgpyN4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747227982;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m9DMDyPRjI6E5O11T+MLOWN5723elni8VGDnm6hILQU=;
-	b=ImztO0JUJFx7WXvEHB8H/jlXlRRUUVL6htVHZMzMc/7CgYet1MhIx6bHtZPTRpeRBQnvjO
-	FUvmxPLHel+RtCBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747227982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m9DMDyPRjI6E5O11T+MLOWN5723elni8VGDnm6hILQU=;
-	b=trno/NzFZkvVtoXuotoZafl5G13MHelOy4wsITEGv+TRznz+MxLocI3Kzngt2PmWmQtO78
-	kNKhDJ1hB1GN2CiC5OBFno/MJtw9167JnKLKNVzs74jJuRcm1Zh+B7QKTtEHLzDTumNqHv
-	7FflBlKy727hlPzkgHwcTp2mzLgpyN4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747227982;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m9DMDyPRjI6E5O11T+MLOWN5723elni8VGDnm6hILQU=;
-	b=ImztO0JUJFx7WXvEHB8H/jlXlRRUUVL6htVHZMzMc/7CgYet1MhIx6bHtZPTRpeRBQnvjO
-	FUvmxPLHel+RtCBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A3A2137E8;
-	Wed, 14 May 2025 13:06:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id o8qCHU6VJGiadQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 14 May 2025 13:06:22 +0000
-Message-ID: <f4ebf9ca-b331-4a73-ae7a-050bb0686287@suse.cz>
-Date: Wed, 14 May 2025 15:06:22 +0200
+	s=arc-20240116; t=1747228033; c=relaxed/simple;
+	bh=BMWCTnrbswhAIoIlD9yTM51haeoisElLrndTygbZ+aA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ETwuvHPDpt1YoRiO8ixCEmmWy46kvijDKIA4Sx9awtOIvrI1DA0O9JTsK6xo2ORCJQSzxsM1yaMAhu/iBCmiujaeTT7h0pXVkPy7DjeOyw8nzfW9tMEfy/mkZi/A/6RTXBmp8g50h1ZeSaGWzuIK9UMYlYX0naEONM9iLAqeOl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uFBos-0005kf-Gu; Wed, 14 May 2025 15:06:46 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uFBop-002iQl-34;
+	Wed, 14 May 2025 15:06:44 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uFBoq-000Bls-10;
+	Wed, 14 May 2025 15:06:44 +0200
+Message-ID: <0197d176fa7a6498bdc138dca6ba881648a7e30d.camel@pengutronix.de>
+Subject: Re: [PATCH v2 4/4] phy: spacemit: add USB3 support for K1 PCIe/USB3
+ combo PHY
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Ze Huang <huangze@whut.edu.cn>, Vinod Koul <vkoul@kernel.org>, Kishon
+ Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 14 May 2025 15:06:44 +0200
+In-Reply-To: <20250418-b4-k1-usb3-phy-v2-v2-4-b69e02da84eb@whut.edu.cn>
+References: <20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn>
+	 <20250418-b4-k1-usb3-phy-v2-v2-4-b69e02da84eb@whut.edu.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/9] slab: add opt-in caching layer of percpu sheaves
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
- Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
- maple-tree@lists.infradead.org
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
- <20250425-slub-percpu-caches-v4-1-8a636982b4a4@suse.cz>
- <CAJuCfpFR5MKCQOV14okS8JhwT_c3jZ_weDGmQZ69cq=+ND-ZHA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAJuCfpFR5MKCQOV14okS8JhwT_c3jZ_weDGmQZ69cq=+ND-ZHA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[oracle.com,linux.com,google.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email]
-X-Spam-Score: -4.30
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 5/7/25 01:14, Suren Baghdasaryan wrote:
-> On Fri, Apr 25, 2025 at 1:27 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+On Fr, 2025-04-18 at 21:19 +0800, Ze Huang wrote:
+> Add support for USB 3.0 mode on the K1 PCIe/USB3 combo PHY. Currently,
+> only USB mode is supported; PCIe support is not included in this change.
+>=20
+> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+> ---
+>  drivers/phy/spacemit/Kconfig          |   8 ++
+>  drivers/phy/spacemit/Makefile         |   1 +
+>  drivers/phy/spacemit/phy-k1-combphy.c | 251 ++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 260 insertions(+)
+>=20
+[...]
+> diff --git a/drivers/phy/spacemit/phy-k1-combphy.c b/drivers/phy/spacemit=
+/phy-k1-combphy.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a291b7a78fae2f4072b74c1d2=
+cc65847ed821bec
+> --- /dev/null
+> +++ b/drivers/phy/spacemit/phy-k1-combphy.c
+> @@ -0,0 +1,251 @@
+[...]
+> +static int spacemit_combphy_probe(struct platform_device *pdev)
+> +{
+> +	struct spacemit_combphy_priv *priv;
+> +	struct phy_provider *phy_provider;
+> +	struct device *dev =3D &pdev->dev;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->phy_ctrl =3D devm_platform_ioremap_resource_byname(pdev, "ctrl");
+> +	if (IS_ERR(priv->phy_ctrl))
+> +		return PTR_ERR(priv->phy_ctrl);
+> +
+> +	priv->phy_sel =3D devm_platform_ioremap_resource_byname(pdev, "sel");
+> +	if (IS_ERR(priv->phy_sel))
+> +		return PTR_ERR(priv->phy_sel);
+> +
+> +	priv->lfps_threshold =3D COMBPHY_USB_LFPS_THRES_DEFAULT;
+> +	device_property_read_u8(&pdev->dev, "spacemit,lfps-threshold", &priv->l=
+fps_threshold);
+> +
+> +	priv->rx_always_on =3D device_property_read_bool(&pdev->dev, "spacemit,=
+rx-always-on");
+> +	priv->type =3D PHY_NONE;
+> +	priv->dev =3D dev;
+> +
+> +	priv->phy_rst =3D devm_reset_control_get(dev, NULL);
 
-Thanks!
+Please use devm_reset_control_get_exclusive() directly.
 
-> One nit which is barely worth mentioning.
-
-OK, made the change.
-
+regards
+Philipp
