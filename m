@@ -1,186 +1,123 @@
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27E427F4CA
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C91E9B16;
+	Wed, 14 May 2025 18:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747246931; cv=none; b=STmm2holPKMKUkh8Wu4kR6H8+arXjRIu7WPtCpHX4L6SCku3Ii0lb4zo/R15wRd8fvUyTWRwbk4PhtAVyc287kfkLwEZ2xSdQJjKdv34+q/z7CrJkuHEmIqXmpmfQGTCgBTPkVAzuDdQil6bonKhYsBED0YeTMR7viM0o2FxY/4=
+	t=1747246996; cv=none; b=Sk5BqHMrVxSKIPhjrXdTb7XHQi5Ostq9JMBz5TnQcg12vFXo9VtlaHMTT4rNf4u6DYu+MJAjIVr16z2oJOFuUgzL1uVrSPGuSLcGBdf9VFhoJb/oQ+Uf6q/rsq6hnoktpLRu5hw0n0kCUqTDZ9OTaVG2VNv1HdBoARZ39etPVcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747246931; c=relaxed/simple;
-	bh=hvp9AsDlC7TL+8bvq++1Xv3VIY/5QZ/Nz8QK3FfrkQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s112dw/ptzcUJSO0HcNgV9t84z/rmg1tngbs/FuI2Lh6MeGUw/KQQqmfBpnx+Dp21nxDB3TADYHCf2yvSHBfoO1mWMBFUVa4k1yvnn71eTSvmTvRXYbQhildWFn7PqIpHuqlIppXwYk0J+lTdCasVLyLO3wJYO7SKe6CI904I3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=WWRWxFIb; arc=none smtp.client-ip=66.163.188.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="WWRWxFIb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747246920; bh=4rsUJ5zSzI0wKb//W2svOsP/TtV/akPljErK2UMIick=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=WWRWxFIbj800zN1VDAZSyeF3izVPbPvd1f3T1RenAomjI4vHmILtakAVC4RhRq4w08roT62zCuTt+hJmuAwndM8oW8nf/w/heYfGtTHOMZZL4u4qR/4DGxmEHdgD3GOR5833KgQx8Bc3Tex1Pw1OypjCnHM7454gJiGhJqezx5QsCs9fU3G1oROgMTP5ahAdEQlGrMroC6ZZceiWaTreKQxilV7a0wiBp2u10ol9DwpnLc2075TaCydSY+9QGjcp9Wnx3YD9V7Crl/WT5jZIyJxDslb6wlzTtqZTRIRcnhiTtz/W4Jx+CclR3yFlgx1zdIQ+iUqZH3Ix8gH6V5BIpA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747246920; bh=7XIVsWwpvRVuD2kUvv8jP3KMVNVcpcWLvza1lIhTR5T=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=dv8cuo0dR0+/s5svcTcefp5qM31VGmnQMyaeveWxUZf3YhM71BHVhKVW/SpFuBXDoB3+MJyeigcMHoHG5lRxzIRUNkCT4j0ZAVssrvZKE6oAbDBDFdk2f1H5vIKteiKfJjx+ZJ77u343L3jaXfXu5PMYsSDQLz0//vaFrT9c1kXt9uXC1Y0d7Woh31Ti3NbbeLaL0VKXgqkDY/wM3vMFAokJYRzpQNsljn1rzyJrbeNK5r+4kCRCPXUyltjOkXrRD5+6VeFwikzCN9d1YFkqvnvme2ux09yulI51pGazKKW2t5G7HBB+691apzZklzk/I9q2h2c7BYQjat90m6mfIA==
-X-YMail-OSG: nHPTOOIVM1ng.ulIm4wc2Ny2ydbnKy4sbBqTMSuPkDp0amWcNkMMXeYVyWztuil
- VJbnVLWjdnbKddBtA3KvWNF7f0mTgKXu1_U8J.VquvfScER2QosE1vvelxxu1ks621hTS55km3f2
- 2DDCZtEErKMYGXcVnN_G_sqjSJHfDH90pgVVbCdHxIoG8IwCL0wn0EtGtO46uv5uecqM0jOM8nX7
- RNdfo_n866OEbgZIx5eyWzbDgg3SRdeQiW.qmBd2X.pnYO8KcevYhfFCWUu8Ondx9j9JHmLjnwUg
- 3nm2aUwVkZuEudC54x16Rt7.UlZNFP94d2FTSd2mfzvgeUm.L2fxzEm310L3WOKlTERgRRz4XVnU
- y.F_qzkZUAWW5FfScZJzWWeatYXSA2f7U52noW2Czt1bvpV8_67XwUkvOqG1FYn_HgQgm52aOJP_
- b9A1DZRaFMHk5RzZltDEi8bmO4omDHIV4_LhPjYIsr8mABhGZOumnwdUaNBtfI7EnTuPMtXasiBa
- DkjMUCNYRXp.a98a56yA3GaHwekZPCACqLjqJraoASkfcz3s8AKt2TVUIFWSz1hTy_jM5KLvDzJf
- 5PqEy9zaoYAA8.v0fDjzENMmMdUSpRnUi9mKIlzaX2SC8sBtptVu8.MLb2S3aWi9vzyToedUeo7T
- 37Tr1.nXQAHTrKVoC6TYXwL.aHH4ok3FQegm9qcrkr4h1RuP.ohwB1pA3w12ZZOD6u5LxQs.x4wa
- YocMlUbBRVi2OcOlia83TXIxwSPnzVGMccuJDteRMXww6TB2BpuHyFbZHUVLQt7fcx1nXEZRGG2R
- shiokbekeYIHrWxwrrv8C.NBor3cqqmF45CPmnYFbwpPQRgfjiN7DM.gAV_3Y2yzuBnLbWqnR8l3
- 5.rqduMR.pzo8kV2cw1OtutsRKzePiLk7EpaJgzNphySEMaX_0bq7UPEjpvL6VzQXcPj2c7woYrJ
- 4pRcgG.ROQYf2XpkytoWKAf12INW16guMpjchJRNCtVoCXuMOlO0umNmOIGfeIKPjhRw1OTwEsFg
- BQ_CFUF7jLD8QxXPdcnnv6vEaAoGG3HMrI6Pv1a1gdIGVpMwwLKYxhQnvescAdrj0ii4E_nqTDgN
- 0ZHIt9vbO7XuK98HMIyBtBOWajwHVNe3_RigFk7mKZZ5AR8TIy5Q4v5f3QuyQajkbkg8cUigBm5q
- FWmBm4L2LoKA4CY6.cGG8Gc3vK9Y3vK8UPe_dU_AKqmffw5nCg7BlSnEo1HK5dh86jKHzXVe.Tvi
- HsghkhzDwokY29i7383cum6PLAl9dZA2QrfZu6PQuaovFZ3..34vcpKCNnLkfr1sv7OjvAeWv57y
- Z5aowgIXJwTXqsY0nE_8JkpEUeFd7vipcj6_U02vkltUe.k2.WJs8rGLIcAfs8WHMVJaUR_SRm9a
- kLTklbTsRnKsvGdnWZD2yMw0bopDYTl2aMAuKwoe.wc0XXBaSilMbCcepXtHlX_qjY4hYbq8tc8U
- bR.XKOnkLLroFhduQHJDprADVKx.dUefQ81QcHs.AeeJpfHuZzBtSElaCKC3fnNuJbKl11D1qMDQ
- EOjorKrlRKSps6PCkMsljkaY3szDFDPkNNsKteaBnrG8NAV1HHiNf3xUabtMdQ2TYVm1MVLFMruf
- BT0LlNoBUL7e4D_1gXY7_FrIZpyGGeHNjiNny_RiIUnec69icjUcgmERSukDs0K.f7z2eLzcc9YY
- l37ksgbNuddIamOmXkMnQwQYz47XUUlYKKPn3hVAPdrzxGjEepp80xg5zCJagMsUB3khgYkQPHhg
- xw2DqUUidVfzpoH3XrG3_dUI0xhN7NzZFQ1vTh9bKuCGStmd_ZyhnUXZ2fKGSxLpbsM3Hg96ntMN
- QNUOky2UwbmKu4ResRxhyl0rtBqHYE_neausETDs8nhbb81NBd8O6SuJLubxMwMSOeOVnOq62tdW
- 2EBIu22kkqmmuTmprVPPecu8c4bXgUZeXXGFFR_77dH2yICxf2VX1wOKrF.dXdV.fB8tuGzQrKfE
- vt755q5ZMMdC3.vqa0dLyel40TcQbpulDR7V79PDJ_qRfpXJ.ykn0q66m8VQ4Eylh45B6YUM7.VD
- DO3c4AQSEgwtqvyyHnD4aW.JE0BC0l8Mb8Rm6tkfEhNN5dM917w9MYEYKJuumfLvH28R8LCAu4hN
- faxejEjYc2FGwoTR7jWTVFq7aGVIqjsDL.kV.hP1eqs2ow8SkuYv9_NdtouNhbt8fQqs2UhfUDaR
- vO4NboQM5f1Dz0RTJ1xQMD8x4fFN5MOoT08FZDZeqdePW.ZrjOo17BfpXBkS_RBVi5_uJumnyPQ-
- -
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 1720cbeb-f9c3-4a7e-be5c-7547ab69837d
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Wed, 14 May 2025 18:22:00 +0000
-Received: by hermes--production-gq1-74d64bb7d7-dp9cd (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a94d104d78fd57954bd2c60c7ad9d5b3;
-          Wed, 14 May 2025 18:21:54 +0000 (UTC)
-Message-ID: <cb737e58-51ab-4918-b5ba-2c18bf1ad601@schaufler-ca.com>
-Date: Wed, 14 May 2025 11:21:46 -0700
+	s=arc-20240116; t=1747246996; c=relaxed/simple;
+	bh=4e1qOJWkWaFSa6R6yvbt8eruwMLzqqkT2IlDLCrqYys=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L22IxhQcnqq3czH0E2UweUpc5fleRchqCSRMoP+GKSgoG3Rwrz8WH0br8/mTy3HgX2gELkt7YbHFeNIVr77i4eMKB5KuRBAPugf+DNPh9J9U0mKEQTDDIdNU8w8MYRnh3wpopm9Siwt3iYRvv6sHWV/V9YTJvvAVACAcB8JTTS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong
+ Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh
+	<kpsingh@kernel.org>, Roman Gushchin <guro@fb.com>, <netdev@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, syzbot <syzkaller@googlegroups.com>, Eric
+ Dumazet <edumazet@google.com>
+Subject: [PATCH 5.10] bpf: Avoid overflows involving hash elem_size
+Date: Wed, 14 May 2025 21:07:33 +0300
+Message-ID: <20250514180733.1271988-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/7] lsm: introduce new hooks for setting/getting inode
- fsxattr
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
- Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>,
- Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
- selinux@vger.kernel.org, ecryptfs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
- Andrey Albershteyn <aalbersh@kernel.org>,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20250512-xattrat-syscall-v5-0-4cd6821e8ff7@kernel.org>
- <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
- <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
- <kgl5h2iruqnhmad65sonlvneu6mdj6jl3sd4aoc3us3lvrgviy@imce27t4nk2e>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <kgl5h2iruqnhmad65sonlvneu6mdj6jl3sd4aoc3us3lvrgviy@imce27t4nk2e>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.23840 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-On 5/14/2025 4:02 AM, Andrey Albershteyn wrote:
-> On 2025-05-12 08:43:32, Casey Schaufler wrote:
->> On 5/12/2025 6:25 AM, Andrey Albershteyn wrote:
->>> Introduce new hooks for setting and getting filesystem extended
->>> attributes on inode (FS_IOC_FSGETXATTR).
->>>
->>> Cc: selinux@vger.kernel.org
->>> Cc: Paul Moore <paul@paul-moore.com>
->>>
->>> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
->>> ---
->>>  fs/file_attr.c                | 19 ++++++++++++++++---
->>>  include/linux/lsm_hook_defs.h |  2 ++
->>>  include/linux/security.h      | 16 ++++++++++++++++
->>>  security/security.c           | 30 ++++++++++++++++++++++++++++++
->>>  4 files changed, 64 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/fs/file_attr.c b/fs/file_attr.c
->>> index 2910b7047721..be62d97cc444 100644
->>> --- a/fs/file_attr.c
->>> +++ b/fs/file_attr.c
->>> @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
->>>  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
->>>  {
->>>  	struct inode *inode = d_inode(dentry);
->>> +	int error;
->>>  
->>>  	if (!inode->i_op->fileattr_get)
->>>  		return -ENOIOCTLCMD;
->>>  
->>> +	error = security_inode_file_getattr(dentry, fa);
->>> +	if (error)
->>> +		return error;
->>> +
->> If you're changing VFS behavior to depend on LSMs supporting the new
->> hooks I'm concerned about the impact it will have on the LSMs that you
->> haven't supplied hooks for. Have you tested these changes with anything
->> besides SELinux?
-> Sorry, this thread is incomplete, I've resent full patchset again.
-> If you have any further comments please comment in that thread [1]
->
-> I haven't tested with anything except SELinux, but I suppose if
-> module won't register any hooks, then security_inode_file_*() will
-> return 0. Reverting SELinux implementation of the hooks doesn't
-> cause any errors.
->
-> I'm not that familiar with LSMs/selinux and its codebase, if you can
-> recommend what need to be tested while adding new hooks, I will try
-> to do that for next revision.
+From: Eric Dumazet <edumazet@google.com>
 
-At a minimum the Smack testsuite:
-	https://github.com/smack-team/smack-testsuite.git
-And the audit suite:
-	https://github.com/linux-audit/audit-testsuite.git
+commit e1868b9e36d0ca52e4e7c6c06953f191446e44df upstream.
 
-AppArmor has a suite as well, but I'm not sure where is resides.
+Use of bpf_map_charge_init() was making sure hash tables would not use more
+than 4GB of memory.
 
-My primary concern is that you're making changes that remove existing
-hook calls and add new hook calls without verifying that the protections
-provided by the old calls are always also provided by the new ones.
+Since the implicit check disappeared, we have to be more careful
+about overflows, to support big hash tables.
 
->
-> [1]: https://lore.kernel.org/linux-fsdevel/CAOQ4uxgOAxg7N1OUJfb1KMp7oWOfN=KV9Lzz6ZrX0=XRGOQrEQ@mail.gmail.com/T/#t
->
+syzbot triggers a panic using :
+
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_LRU_HASH, key_size=16384, value_size=8,
+                     max_entries=262200, map_flags=0, inner_map_fd=-1, map_name="",
+                     map_ifindex=0, btf_fd=-1, btf_key_type_id=0, btf_value_type_id=0,
+                     btf_vmlinux_value_type_id=0}, 64) = ...
+
+BUG: KASAN: vmalloc-out-of-bounds in bpf_percpu_lru_populate kernel/bpf/bpf_lru_list.c:594 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in bpf_lru_populate+0x4ef/0x5e0 kernel/bpf/bpf_lru_list.c:611
+Write of size 2 at addr ffffc90017e4a020 by task syz-executor.5/19786
+
+CPU: 0 PID: 19786 Comm: syz-executor.5 Not tainted 5.10.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x107/0x163 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x4c8 mm/kasan/report.c:385
+ __kasan_report mm/kasan/report.c:545 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:562
+ bpf_percpu_lru_populate kernel/bpf/bpf_lru_list.c:594 [inline]
+ bpf_lru_populate+0x4ef/0x5e0 kernel/bpf/bpf_lru_list.c:611
+ prealloc_init kernel/bpf/hashtab.c:319 [inline]
+ htab_map_alloc+0xf6e/0x1230 kernel/bpf/hashtab.c:507
+ find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
+ map_create kernel/bpf/syscall.c:829 [inline]
+ __do_sys_bpf+0xa81/0x5170 kernel/bpf/syscall.c:4336
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45deb9
+Code: 0d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd93fbc0c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000001a40 RCX: 000000000045deb9
+RDX: 0000000000000040 RSI: 0000000020000280 RDI: 0000000000000000
+RBP: 000000000119bf60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000119bf2c
+R13: 00007ffc08a7be8f R14: 00007fd93fbc19c0 R15: 000000000119bf2c
+
+Fixes: 755e5d55367a ("bpf: Eliminate rlimit-based memory accounting for hashtab maps")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/bpf/20201207182821.3940306-1-eric.dumazet@gmail.com
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ kernel/bpf/hashtab.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 4c7cab79d90e..829d6d3a8495 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -199,7 +199,7 @@ static void *fd_htab_map_get_ptr(const struct bpf_map *map, struct htab_elem *l)
+ 
+ static struct htab_elem *get_htab_elem(struct bpf_htab *htab, int i)
+ {
+-	return (struct htab_elem *) (htab->elems + i * htab->elem_size);
++	return (struct htab_elem *) (htab->elems + i * (u64)htab->elem_size);
+ }
+ 
+ static void htab_free_elems(struct bpf_htab *htab)
+@@ -255,7 +255,7 @@ static int prealloc_init(struct bpf_htab *htab)
+ 	if (!htab_is_percpu(htab) && !htab_is_lru(htab))
+ 		num_entries += num_possible_cpus();
+ 
+-	htab->elems = bpf_map_area_alloc(htab->elem_size * num_entries,
++	htab->elems = bpf_map_area_alloc((u64)htab->elem_size * num_entries,
+ 					 htab->map.numa_node);
+ 	if (!htab->elems)
+ 		return -ENOMEM;
+-- 
+2.34.1
+
