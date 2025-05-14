@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D371E04BD;
-	Wed, 14 May 2025 10:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE1A25DD09
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747218259; cv=none; b=fYL8opt0OS7e02vdq18Y8lWH+ZgSz2OhM4vmuP3hrXwqS090DjjWO4Gi5RIeUErdxKgKlzfQ1ZePFaC+TSnTYnqAlEX+8cIfXN5yxdHip4c46z8BRdth2v4S4vvtbVjXsTPzs7gvhp7UtQ3dI+twqsRUmxydo6ulHoG4qFKWk5o=
+	t=1747218563; cv=none; b=EJmTpY7RyX//5iN+eklP2M1v+O0RHTpHWLj4Jps0VaTUijzKH5QENM5B+RsW/7M3SWtQ2Qy6QwCJPKDXudVH8AK7f8ZY1xYI5SEZCwHs0YlCSLlANFo3+oOK3cusvcgnz9qcaHXP9liC/7EP6QbgLoHqJ478A+0WhOAbPMzKBX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747218259; c=relaxed/simple;
-	bh=BOofkBfaOlAL0tDVDzAKaauS2ThgBGfeSjAHZg5HhgQ=;
+	s=arc-20240116; t=1747218563; c=relaxed/simple;
+	bh=xV5TGWtAjUBbAlGh1TG217UQBJWDrrfWO3odDFRTQMQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOSZHhLe7ujLvJ2cD17NBtTK0w+6FND7XSdxV9AItVovUL7e43e8LCExhABJ97dZMOhwBXPjSoIOSxQc62rf+/3op2TCiY/XorJl1ZVyV9yKNkUNRDnzkq4MNcRKnyDJ6B77+tMg+n06BF5T0KC1+4xhJVSph+0zDdDBLSr6RR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6673E14BF;
-	Wed, 14 May 2025 03:24:05 -0700 (PDT)
-Received: from [10.57.24.82] (unknown [10.57.24.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A00C53F673;
-	Wed, 14 May 2025 03:24:12 -0700 (PDT)
-Message-ID: <36c46f16-85c2-43f8-b460-942f34631e0d@arm.com>
-Date: Wed, 14 May 2025 11:24:10 +0100
+	 In-Reply-To:Content-Type; b=C13nBvsJ5jCBFxgr4MIGUrPq07vd4hVMrMOFdMEO/OMNhLwVY9Lcpo9/oPUeHjFypOQdZldQRoGVouY719dqrZmO4q5ehOVqLtoqq3R0YCtAG+wOoFw/qOTn1vF4WqxEMzYqjzUxkDsPVcpTvDKIbuhLmPsHpdlTM9BZPEOaZR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=NjgICSIA; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="NjgICSIA"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ba0b6b76so4850124f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747218560; x=1747823360; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fU4PVewcc9MxNH8+f8DwyzdamtEdKDmr83HGRbxUgQA=;
+        b=NjgICSIAzJ3DZL16X7USYlyLMHxqOLroHevQkmeuCpl+Ri0TdDcsqqISaAdt1riMMI
+         tXYarZgGlKGQ/gRyh4tz4pJAuqe4SCnkPY4sYgu3hqGpqC97V2FQiAJh2thHjp81rcuu
+         YXVPNL/XSLemYI7XE51XVwIZawukvPw8kYKQBliwoKSTeMO5io2tTNC3NEMqIsQgg01U
+         u2rHNkOKmBkY5fvyr8QOkLja9EXaMzxr3GPGGL527BI2IT2lP34CR6gGCcfhlS6M8AUF
+         em3ObpaBU79igYBcesgDsbpXp3YSkOyyLoJRJVXK1a5WIw7f0LttpNoYxuEyodAM7nLZ
+         SicQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747218560; x=1747823360;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fU4PVewcc9MxNH8+f8DwyzdamtEdKDmr83HGRbxUgQA=;
+        b=rT/mWvU4m0xSh6vgmTIImkQWb0cR/4u5tG0uNtqb9TiWlwCgZqnRbTe/UpaNEM8Ok6
+         D8oMPz2LhN6+iCXrczp5urr86/KOZLBUj67pAaSiFWXCAXUBGM5Jt+0WYjLFyai+HmDE
+         qkOfL43AViX1wNi/YOmBwZ8ztVDWR9XJ13BUZVrU0jIOBVCIVcD2IKt7KqoiFpOOxEVi
+         XrtCqnFEzFtKXgBha7dljJ+sPw5XVSawmWPUzFjATo4zhR2C2V9tcr6xL++Xrx1mnods
+         d4nkXVBPaOW9/BD5VKcFNdWB6qMNwVePbJy8KOC9DfAVK/2EH4J6tc2YZhMwlIgZTwSn
+         6zmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVk4l8dujUlsFRHRu2cdJlOZ8CuXFU63/TYMC6UQ2LW5WyOiDtEjFj0vQdJV3xNJdDd/FdAlUugDJO96uM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy74c7lBuOKy5RSVu/WpAfKMgHBb1HUP9HeMMJ7uVW1D9KhkJxZ
+	XKHm+tf+CFlpAelQZbsvUnkPpNm370kiUe7gyOIVlr7Kjcq5ImO68mJgSKIkbvA=
+X-Gm-Gg: ASbGncva/oobgajgZFrJjTM+8hY78u5ztB/6KQm6eFis6zCgsqIVhDf/5KndSd1XRL3
+	jJXmduxyO04Nk+idlr7iNpE3HTj3uPN2voYOq5plo0aQFCeRgrbh1z+/ZFX6WWNFBPhYHaLccUD
+	ZKWywmZssPhYUx5Yqq30Al91JKNNI1Rdn/B1bKQYOPSUMchQCm/G4q576OgFYevAIiqwfMzcFME
+	8GyyY33HmkMI1d4lUIlPg/Ka0IRNuxv0EVqg/PCbXKXoHQJuFFIlnfRP9CfQ4T85UCPZ5x4g0h4
+	DUSkxPqKSedX+1zNz41/4IoxmuxE009V9ChDDDyF9vMaQ75PFjBoMqBTVv4=
+X-Google-Smtp-Source: AGHT+IGyw3NxozgVzbMrkAVh72sdE2V/yiO6fwgF41eG84LxNtgGijn9Y7vFEYBwAZhyZjVRwxqXEQ==
+X-Received: by 2002:a05:6000:400c:b0:3a0:aeba:23b1 with SMTP id ffacd0b85a97d-3a349946a98mr1835187f8f.49.1747218559944;
+        Wed, 14 May 2025 03:29:19 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a22ea7a53asm7334492f8f.23.2025.05.14.03.29.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 03:29:19 -0700 (PDT)
+Message-ID: <e470715b-6f76-4b65-b1af-7a24e0432a30@tuxon.dev>
+Date: Wed, 14 May 2025 13:29:17 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,178 +66,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 15/43] arm64: RME: Allow VMM to set RIPAS
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-16-steven.price@arm.com>
- <83071e55-cbe4-4786-b60e-d26ce16368b3@arm.com>
- <f4ee678d-112d-46d1-8b87-70e55d6617e1@arm.com>
- <d0cbb637-6ba1-4858-b326-31271e9949ea@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <d0cbb637-6ba1-4858-b326-31271e9949ea@arm.com>
+Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+ mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
+ p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250512203851.GA1127434@bhelgaas>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250512203851.GA1127434@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 13/05/2025 11:43, Suzuki K Poulose wrote:
-> On 12/05/2025 15:45, Steven Price wrote:
->> On 06/05/2025 14:23, Suzuki K Poulose wrote:
->>> Hi Steven
+Hi, Bjorn,
+
+On 12.05.2025 23:38, Bjorn Helgaas wrote:
+> On Fri, May 09, 2025 at 01:29:40PM +0300, Claudiu Beznea wrote:
+>> On 05.05.2025 14:26, Claudiu Beznea wrote:
+>>> On 01.05.2025 23:12, Bjorn Helgaas wrote:
+>>>> On Wed, Apr 30, 2025 at 01:32:33PM +0300, Claudiu wrote:
+>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>>
+>>>>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>>>>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>>>>> only as a root complex, with a single-lane (x1) configuration. The
+>>>>> controller includes Type 1 configuration registers, as well as IP
+>>>>> specific registers (called AXI registers) required for various adjustments.
+>>>>>
+>>>>> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
+>>>>> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
+>>>>> host driver can be reused for these variants with minimal adjustments.
+>> ...
+> 
+>>>>> +static void rzg3s_pcie_update_bits(void __iomem *base, u32 offset, u32 mask, u32 val)
+>>>>> +{
+>>>>> +	u32 tmp;
+>>>>> +
+>>>>> +	tmp = readl(base + offset);
+>>>>> +	tmp &= ~mask;
+>>>>> +	tmp |= val & mask;
+>>>>> +	writel(tmp, base + offset);
+>>>>> +}
+>>>>
+>>>> Nothing rzg3s-specific here.
+>>>>
+>>>> I think u32p_replace_bits() (include/linux/bitfield.h) is basically this.
 >>>
->>> On 16/04/2025 14:41, Steven Price wrote:
-
-[...]
-
+>>> I wasn't aware of it. I'll use it in the next version. Thank for pointing it.
+>>
+>> I look into changing to u32p_replace_bits() but this one needs a mask that
+>> can be verified at build time. It cannot be used directly in this function.
+>> Would you prefer me to replace all the calls to rzg3s_pcie_update_bits() with:
+>>
+>> tmp = readl();
+>> u32p_replace_bits(&tmp, ...)
+>> writel(tmp);
 > 
->>
->>>> +    }
->>>> +
->>>> +    realm_fold_rtt_level(realm, get_start_level(realm) + 1,
->>>> +                 start, end);
->>>
->>> We don't seem to be reclaiing the RTTs from shared mapping case ?
->>
->> I'm not sure I follow: realm_fold_rtt_level() will free any RTTs that
->> are released.
->>
->> Or are you referring to the fact that we don't (yet) fold the shared
->> range? I have been purposefully leaving that for now as normally we'd
+> It seems like this is the prevailing way it's used.
 > 
-> sorry it was a bit vague. We don't seem to be reclaiming the RTTs in
-> realm_unmap_shared_range(), like we do for the private range.
-
-Ah, you mean we potentially leave empty RTTs which are only reclaimed
-when destroying the realm. Whereas in the private range we
-opportunistically fold which will (usually) cause these to be freed.
-
->> follow the page size in the VMM to choose the page size on the guest,
->> but that doesn't work when the RMM might have a different page size to
->> the host. So my reasons for leaving it for later are:
->>
->>   * First huge pages is very much a TODO in general.
->>
->>   * When we support >4K host pages then a huge page on the host may not
->>     be available in the RMM, so we can't just follow the VMM.
->>
->>   * We don't have support in realm_unmap_shared_range() to split a block
->>     mapping up - it could be added, but it's not clear to me if it's best
->>     to split a block mapping, or remove the whole and refault as
->>     required.
->>
->>   * guest_memfd might well be able to provide some good hints here, but
->>     we'll have to wait for that series to settle.
+> You have ~20 calls, so it seems like it might be excessive to replace
+> each with readl/u32p_replace_bits/writel.
 > 
-> I am not sure I follow. None of this affects folding, once we have
-> "unmapped". For that matter, we could easily DESTROY the RTTs in
-> shared side without unmapping, but we can do that later as an
-> optimisation.
+> But maybe you could use u32p_replace_bits() inside
+> rzg3s_pcie_update_bits().
 
-Yeah, ignore the above - like you say it's not relevant to unmapping, I
-hadn't understood your point ;)
+I tried it like:
 
-I'll stick a call to realm_fold_rtt_level() at the end of
-realm_unmap_shared_range() which should opportunistically free unused
-RTTs. Like you say there's a optimisation to just straight to destroying
-the RTTs in the shared region - but I think that's best left until later.
+#define rzg3s_pcie_update_bits(base, offset, mask, val)	\
+	do {						\
+		u32 tmp = readl((base) + (offset));	\
+		u32p_replace_bits(&tmp, (val), (mask));	\
+		writel(tmp, (base) + (offset));		\
+	} while (0)
 
->>
->>>> +}
->>>> +
->>>> +void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start,
->>>> +               unsigned long size, bool unmap_private)
->>>> +{
->>>> +    unsigned long end = start + size;
->>>> +    struct realm *realm = &kvm->arch.realm;
->>>> +
->>>> +    end = min(BIT(realm->ia_bits - 1), end);
->>>> +
->>>> +    if (realm->state == REALM_STATE_NONE)
->>>> +        return;
->>>> +
->>>> +    realm_unmap_shared_range(kvm, find_map_level(realm, start, end),
->>>> +                 start, end);
->>>> +    if (unmap_private)
->>>> +        realm_unmap_private_range(kvm, start, end);
->>>> +}
->>>> +
->>>> +static int realm_init_ipa_state(struct realm *realm,
->>>> +                unsigned long ipa,
->>>> +                unsigned long end)
->>>> +{
->>>> +    phys_addr_t rd_phys = virt_to_phys(realm->rd);
->>>> +    int ret;
->>>> +
->>>> +    while (ipa < end) {
->>>> +        unsigned long next;
->>>> +
->>>> +        ret = rmi_rtt_init_ripas(rd_phys, ipa, end, &next);
->>>> +
->>>> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
->>>> +            int err_level = RMI_RETURN_INDEX(ret);
->>>> +            int level = find_map_level(realm, ipa, end);
->>>> +
->>>> +            if (WARN_ON(err_level >= level))
->>>
->>> I am wondering if WARN_ON() is required here. A buggy VMM could trigger
->>> the WARN_ON(). (e.g, INIT_IPA after POPULATE, where L3 table is
->>> created.). The only case where it may be worth WARNING is if the level
->>> == 3.
->>
->> I have to admit I've struggled to get my head round this ;)
->>
->> init_ripas will fail with ERROR_RTT in three cases:
->>
->>   1. (base_align) The base address isn't aligned for the level reached.
->>
->>   2. (rtt_state) The rtte state is !UNASSIGNED.
->>
->>   3. (no_progress) base==walk_top - the while condition should prevent
->>      this.
->>
->> So I think case 1 is the case we're expecting, and creating RTTs should
->> resolve it.
->>
->> Case 2 is presumably the case you are concerned about, although it's not
->> because tables have been created, but because INIT_RIPAS is invalid on
->> areas that have been populated already.
-> 
-> Correct, this is the case I was referring to.
-> 
->>
->> If my reading of the spec is correct, then level == 3 isn't a possible
->> result, so beyond potentially finding RMM bugs I don't think a WARN for
-> 
-> It is almost certainly possible, with L3 page mapping created for
-> POPULATE and a follow up INIT_RIPAS with 2M or even 1G alignment, could
-> lead us to expect that only L1 or L2 is required (find_map_level) but
-> the RTT walk reached L3 and failed. This is not a case of RMM bug, but
-> a VMM not following the rules.
+But the mask may still depend on runtime variable. E.g. there is this call
+in the driver (and other similar):
 
-Sorry, I wasn't clear. I mean "level == 3" isn't something that we
-should be WARNing on.
+static void rzg3s_pcie_msi_irq_mask(struct irq_data *d)
+{
+        struct rzg3s_pcie_msi *msi = irq_data_get_irq_chip_data(d);
+        struct rzg3s_pcie_host *host = rzg3s_msi_to_host(msi);
+        u8 reg_bit = d->hwirq % RZG3S_PCI_MSI_INT_PER_REG;
+        u8 reg_id = d->hwirq / RZG3S_PCI_MSI_INT_PER_REG;
 
->> that is very interesting. So for now I'll just drop the WARN_ON here
->> altogether.
-> 
-> Thanks, that is much safer
+        guard(raw_spinlock_irqsave)(&host->hw_lock);
 
-Ack.
+        rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_MSIRM(reg_id),
+                               BIT(reg_bit), BIT(reg_bit));
 
-Thanks,
-Steve
+}
 
-> Suzuki
-> 
+reg_id is a runtime variable and cannot be checked at compile time thus the
+compilation of u32p_replace_bits() fails with:
 
+../include/linux/bitfield.h:166:3: error: call to ‘__bad_mask’ declared
+with attribute error: bad bitfield mask
+  166 |   __bad_mask();
+      |   ^~~~~~~~~~~~
+
+Please let me know if you have other suggestions.
+
+Thank you,
+Claudiu
