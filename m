@@ -1,116 +1,174 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF04274FD9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314D15AF6;
+	Wed, 14 May 2025 13:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747229780; cv=none; b=jxZSJV1TBXkGYnr+i5h59baBaAGsXR1Rs6IavPtr8u+W5Bz+QgMUc3+q+XQ7LEcsOJeEYUM3oMdm8XtihyGcJvd0jNuUY4UrayzwfDoi05ctpPHr3/qPDnc6DG2I9hRh/uIWyt0vRODaAblKSJ8WX/WV6XeJGUA4MF1Z5ag+mCE=
+	t=1747229880; cv=none; b=jiAPZJOnpLDZScEWVa3napk4KfTq8zFfatgtiwpNFtHBIzcy0/3YAR6SGAlTYsjpOC7NyRQSB6jOVUeaZdcM+v0vr8ImAexslYafCFN9l6rwtcN94RUtVeUo+pUVwXfUCi9I8bqQ+mazhOeCaNwjrT01UC4e0EnCWxTbXdPUb9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747229780; c=relaxed/simple;
-	bh=yMgoMTH3h37N0QI1Jl75rwUN+zTne9g/7CDb67cjf10=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g4c7VwpiDTB1GCz3VRvYGfKiF9C7LE+W2824CnWeHnOrfai0PNRSwv9HfEnZNsB1LKqjw3ODc/nMILgk9NUE9tdkv2TW37WXrNaL+orIJeCBaCgHq6dpml/xJqc0xfZ/p3eSZLExUxTvP1x0EC1klotKQt4rowfyYsyfquvlfrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gt1E/nRb; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gt1E/nRb"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E6GS7A017030;
-	Wed, 14 May 2025 13:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=YfTUAH1ofCS4VsMDlN4kr7Gt1uhktSk0r2YXiiHdo
-	oo=; b=Gt1E/nRbl4+C/uE+mm9nztkmJGNAVpuVaB9/J8pJDIQTCZVZeJc/oF4in
-	3FYpHiuAkW1AVJDvaOAAyuo75fDOGU+s+ew2swVRFZnfhPc0iCdsYzboQ6Ah2Kw6
-	hL9UfA8dTwwu8RdaNar7x7rGQ5EtiAFIokszFUstNIVtvxOHV3FMHWSGACL5CuNI
-	b11UjlRsn8M8kJENGgqhdLCMsgAVQJQExno7IzjBIgDhh8v+kkkACfY0mrKLfNhN
-	PcLpazQBrFalfbcu9HjLTH+CXxPU3PuyQMV1fjfOOFSFAiRk3Cn4gRxt1JPCyxvY
-	NikWYVHQNIUdJi/jz1ZpNKq54Fq8Q==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8mhxf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 13:35:27 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDXYj3015498;
-	Wed, 14 May 2025 13:35:26 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpvdhx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 13:35:26 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EDZOJW32703132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 13:35:24 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BD5120128;
-	Wed, 14 May 2025 13:35:24 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8960B20127;
-	Wed, 14 May 2025 13:35:24 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 14 May 2025 13:35:24 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-	id 3768EE08A7; Wed, 14 May 2025 15:35:24 +0200 (CEST)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH] objtool: Add missing endianess conversion when checking annations
-Date: Wed, 14 May 2025 15:35:15 +0200
-Message-ID: <20250514133515.1829691-1-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1747229880; c=relaxed/simple;
+	bh=ZepZzLIO7dOmpE2MQV/FK9ew8cF/BPgsg3oRN2yJCNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qXF8DZ8i2gs0T3AcfmW8bF8sp1LOIaCKJwjssid/w4joYw7Zg7HKQF75T9Q5UwtPfDjU8ZQqBw1aQ+Qp0/B9czOCqV5X9HjrJCcYOwtoE5icOrTSmSeR5ZqKpJxOIIg96UmqSXdNCvTbU2T5vCkbZqLtEEDce7JHGlUpNWEqcSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c922169051so410584085a.0;
+        Wed, 14 May 2025 06:37:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747229877; x=1747834677;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/IsAbXzh91Q8PuBlOs0s/9HiPsMLpNN7I5T9azSzLhg=;
+        b=vpwy0meihT844B8Jb/GZG8ySyXLxyx23W84j/0y437sEvWQi1F4hlIGi5zjRJOa14F
+         YTRKf5PLzL6PQVmi5IYAo/i+vpG/YDuO8q+R6blpFmYjBF1siwBVNpQH383SSlvJAHuA
+         DLT9gr5pXzqLBmWLQq4YzJ+snAR/Kf6RW055ciREhoh4gXFjbTgXMhIkYDfI5RU3uMT0
+         R0etuPATjniRKkYLYtV9nTPAk8aGrHejjU3RyxMGZyZhZ5IrUZlt9NX0HYWMAa0m8a9L
+         7MTA0hoRtpdSna4wTA5AwKLgwk/sLvnmG5chmX1LX6QTgjd/OISwcS7RmZM45ilPUqKw
+         X30g==
+X-Forwarded-Encrypted: i=1; AJvYcCW26FG07A1su6QEsRn/TNvkkPqgpyFrTANzxZEy34NmAOiVAmVZH53i/9mt5mg9/t0lwpMAzai7mI7pilg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5Vr3Y7iV3Q91dkuyP+dlUisSn1fiXTsHOGPaf840ZP+5VNw9K
+	/FUSAqjE0/sXKKTgFCsYH4YpoZ9fde1faH+FTSpqOJVqBKPNx6aKLAcTK2RH
+X-Gm-Gg: ASbGncsXxhzgoYaP6/3FMYb8+nRIgHZ92+cTFJk4yY2CnCW3yhYRBGtcgN1NE7llJVf
+	43Z4YFyD9vVuJtB2tBSgPs7kg7TD2SJkIsWK9K6c0vB+9y3jWkIy5c8uebAJV7ixVnIg3+1I4TK
+	INZhoDAdd7Xa4k8nGUY9g/dWp3LA8RGO+4Y2SAjUq+XCPWSBnc36j7cZT1xlynXW+aCVjU3LRdx
+	Arn1MqWd4/dXOHrcbEVQBHxTNBMnOWhiqF6bCiNTIDDjt5Tk1iJN3H1i3b8JHkOhQ0cd0XW416o
+	CeyDR8g817ncIAzouIwAorwC3maPN9kh5oeb2I3HsIPYMUjpGBj7xvq+J0ky4SqW5rDOuf11raV
+	OIw==
+X-Google-Smtp-Source: AGHT+IHFH4g3ss66qDbAjeW+ob+M+vGKPfczusRUWfH82PtGDW1Ihq4RAiJiDDPKDJk4yw0DUI89bQ==
+X-Received: by 2002:a05:620a:c52:b0:7c5:464b:6718 with SMTP id af79cd13be357-7cd2888faf1mr639600785a.54.1747229877300;
+        Wed, 14 May 2025 06:37:57 -0700 (PDT)
+Received: from tachyon.tail92c87.ts.net ([192.159.180.233])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00fe61d2sm852983985a.99.2025.05.14.06.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 06:37:56 -0700 (PDT)
+From: Tavian Barnes <tavianator@tavianator.com>
+To: linux-sound@vger.kernel.org
+Cc: Tavian Barnes <tavianator@tavianator.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	sound-open-firmware@alsa-project.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5] ASoC: SOF: Intel: hda: Fix UAF when reloading module
+Date: Wed, 14 May 2025 09:37:49 -0400
+Message-ID: <570b15570b274520a0d9052f4e0f064a29c950ef.1747229716.git.tavianator@tavianator.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xJ0WNLTo4dcc3szMpA0ITfuQBycRBGGS
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=68249c1f cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=OlQpHzDty6Yk0YrQ6AQA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDExNSBTYWx0ZWRfX8klJCSs/EcDw ZgFd+BUMqYcmVkdv0WaSsv39vMSfB7EGvn62OvCrxH+IkS1yzuX1Trth3nitLxPn691tbUX/4GR 2XMk34Oa+44MX0fngEZFk9+PaZczzr5StCOBfVrQryYYEZ+306OS+ssbNeRGeKjScgHvUElq8FW
- l1j2L+48o46gmwHHY5XcP8u2XPkldBIlU7WyWcEPtG3QGmfs2bwi1nlXhpyUMLLyu4JUb726ojy Kl2fmyunqBCCbE2dWGhz6RmM7ScP37Vs3YWzYRyRPsQsKrzToMPPusqlW47SasuO00n8fFKIBLL DtZXLGihXx94vcC0JLg9+GfZjr70eycqWTU7e02u+GGnFGusMzG1gi+MeWRrPbWGffY7ZeQKqXR
- 8XZxEZOEE+u4viHhAqQzOxm6vTHjkQAgGIc9JPK//3DGgnKBaRX+gDWEr8YJPrZwOCmbwtOk
-X-Proofpoint-GUID: xJ0WNLTo4dcc3szMpA0ITfuQBycRBGGS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1011
- mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140115
 
-cross-compiling a kernel for x86 on s390 produces the following warning:
+hda_generic_machine_select() appends -idisp to the tplg filename by
+allocating a new string with devm_kasprintf(), then stores the string
+right back into the global variable snd_soc_acpi_intel_hda_machines.
+When the module is unloaded, this memory is freed, resulting in a global
+variable pointing to freed memory.  Reloading the module then triggers
+a use-after-free:
 
-drivers/mfd/mc13xxx-core.o: warning: objtool: mc13xxx_reg_rmw+0xc: Unknown annotation type: 50331648
+BUG: KFENCE: use-after-free read in string+0x48/0xe0
 
-Fix this by adding the required endianess conversion.
+Use-after-free read at 0x00000000967e0109 (in kfence-#99):
+ string+0x48/0xe0
+ vsnprintf+0x329/0x6e0
+ devm_kvasprintf+0x54/0xb0
+ devm_kasprintf+0x58/0x80
+ hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+ sof_probe_work+0x7f/0x600 [snd_sof]
+ process_one_work+0x17b/0x330
+ worker_thread+0x2ce/0x3f0
+ kthread+0xcf/0x100
+ ret_from_fork+0x31/0x50
+ ret_from_fork_asm+0x1a/0x30
 
-Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
-Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+kfence-#99: 0x00000000198a940f-0x00000000ace47d9d, size=64, cache=kmalloc-64
+
+allocated by task 333 on cpu 8 at 17.798069s (130.453553s ago):
+ devm_kmalloc+0x52/0x120
+ devm_kvasprintf+0x66/0xb0
+ devm_kasprintf+0x58/0x80
+ hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+ sof_probe_work+0x7f/0x600 [snd_sof]
+ process_one_work+0x17b/0x330
+ worker_thread+0x2ce/0x3f0
+ kthread+0xcf/0x100
+ ret_from_fork+0x31/0x50
+ ret_from_fork_asm+0x1a/0x30
+
+freed by task 1543 on cpu 4 at 141.586686s (6.665010s ago):
+ release_nodes+0x43/0xb0
+ devres_release_all+0x90/0xf0
+ device_unbind_cleanup+0xe/0x70
+ device_release_driver_internal+0x1c1/0x200
+ driver_detach+0x48/0x90
+ bus_remove_driver+0x6d/0xf0
+ pci_unregister_driver+0x42/0xb0
+ __do_sys_delete_module+0x1d1/0x310
+ do_syscall_64+0x82/0x190
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Fix it by copying the match array with devm_kmemdup_array() before we
+modify it.
+
+Fixes: 5458411d7594 ("ASoC: SOF: Intel: hda: refactoring topology name fixup for HDA mach")
+Suggested-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 ---
- tools/objtool/check.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v5: Formatting fix.
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b21b12ec88d9..35fb871b2c62 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2316,7 +2316,7 @@ static int read_annotate(struct objtool_file *file,
- 	}
+v4: Copy the whole array, including the sentinel.
+
+v3: Copy the whole machine struct instead so we can safely modify it
+    (instead of storing the name in pdata->tplg_filename, breaking other
+    fixups).  The problem with v2 was pointed out by Bard Liao, with the
+    alternative fix suggested by Péter Ujfalusi.
+
+v2: Typo fix.
+
+ sound/soc/sof/intel/hda.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index b34e5fdf10f1..6a3932d90b43 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -1049,7 +1049,21 @@ static void hda_generic_machine_select(struct snd_sof_dev *sdev,
+ 		if (!*mach && codec_num <= 2) {
+ 			bool tplg_fixup = false;
  
- 	for_each_reloc(sec->rsec, reloc) {
--		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
-+		type = bswap_if_needed(file->elf, *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4));
+-			hda_mach = snd_soc_acpi_intel_hda_machines;
++			/*
++			 * make a local copy of the match array since we might
++			 * be modifying it
++			 */
++			hda_mach = devm_kmemdup_array(sdev->dev,
++					snd_soc_acpi_intel_hda_machines,
++					2, /* we have one entry + sentinel in the array */
++					sizeof(snd_soc_acpi_intel_hda_machines[0]),
++					GFP_KERNEL);
++			if (!hda_mach) {
++				dev_err(bus->dev,
++					"%s: failed to duplicate the HDA match table\n",
++					__func__);
++				return;
++			}
  
- 		offset = reloc->sym->offset + reloc_addend(reloc);
- 		insn = find_insn(file, reloc->sym->sec, offset);
+ 			dev_info(bus->dev, "using HDA machine driver %s now\n",
+ 				 hda_mach->drv_name);
 -- 
-2.45.2
+2.49.0
 
