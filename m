@@ -1,141 +1,452 @@
-Received: from mailhub11-fb.kaspersky-labs.com (mailhub11-fb.kaspersky-labs.com [81.19.104.124])
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A58427510A;
-	Wed, 14 May 2025 12:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.104.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A544027510A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747225243; cv=none; b=YmADbBDwNI9XSswzgzITLU+gWLVTZj/fljNQLEoRwFn08M+Eqtfjr/ul8Tpwij098cGOyqyOMelS6YVh3q02mqzTHU/BU1IgXPqyfZpFmFbXUwjDsKeNyRqzJp6tb+k337BbLPIudMUhyHpUafoF9+xBYW/6+PLbcJuhz6uLA0E=
+	t=1747225252; cv=none; b=lVxe7OM+vRxPrnYzpY4LB/NpSCClu4lOs5mdZ35/qAyGz90qf47HX4zKjAQwU+aSCeGxKlhuXIZ3LSyedoMpMgrF2Xucu169MxxnMdFnBWPaezKPDKUVYcNJeBpY/YoqBg3+gciqD0a9GGqtjfsf8CZzCaSVNEtXcPFFjw5qtlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747225243; c=relaxed/simple;
-	bh=bCMtLnVD2dgxi8EjKGcWIGCO8ra6AUHVklgwLHB8IbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nuqwrMy+fEDw2zqS9goVPjUx71FSYivnhLoKrDO4cRD8TXKJNM0VSZTlbhEBfSBbaoBvoR9lzMqX5EOTMxuDKBTba42Ipv8Oq4dGgSgRX8U3w4r76xu4Ng9f5oq5LbcgICxFf+z6sqD9DzSi3Hh6WhKnbADkS1KGlHFT8UvFnlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com; spf=pass smtp.mailfrom=kaspersky.com; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=bBB1baW5; dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b=KtcrOFi7; arc=none smtp.client-ip=81.19.104.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaspersky.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="bBB1baW5";
-	dkim=pass (2048-bit key) header.d=kaspersky.com header.i=@kaspersky.com header.b="KtcrOFi7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747224786;
-	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-	b=bBB1baW5Ev8WKm3e59WK+xdR5CNo2/JVqpkdYxLLm2KjiU6CRjCd3Y+rJaMxwxmw7
-	 LPvIKXJHXuJeI/p1+1nY11GiWx8pWabQGPRlb+k3vnOkYTPlG/4ooVqnno7bcrI/5J
-	 xrviDOcyvcYwUxWPcRZ07+2GlDT3qmKseMH0WWVcDDacgvUw4V0RY3P47imS5Nc1Ss
-	 wd4X7KO17llqX91Tsr/13bHnDsoy4Oo9KEjj4SMr0qNrPjUlhMk10u83xgEWKlxdnH
-	 puoZjgQfLD1akbfX0EXnG74Oe3JCg5aXBSZismY63KUK4al2zaGuqZ1SOJZ+ZQDfJ3
-	 N+gtvs5Cl/uAA==
-Received: from mailhub11-fb.kaspersky-labs.com (localhost [127.0.0.1])
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTP id 2D6D7E8F244;
-	Wed, 14 May 2025 15:13:06 +0300 (MSK)
-Received: from mx13.kaspersky-labs.com (mx13.kaspersky-labs.com [91.103.66.164])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "mx13.kaspersky-labs.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub11-fb.kaspersky-labs.com (Postfix) with ESMTPS id 03BC9E8F231;
-	Wed, 14 May 2025 15:13:05 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaspersky.com;
-	s=mail202502; t=1747224776;
-	bh=pAjLW2i6DlqO1kn+FO+4QKQ88dteWB/N9XRN4Z86JAo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-	b=KtcrOFi7sYoiVBDNR4Znc/i/kYXErdIJGU8ic98y9kHQ5/xXIbeufS6FBaa26lWmp
-	 coIrO2YxLe5drhpOXnQDEBisNnkZ/Z2l40Te3ntqSlrgMDGjjQ+jBrREFCIaBWx664
-	 pWZMt2aIJ+IGg+J9wH+KEwS2ZwY+lMFPJB1VRVKOlJYVYTFzbLcQA/Fbs29nlyq9K6
-	 hIpNs7Kjut6kNf+INdGneqyjaLcV9X8iFsbNNo6/72C/sHoESOGyNzXlce2lAA2kNd
-	 z1717Uu1JnhkZv1QCFXwOiZGDbaczwQie6vA8JxEEL6BslOSj62mwS3KFOf51fXnD0
-	 bLHMXvnP6aDTw==
-Received: from relay13.kaspersky-labs.com (localhost [127.0.0.1])
-	by relay13.kaspersky-labs.com (Postfix) with ESMTP id DC7813E501B;
-	Wed, 14 May 2025 15:12:56 +0300 (MSK)
-Received: from mail-hq2.kaspersky.com (unknown [91.103.66.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "mail-hq2.kaspersky.com", Issuer "Kaspersky MailRelays CA G3" (verified OK))
-	by mailhub13.kaspersky-labs.com (Postfix) with ESMTPS id 1C3AB3E5671;
-	Wed, 14 May 2025 15:12:56 +0300 (MSK)
-Received: from HQMAILSRV1.avp.ru (10.64.57.51) by HQMAILSRV2.avp.ru
- (10.64.57.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 14 May
- 2025 15:12:55 +0300
-Received: from HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408]) by
- HQMAILSRV1.avp.ru ([fe80::44b0:5a05:5379:9408%2]) with mapi id
- 15.02.1748.010; Wed, 14 May 2025 15:12:55 +0300
-From: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>
-CC: Hans de Goede <hdegoede@redhat.com>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Mario Limonciello
-	<mario.limonciello@dell.com>, Divya Bharathi <divya.bharathi@dell.com>,
-	"Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
- current_password_store()
-Thread-Topic: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow in
- current_password_store()
-Thread-Index: AdvEyRwGGRgYB7/5RZGEC7fXF7io4Q==
-Date: Wed, 14 May 2025 12:12:55 +0000
-Message-ID: <39973642a4f24295b4a8fad9109c5b08@kaspersky.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-kse-serverinfo: HQMAILSRV2.avp.ru, 9
-x-kse-attachmentfiltering-interceptor-info: no applicable attachment filtering
- rules found
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 5/14/2025 10:47:00 AM
-x-kse-bulkmessagesfiltering-scan-result: InTheLimit
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1747225252; c=relaxed/simple;
+	bh=M4AuJKfMa+MtMgDZwMclOyaePiHWoI8iEFaDD9LbWJQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G94csmIqV60CHLEQjY8pZiS3sk26urKtUOh7w5u6AICVBzplHm83a21o/RCBDXG1DImb3rqyu3mFVX7jFCTmTuGSX12of1MiCQsIfGM+Ak2tOwEhjnCOm0kdJ7tsV1cH9pemrtaEeEvU726BTUo7kGKswPYFy7j4cBv8hGqSdRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201622.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202505142019306632;
+        Wed, 14 May 2025 20:19:30 +0800
+Received: from localhost.localdomain (10.94.6.63) by
+ jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 14 May 2025 20:19:32 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH v2] erofs: support deflate decompress by using Intel QAT
+Date: Wed, 14 May 2025 08:17:09 -0400
+Message-ID: <20250514121709.2557-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/05/14 05:39:00 #27979694
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 52
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201616.home.langchao.com (10.100.2.16) To
+ jtjnmail201622.home.langchao.com (10.100.2.22)
+tUid: 2025514201930b7aee302fc456dc6c16d1d04528e0f53
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-If the 'buf' array received from the user contains an empty string, the
-'length' variable will be zero. Accessing the 'buf' array element with
-index 'length - 1' will result in a buffer overflow.
+This patch introdueces the use of the Intel QAT to decompress compressed
+data in the EROFS filesystem, aiming to improve the decompression speed
+of compressed datea.
 
-Add a check for an empty string.
+We created a 285MiB compressed file and then used the following command to
+create EROFS images with different cluster size.
+     # mkfs.erofs -zdeflate,level=9 -C16384
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+fio command was used to test random read and small random read(~5%) and
+sequential read performance.
+     # fio -filename=testfile  -bs=4k -rw=read -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
 
-Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Managemen=
-t Driver over WMI for Dell Systems")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+Here are some performance numbers for reference:
+
+Processors: Intel(R) Xeon(R) 6766E(144 core)
+Memory:     521 GiB
+
+|-----------------------------------------------------------------------------|
+|           | Cluster size | sequential read | randread  | small randread(5%) |
+|-----------|--------------|-----------------|-----------|--------------------|
+| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+| deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
+
+Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
+Changes since v1:
+ - Move the code to the decompress_crypto.c file.
+ - Add a struct z_erofs_crypto_engine to maintain accelerator information.
+ - Add a sysfs interface to enable/disable the accelerator.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c=
- b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-index 230e6ee96636..d8f1bf5e58a0 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
-@@ -45,7 +45,7 @@ static ssize_t current_password_store(struct kobject *kob=
-j,
- 	int length;
-=20
- 	length =3D strlen(buf);
--	if (buf[length-1] =3D=3D '\n')
-+	if (length && buf[length - 1] =3D=3D '\n')
- 		length--;
-=20
- 	/* firmware does verifiation of min/max password length,
---=20
-2.25.1
+ fs/erofs/Makefile               |   2 +-
+ fs/erofs/compress.h             |  13 ++
+ fs/erofs/decompressor_crypto.c  | 219 ++++++++++++++++++++++++++++++++
+ fs/erofs/decompressor_deflate.c |  14 +-
+ fs/erofs/sysfs.c                |  19 +++
+ 5 files changed, 265 insertions(+), 2 deletions(-)
+ create mode 100644 fs/erofs/decompressor_crypto.c
+
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 4331d53c7109..8462e16a8356 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -3,7 +3,7 @@
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+ erofs-objs := super.o inode.o data.o namei.o dir.o sysfs.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+-erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
++erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o decompressor_crypto.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 2704d7a592a5..909fab195d93 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -70,10 +70,23 @@ struct z_erofs_stream_dctx {
+ 	bool bounced;			/* is the bounce buffer used now? */
+ };
+ 
++struct z_erofs_crypto_engine {
++	char *crypto_name;
++	bool enabled;
++	struct crypto_acomp *erofs_tfm;
++};
++
++extern struct z_erofs_crypto_engine *z_erofs_crypto[];
++
+ int z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx, void **dst,
+ 			       void **src, struct page **pgpl);
+ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+ 			 unsigned int padbufsize);
+ int __init z_erofs_init_decompressor(void);
+ void z_erofs_exit_decompressor(void);
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++						struct crypto_acomp *erofs_tfm, struct page **pgpl);
++struct crypto_acomp *z_erofs_crypto_get_enbale_engine(int type);
++int z_erofs_crypto_enable_engine(const char *name);
++int z_erofs_crypto_disable_engine(const char *name);
+ #endif
+diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
+new file mode 100644
+index 000000000000..500cff5e9b17
+--- /dev/null
++++ b/fs/erofs/decompressor_crypto.c
+@@ -0,0 +1,219 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/scatterlist.h>
++#include <crypto/acompress.h>
++
++#include "compress.h"
++
++static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq,
++				struct crypto_acomp *erofs_tfm)
++{
++	unsigned int nrpages_out = rq->outpages, nrpages_in = rq->inpages;
++	struct sg_table st_src, st_dst;
++	struct scatterlist *sg_src, *sg_dst;
++	struct acomp_req *req;
++	struct crypto_wait wait;
++	int ret, i;
++	u8 *headpage;
++
++
++	WARN_ON(!*rq->in);
++	headpage = kmap_local_page(*rq->in);
++	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++				min_t(unsigned int, rq->inputsize,
++							rq->sb->s_blocksize - rq->pageofs_in));
++	kunmap_local(headpage);
++	if (ret)
++		return ret;
++
++	req = acomp_request_alloc(erofs_tfm);
++	if (!req) {
++		erofs_err(rq->sb, "failed to alloc decompress request");
++		return -ENOMEM;
++	}
++
++	if (sg_alloc_table(&st_src, nrpages_in, GFP_KERNEL)) {
++		acomp_request_free(req);
++		return -ENOMEM;
++	}
++
++	if (sg_alloc_table(&st_dst, nrpages_out, GFP_KERNEL)) {
++		acomp_request_free(req);
++		sg_free_table(&st_src);
++		return -ENOMEM;
++	}
++
++	for_each_sg(st_src.sgl, sg_src, nrpages_in, i) {
++		if (i == 0)
++			sg_set_page(sg_src, rq->in[0],
++				PAGE_SIZE - rq->pageofs_in, rq->pageofs_in);
++		else if (i == nrpages_in - 1)
++			sg_set_page(sg_src, rq->in[i],
++				rq->pageofs_in + rq->inputsize - (nrpages_in - 1) * PAGE_SIZE, 0);
++		else
++			sg_set_page(sg_src, rq->in[i], PAGE_SIZE, 0);
++	}
++
++	i = 0;
++	for_each_sg(st_dst.sgl, sg_dst, nrpages_out, i) {
++		if (i == 0)
++			sg_set_page(sg_dst, rq->out[0],
++				PAGE_SIZE - rq->pageofs_out, rq->pageofs_out);
++		else if (i == nrpages_out)
++			sg_set_page(sg_dst, rq->out[i],
++				rq->pageofs_out + rq->outputsize - (nrpages_out - 1) * PAGE_SIZE, 0);
++		else
++			sg_set_page(sg_dst, rq->out[i], PAGE_SIZE, 0);
++	}
++
++	acomp_request_set_params(req, st_src.sgl,
++		st_dst.sgl, rq->inputsize, rq->outputsize);
++
++	crypto_init_wait(&wait);
++	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				crypto_req_done, &wait);
++
++	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
++	if (ret < 0) {
++		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
++					ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
++		ret = -EIO;
++	} else
++		ret = 0;
++
++	acomp_request_free(req);
++	sg_free_table(&st_src);
++	sg_free_table(&st_dst);
++	return ret;
++}
++
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				struct crypto_acomp *erofs_tfm, struct page **pgpl)
++{
++	const unsigned int nrpages_out =
++		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
++	int i;
++
++	/* one optimized fast path only for non bigpcluster cases yet */
++	if (rq->inputsize <= PAGE_SIZE && nrpages_out == 1 && !rq->inplace_io) {
++		WARN_ON(!*rq->out);
++		goto dstmap_out;
++	}
++
++	for (i = 0; i < rq->outpages; i++) {
++		struct page *const page = rq->out[i];
++		struct page *victim;
++
++		if (!page) {
++			victim = __erofs_allocpage(pgpl, rq->gfp, true);
++			if (!victim)
++				return -ENOMEM;
++			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
++			rq->out[i] = victim;
++		}
++	}
++
++dstmap_out:
++	return z_erofs_crypto_decompress_mem(rq, erofs_tfm);
++}
++
++struct crypto_acomp *z_erofs_crypto_get_enbale_engine(int type)
++{
++	int i = 0;
++
++	while (z_erofs_crypto[type][i].crypto_name) {
++		if (z_erofs_crypto[type][i].enabled)
++			return z_erofs_crypto[type][i].erofs_tfm;
++		i++;
++	}
++
++	return NULL;
++}
++
++static int z_erofs_crypto_get_compress_type(const char *name)
++{
++	int i, j;
++
++	for (i = 0; i < Z_EROFS_COMPRESSION_MAX; i++) {
++		j = 0;
++		while (z_erofs_crypto[i][j].crypto_name) {
++			if (!strncmp(name, z_erofs_crypto[i][j].crypto_name,
++					strlen(z_erofs_crypto[i][j].crypto_name))) {
++				return i;
++			}
++			j++;
++		}
++	}
++
++	return -EINVAL;
++}
++
++int z_erofs_crypto_enable_engine(const char *name)
++{
++	int i = 0, type;
++
++	type = z_erofs_crypto_get_compress_type(name);
++	if (type < 0)
++		return -EINVAL;
++
++	while (z_erofs_crypto[type][i].crypto_name) {
++		if (!strncmp(z_erofs_crypto[type][i].crypto_name, name,
++				strlen(z_erofs_crypto[type][i].crypto_name))) {
++			if (z_erofs_crypto[type][i].enabled)
++				break;
++
++			z_erofs_crypto[type][i].erofs_tfm =
++				crypto_alloc_acomp(z_erofs_crypto[type][i].crypto_name, 0, 0);
++			if (IS_ERR(z_erofs_crypto[type][i].erofs_tfm)) {
++				z_erofs_crypto[type][i].erofs_tfm = NULL;
++				break;
++			}
++			z_erofs_crypto[type][i].enabled = true;
++		} else if (z_erofs_crypto[type][i].enabled) {
++			if (z_erofs_crypto[type][i].erofs_tfm)
++				crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
++			z_erofs_crypto[type][i].enabled = false;
++		}
++		i++;
++	}
++
++	return 0;
++}
++
++int z_erofs_crypto_disable_engine(const char *name)
++{
++	int i = 0, type;
++
++	type = z_erofs_crypto_get_compress_type(name);
++	if (type < 0)
++		return -EINVAL;
++
++	while (z_erofs_crypto[type][i].crypto_name) {
++		if (!strncmp(z_erofs_crypto[type][i].crypto_name, name,
++				strlen(z_erofs_crypto[type][i].crypto_name))) {
++			if (z_erofs_crypto[type][i].enabled &&
++					z_erofs_crypto[type][i].erofs_tfm) {
++				crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
++				z_erofs_crypto[type][i].erofs_tfm = NULL;
++				z_erofs_crypto[type][i].enabled = false;
++			}
++		}
++		i++;
++	}
++
++	return 0;
++
++}
++
++struct z_erofs_crypto_engine *z_erofs_crypto[] = {
++	[Z_EROFS_COMPRESSION_LZ4] = &(struct z_erofs_crypto_engine) {NULL},
++	[Z_EROFS_COMPRESSION_LZMA] = &(struct z_erofs_crypto_engine) {NULL},
++	[Z_EROFS_COMPRESSION_DEFLATE] = {&(struct z_erofs_crypto_engine) {
++			.crypto_name = "qat_deflate",
++			.enabled = false,
++			.erofs_tfm = NULL,
++		},
++		&(const struct z_erofs_crypto_engine) { NULL },
++	},
++	[Z_EROFS_COMPRESSION_ZSTD] = &(struct z_erofs_crypto_engine) {NULL},
++};
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index c6908a487054..35a5889880f4 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
+ 	return -ENOMEM;
+ }
+ 
+-static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 				      struct page **pgpl)
+ {
+ 	struct super_block *sb = rq->sb;
+@@ -178,6 +178,18 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 	return err;
+ }
+ 
++static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++				struct page **pgpl)
++{
++	struct crypto_acomp *erofs_tfm = NULL;
++
++	erofs_tfm = z_erofs_crypto_get_enbale_engine(Z_EROFS_COMPRESSION_DEFLATE);
++	if (erofs_tfm && !rq->partial_decoding)
++		return z_erofs_crypto_decompress(rq, erofs_tfm, pgpl);
++	else
++		return __z_erofs_deflate_decompress(rq, pgpl);
++}
++
+ const struct z_erofs_decompressor z_erofs_deflate_decomp = {
+ 	.config = z_erofs_load_deflate_config,
+ 	.decompress = z_erofs_deflate_decompress,
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index dad4e6c6c155..a9c0aad01264 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -7,12 +7,15 @@
+ #include <linux/kobject.h>
+ 
+ #include "internal.h"
++#include "compress.h"
+ 
+ enum {
+ 	attr_feature,
+ 	attr_drop_caches,
+ 	attr_pointer_ui,
+ 	attr_pointer_bool,
++	attr_crypto_enable,
++	attr_crypto_disable,
+ };
+ 
+ enum {
+@@ -59,6 +62,8 @@ static struct erofs_attr erofs_attr_##_name = {			\
+ #ifdef CONFIG_EROFS_FS_ZIP
+ EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
+ EROFS_ATTR_FUNC(drop_caches, 0200);
++EROFS_ATTR_FUNC(crypto_enable, 0644);
++EROFS_ATTR_FUNC(crypto_disable, 0644);
+ #endif
+ 
+ static struct attribute *erofs_attrs[] = {
+@@ -95,6 +100,8 @@ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(fragments),
+ 	ATTR_LIST(dedupe),
+ 	ATTR_LIST(48bit),
++	ATTR_LIST(crypto_enable),
++	ATTR_LIST(crypto_disable),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_feat);
+@@ -181,6 +188,18 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 		if (t & 1)
+ 			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
+ 		return len;
++	case attr_crypto_enable:
++		buf = skip_spaces(buf);
++		if (z_erofs_crypto_enable_engine(buf))
++			return -EINVAL;
++
++		return len;
++	case attr_crypto_disable:
++		buf = skip_spaces(buf);
++		if (z_erofs_crypto_disable_engine(buf))
++			return -EINVAL;
++
++		return len;
+ #endif
+ 	}
+ 	return 0;
+-- 
+2.31.1
 
