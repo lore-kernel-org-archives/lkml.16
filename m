@@ -1,131 +1,135 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581A1FBCB0
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1B81FDE31;
+	Wed, 14 May 2025 05:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747202272; cv=none; b=azab8LwjG4okVNePA0LVBaPgLekzsL5mZH2EKwoEyX1IxfEHBAAiVO2jQtlcSCGFvLLdkIRfquOHd27HiVgg4ymUBBrQ3e/jhhJxzeBEnwKmRTdHD2g+vWrmwt07Y01Y3o1QwcZ26dTzTz4xDkTjm2NIVFHnVnyOFLGL7rmI9EA=
+	t=1747202278; cv=none; b=Q+BuXUNmc8MtYbxjXVNzK7iUCSRWVevrZM+k5k3WIWjjNTcmFcuZ21PQZOxq76cMnA8OVxoWYgia7QCU3vFiMwbgC8J8RSNZZvdYDRMZdAYsYLWbviBRhAyLzjeBraXJEQCARn79sYDfl1vDGYev5BkyINK8mQIgjcjzrSHDjbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747202272; c=relaxed/simple;
-	bh=j10W9ERtTCLuRtXkzV2FgTmpZyoQoyxJASYgwPYwbms=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z3ZOtZ9dDAtRKzWiJ9k7J8JwSJb1On4/jpSKFKTwrPtif4tc4ZfwU47WIEO89LKUgalzVRu0u/M3skH0FGJVZJ1FHSpY4+Bxsu7GreD8QeYVNGRLK3KQSiB7EZawjy96DsUEJ1bv7brT+C4a9voBnExVRw7pjesunHjgzaHlKQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=acS4zCvn; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747202278; c=relaxed/simple;
+	bh=Via0WbJSOQi5O3nYN12ZpM2528gmRa1eiQC3UECK9jI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i8LOxMMfycDVUf3hwyisJP3JZ8sQgRUH3JOmbpYe7lEujrRd41qWRTt1Pn2Ldt+/j9zwHYs8WqUV5qOXOx2YuXgxXjZUFD7n0bkk3R63vL4dTOHi6NMqDUpw40IsAbsSFQ5/lI0ucVhxiyfoGHWccDQVA/Fd18UMUZIKD8f2T2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fxYNo2qB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="acS4zCvn"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-879d2e419b9so5884373a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747202270; x=1747807070; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AnkjvbjcuENvVJ26saTSRizx+WjEaICu8Lhi+aJlcF8=;
-        b=acS4zCvnlH0ZhS+mvxsQX3lGvU0SupI9o/3bFSXPS7s2zfMB+TKAsfsgHcaQCgersX
-         iWsZMTNiGQtAVPbdoeC77/jKOB5puwghTYa9VRfTdl0WPahbA/ahAW3nfpWwUsHJH5xM
-         9hF0sCXL9oK2ObwGsCgDtTw7Hv4d0QYhTJLb9Ym5z8CtCC+aWhFUppGkzjkkIKC4gAcH
-         sPRIH1cJf/+FeCDay+dSWrZTiNd1mjdENp6+JA3NXvk7ZQMN0K/BlFR9RFB+3Xq+Hoyo
-         8mt/a9PTHkYvV0nTU6cRPUvQ1BNA0AD/L3+SjqADEZlNwTqwMJX0gs67dZ0g2MiMzc30
-         FEtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747202270; x=1747807070;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AnkjvbjcuENvVJ26saTSRizx+WjEaICu8Lhi+aJlcF8=;
-        b=f2bbsa75uQCOB8AN+Ocxdma7NKPgr83xfPTgxsTxxEI9Cv2ZrfysRWtcfrs+OPW6DF
-         miW4bkVCakjBj1FrXDrboQ42ae6wUvv8W5yusWvytymVQ+FRU4wUeedTzxAOqWcRLnE0
-         UbXZAHQi1VqdQ6B++XLIwvJdn8+XOzWJ2btqGDJ/zA3ZEibc2txTDp35NmBrZmbekdIu
-         +Aw2xegrEMnN1xcwiwXENAhirnlm7OfAVvfbHyvDdcvI5wkrfDLRswDXoeHZCUhL4LLA
-         rPXirZLyeKeoUCYEyuBpF9NE528dWRGfvzaweBUQVDfqiG8+sPpSgVthu49t9OpZkCBt
-         MExA==
-X-Gm-Message-State: AOJu0YztRm5m4J3Qq6we3Z5Eq3i6z5sCjRb0hRIDQ5tU0JkJkjX8mOD7
-	ATOVeie7VsIfKCBo8SeuAVBECcILGemNFN/uFqojszz5amRES/RqQumCR25SVnu9Wwa6BT7+Srd
-	N6cA=
-X-Gm-Gg: ASbGnct+INyRkeBZpcvhjEV48H1HT5oj/AOKVAXijl6fgy822DnUGNw1BkeuvFOV13t
-	DcEwJx1GtKwVrIE6xmFTRwtXtrDZid3cO6EVssIOmCiAIx8cOFOx4eI+dBjiK/oUyyf5dAwYILW
-	TVH1fv48wVkmyo+wVQJiv3p/Rxa0LfHn7zDz07/RbaAoWXch2iw5tr7F9E7ApGtZ8GDSt5Qt76T
-	cf8G9gFKp0gbnNDJArNh2CttQCfBPy3mWa/5L70YV5oQKbZpKrV/JbFW/BFTKSmR6R9MUJwxi/h
-	5W8yfn4hLM9EsCcqtmJFfP0z0y0ynePOEc1+fARorRCz7RrL6tBDt9jYBqe0jQ==
-X-Google-Smtp-Source: AGHT+IGOnxIH4YjGEW5GtZaYNs+W/C6hB2R8AaG0BsyNWrPx0B0lajN6mf6PqMko8vPxUuZYiIe5uA==
-X-Received: by 2002:a17:903:3ba3:b0:223:3396:15e8 with SMTP id d9443c01a7336-2319810114emr33089565ad.22.1747202270073;
-        Tue, 13 May 2025 22:57:50 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.196.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c2dsm91721615ad.135.2025.05.13.22.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 22:57:49 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev,
-	acpica-devel@lists.linux.dev
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH 3/4] ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
-Date: Wed, 14 May 2025 11:27:22 +0530
-Message-ID: <20250514055723.1328557-4-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250514055723.1328557-1-sunilvl@ventanamicro.com>
-References: <20250514055723.1328557-1-sunilvl@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fxYNo2qB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F2EC4CEF2;
+	Wed, 14 May 2025 05:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747202277;
+	bh=Via0WbJSOQi5O3nYN12ZpM2528gmRa1eiQC3UECK9jI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fxYNo2qBMKwejd20yBECNUbHLDy7pkr8bpniol+L1FvE3QX9lkod04FL0w53m9ICP
+	 Qie5eKk1JEj3cWri+ySNDUVcNP90VpqRYwRKDlpBbKyGvszx9eae3SZHaw/roKPp6h
+	 8HSBl19amP+/ZGILTDaYIzMx/EhXQWYuBqjm1iF6tlHOPGXYj0y+pJtiNasnDwdjZN
+	 Jc80DdwzCTAd4q3vuzJUn0va5beDe9F/Jen2tYRLL4lzwHFAxa7Biq8KshLJQiaRfT
+	 1vlntZJycuFEwfUnvQGl7xww8Er4FbWepKA10ujiZk3Igp6npL3WE/Aa1UtUbwLhpf
+	 a2hD6t57OXIow==
+Message-ID: <518b6620-bca0-45e4-8c1f-6cd9ab18bee2@kernel.org>
+Date: Wed, 14 May 2025 07:57:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] vt: add TIOCL_GETCURSORPOS to retrieve the screen
+ cursor position
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250514015554.19978-1-nico@fluxnic.net>
+ <20250514015554.19978-3-nico@fluxnic.net>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250514015554.19978-3-nico@fluxnic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-acpi_iommu_configure_id() currently supports only IORT (ARM) and VIOT.
-Add support for RISC-V as well.
+On 14. 05. 25, 3:52, Nicolas Pitre wrote:
+...
+> So let's work around this limitation by adding TIOCL_GETCURSORPOS as a
+> fallback method to get the cursor position when /dev/vcsa reports 255.
+...
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+...
+> +/* invoked via ioctl(TIOCLINUX) */
+> +static int get_cursor_pos(struct tty_struct *tty)
+> +{
+> +	struct vc_data *vc = tty->driver_data;
+> +	unsigned int x, y;
+> +
+> +	console_lock();
+> +	x = vc->state.x;
+> +	y = vc->state.y;
+> +	console_unlock();
+> +
+> +	/*
+> +	 * Clamp x to 16 bits, y to 15 bits. A display larger than 65535x32767
+> +	 * characters won't be a concern for the foreseeable future.
+> +	 * Bit 31 is reserved to represent negative error codes elsewhere.
+> +	 */
+> +	return min(x, 0xFFFFu) | (min(y, 0x7FFFu) << 16);
 
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
----
- drivers/acpi/scan.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Hmm, I would do a proper struct instead. Like winsize.
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index fb1fe9f3b1a3..70f57d58fd61 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/acpi.h>
- #include <linux/acpi_iort.h>
-+#include <linux/acpi_rimt.h>
- #include <linux/acpi_viot.h>
- #include <linux/iommu.h>
- #include <linux/signal.h>
-@@ -1628,8 +1629,12 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
- 	}
- 
- 	err = iort_iommu_configure_id(dev, id_in);
--	if (err && err != -EPROBE_DEFER)
--		err = viot_iommu_configure(dev);
-+	if (err && err != -EPROBE_DEFER) {
-+		err = rimt_iommu_configure_id(dev, id_in);
-+		if (err && err != -EPROBE_DEFER)
-+			err = viot_iommu_configure(dev);
-+	}
-+
- 	mutex_unlock(&iommu_probe_device_lock);
- 
- 	return err;
+> --- a/include/uapi/linux/tiocl.h
+> +++ b/include/uapi/linux/tiocl.h
+> @@ -38,4 +38,8 @@ struct tiocl_selection {
+>   #define TIOCL_GETKMSGREDIRECT	17	/* get the vt the kernel messages are restricted to */
+>   #define TIOCL_GETBRACKETEDPASTE	18	/* get whether paste may be bracketed */
+>   
+> +#define TIOCL_GETCURSORPOS	20	/* Get screen cursor position */
+
+The same question about man-pages :).
+
+thanks,
 -- 
-2.43.0
-
+js
+suse labs
