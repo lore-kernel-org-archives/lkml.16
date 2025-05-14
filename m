@@ -1,94 +1,75 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AC28E583;
-	Wed, 14 May 2025 20:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16F12951A6;
+	Wed, 14 May 2025 20:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253408; cv=none; b=Ji5cwNKlFGJuOdybdqLND6gaugYhFyqyI0r68m4io8TP4gwVDhrhgIHZ7cNCuDrgbozavrC7mHuG2Qna2fm/qdDY/DSx/kt9oZY8/kvOcy4mdQffGuLajI8e61I1EDnAwpju0C6dX6u3YsyjkOghS3CqQZAQrEHP7uvGniow668=
+	t=1747253557; cv=none; b=SpmpH0N1IiIGPo09agK9keVXeAbzxkEVU0oVVFLnmj/p24j4vW9LgUGSxfj3+BDCSGyXieUX8U+OpxepreNl5Qv8DSVLnnFKu3MNerM3pw7t2ul2s18f9One2y2jt3XM3fDtbBX4VKKt2ZdLKnsJi+LklW0W6U7VjHS+R/9tWtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253408; c=relaxed/simple;
-	bh=Vor2JmERlhiBjTMLvMnGJFx3PllRrl1yk8TtqIk3sY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TNP9h8rfCnS43g4OPSfkyHK7i0rZ4r4+0f/aT36wh3GAjPWZ0T5rhWR7M7E2Na+otiAlyrmjTO3DI+WPLL3qwrp3jVPzxnIIYw2yFDCnw+VLbtiT+tr/WmKJXB6H+Y5Y27ZvBmQvuHxYRvQgRuTy3vu22AP2OuFm+QBGNkw2hxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PG5OPFnH; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747253557; c=relaxed/simple;
+	bh=2WYpJnl1ax8rwpFL8L3G6L2FOopXlQPNK3SrFZq0AQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GVOVCBhEw25/gOUp2DX+0Dr3kvNyRVHC7ntq6fqZDi1uD3SRIkpkptXu6qFD2cNfPZ5d2P7IJ1pOJpTW2qU/qVrn3xM0O7KwJLqz20X+IMD4jEgarXSEwU6qDvH3RN2nNaMX70mY4ZEsLdi2Hm0Mo6QAPx/oKWWLG91YkR9bCdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fbtdd/oH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PG5OPFnH"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7080dd5fe92so1743417b3.3;
-        Wed, 14 May 2025 13:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747253406; x=1747858206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
-        b=PG5OPFnH2bjHc2zTZ3GDEZEdigNrTS5ZdzX/xhv/KVE6sj3CdfDKsaQgS/rUr7PgnX
-         rTAO8Pk77I9iNtYlVId37DLo+hnjys1evksYmLQUJmzpk3SGiwzb6Glj9lhiFaHtZINr
-         sXREWom/0IXBYoI/1v54lnxQEPMPfUq96FZ44+9p75Rjnw+3DGIv/FeCOvxG7aSjPogM
-         DTcf7595ydyb78onE2iXwmY7PV7spdtKA9tyRElxD6iD4Q+Hul4wKLqNHFgGzbg9GlPu
-         6RPBxn/S0wKDzojNGBmGE4KIVira0GMAECDYz2Ewi1cE3vfxewcvQjSKhdHTHBBMN0Ju
-         bp1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253406; x=1747858206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yC0JYTBLCAjFMJ5IHciqczec5NK+wwTHRVRJnm/CnUs=;
-        b=Q3k5auFvR0uavWfBZlxVkK54xMpjbfI7lzFQ6IjZW0GTZ+6PbJzp7GoLQv3dhQc9bM
-         5X3txWkrnZgvVQA56u/9MMioIZDX5obbnw72nd+sk5jiNVuCnnG1n4bY1F37XR2RjFfS
-         86f5NWrUu/q+BBDexUsaxgKgMYaP6hZfWUaokVMFL3H8RRRv1WFpZRRpAueAFgmvl7Eb
-         uPx6EmpVCXkbx2p5vBEOJTVauNb7Cmofn6wwyCzUqpOo6FuNGWN6dcPSxztTrnM/rCSR
-         DFZ/P9zEaJ+SajvoC/JgEjDl98fQLCsForR+BpzsPbagA8MwMV6482nBLNfPFI/VACxg
-         4w7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVxaufyDJwA8Y1Rc4AE0RRwiZAJ14nDsSZQoeyIWebRVqP6BuCbQw9UhEFXo08ra0Um9IxB95VHPbsISv5WKGH+ww==@vger.kernel.org, AJvYcCVys2O1h8OFdEuk2cNhIx6GRLjdVlzSRIak8tgE5D/++Mn75s61RQKx+ZyfKXf8uxeqH6R6mSIpWUFA/dk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS2ACr2ZoVuq3McsdT5AsVkoZzE4nr1A6AnGMeESktNWZvt165
-	Jp6wcdVd2h6+wejCA+Htci7cH50BBk+PmdN/mvrWQi/W0K0/NMh+3yJ7NAJXwq/tTfgRk09cyy1
-	PkfZEtXiwcYODgXpaGQTMf0gFeLydMQqnEXTSRw==
-X-Gm-Gg: ASbGncszlj+cUrrEf4AAxevjyS904eBZnaValvVCE70xU+bkvGAkvXQhFou4V2L3/cd
-	BXXT5jDRhHh8YgfSCKa15bsCJ9GeAv4GIImTuWKXgpBxE4erYtXHkEKt3EMwdImCVR4/Cr+e03V
-	xtN8DbzSIrBIgD1dhQyuFGj2GyMDI52hU=
-X-Google-Smtp-Source: AGHT+IG21FJyi+kfSLXEbQ9XYQljr3Q2+lTXlm9xHhZAiZrLk1xHBcTQUEthvNVzwmylHK8H6BQ4/5ZXRUgM4wijX4k=
-X-Received: by 2002:a05:690c:640c:b0:709:164a:fec with SMTP id
- 00721157ae682-70c7f1437c2mr71180407b3.17.1747253405693; Wed, 14 May 2025
- 13:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fbtdd/oH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10B1C4CEE3;
+	Wed, 14 May 2025 20:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747253557;
+	bh=2WYpJnl1ax8rwpFL8L3G6L2FOopXlQPNK3SrFZq0AQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fbtdd/oHH/eFNDqfEXpXCkjsSKFCfZ1wdk/dFjtcP69HWJgdJQFePY3VR48iavwFx
+	 DxMP7ArmTZdZ8w/uafGAIdImGvmeQLX/2QfYkSe5tRQ+L4PMJIUDJitLWSwcpZNql5
+	 bCAbcrXyfYiGBD0ARw9z6Q7hoWkg/GOcp5jDP7zkQPt/iEYvgd0iSMEd+V2a4lUGyX
+	 L4wuz5vVpwCJln75WamZxymz+yTuZJdYgRk4inyBH5+vh7z9U0b32nLxqb8cBUbUqz
+	 r8b8xZ7Z7w5Tr++Ov2hci5iAzsq+D3dT8lmdGssACsJJOcSr5QbPM/vjYS5/MZ8LYP
+	 n24j3W6gnyK7Q==
+Date: Wed, 14 May 2025 15:12:35 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Nicholas Roth <nicholas@rothemail.net>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, Sascha Hauer <s.hauer@pengutronix.de>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: media: ov8858: inherit
+ video-interface-devices properties
+Message-ID: <174725355479.2958040.5700144507602583801.robh@kernel.org>
+References: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
+ <20250509-camera-v3-1-dab2772d229a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502204056.973977-1-namhyung@kernel.org>
-In-Reply-To: <20250502204056.973977-1-namhyung@kernel.org>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 14 May 2025 13:09:55 -0700
-X-Gm-Features: AX0GCFvvwFy1hO7UqGryskqTZR4hWpkamqCCUqEGvSy7CE3r7BC_54bHt4evydo
-Message-ID: <CAH0uvoi552j-5a-rqR7CbiycUiuz1Rres76hK=1rqiDS-9qbOg@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Show zero value in STRARRAY
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-camera-v3-1-dab2772d229a@bootlin.com>
 
-Hello Namhyung,
 
-On Fri, May 2, 2025 at 1:40=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> The STRARRAY macro is to print values in a pre-defined array.  But
-> sometimes it hides the value because it's 0.  The value of 0 can have a
-> meaning in this case so set 'show_zero' field.
->
-> For example, it can show CREATE_MAP cmd in the bpf syscall.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Fri, 09 May 2025 23:51:37 +0200, Olivier Benjamin wrote:
+> Update the OV8858 binding to inherit properties defined in the
+> video-interface-devices binding.
+> 
+> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ovti,ov8858.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Acked-by: Howard Chu <howardchu95@gmail.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thanks,
-Howard
