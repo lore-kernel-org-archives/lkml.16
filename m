@@ -1,63 +1,71 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27409224AED;
-	Wed, 14 May 2025 12:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5367020C016;
+	Wed, 14 May 2025 12:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747224829; cv=none; b=YrnF2NID5Y+gBWj/b999CNdnYiv/GmzMFq5oE2fDFKalQi5tLcFKAHQY6lehEDH8oANNTn4KSyFSjnkL82Zju326MQjhPQ/z00k7i3ncwnBbxtuwLYEzytJm+yKtNmXuhJcC7Pp6dtrqInrk1yDNDngQDzX0aMa7bcXF0IoPfZo=
+	t=1747224929; cv=none; b=LU2AX9fsathzzRDECcjqXKbI2hPtl3uuqZMiJgpPXI6PLOspxbjBsfPkhSp4sBLK/hgdvi2CIrmpfDBNs4/N6BUVNgwgTH4Wo/SfdO+k2n1MSr++5egK2r2lUudivkps7yTu5SOq5DphRLIbt0w93sMM/JxMnXB55ssnRnwSe2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747224829; c=relaxed/simple;
-	bh=H2PRHzXAWxE9uMK6YCAjGgxQwKItUsBz6sbyztBIjFc=;
+	s=arc-20240116; t=1747224929; c=relaxed/simple;
+	bh=Wq2iBIEwsY6FhRxgTv+U9RMmZ6m7AXpMshuV5t9m3Ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VrIVs2B0uvzZ1VassLsPMtjLRVlK8D8ULCvus5cPMC4l54scTrej1GWh/E91s+kKX/GDxqA2VG9iHPeGcrFnZYhivm3jPoH5b+e/N9Fv+sfY/36lzeEjEN+Md4eRnnqvPaV79m1mCI208jNxaJ6lk9X1fliP3Eqy4I72DAt/p6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=dRHBEV2c; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=k6VzaufGda65EAPZ2JTK2E+JwmzKBuSGJbbYPRfsSWvXbYwLOWO7W3O3pQlsNp9Ej6l6uvOg8gx35d31mZsh0CoHpSXZjfgk8Xwu1krlkotK73v/7EDWZVeYdTXZQg4LWW9hHhPPqJMJh9MQQ21GdeYJ1utWcLtnLRC2qeymT4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dDesafKP; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dRHBEV2c"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+AfK7MCkRVYWu8R51rsh6Q0jzO0vpYJ7OnABWuVAlLw=; b=dRHBEV2cEqxhfNzllZyhYafO0h
-	/hTgKWQXQn7JZ09jG5zYsbQMXqlUDve784VuWkNKz1emP/PBXlLZ30KvDz7bWFgoM3/oPy+uBpVjE
-	SjbfghHTiSnRM3iZf+nXifEOpdp47y3xmOahwnOA12NLahY7d+IzuTzHqoV1EehTa7VfFC6xJOxpg
-	9f5/xe7kkVs4jCEDy3ktJ26eYruBhzENT2hJPxPLAIG0nqxdnaDXgxzlqyZWynPyO5bcnFhP39k9r
-	urtICyboVUk0OcoE3KqPl0KUsfKFhxaNuRdyERMQwWYy2ew+yYBTxFtAfJWz5wvLdJlvWkLbODNqK
-	y2ia513A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36192)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uFAzN-0007GH-1J;
-	Wed, 14 May 2025 13:13:33 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uFAzG-0004FD-2Z;
-	Wed, 14 May 2025 13:13:26 +0100
-Date: Wed, 14 May 2025 13:13:26 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	balika011 <balika011@gmail.com>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v3 2/2] net: phy: mediatek: add driver for
- built-in 2.5G ethernet PHY on MT7988
-Message-ID: <aCSI5k7uUgAlpSsy@shell.armlinux.org.uk>
-References: <20250514105738.1438421-1-SkyLake.Huang@mediatek.com>
- <20250514105738.1438421-3-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dDesafKP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747224927; x=1778760927;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Wq2iBIEwsY6FhRxgTv+U9RMmZ6m7AXpMshuV5t9m3Ts=;
+  b=dDesafKPYQHLMRrBmrBv4lFR5wKME8x9zZTm2xem+9Tg4VshNuOCRBej
+   0Lwx5wNiq8G234hSLdQWNmlecm9zq4dzNaah1p8+cX8p5x2IFtnv/YhUN
+   bOVCvI/urVfYGC6QH1+6JJOOcv6mO4aHDlKzuAR0oHFb1w2VZFR3fPj9Z
+   3b88bPv7o8p09wEW/56nZRO26WjqImEfW4Pg6vu/m/e6yLzwVWQvheOga
+   3daTaywV0VOPkMs9gvmJYfwzcQ5NB7hEyLcjwfQzcEWFtQet3AGSVYegP
+   KRFd6JTq5AUcXfI1bFXqomj72MNYFSHe08ZzNUZZZLqGscD8tswDyTAj1
+   w==;
+X-CSE-ConnectionGUID: I4gjvmluRTmZJEfiNRh8QQ==
+X-CSE-MsgGUID: rt5xYqyLRNOJIYD4Wcddmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71621443"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="71621443"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:15:26 -0700
+X-CSE-ConnectionGUID: 10hiSKPcTemNRJ3E3wInOw==
+X-CSE-MsgGUID: v2pUpbBIT0uxm7g3oN8LFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="138071684"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 May 2025 05:15:19 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFB13-000H5P-1n;
+	Wed, 14 May 2025 12:15:17 +0000
+Date: Wed, 14 May 2025 20:14:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, kernel_team@skhynix.com,
+	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
+	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
+	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
+	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com
+Subject: Re: [PATCH v15 02/43] dept: implement DEPT(DEPendency Tracker)
+Message-ID: <202505142038.OTu01zaa-lkp@intel.com>
+References: <20250513100730.12664-3-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,114 +74,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514105738.1438421-3-SkyLake.Huang@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250513100730.12664-3-byungchul@sk.com>
 
-Hi,
+Hi Byungchul,
 
-On Wed, May 14, 2025 at 06:57:38PM +0800, Sky Huang wrote:
-> +#define MTK_2P5GPHY_ID_MT7988		(0x00339c11)
-> +
-> +#define MT7988_2P5GE_PMB_FW		"mediatek/mt7988/i2p5ge-phy-pmb.bin"
-> +#define MT7988_2P5GE_PMB_FW_SIZE	(0x20000)
-> +#define MT7988_2P5GE_PMB_FW_BASE	(0x0f100000)
-> +#define MT7988_2P5GE_PMB_FW_LEN		(0x20000)
-> +#define MTK_2P5GPHY_MCU_CSR_BASE	(0x0f0f0000)
-> +#define MTK_2P5GPHY_MCU_CSR_LEN		(0x20)
-> +#define MD32_EN_CFG			(0x18)
+kernel test robot noticed the following build warnings:
 
-These parens are all unnecessary, as are ones below around a simple
-number.
+[auto build test WARNING on 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3]
 
-> +#define   MD32_EN			BIT(0)
-> +
-> +#define BASE100T_STATUS_EXTEND		(0x10)
-> +#define BASE1000T_STATUS_EXTEND		(0x11)
-> +#define EXTEND_CTRL_AND_STATUS		(0x16)
-> +
-> +#define PHY_AUX_CTRL_STATUS		(0x1d)
-> +#define   PHY_AUX_DPX_MASK		GENMASK(5, 5)
-> +#define   PHY_AUX_SPEED_MASK		GENMASK(4, 2)
-> +
-> +/* Registers on MDIO_MMD_VEND1 */
-> +#define MTK_PHY_LPI_PCS_DSP_CTRL		(0x121)
+url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/llist-move-llist_-head-node-definition-to-types-h/20250513-181346
+base:   82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+patch link:    https://lore.kernel.org/r/20250513100730.12664-3-byungchul%40sk.com
+patch subject: [PATCH v15 02/43] dept: implement DEPT(DEPendency Tracker)
+config: x86_64-kismet-CONFIG_DEBUG_MUTEXES-CONFIG_DEPT-0-0 (https://download.01.org/0day-ci/archive/20250514/202505142038.OTu01zaa-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250514/202505142038.OTu01zaa-lkp@intel.com/reproduce)
 
-...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505142038.OTu01zaa-lkp@intel.com/
 
-> +static int mt798x_2p5ge_phy_load_fw(struct phy_device *phydev)
-> +{
-> +	void __iomem *mcu_csr_base, *pmb_addr;
-> +	struct device *dev = &phydev->mdio.dev;
-
-This will attract a comment about reverse christmas tree.
-
-> +	const struct firmware *fw;
-> +	int ret, i;
-> +	u32 reg;
-
-...
-
-> +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> +{
-> +	struct pinctrl *pinctrl;
-> +
-> +	/* Check if PHY interface type is compatible */
-> +	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL)
-> +		return -ENODEV;
-> +
-> +	/* Setup LED */
-> +	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED0_ON_CTRL,
-> +			 MTK_PHY_LED_ON_POLARITY | MTK_PHY_LED_ON_LINK10 |
-> +			 MTK_PHY_LED_ON_LINK100 | MTK_PHY_LED_ON_LINK1000 |
-> +			 MTK_PHY_LED_ON_LINK2500);
-> +	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED1_ON_CTRL,
-> +			 MTK_PHY_LED_ON_FDX | MTK_PHY_LED_ON_HDX);
-> +
-> +	/* Switch pinctrl after setting polarity to avoid bogus blinking */
-> +	pinctrl = devm_pinctrl_get_select(&phydev->mdio.dev, "i2p5gbe-led");
-> +	if (IS_ERR(pinctrl))
-> +		dev_err(&phydev->mdio.dev, "Fail to set LED pins!\n");
-
-No, don't do this. config_init() can be called multiple times during
-the lifetime of the driver bound to the device, and each time it is,
-a new managed-dev structure will be allocated to release this action
-each time, thus consuming more and more memory, or possibly failing
-after the first depending on the pinctrl_get_select() behaviour.
-Please find a different way.
-
-...
-
-> +static int mt798x_2p5ge_phy_config_aneg(struct phy_device *phydev)
-> +{
-> +	bool changed = false;
-> +	u32 adv;
-> +	int ret;
-> +
-> +	ret = genphy_c45_an_config_aneg(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret > 0)
-> +		changed = true;
-> +
-> +	/* Clause 45 doesn't define 1000BaseT support. Use Clause 22 instead in
-> +	 * our design.
-> +	 */
-> +	adv = linkmode_adv_to_mii_ctrl1000_t(phydev->advertising);
-> +	ret = phy_modify_changed(phydev, MII_CTRL1000, ADVERTISE_1000FULL, adv);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret > 0)
-> +		changed = true;
-> +
-> +	return __genphy_config_aneg(phydev, changed);
-
-Do you want this (which will program EEE and the 10/100 advert) or do
-you want genphy_check_and_restart_aneg() here? Note that
-genphy_c45_an_config_aneg() will already have programmed both the EEE
-and 10/100 adverts via the C45 registers.
-
-Thanks.
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for DEBUG_MUTEXES when selected by DEPT
+   WARNING: unmet direct dependencies detected for DEBUG_RWSEMS
+     Depends on [n]: DEBUG_KERNEL [=y] && !PREEMPT_RT [=y]
+     Selected by [y]:
+     - DEPT [=y] && DEBUG_KERNEL [=y] && LOCK_DEBUGGING_SUPPORT [=y]
+   
+   WARNING: unmet direct dependencies detected for DEBUG_MUTEXES
+     Depends on [n]: DEBUG_KERNEL [=y] && !PREEMPT_RT [=y]
+     Selected by [y]:
+     - DEPT [=y] && DEBUG_KERNEL [=y] && LOCK_DEBUGGING_SUPPORT [=y]
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
