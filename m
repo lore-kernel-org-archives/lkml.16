@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F3722FF35
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736F3230BE6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266190; cv=none; b=JG+OZVphYVycYmyJIlBen8dO4JOl4X8aPmL+KjJLs1kiB68P5xENqbULVD6LNidtnXd1ZdUcEaaBjZEhDzSiOqZhQYVGX2qIJZz+AZx6tROJJx0/duyHGm+5u7kfDdke1OEk54xzwF6jC3Q7U9yEPdo2cVEOMlAhDhc77mFqW9U=
+	t=1747266192; cv=none; b=f8nGfcisrWPNkT+mlIPE0CPb7f6lIlJrgc/iLxGn+mQTcLl/6ibR/uMR+Ufl8ZaarR/HClZHzK9Lg8V+3qciBUOqEPqV4CUEe+Yu2yQi0lJhQy/XtWGUTALeCaBt6GFJv4972+TnmLsvRHButx/4D+lkErBs1wTxw8LZQsCplQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266190; c=relaxed/simple;
-	bh=iKx5IvzpTweaAgeru4AhASmMtm6VdZkcgLEM9HYPrv8=;
+	s=arc-20240116; t=1747266192; c=relaxed/simple;
+	bh=TuCNdCmxfK0dmEiyt2S0QuAAbIE9Srge8FQVDB0ZAyI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PNAZrACz0piSAimxpvrADb7BfAASjOLZmVXCakp6R3z0vEuxXAP5GSuO5DATtmSV1b7mYo64JKKYASX/smpwuOuOXQoiIb9ocXH2h9KjNDgLOy06B8DbKwqUDfNBf5TT/XBhKyo569o1DW94fIM2ot22qNFHIpTlGDaQea0tsAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Jh42S9J; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Ccyce9jDXC1tbgzuamiJYG0+VY5Oq7wefsfLgoD2fNytXxCIOIJY9GFSGwClZFsmTQ25bHi1fEvrYg2tbAPBuq6spdxeyo9Y8sko0bQl1kQFNBcaeDvw120v9xsvTI6PQpF1L2NKfYRA0PZksZMUeRRBz/n5KXXyVIQv8wMOf4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qc3Hqwi+; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Jh42S9J"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a7cc8c52eso423405a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qc3Hqwi+"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so654391a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266188; x=1747870988; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266190; x=1747870990; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=duQaEMPI/+/8EJ+OqflXscIYsMBaL2tMJ4wppFAcdZo=;
-        b=0Jh42S9JzEJNm5pM4bs11rd4rBqu/OpOxa5cgqX23fOJwDRJ4kTqF6HBCnjk45vdxq
-         KapMAC9tcZK2/k0Y5nO7bhxYhaHAFTWZLhUp7ZjI3xR0lo0fgt5ZLE/EdqfigJM4ES9V
-         AIiwagHgZyWt1Q7noZUKdHqm504ufoHC7GXPrmMVbHOCThhDOI8ONGeaWaxvspXbcjNP
-         uLZ+VyF8PLFbTNR0ZwTolFzwoGTHgWkOY3TarRgDcOX15VQsnMsA5xCNRy2yKHF0tq2p
-         8nOoQQFPIQtqsfppRMP4jFp0bVQI8c7wik2kVXJx2YdEVWsxFgaaaqkcnMqN3LpkMt/o
-         I7GQ==
+        bh=O4oPfv2n35WjJH2QrKz/exL9QiCodfRoanXJUAdhzSo=;
+        b=Qc3Hqwi+RdTmMP8o5BfDPMMa0DOonJYElm5vx1OVGSiD0ekNGhc3zHt6RUP0rwO7YZ
+         sbAP5XcYCaGXja8PEpnMX5tfHesNGtkjDulRN7IY0G3fDVLunr9H+lr4tRcZlzZzue4n
+         rp4LbHMXGo4a/cFOdt8oAkcqeSydhYPpSs61QFedt0kni1QOJzVWOBbiAF5fFiX43AsK
+         BSxr+cIP8bcCVp6sgNSEQV2ySZsb55oP9nRef2B58fQB20ba7NR4VkKnlM8+2BV8Dbi1
+         OKWTfliDvdSMQhoHfr4oNlET/TMTQSXEuFVYo8HFVFJ6wFCp4CR5FRSzibVkHBZWwUSb
+         lV5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266188; x=1747870988;
+        d=1e100.net; s=20230601; t=1747266190; x=1747870990;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=duQaEMPI/+/8EJ+OqflXscIYsMBaL2tMJ4wppFAcdZo=;
-        b=mturBofJpu/sdLXWXFlLmpaszAC2OcgktShWRinUOs1EjJ0YJv8Uaa5AGY16nQGZdN
-         Ro42a7D0aglufuiuEIRTzEN2LWgfhH+kcG1csdHe9h1aySGW/qVC0AN91NUqmfw22ord
-         HmtU1SHCCLv0JPCx6bf1WrvShzDlgHQXcF25oCuzy23/yejBhqWmPKd02DfL6nAeJ2vu
-         RwzpMYMP4Fuz5ylM5cq9MEOW8LoFGNKi8oEx4+jcVxPTkcFhrFXT6XQ53opodXehpfvu
-         vSH7eq4K+fKGi9B8sLWZyjt6DhM1ZAAeEEmwp/NvtvOn+hXxHmPrsyDX6RMgyWCQ8sC8
-         I5Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPh0Ls4y1kH5WBQ5QqYFe4VhJaG5u4cjDCX+uxPmnlqC3Tc4IkSIZondxzWzKqhQfiBI+gfZTYmnAoz14=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNuu7cRguefWtgoh1NAGxZ7rtsGQPWyPkPSyNGt2JmHWEaWT7b
-	7xfIUdzdpWMfme2LBKoLADwmTn2nMvaJBArYxQSGeLmrC+QEZPGG/Ovh4OrmJpn4hnGRbc9F37y
-	nTWTFOYo6HShSj1UHUpHOlQ==
-X-Google-Smtp-Source: AGHT+IFrb+gsGiHZc/e64qLljrrwwFd5Rm0IiKqEVIeKNMAq/DWkzMG2AbDLdjpl7ubUiMkSYyuQC33P/I6kwzCn8Q==
-X-Received: from pjbee11.prod.google.com ([2002:a17:90a:fc4b:b0:30a:3021:c1af])
+        bh=O4oPfv2n35WjJH2QrKz/exL9QiCodfRoanXJUAdhzSo=;
+        b=mh/d1oMaLL9La6LZDjMtZ/nKOCQ4n/ca+HuKuBena6fYhu/Dq84jvA5J4ChwT671Cb
+         o/67WZGZFWmyLRCAHfj798MGHajdNLTl/JKPb5qN76Y+5X0R6oZ++HhKHro14QEJ7PHC
+         99pf6sZu5m1rvwOml1b0jFJDOmX6fDrOwBBv+A02rIiJGUkA3/xQTwb6Qw3oh6dLX7in
+         mgJVDxx7y5It4fX8rEowR/UHphlkRDvYgANIE+T+IhWzJQ0UTqwZLSqIERpESnRyc+Ta
+         9DMpaR/dEvsafYdF7sZwUTeRIpOZUP4q7ROzPpGJAK7BOpvOiIHLSa3TExNg8K15iOoW
+         akug==
+X-Forwarded-Encrypted: i=1; AJvYcCWfvdkTIjiBHD4YDzadQLUE7TJQo8tPvlEGq+ggUOEOOIpC2ieyuVgfrgt+enYxYq3UFadqE1gl/K5I5x0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxcJ81GnSHJNjPTSyAASb+xeOgVttwSsJj1pWANRWzac5oRrTu
+	HIP10pT+7au/rhbxB3/BpbdEdi95p6ODrrC1KDdL8/NrIkvO8T8y2QFoCTk75H56iakl1tRFOb8
+	EudwOYwBZ2OUuC2k++5a6dA==
+X-Google-Smtp-Source: AGHT+IEA8LrfLfFI8PpcjddLO/wbh1V8oxL5OnFdRpSUscIRk8byP+XixVrSrRP2XLlfKkrpW4t+rWo0H2IMHIeXcA==
+X-Received: from pjbqx15.prod.google.com ([2002:a17:90b:3e4f:b0:308:64ce:7274])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:520f:b0:306:b65e:13a8 with SMTP id 98e67ed59e1d1-30e2e5ba382mr8485187a91.8.1747266188231;
- Wed, 14 May 2025 16:43:08 -0700 (PDT)
-Date: Wed, 14 May 2025 16:41:46 -0700
+ 2002:a17:90b:2dc2:b0:2ee:f687:6acb with SMTP id 98e67ed59e1d1-30e5158e007mr667015a91.13.1747266189745;
+ Wed, 14 May 2025 16:43:09 -0700 (PDT)
+Date: Wed, 14 May 2025 16:41:47 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <59d0c13258bea1caec2d3eeed54bc8cb78783399.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 07/51] KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
+Message-ID: <7ae972e602f94cef707ccb19b139638f4266d361.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 08/51] KVM: selftests: Test flag validity after
+ guest_memfd supports conversions
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,150 +97,73 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-KVM_CAP_GMEM_CONVERSION indicates that guest_memfd supports
-conversion.
+Before guest_memfd supports conversions, Coco VMs must not allow
+GUEST_MEMFD_FLAG_SUPPORT_SHARED.
 
-With this patch, as long as guest_memfd supports shared memory, it
-also supports conversion.
+Because this is a platform stability requirement for hosts supporting
+Coco VMs, this is an important test to retain.
 
-With conversion support comes tracking of private/shared memory within
-guest_memfd, hence now all VM types support shared memory in
-guest_memfd.
-
-Before this patch, Coco VMs did not support shared memory because that
-would allow private memory to be accessible to the host. Coco VMs now
-support shared memory because with private/shared status tracked in
-guest_memfd, private memory will not be allowed to be mapped into the
-host.
-
-Change-Id: I057b7bd267dd84a93fdee2e95cceb88cd9dfc647
+Change-Id: I7a42a7d22e96adf17db3dcaedac6b175a36a0eab
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- arch/arm64/include/asm/kvm_host.h |  5 -----
- arch/x86/include/asm/kvm_host.h   | 10 ----------
- include/linux/kvm_host.h          | 13 -------------
- include/uapi/linux/kvm.h          |  1 +
- virt/kvm/guest_memfd.c            | 12 ++++--------
- virt/kvm/kvm_main.c               |  3 ++-
- 6 files changed, 7 insertions(+), 37 deletions(-)
+ .../testing/selftests/kvm/guest_memfd_test.c  | 26 ++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 2514779f5131..7df673a71ade 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1598,9 +1598,4 @@ static inline bool kvm_arch_supports_gmem(struct kvm *kvm)
- 	return IS_ENABLED(CONFIG_KVM_GMEM);
+diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
+index bf2876cbd711..51d88acdf072 100644
+--- a/tools/testing/selftests/kvm/guest_memfd_test.c
++++ b/tools/testing/selftests/kvm/guest_memfd_test.c
+@@ -435,7 +435,8 @@ static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+ 	for (flag = BIT(0); flag; flag <<= 1) {
+ 		test_vm_with_gmem_flag(vm, flag, flag & expected_valid_flags);
+ 
+-		if (flag == GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
++		if (flag == GUEST_MEMFD_FLAG_SUPPORT_SHARED &&
++		    kvm_has_cap(KVM_CAP_GMEM_CONVERSION)) {
+ 			test_vm_with_gmem_flag(
+ 				vm, flag | GUEST_MEMFD_FLAG_INIT_PRIVATE, true);
+ 		}
+@@ -444,7 +445,7 @@ static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+ 	kvm_vm_release(vm);
  }
  
--static inline bool kvm_arch_vm_supports_gmem_shared_mem(struct kvm *kvm)
--{
--	return IS_ENABLED(CONFIG_KVM_GMEM_SHARED_MEM);
--}
--
- #endif /* __ARM64_KVM_HOST_H__ */
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f72722949cae..709cc2a7ba66 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -2255,18 +2255,8 @@ void kvm_configure_mmu(bool enable_tdp, int tdp_forced_root_level,
- 
- #ifdef CONFIG_KVM_GMEM
- #define kvm_arch_supports_gmem(kvm) ((kvm)->arch.supports_gmem)
--
--/*
-- * CoCo VMs with hardware support that use guest_memfd only for backing private
-- * memory, e.g., TDX, cannot use guest_memfd with userspace mapping enabled.
-- */
--#define kvm_arch_vm_supports_gmem_shared_mem(kvm)			\
--	(IS_ENABLED(CONFIG_KVM_GMEM_SHARED_MEM) &&			\
--	 ((kvm)->arch.vm_type == KVM_X86_SW_PROTECTED_VM ||		\
--	  (kvm)->arch.vm_type == KVM_X86_DEFAULT_VM))
- #else
- #define kvm_arch_supports_gmem(kvm) false
--#define kvm_arch_vm_supports_gmem_shared_mem(kvm) false
- #endif
- 
- #define kvm_arch_has_readonly_mem(kvm) (!(kvm)->arch.has_protected_state)
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 91279e05e010..d703f291f467 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -729,19 +729,6 @@ static inline bool kvm_arch_supports_gmem(struct kvm *kvm)
- }
- #endif
- 
--/*
-- * Returns true if this VM supports shared mem in guest_memfd.
-- *
-- * Arch code must define kvm_arch_vm_supports_gmem_shared_mem if support for
-- * guest_memfd is enabled.
-- */
--#if !defined(kvm_arch_vm_supports_gmem_shared_mem) && !IS_ENABLED(CONFIG_KVM_GMEM)
--static inline bool kvm_arch_vm_supports_gmem_shared_mem(struct kvm *kvm)
--{
--	return false;
--}
--#endif
--
- #ifndef kvm_arch_has_readonly_mem
- static inline bool kvm_arch_has_readonly_mem(struct kvm *kvm)
+-static void test_gmem_flag_validity(void)
++static void test_gmem_flag_validity_without_conversion_cap(void)
  {
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 5b28e17f6f14..433e184f83ea 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -931,6 +931,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
- #define KVM_CAP_GMEM_SHARED_MEM 240
-+#define KVM_CAP_GMEM_CONVERSION 241
+ 	uint64_t non_coco_vm_valid_flags = 0;
  
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 853e989bdcb2..8c9c9e54616b 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -1216,7 +1216,7 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
- 	u64 flags = args->flags;
- 	u64 valid_flags = 0;
- 
--	if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
-+	if (IS_ENABLED(CONFIG_KVM_GMEM_SHARED_MEM))
- 		valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
- 
- 	if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
-@@ -1286,13 +1286,9 @@ int kvm_gmem_bind(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	    offset + size > i_size_read(inode))
- 		goto err;
- 
--	if (kvm_gmem_supports_shared(inode)) {
--		if (!kvm_arch_vm_supports_gmem_shared_mem(kvm))
--			goto err;
--
--		if (slot->userspace_addr &&
--		    !kvm_gmem_is_same_range(kvm, slot, file, offset))
--			goto err;
-+	if (kvm_gmem_supports_shared(inode) && slot->userspace_addr &&
-+	    !kvm_gmem_is_same_range(kvm, slot, file, offset)) {
-+		goto err;
- 	}
- 
- 	filemap_invalidate_lock(inode->i_mapping);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 66dfdafbb3b6..92054b1bbd3f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -4843,7 +4843,8 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+@@ -462,11 +463,30 @@ static void test_gmem_flag_validity(void)
  #endif
- #ifdef CONFIG_KVM_GMEM_SHARED_MEM
- 	case KVM_CAP_GMEM_SHARED_MEM:
--		return !kvm || kvm_arch_vm_supports_gmem_shared_mem(kvm);
-+	case KVM_CAP_GMEM_CONVERSION:
-+		return true;
- #endif
- 	default:
- 		break;
+ }
+ 
++static void test_gmem_flag_validity(void)
++{
++	/* After conversions are supported, all VM types support shared mem. */
++	uint64_t valid_flags = GUEST_MEMFD_FLAG_SUPPORT_SHARED;
++
++	test_vm_type_gmem_flag_validity(VM_TYPE_DEFAULT, valid_flags);
++
++#ifdef __x86_64__
++	test_vm_type_gmem_flag_validity(KVM_X86_SW_PROTECTED_VM, valid_flags);
++	test_vm_type_gmem_flag_validity(KVM_X86_SEV_VM, valid_flags);
++	test_vm_type_gmem_flag_validity(KVM_X86_SEV_ES_VM, valid_flags);
++	test_vm_type_gmem_flag_validity(KVM_X86_SNP_VM, valid_flags);
++	test_vm_type_gmem_flag_validity(KVM_X86_TDX_VM, valid_flags);
++#endif
++}
++
+ int main(int argc, char *argv[])
+ {
+ 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_GUEST_MEMFD));
+ 
+-	test_gmem_flag_validity();
++	if (kvm_has_cap(KVM_CAP_GMEM_CONVERSION))
++		test_gmem_flag_validity();
++	else
++		test_gmem_flag_validity_without_conversion_cap();
+ 
+ 	test_with_type(VM_TYPE_DEFAULT, 0, false);
+ 	if (kvm_has_cap(KVM_CAP_GMEM_SHARED_MEM)) {
 -- 
 2.49.0.1045.g170613ef41-goog
 
