@@ -1,77 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C42F194A44
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFEA1B3952
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232385; cv=none; b=LP6AvGGW/N423n54Uy9kECopBzh2JbZqCkXePHtLFz3+2sjTQeK1X3Y+CS6tMx4QbYnj4BQzJ+8E2t+pP7mEtA2Eqn7iDOng9eSMRcyR48y+yXB/EzHyNg7tBiuO5S8vWb8I3zwzLJ3ETC8EIY59Tu00eNyZEx47zf9bY5OKacY=
+	t=1747232389; cv=none; b=rWj2YzVHbRZqhSyphh4t60a3uL2T+q6pLnz5YXY72CYeitDj0liLFYnvO5mdP0vurPfF4/UD7DkZk1kDVqaFrrB6ua3I1I+Lzfq8wi3/kSWzZKIXOLDpHYfmuY5zLsA69oVQLIeHhePsAk3jfqxxmtZinCh7JjNwMQFJxV+sYIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232385; c=relaxed/simple;
-	bh=MDkS8ldGXScRZONUBL673Asf/ksz7j4BMNcyHSf2rFk=;
+	s=arc-20240116; t=1747232389; c=relaxed/simple;
+	bh=5Sj5KzI/F46StOB82OyP21k7diNVwpEzL2KwJR5OdEM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=phvRAD5DRJ56tqcuWrecyo4S4v21ZbBA1kGDUVxOPMSfrvTkKunrAbRzGsuff+/CHcsldFSaB0E37kMU5pgaGZ2F0/TV4LSh++ZBm5O4go5KtNBNVmYR5ogkkexG63p5dFhpgju4CvNVElW7YmqK7FKF70T30WwMUyWBNrq/yWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R3OWbae2; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=NpdoT+IXoQvYkIee2V2KMH9TW6sYGnQB+SG969wziYVi6UITIdLAwi/KkryNdzO1ts3Wid+mLKbiSiYi+DfyhwKiZXPeEDGTsnaugUIcDJ+OvygHYulOcmoivIJK3EfEUFlwXT4NdIdFcZaGkIo2EnrxnQYJzODP3hOz1R23XwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RsgLmJUq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R3OWbae2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsgLmJUq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747232380;
+	s=mimecast20190719; t=1747232387;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yRSwjGEuphQPWi9/jNcoY4twWfTF60gioe70+GQBSH4=;
-	b=R3OWbae2LoAK8JO4Ic/bOwgdU9h90moWljVL0KJdDFoOuQUxRh7sjlDBsnGmJR78S920ed
-	+iTMinSdRSJCfCzpr//XRKCglcojsOW76jeOYDD0IhVehnKzbZQzrbQ3TTM3Z308MqOd4c
-	zQ0PSFyr5yMrVqAgF4ubv2YpMDn4xis=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8Zvmt/u8Of+L1THnq1idxvoVHR9sJvksCbQhIaqH1ko=;
+	b=RsgLmJUqx2Jye3nWFC/liW9hAgF2raciqJz/WvwXogsCQrYLTfJNqZZ1q/q8BPtScIJX3k
+	6O/YLNKCujOGlXXkEbsNuuVkabrMBFxjHG9TEvodCMHW4/f1PYNA+/hiL8NnKHNOpCaYB0
+	PfkObO15UwbAvsui2SIP1T98CV6wD9s=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-4g1STkMcN-GG5ryMUUJfXQ-1; Wed, 14 May 2025 10:19:39 -0400
-X-MC-Unique: 4g1STkMcN-GG5ryMUUJfXQ-1
-X-Mimecast-MFC-AGG-ID: 4g1STkMcN-GG5ryMUUJfXQ_1747232378
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso6456345e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:19:39 -0700 (PDT)
+ us-mta-691-pQChAy8wOoC1f-1tUszhxA-1; Wed, 14 May 2025 10:19:45 -0400
+X-MC-Unique: pQChAy8wOoC1f-1tUszhxA-1
+X-Mimecast-MFC-AGG-ID: pQChAy8wOoC1f-1tUszhxA_1747232385
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b7120290so3177834f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:19:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747232378; x=1747837178;
+        d=1e100.net; s=20230601; t=1747232384; x=1747837184;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yRSwjGEuphQPWi9/jNcoY4twWfTF60gioe70+GQBSH4=;
-        b=slcowoRMMFt55Q0eqTGWFwi4Rkq67goy2XWWM9pBVwCXlj8mapkWK09trX6h13Ow59
-         gRnwXn7tbkx+NUYCFVGZ8BAkreroYj1JeEUroLBoM48uzd3zM6iZn/cw7CMZHNFY/WSV
-         j06uVgAixqZCU5Rv+snWcUOMrZp0LGnM+M0R8j1x++/KIiikD64DwSbuRIrZZO3l3m2G
-         WGJUDKHckTHrPI9E+qVV0TSuHacvmZnm8cCZKvaSIdyzdnLWl8hwx5iNFF9LdeVEX1ss
-         jZKhqGVPKCqwTpvjb2MdyF40K/4DmP/qCKoGRh87q5LpK+Hla6+xk/iWYFDukYaRHDea
-         T9Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjSKmt9UkaFeSrJXZFgBYV8blMjaUoCvh9Hv+uJfw7SIqioxer5Im+KhKxgAZbhrWx8j8uZB9TTxVcis8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfY5qDAnjp56n47MTxdhbGODdm0sIrVO8pR5wp7tpqU8JESF8s
-	ko/oNppt9H3LdLwSBuYWQu+NM0CTakanfnKcuMCBhQ2/zLCLGg/KQkkmVuxqs36Wl8Adz32aFwd
-	/HK9fzSh/tktOJYws2RsJTQ90QfpwpYKxM6z7sLMTuEiNqz/fBdCkzKER4JN0lw==
-X-Gm-Gg: ASbGncsmkWUqrqJhaSLjktyRbTysmG6dIjkdQGQ5CS3uAMrR4VN7EJAyWajChgphfMd
-	VGAZw/i9+fnlNNAItEdAcfVa/1PiJWkAFU9wdvNkfl41t1P/MiFgCuZz5KMvLEWrwTrcKqGcfIT
-	nKVNCgWrZIO7dzo4uqoxPi9cgKarsDWLCk6JzHHOWXGwzRY0L2jC8pEuzoKeZi5kCJXS40onFPh
-	yMV545eJL/rTMkxE/4pVmq4Krpi6i+uTfzmnFEPhKPoBLhw1Zfu4Q6SHZo4HDboZCqmZOmrbWzk
-	q6/CUkE50j7rKoSmtw==
-X-Received: by 2002:a05:600c:3494:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-442f20b9b46mr35323505e9.4.1747232378284;
-        Wed, 14 May 2025 07:19:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEF2R2tDjrWwT+L3uOaPxQKRvbLVHWMJVYv5KC6EA6jIX0QqXFdhjGQEIvk4sDMFBkXNW9ig==
-X-Received: by 2002:a05:600c:3494:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-442f20b9b46mr35323015e9.4.1747232377726;
-        Wed, 14 May 2025 07:19:37 -0700 (PDT)
+        bh=8Zvmt/u8Of+L1THnq1idxvoVHR9sJvksCbQhIaqH1ko=;
+        b=d2uL9XdZnMbvNCfQOcWf9ZzK4o8Di3XOHfiQi5j/5V8oj8XdeORehUNq0i+zQ+5GdA
+         wYSsTL7Ze+71ErC6ZRcR6/zOQjiHW07XrdAhRg/va3J8EpFpqsUmIuShGUaMwwpVxWIf
+         EQnDN7KhmZFlXjFuZMcQDpIUshPXZw3kH5Ncvq7d2vYObTjomBGEOSIjtknO2rg8fHlF
+         bINj4us+pQ36hwDDA33+z3Lzz7PqdQC5PmzWfMqGfXV4FR6/QlvVj9RJg0lvqE9TKxNp
+         hvwd/s1HSeNw/D6Lx4e0oHPPYbmMEazUmkbnUreuUMXa0UOqk37pc3Xbw5Qb2eu3oMyr
+         RWcg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/yZZf6YF2lmqC7o56JHL9EmohI1Ymxifh6c6TsZQ7bpOA0UQ972gpTXmQTScH0ptXIsEtqtJp5NrOFO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2Vi+vUgwC8pT1jLu7P/Qu0VweSjvk8x2QHSCbezfLd+3FbD9S
+	IQFrNNSUWrcMppWwu05gtGaFCtavSWE06QiRSpVtFeErPvQfQjnQUAOj2wQqw2a5jUiYG8H52qV
+	swqfdg23xvgu87eB8KIc1Rcl5RJnAC5IKWS/6joHiEwN6VhHvWlP1AUsjFCHExw==
+X-Gm-Gg: ASbGnctoQjQ+xGAPYYrHDAihWn+ZGoPKLnfeqgtFaPpWjUEWOf3QgQcqRZAFX3LWzwU
+	reQfnNvxrI8wI8oT2RUJ1dhHhlqhg8xNs9fBotPmlZuvc//tlysh1xuKkgSvV1i7Pfe/+vkFFsB
+	OZxQk1PyWoLM5dyrfoRRKiPqk6JQsjJDS+oKAdA1MNUyJHwO6/vt3QDo4wUcYXp/2PbH9hN94Ej
+	3NFcew+fQz0DXEHkM4DqDbWVkYM8xLWnO2QsS5sMizOhcd2kVJKK+Eua/uLrfPpLlDm5Ko2mps9
+	ksEXcNY12DDEqOJ8Yw==
+X-Received: by 2002:a05:6000:2011:b0:3a1:fcd9:f2ff with SMTP id ffacd0b85a97d-3a349694e9fmr2882893f8f.12.1747232384550;
+        Wed, 14 May 2025 07:19:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHlD0Y36veSQX0bZUBU4CJr9Oc/mcPJK9k57/34jB6gCQcLqBmTZi0wMgJYerwAAhbWQRLHsQ==
+X-Received: by 2002:a05:6000:2011:b0:3a1:fcd9:f2ff with SMTP id ffacd0b85a97d-3a349694e9fmr2882865f8f.12.1747232384019;
+        Wed, 14 May 2025 07:19:44 -0700 (PDT)
 Received: from stex1.redhat.com ([193.207.203.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e8578sm33288515e9.29.2025.05.14.07.19.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f28f7sm19625694f8f.41.2025.05.14.07.19.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 07:19:37 -0700 (PDT)
+        Wed, 14 May 2025 07:19:43 -0700 (PDT)
 From: Stefano Garzarella <sgarzare@redhat.com>
 To: netdev@vger.kernel.org
 Cc: virtualization@lists.linux.dev,
 	Stefano Garzarella <sgarzare@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 1/3] vsock/test: add timeout_usleep() to allow sleeping in timeout sections
-Date: Wed, 14 May 2025 16:19:25 +0200
-Message-ID: <20250514141927.159456-2-sgarzare@redhat.com>
+Subject: [PATCH net-next v2 2/3] vsock/test: retry send() to avoid occasional failure in sigpipe test
+Date: Wed, 14 May 2025 16:19:26 +0200
+Message-ID: <20250514141927.159456-3-sgarzare@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250514141927.159456-1-sgarzare@redhat.com>
 References: <20250514141927.159456-1-sgarzare@redhat.com>
@@ -85,69 +85,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Stefano Garzarella <sgarzare@redhat.com>
 
-The timeout API uses signals, so we have documented not to use sleep(),
-but we can use nanosleep(2) since POSIX.1 explicitly specifies that it
-does not interact with signals.
+When the other peer calls shutdown(SHUT_RD), there is a chance that
+the send() call could occur before the message carrying the close
+information arrives over the transport. In such cases, the send()
+might still succeed. To avoid this race, let's retry the send() call
+a few times, ensuring the test is more reliable.
 
-Let's provide timeout_usleep() for that.
+Sleep a little before trying again to avoid flooding the other peer
+and filling its receive buffer, causing false-negative.
 
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- tools/testing/vsock/timeout.h |  1 +
- tools/testing/vsock/timeout.c | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
+v2:
+- add little sleep [Paolo]
+---
+ tools/testing/vsock/vsock_test.c | 38 +++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/vsock/timeout.h b/tools/testing/vsock/timeout.h
-index ecb7c840e65a..1c3fcad87a49 100644
---- a/tools/testing/vsock/timeout.h
-+++ b/tools/testing/vsock/timeout.h
-@@ -11,5 +11,6 @@ void sigalrm(int signo);
- void timeout_begin(unsigned int seconds);
- void timeout_check(const char *operation);
- void timeout_end(void);
-+int timeout_usleep(useconds_t usec);
- 
- #endif /* TIMEOUT_H */
-diff --git a/tools/testing/vsock/timeout.c b/tools/testing/vsock/timeout.c
-index 44aee49b6cee..1453d38e08bb 100644
---- a/tools/testing/vsock/timeout.c
-+++ b/tools/testing/vsock/timeout.c
-@@ -21,6 +21,7 @@
- #include <stdbool.h>
- #include <unistd.h>
- #include <stdio.h>
-+#include <time.h>
- #include "timeout.h"
- 
- static volatile bool timeout;
-@@ -28,6 +29,8 @@ static volatile bool timeout;
- /* SIGALRM handler function.  Do not use sleep(2), alarm(2), or
-  * setitimer(2) while using this API - they may interfere with each
-  * other.
-+ *
-+ * If you need to sleep, please use timeout_sleep() provided by this API.
-  */
- void sigalrm(int signo)
- {
-@@ -58,3 +61,18 @@ void timeout_end(void)
- 	alarm(0);
- 	timeout = false;
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index d0f6d253ac72..68f425af00cc 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1058,17 +1058,34 @@ static void sigpipe(int signo)
+ 	have_sigpipe = 1;
  }
+ 
++#define SEND_SLEEP_USEC (10 * 1000)
 +
-+/* Sleep in a timeout section.
-+ *
-+ * nanosleep(2) can be used with this API since POSIX.1 explicitly
-+ * specifies that it does not interact with signals.
-+ */
-+int timeout_usleep(useconds_t usec)
-+{
-+	struct timespec ts = {
-+		.tv_sec = usec / 1000000,
-+		.tv_nsec = (usec % 1000000) * 1000,
-+	};
+ static void test_stream_check_sigpipe(int fd)
+ {
+ 	ssize_t res;
+ 
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, 0);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
++	/* When the other peer calls shutdown(SHUT_RD), there is a chance that
++	 * the send() call could occur before the message carrying the close
++	 * information arrives over the transport. In such cases, the send()
++	 * might still succeed. To avoid this race, let's retry the send() call
++	 * a few times, ensuring the test is more reliable.
++	 */
++	timeout_begin(TIMEOUT);
++	while(1) {
++		res = send(fd, "A", 1, 0);
++		if (res == -1)
++			break;
 +
-+	return nanosleep(&ts, NULL);
-+}
++		/* Sleep a little before trying again to avoid flooding the
++		 * other peer and filling its receive buffer, causing
++		 * false-negative.
++		 */
++		timeout_usleep(SEND_SLEEP_USEC);
++		timeout_check("send");
+ 	}
++	timeout_end();
+ 
+ 	if (!have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE expected\n");
+@@ -1077,11 +1094,16 @@ static void test_stream_check_sigpipe(int fd)
+ 
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, MSG_NOSIGNAL);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
++	timeout_begin(TIMEOUT);
++	while(1) {
++		res = send(fd, "A", 1, MSG_NOSIGNAL);
++		if (res == -1)
++			break;
++
++		timeout_usleep(SEND_SLEEP_USEC);
++		timeout_check("send");
+ 	}
++	timeout_end();
+ 
+ 	if (have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE not expected\n");
 -- 
 2.49.0
 
