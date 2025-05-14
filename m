@@ -1,72 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C124C6C;
-	Wed, 14 May 2025 17:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2DD1F4CB7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747243845; cv=none; b=ZyyGAC0WRo/IcF1ZjTcsaY28Nyn51dm/1deyDRw2ia5aisrSkcLsH4d8HcnG4tjRzXgkYaVeecAvq9cn5OTsOGa0moJG/71y1kh62UpPYsKXQKGkss/knwF9lH6dNyZK5agDneICHum6Rf1CQwZcXnCGxOVv6KqX6faVPNJMr28=
+	t=1747244068; cv=none; b=BQ0MA7OrKLlGOv5gZkvgLGMqDEmtDlmwV6cB0pdSdrkGXmLM7m7qVk4R59/HhtusNxvid5A9svbC6S5fk9u4agHVXHig5A1JJTynd+ZnSiwOVEeyDihGY7UF4hh5qYGqDprquwaoo14SX7/ceSkcnuTLKGrBiVZSu41b18A8/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747243845; c=relaxed/simple;
-	bh=hC229h01NjG4tzMc+UJvdaO4H9bxCIs8sjaXu1XFmBQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TDRcSf77tsG0WBUB/3CdMdmKBuIb+Sc5tm+9fAxvX/nlp3CNLy9KQOFAKWr5U1srkLYy6g6ddQ2Gl+bTyc1UKGFp6L5iB3Fjha7u3LfZCbNXWfHiGTK6yT5qS0p+B+wQBpiW4c/bmTP4Af2coXgwzfn2DB10lPIz3ZUqSrmfnCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/r9sY8N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747244068; c=relaxed/simple;
+	bh=F3EUI2ld0UT0ppfEbNNdIJ5hFYgpY8iEsw8ZhGn/Dgo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D26YHzNw+xnGNKtFjzU9HyAckA2OonXrslBrcy94Gzm/L1mN7QjR8HoZ0J4tCxb39XnVWfvPA0JF9NGRxewgyYhf3Jp7tiMrs1oWc2ZdPpmepXcA2/vOoJSX5kHJv9pOzZ08TUiIOjvPpChFnS1bigHDybhhYegQlf+GzpRiDfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=QpnGWJ78; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/r9sY8N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66126C4CEED;
-	Wed, 14 May 2025 17:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747243843;
-	bh=hC229h01NjG4tzMc+UJvdaO4H9bxCIs8sjaXu1XFmBQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=j/r9sY8Nl4gdAWyZxEdYNL9e8EhvovdzEa+v3R4mGjDIIQdApGUvXPZZ+5nenIrWN
-	 1ABqDrsVmRdB0beNPJdfy6b4EHIaD6vdw5IAZw1hAXJVRre5ozkryVOHl0skcY9+YX
-	 crZOW663wapGoWojnhnMr+Wkovj0eDtu+KDVPRfT4z/fOl6UIQDMObYY4QkolLTFA1
-	 nJg0zhkeN1DjcprfzxwOrla57miWHQHHln1MvTPJqZtBAtI5KNPPbQc2Mis2+THjIX
-	 wLCKArDmIjkGlQ64nuoDDKNZLUAMiPaXtOhs83w8iFzs1vshsDkU/9fyqUlMVuDjly
-	 uRTG7DrOpkUyw==
-From: Carlos Maiolino <cem@kernel.org>
-To: linux-xfs@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: Dave Chinner <david@fromorbit.com>, 
- "Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250514104937.15380-1-hans.holmberg@wdc.com>
-References: <20250514104937.15380-1-hans.holmberg@wdc.com>
-Subject: Re: [PATCH 0/2] Add mru cache for inode to zone allocation mapping
-Message-Id: <174724384212.752716.9754697485095664382.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 19:30:42 +0200
+	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="QpnGWJ78"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso730365e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1747244062; x=1747848862; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A3pWDBUK6FlzBPdfRXbrUWkXt48aUKk3wxjH/A7GEbU=;
+        b=QpnGWJ78/xG9MWxKFoEoyBNk9rW4fmEKf1xDc5uUTVUhwRxICBYI0G9af65ym4hJpj
+         fIH1FrD4Ys+wSH6r/qgo+XIovPC0Ar0l/FXY6rbbZN3qI3I6TZURkZUJPG5UHBP3wiqM
+         NsqULyrhAmw+NTCdCl+2SqJtTXauLp5k8T6N23VklJV7q8l6ot6tD2DsGOYP86bOoJTR
+         MGy34J3aiVL9MHg1QuQ99QTnjNvoGmsOfJ0Gw8yKD1nmpsY4yFp6RH42t7wE/8GWwnRh
+         EBRzWQ9q+rM+mHpybQjtE174N+iQxs5zeqe/4xPxa8loUMHUkxAF3ZongOcHdt3jaPC0
+         f8Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747244062; x=1747848862;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A3pWDBUK6FlzBPdfRXbrUWkXt48aUKk3wxjH/A7GEbU=;
+        b=qzY/AfjjGjpbgGZYTJ2m5WyTrHAgMS8PBWoS3zkqsiT32hOV4zqq+eLq4la5c/nb4O
+         6aCmr7Qnnoq8XNXywdvIxbjaXda755B/ewsUFigfUJPcWf1BrgZKWEMmglH26Le8x4HJ
+         ENrzddhmz+T1sYFH9Gn2jzXDTzxvKy3LBaaiyQsQEw6q+qWFv5S/7jOwLGxn8rUQtwK/
+         8qDn0nrvDhdgvEhD1r3ik39OpmnBf9A4k21ZCk+FcuuLve3dkiblr6PeLG6JX7mGbxrH
+         NF3oZ8CwPcPDmPdo1KKGnMDQp1LKRuEmWBJ/W/eLM+vfJW3miZEQWXErAOKuBzeiNo6I
+         BqQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpasj29ApZQ6z1mGUL55HZANq9QCAJ04EFrKBudMGegDf5ybpaLlMlWkW1IJNlQywyspTag7cm75HH9fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8QBs3cSlGrTAzZM9CXZmvbup9KP4Lns921XDq9OzLR2cV/pbB
+	3CQl1MvrEPsKKHsdfig67trBQSWLM/rOEbZBWrvod5/B1z72fVvHEsIVDz/+b0I=
+X-Gm-Gg: ASbGnctJkJnHUmTeu6s5avxwXejm0ShEiKKL4S7ftyqhRAPEXAVNcHhbh/H+LrvgymH
+	3nOAc9Ceuj36lnJGGttLiskZXIizUGbWT/qVDfrGt1I83kelPaeZ2U497wgoOK59ejCgrEh5oxv
+	+tuBrYvK5qIr2AmRmEITSA2O0ZF/b7QVJhVJh9x7MPjZfHGOZ25byMEfadmVwOnxipu9VEIzk3f
+	p3wh7BQVoNwAHC/NGzfY+nZxjiUv6m/lQz4ERZqUl7cDsUF411FpmgmdmNMthJ35Iw4ODqvKImK
+	6t+wF/FDxVKO/nF+ZQuXNwsYq0h6iYC4XD6OWNEStak3TLS+dr7UL9+GdlrBYiv0kOKQaXHSRiy
+	/CIKcxMs4VxLneE7tg7s=
+X-Google-Smtp-Source: AGHT+IEf/t/BC2mdqBFuBd+YCiNuDrjCiLIwibxauSA1YNnVs198o6Ml3tNDJ277LgQ1YGugHmQULg==
+X-Received: by 2002:a05:6000:2207:b0:3a2:244:67a4 with SMTP id ffacd0b85a97d-3a34991bfe5mr3735657f8f.43.1747244062018;
+        Wed, 14 May 2025 10:34:22 -0700 (PDT)
+Received: from odysseia.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3951adcsm39135225e9.19.2025.05.14.10.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 10:34:21 -0700 (PDT)
+From: Marios Makassikis <mmakassikis@freebox.fr>
+To: netdev@vger.kernel.org
+Cc: marcin.s.wojtas@gmail.com,
+	linux@armlinux.org.uk,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-kernel@vger.kernel.org,
+	Marios Makassikis <mmakassikis@freebox.fr>
+Subject: [PATCH] drivers: net: mvpp2: attempt to refill rx before allocating skb
+Date: Wed, 14 May 2025 19:34:17 +0200
+Message-ID: <20250514173417.276731-1-mmakassikis@freebox.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 May 2025 10:50:36 +0000, Hans Holmberg wrote:
-> These patches cleans up the xfs mru code a bit and adds a cache for
-> keeping track of which zone an inode allocated data to last. Placing
-> file data in the same zone helps reduce garbage collection overhead,
-> and with this patch we add support per-file co-location for random
-> writes.
-> 
-> While I was initially concerned by adding overhead to the allocation
-> path, the cache actually reduces it as as we avoid going through the
-> zone allocation algorithm for every random write.
-> 
-> [...]
+on mvpp2_rx_refill() failure, the freshly allocated skb is freed,
+the rx error counter is incremented and the descriptor currently
+being processed is rearmed through mvpp2_bm_pool_put().
 
-Applied to for-next, thanks!
+the logic is that the system is low on memory so it's not possible
+to allocate both a rx descriptor and an skb, so we might as well
+drop the skb and return the descriptor to the rx pool to avoid
+draining it (and preventing any future packet reception).
 
-[1/2] xfs: free the item in xfs_mru_cache_insert on failure
-      commit: 70b95cb86513d7f6d084ddc8e961a1cab9022e14
-[2/2] xfs: add inode to zone caching for data placement
-      commit: f3e2e53823b98d55da46ea72d32ac18bd7709c33
+the skb freeing is unfortunate, as build_skb() takes ownership
+of the 'data' buffer:
+ - build_skb() calls  __finalize_skb_around() which sets skb->head
+ and skb->data to point to 'data'
+ - dev_free_skb_any() may call skb_free_frag() on skb->head
 
-Best regards,
+thus, the final mvpp2_bm_pool_put() rearms a descriptor that was
+just freed.
+
+call mvpp2_rx_refill() first, so there's no skb to free.
+
+incidentally, doing rx refill prior to skb allocation is what is
+done in marvell's mvneta driver for armada 370 (mvneta_rx_hwbm() in
+mvneta.c)
+
+Signed-off-by: Marios Makassikis <mmakassikis@freebox.fr>
+Fixes: d6526926de739 ("net: mvpp2: fix memory leak in mvpp2_rx")
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 416a926a8281..e13055ec4483 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -4003,6 +4003,12 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+ 			metasize = xdp.data - xdp.data_meta;
+ 		}
+ 
++		err = mvpp2_rx_refill(port, bm_pool, pp, pool);
++		if (err) {
++			netdev_err(port->dev, "failed to refill BM pools\n");
++			goto err_drop_frame;
++		}
++
+ 		if (frag_size)
+ 			skb = build_skb(data, frag_size);
+ 		else
+@@ -4021,13 +4027,6 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+ 					 skb_hwtstamps(skb));
+ 		}
+ 
+-		err = mvpp2_rx_refill(port, bm_pool, pp, pool);
+-		if (err) {
+-			netdev_err(port->dev, "failed to refill BM pools\n");
+-			dev_kfree_skb_any(skb);
+-			goto err_drop_frame;
+-		}
+-
+ 		if (pp)
+ 			skb_mark_for_recycle(skb);
+ 		else
 -- 
-Carlos Maiolino <cem@kernel.org>
+2.49.0
 
