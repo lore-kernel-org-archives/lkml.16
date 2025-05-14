@@ -1,110 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB361BC3F;
-	Wed, 14 May 2025 09:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8291BC3F
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214147; cv=none; b=ptqicpzoaLT0LHeaYwPYgD61C7QnZS3OAHq3dfmoRoJaTNNV/fZApGC2OtVIbzu9UZDFmybxSxKtJ5L/teCtpeSSboxmwxrLbOsy5yYm5RCQxzOQB0cuNF4oidqCzTknAArCAQl8V70bb3xuNweZbjrIsVRO2DA/LfZR3jABgj0=
+	t=1747214245; cv=none; b=LyixKn383r8/xyaWiwiHUjkn6/AqPKy/uq4VITG+MjEwqBwHzCaryKMylUTQcQ4H66TXad6r3VmeD9Kc/aK2zvEsEU5066cTfeiFXe2te/RTR1wGCHdW3TKE92dqzuJnINoE3cl+NUF6Pk2unz4XTLw+qSQMiQnRbvQnuxZSS9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214147; c=relaxed/simple;
-	bh=1cKoue+upTo4HfjWM/Vwi5Qay2EkwgJIx0igGvDWUwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iLHUbXtOboFwV0aEmC5/gPN6GG3TSCcnU60Aqt0Pm27aaD/wyAdfp4qkoSNdR5Hrxwi1ySfc/0kmh9ZDcDGXpA93aCJY/9bN7GhV2/gJ1H02V4SFahlUMn0QgEV/bySEBiVsWhc331zQEPOZkgM1UXY4n2DdssOlFGYHvMwp//E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVxe6Zka; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747214245; c=relaxed/simple;
+	bh=pEmPsXkZn2LmqIE/lJhivP5HaBIetx4VZNaXDTcmm/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rCan6vbeMjkGKNcipy7qZ4SvNkJLtVqAdzyNkkBGzjVwctpZEi9FymED+IWydPAjCAL+CVVC+ooos4mGFW7ry2y9bYai9JwnR05dJFEB1xCQhLeS42S2KshVtMDCgvqjyevjckyW9Ac5v9bqAbmIN6GH8yy17Lep3DtOLO1lo3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TXca49Zk; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVxe6Zka"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764C1C4CEE9;
-	Wed, 14 May 2025 09:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747214146;
-	bh=1cKoue+upTo4HfjWM/Vwi5Qay2EkwgJIx0igGvDWUwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JVxe6Zka6jWGS+tUAFUL78fgvJsnjKkZzqksLrW3yyshPyT5rWbBhgZqjFCjewVed
-	 qStVS4di+0Lj2l5vZgJe/+CxQiX0AuP5EI4bd99SZBaHycPeWXVICIW3haayavbCeP
-	 BlFlSBz2Du4jk9Cw3cTy6WgHijEL4bQGFAxc0rx+GybtjFawzTAuzqWIfZAHIzOeIB
-	 pz+a/FbjvHvk2ZRoAUS85yNXnuLJpnEI6mf34w9+n5Qca0kfLt8rqyqp1U/TZNrHlK
-	 rHwpmjzMK4PjWRWCTOC5eNERmuAmQutzD8k/wi7ANenKb9PzxwY1nQpu1X9E2J8w7O
-	 sd06XPpg7XQbw==
-Date: Wed, 14 May 2025 11:15:41 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Pankaj Gupta <pankaj.gupta@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Srikanth Aithal <sraithal@amd.com>, stable@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/sev: Do not touch VMSA pages during SNP
- guest memory kdump
-Message-ID: <aCRfPTxaPvoqILq8@gmail.com>
-References: <20250428214151.155464-1-Ashish.Kalra@amd.com>
- <174715966762.406.12942579862694214802.tip-bot2@tip-bot2>
- <aCREWka5uQndvTN_@gmail.com>
- <20250514081120.GAaCRQKOVcm4dgqp59@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TXca49Zk"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3104ddb8051so68928041fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747214241; x=1747819041; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9l61OPQYUyrwxbE4WLEA0UZlwRfXVKqAkVC77MMSPUY=;
+        b=TXca49Zk3xquiP4FDZe8OxVcWeKmm2swhgGg0/oQsGVQcfWHmPl3d6cIGnE41qEw/m
+         icmwaXt65pMx5RDmDrbYFmX2T8OPB1d8II7w4tlsZMM8eLnzJIinUs2P2fE+C/PtFS9m
+         QEAKyqH8mUYvWoRomh+IGPp47WKBEevF1y+mM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747214241; x=1747819041;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9l61OPQYUyrwxbE4WLEA0UZlwRfXVKqAkVC77MMSPUY=;
+        b=B0siPfztGD5B5+SPJnGIuQQFenuQjjSZPD5zyAwGUpov96VThg8l9PPjT8BIDoxGSF
+         C99GkEvEN/bL0+IVNmjmlYfW7jI+FGMPsuQEqCNvy/RQkF84VZiDQXhgnUvqKd2fWzfs
+         Gv1q9bewK2aNbH6rrsvQpUnW5MH0YZZbXj8jUs4rmCRgN+UTnNnPIpEmqe++bvcNDUPZ
+         49lSiQTwIelHd3WBEWSVMkLsK10Jor/ZrWpMpOhBR98TnGYzHiR5GIm/Ekp7NQ8sAmMI
+         sRKkZ8xnNqKitLEUE9rzjXrUNpsyafQJQX0a3lsDCfP/5kJBJayqKrWcg5CkpQyCywIW
+         gdjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAoKNVp4Sgn/nzlVXfhZBBq7xRjunUfoc9+SK7SrWyqWEP1iNzBbI+wwE/bAkl3WLCOfd3KyLylINwyHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG+Nkc9NLPCm3YE85BV4Cv6Nx4mHOxyzQL3L0H02q+Ps3XesAZ
+	rVFxiSnytneofv+1JCBqbxC5tYFKUFLKIDfYfRkQ48HD3Z/Q1prgoKlHq1rC5Qeg4dWvvJSy8Qg
+	=
+X-Gm-Gg: ASbGncsObX65ADZMbczLp3Mtr5/u56rLaXAX7ALGk57TVsSlwOPo9+pVhzdNZS4hOcM
+	dQUQlmTWzmqsi7ZFWx1r2QyaYRHHdf7bCSP7sYjD+VnlLse/GVKerBzPBdRBQCr6BNHr00+fKdP
+	aV14BwCXDaUyG/UVOKtBXz7nWsK3D9eKueSndra09bS3QR6zYJ7frgUibvO+MT4SYWAFBp0J6Wj
+	Fl16ZkUPN3Xfs/x1pdpPNIve11zrq3+pEP6tom38q4PO+3YOter9vXwZ/f+Qahk015NR7ilqyKk
+	bBxpYEvkSL/CzJtJBlSjKXmZa2VCjFWhHOQdne4aXf7tnJs3jupZYPtjtldofYTnCnnrWYZ/5PW
+	KiiYY+R9M5tkgbs2gPA==
+X-Google-Smtp-Source: AGHT+IGTI8/jLc0MSYivDbvsa3BnNpwpK0AW7mTqsFIKfoFGjnrnK3YxQUXQQG4Kk4o6I8jDKrWfmA==
+X-Received: by 2002:a2e:be0b:0:b0:308:fbd5:9d2d with SMTP id 38308e7fff4ca-327ed2015a6mr10443611fa.37.1747214241114;
+        Wed, 14 May 2025 02:17:21 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c3502dbcsm18990171fa.66.2025.05.14.02.17.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 02:17:20 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3104ddb8051so68927651fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:17:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUd3YG1q1G3G6OAEjXB80HawX7n450Zlf1q2jLx3NxsxgUsdh3BTZj1b2VqlFwiLYxkdwbtNO/NKK8UYBE=@vger.kernel.org
+X-Received: by 2002:a05:651c:2206:b0:31e:9d54:62bc with SMTP id
+ 38308e7fff4ca-327ed0d66a9mr9898921fa.14.1747214239624; Wed, 14 May 2025
+ 02:17:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514081120.GAaCRQKOVcm4dgqp59@fat_crate.local>
+References: <20250510061803.811433-1-ccc194101@163.com>
+In-Reply-To: <20250510061803.811433-1-ccc194101@163.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 14 May 2025 11:17:06 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsXPgQZVtq9RL_TkXCAW9Bt3kMO3-cR4X8GZaQvmYCQyA@mail.gmail.com>
+X-Gm-Features: AX0GCFvV5LPFwjfvUWgotcxdHtaNHc8xIDNoSaAFhOasi7TjbYfRetkWjqFlOtU
+Message-ID: <CANiDSCsXPgQZVtq9RL_TkXCAW9Bt3kMO3-cR4X8GZaQvmYCQyA@mail.gmail.com>
+Subject: Re: [PATCH v10] media: uvcvideo: Fix bandwidth issue for Alcor camera.
+To: chenchangcheng <ccc194101@163.com>
+Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, mchehab@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	chenchangcheng <chenchangcheng@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi chenchangcheng
+
+Thanks for your patience fixing the warnings from media-ci :)
+
+Regards
+
+On Sat, 10 May 2025 at 08:18, chenchangcheng <ccc194101@163.com> wrote:
+>
+> From: chenchangcheng <chenchangcheng@kylinos.cn>
+>
+> Some broken device return wrong dwMaxPayloadTransferSize fields
+> as follows:
+>     [  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
+>     [  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
+>
+> When dwMaxPayloadTransferSize is greater than maxpsize,
+> it will prevent the camera from starting.
+> So use the bandwidth of maxpsize.
+>
+> Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_video.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index e3567aeb0007..a74cf89852d1 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -262,6 +262,15 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
+>
+>                 ctrl->dwMaxPayloadTransferSize = bandwidth;
+>         }
+> +
+> +       if (stream->intf->num_altsetting > 1 &&
+> +           ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
+> +               dev_warn_ratelimited(&stream->intf->dev,
+> +                                    "the max payload transmission size (%d) exceededs the size of the ep max packet (%d). Using the max size.\n",
+> +                                    ctrl->dwMaxPayloadTransferSize,
+
+Minor nitpick. I am trying to standarize "UVC non compliance" header
+in the logs for this kind of things.
+
+"UVC non compliance: the max payload transmission size (%d) exceededs
+the size of the ep max packet (%d). Using the max size.\n"
+> +                                    stream->maxpsize);
+> +               ctrl->dwMaxPayloadTransferSize = stream->maxpsize;
+> +       }
+>  }
+>
+>  static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
+>
+> base-commit: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
+> --
+> 2.25.1
+>
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
-
-> On Wed, May 14, 2025 at 09:20:58AM +0200, Ingo Molnar wrote:
-> > Boris, please don't rush these SEV patches without proper review first! ;-)
-> 
-> You didn't read the R-by and SOB tags at the beginning?
-
-Reviewed-by tags and SOB tags don't necessarily imply a proper review, 
-as my review feedback here amply demonstrates.
-
-> Feel free to propose fixes, Tom and I will review them and even test 
-> them for you!
-> 
-> But ontop of those: those are fixes and the "issues" you've pointed 
-> out are to existing code which this patch only moves.
-
-Firstly, while you may be inclined to ignore the half dozen typos in 
-the changelog and the comments as inconsequential, do your scare-quotes 
-around 'issues' imply that you don't accept the other issues my review 
-identified, such as the messy type conversions and the inconsistent 
-handling of svsm_caa_pa as valid? That would be sad.
-
-Secondly, the fact that half of the patch is moving/refactoring code, 
-while the other half is adding new code is no excuse to ignore review 
-feedback for the code that gets moved/refactored - reviewers obviously 
-need to read and understand the code that gets moved too. This is 
-kernel maintenance 101.
-
-And the new functionality introduced obviously expands on the bad 
-practices & fragile code I outlined.
-
-This is a basic requirement when implementing new functionality (and 
-kdump never really worked on SEV-SNP I suppose, at least since August 
-laste year, so it's basically new functionality), is to have a clean 
-codebase it is extending, especially if the changes are so large:
-
-   1 file changed, 158 insertions(+), 86 deletions(-)
-
-All these problems accumulate and may result in fragility and bugs.
-
-Third, this patch should have been split into two parts to begin with: 
-the first one refactors the code into vmgexit_ap_control() and moves 
-snp_set_vmsa() and snp_cleanup_vmsa() - and a second, smaller, easier 
-to review patch that does the real changes. Right now the actual 
-changes are hidden within the noise of code movement and refactoring.
-
-> I would usually say "Thx" here but not this time.
-
-Oh wow, you really don't take constructive criticism of patches very 
-well. Review feedback isn't a personal attack against you. Please don't 
-shoot the messenger.
-
-Thanks,
-
-	Ingo
+-- 
+Ricardo Ribalda
