@@ -1,132 +1,170 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CE7277818;
-	Wed, 14 May 2025 10:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4072581;
+	Wed, 14 May 2025 10:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747217751; cv=none; b=fCoQZfYPHeXb9nO1+ELFe0vIuwkOqi+C91RHRcelg4jY5r+BOr8g0bNznZinTJ6X8Izr/ht3G/W+NVULZj5N8Rxg+TTUxeymMYnfxJHpfyWaUYw6hN0LGYYPs0ZAsph9UZmrhbOL4AAh8QUi42uGpPkeUy8mw+yF50wf+tKN/LU=
+	t=1747217807; cv=none; b=PskoLSfotJKsuwPXeGtdz/atU1w5X0bfMouobMsFgzj9AWkMoMQA9VIiEtlJnXnd624ZH92Dy1cmlkDnHINkqoM8yNpF1WrW3KjGtBebxSd8nidPOFxfOLEPLHGXIL/Bl/lQyslnAhvW5Ah+Gz7qVgv5Mgvy6w05D3Zh/3qBFvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747217751; c=relaxed/simple;
-	bh=cQGdt7Bm+oCA45OrDj/tyvOjEKvRxwuUaaTwuxv87fM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bP82OzEaXV6rzTDR7V9xAKt/K5XgLQYYObqx34UMr7n2a+UPNhw6E1SNmYF4LBUlwTTMxnSuJgPXGYcV8cbpUtMUdNkCXwJ4w9agua4YiNqba/NATf0U4Q6ScRf9nCl3Lo5USpy/D5q5B6LquztGy0qyYnHjcBD4wsmMTn3g4eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZnEpM1HG; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1747217807; c=relaxed/simple;
+	bh=xUrXMqnTLFPEX7yU7U+LYrYTOBZ2oDw/xXihZ9FZOZI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KZcnV5Hf6nCrceIwui+HPIPUEMuz518dQJN416QgCRcS/d0wlb++HrWBiVSVrOkn6DVBcbOyVhGY1syxHjFV0jRr61evwyfCbe4l+aFnBNNsFVLVjjkJIzseBHxMvUKcbzaNGYadoKrkm67q9rKuONCidR+UDg5JWCrqnKYQjgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ecTpoxRF; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnEpM1HG"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a108684f90so4055232f8f.1;
-        Wed, 14 May 2025 03:15:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecTpoxRF"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso3093198f8f.3;
+        Wed, 14 May 2025 03:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747217748; x=1747822548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pI3nqyB+c8lWNh8ROyF/TiOE8yTJ1KcZLq3G1bSkOZ4=;
-        b=ZnEpM1HGfODCWjpoqOB3Xg3uFi/BWYaLtwi7f3Iysa+dlF5yKz1sDhiUPQzQVXcUl7
-         xA8di5vucNdKKwBWeaK99S/cju5wCgBds3nNmmNqILhlr+fry6lsRh/VemITG73jwTiZ
-         0bkH/x6iPBTSNRy121boBtAWPkUFcYA2vgrbSJqdHowcUgvYJTiciB5HXkY/S07eJkYk
-         IeKUJ6J57sjlI9kRfUZ51h8/SolClkH53xolDknoIqD3vuntVsFMzLxCs0jZES3FlN6e
-         3LymPU9rzOG/AFbb/3Jsf+ayw6X+Jjhc57W6irY4Qjz+3RQq+OHijV1d/jPOo3SxpmPn
-         aO4A==
+        d=gmail.com; s=20230601; t=1747217804; x=1747822604; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xt5jpPl9R9r3M1DxHFUgl8SbNW1F0avaN7jhoorozrg=;
+        b=ecTpoxRFZNaCn3aLlPtKERKJhTFIquFtUUietKO86PAfMmILiMVZB1vs+BxruOdPxs
+         dmBH3L0fRkb8lcheeDSV5Su0Bqu7j2uBR2gKDqPJ3dXJBLN15mAxs4aEtQskVm1hvdEi
+         ZTa9rc3Xq842PRG+KE9zpqxQsISDcu0A0/NuSredv5xo1J7oO8nNpTk7PgGDHL9HT+hD
+         s7FPg0pfi4C+VOlYUvbLCuoyWBrTGdaX4tHHQMgLJyKKxeDjvIKdnZ/nNudp/kuTIApK
+         xA3pfWtgkV+yrHi1McPMWx1YosvJkdKrkbA/fpNvnlcCHaAbpzg1hNaWaCvRE8wxeSa8
+         hQAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747217748; x=1747822548;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pI3nqyB+c8lWNh8ROyF/TiOE8yTJ1KcZLq3G1bSkOZ4=;
-        b=SlUYUQDiEO71HU/i4zcHDqDaBj7w3VwJn31wfkjZ97/dXAzvNgESSiDzX6XxquoYdu
-         dyqflqGFBJ5Z+j+1yHYrUjBmp8XZBNc2vQyfdc+Z+JrblZnaKXUn/q1Hk8E/Lc8RaCfR
-         9Q25KU8jEcED+keBgHzGrsWkSBqPbbTpkTkMrLk6CFwmpLRz7lNmW96yjLu9tTPrMD2z
-         8J0t1BE2gstLe5adT9DnA1KPK5EEl3jKIHdGGcR1pnFenYBginvrjKPG3gfSj6aDdWFe
-         ssYpmoSLy9UYNyqm1EYn5kE2c4CYnqwZ+XtlW1/UxdH1jqCPdKv8OFPqxB7Iw4ThYXfn
-         P/Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWrpQgNp8CFhobK//uvt/PrRryAx4+djOSZk8lDpYTNTrZQpHmXOYJykyxr/7OrPpxrR74+7qGnZSbwvt4=@vger.kernel.org, AJvYcCXSIuXowH8QmIfkp6niwT5J/4OwcnrzgGQDXTloox8iQA7wfpICZq6c2FJ+OvIKP7OSS8kMBeUJeijGw8iV7TICfmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjueyCsmCMXc03gNJ3SPCwUd6+X52hGbjUrlOSp14XNvbTTOaG
-	ed3jgF+k8U4O8j0BnrrIO5zIT95Ki+Jxp4tfYb0wUxBd+GF8nsrM
-X-Gm-Gg: ASbGncvNXQ2Pl0ye5s5kpofZJ7yUszwfWfzFaweKVcB45/7JjaflUpz7EM7g9JTn2Mg
-	aqtHe+/aEB1rZqx+TyzivYnFgNKytiBWuAayKzFffCwW6dqSvndY4a9eshPtGIQvXYm/uBz4fC9
-	daLQGQS8MZKT2u/Th7WUzu9kRGoqUqIPMzc8ukmxeaLdvpkMnXoOjkNUp1BaaqWgHGqNFgDi+Mj
-	6R9+RFjM9E6artl5gvUgK3UIDJrr42In/svhR1rj7gdDu99F8NE6h3Il8lqstFco9nRXyMngQA3
-	rf0s09Mibnx4c7RzphcZxlKGdY2aSc0uhNfKpbgsXSyNWGNCfmamC0WDWqq6zN8bMZGVniiXngP
-	L
-X-Google-Smtp-Source: AGHT+IF5iem/07wGGfQa7jBrISioiOryTVCpPwJFAUfTPbkxAOtzOjb0nhNqIVTUfIs7I/H8n5iE3Q==
-X-Received: by 2002:a05:6000:2209:b0:3a0:7d15:1d8a with SMTP id ffacd0b85a97d-3a34992adbdmr2411525f8f.38.1747217747655;
-        Wed, 14 May 2025 03:15:47 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:6140:13af:687a:7a66])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f3afdsm19530249f8f.60.2025.05.14.03.15.46
+        d=1e100.net; s=20230601; t=1747217804; x=1747822604;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xt5jpPl9R9r3M1DxHFUgl8SbNW1F0avaN7jhoorozrg=;
+        b=tArKzM0S1jC6anDYbYH+qXz/caiukBnzJgAZMdp9mKqI2WKm4Go/GOwFoz8w4P7HKe
+         4lS3LcedSJSPvZHRjzHGVFv3A+5v3GXX1ZIxXVDw64GMLWvfOBjsBmdBq8iEabHlRG3Q
+         joqGjvmnfUgBkHRDab3vMaG7zQWV/FLJ0ge6YQebGRQst/6Zf1Vo2aQcWBLCZoXUr3WJ
+         8n2jyip8qmVr5YXNmOObcxlaLg2tdvRiXP2omYroSbsnfpTcU8yKh4+OnbyGQfJDstGZ
+         sKdfeznLFGuwgj9LxuVvLTn3h9q7A4jZt9VQuaTIMBbi8U8gyQ3aOJMLZM3Zv5Fmgnh2
+         MNIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPXGnSQyuHF5L6M41mUd1SbfkrUtFCNUIg8j1vvyWp2xj3b1OBbIitfLcxPAUeqeeWWI4057QmObkxrzL3@vger.kernel.org, AJvYcCWNgvAB+Q4ralDrbkuGn26DKyKTSQwsKG7dooYACVNEfda8/GBpWdCdxW2vYoageCAFg2c/vxa2qrbA1ceW@vger.kernel.org, AJvYcCWWERvLskMTE+bivH88Xcuqdoh0tvDcMXLE+U/2TbgAcELQ6GAWev6b+H0OW01ydF8y9smZUKiFCaWO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqOabkzmXfi272C2+4KcZ/42spv+6SsXwgFTAyYiXAuge5MrYE
+	o8obNrmsrDLSz05dDXr+Kp97YUBP/hIQsPDJvv0USTcVaAdOhsKv
+X-Gm-Gg: ASbGncvkIKYq8H0/4gTiwNR2NnpaaR33AjpNlPkWRv8khQy9RQPsiToVu2F6JLgFeLo
+	wUEojdz3s08XoNnCWftz3JMgOkTC4acOWNb69OczovuScR0+YYzTzibzZ01E4gldQm+AbPnAOiX
+	RP+uuZRc2kjIlzyqdyhn/RcZZES0iY/scpj3wBB6AdpkGQnNVGFY68HWsyaxnyFt76lCAGTvaxC
+	+NaV3RG6qVZXYhvmsKaVgcr2K3sDFfsLcmbgobPlyaAXtiffN7RG50KC3iAPu9ow1CsmNS5XP/k
+	1rL5ReFg8v/LiwIr3aDdKk4AKO1hGTwy/p70K/HE6ZobF7lXwi3yA/YX4fteLG5Ez9dP03sbESU
+	NyAM6
+X-Google-Smtp-Source: AGHT+IGTBzXJ8khuka4ANfCsJsFYflJ8G0mPpcLcLGB4Y+fmnHYrjMluF3TVeXvhgi5hMkdHZs1XCQ==
+X-Received: by 2002:a05:6000:1a8c:b0:3a2:12a:e637 with SMTP id ffacd0b85a97d-3a34994fee5mr2322746f8f.56.1747217803976;
+        Wed, 14 May 2025 03:16:43 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde27sm19596519f8f.17.2025.05.14.03.16.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 03:15:46 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-renesas-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 10/10] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable Mali-G31 GPU
-Date: Wed, 14 May 2025 11:15:28 +0100
-Message-ID: <20250514101528.41663-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 14 May 2025 03:16:43 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Wed, 14 May 2025 12:16:38 +0200
+Subject: [PATCH] spi: spi-qpic-snand: reuse
+ qcom_spi_check_raw_flash_errors()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-qpic-snand-error-check-v1-1-c0ebd3aae72a@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAIVtJGgC/x3MSwqAMAwA0auUrA3Y+gOvIi40jRqEWlMQQby7x
+ eVbzDyQWIUT9OYB5UuSHCHDFgZom8LKKD4bXOmasrE1nlEIU5iCR1Y9FGlj2tHNbLu2o8qTgxx
+ H5UXufzyM7/sBCVK1amgAAAA=
+X-Change-ID: 20250514-qpic-snand-error-check-2be1767c3dc2
+To: Mark Brown <broonie@kernel.org>
+Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+The qcom_spi_check_raw_flash_errors() function can be used to
+verify the flash status after raw operations.
 
-Enable the Mali-G31 GPU on the RZ/V2N EVK.
+Move the function slightly up in the code and change the
+qcom_spi_read_last_cw() function to call it instead of using
+an open coded implementation of the same check.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
 ---
- .../boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/spi/spi-qpic-snand.c | 40 +++++++++++++++++++---------------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-index c4f248bcada3..de5dce4514f0 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-@@ -39,6 +39,15 @@ memory@48000000 {
- 		reg = <0x0 0x48000000 0x1 0xf8000000>;
- 	};
+diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
+index 18a8e572434e81b698332aceeff852e88e1d6b13..3ee891fd5b5e334950a8da58221658b62b8378c2 100644
+--- a/drivers/spi/spi-qpic-snand.c
++++ b/drivers/spi/spi-qpic-snand.c
+@@ -492,6 +492,22 @@ static void qcom_spi_config_single_cw_page_read(struct qcom_nand_controller *sna
+ 	qcom_read_reg_dma(snandc, NAND_FLASH_STATUS, 1, 0);
+ }
  
-+	reg_0p8v: regulator-0p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-0.8V";
-+		regulator-min-microvolt = <800000>;
-+		regulator-max-microvolt = <800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
++static int qcom_spi_check_raw_flash_errors(struct qcom_nand_controller *snandc, int cw_cnt)
++{
++	int i;
 +
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
-@@ -79,6 +88,11 @@ &eth1 {
- 	status = "okay";
- };
++	qcom_nandc_dev_to_mem(snandc, true);
++
++	for (i = 0; i < cw_cnt; i++) {
++		u32 flash = le32_to_cpu(snandc->reg_read_buf[i]);
++
++		if (flash & (FS_OP_ERR | FS_MPU_ERR))
++			return -EIO;
++	}
++
++	return 0;
++}
++
+ static int qcom_spi_read_last_cw(struct qcom_nand_controller *snandc,
+ 				 const struct spi_mem_op *op)
+ {
+@@ -537,11 +553,9 @@ static int qcom_spi_read_last_cw(struct qcom_nand_controller *snandc,
+ 		return ret;
+ 	}
  
-+&gpu {
-+	status = "okay";
-+	mali-supply = <&reg_0p8v>;
-+};
-+
- &i2c0 {
- 	pinctrl-0 = <&i2c0_pins>;
- 	pinctrl-names = "default";
+-	qcom_nandc_dev_to_mem(snandc, true);
+-	u32 flash = le32_to_cpu(snandc->reg_read_buf[0]);
+-
+-	if (flash & (FS_OP_ERR | FS_MPU_ERR))
+-		return -EIO;
++	ret = qcom_spi_check_raw_flash_errors(snandc, 1);
++	if (ret)
++		return ret;
+ 
+ 	bbpos = mtd->writesize - ecc_cfg->cw_size * (num_cw - 1);
+ 
+@@ -622,22 +636,6 @@ static int qcom_spi_check_error(struct qcom_nand_controller *snandc, u8 *data_bu
+ 	return 0;
+ }
+ 
+-static int qcom_spi_check_raw_flash_errors(struct qcom_nand_controller *snandc, int cw_cnt)
+-{
+-	int i;
+-
+-	qcom_nandc_dev_to_mem(snandc, true);
+-
+-	for (i = 0; i < cw_cnt; i++) {
+-		u32 flash = le32_to_cpu(snandc->reg_read_buf[i]);
+-
+-		if (flash & (FS_OP_ERR | FS_MPU_ERR))
+-			return -EIO;
+-	}
+-
+-	return 0;
+-}
+-
+ static int qcom_spi_read_cw_raw(struct qcom_nand_controller *snandc, u8 *data_buf,
+ 				u8 *oob_buf, int cw)
+ {
+
+---
+base-commit: d43eef530946783cb5537ee58bec892253b68648
+change-id: 20250514-qpic-snand-error-check-2be1767c3dc2
+
+Best regards,
 -- 
-2.49.0
+Gabor Juhos <j4g8y7@gmail.com>
 
