@@ -1,95 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72B0221572
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FE522126D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210510; cv=none; b=cg9rn7AAKNRavuKjXuqLcZ5XVNjoLUqr4wGKvpOmE6rd3aBAvU4LzELG6ww77BkiyqMLtpVnt6CwFhrS4B8jS1qsJ+GnM+nYljkSqiW6UvcgQbRufpRAlS2Bodd+3AHGjZCgrNR743nJhYbwWHZBOb5MEwGu1giCPgavaD+z8Yo=
+	t=1747210540; cv=none; b=tz4x47db8+ZueBTs3l2rxg7Sg5Wml7X14j5tmFLUfCVouqjRco75160rc6jaYvkqf0sbCWn7m9w/dd0vbPU53JN2sEKB2ask1IalbTgqDl6S1FjvMCZwtaXTleSdNY97N4bN2TBeRb6kFJKALNyF/YqkvUjZNVcnfu+gnV22PPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210510; c=relaxed/simple;
-	bh=9VCZ2nTIs3bCUWVuAYQgmVxueOMul5I+8ga024o2NB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m/OpQUm7mjTFygLCh5fsU2dU+yoq4gjImycdJ4E3ovgWRM8CmP0P1C3HbeZ9RfrMfehY/W7IF3TuGZAf3JP2kF7C1gf11wyoK+xyoBdIDGBwgoDvyvxvwFfdHTZfNxdP5yviGjYfycewg/hCG0mMhLi0ToOnOMEcNblUncp+RMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dw6eMP3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747210540; c=relaxed/simple;
+	bh=JmFV/6TbRYWkoashtzIc4qEABXlVyLSaZRRjtdNIx9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEOiHRlUmQsxY54mHNpAlkHnvAwMOldKsCoWjvT0GEpMzmSMwjyOL337fsRYzmHsjPA0DleDLkLDENSKrKFU0wHIB6kWgOr9HFucx5BnvwX9rc+FFlhC0ncALHry7KkjXeWLDAT58np87HUunJHQaE0rQGm4+tWhwlJhGVDGqFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+sGc+7L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dw6eMP3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24731C4CEEB
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:15:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+sGc+7L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43BCCC4CEE9;
+	Wed, 14 May 2025 08:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210510;
-	bh=9VCZ2nTIs3bCUWVuAYQgmVxueOMul5I+8ga024o2NB4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Dw6eMP3UhWFPvTXkkokCdhU/Xl72PEoTwImjTjs4vhzAOg0L2CBgUZC8NBqVxuawZ
-	 I3ihPluFcZhHI81AjUqUd1ORvcF/9adntjAMULNKXN43nX1lyu13NIus8nxpcS1kx3
-	 qhlOHRjj+Mcpeb9cn+3qkR/xihlYxL3OCNkKJPMfpi/pGGYr0uvIgtQJK3ozXXAET3
-	 asXnvgPoVBKqeTatgE4QbldNqvB2SJ+tutH48MRMvEYIWUXXV/FQq9j1fMQLNkph8F
-	 Vxu41kM41EaDKHljQiC3qmwy33xenKrLUNVI56Ss+fLpo2v9rQvBfrg7Ek32MHEje7
-	 ceki9nr049n9Q==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54e7967cf67so7930575e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:15:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/Ir/RDSSzS66fHyI6qKGi9EvZ6yoxTiTga69SY7QQNZgtN3KSlM34mKZkj246rslRxfGGn48shngpmqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7gp715PTqxKfFh06gRC9rhKCX7IgkS0lJmeZxselIUKMzS+HV
-	GIX/jSXdMN1J1cwWMsdNiM+LPeocWxsZGclokqbD59UP92XVi9dgs0GV0RpEkxoBCAJwfm0vOsC
-	ZpHW2QFznziuxuRzqQvWwId9X8Ec=
-X-Google-Smtp-Source: AGHT+IGUWeYGV7srKLxri40hS627pla6oAdPrNn/iGJSiTLZpJPZeHPZFQEgTAits1U4kYbamCgJdgB/UEyvWT3cdIM=
-X-Received: by 2002:a05:6512:2588:b0:549:8f15:db18 with SMTP id
- 2adb3069b0e04-550d5fafe54mr918617e87.28.1747210508516; Wed, 14 May 2025
- 01:15:08 -0700 (PDT)
+	s=k20201202; t=1747210539;
+	bh=JmFV/6TbRYWkoashtzIc4qEABXlVyLSaZRRjtdNIx9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O+sGc+7LwX1Ej5RdW9jtRbYqSg1E6m/LKXtMus24cfw7YfxQnvqYo8IVEGamIjksi
+	 ++++bQ82G+MBM+UmOQVCKQ2PoUf2ug7yHmMzm3gX1+lyNlNit68CxiAamEj7xX2GgP
+	 dzbugGU2c7Ha3wkN35AShkaWZXDlKAPowTZU5w7tX9SzX0hzPEusbXlKiGaExiWtF6
+	 rMuTKuWRxuo8FH2AVYvj5MBIx1zcxs4cdHPp9aCOKkW1FOXk8UIDQtRLaskCcyCsYN
+	 AYLm1rQD1v46MCFc4Ibb/KJNnyA5Q6IsUxwDo6lHgJ2YX89SNDIv2MiWSoUlGYmAnN
+	 NvH70dqoQ1+qw==
+Date: Wed, 14 May 2025 10:15:35 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 4/6] x86/boot: Set 5-level paging CPU cap before
+ entering C code
+Message-ID: <aCRRJ_ahL2IRXxcj@gmail.com>
+References: <20250513111157.717727-8-ardb+git@google.com>
+ <20250513111157.717727-12-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513111157.717727-8-ardb+git@google.com> <20250513111157.717727-10-ardb+git@google.com>
- <7uh3pi23cdd5r2t6ln5p2z2htgmzo5b6omlhb6vyddobcbqqnt@nyujbhsnpioh> <aCROdV_fIygO8OoM@gmail.com>
-In-Reply-To: <aCROdV_fIygO8OoM@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 14 May 2025 09:14:56 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGChWHhbfjUgTQ37+epLjivrKhV8unwyZCHvNTJL2f57w@mail.gmail.com>
-X-Gm-Features: AX0GCFulJvnHexLoDyvpHu0YI-wl8atKuHlQpPRLY0e2_i3HQ4O3x1qtuq1KPmc
-Message-ID: <CAMj1kXGChWHhbfjUgTQ37+epLjivrKhV8unwyZCHvNTJL2f57w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] x86/cpu: Use a new feature flag for 5 level paging
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513111157.717727-12-ardb+git@google.com>
 
-On Wed, 14 May 2025 at 09:04, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Kirill A. Shutemov <kirill@shutemov.name> wrote:
->
-> > On Tue, May 13, 2025 at 01:12:00PM +0200, Ard Biesheuvel wrote:
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > Currently, the LA57 CPU feature flag is taken to mean two different
-> > > things at once:
-> > > - whether the CPU implements the LA57 extension, and is therefore
-> > >   capable of supporting 5 level paging;
-> > > - whether 5 level paging is currently in use.
-> > >
-> > > This means the LA57 capability of the hardware is hidden when a LA57
-> > > capable CPU is forced to run with 4 levels of paging. It also means the
-> > > the ordinary CPU capability detection code will happily set the LA57
-> > > capability and it needs to be cleared explicitly afterwards to avoid
-> > > inconsistencies.
-> > >
-> > > Separate the two so that the CPU hardware capability can be identified
-> > > unambigously in all cases.
-> >
-> > Unfortunately, there's already userspace that use la57 flag in
-> > /proc/cpuinfo as indication that 5-level paging is active. :/
-> >
-> > See va_high_addr_switch.sh in kernel selftests for instance.
->
-> Kernel selftests do not really count if that's the only userspace that
-> does this - but they indeed increase the likelihood that some external
-> userspace uses /proc/cpuinfo in that fashion. Does such external
-> user-space code exist?
->
 
-Bah, that seems likely if this is the only way user space is able to
-infer that the kernel is using 5-level paging.
+* Ard Biesheuvel <ardb+git@google.com> wrote:
+
+> diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+> index ad4ea6fb3b6c..6259b474073b 100644
+> --- a/arch/x86/kernel/asm-offsets.c
+> +++ b/arch/x86/kernel/asm-offsets.c
+> @@ -33,6 +33,14 @@
+>  
+>  static void __used common(void)
+>  {
+> +	OFFSET(CPUINFO_x86, cpuinfo_x86, x86);
+> +	OFFSET(CPUINFO_x86_vendor, cpuinfo_x86, x86_vendor);
+> +	OFFSET(CPUINFO_x86_model, cpuinfo_x86, x86_model);
+> +	OFFSET(CPUINFO_x86_stepping, cpuinfo_x86, x86_stepping);
+> +	OFFSET(CPUINFO_cpuid_level, cpuinfo_x86, cpuid_level);
+> +	OFFSET(CPUINFO_x86_capability, cpuinfo_x86, x86_capability);
+> +	OFFSET(CPUINFO_x86_vendor_id, cpuinfo_x86, x86_vendor_id);
+> +
+>  	BLANK();
+>  	OFFSET(TASK_threadsp, task_struct, thread.sp);
+>  #ifdef CONFIG_STACKPROTECTOR
+> diff --git a/arch/x86/kernel/asm-offsets_32.c b/arch/x86/kernel/asm-offsets_32.c
+> index 2b411cd00a4e..e0a292db97b2 100644
+> --- a/arch/x86/kernel/asm-offsets_32.c
+> +++ b/arch/x86/kernel/asm-offsets_32.c
+> @@ -12,15 +12,6 @@ void foo(void);
+>  
+>  void foo(void)
+>  {
+> -	OFFSET(CPUINFO_x86, cpuinfo_x86, x86);
+> -	OFFSET(CPUINFO_x86_vendor, cpuinfo_x86, x86_vendor);
+> -	OFFSET(CPUINFO_x86_model, cpuinfo_x86, x86_model);
+> -	OFFSET(CPUINFO_x86_stepping, cpuinfo_x86, x86_stepping);
+> -	OFFSET(CPUINFO_cpuid_level, cpuinfo_x86, cpuid_level);
+> -	OFFSET(CPUINFO_x86_capability, cpuinfo_x86, x86_capability);
+> -	OFFSET(CPUINFO_x86_vendor_id, cpuinfo_x86, x86_vendor_id);
+> -	BLANK();
+> -
+
+This is needed so that we can run (well, build) the setup_force_cpu_cap 
+macro on x86-64 too, right?
+
+Could you please split out this portion into a separate patch, to 
+simplify the more dangerous half of the patch?
+
+> -	if (IS_ENABLED(CONFIG_X86_5LEVEL) && (native_read_cr4() & X86_CR4_LA57))
+> -		setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
+
+> +#ifdef CONFIG_X86_5LEVEL
+> +	/*
+> +	 * Set the X86_FEATURE_5LEVEL_PAGING capability before calling into the
+> +	 * C code, so that it is guaranteed to have a consistent view of any
+> +	 * global pseudo-constants that are derived from pgtable_l5_enabled().
+> +	 */
+> +	mov	%cr4, %rax
+> +	btl	$X86_CR4_LA57_BIT, %eax
+> +	jnc	0f
+> +
+> +	setup_force_cpu_cap X86_FEATURE_5LEVEL_PAGING
+> +0:
+> +#endif
+
+Nice!
+
+Thanks,
+
+	Ingo
