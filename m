@@ -1,153 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA56A21B9E7;
-	Wed, 14 May 2025 09:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA242224AED
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214056; cv=none; b=WDzL/Ip59y65cMOaEbSUWGONjzK8lSoEdsHrEgW+cFoBdRqASoyO2hhGRXo2ymaSILCJcNDT4N7xpgJwtwOjxybvlZXl2ABXXaITW6fXUGLpCSG/6atEowPKIJ9x0aBZhfCa1hWrFq+d6pQtJNJ74HngUjmAlmSAnlJNkhPxz8o=
+	t=1747214115; cv=none; b=rXnRdYtZ1wjV5ZRlOpgmO9rLlko/brOIzhive5QGQs/8M1PkP3hQqte8kYCW/21YqH2TjnnwAWjopiKS35NAwCZ80c3Gz4clbSK5n+xKcLXozPrU4zo3QD7mmp5OJqhu8vuxYQ07mNj46oQvbNuEZzlKNJM+F9ZYrrO4lEtWTI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214056; c=relaxed/simple;
-	bh=zqbpr1/pmEwXyeTCn/N+XUxN2P/HcKgvmsCSU107Kms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mU193zevbnAXfkHcPFslIniE59Mq7i7drV5HF7wmthbG4yewh18BK9zCrHdALJOyJ67TUK+4h8Ype5xwbYz2L5HNhArOSXSCcz8x2zcgwcSjYmDoMi0ZJEze6sOneNiqr4tgFv51BEQpkjzlvhRt60YOqiZZ7fG4U/9NWMf8DQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iGha87tN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iGha87tN"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E8Gru1016770;
-	Wed, 14 May 2025 09:14:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	L3zUiP6IGnNCzK66tqCkthGESqX/+EF8UayPwSJbE2I=; b=iGha87tNgMJ07ecN
-	dm+ElJDjdr54p/8EF7jnDMDLFj6nM5eMqF7McozJXkTBIGYjA6Vd79R70MyjygCA
-	YDJxgQAS/IdCwfmnnyOFf50JnLArWwsso5iFbPb+4+xUjl1KzDLduHSVQmNNa2MA
-	3gUanvUb3qSyUE32dzxDtKrcAnJP+Pt7AgA1GVPYGTHySxpfHDPt1MXuwO8jlrKD
-	QEqC7MVEd+n8CaLqRJo7Wno2ymCg2GkYpioddGBTQ8+BYN+ZTgFZrBhGxXhlp7BS
-	JQqNg4LgQQWBtzTeZrs0mRtAcTKnJks7LFhrge6AbUcN1inI1v1x4n0P7TN2sQma
-	l1Xaag==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmt4ps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 09:14:10 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54E9EAkZ008832
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 09:14:10 GMT
-Received: from [10.239.105.44] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 14 May
- 2025 02:14:07 -0700
-Message-ID: <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
-Date: Wed, 14 May 2025 17:14:04 +0800
+	s=arc-20240116; t=1747214115; c=relaxed/simple;
+	bh=kxxTgdmGJNsrlf4IcgzT3n0S5zAAcuol3ADDvF6vPOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0gRDL4Y2dudpYuamkFaHXJAfgU9tHzt25fwDMxBzn8C/CUzjyEJbT4d1PS7PRWSQMitNv4dgsBc4VpXD2oteBDm8yItaH9TIQ+MTr+KljQ6vQ2C9nXkkE8dDWjPEQXShCy/Dyoxfmtvz9PNRzfRTe/k80JiK/V10krRnyBV+wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 109D715A1;
+	Wed, 14 May 2025 02:15:01 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCB213F5A1;
+	Wed, 14 May 2025 02:15:11 -0700 (PDT)
+Date: Wed, 14 May 2025 10:15:09 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] coresight: holding cscfg_csdev_lock while
+ removing cscfg from csdev
+Message-ID: <20250514091509.GD26114@e132581.arm.com>
+References: <20250513170622.3071637-1-yeoreum.yun@arm.com>
+ <20250513170622.3071637-2-yeoreum.yun@arm.com>
+ <20250513170622.3071637-3-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
- ttyport_close() due to uninitialized serport->tty
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
-        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
-        <quic_mohamull@quicinc.com>,
-        Panicker Harish <quic_pharish@quicinc.com>
-References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
- <2025043022-rumbling-guy-26fb@gregkh>
- <d388b471-482b-48ba-a504-694529535362@quicinc.com>
- <2025050851-splatter-thesaurus-f54e@gregkh>
-Content-Language: en-US
-From: Xin Chen <quic_cxin@quicinc.com>
-In-Reply-To: <2025050851-splatter-thesaurus-f54e@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lEqEWXYHHo7jUVR5aXmMi69kvT4mu4c1
-X-Authority-Analysis: v=2.4 cv=HZ4UTjE8 c=1 sm=1 tr=0 ts=68245ee2 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=_VqJUKEpYW178Kr0VN0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: lEqEWXYHHo7jUVR5aXmMi69kvT4mu4c1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA4MCBTYWx0ZWRfX9882ezAd70Oi
- UWom0AbIgqDOHR6vQdIrDQ3mt7lNxjvycj+6pBqBryjV6ll1d79XYFvDtX6Jw5mrfA9W+UkyswC
- yPCbY3u/fLAFhS3VnOPf7zNSyNLOdLbFvJ9ZXOZwMKuqF5pifZhgBbTvuo+hgYBy0NM3nOFBhRF
- 0nGgAMYssF737L7pqCd874hrZijSserHVV+OgIO8Cs3uCDs0dgFwEolCBLAHX+/73sdZoovPOqT
- wlpCAaMqD5HOP/WB/P+NJ+Nx0G6CpPAhFpg8FcOjh8cHTepsmYLwh6CzslZ9smtiKP6P02ry9Bn
- 1IZi8uJi6AnQP4GS5yZBBmmwbBX/t2gfdfqLcXS2zr4YhDH8N50fXfBzfrJKXW13G353vF0TyFI
- rfZUwqzhGMgiV8UQB8dMQsuMX//EnkkY+Q2JQfeVBXQ4w+IRdNOoQJzFEO3U+K9kQfZdPouV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 mlxscore=0 mlxlogscore=813 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140080
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513170622.3071637-3-yeoreum.yun@arm.com>
 
-
-
-On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
-> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
->>
->> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
->>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
->>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
->>>> --- a/drivers/tty/serdev/serdev-ttyport.c
->>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
->>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
->>>>  {
->>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
->>>>  	struct tty_struct *tty = serport->tty;
->>>> +	if (!tty) {
->>>> +		dev_err(&ctrl->dev, "tty is null\n");
->>>> +		return;
->>>> +	}
->>>
->>> What prevents tty from going NULL right after you just checked this?
->>
->> First sorry for reply so late for I have a long statutory holidays.
->> Maybe I don't get your point. From my side, there is nothing to prevent it.
->> Check here is to avoid code go on if tty is NULL.
+On Tue, May 13, 2025 at 06:06:21PM +0100, Yeoreum Yun wrote:
+> There'll be possible race scenario for coresight config:
 > 
-> Yes, but the problem is, serport->tty could change to be NULL right
-> after you check it, so you have not removed the real race that can
-> happen here.  There is no lock, so by adding this check you are only
-> reducing the risk of the problem happening, not actually fixing the
-> issue so that it will never happen.
+> CPU0                                          CPU1
+> (perf enable)                                 load module
+>                                               cscfg_load_config_sets()
+>                                               activate config. // sysfs
+>                                               (sys_active_cnt == 1)
+> ...
+> cscfg_csdev_enable_active_config()
+>   lock(csdev->cscfg_csdev_lock)
+>                                               deactivate config // sysfs
+>                                               (sys_activec_cnt == 0)
+>                                               cscfg_unload_config_sets()
+>   <iterating config_csdev_list>               cscfg_remove_owned_csdev_configs()
+>   // here load config activate by CPU1
+>   unlock(csdev->cscfg_csdev_lock)
 > 
-> Please fix it so that this can never happen.
+> iterating config_csdev_list could be raced with config_csdev_list's
+> entry delete.
 > 
+> To resolve this race , hold csdev->cscfg_csdev_lock() while
+> cscfg_remove_owned_csdev_configs()
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> Fixes: 02bd588e12df ("coresight: configuration: Update API to permit dynamic load/unload")
+> ---
+>  drivers/hwtracing/coresight/coresight-syscfg.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> index a70c1454b410..5d194b9269f5 100644
+> --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> @@ -391,14 +391,17 @@ static void cscfg_owner_put(struct cscfg_load_owner_info *owner_info)
+>  static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, void *load_owner)
+>  {
+>  	struct cscfg_config_csdev *config_csdev, *tmp;
+> +	unsigned long flags;
+>  
+>  	if (list_empty(&csdev->config_csdev_list))
+>  		return;
+>  
+> +	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
 
-Actually I have never thought the race condition issue since the crash I met is
-not caused by race condition. It's caused due to Bluetooth driver call
-ttyport_close() after ttyport_open() failed. This two action happen one after
-another in one thread and it seems impossible to have race condition. And with
-my fix the crash doesn't happen again in several test of same case.
+Could we use the format:
 
-Let me introduce the complete process for you:
-  1) hci_dev_open_sync()->
-hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
-here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
-serdev_device_close() to close tty normally. And then call serdev_device_open()
-to retry.
-  2) serdev_device_open() fails due to tty_init_dev() fails, then tty gets
-released, which means this time the tty has been freed succesfully.
-  3) Return back to upper func  hci_dev_open_sync(),
-hdev->close()(hci_uart_close) is called. And hci_uart_close calls
-hci_uart_flush() and serdev_device_close(). serdev_device_close() tries to close
-tty again, it's calltrace is serdev_device_close()->ttyport_close()->tty_lock(),
-tty_unlock(), tty_release_struct(). The four funcs hci_uart_flush(), tty_lock(),
-tty_unlock(), tty_release_struct() read tty pointer's value, which is invalid
-and causes crash.
+   guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
 
+Sorry I did not mention this in the earlier review.  Otherwise:
+
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+>  	list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_list, node) {
+>  		if (config_csdev->config_desc->load_owner == load_owner)
+>  			list_del(&config_csdev->node);
+>  	}
+> +	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+
+
+>  }
+>  
+>  static void cscfg_remove_owned_csdev_features(struct coresight_device *csdev, void *load_owner)
+> -- 
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
