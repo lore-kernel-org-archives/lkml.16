@@ -1,113 +1,101 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649471C3039
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2D527466E
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223527; cv=none; b=Ro3OuCKejTZOMtIVYbvKp6rAbF3gHPhzpad/BGIKEXytXU48Zm4CuvRk2GBEqyvlmjgTUGxozLal7ax5o0pCMGlWXHRbMDfAOpj/9qbM0dfuw+SaReAk9EQsyVZOcv+GVvtf2ptRU5Qg0U6LPnNcnfxx2+yHLG1G21OGvNibxTY=
+	t=1747223558; cv=none; b=X90hN71XtPUnELEpdKW/0Tx1E+6qKOnOpuSqbehzB68g8x7gah4YLYaoVdZa+JSveI05x4mKh2sXC+yeUrdz9n6hCv/fNCeCAivCYmfYArvQHP9QEH5CkynV7dLODhZ3yxPa2Sad2lsD1Ov3ZkkEHZnQlkWpwWzOYIsfjKf/nI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223527; c=relaxed/simple;
-	bh=XkElfIUZFUjxateTgfc/1qyZznRNoyDqHKzHLA1oKXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r/wdVAmLtgDyWU0r4mkiw2ncYgEIat3srg3DUe8cS59B0wLkzgqUFUMBb71Cez7lWwj0qUkJaapvGzYIOQkU3zFGpJZq4ojzFonv29fFcrInb2UfcK6q0VpBfRc+AvA3wIDUQWp3mSH40uGL2mr4EqoyIl6IiggICV+tyyotQ9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sFSAob4S; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sFSAob4S"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747223521; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=/QDkqHbGcD+TMq3shCe5JVRzKlFBnQK6t8dDql3URHk=;
-	b=sFSAob4SJopFABxgU4HVvWEbLq//YdNL7eP2TsUjyzJsxnjyDbSdnHVymhtOBgJp1QXUH8WvL8aoFSwI8ru9MdU6iwmfjXHaZ35LSl+WKkmwYzJwLJ2XXrxT8IoPdXMF0dZRrul1nytPWwv5cA3lMYrAxaKTwv56HVuCLJYH/ng=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WalxjuG_1747223520 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 May 2025 19:52:01 +0800
-Message-ID: <a18463df-a63b-4bdd-af85-bd8435cb23e7@linux.alibaba.com>
-Date: Wed, 14 May 2025 19:51:59 +0800
+	s=arc-20240116; t=1747223558; c=relaxed/simple;
+	bh=pI7OHw+XgKtV3gEI9hZrPZaVBBxpKFZqQrAGBXAQ4HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cE7lIQd2S5u16aE/+vHhiGbMnbfe2HtbLor5eYxjYhj948wE6RiqjMsqrLFNpP+JnOPKMtneSISCVGPHlZB2+uEHUM7nPiNq7Sb0OLmNIEsRtvLwuEdNviOqs+lFFyM7LfEehNIRLopZiK3htdCf03FmhyaNTSycK9V6dh3J300=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-112-151.bstnma.fios.verizon.net [173.48.112.151])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54EBqBbZ012749
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 07:52:12 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 74E822E00DC; Wed, 14 May 2025 07:52:11 -0400 (EDT)
+Date: Wed, 14 May 2025 07:52:11 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 2/3] ext4: implement IOCB_DONTCACHE handling in write
+ operations
+Message-ID: <20250514115211.GC9943@mit.edu>
+References: <20250421105026.19577-1-chentaotao@didiglobal.com>
+ <20250421105026.19577-3-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] erofs: avoid using multiple devices with different
- type
-To: Sheng Yong <shengyong2021@gmail.com>, xiang@kernel.org, chao@kernel.org,
- zbestahu@gmail.com, jefflexu@linux.alibaba.com, lihongbo22@huawei.com,
- dhavale@google.com
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Sheng Yong <shengyong1@xiaomi.com>
-References: <20250513113418.249798-1-shengyong1@xiaomi.com>
- <20250513113418.249798-2-shengyong1@xiaomi.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250513113418.249798-2-shengyong1@xiaomi.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421105026.19577-3-chentaotao@didiglobal.com>
 
-Hi Yong,
+On Mon, Apr 21, 2025 at 10:50:30AM +0000, 陈涛涛 Taotao Chen wrote:
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 94c7d2d828a6..787dd152a47e 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -1147,16 +1147,22 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
+>  {
+>  	struct inode *inode = mapping->host;
+>  	int ret, needed_blocks;
+> +	int iocb_flag;
+>  	handle_t *handle;
+>  	int retries = 0;
+>  	struct folio *folio;
+>  	pgoff_t index;
+> +	fgf_t fgp = FGP_WRITEBEGIN;
+>  	unsigned from, to;
+>  
+>  	ret = ext4_emergency_state(inode->i_sb);
+>  	if (unlikely(ret))
+>  		return ret;
+>  
+> +	iocb_flag = (int)(uintptr_t)(*fsdata);
+> +	if (iocb_flag & IOCB_DONTCACHE)
+> +		fgp |= FGP_DONTCACHE;
+> +
 
-On 2025/5/13 19:34, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> For multiple devices, both primary and extra devices should be the
-> same type. `erofs_init_device` has already guaranteed that if the
-> primary is a file-backed device, extra devices should also be
-> regular files.
-> 
-> However, if the primary is a block device while the extra device
-> is a file-backed device, `erofs_init_device` will get an ENOTBLK,
-> which is not treated as an error in `erofs_fc_get_tree`, and that
-> leads to an UAF:
-> 
->    erofs_fc_get_tree
->      get_tree_bdev_flags(erofs_fc_fill_super)
->        erofs_read_superblock
->          erofs_init_device  // sbi->dif0 is not inited yet,
->                             // return -ENOTBLK
->        deactivate_locked_super
->          free(sbi)
->      if (err is -ENOTBLK)
->        sbi->dif0.file = filp_open()  // sbi UAF
-> 
-> So if -ENOTBLK is hitted in `erofs_init_device`, it means the
-> primary device must be a block device, and the extra device
-> is not a block device. The error can be converted to -EINVAL.
+See my comment against the first patch in this series.  It *should* be
+possible to solve the problem just for ext4 by adding this line here:
 
-Yeah, nice catch.
+	*fsdata = (void *)0;
 
-As Hongbo said, it'd be better to add "Fixes:" tag
-in the next version.
+The problem is that it's super-fragile, since how *fsdata gets used
+changes at different points in time, so it makes code review and
+maintenance more difficult.  (As evidenced by the fact that you missed
+this; this is not a criticism on your programming ability, but rather
+for the design choise of overloading the use of *fsdata.  This is a
+trap that someone else might fall into when doing future code
+changes.)
 
-> 
-> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-> ---
->   fs/erofs/super.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 512877d7d855..16b5b1f66584 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -165,8 +165,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
->   				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
->   				bdev_file_open_by_path(dif->path,
->   						BLK_OPEN_READ, sb->s_type, NULL);
-> -		if (IS_ERR(file))
-> +		if (IS_ERR(file)) {
-> +			if (PTR_ERR(file) == -ENOTBLK)
+And of course, the question is whether PATCH 1/3 could potentially
+break other file systems.  We would need audit all of the other
+*_write_begin() functions, and then document this for the sake of
+future file system developers that might want to change their
+write_begin() function.
 
-It's preferred to use:
-			if (file == ERR_PTR(-ENOTBLK))
-				return -EINVAL;
+This is why my preference would be to add an extra flags paramter to
+write_begin(), but that is going to be a lot more work.
 
-Otherwise it looks good to me.
+Cheers,
 
-Could you submit it as a seperate patch so I
-could apply directly?
-
-Thanks,
-Gao Xiang
-
+						- Ted
