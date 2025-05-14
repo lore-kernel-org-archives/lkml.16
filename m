@@ -1,86 +1,111 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CAD218AD4;
-	Wed, 14 May 2025 08:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C4421B9E4;
+	Wed, 14 May 2025 08:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211376; cv=none; b=Xyg84VhfTtv/k6Ange02OsCvmnrCYuaGtKkOmYnusGpGC4109fDkA5d/S1POS0PHVMw/LiC7NIR9goIO3VGX11zUVW/2QeSkrfNBHI13A9izH485J7GKVcvXM4Qp6Jd3Qy+4SwayTB3LgST3KR2pTlJ3ofAtfOeRY24AuMrk4A8=
+	t=1747211398; cv=none; b=eIKEkJ18VfR4LZeN/4ccUS4h/GDMI8NqBB4MLgGWgMmrO9aVw9iVg4k2ebSg4ZdpS538/537/iatlt3Q46JzwMxKDjauAkMFKOXioQUuy81Ep/z7YiS7a17MN+LKXfa7HDStSFSuRJZqhJ/2rTeIIE6yvVPtd+ND5dgxzBHiRK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211376; c=relaxed/simple;
-	bh=h/RoXrF9EhmVB749ozpnWoC+NsjWTVPhX7E7QNI3cwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NS/DAgac+cgHtZ0l7ozq8PEzIlO3Rz7sqiy9NhPKBIL/77z4Zto3sRMSjVGqvQsDv+V95MXeXMyea2g4IR0eGzFy4Jo4Sbwxl4XuhmxZua97VaV3MluXxhTSZhk8BCO6fvV9ofhhqnx/XBWLNg9+3Eo5h1LnretPDY/XjQ5L/x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowABnpAxcVCRoIdclFQ--.54183S2;
-	Wed, 14 May 2025 16:29:18 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: idosch@nvidia.com,
-	petrm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] mlxsw: spectrum: Reset lossiness configuration when changing MTU
-Date: Wed, 14 May 2025 16:28:59 +0800
-Message-ID: <20250514082900.239-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747211398; c=relaxed/simple;
+	bh=UDo0iqhDIRPoWj9+ujO/asZadhdSeDpkcJfUIyMlvW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lc1yZIPscA3xFDg3yhd/Z0iL0+3kAxtwI5XAZVlMVUCshCROFz+yYBf4CCSxFJE/rW2zEPT03M3MNThAb5nTAE1QQJFgs/mxKE1OlREvHCgRVqdKlm6c3DBdBOBZX00SKgtLCXvvb8TRwienDBNCoF6H/WFgGdnjRun79oeBPDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rReAGh3r; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rReAGh3r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E751EC4CEE9;
+	Wed, 14 May 2025 08:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747211397;
+	bh=UDo0iqhDIRPoWj9+ujO/asZadhdSeDpkcJfUIyMlvW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rReAGh3rraICJW7PHr5bGqurPZIijRdHUf6O2t4PQ2GFGukHHvGbUxPpZGIx30gwN
+	 6pozWu4Gtm0aP/jOBlKnHsiGtBEZQj34p594VAW2gwjt9L9ReN1BJ3BWWDhVbghr4/
+	 qxKhUbFoT2lpjcyqeHrdlZrIMmI2BgLQ9co3ttv/5lZIdKfBzZwrOUZmqzS5asYPUr
+	 nCmZocE98PxncZGWposgmZXJdQRfbMFv+hqa4x7lRLYiTfGDHsZo52vhy61t6l3fyC
+	 ydpxbdBF7RDcIf9UdjXg84cg+r/wPnnpLpelKdjq2+4qrZdyTKvAVPcKQ8XCL7UVeL
+	 pj5ytNgOalXrA==
+Date: Wed, 14 May 2025 10:29:53 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Simon Trimmer <simont@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com, tiwai@suse.de
+Subject: Re: [PATCH 2/2] ALSA: hda: cs35l56: Log tuning unique identifiers
+ during firmware load
+Message-ID: <aCRUgeFcG4iubmSV@finisterre.sirena.org.uk>
+References: <cover.1747142267.git.simont@opensource.cirrus.com>
+ <2fcc0e6fc5b8669acb026bebe44a4995ac83b967.1747142267.git.simont@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABnpAxcVCRoIdclFQ--.54183S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1UJFW3Cr1DJFy8trW3trb_yoWkWFXEkr
-	9rZr1rW3W5ArWYkr1a9rW5Xr9Ik3ZYvFs5GFWDuFyayr9rWrW3JF97XF1xtw4kGayjqrZ8
-	JF4fXa43Xw17AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwCA2gkKjK6wAAAsl
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e+812Av5nI8WoFLT"
+Content-Disposition: inline
+In-Reply-To: <2fcc0e6fc5b8669acb026bebe44a4995ac83b967.1747142267.git.simont@opensource.cirrus.com>
+X-Cookie: Well begun is half done.
 
-The function mlxsw_sp_port_change_mtu() reset the buffer sizes but does
-not reset the lossiness configuration of the buffers. This could lead to
-inconsistent lossiness settings. A proper implementation can be found
-in mlxsw_sp_port_headroom_ets_set().
 
-Add lossiness reset by calling mlxsw_sp_hdroom_bufs_reset_lossiness().
+--e+812Av5nI8WoFLT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, May 13, 2025 at 01:39:24PM +0000, Simon Trimmer wrote:
+> The cs35l56 smart amplifier has some informational firmware controls
+> that are populated by a tuning bin file to unique values - logging these
+> during firmware load identifies the specific configuration being used on
+> that device instance.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 3f5e5d99251b..54aa1dca5076 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -797,6 +797,7 @@ static int mlxsw_sp_port_change_mtu(struct net_device *dev, int mtu)
- 
- 	hdroom = orig_hdroom;
- 	hdroom.mtu = mtu;
-+	mlxsw_sp_hdroom_bufs_reset_lossiness(&hdroom);
- 	mlxsw_sp_hdroom_bufs_reset_sizes(mlxsw_sp_port, &hdroom);
- 
- 	err = mlxsw_sp_hdroom_configure(mlxsw_sp_port, &hdroom);
--- 
-2.42.0.windows.2
+Adding Takashi since this is an ALSA patch (and not deleting context for
+him), Takashi is this OK to go via ASoC?
 
+As documented in submitting-patches.rst please send patches to the=20
+maintainers for the code you would like to change.  The normal kernel
+workflow is that people apply patches from their inboxes, if they aren't
+copied they are likely to not see the patch at all and it is much more
+difficult to apply patches.
+
+>=20
+> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+> ---
+>  sound/pci/hda/cs35l56_hda.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
+> index b6fecf119261..aed7d7284231 100644
+> --- a/sound/pci/hda/cs35l56_hda.c
+> +++ b/sound/pci/hda/cs35l56_hda.c
+> @@ -676,6 +676,8 @@ static void cs35l56_hda_fw_load(struct cs35l56_hda *c=
+s35l56)
+>  	if (ret)
+>  		cs_dsp_stop(&cs35l56->cs_dsp);
+> =20
+> +	cs35l56_log_tuning(&cs35l56->base, &cs35l56->cs_dsp);
+> +
+>  err_powered_up:
+>  	if (!cs35l56->base.fw_patched)
+>  		cs_dsp_power_down(&cs35l56->cs_dsp);
+> --=20
+> 2.43.0
+>=20
+
+--e+812Av5nI8WoFLT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkVIAACgkQJNaLcl1U
+h9DLsQf8CwmbSDW21fooswjD03I5LXbtmieVj4i5y7p9tN20imlRpOx1+CQfMNNY
+FjNLdVgmWzT97Hb4FLN3KKZheWy9x1Ozy3S6/BgSaLMuz+xQsDgA1Z2Ei6M2fHP6
+qNhogLtISqVXpsV0gGL4pzbc+M89OexChf0ek4Ivv/Bahe1ZEZZA9UlPZv4USRbZ
+aEBpiu/dWVpMDhfSxmr2tgByPBvmmCD85h2rg6RtwtZjK3BIc6hZhfUXatCl/c/e
+Rg0zp19PVZ/btrVPZvXpG9Hb5V2fCZcc9HO5KoBd65YDSKEc4WevO/56WTjhxbyF
+h7vDbqEvkse+FPuP3Din9HRo1e1fgQ==
+=gUuS
+-----END PGP SIGNATURE-----
+
+--e+812Av5nI8WoFLT--
