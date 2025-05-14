@@ -1,214 +1,220 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013027.outbound.protection.outlook.com [52.101.72.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C451FC7E7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215387; cv=none; b=PgAi3Uml0sTuU3JYdzFB8CZEwETDJ5iPruq/aJXouf1gHQN+NJW+gOQta4ZmJItz32SZrMc/oM9O60PJPpOY6CBzrlyToz8Wqe78zBOELoRfZW3AwoGzCNs23+jUF4P/t0v3ZetBFU/ShRHHhcrhysyPOrrPdMKB7aiMP01kXYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215387; c=relaxed/simple;
-	bh=WsUpKh0jFlrZUEdFtK5gAGnp8UK4rihuv//4tsWo8+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fWzKBHP6T7Qw6cQICQ4e7Z+us9MWLY1tV8YS1hYlBda/BIiMBvHOQqZZTmIEMwuZms2jOLccrwo547cLGs5jSQzAxyijuBeqGUX7P4tBCnu5mOGQ0BPz/MhCTyafdoSziW2tdYW7Srmk0afwpVQcEjPD/m0M3+9pax4OEi1tyCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y+DhdTS7; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F48F1F4285;
+	Wed, 14 May 2025 09:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747215438; cv=fail; b=rf2D1yb6WU9tugVIml4Ery1sBkVU1uyOoTfplBySnxbrDFvKEVainSggUd2+I1IHOq1QDQ7t+s89xSCnYUs7J8+jTanrNpTkiUSbohREbAgns35LYrFRxnNZtAYOl0dMkJgtuoaKyha9vhQuTmOU/KMAiD6D48XWJUfCHVAxRzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747215438; c=relaxed/simple;
+	bh=0nz4XTLEIjNQ6t3Q/b8WeBCtag35WbLOhOR4cve/4Qg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=psvcTUK7kOkru4vOH6ZRkmshwm1RE+mNFkqRA5w1TPdwm4tLIIADjALje7hbBr4ZTNmut/U0xhOMAUPNerdoRFnMmdGss+QfPX8PG2eJP6x/jY76vLcs83pJxF/PMwsm98R/HZfANb4WVrk83CI4LRu4KQOSYF8IP7uqZCj6z1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=QYpu823V; arc=fail smtp.client-ip=52.101.72.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y+DhdTS7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747215383;
-	bh=WsUpKh0jFlrZUEdFtK5gAGnp8UK4rihuv//4tsWo8+E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y+DhdTS7jNVGBQdcWzrHJFILvdLIT88gTy9Y7Kr9NjX19jFsK//8u8vF2KMP+sKCF
-	 FZHaAYkbI8xz0EsyhGMVNIGT9HREydFlytz5zLkRZgPHv9Lv+cEh5/nk9D/PVofPoQ
-	 H3C7Y3xzLHN/aGkDJWnZregDakcXEEM5YYkn9c+NemU/EXH89evC4Ix831WWMl4Snd
-	 vohUZeDwtdIW6nJYW5bGwuaRznwQtdgoP7d9bfoGd5tMMtPLDTfAe5woZPL9qpAp8l
-	 vt39pFLpaABDAlvDWQhJ4CM8gnlckrJWXHZxgOoNdfqNHKMsW7ey5EnY6kxhMzUz4o
-	 2YAfyU/A5Y5Yg==
-Received: from [192.168.50.250] (unknown [171.76.80.110])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9BD9B17E120C;
-	Wed, 14 May 2025 11:36:21 +0200 (CEST)
-Message-ID: <ffe67dc5-f694-4780-83c3-7d671dfc4a4f@collabora.com>
-Date: Wed, 14 May 2025 15:06:18 +0530
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="QYpu823V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VPYluKebvRf9yzugHiyvVXhmGBosLM9H6D/kzlCd0Z9/tB/4gAf4pFuCxYQ9+fc/3OIwYLej4ZPlYnzhlp2wB95xFamq1mwZ0P/l4zUBaU23GRJNkMNnDyy2CNX+FAAkInWf63KYutqrJaJEgaHUkh+HDk6UHE6oQ2lWgpndi6sMzQr5eKAiHZJYhpSqsVBA0263fssGtn26YN404CrODMshH7sAodtA/uEc7Jb0UrSFHPHk9BfNa/S21whqwduHptwtqWp7ZBHxaj4JqPPox3tXnukFOBbJc6Ju9Ldm1o3JXPMNJGyV1iuGCutzrcXT7PzeZlJFM2zQm0821eZbGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gONIbD6TQWb8jCrfc2aVJkgXHfm3q6iJXqHPCyR2fGU=;
+ b=dTI7IxcxCEMNdCHlfPXBsY2y+2GcSUOW3UAMgqEENASlvncfO4Q515j3067tRlSXwNx/nYVObQfTun6V0q/4LV+64fioidblq8PiyOdTEQhWBFryKjR6ml69y9izR5Vwa1OHPj3uegcEt1kY7vgfDJlQKprlFeS2Uy/8U9ZC+dzAD7dylDFj7y57+qBlv4rIGUCeXPAhiXYwUxY8YBcrLqoMtLvB3ZPWpoWPHbEQmpqiN6eL/0dG8NH6XQR/l5ZhbS96X8mtt5arz/bxB6AWMDPAnUfbN0qJL7eku36U/cgrA9vY0+N2l/v9U+OVJgACaILlFm75MsP5L/YFWNdgmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gONIbD6TQWb8jCrfc2aVJkgXHfm3q6iJXqHPCyR2fGU=;
+ b=QYpu823VZtf4Zqw4dYugN8AlAjwR1g935cgcxUfUDqU2qNPcgCuVcDPKDKqUGhGKJmue/fF2IOBMAjcjS3QiJV4zZVKumuMS62ojP+BfMb68hrAi/kb8csk4WekDJNN2DFah2Ka+A9qDLCUfSntiAKo09MVO8uCtIIsrdATwWq8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by DU2PR04MB8615.eurprd04.prod.outlook.com (2603:10a6:10:2da::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 14 May
+ 2025 09:37:13 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 09:37:12 +0000
+Message-ID: <c8538d66-a39a-490d-bfbc-95abda3871ef@cherry.de>
+Date: Wed, 14 May 2025 11:37:11 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] arm64: dts: rockchip: add px30-pp1516 base dtsi
+ and board variants
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+References: <20250513150234.2331221-1-heiko@sntech.de>
+ <20250513150234.2331221-7-heiko@sntech.de>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20250513150234.2331221-7-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0234.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b2::18) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: amlogic: Synchronous Abort with v6.15-rc6
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- linux-amlogic <linux-amlogic@lists.infradead.org>
-Cc: khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, sboyd@kernel.org,
- daniels <daniels@collabora.com>, Daniel Stone <daniel@fooishbar.org>,
- lumag@kernel.org, robdclark <robdclark@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <eb9281cc-de91-48a4-bbd6-f67ddc67a9dd@collabora.com>
- <b090cef6-5b9e-4149-872d-0316666f9e90@linaro.org>
- <714a719a-9e56-4158-a8ce-118b7ddb97b3@collabora.com>
- <919fa7f1-d198-429b-8f31-70f085a4c79f@linaro.org>
-Content-Language: en-US
-From: Vignesh Raman <vignesh.raman@collabora.com>
-In-Reply-To: <919fa7f1-d198-429b-8f31-70f085a4c79f@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|DU2PR04MB8615:EE_
+X-MS-Office365-Filtering-Correlation-Id: a94a34d1-b8be-4728-be46-08dd92cae7da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q1Zlb2VFTUpnTzIzenZEMnMwc0tWWWx1ZnFjalluNUVzaUFjMExpMnN6b1lO?=
+ =?utf-8?B?T0xQa01xN1gzN3ZuUTFIdEc2MTNrMkxUdDJLLzNsR0Q0eGlWbEIyTG1aQ3hM?=
+ =?utf-8?B?S1MrZElJSzFMcTVCNlpMNGRjRmFQU1dUZkRoOWJ2YmQrUWRTWUJ5cXlrVHZ5?=
+ =?utf-8?B?b01JaCtOWWJZNWJaQ1VaR1poaWVoM2ZWN2hxelNOTGJtT1BVelpGdi9oMUJk?=
+ =?utf-8?B?OUhmV3VuWXlKOEZjL1dGc1orbnEycjFvSGFDVkZpQ0p5dlBVM3M2cE1CRXNp?=
+ =?utf-8?B?OWM2M0x2YWQ0QVpFYkZxbFl3NmpJeGErcHRXS3RoazZidjFsa29ZQlhtK21L?=
+ =?utf-8?B?V3JITm9mWUtmYWxocjMyS09rVldjRmI5dWVoOGRHK1MxVHFEQkJ0bUJkR1J4?=
+ =?utf-8?B?V1FPZ2R5VmkwbVljbEdESElPWHZPWUQ0QWhlcGt2R2dadUtyN0pMSFQzSnU2?=
+ =?utf-8?B?YWp4R0pQWkt3Y1I0bWQ5RVlDZE5OUjV1d2lwS2pVWjZQcnRiYXRRNTlVOHB4?=
+ =?utf-8?B?SzlSVkt3dytSTmtxb2ZuUTQ4NC9JdGZOZXU4RTQ5T0pRbVlER1NFd2dMRFU0?=
+ =?utf-8?B?OEQ2M3VaNFVXam9sTmNUZHZJSngxRzNEbFdtWXRHajdzbTNmbEtpcmMweUly?=
+ =?utf-8?B?U0VtM212MFhodHN4aTF4MTBwbm1RZkJrdDJhbHRDTnAwSG4wOFVDS0c1NnZl?=
+ =?utf-8?B?N2srL1R4V2kzVHRIR2JwcXNQME94c29tZ3p1WjVnNy96TFpjajdwR3FsNXdy?=
+ =?utf-8?B?RDF3RXBlV2NoejFEN3k5Q1NOS2xXbGVLdjRmM1BZUFpJamFWQjhTWDB3UW5x?=
+ =?utf-8?B?dElxUFNuMmQ0OWYvMUlzZXNmcnVwRVlWWk42T0o2TlhybkRremE0MXZETlZu?=
+ =?utf-8?B?Ums1cWhJQXpLc2NkOWFpcHB4TENSeGx5ZWE4bmFXME1qcGFXUWlqbnQ0M0Z1?=
+ =?utf-8?B?NGpNT2NJbTNVNUlnRk1tbGQ2S3ZXaXZpRzd2Tk42MnkrSVpJWUVUYy84Rjdx?=
+ =?utf-8?B?YThJZFBBMEdFRTRaV1czblVzdHY2UG9ra1NHdVNtajZVbGcrLzNyVE1sNXJ0?=
+ =?utf-8?B?VjQyZ3lTVEd1Uld6S01nSzIwMnNrMURvQ3ZmZ05DWXJrYkQzekF6NGxIaExl?=
+ =?utf-8?B?TXI4MUZRMUdxNnA2KzFlSHlaT3NYcWNsSUNBc1gvU0lCKzdXb0tiekxsditj?=
+ =?utf-8?B?UjVOeVJEZHdlaCtRZGp4RVFia3UyNjVkbkNhLzk5c3p6L1V6RTk0QUxUSkQv?=
+ =?utf-8?B?My96dTIxcjM0REdnaDhRZ0pzWTdLUVBkc1YzQjM3WlZnWkVjd1BqUFU0aWlj?=
+ =?utf-8?B?RHpNaDBVeXlCQUw3YVk5bEh4b1ZPNjdMeFJGNUI0YitPRUl4Z29iUjdhaGQ3?=
+ =?utf-8?B?Y1RpRkNGektkZTdNZnpKcUJaQ01zb2k4RVY4b0QvY2Q4MnZmVFBZQm9FdkJ3?=
+ =?utf-8?B?dUhMd1JWZjNrdTNHZk1ZVGJaNzVhamFDUnhSbjYzZ21HT20wSjdWNmRQNkYr?=
+ =?utf-8?B?bU1DamlQMUdySVNWNkViOGJFMCtQK3Z4Vkg1MkluN3VPUC9pRktDVkorb0VX?=
+ =?utf-8?B?MzBLb0VITHpFd1RPWXk5TVl6Ky8xd3hNRlJ0cGdYTURzdC81OEhTcVMrU2lj?=
+ =?utf-8?B?RU9oQ3hUVDZnVUpVT1hTdUt1SmJqbU5VdktyeTZwY2xqVFlyVGxncTQvdW9m?=
+ =?utf-8?B?bFoyamNScDN2QXlvcXZwQW0zM1FoRHlnelEvelRhcSsxcDl4UnJMc1BtWVNk?=
+ =?utf-8?B?elZWbHJZMU5pV1V5OTV3UUZKVjlqdDZieHRwWHp5RVloQmFsUmsrdWZXK0ZF?=
+ =?utf-8?B?T3B0Skc5dW90Umo2eDZRbkZmdTlmdU5RdnY2cS81RWRzenFnLzNPdVk5cEZ2?=
+ =?utf-8?B?VUoxOTd4ZVZZeHBlZWZ4NStMQ0s1YS96M1V1aGVEb2VVUkJNTTdHSHNpMU0x?=
+ =?utf-8?Q?iAQJjo1kyuc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dlNRSndzdnA3MW04YTBrUUFUQS9OV2tkUGZjdmF6S3dHZmlOaG5Hb3FqbmVN?=
+ =?utf-8?B?QVN0RHdMVytsdDNnZVp6YVpiM0M1N2VqVi9Cck1wUUtPZzd0cFdTQzI2UWhk?=
+ =?utf-8?B?QU5oc3hJSzE2WWNxcmcyOHFnOWU4ME9aNHg2Z1pST1dmNW5rUHczZGs5NkJS?=
+ =?utf-8?B?MG1uc2k1bmhSNjN2UjFrUWZNMCtObEthQlJPYjZsbUNqZlhCbGFybGwwSUxv?=
+ =?utf-8?B?VkFpTVhNaytXSzlTR2plcTVxcDNPRmMxczh1LytRSWIyVm9lQXhCRHpNRyto?=
+ =?utf-8?B?SWZNSGIwUUErQnB6N2NVTFpXdS9vd0RqRjRCZVpKRFJ0RG15RWJmVCtSamNo?=
+ =?utf-8?B?OFE5aXVKQ1B4WE1SVDY4S2N1NVA3Z0dabXB4cUpWK1hkQW1ZcXU2RjFVNnEx?=
+ =?utf-8?B?UWlpQXRQaENTb0JmK1dhdmNoanhoL3dPL2xpLzlJYk5NSGV5NFlYN1BYSTJI?=
+ =?utf-8?B?cFd4dnA5TkNhVGt0QXBQdTAzblgwSTdiMmg4R0V0a1U5R3RpNkxOcTd5bWVn?=
+ =?utf-8?B?T2t1emxndksrYXBzY2plSWkvL1p1VkkwbE5rbkhmTW1jTkRPRlhwakp0UDJF?=
+ =?utf-8?B?ZkRJOHFNdDE3ejJ2S242QW9YaFlQaUdFV3VYdDdIcytNZjJFRFJlVmJNV0pl?=
+ =?utf-8?B?WUc2N3pqM1p2bjNodHhrVGtIdWZHUytWMDNuZ0l6ZUVlOVJtaE1SREtYVkx0?=
+ =?utf-8?B?NlVPdm8vd3ZtTGJkWlJYSUhpUG9NYjNIT3VPQTdoKzA3b3c2YU9ubkx0dkV5?=
+ =?utf-8?B?ZEVlcFZ5cWhxTGhJaDY4Y0h3TlJ0WCtlWWdmeHdLWDNDUUV0NW85RFVWT2Vz?=
+ =?utf-8?B?R2FoeHpIWS90dDl5TnJMVmxVY1p3RVdDeEphcWxVcjJtOVFiMVdEWVd5a1FJ?=
+ =?utf-8?B?a0oraW5scWVLYSs3RVNPdTc2cWk5a3F4NTl5OFgyQ3FydVgzMWI2MmpuZ1RR?=
+ =?utf-8?B?NW1Ednkzem1kMi9SOGp5YVRVVnh3Q3ZYekNYQWZiczZqNzIyLzI1Q2pjVWto?=
+ =?utf-8?B?K1VLaG1kYWRSQkFkb093ZnZPN0o0alNHaG9jNmxzNjViQWFWaWY1V2hXdEtX?=
+ =?utf-8?B?b3F3VEp4K1ZtVVU1cHV4VnI4bWlkL3E2R1htMnNGRWZ5djRtc0RJSTZEVXdS?=
+ =?utf-8?B?ZXJHZ21oSURsNGlVTjU4VnJLb25iUXM2emN0bWkvb3IzU0Y0dlVDNSsrZTdq?=
+ =?utf-8?B?alJyZWViaEtnUnBDRHB6VTZSa0t3TUgrd1ZEYjRucFpoZFVqMXR5cHBQSUgv?=
+ =?utf-8?B?Q1piYWJRL0xTRnQ1Z1lZZUFEblpJb3ZaTUE1eUJTejZqM1dXUXZzVWovTk52?=
+ =?utf-8?B?K3RZMWhzWDNmaVMxWUhwcVNYWXh2NFk0RWRtM1NUTC9oY3orZnQ5Wmc0L1Yz?=
+ =?utf-8?B?QlhZZ3pLdXVhS0R6L3RXMWtXcXB2VVJ0QXhVR1lqSXI2TTUxaDMzRlhoVkR1?=
+ =?utf-8?B?bERXdWRlQzZuUzM1aHBTQVl2VTJkak1iaE5ZdzVhcTVXZ3lBcDdIYXVreTZq?=
+ =?utf-8?B?WFAxVFFSRVFjSDB2anREZFJONVJ1aVRKeXY2V1dlRmZPVjZwYmprMFhpa2dL?=
+ =?utf-8?B?djZGcE9wRjUvZ0phcWsya2tYL0VhTkdNeUdzS0FEYTAxYlBsbzdmZ0pKakE2?=
+ =?utf-8?B?dTh0UWhVZFRCOWU5dXF2NUVKQ1M4WnFMV3lqWXJpcytHaUhXR0h6NXJhT3lB?=
+ =?utf-8?B?YnlGaDVRNmQ2WjJKV29mdHc0U01yMGFLcldmdDZyeXZ3RlR4WmU2TnduaE5y?=
+ =?utf-8?B?VFg0dXVpZWpuZDk1Mmp4RVNDd0h6RlgyQ0owVU1uMWVyWjRxUkhFcktQZ0xB?=
+ =?utf-8?B?YlRGWjgwRitqcUNrTDI4OHNIRUxORU0rTnRSNll2aE80TzY3U2xMNDFhd1Rm?=
+ =?utf-8?B?Z3lyZkk1Tkt4NzZjVjljOFg4dWNVR2EzSnQzVU8vL05nQUlsWHkvbGwvUW0x?=
+ =?utf-8?B?VXJSaUY4T1hENVlKenV4b3BiYlVMVkt4YnlzM0llSXE4bXZocEdjclk5cmRv?=
+ =?utf-8?B?KzNoNjk5WUlDME03LzZnQjlnb0JqanF3QUxkdWxsdEN6dHEwM2xHZmNLVFps?=
+ =?utf-8?B?SU56VXM4WkFpZGVpTEFXQk5WcUZEa3pYcnpoQ0FNL05wMDNDRlRoYnRzSzRo?=
+ =?utf-8?B?UStaYUYyRnJIL2NLMkowdmN0cGF0ZXpmMVBiSXBzd1JjK25VbCt1NjNhTUZ3?=
+ =?utf-8?B?a1E9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: a94a34d1-b8be-4728-be46-08dd92cae7da
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 09:37:12.8846
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VLcZGz/3uAQ4RDQBH6OHu5CEx0WvNYcEArLZkA/OGQ3Ix4ly3cGEYPufZrg6Aabykojxa5ATy4giIW3aBWS9kozGU/r33EwzuUb0koZVJ3U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8615
 
-Hi Neil,
+Hi Heiko,
 
-On 13/05/25 21:25, Neil Armstrong wrote:
-> On 13/05/2025 16:26, Vignesh Raman wrote:
->> Hi Neil,
->>
->> On 13/05/25 15:25, neil.armstrong@linaro.org wrote:
->>> Hi,
->>>
->>> On 13/05/2025 11:41, Vignesh Raman wrote:
->>>> Hi,
->>>>
->>>> The Amlogic Meson G12B (A311D) SoC board (meson-g12b-a311d-khadas- 
->>>> vim3) fails to boot with the following logs,
->>>>
->>>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76210200
->>>>
->>>> 02:58:27.819: Starting kernel ...
->>>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 
->>>> 0x51000d8
->>>> 02:58:27.819: "Synchronous Abort" handler, esr 0x96000010, far 
->>>> 0x51000c8
->>>> 02:58:27.819: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
->>>> 02:58:27.819: elr: 00000000f2f26a48 lr : 00000000f2f26c88
->>>> 02:58:27.819: x0 : 00000000050fffc0 x1 : 0000000001004383
->>>> 02:58:27.819: x2 : 00000000f2f6a358 x3 : 000000000000003f
->>>> 02:58:27.819: x4 : 00000000f4fefffc x5 : 0000000000000010
->>>> 02:58:27.819: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
->>>> 02:58:27.819: x8 : 0000000000000008 x9 : 0000000000000001
->>>> 02:58:27.820: x10: 0000000000000010 x11: 0000000000000004
->>>> 02:58:27.820: x12: 00000000f4fefc00 x13: 0000000000000000
->>>> 02:58:27.820: x14: 00000000f4fefc00 x15: 0000000000000000
->>>> 02:58:27.820: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
->>>> 02:58:27.820: x18: 00000000f0f21d90 x19: 00000000050fffc0
->>>> 02:58:27.820: x20: 0000000000000000 x21: 000000007ffe9000
->>>> 02:58:27.820: x22: 0000000000001710 x23: 00000000f0f0e8c0
->>>> 02:58:27.820: x24: 0000000000000000 x25: 0000000000000000
->>>> 02:58:27.820: x26: 0000000000000000 x27: 0000000000000000
->>>> 02:58:27.820: x28: 00000000f0f4f790 x29: 00000000050fff60
->>>> 02:58:27.820: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
->>>> 02:58:27.820: Resetting CPU ...
->>>>
->>>
->>> Could you boot with earlycon enabled to at least have a clue of 
->>> what's happening ?
->>
->> There is a synchronous abort right after 'Starting kernel...'. Maybe 
->> this prevents any early console logs from appearing.
->>
->> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243455
->>
->> 13:54:02.013: => setenv bootargs 'console=ttyAML0,115200n8 root=/dev/ 
->> nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18641665/ 
->> extract-nfsrootfs-h2fjsmdc,tcp,hard,v3 init=/init rootwait 
->> usbcore.quirks=0bda:8153:k earlycon=meson,0xff803000 keep_bootcon  
->> ip=dhcp'
->> 13:54:02.014: $ booti 0x1080000 - 0x1000000
->> 13:54:02.014: => booti 0x1080000 - 0x1000000
->> 13:54:02.014: Moving Image from 0x1080000 to 0x1200000, end=5160000
->> 13:54:02.014: ## Flattened Device Tree blob at 01000000
->> 13:54:02.014:    Booting using the fdt blob at 0x1000000
->> 13:54:02.014: Working FDT set to 1000000
->> 13:54:02.014: ERROR: reserving fdt memory region failed (addr=5000000 
->> size=300000 flags=4)
->> 13:54:02.014:    Loading Device Tree to 000000007ffe9000, end 
->> 000000007ffff57c ... OK
->> 13:54:02.014: Working FDT set to 7ffe9000
->> 13:54:02.014: Starting kernel ...
->> 13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000d8
->> 13:54:02.014: "Synchronous Abort" handler, esr 0x96000010, far 0x51000c8
->> 13:54:02.014: elr: 0000000001002a48 lr : 0000000001002c88 (reloc)
->> 13:54:02.014: elr: 00000000f2f26a48 lr : 00000000f2f26c88
->> 13:54:02.014: x0 : 00000000050fffc0 x1 : 0000000001004383
->> 13:54:02.014: x2 : 00000000f2f6a358 x3 : 000000000000003f
->> 13:54:02.014: x4 : 00000000f4fefffc x5 : 0000000000000010
->> 13:54:02.014: x6 : 00000000f4e5b000 x7 : 00000000050fffa0
->> 13:54:02.014: x8 : 0000000000000008 x9 : 0000000000000001
->> 13:54:02.014: x10: 0000000000000010 x11: 0000000000000004
->> 13:54:02.014: x12: 00000000f4fefc00 x13: 0000000000000000
->> 13:54:02.014: x14: 00000000f4fefc00 x15: 0000000000000000
->> 13:54:02.014: x16: 00000000f2f6d0e0 x17: 0000000000c0c0c0
->> 13:54:02.014: x18: 00000000f0f21d90 x19: 00000000050fffc0
->> 13:54:02.014: x20: 0000000000000000 x21: 000000007ffe9000
->> 13:54:02.014: x22: 0000000000001710 x23: 00000000f0f0e8c0
->> 13:54:02.014: x24: 0000000000000000 x25: 0000000000000000
->> 13:54:02.014: x26: 0000000000000000 x27: 0000000000000000
->> 13:54:02.014: x28: 00000000f0f566a0 x29: 00000000050fff60
->> 13:54:02.014: Code: a9025bf5 f9001bf7 f9400641 36000141 (f9408663)
->> 13:54:02.014: Resetting CPU ...
-> 
-> In fact, this is an U-boot fault, not Linux. I guess perhaps the Linux 
-> kernel is too big, can you check the size difference since v6.14 ?
+On 5/13/25 5:02 PM, Heiko Stuebner wrote:
 
-Yes, looks like the kernel image size causes this issue. I disabled a 
-few configs in drm-ci, and the kernel image size was around 49M. It 
-booted fine with v6.15-rc1.
+[...]
 
-In previous tests, v6.14-rc7 kernel image size was 52M, and v6.15-rc1 
-kernel image size was 53M.
+> +	rk809: pmic@20 {
+> +		compatible = "rockchip,rk809";
+> +		reg = <0x20>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "xin32k";
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int>;
+> +		wakeup-source;
+> +		system-power-controller;
+> +
 
-Thanks for the pointers.
+Please order alphabetically here.
 
-Regards,
-Vignesh
+[...]
 
-> 
->>
->> Successful logs with v6.14-rc7,
->> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76248143
->>
->>>
->>> BPI-M2S (A311D) is booting fine on v6.15-rc, see https://gitlab.com/ 
->>> amlogic-foss/abcd-linux-test/-/jobs/10004997032
->>>
->>> But perhaps something specific to the VIM3 is breaking, do you change 
->>> the kernel config for the DRM ?
->>
->> Yes, we change the config. Please see the config used to build the 
->> kernel,
->> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76243439/ 
->> artifacts/file/artifacts/testing:arm64_config
->>
->> Regards,
->> Vignesh
->>
->>>
->>> Neil
->>>
->>>
->>>> The board boots successfully in v6.14-rc7, but the issue appears 
->>>> starting from v6.15-rc1. These tests were run in drm-ci.
->>>>
->>>> On bisecting the kernel, the first bad commit identified by git 
->>>> biscet is,
->>>>
->>>> 59c35416f4246aee66b5f5523fdc950b83325d82 is the first bad commit
->>>> commit 59c35416f4246aee66b5f5523fdc950b83325d82
->>>> Merge: 472863ab2aca e988adcb5dee
->>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
->>>> Date:   Sat Mar 29 17:23:34 2025 -0700
->>>>
->>>>      Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/ 
->>>> linux/ kernel/git/clk/linux
->>>>
->>>> Please could you look into this issue. Thank you.
->>>>
->>>> Regards,
->>>> Vignesh
->>>
->>
-> 
+> +&pinctrl {
+> +	camera {
+> +		accel_int: accel-int {
+> +			rockchip,pins = <2 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
 
+The accelerometer is not in the camera module like some of our other 
+products, but on the PCBA directly, so I would put it in a different 
+section in the pinctrl node.
+
+Can you have it this way too:
+
+rockchip,pins =
+         <2 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
+
+so it is consistent with the other ones?
+
+[...]
+
+> +	panel {
+> +		dsp_rst: dsp-rst {
+> +			rockchip,pins =
+> +				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
+
+Same remark as for Cobra, I assume we want a pull down here, to keep in 
+reset until the driver probe drives the pin to orchestrate the reset?
+
+With all the above changed:
+
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+
+Thanks!
+Quentin
