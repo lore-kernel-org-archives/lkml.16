@@ -1,64 +1,25 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39C41F0E47;
-	Wed, 14 May 2025 21:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B943B235C01;
+	Wed, 14 May 2025 21:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747257941; cv=none; b=EfbRvPDRiXPR8UBIiNmnVSV2NtgyPslL0Cw55Z3O6Ob5EWAWPqwf1QSBkXpgzJ1mwvX/mUCBbDspQKeu7tQ+1LksFNmLi6gL0j8TN+T1hIWMVohyFogLjjwDJiScnG6fgtLKrfhhAceX84yk8IJHUGe5pbrhUHg0QHYyVa2ZbWs=
+	t=1747257999; cv=none; b=OsYupaJf98F8VMorEBsLG8ELCjQmmQxrUuW8Ry2gRlhPpyCCSOg9lHiM+kJ+toc4Zsd9gH6QKBbZQq8S9p3BU8b7KlOO8KPX75Bj2i8v5LkGpqQWJZ3Lpn6GnLv/AjTlZDoC+KCge1NS1CQNNDE47ouwmWA3hbF+kkW5geGxgnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747257941; c=relaxed/simple;
-	bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
+	s=arc-20240116; t=1747257999; c=relaxed/simple;
+	bh=6A33sYQdjDk+F4iBMB1qydcIOHVTBcwxBUobGMjX9aI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1mUcV4nPVAe0FTg0nfVcnU4qRPGYQVzAt6mdgJIDVcH89TGEbaLJOzkmXIPtRXte1R3CJic9SeUTlwA+ADBdWOjzqnINLE9kGF/hHkCL6MmzvfrAxARJobqW4C6EB47KxkORuuWHsIv0CJMeC9msxq32famEp6tL8g9t/lFp08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avRYxeJb; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avRYxeJb"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5fcc96b6a64so564576a12.0;
-        Wed, 14 May 2025 14:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747257938; x=1747862738; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
-        b=avRYxeJb70gNBiam3EM3PEa4oOuSECL8g5cLvDLWL4phsNTbCK6NYYbvbfq3vKj/Cu
-         GIfx8a5iTchQyoliWYKdE0XJQYt9hIWGE6oZvGXCTnNfy1z10qKQ9hSOaSPb3ORCv49t
-         z1tcjdHN2SHKqpOXEkZgXCkmnbx5Tlh4NV+845GLUVoqZzfkkIf1QTF/dxLkpOSvW9WK
-         eZ11WPMRqeQx3WSvSmV/4FbSE3pdkmgLem9heYu52ELvcnSWHHMCCE07bJdJd+DXExgG
-         ZWchGxt2HfL6yzG5Ahubs6hd13/gwb21jzDd2yGCr5/KxHYgU7rJmQxECwNBgGnEXzU9
-         xfEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747257938; x=1747862738;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpzam9QMg2o05WO4i9hkTgnqS0DWyNL0eyxNtT6b6y0=;
-        b=vyqT2lPAe5xNj4CVBIFRT0vpe4NKw7CmcFqZ83+PQ/AbszPWNmCjREchqa8xX7Z7DS
-         G275I1kf5R0VYrIKZh8ECiAxXzinBf/zYCeawILRrXDKMmauJibS6IYEdr6EVnm4EU/d
-         NSuthoRDJ09+uYow0TA42xMC9UEm+hyAsI8cg6ny+benOyL7hWfsPrrpjk2lgaYCKHd2
-         5dlQwnTcwOemWZBJR8QCUzQ1HUYO4YNykZIn8bPH8tAOxl5Vd8WnWwyYef9QPdZv/AAR
-         e69BMDvRl2tGH5WPBx7Mia/228scga0PPeZbVTt0YS7Wzcslj+O2Unr34GLqnng+ICAD
-         XD7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUedO1EyqN5uFHJk9t6AzsAG5HmY/WzR5OgP1YCAJl8fg95UA8akQaJvZiaYrJ1FrYPCtYNp3FO54hiBac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7xzcSw/CWE76AbTHwdvlNJRF4CQ4MaYzZdGo8GSwEayYwaRrD
-	K58kNt1FNT3zTpQRhqno4kKHJ0bulXTXFLedXEVt6/fUt8yVo9gU
-X-Gm-Gg: ASbGncud1kjJhEa86NAUubH1r7GYoNVFgU8dNnvzuHSHGV6ikduAwShGEGdCjFsCjyK
-	nMV8UNRwxJ6hswRoTE0IG33vP8SpeOxuvVWkBugQTOrOeFJdv0hyhIUpiUk8eirryauw3fatG6A
-	ojnRKLpCNNugeG+5uIAwhG1Wfj7yAq4wUDgtIdx8GlFheHPmww9NTsHjwWkt6CYJPx3agmxY6DS
-	8sfNORjuaonBeBgwtVS8J8hNLJi5GihD4b83Q5CSM0pwOx7HXGWI+SpEdGJBRgGvwReI5++76+c
-	oMatTQ4PRzTSS+yLnhaNLA4HgdkXhCVXjr2KKfy+SuPlHdl3gV3flaLy9q0wD+0=
-X-Google-Smtp-Source: AGHT+IGA/ejkxGCh4W/lw4dP+0sAd0GbaKcMoHrkLayhXBddAQtKtk/FZ4vNZ2mS+R82rlBSPL4oIw==
-X-Received: by 2002:a05:6402:254b:b0:5f8:e955:241d with SMTP id 4fb4d7f45d1cf-5ff988a5551mr3998097a12.8.1747257937853;
-        Wed, 14 May 2025 14:25:37 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d7016b4sm9313385a12.49.2025.05.14.14.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 14:25:37 -0700 (PDT)
-Message-ID: <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
-Date: Wed, 14 May 2025 23:25:36 +0200
+	 In-Reply-To:Content-Type; b=ZdYxQr4wU/VybEO9GWbdO0li0wFMVtjZ7UKHYyOOSuuWl6Ro7XYOXT5YWeoScwvmXV49o206WeYET5SUWtWpKQ1Ym70V2RysjXc/AaJ8bCRQh3BzePw5jGd01BI9tpUGBseTEtbmqGdLr3ptJrARCr8XmFT/IEdUphGy0jn26DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18BB8150C;
+	Wed, 14 May 2025 14:26:23 -0700 (PDT)
+Received: from [192.168.178.25] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 607613F5A1;
+	Wed, 14 May 2025 14:26:22 -0700 (PDT)
+Message-ID: <d6692902-837a-4f30-913b-763f01a5a7ea@arm.com>
+Date: Wed, 14 May 2025 23:26:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,146 +27,183 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-To: Mario Limonciello <superm1@kernel.org>, Raag Jadav
- <raag.jadav@intel.com>, rafael@kernel.org, mahesh@linux.ibm.com,
- oohall@gmail.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
- aravind.iddamsetty@linux.intel.com
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
+Subject: Re: EEVDF regression still exists
+To: "Prundeanu, Cristian" <cpru@amazon.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+ "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>,
+ "Saidi, Ali" <alisaidi@amazon.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ "Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
+ "Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy
+ <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
+ Joseph Salisbury <joseph.salisbury@oracle.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-tip-commits@vger.kernel.org" <linux-tip-commits@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, Chris Redpath <Chris.Redpath@arm.com>
+References: <20250429213817.65651-1-cpru@amazon.com>
+ <20250429215604.GE4439@noisy.programming.kicks-ass.net>
+ <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
+ <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
+ <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
+ <20250502084844.GT4198@noisy.programming.kicks-ass.net>
+ <935376C2-71B9-4E41-9738-99A4BCC55B48@amazon.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <935376C2-71B9-4E41-9738-99A4BCC55B48@amazon.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
++ Chris Redpath <Chris.Redpath@arm.com>
+
+On 02/05/2025 18:52, Prundeanu, Cristian wrote:
+> On 2025-05-02, 03:50, "Peter Zijlstra" <peterz@infradead.org <mailto:peterz@infradead.org>> wrote:
+> 
+>> On Thu, May 01, 2025 at 04:16:07PM +0000, Prundeanu, Cristian wrote:
+>>
+>>> (Please keep in mind that the target isn't to get SCHED_BATCH to the same
+>>> level as 6.5-default; it's to resolve the regression from 6.5-default to
+>>> 6.6+ default, and from 6.5-SCHED_BATCH to 6.6+ SCHED_BATCH).
+>>
+>> No, the target definitely is not to make 6.6+ default match 6.5 default.
+>>
+>> The target very much is getting you performance similar to the 6.5
+>> default that you were happy with with knobs we can live with.
+> 
+> If we're talking about new knobs in 6.6+, absolutely.
+> 
+> For this particular case, SCHED_BATCH existed before 6.6. Users who already
+> enable SCHED_BATCH now have no recourse. We can't, with a straight face,
+> claim that this is a sufficient fix, or that there is no regression.
+> 
+> I am, of course, interested to discuss any knob tweaks as a stop-gap measure.
+> (That is also why I proposed moving NO_PLACE_LAG and NO_RUN_TO_PARITY to sysctl
+> a few months back: to give users, including distro maintainers, a reasonable
+> way to preconfigure their systems in a standard, persistent way, while this is
+> being worked on).
+> None of this should be considered a permanent solution though. It's not a fix,
+> and was never meant to be anything but a short-term relief while debugging the
+> regression is ongoing.
+
+I've been running those tests as well on an environment pretty close to
+yours. I use c7g.16xlarge and m7gd.16xlarge ('maxcpus=16 nr_cpus=16') AWS
+instances for LoadGen (hammerdb) and SUT (mysqld).
+
+We tried to figure out whether only changing the mysql (SUT) 'connection'
+tasks to SCHED_BATCH is sufficient to see a performance uplift. There is
+one of those tasks per virtual user.
+
+I ran (1)-(3) (like you) plus (4):
 
 
-On 5/14/25 21:53, Mario Limonciello wrote:
-> On 5/14/2025 11:29 AM, Denis Benato wrote:
->> Hello,
->>
->> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
->>
->> you can follow an example of my problems in this [1] bug report.
->>
->> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
->>
->> You can see the dmesg here: https://pastebin.com/Um7bmdWi
->>
->> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
->>
->
-> Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
->
-Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
+(1) default
 
-Probably this either unveils a pre-existing thunderbolt bug or creates a new one.  If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
+(2) NO_PL NO_RTP ... run w/ NO_PLACE_LAG and NO_RUN_TO_PARITY
+
+(3) SCHED_BATCH  ... launch mysqld.service with 'CPUSchedulingPolicy=batch'
+                     [/lib/systemd/system/mysql.service]
+
+(4) mysql patch  ... run 'connection' threads as SCHED_BATCH
 
 
-I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
+Kernel   | Runtime      | mysql  | Throughput | P50 latency
+aarch64  | parameters   | patch* | (NOPM)     | (larger is worse)
+---------+--------------+--------+------------+------------------
+6.5      | default      |        |  baseline  |  baseline
+         | SCHED_BATCH  |        |  +10.9%    |  -42.9%
+         | default      |   x    |   +9.5%    |  -33.0%
+---------+--------------+--------+------------+------------------
+6.6      | default      |        |   -2.7%    |  -23.7%
+         | NO_PL NO_RTP |        |   +4.4%    |   +8.8%
+         | SCHED_BATCH  |        |   +4.5%    |    -*
+         | default      |   x    |   +4.2%    |  -38.8%
+---------+--------------+--------+------------+------------------
+6.8      | default      |        |   -3.7%    |    -
+         | NO_PL NO_RTP |        |   +2.5%    |  -24.0%
+         | SCHED_BATCH  |        |   +6.2%    |  -38.6%
+         | default      |   x    |   +2.7%    |  -37.0%
+---------+--------------+--------+------------+------------------
+6.12     | default      |        |   -6.3%    |    -
+         | NO_PL NO_RTP |        |   -4.0%    |  -34.1%
+         | SCHED_BATCH  |        |   -2.3%    |  -35.9%
+         | default      |   x    |   -2.1%    |  -33.6%
+---------+--------------+--------+------------+------------------
+6.13     | default      |        |   -7.3%    |   -9.2%
+         | NO_PL NO_RTP |        |   -3.7%    |  -35.0%
+         | SCHED_BATCH  |        |      0%    |  -38.2%
+         | default      |   x    |   -1.7%    |  -34.3%
+---------+--------------+--------+------------+------------------
+6.14     | default      |        |   -7.3%    |  -19.3%
+         | NO_PL NO_RTP |        |   -5.3%    |  -36.6%
+         | SCHED_BATCH  |        |   -2.9%    |  -40.1%
+         | default      |   x    |   -2.4%    |  -39.0%
+---------+--------------+--------+------------+------------------
+6.15-rc5 | default      |        |   -9.6%    |  -19.3%
+         | NO_PL NO_RTP |        |   -7.7%    |  -34.7%
+         | SCHED_BATCH  |        |   -5.1%    |  -38.6%
+         | default      |   x    |   -5.6%    |    -
+---------+--------------+------------+--------+------------------
 
+'-'* 'repro-regression' didn't provide latency numbers
 
-> The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
->
-> I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
->
-I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
->>
->> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
->>
->> On 5/4/25 11:04, Raag Jadav wrote:
->>
->>> If error flags are set on an AER capable device, most likely either the
->>> device recovery is in progress or has already failed. Neither of the
->>> cases are well suited for power state transition of the device, since
->>> this can lead to unpredictable consequences like resume failure, or in
->>> worst case the device is lost because of it. Leave the device in its
->>> existing power state to avoid such issues.
->>>
->>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>> ---
->>>
->>> v2: Synchronize AER handling with PCI PM (Rafael)
->>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>      Elaborate "why" (Bjorn)
->>>
->>> More discussion on [1].
->>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>
->>>   drivers/pci/pci.c      | 12 ++++++++++++
->>>   drivers/pci/pcie/aer.c | 11 +++++++++++
->>>   include/linux/aer.h    |  2 ++
->>>   3 files changed, 25 insertions(+)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 4d7c9f64ea24..25b2df34336c 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -9,6 +9,7 @@
->>>    */
->>>     #include <linux/acpi.h>
->>> +#include <linux/aer.h>
->>>   #include <linux/kernel.h>
->>>   #include <linux/delay.h>
->>>   #include <linux/dmi.h>
->>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>          || (state == PCI_D2 && !dev->d2_support))
->>>           return -EIO;
->>>   +    /*
->>> +     * If error flags are set on an AER capable device, most likely either
->>> +     * the device recovery is in progress or has already failed. Neither of
->>> +     * the cases are well suited for power state transition of the device,
->>> +     * since this can lead to unpredictable consequences like resume
->>> +     * failure, or in worst case the device is lost because of it. Leave the
->>> +     * device in its existing power state to avoid such issues.
->>> +     */
->>> +    if (pci_aer_in_progress(dev))
->>> +        return -EIO;
->>> +
->>>       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>       if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>           pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index a1cf8c7ef628..4040770df4f0 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>   }
->>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>   +bool pci_aer_in_progress(struct pci_dev *dev)
->>> +{
->>> +    u16 reg16;
->>> +
->>> +    if (!pcie_aer_is_native(dev))
->>> +        return false;
->>> +
->>> +    pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
->>> +    return !!(reg16 & PCI_EXP_AER_FLAGS);
->>> +}
->>> +
->>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>   {
->>>       int rc;
->>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>> index 02940be66324..e6a380bb2e68 100644
->>> --- a/include/linux/aer.h
->>> +++ b/include/linux/aer.h
->>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>   #if defined(CONFIG_PCIEAER)
->>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>   int pcie_aer_is_native(struct pci_dev *dev);
->>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>   #else
->>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>   {
->>>       return -EINVAL;
->>>   }
->>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>   #endif
->>>     void pci_print_aer(struct pci_dev *dev, int aer_severity,
->
+Looks like (4) is almost as good as (3). And we see this uplift also on
+CFS (6.5). The patch below is trivial and easily to apply. 
+
+That said, I also see the policy unrelated regression you're describing
+(especially from '6.8 -> 6.12' and then from '6.14 -> 6.15-rc5'.
+
+I will have time the next couple of days to also look into these issues
+using our setup.
+
+---
+
+Patch applied to mysql-8.0-8.0.42 source package (Ubuntu 22.04):
+
+-->8--
+
+From: Chris Redpath <chris.redpath@arm.com>
+Date: Thu, 13 Mar 2025 16:30:13 +0000
+Subject: [PATCH] Make sure we use SCHED_BATCH for thread-per-connection mode
+
+Hack in a small change in the thread init code for the handlers to choose
+the correct scheduler policy.
+
+Signed-off-by: "Chris Redpath" <chris.redpath@arm.com>
+---
+ sql/conn_handler/connection_handler_per_thread.cc | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/sql/conn_handler/connection_handler_per_thread.cc b/sql/conn_handler/connection_handler_per_thread.cc
+index 68641b55723..10086cd3c6f 100644
+--- a/sql/conn_handler/connection_handler_per_thread.cc
++++ b/sql/conn_handler/connection_handler_per_thread.cc
+@@ -249,6 +249,7 @@ static void *handle_connection(void *arg) {
+       Connection_handler_manager::get_instance();
+   Channel_info *channel_info = static_cast<Channel_info *>(arg);
+   bool pthread_reused [[maybe_unused]] = false;
++  struct sched_param param = {0};
+ 
+   if (my_thread_init()) {
+     connection_errors_internal++;
+@@ -260,6 +261,15 @@ static void *handle_connection(void *arg) {
+     return nullptr;
+   }
+ 
++  // Set the scheduling policy to SCHED_BATCH
++  if (sched_setscheduler(0, SCHED_BATCH, &param) == -1) {
++    perror("sched_setscheduler");
++    // Handle the error as needed
++    delete channel_info;
++    my_thread_exit(nullptr);
++    return nullptr;
++  }
++
+   for (;;) {
+     THD *thd = init_new_thd(channel_info);
+     if (thd == nullptr) {
+-- 
+2.34.1
+
