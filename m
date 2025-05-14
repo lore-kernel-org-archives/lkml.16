@@ -1,154 +1,102 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE31C27;
-	Wed, 14 May 2025 00:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBB81FDD;
+	Wed, 14 May 2025 00:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747181472; cv=none; b=qOzt6Uhx5VVJtAz0CvlkN0+h9/vE1hxhsiX8DPVDHuGiAVkSBgW5MMzbvHp3lThLIROUSrOmL3JVr6x7GFTcUhH6DRBjGVgJas71bdIwCIYQKYoleIlpLhtrENRiyFQk+D80II2Nqnqs+75vVFn81zGyXbxjM48UafqjxBtce5Y=
+	t=1747181664; cv=none; b=fFWewQhez5K7IyoZ9U+oq2HAAVJ6qAiswMMtS0UNDsqDdVkwCd9mZckk1sl12pFX91vXo/Fbl/IbxQUgLouXadsdKd5ARld1VTY9u7WUZQc5UsugwH6nXFHHDN/km4MJ62yf2QhCeOeWMXmZbB36ML++ejogGMeS2d7l0aZTpAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747181472; c=relaxed/simple;
-	bh=wkfDB2oVIWKK1a5eXkQoWzJ/nlBkrw3GK1U6oYBNAQ8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VCZtkzFjTmvISy3kUhFFOdFxfgCLwJaowPgenh3DRz8hvl9DVmJXtJCeJ/SFv2fX6XlgJBoSkABJ2WFV87NdAoEyEtxCPMPnkDEhn1JBbEqE1q5wB2GxOIqyHEUHXrnaIrey4YnlmpLVt72wit8pbdVLgw5d9PjNnKshldHscz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=A4eu4F4u; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1747181664; c=relaxed/simple;
+	bh=jDk0BvPdBOsudd297pGyGFep8goSpk+trsNoQeXfyGQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QdiEfvv0/4LRUh/AoK418c3VVZMDPdAMzJvD/jvXpmV/XzsnYXniwjCGcwkzxyJ1Uu5OptGNh7YAVU0Z1FjKdieZn94/8vDyyi2JK43d4E5n24cmHyM+5+OTRcRadBbzfAl//KN6HqE9GvN4May4cmWKwSMUrW0JKuc0oBdlFF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqKGWCg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="A4eu4F4u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1747181467; x=1747786267; i=spasswolf@web.de;
-	bh=op1KZQkRCtc3+W3fATc0uPEXHj/b7P0Lr/rtvLPmTPU=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=A4eu4F4u1O16nrMqsqe6e9WO88QQRZIF8yaEzmoXMWG0cwkW1NkO5udkFzRPXcZP
-	 KDw0IutqvA5tyzcDgsWOo9b+lN71C4nVU+gB87NJN0QgUZ+gzWf0X0pYWEPsMU0Pe
-	 /VDN6bNnbQt/p3tXIxgA6Ns+RngP2WbiCekhEa9IzzKkvald6klTq41tFe2DWLNB3
-	 DVx56trOOk/Kl28CxJJoTciPclV28HCiS7avoiz6faZazmP2S8j6VVy6d1VgJbVvu
-	 KdlaGCjlrgjckCemMe/5NjmnD2D7HIvP4luJdnhdD37TZifI1FNXTAAqPgkAbel01
-	 HwY3/R//5IRd2Xf11g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjxeO-1uhTqV0nrE-00ndWS; Wed, 14
- May 2025 02:11:07 +0200
-Message-ID: <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
-Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
- compiled with clang
-From: Bert Karwatzki <spasswolf@web.de>
-To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, llvm@lists.linux.dev, Johannes Berg
-	 <johannes.berg@intel.com>, spasswolf@web.de
-Date: Wed, 14 May 2025 02:11:05 +0200
-In-Reply-To: <87h61ojg3g.ffs@tglx>
-References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqKGWCg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB457C4CEE4;
+	Wed, 14 May 2025 00:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747181664;
+	bh=jDk0BvPdBOsudd297pGyGFep8goSpk+trsNoQeXfyGQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=PqKGWCg8dh3loYFuR0jSEDNpWVH6sczf9s2k3j6fH+99wPEjDU5mG84IBYH5MbgD6
+	 bjR2nxsM3pC2s89muWEUGZTb5OpRY+NhJX4YTbeneW+NCPR0lCE+BFYg5zPy8Yv0vs
+	 8RLxEJgzLKFwjZ6k9OyVd8HdRr+7o1BoJNcRiFq1GVK8wBC3J5GLJscsFxtzpbNeaR
+	 5o7g2Tedq+gTAJ8DP6FhEoyUi8KqEgjQeehOQg9wJepzLb2012iEcqacZ+iTAFaRtW
+	 MsXRcMgbsLAI8UZlKD9z2Nytq530gIRICfeorKFZ+sL0L4v+WL7V0rsSewojSI0eoA
+	 J4dtDhDgnN/Rw==
+Date: Tue, 13 May 2025 17:14:22 -0700 (PDT)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: John Ernberg <john.ernberg@actia.se>
+cc: Juergen Gross <jgross@suse.com>, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
+    "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    Christoph Hellwig <hch@infradead.org>, 
+    "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH v2] xen: swiotlb: Wire up map_resource callback
+In-Reply-To: <20250512071440.3726697-1-john.ernberg@actia.se>
+Message-ID: <alpine.DEB.2.22.394.2505131714100.368682@ubuntu-linux-20-04-desktop>
+References: <20250512071440.3726697-1-john.ernberg@actia.se>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oPtwMikyUfZ7uvY4o2qRU0Hn/RpJAD9cDevhup5xGQepFv6jujd
- k+K2uv5LgzgIuo6gF6NZcAQ1WGBoS9WAeGwRD9W+qPfc8y66foFFjsZF6OqdjKno1E1HKn5
- lO6AMZzZSqz0fym+JRnSG0e7YcZyS7ZQUQOARJg85gYolBBFcTtZjflgMOVu5/x48rxLUuY
- RKn6eauM58n8PZvNW1uyA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6H6/ew3cfHk=;Cc/dGYOQdL+WFhwqQKouJIiYS14
- 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
- aT8tyxcrwvObM=
+Content-Type: text/plain; charset=US-ASCII
 
-Am Mittwoch, dem 14.05.2025 um 00:33 +0200 schrieb Thomas Gleixner:
-> On Tue, May 13 2025 at 18:48, Bert Karwatzki wrote:
-> > >=20
-> > > I'll now start a bisection where I revert 76a853f86c97 where possibl=
-e in
-> > > order to find the remaining bugs.
-> >=20
-> > The second bisection (from v6.15-rc6 to next-20250512) is finished now=
-:
-> >=20
-> > This commit leads to lockups and kernel panics after
-> > watching ~5-10min of a youtube video while compiling a kernel,
-> > reverting it in next-20250512 is possible:
-> > 76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
-> > This commit leads to the boot failure, reverting leads to the
-> > compile error it is supposed to fix:
-> > 97f4b999e0c8 ("genirq: Use scoped_guard() to shut clang up")
->=20
-> I really have a hard time to understand what you are trying to explain
-> here. 'This commit leads..' is so unspecified that I can't make any
-> sense of it.
->=20
-> Also please make sure that you have commit b5fcb6898202 ("genirq: Ensure
-> flags in lock guard is consistently initialized") in your tree when
-> re-testing. That's fixing another subtle (AFAICT clang only) problem in
-> the guard conversion. If it's not in next yet, you can just merge
->=20
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
->=20
-> into next or wait for the next next integration.
->=20
-> Thanks
->=20
->         tglx
+On Mon, 12 May 2025, John Ernberg wrote:
+> When running Xen on iMX8QXP, an Arm SoC without IOMMU, DMA performed via
+> its eDMA v3 DMA engine fail with a mapping error.
+> 
+> The eDMA performs DMA between RAM and MMIO space, and it's the MMIO side
+> that cannot be mapped.
+> 
+> MMIO->RAM DMA access cannot be bounce buffered if it would straddle a page
+> boundary and on Xen the MMIO space is 1:1 mapped for Arm, and x86 PV Dom0.
+> Cases where MMIO space is not 1:1 mapped, such as x86 PVH Dom0, requires an
+> IOMMU present to deal with the mapping.
+> 
+> Considering the above the map_resource callback can just be wired to the
+> existing dma_direct_map_resource() function.
+> 
+> There is nothing to do for unmap so the unmap callback is not needed.
+> 
+> Signed-off-by: John Ernberg <john.ernberg@actia.se>
+
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 
 
-I merged git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/cor=
-e into
-next-20250513 and this fixes the boot failure but the system still locks u=
-p
-after a few minutes (with flashing capslock). To solve this I need to reve=
-rt=20
-76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
-
-Also commit 97f4b999e0c8 did not actually cause the boot failure that was =
-a
-bisection error.
-
-Bert Karwatzki
+> ---
+> 
+> v2:
+>  - Just use dma_direct_map_resource() directly (Stefano Stabellini)
+>  - Incorporate some of the discussion and explanations from v1 into the
+>     commit message (Stefano, Christoph)
+>  - General English improvements in the commit message.
+>  - Just this patch now, 1/2 in the previous set was applied
+> 
+> v1: (series) https://lore.kernel.org/xen-devel/20250502114043.1968976-1-john.ernberg@actia.se/
+> ---
+>  drivers/xen/swiotlb-xen.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index ef56a2500ed6..da1a7d3d377c 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -426,4 +426,5 @@ const struct dma_map_ops xen_swiotlb_dma_ops = {
+>  	.alloc_pages_op = dma_common_alloc_pages,
+>  	.free_pages = dma_common_free_pages,
+>  	.max_mapping_size = swiotlb_max_mapping_size,
+> +	.map_resource = dma_direct_map_resource,
+>  };
+> -- 
+> 2.49.0
+> 
