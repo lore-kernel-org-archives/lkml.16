@@ -1,257 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930CE101DE;
-	Wed, 14 May 2025 05:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A71C1F4C8D;
+	Wed, 14 May 2025 05:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747201602; cv=none; b=aChZS3o4PCsc8MYZ3R3GsI7bcOAbvP1P/Z+vVtAECYRIbQjsuqBh+yeUDWbE4JZaiZUfn5ui8SJuKk/KRPF0ws54kpYjK4Tv1gFVbpXSOTNHxltqfMTS93t3a7E5iMUEqt6l/EnRCfQM6cWgx7PTKU6Y8OfVXryfek2u14pNInw=
+	t=1747201954; cv=none; b=XzytgD4TiqYuWoChtg0/v3lZ+68rbXXRGsTY4ACC4jaUuHJ9tIiSVz8kTWCI4P8W1h+mQ/7ew10INnM1zsFxtifzUrDOWqAp6j3E8DvZhalE2ubxE81yWRTJTFYKgemk4L2joBiZjIzdgo1DGgSThB4DBMRDFxfFaQZCVjNKOPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747201602; c=relaxed/simple;
-	bh=Qtt2l3MpQEO0rnXc/D0BJQ8VZXVj0i27W9KXpRamOr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gb9DYSMG9YOPh+paFPPwRVvN/lqLBNovCXL1F79Ei/75nIg7V/4ikthKVcvIqEHSL+3O8I52wi0RTa5W8MnbzZJQFK42QKfzLujDCxyUxUtOQrSm1R1fnXQ/0SJInRuAcmJN9jJQVzXehdLwGhPSvZZ3JSGEH45BsHmPnsny3Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2EY8j/a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747201954; c=relaxed/simple;
+	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LOumkmNwqT5cXj/TiAIyAZFXgJLj3eocSq0C1ntaxi3kRZkbx/roXoMHxWPPjen8U2cXbZHTFHryTxAiSzhIH+5zWy6qN83GprsZzyJ+dgtyUFXmi7+x27tebbSCKPnMwNRbLicgoRVACNv8jiI1my1RyT+7HlyuH1VWgaLjPEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjbXlIr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2EY8j/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1457C4CEEB;
-	Wed, 14 May 2025 05:46:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjbXlIr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7087C4CEF1;
+	Wed, 14 May 2025 05:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747201602;
-	bh=Qtt2l3MpQEO0rnXc/D0BJQ8VZXVj0i27W9KXpRamOr4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U2EY8j/afd8yVzA/D8keFSaYNtw+rNJ/kMez3t/UUTOk6LEh+L0k49yNpp7CejQ8s
-	 hS2ko53ZmOQ82ks8hkHt1SSs0Q25x10dhVOe4vM1yBZQf0NcGruRgbADJ7x+h6qKM7
-	 tuc0+NYvgkRk3t5Ye0hPt5NAuGx9XFnXvhvWiqqBf4USna7sDWorJD6+fR9hRyA1M2
-	 +xrNN48WvSfXPLm8qpfch7NeQEfZB08wP8wz8lW/ps7akzmrlEepBfpnpfQ0fUm/vI
-	 Ia/vtcL6kQZr8IbEaIuTBtxMWO1Jdl5h+L2D7hyDgRUcpWiDg0Yd2HiiivVJusjCYm
-	 /j20uXQ3ApJHw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>
-Subject: [PATCH] kbuild: move kbuild syntax processing to scripts/Makefile.build
-Date: Wed, 14 May 2025 14:46:33 +0900
-Message-ID: <20250514054635.93577-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1747201954;
+	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=TjbXlIr8tSBr86YWv+eDCsx+UjpMXz7ldV62sd+knYTTatma5LVSElbFrD2yjsvlG
+	 yQPqEW4FX10dFFdu1Js79LubPodXy20IfxboVCQW2Vsv0X5AXOVsARki6cRxgMCnWO
+	 2GL/rE4uH4VvM7C2sDQsuyJNaFk+FilfoSVUpi+Z82II+173liBupp7pU/fNcIWgSs
+	 nWAe8TNKZdyAmznPc1XsyS+np0msVEqahOePAf7r/Sx8xdA/Mx+co824R8z7jSavNO
+	 1rhlIVsVWDIW3Qo5bIAeG4DxbivlQAQqApLdbyu/jU7FWnM/qJklT7kC5b3Y90bRu9
+	 UkKRSZy8km/fw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD3C3ABCB;
+	Wed, 14 May 2025 05:52:33 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Wed, 14 May 2025 09:52:14 +0400
+Subject: [PATCH v10 2/2] arm64: dts: qcom: ipq5018: Enable PCIe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-ipq5018-pcie-v10-2-5b42a8eff7ea@outlook.com>
+References: <20250514-ipq5018-pcie-v10-0-5b42a8eff7ea@outlook.com>
+In-Reply-To: <20250514-ipq5018-pcie-v10-0-5b42a8eff7ea@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Nitheesh Sekar <quic_nsekar@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Praveenkumar I <quic_ipkumar@quicinc.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
+ 20250317100029.881286-1-quic_varada@quicinc.com, 
+ 20250317100029.881286-2-quic_varada@quicinc.com, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747201951; l=2062;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=OKmTrcmt0ksiQwz9dz8aVIs/K+GfvvlMVFo78Mfk/ZA=;
+ b=Kdpp0nNjPVPIkhZUEbwUlCo6UHMoANmtgHx2Kel29NApsyxP4Vf0gWcib6DlzyYlQZMG5enJQ
+ HaFqTRaMVQXDjtGTc5p3c1nCZm75Lu0AqLuz26tXIig+5Ob1Wnd5E23
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-scripts/Makefile.lib is included by the following Makefiles:
+From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-  scripts/Makefile.build
-  scripts/Makefile.modfinal
-  scripts/Makefile.package
-  scripts/Makefile.vmlinux
-  scripts/Makefile.vmlinux_o
+Enable the PCIe controller and PHY nodes for RDP 432-c2.
 
-However, the last four do not need to process Kbuild syntax such as
-obj-*, lib-*, subdir-*, etc.
-
-Move the relevant code to scripts/Makefile.build.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
+ arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 40 ++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
- scripts/Makefile.build | 84 ++++++++++++++++++++++++++++++++++++++++++
- scripts/Makefile.lib   | 84 ------------------------------------------
- 2 files changed, 84 insertions(+), 84 deletions(-)
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+index 8460b538eb6a3e2d6b971bd9637309809e0c0f0c..43def95e9275258041e7522ba4098a3767be3df1 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+@@ -9,6 +9,8 @@
+ 
+ #include "ipq5018.dtsi"
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	model = "Qualcomm Technologies, Inc. IPQ5018/AP-RDP432.1-C2";
+ 	compatible = "qcom,ipq5018-rdp432-c2", "qcom,ipq5018";
+@@ -28,6 +30,20 @@ &blsp1_uart1 {
+ 	status = "okay";
+ };
+ 
++&pcie0 {
++	pinctrl-0 = <&pcie0_default>;
++	pinctrl-names = "default";
++
++	perst-gpios = <&tlmm 15 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 16 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
++
++&pcie0_phy {
++	status = "okay";
++};
++
+ &sdhc_1 {
+ 	pinctrl-0 = <&sdc_default_state>;
+ 	pinctrl-names = "default";
+@@ -43,6 +59,30 @@ &sleep_clk {
+ };
+ 
+ &tlmm {
++	pcie0_default: pcie0-default-state {
++		clkreq-n-pins {
++			pins = "gpio14";
++			function = "pcie0_clk";
++			drive-strength = <8>;
++			bias-pull-up;
++		};
++
++		perst-n-pins {
++			pins = "gpio15";
++			function = "gpio";
++			drive-strength = <8>;
++			bias-pull-up;
++			output-low;
++		};
++
++		wake-n-pins {
++			pins = "gpio16";
++			function = "pcie0_wake";
++			drive-strength = <8>;
++			bias-pull-up;
++		};
++	};
++
+ 	sdc_default_state: sdc-default-state {
+ 		clk-pins {
+ 			pins = "gpio9";
 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 13dcd86e74ca..8d8252229895 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -37,6 +37,90 @@ include $(srctree)/scripts/Makefile.compiler
- include $(kbuild-file)
- include $(srctree)/scripts/Makefile.lib
- 
-+# flags that take effect in current and sub directories
-+KBUILD_AFLAGS += $(subdir-asflags-y)
-+KBUILD_CFLAGS += $(subdir-ccflags-y)
-+KBUILD_RUSTFLAGS += $(subdir-rustflags-y)
-+
-+# Figure out what we need to build from the various variables
-+# ===========================================================================
-+
-+# When an object is listed to be built compiled-in and modular,
-+# only build the compiled-in version
-+obj-m := $(filter-out $(obj-y),$(obj-m))
-+
-+# Libraries are always collected in one lib file.
-+# Filter out objects already built-in
-+lib-y := $(filter-out $(obj-y), $(sort $(lib-y) $(lib-m)))
-+
-+# Subdirectories we need to descend into
-+subdir-ym := $(sort $(subdir-y) $(subdir-m) \
-+			$(patsubst %/,%, $(filter %/, $(obj-y) $(obj-m))))
-+
-+# Handle objects in subdirs:
-+# - If we encounter foo/ in $(obj-y), replace it by foo/built-in.a and
-+#   foo/modules.order
-+# - If we encounter foo/ in $(obj-m), replace it by foo/modules.order
-+#
-+# Generate modules.order to determine modorder. Unfortunately, we don't have
-+# information about ordering between -y and -m subdirs. Just put -y's first.
-+
-+ifdef need-modorder
-+obj-m := $(patsubst %/,%/modules.order, $(filter %/, $(obj-y)) $(obj-m))
-+else
-+obj-m := $(filter-out %/, $(obj-m))
-+endif
-+
-+ifdef need-builtin
-+obj-y		:= $(patsubst %/, %/built-in.a, $(obj-y))
-+else
-+obj-y		:= $(filter-out %/, $(obj-y))
-+endif
-+
-+# Expand $(foo-objs) $(foo-y) etc. by replacing their individuals
-+suffix-search = $(strip $(foreach s, $3, $($(1:%$(strip $2)=%$s))))
-+# List composite targets that are constructed by combining other targets
-+multi-search = $(sort $(foreach m, $1, $(if $(call suffix-search, $m, $2, $3 -), $m)))
-+# List primitive targets that are compiled from source files
-+real-search = $(foreach m, $1, $(if $(call suffix-search, $m, $2, $3 -), $(call suffix-search, $m, $2, $3), $m))
-+
-+# If $(foo-objs), $(foo-y), $(foo-m), or $(foo-) exists, foo.o is a composite object
-+multi-obj-y := $(call multi-search, $(obj-y), .o, -objs -y)
-+multi-obj-m := $(call multi-search, $(obj-m), .o, -objs -y -m)
-+multi-obj-ym := $(multi-obj-y) $(multi-obj-m)
-+
-+# Replace multi-part objects by their individual parts,
-+# including built-in.a from subdirectories
-+real-obj-y := $(call real-search, $(obj-y), .o, -objs -y)
-+real-obj-m := $(call real-search, $(obj-m), .o, -objs -y -m)
-+
-+always-y += $(always-m)
-+
-+# hostprogs-always-y += foo
-+# ... is a shorthand for
-+# hostprogs += foo
-+# always-y  += foo
-+hostprogs += $(hostprogs-always-y) $(hostprogs-always-m)
-+always-y += $(hostprogs-always-y) $(hostprogs-always-m)
-+
-+# userprogs-always-y is likewise.
-+userprogs += $(userprogs-always-y) $(userprogs-always-m)
-+always-y += $(userprogs-always-y) $(userprogs-always-m)
-+
-+# Add subdir path
-+
-+ifneq ($(obj),.)
-+extra-y		:= $(addprefix $(obj)/, $(extra-y))
-+always-y	:= $(addprefix $(obj)/, $(always-y))
-+targets		:= $(addprefix $(obj)/, $(targets))
-+obj-m		:= $(addprefix $(obj)/, $(obj-m))
-+lib-y		:= $(addprefix $(obj)/, $(lib-y))
-+real-obj-y	:= $(addprefix $(obj)/, $(real-obj-y))
-+real-obj-m	:= $(addprefix $(obj)/, $(real-obj-m))
-+multi-obj-m	:= $(addprefix $(obj)/, $(multi-obj-m))
-+subdir-ym	:= $(addprefix $(obj)/, $(subdir-ym))
-+endif
-+
- ifndef obj
- $(warning kbuild: Makefile.build is included improperly)
- endif
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 2fe73cda0bdd..2d3a8470cf39 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -1,89 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--# flags that take effect in current and sub directories
--KBUILD_AFLAGS += $(subdir-asflags-y)
--KBUILD_CFLAGS += $(subdir-ccflags-y)
--KBUILD_RUSTFLAGS += $(subdir-rustflags-y)
--
--# Figure out what we need to build from the various variables
--# ===========================================================================
--
--# When an object is listed to be built compiled-in and modular,
--# only build the compiled-in version
--obj-m := $(filter-out $(obj-y),$(obj-m))
--
--# Libraries are always collected in one lib file.
--# Filter out objects already built-in
--lib-y := $(filter-out $(obj-y), $(sort $(lib-y) $(lib-m)))
--
--# Subdirectories we need to descend into
--subdir-ym := $(sort $(subdir-y) $(subdir-m) \
--			$(patsubst %/,%, $(filter %/, $(obj-y) $(obj-m))))
--
--# Handle objects in subdirs:
--# - If we encounter foo/ in $(obj-y), replace it by foo/built-in.a and
--#   foo/modules.order
--# - If we encounter foo/ in $(obj-m), replace it by foo/modules.order
--#
--# Generate modules.order to determine modorder. Unfortunately, we don't have
--# information about ordering between -y and -m subdirs. Just put -y's first.
--
--ifdef need-modorder
--obj-m := $(patsubst %/,%/modules.order, $(filter %/, $(obj-y)) $(obj-m))
--else
--obj-m := $(filter-out %/, $(obj-m))
--endif
--
--ifdef need-builtin
--obj-y		:= $(patsubst %/, %/built-in.a, $(obj-y))
--else
--obj-y		:= $(filter-out %/, $(obj-y))
--endif
--
--# Expand $(foo-objs) $(foo-y) etc. by replacing their individuals
--suffix-search = $(strip $(foreach s, $3, $($(1:%$(strip $2)=%$s))))
--# List composite targets that are constructed by combining other targets
--multi-search = $(sort $(foreach m, $1, $(if $(call suffix-search, $m, $2, $3 -), $m)))
--# List primitive targets that are compiled from source files
--real-search = $(foreach m, $1, $(if $(call suffix-search, $m, $2, $3 -), $(call suffix-search, $m, $2, $3), $m))
--
--# If $(foo-objs), $(foo-y), $(foo-m), or $(foo-) exists, foo.o is a composite object
--multi-obj-y := $(call multi-search, $(obj-y), .o, -objs -y)
--multi-obj-m := $(call multi-search, $(obj-m), .o, -objs -y -m)
--multi-obj-ym := $(multi-obj-y) $(multi-obj-m)
--
--# Replace multi-part objects by their individual parts,
--# including built-in.a from subdirectories
--real-obj-y := $(call real-search, $(obj-y), .o, -objs -y)
--real-obj-m := $(call real-search, $(obj-m), .o, -objs -y -m)
--
--always-y += $(always-m)
--
--# hostprogs-always-y += foo
--# ... is a shorthand for
--# hostprogs += foo
--# always-y  += foo
--hostprogs += $(hostprogs-always-y) $(hostprogs-always-m)
--always-y += $(hostprogs-always-y) $(hostprogs-always-m)
--
--# userprogs-always-y is likewise.
--userprogs += $(userprogs-always-y) $(userprogs-always-m)
--always-y += $(userprogs-always-y) $(userprogs-always-m)
--
--# Add subdir path
--
--ifneq ($(obj),.)
--extra-y		:= $(addprefix $(obj)/,$(extra-y))
--always-y	:= $(addprefix $(obj)/,$(always-y))
--targets		:= $(addprefix $(obj)/,$(targets))
--obj-m		:= $(addprefix $(obj)/,$(obj-m))
--lib-y		:= $(addprefix $(obj)/,$(lib-y))
--real-obj-y	:= $(addprefix $(obj)/,$(real-obj-y))
--real-obj-m	:= $(addprefix $(obj)/,$(real-obj-m))
--multi-obj-m	:= $(addprefix $(obj)/, $(multi-obj-m))
--subdir-ym	:= $(addprefix $(obj)/,$(subdir-ym))
--endif
--
- # Finds the multi-part object the current object will be linked into.
- # If the object belongs to two or more multi-part objects, list them all.
- modname-multi = $(sort $(foreach m,$(multi-obj-ym),\
 -- 
-2.43.0
+2.49.0
+
 
