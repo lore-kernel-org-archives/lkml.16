@@ -1,78 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F752A1C9;
-	Wed, 14 May 2025 13:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B761F428F;
+	Wed, 14 May 2025 13:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747229636; cv=none; b=AggXYT5E+Lv09njjNnBSIIBkQeMlKlt8ZMgn823YNG8UOBH2Am04uJ8p9qP8gccqtfTms1Djic9Mq0AGtH+rPjssc31AusWJ6ehqGuP5XFXmcuiAZgglBUnUnDCgAfl9l4ELneqWO6BsMuaHQlLt3gUN4W3SRNekxJ1sOkhbPqE=
+	t=1747229689; cv=none; b=DFTNbHMPCKQ04dI6kc9NF3fY7qQQGZNaVFlVLO7IV9OepYJXQJr0G0Z/JbBs3L9VaQlAVJt2jPu9KXHy8WTQqHEokmFmLwwbrh2IOKmJPP3Y9jgCvosxtklmfvaHZaoSJ8WGIrOCByKram9WzLk9Ag+RSGiGCrsrN4okUoScB2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747229636; c=relaxed/simple;
-	bh=JkZBRUWlAZrD6dJDIWe0/jn+X6h1LP7wJ9CI+0AFqjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f83wBVxTIegJn7uAOGwVy5NH91zOmp4FO2/gVsbJ4mjvOGC7nVFYg8QHqgf+mBGzIF1A92dKLefG+SDLwiyfOIwDcVNgEyhNaKNtTXYoAOqWgr9ND8zP03JuClCfEzffcqmmKN3OBQ4T+E0KcwzanRAqPHVK17rh9oDRuoW3vxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvpneVxJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvpneVxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFBAC4CEED;
-	Wed, 14 May 2025 13:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747229636;
-	bh=JkZBRUWlAZrD6dJDIWe0/jn+X6h1LP7wJ9CI+0AFqjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mvpneVxJLLjoBoY9CYOFE0wQiZpdBI5rvXfT/Z+p+h2q4LSQTHOrdUNZMJrVmpYGQ
-	 ovXqGVejvMRm0mC8Fojfx4D/M5LjJjtXlbFz9E34JsGwj8SBNsr+hwPb+NvRrE6vnY
-	 4Ji0WcSkziOpsNvQ58j25ICa27RXZrS434J+EVWDlxUSC2B6Fm2RWKcnfvB54wTcc8
-	 Tv+Fxa2Ciy5nvY4UMw3EZRwAeJ/zYjf/T1hDd4Mwv+iBerXBPe+jxSPm72FXz7Tqp6
-	 0ZGvgakCPLzabpILkcnC/24Y8bbqLLS2a6PBvWgiYzA0d2ex+1a7wGubc2S+/feEkL
-	 Gs9Izvv1eFKyA==
-Date: Wed, 14 May 2025 08:33:54 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH RESEND v2 2/2] media: dt-bindings: renesas,vsp1: add
- top-level constraints
-Message-ID: <174722962611.1969176.16342856670669078969.robh@kernel.org>
-References: <20250501173411.134130-3-krzysztof.kozlowski@linaro.org>
- <20250501173411.134130-4-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1747229689; c=relaxed/simple;
+	bh=wVOcW9WcqwQ0MaauWnzbqHVaQ+oh6npsussaYish+00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GpIIUFknL3JR6+NevNMb2UhqZjibBfmp40C4eakgEYGCOwbRMsT30CIMvMVp/PYCz9mIxxUZlmgjmAKMi27C37Oli8D1q3fU3Wg+p+Q0UuSqv+8rRy04MVVyXUAYkuU4qfBCjuPARipGxjLOo/RqEhUTl2/06lND3+V6WlwxG28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowADnkj_mmyRoeFwhFQ--.7405S2;
+	Wed, 14 May 2025 21:34:32 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: cezary.rojewski@intel.com,
+	liam.r.girdwood@linux.intel.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: kuninori.morimoto.gx@renesas.com,
+	tony.luck@intel.com,
+	amadeuszx.slawinski@linux.intel.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: avs: Add null pointer check for es8366
+Date: Wed, 14 May 2025 21:34:08 +0800
+Message-ID: <20250514133409.713-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501173411.134130-4-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADnkj_mmyRoeFwhFQ--.7405S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw45KrW5Zr15Cw4kJrW5Wrg_yoW8WFy5pF
+	1DWrZrKFW5Jr4xG345XayFvFy7Za48CFZ3GrWxK3s7AF4fJr93Wr1YqryjyFyakryxJw47
+	Xryj9ay8C34rJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRx-BiUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsCA2gkZJ+0pQAAsr
 
+The avs_card_suspend_pre() and avs_card_resume_post() in es8336
+calls the snd_soc_card_get_codec_dai(), but does not check its return
+value which is a null pointer if the function fails. This can result
+in a null pointer dereference. A proper implementation can be found
+in acp5x_nau8821_hw_params() and card_suspend_pre().
 
-On Thu, 01 May 2025 19:34:13 +0200, Krzysztof Kozlowski wrote:
-> Properties with variable number of items per each device are expected to
-> have widest constraints in top-level "properties:" block and further
-> customized (narrowed) in "if:then:".  Add missing top-level constraints
-> for clocks and clock-names.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes in v2:
-> 1. Add tag
-> 2. Move clocks description to top level
-> ---
->  .../bindings/media/renesas,vsp1.yaml          | 24 ++++++++++---------
->  1 file changed, 13 insertions(+), 11 deletions(-)
-> 
+Add a null pointer check for snd_soc_card_get_codec_dai() to avoid null
+pointer dereference when the function fails.
 
-Applied, thanks!
+Fixes: 32e40c8d6ff9 ("ASoC: Intel: avs: Add es8336 machine board")
+Cc: stable@vger.kernel.org # v6.6
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ sound/soc/intel/avs/boards/es8336.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/sound/soc/intel/avs/boards/es8336.c b/sound/soc/intel/avs/boards/es8336.c
+index 426ce37105ae..e31cc656f076 100644
+--- a/sound/soc/intel/avs/boards/es8336.c
++++ b/sound/soc/intel/avs/boards/es8336.c
+@@ -243,6 +243,9 @@ static int avs_card_suspend_pre(struct snd_soc_card *card)
+ {
+ 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, ES8336_CODEC_DAI);
+ 
++	if (!codec_dai)
++		return -EINVAL;
++
+ 	return snd_soc_component_set_jack(codec_dai->component, NULL, NULL);
+ }
+ 
+@@ -251,6 +254,9 @@ static int avs_card_resume_post(struct snd_soc_card *card)
+ 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, ES8336_CODEC_DAI);
+ 	struct avs_card_drvdata *data = snd_soc_card_get_drvdata(card);
+ 
++	if (!codec_dai)
++		return -EINVAL;
++
+ 	return snd_soc_component_set_jack(codec_dai->component, &data->jack, NULL);
+ }
+ 
+-- 
+2.42.0.windows.2
 
