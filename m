@@ -1,109 +1,141 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804C61DAC92;
-	Wed, 14 May 2025 01:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8461D54EF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747187778; cv=none; b=FwOiLoamH2ba6HQIsFdZZ5Bt9dw+sXbSfUFTwTuiKEsnQdrFmAnA4Ldm9MfCVUAVBNHXA160/moCGKnxLZfgyHcVHJV/xfyVSY5+CRGUhv3MSUgyFTaFHhp2zcpj4pOJQZZQHAYZRuryvI9+n3TVViRYMiOU64jfFiDqY193FLI=
+	t=1747187850; cv=none; b=uiWMQGvok2WiFB6MML6Bk9h/YeJwGmlFlaq3HwDQ5pAr8GS18tj+3jTS2CuSUiP4RkRkggkdREKUfifvQjRho68dxLeRgi+w/S4J6NCs4adB9ENk481Wc2MnSd6Vm/+4Gn+fx/SHr1WD37KUVJIVuh5KyD0b0dPvLU8uheJky6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747187778; c=relaxed/simple;
-	bh=kprDUzz3HORek4jgXz1YTQRAJVW8oMV2aHsige+efKo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=csDKNfKknn556l0c48/2jO02NwMe6RF4n35pqVMhRvWUEhMiV2VYnQ5xu7PTjQDJSIp5Y1n2M/bCUqfBc+jIKMY+mUnKXut881dhX0L55mexfP3ip7TzhXO1z4kIjltUj78W67cqqW+SvdCZyqfb1a+EHDlxTfw0eLPY7SEidlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=VcUKUKuE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oaog5whK; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="VcUKUKuE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oaog5whK"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 514661140095;
-	Tue, 13 May 2025 21:56:13 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-02.internal (MEProxy); Tue, 13 May 2025 21:56:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1747187773; x=1747274173; bh=vhpfVrpjQAxMVNP9kRsPQ
-	04hdep/8LVopp9unopJ7zA=; b=VcUKUKuEQVusCUhfap+PNpTtEgjLc/Tmz2cKd
-	sKWVXGQJ5DZShfBk3Rp5mWVjm4qZQ2M8bPe8355A4av3IPBAD2By4kW0gKDahbQW
-	hk6UpVdOHlqDig8Ca8x7u+ZGyY0DpN4ISEEZHCrtT+6G224nkaRqjeIisrAGm/Gb
-	Wt6qtwG4LzeGGRE1dNVJ88E7x0L2fJNC4M+PrA7tMTyuANdEyElrnzcvKOcif75I
-	2pKsF+8kZqRgKtxXXKtu0TlCZcKHwWMudp3xXi9ZTuWnlv8UfDBi+LZFi1cxSVtz
-	9bEr4v8nC0ABkEIky2gz4hwQ8i2MH9KN0AVxfBFKbjwmAA6Ew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1747187773; x=1747274173; bh=vhpfVrpjQAxMVNP9kRsPQ04hdep/8LVopp9
-	unopJ7zA=; b=oaog5whKPAL1rE3RNNcoK25wafkrf4DEOXmYFYDgM1JOvAZsSyj
-	iFHlVI9bhutFDCfPU/AgQ/ABLRpHE3OuXsyHtKeZJZtxjIVueFKVZXo62Nalrtka
-	i/sJAWHNIXppXu7l/bt6nfPQmn/ws1FuDaysi+gvYBePdaTt9cQ2hV9CHm/mNJgB
-	hod8Rg4KeNZIgn4yaA6lNTh/KdXalMdLpO3U5kvZcB3CU0db4iqCwSy+zA+POilu
-	e/amhM9IKGNyttIR1bR2jpk/u15F7x+vUMegTJEDFtTtOXbEFoTsXmIxN03ZV3ZE
-	Pbd7fnWxTCSLI8nvClyPB4M6AGxTPrMTriw==
-X-ME-Sender: <xms:PPgjaIKhCp1oqs_qrEo5dD70_HPzP4M0WEFNTUMUgl4dGrbkkrIhkA>
-    <xme:PPgjaIKsb1JjUj100s8cn0y6-t0-NGrnfnmD4DoMdnhttty1xqkD28JpWRFIr_lGt
-    DLaT6RDXiLyCYEWn_U>
-X-ME-Received: <xmr:PPgjaIuXwSkJ7SnwmjYsShouzYJZtHCUdGlLicJUOEfXSQ-Tsexvka2sV-zqOy2pbHKJfINjvxXFduLwBmmAMTNuutShPX-B1XJfgrXP6jF5quoS_A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdehjedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttden
-    ucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitgdrnh
-    gvtheqnecuggftrfgrthhtvghrnhephefhfeetueeiteeigfffieelveethfduleegheel
-    teehudetuedvjeffffdvhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphhtthho
-    peehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnphhithhrvgessggrhihlih
-    gsrhgvrdgtohhmpdhrtghpthhtohepjhhirhhishhlrggshieskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:PPgjaFbUmzgqPBlNvr3MN8QkeY3SSZ1gpwwYnmu8TquVla9zyS0vbA>
-    <xmx:PPgjaPZwqqpyVwsa3dwkTPvwqD3sGF6PbvqF6KX2n_goI67TtlA1oA>
-    <xmx:PPgjaBC5vcOjbqMnhyeAw7u10GKOvBLDXdw7Sht5g91RmECPHz6Icg>
-    <xmx:PPgjaFa9ablJ_8YPhXR0KxGP-Gk3S3JUagoTk4k_OyCivCRGTnUMQg>
-    <xmx:PfgjaFqIhDBKTBzVe_BY9x2gIoJeqSa1cjFdFJ8alCx7Vb-WG5Z29dTb>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 13 May 2025 21:56:12 -0400 (EDT)
-Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 119C011A0BC6;
-	Tue, 13 May 2025 21:56:12 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] vt: bracketed paste and cursor position
-Date: Tue, 13 May 2025 21:52:56 -0400
-Message-ID: <20250514015554.19978-1-nico@fluxnic.net>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747187850; c=relaxed/simple;
+	bh=tDrvq9S8UbkdawsX8X91djBZBoRSYZ+8h/HviY3r1dk=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=A2QdygRh7a+UX+R4N+yMKkroy5xE+wsaf7Sy4aDSVgUhKquJP/luwEEro4WnoJQ8MJMRZNMjZS/ooPeBwyxTHctAiKkFcKtUeYCjn9sQ7DZlHKzdJ0msib6g3Qpb6JR3XiMZTHEFdDhIFaK4bT34MviSbSI+ujLnfUA0ot+XXdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZxxLB5ppbz8R044;
+	Wed, 14 May 2025 09:57:22 +0800 (CST)
+Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
+	by mse-fl2.zte.com.cn with SMTP id 54E1vEuk019126;
+	Wed, 14 May 2025 09:57:14 +0800 (+08)
+	(envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp01[null])
+	by mapi (Zmail) with MAPI id mid14;
+	Wed, 14 May 2025 09:57:15 +0800 (CST)
+Date: Wed, 14 May 2025 09:57:15 +0800 (CST)
+X-Zmail-TransId: 2b036823f87bffffffffe21-f0575
+X-Mailer: Zmail v1.0
+Message-ID: <20250514095715517YAAvcCEiCPevDbByvfkG8@zte.com.cn>
+In-Reply-To: <20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn>
+References: 20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <yang.yang29@zte.com.cn>
+To: <jiang.kun2@zte.com.cn>, <wang.yaxin@zte.com.cn>
+Cc: <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
+        <bsingharora@gmail.com>, <jiang.kun2@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <akpm@linux-foundation.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsaW51eCBuZXh0XSB0YXNrc3RhdHM6IGZpeCBzdHJ1Y3QgdGFza3N0YXRzIGJyZWFrcyBiYWNrd2FyZAogY29tcGF0aWJpbGl0eSBzaW5jZSB2ZXJzaW9uIDE1?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+X-MAIL:mse-fl2.zte.com.cn 54E1vEuk019126
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6823F882.004/4ZxxLB5ppbz8R044
 
-A different kind of VT console update this time. These patches:
 
-- add bracketed paste support to the VT console
 
-- overcome a /dev/vcsa limitation with cursor position retrieval
+--=====_001_next=====
+Content-Type: multipart/related;
+	boundary="=====_002_next====="
 
-They are submitted together to avoid merge conflicts as they touch some
-common code.
 
-Tested on top of linux v6.15.0-rc4.
+--=====_002_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
 
-diffstat:
- drivers/tty/vt/selection.c     | 35 ++++++++++++++++++++++++++++++----
- drivers/tty/vt/vt.c            | 37 ++++++++++++++++++++++++++++++++++++
- include/linux/console_struct.h |  1 +
- include/uapi/linux/tiocl.h     |  5 +++++
- 4 files changed, 74 insertions(+), 4 deletions(-)
+
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PiBTb2x1dGlvbj4gPT09PT09PT09PiBtb3ZlIGRlbGF5IG1heCBhbmQgZGVsYXkgbWluIHRvIHRo
+ZSBlbmQgb2YgdGFza3N0YXQsIGFuZCBidW1wPiB0aGUgdmVyc2lvbiB0byAxNiBhZnRlciB0aGUg
+Y2hhbmdlDQpQbGVhc2Ugbm90aWNlIERvY3VtZW50YXRpb24vYWNjb3VudGluZy90YXNrc3RhdHMu
+cnN0LCBpdCBzYWlkOg0KQWRkaW5nIG1vcmUgZmllbGRzIHRvIHRoZSBlbmQgb2YgdGhlIGV4aXN0
+aW5nIHN0cnVjdCB0YXNrc3RhdHMuDQoNCj4gKyBfX3U2NCB3cGNvcHlfZGVsYXlfbWF4Oz4gKyBf
+X3U2NCB3cGNvcHlfZGVsYXlfbWluOw0KVGhlcmUgc2VlbXMgdG8gaGF2ZSBhIHdoaXRlc3BhY2Ug
+cHJvYmxlbXMsIGVsc2UgTEdUTS4NClJldmlld2VkLWJ5OiBZYW5nIFlhbmcgPHlhbmcueWFuZzI5
+QHp0ZS5jb20uY24+DQoNCkFub3RoZXIgdGhpbmcgdG8gbWFrZSBpdCBiZXR0ZXIgKG1heWJlIG5l
+eHQgcGF0Y2gpOiBzdHJ1Y3QgdGFza3N0YXRzDQpoYWQgY29tbWVudHMgdG8gZXhwbGFpbiB4eHhf
+Y291bnQgYW5kIHh4eF9kZWxheV90b3RhbCwgd2Ugc2hvdWxkDQphbHNvIGV4cGxhaW4geHh4X2Rl
+bGF5X21pbi9tYXgu
+
+
+--=====_003_next=====
+Content-Type: text/html ;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZh
+bWlseTrlvq7ova/pm4Xpu5EsTWljcm9zb2Z0IFlhSGVpOyI+Jmd0OyA8c3BhbiBzdHlsZT0iZm9u
+dC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90O0x1Y2lk
+YSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBi
+YWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij5Tb2x1dGlvbjwvc3Bhbj48YnIg
+c3R5bGU9ImJveC1zaXppbmc6IGJvcmRlci1ib3g7IG91dGxpbmU6IDBweDsgZm9udC1mYW1pbHk6
+IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90O0x1Y2lkYSBHcmFuZGUm
+cXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyB3aGl0ZS1zcGFj
+ZTogbm9ybWFsOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij48c3BhbiBz
+dHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZx
+dW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5z
+LXNlcmlmOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij4mZ3Q7ID09PT09
+PT09PTwvc3Bhbj48YnIgc3R5bGU9ImJveC1zaXppbmc6IGJvcmRlci1ib3g7IG91dGxpbmU6IDBw
+eDsgZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90
+O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNl
+cmlmOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUs
+IDI1NSk7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQg
+WWFoZWkmcXVvdDssICZxdW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwg
+SGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1
+NSk7Ij4mZ3Q7IG1vdmUgZGVsYXkgbWF4IGFuZCBkZWxheSBtaW4gdG8gdGhlIGVuZCBvZiB0YXNr
+c3RhdCwgYW5kIGJ1bXA8L3NwYW4+PGJyIHN0eWxlPSJib3gtc2l6aW5nOiBib3JkZXItYm94OyBv
+dXRsaW5lOiAwcHg7IGZvbnQtZmFtaWx5OiBBcmlhbCwgJnF1b3Q7TWljcm9zb2Z0IFlhaGVpJnF1
+b3Q7LCAmcXVvdDtMdWNpZGEgR3JhbmRlJnF1b3Q7LCBWZXJkYW5hLCBMdWNpZGEsIEhlbHZldGlj
+YSwgc2Fucy1zZXJpZjsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgYmFja2dyb3VuZC1jb2xvcjogcmdi
+KDI1NSwgMjU1LCAyNTUpOyI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgJnF1b3Q7
+TWljcm9zb2Z0IFlhaGVpJnF1b3Q7LCAmcXVvdDtMdWNpZGEgR3JhbmRlJnF1b3Q7LCBWZXJkYW5h
+LCBMdWNpZGEsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1
+NSwgMjU1LCAyNTUpOyI+Jmd0OyB0aGUgdmVyc2lvbiB0byAxNiBhZnRlciB0aGUgY2hhbmdlPC9z
+cGFuPjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk65b6u6L2v6ZuF6buR
+LE1pY3Jvc29mdCBZYUhlaTsiPlBsZWFzZSBub3RpY2UmbmJzcDtEb2N1bWVudGF0aW9uL2FjY291
+bnRpbmcvdGFza3N0YXRzLnJzdCwgaXQgc2FpZDo8L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZToxNHB4
+O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7Ij5BZGRpbmcgbW9yZSBm
+aWVsZHMgdG8gdGhlIGVuZCBvZiB0aGUgZXhpc3Rpbmcgc3RydWN0IHRhc2tzdGF0cy48L3A+PHAg
+c3R5bGU9ImZvbnQtc2l6ZToxNHB4O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQg
+WWFIZWk7Ij48YnI+PC9wPjxwPiZndDsgKyBfX3U2NCB3cGNvcHlfZGVsYXlfbWF4OzxiciBzdHls
+ZT0iYm94LXNpemluZzogYm9yZGVyLWJveDsgb3V0bGluZTogMHB4OyBmb250LWZhbWlseTogQXJp
+YWwsICZxdW90O01pY3Jvc29mdCBZYWhlaSZxdW90OywgJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90
+OywgVmVyZGFuYSwgTHVjaWRhLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IHdoaXRlLXNwYWNlOiBu
+b3JtYWw7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPiZndDsgKyBfX3U2
+NCB3cGNvcHlfZGVsYXlfbWluOzwvcD48cD5UaGVyZSBzZWVtcyB0byBoYXZlIGEgd2hpdGVzcGFj
+ZSBwcm9ibGVtcywgZWxzZSBMR1RNLjwvcD48cD5SZXZpZXdlZC1ieTombmJzcDtZYW5nIFlhbmcg
+Jmx0O3lhbmcueWFuZzI5QHp0ZS5jb20uY24mZ3Q7PC9wPjxwPjxicj48L3A+PHA+QW5vdGhlciB0
+aGluZyB0byBtYWtlIGl0IGJldHRlciAobWF5YmUgbmV4dCBwYXRjaCk6IHN0cnVjdCB0YXNrc3Rh
+dHM8L3A+PHA+aGFkIGNvbW1lbnRzIHRvIGV4cGxhaW4geHh4X2NvdW50IGFuZCB4eHhfZGVsYXlf
+dG90YWwsIHdlIHNob3VsZDwvcD48cD5hbHNvIGV4cGxhaW4geHh4X2RlbGF5X21pbi9tYXguPC9w
+PjwvZGl2Pg==
+
+
+--=====_003_next=====--
+
+--=====_002_next=====--
+
+--=====_001_next=====--
+
