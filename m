@@ -1,178 +1,129 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E6B221541
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4EE21A428;
+	Wed, 14 May 2025 08:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212718; cv=none; b=aPDJWRxGdpoSkP5HOwzdgZ02IRn9nTFKQBzhhr9cw8thjzyDqlO5epwxWXy5QcURAxfzn1HALWq7XcA3zL6tuN5b2xhPK24AsvqMaPmECfCjX1pRk3Dun1WUd8IdwunJFEXrqsxrb0MC9q9KwMMYvCc0peRxtIMu7FKRyZKmvXA=
+	t=1747212743; cv=none; b=JKoEp8N0gP5H3dEv3tfCKQOWOcv2QX/LrLLaEL4Xg19r1X2FMpA09+wOVC+z2pwkTRFhe9fEdsIiRSMamK6AEmCMRqIsrbYyZgmxQxFqDbVR1stwf784lmOhMruMK0B0r0psAHurbrtafCjC+JFTH4L3pvptykjEaz38nnxG2/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212718; c=relaxed/simple;
-	bh=08NpCGD+M4D8EFyf6OcXAksA72+oaIdVsJmF4fVuSQU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f4ZlydZd84nWjuL3DAeniuJPMwDGsaC5bLvv2vw4FtY6JWQTczMtC3iQzrPZ9cX9l/L/oKe8Nlc9EYFp2nnOiSm8cKu6RCQeya4LbOyCdJo0S+cUSbff9S2zpv8GjHAsk8uRNn48oYai+cysbOLFyqDpLmaz5q3mWwW3p8J5kbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h7D+ruxr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ovbwLlVQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h7D+ruxr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ovbwLlVQ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747212743; c=relaxed/simple;
+	bh=lvH4KVUWdDq9a9MwZjjMb15JvVXgbgvQwr6KF7wllzA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oEKysivyHJdKez+0BJoK1rDR5sYPmzb0zKIcrF79QIn4AjKiEeK1KyIbS4X6JMkkoeGlRwJs9dV4va51PX0anFP+uPMTuO1GwL2eo9vgTQisIEPb0AEfKzThPQrgNmQ2aOJs9PEtmB1qkqw+dK3+cbGoikSkIugFVd4KTSghEEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNT2ter8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h7D+ruxr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ovbwLlVQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h7D+ruxr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ovbwLlVQ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 30AE91F391;
-	Wed, 14 May 2025 08:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747212714; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TvbbYdamFPsDUbFCIqYLcc+lzT3rPBBeOg6bydKK8s=;
-	b=h7D+ruxrm9AdEFMS2L6H/jZ6VyYtyYTpO+qYJooiH9sz6iiBFGNQpVDP6renJNmpKVShRT
-	p8LZqiRQyrUdOMncd0DV5mE/03AmZW4zAyNguHCpE6+SBSsgQW5jY+nCoIxQwqudPQUO49
-	uWJyv22jxjD+1L0Si6uT2OIOe+cHwV8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747212714;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TvbbYdamFPsDUbFCIqYLcc+lzT3rPBBeOg6bydKK8s=;
-	b=ovbwLlVQnBkCZnC1SDZaEp5kNpq6IDYUkZif2Q1UGARph4eV/lYN+0mpabov8BOa4HlGWd
-	kx60wv9h5G4iyBAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=h7D+ruxr;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ovbwLlVQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747212714; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TvbbYdamFPsDUbFCIqYLcc+lzT3rPBBeOg6bydKK8s=;
-	b=h7D+ruxrm9AdEFMS2L6H/jZ6VyYtyYTpO+qYJooiH9sz6iiBFGNQpVDP6renJNmpKVShRT
-	p8LZqiRQyrUdOMncd0DV5mE/03AmZW4zAyNguHCpE6+SBSsgQW5jY+nCoIxQwqudPQUO49
-	uWJyv22jxjD+1L0Si6uT2OIOe+cHwV8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747212714;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8TvbbYdamFPsDUbFCIqYLcc+lzT3rPBBeOg6bydKK8s=;
-	b=ovbwLlVQnBkCZnC1SDZaEp5kNpq6IDYUkZif2Q1UGARph4eV/lYN+0mpabov8BOa4HlGWd
-	kx60wv9h5G4iyBAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 013FE137E8;
-	Wed, 14 May 2025 08:51:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BRicOqlZJGj9HAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 14 May 2025 08:51:53 +0000
-Date: Wed, 14 May 2025 10:51:53 +0200
-Message-ID: <877c2jval2.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: Simon Trimmer <simont@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	tiwai@suse.de
-Subject: Re: [PATCH 2/2] ALSA: hda: cs35l56: Log tuning unique identifiers during firmware load
-In-Reply-To: <aCRUgeFcG4iubmSV@finisterre.sirena.org.uk>
-References: <cover.1747142267.git.simont@opensource.cirrus.com>
-	<2fcc0e6fc5b8669acb026bebe44a4995ac83b967.1747142267.git.simont@opensource.cirrus.com>
-	<aCRUgeFcG4iubmSV@finisterre.sirena.org.uk>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNT2ter8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B826C4CEF0;
+	Wed, 14 May 2025 08:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747212743;
+	bh=lvH4KVUWdDq9a9MwZjjMb15JvVXgbgvQwr6KF7wllzA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=GNT2ter8uV5dQI1NAeeKP0ngsy6iBeJcdaVJ/gNftQxT3oTBVG1VvrQ+faxJXpYuN
+	 Ir1kAtJlnKwsspjtJLxPhVadt5KWjxP991O7nNBOx8HLtT0st7eUJA6A9toV+JoNB8
+	 Gw4tTcEWMIKWC5Y/tpC/TPqNYYjPkSM7jkNHGduRIIKEpsRneDHLKhZLlCBBZa75Ua
+	 NGPGBU08+RCOeQGsNhRax6xOQKuP6SO0uipZ4mTS2frDzbMIGmNhaXVMMg+zSm3sdz
+	 LROtq8JlMQkpby/rLDOLCKg2ECsX0+83e6kvu67Ufhxs4m5C6GvY24FjRPqGoqSPEA
+	 iXEvMw9af3Y0w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A2C3ABDA;
+	Wed, 14 May 2025 08:52:23 +0000 (UTC)
+From: Aleksa Paunovic via B4 Relay <devnull+aleksa.paunovic.htecgroup.com@kernel.org>
+Date: Wed, 14 May 2025 10:51:50 +0200
+Subject: [PATCH v4 1/2] dt-bindings: timer: mti,gcru
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 30AE91F391
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-riscv-time-mmio-v4-1-cb0cf2922d66@htecgroup.com>
+References: <20250514-riscv-time-mmio-v4-0-cb0cf2922d66@htecgroup.com>
+In-Reply-To: <20250514-riscv-time-mmio-v4-0-cb0cf2922d66@htecgroup.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, 
+ Djordje Todorovic <djordje.todorovic@htecgroup.com>, 
+ Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747212741; l=1731;
+ i=aleksa.paunovic@htecgroup.com; s=20250514; h=from:subject:message-id;
+ bh=bavSLGIvQI52iBpPwSEEg1jcYvhis52EMItmcd2/Qlo=;
+ b=g89qj4IiCI3QUes9/qSdtJSGECHU1IQBnqo4tR1iKJGDCUEP+o96M4G01g92qOz4ZjiH3qmBX
+ gnd8g3ieVr/BCvXawkU3WUt4LtIP7G3gjQca6sfVPJOMUCkKaMPFu2H
+X-Developer-Key: i=aleksa.paunovic@htecgroup.com; a=ed25519;
+ pk=gFVSVYLKAgJiS5qCnDyUMGOFuczv8C6o0UmRs+fgisA=
+X-Endpoint-Received: by B4 Relay for aleksa.paunovic@htecgroup.com/20250514
+ with auth_id=403
+X-Original-From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+Reply-To: aleksa.paunovic@htecgroup.com
 
-On Wed, 14 May 2025 10:29:53 +0200,
-Mark Brown wrote:
-> 
-> On Tue, May 13, 2025 at 01:39:24PM +0000, Simon Trimmer wrote:
-> > The cs35l56 smart amplifier has some informational firmware controls
-> > that are populated by a tuning bin file to unique values - logging these
-> > during firmware load identifies the specific configuration being used on
-> > that device instance.
-> 
-> Adding Takashi since this is an ALSA patch (and not deleting context for
-> him), Takashi is this OK to go via ASoC?
+From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
 
-Sure, it's a simple logging, feel free to pick it up.
+Add dt-bindings for the GCR.U memory mapped timer device for RISC-V
+platforms. The GCR.U memory region contains shadow copies of the RISC-V
+mtime register and the hrtime Global Configuration Register.
 
-Acked-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+---
+ .../devicetree/bindings/timer/mti,gcru.yaml        | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/mti,gcru.yaml b/Documentation/devicetree/bindings/timer/mti,gcru.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..ceaf90bad5332b64f3c1f28bebdc28d78443898a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/mti,gcru.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/mti,gcru.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: GCR.U timer device for RISC-V platforms
++
++maintainers:
++  - Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
++
++description:
++  The GCR.U memory region contains memory mapped shadow copies of
++  mtime and hrtime Global Configuration Registers,
++  which software can choose to make accessible from user mode.
++
++properties:
++  compatible:
++    const: mti,gcru
++
++  reg:
++    items:
++      - description: Read-only shadow copy of the RISC-V mtime register.
++      - description: Read-only shadow copy of the high resolution timer register.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@1617f000 {
++        compatible = "mti,gcru";
++        reg = <0x1617f050 0x8>,
++              <0x1617f090 0x8>;
++    };
+
+-- 
+2.34.1
 
 
-thanks,
-
-Takashi
-
-
-> As documented in submitting-patches.rst please send patches to the 
-> maintainers for the code you would like to change.  The normal kernel
-> workflow is that people apply patches from their inboxes, if they aren't
-> copied they are likely to not see the patch at all and it is much more
-> difficult to apply patches.
-> 
-> > 
-> > Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-> > ---
-> >  sound/pci/hda/cs35l56_hda.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-> > index b6fecf119261..aed7d7284231 100644
-> > --- a/sound/pci/hda/cs35l56_hda.c
-> > +++ b/sound/pci/hda/cs35l56_hda.c
-> > @@ -676,6 +676,8 @@ static void cs35l56_hda_fw_load(struct cs35l56_hda *cs35l56)
-> >  	if (ret)
-> >  		cs_dsp_stop(&cs35l56->cs_dsp);
-> >  
-> > +	cs35l56_log_tuning(&cs35l56->base, &cs35l56->cs_dsp);
-> > +
-> >  err_powered_up:
-> >  	if (!cs35l56->base.fw_patched)
-> >  		cs_dsp_power_down(&cs35l56->cs_dsp);
-> > -- 
-> > 2.43.0
-> > 
-> Verifying...
