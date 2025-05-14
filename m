@@ -1,142 +1,87 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4652F22
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9E01D79A5;
+	Wed, 14 May 2025 03:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747193747; cv=none; b=mI8K8Y3IRK4/GhwG37InkNgaHPPrGZ1V3amYVMIyKxS0DpfV07Xr/yTrEVcmAnX1MIzPI+Zd9ABWKrsjZ9Q1uojK50czHzQsTaEGdmgP2Fmpp9SFmPoketJZK/xMt4cBgx095fGY80hZ5bN0YIF1Xd7jg0j9qwyhVq0UW5CaHpc=
+	t=1747193940; cv=none; b=BFiUghBGqSnhPflH8ApgunRaGJDDYrxP6AHpSblgNUr8VYnV5TgOACrrZWqD2zI63zGbvA2C7JWaeuhCstG02bIZJIRZ3DdbJ6QV0xCQDLPg/tgKqK8XdyE7Kl6NNC/wRD2h4iq66Q12NtvZ/F5JeRXjQGvIypKnBn9XTeN2V7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747193747; c=relaxed/simple;
-	bh=dNa202f7uBhzdx+4Rgy1FGXfZT3ZNrWCIiuMiGYdesA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oHN9t2AYETvoCMp6NGepqIyYTxdTBLiZ/PjoPfvpOwXrjgjhoQgpAZmndLaiWuAAl/7dMchjpYODTXNdH7yU9f2y1Tzpxdz3fWz2BSGLUsrbDdPaEw2d/3VK89SH0XAfL6TuV9VZ82qRM6JaRd2RDA2xfZX95CQZ+SDCmiIpceE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DvuikcOq; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747193940; c=relaxed/simple;
+	bh=nkIIBBijf1JlW2gYe6G5ZP+HpfQx9QDsr5Jb8eacet8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKkxX4X1XiJx604sPiqlOgiycaR51lcUZ5vShX41zjJK5mcfzy+WGgG2nzcd7cjNaCkXGy/J5hlRtUYhyLVl28DF1Wm8PlKhCIyCpeDjdG2mTz8xml4vezff9phbYgijpmgXK0mvPFDLdR2/h+BU0DvyLh03im3oh8Iga5BT91g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIZ3nudN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DvuikcOq"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIsg8S025407;
-	Wed, 14 May 2025 03:35:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SPkwKx
-	RZ0jZWUYWozH5i6AyzMDzsb6UiTpEj0ygaXeo=; b=DvuikcOqqeRT+RbKoj6GHC
-	wm1rcotG8nxLoJEvZM2GbxUsORFE3saF5cADFMsZWLa04qoeCBSCc9VaH9FINvTv
-	7XUzZHsLLH7IhF48fGmefEdWQjUcZytb5qcUC0ydHwoYaI/meg5MGjtfQOklY9h2
-	yGuPOFTrBJiqlcPz91OojDd6iPUXTbWD1LMlk3+KEAOID90YrddIy/87Z8RoLsYi
-	7dDBdnywbCD/lgvhk3j/DsXawy4uyrWbOURZv6PUTYMGtwYllKSGRmyFTBJtoBll
-	Sk1ZywSqoTSmVZz5uHlO6EaF5hJ7QXcj6/QOPvkZTy11Xm3j4JRn6ewfyd7VcJJg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbs6hu27-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 03:35:14 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54E3ZDRh009700;
-	Wed, 14 May 2025 03:35:13 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbs6hu25-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 03:35:13 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54E24oM7026656;
-	Wed, 14 May 2025 03:35:13 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpa2fy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 03:35:12 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54E3ZCPX23920982
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 03:35:12 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3281158059;
-	Wed, 14 May 2025 03:35:12 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 84D0A58055;
-	Wed, 14 May 2025 03:35:09 +0000 (GMT)
-Received: from [9.204.206.207] (unknown [9.204.206.207])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 May 2025 03:35:09 +0000 (GMT)
-Message-ID: <876dd739-d708-40f1-82ad-45090a26664e@linux.ibm.com>
-Date: Wed, 14 May 2025 09:05:08 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIZ3nudN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B32A5C4CEED;
+	Wed, 14 May 2025 03:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747193939;
+	bh=nkIIBBijf1JlW2gYe6G5ZP+HpfQx9QDsr5Jb8eacet8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HIZ3nudNBjHzqihItNhUSQQ3K0gJgjUMYYDf5YWmNZ31hNQmAOn2nyXxsi0JjeBbs
+	 nzwwlTDmsuZD2gRiNBkzVheeIsBonHv1xR253vK6wLLWbDu6uDxYzBbOouv2rV6grH
+	 lJdcHJ5VTGfUj7RWHqEjf5xk6rjQcvUK1KvK4qeYFMX8JlDzjKaESMJVL8r5vCPAm1
+	 agIZBrAujvOOKFucL/VAbTd11qqDm2b/FYTqIFwaaIAoChj+y9gCmLWtEYNIfKXXhv
+	 b/GReFTRuEjSed7gD40r98Ag/+o8aoioziEdD4RoYCWa7dNJ4gX84u+VD7aHDVesgC
+	 GsAz9kwmp/7+A==
+Date: Tue, 13 May 2025 20:38:57 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Jason Baron <jbaron@akamai.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v2] params: Add support for static keys
+Message-ID: <ft6buh2oquxdygzxzobfmnjnatpuf6k6eetjtlqi2o3myv5qu3@vdt3t2yyprsv>
+References: <20250513130734.370280-1-kent.overstreet@linux.dev>
+ <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
+ <tjqz5spozvd35egxtfn2n3csvqu2qsaobbkfzf52ovhsokq47y@eq5xl2ugyydq>
+ <zljx4swb6eyhf67kwm32gcfboedxvikige3p5c7kt5lqo6c2jj@jjoa4g6375re>
+ <jgdcnclxhw62rs2jb67n4wmmvnmc7l6mnnmlyhzkec3gb6zovp@rccwil2bi4bb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: Transliterate author name and remove FIXME
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20241110162139.5179-2-thorsten.blum@linux.dev>
- <87v7wuy3p5.fsf@mpe.ellerman.id.au>
- <55B1EE24-BEC9-4A8D-84B0-ED32FCC070A5@linux.dev>
- <87v7weodqn.fsf@mpe.ellerman.id.au>
- <d9e232bb-5069-4526-b781-f4e316bda95d@csgroup.eu>
- <774CD605-AE6F-4D37-AB50-B9676858CDFA@linux.dev>
- <504A9138-865E-4CB3-8E1C-E19C4B86F1D3@linux.dev>
- <922be2ed-aed2-4c55-b7b0-37abfc745500@csgroup.eu>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <922be2ed-aed2-4c55-b7b0-37abfc745500@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDAyNSBTYWx0ZWRfX2Gd79AK1XC2v 0ROZDxXV0Kh6npqxTTzr/70KAEfsohpa7XqQ/Y9Q7MVDLaNxPxO3u5GnPOOctxOvncZ+oKvfco/ BhaVkTN0wVCOl7FHai/C6jmcYRqRpzE409BQRbEvB4p+mPpy/JLbskjx3Sn/ffx9SlhMG/p9REA
- QRMiIsS0zEDgLSSAgi42ZHe9KGaNQTt6+X3lWZWD6EMLDLk0PIhU/AH6Ttsox7szE+FayRcY6Na 6+u9DpeJgFP7ahHfetlyvxgFpKSvPnBOSeTMIav/I+EK4N/ls6i2k9q5bScaL9v0EiqL6RV3Xdm nAnOc5Nl3I131xKwN90wUwqTIW+f9d3gri3mFo/rqjAMtVtJpnsV8194m/5N66En4UN7ijZAAfk
- MzwLMbD6vtlZ8xs5B7sdrq+W0mBwIEwJhPvxy3gBwaP1nZCVfbYuYni/R9FVs6gxIVBn57T6
-X-Proofpoint-ORIG-GUID: RygOFpSGw5FOOlyWFCprbu40DsIUmHJz
-X-Authority-Analysis: v=2.4 cv=d5f1yQjE c=1 sm=1 tr=0 ts=68240f72 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=NEAV23lmAAAA:8 a=voM4FWlXAAAA:8 a=1UX6Do5GAAAA:8
- a=gmKdWFfqcPwGhx-9FWsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IC2XNlieTeVoXbcui8wp:22 a=Et2XPkok5AAZYJIKzHr1:22
-X-Proofpoint-GUID: HvOB_mhN5i6zhAb8yKPuvkeo6NcrL5n_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 mlxlogscore=872 impostorscore=0 adultscore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140025
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <jgdcnclxhw62rs2jb67n4wmmvnmc7l6mnnmlyhzkec3gb6zovp@rccwil2bi4bb>
 
-
-
-On 5/13/25 11:18 PM, Christophe Leroy wrote:
+On Tue, May 13, 2025 at 08:44:49PM -0400, Kent Overstreet wrote:
+> On Tue, May 13, 2025 at 05:37:11PM -0700, Josh Poimboeuf wrote:
+> > On Tue, May 13, 2025 at 07:34:59PM -0400, Kent Overstreet wrote:
+> > > On Tue, May 13, 2025 at 02:24:46PM -0700, Josh Poimboeuf wrote:
+> > > > > +++ b/include/linux/moduleparam.h
+> > > > > @@ -122,6 +122,7 @@ struct kparam_array
+> > > > >   *	charp: a character pointer
+> > > > >   *	bool: a bool, values 0/1, y/n, Y/N.
+> > > > >   *	invbool: the above, only sense-reversed (N = true).
+> > > > > + *	static_key_t: same as bool, but updates a 'struct static_key'
+> > > > 
+> > > > The static_key_*() interfaces are deprecated because they're really easy
+> > > > to use incorrectly.  I don't think we want to propagate that misuse to
+> > > > modules.
+> > > > 
+> > > > It would be better to have type(s) based on static_key_false and/or
+> > > > static_key_true, depending on whatever the default is.
+> > > 
+> > > Except those are just wrappers around struct static_key, so why does
+> > > that matter here?
+> > 
+> > Those struct wrappers are needed to work with static_branch_likely() and
+> > static_branch_unlikely().
 > 
-> 
-> Le 13/05/2025 à 16:10, Thorsten Blum a écrit :
->> On 7. Jan 2025, at 13:16, Thorsten Blum wrote:
->>> On 23. Nov 2024, at 11:19, Christophe Leroy wrote:
->>>> Isn't our file just a copy of the one from binutils ? Shouldn't we adjust it based on commit https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fbminor%2Fbinutils-gdb%2Fcommit%2F2ce18a16268a&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cab93fab4ad1e43fbaaee08dd9227edf0%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638827422381661999%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=pYe0b3WZhhmX3IHNh58Ogf%2BFMLYsdA7zn93%2B74D%2F%2FsA%3D&reserved=0 ?
->>>
->>> It looks like it's a copy and the name is spelled the same as in my patch:
->>>
->>>   "Mimi Phuong-Thao Vo"
->>>
->>> What's missing to get this merged?
->>
->> Does it make sense to resubmit this or do we leave the name and the
->> FIXME as is?
-> 
-> Thanks for the ping, your patch is not lost, it is still here: https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20241110162139.5179-2-thorsten.blum@linux.dev/
-> 
-> Maddy, what do you think about the way forward ?
+> Sure, but this has no bearing on that - unless I've missed them, there
+> aren't separate methods for just setting and checking the value, which
+> is all we're doing here.
 
-Was waiting for someone to chime to confirm. But I guess will pull it in .
+To make use of this feature, wouldn't the module need to use
+static_key_false() or so to actually insert the static branch to check
+the value?  Otherwise what's the point of using static keys here?
 
-Thanks.
-
-
-> 
-> Thanks
-> Christophe
-> 
-
+-- 
+Josh
