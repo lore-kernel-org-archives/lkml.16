@@ -1,209 +1,709 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021079.outbound.protection.outlook.com [52.101.62.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421E2156C6F;
-	Wed, 14 May 2025 19:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747251368; cv=fail; b=sceInJireSk3mvOr8tWbBmZAn1QqNhmNGLqPy2bhgynWQ/gsJdLck4/bHbiPPS2qxOboHlPzkmp3KJQUX9aqKPBg6e5vYC0bc8biYenRWGGzz2mct0kM4J3ruW6QfbM2HSTUQoc3EXI36Vqtnz9Iw4ntvnbVGKOdF3mLYEdY6BI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747251368; c=relaxed/simple;
-	bh=9Rk/VMRilcu8KzWFLBBi/d+8G9l0Nk7F+xcOpXmX7rU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MfkaXCAPZ5es7AUmqEwUE64yspI5EOmeoYwl2jwhFtx+qx626k7ilR/xMg5GiVYKqoKKx3ykuucH1TxZl8dfQi0pm8K92M79Dxfn780wMD0iyZ1Q8NOjDlumx6Rrnhju+z6paOxgAhLMf8xcjJdZunve9CNNeHApZIrpIVxklJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=YzRN79cc; arc=fail smtp.client-ip=52.101.62.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E2815278E;
+	Wed, 14 May 2025 19:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747251647; cv=none; b=pKIcXcRcZp0pz3Nfl5yov2a+K7sGu+RHjM3vBHbYsNAvf9Wg59sOvrgWzhOCCYhawa20hi4W1egsmdxQn/QqeIWIF3ZPvk/qT0H7nzSsf9gyw/2hmJVRF1dTFonzrlqCHxqIdnO/mj5f30klMC3/puSkJJjXYyP0RXNvFjHiSeQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747251647; c=relaxed/simple;
+	bh=0LSFEiBVicpTGKfKhTXVeP1f6NNg9Pt7ZLzw1Y3ChvQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IQmya+v6z5CkJks4p27n7cs1wijpxe5EYBnzoNXWwNgkxMFwc8bADNm85lSOeBQxYppY7drg8fIyUnq4AVy4dQZCWs3tVLk5A88sZmVZgelDDZeYfGeWS6UNIp4g7Yq3GYsApZL4bNjRbgem4msaO2H07DTr/uikgTdlTbTZbY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcDDZo5X; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YzRN79cc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c4X5b7wFSPooaz/+Qcju1v+H7EUlWyylTBqw8/yq1fC5g+eRM/jKtKuN7JueUW8DaN8Ty93/vQ7fjmywKIV8CD/1ql2Zw8lhsD52CQ++agj7eVJNzrOc7j+qrtFuRrzYgO9WCJCcTUQZkEX/qy6X2uAhYBthu2vewvn9t3OWRKY1o+jd4aqbIsvumPzmU2aUf5HfxUtlpHUIOFACFpMQJwz8t6NZbuIcoQo6btwYjEbAj9U9cm/LGRWNnSwEXYIdZ/xub4D0ZJFcRPiYkqwgPAuVDV7Aaj1/PN9vXE8Qbbjd0ZQ66ZZM1BKWr3rNt0JiiLaoXKkVamRNCbiuZTUnfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9Rk/VMRilcu8KzWFLBBi/d+8G9l0Nk7F+xcOpXmX7rU=;
- b=NtpZBPUXmxszd91V6lkwm/vqKFjpN9K/wWNOfuMNeSGuC0iBSUETFPb9JY3spjM3gUVENeZKOEbaYPRHQy5yIDtUe8rbjp3TIaSNaJppk3iasym9M/3r2gDX7g0kvvmV9czJ/dncoKOHPfeCl+ztZFsYg/n9+PcSGqiUEhJ7MG1d21uC22/ugQUPl3PdG5hZ9OdkUZ2CEVPu8/xcLr6bAMFMW+oupuUGVaJitwP03SVpoflFgYZ2j3IGlW8i98YysDk4B1TiiAbyY606ri8ClaSMA1Sc3Ghm2jKlgL6amdbINUZMckF5p61pznhe3oxHozpLHmy+nQ5GgVftTfBwxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Rk/VMRilcu8KzWFLBBi/d+8G9l0Nk7F+xcOpXmX7rU=;
- b=YzRN79ccZsx/YDF1mI6St1AaVdNqy5HIf73lc6bkBS3kZs7x8xGtW81BkTbbHHnWpijIDjGr2lv6WLlxaC4zGU+aFDaTb8e9mNR17n+BFWdMXUbiV2aM4PnDiR9bINXc2eiY4Mmuw9VrjC+CIyLKd0Ka1VUca5yAF1X2leU6+Qo=
-Received: from MN0PR21MB3437.namprd21.prod.outlook.com (2603:10b6:208:3d2::17)
- by BL1PR21MB3040.namprd21.prod.outlook.com (2603:10b6:208:394::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.3; Wed, 14 May
- 2025 19:36:03 +0000
-Received: from MN0PR21MB3437.namprd21.prod.outlook.com
- ([fe80::5125:461:1c07:1a97]) by MN0PR21MB3437.namprd21.prod.outlook.com
- ([fe80::5125:461:1c07:1a97%4]) with mapi id 15.20.8769.001; Wed, 14 May 2025
- 19:36:02 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC: Dexuan Cui <decui@microsoft.com>, "stephen@networkplumber.org"
-	<stephen@networkplumber.org>, KY Srinivasan <kys@microsoft.com>, Paul
- Rosswurm <paulros@microsoft.com>, "olaf@aepfle.de" <olaf@aepfle.de>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "leon@kernel.org"
-	<leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "john.fastabend@gmail.com"
-	<john.fastabend@gmail.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "shradhagupta@linux.microsoft.com"
-	<shradhagupta@linux.microsoft.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, Konstantin Taranov <kotaranov@microsoft.com>,
-	"horms@kernel.org" <horms@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next,v3] net: mana: Add handler for hardware servicing
- events
-Thread-Topic: [PATCH net-next,v3] net: mana: Add handler for hardware
- servicing events
-Thread-Index: AQHbw3g4KpxrP38PRECRV38WXy1PPbPSh19w
-Date: Wed, 14 May 2025 19:36:02 +0000
-Message-ID:
- <MN0PR21MB3437621E95E27BD2EBA4923BCA91A@MN0PR21MB3437.namprd21.prod.outlook.com>
-References: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1747079874-9445-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=49caaab5-9f29-4fd6-adc1-27da3cfc8dd2;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-05-14T19:34:06Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR21MB3437:EE_|BL1PR21MB3040:EE_
-x-ms-office365-filtering-correlation-id: 93ffc945-df66-4e92-4de9-08dd931e8fe5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?AcJp1m/bqOuSSwdTGERF4CMNckNCC3wa2WnMXW/C+avP+aFRgnYtkAaAYkot?=
- =?us-ascii?Q?jVvpw197+8HzX4j/5poq3eQGR++B7Bdh7zU5oCpUOptvbUTjtVd0ZmvpB+Y3?=
- =?us-ascii?Q?/pUdBBgGbgMCDT+UgmYlXm/gzpC4vL46TQVEfq4nbmhheL5Gph+K0+joZEIN?=
- =?us-ascii?Q?w0DeGaj1RvoTWjFvMk08/D/osybOWL3S6P2QZMOLWtDIokRmcIVBNrwB+uRg?=
- =?us-ascii?Q?flt8Ue5+75QBYxlLUGs9zMV7BUpTKXDgq8H9OfMkc9OLJBcBNawOgM79RJt7?=
- =?us-ascii?Q?AMw+EsnTw9maY2ucc5wJpzco5+iJbfeVB2zxlYHVWjmyJgrOOrP7a0+1wRGA?=
- =?us-ascii?Q?E+0h9Lpr9+9YVPdx7pX3AXXSycuAexBoXVk2OFf21x/eb1w5k59hzoKt0hDU?=
- =?us-ascii?Q?+9cDRpfQBaP3nyGm4M1NXdEL0Sk4wAqbPmfLft6rU5XOef+xj6MLHzwps5N3?=
- =?us-ascii?Q?CdIgBKbijPAdP6dRPbivWPYKwYBmMnsvZpG2m0SO0UJt43lZGctGwhWat8XP?=
- =?us-ascii?Q?fiUsYQFZWQDOpbK1WBZ1zAqkKsn8zaRJcqDqQJCkplz1msZTlOUjjf2GT+S9?=
- =?us-ascii?Q?WA8OZmMlOybYrXcT9M/fR6q9VSOcVpgC48rE2x/5bjCHyzlLqWhwL/q9cY/p?=
- =?us-ascii?Q?bU7tlOpOq2BwRycNz3XWC2SGYNkgSirijJFPVifE9luMmr8IC7G+sNvTkk5E?=
- =?us-ascii?Q?sg6/+SefWfq9KHT6BesHsWPgKkwdCvuJ/I5lprrMR6webbpJE16lWzyZ1lOB?=
- =?us-ascii?Q?Z/SuFhJu7lPFym1MwA+fSoUYyW8jkBRGr/CCR+EtUStuSQebaTRCDgHjM8+6?=
- =?us-ascii?Q?2AkDuAa6nk5IcTYLHF1Ge10JCwfuXR4lxvuJjQyDnNa8xIbepWso4e0Xx7gO?=
- =?us-ascii?Q?CZK4rwe7K3Y3MVoQg5CBwtNv8GfbnM5aykBf8wqSiZGpte5a0ixIT/mcpuvt?=
- =?us-ascii?Q?LTZ7q0IcsmbZ4bhXu8Dluun+EqxcIE07g0GhoSOIxKC7LTG2zzmv0xMviw8+?=
- =?us-ascii?Q?7XMAR2xoGy3ssi8bXL6mdML/VVMqyLkS7pn0wS4tkhM5ml3pGJ0hrV7BW16c?=
- =?us-ascii?Q?I5QNoDkVj+XKLZUJK3S0aJy47O4iyDNHH23GwZhK3G54gJIrT63nhR1q1xG0?=
- =?us-ascii?Q?BCzbe4JsrXpUpOpCKUdnlJxc0k0MxvtdMkMWV9QbKGkjcS7p94hb793SHnAl?=
- =?us-ascii?Q?/AEjQ1eZjWouGCQZNAG2f6EaLD2y/fghAJcvDvWGCMWBT7yVa55/h1f3O2tb?=
- =?us-ascii?Q?2kjfZ8yvT8EWDnVnCEEdf93YQZd6aiacr/iOEhE+NDgWAcrXc+h5PrsgIrT2?=
- =?us-ascii?Q?fMmy+6AFxWIl4rxA/u2PgOMwYeyMeewaf7TcNNd+BUsHEP3TFR2oqoS6jrHV?=
- =?us-ascii?Q?rTcM1qO+nk/d9JdhUhPsul/MSc39dp4ELlFgXEP/uJ/8eBgBCwbMvs3hT6cP?=
- =?us-ascii?Q?yctlaeLaXwwy8j4LCYVTJwDh5noiXb5wXdsnlb8BzUaqXCAHbplYHA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3437.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?rgWxv9bDz1W2X3Nh2PI/nIiCr8WkbjJXBxgVo4vtDE2pnd0NDzntUiD9ptZj?=
- =?us-ascii?Q?K6JfpfiiIKxAXv1mMNux1rx7swpb4ruMo8iiKMGwtzZ/XrZt1vrssYW2Khuh?=
- =?us-ascii?Q?FPpaNJsISe1msumPTSlbNY7KvibGptpmgYuZOris7lD12GJbeQvf1qGEk/i/?=
- =?us-ascii?Q?CqZ2TuGxOFGwyMI9pSShTQunVXpFJi/pPjf7fedMGgvclUsK9wHp7DhMTOce?=
- =?us-ascii?Q?tDDab/4Tb6ZiVJnJH/Dq/0LdjEQfSBelrBlkL/S+jkbAGqlXXmdpSsjiX2Jk?=
- =?us-ascii?Q?I+4iszIyJhQC+OGNRmV3x6I6pty+JjmHWBsTN1CJmrS0suSbEItH0ybbOAsn?=
- =?us-ascii?Q?wT7uYhh/JS1iOE75Lx5EzTDsYmjGZOgiVpBu01Z7V21bduT+vGvHANEPJkIA?=
- =?us-ascii?Q?B5kCT0xoHMQuFqKguZ/DvZYtOfpE+DDhWSdz4HXlhQpVyTuWQ3k2X10Ji22V?=
- =?us-ascii?Q?4b1ccuFV+nRLSceSVSPUElZuQRTn/f1nIGyURmzaLEPdeSVNEr3jL+UvQZsf?=
- =?us-ascii?Q?KjEMZzQX4J9KUpYbJZfqVoZqi+lxwTsn2DFBcOn10nWJ24UcfyYJAyeTAfps?=
- =?us-ascii?Q?nAd35dTFTArPo2LBsSVGmEMdx9xW1vo4ZWXymkzb9QQci34wFijOqM1muRi7?=
- =?us-ascii?Q?ocp3RQ3aLOV+lySrEnWev4BFHaPcdwGs/VckzYzvDPpj04OBGcE/El0awDtq?=
- =?us-ascii?Q?23WERHtGUCB8ZlgKVS8NZnaD3IoB3nt/8gNdUq6l904RYxzPVY6Fbbe0l3H2?=
- =?us-ascii?Q?xnsGYi8mW0c31pFY3IfcAi/b0YeAgRgoMr5NDu9hGz1mSqYZ7nTM29AWqBol?=
- =?us-ascii?Q?5afJDQWSaM8En1S98ER+J2O4OnyQTV5iaXLJKOBB7UBT4o68YoiV8Z9RD4n5?=
- =?us-ascii?Q?LX37dTJuQ3CxlYcxzHrs0vRyO+4cVyWKvpG7toeiMRUtNER1MI53wGTj21+h?=
- =?us-ascii?Q?H4IE9xOH//+QtBdklEv4TXRItat9nag25S6b+egQltHhTikDVWVwIIswHl/9?=
- =?us-ascii?Q?NQbmKTTg70v7BpJLzSTdfkwQ854T4J62OpYNeJP6eDlG6BcIZfvpZVJAVBMs?=
- =?us-ascii?Q?vDwBc5m2uncuRSZv1adXRBtg+eErvQ2qSfzBh/E4KkbkHoLuhYjNtdT5inOz?=
- =?us-ascii?Q?mmQVtBH6K5gWz2Aop43uvJI8ItDi3J0t/BguLn3KWgyHQ0Pf7X+knlhLZI2t?=
- =?us-ascii?Q?EOcByAbR0ScjFYggJwHIEwSjY7p2eACK8qluPMU6jf5Q/L5472pYefa1aRo4?=
- =?us-ascii?Q?wMYbXnQWC/PAu8IpCxKsbrFDUbUt+3Nwl2pFcO/saT+ki9sAa3SRhLoQBdzS?=
- =?us-ascii?Q?2JF2ltpQzKs9lvDrMEOBmRs130JiDCepL+2FQfBnOrwobJQIf/ypL5AgcVL2?=
- =?us-ascii?Q?rT0YLegXl9GfG4zZodsGLSyXRbi1neCByzb3nDNmo1h0+mz1IyR0RYl8dxK+?=
- =?us-ascii?Q?TJmfJ1omSMBwuPFMWvfQhZCictchcjmKbiPPWU5Z2/VscESDAzVo9K6Bji+g?=
- =?us-ascii?Q?KNJT2dqTHqNevTl7raSe3swAxvJLlhpeOH5F3yXa3tgzB6qyMKJv7JxRPjgE?=
- =?us-ascii?Q?3k0+zpQ8NjFd4kteD/QvhAqG4TlmPmmct2wqpRel?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcDDZo5X"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30c54b40112so188447a91.2;
+        Wed, 14 May 2025 12:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747251642; x=1747856442; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/jov0NzE83tU2+TpN1MGZpdxxagVZ2ggyga7FPdDYaE=;
+        b=TcDDZo5X2vNt/XmZF6PNBwS3b+ntoL2ibRC4DzVXIQixon5hDZfiUMfPZY4n58XdyK
+         WStBbxKnbvjfwZHsnTkHJCJJYFxP6HciQfEhA9q17TKxvTeEwm/SqcyS1fcrttYby/g6
+         bSD+GFGVmhA6EEFcFQTX1sBXYybLXXdmYwX9AtwQXz0qycsygBjGPqXCJZ/qNj7skRyN
+         FX7S060O55jRxOAzPYoe3cGjHrKSsJqhYPHxV5wg2kReCS1IqwnduWu0uYuhnJhkdeeB
+         +iGM1rRagOK50BQvuXRE5DY7/FyZPP2hr0r288uQ3BKgWEcWu7GDOUOAHV8o8YpM1Qfx
+         JGkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747251642; x=1747856442;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/jov0NzE83tU2+TpN1MGZpdxxagVZ2ggyga7FPdDYaE=;
+        b=OHq3RxuzbCbcnFAq985zpUn2Wo+5fzm7NKVFrmNlq7hPA92f+MH6CwWryTr9HTsP5m
+         Y1qnBS2wYuumdNxhYVwFGsfe+nu3JBUu3zudIkCpyv8+nrb90EJ5DnEjLa2QZl2FUTJp
+         Zep2IeFdMCieri8+sn6Q1jxi5Oas134na8exxe/sYCVOSLzrrtvOnD/7W0AINJzeufOy
+         GglZwUfKBHRkiyYfnsOA8dHsUeTOgnZOy69/1LMlw0hIXxh2PBDnKu836lwSRloSQjcZ
+         5Ft7zHi98KV/CR4jmxa4YBh6FdayQueWDlr6c9xgirmA1UkMBQM7vXEQ6t5MvORnJEpI
+         Ermg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaIJygswdLjV3AWoM35krfd55LQiEppNMF+ESNtPqSLBHlY5bRuCEOh86hKrOsJWdZfRvjq8rL9VmH6GQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyuTsF29mdRzMmTuJTnBuuwjyGb2uuk28ogrvapwNm0rvMmhye
+	hTWLYdwvC0Lxkahm5bzvi/dKUZlNzpbQR1bvFxzE7ELssAPX7DI0Nty/kFRnWYs8WfvjKPuQ1uj
+	Xnzqfdj02xYRpnz9OetpxiGkHK6A=
+X-Gm-Gg: ASbGnctaDYY810jvDve0KH98gizyrIU8sQeJFiPbwLFueoZJ39S0fVl2fnq4KIE3YZG
+	IRWW2kENlD3djRZMD+jzh9JQHLeSd9o46VBZFBgppVsP+FEv8xMyzR0ine9WyHJlKbgIisFDEc0
+	pNClpwAI5OBU8GLGD0iMpY/gk1ppLhDBvs
+X-Google-Smtp-Source: AGHT+IHl0gaItrxM/99mteLL7vBbCWn2Y0ybn8GHEF8Eonk2MsljjAlxWf4H7wK2d+CUDDAssP/aeaeElQCvFPIX1kQ=
+X-Received: by 2002:a17:90b:4e87:b0:303:75a7:26a4 with SMTP id
+ 98e67ed59e1d1-30e2e5d6105mr7597234a91.7.1747251642270; Wed, 14 May 2025
+ 12:40:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3437.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93ffc945-df66-4e92-4de9-08dd931e8fe5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 19:36:02.8929
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LgDTkv3J9+ZNCaIHdCOZFNWqAj//iw7+oU0slAD279V0cBkqTD+2W7gpjCeLICXF+eUc6ziSwm2HBZwZEfu3Aw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3040
+References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-13-cgoettsche@seltendoof.de>
+In-Reply-To: <20250511173055.406906-13-cgoettsche@seltendoof.de>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Wed, 14 May 2025 15:40:31 -0400
+X-Gm-Features: AX0GCFt8Gh_LqDAuW9dimznklV68czDJFn7Yeh2v9J64V89mxmXwRWUk5ZxNns0
+Message-ID: <CAEjxPJ6PbCy6u1+3fnqXkxmEPtY3XadAT-csk-+eTmjLnfNFVg@mail.gmail.com>
+Subject: Re: [PATCH v3 13/14] selinux: restrict policy strings
+To: cgzones@googlemail.com, James Carter <jwcart2@gmail.com>
+Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> Validate the characters and the lengths of strings parsed from binary
+> policies.
+>
+>   * Disallow control characters
+>   * Limit characters of identifiers to alphanumeric, underscore, dash,
+>     and dot
+>   * Limit identifiers in length to 64, expect types to 1024,
+>     sensitivities to 32 and categories to 16, characters
+>     (excluding NUL-terminator)
 
+(added James Carter to explicit cc for comparison with any
+userspace-imposed restrictions)
 
-> -----Original Message-----
-> From: LKML haiyangz <lkmlhyz@microsoft.com> On Behalf Of Haiyang Zhang
-> Sent: Monday, May 12, 2025 3:58 PM
-> To: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>; Dexuan Cui
-> <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
-> <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
-> olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
-> wei.liu@kernel.org; edumazet@google.com; kuba@kernel.org;
-> pabeni@redhat.com; leon@kernel.org; Long Li <longli@microsoft.com>;
-> ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
-> daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
-> ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
-> shradhagupta@linux.microsoft.com; andrew+netdev@lunn.ch; Konstantin
-> Taranov <kotaranov@microsoft.com>; horms@kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH net-next,v3] net: mana: Add handler for hardware servicin=
-g
-> events
->=20
-> To collaborate with hardware servicing events, upon receiving the special
-> EQE notification from the HW channel, remove the devices on this bus.
-> Then, after a waiting period based on the device specs, rescan the parent
-> bus to recover the devices.
->=20
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+I think we could easily go lower than 1024 characters for type names.
+
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
 > ---
 > v3:
-> Updated for checkpatch warnings as suggested by Simon Horman.
->=20
+>   - introduce a central limits.h header
+>   - add limits for all kinds of string: filesystem names, filetrans
+>     keys, genfs paths, infiniband device names
 > v2:
-> Added dev_dbg for service type as suggested by Shradha Gupta.
-> Added driver cap bit.
->=20
+>   - add wrappers for str_read() to minimize the usage of magic numbers
+>   - limit sensitivities to a length of 32, to match categories,
+>     suggested by Daniel
 > ---
+>  security/selinux/include/limits.h | 90 +++++++++++++++++++++++++++++++
+>  security/selinux/ss/conditional.c |  5 +-
+>  security/selinux/ss/conditional.h |  2 -
+>  security/selinux/ss/constraint.h  |  2 -
+>  security/selinux/ss/policydb.c    | 78 ++++++++++++++++++---------
+>  security/selinux/ss/policydb.h    | 51 +++++++++++++++++-
+>  6 files changed, 196 insertions(+), 32 deletions(-)
+>  create mode 100644 security/selinux/include/limits.h
+>
+> diff --git a/security/selinux/include/limits.h b/security/selinux/include=
+/limits.h
+> new file mode 100644
+> index 000000000000..d267c0c64f49
+> --- /dev/null
+> +++ b/security/selinux/include/limits.h
+> @@ -0,0 +1,90 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Limits for various policy database elements.
+> + */
+> +
+> +/*
+> + * Maximum supported depth of conditional expressions.
+> + */
+> +#define COND_EXPR_MAXDEPTH 10
+> +
+> +/*
+> + * Maximum supported depth for constraint expressions.
+> + */
+> +#define CEXPR_MAXDEPTH 5
+> +
+> +/*
+> + * Maximum supported identifier value.
+> + *
+> + * Reasoning: The most used symbols are types and they need to fit into
+> + *            an u16 for the avtab entries. Keep U16_MAX as special valu=
+e
+> + *            and U16_MAX-1 to avoid accidental overflows into U16_MAX.
 
-Thanks for the reviews.=20
-I will submit v4 soon with a minor name change.
+This seems rather arbitrary and unnecessary to me? Unless userspace
+does the same?
 
-Thanks,
-- Haiyang
+> + */
+> +#define IDENTIFIER_MAXVALUE (U16_MAX - 2)
+> +
+> +/*
+> + * Maximum supported length of security context strings.
+> + *
+> + * Reasoning: The string must fir into a PAGE_SIZE.
+
+s/fir/fit/
+s/into a/under/
+
+> + */
+> +#define CONTEXT_MAXLENGTH 4000
+
+Any particular reason to not just make it PAGE_SIZE then?
+
+> +
+> +/*
+> + * Maximum supported boolean name length.
+> + */
+> +#define BOOLEAN_NAME_MAXLENGTH 64
+> +
+> +/*
+> + * Maximum supported security class and common class name length.
+> + */
+> +#define CLASS_NAME_MAXLENGTH 64
+> +
+> +/*
+> + * Maximum supported permission name length.
+> + */
+> +#define PERMISSION_NAME_MAXLENGTH 64
+> +
+> +/*
+> + * Maximum supported user name length.
+> + */
+> +#define USER_NAME_MAXLENGTH 64
+> +
+> +/*
+> + * Maximum supported role name length.
+> + */
+> +#define ROLE_NAME_MAXLENGTH 64
+> +
+> +/*
+> + * Maximum supported type name length.
+> + */
+> +#define TYPE_NAME_MAXLENGTH 1024
+
+Would advocate for a lower limit unless we know of a policy that would
+exceed it.
+
+> +
+> +/*
+> + * Maximum supported sensitivity name length.
+> + */
+> +#define SENSITIVITY_NAME_MAXLENGTH 32
+> +
+> +/*
+> + * Maximum supported category name length.
+> + */
+> +#define CATEGORY_NAME_MAXLENGTH 16
+> +
+> +/*
+> + * Maximum supported path name length for keys in filename transitions.
+> + */
+> +#define FILETRANSKEY_NAME_MAXLENGTH 1024
+
+These are component names only, right, not multi-component pathnames?
+In that case open to lower limit or using something defined by fs layer.
+
+> +
+> +/*
+> + * Maximum supported filesystem name length.
+
+s/filesystem/filesystem type/
+
+> + */
+> +#define FILESYSTEM_NAME_MAXLENGTH 128
+
+If we can find a limit imposed by the kernel elsewhere for fstype
+names, we should just reuse that.
+
+> +
+> +/*
+> + * Maximum supported path prefix length for genfs statements.
+> + */
+> +#define GENFS_PATH_MAXLENGTH 1024
+
+Should just use PATH_MAX or similar definition from elsewhere.
+
+> +
+> +/*
+> + * Maximum supported Infiniband device name length.
+> + */
+> +#define INFINIBAND_DEVNAME_MAXLENGTH 256
+
+Would use a limit from infiniband subsystem if one exists.
+
+> diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/cond=
+itional.c
+> index ce0281cce739..c0a2814dafdb 100644
+> --- a/security/selinux/ss/conditional.c
+> +++ b/security/selinux/ss/conditional.c
+> @@ -245,7 +245,8 @@ int cond_index_bool(void *key, void *datum, void *dat=
+ap)
+>         booldatum =3D datum;
+>         p =3D datap;
+>
+> -       if (!booldatum->value || booldatum->value > p->p_bools.nprim)
+> +       if (!booldatum->value || booldatum->value > p->p_bools.nprim ||
+> +           booldatum->value > IDENTIFIER_MAXVALUE)
+>                 return -EINVAL;
+>
+>         p->sym_val_to_name[SYM_BOOLS][booldatum->value - 1] =3D key;
+> @@ -280,7 +281,7 @@ int cond_read_bool(struct policydb *p, struct symtab =
+*s, struct policy_file *fp)
+>
+>         len =3D le32_to_cpu(buf[2]);
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_bool(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto err;
+>
+> diff --git a/security/selinux/ss/conditional.h b/security/selinux/ss/cond=
+itional.h
+> index 468e98ad3ea1..d5aefcbaa1eb 100644
+> --- a/security/selinux/ss/conditional.h
+> +++ b/security/selinux/ss/conditional.h
+> @@ -12,8 +12,6 @@
+>  #include "policydb.h"
+>  #include "../include/conditional.h"
+>
+> -#define COND_EXPR_MAXDEPTH 10
+> -
+>  /*
+>   * A conditional expression is a list of operators and operands
+>   * in reverse polish notation.
+> diff --git a/security/selinux/ss/constraint.h b/security/selinux/ss/const=
+raint.h
+> index 1d75a8a044df..f986156de856 100644
+> --- a/security/selinux/ss/constraint.h
+> +++ b/security/selinux/ss/constraint.h
+> @@ -19,8 +19,6 @@
+>
+>  #include "ebitmap.h"
+>
+> -#define CEXPR_MAXDEPTH 5
+> -
+>  struct constraint_expr {
+>  #define CEXPR_NOT   1 /* not expr */
+>  #define CEXPR_AND   2 /* expr and expr */
+> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
+b.c
+> index 2b098d9abf17..e64254985762 100644
+> --- a/security/selinux/ss/policydb.c
+> +++ b/security/selinux/ss/policydb.c
+> @@ -552,7 +552,8 @@ static int common_index(void *key, void *datum, void =
+*datap)
+>
+>         comdatum =3D datum;
+>         p =3D datap;
+> -       if (!comdatum->value || comdatum->value > p->p_commons.nprim)
+> +       if (!comdatum->value || comdatum->value > p->p_commons.nprim ||
+> +           comdatum->value > IDENTIFIER_MAXVALUE)
+>                 return -EINVAL;
+>
+>         p->sym_val_to_name[SYM_COMMONS][comdatum->value - 1] =3D key;
+> @@ -567,7 +568,8 @@ static int class_index(void *key, void *datum, void *=
+datap)
+>
+>         cladatum =3D datum;
+>         p =3D datap;
+> -       if (!cladatum->value || cladatum->value > p->p_classes.nprim)
+> +       if (!cladatum->value || cladatum->value > p->p_classes.nprim ||
+> +           cladatum->value > IDENTIFIER_MAXVALUE)
+>                 return -EINVAL;
+>
+>         p->sym_val_to_name[SYM_CLASSES][cladatum->value - 1] =3D key;
+> @@ -583,6 +585,7 @@ static int role_index(void *key, void *datum, void *d=
+atap)
+>         role =3D datum;
+>         p =3D datap;
+>         if (!role->value || role->value > p->p_roles.nprim ||
+> +           role->value > IDENTIFIER_MAXVALUE ||
+>             role->bounds > p->p_roles.nprim)
+>                 return -EINVAL;
+>
+> @@ -601,6 +604,7 @@ static int type_index(void *key, void *datum, void *d=
+atap)
+>
+>         if (typdatum->primary) {
+>                 if (!typdatum->value || typdatum->value > p->p_types.npri=
+m ||
+> +                   typdatum->value > IDENTIFIER_MAXVALUE ||
+>                     typdatum->bounds > p->p_types.nprim)
+>                         return -EINVAL;
+>                 p->sym_val_to_name[SYM_TYPES][typdatum->value - 1] =3D ke=
+y;
+> @@ -618,6 +622,7 @@ static int user_index(void *key, void *datum, void *d=
+atap)
+>         usrdatum =3D datum;
+>         p =3D datap;
+>         if (!usrdatum->value || usrdatum->value > p->p_users.nprim ||
+> +           usrdatum->value > IDENTIFIER_MAXVALUE ||
+>             usrdatum->bounds > p->p_users.nprim)
+>                 return -EINVAL;
+>
+> @@ -634,7 +639,8 @@ static int sens_index(void *key, void *datum, void *d=
+atap)
+>         levdatum =3D datum;
+>         p =3D datap;
+>
+> -       if (!levdatum->level.sens || levdatum->level.sens > p->p_levels.n=
+prim)
+> +       if (!levdatum->level.sens || levdatum->level.sens > p->p_levels.n=
+prim ||
+> +           levdatum->level.sens > IDENTIFIER_MAXVALUE)
+>                 return -EINVAL;
+>
+>         if (!levdatum->isalias)
+> @@ -651,7 +657,8 @@ static int cat_index(void *key, void *datum, void *da=
+tap)
+>         catdatum =3D datum;
+>         p =3D datap;
+>
+> -       if (!catdatum->value || catdatum->value > p->p_cats.nprim)
+> +       if (!catdatum->value || catdatum->value > p->p_cats.nprim ||
+> +           catdatum->value > IDENTIFIER_MAXVALUE)
+>                 return -EINVAL;
+>
+>         if (!catdatum->isalias)
+> @@ -1226,8 +1233,9 @@ static int context_read_and_validate(struct context=
+ *c, struct policydb *p,
+>   * binary representation file.
+>   */
+>
+> -int str_read(char **strp, gfp_t flags, struct policy_file *fp, u32 len)
+> +int str_read(char **strp, gfp_t flags, struct policy_file *fp, u32 len, =
+int kind, u32 max_len)
+>  {
+> +       u32 i;
+>         int rc;
+>         char *str;
+>
+> @@ -1237,19 +1245,35 @@ int str_read(char **strp, gfp_t flags, struct pol=
+icy_file *fp, u32 len)
+>         if (size_check(sizeof(char), len, fp))
+>                 return -EINVAL;
+>
+> +       if (len > max_len)
+> +               return -EINVAL;
+> +
+>         str =3D kmalloc(len + 1, flags | __GFP_NOWARN);
+>         if (!str)
+>                 return -ENOMEM;
+>
+>         rc =3D next_entry(str, fp, len);
+> -       if (rc) {
+> -               kfree(str);
+> -               return rc;
+> +       if (rc)
+> +               goto bad_str;
+> +
+> +       rc =3D -EINVAL;
+> +       for (i =3D 0; i < len; i++) {
+> +               if (iscntrl(str[i]))
+> +                       goto bad_str;
+> +
+> +               if (kind =3D=3D STR_IDENTIFIER &&
+> +                   !(isalnum(str[i]) || str[i] =3D=3D '_' || str[i] =3D=
+=3D '-' || str[i] =3D=3D '.'))
+> +                       goto bad_str;
+> +
+>         }
+>
+>         str[len] =3D '\0';
+>         *strp =3D str;
+>         return 0;
+> +
+> +bad_str:
+> +       kfree(str);
+> +       return rc;
+>  }
+>
+>  static int perm_read(struct policydb *p, struct symtab *s, struct policy=
+_file *fp)
+> @@ -1274,7 +1298,7 @@ static int perm_read(struct policydb *p, struct sym=
+tab *s, struct policy_file *f
+>         if (perdatum->value < 1 || perdatum->value > SEL_VEC_MAX)
+>                 goto bad;
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_perm(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1321,7 +1345,7 @@ static int common_read(struct policydb *p, struct s=
+ymtab *s, struct policy_file
+>                 goto bad;
+>         comdatum->permissions.nprim =3D le32_to_cpu(buf[2]);
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_class(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1559,12 +1583,12 @@ static int class_read(struct policydb *p, struct =
+symtab *s, struct policy_file *
+>
+>         ncons =3D le32_to_cpu(buf[5]);
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_class(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+>         if (len2) {
+> -               rc =3D str_read(&cladatum->comkey, GFP_KERNEL, fp, len2);
+> +               rc =3D str_read_class(&cladatum->comkey, GFP_KERNEL, fp, =
+len2);
+>                 if (rc)
+>                         goto bad;
+>
+> @@ -1698,7 +1722,7 @@ static int role_read(struct policydb *p, struct sym=
+tab *s, struct policy_file *f
+>         if (p->policyvers >=3D POLICYDB_VERSION_BOUNDARY)
+>                 role->bounds =3D le32_to_cpu(buf[2]);
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_role(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1765,7 +1789,7 @@ static int type_read(struct policydb *p, struct sym=
+tab *s, struct policy_file *f
+>                 typdatum->primary =3D le32_to_cpu(buf[2]);
+>         }
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_type(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1829,7 +1853,7 @@ static int user_read(struct policydb *p, struct sym=
+tab *s, struct policy_file *f
+>         if (p->policyvers >=3D POLICYDB_VERSION_BOUNDARY)
+>                 usrdatum->bounds =3D le32_to_cpu(buf[2]);
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_user(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1878,7 +1902,7 @@ static int sens_read(struct policydb *p, struct sym=
+tab *s, struct policy_file *f
+>                 goto bad;
+>         levdatum->isalias =3D val;
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_sens(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -1921,7 +1945,7 @@ static int cat_read(struct policydb *p, struct symt=
+ab *s, struct policy_file *fp
+>                 goto bad;
+>         catdatum->isalias =3D val;
+>
+> -       rc =3D str_read(&key, GFP_KERNEL, fp, len);
+> +       rc =3D str_read_cat(&key, GFP_KERNEL, fp, len);
+>         if (rc)
+>                 goto bad;
+>
+> @@ -2230,7 +2254,7 @@ static int filename_trans_read_helper_compat(struct=
+ policydb *p, struct policy_f
+>         len =3D le32_to_cpu(buf[0]);
+>
+>         /* path component string */
+> -       rc =3D str_read(&name, GFP_KERNEL, fp, len);
+> +       rc =3D str_read(&name, GFP_KERNEL, fp, len, STR_UNCONSTRAINT, FIL=
+ETRANSKEY_NAME_MAXLENGTH);
+>         if (rc)
+>                 return rc;
+>
+> @@ -2329,7 +2353,7 @@ static int filename_trans_read_helper(struct policy=
+db *p, struct policy_file *fp
+>         len =3D le32_to_cpu(buf[0]);
+>
+>         /* path component string */
+> -       rc =3D str_read(&name, GFP_KERNEL, fp, len);
+> +       rc =3D str_read(&name, GFP_KERNEL, fp, len, STR_UNCONSTRAINT, FIL=
+ETRANSKEY_NAME_MAXLENGTH);
+>         if (rc)
+>                 return rc;
+>
+> @@ -2483,7 +2507,7 @@ static int genfs_read(struct policydb *p, struct po=
+licy_file *fp)
+>                 if (!newgenfs)
+>                         goto out;
+>
+> -               rc =3D str_read(&newgenfs->fstype, GFP_KERNEL, fp, len);
+> +               rc =3D str_read_fsname(&newgenfs->fstype, GFP_KERNEL, fp,=
+ len);
+>                 if (rc)
+>                         goto out;
+>
+> @@ -2522,7 +2546,8 @@ static int genfs_read(struct policydb *p, struct po=
+licy_file *fp)
+>                         if (!newc)
+>                                 goto out;
+>
+> -                       rc =3D str_read(&newc->u.name, GFP_KERNEL, fp, le=
+n);
+> +                       rc =3D str_read(&newc->u.name, GFP_KERNEL, fp, le=
+n,
+> +                                     STR_UNCONSTRAINT, GENFS_PATH_MAXLEN=
+GTH);
+>                         if (rc)
+>                                 goto out;
+>
+> @@ -2625,7 +2650,7 @@ static int ocontext_read(struct policydb *p,
+>                                         goto out;
+>                                 len =3D le32_to_cpu(buf[0]);
+>
+> -                               rc =3D str_read(&c->u.name, GFP_KERNEL, f=
+p, len);
+> +                               rc =3D str_read_fsname(&c->u.name, GFP_KE=
+RNEL, fp, len);
+>                                 if (rc)
+>                                         goto out;
+>
+> @@ -2693,7 +2718,7 @@ static int ocontext_read(struct policydb *p,
+>                                         goto out;
+>
+>                                 len =3D le32_to_cpu(buf[1]);
+> -                               rc =3D str_read(&c->u.name, GFP_KERNEL, f=
+p, len);
+> +                               rc =3D str_read_fsname(&c->u.name, GFP_KE=
+RNEL, fp, len);
+>                                 if (rc)
+>                                         goto out;
+>
+> @@ -2759,7 +2784,9 @@ static int ocontext_read(struct policydb *p,
+>                                 len =3D le32_to_cpu(buf[0]);
+>
+>                                 rc =3D str_read(&c->u.ibendport.dev_name,
+> -                                             GFP_KERNEL, fp, len);
+> +                                             GFP_KERNEL, fp, len,
+> +                                             STR_UNCONSTRAINT,
+> +                                             INFINIBAND_DEVNAME_MAXLENGT=
+H);
+>                                 if (rc)
+>                                         goto out;
+>
+> @@ -2827,7 +2854,8 @@ int policydb_read(struct policydb *p, struct policy=
+_file *fp)
+>                 goto bad;
+>         }
+>
+> -       rc =3D str_read(&policydb_str, GFP_KERNEL, fp, len);
+> +       rc =3D str_read(&policydb_str, GFP_KERNEL, fp, len,
+> +                     STR_UNCONSTRAINT, strlen(POLICYDB_STRING));
+>         if (rc) {
+>                 if (rc =3D=3D -ENOMEM) {
+>                         pr_err("SELinux:  unable to allocate memory for p=
+olicydb string of length %d\n",
+> diff --git a/security/selinux/ss/policydb.h b/security/selinux/ss/policyd=
+b.h
+> index b4f0c1a754cf..e901ec648cbf 100644
+> --- a/security/selinux/ss/policydb.h
+> +++ b/security/selinux/ss/policydb.h
+> @@ -27,6 +27,7 @@
+>  #include "mls_types.h"
+>  #include "context.h"
+>  #include "constraint.h"
+> +#include "limits.h"
+>
+>  /*
+>   * A datum type is defined for each kind of symbol
+> @@ -408,7 +409,55 @@ static inline bool val_is_boolean(u32 value)
+>         return value =3D=3D 0 || value =3D=3D 1;
+>  }
+>
+> -extern int str_read(char **strp, gfp_t flags, struct policy_file *fp, u3=
+2 len);
+> +#define STR_UNCONSTRAINT 0
+> +#define STR_IDENTIFIER 1
+> +extern int str_read(char **strp, gfp_t flags, struct policy_file *fp, u3=
+2 len,
+> +                   int kind, u32 max_len);
+> +
+> +static inline int str_read_bool(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, BOOLEAN_NAM=
+E_MAXLENGTH);
+> +}
+> +
+> +static inline int str_read_cat(char **strp, gfp_t flags, struct policy_f=
+ile *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, CATEGORY_NA=
+ME_MAXLENGTH);
+> +}
+> +
+> +static inline int str_read_class(char **strp, gfp_t flags, struct policy=
+_file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, CLASS_NAME_=
+MAXLENGTH);
+> +}
+> +
+> +static inline int str_read_perm(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, PERMISSION_=
+NAME_MAXLENGTH);
+> +}
+> +
+> +static inline int str_read_role(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, ROLE_NAME_M=
+AXLENGTH);
+> +}
+> +
+> +static inline int str_read_sens(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, SENSITIVITY=
+_NAME_MAXLENGTH);
+> +}
+> +
+> +static inline int str_read_type(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, TYPE_NAME_M=
+AXLENGTH);
+> +}
+> +
+> +static inline int str_read_user(char **strp, gfp_t flags, struct policy_=
+file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, USER_NAME_M=
+AXLENGTH);
+> +}
+> +
+> +static inline int str_read_fsname(char **strp, gfp_t flags, struct polic=
+y_file *fp, u32 len)
+> +{
+> +       return str_read(strp, flags, fp, len, STR_IDENTIFIER, FILESYSTEM_=
+NAME_MAXLENGTH);
+> +}
+>
+>  extern u16 string_to_security_class(struct policydb *p, const char *name=
+);
+>  extern u32 string_to_av_perm(struct policydb *p, u16 tclass, const char =
+*name);
+> --
+> 2.49.0
+>
