@@ -1,101 +1,91 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E7A25F798
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA525F97E;
+	Wed, 14 May 2025 09:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216450; cv=none; b=jYgfeEn7sqQ0JTzMcjvYwem0FzzMx1lwp8JpqGY+0eds9Xed0oElzm24Ej4kXGPWGMEoo1PAb96X/8RHq4nfr7OTv8056Q0CY5+Vxrf3ZVzCoF+AZ6QvMCXg0u5KsTilZKCc7MC87/pE422peBUGswbYXTThnJwKjLLpQrrzIHw=
+	t=1747216449; cv=none; b=YsOz2f/+k+AgP7Uf85qKzYoWS51OMMpXUHuoBI4HERVRNO4tsv3+0Zq0To5HKxLISy6VjV9BSmNDMWCqeR22goU+z6l7EE6vC+4KDQMB0RYJIxie7n+0y4ROND03FOZe5kt7tqkuSB/uDWdL+wBcmMCTqdvAEdNk/nJ1faQdGSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216450; c=relaxed/simple;
-	bh=VbnAmLxBB+9ni3Y9B/gXoAlfLtNObeur1VJCWbvyhdM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L9IZ7CEpXHfqXvQ3XCf+WU4iAyF/MNRiG0rUAo9FhIgXAoZkyN02SZi8I2AbzCrzt+z8YSQFnQSkWA7ltxRtgmkk+f457D/Rl3VTlYpp4Wy6cqwHP/SzsU03vNvDqC/l5hyRKm515l+C7w5cN8hgagbcAAb+ig0+r19o2qX/ZRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 54E9rrw0092296
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 17:53:53 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Wed, 14 May 2025
- 17:53:53 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To:
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
-        Ben Zong-You Xie <ben717@andestech.com>
-Subject: [PATCH v4 1/9] riscv: add Andes SoC family Kconfig support
-Date: Wed, 14 May 2025 17:53:42 +0800
-Message-ID: <20250514095350.3765716-2-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514095350.3765716-1-ben717@andestech.com>
-References: <20250514095350.3765716-1-ben717@andestech.com>
+	s=arc-20240116; t=1747216449; c=relaxed/simple;
+	bh=ni2ujCUUK50+l/mp77F0X4asQYcKuGwv6DTb3CRLaJY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=NuS8Dvh7rPrk/WEBDWkoSLn4SfXzdhFa8hKB0PIzgDVLacKf5vw97cMl6yGYWyud1CG18QNWVtIqdsArKy/ASTyRawViEVhQ7Xbs1Itga02EyFb1ikLbCELVAm2qDRZAk/6uKi1/BREyxnPYJq2C06ba1zD5mnt8Kc7xOeECsxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xbpj4WNr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ALLJSQ8l; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xbpj4WNr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ALLJSQ8l"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747216446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=szSON8XluKV7feOkhHdeIpICpw90RUfpg2AC3qITLPc=;
+	b=Xbpj4WNrmUUlf8f9j3pDZfl/IK7LUIcrS/+sQNbu4cNESLSXJWFzg4yMBsRkw/Lex8GFrF
+	hBP96sr6dPKqCRszB5XGlYpCTPraTuR/d6jQDqxaHtzcBdnNiNSqe9u9gJe3LlsZlCKHBc
+	4uqWqBSE4rO+JYAyr7eQGuAKzS3pccsZ8GftkCQI8tuBu+G9WagIPKvaKYrv7EoklgbzQ1
+	rLJYtFQlJLOy0EQWoT7xMEArz9LoTRNGWKb9khUn9J2kNlxdHSdfWARaXGbWVHnNGM5aH2
+	5lLOT/MnU8j4yiWoWjPO/DtyssNgKhwVxAmF9K1wVH67rIp51xqFGwhH6SxmxQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747216446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=szSON8XluKV7feOkhHdeIpICpw90RUfpg2AC3qITLPc=;
+	b=ALLJSQ8leMe1/tQ4Dd7Mn7t0DiheU/4uTATtLwTnl/YC49mX8a0rcry0Dw7K7p49Jod99a
+	V2iKraO90UOE1sBw==
+To: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
+ <ardb@kernel.org>, Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin
+ Loughlin <kevinloughlin@google.com>, Tom Lendacky
+ <thomas.lendacky@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+In-Reply-To: <aCQ2L3L2DQX80blY@gmail.com>
+Date: Wed, 14 May 2025 11:54:06 +0200
+Message-ID: <87wmajikld.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54E9rrw0092296
 
-The first SoC in the Andes series is QiLai. It includes a high-performance
-quad-core RISC-V AX45MP cluster and one NX27V vector processor.
+Ingo!
 
-For further information, refer to [1].
+On Wed, May 14 2025 at 08:20, Ingo Molnar wrote:
+> * Borislav Petkov <bp@alien8.de> wrote:
+> Your failure to follow and understand this series is not an excuse for 
+> the flippant and condescending tone you are using in your replies ...
 
-[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
+Can you please stop right there?
 
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
----
- arch/riscv/Kconfig.errata | 2 +-
- arch/riscv/Kconfig.socs   | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+I've been observing this for a while now and to be blatantly honest,
+_you_ are the one who is constantly failing to work in a team and _you_
+are the one who acts like a 19'th century school master.
 
-diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
-index e318119d570d..be76883704a6 100644
---- a/arch/riscv/Kconfig.errata
-+++ b/arch/riscv/Kconfig.errata
-@@ -12,7 +12,7 @@ config ERRATA_ANDES
- 
- config ERRATA_ANDES_CMO
- 	bool "Apply Andes cache management errata"
--	depends on ERRATA_ANDES && ARCH_R9A07G043
-+	depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
- 	select RISCV_DMA_NONCOHERENT
- 	default y
- 	help
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index a9c3d2f6debc..1bf5637f2601 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -1,5 +1,14 @@
- menu "SoC selection"
- 
-+config ARCH_ANDES
-+	bool "Andes SoCs"
-+	depends on MMU && !XIP_KERNEL
-+	select ERRATA_ANDES
-+	select ERRATA_ANDES_CMO
-+	select AX45MP_L2_CACHE
-+	help
-+	  This enables support for Andes SoC platform hardware.
-+
- config ARCH_MICROCHIP_POLARFIRE
- 	def_bool ARCH_MICROCHIP
- 
--- 
-2.34.1
+Your outbreaks of showing up and applying random patches fresh from the
+press, your absolute refusal to slow down when asked for, is annoying as
+hell to everyone working in and against the tip tree.
 
+You can do whatever you want on your private mingo/*.git branches, but
+this frenzy of shoving crap into tip has to stop once and forever.
+
+Borislav, Dave and Peter are doing a great job in taming the influx and
+reviewing the patch firehose, but there are limitations on bandwidth and
+you cannot demand that everyone drops everything just because you
+declare that a particular patch series is the most important thing since
+the invention of sliced bread.
+
+You are not the one setting the rules of how the tip team works together
+and if you can't agree with the rest of the team, then either we all sit
+together and hash it out or you step back.
+
+Continuing this sh*tshow, which is going on for way too long now (hint:
+years), is not an option at all.
+
+Thanks,
+
+        Thomas
