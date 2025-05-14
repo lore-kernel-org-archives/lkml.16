@@ -1,107 +1,195 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831641EA7D6;
-	Wed, 14 May 2025 22:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2C420C038
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747261599; cv=none; b=XuylPKpU5d2XQYffCo1JuksQ3ATYhqgTRoUFLi4UBJTnhaDI7+BUrN/3jPir1yGSWYRt9dxXUgAvM3/GallMthjuqfRNGx09OBh8lldcfroi01yPCOB+vhJI5OcJ4lKbx2MHkPXD86g1kPE4OqKfN1y2yiBeB82fdGRjvzEtkZs=
+	t=1747261599; cv=none; b=JLBmyxQqq0QhO2KHcmOkLSh7H7BJ3Zi5W9DDhL++ID1sZilYkDR6HhvQLsrolpwhPZ99Ds9VLVJUbYkdtAJM4hMURZVUKujVA4dtqM9AA8ZTm3Meovx1wElEfBDkvH6AaHhBNCAxM9dpnfRQIu+yJTWZrSgEfK86c1bOzuYrw/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747261599; c=relaxed/simple;
-	bh=e318nA+l2faX+8mEcOPz0nIXWQIzRPQPZ3gt/UuoOX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJ4PIr8ZakdcNk2j/hjB43jnsccGpReJb5JOmOJzGxvejCWdgpC30oVYZSE7/yvvOEMxjW5kzYAcAicrvvbC60oKqQY1os4fI69s0qBWqzEP0KZmtbNoA9PMiFhWPznXiV9aiEMH2Vti28VO0AUnglvjMar/TS1J5k9OVxbyvx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ljRVWKKf; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=FtQTm3oxNvJ/l1FwcAmyvIh6lN4Fw3Y5j1lS0sixKYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mJkysMoqLm85he/rxJbPgmO+Ie0515wKOgsiCnAbqVhpz4aV+cJyWgdKcjqesIVl/1SprmIkYuNUrOrCwxYFpz0Of01sSGrhuDQ4FPSbYJ5MxFFnL25fvuK7xaxVr4m3Vj+puNeMV78SdLeR7qDP5GXci6PhmLiDjuMoz4VpJ3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMj6SQoh; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljRVWKKf"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c9376c4bddso28840285a.3;
-        Wed, 14 May 2025 15:26:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMj6SQoh"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fab85c582fso4068a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:26:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747261596; x=1747866396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8WzUMbK9qDOEyYdDVvObbmZCXxUEIqd+QHrspXvgLY=;
-        b=ljRVWKKfSFX/NHqzR1lUe2lvdWGvVZaEpWCi1hfLOCJg2ssbIgtb8hEMt4wpHOy57B
-         HZ8bJYRlXO1Q7WAqJvFIMzkLmMktPPM795dn/X9bxXR/2vkqhyu1QAaXKRBZ0td3QO8V
-         +DtUib1yoDSkfqIo3FIm7wxQVd8zJV4Mu7MQ1MIEzduAE91sJr93oWavlt00rBAFgwg4
-         bLq5qlwaP+Yecrj6H2i5K8tDjwsDhjO4aEVBmF8W0VeSEf3Y5DYRxH4IuHcXyc3g3chP
-         dQfvBCbd2zJC07EJzeFKXTg3v11BumDZo75BhmN5pXCOg//Mqp3HPBHYwxpfx4s79vAz
-         LVsw==
+        d=google.com; s=20230601; t=1747261596; x=1747866396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ajK788JZDGFUfelYOxj8uXfAGypj9boxd8OPVuuZGk4=;
+        b=KMj6SQohGOxtor+gneddbjVEaM6opt+/eJNYIM2DAorurGugmB6scQsN2/UgrrFc1n
+         5l34ubRpqa1o3A0Gw2JOTMmqeJcPaBkIC9X0gkdBHiPDPxV0tXCJkGXLqLErlDpWtamT
+         tbTzfelTV0fGPeMfyIg/315Ozv42esIIpkaS39SCTLXgOK98I1rPyoWNtwrZRNKlLL/z
+         2iGNd8h5Dpw4qqEqszBot98rxZXAshMVKL0YHcSGVdUcNgz5WK1Nta0B2YxubxLTuduF
+         Si5+fyCtO5pVbstRNxM9FzbJ0uJWpJqbWPjtfPO1+2vFEmOf+Y9UuUhHXzz6ObLZyRl7
+         OMsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1747261596; x=1747866396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c8WzUMbK9qDOEyYdDVvObbmZCXxUEIqd+QHrspXvgLY=;
-        b=P8tjnBSuR9Kipc6nk37+M3KVPsedSeuaObBGFJ0nkMY7Q9e1s1aDxSCGc5MOxD/TWG
-         4CyajJDme0nH2LIj5LZfilW5Ik2G0E60zJWm78QLnDN95R84ybieMNbwQQTtFvksyG7R
-         282AZDZ1Q2OXHp65aYPeLtIWMNfsE8GpdI7QD4BlqsHACgNfizL1dYwGy25W6kSsBnMm
-         q5S8itZyGcK4hPHZGl5sAK/LkrrC5AsBBjyWo25K/UGon6YLv17umvYxSEE3uKz31IKH
-         qgaZ5O4dGhQDXHxYhcDzusO63Enu4kLVVTuShlGvTkzCb+Qfux/eMuTK6oLOa9oontk3
-         KNIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCnhxcof/BMBkkpBVcSBBk/B1h10mYoNh9PL8rcFxfIrCUuEqPag4d6g/eGmKydZkBEyKsc2NN77gv@vger.kernel.org, AJvYcCVhlYbu7p4UEms29QPmuunzXpx57vZjWD+sWJzQ8NoKBH4o/fbUn109DJwFb72sgjs8z/dl+XkLc7j7mNVR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU4TGIa1M6dLC9v1HZYm4KRq1QEqS39DEgYsPQTUk7GlqW3l13
-	ejKbMm5li/chIF/Wz9wlZ8bUbNONEKbAuZK0NKCsTF3H5EiMan1BV7wAy1Ru
-X-Gm-Gg: ASbGncvZue2TUpxyUfoNf87cs13dM0w5knhxGJZuO2UBAY2QP+yaNipoJoC7mbtdwe3
-	jXjdF9w/tz5XGJWePIP1Ws4HL0JWUJn9WNvAaEuLGIvo/Zbl58nWMYD3k3yYWURfXXxzvfm/Q+s
-	QsiBccpxmvhAZtuICdkqWP0EGsIPXhsy3D7bbe9MenOF8Lfm3xmmaBdkxMZ0sUT1+mTJRQ4fOs1
-	Ni3ZuUPvRmYEAaqZ4WldQcxMK3BPiAONky8LBwjt6548jLUiRYE88+xzHeQ/5T4Id7XGe1azFP6
-	ekoDAgX0XnEg0uZf1r9kHyFhxdg=
-X-Google-Smtp-Source: AGHT+IFCPVi/HY6nkbeTe3GAvpoQfv29BrlN1iWGz0H9o77nmmRTrZnt07gCTVHpLkHuJ4hlKEVttw==
-X-Received: by 2002:a05:620a:2904:b0:7c9:4d96:24ce with SMTP id af79cd13be357-7cd28846e7emr739361085a.44.1747261596342;
-        Wed, 14 May 2025 15:26:36 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd00f4e0f3sm899305485a.16.2025.05.14.15.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 15:26:35 -0700 (PDT)
-Date: Thu, 15 May 2025 06:26:04 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	linux-riscv@lists.infradead.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] riscv: dts: sophgo: add more sg2042 isa extension
- support
-Message-ID: <qz2kywcmxx2ub4bycso3y4qodiaeddj63nclissppy5morsjqt@jci4bapl2afc>
-References: <cover.1747235487.git.rabenda.cn@gmail.com>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ajK788JZDGFUfelYOxj8uXfAGypj9boxd8OPVuuZGk4=;
+        b=dxFdA8lnMQeWI19XEe0eoptZhm6RTdKf5jvg5WGPg8vCyx1eVVVGr3XLUAnpHBj7RL
+         b117gAfw8huFOo8qfsd/ulQHUMSomxoGMZNi8iLVBU/Nt8OuiFGqlnqYrHssUn9jFn9C
+         U9RMnTkhPUK8mbnvmErj5MIejCAJ8gyioN981+P1BRZlHN3dq1xIlSqZdS6gns7PGlPy
+         qwHBlE3KLaFHaMG2JOqCmlFVNaEysnlwBIkkXimNhspBCQvA6gtXnS6c+W0zqvcx165K
+         9IHg4XAAY0PNxAgIfTRGKYT5p3EUZx62Li8CCdPVAtxEbQ8c+IBtfrwSeX6lZfcBDIsy
+         +ghA==
+X-Forwarded-Encrypted: i=1; AJvYcCWj1+HMM53eCuaAYnIL4t68G/CXZBvSu07MQPFhmBqnkLe/Z61hmRLweNSLo6+6+dX49BXNBoA0G59C9fM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+mxEn+Sr/IOSaYZzPCMbySROnjloZq5tKLZdCwt7mRRNlinjq
+	fgbpbc5m1a6mk/sqorMuShIx8zAilmgeR9J5TnpXtrrxqtuywcQ960Obt0VAJ7bwvPVHw3tN7jY
+	lNcXhrgMsuC77UnGxctCyA2fRBATGptwncVG603c+
+X-Gm-Gg: ASbGnctUDre/dlWk28uc1GyV8Tydls/GVM29GD32205a2ISw4y5PYj56D17Rk0gvpu/
+	mVz5VD6/BsqP5SNt2TLjsq8FQDPu14oGCJ9B27R4GIulo57uAwvvDTqNuAERCZ78yLlJpmcBIdk
+	juQgaYKGtxx09r85sBetfULB/19hiN6li5BaeoZKReLwP86zzE/QVJ4UW/27xsLqw=
+X-Google-Smtp-Source: AGHT+IGfecSoyspK8L8+g9hqxfDItdcBIBiuhjZMOg8osC4F1/5QLuRdI0pTHJslDrRqhO1yPhpfEUEj1++mmGVrHUA=
+X-Received: by 2002:a50:9f44:0:b0:5fc:e6a6:6a34 with SMTP id
+ 4fb4d7f45d1cf-5ffc9db067cmr33617a12.6.1747261596038; Wed, 14 May 2025
+ 15:26:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1747235487.git.rabenda.cn@gmail.com>
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-1-3e93ce7bb76e@google.com> <57ddf59f8f2ca740b11650360ea7d5356dad7112.camel@nvidia.com>
+In-Reply-To: <57ddf59f8f2ca740b11650360ea7d5356dad7112.camel@nvidia.com>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Wed, 14 May 2025 15:26:24 -0700
+X-Gm-Features: AX0GCFua-U5cokvwHDg0ArWsLq4jP7K06ErwyHL95H35likqkuCfUzV0DvJvDfQ
+Message-ID: <CAGSQo03rWM8DABQWGfiHwQVbUGC5rXTVvKx5AZhCer58g2A-iA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: debugfs: Bind DebugFS directory creation
+To: Timur Tabi <ttabi@nvidia.com>
+Cc: "tmgross@umich.edu" <tmgross@umich.edu>, "benno.lossin@proton.me" <benno.lossin@proton.me>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, 
+	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, 
+	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
+	"dakr@kernel.org" <dakr@kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
+	"aliceryhl@google.com" <aliceryhl@google.com>, "ojeda@kernel.org" <ojeda@kernel.org>, 
+	"rafael@kernel.org" <rafael@kernel.org>, "samitolvanen@google.com" <samitolvanen@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 11:15:49PM +0800, Han Gao wrote:
-> Add xtheadvector & ziccrse & zfh for sg2042
-> 
-> Thanks,
-> Han
-> 
-> ---
-> 
-> Changes in v2:
->   add zfh for sg2042
-> 
-> v1: https://lore.kernel.org/linux-riscv/cover.1746828006.git.rabenda.cn@gmail.com/
-> 
-> Han Gao (3):
->   riscv: dts: sophgo: Add xtheadvector to the sg2042 devicetree
->   riscv: dts: sophgo: add ziccrse for sg2042
->   riscv: dts: sophgo: add zfh for sg2042
-> 
->  arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 512 ++++++++++++--------
->  1 file changed, 320 insertions(+), 192 deletions(-)
-> 
-> -- 
-> 2.47.2
-> 
+On Wed, May 7, 2025 at 11:46=E2=80=AFAM Timur Tabi <ttabi@nvidia.com> wrote=
+:
+>
+> On Mon, 2025-05-05 at 23:51 +0000, Matthew Maurer wrote:
+> >
+> > +impl<'a> Entry<'a> {
+> > +    /// Constructs a new DebugFS [`Entry`] from the underlying pointer=
+.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// The pointer must either be an error code, `NULL`, or represent=
+ a transfer of ownership of
+> > a
+> > +    /// live DebugFS directory. If this is a child directory or file, =
+`'a` must be less than the
+> > +    /// lifetime of the parent directory.
+> > +    #[cfg(CONFIG_DEBUG_FS)]
+> > +    unsafe fn from_ptr(entry: *mut bindings::dentry) -> Self {
+> > +        Self {
+> > +            entry,
+> > +            _phantom: PhantomData,
+> > +        }
+> > +    }
+> > +
+> > +    #[cfg(not(CONFIG_DEBUG_FS))]
+> > +    fn new() -> Self {
+> > +        Self {
+> > +            _phantom: PhantomData,
+> > +        }
+> > +    }
+>
+> I am new to Rust, so forgive me if this is a dumb question, but it looks =
+to me that if
+> CONFIG_DEBUG_FS is defined, then you need to call from_ptr() to create a =
+new Entry, but if
+> CONFIG_DEBUG_FS is not defined, then you need to call new() instead.  Is =
+that right?  If so, is that
+> really idiomatic?
 
-Reviewed-by: Inochi Amaoto <inochiama@gmail.com>
+I could make `from_ptr` take an arbitrary pointer and discard it as
+well, but the callsite for `from_ptr` involves calling into the C
+bindings to get a pointer back. I can do one of the following:
+1. Create a stub function for the CONFIG_DEBUG_FS=3Dn variant of those
+functions (since those are in header files, so they need a special
+helper) which gets compiled in, and just returns ERR_PTR(ENODEV), call
+that, and pass it back in. (This leads to code bloat, though not
+much.)
+2. Manually call `ptr::dangling()` and pass it to the alt `from_ptr`
+that ignores its argument
+3. Create and call `::new`.
+
+If I had more call-sites where I had a pointer-like object to put in
+there, I'd use a `from_ptr` that discards. I used `::new` just because
+it was easier.
+
+>
+> In the Dir implementation below, you are careful to call from_ptr() only =
+from the CONFIG_DEBUG_FS
+> version of create(), and you call new() only from the !CONFIG_DEBUG_FS ve=
+rsion of create().  So your
+> bases are covered as long as no driver tries to create an Entry from scra=
+tch.
+>
+> But I guess that can't happen because Entry is not public, right?
+
+Correct, `Entry` is a private type.
+
+>
+> > +    /// Create a DebugFS subdirectory.
+> > +    ///
+> > +    /// Subdirectory handles cannot outlive the directory handle they =
+were created from.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// # use kernel::c_str;
+> > +    /// # use kernel::debugfs::Dir;
+> > +    /// let parent =3D Dir::new(c_str!("parent"));
+> > +    /// let child =3D parent.subdir(c_str!("child"));
+> > +    /// ```
+> > +    pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b> {
+> > +        Dir::create(name, Some(self))
+> > +    }
+> > +
+> > +    /// Create a new directory in DebugFS at the root.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// # use kernel::c_str;
+> > +    /// # use kernel::debugfs::Dir;
+> > +    /// let debugfs =3D Dir::new(c_str!("parent"));
+> > +    /// ```
+> > +    pub fn new(name: &CStr) -> Self {
+> > +        Dir::create(name, None)
+> > +    }
+>
+> Is there any real value to having two constructors, just to avoid passing=
+ None for the one time that
+> a root directory will be created?  The C code has no problem passing NULL=
+.
+
+Past revisions (and some of Danilo's suggestions on this revision)
+required the ability to return different types when a directory was
+not a subdir. In earlier versions, because subdirectories were not
+automatically cleaned on drop unless opted in, where the root
+directory was. In future versions, he would like me to use this to
+suppress `Dir::keep` from being callable on root directories.
+
+>
+>
