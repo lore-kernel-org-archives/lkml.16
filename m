@@ -1,144 +1,110 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9E92741B7;
-	Wed, 14 May 2025 10:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EC8274672;
+	Wed, 14 May 2025 10:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747217743; cv=none; b=W+Ov75/T8AYD3w/RL2DrD3Q81pZl3kivHhaXxM5sSxp73vlatZHV7bgaiAMFjhCqL94JqTxSfMKnF+mcQQup4ek5o+tknDRiw2AGFcUJy4Qhxc/7w6wPrCdltrbnZRM/c1NOcrRLjlKbg5E+XKDfnXJSTknl76YB68eyUJUPLVc=
+	t=1747217745; cv=none; b=KsHGnlYxRK7ylgpLPNZUZ+il2Axolakpr2MG1H2wH2VsPYa5UHWScELwLPo8WUfYKq1Cl+pmZdF8A+RGnjXgfPnRoFcAgJhQxo29dBcJ2O6rWnH+HDdVeHdiNt1wcTPiGRJ2gZEwq4xlZmg2Jejus3oShMpBXNj5dBIRqO1gWus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747217743; c=relaxed/simple;
-	bh=mnqbtbW+dLWKpWpD3Oeu46dRApO+L+xS89W5ndhjlSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AHNdaM+8UT4esHywFHOyZNuREXZJMMS7ID/UJOrHX83Bh18SwMoxvr6NcXC9qC0eq05VdxQkOdNSSge0o7r3zwahdcJCaURBaDpw4N22JUqUftg7uWMDhBmrHBfrdzuwVT2iUt9Xkzo5tzAuN6Mt0mnbnsfOqlLcN+QNm6KOMUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jT0cwtwX; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747217745; c=relaxed/simple;
+	bh=io0fuEqu2zUdnHEFnufD9IYz8rdr9vOH4izP/ZTKp4o=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=S1EkpBZBCof9wAw2ELi/EBjdJ2dYda7u3fcafmMa7SyGE7d+qv4zYplGkEdej46yX3UVHjP8Y0v2byQlg5jZ0pfJnLp7oQBqBk1X/Msad0S7hCPIfqF48Q79P8qJpbvVlQlAcoTOjLw1/YhF24zweeosl9/cOQUoSTPDmjvAW1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cWsqkVAK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O2wh3NFE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT0cwtwX"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso3824981f8f.1;
-        Wed, 14 May 2025 03:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747217739; x=1747822539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHFTNofL5aafinMdCSrcIJpTz1DT13JMHNYYEMN4izM=;
-        b=jT0cwtwXcF6d+uYrSXM6XU2KFCX1aZTzh1XWxy8N1cmEGssnj3Xj2OSt+qRZq97qup
-         N4V3Vqw5nDomwGAKG2wUk4dWzjMWgGkY1w19TIFs9f2gkX+m8oCQ7wQ1tHPdrrjciX9A
-         vPPgFlwGj+8Yqjq93TbKXPFLv8VRyOfBjlGxqdWxHpC8UoM975csNWWhxZo3Nj1xYdbL
-         TRq1j8QZ+wuPk3AAGwngHS74hvtsVE46u9gioWEHtL8RdHcHyaRAfErqBD6GzfRXAqAF
-         LwaBbDZCY1ETEaW+qjmg18O0BKgSzodRk5h9n0td0IUvZRbDcBYRwabbqOPsgXH/4vbk
-         M0Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747217739; x=1747822539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gHFTNofL5aafinMdCSrcIJpTz1DT13JMHNYYEMN4izM=;
-        b=WIScuevr1puqoHeU/cwix56kAxWFpdFJ0THXoe38EAsSBPSMB5ftzQlov8AjeNWEBG
-         YocFG3ACAwzw2GQcsBDncLal13DPYoLCP6xDCYvcLeTfLB6vClgdjTxjyAEfQyWhQ62C
-         avwBA545fAG4aJ1uCBzObHFSxqGrYW8R6ELzqdnN41mn1DU6bpX2dkG06PYhQD87ScI1
-         6IMNYzCrB/Yzy4ThwHmKC/ki9BsYKqD4amkZIXq8kdmUdFjBjgcx4ZE+NcOeS0EByB2t
-         VrdIEt2qA6s65SFyiXLQoUgMenZykKnjg6QZDTkrPzIKA0CucEOZrHQj2jZEWzH4MnVH
-         vvWA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9aWdVxGFnZC+E2+kMsapa6AYaKzcuVTgLhYKNO7Ln1bVBKSjJe2023ktHid3EQeraqTCkawf+GbiYduA=@vger.kernel.org, AJvYcCXx+CBvAjMF0vBFel2iKBE/2fg17h4pU3WU/HDMjA3llr2GHMM6s1vZVPbmtHty4Yb3jYmUvw8BO+PWMVI1ilfxQEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywju1TkKDKkCX6uoXVrHQVze/KzcPm002GAPp0YAHHdPGJve1Ib
-	wbOaPIJ/g0s8mlAVaXWq8J2gY1d4QvPFcyddJWAHaGgX0IEwXviR
-X-Gm-Gg: ASbGncsTia6kKUHPAVmaIZN5Fzf8JOAJjzHIJTS6cPpy0mK4B5WrH1tEm/uUw9Z/2SX
-	r9t87YeAdkj61tev3MoSjaszllAxG7HUJTzj2WVXT39XvfsO2sWDanMtbppEflestgYTckxnvWy
-	m/7YQxrBWhQO5WejN2TO3Sah5RPfb2Y0LQcc7LOmqOtifO4Kj0PoOh3qqmuU6+28BnwhTUGe8So
-	mEmelpFpgsgC5sg9INesv5gK9bcQLO1WgJyiLTmZv5SqiWTkr36bBgnLF/ek9+I3BLrQY2JBl7V
-	MbPO3jU9ffMzSpwNAtoio7mPfiwDWj7z8KxiSsbP2uqI2R/hWWstjWdXcaURLHSutGB5C0R0NO9
-	+
-X-Google-Smtp-Source: AGHT+IECKmmSaYbWXHLI10tP3yB8YXndrtYtHhrgnf0sQYHpNwoQxFxt1WoWZX5nOyPdu8XE+ObUxA==
-X-Received: by 2002:a05:6000:2a6:b0:39c:1f04:bb4a with SMTP id ffacd0b85a97d-3a349694b08mr2326672f8f.10.1747217739242;
-        Wed, 14 May 2025 03:15:39 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:6140:13af:687a:7a66])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f3afdsm19530249f8f.60.2025.05.14.03.15.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 03:15:38 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-renesas-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 04/10] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable OSTM timers on RZ/V2N EVK
-Date: Wed, 14 May 2025 11:15:22 +0100
-Message-ID: <20250514101528.41663-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cWsqkVAK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O2wh3NFE"
+Date: Wed, 14 May 2025 10:15:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747217742;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ne44DSn6E2PNnBd9PVaHQ31yx5UAzOe8msVi/cc7N2U=;
+	b=cWsqkVAKiFxxnFahd9iWE0pz/jAsGQNnkYNTngXBwBKjM71yjYBiFZintfkkQTyeaWG2Gp
+	wVDIz2HkLXZow/5RY+b/WRqZ5UOFw+QypuVfrqArUSds23Y21a/W7Oqwjxg9SlSKqdM+9m
+	NSY74HMYGXOdiCJCfr6To2Ts80Mse0U91Oz4r33xpKdyGeD/RSpzAjlylwKjck0S5CYQ7a
+	YYqvruuAfIUraup9RWQ9Au0hVss50pWhuSsBK8xuNb5rgNkY6SL21KU4u/TGWJgRrupteX
+	bGemQwxGuCsYI5gB0IWgbDjHqM21Yhl89kajXS1etIuZ71orFEccODcBMz/ksQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747217742;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ne44DSn6E2PNnBd9PVaHQ31yx5UAzOe8msVi/cc7N2U=;
+	b=O2wh3NFE+1X+2yathWEIJdvWcdbySaXX7oIGki221Ixdbwhfl1Y+U2+vEhLHxcn8TPMp4o
+	H5OBzGoLRgqQX/Dg==
+From: "tip-bot2 for Jon Hunter" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq/manage: Use the correct lock guard in
+ irq_set_irq_wake()
+Cc: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250514095041.1109783-1-jonathanh@nvidia.com>
+References: <20250514095041.1109783-1-jonathanh@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174721774116.406.2638049997395737811.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+The following commit has been merged into the irq/core branch of tip:
 
-Enable OSTM0-OSTM7 instances in the RZ/V2N EVK device tree so that all
-eight OSTM general timers are active and available.
+Commit-ID:     58eb5721a445ea0af310d1410d7117a1910627bc
+Gitweb:        https://git.kernel.org/tip/58eb5721a445ea0af310d1410d7117a1910627bc
+Author:        Jon Hunter <jonathanh@nvidia.com>
+AuthorDate:    Wed, 14 May 2025 10:50:41 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 14 May 2025 12:05:58 +02:00
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+genirq/manage: Use the correct lock guard in irq_set_irq_wake()
+
+Commit 8589e325ba4f ("genirq/manage: Rework irq_set_irq_wake()") updated
+the irq_set_irq_wake() to use the new guards for locking the interrupt
+descriptor.
+
+However, in doing so it inadvertently changed irq_set_irq_wake() such that
+the 'chip_bus_lock' is no longer acquired. This has caused system suspend
+tests to fail on some Tegra platforms.
+
+Fix this by correcting the guard used in irq_set_irq_wake() to ensure the
+'chip_bus_lock' is held.
+
+Fixes: 8589e325ba4f ("genirq/manage: Rework irq_set_irq_wake()")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250514095041.1109783-1-jonathanh@nvidia.com
 ---
- .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ kernel/irq/manage.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-index b72574dcc209..518426dd624c 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-@@ -110,6 +110,38 @@ phy1: ethernet-phy@1 {
- 	};
- };
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 2861e11..c948373 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -846,7 +846,7 @@ static int set_irq_wake_real(unsigned int irq, unsigned int on)
+  */
+ int irq_set_irq_wake(unsigned int irq, unsigned int on)
+ {
+-	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
++	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+ 		struct irq_desc *desc = scoped_irqdesc;
+ 		int ret = 0;
  
-+&ostm0 {
-+	status = "okay";
-+};
-+
-+&ostm1 {
-+	status = "okay";
-+};
-+
-+&ostm2 {
-+	status = "okay";
-+};
-+
-+&ostm3 {
-+	status = "okay";
-+};
-+
-+&ostm4 {
-+	status = "okay";
-+};
-+
-+&ostm5 {
-+	status = "okay";
-+};
-+
-+&ostm6 {
-+	status = "okay";
-+};
-+
-+&ostm7 {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	eth0_pins: eth0 {
- 		pins = "ET0_TXC_TXCLK";
--- 
-2.49.0
-
