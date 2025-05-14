@@ -1,253 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D1220FA81;
-	Wed, 14 May 2025 07:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C67E20297F;
+	Wed, 14 May 2025 07:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206103; cv=none; b=Ukbu+hmzAAjrR9eJ2nCDmJFo+jKdZx3dazXaIbAFh65vajB9oNbH+eBs+dcbkpqwr8LtUtetV9Asr8PHLGMEtM6Yf5l5TKFmLnBziK6BtDW07IHmgxqjL6KAxrICSFMSlTOWGAcF+32xysoOJv8wrZZ3pLwnGsCkX7eVvN/TVGU=
+	t=1747206130; cv=none; b=uVRXXjcVXdHFcjQRyIbnv3eDWuSwkoFbeShKw0bTPipE6mL12cyWyhsNgsh6G2qfwRQdWpa73+csiz0VFqKjOfXlcxnTxYLkPS7igdsRQ+HesSLE62sjQ9BeZXEAX0TlMQraNahPnmWm2tajVfnRBEFmuRq2ge6f99IBbndpjZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206103; c=relaxed/simple;
-	bh=RqOyY2jGCkyEVgXr7GCKE7372fyZqazKLEDvm8VS4nA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DeLDojoEMNwnB3x1TNqgMqpgQOrwxNgOhCelu7mUlA5NIJvVSyWCBIoMLiU9tU2rzLw6P4RGPVjSsiuaGzQR7QxEfeOLzli+yigBG9+AT+a+MPxf11p0cc/HrPCzo0d1xzrjvaNhjUZL/bSvFqPAnzGC0MULTg+JIWM7USewwck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCNYoxu+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCNYoxu+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61825C4CEEB;
-	Wed, 14 May 2025 07:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747206103;
-	bh=RqOyY2jGCkyEVgXr7GCKE7372fyZqazKLEDvm8VS4nA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HCNYoxu+yPlb+arEGU8A+AV1VzIIyn7mdqbyISKRa/3pixyQ4n1r2jY5BwbGXFve+
-	 ohqbahroBGlr8cGF6kMgEI+9qL9nnUeI91arz2dInEDPDqRc40DP5XPbUc3p3H+GOc
-	 VnvzQwRFFekdYZvSh26OgxyjEMnxHdlNp1kJdXk17xQwGm4FlAGfjtcHkHOs7bdCn4
-	 wJJi+JoL7bXm7Tm/rrR6SHKMKRPG1ehpFjfi1/xuwkZweDgFkQyCzZKTMdHV5YCC8P
-	 w2qEqMyBkns8Qn76b3nmJT669lN8pq2/109MXIKP6Xgomm8NiPZBGwqSvLIwv9oHYL
-	 C9wEvuEMTroJw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59009C3ABDA;
-	Wed, 14 May 2025 07:01:42 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 14 May 2025 15:01:32 +0800
-Subject: [PATCH 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+	s=arc-20240116; t=1747206130; c=relaxed/simple;
+	bh=vs5b+EHYKYPsWMhmT/qyRr8Xjgec3HQB2Fry1oY6b54=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HVmsXnteJ9fLxE0i9MHjO/r6SCxuw2gfwhSQ9R6k7O85t1mtH9zciYsIPYvlZDIrX2e4V+oxcyvglpU1YJ4MlwOKCuC06Xs1Rm0zjhBLx+/BYSJCdGK0R+rb9EWVZDHNKyAPv+zTbG21/HXy/mmNnlhFtAudyx4B+xnsnf1LBSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zy40p0dS2zyVKc;
+	Wed, 14 May 2025 14:57:46 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 87E68140155;
+	Wed, 14 May 2025 15:02:04 +0800 (CST)
+Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 14 May
+ 2025 15:02:03 +0800
+From: Yuntao Liu <liuyuntao12@huawei.com>
+To: <x86@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <liuyuntao12@huawei.com>
+Subject: [PATCH] kvm: x86: fix infinite loop in kvm_guest_time_update when tsc is 0
+Date: Wed, 14 May 2025 06:49:41 +0000
+Message-ID: <20250514064941.51609-1-liuyuntao12@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-s6-s7-pinctrl-v1-5-39d368cad250@amlogic.com>
-References: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
-In-Reply-To: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747206100; l=5229;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=gBld46AxkELbpQvuVxx+JAeuTI0Fp+bQupU9PRwGIaM=;
- b=O0H7JfjGniNuecua7TnPLDc7MaS7+00eIT5GXbEd2wGaDL8q8He4wQek3RADn0VfcH6+uskOK
- dXygW6aEOgqABPsJ3fMmyGH4oFflTnEVQs1wThzAI05bwrQeZVC7B+n
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Syzkaller testing detected a soft lockup.
 
-In some Amlogic SoCs, to save register space or due to some
-abnormal arrangements, two sets of pins share one mux register.
+watchdog: BUG: soft lockup - CPU#3 stuck for 127s! [syz.1.2088:9817]
+Modules linked in:
+CPU: 3 PID: 9817 Comm: syz.1.2088 Tainted: G S                 6.6.0+
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x8/0x20 kernel/kcov.c:313
+Code: bf 03 00 00 00 e9 48 fe ff ff 0f 1f 84 00 00 00 00 00 90 90 90 90
+90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 0c 24 <89> f2 89
+   fe bf 05 00 00 00 e9 1a fe ff ff 66 2e 0f 1f 84 00 00 00
+RSP: 0018:ffff888016d8fad8 EFLAGS: 00000206
+RAX: 0000000000080000 RBX: ffff88810e242540 RCX: ffffffff901150d6
+RDX: 0000000000080000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffff888016d8fb50 R08: 0000000000000001 R09: ffffed1021c484af
+R10: 0000000000000000 R11: 0000000000000277 R12: 0000000000000000
+R13: fffffed357281918 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007f2a8f6ea6c0(0000) GS:ffff888119780000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000012c56c0 CR3: 000000000dce8001 CR4: 0000000000772ee0
+DR0: 0000000000000000 DR1: 0000000000d3eb1c DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+PKRU: 80000000
+Call Trace:
+ <TASK>
+ kvm_get_time_scale arch/x86/kvm/x86.c:2458 [inline]
+ kvm_guest_time_update+0x926/0xb00 arch/x86/kvm/x86.c:3268
+ vcpu_enter_guest.constprop.0+0x1e70/0x3cf0 arch/x86/kvm/x86.c:10678
+ vcpu_run+0x129/0x8d0 arch/x86/kvm/x86.c:11126
+ kvm_arch_vcpu_ioctl_run+0x37a/0x13d0 arch/x86/kvm/x86.c:11352
+ kvm_vcpu_ioctl+0x56b/0xe60 virt/kvm/kvm_main.c:4188
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:871 [inline]
+ __se_sys_ioctl+0x12d/0x190 fs/ioctl.c:857
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-A group starting from pin0 is the main pin group, which acquires
-the register address through DTS and has management permissions,
-but the register bit offset is undetermined.
+ioctl$KVM_SET_TSC_KHZ(r2, 0xaea2, 0x1)
+user_tsc_khz = 0x1
+	|
+kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
+	|
+	ioctl$KVM_RUN(r2, 0xae80, 0x0)
+		|
+		...
+	kvm_guest_time_update(struct kvm_vcpu *v)
+		|
+		if (kvm_caps.has_tsc_control)
+			tgt_tsc_khz = kvm_scale_tsc(tgt_tsc_khz,
+					    v->arch.l1_tsc_scaling_ratio);
+			|
+			kvm_scale_tsc(u64 tsc, u64 ratio)
+			|
+			__scale_tsc(u64 ratio, u64 tsc)
+			ratio=122380531, tsc=2299998, N=48
+			ratio*tsc >> N = 0.999... -> 0
+			|
+		kvm_get_time_scale
 
-Another GPIO group as a subordinate group. Some pins mux use share
-register and bit offset from bit0 . But this group do not have
-register management permissions.
+In function __scale_tsc, it uses fixed point number to calculate
+tsc, therefore, a certain degree of precision is lost, the actual tsc
+value of 0.999... would be 0. In function kvm_get_time_scale
+tps32=tps64=base_hz=0, would lead second while_loop infinite. when
+CONFIG_PREEMPT is n, it causes a soft lockup issue.
 
-This submission implements this situation.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Fixes: 35181e86df97 ("KVM: x86: Add a common TSC scaling function")
+Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
 ---
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 94 +++++++++++++++++++++++++++++-
- 1 file changed, 92 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index 90d4d10ca10b..f2c98ee9cdb1 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -50,8 +50,23 @@ struct aml_pio_control {
- 	u32 bit_offset[AML_NUM_REG];
- };
- 
-+/*
-+ * partial bank(subordinate) pins mux config use other bank(main) mux registgers
-+ * m_bank_id:	the main bank which pin_id from 0, but register bit not from bit 0
-+ * m_bit_offs:	bit offset the main bank mux register
-+ * sid:         start pin_id of subordinate bank
-+ * eid:         end pin_id of subordinate bank
-+ */
-+struct multi_mux {
-+	unsigned int m_bank_id;
-+	unsigned int m_bit_offs;
-+	unsigned int sid;
-+	unsigned int eid;
-+};
-+
- struct aml_pctl_data {
- 	unsigned int number;
-+	struct multi_mux multi_data[];
- };
- 
- struct aml_pmx_func {
-@@ -71,10 +86,12 @@ struct aml_gpio_bank {
- 	struct gpio_chip		gpio_chip;
- 	struct aml_pio_control		pc;
- 	u32				bank_id;
-+	u32				mux_bit_offs;
- 	unsigned int			pin_base;
- 	struct regmap			*reg_mux;
- 	struct regmap			*reg_gpio;
- 	struct regmap			*reg_ds;
-+	const struct multi_mux		*p_mux;
- };
- 
- struct aml_pinctrl {
-@@ -106,13 +123,39 @@ static const char *aml_bank_name[31] = {
- "GPIOCC", "TEST_N", "ANALOG"
- };
- 
-+const struct aml_pctl_data s7_priv_data = {
-+	.number = 1,
-+	.multi_data[0] = {
-+		.m_bank_id = AMLOGIC_GPIO_CC,
-+		.m_bit_offs = 24,
-+		.sid = (AMLOGIC_GPIO_X << 8) + 16,
-+		.eid = (AMLOGIC_GPIO_X << 8) + 19,
-+	},
-+};
-+
-+const struct aml_pctl_data s6_priv_data = {
-+	.number = 2,
-+	.multi_data[0] = {
-+		.m_bank_id = AMLOGIC_GPIO_CC,
-+		.m_bit_offs = 24,
-+		.sid = (AMLOGIC_GPIO_X << 8) + 16,
-+		.eid = (AMLOGIC_GPIO_X << 8) + 19,
-+	},
-+	.multi_data[1] = {
-+		.m_bank_id = AMLOGIC_GPIO_F,
-+		.m_bit_offs = 4,
-+		.sid = (AMLOGIC_GPIO_D << 8) + 6,
-+		.eid = (AMLOGIC_GPIO_D << 8) + 6,
-+	},
-+};
-+
- static int aml_pmx_calc_reg_and_offset(struct pinctrl_gpio_range *range,
- 				       unsigned int pin, unsigned int *reg,
- 				       unsigned int *offset)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1fa5d89f8d27..3e9d6f368eed 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2605,10 +2605,14 @@ static void kvm_track_tsc_matching(struct kvm_vcpu *vcpu)
+  * point number (mult + frac * 2^(-N)).
+  *
+  * N equals to kvm_caps.tsc_scaling_ratio_frac_bits.
++ *
++ * return 1 if _tsc is 0.
+  */
+ static inline u64 __scale_tsc(u64 ratio, u64 tsc)
  {
- 	unsigned int shift;
- 
--	shift = (pin - range->pin_base) << 2;
-+	shift = ((pin - range->pin_base) << 2) + *offset;
- 	*reg = (shift / 32) * 4;
- 	*offset = shift % 32;
- 
-@@ -124,9 +167,36 @@ static int aml_pctl_set_function(struct aml_pinctrl *info,
- 				 int pin_id, int func)
- {
- 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
-+	unsigned int shift;
- 	int reg;
--	int offset;
-+	int i;
-+	unsigned int offset = bank->mux_bit_offs;
-+	const struct multi_mux	*p_mux;
+-	return mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits);
++	u64 _tsc = mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits);
 +
-+	/* peculiar mux reg set */
-+	if (bank->p_mux) {
-+		p_mux = bank->p_mux;
-+		if (pin_id >= p_mux->sid && pin_id <= p_mux->eid) {
-+			bank = NULL;
-+			for (i = 0; i < info->nbanks; i++) {
-+				if (info->banks[i].bank_id == p_mux->m_bank_id) {
-+					bank = &info->banks[i];
-+						break;
-+				}
-+			}
-+
-+			if (!bank || !bank->reg_mux)
-+				return -EINVAL;
-+
-+			shift = (pin_id - p_mux->sid) << 2;
-+			reg = (shift / 32) * 4;
-+			offset = shift % 32;
-+			return regmap_update_bits(bank->reg_mux, reg,
-+					0xf << offset, (func & 0xf) << offset);
-+		}
-+	}
- 
-+	/* normal mux reg set */
- 	if (!bank->reg_mux)
- 		return 0;
- 
-@@ -836,12 +906,30 @@ static const struct gpio_chip aml_gpio_template = {
- static void init_bank_register_bit(struct aml_pinctrl *info,
- 				   struct aml_gpio_bank *bank)
- {
-+	const struct aml_pctl_data *data = info->data;
-+	const struct multi_mux *multi_data;
- 	int i;
- 
- 	for (i = 0; i < AML_NUM_REG; i++) {
- 		bank->pc.reg_offset[i] = aml_def_regoffs[i];
- 		bank->pc.bit_offset[i] = 0;
- 	}
-+
-+	bank->mux_bit_offs = 0;
-+
-+	if (data) {
-+		for (i = 0; i < data->number; i++) {
-+			multi_data = &data->multi_data[i];
-+			if (bank->bank_id == multi_data->m_bank_id) {
-+				bank->mux_bit_offs = multi_data->m_bit_offs;
-+				break;
-+			}
-+			if (multi_data->sid >> 8 == bank->bank_id) {
-+				bank->p_mux = multi_data;
-+				break;
-+			}
-+		}
-+	}
++	return  !_tsc ? 1 : _tsc;
  }
  
- static int aml_gpiolib_register_bank(struct aml_pinctrl *info,
-@@ -1008,6 +1096,8 @@ static int aml_pctl_probe(struct platform_device *pdev)
- 
- static const struct of_device_id aml_pctl_of_match[] = {
- 	{ .compatible = "amlogic,pinctrl-a4", },
-+	{ .compatible = "amlogic,pinctrl-s7", .data = &s7_priv_data, },
-+	{ .compatible = "amlogic,pinctrl-s6", .data = &s6_priv_data, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, aml_pctl_dt_match);
-
+ u64 kvm_scale_tsc(u64 tsc, u64 ratio)
 -- 
-2.37.1
-
+2.34.1
 
