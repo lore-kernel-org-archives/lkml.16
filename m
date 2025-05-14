@@ -1,172 +1,195 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2066.outbound.protection.outlook.com [40.107.237.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11736215075;
-	Wed, 14 May 2025 07:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207334; cv=fail; b=fcswHKdX0C4KnV6jk9HCkt97m6jq2RXOAFPT2NCSPHLHe99f6sGF+IxRpnmdZgE8O3inBsYdjVus/pi5q31lfAahGaYTn4+fw48ZeVsGHmVCOvD0rc5myvjOcsexFStt2Ww/RAdGSiTRuD6czeM31HDPhmYUWPksl0P953NwkDg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207334; c=relaxed/simple;
-	bh=czO76iWY47hWx3B+NYgkj2rMP2CaNKi0ipfccbjam7k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EkeRZEgO5qh4eJebFmImR/+uCw4OUUlSmeXkhSuhNViBjM35A2ETodOhBYHFQjNGnnPI9hUbrq24eFuYzZYh+AcYiAaB2nXQmH1aFt3j+zVF7FAfH+4QglO86RnPOCEKDDsUs7qtfIA7wcxhtMJ1uVbxOd8VoqteSNxesEQJORY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kuYiIywe; arc=fail smtp.client-ip=40.107.237.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEF12063F0;
+	Wed, 14 May 2025 07:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207348; cv=none; b=pBedPpS4me1TZddJwKcJCzwWUs9WkAl/lxLPFZXWo2sFfQM1RuWxN71cLKfRHMkU7NjP214V6wiXsWf7bwbTnqhkacd+G8L907lGvo60fwGh3VWuN/twUSwZSS8VXbMvokBVogQE+JWI/EfVpbJ3mBHnhiC126wZWLlFEEw+lyA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207348; c=relaxed/simple;
+	bh=1hZrJvEOYUx9JGctY4L22hhqz29PWO7JEuA6Jf8JYdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OUDeBZiGNRuwxTunwbShiq/x9P0e1eHzsrp7mWVsiVUW0BAWFI5wf/ekBXmaNHSD+D8J4XkzAlT/ymo56KejRPkhxmvvLmwoCpw6bEaOiR/6AYjWcNIJLqetER/797bZ3HXrgls9NEGCdIj5o8MI6eAxTPZdUJuIp0O4YRC0gyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW73m9fx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kuYiIywe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y4QWCvsRjmxC6j17rhn5St0rTrcawADYm32b5/iDYoEip8/apEHBqGinusQpWHkcYflcxY/FstFWlUKZm7ea30TEUA7g2UZ70RtDNHaQtUxPkx90X8Em2NOGZocPUyrdS9fH16muGZE2SNtm1ldrO6PZAeYEG5jBT+QaZagzojNToDrUCIGiWsiS2wWARpJwblhwFy9h5tTWfwzeyothasX4HP5qyh7rZOHLlDD/Qnr8LvayOV7j9md9ndFGWw7zq66tHhSypL/sNUqiYIcx7criQtrwqV0oRahfrz+cgpXyapEDsIs+Z2Ol1BLD5LeFQ0eZ6sF0FAHw9gDQ8momOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=neJ3GCY5YlqoKJyr+3QB1JziGWx6Lt81umoneFvI8XA=;
- b=opd1QeF/W9qW6+o8pT5Ok4uC6kyAPc6AaX2eMDTJAnmvDyjQmyAksdXg1ScR8i0LR4pxq2sBdm9IIP5i+ohneUrIG5rLj4I+K5rLxl898gteUSWfHoS74morX+ZvYANr1XCYdg1dPsEnS3Ea8n9a/52dA1m2x35Lm0MBB7P3B34nokDlmL2Fk+Fbt9+MivPU1xC8r+HH96/1nMrBjRMNoCuXIvq4XEKSI+ecsCCq3utPk8KZO+7HhHcybN/KZGkcmzV/r1ZwNWetYoBGmmpLV4WuONOqGcMcHoaT5YG4Gqd/hA1ZLS/5pr2QNEiX4TyPaxNudavrtVodlSwHqonvew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=neJ3GCY5YlqoKJyr+3QB1JziGWx6Lt81umoneFvI8XA=;
- b=kuYiIyweHIN1gDolhRsxuKayBN7ZBKYBcLOzEJ2Ab3oI7hQpNEZNEy4bztlTgzBLZhjbR8C+Uo1nIrcvGiDTrHrgp9Moxec5CeGfEluEdR3sVVh5P6glm4HF9BEGFsPioqfETXJuabmpEwXX/YOR5LqmWgbGvkr80udH3H+nHxY=
-Received: from SN7PR04CA0032.namprd04.prod.outlook.com (2603:10b6:806:120::7)
- by PH8PR12MB7303.namprd12.prod.outlook.com (2603:10b6:510:220::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 07:22:06 +0000
-Received: from SN1PEPF00036F40.namprd05.prod.outlook.com
- (2603:10b6:806:120:cafe::6) by SN7PR04CA0032.outlook.office365.com
- (2603:10b6:806:120::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.30 via Frontend Transport; Wed,
- 14 May 2025 07:22:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F40.mail.protection.outlook.com (10.167.248.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:22:05 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 14 May 2025 02:21:50 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v6 09/32] x86/apic: Rename 'reg_off' to 'reg'
-Date: Wed, 14 May 2025 12:47:40 +0530
-Message-ID: <20250514071803.209166-10-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
-References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW73m9fx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48394C4CEE9;
+	Wed, 14 May 2025 07:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747207347;
+	bh=1hZrJvEOYUx9JGctY4L22hhqz29PWO7JEuA6Jf8JYdE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZW73m9fxryJP2BBe5XZJuiuJbAl9WFvR1bGr0SAsArLv39hCPQKhxfs3uKlZ5RC1o
+	 STAtwJSWSyak90MP/W8x8CHNxPIeAzhpeeJee8UjLyt9+01XBf3AVe3agI79zhyL9z
+	 cbXBnpOMDAbrL98KcLOqicGUufqNTuOSpsNWfujekYy8hxPwJyne43bIDQCpJR6MMh
+	 dt31v06qdHzW3GgEg5NCNdJhYXqQFPXuVi3ns+27KSAWlQjoZwnSjvZWTBPJ2crXDZ
+	 rRk6AzanpAINWbd7mcpNuo5dw4/03aDnND1evGIk1g4v/vgFZtmfXiRYgPM6bbUv4U
+	 UFpN90MWeFwfA==
+Message-ID: <ef8c87b6-dcf6-47a4-92dc-075927d3823c@kernel.org>
+Date: Wed, 14 May 2025 09:22:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F40:EE_|PH8PR12MB7303:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1ce16f9b-c554-4a3a-4f4a-08dd92b807dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SGwxFm6XOU72xqOGTiLpXY3cV6OaFPyxiuqmuLjqG0RC2j1WoUYkmHgDwPnc?=
- =?us-ascii?Q?6DTS7BD2uH9HpDkneGeguEpC3QvJJ2FpnJW019DVyswUHoUpden4xfPYpzwl?=
- =?us-ascii?Q?Owbu5yi3kGhFJmwiSGx6V561tM8WZJyzO8DQrgKmBVqH8+JQIKhF+rNsiQJQ?=
- =?us-ascii?Q?yv7DiTfbrTAKd9Ph/dZbqo3KgflALqT2plRpmE/T8Np2drWj2CLSITs28Y1y?=
- =?us-ascii?Q?Yt1kKIn/hm99S9YIGqYaf43mjZQ363ARGqRiqsYbd5rijgKewX6W9hr/Au4v?=
- =?us-ascii?Q?SamlcOlfZn8HTmBzctvFoVs76KR4R+X/i0FptJv8R6j4dskHx2rTK511Cddm?=
- =?us-ascii?Q?DnRObL93W7k8ysTkSSqf43eBPOeJQ5vw/BdMSi/BXuJBvWF+jkNqYE527zOS?=
- =?us-ascii?Q?LrOTjjC5Syr3YzxQPuBjk3czm9K8t0FkBZkzwmcAvBEqHQMLAKNBxFgXYayM?=
- =?us-ascii?Q?o7L2Wfou3UiVcO8rZfi7f9+NiPHeMHcv2E1eV6qBhhwtLfUkDEqLe/YZqX5j?=
- =?us-ascii?Q?txgP88qg2sNWe5vE0K+3bqKIHEmLpwF5EN8woyMUVRRQ7b/yVHGhHXyF84bp?=
- =?us-ascii?Q?NcRsGhfyny/nfd1JrQ08VZjcNG7JOi5DZzr4HpnYnD19yQzLL08iWOo+JAhP?=
- =?us-ascii?Q?2ykeB5jC5FWt+AYtMEML4CYaQIIamlmJSUVtjTsEDKpfXSKfivTKQU9aO3FL?=
- =?us-ascii?Q?9wuPmRQg992XCMYkAzRvWimHIessWVq7huiJBar5dqSy8y6h1H4yyQ/r2SIw?=
- =?us-ascii?Q?hNxyCvV91ZbaxWqJSI11WbS9TE/BraeG5M9H9HaMkYsMCiBHV+3m9fCz0C/k?=
- =?us-ascii?Q?YH42wt0J730wBVGU881zEw8kaM+5SmKQUyYORwAmankDV+jteGLipJuAGARL?=
- =?us-ascii?Q?IRBIbgYcHy3Ju7PChP8WZEF2WoXwej4EwgbD2AOOOSuq4ewEBhXGGWALBT7q?=
- =?us-ascii?Q?Koc8n2nGvdPZ+1+tbphtVx7DUVNNV9fbTpr9j5Jkmh3gHLxZsF97KRpG67U2?=
- =?us-ascii?Q?NRuZWiIzjeJt1KlMZr3dZeRH8MvtGCbc2kQ3Rmg0Kti0hwVL26DIbJrVFDtn?=
- =?us-ascii?Q?KNV4lFXca8sqiUWzD9B3/vV9NRTIm8OTIifkyR64fqgPVgSl9cP9emo0KUwf?=
- =?us-ascii?Q?FvUHCuY0ce7odg3wcCKiDY8gmaAtjC7rT3Q8m7sl6BRrBV7ziiLw4TQfrdjD?=
- =?us-ascii?Q?pj1RIcZnXc5L4vrZpKRWlbdj+kuesr4RXAF64xYxNvqSIgkNkJb10zYmfOWR?=
- =?us-ascii?Q?DAR1xnLCl/eduEAeTjckyZBNchvZutUJ9yeh0A/Hpm4NwGZAPoRFNqZYiz4f?=
- =?us-ascii?Q?SdSNIRy8VilL9CFURupEhfYVb9Pxa/ajHK6OG7H+uDxJmUI/veLMqJ0ehrR9?=
- =?us-ascii?Q?c9rM4iQBW/Iw44Dzx78G0cVzS+V0Y10Q0HGM8yjWmaxH7QD4lXd045lkF+1n?=
- =?us-ascii?Q?1KnfVRPUMurUsXLwoG+pwlAdkRi1aQSPZkI8pMU1uP+nyulXn5zoEzULN0Cs?=
- =?us-ascii?Q?wC7SSW3AvowduN7s1IrZMCZHuh8yYSpX0eFd?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:22:05.9341
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ce16f9b-c554-4a3a-4f4a-08dd92b807dc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F40.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7303
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tty: serial: 8250_omap: fix TX with DMA for am33xx
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mans Rullgard <mans@mansr.com>, stable@vger.kernel.org
+References: <20250514072035.2757435-1-jirislaby@kernel.org>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250514072035.2757435-1-jirislaby@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Rename the 'reg_off' parameter of apic_{set|get}_reg() to 'reg' to
-match other usages in apic.h.
+On 14. 05. 25, 9:20, Jiri Slaby (SUSE) wrote:
+> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+> introduced an error in the TX DMA handling for 8250_omap.
+> 
+> When the OMAP_DMA_TX_KICK flag is set, the "skip_byte" is pulled from
+> the kfifo and emitted directly in order to start the DMA. While the
+> kfifo is updated, dma->tx_size is not decreased. This leads to
+> uart_xmit_advance() called in omap_8250_dma_tx_complete() advancing the
+> kfifo by one too much.
+> 
+> In practice, transmitting N bytes has been seen to result in the last
+> N-1 bytes being sent repeatedly.
+> 
+> This change fixes the problem by moving all of the dma setup after the
+> OMAP_DMA_TX_KICK handling and using kfifo_len() instead of the DMA size
+> for the 4-byte cutoff check. This slightly changes the behaviour at
+> buffer wraparound, but it still transmits the correct bytes somehow.
+> 
+> Now, the "skip_byte" would no longer be accounted to the stats. As
+> previously, dma->tx_size included also this skip byte, up->icount.tx was
+> updated by aforementioned uart_xmit_advance() in
+> omap_8250_dma_tx_complete(). Fix this by using the uart_fifo_out()
+> helper instead of bare kfifo_get().
+> 
+> Based on patch by Mans Rullgard <mans@mansr.com>
+> 
+> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
+> Reported-by: Mans Rullgard <mans@mansr.com>
+> Cc: stable@vger.kernel.org
 
-No functional changes intended.
+I should have added this too:
+Link: https://lore.kernel.org/all/20250506150748.3162-1-mans@mansr.com/
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v5:
+> ---
+> The same as for the original patch, I would appreaciate if someone
+> actually tests this one on a real HW too.
+> 
+> A patch to optimize the driver to use 2 sgls is still welcome. I will
+> not add it without actually having the HW.
+> ---
+>   drivers/tty/serial/8250/8250_omap.c | 25 ++++++++++---------------
+>   1 file changed, 10 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> index c9b1c689a045..bb23afdd63f2 100644
+> --- a/drivers/tty/serial/8250/8250_omap.c
+> +++ b/drivers/tty/serial/8250/8250_omap.c
+> @@ -1151,16 +1151,6 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   		return 0;
+>   	}
+>   
+> -	sg_init_table(&sg, 1);
+> -	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+> -					   UART_XMIT_SIZE, dma->tx_addr);
+> -	if (ret != 1) {
+> -		serial8250_clear_THRI(p);
+> -		return 0;
+> -	}
+> -
+> -	dma->tx_size = sg_dma_len(&sg);
+> -
+>   	if (priv->habit & OMAP_DMA_TX_KICK) {
+>   		unsigned char c;
+>   		u8 tx_lvl;
+> @@ -1185,18 +1175,22 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   			ret = -EBUSY;
+>   			goto err;
+>   		}
+> -		if (dma->tx_size < 4) {
+> +		if (kfifo_len(&tport->xmit_fifo) < 4) {
+>   			ret = -EINVAL;
+>   			goto err;
+>   		}
+> -		if (!kfifo_get(&tport->xmit_fifo, &c)) {
+> +		if (!uart_fifo_out(&p->port, &c, 1)) {
+>   			ret = -EINVAL;
+>   			goto err;
+>   		}
+>   		skip_byte = c;
+> -		/* now we need to recompute due to kfifo_get */
+> -		kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
+> -				UART_XMIT_SIZE, dma->tx_addr);
+> +	}
+> +
+> +	sg_init_table(&sg, 1);
+> +	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1, UART_XMIT_SIZE, dma->tx_addr);
+> +	if (ret != 1) {
+> +		ret = -EINVAL;
+> +		goto err;
+>   	}
+>   
+>   	desc = dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_DEV,
+> @@ -1206,6 +1200,7 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
+>   		goto err;
+>   	}
+>   
+> +	dma->tx_size = sg_dma_len(&sg);
+>   	dma->tx_running = 1;
+>   
+>   	desc->callback = omap_8250_dma_tx_complete;
 
- - New change.
 
- arch/x86/include/asm/apic.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index fb0efd297066..1f9cfb5eb54e 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -525,14 +525,14 @@ static inline int apic_find_highest_vector(void *bitmap)
- 	return -1;
- }
- 
--static inline u32 apic_get_reg(char *regs, int reg_off)
-+static inline u32 apic_get_reg(char *regs, int reg)
- {
--	return *((u32 *) (regs + reg_off));
-+	return *((u32 *) (regs + reg));
- }
- 
--static inline void apic_set_reg(char *regs, int reg_off, u32 val)
-+static inline void apic_set_reg(char *regs, int reg, u32 val)
- {
--	*((u32 *) (regs + reg_off)) = val;
-+	*((u32 *) (regs + reg)) = val;
- }
- 
- static __always_inline u64 apic_get_reg64(char *regs, int reg)
 -- 
-2.34.1
-
+js
+suse labs
