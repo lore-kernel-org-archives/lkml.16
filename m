@@ -1,70 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA9D1C862D;
-	Wed, 14 May 2025 16:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABFE22A1E5;
+	Wed, 14 May 2025 16:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238701; cv=none; b=MZHDXCAhwzb+4PfUtsK+FDon+gkn5WUJglUyiJpE67TINoya5eqh4xHwPejzLOJTXZoIBM3oYagcpegR0PTw4j6lMOeBEjL3Z4KnK4Di9xYN76ZbPW7o3+70MO2xoL24oVcwKd4NpqrIF4ekjF0NLhYAf/P0y+sr4GMwjVLcqbQ=
+	t=1747238717; cv=none; b=YDFQwnEI2UQDq8s+kbi4YEn3mNJgaYQiSbnQUQPlCMrl9PNnbTWp/PSxEoVucvg6EN1nFyywsb/HTGO0/G3UhRjywJo2lbjsj6G1h3ZkDCGkrKsBRxdUENJqpLm/1dAEbMU80morVaa00J7Lu125NAUXPBosxosVNPNO/Dk+KOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238701; c=relaxed/simple;
-	bh=RkTxB0ZxzYAlqUbtPbrV4H9RQUd/PeOBalusgwRU4PQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Amjy+LaDoHE0rX+TPbR5S8ur+ctXungzP5m2phiOskhuB+ozFBCmyimvoj9nMv+bWPktIfpZdU95KgEMmKa/7PmxYyVlbFIi+TQhBgzTk1K70Iikn6w/gnw9gQjG9ZrJo4Bnj6KT8SHxLP0oK575VF5g586MhBONkX6MEqjyHUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exI/7OTy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747238717; c=relaxed/simple;
+	bh=K5SbCUR48viLumkMFB4d7bJeXuIy++1ZKMdNBUHbUFE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=H8AG09Mx8yFTrs54BX7o+olG4dKdMnW6IeyFn2IuJhNZdSA4DRoHNCO2y2o4CUqtwBUzAa7XUQVP1MWeBP667ZvCw6mlR+15t8xqL2dL24pIcrPH+H9FRodjEdr5yMGYw47mgQIEKGbNOG6ShztOdpznbAawNwDh6Nfp5VmaPfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yy0QP7v7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exI/7OTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8E2C4CEE3;
-	Wed, 14 May 2025 16:05:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yy0QP7v7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA930C4CEE3;
+	Wed, 14 May 2025 16:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238701;
-	bh=RkTxB0ZxzYAlqUbtPbrV4H9RQUd/PeOBalusgwRU4PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=exI/7OTyHwVQ4yU9GlyrC6Q1hbJTnYs6PYs3JiP+nrVv1++gwisHzaVv0wWvYlHWQ
-	 1HN34m8JJorMxTUMDHJN9j3KMw6rKNq2IUv3TSc82Kvx2VpHNERr3y+P5rxWH1v3Wu
-	 3LZwkymkIUmoX1rcU5n8bAibpdVfhHSlYj9XKrLA18WSvRa0aMamciKHhp5gqeSfTO
-	 /mllHgmeoJhCnFsAw0mnZpupjOIbCBIyNmIKqZMJoawYIVF4s5RP7SUB5Q7PsxSiXU
-	 ARKSz7ODHRbZm4TtlpowsV9qUh114yyxhQmXew1KdVJnzKyjl01+hg/g+nAaKcSflF
-	 zd+68Zpr2a/Zg==
-Date: Wed, 14 May 2025 11:04:59 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: panel: Document Renesas
- R61307 based DSI panel
-Message-ID: <174723869857.2423571.2570619557941621488.robh@kernel.org>
-References: <20250506092718.106088-1-clamor95@gmail.com>
- <20250506092718.106088-2-clamor95@gmail.com>
+	s=k20201202; t=1747238717;
+	bh=K5SbCUR48viLumkMFB4d7bJeXuIy++1ZKMdNBUHbUFE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Yy0QP7v7ghmckWndnzmIs0qPPRDE1FBSrLltHlpSBFEWqaaeCfjoibV4vD1yKPFv5
+	 Sq7vWsus/M7SF/4SalFwYhIKrT7L832eBRF08Iasql+db0I2eU1tZMMYmH2OqFhPI/
+	 4uUFfSr+gJhXaJCy0hsdX9dbZLqBItGDDYAci5mPkG12Qq7l+zKaMZ1vQaeVfX+tWX
+	 +4/8txqrO/DUbM7qj+D5TXVzk1ASpDUzEVLfyRtNTYcDao38t1+6psPVHMc9TD56au
+	 vzoQN0Slw0VO8shqVXmiX6qHuWVrQ4yjk41k3RfgPMK0hJIaJytn/SXHW4aTHX93do
+	 eucpC0DElWW6g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506092718.106088-2-clamor95@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 May 2025 18:05:11 +0200
+Message-Id: <D9W0FJ6MKPTE.1NI5HK0TJRHCM@kernel.org>
+Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Boris Brezillon"
+ <boris.brezillon@collabora.com>, "Sebastian Reichel"
+ <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Mark Brown" <broonie@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
+ <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
+ <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
+ <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
+ <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
+ <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
+In-Reply-To: <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
 
+On Wed May 14, 2025 at 5:50 PM CEST, Mark Brown wrote:
+> On Wed, May 14, 2025 at 05:38:40PM +0200, Benno Lossin wrote:
+>> On Wed May 14, 2025 at 4:40 PM CEST, Daniel Almeida wrote:
+>> > By the way, IIUC, regulator_disable() does not disable a regulator nec=
+essarily.
+>> > It just tells the system that you don't care about it being enabled an=
+ymore. It can
+>> > still remain on if there are other users.
+>
+>> Hmm, so a `struct regulator` might already be enabled and calling
+>> `regulator_enable` doesn't do anything?
+>
+> It takes a reference to the regulator.  This may or may not result in a
+> change in an underlying physical regulator.
 
-On Tue, 06 May 2025 12:27:15 +0300, Svyatoslav Ryhel wrote:
-> R61307 is liquid crystal driver for high-definition amorphous silicon
-> (a-Si) panels and is ideal for tablets and smartphones.
-> 
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> ---
->  .../display/panel/renesas,r61307.yaml         | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/renesas,r61307.yaml
-> 
+Gotcha. So calling `regulator_enable` twice on the same regulator is
+fine?
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+If that is the case -- and after re-reading the functions exposed on
+both types `EnabledRegulator` and `Regulator` -- I am confused why we
+even need two different type states? Both expose the same functions
+(except `enable` and `disable`) and I don't otherwise see the purpose of
+having two types.
 
+---
+Cheers,
+Benno
