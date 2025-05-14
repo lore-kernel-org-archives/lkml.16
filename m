@@ -1,152 +1,246 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11022082.outbound.protection.outlook.com [40.93.200.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492F5280A5B;
-	Wed, 14 May 2025 17:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747244715; cv=none; b=csw9IB4SQCm4AonPlN3UJEGO8IQwCTupOXeolCc2qoq7YAdfHbMOLyZT5+MkhWfuERhHYLR2EGlpI3EpsBgPLQ3iRwFtD6ZpauXb+vrK5ecTqmBQ3yhtdr5QqLT0U4HwA2EdHgajgTgSSlM8qZMv25mAofl7okPP+5AYb6hyHnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747244715; c=relaxed/simple;
-	bh=YyGpl+1JAwga7bL89FCIocEXNFC49J6jOZJ18Lhrkls=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KxNAX2gna3P1EVCE/aqJSS/sqyF3fesNP7DUhsVLo99khI4OdzhjnJaqJlO+pLjP9oibJaJ/JybNFcZlPC4K4zkRR2lzU1kaNPliXsHucuvOMWxbm6PgHRx94+IOyfjdltlht++p8AhIlnMkc/V11RIjv5YItPQ5Qp1fQ/0GjO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=ipTVMwPr; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EBA1581EE;
+	Wed, 14 May 2025 17:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.200.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747244774; cv=fail; b=nL0RdcAdF9fC46iuJaEOKEOOfRkzAhy5rw1KbUk9mFUWBOXiaN34RGWVqLAi/v7b6rg4aiW9N4+x/UjyO5VV6XQoNd/t7LtRW6kNOu9qHa1MDcnnWnh88bsnUOAaOTwrPmrRV4Lxu4Dzvay9BnQRcidtcmVQnZifDBH2EuT9iuI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747244774; c=relaxed/simple;
+	bh=LZt4s7zWAMd6uuL4B3TyQeWHOgNzsKssAiryfcoOpNQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rEa3awhKHgBoao4jv/vTuMQ5SbOOh+A07chchIl0MYTllF5l8x885SvdfjTpVAQ/zSMmNDEo02CLoLZBUuvAV1sGGC0zRgWE5WarH0Jb864dRHfxM1f7GFeCDRpwo2HP8z0D8+QX9tW/NgOspJGa+yVUvTK4Bwhfpo9JKeUbvgg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=YMy60hMI; arc=fail smtp.client-ip=40.93.200.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ipTVMwPr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1747244712;
-	bh=YyGpl+1JAwga7bL89FCIocEXNFC49J6jOZJ18Lhrkls=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=ipTVMwPrqQR9rV+qX8xgGgKQIvGgYG4xUfszVq7FEWczZMkdkG3nUpttnFiUt1I6p
-	 WtPjn5NmYie3uQeoq4k6htYCGS3QrWH2+k9aFr/3jBkW4ZhT1nEH5AaTmLQFplKGKX
-	 i8pFJkTDQ0IhNNBKkP/qaB9eZIj+LDz25XVmoQ6A=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 106291C01B5;
-	Wed, 14 May 2025 13:45:10 -0400 (EDT)
-Message-ID: <4f92fcfaeffd179ff6ae265822dc79856310d6a3.camel@HansenPartnership.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: KP Singh <kpsingh@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>, bboscaccy@linux.microsoft.com, 
- bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net,
-  dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
- jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com,
- justinstitt@google.com,  keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org,  linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org,  linux-security-module@vger.kernel.org,
- llvm@lists.linux.dev,  masahiroy@kernel.org, mic@digikod.net,
- morbo@google.com, nathan@kernel.org,  neal@gompa.dev,
- nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu,  nkapron@google.com,
- roberto.sassu@huawei.com, serge@hallyn.com, shuah@kernel.org, 
- teknoraver@meta.com, xiyou.wangcong@gmail.com, kysrinivasan@gmail.com,
- Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 14 May 2025 13:45:09 -0400
-In-Reply-To: <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
-	 <20250502210034.284051-1-kpsingh@kernel.org>
-	 <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-	 <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
-	 <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
-	 <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
-	 <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
-	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
-	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
-	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
-	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
-	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
-	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
-	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="YMy60hMI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uNXHytLcRu4u5x3ydDbl2KRCVWPcGlZCxgspoPi20qJhS8MP0T76clxDwPGgMNar7sZnxQvEWXuzkinpft/b4jXTyDF3i7J+9b3I+Den1PDMsdGKRhKjuhUpmS40YX378wiIz8oMNmhq8uWgEYqZVTgtVY24+KwD+fbTm0r/Iwpi8UUQ5JfajjWSzPVyc9D+kKiIKfPvmaJUkJPKtaxAgiO+gurINcxpxQNM2IXgBJlKseg+CxyM5uuuZ18W/9Y5DJGJFfkHa9LBnk1TsUgph9T6qsZo9/m5amQL4tLCCjj5905K2FDyRSxv4JkaxpV8iiunVbw01BKlW0R7xMGckg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mUEk2JEZtleGX1GYKvXXfKhcHj5VL4jTt+AbSXad0aY=;
+ b=EpUEVV5Tt5f1E5qf73JPJWUHCrQsIz1FUGGoNtA16HYXGYXJGFjNBvLEkTKYpIBQM51d8FXVVqiobmffl1i5oWbkXprJLbWlwCWOrTma+osaYQUl3d3ck5FtKQb0S/sImv6YyGiTGmLN4gV2D78SepalMcQX2warsDsytQlAr1wZFCVowrhIrsJr5+/qo3j2zxDFj0dfc87Jvp+z+y4ylUJogw6pN421DeUe32tA+btNZCewf4IShvY375yw+RIhlBDHNJ/OIQnglzQbY/BplTWZAyWKxTs9qqMjKTpkPVz9d0TCGw9rM6wX4OMfbdYbXe6wpubeQg57rPp72XTAwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mUEk2JEZtleGX1GYKvXXfKhcHj5VL4jTt+AbSXad0aY=;
+ b=YMy60hMITu9VI19iSNpW9wcmy9p5RY29WodkvZs7DY2zcZw+l6o6l4i1fYpvHpbJsq55y7TnCtEcZ0RKDnh812WuxUJGHE7zi33GjZdMpUs+QBZTtKNG5pJVkH8dq1JXqUMtWpUZ+ak0qhH+nX/4mHIGJ3eFjng56th0QQOSOsg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
+ BN0PR01MB7120.prod.exchangelabs.com (2603:10b6:408:153::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.29; Wed, 14 May 2025 17:46:08 +0000
+Received: from CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8722.031; Wed, 14 May 2025
+ 17:46:07 +0000
+Message-ID: <ac567448-0dd1-48dd-ad54-d71215629c96@os.amperecomputing.com>
+Date: Wed, 14 May 2025 10:46:04 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
+ linux-mm@kvack.org, Janosch Frank <frankja@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pbonzini@redhat.com
+References: <20250514163530.119582-1-lorenzo.stoakes@oracle.com>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <20250514163530.119582-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR04CA0015.namprd04.prod.outlook.com
+ (2603:10b6:5:334::20) To CH0PR01MB6873.prod.exchangelabs.com
+ (2603:10b6:610:112::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|BN0PR01MB7120:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9fd7b23-c824-4c90-3f0a-08dd930f34cf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y1R0WGhuNWE2dkhxM3g0N3A2UWlhenVaUEpjeXRnZitROTliL25GR0NEWEN1?=
+ =?utf-8?B?ckFFZzZDVkh3WnVNR3IwUytwMi9uc2lOcm1oQmVkT25sSzh3azJXRzREZm1a?=
+ =?utf-8?B?VWs0WmxIbWlIRkhLZTdTUEovQlNPNnRpTW5tMllvWHlUYk10MzVXcWIwbk50?=
+ =?utf-8?B?TG5XblBYaUlRMkJTOUhBSEswRFN0VVExcXdHaHdRMTlYNTlJMzZlUzF5cmJ4?=
+ =?utf-8?B?MTN2Y0lQQXlzZENHVTQrVzBCVWtsajdtVXh6aExEeXlGaUhpOW4zM2Z1LzlQ?=
+ =?utf-8?B?QXl5bmNvUVJkZUFYRFVOU2N3akhpbkhmd2RyTUtMRWNpZHMvbWcxTWlFdWZH?=
+ =?utf-8?B?WVpQWjM4RnJ1OGtmRWhlMW9QbXRORjlMdk42WC9wR285UWV6d2U1V1p3Q3F1?=
+ =?utf-8?B?ZFBqNHROLzFLWGNweVJJVXozUmpHTFFJdW8wazl1U2x6Qy9UWHJkNWwvVTdu?=
+ =?utf-8?B?V2hHWnd4YjFzRHpubkpoM0NXT3drR1NPNDViMjNGZlRrakp6VHdNamoxUnFi?=
+ =?utf-8?B?dWZlSGozWVZLZ0hHaGdUdGI0aWNTeHdJSFZFUFVWeHVZalhmdHo5ODZNUWt4?=
+ =?utf-8?B?eGFmTlA3OU5OV29hT2s5Z0dXOUl0OThBQitvWjFUU0Q0L1d3cy9SdzFidmRh?=
+ =?utf-8?B?emgzTzdqQUY4OVZnMG9OVWhzb1oxdE1EU3EvdWJ6cENkNjllcmR5UDFVM1NE?=
+ =?utf-8?B?eFhEWHJ4NzJMMDFzdzJXcnpiTW15eDFqZTgyZC9GeDFtckFDWDdPOWM4VGxK?=
+ =?utf-8?B?Ym9OTnFLR3g1UllxZFBhaHYzUU81bVRIUzBWRUZqTVNoNW1LTTlGQ3RzbGxU?=
+ =?utf-8?B?bFczdGQxSGZycnZJamIyTFJZZGdtekd2djdmQThZQkRzcExsNUMwVzhhMHJI?=
+ =?utf-8?B?bFV0dEtvU1plYXBFVVJ6NTE4TkloSXhjOHNzMDBaaHN5cC9SaXZKNmpIeEJG?=
+ =?utf-8?B?T3crazFkR09VaWJwZ1dtbG4zR1BqQVVzMlRFSURWSWZOeGVIQjIxYVJHa2Mr?=
+ =?utf-8?B?djBvYit2Y3JsTDgwNTVNSzFMaVlnZVpDeHBZVGNmdHdXOGtRMUNBbkhVNzE1?=
+ =?utf-8?B?YnBzL0liKzRVMGVTZWZFamlyS0IzY2RGNU5pMHA2b3QrWnJ1UEFHS1prSnZN?=
+ =?utf-8?B?Q01ucWtpMlFqV2RXVER1dHdWLytNejZldWpkVlNMbTRyaWk1elFYbUgwd0FM?=
+ =?utf-8?B?cU8yU2FTU0NxOElidWZ6YzV5anB2R2NtODl5ZE1lUlZPZzBDRHVDeFhRbGdZ?=
+ =?utf-8?B?Z3pEVjJTaGtUVk4xU3cyTFEya3VUZjJtL1Q5QWdoWExDNm5YUmo3ZVJCa1FZ?=
+ =?utf-8?B?REtZMTM4SnFYekdjZmo3azc3dE5aVmwyWTU3UDF1ajVnMU1NekVJNEJ0TDVh?=
+ =?utf-8?B?QVMzUW9YWjFFZGFFZFoyY05Jb1g1SUlGVmpiV1ZLa0l1eGtuMlpEb1V5TEJV?=
+ =?utf-8?B?ZnFnZ25DWmFIeXA3c3NxaTY0ZHo0S01Ha0NzMU1xZlNiK2ZEUGluN1N6NHFT?=
+ =?utf-8?B?akRla3BJWWQxai9BTTdIZEVWVG1Pem54QzF3dExkbXZhdzB1K25yT1JjaUYr?=
+ =?utf-8?B?Sks0NHZjZXZmME11ckphMXdvV2ZlTGRDd3hNTmVnMnRSZmluYnNXd2pWRzBy?=
+ =?utf-8?B?TUorVnA2VXU1ZG9FS204WlZOVHRDS00rcndvK3FaOWtKbmF2WGdiK0tlMFJx?=
+ =?utf-8?B?cjMzVlhXSDFtRzY0ZEN1ZWg1S3hodlJqbXNyTkwwazVnNlUvVjA1bXJLU2pD?=
+ =?utf-8?B?dmN6dVo2OTN0UW9LdDdLR3JwTkhiL3l2VkFnTXFrRE0xN0JGSmcrMlZnTmZM?=
+ =?utf-8?Q?FIyV1/D6Qmq9A8DJGNEX2GcsiuR/Mjyl7g3dA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bTdCdFg1U1lQL29nSTBPRG1PNnorWm4zVzZVUk5tRFh3ZnoybHlJZzlidWxV?=
+ =?utf-8?B?U0RPQ015cHZSeU5NdEh6MmQ0QS9kZ1NQcEFVWDV4UEFLNVV5SkxEMkd6Y3lG?=
+ =?utf-8?B?VmtNM2ZzbE5XSzRwNzdCdERDRzVYVnVOZFhrcTJCVEdqc2JSY3lPM2Rjbnhx?=
+ =?utf-8?B?S0lTbUxJOGpzNmtnSXlPUm84YmV3MVpHdnA4NUR5dkdYQUNIcUluckNIaHls?=
+ =?utf-8?B?Q2dwclRQREcrUUc3eHN1TWhHck0yUUlRb20yV08zTVljN3lOVTRUME84NytX?=
+ =?utf-8?B?dGpXeUdJNVZybmtDUExlYWxXVUU4dTlUbkp6YWpTT1U2ZFRncEZ0TWVseWs5?=
+ =?utf-8?B?Sk5tVS96bXN2QmVhUndtSFBSMFRENElMUFdqeVBrRk9EVHZoa2N3V1RmK3ZB?=
+ =?utf-8?B?Qm1Jcjk1UFdERXJPUEtZR0x3R1IrRTlEbXdnbGc0dXhLRjltMXp5TjhaaEFt?=
+ =?utf-8?B?eTA1aFBYMTFrV1oxMWgzcFY5T2RRbFdHSllFaFhyQlN6aUNRYVFJTkJJWnB4?=
+ =?utf-8?B?U1ZKVkplWFBNUEgwWmpCR0xSNXlSOW9kYllnQ2ZMYlBVbmVndVd1U2FZOUJv?=
+ =?utf-8?B?NnpTWGtoaWFBdjViOWdlaU5SZDFLOXFZSGI0MnVsMWVkSnN3UDZ0ODdnVUtj?=
+ =?utf-8?B?cWxUVTlxeElBdjI4QlhWUGc1bURqMkdsc1RyRFBiZVVFd3ZLUU5CWkw3Kzd6?=
+ =?utf-8?B?dkNBMDB6enNHNVJCTTZkNWQ5LzE4TDJpc2dsL2VDcDdCbXBBKzd6OGtCVFFR?=
+ =?utf-8?B?K0FtWVN4NFdxUDBFK2QxT01CeDc5WEtWRWwyRnlyaDZwWFhRQ0VhVUloOVA3?=
+ =?utf-8?B?WEc5VW14S3YxOUVjUXRDMHExaFR1a0lPM0xsanJYZ0pKTm9GZXAvdk1aMkJr?=
+ =?utf-8?B?QXdXMGxodzhtVUZ5eGF5UWp3QzdId0h3aitFQlNwKy85MlE2cGR1TVFkYlNy?=
+ =?utf-8?B?eXl0eG42VUtPd0tHTXRBay95K0ZCYk9XbHBpMGtWcG9Fazg0d3VuOG5tRHp3?=
+ =?utf-8?B?YWwzcVpQMmR6eUxiNWpkeG8yNEpjenZtZnNCVnU5eFp2TDFKVytJeXcyNDVK?=
+ =?utf-8?B?QWJtb0F4N0dVQ3JZaG5CbmZ1TGxaMEhxL1pXM0xOTkUvcE9qRzZURDVQMGsv?=
+ =?utf-8?B?NXBMWW9wZGI5enBlVjd2RE16UVo2QTdaTWowN2ZEbDQvZUZqWS95aDR6RlVE?=
+ =?utf-8?B?MXhyL2x1TG9EbXhxVGZHa05rVTgrVzlGUHl3WFVrbUd6QlltNWZFbG8rSXlk?=
+ =?utf-8?B?cGdralZHT2VpNXZxSjVSVGtSTnBDVlgzVGMwaC9VUXVZeWw2QUR6cXBTUm1o?=
+ =?utf-8?B?aytIckUvblpNSVNpd0ZyelJOSDlaUHZoNzY5VitEZmNydUxweTQvTG93Nmly?=
+ =?utf-8?B?SUhJWlNVQ1I0MjVadUR2dVh0cWF4VUpyaExudWk3Zm5hQ0FrbDdqTlpIUnlR?=
+ =?utf-8?B?UDdCQ2dqVHBoTVRVeUpyeGRDTlBSekxWbHZVQlZUUnJmcnd4MEZvMWhucXBO?=
+ =?utf-8?B?QUNUMTljZEY2NXltazkydUl3WEd5YnBodEtIMUhualhJYUV4QXhOdWFUQ2hS?=
+ =?utf-8?B?SW1yK0tNSll5VlhnTzVHK1hoOHNlYllnRTIySU9VUVo4TTZ6V3YweVY5RzlL?=
+ =?utf-8?B?eFVZK1luMUttdTFBelJHVVVZSk9CYkI3cXF6cmVPMDJNNmhNc0w0WVN5SGc4?=
+ =?utf-8?B?djNiQ2Y2dmdtR1hNYUlVanNWNVpjUWtVdlVCdGR6RkpUZTZWOE5TOUw5emlL?=
+ =?utf-8?B?aEpKY3c3S3Jva1NpNUpWVEtQYWg4bDMxUitvOWUyV1RnblBIcy9WcW5xMkFF?=
+ =?utf-8?B?TllnOFRwUjdJSkpCNnViYUV2b2hQOGpRN1dHZFlFQ1lrOWdoTjJaWGszNGov?=
+ =?utf-8?B?TXlmaXZ0TjBzbXZuMEsrRVY2TzNBRExBMFhwYytickJvMEtnbGY2Q3ozUklk?=
+ =?utf-8?B?QkZEVlNwbDB0WHI5cEV5Zkw2Q1crWWpibG1aMmFOWmE4RHVWaXV5RERaeU5r?=
+ =?utf-8?B?Vm4xR3NMb1Z5Slo1aTFPY1RYamFSa3B3SnhMSG42djhhYTZDZG1XRUdjUDhj?=
+ =?utf-8?B?OTQwY2piUThOYmluVDJjWFkrSWN5RlBPU3ZxTy9TbVZHN1pzRHNRVWlrL3c2?=
+ =?utf-8?B?WU5XSUJKMHdhV1lUTjhkdjNuQ3lTb01XU1NLNXZOQWVCTFk5TE5GT0NSTjFz?=
+ =?utf-8?Q?R3z+GSpXe5wPtmCDda4kUHs=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9fd7b23-c824-4c90-3f0a-08dd930f34cf
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 17:46:07.8269
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NTLzbau/egBI5aRY/hXBhTzidvkmYH6qetRAuLyxSeioHMEuyoV23zDXAEs1gu9tOH/3tJ9QcTCiNKcRzbxCrdr7kBx0S6Z7MJyhJrIQVxc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR01MB7120
 
-On Wed, 2025-05-14 at 19:17 +0200, KP Singh wrote:
-> On Wed, May 14, 2025 at 5:39=E2=80=AFPM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > On Sun, 2025-05-11 at 04:01 +0200, KP Singh wrote:
-[...]
-> > > This implicitly makes the payload equivalent to the signed block
-> > > (B_signed)
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0 I_loader || H_meta
-> > >=20
-> > > bpftool then generates the signature of this I_loader payload
-> > > (which now contains the expected H_meta) using a key (system or
-> > > user) with new flags that work in combination with bpftool -L
-> >=20
-> > Could I just push back a bit on this.=C2=A0 The theory of hash chains
-> > (which I've cut to shorten) is about pure data structures.=C2=A0 The
-> > reason for that is that the entire hash chain is supposed to be
-> > easily independently verifiable in any environment because anything
-> > can compute the hashes of the blocks and links.=C2=A0 This independent
-> > verification of the chain is key to formally proving hash chains to
-> > be correct.=C2=A0 In your proposal we lose the easy verifiability
-> > because the link hash is embedded in the ebpf loader program which
-> > has to be disassembled to do the extraction of the hash and verify
-> > the loader is actually checking it.
->=20
-> I am not sure I understand your concern. This is something that can
-> easily be built into tooling / annotations.
->=20
-> =C2=A0=C2=A0=C2=A0 bpftool -S -v <verification_key> <loader> <metadata>
->=20
-> Could you explain what's the use-case for "easy verifiability".
-
-I mean verifiability of the hash chain link.  Given a signed program,
-(i.e. a .h file which is generated by bpftool) which is a signature
-over the loader only how would one use simple cryptographic operations
-to verify it?
 
 
->=20
-> > I was looking at ways we could use a pure hash chain (i.e.
-> > signature over loader and real map hash) and it does strike me that
-> > the above ebpf hash verification code is pretty invariant and easy
-> > to construct, so it could run as a separate BPF fragment that then
-> > jumps to the real loader.=C2=A0 In that case, it could be constructed o=
-n
-> > the fly in a trusted environment, like the kernel, from the link
-> > hash in the signature and the signature could just be Sig(loader ||
-> > map hash) which can then be
->=20
-> The design I proposed does the same thing:
->=20
-> =C2=A0=C2=A0=C2=A0 Sig(loader || H_metadata)
->=20
-> metadata is actually the data (programs, context etc) that's passed
-> in the map. The verification just happens in the loader program and
-> the loader || H_metadata is implemented elegantly to avoid any
-> separate payloads.
+On 5/14/25 9:35 AM, Lorenzo Stoakes wrote:
+> The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
+> unfortunate identifier within it - PROT_NONE.
+>
+> This clashes with the protection bit define from the uapi for mmap()
+> declared in include/uapi/asm-generic/mman-common.h, which is indeed what
+> those casually reading this code would assume this to refer to.
+>
+> This means that any changes which subsequently alter headers in any way
+> which results in the uapi header being imported here will cause build
+> errors.
+>
+> Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
+>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
+> ---
+>
+> Andrew - sorry to be a pain - this needs to land before
+> https://lore.kernel.org/all/20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com/
+>
+> I can resend this as a series with it if that makes it easier for you? Let
+> me know if there's anything I can do to make it easier to get the ordering right here.
+>
+> Thanks!
+>
+>   arch/s390/kvm/gaccess.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 
-OK, so I think this is the crux of the problem:  In formal methods
-proving the validity of a data based hash link is an easy set of
-cryptographic operations.  You can assert that's equivalent to a
-signature over a program that verifies the hash, but formally proving
-it requires a formal analysis of the program to show that 1) it
-contains the correct hash and 2) it correctly checks the hash against
-the map.  That makes the task of someone receiving the .h file
-containing the signed skeleton way harder: it's easy to prove the
-signature matches the loader instructions, but they still have to prove
-the instructions contain and verify the correct map hash.
+Acked-by: Yang Shi <yang@os.amperecomputing.com>
 
-Regards,
-
-James
-
+>
+> diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+> index f6fded15633a..4e5654ad1604 100644
+> --- a/arch/s390/kvm/gaccess.c
+> +++ b/arch/s390/kvm/gaccess.c
+> @@ -318,7 +318,7 @@ enum prot_type {
+>   	PROT_TYPE_DAT  = 3,
+>   	PROT_TYPE_IEP  = 4,
+>   	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
+> -	PROT_NONE,
+> +	PROT_TYPE_DUMMY,
+>   };
+>
+>   static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
+> @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+>   	switch (code) {
+>   	case PGM_PROTECTION:
+>   		switch (prot) {
+> -		case PROT_NONE:
+> +		case PROT_TYPE_DUMMY:
+>   			/* We should never get here, acts like termination */
+>   			WARN_ON_ONCE(1);
+>   			break;
+> @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+>   			gpa = kvm_s390_real_to_abs(vcpu, ga);
+>   			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
+>   				rc = PGM_ADDRESSING;
+> -				prot = PROT_NONE;
+> +				prot = PROT_TYPE_DUMMY;
+>   			}
+>   		}
+>   		if (rc)
+> @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+>   		if (rc == PGM_PROTECTION)
+>   			prot = PROT_TYPE_KEYC;
+>   		else
+> -			prot = PROT_NONE;
+> +			prot = PROT_TYPE_DUMMY;
+>   		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
+>   	}
+>   out_unlock:
+> --
+> 2.49.0
 
