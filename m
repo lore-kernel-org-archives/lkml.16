@@ -1,67 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA6D212B2B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27EA2741B0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221352; cv=none; b=W/SyrjQxLtsJhM4oPCb90e6RfzDrivy6GVmydCoZZ/quip0c9PyosdTnaVuDmxz93sCeqxi+yCwu6IkWK2I+MjTooyAji4Fqnq2Au8kV8XCE1CYSP1lEVlXRyQ8SFal07RErGzQlTQfhj/qLwHCEmiahFCZzw/DH6v7q+66pyYc=
+	t=1747221355; cv=none; b=sEJnJkMqbcTJXkdkkv8Hjy2MYuh+ABDT9Y5AcW8bt1ZLWSuk6b2sQf19uRL3qLmoOT7FVcVw0qVyzTVUus7vmU3MqkvWbF4L8gX6Smp7YQQqllzXYYXcXLtBybQohBFpC4h8W1iryCi/U8aB61dJF8mtyHXF+nZs9dqey7w7quE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221352; c=relaxed/simple;
-	bh=7jiNQ8On0aJiW3KOJvKsfGYijgcEvhZxGNKiPDfiJY8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mU3SHpp//W+YJ2NMIK11wWjaEat9q9bpGmNUEXoiG2gVG0uRI02kBMLvWJeP1U15b3KHFF8QOLJ2mDPZ6b7RCCMC8RPE8Z6GqEF5Y3wLliCtzBcLFvNpFTqnz+mdqdle2Bq7EJyogIDglIfKdG9a+3pz0PhEdgEJ0Ga2CSyvRbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P6wICQG4; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1747221355; c=relaxed/simple;
+	bh=SBuojYrrqpBFDrlTNShywACmIJ60kDXWt/jACPJjCY8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OJcPUS7KcEATnjYWfOd+ZD577bVItgxUtHr7LpPOF9I8kleBKauFQvjbkOm1LQwOvV1o/IRT4aH+NZghG3K9dbDOW7QRrc8+ToKR8M2dzk2q73FwGSWeiDwElq6iL/+LPbAW7O+AOQzW66PALnYH/VTVX8lHCsnJjkwv9ScZDBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AbnMCl9I; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P6wICQG4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AbnMCl9I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747221349;
+	s=mimecast20190719; t=1747221352;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KIw9tYXSMe4QTBEVyDr0dCSVyNZwb8svaSbHmSTLAC0=;
-	b=P6wICQG4c4sudz6CiOVTMUAP7iGfbcWougmbpqXfBOq8Z99ZjzlTjziWT1cLeL3rLCoqe2
-	RRI/d8uNlNVwf8A//EFjeKk7NB4qK9CoLu5mErYOc+w841slol8/VcPEpYg2VpjUh6QOQp
-	n9tENBxkKywB+6R2j24Gnj73OXqwDck=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USAeB9Dgua5+aC4n7BcswguTapqG/rE90mePm5URn3E=;
+	b=AbnMCl9IdXQcNpaVA7Wi4jTQ+EggZWe16omZWk7B0wnLF8zMbvZ5Gb/wxsJH7xwpWPvWnr
+	n/zXEo6bk389y40LiXVfXoI0LLuQviJKLIqCGS7mt9P3MuPyi+q14oaUoTp+4lneL04aJf
+	Ct98tA2cWc07ML23wxLqnFEO7HTGfYs=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-swPfquLqNwGabSvBaVmFHQ-1; Wed, 14 May 2025 07:15:48 -0400
-X-MC-Unique: swPfquLqNwGabSvBaVmFHQ-1
-X-Mimecast-MFC-AGG-ID: swPfquLqNwGabSvBaVmFHQ_1747221347
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so42970225e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:15:48 -0700 (PDT)
+ us-mta-387-hwoQ_hCEO9C-uWrUFkPixA-1; Wed, 14 May 2025 07:15:51 -0400
+X-MC-Unique: hwoQ_hCEO9C-uWrUFkPixA-1
+X-Mimecast-MFC-AGG-ID: hwoQ_hCEO9C-uWrUFkPixA_1747221350
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so2703214f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:15:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747221347; x=1747826147;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KIw9tYXSMe4QTBEVyDr0dCSVyNZwb8svaSbHmSTLAC0=;
-        b=nNNGpO//quJgKQp9ehUr5D6+Kp5ClkfmqRT0FNwO55i4kMMuaMdg+dmoWpLvKgluab
-         SskrqqXresSwIkrEv24lirFmcmftFQzQ+C7fcP8RdaU5GMIY7wys8mwOcl20jT7Fhm6e
-         EQDP+kFKDbMaF3J/fxgLt9+vhqa21isbpC0QvQXQEoLl7xrlOYnyF2MnKvQkYSyqDCmA
-         jXFh3h3sjDDWP3yRlC1Q4xf3JHfifxWpj8UkwCmFgUxggZh4tqk3dyXNUK2OS4ohXdP+
-         A6o1oIe87cjBkhcHlMQrdEfZvBU+hTtpv/jsk4G7d6KRvqo+VSUAhkau0Rz0ZMZxO12n
-         GCAQ==
-X-Gm-Message-State: AOJu0YzcVE5qCBUmC/NYnXrE0Sn05GMa5aQGaENTuRWvGTYAp8guBGpO
-	p3qINTxnYnO1X9+a4YxIWODLCv403Bf5X/z38y3JLFKt5dEACh6+pRujSZTUZv728N+Svfv04Lr
-	eyKs7xtcViRQBcpPjNbQR3su/FIiWmxdqWo+5b5gFwYzaSMPPJEmQ5NHopO8ju3g7o1MgVENMjz
-	gbtX/YisrN0A9EMfkpR1gJ/1ZqPRNzLMpXl1mMayEPcY2/
-X-Gm-Gg: ASbGncsFLH+CcV8M0ebhinAtdC75M+4mTdMNIB0TZt+cVneM/4n6VXLldRiE+6gbcZV
-	2ZahKgdciBOjGZyF4KxpqKrWv2bxT5FMTQZ3tPTFIM/k/SJgg+DCGGkwgIhSUtOxT+cLsNE1Kgu
-	2xOvdBYX4/jgw/1hEWwlnB98I5j3lgRL1yZHNXqM7bigqqVowyWObST3JF4u7pQy5LDMN078xY9
-	eDeibfhsuu/rYeB73c++iQ1oYuLyOBvtR/lWGTXJcHHOGipLQwmc2e0876WvkqYADL3djW+/z+a
-	RfHsz/K0FObiPnTYCjdV2zH8KIAWgpLuwMFLw9cSA75ht3HY6SAZw7HhLNtDr7a/7McfwdAJ
-X-Received: by 2002:a05:600c:c059:20b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-442f285da04mr13846165e9.2.1747221346933;
-        Wed, 14 May 2025 04:15:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJJIhh7s5g1SAUq6KR34Wmh7l8nWtY6enkkRW9tV0qsQ8PccLlCfYwaJySR3PqJiwxgI3cFA==
-X-Received: by 2002:a05:600c:c059:20b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-442f285da04mr13845795e9.2.1747221346462;
-        Wed, 14 May 2025 04:15:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747221350; x=1747826150;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=USAeB9Dgua5+aC4n7BcswguTapqG/rE90mePm5URn3E=;
+        b=V5rhfVhabRvuBI9S3IkGbrU2lDUIdGkyz9vyfkMeMun2qZC64iT8CegcK0iXt8dbE4
+         5/Fsma2P1tgGrPIaXqN4rrsplagw1LU1fKBUjJPXuGCCzeJOsQtw/axp6KHi2iSBbQV4
+         jXGs3okS3jsudf0c/jZT/wb2lEZuT1C+jpAGsp8Xj6OHOOMVoFmN5xd4ejShkXnmPcNu
+         p7OlWWfXXVMEfgc9Mwe1nRROw81RhXOMthiwaQIOy3UqYykNMQn9UY9dB9nBz+Yrx3KD
+         8VtqJKiBRaUHltHmLHttawB6ZZFIUOn0I7sIGyzuXKcVyEHIGjkTYc1qg1kNKbQczvRP
+         p8/A==
+X-Gm-Message-State: AOJu0Yxk5ENyiFAuRaoPeXcqqkVnNZ3y9GfV07qsg2xpZk9PDjGWecDJ
+	LVsPXLCk2GJIaOxab1BWxlawOU9OfzX0ebEe4MO7WZ8h/MLODe88+MH/7vEN/Vhz2n2W/MFrdJB
+	d2Jkz7bg1O7YMU/q5a9TdHv9zR2EKIpm+v1wHf2SnSiuOLhZ204+NqeUrizwEu1s+FNX64V3wWv
+	+3EbiAwGLJa16rzuIvMiQ/8l4XY57DzP6+KDlB1SpNLMAP
+X-Gm-Gg: ASbGncshGSqC4uCcR+WJK8HCztQw/KczyanjaSJptERuZovNkdwGtSVKmLv47AdMABT
+	1BhJFWwHSATxyyyI4qTFH97DdJrHG4mUMQHO3A6A3Y8NZG746b7Z5+IeewGGGWymIR21n+lFwPH
+	L5jOOCb7V2bEkp01AMNELwb8yfG2sB4pwv879YyAU+P5BjDPwoIlndfxcdtCMNKRJFXSD5uCVT9
+	uEdU2Kpnhfj4CEnXR40V1b0Ij72RHMjln+cGzTicicOQzsaMS++mMpjVJPMYMIWE8AZSz1fldx6
+	X5G5dBod23tXVFwrZJQWry6ewEss0b/7bO3JKpFbf7wFm6yZ3Md4Gatp2L1X7ryCG4MNUI5h
+X-Received: by 2002:a05:6000:2a6:b0:3a0:b521:9525 with SMTP id ffacd0b85a97d-3a34969ad59mr2825509f8f.1.1747221350385;
+        Wed, 14 May 2025 04:15:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7IAF/NSDrxcSU/xvaJlGrQphfZd4k82Xl6a3TRsBzfALbvBwKjpxgERH4dcJ+8qF6KaRktA==
+X-Received: by 2002:a05:6000:2a6:b0:3a0:b521:9525 with SMTP id ffacd0b85a97d-3a34969ad59mr2825466f8f.1.1747221349944;
+        Wed, 14 May 2025 04:15:49 -0700 (PDT)
 Received: from localhost (p200300d82f156200d4851bcdd708f5df.dip0.t-ipconnect.de. [2003:d8:2f15:6200:d485:1bcd:d708:f5df])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442f3979275sm26123595e9.34.2025.05.14.04.15.45
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f58f3369sm19586020f8f.57.2025.05.14.04.15.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 04:15:46 -0700 (PDT)
+        Wed, 14 May 2025 04:15:49 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -80,71 +82,79 @@ Cc: linux-mm@kvack.org,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	Zi Yan <ziy@nvidia.com>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH v1 0/2] mm/memory_hotplug: introduce and use PG_offline_skippable
-Date: Wed, 14 May 2025 13:15:42 +0200
-Message-ID: <20250514111544.1012399-1-david@redhat.com>
+Subject: [PATCH v1 2/2] mm/memory_hotplug: remove -EBUSY handling from scan_movable_pages()
+Date: Wed, 14 May 2025 13:15:44 +0200
+Message-ID: <20250514111544.1012399-3-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250514111544.1012399-1-david@redhat.com>
+References: <20250514111544.1012399-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is a requirement for making PageOffline pages not have a refcount
-in the long future ("frozen"), and for reworking non-folio page migration
-in the near future.
+Now that we can reliably identify PageOffline() pages that allow for
+memory offlining in has_unmovable_pages(), start_isolate_page_range()
+will fail on PageOffline() pages that would prevent memory offlining, and
+we no longer have to detect them in scan_movable_pages() anymore.
 
-I have patches mostly ready to go to handle the latter. For turning all
-PageOffline() pages frozen, the non-folio page migration and memory
-ballooning drivers will have to be reworked first, to no longer rely on
-the refcount of PageOffline pages.
+Note that the previous mechanism relied on MEM_GOING_OFFLINE, whereby we
+were not able to distinguish the types of PageOffline() before
+MEM_GOING_OFFLINE.
 
-Introduce PG_offline_skippable that only applies to PageOffline() pages --
-of course, reusing one of the existing PG_ flags for now -- and convert
-virtio-mem to make use of the new way: to allow for skipping PageOffline
-pages during memory offlining, treating them as if they would not be
-allocated.
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/memory_hotplug.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-Note that the existing mechanism relied on the driver (virtio-mem)
-dropping its reference during MEM_GOING_OFFLINE, which is complicated and
-not compatible with the concept of frozen pages (no refcount).
-
-Tested with virtio-mem on x86, including  partially hotplugging a memory
-block (hotplugging 64MiB with a 128 MiB memory block size), and repeatedly
-onlining+offlining the memory block.
-
-Cc: David Hildenbrand <david@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: "Eugenio Pérez" <eperezma@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Brendan Jackman <jackmanb@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-
-David Hildenbrand (2):
-  mm/memory_hotplug: PG_offline_skippable for offlining memory blocks
-    with PageOffline pages
-  mm/memory_hotplug: remove -EBUSY handling from scan_movable_pages()
-
- drivers/virtio/virtio_mem.c | 111 +-----------------------------------
- include/linux/page-flags.h  |  29 +++++++---
- mm/memory_hotplug.c         |  22 ++-----
- mm/page_alloc.c             |   8 +--
- mm/page_isolation.c         |  21 +++----
- 5 files changed, 40 insertions(+), 151 deletions(-)
-
-
-base-commit: 2f6baf8dadecc2bec7d6bc931f7e0d58d8443d76
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0cc5537f234bb..beace5b695aee 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1743,13 +1743,11 @@ bool mhp_range_allowed(u64 start, u64 size, bool need_mapping)
+ /*
+  * Scan pfn range [start,end) to find movable/migratable pages (LRU pages,
+  * non-lru movable pages and hugepages). Will skip over most unmovable
+- * pages (esp., pages that can be skipped when offlining), but bail out on
+- * definitely unmovable pages.
++ * pages (esp., pages that can be skipped when offlining).
+  *
+  * Returns:
+  *	0 in case a movable page is found and movable_pfn was updated.
+  *	-ENOENT in case no movable page was found.
+- *	-EBUSY in case a definitely unmovable page was found.
+  */
+ static int scan_movable_pages(unsigned long start, unsigned long end,
+ 			      unsigned long *movable_pfn)
+@@ -1766,13 +1764,6 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ 		if (__PageMovable(page))
+ 			goto found;
+ 
+-		/*
+-		 * PageOffline() pages that are neither "movable" nor
+-		 * "skippable" prevent memory offlining.
+-		 */
+-		if (PageOffline(page) && !PageOfflineSkippable(page))
+-			return -EBUSY;
+-
+ 		if (!PageHuge(page))
+ 			continue;
+ 		folio = page_folio(page);
+@@ -2051,11 +2042,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+ 			}
+ 		} while (!ret);
+ 
+-		if (ret != -ENOENT) {
+-			reason = "unmovable page";
+-			goto failed_removal_isolated;
+-		}
+-
+ 		/*
+ 		 * Dissolve free hugetlb folios in the memory block before doing
+ 		 * offlining actually in order to make hugetlbfs's object
 -- 
 2.49.0
 
