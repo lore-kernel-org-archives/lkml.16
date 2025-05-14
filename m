@@ -1,92 +1,81 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7851D79A5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35A91EB5C2
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747194014; cv=none; b=pY+9cIuEYVujQCjmpRsCWWm29ToC3t573BqfH6KnvGIwfHtRaKD4qPM0dCKqgDww9etn9lp1kEN/jkG8UAOHN2+17OlqeHZUvRBbCO27IfKa5umWyJT/FbeB65Qx5hDYIFlJHg/jYCa2eGUxTlz41VupuE5V8Wz+oNIuddXKAQY=
+	t=1747194717; cv=none; b=FFIWsz/7spRRolJnWkz7gT7Tb01x1fzxnYPHL5HXnUkSOe3fCbo40FPD/RMXgWecMuSRUviOq4/chVNYvCo7s5HdO4471GJy2TZI2wM+BKsEd0jX2ibRoj0aJVewBFndQBFh8fFst6gZjMhOxI7TDp1a2MlKLxs+CjpadmYkLRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747194014; c=relaxed/simple;
-	bh=I3R+rQ27w0UGwmfv882mYWoYHzH7py1R9rJyM6PQRvs=;
+	s=arc-20240116; t=1747194717; c=relaxed/simple;
+	bh=r+900GmI67uxErSP2GNq2T78xo+2Cyqm8I6e6bOAIFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmepG5Xv3Slo7UXZXu2MDYTRqLRi6RfIDqxQP98Mm+2AiOXPOmNid/E/uk+T2jmK/faelS82Cuw2l35l4awhGDWe0qikvvHWk/1DxvMb3dpHPyTmM3s8TQu9e2l7Gl6Pl/L4SvYkjL3CrLrJdRTqwW5rnlvUI0ePl/FtSRRWFtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EnBedwyx; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EnBedwyx"
-Date: Tue, 13 May 2025 23:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747194009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NA7E2kJOA5MHkkOq+Sx2r/MfVDTe3tDwcatQiM1q45w=;
-	b=EnBedwyx6gTTOnGeSctw7qq5IFCGnAFUceh5SCoKottoFx/PB9ZOAvlsaI4k9D7birp4K3
-	vmcl6MeeIwpgJfcJqcQ1tDIJ2QewUD71dBlwFyRTO3C4D8VqQF8HaE3JywPd2JKuAD8GOL
-	SFUkpzSR9cCQ0Vdlg/NegdypV8aX3Fo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jason Baron <jbaron@akamai.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2] params: Add support for static keys
-Message-ID: <ecslihevvegiywtch4ckdw27x3h6mnekj7gf3lrbrtjwwzfodo@k5ks4ixf5i7j>
-References: <20250513130734.370280-1-kent.overstreet@linux.dev>
- <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
- <tjqz5spozvd35egxtfn2n3csvqu2qsaobbkfzf52ovhsokq47y@eq5xl2ugyydq>
- <zljx4swb6eyhf67kwm32gcfboedxvikige3p5c7kt5lqo6c2jj@jjoa4g6375re>
- <jgdcnclxhw62rs2jb67n4wmmvnmc7l6mnnmlyhzkec3gb6zovp@rccwil2bi4bb>
- <ft6buh2oquxdygzxzobfmnjnatpuf6k6eetjtlqi2o3myv5qu3@vdt3t2yyprsv>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciZ5N1woQiMeOB3oU4zPyD+20JxVApOWLSwsziSYkHpK72Cf2IzzUcJy6yF8s9eMh5lqOnqIqBfOblyKCCDLjZKoBI7lkYIe2KH4xOxsPuW1DWfZHAHbsHI+A4Sqxdjigol4OgeS6Cuf71hM1pc8t0F8QtjMBCJnwebnZom7btw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-112-151.bstnma.fios.verizon.net [173.48.112.151])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54E3pPRB010817
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 23:51:25 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 3B3CE2E00DC; Tue, 13 May 2025 23:51:25 -0400 (EDT)
+Date: Tue, 13 May 2025 23:51:25 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/3] mm/filemap: initialize fsdata with iocb->ki_flags
+Message-ID: <20250514035125.GB178093@mit.edu>
+References: <20250421105026.19577-1-chentaotao@didiglobal.com>
+ <20250421105026.19577-2-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ft6buh2oquxdygzxzobfmnjnatpuf6k6eetjtlqi2o3myv5qu3@vdt3t2yyprsv>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421105026.19577-2-chentaotao@didiglobal.com>
 
-On Tue, May 13, 2025 at 08:38:57PM -0700, Josh Poimboeuf wrote:
-> On Tue, May 13, 2025 at 08:44:49PM -0400, Kent Overstreet wrote:
-> > On Tue, May 13, 2025 at 05:37:11PM -0700, Josh Poimboeuf wrote:
-> > > On Tue, May 13, 2025 at 07:34:59PM -0400, Kent Overstreet wrote:
-> > > > On Tue, May 13, 2025 at 02:24:46PM -0700, Josh Poimboeuf wrote:
-> > > > > > +++ b/include/linux/moduleparam.h
-> > > > > > @@ -122,6 +122,7 @@ struct kparam_array
-> > > > > >   *	charp: a character pointer
-> > > > > >   *	bool: a bool, values 0/1, y/n, Y/N.
-> > > > > >   *	invbool: the above, only sense-reversed (N = true).
-> > > > > > + *	static_key_t: same as bool, but updates a 'struct static_key'
-> > > > > 
-> > > > > The static_key_*() interfaces are deprecated because they're really easy
-> > > > > to use incorrectly.  I don't think we want to propagate that misuse to
-> > > > > modules.
-> > > > > 
-> > > > > It would be better to have type(s) based on static_key_false and/or
-> > > > > static_key_true, depending on whatever the default is.
-> > > > 
-> > > > Except those are just wrappers around struct static_key, so why does
-> > > > that matter here?
-> > > 
-> > > Those struct wrappers are needed to work with static_branch_likely() and
-> > > static_branch_unlikely().
-> > 
-> > Sure, but this has no bearing on that - unless I've missed them, there
-> > aren't separate methods for just setting and checking the value, which
-> > is all we're doing here.
-> 
-> To make use of this feature, wouldn't the module need to use
-> static_key_false() or so to actually insert the static branch to check
-> the value?  Otherwise what's the point of using static keys here?
+On Mon, Apr 21, 2025 at 10:50:30AM +0000, 陈涛涛 Taotao Chen wrote:
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 7b90cbeb4a1a..9174b6310f0b 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -4087,7 +4087,11 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
+>  		size_t offset;		/* Offset into folio */
+>  		size_t bytes;		/* Bytes to write to folio */
+>  		size_t copied;		/* Bytes copied from user */
+> -		void *fsdata = NULL;
+> +		/*
+> +		 * Initialize fsdata with iocb flags pointer so that filesystems
+> +		 * can check ki_flags (like IOCB_DONTCACHE) in write operations.
+> +		 */
+> +		void *fsdata = &iocb->ki_flags;
 
-I'm not sure I follow?
+Unfortunately, this is't safe.  There may very well be code
+paths which depend on fsdata being initialized to NULL before
+calling write_begin().
 
-You just pass the inner static_key to the modparam, you still use
-static_key_true or static_key_false as normal.
+In fact in the patch 2/3 in this series, ext4_write_end() will get
+confused in the non-delayed allocation case, since ext4_write_begin()
+doesn't force fsdata to be not be &iocb->ki_flags, and this will cause
+ext4_write_end() to potentially get confused and do the wrong thing.
+
+I understand that it would be a lot more inconvenient change the
+function signature of write_begin() to pass through iocb->ki_fags via
+a new parameter.  But I think that probably is the best way to go.
+
+Cheers,
+
+					- Ted
