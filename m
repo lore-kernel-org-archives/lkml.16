@@ -1,162 +1,83 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF8D1940A2;
-	Wed, 14 May 2025 14:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A9519D88F
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232876; cv=none; b=NEBTuvbtBOS6iW+CQfYG7brZg2AFAH2fQP6FPr00vpM/qHezEhzsY3B0hsGYvLML/n0nPmyE0/1q4paIMQ+tydOriNpbyL7OYcTsQiEbICOlxoKTFxjjINrOz2Kw+esfIOJ+iaGTpnJqFxSHhweVHSEQIox5fbOYm7rcOS8pdN0=
+	t=1747232900; cv=none; b=QP1F8klG4pUDfSdMatntEXfdQinW22du5EI5umJRVNKvGGttRU2a3tWz6OOb1lxR3Tr4k5MpE+4xSU7IEH4AidCERyXZHdvhntWlJdOAmI8CjjY+V88QaR7p3Gk9xcVry+uAbqO3tpSpzNLV6W2ZHCwp2L0lhGA+1YpQkRwE9/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232876; c=relaxed/simple;
-	bh=D1NNY72HS48AjdGCPYfTBbVvfFGs/MdRkl9rDPLOHzw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OFYNWRp9AopuhXODtldlFjm6zmYOP5KP/9s4WVKOR6R6oWsYWxOdHkw+HDZVv4OpcE7ozslGf+CeQE0Hy/IC7j10lIKA0OXnXhsfvTPQZa9zCir2fW7iBHHnWAO9oZGGm8mTLoo0l0U0kV3l0yy3ey6gB8J8A3iog5Alta8RSaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1YzsFgPY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y34otpBM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747232900; c=relaxed/simple;
+	bh=+CkoP5BlTkuB0KaCxwhsbWHrsVIGKhwqqS2uurcGshw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aURD1U9om75MLyXaxc5ai63T3NGhLrdhH+W28RovafiojRhe6SJLWgV4beyry/BEK5EEAnUpstfljMLbwSMvFeqRBEqhfwBLayG0dGLQY9sOjonz4WollvILT5yCTOnYeU1KmjI2fyTscslGEyuT2PDaXMzVtxhrKtJM3aAbc40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oUMMZzDm; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1YzsFgPY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y34otpBM"
-Date: Wed, 14 May 2025 14:27:45 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747232866;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LT8amerTR0frbMbnJYMcNjkbRhMCJDZrMUynxGTe3WQ=;
-	b=1YzsFgPYBu0bvVM1S/Hd68pYvGvxzxOV0wvEt+/gdbqnY23CGL1YKenojC6YymOrM4HEYt
-	krxP5NpJpvwZXcxk3k5pc94DS3jxYCAgyuLHuP74xFmD0lyXrXAWZHuuqHADHpwxqhfhfn
-	BNk8rVK9BgZ9ds/c/ZIivGS8YpwqqzRpGg3X001f+Sf/QdrGKhEadGWJUgwz5lDvD3E8k5
-	+nIXfa5F8rAfi73c/PVSM2rsli53pioP9/QzzCq9v/C3vPaJf8JUEhlJo/ivshRhedxVno
-	xpjqk81E1xd9OCtNyc5C4cjFPduWqRFZyklqB8u7eTRtyfIXhxdfASdfa7PZLg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747232866;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LT8amerTR0frbMbnJYMcNjkbRhMCJDZrMUynxGTe3WQ=;
-	b=Y34otpBMcwxoG7FQzyz1K+d0+TSBqtXeDSNAxjFzOBzbeILlQT3mdVcqNTYtOugRTfZcDK
-	gYc6xVh3uHJiO/Ag==
-From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip: Drop MSI_CHIP_FLAG_SET_ACK from
- unsuspecting MSI drivers
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250513172819.2216709-6-maz@kernel.org>
-References: <20250513172819.2216709-6-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oUMMZzDm"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso4280680a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747232897; x=1747837697; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JwSZho1aVXd0gOKNCtJu6/KAYeC633U2Q8DtB/XeCo=;
+        b=oUMMZzDmajrzLcVtTFOSkozMKzu5VUGxn0AmgKeeCoX1KeRChzcy/T59P2d/QwcXin
+         EL63o9TSJmlxRSibsYqLMgr96EmqsOUCbc5nXd6ZxAcIrxC6sw+JKt27X1fV46L8FqVQ
+         PBLlmpqC4ehQ+EvJXnyfJzwCQQ9SPJr18bdJvGVTgklg/XeAfkBtxgHrpN6aQXLE41KP
+         cJMrz08e0qZIDYoCWTXzlVW+1CHXc4U0JL4utGKsAX39AhH40tqvhaH7L+2dz9d16xn2
+         yVrfcuX0yZ2hREu4lk/NZmIHoID6M1W3jWk4peprI7JbKHtcSZLynZ3NcHszCWRncNRz
+         IATQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747232897; x=1747837697;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JwSZho1aVXd0gOKNCtJu6/KAYeC633U2Q8DtB/XeCo=;
+        b=H+T6NF69oj1rtkHLSH6VnPHlhA1SYho7RREciICV9BD3/rL4W/i9Ew9/FZnwjWEjpF
+         QHQcb1L++Wf71o+Cd61lg7OfTto8kXlratPCD7d3tuHABV55kUbLnOGKYCG1kRyZuaA/
+         grw3pi1XAG6E3BHV4XNFrKOd6xmhk3YxnmJsuZZWVUo4DaaDxVsPduk/yFImQMXiEagv
+         HZvZU17ggZv/X6jEzn9uA/+S8G8sxgE3UM09SWlyLd8bMiMxlrW3b7NTYXpCYC8M9XJc
+         DoPTYRlU4E6RjJNpWfP755hONF9Qd2hPqTSVpi90xX0YEPKflV9jDU34BAxlBXXowmGF
+         owLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQS/gNbIBlDCVjInrJz85ZDX74c+tlev1H4UdPO1Kqpnf8X2XPW70SQylCY1H/FdkUX077suMI+83Qbfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYNDTt2S7fuIW281uROcSNtxU6J0qeHA9MjSNOU4FdEXvGXBIP
+	mXuBM4HGKBWmj3YLqxnaKhOl72z5/KtGjoUbtNVxVOLUJw3LQ+LXaM5A+jAhbh2hJE8MGQ4eutm
+	PlA==
+X-Google-Smtp-Source: AGHT+IEejYLU/CvC6l7GTpDB1yueWZLgwJKtIoxwmY92wteVivAmhIVBF47cYfmEL4ofY6C8LdKH5tp76EM=
+X-Received: from pjbqc9.prod.google.com ([2002:a17:90b:2889:b0:2f9:e05f:187f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f4b:b0:2ff:784b:ffe
+ with SMTP id 98e67ed59e1d1-30e2e5e5a8fmr5993301a91.11.1747232896994; Wed, 14
+ May 2025 07:28:16 -0700 (PDT)
+Date: Wed, 14 May 2025 07:28:15 -0700
+In-Reply-To: <9ac64e89dc5467e15c397e7bc14f775c693f91d7.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174723286550.406.7144630379886904318.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-2-mlevitsk@redhat.com>
+ <aAgnRx2aMbNKOlXY@google.com> <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
+ <aBuV7JmMU3TcsqFW@google.com> <9ac64e89dc5467e15c397e7bc14f775c693f91d7.camel@redhat.com>
+Message-ID: <aCSof_0F2mE9gMYh@google.com>
+Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
+ with access functions
+From: Sean Christopherson <seanjc@google.com>
+To: mlevitsk@redhat.com
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="us-ascii"
 
-The following commit has been merged into the irq/urgent branch of tip:
+On Mon, May 12, 2025, mlevitsk@redhat.com wrote:
+> On Wed, 2025-05-07 at 10:18 -0700, Sean Christopherson wrote:
+> AFAIK the KVM convention for msr writes is that 1 is GP, 0 success, and
+> negative value exits as a KVM internal error to userspace. Not very developer
+> friendly IMHO, there is a room for improvement here.
 
-Commit-ID:     fb0ea6e4878a45b1ac81972027907fc424a792e6
-Gitweb:        https://git.kernel.org/tip/fb0ea6e4878a45b1ac81972027907fc424a792e6
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Tue, 13 May 2025 18:28:15 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 14 May 2025 16:24:27 +02:00
-
-irqchip: Drop MSI_CHIP_FLAG_SET_ACK from unsuspecting MSI drivers
-
-Commit 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default
-irq_eoi()/irq_ack()") added blanket MSI_CHIP_FLAG_SET_ACK flags,
-irrespective of whether the underlying irqchip required it or not.
-
-Drop it from a number of drivers that do not require it.
-
-Fixes: 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default irq_eoi()/irq_ack()")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250513172819.2216709-6-maz@kernel.org
-
----
- drivers/irqchip/irq-gic-v2m.c               | 2 +-
- drivers/irqchip/irq-gic-v3-its-msi-parent.c | 2 +-
- drivers/irqchip/irq-gic-v3-mbi.c            | 2 +-
- drivers/irqchip/irq-mvebu-gicp.c            | 2 +-
- drivers/irqchip/irq-mvebu-odmi.c            | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index dc98c39..cc6a6c1 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -252,7 +252,7 @@ static void __init gicv2m_teardown(void)
- static struct msi_parent_ops gicv2m_msi_parent_ops = {
- 	.supported_flags	= GICV2M_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= GICV2M_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "GICv2m-",
-diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-index bdb04c8..c5a7eb1 100644
---- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-+++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-@@ -203,7 +203,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- const struct msi_parent_ops gic_v3_its_msi_parent_ops = {
- 	.supported_flags	= ITS_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= ITS_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "ITS-",
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index 34e9ca7..647b18e 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -197,7 +197,7 @@ static bool mbi_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
- static const struct msi_parent_ops gic_v3_mbi_msi_parent_ops = {
- 	.supported_flags	= MBI_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= MBI_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
- 	.prefix			= "MBI-",
-diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
-index d67f93f..60b9762 100644
---- a/drivers/irqchip/irq-mvebu-gicp.c
-+++ b/drivers/irqchip/irq-mvebu-gicp.c
-@@ -161,7 +161,7 @@ static const struct irq_domain_ops gicp_domain_ops = {
- static const struct msi_parent_ops gicp_msi_parent_ops = {
- 	.supported_flags	= GICP_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= GICP_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token       = DOMAIN_BUS_GENERIC_MSI,
- 	.bus_select_mask	= MATCH_PLATFORM_MSI,
- 	.prefix			= "GICP-",
-diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
-index 28f7e81..54f6f08 100644
---- a/drivers/irqchip/irq-mvebu-odmi.c
-+++ b/drivers/irqchip/irq-mvebu-odmi.c
-@@ -157,7 +157,7 @@ static const struct irq_domain_ops odmi_domain_ops = {
- static const struct msi_parent_ops odmi_msi_parent_ops = {
- 	.supported_flags	= ODMI_MSI_FLAGS_SUPPORTED,
- 	.required_flags		= ODMI_MSI_FLAGS_REQUIRED,
--	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
- 	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
- 	.bus_select_mask	= MATCH_PLATFORM_MSI,
- 	.prefix			= "ODMI-",
+Yeah, it's ugly.  You're definitely not the first person to complain about KVM's
+error code shenanigans.  Unfortunately, disentangling everything and doing so in
+a way that is maintainable in the long term would be quite tricky, and absurdly
+invasive. :-/
