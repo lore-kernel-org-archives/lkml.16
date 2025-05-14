@@ -1,175 +1,187 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2043.outbound.protection.outlook.com [40.107.94.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F241FF7B0;
-	Wed, 14 May 2025 07:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207297; cv=fail; b=G6d27fcOTyT5aWq8Vybfzqd46gQ/MZfhFEa3uw5dgNS+4fRrK7U88WDwERhQ2oUhTT2kMrxk3gOLyjf1VULnk/E+GHycL/1k7h+/5+V6gS7NifPBjLWrgisgrSTCvygF5FrcnL7jWrDfDGNs3MEeb9WH3u++gPfE1kOPENsJXpg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207297; c=relaxed/simple;
-	bh=L8BkwlssXqbAnqT5W9QM+JU32Xx373tJawJL4w6iaGM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N96Gnpi+Hmo8AJi/voO7SgQ7tosYgOSVXNHNIFA7V726UDLgkusnemQ5GKXOLXnomrW2Z4e49p0N70uYxWIvCi4x9ItJ3O0P2edqDDefUPkhlTuUgz5Qpg56n3qwyXUouXKboC4OdlV1ln9ibhhVjyPAZ/vjOhovRjYj2pSFMpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qFm+jBus; arc=fail smtp.client-ip=40.107.94.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA711F9F73
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207330; cv=none; b=mvP33rIv61IyC9mPgbeUjCA/KUMueSTmylyMrmiu+S+87rfJOBdvEGUOJhaLeqfTTvTwjG5KmcMLfBlGpRmAVGAL4K4Aw3qQIuQrXE8cV5f4BRe08oQwXZ1R07wccHFHANFS4ySpcpapRZPdWhijn/MP2D2dC0LFnK/RVfEJtDs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207330; c=relaxed/simple;
+	bh=xsIXzxcogPEj7WI1OQx1l9ITv7ODZeAyB0f4aMhmg0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q0D4ZltuL4+1nKI1d8V2IT4QMJB7J7K21m4KgM3Y4m+U60mEXJytSPD7J7PaEg/8plR/EO+uCaY/otjiBGexCnQ9q43OgOnNd7xNH8Mn4mkX37dpHcgxyLsXHjhY/GYs7NJf+qTLrgaKWNMw0O1Q+lTcnQlmgvt9cZAhFFRwJFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=OJBazy+c; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qFm+jBus"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sNFN4rEQrNFbKkhpp6wWtw/LdNGxCG8hBCjrWzIDvcoGqQJL0xXOcLwIVfLZY177JwBShFrFBJJQAyLwJVZC0X9Wx/7h9FsvBtZ1SeEfZWJSAfKKHgkm4rK0Lct85Qnslno0IrAzxvmP5ZagVURQdZndcIJ4DaX509+YWcFVj5cUQ7gqxCvR71azwnV2hRkTymL8RqAWR8CBL0Jea+cIKeDS0mnrpVzTMQ/9SEfmwO56Ph4EJvNxRVB8/q5MaoUQ/zF9rAithq0k83gujHsrHH9VglCx/i+64DxoRGHARQoJQJlIkIIWbFxoH9z14qCrLfvFlLvKSKBPpLghrtAT4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4ERt0eDd+vHAbyC7Weya6cMm/44985X0ll6EbD+DYT8=;
- b=XTymfYS8NbRxQRY6ZLOj9NpSajBtuKx16nImTpwBzgMOM7Rp6cIq74c9y6rNfZEffcg+4YXlvKFr0tn7Z5hGkWoI0jGZpBLdHnAbcXenSepl3ez/p0FZv4DG10k8K0NvCFQ8ninpHMVa+qnJLxfT04+OqScsyUWvGbg9vaOi5XA5x9VpjYNZwUUvTPXE7lEjRiC9ad5LtSfC9gUX5s2UpZomfsV38IiA0zVXq7o2QtZMjJMiXVX6/5VkFxxFWUl1OyzzvHM747uuWPLP9L0QkC3gYVtr3EL0/byzNLdw0fruv3Xrrg5jgDqMhAYSgOphFDABCg65nTM1dyFBrzXcTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ERt0eDd+vHAbyC7Weya6cMm/44985X0ll6EbD+DYT8=;
- b=qFm+jBus/KLwpZtoZZ6A1GXmTF9b4MFHgSaiQ4WHtXR4bmM8lKJVeKxVd6w6c+DJqciSHVOI7rQc1Sk/bCDhdbZeTc/WPlgzhWRT/Q/Zu/wm176JNDL23DrvC+EuD8bxD35u3Yh+Vzhr0uLkJptdlV+U3oXjIHbKAFLc1UfL6DY=
-Received: from PH7PR02CA0016.namprd02.prod.outlook.com (2603:10b6:510:33d::15)
- by CH1PPF2EB7CF87B.namprd12.prod.outlook.com (2603:10b6:61f:fc00::60b) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Wed, 14 May
- 2025 07:21:31 +0000
-Received: from SN1PEPF00036F42.namprd05.prod.outlook.com
- (2603:10b6:510:33d:cafe::91) by PH7PR02CA0016.outlook.office365.com
- (2603:10b6:510:33d::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.16 via Frontend Transport; Wed,
- 14 May 2025 07:21:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F42.mail.protection.outlook.com (10.167.248.26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:21:31 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 14 May 2025 02:21:21 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v6 08/32] x86/apic: Remove redundant parentheses around 'bitmap'
-Date: Wed, 14 May 2025 12:47:39 +0530
-Message-ID: <20250514071803.209166-9-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
-References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="OJBazy+c"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad23db02350so712746866b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1747207327; x=1747812127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tcbw5sLrHE1qbiw4ucHwavhVf9qACz67c1w54poiYio=;
+        b=OJBazy+c3+gEW5HW4kB/WltiOBKafN68yV1O4L8vwACBYd26ud99VGXZPIxIQcocKt
+         /Ex5DKanYGbYSrqz+G3NYcdm1SS94pkXfrj57y8WflSHslm5V3oiHYtkdKVx2ikuTNiI
+         Hwo7DhqTkVTS8i6VURaZWKuBGEW8kYfVqLa7UQ+BpqQXYnLzObqTWaOK5wRsRiaNtwIK
+         dqEf/7OjGLlgxQEyZW7GKkKnz3o91LsJg0aBylI3ijscxPW3GtmRUhEiPjroNO8au4It
+         MwxIP82yFosa4fGK3MAJ48iB6sx8oN492j29U3J64RHwqQSOMSAaH1NVyokLeM9/DWZk
+         uXqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747207327; x=1747812127;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tcbw5sLrHE1qbiw4ucHwavhVf9qACz67c1w54poiYio=;
+        b=tCMemn5DyrWdNWAQ8acer7RfI9wvuWYefn0JKFa1GaCuupn6fLk46xem7Yal7Z9O+o
+         387P4A6ggGLc4/GaUjh2DPXfREmRRRjw1AK0hX40K/CuN9wbEbZi2Rbir/w5HIy4qASk
+         yNDpRRlh74pkqn9P3AwMDrYjiYzV32/5jh3Fmw9h16XmQISD+BuvzNY+ltjmBJR355lw
+         hV7nTABzaLxenCSKBSU//qnSpEKXHsUjxq4PIjBu4PjPJ6WTgHCPxBiov48+cffEe5e/
+         YIUpt6hPKiF5VMoxrKeEbhtyw/LnOi31yx6XEK5vnBAjqfNulWyeknyJM2GagXn4Q/On
+         +NeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM5Bv+3AiG1+cysai0B7HLvRGryiBaE/5qlypLG2XgpIyhivquBDflGhJmm8AUGEDp5kE95ru3dsehguY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0+NKnh/YAYdch0/M8NNO6nejuEfLafPpsHB+U9qxjgZf/E4Ra
+	cqT159mDqXjHZTcuzYvUC+GdmCWslESjrjXBBk/ZzkNTmY2jwqCNri2Io0IPbTGp41/gIdDUKij
+	bFy6LxDY3TLMIr5nogvNdnyw5DsxkHKOU80eN+g==
+X-Gm-Gg: ASbGncsELoKxC988GVRYwsmZbuNOn635ZQQBqvI8Sybk9ov06jQk7aYrYdFeiQwfa+z
+	OQ98BPGKmezoEL6EXSl0Zcpf5CvAZq3xAastC3Z7K7LDwxsYu1Y/WNbfLpLmnBwqOZZqKkmT0n5
+	H/DBWSaqXpmGCg/a34tXGLhJjRSyN1fqk=
+X-Google-Smtp-Source: AGHT+IHqsMqx3BaDCWn45qMLaOEYvPW7XUqjv7SdJvzZ3hWp+AKyoxb4KrcmHMVJwGZocnpesHw3un4CM8pfyBJnatc=
+X-Received: by 2002:a17:907:7f94:b0:acb:b1be:4873 with SMTP id
+ a640c23a62f3a-ad4f70f6129mr261521866b.2.1747207326486; Wed, 14 May 2025
+ 00:22:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F42:EE_|CH1PPF2EB7CF87B:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0194000-f252-40e0-4ec6-08dd92b7f30f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QmuhEVOdHDNouQ23BLfUD6FiAFfqrLH9NVuezJe6VLKf4eOmfrA+/pq9AVgR?=
- =?us-ascii?Q?XHaS280lMLcnGRWPzL7Uc1wS1nqc9v2rdxi+boEUh9etGwys9/JVcCYgYPFB?=
- =?us-ascii?Q?9rhH9+VFNNSaJaSQRmhQS+747PqPdqMCryUc60kcRs+3qOTSX0sKw2TW1gdt?=
- =?us-ascii?Q?7hOwmIgwV1AF7Rf8vY0WqQHThi7JQSMgZFLSQrFRMv/cfRJB2eogj8Lb9Leu?=
- =?us-ascii?Q?h9ZFOktkn7Sx93Y+qq5J8f2xrDqOe7OJKgjdStWcABtQ1SbHqFRR450oYpXV?=
- =?us-ascii?Q?F39QODzTboDKZ0qtIsjhiEo6PPzN+Lw6z7oHvNDGyHxWMf6s2ha6/RHC7iUN?=
- =?us-ascii?Q?c4uqZCAaHU8S86PXGTa8GQYm7s7lLoHMOOeaVNfUAvQbs/e2MiPtGfXcn0fC?=
- =?us-ascii?Q?9kEr+oTvHBnuw/MZsO2N+B++HDtpT4xJEnsUpMisZvtIO9c2slKzJgn8NaT9?=
- =?us-ascii?Q?OyNExmyM+v8MJeMzby3bHXQT3EMgljKxGJMuNo7/3VJSaSN+Fw00uLXob4qe?=
- =?us-ascii?Q?IrBp5tlOuEFIz6rTz2yrw8/XO9Bfw8LkHp/kjTFS8DdFOyiZR3NceLgkfYC0?=
- =?us-ascii?Q?w7uGgirigYe+W+BwAjPxM4X6bVhaHutIcHU/x8XxYHoY17PLfz1J4EvyM8r6?=
- =?us-ascii?Q?0sGa1Jk6FMVryPeL+98zylEzIOvsMKzWHhSgC1DO/K2aBC+gJyzSKnX8FXmC?=
- =?us-ascii?Q?wztPfYf20MHyTVeoZO/+1mOvuTH3CsOGrkFs5QaM2NhNWm4WQHT4cmUeOGy+?=
- =?us-ascii?Q?sTdSGAcj0UQl2hzWlGE+AbCV7bhHHMBU0Lvj3lYQAzBZoMeAQrDjMO9o/llY?=
- =?us-ascii?Q?zTsZ6v9ZMTehUwOXdBEe/JPvvaZCQ2i9lkJWQMHx+n8OBh+6a0O6GfJSrI5n?=
- =?us-ascii?Q?ZPMjJjK5072DMFeZhz4mhozITLOqaycDYGBvgXvJkchbIsPvHTcxgeY5rHWM?=
- =?us-ascii?Q?cygDQgX/N6TUE5aUZxgvrzu/vbSGU3X0sssLORxGZ+gWUCB2mL4X1VkZwG2Z?=
- =?us-ascii?Q?JYgz6Dq1Kwv+kr+PflJgvpOtYFj0XBVTB6LHWa4HC/iu9cjj0+41iDVo6ZLc?=
- =?us-ascii?Q?B4jaAgyhmKvkYfrr8VF3SMZe5Xy0TiMCENVUcblHeVAoGrdDfNPM8lhiwp43?=
- =?us-ascii?Q?Q16fKIpMgWkqULLQ5Sq+X4Xh9YRsZFpkgtzc0PFR36lMqHis5VFzUuSeumSM?=
- =?us-ascii?Q?WJRJOe/sdINYD9TwP/dIxFzYjZpfL//r32aOKu6r325FqcaCQa2uPwtJoq7t?=
- =?us-ascii?Q?I66xcuzw7E70hrCl6BHT/gEJVr4UvBbXuhw15Gu47MBbdYNl9CMOL1DQL6eP?=
- =?us-ascii?Q?N8g73ttE050pk+sM+I9Kz7+oT3x107nxlbgpNSYvlij0GqOfXRjnA7zgKxdd?=
- =?us-ascii?Q?qfzQvkMO9gRB+aIEMkvPzXPUkTBgxaNIgqmyCvRC9QN72YHx9RF9U0YlOaDx?=
- =?us-ascii?Q?fCzlEICQwdejIn3ARCn8jZ6N63bfaC//5xF6PH8ct7tajZ4GM4g8e8H8DB4n?=
- =?us-ascii?Q?hVPD0I2rMd/SEUrzhiexyMPxeACPTy8LI3bf?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:21:31.0330
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0194000-f252-40e0-4ec6-08dd92b7f30f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F42.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF2EB7CF87B
+References: <20250429085048.1310409-1-guodong@riscstar.com>
+In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Wed, 14 May 2025 15:21:53 +0800
+X-Gm-Features: AX0GCFscwF3i-VATg9tXixD2-TDlOGgy-oyXk_jgaiYVherKFdQgiFo0yj7WIAw
+Message-ID: <CAH1PCMai91WjooaF8HzY=rJWpFT4Drnx7fcs4+NCsLT4pGEKUA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, conor+dt@kernel.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, alex@ghiti.fr, Yixun Lan <dlan@gentoo.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, drew@pdp7.com, Inochi Amaoto <inochiama@gmail.com>, 
+	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
+	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
+	heikki.krogerus@linux.intel.com
+Cc: Alex Elder <elder@riscstar.com>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When doing pointer arithmetic in apic_{clear|set|test}_vector(),
-remove the unnecessary parentheses surrounding the 'bitmap'
-parameter.
+Hi, All
 
-No functional changes intended.
+On Tue, Apr 29, 2025 at 4:51=E2=80=AFPM Guodong Xu <guodong@riscstar.com> w=
+rote:
+>
+> This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA driver
+> and updates related device tree bindings. The changes enable PWM
+> functionality on the K1 platform through driver enhancements,
+> configuration updates, and device tree additions.
+>
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v5:
+Gentle ping, any comments or concerns on this patchset?
+Any feedback would be greatly appreciated.
 
- - New change.
+Thanks in advance!
+Best regards,
+Guodong
 
- arch/x86/include/asm/apic.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index d7377615d93a..fb0efd297066 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -549,17 +549,17 @@ static __always_inline void apic_set_reg64(char *regs, int reg, u64 val)
- 
- static inline void apic_clear_vector(int vec, void *bitmap)
- {
--	clear_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), (bitmap) + APIC_VECTOR_TO_REG_OFFSET(vec));
-+	clear_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), bitmap + APIC_VECTOR_TO_REG_OFFSET(vec));
- }
- 
- static inline void apic_set_vector(int vec, void *bitmap)
- {
--	set_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), (bitmap) + APIC_VECTOR_TO_REG_OFFSET(vec));
-+	set_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), bitmap + APIC_VECTOR_TO_REG_OFFSET(vec));
- }
- 
- static inline int apic_test_vector(int vec, void *bitmap)
- {
--	return test_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), (bitmap) + APIC_VECTOR_TO_REG_OFFSET(vec));
-+	return test_bit(APIC_VECTOR_TO_BIT_NUMBER(vec), bitmap + APIC_VECTOR_TO_REG_OFFSET(vec));
- }
- 
- /*
--- 
-2.34.1
-
+> Functionality has been verified on the Banana Pi BPI-F3 board using PWM14=
+,
+> configured as a pwm-backlight. Per community feedback, the actual
+> pwm-backlight node is not included in this patchset but can be found in
+> patch 7 of the v1 series, with modification of pwms property to 4-cell
+> format to match updated binding (#pwm-cells =3D <3>) since v3.
+>
+> +               pwms =3D <&pwm14 0 2000 0>;
+>
+> This patchset is based on [spacemit/for-next]
+>   base: https://github.com/spacemit-com/linux for-next
+>
+> Plus the following dependencies:
+> 1. Clock controller driver, posted by Heylen Chu (v8), with most of it ha=
+s
+>    been accepted:
+> https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
+> 2. Reset controller driver, posted by Alex Elder (v5):
+> https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com/
+>
+> Major differences between v3 and v2:
+>  - Patch 1:
+>     - Added: Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2.
+>     - When compatible string contains "spacemit,k1-pwm",
+>       #pwm-cells must be 3.
+>  - Patch 2:
+>     - Dropped the addition of a reset_control field to struct pxa_pwm_chi=
+p.
+>     - Using a local variable in pwm_probe() instead.
+>  - Patch 3:
+>     - In k1.dtsi, changed #pwm-cells =3D <1> to <3>.
+>
+> Major differences between v2 and v1:
+>  - Dropped the addition of spacemit,k1-pwm as a compatible string in the
+>    PWM_PXA driver; instead, it now falls back to marvell,pxa910-pwm.
+>  - Removed pinctrl settings for all PWM nodes (pwm0-pwm14); only the
+>    pwm14_1 configuration is included in this version.
+>  - Changed PWM_PXA from built-in to a loadable module (=3Dm) in the
+>    riscv defconfig.
+>
+> v2 consists of the following patches:
+> Patch 1: Add spacemit,k1-pwm compatible string (with fallback to
+>            marvell,pxa910-pwm) and support optional resets property.
+> Patch 2: Add reset controller support to the PWM_PXA driver.
+> Patch 3: Add device tree nodes for all 20 PWM instances on K1.
+> Patch 4: Add pinctrl settings for PWM14.
+> Patch 5: Add ARCH_SPACEMIT dependency to the PWM_PXA Kconfig entry.
+> Patch 6: Enable PWM and PWM_PXA in riscv defconfig for SpacemiT K1.
+>
+> v2:
+> https://lore.kernel.org/all/20250420070251.378950-1-guodong@riscstar.com/
+>
+> v1:
+> https://lore.kernel.org/all/20250411131423.3802611-1-guodong@riscstar.com=
+/
+>
+> Best regards,
+> Guodong Xu
+>
+> Guodong Xu (6):
+>   dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
+>   pwm: pxa: add optional reset control
+>   riscv: dts: spacemit: add PWM support for K1 SoC
+>   riscv: dts: spacemit: add pwm14_1 pinctrl setting
+>   pwm: Kconfig: add depends on ARCH_SPACEMIT to PWM_PXA
+>   riscv: defconfig: Enable PWM support for SpacemiT K1 SoC
+>
+>  .../bindings/pwm/marvell,pxa-pwm.yaml         |  35 +++-
+>  arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |   7 +
+>  arch/riscv/boot/dts/spacemit/k1.dtsi          | 180 ++++++++++++++++++
+>  arch/riscv/configs/defconfig                  |   2 +
+>  drivers/pwm/Kconfig                           |   2 +-
+>  drivers/pwm/pwm-pxa.c                         |   7 +
+>  6 files changed, 225 insertions(+), 8 deletions(-)
+>
+>
+> base-commit: cb9c3aeae509b36afbdf46942a7a0a0dfc856ce7
+> prerequisite-patch-id: a5d2fb43fd88525fa6c8ee767c31adfee87f1012
+> prerequisite-patch-id: 8a8d0eefd0b4423d87f3c093b451a0fa60622ec4
+> prerequisite-patch-id: 30f92f93e5b3577bde61424303f21c709a715ec5
+> prerequisite-patch-id: d774b8281b5c6a822445365ee94925e1ab6c7a93
+> prerequisite-patch-id: 54a4f5d065eb9f212fd99efec6e7e06abbb9bad8
+> prerequisite-patch-id: 93962be60d1b58a98d947edf51b4af9edf513785
+> prerequisite-patch-id: 5f53f8bf16fb067628092daebc4831293261aa01
+> --
+> 2.43.0
+>
