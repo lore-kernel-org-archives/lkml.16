@@ -1,193 +1,154 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6831DF994;
-	Wed, 14 May 2025 16:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B81617B425;
+	Wed, 14 May 2025 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240171; cv=none; b=eKBpcc7Do31ndnhew0t12ATRTc8dO0eQsQUsUerIgLDi8ZW1KInueW0RHWicqeVGbB6KKqvMEcloJ8vIvWykgCLpdw/uPHvMh+mPgz7XIN3gBTpwdChF37OO9FIlBmrx+W6eu1s3dXsa4/D1mKyC3CW54u9SlZbH2oy8tZPvgqo=
+	t=1747240275; cv=none; b=oYs5CZbHrk35GQOlcty9DJ3ALmzBuvxCK3hsHbD3ibST5itXavzGEqAwfsA6Und9xFA0KuMWuY9yzx4xaquIkt4lxnQmsWOga+NrvBtNQZOvza8Y0FjH5HpiM4vMYnEjb7oZSPiIY6Q7FWgSG/OPIYuL/JgtpQtpHhYtq79ZvUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240171; c=relaxed/simple;
-	bh=0TLgoK7Gs4ddSH1MAUNifrUlpwnTT08O7PTx0UW/was=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jrne9DKBctWLOqE2a7HerZGJFP0IlE6orj1v3veZsZnajYuHcAMD7KMhDCGLCKszDNgWt1f1+1CEPLKpAY+sThFF5VmZB2PptW7EhB77hTsF0hqg9/RNld2O1jZrLnBCAhTR82/jWqkSvenyKr+LmaEluRsAy5BMOc6OFvAMIjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z98WSOM1; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1747240275; c=relaxed/simple;
+	bh=hMG5Hp4DrK9f+Zt1PU2mXZ8zjXEdBSx3vlr7E9/HJHE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZZKoe58k3+5cvjleWn1Ab2g0BycqAG4u8xbQ3mgQLqKMyjvk1Z0KgxYtelh6xx0Rkb5wbmxL9xuJooiX+zWv04+doox/hbeX9GQPra7EohVWe8lmYfaj/4eTN3r8enKRiEWciwW0m5rVzHPcndKh+OP29WZ78Av0FwAeaHl3egQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/1wIB5q; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z98WSOM1"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a0b6aa08e5so838310f8f.1;
-        Wed, 14 May 2025 09:29:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/1wIB5q"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-326c1795b8bso13397371fa.1;
+        Wed, 14 May 2025 09:31:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747240167; x=1747844967; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UVJVw7FLXuXnBLkyBJnMW+owWDNIHrc56quEF7c9tr4=;
-        b=Z98WSOM1EvPe00msqM7DNpiiQr61J3OdbxD96Mwh4iVrfuZwPxoq7t9/t7Yc+19sb1
-         YY+4CWq64CmoQp6gLdytbo7Dz17yoxShuOikRl3edL5vxfbJdzZt8PHWRiZj9S2sat3g
-         uEjfLLE5D5nPZEYujFfyoIYp7iE8OJe8nj5erIvGGvZuseGDZQVjy7ASw9TnKhexI9Nb
-         wPiLL/FtB3ZFY4dIS7my4ynk4g4uOMQ3nhnQuIK+3ngkfNdUmFUDUEo4MmNinL/4dj5P
-         0nxnXelpUq2joKYLn0xtesf/EIuMTSYK601Ogs+TdaWBj/55ZQED3rSS2uqsJyZrCQdJ
-         GlJA==
+        d=gmail.com; s=20230601; t=1747240271; x=1747845071; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tl3sZuw1JpFTPNUyXtF/TiniOiQd8y65SQ3qOplFDgE=;
+        b=f/1wIB5qY0x9wE4vuekUTdIvWxi3DAR5ECw4OaoaDh/Tiq3Fv70y+Q4cI8TcYZeimY
+         PO9LjKT5mJl09UwS061RYRJatqDoMKdJ7zSHVff3UJtoaCMlgm36Js+X3U/hLR4vHbUX
+         AU0gD7uXQKkqPE/Uzoylo3+pDIVa8pRGax2tP+sRcBiAnWvbO2ZUncZQTwIFVbuZhqAm
+         nu+iydzCfUmKojVO6rIYBF6hblv/tfzShj7oRFYuT/wyyWexdLj6pC2OO85e81z4alA/
+         OQ4NcehM2FlYlaWjsPHkTvXIpEFs39qzhyl+zyDFR3FmIMGtpWqSN93yX3Wu6fCaB2jq
+         OKVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240167; x=1747844967;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVJVw7FLXuXnBLkyBJnMW+owWDNIHrc56quEF7c9tr4=;
-        b=LvDXQHRZ8X6dRr9udzhItbaeyWdNwRLoO7L23MWV+fgq2bp9/jsRjY/mXw4PEJoLO3
-         10CltkK7wbX7R4mhw+g3YSQyF/yqIpt21XavEHJcjDbvvsoxr61TPdYm6mZFWdnhOhJ3
-         A/Vzk08iGsLq/c7gsxnfPcx7iXkAt2U0PAiYuVqdbb+cNfCFZ2LmKyOJc9EWkGqLN2V7
-         ZX/j/mNxQxkI6OVnIdb+HKkq0SG4O7OkWp1EoqOUJh56cKBmu1LDxDnlz7v/hLV/fet1
-         xAnR8V1EQOkqIIIPLVN+UfitaNDWiGgNHihlGlvWYxbga9yIC5sdW3gvFyhpBzUDFffq
-         gZig==
-X-Forwarded-Encrypted: i=1; AJvYcCVO2qZXwN/D9QuptH/rjsm8atox4EoqK+eCaUU50WzifC4xygOVyfA/Uqg65pmU1sX1zn/sOWe8WW4xlfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFphiGQdfCYNKRcB/nK0M2m8JZCQmO7KYlUa+xAG+EbPvsrXgi
-	3V5oXpzWp5XI5mB7fJC5zaFlokC/MVfWeQP7WVmgLpQbhJYMlDU56vNw
-X-Gm-Gg: ASbGncs9uCNorYTghp78YbLOWIZAffVGI0MJ0Axmz0+3t1zPgONbz5taWkGARFHKl2r
-	auS7VGflBjLQslE7/PjpWGbIvmMkfoWsD8ivsGj4nEVXMCfz2y0re74rzkjsBpQxBEY/dSEtTx1
-	0RjJ9LZXHzaOlAi/fChFFJKLEqT8Vy3OYBws3C4ofQdRK1/i31q583u6Bh1OSdsgeYA4QSAn9GC
-	kRVKE60kr97xjs6PSoPuz0HX1OdtqhtclTM2vaFlL6Z15cu+THrfF20PoJvaAhD1PfRQcf0SSeF
-	tif9MOnXZfp1k5BItr4bOVKO/v5Dl4j3QHNN2KL0GpAqLbbgIjgQWDba+eTtEWE=
-X-Google-Smtp-Source: AGHT+IFaPwLMJybZgs0MOXNkpAzB87GgJsOEz9Jh5PzFZVDEDe1FjxRm3LaRLhUFnU7KopRGXdtUyQ==
-X-Received: by 2002:a05:6000:1a8a:b0:3a1:d06c:4e5c with SMTP id ffacd0b85a97d-3a3512231edmr159304f8f.26.1747240167414;
-        Wed, 14 May 2025 09:29:27 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395166fsm36259565e9.18.2025.05.14.09.29.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 09:29:27 -0700 (PDT)
-Message-ID: <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
-Date: Wed, 14 May 2025 18:29:26 +0200
+        d=1e100.net; s=20230601; t=1747240271; x=1747845071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tl3sZuw1JpFTPNUyXtF/TiniOiQd8y65SQ3qOplFDgE=;
+        b=gaKAj9L7QuIpPnoDI5E5IU2R1ONBvGMXqLkL7krB1XB2BfbKOnjrb5b/wlZvZjxVgd
+         mZILNoQxjaAUkDFY0PjWaJqzl005qwrBEjv2S1mFIswTc1pucQMmfMLtuCIKpwP1RkXy
+         JJpNRZINn7VS3yYVtd3pQQ1vDPnokqtcLM5pifts3AUgOb6g091crpy4u3d6VZlW+WUo
+         0puI7voOVu4d5kKxYBdxiW1CEo4W9WMrHYRVD1tp88Z3iPu2N0GVy89CYppWB+qskdkR
+         +HF7C66gJhFiGoD3jifKApBOpA1Sh9k7AhROsKPAA3X4lKYjqK/hw7h/MlPuaILX2etZ
+         /2+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVLhOPFIBIOvsSRLb7Us4ZfTqTLsWKGqgHJdVkkkxgnfiLqgPl1nGtlzdJjJAWErwhdWyJ+tMsp7lUZ3KU=@vger.kernel.org, AJvYcCWgRJx/vGwj1KZF0iJFNNSMOcDPLKlOFw+5F9vjB7Y/eG9ff3g91Zvzwfr0XfjT5XAs86lp1rBXBNlMk/E=@vger.kernel.org, AJvYcCXBWhZlxoGz5Qo4WgQ+aTxlio3I+0e3KgX08xeaKUxCT88GzYBA7iBPexT07sPfgfD37alENuKkN6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJM6LWtqm7ztfxzhMlF/7OieIjoVltlPnOPF13r5fjilXRXf04
+	Uf95G9FxNP1YY2gZWvNgmKOaCPehOub4FkdyiaPtbFgjM8KYeAqc5yFSvXZHaGPLXjg+9hTIDrO
+	P11fOV+eyLI3m4wxAlW3cPDvvNDU=
+X-Gm-Gg: ASbGncsUd2z5Pj8pYHMgjHJKR2YlxoSZBQ8ztuQXlbeo4H6a3CAOSsRtKlUkmUm84KS
+	tmwEvOenWfvyEKPFFsVw10pYxWiSOGinOCd6sQzZ+lx8QuHtpDQy1/NNPAnqVg5XRnO0pA+aVGz
+	MeWvrnQd0sM/o7mGPPdkgT1Hsv487ZI5CfuQ==
+X-Google-Smtp-Source: AGHT+IEBixW/UnlsdMV+KcAwpESPlSRZwPO2hjoXVUOHsdw5UOEX0JmzjViwlmGtZphdTMfVYwah+r3pzhyPDgtTI3Q=
+X-Received: by 2002:a05:651c:b12:b0:326:cf84:63c4 with SMTP id
+ 38308e7fff4ca-327f843efc2mr1150781fa.1.1747240271035; Wed, 14 May 2025
+ 09:31:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-To: Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org,
- mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
- Mario Limonciello <superm1@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
- aravind.iddamsetty@linux.intel.com
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20250504090444.3347952-1-raag.jadav@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
+ <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com> <da080e61-4e54-4334-a239-1619bf8fea0c@nvidia.com>
+In-Reply-To: <da080e61-4e54-4334-a239-1619bf8fea0c@nvidia.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Wed, 14 May 2025 11:30:58 -0500
+X-Gm-Features: AX0GCFtHpKPKPsDOnGvKMQdAIPreQAx29TyN97-A_3yl0xx21IqwVU2UXtPudyg
+Message-ID: <CALHNRZ9DKf_p5y3K4yVF8wDm4S0jRB-NSF8aZB5CsYxk7GmyNQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
-
-you can follow an example of my problems in this [1] bug report.
-
-I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
-
-You can see the dmesg here: https://pastebin.com/Um7bmdWi
-
-I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
-
-
-[1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
-
-On 5/4/25 11:04, Raag Jadav wrote:
-
-> If error flags are set on an AER capable device, most likely either the
-> device recovery is in progress or has already failed. Neither of the
-> cases are well suited for power state transition of the device, since
-> this can lead to unpredictable consequences like resume failure, or in
-> worst case the device is lost because of it. Leave the device in its
-> existing power state to avoid such issues.
+On Wed, May 14, 2025 at 5:32=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> w=
+rote:
 >
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
 >
-> v2: Synchronize AER handling with PCI PM (Rafael)
-> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->     Elaborate "why" (Bjorn)
+> On 09/05/2025 01:04, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > This requires three changes:
+> > * A soft dependency on cpufreq-dt as this driver only handles power
+> >    management and cpufreq-dt does the real operations
+> > * Adding a remove routine to remove the cpufreq-dt device
+> > * Adding a exit routine to handle cleaning up the driver
+> >
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> >   drivers/cpufreq/Kconfig.arm        |  2 +-
+> >   drivers/cpufreq/tegra124-cpufreq.c | 36 +++++++++++++++++++++++++++++=
++++----
+> >   2 files changed, 33 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> > index 4f9cb943d945c244eb2b29f543d14df6cac4e5d4..625f6fbdaaf5fd774e3b0bb=
+996eb7ce980da41ee 100644
+> > --- a/drivers/cpufreq/Kconfig.arm
+> > +++ b/drivers/cpufreq/Kconfig.arm
+> > @@ -238,7 +238,7 @@ config ARM_TEGRA20_CPUFREQ
+> >         This adds the CPUFreq driver support for Tegra20/30 SOCs.
+> >
+> >   config ARM_TEGRA124_CPUFREQ
+> > -     bool "Tegra124 CPUFreq support"
+> > +     tristate "Tegra124 CPUFreq support"
+> >       depends on ARCH_TEGRA || COMPILE_TEST
+> >       depends on CPUFREQ_DT
+> >       default y
+> > diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra=
+124-cpufreq.c
+> > index bc0691e8971f9454def37f489e4a3e244100b9f4..b6059c91f2474c56809c403=
+eca94eacf51df734f 100644
+> > --- a/drivers/cpufreq/tegra124-cpufreq.c
+> > +++ b/drivers/cpufreq/tegra124-cpufreq.c
+> > @@ -16,6 +16,8 @@
+> >   #include <linux/pm_opp.h>
+> >   #include <linux/types.h>
+> >
+> > +static struct platform_device *platform_device;
+> > +
+> >   struct tegra124_cpufreq_priv {
+> >       struct clk *cpu_clk;
+> >       struct clk *pllp_clk;
+> > @@ -176,6 +178,21 @@ static int __maybe_unused tegra124_cpufreq_resume(=
+struct device *dev)
+> >       return err;
+> >   }
+> >
+> > +static void tegra124_cpufreq_remove(struct platform_device *pdev)
+> > +{
+> > +     struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(&pdev->dev=
+);
+> > +
+> > +     if (!IS_ERR(priv->cpufreq_dt_pdev)) {
+> > +             platform_device_unregister(priv->cpufreq_dt_pdev);
+> > +             priv->cpufreq_dt_pdev =3D ERR_PTR(-ENODEV);
+> > +     }
+> > +
+> > +     clk_put(priv->pllp_clk);
+> > +     clk_put(priv->pllx_clk);
+> > +     clk_put(priv->dfll_clk);
+> > +     clk_put(priv->cpu_clk);
 >
-> More discussion on [1].
-> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
 >
->  drivers/pci/pci.c      | 12 ++++++++++++
->  drivers/pci/pcie/aer.c | 11 +++++++++++
->  include/linux/aer.h    |  2 ++
->  3 files changed, 25 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24..25b2df34336c 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/aer.h>
->  #include <linux/kernel.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->  	   || (state == PCI_D2 && !dev->d2_support))
->  		return -EIO;
->  
-> +	/*
-> +	 * If error flags are set on an AER capable device, most likely either
-> +	 * the device recovery is in progress or has already failed. Neither of
-> +	 * the cases are well suited for power state transition of the device,
-> +	 * since this can lead to unpredictable consequences like resume
-> +	 * failure, or in worst case the device is lost because of it. Leave the
-> +	 * device in its existing power state to avoid such issues.
-> +	 */
-> +	if (pci_aer_in_progress(dev))
-> +		return -EIO;
-> +
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..4040770df4f0 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->  
-> +bool pci_aer_in_progress(struct pci_dev *dev)
-> +{
-> +	u16 reg16;
-> +
-> +	if (!pcie_aer_is_native(dev))
-> +		return false;
-> +
-> +	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
-> +	return !!(reg16 & PCI_EXP_AER_FLAGS);
-> +}
-> +
->  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->  {
->  	int rc;
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324..e6a380bb2e68 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
-> +bool pci_aer_in_progress(struct pci_dev *dev);
->  #else
->  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->  #endif
->  
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> If we use devm_clk_get() in probe, then we should be able to avoid this.
+
+I can do that. There's a lot of other cleanup like this that the
+driver could use based on newer kernel apis, but that's out of scope
+of this series.
+
+Sincerely,
+Aaron
