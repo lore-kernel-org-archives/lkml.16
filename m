@@ -1,80 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D791A0BFD
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F7A199FAB;
+	Wed, 14 May 2025 14:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232397; cv=none; b=dPac2NgQayeqGo9FXlNlz2WMMVH71OK34XOeNFETnOJDQmrK2gLq4WbxkTr+Z/rW+UlfAAI1ptNc232IXLFipHk12rzibL2Z7ldU2cdABXzzn4dDwHKuDq3+YXPz7B1kkPduLrEU4BFWMTlk/AGSJ6umCEC6v7qf92Q/LEoqjrQ=
+	t=1747232422; cv=none; b=L/Fkwd27H744T8vqE8+hGfupwHuLak9j+hw0DPzS6YrtzrWq3tJOmSFn15WwxJpmwJQT39W9IBNBv+Uy1+FwerP/4k3vpgKVWwDE01+UwM7aTQZ9x/zPQZN9O3LLfeolDcRibikJLGufmo4OcCZ/4K5si9L9Fmw2/5MbBr/YOJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232397; c=relaxed/simple;
-	bh=CcrER2Exd8xwndgBuv285nkTGJ5VgH5wjXS9fED1jP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FjUbDWReEeEvWUzDQoWDYLCvXLvQSDaFHvaSNcRdFF5QaGIteB0KveO9kEG09Vb8+xB+5Wu0UH+sC2HvIzZ/xgfnmw7frs89tlWlGKuPBRTP2VkBkHaxn5k+4MSm2fKHugx2U55FeQGBMDFDZMqzZyrUkFQUvp/8kzS8bdbjWtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aOQc/k2c; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aOQc/k2c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747232394;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cDm7nJrRE59Z0WBLF69Q9FPldj2cPZK9AVpQiRbnwXM=;
-	b=aOQc/k2cfY8v1T+jYzUZ4S9ib8pa8CwPrBdycKhazp9LYGUqeq/HmTptVYsVIHDpaNd/Qg
-	YZIkH3vtFUFKJnT95VxCTUezY4meK0gpRG0u5Yg9y3qEVVSX85Kt1bZa2V57x6zm6uekYv
-	XqdAgJF/sf4BpOfYFF3Lcpl+ZSy/LaI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-sEDdvhGxOuGi171SWig03g-1; Wed, 14 May 2025 10:19:53 -0400
-X-MC-Unique: sEDdvhGxOuGi171SWig03g-1
-X-Mimecast-MFC-AGG-ID: sEDdvhGxOuGi171SWig03g_1747232391
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so2799566f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:19:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747232390; x=1747837190;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cDm7nJrRE59Z0WBLF69Q9FPldj2cPZK9AVpQiRbnwXM=;
-        b=Gtf/+InGM9ugoNm/FONVv3GNH6pKdTyvAyfRvvpcTzj68Bn4WhfErygyRSh5zoi18h
-         8SMbwW4czQO4jfEw7b+Qyn9eJ9s4QGaBaNXMeg6wa2ktv+lmnoMdf9sL5uinTGosMNp5
-         djdk7mEquVWABSsPy+qaXrYxMwCWzO60lnj6SmaWcVIPLA5rGsUw3/Rfvk6BafVKsPjn
-         tvQ/Z8nGo0QlfIuRyCgZe/lOoX6OL7yuO3jQqb9ag7OM5cUVIG66I2UhaNk3nz0NwNhI
-         WU2MJ9pyLtfFLtVZ4Ka/3Y9uXKo62ILFr7lfphqAkuh4JNgC+3cay1jxeWzW38n126BX
-         3TsA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnZ+ig6xzn4O6MTUYnkkc+OXyRzELHyytCl+wGwzgnZ9rDCahlBD7xaITcWgi/tadqrIzY8iZAmfakdnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAOdfwwkRykemJMIFSoSBrJhHAp7PfoIPQn1McYG25GrXDiVeY
-	0O4WZiC/a3ZHYbZKl2jF7z6R6i+EWMLEebEhMx0BWtpAzKquDiL1IF1iyf8TkqDBba3jGCIc3rx
-	HkC73Mz44v4cUJPN0o4SIpy6qWLC23GhYTFawmLQG35inSniIcBd+okoAjT/TVVj/VuvJDg==
-X-Gm-Gg: ASbGncvGGGJN6eH+Mew/FdcuQBYAQWbltWJs+4AvCZ7PUfo6qAuImfa8wIpMLv1WXkS
-	KprRFAy1pdHmaLKGEaBW7bGMidfhPbRkOXAFG2hD262JSjvN59kN4zfO2y+5xdKHCKgW2D8hkOh
-	zK+rKb5VXksp68VNhZzGLczTUVmMtywCXsD2l9rei2djYDTHxbZZLO6jedDCTu6iJGfY0dedvJL
-	AV6sej2A8Xl+M+PVSVwmfKfPsq401fucjbG9YpaYskJXHPNb3KHifVxOy1cpCdiZfwc+KM++xXD
-	oh+qMxGKtOg8Jw1eMw==
-X-Received: by 2002:a05:6000:144e:b0:3a1:fcd4:eada with SMTP id ffacd0b85a97d-3a34969acb4mr3222048f8f.4.1747232390286;
-        Wed, 14 May 2025 07:19:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG75RsnzyRLR1LhB+z1tdqBl/h6dNHdHAx2k1Nlw/1mOd/47oPLqRJ7tYPfYXaURS4y1kTd7A==
-X-Received: by 2002:a05:6000:144e:b0:3a1:fcd4:eada with SMTP id ffacd0b85a97d-3a34969acb4mr3222017f8f.4.1747232389836;
-        Wed, 14 May 2025 07:19:49 -0700 (PDT)
-Received: from stex1.redhat.com ([193.207.203.94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4cc2esm20351768f8f.90.2025.05.14.07.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 07:19:48 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: netdev@vger.kernel.org
-Cc: virtualization@lists.linux.dev,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 3/3] vsock/test: check also expected errno on sigpipe test
-Date: Wed, 14 May 2025 16:19:27 +0200
-Message-ID: <20250514141927.159456-4-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514141927.159456-1-sgarzare@redhat.com>
-References: <20250514141927.159456-1-sgarzare@redhat.com>
+	s=arc-20240116; t=1747232422; c=relaxed/simple;
+	bh=6ZlHp5+n6qxvzjAudRpWJc8ejLU2WjsX4VaTriOdCzQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=odNzSvFx9gEkD4GSGURxWdCHIjQjfNuY5bD3bEBZl80LvEEw7mEMOmKKrNzNuXGZporwTd7ayB6P03p5mK+lbQVLDYpXwbCX+aZRe+Hybktyn61H+ntuqaPmQTiCwU5iXGJJ/eYGufqj1c0dHhASCj2+B4PHZGcYUNVVygbqFCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAAnYQmVpiRoMqdLFQ--.32116S2;
+	Wed, 14 May 2025 22:20:07 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: cezary.rojewski@intel.com,
+	liam.r.girdwood@linux.intel.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: kuninori.morimoto.gx@renesas.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: avs: rt274: Add null pointer check for snd_soc_card_get_codec_dai()
+Date: Wed, 14 May 2025 22:19:47 +0800
+Message-ID: <20250514141947.998-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,69 +43,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAnYQmVpiRoMqdLFQ--.32116S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AryUJFWrXrW7tw15uF18uFg_yoW8AF17pF
+	1qgrZxKFW5Jr4xGF1rXa9Yva45ua48CFWfGrWxta4xAF1xJr93Wrn8t34qkFySkry8J3WU
+	Xr1j9ay0k34rJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUeT5lUUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUCA2gkZEjUxQAAs5
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+The avs_card_suspend_pre() and avs_card_resume_post() in rt274
+calls the snd_soc_card_get_codec_dai(), but does not check its return
+value which is a null pointer if the function fails. This can result
+in a null pointer dereference. A proper implementation can be found
+in acp5x_nau8821_hw_params() and card_suspend_pre().
 
-In the sigpipe test, we expect send() to fail, but we do not check if
-send() fails with the errno we expect (EPIPE).
+Add a null pointer check for snd_soc_card_get_codec_dai() to avoid null
+pointer dereference when the function fails.
 
-Add this check and repeat the send() in case of EINTR as we do in other
-tests.
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Fixes: a08797afc1f9 ("ASoC: Intel: avs: rt274: Refactor jack handling")
+Cc: stable@vger.kernel.org # v6.2
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
-v2:
-- fixed loop exit condition [Paolo]
-  note: the code changed a bit from v1, but this time I checked it
-  better!
----
- tools/testing/vsock/vsock_test.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ sound/soc/intel/avs/boards/rt274.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index 68f425af00cc..082c5dd6e8f5 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -1075,7 +1075,7 @@ static void test_stream_check_sigpipe(int fd)
- 	timeout_begin(TIMEOUT);
- 	while(1) {
- 		res = send(fd, "A", 1, 0);
--		if (res == -1)
-+		if (res == -1 && errno != EINTR)
- 			break;
+diff --git a/sound/soc/intel/avs/boards/rt274.c b/sound/soc/intel/avs/boards/rt274.c
+index 4b6c02a40204..7a8b6ee79f4c 100644
+--- a/sound/soc/intel/avs/boards/rt274.c
++++ b/sound/soc/intel/avs/boards/rt274.c
+@@ -194,6 +194,11 @@ static int avs_card_suspend_pre(struct snd_soc_card *card)
+ {
+ 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, RT274_CODEC_DAI);
  
- 		/* Sleep a little before trying again to avoid flooding the
-@@ -1087,6 +1087,10 @@ static void test_stream_check_sigpipe(int fd)
- 	}
- 	timeout_end();
- 
-+	if (errno != EPIPE) {
-+		fprintf(stderr, "unexpected send(2) errno %d\n", errno);
-+		exit(EXIT_FAILURE);
++	if (!codec_dai) {
++		dev_err(card->dev, "Codec dai not found\n");
++		return -EINVAL;
 +	}
- 	if (!have_sigpipe) {
- 		fprintf(stderr, "SIGPIPE expected\n");
- 		exit(EXIT_FAILURE);
-@@ -1097,7 +1101,7 @@ static void test_stream_check_sigpipe(int fd)
- 	timeout_begin(TIMEOUT);
- 	while(1) {
- 		res = send(fd, "A", 1, MSG_NOSIGNAL);
--		if (res == -1)
-+		if (res == -1 && errno != EINTR)
- 			break;
++
+ 	return snd_soc_component_set_jack(codec_dai->component, NULL, NULL);
+ }
  
- 		timeout_usleep(SEND_SLEEP_USEC);
-@@ -1105,6 +1109,10 @@ static void test_stream_check_sigpipe(int fd)
- 	}
- 	timeout_end();
+@@ -202,6 +207,11 @@ static int avs_card_resume_post(struct snd_soc_card *card)
+ 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, RT274_CODEC_DAI);
+ 	struct snd_soc_jack *jack = snd_soc_card_get_drvdata(card);
  
-+	if (errno != EPIPE) {
-+		fprintf(stderr, "unexpected send(2) errno %d\n", errno);
-+		exit(EXIT_FAILURE);
++	if (!codec_dai) {
++		dev_err(card->dev, "Codec dai not found\n");
++		return -EINVAL;
 +	}
- 	if (have_sigpipe) {
- 		fprintf(stderr, "SIGPIPE not expected\n");
- 		exit(EXIT_FAILURE);
++
+ 	return snd_soc_component_set_jack(codec_dai->component, jack, NULL);
+ }
+ 
 -- 
-2.49.0
+2.42.0.windows.2
 
