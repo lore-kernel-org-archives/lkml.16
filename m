@@ -1,259 +1,74 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AD7323D;
-	Wed, 14 May 2025 19:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C08F26FDBD
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747252054; cv=none; b=K5KWji26m9R0Bc87J8lixAsHitFI0Ny+CiV8roMdRNxTy2ZNhf8v8paO1241CbUp3q9VmfBLfP9UEENt3WTmhnnnfQA2cDL5xKTbN60E4S5jdVSp9/CTKOTzTOY0NgTUzC+IIWpYk9rYhh8ylXG0lnfdMoz0TX0YgvRaMueDs2o=
+	t=1747252145; cv=none; b=TjK0Ky0D/2Zc3QDq3i2z1u8gXCE0viTz2nUkj+f+YXKZQI1jLZ2y0/LsApdH7TYUjuo5/kt6R0EU1AiMnr4nsQW9PzwGUYcFLj8NVqfHoWYsCSPMxEd1WSaDvahBttTxE0uer58fUO+ZNdSvzWZxX/W7G5p3JsW2arORMw+ZocI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747252054; c=relaxed/simple;
-	bh=NE3G+B6HKRYb/yE9TfjfmofVj/zJKOkrwGAAUbyPCK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qgXrWDOFAlDWFxKGRBcb+1/SqHoORg6v0eIXk/h5hxr9CBnSo2P42JLnN2wP/d7/OmLNkksjR3Gh3TJxyC4hWS6muzsS6/YhPny3b6Tj9yUUcgibQA3VMIqXSCg81kwy5QWzzIg+/tuk6ouDXXslXOo7bNItHFIXtTolWkvA+xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=aSxTB4+q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sOis7Ku9; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="aSxTB4+q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sOis7Ku9"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C54C625400F1;
-	Wed, 14 May 2025 15:47:30 -0400 (EDT)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-02.internal (MEProxy); Wed, 14 May 2025 15:47:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1747252050; x=
-	1747338450; bh=AOJZkOXnIPu3c2Yr+S0MTZdI+IAv0M+sMRCHiXFrViA=; b=a
-	SxTB4+qjGEGxTo9MR7ymzmCyC4ZI9q/skXV5NmwO9FMheCqVpB/rGmOcv964zeeX
-	7PQU4WtJojhMbCSGmjrS0G/I3WDknEDLGmfeOP6wQLfSs3MFvXzZ+OKBcB2DfNp+
-	XnMryJO+ZBMQAK0MEDOe13QEdq8MMFUUn4lSN9+e7RFv+h2MeeFjcMgeEIy5638D
-	zj4JuN6EtaqoRXfPU762MHsop29V1s7bHkZLWlm635hzgbXh3+QSR7/sW4yDzxYx
-	FUKnLBcJz0rgHPLjFRxQU5TCKkMGsg8Bj8N6Jiriov7g0nKU1si3pFU8aRV6ZglH
-	aNTFSHRiBRMfrCMzLl3uA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1747252050; x=1747338450; bh=A
-	OJZkOXnIPu3c2Yr+S0MTZdI+IAv0M+sMRCHiXFrViA=; b=sOis7Ku9NVCdXborf
-	eSuCDattCbOkGc+yUoKkwbk2suULK3ZPm5gk3vFQTWf+aPTs5VyQXgcWeY/OLkNG
-	awF7bLi069kSO+xJP4pjXbIF7fUjG8ymdHwuOyX7o5xq/VrnbArz/DN9WM0JgKhO
-	egA4Sj1Wsn1fWGH+YzM0F90YxFR4ZjohAy0ItOyeSPJcE2mz8MNO000PfGUnYdls
-	tGs1GIljkm6yLyrj/TrJ+zKE7hL7xEcGjcHpPzyRXJC2UHg+D50wDdVd6kwSuH0r
-	5+LnB5fu3jXYZOP+F2HCNQ5eGoIm7R/5rqhcoCuYQRkGZoJfCoKElfYnitaVJMvP
-	mLkxA==
-X-ME-Sender: <xms:UvMkaEEJaJE2ELOIkoiQsJET4NZ4J9QmDHDcO6xb6jdu-cUk3QGngw>
-    <xme:UvMkaNVyfo9EB1CMK43-UO6fec2v0n9kOW9hmvEBA4-dsTNurTdtl_0Ch5A-vyzP6
-    OH141x2macIthSf_2c>
-X-ME-Received: <xmr:UvMkaOKavj0dSVEc6NmJqydB4Lb6gCkVkZeOoUeRUpZJOdUApc6UYQ85G-Gh6c3E0UGf9R2O7P_NwF2pAcuRuIYIVbK4byfSj9NoAbEWkzs9d4gRGQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdejkeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
-    tdenucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitg
-    drnhgvtheqnecuggftrfgrthhtvghrnhepgeevuddukeevhfdujefgfeevuddvuedvieeu
-    vdduieevjeeuudeggeetvefhhfejnecuffhomhgrihhnpeifihhkihhpvgguihgrrdhorh
-    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhi
-    tghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehnphhithhrvgessggrhihlihgsrhgvrdgtohhmpdhrtghp
-    thhtohepjhhirhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvg
-    hgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:UvMkaGFqipLRLpfhT08vxUoKRoXkiLgTXPArDgTFy7lWayZMqg99ZA>
-    <xmx:UvMkaKU1MiwH6GAPcqVLzrkkouKXF_nYXbvI7bCKM6SqFVBo7OU48w>
-    <xmx:UvMkaJOxlfjXy8Zohb8YcY9kx38udHg1NiIS4-wonbH-MJ3ucxZYgA>
-    <xmx:UvMkaB0_aPV0HdhoikTNUM8_1Bz85FztnYeguHV2WpoDIQuGhn976g>
-    <xmx:UvMkaF0565aNEnGunTk_fjDe5H5RvYx7FzCzOigx4rxNXVf38bj3nEeL>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 14 May 2025 15:47:30 -0400 (EDT)
-Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 857B411A26E7;
-	Wed, 14 May 2025 15:47:29 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] vt: bracketed paste support
-Date: Wed, 14 May 2025 15:42:39 -0400
-Message-ID: <20250514194710.6709-2-nico@fluxnic.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514194710.6709-1-nico@fluxnic.net>
-References: <20250514194710.6709-1-nico@fluxnic.net>
+	s=arc-20240116; t=1747252145; c=relaxed/simple;
+	bh=oIrs49oF22LdOayzkJxHulEMqFcJxB98u0gpNzS1tJw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=T0Zj2cVzUByfluFe9AP0Ku5fODMUkL+LiKOS3cJPdXqEDrIPFN+qZGyIhreEb2otjxSoB3VId7FQ0zaOt4fYvcSdTzkcEuGKGgg27aL899OILmgfw7YBn+2e3qhkemARFVsyWMRJPvUoWJuvvN7lU/hTq90ODE5NAsfbMtXVBb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85c552b10b9so24376739f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:49:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747252142; x=1747856942;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Im8wekS7D0YSdnMIfDocgAHGRdGBxTKIXIfbrUkKCCY=;
+        b=bIqP05DG583E4k9Sf7LvkICZBTYjZL2RGl8x7SBjACVydMHwssQ4F9x1DnqT5olqm6
+         9i+f8g+P4aGuYpXh+2IB4OzpTKmruNn1x+I76KHjgc9tEGGYhlMsl8GE9AuI2TAg1Gpv
+         hYNUTAV+sThgGx95lbjzbRL7M3msHarPhs4X9htXld9TS6AhX7Zm41hytWh72kCIQk1O
+         LQgxL2bONF+eViIMxFkcKWCo9iAGGFXCbl1ThruDI+iQM4+PI7vUi4mN+u0T7qoo5bRy
+         UDhuydoJcpT7lMXf9MqQn5W/0ArbrUYCW9iUUInrm83cLuteeJ54g4ar0loCYFSeWi3A
+         JTwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTEDg0c+UvYzE2pcHo2m/eiH2c4XBBARmEOeoj2LpXfpLMSOimT4iH2UthKSnIkrjET9EVEUf5+wZ1HrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGvYztGiI/6TpBn43LrUbRXkA2GuRTGX/gYO7/Xr0LlM7ZFY1c
+	/AylxdKDKsltb78z1Xsm+baRWhfuwoeNph2VW3kU2Xx587weP+G8glepCI28bR/H8xMsJhDlYyl
+	JO+ajCABMbVjb0ObCI7sMlT6g9GEW69Z2T6nwLlAAF7dMZDC07f7aIOA=
+X-Google-Smtp-Source: AGHT+IHi1nA9q05RgsrvMcaw4+vkrl4VzwVZ7QmhuqaphmWHt3YXymWvrvMvRn2WUOpe2Ha7COf3DHODkvj9pxX72z9wyoUxAbTe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:368e:b0:85b:4afc:11d1 with SMTP id
+ ca18e2360f4ac-86a08dccf99mr546554139f.5.1747252142169; Wed, 14 May 2025
+ 12:49:02 -0700 (PDT)
+Date: Wed, 14 May 2025 12:49:02 -0700
+In-Reply-To: <20250514184652.GP2023217@ZenIV>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6824f3ae.a70a0220.3e9d8.001b.GAE@google.com>
+Subject: Re: [syzbot] [xfs?] general protection fault in do_move_mount (3)
+From: syzbot <syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com>
+To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-From: Nicolas Pitre <npitre@baylibre.com>
+Hello,
 
-This is comprised of 3 aspects:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-- Take note of when applications advertise bracketed paste support via
-  "\e[?2004h" and "\e[?2004l".
+Reported-by: syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com
+Tested-by: syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com
 
-- Insert bracketed paste markers ("\e[200~" and "\e[201~") around pasted
-  content in paste_selection() when bracketed paste is active.
+Tested on:
 
-- Add TIOCL_GETBRACKETEDPASTE to return bracketed paste status so user
-  space daemons implementing cut-and-paste functionality (e.g. gpm,
-  BRLTTY) may know when to insert bracketed paste markers.
+commit:         cfaefc95 fix a braino in "do_move_mount(): don't leak ..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=11865cd4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
+dashboard link: https://syzkaller.appspot.com/bug?extid=799d4cf78a7476483ba2
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-Link: https://en.wikipedia.org/wiki/Bracketed-paste
-
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
----
- drivers/tty/vt/selection.c     | 31 +++++++++++++++++++++++++++----
- drivers/tty/vt/vt.c            | 15 +++++++++++++++
- include/linux/console_struct.h |  1 +
- include/uapi/linux/tiocl.h     |  1 +
- 4 files changed, 44 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-index 791e2f1f7c0b..24b0a53e5a79 100644
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -403,6 +403,12 @@ int paste_selection(struct tty_struct *tty)
- 	DECLARE_WAITQUEUE(wait, current);
- 	int ret = 0;
- 
-+	bool bp = vc->vc_bracketed_paste;
-+	static const char bracketed_paste_start[] = "\033[200~";
-+	static const char bracketed_paste_end[]   = "\033[201~";
-+	const char *bps = bp ? bracketed_paste_start : NULL;
-+	const char *bpe = bp ? bracketed_paste_end : NULL;
-+
- 	console_lock();
- 	poke_blanked_console();
- 	console_unlock();
-@@ -414,7 +420,7 @@ int paste_selection(struct tty_struct *tty)
- 
- 	add_wait_queue(&vc->paste_wait, &wait);
- 	mutex_lock(&vc_sel.lock);
--	while (vc_sel.buffer && vc_sel.buf_len > pasted) {
-+	while (vc_sel.buffer && (vc_sel.buf_len > pasted || bpe)) {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 		if (signal_pending(current)) {
- 			ret = -EINTR;
-@@ -427,10 +433,27 @@ int paste_selection(struct tty_struct *tty)
- 			continue;
- 		}
- 		__set_current_state(TASK_RUNNING);
-+
-+		if (bps) {
-+			bps += tty_ldisc_receive_buf(ld, bps, NULL, strlen(bps));
-+			if (*bps != '\0')
-+				continue;
-+			bps = NULL;
-+		}
-+
- 		count = vc_sel.buf_len - pasted;
--		count = tty_ldisc_receive_buf(ld, vc_sel.buffer + pasted, NULL,
--					      count);
--		pasted += count;
-+		if (count) {
-+			pasted += tty_ldisc_receive_buf(ld, vc_sel.buffer + pasted,
-+							NULL, count);
-+			if (vc_sel.buf_len > pasted)
-+				continue;
-+		}
-+
-+		if (bpe) {
-+			bpe += tty_ldisc_receive_buf(ld, bpe, NULL, strlen(bpe));
-+			if (*bpe == '\0')
-+				bpe = NULL;
-+		}
- 	}
- 	mutex_unlock(&vc_sel.lock);
- 	remove_wait_queue(&vc->paste_wait, &wait);
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index efb761454166..ed39d9cb4432 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1870,6 +1870,14 @@ int mouse_reporting(void)
- 	return vc_cons[fg_console].d->vc_report_mouse;
- }
- 
-+/* invoked via ioctl(TIOCLINUX) */
-+static int get_bracketed_paste(struct tty_struct *tty)
-+{
-+	struct vc_data *vc = tty->driver_data;
-+
-+	return vc->vc_bracketed_paste;
-+}
-+
- enum {
- 	CSI_DEC_hl_CURSOR_KEYS	= 1,	/* CKM: cursor keys send ^[Ox/^[[x */
- 	CSI_DEC_hl_132_COLUMNS	= 3,	/* COLM: 80/132 mode switch */
-@@ -1880,6 +1888,7 @@ enum {
- 	CSI_DEC_hl_MOUSE_X10	= 9,
- 	CSI_DEC_hl_SHOW_CURSOR	= 25,	/* TCEM */
- 	CSI_DEC_hl_MOUSE_VT200	= 1000,
-+	CSI_DEC_hl_BRACKETED_PASTE = 2004,
- };
- 
- /* console_lock is held */
-@@ -1932,6 +1941,9 @@ static void csi_DEC_hl(struct vc_data *vc, bool on_off)
- 		case CSI_DEC_hl_MOUSE_VT200:
- 			vc->vc_report_mouse = on_off ? 2 : 0;
- 			break;
-+		case CSI_DEC_hl_BRACKETED_PASTE:
-+			vc->vc_bracketed_paste = on_off;
-+			break;
- 		}
- }
- 
-@@ -2157,6 +2169,7 @@ static void reset_terminal(struct vc_data *vc, int do_clear)
- 	vc->state.charset	= 0;
- 	vc->vc_need_wrap	= 0;
- 	vc->vc_report_mouse	= 0;
-+	vc->vc_bracketed_paste	= 0;
- 	vc->vc_utf              = default_utf8;
- 	vc->vc_utf_count	= 0;
- 
-@@ -3483,6 +3496,8 @@ int tioclinux(struct tty_struct *tty, unsigned long arg)
- 		break;
- 	case TIOCL_BLANKEDSCREEN:
- 		return console_blanked;
-+	case TIOCL_GETBRACKETEDPASTE:
-+		return get_bracketed_paste(tty);
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
-index 20f564e98552..59b4fec5f254 100644
---- a/include/linux/console_struct.h
-+++ b/include/linux/console_struct.h
-@@ -145,6 +145,7 @@ struct vc_data {
- 	unsigned int	vc_need_wrap	: 1;
- 	unsigned int	vc_can_do_color	: 1;
- 	unsigned int	vc_report_mouse : 2;
-+	unsigned int	vc_bracketed_paste : 1;
- 	unsigned char	vc_utf		: 1;	/* Unicode UTF-8 encoding */
- 	unsigned char	vc_utf_count;
- 		 int	vc_utf_char;
-diff --git a/include/uapi/linux/tiocl.h b/include/uapi/linux/tiocl.h
-index b32acc229024..88faba506c3d 100644
---- a/include/uapi/linux/tiocl.h
-+++ b/include/uapi/linux/tiocl.h
-@@ -36,5 +36,6 @@ struct tiocl_selection {
- #define TIOCL_BLANKSCREEN	14	/* keep screen blank even if a key is pressed */
- #define TIOCL_BLANKEDSCREEN	15	/* return which vt was blanked */
- #define TIOCL_GETKMSGREDIRECT	17	/* get the vt the kernel messages are restricted to */
-+#define TIOCL_GETBRACKETEDPASTE	18	/* get whether paste may be bracketed */
- 
- #endif /* _LINUX_TIOCL_H */
--- 
-2.49.0
-
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
