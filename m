@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE372512C9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C76252289
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266219; cv=none; b=WnYWhzeuwkFicrHpX3w+p8qRHCaKOWhy2HrkWd56TtKwCJgVYSkPMMYoTs46QGlBmNyjvgjhX16dQJQBGXncoJEvHQP0J0QJaVQy61oKQIEFUuGk72TFRO3WfAyGQegAmmgIMJzUbL9Qau+SUYGXKwmL1qQ48NK7InpoHSw2IOs=
+	t=1747266222; cv=none; b=hiYKuuM808gqWyEvwKEcz8CE/47nxqbHiqxBf8TpvC663OYpggenXTZ5nyIVwRD/1Pu3pSeqVvb1qRth1K4gN8AB8sZMsYJBqm0SbNZd9Y5GVJ/XQPwfiFs6XLHTC/V/DxTXlhHXu64lK9vTdi0E6lRRmnJbkeyufDWXunKT9hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266219; c=relaxed/simple;
-	bh=P4f0b62NWOp+NPWKRTgUNNPji/5ERCLjnY9pODYzlUE=;
+	s=arc-20240116; t=1747266222; c=relaxed/simple;
+	bh=CY4bTSNeZPPROcrIeiO6I6OWg6zoDnaqUze/3Ax9ufY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R9/bhmsbXz0OXNik+DEJdBzRql5LkCa4Pg6LH1JiU4yoXlYVafveGAKfufQM2SNa/hcTJAPxTjLJaC4OQtecVRamur3By9WnGXrbhlqd6k8dXeRpPPtvF+k7Zmhdsyal6q+Wd9o3Sm6I0mJ1xSUyYsxtpKUOs5gjsr3nyZnfPn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X3aGCmoK; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=lymqdClQ08g02G+CfA2PgB+DcX2+e87yv83XJM6PKaa01QUrNVEsZ03QCR1LunnD/P0Y0oXm6UP39fxne9NrtXt3fSOP1ds3Fk60/WDfYwlZp5oOGkcUVVNaFbqS0EceohmO0oRBT71ywThzCvRhT1zSCRqxCKB/1wKO7cykmpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3WPbM3Qt; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X3aGCmoK"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30c4b072631so348101a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3WPbM3Qt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ab4d56096so389028a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266216; x=1747871016; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266218; x=1747871018; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B7idB2ZTiegZ6IK12Tr/2nYezS5KZiJSYYU8LHDGXMQ=;
-        b=X3aGCmoKl/t1PnndVwmh2h0I9wXGB88CzUqrLj9/ASoXDCLVAuD2OpqN1iOg+Jsyv0
-         QqAixmStyQqLyikPurcbAqeYN2p+nhIzBSC7KXw+kpoMm1TcTHe5yafvYBUkNt4EL+AK
-         L13oz6T3422l+WFwQ88asyW6y/NYNH/jiVcKiSFdeDaFdgAqhiIRHqpb6pPf1iQaQgn4
-         q0EqoPZ8zhO9J1ytmo6lLQHfxC4LW0eRkQrD1PG0NC0A+dTbvdTOCU/72Me9kYWeyChO
-         0nsuwIUf+tT5GhDYh7S8FP8mTmWkIydqtEZBpBeNkSQ2082dVwMtrLg1OQQnUKBo9BIU
-         8utw==
+        bh=tTxikc62gZoeyz7SAyFK4qZ9SsMpsyITZnnPziBCTKM=;
+        b=3WPbM3Qt1NsRnOqdUxu1QcT2TteijobkjfB1GDWiQ3yCZ9ikwO37owIj+f6KUnW9/r
+         SkFh6VxNKJtQoZOz+lu2sBXsBPrmTrko5gIb9NWcidO6uO5vNyL4FcGOqK8odH1jBl6O
+         o1hCR1YQ+exUl8k/NggB3TuZGcej2Q4H/9aXsnpmbmzW0OKF7XNqtO52jWvbQoaeg5zC
+         52dlZ9W4fPRvHbD1Um8zyArC7Tktugd5+lHNsLGIRauceioORIUzyUxmRU73YPX5WlbY
+         18FIex+5eTOrHntGB1HmRcxq2h6i5iD/GbE/SKqIzxK4fLQsPM26ivqp6yuJ+bziDNY6
+         STZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266216; x=1747871016;
+        d=1e100.net; s=20230601; t=1747266218; x=1747871018;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B7idB2ZTiegZ6IK12Tr/2nYezS5KZiJSYYU8LHDGXMQ=;
-        b=nKcrktUEDcdttVrJBjZiLVRa2VNXWOcPXJPcpLFFKU8LQL2IBSNZ+NoFxAMNI26gM6
-         sH0XVi0A4BhbHqW3ZWJ4hK11RzAZ9ckChSk0bgE+oLK2H1LEtxllkzxiUHBp3/9hf2Mm
-         18zQ9P+Sp9wsXEBaDS4hwBWXK+1fwE4GMs1cYH0lQJcfOlzkhAo8OX/+JIIF8PweULWr
-         dJqYhkCSXRlsAOgmcMtLHcI4sQ5SWvrgGNii6BJTvRSxD37d+qYc/A42TUaL6/rKoEKB
-         +UD7J0J04soMp6jYc8AaclNZMOMxw99LcfgnFbYdR9bvG/9xeprG2WF9Z6z6vtCf4L+e
-         uUIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtFGT6hfW2mKwjURktT8VNbeMIBfApy5NpJB9FQDLcUjXt+vwlORcR/uJJsA4Zh7k+Zv98DzqnSlM6pD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvQtez8UK1+Qe+TGpxLb5FOyHgi0YrhClruR4B5jp2FscyqcJu
-	wwKvc7VWHZZUFMfnmpejz7q/7rL8s20RT5r1CKNLGteecmrYkenbdWuloUs8k0hTWEJSNbxFvVT
-	uesjBOT7dy9s4A6Roybi9Jg==
-X-Google-Smtp-Source: AGHT+IE2emob7ne9xgmmOZ/2Nz4UUhKEr9sTG+LQ/jCh4mtM1mNcZXbWVXEVF+2dcFUaFpOL2yid3wyO7OHIppEddw==
-X-Received: from pjbee7.prod.google.com ([2002:a17:90a:fc47:b0:2fa:1fac:269c])
+        bh=tTxikc62gZoeyz7SAyFK4qZ9SsMpsyITZnnPziBCTKM=;
+        b=egsF8McpAoH6oCwickmWmQDH8pyRL5HGJ9ul9psQiL7W6isLQgorYyexCHlFvKdVkl
+         hRa+neB3SwJiI5wRwkI6voJoQyD6gv/A7oc9JfHf+Ok9mtpi9gnnztW/X0yNxEHuezuy
+         x4uBpTb1Dfhzj4rG5IdOTzTsQj54BwUFbSi0XOUIez71mXRFu1YFMs6BBB4mYsMw6gQP
+         wqpGaN7je+PKmusY2xtn62DUjhhoZKLGYfvfBYSfOCHbEOvnBVqjybOMiRcfEsicjOw7
+         akRamaD0A9lg0gGD44pBkm4LyX2jDifE2uD7IzKtfvjo5Brw2UNZNiz1fnQVqqibwWsm
+         va9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWi1FryNVPSZRe8rJjl8K3MEOrHWqktMdxwTjNMdlZtfaZsv50zHzSMxlAzdFEvGnl3iiAg9ylD2NMQnlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRTiJ5BSyjyaafHYT97NdpbEnTRk5e0phw0xmkvn4S+wXLAKn7
+	R6RSsy2bC2jcq5pMHxpnPGDuNZabNB5PttA5/ZviAX1l6iFku4Xjx1jP0wZTUsIFyhYZD376FW3
+	sHyVElUbVU0wq1RUWKV4qrQ==
+X-Google-Smtp-Source: AGHT+IElJzF9b5y9iQhVl4MWgA/5M09NCf7n3sHbhDGMjoGMq56uDKR3Aes/09IOTbaGDebGEYQU1jlk3yzx6ggjqQ==
+X-Received: from pjxx15.prod.google.com ([2002:a17:90b:58cf:b0:2f9:c349:2f84])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:55d0:b0:309:fac6:44f9 with SMTP id 98e67ed59e1d1-30e51947471mr583415a91.31.1747266215905;
- Wed, 14 May 2025 16:43:35 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:04 -0700
+ 2002:a17:90b:2d8b:b0:2ee:d371:3227 with SMTP id 98e67ed59e1d1-30e2e616623mr10140667a91.17.1747266217551;
+ Wed, 14 May 2025 16:43:37 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:05 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <b01365820cca734c1c37de6709167d8c81afb295.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 25/51] mm: truncate: Expose preparation steps for truncate_inode_pages_final
+Message-ID: <3a897dc919d25951816cba95dd53bfeb2ea6e581.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 26/51] mm: Consolidate freeing of typed folios on final folio_put()
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,72 +96,106 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-This will allow preparation steps to be shared while implementing
-truncation differently.
+From: Fuad Tabba <tabba@google.com>
 
+Some folio types, such as hugetlb, handle freeing their own folios.
+
+The guestmem_hugetlb folio, to be introduced in a later patch,
+requires extra handling as part of the freeing process.
+
+As a first step towards that, this patch consolidates freeing folios
+that have a type. The first user is hugetlb folios. Later in this
+patch series, guestmem_hugetlb will become the second user of this.
+
+Suggested-by: David Hildenbrand <david@redhat.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Fuad Tabba <tabba@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Change-Id: I83ad5965b8b50283ad930c20c99e3165cb5626c9
+Change-Id: I881dc58ca89603ddd1e8e1ccca8f5dbfc80c43be
 ---
- include/linux/mm.h |  1 +
- mm/truncate.c      | 26 ++++++++++++++++----------
- 2 files changed, 17 insertions(+), 10 deletions(-)
+ include/linux/page-flags.h | 15 +++++++++++++++
+ mm/swap.c                  | 23 ++++++++++++++++++-----
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index bf55206935c4..e4e73c231ced 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3514,6 +3514,7 @@ extern unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info);
- extern void truncate_inode_pages(struct address_space *, loff_t);
- extern void truncate_inode_pages_range(struct address_space *,
- 				       loff_t lstart, loff_t lend);
-+extern void truncate_inode_pages_final_prepare(struct address_space *mapping);
- extern void truncate_inode_pages_final(struct address_space *);
- 
- /* generic vm_area_ops exported for stackable file systems */
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 5d98054094d1..057e4aa73aa9 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -457,16 +457,7 @@ void truncate_inode_pages(struct address_space *mapping, loff_t lstart)
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index e6a21b62dcce..9dd60fb8c33f 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -985,6 +985,21 @@ static inline bool page_has_type(const struct page *page)
+ 	return page_mapcount_is_type(data_race(page->page_type));
  }
- EXPORT_SYMBOL(truncate_inode_pages);
  
--/**
-- * truncate_inode_pages_final - truncate *all* pages before inode dies
-- * @mapping: mapping to truncate
-- *
-- * Called under (and serialized by) inode->i_rwsem.
-- *
-- * Filesystems have to use this in the .evict_inode path to inform the
-- * VM that this is the final truncate and the inode is going away.
-- */
--void truncate_inode_pages_final(struct address_space *mapping)
-+void truncate_inode_pages_final_prepare(struct address_space *mapping)
- {
- 	/*
- 	 * Page reclaim can not participate in regular inode lifetime
-@@ -487,6 +478,21 @@ void truncate_inode_pages_final(struct address_space *mapping)
- 		xa_lock_irq(&mapping->i_pages);
- 		xa_unlock_irq(&mapping->i_pages);
- 	}
-+}
-+EXPORT_SYMBOL(truncate_inode_pages_final_prepare);
-+
-+/**
-+ * truncate_inode_pages_final - truncate *all* pages before inode dies
-+ * @mapping: mapping to truncate
-+ *
-+ * Called under (and serialized by) inode->i_rwsem.
-+ *
-+ * Filesystems have to use this in the .evict_inode path to inform the
-+ * VM that this is the final truncate and the inode is going away.
-+ */
-+void truncate_inode_pages_final(struct address_space *mapping)
++static inline int page_get_type(const struct page *page)
 +{
-+	truncate_inode_pages_final_prepare(mapping);
- 
- 	truncate_inode_pages(mapping, 0);
++	return page->page_type >> 24;
++}
++
++static inline bool folio_has_type(const struct folio *folio)
++{
++	return page_has_type(&folio->page);
++}
++
++static inline int folio_get_type(const struct folio *folio)
++{
++	return page_get_type(&folio->page);
++}
++
+ #define FOLIO_TYPE_OPS(lname, fname)					\
+ static __always_inline bool folio_test_##fname(const struct folio *folio) \
+ {									\
+diff --git a/mm/swap.c b/mm/swap.c
+index 77b2d5997873..d0a5971787c4 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -94,6 +94,19 @@ static void page_cache_release(struct folio *folio)
+ 		unlock_page_lruvec_irqrestore(lruvec, flags);
  }
+ 
++static void free_typed_folio(struct folio *folio)
++{
++	switch (folio_get_type(folio)) {
++#ifdef CONFIG_HUGETLBFS
++	case PGTY_hugetlb:
++		free_huge_folio(folio);
++		return;
++#endif
++	default:
++		WARN_ON_ONCE(1);
++	}
++}
++
+ void __folio_put(struct folio *folio)
+ {
+ 	if (unlikely(folio_is_zone_device(folio))) {
+@@ -101,8 +114,8 @@ void __folio_put(struct folio *folio)
+ 		return;
+ 	}
+ 
+-	if (folio_test_hugetlb(folio)) {
+-		free_huge_folio(folio);
++	if (unlikely(folio_has_type(folio))) {
++		free_typed_folio(folio);
+ 		return;
+ 	}
+ 
+@@ -964,13 +977,13 @@ void folios_put_refs(struct folio_batch *folios, unsigned int *refs)
+ 		if (!folio_ref_sub_and_test(folio, nr_refs))
+ 			continue;
+ 
+-		/* hugetlb has its own memcg */
+-		if (folio_test_hugetlb(folio)) {
++		if (unlikely(folio_has_type(folio))) {
++			/* typed folios have their own memcg, if any */
+ 			if (lruvec) {
+ 				unlock_page_lruvec_irqrestore(lruvec, flags);
+ 				lruvec = NULL;
+ 			}
+-			free_huge_folio(folio);
++			free_typed_folio(folio);
+ 			continue;
+ 		}
+ 		folio_unqueue_deferred_split(folio);
 -- 
 2.49.0.1045.g170613ef41-goog
 
