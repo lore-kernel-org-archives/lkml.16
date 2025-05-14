@@ -1,299 +1,204 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305BB1E5B79
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4640B634EC;
+	Wed, 14 May 2025 07:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206515; cv=none; b=fEg2KDB7AKz4UNpkxu1YvvAi/emEW6hi5tk9Vgv//Kwxu1gC25bvjXKiWkgI6UOur1lXtrBpKXP3TY2hDz+5PsVv9sXebS3pQrBgjxWZF3HigcX2M2wFgL9lgF4tYdi9xStfZH6p6wQfYEn+lWttpfsJgkMmNbJgx/yrMlm7g6E=
+	t=1747206538; cv=none; b=WnUKpPLdUvivq3SRY12B0QMhbvxRqvsSiEd7KsrXHAUk5Kfi6QjxKZB+4Ch9HcWgvYiutJG8xSHVa3FzwGli7GtOHj+tIlKjEvQmFO675Q+MWbuIoe2EcW+RGIvKHTQQm5A3kE7HUtR8RLFnle6Lg/9ODxR2aurRU5A5LN/t4Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206515; c=relaxed/simple;
-	bh=PEHGLGsbm5xR+hztW6cvsOVLWGwzVvgJIGxk8mLDs+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=dX9oOwEaxPclVn3GHXIaLPiKX5MYrBC549oBpz+J0Cd6HY8MtoD4ziH1483YJSgJk41NyoOqOcUyUD8SmXhbRuT1a+gsrnyjB4BRn0Y/U6fHLNHb3lkOoMZNI3zr8duhwOCODuExWc0zMZGE7Cf03cw1sLsaC6RjXJ/5BRjQRbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mtHqVTE2; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747206538; c=relaxed/simple;
+	bh=I5ZeDzwTsw5smVFSGfLPW9Kqqd0AVZLFXaBqDiREk1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8AiFaClqJ8EepZSj63asRb18MZAonHA4lGAtj5CnSDl9LHsU9HngvOFo/Gip/oD10k5FHT7ptKXNX4AvMOLGai+ax0yccdLkOL9RElMcuLmj23nKgK1of3kCVedgroLPaasGWlDOMthxmT1k7fCx08HGs1IkB+HrvqpiToOAEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uta2K00a; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mtHqVTE2"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30a93d80a80so5138402a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747206512; x=1747811312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMr4aF1l/qw57+l4Bi/2yJ5W0FLN7beti6Elj9tOF5g=;
-        b=mtHqVTE2wuPVgLKYjFRs2c4UrKwCnjbTzqB5cu9P9+FpmgpXDCnD0a3hXBSNzsdMBC
-         DfZfoboE2FrWx2zHYcbs9y5mCdWutsvE1xEZ6RYw80lruveuOlmdtf8V7M5m7zXvQcmV
-         du9p+zasuJw/jYv2FYPgr6n0Oe+4M5FMrpCjW2xwSUv17KUI3h0K4VV0rEOZ81a+6O1c
-         WTUnfD/b28OzKvHuTCJWEjspFoi1WRew8VOdBUr+W9sNQxTSXMPU3dDdAFfZE2uF3tVf
-         51mvRVfzrY4y44blUpGa8e0F5979flB0ElLYizMKzDvpgYCr4Ag7O5hk+ikXPMgLX38I
-         o1Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747206512; x=1747811312;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oMr4aF1l/qw57+l4Bi/2yJ5W0FLN7beti6Elj9tOF5g=;
-        b=gy+ucE27YTjP4U5tygk9l+6uP1vv5z0ezijef+GgN1CgRa2gWxTD0fzmkX5J3qu0qa
-         I/Zh+TF20rz6WwjQiShU6XwyA44iaqQVs+GCrV0GVMCtoVEcWg039b+oaCof+h8BthEs
-         8/027aMWEDXfEd+cS+TLjjt3QXZ3uOLj5/+6y67MWqnvYO8KjofPNVylWMSU5WXX24as
-         avILZ2wkrLTNJwEiLh4OBG5yxx6TxXZg2Suk6kpAFlmYV3XUU+42OGBKWsDjz4xEK10X
-         M/ipQMaX9AYZYzwG0j9tIapBqnqtl+dLUUzHJtdBUuaHt9y6Xb6AD6X0hgQZaVTnMoc8
-         LcPg==
-X-Gm-Message-State: AOJu0Yw9uBsHH0VkzFWSL3FtlXjJlzqqyl7qXrxSAP70W9P9iCeXzNc6
-	lDyWShkhpunuv7a94nZtCG35eEkrrRn+Ank7ecsTfg1GGVHKxqD9tqghJg==
-X-Gm-Gg: ASbGncvFZCFuUDuiiZVePm/UUPhyqMGi51F4I0kCLq3+g0d3djFjwWbfGVtWKtloWFy
-	lkym3moslQx0Q93BkR50NCXoMoUmjnIlOwrrbhq9wfynRKe+ExxktjI1pSePBqr0dutJ3UZUX00
-	b0TP67vkHVRO1uxXZP8sOMkPe5QPeyX0QfslaXGD339aeYp6KDuO751SI5oJEQxXJsFH+kdfN5e
-	Cj47hsHDHZMFrllyFTVRs1fCQrAifs4PbktZIgnYvykeCFDuchQiJ1SH9kPKVGucmF+6b+sQl1D
-	w43VQ6BtOBquclUkcGp/itPglCQBnzuoDi9zLgpvnK8lLsh8khzwQ8HaJu505AKxuiDS4l3vZg=
-	=
-X-Google-Smtp-Source: AGHT+IEHI5kdVGTjYtz9myo26Efk7NSbVRSeMuqcNXIlr0n2lLwtByYRxpM6B5P0cqoY8Dw+lBKqsQ==
-X-Received: by 2002:a17:90b:2dc2:b0:2fe:994d:613b with SMTP id 98e67ed59e1d1-30e2e687a8emr3712405a91.35.1747206512096;
-        Wed, 14 May 2025 00:08:32 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.10.104])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401768sm852285a91.3.2025.05.14.00.08.25
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 May 2025 00:08:31 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	zhengtangquan@oppo.com,
-	Barry Song <v-songbaohua@oppo.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	David Hildenbrand <david@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH RFC v2] mm: add support for dropping LRU recency on process exit
-Date: Wed, 14 May 2025 19:08:20 +1200
-Message-Id: <20250514070820.51793-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uta2K00a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747206536; x=1778742536;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=I5ZeDzwTsw5smVFSGfLPW9Kqqd0AVZLFXaBqDiREk1U=;
+  b=Uta2K00aq9ueI+Sf/9yzC7MAl/hKx62vxlybNhpyJBuuCx3oBmycl3cY
+   qRqJf1Uo8XIplW4a/xJkzpLw2nIHTt2Vp3JEqNpkU9ktR1ISqgAmrDgjD
+   kh9kbP1mrWsUfIvHT+OumUV3EPGVwqGSa54mfKp1G8wjjqEfp8WSUNRTb
+   RLLQwtu1ZF4rSZfFJvuqoP+0YDNfokpgmQkFFoCoyyWW1zdjskD5INupl
+   b8vl+K6p409bOLnDkiALl6Y4zeaI3bcKPyeYjPtGSF6+ZirjzYEUI/Dc8
+   EKzu0+bSwJ7cfprNEIvlhz8XxPB7Hs3TkmB25ZhYDtk2Lh0ihEpzeEW7X
+   g==;
+X-CSE-ConnectionGUID: VLu4ss5PRze7K4shRscZ5w==
+X-CSE-MsgGUID: 4oIrn8zzSBeIK0hmsa/WCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="66635949"
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="66635949"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 00:08:33 -0700
+X-CSE-ConnectionGUID: PlY5bNZKQKau2P5xsihc5w==
+X-CSE-MsgGUID: rrPdk0y0QkOk1bT2XRucfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="142894346"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 14 May 2025 00:08:27 -0700
+Date: Wed, 14 May 2025 15:02:53 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, kvm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
+	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
+	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
+	dan.j.williams@intel.com, yilun.xu@intel.com,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
+	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
+References: <20250107142719.179636-1-yilun.xu@linux.intel.com>
+ <371ab632-d167-4720-8f0d-57be1e3fee84@amd.com>
+ <4b6dc759-86fd-47a7-a206-66b25a0ccc6d@amd.com>
+ <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
+ <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
+ <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
+ <20250509184318.GD5657@nvidia.com>
+ <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
+ <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512140617.GA285583@nvidia.com>
 
-From: Barry Song <v-songbaohua@oppo.com>
+On Mon, May 12, 2025 at 11:06:17AM -0300, Jason Gunthorpe wrote:
+> On Mon, May 12, 2025 at 07:30:21PM +1000, Alexey Kardashevskiy wrote:
+> 
+> > > > I'm surprised by this.. iommufd shouldn't be doing PCI stuff, it is
+> > > > just about managing the translation control of the device.
+> > > 
+> > > I have a little difficulty to understand. Is TSM bind PCI stuff? To me
+> > > it is. Host sends PCI TDISP messages via PCI DOE to put the device in
+> > > TDISP LOCKED state, so that device behaves differently from before. Then
+> > > why put it in IOMMUFD?
+> > 
+> > 
+> > "TSM bind" sets up the CPU side of it, it binds a VM to a piece of
+> > IOMMU on the host CPU. The device does not know about the VM, it
+> > just enables/disables encryption by a request from the CPU (those
+> > start/stop interface commands). And IOMMUFD won't be doing DOE, the
+> > platform driver (such as AMD CCP) will. Nothing to do for VFIO here.
+> > 
+> > We probably should notify VFIO about the state transition but I do
+> > not know VFIO would want to do in response.
+> 
+> We have an awkward fit for what CCA people are doing to the various
+> Linux APIs. Looking somewhat maximally across all the arches a "bind"
+> for a CC vPCI device creation operation does:
+> 
+>  - Setup the CPU page tables for the VM to have access to the MMIO
 
-Currently, both zap_pmd and zap_pte always promote young file folios,
-regardless of whether the processes are dying.
-However, in systems where the process recency fades upon dying, we may
-want to reverse this behavior. The goal is to reclaim the folios from
-the dying process as quickly as possible, allowing new processes to
-acquire memory ASAP.
-For example, while Firefox is killed and LibreOffice is launched,
-activating Firefox's young file-backed folios makes it harder to
-reclaim memory that LibreOffice doesn't use at all.
+This is guest side thing, is it? Anything host need to opt-in?
 
-On systems like Android, processes are either explicitly stopped by
-user action or reaped due to OOM after being inactive for a long time.
-These processes are unlikely to restart in the near future. Rather than
-promoting their folios, we skip promoting and demote their exclusive
-folios so that memory can be reclaimed and made available for new
-user-facing processes.
+>  - Revoke hypervisor access to the MMIO
 
-Users possibly do not care about the recency of a dying process.
-However, we still need an explicit user indication to take this action.
-Thus, we introduced a prctl to provide that necessary user-level hint
-as suggested by Johannes and David.
+VFIO could choose never to mmap MMIO, so in this case nothing to do?
 
-We observed noticeable improvements in refaults, swap-ins, and swap-outs
-on a hooked Android kernel. More data for this specific version will
-follow.
+>  - Setup the vIOMMU to understand the vPCI device
+>  - Take over control of some of the IOVA translation, at least for T=1,
+>    and route to the the vIOMMU
+>  - Register the vPCI with any attestation functions the VM might use
+>  - Do some DOE stuff to manage/validate TDSIP/etc
 
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- -v2:
- * add prctl as suggested by Johannes and David
- * demote exclusive file folios if drop_recency can apply
- -v1:
- https://lore.kernel.org/linux-mm/20250412085852.48524-1-21cnbao@gmail.com/
+Intel TDX Connect has a extra requirement for "unbind":
 
- include/linux/mm_types.h   |  1 +
- include/uapi/linux/prctl.h |  3 +++
- kernel/sys.c               | 16 ++++++++++++++++
- mm/huge_memory.c           | 12 ++++++++++--
- mm/internal.h              | 14 ++++++++++++++
- mm/memory.c                | 12 +++++++++++-
- 6 files changed, 55 insertions(+), 3 deletions(-)
+- Revoke KVM page table (S-EPT) for the MMIO only after TDISP
+  CONFIG_UNLOCK
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 15808cad2bc1..84ab113c54a2 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1733,6 +1733,7 @@ enum {
-  * on NFS restore
-  */
- //#define MMF_EXE_FILE_CHANGED	18	/* see prctl_set_mm_exe_file() */
-+#define MMF_FADE_ON_DEATH	18	/* Recency is discarded on process exit */
- 
- #define MMF_HAS_UPROBES		19	/* has uprobes */
- #define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 15c18ef4eb11..22d861157552 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -364,4 +364,7 @@ struct prctl_mm_map {
- # define PR_TIMER_CREATE_RESTORE_IDS_ON		1
- # define PR_TIMER_CREATE_RESTORE_IDS_GET	2
- 
-+#define PR_SET_FADE_ON_DEATH			78
-+#define PR_GET_FADE_ON_DEATH			79
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index c434968e9f5d..cabe1bbb35a4 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2658,6 +2658,22 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 			clear_bit(MMF_DISABLE_THP, &me->mm->flags);
- 		mmap_write_unlock(me->mm);
- 		break;
-+	case PR_GET_FADE_ON_DEATH:
-+		if (arg2 || arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = !!test_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
-+		break;
-+	case PR_SET_FADE_ON_DEATH:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		if (mmap_write_lock_killable(me->mm))
-+			return -EINTR;
-+		if (arg2)
-+			set_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
-+		else
-+			clear_bit(MMF_FADE_ON_DEATH, &me->mm->flags);
-+		mmap_write_unlock(me->mm);
-+		break;
- 	case PR_MPX_ENABLE_MANAGEMENT:
- 	case PR_MPX_DISABLE_MANAGEMENT:
- 		/* No longer implemented: */
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 2780a12b25f0..c99894611d4a 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2204,6 +2204,7 @@ static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
- int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		 pmd_t *pmd, unsigned long addr)
- {
-+	bool drop_recency = false;
- 	pmd_t orig_pmd;
- 	spinlock_t *ptl;
- 
-@@ -2260,13 +2261,20 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			add_mm_counter(tlb->mm, mm_counter_file(folio),
- 				       -HPAGE_PMD_NR);
- 
-+			drop_recency = zap_need_to_drop_recency(tlb->mm);
- 			/*
- 			 * Use flush_needed to indicate whether the PMD entry
- 			 * is present, instead of checking pmd_present() again.
- 			 */
--			if (flush_needed && pmd_young(orig_pmd) &&
--			    likely(vma_has_recency(vma)))
-+			if (flush_needed && pmd_young(orig_pmd) && !drop_recency &&
-+					likely(vma_has_recency(vma)))
- 				folio_mark_accessed(folio);
-+			/*
-+			 * Userspace explicitly marks recency to fade when the process
-+			 * dies; demote exclusive file folios to aid reclamation.
-+			 */
-+			if (drop_recency && !folio_maybe_mapped_shared(folio))
-+				deactivate_file_folio(folio);
- 		}
- 
- 		spin_unlock(ptl);
-diff --git a/mm/internal.h b/mm/internal.h
-index 6b8ed2017743..af9649b3e84a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -11,6 +11,7 @@
- #include <linux/khugepaged.h>
- #include <linux/mm.h>
- #include <linux/mm_inline.h>
-+#include <linux/oom.h>
- #include <linux/pagemap.h>
- #include <linux/pagewalk.h>
- #include <linux/rmap.h>
-@@ -130,6 +131,19 @@ static inline int folio_nr_pages_mapped(const struct folio *folio)
- 	return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED;
- }
- 
-+/*
-+ * Returns true if the process attached to the mm is dying or undergoing
-+ * OOM reaping, and its recency—explicitly marked by userspace—will also
-+ * fade; otherwise, returns false.
-+ */
-+static inline bool zap_need_to_drop_recency(struct mm_struct *mm)
-+{
-+	if (!atomic_read(&mm->mm_users) || check_stable_address_space(mm))
-+		return !!test_bit(MMF_FADE_ON_DEATH, &mm->flags);
-+
-+	return false;
-+}
-+
- /*
-  * Retrieve the first entry of a folio based on a provided entry within the
-  * folio. We cannot rely on folio->swap as there is no guarantee that it has
-diff --git a/mm/memory.c b/mm/memory.c
-index 5a7e4c0e89c7..6dd01a7736a8 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1505,6 +1505,7 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
- 		bool *force_flush, bool *force_break, bool *any_skipped)
- {
- 	struct mm_struct *mm = tlb->mm;
-+	bool drop_recency = false;
- 	bool delay_rmap = false;
- 
- 	if (!folio_test_anon(folio)) {
-@@ -1516,9 +1517,18 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
- 				*force_flush = true;
- 			}
- 		}
--		if (pte_young(ptent) && likely(vma_has_recency(vma)))
-+
-+		drop_recency = zap_need_to_drop_recency(mm);
-+		if (pte_young(ptent) && !drop_recency &&
-+				likely(vma_has_recency(vma)))
- 			folio_mark_accessed(folio);
- 		rss[mm_counter(folio)] -= nr;
-+		/*
-+		 * Userspace explicitly marks recency to fade when the process dies;
-+		 * demote exclusive file folios to aid reclamation.
-+		 */
-+		if (drop_recency && !folio_maybe_mapped_shared(folio))
-+			deactivate_file_folio(folio);
- 	} else {
- 		/* We don't need up-to-date accessed/dirty bits. */
- 		clear_full_ptes(mm, addr, pte, nr, tlb->fullmm);
--- 
-2.39.3 (Apple Git-146)
+Another thing is, seems your term "bind" includes all steps for
+shared -> private conversion. But in my mind, "bind" only includes
+putting device in TDISP LOCK state & corresponding host setups required
+by firmware. I.e "bind" means host lockes down the CC setup, waiting for
+guest attestation.
 
+While "unbind" means breaking CC setup, no matter the vPCI device is
+already accepted as CC device, or only locked and waiting for attestation.
+
+> 
+> So we have interactions of things controlled by PCI, KVM, VFIO, and
+> iommufd all mushed together.
+> 
+> iommufd is the only area that already has a handle to all the required
+> objects:
+>  - The physical PCI function
+>  - The CC vIOMMU object
+>  - The KVM FD
+>  - The CC vPCI object
+> 
+> Which is why I have been thinking it is the right place to manage
+> this.
+
+Yeah, I see the merit.
+
+> 
+> It doesn't mean that iommufd is suddenly doing PCI stuff, no, that
+> stays in VFIO.
+
+I'm not sure if Alexey's patch [1] illustates your idea. It calls
+tsm_tdi_bind() which directly does device stuff, and impacts MMIO.
+VFIO doesn't know about this.
+
+I have to interpret this as VFIO firstly hand over device CC features
+and MMIO resources to IOMMUFD, so VFIO never cares about them.
+
+[1] https://lore.kernel.org/all/20250218111017.491719-15-aik@amd.com/
+
+> 
+> > > > So your issue is you need to shoot down the dmabuf during vPCI device
+> > > > destruction?
+> > > 
+> > > I assume "vPCI device" refers to assigned device in both shared mode &
+> > > prvate mode. So no, I need to shoot down the dmabuf during TSM unbind,
+> > > a.k.a. when assigned device is converting from private to shared.
+> > > Then recover the dmabuf after TSM unbind. The device could still work
+> > > in VM in shared mode.
+> 
+> What are you trying to protect with this? Is there some intelism where
+> you can't have references to encrypted MMIO pages?
+> 
+> > > What I really want is, one SW component to manage MMIO dmabuf, secure
+> > > iommu & TSM bind/unbind. So easier coordinate these 3 operations cause
+> > > these ops are interconnected according to secure firmware's requirement.
+> >
+> > This SW component is QEMU. It knows about FLRs and other config
+> > space things, it can destroy all these IOMMUFD objects and talk to
+> > VFIO too, I've tried, so far it is looking easier to manage. Thanks,
+> 
+> Yes, qemu should be sequencing this. The kernel only needs to enforce
+> any rules required to keep the system from crashing.
+
+To keep from crashing, The kernel still needs to enforce some firmware
+specific rules. That doesn't reduce the interactions between kernel
+components. E.g. for TDX, if VFIO doesn't control "bind" but controls
+MMIO, it should refuse FLR or MSE when device is bound. That means VFIO
+should at least know from IOMMUFD whether device is bound.
+
+Further more, these rules are platform firmware specific, "QEMU executes
+kernel checks" means more SW components should be aware of these rules.
+That multiples the effort.
+
+And QEMU can be killed, means if kernel wants to reclaim all the
+resources, it still have to deal with the sequencing. And I don't think
+it is a good idea that kernel just stales large amount of resources.
+
+Thanks,
+Yilun
+> 
+> Jason
