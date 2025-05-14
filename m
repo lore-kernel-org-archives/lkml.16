@@ -1,180 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B2F1CFBC;
-	Wed, 14 May 2025 04:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC901CFBC;
+	Wed, 14 May 2025 04:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747197886; cv=none; b=NgNZLr6o2sfjDXxMzH5w36nwgyoxSaRPAvfQ2yHjhuzJIjjBEEkz96U+d4yisIjAr7RdrgTFCZWNMy7qGvCbzcfUaV53jxpO/L1B6hU4V06quKbIJ3gTkk7spmQQHdi387gPlnQjGgT3IRXOuBNBgbiWKfrqgZ15Kh9VZwRNPOQ=
+	t=1747197894; cv=none; b=hAxzx9MghfTp2g2mctijo/+Lew+kkpanUq4IeUKlHeyTt0VmcPFNzUcMdpMunhktTiosN23tBzo+uLfR51FvYLg+D+ReObH5BBpHncMhH8NHrY/SUubPesxrWoy8G0uOyFG6IG1p/km94/5JGk4utMPqN+5fZQ5Ypdj3/8nVYj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747197886; c=relaxed/simple;
-	bh=JM6s38ilKaapWxY0omjoFSzpjd/zCOTMNCd1O7dR9kA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYJ9bxtGcoaFvwqgzOlV3Y1cVaDRHySBhwntskmMwEwUshK9jeA8DKsay9FR6vqnG7ljDJgkHe80Eew56Sn204dRK24TvhfENME1LAfjiLdnloHdKZfY7CXUL3HTsEp5OF4hbBN1LMsBt2iJfjkT5KhFSSfInwsz0ESJ/NX/364=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMD8L/wS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747197894; c=relaxed/simple;
+	bh=Y6s3AX2jrPC7U4pqLlFuhTwX0EZLQ+3bOheTss9JR7g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WK4lbjNM9DqHYnUth8WRDBDj48Q/GVHAoq1Fske1EMordnU0Zfw/wYI+V3t1SMhThdHfsK999Iabh/oy3ddBL9JEdA8wP62fBgHd+VAurJk1b4uHlwitKj/26QuY6pLFuMu7qwwHwJYmEQkbrlUyB83ftbTCZEW80f2q/Lu7S3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJOnvn6E; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMD8L/wS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17DBC4CEED;
-	Wed, 14 May 2025 04:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747197886;
-	bh=JM6s38ilKaapWxY0omjoFSzpjd/zCOTMNCd1O7dR9kA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jMD8L/wSneZiTW9DAja5Mg8OPQIqeRru3Lt+eMZ+fSkUbkhaYIbpCqLxvAysV9X9t
-	 daLvQDzpyykqZxcXH6EGExVynYu9HoUq9DgFo9vozDw5/klxoLkKmz5kj20DsFBwDT
-	 RnHwG32nByUR3c2CFqrYVRBPlyLSV4x23s0YE6Beo9lr1q+R5DfM4u/g+xBFtOh8zf
-	 A3lwqZgJD/K+56bEIqA5lwxeeHPJqtM8fgynbmh52ELAcIADC7G1M486E6tD5vs6jY
-	 MranxhUd3yRzQb5Crq7B/MZCOgjEKyQFH9pKAtrtke0m8lDZmyPfTXEfSiCZsJ7IRJ
-	 IWyih44qoxL8g==
-Date: Wed, 14 May 2025 00:44:44 -0400
-From: Tejun Heo <tj@kernel.org>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH 2/3 cgroup/for-6.16] sched_ext: Introduce
- cgroup_lifetime_notifier
-Message-ID: <aCQfvCuVWOYkv_X5@mtj.duckdns.org>
-References: <aCQfffBvNpW3qMWN@mtj.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJOnvn6E"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4966016a12.2;
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747197891; x=1747802691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A9trPMXX/EB7UVvTChy9shKqqwZNL3OD0NP24pTFGYI=;
+        b=aJOnvn6Ef+yENNdpZps/EmjmWnQ0Oi0HCcKPOlowEGEy56Ndmv8vhYvtTPgzGTQQ8r
+         jGfk09Qm7I7O2WIwIp0aQYHweyvBM3ImcZJYkSppabRtKYW+FfIVm/2Se5kt4fQjG6CH
+         S59yHlHl1XYprzrTBwGdB/j6y+lheZXs0kpSMrWCSKdOAnG6HUVntFfS5JGKppp1VUT4
+         A0J70Hbd3XxnJVRElmQDaMNAy7b4beDAYmDyNeJZhhGZZW40jLS+rwtA9DjjXyTeYTnd
+         NBEcJ1lzt1YidF8t1khPFV0/AORMJTZ4k7XPJH9zV1yLUWsr/qLBMEHR5glytnl29Ex1
+         PGfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747197891; x=1747802691;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A9trPMXX/EB7UVvTChy9shKqqwZNL3OD0NP24pTFGYI=;
+        b=h3q0xyV0IEDmghZoien8sMrPxZP4nCHF6S09tvh+di0REEvliJxfiZfa7XtS16G6bS
+         kUkdhmPguj18pVPhfBk1ancJGftmZG5zPhxoS1SP9PRuPvJ1n72EZWGlbcmgIckCr9te
+         Ry8hcQcZK8hXQhiHRiDtDLqgKYGn03k+JUw9i63quMqQMl5W67bivResZVCz3y4RUg1s
+         PJsOn6aVrFICNMJVKNdDLs4p3kWkrbn1ElxqoQmYDypeXeoXFrIhpkKvm6gwJIk6rVuA
+         bHoNI/8VDqB7tP5ND3hJRjKaXLw1Ok1pUwZ+GvxcqqTgx9zyGNLCasnnriT4gzaivnWD
+         KpJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfWiK06HHM8sFrpfW0kq7TFjbRjhSJtqdrug+EpP7fLVKJyURBGxMIqnj9Ae/uHYs3Y8/4pSfGV7qIP22t@vger.kernel.org, AJvYcCVBix1f685e6YYvzNaWKojyECC2ULxon85VpUaYnizTK178c6Dwz2GgjJlYPCJjWpT222S3xZcGgMIqw8GC@vger.kernel.org, AJvYcCWm06zLa1RAYwBWowmewvAuOFfvwuhWCkBRZaNFWlJOPfEFthAW011uFP5PK9rp/WF59sLFDY0GlC4J7UrL4y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv4FZFfhglIKiqI9XGTN0ddBUWx14oY41JRrXj9uWheEFyFglY
+	DCAwgYmy5z70BGK/cvQZOhRm/zC33JpeWui4aKxMezY84P4VZfbcO4uLPQ==
+X-Gm-Gg: ASbGncvLsjz1VhvVdWqgFF92VXiODj3AGCHqDTuPKSFgQGup3w41iduWZ6MeTPTVI+Z
+	o0LG3Qbv4r/gDpdPzrK3Y+RJhmDpivIFtHODz69qPX3IzMByBA6qazqvQ1vuSajuiQHJBOHFJHp
+	CYGhLoLBfcKPnxOW1Cv5cEVDWUdF7fKRjdgrQAPVdNnGddSOI379sh+aL2NKAwhBZcEDdhlWiqA
+	KDNI6O8aKNlf/l3iQVNvzavu9UpG9yF4yPRDKMVYwNsqhwPHKVkbmWzIDlsK7j/aHe2TIXarYFG
+	oA3MJ8w/SXwswMEkc1GR3GznJys4wp35vEx0fKg+d8nt2Emvgd+bZ+vObyxyxN8InSVCeYFZ9XT
+	vBdiQLvxLq/599RGuJBS4qegYu9bf4AfXj6bR7wYA
+X-Google-Smtp-Source: AGHT+IHLP2oJUtXKiM26CLjzKW+MVekolbuyEIjQf6pZqRH55HA5MC3HvmIPl+AIf5XTZZhPfj2chA==
+X-Received: by 2002:a17:902:db06:b0:221:78a1:27fb with SMTP id d9443c01a7336-231981057a2mr32169645ad.11.1747197891426;
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7742ceesm90682255ad.73.2025.05.13.21.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 21:44:51 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	gustavoars@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 1/1] PCI: hv: Remove unnecessary flex array in struct pci_packet
+Date: Tue, 13 May 2025 21:44:40 -0700
+Message-Id: <20250514044440.48924-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCQfffBvNpW3qMWN@mtj.duckdns.org>
+Content-Transfer-Encoding: 8bit
 
-Other subsystems may make use of the cgroup hierarchy with the cgroup_bpf
-support being one such example. For such a feature, it's useful to be able
-to hook into cgroup creation and destruction paths to perform
-feature-specific initializations and cleanups.
+From: Michael Kelley <mhklinux@outlook.com>
 
-Add cgroup_lifetime_notifier which generates CGROUP_LIFETIME_ONLINE and
-CGROUP_LIFETIME_OFFLINE events whenever cgroups are created and destroyed,
-respectively.
+struct pci_packet contains a "message" field that is a flex array
+of struct pci_message. struct pci_packet is usually followed by a
+second struct in a containing struct that is defined locally in
+individual functions in pci-hyperv.c. As such, the compiler
+flag -Wflex-array-member-not-at-end (introduced in gcc-14) generates
+multiple warnings such as:
 
-The next patch will convert cgroup_bpf to use the new notifier and other
-uses are planned.
+drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure
+    containing a flexible array member is not at the end of another
+    structure [-Wflex-array-member-not-at-end]
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
+The Linux kernel intends to introduce this compiler flag in standard
+builds, so the current code is problematic in generating these warnings.
+
+The "message" field is used only to locate the start of the second
+struct, and not as an array. Because the second struct can be
+addressed directly, the "message" field is not really necessary.
+Rather than try to fix its usage to meet the requirements of
+-Wflex-array-member-not-at-end, just eliminate the field and
+either directly reference the second struct, or use "pkt + 1"
+when "pkt" is dynamically allocated.
+
+Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 ---
- include/linux/cgroup.h |    9 ++++++++-
- kernel/cgroup/cgroup.c |   27 ++++++++++++++++++++++++++-
- 2 files changed, 34 insertions(+), 2 deletions(-)
+Original discussion of the issue is here:
 
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -19,6 +19,7 @@
- #include <linux/kernfs.h>
- #include <linux/jump_label.h>
- #include <linux/types.h>
-+#include <linux/notifier.h>
- #include <linux/ns_common.h>
- #include <linux/nsproxy.h>
- #include <linux/user_namespace.h>
-@@ -40,7 +41,7 @@ struct kernel_clone_args;
- 
- #ifdef CONFIG_CGROUPS
- 
--enum {
-+enum css_task_iter_flags {
- 	CSS_TASK_ITER_PROCS    = (1U << 0),  /* walk only threadgroup leaders */
- 	CSS_TASK_ITER_THREADED = (1U << 1),  /* walk all threaded css_sets in the domain */
- 	CSS_TASK_ITER_SKIPPED  = (1U << 16), /* internal flags */
-@@ -66,10 +67,16 @@ struct css_task_iter {
- 	struct list_head		iters_node;	/* css_set->task_iters */
+https://lore.kernel.org/linux-hyperv/aAu8qsMQlbgH82iN@kspp/
+
+ drivers/pci/controller/pci-hyperv.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e1eaa24559a2..ca5459e0dfcb 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -309,8 +309,6 @@ struct pci_packet {
+ 	void (*completion_func)(void *context, struct pci_response *resp,
+ 				int resp_packet_size);
+ 	void *compl_ctxt;
+-
+-	struct pci_message message[];
  };
  
-+enum cgroup_lifetime_events {
-+	CGROUP_LIFETIME_ONLINE,
-+	CGROUP_LIFETIME_OFFLINE,
-+};
-+
- extern struct file_system_type cgroup_fs_type;
- extern struct cgroup_root cgrp_dfl_root;
- extern struct css_set init_css_set;
- extern spinlock_t css_set_lock;
-+extern struct blocking_notifier_head cgroup_lifetime_notifier;
- 
- #define SUBSYS(_x) extern struct cgroup_subsys _x ## _cgrp_subsys;
- #include <linux/cgroup_subsys.h>
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -95,6 +95,9 @@ EXPORT_SYMBOL_GPL(cgroup_mutex);
- EXPORT_SYMBOL_GPL(css_set_lock);
- #endif
- 
-+struct blocking_notifier_head cgroup_lifetime_notifier =
-+	BLOCKING_NOTIFIER_INIT(cgroup_lifetime_notifier);
-+
- DEFINE_SPINLOCK(trace_cgroup_path_lock);
- char trace_cgroup_path[TRACE_CGROUP_PATH_LEN];
- static bool cgroup_debug __read_mostly;
-@@ -1335,6 +1338,7 @@ static void cgroup_destroy_root(struct c
- {
- 	struct cgroup *cgrp = &root->cgrp;
- 	struct cgrp_cset_link *link, *tmp_link;
-+	int ret;
- 
- 	trace_cgroup_destroy_root(root);
- 
-@@ -1343,6 +1347,10 @@ static void cgroup_destroy_root(struct c
- 	BUG_ON(atomic_read(&root->nr_cgrps));
- 	BUG_ON(!list_empty(&cgrp->self.children));
- 
-+	ret = blocking_notifier_call_chain(&cgroup_lifetime_notifier,
-+					   CGROUP_LIFETIME_OFFLINE, cgrp);
-+	WARN_ON_ONCE(notifier_to_errno(ret));
-+
- 	/* Rebind all subsystems back to the default hierarchy */
- 	WARN_ON(rebind_subsystems(&cgrp_dfl_root, root->subsys_mask));
- 
-@@ -2159,6 +2167,10 @@ int cgroup_setup_root(struct cgroup_root
- 		WARN_ON_ONCE(ret);
+ /*
+@@ -1438,7 +1436,7 @@ static int hv_read_config_block(struct pci_dev *pdev, void *buf,
+ 	memset(&pkt, 0, sizeof(pkt));
+ 	pkt.pkt.completion_func = hv_pci_read_config_compl;
+ 	pkt.pkt.compl_ctxt = &comp_pkt;
+-	read_blk = (struct pci_read_block *)&pkt.pkt.message;
++	read_blk = (struct pci_read_block *)pkt.buf;
+ 	read_blk->message_type.type = PCI_READ_BLOCK;
+ 	read_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	read_blk->block_id = block_id;
+@@ -1518,7 +1516,7 @@ static int hv_write_config_block(struct pci_dev *pdev, void *buf,
+ 	memset(&pkt, 0, sizeof(pkt));
+ 	pkt.pkt.completion_func = hv_pci_write_config_compl;
+ 	pkt.pkt.compl_ctxt = &comp_pkt;
+-	write_blk = (struct pci_write_block *)&pkt.pkt.message;
++	write_blk = (struct pci_write_block *)pkt.buf;
+ 	write_blk->message_type.type = PCI_WRITE_BLOCK;
+ 	write_blk->wslot.slot = devfn_to_wslot(pdev->devfn);
+ 	write_blk->block_id = block_id;
+@@ -1599,7 +1597,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 		return;
  	}
+ 	memset(&ctxt, 0, sizeof(ctxt));
+-	int_pkt = (struct pci_delete_interrupt *)&ctxt.pkt.message;
++	int_pkt = (struct pci_delete_interrupt *)ctxt.buffer;
+ 	int_pkt->message_type.type =
+ 		PCI_DELETE_INTERRUPT_MESSAGE;
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+@@ -2482,7 +2480,7 @@ static struct hv_pci_dev *new_pcichild_device(struct hv_pcibus_device *hbus,
+ 	comp_pkt.hpdev = hpdev;
+ 	pkt.init_packet.compl_ctxt = &comp_pkt;
+ 	pkt.init_packet.completion_func = q_resource_requirements;
+-	res_req = (struct pci_child_message *)&pkt.init_packet.message;
++	res_req = (struct pci_child_message *)pkt.buffer;
+ 	res_req->message_type.type = PCI_QUERY_RESOURCE_REQUIREMENTS;
+ 	res_req->wslot.slot = desc->win_slot.slot;
  
-+	ret = blocking_notifier_call_chain(&cgroup_lifetime_notifier,
-+					   CGROUP_LIFETIME_ONLINE, root_cgrp);
-+	WARN_ON_ONCE(notifier_to_errno(ret));
-+
- 	trace_cgroup_setup_root(root);
+@@ -2860,7 +2858,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 		pci_destroy_slot(hpdev->pci_slot);
  
- 	/*
-@@ -5753,6 +5765,15 @@ static struct cgroup *cgroup_create(stru
- 			goto out_psi_free;
- 	}
+ 	memset(&ctxt, 0, sizeof(ctxt));
+-	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
++	ejct_pkt = (struct pci_eject_response *)ctxt.buffer;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+@@ -3118,7 +3116,7 @@ static int hv_pci_protocol_negotiation(struct hv_device *hdev,
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt->completion_func = hv_pci_generic_compl;
+ 	pkt->compl_ctxt = &comp_pkt;
+-	version_req = (struct pci_version_request *)&pkt->message;
++	version_req = (struct pci_version_request *)(pkt + 1);
+ 	version_req->message_type.type = PCI_QUERY_PROTOCOL_VERSION;
  
-+	ret = blocking_notifier_call_chain_robust(&cgroup_lifetime_notifier,
-+						  CGROUP_LIFETIME_ONLINE,
-+						  CGROUP_LIFETIME_OFFLINE, cgrp);
-+	ret = notifier_to_errno(ret);
-+	if (ret) {
-+		cgroup_bpf_offline(cgrp);
-+		goto out_psi_free;
-+	}
-+
- 	/* allocation complete, commit to creation */
- 	spin_lock_irq(&css_set_lock);
- 	for (i = 0; i < level; i++) {
-@@ -5980,7 +6001,7 @@ static int cgroup_destroy_locked(struct
- 	struct cgroup *tcgrp, *parent = cgroup_parent(cgrp);
- 	struct cgroup_subsys_state *css;
- 	struct cgrp_cset_link *link;
--	int ssid;
-+	int ssid, ret;
+ 	for (i = 0; i < num_version; i++) {
+@@ -3340,7 +3338,7 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt->completion_func = hv_pci_generic_compl;
+ 	pkt->compl_ctxt = &comp_pkt;
+-	d0_entry = (struct pci_bus_d0_entry *)&pkt->message;
++	d0_entry = (struct pci_bus_d0_entry *)(pkt + 1);
+ 	d0_entry->message_type.type = PCI_BUS_D0ENTRY;
+ 	d0_entry->mmio_base = hbus->mem_config->start;
  
- 	lockdep_assert_held(&cgroup_mutex);
+@@ -3498,20 +3496,20 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
  
-@@ -6041,6 +6062,10 @@ static int cgroup_destroy_locked(struct
- 	if (cgrp->root == &cgrp_dfl_root)
- 		cgroup_bpf_offline(cgrp);
+ 		if (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2) {
+ 			res_assigned =
+-				(struct pci_resources_assigned *)&pkt->message;
++				(struct pci_resources_assigned *)(pkt + 1);
+ 			res_assigned->message_type.type =
+ 				PCI_RESOURCES_ASSIGNED;
+ 			res_assigned->wslot.slot = hpdev->desc.win_slot.slot;
+ 		} else {
+ 			res_assigned2 =
+-				(struct pci_resources_assigned2 *)&pkt->message;
++				(struct pci_resources_assigned2 *)(pkt + 1);
+ 			res_assigned2->message_type.type =
+ 				PCI_RESOURCES_ASSIGNED2;
+ 			res_assigned2->wslot.slot = hpdev->desc.win_slot.slot;
+ 		}
+ 		put_pcichild(hpdev);
  
-+	ret = blocking_notifier_call_chain(&cgroup_lifetime_notifier,
-+					   CGROUP_LIFETIME_OFFLINE, cgrp);
-+	WARN_ON_ONCE(notifier_to_errno(ret));
-+
- 	/* put the base reference */
- 	percpu_ref_kill(&cgrp->self.refcnt);
+-		ret = vmbus_sendpacket(hdev->channel, &pkt->message,
++		ret = vmbus_sendpacket(hdev->channel, pkt + 1,
+ 				size_res, (unsigned long)pkt,
+ 				VM_PKT_DATA_INBAND,
+ 				VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+@@ -3809,6 +3807,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 		struct pci_packet teardown_packet;
+ 		u8 buffer[sizeof(struct pci_message)];
+ 	} pkt;
++	struct pci_message *msg;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct hv_pci_dev *hpdev, *tmp;
+ 	unsigned long flags;
+@@ -3854,10 +3853,10 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ 	init_completion(&comp_pkt.host_event);
+ 	pkt.teardown_packet.completion_func = hv_pci_generic_compl;
+ 	pkt.teardown_packet.compl_ctxt = &comp_pkt;
+-	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
++	msg = (struct pci_message *)pkt.buffer;
++	msg->type = PCI_BUS_D0EXIT;
  
+-	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
+-				     sizeof(struct pci_message),
++	ret = vmbus_sendpacket_getid(chan, msg, sizeof(*msg),
+ 				     (unsigned long)&pkt.teardown_packet,
+ 				     &trans_id, VM_PKT_DATA_INBAND,
+ 				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+-- 
+2.25.1
+
