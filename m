@@ -1,171 +1,280 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36D027E7F0;
-	Wed, 14 May 2025 12:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2051327587A;
+	Wed, 14 May 2025 12:05:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747224298; cv=none; b=B4i/20nOJTPdjZOGY1zjGiLcw3JxvYPyGuEXrrvcrTMBdyYBYP1tKOtQHSr1PuJ5a53Cv3jA5d6RwcwAVEcxurHul6s5gppmoZx1N1ZgjDXO2n5CVlnsiomurymCOg+QHSMftQB/66whKzHhAxZvBkNyR+IsSQa9HwOTEUpoqOo=
+	t=1747224346; cv=none; b=EOc2uJGWmqcFiElV1a/AYXKy1GpF98mmF5F7B0EsHkNUHjrsA45LO7UqEcIDvcZGlnWUIX1VXkntMPAym3m7+rmixuGX0AanZkW4uuUr+r8ua9W+uv9TfFpkRXTQUufcCqkUddcXCHoNBm3LU2YkJYFVxv43oRR21KROauNG0/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747224298; c=relaxed/simple;
-	bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jDnDmDfTydEWmpJqhnHVEhkx/Og17/H6ZVwkFPTii06KZuSjYIHSliqyk2hRUdkD9mSDKWwYPGJ58bqBxku+mTZh8L1pWGYzPDibpUdBWpRgMUEjmYIC3uaoElOsPwIYSfH8UUx9+uMok7et9kOnpdqJSStuqXRvvdAJmr44odE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQWVr4ce; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQWVr4ce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76566C4CEF0;
-	Wed, 14 May 2025 12:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747224298;
-	bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nQWVr4ceomZQiVyJDD2RLJXhCp007SAaQ3hux2k5W2JzwcUW/2KBfYBAbmHKSnHjd
-	 RnyovmoDllw6CW5QwAWHMMLyCYWaIYQ/zMn7vlAmsGN/9bejTckcpQ8I4RREN6lI4e
-	 qzJitNlYzDqwX1tdwZtC6OGYV6G/IHaawSHfPRaqK3FOnlrT9V0CbWlwJHJ0KJcul/
-	 4fMXX22vtyqNLLNwkSPeFglAOKTKZ3SRvyy6hz9io4Q/qFCQPzlTkW8QAdFPE95YAd
-	 zBS6Pt6PmrccdT3sK7sYj75FIAhSnNCRUHpTBJiF7ncmt/3qEwCyh7P8Rfc8BSr4QQ
-	 l6pOOP92h+Y5A==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Wed, 14 May 2025 15:04:29 +0300
-Subject: [PATCH net-next v4 9/9] net: ethernet: ti: am65-cpsw: remove
- cpsw_ale_classifier_setup_default()
+	s=arc-20240116; t=1747224346; c=relaxed/simple;
+	bh=sKIP/22I1SQvo6tkkmk2GpLfv/4h+uB9iEuhkOzX7dg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=suSdf8Qr58FvobkrJIYGib6aVB1AhHEXe9zd/qhpxfJzoxumPx33SFMQBbke7YJm6sOed9keM07PQcBq17/Y9QAOO5HGH1csTDLgwk7vY1feiXhQ/tX5yh2MUWfTjo/3/lHKc3/YwJ0QNFmjUghSy61V6XCxMZkjVe9rTV+ayGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E27C4CEF3;
+	Wed, 14 May 2025 12:05:40 +0000 (UTC)
+Date: Wed, 14 May 2025 13:05:37 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Will Deacon <will@kernel.org>,
+	=?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	yang@os.amperecomputing.com, corbet@lwn.net,
+	jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
+	akpm@linux-foundation.org, paulmck@kernel.org, mark.rutland@arm.com,
+	joey.gouly@arm.com, maz@kernel.org, james.morse@arm.com,
+	broonie@kernel.org, oliver.upton@linux.dev, baohua@kernel.org,
+	david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
+	nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+	smostafa@google.com, kevin.tian@intel.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <aCSHESk1DzShD4vt@arm.com>
+References: <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+ <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+ <20250509134904.GA5707@willie-the-truck>
+ <aB4nqtMJuvvp7Vwm@arm.com>
+ <015746d7-ca46-4978-a441-09fba781fdd4@arm.com>
+ <4709ff5a-f89c-426e-ae95-f8356808f4f5@arm.com>
+ <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com>
+ <aCIiwrA_MOeVhFre@arm.com>
+ <c5a74dfe-68e2-48f1-9bbb-06db8e62ffea@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-am65-cpsw-rx-class-v4-9-5202d8119241@kernel.org>
-References: <20250514-am65-cpsw-rx-class-v4-0-5202d8119241@kernel.org>
-In-Reply-To: <20250514-am65-cpsw-rx-class-v4-0-5202d8119241@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
-Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4075; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=ZLuQ+QKiv6AHk6aYVgypKAalpJm1udHDw0jrk7Sr2HM=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBoJIbJgvwvVRPMVMrXLHpU7je+8Sp2Temu9+DTu
- B7XMCjhsYmJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCaCSGyQAKCRDSWmvTvnYw
- kyFkD/4o2JEvfduzn104O4gNsUiLmyaKFR+/ymEzhChd2ruMMvzuXYqiIApQu4hcpO/ioRp4gcu
- f3A4EMscKxuHkLTuWNHecHFy5kwU278sYmtvuZnfNeZhY0/4tDc5StzHTMjz5SrMJ34IVyYJGaz
- E5CRSXhjYozVtgvEsq1YqHd0oZWvso0C26uZjMm2A+DpLN4OblPOmvMKyB09310lk/OC9eN0Vxb
- a+k+xIuX8IC+9HjuXY8GAi8rUjTItrCBxKR9mogdwwHy+Yd+NA9zINUqa1FtuIsKaBENNwQmXTw
- +lEjvzrbq3H28uVnUNaI2DN7npfaFGB1+LAjSYdhOam80jbaDxd3GbAhKBQaQ8eOQhASxCHhxnI
- e9q2JwPMl+jP3IYAm6oetl233VNwiR9kbcyjcn0BENe4UijJ8iiDwWoXDm7z86UzaFz3SRtCYKg
- 3N0yZQcKmrqgmUnpC/YKWvIwt9JKh6SNf3HIGhB1nP1k18+Gy56fJzXS55J1c6crIU+d6TXt6ip
- /VUwfSxtrz5TG17P+NCZfm83RmXGD5uaWF+8kx/JTkLHjFoOSpT0FpRdeU8ZcCuWpyfYiZkza1Z
- dqGgiGs+tGKZXy8BYC0fDd0D1WLbdgVNsAogbq1NhbRX8AZnJYdHgI2nv86XO7Syc5aK7LuOz3n
- sKnUga6x5p6sjrA==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5a74dfe-68e2-48f1-9bbb-06db8e62ffea@arm.com>
 
-The RX classifier can now be configured by user using ethtool -N.
-So drop cpsw_ale_classifier_setup_default().
+On Tue, May 13, 2025 at 10:15:49AM +0100, Suzuki K Poulose wrote:
+> On 12/05/2025 17:33, Catalin Marinas wrote:
+> > Stepping back a bit, we know that the MIDR allow-list implies
+> > BBML2_NOABORT (and at least BBML2 as in the ID regs). In theory, we need
+> 
+> Please be aware that BBML2_NOABORT midr list may not always imply BBLM2 in
+> ID registers (e.g., AmpereOne. But the plan is to fixup the per cpu
+> ID register - struct cpuinfo_arm64 - for such cores at early boot,
+> individually, before it is used for sanitisation of the system wide
+> copy).
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c |  3 --
- drivers/net/ethernet/ti/cpsw_ale.c       | 52 --------------------------------
- drivers/net/ethernet/ti/cpsw_ale.h       |  1 -
- 3 files changed, 56 deletions(-)
+Ah, good point. We can then ignore BBML2 ID regs and only rely on MIDR
+(and some future BBML3).
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index cdb83ae54656..0523c81a2a54 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2497,9 +2497,6 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
- 		}
- 	}
+> > So how about we introduce a WEAK_BOOT_CPU_FEATURE which gets enabled by
+> > the boot CPU if it has it _but_ cleared by any secondary early CPU if it
+> > doesn't (and never enabled by secondary CPUs). When the features are
+> > finalised, we know if all early CPUs had it. In combination with
+> > PERMITTED_FOR_LATE_CPU, we'd reject late CPUs that don't have it.
+> 
+> That could work, but it introduces this "clearing" a capability, which
+> we don't do at the moment.
+> 
+> We had an offline discussion about this some time ago, with Mark
+> Rutland. The best way to deal with this is to change the way we compute
+> capabilities. i.e.,
+> 
+> 
+> 1. Each boot CPU run through all the capabilities and maintain a per-cpu
+>    copy of the state.
+> 2. System wide capabilities can then be constructed from the all early
+>    boot CPU capability state (e.g., ANDing all the state from all CPUs
+>    for SCOPE_SYSTEM or ORing for LOCAL_CPU).
+> 
+> But this requires a drastic change to the infrastructure.
+
+I think it's a lot simpler to achieve the ANDing - set the (system)
+capability if detected on the boot CPU, only clear it if missing on
+subsequent CPUs. See below on an attempt to introduce this. For lack of
+inspiration, I called it ARM64_CPUCAP_GLOBAL_CPU_FEATURE which has both
+SCOPE_LOCAL and SCOPE_SYSTEM. It's permitted for late CPUs but not
+optional if already enabled. The advantage of having both local&system
+is that the match function will be called for both scopes. I added a
+mask in to cpucap_default_scope() when calling matches() since so far
+no cap had both.
+
+---------------------8<-----------------------------------------
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index c4326f1cb917..0b0b26a6f27b 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -331,6 +331,15 @@ extern struct arm64_ftr_reg arm64_ftr_reg_ctrel0;
+ #define ARM64_CPUCAP_BOOT_CPU_FEATURE                  \
+ 	(ARM64_CPUCAP_SCOPE_BOOT_CPU | ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU)
  
--	/* setup classifier to route priorities to flows */
--	cpsw_ale_classifier_setup_default(common->ale, common->rx_ch_num_flows);
--
- 	return 0;
- 
- err_request_irq:
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 0cd27a6fe575..ba639d87706b 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -1695,58 +1695,6 @@ void cpsw_ale_policer_reset(struct cpsw_ale *ale)
- 		cpsw_ale_policer_reset_entry(ale, i);
++/*
++ * CPU feature detected at boot time based on all CPUs. It is safe for a late
++ * CPU to have this feature even though the system hasn't enabled it, although
++ * the feature will not be used by Linux in this case. If the system has
++ * enabled this feature already, then every late CPU must have it.
++ */
++#define ARM64_CPUCAP_GLOBAL_CPU_FEATURE			\
++	 (ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_SYSTEM_FEATURE)
++
+ struct arm64_cpu_capabilities {
+ 	const char *desc;
+ 	u16 capability;
+@@ -391,6 +400,11 @@ static inline int cpucap_default_scope(const struct arm64_cpu_capabilities *cap)
+ 	return cap->type & ARM64_CPUCAP_SCOPE_MASK;
  }
  
--/* Default classifier is to map 8 user priorities to N receive channels */
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch)
--{
--	int pri, idx;
--
--	/* Reference:
--	 * IEEE802.1Q-2014, Standard for Local and metropolitan area networks
--	 *    Table I-2 - Traffic type acronyms
--	 *    Table I-3 - Defining traffic types
--	 * Section I.4 Traffic types and priority values, states:
--	 * "0 is thus used both for default priority and for Best Effort, and
--	 *  Background is associated with a priority value of 1. This means
--	 * that the value 1 effectively communicates a lower priority than 0."
--	 *
--	 * In the table below, Priority Code Point (PCP) 0 is assigned
--	 * to a higher priority thread than PCP 1 wherever possible.
--	 * The table maps which thread the PCP traffic needs to be
--	 * sent to for a given number of threads (RX channels). Upper threads
--	 * have higher priority.
--	 * e.g. if number of threads is 8 then user priority 0 will map to
--	 * pri_thread_map[8-1][0] i.e. thread 1
--	 */
--
--	int pri_thread_map[8][8] = {   /* BK,BE,EE,CA,VI,VO,IC,NC */
--					{ 0, 0, 0, 0, 0, 0, 0, 0, },
--					{ 0, 0, 0, 0, 1, 1, 1, 1, },
--					{ 0, 0, 0, 0, 1, 1, 2, 2, },
--					{ 0, 0, 1, 1, 2, 2, 3, 3, },
--					{ 0, 0, 1, 1, 2, 2, 3, 4, },
--					{ 1, 0, 2, 2, 3, 3, 4, 5, },
--					{ 1, 0, 2, 3, 4, 4, 5, 6, },
--					{ 1, 0, 2, 3, 4, 5, 6, 7 } };
--
--	cpsw_ale_policer_reset(ale);
--
--	/* use first 8 classifiers to map 8 (DSCP/PCP) priorities to channels */
--	for (pri = 0; pri < 8; pri++) {
--		idx = pri;
--
--		/* Classifier 'idx' match on priority 'pri' */
--		cpsw_ale_policer_read_idx(ale, idx);
--		regmap_field_write(ale->fields[POL_PRI_VAL], pri);
--		regmap_field_write(ale->fields[POL_PRI_MEN], 1);
--		cpsw_ale_policer_write_idx(ale, idx);
--
--		/* Map Classifier 'idx' to thread provided by the map */
--		cpsw_ale_policer_thread_idx_enable(ale, idx,
--						   pri_thread_map[num_rx_ch - 1][pri],
--						   1);
--	}
--}
--
- #define HOST_PORT_NUM 0
++static inline bool cpucap_global_scope(const struct arm64_cpu_capabilities *cap)
++{
++	return (cap->type & SCOPE_LOCAL_CPU) && (cap->type & SCOPE_SYSTEM);
++}
++
+ /*
+  * Generic helper for handling capabilities with multiple (match,enable) pairs
+  * of call backs, sharing the same capability bit.
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 5ba149c0c2ac..1a5a51090c0e 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -3359,13 +3381,47 @@ static void update_cpu_capabilities(u16 scope_mask)
  
- /* Clear Policer and associated ALE table entries */
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index dbc095397389..5c9614730998 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -223,7 +223,6 @@ int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
- int cpsw_ale_vlan_del_modify(struct cpsw_ale *ale, u16 vid, int port_mask);
- void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
- 			      bool add);
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch);
- void cpsw_ale_policer_reset(struct cpsw_ale *ale);
- int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
- 			       struct cpsw_ale_policer_cfg *cfg);
+ 	scope_mask &= ARM64_CPUCAP_SCOPE_MASK;
+ 	for (i = 0; i < ARM64_NCAPS; i++) {
++		bool global_cap = false;
++
+ 		caps = cpucap_ptrs[i];
+-		if (!caps || !(caps->type & scope_mask) ||
+-		    cpus_have_cap(caps->capability) ||
+-		    !caps->matches(caps, cpucap_default_scope(caps)))
++		if (!caps || !(caps->type & scope_mask))
+ 			continue;
+ 
+-		if (caps->desc && !caps->cpus)
++		global_cap = cpucap_global_scope(caps);
++
++		/*
++		 * If it's not a global CPU capability, avoid probing if
++		 * already detected.
++		 */
++		if (!global_cap && cpus_have_cap(caps->capability))
++			continue;
++
++		/*
++		 * Pass the actual scope we are probing to the match function.
++		 * This is important for the global CPU capabilities that are
++		 * checked both as a local CPU feature and as a system one.
++		 */
++		if (!caps->matches(caps,
++				   cpucap_default_scope(caps) & scope_mask)) {
++			/* All CPUs must have the global capability */
++			if (global_cap)
++				__clear_bit(caps->capability, system_cpucaps);
++			continue;
++		}
++
++		/*
++		 * A global capability is only set when probing the boot CPU.
++		 * It may be cleared subsequently if not detected on secondary
++		 * ones.
++		 */
++		if (global_cap && !(scope_mask & SCOPE_BOOT_CPU))
++			continue;
++
++		/*
++		 * Global CPU capabilities are logged later when the system
++		 * capabilities are finalised.
++		 */
++		if (!global_cap && caps->desc && !caps->cpus)
+ 			pr_info("detected: %s\n", caps->desc);
+ 
+ 		__set_bit(caps->capability, system_cpucaps);
+@@ -3771,17 +3827,24 @@ static void __init setup_system_capabilities(void)
+ 	enable_cpu_capabilities(SCOPE_ALL & ~SCOPE_BOOT_CPU);
+ 	apply_alternatives_all();
+ 
+-	/*
+-	 * Log any cpucaps with a cpumask as these aren't logged by
+-	 * update_cpu_capabilities().
+-	 */
+ 	for (int i = 0; i < ARM64_NCAPS; i++) {
+ 		const struct arm64_cpu_capabilities *caps = cpucap_ptrs[i];
+ 
+-		if (caps && caps->cpus && caps->desc &&
+-			cpumask_any(caps->cpus) < nr_cpu_ids)
++		if (!caps || !caps->desc)
++			continue;
++
++		/*
++		 * Log any cpucaps with a cpumask as these aren't logged by
++		 * update_cpu_capabilities().
++		 */
++		if (caps->cpus && cpumask_any(caps->cpus) < nr_cpu_ids)
+ 			pr_info("detected: %s on CPU%*pbl\n",
+ 				caps->desc, cpumask_pr_args(caps->cpus));
++
++		/* Log global CPU capabilities */
++		if (cpucap_global_scope(caps) &&
++		    cpus_have_cap(caps->capability))
++			pr_info("detected: %s\n", caps->desc);
+ 	}
+ 
+ 	/*
+---------------------8<-----------------------------------------
+
+And an dummy test:
+
+---------------------8<-----------------------------------------
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index 5ba149c0c2ac..1a5a51090c0e 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -2480,6 +2480,21 @@ test_has_mpam_hcr(const struct arm64_cpu_capabilities *entry, int scope)
+ 	return idr & MPAMIDR_EL1_HAS_HCR;
+ }
+ 
++static void
++cpu_enable_dummy_global(const struct arm64_cpu_capabilities *entry)
++{
++	pr_info("%s: %s: smp_processor_id() = %d", __func__, entry->desc, smp_processor_id());
++}
++
++static bool
++has_dummy_global(const struct arm64_cpu_capabilities *entry, int scope)
++{
++	pr_info("%s: %s: scope = %x smp_processor_id() = %d", __func__, entry->desc, scope, smp_processor_id());
++	if (smp_processor_id() < 4)
++		return true;
++	return false;
++}
++
+ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 	{
+ 		.capability = ARM64_ALWAYS_BOOT,
+@@ -3050,6 +3065,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_pmuv3,
+ 	},
+ #endif
++	{
++		.desc = "Dummy test for global CPU feature",
++		.capability = ARM64_HAS_GLOBAL_CPU_TEST,
++		.type = ARM64_CPUCAP_GLOBAL_CPU_FEATURE,
++		.cpu_enable = cpu_enable_dummy_global,
++		.matches = has_dummy_global,
++	},
+ 	{},
+ };
+ 
+diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+index 772c1b008e43..dbc5a3eb5b3d 100644
+--- a/arch/arm64/tools/cpucaps
++++ b/arch/arm64/tools/cpucaps
+@@ -37,6 +37,7 @@ HAS_GENERIC_AUTH_IMP_DEF
+ HAS_GIC_CPUIF_SYSREGS
+ HAS_GIC_PRIO_MASKING
+ HAS_GIC_PRIO_RELAXED_SYNC
++HAS_GLOBAL_CPU_TEST
+ HAS_HCR_NV1
+ HAS_HCX
+ HAS_LDAPR
+---------------------8<-----------------------------------------
 
 -- 
-2.34.1
-
+Catalin
