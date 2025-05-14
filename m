@@ -1,97 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410B70838
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B494A70838
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212000; cv=none; b=ZJvqOv/SoypHgc5ejYRq4LnmJ5fIzQszU/DzOLOzgRBn2sLxl2+RGAxxea1lb2Ypyr2pygEoE4eu4RnX8J31rOMsZ0gPlyYSZ9pOuJnJUnBaikCrvarwExCNMATxW5Xv+tG4ITE8VIX0bzI7fSvHINH5Z4xXHiPkbWgWY/acO3c=
+	t=1747212037; cv=none; b=W4f+1TSQMF+/XdKUN/4M9gCxYhLbR8QYeaHg/R8Jl2H0ygOkSq/FQj30VMErMfMoXX9H4T6L56PpTowJBrjf4xG7/ithC8Vat9wHErwDFwfdXN3/c3S2InyPC2ePa3DNP8YEuJ/nKcRZvcRJwyqxbCnx9/rxmwF72n+DFAOU6TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212000; c=relaxed/simple;
-	bh=7IBu6SqoOaixh4a2E5UhMsl0v0l4ryM3zDotZ/2zmxc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZEpkrRNVUkvRpPPwbBQrh34EnJ4pU5X1K7WXxew0sw5WPov2JqjxUFjRMZ2igmE6KjFIj4BxXpC7X+5c8Dsbd0spAv9qvmOTcJ1i7i/sKTErEl2F6KG9WGl6GONZrRp7ZcMQRhMoTcthLQAOojXzEZHcDdf8w6rgTSkCCLnXRsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnuqKWQh; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747212037; c=relaxed/simple;
+	bh=x8/dZI24jwL/TPXh/+exv1bmf/+4VkSgV4hG/MmNt9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BkNVuco5MtK0PjrSwpMzcid39c6SAi1QNaspOOU8W8PDkY5Qf307PVLxTZNzZVromH5fTUhwfXD55u2O9Jp+1Rom6Zi3mEwr237hLHs1+5OU1d3GjKoKtG3hV0Hp5p6F0x2z0iVyKr+3J9NRWPf6XOkYuxV+sxYnKKH/HvYeJBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bgo82FC9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnuqKWQh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747211998; x=1778747998;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=7IBu6SqoOaixh4a2E5UhMsl0v0l4ryM3zDotZ/2zmxc=;
-  b=NnuqKWQhLSRJhU9HrhxpJBU+og/Htmb4wThDKzn3RPlWbYSNJAkBhCPD
-   wcgiZ+CMuWVJsDvB4MT5zaEIroDs21VkLqiLa3codBbVfekGXNFK028gb
-   GrBM4esRIHj6B/T3p5u5ThkDwOEd6tBVAzlTRMxv0Y1XEDXWktEsJsYgV
-   xkOgeUvA97w5o7wxg3yKj4DgpX21B6/rcSx3hh13k87CuKwxemb3kDKPy
-   mPLFn66sffQdE7+xBC6EjGeo6pmDRutvGDfwUpISx3QFVX5+GlL1ijzxt
-   z4a/iyT34fbCgWA6lOfFRJHJfEgkzlQ1pZcEQqrTplzXOavmTfT3kQij7
-   A==;
-X-CSE-ConnectionGUID: L1KVlgTSSN+BS1hpLhztEg==
-X-CSE-MsgGUID: Miyde0CPSkS5Ar8kkpqHCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48964633"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="48964633"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 01:39:58 -0700
-X-CSE-ConnectionGUID: fkoVliQkTt+1gp7aIeKD2g==
-X-CSE-MsgGUID: 8yaHo7RnTMuc0hUxCalqWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="142913537"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.180])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 01:39:52 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: "feijuan.li" <feijuan.li@samsung.com>, jingoohan1@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: feijuan.li@samsung.com, hongfei.tang@samsung.com,
- minggui.yan@samsung.com, qilin.wang@samsung.com
-Subject: Re: [PATCH v3] drm/edid: fixed the bug that hdr metadata was not reset
-In-Reply-To: <20250514063511.4151780-1-feijuan.li@samsung.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CGME20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e@epcas5p2.samsung.com>
- <20250514063511.4151780-1-feijuan.li@samsung.com>
-Date: Wed, 14 May 2025 11:39:49 +0300
-Message-ID: <878qmzio16.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bgo82FC9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CA4C4CEF3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747212037;
+	bh=x8/dZI24jwL/TPXh/+exv1bmf/+4VkSgV4hG/MmNt9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Bgo82FC9u4mbZ4+oUr+u9QxGPRgpy+M8e3ytiS/JTGkbwAu/lhpp9Rj47oULwLeIM
+	 t9zz6jDY6VtJiV8PDh80ANUmU+23dOPRANqBPLG71UnrWwpD5miFEOxfKtnFQx/8Y6
+	 eDOnyBMMGeuGFbm9RJABOiIbWRe8w18yj9woWb/6hYQrIib2ULDzf9Fdms1OPWqZUV
+	 7mpjmXHXt8+6QksCDDM+feS/d7bILEUWJmEXmwOijLBsr3CfU/DJF4vvroG8qcB5V3
+	 K9vt8w0vovFXkrZnK7ZbqBg7i/oxEVsTu6MrtLe+s7o98650+43rs+InC1N2sHwzzV
+	 wj3jXLHihgO6A==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54ea69e9352so9021741e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:40:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXCDHAj17t1+9AETXJHvFBnBgripFpRYhQpf+cnP580NCFpZBfqWCmGKaJF4IE0Hr9DZdUodGdVYttAj/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxREhJ11D/smBuWuj8oYh3pA6tciB8lSJ/9GlCdlQZ/9iGuhEt3
+	/49EYNfgT/aPimBpIr3jP0bQkttdAA05TizlST43dxKVICR4dqKKRBeIz5eWwLxZdJofp6/fEaH
+	cbA+ESARcbmLMtPgiD0RYv/slmIA=
+X-Google-Smtp-Source: AGHT+IFqpiEcYgujniBtwPzVTsjbnZ7XH43vPfwg9VTu1wHJZTWJ/iPNzvTuvVpr7XQhhYguUHknaiCeM02K90ClQ7w=
+X-Received: by 2002:a05:6512:239a:b0:54e:819a:8327 with SMTP id
+ 2adb3069b0e04-550d5fbb916mr1055957e87.13.1747212035551; Wed, 14 May 2025
+ 01:40:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250513111157.717727-8-ardb+git@google.com> <20250513111157.717727-12-ardb+git@google.com>
+ <aCRRJ_ahL2IRXxcj@gmail.com> <CAMj1kXF0Kc+--5rOqcVKoF-NhYfzA2rioaWsB09VK1hJ49nG+w@mail.gmail.com>
+ <aCRWSpS8B-B26AB6@gmail.com>
+In-Reply-To: <aCRWSpS8B-B26AB6@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 14 May 2025 09:40:23 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGypw0PY+ytYNV1sguAoWc-qTc0OL89PhPuEk938Qq0mw@mail.gmail.com>
+X-Gm-Features: AX0GCFt-4eAaOy1DTX8A7KVhqSfovRSfNfoxNBqQ09oxMfEb3uZZhgbE7JAo_2Q
+Message-ID: <CAMj1kXGypw0PY+ytYNV1sguAoWc-qTc0OL89PhPuEk938Qq0mw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/6] x86/boot: Set 5-level paging CPU cap before
+ entering C code
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 14 May 2025, "feijuan.li" <feijuan.li@samsung.com> wrote:
-> When DP connected to a device with HDR capability,
-> the hdr structure was filled.Then connected to another
-> sink device without hdr capability, but the hdr info
-> still exist.
+On Wed, 14 May 2025 at 09:37, Ingo Molnar <mingo@kernel.org> wrote:
 >
-> Signed-off-by: feijuan.li <feijuan.li@samsung.com>
-
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-
-
-> ---
->  drivers/gpu/drm/drm_edid.c | 1 +
->  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 13bc4c290b17..9edb3247c767 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -6596,6 +6596,7 @@ static void drm_reset_display_info(struct drm_connector *connector)
->  	info->has_hdmi_infoframe = false;
->  	info->rgb_quant_range_selectable = false;
->  	memset(&info->hdmi, 0, sizeof(info->hdmi));
-> +	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_metadata));
->  
->  	info->edid_hdmi_rgb444_dc_modes = 0;
->  	info->edid_hdmi_ycbcr444_dc_modes = 0;
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> > > > -     if (IS_ENABLED(CONFIG_X86_5LEVEL) && (native_read_cr4() & X86_CR4_LA57))
+> > > > -             setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
+> >
+> > Note that at this point, we'll likely still have to force clear the
+> > original X86_FEATURE_LA57 bit, to address the issue that Kirill
+> > raised that user space is now likely to conflate the "la57" cpuinfo
+> > string with 5-level paging being in use.
+>
+> No, I think the general outcome of your series is fine and clean in
+> terms of kernel-internal logic, and I wouldn't mess up that clarity
+> with user ABI quirks: and we can solve the /proc/cpuinfo ABI
+> compatibility requirement by exposing X86_FEATURE_5LEVEL_PAGING as
+> 'la57', and renaming X86_FEATURE_LA57 to X86_FEATURE_LA57_HW and
+> exposing it as a (new) la57_hw flag, or so.
+>
 
--- 
-Jani Nikula, Intel
+Ok.
