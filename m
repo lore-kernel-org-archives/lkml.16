@@ -1,28 +1,28 @@
 Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502C214900B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 779C327A905;
 	Wed, 14 May 2025 16:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239231; cv=none; b=CMxNS+PHv6SEZytWBFoGLKuzVazeUaBgX/OgcYQnvSbmjX1GKXDj4vxqSPUIZ9enSI9FzP10xCC9kQyDBu38v3boVvyFwnaSsBthEmRIwSocE6A5hkokfUzETIjYcaVb6C2Ud/3c+3J5rErdYrhYu3WwRM5p+iLFPVEgQtY9xWM=
+	t=1747239232; cv=none; b=Kl4Hjlxitj/52JERsB/WaAGndSHmjZxcnsqNITt6W8hlZGClV9ErKjgH0t0YioMuhH/p6p7kY4DY2MdBCCRL4NPMuaMmHQzYC5JVVXK9GSkZ9hXLZjzzI8qFARXZ2y6G4VfYewuxeZ6hG5IWLAvcedoZqOOA/PNZ2xxnwO/c5Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239231; c=relaxed/simple;
-	bh=wFwQeyX3UzcyLRreHcn0/L70EXFFVb+3SeDb0oXMq88=;
+	s=arc-20240116; t=1747239232; c=relaxed/simple;
+	bh=Mtrxl0A4mSKdtI0P/Aar9g1OwtcP2NOqbzya7zHujEg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p1WFrGd104Xmetzn9jwb9kozolj+LOSVgHEQAPI2Upwi8ETFRn8FE+v5r/BXNt9KO2Tm025iMN6syd2rMKeNtJImA8t/W9ZRSMovlt8EpArZlzjF1vpBNbyEgF4QeRHlC5V8dz2WIufuAAoDQepGrrG0IupRWj2U0mDvIXWNOAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bJA6LoHs; arc=none smtp.client-ip=117.135.210.3
+	 MIME-Version; b=iTSEUoI7jUIUN1pbROh07jNmaIaEyiqesEtN82eo3CqOpc5BWYS4pZPChFBKzd/C8X43V6LNHc3zfYaquWL0A+6KpsACHnvUlCC7jaAl2uCzlSjoV0xy/cyJH6BRUP3GGSJs8tZ+3do0vJOmFHg1ltBeluvGOTT01Ydut55z5N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Nu5reeW1; arc=none smtp.client-ip=117.135.210.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bJA6LoHs"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Nu5reeW1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=L8
-	jrWZzE23L1dkQ7R9r76qgtfq+E/JkOCD8Sti47jSk=; b=bJA6LoHslDNdcIU4cY
-	XUdQClkyeMs+nG0Vfzu1j0LZe7gQYtfZpCvwCGzYPtQMBlXbXCpahebIVWT9L6ij
-	qjde+6H1NvUimyL//mw42EICsao2tAolQ5cpTfZSZRKq0NjVLycAc1wjmL4X5Wap
-	mO/nb2ZhV7OUQfNWADw7U2oPA=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=B2
+	KbUeb00HMJXvi9fxwd6fwPO8aUBiZrktepUk6uN2g=; b=Nu5reeW1/+nr5Vnlwu
+	D4QhTw8R43G6uaWYZ6tYeTZ4v0D6gmQheDBHHfB/1+3hZFBbRZGUaG3Bhjx7aLnu
+	FM1Y5rUHrJmxLK6zjenkcxyfa6TG3tbgWPfYcl9EnHKbX8Ma32n062Q/4MRuk9v3
+	HR8r71m0yc0dTbWIiG8aXtehU=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3VU0LwSRo5cN_BQ--.35962S4;
-	Thu, 15 May 2025 00:13:01 +0800 (CST)
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3VU0LwSRo5cN_BQ--.35962S7;
+	Thu, 15 May 2025 00:13:02 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	bhelgaas@google.com,
@@ -35,9 +35,9 @@ Cc: cassel@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v12 2/6] PCI: Clean up __pci_find_next_cap_ttl() readability
-Date: Thu, 15 May 2025 00:12:54 +0800
-Message-Id: <20250514161258.93844-3-18255117159@163.com>
+Subject: [PATCH v12 5/6] PCI: cadence: Use common PCI host bridge APIs for finding the capabilities
+Date: Thu, 15 May 2025 00:12:57 +0800
+Message-Id: <20250514161258.93844-6-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250514161258.93844-1-18255117159@163.com>
 References: <20250514161258.93844-1-18255117159@163.com>
@@ -48,88 +48,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3VU0LwSRo5cN_BQ--.35962S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tFyUuF4Uur15Ar17AFW5Wrg_yoW8tr1kpF
-	98Ca47Ar48JF17Cws293W2yr13Xa4DCrW8G3yagwn8uFy2yF18twsIkF13tF17JrZ293W5
-	XrWqv395uF90yaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pisa9-UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxpNo2gkvuBv6wABss
+X-CM-TRANSID:_____wC3VU0LwSRo5cN_BQ--.35962S7
+X-Coremail-Antispam: 1Uf129KBjvJXoWxury7KFWfKFy8WrWDAw1xuFg_yoW5uFyDpF
+	WDGFyfC3WrJrW3uFs3A3W5Xr13tFnak347ta92kw12vF17ur1UGF12gFy3Kr9xKrs7Wr13
+	X3yDtFykKrn0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pK-e5dUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgBNo2gkwQMCvQAAsl
 
-Refactor the __pci_find_next_cap_ttl() to improve code clarity:
-- Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
-- Use ALIGN_DOWN() for position alignment instead of manual bitmask.
-- Extract PCI capability fields via FIELD_GET() with standardized masks.
-- Add necessary headers (linux/align.h).
-
-The changes are purely non-functional cleanups, ensuring behavior remains
-identical to the original implementation.
+Use the PCI core is now exposing generic macros for the host bridges to
+search for the PCIe capabilities, make use of them in the CDNS driver.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
 Changes since v11:
+- Modify the return value of cdns_pcie_readw from u32 to u16. 
+- Modify the return value of cdns_pcie_readb from u32 to u8. 
+
+Changes since v8 ~ v10:
 - None
 
-Changes since v10:
-- Remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+Changes since v7:
+- Resolve compilation errors.
 
-Changes since v9:
-- None
+Changes since v6:
+https://lore.kernel.org/linux-pci/20250323164852.430546-4-18255117159@163.com/
 
-Changes since v8:
-- Split into patch 1/6, patch 2/6.
-- The
+- The patch commit message were modified.
+
+Changes since v5:
+https://lore.kernel.org/linux-pci/20250321163803.391056-4-18255117159@163.com
+
+- Kconfig add "select PCI_HOST_HELPERS"
 ---
- drivers/pci/pci.c             | 9 +++++----
- include/uapi/linux/pci_regs.h | 2 ++
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/controller/cadence/pcie-cadence.c | 28 +++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 13 +++++++++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e77d5b53c0ce..27d2adb18a30 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,6 +9,7 @@
-  */
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..ca4a1a809fcb 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -7,6 +7,34 @@
+ #include <linux/of.h>
  
- #include <linux/acpi.h>
-+#include <linux/align.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
- 	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+ #include "pcie-cadence.h"
++#include "../../pci.h"
++
++static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
++{
++	struct cdns_pcie *pcie = priv;
++
++	if (size == 4)
++		*val = cdns_pcie_readl(pcie, where);
++	else if (size == 2)
++		*val = cdns_pcie_readw(pcie, where);
++	else if (size == 1)
++		*val = cdns_pcie_readb(pcie, where);
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
++				     cap, pcie);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_capability);
++
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie);
++}
++EXPORT_SYMBOL_GPL(cdns_pcie_find_ext_capability);
  
- 	while ((*ttl)--) {
--		if (pos < 0x40)
-+		if (pos < PCI_STD_HEADER_SIZEOF)
- 			break;
--		pos &= ~3;
-+		pos = ALIGN_DOWN(pos, 4);
- 		pci_bus_read_config_word(bus, devfn, pos, &ent);
- 
--		id = ent & 0xff;
-+		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
- 		if (id == 0xff)
- 			break;
- 		if (id == cap)
- 			return pos;
--		pos = (ent >> 8);
-+		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
- 	}
- 	return 0;
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+ {
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 39ee9945c903..0a4a8bfd3174 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
+ 	return readl(pcie->reg_base + reg);
  }
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index ba326710f9c8..35051f9ac16a 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -206,6 +206,8 @@
- /* 0x48-0x7f reserved */
  
- /* Capability lists */
-+#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
-+#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
++static inline u16 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
++{
++	return readw(pcie->reg_base + reg);
++}
++
++static inline u8 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
++{
++	return readb(pcie->reg_base + reg);
++}
++
+ static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
+ {
+ 	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+@@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+ }
+ #endif
  
- #define PCI_CAP_LIST_ID		0	/* Capability ID */
- #define  PCI_CAP_ID_PM		0x01	/* Power Management */
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
++
+ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+ 
+ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
 -- 
 2.25.1
 
