@@ -1,119 +1,151 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107BE22576A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756702253E9;
 	Wed, 14 May 2025 09:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214496; cv=none; b=Vgpq/zxMZYcCUH+7Yd8N8WoXx2MjH7Vghv1v6PsDESVYMB8hpx51FwC11joIQYuftHPJuItwGH4vcDtgnntCNHVlww0SBiWYKdh2czUegjREMsEvIqX3KLeLGWFKl/qPwVgHFCqaZUiDXR5qh5sVZXANMvq3RbBjxrf9AgkcyZ0=
+	t=1747214496; cv=none; b=I8gawmNjPOBs12U6z/BTpARaaUlJDxZZT03ERxnD8QyRtwDuiyz2+Q+FPYuiZuUb9Wmv4Mb90P0ZdPaQ/ss1Rnvg8TZzO2BplhO9hHx7+8/EtrMzPMjucO2OLus+uBUahvarmfe6jmEuh5hlzyo1DMSbhsbtEiiUJS3a2ikxK6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747214496; c=relaxed/simple;
-	bh=i9LSW+S4PAZOlz8NvEMuLQl0XMu60kzZIjrm0p4e00A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HrTje0d2Z6CSHWTKP2+F7eyaHOwtokGdJwWUxf68c9g6AQq4D3Je70OmL6poMb9cNamY4LWZnjxeJ9S2bo647UR+QsWKOv7eYQA4cwsWBrJfnfGS5P0IclCyGApKHeu77ehemT8kidnosSCV1J2d7c06BcrKSSMYcdrGaAYCHic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BlZjdebh; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	bh=tR883kMOoHbOluv8q6ujapdKy6utTqe0KM+gfzLlNfA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n6FnBRTvKGi/gU4grq23MPrVFLYOf8Ac4KdUYa7UBRiegYZkfggHR/Qk/RVgbCm5TFuGl8XVcKrUYeszMrJB0QbjKphcAQx/IelbX/nEbKoFq37TfbVKZzkudHiE9W/OEGse7miV9Q2EOeRXemOOPhaZ5xCvUSToKbxS5rGrFXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nx/kBExt; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BlZjdebh"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7w8pW023322;
-	Wed, 14 May 2025 11:21:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	99SNtvnMFqK7qNsbPspBqDAiBIpPQhzr7yAu4VDBnp8=; b=BlZjdebhX5jqrVHb
-	VNH2gIrtZp6/CWej+WSDKFR8rDQ/+uw/hmRiSrnBfECN+47hpxo4YaaS5t/TnK7O
-	0dWSgI+8FYvFnupDGloJSq9XFifgbfTc1R3iId7GlPX08pjIs9Au7DOr0DVKrttF
-	xsV0jYCm+GQ9sHA+2pabxuu7h4hMnNhtA8zjyEnwBF9bSilF8nX++g1lxbb1wx57
-	gyDf2C5wUy5T1CCaL4A3VV+0tuOtgRhCcAh+9btinErWgKzZtI6HFlYSM56AEf7B
-	/GtE4k2R+qki+BrZZa74TluH+KWSxSXo3eigYMx/9jujnpDHOUQXM3l9LjLhg2Pn
-	Rz99MA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbds2s3n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 11:21:09 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7B8AE40047;
-	Wed, 14 May 2025 11:19:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0F5A0B48E9E;
-	Wed, 14 May 2025 11:18:20 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 11:18:19 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 9/9] arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
-Date: Wed, 14 May 2025 11:15:30 +0200
-Message-ID: <20250514091530.3249364-10-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
-References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nx/kBExt"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30db1bc464dso62424181fa.0;
+        Wed, 14 May 2025 02:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747214492; x=1747819292; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KjbYfCEVCFS3UZNIAD2NZgl3DfkMX5aeNDJvSamuYVg=;
+        b=Nx/kBExtN5zbXnDhfbdDgVedgQZrRqnSnBeGklmHvXNv9Ct8HvinWEeZ/YGKYLMfXP
+         Lg0/AlQdl6sJQ+jaOflcZx4zi/eIlLuHx+vea7Xwq1q0J02wn6DHWpiihnyzKHLD7e56
+         CxfVKjgEv9ewdMK0ehCKtp8/xMbCmz99liaxsT/9MTryeWsEPXFBlXAkfkrmcGKZinnm
+         CEvzhsTMS0IASspiMxJNommNp/oj2vgG+fSyT9IkTTR8ZWG/ZAgFwerCe/bRVFvZmxp/
+         iY+kRCX5Lz/ooiV4qdeT406Sf2tmUly3JstkSHOYFRdRZVqM9fW3G6MyNJTPlRC3yOZB
+         xRfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747214492; x=1747819292;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjbYfCEVCFS3UZNIAD2NZgl3DfkMX5aeNDJvSamuYVg=;
+        b=Uih5i0ie0k2x9TIHEVvMes193czf+hAkyDMnj8WSZRHiFCLbDPDtAwBAWe6NZoeo3r
+         KFyZlKJR0vlzO7tzAlkOPDLent0SWiiZ7SXJnSD79gHhUlInAzEGr15FEHFTCzDMXZrd
+         Rs6XPTz2pydeEo4jJkYcsEHxGXMOjp7Y1/S8fXP/S8j2HlwZ6abLxe0GktOgFYc4bLAW
+         PlRDkciIcV2j7fVjupreSf8x7nJ1FmNYHV2z7R6OClsphZpuTQlfZrhNqZ7zI4+17JYq
+         KxpVcw5DXfjVqPgNSFr5CHXBZ7Fkw/uU5cjv8FMoeiJ2K6jMAYfCk4bdLub2AoGur909
+         DYXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGQjUJ8n2YsiwglLlGRREeUtrztoJZm4+qK9KBlBHlaE5iHfZrDVxW+URptV1wIVEljpyBmK4q1xgLQ9wS@vger.kernel.org, AJvYcCVkTeTags4ZdD0nTKZTaFizGj7BxNqsaxsIAC6UEpBvBxEpOR4TaHTt4eFM1MEZx2n6OtEcF3nmY2Od@vger.kernel.org, AJvYcCXe5WMiOTV4oO+z/TbWWidEFDkBja/ayQb26viZ4QS6VkYL4BBc+DsBuB7KEDVpPlMlAHsYG1dSPyec@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTL96DajmJHql3+5UBinU35jGSmTm/d4pAgHcPGZtcN8MZnUpk
+	/AZMvHCsRHMdLWvotVzPfKqptbmX8PEaZxiD3mB7Tt7/fQcsSgrm
+X-Gm-Gg: ASbGncuAyGTxlZEOYwAWDexrHfUDU+Mfm/ZAdHAxv9vCvWpsDJPdbxqFHFBzXenzzma
+	E17NhaySrBa7vw4r+X/D9zFbqxMbtN0uNGJWGMVdAG28/xDHRopcBW+VW8sMC+YfjBr6wnmoo43
+	bwUUvC0ASXoIqfh01MkRRki8XFuREkRTwW7NIGBvJvMj0SsXgaGssiTy+0v+v6cE3SP7UaAkfpC
+	APv1pemQ3FFvyVVxhqoMvcPypzHn8MSeZhvx8Y0Y6clTr3hyPEpwxxzJIC6nsRsgbqDSPR3oadz
+	19/N/qffIz5BrYGRaCFaQLcVeo2W+WI4+DxeRcSwJogewZTEFLNBDHARakBe+8bcYF7lPfcDSNj
+	0e43HZgrrL1CMbUkaJhkcaZNieNB2FfZe
+X-Google-Smtp-Source: AGHT+IHx7mOpFNkteQCtu3aVqL5FI0DY2rbNPAk8loPHngRnMdRfE5DwUyn9l898kMIqpqZqYdKDmQ==
+X-Received: by 2002:a05:651c:b10:b0:30b:efa3:b105 with SMTP id 38308e7fff4ca-327ed102ad5mr10993521fa.19.1747214492166;
+        Wed, 14 May 2025 02:21:32 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c339a41bsm19271401fa.19.2025.05.14.02.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 02:21:31 -0700 (PDT)
+Message-ID: <5ed56b89-8a9b-464f-9b87-f6553395a941@gmail.com>
+Date: Wed, 14 May 2025 12:21:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] iio: adc: ad7476: Support ROHM BU79100G
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1747123883.git.mazziesaccount@gmail.com>
+ <a6d84a4c9cdd961fbda38182501983f26cceadc9.1747123883.git.mazziesaccount@gmail.com>
+ <5f36c304-ed09-4a13-b22d-ceb5924c3739@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+In-Reply-To: <5f36c304-ed09-4a13-b22d-ceb5924c3739@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
-Add PCIe RC and EP support on stm32mp257f-ev1 board.
-Default to RC mode.
+On 14/05/2025 10:38, Matti Vaittinen wrote:
+> On 13/05/2025 11:26, Matti Vaittinen wrote:
+>> ROHM BU79100G is a 12-bit, single channel ADC. Support reading ADC
+>> measurements using the ad7476.c
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> ---
+>>   drivers/iio/adc/ad7476.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+> 
+> For anyone who might hit this mail thread later:
+> 
+> Conor made me realize that, for now, the BU79100G looks identical to the 
+> ads7866. Thus, these code-changes aren't needed at the moment, and this 
+> patch can be dropped. For those who wish to use BU79100G, please 
+> introduce it as
+> 
+> compatible = "rohm,bu79100g", "ti,ads7866";
+> 
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+I was too hasty.
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 9d1a1155e36c..85f99a1ca154 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -257,6 +257,27 @@ scmi_vdd_sdcard: regulator@23 {
- 	};
- };
- 
-+&pcie_ep {
-+	pinctrl-names = "default", "init";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+	status = "disabled";
-+};
-+
-+&pcie_rc {
-+	pinctrl-names = "default", "init", "sleep";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	pinctrl-2 = <&pcie_sleep_pins_a>;
-+	status = "okay";
-+
-+	pcie@0,0 {
-+		 reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+		 wake-gpios = <&gpioh 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+	};
-+};
-+
- &sdmmc1 {
- 	pinctrl-names = "default", "opendrain", "sleep";
- 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
--- 
-2.34.1
+It seems to me that the fallback won't work with the current driver 
+because the driver is not populating the of_match_table, but is relying 
+solely on the spi_device_id table.
+
+Judging a quick code reading, the spi_driver_id table entries are 
+matched to the modalias:
+https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/spi/spi.c#L393
+
+Which is (as far as I understand), generated from the first compatible:
+https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/of/base.c#L1170
+
+and not from the fallback one.
+
+I suppose this means that we would need to add the of_match_table entry 
+for the ti,ads7866 to make the fallback entry to match the driver.
+
+But...
+
+The __spi_register_driver() has following comment:
+	/*
+	 * For Really Good Reasons we use spi: modaliases not of:
+	 * modaliases for DT so module autoloading won't work if we
+	 * don't have a spi_device_id as well as a compatible string.
+	 */
+https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/spi/spi.c#L487
+
+So, having the of_match_table for would not be sufficient for the 
+autoloading, which would still require the bu79100g to be in the 
+spi_device_id table.
+
+Am I missing something? I don't see how the Linux SPI drivers benefit 
+from the fallback entries in the dt? (Not saying fallbacks wouldn't be 
+The Right Thing To Do. Ideally DTs aren't for Linux only, maybe some 
+other systems can utilize them). To me it seems I still need to add the 
+spi_device_id entry for the BU79100G, and of_match_table has no 
+additional benefit? If this is right, then this patch is still relevant, 
+even though the binding should be done as in v2.
+
+Yours,
+	-- Matti
+
+
 
