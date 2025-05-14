@@ -1,87 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834FB20297D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DA72AD02;
+	Wed, 14 May 2025 06:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747205043; cv=none; b=Y9EnfSxi8vUuVae8L0cQA8gDXX56r/fOJP/7qcAm8eSQgUfmFB3ojxLcgocYcxCrulDr+LrwfdmmDQtoDf+IHabYXrHnbWZse0bfmsmUNV33HgIn3KTnRY5nhR1lSB1DKego7sg+tCA1xiUepKxejitlatmmi/Zj8ZPQ4LzI4IE=
+	t=1747205088; cv=none; b=gcL5DlFCgKEpTck13pk2HxFNwoyIQtsU/mLPdDacTLl+ftc8azqag+mpDxMAwpxO5u0QV/dUQ5035BEweDifUE7t/j8Jg9MfQecFHydi0MJyGci7iW7UYLKaw0zzoZYDKy0wSsL7vdu3VLP25FKY/eX0CL8YorwR0EUeLBGtMlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747205043; c=relaxed/simple;
-	bh=w/ck8FP/0peMslKPAAUo4+aaobGgd/LaJyMrWDxryIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ELtj8YNy9WgAdoOoEuaWPZoNsIA9NHXuDdvmwRtOg7bVxC/lA2Iky8UfUeRX+0MKO6RT4z7sjPSoyHX1QZHagaVCLBbuApyAedhl8lOpFvQUpuYhZLMI2Y6d6vB9OEK7K7nz1hiclPliGrvGISZuk+k3Uc5WJywJxKVX34qGaeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J5l9N07Z; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747205088; c=relaxed/simple;
+	bh=ijzwnnI/HGCOYp81pOseMCjlmDojsIOrtfsqtslA87M=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=EcgAqOo+msQFW0gJrY7aSxgMn0dhAZTdYManj2U6CNOaeWL48acWX5yZ80KLwlDjeaHiEwBgd7INCvW+xQFDhGP2lZS1JezTxnOY9Z6WhSGUWX5M2tQjYEQW32097kVDOinKMtMI2vGtPwUxmjOhStjj8NZv+ofdKG6fAQIxyR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJIIWHRX; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5l9N07Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747205042; x=1778741042;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=w/ck8FP/0peMslKPAAUo4+aaobGgd/LaJyMrWDxryIA=;
-  b=J5l9N07Zg5nf2W7sf99y0ovRozqt5wgeMCGQOiSZaFIQV6anj3OfJMAA
-   /W739NSeeKVEQBtiBq0LdPbhzwo+wknK3saZ6JDY/UyaL3Q/NzN19iipG
-   Lp2+jMicgBTJFuBRmCdV0uZ5Ak1wpvjIsFOjasTdzVsnz3q0RE91XRssr
-   mdLxLLxtSJVtgYjOZmwwOn8vRaE0/RpiPyMBx3xxtKVZ0BSYsK+PRg/bM
-   ksQciBY+lBv2cxhyfKaZh4lQDseQ3SSuc44CF745h02tzEpyEZiB5x1Ri
-   LB/nnwGuNQkXhlvuiep7TwLqVe8VOAu0xv7YmIjgzTNQ+C3sVvcjxsPGa
-   w==;
-X-CSE-ConnectionGUID: aRmXgfQKQ+qGqLlyFKGcIg==
-X-CSE-MsgGUID: 1KJKTLtSSYCelqdFA7JltA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="71584985"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="71584985"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 23:44:01 -0700
-X-CSE-ConnectionGUID: AJgXBp2CRzuRmYuGHsVlqw==
-X-CSE-MsgGUID: pWI0IcR+QDKEXnsMe19efQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="169044659"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 23:43:59 -0700
-Message-ID: <18db51b6-5685-40bf-bf8b-1e787834fdf5@linux.intel.com>
-Date: Wed, 14 May 2025 14:39:21 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJIIWHRX"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73972a54919so6390201b3a.3;
+        Tue, 13 May 2025 23:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747205086; x=1747809886; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TcDZQwTmMdtyKKt05qTa4r45+8RvNA2opPyhd5OidXw=;
+        b=ZJIIWHRXDOIKBxqBiUpVIQZTrFiWVRDG5GNxOpxDWAtDV+OShfdB4YYbYF5s06sC9e
+         FWlQbWfiXnObrGpAIx4EapXp9cUaL8oFmQnFHayUB8bQWFM955nPYP3HR22A+6kQcTEP
+         eTqTnXb7BZJvI+RWBjBy3e0OUGqP2TCxUjBN+yzBDKwYQPzPyzfewA8KqIa7n/2ljYqP
+         +osMxZ3RwhwYNgCjnkJ7RKrZUKvJMhtsA+bY3/zBQhqCwDBm3Emb8SR2qZ7gT7Tvd35/
+         RkEO5w4i9w1LPfsa6qmKS2tlv97N3eEthT9Q6AdflrwOlo1nl/XKO0IBbqIl9AGlhys/
+         p9iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747205086; x=1747809886;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TcDZQwTmMdtyKKt05qTa4r45+8RvNA2opPyhd5OidXw=;
+        b=AvQgkNHBlA1+Gmk0MaRPjhtJyqC5R3gtlS+0lEEQDagQzhZbO5wweSEBwN+2AvTdpa
+         fhnLcNs531x57a2hCGD23gJJijCKlkiD06byER45Ruq6RGQeovZB4u1zFP2CCt0h4RzW
+         YBEL5k3SvPhqh2nzVdaxhT9J9PWvFrVpSLpsXKiRo5jQiRcHd0umKfWT2r8+8b2VqhsG
+         7xyUqp0hHuanaP1ziFxZ8u+EhL/K2wq5x14c+wMHbPU7pehZWxAGzkBe7AZ5PGoJ8J8D
+         xQ7TtjOJIF+SoaWHHP3+S5u0gK//kZ5pdr5ZNw7NvziX1imN8rEXlx+CKQpfj/U4kuoK
+         7LMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqb9WvD5SQLLo3/TYZsoD5PtweeZonvheHDx6rNlw5Mft+/QNk+WFvCBWUqRZNX4XZXtPhzWLTxi+74Ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2pf5xf1SAgkUuxzRI7pqKNI9suKU5+cfVMo4Mv8+RXBlEYnHz
+	XhsJGHXk8tP2a3wcvQEdbjwqs1j5D7XL5+kWIMDxT1l5VH/nOg38
+X-Gm-Gg: ASbGncsFT46DGk6EVRqNd0Z9mYBEF0ltlLc7xdP87TfvQ4snk0sqk+8oubQfk4Hgyk1
+	sQuuSnUk1FaGqPP6LVHWH9QJzN/YFnJBd0oZ0u/yFo5qLYFIP8XAOG81ycHb5CjfCc2rkNc5uOP
+	1SNorRFikeFNUrX6yD0Ee1/U8iFf9fUkSUb29Xj/suB6LkGgAPoQYRdjFfvBtKWE1ZQBntvqtKw
+	iclREdkW9fmKju3lwKJ02Ex3CAjsi8tZlOqiXkJyUVt1UtYP67EG845KEjmClwJQVN0F1TAhZb5
+	3T8BTnV62LIId7BVQXVvGmB/erD7ueYII6r4mJ7wW7GX3hHOoR+4jAaKPpa2qRYdqZSNfq2a
+X-Google-Smtp-Source: AGHT+IFwIZrYPD3WbXFDRklDUuXUJrldwY/u0s/EqxIvE+gIjhV/Huxd9CKq/cSzMKDp1d6ZGWTLgw==
+X-Received: by 2002:a05:6a20:729f:b0:1f5:9024:3246 with SMTP id adf61e73a8af0-215ff0eba21mr2915171637.17.1747205086397;
+        Tue, 13 May 2025 23:44:46 -0700 (PDT)
+Received: from dea88b1475bb.. (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7742d13sm92517375ad.90.2025.05.13.23.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 23:44:46 -0700 (PDT)
+Message-ID: <68243bde.170a0220.12d995.13f9@mx.google.com>
+X-Google-Original-Message-ID: <20250514064430.284576-1-LeoWang>
+From: leo.jt.wang@gmail.com
+X-Google-Original-From: LeoWang
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	george.kw.lee@fii-foxconn.com,
+	leo.jt.wang@fii-foxconn.com,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH V2 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
+Date: Wed, 14 May 2025 14:44:30 +0800
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <6822b830.050a0220.27a24d.d064@mx.google.com>
+References: <6822b830.050a0220.27a24d.d064@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] iommu/vt-d: Restore WO permissions on second-level
- paging entries
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <PN3PR01MB9597D59895582119A2F56928B891A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <PN3PR01MB9597D59895582119A2F56928B891A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/14/25 13:52, Aditya Garg wrote:
-> Hi
-> 
-> Since the original patch which this patch aims to revert fixed CVE-2021-47035, I'd
-> like to know how is that managed now.
+From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-Modern IOMMU hardware supports multiple formats of page tables. Some of
-them support write-only permission, but others do not due to
-compatibility with the CPU page table. That's the reason why the
-previous commit removed write-only permission to make it consistent.
+Document the new compatibles used on Meta Clemente.
 
-Nowadays, we have renewed iommu domain allocation interface which takes
-a device pointer and allocation flags. So, if the upper layers, for
-example, VFIO or IOMMUFD, want the iommu driver to enforce write-only
-protection, they should add an allocation flag for this explicitly.
-Otherwise, the IOMMU driver will treat DMA_FROM_DEVICE as a hint, not an
-enforcement.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+---
+ Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-baolu
+diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+index a3736f134130..4416a40dcd86 100644
+--- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
++++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+@@ -81,6 +81,7 @@ properties:
+               - asus,x4tf-bmc
+               - facebook,bletchley-bmc
+               - facebook,catalina-bmc
++              - facebook,clemente-bmc
+               - facebook,cloudripper-bmc
+               - facebook,elbert-bmc
+               - facebook,fuji-bmc
+-- 
+2.43.0
+
