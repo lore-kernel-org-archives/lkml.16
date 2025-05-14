@@ -1,135 +1,131 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913DE151990;
-	Wed, 14 May 2025 01:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B173C00;
+	Wed, 14 May 2025 01:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747185621; cv=none; b=Fj5KZTON8y5MVo+C39jlZ5B8RJjd0nsbK8fSTuO6cbmoM0hB2S9XW5b1m5lpV6yA/kGt2tddy4qxvcg8OVtqa7WHcl6Net3YmVQLQQHnWh6nFn7oYLO5UdTGU78X21r7VXz+0RG5Z7ByaCs6jc73npb29V/WuDDCKX0xalPmEn4=
+	t=1747185996; cv=none; b=dWU14/kFAtZnHtR8H12TP9R2HGtafsRKD0KGyDHVofdx41JaTaK2YhEfLVM/SNmbC8ACVH+UIjat8ij2ML3UKUoEE29rIAxwa+2Mu2NY8wCGzMWKOSwG6A6YY1Zin0gaYZY6g4ytGbOeE4g1GaizvCvNDVYjiTabtlAJ7EvJQEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747185621; c=relaxed/simple;
-	bh=6TH+CfOf8nH8p092bYaPHuPFIDKQno5bG+ApPzD2hCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T8a81Edfq8zKBl5J4kzM1Hlep6U+vjIadLHlb1ULH2kMHUcXVbjfeZqJohvQeEM7o/ie/cHyH1A8A4MhCsQ3imZJMZDGegJpcxOWpZm/9ecMneLK5mpPWsKM+Hgphw9HugsDQwIZW2F5sqqSfKF99C9sGFNwmuVsWFO+gXLvY4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfX7moft; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747185996; c=relaxed/simple;
+	bh=U0F6kN/3BrA8/yua4t0F7JSzc9uNHz91fX+ER7J1wMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sD4XJkMB+/z2PPyvU46RdS8oTVuAOjnZsyDUJ6Lu+7UP1S0b7DSeZTS8Hcg1u9bBn3aBNDl+zjMHdYDQ1BdZpHyw43/H9kJUgHytmfQOJZsq4894KiQgvfTcuDlvGNgGVPMp7CQs3oZh9IfqCFNY846SI4z9jfba6RApT45aCkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPUwfQbO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfX7moft"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c14138668so1612089a34.2;
-        Tue, 13 May 2025 18:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747185617; x=1747790417; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjhw+8R2L2eVYt9u5Zf9479vJ3/o77t8mJ9Bz83DtoQ=;
-        b=bfX7moftQbj4hAbiGEsEFqZK1HNmygwOkTebz/QvQV1GANNaOD5M+EA4hxaZtrpec0
-         1VQHB7om3PCvpMWY9+ktWfPIf3JZ44c0PpAd1mxwzO8KP6kahWC4NeGGNDShxfBZS/Zk
-         9iSqFtYY26Sj/36tgI4ba7GbZ2PB8uGuSKo+5OMKWc9rIU7fZxp9/Bk/F230cGeQgMYZ
-         BM/KnE9az4ornikZ/8pE09D+br7MTVBW+ztB4c0d9DiXpDznNDHgDNakJ/U7bmkcKESp
-         PCEbNO+WuXlY8xQoeljtHccJC02jrEqw18NLjC7rr7xgwGJPUtHOfildtRRCkFyv++HD
-         svug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747185617; x=1747790417;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kjhw+8R2L2eVYt9u5Zf9479vJ3/o77t8mJ9Bz83DtoQ=;
-        b=EC7E5bW80OzdXAOG+xHHhji+pETFXnhJPaF1BFMM7l54h2L1JeBSXToDEgP1hQUUbH
-         w8SH2R93ZTqlpM/1ZX2L/kL9c4yX+zEbFVzTk4OhCAa0jjv+HgLqAaYFxmCVLGD3RmrG
-         peera0stKBlV9Idq8Thwgqb/724Hem6Lp9qyGgL1DLZ8rfinvKcRqIW6Wyv1cC+jRJr4
-         ZDAIJeBvZB3wv2k5TXPwt7rWej8GVhXRWmgY8FcRit2eIfuEYQP0ll8qDC8+AqRao7dj
-         2aHdQEfPvDEVx7Nh1IO8OPGtnaRwJHrNjJHrC0BO6u0JRrKUQZ+b1TaOUJfQLzHZ+GSm
-         XA7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWK99Yv6OhLnDmIxytRA5js+I70YswnIPMB5Zx3vhbaF4SIRccpmOF3iT+gK8rQ56B9tvl285LHpMTC9z8=@vger.kernel.org, AJvYcCXUGg20IGU2BdSah6CVexCUBVH0S5ISrA5KVLjm1aXsXbN50NTKwm0Sx7zngZLHTW91833BHiFEwnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDm7wBQIG8h+hJ4bHm9KuBl3dScJ+aEhyj+vdKxsgbY55ovql2
-	/nc2kuHu3f5ziYY6o2jXOr8OpY+lK3ZHt4Xys1lnWJqTRsxH94lDN+eE0ET+KwP4envYlFAY2yZ
-	UFF46wUjzS81z4Qc0Q4l12CXEUTj2Wfm3KN4=
-X-Gm-Gg: ASbGncsIIp2NH42Q7Uiypu31+1b4EQHodGzvuWRLUB3QuIHM+9GbLVC8fbrHSWPJLhO
-	/EFXYcIUZDeSFtd7fsKqtmbaHQkVxrgkI+caK4MV4CFpqgtSbTEkFaiw4cdWrmNVpnMG03Dkg1x
-	g6IuRZFKOU9DZkSEeX65eoluXr+Ey+LToGET2LM3zCE1TeyC1Hu/ddqZj3mut5T8zT0Q==
-X-Google-Smtp-Source: AGHT+IHkZ/hgevBC9dQiqQ7Y9K8Hy5o5zbMHYNDgVh2fgORnUsRO27N4/XTRi5pSH9FtbfVkATvj1JiZs9S+RGqo4q8=
-X-Received: by 2002:a05:6870:71cb:b0:2d4:d07c:7cb2 with SMTP id
- 586e51a60fabf-2e32b1366a7mr696824fac.11.1747185617429; Tue, 13 May 2025
- 18:20:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPUwfQbO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6432FC4CEE4;
+	Wed, 14 May 2025 01:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747185995;
+	bh=U0F6kN/3BrA8/yua4t0F7JSzc9uNHz91fX+ER7J1wMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hPUwfQbOOzlMUND78gmSa+K7TVclojnoZIJdL6WBPRyyq4tVssCp9jgRtXDXlMHjK
+	 uRxLXQu+O5IYisyJgd7Ybx3LRQ/IKKr4c7bYQYwERqGEjbtqYWDn8/jqh3q2kbahhW
+	 mrm/YyN6b1cRkiMpTWTbulqGJ5pMS1hgOll0jA9011iM/z5VztUFLDX0lLfGls86Ou
+	 IKPYLtex8S+49OKEO30MFCt0tW0xfLRtfRLg33iUzD+2x7Pno/nnGF5nkFtKlP+oYG
+	 LTWnKnA0di6xw7WCv60W4b9l3ucOJ2ELUKwBQej6aAbV0c42NcDX639nlVzYqUF7vs
+	 oL1WjpR36EqAg==
+Date: Wed, 14 May 2025 09:26:27 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: cdnsp: Fix issue with detecting command
+ completion event
+Message-ID: <20250514012627.GA623775@nchen-desktop>
+References: <20250513052613.447330-1-pawell@cadence.com>
+ <PH7PR07MB9538AA45362ACCF1B94EE9B7DD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510184709.44935-1-suchitkarunakaran@gmail.com> <09c7ad5e-4061-4c0b-b097-fa575c12a244@linuxfoundation.org>
-In-Reply-To: <09c7ad5e-4061-4c0b-b097-fa575c12a244@linuxfoundation.org>
-From: Suchit K <suchitkarunakaran@gmail.com>
-Date: Wed, 14 May 2025 06:50:06 +0530
-X-Gm-Features: AX0GCFtYZvMyu3LNA6tisPv-kVuwpVvfEoES84vyI6pfnQg2CB3GgUX9A07nmkk
-Message-ID: <CAO9wTFjyEngVR10ixYj=G8udRBeKaxAQquPCdi0V638t3WqQfA@mail.gmail.com>
-Subject: Re: [PATCH] tools/powercap: Implement powercap_set_enabled()
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: trenn@suse.com, shuah@kernel.org, jwyatt@redhat.com, jkacur@redhat.com, 
-	linux-pm@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR07MB9538AA45362ACCF1B94EE9B7DD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
 
-Thanks for the suggestion, Shuah. And I did compile the kernel after
-making the changes.
+On 25-05-13 05:30:09, Pawel Laszczak wrote:
+> In some cases, there is a small-time gap in which CMD_RING_BUSY
+> can be cleared by controller but adding command completion event
+> to event ring will be delayed. As the result driver will return
+> error code.
+> This behavior has been detected on usbtest driver (test 9) with
+> configuration including ep1in/ep1out bulk and ep2in/ep2out isoc
+> endpoint.
+> Probably this gap occurred because controller was busy with adding
+> some other events to event ring.
+> The CMD_RING_BUSY is cleared to '0' when the Command Descriptor
+> has been executed and not when command completion event has been
+> added to event ring.
+> 
+> To fix this issue for this test the small delay is sufficient
+> less than 10us) but to make sure the problem doesn't happen again
+> in the future the patch introduces 10 retries to check with delay
+> about 20us before returning error code.
 
+Does the ./scripts/checkpatch.pl report warning if the delay time is
+20us for udelay?
 
-On Wed, 14 May 2025 at 03:33, Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> On 5/10/25 12:47, Suchit Karunakaran wrote:
-> > The powercap_set_enabled() function previously returned a dummy value
-> > and was marked with a TODO comment. This patch implements the function
-> > by writing the desired mode (0 or 1) to /sys/class/powercap/intel-rapl/enabled
->
-> The short summary should say cpupower: Implement powercap_set_enabled()
-> >
-> > Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-> > ---
-> >   tools/power/cpupower/lib/powercap.c | 22 ++++++++++++++++++----
-> >   1 file changed, 18 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/power/cpupower/lib/powercap.c b/tools/power/cpupower/lib/powercap.c
-> > index 94a0c69e55ef..7947b9809239 100644
-> > --- a/tools/power/cpupower/lib/powercap.c
-> > +++ b/tools/power/cpupower/lib/powercap.c
-> > @@ -70,6 +70,22 @@ static int sysfs_get_enabled(char *path, int *mode)
-> >       return ret;
-> >   }
-> >
-> > +static int sysfs_set_enabled(const char *path, int mode)
-> > +{
-> > +     int fd;
-> > +     char buf[2] = { mode ? '1' : '0', '\n' };
-> > +     ssize_t ret;
-> > +
-> > +     fd = open(path, O_WRONLY);
-> > +     if (fd == -1)
-> > +             return -1;
-> > +
-> > +     ret = write(fd, buf, sizeof(buf));
-> > +     close(fd);
-> > +
-> > +     return ret == sizeof(buf) ? 0 : -1;
-> > +}
-> > +
-> >   int powercap_get_enabled(int *mode)
-> >   {
-> >       char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
-> > @@ -77,12 +93,10 @@ int powercap_get_enabled(int *mode)
-> >       return sysfs_get_enabled(path, mode);
-> >   }
-> >
-> > -/*
-> > - * TODO: implement function. Returns dummy 0 for now.
-> > - */
-> >   int powercap_set_enabled(int mode)
-> >   {
-> > -     return 0;
-> > +     char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
-> > +     return sysfs_set_enabled(path, mode);
->
-> Did you compile this?
->
-> thanks,
-> -- Shuah
+Peter
+> 
+> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+> Changelog:
+> v2:
+> - replaced usleep_range with udelay
+> - increased retry counter and decreased the udelay value
+> 
+>  drivers/usb/cdns3/cdnsp-gadget.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
+> index 4824a10df07e..58650b7f4173 100644
+> --- a/drivers/usb/cdns3/cdnsp-gadget.c
+> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
+> @@ -547,6 +547,7 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
+>  	dma_addr_t cmd_deq_dma;
+>  	union cdnsp_trb *event;
+>  	u32 cycle_state;
+> +	u32 retry = 10;
+>  	int ret, val;
+>  	u64 cmd_dma;
+>  	u32  flags;
+> @@ -578,8 +579,23 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
+>  		flags = le32_to_cpu(event->event_cmd.flags);
+>  
+>  		/* Check the owner of the TRB. */
+> -		if ((flags & TRB_CYCLE) != cycle_state)
+> +		if ((flags & TRB_CYCLE) != cycle_state) {
+> +			/*
+> +			 * Give some extra time to get chance controller
+> +			 * to finish command before returning error code.
+> +			 * Checking CMD_RING_BUSY is not sufficient because
+> +			 * this bit is cleared to '0' when the Command
+> +			 * Descriptor has been executed by controller
+> +			 * and not when command completion event has
+> +			 * be added to event ring.
+> +			 */
+> +			if (retry--) {
+> +				udelay(20);
+> +				continue;
+> +			}
+> +
+>  			return -EINVAL;
+> +		}
+>  
+>  		cmd_dma = le64_to_cpu(event->event_cmd.cmd_trb);
+>  
+> -- 
+> 2.43.0
+> 
+
+-- 
+
+Best regards,
+Peter
