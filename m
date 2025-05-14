@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF56C83A14;
-	Wed, 14 May 2025 07:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3069283A14
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209206; cv=none; b=H1304IoZ0xPZD/PrO298yAp6ZbsKg8niSSoqkLaO8V0rNHbwND5uq5WBPaJTYOPCDeGPkLEObJD9oVkYTSy3vypzrfFeIjG9WedB+Lla+OWCF01wGCXngngu7oJny4gA1Git8Fcz1tJuuxaKC204zFrTHhphyHgTWsWDYzR8L9E=
+	t=1747209248; cv=none; b=sqTxoDjtvktJbmXICg4oOvaqH65k4FTzsA6oTnKdcwPZtAInSqtRLDtHuhGglyb1CV6LgNepZVZWHxdQUeXyignZfiAuH9xQIUC+gHMB/WPjGhSdB3vhs81ukWGU/zLXf3sr2vHUi1OGRqPg4CRYDImjHWgD9UmkQmKrY4Jmd5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209206; c=relaxed/simple;
-	bh=oT7hxr/wD5m8n+rvu9J4tvnekTFUNd2V2+qGVpNFN7I=;
+	s=arc-20240116; t=1747209248; c=relaxed/simple;
+	bh=f0SmfOrgAK7b1qc4qpgTY4qvsC6LjJMZJfgGNUJT+Mg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RWn/1udXcxx58HauQIj8YmYb/cJlzganCZDJ7+ySQtmbxqrAnNBzMAbU+Nno+0KjhE44cZ9bj/nfEW6K25Jpy9W0tnSjEaI6xlZUHPtb+TKomgZ93EsH0v+TuAaaOmYBD1FPiyrJf3VO/kmIvGTcHu+ksnozABsJRltn0CU94pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcKG4F2I; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h52/TllNyDSheJhnEKOd8Pxf345RcMe+UWP9ho7mwPa+yanq8nKKpoGNt761t/u/qF5ChjYbr+NCfLfi1/+cUlqV9uOUFsaIN2/6ruzp8doCsEINnEc3nWkS2ahRsIcTXoOlAzdCtIrg0NfELWxSbQs7uDsIY5WTc9YFmSaENIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qif7zy8g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcKG4F2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331A8C4CEE9;
-	Wed, 14 May 2025 07:53:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qif7zy8g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B620EC4CEE9;
+	Wed, 14 May 2025 07:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747209206;
-	bh=oT7hxr/wD5m8n+rvu9J4tvnekTFUNd2V2+qGVpNFN7I=;
+	s=k20201202; t=1747209247;
+	bh=f0SmfOrgAK7b1qc4qpgTY4qvsC6LjJMZJfgGNUJT+Mg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JcKG4F2IWhY6/FI60SaIDQv3Bus06dL7pt5ajtpJ4NpxsRj3qNm2X8lnAaWQBCwK4
-	 +24G84KhF65eVKSpEPPYvoTjTkdHVFJZT5VD1viKkf4eLZShyLEeAgN6zIlE3L/eDW
-	 5C7B84ca2WwEHaMs2X6ojLqwLvke4gBEfz8volOlQtGeo3iMKt2COpPHaRzAIjO57q
-	 RfLYDo16ekEAsYe16Ajph3FetOkeKTACK4jIK3IaN0kv5Yu3KuB3fSu2+GXwzyUNnn
-	 gj/RGd4EnFtbEydBcMtC6hSrvqkaKhb4qxoT3LmFM85Y2U0g+9HDGJ2Jw6xdYhYtOJ
-	 UZ12IAG8dNfLQ==
-Message-ID: <8728195a-6861-4f90-9edb-d73fe03909a8@kernel.org>
-Date: Wed, 14 May 2025 09:53:22 +0200
+	b=qif7zy8gPlqHy4wGwXwNrpkOF2kkxZAnpAGCXXAAoS4Jhm2JVWxqhk1mFsPFRtCC4
+	 cvf1T2ZbxcZXW1Bb8r4bJo9hUl3XTbHNzcCYzvLBaLNZurU0D0xvcvmM4E0QO+3Ahs
+	 eQxh7aK/lASHm6LmP3Voy963DLjc5oCcxJ3uFdvwMFbqlq6Yzp7EQE/SbgAjGhdncI
+	 LN5eA5GXK0VUVEKZRwUw5ipoC5heU0a+TuGsHkvainyR5qAQ5gRxhtY4OQ8Af2pIxj
+	 IXBO7ftcQehqsFrXR+NlqOPP71LS10NYtNMzl9PbiYk0U1ECIyF8/3EVYBmtj5l6ua
+	 3NEFBzJLMSfUQ==
+Message-ID: <3b5806d4-bb65-4cc3-b5c9-3c6aa8eefdc4@kernel.org>
+Date: Wed, 14 May 2025 09:54:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: crypto: Convert axis,artpec6-crypto to DT
- schema
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lars Persson <lars.persson@axis.com>
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250513184057.3051854-1-robh@kernel.org>
+Subject: Re: [PATCH] memory: stm32_omm: Fix error handling in
+ stm32_omm_disable_child()
+To: Patrice Chotard <patrice.chotard@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Christophe Kerello <christophe.kerello@foss.st.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,18 +90,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250513184057.3051854-1-robh@kernel.org>
+In-Reply-To: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/05/2025 20:40, Rob Herring (Arm) wrote:
-> Convert the Axis Crypto engine binding to DT schema format. It's a
-> straight forward conversion.
+On 13/05/2025 17:34, Patrice Chotard wrote:
+> Fix stm32_omm_toggle_child_clock() return value test, we should exit
+> only on non zero value.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> Fixes: 8181d061dcff ("memory: Add STM32 Octo Memory Manager driver")
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please always give credits to people.
 
 Best regards,
 Krzysztof
