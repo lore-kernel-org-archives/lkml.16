@@ -1,301 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22BE22AE7E;
-	Wed, 14 May 2025 09:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F077922ACD3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215442; cv=none; b=h2X6FWiEHkcRlyzURrXmIQRpTppvVY60ZgAIc+Rw7qSLoK3mpkoB9WPZUteWylA36x7cX453QRNT7VMK8XfsX/dE8P23WJQ6dcQ4ngM0VyL4Q3sPDopna3cOXtQKOsqDpYrzKChgW9RbHgXYisTO+xt7D+he2O9+FSno7q081yQ=
+	t=1747215444; cv=none; b=LhB8yTIG30o61lEHy0eG/crKjIn7LRqvM7S1D58tR3EtRZ1AUlgAPlV53bu7ZI8f1FwMrUxyCIEpMLF9X3kQegaNj8rmd3EGYDg5G3UJDw2cboJIfcv7uHOj2pocDj0+B9b4LT/VjDylj4qOugulv6PWXto6NUl5LjmieF1lOnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215442; c=relaxed/simple;
-	bh=avleXqFdRiHvr/nv0iuJrbDTjUHK6V3QXiYtGVW87k4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VsRl9/jCJLjFxpyZQaK4YyGCYFs5EmE36otu5IGT5Ik3zeM+AqwGJ93mQY3Sme5l/+0PTUEGZWISjnXiw7mpQ+k6BgIJTnFdLtC8UvE97u5k2sAK147ZbbN6eehT0oILUTanI0hwOv6rHcgYFov9pmKQiLqiKJw+RWmJ4y9++sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpBpenUJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747215444; c=relaxed/simple;
+	bh=FDUjn+NWpP7XGTtjpLyR9+XZTLtGQfrqPf3Qpzm70e8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dq0lO5pqFOFDm30jwJuazz0YOzaLxX20/Ot1brNfoVGNTqd4uJs4gj1IjwgHi6IZB4ZNrgQ32Litt54fBq4iUV6QqlD0QFbciXAIjKPJzfiNRBWsdfwND0u+xVIlm+pIW6+BhXtIqbtICl84PkIfKwKpkJglKTM46xHsQnwgk68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=gWzR7qk2; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpBpenUJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0193C4CEEB;
-	Wed, 14 May 2025 09:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215442;
-	bh=avleXqFdRiHvr/nv0iuJrbDTjUHK6V3QXiYtGVW87k4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HpBpenUJfwFge/x8Pqj6VQG9zPiPfjmW9I+3aewe0J8ufh5Oy8t9z8i5D6DXzrVco
-	 25Hdku+wKOcb8AaMF/UVFwk3jC0VIDnN7RtUmYkQ1kQ7ReojJdAatHfzMj0JNs1lbU
-	 pNaKvpAxXi8reY1IsHoxn65gQGZZrGRSZ6pINFiJIebod1BRlzEs+54w0ePUTqwaVE
-	 a3VxZvR/FVtjwuDav1JUbeL3KUlo1W9Own5EnOcWEu0q1knabx8vPohF42tHxBQumx
-	 JrrKxeCNzNUAFej808sqGsnAwic6ZeFRSi57o+IepkdIH7TfGFWOMnCG/fb1xCY4FH
-	 xaIQZeP0H9EWQ==
-Date: Wed, 14 May 2025 15:07:09 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] firmware: qcom: scm: add support for object
- invocation
-Message-ID: <aCRkRTMFi65zBODh@sumit-X1>
-References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
- <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-5-6a143640a6cb@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="gWzR7qk2"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a1b8e8b2b2so3579855f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747215440; x=1747820240; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s4mPx04d8ciBVCzc7o5kQLaD0nCzpxnBqCMUyERgNAs=;
+        b=gWzR7qk2obyYq689JHbJPH7b9lctY8xyp64FFoldegbQ/RlbHSpIOSumhFjp1jKT42
+         aZm3hbceQvSSILXQWKOBcgxGgkG8XwTt2DTFlWrJyF1e2iOzWlQZ1XnGfKUrJ2gx1vzL
+         OKAaBNWEbnrHx6skyesnhspWHGcKy2E2k6mBoglLlicRnjVGJp7ZGRJoBMbUUDSkUDKN
+         xZrYDEsfmum5UoWWbfCyQzf9ip71xTA5gfCnJiuyfhndB5B5Lx83YN1KsNg6QfoKLH8U
+         QMFTNK6feop2+m9xqjJtcjU/G83SF0gxtCX1U3C54T9tSmi7TqsUAnPsnWWZAlNfQO0D
+         qBdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747215440; x=1747820240;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s4mPx04d8ciBVCzc7o5kQLaD0nCzpxnBqCMUyERgNAs=;
+        b=PnJUALGgYCuiFkhMKrSd0EezKMVfhpGS2P2Ai9m4eV5TvPewn2U2T6MAcmwsyBr4KL
+         yBA6R5cCmdI6dgXaHALVN1zWTm9YuaXlEIjGttpzH0XDDt2g/TXlvUVUpZg8vxLRDVV6
+         hl4wfmkjArWbIFJuitWBGtUQ/IyaHXPyzcajrBhxPKEcapNaWilUFY6xtav5SBr552sI
+         MySWsYHGCzgFo7TX/37BwlxrS2X13tsUAcMFqdXwFFVd6M/SnD+28mCIXBbo4cDhAv66
+         DaV5yHCRLrox+te5isxNdS+rYoCeQcjDO/U13vnzYnzPK0r+/akqaA9cvXYVCvCYxFAc
+         p5IA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrZSdpMomxa2oTyYosA6FlXGdlgkaYRo+n9BsqVsAl04aTrh4uM1wNnkiERcpX5HHxeWT2/8WZ3fDEPiU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPbC1zJ7bojvpcqRR9m10J7a9r0KpL/ML5Z7pgAoomtVoR/b52
+	Dyo3Mk+yjxejaExTzXQ823Y8ydwd+vSGSFn3wPkM5vHHz1qolpLD8mKYD1fyy8c=
+X-Gm-Gg: ASbGncu4dnaP4pyAWhFHNeWtxnT0TUYAhxJsseU4J7Gas4HCGvB7JHFsAXxOLcGJsg0
+	/YUsMN2qq9nvPQ1j5Iekak+ZUpgY1v4u8ctfOeyad32dOEMjbC9kkrg5qpgdkUR8Q15CBe659vG
+	9aygWOMHWxRkx7fXgBVXxzuopXnS16mFe0BIKPvljdTyEHcFCTgXUnz+72JY/paYLk2idlMTpgE
+	o0e+FqlhT9QvUFaOWSRqnsZckeRWtGqwzdcJclNqZRN1DjMEAW+jpVeI85xv3BSngdtyAFRfHy/
+	qYjY/WWpYgX3u6yxIhThgVGLkekARdW5vfQffMZKnnx22zfI2VPVTcsk9TU=
+X-Google-Smtp-Source: AGHT+IHnSc4wA94qOllSk7otA1xRX53jldMfyoziJ8FC+BVymjse5i0ZvJhyS6S2mppTOQu7gsAr1Q==
+X-Received: by 2002:a05:6000:2586:b0:3a0:8291:20d0 with SMTP id ffacd0b85a97d-3a3496c20afmr2168258f8f.29.1747215440172;
+        Wed, 14 May 2025 02:37:20 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ebec4sm19438238f8f.36.2025.05.14.02.37.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 02:37:19 -0700 (PDT)
+Message-ID: <84b88ab7-65f6-4c9a-a28b-620cc4d8d453@tuxon.dev>
+Date: Wed, 14 May 2025 12:37:17 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-5-6a143640a6cb@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+ mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
+ p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250512202550.GA1126561@bhelgaas>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250512202550.GA1126561@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Amir,
+Hi, Bjorn,
 
-On Mon, Apr 28, 2025 at 11:06:26PM -0700, Amirreza Zarrabi wrote:
-> Qualcomm TEE (QTEE) hosts Trusted Applications (TAs) and services in
-> the secure world, accessed via objects. A QTEE client can invoke these
-> objects to request services. Similarly, QTEE can request services from
-> the nonsecure world using objects exported to the secure world.
+On 12.05.2025 23:25, Bjorn Helgaas wrote:
+> On Mon, May 05, 2025 at 02:26:43PM +0300, Claudiu Beznea wrote:
+>> On 01.05.2025 23:12, Bjorn Helgaas wrote:
+>>> On Wed, Apr 30, 2025 at 01:32:33PM +0300, Claudiu wrote:
+>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>
+>>>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>>>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>>>> only as a root complex, with a single-lane (x1) configuration. The
+>>>> controller includes Type 1 configuration registers, as well as IP
+>>>> specific registers (called AXI registers) required for various adjustments.
+>>>>
+>>>> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
+>>>> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
+>>>> host driver can be reused for these variants with minimal adjustments.
+>> ...
 > 
-> Add low-level primitives to facilitate the invocation of objects hosted
-> in QTEE, as well as those hosted in the nonsecure world.
+>>>> +static void rzg3s_pcie_irqs_init(struct rzg3s_pcie_host *host)
+>>>
+>>> This and many of the following functions have names that don't
+>>> correspond to anything in other drivers, which makes it harder to
+>>> transfer knowledge between the drivers.  If you can find a pattern
+>>> somewhere to follow, it will make it easier for others to read the
+>>> driver.
+>>
+>> OK, I'll think about it. Do you have a recomentation?
 > 
-> If support for object invocation is available, the qcom_scm allocates
-> a dedicated child platform device. The driver for this device communicates
-> with QTEE using low-level primitives.
+> Not really.  Maybe pick a driver with recent activity.
 > 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
->  drivers/firmware/qcom/qcom_scm.c       | 128 +++++++++++++++++++++++++++++++++
->  drivers/firmware/qcom/qcom_scm.h       |   7 ++
->  include/linux/firmware/qcom/qcom_scm.h |  27 +++++++
->  3 files changed, 162 insertions(+)
+>>>> +static int rzg3s_pcie_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	void *devres_group_id;
+>>>> +	int ret;
+>>>> +
+>>>> +	devres_group_id = devres_open_group(dev, NULL, GFP_KERNEL);
+>>>> +	if (!devres_group_id)
+>>>> +		return -ENOMEM;
+>>>
+>>> What's the benefit of using devres_open_group()?  No other PCI
+>>> controller drivers use it.
+>>
+>> This driver uses devm_add_action_or_reset() to keep the error path simpler.
+>> Some of the action or reset registered handlers access the controller
+>> registers. Because the driver is attached to the platform bus and the
+>> dev_pm_domain_detach() is called right after driver remove [1] having devm
+>> action or reset handlers accessing controller register will later lead to
+>> hangs when the device_unbind_cleanup() -> devres_release_all() will be
+>> called on remove path. Other issue described in [2] may arries when doing
+>> continuous unbind/bind if the driver has runtime PM API (not case for this
+>> driver at the moment) that access directly controller registers.
+>>
+>> This is because the dev_pm_domain_detach() drops the clocks from PM domain
+>> and any subsequent pm_runtime_resume() (or similar function) call will lead
+>> to no runtime resume of the device.
+>>
+>> There is a solution proposed to this here [2] but it slowly progresses.
+>> Until this will be solved I chosed the appraoch of having the devres group
+>> opened here. If you agree with it, I had the intention to drop this call if
+>> there will be an accepted solution for it. If you are OK with going forward
+>> like this, for the moment, would to prefer me to add a comment about the
+>> reason the devres_open_group() is used here?
+>>
+>> This is not PCIe specific but platform bus specific. There are other
+>> affected drivers on this side (e.g. rzg2l-adc [3], rzg3s-thermal [4]).
+>>
+>> A similar solution as [2] is already used by the i2c subsystem.
 > 
-> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-> index fc4d67e4c4a6..bff1b0d3306e 100644
-> --- a/drivers/firmware/qcom/qcom_scm.c
-> +++ b/drivers/firmware/qcom/qcom_scm.c
-> @@ -2084,6 +2084,124 @@ static int qcom_scm_qseecom_init(struct qcom_scm *scm)
->  
->  #endif /* CONFIG_QCOM_QSEECOM */
->  
-> +#ifdef CONFIG_QCOMTEE
-> +
-> +/**
-> + * qcom_scm_qtee_invoke_smc() - Invoke a QTEE object.
-> + * @inbuf: start address of memory area used for inbound buffer.
-> + * @inbuf_size: size of the memory area used for inbound buffer.
-> + * @outbuf: start address of memory area used for outbound buffer.
-> + * @outbuf_size: size of the memory area used for outbound buffer.
-> + * @result: result of QTEE object invocation.
-> + * @response_type: response type returned by QTEE.
-> + *
-> + * @response_type determines how the contents of @inbuf and @outbuf
-> + * should be processed.
-> + *
-> + * Return: On success, return 0 or <0 on failure.
-> + */
-> +int qcom_scm_qtee_invoke_smc(phys_addr_t inbuf, size_t inbuf_size,
-> +			     phys_addr_t outbuf, size_t outbuf_size,
-> +			     u64 *result, u64 *response_type)
-> +{
-> +	struct qcom_scm_desc desc = {
-> +		.svc = QCOM_SCM_SVC_SMCINVOKE,
-> +		.cmd = QCOM_SCM_SMCINVOKE_INVOKE,
-> +		.owner = ARM_SMCCC_OWNER_TRUSTED_OS,
-> +		.args[0] = inbuf,
-> +		.args[1] = inbuf_size,
-> +		.args[2] = outbuf,
-> +		.args[3] = outbuf_size,
-> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_RW, QCOM_SCM_VAL,
-> +					 QCOM_SCM_RW, QCOM_SCM_VAL),
-> +	};
-> +	struct qcom_scm_res res;
-> +	int ret;
-> +
-> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*response_type = res.result[0];
-> +	*result = res.result[1];
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(qcom_scm_qtee_invoke_smc);
-> +
-> +/**
-> + * qcom_scm_qtee_callback_response() - Submit response for callback request.
-> + * @buf: start address of memory area used for outbound buffer.
-> + * @buf_size: size of the memory area used for outbound buffer.
-> + * @result: Result of QTEE object invocation.
-> + * @response_type: Response type returned by QTEE.
-> + *
-> + * @response_type determines how the contents of @buf should be processed.
-> + *
-> + * Return: On success, return 0 or <0 on failure.
-> + */
-> +int qcom_scm_qtee_callback_response(phys_addr_t buf, size_t buf_size,
-> +				    u64 *result, u64 *response_type)
-> +{
-> +	struct qcom_scm_desc desc = {
-> +		.svc = QCOM_SCM_SVC_SMCINVOKE,
-> +		.cmd = QCOM_SCM_SMCINVOKE_CB_RSP,
-> +		.owner = ARM_SMCCC_OWNER_TRUSTED_OS,
-> +		.args[0] = buf,
-> +		.args[1] = buf_size,
-> +		.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_RW, QCOM_SCM_VAL),
-> +	};
-> +	struct qcom_scm_res res;
-> +	int ret;
-> +
-> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*response_type = res.result[0];
-> +	*result = res.result[1];
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(qcom_scm_qtee_callback_response);
-> +
-> +static void qcom_scm_qtee_free(void *data)
-> +{
-> +	struct platform_device *qtee_dev = data;
-> +
-> +	platform_device_unregister(qtee_dev);
-> +}
-> +
-> +static int qcom_scm_qtee_init(struct qcom_scm *scm)
-> +{
-> +	struct platform_device *qtee_dev;
-> +	int ret;
-> +
+> OK.  Is there something unique about rzg3s that means it needs
+> devres_open_group(), while other PCI controller drivers do not?  Or
+> should the other drivers be using it too?  Maybe they have similar
+> latent defects that should be fixed.
 
-I am still unable to get the QCOMTEE driver to work on db845c. As I can
-see machine: "qcom,sdm845" is not supported for tzmem based on SHM
-brigde here: drivers/firmware/qcom/qcom_tzmem.c +81. I am still seeing
-following logs from userspace:
+Nothing particular for RZ/G3S. The issue is there for every drivers
+attached to platform bus (at least the ones that have their clocks as part
+of their PM domain as RZ/G3S is having) which are accessing IP registers
+though devres cleanup APIs or are accessing IP registers in the runtime PM
+APIs. This is because these accesses ends up to be done when the clocks
+cannot be enabled anymore though runtime resume calls (detailed explanation
+in [1]). This is the reason for which I am trying to impose it in the
+platform bus driver, but the discussion is slowly progressing and not all
+involved parties agrees with having the fix in the platform bus driver [1].
 
-# /mnt/unittest -d
-[test_print_diagnostics_info][31] test_get_client_env_object.
-[test_supplicant_release][65] test_supplicant_worker killed.
+[1]
+https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
 
-I think you should first check here for SHM bridge support. If available
-then only add a QTEE platform device.
-
--Sumit
-
-> +	/* Setup QTEE interface device. */
-> +	qtee_dev = platform_device_alloc("qcomtee", -1);
-> +	if (!qtee_dev)
-> +		return -ENOMEM;
-> +
-> +	qtee_dev->dev.parent = scm->dev;
-> +
-> +	ret = platform_device_add(qtee_dev);
-> +	if (ret) {
-> +		platform_device_put(qtee_dev);
-> +		return ret;
-> +	}
-> +
-> +	return devm_add_action_or_reset(scm->dev, qcom_scm_qtee_free, qtee_dev);
-> +}
-> +
-> +#else
-> +
-> +static int qcom_scm_qtee_init(struct qcom_scm *scm)
-> +{
-> +	return 0;
-> +}
-> +
-> +#endif /* CONFIG_QCOMTEE */
-> +
->  /**
->   * qcom_scm_is_available() - Checks if SCM is available
->   */
-> @@ -2319,6 +2437,16 @@ static int qcom_scm_probe(struct platform_device *pdev)
->  	ret = qcom_scm_qseecom_init(scm);
->  	WARN(ret < 0, "failed to initialize qseecom: %d\n", ret);
->  
-> +	/*
-> +	 * Initialize the QTEE object interface.
-> +	 *
-> +	 * This only represents the availability for QTEE object invocation
-> +	 * and callback support. On failure, ignore the result. Any subsystem
-> +	 * depending on it may fail if it tries to access this interface.
-> +	 */
-> +	ret = qcom_scm_qtee_init(scm);
-> +	WARN(ret < 0, "failed to initialize qcomtee: %d\n", ret);
-> +
->  	return 0;
->  
->  err:
-> diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
-> index 097369d38b84..a25202e99f7c 100644
-> --- a/drivers/firmware/qcom/qcom_scm.h
-> +++ b/drivers/firmware/qcom/qcom_scm.h
-> @@ -152,6 +152,13 @@ struct qcom_tzmem_pool *qcom_scm_get_tzmem_pool(void);
->  #define QCOM_SCM_SVC_GPU			0x28
->  #define QCOM_SCM_SVC_GPU_INIT_REGS		0x01
->  
-> +/* ARM_SMCCC_OWNER_TRUSTED_OS calls */
-> +
-> +#define QCOM_SCM_SVC_SMCINVOKE			0x06
-> +#define QCOM_SCM_SMCINVOKE_INVOKE_LEGACY	0x00
-> +#define QCOM_SCM_SMCINVOKE_CB_RSP		0x01
-> +#define QCOM_SCM_SMCINVOKE_INVOKE		0x02
-> +
->  /* common error codes */
->  #define QCOM_SCM_V2_EBUSY	-12
->  #define QCOM_SCM_ENOMEM		-5
-> diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-> index 983e1591bbba..bf5e64f6deba 100644
-> --- a/include/linux/firmware/qcom/qcom_scm.h
-> +++ b/include/linux/firmware/qcom/qcom_scm.h
-> @@ -176,4 +176,31 @@ static inline int qcom_scm_qseecom_app_send(u32 app_id,
->  
->  #endif /* CONFIG_QCOM_QSEECOM */
->  
-> +#ifdef CONFIG_QCOMTEE
-> +
-> +int qcom_scm_qtee_invoke_smc(phys_addr_t inbuf, size_t inbuf_size,
-> +			     phys_addr_t outbuf, size_t outbuf_size,
-> +			     u64 *result, u64 *response_type);
-> +int qcom_scm_qtee_callback_response(phys_addr_t buf, size_t buf_size,
-> +				    u64 *result, u64 *response_type);
-> +
-> +#else /* CONFIG_QCOMTEE */
-> +
-> +static inline int qcom_scm_qtee_invoke_smc(phys_addr_t inbuf, size_t inbuf_size,
-> +					   phys_addr_t outbuf,
-> +					   size_t outbuf_size, u64 *result,
-> +					   u64 *response_type)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int qcom_scm_qtee_callback_response(phys_addr_t buf,
-> +						  size_t buf_size, u64 *result,
-> +						  u64 *response_type)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +#endif /* CONFIG_QCOMTEE */
-> +
->  #endif
 > 
-> -- 
-> 2.34.1
-> 
-> 
+> If there's something unique about rzg3s, please add a brief comment
+> about what it is so we know why it needs devres_open_group().
+
+In the initial version I've added a comment in the documentation of struct
+rzg3s_pcie_host::devres_group_id. I'll update the place where this is call,
+too.
+
+Thank you for your review,
+Claudiu
