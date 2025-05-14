@@ -1,88 +1,380 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53871218AB9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE0E521129C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209399; cv=none; b=V7u3pYWQ7Vbf1hYBljmMuOLU2/1m5EzZEuZtRWb+9jey3S9wiQerPMeTRcH/v9EiUN0ew9MPM9jtUuB9bq7JMhA0rYiV8Iu62FaZa1Pze5UyYWL3h1+RBJoOyqF/MkAH+/rB3fi95G63lJmXnI/e6DhylSnJmNZeoUXyQy7gmMM=
+	t=1747209399; cv=none; b=RDznagG2+Er7tW0OSocIf1B2j8f2omVKZNEoI6oV5/rrtDlh8chIrod2Rb/MHWaZfhJFvv52tn8JiFvoh+ugMTyzUyLHhWKnC/P1EmlgyesjfjNzMqIgdPPFh5DZJVGnd8Jw1PuADjqenbMBDtYHsjWWoM1TAsxUxC+a1C4CseA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747209399; c=relaxed/simple;
-	bh=WSr9kxBydcy+eQdCxaSc/j0puaSCJFK65LGCie+xys4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k33CA2RXJfjLYRYyEGKBFE1wEcZ7QaoGZQjt7wdenmbVmkNTk2JAJGYGER543RGhd87/hYPhYK4A0opUIIiAeBJjzc8ib6D+qNBu2vrsDGvSXeIJ5kxNLXiZ5zj21wIF7EMAX5QXACBpsnACNa0IPnTr+/BvLxgKI0yCb04Oawc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zy5JG4lG4z4f3jt8
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:56:14 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 3A04E1A1BB4
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:56:34 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP1 (Coremail) with SMTP id cCh0CgDXOnuvTCRoTNWvMA--.62928S7;
-	Wed, 14 May 2025 15:56:34 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: hughd@google.com,
-	baolin.wang@linux.alibaba.com,
-	akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] mm/shmem: remove unneeded xa_is_value() check in shmem_unuse_swap_entries()
-Date: Thu, 15 May 2025 00:50:47 +0800
-Message-Id: <20250514165047.946884-6-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250514165047.946884-1-shikemeng@huaweicloud.com>
-References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
+	bh=mcMo7PQHI1ZDZEzm9Zv9hS0UhuE9ezIrT2xvL8UJLOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QPxm1TuqrcbXzHbrof971oJosmh/PhRswkejtsokVGsnn5uRiy6rq0VQIXkr6P+e5UTE4jpcAotDsprHcnjn/lMVHO55qLDUNNkvROoI7Uwog0vuD3Lg+PbvvLA+Rur++OnQ3F3qMtttSI2lRGAQpbGNHLxnkkbWlkwQRjgJndM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CFF41688;
+	Wed, 14 May 2025 00:56:23 -0700 (PDT)
+Received: from [10.162.43.24] (K4MQJ0H1H2.blr.arm.com [10.162.43.24])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA4EF3F673;
+	Wed, 14 May 2025 00:56:26 -0700 (PDT)
+Message-ID: <b083d377-ae92-486f-9c6b-5fe30bb88397@arm.com>
+Date: Wed, 14 May 2025 13:26:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] mm: make try_to_unmap_one support batched unmap for
+ anon large folios
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ David Hildenbrand <david@redhat.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
+ Kairui Song <kasong@tencent.com>, Chris Li <chrisl@kernel.org>,
+ Baoquan He <bhe@redhat.com>, Dan Schatzberg <schatzberg.dan@gmail.com>,
+ Kaixiong Yu <yukaixiong@huawei.com>, Fan Ni <fan.ni@samsung.com>,
+ Tangquan Zheng <zhengtangquan@oppo.com>
+References: <20250513084620.58231-1-21cnbao@gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250513084620.58231-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDXOnuvTCRoTNWvMA--.62928S7
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF1UGF45Aw1DJr13uw4kWFg_yoW3Gwb_ur
-	y8J3W8GrWrur4xXFsIkr4fXFZ0gr4v9ryDZ3WUtFyayryDtFn5Gr4kJr4ayry7uF4qga90
-	yrn7XrsIkrnrWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07ja
-	g4hUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-As only value entry will be added to fbatch in shmem_find_swap_entries(),
-there is no need to do xa_is_value() check in shmem_unuse_swap_entries().
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- mm/shmem.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index dfd2f730833c..f1d45fcff5e8 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1446,8 +1446,6 @@ static int shmem_unuse_swap_entries(struct inode *inode,
- 	for (i = 0; i < folio_batch_count(fbatch); i++) {
- 		struct folio *folio = fbatch->folios[i];
- 
--		if (!xa_is_value(folio))
--			continue;
- 		error = shmem_swapin_folio(inode, indices[i], &folio, SGP_CACHE,
- 					mapping_gfp_mask(mapping), NULL, NULL);
- 		if (error == 0) {
--- 
-2.30.0
+On 13/05/25 2:16 pm, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> My commit 354dffd29575c ("mm: support batched unmap for lazyfree large
+> folios during reclamation") introduced support for unmapping entire
+> lazyfree anonymous large folios at once, instead of one page at a time.
+> This patch extends that support to generic (non-lazyfree) anonymous
+> large folios.
+> 
+> Handling __folio_try_share_anon_rmap() and swap_duplicate() becomes
+> extremely complex—if not outright impractical—for non-exclusive
+> anonymous folios. As a result, this patch limits support to exclusive
+> large folios. Fortunately, most anonymous folios are exclusive in
+> practice, so this restriction should be acceptable in the majority of
+> cases.
+> 
+> SPARC is currently the only architecture that implements
+> arch_unmap_one(), which also needs to be batched for consistency.
+> However, this is not yet supported, so the platform is excluded for
+> now.
+> 
+> Using the following micro-benchmark to measure the time taken to perform
+> PAGEOUT on 256MB of 64KiB anonymous large folios.
+> 
+>   #define _GNU_SOURCE
+>   #include <stdio.h>
+>   #include <stdlib.h>
+>   #include <sys/mman.h>
+>   #include <string.h>
+>   #include <time.h>
+>   #include <unistd.h>
+>   #include <errno.h>
+> 
+>   #define SIZE_MB 256
+>   #define SIZE_BYTES (SIZE_MB * 1024 * 1024)
+> 
+>   int main() {
+>       void *addr = mmap(NULL, SIZE_BYTES, PROT_READ | PROT_WRITE,
+>                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>       if (addr == MAP_FAILED) {
+>           perror("mmap failed");
+>           return 1;
+>       }
+> 
+>       memset(addr, 0, SIZE_BYTES);
+> 
+>       struct timespec start, end;
+>       clock_gettime(CLOCK_MONOTONIC, &start);
+> 
+>       if (madvise(addr, SIZE_BYTES, MADV_PAGEOUT) != 0) {
+>           perror("madvise(MADV_PAGEOUT) failed");
+>           munmap(addr, SIZE_BYTES);
+>           return 1;
+>       }
+> 
+>       clock_gettime(CLOCK_MONOTONIC, &end);
+> 
+>       long duration_ns = (end.tv_sec - start.tv_sec) * 1e9 +
+>                          (end.tv_nsec - start.tv_nsec);
+>       printf("madvise(MADV_PAGEOUT) took %ld ns (%.3f ms)\n",
+>              duration_ns, duration_ns / 1e6);
+> 
+>       munmap(addr, SIZE_BYTES);
+>       return 0;
+>   }
+> 
+> w/o patch:
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1337334000 ns (1337.334 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1340471008 ns (1340.471 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1385718992 ns (1385.719 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1366070000 ns (1366.070 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1347834992 ns (1347.835 ms)
+> 
+> w/patch:
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 698178000 ns (698.178 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 708570000 ns (708.570 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 693884000 ns (693.884 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 693366000 ns (693.366 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 690790000 ns (690.790 ms)
+> 
+> We found that the time to reclaim this memory was reduced by half.
+> 
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Harry Yoo <harry.yoo@oracle.com>
+> Cc: Kairui Song <kasong@tencent.com>
+> Cc: Chris Li <chrisl@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
+> Cc: Kaixiong Yu <yukaixiong@huawei.com>
+> Cc: Fan Ni <fan.ni@samsung.com>
+> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>   include/linux/swap.h |  4 +--
+>   mm/memory.c          |  2 +-
+>   mm/rmap.c            | 79 +++++++++++++++++++++++++++++---------------
+>   mm/swapfile.c        | 10 ++++--
+>   4 files changed, 62 insertions(+), 33 deletions(-)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index bc0e1c275fc0..8fbb8ce72016 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -479,7 +479,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry);
+>   extern swp_entry_t get_swap_page_of_type(int);
+>   extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+>   extern void swap_shmem_alloc(swp_entry_t, int);
+> -extern int swap_duplicate(swp_entry_t);
+> +extern int swap_duplicate(swp_entry_t, int nr);
+
+Missed writing the parameter name here.
+
+>   extern int swapcache_prepare(swp_entry_t entry, int nr);
+>   extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+>   extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> @@ -546,7 +546,7 @@ static inline void swap_shmem_alloc(swp_entry_t swp, int nr)
+>   {
+>   }
+>   
+> -static inline int swap_duplicate(swp_entry_t swp)
+> +static inline int swap_duplicate(swp_entry_t swp, int nr)
+>   {
+>   	return 0;
+>   }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 99af83434e7c..5a7e4c0e89c7 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -803,7 +803,7 @@ copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>   	swp_entry_t entry = pte_to_swp_entry(orig_pte);
+>   
+>   	if (likely(!non_swap_entry(entry))) {
+> -		if (swap_duplicate(entry) < 0)
+> +		if (swap_duplicate(entry, 1) < 0)
+>   			return -EIO;
+>   
+>   		/* make sure dst_mm is on swapoff's mmlist. */
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index fb63d9256f09..2607e02a0960 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1845,23 +1845,42 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+>   #endif
+>   }
+>   
+> -/* We support batch unmapping of PTEs for lazyfree large folios */
+> +/*
+> + * We support batch unmapping of PTEs for lazyfree or exclusive anon large
+> + * folios
+> + */
+>   static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> -			struct folio *folio, pte_t *ptep)
+> +		struct folio *folio, pte_t *ptep, bool exclusive)
+>   {
+>   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>   	int max_nr = folio_nr_pages(folio);
+> +#ifndef __HAVE_ARCH_UNMAP_ONE
+> +	bool no_arch_unmap = true;
+> +#else
+> +	bool no_arch_unmap = false;
+> +#endif
+>   	pte_t pte = ptep_get(ptep);
+> +	int mapped_nr;
+>   
+> -	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+> +	if (!folio_test_anon(folio))
+>   		return false;
+>   	if (pte_unused(pte))
+>   		return false;
+>   	if (pte_pfn(pte) != folio_pfn(folio))
+>   		return false;
+>   
+> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+> -			       NULL, NULL) == max_nr;
+> +	mapped_nr = folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+> +			NULL, NULL);
+> +	if (mapped_nr != max_nr)
+> +		return false;
+> +	if (!folio_test_swapbacked(folio))
+> +		return true;
+> +
+> +	/*
+> +	 * The large folio is fully mapped and its mapcount is the same as its
+> +	 * number of pages, it must be exclusive.
+> +	 */
+> +	return no_arch_unmap && exclusive && folio_mapcount(folio) == max_nr;
+>   }
+>   
+>   /*
+> @@ -2025,7 +2044,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   				folio_mark_dirty(folio);
+>   		} else if (likely(pte_present(pteval))) {
+>   			if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
+> -			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
+> +			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte,
+> +			    anon_exclusive))
+>   				nr_pages = folio_nr_pages(folio);
+>   			end_addr = address + nr_pages * PAGE_SIZE;
+>   			flush_cache_range(vma, address, end_addr);
+> @@ -2141,8 +2161,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   				goto discard;
+>   			}
+>   
+> -			if (swap_duplicate(entry) < 0) {
+> -				set_pte_at(mm, address, pvmw.pte, pteval);
+> +			if (swap_duplicate(entry, nr_pages) < 0) {
+> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
+>   				goto walk_abort;
+>   			}
+>   
+> @@ -2159,9 +2179,10 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   
+>   			/* See folio_try_share_anon_rmap(): clear PTE first. */
+>   			if (anon_exclusive &&
+> -			    folio_try_share_anon_rmap_pte(folio, subpage)) {
+> -				swap_free(entry);
+> -				set_pte_at(mm, address, pvmw.pte, pteval);
+> +			    __folio_try_share_anon_rmap(folio, subpage, nr_pages,
+> +							RMAP_LEVEL_PTE)) {
+> +				swap_free_nr(entry, nr_pages);
+> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
+>   				goto walk_abort;
+>   			}
+>   			if (list_empty(&mm->mmlist)) {
+> @@ -2170,23 +2191,27 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   					list_add(&mm->mmlist, &init_mm.mmlist);
+>   				spin_unlock(&mmlist_lock);
+>   			}
+> -			dec_mm_counter(mm, MM_ANONPAGES);
+> -			inc_mm_counter(mm, MM_SWAPENTS);
+> -			swp_pte = swp_entry_to_pte(entry);
+> -			if (anon_exclusive)
+> -				swp_pte = pte_swp_mkexclusive(swp_pte);
+> -			if (likely(pte_present(pteval))) {
+> -				if (pte_soft_dirty(pteval))
+> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> -				if (pte_uffd_wp(pteval))
+> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> -			} else {
+> -				if (pte_swp_soft_dirty(pteval))
+> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> -				if (pte_swp_uffd_wp(pteval))
+> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +			add_mm_counter(mm, MM_ANONPAGES, -nr_pages);
+> +			add_mm_counter(mm, MM_SWAPENTS, nr_pages);
+> +			/* TODO: let set_ptes() support swp_offset advance */
+> +			for (pte_t *ptep = pvmw.pte; address < end_addr;
+> +			     entry.val++, address += PAGE_SIZE, ptep++) {
+> +				swp_pte = swp_entry_to_pte(entry);
+> +				if (anon_exclusive)
+> +					swp_pte = pte_swp_mkexclusive(swp_pte);
+> +				if (likely(pte_present(pteval))) {
+> +					if (pte_soft_dirty(pteval))
+> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> +					if (pte_uffd_wp(pteval))
+> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +				} else {
+> +					if (pte_swp_soft_dirty(pteval))
+> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> +					if (pte_swp_uffd_wp(pteval))
+> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +				}
+> +				set_pte_at(mm, address, ptep, swp_pte);
+>   			}
+> -			set_pte_at(mm, address, pvmw.pte, swp_pte);
+>   		} else {
+>   			/*
+>   			 * This is a locked file-backed folio,
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 026090bf3efe..189e3474ffc6 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3550,13 +3550,17 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage, int nr)
+>   
+>   	offset = swp_offset(entry);
+>   	VM_WARN_ON(nr > SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER);
+> -	VM_WARN_ON(usage == 1 && nr > 1);
+>   	ci = lock_cluster(si, offset);
+>   
+>   	err = 0;
+>   	for (i = 0; i < nr; i++) {
+>   		count = si->swap_map[offset + i];
+>   
+> +		/*
+> +		 * We only support batched swap_duplicate() for unmapping
+> +		 * exclusive large folios where count should be zero
+> +		 */
+> +		VM_WARN_ON(usage == 1 && nr > 1 && swap_count(count));
+>   		/*
+>   		 * swapin_readahead() doesn't check if a swap entry is valid, so the
+>   		 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
+> @@ -3626,11 +3630,11 @@ void swap_shmem_alloc(swp_entry_t entry, int nr)
+>    * if __swap_duplicate() fails for another reason (-EINVAL or -ENOENT), which
+>    * might occur if a page table entry has got corrupted.
+>    */
+> -int swap_duplicate(swp_entry_t entry)
+> +int swap_duplicate(swp_entry_t entry, int nr)
+>   {
+>   	int err = 0;
+>   
+> -	while (!err && __swap_duplicate(entry, 1, 1) == -ENOMEM)
+> +	while (!err && __swap_duplicate(entry, 1, nr) == -ENOMEM)
+>   		err = add_swap_count_continuation(entry, GFP_ATOMIC);
+>   	return err;
+>   }
 
