@@ -1,143 +1,73 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE81A1AAE01;
-	Wed, 14 May 2025 14:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747233904; cv=pass; b=jPGXjTBqetpMNYFPYueIQ3eVE0M9+bIuxVx12XM+BGCFLK1wd0oOpOq5Sw/KsBxaDO8Di72zrq+pdQy1bp4zsBC/SHDEwnhAZeLB730TYNaj8oRgnt9YFeYcUMc+k8h+gpOgEVw5Ci/egnWNv5xY/H5oK0NdB7yqxO+b5qUMMc0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747233904; c=relaxed/simple;
-	bh=G9Lr9h/qzKBSsvh36KkaPVUOYavbtRCU+dcCcXojJ7M=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=YiNjgI7ieEuPbSQ7NMTlNNBbgViyJSIZ6Nc2uK8y1rH+rkvEHr6O3H2kVH7oL0IBuhLZSLvHT/1NUdmVnLWywpqpcgIdKUu2aCRAQLBQqXae9bOnDtpVLLx0SMnxcHWotEChL6kYj3gCdEsWmwxBlITRCfdGqPGuZ81y+m6F2m0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=k3eLODiR; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF99C1624EA;
+	Wed, 14 May 2025 14:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747234001; cv=none; b=eXbu7OAR8Smq6U4OCP5+y5KO+QSQzyhgzk3hIb6lvs06QDIxRz+6A7KBc6g0CJlf/v1okkNEodCrI/eEGq+2lmcTmhFACuzkUaTsxTWluwXQTGHnnIky3wZP1oQrSKc/d1rgk08N5W3Ytf0oGuaLH7HpxmxNegaLpAExf0FuX5g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747234001; c=relaxed/simple;
+	bh=SGDkX1d+uo3yITc3PwRHnv+hcDSCIY8Ie9roBIm0GuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GM7ltUFiwqNN8kAN4MXu8JwXuCSICD6ohOOpDj+zX/yqhFl6F1SmVhL30j1Xkj/QD3sd0JGShLal6RLyFN9fet7o/Z07nvbqbQjS6vq9KT9upXl86hlW/lX9H2PuOOxEUnrbVECKxmmaPXJ8F4t4t9xc3mSnM5cjRTGrxkVpdtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x3zqkEVF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="k3eLODiR"
-ARC-Seal: i=1; a=rsa-sha256; t=1747233878; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TcNwq0VOstVJcv753zkvRm42a/UqrRnVZJKoqYTkDLvBXNLCwubcaR+LeExq3NZIxCCRt0Q/7uGm0bfhR+urd9qs1Y92CBAyeTFPIk2uuiGTla8Uqu2VcavtzE08h71QSa4xb+ycKU6Xt0LT0eK7i7SJVqRxp9FR7ZFXL0VDdlY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747233878; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=IuVj56x7vLncLy3xZykI9+zK4SpK9TOpJL2h9C3nusA=; 
-	b=aleo8XW2N+gnGc69GOeUJQFvYf3PFeKCp63elC3ItxcXyPDIX0pjknSQT5IOERb2q5sOMRo4tPh5BZmeg/7CVXuqPXLy0JkkA1vSPBYoPCrXPo+R68hfGrOMhkQcS6pf3g4ZW2FI9LD+6saLL7Qn0oBnXkOU72HZSIWzR04etNI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747233878;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=IuVj56x7vLncLy3xZykI9+zK4SpK9TOpJL2h9C3nusA=;
-	b=k3eLODiRSkzeyuwio/QtYjni4sNeR55sYwm/GKoZlAyBBYfw+fMfux0Fn4vsN44G
-	7U2t++MrW0t6ZabgqMJ23A5mo6ptrF1MV3RAPn/PYo7ILMMYLIFLqjUhwqp/1+3LS3D
-	9gm2O+F2B6DNjScgKEl8T8oykRKUgH+eBr+mWddE=
-Received: by mx.zohomail.com with SMTPS id 1747233876983440.3664498519365;
-	Wed, 14 May 2025 07:44:36 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x3zqkEVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B82EEC4CEE3;
+	Wed, 14 May 2025 14:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747234000;
+	bh=SGDkX1d+uo3yITc3PwRHnv+hcDSCIY8Ie9roBIm0GuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x3zqkEVFJb3Fa92jCKKpRkUPVfhalgRi+Mv5c5OOD2XgdXlbUyuuW740l+XZ5CYPy
+	 GpIUnB+86c1SXj5NnQPaB3WLGtmaIyR2ry8h9asAiInA/FFbi28QKCEZ01FpA41ooz
+	 V8VbtBXLBP4DhcvODNVz3yY6OBRLhGNQm1pnJshA=
+Date: Wed, 14 May 2025 16:44:51 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "jay.chen" <shawn2000100@gmail.com>
+Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: xhci: Set avg_trb_len = 8 for EP0 during Address
+ Device Command
+Message-ID: <2025051444-among-posh-afcb@gregkh>
+References: <20250514134011.16285-1-shawn2000100@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAH5fLggSET--eSW=rA_hw2jAyAO6_fa82gm0X3qeanXEvmZscA@mail.gmail.com>
-Date: Wed, 14 May 2025 11:44:22 -0300
-Cc: Boqun Feng <boqun.feng@gmail.com>,
- ojeda@kernel.org,
- alex.gaynor@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- a.hindborg@kernel.org,
- tmgross@umich.edu,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3753EBEB-8538-403A-BEFC-768390EB2D9E@collabora.com>
-References: <20250122163932.46697-1-daniel.almeida@collabora.com>
- <Z5HtHVMipAdNvOcj@boqun-archlinux>
- <CAH5fLggSET--eSW=rA_hw2jAyAO6_fa82gm0X3qeanXEvmZscA@mail.gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514134011.16285-1-shawn2000100@gmail.com>
 
-Hi Alice,
+On Wed, May 14, 2025 at 09:40:08PM +0800, jay.chen wrote:
+> According to the xHCI 1.2 spec (Section 6.2.3, p.454), the Average
+> TRB Length (avg_trb_len) for control endpoints should be set to 8.
+> 
+> Currently, during the Address Device Command, EP0's avg_trb_len remains 0,
+> which may cause some xHCI hardware to reject the Input Context, resulting
+> in device enumeration failures. In extreme cases, using a zero avg_trb_len
+> in calculations may lead to division-by-zero errors and unexpected system
+> crashes.
+> 
+> This patch sets avg_trb_len to 8 for EP0 in
+> xhci_setup_addressable_virt_dev(), ensuring compliance with the spec
+> and improving compatibility across various host controller implementations.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220033
+> Signed-off-by: jay.chen <shawn2000100@gmail.com>
 
-> On 23 Jan 2025, at 06:07, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> On Thu, Jan 23, 2025 at 8:18=E2=80=AFAM Boqun Feng =
-<boqun.feng@gmail.com> wrote:
->>=20
->> On Wed, Jan 22, 2025 at 01:39:30PM -0300, Daniel Almeida wrote:
->>> Add support for registering IRQ handlers in Rust.
->>>=20
->>> IRQ handlers are extensively used in drivers when some peripheral =
-wants to
->>> obtain the CPU attention. Registering a handler will make the system =
-invoke the
->>> passed-in function whenever the chosen IRQ line is triggered.
->>>=20
->>> Both regular and threaded IRQ handlers are supported through a =
-Handler (or
->>> ThreadedHandler) trait that is meant to be implemented by a type =
-that:
->>>=20
->>> a) provides a function to be run by the system when the IRQ fires =
-and,
->>>=20
->>> b) holds the shared data (i.e.: `T`) between process and IRQ =
-contexts.
->>>=20
->>> The requirement that T is Sync derives from the fact that handlers =
-might run
->>> concurrently with other processes executing the same driver, =
-creating the
->>> potential for data races.
->>>=20
->>> Ideally, some interior mutability must be in place if T is to be =
-mutated. This
->>> should usually be done through the in-flight SpinLockIrq type.
->>>=20
->>> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
->>> ---
->>>=20
->>> Changes from v1:
->>>=20
->>> - Added Co-developed-by tag to account for the work that Alice did =
-in order to
->>> figure out how to do this without Opaque<T> (Thanks!)
->>> - Removed Opaque<T> in favor of plain T
->>=20
->> Hmmm...
->>=20
->> [...]
->>=20
->>> +#[pin_data(PinnedDrop)]
->>> +pub struct Registration<T: Handler> {
->>> +    irq: u32,
->>> +    #[pin]
->>> +    handler: T,
->>=20
->> I think you still need to make `handler` as `!Unpin` because =
-compilers
->> can assume a `&mut T` from a `Pin<&mut Registration>`, am I missing
->> something here?
->=20
-> The current version operates under the assumption that PhantomPinned
-> is enough. But I'm happy to add Aliased here.
->=20
-> Alice
+Please use your name, not your email alias.
 
-Aliased? What is this? I can=E2=80=99t find that trait or type anywhere.
+And as you are now using a gmail account, please set the "From:" line at
+the top of the patch properly as is documented.  Please work with others
+at your company that know how to do all of this if you have questions.
 
-=E2=80=94 Daniel
+Also, this is a v2 patch, so always document what changed to warrant a
+new version.
 
+thanks,
 
+greg k-h
