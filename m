@@ -1,107 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A294E3C00;
-	Wed, 14 May 2025 01:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A18A3C00;
+	Wed, 14 May 2025 01:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747186150; cv=none; b=aGUFu/+8DfGgjANzurCqiUGmxGtfaJBw0Og+G2bkswBljy6Mgwms9ugy7Uy3bDfwg/AkexriWYKE06NBPGa5kLRu7uRNX+MCWtWa4B+omqhtNfvPNAptiWUaQfpSWtBiYThfytj1Od50xMFxhu3bchUppOVZwpUbfi09TDHLLHc=
+	t=1747186155; cv=none; b=ZEu1elu9OyxwpHpSmcHEbrYmtEC6bAFKSOaxh27c+hw7lv1Qr9MwLIyqRVRSBRhLnEIP93UyyU+falaa7fsMw0fsCj5XW+X3IlosmcakWUK1xtVTh4AIj2o6Jct/aEyJYtfJrSKbMWNi5nShQEO5ki84ikMD5VKNmxL80E7q0Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747186150; c=relaxed/simple;
-	bh=eO7mKv1YT1/mJYncjN+haZ+QIoFNpinoMkZuKwUqknY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SkNZIHcoXVggYpN9asDPHBZ6TD7w4BkmbA0Nbyk5IiPMeYZqMVGb1HLue8W6Wyo7R9ImBIap8rrNEdoDPI+2i3jKIuTAIXs6icZSeUoEAyT7/YaORleAebIznKdSLkGd/M1657PoCuwapL7QIYmSXkkZ3U0daW9tJUvwiBZyYbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bE6eQ9nB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747186155; c=relaxed/simple;
+	bh=tIxAuEYnljGjkk9cCz3K7jL4A7gXJkGqZfQOtkiSMU0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=H0TNxig8MT+qZViR3rGDB59D27UMzqsSayFrD+sppn475o7F7HXtBLLU584fDD3KlK9a32U2F1DejNZMePzjQR6nnp0ODdQ0TDrsObX1EzLNXJ4XkQrjXRO6o5XYhS9jnWO+nuJHgdMdw+vk29/dRHOmbeau5C5ECh7KEPv/whI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QX5wsP0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bE6eQ9nB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2100AC4CEE4;
-	Wed, 14 May 2025 01:29:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QX5wsP0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9229C4CEE4;
+	Wed, 14 May 2025 01:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747186149;
-	bh=eO7mKv1YT1/mJYncjN+haZ+QIoFNpinoMkZuKwUqknY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bE6eQ9nBPoZt7V6l9fIIem1TS4bvnJP5gdi/DY7Fgy1sZpWP7aNwkO8jaDuhqatBM
-	 pKMLW61eHY30FWqsmYfYtuZxnLSgqzX7QJwPq6JxRg66u7mvBFih99Egrrx6qIRKKi
-	 MkXDdVM3idPGjCMT5jQa737aXmBx7C1TP+lzwTSPexc2LJ62GfWXiJ4PQECwKrTfa+
-	 nune5gCN71vpLVwS6Ws7aCjdzTXLl41abdMZKGPGBm19VcLsObPWlMYel/QSA4aEhq
-	 4rakbPFDjQiXkHvyf0U4TAscHhUHWcSSfegKb25u4X1agO3AAmnOtB3wW/MO0oYWci
-	 EVpOBB35PLHBg==
-Date: Wed, 14 May 2025 09:29:01 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] usb: cdnsp: Fix issue with detecting USB 3.2 speed
-Message-ID: <20250514012901.GB623775@nchen-desktop>
-References: <20250513065010.476366-1-pawell@cadence.com>
- <PH7PR07MB95387AD98EDCA695FECE52BADD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
+	s=k20201202; t=1747186154;
+	bh=tIxAuEYnljGjkk9cCz3K7jL4A7gXJkGqZfQOtkiSMU0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QX5wsP0EU+Bv1NtlmbwOfFo5kkJSBrZwYnw8x3v7I1qXjA9BjORuMJQvo9qF6zgbY
+	 rG2LJLibSlBN4VRSUJz9FF8b1Ne6NApwn2q3gCGsci3ryMBWGXOkOp8pmYvjW076dD
+	 JfimgpS17foisa6rIVoMbdr6X20BRKc1EygcYtqYPXyVE0F7enAKbh5KDxdfc5M8CL
+	 ek46l97RUI0XArPBd21mFeagOuWwJnczGcMr8clRrdAZSKdaV76NYyOKTiYEv6BhWW
+	 FB0kGQLBXukLJlFjw6J2ygoH+/24hROdZ5Ct/H08haNoplKRyY8L8nMHaQptfsj6+y
+	 tr4JrRpd0kIqg==
+Date: Wed, 14 May 2025 10:29:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250514102908.6a431966ef5b0f5f197bdb48@kernel.org>
+In-Reply-To: <CAL+tcoAGCdowY14QL7HEqbW3ewAJi0OXpWNVkbqq9cM6xRmLkg@mail.gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-3-kerneljasonxing@gmail.com>
+	<20250513185810.3d57dfe2a0c05784ddf8f0a9@kernel.org>
+	<CAL+tcoCThLOL1AKPamh2fpeDjYEqvEber0Eddc2ZVxi6VAYJkQ@mail.gmail.com>
+	<20250513222235.33fd1817970cd601b18e92cf@kernel.org>
+	<CAL+tcoAGCdowY14QL7HEqbW3ewAJi0OXpWNVkbqq9cM6xRmLkg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB95387AD98EDCA695FECE52BADD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 25-05-13 06:54:03, Pawel Laszczak wrote:
-> Patch adds support for detecting SuperSpeedPlus Gen1 x2
-> and SuperSpeedPlus Gen2 x2 speed.
-> 
-> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+On Tue, 13 May 2025 21:46:25 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
+> > > > > +
+> > > > > +     if (flags & RELAY_DUMP_BUF_FULL)
+> > > > > +             offset += snprintf(buf, sizeof(unsigned int), "%u", full_counter);
+> > > > > +
+> > > > > +     snprintf(buf + offset, 1, "\n");
+> > > >
+> > > > Is there any reason to return the value as string?
+> > > > If it returns a digit value and the caller makes it a string,
+> > > > it could be more flexible for other use cases.
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > I will remove the above one as you pointed out in the next revision.
+> > > And it seems unnecessary to add '\0' at the end of the buffer like
+> > > "*buf = '\0';"?
+> >
+> > Sorry, I think you missed my point. I meant it should be
+> >
+> > /* Return the number of fullfilled buffer in the channel */
+> > size_t relay_full(struct rchan *chan);
+> >
+> > And keep the snprintf() in the blk_dropped_read() because that function
+> > is responsible for formatting the output.
+> 
+> Oh, sorry, it's not what I want because (please see patch [4/5] [1])
+> relay_dump() works to print various statistics of the buffer. In this
+> patch, 'full' counter is the first one.
+> 
+> [1]: https://lore.kernel.org/all/20250512024935.64704-5-kerneljasonxing@gmail.com/
 
-Peter
-> ---
->  drivers/usb/cdns3/cdnsp-gadget.c | 3 ++-
->  drivers/usb/cdns3/cdnsp-gadget.h | 4 ++++
->  2 files changed, 6 insertions(+), 1 deletion(-)
+Yes, that's why I asked you to make it just returning raw value.
+The string formatting of those values is blk_dropped_read()s business
+(because it is a 'read' callback), not for relayfs.
+
+For example, other relayfs user wants to summarize the values or
+calculate the percentage form that value. Also, we don't need to
+bother to check the buffer size etc, because blk_dropped_read()
+knows that.
+
 > 
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
-> index 52431ea41669..893b55823261 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.c
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
-> @@ -29,7 +29,8 @@
->  unsigned int cdnsp_port_speed(unsigned int port_status)
->  {
->  	/*Detect gadget speed based on PORTSC register*/
-> -	if (DEV_SUPERSPEEDPLUS(port_status))
-> +	if (DEV_SUPERSPEEDPLUS(port_status) ||
-> +	    DEV_SSP_GEN1x2(port_status) || DEV_SSP_GEN2x2(port_status))
->  		return USB_SPEED_SUPER_PLUS;
->  	else if (DEV_SUPERSPEED(port_status))
->  		return USB_SPEED_SUPER;
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
-> index 12534be52f39..2afa3e558f85 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.h
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
-> @@ -285,11 +285,15 @@ struct cdnsp_port_regs {
->  #define XDEV_HS			(0x3 << 10)
->  #define XDEV_SS			(0x4 << 10)
->  #define XDEV_SSP		(0x5 << 10)
-> +#define XDEV_SSP1x2		(0x6 << 10)
-> +#define XDEV_SSP2x2		(0x7 << 10)
->  #define DEV_UNDEFSPEED(p)	(((p) & DEV_SPEED_MASK) == (0x0 << 10))
->  #define DEV_FULLSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_FS)
->  #define DEV_HIGHSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_HS)
->  #define DEV_SUPERSPEED(p)	(((p) & DEV_SPEED_MASK) == XDEV_SS)
->  #define DEV_SUPERSPEEDPLUS(p)	(((p) & DEV_SPEED_MASK) == XDEV_SSP)
-> +#define DEV_SSP_GEN1x2(p)	(((p) & DEV_SPEED_MASK) == XDEV_SSP1x2)
-> +#define DEV_SSP_GEN2x2(p)	(((p) & DEV_SPEED_MASK) == XDEV_SSP2x2)
->  #define DEV_SUPERSPEED_ANY(p)	(((p) & DEV_SPEED_MASK) >= XDEV_SS)
->  #define DEV_PORT_SPEED(p)	(((p) >> 10) & 0x0f)
->  /* Port Link State Write Strobe - set this when changing link state */
-> -- 
-> 2.43.0
+> >
+> > static ssize_t blk_dropped_read(struct file *filp, char __user *buffer,
+> >                                 size_t count, loff_t *ppos)
+> > {
+> >         struct blk_trace *bt = filp->private_data;
+> >         char buf[16];
+> >
+> >         snprintf(buf, sizeof(buf), "%zu\n", relay_full(bt->rchan));
+> >
+> >         return simple_read_from_buffer(buffer, count, ppos, buf, strlen(buf));
+> > }
+> >
+> > But the question is that what blk_subbuf_start_callback() counts
+> > is really equal to what the relay_full() counts, because it seems
+> > relay_full() just returns the current status of the channel, but
+> > bt->dropped is the accumlated number of dropping events.
+> >
+> > This means that if the client (reader) reads the subbufs the
+> > number of full subbufs will be decreased, but the number of
+> > dropped event does not change.
 > 
+> At least in this series, I didn't give the 'full' counter any chance
+> to decrement, which means it's compatible with blktrace, unless
+> __relay_reset() is triggered :)
+
+Ah, OK. I missed what [1/5] does. I agree that this does the
+same thing.
+
+> 
+> While discussing with you on this point, I suddenly recalled that in
+> some network drivers, they implemented 'wake' and 'stop' as a pair to
+> know what the current status of a certain queue is. I think I can add
+> a similar thing to the buffer about 1) how many times are the buffer
+> full, 2) how many times does the buffer get rid of being full.
+
+Sounds nice.
+
+Thank you,
+
+> 
+> Thanks,
+> Jason
+> 
+> >
+> > Can you recheck it?
+> >
+> > Thank you,
+> >
+> > >
+> > > While at it, I'm thinking if I can change the return value of
+> > > relay_dump() to "how many bytes do we actually write into the buffer"?
+> > > Does it sound better?
+> > >
+> > > Thanks,
+> > > Jason
+> > >
+> > > >
+> > > > Thank you,
+> > > >
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(relay_dump);
+> > > > > +
+> > > > >  /**
+> > > > >   *   relay_file_open - open file op for relay files
+> > > > >   *   @inode: the inode
+> > > > > --
+> > > > > 2.43.5
+> > > > >
+> > > >
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 -- 
-
-Best regards,
-Peter
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
