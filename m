@@ -1,186 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D6B183CA6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E9B183CA6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747243058; cv=none; b=DrtGvYRuANI4Ir6UPXgsQAai33a+FIE2xWTjw9ng+Id8jpssnkQ3XIeyeO0bXDQS0KA40rtc4leqi+mgWTJ2yC/Nd4TOZ8cjU4y8N2XUDJa9iaueT5wrLNkWhpgtAJx0kRl8EE0p3xHyhVcm88hE2acLYMh86hRRboYmmyUg92Y=
+	t=1747243111; cv=none; b=Qqyet3IQwW6+UeWUwJsi6J9yYlL0IhpMm+sVo1BgV1sGnEGnN6hxeG+X9NN+IEKXvt6SxN+XXcdh2DzopXTYEN0oBGPNTERf+JA3nxAcD5SEtP+ffc3WQB4b2GRhF6TyQ7+2nLgnc5LffgTCXddhrvj99GHJrXKdfQilTE/TuWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747243058; c=relaxed/simple;
-	bh=FDhdtyxCTap+04aKrlvv+t4yDmBNbsQsV62cqYnEcWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O9ILbhnNyh2Ky6xlhGlAoTlA056dV0DxNd4E7YNtVKDiE7ROAp7FFfn+rH3KTZrbp0BMdiE+gXt2L9/xVQvC00r+58NvutiCehgbDNY7bkDb+i1gaE2drl64+Xe462L8GxXXV+0Ax7WYwp9CFf2peeaWt4tPON6tyEaVceAci7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxVmr/ft; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxVmr/ft"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB840C116D0
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747243057;
-	bh=FDhdtyxCTap+04aKrlvv+t4yDmBNbsQsV62cqYnEcWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GxVmr/ftS93uarBMKzJWceF4i9WcC7bKkCJh8F6Nhk59cFukYASZ88mOuaxpNBYKj
-	 xD1zOe+mXSuBIXQjSjIg8ZUWQRWkLb2GQWLUbD0qmprod5Qoc5C4FmNwZty0XAV8rv
-	 LoHWK9XhMs5fGj79eLOUvSiiiLzqeZmpUSkiwBv1Bj7kbhniF7c5+k5A2JBXOyS+Q7
-	 YvqzPZYjq0KOnnqvvCiyUyKEfiLf0qqAyUGACDO7AIQwCYWB6rApq9vWnkJ7Ysf5L9
-	 URg/w2CjDBbpfqq3YcE+ivuaZsXk/L6ulnw9KwYBHASfYyCiAYu+yeUtuns0F3NQq8
-	 YKIQlC8ao2elg==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbed53b421so149885a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:17:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXyHRhEDkPovhyF4VEQ70B5C5Y/YMjrK/Y9M/WOjYja+hWln3Luxlu4rx9JWoBAauoPoS/elIg0Cc2jWKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN+ww8mMxD5ESvhnMQFqs5BKRpcJjOxMyZWwYoa4yGJ8AVouza
-	2l7SVMR7RQuEzAMDc9LAh7hUi1Sdlfbgd24jiluaRExAqhdQnUVh4ZldpJAatV89kDI/VmhE0Vf
-	XwA8+r+w8o6v/NYU9VD7MjSOT9UI+nBso00Oz
-X-Google-Smtp-Source: AGHT+IEOVd6ylZgHdYkHjW+kgS0JvvQJmlojiJ55yxngXk0tGlu2ur8qbDKzXcFMtelFrk1TuWFTRE31C+Kg7x92aJA=
-X-Received: by 2002:a05:6402:238f:b0:5ff:b606:930b with SMTP id
- 4fb4d7f45d1cf-5ffb6069372mr1068438a12.12.1747243056124; Wed, 14 May 2025
- 10:17:36 -0700 (PDT)
+	s=arc-20240116; t=1747243111; c=relaxed/simple;
+	bh=950u9k10sGSQ6JHvizfXzyLXwASdjZUis65ZscnM0XU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Zpbl66vQ0FYDuHMWaKG8neugK0KN5GL/f8mub8LQxo6l6fOhd9prHgqKsvHuNqmsxyfKju7W6gfUcUkjvhWHJR+8ib0r4wrWIGX8cmATWkQn+bmiqolOCpl/eF5Bevmh3n8O5gfCJKydi1dlhyCAg8Wvr8dvx+KaJw/sa55TraI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3db6f98ddf7so251295ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:18:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747243109; x=1747847909;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VTKwZzlkl/upe8s+kS5zSf2fAUZ81UUbirQjiUx/qCM=;
+        b=H4gNcBahFKp19NPOInI7E3XZev6pI9veyZaAi46lIjGyGIHqwnd9hRXmPxDMTu/hCP
+         uAgQkKJT7MH2lkByMjoYf06ANSQxRz+wMjA7S3laA3khv4hZ1Hbt9fug2WLeQjj9osCe
+         NiUYaeF3uRS5XdosrtAU4v3q790NkHz8A9s9nkaXdU/0qHyu7cgINEkaPMUfHNaLpzob
+         3x1szoLNmcdB/anVy2/pl53tNoeXnSiJFMoXV1MtJmR8lpDfjRtaAWFtuAFrYQZ5TJFx
+         k24PX4wPJ6G/E1bjm0ueZOdxoJmfZuh2sfsfiiTT5gGTwZ4crhCHoa4T4wegdBpfmGae
+         YwnA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0m11KLH6m/7f0h0tF2uVyWJ+4Dmdb+lDCC8pKBb3QgsoaVqv0rWWzkFCpAtGGasZ2vEqfPicIq3FPEIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ3WEH6Rrvg/ggPrRio+ecUquobXaAT69hrCMV5NdktSfCbjmH
+	gflGzhacwLx7kK2QwggQUoyC6EiCdhDgXH2sIooUT+1BA5DO4yqo4nY97lZ7WjaHWnJXkZbeqi4
+	ZxzJEQW/ppcfekPmnu5zptsrcVKpAQ+QNPMZh89gFhETHP1vJYEGLFb8=
+X-Google-Smtp-Source: AGHT+IE/xoceW5JkXxGnNDL6ugE+2kMibT8CAUQEjcqiEwWKmIYmFWGmvh6/E6/VjSCisbq3jwFJPt0RuvkYQZbdVK8zY/fthU9r
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com> <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
-In-Reply-To: <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Wed, 14 May 2025 19:17:25 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
-X-Gm-Features: AX0GCFsMtrdPzfS33E-5H3itP3YDxJJoQNEUvaPpI7wNO1nxLfvV3IZXpPdMWT8
-Message-ID: <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Paul Moore <paul@paul-moore.com>, bboscaccy@linux.microsoft.com, bpf@vger.kernel.org, 
-	code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, dhowells@redhat.com, 
-	gnoack@google.com, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	jmorris@namei.org, jstancek@redhat.com, justinstitt@google.com, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, llvm@lists.linux.dev, 
-	masahiroy@kernel.org, mic@digikod.net, morbo@google.com, nathan@kernel.org, 
-	neal@gompa.dev, nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu, 
-	nkapron@google.com, roberto.sassu@huawei.com, serge@hallyn.com, 
-	shuah@kernel.org, teknoraver@meta.com, xiyou.wangcong@gmail.com, 
-	kysrinivasan@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>
+X-Received: by 2002:a05:6e02:1d97:b0:3d9:3e8e:60da with SMTP id
+ e9e14a558f8ab-3db6f7f4164mr48323125ab.17.1747243108927; Wed, 14 May 2025
+ 10:18:28 -0700 (PDT)
+Date: Wed, 14 May 2025 10:18:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6824d064.a70a0220.3e9d8.001a.GAE@google.com>
+Subject: [syzbot] [net?] KASAN: use-after-free Read in __linkwatch_run_queue
+From: syzbot <syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 5:39=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Sun, 2025-05-11 at 04:01 +0200, KP Singh wrote:
-> [...]
-> > >
-> > For this specific BPF case, we will directly sign a composite of the
-> > first message and the hash of the second. Let H_meta =3D H(M_metadata).
-> > The block to be signed is effectively:
-> >
-> >     B_signed =3D I_loader || H_meta
-> >
-> > The signature generated is Sig(B_signed).
-> >
-> > The process then follows a similar pattern to the Alice and Bob
-> > model,
-> > where the kernel (Bob) verifies I_loader and H_meta using the
-> > signature. Then, the trusted I_loader is responsible for verifying
-> > M_metadata against the trusted H_meta.
-> >
-> > From an implementation standpoint:
-> >
-> > # Build
-> >
-> > bpftool (or some other tool in the user's build environment) knows
-> > about the metadata (M_metadata) and the loader program (I_loader). It
-> > first calculates H_meta =3D H(M_metadata). Then it constructs the
-> > object
-> > to be signed and computes the signature:
-> >
-> >     Sig(I_loader || H_meta)
-> >
-> > # Loader
-> >
-> > bpftool generates the loader program. The initial instructions of
-> > this loader program are designed to verify the SHA256 hash of the
-> > metadata (M_metadata) that will be passed in a map. These
-> > instructions effectively embed the precomputed H_meta as immediate
-> > values.
-> >
-> >     ld_imm64 r1, const_ptr_to_map // insn[0].src_reg =3D=3D
-> > BPF_PSEUDO_MAP_IDX
-> >     r2 =3D *(u64 *)(r1 + 0);
-> >     ld_imm64 r3, sha256_of_map_part1 // constant precomputed by
-> > bpftool (part of H_meta)
-> >     if r2 !=3D r3 goto out;
-> >
-> >     r2 =3D *(u64 *)(r1 + 8);
-> >     ld_imm64 r3, sha256_of_map_part2 // (part of H_meta)
-> >     if r2 !=3D r3 goto out;
-> >
-> >     r2 =3D *(u64 *)(r1 + 16);
-> >     ld_imm64 r3, sha256_of_map_part3 // (part of H_meta)
-> >     if r2 !=3D r3 goto out;
-> >
-> >     r2 =3D *(u64 *)(r1 + 24);
-> >     ld_imm64 r3, sha256_of_map_part4 // (part of H_meta)
-> >     if r2 !=3D r3 goto out;
-> >     ...
-> >
-> > This implicitly makes the payload equivalent to the signed block
-> > (B_signed)
-> >
-> >     I_loader || H_meta
-> >
-> > bpftool then generates the signature of this I_loader payload (which
-> > now contains the expected H_meta) using a key (system or user) with
-> > new flags that work in combination with bpftool -L
->
-> Could I just push back a bit on this.  The theory of hash chains (which
-> I've cut to shorten) is about pure data structures.  The reason for
-> that is that the entire hash chain is supposed to be easily
-> independently verifiable in any environment because anything can
-> compute the hashes of the blocks and links.  This independent
-> verification of the chain is key to formally proving hash chains to be
-> correct.  In your proposal we lose the easy verifiability because the
-> link hash is embedded in the ebpf loader program which has to be
-> disassembled to do the extraction of the hash and verify the loader is
-> actually checking it.
+Hello,
 
-I am not sure I understand your concern. This is something that can
-easily be built into tooling / annotations.
+syzbot found the following issue on:
 
-    bpftool -S -v <verification_key> <loader> <metadata>
+HEAD commit:    9f35e33144ae x86/its: Fix build errors when CONFIG_MODULES=n
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=107f56f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c9b33a466dfee330
+dashboard link: https://syzkaller.appspot.com/bug?extid=1ec2f6a450f0b54af8c8
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Could you explain what's the use-case for "easy verifiability".
+Unfortunately, I don't have any reproducer for this issue yet.
 
->
-> I was looking at ways we could use a pure hash chain (i.e. signature
-> over loader and real map hash) and it does strike me that the above
-> ebpf hash verification code is pretty invariant and easy to construct,
-> so it could run as a separate BPF fragment that then jumps to the real
-> loader.  In that case, it could be constructed on the fly in a trusted
-> environment, like the kernel, from the link hash in the signature and
-> the signature could just be Sig(loader || map hash) which can then be
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/136b6fd9c02c/disk-9f35e331.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1db87e48df97/vmlinux-9f35e331.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9588fd34964c/bzImage-9f35e331.xz
 
-The design I proposed does the same thing:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com
 
-    Sig(loader || H_metadata)
+==================================================================
+BUG: KASAN: use-after-free in netdev_need_ops_lock include/net/netdev_lock.h:30 [inline]
+BUG: KASAN: use-after-free in netdev_unlock_ops include/net/netdev_lock.h:47 [inline]
+BUG: KASAN: use-after-free in __linkwatch_run_queue+0x7d8/0x8a0 net/core/link_watch.c:245
+Read of size 8 at addr ffff88807a5ecb88 by task kworker/u8:9/6112
 
-metadata is actually the data (programs, context etc) that's passed in
-the map. The verification just happens in the loader program and the
-loader || H_metadata is implemented elegantly to avoid any separate
-payloads.
+CPU: 0 UID: 0 PID: 6112 Comm: kworker/u8:9 Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: events_unbound linkwatch_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ netdev_need_ops_lock include/net/netdev_lock.h:30 [inline]
+ netdev_unlock_ops include/net/netdev_lock.h:47 [inline]
+ __linkwatch_run_queue+0x7d8/0x8a0 net/core/link_watch.c:245
+ linkwatch_event+0x8f/0xc0 net/core/link_watch.c:304
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
-> easily verified without having to disassemble ebpf code.  So we get the
-> formal provability benefits of using a real hash chain while still
-> keeping your verification in BPF.
->
-> Regards,
->
-> James
->
->
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88807a5efc00 pfn:0x7a5ec
+flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000000000 ffffea0001aedf08 ffff8880b853fa00 0000000000000000
+raw: ffff88807a5efc00 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as freed
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0x446dc0(GFP_KERNEL_ACCOUNT|__GFP_ZERO|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP), pid 13363, tgid 13353 (syz.0.2160), ts 637147906784, free_ts 639281975158
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
+ prep_new_page mm/page_alloc.c:1726 [inline]
+ get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
+ __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
+ __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:5004
+ __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+ ___kmalloc_large_node+0x82/0x1e0 mm/slub.c:4271
+ __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4299
+ __do_kmalloc_node mm/slub.c:4315 [inline]
+ __kvmalloc_node_noprof.cold+0xb/0x65 mm/slub.c:5012
+ alloc_netdev_mqs+0xd2/0x1570 net/core/dev.c:11604
+ tun_set_iff drivers/net/tun.c:2752 [inline]
+ __tun_chr_ioctl+0x1964/0x4740 drivers/net/tun.c:3048
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 13353 tgid 13353 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
+ __folio_put+0x329/0x450 mm/swap.c:112
+ device_release+0xa4/0x240 drivers/base/core.c:2568
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e7/0x5a0 lib/kobject.c:737
+ netdev_run_todo+0x7e9/0x1320 net/core/dev.c:11305
+ tun_detach drivers/net/tun.c:639 [inline]
+ tun_chr_close+0xea/0x230 drivers/net/tun.c:3390
+ __fput+0x402/0xb70 fs/file_table.c:465
+ task_work_run+0x150/0x240 kernel/task_work.c:227
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88807a5eca80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88807a5ecb00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff88807a5ecb80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                      ^
+ ffff88807a5ecc00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff88807a5ecc80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
