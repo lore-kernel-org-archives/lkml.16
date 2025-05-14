@@ -1,164 +1,136 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A331171C9;
-	Wed, 14 May 2025 07:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207749; cv=fail; b=nw9PT19m4WOTiFd0m6Vn2PtT1LunxqAOTINOh19ILeBmL3ZpDQFumT/soNJUemZDcQrOgmTC1urY/NtrssrXjDTXw2eGB16I8UPlMveRv97kr+b00mEKU3/evTSjw0B+SGzBMndri2W8GIBY3RudPzuTwEmPA1uhkcm3aBGB/8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207749; c=relaxed/simple;
-	bh=YI4ybmFHjASN3S73Xtv5NVN8wS5pzee8pJBG1aRSZw0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUXNCG4CBb7M1dh9k2lgVo7VD1St6BR4ZwYGMwJ3WryFxO5COw4nffXMczBEWl/Sjqij6pi/Mg/NAQ2WfNcbbMgG4FWp2orB8hFrr16ZSPlkGJjdBgU4WPph7uwf//Onyv1roH/MKaQLF5Ip+fDbHoSDcYNgbamBYhGNSb5nzTk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wpngRpWG; arc=fail smtp.client-ip=40.107.220.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A7520FAB9
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207757; cv=none; b=uguqrQkVvteAMB7uZwPzIR4OBAT00QFVlXxOElN2hJWsrpYQ3GfcpGLKJBCiMnvPr94OxDw99BxfFkr5Z65fqE7p+jzgk/w4yDzzc2V+/LGR5/LRYZ0Mf/7JpYRU/0aRQWPnT32335+ujOgC8J2X9r+w5F+r0bmWKJZXQv5jhNI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207757; c=relaxed/simple;
+	bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qhZF2UqhW+z2zYlWuIvx8MHpJXLeAhdTFs4B2RsvQ9fwI3ND/IjHJoJF37rALezHiCV3LHqj1wp09c6Ic0t/5HEHFmGmAVotPoEg2FUsaq11nXlQs21D+tTunpxKQl78EMKnBWd0OGimZs5qK/gFi9rH7v1PYuTEAp4vbd+IflQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kgh4HGDO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wpngRpWG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g9X98xZtMtyq09EQmC+HPocyyu6JkyY2xd+HXLl/P0tV67Uchs66sBjACy8odHSofERJj+6uN16FeSuBXU3dj/KPdpN2VIK2t4lGMYkwqHm4TxVTi0Am3Nhlc93RdgmYH9HKJJBQTiF+dtz5DpVB3hwKHAUcO0z8wr4ePb7FJ83+EM9QO5nqcfK4q5F/MLaujYYYtSTgjJAbJ5upLy8jfFYfoyfhgo47jNoPV9RDPypidAFNITRUZGouad2ZG0poDnbuEmaX7Yvq1bB/LZx0PEKB/bCFHxeZ0WX9t1fDFCQO8zoQ+AXHe3RKz/QWtYYi99pBAS0h1kXMGwqVlRonvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vTewJzkSdDXXs2fluGD1o9G9+v/uoXatK/D4bq1ahMc=;
- b=QqpakUD7DO5zgcI724K4wRDR2m0KRUSw8UiOUJu9UHYZhtLtb+o1jxEGQnn59NUt5HQetPmVwwRMBwRWh4ycYPEHA+22Acc140RN/sbh495nbPVGn/va+bOwr7GBWWmekii3foar6TV7ZPuGOQOOVSmwXpUWzqt3IZSwnyfVmMcZKAno1d7PpKd1X0GgGmQk6/ESSE8GCr8JtZcwV2PcKAdhFNaT1utAurMQ1GfAn57PHsS4d9yjz8R5MsdRQQ2h27ccHwE9xHzyJOCveXrlYM0Cu4IQH4yUPzOo9uc+4/DqfmxmuN8ZoNgECNcrKkidCJoLHM7YHFS8vmKceIpGLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vTewJzkSdDXXs2fluGD1o9G9+v/uoXatK/D4bq1ahMc=;
- b=wpngRpWG4ThF0ukvRs70VgMZ3i4cQbLRz8w9EIOKGCb6h9dOx+jlAXXQ9h/22T4MR++wzzVFdxHV8ZrFD1R/7zlgIcvVsOIXCpMU/IucwTIOBnPqEI3IMc59mTKOjCu2wFgOq/oxx70iaOi8EdvjaTwv/oAAmi67+IFaHPsr3K8=
-Received: from CH5P223CA0019.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:1f3::6)
- by SA5PPFCAFD069B8.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8e1) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 14 May
- 2025 07:28:59 +0000
-Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
- (2603:10b6:610:1f3:cafe::ed) by CH5P223CA0019.outlook.office365.com
- (2603:10b6:610:1f3::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.16 via Frontend Transport; Wed,
- 14 May 2025 07:28:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:28:59 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 14 May 2025 02:28:50 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v6 26/32] x86/sev: Enable NMI support for Secure AVIC
-Date: Wed, 14 May 2025 12:47:57 +0530
-Message-ID: <20250514071803.209166-27-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
-References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kgh4HGDO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747207754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
+	b=Kgh4HGDOqszb19RmdeCgIrbvN7pIHMv3Q79AFAGO604RHXomqVOyev4EWqnbnLC5mAM1cO
+	jopO0AoqWIhdSqqAMUJhf5IGA8dR1Dld3OF2B74NWybHz8Ne9EQ/NeNe3+y2hvz837xj2+
+	G6ZB55yD+4uDowohzP0HMH8dh1G7QmM=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-518-Cor8vXoyM2Gp-bzRHEOH7w-1; Wed, 14 May 2025 03:29:13 -0400
+X-MC-Unique: Cor8vXoyM2Gp-bzRHEOH7w-1
+X-Mimecast-MFC-AGG-ID: Cor8vXoyM2Gp-bzRHEOH7w_1747207752
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so6985456a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:29:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747207752; x=1747812552;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
+        b=XA2HwJaN1G+7CuWxf/cIW+oQ3tMDzTB0HyHx/MNZB4LVR16wNhFqgUuaco0HpavlNO
+         m6r1/Dzg7na4kioX2F5h0FNIaiYqL3K3F9P5xoPWcIHDiV9aYARRmLUMaluU/Qu7NDjv
+         P5Nk0rLqLwoEX/5xsNcSQpn92RGRLVDW6mLekrmGs6utG7PEViP+jI43CWCXtBKRLHoz
+         BXy7To3tSjVYI0wFR4FGjpcVcaN9WmG/+Ceiv4xdDs6OHhA4+tq1vPuH93hie7vfWtkB
+         8Wu2ujngsLIg23VWn31nRZVU5VLJRcFw5HErGs9xsybD8R528tCZUh1IlSV0nwNUe679
+         PFAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRP8ROAYj3GopsGe6Z06kqi6BiuOibsYTRlzZqUUT7+qmN/OXlkzEnqt+nrKR7TasuEcan9sCfo7YQGqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypXDf3qcRVrnwZSFT7r/wbI6kyH7m/7kkgKAD9RvuXqzPtcZ2+
+	/77nshcjxJj9JGz2uNjn4NDm/kXApZovp9r7ZbSDD7uXNrCxh4ggrTHulA8ZwmKHf/qQsZoE/VD
+	PDJVEoiFsUq2GsAITdYsAEaCsi4Q/i6BCzL8NysMOsVYSRGlgCpZLvMAvPGYhNlRBVB5OM/EYly
+	4MUEgK2RCEKyfyLk3aGEyjS/DJm+NlFjXuNKuM
+X-Gm-Gg: ASbGncu/L5VNOgnPOUYQfQwuAC0aXfjmuk5+2HRFpoKAvrlZ5zNHj5RPRb9/+Qf79Zk
+	7OGfyVvCaRx6Q59nhX7PqofuA6nk852T4mT6GPbBzozFTdcpFIiDVr6ZwMxo9ghGIV4/ZMZ6eMs
+	bpZ3ewPUFLO3J0oiUfPc284IvPkw==
+X-Received: by 2002:a17:90b:58ef:b0:2ff:64c3:3bd9 with SMTP id 98e67ed59e1d1-30e2e625f04mr2998506a91.23.1747207752300;
+        Wed, 14 May 2025 00:29:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErZhOIhtd3hI4AKZUHoezz+kYbi9KNoNaaRDKtt38OZ6UI/QdvxrBZC4rk+6QrFDTtDOghmI+q8BJtDQ8PcGA=
+X-Received: by 2002:a17:90b:58ef:b0:2ff:64c3:3bd9 with SMTP id
+ 98e67ed59e1d1-30e2e625f04mr2998476a91.23.1747207751899; Wed, 14 May 2025
+ 00:29:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|SA5PPFCAFD069B8:EE_
-X-MS-Office365-Filtering-Correlation-Id: 373d0d19-4421-459f-e3ee-08dd92b8fe44
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k3//MN5wJvcGH0P3zKhJzRfulGINiERxPRXkHBiowg3/SNI8Bc3qA9eSc3Kn?=
- =?us-ascii?Q?wmCfzQYexToryTM28lbSM2QDJE5uzGwx1pUXBsiNHz2h1+xMud8uUl+oeBxc?=
- =?us-ascii?Q?TBLyQWFrPnWhZ6zePpuhiUXDHbizZgFi3MvNzabSwY7z+Z0P8MV5+8o892WP?=
- =?us-ascii?Q?FcxwKN/htsQQ70uQCJJztQn0RiekdQ79Jwt8gGZllfldmUfRuqPS5Y/dt9+k?=
- =?us-ascii?Q?8w0doP7dg/STEYnZncNZTnNICClBD2VexFfKbI3hO7RbaX8jlpciV9D4rS+f?=
- =?us-ascii?Q?X71E9xUM/EKlsmpPP2NrJUlcOYqSPdRtRiiAuZPIMluAbX8XMUhC3AHGSHSc?=
- =?us-ascii?Q?6V8gyo1BqwWgT9+FNk+P7udQZRh0ML1y2XiD71w/y7IYuMNrotR/pSA77wGv?=
- =?us-ascii?Q?KfRDnjMV1hPkTlZZYeo5YRBz70KXPeSCFb0ad3/YsOIMKDM2bQDMYIHtW2YC?=
- =?us-ascii?Q?MMbQbE3CSqsnUPx/U0964bMn1TwC7pGVs0F7cDor9BEqj/SzFG+pzKqfEjTi?=
- =?us-ascii?Q?rLliuifCkHQbUNrdVqB2CTtQspQ7QbV7EOyMTqu4o/1YcgC3oH5N+bMrvfaC?=
- =?us-ascii?Q?nMNWjmOIFCbtANXKhhqepvNd94jThlYFJJXwkYb7TPQrxOkd9Lwm2b1awcap?=
- =?us-ascii?Q?0qPeoxNZlVYggYoCjdV22dAXfe2RflnXdLYGCTp0GAChRf2QY4nIzYvX2x/5?=
- =?us-ascii?Q?+RFj9qg1sBtklz3izL1kAan2YXpTloS6dpHjX9qiTXA4FdZSw/wNXhnfDNx4?=
- =?us-ascii?Q?cSKzmL0sUXU+ZQsbUnFAiVbMxg2KoR4uRa8sM231hM1uf/tSz8WmWf+v2zaV?=
- =?us-ascii?Q?gsR38QzW8wl3/lej02AULPR1sGKd5J7yk1JHJpBM5oP9kW8lJ5B3PbGHeeKD?=
- =?us-ascii?Q?2OjtkFgFCztpULk25zayqehwdWhav24v+/CcPOhwD5vV5mX2HKA02dlgx37p?=
- =?us-ascii?Q?ieAp7ACrvI4tJ7JNQV1Zgo7G7ziAyORKV/q1qdCw0D4OljDuB6DT7nUt5KA2?=
- =?us-ascii?Q?PgjFSvhFMfv8mGoBof6rSAMFSPNgIC7JgXjC/xRUZ2+wb2MKBB47GemIx6J0?=
- =?us-ascii?Q?WT0lctPBqeCahg4mPivRrsUdRV9aXhg3xDiRITW2RL1zCH/Bq3Djm6A/TPZO?=
- =?us-ascii?Q?OkXwgQR8tk2NvYVSRSKDP+rq2I0y76zLmhPIz+IAFW6De5xfgrEgAFTAXsYr?=
- =?us-ascii?Q?A8/E+UNEp6ebdLlJSwq0rdJqBJF3YIQI+ailjoukOMVHrsWkgUAWz+LEUJL6?=
- =?us-ascii?Q?jdMtgj+z75zrsb9iII9I9Gx/LrQexYfcuhwuOF5ZBUUThX5cp0j1LG2RVEO4?=
- =?us-ascii?Q?+t9RInYqI8XqWs5EplA8YacsoXOnoK2t8mM0kjWEIX0xIk9upMpGT3YcWMrd?=
- =?us-ascii?Q?WDA6ttWS1t7nAt8irKb0SaYAVyGdn5nKJTdlpre63P6TB2WcP2AWee46BZi8?=
- =?us-ascii?Q?lnb3KXVakIszaVKun25vLfCLi7d311/nlCAK6OQeG3tEBgz1COF80hN/5k1V?=
- =?us-ascii?Q?kaBODmVXv3G6AWRKJ+Dx45oH4vtAoO5sIT3W?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:28:59.3495
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 373d0d19-4421-459f-e3ee-08dd92b8fe44
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD76.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFCAFD069B8
+References: <20250514065513.463941-1-lukas.bulwahn@redhat.com> <a0c3a812-8a24-481c-9354-4475ac71d68b@flourine.local>
+In-Reply-To: <a0c3a812-8a24-481c-9354-4475ac71d68b@flourine.local>
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+Date: Wed, 14 May 2025 09:28:59 +0200
+X-Gm-Features: AX0GCFvvwL92M4FGbZOgsDbYBNn-v06sRogm_7vOCHV7R_FGPG5EmYFbXDI9rTs
+Message-ID: <CAOc5a3M2Nvv0oREzWN_kzOJqt4s+0zzmqWdG4tM58RJSWAb4BQ@mail.gmail.com>
+Subject: Re: [PATCH] block: Remove obsolete configs BLK_MQ_{PCI,VIRTIO}
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kishon Vijay Abraham I <kvijayab@amd.com>
+On Wed, May 14, 2025 at 9:10=E2=80=AFAM Daniel Wagner <dwagner@suse.de> wro=
+te:
+>
+> On Wed, May 14, 2025 at 08:55:13AM +0200, Lukas Bulwahn wrote:
+> > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> >
+> > Commit 9bc1e897a821 ("blk-mq: remove unused queue mapping helpers") mak=
+es
+> > the two config options, BLK_MQ_PCI and BLK_MQ_VIRTIO, have no remaining
+> > effect.
+> >
+> > Remove the two obsolete config options.
+>
+> A quick grep revealed that there is at least a test config still in the
+> tree which uses BLK_MQ_VIRTIO:
+>
+> drivers/gpu/drm/ci/x86_64.config
+> 108:CONFIG_BLK_MQ_VIRTIO=3Dy
+>
+> Not sure how this is supposed to be handled.
+>
 
-Now that support to send NMI IPI and support to inject NMI from
-the hypervisor has been added, set V_NMI_ENABLE in VINTR_CTRL
-field of VMSA to enable NMI for Secure AVIC guests.
+I noticed that as well, but that is really yet another clean up.
 
-Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v5:
+Generally, these config files in the kernel tree are ill designed and
+terribly maintained.
 
- - No change.
+They are ill designed, because when they are created, they are dropped
+as complete kernel configurations, whereas they intend to set a
+specific fragment of options, and have the rest as default. That
+creates needless large files, distracts from what is important in
+those files, and creates some record of the default of various options
+at this random point of time where the config was created, which now
+makes the clean-up pretty complicated.
 
- arch/x86/coco/sev/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+They are terribly maintained, i.e., the command
+./scripts/checkkconfigsymbols.py | grep "configs" -B 1, will show all
+the references to config options in those config files, for config
+options that do not exist anymore in the current tree. In the current
+linux-next tree, there are over 200 references to non-existing config
+options from such config files. At this point, I do not worry about
+adding one more such reference in one of those files.
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 4250337aa882..d2a752a0eeb8 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -860,7 +860,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	vmsa->x87_fcw		= AP_INIT_X87_FCW_DEFAULT;
- 
- 	if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
--		vmsa->vintr_ctrl	|= V_GIF_MASK;
-+		vmsa->vintr_ctrl	|= (V_GIF_MASK | V_NMI_ENABLE_MASK);
- 
- 	/* SVME must be set. */
- 	vmsa->efer		= EFER_SVME;
--- 
-2.34.1
+This whole proper clean-up of those files is a larger project, though;
+maybe for some later day.
+
+Lukas
+
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+>
+> Reviewed-by: Daniel Wagner <dwagner@suse.de>
+>
 
