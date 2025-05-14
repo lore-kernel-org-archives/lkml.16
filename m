@@ -1,129 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13D01A5B82
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F791B87CF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234266; cv=none; b=ZVdvhr8+mcqW5mWgzVybqzKGNMbKc32VPUvl4TyKP2Bas4vKsTrvhPDB2o6ElqkqYfBak5GRrNHdspNp0XfWDapv/vUDxTSr+E986hpu8nxF4tWxqreEAFNnF+6M3fyEUXIOtT1t79PcEfH/EPVVYa7YH9ZJgFQsk8v5ZBJuR0k=
+	t=1747234278; cv=none; b=i35T7urIw1QXECCL4eGkupSH1PsjDpi+pNJxi1jy6AAx63qlCccL+f8uenyyLx4lAQ5IGFM0vS6lMX8P04MoOCByw3c8kupyrUQabiOv/R3t6kc/PE+igPRjw8cOefSumiW+uicWDuxs1S712y8yEzEFfAKtf2OfMuTJC4Jfz5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234266; c=relaxed/simple;
-	bh=54ct1BtcUapGHVq4wWvZ4zz+MIrUcIPkwqhDJ5i7gwo=;
+	s=arc-20240116; t=1747234278; c=relaxed/simple;
+	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZyZnDVO1Ga5ztipCyuakGLZtyrnkBGRgo6NhUBawA4obbai+FLOAhMH0l5nkhuA9wIZ7kn+f7ivHJ7FK0W1S67hPfLQNBiz/1oJl/EBH+8X9sXhpbzsRpavyIyBBsXep5EMEHNwD26ClRKRrrLOE5S8GKhwN3vU07hGTZZkhNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ue5b80FW; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=rLY8Nm6fZnb9L+lcq1TZ3WUsifChDm+RwQh+Y36+VTJrcr5R1bKAlMZZri1ogDqxZBCF81GEuqwq5fc/nfZ932rNmtYWmsO8HDx9W6bs3G8yGTtaTSNUuXu7pIguG3AkN1A033pWFNvk44yXOQzoQB/osXANDDCGYoja9fh3x0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFONZlvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ue5b80FW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47CCBC4CEE3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:51:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFONZlvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34E5C4AF09
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234266;
-	bh=54ct1BtcUapGHVq4wWvZ4zz+MIrUcIPkwqhDJ5i7gwo=;
+	s=k20201202; t=1747234278;
+	bh=O7WNQrDY8/JOx9yDYkECk6fBdY8kCGDAHOxbGZh8bYQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ue5b80FW1wgF10U3Zifd1J6tz1VUWPPruy+wYjhUfUFL7wgmvz9Ve7usUqmllE13D
-	 XqnpNS7aG/OZDNydIG+NM8uXNlx9EPKVuY8sCe0ZuW8GJQH8mIGTOtDUvOnHijxZtg
-	 UMvgYXv02ahv6dztYnj3H3Vz1BQoatO+E+WQeCDmEY8FIA7aur1JPUrxHC+k0kTy5q
-	 fiXipjK2NmvHaIQaLAeqFwvOsoaxFJUi4Edi5g8MwzX5pXHf9iIooBDY3lyc+UVn22
-	 o25u6hS9Q01oX89k0s96W/DewWp2sqZ80CexAig5+E8uK9RxhTkYXD/Ga/kcBJgDBV
-	 zLADSA7z85c1w==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acbb85ce788so1333896266b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:51:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV3pjrG9nPCDxO4cOvUOpcVB5ntmXFhjxLO33yRn9rfKBft2WpoImgOVf72uFs4wPo5SU1fHbpjtzxmilA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpkQUZAFyQJGXDQotqc0JfZC5nyEJPWf6gyFPTkL+7MsBD5vHr
-	f6cugZyyDiOJpRpdt3pkUTH9L1hBrKuEcJdsKgyXIfebm6t9DSHwPd7wVgkuQwZDupfqLrdbnc4
-	0nAl+Tl6eQJPxYpNhOXEd4HQiAQ==
-X-Google-Smtp-Source: AGHT+IHHwEKl6KCMBqy7rgmxXmuTIh8nZgXRMqUStX7VUuXrxOdp1iOj4RjhCEheh3CMMCyM4wWF2NCrG5d6xK07Gug=
-X-Received: by 2002:a17:907:a2cb:b0:ad2:39f2:3ab3 with SMTP id
- a640c23a62f3a-ad4f728f90fmr409018766b.48.1747234264928; Wed, 14 May 2025
- 07:51:04 -0700 (PDT)
+	b=SFONZlvsCwA565BQdFpfDjkcMv253uLGPft7yJjo3pFhivG/KlnAEBVyQRZMCxAMo
+	 5SfjfRGRER4rCsWtcmS7lW2ib7ivcQr64SNxH/01LOonjLcfgnkI5ec+4wr8r+vSOF
+	 gnwGQ31WlALhmguu2ayOr1r3pmJwRQsEM6iNBvY+YjUo9+t/itz3r5kgkZIkGIry7X
+	 HQNd8g1xeR6BWC79gum/Q9olLAuuzOPT19XAbrJhlOAh3U2iJBCLnKcpCnEO8lvXvD
+	 PIux9I6AgzE21ffM7frhrnTD9Z1bhNLmotQKoWZ+4KoOZH+jLDrPtcLp8hke8sJJNQ
+	 sdVodGXvju8Ww==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5fbcd9088a7so2110352a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:51:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX1nRa8tL80DONgmVbvZwpbVcnc//qtzqwI2Wcwuu86N568qD2hHg+zHz8ulSwG5sNHlzp2hfopo21VuuY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJt8hD6zKg88d2iL4KD9K7zb1nxXdAbuGWjbceQciBTBc+K+q/
+	EoLmK4CcFoOgOIAgPorSHTSsACpbAGaJO2V+JDYbb9cn/8ZhTWHnTMyNDhRaSZvRR7INcqwIRZl
+	S+MTMMe+7TaV0JW0ohDQvki0sJBQ=
+X-Google-Smtp-Source: AGHT+IH/ThODmqttSoNzxbWWABbYYF2hu3CS8DS4XL22UFTENLhop6PijzhnzaiTU8loCXoEbpnzWq9hUec6yC+fzhM=
+X-Received: by 2002:a05:6402:1e94:b0:5fc:93ff:f2bf with SMTP id
+ 4fb4d7f45d1cf-5ff95c36519mr2983841a12.15.1747234277282; Wed, 14 May 2025
+ 07:51:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla> <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
- <aCIVec7zl3tIh73h@J2N7QTR9R3> <d67d893e-9c7e-487e-a14b-419a7cdc6158@linux.dev>
-In-Reply-To: <d67d893e-9c7e-487e-a14b-419a7cdc6158@linux.dev>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 14 May 2025 09:50:53 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+TUife95L3hgafAujsHF9O81+YYV1gwq17AR_e63x0vg@mail.gmail.com>
-X-Gm-Features: AX0GCFv0K4Z03fSgxYvGWe0EVE0kgIwLZ5h7urcrmE_VdP42VE4V5alJb709t7I
-Message-ID: <CAL_Jsq+TUife95L3hgafAujsHF9O81+YYV1gwq17AR_e63x0vg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	Radu Rendec <rrendec@redhat.com>, Will Deacon <will@kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+References: <20250513092116.25979-1-yangtiezhu@loongson.cn>
+ <20250513092116.25979-3-yangtiezhu@loongson.cn> <CAAhV-H4AgHQs4pMqGqe7WfwCA+u7mO3U+=hcm8ZWk5DQHhsO1w@mail.gmail.com>
+ <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
+In-Reply-To: <bbd7e5ad-c353-6916-cf9e-8f3aa3fefda9@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 14 May 2025 22:51:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
+X-Gm-Features: AX0GCFuW0sYon0f2qyf0-wgagLfvseV3bMoL8UCdpvzdkJWXMnyXie5UBp29UXg
+Message-ID: <CAAhV-H6HTx3qgoUHKC0nB0LTqN9o9t=P3QuD7PumacaOe8pjEw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] LoongArch: uprobe: Remove redundant code about resume_era
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 11:27=E2=80=AFAM Sean Anderson <sean.anderson@linux=
-.dev> wrote:
+On Wed, May 14, 2025 at 5:33=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On 5/12/25 11:36, Mark Rutland wrote:
-> > On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
-> >> On 5/10/25 03:04, Sudeep Holla wrote:
-> >> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
-> >> >> Cache geometry is exposed through the Cache Size ID register. There=
- is
-> >> >> one register for each cache, and they are selected through the Cach=
-e
-> >> >> Size Selection register. If FEAT_CCIDX is implemented, the layout o=
-f
-> >> >> CCSIDR changes to allow a larger number of sets and ways.
-> >> >>
-> >> >
-> >> > Please refer
-> >> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache in=
-formation probing")
-> >> >
-> >>
-> >> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for =
-use
-> >> | in conjunction with set/way cache maintenance and are not guaranteed=
- to
-> >> | represent the actual microarchitectural features of a design.
-> >> |
-> >> | The architecture explicitly states:
-> >> |
-> >> | | You cannot make any inference about the actual sizes of caches bas=
-ed
-> >> | | on these parameters.
-> >>
-> >> However, on many cores (A53, A72, and surely others that I haven't
-> >> checked) these *do* expose the actual microarchitectural features of t=
-he
-> >> design. Maybe a whitelist would be suitable.
+> On 05/13/2025 11:13 PM, Huacai Chen wrote:
+> > Hi, Tiezhu,
 > >
-> > Then we have to maintain a whitelist forever,
+> > On Tue, May 13, 2025 at 5:21=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> >>
+> >> arch_uprobe_skip_sstep() returns true if instruction was emulated,
+> >> that is to say, there is no need to single step for the emulated
+> >> instructions, it will point to the destination address directly
+> >> after the exception, so the resume_era related code is redundant,
+> >> just remove them.
+> >>
+> >> Fixes: 19bc6cb64092 ("LoongArch: Add uprobes support")
+> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> ---
+> >>  arch/loongarch/include/asm/uprobes.h | 1 -
+> >>  arch/loongarch/kernel/uprobes.c      | 7 +------
+> >>  2 files changed, 1 insertion(+), 7 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/inc=
+lude/asm/uprobes.h
+> >> index 99a0d198927f..025fc3f0a102 100644
+> >> --- a/arch/loongarch/include/asm/uprobes.h
+> >> +++ b/arch/loongarch/include/asm/uprobes.h
+> >> @@ -15,7 +15,6 @@ typedef u32 uprobe_opcode_t;
+> >>  #define UPROBE_XOLBP_INSN      __emit_break(BRK_UPROBE_XOLBP)
+> >>
+> >>  struct arch_uprobe {
+> >> -       unsigned long   resume_era;
+> >>         u32     insn[2];
+> >>         u32     ixol[2];
+> >>         bool    simulate;
+> >> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/u=
+probes.c
+> >> index 0ab9d8d631c4..6022eb0f71db 100644
+> >> --- a/arch/loongarch/kernel/uprobes.c
+> >> +++ b/arch/loongarch/kernel/uprobes.c
+> >> @@ -52,11 +52,7 @@ int arch_uprobe_post_xol(struct arch_uprobe *auprob=
+e, struct pt_regs *regs)
+> >>
+> >>         WARN_ON_ONCE(current->thread.trap_nr !=3D UPROBE_TRAP_NR);
+> >>         current->thread.trap_nr =3D utask->autask.saved_trap_nr;
+> >> -
+> >> -       if (auprobe->simulate)
+> >> -               instruction_pointer_set(regs, auprobe->resume_era);
+> >> -       else
+> >> -               instruction_pointer_set(regs, utask->vaddr + LOONGARCH=
+_INSN_SIZE);
+> >> +       instruction_pointer_set(regs, utask->vaddr + LOONGARCH_INSN_SI=
+ZE);
+> > This seems wrong. If in the simulate case, regs->csr_era has already
+> > pointed to the correct destination address, then here we should only
+> > handle the non-simulate case.
 >
-> There's no maintenance involved. The silicon is already fabbed, so it's
-> not like it's going to change any time soon.
+> What is wrong with this code? AFAICT, the code is right.
 >
-> > and running an old/distro
-> > kernel on new HW won't give you useful values unless you provide
-> > equivalent values in DT, in which case the kernel doesn't need to read
-> > the registers anyway.
+> Here are the call chains in the generic code of uprobe:
 >
-> Conversely (and far more likely IMO), running an old/distro devicetree
-> on a new kernel won't give you usefult values. Bootloaders tend not be
-> be updated very often (if ever), whereas kernels can (ideally) be
-> updated without changing userspace.
+> handle_swbp()
+>    arch_uprobe_skip_sstep()
+>    pre_ssout()
+>      arch_uprobe_pre_xol()
+> handle_singlestep()
+>    arch_uprobe_post_xol()
 >
-> > The architecture explcitly tells us not to use the values in this way,
-> > and it's possible to place the values into DT when you know they're
-> > meaningful.
->
-> Well, maybe we can just use these registers for the hundreds of existing
-> devicetrees that lack values.
+> arch_uprobe_post_xol() only handles the instruction that is not emulated
+> because if arch_uprobe_skip_sstep() returns true, arch_uprobe_post_xol()
+> will not be called, it will be called only if arch_uprobe_skip_sstep()
+> returns false.
+OK, I know.
 
-If the lack of values is a problem, add a schema to require them. Just
-adding them as required globally isn't going to work, but nothing
-prevents someone from having additional schemas for platforms they
-care about or we could figure out a way to opt-in to specific schemas.
+Huacai
 
-Rob
+>
+> Thanks,
+> Tiezhu
+>
