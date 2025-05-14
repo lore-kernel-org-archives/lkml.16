@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC37256C88
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABB225C703
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266234; cv=none; b=aBkBJdyTP1oQvvXC6gH+9izdiTRvMNEvxDxvGyJp923QqIhxqSaTy1Um2eJdOx/dz2+FbdiDdejGmtPqcdpEKBZ9B45fNLnpAKV4anUMFeyEsqDipZDiwvxMBYMeTMMgOVgmNCwmX6QSGM8y9U0aefkxywGNksIxAQ/e36gkgaw=
+	t=1747266237; cv=none; b=DAONtRcAG5W3Pj9r9TK1CWZ30DNbmYlmg7e1dUzMJPbA+oA725Jb/rMEO4DqOT2p9MEqVjDzzBBz54hZPBtnNTKXtBPoj9920pvwpXyVA0d5wemsO7h+lvKUPoXqHwlzznphEOwv6t6vqX6Gzt2SrYmO6oy99nURyNUjpnZW56Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266234; c=relaxed/simple;
-	bh=WIiuIhBvEYQRoDVYaMe6Epa6jW56JZZDNHsLnkwv8LE=;
+	s=arc-20240116; t=1747266237; c=relaxed/simple;
+	bh=IMiKEMd6OxkBoCNVWLOzENvmPQZSLrc1NWT7HaivxWo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mk1XyxamSEOyyeV8diliIb8zZkMbMFm4jBevrKXU2vKN4q/gNPtVaPjvO15jqVtIp7n+i2aCQohdctKXaAZbTLQiCsrAGXdBZJDZlV5b3qcNt836S79dAoxXcUmEsGtwk79uRXQqF3UJhOjJS6MBDaXU4SSi0e0DUHutiXmeKsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mARadzej; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=JlpCMwUC2M6GKrqHXF441sd6mGWnaB28+ZlVq0M53QQ6lYMukmh4k7z0hMrDCCVDOHFvwtjpz/m1fSO0D/LIR50zfFK7vBHJ3QAwAzaa9DlDabAvOECZqZBeizeNF3JZNL3iMwsuL6pgHRoIYKtBn+EH3wyLjt4MQ00hnJPRI60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lWpVxQE4; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mARadzej"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab5d34fdbso360806a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWpVxQE4"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74292762324so272254b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266232; x=1747871032; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266235; x=1747871035; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfnYbWQzMmQc1PANKcXbyhh93wrWxLA5NUfiI2kZlfs=;
-        b=mARadzejB9xaLag0baFW/aClRLPyi2wXmXmCQLxkqP3A7q8uU3atLorUOvL435O0l3
-         ey3vbDghtzjtiXIx2ec9i+aDs2fUeI27wgLt+x/UmnfYIZMoe6LWQb9W+2KwrJbufhXs
-         dePLiQykaaRLMeaZF7+MHJAqev6y217+sEjIEvvUmTqy/ecmMQpcp6cUGh1JSjD33YWC
-         4xktAJdcC5Cw+9NmJhYSgzUi8Y9e5DiUTK8rarjl0nzV3jkNRtLP3TuYC/OXm1opdNY/
-         ekYapZowZb3x4NaxLyrAKJ3Mq/XcnkPSkKsmi41tn/wI8gPmYWMsopGyzyaqAqnpPHH+
-         ciWw==
+        bh=uuq1bEexdRhfFEX1jCABHc+UNgsIInH8N9P0pZ09IXA=;
+        b=lWpVxQE4i8lmzDx5Y94IGz4ODljbyX6Edr1/iYC4JCNTqGAzQ6GikucSHNnRdq0k9N
+         wODK+Rtr5JQD3u7Q4n1hTrv1wMtqWIsI6jlbUXvyaBIzUK1CVwoWo00ULPQ5LC/wZqiS
+         /bz3GW6jBJR7jEyjvg4tIouNzElyQ9t89PXCO6piR8SqKWCbJX3JZRXVQIbVHhmGrzTR
+         EXveltb979x2WHXeqroFn69h5lENXc+dbWBkAiJzhre355kM2mZbge3awmsRNQ2huF6w
+         A/wQlyKBLnINIQSFc6jVv4srKLs4mHAC1wZXBUH4Ml4webkymYKUtL1aKuFuz6lkdWst
+         nnyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266232; x=1747871032;
+        d=1e100.net; s=20230601; t=1747266235; x=1747871035;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfnYbWQzMmQc1PANKcXbyhh93wrWxLA5NUfiI2kZlfs=;
-        b=h2Dt2aIl3ktzICp2/o9vy93BEYrPEwuNS9U/GdpejW+KhH8nmEizmK8Bhc1BnXQdn5
-         D8p28TMr2A6Zlr0uKhBkTx1wEsbptenZ+TuiCIWd2ySnZ7dFpc7y6UqTCJ7zlIXkqcjp
-         GdsD+rgwr08RlJqk71MV846Vw3y7sLWB13JbsAGKx43A0uNv9WR3g1i8hFZsOrajI5Oh
-         j6iK3l9r13Fvli1qGZ7CGYJwkL5pZITdm6TXEQbJXf/c2SvGUn9hBzCPad2y1sKeF0Jb
-         YVzqaYy004r1fU64+AVZzA+WhSW2WkmtG+KRyX3aKzCJxzM9Q6U01VEmm8ZLDa4FaYmT
-         fwJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRhpxqIruH7Iaw1iKsXWETeR9F/1p2GqI1CWUtKczv/4kXEbFIKiTY8ZgP2SLnd9hdeItAS0XRIn1ZxwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQgz8326wOVaKIcde35N46W7sig6KSv8NjzEYSv6JeD8otgsAW
-	dBb4qme0Dkuyw5CpVMAdl0gOK0MSonOq8vtAgcUGMy/fwpAiILC4aIyEmeKoJQzNyvxaAOVhacy
-	g33wt5STSOcgpmuXji6/nGQ==
-X-Google-Smtp-Source: AGHT+IFVGcqlDEnJpkFEd+R21FoPe5Rerk1Iq1HXA53kK0tkVEoANeobibZBnoWnktKVrpAkNdhU2ptVfud0MkCE0w==
-X-Received: from pji8.prod.google.com ([2002:a17:90b:3fc8:b0:2ea:5084:5297])
+        bh=uuq1bEexdRhfFEX1jCABHc+UNgsIInH8N9P0pZ09IXA=;
+        b=YM6/rjz9+L301VYu6XCqCurpaXvDYvsi0KZn/c/7mnqQ7800vb7/vJ6h+nosdnOKYq
+         60czeVxN1SxfthZGqaq0bi0EguwSR26QK0mbhZOtNp+7XEdcwMIE7V+C9TgC2ZC8qnDg
+         s8S7hBCs5WwxApKc5nq7OQMUBS7qMyI//lOh7akNvytks8R9naB7Aa6SslRnnOaYQnwe
+         Ctghxy4O4mf/mfbNoLO5VuDkMOk0smmNzaRUbbX4iS0rbP9n6JIxbUr6fqFem8MsuUF2
+         lwtRa0W1Y+n6xGsAI00B+L8fThOZo9SLWeTcrv0BRziwdjjI4rWQhZ5xNjZPg+UOj3+h
+         IzJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfyStszW/vnyyn+ucqcgsCQ58576hb06eHc9bJOGXvCMgIY3iP5jWPS11lQh8yOMhGd7OF0sRJKdRzECE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRCh9LREEdQrh0pndmcSwF9yCdmaF770mI1WMkRwLLP3p4ItGL
+	HGKbu4iC8vLCHFGp6ozNM5KomS1PEtid5dHDPhbnj9FwGET1kvXAID/6Se58FXJBTmN3QKDgZEj
+	5KkThgLwJ02eTvpjsxxHDZQ==
+X-Google-Smtp-Source: AGHT+IEP7NX45yVSRggtsTELkRXbv8SEWvt+7ORsl2x8HhwmdlC6ogf+zGJHadz5Krd2YgHwh61qzF+l2O1bbO5BGw==
+X-Received: from pfmv16.prod.google.com ([2002:a62:a510:0:b0:736:3cd5:ba3f])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4acb:b0:2ee:b4bf:2d06 with SMTP id 98e67ed59e1d1-30e2e6133d8mr7435241a91.19.1747266231568;
- Wed, 14 May 2025 16:43:51 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:14 -0700
+ 2002:a05:6a00:181c:b0:740:9d7c:aeb9 with SMTP id d2e1a72fcca58-74289377cb0mr7546070b3a.21.1747266234724;
+ Wed, 14 May 2025 16:43:54 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:16 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <2ae41e0d80339da2b57011622ac2288fed65cd01.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 35/51] mm: guestmem_hugetlb: Add support for splitting
- and merging pages
+Message-ID: <a7a0eb4053059731f70c18d4aa4736b6cf1b4e35.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 37/51] filemap: Pass address_space mapping to ->free_folio()
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -94,441 +93,234 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
 	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
 	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
+	yuzenghui@huawei.com, zhiquan1.li@intel.com, Mike Day <michael.day@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-These functions allow guest_memfd to split and merge HugeTLB pages,
-and clean them up on freeing the page.
+From: Elliot Berman <quic_eberman@quicinc.com>
 
-For merging and splitting pages on conversion, guestmem_hugetlb
-expects the refcount on the pages to already be 0. The caller must
-ensure that.
+The plan is to be able to support multiple allocators for guest_memfd
+folios. To allow each allocator to handle release of a folio from a
+guest_memfd filemap, ->free_folio() needs to retrieve allocator
+information that is stored on the guest_memfd inode.
 
-For conversions, guest_memfd ensures that the refcounts are already 0
-by checking that there are no unexpected refcounts, and then freezing
-the expected refcounts away. On unexpected refcounts, guest_memfd will
-return an error to userspace.
+->free_folio() shouldn't assume that folio->mapping is set/valid, and
+the mapping is well-known to callers of .free_folio(). Hence, pass
+address_space mapping to ->free_folio() for the callback to retrieve
+any necessary information.
 
-For truncation, on unexpected refcounts, guest_memfd will return an
-error to userspace.
-
-For truncation on closing, guest_memfd will just remove its own
-refcounts (the filemap refcounts) and mark split pages with
-PGTY_guestmem_hugetlb.
-
-The presence of PGTY_guestmem_hugetlb will trigger the folio_put()
-callback to handle further cleanup. This cleanup process will merge
-pages (with refcount 0, since cleanup is triggered from folio_put())
-before returning the pages to HugeTLB.
-
-Since the merging process is long, it is deferred to a worker thread
-since folio_put() could be called from atomic context.
-
-Change-Id: Ib04a3236f1e7250fd9af827630c334d40fb09d40
+Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
+Suggested-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Change-Id: I8bac907832a0b2491fa403a6ab72fcef1b4713ee
+Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+Tested-by: Mike Day <michael.day@amd.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-Signed-off-by: Vishal Annapurve <vannapurve@google.com>
 ---
- include/linux/guestmem.h |   3 +
- mm/guestmem_hugetlb.c    | 349 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 347 insertions(+), 5 deletions(-)
+ Documentation/filesystems/locking.rst |  2 +-
+ Documentation/filesystems/vfs.rst     | 15 +++++++++------
+ fs/nfs/dir.c                          |  9 +++++++--
+ fs/orangefs/inode.c                   |  3 ++-
+ include/linux/fs.h                    |  2 +-
+ mm/filemap.c                          |  9 +++++----
+ mm/secretmem.c                        |  3 ++-
+ mm/vmscan.c                           |  4 ++--
+ virt/kvm/guest_memfd.c                |  3 ++-
+ 9 files changed, 31 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/guestmem.h b/include/linux/guestmem.h
-index 4b2d820274d9..3ee816d1dd34 100644
---- a/include/linux/guestmem.h
-+++ b/include/linux/guestmem.h
-@@ -8,6 +8,9 @@ struct guestmem_allocator_operations {
- 	void *(*inode_setup)(size_t size, u64 flags);
- 	void (*inode_teardown)(void *private, size_t inode_size);
- 	struct folio *(*alloc_folio)(void *private);
-+	int (*split_folio)(struct folio *folio);
-+	void (*merge_folio)(struct folio *folio);
-+	void (*free_folio)(struct folio *folio);
- 	/*
- 	 * Returns the number of PAGE_SIZE pages in a page that this guestmem
- 	 * allocator provides.
-diff --git a/mm/guestmem_hugetlb.c b/mm/guestmem_hugetlb.c
-index ec5a188ca2a7..8727598cf18e 100644
---- a/mm/guestmem_hugetlb.c
-+++ b/mm/guestmem_hugetlb.c
-@@ -11,15 +11,12 @@
- #include <linux/mm.h>
- #include <linux/mm_types.h>
- #include <linux/pagemap.h>
-+#include <linux/xarray.h>
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index 0ec0bb6eb0fb..c3d7430481ae 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -263,7 +263,7 @@ prototypes::
+ 	sector_t (*bmap)(struct address_space *, sector_t);
+ 	void (*invalidate_folio) (struct folio *, size_t start, size_t len);
+ 	bool (*release_folio)(struct folio *, gfp_t);
+-	void (*free_folio)(struct folio *);
++	void (*free_folio)(struct address_space *, struct folio *);
+ 	int (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+ 	int (*migrate_folio)(struct address_space *, struct folio *dst,
+ 			struct folio *src, enum migrate_mode);
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index ae79c30b6c0c..bba1ac848f96 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -833,7 +833,7 @@ cache in your filesystem.  The following members are defined:
+ 		sector_t (*bmap)(struct address_space *, sector_t);
+ 		void (*invalidate_folio) (struct folio *, size_t start, size_t len);
+ 		bool (*release_folio)(struct folio *, gfp_t);
+-		void (*free_folio)(struct folio *);
++		void (*free_folio)(struct address_space *, struct folio *);
+ 		ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+ 		int (*migrate_folio)(struct mapping *, struct folio *dst,
+ 				struct folio *src, enum migrate_mode);
+@@ -1011,11 +1011,14 @@ cache in your filesystem.  The following members are defined:
+ 	clear the uptodate flag if it cannot free private data yet.
  
- #include <uapi/linux/guestmem.h>
+ ``free_folio``
+-	free_folio is called once the folio is no longer visible in the
+-	page cache in order to allow the cleanup of any private data.
+-	Since it may be called by the memory reclaimer, it should not
+-	assume that the original address_space mapping still exists, and
+-	it should not block.
++	free_folio is called once the folio is no longer visible in
++	the page cache in order to allow the cleanup of any private
++	data.  Since it may be called by the memory reclaimer, it
++	should not assume that the original address_space mapping
++	still exists at folio->mapping. The mapping the folio used to
++	belong to is instead passed for free_folio to read any
++	information it might need from the mapping. free_folio should
++	not block.
  
- #include "guestmem_hugetlb.h"
--
--void guestmem_hugetlb_handle_folio_put(struct folio *folio)
--{
--	WARN_ONCE(1, "A placeholder that shouldn't trigger. Work in progress.");
--}
-+#include "hugetlb_vmemmap.h"
+ ``direct_IO``
+ 	called by the generic read/write routines to perform direct_IO -
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index bd23fc736b39..148433f6d9d4 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -55,7 +55,7 @@ static int nfs_closedir(struct inode *, struct file *);
+ static int nfs_readdir(struct file *, struct dir_context *);
+ static int nfs_fsync_dir(struct file *, loff_t, loff_t, int);
+ static loff_t nfs_llseek_dir(struct file *, loff_t, int);
+-static void nfs_readdir_clear_array(struct folio *);
++static void nfs_free_folio(struct address_space *, struct folio *);
+ static int nfs_do_create(struct inode *dir, struct dentry *dentry,
+ 			 umode_t mode, int open_flags);
  
- struct guestmem_hugetlb_private {
- 	struct hstate *h;
-@@ -34,6 +31,339 @@ static size_t guestmem_hugetlb_nr_pages_in_folio(void *priv)
- 	return pages_per_huge_page(private->h);
- }
- 
-+static DEFINE_XARRAY(guestmem_hugetlb_stash);
-+
-+struct guestmem_hugetlb_metadata {
-+	void *_hugetlb_subpool;
-+	void *_hugetlb_cgroup;
-+	void *_hugetlb_hwpoison;
-+	void *private;
-+};
-+
-+struct guestmem_hugetlb_stash_item {
-+	struct guestmem_hugetlb_metadata hugetlb_metadata;
-+	/* hstate tracks the original size of this folio. */
-+	struct hstate *h;
-+	/* Count of split pages, individually freed, waiting to be merged. */
-+	atomic_t nr_pages_waiting_to_be_merged;
-+};
-+
-+struct workqueue_struct *guestmem_hugetlb_wq __ro_after_init;
-+static struct work_struct guestmem_hugetlb_cleanup_work;
-+static LLIST_HEAD(guestmem_hugetlb_cleanup_list);
-+
-+static inline void guestmem_hugetlb_register_folio_put_callback(struct folio *folio)
-+{
-+	__folio_set_guestmem_hugetlb(folio);
-+}
-+
-+static inline void guestmem_hugetlb_unregister_folio_put_callback(struct folio *folio)
-+{
-+	__folio_clear_guestmem_hugetlb(folio);
-+}
-+
-+static inline void guestmem_hugetlb_defer_cleanup(struct folio *folio)
-+{
-+	struct llist_node *node;
-+
-+	/*
-+	 * Reuse the folio->mapping pointer as a struct llist_node, since
-+	 * folio->mapping is NULL at this point.
-+	 */
-+	BUILD_BUG_ON(sizeof(folio->mapping) != sizeof(struct llist_node));
-+	node = (struct llist_node *)&folio->mapping;
-+
-+	/*
-+	 * Only schedule work if list is previously empty. Otherwise,
-+	 * schedule_work() had been called but the workfn hasn't retrieved the
-+	 * list yet.
-+	 */
-+	if (llist_add(node, &guestmem_hugetlb_cleanup_list))
-+		queue_work(guestmem_hugetlb_wq, &guestmem_hugetlb_cleanup_work);
-+}
-+
-+void guestmem_hugetlb_handle_folio_put(struct folio *folio)
-+{
-+	guestmem_hugetlb_unregister_folio_put_callback(folio);
-+
-+	/*
-+	 * folio_put() can be called in interrupt context, hence do the work
-+	 * outside of interrupt context
-+	 */
-+	guestmem_hugetlb_defer_cleanup(folio);
-+}
-+
-+/*
-+ * Stash existing hugetlb metadata. Use this function just before splitting a
-+ * hugetlb page.
-+ */
-+static inline void
-+__guestmem_hugetlb_stash_metadata(struct guestmem_hugetlb_metadata *metadata,
-+				  struct folio *folio)
-+{
-+	/*
-+	 * (folio->page + 1) doesn't have to be stashed since those fields are
-+	 * known on split/reconstruct and will be reinitialized anyway.
-+	 */
-+
-+	/*
-+	 * subpool is created for every guest_memfd inode, but the folios will
-+	 * outlive the inode, hence we store the subpool here.
-+	 */
-+	metadata->_hugetlb_subpool = folio->_hugetlb_subpool;
-+	/*
-+	 * _hugetlb_cgroup has to be stored for freeing
-+	 * later. _hugetlb_cgroup_rsvd does not, since it is NULL for
-+	 * guest_memfd folios anyway. guest_memfd reservations are handled in
-+	 * the inode.
-+	 */
-+	metadata->_hugetlb_cgroup = folio->_hugetlb_cgroup;
-+	metadata->_hugetlb_hwpoison = folio->_hugetlb_hwpoison;
-+
-+	/*
-+	 * HugeTLB flags are stored in folio->private. stash so that ->private
-+	 * can be used by core-mm.
-+	 */
-+	metadata->private = folio->private;
-+}
-+
-+static int guestmem_hugetlb_stash_metadata(struct folio *folio)
-+{
-+	XA_STATE(xas, &guestmem_hugetlb_stash, 0);
-+	struct guestmem_hugetlb_stash_item *stash;
-+	void *entry;
-+
-+	stash = kzalloc(sizeof(*stash), 1);
-+	if (!stash)
-+		return -ENOMEM;
-+
-+	stash->h = folio_hstate(folio);
-+	__guestmem_hugetlb_stash_metadata(&stash->hugetlb_metadata, folio);
-+
-+	xas_set_order(&xas, folio_pfn(folio), folio_order(folio));
-+
-+	xas_lock(&xas);
-+	entry = xas_store(&xas, stash);
-+	xas_unlock(&xas);
-+
-+	if (xa_is_err(entry)) {
-+		kfree(stash);
-+		return xa_err(entry);
-+	}
-+
-+	return 0;
-+}
-+
-+static inline void
-+__guestmem_hugetlb_unstash_metadata(struct guestmem_hugetlb_metadata *metadata,
-+				    struct folio *folio)
-+{
-+	folio->_hugetlb_subpool = metadata->_hugetlb_subpool;
-+	folio->_hugetlb_cgroup = metadata->_hugetlb_cgroup;
-+	folio->_hugetlb_cgroup_rsvd = NULL;
-+	folio->_hugetlb_hwpoison = metadata->_hugetlb_hwpoison;
-+
-+	folio_change_private(folio, metadata->private);
-+}
-+
-+static int guestmem_hugetlb_unstash_free_metadata(struct folio *folio)
-+{
-+	struct guestmem_hugetlb_stash_item *stash;
-+	unsigned long pfn;
-+
-+	pfn = folio_pfn(folio);
-+
-+	stash = xa_erase(&guestmem_hugetlb_stash, pfn);
-+	__guestmem_hugetlb_unstash_metadata(&stash->hugetlb_metadata, folio);
-+
-+	kfree(stash);
-+
-+	return 0;
-+}
-+
-+/**
-+ * guestmem_hugetlb_split_folio() - Split a HugeTLB @folio to PAGE_SIZE pages.
-+ *
-+ * @folio: The folio to be split.
-+ *
-+ * Context: Before splitting, the folio must have a refcount of 0. After
-+ *          splitting, each split folio has a refcount of 0.
-+ * Return: 0 on success and negative error otherwise.
-+ */
-+static int guestmem_hugetlb_split_folio(struct folio *folio)
-+{
-+	long orig_nr_pages;
-+	int ret;
-+	int i;
-+
-+	if (folio_size(folio) == PAGE_SIZE)
-+		return 0;
-+
-+	orig_nr_pages = folio_nr_pages(folio);
-+	ret = guestmem_hugetlb_stash_metadata(folio);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * hugetlb_vmemmap_restore_folio() has to be called ahead of the rest
-+	 * because it checks and page type. This doesn't actually split the
-+	 * folio, so the first few struct pages are still intact.
-+	 */
-+	ret = hugetlb_vmemmap_restore_folio(folio_hstate(folio), folio);
-+	if (ret)
-+		goto err;
-+
-+	/*
-+	 * Can clear without lock because this will not race with the folio
-+	 * being mapped. folio's page type is overlaid with mapcount and so in
-+	 * other cases it's necessary to take hugetlb_lock to prevent races with
-+	 * mapcount increasing.
-+	 */
-+	__folio_clear_hugetlb(folio);
-+
-+	/*
-+	 * Remove the first folio from h->hugepage_activelist since it is no
-+	 * longer a HugeTLB page. The other split pages should not be on any
-+	 * lists.
-+	 */
-+	hugetlb_folio_list_del(folio);
-+
-+	/* Actually split page by undoing prep_compound_page() */
-+	__folio_clear_head(folio);
-+
-+#ifdef NR_PAGES_IN_LARGE_FOLIO
-+	/*
-+	 * Zero out _nr_pages, otherwise this overlaps with memcg_data,
-+	 * resulting in lookups on false memcg_data.  _nr_pages doesn't have to
-+	 * be set to 1 because folio_nr_pages() relies on the presence of the
-+	 * head flag to return 1 for nr_pages.
-+	 */
-+	folio->_nr_pages = 0;
-+#endif
-+
-+	for (i = 1; i < orig_nr_pages; ++i) {
-+		struct page *p = folio_page(folio, i);
-+
-+		/* Copy flags from the first page to split pages. */
-+		p->flags = folio->flags;
-+
-+		p->mapping = NULL;
-+		clear_compound_head(p);
-+	}
-+
-+	return 0;
-+
-+err:
-+	guestmem_hugetlb_unstash_free_metadata(folio);
-+
-+	return ret;
-+}
-+
-+/**
-+ * guestmem_hugetlb_merge_folio() - Merge a HugeTLB folio from the folio
-+ * beginning @first_folio.
-+ *
-+ * @first_folio: the first folio in a contiguous block of folios to be merged.
-+ *
-+ * The size of the contiguous block is tracked in guestmem_hugetlb_stash.
-+ *
-+ * Context: The first folio is checked to have a refcount of 0 before
-+ *          reconstruction. After reconstruction, the reconstructed folio has a
-+ *          refcount of 0.
-+ */
-+static void guestmem_hugetlb_merge_folio(struct folio *first_folio)
-+{
-+	struct guestmem_hugetlb_stash_item *stash;
-+	struct hstate *h;
-+
-+	stash = xa_load(&guestmem_hugetlb_stash, folio_pfn(first_folio));
-+	h = stash->h;
-+
-+	/*
-+	 * This is the step that does the merge. prep_compound_page() will write
-+	 * to pages 1 and 2 as well, so guestmem_unstash_hugetlb_metadata() has
-+	 * to come after this.
-+	 */
-+	prep_compound_page(&first_folio->page, huge_page_order(h));
-+
-+	WARN_ON(guestmem_hugetlb_unstash_free_metadata(first_folio));
-+
-+	/*
-+	 * prep_compound_page() will set up mapping on tail pages. For
-+	 * completeness, clear mapping on head page.
-+	 */
-+	first_folio->mapping = NULL;
-+
-+	__folio_set_hugetlb(first_folio);
-+
-+	hugetlb_folio_list_add(first_folio, &h->hugepage_activelist);
-+
-+	hugetlb_vmemmap_optimize_folio(h, first_folio);
-+}
-+
-+static struct folio *guestmem_hugetlb_maybe_merge_folio(struct folio *folio)
-+{
-+	struct guestmem_hugetlb_stash_item *stash;
-+	unsigned long first_folio_pfn;
-+	struct folio *first_folio;
-+	unsigned long pfn;
-+	size_t nr_pages;
-+
-+	pfn = folio_pfn(folio);
-+
-+	stash = xa_load(&guestmem_hugetlb_stash, pfn);
-+	nr_pages = pages_per_huge_page(stash->h);
-+	if (atomic_inc_return(&stash->nr_pages_waiting_to_be_merged) < nr_pages)
-+		return NULL;
-+
-+	first_folio_pfn = round_down(pfn, nr_pages);
-+	first_folio = pfn_folio(first_folio_pfn);
-+
-+	guestmem_hugetlb_merge_folio(first_folio);
-+
-+	return first_folio;
-+}
-+
-+static void guestmem_hugetlb_cleanup_folio(struct folio *folio)
-+{
-+	struct folio *merged_folio;
-+
-+	merged_folio = guestmem_hugetlb_maybe_merge_folio(folio);
-+	if (merged_folio)
-+		__folio_put(merged_folio);
-+}
-+
-+static void guestmem_hugetlb_cleanup_workfn(struct work_struct *work)
-+{
-+	struct llist_node *node;
-+
-+	node = llist_del_all(&guestmem_hugetlb_cleanup_list);
-+	while (node) {
-+		struct folio *folio;
-+
-+		folio = container_of((struct address_space **)node,
-+				     struct folio, mapping);
-+
-+		node = node->next;
-+		folio->mapping = NULL;
-+
-+		guestmem_hugetlb_cleanup_folio(folio);
-+	}
-+}
-+
-+static int __init guestmem_hugetlb_init(void)
-+{
-+	INIT_WORK(&guestmem_hugetlb_cleanup_work, guestmem_hugetlb_cleanup_workfn);
-+
-+	guestmem_hugetlb_wq = alloc_workqueue("guestmem_hugetlb",
-+					      WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
-+	if (!guestmem_hugetlb_wq)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+subsys_initcall(guestmem_hugetlb_init);
-+
- static void *guestmem_hugetlb_setup(size_t size, u64 flags)
- 
- {
-@@ -164,10 +494,19 @@ static struct folio *guestmem_hugetlb_alloc_folio(void *priv)
- 	return ERR_PTR(-ENOMEM);
- }
- 
-+static void guestmem_hugetlb_free_folio(struct folio *folio)
-+{
-+	if (xa_load(&guestmem_hugetlb_stash, folio_pfn(folio)))
-+		guestmem_hugetlb_register_folio_put_callback(folio);
-+}
-+
- const struct guestmem_allocator_operations guestmem_hugetlb_ops = {
- 	.inode_setup = guestmem_hugetlb_setup,
- 	.inode_teardown = guestmem_hugetlb_teardown,
- 	.alloc_folio = guestmem_hugetlb_alloc_folio,
-+	.split_folio = guestmem_hugetlb_split_folio,
-+	.merge_folio = guestmem_hugetlb_merge_folio,
-+	.free_folio = guestmem_hugetlb_free_folio,
- 	.nr_pages_in_folio = guestmem_hugetlb_nr_pages_in_folio,
+@@ -69,7 +69,7 @@ const struct file_operations nfs_dir_operations = {
  };
- EXPORT_SYMBOL_GPL(guestmem_hugetlb_ops);
+ 
+ const struct address_space_operations nfs_dir_aops = {
+-	.free_folio = nfs_readdir_clear_array,
++	.free_folio = nfs_free_folio,
+ };
+ 
+ #define NFS_INIT_DTSIZE PAGE_SIZE
+@@ -230,6 +230,11 @@ static void nfs_readdir_clear_array(struct folio *folio)
+ 	kunmap_local(array);
+ }
+ 
++static void nfs_free_folio(struct address_space *mapping, struct folio *folio)
++{
++	nfs_readdir_clear_array(folio);
++}
++
+ static void nfs_readdir_folio_reinit_array(struct folio *folio, u64 last_cookie,
+ 					   u64 change_attr)
+ {
+diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+index 5ac743c6bc2e..884cc5295f3e 100644
+--- a/fs/orangefs/inode.c
++++ b/fs/orangefs/inode.c
+@@ -449,7 +449,8 @@ static bool orangefs_release_folio(struct folio *folio, gfp_t foo)
+ 	return !folio_test_private(folio);
+ }
+ 
+-static void orangefs_free_folio(struct folio *folio)
++static void orangefs_free_folio(struct address_space *mapping,
++				struct folio *folio)
+ {
+ 	kfree(folio_detach_private(folio));
+ }
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 0fded2e3c661..9862ea92a2af 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -455,7 +455,7 @@ struct address_space_operations {
+ 	sector_t (*bmap)(struct address_space *, sector_t);
+ 	void (*invalidate_folio) (struct folio *, size_t offset, size_t len);
+ 	bool (*release_folio)(struct folio *, gfp_t);
+-	void (*free_folio)(struct folio *folio);
++	void (*free_folio)(struct address_space *mapping, struct folio *folio);
+ 	ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+ 	/*
+ 	 * migrate the contents of a folio to the specified target. If
+diff --git a/mm/filemap.c b/mm/filemap.c
+index bed7160db214..a02c3d8e00e8 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -226,11 +226,11 @@ void __filemap_remove_folio(struct folio *folio, void *shadow)
+ 
+ void filemap_free_folio(struct address_space *mapping, struct folio *folio)
+ {
+-	void (*free_folio)(struct folio *);
++	void (*free_folio)(struct address_space*, struct folio *);
+ 
+ 	free_folio = mapping->a_ops->free_folio;
+ 	if (free_folio)
+-		free_folio(folio);
++		free_folio(mapping, folio);
+ 
+ 	folio_put_refs(folio, folio_nr_pages(folio));
+ }
+@@ -820,7 +820,8 @@ EXPORT_SYMBOL(file_write_and_wait_range);
+ void replace_page_cache_folio(struct folio *old, struct folio *new)
+ {
+ 	struct address_space *mapping = old->mapping;
+-	void (*free_folio)(struct folio *) = mapping->a_ops->free_folio;
++	void (*free_folio)(struct address_space *, struct folio *) =
++		mapping->a_ops->free_folio;
+ 	pgoff_t offset = old->index;
+ 	XA_STATE(xas, &mapping->i_pages, offset);
+ 
+@@ -849,7 +850,7 @@ void replace_page_cache_folio(struct folio *old, struct folio *new)
+ 		__lruvec_stat_add_folio(new, NR_SHMEM);
+ 	xas_unlock_irq(&xas);
+ 	if (free_folio)
+-		free_folio(old);
++		free_folio(mapping, old);
+ 	folio_put(old);
+ }
+ EXPORT_SYMBOL_GPL(replace_page_cache_folio);
+diff --git a/mm/secretmem.c b/mm/secretmem.c
+index c0e459e58cb6..178507c1b900 100644
+--- a/mm/secretmem.c
++++ b/mm/secretmem.c
+@@ -152,7 +152,8 @@ static int secretmem_migrate_folio(struct address_space *mapping,
+ 	return -EBUSY;
+ }
+ 
+-static void secretmem_free_folio(struct folio *folio)
++static void secretmem_free_folio(struct address_space *mapping,
++				 struct folio *folio)
+ {
+ 	set_direct_map_default_noflush(&folio->page);
+ 	folio_zero_segment(folio, 0, folio_size(folio));
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 3783e45bfc92..b8add4d0cf18 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -788,7 +788,7 @@ static int __remove_mapping(struct address_space *mapping, struct folio *folio,
+ 		xa_unlock_irq(&mapping->i_pages);
+ 		put_swap_folio(folio, swap);
+ 	} else {
+-		void (*free_folio)(struct folio *);
++		void (*free_folio)(struct address_space *, struct folio *);
+ 
+ 		free_folio = mapping->a_ops->free_folio;
+ 		/*
+@@ -817,7 +817,7 @@ static int __remove_mapping(struct address_space *mapping, struct folio *folio,
+ 		spin_unlock(&mapping->host->i_lock);
+ 
+ 		if (free_folio)
+-			free_folio(folio);
++			free_folio(mapping, folio);
+ 	}
+ 
+ 	return 1;
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 24d270b9b725..c578d0ebe314 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -1319,7 +1319,8 @@ static void kvm_gmem_invalidate(struct folio *folio)
+ static inline void kvm_gmem_invalidate(struct folio *folio) {}
+ #endif
+ 
+-static void kvm_gmem_free_folio(struct folio *folio)
++static void kvm_gmem_free_folio(struct address_space *mapping,
++				struct folio *folio)
+ {
+ 	folio_clear_unevictable(folio);
+ 
 -- 
 2.49.0.1045.g170613ef41-goog
 
