@@ -1,106 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3069283A14
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DCF83A14;
+	Wed, 14 May 2025 07:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209248; cv=none; b=sqTxoDjtvktJbmXICg4oOvaqH65k4FTzsA6oTnKdcwPZtAInSqtRLDtHuhGglyb1CV6LgNepZVZWHxdQUeXyignZfiAuH9xQIUC+gHMB/WPjGhSdB3vhs81ukWGU/zLXf3sr2vHUi1OGRqPg4CRYDImjHWgD9UmkQmKrY4Jmd5I=
+	t=1747209303; cv=none; b=VZIDnsrRA2NbCiSrNWEbrkQgiCb8FstaZKsMsjTFI1i2VKrikDcFf85YAFme4hQYALKqsbiOy0gQ284bL+wA9EZN9zLQUQrmIMjE6RPtELSaW39ODzkYnaWzheZQb1hw8vZVNO1iumOUXph1S2LX7L20AAnSnHakv/5QF05qzDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209248; c=relaxed/simple;
-	bh=f0SmfOrgAK7b1qc4qpgTY4qvsC6LjJMZJfgGNUJT+Mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h52/TllNyDSheJhnEKOd8Pxf345RcMe+UWP9ho7mwPa+yanq8nKKpoGNt761t/u/qF5ChjYbr+NCfLfi1/+cUlqV9uOUFsaIN2/6ruzp8doCsEINnEc3nWkS2ahRsIcTXoOlAzdCtIrg0NfELWxSbQs7uDsIY5WTc9YFmSaENIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qif7zy8g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747209303; c=relaxed/simple;
+	bh=Ee7p0wfpb95gVJiPmJV8YsUQr2NDPZZTeHdvJQoBqSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ft0QJw4yRC20PqJ1/C7YQgZFjruZ0bADmnOnFXCv0airIU752URVUbXR1WGEHded/MMMgZL4iNU1+x2DRwM/xZcMgMuCvgMeedpFGjsWOkEcHNnUsyRBybmESgdpm2tSfpVW+w5hm1yb4Ud6zLs9inZgE1eKH+RMvC0REibvkbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm47hsLV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qif7zy8g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B620EC4CEE9;
-	Wed, 14 May 2025 07:54:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm47hsLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DBB6C4CEE9;
+	Wed, 14 May 2025 07:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747209247;
-	bh=f0SmfOrgAK7b1qc4qpgTY4qvsC6LjJMZJfgGNUJT+Mg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qif7zy8gPlqHy4wGwXwNrpkOF2kkxZAnpAGCXXAAoS4Jhm2JVWxqhk1mFsPFRtCC4
-	 cvf1T2ZbxcZXW1Bb8r4bJo9hUl3XTbHNzcCYzvLBaLNZurU0D0xvcvmM4E0QO+3Ahs
-	 eQxh7aK/lASHm6LmP3Voy963DLjc5oCcxJ3uFdvwMFbqlq6Yzp7EQE/SbgAjGhdncI
-	 LN5eA5GXK0VUVEKZRwUw5ipoC5heU0a+TuGsHkvainyR5qAQ5gRxhtY4OQ8Af2pIxj
-	 IXBO7ftcQehqsFrXR+NlqOPP71LS10NYtNMzl9PbiYk0U1ECIyF8/3EVYBmtj5l6ua
-	 3NEFBzJLMSfUQ==
-Message-ID: <3b5806d4-bb65-4cc3-b5c9-3c6aa8eefdc4@kernel.org>
-Date: Wed, 14 May 2025 09:54:04 +0200
+	s=k20201202; t=1747209303;
+	bh=Ee7p0wfpb95gVJiPmJV8YsUQr2NDPZZTeHdvJQoBqSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lm47hsLVvpnHCy/mtp9dakLGGxoV40cZJ+tdRhgM3Y+ByJ8dan/9upaqA4Q0T2RcP
+	 7AqMcudXjIm55O/8lfObGjo18CVI1bVpTzSmU9H9If+I5+O681IB3c5nPPuvEK7+/g
+	 nzlGuRxnQPkI1ggAjDPSBThc2qRNYM3yzteJ3ikCzZ4S8iALfi3iVjah62E+NPKVSs
+	 PTnVphuohzp7RPQQgPLTivSz+Xb7fxz/EP8QnkYgAWtkpB6tioypTcu6KYE6sQ1h+r
+	 h562fJTDY2dMslo0K2Ep17FeVKCwhnb3ZLO4bCpsy8SdDDwQ7nbbzJoH5GfraOR70x
+	 mWK3EmvgLBuxQ==
+Date: Wed, 14 May 2025 09:54:55 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
+	pavel@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
+	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
+	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
+Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
+ warnings
+Message-ID: <aCRMT0TlpFvpRGYk@gmail.com>
+References: <20250514062637.3287779-1-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memory: stm32_omm: Fix error handling in
- stm32_omm_disable_child()
-To: Patrice Chotard <patrice.chotard@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Christophe Kerello <christophe.kerello@foss.st.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514062637.3287779-1-shivankg@amd.com>
 
-On 13/05/2025 17:34, Patrice Chotard wrote:
-> Fix stm32_omm_toggle_child_clock() return value test, we should exit
-> only on non zero value.
+
+* Shivank Garg <shivankg@amd.com> wrote:
+
+> Warnings generated with 'make W=1':
+> arch/x86/mm/pgtable.c:623: warning: Function parameter or struct member 'reserve' not described in 'reserve_top_address'
+> arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'p4d' not described in 'p4d_set_huge'
+> arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'addr' not described in 'p4d_set_huge'
+> ... so on
 > 
-> Fixes: 8181d061dcff ("memory: Add STM32 Octo Memory Manager driver")
+> Add missing parameter documentation in page table functions to
+> fix kernel-doc warnings.
+> 
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+> ---
+>  arch/x86/mm/pgtable.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index f7ae44d3dd9e..8a5bc4545ad3 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -614,7 +614,7 @@ pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
+>  
+>  /**
+>   * reserve_top_address - reserves a hole in the top of kernel address space
+> - * @reserve - size of hole to reserve
+> + * @reserve: Size of hole to reserve.
+>   *
+>   * Can be used to relocate the fixmap area and poke a hole in the top
+>   * of kernel address space to make room for a hypervisor.
+> @@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+>  #ifdef CONFIG_X86_5LEVEL
+>  /**
+>   * p4d_set_huge - setup kernel P4D mapping
+> + * @p4d: Pointer to a p4d entry.
+> + * @addr: Virtual Address associated with p4d.
+> + * @prot: Protection bits to use.
 
-Please always give credits to people.
+How about using the same capitalization you already see in this 
+description?
 
-Best regards,
-Krzysztof
+>  /**
+>   * p4d_clear_huge - clear kernel P4D mapping when it is set
+> + * @p4d: Pointer to the p4d entry to clear.
+
+Ditto.
+
+>   * pud_set_huge - setup kernel PUD mapping
+> + * @pud: Pointer to a pud entry.
+> + * @addr: Virtual Address associated with pud.
+> + * @prot: Protection bits to use.
+
+Ditto.
+
+>   * pmd_set_huge - setup kernel PMD mapping
+> + * @pmd: Pointer to a pmd entry.
+> + * @addr: Virtual Address associated with pmd.
+> + * @prot: Protection bits to use.
+
+Ditto.
+
+> @@ -745,6 +755,7 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
+>  
+>  /**
+>   * pud_clear_huge - clear kernel PUD mapping when it is set
+> + * @pud: Pointer to the pud entry to clear.
+
+Ditto.
+
+>   * Returns 1 on success and 0 on failure (no PUD map is found).
+>   */
+> @@ -760,6 +771,7 @@ int pud_clear_huge(pud_t *pud)
+>  
+>  /**
+>   * pmd_clear_huge - clear kernel PMD mapping when it is set
+> + * @pmd: Pointer to the pmd entry to clear.
+
+Ditto.
+
+Thanks,
+
+	Ingo
