@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F5727A91F;
-	Wed, 14 May 2025 13:11:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAC627C149;
+	Wed, 14 May 2025 13:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747228273; cv=none; b=JDhK9QUQ6qpVSlng4bBca+THnJL0DHYKMWwFiY6eiJDjJu6FfmdV3wgPTQ8/2Jt/cgNPvRGYHPiw53SJMrewd7ovMw/p8cX+wotlP334fktxKCUDumLxYuYDnVxAGAS1/y1HWdjnS1bvZc6dBUnjkdkAp4IBdtHGVOwPPtOfBEk=
+	t=1747228278; cv=none; b=AuX6Kcrqt4n1TQpijD1WVqOrwi8n/V6CMxyxjmhyM0NGkRQdDbR5I/Nba9WLQmDgYMY6KmiW/Sf6BbsF5TDGydNMsVMOJN8OJ304efQawsPGDpKVU+avK+PGxHH46HWb7qSwVdyKoe9yzcWVaSybZwKPda7SxdyGIIahv8PjvGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747228273; c=relaxed/simple;
-	bh=Mch9zsCTZ++9Xv+WL31mykbtqROtgLIoRLVQlMeLD5Q=;
+	s=arc-20240116; t=1747228278; c=relaxed/simple;
+	bh=Jmn9JZiPwS6t7l5qP1DBTGlSEGv98zwsb0/iNG4GySk=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=JRsM5dThaKmJvn4k2XizzhcQbnRO58os/a9l4zDZVYnl3AoR0o384WpKOyGX4VdwacdngdcG1M4pSJW9DdyUXCPeyvmjnG5JDwHPCE+Y3F6GvjXaCRB+ybb/fB78ekzZuCas2uuUnXMj0pxc3hUSzVgMqOrDGas1IQZD+1JDyuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRzly4qL; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Nk2HLN6AF0A1BeYwS+UwlVfLMDmoXchN2kC5xYb2P80iaLYdPv6qL32DLC7apyPl0cVcSRPRfBqmGN96MkDZ9hE3ULdEZ5NzrK2vu5qL1ggZoUDN+yGh5w45QtLMgbPTZEPlXcTW9Ko0VHLYc3zXa0ZjZO7W09R9kC0QxmJcto0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8udReAr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRzly4qL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325D3C4CEED;
-	Wed, 14 May 2025 13:11:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8udReAr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF712C4CEED;
+	Wed, 14 May 2025 13:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747228272;
-	bh=Mch9zsCTZ++9Xv+WL31mykbtqROtgLIoRLVQlMeLD5Q=;
+	s=k20201202; t=1747228275;
+	bh=Jmn9JZiPwS6t7l5qP1DBTGlSEGv98zwsb0/iNG4GySk=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=GRzly4qLCx1tfyhCjxc4up1k0KPUIbRuXLk/NtEj+b52QZe4iBWJdSMSDaKWne57f
-	 gxnhMmOjMb2CXMnHVyNvFdwQHtxwIt+8kUuBfoP/yJ7UfMrT2h/ObiGqByu8ZwGs4u
-	 zmPyv1/z/7+rj8gNLYCnMh0nGaU/FEUuhKmRCZAevh4CKy7JkuD9EIJ7XiwWJCXHhf
-	 qhl62L65ervTDgGYQ9k2NUrrNdr4uZcp/wAIHsc30W/9vixiBRSirmGRfmIdg1WZqX
-	 D0puIWD3XNEyzKiLDnXt2iv2g1AEatvFhytB7Qt5eqzjqIirsNcNgfxbYMNwj1bC41
-	 x0KlQJySqSrOA==
-Date: Wed, 14 May 2025 08:11:10 -0500
+	b=D8udReAr9GpwYvjahuiKSa2nvqA3mqFELpWeMVn93WISyfAAgP36SvIZn2Qi7aZGh
+	 RK+PK1wXOHZg9NREUiDVnpkmRc5INUap1wD84PXbhe5wYizZP3BEjBami0yLUKxNMQ
+	 mzQZ7Xk+F4IOhsi31iM7wwcyfbqA2yV4B5I0+bLdzmKMfbtD9/sMXG57Yw4UxNjjjz
+	 jDggtE5FlCXiLL18yQh8k4fhihuta9K9uKWFVFC7zOykOo0XRSx823nnZzDAdEf7p+
+	 jC2IgtX9QwHOdGhnbAMRpxHUJsC0Yt1iEO02akHjmhQqJNVp3AQgKwS1/W5Geopmgh
+	 PLZAoBVjetsFA==
+Date: Wed, 14 May 2025 08:11:14 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,85 +36,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, conor+dt@kernel.org, 
- devicetree@vger.kernel.org, quentin.schulz@cherry.de, 
- linux-kernel@vger.kernel.org, krzk+dt@kernel.org, 
- linux-rockchip@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-In-Reply-To: <20250514120906.2412588-1-heiko@sntech.de>
-References: <20250514120906.2412588-1-heiko@sntech.de>
-Message-Id: <174722778701.1826414.17251063329059512671.robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] Add two board-families from Theobroma-Systems
+Cc: Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ linux-arm-kernel@lists.infradead.org, george.kw.lee@fii-foxconn.com, 
+ Conor Dooley <conor+dt@kernel.org>, leo.jt.wang@fii-foxconn.com, 
+ Joel Stanley <joel@jms.id.au>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+ devicetree@vger.kernel.org
+To: leo.jt.wang@gmail.com
+In-Reply-To: <6822b851.050a0220.27a24d.d071@mx.google.com>
+References: <20250513031010.267994-1-LeoWang>
+ <6822b851.050a0220.27a24d.d071@mx.google.com>
+Message-Id: <174722778823.1826573.3458459625783482888.robh@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
 
 
-On Wed, 14 May 2025 14:09:00 +0200, Heiko Stuebner wrote:
-> Both the Cobra and PP1516 boards are based around the PX30 SoC and can be
-> found with a variety of display options.
+On Tue, 13 May 2025 11:10:10 +0800, leo.jt.wang@gmail.com wrote:
+> From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 > 
-> As new boards should not use the deprecated snps,reset-* properties
-> in the gmac node, I also added a core mdio-node for the gmac and
-> converted the Theobroma Ringneck board over.
+> Add linux device tree entry for Meta Clemente compute-tray
+> BMC using AST2600 SoC.
 > 
-> Testing with the new node both before and after converting Ringneck
-> showed the board finding its network both when booting locally and
-> from the tftp/nfs.
-> 
-> changes in v3:
-> - more sorting
-> - more Reviewed-bys
-> - pull-down for dsp-rst
-> - pp1516 accel pinctrl group
-> 
-> changes in v2:
-> - add received Acks/Reviews
-> - drop "rockchip" prefix from system-power-controller (Diederik)
-> - split out prototype-pins to prototype variant
-> - address Quentin's review comments
->   - ethernet0 alias for Cobra
->   - a number more pinctrl entries for gpios
->   - drop unused slp pinctrl entries
->   - additional comments
->   - use gpio-constants for pmic int
->   - ordering (nodes + properties)
->   - clarify vccio_sd more
->   - interrupt line for pp1516 accelerometer
-> 
-> Heiko Stuebner (6):
->   arm64: dts: rockchip: add basic mdio node to px30
->   arm64: dts: rockchip: move reset to dedicated eth-phy node on ringneck
->   dt-bindings: arm: rockchip: add PX30-Cobra boards from Theobroma
->     Systems
->   arm64: dts: rockchip: add px30-cobra base dtsi and board variants
->   dt-bindings: arm: rockchip: add PX30-PP1516 boards from Theobroma
->     Systems
->   arm64: dts: rockchip: add px30-pp1516 base dtsi and board variants
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |  18 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   6 +
->  .../rockchip/px30-cobra-ltk050h3146w-a2.dts   |  39 ++
->  .../dts/rockchip/px30-cobra-ltk050h3146w.dts  |  39 ++
->  .../dts/rockchip/px30-cobra-ltk050h3148w.dts  |  39 ++
->  .../dts/rockchip/px30-cobra-ltk500hd1829.dts  |  73 +++
->  arch/arm64/boot/dts/rockchip/px30-cobra.dtsi  | 566 ++++++++++++++++
->  .../rockchip/px30-pp1516-ltk050h3146w-a2.dts  |  39 ++
->  .../dts/rockchip/px30-pp1516-ltk050h3148w.dts |  39 ++
->  arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi | 602 ++++++++++++++++++
->  .../boot/dts/rockchip/px30-ringneck.dtsi      |  22 +-
->  arch/arm64/boot/dts/rockchip/px30.dtsi        |   6 +
->  12 files changed, 1485 insertions(+), 3 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3146w-a2.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3148w.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/px30-pp1516.dtsi
-> 
-> --
-> 2.47.2
-> 
-> 
+> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> ---
+>  arch/arm/boot/dts/aspeed/Makefile             |    1 +
+>  .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1269 +++++++++++++++++
+>  2 files changed, 1270 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
 > 
 
 
@@ -134,219 +81,81 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/v6.15-rc1-23-g0d0947766d87 (exact match)
+ Base: tags/next-20250514 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250514120906.2412588-1-heiko@sntech.de:
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 6822b851.050a0220.27a24d.d071@mx.google.com:
 
-Error: arch/arm64/boot/dts/rockchip/px30-cobra.dtsi:424.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dtb] Error 1
-make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/rockchip] Error 2
-make[2]: Target 'arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd1829.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: rockchip/px30-cobra-ltk500hd1829.dtb] Error 2
-Error: arch/arm64/boot/dts/rockchip/px30-cobra.dtsi:424.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dtb] Error 1
-make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/rockchip] Error 2
-make[2]: Target 'arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148w.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: rockchip/px30-cobra-ltk050h3148w.dtb] Error 2
-arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3148w.dtb: panel@0 (leadtek,ltk050h3148w): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
-Error: arch/arm64/boot/dts/rockchip/px30-cobra.dtsi:424.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dtb] Error 1
-make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/rockchip] Error 2
-make[2]: Target 'arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: rockchip/px30-cobra-ltk050h3146w.dtb] Error 2
-arch/arm64/boot/dts/rockchip/px30-pp1516-ltk050h3146w-a2.dtb: panel@0 (leadtek,ltk050h3146w-a2): 'port' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
-Error: arch/arm64/boot/dts/rockchip/px30-cobra.dtsi:424.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dtb] Error 1
-make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/rockchip] Error 2
-make[2]: Target 'arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1475: rockchip/px30-cobra-ltk050h3146w-a2.dtb] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-make: Target 'rockchip/rk3399-ficus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-odroid-m2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-r88.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rockpro64.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-gru-scarlet-dumo.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-pinetab2-v2.0.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-coolpi-cm5-genbook.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-geekbox.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-odroid-go3.dtb' not remade because of errors.
-make: Target 'rockchip/rk3528-radxa-e20c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-gru-scarlet-inx.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-gru-bob.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-orangepi-5b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-h96-max-v58.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-soquartz-cm4.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-bigtreetech-pi2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-armsom-w3.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-orangepi-3b-v2.1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3318-a95x-z2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-orangepi-r1-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3576-roc-pc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-orangepi-5-ultra.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-pi-4a-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-anbernic-rg351v.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-rock64.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-jaguar.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-edgeble-neu6b-io.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-ok3588-c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-pi-4b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-powkiddy-rgb10max3.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-khadas-edge-v.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-radxa-e25.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-gameforce-ace.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-4se.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-bpi-r2-pro.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-orangepi-5.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-tiger-haikou.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-nanopi-r2s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-photonicat.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-hugsun-x99.dtb' not remade because of errors.
-make: Target 'rockchip/rk3582-radxa-e52c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg-arc-s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-4c-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rockpro64-v2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-px5-evb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3308-rock-s0.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-puma-haikou.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-qnap-ts433.dtb' not remade because of errors.
-make: Target 'rockchip/px30-engicam-px30-core-ctouch2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-coolpi-4b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-toybrick-x0.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-pi-4c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-khadas-edge.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-pinebook-pro.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-nanopi-r5c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-khadas-edge2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopi-m4.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-odroid-go2-v11.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopi-r4s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-lion-haikou.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-friendlyelec-cm3588-nas.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-lckfb-tspi.dtb' not remade because of errors.
-make: Target 'rockchip/px30-cobra-ltk500hd1829.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-sapphire.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-fastrhino-r68s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-edgeble-neu6a-io.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg353ps.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-rock-5a.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-fastrhino-r66s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-rock-5-itx.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-kobol-helios64.dtb' not remade because of errors.
-make: Target 'rockchip/rk3576-armsom-sige5.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-leez-p710.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-wolfvision-pf5.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-gru-kevin.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-nanopi-r5s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-evb1-v10.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg353vs.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-rock-3b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-powkiddy-rgb30.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-powkiddy-x55.dtb' not remade because of errors.
-make: Target 'rockchip/px30-pp1516-ltk050h3148w.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-anbernic-rg351m.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopi-m4b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock960.dtb' not remade because of errors.
-make: Target 'rockchip/px30-cobra-ltk050h3148w.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-orangepi.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-rock-5b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-soquartz-model-a.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-nanopi-r2c.dtb' not remade because of errors.
-make: Target 'rockchip/px30-ringneck-haikou.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-sapphire-excavator.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-roc-pc-mezzanine.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-odroid-m1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-evb1-v10.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-roc-pc-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-powkiddy-rgb20sx.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-gru-scarlet-kd.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-roc-pc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-evb-act8846.dtb' not remade because of errors.
-make: Target 'rockchip/rk3308-bpi-p2-pro.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-quartzpro64.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-turing-rk1.dtb' not remade because of errors.
-make: Target 'rockchip/px30-engicam-px30-core-edimm2.2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-radxa-cm3-io.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-radxa-zero-3e.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-roc-pc.dtb' not remade because of errors.
-make: Target 'rockchip/px30-cobra-ltk050h3146w.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-roc-pc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-nanopi-r2c-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-mnt-reform2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-nanopc-t6-lts.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-odroid-m1s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-armsom-sige7.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-rock-pi-e.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-mecsbc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-nanopi-r6c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399pro-rock-pi-n10.dtb' not remade because of errors.
-make: Target 'rockchip/px30-firefly-jd4-core-mb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-radxa-zero-3w.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-firefly.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-orangepi-5-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-pinephone-pro.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-evb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-quartz64-b.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-roc-cc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-nanopc-t6.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-eaidk-610.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-orangepi-5-max.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-nanopi-r6s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-odroid-go2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-pi-4a.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-rock-5c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg353v.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-firefly-itx-3588j.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-orangepi-r1-plus-lts.dtb' not remade because of errors.
-make: Target 'rockchip/rk3576-evb1-v10.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-orangepi-3b-v1.1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-lubancat-2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-box-demo.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-powkiddy-rk2023.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-rock-3c.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-bigtreetech-cb2-manta.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-evb1-v10.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-rock-pi-4b-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3308-roc-cc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3326-gameforce-chi.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-a1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-pinenote-v1.1.dtb' not remade because of errors.
-make: Target 'rockchip/px30-pp1516-ltk050h3146w-a2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg503.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-soquartz-blade.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-pinenote-v1.2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-nanopi-r3s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3308-evb.dtb' not remade because of errors.
-make: Target 'rockchip/px30-evb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588-coolpi-cm5-evb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3588s-indiedroid-nova.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-lubancat-1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopi-r4s-enterprise.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopi-neo4.dtb' not remade because of errors.
-make: Target 'rockchip/px30-engicam-px30-core-ctouch2-of10.dtb' not remade because of errors.
-make: Target 'rockchip/rk3328-nanopi-r2s-plus.dtb' not remade because of errors.
-make: Target 'rockchip/rk3308-rock-pi-s.dtb' not remade because of errors.
-make: Target 'rockchip/rk3568-rock-3a.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-orion-r68-meta.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg353p.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-quartz64-a.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-roc-pc.dtb' not remade because of errors.
-make: Target 'rockchip/rk3576-rock-4d.dtb' not remade because of errors.
-make: Target 'rockchip/px30-cobra-ltk050h3146w-a2.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-evb.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-anbernic-rg-arc-d.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-nanopc-t4.dtb' not remade because of errors.
-make: Target 'rockchip/rk3399-khadas-edge-captain.dtb' not remade because of errors.
-make: Target 'rockchip/rk3566-pinetab2-v0.1.dtb' not remade because of errors.
-make: Target 'rockchip/rk3368-lba3368.dtb' not remade because of errors.
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: / (facebook,clemente-bmc): compatible: 'oneOf' conditional failed, one must be fixed:
+	'facebook,clemente-bmc' is not one of ['delta,ahe50dc-bmc', 'facebook,galaxy100-bmc', 'facebook,wedge100-bmc', 'facebook,wedge40-bmc', 'microsoft,olympus-bmc', 'quanta,q71l-bmc', 'tyan,palmetto-bmc', 'yadro,vesnin-bmc']
+	'facebook,clemente-bmc' is not one of ['amd,daytonax-bmc', 'amd,ethanolx-bmc', 'ampere,mtjade-bmc', 'aspeed,ast2500-evb', 'asrock,e3c246d4i-bmc', 'asrock,e3c256d4i-bmc', 'asrock,romed8hm3-bmc', 'asrock,spc621d8hm3-bmc', 'asrock,x570d4u-bmc', 'bytedance,g220a-bmc', 'facebook,cmm-bmc', 'facebook,minipack-bmc', 'facebook,tiogapass-bmc', 'facebook,yamp-bmc', 'facebook,yosemitev2-bmc', 'facebook,wedge400-bmc', 'hxt,stardragon4800-rep2-bmc', 'ibm,mihawk-bmc', 'ibm,mowgli-bmc', 'ibm,romulus-bmc', 'ibm,swift-bmc', 'ibm,witherspoon-bmc', 'ingrasys,zaius-bmc', 'inspur,fp5280g2-bmc', 'inspur,nf5280m6-bmc', 'inspur,on5263m5-bmc', 'intel,s2600wf-bmc', 'inventec,lanyang-bmc', 'lenovo,hr630-bmc', 'lenovo,hr855xg2-bmc', 'portwell,neptune-bmc', 'qcom,centriq2400-rep-bmc', 'supermicro,x11spi-bmc', 'tyan,s7106-bmc', 'tyan,s8036-bmc', 'yadro,nicole-bmc', 'yadro,vegman-n110-bmc', 'yadro,vegman-rx20-bmc', 'yadro,vegman-sx20-bmc']
+	'facebook,clemente-bmc' is not one of ['ampere,mtjefferson-bmc', 'ampere,mtmitchell-bmc', 'aspeed,ast2600-evb', 'aspeed,ast2600-evb-a1', 'asus,x4tf-bmc', 'facebook,bletchley-bmc', 'facebook,catalina-bmc', 'facebook,cloudripper-bmc', 'facebook,elbert-bmc', 'facebook,fuji-bmc', 'facebook,greatlakes-bmc', 'facebook,harma-bmc', 'facebook,minerva-cmc', 'facebook,yosemite4-bmc', 'ibm,blueridge-bmc', 'ibm,everest-bmc', 'ibm,fuji-bmc', 'ibm,rainier-bmc', 'ibm,sbp1-bmc', 'ibm,system1-bmc', 'ibm,tacoma-bmc', 'inventec,starscream-bmc', 'inventec,transformer-bmc', 'jabil,rbp-bmc', 'nvidia,gb200nvl-bmc', 'qcom,dc-scm-v1-bmc', 'quanta,s6q-bmc', 'ufispace,ncplite-bmc']
+	'aspeed,ast2400' was expected
+	'aspeed,ast2500' was expected
+	from schema $id: http://devicetree.org/schemas/arm/aspeed/aspeed.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /: failed to match any schema with compatible: ['facebook,clemente-bmc', 'aspeed,ast2600']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: ethernet@1e670000 (aspeed,ast2600-mac): Unevaluated properties are not allowed ('ncsi-ctrl,start-redo-probe', 'ncsi-package' were unexpected)
+	from schema $id: http://devicetree.org/schemas/net/faraday,ftgmac100.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: ethernet@1e670000 (aspeed,ast2600-mac): 'ncsi-ctrl,start-redo-probe' does not match any of the regexes: '^#.*', '^(at25|bm|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio-key|gpio|gpmc|hdmi|i2c-gpio),.*', '^(keypad|m25p|max8952|max8997|max8998|mpmc),.*', '^(pciclass|pinctrl-single|#pinctrl-single|PowerPC),.*', '^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*', '^(simple-audio-card|st-plgpio|st-spics|ts),.*', '^100ask,.*', '^70mai,.*', '^8dev,.*', '^GEFanuc,.*', '^IBM,.*', '^ORCL,.*', '^SUNW,.*', '^[a-zA-Z0-9#_][a-zA-Z0-9+\-._@]{0,63}$', '^[a-zA-Z0-9+\-._]*@[0-9a-zA-Z,]*$', '^abb,.*', '^abilis,.*', '^abracon,.*', '^abt,.*', '^acbel,.*', '^acelink,.*', '^acer,.*', '^acme,.*', '^actions,.*', '^active-semi,.*', '^ad,.*', '^adafruit,.*', '^adapteva,.*', '^adaptrum,.*', '^adh,.*', '^adi,.*', '^adieng,.*', '^admatec,.*', '^advantech,.*', '^aeroflexgaisler,.*', '^aesop,.*', '^airoha,.*', '^al,.*', '^alcatel,.*', '^aldec,.*', '^alfa-network,.*', '^allegro,.*', '^allegromicro,.*', '^alliedvision,.*', '^allo,.*', '^allwinner,.*', '^alphascale,.*', '^alps,.*', '^alt,.*', '^altr,.*', '^amarula,.*', '^amazon,.*', '^amcc,.*', '^amd,.*', '^amediatech,.*', '^amlogic,.*', '^ampere,.*', '^amphenol,.*', '^ampire,.*', '^ams,.*', '^amstaos,.*', '^analogix,.*', '^anbernic,.*', '^andestech,.*', '^anvo,.*', '^aoly,.*', '^aosong,.*', '^apm,.*', '^apple,.*', '^aptina,.*', '^arasan,.*', '^archermind,.*', '^arcom,.*', '^arctic,.*', '^arcx,.*', '^ariaboard,.*', '^aries,.*', '^arm,.*', '^armadeus,.*', '^armsom,.*', '^arrow,.*', '^artesyn,.*', '^asahi-kasei,.*', '^asc,.*', '^asix,.*', '^aspeed,.*', '^asrock,.*', '^asteralabs,.*', '^asus,.*', '^atheros,.*', '^atlas,.*', '^atmel,.*', '^auo,.*', '^auvidea,.*', '^avago,.*', '^avia,.*', '^avic,.*', '^avnet,.*', '^awinic,.*', '^axentia,.*', '^axis,.*', '^azoteq,.*', '^azw,.*', '^baikal,.*', '^bananapi,.*', '^beacon,.*', '^beagle,.*', '^belling,.*', '^bhf,.*', '^bigtreetech,.*', '^bitmain,.*', '^blaize,.*', '^blutek,.*', '^boe,.*', '^bosch,.*', '^boundary,.*', '^brcm,.*', '^broadmobi,.*', '^bsh,.*', '^bticino,.*', '^buffalo,.*', '^bur,.*', '^bytedance,.*', '^calamp,.*', '^calao,.*', '^calaosystems,.*', '^calxeda,.*', '^cameo,.*', '^canaan,.*', '^caninos,.*', '^capella,.*', '^cascoda,.*', '^catalyst,.*', '^cavium,.*', '^cct,.*', '^cdns,.*', '^cdtech,.*', '^cellwise,.*', '^ceva,.*', '^chargebyte,.*', '^checkpoint,.*', '^chefree,.*', '^chipidea,.*', '^chipone,.*', '^chipspark,.*', '^chongzhou,.*', '^chrontel,.*', '^chrp,.*', '^chunghwa,.*', '^chuwi,.*', '^ciaa,.*', '^cirrus,.*', '^cisco,.*', '^clockwork,.*', '^cloos,.*', '^cloudengines,.*', '^cnm,.*', '^cnxt,.*', '^colorfly,.*', '^compulab,.*', '^comvetia,.*', '^congatec,.*', '^coolpi,.*', '^coreriver,.*', '^corpro,.*', '^cortina,.*', '^cosmic,.*', '^crane,.*', '^creative,.*', '^crystalfontz,.*', '^csky,.*', '^csot,.*', '^csq,.*', '^ctera,.*', '^ctu,.*', '^cubietech,.*', '^cudy,.*', '^cui,.*', '^cypress,.*', '^cyx,.*', '^cznic,.*', '^dallas,.*', '^dataimage,.*', '^davicom,.*', '^deepcomputing,.*', '^dell,.*', '^delta,.*', '^densitron,.*', '^denx,.*', '^devantech,.*', '^dfi,.*', '^dfrobot,.*', '^dh,.*', '^difrnce,.*', '^digi,.*', '^digilent,.*', '^dimonoff,.*', '^diodes,.*', '^dioo,.*', '^dlc,.*', '^dlg,.*', '^dlink,.*', '^dmo,.*', '^domintech,.*', '^dongwoon,.*', '^dptechnics,.*', '^dragino,.*', '^dream,.*', '^ds,.*', '^dserve,.*', '^dynaimage,.*', '^ea,.*', '^ebang,.*', '^ebbg,.*', '^ebs-systart,.*', '^ebv,.*', '^eckelmann,.*', '^econet,.*', '^edgeble,.*', '^edimax,.*', '^edt,.*', '^ees,.*', '^eeti,.*', '^einfochips,.*', '^eink,.*', '^elan,.*', '^element14,.*', '^elgin,.*', '^elida,.*', '^elimo,.*', '^elpida,.*', '^embedfire,.*', '^embest,.*', '^emcraft,.*', '^emlid,.*', '^emmicro,.*', '^empire-electronix,.*', '^emtrion,.*', '^enclustra,.*', '^endless,.*', '^ene,.*', '^energymicro,.*', '^engicam,.*', '^engleder,.*', '^epcos,.*', '^epfl,.*', '^epson,.*', '^esp,.*', '^est,.*', '^ettus,.*', '^eukrea,.*', '^everest,.*', '^everspin,.*', '^evervision,.*', '^exar,.*', '^excito,.*', '^exegin,.*', '^ezchip,.*', '^facebook,.*', '^fairchild,.*', '^fairphone,.*', '^faraday,.*', '^fascontek,.*', '^fastrax,.*', '^fcs,.*', '^feixin,.*', '^feiyang,.*', '^fii,.*', '^firefly,.*', '^focaltech,.*', '^forlinx,.*', '^freebox,.*', '^freecom,.*', '^frida,.*', '^friendlyarm,.*', '^fsl,.*', '^fujitsu,.*', '^fxtec,.*', '^galaxycore,.*', '^gameforce,.*', '^gardena,.*', '^gateway,.*', '^gateworks,.*', '^gcw,.*', '^ge,.*', '^geekbuying,.*', '^gef,.*', '^gehc,.*', '^gemei,.*', '^gemtek,.*', '^genesys,.*', '^genexis,.*', '^geniatech,.*', '^giantec,.*', '^giantplus,.*', '^glinet,.*', '^globalscale,.*', '^globaltop,.*', '^gmt,.*', '^gocontroll,.*', '^goldelico,.*', '^goodix,.*', '^google,.*', '^goramo,.*', '^gplus,.*', '^grinn,.*', '^grmn,.*', '^gumstix,.*', '^gw,.*', '^hannstar,.*', '^haochuangyi,.*', '^haoyu,.*', '^hardkernel,.*', '^hechuang,.*', '^hideep,.*', '^himax,.*', '^hirschmann,.*', '^hisi,.*', '^hisilicon,.*', '^hit,.*', '^hitex,.*', '^holt,.*', '^holtek,.*', '^honestar,.*', '^honeywell,.*', '^hoperf,.*', '^hoperun,.*', '^hp,.*', '^hpe,.*', '^hsg,.*', '^htc,.*', '^huawei,.*', '^hugsun,.*', '^hwacom,.*', '^hxt,.*', '^hycon,.*', '^hydis,.*', '^hynitron,.*', '^hynix,.*', '^hyundai,.*', '^i2se,.*', '^ibm,.*', '^icplus,.*', '^idt,.*', '^iei,.*', '^ifi,.*', '^ilitek,.*', '^imagis,.*', '^img,.*', '^imi,.*', '^inanbo,.*', '^incircuit,.*', '^indiedroid,.*', '^inet-tek,.*', '^infineon,.*', '^inforce,.*', '^ingenic,.*', '^ingrasys,.*', '^injoinic,.*', '^innocomm,.*', '^innolux,.*', '^inside-secure,.*', '^insignal,.*', '^inspur,.*', '^intel,.*', '^intercontrol,.*', '^invensense,.*', '^inventec,.*', '^inversepath,.*', '^iom,.*', '^irondevice,.*', '^isee,.*', '^isil,.*', '^issi,.*', '^ite,.*', '^itead,.*', '^itian,.*', '^ivo,.*', '^iwave,.*', '^jadard,.*', '^jasonic,.*', '^jdi,.*', '^jedec,.*', '^jenson,.*', '^jesurun,.*', '^jethome,.*', '^jianda,.*', '^jide,.*', '^joz,.*', '^kam,.*', '^karo,.*', '^keithkoep,.*', '^keymile,.*', '^khadas,.*', '^kiebackpeter,.*', '^kinetic,.*', '^kingdisplay,.*', '^kingnovel,.*', '^kionix,.*', '^kobo,.*', '^kobol,.*', '^koe,.*', '^kontron,.*', '^kosagi,.*', '^kvg,.*', '^kyo,.*', '^lacie,.*', '^laird,.*', '^lamobo,.*', '^lantiq,.*', '^lattice,.*', '^lckfb,.*', '^lctech,.*', '^leadtek,.*', '^leez,.*', '^lego,.*', '^lemaker,.*', '^lenovo,.*', '^lg,.*', '^lgphilips,.*', '^libretech,.*', '^licheepi,.*', '^linaro,.*', '^lincolntech,.*', '^lineartechnology,.*', '^linksprite,.*', '^linksys,.*', '^linutronix,.*', '^linux,.*', '^linx,.*', '^liontron,.*', '^liteon,.*', '^litex,.*', '^lltc,.*', '^logicpd,.*', '^logictechno,.*', '^longcheer,.*', '^lontium,.*', '^loongmasses,.*', '^loongson,.*', '^lsi,.*', '^lunzn,.*', '^luxul,.*', '^lwn,.*', '^lxa,.*', '^m5stack,.*', '^macnica,.*', '^mantix,.*', '^mapleboard,.*', '^marantec,.*', '^marvell,.*', '^maxbotix,.*', '^maxim,.*', '^maxlinear,.*', '^mbvl,.*', '^mcube,.*', '^meas,.*', '^mecer,.*', '^mediatek,.*', '^megachips,.*', '^mele,.*', '^melexis,.*', '^melfas,.*', '^mellanox,.*', '^memsensing,.*', '^memsic,.*', '^menlo,.*', '^mentor,.*', '^meraki,.*', '^merrii,.*', '^methode,.*', '^micrel,.*', '^microchip,.*', '^microcrystal,.*', '^micron,.*', '^microsoft,.*', '^microsys,.*', '^microtips,.*', '^mikroe,.*', '^mikrotik,.*', '^milkv,.*', '^miniand,.*', '^minix,.*', '^mips,.*', '^miramems,.*', '^mitsubishi,.*', '^mitsumi,.*', '^mixel,.*', '^miyoo,.*', '^mntre,.*', '^mobileye,.*', '^modtronix,.*', '^moortec,.*', '^mosaixtech,.*', '^motorcomm,.*', '^motorola,.*', '^moxa,.*', '^mpl,.*', '^mps,.*', '^mqmaker,.*', '^mrvl,.*', '^mscc,.*', '^msi,.*', '^mstar,.*', '^mti,.*', '^multi-inno,.*', '^mundoreader,.*', '^murata,.*', '^mxic,.*', '^mxicy,.*', '^myir,.*', '^national,.*', '^neardi,.*', '^nec,.*', '^neofidelity,.*', '^neonode,.*', '^netcube,.*', '^netgear,.*', '^netlogic,.*', '^netron-dy,.*', '^netronix,.*', '^netxeon,.*', '^neweast,.*', '^newhaven,.*', '^newvision,.*', '^nexbox,.*', '^nextthing,.*', '^ni,.*', '^nintendo,.*', '^nlt,.*', '^nokia,.*', '^nordic,.*', '^nothing,.*', '^novatek,.*', '^novtech,.*', '^numonyx,.*', '^nutsboard,.*', '^nuvoton,.*', '^nvd,.*', '^nvidia,.*', '^nxp,.*', '^oceanic,.*', '^ocs,.*', '^oct,.*', '^okaya,.*', '^oki,.*', '^olimex,.*', '^olpc,.*', '^oneplus,.*', '^onie,.*', '^onion,.*', '^onnn,.*', '^ontat,.*', '^opalkelly,.*', '^openailab,.*', '^opencores,.*', '^openembed,.*', '^openpandora,.*', '^openrisc,.*', '^openwrt,.*', '^option,.*', '^oranth,.*', '^orisetech,.*', '^ortustech,.*', '^osddisplays,.*', '^osmc,.*', '^ouya,.*', '^overkiz,.*', '^ovti,.*', '^oxsemi,.*', '^ozzmaker,.*', '^panasonic,.*', '^parade,.*', '^parallax,.*', '^pda,.*', '^pegatron,.*', '^pericom,.*', '^pervasive,.*', '^phicomm,.*', '^phytec,.*', '^picochip,.*', '^pinctrl-[0-9]+$', '^pine64,.*', '^pineriver,.*', '^pixcir,.*', '^plantower,.*', '^plathome,.*', '^plda,.*', '^plx,.*', '^ply,.*', '^pni,.*', '^pocketbook,.*', '^polaroid,.*', '^polyhex,.*', '^portwell,.*', '^poslab,.*', '^pov,.*', '^powertip,.*', '^powervr,.*', '^powkiddy,.*', '^pri,.*', '^primeview,.*', '^primux,.*', '^probox2,.*', '^prt,.*', '^pulsedlight,.*', '^purism,.*', '^puya,.*', '^qca,.*', '^qcom,.*', '^qemu,.*', '^qi,.*', '^qiaodian,.*', '^qihua,.*', '^qishenglong,.*', '^qnap,.*', '^quanta,.*', '^radxa,.*', '^raidsonic,.*', '^ralink,.*', '^ramtron,.*', '^raspberrypi,.*', '^raydium,.*', '^rda,.*', '^realtek,.*', '^relfor,.*', '^remarkable,.*', '^renesas,.*', '^rervision,.*', '^retronix,.*', '^revotics,.*', '^rex,.*', '^richtek,.*', '^ricoh,.*', '^rikomagic,.*', '^riot,.*', '^riscv,.*', '^rockchip,.*', '^rocktech,.*', '^rohm,.*', '^ronbo,.*', '^roofull,.*', '^roseapplepi,.*', '^rve,.*', '^saef,.*', '^samsung,.*', '^samtec,.*', '^sancloud,.*', '^sandisk,.*', '^satoz,.*', '^sbs,.*', '^schindler,.*', '^schneider,.*', '^sciosense,.*', '^seagate,.*', '^seeed,.*', '^seirobotics,.*', '^semtech,.*', '^senseair,.*', '^sensirion,.*', '^sensortek,.*', '^sercomm,.*', '^sff,.*', '^sgd,.*', '^sgmicro,.*', '^sgx,.*', '^sharp,.*', '^shift,.*', '^shimafuji,.*', '^shineworld,.*', '^shiratech,.*', '^si-en,.*', '^si-linux,.*', '^siemens,.*', '^sifive,.*', '^siflower,.*', '^sigma,.*', '^sii,.*', '^sil,.*', '^silabs,.*', '^silan,.*', '^silead,.*', '^silergy,.*', '^silex-insight,.*', '^siliconfile,.*', '^siliconmitus,.*', '^silvaco,.*', '^simtek,.*', '^sinlinx,.*', '^sinovoip,.*', '^sinowealth,.*', '^sipeed,.*', '^sirf,.*', '^sis,.*', '^sitronix,.*', '^skov,.*', '^skyworks,.*', '^smartlabs,.*', '^smartrg,.*', '^smi,.*', '^smsc,.*', '^snps,.*', '^sochip,.*', '^socionext,.*', '^solidrun,.*', '^solomon,.*', '^sony,.*', '^sophgo,.*', '^sourceparts,.*', '^spacemit,.*', '^spansion,.*', '^sparkfun,.*', '^spinalhdl,.*', '^sprd,.*', '^square,.*', '^ssi,.*', '^sst,.*', '^sstar,.*', '^st,.*', '^st-ericsson,.*', '^starfive,.*', '^starry,.*', '^startek,.*', '^starterkit,.*', '^ste,.*', '^stericsson,.*', '^storlink,.*', '^storm,.*', '^storopack,.*', '^summit,.*', '^sunchip,.*', '^sundance,.*', '^sunplus,.*', '^supermicro,.*', '^swir,.*', '^syna,.*', '^synology,.*', '^synopsys,.*', '^tbs,.*', '^tbs-biometrics,.*', '^tcg,.*', '^tcl,.*', '^tcs,.*', '^tcu,.*', '^tdo,.*', '^team-source-display,.*', '^technexion,.*', '^technologic,.*', '^techstar,.*', '^techwell,.*', '^teejet,.*', '^teltonika,.*', '^tempo,.*', '^terasic,.*', '^tesla,.*', '^test,.*', '^tfc,.*', '^thead,.*', '^thine,.*', '^thingyjp,.*', '^thundercomm,.*', '^thwc,.*', '^ti,.*', '^tianma,.*', '^tlm,.*', '^tmt,.*', '^topeet,.*', '^topic,.*', '^topland,.*', '^toppoly,.*', '^topwise,.*', '^toradex,.*', '^toshiba,.*', '^toumaz,.*', '^tpk,.*', '^tplink,.*', '^tpo,.*', '^tq,.*', '^transpeed,.*', '^traverse,.*', '^tronfy,.*', '^tronsmart,.*', '^truly,.*', '^tsd,.*', '^turing,.*', '^tyan,.*', '^tyhx,.*', '^u-blox,.*', '^u-boot,.*', '^ubnt,.*', '^ucrobotics,.*', '^udoo,.*', '^ufispace,.*', '^ugoos,.*', '^uni-t,.*', '^uniwest,.*', '^upisemi,.*', '^urt,.*', '^usi,.*', '^usr,.*', '^utoo,.*', '^v3,.*', '^vaisala,.*', '^vamrs,.*', '^variscite,.*', '^vdl,.*', '^vertexcom,.*', '^via,.*', '^vialab,.*', '^vicor,.*', '^videostrong,.*', '^virtio,.*', '^virtual,.*', '^vishay,.*', '^visionox,.*', '^vitesse,.*', '^vivante,.*', '^vivax,.*', '^vocore,.*', '^voipac,.*', '^voltafield,.*', '^vot,.*', '^vscom,.*', '^vxt,.*', '^wacom,.*', '^wanchanglong,.*', '^wand,.*', '^waveshare,.*', '^wd,.*', '^we,.*', '^welltech,.*', '^wetek,.*', '^wexler,.*', '^whwave,.*', '^wi2wi,.*', '^widora,.*', '^wiligear,.*', '^willsemi,.*', '^winbond,.*', '^wingtech,.*', '^winlink,.*', '^winsen,.*', '^winstar,.*', '^wirelesstag,.*', '^wits,.*', '^wlf,.*', '^wm,.*', '^wobo,.*', '^wolfvision,.*', '^x-powers,.*', '^xen,.*', '^xes,.*', '^xiaomi,.*', '^xillybus,.*', '^xingbangda,.*', '^xinpeng,.*', '^xiphera,.*', '^xlnx,.*', '^xnano,.*', '^xunlong,.*', '^xylon,.*', '^yadro,.*', '^yamaha,.*', '^yes-optoelectronics,.*', '^yic,.*', '^yiming,.*', '^ylm,.*', '^yna,.*', '^yones-toptech,.*', '^ys,.*', '^ysoft,.*', '^yuridenki,.*', '^yuzukihd,.*', '^zarlink,.*', '^zealz,.*', '^zeitec,.*', '^zidoo,.*', '^zii,.*', '^zinitix,.*', '^zkmagic,.*', '^zte,.*', '^zyxel,.*'
+	from schema $id: http://devicetree.org/schemas/vendor-prefixes.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: ethernet@1e690000 (aspeed,ast2600-mac): Unevaluated properties are not allowed ('ncsi-ctrl,start-redo-probe', 'ncsi-package' were unexpected)
+	from schema $id: http://devicetree.org/schemas/net/faraday,ftgmac100.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: ethernet@1e690000 (aspeed,ast2600-mac): 'ncsi-ctrl,start-redo-probe' does not match any of the regexes: '^#.*', '^(at25|bm|devbus|dmacap|dsa|exynos|fsi[ab]|gpio-fan|gpio-key|gpio|gpmc|hdmi|i2c-gpio),.*', '^(keypad|m25p|max8952|max8997|max8998|mpmc),.*', '^(pciclass|pinctrl-single|#pinctrl-single|PowerPC),.*', '^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*', '^(simple-audio-card|st-plgpio|st-spics|ts),.*', '^100ask,.*', '^70mai,.*', '^8dev,.*', '^GEFanuc,.*', '^IBM,.*', '^ORCL,.*', '^SUNW,.*', '^[a-zA-Z0-9#_][a-zA-Z0-9+\-._@]{0,63}$', '^[a-zA-Z0-9+\-._]*@[0-9a-zA-Z,]*$', '^abb,.*', '^abilis,.*', '^abracon,.*', '^abt,.*', '^acbel,.*', '^acelink,.*', '^acer,.*', '^acme,.*', '^actions,.*', '^active-semi,.*', '^ad,.*', '^adafruit,.*', '^adapteva,.*', '^adaptrum,.*', '^adh,.*', '^adi,.*', '^adieng,.*', '^admatec,.*', '^advantech,.*', '^aeroflexgaisler,.*', '^aesop,.*', '^airoha,.*', '^al,.*', '^alcatel,.*', '^aldec,.*', '^alfa-network,.*', '^allegro,.*', '^allegromicro,.*', '^alliedvision,.*', '^allo,.*', '^allwinner,.*', '^alphascale,.*', '^alps,.*', '^alt,.*', '^altr,.*', '^amarula,.*', '^amazon,.*', '^amcc,.*', '^amd,.*', '^amediatech,.*', '^amlogic,.*', '^ampere,.*', '^amphenol,.*', '^ampire,.*', '^ams,.*', '^amstaos,.*', '^analogix,.*', '^anbernic,.*', '^andestech,.*', '^anvo,.*', '^aoly,.*', '^aosong,.*', '^apm,.*', '^apple,.*', '^aptina,.*', '^arasan,.*', '^archermind,.*', '^arcom,.*', '^arctic,.*', '^arcx,.*', '^ariaboard,.*', '^aries,.*', '^arm,.*', '^armadeus,.*', '^armsom,.*', '^arrow,.*', '^artesyn,.*', '^asahi-kasei,.*', '^asc,.*', '^asix,.*', '^aspeed,.*', '^asrock,.*', '^asteralabs,.*', '^asus,.*', '^atheros,.*', '^atlas,.*', '^atmel,.*', '^auo,.*', '^auvidea,.*', '^avago,.*', '^avia,.*', '^avic,.*', '^avnet,.*', '^awinic,.*', '^axentia,.*', '^axis,.*', '^azoteq,.*', '^azw,.*', '^baikal,.*', '^bananapi,.*', '^beacon,.*', '^beagle,.*', '^belling,.*', '^bhf,.*', '^bigtreetech,.*', '^bitmain,.*', '^blaize,.*', '^blutek,.*', '^boe,.*', '^bosch,.*', '^boundary,.*', '^brcm,.*', '^broadmobi,.*', '^bsh,.*', '^bticino,.*', '^buffalo,.*', '^bur,.*', '^bytedance,.*', '^calamp,.*', '^calao,.*', '^calaosystems,.*', '^calxeda,.*', '^cameo,.*', '^canaan,.*', '^caninos,.*', '^capella,.*', '^cascoda,.*', '^catalyst,.*', '^cavium,.*', '^cct,.*', '^cdns,.*', '^cdtech,.*', '^cellwise,.*', '^ceva,.*', '^chargebyte,.*', '^checkpoint,.*', '^chefree,.*', '^chipidea,.*', '^chipone,.*', '^chipspark,.*', '^chongzhou,.*', '^chrontel,.*', '^chrp,.*', '^chunghwa,.*', '^chuwi,.*', '^ciaa,.*', '^cirrus,.*', '^cisco,.*', '^clockwork,.*', '^cloos,.*', '^cloudengines,.*', '^cnm,.*', '^cnxt,.*', '^colorfly,.*', '^compulab,.*', '^comvetia,.*', '^congatec,.*', '^coolpi,.*', '^coreriver,.*', '^corpro,.*', '^cortina,.*', '^cosmic,.*', '^crane,.*', '^creative,.*', '^crystalfontz,.*', '^csky,.*', '^csot,.*', '^csq,.*', '^ctera,.*', '^ctu,.*', '^cubietech,.*', '^cudy,.*', '^cui,.*', '^cypress,.*', '^cyx,.*', '^cznic,.*', '^dallas,.*', '^dataimage,.*', '^davicom,.*', '^deepcomputing,.*', '^dell,.*', '^delta,.*', '^densitron,.*', '^denx,.*', '^devantech,.*', '^dfi,.*', '^dfrobot,.*', '^dh,.*', '^difrnce,.*', '^digi,.*', '^digilent,.*', '^dimonoff,.*', '^diodes,.*', '^dioo,.*', '^dlc,.*', '^dlg,.*', '^dlink,.*', '^dmo,.*', '^domintech,.*', '^dongwoon,.*', '^dptechnics,.*', '^dragino,.*', '^dream,.*', '^ds,.*', '^dserve,.*', '^dynaimage,.*', '^ea,.*', '^ebang,.*', '^ebbg,.*', '^ebs-systart,.*', '^ebv,.*', '^eckelmann,.*', '^econet,.*', '^edgeble,.*', '^edimax,.*', '^edt,.*', '^ees,.*', '^eeti,.*', '^einfochips,.*', '^eink,.*', '^elan,.*', '^element14,.*', '^elgin,.*', '^elida,.*', '^elimo,.*', '^elpida,.*', '^embedfire,.*', '^embest,.*', '^emcraft,.*', '^emlid,.*', '^emmicro,.*', '^empire-electronix,.*', '^emtrion,.*', '^enclustra,.*', '^endless,.*', '^ene,.*', '^energymicro,.*', '^engicam,.*', '^engleder,.*', '^epcos,.*', '^epfl,.*', '^epson,.*', '^esp,.*', '^est,.*', '^ettus,.*', '^eukrea,.*', '^everest,.*', '^everspin,.*', '^evervision,.*', '^exar,.*', '^excito,.*', '^exegin,.*', '^ezchip,.*', '^facebook,.*', '^fairchild,.*', '^fairphone,.*', '^faraday,.*', '^fascontek,.*', '^fastrax,.*', '^fcs,.*', '^feixin,.*', '^feiyang,.*', '^fii,.*', '^firefly,.*', '^focaltech,.*', '^forlinx,.*', '^freebox,.*', '^freecom,.*', '^frida,.*', '^friendlyarm,.*', '^fsl,.*', '^fujitsu,.*', '^fxtec,.*', '^galaxycore,.*', '^gameforce,.*', '^gardena,.*', '^gateway,.*', '^gateworks,.*', '^gcw,.*', '^ge,.*', '^geekbuying,.*', '^gef,.*', '^gehc,.*', '^gemei,.*', '^gemtek,.*', '^genesys,.*', '^genexis,.*', '^geniatech,.*', '^giantec,.*', '^giantplus,.*', '^glinet,.*', '^globalscale,.*', '^globaltop,.*', '^gmt,.*', '^gocontroll,.*', '^goldelico,.*', '^goodix,.*', '^google,.*', '^goramo,.*', '^gplus,.*', '^grinn,.*', '^grmn,.*', '^gumstix,.*', '^gw,.*', '^hannstar,.*', '^haochuangyi,.*', '^haoyu,.*', '^hardkernel,.*', '^hechuang,.*', '^hideep,.*', '^himax,.*', '^hirschmann,.*', '^hisi,.*', '^hisilicon,.*', '^hit,.*', '^hitex,.*', '^holt,.*', '^holtek,.*', '^honestar,.*', '^honeywell,.*', '^hoperf,.*', '^hoperun,.*', '^hp,.*', '^hpe,.*', '^hsg,.*', '^htc,.*', '^huawei,.*', '^hugsun,.*', '^hwacom,.*', '^hxt,.*', '^hycon,.*', '^hydis,.*', '^hynitron,.*', '^hynix,.*', '^hyundai,.*', '^i2se,.*', '^ibm,.*', '^icplus,.*', '^idt,.*', '^iei,.*', '^ifi,.*', '^ilitek,.*', '^imagis,.*', '^img,.*', '^imi,.*', '^inanbo,.*', '^incircuit,.*', '^indiedroid,.*', '^inet-tek,.*', '^infineon,.*', '^inforce,.*', '^ingenic,.*', '^ingrasys,.*', '^injoinic,.*', '^innocomm,.*', '^innolux,.*', '^inside-secure,.*', '^insignal,.*', '^inspur,.*', '^intel,.*', '^intercontrol,.*', '^invensense,.*', '^inventec,.*', '^inversepath,.*', '^iom,.*', '^irondevice,.*', '^isee,.*', '^isil,.*', '^issi,.*', '^ite,.*', '^itead,.*', '^itian,.*', '^ivo,.*', '^iwave,.*', '^jadard,.*', '^jasonic,.*', '^jdi,.*', '^jedec,.*', '^jenson,.*', '^jesurun,.*', '^jethome,.*', '^jianda,.*', '^jide,.*', '^joz,.*', '^kam,.*', '^karo,.*', '^keithkoep,.*', '^keymile,.*', '^khadas,.*', '^kiebackpeter,.*', '^kinetic,.*', '^kingdisplay,.*', '^kingnovel,.*', '^kionix,.*', '^kobo,.*', '^kobol,.*', '^koe,.*', '^kontron,.*', '^kosagi,.*', '^kvg,.*', '^kyo,.*', '^lacie,.*', '^laird,.*', '^lamobo,.*', '^lantiq,.*', '^lattice,.*', '^lckfb,.*', '^lctech,.*', '^leadtek,.*', '^leez,.*', '^lego,.*', '^lemaker,.*', '^lenovo,.*', '^lg,.*', '^lgphilips,.*', '^libretech,.*', '^licheepi,.*', '^linaro,.*', '^lincolntech,.*', '^lineartechnology,.*', '^linksprite,.*', '^linksys,.*', '^linutronix,.*', '^linux,.*', '^linx,.*', '^liontron,.*', '^liteon,.*', '^litex,.*', '^lltc,.*', '^logicpd,.*', '^logictechno,.*', '^longcheer,.*', '^lontium,.*', '^loongmasses,.*', '^loongson,.*', '^lsi,.*', '^lunzn,.*', '^luxul,.*', '^lwn,.*', '^lxa,.*', '^m5stack,.*', '^macnica,.*', '^mantix,.*', '^mapleboard,.*', '^marantec,.*', '^marvell,.*', '^maxbotix,.*', '^maxim,.*', '^maxlinear,.*', '^mbvl,.*', '^mcube,.*', '^meas,.*', '^mecer,.*', '^mediatek,.*', '^megachips,.*', '^mele,.*', '^melexis,.*', '^melfas,.*', '^mellanox,.*', '^memsensing,.*', '^memsic,.*', '^menlo,.*', '^mentor,.*', '^meraki,.*', '^merrii,.*', '^methode,.*', '^micrel,.*', '^microchip,.*', '^microcrystal,.*', '^micron,.*', '^microsoft,.*', '^microsys,.*', '^microtips,.*', '^mikroe,.*', '^mikrotik,.*', '^milkv,.*', '^miniand,.*', '^minix,.*', '^mips,.*', '^miramems,.*', '^mitsubishi,.*', '^mitsumi,.*', '^mixel,.*', '^miyoo,.*', '^mntre,.*', '^mobileye,.*', '^modtronix,.*', '^moortec,.*', '^mosaixtech,.*', '^motorcomm,.*', '^motorola,.*', '^moxa,.*', '^mpl,.*', '^mps,.*', '^mqmaker,.*', '^mrvl,.*', '^mscc,.*', '^msi,.*', '^mstar,.*', '^mti,.*', '^multi-inno,.*', '^mundoreader,.*', '^murata,.*', '^mxic,.*', '^mxicy,.*', '^myir,.*', '^national,.*', '^neardi,.*', '^nec,.*', '^neofidelity,.*', '^neonode,.*', '^netcube,.*', '^netgear,.*', '^netlogic,.*', '^netron-dy,.*', '^netronix,.*', '^netxeon,.*', '^neweast,.*', '^newhaven,.*', '^newvision,.*', '^nexbox,.*', '^nextthing,.*', '^ni,.*', '^nintendo,.*', '^nlt,.*', '^nokia,.*', '^nordic,.*', '^nothing,.*', '^novatek,.*', '^novtech,.*', '^numonyx,.*', '^nutsboard,.*', '^nuvoton,.*', '^nvd,.*', '^nvidia,.*', '^nxp,.*', '^oceanic,.*', '^ocs,.*', '^oct,.*', '^okaya,.*', '^oki,.*', '^olimex,.*', '^olpc,.*', '^oneplus,.*', '^onie,.*', '^onion,.*', '^onnn,.*', '^ontat,.*', '^opalkelly,.*', '^openailab,.*', '^opencores,.*', '^openembed,.*', '^openpandora,.*', '^openrisc,.*', '^openwrt,.*', '^option,.*', '^oranth,.*', '^orisetech,.*', '^ortustech,.*', '^osddisplays,.*', '^osmc,.*', '^ouya,.*', '^overkiz,.*', '^ovti,.*', '^oxsemi,.*', '^ozzmaker,.*', '^panasonic,.*', '^parade,.*', '^parallax,.*', '^pda,.*', '^pegatron,.*', '^pericom,.*', '^pervasive,.*', '^phicomm,.*', '^phytec,.*', '^picochip,.*', '^pinctrl-[0-9]+$', '^pine64,.*', '^pineriver,.*', '^pixcir,.*', '^plantower,.*', '^plathome,.*', '^plda,.*', '^plx,.*', '^ply,.*', '^pni,.*', '^pocketbook,.*', '^polaroid,.*', '^polyhex,.*', '^portwell,.*', '^poslab,.*', '^pov,.*', '^powertip,.*', '^powervr,.*', '^powkiddy,.*', '^pri,.*', '^primeview,.*', '^primux,.*', '^probox2,.*', '^prt,.*', '^pulsedlight,.*', '^purism,.*', '^puya,.*', '^qca,.*', '^qcom,.*', '^qemu,.*', '^qi,.*', '^qiaodian,.*', '^qihua,.*', '^qishenglong,.*', '^qnap,.*', '^quanta,.*', '^radxa,.*', '^raidsonic,.*', '^ralink,.*', '^ramtron,.*', '^raspberrypi,.*', '^raydium,.*', '^rda,.*', '^realtek,.*', '^relfor,.*', '^remarkable,.*', '^renesas,.*', '^rervision,.*', '^retronix,.*', '^revotics,.*', '^rex,.*', '^richtek,.*', '^ricoh,.*', '^rikomagic,.*', '^riot,.*', '^riscv,.*', '^rockchip,.*', '^rocktech,.*', '^rohm,.*', '^ronbo,.*', '^roofull,.*', '^roseapplepi,.*', '^rve,.*', '^saef,.*', '^samsung,.*', '^samtec,.*', '^sancloud,.*', '^sandisk,.*', '^satoz,.*', '^sbs,.*', '^schindler,.*', '^schneider,.*', '^sciosense,.*', '^seagate,.*', '^seeed,.*', '^seirobotics,.*', '^semtech,.*', '^senseair,.*', '^sensirion,.*', '^sensortek,.*', '^sercomm,.*', '^sff,.*', '^sgd,.*', '^sgmicro,.*', '^sgx,.*', '^sharp,.*', '^shift,.*', '^shimafuji,.*', '^shineworld,.*', '^shiratech,.*', '^si-en,.*', '^si-linux,.*', '^siemens,.*', '^sifive,.*', '^siflower,.*', '^sigma,.*', '^sii,.*', '^sil,.*', '^silabs,.*', '^silan,.*', '^silead,.*', '^silergy,.*', '^silex-insight,.*', '^siliconfile,.*', '^siliconmitus,.*', '^silvaco,.*', '^simtek,.*', '^sinlinx,.*', '^sinovoip,.*', '^sinowealth,.*', '^sipeed,.*', '^sirf,.*', '^sis,.*', '^sitronix,.*', '^skov,.*', '^skyworks,.*', '^smartlabs,.*', '^smartrg,.*', '^smi,.*', '^smsc,.*', '^snps,.*', '^sochip,.*', '^socionext,.*', '^solidrun,.*', '^solomon,.*', '^sony,.*', '^sophgo,.*', '^sourceparts,.*', '^spacemit,.*', '^spansion,.*', '^sparkfun,.*', '^spinalhdl,.*', '^sprd,.*', '^square,.*', '^ssi,.*', '^sst,.*', '^sstar,.*', '^st,.*', '^st-ericsson,.*', '^starfive,.*', '^starry,.*', '^startek,.*', '^starterkit,.*', '^ste,.*', '^stericsson,.*', '^storlink,.*', '^storm,.*', '^storopack,.*', '^summit,.*', '^sunchip,.*', '^sundance,.*', '^sunplus,.*', '^supermicro,.*', '^swir,.*', '^syna,.*', '^synology,.*', '^synopsys,.*', '^tbs,.*', '^tbs-biometrics,.*', '^tcg,.*', '^tcl,.*', '^tcs,.*', '^tcu,.*', '^tdo,.*', '^team-source-display,.*', '^technexion,.*', '^technologic,.*', '^techstar,.*', '^techwell,.*', '^teejet,.*', '^teltonika,.*', '^tempo,.*', '^terasic,.*', '^tesla,.*', '^test,.*', '^tfc,.*', '^thead,.*', '^thine,.*', '^thingyjp,.*', '^thundercomm,.*', '^thwc,.*', '^ti,.*', '^tianma,.*', '^tlm,.*', '^tmt,.*', '^topeet,.*', '^topic,.*', '^topland,.*', '^toppoly,.*', '^topwise,.*', '^toradex,.*', '^toshiba,.*', '^toumaz,.*', '^tpk,.*', '^tplink,.*', '^tpo,.*', '^tq,.*', '^transpeed,.*', '^traverse,.*', '^tronfy,.*', '^tronsmart,.*', '^truly,.*', '^tsd,.*', '^turing,.*', '^tyan,.*', '^tyhx,.*', '^u-blox,.*', '^u-boot,.*', '^ubnt,.*', '^ucrobotics,.*', '^udoo,.*', '^ufispace,.*', '^ugoos,.*', '^uni-t,.*', '^uniwest,.*', '^upisemi,.*', '^urt,.*', '^usi,.*', '^usr,.*', '^utoo,.*', '^v3,.*', '^vaisala,.*', '^vamrs,.*', '^variscite,.*', '^vdl,.*', '^vertexcom,.*', '^via,.*', '^vialab,.*', '^vicor,.*', '^videostrong,.*', '^virtio,.*', '^virtual,.*', '^vishay,.*', '^visionox,.*', '^vitesse,.*', '^vivante,.*', '^vivax,.*', '^vocore,.*', '^voipac,.*', '^voltafield,.*', '^vot,.*', '^vscom,.*', '^vxt,.*', '^wacom,.*', '^wanchanglong,.*', '^wand,.*', '^waveshare,.*', '^wd,.*', '^we,.*', '^welltech,.*', '^wetek,.*', '^wexler,.*', '^whwave,.*', '^wi2wi,.*', '^widora,.*', '^wiligear,.*', '^willsemi,.*', '^winbond,.*', '^wingtech,.*', '^winlink,.*', '^winsen,.*', '^winstar,.*', '^wirelesstag,.*', '^wits,.*', '^wlf,.*', '^wm,.*', '^wobo,.*', '^wolfvision,.*', '^x-powers,.*', '^xen,.*', '^xes,.*', '^xiaomi,.*', '^xillybus,.*', '^xingbangda,.*', '^xinpeng,.*', '^xiphera,.*', '^xlnx,.*', '^xnano,.*', '^xunlong,.*', '^xylon,.*', '^yadro,.*', '^yamaha,.*', '^yes-optoelectronics,.*', '^yic,.*', '^yiming,.*', '^ylm,.*', '^yna,.*', '^yones-toptech,.*', '^ys,.*', '^ysoft,.*', '^yuridenki,.*', '^yuzukihd,.*', '^zarlink,.*', '^zealz,.*', '^zeitec,.*', '^zidoo,.*', '^zii,.*', '^zinitix,.*', '^zkmagic,.*', '^zte,.*', '^zyxel,.*'
+	from schema $id: http://devicetree.org/schemas/vendor-prefixes.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e6e0000/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e6e0000/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fan-controller@21 (maxim,max31790): '#address-cells', '#size-cells', 'channel@2', 'channel@5' do not match any of the regexes: '^fan-[0-9]+$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/maxim,max31790.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fan-controller@27 (maxim,max31790): '#address-cells', '#size-cells', 'channel@2', 'channel@5' do not match any of the regexes: '^fan-[0-9]+$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/hwmon/maxim,max31790.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: i2c@400 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('aspeed,hw-timeout-ms' was unexpected)
+	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: ssif-bmc@10 (ssif-bmc): 'alert-gpios', 'timeout-ms' do not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/ssif-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/serial@1e78e000: failed to match any schema with compatible: ['aspeed,ast2600-uart']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
 
 
 
