@@ -1,63 +1,63 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DF92949F6;
-	Wed, 14 May 2025 17:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EFE296D14;
+	Wed, 14 May 2025 17:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245440; cv=none; b=S61sfCDvSzGwmOQ+Flo/l37tLoCipvlDCNJc8tss7VPLXVezdD87/Vr4Z1graVlgYgUh2WaPiyifzQwA6HOJjRW19n2WFs3CUJp9QHvFVP/iF89Fvf5fnn4jI30DUM5HIb2jRB0uBBjIfDUWlHHf+16vt4NsRz03kEN1jhYJBKU=
+	t=1747245444; cv=none; b=ITqNxtWmTUzkQd/uQml/FjMAuA4QmGedbAahuijtZYkuNrG88mkNRjPwJmlon9jS7EzUIu9JadJEdfMeBqBdhlhGUrzw4MVQKbcC8sMzeI3v9O4oTpO5lqWK7gidQVOpwt+XO7fpeq439VvWP8QOh4JV2lFnUU/TnU10nW+T648=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245440; c=relaxed/simple;
-	bh=jG4HobhwucdIR8FiKaw3dwjAyUJvZK+eWfYr6ftrCks=;
+	s=arc-20240116; t=1747245444; c=relaxed/simple;
+	bh=pnQLoKZ1vywrckNj3NloDzeebCX7xk3jDKnHs/ziE+I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FIHhYxoVPWqzDvKAI/REwghZuToNvhnTJgRwhCmSSJHKuQ5ACLLIy8w11PQR/E8sxOm85UuEXJQ5nLZ4ce1XYP8U75k2WqFygLa69tfd0kuIttN5g39kKTnJGyKgkyE89kACwOAWZYQ16mkVP+QigZ/22+0+YcA3vWzfvjTSjDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GwA/CMdF; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=Vx8X7kbASnHbbwHe7mBZn2uljGedY5qr/9fyJOytz1Vcth+17WdXZY61W9YYRiqp3odZVbi06Gpo42B5mWkCp43idqEsAt2GYar/Zove/en9ymximTZyFq8xtvbGH9Z6lc0RkZZWXD2aO6EE3PZP9SIVqZ7tvcecmCpdrlzBPuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m/Qxcx31; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwA/CMdF"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22d95f0dda4so1369775ad.2;
-        Wed, 14 May 2025 10:57:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/Qxcx31"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22fb6eda241so1454305ad.1;
+        Wed, 14 May 2025 10:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747245435; x=1747850235; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747245442; x=1747850242; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TSLYVQjOTOZYiQMTrnfPyfZsaxnus9kkFYB9Wzg3Y0s=;
-        b=GwA/CMdFRNBzSi/btmitPUTxDLz+0XqvssexVIT5Mee6Ca4qm/KaU/fWpeYxKYhzV7
-         R+C3fMi2aOQozRvp6p+DkyUIoNuZq3Bd6P34Fr8Ldv3TPpp42BpsWSFXyEzykVBf3YZC
-         7pE5nLeOxHpBgH9O9UaOQOYWMGd2Asdfyz2ma47hANSw43tQsEkPwf0eFhZqwG5Uz3WS
-         0tQS8m82da33aAGvc17OS3Rpi/dmW1574nkcRE1Biuysj5RB5GAVe/li4tZpnZbkM1gA
-         TX1wqo2FXCEkRdkpiZAt9ZO4Qn8jpotqEDS5efVHi8NgmOAFy/K6H9EmMBRyIHYXodFE
-         pLEw==
+        bh=hDifTqtGVvkdBFnZ2aqlffmPu8mY951wNojwhaWPbg0=;
+        b=m/Qxcx315r78fYRmdW1f4Qz7JbgDJfj7JDEoICm4qldhmsP8AsdkM7uRfVi+QQST/5
+         FokCa5hVyhc79AgT3KJ9Iba3CvCL9jtgTDsJpkgwlgxQZjykTKdZrguADAP08LGV+dKI
+         va/H4UjwxyVCwKvidIcnmuf+OVecmjZzFgd+eHBZNnpEqNM1svPpqrEacxXSBJj6adIh
+         3xE7QhCRO3XGksO5iWzkNBkNKQpWHmEwBdcLIzpG8PI5RF6373t6jFstBQybRD+3wyXz
+         nqZL3cpHVdSoO5YCM/1qSnqrQLlUQMbHKS8xlqQ3L4ESnfzQFRdeWuJQPUjJMArfQkcz
+         wVfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245435; x=1747850235;
+        d=1e100.net; s=20230601; t=1747245442; x=1747850242;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TSLYVQjOTOZYiQMTrnfPyfZsaxnus9kkFYB9Wzg3Y0s=;
-        b=QaGXPVvyPYv4mBNmiIYdj6z7NYBWnQsPAx96KN47mxIQLJJSCQIH6qej3/NYQNbQ75
-         sFxtICvu2vZj8h7hjA93jdgXKlt2VU2ANUvmSlZdEmvU7iFo36HJyMILwo0Er3eipShk
-         TnCTKtw61oS6ohruOLWgdtlPstMsNajIBSt0zWj9WiYOSeEtbU/lrm+8F1puLZnXEVvT
-         WN+Zm6AR6Ek+D0reia2u+rAVPZAHqsJ/VaKoaBmUtmFGHpdKBXEuIII3O1qs8FGffIgA
-         eW+hSv0hrDcwznUvVRy7XI8aKiXM54r9+5YbZUj7w60VaW/ZpgOemKfaosqYyOxbSoJw
-         Rofg==
-X-Forwarded-Encrypted: i=1; AJvYcCWF5qkkcbgjYcQvN8mLugzQeIMEyr3TxYSk2dsBs1ZH6SD5BPFHvrynx87khjr+dZKu3MP/o1LiEoN5Xk3z@vger.kernel.org, AJvYcCXTINApIxd4z8G9PdOHd6nEtDaOmGOgl4HSuuUw4eq5MT7FgOmjrkiNiXeya+z8gCP2mht+aQR2LfLxYXND@vger.kernel.org, AJvYcCXZJGXJViWOncW7L3/Zpk8evdnxYSP8QoFMGt7/rRuxVnfpXl7RZbNa6CYoYXT1Ai+utcqCr6vYdWh98LQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcCT2kHLOavqSTHBsfaphyS2NspUUKJkrTzDkpDU3UUtajDVNP
-	RPQcaAZXtNoBfjtajy1im0hR3vren0qd6ExAHJoH3tNakO1c/FiT
-X-Gm-Gg: ASbGncvOV6YN/UvuNP6xKBrv3G+9H5r+IQCLfmgLNVDanPipvUxoUT2ZC9KoX/UucvB
-	7i6BPuCoGmC0WeuK1JWq1751CKfii3BgSQj7GMCgz35bG3braS3olrq5AJpHis0nRADMNjMkdyE
-	os4FG4y9UZ+I6xGQy+qRY91NXvJj/8ZqYjLez44lXmUEHNOCZ+5D4gNU32vy8rtgfYYjTRDgzJy
-	JOtfTPbp61kPyVUL5zAZnrM2zKj/cptmlg7eDMDpxKTZZM4xM7ZDrQn8h5ydWr1DT5hC5tVGg0k
-	MMvAabLsNtxWTlSUxviTVqr5JTpvpZ35LXum3ou/VGF93X4r/OUjQjPpPJB64Gbpk0slrgVI1Fc
-	afg9+Xr1QNi8LGNlXd/Pow529Zw==
-X-Google-Smtp-Source: AGHT+IHR2Bb8YWMbOaKglfjJLimIcYf2uvEe3uKHnBQ6V2fnK1OCPtlYmrcPCkebR1P5QhHuoj0gxw==
-X-Received: by 2002:a17:903:1b4d:b0:224:1935:d9a3 with SMTP id d9443c01a7336-231980d7453mr73238395ad.21.1747245434977;
-        Wed, 14 May 2025 10:57:14 -0700 (PDT)
+        bh=hDifTqtGVvkdBFnZ2aqlffmPu8mY951wNojwhaWPbg0=;
+        b=LoQdqR+Trd+hSt5ZhnQowltg08krjFAgmGUvEDbVx5VryTNfcJ/u1h2ewrNfFShd/1
+         jjeJHUn18aoLe02ACEBvNEkNOnk8ZIrzj9BQHRCh/9P2++rdLKia+mAOjbSRMBcC6vyJ
+         aTJJXrOEtejJ+Cy4k/L+tDEVJt1OHm8ORkQ81iI5J3S8iyeImp7tH8AvNPEIFoies986
+         elVH9mxRcagxYQjeY5j7XRNSkTlDPuoT+ecg0skwKdLFyuKIKeT2zS8jWUzyI+dXtveV
+         Cn0BDMDiugI1Da2VVObKKOhyuKREv7Q4XBzVnFo9B/m8Rfi8BJv7CRrUBAx5SbQBeSsG
+         2GIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTuB9+tpNPBR4Cs8fJLOC2hBF4yj9AG0pvMsHNsrR0+YYpHX8G+3CzHUCBxOu0ejKL1fURPwUzQuZYaaLO@vger.kernel.org, AJvYcCXUNWWYaQetzcpDYFQoog3BbExW731OHfrIDdikiXif1Lj2Xa970gbJ6887xiemzBCuJbweysVRQviN2EKL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbDPWxkzU7v/VAwnjsppmRuAJNnrMonNDKzlx5CvhiCBtYS6jO
+	BpvUiq6YE+1w7bAREHemJ+AtSGrH5Dv3hKFs6/KdxUO8KZpFB+m7
+X-Gm-Gg: ASbGncvZvo8vstfle8ytshdsL5wEwGBf3Hk1rBeDWoeIJa/A38E+DHmfoUNxbmOg30U
+	grNTMMgFJdFhPNhgg34y5XMiRXofBDw5v7DryR4janLnvuBt+5hUCECmNkWmQpHKAiiMKX/Ci6p
+	KgWMXHOnFRnIfH+JqwaXxyuHW0SNcWfH6AKk4obAgohn06sgU9Ub7p7vx9c2Z/AynxGy2XMtBqm
+	pn7x+3XYDsy3GHK4Wp1NLxA9At4mXYpDw7inCiNEOkhGWkgsAB+l0GWPnVcTywtP4GiLeM/DEzs
+	GPRQoeZ2/jaiKDN+3JcBtCf92mjzwQQp0ARYHY4AIsor6ET+ULRvVwldw9q9nZ7exxXGk1nik8I
+	1323RCNOV7l5Hdjf9UYZ0/O/KKA==
+X-Google-Smtp-Source: AGHT+IFnI4cNQJPT/KKT9TNgAjcTqSZ6JmSfX8QI6yRIz+tmXH9K+A+O7t019u80yYB/SGJ891d6AQ==
+X-Received: by 2002:a17:903:2287:b0:22e:4cab:f786 with SMTP id d9443c01a7336-23198138157mr51787425ad.18.1747245442310;
+        Wed, 14 May 2025 10:57:22 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c43sm102965515ad.139.2025.05.14.10.57.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b3a0sm102931915ad.179.2025.05.14.10.57.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 10:57:14 -0700 (PDT)
+        Wed, 14 May 2025 10:57:21 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
@@ -71,18 +71,10 @@ Cc: freedreno@lists.freedesktop.org,
 	Marijn Suijten <marijn.suijten@somainline.org>,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
-	linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
-Subject: [PATCH v4 29/40] drm/msm: Extract out syncobj helpers
-Date: Wed, 14 May 2025 10:53:43 -0700
-Message-ID: <20250514175527.42488-30-robdclark@gmail.com>
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 34/40] drm/msm: Split out map/unmap ops
+Date: Wed, 14 May 2025 10:53:48 -0700
+Message-ID: <20250514175527.42488-35-robdclark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250514175527.42488-1-robdclark@gmail.com>
 References: <20250514175527.42488-1-robdclark@gmail.com>
@@ -96,544 +88,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-We'll be re-using these for the VM_BIND ioctl.
+With async VM_BIND, the actual pgtable updates are deferred.
+Synchronously, a list of map/unmap ops will be generated, but the
+actual pgtable changes are deferred.  To support that, split out
+op handlers and change the existing non-VM_BIND paths to use them.
 
-Also, rename a few things in the uapi header to reflect that syncobj use
-is not specific to the submit ioctl.
+Note in particular, the vma itself may already be destroyed/freed
+by the time an UNMAP op runs (or even a MAP op if there is a later
+queued UNMAP).  For this reason, the op handlers cannot reference
+the vma pointer.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/Makefile         |   1 +
- drivers/gpu/drm/msm/msm_gem_submit.c | 192 ++-------------------------
- drivers/gpu/drm/msm/msm_syncobj.c    | 172 ++++++++++++++++++++++++
- drivers/gpu/drm/msm/msm_syncobj.h    |  37 ++++++
- include/uapi/drm/msm_drm.h           |  26 ++--
- 5 files changed, 235 insertions(+), 193 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/msm_syncobj.c
- create mode 100644 drivers/gpu/drm/msm/msm_syncobj.h
+ drivers/gpu/drm/msm/msm_gem_vma.c | 63 +++++++++++++++++++++++++++----
+ 1 file changed, 56 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index 5df20cbeafb8..8af34f87e0c8 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -128,6 +128,7 @@ msm-y += \
- 	msm_rd.o \
- 	msm_ringbuffer.o \
- 	msm_submitqueue.o \
-+	msm_syncobj.o \
- 	msm_gpu_tracepoints.o \
- 
- msm-$(CONFIG_DRM_FBDEV_EMULATION) += msm_fbdev.o
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index f282d691087f..bfb8c5ac1f1e 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -16,6 +16,7 @@
- #include "msm_gpu.h"
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 73baa9451ada..a105aed82cae 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -8,6 +8,34 @@
  #include "msm_gem.h"
- #include "msm_gpu_trace.h"
-+#include "msm_syncobj.h"
+ #include "msm_mmu.h"
  
- /* For userspace errors, use DRM_UT_DRIVER.. so that userspace can enable
-  * error msgs for debugging, but we don't spam dmesg by default
-@@ -486,173 +487,6 @@ void msm_submit_retire(struct msm_gem_submit *submit)
- 	}
++#define vm_dbg(fmt, ...) pr_debug("%s:%d: "fmt"\n", __func__, __LINE__, ##__VA_ARGS__)
++
++/**
++ * struct msm_vm_map_op - create new pgtable mapping
++ */
++struct msm_vm_map_op {
++	/** @iova: start address for mapping */
++	uint64_t iova;
++	/** @range: size of the region to map */
++	uint64_t range;
++	/** @offset: offset into @sgt to map */
++	uint64_t offset;
++	/** @sgt: pages to map, or NULL for a PRR mapping */
++	struct sg_table *sgt;
++	/** @prot: the mapping protection flags */
++	int prot;
++};
++
++/**
++ * struct msm_vm_unmap_op - unmap a range of pages from pgtable
++ */
++struct msm_vm_unmap_op {
++	/** @iova: start address for unmap */
++	uint64_t iova;
++	/** @range: size of region to unmap */
++	uint64_t range;
++};
++
+ static void
+ msm_gem_vm_free(struct drm_gpuvm *gpuvm)
+ {
+@@ -21,18 +49,36 @@ msm_gem_vm_free(struct drm_gpuvm *gpuvm)
+ 	kfree(vm);
  }
  
--struct msm_submit_post_dep {
--	struct drm_syncobj *syncobj;
--	uint64_t point;
--	struct dma_fence_chain *chain;
--};
--
--static struct drm_syncobj **msm_parse_deps(struct msm_gem_submit *submit,
--                                           struct drm_file *file,
--                                           uint64_t in_syncobjs_addr,
--                                           uint32_t nr_in_syncobjs,
--                                           size_t syncobj_stride)
--{
--	struct drm_syncobj **syncobjs = NULL;
--	struct drm_msm_gem_submit_syncobj syncobj_desc = {0};
--	int ret = 0;
--	uint32_t i, j;
--
--	syncobjs = kcalloc(nr_in_syncobjs, sizeof(*syncobjs),
--	                   GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
--	if (!syncobjs)
--		return ERR_PTR(-ENOMEM);
--
--	for (i = 0; i < nr_in_syncobjs; ++i) {
--		uint64_t address = in_syncobjs_addr + i * syncobj_stride;
--
--		if (copy_from_user(&syncobj_desc,
--			           u64_to_user_ptr(address),
--			           min(syncobj_stride, sizeof(syncobj_desc)))) {
--			ret = -EFAULT;
--			break;
--		}
--
--		if (syncobj_desc.point &&
--		    !drm_core_check_feature(submit->dev, DRIVER_SYNCOBJ_TIMELINE)) {
--			ret = SUBMIT_ERROR(EOPNOTSUPP, submit, "syncobj timeline unsupported");
--			break;
--		}
--
--		if (syncobj_desc.flags & ~MSM_SUBMIT_SYNCOBJ_FLAGS) {
--			ret = SUBMIT_ERROR(EINVAL, submit, "invalid syncobj flags: %x", syncobj_desc.flags);
--			break;
--		}
--
--		ret = drm_sched_job_add_syncobj_dependency(&submit->base, file,
--							   syncobj_desc.handle, syncobj_desc.point);
--		if (ret)
--			break;
--
--		if (syncobj_desc.flags & MSM_SUBMIT_SYNCOBJ_RESET) {
--			syncobjs[i] =
--				drm_syncobj_find(file, syncobj_desc.handle);
--			if (!syncobjs[i]) {
--				ret = SUBMIT_ERROR(EINVAL, submit, "invalid syncobj handle: %u", i);
--				break;
--			}
--		}
--	}
--
--	if (ret) {
--		for (j = 0; j <= i; ++j) {
--			if (syncobjs[j])
--				drm_syncobj_put(syncobjs[j]);
--		}
--		kfree(syncobjs);
--		return ERR_PTR(ret);
--	}
--	return syncobjs;
--}
--
--static void msm_reset_syncobjs(struct drm_syncobj **syncobjs,
--                               uint32_t nr_syncobjs)
--{
--	uint32_t i;
--
--	for (i = 0; syncobjs && i < nr_syncobjs; ++i) {
--		if (syncobjs[i])
--			drm_syncobj_replace_fence(syncobjs[i], NULL);
--	}
--}
--
--static struct msm_submit_post_dep *msm_parse_post_deps(struct drm_device *dev,
--                                                       struct drm_file *file,
--                                                       uint64_t syncobjs_addr,
--                                                       uint32_t nr_syncobjs,
--                                                       size_t syncobj_stride)
--{
--	struct msm_submit_post_dep *post_deps;
--	struct drm_msm_gem_submit_syncobj syncobj_desc = {0};
--	int ret = 0;
--	uint32_t i, j;
--
--	post_deps = kcalloc(nr_syncobjs, sizeof(*post_deps),
--			    GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
--	if (!post_deps)
--		return ERR_PTR(-ENOMEM);
--
--	for (i = 0; i < nr_syncobjs; ++i) {
--		uint64_t address = syncobjs_addr + i * syncobj_stride;
--
--		if (copy_from_user(&syncobj_desc,
--			           u64_to_user_ptr(address),
--			           min(syncobj_stride, sizeof(syncobj_desc)))) {
--			ret = -EFAULT;
--			break;
--		}
--
--		post_deps[i].point = syncobj_desc.point;
--
--		if (syncobj_desc.flags) {
--			ret = UERR(EINVAL, dev, "invalid syncobj flags");
--			break;
--		}
--
--		if (syncobj_desc.point) {
--			if (!drm_core_check_feature(dev,
--			                            DRIVER_SYNCOBJ_TIMELINE)) {
--				ret = UERR(EOPNOTSUPP, dev, "syncobj timeline unsupported");
--				break;
--			}
--
--			post_deps[i].chain = dma_fence_chain_alloc();
--			if (!post_deps[i].chain) {
--				ret = -ENOMEM;
--				break;
--			}
--		}
--
--		post_deps[i].syncobj =
--			drm_syncobj_find(file, syncobj_desc.handle);
--		if (!post_deps[i].syncobj) {
--			ret = UERR(EINVAL, dev, "invalid syncobj handle");
--			break;
--		}
--	}
--
--	if (ret) {
--		for (j = 0; j <= i; ++j) {
--			dma_fence_chain_free(post_deps[j].chain);
--			if (post_deps[j].syncobj)
--				drm_syncobj_put(post_deps[j].syncobj);
--		}
--
--		kfree(post_deps);
--		return ERR_PTR(ret);
--	}
--
--	return post_deps;
--}
--
--static void msm_process_post_deps(struct msm_submit_post_dep *post_deps,
--                                  uint32_t count, struct dma_fence *fence)
--{
--	uint32_t i;
--
--	for (i = 0; post_deps && i < count; ++i) {
--		if (post_deps[i].chain) {
--			drm_syncobj_add_point(post_deps[i].syncobj,
--			                      post_deps[i].chain,
--			                      fence, post_deps[i].point);
--			post_deps[i].chain = NULL;
--		} else {
--			drm_syncobj_replace_fence(post_deps[i].syncobj,
--			                          fence);
--		}
--	}
--}
--
- int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 		struct drm_file *file)
++static void
++vm_unmap_op(struct msm_gem_vm *vm, const struct msm_vm_unmap_op *op)
++{
++	vm_dbg("%p: %016llx %016llx", vm, op->iova, op->iova + op->range);
++
++	vm->mmu->funcs->unmap(vm->mmu, op->iova, op->range);
++}
++
++static int
++vm_map_op(struct msm_gem_vm *vm, const struct msm_vm_map_op *op)
++{
++	vm_dbg("%p: %016llx %016llx", vm, op->iova, op->iova + op->range);
++
++	return vm->mmu->funcs->map(vm->mmu, op->iova, op->sgt, op->offset,
++				   op->range, op->prot);
++}
++
+ /* Actually unmap memory for the vma */
+ void msm_gem_vma_unmap(struct drm_gpuva *vma)
  {
-@@ -663,7 +497,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 	struct msm_gpu *gpu = priv->gpu;
- 	struct msm_gpu_submitqueue *queue;
- 	struct msm_ringbuffer *ring;
--	struct msm_submit_post_dep *post_deps = NULL;
-+	struct msm_syncobj_post_dep *post_deps = NULL;
- 	struct drm_syncobj **syncobjs_to_reset = NULL;
- 	struct sync_file *sync_file = NULL;
- 	int out_fence_fd = -1;
-@@ -740,10 +574,10 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ 	struct msm_gem_vma *msm_vma = to_msm_vma(vma);
+-	struct msm_gem_vm *vm = to_msm_vm(vma->vm);
+-	unsigned size = vma->va.range;
+ 
+ 	/* Don't do anything if the memory isn't mapped */
+ 	if (!msm_vma->mapped)
+ 		return;
+ 
+-	vm->mmu->funcs->unmap(vm->mmu, vma->va.addr, size);
++	vm_unmap_op(to_msm_vm(vma->vm), &(struct msm_vm_unmap_op){
++		.iova = vma->va.addr,
++		.range = vma->va.range,
++	});
+ 
+ 	msm_vma->mapped = false;
+ }
+@@ -42,7 +88,6 @@ int
+ msm_gem_vma_map(struct drm_gpuva *vma, int prot, struct sg_table *sgt)
+ {
+ 	struct msm_gem_vma *msm_vma = to_msm_vma(vma);
+-	struct msm_gem_vm *vm = to_msm_vm(vma->vm);
+ 	int ret;
+ 
+ 	if (GEM_WARN_ON(!vma->va.addr))
+@@ -62,9 +107,13 @@ msm_gem_vma_map(struct drm_gpuva *vma, int prot, struct sg_table *sgt)
+ 	 * Revisit this if we can come up with a scheme to pre-alloc pages
+ 	 * for the pgtable in map/unmap ops.
+ 	 */
+-	ret = vm->mmu->funcs->map(vm->mmu, vma->va.addr, sgt,
+-				  vma->gem.offset, vma->va.range,
+-				  prot);
++	ret = vm_map_op(to_msm_vm(vma->vm), &(struct msm_vm_map_op){
++		.iova = vma->va.addr,
++		.range = vma->va.range,
++		.offset = vma->gem.offset,
++		.sgt = sgt,
++		.prot = prot,
++	});
+ 	if (ret) {
+ 		msm_vma->mapped = false;
  	}
- 
- 	if (args->flags & MSM_SUBMIT_SYNCOBJ_IN) {
--		syncobjs_to_reset = msm_parse_deps(submit, file,
--		                                   args->in_syncobjs,
--		                                   args->nr_in_syncobjs,
--		                                   args->syncobj_stride);
-+		syncobjs_to_reset = msm_syncobj_parse_deps(dev, &submit->base,
-+							   file, args->in_syncobjs,
-+							   args->nr_in_syncobjs,
-+							   args->syncobj_stride);
- 		if (IS_ERR(syncobjs_to_reset)) {
- 			ret = PTR_ERR(syncobjs_to_reset);
- 			goto out_unlock;
-@@ -751,10 +585,10 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 	}
- 
- 	if (args->flags & MSM_SUBMIT_SYNCOBJ_OUT) {
--		post_deps = msm_parse_post_deps(dev, file,
--		                                args->out_syncobjs,
--		                                args->nr_out_syncobjs,
--		                                args->syncobj_stride);
-+		post_deps = msm_syncobj_parse_post_deps(dev, file,
-+							args->out_syncobjs,
-+							args->nr_out_syncobjs,
-+							args->syncobj_stride);
- 		if (IS_ERR(post_deps)) {
- 			ret = PTR_ERR(post_deps);
- 			goto out_unlock;
-@@ -897,10 +731,8 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 	args->fence = submit->fence_id;
- 	queue->last_fence = submit->fence_id;
- 
--	msm_reset_syncobjs(syncobjs_to_reset, args->nr_in_syncobjs);
--	msm_process_post_deps(post_deps, args->nr_out_syncobjs,
--	                      submit->user_fence);
--
-+	msm_syncobj_reset(syncobjs_to_reset, args->nr_in_syncobjs);
-+	msm_syncobj_process_post_deps(post_deps, args->nr_out_syncobjs, submit->user_fence);
- 
- out:
- 	submit_cleanup(submit, !!ret);
-diff --git a/drivers/gpu/drm/msm/msm_syncobj.c b/drivers/gpu/drm/msm/msm_syncobj.c
-new file mode 100644
-index 000000000000..4baa9f522c54
---- /dev/null
-+++ b/drivers/gpu/drm/msm/msm_syncobj.c
-@@ -0,0 +1,172 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright (C) 2020 Google, Inc */
-+
-+#include "drm/drm_drv.h"
-+
-+#include "msm_drv.h"
-+#include "msm_syncobj.h"
-+
-+struct drm_syncobj **
-+msm_syncobj_parse_deps(struct drm_device *dev,
-+		       struct drm_sched_job *job,
-+		       struct drm_file *file,
-+		       uint64_t in_syncobjs_addr,
-+		       uint32_t nr_in_syncobjs,
-+		       size_t syncobj_stride)
-+{
-+	struct drm_syncobj **syncobjs = NULL;
-+	struct drm_msm_syncobj syncobj_desc = {0};
-+	int ret = 0;
-+	uint32_t i, j;
-+
-+	syncobjs = kcalloc(nr_in_syncobjs, sizeof(*syncobjs),
-+	                   GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
-+	if (!syncobjs)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i = 0; i < nr_in_syncobjs; ++i) {
-+		uint64_t address = in_syncobjs_addr + i * syncobj_stride;
-+
-+		if (copy_from_user(&syncobj_desc,
-+			           u64_to_user_ptr(address),
-+			           min(syncobj_stride, sizeof(syncobj_desc)))) {
-+			ret = -EFAULT;
-+			break;
-+		}
-+
-+		if (syncobj_desc.point &&
-+		    !drm_core_check_feature(dev, DRIVER_SYNCOBJ_TIMELINE)) {
-+			ret = UERR(EOPNOTSUPP, dev, "syncobj timeline unsupported");
-+			break;
-+		}
-+
-+		if (syncobj_desc.flags & ~MSM_SYNCOBJ_FLAGS) {
-+			ret = UERR(EINVAL, dev, "invalid syncobj flags: %x", syncobj_desc.flags);
-+			break;
-+		}
-+
-+		ret = drm_sched_job_add_syncobj_dependency(job, file,
-+						   syncobj_desc.handle,
-+						   syncobj_desc.point);
-+		if (ret)
-+			break;
-+
-+		if (syncobj_desc.flags & MSM_SYNCOBJ_RESET) {
-+			syncobjs[i] = drm_syncobj_find(file, syncobj_desc.handle);
-+			if (!syncobjs[i]) {
-+				ret = UERR(EINVAL, dev, "invalid syncobj handle: %u", i);
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (ret) {
-+		for (j = 0; j <= i; ++j) {
-+			if (syncobjs[j])
-+				drm_syncobj_put(syncobjs[j]);
-+		}
-+		kfree(syncobjs);
-+		return ERR_PTR(ret);
-+	}
-+	return syncobjs;
-+}
-+
-+void
-+msm_syncobj_reset(struct drm_syncobj **syncobjs, uint32_t nr_syncobjs)
-+{
-+	uint32_t i;
-+
-+	for (i = 0; syncobjs && i < nr_syncobjs; ++i) {
-+		if (syncobjs[i])
-+			drm_syncobj_replace_fence(syncobjs[i], NULL);
-+	}
-+}
-+
-+struct msm_syncobj_post_dep *
-+msm_syncobj_parse_post_deps(struct drm_device *dev,
-+			    struct drm_file *file,
-+			    uint64_t syncobjs_addr,
-+			    uint32_t nr_syncobjs,
-+			    size_t syncobj_stride)
-+{
-+	struct msm_syncobj_post_dep *post_deps;
-+	struct drm_msm_syncobj syncobj_desc = {0};
-+	int ret = 0;
-+	uint32_t i, j;
-+
-+	post_deps = kcalloc(nr_syncobjs, sizeof(*post_deps),
-+			    GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY);
-+	if (!post_deps)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i = 0; i < nr_syncobjs; ++i) {
-+		uint64_t address = syncobjs_addr + i * syncobj_stride;
-+
-+		if (copy_from_user(&syncobj_desc,
-+			           u64_to_user_ptr(address),
-+			           min(syncobj_stride, sizeof(syncobj_desc)))) {
-+			ret = -EFAULT;
-+			break;
-+		}
-+
-+		post_deps[i].point = syncobj_desc.point;
-+
-+		if (syncobj_desc.flags) {
-+			ret = UERR(EINVAL, dev, "invalid syncobj flags");
-+			break;
-+		}
-+
-+		if (syncobj_desc.point) {
-+			if (!drm_core_check_feature(dev,
-+			                            DRIVER_SYNCOBJ_TIMELINE)) {
-+				ret = UERR(EOPNOTSUPP, dev, "syncobj timeline unsupported");
-+				break;
-+			}
-+
-+			post_deps[i].chain = dma_fence_chain_alloc();
-+			if (!post_deps[i].chain) {
-+				ret = -ENOMEM;
-+				break;
-+			}
-+		}
-+
-+		post_deps[i].syncobj =
-+			drm_syncobj_find(file, syncobj_desc.handle);
-+		if (!post_deps[i].syncobj) {
-+			ret = UERR(EINVAL, dev, "invalid syncobj handle");
-+			break;
-+		}
-+	}
-+
-+	if (ret) {
-+		for (j = 0; j <= i; ++j) {
-+			dma_fence_chain_free(post_deps[j].chain);
-+			if (post_deps[j].syncobj)
-+				drm_syncobj_put(post_deps[j].syncobj);
-+		}
-+
-+		kfree(post_deps);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return post_deps;
-+}
-+
-+void
-+msm_syncobj_process_post_deps(struct msm_syncobj_post_dep *post_deps,
-+			      uint32_t count, struct dma_fence *fence)
-+{
-+	uint32_t i;
-+
-+	for (i = 0; post_deps && i < count; ++i) {
-+		if (post_deps[i].chain) {
-+			drm_syncobj_add_point(post_deps[i].syncobj,
-+			                      post_deps[i].chain,
-+			                      fence, post_deps[i].point);
-+			post_deps[i].chain = NULL;
-+		} else {
-+			drm_syncobj_replace_fence(post_deps[i].syncobj,
-+			                          fence);
-+		}
-+	}
-+}
-diff --git a/drivers/gpu/drm/msm/msm_syncobj.h b/drivers/gpu/drm/msm/msm_syncobj.h
-new file mode 100644
-index 000000000000..bcaa15d01da0
---- /dev/null
-+++ b/drivers/gpu/drm/msm/msm_syncobj.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright (C) 2020 Google, Inc */
-+
-+#ifndef __MSM_GEM_SYNCOBJ_H__
-+#define __MSM_GEM_SYNCOBJ_H__
-+
-+#include "drm/drm_device.h"
-+#include "drm/drm_syncobj.h"
-+#include "drm/gpu_scheduler.h"
-+
-+struct msm_syncobj_post_dep {
-+	struct drm_syncobj *syncobj;
-+	uint64_t point;
-+	struct dma_fence_chain *chain;
-+};
-+
-+struct drm_syncobj **
-+msm_syncobj_parse_deps(struct drm_device *dev,
-+		       struct drm_sched_job *job,
-+		       struct drm_file *file,
-+		       uint64_t in_syncobjs_addr,
-+		       uint32_t nr_in_syncobjs,
-+		       size_t syncobj_stride);
-+
-+void msm_syncobj_reset(struct drm_syncobj **syncobjs, uint32_t nr_syncobjs);
-+
-+struct msm_syncobj_post_dep *
-+msm_syncobj_parse_post_deps(struct drm_device *dev,
-+			    struct drm_file *file,
-+			    uint64_t syncobjs_addr,
-+			    uint32_t nr_syncobjs,
-+			    size_t syncobj_stride);
-+
-+void msm_syncobj_process_post_deps(struct msm_syncobj_post_dep *post_deps,
-+				   uint32_t count, struct dma_fence *fence);
-+
-+#endif /* __MSM_GEM_SYNCOBJ_H__ */
-diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
-index 1bccc347945c..2c2fc4b284d0 100644
---- a/include/uapi/drm/msm_drm.h
-+++ b/include/uapi/drm/msm_drm.h
-@@ -220,6 +220,17 @@ struct drm_msm_gem_cpu_fini {
-  * Cmdstream Submission:
-  */
- 
-+#define MSM_SYNCOBJ_RESET 0x00000001 /* Reset syncobj after wait. */
-+#define MSM_SYNCOBJ_FLAGS ( \
-+		MSM_SYNCOBJ_RESET | \
-+		0)
-+
-+struct drm_msm_syncobj {
-+	__u32 handle;     /* in, syncobj handle. */
-+	__u32 flags;      /* in, from MSM_SUBMIT_SYNCOBJ_FLAGS */
-+	__u64 point;      /* in, timepoint for timeline syncobjs. */
-+};
-+
- /* The value written into the cmdstream is logically:
-  *
-  *   ((relocbuf->gpuaddr + reloc_offset) << shift) | or
-@@ -309,17 +320,6 @@ struct drm_msm_gem_submit_bo {
- 		MSM_SUBMIT_FENCE_SN_IN   | \
- 		0)
- 
--#define MSM_SUBMIT_SYNCOBJ_RESET 0x00000001 /* Reset syncobj after wait. */
--#define MSM_SUBMIT_SYNCOBJ_FLAGS        ( \
--		MSM_SUBMIT_SYNCOBJ_RESET | \
--		0)
--
--struct drm_msm_gem_submit_syncobj {
--	__u32 handle;     /* in, syncobj handle. */
--	__u32 flags;      /* in, from MSM_SUBMIT_SYNCOBJ_FLAGS */
--	__u64 point;      /* in, timepoint for timeline syncobjs. */
--};
--
- /* Each cmdstream submit consists of a table of buffers involved, and
-  * one or more cmdstream buffers.  This allows for conditional execution
-  * (context-restore), and IB buffers needed for per tile/bin draw cmds.
-@@ -333,8 +333,8 @@ struct drm_msm_gem_submit {
- 	__u64 cmds;           /* in, ptr to array of submit_cmd's */
- 	__s32 fence_fd;       /* in/out fence fd (see MSM_SUBMIT_FENCE_FD_IN/OUT) */
- 	__u32 queueid;        /* in, submitqueue id */
--	__u64 in_syncobjs;    /* in, ptr to array of drm_msm_gem_submit_syncobj */
--	__u64 out_syncobjs;   /* in, ptr to array of drm_msm_gem_submit_syncobj */
-+	__u64 in_syncobjs;    /* in, ptr to array of drm_msm_syncobj */
-+	__u64 out_syncobjs;   /* in, ptr to array of drm_msm_syncobj */
- 	__u32 nr_in_syncobjs; /* in, number of entries in in_syncobj */
- 	__u32 nr_out_syncobjs; /* in, number of entries in out_syncobj. */
- 	__u32 syncobj_stride; /* in, stride of syncobj arrays. */
 -- 
 2.49.0
 
