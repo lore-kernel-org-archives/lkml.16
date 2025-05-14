@@ -1,60 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C9483A14;
-	Wed, 14 May 2025 07:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D712C201004;
+	Wed, 14 May 2025 07:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747208482; cv=none; b=fYOzKlHECPTac+JEjlw+HWvJdItj1llfc2daDZz74F010x2OGpVpk7kI9cv6b6KBzo/NiZ9TTFrp9rhM4ebsLBSmPgDmHcZae9dW3T/bBGXg7lzJtDr/ufFJ6cC3eK4W6aj23hcjiGRkejNw3VE/2PwYaA/YtxHfvFejdpTBs+s=
+	t=1747208510; cv=none; b=CTK38sjay6sVuxJV8EpmfigqvlLWzG5VgglTR3Ju0H0NVKcuI8AnZzqZ8gvw5wFDSlXvM8f3+QXxVzM5dxoJgDMF8ewTrfppNdoWGwHUknyeh+J3HaS8i9+wEhUKulk1VmPIQ4llhbneVurd/ffoMweYmpg3Om1hhPViW5/f/HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747208482; c=relaxed/simple;
-	bh=JsiVAsFG1XKaIWx9sq38p2xafzRumZE3uqYzsBqzHes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejzVmXW2rRrndUytHBms1TGV34Ov+vBkZq117BzS8NVuRjGF3M2jP8PJTahpwE2P1awllI9x5CXL9DppXENMs8IvNJUllLqeUDHtUHd8pLJW7H1N6+7TVCojvguZFmXbGxT1jHeySMRiU+MyCOYuiI+2Ygj1ReGrIh/M9/g+vwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4043EC4CEF3;
-	Wed, 14 May 2025 07:41:20 +0000 (UTC)
-Date: Wed, 14 May 2025 09:39:33 +0200
-From: Greg KH <greg@kroah.com>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, linux-spdx@vger.kernel.org
-Subject: Re: [PATCH] lib/crc32: add SPDX license identifier
-Message-ID: <2025051423-gallstone-carpentry-1c5a@gregkh>
-References: <20250514052409.194822-1-ebiggers@kernel.org>
- <87bjrvk9gj.ffs@tglx>
- <20250514061425.GA237199@sol>
+	s=arc-20240116; t=1747208510; c=relaxed/simple;
+	bh=jo+adrnc48N5zwYDRXxyN3PWTy2SX/NhEUGfMF8JA2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cn3jC+A4jzacG8/9a2RmPygOv0HY5lr9wnK18vM8Zy5EZu39FOzg+qWr/o+aCPQRg1SJFQXB6FoO1sB2WHSO/8VhT+Erv6u0DLaLoI1ewReMFS/WTux8OhjLe6GMprFiaiJ90jcze9+62CgGg49x0rX0gTKgA9/1Y1JQSS+k6Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PwTrLJb4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PwTrLJb4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5479BC113D0;
+	Wed, 14 May 2025 07:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747208510;
+	bh=jo+adrnc48N5zwYDRXxyN3PWTy2SX/NhEUGfMF8JA2c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PwTrLJb4uoTxnvzGifeqmkD6jKhnN49F/7oo1EXMpCGgWlVpsG0PT870ko3DH2ULK
+	 IC2ux/eGqe5kefsVEnWv1p9OufGFhZ+dk/b8PAQxAtiqOmTz0YdxzAlpput+Pm83UM
+	 Fy3qQgcD87+y8kKDM586NWIPVVIWeJ8sSWEuLWW5YI8L5hAa2npZXhHKqqUomvnVUH
+	 v2ESdlnJd7+VlLXiWVTQT9pIYgMawfZ7dz8oFr15iglvwzDkr3Cz2u7uXsLTRnSq5x
+	 QyrVsop9RvwqQjhtlNqLNkzXqYW6ZZgvwTace6LfwIRf2iu+/kEuPzQujMjyXrCov5
+	 NMks7fxXsHChg==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30effbfaf61so7535851fa.0;
+        Wed, 14 May 2025 00:41:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUI9R4RS30W4zAPBbcgw3dYalAA3FjgCx0AkmXqczX/yKuASKQiNX7iOlTKVQRe2tOxs6MM4dGnx5xz6j7N@vger.kernel.org, AJvYcCUaxEFUECUhJWeDVxFCzuIjE165/o/oo/f0Rf4FKYk67p6+Q7YSR31Z3jho2TPelTAlib3lkjsCYK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZvMzKzmCszVr901XAd8u+yM8wb/I+pJO3xGtuNa3xMLWEUZeP
+	6w1w6CnofIq+BSzKFMdJOxVkq33/c2axUGFqRWed7n9m6TzJZn+LXmHUzdl+M+skiL6lD1GgDJf
+	caMjQvoOeurQuFrAwGgTtTDp1Jdw=
+X-Google-Smtp-Source: AGHT+IF1PkBr4PHzNyt6JEZKfqOpJZxK09kpQ2HIZSQxzrcAD/IcCTx93JBAooZpxHUe84q1BNE4PsAxvNSbdUOqjzs=
+X-Received: by 2002:a05:651c:4112:10b0:327:ef41:8b0a with SMTP id
+ 38308e7fff4ca-327ef4197efmr2797641fa.18.1747208508701; Wed, 14 May 2025
+ 00:41:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514061425.GA237199@sol>
+References: <20250512190834.332684-23-ardb+git@google.com> <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+ <aCMYrgd9DDQl7G1W@gmail.com> <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
+ <aCMraFZ2yJQNyHf3@gmail.com> <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
+ <CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com> <aCQ444zAwwkUwwm8@gmail.com>
+In-Reply-To: <aCQ444zAwwkUwwm8@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 14 May 2025 08:41:36 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
+X-Gm-Features: AX0GCFsz3fsSA4_YKcvzBRbGrzJlaZCyGDwF-6rwZdT4WoVTPwyq1W4SuQrqd5g
+Message-ID: <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 13, 2025 at 11:14:25PM -0700, Eric Biggers wrote:
-> On Wed, May 14, 2025 at 08:11:40AM +0200, Thomas Gleixner wrote:
-> > On Tue, May 13 2025 at 22:24, Eric Biggers wrote:
-> > 
-> > > From: Eric Biggers <ebiggers@google.com>
-> > >
-> > > lib/crc32.c and include/linux/crc32.h got missed by the bulk SPDX
-> > > conversion because of the nonstandard explanation of the license.
-> > > However, crc32.c clearly states that it's licensed under the GNU General
-> > > Public License, Version 2.  And the comment in crc32.h clearly indicates
-> > > that it's meant to have the same license as crc32.c.  Therefore, apply
-> > > SPDX-License-Identifier: GPL-2.0-only to both files.
-> > >
-> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > 
-> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Thanks.
-> 
-> I forgot to mention: I'm planning to take this patch through the crc tree.
+On Wed, 14 May 2025 at 07:32, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+...
+> > In any case, there is no urgency wrt these changes as far as I am
+> > concerned, and given that I already found an issue myself with v3,
+> > perhaps it is better if we disregard it for the time being, and we can
+> > come back to it for the next cycle. In the mean time, I can compare
+> > notes with Boris and Tom directly to ensure that this is in the right
+> > shape, and perhaps we could at least fix the pgtable_l5_enabled() mess
+> > as well (for which I sent out a RFC/v3 today).
+>
+...
+> We could perhaps do the mechanical code movement to
+> arch/x86/boot/startup/ alone, without any of the followup functional
+> changes. This would reduce the cross section of the riskiest part of
+> your series substantially.
 
-Great!
+The first phase of this work, which is already queued up, was to move
+all of the source files that were using RIP_REL_REF() into
+arch/x86/boot/startup to be built with -fPIC so that RIP_REL_REF()
+could be removed.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The current phase is to separate code that really needs to live under
+startup/ from code that doesn't. This is the bit that was
+straight-forward for mapping the kernel (including the SME encryption
+pieces) because they were already in dedicated source files, but not
+so straight-forward for SEV-SNP.
+
+In reality, the mechanical code movement in this phase is mostly in
+the opposite direction, where things are separated into startup and
+non-startup code at a high level of detail, and the latter is moved
+out again.
+
+> If that sounds good to you, please send a
+> series for review.
+>
+
+Not sure what happened to the tip/x86/boot branch in the meantime, but
+assuming that what was already queued up is still scheduled for the
+next cycle, I don't think there are any parts of this series that
+could be meaningfully rearranged. IOW, the SEV-SNP refactoring needs
+to be completed first, which accounts for most of the code movement.
+Then, implementing the confined symbol space is just a couple of
+patches on top.
