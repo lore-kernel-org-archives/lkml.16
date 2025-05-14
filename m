@@ -1,94 +1,71 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056DE221281
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AFF3BBF2
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211736; cv=none; b=ARGNcgNq3Rxd4heFbejDWClgXni2NXXWWc+r3B4nJbqYof4rI5m6bEjYNqq51wgp1DzZDX+ViK6QmM/SIsJ8rmw/Pd1Oss5ibQ10Mmxy9Rfi773L8jaob4tWwVvEdLRsF2vULvg8wOtE85uFS98ccmvGlTBdgeTxIA4/BQFLj3I=
+	t=1747211855; cv=none; b=lLPpt2eKXIQWkmOFfpciTYoHcz9YuAHsu4e3fnv4hipkZohGpFfcUUX0oC5ki/3IYK3lSrRLR8UCjb7GeXZR2s7qWS4vTNlCKLvbx1d7HSC+UykVDNaAnVI8rsv5wa+s1sXZ/NGd8CEzDwT17AXMQx3HaO//N6RkhtBnOYhqTAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211736; c=relaxed/simple;
-	bh=LnsVWhwJpBAkpZDh+52MQNw22R/I9maYDg8qpRVBVKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qrEkOdX+wjGAV5UGGEdhfOcPVhGlB1xBaNZHPEFlMF4jHNX91jwaZj+CyoAuZmJcvifVRMNk5qBPgCuxaI04ppksTQr3R2+lbLMw+T9un2Jpv/nLXvGO7prLq/Jdjzba1hi3XBEOGzgJdLfZ0nKp6MM+JqYWor4xrFCZXfkSqBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=daTGaeUU; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747211855; c=relaxed/simple;
+	bh=MaKC8G01CZTOxwxGgHV7gKPYPUouJRHCJlWK0BbTmGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sBvaSVntuKLBqvTjFwzmKTq4POfalTC1PwNM/1W/D2Zai+G8eVjOq0mV3N/c+dS3IDLDUaADleu52ihYzaixWuvyb5OkwBMPmTsCDKKBmnkmFn2TcXnEkrP7htPjI+3SRGgaav7aRkWSluu/mQVLOj7bR6jtMz7sfE57SJXwWBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2FoKBC3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="daTGaeUU"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a1fa0d8884so3111798f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747211733; x=1747816533; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V9zd+GoKgmj0lz1D+LN0r99cnHBgUgWB63kqIPzuCsc=;
-        b=daTGaeUU6AmMCswrVFzQZN1mjZrlMIXH9TuBa85yg9Ria2TVuVhHfIbn/0i8kNyUL2
-         xrovdREeqNFk9mRsJf/yoQOIchMOc+TjrWwc7ormUT673FVPjRAbsabyjHOPXqOfFpm/
-         IcEvn3N8klO1XBsFzlxuGikxrhOfaxr33b+Ye8piOOaA7H4gD3Q8D5YlWAUWj1KQ0jXF
-         LyLVvKZXnqrFq4onSKfU8ZeGd38rFm3R2IMoSqwog9ngVs40tbvowOtw4OOFkFwHR8+Q
-         0ag0BDyqcBTIHJXX6xy6RXhjzB4O34TPXoDSLtO7n4olCEbmS/1VfKEU4DNrtUPQ4oi3
-         95Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747211733; x=1747816533;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9zd+GoKgmj0lz1D+LN0r99cnHBgUgWB63kqIPzuCsc=;
-        b=uz9eQfmlDtu/ZcWIbcCVuI2WD+EzDwiyvCvFZ3j9lv7XMUMwyDHjUs1U+xMtUEeDZD
-         InTkk9VOYI9rbB4GrTFFnXKJ3bIY9CtQ+AN/IE3+mxfvnIgETF15QVZu5SYDeuz/Xu3K
-         LZmuubKL4LNb20+3DQIjfdzC1VAGhT8ZNP9JStcuTCYJ3ju6MANQ30qrzq8QtZ9sc9m9
-         rCct/EyXXBbExB0Iy6gthiPuP1VFtjsz9zQxCNR3sKZmm0tHWAKFNY9m0KYm0kKgqTsj
-         nl5oDR5LxYIN5cZMo6AKPqESq7+ismmSyO+SoYEAiGQAqHgbYzZSbXkmvlq+xdN379+M
-         aJlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmiarl6Woey4VaTGOFq/TDMr7A7cDsXAEEFtUUVNY+uuAM/w9vfki8G2EBiQeXnujlW99F6/1CLAeLWoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzORjQm2sBVssYUf0PFDSNf/iOaLG/YgFIBBXAub+Zfpeil+OpI
-	Thm5siDRjalScYiYUujZmX62jPefVw8vDQ6MBvHdNSOeAuy0CiXFTOxv7pfGX9U=
-X-Gm-Gg: ASbGncs6h9e8rVFjhuV8fgFgeBX3hycVMbnOHg8f2an7ruwpUU0zoXgu263gbMTDrg2
-	GvMTQihySRlQiTDgx/Ud01zKb2WylTOcA/xt+nYXeSRDpdfn8daEama5ogn1/+Al1xf3g4vqLZj
-	6ANenEPVIBz56Yzt519JrUNXEoDa4uc3MasJVtLUSCnE67Hmbqj8dgiiI8ZxxUPIUPxC9gqh+VT
-	TtRhlYOrg9wQOVv0C0gkmCPeeokNg2PK50+N+kex6HJHXpmnhmadNPkUFzWKJV4Eka88vll4qR1
-	SnxzVkN4Rl/PmKMr7Nw7oIH2aJpmu0uXMT/ZApdjEMtewhZ6ecJqXQ==
-X-Google-Smtp-Source: AGHT+IGT6wMyIUernPhTKllof9XQpCI1zQrbycT2cwRsu9zmtZYLZ5dRauNiPAUk32i9JzaAtr/pSg==
-X-Received: by 2002:a05:6000:2481:b0:3a0:b550:ded4 with SMTP id ffacd0b85a97d-3a3496a47f9mr1500267f8f.13.1747211733319;
-        Wed, 14 May 2025 01:35:33 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4df3fe369b7sm6319632137.16.2025.05.14.01.35.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 01:35:32 -0700 (PDT)
-Message-ID: <eb13d6b4-3c6d-42e6-ae58-bb4454297c5c@suse.com>
-Date: Wed, 14 May 2025 10:35:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2FoKBC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69EB8C4CEE9;
+	Wed, 14 May 2025 08:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747211854;
+	bh=MaKC8G01CZTOxwxGgHV7gKPYPUouJRHCJlWK0BbTmGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b2FoKBC3uWBEU3M80++9Vk54XWu5CUnoeTrHCpD+KOJfXMwMesUYvyAUc8v1f+r6X
+	 F088IHjr2cbsRwPUsjbsNyYiWT2618wCDac4WiXS4WYR2uefDXSHx9FqOSTInEalYR
+	 2nlcvP/HuYJ/DJd2Xwpg/amc/5vlAZyh1K5MmsfEZqKSpKD/7Eq2O/G+Y5MPpcoD6T
+	 MKQ9gOVKOWzlozX6Lnx6A+1pj1wedqceJKujn5IOfP5AznN8MgXcNDWRUiuvVYmsww
+	 82ghfW1aJwliOe/P989173V1nuOVUXvdmO87/6y49WLlUApKmyCisMe2H8F8fJ/9Q9
+	 DRgaC0BcVcI+g==
+Date: Wed, 14 May 2025 10:37:30 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 4/6] x86/boot: Set 5-level paging CPU cap before
+ entering C code
+Message-ID: <aCRWSpS8B-B26AB6@gmail.com>
+References: <20250513111157.717727-8-ardb+git@google.com>
+ <20250513111157.717727-12-ardb+git@google.com>
+ <aCRRJ_ahL2IRXxcj@gmail.com>
+ <CAMj1kXF0Kc+--5rOqcVKoF-NhYfzA2rioaWsB09VK1hJ49nG+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] module: Extend the MODULE_ namespace parsing
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com,
- samitolvanen@google.com, da.gomez@samsung.com, masahiroy@kernel.org,
- nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
- hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
-References: <20250502141204.500293812@infradead.org>
- <20250502141844.154517322@infradead.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250502141844.154517322@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXF0Kc+--5rOqcVKoF-NhYfzA2rioaWsB09VK1hJ49nG+w@mail.gmail.com>
 
-On 5/2/25 16:12, Peter Zijlstra wrote:
-> Instead of only accepting "module:${name}", extend it with a comma
-> separated list of module names and add tail glob support.
+
+* Ard Biesheuvel <ardb@kernel.org> wrote:
+
+> > > -     if (IS_ENABLED(CONFIG_X86_5LEVEL) && (native_read_cr4() & X86_CR4_LA57))
+> > > -             setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
 > 
-> That is, something like: "module:foo-*,bar" is now possible.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Note that at this point, we'll likely still have to force clear the 
+> original X86_FEATURE_LA57 bit, to address the issue that Kirill 
+> raised that user space is now likely to conflate the "la57" cpuinfo 
+> string with 5-level paging being in use.
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+No, I think the general outcome of your series is fine and clean in 
+terms of kernel-internal logic, and I wouldn't mess up that clarity 
+with user ABI quirks: and we can solve the /proc/cpuinfo ABI 
+compatibility requirement by exposing X86_FEATURE_5LEVEL_PAGING as 
+'la57', and renaming X86_FEATURE_LA57 to X86_FEATURE_LA57_HW and 
+exposing it as a (new) la57_hw flag, or so.
 
--- Petr
+Thanks,
+
+	Ingo
