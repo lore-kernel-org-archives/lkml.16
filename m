@@ -1,46 +1,65 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDFB2206BA;
-	Wed, 14 May 2025 08:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFB921ADAB;
+	Wed, 14 May 2025 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210361; cv=none; b=pKEPaD8tRz9IhxQv4o6LoDf19NMWF7yvlzh2F6OfkG2rEckNHtbyqrvVwLRa+M1fZI6H5wJwvQBsr6BvX0ywoHiqOvbcI7wDPJbHUhpZ6UX4xqovloqbsAUOZc08liMpnNl47WaADN1jMe0chBX4ua6yZQZ97NGk/U3gs6/S1II=
+	t=1747210392; cv=none; b=Y9i14viSS45o+OLY9cNRxq+bgSPnTVhCPjBFZR2d+11+fG4aSLNjpYbOhf8sb8DUjVjZXldAMQNpRcv4U9ggFQiy2kjE75sxdjO6lLCCCl1IngXBiEPDg9gjWao7N+E4SxO4mEd85YzaWk891hHIWspKylINcgwSCxN9DEoW9mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210361; c=relaxed/simple;
-	bh=L29ab6t00b4UIhdjj6U8q3eeC8HWZNGYzhs5ue0B0pI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GqSq42xubrwPqsblWqt9VEUpU/ivINU5KRzY7GePwvkH5WSzh6sfVn184LPQ/jjIK8gcn25dKWl6t0Delsn+o0FG4orC4rIL8U2EAR362UviDQ9rj8Jb7k9PcuoG9iKJejjBPC8BPyJlwlXMMNUQqb/xQ1dkgyp2Ej9TNm/uc+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.75.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app2 (Coremail) with SMTP id TQJkCgBX9pRrUCRoC755AA--.17875S2;
-	Wed, 14 May 2025 16:12:29 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v3 2/2] pinctrl: eswin: Add EIC7700 pinctrl driver
-Date: Wed, 14 May 2025 16:12:25 +0800
-Message-Id: <20250514081225.1428-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250514080928.385-1-luyulin@eswincomputing.com>
-References: <20250514080928.385-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1747210392; c=relaxed/simple;
+	bh=8dNL7qXlUebzURAN5oKFRBZjZl8MG0qJ+nBv83ydV00=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hjkKgCmVhSw0sbQp3Uy9Yh8JaSA/W8abVOT9JK/+CJyTTWB5XCry2S+5LiDwsNNH9ANUgAUTKF+h4LK1yOyRt+oaRLtwhrj3IgFdtnSt8S2FhFuBAhMW2Ms83pS4oDFdjfONco3jBWwRpt+aAPgF5McYTG8HRNd6x/NwrrKnEOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SHMcbrbK; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SHMcbrbK"
+X-UUID: 41e9e342309b11f0813e4fe1310efc19-20250514
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GRtRPlRxqcUfH74V+92iACzveKBv6uk8BJlvGn4PRsk=;
+	b=SHMcbrbKphac0KydJeo7oxrUgQ5ZHBEH3f2iTUbzxLBYC0Sn71jHHQuz5spJLc15Wl8h56txmdp7JtaElXbqKTfTocfTEuYeqPFzmKRjQbfR0tL8PNLGDot4T6DW0gANRxtMzlSqK/KKNkZKh00n8kZx00JU/lPEqF6+yWcP13c=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:d8626e95-f162-48af-8d42-0cbdbe48afc7,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:3fbefd3d-da74-431d-a7be-5e6761de3b64,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 41e9e342309b11f0813e4fe1310efc19-20250514
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <darren.ye@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1353619536; Wed, 14 May 2025 16:13:03 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Wed, 14 May 2025 16:13:01 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Wed, 14 May 2025 16:13:00 +0800
+From: Darren.Ye <darren.ye@mediatek.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
+	<darren.ye@mediatek.com>
+Subject: [PATCH v3 03/10] ASoC: mediatek: mt8196: support audio clock control
+Date: Wed, 14 May 2025 16:11:05 +0800
+Message-ID: <20250514081125.24475-4-darren.ye@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250514081125.24475-1-darren.ye@mediatek.com>
+References: <20250514081125.24475-1-darren.ye@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,781 +67,1266 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgBX9pRrUCRoC755AA--.17875S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfXrWfJF47uryxurWUJF1DJrb_yoW5Wr4rZo
-	WfCw47Xr15Kr48ZrW3CFZ5K3Z5XrnakF1Yvw15Ar13AF1Iyr1IgrZYgr4qg343Jryjyry8
-	ur1DWry3A395Xa43n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYl7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR_OzsDUUUU
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+Content-Type: text/plain
+X-MTK: N
 
-Add support for the pin controller in ESWIN's EIC7700 SoC,
-which supports pin multiplexing, pin configuration,
-and rgmii voltage control.
+From: Darren Ye <darren.ye@mediatek.com>
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+Add audio clock wrapper and audio tuner control.
+
+Signed-off-by: Darren Ye <darren.ye@mediatek.com>
 ---
- drivers/pinctrl/Kconfig           |  11 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-eic7700.c | 702 ++++++++++++++++++++++++++++++
- 3 files changed, 714 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.c    | 723 ++++++++++++++++++
+ sound/soc/mediatek/mt8196/mt8196-afe-clk.h    | 142 ++++
+ sound/soc/mediatek/mt8196/mt8196-audsys-clk.c | 252 ++++++
+ sound/soc/mediatek/mt8196/mt8196-audsys-clk.h |  14 +
+ .../soc/mediatek/mt8196/mt8196-audsys-clkid.h |  78 ++
+ 5 files changed, 1209 insertions(+)
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-audsys-clk.c
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-audsys-clk.h
+ create mode 100644 sound/soc/mediatek/mt8196/mt8196-audsys-clkid.h
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 464cc9aca157..5e709a3f76bc 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -208,6 +208,17 @@ config PINCTRL_DIGICOLOR
- 	select PINMUX
- 	select GENERIC_PINCONF
- 
-+config PINCTRL_EIC7700
-+	tristate "EIC7700 PINCTRL driver"
-+	depends on ARCH_ESWIN || COMPILE_TEST
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	help
-+	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
-+	  which supports pin multiplexing, pin configuration,and rgmii voltage
-+	  control.
-+	  Say Y here to enable the eic7700 pinctrl driver
-+
- config PINCTRL_EP93XX
- 	bool
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac27e88677d1..82e0d4cf5045 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_CY8C95X0)	+= pinctrl-cy8c95x0.o
- obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
- obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
-+obj-$(CONFIG_PINCTRL_EIC7700)	+= pinctrl-eic7700.o
- obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
- obj-$(CONFIG_PINCTRL_EP93XX)	+= pinctrl-ep93xx.o
- obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
-diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
+diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-clk.c b/sound/soc/mediatek/mt8196/mt8196-afe-clk.c
 new file mode 100644
-index 000000000000..e8fe2141b2d1
+index 000000000000..83b5ee9d30ef
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-eic7700.c
-@@ -0,0 +1,702 @@
++++ b/sound/soc/mediatek/mt8196/mt8196-afe-clk.c
+@@ -0,0 +1,723 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * ESWIN Pinctrl Controller Platform Device Driver
++ *  mt8196-afe-clk.c  --  Mediatek 8196 afe clock ctrl
 + *
-+ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-+ *
-+ * Authors: Samuel Holland <samuel.holland@sifive.com>
-+ *          Yulin Lu <luyulin@eswincomputing.com>
++ *  Copyright (c) 2024 MediaTek Inc.
++ *  Author: Darren Ye <darren.ye@mediatek.com>
 + */
 +
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
-+#include <linux/regulator/consumer.h>
++#include <linux/clk.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#include "mt8196-afe-common.h"
++#include "mt8196-audsys-clk.h"
++#include "mt8196-afe-clk.h"
 +
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+#include "pinmux.h"
-+#include "pinconf.h"
-+
-+#define EIC7700_PIN_REG(i)		(4 * (i))
-+#define EIC7700_IE			BIT(0)
-+#define EIC7700_PU			BIT(1)
-+#define EIC7700_PD			BIT(2)
-+#define EIC7700_DS			GENMASK(6, 3)
-+#define EIC7700_ST			BIT(7)
-+#define EIC7700_FUNC_SEL		GENMASK(18, 16)
-+
-+#define EIC7700_BIAS			(EIC7700_PD | EIC7700_PU)
-+#define EIC7700_PINCONF			GENMASK(7, 0)
-+
-+#define EIC7700_RGMII0_SEL_MODE		(0x310 - 0x80)
-+#define EIC7700_RGMII1_SEL_MODE		(0x314 - 0x80)
-+#define EIC7700_MS			GENMASK(1, 0)
-+#define EIC7700_MS_3V3			0x0
-+#define EIC7700_MS_1V8			0x3
-+
-+#define EIC7700_FUNCTIONS_PER_PIN	8
-+
-+struct eic7700_pin {
-+	u8 functions[EIC7700_FUNCTIONS_PER_PIN];
++static const char *aud_clks[MT8196_CLK_NUM] = {
++	/* vlp clk */
++	[MT8196_CLK_VLP_MUX_AUDIOINTBUS] = "top_aud_intbus",
++	[MT8196_CLK_VLP_MUX_AUD_ENG1] = "top_aud_eng1",
++	[MT8196_CLK_VLP_MUX_AUD_ENG2] = "top_aud_eng2",
++	[MT8196_CLK_VLP_MUX_AUDIO_H] = "top_aud_h",
++	[MT8196_CLK_VLP_CLK26M] = "vlp_clk26m",
++	/* pll */
++	[MT8196_CLK_TOP_APLL1_CK] = "apll1",
++	[MT8196_CLK_TOP_APLL2_CK] = "apll2",
++	/* divider */
++	[MT8196_CLK_TOP_APLL1_D4] = "apll1_d4",
++	[MT8196_CLK_TOP_APLL2_D4] = "apll2_d4",
++	[MT8196_CLK_TOP_APLL12_DIV_I2SIN0] = "apll12_div_i2sin0",
++	[MT8196_CLK_TOP_APLL12_DIV_I2SIN1] = "apll12_div_i2sin1",
++	[MT8196_CLK_TOP_APLL12_DIV_FMI2S] = "apll12_div_fmi2s",
++	[MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M] = "apll12_div_tdmout_m",
++	[MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B] = "apll12_div_tdmout_b",
++	/* mux */
++	[MT8196_CLK_TOP_MUX_AUD_1] = "top_apll1",
++	[MT8196_CLK_TOP_MUX_AUD_2] = "top_apll2",
++	[MT8196_CLK_TOP_I2SIN0_M_SEL] = "top_i2sin0",
++	[MT8196_CLK_TOP_I2SIN1_M_SEL] = "top_i2sin1",
++	[MT8196_CLK_TOP_FMI2S_M_SEL] = "top_fmi2s",
++	[MT8196_CLK_TOP_TDMOUT_M_SEL] = "top_dptx",
++	[MT8196_CLK_TOP_ADSP_SEL] = "top_adsp",
++	/* top 26m*/
++	[MT8196_CLK_TOP_CLK26M] = "clk26m",
++	/* clock gate */
++	[MT8196_CLK_AFE_AUDIO_HOPPING] = "afe_audio_hopping_ck",
++	[MT8196_CLK_AFE_AUDIO_F26M] = "afe_audio_f26m_ck",
++	[MT8196_CLK_AFE_APLL1] = "afe_apll1_ck",
++	[MT8196_CLK_AFE_APLL2] = "afe_apll2_ck",
++	[MT8196_CLK_AFE_APLL_TUNER1] = "afe_apll_tuner1",
++	[MT8196_CLK_AFE_APLL_TUNER2] = "afe_apll_tuner2",
++	[MT8196_CLK_AFE_ETDM_OUT4] = "afe_etdm_out4",
++	[MT8196_CLK_AFE_ETDM_IN6] = "afe_etdm_in6",
++	[MT8196_CLK_AFE_ETDM_OUT6] = "afe_etdm_out6",
++	[MT8196_CLK_AFE_TDM_OUT] = "afe_tdm_out",
++	[MT8196_CLK_AFE_CM0] = "afe_cm0",
++	[MT8196_CLK_AFE_CM1] = "afe_cm1",
++	[MT8196_CLK_AFE_CM2] = "afe_cm2",
 +};
 +
-+struct eic7700_pinctrl {
-+	void __iomem *base;
-+	struct pinctrl_desc desc;
-+	unsigned int functions_count;
-+	struct pinfunction functions[] __counted_by(functions_count);
-+};
-+
-+enum {
-+	F_DISABLED,
-+	F_BOOT_SEL,
-+	F_CHIP_MODE,
-+	F_EMMC,
-+	F_FAN_TACH,
-+	F_GPIO,
-+	F_HDMI,
-+	F_I2C,
-+	F_I2S,
-+	F_JTAG,
-+	F_DDR_REF_CLK_SEL,
-+	F_LPDDR_REF_CLK,
-+	F_MIPI_CSI,
-+	F_OSC,
-+	F_PCIE,
-+	F_PWM,
-+	F_RGMII,
-+	F_RESET,
-+	F_SATA,
-+	F_SDIO,
-+	F_SPI,
-+	F_S_MODE,
-+	F_UART,
-+	F_USB,
-+	EIC7700_FUNCTIONS_COUNT
-+};
-+
-+static const char *const eic7700_functions[EIC7700_FUNCTIONS_COUNT] = {
-+	[F_DISABLED]		= "disabled",
-+	[F_BOOT_SEL]		= "boot_sel",
-+	[F_CHIP_MODE]		= "chip_mode",
-+	[F_EMMC]		= "emmc",
-+	[F_FAN_TACH]		= "fan_tach",
-+	[F_GPIO]		= "gpio",
-+	[F_HDMI]		= "hdmi",
-+	[F_I2C]			= "i2c",
-+	[F_I2S]			= "i2s",
-+	[F_JTAG]		= "jtag",
-+	[F_DDR_REF_CLK_SEL]	= "ddr_ref_clk_sel",
-+	[F_LPDDR_REF_CLK]	= "lpddr_ref_clk",
-+	[F_MIPI_CSI]		= "mipi_csi",
-+	[F_OSC]			= "osc",
-+	[F_PCIE]		= "pcie",
-+	[F_PWM]			= "pwm",
-+	[F_RGMII]		= "rgmii",
-+	[F_RESET]		= "reset",
-+	[F_SATA]		= "sata",
-+	[F_SDIO]		= "sdio",
-+	[F_SPI]			= "spi",
-+	[F_S_MODE]		= "s_mode",
-+	[F_UART]		= "uart",
-+	[F_USB]			= "usb",
-+};
-+
-+#define EIC7700_PIN(_number, _name, ...) \
-+	{ \
-+		.number	= _number, \
-+		.name = _name, \
-+		.drv_data = (void *)&(struct eic7700_pin) { { __VA_ARGS__ } } \
-+	}
-+
-+static const struct pinctrl_pin_desc eic7700_pins[] = {
-+	EIC7700_PIN(0,   "chip_mode",		[0] = F_CHIP_MODE),
-+	EIC7700_PIN(1,   "mode_set0",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(2,   "mode_set1",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(3,   "mode_set2",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(4,   "mode_set3",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(5,   "xin",			[0] = F_OSC),
-+	EIC7700_PIN(6,   "rtc_xin",		[0] = F_DISABLED),
-+	EIC7700_PIN(7,   "rst_out_n",		[0] = F_RESET),
-+	EIC7700_PIN(8,   "key_reset_n",		[0] = F_RESET),
-+	EIC7700_PIN(9,   "rst_in_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(10,  "por_in_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(11,  "por_out_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(12,  "gpio0",		[0] = F_GPIO),
-+	EIC7700_PIN(13,  "por_sel",		[0] = F_RESET),
-+	EIC7700_PIN(14,  "jtag0_tck",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(15,  "jtag0_tms",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(16,  "jtag0_tdi",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(17,  "jtag0_tdo",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(18,  "gpio5",		[0] = F_GPIO, [1] = F_SPI),
-+	EIC7700_PIN(19,  "spi2_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(20,  "jtag1_tck",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(21,  "jtag1_tms",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(22,  "jtag1_tdi",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(23,  "jtag1_tdo",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(24,  "gpio11",		[0] = F_GPIO),
-+	EIC7700_PIN(25,  "spi2_cs1_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(26,  "pcie_clkreq_n",	[0] = F_PCIE),
-+	EIC7700_PIN(27,  "pcie_wake_n",		[0] = F_PCIE),
-+	EIC7700_PIN(28,  "pcie_perst_n",	[0] = F_PCIE),
-+	EIC7700_PIN(29,  "hdmi_scl",		[0] = F_HDMI),
-+	EIC7700_PIN(30,  "hdmi_sda",		[0] = F_HDMI),
-+	EIC7700_PIN(31,  "hdmi_cec",		[0] = F_HDMI),
-+	EIC7700_PIN(32,  "jtag2_trst",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(33,  "rgmii0_clk_125",	[0] = F_RGMII),
-+	EIC7700_PIN(34,  "rgmii0_txen",		[0] = F_RGMII),
-+	EIC7700_PIN(35,  "rgmii0_txclk",	[0] = F_RGMII),
-+	EIC7700_PIN(36,  "rgmii0_txd0",		[0] = F_RGMII),
-+	EIC7700_PIN(37,  "rgmii0_txd1",		[0] = F_RGMII),
-+	EIC7700_PIN(38,  "rgmii0_txd2",		[0] = F_RGMII),
-+	EIC7700_PIN(39,  "rgmii0_txd3",		[0] = F_RGMII),
-+	EIC7700_PIN(40,  "i2s0_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(41,  "i2s0_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(42,  "i2s0_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(43,  "i2s0_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(44,  "i2s_mclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(45,  "rgmii0_rxclk",	[0] = F_RGMII),
-+	EIC7700_PIN(46,  "rgmii0_rxdv",		[0] = F_RGMII),
-+	EIC7700_PIN(47,  "rgmii0_rxd0",		[0] = F_RGMII),
-+	EIC7700_PIN(48,  "rgmii0_rxd1",		[0] = F_RGMII),
-+	EIC7700_PIN(49,  "rgmii0_rxd2",		[0] = F_RGMII),
-+	EIC7700_PIN(50,  "rgmii0_rxd3",		[0] = F_RGMII),
-+	EIC7700_PIN(51,  "i2s2_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(52,  "i2s2_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(53,  "i2s2_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(54,  "i2s2_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(55,  "gpio27",		[0] = F_GPIO, [1] = F_SATA),
-+	EIC7700_PIN(56,  "gpio28",		[0] = F_GPIO),
-+	EIC7700_PIN(57,  "gpio29",		[0] = F_RESET, [1] = F_EMMC, [2] = F_GPIO),
-+	EIC7700_PIN(58,  "rgmii0_mdc",		[0] = F_RGMII),
-+	EIC7700_PIN(59,  "rgmii0_mdio",		[0] = F_RGMII),
-+	EIC7700_PIN(60,  "rgmii0_intb",		[0] = F_RGMII),
-+	EIC7700_PIN(61,  "rgmii1_clk_125",	[0] = F_RGMII),
-+	EIC7700_PIN(62,  "rgmii1_txen",		[0] = F_RGMII),
-+	EIC7700_PIN(63,  "rgmii1_txclk",	[0] = F_RGMII),
-+	EIC7700_PIN(64,  "rgmii1_txd0",		[0] = F_RGMII),
-+	EIC7700_PIN(65,  "rgmii1_txd1",		[0] = F_RGMII),
-+	EIC7700_PIN(66,  "rgmii1_txd2",		[0] = F_RGMII),
-+	EIC7700_PIN(67,  "rgmii1_txd3",		[0] = F_RGMII),
-+	EIC7700_PIN(68,  "i2s1_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(69,  "i2s1_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(70,  "i2s1_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(71,  "i2s1_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(72,  "gpio34",		[0] = F_RESET, [1] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(73,  "rgmii1_rxclk",	[0] = F_RGMII),
-+	EIC7700_PIN(74,  "rgmii1_rxdv",		[0] = F_RGMII),
-+	EIC7700_PIN(75,  "rgmii1_rxd0",		[0] = F_RGMII),
-+	EIC7700_PIN(76,  "rgmii1_rxd1",		[0] = F_RGMII),
-+	EIC7700_PIN(77,  "rgmii1_rxd2",		[0] = F_RGMII),
-+	EIC7700_PIN(78,  "rgmii1_rxd3",		[0] = F_RGMII),
-+	EIC7700_PIN(79,  "spi1_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(80,  "spi1_clk",        [0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(81,  "spi1_d0", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(82,  "spi1_d1", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(83,  "spi1_d2",		[0] = F_SPI, [1] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(84,  "spi1_d3",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(85,  "spi1_cs1_n",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(86,  "rgmii1_mdc",		[0] = F_RGMII),
-+	EIC7700_PIN(87,  "rgmii1_mdio",		[0] = F_RGMII),
-+	EIC7700_PIN(88,  "rgmii1_intb",		[0] = F_RGMII),
-+	EIC7700_PIN(89,  "usb0_pwren",		[0] = F_USB, [2] = F_GPIO),
-+	EIC7700_PIN(90,  "usb1_pwren",		[0] = F_USB, [2] = F_GPIO),
-+	EIC7700_PIN(91,  "i2c0_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(92,  "i2c0_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(93,  "i2c1_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(94,  "i2c1_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(95,  "i2c2_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(96,  "i2c2_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(97,  "i2c3_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(98,  "i2c3_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(99,  "i2c4_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(100, "i2c4_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(101, "i2c5_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(102, "i2c5_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(103, "uart0_tx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(104, "uart0_rx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(105, "uart1_tx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(106, "uart1_rx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(107, "uart1_cts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(108, "uart1_rts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(109, "uart2_tx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(110, "uart2_rx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(111, "jtag2_tck",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(112, "jtag2_tms",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(113, "jtag2_tdi",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(114, "jtag2_tdo",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(115, "fan_pwm",		[0] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(116, "fan_tach",		[0] = F_FAN_TACH, [2] = F_GPIO),
-+	EIC7700_PIN(117, "mipi_csi0_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(118, "mipi_csi0_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(119, "mipi_csi0_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(120, "mipi_csi1_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(121, "mipi_csi1_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(122, "mipi_csi1_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(123, "mipi_csi2_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(124, "mipi_csi2_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(125, "mipi_csi2_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(126, "mipi_csi3_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(127, "mipi_csi3_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(128, "mipi_csi3_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(129, "mipi_csi4_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(130, "mipi_csi4_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(131, "mipi_csi4_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(132, "mipi_csi5_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(133, "mipi_csi5_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(134, "mipi_csi5_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(135, "spi3_cs_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(136, "spi3_clk",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(137, "spi3_di",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(138, "spi3_do",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(139, "gpio92",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(140, "gpio93",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(141, "s_mode",		[0] = F_S_MODE, [2] = F_GPIO),
-+	EIC7700_PIN(142, "gpio95",		[0] = F_DDR_REF_CLK_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(143, "spi0_cs_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(144, "spi0_clk",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(145, "spi0_d0",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(146, "spi0_d1",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(147, "spi0_d2",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(148, "spi0_d3",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(149, "i2c10_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(150, "i2c10_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(151, "i2c11_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(152, "i2c11_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(153, "gpio106",		[0] = F_GPIO),
-+	EIC7700_PIN(154, "boot_sel0",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(155, "boot_sel1",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(156, "boot_sel2",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(157, "boot_sel3",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(158, "gpio111",		[0] = F_GPIO),
-+	EIC7700_PIN(159, "reserved0",		[0] = F_DISABLED),
-+	EIC7700_PIN(160, "reserved1",		[0] = F_DISABLED),
-+	EIC7700_PIN(161, "reserved2",		[0] = F_DISABLED),
-+	EIC7700_PIN(162, "reserved3",		[0] = F_DISABLED),
-+	EIC7700_PIN(163, "lpddr_ref_clk",		[0] = F_LPDDR_REF_CLK),
-+};
-+
-+static int eic7700_get_groups_count(struct pinctrl_dev *pctldev)
++int mt8196_afe_enable_clk(struct mtk_base_afe *afe, struct clk *clk)
 +{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->desc.npins;
-+}
-+
-+static const char *eic7700_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->desc.pins[selector].name;
-+}
-+
-+static int eic7700_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
-+				  const unsigned int **pins, unsigned int *npins)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = &pc->desc.pins[selector].number;
-+	*npins = 1;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops eic7700_pinctrl_ops = {
-+	.get_groups_count	= eic7700_get_groups_count,
-+	.get_group_name		= eic7700_get_group_name,
-+	.get_group_pins		= eic7700_get_group_pins,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map		= pinconf_generic_dt_free_map,
-+};
-+
-+static int eic7700_pin_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+				  unsigned long *config)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+	u32 arg, value;
-+	int param;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
-+
-+	param = pinconf_to_config_param(*config);
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		arg = (value & EIC7700_BIAS) == 0;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		arg = (value & EIC7700_BIAS) == EIC7700_PD;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		arg = (value & EIC7700_BIAS) == EIC7700_PU;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+		if (pin_data->functions[0] == F_RGMII ||
-+			pin_data->functions[0] == F_LPDDR_REF_CLK)
-+			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 3000;
-+		else
-+			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 6000;
-+		break;
-+	case PIN_CONFIG_INPUT_ENABLE:
-+		arg = value & EIC7700_IE;
-+		break;
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		arg = value & EIC7700_ST;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+	return arg ? 0 : -EINVAL;
-+}
-+
-+static int eic7700_pin_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+				  unsigned long *configs, unsigned int num_configs)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+	u32 value;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
-+
-+	for (unsigned int i = 0; i < num_configs; i++) {
-+		int param = pinconf_to_config_param(configs[i]);
-+		u32 arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			value &= ~EIC7700_BIAS;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			if (arg == 0)
-+				return -EOPNOTSUPP;
-+			value &= ~EIC7700_BIAS;
-+			value |= EIC7700_PD;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			if (arg == 0)
-+				return -EOPNOTSUPP;
-+			value &= ~EIC7700_BIAS;
-+			value |= EIC7700_PU;
-+			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+			value &= ~EIC7700_DS;
-+			if (pin_data->functions[0] == F_RGMII ||
-+				pin_data->functions[0] == F_LPDDR_REF_CLK) {
-+				if (arg < 3000 || arg > 24000)
-+					return -EOPNOTSUPP;
-+				value |= FIELD_PREP(EIC7700_DS, (arg - 3000) / 3000);
-+			} else {
-+				if (arg < 6000 || arg > 27000)
-+					return -EOPNOTSUPP;
-+				value |= FIELD_PREP(EIC7700_DS, (arg - 6000) / 3000);
-+			}
-+			break;
-+		case PIN_CONFIG_INPUT_ENABLE:
-+			if (arg)
-+				value |= EIC7700_IE;
-+			else
-+				value &= ~EIC7700_IE;
-+			break;
-+		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+			if (arg)
-+				value |= EIC7700_ST;
-+			else
-+				value &= ~EIC7700_ST;
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(pin));
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+static void eic7700_pin_config_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+					unsigned int pin)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin)) & EIC7700_PINCONF;
-+
-+	seq_printf(s, " [0x%02x]", value);
-+}
-+#else
-+#define eic7700_pin_config_dbg_show NULL
-+#endif
-+
-+static const struct pinconf_ops eic7700_pinconf_ops = {
-+	.is_generic			= true,
-+	.pin_config_get			= eic7700_pin_config_get,
-+	.pin_config_set			= eic7700_pin_config_set,
-+	.pin_config_group_get		= eic7700_pin_config_get,
-+	.pin_config_group_set		= eic7700_pin_config_set,
-+	.pin_config_dbg_show		= eic7700_pin_config_dbg_show,
-+	.pin_config_group_dbg_show	= eic7700_pin_config_dbg_show,
-+};
-+
-+static int eic7700_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->functions_count;
-+}
-+
-+static const char *eic7700_get_function_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->functions[selector].name;
-+}
-+
-+static int eic7700_get_function_groups(struct pinctrl_dev *pctldev, unsigned int selector,
-+				       const char *const **groups, unsigned int *num_groups)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = pc->functions[selector].groups;
-+	*num_groups = pc->functions[selector].ngroups;
-+
-+	return 0;
-+}
-+
-+static int eic7700_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-+			   unsigned int group_selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[group_selector].drv_data;
-+	u32 fs, value;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	for (fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++)
-+		if (pin_data->functions[fs] == func_selector)
-+			break;
-+
-+	if (fs == EIC7700_FUNCTIONS_PER_PIN) {
-+		dev_err(pctldev->dev, "invalid mux %s for pin %s\n",
-+			pc->functions[func_selector].name,
-+			pc->desc.pins[group_selector].name);
-+		return -EINVAL;
-+	}
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(group_selector));
-+	value &= ~EIC7700_FUNC_SEL;
-+	value |= FIELD_PREP(EIC7700_FUNC_SEL, fs);
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(group_selector));
-+
-+	return 0;
-+}
-+
-+static int eic7700_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				       struct pinctrl_gpio_range *range, unsigned int offset)
-+{
-+	return eic7700_set_mux(pctldev, F_GPIO, offset);
-+}
-+
-+static void eic7700_gpio_disable_free(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range, unsigned int offset)
-+{
-+	eic7700_set_mux(pctldev, F_DISABLED, offset);
-+}
-+
-+static int eic7700_gpio_set_direction(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range, unsigned int offset,
-+				      bool input)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 value;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(offset));
-+	if (input)
-+		value |= EIC7700_IE;
-+	else
-+		value &= ~EIC7700_IE;
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(offset));
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops eic7700_pinmux_ops = {
-+	.get_functions_count	= eic7700_get_functions_count,
-+	.get_function_name	= eic7700_get_function_name,
-+	.get_function_groups	= eic7700_get_function_groups,
-+	.set_mux		= eic7700_set_mux,
-+	.gpio_request_enable	= eic7700_gpio_request_enable,
-+	.gpio_disable_free	= eic7700_gpio_disable_free,
-+	.gpio_set_direction	= eic7700_gpio_set_direction,
-+	.strict			= true,
-+};
-+
-+static int eic7700_pinctrl_init_function_groups(struct device *dev, struct eic7700_pinctrl *pc,
-+						const char *const *function_names)
-+{
-+	unsigned int ngroups = 0;
-+	const char **groups;
-+
-+	/* Count the number of groups for each function */
-+	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
-+		const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+		bool found_disabled = false;
-+
-+		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
-+			unsigned int selector = pin_data->functions[fs];
-+			struct pinfunction *function = &pc->functions[selector];
-+
-+			/* Only count F_DISABLED once per pin */
-+			if (selector == F_DISABLED) {
-+				if (found_disabled)
-+					continue;
-+				found_disabled = true;
-+			}
-+
-+			function->ngroups++;
-+			ngroups++;
-+		}
-+	}
-+
-+	groups = devm_kcalloc(dev, ngroups, sizeof(*groups), GFP_KERNEL);
-+	if (!groups)
-+		return -ENOMEM;
-+
-+	for (unsigned int selector = 0; selector < pc->functions_count; selector++) {
-+		struct pinfunction *function = &pc->functions[selector];
-+
-+		function->name = function_names[selector];
-+		function->groups = groups;
-+		groups += function->ngroups;
-+
-+		/* Reset per-function ngroups for use as iterator below */
-+		function->ngroups = 0;
-+	}
-+
-+	/* Fill in the group pointers for each function */
-+	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
-+		const struct pinctrl_pin_desc *desc = &pc->desc.pins[pin];
-+		const struct eic7700_pin *pin_data = desc->drv_data;
-+		bool found_disabled = false;
-+
-+		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
-+			unsigned int selector = pin_data->functions[fs];
-+			struct pinfunction *function = &pc->functions[selector];
-+
-+			/* Only count F_DISABLED once per pin */
-+			if (selector == F_DISABLED) {
-+				if (found_disabled)
-+					continue;
-+				found_disabled = true;
-+			}
-+
-+			((const char **)function->groups)[function->ngroups++] = desc->name;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int eic7700_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pinctrl_dev *pctldev;
-+	struct eic7700_pinctrl *pc;
-+	struct regulator *regulator;
-+	u32 voltage, rgmii0_mode, rgmii1_mode;
 +	int ret;
 +
-+	pc = devm_kzalloc(dev, struct_size(pc, functions, EIC7700_FUNCTIONS_COUNT), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	pc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(pc->base))
-+		return PTR_ERR(pc->base);
-+
-+	regulator = devm_regulator_get(dev, "vrgmii");
-+	if (IS_ERR_OR_NULL(regulator)) {
-+		return dev_err_probe(dev, PTR_ERR(regulator),
-+					 "failed to get vrgmii regulator\n");
-+	}
-+
-+	voltage = regulator_get_voltage(regulator);
-+	if (voltage < 0) {
-+		return dev_err_probe(&pdev->dev, voltage,
-+			 "Failed to get voltage from regulator\n");
-+	}
-+
-+	rgmii0_mode = readl_relaxed(pc->base + EIC7700_RGMII0_SEL_MODE);
-+	rgmii1_mode = readl_relaxed(pc->base + EIC7700_RGMII1_SEL_MODE);
-+	rgmii0_mode &= ~EIC7700_MS;
-+	rgmii1_mode &= ~EIC7700_MS;
-+	if (voltage == 1800000) {
-+		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
-+		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
-+	} else if (voltage == 3300000) {
-+		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
-+		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
++	if (clk) {
++		ret = clk_prepare_enable(clk);
++		if (ret) {
++			dev_dbg(afe->dev, "failed to enable clk\n");
++			return ret;
++		}
 +	} else {
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+			 "Invalid voltage configuration, should be either 1.8V or 3.3V\n");
++		dev_dbg(afe->dev, "NULL clk\n");
++	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mt8196_afe_enable_clk);
++
++void mt8196_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk)
++{
++	if (clk)
++		clk_disable_unprepare(clk);
++	else
++		dev_dbg(afe->dev, "NULL clk\n");
++}
++EXPORT_SYMBOL_GPL(mt8196_afe_disable_clk);
++
++static int mt8196_afe_set_clk_rate(struct mtk_base_afe *afe, struct clk *clk,
++				   unsigned int rate)
++{
++	int ret;
++
++	if (clk) {
++		ret = clk_set_rate(clk, rate);
++		if (ret) {
++			dev_dbg(afe->dev, "failed to set clk rate\n");
++			return ret;
++		}
 +	}
 +
-+	writel_relaxed(rgmii0_mode, pc->base + EIC7700_RGMII0_SEL_MODE);
-+	writel_relaxed(rgmii1_mode, pc->base + EIC7700_RGMII1_SEL_MODE);
++	return 0;
++}
 +
-+	pc->desc.name = dev_name(dev);
-+	pc->desc.pins = eic7700_pins;
-+	pc->desc.npins = ARRAY_SIZE(eic7700_pins);
-+	pc->desc.pctlops = &eic7700_pinctrl_ops;
-+	pc->desc.pmxops = &eic7700_pinmux_ops;
-+	pc->desc.confops = &eic7700_pinconf_ops;
-+	pc->desc.owner = THIS_MODULE;
++static int mt8196_afe_set_clk_parent(struct mtk_base_afe *afe, struct clk *clk,
++				     struct clk *parent)
++{
++	int ret;
 +
-+	pc->functions_count = EIC7700_FUNCTIONS_COUNT;
-+	ret = eic7700_pinctrl_init_function_groups(dev, pc, eic7700_functions);
++	if (clk && parent) {
++		ret = clk_set_parent(clk, parent);
++		if (ret) {
++			dev_dbg(afe->dev, "failed to set clk parent %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static unsigned int get_top_cg_reg(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8196_AUDIO_26M_EN_ON:
++	case MT8196_AUDIO_F3P25M_EN_ON:
++	case MT8196_AUDIO_APLL1_EN_ON:
++	case MT8196_AUDIO_APLL2_EN_ON:
++		return AUDIO_ENGEN_CON0;
++	default:
++		return 0;
++	}
++}
++
++static unsigned int get_top_cg_mask(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8196_AUDIO_26M_EN_ON:
++		return AUDIO_26M_EN_ON_MASK_SFT;
++	case MT8196_AUDIO_F3P25M_EN_ON:
++		return AUDIO_F3P25M_EN_ON_MASK_SFT;
++	case MT8196_AUDIO_APLL1_EN_ON:
++		return AUDIO_APLL1_EN_ON_MASK_SFT;
++	case MT8196_AUDIO_APLL2_EN_ON:
++		return AUDIO_APLL2_EN_ON_MASK_SFT;
++	default:
++		return 0;
++	}
++}
++
++static unsigned int get_top_cg_on_val(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8196_AUDIO_26M_EN_ON:
++	case MT8196_AUDIO_F3P25M_EN_ON:
++	case MT8196_AUDIO_APLL1_EN_ON:
++	case MT8196_AUDIO_APLL2_EN_ON:
++		return get_top_cg_mask(cg_type);
++	default:
++		return 0;
++	}
++}
++
++static unsigned int get_top_cg_off_val(unsigned int cg_type)
++{
++	switch (cg_type) {
++	case MT8196_AUDIO_26M_EN_ON:
++	case MT8196_AUDIO_F3P25M_EN_ON:
++	case MT8196_AUDIO_APLL1_EN_ON:
++	case MT8196_AUDIO_APLL2_EN_ON:
++		return 0;
++	default:
++		return get_top_cg_mask(cg_type);
++	}
++}
++
++static int mt8196_afe_enable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
++{
++	unsigned int reg = get_top_cg_reg(cg_type);
++	unsigned int mask = get_top_cg_mask(cg_type);
++	unsigned int val = get_top_cg_on_val(cg_type);
++
++	regmap_update_bits(afe->regmap, reg, mask, val);
++	return 0;
++}
++
++static int mt8196_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
++{
++	unsigned int reg = get_top_cg_reg(cg_type);
++	unsigned int mask = get_top_cg_mask(cg_type);
++	unsigned int val = get_top_cg_off_val(cg_type);
++
++	regmap_update_bits(afe->regmap, reg, mask, val);
++	return 0;
++}
++
++static int mt8196_afe_enable_afe_on(struct mtk_base_afe *afe)
++{
++	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_26M_EN_ON);
++	return 0;
++}
++
++static int mt8196_afe_disable_afe_on(struct mtk_base_afe *afe)
++{
++	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_26M_EN_ON);
++	return 0;
++}
++
++static int apll1_mux_setting(struct mtk_base_afe *afe, bool enable)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret = 0;
++
++	dev_dbg(afe->dev, "enable: %d\n", enable);
++
++	if (enable) {
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
++						afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
++		if (ret)
++			return ret;
++
++		/* 180.6336 / 4 = 45.1584MHz */
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1],
++						afe_priv->clk[MT8196_CLK_TOP_APLL1_D4]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++						afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
++		if (ret)
++			return ret;
++	} else {
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1],
++						afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++		if (ret)
++			return ret;
++
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1]);
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
++						afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
++		if (ret)
++			return ret;
++
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
++		mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++					  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++	}
++
++	return 0;
++}
++
++static int apll2_mux_setting(struct mtk_base_afe *afe, bool enable)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret = 0;
++
++	dev_dbg(afe->dev, "enable: %d\n", enable);
++
++	if (enable) {
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
++						afe_priv->clk[MT8196_CLK_TOP_APLL2_CK]);
++		if (ret)
++			return ret;
++
++		/* 196.608 / 4 = 49.152MHz */
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2],
++						afe_priv->clk[MT8196_CLK_TOP_APLL2_D4]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++						afe_priv->clk[MT8196_CLK_TOP_APLL2_CK]);
++		if (ret)
++			return ret;
++	} else {
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2],
++						afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++		if (ret)
++			return ret;
++
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2]);
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
++						afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
++		if (ret)
++			return ret;
++
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
++		mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++					  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++	}
++
++	return 0;
++}
++
++static int mt8196_afe_disable_apll(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret = 0;
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
 +	if (ret)
 +		return ret;
 +
-+	ret = devm_pinctrl_register_and_init(dev, &pc->desc, pc, &pctldev);
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
 +	if (ret)
-+		return dev_err_probe(dev, ret, "could not register pinctrl driver\n");
++		goto clk_ck_mux_aud1_err;
 +
-+	return pinctrl_enable(pctldev);
++	ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
++					afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
++	if (ret)
++		goto clk_ck_mux_aud1_parent_err;
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
++	if (ret)
++		goto clk_ck_mux_aud2_err;
++
++	ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
++					afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
++	if (ret)
++		goto clk_ck_mux_aud2_parent_err;
++
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++	return 0;
++
++clk_ck_mux_aud2_parent_err:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
++clk_ck_mux_aud2_err:
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
++				  afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
++clk_ck_mux_aud1_parent_err:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
++clk_ck_mux_aud1_err:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++
++	return ret;
 +}
 +
-+static const struct of_device_id eic7700_pinctrl_of_match[] = {
-+	{ .compatible = "eswin,eic7700-pinctrl" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, eic7700_pinctrl_of_match);
++static void mt8196_afe_apll_init(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
 +
-+static struct platform_driver eic7700_pinctrl_driver = {
-+	.probe	= eic7700_pinctrl_probe,
-+	.driver	= {
-+		.name		= "pinctrl-eic7700",
-+		.of_match_table	= eic7700_pinctrl_of_match,
++	if (afe_priv->vlp_ck) {
++		regmap_write(afe_priv->vlp_ck, VLP_APLL1_TUNER_CON0, VLP_APLL1_TUNER_CON0_VALUE);
++		regmap_write(afe_priv->vlp_ck, VLP_APLL2_TUNER_CON0, VLP_APLL2_TUNER_CON0_VALUE);
++	} else {
++		dev_warn(afe->dev, "vlp_ck regmap is null ptr\n");
++	}
++}
++
++int mt8196_apll1_enable(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret;
++
++	/* setting for APLL */
++	apll1_mux_setting(afe, true);
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL1]);
++	if (ret)
++		goto ERR_CLK_APLL1;
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER1]);
++	if (ret)
++		goto ERR_CLK_APLL1_TUNER;
++
++	/* sel 44.1kHz:1, apll_div:7, upper bound:3 */
++	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
++			   XTAL_EN_128FS_SEL_MASK_SFT | APLL_DIV_MASK_SFT | UPPER_BOUND_MASK_SFT,
++			   (0x1 << XTAL_EN_128FS_SEL_SFT) | (7 << APLL_DIV_SFT) |
++			   (3 << UPPER_BOUND_SFT));
++
++	/* apll1 freq tuner enable */
++	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
++			   FREQ_TUNER_EN_MASK_SFT,
++			   0x1 << FREQ_TUNER_EN_SFT);
++
++	/* audio apll1 on */
++	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_APLL1_EN_ON);
++
++	return 0;
++
++ERR_CLK_APLL1_TUNER:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER1]);
++ERR_CLK_APLL1:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL1]);
++	return ret;
++}
++
++void mt8196_apll1_disable(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++
++	/* audio apll1 off */
++	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_APLL1_EN_ON);
++
++	/* apll1 freq tuner disable */
++	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
++			   FREQ_TUNER_EN_MASK_SFT,
++			   0x0);
++
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER1]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL1]);
++	apll1_mux_setting(afe, false);
++}
++
++int mt8196_apll2_enable(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret;
++
++	/* setting for APLL */
++	apll2_mux_setting(afe, true);
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL2]);
++	if (ret)
++		goto ERR_CLK_APLL2;
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER2]);
++	if (ret)
++		goto ERR_CLK_APLL2_TUNER;
++
++	/* sel 48kHz: 2, apll_div: 7, upper bound: 3*/
++	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
++			   XTAL_EN_128FS_SEL_MASK_SFT | APLL_DIV_MASK_SFT | UPPER_BOUND_MASK_SFT,
++			   (0x2 << XTAL_EN_128FS_SEL_SFT) | (7 << APLL_DIV_SFT) |
++			   (3 << UPPER_BOUND_SFT));
++
++	/* apll2 freq tuner enable */
++	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
++			   FREQ_TUNER_EN_MASK_SFT,
++			   0x1 << FREQ_TUNER_EN_SFT);
++
++	/* audio apll2 on */
++	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_APLL2_EN_ON);
++	return 0;
++
++ERR_CLK_APLL2_TUNER:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER2]);
++ERR_CLK_APLL2:
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL2]);
++	return ret;
++
++	return 0;
++}
++
++void mt8196_apll2_disable(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++
++	/* audio apll2 off */
++	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_APLL2_EN_ON);
++
++	/* apll2 freq tuner disable */
++	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
++			   FREQ_TUNER_EN_MASK_SFT,
++			   0x0);
++
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL_TUNER2]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_APLL2]);
++	apll2_mux_setting(afe, false);
++}
++
++int mt8196_get_apll_rate(struct mtk_base_afe *afe, int apll)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int clk_id = 0;
++
++	if (apll < MT8196_APLL1 || apll > MT8196_APLL2) {
++		dev_warn(afe->dev, "invalid clk id\n");
++		return 0;
++	}
++
++	if (apll == MT8196_APLL1)
++		clk_id = MT8196_CLK_TOP_APLL1_CK;
++	else
++		clk_id = MT8196_CLK_TOP_APLL2_CK;
++
++	return clk_get_rate(afe_priv->clk[clk_id]);
++}
++
++int mt8196_get_apll_by_rate(struct mtk_base_afe *afe, int rate)
++{
++	return ((rate % 8000) == 0) ? MT8196_APLL2 : MT8196_APLL1;
++}
++
++int mt8196_get_apll_by_name(struct mtk_base_afe *afe, const char *name)
++{
++	if (strcmp(name, APLL1_W_NAME) == 0)
++		return MT8196_APLL1;
++	else
++		return MT8196_APLL2;
++}
++
++/* mck */
++struct mt8196_mck_div {
++	int m_sel_id;
++	int div_clk_id;
++};
++
++static const struct mt8196_mck_div mck_div[MT8196_MCK_NUM] = {
++	[MT8196_I2SIN0_MCK] = {
++		.m_sel_id = MT8196_CLK_TOP_I2SIN0_M_SEL,
++		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_I2SIN0,
++	},
++	[MT8196_I2SIN1_MCK] = {
++		.m_sel_id = MT8196_CLK_TOP_I2SIN1_M_SEL,
++		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_I2SIN1,
++	},
++	[MT8196_FMI2S_MCK] = {
++		.m_sel_id = MT8196_CLK_TOP_FMI2S_M_SEL,
++		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_FMI2S,
++	},
++	[MT8196_TDMOUT_MCK] = {
++		.m_sel_id = MT8196_CLK_TOP_TDMOUT_M_SEL,
++		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M,
++	},
++	[MT8196_TDMOUT_BCK] = {
++		.m_sel_id = -1,
++		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B,
 +	},
 +};
-+module_platform_driver(eic7700_pinctrl_driver);
 +
-+MODULE_DESCRIPTION("Pinctrl driver for the ESWIN EIC7700 SoC");
-+MODULE_AUTHOR("Samuel Holland <samuel.holland@sifive.com>");
-+MODULE_AUTHOR("Yulin Lu <luyulin@eswincomputing.com>");
-+MODULE_LICENSE("GPL");
++int mt8196_mck_enable(struct mtk_base_afe *afe, int mck_id, int rate)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int apll = mt8196_get_apll_by_rate(afe, rate);
++	int apll_clk_id = apll == MT8196_APLL1 ?
++			  MT8196_CLK_TOP_MUX_AUD_1 : MT8196_CLK_TOP_MUX_AUD_2;
++	int m_sel_id = 0;
++	int div_clk_id = 0;
++	int ret = 0;
++
++	dev_dbg(afe->dev, "mck_id: %d, rate: %d\n", mck_id, rate);
++
++	if (mck_id >= MT8196_MCK_NUM || mck_id < 0)
++		return -EINVAL;
++
++	m_sel_id = mck_div[mck_id].m_sel_id;
++	div_clk_id = mck_div[mck_id].div_clk_id;
++
++	/* select apll */
++	if (m_sel_id >= 0) {
++		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[m_sel_id]);
++		if (ret)
++			return ret;
++
++		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[m_sel_id],
++						afe_priv->clk[apll_clk_id]);
++		if (ret)
++			return ret;
++	}
++
++	/* enable div, set rate */
++	if (div_clk_id < 0) {
++		dev_err(afe->dev, "invalid div_clk_id %d\n", div_clk_id);
++		return -EINVAL;
++	}
++	if (div_clk_id == MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B)
++		rate = rate * 16;
++
++	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[div_clk_id]);
++	if (ret)
++		return ret;
++
++	ret = mt8196_afe_set_clk_rate(afe, afe_priv->clk[div_clk_id], rate);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++int mt8196_mck_disable(struct mtk_base_afe *afe, int mck_id)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int m_sel_id = 0;
++	int div_clk_id = 0;
++
++	dev_dbg(afe->dev, "mck_id: %d.\n", mck_id);
++
++	if (mck_id < 0) {
++		dev_err(afe->dev, "mck_id = %d < 0\n", mck_id);
++		return -EINVAL;
++	}
++
++	m_sel_id = mck_div[mck_id].m_sel_id;
++	div_clk_id = mck_div[mck_id].div_clk_id;
++
++	if (div_clk_id < 0) {
++		dev_err(afe->dev, "div_clk_id = %d < 0\n",
++			div_clk_id);
++		return -EINVAL;
++	}
++
++	mt8196_afe_disable_clk(afe, afe_priv->clk[div_clk_id]);
++
++	if (m_sel_id >= 0)
++		mt8196_afe_disable_clk(afe, afe_priv->clk[m_sel_id]);
++
++	return 0;
++}
++
++int mt8196_afe_enable_reg_rw_clk(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++
++	/* bus clock for AFE external access, like DRAM */
++	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_ADSP_SEL]);
++
++	/* bus clock for AFE internal access, like AFE SRAM */
++	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS]);
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS],
++				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++	/* enable audio vlp clock source */
++	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++
++	/* AFE hw clock */
++	/* IPM2.0: USE HOPPING & 26M */
++	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_AUDIO_HOPPING]);
++	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_AUDIO_F26M]);
++	return 0;
++}
++
++int mt8196_afe_disable_reg_rw_clk(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++
++	/* IPM2.0: Use HOPPING & 26M */
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_AUDIO_HOPPING]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_AFE_AUDIO_F26M]);
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
++				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
++	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS],
++				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS]);
++	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_ADSP_SEL]);
++	return 0;
++}
++
++int mt8196_afe_enable_main_clock(struct mtk_base_afe *afe)
++{
++	mt8196_afe_enable_afe_on(afe);
++	return 0;
++}
++
++int mt8196_afe_disable_main_clock(struct mtk_base_afe *afe)
++{
++	mt8196_afe_disable_afe_on(afe);
++	return 0;
++}
++
++int mt8196_init_clock(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	int ret = 0;
++	int i = 0;
++
++	ret = mt8196_audsys_clk_register(afe);
++	if (ret) {
++		dev_err(afe->dev, "register audsys clk fail %d\n", ret);
++		return ret;
++	}
++
++	afe_priv->clk = devm_kcalloc(afe->dev, MT8196_CLK_NUM, sizeof(*afe_priv->clk),
++				     GFP_KERNEL);
++	if (!afe_priv->clk)
++		return -ENOMEM;
++
++	for (i = 0; i < MT8196_CLK_NUM; i++) {
++		afe_priv->clk[i] = devm_clk_get(afe->dev, aud_clks[i]);
++		if (IS_ERR(afe_priv->clk[i])) {
++			dev_err(afe->dev, "devm_clk_get %s fail\n", aud_clks[i]);
++			return PTR_ERR(afe_priv->clk[i]);
++		}
++	}
++
++	afe_priv->vlp_ck = syscon_regmap_lookup_by_phandle(afe->dev->of_node,
++							   "vlpcksys");
++	if (IS_ERR(afe_priv->vlp_ck)) {
++		dev_err(afe->dev, "Cannot find vlpcksys\n");
++		return PTR_ERR(afe_priv->vlp_ck);
++	}
++
++	mt8196_afe_apll_init(afe);
++
++	ret = mt8196_afe_disable_apll(afe);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-clk.h b/sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+new file mode 100644
+index 000000000000..60f5e5a157d5
+--- /dev/null
++++ b/sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+@@ -0,0 +1,142 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * mt8196-afe-clk.h  --  Mediatek 8196 afe clock ctrl definition
++ *
++ * Copyright (c) 2024 MediaTek Inc.
++ *  Author: Darren Ye <darren.ye@mediatek.com>
++ */
++
++#ifndef _MT8196_AFE_CLOCK_CTRL_H_
++#define _MT8196_AFE_CLOCK_CTRL_H_
++
++/* vlp_cksys_clk: 0x1c016000 */
++#define VLP_APLL1_TUNER_CON0 0x02a4
++#define VLP_APLL2_TUNER_CON0 0x02a8
++
++/* vlp apll1 tuner default value*/
++#define VLP_APLL1_TUNER_CON0_VALUE 0x6f28bd4d
++/* vlp apll2 tuner default value + 1*/
++#define VLP_APLL2_TUNER_CON0_VALUE 0x78fd5265
++
++/* APLL */
++#define APLL1_W_NAME "APLL1"
++#define APLL2_W_NAME "APLL2"
++
++enum {
++	MT8196_APLL1 = 0,
++	MT8196_APLL2,
++};
++
++enum {
++	/* vlp clk */
++	MT8196_CLK_VLP_MUX_AUDIOINTBUS,
++	MT8196_CLK_VLP_MUX_AUD_ENG1,
++	MT8196_CLK_VLP_MUX_AUD_ENG2,
++	MT8196_CLK_VLP_MUX_AUDIO_H,
++	MT8196_CLK_VLP_CLK26M,
++	/* pll */
++	MT8196_CLK_TOP_APLL1_CK,
++	MT8196_CLK_TOP_APLL2_CK,
++	/* divider */
++	MT8196_CLK_TOP_APLL1_D4,
++	MT8196_CLK_TOP_APLL2_D4,
++	MT8196_CLK_TOP_APLL12_DIV_I2SIN0,
++	MT8196_CLK_TOP_APLL12_DIV_I2SIN1,
++	MT8196_CLK_TOP_APLL12_DIV_FMI2S,
++	MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M,
++	MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B,
++	/* mux */
++	MT8196_CLK_TOP_MUX_AUD_1,
++	MT8196_CLK_TOP_MUX_AUD_2,
++	MT8196_CLK_TOP_I2SIN0_M_SEL,
++	MT8196_CLK_TOP_I2SIN1_M_SEL,
++	MT8196_CLK_TOP_FMI2S_M_SEL,
++	MT8196_CLK_TOP_TDMOUT_M_SEL,
++	MT8196_CLK_TOP_ADSP_SEL,
++	/* top 26m */
++	MT8196_CLK_TOP_CLK26M,
++	/* clock gate */
++	MT8196_CLK_AFE_PCM1,
++	MT8196_CLK_AFE_PCM0,
++	MT8196_CLK_AFE_CM2,
++	MT8196_CLK_AFE_CM1,
++	MT8196_CLK_AFE_CM0,
++	MT8196_CLK_AFE_STF,
++	MT8196_CLK_AFE_HW_GAIN23,
++	MT8196_CLK_AFE_HW_GAIN01,
++	MT8196_CLK_AFE_FM_I2S,
++	MT8196_CLK_AFE_MTKAIFV4,
++	MT8196_CLK_AFE_UL2_ADC_HIRES_TML,
++	MT8196_CLK_AFE_UL2_ADC_HIRES,
++	MT8196_CLK_AFE_UL2_TML,
++	MT8196_CLK_AFE_UL2_ADC,
++	MT8196_CLK_AFE_UL1_ADC_HIRES_TML,
++	MT8196_CLK_AFE_UL1_ADC_HIRES,
++	MT8196_CLK_AFE_UL1_TML,
++	MT8196_CLK_AFE_UL1_ADC,
++	MT8196_CLK_AFE_UL0_ADC_HIRES_TML,
++	MT8196_CLK_AFE_UL0_ADC_HIRES,
++	MT8196_CLK_AFE_UL0_TML,
++	MT8196_CLK_AFE_UL0_ADC,
++	MT8196_CLK_AFE_ETDM_IN6,
++	MT8196_CLK_AFE_ETDM_IN5,
++	MT8196_CLK_AFE_ETDM_IN4,
++	MT8196_CLK_AFE_ETDM_IN3,
++	MT8196_CLK_AFE_ETDM_IN2,
++	MT8196_CLK_AFE_ETDM_IN1,
++	MT8196_CLK_AFE_ETDM_IN0,
++	MT8196_CLK_AFE_ETDM_OUT6,
++	MT8196_CLK_AFE_ETDM_OUT5,
++	MT8196_CLK_AFE_ETDM_OUT4,
++	MT8196_CLK_AFE_ETDM_OUT3,
++	MT8196_CLK_AFE_ETDM_OUT2,
++	MT8196_CLK_AFE_ETDM_OUT1,
++	MT8196_CLK_AFE_ETDM_OUT0,
++	MT8196_CLK_AFE_TDM_OUT,
++	MT8196_CLK_AFE_GENERAL15_ASRC,
++	MT8196_CLK_AFE_GENERAL14_ASRC,
++	MT8196_CLK_AFE_GENERAL13_ASRC,
++	MT8196_CLK_AFE_GENERAL12_ASRC,
++	MT8196_CLK_AFE_GENERAL11_ASRC,
++	MT8196_CLK_AFE_GENERAL10_ASRC,
++	MT8196_CLK_AFE_GENERAL9_ASRC,
++	MT8196_CLK_AFE_GENERAL8_ASRC,
++	MT8196_CLK_AFE_GENERAL7_ASRC,
++	MT8196_CLK_AFE_GENERAL6_ASRC,
++	MT8196_CLK_AFE_GENERAL5_ASRC,
++	MT8196_CLK_AFE_GENERAL4_ASRC,
++	MT8196_CLK_AFE_GENERAL3_ASRC,
++	MT8196_CLK_AFE_GENERAL2_ASRC,
++	MT8196_CLK_AFE_GENERAL1_ASRC,
++	MT8196_CLK_AFE_GENERAL0_ASRC,
++	MT8196_CLK_AFE_CONNSYS_I2S_ASRC,
++	MT8196_CLK_AFE_AUDIO_HOPPING,
++	MT8196_CLK_AFE_AUDIO_F26M,
++	MT8196_CLK_AFE_APLL1,
++	MT8196_CLK_AFE_APLL2,
++	MT8196_CLK_AFE_H208M,
++	MT8196_CLK_AFE_APLL_TUNER2,
++	MT8196_CLK_AFE_APLL_TUNER1,
++	MT8196_CLK_NUM,
++};
++
++struct mtk_base_afe;
++
++int mt8196_mck_enable(struct mtk_base_afe *afe, int mck_id, int rate);
++int mt8196_mck_disable(struct mtk_base_afe *afe, int mck_id);
++int mt8196_get_apll_rate(struct mtk_base_afe *afe, int apll);
++int mt8196_get_apll_by_rate(struct mtk_base_afe *afe, int rate);
++int mt8196_get_apll_by_name(struct mtk_base_afe *afe, const char *name);
++int mt8196_init_clock(struct mtk_base_afe *afe);
++int mt8196_afe_enable_clk(struct mtk_base_afe *afe, struct clk *clk);
++void mt8196_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk);
++int mt8196_apll1_enable(struct mtk_base_afe *afe);
++void mt8196_apll1_disable(struct mtk_base_afe *afe);
++int mt8196_apll2_enable(struct mtk_base_afe *afe);
++void mt8196_apll2_disable(struct mtk_base_afe *afe);
++int mt8196_afe_enable_main_clock(struct mtk_base_afe *afe);
++int mt8196_afe_disable_main_clock(struct mtk_base_afe *afe);
++int mt8196_afe_enable_reg_rw_clk(struct mtk_base_afe *afe);
++int mt8196_afe_disable_reg_rw_clk(struct mtk_base_afe *afe);
++
++#endif
+diff --git a/sound/soc/mediatek/mt8196/mt8196-audsys-clk.c b/sound/soc/mediatek/mt8196/mt8196-audsys-clk.c
+new file mode 100644
+index 000000000000..aa40f02698ac
+--- /dev/null
++++ b/sound/soc/mediatek/mt8196/mt8196-audsys-clk.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * mt8196-audsys-clk.c  --  MediaTek 8196 audsys clock control
++ *
++ * Copyright (c) 2025 MediaTek Inc.
++ * Author: Darren Ye <darren.ye@mediatek.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include "mt8196-afe-common.h"
++#include "mt8196-audsys-clk.h"
++#include "mt8196-audsys-clkid.h"
++#include "mt8196-reg.h"
++
++struct afe_gate {
++	int id;
++	const char *name;
++	const char *parent_name;
++	int reg;
++	u8 bit;
++	const struct clk_ops *ops;
++	unsigned long flags;
++	u8 cg_flags;
++};
++
++#define GATE_AFE_FLAGS(_id, _name, _parent, _reg, _bit, _flags, _cgflags) {\
++		.id = _id,					\
++		.name = _name,					\
++		.parent_name = _parent,				\
++		.reg = _reg,					\
++		.bit = _bit,					\
++		.flags = _flags,				\
++		.cg_flags = _cgflags,				\
++	}
++
++#define GATE_AFE(_id, _name, _parent, _reg, _bit)		\
++	GATE_AFE_FLAGS(_id, _name, _parent, _reg, _bit,		\
++		       CLK_SET_RATE_PARENT, CLK_GATE_SET_TO_DISABLE)
++
++#define GATE_AUD0(_id, _name, _parent, _bit)			\
++	GATE_AFE(_id, _name, _parent, AUDIO_TOP_CON0, _bit)
++
++#define GATE_AUD1(_id, _name, _parent, _bit)			\
++	GATE_AFE(_id, _name, _parent, AUDIO_TOP_CON1, _bit)
++
++#define GATE_AUD2(_id, _name, _parent, _bit)			\
++	GATE_AFE(_id, _name, _parent, AUDIO_TOP_CON2, _bit)
++
++#define GATE_AUD3(_id, _name, _parent, _bit)			\
++	GATE_AFE(_id, _name, _parent, AUDIO_TOP_CON3, _bit)
++
++#define GATE_AUD4(_id, _name, _parent, _bit)			\
++	GATE_AFE(_id, _name, _parent, AUDIO_TOP_CON4, _bit)
++
++static const struct afe_gate aud_clks[CLK_AFE_NR_CLK] = {
++	/* AFE0 */
++	GATE_AUD0(CLK_AFE_PCM1, "afe_pcm1",
++		  "vlp_aud_clksq_ck", 13),
++	GATE_AUD0(CLK_AFE_PCM0, "afe_pcm0",
++		  "vlp_aud_clksq_ck", 14),
++	GATE_AUD0(CLK_AFE_CM2, "afe_cm2",
++		  "vlp_aud_clksq_ck", 16),
++	GATE_AUD0(CLK_AFE_CM1, "afe_cm1",
++		  "vlp_aud_clksq_ck", 17),
++	GATE_AUD0(CLK_AFE_CM0, "afe_cm0",
++		  "vlp_aud_clksq_ck", 18),
++	GATE_AUD0(CLK_AFE_STF, "afe_stf",
++		  "vlp_aud_clksq_ck", 19),
++	GATE_AUD0(CLK_AFE_HW_GAIN23, "afe_hw_gain23",
++		  "vlp_aud_clksq_ck", 20),
++	GATE_AUD0(CLK_AFE_HW_GAIN01, "afe_hw_gain01",
++		  "vlp_aud_clksq_ck", 21),
++	GATE_AUD0(CLK_AFE_FM_I2S, "afe_fm_i2s",
++		  "vlp_aud_clksq_ck", 24),
++	GATE_AUD0(CLK_AFE_MTKAIFV4, "afe_mtkaifv4",
++		  "vlp_aud_clksq_ck", 25),
++	/* AFE1 */
++	GATE_AUD1(CLK_AFE_UL2_ADC_HIRES_TML, "afe_ul2_aht",
++		  "vlp_audio_h_ck", 12),
++	GATE_AUD1(CLK_AFE_UL2_ADC_HIRES, "afe_ul2_adc_hires",
++		  "vlp_audio_h_ck", 13),
++	GATE_AUD1(CLK_AFE_UL2_TML, "afe_ul2_tml",
++		  "vlp_aud_clksq_ck", 14),
++	GATE_AUD1(CLK_AFE_UL2_ADC, "afe_ul2_adc",
++		  "vlp_aud_clksq_ck", 15),
++	GATE_AUD1(CLK_AFE_UL1_ADC_HIRES_TML, "afe_ul1_aht",
++		  "vlp_audio_h_ck", 16),
++	GATE_AUD1(CLK_AFE_UL1_ADC_HIRES, "afe_ul1_adc_hires",
++		  "vlp_audio_h_ck", 17),
++	GATE_AUD1(CLK_AFE_UL1_TML, "afe_ul1_tml",
++		  "vlp_aud_clksq_ck", 18),
++	GATE_AUD1(CLK_AFE_UL1_ADC, "afe_ul1_adc",
++		  "vlp_aud_clksq_ck", 19),
++	GATE_AUD1(CLK_AFE_UL0_ADC_HIRES_TML, "afe_ul0_aht",
++		  "vlp_audio_h_ck", 20),
++	GATE_AUD1(CLK_AFE_UL0_ADC_HIRES, "afe_ul0_adc_hires",
++		  "vlp_audio_h_ck", 21),
++	GATE_AUD1(CLK_AFE_UL0_TML, "afe_ul0_tml",
++		  "vlp_aud_clksq_ck", 22),
++	GATE_AUD1(CLK_AFE_UL0_ADC, "afe_ul0_adc",
++		  "vlp_aud_clksq_ck", 23),
++	/* AFE2 */
++	GATE_AUD2(CLK_AFE_ETDM_IN6, "afe_etdm_in6",
++		  "vlp_aud_clksq_ck", 7),
++	GATE_AUD2(CLK_AFE_ETDM_IN5, "afe_etdm_in5",
++		  "vlp_aud_clksq_ck", 8),
++	GATE_AUD2(CLK_AFE_ETDM_IN4, "afe_etdm_in4",
++		  "vlp_aud_clksq_ck", 9),
++	GATE_AUD2(CLK_AFE_ETDM_IN3, "afe_etdm_in3",
++		  "vlp_aud_clksq_ck", 10),
++	GATE_AUD2(CLK_AFE_ETDM_IN2, "afe_etdm_in2",
++		  "vlp_aud_clksq_ck", 11),
++	GATE_AUD2(CLK_AFE_ETDM_IN1, "afe_etdm_in1",
++		  "vlp_aud_clksq_ck", 12),
++	GATE_AUD2(CLK_AFE_ETDM_IN0, "afe_etdm_in0",
++		  "vlp_aud_clksq_ck", 13),
++	GATE_AUD2(CLK_AFE_ETDM_OUT6, "afe_etdm_out6",
++		  "vlp_aud_clksq_ck", 15),
++	GATE_AUD2(CLK_AFE_ETDM_OUT5, "afe_etdm_out5",
++		  "vlp_aud_clksq_ck", 16),
++	GATE_AUD2(CLK_AFE_ETDM_OUT4, "afe_etdm_out4",
++		  "vlp_aud_clksq_ck", 17),
++	GATE_AUD2(CLK_AFE_ETDM_OUT3, "afe_etdm_out3",
++		  "vlp_aud_clksq_ck", 18),
++	GATE_AUD2(CLK_AFE_ETDM_OUT2, "afe_etdm_out2",
++		  "vlp_aud_clksq_ck", 19),
++	GATE_AUD2(CLK_AFE_ETDM_OUT1, "afe_etdm_out1",
++		  "vlp_aud_clksq_ck", 20),
++	GATE_AUD2(CLK_AFE_ETDM_OUT0, "afe_etdm_out0",
++		  "vlp_aud_clksq_ck", 21),
++	GATE_AUD2(CLK_AFE_TDM_OUT, "afe_tdm_out",
++		  "ck_aud_1_ck", 24),
++	/* AFE3 */
++	GATE_AUD3(CLK_AFE_GENERAL15_ASRC, "afe_general15_asrc",
++		  "vlp_aud_clksq_ck", 9),
++	GATE_AUD3(CLK_AFE_GENERAL14_ASRC, "afe_general14_asrc",
++		  "vlp_aud_clksq_ck", 10),
++	GATE_AUD3(CLK_AFE_GENERAL13_ASRC, "afe_general13_asrc",
++		  "vlp_aud_clksq_ck", 11),
++	GATE_AUD3(CLK_AFE_GENERAL12_ASRC, "afe_general12_asrc",
++		  "vlp_aud_clksq_ck", 12),
++	GATE_AUD3(CLK_AFE_GENERAL11_ASRC, "afe_general11_asrc",
++		  "vlp_aud_clksq_ck", 13),
++	GATE_AUD3(CLK_AFE_GENERAL10_ASRC, "afe_general10_asrc",
++		  "vlp_aud_clksq_ck", 14),
++	GATE_AUD3(CLK_AFE_GENERAL9_ASRC, "afe_general9_asrc",
++		  "vlp_aud_clksq_ck", 15),
++	GATE_AUD3(CLK_AFE_GENERAL8_ASRC, "afe_general8_asrc",
++		  "vlp_aud_clksq_ck", 16),
++	GATE_AUD3(CLK_AFE_GENERAL7_ASRC, "afe_general7_asrc",
++		  "vlp_aud_clksq_ck", 17),
++	GATE_AUD3(CLK_AFE_GENERAL6_ASRC, "afe_general6_asrc",
++		  "vlp_aud_clksq_ck", 18),
++	GATE_AUD3(CLK_AFE_GENERAL5_ASRC, "afe_general5_asrc",
++		  "vlp_aud_clksq_ck", 19),
++	GATE_AUD3(CLK_AFE_GENERAL4_ASRC, "afe_general4_asrc",
++		  "vlp_aud_clksq_ck", 20),
++	GATE_AUD3(CLK_AFE_GENERAL3_ASRC, "afe_general3_asrc",
++		  "vlp_aud_clksq_ck", 21),
++	GATE_AUD3(CLK_AFE_GENERAL2_ASRC, "afe_general2_asrc",
++		  "vlp_aud_clksq_ck", 22),
++	GATE_AUD3(CLK_AFE_GENERAL1_ASRC, "afe_general1_asrc",
++		  "vlp_aud_clksq_ck", 23),
++	GATE_AUD3(CLK_AFE_GENERAL0_ASRC, "afe_general0_asrc",
++		  "vlp_aud_clksq_ck", 24),
++	GATE_AUD3(CLK_AFE_CONNSYS_I2S_ASRC, "afe_connsys_i2s_asrc",
++		  "vlp_aud_clksq_ck", 25),
++	/* AFE4 */
++	GATE_AUD4(CLK_AFE_AUDIO_HOPPING, "afe_audio_hopping_ck",
++		  "vlp_aud_clksq_ck", 0),
++	GATE_AUD4(CLK_AFE_AUDIO_F26M, "afe_audio_f26m_ck",
++		  "vlp_aud_clksq_ck", 1),
++	GATE_AUD4(CLK_AFE_APLL1, "afe_apll1_ck",
++		  "ck_aud_1_ck", 2),
++	GATE_AUD4(CLK_AFE_APLL2, "afe_apll2_ck",
++		  "ck_aud_2_ck", 3),
++	GATE_AUD4(CLK_AFE_H208M, "afe_h208m_ck",
++		  "vlp_audio_h_ck", 4),
++	GATE_AUD4(CLK_AFE_APLL_TUNER2, "afe_apll_tuner2",
++		  "vlp_aud_engen2_ck", 12),
++	GATE_AUD4(CLK_AFE_APLL_TUNER1, "afe_apll_tuner1",
++		  "vlp_aud_engen1_ck", 13),
++};
++
++static void mt8196_audsys_clk_unregister(void *data)
++{
++	struct mtk_base_afe *afe = data;
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	struct clk *clk;
++	struct clk_lookup *cl;
++	int i;
++
++	if (!afe_priv)
++		return;
++
++	for (i = 0; i < CLK_AFE_NR_CLK; i++) {
++		cl = afe_priv->lookup[i];
++		if (!cl)
++			continue;
++
++		clk = cl->clk;
++		clk_unregister_gate(clk);
++
++		clkdev_drop(cl);
++	}
++}
++
++int mt8196_audsys_clk_register(struct mtk_base_afe *afe)
++{
++	struct mt8196_afe_private *afe_priv = afe->platform_priv;
++	struct clk *clk;
++	struct clk_lookup *cl;
++	int i;
++
++	afe_priv->lookup = devm_kcalloc(afe->dev, CLK_AFE_NR_CLK,
++					sizeof(*afe_priv->lookup),
++					GFP_KERNEL);
++
++	if (!afe_priv->lookup)
++		return -ENOMEM;
++
++	for (i = 0; i < ARRAY_SIZE(aud_clks); i++) {
++		const struct afe_gate *gate = &aud_clks[i];
++
++		clk = clk_register_gate(afe->dev, gate->name, gate->parent_name,
++					gate->flags, afe->base_addr + gate->reg,
++					gate->bit, gate->cg_flags, NULL);
++
++		if (IS_ERR(clk)) {
++			dev_err(afe->dev, "Failed to register clk %s: %ld\n",
++				gate->name, PTR_ERR(clk));
++			continue;
++		}
++
++		/* add clk_lookup for devm_clk_get(SND_SOC_DAPM_CLOCK_SUPPLY) */
++		cl = kzalloc(sizeof(*cl), GFP_KERNEL);
++		if (!cl)
++			return -ENOMEM;
++
++		cl->clk = clk;
++		cl->con_id = gate->name;
++		cl->dev_id = dev_name(afe->dev);
++		cl->clk_hw = NULL;
++		clkdev_add(cl);
++
++		afe_priv->lookup[i] = cl;
++	}
++
++	return devm_add_action_or_reset(afe->dev, mt8196_audsys_clk_unregister, afe);
++}
+diff --git a/sound/soc/mediatek/mt8196/mt8196-audsys-clk.h b/sound/soc/mediatek/mt8196/mt8196-audsys-clk.h
+new file mode 100644
+index 000000000000..fad3a38a5ccb
+--- /dev/null
++++ b/sound/soc/mediatek/mt8196/mt8196-audsys-clk.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * mt8196-audsys-clk.h  --  MediaTek 8196 audsys clock definition
++ *
++ * Copyright (c) 2025 MediaTek Inc.
++ * Author: Darren Ye <darren.ye@mediatek.com>
++ */
++
++#ifndef _MT8196_AUDSYS_CLK_H_
++#define _MT8196_AUDSYS_CLK_H_
++
++int mt8196_audsys_clk_register(struct mtk_base_afe *afe);
++
++#endif
+diff --git a/sound/soc/mediatek/mt8196/mt8196-audsys-clkid.h b/sound/soc/mediatek/mt8196/mt8196-audsys-clkid.h
+new file mode 100644
+index 000000000000..b61db004eb2b
+--- /dev/null
++++ b/sound/soc/mediatek/mt8196/mt8196-audsys-clkid.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * mt8196-audsys-clkid.h  --  MediaTek 8196 audsys clock id definition
++ *
++ * Copyright (c) 2025 MediaTek Inc.
++ * Author: Darren Ye <darren.ye@mediatek.com>
++ */
++
++#ifndef _MT8196_AUDSYS_CLKID_H_
++#define _MT8196_AUDSYS_CLKID_H_
++
++enum{
++	/* AFE */
++	CLK_AFE_PCM1,
++	CLK_AFE_PCM0,
++	CLK_AFE_CM2,
++	CLK_AFE_CM1,
++	CLK_AFE_CM0,
++	CLK_AFE_STF,
++	CLK_AFE_HW_GAIN23,
++	CLK_AFE_HW_GAIN01,
++	CLK_AFE_FM_I2S,
++	CLK_AFE_MTKAIFV4,
++	CLK_AFE_UL2_ADC_HIRES_TML,
++	CLK_AFE_UL2_ADC_HIRES,
++	CLK_AFE_UL2_TML,
++	CLK_AFE_UL2_ADC,
++	CLK_AFE_UL1_ADC_HIRES_TML,
++	CLK_AFE_UL1_ADC_HIRES,
++	CLK_AFE_UL1_TML,
++	CLK_AFE_UL1_ADC,
++	CLK_AFE_UL0_ADC_HIRES_TML,
++	CLK_AFE_UL0_ADC_HIRES,
++	CLK_AFE_UL0_TML,
++	CLK_AFE_UL0_ADC,
++	CLK_AFE_ETDM_IN6,
++	CLK_AFE_ETDM_IN5,
++	CLK_AFE_ETDM_IN4,
++	CLK_AFE_ETDM_IN3,
++	CLK_AFE_ETDM_IN2,
++	CLK_AFE_ETDM_IN1,
++	CLK_AFE_ETDM_IN0,
++	CLK_AFE_ETDM_OUT6,
++	CLK_AFE_ETDM_OUT5,
++	CLK_AFE_ETDM_OUT4,
++	CLK_AFE_ETDM_OUT3,
++	CLK_AFE_ETDM_OUT2,
++	CLK_AFE_ETDM_OUT1,
++	CLK_AFE_ETDM_OUT0,
++	CLK_AFE_TDM_OUT,
++	CLK_AFE_GENERAL15_ASRC,
++	CLK_AFE_GENERAL14_ASRC,
++	CLK_AFE_GENERAL13_ASRC,
++	CLK_AFE_GENERAL12_ASRC,
++	CLK_AFE_GENERAL11_ASRC,
++	CLK_AFE_GENERAL10_ASRC,
++	CLK_AFE_GENERAL9_ASRC,
++	CLK_AFE_GENERAL8_ASRC,
++	CLK_AFE_GENERAL7_ASRC,
++	CLK_AFE_GENERAL6_ASRC,
++	CLK_AFE_GENERAL5_ASRC,
++	CLK_AFE_GENERAL4_ASRC,
++	CLK_AFE_GENERAL3_ASRC,
++	CLK_AFE_GENERAL2_ASRC,
++	CLK_AFE_GENERAL1_ASRC,
++	CLK_AFE_GENERAL0_ASRC,
++	CLK_AFE_CONNSYS_I2S_ASRC,
++	CLK_AFE_AUDIO_HOPPING,
++	CLK_AFE_AUDIO_F26M,
++	CLK_AFE_APLL1,
++	CLK_AFE_APLL2,
++	CLK_AFE_H208M,
++	CLK_AFE_APLL_TUNER2,
++	CLK_AFE_APLL_TUNER1,
++	CLK_AFE_NR_CLK,
++};
++
++#endif
 -- 
-2.25.1
+2.45.2
 
