@@ -1,298 +1,202 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2082.outbound.protection.outlook.com [40.107.93.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02296282E1;
-	Wed, 14 May 2025 22:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747262340; cv=none; b=dExEM7SG8HLmxbAl/DFp9m8guETpzlvHOaeBhg8RhE6jS1zs4VA7cX7Avnxd5/473FhNiA3p8Y1d/ZGaMP6iwomn3b1HqYpdBo16zIzRvdfB3uFpMr30U6aTzmyJQv6TRd+ctFjLHLIRa0h5RSVCXd1C8NWiKwa8veR2IMWhS3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747262340; c=relaxed/simple;
-	bh=GwNy22QIi4AIPIrZbza8M5BhHX1dV22QtfubBHjbg9g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXkBo08GnprV/htTKGog+wATGZmrAZ73qpprUj18mG9WsKr7zwXwwneY46+agrDtSglykMCjhPr4TT5xuY4fUjwmuk7egUcPV/npb+HfLQ8wpuiUtaT9PiDmG1ALxczeZ2lP3PcH+ztOR5LFUauQJhNOY1rzhyUueSo+XAASyYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e78e38934baso348281276.1;
-        Wed, 14 May 2025 15:38:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747262337; x=1747867137;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oY192BQ1DoJfE7kUSLdC/AuSynN/qFzUH1ibnUPL48Q=;
-        b=OpGG2wgcSqTfAc3/f4MRkYUbd6fukFBZzPD2zGZLxQzhCvcUBcDggyvBQghQ0IaNVu
-         6kgdYDVkBgnEsea5b4qO5Z1I8Rm+ZVmsp2Ljz7snaGw24rXl5Y2ONZjyAMXYc2clqFRn
-         g/Qbm1z7DmU/UftporcsIlIelfaEEm6XQqso6Pr3M6pzqwnyqhI2XwwshXKImuy4JnWu
-         G8CzY1FTj55W764uw7jGle57U1AbVS6bqnu7flxhMI7kH0nfSNpGedzofY9yaEw73TE3
-         ZRRa4ku2rUwxqe9yZX3GIEFg9e6QgzS95F3uuxrNiidJq0ciQDRQ7h5Nwd2r491X4m5v
-         VRcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvCv/USXpg0H6RRlNQtkr/H29jbw42gn6i/uM5pDBXqJXRJGfCg2Wps4cmbBM4P5V2CqFZ3UB1P0aInBPhTqBc0r25hqfT@vger.kernel.org, AJvYcCVami5nGuuftm7x98NNhE/1LcN74q2UNXIVz2fH7kfP+Xmg7VAxEm/Fvi9TiY/Xpqpqe6AfSUJL@vger.kernel.org, AJvYcCXPHoXtoEi2eX3Qj9mSfxSbHepamti5AnSuzU3tjuwKKLj+/GjiMoOq34yv/RnXFlLKEvSSNKYF8gRVGCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPWJigprrG2DZhwbdOTPvp4Pd1toEYuhSpa7VxWrHeeiaiwfTq
-	JzP2e2+8MXz65z4DEiNUTFd4NFQWkkddstTHI14nuz9eOu14nudkf9XhRw==
-X-Gm-Gg: ASbGncvtL0zi3h0et8jOfExOPN2dfHAjVSxPLkrfEs8mCv5G76h+OJ/I5MxGvGtAfZG
-	Qmg/awchYskS+Bm/FRMJLgh3vFAJaWNorsP15gKe8Hwil5IcZniHAD4KElnll5B2FH4npd9N18S
-	ihbhT0fg/ly8Ir137eXqzYgFEwkENJEgkZhYtBqT6Kzcb4nsOUdZzI3BAVDeXTaYF5iSpqg2mLk
-	LAVsJdMvgPppf/WV7VQg5jPeaIxMs1+9DZkxISEh2PNhW2E6/Y//ctJkGA/9jIk7/l1EnWbe0dp
-	DyxjKzickV9EQEwc+Iet7mOeqD37JCsRHl0dI6mC3W0VDp3VueLPU0HPkzmG49E/KUbkuVzmM/X
-	GkLNn4jGliXAa
-X-Google-Smtp-Source: AGHT+IFbv6XyPTHYJvsI0HonHvPYW5M+30Ov7KdMTgzHAHntOI5Xffm3eNODBG/eXtm0xp9chosuyA==
-X-Received: by 2002:a05:6902:1503:b0:e73:294c:2286 with SMTP id 3f1490d57ef6-e7b3d50493emr7216143276.26.1747262336666;
-        Wed, 14 May 2025 15:38:56 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e78fd651b45sm3407614276.43.2025.05.14.15.38.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 15:38:56 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70a32708b4eso2203087b3.3;
-        Wed, 14 May 2025 15:38:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVwJc9gevHWkunAlFl+EMMQZBdyDGVGsNx3hpdEplIVv/4G0sXKsQUHgrSHWjuW9rtN0DSz2NZ2MS6/UoI=@vger.kernel.org, AJvYcCWDTLpbzetDzfOL3GkM4MrOoGADV+HLzqx8t7s71flOR7rbOnFuZNbvdCTNhzUfAIGp0Ye65AKQECbxAyM8mCtrfAUWmEdx@vger.kernel.org, AJvYcCWXjH8VkBLEOy0YSYVFpqFrvjfl+pT0+onA2MQNgEVXqf5aJO1nktLN+DUNF7sFJqCixsHKd0RA@vger.kernel.org
-X-Received: by 2002:a05:690c:45c7:b0:709:176d:2b5 with SMTP id
- 00721157ae682-70c7f10c045mr80175517b3.2.1747262335951; Wed, 14 May 2025
- 15:38:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E51413AA2A;
+	Wed, 14 May 2025 22:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747262414; cv=fail; b=heU7C9nlJuxUXrC+FnnYONGZBfDGif/iyn3Av6fLvlAG7Pv0hh3qil/6ypWfmsOiOSPcmc6GnubCMwkwhQQzo6OsHVsMa4vPrt2vzHhLEdPdlL+mJBX1xibwEk756G1Ti6ytA+Lb3/fnv6+5eJjAcLY8TqtZICp7p/P2KsGR3zQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747262414; c=relaxed/simple;
+	bh=3eShwHmXJSa7U5eu9nkzZLB1q2sjO6zCr9QbGZOdTPw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uiGmKQY+9RbmRJO0aow4rs8seylrYZ3Gbm0AwCLB3CfOBgn7DgAFD4/O+yLrtjVXB6OHEccMTLT7VBvgr72a2pZiVmWYRlRH8Zd0EYNol5jsFQ8kCkB8vYCfFTQw2fKoxVVGZcamZc/xXkiKEBflHsG3R5RtRiS2KJeJXkP9ihs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NYKmaIsm; arc=fail smtp.client-ip=40.107.93.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NYKmaIsm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iGi341eI14UeJm8pBjCg9iv9bE3tATM6QxK6Hs4tBdMW5VOdmNWRiiGAFgLhkb131mzMO3GdZhj1YELgTwnDG3kAjzjTvjXnMxnYEed4ppCdE6RKcU/+6ge4DqfGgEjW/ayBFI2N8E4RgTtkiQpGjuHzP8IDskpCKCT2/KfNYPZWuQOCL6It5wwMJeA92Z0oYgtUciEjnBS8J8o0DoeaNkmh4S8DVFzkqh6IuSrDJgtxezRjiuK0VyeAXadRhU9ZptRsdk5j6s5GtHcffmVR1q/Q8z8aSEHaa4vwOzS4/uUqtCArnR7gtiS3Sanr7zBD3J1nTCygFGQnAy3FMLgMGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3eShwHmXJSa7U5eu9nkzZLB1q2sjO6zCr9QbGZOdTPw=;
+ b=svywyG+M/UY/nDcF9ha8k95BtgeueevWKbN493wUTEtSxcwWlTICBWvZOkvdQyXgC+US8gFoiHlbIh4oA2s/0dpg+laSHK809Q+h50FRn+TzgD+kUIL4JU3cbKxXUBmGxYctgZHyoA5GjQZGg3mjGXaZuQ17/UJQxdj78QBk0D+bgnMawHbeLL3zrRd6iQslFkbcY8rTla4NfMAIf5ZYYiUwpBi01oAfvpk1IGngQZ6Q32FZVLF9oC+p0JS9ORUkEyqshlLCaGr/7tbl4XtMWvjbZ2/QL2aeSeA+lPuIjsCrdQm3zxw42CIJFpLbDXMNeB8tqhX993CYtNCFASA1Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3eShwHmXJSa7U5eu9nkzZLB1q2sjO6zCr9QbGZOdTPw=;
+ b=NYKmaIsmukuwewufmB9FrqnE9is/xfccEsA5heyIvzMrXSAIORB97/vlJDq1mstctkIFVMAFnj73H5A3EJ4irm8BHSxnA1LtBKlOox1l17ReeYgZg70IHcosdJbFxE1/rX/AItbItM9jKQtw/fEJzN0n+G3WaaA4lzwnc9aDi4vtJi6dLEX3bzP8QtEtYruprhRcM1Qyk4BVqSuAvCjimew5p3oFO7ygGt/FRYh6fiCrqqeesV6cT51AIHao8BP/6C5BZ4h/yxfVpmWo+azPM5yLpNy5IlfUEHQi1hEhMpaJ980e6oJFCX93N6PMd9HX7645fPAEyFv793zkdnikmg==
+Received: from CY5PR12MB6526.namprd12.prod.outlook.com (2603:10b6:930:31::20)
+ by DS0PR12MB7656.namprd12.prod.outlook.com (2603:10b6:8:11f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Wed, 14 May
+ 2025 22:40:09 +0000
+Received: from CY5PR12MB6526.namprd12.prod.outlook.com
+ ([fe80::e420:4e37:166:9c56]) by CY5PR12MB6526.namprd12.prod.outlook.com
+ ([fe80::e420:4e37:166:9c56%5]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 22:40:09 +0000
+From: Timur Tabi <ttabi@nvidia.com>
+To: "dakr@kernel.org" <dakr@kernel.org>, "mmaurer@google.com"
+	<mmaurer@google.com>
+CC: "tmgross@umich.edu" <tmgross@umich.edu>, "benno.lossin@proton.me"
+	<benno.lossin@proton.me>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>,
+	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "lossin@kernel.org"
+	<lossin@kernel.org>, "bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>,
+	"aliceryhl@google.com" <aliceryhl@google.com>, "ojeda@kernel.org"
+	<ojeda@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "samitolvanen@google.com"
+	<samitolvanen@google.com>, "rust-for-linux@vger.kernel.org"
+	<rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Thread-Topic: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Thread-Index:
+ AQHbvhiqMNeyew5UtkaK13bmqI7ZnbPRxT2AgAAdqwCAAA1QgIAAzP+AgAABqICAAAJ/gIAAAocAgAACMwA=
+Date: Wed, 14 May 2025 22:40:09 +0000
+Message-ID: <d61e11e2d99659cf13d0e20f56afe319720d03b7.camel@nvidia.com>
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+	 <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
+	 <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
+	 <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
+	 <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com>
+	 <aCUVuXO_jORqlxwr@pollux>
+	 <CAGSQo02nP8MT8q-_gQwjUGFNSyiW2AKOQ3V4yy9jofDzjc0SpA@mail.gmail.com>
+	 <CAGSQo017FgGmStYxLX7JeqV+AcMUMjmnxF6KBesFhc31BieBbw@mail.gmail.com>
+In-Reply-To:
+ <CAGSQo017FgGmStYxLX7JeqV+AcMUMjmnxF6KBesFhc31BieBbw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.3-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR12MB6526:EE_|DS0PR12MB7656:EE_
+x-ms-office365-filtering-correlation-id: 24e625b3-ae86-4c8a-e76e-08dd93384815
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?SnlHZUNjbHEyUnFYckt6WHFvZmY1WnhYeElOOE9KVENaRm1PWXJvdFZhQ1Rs?=
+ =?utf-8?B?MldFWWRDM2g1QVpGbFI4MDhlY0ZzYXR5Z3J3ODE2dmNSaVZIbTNLS09XZ1N0?=
+ =?utf-8?B?bU1WckNHN3IrVFQycFNqckRlbndTaXdkOWxNU2duVzZOdlFTNWswWFVSOHpk?=
+ =?utf-8?B?ZytHZ0JHdFVxLy8vTVoyOUhGSVNpV2RJZWkzdkxieE9ucFRaWjNkekNMTENi?=
+ =?utf-8?B?azMrbVJDZCt5R0lxY1cvbWg5VnB6b3ZicFhranIwWXpmTXR6dVRqdGxmOVF5?=
+ =?utf-8?B?V0J3eEw5OFMrMmhyVnM4Zkt5czd3azgvTDFhSUh2TXRzdG93OHpudnh5YmdW?=
+ =?utf-8?B?R0Y4LzFYOGxxOXd6azBIamNGa2t1a29lZ3VUV1h6OCt3VDhkR3lQajRjQTlj?=
+ =?utf-8?B?V2M4UjliMlVsbXpVUjNuUEpJYW1OWDJXMEdFYmJBNDIxYytmZGZWTys2TmR2?=
+ =?utf-8?B?M3l4ZXNJNWIzM2Y4bFJEZFQ1NGhLZmZGOHlOdGE2VjkxUVBHdEgrcjA2aTJq?=
+ =?utf-8?B?MEhscndzNTArUmtXb1FaWW1QUGM1cXk4T0RESFVSZnFjaDd5Vk1IWXZER0hh?=
+ =?utf-8?B?T2J0QUdPbXpkL1hqNWtWUUxzbHRTMlZCVTR1b1pERlcwSmVkbjVFTHM3UXlR?=
+ =?utf-8?B?NEhNNWF0S2pXb09JSFp0NUU5azh3VUExaFYyUXptNDR0UWpObi9US1pjbm8x?=
+ =?utf-8?B?dFpoOHNyTUU2dFhCS0VYVHlKNUM5VDJiaXI5R2RGOWdSSDQ0Uk10ZkVxTmdx?=
+ =?utf-8?B?WFpqdG10VXhHbWRzeERTR3Z0cTU3WjhmNFhYNmV4enREaW9RWWFNdnYyRWEr?=
+ =?utf-8?B?TldVUFhWc3V5S1F6NUVnb1Joc1ovZjBrVTBVczRKL3l5b1R2cTY2SzhPdnIv?=
+ =?utf-8?B?VGRSd3lGbVpGdENNMERhUDlEckhKZ2dJMk83UTIyOU9ua2hycGpIdEJMOUU4?=
+ =?utf-8?B?TldOUy9QMlR3TXVHUUdLQTAyN3NIRWRWLzZud0Vwbmo4YVNLTTZQYmgyUHlY?=
+ =?utf-8?B?M2ZTWUZRR2h3cVM0RzFQSllEeXVVUGExaEdZS2JJak94ZGgwZW8zS2M3S2Ew?=
+ =?utf-8?B?QVJjNm43RGt3KzNGaVNrdFNVN1Q5Y2xhOHZ5N2ZNN1Y3VFREVXg0alJCa2NJ?=
+ =?utf-8?B?TWFTV2lwTm9YaHg4eExCS1lCWVVMVndlc0w5STNBZXBqYkdoRlkvOTlZNVRz?=
+ =?utf-8?B?OUhCbDZTaTJWb05MS1owSytva241L25MZE5oOW9LTzJWdTRHMEpwMDdNTVhI?=
+ =?utf-8?B?OTduUW1EeUcvd0JPMTUyV1NIUVR2bnh5NGJoakpCVEdjSmI0NlVrR2gxMEkw?=
+ =?utf-8?B?dTBGamRzTm9zUlk5K0ZLc05KL3hUNHVyVTcvVzhmdE9aTUhFbCtJMi8wZThx?=
+ =?utf-8?B?NGRGTTV4TGp6dzlCUHVYOE1lRTFsekN5YVg5blFrZ0xwWFBMVnpYUnNFekhk?=
+ =?utf-8?B?a1VUOXNhRmJDSDVPam1mQUFUYzE1NndPdmtpVVZsalVLVTl1eVNPVnhsN1V6?=
+ =?utf-8?B?MFhCQXJ0S3BFTGxhbUdtM0w0REtnWWNVVDBzZnpkWTlqV3VEdjYvZnpvOEVP?=
+ =?utf-8?B?TXU3Vk53TUZETW02ekp2aHNRcDhVSmF6NDZjNHNmRnlOcDM0YkRJb1BLMWpU?=
+ =?utf-8?B?YkZEMStaYWp4cWtjbTdmVEJwcXcvWm5sLzQ3K3E1QllFSmJhTlRrenRsMndP?=
+ =?utf-8?B?ZnJMNk5VbjBHMlk1RGVGdVk0aHJQVkM3R2xXU0FvSGRXeWR3aEtSRTVBZWlQ?=
+ =?utf-8?B?d0pQRUlvcmtQdjBiSWJXV2M0Mlp0V2NUL0h4OWdxU0dGWlplRUxuZXM0Wm9C?=
+ =?utf-8?B?eTA2SHlhN3BwL0NTeWR6KzFDaHZJamFjVUh2b0dTNTVWUHlDVWZ4QWxvSWVF?=
+ =?utf-8?B?QTlTMHFYVW9ENDQydGI5WDE3UENSQTF5ZjFKOXpDV3k5YStHV1N4TWN0ajRP?=
+ =?utf-8?B?bTZaTkRTb1lSYno2Z0doR3J1MnJGcHlJN3NsVjY0eGh0U0krSjJRa2NURkFP?=
+ =?utf-8?Q?PPhgQK4HvXBWhSNPNdMEQYkJFl9evg=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6526.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?L25GS3RmMWhCWWFySnRIdmVkOGoxcHRUaGFFY3M2WXBaZEpRcDBZYzdpa2JF?=
+ =?utf-8?B?cjhJYkJvUmxOZlYrc1p4djdONTBZS1ZVNHNWdWRGUlYxdUg5Szc3dzJLbHRX?=
+ =?utf-8?B?TEQvK1BTWjNLYngyQ0V6MEJVUmRzcjR0REZtVktqMmpMVFZPS1RuMUhpT3hi?=
+ =?utf-8?B?WVc1VTQwYWJUbFFmMDZ2QXNpdzNFYTRreURORlZ4YkJXejNZaGs4eUEwczJa?=
+ =?utf-8?B?M1N5Wjh1S3BTRTJqdkMzeWdMYS9zQ2dyV1NHWlVOcjdPTzJNc3dnazhmc0cz?=
+ =?utf-8?B?WTZiNllMY0RoOGxRVHI2THU1TEZjRDJ2QlcrRE56NEUvc1AvOGFIQjNSay85?=
+ =?utf-8?B?Y2NZYnNYWGJ2VnBDRUtZV1RtNnNJSjZwTUZWN0RSWVMyaEkwU2V3cXFBSGNn?=
+ =?utf-8?B?RzZacFJTRyt3OFd2U2syWUxnK3YweWhQNkxYUjVtclJUMWdGZ3RBVG9vY0d4?=
+ =?utf-8?B?RkFmQW5QVTVEZ2NUWUo4YmVzMFE0WU53TEJrbGZja3ZrdUUxYlVVL1N5WWhX?=
+ =?utf-8?B?YzlteSs4bHFaTTIvYXJ2bFFBMWhHU1pJTWcxR1JvTjIzb3lWUEJWdjdleWlk?=
+ =?utf-8?B?d0MyM3lvMjZ0ZGxUSW5BS1kwWWtsWW44WklreFNHNUhyZHUzd1ovcFBrNzRn?=
+ =?utf-8?B?aU0rZ0hna1FOMXZTWlp6SlFEK09vQi9rSURwZGxsNThFOTBjQmUzL0lZQVF4?=
+ =?utf-8?B?dS95cGJFRWU0SEFieldocDJZWFB3S21RYzJOamwxTzJFa25QcTFvUEVVUDlM?=
+ =?utf-8?B?RTN6Zk9UdnZUMG1YRHNvbk5ITmxZZzNmbnpTZzNsUExWOTY4TDhKV240MWhK?=
+ =?utf-8?B?b0JSUUkvSkdNcnBqZWtrTnlyendGa0xscC84S2FmSllZcG43SFh4d0FqeVBL?=
+ =?utf-8?B?SlNrQ1JNdTJ0U3hodmx6TG5jcytJY3o4S0VhUWFabDVOR25UdFlFZFgyVGQv?=
+ =?utf-8?B?NmtaY00rOTFGWWozeEc3eWZrSDRDcGtqbkdhUTdWRU5KRVUzaDhxeGdkVkFi?=
+ =?utf-8?B?SkdGWUlxQXFUci9YU2tXRThJdmE4d1hQVXAzSXZISjhLbUR3RDBUQ0lWZ2FB?=
+ =?utf-8?B?eGdzWjlwbEFJZTRJZTdNQ1lvUUF2Q0x5eUYweFlFZG14VFJmVlh5Y2xWQlNh?=
+ =?utf-8?B?d1diVFEydzlyWVF1SG5SN3VBS2FJSzZnSmFmVDdDL1JnS01Ib1BSN25HU3ox?=
+ =?utf-8?B?OGFvdk5yU2dPUW81UnhlRjU4ZThxZ3I0NGE3SmV4ejV4d3BkNVQ0aGpmSXM0?=
+ =?utf-8?B?LytQZFNLczRuNTlvci9CRDJvOVZ2SHVJMmFyWlAxclRSdlFGaGd6dGZSYUlU?=
+ =?utf-8?B?U0RwWGs3R3lXUkpjbitJRDZDYVhwSmhud1FLNnU5TVN6QlA4NnJySVJ3NjZC?=
+ =?utf-8?B?bDhYZGRFQWtVSW1FNDVZYTZmaW9abHJiZU56c3BLWm1kb0xCdVFwUHhRZVdI?=
+ =?utf-8?B?MjFXS2dhZG1aVEcya1RleDVPbWJGeW0ySXB4L2JGbHIzVkJTb202ZXFqTDd0?=
+ =?utf-8?B?N3ZLTXpUMUh6QUdJT0ZQWEF3VG10UWI1UHMrODkrRllVN1hXUVpOZ2hmSzdh?=
+ =?utf-8?B?bmdaN2xRbjZ2SFFkOTNOZTZ0Vk5yemVWVFFoYWdWSk5Zd2VmZmNqeUkvbWZB?=
+ =?utf-8?B?MEQ5VUNYYkdPTXZ4QjZMbXlHK3YybG5Ea2I4OFREUTM1WTB3cVBpQXVqMEVN?=
+ =?utf-8?B?NXBZa3cxbU9IaVFyRVJqZ1VWMktneDdMMkhXWXlXcWpKWEcvVnhBczlnMnF6?=
+ =?utf-8?B?TXZMajFmZFRiRkpYYzdTWTN3WGpBOUFvWnA2UHlEZ3hZT2tEdWczVlgvM29E?=
+ =?utf-8?B?cVJxV2ltMHVVeDVQNmpEcXdqbkI4SzRTTmVEencvLyszMmY1M1Y0eGFTc0tq?=
+ =?utf-8?B?ZDN4UWViWFRVb2EvNjRtMU1ZMWlYMXV3ODFHeG1nckFkOXZNajgycDNKUk5Q?=
+ =?utf-8?B?RnBMdHJyQkdUK1oyRWxPZk1hWU9sU003K29FQXNQZEZtakFWVjkyOVpJZ1Bo?=
+ =?utf-8?B?bU9QbUlwdHcycWNjVmhsdngzc2d5eldleVpiMzdYU1VoNnJwbi9lQmpQb2pC?=
+ =?utf-8?B?VzQrR2hqVmo2OVdRR0lZa0NURWNicnRsZWhqSlE5THZXUmk3SWRydXFSbEhk?=
+ =?utf-8?Q?NQWJ7UhUIYpy6C5W7WtHk0Qgu?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C42F0A9DA6817B438353A41AF2BD8DD7@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
-In-Reply-To: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
-From: Luca Boccassi <bluca@debian.org>
-Date: Wed, 14 May 2025 23:38:45 +0100
-X-Gmail-Original-Message-ID: <CAMw=ZnQJ3h3ho2Q2L07AOuUaOr05HNm1aMoSyLTS_OD+w9BSPQ@mail.gmail.com>
-X-Gm-Features: AX0GCFsXsryormWEGIKna5LSH2nDHEStseOJ8IxwSboMNNs10SR9BhIWxhQsWVc
-Message-ID: <CAMw=ZnQJ3h3ho2Q2L07AOuUaOr05HNm1aMoSyLTS_OD+w9BSPQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/9] coredump: add coredump socket
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6526.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24e625b3-ae86-4c8a-e76e-08dd93384815
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 22:40:09.2790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rD3eXG1Q/z9NsITSXX4f80o6LaYs9EoPXZi0ESzzNPMZ+YCCaF8iVesJRCeHjQmzVnRkZTKdndQcJQApGkSPTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7656
 
-On Wed, 14 May 2025 at 23:04, Christian Brauner <brauner@kernel.org> wrote:
->
-> Coredumping currently supports two modes:
->
-> (1) Dumping directly into a file somewhere on the filesystem.
-> (2) Dumping into a pipe connected to a usermode helper process
->     spawned as a child of the system_unbound_wq or kthreadd.
->
-> For simplicity I'm mostly ignoring (1). There's probably still some
-> users of (1) out there but processing coredumps in this way can be
-> considered adventurous especially in the face of set*id binaries.
->
-> The most common option should be (2) by now. It works by allowing
-> userspace to put a string into /proc/sys/kernel/core_pattern like:
->
->         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
->
-> The "|" at the beginning indicates to the kernel that a pipe must be
-> used. The path following the pipe indicator is a path to a binary that
-> will be spawned as a usermode helper process. Any additional parameters
-> pass information about the task that is generating the coredump to the
-> binary that processes the coredump.
->
-> In the example core_pattern shown above systemd-coredump is spawned as a
-> usermode helper. There's various conceptual consequences of this
-> (non-exhaustive list):
->
-> - systemd-coredump is spawned with file descriptor number 0 (stdin)
->   connected to the read-end of the pipe. All other file descriptors are
->   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
->   already caused bugs because userspace assumed that this cannot happen
->   (Whether or not this is a sane assumption is irrelevant.).
->
-> - systemd-coredump will be spawned as a child of system_unbound_wq. So
->   it is not a child of any userspace process and specifically not a
->   child of PID 1. It cannot be waited upon and is in a weird hybrid
->   upcall which are difficult for userspace to control correctly.
->
-> - systemd-coredump is spawned with full kernel privileges. This
->   necessitates all kinds of weird privilege dropping excercises in
->   userspace to make this safe.
->
-> - A new usermode helper has to be spawned for each crashing process.
->
-> This series adds a new mode:
->
-> (3) Dumping into an abstract AF_UNIX socket.
->
-> Userspace can set /proc/sys/kernel/core_pattern to:
->
->         @/path/to/coredump.socket
->
-> The "@" at the beginning indicates to the kernel that an AF_UNIX
-> coredump socket will be used to process coredumps.
->
-> The coredump socket must be located in the initial mount namespace.
-> When a task coredumps it opens a client socket in the initial network
-> namespace and connects to the coredump socket.
->
-> - The coredump server should use SO_PEERPIDFD to get a stable handle on
->   the connected crashing task. The retrieved pidfd will provide a stable
->   reference even if the crashing task gets SIGKILLed while generating
->   the coredump.
->
-> - When a coredump connection is initiated use the socket cookie as the
->   coredump cookie and store it in the pidfd. The receiver can now easily
->   authenticate that the connection is coming from the kernel.
->
->   Unless the coredump server expects to handle connection from
->   non-crashing task it can validate that the connection has been made from
->   a crashing task:
->
->      fd_coredump = accept4(fd_socket, NULL, NULL, SOCK_CLOEXEC);
->      getsockopt(fd_coredump, SOL_SOCKET, SO_PEERPIDFD, &fd_peer_pidfd, &fd_peer_pidfd_len);
->
->      struct pidfd_info info = {
->              info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP,
->      };
->
->      ioctl(pidfd, PIDFD_GET_INFO, &info);
->      /* Refuse connections that aren't from a crashing task. */
->      if (!(info.mask & PIDFD_INFO_COREDUMP) || !(info.coredump_mask & PIDFD_COREDUMPED) )
->              close(fd_coredump);
->
->      /*
->       * Make sure that the coredump cookie matches the connection cookie.
->       * If they don't it's not the coredump connection from the kernel.
->       * We'll get another connection request in a bit.
->       */
->      getsocketop(fd_coredump, SOL_SOCKET, SO_COOKIE, &peer_cookie, &peer_cookie_len);
->      if (!info.coredump_cookie || (info.coredump_cookie != peer_cookie))
->              close(fd_coredump);
->
->   The kernel guarantees that by the time the connection is made the
->   coredump info is available.
->
-> - By setting core_pipe_limit non-zero userspace can guarantee that the
->   crashing task cannot be reaped behind it's back and thus process all
->   necessary information in /proc/<pid>. The SO_PEERPIDFD can be used to
->   detect whether /proc/<pid> still refers to the same process.
->
->   The core_pipe_limit isn't used to rate-limit connections to the
->   socket. This can simply be done via AF_UNIX socket directly.
->
-> - The pidfd for the crashing task will contain information how the task
->   coredumps. The PIDFD_GET_INFO ioctl gained a new flag
->   PIDFD_INFO_COREDUMP which can be used to retreive the coredump
->   information.
->
->   If the coredump gets a new coredump client connection the kernel
->   guarantees that PIDFD_INFO_COREDUMP information is available.
->   Currently the following information is provided in the new
->   @coredump_mask extension to struct pidfd_info:
->
->   * PIDFD_COREDUMPED is raised if the task did actually coredump.
->   * PIDFD_COREDUMP_SKIP is raised if the task skipped coredumping (e.g.,
->     undumpable).
->   * PIDFD_COREDUMP_USER is raised if this is a regular coredump and
->     doesn't need special care by the coredump server.
->   * PIDFD_COREDUMP_ROOT is raised if the generated coredump should be
->     treated as sensitive and the coredump server should restrict access
->     to the generated coredump to sufficiently privileged users.
->
-> - The coredump server should mark itself as non-dumpable.
->
-> - A container coredump server in a separate network namespace can simply
->   bind to another well-know address and systemd-coredump fowards
->   coredumps to the container.
->
-> - Coredumps could in the future also be handled via per-user/session
->   coredump servers that run only with that users privileges.
->
->   The coredump server listens on the coredump socket and accepts a
->   new coredump connection. It then retrieves SO_PEERPIDFD for the
->   client, inspects uid/gid and hands the accepted client to the users
->   own coredump handler which runs with the users privileges only
->   (It must of coure pay close attention to not forward crashing suid
->   binaries.).
->
-> The new coredump socket will allow userspace to not have to rely on
-> usermode helpers for processing coredumps and provides a safer way to
-> handle them instead of relying on super privileged coredumping helpers.
->
-> This will also be significantly more lightweight since no fork()+exec()
-> for the usermodehelper is required for each crashing process. The
-> coredump server in userspace can just keep a worker pool.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
-> Changes in v7:
-> - Use regular AF_UNIX sockets instead of abstract AF_UNIX sockets. This
->   fixes the permission problems as userspace can ensure that the socket
->   path cannot be rebound by arbitrary unprivileged userspace via regular
->   path permissions.
->
->   This means:
->   - We don't require privilege checks on a reserved abstract AF_UNIX
->     namespace
->   - We don't require a fixed address for the coredump socket.
->   - We don't need to use abstract unix sockets at all.
->   - We don't need  special socket cookie magic in the
->     /proc/sys/kernel/core_pattern handler.
->   - We are able to set /proc/sys/kernel/core_pattern statically without
->     having any socket bound.
->
->   That's all complaints addressed.
->
->   Simply massage unix_find_bsd() to be able to handle this and always
->   lookup the coredump socket in the initial mount namespace with
->   appropriate credentials. The same thing we do for looking up other
->   parts in the kernel like this. Only the lookup happens this way.
->   Actual connection credentials are obviously from the coredumping task.
-> - Link to v6: https://lore.kernel.org/20250512-work-coredump-socket-v6-0-c51bc3450727@kernel.org
->
-> Changes in v6:
-> - Use the socket cookie to verify the coredump server.
-> - Link to v5: https://lore.kernel.org/20250509-work-coredump-socket-v5-0-23c5b14df1bc@kernel.org
->
-> Changes in v5:
-> - Don't use a prefix just the specific address.
-> - Link to v4: https://lore.kernel.org/20250507-work-coredump-socket-v4-0-af0ef317b2d0@kernel.org
->
-> Changes in v4:
-> - Expose the coredump socket cookie through the pidfd. This allows the
->   coredump server to easily recognize coredump socket connections.
-> - Link to v3: https://lore.kernel.org/20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org
->
-> Changes in v3:
-> - Use an abstract unix socket.
-> - Add documentation.
-> - Add selftests.
-> - Link to v2: https://lore.kernel.org/20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org
->
-> Changes in v2:
-> - Expose dumpability via PIDFD_GET_INFO.
-> - Place COREDUMP_SOCK handling under CONFIG_UNIX.
-> - Link to v1: https://lore.kernel.org/20250430-work-coredump-socket-v1-0-2faf027dbb47@kernel.org
->
-> ---
-> Christian Brauner (9):
->       coredump: massage format_corname()
->       coredump: massage do_coredump()
->       coredump: reflow dump helpers a little
->       coredump: add coredump socket
->       pidfs, coredump: add PIDFD_INFO_COREDUMP
->       coredump: show supported coredump modes
->       coredump: validate socket name as it is written
->       selftests/pidfd: add PIDFD_INFO_COREDUMP infrastructure
->       selftests/coredump: add tests for AF_UNIX coredumps
->
->  fs/coredump.c                                     | 392 +++++++++++++----
->  fs/pidfs.c                                        |  79 ++++
->  include/linux/net.h                               |   1 +
->  include/linux/pidfs.h                             |  10 +
->  include/uapi/linux/pidfd.h                        |  22 +
->  net/unix/af_unix.c                                |  60 ++-
->  tools/testing/selftests/coredump/stackdump_test.c | 514 +++++++++++++++++++++-
->  tools/testing/selftests/pidfd/pidfd.h             |  23 +
->  8 files changed, 996 insertions(+), 105 deletions(-)
-> ---
-> base-commit: 4dd6566b5a8ca1e8c9ff2652c2249715d6c64217
-> change-id: 20250429-work-coredump-socket-87cc0f17729c
-
-Looks great to me and we can for sure use this in systemd-coredump,
-thanks, for the series:
-
-Acked-by: Luca Boccassi <luca.boccassi@gmail.com>
+T24gV2VkLCAyMDI1LTA1LTE0IGF0IDE1OjMyIC0wNzAwLCBNYXR0aGV3IE1hdXJlciB3cm90ZToN
+Cj4gT25lIGZ1cnRoZXIgcG9zc2liaWxpdHkgaGVyZSwgd2hpY2ggd2UnZCBuZWVkIEdyZWcgdG8g
+d2VpZ2ggaW4gb24gLSB3ZQ0KPiBjb3VsZCBhZGQgYSBtZXRob2QgdG8gdGhlIGRlYnVnZnMgQVBJ
+IGludGVuZGVkIGZvciBSdXN0IHVzYWdlIHdoaWNoDQo+IHNwZWNpZmljYWxseSByZWxlYXNlcyBh
+IGRpcmVjdG9yeSBvciBmaWxlICp3aXRob3V0KiByZWxlYXNpbmcgYW55DQo+IG5lc3RlZCBlbGVt
+ZW50cy4gVGhpcyB3b3VsZCBtZWFuIHdlIGNvdWxkIGdldCByaWQgb2YgYWxsIHRoZSBsaWZldGlt
+ZXMNCj4gb24gZGlyZWN0b3J5IGFuZCBmaWxlIGhhbmRsZXMuIA0KDQpJIGhhZCBhIGNvbnZlcnNh
+dGlvbiB3aXRoIEdyZWcgYWJvdXQgdGhpcyB0b3BpYyBqdXN0IHRoZSBvdGhlciB3ZWVrLg0KDQpo
+dHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1kb2MvMjAyNTA0MjkxNzM5NTguMzk3Mzk1OC0x
+LXR0YWJpQG52aWRpYS5jb20vDQoNClRoZXJlIGFyZSB0d28gdmVyc2lvbnMgb2YgZGVidWdmc19y
+ZW1vdmU6DQoNCnZvaWQgZGVidWdmc19yZW1vdmUoc3RydWN0IGRlbnRyeSAqZGVudHJ5KTsNCiNk
+ZWZpbmUgZGVidWdmc19yZW1vdmVfcmVjdXJzaXZlIGRlYnVnZnNfcmVtb3ZlDQoNClVuZm9ydHVu
+YXRlbHksIHRoZSBkaXJlY3Rpb24gdGhhdCB3ZSd2ZSBiZWVuIGdvaW5nIGlzIHRvIGdldCByaWQg
+b2YgZGVidWdmc19yZW1vdmVfcmVjdXJzaXZlKCkgYW5kDQpoYXZlIGRyaXZlcnMgb25seSBjYWxs
+IGRlYnVnZnNfcmVtb3ZlKCkuICANCg0KV2hhdCB3b3VsZCBzb2x2ZSB5b3VyIHByb2JsZW0gaXMg
+ZG9pbmcgdGhlIG9wcG9zaXRlOiBtYWtpbmcgZGVidWdmc19yZW1vdmUoKSBiZSBub24tcmVjdXJz
+aXZlIGFuZA0KcmVxdWlyZSBkcml2ZXJzIHRvIGNhbGwgZGVidWdmc19yZW1vdmVfcmVjdXJzaXZl
+KCkgaWYgdGhhdCdzIHdoYXQgdGhleSByZWFsbHkgd2FudC4NCg0KTWF5YmUgd2UgbmVlZCBkZWJ1
+Z2ZzX3JlbW92ZV9zaW5nbGUoKT8NCg0K
