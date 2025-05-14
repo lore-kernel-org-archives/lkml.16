@@ -1,123 +1,139 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C91E9B16;
-	Wed, 14 May 2025 18:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA76E27A112;
+	Wed, 14 May 2025 18:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747246996; cv=none; b=Sk5BqHMrVxSKIPhjrXdTb7XHQi5Ostq9JMBz5TnQcg12vFXo9VtlaHMTT4rNf4u6DYu+MJAjIVr16z2oJOFuUgzL1uVrSPGuSLcGBdf9VFhoJb/oQ+Uf6q/rsq6hnoktpLRu5hw0n0kCUqTDZ9OTaVG2VNv1HdBoARZ39etPVcI=
+	t=1747247076; cv=none; b=WJoNKUHGyy5idjVfRIpMtQST364WYT+fmxrlB18Xxc4vQbahaikkzvr2berGLwv+1pcAIsZsNHgK2A5e57IVXedMnsPypfIaWof0jUTi+Kz0s7eRkcZpi7p6BQxH7Q0LT6yzhrouCzsdqUm9rtg7ZkDbGtwYfSi84g5D5GlH0dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747246996; c=relaxed/simple;
-	bh=4e1qOJWkWaFSa6R6yvbt8eruwMLzqqkT2IlDLCrqYys=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L22IxhQcnqq3czH0E2UweUpc5fleRchqCSRMoP+GKSgoG3Rwrz8WH0br8/mTy3HgX2gELkt7YbHFeNIVr77i4eMKB5KuRBAPugf+DNPh9J9U0mKEQTDDIdNU8w8MYRnh3wpopm9Siwt3iYRvv6sHWV/V9YTJvvAVACAcB8JTTS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong
- Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh
-	<kpsingh@kernel.org>, Roman Gushchin <guro@fb.com>, <netdev@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, syzbot <syzkaller@googlegroups.com>, Eric
- Dumazet <edumazet@google.com>
-Subject: [PATCH 5.10] bpf: Avoid overflows involving hash elem_size
-Date: Wed, 14 May 2025 21:07:33 +0300
-Message-ID: <20250514180733.1271988-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747247076; c=relaxed/simple;
+	bh=u4bE+JoGvRyXp7HmR31mNZgrsyQSv9Mu4pvHA0ya990=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bIu8jF1AXQsa2b3MIowHqo4JLwkyHZ18Cbd/vEo6UqUYCCTscUB5mblkuC2tLKtqQdaVy8TwYldQ/BfyD4/dFotzpA92t5QEcgw76v8/9MO4auZHaBhgkYmqXlfEAPNViyIU3mG5DuPQD1blJODPXlAyURu+KGWKdpZuJr2CcWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/hMP962; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/hMP962"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a8c929220so193251a91.0;
+        Wed, 14 May 2025 11:24:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747247074; x=1747851874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=piSbfKJRJsFdYn1Tp0vDZEziAUCdMJcpPh7Bt+nrbzM=;
+        b=f/hMP962eLtninCt8l9nxRCBw+XohGm9uTO0YZCeLbOugYS34/bFBUXqeiLExgeGU1
+         tDt18DiacC3tRj90jUfKSkNo/UXMbXiemoaRJT+7raUoWs7oXMiasBrUNhqnm1+M7Mt6
+         VxOYgOwu6E5xotiNkNPs2QQ3WllGJJVrAsyUAVzBG+OU+otsM4fSFu1xy7+FhYjtlSI4
+         W8XSrUicElp3ALLkuPBx4vjSpQUCqzHXbr7R8CcWdyxHhKWYC6Sto+Z9irGxrGAhUyjz
+         inDbl0WgyoYSkuJIt8ho+xqmZNRI4RlbQtJEHbTNYU23/MRmc4QwVQ/8wasLhnhEWc4/
+         78jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747247074; x=1747851874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=piSbfKJRJsFdYn1Tp0vDZEziAUCdMJcpPh7Bt+nrbzM=;
+        b=vDjNPQJ8b/q6lKm9g6qTmvF/Cu0bkvtYwYWXgu+oFPXAyZZU0YobJBoHMnPhvjG6HD
+         vfOv9nAmZs/Klc/KT6c0A2+KC9ts4b5UFHNuVFUxx19dwowZYObQiVyUk6WEptJdUc8U
+         iaDh0Ewb869/Hkn7je3tftG+4hzv+bxjQHoFwRWuj2iSuHW1t6uq2AcjFefSl5MgKWD2
+         ymZtc4zAfYssqp0U59eXudNEbyyMSIOUhdAPM9qWb2cBt+a7b1ENyUCPqSWo42QxVPVn
+         DSaMsNr4q6dBPU2kss+sTJKeakgL3PRtjJEC4AnCoSYh/s3j+a9h2f8P8n2lojjs+IXL
+         lbxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaezTXeSpCw2hPAWsIPo7TBunT0LBLfatrBp/rDevnI5fb5+SLotn27qq6lTWPMH4VEYrqbpHXGVylcrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZnpargNci7tP9hGyu1FP+Arb3NMNQaSZk1h+YlpDq8LdlmrV8
+	qscuZ3u3y5gZ0Kl4MFmqI6ZDpd87yy183Z83J8mUR/syHemd7IztCTiB426fE+q3s6KFW+06cca
+	pvqCnAX3Vd52BAHEHEKWXqOBZmPE=
+X-Gm-Gg: ASbGnct7NhNvz8n+27Lhm2m3l61NNRrshOoSSFlknmlFvZ8g5TMF4BUPr/c9sED61Hg
+	gzYoAjmWd6kiOt/IE0lxKdKJdYKyK/WBwlkvEMZGH31xzlc7oFpQx6WIQXZAOAsaj12N3bNvQKZ
+	yu1wmcKEYHQIFsIKmsQesVXx8v67K4rovF
+X-Google-Smtp-Source: AGHT+IERoYisQRYFJ/fdok/fO29isseqPw/s5Opd9yaIozNjBL9q8/QzL7npdwV9NLyVFHrNdrxCPJsKuOVi/dFcEBM=
+X-Received: by 2002:a17:90b:560b:b0:2fe:d766:ad8e with SMTP id
+ 98e67ed59e1d1-30e2e59bccamr7095948a91.4.1747247073845; Wed, 14 May 2025
+ 11:24:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-8-cgoettsche@seltendoof.de>
+In-Reply-To: <20250511173055.406906-8-cgoettsche@seltendoof.de>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Wed, 14 May 2025 14:24:22 -0400
+X-Gm-Features: AX0GCFvbxMkuY17oY-D8wAxWly6wk9bbXtCXdYIcMPpEHk-VWofrdV7i6ISJEzE
+Message-ID: <CAEjxPJ7ZpsmbV3AiEdEOCvUQBDAojn9XUhC6pzeOapPSYc2-Cw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/14] selinux: reorder policydb_index()
+To: cgzones@googlemail.com
+Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Eric Dumazet <edumazet@google.com>
+On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> Index as soon as possible to enable isvalid() checks to fail on gaps.
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
 
-commit e1868b9e36d0ca52e4e7c6c06953f191446e44df upstream.
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-Use of bpf_map_charge_init() was making sure hash tables would not use more
-than 4GB of memory.
-
-Since the implicit check disappeared, we have to be more careful
-about overflows, to support big hash tables.
-
-syzbot triggers a panic using :
-
-bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_LRU_HASH, key_size=16384, value_size=8,
-                     max_entries=262200, map_flags=0, inner_map_fd=-1, map_name="",
-                     map_ifindex=0, btf_fd=-1, btf_key_type_id=0, btf_value_type_id=0,
-                     btf_vmlinux_value_type_id=0}, 64) = ...
-
-BUG: KASAN: vmalloc-out-of-bounds in bpf_percpu_lru_populate kernel/bpf/bpf_lru_list.c:594 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in bpf_lru_populate+0x4ef/0x5e0 kernel/bpf/bpf_lru_list.c:611
-Write of size 2 at addr ffffc90017e4a020 by task syz-executor.5/19786
-
-CPU: 0 PID: 19786 Comm: syz-executor.5 Not tainted 5.10.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x107/0x163 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x4c8 mm/kasan/report.c:385
- __kasan_report mm/kasan/report.c:545 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:562
- bpf_percpu_lru_populate kernel/bpf/bpf_lru_list.c:594 [inline]
- bpf_lru_populate+0x4ef/0x5e0 kernel/bpf/bpf_lru_list.c:611
- prealloc_init kernel/bpf/hashtab.c:319 [inline]
- htab_map_alloc+0xf6e/0x1230 kernel/bpf/hashtab.c:507
- find_and_alloc_map kernel/bpf/syscall.c:123 [inline]
- map_create kernel/bpf/syscall.c:829 [inline]
- __do_sys_bpf+0xa81/0x5170 kernel/bpf/syscall.c:4336
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45deb9
-Code: 0d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd93fbc0c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000001a40 RCX: 000000000045deb9
-RDX: 0000000000000040 RSI: 0000000020000280 RDI: 0000000000000000
-RBP: 000000000119bf60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000119bf2c
-R13: 00007ffc08a7be8f R14: 00007fd93fbc19c0 R15: 000000000119bf2c
-
-Fixes: 755e5d55367a ("bpf: Eliminate rlimit-based memory accounting for hashtab maps")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Roman Gushchin <guro@fb.com>
-Link: https://lore.kernel.org/bpf/20201207182821.3940306-1-eric.dumazet@gmail.com
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- kernel/bpf/hashtab.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 4c7cab79d90e..829d6d3a8495 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -199,7 +199,7 @@ static void *fd_htab_map_get_ptr(const struct bpf_map *map, struct htab_elem *l)
- 
- static struct htab_elem *get_htab_elem(struct bpf_htab *htab, int i)
- {
--	return (struct htab_elem *) (htab->elems + i * htab->elem_size);
-+	return (struct htab_elem *) (htab->elems + i * (u64)htab->elem_size);
- }
- 
- static void htab_free_elems(struct bpf_htab *htab)
-@@ -255,7 +255,7 @@ static int prealloc_init(struct bpf_htab *htab)
- 	if (!htab_is_percpu(htab) && !htab_is_lru(htab))
- 		num_entries += num_possible_cpus();
- 
--	htab->elems = bpf_map_area_alloc(htab->elem_size * num_entries,
-+	htab->elems = bpf_map_area_alloc((u64)htab->elem_size * num_entries,
- 					 htab->map.numa_node);
- 	if (!htab->elems)
- 		return -ENOMEM;
--- 
-2.34.1
-
+> ---
+>  security/selinux/ss/policydb.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
+b.c
+> index 27f6809b562a..326d82f8db8c 100644
+> --- a/security/selinux/ss/policydb.c
+> +++ b/security/selinux/ss/policydb.c
+> @@ -728,7 +728,6 @@ static int policydb_index(struct policydb *p)
+>         pr_debug("SELinux:  %d classes, %d rules\n", p->p_classes.nprim,
+>                  p->te_avtab.nel);
+>
+> -       avtab_hash_eval(&p->te_avtab, "rules");
+>         symtab_hash_eval(p->symtab);
+>
+>         p->class_val_to_struct =3D kcalloc(p->p_classes.nprim,
+> @@ -2799,6 +2798,10 @@ int policydb_read(struct policydb *p, struct polic=
+y_file *fp)
+>                 p->symtab[i].nprim =3D nprim;
+>         }
+>
+> +       rc =3D policydb_index(p);
+> +       if (rc)
+> +               goto bad;
+> +
+>         rc =3D -EINVAL;
+>         p->process_class =3D string_to_security_class(p, "process");
+>         if (!p->process_class) {
+> @@ -2810,6 +2813,8 @@ int policydb_read(struct policydb *p, struct policy=
+_file *fp)
+>         if (rc)
+>                 goto bad;
+>
+> +       avtab_hash_eval(&p->te_avtab, "rules");
+> +
+>         if (p->policyvers >=3D POLICYDB_VERSION_BOOL) {
+>                 rc =3D cond_read_list(p, fp);
+>                 if (rc)
+> @@ -2907,10 +2912,6 @@ int policydb_read(struct policydb *p, struct polic=
+y_file *fp)
+>         if (rc)
+>                 goto bad;
+>
+> -       rc =3D policydb_index(p);
+> -       if (rc)
+> -               goto bad;
+> -
+>         rc =3D -EINVAL;
+>         perm =3D string_to_av_perm(p, p->process_class, "transition");
+>         if (!perm) {
+> --
+> 2.49.0
+>
