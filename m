@@ -1,112 +1,117 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D4B2AF10
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A751E9B0C;
+	Wed, 14 May 2025 19:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250264; cv=none; b=UOYZ3N6+6xBDWE6oCWRQwlN2E1L1thuXwXLlf1LcWlpG2Tt+XBnl3ZM2bYo3mQtkRdQ+8cBOoM4Sl5vyqd+L/y+stDcCkH55aPnIQ2RNMugfniy9Kh6BBfG9WqVorBn/scAFse0YBGvLY873XfysFtFJi0XMJCxYCSsf8YImFvc=
+	t=1747250329; cv=none; b=a8ESar+box48TrMmBm7qzc3dKeCTggnCiAc/vLvkmKGCfRPhBWZ5MMgY6rMfW9S37cl3mIZeXFyxewXiKyPPMGJj3QQM+btrk1L0CmmTWa1YsLuGyvuR2Rqu+Ewinw/WhWmzPqF/KD0JEh2BKavocLaRw/Mvk0z+yD7jvoqdC28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250264; c=relaxed/simple;
-	bh=693eHDaQbZtLC4bsIMwpoMiyAD4BvcV+QU9WfdiAC8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZ6DuyA9Ho3H2QTB5nikPQ3j3zbxPMh8n/Wiw5Lr8t9igY9zcS9+0iT0J1oRThB5MliV2eIdCltUTC9NXSl0H5RfWuQjNWZiGMHLOcXk/LgW3AkAUOwSoE/JEaoxebQqgx9VUSPYPngzDwpRA+RwrSB+nVJt8QrZHPLVq7xQgW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y/S4GaqK; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747250329; c=relaxed/simple;
+	bh=6Szgs5ZgAKhhejy9bd5sdKVyqZl7jtCcEZRRMTPsa28=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MIE48lvN9jVzBFc7K4IYUgdrsP1VfVoALQa824zdbr3Bb07FKzokyV66brrehBTn8WvdHY4LoBgASsqxZCFKuR+O02D/RG+9ueaXyP7MGZL4meDN4aRAS7fRSUSlHkyFO0jehkXY6JA95lEDxg1gZF0U14ADN/c30VJOeqzLlA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhyDBNLP; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y/S4GaqK"
-Date: Wed, 14 May 2025 15:17:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747250258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aEMr/eadSnEp9WCyDtXg9Ani6i3ZP+h0iCP/cZX+XY0=;
-	b=Y/S4GaqKMIIq0e+IcSOStxKqsND4Yz0PXFmus6Ga5ObK5zRhrEO6NUvKoIXvDnGOVK6fjt
-	GO9/qL1htNFWWGy8Tj8KP1RI6LwAbERJ1QRfo4MZKYSCbTdbV9Qjw3FWsH2Btq5lcFLb4l
-	7gaed03W5ytNqV/ubFEgFHDHS/Cd3mo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jason Baron <jbaron@akamai.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2] params: Add support for static keys
-Message-ID: <4qls2tbpbybpgwibt3hnuen3eraqbrltshlr22g4ausaci73o5@e26sk23msqoy>
-References: <20250513130734.370280-1-kent.overstreet@linux.dev>
- <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
- <tjqz5spozvd35egxtfn2n3csvqu2qsaobbkfzf52ovhsokq47y@eq5xl2ugyydq>
- <zljx4swb6eyhf67kwm32gcfboedxvikige3p5c7kt5lqo6c2jj@jjoa4g6375re>
- <jgdcnclxhw62rs2jb67n4wmmvnmc7l6mnnmlyhzkec3gb6zovp@rccwil2bi4bb>
- <ft6buh2oquxdygzxzobfmnjnatpuf6k6eetjtlqi2o3myv5qu3@vdt3t2yyprsv>
- <ecslihevvegiywtch4ckdw27x3h6mnekj7gf3lrbrtjwwzfodo@k5ks4ixf5i7j>
- <rbghhbko7wervmjtejgambxt7eacn647m747gnfsvfwuwseqhz@5z7bqeycnfzv>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhyDBNLP"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ea341570so1054155e9.1;
+        Wed, 14 May 2025 12:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747250325; x=1747855125; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5BtbSxTybdtcFtS1jNyktVMyxuW9cSflR46MX/L5XT0=;
+        b=jhyDBNLPqGrNpfMxIH4Vm6ztYGjwiCS1GQwoDDsiUT5Nby9Tspg7INqB0QOyoXNdX+
+         7BWOwzj8df7+lJwsL/Ya3Eb2YKvDsYvNVm7YMJqz4x/4AHDZnCNJEakL1vNFvBVxz7RP
+         c3uvSOn3KUsd24oqJ1LgacyozranENsJw2g4ZA3Yf0AKGsVQfPQnBVmlcxd8mO1uTekW
+         4h6/HOHfWmjVayXebgtBU6b/HI4BUX3xV8UbVcPNYDhCFghRY71cMdlG3hvM49EPUByK
+         X50NIZwh6tV4yY4/ps+CukL6iIIB/JjjHhfqJol2LpWZuUebaCf/sYiAVoG8jnIhnXyM
+         R4Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747250325; x=1747855125;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5BtbSxTybdtcFtS1jNyktVMyxuW9cSflR46MX/L5XT0=;
+        b=gQIDocJwNlkgnByQyclgglopE/EiCldF/vgTSOau43mEG8kTESPJFl2rS5LdqqaoPE
+         PcFM40o4/C2V6ESTBQyp8tLnNKFyub91F9SOkMqXZkQ8jp78ztpb+QKAVRFBe2mMU3KZ
+         3YG4yp5i/E4Ho5SMIB4yfqstPFJuUnbK9PCGcZYupj2m23CxnJ7dzTPcbnVUZuhUfIcl
+         1uoh/lV8jK17h5/FgNN/pQz+ADXEGVlx2D3fIdbPmqo0D1Z8IJy7VJwEajM7vgIQtqtK
+         +JjxN2xg34QWKSBaGQQzOvJPBUJLB9YSXM4/fkvrKBfKfZN5Wzu/DZgwrniAyEglsJWZ
+         kENA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaB94pTbH+d2e3A5TWLwdwj53e/I6YRpxFdM/LKpPX3b6+QmOtWBFJ13Bh6ZqZRcPMekehMEXKYJgM@vger.kernel.org, AJvYcCUrbDG+alSVRdcs2PqfFosfnvu7ls4ghkUd7IxwQSEw3kaI4EeCxBQ13ZO/TQB1+dMYNaTf7W5L@vger.kernel.org, AJvYcCXVjTsxBrKhqrKf3jfl5gHPEKyOtvQl+mMaMmT10WDW95rFFR6NT33Npf8AkguWfxf2zAmGaPyql9+X5cL9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ7YC6273FQZAaS4a2vRbl1nMWPziLv0vcORuHSLLTjKmOPOlc
+	iFoPVlifb4+wLjMjbMbfNsRodTyH76Z0hhxKVPI8LduWY+HDG268
+X-Gm-Gg: ASbGnctgZG0CP9F/m+Qj+B3lfFc1gKv3HptgJx5WRxG3krsM6HTk/n/vVkN6DC64HEO
+	MiI2BWf8JrFHBHi1Rl2mGCq9kfzlCoYhjSQ2Bxn05M0gpWXdARwU+/npMX3E5JXANdpsdqBFWeB
+	xSdSSxQCVbnag5q57iOhC/1hlswbI+StJ4QSUA9ENfUZP16DmbhBGAV0k+DM3tBt2LxG3lylnI+
+	CEAs2SVSWuZLOH+h2ziLcp+kHiHu17NGHYpj91y17p97nCNgvzsUxE1ucya3uidQIHM2ZZu2NaT
+	MAJDBvDWg91iEKPLb/EYqukH/eGxsqY8pcm9NxGNxJwm+c7ETmpmbHSzmztn5tye8VVUGTC/rcq
+	MJjE7
+X-Google-Smtp-Source: AGHT+IFKFToRN7zXhbHdXQ/cdww5PsgDL/Kla5r5RaA5iyZqqiHLzqal1BkIz+g9xpxoUT2qzwYoxw==
+X-Received: by 2002:a05:600c:3483:b0:43c:eeee:b706 with SMTP id 5b1f17b1804b1-442f2168b73mr39019935e9.24.1747250324619;
+        Wed, 14 May 2025 12:18:44 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f39ef811sm38707525e9.35.2025.05.14.12.18.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 12:18:44 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH v2 0/7] pinctrl: armada-37xx: a couple of small fixes
+Date: Wed, 14 May 2025 21:18:31 +0200
+Message-Id: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <rbghhbko7wervmjtejgambxt7eacn647m747gnfsvfwuwseqhz@5z7bqeycnfzv>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIfsJGgC/32NQQ6DIBREr2L+ur8BKrV11Xs0LhBBf6JiwBAaw
+ 91LPUCXbyZv5oBgPJkAbXWAN5ECubWAuFSgJ7WOBmkoDIIJySQXuNGqdz+jujUpoaVkAj4fVvW
+ 6lrrnHIq5eXMWRXx3hScKu/Of8yTyX/p/L3JkONQNs2WQ35V8jYui+ardAl3O+Qvqep+CtgAAA
+ A==
+X-Change-ID: 20250512-pinctrl-a37xx-fixes-98fabc45cb11
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Wed, May 14, 2025 at 12:06:44PM -0700, Josh Poimboeuf wrote:
-> On Tue, May 13, 2025 at 11:40:05PM -0400, Kent Overstreet wrote:
-> > On Tue, May 13, 2025 at 08:38:57PM -0700, Josh Poimboeuf wrote:
-> > > On Tue, May 13, 2025 at 08:44:49PM -0400, Kent Overstreet wrote:
-> > > > On Tue, May 13, 2025 at 05:37:11PM -0700, Josh Poimboeuf wrote:
-> > > > > On Tue, May 13, 2025 at 07:34:59PM -0400, Kent Overstreet wrote:
-> > > > > > On Tue, May 13, 2025 at 02:24:46PM -0700, Josh Poimboeuf wrote:
-> > > > > > > > +++ b/include/linux/moduleparam.h
-> > > > > > > > @@ -122,6 +122,7 @@ struct kparam_array
-> > > > > > > >   *	charp: a character pointer
-> > > > > > > >   *	bool: a bool, values 0/1, y/n, Y/N.
-> > > > > > > >   *	invbool: the above, only sense-reversed (N = true).
-> > > > > > > > + *	static_key_t: same as bool, but updates a 'struct static_key'
-> > > > > > > 
-> > > > > > > The static_key_*() interfaces are deprecated because they're really easy
-> > > > > > > to use incorrectly.  I don't think we want to propagate that misuse to
-> > > > > > > modules.
-> > > > > > > 
-> > > > > > > It would be better to have type(s) based on static_key_false and/or
-> > > > > > > static_key_true, depending on whatever the default is.
-> > > > > > 
-> > > > > > Except those are just wrappers around struct static_key, so why does
-> > > > > > that matter here?
-> > > > > 
-> > > > > Those struct wrappers are needed to work with static_branch_likely() and
-> > > > > static_branch_unlikely().
-> > > > 
-> > > > Sure, but this has no bearing on that - unless I've missed them, there
-> > > > aren't separate methods for just setting and checking the value, which
-> > > > is all we're doing here.
-> > > 
-> > > To make use of this feature, wouldn't the module need to use
-> > > static_key_false() or so to actually insert the static branch to check
-> > > the value?  Otherwise what's the point of using static keys here?
-> > 
-> > I'm not sure I follow?
-> > 
-> > You just pass the inner static_key to the modparam, you still use
-> > static_key_true or static_key_false as normal.
-> 
-> Ok, so the caller does something like so?
-> 
->   DEFINE_STATIC_KEY_FALSE(foo);
->   module_param_named(foo, foo.key, static_key_t, 0);
-> 
-> I guess that works, but 'foo.key' is awkward in that it's nonobvious and
-> breaks the abstraction.  Driver people might end up allocating
-> static_key directly and using the deprecated interfaces again.
-> 
-> My preference would be to stick to the supported interfaces, e.g.:
-> 
->   DEFINE_STATIC_KEY_FALSE(foo);
->   module_param_named(foo, foo, static_key_false_t, 0);
+The series contains several small patches to fix various
+issues in the pinctrl driver for Armada 3700.
 
-Yeah, that looks reasonable
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Changes in v2:
+  - remove 'stable' and 'Fixes' tags from the error propagating patches
+  - collect 'Reviewed-by' tags from Andrew
+  - swap patches 2 and 3 so the bug fix in the latter can be applied cleanly
+    without depending on the change in the former
+  - Link to v1: https://lore.kernel.org/r/20250512-pinctrl-a37xx-fixes-v1-0-d470fb1116a5@gmail.com
+
+---
+Gabor Juhos (7):
+      pinctrl: armada-37xx: use correct OUTPUT_VAL register for GPIOs > 31
+      pinctrl: armada-37xx: set GPIO output value before setting direction
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_direction_output()
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_get()
+      pinctrl: armada-37xx: propagate error from armada_37xx_pmx_gpio_set_direction()
+      pinctrl: armada-37xx: propagate error from armada_37xx_gpio_get_direction()
+      pinctrl: armada-37xx: propagate error from armada_37xx_pmx_set_by_name()
+
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 35 ++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
+---
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250512-pinctrl-a37xx-fixes-98fabc45cb11
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
