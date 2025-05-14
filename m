@@ -1,100 +1,105 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477EA1DF254;
-	Wed, 14 May 2025 15:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194202701C5;
+	Wed, 14 May 2025 15:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238288; cv=none; b=YJR/P9dcRRJlO5YkE8Vn8Tq39v4tcTm1uCsP1802opY30DlxxkaLL1y9DM3mv2JNOTJ5Ev+g2MC/riC4/JmGIFi6iJl279bRomVvnejiPFwn8jEZ0jf1YnBdAsMG1AvNrUPU87wC32KnNpNPTcyB9B9KOBn+U4Xs5QpQM3GHiTs=
+	t=1747238331; cv=none; b=ulBJZ+fKVE/kEm2czRHozhNg0buFQTvl4vIMPxKQ/cGtzR++p9vSRCi2SaqGCQeXf+v0+KIHOdEoxfCJ8XbemP1qetbtrVnkISwHmE+x+D1KCQji2D/c9VjGzif14vovFU9fI9cjTDsEp9Zc+Z6fzVZwDHcMZZ9WeIQX9hhaJwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238288; c=relaxed/simple;
-	bh=fpKmBmEzp50TR8APNwZcmeWT4nycvxyHG74DrWJq0sw=;
+	s=arc-20240116; t=1747238331; c=relaxed/simple;
+	bh=DSf6fgAJPEt/aB96YuwhOZof99etbHcJvpC8hw67anY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HV8Y79m8dSreCezYbqFqo0OePf9uwG4+WkMzj7A2wuMTzjjLPAAz7UfDyK8O0uzG6MjPl9Fh5J/1pQUwXY9O3QWN35+uw6iSKgeVE8sWKoueJFSfht1T8HyZn5XfxnfLhgO5qF5ssWsD1t7LJeIZSeUxOYYBbkEs7aEnS4CoRp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gk1YqMLh; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXOoatfZgZIdTVXuh3X2QeHWvEN+Zo1w30llMolF6vA8jp1o9fRvUacx8UiqprBSopZ5e2RmQcdwO1Jrne/tVkpLDoAW8JSuNgb6ZohR1WIRsgk88MAroAYz3OKNWulOCRH/UVUHEGi2Lz1+oYYhlnDdtu9L5+2tp36ZB9duuOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kp4dsLU0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gk1YqMLh"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so984352b3a.0;
-        Wed, 14 May 2025 08:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747238286; x=1747843086; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fpKmBmEzp50TR8APNwZcmeWT4nycvxyHG74DrWJq0sw=;
-        b=Gk1YqMLhpGHSO45TJBhS7Xv31qb4tEP0+egi4EwGD8Z0P39jGyRquxyqnt4Z2u/R91
-         +Uti/hZJBEe3wj+et/SPY7ZKkmiTLmC34yZgL/Mup56Ns6gCXwSL2ocz7Iw9gCAPctEm
-         GDpKgxz0z0bWlvcWA17nqtQXDRJVJTvNwXIZyjwfRm7MW+OgqJEdw3w/vyk7GUA8lscZ
-         bPfLy5i7erq3e4bZuKJm0BVyM/zdZBbibCmg4DX+RZU9lPcVp38Hbd5au8DAnpO99tVp
-         jktYKVeviyS97Vlky2fNzaIlKld3cpiJyYiprlvMJ+A0wfaB6rg93dDjXpMSNIqZRzp+
-         EMEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747238286; x=1747843086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fpKmBmEzp50TR8APNwZcmeWT4nycvxyHG74DrWJq0sw=;
-        b=tEXT8Kvq3XQA6p2CXwwFJcDxBZzFMTAFZfTeqpiI7PVeYvDQIsn4L7TbUeRM66gsvc
-         8LU/wJXq9bRITazzPDnHqXF6PV78kY+H1v0B88iQNpgphjGDzLTkRFIMDmarQUQo7DaE
-         YRRoh1F4RAgBMK0h2qjvvI4s6J7X3yLEBXXDwm2kTnXfen+v33J+HF1kUt4P6j2eMMms
-         PbOj2npcrMDZuqT/D3MrvL/V8+RFSa5SqYmamLMZ4GuZvrLYI3oJFWEMuBLd9Vf8mqDq
-         Ur/SMEuhiE3mDTwddhXqQoG8MbWJPySQUYiM+vAxdWAdi1B+wvxdyy7wOfiCeFdqiESA
-         AIGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2KIDiGfUrwCTdUevefZGkMm1bhpnuql2oq5Idx/IYMPd/icDG82LJYVwtK3j5NNE18B3OfhoO@vger.kernel.org, AJvYcCXowj3Ux3B0mSj36nW/by4OHiDfHCv9odZ6VZbUwZbx499/22MTHDk8GT3T+2Fes+FqZZhI1VfQTvEv4MY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfDKVUaJTnQzgQNzDOb7oiQblFfB5F6QrGlaiSOjKxiM5NSpjp
-	ImaXQ/C4SfL3a7ngTadHEnEbeHNl8Q5K9GujDPZUnQvsVQl/b13s
-X-Gm-Gg: ASbGncsGgxPRN9Yudjzy8CpdsvWiYbd5LSR+sDNZD4Cg5wTYTkmwapwXT4sd5zum1N+
-	uPOPgH2cLjK3H9Zi4//fkR/r2E8eko6T+iIqxy4+6sq8BBMKcypJ4ZOwtZisjfvO37jq4D8P94S
-	ccVUbblou6YIA/f0KIuIujNfBsS07O8wDn1eRJAsG1avQ8Q1AZQbp8Vx1KJlEX+HJxrXFezAldn
-	F8FZk7abt9BWSi50Ljazn/gdV+yzzPuvwxiWFMBuvY7W6fJdccYACqVxMoS6kBUIfyWcz0w639B
-	ChMvXMtT7pbHVz02h/GHop8yc5aEjOfC6pLuci4jGUtaKRdHNZMsmtuVKLwPJQ6ymzvw7yY=
-X-Google-Smtp-Source: AGHT+IEGtOwegxBLaY+Q6tQVIrHN3fYemJ8QgU8MQUPTrc4QFAGE7i3gBDzE7oFdfo9l2d909PY1ng==
-X-Received: by 2002:a17:902:ec88:b0:215:a2f4:d4ab with SMTP id d9443c01a7336-231b3985156mr930205ad.7.1747238286420;
-        Wed, 14 May 2025 08:58:06 -0700 (PDT)
-Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271f77sm100631825ad.126.2025.05.14.08.58.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 08:58:05 -0700 (PDT)
-Date: Wed, 14 May 2025 08:58:03 -0700
-From: Richard Cochran <richardcochran@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Miroslav Lichvar <mlichvar@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-	Christopher Hall <christopher.s.hall@intel.com>,
-	David Zage <david.zage@intel.com>, John Stultz <jstultz@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Werner Abt <werner.abt@meinberg-usa.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Kurt Kanzenbach <kurt@linutronix.de>,
-	Nam Cao <namcao@linutronix.de>,
-	Alex Gieringer <gieri@linutronix.de>
-Subject: Re: [patch 00/26] timekeeping: Provide support for independent PTP
- timekeepers
-Message-ID: <aCS9ixXXLmva5-BT@hoboy.vegasvil.org>
-References: <20250513144615.252881431@linutronix.de>
- <aCRCe8STiX03WcxU@localhost>
- <871psrk1x2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kp4dsLU0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0CEEC4CEE3;
+	Wed, 14 May 2025 15:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747238330;
+	bh=DSf6fgAJPEt/aB96YuwhOZof99etbHcJvpC8hw67anY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kp4dsLU0VanD4e33v8AkFmQGIz6asUN7iZP7tr8C0MFMSLPgm77AjW95C1REu6B+9
+	 DnzOoxHmkwatWB2kifBGKdOcmo5mRg5Y0O8HZSW1MpRBHS0py5IiYy87Q076gIm577
+	 fTEb48QTccoVWaAQ6FG4WZ1e/tLjMFy7rdcGUTz7+thmXLHqXd2ZE8EjiyzeCPqdqR
+	 XsPIKV63EtBATSgTlm0EVCl6vR4KRZJ6nE4D6b5qeo6urTUnYNa+9XZ5mVHrcou+22
+	 obKT7rBh4q8euVpMW8oPViRup8KJStzfLM8aL25oBrPwZ+eZ5dPnFLAtJEjmC9ACX0
+	 lJxpKKpdKzlMw==
+Date: Wed, 14 May 2025 16:58:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Hsun Lai <i@chainsx.cn>
+Cc: Fred Bloggs <f.blogs@napier.co.nz>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: vendor-prefixes: Add SakuraPi prefix
+Message-ID: <20250514-starship-hula-8bdf775ebe99@spud>
+References: <20250513163515.177472-1-i@chainsx.cn>
+ <20250513163515.177472-2-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D6jM8BuA+oADXsbS"
 Content-Disposition: inline
-In-Reply-To: <871psrk1x2.ffs@tglx>
+In-Reply-To: <20250513163515.177472-2-i@chainsx.cn>
 
-On Wed, May 14, 2025 at 10:54:33AM +0200, Thomas Gleixner wrote:
 
-> CLOCK_AUX0-7 sounds really good to me and makes sense. I picked PTP
-> because that's where I was coming from. I'll rework that accordingly and
-> make the config enablement independent of PTP as well:
+--D6jM8BuA+oADXsbS
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-+1 for using AUX naming instead of PTP.
+On Wed, May 14, 2025 at 12:35:12AM +0800, Hsun Lai wrote:
+> Add vendor prefix for SakuraPi.org, which produces
 
-Thanks,
-Richard
+This website does not exist? Think you should mention that
+https://docs.sakurapi.org/en/ is the site (in a Link: tag).
+
+> development boards like the SakuraPi-RK3308B.
+>=20
+> Signed-off-by: Hsun Lai <i@chainsx.cn>
+> ---
+>=20
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
+umentation/devicetree/bindings/vendor-prefixes.yaml
+> index 3e7450c3f..744d01a76 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1299,6 +1299,8 @@ patternProperties:
+>    "^rve,.*":
+>      description: Recharge V=E9hicule =C9lectrique (RVE) inc.
+
+>    "^saef,.*":
+> +    description: SakuraPi.org
+> +  "^sakurapi,.*":
+>      description: Saef Technology Limited
+
+You've added your entry in the middle of the Saef one.
+
+>    "^samsung,.*":
+>      description: Samsung Semiconductor
+> --=20
+> 2.34.1
+>=20
+
+--D6jM8BuA+oADXsbS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCS9tgAKCRB4tDGHoIJi
+0q8QAP9tNCMpApYlgZi+aeED8eLOGgKb5hjN/+SCXPB6O/y9FgD8CJmz2GXl+RKW
+ppMsUotzTNA4d0ZHlowv8DqWDntvqAs=
+=yovm
+-----END PGP SIGNATURE-----
+
+--D6jM8BuA+oADXsbS--
