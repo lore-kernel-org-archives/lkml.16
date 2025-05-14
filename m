@@ -1,202 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71331DE4E3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070AC1F4607;
+	Wed, 14 May 2025 17:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245195; cv=none; b=uBzOaRBxOeYmXV6cacdBpLADN3HR3EbLYI8uDUThYnz2wG9eJwwiNvhUUlHIAUnsqvzqAlrsLBkRFq5MXi1wU9oEx5YsJHJbDTD8RRZkRnBbIMXtAam07qetr0G00dZe01zqEA1aUTxuhx9m+H2Co/ztPl2y6/0iK1CLoJZg9zA=
+	t=1747245231; cv=none; b=NgoTit5I7iz4NGEBBzuJWosGju/LRzkEty9+ygV3UCWru3Pm4zf5UeJlcYuVkfsLbzlM0Svy8SclkYfXKl4vZ+bHNa1prOiWkpiYdX6b0vofmQZzWbSj3pAHbrxC7H6JKEisf3yxRDuapxkCRvucQ5KZwv/glAoveWfb6At0isY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245195; c=relaxed/simple;
-	bh=yyrmU6W8SSAQ69TGnG/eTlj7nlNV55pBc8ipgTcqAPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=V691187o7l/O/2N4oCZFMpeuMQ4xxfxKodLTf57Wn1K28RPQ8kYMWwhe08dtksFwCwQSEKk2dIFY1mjoKK97uNF3YuiF2jHxuKA9eYCMNTcPzBRMg0E777C4xVvALwh6S1y25UpuXDDWht2ameDGboEWWolDyKcO+9VUYBDxGfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MK9+4SZ/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747245231; c=relaxed/simple;
+	bh=0aB7Zf1FjNrjHWMfXxq/GZb+CC83CIEm1R4JLzr4fIU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=duONkQsAE+0Rhn1jlNiJW4pm3B0mKm5zUHKolu4PR93v9X+DrUNN12BbpclycJGgcO+k3XEw55QocExgTUrorzp4QwXUwNkWyYnyMJ5QxU905vjs1IW/zYWIuArvOxlvoIbdKcPfJy6Kj3hTj6VfORnBLR7YHfU6sb9r0CwsdIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcd83feY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MK9+4SZ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747245192;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=T9gEkHcNNRGwG4zKAICU/T3iGmVhFST3CjssIJGy95U=;
-	b=MK9+4SZ/4zq/7KTGTHW4l89FCuUe/mgoSkA5OsC/aqaRLurNcT6M5DJeuP+EbTj06c7R5R
-	Z+rWDiCeDv0NIv/yumHT9H1eyfsNxwzQ8ionD8HLlh0IefKzc7l/Zf8Ig1hWErmF+RJ2nM
-	DR2KTvoCbM6eayOXWPbGcyEsPnqzzKk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-379-Hy-hkAOHNH2iPsJHirFWfg-1; Wed, 14 May 2025 13:53:08 -0400
-X-MC-Unique: Hy-hkAOHNH2iPsJHirFWfg-1
-X-Mimecast-MFC-AGG-ID: Hy-hkAOHNH2iPsJHirFWfg_1747245187
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f9ddf04bso26124f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:53:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245187; x=1747849987;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T9gEkHcNNRGwG4zKAICU/T3iGmVhFST3CjssIJGy95U=;
-        b=uGWD8KdI5G5H9AIqOIhVddavhmlQ7C6BYCXaTEeCpVWNqtSWAk9TmcU3fwNatnEnb+
-         3JUe4yhbK1r1mkvZB4vYSwKg1JV1VAgJ7/bd0+AxWErIC2KwowXHgyWpCS/4O+OT7SF1
-         LQcV7JYdKDI9yLNyy7+MIHp0ASNgiQuTUkvb+Pzx89atyp4h3fhw6M5LLNa+s2IIIG2l
-         UxDiu88ftdVF+osw1c6D1cC0PB84l97CHB3OyT0HEOwxs1REL5JaI3Y+tMcpntRRf3gc
-         csNUXTdtOnym6cV+joHR6SobUjwYm9gEEUWZ+OJ32bqt6lEMHs39Vg+gjl/XDN+Gzxh5
-         iQIA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5jEAJVR8cWc8AezuxUx99Rbs1PeaX3igqUy2vk8lBR14ZG6B+3E4q6mv4ndwzGvwjs/rDYAn/PuWc2Nc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdTCeg1YkEodonktVVFS5Q4G0bWEgLifSlOjlH23Oe6ajAiYX7
-	GG0tG6kytx04+B++7254QdigYwPYmSbqjw7oeFMavjAv087yGpMcytEg86gBhOrPxKPNUrXaW/B
-	WgVX133FJVnmDOOXr5avi+9XjKTPnAFxXUh+JBPKjVOMmkOQ7ODM4gVbCe8SJAsV3ow3THw74
-X-Gm-Gg: ASbGncvBEboyGiGfEJLsO/onfh7z7P69GJMndc5PuX4sVV9twpyvbH0VJq+sLNyKWne
-	bxNfz9r54teLIvNItCn5L751iFrv3wqGXj/vGucauuLKVaG86g9z8doWCyNABB9kpCY4g+8SUNc
-	9NEA79G0TaNJkNt0e2B/W1IezrDfvx3jv2eWVi25zE3ur44iwQ7YUebURP1VX3Mp/2Pb/PbydhP
-	p8zIKSpFEKfUsfJm8uhFaEzUEXVgGQu6sxY28wJAxUaKjs5iG1awsJZQ41qGo7fgvJlhjGoa3ET
-	G0ojATj3AM0FW3HZGnQQNmEEGykBmF8AGIikbni0CJEMYy4D1I7ssYqRNKF3Lc/XJP/HrGgDn3L
-	mlPJSjkjN4YBHLTkHqFIDJ2bdsHdWa5aZZ+ozMgA=
-X-Received: by 2002:adf:f7cc:0:b0:3a2:2d6:4205 with SMTP id ffacd0b85a97d-3a349921da8mr3561079f8f.47.1747245187407;
-        Wed, 14 May 2025 10:53:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI/rQoUNdarqySB6UGfLmR7K5cvW1c5VoY82rTRIWoLyPgqKa4z52Sz2Zo6d+MLUSeBgWoLg==
-X-Received: by 2002:adf:f7cc:0:b0:3a2:2d6:4205 with SMTP id ffacd0b85a97d-3a349921da8mr3561064f8f.47.1747245187062;
-        Wed, 14 May 2025 10:53:07 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f15:6200:d485:1bcd:d708:f5df? (p200300d82f156200d4851bcdd708f5df.dip0.t-ipconnect.de. [2003:d8:2f15:6200:d485:1bcd:d708:f5df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecccbsm20532621f8f.32.2025.05.14.10.53.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 10:53:06 -0700 (PDT)
-Message-ID: <18d502c8-7bbe-470e-863c-7c2f42ea2487@redhat.com>
-Date: Wed, 14 May 2025 19:53:04 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcd83feY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D16BC4CEE3;
+	Wed, 14 May 2025 17:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747245230;
+	bh=0aB7Zf1FjNrjHWMfXxq/GZb+CC83CIEm1R4JLzr4fIU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Hcd83feY5Lj9t7DrEIwBfh+va0pXhDL0MIZ1ZdBpZve0KF6IMe7WGaV5O6HM9U1lH
+	 oApRhUzXE/hsQuKw186x1QXpektlLW5hBI5gu7o/NSai7E98pMatFzrT50AVIQCtQ8
+	 wtE/lx3B9kZxzhYnHFkGxGcEa6RwbdUim8rycRnm/0jwq6VAADHUnobsQpU9LahzUn
+	 PEahdDvfKT/rOt16wfsLNR7qkSiJw4rxuA4CCWsBF/PRACH3ns0TqYbDc8yDWkKe9M
+	 K1X0gk+opL0n50DgfuHri5fk/bigIwR8DXAdNxMG7cTEzB74/I/dMkhLFmv7VFNdav
+	 tGVYMJ0btuv1Q==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Wed, 14 May 2025 19:53:38 +0200
+Subject: [PATCH] ASoC: q6apm-lpass-dais: Print APM port id in decimal on
+ enable error
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/11] x86/mm/pat: remove MEMTYPE_*_MATCH
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
- Ingo Molnar <mingo@kernel.org>
-References: <20250512123424.637989-1-david@redhat.com>
- <20250512123424.637989-9-david@redhat.com>
- <f2bxgy5tmb3cpk457lay3hl4wejj5dvttswnvzi2uudxtkkbsm@ktcytlgv64nn>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f2bxgy5tmb3cpk457lay3hl4wejj5dvttswnvzi2uudxtkkbsm@ktcytlgv64nn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-topic-asoc_print_hexdec-v1-1-85e90947ec4f@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAKHYJGgC/x3MQQqAIBBA0avErBNSm6KuEiFhU81GRSOE8O5Jy
+ 7f4/4VEkSnB3LwQ6eHE3lXItgF7be4kwXs1qE5hh7IXtw9sxZa8NSGyu81FeScrUPVajwOO04R
+ Q6xDp4Pyfl7WUD3I/AQRpAAAA
+X-Change-ID: 20250514-topic-asoc_print_hexdec-524337657995
+To: Srinivas Kandagatla <srini@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747245227; l=1175;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=WY0FCnwcfqmDBpegGuUNmfFMF0650DhHOEzIRDiem8c=;
+ b=mto0jGaH93OINWmFwcr/neBFIyIfQyzqRiRNXCWllVQP2UykyWkIVQAC2c/89linOlsNqoqFR
+ PoNXpaCWpASDCOIKgjzHFBbCD5yMossZq+wzad6O3ATUJockzfvALJ1
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On 13.05.25 19:48, Liam R. Howlett wrote:
-> * David Hildenbrand <david@redhat.com> [250512 08:34]:
->> The "memramp() shrinking" scenario no longer applies, so let's remove
->> that now-unnecessary handling.
->>
->> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> small comment, but this looks good.
-> 
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Thanks!
+Change the port enable failure error message format specifier to make
+it less confusing.
 
-> 
->> ---
->>   arch/x86/mm/pat/memtype_interval.c | 44 ++++--------------------------
->>   1 file changed, 6 insertions(+), 38 deletions(-)
->>
->> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
->> index 645613d59942a..9d03f0dbc4715 100644
->> --- a/arch/x86/mm/pat/memtype_interval.c
->> +++ b/arch/x86/mm/pat/memtype_interval.c
->> @@ -49,26 +49,15 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
->>   
->>   static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
->>   
->> -enum {
->> -	MEMTYPE_EXACT_MATCH	= 0,
->> -	MEMTYPE_END_MATCH	= 1
->> -};
->> -
->> -static struct memtype *memtype_match(u64 start, u64 end, int match_type)
->> +static struct memtype *memtype_match(u64 start, u64 end)
->>   {
->>   	struct memtype *entry_match;
->>   
->>   	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
->>   
->>   	while (entry_match != NULL && entry_match->start < end) {
-> 
-> I think this could use interval_tree_for_each_span() instead.
+Take the chance to align the style ('fail'->'Failed') while at it.
 
-Fancy, let me look at this. Probably I'll send another patch on top of 
-this series to do that conversion. (as you found, patch #9 moves that code)
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ sound/soc/qcom/qdsp6/q6apm-lpass-dais.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
+index 9c98a35ad09945173c15dd6dff34830f43fe9388..a0d90462fd6a3807502f3e272dfb852d4d9c0f62 100644
+--- a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
++++ b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
+@@ -206,7 +206,7 @@ static int q6apm_lpass_dai_prepare(struct snd_pcm_substream *substream, struct s
+ 
+ 	rc = q6apm_graph_start(dai_data->graph[dai->id]);
+ 	if (rc < 0) {
+-		dev_err(dai->dev, "fail to start APM port %x\n", dai->id);
++		dev_err(dai->dev, "Failed to start APM port %d\n", dai->id);
+ 		goto err;
+ 	}
+ 	dai_data->is_port_started[dai->id] = true;
+
+---
+base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+change-id: 20250514-topic-asoc_print_hexdec-524337657995
+
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
