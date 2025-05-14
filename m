@@ -1,151 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABBF2F42;
-	Wed, 14 May 2025 01:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60E21DFE8
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747185275; cv=none; b=shh9OwTMdYQYzejmTHIwB+SE3pqSfBsINWsQJ2JWfOEUnhnSIVfGI5QEB/MFs6UO6dh0mW1+D5FPK1UZSXd/1asWM8kxhbagfRiuR4nLto5WEywdzUzgPYPsKUdUsVysgankB6aztuozKiT8RTe29eAe1lnBOL5dty8rkxZ3Vgc=
+	t=1747185385; cv=none; b=Mj9QfT/WQ00oY2CGICO1snHd6IgI5DUtzwclMIqW3AXLrBu+TofOMW95APgzbkzfzSTlYw/SwuqWtAtPVezaZNwiBcQfgc0FmMtF2/KsdfEAgEeDdgzwnOdMBlBdrYS8DxASdso8IkfFhAyv+YhNRjlbIBu6Id2/d473oo0Lb+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747185275; c=relaxed/simple;
-	bh=CzeDfW6P7QbovukrEwnJdSGdw85sjKnjpjgPD0DzpxM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jNVkOOnVmnjhYBYkXJxD+VKz0F+rS+gTXZA94ZUiyQh/s8NFgGaOWDNPGs868+ecYUQXiH2KxG1hNS3SHoplbaJLvuVcDo4R9nRBc/suLRBtc9pmfNvQ+kUqFiZ7ecBhQ5Hy5Lb8ZZRybVC/c3l23h91NDdSQMXIr2l1bsxrtlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayf+nUsr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747185385; c=relaxed/simple;
+	bh=2iyMcmTUCksrl8tcWLl+IWP5N2afJcL8MbqS/UWeXQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MB80I6+gKp2JRvKoXl6GA+EnBGtbK/+YDtd2cr/9Yd+qWWPk12a/Y1B0XY2I8oBXnOX+pjhwEecifaDLLOd5nxMMW13qrnXrvshMeHziyeIwefIMrCx6ikMNhCu0zAjCCQeycJikN/rnpdtIWSQinWtOhfP8xcEsCHcKUYY2W3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=WgGedhVm; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayf+nUsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1B27C4CEED;
-	Wed, 14 May 2025 01:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747185275;
-	bh=CzeDfW6P7QbovukrEwnJdSGdw85sjKnjpjgPD0DzpxM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ayf+nUsrqtO2rN9/PTKGFg8PvTmjpXsBhMjdP0KspbY5OYGK4+wEAklQvQuvMUGLO
-	 nGN3rHI4b4BrzAqKcvX8J8Z5ftw7w/TgJAwrhsnb1y0tbgPOQnpnPnhn+MFxFa/1QT
-	 BklgL/T3p/1FBhoA8vF4Mw8NW5klGQ1DOLtHZ0WVVMPvHMc+IDRvYBftrOzptTVwD6
-	 ocGCidol/AzaGM1ALVZIClp5+yuPyX8l8NJKCiMyvSYR6Js9LXJBiGAwXjQFCwKct3
-	 S1NsXjXYFwtvPw8IZVO32mgp3zjpjiVLqzAw/6ZpqyZ/Uv33+ubOzEx7u/3H9tyqNt
-	 Garsk6Qyn0bjA==
-Date: Wed, 14 May 2025 10:14:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: Record trace_clock and recover when reboot
-Message-Id: <20250514101431.e1363d1a60ed2548feb4cef0@kernel.org>
-In-Reply-To: <20250513135652.7cb970cf@gandalf.local.home>
-References: <174709628747.1945884.11884057542151507891.stgit@mhiramat.tok.corp.google.com>
-	<20250513135652.7cb970cf@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="WgGedhVm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=1hs0q+mYysLcaiUGDRGU9TTWH9u5sOR249xe+14mUYE=; b=WgGedhVmEtnihbug
+	SFvkbuRhV8goYYF6lKHH2iKLLNc8rG4SVCmXVxAWsML0+B9VAbNCQ+ToGlPa+bFCPDv5gLjq65LTL
+	wdEjOe6Ih+peKUx/B3FBq5j1yYptpGsrpGL3Fccnlq+FhVTpcj+K+pHpt1g7r+qphZQ3Bjz9c7cd2
+	lxCpD8+tFTksaAJFpsW51xhj0jAaGraa9BYTtT/5xVItG+6TXZC9Tu7vVz+d5tosp6h83Fu9NVfhm
+	7Y3FxO6XaXXZu929fpm1eHeKo2l7q5TbbL0wFgM5cGU143FyYKYWVODs95f1H4ZaYb6RY1TpeSYld
+	aAPQZz4AiVKysSYc4w==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uF0jD-003Oxd-2I;
+	Wed, 14 May 2025 01:16:11 +0000
+From: linux@treblig.org
+To: alexander.deucher@amd.com,
+	christophe.jaillet@wanadoo.fr,
+	christian.koenig@amd.com
+Cc: airlied@gmail.com,
+	simona@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] drm/radeon/cik: Clean up doorbells
+Date: Wed, 14 May 2025 02:16:10 +0100
+Message-ID: <20250514011610.136607-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 13:56:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-> On Tue, 13 May 2025 09:31:27 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Record trace_clock information in the trace_scratch area and recover
-> > the trace_clock when boot, so that reader can docode the timestamp
-> > correctly.
-> > Note that since most trace_clocks records the timestamp in nano-
-> > seconds, this is not a bug. But some trace_clock, like counter and
-> > tsc will record the counter value. Only for those trace_clock user
-> > needs this information.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v3:
-> >    - Save clock_id instead of its name.
-> >  Changes in v2:
-> >    - instead of exposing it via last_boot_info, set the current
-> >      trace_clock as the same clock we used in the last boot.
-> > ---
-> >  kernel/trace/trace.c |   16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index cf51c30b137f..2a060c62d686 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -6066,6 +6066,7 @@ struct trace_mod_entry {
-> >  };
-> >  
-> >  struct trace_scratch {
-> > +	int			clock_id;
-> 
-> Should be "unsigned int"
+Free doorbells in the error paths of cik_init and in cik_fini.
 
-OK.
+Build tested only.
 
-> 
-> >  	unsigned long		text_addr;
-> >  	unsigned long		nr_entries;
-> >  	struct trace_mod_entry	entries[];
-> > @@ -6181,6 +6182,7 @@ static void update_last_data(struct trace_array *tr)
-> >  	if (tr->scratch) {
-> >  		struct trace_scratch *tscratch = tr->scratch;
-> >  
-> > +		tscratch->clock_id = tr->clock_id;
-> >  		memset(tscratch->entries, 0,
-> >  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
-> >  		tscratch->nr_entries = 0;
-> > @@ -7403,6 +7405,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
-> >  	tracing_reset_online_cpus(&tr->max_buffer);
-> >  #endif
-> >  
-> > +	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
-> > +		struct trace_scratch *tscratch = tr->scratch;
-> > +
-> > +		tscratch->clock_id = i;
-> > +	}
-> > +
-> >  	mutex_unlock(&trace_types_lock);
-> >  
-> >  	return 0;
-> > @@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
-> >  
-> >  	/* Scan modules to make text delta for modules. */
-> >  	module_for_each_mod(make_mod_delta, tr);
-> > +
-> > +	/* Set trace_clock as the same of the previous boot. */
-> > +	if (tscratch->clock_id != tr->clock_id) {
-> > +		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
-> 
-> In case the tscratch->clock_id gets corrupted, we better make sure it
-> doesn't overflow:
-> 
-> 		if (tscratch->clock_id >= ARRAY_SIZE(trace_clocks) ||
-> 		    tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
+Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+RFC->v1
+  Renamed ringCP[12]->ring_cp[12]
+  Cleaned up doorbells in cik_startup failure case
 
-Good catch! BTW, don't we have any check about scratch area?
-(e.g. adding a checksum)
+ drivers/gpu/drm/radeon/cik.c | 42 +++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 12 deletions(-)
 
-Thank you,
-
-> 
-> -- Steve
-> 
-> 
-> > +			pr_info("the previous trace_clock info is not valid.");
-> > +			goto reset;
-> > +		}
-> > +	}
-> >  	return;
-> >   reset:
-> >  	/* Invalid trace modules */
-> 
-> 
-
-
+diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
+index 11a492f21157..51a3e0fc2f56 100644
+--- a/drivers/gpu/drm/radeon/cik.c
++++ b/drivers/gpu/drm/radeon/cik.c
+@@ -8548,7 +8548,7 @@ int cik_suspend(struct radeon_device *rdev)
+  */
+ int cik_init(struct radeon_device *rdev)
+ {
+-	struct radeon_ring *ring;
++	struct radeon_ring *ring, *ring_cp1, *ring_cp2;
+ 	int r;
+ 
+ 	/* Read BIOS */
+@@ -8623,19 +8623,22 @@ int cik_init(struct radeon_device *rdev)
+ 	ring->ring_obj = NULL;
+ 	r600_ring_init(rdev, ring, 1024 * 1024);
+ 
+-	ring = &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
+-	ring->ring_obj = NULL;
+-	r600_ring_init(rdev, ring, 1024 * 1024);
+-	r = radeon_doorbell_get(rdev, &ring->doorbell_index);
++	ring_cp1 = &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
++	ring_cp2 = &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
++	ring_cp1->ring_obj = NULL;
++	ring_cp2->ring_obj = NULL;
++	ring_cp1->doorbell_index = RADEON_MAX_DOORBELLS;
++	ring_cp2->doorbell_index = RADEON_MAX_DOORBELLS;
++
++	r600_ring_init(rdev, ring_cp1, 1024 * 1024);
++	r = radeon_doorbell_get(rdev, &ring_cp1->doorbell_index);
+ 	if (r)
+ 		return r;
+ 
+-	ring = &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
+-	ring->ring_obj = NULL;
+-	r600_ring_init(rdev, ring, 1024 * 1024);
+-	r = radeon_doorbell_get(rdev, &ring->doorbell_index);
++	r600_ring_init(rdev, ring_cp2, 1024 * 1024);
++	r = radeon_doorbell_get(rdev, &ring_cp2->doorbell_index);
+ 	if (r)
+-		return r;
++		goto out;
+ 
+ 	ring = &rdev->ring[R600_RING_TYPE_DMA_INDEX];
+ 	ring->ring_obj = NULL;
+@@ -8653,12 +8656,16 @@ int cik_init(struct radeon_device *rdev)
+ 
+ 	r = r600_pcie_gart_init(rdev);
+ 	if (r)
+-		return r;
++		goto out;
+ 
+ 	rdev->accel_working = true;
+ 	r = cik_startup(rdev);
+ 	if (r) {
+ 		dev_err(rdev->dev, "disabling GPU acceleration\n");
++		radeon_doorbell_free(rdev, ring_cp1->doorbell_index);
++		radeon_doorbell_free(rdev, ring_cp2->doorbell_index);
++		ring_cp1->doorbell_index = RADEON_MAX_DOORBELLS;
++		ring_cp2->doorbell_index = RADEON_MAX_DOORBELLS;
+ 		cik_cp_fini(rdev);
+ 		cik_sdma_fini(rdev);
+ 		cik_irq_fini(rdev);
+@@ -8678,10 +8685,16 @@ int cik_init(struct radeon_device *rdev)
+ 	 */
+ 	if (!rdev->mc_fw && !(rdev->flags & RADEON_IS_IGP)) {
+ 		DRM_ERROR("radeon: MC ucode required for NI+.\n");
+-		return -EINVAL;
++		r = -EINVAL;
++		goto out;
+ 	}
+ 
+ 	return 0;
++
++out:
++	radeon_doorbell_free(rdev, ring_cp1->doorbell_index);
++	radeon_doorbell_free(rdev, ring_cp2->doorbell_index);
++	return r;
+ }
+ 
+ /**
+@@ -8695,6 +8708,7 @@ int cik_init(struct radeon_device *rdev)
+  */
+ void cik_fini(struct radeon_device *rdev)
+ {
++	struct radeon_ring *ring;
+ 	radeon_pm_fini(rdev);
+ 	cik_cp_fini(rdev);
+ 	cik_sdma_fini(rdev);
+@@ -8708,6 +8722,10 @@ void cik_fini(struct radeon_device *rdev)
+ 	radeon_ib_pool_fini(rdev);
+ 	radeon_irq_kms_fini(rdev);
+ 	uvd_v1_0_fini(rdev);
++	ring = &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
++	radeon_doorbell_free(rdev, ring->doorbell_index);
++	ring = &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
++	radeon_doorbell_free(rdev, ring->doorbell_index);
+ 	radeon_uvd_fini(rdev);
+ 	radeon_vce_fini(rdev);
+ 	cik_pcie_gart_fini(rdev);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
