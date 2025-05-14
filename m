@@ -1,165 +1,164 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439B513E41A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F3525EF9C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216684; cv=none; b=qgR8ibjLIoxHkxemUvnRFxkt5Knon0DCX3cJQcfKn7qg898VMIDeJNJyH76gIkjGqOztevazjnj1Oo0uWjq1wnnMioXcR1CpLby4OPSFxsywWEB2IAVwUEDEOr9t2rsMjhjm6fyzEJn5HxN62sYDav3lguS4r1TOKBlr16jA7vM=
+	t=1747216689; cv=none; b=W/PLtEDcpiUcua2+DZzke+NcsE+QSaixf2jX7cE/6ppqYEkM7urj4LGsNLcCNlWp+lAE7/3F0XOAuFwkqMHzeOHa5koQJSqe0JipsI7inR1Ftkcm+/hGbLO8H4RnMCGv2m7WQ+CRUgrZGG+AJarfz0vxIwucWUhWvunTbg3Gb7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216684; c=relaxed/simple;
-	bh=bS6OiwwODtIhVfytW0IXHsyd6ZKxJRnv6rBUnfwIwaw=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U4g3aczHfrdYxRUuLHSAN28pg0CO5T03M7oe+8/XS4tnmTLeamW5iwpUvaCCY4/fFMGmeEcNv2Jz1oFrRhOGsoWVM6lL/a1EZ5J+I8Yj+/aZZ3CMADTdT+fuFYkoUwD36pvZOZ25ZH4rcESzQ617RRPiJPU6/owKLptCqQ8fUvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HFJin9uy; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747216689; c=relaxed/simple;
+	bh=8qzF0dnibpzSwk28HHXwMXKVCE2C0IRgQqjSRLDXxF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I0uFrAdL2YWEEHO4JRFoJJRcAMZxD5ZVfMDZlDciD6quVJIYM8dqRu1OyonPfK+hgO9uFnavvOjE4+wj5w65e7GnPQBBGYFD50GvsTptE7WQStjs/noYHm8wxVZ0Jjnp4stmTCfBTC+DmZnSb1kFPXMO3DTt2vX+iW3YtKGMPI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hP94fQbW; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HFJin9uy"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30de488cf81so65814691fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747216680; x=1747821480; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:references
-         :mime-version:in-reply-to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Sef9ctaVHOch8HKf4l4HAkMpIwdQ/iI1WZkRcq3n7hA=;
-        b=HFJin9uypWSHptoKRRqB/qFGU4LePrUzUdwNqJs0iS+MreEZ2idXsqc557Xa8XKkBd
-         Y0Jby+6L/Xh9tGA5T+YRKcyG5gVPp6CYHgDYj+r0g2sndHQQ5r7rLjVRnYGWg/z3dySf
-         Qp2L9LwCAhvw4fERF+IMrvaRrM+lpfqJa4kTgDktGkR8gPQ+vJXhFZrNLuQeW7q8XRN0
-         O3WPcEyBlHhqRFF04NOc4yIJku1HKxf77ZuBUF7/RXOpaaETSLPzKdl0b4ohkSiolvN6
-         v0kqsSy5ndpSvUduH9WYABDhsnc/v5knsfDJk4zOTwAmHzBzGbqVlOMx1Gd86jLkSaxu
-         hFzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747216680; x=1747821480;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:references
-         :mime-version:in-reply-to:from:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Sef9ctaVHOch8HKf4l4HAkMpIwdQ/iI1WZkRcq3n7hA=;
-        b=nMNSKzv7aeGeScY3PB2JR0+ri8AkBXXBlrOZmIhF8dtCBT2LjQW/EUEDwVXTSvvdj7
-         BX7Q1RZCLWPBDa8pRLAnPhHZTXaguNsB0ulFmBxyKz9QPZvfFfyJrH2UZinn5avAoxoK
-         ROiqfND9JilNVPS2zbyp5ZbkpBgnSzPU4mXv2R4f1hKldoV3Ir7w2bVkdFVc1qk8b63V
-         c7ljTr5GzVxX8PzgfyxrhEN63fSH8idKg6NYgffhpnparaR5orDqKG/KAsM+B8MMxVWT
-         lWGtuyObeEIDd7gnIoJ9dXSJKOCrdAO460Y/T1P/Bld7MTgmSe+pAHF/vyHIf/Eh/R+I
-         v4jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWC586lryHMtDMoUWhMAYElJACasKRuC1XLZk3mZ8eFcZY0Vr6iduT1qYZS2cISn8jYOKlPdwsYCWTM2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywja2pHdOefhFLoiS8tos5iYJQ5xpIALKvNf6JRIsHOrYWMPmPx
-	qD+qhI3XJ4u3MxtAkG5CM0jf2qCrRD/sPuTA+5q5+pfB/NsAchv5axE46ug4xl4oALyo4nyACW7
-	ug2jmmfGU4U2l6hIbSGWdVGsisRgrygDHftQ+Rg==
-X-Gm-Gg: ASbGncv9Juz1ruqJkCVVMjhpecBKP7rR4BDsL6B5EvILcrFz6wakDbEu7GAk5LNTmtN
-	8FLjSobr8i0/Stn6zaofQwvxq5T5zMbx9EqDMkgaJplZoSy13HT/ioUC4tc/2GPPAyGh+tmCL5B
-	9r+dRyQN7uJsd0FI45z7K/Km8TIvSHDQc=
-X-Google-Smtp-Source: AGHT+IEGW1BwG0vWRm5BlH8SykmxSxEEcq2RxvplxQZDDT5E7U5dCDchPUbWlRgl684WDWawwv+GOAwQdpalrax/dWE=
-X-Received: by 2002:a05:651c:221e:b0:302:2598:de91 with SMTP id
- 38308e7fff4ca-327ed11b3a1mr9949641fa.16.1747216680139; Wed, 14 May 2025
- 02:58:00 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 14 May 2025 02:57:59 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 14 May 2025 02:57:59 -0700
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <CACRpkdaErq4uwjjqug3BbiHMKbP=4PkzpXPuQ57+2mgjJQ7ACQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hP94fQbW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747216680;
+	bh=8qzF0dnibpzSwk28HHXwMXKVCE2C0IRgQqjSRLDXxF4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hP94fQbWKz+uhHQTs97vAzBtt43GNsf3+oV5qJLFjImHMUcnAeII1j72Jav5HgM9W
+	 VogXJD/dblDIFTonYJh+gA0jY+6ozilq60FrDX9PoRoY1c/GNPKEJaUCwzBO7PJTHI
+	 IZuZPC16pSZvijRdp5G/9Tz+Q9+ZssJ9Mw9IwgERok5Mp66Yna3oPlZC8acOJNNAlx
+	 nSmTuWV3fE3VXaxK74TjedgXI5eT7u53uFVsX/IWF/+QOgRKz+X4uAHwuzq5YBtk7i
+	 jS/JROnuzjbwRLpwUbG2sQDHuX0aNDrLiJLjm5gpBcx+3jlP5XXPtGaf+HofiMgQ4f
+	 yGB9VfG6WFl+w==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 010DD17E153D;
+	Wed, 14 May 2025 11:57:57 +0200 (CEST)
+Message-ID: <6c187b50-8ac0-42ac-af46-5357a26cb830@collabora.com>
+Date: Wed, 14 May 2025 15:27:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-pinctrl-msm-fix-v2-0-249999af0fc1@oss.qualcomm.com>
- <20250513-pinctrl-msm-fix-v2-1-249999af0fc1@oss.qualcomm.com> <CACRpkdaErq4uwjjqug3BbiHMKbP=4PkzpXPuQ57+2mgjJQ7ACQ@mail.gmail.com>
-Date: Wed, 14 May 2025 02:57:59 -0700
-X-Gm-Features: AX0GCFuzMkv-uw4OkxtcQ7B0bROFFsRTNAPuiGhyru3oWFwWfGG6-KWTDkLR3FY
-Message-ID: <CAMRc=McwKEPZx=P1LMkWu6++=jLiU_+eDEHB=PRcJoFqVGufpA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] gpiolib: don't crash on enabling GPIO HOG pins
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Josh Cartwright <joshc@codeaurora.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Doug Anderson <dianders@chromium.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: x86: Boot failure on select chromebooks with v6.15-rc5
+To: dmkhn@proton.me
+Cc: Ingo Molnar <mingo@kernel.org>, dmukhin@ford.com, mingo@redhat.com,
+ andriy.shevchenko@linux.intel.com, x86@kernel.org,
+ daniels <daniels@collabora.com>, Daniel Stone <daniel@fooishbar.org>,
+ robdclark <robdclark@gmail.com>, lumag@kernel.org,
+ linux-kernel <linux-kernel@vger.kernel.org>
+References: <a8638f85-1cc2-4f51-97ba-7106a4662885@collabora.com>
+ <aB2bStp8efMHPjet@gmail.com>
+ <d966d626-458b-4a29-abe1-b645317e15d2@collabora.com>
+ <aB2itc2-5h3LEJi6@gmail.com>
+ <45450eeb-1866-4bf6-a83b-1f28e26f311c@collabora.com>
+ <aCIwQHABCPufAQWr@kraken>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <aCIwQHABCPufAQWr@kraken>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 May 2025 00:18:41 +0200, Linus Walleij
-<linus.walleij@linaro.org> said:
-> On Tue, May 13, 2025 at 8:39=E2=80=AFPM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->
->> On Qualcomm platforms if the board uses GPIO hogs msm_pinmux_request()
->> calls gpiochip_line_is_valid(). After commit 8015443e24e7 ("gpio: Hide
->> valid_mask from direct assignments") gpiochip_line_is_valid() uses
->> gc->gpiodev, which is NULL when GPIO hog pins are being processed.
->> Thus after this commit using GPIO hogs causes the following crash. In
->> order to fix this, verify that gc->gpiodev is not NULL.
->>
->> Note: it is not possible to reorder calls (e.g. by calling
->> msm_gpio_init() before pinctrl registration or by splitting
->> pinctrl_register() into _and_init() and pinctrl_enable() and calling the
->> latter function after msm_gpio_init()) because GPIO chip registration
->> would fail with EPROBE_DEFER if pinctrl is not enabled at the time of
->> registration.
->>
->> pc : gpiochip_line_is_valid+0x4/0x28
->> lr : msm_pinmux_request+0x24/0x40
->> sp : ffff8000808eb870
->> x29: ffff8000808eb870 x28: 0000000000000000 x27: 0000000000000000
->> x26: 0000000000000000 x25: ffff726240f9d040 x24: 0000000000000000
->> x23: ffff7262438c0510 x22: 0000000000000080 x21: ffff726243ea7000
->> x20: ffffab13f2c4e698 x19: 0000000000000080 x18: 00000000ffffffff
->> x17: ffff726242ba6000 x16: 0000000000000100 x15: 0000000000000028
->> x14: 0000000000000000 x13: 0000000000002948 x12: 0000000000000003
->> x11: 0000000000000078 x10: 0000000000002948 x9 : ffffab13f50eb5e8
->> x8 : 0000000003ecb21b x7 : 000000000000002d x6 : 0000000000000b68
->> x5 : 0000007fffffffff x4 : ffffab13f52f84a8 x3 : ffff8000808eb804
->> x2 : ffffab13f1de8190 x1 : 0000000000000080 x0 : 0000000000000000
->> Call trace:
->>  gpiochip_line_is_valid+0x4/0x28 (P)
->>  pin_request+0x208/0x2c0
->>  pinmux_enable_setting+0xa0/0x2e0
->>  pinctrl_commit_state+0x150/0x26c
->>  pinctrl_enable+0x6c/0x2a4
->>  pinctrl_register+0x3c/0xb0
->>  devm_pinctrl_register+0x58/0xa0
->>  msm_pinctrl_probe+0x2a8/0x584
->>  sdm845_pinctrl_probe+0x20/0x88
->>  platform_probe+0x68/0xc0
->>  really_probe+0xbc/0x298
->>  __driver_probe_device+0x78/0x12c
->>  driver_probe_device+0x3c/0x160
->>  __device_attach_driver+0xb8/0x138
->>  bus_for_each_drv+0x84/0xe0
->>  __device_attach+0x9c/0x188
->>  device_initial_probe+0x14/0x20
->>  bus_probe_device+0xac/0xb0
->>  deferred_probe_work_func+0x8c/0xc8
->>  process_one_work+0x208/0x5e8
->>  worker_thread+0x1b4/0x35c
->>  kthread+0x144/0x220
->>  ret_from_fork+0x10/0x20
->> Code: b5fffba0 17fffff2 9432ec27 f9400400 (f9428800)
->>
->> Fixes: 8015443e24e7 ("gpio: Hide valid_mask from direct assignments")
->> Reported-by: Doug Anderson <dianders@chromium.org>
->> Closes: https://lore.kernel.org/r/CAD=3DFV=3DVg8_ZOLgLoC4WhFPzhVsxXFC19N=
-rF38W6cW_W_3nFjbw@mail.gmail.com
->> Tested-by: Douglas Anderson <dianders@chromium.org>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->
-> (...)
->> +       /*
->> +        * hog pins are requested before registering GPIO chip
->> +        */
->> +       if (!gc->gpiodev)
->> +               return true;
->
-> LGTM, Bartosz if it's fine with you as well can you ACK this and I'll
-> stick the patches in fixes and get it to Torvalds pronto.
->
-> Yours,
-> Linus Walleij
->
+Hi Denis
 
-Sure,
+On 12/05/25 23:00, dmkhn@proton.me wrote:
+> Hi,
+> 
+> On Fri, May 09, 2025 at 01:07:54PM +0530, Vignesh Raman wrote:
+>> Hi Ingo,
+>>
+>> On 09/05/25 12:07, Ingo Molnar wrote:
+>>>
+>>> * Vignesh Raman <vignesh.raman@collabora.com> wrote:
+>>>
+>>>>> What boot cmdline does your kernel have? The MMIO-UART patches should
+>>>>> only have an effect if the feature is specifically enabled via a boot
+>>>>> option:
+>>>>>
+>>>>> +               if (!strncmp(buf, "mmio32", 6)) {
+>>>>> +			buf += 6;
+>>>>> +                       early_mmio_serial_init(buf);
+>>>>> +                       early_console_register(&early_serial_console, keep);
+>>>>> +                       buf += 4;
+>>>>> +               }
+>>>>>
+>>>>
+>>>> amdgpu:stoney:
+>>>> earlyprintk=uart8250,mmio32,0xfedc6000,115200n8  console=ttyS0,115200n8
+>>>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598802/extract-nfsrootfs-wgn1xjer,tcp,hard,v3
+>>>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>>>> tftpserverip=192.168.201.1
+>>>>
+>>>> i915:amly:
+>>>> earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8
+>>>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598804/extract-nfsrootfs-5rlm_b6z,tcp,hard,v3
+>>>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>>>> tftpserverip=192.168.201.1
+>>>>
+>>>> i915:whl:
+>>>> earlyprintk=uart8250,mmio32,0xde000000,115200n8  console=ttyS0,115200n8
+>>>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18598833/extract-nfsrootfs-3w0w5_mi,tcp,hard,v3
+>>>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>>>> tftpserverip=192.168.201.1
+>>>
+>>> Well, if you remove the earlyprintk option then it will boot fine,
+>>> right?
+>>
+>> Yes, it works when mmio32 option is removed.
+>>
+>> https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/76005338
+>>
+>> earlyprintk=uart8250,0xde000000,115200n8  console=ttyS0,115200n8
+>> root=/dev/nfs rw nfsroot=192.168.201.1:/var/lib/lava/dispatcher/tmp/18599938/extract-nfsrootfs-neuejjq0,tcp,hard,v3
+>> init=/init rootwait usbcore.quirks=0bda:8153:k ip=dhcp
+>> tftpserverip=192.168.201.1
+> 
+> For the above example, can you please try something like
+> 
+>    earlyprintk=mmio32,0xde000000,nocfg
+> 
+> ?
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This option didn’t work. For now, we’ll use earlycon instead of 
+earlyprintk to fix the issue.
+
+Thanks.
+
+Regards,
+Vignesh
+
+> 
+> In my case, configuring exact baud rate did not work. I started to dig that,
+> but did not finish, because `nocfg` worked (firmware happened to configure the
+> UART correctly). Using `nocfg` was sufficient for the system bringup debugging.
+> 
+>>
+>>>
+>>> The earlyprintk=mmio32 in v6.15 is a new debugging feature that was
+>>> tested on a single board by Denis Mukhin AFAIK, and it may or may not
+>>> work on your particular UART - even assuming that all the parameters
+>>> are correct.
+> 
+> Correct, I have tested with one board only and with limited UART configuration
+> combinations.
+> 
+>>
+>> So the earlyprintk=mmio32 debugging feature is needed only for v6.15 and is
+>> not necessary in previous kernels (e.g., v6.14 and earlier). Is my
+>> understanding correct?
+>>
+>> Regards,
+>> Vignesh
+>>
+>>>
+>>> Thanks,
+>>>
+>>> 	Ingo
+>>
+> 
+> Thanks,
+> Denis
+> 
+
