@@ -1,179 +1,212 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2086.outbound.protection.outlook.com [40.107.249.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553D352F88;
-	Wed, 14 May 2025 14:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547699478;
+	Wed, 14 May 2025 14:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747233659; cv=pass; b=YogHSggcIfGP+3cvceVIP0XO8A+1r+jT9hDidvxrjCLSl1BE+7yyuNEsmFtJsLv1NV/tuO+SU7TfW3oGytuXvT4gs8UYhBXjaQ2abXJYRLIZnxp3I3qoN4sK9YC77/cFt/6PE319sW67iK93rnOfiDuvWPr+QTk2XmRG4Jk7Q60=
+	t=1747233720; cv=fail; b=IOY8Z1soXlg2Ep/96thrMSMvGjTjHurzEt5vLbdj+fP4BRQx7avezNh/VI5QUYB+qdWNSLtAvgT6M9myke7Z9mTGETjJdd+ePeZzoNU9T8k6LE/QnGuBMlGcbwo9AqtsGSgssyqxHfhgHOoFyvrnwr9ggzGXO6UEFuJY7sPP6vg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747233659; c=relaxed/simple;
-	bh=0c83d2w4up38WYiLqe4rd4DT9kdc0wUmuTY9Wxo+lJw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LR0JC8IKTrjtiC63fgXRXL1T14qDAWVOWo4uJWGqnuKUpjFqsTKbdX6gbFxQCoMHkMlLpGMiayFqJxDSE0HMrs6nExAb4raW/BksX81p/AabTDW8f9l3kDIyOUAoxYlyoBcpd20I/D+3UtBI8sG2eB69SwY3+lw9CIyqrRjcwDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=TAw2fi+T; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747233720; c=relaxed/simple;
+	bh=P92Pw7I5Z1Z8Cd7m6Ha2JSQcsTV5Y7MBnP/z4myUgFA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KzCHhRn6TRipvnQuNLLvmZVLdR4WSRim3x9bvJ5Umo9DG+OolVRbHGwIYjbCDHbjPqNnuNBxK7U8cbTMuzishLXQHsZHuuMeRYkJWAgUutGhA0E4U+k8N2fIOstoXpFvMgGu5Nc0tpsIz8SVe71KLOlXhRig0QvF/+mpLJjJVXQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=XCJcE13f; arc=fail smtp.client-ip=40.107.249.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="TAw2fi+T"
-ARC-Seal: i=1; a=rsa-sha256; t=1747233634; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MtO8KegtooDdBrJ+M1QL6UKocX0HfqS5g1u/EiYxON7/lfESJj5pv2w/NJeOXQrG5uO1jgQPS2tKqx8mJ/rlm+kkIp46Wb9dwLjaL+jTxQAyX/pC5DB6BcRlvttuCI5qty6THRP1B1UYRB7ATl9aI5satdW146JYMOkoiaM0k8Y=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747233634; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zvmLeQwvJW8Kb01T+DUC0a0dVewvRUOUqmlkWNLJ16k=; 
-	b=HNpcWehCoHJ53LTKhHa964QwGLX2oKesvKeGFUeg2KF3I2Qd0Xps4kvdjvK7uokiGaT+lKShDk83FNbNHQwX0bEAs0W6Awzpef8giSg1PjnXEv8McKWgJG7/PGyOR7Gb4KpJP6QZIalDapMgprwbO59HSoGPJCCEQMSWbgUbpHE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747233634;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=zvmLeQwvJW8Kb01T+DUC0a0dVewvRUOUqmlkWNLJ16k=;
-	b=TAw2fi+T1jNZNUKSQpHuTuy/a47Hk9wt6jEz+PoKZ0tsoJCPCCPvYAC3UDBjjzmr
-	LZxMQmiRPIsKt6RfgCvivwocfzSC0VQyHM6N+ZfP/QAVhfrMsajQbP0LXSL8Es6CJWP
-	8A/d0+B+SuBL8NDz+UkSsANCuiWqLrupxQGlIWvY=
-Received: by mx.zohomail.com with SMTPS id 1747233631513277.34552553411754;
-	Wed, 14 May 2025 07:40:31 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="XCJcE13f"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g1ICEoqPXqCqVyKw+ljAG98hGySVYqXB2fjpJbXpZsIo8edRH0RYl/QjlSX1LXsQ20YmZa3yVfJcPZJkaRfhUg7+HgWELBUL2665dVy0PynbsG1bhOFr68kxpehbuoJ+fmGJwvTi273AT2h5rYq/7PPDko3avIElkYk/1g9o70o57r+sa9oAZHuY689aDs9Q6j0h/zMvDg4evkcH2MCPiBld+JMdABQr5+KeeyRB23r7+ykm1278UFB9zd7MMayyrzG3EJ6DE8D2vEQLDoSYatu9AR6jpIN8hM3GPYyxOklmXjmImFqftFwVniVIW1m6CnlIwfJzBNRdnMByD8LFwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r0JR2aPw+Qc484Gcp/+/tfkspAxD9MlLqLMiMiaHVD8=;
+ b=gzmHksfjx2Z8M1KX0vz877Jfs1Lo34XwcTFncxUw6gaM0LvDjOfniKTyWoiSvEfb4/NQqsZcKIVyonF0d+y7r70vHyAeGcOgzAGAaSIE/U0/9exjk2S5fycKjvXVQ/reByhcWRNfjdK8teLEXPqKc8A37fPSZFCY1g+DCPmTN73oIzyF1NBHRKlGyBmO/ut1M6VuW7RgGCh97QE+rEiqQGYvR0bRvMWjaHRYSZMhfolUqQBJihnz3rKDot27VfOzYbig4wqOYFztKC1uzGw6vWTVEUWxJn9WnnUhlnIKMe0ztae671dOFu4pmkvfo6QPWyrc1AncAGJJu0M4R1jxvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
+ dkim=pass header.d=axis.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r0JR2aPw+Qc484Gcp/+/tfkspAxD9MlLqLMiMiaHVD8=;
+ b=XCJcE13ft5XPonPu3u4+bDONgXGON7xa9P9k4JxHV2bI7exf1Rd0NKO4Ssth4Ft2XvIgZRa+MiKALB5imYotoq0SxJFgid3QDrcfwwqYvwrRbRvjKnUxgIn+bvUMKQ+OabneqCmc1egR36tKuHExCUMOjimvMUow/nbJT3dQdAc=
+Received: from PAWPR02MB9281.eurprd02.prod.outlook.com (2603:10a6:102:330::10)
+ by AS8PR02MB9885.eurprd02.prod.outlook.com (2603:10a6:20b:61b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 14 May
+ 2025 14:41:36 +0000
+Received: from PAWPR02MB9281.eurprd02.prod.outlook.com
+ ([fe80::87f6:1bcb:22bd:b050]) by PAWPR02MB9281.eurprd02.prod.outlook.com
+ ([fe80::87f6:1bcb:22bd:b050%5]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 14:41:36 +0000
+From: Johan Adolfsson <Johan.Adolfsson@axis.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>
+CC: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kernel
+	<Kernel@axis.com>, Johan Adolfsson <Johan.Adolfsson@axis.com>
+Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+Thread-Topic: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+Thread-Index:
+ AQHbvnMzuEeJRwGRtkiTeZxACDeeErPMBIqAgAKi8eOAAK3JAIABOlYjgABz8ACAATqsng==
+Date: Wed, 14 May 2025 14:41:36 +0000
+Message-ID:
+ <PAWPR02MB9281EDE0658B51FBE86D8A089B91A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
+ <62a74e0e-f5a1-40b5-a855-6e9bd620cbd5@gmail.com>
+ <PAWPR02MB92814A311B18A6FD8A448D249B97A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+ <0bf10848-0fa2-438a-92dc-6d3b29760b64@gmail.com>
+ <PAWPR02MB9281789F85D773CEC278688F9B96A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+ <a7988a35-9dad-4771-afb3-b2fb8c543fbe@gmail.com>
+In-Reply-To: <a7988a35-9dad-4771-afb3-b2fb8c543fbe@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axis.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAWPR02MB9281:EE_|AS8PR02MB9885:EE_
+x-ms-office365-filtering-correlation-id: bef213cc-c25c-4bbc-c821-08dd92f56dff
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?d7gBUnh9ZTa7+C77LB6QZXejqFq3AICDgXvwPcafW3PCp8NR95iNovV0dw?=
+ =?iso-8859-1?Q?FEDTzRmgZvwRICoR7sGbxsplOWnzZxHdCK2ZMwdBUYYQZC1OtYxBSwZ11n?=
+ =?iso-8859-1?Q?sDkXmQPIxfJZqKVRGHlc8kL5vy4RuVa0wG2y4gv4t/7/rpp0fWAy/8kPyP?=
+ =?iso-8859-1?Q?jfAwTzr/A9EdDpM8i9VSYGFU4FvP0AN+35bMRusJh31kTR0FjHEBx1ao8m?=
+ =?iso-8859-1?Q?qfWDpOdDdZcsuZrH6Bnak/hwFBlhmuENlkd022yZ36v1Qc559gvlhJjqDT?=
+ =?iso-8859-1?Q?7wYgyKWrak849jpQm3lJ/xOn2uqXZZw8Kpzm1d+e9kIDaXLbCYhYHq1tj7?=
+ =?iso-8859-1?Q?BanmsXgBIv32hM/mg/en5koF321DpFh6lO9mmQIAw6N1QpW92Maq5XFg0o?=
+ =?iso-8859-1?Q?lxYvadqHotYkJvavSoqf13VSE/qr+Eq+dES5QQtstsEtciSccqi/KQcMGt?=
+ =?iso-8859-1?Q?6xYXbsCi79JZ0IGwn7UDqkY6lNuya6worGwIIp7t/oeLwIC0eLJ3Wx5OBN?=
+ =?iso-8859-1?Q?YCZlHnyVUIlnkceZeta+JkZy2RUNP6NCBxO14fuwTfz9iZNx5HgUQNT4uz?=
+ =?iso-8859-1?Q?NBdW/RE5B3ex0I/JiTe643ekiUWbDMayepNpQvqezpSFYaC57Z3Khfa3cj?=
+ =?iso-8859-1?Q?X+D3oQOGjeEUa6pJTBTWhdFhJHLpKSnJdCFR2e3DFcJLJa+16e7/dk0+a/?=
+ =?iso-8859-1?Q?KeQa+YUBIIv2ecl8qBTySlQt+1y0JOJFfGGXmUuN3dRorZCewkugmAvXXh?=
+ =?iso-8859-1?Q?HRp2NfWTfIEaAFJEichXL/FX+inXc9f+xIduTtHh0ERG+Y5MJP+6nnv4YQ?=
+ =?iso-8859-1?Q?lwEGk4yUvua8ZrT58zOlsRFAbsn46E515EgZgGPz0g8I0DbfQFY/o9nEH/?=
+ =?iso-8859-1?Q?s4flZDLlGZ9Wbm+bINSp/U4nFe8fhmJWWTA9VajA9NQT375AFgWzEBA4RF?=
+ =?iso-8859-1?Q?xPNOVthyN+jJxYVSptCPI+/hXYqt84k1143FAtAbEss7xeW4tq4rFTa2bM?=
+ =?iso-8859-1?Q?JxrKMeTojVJoj/K0bLwhuz90/50olo09jfnQKwy2blXNBVBjG4YBOPqhCH?=
+ =?iso-8859-1?Q?bqNT3R7qWIfW51aGVhUP9zwuasr9BhTZPDBjma+u91j2YmBK7Rn8JL2jhL?=
+ =?iso-8859-1?Q?oUMHw69TmTqR0EWQfQFYIZ5C7NcEmE/bAboJR70UcGfwCbeEdS9t6y+MEm?=
+ =?iso-8859-1?Q?QPFmQJgpnTTlPPUEWfYZrEPVAOqH/ksyx35KWUF6/y7ePUOD8fq8iFabp8?=
+ =?iso-8859-1?Q?ulN3x7b372oDXLU2dbXgjNAjAmUjY5pUv9W0rbCneenL9GzJlwjKP0/Aho?=
+ =?iso-8859-1?Q?6fle3+zUY3iSDUb2ClX4trXPDHuLVixo91GLgAHph8rAw5u+E79H5lfm00?=
+ =?iso-8859-1?Q?YYRYlk4qSb7pHfjk6AGO3J7K5VXQunOYJ+OX8cfIu7g2S0pOKlCw/UrDYR?=
+ =?iso-8859-1?Q?2Wn5RKChWoZ6pTvcdJGRNhAfDDAxEJrnvAXfnLvYFd3GfluzoFYq/efqxq?=
+ =?iso-8859-1?Q?Hro6it/5U1yuz8YJq60aqGGSOrSlmEWORUgaEYamKl0Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR02MB9281.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?rb4i0NArcmv0OsoZP3zSFTqQiR9PUppKDHxuQEMBPK/ThRmy/sV6k7+fyB?=
+ =?iso-8859-1?Q?kZ0lB/JWXX4j+Ege2bBeNwfZGzUYaH6zHlbWyhtw9q1jhGqqqxhKbxsm2f?=
+ =?iso-8859-1?Q?ZQgfnJyLu9sRfShTKPfcQwHGilfz0b1ErbmV79GD5jDI3OA6I14HEQA8Iy?=
+ =?iso-8859-1?Q?6QbDCJAFhwsXJERl6XoZ4vZN7qWerFrKDuxb1grW8Jnu4r4VKgfcF39aAJ?=
+ =?iso-8859-1?Q?U+790Jiq3fxt9500PQ3OoFl4bnZK67uTl7ZXs0+/E5MQNJGjjPz8dEo4DI?=
+ =?iso-8859-1?Q?A8Hd12NnqHfhYchDllnmSUpUpIHnHypUuqZpX7u37sbewOlYSvhOB0V6OC?=
+ =?iso-8859-1?Q?3Vlnyvq+OS9zBR7JFeC+NLE7/dj0LRq97AbL/qk9VGipXADI0OZRBOPLmR?=
+ =?iso-8859-1?Q?C5NghQiMYz6nnpm6uZiCkjULQKb/8nsXoluO8d29SOf+SNf+v4v6sK3QVe?=
+ =?iso-8859-1?Q?OBIC0XDyFeQc8iCR80FtZSb1EjGAa37RknDpcNpxDVZnWQzL7c6Gsfcy9F?=
+ =?iso-8859-1?Q?rgOxZRPMyE0lrmHbYLbqjtcdZ7SOXaHbJzoDmLSHSwfg/OBJnCkhPTmC4W?=
+ =?iso-8859-1?Q?sjmYim23sunt5hhtVj8UAUF2qjmu/NzGJs6hmTZg4XF2hZy5zRKmLQZHP0?=
+ =?iso-8859-1?Q?NQ0LEVQH97k/TjgNf0ZqVnVkdeVZpBqD9MZ/VJzwBPh1YILD5osVfgfOhT?=
+ =?iso-8859-1?Q?uCWcck9b33s4grl0FAC66owAYU+luJRVJCqd7qI0GPBjcj/y12z0m1AERf?=
+ =?iso-8859-1?Q?eQIKRAKRF03ymicKMbCVf8ekHjwbz0YrMuo7zO4G/4GJlJevSXjcXIyQUI?=
+ =?iso-8859-1?Q?5Axe8PHEn9LnR7yY/ht7tBjuEyVC+FEsuGoH2tKoG1GwXaVBkoP3A+crBF?=
+ =?iso-8859-1?Q?WcWhiz+k5H6XGJ/Atfwo9BrB6d2JIGtCl+I3ie1mtDMDM9kcFY7hX2U2uO?=
+ =?iso-8859-1?Q?u2Jx8mcAXynyBAr4zvs38N6W7QJmQdKly702SIj/FSRMK/AdTdArYgfm4m?=
+ =?iso-8859-1?Q?y8PlQzdWko5Mdq+33W6ctrb7zF2BnCFyA8KWWaOuV0Vmh81K/COs3JMlF0?=
+ =?iso-8859-1?Q?MSAWTL7f6HrRCNhk+iDOmlimXU27ZXaihsq16QON/rG4D8tWFkJ6H5SNN4?=
+ =?iso-8859-1?Q?e9JPJMOZ0m5QXv55cuh9VXR9910CVEtkT+Qx9pNKRni/GZNIVav9NJfYAF?=
+ =?iso-8859-1?Q?k689RYJi++R4sHPWdZIYRb/RIrgMFcjbsnz3iWwUFuGAkmv5DsMOhNIfVG?=
+ =?iso-8859-1?Q?QOcKe+T1kWCSoKMo9KRp+FOAyUSGZyYKHt2jUt0RL49cwAnMPYUZq0WcP3?=
+ =?iso-8859-1?Q?Xny461FvFzi2Ch/Z5iRpLGVhTWa4JNZkORgbUsEiIFnUhTcAyXM609F4fs?=
+ =?iso-8859-1?Q?yLEoCuDwkVxq9ge7OytFeCx/m4gBpvrpnsQFAt4W4pTqH7LtNH16Wr096H?=
+ =?iso-8859-1?Q?UaGOYBSSD1OI4emsAAO4Wrgc9NLPnUn70ArtwErEaOH6LM2lY1RH/YnzKn?=
+ =?iso-8859-1?Q?pz+E94/ygUChAAv33O22jNY9leWK1mhLQsoAXrVj+LtykHRK5Z5n3qTf4G?=
+ =?iso-8859-1?Q?/em3o0MmPtaLGb6Ig0U5MooUNeOGWWobwVeOf2cU5VMN4HlC+qqlObclQh?=
+ =?iso-8859-1?Q?lpg+F7g5Ka5GY=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
-Date: Wed, 14 May 2025 11:40:15 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
- <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAWPR02MB9281.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bef213cc-c25c-4bbc-c821-08dd92f56dff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 14:41:36.6370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7Q/mKFE4WeszDkX1WantlO9+9iJrrgm9OYCtL6giOqF6oWSHAgMndighWj9vH5fc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9885
 
-
-
-> On 14 May 2025, at 10:57, Benno Lossin <lossin@kernel.org> wrote:
->=20
-> On Wed May 14, 2025 at 3:01 PM CEST, Daniel Almeida wrote:
->>> On 13 May 2025, at 17:01, Benno Lossin <lossin@kernel.org> wrote:
->>> On Tue May 13, 2025 at 5:44 PM CEST, Daniel Almeida wrote:
->>>> diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
->>>> new file mode 100644
->>>> index =
-0000000000000000000000000000000000000000..7b07b64f61fdd4a84ffb38e9b0f90830=
-d5291ab9
->>>> --- /dev/null
->>>> +++ b/rust/kernel/regulator.rs
->>>> @@ -0,0 +1,211 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +
->>>> +//! Regulator abstractions, providing a standard kernel interface =
-to control
->>>> +//! voltage and current regulators.
->>>> +//!
->>>> +//! The intention is to allow systems to dynamically control =
-regulator power
->>>> +//! output in order to save power and prolong battery life. This =
-applies to both
->>>> +//! voltage regulators (where voltage output is controllable) and =
-current sinks
->>>> +//! (where current limit is controllable).
->>>> +//!
->>>> +//! C header: =
-[`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/con=
-sumer.h)
->>>> +//!
->>>> +//! Regulators are modeled in Rust with two types: [`Regulator`] =
-and
->>>> +//! [`EnabledRegulator`].
->>>=20
->>> Would it make sense to store this in a generic variable acting as a =
-type
->>> state instead of using two different names? So:
->>>=20
->>>   pub struct Regulator<State: RegulatorState> { /* ... */ }
->>>=20
->>>   pub trait RegulatorState: private::Sealed {}
->>>=20
->>>   pub struct Enabled;
->>>   pub struct Disabled;
->>>=20
->>>   impl RegulatorState for Enabled {}
->>>   impl RegulatorState for Disabled {}
->>>=20
->>> And then one would use `Regulator<Enabled>` and =
-`Regulator<Disabled>`.
->>=20
->> This seems like just another way of doing the same thing.
->>=20
->> I have nothing against a typestate, it's an elegant solution really, =
-but so is
->> the current one. I'd say let's keep what we have unless there is =
-something
->> objectively better about a typestatethat makes it worthy to change =
-this.
->=20
-> I'd say it's cleaner and we already have some APIs that utilize type
-> states, so I'd prefer we use that where it makes sense.
->=20
-
-By the way, IIUC, regulator_disable() does not disable a regulator =
-necessarily.
-It just tells the system that you don't care about it being enabled =
-anymore. It can
-still remain on if there are other users.
-
-This means that Regulator<Disabled> is a misnomer.
-
-Also, the current solution relies on Regulator being a member of
-EnabledRegulator to keep the refcounts sane. I wonder how that is going =
-to work
-now that Regulator<Disabled> is obviously not a member of =
-Regulator<Enabled>, i.e.:
-
-impl Drop for Regulator<Enabled> {
- fn drop(&mut self) {
-  regulator_disable(); =20
- =20
-  // We now have to call this explicitly, because no one else will call =
-it for
-  // us.
-  regulator_put();
- }
-}
-
-impl Drop for Regulator<Disabled> {
- fn drop(&mut self) {
-  // We now have to repeat this in both destructors.
-  regulator_put(); =20
- }
-}
-
-Just to confirm: is that what you have in mind?
-
-=E2=80=94 Daniel=
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>=0A=
+Sent: Tuesday, May 13, 2025 21:50=0A=
+To: Johan Adolfsson; Lee Jones; Pavel Machek=0A=
+Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel=0A=
+Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct multi=
+_index=0A=
+=0A=
+...=0A=
+>> Maybe I'm missing something here - but how do i specify that a certain p=
+in on the driver IC is connected to a certain color of the LED.=0A=
+>> The devicetree looks like this:=0A=
+>> It seems the first number in multi_intensity seem to go to pin regardles=
+s of what multi_index says.=0A=
+=0A=
+>OK, indeed there is a problem. Let's continue in your patch thread.=0A=
+=0A=
+>>=0A=
+>>                       multi-led@0 {=0A=
+>>                               reg =3D <0x0>;=0A=
+>>                               color =3D <LED_COLOR_ID_RGB>;=0A=
+>>                               label =3D "led:rgb";=0A=
+>>                               function =3D "led";=0A=
+>>                               linux,default-trigger =3D "default-on";=0A=
+>>                               max-brightness =3D <255>;=0A=
+>>                               #address-cells =3D <1>;=0A=
+>>                               #size-cells =3D <0>;=0A=
+>>=0A=
+>>                               /* Need BLUE GREEN RED here or reg to give=
+ red green blue in multi_index! */=0A=
+>>                               led-0@0 {=0A=
+>>                                       color =3D <LED_COLOR_ID_RED>;=0A=
+>>                                       reg =3D <0>;=0A=
+>>                               };=0A=
+>>=0A=
+>>                               led-1@1 {=0A=
+>>                                       color =3D <LED_COLOR_ID_GREEN>;=0A=
+>>                                       reg =3D <1>;=0A=
+>>                               };=0A=
+>>=0A=
+>>                               led-2@2 {=0A=
+>>                                       color =3D <LED_COLOR_ID_BLUE>;=0A=
+>>                                       reg =3D <4>;=0A=
+>=0A=
+>This needs to match node-name[@unit-address], i.e. here 2.=0A=
+=0A=
+Sorry, my bad.=0A=
+I copied the version where I wanted to test my changes to address the comme=
+nt from Lee Jones and do error out instead of warn if the reg is out of ran=
+ge .=0A=
+>--=0A=
+>Best regards,=0A=
+>Jacek Anaszewski=0A=
+=0A=
+Best regards=0A=
+/Johan=0A=
+=0A=
+=0A=
