@@ -1,153 +1,281 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3EE1A3155;
-	Wed, 14 May 2025 10:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DA926FA77
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747217157; cv=none; b=exCqT1DxooBkah3zklhjxalN2zmZy009+H3TTsamd5LJa3w662z+fKyhSyAfCeQrm/6C22zsZkSZV0BM4nxXbxrodu8v6eQDH7wSlwWZ3dzcFpO1VF/5vBJ+Gf7bNEcFuej2hPIoIZn8DJtXDTcycQ3LsRamdNXWDbdmlHB99dc=
+	t=1747217267; cv=none; b=nKZKJ3iEfQF/AayguRz47poWmhzmBZCWi7Cdbb32KiuASozUJM+WvMsGf44hTvkAlfxufT+EE4tolx3f87CXozIYD8sf5u45li3IIwsvUgznzWQPNKvqUfB4kVS+qVyUbNxZ/zYnK2JqvnWs6cwnOkSYR0im7ARTl0/0OTk/XWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747217157; c=relaxed/simple;
-	bh=NYSmKEbAOdJG/SX+PS/JBDn7qXoAVnPYjv1kKaO6mBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sTAPtDuHU0l8lzytmDrI9oUCSOJjQdVA18yN4ZAz/A6mhRPYqaFukJghadRaGlxn+3RapaHAEM1xagK98IA91oJ/xss4BCUgmWEzYh5GIuENCO1q2bDN7LyUiBHKTq5YgTuAO71E92BVxJZsB/ZZ2fdB9Ebny53xCfrmnX2r4no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9TUSGOx; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747217267; c=relaxed/simple;
+	bh=FEat6LLCEzvwiX2TjuWW+9FR8W2ns0vfPg2MauexgeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbbMV5X1DvE7AqBeBaoDrQsGQ+uLwA6lCJVdcJs2vVuj5a8W0JwYLDfMQH+13qnSsf+pCfFc9udPf6fvbu2xuzhL21a2GfP+CoOdP5zUD/vpKJd/tq2Ed1P1bkPtbV57jBy/M8JUYOJhdLB5XIakQmSgNkFC5ew6pXf0pqpd7pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xB6JwS6o; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XjQ3tlpo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xB6JwS6o; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XjQ3tlpo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9TUSGOx"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e9021d2b5so868863e87.1;
-        Wed, 14 May 2025 03:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747217153; x=1747821953; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmdIq6qyH0eLEtriOCHpTWROy8Nurvm9ujMkcBHK6F0=;
-        b=l9TUSGOxCE/+f8LsPgSBPEEMCd6xZ8J1WVYEU/eo8HJH4k/8JoXJ1ytXyBcI6zI+xS
-         ydRuPlPcUztV2shDT8DgLFk81RquFANcPpYvK1L8eKWb1M8kj+QOoU+4LL3ubtVRC+MV
-         8qaVhpmYvDI8x3jTTlNAhCIBHWHZK11cCNgMgKkt+m9Rw4oHiWyKFm7zjMNVhXgE8+GN
-         7c1RP/4JAzdwNjUrOtJ0nunDw8cFg8tWAlIUwRq23xoNRE0oWxN+oRVRb0QSQA3FIGDD
-         kRpmRz7iAhhHavcu9xzxBtCIuNi3F231xa+eB/11ITKvj/Qeu1TTX8f7O7HBycegNH3D
-         aM8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747217153; x=1747821953;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pmdIq6qyH0eLEtriOCHpTWROy8Nurvm9ujMkcBHK6F0=;
-        b=hksGfJIwN/mX/j+g07vjqE4GgX/6VEllL4aHjUQfV/XqpuDVlL+gOxkC00FE37Ix2P
-         tLI+9CzL5fGb8cnkVi2x635G++LGa6oZFV+gGBuwdgdBOIqg7/9Ps3MVs/nMqrizxu9o
-         KQ1Erd+0XYifOhtGgnmdW3Kmu9i2cd2mSfRuPyBwxcSQ6ZSKe1uDmZyNM+2tLlquNpc8
-         8dkg7h8IUWVEFbtCSCCv0io8IP/ii0xlP6FfPI1KxuBAPghEDODYJDiDDPmY8Q/wBY2b
-         lDu/px2O4DJWn8O6puQGrp6YnheUiIgMPDoicFH1RCSZUXYBqzqwL4Q4O9kTSF7Gndfu
-         ngvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhXvqTr1b0qwKiPxt8yIAH3IjJkOCT8Va5uncG4IdAttfRjaUZdiQSzl1cFj1OHQAAZvBPARCw@vger.kernel.org, AJvYcCX2YfSPiZm6IIJ1eDsPajwu8W2CMW+CPQG6sEhXdTXDm7b1VnsWtvgxMd7P2k1zPkTGFjuJyp73GKIGKek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAULyFlmVqzZyovDllrF7Dt9ba+aXdtTAgqe1qnmoXEBorNka8
-	IptmK8g9DSXzKy+wkvXCJymiVtZ61bIy3bSxbXPBbeVldjpQ9wYa
-X-Gm-Gg: ASbGncs4Nwg/W3JdlR0P8XXpBIyzq9j0X3D0Yeg4M1ehMVfH4o5ghB/8eTKYSTfwj0f
-	aC58wEVJgEoagats2JnJeyBlLFG5Wvm5Ang82Gsv1S7I7BIureUVTXjgSZ9p1wH2x8Jl6DadNEI
-	R4DUwlVb2E+BJ2wvNoinP0V5Q0dB543TiiyvVCGdaWrIWDNQCrbRbiNqMBjPNxBLCleTwymYS7o
-	aHEYEXZxA/VSS0VpNN8/4Uj71cADp8JzUa1/ufvfd7SJzLmKwE1CM98jPvXr6bxunHnPeoACHyG
-	8vwUUI2Ouwf6/AXEHGNLGw95f6KymrOA7++FpEMRRUq4J2Ytb124LUfy9CszUWR/udMyUk55212
-	j
-X-Google-Smtp-Source: AGHT+IFAiosPT9P0KrMvz7v43+Z/+PsGFzGQEumyNwPQuzDEWCshn1lTLlSbn+SGS9f1mfQ9m7J4qw==
-X-Received: by 2002:a05:6512:3d86:b0:54b:117f:67a0 with SMTP id 2adb3069b0e04-550d0c0a508mr2681992e87.28.1747217153021;
-        Wed, 14 May 2025 03:05:53 -0700 (PDT)
-Received: from localhost.localdomain ([91.197.2.199])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c35b04bfsm18897081fa.113.2025.05.14.03.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 03:05:52 -0700 (PDT)
-From: Andrey Kriulin <kitotavrik.s@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	NeilBrown <neilb@suse.de>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] fs: minix: Fix handling of corrupted directories
-Date: Wed, 14 May 2025 13:05:31 +0300
-Message-ID: <20250514100536.23262-1-kitotavrik.s@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xB6JwS6o";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XjQ3tlpo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xB6JwS6o";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XjQ3tlpo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1535E21203;
+	Wed, 14 May 2025 10:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747217264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n456aI6jq0P1TSTlPKrDgnacHuDdChXTe65g3cUCZgU=;
+	b=xB6JwS6oLUMLaZZ80Djtm/gTvmQnvy5QGoicXi4Bi0kFWC3lZkLe6mM2nivoP2WQXkPoUm
+	3fEWTjImQ/nUg2+Xr8d2UOy/Ca61h4daRcivqi5OEh2Qb0vBNnYT0TxBprydfKmC/TJB7D
+	Of7JwdvQATJV2ISpa+Ea8fqGoKmquD0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747217264;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n456aI6jq0P1TSTlPKrDgnacHuDdChXTe65g3cUCZgU=;
+	b=XjQ3tlpo/TLsUkK9cDyTkHqw+/D+2HdB6AMBJyDWmEzMiqGcEo/76fqUhvw0mBps+boOe9
+	twxS+YFYPwsQZUAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=xB6JwS6o;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=XjQ3tlpo
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747217264; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n456aI6jq0P1TSTlPKrDgnacHuDdChXTe65g3cUCZgU=;
+	b=xB6JwS6oLUMLaZZ80Djtm/gTvmQnvy5QGoicXi4Bi0kFWC3lZkLe6mM2nivoP2WQXkPoUm
+	3fEWTjImQ/nUg2+Xr8d2UOy/Ca61h4daRcivqi5OEh2Qb0vBNnYT0TxBprydfKmC/TJB7D
+	Of7JwdvQATJV2ISpa+Ea8fqGoKmquD0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747217264;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n456aI6jq0P1TSTlPKrDgnacHuDdChXTe65g3cUCZgU=;
+	b=XjQ3tlpo/TLsUkK9cDyTkHqw+/D+2HdB6AMBJyDWmEzMiqGcEo/76fqUhvw0mBps+boOe9
+	twxS+YFYPwsQZUAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 09A4913306;
+	Wed, 14 May 2025 10:07:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JHRXAnBrJGi/OAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 14 May 2025 10:07:44 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B7B3BA0A02; Wed, 14 May 2025 12:07:35 +0200 (CEST)
+Date: Wed, 14 May 2025 12:07:35 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: tytso@mit.edu, jack@suse.cz, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+Subject: Re: [PATCH] jbd2: fix data-race and null-ptr-deref in
+ jbd2_journal_dirty_metadata()
+Message-ID: <ikdnwnux5ks25eqn5nbya6dpb2wrtsb22m57757ewdzd4qo6rx@e46o3ugl5wfa>
+References: <20250513170441.54658-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513170441.54658-1-aha310510@gmail.com>
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 1535E21203
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[de24c3fe3c4091051710];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.com:email]
+X-Rspamd-Action: no action
 
-If the directory is corrupted and the number of nlinks is less than 2
-(valid nlinks have at least 2), then when the directory is deleted, the
-minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-value.
+On Wed 14-05-25 02:04:41, Jeongjun Park wrote:
+> Since handle->h_transaction may be a NULL pointer, so we should change it
+> to call is_handle_aborted(handle) first before dereferencing it.
+> 
+> And the following data-race was reported in my fuzzer:
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in jbd2_journal_dirty_metadata / jbd2_journal_dirty_metadata
+> 
+> write to 0xffff888011024104 of 4 bytes by task 10881 on cpu 1:
+>  jbd2_journal_dirty_metadata+0x2a5/0x770 fs/jbd2/transaction.c:1556
+>  __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
+>  ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
+>  ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
+>  __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
+>  ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
+> ....
+> 
+> read to 0xffff888011024104 of 4 bytes by task 10880 on cpu 0:
+>  jbd2_journal_dirty_metadata+0xf2/0x770 fs/jbd2/transaction.c:1512
+>  __ext4_handle_dirty_metadata+0xe7/0x4b0 fs/ext4/ext4_jbd2.c:358
+>  ext4_do_update_inode fs/ext4/inode.c:5220 [inline]
+>  ext4_mark_iloc_dirty+0x32c/0xd50 fs/ext4/inode.c:5869
+>  __ext4_mark_inode_dirty+0xe1/0x450 fs/ext4/inode.c:6074
+>  ext4_dirty_inode+0x98/0xc0 fs/ext4/inode.c:6103
+> ....
+> 
+> value changed: 0x00000000 -> 0x00000001
+> ==================================================================
+> 
+> According to this crash report, there is a read/write data-race in
+> jh->b_modified.
+> 
+> This is because the b_state_lock is locked too late.
+> 
+> For some reason, jbd2_journal_dirty_metadata() has been written in a way
+> that it does not lock b_state_lock before checking jh->b_transaction.
 
-Make nlinks validity check for directory in minix_lookup.
+Yes and that is deliberate because for some buffers like bitmaps the
+contention (and cacheline bouncing) on the b_state_lock can be actually
+quite significant. See commit 6e06ae88edae ("jbd2: speedup
+jbd2_journal_dirty_metadata()") for a bit more description.
 
-Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
----
-v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
-<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
-directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
+> However, This makes the code that checks jh->b_transaction messy and
+> causes a data-race in jh->b_* variables. Since locking b_state_lock
+> earlier is not enough to significantly affect performance and most of the
+> functions defined in transaction.c lock b_state_lock before
+> reading/writing jh->b_*.
 
- fs/minix/inode.c | 16 ++++++++++++++++
- fs/minix/namei.c |  7 +------
- 2 files changed, 17 insertions(+), 6 deletions(-)
+Well, the code is written with the expectation that b_transaction, b_jlist,
+and b_modified fields can be changing underneath. Since this was
+implemented 10 years ago, we didn't really bother with properly annotating
+this but the code as is is safe. I agree the data_race() annotation for the
+b_modified check was missed when adding data_race() annotations 4 years
+ago so that should be fixed.
 
-diff --git a/fs/minix/inode.c b/fs/minix/inode.c
-index f007e389d5d2..d815397b8b0d 100644
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -517,6 +517,14 @@ static struct inode *V1_minix_iget(struct inode *inode)
- 		iget_failed(inode);
- 		return ERR_PTR(-ESTALE);
- 	}
-+	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
-+		printk("MINIX-fs: inode directory with corrupted number of links");
-+		if (!sb_rdonly(inode->i_sb)) {
-+			brelse(bh);
-+			iget_failed(inode);
-+			return ERR_PTR(-EUCLEAN);
-+		}
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
-@@ -555,6 +563,14 @@ static struct inode *V2_minix_iget(struct inode *inode)
- 		iget_failed(inode);
- 		return ERR_PTR(-ESTALE);
- 	}
-+	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
-+		printk("MINIX-fs: inode directory with corrupted number of links");
-+		if (!sb_rdonly(inode->i_sb)) {
-+			brelse(bh);
-+			iget_failed(inode);
-+			return ERR_PTR(-EUCLEAN);
-+		}
-+	}
- 	inode->i_mode = raw_inode->i_mode;
- 	i_uid_write(inode, raw_inode->i_uid);
- 	i_gid_write(inode, raw_inode->i_gid);
-diff --git a/fs/minix/namei.c b/fs/minix/namei.c
-index 5717a56fa01a..8938536d8d3c 100644
---- a/fs/minix/namei.c
-+++ b/fs/minix/namei.c
-@@ -28,13 +28,8 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
- 		return ERR_PTR(-ENAMETOOLONG);
- 
- 	ino = minix_inode_by_name(dentry);
--	if (ino) {
-+	if (ino)
- 		inode = minix_iget(dir->i_sb, ino);
--		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
--			iput(inode);
--			return ERR_PTR(-EIO);
--		}
--	}
- 	return d_splice_alias(inode, dentry);
- }
- 
+								Honza
+
+> Thereforce, I think it would be appropriate to modify 
+> jbd2_journal_dirty_metadata() to lock b_state_lock earlier as well.
+> 
+> Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
+> Fixes: 6e06ae88edae ("jbd2: speedup jbd2_journal_dirty_metadata()")
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+>  fs/jbd2/transaction.c | 49 +++++++++++++++----------------------------
+>  1 file changed, 17 insertions(+), 32 deletions(-)
+> 
+> diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+> index cbc4785462f5..7e6dbf37396f 100644
+> --- a/fs/jbd2/transaction.c
+> +++ b/fs/jbd2/transaction.c
+> @@ -1496,41 +1496,25 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+>  	jbd2_debug(5, "journal_head %p\n", jh);
+>  	JBUFFER_TRACE(jh, "entry");
+>  
+> -	/*
+> -	 * This and the following assertions are unreliable since we may see jh
+> -	 * in inconsistent state unless we grab bh_state lock. But this is
+> -	 * crucial to catch bugs so let's do a reliable check until the
+> -	 * lockless handling is fully proven.
+> -	 */
+> -	if (data_race(jh->b_transaction != transaction &&
+> -	    jh->b_next_transaction != transaction)) {
+> -		spin_lock(&jh->b_state_lock);
+> -		J_ASSERT_JH(jh, jh->b_transaction == transaction ||
+> -				jh->b_next_transaction == transaction);
+> -		spin_unlock(&jh->b_state_lock);
+> -	}
+> +	spin_lock(&jh->b_state_lock);
+> +
+> +	J_ASSERT_JH(jh, jh->b_transaction == transaction ||
+> +			jh->b_next_transaction == transaction);
+> +
+>  	if (jh->b_modified == 1) {
+>  		/* If it's in our transaction it must be in BJ_Metadata list. */
+> -		if (data_race(jh->b_transaction == transaction &&
+> -		    jh->b_jlist != BJ_Metadata)) {
+> -			spin_lock(&jh->b_state_lock);
+> -			if (jh->b_transaction == transaction &&
+> -			    jh->b_jlist != BJ_Metadata)
+> -				pr_err("JBD2: assertion failure: h_type=%u "
+> -				       "h_line_no=%u block_no=%llu jlist=%u\n",
+> -				       handle->h_type, handle->h_line_no,
+> -				       (unsigned long long) bh->b_blocknr,
+> -				       jh->b_jlist);
+> -			J_ASSERT_JH(jh, jh->b_transaction != transaction ||
+> -					jh->b_jlist == BJ_Metadata);
+> -			spin_unlock(&jh->b_state_lock);
+> -		}
+> -		goto out;
+> +		if (jh->b_transaction == transaction &&
+> +			jh->b_jlist != BJ_Metadata)
+> +			pr_err("JBD2: assertion failure: h_type=%u "
+> +			       "h_line_no=%u block_no=%llu jlist=%u\n",
+> +			       handle->h_type, handle->h_line_no,
+> +			       (unsigned long long) bh->b_blocknr,
+> +			       jh->b_jlist);
+> +		J_ASSERT_JH(jh, jh->b_transaction != transaction ||
+> +				jh->b_jlist == BJ_Metadata);
+> +		goto out_unlock_bh;
+>  	}
+>  
+> -	journal = transaction->t_journal;
+> -	spin_lock(&jh->b_state_lock);
+> -
+>  	if (is_handle_aborted(handle)) {
+>  		/*
+>  		 * Check journal aborting with @jh->b_state_lock locked,
+> @@ -1543,6 +1527,8 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+>  		goto out_unlock_bh;
+>  	}
+>  
+> +	journal = transaction->t_journal;
+> +
+>  	if (jh->b_modified == 0) {
+>  		/*
+>  		 * This buffer's got modified and becoming part
+> @@ -1628,7 +1614,6 @@ int jbd2_journal_dirty_metadata(handle_t *handle, struct buffer_head *bh)
+>  	spin_unlock(&journal->j_list_lock);
+>  out_unlock_bh:
+>  	spin_unlock(&jh->b_state_lock);
+> -out:
+>  	JBUFFER_TRACE(jh, "exit");
+>  	return ret;
+>  }
+> --
 -- 
-2.47.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
