@@ -1,123 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF3726AC3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CF91EA7D6;
+	Wed, 14 May 2025 22:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747261516; cv=none; b=TSzGQwDlQk/WiU8k7EBAorekxIB9y1M84G9csBukqErRxgbGU6QL/gXBfx9VeRUswuf1FvYw793N4lakZZXTfDRoQjETF/TylWrPqro5FIolsjGsCa/L6DS+HYwkjGlZZ2X9EfEFrmggnP6/RAvQih55fVJAoHrYXeyEzsvTmqA=
+	t=1747261535; cv=none; b=X5mYWK6RYXDieuG4OQ8hgV5gYPyDHn1MnoP+D755UxrJRNzLP5NZLshAezDMoauBYO0CLGHtZCsn3rEj/ax1gLTU+dvkXXzm0b2Lhdo5lhLgUYKgvtG7dWceBC4d4aOj6f0CzNfp/d2wMtp5jbFJbfgDQW4b/jJWgFggBlrW0ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747261516; c=relaxed/simple;
-	bh=0mhDVq8PmqKlmu4csYwz3TvRjSxaKgBaOMs+q2+IyDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ld9z0r7AxDeFIPEDXEeCiy8KT47662XDCf7l21g7rRwpOInVlBL5ih6JiuUweAvQlIOihpOvvFaAeAOmJ9Rju4fri6oY9lO0QxOkKkENV68wMzOr0JLZ9irMD9Agy2MsH7egoF+9bldRbANiCGzUn6U9JqqmDS/85uLktQV7WlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1uFKX6-0007tY-75; Thu, 15 May 2025 00:25:00 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH 3/3] drm/bridge: fsl-ldb: simplify device_node error handling
-Date: Thu, 15 May 2025 00:24:53 +0200
-Message-Id: <20250514222453.440915-4-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250514222453.440915-1-m.felsch@pengutronix.de>
-References: <20250514222453.440915-1-m.felsch@pengutronix.de>
+	s=arc-20240116; t=1747261535; c=relaxed/simple;
+	bh=kt76mW7EYpSqm4dp8S9Ts3jRLpbzTTIf4rdn4dOuRC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8eh9sEjEYpygs/MVbDC/mrbXP9Xw2M60h5lS0tZnl2RBXCtiuhhaB6iMq/6YfW2n6/ldIcxDmGaMK+l2+enwBeDjYP2UStyI7Tqk95MYn58wgRUXOM5I7CdfJBx/wWmc2/awjB0+ut+3uLf9EzK1SFhl9W8NicGq/jU4v7DIWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Y+CXRrsD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y+CXRrsD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9E06A40E01FA;
+	Wed, 14 May 2025 22:25:29 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 4vk0dmle8tFN; Wed, 14 May 2025 22:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747261523; bh=3GO3lxo4ve1H+NZkEhr/MG/9q7gpIWMyeb/o2QdI5LE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y+CXRrsDn0BX5+9rVv3rvbC/CowGAJPGSGof4vEUoXLo5GHosUuviTEJyaclitBb8
+	 oQPM8hyuLEhWaA78anc3PEpG+EBxAR8r53OWavJ0oyVSl6F2uxxkKPwsaYnd+60Tqm
+	 qkV0eES0Ec2ansXbvX4C/XBCrIqfoAEytKZ4SsNG4RpK3BWZmG4FXJtU1cfS0fiF6F
+	 VMKjah7ZyhAt6l9eNiKk63Lk97dwpcox3YpBtcqNjl26ink57Q7nUDtR9Q7qkmP+AX
+	 qNcqwUH8IRUbUDp2QKXkHKr4dLJ1lw7on0JR/2o4xLiYYUuba0ck589/7UOSGWorRG
+	 MvLnt7Wpwhkqf1cCSMBS2Z+mx2Jbhj8Qy6de8b3gB8jrYMCa9faXpOJEPsufoEFNq9
+	 BltQHF5dRaK9i9mRabH36mAAw6QRU1spH1ei/zGBzXic6ryTGF+/1ZdDn/slpr7HM1
+	 9XJ+2pddV/tctdNGWQvqy7ZbEeyWvWuTsJIXQ9gzKF2Jq+7X6psfWRcGO/rMuwH87x
+	 tC21Z1QoynriMYNLMvz4ioeMGSiFWGkw8SU5XwNCYfYJkf/G23LA0F42unkNovtsbY
+	 UJVssPOihlasjQG5tN0hCjsZdTvIbMHHyDP1LU5HE+JGF9Ac3WcA4kdJRKNsSCFuF5
+	 vq2CJW6it77rS98QnOvQPxuE=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 909C040E01ED;
+	Wed, 14 May 2025 22:25:13 +0000 (UTC)
+Date: Thu, 15 May 2025 00:25:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Suraj Jitindar Singh <surajjs@amazon.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/bugs: Don't warn when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Message-ID: <20250514222507.GKaCUYQ9TVadHl7zMv@fat_crate.local>
+References: <20250514220835.370700-1-surajjs@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250514220835.370700-1-surajjs@amazon.com>
 
-Make use of __free(device_node) to simplify the of_node_put() error
-handling paths. No functional changes.
+On Wed, May 14, 2025 at 03:08:35PM -0700, Suraj Jitindar Singh wrote:
+> -	if (x86_return_thunk != __x86_return_thunk)
+> +	/*
+> +	 * There can only be one return thunk enabled at a time, so issue a
+> +	 * warning when overwriting it. retbleed_return_thunk is a special case
+> +	 * which is safe to be overwritten with srso_return_thunk since it
+> +	 * provides a superset of the functionality and is handled correctly in
+> +	 * entry_untrain_ret().
+> +	 */
+> +	if ((x86_return_thunk != __x86_return_thunk) &&
+> +	    (thunk != srso_return_thunk ||
+> +	     x86_return_thunk != retbleed_return_thunk))
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/gpu/drm/bridge/fsl-ldb.c | 24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+Instead of making this an unreadable conditional, why don't we ...
 
-diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
-index e0a229c91953..cea9ddaa5e01 100644
---- a/drivers/gpu/drm/bridge/fsl-ldb.c
-+++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-@@ -287,8 +287,9 @@ static const struct drm_bridge_funcs funcs = {
- static int fsl_ldb_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *panel_node;
--	struct device_node *remote1, *remote2;
-+	struct device_node *panel_node __free(device_node) = NULL;
-+	struct device_node *remote1 __free(device_node) = NULL;
-+	struct device_node *remote2 __free(device_node) = NULL;
- 	struct drm_panel *panel;
- 	struct fsl_ldb *fsl_ldb;
- 	int dual_link;
-@@ -321,21 +322,16 @@ static int fsl_ldb_probe(struct platform_device *pdev)
- 	remote2 = of_graph_get_remote_node(dev->of_node, 2, 0);
- 	fsl_ldb->ch0_enabled = (remote1 != NULL);
- 	fsl_ldb->ch1_enabled = (remote2 != NULL);
--	panel_node = of_node_get(remote1 ? remote1 : remote2);
--	of_node_put(remote1);
--	of_node_put(remote2);
-+	panel_node = remote1 ? remote1 : remote2;
- 
--	if (!fsl_ldb->ch0_enabled && !fsl_ldb->ch1_enabled) {
--		of_node_put(panel_node);
-+	if (!fsl_ldb->ch0_enabled && !fsl_ldb->ch1_enabled)
- 		return dev_err_probe(dev, -ENXIO, "No panel node found");
--	}
- 
- 	dev_dbg(dev, "Using %s\n",
- 		fsl_ldb_is_dual(fsl_ldb) ? "dual-link mode" :
- 		fsl_ldb->ch0_enabled ? "channel 0" : "channel 1");
- 
- 	panel = of_drm_find_panel(panel_node);
--	of_node_put(panel_node);
- 	if (IS_ERR(panel))
- 		return dev_err_probe(dev, PTR_ERR(panel), "drm panel not found\n");
- 
-@@ -345,14 +341,12 @@ static int fsl_ldb_probe(struct platform_device *pdev)
- 				     "drm panel-bridge add failed\n");
- 
- 	if (fsl_ldb_is_dual(fsl_ldb)) {
--		struct device_node *port1, *port2;
-+		struct device_node *port1 __free(device_node) =
-+			of_graph_get_port_by_id(dev->of_node, 1);
-+		struct device_node *port2 __free(device_node) =
-+			of_graph_get_port_by_id(dev->of_node, 2);
- 
--		port1 = of_graph_get_port_by_id(dev->of_node, 1);
--		port2 = of_graph_get_port_by_id(dev->of_node, 2);
- 		dual_link = drm_of_lvds_get_dual_link_pixel_order(port1, port2);
--		of_node_put(port1);
--		of_node_put(port2);
--
- 		if (dual_link < 0)
- 			return dev_err_probe(dev, dual_link,
- 					     "Error getting dual link configuration\n");
+>  		pr_warn("x86/bugs: return thunk changed\n");
+
+... turn this into a
+
+	pr_info("set return thunk to: %ps\n", ...)
+
+and simply say which thunk was set?
+
 -- 
-2.39.5
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
