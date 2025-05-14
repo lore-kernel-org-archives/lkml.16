@@ -1,71 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9929B15C0
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308A525760;
+	Wed, 14 May 2025 00:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747182527; cv=none; b=n13Jp8Y6qyUAQ8W37qjRVWiHocdSt/dbRAG/6+BtSKkTjX+1SCICPNxgTwVuNw3Y7bhw+PYVRDz3T3DzJ3b6+cLUHFX5Fpl/yFbpE9dNMQ1BZde4pTNvOvzBHUUz48logylSUk9nvuK3HtnAK5KnYyUks0xEMYuBDY/uf2ZlAQM=
+	t=1747182593; cv=none; b=rsVuxnUDPrdHjJQwaCAQJ/mb3egM4xEZMLtJVQPeS+aDKXrud6xDITI04+u3TrrXhNnpuLVCYQjozqCoUyRZVvW23c2z2nxIJv8JrF0PxBwThWFCyaGvteQxo00yQjG2/+xFlaQ8uHQDSfvUuKJQxIAb1TIWk+6os0BwutPHSBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747182527; c=relaxed/simple;
-	bh=RJdTXy3O6fVGghc66PHeMpt+sTguOoLMO0trGavJx00=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n+YCjQheO/UmdWXj45ZQgV78akKVpQeSk3K8JtMWLGHnMP36WhCKqntab1rZzcKgq3jQjq04U5ZrUKsJY4VVlNdL3myaY8rqdG/8ARmuHlq//CeSHRc7ojkQ4dw8HRrWxouGXCoNBE9bUoHhK8ZnF0ZYEX9E2Xk4ErVydeNk6RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=slEYT9T6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747182593; c=relaxed/simple;
+	bh=/tWBXSqBsWK0/0++UUW/l22Ugc9piDNSl+WPBk5asaM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pXrPyNcD9DRkb+/eNTdhFBNZOMRsiY9CpBVLoFNBI0rDyqweN3YQLzbw6DjQ6ZX51cc+eqlM8nDEdxERySvvZ6AXOXBq6NhQJ6WyQCp2tJrXX4tzVPqEp5V7BfB3y95pBIimKLFjFMn0kjWkNzQ2wCX/kneGALcvTM6XlvY3Sy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyFI1H6O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="slEYT9T6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4731C4CEE4;
-	Wed, 14 May 2025 00:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747182526;
-	bh=RJdTXy3O6fVGghc66PHeMpt+sTguOoLMO0trGavJx00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=slEYT9T6viA7pHeeXFxxYNy2KlvNOtxKraIFWbhM/v8JSx93mKp5yf5XuAtLO1/tJ
-	 cX7rMJPMQrwD0MwN2a1GRXs4EkZC3cbMIWHC5DqvbgWIq+q40Y2vuPQnFVJVcKH8CG
-	 BiKylFeFwuKfuusrAbAuK7hXShYtbjd4Csq9kNX8=
-Date: Tue, 13 May 2025 17:28:45 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Nitesh Shetty <nj.shetty@samsung.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>,
- Christian Brauner <brauner@kernel.org>, Keith Busch <kbusch@kernel.org>,
- gost.dev@samsung.com, nitheshshetty@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iov_iter: Use iov_offset for length calculation in
- iov_iter_aligned_bvec
-Message-Id: <20250513172845.48d1bf39307a543d4a36a1ed@linux-foundation.org>
-In-Reply-To: <20250428095849.11709-1-nj.shetty@samsung.com>
-References: <CGME20250428100738epcas5p3eb82b4ea94b229634f9319d23d7d7e14@epcas5p3.samsung.com>
-	<20250428095849.11709-1-nj.shetty@samsung.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyFI1H6O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5A9C4CEE4;
+	Wed, 14 May 2025 00:29:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747182592;
+	bh=/tWBXSqBsWK0/0++UUW/l22Ugc9piDNSl+WPBk5asaM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=tyFI1H6OV0ovpBXd7X9NKQ/k0APzXbrdWfs3DrUtEn9drb1cntrWu/UGcLzIxTNnt
+	 VYSKiLq7iJNCj7dGUVRJ7Ih9Y8GdCILgtJbsOeUBmA8VYztqKUMSNcXe7UMTe5Ly2F
+	 ga+EFitGAhiHDXCNB46zZhmlp/89HoMpUWWHIs7TMkdqlwjxwtT8qvLyR/BtWQeqP/
+	 EpF0uWdVHZpsUCLvwhmIawS7fPj55/xinSbiywnO5hmWsIF5NvepaWs2T082ld2XFw
+	 ubOOQkEPntr172a2/hFcrjf7X2BCpcsnwf6tAcY0N7eWy/Jwf7PKJqJw4fcf14Ggoz
+	 tN30NfM3NsStA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 341AD380DBE8;
+	Wed, 14 May 2025 00:30:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] qlcnic: fix memory leak in
+ qlcnic_sriov_channel_cfg_cmd()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174718263001.1832687.7775702578018906906.git-patchwork-notify@kernel.org>
+Date: Wed, 14 May 2025 00:30:30 +0000
+References: <20250512044829.36400-1-abdun.nihaal@gmail.com>
+In-Reply-To: <20250512044829.36400-1-abdun.nihaal@gmail.com>
+To: Abdun Nihaal <abdun.nihaal@gmail.com>
+Cc: shshaikh@marvell.com, horms@kernel.org, manishc@marvell.com,
+ GR-Linux-NIC-Dev@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ sucheta.chakraborty@qlogic.com, rajesh.borundia@qlogic.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, 28 Apr 2025 15:28:48 +0530 Nitesh Shetty <nj.shetty@samsung.com> wrote:
+Hello:
 
-> If iov_offset is non-zero, then we need to consider iov_offset in length
-> calculation, otherwise we might pass smaller IOs such as 512 bytes, in
-> below scenario[1].
-> This issue is reproducible using lib-uring test/fixed-seg.c application
-> with fixed buffer on a 512 LBA formatted device.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 12 May 2025 10:18:27 +0530 you wrote:
+> In one of the error paths in qlcnic_sriov_channel_cfg_cmd(), the memory
+> allocated in qlcnic_sriov_alloc_bc_mbx_args() for mailbox arguments is
+> not freed. Fix that by jumping to the error path that frees them, by
+> calling qlcnic_free_mbx_args(). This was found using static analysis.
 > 
-> [1]
-> At present we pass the alignment check,
-> for 512 LBA formatted devices, len_mask = 511
-> when IO is smaller, i->count = 512
-> has an offset, i->io_offset = 3584
-> with bvec values, bvec->bv_offset = 256, bvec->bv_len = 3840.
-> In short, the first 256 bytes are in the current page,
-> next 256 bytes are in the another page.
-> Ideally we expect to fail the IO.
+> Fixes: f197a7aa6288 ("qlcnic: VF-PF communication channel implementation")
+> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+> 
+> [...]
 
-Thanks.  Can you please send us a description of the userspace-visible
-effects of this issue?  That will help others to determine whether a
--stable backport is desirable and it will be helpful to people who are
-wondering whether this patch will fix an issue they are experiencing.
+Here is the summary with links:
+  - [net,v2] qlcnic: fix memory leak in qlcnic_sriov_channel_cfg_cmd()
+    https://git.kernel.org/netdev/net/c/9d8a99c5a7c7
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
