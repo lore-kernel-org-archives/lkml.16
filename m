@@ -1,98 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E9A1E04BD;
-	Wed, 14 May 2025 09:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AFB15199A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747213939; cv=none; b=tstAbT6uV/W7sycMSj2yHnAH9PfhveFn7pV6XWgi8vYb1Cv3m+1rv0UJh2/CvBSQKtJtUgTAOywge2tX7Vg/V5Z7y0G+2SHzXMk9mxAQC7vhk8/R5GTKolI01srwOJ9vUiH4zLt6rH2AErXmR3yRPLlUgdMWbAlzT+daebB9rJE=
+	t=1747214013; cv=none; b=LqO82c6dgiSHR7DNv04zvveJxWBbJmtrDh+Efslq2NNQmxP2SOY6U/PAZ5c1ncvNxggYwhNE0jfG0Y02jXNNO7HbR2sedH3krBNYdTKjBUnsXnD+JCs2KtA5QH8jH7PVIYl71hVeTrWjBrBKLHy0MrkdXLzzmtHV5WSMJQubpQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747213939; c=relaxed/simple;
-	bh=hU2OlZFgidacH6mqtYbQqCg+lm4nvVeVYSGqJE5uNSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+yCFbbFMFFSbIF89GEBkAwPd9qmaMzLIgUzuob249qitY90ACQdbrUtiTnXKOcV5OD/sFe+vOgM1nGlyuQkEZhDCk7/HgsbqMzUcHuFT6mcIpmFDVTKaT3yB+4P6wBAt+u2xT9fAOLsZlfrwYBqORG2eoyvBfsLDHZpTXZFhSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtqkZjSl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747214013; c=relaxed/simple;
+	bh=cFeVRe+A70sYpv8Ge9aAo11X2NPgN11proufQ2VgVNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sPB/wX2C/iwIrTZPBzhVk9pPSKdO2LOttuAQ/Nm2mlFV6OD3mhAznaf5TK8uPCqFOjCu6fWt02+5ipkDSPi7q2zZTFeVxEr2B7SNhLA//ulqwTCcJa86wj85/TL3MQqn2Cer9u5HMwx74UIqY8bmv7kUnInJ3Zsh2mZdCfOb/M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bEl1Gf5v; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nwvSBOrm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Cq72lhzG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tCmuaFQg; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtqkZjSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B2AC4CEEB;
-	Wed, 14 May 2025 09:12:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747213939;
-	bh=hU2OlZFgidacH6mqtYbQqCg+lm4nvVeVYSGqJE5uNSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TtqkZjSlnrz/6Sl0DZD8iGpy2ooUOZrc+aYsOM4cD4fwuLHLOAehLL5uSNAN4VCrA
-	 4iNcPMX67bYdH3Ih9hVIbi9VJo+2Ujd30f8m8D0VP82q2tkwfXoNDChXHrEk3wgWPr
-	 TRLaqjZsIdQeHc77MmAY1pu4uExjccOUleZJ2ByVHEQwwn8r5pnUbklsRI1zgD86Xs
-	 VQi76r/xX2wnTKt/jYOD4QNYixDwhOIluHqVT8YGeXy+8a/GLJ/jS0hfjUSpuVwqOd
-	 k5MSomCZyWPif0s9/ybVZD45nHgm4anMUq/N5NJstN1ebmuYNasCIJDbejrnvciUEX
-	 Gkbfckhqo11UQ==
-Date: Wed, 14 May 2025 11:12:14 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Zhang Yi <zhangyi@everest-semi.com>
-Cc: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-	perex@perex.cz, krzk+dt@kernel.org,
-	amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
-Subject: Re: [RESEND v7 0/2] ASoC: codecs: add support for ES8389
-Message-ID: <aCRebl_L2db3ZJsj@finisterre.sirena.org.uk>
-References: <20250514090257.34585-1-zhangyi@everest-semi.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bEl1Gf5v";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nwvSBOrm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Cq72lhzG";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tCmuaFQg"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 619AF1F455;
+	Wed, 14 May 2025 09:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747214009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJzDrZLzl0GAfPyXpLtIqKtYKjkB62YGWcSeN006vHk=;
+	b=bEl1Gf5vMzoW9w/RxKz7jsH1lSM2aHfdI5U/pXt3hgqp1KefKLXMTlsA13FPuvDCQWbaxa
+	BL47D6iLzqOGwpP8T2ElMsRyscv2wU7zvur0Uwtp3XElvuU8gxCPJEXUGnGp29Dz8FWMh+
+	Ep+nHRDcoByE9x5uBGUfGVO/Ehsu81w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747214009;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJzDrZLzl0GAfPyXpLtIqKtYKjkB62YGWcSeN006vHk=;
+	b=nwvSBOrmxl/LGpG5yITjUvoH8OxYyE+rUnKD3ugEpQfzsFRhA5f2ccdSDLdoAR2OtW3no2
+	dGvU5PgK4fqdRgAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Cq72lhzG;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=tCmuaFQg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747214008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJzDrZLzl0GAfPyXpLtIqKtYKjkB62YGWcSeN006vHk=;
+	b=Cq72lhzGbBW2QBWBijcCbYFFzRnKmRnDPomsIRwrLGtBjNfqFjavbOPNuQsv/HhNBKL+49
+	oRvgFR4RZlBTyeojT8a9rBpar/Ues7wYdSjZM6cPTSIfUYbyOD4eEsKB0cj+QuHBe69KX1
+	9iAeTXraf0CKhxyucl/PRkubTfH/moA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747214008;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJzDrZLzl0GAfPyXpLtIqKtYKjkB62YGWcSeN006vHk=;
+	b=tCmuaFQg24TDWQ/gg5VCK6pSMVIlUoOElC66m8lfe8VgK7I3/fJZI5WJi9A/Wey4o5d5jQ
+	u0NmFuTgk9u7vlAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3AD50137E8;
+	Wed, 14 May 2025 09:13:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mlXdDLheJGgAJAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 14 May 2025 09:13:28 +0000
+Message-ID: <8e13926d-b685-4802-a207-ade2001cb657@suse.cz>
+Date: Wed, 14 May 2025 11:13:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="waxfeb911tkDjUUl"
-Content-Disposition: inline
-In-Reply-To: <20250514090257.34585-1-zhangyi@everest-semi.com>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: remove WARN_ON_ONCE() in file_has_valid_mmap_hooks()
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20250514084024.29148-1-lorenzo.stoakes@oracle.com>
+ <357de3b3-6f70-49c4-87d4-f6e38e7bec11@redhat.com>
+ <f7dddb21-25cb-4de4-8c6e-d588dbc8a7c5@lucifer.local>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <f7dddb21-25cb-4de4-8c6e-d588dbc8a7c5@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 619AF1F455
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
 
+On 5/14/25 10:56, Lorenzo Stoakes wrote:
+>> Fixes: c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback")
 
---waxfeb911tkDjUUl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah yeah I missed there wasn't one.
 
-On Wed, May 14, 2025 at 05:02:57PM +0800, Zhang Yi wrote:
+> Is it worth having a fixes tag for something not upstream? This is why I
+> excluded that. I feel like it's maybe more misleading when the commit hashes are
+> ephemeral in a certain branch?
 
-> > Applying: ASoC: codecs: add support for ES8389
-> > error: sha1 information is lacking or useless (sound/soc/codecs/Kconfig).
-> > error: could not build fake ancestor
-> > Patch failed at 0001 ASoC: codecs: add support for ES8389
+Yeah it can be useful, in case the fixed commit gets backported somewhere,
+tools can warn that there's a follow up fix. As mm-stable hashes should not
+be ephemeral, then this should remain valid (and if there's a rebase for
+some reason then the fix could be squashed).
 
-> I'm confused as to why this happened.
-> I made the patch based on the following branch
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/?h=next-20250513
+>>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+> 
+> Thanks!
+> 
+>>
+>> --
+>> Cheers,
+>>
+>> David / dhildenb
+>>
 
-That's not my tree, that's linux-next.  MAINTAINERS shows:
-
-SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEMENT (ASoC)
-M:      Liam Girdwood <lgirdwood@gmail.com>
-M:      Mark Brown <broonie@kernel.org>
-L:      linux-sound@vger.kernel.org
-S:      Supported
-W:      http://alsa-project.org/main/index.php/ASoC
-T:      git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
-
-and note that above git is saying it's not got a useful SHA1 in your
-patch so either there's a formatting issue or it's not quite -next (the
-repo I apply to has -next so would see -next commits).  For things
-targetting 6.16 you want for-6.16.
-
---waxfeb911tkDjUUl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkXm0ACgkQJNaLcl1U
-h9BMMAf6A6b2CHOuIDWn53GFuWNZsPvP4hNSexS8K/i2/GjQTRwc4fAkxzdhMOgY
-qAuYJqxMqTh4OUzDn+Z7RILcoZfHvUYi4rrEJ8EaZqabT1el6a1uPMaKbY/tn40h
-z46NRr/gbOv3yg98BjGYjvhgOuGW1nIdU5ZFk2rPqU67+6OpJmcuFGVRlHo0q3JE
-Ujj6k8HNQMtPuqPkU7HC6aGseXCd73TNilYiKB85gln/rbznhksFmOp9YgYfFxL3
-DDvMTZhgbvT0wsfhFw8aidC+F0uNWHiEGp+Jy/W54b2nlVqqjuPfSeWaZP0qxU/7
-Ks4A5PSvkYXCXDcUqad5eCRxLnFXtg==
-=nIwU
------END PGP SIGNATURE-----
-
---waxfeb911tkDjUUl--
