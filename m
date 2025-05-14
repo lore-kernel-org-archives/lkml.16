@@ -1,53 +1,53 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF9128314E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD22E283FE0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747244642; cv=none; b=YhUVq8XUAU8X2yHpQdEzE0f3Wdc4LKhNQipQW9SYQFv0PyXlXMgRh6fIPKwAekZ9gGkucz0NhvZCSJmdm6mvzlsP/ZHbF5CLD6lxf+WidQC2I4c1dx9W9yAeTuHADqhvUGnf54JAbZ4FVlH6niAO0iasSSkkkUGjFxeIkqTe7ac=
+	t=1747244644; cv=none; b=uOLmQp0Gqm6rq7t2Yw8Wa8vsYCW6ACKqZuyoxSWmp9AAGvS0Jq3iVjkkwOTco2KkfdFhXP5EpbYHm3gONXYNWIDvd+qjYZvG1hL0DCSc/M+bXPfRomHMkSYCZaX3VAzjxCqSj8w2GuqodICw5XjXheFa0QOkDIPIm/vS+QrUprA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747244642; c=relaxed/simple;
-	bh=mVrD8G0mEVud+xrEngrBvbLdJt6fvh89BZud7f0K+CU=;
+	s=arc-20240116; t=1747244644; c=relaxed/simple;
+	bh=r4eQVxCCQ3NGsGM9bJXrqNCo0KJxcgbpHM71Yu/owQg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DW9B3rOJ1Vtehl9gmtmfTdSAvD0WwEtNUdeOZvkkQtM+KLRGe7iXDO7OMOwYgBMu4ZFWOLUv0ApJFWEphjpT99+tgGtE4uBRbmr2cMarY8s5TvZLzcWXHQLLcUfTt2Wb+RsGvZ3XNBlidoT7amaq+K/6VTlBib9IQ76++fV5fHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CxJJ2Tlw; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=g8NxiiQBuZbPb6N2M5iJ2F+GdIbj9QmDbGBerJRQ+62mNdMnZKi0JBz+v+4HEDz9nSHgIe9SfyYZumqSOyECqOBGQoe30UkB8HA6t8D0/nCL+IaLtJewoAjHDvssUMU/kaiV8VSFjNGiK64uxAEMEy00Luk909jtuo9tLTxpowY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uEUufJG6; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CxJJ2Tlw"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cfda30a3cso345145e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:44:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEUufJG6"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-441c96c1977so596055e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747244639; x=1747849439; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747244641; x=1747849441; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tXVJMsufZ9sm0rGmcq7nqIrA1daerFrHzMfPhoL+63A=;
-        b=CxJJ2TlwvY7HQgFpVM6QXrVPonKnB6U3LjWS5GocZ6CD2A5468WSt2irMySx3A1Giz
-         U9480QcdIeNsokDdxgyvO7btCUrFh7ZFCRXSRlUegWMIeR9dI/eAFHlNXkDfL+BBCsID
-         70xUE73FZDuQDQFlSf//60oF8GNDGyHJhKseAh3G+YyJTH6kQyH3cTVlaood8PbiS7Id
-         wQyKoGzDJ00Q+hT1dRkZNiaETonuLAuNigyapVUU+xWcSXe4gDeQm2mrhTM6KHfgWHrc
-         UwK9MEUllPWIRjEwUN+Y0Cn1hNW/Q6vEt2JrRhH6vdCdlQuNhmzmipXDEPHr/FFUE5oM
-         Sl0Q==
+        bh=Lr489qzcXalsUK5OJ8OM0VMNZiYyGTMtXZ1AW7+fvJI=;
+        b=uEUufJG6MyG/tZ25duEvJs94ByyQZT5jA1mrkffH4n+Tr7Ubojr9PClwVctTWB9z2P
+         uWqZFSr7ii8LuiP+sChSjsMMskLAxS1Rx2GM+0Km/1dh+Y11puMtuCfSyYEh6t5w+pMq
+         YF95QpMxg35hWngVSVu3kLv4cOC7nR7OYq61o55kkhPu+6797jiPVsdhxAQVrTy+6sOh
+         24J+li/GgAmSIPzP0OM228kyYiZbNqF5o1mNHt+6fqyOUYUtdBYZ08OZT4OWMOdPVKex
+         sQH3KnTgbZBawK0jFkIumiD/Aa00nodPvKK38nEw6dI1pDRNs/oMY47J/jGZROg4Pb5x
+         eUWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747244639; x=1747849439;
+        d=1e100.net; s=20230601; t=1747244641; x=1747849441;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tXVJMsufZ9sm0rGmcq7nqIrA1daerFrHzMfPhoL+63A=;
-        b=VsCzgZe1OUYJYfqCqjgLz7YwfMJ7S/XIoH/rLx9WOspZyCXscrZ2dvsS/cUL4QzRAV
-         dnGzFl8TKr+Hf/VxsXpMlpHKuKJa242GTNq2MSCbjz/xxD6XNhltAks8wILnTuafJy0i
-         EDNdLxH+dFxh1rOLm2z9FklnV5Pn7hOfBQnRmdmqbAqF3xLxeu+UmV/STyBrdo7C5BUm
-         QOZMdqkOfhPr5lpoL495bQvkGh2CDVauluIqeKpIqOdzo1hLD7XH+i2iG2MlMY8CeQgW
-         r8UfuL8c9m6ZB1g5GOxbNboZOmPaWVmA82wttPlVR5VZgo0yMdclxJMihKx9v4VXtmJs
-         fsHw==
-X-Gm-Message-State: AOJu0Yx59rBiX2jS/LqHNOR59Ug/IL6W+GjZis19OXQ5vnj6Ysk21x0P
-	GjOBOuaQ43uE/29GBjm63spcbg8wKvuQVJ0qjUiim3Kb8/ZoPhQvwIEskTzdzRbZ6KMNTg==
-X-Google-Smtp-Source: AGHT+IEFMJweCFn/YJy00TUveKZvloJ8ozZW7ocyXdHKJvi0QMeGWaS9uMuGA5J4Ptlhdx+EEwEvRi9t
-X-Received: from wmrn6.prod.google.com ([2002:a05:600c:5006:b0:43c:fe64:2de3])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1e84:b0:43c:e7a7:1e76
- with SMTP id 5b1f17b1804b1-442f20b8554mr32240165e9.1.1747244639223; Wed, 14
- May 2025 10:43:59 -0700 (PDT)
-Date: Wed, 14 May 2025 19:43:42 +0200
+        bh=Lr489qzcXalsUK5OJ8OM0VMNZiYyGTMtXZ1AW7+fvJI=;
+        b=WuUquP5N7AD2boWcp3nVlPgIGF4AAqn1w9y7Rz/U+1YFPokISCTUFMoSa/MmBoDpXh
+         Bb2UCZXH8DHK0C3fvTyoBuXHsL4ThKQnUlGKEmUSvMZZIdjPfyJi7pUHAMeNFRVerBFy
+         qXGI2S3hJ+UdlHMVuH5Wr67R/wW0Bv/yEc/tv7821eA8Pclf+gAyfWC/OI0KeyC83dBh
+         Y/JtnlSY8zc7aauwPmfqELQB4csEFvjwojmFmvUSqesQeTnQoJ2qSW9E9MS/M4nmlK3A
+         eqJl1Q2M3unTwXGe//EBB/f5+015apOsYsUEovlxF8DeBcLPaAEjqXKJhXsPmE1A4yNw
+         PzcQ==
+X-Gm-Message-State: AOJu0YzlviT4hB744iBbvvwhwBY6vUuJoTin/hyKqHJ/76UT9Wz/2JTf
+	yGB3jJka1OENqdOa4MX2sih5C1KPb/M2bEmkKyv9oHdwv8RPcXtNb7OjyVf7DZVYOuNxIw==
+X-Google-Smtp-Source: AGHT+IF4eQ+ydqWoNEayJUroHoQxAkXTja0NASjKqMSbnY/vDFIWy+Z3Ik1V29mozN3Vprxr/BZDW0of
+X-Received: from wmbes6.prod.google.com ([2002:a05:600c:8106:b0:43d:9035:df36])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3e88:b0:43c:ec28:d31b
+ with SMTP id 5b1f17b1804b1-442f20db116mr51865765e9.10.1747244641338; Wed, 14
+ May 2025 10:44:01 -0700 (PDT)
+Date: Wed, 14 May 2025 19:43:43 +0200
 In-Reply-To: <20250514174339.1834871-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,14 +57,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250514174339.1834871-9-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5541; i=ardb@kernel.org;
- h=from:subject; bh=5U5zQ0g4Nylx2meOob6iW9ucS95iuPh4XIaL8oIC4Co=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPlWuD06w/y06a7Tpn6tO6j+rPwRDlL+xfXBFZv+6jOu
- tKxdW9CRykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZhIBxfDP4OTO6NSUk0c1NZu
- E5HaJNtptfjfmibztg1O+ilpqgrK8xj+B4Qt7urwXH1sys6X8fMMBBJ92Rf8SeuPdC7fuORk58p PPAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4131; i=ardb@kernel.org;
+ h=from:subject; bh=x0gdcnYhqzj5S3CKFvtpWSVou+0kjuvQshTcS6vWwRw=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPlWtCHRjOVN3Oe9CUE+qgfYqgVFDYN5/fMOJG39Q1XP
+ 8tvod8dpSwMYhwMsmKKLAKz/77beXqiVK3zLFmYOaxMIEMYuDgFYCIyPxgZJr5t23bkHI+e4L/g
+ /Uyb7zvXZkQffX2hPkDyibaNZsRqEUaGu6n26yx+vJ27fmLn2eryZUYT6pUyp/6Y413hmjlb0/I xCwA=
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250514174339.1834871-11-ardb+git@google.com>
-Subject: [RFC PATCH 2/7] efi/runtime: Return success/failure from arch_efi_call_virt_setup()
+Message-ID: <20250514174339.1834871-12-ardb+git@google.com>
+Subject: [RFC PATCH 3/7] efi/runtime: Deal with arch_efi_call_virt_setup()
+ returning failure
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
@@ -74,160 +75,122 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Permit the arch glue to signal failure from arch_efi_call_virt_setup().
-This permits the use of sleeping locks in the call wrappers, and this
-will allow EFI runtime services to be invoked without the need for
-disabling preemption.
+Deal with arch_efi_call_virt_setup() returning failure, by giving up and
+returning an appropriate error code to the caller.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm/include/asm/efi.h           | 2 +-
- arch/arm64/include/asm/efi.h         | 2 +-
- arch/arm64/kernel/efi.c              | 3 ++-
- arch/loongarch/include/asm/efi.h     | 2 +-
- arch/riscv/include/asm/efi.h         | 2 +-
- arch/x86/include/asm/efi.h           | 2 +-
- arch/x86/platform/efi/efi_32.c       | 3 ++-
- arch/x86/platform/efi/efi_64.c       | 3 ++-
- drivers/firmware/efi/riscv-runtime.c | 3 ++-
- 9 files changed, 13 insertions(+), 9 deletions(-)
+ arch/x86/platform/uv/bios_uv.c          |  3 ++-
+ drivers/firmware/efi/runtime-wrappers.c | 20 +++++++++++++-------
+ include/linux/efi.h                     |  8 ++++----
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/include/asm/efi.h b/arch/arm/include/asm/efi.h
-index e408399d5f0e..0809a69bb579 100644
---- a/arch/arm/include/asm/efi.h
-+++ b/arch/arm/include/asm/efi.h
-@@ -23,7 +23,7 @@ void arm_efi_init(void);
- int efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md);
- int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md, bool);
+diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
+index bf31af3d32d6..a442bbe5b1c2 100644
+--- a/arch/x86/platform/uv/bios_uv.c
++++ b/arch/x86/platform/uv/bios_uv.c
+@@ -32,7 +32,8 @@ static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
+ 		 */
+ 		return BIOS_STATUS_UNIMPLEMENTED;
  
--#define arch_efi_call_virt_setup()	efi_virtmap_load()
-+#define arch_efi_call_virt_setup()	(efi_virtmap_load(), true)
- #define arch_efi_call_virt_teardown()	efi_virtmap_unload()
+-	ret = efi_call_virt_pointer(tab, function, (u64)which, a1, a2, a3, a4, a5);
++	ret = efi_call_virt_pointer(tab, function, BIOS_STATUS_UNIMPLEMENTED,
++				    (u64)which, a1, a2, a3, a4, a5);
  
- #ifdef CONFIG_CPU_TTBR0_PAN
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index bcd5622aa096..decf87777f57 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -37,7 +37,7 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md,
- extern u64 *efi_rt_stack_top;
- efi_status_t __efi_rt_asm_wrapper(void *, const char *, ...);
- 
--void arch_efi_call_virt_setup(void);
-+bool arch_efi_call_virt_setup(void);
- void arch_efi_call_virt_teardown(void);
- 
- /*
-diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-index 250e9d7c08a7..44ad5e759af4 100644
---- a/arch/arm64/kernel/efi.c
-+++ b/arch/arm64/kernel/efi.c
-@@ -166,11 +166,12 @@ asmlinkage efi_status_t efi_handle_corrupted_x18(efi_status_t s, const char *f)
- 
- static DEFINE_RAW_SPINLOCK(efi_rt_lock);
- 
--void arch_efi_call_virt_setup(void)
-+bool arch_efi_call_virt_setup(void)
- {
- 	efi_virtmap_load();
- 	raw_spin_lock(&efi_rt_lock);
- 	__efi_fpsimd_begin();
-+	return true;
+ 	return ret;
  }
+diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+index 708b777857d3..82a27b414485 100644
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -219,7 +219,10 @@ static void __nocfi efi_call_rts(struct work_struct *work)
+ 	efi_status_t status = EFI_NOT_FOUND;
+ 	unsigned long flags;
  
- void arch_efi_call_virt_teardown(void)
-diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
-index eddc8e79b3fa..84cf2151123f 100644
---- a/arch/loongarch/include/asm/efi.h
-+++ b/arch/loongarch/include/asm/efi.h
-@@ -14,7 +14,7 @@ void efifb_setup_from_dmi(struct screen_info *si, const char *opt);
+-	arch_efi_call_virt_setup();
++	if (!arch_efi_call_virt_setup()) {
++		status = EFI_NOT_READY;
++		goto out;
++	}
+ 	flags = efi_call_virt_save_flags();
  
- #define ARCH_EFI_IRQ_FLAGS_MASK  0x00000004  /* Bit 2: CSR.CRMD.IE */
+ 	switch (efi_rts_work.efi_rts_id) {
+@@ -308,6 +311,7 @@ static void __nocfi efi_call_rts(struct work_struct *work)
+ 	efi_call_virt_check_flags(flags, efi_rts_work.caller);
+ 	arch_efi_call_virt_teardown();
  
--#define arch_efi_call_virt_setup()
-+#define arch_efi_call_virt_setup()	true
- #define arch_efi_call_virt_teardown()
++out:
+ 	efi_rts_work.status = status;
+ 	complete(&efi_rts_work.efi_rts_comp);
+ }
+@@ -444,8 +448,8 @@ virt_efi_set_variable_nb(efi_char16_t *name, efi_guid_t *vendor, u32 attr,
+ 	if (down_trylock(&efi_runtime_lock))
+ 		return EFI_NOT_READY;
  
- #define EFI_ALLOC_ALIGN		SZ_64K
-diff --git a/arch/riscv/include/asm/efi.h b/arch/riscv/include/asm/efi.h
-index 46a355913b27..a7b4d719e7be 100644
---- a/arch/riscv/include/asm/efi.h
-+++ b/arch/riscv/include/asm/efi.h
-@@ -40,7 +40,7 @@ static inline unsigned long efi_get_kimg_min_align(void)
+-	status = efi_call_virt_pointer(efi.runtime, set_variable, name, vendor,
+-				       attr, data_size, data);
++	status = efi_call_virt_pointer(efi.runtime, set_variable, EFI_NOT_READY,
++				       name, vendor, attr, data_size, data);
+ 	up(&efi_runtime_lock);
+ 	return status;
+ }
+@@ -481,9 +485,9 @@ virt_efi_query_variable_info_nb(u32 attr, u64 *storage_space,
+ 	if (down_trylock(&efi_runtime_lock))
+ 		return EFI_NOT_READY;
  
- #define EFI_KIMG_PREFERRED_ADDRESS	efi_get_kimg_min_align()
- 
--void arch_efi_call_virt_setup(void);
-+bool arch_efi_call_virt_setup(void);
- void arch_efi_call_virt_teardown(void);
- 
- unsigned long stext_offset(void);
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index f227a70ac91f..879c8402e024 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -140,7 +140,7 @@ extern void efi_delete_dummy_variable(void);
- extern void efi_crash_gracefully_on_page_fault(unsigned long phys_addr);
- extern void efi_free_boot_services(void);
- 
--void arch_efi_call_virt_setup(void);
-+bool arch_efi_call_virt_setup(void);
- void arch_efi_call_virt_teardown(void);
- 
- extern u64 efi_setup;
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index b2cc7b4552a1..215f16ce84ab 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -141,10 +141,11 @@ void __init efi_runtime_update_mappings(void)
+-	status = efi_call_virt_pointer(efi.runtime, query_variable_info, attr,
+-				       storage_space, remaining_space,
+-				       max_variable_size);
++	status = efi_call_virt_pointer(efi.runtime, query_variable_info,
++				       EFI_NOT_READY, attr, storage_space,
++				       remaining_space, max_variable_size);
+ 	up(&efi_runtime_lock);
+ 	return status;
+ }
+@@ -509,12 +513,14 @@ virt_efi_reset_system(int reset_type, efi_status_t status,
+ 		return;
  	}
+ 
+-	arch_efi_call_virt_setup();
++	if (!arch_efi_call_virt_setup())
++		goto out;
+ 	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
+ 	arch_efi_call_virt(efi.runtime, reset_system, reset_type, status,
+ 			   data_size, data);
+ 	arch_efi_call_virt_teardown();
+ 
++out:
+ 	up(&efi_runtime_lock);
  }
  
--void arch_efi_call_virt_setup(void)
-+bool arch_efi_call_virt_setup(void)
- {
- 	efi_fpu_begin();
- 	firmware_restrict_branch_speculation_start();
-+	return true;
- }
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 7d63d1d75f22..13aff30be3a9 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1179,19 +1179,19 @@ static inline void efi_check_for_embedded_firmwares(void) { }
+  *    Restores the usual kernel environment once the call has returned.
+  */
  
- void arch_efi_call_virt_teardown(void)
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ac57259a432b..023368e9698a 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -445,12 +445,13 @@ static void efi_leave_mm(void)
- 	switch_mm(&efi_mm, efi_prev_mm, NULL);
- }
+-#define efi_call_virt_pointer(p, f, args...)				\
++#define efi_call_virt_pointer(p, f, busy, args...)			\
+ ({									\
+-	typeof((p)->f(args)) __s;					\
++	typeof((p)->f(args)) __s = (busy);				\
+ 	unsigned long __flags;						\
+ 									\
+-	arch_efi_call_virt_setup();					\
++	if (!arch_efi_call_virt_setup()) goto __out;			\
+ 									\
+ 	__flags = efi_call_virt_save_flags();				\
+ 	__s = arch_efi_call_virt(p, f, args);				\
+ 	efi_call_virt_check_flags(__flags, NULL);			\
+ 									\
+ 	arch_efi_call_virt_teardown();					\
+-									\
++__out:									\
+ 	__s;								\
+ })
  
--void arch_efi_call_virt_setup(void)
-+bool arch_efi_call_virt_setup(void)
- {
- 	efi_sync_low_kernel_mappings();
- 	efi_fpu_begin();
- 	firmware_restrict_branch_speculation_start();
- 	efi_enter_mm();
-+	return true;
- }
- 
- void arch_efi_call_virt_teardown(void)
-diff --git a/drivers/firmware/efi/riscv-runtime.c b/drivers/firmware/efi/riscv-runtime.c
-index fa71cd898120..07e04b8f982a 100644
---- a/drivers/firmware/efi/riscv-runtime.c
-+++ b/drivers/firmware/efi/riscv-runtime.c
-@@ -142,10 +142,11 @@ static void efi_virtmap_unload(void)
- 	preempt_enable();
- }
- 
--void arch_efi_call_virt_setup(void)
-+bool arch_efi_call_virt_setup(void)
- {
- 	sync_kernel_mappings(efi_mm.pgd);
- 	efi_virtmap_load();
-+	return true;
- }
- 
- void arch_efi_call_virt_teardown(void)
 -- 
 2.49.0.1101.gccaa498523-goog
 
