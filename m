@@ -1,189 +1,308 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CBD1F1931;
-	Wed, 14 May 2025 16:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59721C198
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239993; cv=none; b=OtyDdExraXxmLSfLh3vf5cef3o/5L6Fs/M4/SrXAkDtvxtQDPpCYbmRQ1ucRzDieoMV0yFED+XHMChu0qKdbmpDRaAJ9i6kG8N5l200/KJhK6iaCLpttmfd8xCHaj0hQ+WrOFX0UnPtt3geG0vUHqBd0+6j34Zj1R4nOv8K1SG8=
+	t=1747240013; cv=none; b=ToHN6TaHAsST/HomsIi4n7Fa69olsK4RPhG/lnXljilHpsgSqprC2q/Fq5R/l8GCqxWoq7GbVF2K/0X54l2ZuZXILm6hKvbiqoo7cX7ghm1uGjyeNyb+mczDb5FsAq9ecMpcoQdrr8TmLmpSMi4uyAvA3jIRtYy6W8e05P4Xj3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239993; c=relaxed/simple;
-	bh=TDtZLkoLaoUO/Jbe9u7OfS6V+mxNZUjGDh0ct8/VoGI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CPzLO/O/0Rdk+3XLaj7N50mjUcBOslz9dmMXYDqpt9J2O/tG9Yqy8ZGuY+/LX1xpnb3oAgr0fumpkiAfwgMU5u+kBYnsw8G5jF60SS4b8Y8FAVpQ2S3GSS/MIZ1zCCbC0LPIZJZI8emHh8qzFLYXqKfCOeGAN0sEh9o9EIE3mGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=ry8VG5Oc; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1747240013; c=relaxed/simple;
+	bh=9QOQNm1DtryVnoeSN7DGC61nsEhaIMM2YYX27XDU2u4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=laRVroHSXN6RQNEfDjnCr85A2ocAaZkDPCMq4l2aWGVhFq5etWek300UmDlfC6XJ3+lOMNS5YGZhW4AUFt2zxnOqYGlFnl7VpDwjqZOcU9JjH/7pfShaOF3BidkewMz+e02/MJWzN1pee8+qIxVuqgZQnFJYIYbnD2NQ7vIl+oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=tW6KXxWl; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="ry8VG5Oc"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4ED2AA033A;
-	Wed, 14 May 2025 18:18:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=w4cPfXtu/36KJ7d3kTTSCLSd63SmospMQ3mRMjbyoKo=; b=
-	ry8VG5OcuPJBHR+i//bwjxyo9xo1z/joraaXLlw2pHbcgVnYShecYYDaR99bR/Q5
-	+2emwNuXuHFE2G8WPp2DJSF2wxnxxVgudIb52miKCt3Dc6JshapMQMG2v1TG/YOe
-	JNzvcAM/HR+F8Ee2qXFD0SQc1GAIneR2sGdMaaAnQAWJu4E1fsJMUzr/1VGlWPSV
-	com2HeicAcgc4aVmWARvdWmHmvo4IW+1s5yvTm4FS3rAhrlf3zO/8F/tMWwDYxxD
-	wv4xJaR2jk6M5drE+D9uQS+AVTnDnoCw+RA4dd7Bf/XFKihEPmnexpfUZ8WL6dS4
-	ybBi+gRO/RgkXH2xH0Ley7xFSLStfSOhySYfP+oOHHsYV8NDWatcoMjbFo8jwseC
-	HUfppXWhOrJc9zjXzUXcUUzlTpXEa/xGDUq8OQsQMYsfsnUB0MjsC0SdEItWZ6cg
-	wCVS6JUiPsMzABDHJDExj8nxu6l4UodOMZNs/VZPpU4LrNLI0tNBWBbMZo/vOWrE
-	bwKUdu76EgKQUC2gHQOnBjnpN3ILm7eJtLlWhmUqhWmc4ehw8zOvFrRluxmctDoa
-	ywOloa/8Qkv9gMNHaPzmkWouAha6YpnuPoklx/wwnDqeg0syjmqS6VxgIKzfh6ic
-	omHC23bLXgGfKWF4I4WfAEEUMWzHnK33jHnx9agDFdo=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
- Tsai" <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, "Chen-Yu
- Tsai" <wens@csie.org>, Julian Calaby <julian.calaby@gmail.com>, Vinod Koul
-	<vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v9] dma-engine: sun4i: Simplify error handling in probe()
-Date: Wed, 14 May 2025 18:18:01 +0200
-Message-ID: <20250514161803.229600-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="tW6KXxWl"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70a23f4fe8bso66163037b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1747240010; x=1747844810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gJ0AzCyNbBw7LmTlYnlYRUZRvc6BiWujoVO60kyzOiU=;
+        b=tW6KXxWljaiMmR2np+P1joBCEqM4CtD+NZd0mrqRmHRWzXS828ZOSDtNmgq4vBxlMh
+         +yJfIY98WIpc7m8RNjqvDRv3fAJunQRYFGUL2QEdxfliDqkG+t8q6eKdeJ5iotFAbfOB
+         g6dKFfqVbNLxXZlpPifyHJPGWhg122FRdGhA2D6Iadw1fY85506ZM0tnTGsvTUgaDBaY
+         zuP5k1vmEkGdzyX9WerwK4ePCv2i+Ff5juHT0AYHiRHoUbz6Bd5kghDTl6/obqQcRfVy
+         ZOStTNr6eW/y01sdLU9P4zFgHolRPuO52CPlgSP0hll7RaRAujd4WzU6gGrNFoMowqoD
+         MtnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747240010; x=1747844810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gJ0AzCyNbBw7LmTlYnlYRUZRvc6BiWujoVO60kyzOiU=;
+        b=Zn+AJYVQbqjzHbfUznWmFf89pQnXW23fVwkvNOquwuyzBEgNNdvKgVL7KK4avRiFw7
+         KUzPWu+q4ttbteGxq4LsGs5levm3qdh3G35xdnvo5/N50UPQs/d8vlmp0ybAay9rkEmR
+         cYPizGcODwbdjtwMgLsJf1ULJ6ontZYN4uUYxKg+IXQTtjWwaZtaM/0d2eTa6G7N31mh
+         tE59KRPRb7lVbYbXGgrImMCT3tzBSYpHLaC4a+6HHW8gzBgPEAEHjWexC56iydpsux0I
+         YAkzyJfrqXZFV/uYg72S6yQ7+0mqHlWYBPluI6RHlTo5XHfabQJHTJUY6ua8tE5zcOq1
+         y9wA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7VPTqWBQ7HJXN4UVTSuU+U9BYqf2076+sHRZGHLqvinWRy5SrjZpANhvMK4Jsff8rUSCRtFTGEtQabO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEYcY5E3WBOZeGDzE014w3tDE6RIef9YoPVy+YgWG4GVojpzYX
+	0RlXGqBAZ+pBE4ZbnjyRHdS41jHPopI86Au0qSB4+oaxOfhIsM743uSAr6KQM/8=
+X-Gm-Gg: ASbGnct4qOVHeG6QxHCRjWG9vPha9YKgNxSNIAhGVL6TzIu/GI3lYvub7x6gqIBYcp5
+	Z1/o2pXTU99LBnIFR2WPsNeqxDvZ1lyK7gfyWf1fpiJ0QVOMoNvcKd9mvfyXnaDMbziLbzuJl0s
+	wBYe6ZiKSreohl8O6w3+Ed8QmLK8fVaCt6iOTD800iqO0b+cdVgT6ps1wwxjRg42AtiU5vFiu9v
+	nTcqgy0gv9H+pacscTIeVZ7miaWu/tSc/3fA3R1cd3C+3FjlveMi84+zXmEQDAE1S67fY2DNtUV
+	LYeyOeCpVQBXbBMxBPd1wg+TkTAr2yhkeR+IdomE5guxHQWqorsT5cXzuxnt1NKsg56hIhg0AVB
+	vMxzzAY5rkMGlIM7DCvU=
+X-Google-Smtp-Source: AGHT+IG+uTH2mFy8MPlKHWxCcLd2xL3H9qSutUTXT/habpIlOeQQg0fLL94X9rKsK/xpDtOCZ5yThg==
+X-Received: by 2002:a05:690c:3341:b0:6ef:94db:b208 with SMTP id 00721157ae682-70c7f221d1amr55077777b3.24.1747240010102;
+        Wed, 14 May 2025 09:26:50 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9cb5ccsm29779187b3.90.2025.05.14.09.26.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 09:26:49 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e78f528aa8eso6069068276.3;
+        Wed, 14 May 2025 09:26:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQL6ZUqYR60/mjV7HZhQEUUW3dKH/vXljeyx4HVQPs53n/4gdMFXJA60weEhzFTn9PbJPN0f/vY2QqEHr3@vger.kernel.org, AJvYcCUkiGgBr2jDg+RYBsWsC6RF+sbXYhchzxbvXkmUid1KIu74NSQ52V5i1zj7LZBhXSQfJuuLC9kFnYIj@vger.kernel.org, AJvYcCUrtu+y4sofV1DOlWAtNJKGYdJdeQ3kPSMCaDUI7en2vDddYaeBCRz6BMixfN+3/ZPvzdwY0o3SchsGZq0=@vger.kernel.org, AJvYcCVcOXqOIpGd59hPHSY2ywtDrnJ3+QTcI6Kis0KdjT/oMPW7lFkqx5un/W9UnT9spgVJRek7n+8cQRbW@vger.kernel.org
+X-Received: by 2002:a05:6902:1202:b0:e6d:f160:bbdf with SMTP id
+ 3f1490d57ef6-e7b3d59ae2fmr4832866276.36.1747240009056; Wed, 14 May 2025
+ 09:26:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
+ <20250225-6-10-rocket-v2-1-d4dbcfafc141@tomeuvizoso.net> <20250225160248.GA2563229-robh@kernel.org>
+In-Reply-To: <20250225160248.GA2563229-robh@kernel.org>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Wed, 14 May 2025 18:26:38 +0200
+X-Gmail-Original-Message-ID: <CAAObsKD01rdYf0E6Vev6oFRZEf1f006oi+ghgVUn+h=aRx-hmQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvDEBwxCoW2ZGLJEEIKb_2H5q_lCEI2NWi7ZFVAMNUkSoshPa20AanOMV0
+Message-ID: <CAAObsKD01rdYf0E6Vev6oFRZEf1f006oi+ghgVUn+h=aRx-hmQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: npu: rockchip,rknn: Add bindings
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1747239491;VERSION=7991;MC=2098525897;ID=2622337256;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A296767155D617160
+Content-Transfer-Encoding: quoted-printable
 
-Clean up error handling by using devm functions and dev_err_probe(). This
-should make it easier to add new code, as we can eliminate the "goto
-ladder" in sun4i_dma_probe().
+Hi Rob,
 
-Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
+On Tue, Feb 25, 2025 at 5:02=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Tue, Feb 25, 2025 at 08:55:47AM +0100, Tomeu Vizoso wrote:
+> > Add the bindings for the Neural Processing Unit IP from Rockchip.
+> >
+> > v2:
+> > - Adapt to new node structure (one node per core, each with its own
+> >   IOMMU)
+> > - Several misc. fixes from Sebastian Reichel
+> >
+> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> >  .../bindings/npu/rockchip,rknn-core.yaml           | 152 +++++++++++++=
+++++++++
+> >  1 file changed, 152 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/npu/rockchip,rknn-core.y=
+aml b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..e8d0afe4a7d1c4f166cf13a=
+9f4aa7c1901362a3f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
+> > @@ -0,0 +1,152 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Neural Processing Unit IP from Rockchip
+> > +
+> > +maintainers:
+> > +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > +
+> > +description:
+> > +  Rockchip IP for accelerating inference of neural networks, based on =
+NVIDIA's
+> > +  open source NVDLA IP.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^npu-core@[a-f0-9]+$'
+> > +
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - rockchip,rk3588-rknn-core-top
+> > +          - const: rockchip,rknn-core-top
+>
+> Drop the fallbacks unless you have some evidence that the IP is the
+> same across a lot of SoCs. If you don't, then
+> rockchip,rk3588-rknn-core-top can be the fallback whenever there are
+> more compatible SoCs.
+>
+> Or if there's version/feature registers that otherwise make it
+> discoverable, then a common compatible is fine.
+>
+> > +      - items:
+> > +          - enum:
+> > +              - rockchip,rk3588-rknn-core
+> > +          - const: rockchip,rknn-core
+>
+> I don't understand the difference between core and core-top. That needs
+> to be explained in the top-level description.
+>
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 2
+> > +    maxItems: 4
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: aclk
+> > +      - const: hclk
+> > +      - const: npu
+> > +      - const: pclk
+> > +    minItems: 2
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  iommus:
+> > +    maxItems: 1
+> > +
+> > +  npu-supply: true
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 2
+> > +
+> > +  reset-names:
+> > +    items:
+> > +      - const: srst_a
+> > +      - const: srst_h
+> > +
+> > +  sram-supply: true
+>
+> Group supply properties together
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +  - iommus
+> > +  - npu-supply
+> > +  - power-domains
+> > +  - resets
+> > +  - reset-names
+> > +  - sram-supply
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - rockchip,rknn-core-top
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 4
+> > +
+> > +        clock-names:
+> > +          minItems: 4
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - rockchip,rknn-core
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          maxItems: 2
+> > +        clock-names:
+> > +          maxItems: 2
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/power/rk3588-power.h>
+> > +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+> > +
+> > +    bus {
+> > +      #address-cells =3D <2>;
+> > +      #size-cells =3D <2>;
+> > +
+> > +      rknn_core_top: npu-core@fdab0000 {
+>
+> npu@...
 
-Notes:
-    Changes in v2:
-    * rebase on current next
-    Changes in v3:
-    * rebase on current next
-    * collect Jernej's tag
-    Changes in v4:
-    * rebase on current next
-    * collect Chen-Yu's tag
-    Changes in v5:
-    * reformat msg to 75 cols
-    * keep `\n`s in error messages
-    Changes in v6:
-    * remove redundant braces
-    * break lines to stay under 85 cols
-    * reword subject and message
-    Changes in v7:
-    * rebase onto current next
-    * collect Julian's tag
-    Changes in v8:
-    * rebase onto current next
-    Changes in v9:
-    * rebase onto current next
+Can you extend on why you would prefer to have npu@? As each node
+corresponds to a core inside the NPU, I went with npu-core@.
 
- drivers/dma/sun4i-dma.c | 46 ++++++++++++-----------------------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
+Thanks,
 
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 24796aaaddfa..00d2fd38d17f 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -1249,11 +1249,10 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No clock specified\n");
--		return PTR_ERR(priv->clk);
--	}
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "Couldn't start the clock\n");
- 
- 	if (priv->cfg->has_reset) {
- 		priv->rst = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
-@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 		vchan_init(&vchan->vc, &priv->slave);
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Couldn't enable the clock\n");
--		return ret;
--	}
--
- 	/*
- 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
- 	 * likes to leave these dirty
-@@ -1343,33 +1336,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 
- 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
- 			       0, dev_name(&pdev->dev), priv);
--	if (ret) {
--		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
- 
--	ret = dma_async_device_register(&priv->slave);
--	if (ret) {
--		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
--		goto err_clk_disable;
--	}
-+	ret = dmaenginem_async_device_register(&priv->slave);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register DMA engine device\n");
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
- 					 priv);
--	if (ret) {
--		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
--		goto err_dma_unregister;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register translation function\n");
- 
- 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
- 
- 	return 0;
--
--err_dma_unregister:
--	dma_async_device_unregister(&priv->slave);
--err_clk_disable:
--	clk_disable_unprepare(priv->clk);
--	return ret;
- }
- 
- static void sun4i_dma_remove(struct platform_device *pdev)
-@@ -1380,9 +1363,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
- 	disable_irq(priv->irq);
- 
- 	of_dma_controller_free(pdev->dev.of_node);
--	dma_async_device_unregister(&priv->slave);
--
--	clk_disable_unprepare(priv->clk);
- }
- 
- static struct sun4i_dma_config sun4i_a10_dma_cfg = {
+Tomeu
 
-base-commit: 3c018bf5a0ee3abe8d579d6a0dda616c3858d7b2
--- 
-2.43.0
-
-
+> > +        compatible =3D "rockchip,rk3588-rknn-core-top", "rockchip,rknn=
+-core-top";
+> > +        reg =3D <0x0 0xfdab0000 0x0 0x9000>;
+> > +        assigned-clocks =3D <&scmi_clk SCMI_CLK_NPU>;
+> > +        assigned-clock-rates =3D <200000000>;
+> > +        clocks =3D <&cru ACLK_NPU0>, <&cru HCLK_NPU0>,
+> > +                 <&scmi_clk SCMI_CLK_NPU>, <&cru PCLK_NPU_ROOT>;
+> > +        clock-names =3D "aclk", "hclk", "npu", "pclk";
+> > +        interrupts =3D <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +        iommus =3D <&rknn_mmu_top>;
+> > +        npu-supply =3D <&vdd_npu_s0>;
+> > +        power-domains =3D <&power RK3588_PD_NPUTOP>;
+> > +        resets =3D <&cru SRST_A_RKNN0>, <&cru SRST_H_RKNN0>;
+> > +        reset-names =3D "srst_a", "srst_h";
+> > +        sram-supply =3D <&vdd_npu_mem_s0>;
+> > +      };
+> > +
+> > +      rknn_core_1: npu-core@fdac0000 {
+> > +        compatible =3D "rockchip,rk3588-rknn-core", "rockchip,rknn-cor=
+e";
+> > +        reg =3D <0x0 0xfdac0000 0x0 0x9000>;
+> > +        clocks =3D <&cru ACLK_NPU1>, <&cru HCLK_NPU1>;
+> > +        clock-names =3D "aclk", "hclk";
+> > +        interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +        iommus =3D <&rknn_mmu_1>;
+> > +        npu-supply =3D <&vdd_npu_s0>;
+> > +        power-domains =3D <&power RK3588_PD_NPU1>;
+> > +        resets =3D <&cru SRST_A_RKNN1>, <&cru SRST_H_RKNN1>;
+> > +        reset-names =3D "srst_a", "srst_h";
+> > +        sram-supply =3D <&vdd_npu_mem_s0>;
+> > +      };
+> > +    };
+> > +...
+> >
+> > --
+> > 2.48.1
+> >
