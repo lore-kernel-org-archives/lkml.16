@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD6842A82;
-	Wed, 14 May 2025 11:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1AD277020;
+	Wed, 14 May 2025 11:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747222313; cv=none; b=QRh2TNbMmFS/KOuLYBIt31l8CYIz32eP6SOD9bAC+ibSLH8/schv2F8cPeSnsqTzAAvQffXPyhrNul/H0hSsdejOUc278ywPflR9s6Cf6ue0O2qYxtYIok45aKoqdxXwxMxFEFjocAF5ZAzPpwPp50VuJsrpKBKOG4eVjwcxMec=
+	t=1747222316; cv=none; b=j7flvvM/9NyEP4UCK0LpOIQut6HDpagEVD2Mau+U3KU3SQcOBsGojipKBiM/RENL6ugkt5I319zMeuxefPTluHIngrR/baWQFYpifGcquRsGOWrhSP0UPI/MEMg7xWV71vResb5r9EpOa9D+fUOy7Wo57r+9OryJ7+8nEaXl7vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747222313; c=relaxed/simple;
-	bh=gxyZSrmBDmqX32YqUTwl2p4jw1lJWQ4gQiNsJnaveRw=;
+	s=arc-20240116; t=1747222316; c=relaxed/simple;
+	bh=NzqA+eKHxUEF+PGJTwjMCdcX89RCrviZg/f/DP8l7OQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PSwNKwC8OIRlvTM5AC5eBXNQBwVqILuDvyk+IRZoxhCju4PCGAS40JPQsEl5apvUw4q+MBreaTZDoe2WJ3zNZlM+PZ44fSQlHEg0pF30uaa8Kw/7d1Qn3ucYpOGqNcEnICYZNbAQ4eZ1Xii7ild04VFvfwHGAETaivbW/csIeqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0JCzueK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Ge71OFTNnGCuqw+KFZ74hq00IKetE1Y2W4Y057zM82pe4YE0vFqGIstMCPdHRRlRTdwUrsNRYRQQza53w6A8hHDoqSA17SMOK+3KlbKskPj975vfa/xlwl9YjQ76IMaoEtS2N9Cv+TAe7Fbp9Io5qMa/pkST+grqxGR7oppUie4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsQsqm9+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0JCzueK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25422C4CEF0;
-	Wed, 14 May 2025 11:31:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsQsqm9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39ABC4CEF1;
+	Wed, 14 May 2025 11:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747222313;
-	bh=gxyZSrmBDmqX32YqUTwl2p4jw1lJWQ4gQiNsJnaveRw=;
+	s=k20201202; t=1747222315;
+	bh=NzqA+eKHxUEF+PGJTwjMCdcX89RCrviZg/f/DP8l7OQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=p0JCzueKZiWVU9x5plR+Ot+TmLrStNZOlN9S/m9Q9M/3bmw0sS32GdWCEFAEgSROH
-	 kCMJuZyTEef5L7ABdau0wQQm0ZBxtPoZrINmik+1VW5SKpzYLHcZZb5prmZErMJnX5
-	 j+TfVsVnh8MY75y3nBVIWQ6miHJMu1qI2fyNX3o1XJDee1RmLJnTXRSUqyhtvBeGHq
-	 kE/Xe50tCq4DT/vFtK0YIeRG/gwgXdLatXEqzs97ffsSTAIC390T+bVTaI1yALHaba
-	 5dgmuWOFWoMdFyAj6W98B49/osm+iA/vHXhxwByEDTndRJjsBEGN2iwzEa2WF7dSft
-	 RqOuBbTD4CEhA==
+	b=IsQsqm9+Cv6oUwM1UdOrUbglX8hxrEWScrCJE1BTLzJcqjvJhqwgZZKrpMNwzUhDV
+	 j2IAAm2FJlMgsz0uET7tT1xGCbvxpwn+jhsVPBlkmax9y3ZoDI0qanBtlXccPE99nF
+	 0bDb7xrqDSw1n8oHRwLeDPMIZ3cce9caD5HzZvSjqfPk8e5ka8JrA1zVkLdyZ5SkF/
+	 cAZy+liB5kEtUgGWaN0Zp3h9KXMAwVvUVum05nlpl4TrQdFRX1WRya/BGuolGohjtj
+	 O8GeLi8+2JA6QjEWxW1oJFOm8AjwvW1Fj3+DNEh87omuuBhgvq96jlIck3uBYGWpNE
+	 uFyr5oajNQafg==
 From: Vinod Koul <vkoul@kernel.org>
-To: yoshihiro.shimoda.uh@renesas.com, kishon@kernel.org, 
- geert+renesas@glider.be, magnus.damm@gmail.com, horms+renesas@verge.net.au, 
- fabrizio.castro@bp.renesas.com, Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linux-renesas-soc@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250507125032.565017-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250507125032.565017-1-claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH RESEND v3 0/5] phy: renesas: rcar-gen3-usb2: Fixes for
- Renesas RZ/G3S
-Message-Id: <174722231081.74407.5340697321228432140.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 12:31:50 +0100
+To: jckuo@nvidia.com, kishon@kernel.org, thierry.reding@gmail.com, 
+ jonathanh@nvidia.com, Ma Ke <make24@iscas.ac.cn>
+Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, akpm@linux-foundation.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20250303072739.3874987-1-make24@iscas.ac.cn>
+References: <20250303072739.3874987-1-make24@iscas.ac.cn>
+Subject: Re: [PATCH v2 RESEND] phy: Fix error handling in
+ tegra_xusb_port_init
+Message-Id: <174722231344.74407.15426957064569052576.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 12:31:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,29 +49,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 07 May 2025 15:50:27 +0300, Claudiu wrote:
-> Series add fixes for the Renesas USB2 PHY driver identified while
-> working on the Renesas RZ/G3S USB support. These changes are
-> needed for the upcomming RZ/G3S USB support (especially for the
-> power management support).
-> 
-> Series (with [1] on top) was tested on Renesas RZ/G3S with consecutive
-> unbind/bind and data transfer tests before/after the unbind/bind.
+On Mon, 03 Mar 2025 15:27:39 +0800, Ma Ke wrote:
+> If device_add() fails, do not use device_unregister() for error
+> handling. device_unregister() consists two functions: device_del() and
+> put_device(). device_unregister() should only be called after
+> device_add() succeeded because device_del() undoes what device_add()
+> does if successful. Change device_unregister() to put_device() call
+> before returning from the function.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/5] phy: renesas: rcar-gen3-usb2: Fix role detection on unbind/bind
-      commit: 54c4c58713aaff76c2422ff5750e557ab3b100d7
-[2/5] phy: renesas: rcar-gen3-usb2: Move IRQ request in probe
-      commit: de76809f60cc938d3580bbbd5b04b7d12af6ce3a
-[3/5] phy: renesas: rcar-gen3-usb2: Lock around hardware registers and driver data
-      commit: 55a387ebb9219cbe4edfa8ba9996ccb0e7ad4932
-[4/5] phy: renesas: rcar-gen3-usb2: Assert PLL reset on PHY power off
-      commit: 9ce71e85b29eb63e48e294479742e670513f03a0
-[5/5] phy: renesas: rcar-gen3-usb2: Set timing registers only once
-      commit: 86e70849f4b2b4597ac9f7c7931f2a363774be25
+[1/1] phy: Fix error handling in tegra_xusb_port_init
+      commit: b2ea5f49580c0762d17d80d8083cb89bc3acf74f
 
 Best regards,
 -- 
