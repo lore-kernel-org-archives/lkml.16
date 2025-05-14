@@ -1,107 +1,104 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A422253EB
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24B92253EB;
+	Wed, 14 May 2025 09:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214461; cv=none; b=hvZIN29QP17OVfhz8dkvERD5haS/Ej1D/OdRRj7gVxr+iDd9BQuXdkYTT67yxyLxneWEDWc2ENAMscAVij7EZMmz34jhvBHEYUjnBpK32RLYTO9DFWbTbXctde8DkV894LUSW7gTfBIFRBaMAlXcrFj3TwTlywHHqIjVd14Nvho=
+	t=1747214479; cv=none; b=MvdtiE1Ul87Yw1kR8V2RRJQtmKag4SuwqIAbUn3E5szpMJvklsUYk4FnwGg5VC6kmo2OjSo+VISceX5Uv3XYnq9LzI+U+ceN3hK21VoUglrzb0dUmOXdyEF6zfkt0uOtyGFfuevLv5OqRj6mV/lecsbeUcnzK2ZjHOk7mBPfmsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214461; c=relaxed/simple;
-	bh=KHCva7RS+KUG/JBkXstocwt+pRK+aJOvr2dtVHXWRx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Tks0QaAepMUHXRt1oQ2iSaKaSibMn7FtNzLXfGit9uBaeCfSSkpKK8G5qs6f1jftr0VSxsLamF9LdoIevr2m4ekKpSJPWlouLpITCRjKP6stqalniMW8Dj0cwwMfiNiRIizxM5Jd3tZZ3SdlKxYaMtfl0ZsHOp1eE3/cUkPJN4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=qD0gdPGH; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1747214479; c=relaxed/simple;
+	bh=S2VNQ0PBLSoRq5qtpRtWiVNLkMWQQ6zsWwptPZppQhw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XCSUCKJRmhcYXu9vZHi+vgjOKsrBXqVTMMhqwTSFhdKxlfZE1cUaS8OxkbzIv2/mFL1opWmQhKh8eRH+uUd5rgiKx+whWu4MAWG63xCC4IJmPbShRkQhn8MhDxS+W0VdeoPlV6OeRcGDH3rbNR/jBxlKmRGuxtQ+Z4TYURDrSLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=GVjoVjPK; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="qD0gdPGH"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e6880d106so45941355ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1747214459; x=1747819259; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibOaHY58habuMEQUy1e1j8bMM1DI8FzR+feZU4NgPsg=;
-        b=qD0gdPGHF1wm29IJ+9URKTTcK84gpzzq4tUT0ETH1aBrqWwHYQDQvu4JV4Rz+L7lh4
-         DA7ZW/JuhYf74w3yzxC5M4aSUhtqRSCbX6QfeU4RxDgFvwlJ0HxG/ciXNBQxVxr54zz6
-         ecR55zGfk9+n/tvENbeC2h/7EbZX4X+C16Q/g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747214459; x=1747819259;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ibOaHY58habuMEQUy1e1j8bMM1DI8FzR+feZU4NgPsg=;
-        b=smu7mIrovGiEgwETeAX9UX2GEOnqIerL5essj8dNSFRpvYUDnmStXQ2wu0bdsOX6g3
-         /8caK2Cll1afXV/xklBQ6zoh2IhiTnSjqDMM/tZXj6jICgVuyvSfhH2a/u8fdscKOtbr
-         0uRF4GOSxDnZKyssYjg4X7jAA+8UlUgPpHS5Gm3REbbxdGDPpF71m3cwm1v5fBv1iwTr
-         hMG4dLsDHOy/IA+I3ylUfYdE4ASQG3YzOQAo21pko8e+Rh5CmQqbKy2eh7a7aP+fXBYR
-         YtwtemlPLqUE+Dl/aa4BjehzppZbwW7XYUmqcLfIkfEOagIo014WBQVwXJo8aAv6gH6f
-         EM4g==
-X-Forwarded-Encrypted: i=1; AJvYcCX0WoFnsUWDxfoJPtKpc4g5TiwnW49UAG6KOaTh4B7XL/H1wyvBer1P4OAfBGYTyv4t7Y8vNB77YNDFmro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnH7y1WJg/8cp3QU7LtY74VWGNJn+gi8qInn+hIjLNqZV9vVf7
-	8ixa2ilRqVUp3m3m6OsVPUeY8Izg7RbjfW4ZwRP8DXGKZvkcdCnY5jY2i8ImHfU=
-X-Gm-Gg: ASbGncvhON4Bo2P7uuIpCRlJDsDKazqucaXQ/c1urvIXqbJlaXT1wKrVjNv9LhBNbR1
-	r5W+HNPFF7CP/mGJfiJZQgrN1x4lESe2mzw4KqFCaEq1CIg/PhKnj8re9gfrTRr6PKc2XmDMgmh
-	eFEQ1XAfj4M6hUg7utuqgFnxoqVCTfo+Qk/gNe0dQp0seex2kgAB3h/36a56yQlzjtACLopB63q
-	JsDCqyxT62fUdaFJvq9wEEdg6TGczC/mbYrPSPCq/EfVamrADEIjpwt6lNM+gLaevR484XN18tG
-	s+YF9bSo7FU5emmNALjnWtVrX3cbtl+X+XB5gy6/4LDD6IXCuKmgJw/0UGJ3ikIWhJU=
-X-Google-Smtp-Source: AGHT+IGSWLVb97SerQP51yUp7nrx2ZnEYwBo9CbV8YH53jj0P/avx90b8Y2UNutxqjPaGH7wgrsK6g==
-X-Received: by 2002:a17:903:120c:b0:215:8d49:e2a7 with SMTP id d9443c01a7336-231983e5c25mr35466905ad.50.1747214458567;
-        Wed, 14 May 2025 02:20:58 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22fc753fe13sm94696225ad.14.2025.05.14.02.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 02:20:58 -0700 (PDT)
-From: Roger Pau Monne <roger.pau@citrix.com>
-To: xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org
-Cc: jason.andryuk@amd.com,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH] xen: enable XEN_UNPOPULATED_ALLOC as part of xen.config
-Date: Wed, 14 May 2025 11:20:36 +0200
-Message-ID: <20250514092037.28970-1-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="GVjoVjPK"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vsG3012183;
+	Wed, 14 May 2025 11:20:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	YJoo6ONpxoI+NCrpHQdMdcmgwYIWpdAHw9PI2bo7imQ=; b=GVjoVjPKljhGJFRQ
+	wjEzeSfGP3DxNiOc0GIYT4HMdYLZfqJVff8mJG0OiYc4Qfzm7rCSTO4DSxQ31yt/
+	R8e5G+BHcRdjQVP9ub4hTh5WXPFzZ70Zu2MFp0ELs91mX96Mjb+SLvp+bx3e4iOv
+	6DQvFJhPA3u/xOS8cj1WYB1KdTRI2WkRsEHVL+JeRv4KWwzj3yfIVCa79BjEQXgb
+	hgA/mXCnvYtbtWVZ7VkS91LHykxWhkHugxtXLdxLKodzNtq9wYkKgDxXi6ZVMp0R
+	T25Ud+TZ+mKL+pQ64bv7+SY3HyvaczXk7J+UFVKSGQ4l7w2j/wlqKpznQIlY02x5
+	Zu9HZg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdw2s7a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:20:55 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6C1C140044;
+	Wed, 14 May 2025 11:19:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A7E27B4BAEC;
+	Wed, 14 May 2025 11:18:04 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:18:04 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 5/9] MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
+Date: Wed, 14 May 2025 11:15:26 +0200
+Message-ID: <20250514091530.3249364-6-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
-PVH dom0 is useless without XEN_UNPOPULATED_ALLOC, as otherwise it will
-very likely balloon out all dom0 memory to map foreign and grant pages.
+Add myself as maintainer of STM32MP25 PCIe host and PCIe endpoint drivers
 
-Enable it by default as part of xen.config.  This also requires enabling
-MEMORY_HOTREMOVE and ZONE_DEVICE.
-
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 ---
- kernel/configs/xen.config | 3 +++
- 1 file changed, 3 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/configs/xen.config b/kernel/configs/xen.config
-index 6878b9a49be8..1875a0a5047a 100644
---- a/kernel/configs/xen.config
-+++ b/kernel/configs/xen.config
-@@ -13,6 +13,8 @@ CONFIG_SCSI=y
- CONFIG_FB=y
- CONFIG_INPUT_MISC=y
- CONFIG_MEMORY_HOTPLUG=y
-+CONFIG_MEMORY_HOTREMOVE=y
-+CONFIG_ZONE_DEVICE=y
- CONFIG_TTY=y
- # Technically not required but otherwise produces
- # pretty useless systems starting from allnoconfig
-@@ -47,3 +49,4 @@ CONFIG_XEN_GNTDEV=m
- CONFIG_XEN_GRANT_DEV_ALLOC=m
- CONFIG_SWIOTLB_XEN=y
- CONFIG_XEN_PRIVCMD=m
-+CONFIG_XEN_UNPOPULATED_ALLOC=y
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d74250b2e8e6..2140f668a3c2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18912,6 +18912,13 @@ L:	linux-samsung-soc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/pci/controller/dwc/pci-exynos.c
+ 
++PCI DRIVER FOR STM32MP25
++M:	Christian Bruel <christian.bruel@foss.st.com>
++L:	linux-pci@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pci/st,stm32-pcie-*.yaml
++F:	drivers/pci/controller/dwc/*stm32*
++
+ PCI DRIVER FOR SYNOPSYS DESIGNWARE
+ M:	Jingoo Han <jingoohan1@gmail.com>
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 -- 
-2.48.1
+2.34.1
 
