@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999824E4AA
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE372512C9
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266216; cv=none; b=AGS6o8FZ2aaSqsyETN7j/VsNiDvCCdJekGJzT13hURo2RXDGat8DtYnaRvkgFGIlRIikJZdym2nVyM6WtnXMb9a/3X16RB/dlGnqrUxIL8BwHwd0fKveF74ltUT9IikiGSdUIP2V57hQ5iVP2Tn8I89a1o1aAWJcq19Kh5aI/ao=
+	t=1747266219; cv=none; b=WnYWhzeuwkFicrHpX3w+p8qRHCaKOWhy2HrkWd56TtKwCJgVYSkPMMYoTs46QGlBmNyjvgjhX16dQJQBGXncoJEvHQP0J0QJaVQy61oKQIEFUuGk72TFRO3WfAyGQegAmmgIMJzUbL9Qau+SUYGXKwmL1qQ48NK7InpoHSw2IOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266216; c=relaxed/simple;
-	bh=9IWf7Q3oE3YTh1nzFjdFC9zybFJm+g92r90fv7ZGhhU=;
+	s=arc-20240116; t=1747266219; c=relaxed/simple;
+	bh=P4f0b62NWOp+NPWKRTgUNNPji/5ERCLjnY9pODYzlUE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YzzGajhHo9bvVG5S3vLo+ZP9jifxZiIlrJnxc58+CzAQOGjj91x0xMtd2VozYRHtoD2zOOFezlZ/mt8MKtAn9Jc0MzNGJTGYi9dsDG3/6CkYHXQrwJQ/dp5mJ/kebRwJSda1+oX35OBdSxiyk4SJvXlj3rsiw++Dwjd8rnXTZyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yeIz9LFD; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=R9/bhmsbXz0OXNik+DEJdBzRql5LkCa4Pg6LH1JiU4yoXlYVafveGAKfufQM2SNa/hcTJAPxTjLJaC4OQtecVRamur3By9WnGXrbhlqd6k8dXeRpPPtvF+k7Zmhdsyal6q+Wd9o3Sm6I0mJ1xSUyYsxtpKUOs5gjsr3nyZnfPn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X3aGCmoK; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yeIz9LFD"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e48854445so266345a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X3aGCmoK"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30c4b072631so348101a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266213; x=1747871013; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266216; x=1747871016; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlApZPNMFWcR7jIJ9KHUoWOXBlzS7oZ5fyFUsGvGlHI=;
-        b=yeIz9LFDa9x4TMSfx/RqwFPMOPwhuTRIsn51G/g/NxJFazXL+9Ov2aRjSbs3nxeHF7
-         8JRIiu0hh/usStOL12DJhMpcb3sRzRgeAHpMISrzGzjP53khsROs/5FvXgIEN9Tepi4+
-         1Bu8mGat4OsLcmepyMJEPpaqAJWo2xdnMMHQJwZDxHyhARWaNRrBuxRQtsLvg+lPtGKh
-         qLjobxdd5H1gSRTVlPLvwDbKj+YvEVLHXJigd0TaEEf762VaiRBW4njbAThaCNqdeDCB
-         FWD/UqBu5oPOTLlxo8HQYTb4cVc6IrvmvjUP5rVAvZ337cBr+lqyxaR6OUBKZEcxw9eO
-         vZzw==
+        bh=B7idB2ZTiegZ6IK12Tr/2nYezS5KZiJSYYU8LHDGXMQ=;
+        b=X3aGCmoKl/t1PnndVwmh2h0I9wXGB88CzUqrLj9/ASoXDCLVAuD2OpqN1iOg+Jsyv0
+         QqAixmStyQqLyikPurcbAqeYN2p+nhIzBSC7KXw+kpoMm1TcTHe5yafvYBUkNt4EL+AK
+         L13oz6T3422l+WFwQ88asyW6y/NYNH/jiVcKiSFdeDaFdgAqhiIRHqpb6pPf1iQaQgn4
+         q0EqoPZ8zhO9J1ytmo6lLQHfxC4LW0eRkQrD1PG0NC0A+dTbvdTOCU/72Me9kYWeyChO
+         0nsuwIUf+tT5GhDYh7S8FP8mTmWkIydqtEZBpBeNkSQ2082dVwMtrLg1OQQnUKBo9BIU
+         8utw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266213; x=1747871013;
+        d=1e100.net; s=20230601; t=1747266216; x=1747871016;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlApZPNMFWcR7jIJ9KHUoWOXBlzS7oZ5fyFUsGvGlHI=;
-        b=ePCgvhXyBRLZ5srRULHNVZuRN5eI4Ilt3Yr2T4rRi8+KKR4GxKgPDpTGy7arFObcym
-         VZz5J0n7sgvczMJDtM4C8xlHuxE9MJlErFoAM3DsGiJ5ylKCl9B6fqg4UXkC2qWT/yYl
-         9TVuA9b8T5Z3ZTRaIHwPwIGsBVRI6WrL8F/oZDnWZVvv3FwLQlJtWtmaUIACCRfACAsd
-         VVjSxMNh1f+Flk0WeJaes+vi+jh3lbqJG4uQ0yGcav9MwYqAcsKCI+T8uW7T/P7ooOy+
-         x0T46Apv664GBWZTjMjDpRNHeXdYW+OC5MLbLzvWZCePzVLg/ugHnqHJwjHM4EdbWRgG
-         kc7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiUNLgYRRt15Xwalbrsd2XZzkfEzRqm2STnOZMBBm/zYMOp/40o1tYtNQzv5G7Q1NOmpw0+tUZgV9LO1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzmb9Qj57yEhGV3twwf5Xa85/rAQ74kSsfx1jQ4YSXw5IlHHCQA
-	3ejGwrfp5+LUIu0uBvQC/+YI6YEMSSg8FsFCRNkzgkDQYj3IWg7qFrfn1ynLUWvDU5E6GDn+Kx9
-	OwQQxZsqy5uOXzHFPZf7V9g==
-X-Google-Smtp-Source: AGHT+IGpGoT229pDQNLOtvYT1MW+Z5D28EV3QKdaocKPzRw0I86J+skBPLzQ0QgVUYX98zFangxne/p4We6UZ3/4Ig==
-X-Received: from pjbpw8.prod.google.com ([2002:a17:90b:2788:b0:301:1ea9:63b0])
+        bh=B7idB2ZTiegZ6IK12Tr/2nYezS5KZiJSYYU8LHDGXMQ=;
+        b=nKcrktUEDcdttVrJBjZiLVRa2VNXWOcPXJPcpLFFKU8LQL2IBSNZ+NoFxAMNI26gM6
+         sH0XVi0A4BhbHqW3ZWJ4hK11RzAZ9ckChSk0bgE+oLK2H1LEtxllkzxiUHBp3/9hf2Mm
+         18zQ9P+Sp9wsXEBaDS4hwBWXK+1fwE4GMs1cYH0lQJcfOlzkhAo8OX/+JIIF8PweULWr
+         dJqYhkCSXRlsAOgmcMtLHcI4sQ5SWvrgGNii6BJTvRSxD37d+qYc/A42TUaL6/rKoEKB
+         +UD7J0J04soMp6jYc8AaclNZMOMxw99LcfgnFbYdR9bvG/9xeprG2WF9Z6z6vtCf4L+e
+         uUIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtFGT6hfW2mKwjURktT8VNbeMIBfApy5NpJB9FQDLcUjXt+vwlORcR/uJJsA4Zh7k+Zv98DzqnSlM6pD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvQtez8UK1+Qe+TGpxLb5FOyHgi0YrhClruR4B5jp2FscyqcJu
+	wwKvc7VWHZZUFMfnmpejz7q/7rL8s20RT5r1CKNLGteecmrYkenbdWuloUs8k0hTWEJSNbxFvVT
+	uesjBOT7dy9s4A6Roybi9Jg==
+X-Google-Smtp-Source: AGHT+IE2emob7ne9xgmmOZ/2Nz4UUhKEr9sTG+LQ/jCh4mtM1mNcZXbWVXEVF+2dcFUaFpOL2yid3wyO7OHIppEddw==
+X-Received: from pjbee7.prod.google.com ([2002:a17:90a:fc47:b0:2fa:1fac:269c])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:57c4:b0:2fa:15ab:4de7 with SMTP id 98e67ed59e1d1-30e51589dbamr900643a91.12.1747266212707;
- Wed, 14 May 2025 16:43:32 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:02 -0700
+ 2002:a17:90b:55d0:b0:309:fac6:44f9 with SMTP id 98e67ed59e1d1-30e51947471mr583415a91.31.1747266215905;
+ Wed, 14 May 2025 16:43:35 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:04 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <bdd00f8a1919794da94ba366529756bd6b925ade.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 23/51] mm: hugetlb: Refactor out hugetlb_alloc_folio()
+Message-ID: <b01365820cca734c1c37de6709167d8c81afb295.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 25/51] mm: truncate: Expose preparation steps for truncate_inode_pages_final
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,309 +96,72 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Refactor out hugetlb_alloc_folio() from alloc_hugetlb_folio(), which
-handles allocation of a folio and cgroup charging.
-
-Other than flags to control charging in the allocation process,
-hugetlb_alloc_folio() also has parameters for memory policy.
-
-This refactoring as a whole decouples the hugetlb page allocation from
-hugetlbfs, (1) where the subpool is stored at the fs mount, (2)
-reservations are made during mmap and stored in the vma, and (3) mpol
-must be stored at vma->vm_policy (4) a vma must be used for allocation
-even if the pages are not meant to be used by host process.
-
-This decoupling will allow hugetlb_alloc_folio() to be used by
-guest_memfd in later patches. In guest_memfd, (1) a subpool is created
-per-fd and is stored on the inode, (2) no vma-related reservations are
-used (3) mpol may not be associated with a vma since (4) for private
-pages, the pages will not be mappable to userspace and hence have to
-associated vmas.
-
-This could hopefully also open hugetlb up as a more generic source of
-hugetlb pages that are not bound to hugetlbfs, with the complexities
-of userspace/mmap/vma-related reservations contained just to
-hugetlbfs.
+This will allow preparation steps to be shared while implementing
+truncation differently.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Change-Id: I60528f246341268acbf0ed5de7752ae2cacbef93
+Change-Id: I83ad5965b8b50283ad930c20c99e3165cb5626c9
 ---
- include/linux/hugetlb.h |  12 +++
- mm/hugetlb.c            | 192 ++++++++++++++++++++++------------------
- 2 files changed, 118 insertions(+), 86 deletions(-)
+ include/linux/mm.h |  1 +
+ mm/truncate.c      | 26 ++++++++++++++++----------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 8f3ac832ee7f..8ba941d88956 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -698,6 +698,9 @@ bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
- int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
- int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn);
- void wait_for_freed_hugetlb_folios(void);
-+struct folio *hugetlb_alloc_folio(struct hstate *h, struct mempolicy *mpol,
-+				  pgoff_t ilx, bool charge_cgroup_rsvd,
-+				  bool use_existing_reservation);
- struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 				unsigned long addr, bool cow_from_owner);
- struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
-@@ -1099,6 +1102,15 @@ static inline void wait_for_freed_hugetlb_folios(void)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bf55206935c4..e4e73c231ced 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3514,6 +3514,7 @@ extern unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info);
+ extern void truncate_inode_pages(struct address_space *, loff_t);
+ extern void truncate_inode_pages_range(struct address_space *,
+ 				       loff_t lstart, loff_t lend);
++extern void truncate_inode_pages_final_prepare(struct address_space *mapping);
+ extern void truncate_inode_pages_final(struct address_space *);
+ 
+ /* generic vm_area_ops exported for stackable file systems */
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 5d98054094d1..057e4aa73aa9 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -457,16 +457,7 @@ void truncate_inode_pages(struct address_space *mapping, loff_t lstart)
+ }
+ EXPORT_SYMBOL(truncate_inode_pages);
+ 
+-/**
+- * truncate_inode_pages_final - truncate *all* pages before inode dies
+- * @mapping: mapping to truncate
+- *
+- * Called under (and serialized by) inode->i_rwsem.
+- *
+- * Filesystems have to use this in the .evict_inode path to inform the
+- * VM that this is the final truncate and the inode is going away.
+- */
+-void truncate_inode_pages_final(struct address_space *mapping)
++void truncate_inode_pages_final_prepare(struct address_space *mapping)
  {
- }
- 
-+static inline struct folio *hugetlb_alloc_folio(struct hstate *h,
-+						struct mempolicy *mpol,
-+						pgoff_t ilx,
-+						bool charge_cgroup_rsvd,
-+						bool use_existing_reservation)
-+{
-+	return NULL;
-+}
-+
- static inline struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 					   unsigned long addr,
- 					   bool cow_from_owner)
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 29d1a3fb10df..5b088fe002a2 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2954,6 +2954,101 @@ void wait_for_freed_hugetlb_folios(void)
- 	flush_work(&free_hpage_work);
- }
- 
-+/**
-+ * hugetlb_alloc_folio() - Allocates a hugetlb folio.
-+ *
-+ * @h: struct hstate to allocate from.
-+ * @mpol: struct mempolicy to apply for this folio allocation.
-+ * @ilx: Interleave index for interpretation of @mpol.
-+ * @charge_cgroup_rsvd: Set to true to charge cgroup reservation.
-+ * @use_existing_reservation: Set to true if this allocation should use an
-+ *                            existing hstate reservation.
-+ *
-+ * This function handles cgroup and global hstate reservations. VMA-related
-+ * reservations and subpool debiting must be handled by the caller if necessary.
-+ *
-+ * Return: folio on success or negated error otherwise.
-+ */
-+struct folio *hugetlb_alloc_folio(struct hstate *h, struct mempolicy *mpol,
-+				  pgoff_t ilx, bool charge_cgroup_rsvd,
-+				  bool use_existing_reservation)
-+{
-+	unsigned int nr_pages = pages_per_huge_page(h);
-+	struct hugetlb_cgroup *h_cg = NULL;
-+	struct folio *folio = NULL;
-+	nodemask_t *nodemask;
-+	gfp_t gfp_mask;
-+	int nid;
-+	int idx;
-+	int ret;
-+
-+	idx = hstate_index(h);
-+
-+	if (charge_cgroup_rsvd) {
-+		if (hugetlb_cgroup_charge_cgroup_rsvd(idx, nr_pages, &h_cg))
-+			goto out;
-+	}
-+
-+	if (hugetlb_cgroup_charge_cgroup(idx, nr_pages, &h_cg))
-+		goto out_uncharge_cgroup_reservation;
-+
-+	gfp_mask = htlb_alloc_mask(h);
-+	nid = policy_node_nodemask(mpol, gfp_mask, ilx, &nodemask);
-+
-+	spin_lock_irq(&hugetlb_lock);
-+
-+	if (use_existing_reservation || available_huge_pages(h))
-+		folio = dequeue_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
-+
-+	if (!folio) {
-+		spin_unlock_irq(&hugetlb_lock);
-+		folio = alloc_surplus_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
-+		if (!folio)
-+			goto out_uncharge_cgroup;
-+		spin_lock_irq(&hugetlb_lock);
-+		list_add(&folio->lru, &h->hugepage_activelist);
-+		folio_ref_unfreeze(folio, 1);
-+		/* Fall through */
-+	}
-+
-+	if (use_existing_reservation) {
-+		folio_set_hugetlb_restore_reserve(folio);
-+		h->resv_huge_pages--;
-+	}
-+
-+	hugetlb_cgroup_commit_charge(idx, nr_pages, h_cg, folio);
-+
-+	if (charge_cgroup_rsvd)
-+		hugetlb_cgroup_commit_charge_rsvd(idx, nr_pages, h_cg, folio);
-+
-+	spin_unlock_irq(&hugetlb_lock);
-+
-+	gfp_mask = htlb_alloc_mask(h) | __GFP_RETRY_MAYFAIL;
-+	ret = mem_cgroup_charge_hugetlb(folio, gfp_mask);
-+	/*
-+	 * Unconditionally increment NR_HUGETLB here. If it turns out that
-+	 * mem_cgroup_charge_hugetlb failed, then immediately free the page and
-+	 * decrement NR_HUGETLB.
-+	 */
-+	lruvec_stat_mod_folio(folio, NR_HUGETLB, pages_per_huge_page(h));
-+
-+	if (ret == -ENOMEM) {
-+		free_huge_folio(folio);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	return folio;
-+
-+out_uncharge_cgroup:
-+	hugetlb_cgroup_uncharge_cgroup(idx, nr_pages, h_cg);
-+out_uncharge_cgroup_reservation:
-+	if (charge_cgroup_rsvd)
-+		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, nr_pages, h_cg);
-+out:
-+	folio = ERR_PTR(-ENOSPC);
-+	goto out;
-+}
-+
- /*
-  * NOTE! "cow_from_owner" represents a very hacky usage only used in CoW
-  * faults of hugetlb private mappings on top of a non-page-cache folio (in
-@@ -2971,16 +3066,8 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 	bool reservation_exists;
- 	bool charge_cgroup_rsvd;
- 	struct folio *folio;
--	int ret, idx;
--	struct hugetlb_cgroup *h_cg = NULL;
--	gfp_t gfp = htlb_alloc_mask(h) | __GFP_RETRY_MAYFAIL;
- 	struct mempolicy *mpol;
--	nodemask_t *nodemask;
--	gfp_t gfp_mask;
- 	pgoff_t ilx;
--	int nid;
--
--	idx = hstate_index(h);
- 
- 	if (cow_from_owner) {
- 		/*
-@@ -3020,69 +3107,22 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 	}
- 	reservation_exists = vma_reservation_exists || subpool_reservation_exists;
- 
--	/*
--	 * If a vma_reservation_exists, we can skip charging hugetlb
--	 * reservations since that was charged in hugetlb_reserve_pages() when
--	 * the reservation was recorded on the resv_map.
--	 */
--	charge_cgroup_rsvd = !vma_reservation_exists;
--	if (charge_cgroup_rsvd) {
--		ret = hugetlb_cgroup_charge_cgroup_rsvd(
--			idx, pages_per_huge_page(h), &h_cg);
--		if (ret)
--			goto out_subpool_put;
--	}
--
- 	mpol = get_vma_policy(vma, addr, h->order, &ilx);
- 
--	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg);
--	if (ret) {
--		mpol_cond_put(mpol);
--		goto out_uncharge_cgroup_reservation;
--	}
--
--	gfp_mask = htlb_alloc_mask(h);
--	nid = policy_node_nodemask(mpol, gfp_mask, ilx, &nodemask);
--
--	spin_lock_irq(&hugetlb_lock);
--
--	folio = NULL;
--	if (reservation_exists || available_huge_pages(h))
--		folio = dequeue_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
--
--	if (!folio) {
--		spin_unlock_irq(&hugetlb_lock);
--		folio = alloc_surplus_hugetlb_folio(h, gfp_mask, mpol, nid, nodemask);
--		if (!folio) {
--			mpol_cond_put(mpol);
--			goto out_uncharge_cgroup;
--		}
--		spin_lock_irq(&hugetlb_lock);
--		list_add(&folio->lru, &h->hugepage_activelist);
--		folio_ref_unfreeze(folio, 1);
--		/* Fall through */
--	}
--
  	/*
--	 * Either dequeued or buddy-allocated folio needs to add special
--	 * mark to the folio when it consumes a global reservation.
-+	 * If a vma_reservation_exists, we can skip charging cgroup reservations
-+	 * since that was charged during vma reservation. Use a reservation as
-+	 * long as it exists.
- 	 */
--	if (reservation_exists) {
--		folio_set_hugetlb_restore_reserve(folio);
--		h->resv_huge_pages--;
--	}
--
--	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, folio);
--
--	if (charge_cgroup_rsvd) {
--		hugetlb_cgroup_commit_charge_rsvd(idx, pages_per_huge_page(h),
--						  h_cg, folio);
--	}
--
--	spin_unlock_irq(&hugetlb_lock);
-+	charge_cgroup_rsvd = !vma_reservation_exists;
-+	folio = hugetlb_alloc_folio(h, mpol, ilx, charge_cgroup_rsvd,
-+				    reservation_exists);
- 
- 	mpol_cond_put(mpol);
- 
-+	if (IS_ERR_OR_NULL(folio))
-+		goto out_subpool_put;
-+
- 	hugetlb_set_folio_subpool(folio, spool);
- 
- 	/* If vma accounting wasn't bypassed earlier, follow up with commit. */
-@@ -3091,9 +3131,8 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 		/*
- 		 * If there is a discrepancy in reservation status between the
- 		 * time of vma_needs_reservation() and vma_commit_reservation(),
--		 * then there the page must have been added to the reservation
--		 * map between vma_needs_reservation() and
--		 * vma_commit_reservation().
-+		 * then the page must have been added to the reservation map
-+		 * between vma_needs_reservation() and vma_commit_reservation().
- 		 *
- 		 * Adjust for the subpool count incremented above AND
- 		 * in hugetlb_reserve_pages for the same page.	Also,
-@@ -3115,27 +3154,8 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 		}
+ 	 * Page reclaim can not participate in regular inode lifetime
+@@ -487,6 +478,21 @@ void truncate_inode_pages_final(struct address_space *mapping)
+ 		xa_lock_irq(&mapping->i_pages);
+ 		xa_unlock_irq(&mapping->i_pages);
  	}
++}
++EXPORT_SYMBOL(truncate_inode_pages_final_prepare);
++
++/**
++ * truncate_inode_pages_final - truncate *all* pages before inode dies
++ * @mapping: mapping to truncate
++ *
++ * Called under (and serialized by) inode->i_rwsem.
++ *
++ * Filesystems have to use this in the .evict_inode path to inform the
++ * VM that this is the final truncate and the inode is going away.
++ */
++void truncate_inode_pages_final(struct address_space *mapping)
++{
++	truncate_inode_pages_final_prepare(mapping);
  
--	ret = mem_cgroup_charge_hugetlb(folio, gfp);
--	/*
--	 * Unconditionally increment NR_HUGETLB here. If it turns out that
--	 * mem_cgroup_charge_hugetlb failed, then immediately free the page and
--	 * decrement NR_HUGETLB.
--	 */
--	lruvec_stat_mod_folio(folio, NR_HUGETLB, pages_per_huge_page(h));
--
--	if (ret == -ENOMEM) {
--		free_huge_folio(folio);
--		return ERR_PTR(-ENOMEM);
--	}
--
- 	return folio;
- 
--out_uncharge_cgroup:
--	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg);
--out_uncharge_cgroup_reservation:
--	if (charge_cgroup_rsvd)
--		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, pages_per_huge_page(h),
--						    h_cg);
- out_subpool_put:
- 	if (!vma_reservation_exists)
- 		hugepage_subpool_put_pages(spool, 1);
+ 	truncate_inode_pages(mapping, 0);
+ }
 -- 
 2.49.0.1045.g170613ef41-goog
 
