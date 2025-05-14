@@ -1,80 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083327464A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E8427EC9C;
+	Wed, 14 May 2025 15:55:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238127; cv=none; b=gISIk2ZOo+IXSs/KLD1XtrAXEFKdQ9GoTIBZuoG3i+PF+xtHD45Ka1ODkTt7rinC/kJIoKxxRak3SqQQli28LP4kgGTkJeON8xF1zMC++csApdlR9fBKsJHWztfsQ9LpIBvgjTcfLTt5WuNfXToc1PdtGLA9A/SdZdtlYrK3fgM=
+	t=1747238128; cv=none; b=GOy5dyaQoOwsslanU1uLVUFvTVEqp4B52zBxllKoFOLM5vbXW/Yt+4HWZqmSrl/amKSkn2GhAvSL9JN05pA8AxvHuyY7p164VqfLsnTIfKmG4J6BXMcIvrXKrOUvavEnWiPAPi83X0CZzn0Mw+xJIfPA+z+5Q+d5C7pnGzD/4dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238127; c=relaxed/simple;
-	bh=LxaouEa62R9bUZ58f8ZlZzAvQOpG2DjBAinwJJVeb0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N7tqDSoZjv0DlOCUQnEs9HjNwDOPdqOpTffDArCOretT4lEqKG/CjgpY86G3PSmAETIs28kZK+hQgCH5qGoJncVIDyFnD+80f9JeK9KPtnJZ1cN9MjUSz6HrqGS2StZS5Tdr8N1FBVBKPPTKSuRO/BL/72jrfYbC1IVzaUUYXEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMiHZgku; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747238128; c=relaxed/simple;
+	bh=+h4Sfsax8izb0iegJaiPTNkMvhFd8oYAzDM8I20tMvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RyqQrwLsrtjcUxsmflP8yDWgyxAIwNZcpkENRErozgyWEmrfZ+0Bai18eCNcgJ7QJNMdVrzhpErwe8t/JKXgaqhAJuH8HMPGCUzUE6N8i53mBSQVpiFVaIfBD5obIvyDFwjHCia1sln+w//gROOSN5MKe6uPMnXqmOJfrl46n5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDaABTOu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMiHZgku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F88C4CEE9;
-	Wed, 14 May 2025 15:55:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDaABTOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D39FC4CEE3;
+	Wed, 14 May 2025 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747238127;
-	bh=LxaouEa62R9bUZ58f8ZlZzAvQOpG2DjBAinwJJVeb0Q=;
-	h=Date:From:To:Cc:Subject:From;
-	b=DMiHZgkuqraG3Sk5/wZDnyuK0LsRlRjO+rjavIrHN+j9PXgSF4mBEQSkjWvyMoAdS
-	 /xzQhwBl/YLVxYpPwA6qa2vax7lBFNBLbMdAnKLRg0RTgFAA4ZACsAHxCaYOLn1SRP
-	 IWVVeeHhKKhCjxx2T8Ri5rxip74+mlY0MpRkIGEOUHekmUnEAVfVGe6oqZFE2bpCFP
-	 6IvGXJmkofy6U+M+oIjyVtM2vYBAqrJYSYYwPrY3vha3KcIOaA5WL+4Sq2UzFGmbNo
-	 Vz+4+uv34edlkstRj+KGtonF+5H7/6MmsjQZpZnkT2PziUPYgiqtXI5AGPuFhesMtq
-	 UtRGY4+ND6mFA==
-Date: Wed, 14 May 2025 08:55:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [GIT PULL] execve fix for v6.15-rc7
-Message-ID: <202505140853.4D9C198E2A@keescook>
+	bh=+h4Sfsax8izb0iegJaiPTNkMvhFd8oYAzDM8I20tMvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MDaABTOue6pdFohNIhff+Lr0CXP9ak4MbrYCB8OZpcTA8kix+7QX2TvoDCxrTuPWV
+	 rAjghtbBS0mEo4Omi+5XoimHzfNdVTqzVfwUw87GJzgB6eHjFUK5/AiPvCiYTdVCMW
+	 OUJkg04/yhlqobxSn8q1mwiNqkxQuw/i1J2Vg7tZEdI/VpmmO7NznfaZ5MZMbU+UVm
+	 8wtmXf/nVPrQiOc1OKVl4I2uAk7tyWBPzdSDwVdG0BecDbM4+eQRUR+LkfTGTP7luo
+	 luYK6GUvEHI2LXRHj5Ixw/kv6T0JDui+vf2zFbxxLPHn33FPYRf4Jz71Lh9siwazfa
+	 lvSo62fW0512w==
+Date: Wed, 14 May 2025 16:55:22 +0100
+From: Conor Dooley <conor@kernel.org>
+To: aleksa.paunovic@htecgroup.com
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Djordje Todorovic <djordje.todorovic@htecgroup.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: timer: mti,gcru
+Message-ID: <20250514-shaping-strive-3041294b6c70@spud>
+References: <20250514-riscv-time-mmio-v4-0-cb0cf2922d66@htecgroup.com>
+ <20250514-riscv-time-mmio-v4-1-cb0cf2922d66@htecgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KqQqrX7qoMOwsoOT"
+Content-Disposition: inline
+In-Reply-To: <20250514-riscv-time-mmio-v4-1-cb0cf2922d66@htecgroup.com>
+
+
+--KqQqrX7qoMOwsoOT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Wed, May 14, 2025 at 10:51:50AM +0200, Aleksa Paunovic via B4 Relay wrot=
+e:
+> From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+>=20
+> Add dt-bindings for the GCR.U memory mapped timer device for RISC-V
+> platforms. The GCR.U memory region contains shadow copies of the RISC-V
+> mtime register and the hrtime Global Configuration Register.
+>=20
+> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
 
-Please pull this execve fix for v6.15-rc7. This fixes a corner case for
-ASLR-disabled static-PIE brk collision with vdso allocations. It's been
-in -next for a couple weeks and I haven't seen anything new pop up.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks!
+--KqQqrX7qoMOwsoOT
+Content-Type: application/pgp-signature; name="signature.asc"
 
--Kees
+-----BEGIN PGP SIGNATURE-----
 
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCS86gAKCRB4tDGHoIJi
+0o6LAPwMzLfr21Cf+1WiqzTQZ7MXalJFDE0qM293QqB29ADuXAEA6D5GoBA8LnuD
+U7YEsN4IXgIgJmmTEb4ZUxoEku2Kbw8=
+=EUjp
+-----END PGP SIGNATURE-----
 
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.15-rc7
-
-for you to fetch changes up to 11854fe263eb1b9a8efa33b0c087add7719ea9b4:
-
-  binfmt_elf: Move brk for static PIE even if ASLR disabled (2025-05-01 17:13:53 -0700)
-
-----------------------------------------------------------------
-execve fix for v6.15-rc7
-
-- binfmt_elf: Move brk for static PIE even if ASLR disabled
-
-----------------------------------------------------------------
-Kees Cook (1):
-      binfmt_elf: Move brk for static PIE even if ASLR disabled
-
- fs/binfmt_elf.c | 71 ++++++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
-
--- 
-Kees Cook
+--KqQqrX7qoMOwsoOT--
