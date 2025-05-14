@@ -1,110 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DB31CFBC;
-	Wed, 14 May 2025 17:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AD319C54E;
+	Wed, 14 May 2025 17:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747244864; cv=none; b=KEfnyRcSI2kq9Uw+JDd++4jExwnwI4jrrrSOBScBJYrHkY5Fk8Uh+T8ojDjhickLkjLOQSU686vQWtylcGLMm/I8GASagVDLXbIqLT6i6holmVjcynUyaIUu7SdVE43laQHJZkzMnWcZjMmMg5Gt+oiLXbXSRfQt62VdeNZeOPw=
+	t=1747244956; cv=none; b=KUDUSb6LuYeGYOfCz6UY14Sk0SNAa+wnYw1PRXPKOoFecRWaDWXdwyICuIkjyYuUg6un339GhPQzTv2c4vvJQctZvsDH84c9V4zJEWh1BVEKlHSV4z0ofwjqINZW/dEUWXt6h8wH0EecjjwM6OZMcLwNLr/zyIbkhektHcpLtg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747244864; c=relaxed/simple;
-	bh=/dQkEDngC+KpH2Gbfq1uiafn+knBm0KwLnMJlW/Shd4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HcIYl/5ODd3bOfGZUKFYUg7OZoN3x3thB85qHYCTJ9iUv3zs4ItHGbNl7MnM+K/HR8tZTrON6DAeCXatQHUUpD8t7c0Zph2Yh212/bIXo1FnvrC3iMmbG/wJIlUat5O0Hc9vIWxI6JlzFNBhK5njYe8p2cZXXH7eerD1TucYmgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBeY9E/S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747244956; c=relaxed/simple;
+	bh=HX/3hIs0chu+gDP0UdaB6NCKBbswm6Ic2pPa9JtF9qw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N5SyS4lUfid66Kg4wHZsI4XZRdaQUtmwED7X5501vk1wqIHCIO4gh+bEif0BJktAJgB90+YMAkNiRkEKTlSQ4b8CX8OQBgpuvt9KDCI6yOO1WZOBRj/6hr1nYJGIMuGakh/OhTdgngB8D1OqkY5R1mi7lgz2MjyQ5j3rS3Jwmo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=S/rCkGLN; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBeY9E/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D46F1C4CEED;
-	Wed, 14 May 2025 17:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747244860;
-	bh=/dQkEDngC+KpH2Gbfq1uiafn+knBm0KwLnMJlW/Shd4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=OBeY9E/SuVOD92u+Iyz048LEu62xxzZ6tt3E8FyTSPif5R2MpeE/PUMaj4oxeBb51
-	 vjlQVyBf0LxONz0CYWxPPQMK/0Wv5FqGoYkrz6lCBuAvuusY5E+wo3Zd/7aL0IkY6x
-	 gpCtQ83CP9d8mnb/YNx+pCJypgnYOvd4oQINRYp2Llhs/soYkh+1cwDIr3ZGG64oNi
-	 aF9I52+Gxs/MgancBmEatL+DIq8JDq0komSf8B+McGSL5d4exry1HZbRSS1pv6LCXA
-	 +s8D4um+VFgzGiVbncIi2d2lpYzWplSRDdZttXlyHBi4iLBsG6CIHVibtWG853aSud
-	 n6K6j6Ymzecxw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 14 May 2025 19:47:16 +0200
-Subject: [PATCH] arm64: dts: qcom: x1e80100-romulus: Enable DP over Type-C
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="S/rCkGLN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=HX/3hIs0chu+gDP0UdaB6NCKBbswm6Ic2pPa9JtF9qw=;
+	t=1747244955; x=1748454555; b=S/rCkGLNittr92NyfQKJPYEACrQ1EKcV5u/olnstgOMdEM9
+	/JCf99a0awnwuJddQQdTx03LKvdRunUefHpBA2GaijKPzwq0GseTp/slI/URvEfoAUY0sGvs8fJUo
+	MriRzLDQhRtnPXGVW00NkuVSBK4IsVtMSIW/ZYsSCX27TLSkeJhf7sc6nG/PvdZgp+kR6Lsd5fKv3
+	mb8mm/h6PEudLQB1d2h5WBpnkie8KzkXiU5380j7u+0ORzYSX9Hbnv+hZhDRAzc/sJ3+jU+tBo5SI
+	tI0htpkLPNANavkdhnOLsZFC7niOPHI9tcdUwdMgFDaCg/c2LAE5nDZrtohGf8gQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uFGEB-00000008U00-1cFh;
+	Wed, 14 May 2025 19:49:11 +0200
+Message-ID: <260e12b34c2043f54f399461274e983e43672093.camel@sipsolutions.net>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Bert Karwatzki <spasswolf@web.de>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, 
+ "llvm@lists.linux.dev"
+	 <llvm@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-wireless@vger.kernel.org
+Date: Wed, 14 May 2025 19:49:10 +0200
+In-Reply-To: <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+				 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+			 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+		 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+	 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-topic-romu_dp-v1-1-6242d6acb5e5@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIACPXJGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0MT3ZL8gsxk3aL83NL4lAJdQwNDI8tk8yTz5LREJaCegqLUtMwKsHn
- RsbW1AIkbUPRfAAAA
-X-Change-ID: 20250514-topic-romu_dp-10129c7b7cfa
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747244857; l=1332;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=idWeA+jW5u6yON1W9MjSzJfFsemDmLMoRNpUHcOfINo=;
- b=u4CCp0uUoBNJwxVoPfpd4Lm6k/Yol/9lrp5dCVZi8jzk2l4y9afghQ5abndQXE6EUfpF0HEsY
- KqMJsdqgOGbCdgy7hkeFqE5cY0Nc6rxWWJ5AbgRA6EXCavEqrhZ2by7
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+X-malware-bazaar: not-scanned
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, 2025-05-14 at 15:46 +0200, Bert Karwatzki wrote:
+>=20
+> When compiled with clang the disassembly of the function is (from objdump=
+ -d)
 
-Both ports seem to work, just like on other X1E laptops.
+Can you show with relocations ("objdump -dr" I think)? The jumps with
+four 00 bytes don't really make sense if there aren't relocations for
+them.
 
-Tested with a Type-C-to-HDMI2.0 dock (translating into up to 2 DP lanes
-worth of bandwidth).
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- .../boot/dts/qcom/x1e80100-microsoft-romulus.dtsi      | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-index 26ae19b34b37e0e3c67eb4543de898e94e62c678..0fd8516580b2679ee425438cb73fd4078cb20581 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-@@ -944,6 +944,24 @@ &mdss {
- 	status = "okay";
- };
- 
-+&mdss_dp0 {
-+	status = "okay";
-+};
-+
-+&mdss_dp0_out {
-+	data-lanes = <0 1>;
-+	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
-+};
-+
-+&mdss_dp1 {
-+	status = "okay";
-+};
-+
-+&mdss_dp1_out {
-+	data-lanes = <0 1>;
-+	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
-+};
-+
- &mdss_dp3 {
- 	/delete-property/ #sound-dai-cells;
- 
-
----
-base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
-change-id: 20250514-topic-romu_dp-10129c7b7cfa
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+johannes
