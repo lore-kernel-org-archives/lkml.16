@@ -1,148 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791B43169;
-	Wed, 14 May 2025 06:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912151FCFF1
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747205543; cv=none; b=br7PCLf/2SnX7PNmqrO+KhjAOMZH0jaQCzkzjpbkD+FqPmmsRljTw5GdrN/+fPoweJssf3/L3FHIA3RTy66QNKy1cuqxgZwPcUJDfmKCjbz7dzXY02eJTtRgmMcehGraSZGPueroksToMHUMQGaoZsI0aZ5/4A/q6G+PNT4WVRw=
+	t=1747205726; cv=none; b=i9RDa+3RiqGRzRpMp02YPsnIGqSXcvMAVkYVM6dT6M8sb6K4PMDHAiMv1YtvSJGIHYz5B5vELx/U3693cRmWH5740H3nbub+9wjE+OwpiaJjq/kRedGuSCqxRF0sSK8BFKp1asHTiRKfI6SwVVRIhHz4oW9LuZPGJN+8nCJjdts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747205543; c=relaxed/simple;
-	bh=oHnLgoHoVliB2FSyG6HXMzMLz6sBG7fjR8CjZ5XHDwM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kbdxPtyuRkaRpDLxspGDk5bsAgi4+PuC/5SGrak40whcQpEjre7Vh/UtW6QygOGNp0NoAKr6ClVRioDyrHkOexo9NZN9C6BtSQtVJE+eViFNZxJFZ8pqQKM7VNJYpX4t7s8O+C7yCLzlUji1OZZWs81UUp4u4fLEcYZsrvL90rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eq+rltEb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747205726; c=relaxed/simple;
+	bh=0ljOpkyfjZqanSaEy5/y8FMJStiCHYKcp1rDILKb3hc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EaQWvoL//tByNMB0wc4ug9rQCG7H3U+iy5yTPnWTcM+P5AvQI383o9Seo3w2ewXUug6C0vvhlnjx3tR1LggmA1G26Fh1I0X3sOdFe48EE5SL7I+Bo7GuMCoPx7NVxqJ1lSt4ioTA5qV5+Xz+XnzuH5OnrkRCgBJmg891WNt5pDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SnjSJ9xn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eq+rltEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C70C4CEEB;
-	Wed, 14 May 2025 06:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747205542;
-	bh=oHnLgoHoVliB2FSyG6HXMzMLz6sBG7fjR8CjZ5XHDwM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eq+rltEbb/KV5yK697jJJy39sqBC3wWFRdtDrGIPUoh6wThtKmhWmkemcXJupBF1q
-	 uVLP11FWvdxyctxI4AHFP826TPNOgukbXO+PyMO8zVocEz5ad2MeTLUBP2W0Mvwsfg
-	 HWy2Z7YL5E64rdvlPHAMgap6CRZeDuJAdOC70PceW9Q9fvTh+bwtSYrH8QxCGJngn+
-	 6+IpadUvScVPclWfFvE/XeH8mHiqKUuGo2BuLJrvv1qJ9Q5X/JZXWVLcKl2mB60KHR
-	 J24r1xYqV2stllsr0WX7Z4R5euIqvvOQoc+OlQtXeA4DqiSkjyz97mnq78MrampPJ6
-	 gyR6+bUvemL2g==
-Date: Wed, 14 May 2025 15:52:20 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tasos Sahanidis <tasos@tasossah.com>
-Subject: Re: [PATCH] ring-buffer: Fix persistent buffer when commit page is
- the reader page
-Message-Id: <20250514155220.54584891585d57c317aa22ac@kernel.org>
-In-Reply-To: <20250513115032.3e0b97f7@gandalf.local.home>
-References: <20250513115032.3e0b97f7@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SnjSJ9xn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747205723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HYzBb5SJ78VUZP41t3KTybXYvlm+RxzbkoO9o+em8bU=;
+	b=SnjSJ9xnEJ9vqdupqM2fBI+AupDUESdWO251z2fzYdUjgMzPjGEc7mD9L6fWGd2yGXswJ7
+	hBgESNxJitgHP0AQMDRM4owXtHb+PVeAbE81u8qvc6z9InAEFXok2zvsBW/kI16Tc7hc1/
+	YENGoiC+YWQ+QvxtOMN4qL15tzc3N+E=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-384-RmNDBOVpPoKUQ_XQgZ-TTA-1; Wed, 14 May 2025 02:55:21 -0400
+X-MC-Unique: RmNDBOVpPoKUQ_XQgZ-TTA-1
+X-Mimecast-MFC-AGG-ID: RmNDBOVpPoKUQ_XQgZ-TTA_1747205721
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so33647725e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747205720; x=1747810520;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HYzBb5SJ78VUZP41t3KTybXYvlm+RxzbkoO9o+em8bU=;
+        b=LGHxiMRgvKQQVGonjgniRZt8jRxKLZcpgEjUbgU76zVtxJWnMYe94JHG2EyhXa5ybc
+         KE/zo2dr3moLT/L+pxgcFrFH+k9oEPKOaCf0OuibOB9Ey8UBAqQ25b08bRtCg8tXNF8j
+         4uupaLBuWxubOflDJD43KiXnx+jFTKN/9/i1JWwjb/MtxgzkepgTjrZaQC4kJJAwoeqV
+         iDeKRL4uXUSeZ6llzfsl/ISt6UyvV5j/HpSH5paA6ekreVmMvJb6j3xg0hX/xBHhNkm/
+         GqYv8HHHD1RZvxYm51GDvXJ0WLn3SKrW8DJyvKiApwFCttlksCx9AaRZTQJ4AtHOpH2d
+         FyAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXauFzyH0FUyd6NjvSjCMzzKySrOAibEhXhYrUHvnno8orcn1I6l0N/Gg5F/FbXjNgq0TFftKXcHqHI4eI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoDOKsqVhn+kJQiiALSgzzN+DV+jEF3OQvZVBjbR3lPIDse6jK
+	oP+jC3Rw1SMYYEWrJDr/Jx9oX63DkuelUn3t1c2D62g1S9+cWO4RudfLCK5KKK8d0AC5aLfyh+E
+	QsHBlLg1CHV//Qb+YpLgGBNxzD1O4qSJJgkNjaHSMNvpMxOOFesX1geqjdY3/RA==
+X-Gm-Gg: ASbGncvCRuWBJa6FWhDyhvuvPj0v5K0DZ61O81lzDCJsDhL17ECiv6wyS8t3dacArQ5
+	i3AGOOKpkXBxTKIV2F/i7/M4frdXXpjr/2fBIrAlicxVX5I77wvPoMlurLle9j//j3EII336cOC
+	yYHaQhiOzhJfvGXZRcKQEKxmzuZfEoLUy0FZ1daewxWvlBzz19zPI2RJkxjppb3Z4Wv0bzYwjYf
+	bvXtlQuQWoWtFyrEff5ZtiqIdVKEoOxV7jNUl76V86xF09HHLt9JTdv1tP8YLGFz6Ed4nrOO4AP
+	LrOJdb3NS/1Fa5gn1z6g6EgN2ic5ejHQ7/+iQdgKg84cz/DR9apo623HqQ==
+X-Received: by 2002:a05:600c:474a:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-442f2177839mr14481415e9.28.1747205720118;
+        Tue, 13 May 2025 23:55:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFwOplruz65UjRaahKOum0fhAp3drpaJMqfFD47FxF0twZaXDmYs20HOpHSKREcFKpD0U5mQ==
+X-Received: by 2002:a05:600c:474a:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-442f2177839mr14481185e9.28.1747205719752;
+        Tue, 13 May 2025 23:55:19 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395060esm16218525e9.17.2025.05.13.23.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 23:55:18 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Daniel Wagner <wagi@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Hannes Reinecke <hare@suse.de>,
+	Ming Lei <ming.lei@redhat.com>,
+	John Garry <john.g.garry@oracle.com>,
+	linux-block@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] block: Remove obsolete configs BLK_MQ_{PCI,VIRTIO}
+Date: Wed, 14 May 2025 08:55:13 +0200
+Message-ID: <20250514065513.463941-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 11:50:32 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-> \From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The ring buffer is made up of sub buffers (sometimes called pages as they
-> are by default PAGE_SIZE). It has the following "pages":
-> 
->   "tail page" - this is the page that the next write will write to
->   "head page" - this is the page that the reader will swap the reader page with.
->   "reader page" - This belongs to the reader, where it will swap the head
->                   page from the ring buffer so that the reader does not
->                   race with the writer.
-> 
-> The writer may end up on the "reader page" if the ring buffer hasn't
-> written more than one page, where the "tail page" and the "head page" are
-> the same.
-> 
-> The persistent ring buffer has meta data that points to where these pages
-> exist so on reboot it can re-create the pointers to the cpu_buffer
-> descriptor. But when the commit page is on the reader page, the logic is
-> incorrect.
-> 
-> The check to see if the commit page is on the reader page checked if the
-> head page was the reader page, which would never happen, as the head page
-> is always in the ring buffer. The correct check would be to test if the
-> commit page is on the reader page. If that's the case, then it can exit
-> out early as the commit page is only on the reader page when there's only
-> one page of data in the buffer. There's no reason to iterate the ring
-> buffer pages to find the "commit page" as it is already found.
-> 
-> To trigger this bug:
-> 
->   # echo 1 > /sys/kernel/tracing/instances/boot_mapped/events/syscalls/sys_enter_fchownat/enable
->   # touch /tmp/x
->   # chown sshd /tmp/x
->   # reboot
-> 
-> On boot up, the dmesg will have:
->  Ring buffer meta [0] is from previous boot!
->  Ring buffer meta [1] is from previous boot!
->  Ring buffer meta [2] is from previous boot!
->  Ring buffer meta [3] is from previous boot!
->  Ring buffer meta [4] commit page not found
->  Ring buffer meta [5] is from previous boot!
->  Ring buffer meta [6] is from previous boot!
->  Ring buffer meta [7] is from previous boot!
-> 
-> Where the buffer on CPU 4 had a "commit page not found" error and that
-> buffer is cleared and reset causing the output to be empty and the data lost.
-> 
-> When it works correctly, it has:
-> 
->   # cat /sys/kernel/tracing/instances/boot_mapped/trace_pipe
->         <...>-1137    [004] .....   998.205323: sys_enter_fchownat: __syscall_nr=0x104 (260) dfd=0xffffff9c (4294967196) filename=(0xffffc90000a0002c) user=0x3e8 (1000) group=0xffffffff (4294967295) flag=0x0 (0
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 5f3b6e839f3ce ("ring-buffer: Validate boot range memory events")
-> Reported-by: Tasos Sahanidis <tasos@tasossah.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Commit 9bc1e897a821 ("blk-mq: remove unused queue mapping helpers") makes
+the two config options, BLK_MQ_PCI and BLK_MQ_VIRTIO, have no remaining
+effect.
 
-Looks good to me.
+Remove the two obsolete config options.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ block/Kconfig | 8 --------
+ 1 file changed, 8 deletions(-)
 
-Thanks,
-
-> ---
->  kernel/trace/ring_buffer.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 1ca482955dae..6859008ca34d 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -1887,10 +1887,12 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  
->  	head_page = cpu_buffer->head_page;
->  
-> -	/* If both the head and commit are on the reader_page then we are done. */
-> -	if (head_page == cpu_buffer->reader_page &&
-> -	    head_page == cpu_buffer->commit_page)
-> +	/* If the commit_buffer is the reader page, update the commit page */
-> +	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
-> +		cpu_buffer->commit_page = cpu_buffer->reader_page;
-> +		/* Nothing more to do, the only page is the reader page */
->  		goto done;
-> +	}
->  
->  	/* Iterate until finding the commit page */
->  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
-> -- 
-> 2.47.2
-> 
-
-
+diff --git a/block/Kconfig b/block/Kconfig
+index df8973bc0539..15027963472d 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -211,14 +211,6 @@ config BLK_INLINE_ENCRYPTION_FALLBACK
+ 
+ source "block/partitions/Kconfig"
+ 
+-config BLK_MQ_PCI
+-	def_bool PCI
+-
+-config BLK_MQ_VIRTIO
+-	bool
+-	depends on VIRTIO
+-	default y
+-
+ config BLK_PM
+ 	def_bool PM
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
