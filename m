@@ -1,124 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3108278172;
-	Wed, 14 May 2025 12:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7615275878
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747224592; cv=none; b=Oorihrd5xqoD5OwThmvenHL8qkUOAM3ElJG0loHqnTobkfAY38UFDw94iGv5dcVPE1rSZ703r8aEe7BCgY7VqMFTmTm5WEOGkdY2GfHGklgfhD1OEtg20YcxzVbGgG0zVrpf+54hqAyRAQN91UMCUkWrVhTzz1yqzlEwerDRko8=
+	t=1747224651; cv=none; b=Zv211O8g5iekpqx0a/tH42MI1zsKeDV4oYRfi+iLIWeaXNVTy7UAx9pg+vCWI7dP0kqYX9kiMlbPxQBLaOE5m2+PGEIgROcuWH5gdpYgZ8BiWc/e1ab/mw3/axV7j6GKvU0Ye5VPM7SsuPxb/Uu6h6WwB8R1PuVgwH0te5+nN2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747224592; c=relaxed/simple;
-	bh=G+zX7yuG29hH5z39xxu37DP3nN6P2PRPMHIngMLxze0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ejvuQzPq8j/Q+2ACuyxanbZwgnkBPFoannC+U78ZZrBUwx+atFvzwaeSdDJc+c75deNG/a7eCjhK6Wsl/bc3L9jrmAuoWydOKbA8mIeLsohdeXJ/vbAStQYt8v+g3lJGHwveiBGFJIapVvMHAIDRldfBm/9P3E03gkd7vYH3mzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OAVJvTnQ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747224651; c=relaxed/simple;
+	bh=ujFU64lUnTiA1/QHpshqazoqqgK3H8Ez9VWMW+ljgu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OcItK/nAc7xpo8izG4kDW94asDLX0i/ZyRA7I1MDAny5qyuWcKbrJw5toqtr1DdTsnN8t+jtWyoGAOjrfQagMEOhQB1Orb/poq2avQSn/zgFBBmCSDDfJSDKz/nCXMzO9zsMx9Txjhthfu3bmYjVzbL+S8NH19sJ9JqoxX67dKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjLPrrgL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NaRt2/Uz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjLPrrgL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NaRt2/Uz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OAVJvTnQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747224591; x=1778760591;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=G+zX7yuG29hH5z39xxu37DP3nN6P2PRPMHIngMLxze0=;
-  b=OAVJvTnQaQRv27Jwy9muP3Gwsn3o/QQeLZm5mlObsw1EMBfkEeBSK3TP
-   V9Yoy0Fb7endq3LH97WTP+Hbr8/PsmMeK/ozu9dEgBrq4YKhDoFzIh23t
-   N1sZFeI+0J2kYDbpovhd3wt+leNCr8Yb+enVYHspQR+xFtKJS2/ICQ/cS
-   dXjx3Ylj83qnZp/USlfr3xpYqFis5YZ5tVKv8BLA6X8SxqdZ/WzS2k3i/
-   HO60UJ/GXDyQl5etBahZOOk/91zskaRuIXpqswEs9qBMxoc8xeHsN933v
-   I09Q1L0STCXpqOyOkDhdpI3EUfnwPQW8svFJMU2RvOuug4p/xR1n1KdYD
-   A==;
-X-CSE-ConnectionGUID: cLUXxFV1RfSNLSlsTmbG0w==
-X-CSE-MsgGUID: EcOwjA+MRPSPnI584Ithhw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52925403"
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="52925403"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:09:51 -0700
-X-CSE-ConnectionGUID: 2d6TnqmwRcSXrkWWQZURaQ==
-X-CSE-MsgGUID: gLyib5SOTgyckvMioRYUuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="168964151"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.231])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:09:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 May 2025 15:09:44 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: Move reset and restore related code to
- reset-restore.c
-In-Reply-To: <aCSB9Y5OwNkdiuez@wunner.de>
-Message-ID: <096fbf51-cbbf-67ca-862d-9563f88d7f2d@linux.intel.com>
-References: <20250512120900.1870-1-ilpo.jarvinen@linux.intel.com> <aCRBFWHKa02Hu-ec@wunner.de> <7c8ebe5d-a5be-6aba-1b84-15dd2f32b52f@linux.intel.com> <aCSB9Y5OwNkdiuez@wunner.de>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjLPrrgL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NaRt2/Uz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjLPrrgL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NaRt2/Uz"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D16A01F745;
+	Wed, 14 May 2025 12:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747224646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
+	b=mjLPrrgLHlt+uXShOhyDAy/FpSMJaFSOUxmUDhtG0J+v+vjkmPwq8pne0bvJ6B3jc+qlyy
+	sqQfahb1UcC1AhI1m7QWS6vVEw4L4w1TnfObHfxFK3ETV/HxGA+uQ2lHc5w0In8WYnxt5p
+	YKV03EDbyAXtyulGCNjI2/F0H2psbOo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747224646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
+	b=NaRt2/UziOA672AmZIuYg6dQ8m4AL5lbhAgC6p8eP2LKvjGiSmon2085un6zbIEa/hdMjz
+	nqbocSZWw+QOYtAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747224646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
+	b=mjLPrrgLHlt+uXShOhyDAy/FpSMJaFSOUxmUDhtG0J+v+vjkmPwq8pne0bvJ6B3jc+qlyy
+	sqQfahb1UcC1AhI1m7QWS6vVEw4L4w1TnfObHfxFK3ETV/HxGA+uQ2lHc5w0In8WYnxt5p
+	YKV03EDbyAXtyulGCNjI2/F0H2psbOo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747224646;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
+	b=NaRt2/UziOA672AmZIuYg6dQ8m4AL5lbhAgC6p8eP2LKvjGiSmon2085un6zbIEa/hdMjz
+	nqbocSZWw+QOYtAQ==
+Date: Wed, 14 May 2025 14:10:45 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>,
+	Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v3] tpm: tis: Double the timeout B to 4s
+Message-ID: <aCSIRS1fq_b9sByn@kitsune.suse.cz>
+References: <4e4640bd-0313-4594-9667-82340ed9368a@molgen.mpg.de>
+ <20250404082325.13876-1-msuchanek@suse.de>
+ <Z--d7Obw2UEk8Pve@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1317786367-1747224584=:1054"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z--d7Obw2UEk8Pve@kernel.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmx.de,ziepe.ca,vger.kernel.org,earth.li,molgen.mpg.de];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
---8323328-1317786367-1747224584=:1054
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Fri, Apr 04, 2025 at 11:53:00AM +0300, Jarkko Sakkinen wrote:
+> On Fri, Apr 04, 2025 at 10:23:14AM +0200, Michal Suchanek wrote:
+> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> > C) can reach up to about 2250 ms.
+> > 
+> > Timeout C is retried since
+> > commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
+> > 
+> > Timeout B still needs to be extended.
+> > 
+> > The problem is most commonly encountered with context related operation
+> > such as load context/save context. These are issued directly by the
+> > kernel, and there is no retry logic for them.
+> > 
+> > When a filesystem is set up to use the TPM for unlocking the boot fails,
+> > and restarting the userspace service is ineffective. This is likely
+> > because ignoring a load context/save context result puts the real TPM
+> > state and the TPM state expected by the kernel out of sync.
+> > 
+> > Chips known to be affected:
+> > tpm_tis IFX1522:00: 2.0 TPM (device-id 0x1D, rev-id 54)
+> > Description: SLB9672
+> > Firmware Revision: 15.22
+> > 
+> > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 22)
+> > Firmware Revision: 7.83
+> > 
+> > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1A, rev-id 16)
+> > Firmware Revision: 5.63
+> > 
+> > Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > v2: Only extend timeout B
+> > v3: Update commit message
+> > ---
+> >  drivers/char/tpm/tpm_tis_core.h | 2 +-
+> >  include/linux/tpm.h             | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> > index 970d02c337c7..6c3aa480396b 100644
+> > --- a/drivers/char/tpm/tpm_tis_core.h
+> > +++ b/drivers/char/tpm/tpm_tis_core.h
+> > @@ -54,7 +54,7 @@ enum tis_int_flags {
+> >  enum tis_defaults {
+> >  	TIS_MEM_LEN = 0x5000,
+> >  	TIS_SHORT_TIMEOUT = 750,	/* ms */
+> > -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
+> > +	TIS_LONG_TIMEOUT = 4000,	/* 4 secs */
+> >  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+> >  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+> >  };
+> > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> > index 6c3125300c00..3db0b6a87d45 100644
+> > --- a/include/linux/tpm.h
+> > +++ b/include/linux/tpm.h
+> > @@ -224,7 +224,7 @@ enum tpm2_const {
+> >  
+> >  enum tpm2_timeouts {
+> >  	TPM2_TIMEOUT_A          =    750,
+> > -	TPM2_TIMEOUT_B          =   2000,
+> > +	TPM2_TIMEOUT_B          =   4000,
+> >  	TPM2_TIMEOUT_C          =    200,
+> >  	TPM2_TIMEOUT_D          =     30,
+> >  	TPM2_DURATION_SHORT     =     20,
+> > -- 
+> > 2.47.1
+> > 
+> > 
+> 
+> Cc: stable@vger.kernel.org # v6.1+
+> 
+> Probably best that I'll piggyback a patch set for stable with the two
+> fixes, in order to cause least noise. I need to do this *after* an
+> ack'd PR to -rc2.
 
-On Wed, 14 May 2025, Lukas Wunner wrote:
+While there is talk about stable this does not seem to be applied
+anywhere I could find. Is that expected?
 
-> On Wed, May 14, 2025 at 02:29:42PM +0300, Ilpo J=E4rvinen wrote:
-> > On Wed, 14 May 2025, Lukas Wunner wrote:
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -69,15 +69,7 @@ struct pci_pme_device {
-> > > >   */
-> > > >  #define PCI_RESET_WAIT 1000 /* msec */
-> > >=20
-> > > I'd move PCI_RESET_WAIT, pci_dev_wait() and
-> > > pci_bridge_wait_for_secondary_bus() to reset.c as well.
-> > > Then pci_dev_d3_sleep() is the only function which is no longer stati=
-c.
-> >=20
-> > Okay I'll move those as well but that static statement is not exactly=
-=20
-> > true, I'll these need to do these as well:
-> >=20
-> > - move pci_bus_max_d3cold_delay() along with=20
-> >   pci_bridge_wait_for_secondary_bus() to keep that static, or turn that
-> >   into a non-static.
-> >=20
-> > - make pcie_wait_for_link_delay() non-static.
->=20
-> Sorry, missed that.  In that case I suggest moving pcie_wait_for_link()
-> as well.  It is already non-static.  Then you can keep the static on
-> pcie_wait_for_link_delay().
->
-> Per PCIe r6.2 sec 5.8, a transition from D3cold to D0uninitialized
-> implies a Fundamental Reset.  That could serve as a creative
-> justification in the commit message or in the code comment at the
-> top of reset.c why it contains D3cold-related functions. ;)
+Thanks
 
-Great, this is mushrooming fast :-).
+Michal
 
-That implies making pcie_wait_for_link_status() non-static, regardless of=
-=20
-location or moving also pcie_retrain_link() which I suppose can't really=20
-be excused to reside in reset.c :-). Now that I think about it, I recall=20
-I ran across this problem which is why the split ended where it was in=20
-this submission.
-
-Maybe, it would make sense to have not only reset.c but also link.c=20
-(for waiting, retraining, and link speed related functions). Those two=20
-files (link.c and reset.c) are kind of inter-related still but the=20
-interface between looks relatively sane and should be one-way (I think, I=
-=20
-didn't attempt this dual split yet).
-
---=20
- i.
-
---8323328-1317786367-1747224584=:1054--
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> 
+> BR, Jarkko
