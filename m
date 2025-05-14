@@ -1,99 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10331F4285;
-	Wed, 14 May 2025 09:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEB22ACCE;
+	Wed, 14 May 2025 09:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215471; cv=none; b=alFNk6N5kJZPIASVwMUpW7YjYtN6+TUb57Ic6FruaKtcpdpCq0gA3Q7LYwYq0mN2lGCH5QfFi70yvq+riNqd/OTuN7t197yDC4noWTEh5n2DKe00jLu0qXEDPW4WtlcxqY6CRv3YCQdFMPZZRZs7A1dDg01XOck8/gtI/q5wzn4=
+	t=1747215477; cv=none; b=YSPiGqLT6OzUx8NWPDStDgKdnH43pehOZqC9q7CMwQ2tblHfah6Sx/wiyzzqkE1ZocnkptpE+mYivvpo5XJN7kgqoNGDhsY2/nzIexLR+/rcdOS/idDvAxYi97bOJPd21AMIXYX+4DuVRxd6+ykUZfrTKsg91JK6pL0HvY4EGuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215471; c=relaxed/simple;
-	bh=Qtslue7uND0uNsx0uKGx+CdibLc19hhJUSS3+9znthQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=hpsF4pogFEUYIkFIXUnyKPBgmy726/p4OKF51dTjJ+zHee84yZTaBJNLMUAcaVAKRYnqXw1TDkxFYFkPpkt7NoOzT1wUl6JPd6kCjEgkIMbWeko0w9F4EcwBX8RS9mTC8E6OK8kIDm8MUSLLx3k6o1DsM959Zw7PWEwtpY/Gezs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2jIfUct; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747215477; c=relaxed/simple;
+	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgQvUFNWaIknILT3HxuLtcnu3ILxmaGjPOpKs5MeRHoxan4gp3da0GmzLW4whyPLHAEd13aFd2/0LVCDngW17Zxz2sM3zxBQRm98xmhWa/KCEwfL8IyfelB7vX+cSJ7XKcbESsDpJ+jyAf1EOb7AZNZQ6vT1BAFX5rK7ccAQLJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBYxh0W3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2jIfUct"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27CBC4CEE9;
-	Wed, 14 May 2025 09:37:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBYxh0W3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D65DC4CEEB;
+	Wed, 14 May 2025 09:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215471;
-	bh=Qtslue7uND0uNsx0uKGx+CdibLc19hhJUSS3+9znthQ=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=r2jIfUctWnzKhNY+6+c+YyvGKv4lRUj5PP1CftgSQJ17wJIwW3IRcMWds6Fmf192A
-	 D3KzXya1KP4xje8mkOc2gLf5HyDwNBoGxfcxv5NL+3fKBHpMzV1s8ZxAfQnhwhXUc8
-	 a/QWK5ZlXYWOaaWr4zrzPlPg+Ol3Xk3T+li/lEuTEeVkPducVITbI9n17yr7+euuSb
-	 PMrvxsg+67np1NSUvMEY++mCd04yGO4zbhURnA+cZKBfpR6ItzxS5/cm7qGuD/D1m3
-	 7GKegRxjY+01itpoEO4NC3GOvoUuc2+qJJgO4Ck5WNo2XipYbDc+zFy83Aj6jLUxtF
-	 sYPzzYLmYPlwg==
+	s=k20201202; t=1747215476;
+	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cBYxh0W3tiCiq6Ri/9ZWOL4LFwslxGL8iDU9kKOrVza7U2egvvwsWSjfZWtRhBKED
+	 FeuiIqGeiawtU/chMWX+08IyuhK++0NZwI3O7MjcVwqr897AnF6Wcvpx3Hl1BUZ/9R
+	 h2U7T8YKt8C+WqrpqxAbRA+LM1ls9BXOf+fy8dS0nEV7XM8VMREff6m9gypZraKL/M
+	 /UTXYGUwa3sKzXofDq74PbH+7ZUlQrlYVZVYjJUXOASDGVXvnm+k8BU0TuCiT45UWx
+	 tT85cjVrBLNx4n3EhKiRCyFRykqQ6rFY44JxUiy0tqbgjOdItiSugScA/JFqPMxISb
+	 K1EDDzvY81d8A==
+Date: Wed, 14 May 2025 10:37:51 +0100
+From: Simon Horman <horms@kernel.org>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH net 2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to
+ send VMBus messages
+Message-ID: <20250514093751.GF3339421@horms.kernel.org>
+References: <20250513000604.1396-1-mhklinux@outlook.com>
+ <20250513000604.1396-3-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 11:37:46 +0200
-Message-Id: <D9VS6WE94O04.GXFI0K5BH4XN@kernel.org>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Mark Brown" <broonie@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <aCRKR5h_X04OXgjq@finisterre.sirena.org.uk>
-In-Reply-To: <aCRKR5h_X04OXgjq@finisterre.sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513000604.1396-3-mhklinux@outlook.com>
 
-On Wed May 14, 2025 at 9:46 AM CEST, Mark Brown wrote:
-> On Tue, May 13, 2025 at 10:01:05PM +0200, Benno Lossin wrote:
->> On Tue May 13, 2025 at 5:44 PM CEST, Daniel Almeida wrote:
->
->> > +/// A [`Regulator`] that is known to be enabled.
->> > +///
->> > +/// # Invariants
->> > +///
->> > +/// - [`EnabledRegulator`] is a valid regulator that has been enabled=
-.
->
->> This isn't fully clear what it's supposed to mean to me. Maybe mention
->> the `regulator_enable` function?
->
-> I suspect this is adequately clear to someone with the domain specific
-> knowledge required to be using the API.
+On Mon, May 12, 2025 at 05:06:01PM -0700, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> netvsc currently uses vmbus_sendpacket_pagebuffer() to send VMBus
+> messages. This function creates a series of GPA ranges, each of which
+> contains a single PFN. However, if the rndis header in the VMBus
+> message crosses a page boundary, the netvsc protocol with the host
+> requires that both PFNs for the rndis header must be in a single "GPA
+> range" data structure, which isn't possible with
+> vmbus_sendpacket_pagebuffer(). As the first step in fixing this, add a
+> new function netvsc_build_mpb_array() to build a VMBus message with
+> multiple GPA ranges, each of which may contain multiple PFNs. Use
+> vmbus_sendpacket_mpb_desc() to send this VMBus message to the host.
+> 
+> There's no functional change since higher levels of netvsc don't
+> maintain or propagate knowledge of contiguous PFNs. Based on its
+> input, netvsc_build_mpb_array() still produces a separate GPA range
+> for each PFN and the behavior is the same as with
+> vmbus_sendpacket_pagebuffer(). But the groundwork is laid for a
+> subsequent patch to provide the necessary grouping.
+> 
+> Cc: <stable@vger.kernel.org> # 6.1.x
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/net/hyperv/netvsc.c | 50 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+> index d6f5b9ea3109..6d1705f87682 100644
+> --- a/drivers/net/hyperv/netvsc.c
+> +++ b/drivers/net/hyperv/netvsc.c
+> @@ -1055,6 +1055,42 @@ static int netvsc_dma_map(struct hv_device *hv_dev,
+>  	return 0;
+>  }
+>  
+> +/* Build an "array" of mpb entries describing the data to be transferred
+> + * over VMBus. After the desc header fields, each "array" entry is variable
+> + * size, and each entry starts after the end of the previous entry. The
+> + * "offset" and "len" fields for each entry imply the size of the entry.
+> + *
+> + * The pfns are in HV_HYP_PAGE_SIZE, because all communication with Hyper-V
+> + * uses that granularity, even if the system page size of the guest is larger.
+> + * Each entry in the input "pb" array must describe a contiguous range of
+> + * guest physical memory so that the pfns are sequential if the range crosses
+> + * a page boundary. The offset field must be < HV_HYP_PAGE_SIZE.
 
-I still think it's useful to name the exact function that is meant by
-"enabled".
+Hi Michael,
 
->> > +impl EnabledRegulator {
->> > +    fn as_ptr(&self) -> *mut bindings::regulator {
->> > +        self.inner.inner.as_ptr()
->> > +    }
->
->> > +    /// Disables the regulator.
->> > +    pub fn disable(self) -> Result<Regulator> {
->> > +        // Keep the count on `regulator_get()`.
->> > +        let regulator =3D ManuallyDrop::new(self);
->
->> Why don't we drop the refcount if the `regulator_disable` call fails?
->
-> If you fail to disable the regulator then the underlying C code won't
-> drop it's reference count.
+Is there a guarantee that this constraint is met. And moreover, is there a
+guarantee that all of the entries will fit in desc? I am slightly concerned
+that there may be an overrun lurking here.
 
-So if it fails, the regulator should stay alive indefinitely? Would be
-useful to explain that in the comment above the `ManuallyDrop`.
-
----
-Cheers,
-Benno
+...
