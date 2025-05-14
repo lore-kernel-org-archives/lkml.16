@@ -1,83 +1,208 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEC921ADC3;
-	Wed, 14 May 2025 08:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429F421C198
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210283; cv=none; b=kzNUV+vwy0xoXiZwd/tnYZZavv5NER5B0iXyO7uAwDoZKOhS+bZHrVSecDn2baRrxLRSwcQoa5sMLLv268nIuzp3xckIHPi33yBTyfgGLNISM6l/Ii7iaD1RNAM3AihWjzm88RtjQLRyIK6xrSW2B+cXRBXhPPytb9G2DASjZc8=
+	t=1747210288; cv=none; b=gRyYb84jzxMqkYbeD9GPt8rsu4DjxlhiraKTUYUFpHwaSfLErYyTa6aCNqSLesJtRzlyjD1dy3LSrpcWz2EOpmOtwIvdgS604QQx2uor1tZ4strWn1mZqS9PfpcwQ/rsykj8v0g9uJvPLTMUXEKk8bF8qR8Sa1F5Xai89ZZ73ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210283; c=relaxed/simple;
-	bh=crecp3yT2SZLjBUhnRURx5oUzcLwjGoGZoCGTxx3isA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z/T9YBr2oS7VHmxqCuSXB3giFphDxOYB/yWsst8MXNMYBmnUMr4Y9wmGek3s/FxCbv2OgYpiIAPeT2ioRrF4dusrqDV/covF6Ps+x4g7kBD8FLkN7dYwp6nmmUbAnkOcseZ17at5Ct+bHDcBiT3whNiqqwbwoK8L4c0vZwjDnPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Q3ohjz62; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747210288; c=relaxed/simple;
+	bh=622Iu0+yPrJdvhe2WY0qA9BGsbiJy6w7TwPlvD4CLaM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gLQ8t4NX7A8TY7cVmZjSBJr6kU0bNHTYf2ezz8DYG1/hWY36GBuQ08rKOnBd7dSN49sznc4banbpvZImuzlCvIHGkii/zjX+a9xcG9cnPR+DTIwPTA/tiyAjQ3HOXPqQQKXmALNRzuRA3WM2YUV+v4mk2mAzfpc8J3ThBCTx89I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRgifY2+; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Q3ohjz62"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747210279;
-	bh=crecp3yT2SZLjBUhnRURx5oUzcLwjGoGZoCGTxx3isA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q3ohjz62grUXQrGlMZmV14eAlrlnVDazHA+kNoz2opWnap5zMJoUYEri+JOLeIYO8
-	 1l0nsxPkr994hI4PSEzVqba64Tny61FlFN9GYmwZXDIcEbJytJe8wMjSSDJ6/m/a/F
-	 KBEHwPY/ovWtKaIUnBWPpxBf/47bWFJxiX5BXB7JRTdOCtT+uhs7MM4GbkO2lCH5pG
-	 PBscEESi+ceSpfJQemzEQlTpCgHHNKqqPKaVScAqm/LfvZUAhTKNozXL/ciOywe1EI
-	 78hMJbuWrXrtrJ0e9n96xwF/euvGBiCyWFaZ8JJxOz/FZg0UxTUK2ZKwa1EX6tA9ws
-	 bazKi7SoCGEnA==
-Received: from apertis-1.home (2a01cb0892F2D600c8f85CF092D4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EC67D17E07F2;
-	Wed, 14 May 2025 10:11:17 +0200 (CEST)
-Message-ID: <5578490565f6d37fa435ca0c02fcfc2cb685baf8.camel@collabora.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: mediatek: mt6397: Add
- #sound-dai-cells property
-From: Julien Massot <julien.massot@collabora.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, kernel@collabora.com, Sen Chu	
- <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Macpaul Lin	
- <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado"	 <nfraprado@collabora.com>, Hui
- Liu <hui.liu@mediatek.com>, Yong Wu	 <yong.wu@mediatek.com>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon	 <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, Tinghan Shen	 <tinghan.shen@mediatek.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
-Date: Wed, 14 May 2025 10:11:17 +0200
-In-Reply-To: <79148223-d87f-486e-9d51-979f9188a837@kernel.org>
-References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
-	 <20250505-mt8395-dtb-errors-v1-1-9c4714dcdcdb@collabora.com>
-	 <79148223-d87f-486e-9d51-979f9188a837@kernel.org>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRgifY2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747210286; x=1778746286;
+  h=date:from:to:cc:subject:message-id;
+  bh=622Iu0+yPrJdvhe2WY0qA9BGsbiJy6w7TwPlvD4CLaM=;
+  b=IRgifY2+usa0zpSjIOiUlZCjZx9nIHGAM4CvNI5cMawitBl7S79LTPBl
+   VQ8MOZyJMS8/H0qObqoRwUkp7jMjU4SVStcXHlAdwPExRyrGW+ICaSBl7
+   AHmj+5FBP8OHv6hZsk3z4qNDFdpxCN2rnIqTcgFB/mZ2EOzsWD5F/EIA+
+   PF98fXedXvoZ+J0jB8ugfKVc9+TrPr1D30dQt7VuubbN7MOL18YRx3dkT
+   k5i3krAiE0meeK/bwo9Ump5lv5bqffDUVdAbF+vpWtR8GuAqN24U85KVL
+   UklhkYjmzjIaqtkUoVJfZ9H28+MimEElhXeKxOLF+TYsBtLpo39DT0YsV
+   Q==;
+X-CSE-ConnectionGUID: KDaqo6QkStiL8NkjKHRJEw==
+X-CSE-MsgGUID: lhFAeA9fTyicvcKPZ111MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="49073164"
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="49073164"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 01:11:25 -0700
+X-CSE-ConnectionGUID: DkrWGSK9T36a7PfCoAqdvA==
+X-CSE-MsgGUID: j7l8Lc/WQZOWdsKa7frZZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="138393185"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 14 May 2025 01:11:23 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uF7Cz-000Gpq-1w;
+	Wed, 14 May 2025 08:11:21 +0000
+Date: Wed, 14 May 2025 16:10:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/core] BUILD SUCCESS
+ 47af06c9d31fe558493de4e04f9a07847dc4992f
+Message-ID: <202505141635.HOfP3HVr-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-Hi Krzysztof,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+branch HEAD: 47af06c9d31fe558493de4e04f9a07847dc4992f  genirq: Consistently use '%u' format specifier for unsigned int variables
 
-On Thu, 2025-05-08 at 08:01 +0200, Krzysztof Kozlowski wrote:
-> On 05/05/2025 15:23, Julien Massot wrote:
-> > The 'mt6359.dtsi' file already uses the '#sound-dai-cells' property.
-> > Add the corresponding property to the binding to fix the following
-> > dtb-check error:
-> If this is a DAI, then you miss dai-common reference. If not, you need
-> to explain it in commit msg.
+elapsed time: 1394m
 
-Thanks for the review, I will add the missing dai-common reference in the v=
-2.
+configs tested: 131
+configs skipped: 3
 
-Regards,
-Julien
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                 nsimosci_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250513    gcc-14.2.0
+arc                   randconfig-002-20250513    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                      footbridge_defconfig    clang-17
+arm                          pxa910_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250513    gcc-7.5.0
+arm                   randconfig-002-20250513    gcc-8.5.0
+arm                   randconfig-003-20250513    gcc-8.5.0
+arm                   randconfig-004-20250513    clang-16
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250513    clang-21
+arm64                 randconfig-002-20250513    clang-21
+arm64                 randconfig-003-20250513    gcc-6.5.0
+arm64                 randconfig-004-20250513    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250513    gcc-14.2.0
+csky                  randconfig-002-20250513    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250513    clang-21
+hexagon               randconfig-002-20250513    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250513    clang-20
+i386        buildonly-randconfig-002-20250513    clang-20
+i386        buildonly-randconfig-003-20250513    clang-20
+i386        buildonly-randconfig-004-20250513    clang-20
+i386        buildonly-randconfig-005-20250513    gcc-12
+i386        buildonly-randconfig-006-20250513    gcc-12
+i386                                defconfig    clang-20
+loongarch                        alldefconfig    gcc-14.2.0
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250513    gcc-14.2.0
+loongarch             randconfig-002-20250513    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         apollo_defconfig    gcc-14.2.0
+m68k                          multi_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                  cavium_octeon_defconfig    gcc-14.2.0
+mips                          eyeq5_defconfig    gcc-14.2.0
+mips                          eyeq6_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250513    gcc-10.5.0
+nios2                 randconfig-002-20250513    gcc-12.4.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250513    gcc-11.5.0
+parisc                randconfig-002-20250513    gcc-11.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                     ep8248e_defconfig    gcc-14.2.0
+powerpc                       holly_defconfig    clang-21
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc               randconfig-001-20250513    clang-21
+powerpc               randconfig-002-20250513    gcc-8.5.0
+powerpc               randconfig-003-20250513    clang-21
+powerpc                     tqm8560_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250513    clang-21
+powerpc64             randconfig-003-20250513    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250513    gcc-14.2.0
+riscv                 randconfig-002-20250513    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250513    clang-21
+s390                  randconfig-002-20250513    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                          kfr2r09_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250513    gcc-12.4.0
+sh                    randconfig-002-20250513    gcc-14.2.0
+sh                          sdk7786_defconfig    gcc-14.2.0
+sh                   sh7770_generic_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250513    gcc-11.5.0
+sparc                 randconfig-002-20250513    gcc-13.3.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250513    gcc-11.5.0
+sparc64               randconfig-002-20250513    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250513    clang-19
+um                    randconfig-002-20250513    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250513    gcc-12
+x86_64      buildonly-randconfig-002-20250513    gcc-12
+x86_64      buildonly-randconfig-003-20250513    clang-20
+x86_64      buildonly-randconfig-004-20250513    gcc-12
+x86_64      buildonly-randconfig-005-20250513    clang-20
+x86_64      buildonly-randconfig-006-20250513    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250513    gcc-7.5.0
+xtensa                randconfig-002-20250513    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
