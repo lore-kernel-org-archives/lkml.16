@@ -1,270 +1,258 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E85F27A107
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240506; cv=none; b=LGcJlBuMde1C/nN6Du9wGiZY9To4igL+A7T+EXdIL6E38GnqHFunhjKZGgu0dyY8cGGhSDLytr6SgO1NQS9+ffCAtHu6CWUk5WCOAtZG1Sns6G1I0lBCeloAJoyyuXA03fnfV7sV8NwAkSej2fdJWbykWimNqMY2v3fqJcG3w7w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240506; c=relaxed/simple;
-	bh=jMqaj7CoSlKge6w9ihSGG6969e9NHdD3WrG9K31ZQaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeF2GH8zKdDK0O33zuOA5ew37oA7cEwcsfguXXmZEnsmDl/NKshRME5+jfgbPzmWNe+FaJmfR6JGhCTsmXWN8T1Qus49mJng156BZaDXIbRvI3ARk4A76I4gTxCFY99pIuNVxq7ct6ZONO17jjrFOP9Dhy/ccuZmjsEgvOcO2Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fn4THqlg; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F0D270ED7;
+	Wed, 14 May 2025 16:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747240601; cv=fail; b=X8o30rZkGJ6NhJP56N23Gaev5Qs7QIh52KbXu8FgRXGAAXqtnGQ7IROGjSbtwDgl+gsktIhCAG24bsr83a6hCt5N+b3id3nb59n43V2SJ/qQwU4UrFIY6/4yM7+pnIgnCuNPuHXXbBAswDKy3MJaT+WU/XoBkU+Y8RbA0XOw3h0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747240601; c=relaxed/simple;
+	bh=YDPPqllyHe8QeRk8EDe66kv12vvTCcht8QFpT7i3lPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WEIOe6il+AUT67XO45L8qgqmhqo/Y/PbX9waiB4Sfp6xWdwh3QByqWVl2Wy/DtX2XbFK5CSyi8hEUrj1Mnc8eB8VQmAORk4dnvQLHDNqIAXxlYof3tMZNnQreuu8GmrR6e4jMU6FqrzDB3gzj+48Dy64Ks0C8yiiwq6IGwFYiQg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=n/SYoJni; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=icitgrj3; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fn4THqlg"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0b9af89f2so4263061f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:35:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n/SYoJni";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="icitgrj3"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDhs6t010755;
+	Wed, 14 May 2025 16:36:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=GSXLq56UUbHzo6im
+	BhhlPGYJ0bnRgWqHe9aHz3WPEkA=; b=n/SYoJni1onU9d6bBnPZcWMeA6Vsmsxs
+	5Vh+ukSYtjKuzHZFRwRwO4au4oJyvKZ175q1DgokgZsm4bUSELEWeOpZ0gHYCBdA
+	R87YbMO7EVau4oIG4PSaYQux4tAXWceLk+iv1bB581m8xShr1Az7sqZZGlXONpuB
+	rzR2nWXw6UX91r5QJxIkCFAObHLE2h1MllOkdjmEc9mCNjSwQyRJfcnuX7H63Yrp
+	m6y8ndkSsaex9xQMJ+xZdGWMFqctUcOT8703uyieS3wqnBDqA9vNvQK2pdRkiWsJ
+	EO1Kj1Inm3OzVCo49ytDxJFSnShKPVB2OV06V4w+nn3AeAWe1eUfiQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46mbcdtajs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 16:36:27 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54EGGKRf026220;
+	Wed, 14 May 2025 16:36:14 GMT
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17010003.outbound.protection.outlook.com [40.93.1.3])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46mbt87vye-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 16:36:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U/aVtUO3jY17gdjC8zmK3OnmrSGlX1U3qLcTNsTgR5Goqm8SQi0ry54iKzUIAU89qtbWAHv7J4yLQdnwI1qatr7lMiJopKgYA/7t2CrgseXm8GTJpn7C5LgIQbOymXvjWIxzhjqpxjhrx9PYwVXeK5GtY7lfNYQG3mQ4yqodEjbtRGlqwUHNNb6PTbGGISzMWg8uy+zVafcGH2WYT+etDZe0bEKoWtZGLWV68Z/XIwno3ybrz/kNuAiu37Cyk8B01T5K0gwDlFtbhmGqmauf1g1I2kTs60rGgsZqpEmORQrWEkNnIJqMNT+cNJFe3ksIdGnHOaJDpsIFUR6DNvYMow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GSXLq56UUbHzo6imBhhlPGYJ0bnRgWqHe9aHz3WPEkA=;
+ b=TEXofa54KpVE9qnakByYBKMTupUuFNrCYy0KD46cgDSFJptTngsQWeHSAZ6bAriPs961Ctq1iTyCKwETmIfeRsFy8Ymp5uJ+oRgjeQqrFO24Uk542+hkMlJhShDSqvjG5qfdd+jdqBpo8MLG4epByF/FsS/ANZiLuT21NlY8mkES2/WzxwKMGcuutnDNZK9PHmV/DBOdrpGmlFFvkVUCIviByr699wtTQPHfOfPc/g374vPQT3GBWk5kllueaRTkXVtRH4RF8ud1P1ysgQ1i/uf0H0KrbFNYGZmMsl4lczL6U5sxy+F+CgTeBLfvTNFarsz/qRYruXQtvxjhqF+h2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747240503; x=1747845303; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AOckZ8P9OykpU46zTLvu6zDFwY48KuX591SKzhfoGSE=;
-        b=fn4THqlgGxgP9fH1cN0T9bNgMhxYOQCUJLm30Ny3R86vjZ8FK7iHDoqR6jF+/Z4xSU
-         5YCSvxlVxMvDYdu19y6owG6phma5ZbzM8wH7ebQy/3RszIvu4IUP2CcFlKimxUyMgKfO
-         pAxpZl5KnF4Nivt8JaxFkTb27DiHng+W6VF4rkatMhaLid7BJnr9mHlXp9HoY8NInTgd
-         +0BgHeWu7S6+/IUWVOpZ4bsEVSr2EhL1OR+Rf98Oe8aq/C6WlOirftc32yRXHO1DZetO
-         8u4CjdC2LtgLAsl7Y7W/BQCbArWUPwQ+q/rSO4MCp/zLGJDa7XD/6BOgTfPkyc9Z7YUf
-         1Y1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240503; x=1747845303;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AOckZ8P9OykpU46zTLvu6zDFwY48KuX591SKzhfoGSE=;
-        b=VKKNGL5ZPfqpOdfheYAWaVRcnCF7X9ixUUaeb1UgRrsaunFzxhcjPvNrFGIKzHeOd2
-         wTuajEyopZKssQhVaN7o1mpM+e58CdnZvqEY2t4VY7omT8ytloZbI9KgUzvVjdhX75f1
-         xJuIJnqEuKuv66hUC5kVOxCHIBAOOY8YPdFzffY0Vtvr9nVLZmwl+79O5qhR/dWVJKgk
-         QsINHuQ2Lp5CeEHNGp1NqZDhxYONI/VBd8tzt8C5SBYFBsbxT6zw9dolfU5JuAZN/oGv
-         oaiy8X5vs6COBpgBNZduzCeI97rLK93lisEpOXvNanQfJcc4xJ7we2OqGAL675GeNmX5
-         cumA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHsXW+28SqZ7HfRLGqrbpW2slPNmJlZDFOJCF9jOd97JzyBJNU8zuSqHETnaAZH1BmtDqalq1ZWFYPBSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLPzL5AcVgNmCxkv2QnaXrZJ9ort5Caahylcj/PRqCJsZ+Meed
-	N6T5dy6JABQgj5L3gGKuYtzVP8diQNSMSbBj7nEy6cLfWS5KL4r9MgMGvfMCQg==
-X-Gm-Gg: ASbGncuUgzTXay6UlD88U7QeRer2HhgPRw2BSrKbqKXYZ1SLBULS31+ptvCq9rPEUbN
-	VW3IiNsaXm88bTqBNUlDCZSJAaohNWknK2aEgCez1XJ0ZX1z597pefpc4Dr9vsetC7I6bspV/67
-	2MW0ArUg0WRnoXai0y1T07UWW6XbP99ep4t8QO8lN78xXYFiNdo5mmP9rpdO5Dw5n5a3DupvhZq
-	ohyAxXrqSTkFaR5ku0heWtZojod+nBUv0vONls6j5z7fGD6ETt80EewYq8nuHh+SwYQhQQzdREL
-	7AbE5Fomqb944yVA1VMBF4mF/MNCckfG54dwlfZLWtPzaabOIMi9M1lpF5uzKgtmUG8K8X+zYu6
-	IzUZ2y6/z64R5xA==
-X-Google-Smtp-Source: AGHT+IGj3+htGnEIyMivpivIivCnjfIy6Tideg6ovbKdF3ZUejVVtTS1+sX05zRZKNfgj9Ou9ozS3A==
-X-Received: by 2002:a05:6000:1848:b0:3a0:b4f1:8bb8 with SMTP id ffacd0b85a97d-3a3496c38b8mr3799664f8f.34.1747240502599;
-        Wed, 14 May 2025 09:35:02 -0700 (PDT)
-Received: from thinkpad (112.8.30.213.rev.vodafone.pt. [213.30.8.112])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2d2d3sm20577369f8f.63.2025.05.14.09.35.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 09:35:02 -0700 (PDT)
-Date: Wed, 14 May 2025 17:35:00 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 5/5] PCI: qcom: Add support for resetting the slot due
- to link down event
-Message-ID: <sotge26h35mcijcu3eqkbf7aimkwnxzhbgltoz74nfnefc7fjd@xct54hpv5ane>
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-5-7050093e2b50@linaro.org>
- <1b4b7ee5-1d7e-573c-0647-44aad654354a@oss.qualcomm.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GSXLq56UUbHzo6imBhhlPGYJ0bnRgWqHe9aHz3WPEkA=;
+ b=icitgrj3W1d/9dCyfshxv5oSM9NxlcLbllvKa17Km6h6swaFfwU636OX8do7akTrrmiH+vcR6u1VnjwLBU3MSg+b+7wh54az46rlFeEqRl7/YnBn+xjWv0ZTdh0bKRR/cOf1o/uylNSqjjZPTY8tyoszRgPMcHH7Sa0Ox2Qkbm8=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH0PR10MB7498.namprd10.prod.outlook.com (2603:10b6:610:18e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
+ 2025 16:36:08 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8699.022; Wed, 14 May 2025
+ 16:36:08 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
+        linux-mm@kvack.org, Yang Shi <yang@os.amperecomputing.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com
+Subject: [PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
+Date: Wed, 14 May 2025 17:35:30 +0100
+Message-ID: <20250514163530.119582-1-lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0270.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:194::23) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b4b7ee5-1d7e-573c-0647-44aad654354a@oss.qualcomm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB7498:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c43e045-0427-48a5-c883-08dd93056df4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oDK93S59DPzQXXzgdOKlod53jRC8JrCvdRObMjLsq0Ag7V5HfKV47d0F6wlU?=
+ =?us-ascii?Q?qOZMbvqaehx2BSefhAkw6QDu82eAajwgOzwIAVrmvKsZNsaiqfrjzQq5x43j?=
+ =?us-ascii?Q?s1xRbonp9iyUsk93BJtqTMhU5h0scTzIWEHVfe1xwjHlMdh0427qhdHRuAsA?=
+ =?us-ascii?Q?kU/1Y+RXCTru/arZRcrYw5RYeXuVDhDkxbY2ka/AUaUUOQ1Tsm2LAWBCsMxl?=
+ =?us-ascii?Q?pCRvsWhwOTxMuGy0gsJmqxNBXz9TiK4lAEHEXo5OREh7DT4pBzPHUJEvhICc?=
+ =?us-ascii?Q?PnGwsnI0FZkk53V45bGaG4xcZ2ZkQ1YGlT72oxWWyXa3gmGXPOFJub6B+4zi?=
+ =?us-ascii?Q?r44jsX1vT8FlzPx2xlq5WA+TvmK9vfFgIijn0HTWeFvlw7owXadEe8gv0IPl?=
+ =?us-ascii?Q?F/Ei58i1WiT9cKfvtFnqNVU574lVwx/U4V4BM3DtX5379FI61Oqvp1U5gwi1?=
+ =?us-ascii?Q?j9W8fDFnED7UxWqA3o9bjFeWg1Lz2c58GEUVO8ZuYuGyjmx5rlFOlymX5rv0?=
+ =?us-ascii?Q?HQ6v+gwzPcJiflQPo2qlOzgfCGvUCUjh9UHiAhAyrkGfebcyn0QfR+rqtry1?=
+ =?us-ascii?Q?DEcgxPhgW/LGhYgD59t2qU/ot88ilc4CvWqMvTTN3mCgy435ER2O81c8AQ23?=
+ =?us-ascii?Q?zoXzESiaJ1ScSpQISPM+ykFNlGU8omjjOrfudrQ9jfrX2CsQbWyLlohuy+Nu?=
+ =?us-ascii?Q?WOCGPc1fBRISji/wK7Pp3h4co3mKegvyL5KRo8d0rYF7sCc4sxGU4KOQSH4y?=
+ =?us-ascii?Q?+7HOrxkciZv7qOnV3JFA2VJILR7HEukyxw7E31tC4/P9lXOIwBNKzDlsZLsr?=
+ =?us-ascii?Q?/Ez2c2JmPdEem//Ojq59QKS7C9/e0X64hla7EHwO+c1gZJfhyb2IGx6UrMlZ?=
+ =?us-ascii?Q?tdpfuKkSqcNy2YEmuUFBIV3KSzIynfwU2+Bu5dY5cISJd23Ocqj7DkXtTAV3?=
+ =?us-ascii?Q?1CkCzgYQbF6HaaAwAy75VEf8ENQcJBkN4sjugZL5AXX/m/L/oN4TVfp+okEM?=
+ =?us-ascii?Q?BRiAF1l53cvjw+GtY7KHZuVUr86xGMp7DDXj59zJY8m/nn3x8YxoQyvwFJd6?=
+ =?us-ascii?Q?hJtDSef7dhzO/q75j9rQ8hVA+mmXVEdeGdvRvn8hs+9+rC1Cjv4PTGDruQK1?=
+ =?us-ascii?Q?OAhhfjji4wYIpJdGKo4pjXCKQ2Yv3ULPfLlytSE7NhMr+Zw97Kgr79JCQQdv?=
+ =?us-ascii?Q?IiToqCm6gQc6gaJqPUlvrsrvf7efttvM0FLY3cr+8jb1U9YpRtFgvT1LYQ1n?=
+ =?us-ascii?Q?uP1EdmNl3H9e7b5r8JoB0NdL+J1eRYKpiFBW0MyzRwcfA5YVW8yuxtNFciaW?=
+ =?us-ascii?Q?ZdLrPndkKxesvqqHX1hIoPU6GRRoyKUDqqj6zayEf6bvK5jTBKX5hikEmH/X?=
+ =?us-ascii?Q?zyg2P9FZtDHqQlJ4wXQbBStJiIjd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xmGZ5KlZFqxRFg6Y54hXTSzcQQitHybAQQiA/4EriCT78EIzoll/rI9sYv6V?=
+ =?us-ascii?Q?PtV7YGQMV5splKUro42GWSqBxfrfVKBEPipda4ixmQr4Uymh0hX/0aihdt8q?=
+ =?us-ascii?Q?cyxRhfINHuxp1B5wQvuiOC9u7evSntwLELnId6cbj8+hw6/M1qH4DBxkLMwq?=
+ =?us-ascii?Q?UEoUvQOpJVwmq/YbHaoIQyQTMdchYKwPkNnMkVg/q4HaXhFqBPjdU9zHTDA3?=
+ =?us-ascii?Q?VUtCFk4/o4wXMa/Cbi6nUCzBg+mJsj/Qd/jLZbDMUt8kU0ftKj6O6nJTcYRg?=
+ =?us-ascii?Q?m76e3FguGIwG+gpCb9XdDA0AP1pvfH8C4m/F9uuwctwdPc5P0cuh4o5RgCWj?=
+ =?us-ascii?Q?aprqJ7e27wigd5e6f4lUJ3sa+TrFEGTeMDTbU0QVW2ALeOFSAaqC3fQQ3PVh?=
+ =?us-ascii?Q?syalg4nbqJ1IqIhM/nszdsgijhcky9SuHR5EvRLoEAFkAViFM+xQxbtuWIAM?=
+ =?us-ascii?Q?hQZI7RK/OIlEXcdcTryyybjsgkqzyix3tvtWPT5iwTX/9k+MGT4Tc9QqK6qJ?=
+ =?us-ascii?Q?gFLfrkFm79r1amV+JzDmiOBpQjmU7SXU2DhlTopj70PwfyRW3oSOEnXelmk8?=
+ =?us-ascii?Q?doFzIKP/6ImvjjmP4wjkEYCNxrVulkKgLnuFJL1VZzDFPE1fGrwgdcdVrnLg?=
+ =?us-ascii?Q?myPsyCuctLusIm+PEienXevmzo4DNf4e30NTP7eKzt6ECVG43hr3w+b0XsaZ?=
+ =?us-ascii?Q?nnWy6g+YdwJiQmbCpcXphBipuRUVRBXoXiag4DoxLZtUCLbyzWwel8Y/w3ez?=
+ =?us-ascii?Q?vawVcBm+p61yjgwFoYWuVYX+8hxBJgtt9hHo9fD5SAExmNt3qdWjeppFjp5F?=
+ =?us-ascii?Q?tg1icAG3PMpxMGeZ18AzIMAUaE/rn/YMe+TCGZlFb2ZefUBokeEb4ZYX02Mk?=
+ =?us-ascii?Q?H1oZ7JoctZ56l/48OC48bECeMQdYXKSqxuPBRg026S+Pc+PfAFUlDN+0u7z+?=
+ =?us-ascii?Q?efIMak8DJfFVjN5m77yQHWH5IhdLv6XgDjDtXGoYrxpdqvwOGxo2qRCiMTUx?=
+ =?us-ascii?Q?254A+Ita/ABJeTh8eTuEmx42gl9nmBuFGapjm8ucxp385g62q5m7mHpC7ePz?=
+ =?us-ascii?Q?Pe2dKaMWBMvOL/ae/662j3poU1NK672NjjaNIZYpE+q3CI4p6lk3uvXNe4o6?=
+ =?us-ascii?Q?ZJQux8vHRP/4s4DM/4zXdLOBQeXNhlgEYSHgkLy0+bSRNe7HqgQy8nYWYcQ4?=
+ =?us-ascii?Q?7aYxxpOqf2+ZYHouAKPXomskpz5Ry66B793VWg0LKY5EtiBL6mN6LXgts1FA?=
+ =?us-ascii?Q?98uBdyBgkdUn3QeaVnNNUwPwgsjvVkNCW1gFRqswK5CO38rWCjyWD3r1e8fw?=
+ =?us-ascii?Q?hMBL9fnS8pr3gwTb2mdIXGXtptDz8Ily597l1JFw+5ub9z+jRSduu1IfhDpW?=
+ =?us-ascii?Q?EdDEb2HSJiTRKkf0pIqGQ0M2Q06MRIDuTuQYdVcwqxMQ+/sowHYj28UEll5k?=
+ =?us-ascii?Q?FzK6vcdZyX5GOit6SdISwp50nNj54hP46aG2UrXKqopiQVlt4XnJP/DlcDgP?=
+ =?us-ascii?Q?W03Qsg+SHabAhxARC30vN8j5iYGaV/YQUnPvNOdLhQe/UAg+P8/7dQieR6R7?=
+ =?us-ascii?Q?7SribAzrI3tNKkYLKwZsR6lLVzrMlC54gW/Y0l8xYRlCXP1aNAGKickdOBGj?=
+ =?us-ascii?Q?EA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9kIKvfdkNMuHA0zhJdIMvRqfX+uEAEhYbP2UMuzLM+mtqipr2/lmHBTWw5+OAlzDJf3PX4r+JmzN1tTBy48Pq4uEHN6mx9aDwF8RdFLgta5b8PF36b0yvDK1jDNKhIH3PaG/DuxooqYTwBAatT9h+HUjf58DjxevFXRU4uS8K3JGlDQYXXEwxkZBV3FIctkFD8azUHU57xD+F/85sUaDj3Eqz9mTtfeZMx4pvrQn7UWfj6AZK6812wjs9kEDc7oVpvzzugrD9qG2SZbd0xhmMdhU2eTOBzE4npnexFLCXnKDHKEIqrkbRbHsRtNPKAQZyx4xTeDc9WLEl6uGFeBlqikPEcvaubFKSRS7RqqFyrIwkhGJ5EknTKkf/nkUtM1A0g4jAF2a1EzyJwgUTe47jiIMvn8g1pYLimWmaCPDH4K7iQrgAYDFP1lM+D9WSuwQETH6u8nITMnm7uV+A4c/P2puDim2cPY7KmeQ6T6xTQBx38iCnBF/FuiG5A0YDacgrP/BcRWlbshA9KF/XOWohJ4cyP/oue24+eSmTcOlHBNesIf6Y6HR6mR9kUZsaC1ogtYqh5pCoAJqb17swy93LEWcTVRwWyjuRc5athKbLwc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c43e045-0427-48a5-c883-08dd93056df4
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 16:36:08.6125
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OCF3DQF5D2UMZNjb0SsUdC0w5BGdOhQxduSEUpmsKCRszMaUzTW85fCirJ5kKuaPGu/PA88ZXlwJCjHZ8MbIHeJPgJhO9iQf3Q91ifJ1MIw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7498
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505140148
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE0OSBTYWx0ZWRfX7ovnf+WFsKF5 LLRfTY57hDCCMwbDkbvC7jaN8C0Rr1KcyxdtDxKFZ9afRW1Ogbgy4agdd144wVz8BsJHLoo6MQz +ePv7Ms3nuAjli+hTURZzzuSOEizIAyLub2cmuRIXWS6/2gPF5K5B27K9SsWfv4tURUIL2SnnHk
+ eOBFDFi4x08sHi5XpHe/dS3z5xpCXRFw8f6M6qiIXoE/0UsJsla4L0cj44ZeXEcOHf1ZUSvttgd AHHbaDx6diJX9ho1a268LKxGlN3yuWcBFdFvnrtYDCAi0SJm3E271dgiMNR71UB2OFgOQd9hypc sEisRbuPG5yDvheDv4chlpbyLPXQd/eZHAShs8UuYnhC5bK1n//+09J15BePBJl5c1/jpWxs+um
+ 0JF0r5nUN+WYm2QUKQ2QkrN47mzjE4+gcn5Nwktan+aiGBVgOWgUKFzK/F6VA3fC59Y72R7x
+X-Authority-Analysis: v=2.4 cv=Y8T4sgeN c=1 sm=1 tr=0 ts=6824c68b b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=TAZUD9gdAAAA:8 a=yPCof4ZbAAAA:8 a=yLvXmp3QQ7QdUHR_PhgA:9 a=f1lSKsbWiCfrRWj5-Iac:22 cc=ntf awl=host:14694
+X-Proofpoint-GUID: tlV8o1QiJyQrT-wHeZapQJq0nTHi_4sO
+X-Proofpoint-ORIG-GUID: tlV8o1QiJyQrT-wHeZapQJq0nTHi_4sO
 
-On Wed, May 14, 2025 at 11:52:13AM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 5/8/2025 12:40 PM, Manivannan Sadhasivam wrote:
-> > The PCIe link can go down under circumstances such as the device firmware
-> > crash, link instability, etc... When that happens, the PCIe slot needs to
-> > be reset to make it operational again. Currently, the driver is not
-> > handling the link down event, due to which the users have to restart the
-> > machine to make PCIe link operational again. So fix it by detecting the
-> > link down event and resetting the slot.
-> > 
-> > Since the Qcom PCIe controllers report the link down event through the
-> > 'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
-> > bit in PARF_INT_ALL_MASK register.
-> > 
-> > Then in the case of the event, call pci_host_handle_link_down() API
-> > in the handler to let the PCI core handle the link down condition. Note
-> > that both link up and link down events could be set at a time when the
-> > handler runs. So always handle link down first.
-> > 
-> > The API will internally call, 'pci_host_bridge::reset_slot()' callback to
-> > reset the slot in a platform specific way. So implement the callback to
-> > reset the slot by first resetting the PCIe core, followed by reinitializing
-> > the resources and then finally starting the link again.
-> > 
-> Only one comment see below.
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > ---
-> >   drivers/pci/controller/dwc/Kconfig     |   1 +
-> >   drivers/pci/controller/dwc/pcie-qcom.c | 112 ++++++++++++++++++++++++++++++---
-> >   2 files changed, 105 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..ce04ee6fbd99cbcce5d2f3a75ebd72a17070b7b7 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -296,6 +296,7 @@ config PCIE_QCOM
-> >   	select PCIE_DW_HOST
-> >   	select CRC8
-> >   	select PCIE_QCOM_COMMON
-> > +	select PCI_HOST_COMMON
-> >   	help
-> >   	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
-> >   	  PCIe controller uses the DesignWare core plus Qualcomm-specific
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index dc98ae63362db0422384b1879a2b9a7dc564d091..e577619d0f8ceddf0955139ae6b939842f8cb7be 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -34,6 +34,7 @@
-> >   #include <linux/units.h>
-> >   #include "../../pci.h"
-> > +#include "../pci-host-common.h"
-> >   #include "pcie-designware.h"
-> >   #include "pcie-qcom-common.h"
-> > @@ -55,6 +56,7 @@
-> >   #define PARF_INT_ALL_STATUS			0x224
-> >   #define PARF_INT_ALL_CLEAR			0x228
-> >   #define PARF_INT_ALL_MASK			0x22c
-> > +#define PARF_STATUS				0x230
-> >   #define PARF_SID_OFFSET				0x234
-> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
-> >   #define PARF_DBI_BASE_ADDR_V2			0x350
-> > @@ -130,9 +132,14 @@
-> >   /* PARF_LTSSM register fields */
-> >   #define LTSSM_EN				BIT(8)
-> > +#define SW_CLEAR_FLUSH_MODE			BIT(10)
-> > +#define FLUSH_MODE				BIT(11)
-> >   /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > -#define PARF_INT_ALL_LINK_UP			BIT(13)
-> > +#define INT_ALL_LINK_DOWN			1
-> > +#define INT_ALL_LINK_UP				13
-> > +#define PARF_INT_ALL_LINK_DOWN			BIT(INT_ALL_LINK_DOWN)
-> > +#define PARF_INT_ALL_LINK_UP			BIT(INT_ALL_LINK_UP)
-> >   #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-> >   /* PARF_NO_SNOOP_OVERRIDE register fields */
-> > @@ -145,6 +152,9 @@
-> >   /* PARF_BDF_TO_SID_CFG fields */
-> >   #define BDF_TO_SID_BYPASS			BIT(0)
-> > +/* PARF_STATUS fields */
-> > +#define FLUSH_COMPLETED				BIT(8)
-> > +
-> >   /* ELBI_SYS_CTRL register fields */
-> >   #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
-> > @@ -169,6 +179,7 @@
-> >   						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
-> >   #define PERST_DELAY_US				1000
-> > +#define FLUSH_TIMEOUT_US			100
-> >   #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
-> > @@ -274,11 +285,14 @@ struct qcom_pcie {
-> >   	struct icc_path *icc_cpu;
-> >   	const struct qcom_pcie_cfg *cfg;
-> >   	struct dentry *debugfs;
-> > +	int global_irq;
-> >   	bool suspended;
-> >   	bool use_pm_opp;
-> >   };
-> >   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> > +				  struct pci_dev *pdev);
-> >   static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >   {
-> > @@ -1263,6 +1277,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> >   			goto err_assert_reset;
-> >   	}
-> > +	pp->bridge->reset_slot = qcom_pcie_reset_slot;
-> > +
-> >   	return 0;
-> >   err_assert_reset:
-> > @@ -1517,6 +1533,74 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
-> >   	}
-> >   }
-> > +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> > +				  struct pci_dev *pdev)
-> > +{
-> > +	struct pci_bus *bus = bridge->bus;
-> > +	struct dw_pcie_rp *pp = bus->sysdata;
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> > +	struct device *dev = pcie->pci->dev;
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	/* Wait for the pending transactions to be completed */
-> > +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
-> > +					 val & FLUSH_COMPLETED, 10,
-> > +					 FLUSH_TIMEOUT_US);
-> > +	if (ret) {
-> > +		dev_err(dev, "Flush completion failed: %d\n", ret);
-> > +		goto err_host_deinit;
-> > +	}
-> > +
-> > +	/* Clear the FLUSH_MODE to allow the core to be reset */
-> > +	val = readl(pcie->parf + PARF_LTSSM);
-> > +	val |= SW_CLEAR_FLUSH_MODE;
-> > +	writel(val, pcie->parf + PARF_LTSSM);
-> > +
-> > +	/* Wait for the FLUSH_MODE to clear */
-> > +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
-> > +					 !(val & FLUSH_MODE), 10,
-> > +					 FLUSH_TIMEOUT_US);
-> > +	if (ret) {
-> > +		dev_err(dev, "Flush mode clear failed: %d\n", ret);
-> > +		goto err_host_deinit;
-> > +	}
-> > +
-> > +	qcom_pcie_host_deinit(pp);
-> > +
-> > +	ret = qcom_pcie_host_init(pp);
-> > +	if (ret) {
-> > +		dev_err(dev, "Host init failed\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = dw_pcie_setup_rc(pp);
-> > +	if (ret)
-> > +		goto err_host_deinit;
-> > +
-> > +	/*
-> > +	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
-> > +	 * non-sticky.
-> > +	 */
-> > +	if (pcie->global_irq)
-> > +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-> > +			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-> > +
-> > +	qcom_pcie_start_link(pci);
-> > +	if (!dw_pcie_wait_for_link(pci))
-> > +		qcom_pcie_icc_opp_update(pcie);
-> This icc opp update can we removed as this can updated from the global
-> IRQ.
+The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
+unfortunate identifier within it - PROT_NONE.
 
-Right. I forgot to remove it after keeping link up IRQ change. Removed it while
-applying.
+This clashes with the protection bit define from the uapi for mmap()
+declared in include/uapi/asm-generic/mman-common.h, which is indeed what
+those casually reading this code would assume this to refer to.
 
-- Mani
+This means that any changes which subsequently alter headers in any way
+which results in the uapi header being imported here will cause build
+errors.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
+
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
+Cc: stable@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
+---
+
+Andrew - sorry to be a pain - this needs to land before
+https://lore.kernel.org/all/20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com/
+
+I can resend this as a series with it if that makes it easier for you? Let
+me know if there's anything I can do to make it easier to get the ordering right here.
+
+Thanks!
+
+ arch/s390/kvm/gaccess.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+index f6fded15633a..4e5654ad1604 100644
+--- a/arch/s390/kvm/gaccess.c
++++ b/arch/s390/kvm/gaccess.c
+@@ -318,7 +318,7 @@ enum prot_type {
+ 	PROT_TYPE_DAT  = 3,
+ 	PROT_TYPE_IEP  = 4,
+ 	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
+-	PROT_NONE,
++	PROT_TYPE_DUMMY,
+ };
+
+ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
+@@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+ 	switch (code) {
+ 	case PGM_PROTECTION:
+ 		switch (prot) {
+-		case PROT_NONE:
++		case PROT_TYPE_DUMMY:
+ 			/* We should never get here, acts like termination */
+ 			WARN_ON_ONCE(1);
+ 			break;
+@@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+ 			gpa = kvm_s390_real_to_abs(vcpu, ga);
+ 			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
+ 				rc = PGM_ADDRESSING;
+-				prot = PROT_NONE;
++				prot = PROT_TYPE_DUMMY;
+ 			}
+ 		}
+ 		if (rc)
+@@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+ 		if (rc == PGM_PROTECTION)
+ 			prot = PROT_TYPE_KEYC;
+ 		else
+-			prot = PROT_NONE;
++			prot = PROT_TYPE_DUMMY;
+ 		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
+ 	}
+ out_unlock:
+--
+2.49.0
