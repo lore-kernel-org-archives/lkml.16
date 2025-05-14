@@ -1,104 +1,83 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F0323BE;
-	Wed, 14 May 2025 18:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AA928689C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747247446; cv=none; b=vFFSTqWY8PeO8f8zBaUHTIjxfQ3hBq/7lvJr/GuBVv+AqAHe6l+1gv+doRA8XV7N3y14HIvmOEKW0mYhWL3XorhZVnaBqrArMOnphJpIGgMHwScKInPJ3/xt5qXI3VCRSxgdkKeoXRCEC6PonD01DHJv04d1oEMMPoTTDrDhv9A=
+	t=1747247646; cv=none; b=IcvMWEgPSY9TiGOoz2kEbUMtXU/Q/K4Bevu/1eVoSGSg6ikimM2HSggUjjQaw+h5gCAqijx+jLUNKtw/sw3zhNHeG++8Uy3QEIr2Wb4kA2PNJOcVm/DuypM/IaRmea7C7uNOkRbmuOQmb5FAyLSBHpoKgbYmDIxkZ1pxy7RpSq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747247446; c=relaxed/simple;
-	bh=pSGW7o8RmgVXrLWoJVEtzwXBi8/aCvFu/6yaeM8lTRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HXWeSq/UZ6eEkdvRe1nKJDAoPHhm0Gm1bGYS2M9Qr5M8HyCEn+w2t4YkPqXACu10rOqUF911oeFdXeToEC3pKQHXN5ny58YpHIJwmCdbTPWJwEPqJqlEgImFOUb6aEbESXbqBIskSuym955Wj3YTURbSzOElhWuXNMTxXBg4sAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=UM0iiqCu; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="UM0iiqCu"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0CCD010397294;
-	Wed, 14 May 2025 20:30:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1747247434; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=osL0bZFOeaJv8bBxeSyMxOdWP8kKDBIobUjea/j1DHQ=;
-	b=UM0iiqCu2TvrbQolfB7lFjvPbH5EYlQ0mM4Ku/rFzEJAl/oseGdgPWGy0vVGHJxbf9h0YH
-	nKlitRU9fpyS1RUNavigGeWX0omS1Wx++dPPMAnzxAFpmB0nzS/40+Ri9cUuUDvhSwzme1
-	HkisTaCN+6kuo9w85xFubUhmCagfyDnZRRKnnZw7Kg05iOCQlpiCbtcWWOCSMhM7O+hX11
-	nlM1Woe7OIYD0ZIF5rDJ/jo9ELynKI9O9C9uPzkgQYNYhnKqOphetMwRx/oZrxWzkB3Ha1
-	5hkHfoguJnvplt6YkXbCUcO6S4EncomiURVioXcRSQoiRo4mTVRQQreW9NG3Kw==
-Date: Wed, 14 May 2025 20:30:26 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 00/96] 6.1.139-rc2 review
-Message-ID: <aCThQmLufsIn4ScI@duo.ucw.cz>
-References: <20250514125614.705014741@linuxfoundation.org>
+	s=arc-20240116; t=1747247646; c=relaxed/simple;
+	bh=C/AMOybXmMNriLmRrMMUjAPPdkqLnsLVfpwHNG3y1d8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Hfd81yWtHtNn6XoIB4w5icU8GYnOUXFgYqSV0RhDDZmWlJZQyNcnaFglcT6DifbeyvVqk/C7ag9JdMceAfOTcTtLwcTxnUgEMB/MksjydkHH/NbohSTrs3XCQ2Lh54O2cqFVuysquhigPO3QITs9X3WKoRftfhqIWVLrrtcmWdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3db6dc760ffso1623635ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:34:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747247644; x=1747852444;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RN8HMO0gxZcP7qvsx/HaxnOkoUT7cdCTRks8rlUkvpM=;
+        b=h9ksOZitT+K1P4O0nVMVjPeAs4PKcaLIIyn3kOAtwx7Gdde7ozvBs1zWXKVF7DYsqW
+         uhzFV6rikRDhSV2byZHxBiWdemma8xjOiZOlCNQPmxHLjqtM8jjzVUv8ik/Mhk5ahGuP
+         gnDkCgqZxgdMKyBX5CpMSa0kTILWVLC0AE2hl8KDXeEwtCOjJrBDuWQmROE+WNmb3m6U
+         d8+BYVP5kbqSRQJZnvS8HkNQeezH95JR6g3HoQqpMKM/LBy8yfkMw5+wTm/MRAW/4PbY
+         yB/bwtZmGYCkT0+wkvX3EMUI6Nt8pCfGIrYoe8KCpHutPeh3BbZfK8nxAYcHmv27+8Dk
+         qx8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVCPaScvLsHkUarGzyJyXvjmVjGy2TJn10Tt8s0BolzNjyYgA7grSdI9LcEY1CsaKwTmVU4phlqe04n0B0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/fVRjqtkvKckOR9l7KqbkjTb4w5Pi2ZVl7ttFzvvVluRA5mqq
+	ovWOqcsjw0HsNU7YlHkjAI3z0ziXRZB3MX4RdUA18xGFC5YLzhCgggrym7F9dBXcq00+lXlAZN2
+	fQJQ4IjcfQO8XacXZOAKTLHJgKKWm4bThxbTaKtyYdBOPRm/S3W0cOzY=
+X-Google-Smtp-Source: AGHT+IGJxcqIkp76cLlKNDnHJQKnIAItIIxRc0KbDG6doO25XH20nuzMroTHS6Spy1fKPEj866mmszfs+8bEXoBqcNxuVQIpawnR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7FoK957au6Jh/RDf"
-Content-Disposition: inline
-In-Reply-To: <20250514125614.705014741@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
-
-
---7FoK957au6Jh/RDf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:1d9c:b0:3d9:3adb:e589 with SMTP id
+ e9e14a558f8ab-3db6f794c65mr53486305ab.4.1747247643705; Wed, 14 May 2025
+ 11:34:03 -0700 (PDT)
+Date: Wed, 14 May 2025 11:34:03 -0700
+In-Reply-To: <20250514182111.GO2023217@ZenIV>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6824e21b.a00a0220.104b28.0014.GAE@google.com>
+Subject: Re: [syzbot] [xfs?] general protection fault in do_move_mount (3)
+From: syzbot <syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com>
+To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hello,
 
-> This is the start of the stable review cycle for the 6.1.139 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-I still see problems on x86:
+failed to checkout kernel repo git://git.kernel.org/pub/scm/linux/kernel/gi=
+t/viro/vfs.git on commit 8a6d8037a5deb2a9d5184f299f9adb60b0c0ae04: failed t=
+o run ["git" "fetch" "--force" "--tags" "52e739496919cc3ebdc35ab042bcd12547=
+ec52de" "8a6d8037a5deb2a9d5184f299f9adb60b0c0ae04"]: exit status 128
+fatal: remote error: upload-pack: not our ref 8a6d8037a5deb2a9d5184f299f9ad=
+b60b0c0ae04
 
-  CC      init/version-timestamp.o
-2609
-  LD      .tmp_vmlinux.kallsyms1
-2610
-x86_64-linux-gnu-ld: arch/x86/kernel/alternative.o: in function `apply_retp=
-olines':
-2611
-alternative.c:(.init.text+0xa09): undefined reference to `module_alloc'
-2612
-make[1]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
-2613
-make: *** [Makefile:1258: vmlinux] Error 2
-2614
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/jobs/100351=
-17383
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-817477509
 
-Best regards,
-									Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Tested on:
 
---7FoK957au6Jh/RDf
-Content-Type: application/pgp-signature; name="signature.asc"
+commit:         [unknown=20
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git =
+8a6d8037a5deb2a9d5184f299f9adb60b0c0ae04
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Db9683d529ec1b88=
+0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D799d4cf78a7476483=
+ba2
+compiler:      =20
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaCThQgAKCRAw5/Bqldv6
-8qaKAKC8Q1P9aop1NdhDQQbrIrb5PJ9z+wCeOhrDa0g208SE2giU03n8m3GYpx0=
-=bkqE
------END PGP SIGNATURE-----
-
---7FoK957au6Jh/RDf--
+Note: no patches were applied.
