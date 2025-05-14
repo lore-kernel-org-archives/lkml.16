@@ -1,85 +1,113 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 267DB2741A4;
-	Wed, 14 May 2025 11:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649471C3039
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223525; cv=none; b=oVIk+L8IxUDQp3fRbGCm8HS757G4Tyce0ViFS0p2sUa8l6qES1oP+a8jmZiG8MkT5ajRitgGM57r4/EUyiXO5tEOrTAkLBuAY0holmsozAR+P2tFEtdwNiVZNtbjAdFswnZnx5dI44JRpBYA31EVep/VqzNGR5VLlOxBuYNgLmg=
+	t=1747223527; cv=none; b=Ro3OuCKejTZOMtIVYbvKp6rAbF3gHPhzpad/BGIKEXytXU48Zm4CuvRk2GBEqyvlmjgTUGxozLal7ax5o0pCMGlWXHRbMDfAOpj/9qbM0dfuw+SaReAk9EQsyVZOcv+GVvtf2ptRU5Qg0U6LPnNcnfxx2+yHLG1G21OGvNibxTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223525; c=relaxed/simple;
-	bh=ig8WQD2mm9MKTSF9qc4BBEUvxyfahEl5b6dtPdFLtAk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=PccIo3JB7b5w4OQTZPcQgBQLEth9/nGSv12vkOa+8nifTXS1W98ypjAhxQUwmTV4Nm+ZBPT/HJ7BDF0dLURNeAp06AoihBOFdJ3RBwoo7tdCSerRxD3ZvQpuZj8rNwcYEzblIdBRh4wC4O4Eg1wBIFkDp8sXJ76gg6ubqs1vWVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=BqKDeVxA reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747223527; c=relaxed/simple;
+	bh=XkElfIUZFUjxateTgfc/1qyZznRNoyDqHKzHLA1oKXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r/wdVAmLtgDyWU0r4mkiw2ncYgEIat3srg3DUe8cS59B0wLkzgqUFUMBb71Cez7lWwj0qUkJaapvGzYIOQkU3zFGpJZq4ojzFonv29fFcrInb2UfcK6q0VpBfRc+AvA3wIDUQWp3mSH40uGL2mr4EqoyIl6IiggICV+tyyotQ9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sFSAob4S; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="BqKDeVxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=rMbvT6uML8YQwQrr4NcesSn671/PWQtE82gjKxtCgFo=; b=B
-	qKDeVxA0jPK6cINFe2JwcLXpiSKMrAUlhwm9uB6SgV+xOrVJ4tu0kn3oCXWCIJGu
-	9WvrSaNsUn9JAd+oveIQaUAjbDYzPUjszksJpd13w8ce9CwgDvt0Rm1vlURtZwsC
-	jFMuKwOFBaevAVD3LqjwDxzg36cPgYM/q02OojZU0c=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-146 (Coremail) ; Wed, 14 May 2025 19:51:36 +0800
- (CST)
-Date: Wed, 14 May 2025 19:51:36 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Oliver Neukum" <oneukum@suse.com>
-Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-	stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <51fe78fb-5d73-458f-b3d1-fc84cd6c5869@suse.com>
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513113817.11962-1-00107082@163.com>
- <51fe78fb-5d73-458f-b3d1-fc84cd6c5869@suse.com>
-X-NTES-SC: AL_Qu2fBf6ZvEwi4CSYYekZnEYQheY4XMKyuPkg1YJXOp80tCb8wgUaeXBjIGn77cOIKS2Svxeadh1H8uJQYYtJWbJN6jmTiaZ4mmytp3jfX693
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sFSAob4S"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747223521; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=/QDkqHbGcD+TMq3shCe5JVRzKlFBnQK6t8dDql3URHk=;
+	b=sFSAob4SJopFABxgU4HVvWEbLq//YdNL7eP2TsUjyzJsxnjyDbSdnHVymhtOBgJp1QXUH8WvL8aoFSwI8ru9MdU6iwmfjXHaZ35LSl+WKkmwYzJwLJ2XXrxT8IoPdXMF0dZRrul1nytPWwv5cA3lMYrAxaKTwv56HVuCLJYH/ng=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WalxjuG_1747223520 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 May 2025 19:52:01 +0800
+Message-ID: <a18463df-a63b-4bdd-af85-bd8435cb23e7@linux.alibaba.com>
+Date: Wed, 14 May 2025 19:51:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <484fe5f7.9d28.196cea2c6db.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:kigvCgD3X77JgyRoMYMEAA--.29853W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqARNqmgkfR-pFAACsa
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] erofs: avoid using multiple devices with different
+ type
+To: Sheng Yong <shengyong2021@gmail.com>, xiang@kernel.org, chao@kernel.org,
+ zbestahu@gmail.com, jefflexu@linux.alibaba.com, lihongbo22@huawei.com,
+ dhavale@google.com
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Sheng Yong <shengyong1@xiaomi.com>
+References: <20250513113418.249798-1-shengyong1@xiaomi.com>
+ <20250513113418.249798-2-shengyong1@xiaomi.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250513113418.249798-2-shengyong1@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-CkF0IDIwMjUtMDUtMTQgMTk6MjM6MDIsICJPbGl2ZXIgTmV1a3VtIiA8b25ldWt1bUBzdXNlLmNv
-bT4gd3JvdGU6Cj4KPgo+T24gMTMuMDUuMjUgMTM6MzgsIERhdmlkIFdhbmcgd3JvdGU6Cj4+IC0t
-LQo+Cj5IaSwKPgo+c3RpbGwgYW4gaXNzdWUgYWZ0ZXIgYSBzZWNvbmQgcmV2aWV3Lgo+SSBzaG91
-bGQgaGF2ZSBub3RpY2VkIGVhcmxpZXIuCj4KPj4gLS0tIGEvZHJpdmVycy91c2IvY29yZS91cmIu
-Ywo+PiArKysgYi9kcml2ZXJzL3VzYi9jb3JlL3VyYi5jCj4+IEBAIC0yMyw2ICsyMyw3IEBAIHN0
-YXRpYyB2b2lkIHVyYl9kZXN0cm95KHN0cnVjdCBrcmVmICprcmVmKQo+PiAgIAo+PiAgIAlpZiAo
-dXJiLT50cmFuc2Zlcl9mbGFncyAmIFVSQl9GUkVFX0JVRkZFUikKPj4gICAJCWtmcmVlKHVyYi0+
-dHJhbnNmZXJfYnVmZmVyKTsKPj4gKwlrZnJlZSh1cmItPmhjcHJpdl9tZW1wb29sKTsKPgo+V2hh
-dCBpZiBzb21lYm9keSB1c2VzIHVzYl9pbml0X3VyYigpPwoKSSBhbSBub3QgcXVpdGUgc3VyZSBh
-Ym91dCB0aGUgY29uY2VybiBoZXJlLCBkbyB5b3UgbWVhbiBzb21lYm9keSBjcmVhdGUgYSB1cmIs
-CmFuZCB0aGVuIHVzYl9pbml0X3VyYigpIGhlcmUsIGFuZCBuZXZlciB1c2UgdXJiX2Rlc3Ryb3kg
-dG8gcmVsZWFzZSBpdD8KClRoYXQgd291bGQgY2F1c2UgbWVtb3J5IGxlYWsgaWYgdXJiX2Rlc3Ry
-b3kgaXMgbm90IGNhbGxlZC4uLi4uLkJ1dCBpcyB0aGlzIHJlYWxseSBwb3NzaWJsZT8uCgo+ICAK
-Pj4gICAJa2ZyZWUodXJiKTsKPj4gICB9Cj4+IEBAIC0xMDM3LDMgKzEwMzgsMjUgQEAgaW50IHVz
-Yl9hbmNob3JfZW1wdHkoc3RydWN0IHVzYl9hbmNob3IgKmFuY2hvcikKPj4gICAKPj4gICBFWFBP
-UlRfU1lNQk9MX0dQTCh1c2JfYW5jaG9yX2VtcHR5KTsKPj4gICAKPj4gKy8qKgo+PiArICogdXJi
-X2hjcHJpdl9tZW1wb29sX3phbGxvYyAtIGFsbG9jIG1lbW9yeSBmcm9tIG1lbXBvb2wgZm9yIGhj
-cHJpdgo+PiArICogQHVyYjogcG9pbnRlciB0byBVUkIgYmVpbmcgdXNlZAo+PiArICogQHNpemU6
-IG1lbW9yeSBzaXplIHJlcXVlc3RlZCBieSBjdXJyZW50IGhvc3QgY29udHJvbGxlcgo+PiArICog
-QG1lbV9mbGFnczogdGhlIHR5cGUgb2YgbWVtb3J5IHRvIGFsbG9jYXRlCj4+ICsgKgo+PiArICog
-UmV0dXJuOiBOVUxMIGlmIG91dCBvZiBtZW1vcnksIG90aGVyd2lzZSBtZW1vcnkgYXJlIHplcm9l
-ZAo+PiArICovCj4+ICt2b2lkICp1cmJfaGNwcml2X21lbXBvb2xfemFsbG9jKHN0cnVjdCB1cmIg
-KnVyYiwgc2l6ZV90IHNpemUsIGdmcF90IG1lbV9mbGFncykKPj4gK3sKPj4gKwlpZiAodXJiLT5o
-Y3ByaXZfbWVtcG9vbF9zaXplIDwgc2l6ZSkgewo+PiArCQlrZnJlZSh1cmItPmhjcHJpdl9tZW1w
-b29sKTsKPj4gKwkJdXJiLT5oY3ByaXZfbWVtcG9vbF9zaXplID0gc2l6ZTsKPj4gKwkJdXJiLT5o
-Y3ByaXZfbWVtcG9vbCA9IGttYWxsb2Moc2l6ZSwgbWVtX2ZsYWdzKTsKPgo+VGhhdCBjb3VsZCB1
-c2Uga3phbGxvYygpLgoKVGhlIG1lbW9yeSB3b3VsZCBiZSAgc2V0IHRvIDAgYmVmb3JlIHJldHVy
-bmluZyB0byB1c2VyLCB2aWEgbWVtc2V0LCAgIG5vIG1hdHRlciB3aGV0aGVyIHRoZSBtZW1vcnkg
-aXMgCm5ld2x5IGFsbG9jZWQgb3IganVzdCByZXVzZWQuICBJIHRoaW5rIHVzaW5nIGttYWxsb2Mg
-aXMgb2sgaGVyZS4KCgpUaGFua3MKRGF2aWQKCj4KPglSZWdhcmRzCj4JCU9saXZlcgo=
+Hi Yong,
+
+On 2025/5/13 19:34, Sheng Yong wrote:
+> From: Sheng Yong <shengyong1@xiaomi.com>
+> 
+> For multiple devices, both primary and extra devices should be the
+> same type. `erofs_init_device` has already guaranteed that if the
+> primary is a file-backed device, extra devices should also be
+> regular files.
+> 
+> However, if the primary is a block device while the extra device
+> is a file-backed device, `erofs_init_device` will get an ENOTBLK,
+> which is not treated as an error in `erofs_fc_get_tree`, and that
+> leads to an UAF:
+> 
+>    erofs_fc_get_tree
+>      get_tree_bdev_flags(erofs_fc_fill_super)
+>        erofs_read_superblock
+>          erofs_init_device  // sbi->dif0 is not inited yet,
+>                             // return -ENOTBLK
+>        deactivate_locked_super
+>          free(sbi)
+>      if (err is -ENOTBLK)
+>        sbi->dif0.file = filp_open()  // sbi UAF
+> 
+> So if -ENOTBLK is hitted in `erofs_init_device`, it means the
+> primary device must be a block device, and the extra device
+> is not a block device. The error can be converted to -EINVAL.
+
+Yeah, nice catch.
+
+As Hongbo said, it'd be better to add "Fixes:" tag
+in the next version.
+
+> 
+> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+> ---
+>   fs/erofs/super.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 512877d7d855..16b5b1f66584 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -165,8 +165,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+>   				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
+>   				bdev_file_open_by_path(dif->path,
+>   						BLK_OPEN_READ, sb->s_type, NULL);
+> -		if (IS_ERR(file))
+> +		if (IS_ERR(file)) {
+> +			if (PTR_ERR(file) == -ENOTBLK)
+
+It's preferred to use:
+			if (file == ERR_PTR(-ENOTBLK))
+				return -EINVAL;
+
+Otherwise it looks good to me.
+
+Could you submit it as a seperate patch so I
+could apply directly?
+
+Thanks,
+Gao Xiang
+
