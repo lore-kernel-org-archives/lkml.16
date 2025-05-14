@@ -1,244 +1,118 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72587253359
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FDB129A78
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216916; cv=none; b=SCixTwFz4KPwSKeW9lsjIT2JWTF6yPrKXQvgD2kj0df5YnOzbnSa5emUfES6OAABxdCPBX+Sbkk+9ljJZIkIfwjF7otC0UJ66H+GVZMVwe4yS+TvD7XQAUYLJDap7KV4oFbey1SN8fMIYi84FE8KzNaPgmEzw/8jjHBO9WcIeBk=
+	t=1747216949; cv=none; b=buao3oJQaCGwpZmVWUitVRcM6veuV/8X83OtuEtISwsaosQwFw/NcOjGlUFr+X4Rlk7oKzAhocR0aVa8XbnxJ75jNSPfFRoOV1JA2on/tAPeIAQcwMoxtkXIOz+msK3ADY+uYpwhspSu8qAUnrw29Lo0/vpXatgvJN7Bvr35cgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216916; c=relaxed/simple;
-	bh=VVS2WTybSPbS/SG0YWlD7O5FkHMWLh8k8y1Nr+psFC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ESsJVnIhWK1gZb1trJMUMBE/q4q6/gjB8dke+YL+wAJ71W/5sPe17X64Csg0XAKM+ra7SCr6JFf1kOoMQKRWQ/UfzOXlDXwNepjWqOzpCm0SB14eUZ39VKFzAA9kGqIUBlTEBPwTiPlKQzWGGsbdXF84MyXCzni4DMu8xyTRxGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OMhGCGQJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Fby0+Cd/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OMhGCGQJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Fby0+Cd/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747216949; c=relaxed/simple;
+	bh=LMjrgo6nnRT1Si/xieM+szRblaLay1q8zZ96Ll/EHaI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a/5wK8nzfyw+x4wNyC5z5xSQUTKZX9kdNHzvqEBrERBFg2kRPzkkPo9hk/wRcrBu3+yDa7ZWSnh+M9xiuH6pElA2CFOaSb+wLY2aSg+1TnMO5m82jpZCKxlpcMssXEhWSus2srHw1Oxhf2udKvDJQxqF9LxFdhsKf2MvYxICNkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org; spf=pass smtp.mailfrom=kenogo.org; dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b=DhEs2zck; arc=none smtp.client-ip=162.0.218.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kenogo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenogo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OMhGCGQJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Fby0+Cd/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OMhGCGQJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Fby0+Cd/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=kenogo.org header.i=@kenogo.org header.b="DhEs2zck"
+Received: from MTA-11-4.privateemail.com (mta-11.privateemail.com [198.54.118.200])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7CC43211D0;
-	Wed, 14 May 2025 10:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747216912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
-	b=OMhGCGQJey9EaGuP4MAxOm1U6wITxW42sRXkpw+vhjFteV1yKucf35eQc0IqkNmlQP6N1T
-	J//7jilJzTlY8/ZEOvhuC07prHFMXw2olb+a/cAKS+swhzm7rU/InP1O9gWRJ/RhDXdMsd
-	t/OhITkHjXg1a0rh1kVv+h61jYyHnrw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747216912;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
-	b=Fby0+Cd/bt2q98+8gHe/IaIYZPAXdZV/i2QMGngR2mg9vvawgdAlMEDGvHUnCwl5Gw6SnR
-	S1UoZ5ZWAaSeX6BA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747216912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
-	b=OMhGCGQJey9EaGuP4MAxOm1U6wITxW42sRXkpw+vhjFteV1yKucf35eQc0IqkNmlQP6N1T
-	J//7jilJzTlY8/ZEOvhuC07prHFMXw2olb+a/cAKS+swhzm7rU/InP1O9gWRJ/RhDXdMsd
-	t/OhITkHjXg1a0rh1kVv+h61jYyHnrw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747216912;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
-	b=Fby0+Cd/bt2q98+8gHe/IaIYZPAXdZV/i2QMGngR2mg9vvawgdAlMEDGvHUnCwl5Gw6SnR
-	S1UoZ5ZWAaSeX6BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7F8B613306;
-	Wed, 14 May 2025 10:01:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id B/sAHA9qJGjtNgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 14 May 2025 10:01:51 +0000
-Date: Wed, 14 May 2025 11:01:49 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 1/3] mm: introduce new .mmap_prepare() file callback
-Message-ID: <e3olqweuiyxlkewat26n4vyltpn5ordg6ckfndejwjleoemrtw@e2mo6nocaepy>
-References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
- <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
- <dqir4mv7twugxj6nstqziympxc6z3k5act4cwhgpg2naeqy3sx@wkn4wvnwbpih>
- <e18fea49-388d-40d2-9b55-b9f91ac3ce11@lucifer.local>
+	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4Zy85h0qP9z2xBV
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:02:16 -0400 (EDT)
+Received: from mta-11.privateemail.com (localhost [127.0.0.1])
+	by mta-11.privateemail.com (Postfix) with ESMTP id 4Zy85X0vnxz3hhbw;
+	Wed, 14 May 2025 06:02:08 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=kenogo.org; s=default;
+	t=1747216928; bh=LMjrgo6nnRT1Si/xieM+szRblaLay1q8zZ96Ll/EHaI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DhEs2zckBEi+dZXm/0TCGNAzZGkLZMg04oBnWs5jxw29zoKNvz4y9fd8fKNiY01Nk
+	 s/JxGnajt8Wq4BGhIZ3+G+utglsjdyykCC7sYPso7mvWUH5P2ivQyzGlsIsyOVcviZ
+	 bBkhGYfEKaD6iHmV2HJV4CLpVN96m5PFxneteS3BCEl6kildCvc7mb4WItcR1/bVad
+	 nzUu3om2cxujKZQRP7VSk9aAtHbWvmUxMG7U/P3DkVaAAYIWvKHIl5i1K2F9GTyEKB
+	 CEc5YW797P/LGFTnOc0QHtBbAz7fS5LioMexSeyjvLWCb4NMzSnqPUepK5n00hP44b
+	 LLtaTv66+VSXA==
+Received: from [100.115.92.203] (unknown [89.186.158.1])
+	by mta-11.privateemail.com (Postfix) with ESMTPA;
+	Wed, 14 May 2025 06:02:01 -0400 (EDT)
+Message-ID: <2bae6a59-b6da-40dc-99bb-46a098cdd6cb@kenogo.org>
+Date: Wed, 14 May 2025 12:01:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e18fea49-388d-40d2-9b55-b9f91ac3ce11@lucifer.local>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+User-Agent: Mozilla Thunderbird
+Subject: Re: ntp: Adjustment of time_maxerror with 500ppm instead of 15ppm
+To: Miroslav Lichvar <mlichvar@redhat.com>, John Stultz <jstultz@google.com>
+Cc: tglx@linutronix.de, zippel@linux-m68k.org, mingo@elte.hu,
+ linux-kernel@vger.kernel.org
+References: <4a6f1494-c6fe-4f66-a376-b6389538ef9f@kenogo.org>
+ <CANDhNCpQLN0j5KBp9OB4LB-YJGCCexFG+v5Zax2wwBn-3Tv3Tw@mail.gmail.com>
+ <aCG4El4aub9TEKWo@localhost>
+Content-Language: en-US
+From: Keno Goertz <contact@kenogo.org>
+In-Reply-To: <aCG4El4aub9TEKWo@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Wed, May 14, 2025 at 10:12:49AM +0100, Lorenzo Stoakes wrote:
-> On Wed, May 14, 2025 at 10:04:06AM +0100, Pedro Falcato wrote:
-> > On Fri, May 09, 2025 at 01:13:34PM +0100, Lorenzo Stoakes wrote:
-> > > Provide a means by which drivers can specify which fields of those
-> > > permitted to be changed should be altered to prior to mmap()'ing a
-> > > range (which may either result from a merge or from mapping an entirely new
-> > > VMA).
-> > >
-> > > Doing so is substantially safer than the existing .mmap() calback which
-> > > provides unrestricted access to the part-constructed VMA and permits
-> > > drivers and file systems to do 'creative' things which makes it hard to
-> > > reason about the state of the VMA after the function returns.
-> > >
-> > > The existing .mmap() callback's freedom has caused a great deal of issues,
-> > > especially in error handling, as unwinding the mmap() state has proven to
-> > > be non-trivial and caused significant issues in the past, for instance
-> > > those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
-> > > error path behaviour").
-> > >
-> > > It also necessitates a second attempt at merge once the .mmap() callback
-> > > has completed, which has caused issues in the past, is awkward, adds
-> > > overhead and is difficult to reason about.
-> > >
-> > > The .mmap_prepare() callback eliminates this requirement, as we can update
-> > > fields prior to even attempting the first merge. It is safer, as we heavily
-> > > restrict what can actually be modified, and being invoked very early in the
-> > > mmap() process, error handling can be performed safely with very little
-> > > unwinding of state required.
-> > >
-> > > The .mmap_prepare() and deprecated .mmap() callbacks are mutually
-> > > exclusive, so we permit only one to be invoked at a time.
-> > >
-> > > Update vma userland test stubs to account for changes.
-> > >
-> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> >
-> > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> >
-> > Neat idea, thanks. This should also help out with the insane proliferation of
-> > vm_flags_set in ->mmap() callbacks all over. Hopefully.
-[snip] 
-> >
-> > 2) Possibly add a ->mmap_finish()? With a fully constructed vma at that point.
-> >    So things like remap_pfn_range can still be used by drivers' mmap()
-> >    implementation.
+Hey,
+
+On 5/12/25 10:57, Miroslav Lichvar wrote:
+> This 500 ppm increment goes all way back to the original nanokernel
+> implementation by David Mills, on which IIRC was based the Linux and
+> other systems' timekeeping code:
+> https://www.eecis.udel.edu/~mills/ntp/html/kern.html
 > 
-> Thanks for raising the remap_pfn_range() case! Yes this is definitely a
-> thing.
+> I think the idea to use MAXFREQ (reported as tolerance in timex) was
+> to cover the case when the clock is not synchronized at all with the
+> frequency offset set to any value in the +/- 500 ppm range. The Linux
+> adjtimex also allows setting the tick length, which gives it a much
+> wider range of +/-10% adjustment, so that is not fully covered.
 > 
-> However this proposed callback would totally undermine the purpose of the
-> change - the idea is to never give a vma because if we do so we lose all of
-> the advantages here and may as well just leave the mmap in place for
-> this...
->
+> Changing the hardcoded rate to 15 ppm to match RFC5905 doesn't seem
+> like a good idea to me. The kernel doesn't know how well the clock is
+> synchronized and I'm sure in some cases it would be too small.
 
-Yes, good point.
+Thank you for these insights!
 
-> However I do think we'll need a new callback at some point (previously
-> discussed in thread).
-> 
-> We could perhaps provide the option to _explicitly_ remap for instance. I
-> would want it to be heavily locked down as to what can happen and to happen
-> as early as possible.
->
+The site you linked references this RFC, which describes the kernel 
+model for timekeeping as used by the Linux kernel.
 
-I think we can simply combine various ideas here. Like:
+https://www.rfc-editor.org/rfc/rfc1589.html
 
-struct vm_area_desc_private {
-	struct vm_area_desc desc;
-	struct vm_area_struct *vma;
-};
+Just skimming this document really helped my understanding of what's 
+going on.  It also includes a more accurate description of time_maxerror:
 
-Then, for this "mmap_finish" callback and associated infra:
+> This variable establishes the maximum error of the indicated
+> time relative to the primary synchronization source in
+> microseconds. For NTP, the value is initialized by a
+> ntp_adjtime() call to the synchronization distance, which is
+> equal to the root dispersion plus one-half the root delay. It
+> is increased by a small amount (time_tolerance) each second to
+> reflect the clock frequency tolerance. This variable is
+> computed by the synchronization daemon and the kernel, but is
+> otherwise not used by the kernel.
 
-	int (*mmap_finish)(struct vm_area_desc *desc);
+In RFC 1589, time_tolerance is set to MAXFREQ by default and can be 
+changed by the kernel.  The Linux kernel does a hard-coded adjustment of 
+time_maxerror with MAXFREQ instead.
 
-int mmap_remap_pfn_range(struct vm_area_desc *desc, /*...*/)
-{
-	struct vm_area_desc_private *private = container_of(desc, struct vm_area_desc_private, desc);
-	return remap_pfn_range(private->vma, /*...*/);
-}
+A quick fix would be to change the misleading docstring of time_maxerror:
 
-int random_driver_mmap_finish(struct vm_area_desc *desc)
-{
-	return mmap_remap_pfn_range(desc, desc->start, some_pfn, some_size,
-				    desc->page_prot);
-}
+> Maximum error in microseconds holding the NTP sync distance
+> (NTP dispersion + delay / 2)
 
+I think something like this is clearer:
 
-I think something of the sort would be quite less prone to abuse, and we could
-take the time to then even polish up the interface (e.g maybe it would be nicer
-if mmap_remap_pfn_range took a vma offset, and not a start address).
+Maximum error in microseconds.  The NTP daemon sets this to the root 
+synchronization distance (root dispersion + delay / 2).  It is then 
+incremented by MAXFREQ each second to reflect the clock frequency tolerance.
 
-Anyway, just brainstorming. This idea came to mind, I think it's quite interesting.
+Best regards
+Keno
 
-> This is something we can iterate on, as trying to find the ideal scheme
-> immediately will just lead to inaction, the big advantage with the approach
-> here is we can be iterative.
-> 
-> We provide this, use it in a scenario which allows us to eliminate merge
-> retry, and can take it from there :)
-
-Yep, totally.
-
-> 
-> So indeed, watch this space basically... I will be highly proactive on this
-> stuff moving forward.
-> 
-> >
-> > 1) is particularly important so our VFS and driver friends know this is supposed
-> > to be The Way Forward.
-> 
-> I think probably the answer is for me to fully update the document to be
-> bang up to date, right? But that would obviously work best as a follow up
-> patch :)
->
-
-You love your big projects :p I had the impression the docs were more or less up to date?
-The VFS people do update it somewhat diligently. And for mm we only have ->mmap, ->get_unmapped_area,
-and now ->mmap_prepare. And the descriptions are ATM quite useless, just
-"called by the mmap(2) system call".
-
--- 
-Pedro
