@@ -1,45 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456EB1B414E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1201B414E;
+	Wed, 14 May 2025 08:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211598; cv=none; b=q2vXaBf4dvgmnJxOfhtOsltBMX9wJG2hwu7lbRqY02tuLTmq2UKUROcTkfAeFp2SUe5cKf9jcohOwm/ahmCqsB4Z7mrSQfbEE6x/t2k5lDMlIkoSMSxcjNyAXiBHwGHg34Ec20Rv922DICr2ctdtCJB/7oyoWkTcx6pT3mhJtq8=
+	t=1747211627; cv=none; b=RWocUHhdBMEu1tZLWcx+N8DM79DJhixkhddKOFD7EeuM3f6JwxMTxaaZbOCm/eRN7S0X4bt9zZKWgAeLcDShopNZnmul8shAXaIRSNjjfFgFzvRnxyFN9KpQ+FAWwQ2RWCuGus11BD/18H+TsMeK7m7PFVvk2yBbsuKgspMYwZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211598; c=relaxed/simple;
-	bh=3CXpvZ6r0gzI/d2EhYFqbuGUg457rbvvifYrJSBg878=;
+	s=arc-20240116; t=1747211627; c=relaxed/simple;
+	bh=AQgavCoFrn3p4kZpEsuTDbl2iBlKZHyz8RjR4wpvqDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOj991FvnGWHuz14VCekX9XDaqohoGepaKW8VNLsArLz9KshEbuWenaSGYfkLIQ3+GBUUKg0lyZqJRtgKDv40VPIuO8ujBTd35jj4ZEltL0xu+5RlJzq8vDHSSf7fb6x3HubDTAAlvOY0G14MiN6TyECspsfnw/g09UyKm/SvmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hm8iVqZM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7AixbaCa9N7+cYecOxQx8kJJIbGDgELCLHoumAHkts/Mymp6TRrFPT2lHpnfrf5dPA9HLJQ1KqINQ6oLNxbWzg/OpxfN80OCQq11TfF4NmHIQnvivjsr0GrZ9CS0o7+gikx9gpYzvjNinWeIEMkSrv3bl2bMh5wt7YY3u8cufo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6ojRjkB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hm8iVqZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FB9C4CEE9;
-	Wed, 14 May 2025 08:33:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6ojRjkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175A2C4CEE9;
+	Wed, 14 May 2025 08:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747211597;
-	bh=3CXpvZ6r0gzI/d2EhYFqbuGUg457rbvvifYrJSBg878=;
+	s=k20201202; t=1747211626;
+	bh=AQgavCoFrn3p4kZpEsuTDbl2iBlKZHyz8RjR4wpvqDk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hm8iVqZM6376zga6toinURm9wKZa2XbgbO+4YI1CAsaI4/EjJg89Sg/0oPye41aSp
-	 hGAm7BK9nGHVZmx3MCiisEXbMB1svmyEvr2zQDrKDSW5ilUNjGfQI9n50Be+K3+Nk4
-	 DafLcGIBhAgDmZcA6l8QrP08O6UdpfWvbxJhihXmr4h1F9tp5/bHRXADgwP5YQAVj9
-	 31yu93xj0c/Q0/i3/iL1TnagMm+YuY3C1sh6ePI4DRuE37T99R0sN4y+NAczEE+k5x
-	 DmfYt4kwEU+0yKluuq3hmWBfQEXId0lcvXpjEmkUXDuyCparO8m/wCXTyocLxbBcqK
-	 +rIP74zMAyh0g==
-Date: Wed, 14 May 2025 10:33:13 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 2/6] x86/cpu: Use a new feature flag for 5 level
- paging
-Message-ID: <aCRVSaNVH6waid4c@gmail.com>
-References: <20250513111157.717727-8-ardb+git@google.com>
- <20250513111157.717727-10-ardb+git@google.com>
- <7uh3pi23cdd5r2t6ln5p2z2htgmzo5b6omlhb6vyddobcbqqnt@nyujbhsnpioh>
- <aCROdV_fIygO8OoM@gmail.com>
- <jjvzxxat34tc2uebx3sjqpuft3onxk2izv6azvmmrvr2yxkir7@jqeumosuzmrd>
+	b=H6ojRjkBJnyhqb+fdGrlVbRl1CkZXo09J3lhjAkNtgbF2/3sDyisvQtaep8xxk1pW
+	 ql5we5PXROfoE98FkW1DiiOwAIzJo1305qx3HV1/ni1jCVKotrsYUv7l/0/2WC3lBW
+	 mvxVJ/sJGB05lrGoZ+Q+Iuq8NtBiIkOUoE0wdLdRx8KAXNuiA4IfkUgykcaPqKSiuE
+	 q6kj2RiFfrc6c+i/EbqPqCopFiQ4d9/z5Dpnd/3XErvvNwCs8mgtsDX0vQyuxA/Uii
+	 MapWBnhHlxRj22z4I5qLxoax3VfHiEc7ewatwW0LljFq6vymzZbP8Gjnz5aBmuBn7A
+	 0raE+KVU2WzDg==
+Date: Wed, 14 May 2025 09:33:44 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: Melody Olvera <melody.olvera@oss.qualcomm.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
+Message-ID: <aCRVaNDQP/PdAXPR@vaman>
+References: <20250409-sm8750_usb_master-v4-0-6ec621c98be6@oss.qualcomm.com>
+ <20250409-sm8750_usb_master-v4-6-6ec621c98be6@oss.qualcomm.com>
+ <Z/exOF4T+0vNLQwg@vaman>
+ <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,57 +57,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <jjvzxxat34tc2uebx3sjqpuft3onxk2izv6azvmmrvr2yxkir7@jqeumosuzmrd>
+In-Reply-To: <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
 
-
-* Kirill A. Shutemov <kirill@shutemov.name> wrote:
-
-> On Wed, May 14, 2025 at 10:04:05AM +0200, Ingo Molnar wrote:
-> > 
-> > * Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> > 
-> > > On Tue, May 13, 2025 at 01:12:00PM +0200, Ard Biesheuvel wrote:
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > > 
-> > > > Currently, the LA57 CPU feature flag is taken to mean two different
-> > > > things at once:
-> > > > - whether the CPU implements the LA57 extension, and is therefore
-> > > >   capable of supporting 5 level paging;
-> > > > - whether 5 level paging is currently in use.
-> > > > 
-> > > > This means the LA57 capability of the hardware is hidden when a LA57
-> > > > capable CPU is forced to run with 4 levels of paging. It also means the
-> > > > the ordinary CPU capability detection code will happily set the LA57
-> > > > capability and it needs to be cleared explicitly afterwards to avoid
-> > > > inconsistencies.
-> > > > 
-> > > > Separate the two so that the CPU hardware capability can be identified
-> > > > unambigously in all cases.
-> > > 
-> > > Unfortunately, there's already userspace that use la57 flag in
-> > > /proc/cpuinfo as indication that 5-level paging is active. :/
-> > > 
-> > > See va_high_addr_switch.sh in kernel selftests for instance.
-> > 
-> > Kernel selftests do not really count if that's the only userspace that 
-> > does this - but they indeed increase the likelihood that some external 
-> > userspace uses /proc/cpuinfo in that fashion. Does such external 
-> > user-space code exist?
+On 16-04-25, 15:45, Wesley Cheng wrote:
+> Hi Vinod,
 > 
-> I am not aware of any production code that does this. But changing is
-> risky.
+> On 4/10/2025 4:53 AM, Vinod Koul wrote:
+> > On 09-04-25, 10:48, Melody Olvera wrote:
+> > 
+> >> +static int m31eusb2_phy_write_readback(void __iomem *base, u32 offset,
+> >> +					const u32 mask, u32 val)
+> >> +{
+> >> +	u32 write_val;
+> >> +	u32 tmp;
+> >> +
+> >> +	tmp = readl_relaxed(base + offset);
+> >> +	tmp &= ~mask;
+> >> +	write_val = tmp | val;
+> >> +
+> >> +	writel_relaxed(write_val, base + offset);
+> >> +
+> >> +	tmp = readl_relaxed(base + offset);
+> > 
+> > Why are you using _relaxed version here?
+> > 
+> 
+> No particular reason.  I think someone pointed this out previously, and I
+> was open to use the non-relaxed variants, but I assume using the relaxed vs
+> non-relaxed apis comes down to preference in this case.
 
-Would production code ever really care about this?
+Nope you cant! There _needs_ to be a specific reasons!
+When you are doing read, modify, write, it is very important to know the
+right version to use...
 
-> Maybe leave "la57" flag in cpuinfo for 5-level paging enabled case and add
-> "la57_enumerated" or "la57_capable" to indicate that the hardware supports
-> 5-level paging?
-
-Yeah, see my other mail, I think renaming X86_FEATURE_LA57 to 
-X86_FEATURE_LA57_HW and exposing it as an additional 'la57_hw' flag in 
-/proc/cpuinfo would be the way to go, if this is a compatibility 
-concern.
-
-Thanks,
-
-	Ingo
+-- 
+~Vinod
