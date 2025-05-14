@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41932227BA5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2E2356A3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266194; cv=none; b=Hiq2OISWWSCXl1/7AiSX3A4pv6PDox+hjx5Ku4KxNZSurrc/eMz2k1L3AGKmSmXGev2zfAMW/j3nLqO6JUf0RQS7QJp4GY9scAUD5D76RdyddDM/n2cVDC0YthN06+kG0gH5brTENs4ytoK2ZtH/u+lkWBtBrOLpUe3p8dzRc+Y=
+	t=1747266196; cv=none; b=QzBZ4/PJXh5hpVy/xPbBNiXd7tKb/VYN3ZizcptoZcAEnw9lwdmuuhNPfgamS363koXRpdeXIA249z7+h9hkfmLVojJUHdU0k6KgTeD4HtPBnmawXbnuL57McGgx065rDX6ybY8MH5PQBzdknjsga+Fe+2EYoGi+mQ/dxnd+i6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266194; c=relaxed/simple;
-	bh=ROz3Vh7FyPzpWClrBL5MnADoPmYX3e2sldFKqiqdpas=;
+	s=arc-20240116; t=1747266196; c=relaxed/simple;
+	bh=LzJYk4b8YGsjuk791t5mKW865k0fPRkNXL8xs0fj9z0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=l8/XEHW5HHJWV2kZz+dzrF1wl1gwNht6NV3Wzu9CdDrvhAPz3FVz9EEiRhVe6adxANLkLuOJbnG38J3xPUvCy4M+pcr+Env2seVFvfR2p53a3K8C82suGe243bRklWloGRYCwbSznMUWt8dPqMOfpPlKLgtuTyMXDFt/rQJLQto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dTyThdz1; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=iwa8XhfK97+F00JKXJLGVXbAP9pt4PS9Ewiqx/SAsga9TotUP9AVLz6xdmS0+hy2dGr+BXnpbap08/rISyu/2yDc34sv47JNkzximYfETcYo+VWZMuQAIbCTN6XEYBkBW3CeWfjOaUgUv87mk9ATlQKgU7EOmdZNZXXSlnMeY2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dB7tNBjE; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dTyThdz1"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b090c7c2c6aso184512a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dB7tNBjE"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so654468a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266191; x=1747870991; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266194; x=1747870994; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XIQY9yLRzDdCwjnfungXTg71dAj8IwxkOejXFn+6ono=;
-        b=dTyThdz1gNMa8qHdlw2eNqVE1Kvdd99L8asygIMrsE+xW7foDlOu/bHRqYCxlbCDmr
-         NMFE4osgUoPJsLKA5XaIm8JyE7RlMoMjl3da+N1kWX/LHY0cwungy0jvhi9qxbxKATQu
-         AwKUUgRZNKUtUgbJWxBLW5FDkJa3N6UgGTUvKGY3EmxSPg8mIXrSCUP/qyeWu6JvUFbF
-         /ZFf91BRVlT/Q9QcgOcXFzcZzjlHgkSEaTSsW94L8fDvu4imt19laE8+E9Ixx7IbTKQ5
-         TwgKd6Xp9x9NAoZcWiZNifdptel0b0wyieB200mXY4LsSaAG+rYtw5+YigHxnU4EsTLa
-         uuqQ==
+        bh=mGWGFLne1bJyu7laipcwQPaVQw6rHvasb6OTJEqGffc=;
+        b=dB7tNBjEJawIvPmuM7S1FgBXGqOLhkGp0NooRcKZfKHaWFZ1OYviFEfSpa7T57Z2Qp
+         CN0uy9+GkzqpodzUbEYb33YDDLRQtM2LgTG9JgSBXwfdrDPQ0Y5RSXBO91/pBOTksTYN
+         rXzhtFhtZg+4vON2MK0ncyw5qKV94pKyHOaIbdZN4qNy5H14lCl4Nn5QyQu/8BX16/gY
+         jZqdaywDpq64YSVaDgDQD/bbH2RjOBJZ2Jpv5IleZUbT+rqU53RW+VlaIjMSi+2//x+8
+         ELyyPGaYNG4jEujDNIGxZgaLY3NmgnNxII8M/7i7FP0ljtwO/H3TpGoQuG9z/n8Hn2gb
+         gsBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266191; x=1747870991;
+        d=1e100.net; s=20230601; t=1747266194; x=1747870994;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XIQY9yLRzDdCwjnfungXTg71dAj8IwxkOejXFn+6ono=;
-        b=DoDraIr856yOJkJJCqpUVsPolWeG9xBEtvqVkGs+ERKYuuzNAIw7dGidggzvZKU7C4
-         P+pvZZK/6KUhB4kUXirriYKWc/5DQLJB0asf+UdVg/V549Gg141JUbjDbYrJAc8wTZq0
-         TvIZNrIbD/trH5pBUneqYjBNZV0mnS71vmrQ5JMrYnmdOfCIt5tRcbwvG9gFVgplH7oh
-         l/VPJDDd46lH2ju2mSEuDQdIWasqi8XQafogljOBTZ11Oe+6rBjFrT1XrbiulYIFXVFC
-         RlNfe3yvoIA2QkkGuzaM1nlc16KyzkW+vlV48cYTjuNfqLa51Z7r45WxEL8i7ux8DzJm
-         G2oA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6BPln1eaF1bbyr6QJnLy2Lt4BjWwvJ3wxiXRKc8C1oHkGKPdxiyydmJcyq5zjkFw6K2vHDRKzAJE73No=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrpQVuF05ub21ia/yrxfQrl1nU1tS2iM5t3wT8qXR9uVSGEK5O
-	lZ0WNneqr3j/PRKd3GzmINGUgXLY0JWwSw6r4FQdyYSkqsYrlclM+JMuTDGYAYDNnc6A6si90W+
-	esbeJQ5ob1H5KfONrLD8v5A==
-X-Google-Smtp-Source: AGHT+IHC0afSzx4CRGLb+NEtt5FopkBc14R3Tsx3Oo5v/U8eDsNNnam5RHpBwQ1p1qHPCM63buWzU71Ko18fm+qY7w==
-X-Received: from pjbnd11.prod.google.com ([2002:a17:90b:4ccb:b0:2fa:a101:743])
+        bh=mGWGFLne1bJyu7laipcwQPaVQw6rHvasb6OTJEqGffc=;
+        b=iDxJYmR/UcIDqWsRX00/rpegY5QneMbp+xgqMa4ZIaovFvmv7AHLMDDzY9JHhAiiOa
+         jfjuxYXG6sM/GJGsGCpUbJIlZSphl+ald7aOtdQIPUHAqdBXZdDCI9+vH1ZxpGAJ4asV
+         1sDocFTkSjrUAqcZTbP0n5506G7PfKku3vHzotR0235kTWrsCjaR5n/A7Q6g3Iyspmep
+         uzYLqCBscszwGb8M5dus1lJ/xbFnrscx2vg+8UTq8Sm2QnqdPeRON/KmNipkviazTM2C
+         guvMD8Kaq6N98nuMEMIlUqfyQsxDvkT0SFSdICKLEUDEOaQJ/Y9qwWGLAaOF1kPfMn8T
+         r47g==
+X-Forwarded-Encrypted: i=1; AJvYcCWelt+wnuLcJxANY2AmguHQBWOv5+ATs1YbrS0wLGEUDQSnLRufW6KsAAFngkXW7v/VmO1nv+c58Otm0CM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWqMPuKxYx79xJ+0uGaJIvlCfIyADaLA6Af3g6MZuiUFFqR10r
+	E/E1dOQik6MK7+1awdqVtt8XfzrrmZFJt3ar8vnCFG5U/V6UAqzgmTs2swx5p1cZz5BtBoGRIIV
+	PTSY8JxU+Ota1fbl8emRkgg==
+X-Google-Smtp-Source: AGHT+IHW8Awj1az2kZDKXFyRTHzAsu7nHW73nuWNFHatSp354fmtn6egEeLp32OhYFxf0/BZ1Nce5gFMY5p11LmLng==
+X-Received: from pjbee14.prod.google.com ([2002:a17:90a:fc4e:b0:301:1bf5:2f07])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2d4f:b0:30a:3e8e:12cd with SMTP id 98e67ed59e1d1-30e51914e56mr638587a91.22.1747266191346;
- Wed, 14 May 2025 16:43:11 -0700 (PDT)
-Date: Wed, 14 May 2025 16:41:48 -0700
+ 2002:a17:90b:5788:b0:2fe:baa3:b8bc with SMTP id 98e67ed59e1d1-30e51930f95mr563390a91.23.1747266194209;
+ Wed, 14 May 2025 16:43:14 -0700 (PDT)
+Date: Wed, 14 May 2025 16:41:50 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <3d2f49b409f1d6564eaff49494789908eb9b74e5.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 09/51] KVM: selftests: Test faulting with respect to GUEST_MEMFD_FLAG_INIT_PRIVATE
+Message-ID: <09e75529c3f844b1bb4dd5a096ed4160905fca7f.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 11/51] KVM: selftests: Allow cleanup of ucall_pool from host
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,183 +96,82 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Test that faulting is denied when guest_memfd's shareability is
-initialized as private with GUEST_MEMFD_FLAG_INIT_PRIVATE and allowed
-if the flag is not specified.
+Many selftests use GUEST_DONE() to signal the end of guest code, which
+is handled in userspace. In most tests, the test exits and there is no
+need to clean up the ucall_pool->in_use bitmap.
 
+If there are many guest code functions using GUEST_DONE(), or of guest
+code functions are run many times, the ucall_pool->in_use bitmap will
+fill up, causing later runs of the same guest code function to fail.
+
+This patch allows ucall_free() to be called from userspace on uc.hva,
+which will unset and free the correct struct ucall in the pool,
+allowing ucalls to continue being used.
+
+Change-Id: I2cb2aeed4b291b1bfb2bece001d09c509cd10446
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Fuad Tabba <tabba@google.com>
-Signed-off-by: Fuad Tabba <tabba@google.com>
-
-Change-Id: Id93d4683b36fc5a9c924458d26f0525baed26435
 ---
- .../testing/selftests/kvm/guest_memfd_test.c  | 112 +++++++++++++++---
- 1 file changed, 97 insertions(+), 15 deletions(-)
+ .../testing/selftests/kvm/include/ucall_common.h |  1 +
+ tools/testing/selftests/kvm/lib/ucall_common.c   | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index 51d88acdf072..1e79382fd830 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -16,6 +16,7 @@
- #include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#include <sys/wait.h>
+diff --git a/tools/testing/selftests/kvm/include/ucall_common.h b/tools/testing/selftests/kvm/include/ucall_common.h
+index d9d6581b8d4f..b6b850d0319a 100644
+--- a/tools/testing/selftests/kvm/include/ucall_common.h
++++ b/tools/testing/selftests/kvm/include/ucall_common.h
+@@ -40,6 +40,7 @@ __printf(5, 6) void ucall_assert(uint64_t cmd, const char *exp,
+ 				 const char *fmt, ...);
+ uint64_t get_ucall(struct kvm_vcpu *vcpu, struct ucall *uc);
+ void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa);
++void ucall_free(struct ucall *uc);
+ int ucall_nr_pages_required(uint64_t page_size);
  
- #include "kvm_util.h"
- #include "test_util.h"
-@@ -34,7 +35,7 @@ static void test_file_read_write(int fd)
- 		    "pwrite on a guest_mem fd should fail");
- }
+ /*
+diff --git a/tools/testing/selftests/kvm/lib/ucall_common.c b/tools/testing/selftests/kvm/lib/ucall_common.c
+index 42151e571953..9b6865c39ea7 100644
+--- a/tools/testing/selftests/kvm/lib/ucall_common.c
++++ b/tools/testing/selftests/kvm/lib/ucall_common.c
+@@ -21,24 +21,24 @@ int ucall_nr_pages_required(uint64_t page_size)
  
--static void test_mmap_allowed(int fd, size_t page_size, size_t total_size)
-+static void test_faulting_allowed(int fd, size_t page_size, size_t total_size)
+ /*
+  * ucall_pool holds per-VM values (global data is duplicated by each VM), it
+- * must not be accessed from host code.
++ * should generally not be accessed from host code other than via ucall_free(),
++ * to cleanup after using GUEST_DONE()
+  */
+ static struct ucall_header *ucall_pool;
+ 
+ void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa)
  {
- 	const char val = 0xaa;
- 	char *mem;
-@@ -65,6 +66,53 @@ static void test_mmap_allowed(int fd, size_t page_size, size_t total_size)
- 	TEST_ASSERT(!ret, "munmap should succeed");
+-	struct ucall_header *hdr;
+ 	struct ucall *uc;
+ 	vm_vaddr_t vaddr;
+ 	int i;
+ 
+-	vaddr = vm_vaddr_alloc_shared(vm, sizeof(*hdr), KVM_UTIL_MIN_VADDR,
+-				      MEM_REGION_DATA);
+-	hdr = (struct ucall_header *)addr_gva2hva(vm, vaddr);
+-	memset(hdr, 0, sizeof(*hdr));
++	vaddr = vm_vaddr_alloc_shared(vm, sizeof(*ucall_pool),
++				      KVM_UTIL_MIN_VADDR, MEM_REGION_DATA);
++	ucall_pool = (struct ucall_header *)addr_gva2hva(vm, vaddr);
++	memset(ucall_pool, 0, sizeof(*ucall_pool));
+ 
+ 	for (i = 0; i < KVM_MAX_VCPUS; ++i) {
+-		uc = &hdr->ucalls[i];
++		uc = &ucall_pool->ucalls[i];
+ 		uc->hva = uc;
+ 	}
+ 
+@@ -73,7 +73,7 @@ static struct ucall *ucall_alloc(void)
+ 	return NULL;
  }
  
-+static void assert_not_faultable(char *address)
-+{
-+	pid_t child_pid;
-+
-+	child_pid = fork();
-+	TEST_ASSERT(child_pid != -1, "fork failed");
-+
-+	if (child_pid == 0) {
-+		*address = 'A';
-+		TEST_FAIL("Child should have exited with a signal");
-+	} else {
-+		int status;
-+
-+		waitpid(child_pid, &status, 0);
-+
-+		TEST_ASSERT(WIFSIGNALED(status),
-+			    "Child should have exited with a signal");
-+		TEST_ASSERT_EQ(WTERMSIG(status), SIGBUS);
-+	}
-+}
-+
-+static void test_faulting_sigbus(int fd, size_t total_size)
-+{
-+	char *mem;
-+	int ret;
-+
-+	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "mmaping() guest memory should pass.");
-+
-+	assert_not_faultable(mem);
-+
-+	ret = munmap(mem, total_size);
-+	TEST_ASSERT(!ret, "munmap should succeed");
-+}
-+
-+static void test_mmap_allowed(int fd, size_t total_size)
-+{
-+	char *mem;
-+	int ret;
-+
-+	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "mmaping() guest memory should pass.");
-+
-+	ret = munmap(mem, total_size);
-+	TEST_ASSERT(!ret, "munmap should succeed");
-+}
-+
- static void test_mmap_denied(int fd, size_t page_size, size_t total_size)
+-static void ucall_free(struct ucall *uc)
++void ucall_free(struct ucall *uc)
  {
- 	char *mem;
-@@ -364,40 +412,74 @@ static void test_bind_guest_memfd_wrt_userspace_addr(struct kvm_vm *vm)
- 	close(fd);
- }
- 
--static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
--			   bool expect_mmap_allowed)
-+static void test_guest_memfd_features(struct kvm_vm *vm, size_t page_size,
-+				      uint64_t guest_memfd_flags,
-+				      bool expect_mmap_allowed,
-+				      bool expect_faulting_allowed)
- {
--	struct kvm_vm *vm;
- 	size_t total_size;
--	size_t page_size;
- 	int fd;
- 
--	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
--		return;
--
--	page_size = getpagesize();
- 	total_size = page_size * 4;
- 
--	vm = vm_create_barebones_type(vm_type);
-+	if (expect_faulting_allowed)
-+		TEST_REQUIRE(expect_mmap_allowed);
- 
--	test_create_guest_memfd_multiple(vm);
--	test_bind_guest_memfd_wrt_userspace_addr(vm);
- 	test_create_guest_memfd_invalid_sizes(vm, guest_memfd_flags, page_size);
- 
- 	fd = vm_create_guest_memfd(vm, total_size, guest_memfd_flags);
- 
- 	test_file_read_write(fd);
- 
--	if (expect_mmap_allowed)
--		test_mmap_allowed(fd, page_size, total_size);
--	else
-+	if (expect_mmap_allowed) {
-+		test_mmap_allowed(fd, total_size);
-+
-+		if (expect_faulting_allowed)
-+			test_faulting_allowed(fd, page_size, total_size);
-+		else
-+			test_faulting_sigbus(fd, total_size);
-+	} else {
- 		test_mmap_denied(fd, page_size, total_size);
-+	}
- 
- 	test_file_size(fd, page_size, total_size);
- 	test_fallocate(fd, page_size, total_size);
- 	test_invalid_punch_hole(fd, page_size, total_size);
- 
- 	close(fd);
-+}
-+
-+static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
-+			   bool expect_mmap_allowed)
-+{
-+	struct kvm_vm *vm;
-+	size_t page_size;
-+
-+	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
-+		return;
-+
-+	vm = vm_create_barebones_type(vm_type);
-+
-+	test_create_guest_memfd_multiple(vm);
-+	test_bind_guest_memfd_wrt_userspace_addr(vm);
-+
-+	page_size = getpagesize();
-+	if (guest_memfd_flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
-+		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
-+					  expect_mmap_allowed, true);
-+
-+		if (kvm_has_cap(KVM_CAP_GMEM_CONVERSION)) {
-+			uint64_t flags = guest_memfd_flags |
-+					 GUEST_MEMFD_FLAG_INIT_PRIVATE;
-+
-+			test_guest_memfd_features(vm, page_size, flags,
-+						  expect_mmap_allowed, false);
-+		}
-+	} else {
-+		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
-+					  expect_mmap_allowed, false);
-+	}
-+
- 	kvm_vm_release(vm);
- }
- 
+ 	/* Beware, here be pointer arithmetic.  */
+ 	clear_bit(uc - ucall_pool->ucalls, ucall_pool->in_use);
 -- 
 2.49.0.1045.g170613ef41-goog
 
