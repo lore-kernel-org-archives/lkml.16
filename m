@@ -1,122 +1,103 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A778BE8;
-	Wed, 14 May 2025 08:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C99200B8B;
+	Wed, 14 May 2025 08:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209622; cv=none; b=uFflc20iPuhBtZfI1d9vSTbS38AZGyYccZpPOzWXAG+L82rAWBYxWvCLmDSJlRwDnZZ9vQg3s5eWBjuUWYOOm4kJy+IUQJYmJcLg1ON1EBxvNe5SXLFxrzkOdZlP+2WISdMxAZPU2FD0rL/nq82KZtRKF/itmLHpT6lX7L2BVKw=
+	t=1747209629; cv=none; b=pRlq7oID3qLUsDPQAc5d9sqCPLPGuLf+TT4VcxGVAFpazhh76AgewTPt2H8j4F227EZf5nDH7rF/j94oSjhhE0coLwH0JY4l9vAGau4XKxyC1VEaoQhdY/pcMD3bfa+sjFHNjwrUM/p5kQwDVTEmUI5EmXq+yUEm2mBfLp5tTKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209622; c=relaxed/simple;
-	bh=FNnalQEzea7G5/rGNNxlWHjVw5fKy7ofEDIPa/TTLeA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=m7a1m4Hhtn3GT4lIRDIW6/2bnUfGxoLNJrjvoOiJYR3JtPYBafywVbsu57d6ZyHl3KGsSaWWTsJsWQu+OL3igZvQ2ZDsAt3CPCIrFaviAZBwHtr3Si8F3CE98eebmg5ZEhW5l2U9Kw+i8JN2RbG0fkctN70pm5J/JMnHGacU+nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=caEiEi3C; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="caEiEi3C"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E2DTgd015761;
-	Wed, 14 May 2025 08:00:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eCKY5vGp6iytYr65b9eAol+yPV2ZnG6jSEVYa8k0SgQ=; b=caEiEi3C5Yj9xiAi
-	0vScEPzsyeb1v6BS0lRKl7UMXOxoLxWskwrJ5MHjV+2tJiGb6Ld47U/JgJzTL4n6
-	uX6KcYopbj6jcDRs7Y925oPAAwO5CkxTl2Is4FDSdNPIxFt1D7SAbzC1/Vcz8vHo
-	gA5j5Z11FGUCUl7z4UxX2e6NWvKfgsgR7nZ0TisA9+RJCY5TWLfI5PTgQSPq1VPM
-	SM/kMAwjNpfOcL2mibZxxJC5VRhwoWxXFKAzocKWp4CW6TIAaU9BHGnqS87iOPax
-	mXrR2pCc2KtkwdqM8Sxmh5Id5QFYmzh9n9anFLc17ForVNto9MkA2M5FpFpkBJMJ
-	S3qdLg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmhv0t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 08:00:18 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54E80Hho015168
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 08:00:17 GMT
-Received: from [10.64.68.153] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 14 May
- 2025 01:00:14 -0700
-Message-ID: <d87a6bba-eaed-4ac4-a272-3bb38b1607dc@quicinc.com>
-Date: Wed, 14 May 2025 16:00:12 +0800
+	s=arc-20240116; t=1747209629; c=relaxed/simple;
+	bh=+sc5xF/AgzBXcC4c/GiyV+457U3r/SGQb/fh3Xa2xKM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MfgLhVrte5gIyQwEfLAeNG+ugNCjEtxSqXjF8lvzbyKxcSYmzNrz6k9+fCbWsONiD1ZvFhfQESLTi4tcnk3xV/aprGuHdzINSFbVtgLnzMBDRtiO4aJUopVpfDF2YPP2lhVii6WE3+VtPfaiUltxQ0VVtxtEBaOVi+2rT0LaJ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
+X-QQ-mid: esmtpgz12t1747209566td5a1098c
+X-QQ-Originating-IP: FI8528WaxG2H3euIWiQn4sbSZe3lWe01+6ZwNSM9swk=
+Received: from chainsx-ubuntu-server.lan ( [182.242.225.107])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 14 May 2025 15:59:25 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3460519599123491404
+EX-QQ-RecipientCnt: 10
+From: Hsun Lai <i@chainsx.cn>
+To: robh@kernel.org
+Cc: i@chainsx.cn,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	krzk+dt@kernel.org,
+	sfr@canb.auug.org.au,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH v2 2/3] dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
+Date: Wed, 14 May 2025 15:59:13 +0800
+Message-Id: <20250514075914.194651-3-i@chainsx.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514075914.194651-1-i@chainsx.cn>
+References: <20250514075914.194651-1-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] Enable CTCU device for QCS8300
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250327024943.3502313-1-jie.gan@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250327024943.3502313-1-jie.gan@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA2OCBTYWx0ZWRfX3y9eAJIyiCv/
- R/xuCuLo/RjI8KKaoiBSfbC3xyKhQNZgjYBKjtpgL9rp6U9VNBM+afUBsJUHXHxqey0QuzOMHN0
- rQYN5RnqN3nrOL8T4zfarjRZipxMLTarBP0yFAxa/zjaSkYbBKn0sszIHuR+rCA8+3w5XkBAXLh
- zYMkt4ettjjrrtTyB52OuoyQXh5IhfThskhnwVKV0RUbjNhd7nlaqsiaR46Pq2SNIyD+nk0047e
- ET5tGiJl7EoUQprU0ewRg6IxRBF6LMwi7k+st/OQRCBDnc83vKmqEVAl+wjgFWTtFRVYDXL3VO3
- afDXFzw1TCaIPXofOhxD0e4ZjXKVCauJyIX/9NApCwiA+t0ouTo84/zPJNrL8pgQZRy92BqG7Ea
- UrvcARVRS0CoMlFnt5gfEl3iTINAJWL7OnJ1/tSqn64ul9V+DmgQcA4885bdCVj32BxrdLK2
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=68244d92 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=pLMpUjaxxvwfmTDcegsA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: lCFnLqJMcX4kM6QxzAR3OeYaBZNQQ30e
-X-Proofpoint-ORIG-GUID: lCFnLqJMcX4kM6QxzAR3OeYaBZNQQ30e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=698 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140068
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
+X-QQ-XMAILINFO: M3uTjkO5QXGxU9dBLPLehe6v7aI1+EYgkxS7x8s0VW5KyeTM81Rp6hJs
+	L7Y3eiAj+9mZ30tc5UiB1+5xfVWeL2/xN66oiRLANsDS0IqzUZKcVZxA+JvpeKXSr24OQI0
+	OXJvfSqQj3Rv21e8EmzF5+PlwG9DpKgSkRvKgG757RZlliVhqDPSCTJrbe2Ff3PQBTNxoKs
+	bU2m4jljspO8BJHfBcf4yAZzs9KTAnHYscr0Bh97qsFh8FF/mJ5CjBIbWAsonsQxlBvSZA/
+	oimT2V3tX1yH5L8S4QJudLpPNRjDE7AULcHyTFAMPrPdQJyC1K62tcQFP2LFP3TBP+pePLZ
+	nsJ1Vrz8YgekZ+jqMOUqngwmdubXg/f5NTd36/beTHyftpcfq3QWWAhhMfHCx9lrBZqcVzd
+	zoABRSrZqiO+TLnaJikg/0Sr1Gkw7p7V+MvFJ0CmNhYuhcFKYE9ajhjd7PeA58+VwdBO4y0
+	/XElK3rflcmjPlyAbp4NmxyWn46Bnrr9V7WBdWLI614SyDzRBrqQM2pBpA8LWIFVd+5ntL8
+	Fnks8yQ+MZAIehJxuxw294pM8FfzUO+IK2uyBfCWVeSlq/WXod8Kp29agsyPUhTG6xCLUA9
+	tMKC87I7vy5bhecBnmlEAB5sR4P+LYpCZ7q57jcEB97ZIb/sgTiP4dnzI6S9RbZaBQoaii3
+	pNE+geiydvLrtYDyjiYOnAoKdIGsHCrVio+Sti6/bsOn8vBB9shJtExw/hHNtienhr0bFNR
+	vBPIo7IQxg1z2cBwlPKw37J1kvrRU2B9bIXOsKa3ypkIQ4T7VHAUbBny152K18xuQ/Rm8Vt
+	Mjmuw8+FfyomJn64wZ4p7bDcwjK9+VJKoiY+92uIs9zOOucxxedvQCCCFGUIPbcNUvYl0Gt
+	89rx6Gmp+yoQ4b7vRn7RBYSInoHXZ8EjUdKI2oUfv3bog7VQG0y/FZDoDerR47fYlIBXImr
+	I0X3BnHWVbYTM9sXgK8W15VeGfTRmdMAupO9tO2pzRshQ734kt7QFIdHYwwsWVFgl4fINWI
+	JQKDZBymNzYwGpBa9Zs4YwihpBmWb0YETZQtl2Nq/93caMaxY6gk5wfPllkPs=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
+This patch adds device tree binding support for
+Sakura Pi RK3308B, with compatibility for the
+Rockchip RK3308 SoC.
 
+Link: https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
 
-On 3/27/2025 10:49 AM, Jie Gan wrote:
-> Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
-> the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
-> configurations as SA8775p platform.
-> 
+Signed-off-by: Hsun Lai <i@chainsx.cn>
+---
 
-Gentle ping for the series.
+(no changes since v1)
 
-dt-binding patch has been reviewed by Krzysztof.
-dts patch has been acked by Konrad.
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks,
-Jie
-
-> Jie Gan (2):
->    dt-bindings: arm: add CTCU device for QCS8300
->    arm64: dts: qcom: qcs8300: Add CTCU and ETR nodes
-> 
->   .../bindings/arm/qcom,coresight-ctcu.yaml     |   9 +-
->   arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 153 ++++++++++++++++++
->   2 files changed, 160 insertions(+), 2 deletions(-)
-> 
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 115c3ca43..c64adc0d0 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -1109,6 +1109,11 @@ properties:
+           - const: rockchip,rk3588-toybrick-x0
+           - const: rockchip,rk3588
+ 
++      - description: Sakura Pi RK3308B
++        items:
++          - const: sakurapi,rk3308-sakurapi-rk3308b
++          - const: rockchip,rk3308
++
+       - description: Sinovoip RK3308 Banana Pi P2 Pro
+         items:
+           - const: sinovoip,rk3308-bpi-p2pro
+-- 
+2.34.1
 
