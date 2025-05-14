@@ -1,154 +1,127 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B81617B425;
-	Wed, 14 May 2025 16:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB91163
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240275; cv=none; b=oYs5CZbHrk35GQOlcty9DJ3ALmzBuvxCK3hsHbD3ibST5itXavzGEqAwfsA6Und9xFA0KuMWuY9yzx4xaquIkt4lxnQmsWOga+NrvBtNQZOvza8Y0FjH5HpiM4vMYnEjb7oZSPiIY6Q7FWgSG/OPIYuL/JgtpQtpHhYtq79ZvUw=
+	t=1747240351; cv=none; b=hU+xLG7SXcSqkgSiTzuo+flGxnu2NdjvNKpv7yU3pF/TvbkZWm1spxCwbViEUs/3Ukv7w3aNbRLTAWgoMaI0zYNOVx322MXM11Ycr4eFL+/rYyi5BKaUEgOLXfoTqDJT4zZu9Y4Z7JyXrWoBOKm2kSMMi8s9XmosF1Tx0TxLk8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240275; c=relaxed/simple;
-	bh=hMG5Hp4DrK9f+Zt1PU2mXZ8zjXEdBSx3vlr7E9/HJHE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZZKoe58k3+5cvjleWn1Ab2g0BycqAG4u8xbQ3mgQLqKMyjvk1Z0KgxYtelh6xx0Rkb5wbmxL9xuJooiX+zWv04+doox/hbeX9GQPra7EohVWe8lmYfaj/4eTN3r8enKRiEWciwW0m5rVzHPcndKh+OP29WZ78Av0FwAeaHl3egQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/1wIB5q; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747240351; c=relaxed/simple;
+	bh=1N3x/GOevNWDg5nrpVSNIB9tY1j6A1Mn0q58cHpD7mc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I0/6jBe7F30erhuQGz/t0sBSVEaO03jdT+xNIXVydUMW1+WgnTM4i8nrM9DYJH6Ps5sQgX+P4wsmSPrYI9x/ZvaXRf3ADve/O06kWfuTsJjq8S3KaI/3ylBQN9jvhbQwPEUsuU7C+Actego1nSSLR/oA++OjeSOTovPNGju+xhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rqhde4ps; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/1wIB5q"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-326c1795b8bso13397371fa.1;
-        Wed, 14 May 2025 09:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqhde4ps"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a20257c815so4061379f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747240271; x=1747845071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1747240348; x=1747845148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tl3sZuw1JpFTPNUyXtF/TiniOiQd8y65SQ3qOplFDgE=;
-        b=f/1wIB5qY0x9wE4vuekUTdIvWxi3DAR5ECw4OaoaDh/Tiq3Fv70y+Q4cI8TcYZeimY
-         PO9LjKT5mJl09UwS061RYRJatqDoMKdJ7zSHVff3UJtoaCMlgm36Js+X3U/hLR4vHbUX
-         AU0gD7uXQKkqPE/Uzoylo3+pDIVa8pRGax2tP+sRcBiAnWvbO2ZUncZQTwIFVbuZhqAm
-         nu+iydzCfUmKojVO6rIYBF6hblv/tfzShj7oRFYuT/wyyWexdLj6pC2OO85e81z4alA/
-         OQ4NcehM2FlYlaWjsPHkTvXIpEFs39qzhyl+zyDFR3FmIMGtpWqSN93yX3Wu6fCaB2jq
-         OKVg==
+        bh=Fnmo2+MZcpJ2cvX+WFzBsbU3N8d4JXlGi4Htr9EmUTs=;
+        b=rqhde4psltSUx2l8eaFvCu2ZVjXeYPey8dGdXcQdBicQpeJe0yu+45FcLdYAY7Pm9H
+         3CVpRola86z0/ipJ/5U/udmaIV5/77PzJF0mayxBNyfRkdM+MpOq+oRwFAGcmhNXl0Ee
+         Yu+5h1RwYmbA2qOH611lBXLYO9/4eF5hT6OqGR9fWNo3DF3hFHvXpecrUepqWFxy8XJg
+         HAgR+HHR9K6exqel9eaSRtyYAXImzz1PHY+9r/pXf5RMF+zls4xj5tUbP+wxCF6mPokn
+         FumGX/CWW0dttd/PxMr3J7hxKCN1w3eeSdRWLLfFFUROgs6CbUHcj8Hm059VsUlSwo/Z
+         aK1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240271; x=1747845071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747240348; x=1747845148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tl3sZuw1JpFTPNUyXtF/TiniOiQd8y65SQ3qOplFDgE=;
-        b=gaKAj9L7QuIpPnoDI5E5IU2R1ONBvGMXqLkL7krB1XB2BfbKOnjrb5b/wlZvZjxVgd
-         mZILNoQxjaAUkDFY0PjWaJqzl005qwrBEjv2S1mFIswTc1pucQMmfMLtuCIKpwP1RkXy
-         JJpNRZINn7VS3yYVtd3pQQ1vDPnokqtcLM5pifts3AUgOb6g091crpy4u3d6VZlW+WUo
-         0puI7voOVu4d5kKxYBdxiW1CEo4W9WMrHYRVD1tp88Z3iPu2N0GVy89CYppWB+qskdkR
-         +HF7C66gJhFiGoD3jifKApBOpA1Sh9k7AhROsKPAA3X4lKYjqK/hw7h/MlPuaILX2etZ
-         /2+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVLhOPFIBIOvsSRLb7Us4ZfTqTLsWKGqgHJdVkkkxgnfiLqgPl1nGtlzdJjJAWErwhdWyJ+tMsp7lUZ3KU=@vger.kernel.org, AJvYcCWgRJx/vGwj1KZF0iJFNNSMOcDPLKlOFw+5F9vjB7Y/eG9ff3g91Zvzwfr0XfjT5XAs86lp1rBXBNlMk/E=@vger.kernel.org, AJvYcCXBWhZlxoGz5Qo4WgQ+aTxlio3I+0e3KgX08xeaKUxCT88GzYBA7iBPexT07sPfgfD37alENuKkN6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJM6LWtqm7ztfxzhMlF/7OieIjoVltlPnOPF13r5fjilXRXf04
-	Uf95G9FxNP1YY2gZWvNgmKOaCPehOub4FkdyiaPtbFgjM8KYeAqc5yFSvXZHaGPLXjg+9hTIDrO
-	P11fOV+eyLI3m4wxAlW3cPDvvNDU=
-X-Gm-Gg: ASbGncsUd2z5Pj8pYHMgjHJKR2YlxoSZBQ8ztuQXlbeo4H6a3CAOSsRtKlUkmUm84KS
-	tmwEvOenWfvyEKPFFsVw10pYxWiSOGinOCd6sQzZ+lx8QuHtpDQy1/NNPAnqVg5XRnO0pA+aVGz
-	MeWvrnQd0sM/o7mGPPdkgT1Hsv487ZI5CfuQ==
-X-Google-Smtp-Source: AGHT+IEBixW/UnlsdMV+KcAwpESPlSRZwPO2hjoXVUOHsdw5UOEX0JmzjViwlmGtZphdTMfVYwah+r3pzhyPDgtTI3Q=
-X-Received: by 2002:a05:651c:b12:b0:326:cf84:63c4 with SMTP id
- 38308e7fff4ca-327f843efc2mr1150781fa.1.1747240271035; Wed, 14 May 2025
- 09:31:11 -0700 (PDT)
+        bh=Fnmo2+MZcpJ2cvX+WFzBsbU3N8d4JXlGi4Htr9EmUTs=;
+        b=oXJgViEze57jOZekjhtVr1n3rdcf4Ae8KDV8h9exI8O113r7UVVk1lgOu8aYBopXB1
+         CgOu4j8T/3GIsJNhFRCsrdjj9iInpvzb7NdRAgQhF1Dh/vFox0I172Yvb5H2rdqSI/ja
+         Kyj5h/zVnqgEl7RuZ/hDGWM4067VhaUqxwVSL2HAglj874fP355AMk1ov6z2/LopGkhA
+         Pyykg0pzPAKfhLLDpjFQlFVPTWhKgQ3c/NerNzIhXY07c/9I7gu/9PpOEzEhoK+bM2YT
+         SrpnrSzylTVsdPemLGeLLY4GueRrwh/odtWbdnTAVnP/BfEqxS2qQ6U7nu0akOsw3H/a
+         Z8uA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5mbRypYRYKlCFZ2QOyL5FZLkesQIpZwdBJ4/lGYDrJCqmLRsjH5Puagk9HcngclH8VD7S/z2JgY6aHQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxysRMTX11Myy6OYJS70gES5CSoA84PTjDkBmtaTFmhILhtlQo
+	cRpetjMZ2nvicg3Tb3phqmG5HC088UcA072w2EeaZVKKW2gqj3i9CKXxMDkYmw==
+X-Gm-Gg: ASbGnctSnEu9KnbOnLl7UcSM07gCo5WqnUTfmbJvF1c2tXYWb8pQ5rlwt/hk0GSqLhB
+	QIAjr2wzMYn1jAvy25ixsw3nWIzMWbQXaebND83mRdkAnJGHYmhdUTQwSbriLfHcqKFdGFJ9GXU
+	HmzyqeMjEgad1vdIt3NfT1lJbdzHSJkdNpPMV031tkZE2l++nL5tLzDg7pdpK/KWJCBD5aimxkI
+	t/IMTFOGkRLvGRoz8j02bu84niJlW6TmEoZj9z+VLS3eEH6MKd1/Oi0sGfcUc+3QJtq/r799aOa
+	PUGGM/zAtfs8psU8IpccJ/UOmxYNDnJkPvPPNCulD1QfVmhQBfcMjAJSnjtFpECYEua3x69kpty
+	RlqA5l3IhG8BRd/Hw4HE4a7k4SmyaVT+RjTgPDyNxKtb6
+X-Google-Smtp-Source: AGHT+IFn3vXnS6jxMSTKpvWwf0YAtvDrlGdswD18OpUum5KMQooxsvMQxaV39lTehJR9+Ij2bnRE1g==
+X-Received: by 2002:a05:6000:4205:b0:3a0:a0d1:1131 with SMTP id ffacd0b85a97d-3a3496900a9mr3428305f8f.7.1747240348003;
+        Wed, 14 May 2025 09:32:28 -0700 (PDT)
+Received: from thinkpad.c.hoisthospitality.com (112.8.30.213.rev.vodafone.pt. [213.30.8.112])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb8c92d9sm37650875e9.2.2025.05.14.09.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 09:32:27 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Will Deacon <will@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: dingwei@marvell.com,
+	cassel@kernel.org,
+	Lukas Wunner <lukas@wunner.de>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 0/5] PCI: Add support for resetting the slots in a platform specific way
+Date: Wed, 14 May 2025 17:32:23 +0100
+Message-ID: <174724032611.26337.10095399338390897616.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
+References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com> <da080e61-4e54-4334-a239-1619bf8fea0c@nvidia.com>
-In-Reply-To: <da080e61-4e54-4334-a239-1619bf8fea0c@nvidia.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 14 May 2025 11:30:58 -0500
-X-Gm-Features: AX0GCFtHpKPKPsDOnGvKMQdAIPreQAx29TyN97-A_3yl0xx21IqwVU2UXtPudyg
-Message-ID: <CALHNRZ9DKf_p5y3K4yVF8wDm4S0jRB-NSF8aZB5CsYxk7GmyNQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 5:32=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> w=
-rote:
->
->
-> On 09/05/2025 01:04, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > This requires three changes:
-> > * A soft dependency on cpufreq-dt as this driver only handles power
-> >    management and cpufreq-dt does the real operations
-> > * Adding a remove routine to remove the cpufreq-dt device
-> > * Adding a exit routine to handle cleaning up the driver
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> >   drivers/cpufreq/Kconfig.arm        |  2 +-
-> >   drivers/cpufreq/tegra124-cpufreq.c | 36 +++++++++++++++++++++++++++++=
-+++----
-> >   2 files changed, 33 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> > index 4f9cb943d945c244eb2b29f543d14df6cac4e5d4..625f6fbdaaf5fd774e3b0bb=
-996eb7ce980da41ee 100644
-> > --- a/drivers/cpufreq/Kconfig.arm
-> > +++ b/drivers/cpufreq/Kconfig.arm
-> > @@ -238,7 +238,7 @@ config ARM_TEGRA20_CPUFREQ
-> >         This adds the CPUFreq driver support for Tegra20/30 SOCs.
-> >
-> >   config ARM_TEGRA124_CPUFREQ
-> > -     bool "Tegra124 CPUFreq support"
-> > +     tristate "Tegra124 CPUFreq support"
-> >       depends on ARCH_TEGRA || COMPILE_TEST
-> >       depends on CPUFREQ_DT
-> >       default y
-> > diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra=
-124-cpufreq.c
-> > index bc0691e8971f9454def37f489e4a3e244100b9f4..b6059c91f2474c56809c403=
-eca94eacf51df734f 100644
-> > --- a/drivers/cpufreq/tegra124-cpufreq.c
-> > +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> > @@ -16,6 +16,8 @@
-> >   #include <linux/pm_opp.h>
-> >   #include <linux/types.h>
-> >
-> > +static struct platform_device *platform_device;
-> > +
-> >   struct tegra124_cpufreq_priv {
-> >       struct clk *cpu_clk;
-> >       struct clk *pllp_clk;
-> > @@ -176,6 +178,21 @@ static int __maybe_unused tegra124_cpufreq_resume(=
-struct device *dev)
-> >       return err;
-> >   }
-> >
-> > +static void tegra124_cpufreq_remove(struct platform_device *pdev)
-> > +{
-> > +     struct tegra124_cpufreq_priv *priv =3D dev_get_drvdata(&pdev->dev=
-);
-> > +
-> > +     if (!IS_ERR(priv->cpufreq_dt_pdev)) {
-> > +             platform_device_unregister(priv->cpufreq_dt_pdev);
-> > +             priv->cpufreq_dt_pdev =3D ERR_PTR(-ENODEV);
-> > +     }
-> > +
-> > +     clk_put(priv->pllp_clk);
-> > +     clk_put(priv->pllx_clk);
-> > +     clk_put(priv->dfll_clk);
-> > +     clk_put(priv->cpu_clk);
->
->
-> If we use devm_clk_get() in probe, then we should be able to avoid this.
 
-I can do that. There's a lot of other cleanup like this that the
-driver could use based on newer kernel apis, but that's out of scope
-of this series.
+On Thu, 08 May 2025 12:40:29 +0530, Manivannan Sadhasivam wrote:
+> Currently, in the event of AER/DPC, PCI core will try to reset the slot and its
+> subordinate devices by invoking bridge control reset and FLR. But in some
+> cases like AER Fatal error, it might be necessary to reset the slots using the
+> PCI host bridge drivers in a platform specific way (as indicated by the TODO in
+> the pcie_do_recovery() function in drivers/pci/pcie/err.c). Otherwise, the PCI
+> link won't be recovered successfully.
+> 
+> [...]
 
-Sincerely,
-Aaron
+Applied, thanks!
+
+[1/5] PCI/ERR: Remove misleading TODO regarding kernel panic
+      commit: 0b56264b66b695aa76115ae68c1365dff80814e0
+[2/5] PCI/ERR: Add support for resetting the slots in a platform specific way
+      commit: e2889025d83fb38faac80d976f1789af3320ecb2
+[3/5] PCI: host-common: Make the driver as a common library for host controller drivers
+      commit: a811ffd43754dfcaccff497de1d8ee0bd30f8f2f
+[4/5] PCI: host-common: Add link down handling for host bridges
+      commit: f24509b96c33c1bdd9cc57bc4f8a58391e846c8c
+[5/5] PCI: qcom: Add support for resetting the slot due to link down event
+      commit: 40eba89968afc15302fa5aaef207fd9ccaf1ecb2
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
