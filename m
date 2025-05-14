@@ -1,48 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E7220ADE6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282CB277038;
+	Wed, 14 May 2025 12:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747226309; cv=none; b=uiQuI2Wgf6fevi/iGE3mTNptYGIopcD6dCQITbuRi+Br9vm2jEhH86lBHFX65rOlyJLwzpvd0zzWNcodTdb4Eax6Ka0XxaA9jyDzwbzdPOs61h5x1DZpzSR9cJt8Prk9hzmfpnRFqvlMxdgQxmeS6YXT2B5GefaU5JaG49BYjjE=
+	t=1747226318; cv=none; b=MxJeaaLrtoCoDkgDhH+HvaEMGCvDPhWg/IKGfEcmXMGN/qbpA04c0EgNoi8kUIMfKNY7m1Rau8K1HdyzvAV23d5j7kfPCJ/e1yqgo+dnRFX7zJWoOO6Fdu9iG/WSx3gfH3rX7PPMfwrdoW7uhQAu1BFGuSl09S1Xooi684M3ZPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747226309; c=relaxed/simple;
-	bh=j9+XZ+bw7t14t604iZV2M8SR46RjkO3CFgtXl+uo9fk=;
+	s=arc-20240116; t=1747226318; c=relaxed/simple;
+	bh=ZRAbtDLU7nP6o3LdOmMc3nAAyiNgbM8NKuOVKfOJ8W8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5TAFqe6V4j5Ua68MK1CR8hdekN8mupFflfoaUxvoDXSb0McVsMo63ixpPQ5H+aUFMGmNCulHchXNLOX3vTQzmxP8Yl94OiSn9WwZQ+LuEFLh4+m4DpJ9/1S0E73E8sZyP3Ci5fVmixUKXbDONkRwfXxu7kVyzpActO6+hHsxzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrvlmqEu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ji46UF2tUg3bgIm2v0d5PmIRnX8z15bP4VVBeJ7dvlH/UQSt/vx/2YhIm6FhPFPyDswO3P6CRU9NxWIWJTwKGO5E4xHQlNTL3R853A7k6MGQLvhqt1iQN8lEyDPcPAqknb9VuSUlrzIEGX0CLcE8NDON+LIO6nTJrYwFrgsMtVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1h+8wh4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrvlmqEu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DA7C4CEE9;
-	Wed, 14 May 2025 12:38:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1h+8wh4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E945C4CEE9;
+	Wed, 14 May 2025 12:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747226308;
-	bh=j9+XZ+bw7t14t604iZV2M8SR46RjkO3CFgtXl+uo9fk=;
+	s=k20201202; t=1747226317;
+	bh=ZRAbtDLU7nP6o3LdOmMc3nAAyiNgbM8NKuOVKfOJ8W8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JrvlmqEuESmTorQOh12G23B9NASk8zHZm0Fu3T2+rtz2Umy6xJ77QWqYAiG+gbq1z
-	 yhzl7A5w8pwBBbE/TzzFDDamaiw7eJB2qymXZIkTU7lxUWCNgVsGKSBFurX8ldEpIb
-	 /vOgPkn8KNS3z8dxQNZRPtgqcgvujO3Q4sb51g6b8IMhLGFk2Y0a0uUNi/ELMNh/w9
-	 wgC/i1HmQvy3yuC2VHE9A4WjkEqe06N4Jyh4yeuQm7Ie3mP0BtNmC3+/UeN6V7u1j2
-	 Doop+WYWtPpq9Zww1QA1JicExnxi5EUP3gxBv8isveJJ13yaxOqiBBescdp4Zj0787
-	 ifNi9jF/WFfkA==
-Date: Wed, 14 May 2025 13:38:23 +0100
-From: Will Deacon <will@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Radu Rendec <rrendec@redhat.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: cacheinfo: Report cache sets, ways, and line size
-Message-ID: <20250514123823.GA10606@willie-the-truck>
-References: <20250509233735.641419-1-sean.anderson@linux.dev>
- <20250510-fresh-magenta-owl-c36fb7@sudeepholla>
- <f63c2be5-50e4-4c47-8a56-9a570977a6cf@linux.dev>
- <aCIVec7zl3tIh73h@J2N7QTR9R3>
- <d67d893e-9c7e-487e-a14b-419a7cdc6158@linux.dev>
+	b=b1h+8wh4M9WYHlvQBBJt8UhjWW7n06dcTRpU2HcbXxZEwu9RwNhTKVPC+yneJNMZB
+	 x3ZjUS+ohxAGqbDVY3NbF/kh9sr/2xDsubiKpuNayqz6l20/BnBiIxw+eyB7K0yohf
+	 BtMf3re71j5ozdb66cSmRypL8rn4FvcMbLJRv6vLZqO2BD4lIe3MAbvavBmqQ/5nyL
+	 VfiavAY79QjbnoEzqpIxCcJI1KS/54rXt3Ze7KeZcTSmC5emLahMzJp4C1Ok28JZHu
+	 wuWOAN2cqHoz1SYrTYFS5/BLqqhx+gHCZVuOA2DiOzEPNDaUbwwudf5onaHfoExTNe
+	 yTPDuje/sgJ8A==
+Date: Wed, 14 May 2025 07:38:35 -0500
+From: Rob Herring <robh@kernel.org>
+To: Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manuel Traut <manuel.traut@mt.com>, Marek Vasut <marex@denx.de>,
+	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+	Markus Burri <markus.burri@bbv.ch>
+Subject: Re: [PATCH v3 6/7] dt-bindings: rtc-rv8803: add tamper detection
+ property node
+Message-ID: <20250514123835.GA1729201-robh@kernel.org>
+References: <20250513161922.4064-1-markus.burri@mt.com>
+ <20250513161922.4064-7-markus.burri@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,73 +49,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d67d893e-9c7e-487e-a14b-419a7cdc6158@linux.dev>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250513161922.4064-7-markus.burri@mt.com>
 
-On Mon, May 12, 2025 at 11:56:28AM -0400, Sean Anderson wrote:
-> On 5/12/25 11:36, Mark Rutland wrote:
-> > On Mon, May 12, 2025 at 11:28:36AM -0400, Sean Anderson wrote:
-> >> On 5/10/25 03:04, Sudeep Holla wrote:
-> >> > On Fri, May 09, 2025 at 07:37:35PM -0400, Sean Anderson wrote:
-> >> >> Cache geometry is exposed through the Cache Size ID register. There is
-> >> >> one register for each cache, and they are selected through the Cache
-> >> >> Size Selection register. If FEAT_CCIDX is implemented, the layout of
-> >> >> CCSIDR changes to allow a larger number of sets and ways.
-> >> >> 
-> >> > 
-> >> > Please refer
-> >> > Commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
-> >> > 
-> >> 
-> >> | The CCSIDR_EL1.{NumSets,Associativity,LineSize} fields are only for use
-> >> | in conjunction with set/way cache maintenance and are not guaranteed to
-> >> | represent the actual microarchitectural features of a design.
-> >> | 
-> >> | The architecture explicitly states:
-> >> | 
-> >> | | You cannot make any inference about the actual sizes of caches based
-> >> | | on these parameters.
-> >> 
-> >> However, on many cores (A53, A72, and surely others that I haven't
-> >> checked) these *do* expose the actual microarchitectural features of the
-> >> design. Maybe a whitelist would be suitable.
-> > 
-> > Then we have to maintain a whitelist forever,
+On Tue, May 13, 2025 at 06:19:21PM +0200, Markus Burri wrote:
+> Document tamper detection property for epson,rx8901 rtc chip.
+
+Looks like a lot more than 1 property. Explain the feature and why it is 
+needed. What the change is is obvious reading the diff.
+
 > 
-> There's no maintenance involved. The silicon is already fabbed, so it's
-> not like it's going to change any time soon.
-
-The list is going to change though and it introduces divergent behaviour
-that I'd much rather avoid. The mechanism is there for firmware to
-provide the information and it's hardly onerous compared with other
-(critical) things that it's tasked to provide such as interrupt routing
-and GPIOs.
-
-> > and running an old/distro
-> > kernel on new HW won't give you useful values unless you provide
-> > equivalent values in DT, in which case the kernel doesn't need to read
-> > the registers anyway.
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
+> ---
+>  .../devicetree/bindings/rtc/epson,rx8900.yaml | 40 +++++++++++++++++--
+>  1 file changed, 37 insertions(+), 3 deletions(-)
 > 
-> Conversely (and far more likely IMO), running an old/distro devicetree
-> on a new kernel won't give you usefult values. Bootloaders tend not be
-> be updated very often (if ever), whereas kernels can (ideally) be
-> updated without changing userspace.
+> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml b/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
+> index 03af81754482..c2e542c9bdc6 100644
+> --- a/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
+> @@ -9,9 +9,6 @@ title: EPSON RX8900 / Microcrystal RV8803 Real-Time Clock
+>  maintainers:
+>    - Marek Vasut <marex@denx.de>
+>  
+> -allOf:
+> -  - $ref: rtc.yaml#
+> -
+>  properties:
+>    compatible:
+>      enum:
+> @@ -33,6 +30,43 @@ properties:
+>  
+>    wakeup-source: true
+>  
+> +  tamper:
+> +    description: Subnode for tamper configuration. This
+> +      subnode is only available for epson,rx8901.
 
-Updating the device-tree shouldn't require updating the bootloader.
+Wrap at 80 char.
 
-> > The architecture explcitly tells us not to use the values in this way,
-> > and it's possible to place the values into DT when you know they're
-> > meaningful.
+> +    type: object
+> +    additionalProperties: false
+
+blank line
+
+> +    properties:
+> +      buffer-mode:
+> +        description: Set the buffer mode to inhibit (0) or overwrite (1).
+> +        minimum: 0
+> +        maximum: 1
+
+Could be boolean?
+
+blank line
+
+> +    patternProperties:
+> +      "^evin-[0-3]$":
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        minItems: 3
+> +        maxItems: 3
+> +        description: |
+> +          Event input pin configuration.
+> +          The configuration is an array of tree values and contains
+> +          "pull-resistore", "trigger" and "filter".
+
+pull-resistor
+
+> +          For a detaild description, see epson-rx8901 datasheet.
+
+detailed
+
+blank line between paragraphs.
+
+> +
+> +allOf:
+> +  - $ref: rtc.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - epson,rx8901
+> +    then:
+> +      properties:
+> +        tamper: true
+
+Don't need this. It is allowed by default. Invert the if.
+
+> +    else:
+> +      # property is not allowed:
+
+Drop comment
+
+> +      properties:
+> +        tamper: false
+> +
+>  required:
+>    - compatible
+>    - reg
+> -- 
+> 2.39.5
 > 
-> Well, maybe we can just use these registers for the hundreds of existing
-> devicetrees that lack values.
-
-The fact that the device-tree files tend to omit this information is
-quite telling as to how useful it actually is. What would you like to
-use it for?
-
-Short of having an immediate functional or performance benefit by
-exposing this stuff, I wonder if we could add a kselftest for it
-instead?
-
-Will
