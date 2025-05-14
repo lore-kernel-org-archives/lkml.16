@@ -1,185 +1,240 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2061.outbound.protection.outlook.com [40.107.243.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E9B183CA6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747243111; cv=none; b=Qqyet3IQwW6+UeWUwJsi6J9yYlL0IhpMm+sVo1BgV1sGnEGnN6hxeG+X9NN+IEKXvt6SxN+XXcdh2DzopXTYEN0oBGPNTERf+JA3nxAcD5SEtP+ffc3WQB4b2GRhF6TyQ7+2nLgnc5LffgTCXddhrvj99GHJrXKdfQilTE/TuWQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747243111; c=relaxed/simple;
-	bh=950u9k10sGSQ6JHvizfXzyLXwASdjZUis65ZscnM0XU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Zpbl66vQ0FYDuHMWaKG8neugK0KN5GL/f8mub8LQxo6l6fOhd9prHgqKsvHuNqmsxyfKju7W6gfUcUkjvhWHJR+8ib0r4wrWIGX8cmATWkQn+bmiqolOCpl/eF5Bevmh3n8O5gfCJKydi1dlhyCAg8Wvr8dvx+KaJw/sa55TraI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3db6f98ddf7so251295ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:18:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747243109; x=1747847909;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VTKwZzlkl/upe8s+kS5zSf2fAUZ81UUbirQjiUx/qCM=;
-        b=H4gNcBahFKp19NPOInI7E3XZev6pI9veyZaAi46lIjGyGIHqwnd9hRXmPxDMTu/hCP
-         uAgQkKJT7MH2lkByMjoYf06ANSQxRz+wMjA7S3laA3khv4hZ1Hbt9fug2WLeQjj9osCe
-         NiUYaeF3uRS5XdosrtAU4v3q790NkHz8A9s9nkaXdU/0qHyu7cgINEkaPMUfHNaLpzob
-         3x1szoLNmcdB/anVy2/pl53tNoeXnSiJFMoXV1MtJmR8lpDfjRtaAWFtuAFrYQZ5TJFx
-         k24PX4wPJ6G/E1bjm0ueZOdxoJmfZuh2sfsfiiTT5gGTwZ4crhCHoa4T4wegdBpfmGae
-         YwnA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0m11KLH6m/7f0h0tF2uVyWJ+4Dmdb+lDCC8pKBb3QgsoaVqv0rWWzkFCpAtGGasZ2vEqfPicIq3FPEIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ3WEH6Rrvg/ggPrRio+ecUquobXaAT69hrCMV5NdktSfCbjmH
-	gflGzhacwLx7kK2QwggQUoyC6EiCdhDgXH2sIooUT+1BA5DO4yqo4nY97lZ7WjaHWnJXkZbeqi4
-	ZxzJEQW/ppcfekPmnu5zptsrcVKpAQ+QNPMZh89gFhETHP1vJYEGLFb8=
-X-Google-Smtp-Source: AGHT+IE/xoceW5JkXxGnNDL6ugE+2kMibT8CAUQEjcqiEwWKmIYmFWGmvh6/E6/VjSCisbq3jwFJPt0RuvkYQZbdVK8zY/fthU9r
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD7B13CA9C;
+	Wed, 14 May 2025 17:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747243192; cv=fail; b=r8u4BlYu6zsOlpIp+SIejAsckdm8xRbc/QDnOLQYfb0bcnGH75qu6QnZ1vxN6v9UEjf8RS3bv5A7yTjzXnSfpVq6UJsPsfVcXjhvUw5z1xDgFZFIvC0Y0aU6qiN/qXspAfWEAxFyXz9SwG5oZxejEJ/YmywgD/qVGu32/ioOapk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747243192; c=relaxed/simple;
+	bh=C9HbCRaO1fkUglOBns6QDmeYsAYcePJWBkjkH7+kxBM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CIW1pB8Q5EMF7i6aQP3bNOHTeEVVKPMM+eYGPzTQO33OlsFfgnxEgizbvVK24ZrdtzZ/Pk0tPD0ia62GEHfix90pb/akmd2Xa1AIpKuCKduWAYvlGYQPeL7dG/Gt/INz+166iFOd+Sv4I3Qfa1JNjrR1Tnm94bgB6CL1oap4jkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CXf3+xXL; arc=fail smtp.client-ip=40.107.243.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CXf3+xXL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uPaS4ddfieL4fgB9LhIGkcoDJ/0MmNmFfyrTas/V6BHHGY2IGaaV+jU17VHntRDf4eGaCnsOiwCaVUFy80EwBCkxvV+NphyIdkGsthcIZBUQZbn5EMPKSpQf922PJk+L98wschpwq1qybFuT6WEgQnbbhcaaktoXwJqZ10q8e6xckiUJR614aA9jb+2PyPVtDNU/pcyEq/lZTP+YEn8XNAS+VqtNcqdp1DxMnoyWYjp/GOWepBLjEWJ1LnfhMD7hgoPadgOgvF6xtkf2/1RnnTNsERlqsVbtUAHfkvf648cEQMSN2Yym/mWicyHSh4ocUIKDzIzcXgRZAmJoUIqbfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u0jR3LpBlyyIcictpgizIWsmBwaBhj1C5K0tiZa0pDc=;
+ b=iXDG6nkNu8DAK1FYahMXvVbvRRMU+oB9wjy0Msg/YbULAcT96rQ4GU1lcCUZlm4RQtBJTF4pwKROnX1/pDcGVdGlwbsUx9cpBLPnf88BoYL+JHJ8bGTqJyEQH1aeHRxEC5BsXaqMK70+LBD85ex5IIOqnev8GnXPBS4WelmupH9WuLpxgtrl/f7NEY3NwP0ieXItjB2E6SeuLpFS651NLRQfPqkMX4x7q86TBVniPSABP4TU1rt8PUPZ2mqGwsD0AYgchbVVD1mapU2gXQkA6xRuwxRkiriQ3j3Mlpb6Jz3hcpdI4lSoNVExkz4QM6UM3GDfAh37IagEiOx3Z5e9NQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u0jR3LpBlyyIcictpgizIWsmBwaBhj1C5K0tiZa0pDc=;
+ b=CXf3+xXLe5jRcayGK2o9So+uJmjWxicE2opvNgJ6PoGNSlyFO10jlEDMEMpcLrDgD6CfZjuMGRk0jrhYSl06i2uo2fr0ufSaAnAkK4SU7WHrw8SsYNObcKxyyS1NVWFvXSU5vQ//3KHemx3tyFv9VE2azp/6m/Uo4CYK3IUJyv0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com (2603:10b6:8:c8::18) by
+ MN0PR12MB6343.namprd12.prod.outlook.com (2603:10b6:208:3c0::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 17:19:47 +0000
+Received: from DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620]) by DS0PR12MB6440.namprd12.prod.outlook.com
+ ([fe80::6576:7d84:1c66:1620%5]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 17:19:46 +0000
+Message-ID: <80008a56-f410-4186-8bb6-7794aa066d0e@amd.com>
+Date: Wed, 14 May 2025 13:19:44 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14] platform/x86: Add AMD ISP platform config for OV05C10
+Content-Language: en-GB
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, W_Armin@gmx.de, mario.limonciello@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+ king.li@amd.com, dantony@amd.com
+References: <20250512213711.3226784-1-pratap.nirujogi@amd.com>
+ <aece6449-8acd-41ae-bed6-fe5cc7d64050@oracle.com>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <aece6449-8acd-41ae-bed6-fe5cc7d64050@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT4PR01CA0223.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:eb::15) To DS0PR12MB6440.namprd12.prod.outlook.com
+ (2603:10b6:8:c8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d97:b0:3d9:3e8e:60da with SMTP id
- e9e14a558f8ab-3db6f7f4164mr48323125ab.17.1747243108927; Wed, 14 May 2025
- 10:18:28 -0700 (PDT)
-Date: Wed, 14 May 2025 10:18:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6824d064.a70a0220.3e9d8.001a.GAE@google.com>
-Subject: [syzbot] [net?] KASAN: use-after-free Read in __linkwatch_run_queue
-From: syzbot <syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6440:EE_|MN0PR12MB6343:EE_
+X-MS-Office365-Filtering-Correlation-Id: fadb52e0-824c-4450-99ba-08dd930b8616
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZmtzdlhLb05VckJQYXhEZyt1MG1DU3NUbGJTaGRidE9kaWx4aFhQQkVGUG1S?=
+ =?utf-8?B?bWFpVHNzdVVXNWRDYlZVcC9tU3QxcHNPcDNCSHVJdVJKaFdjTjRraGVTdTVL?=
+ =?utf-8?B?c1YzUzdUZVNWV0tjM2EzejFJdmw2dHhjMGZOKzJTazZXUmtYWVk1ZTgxeVE1?=
+ =?utf-8?B?NzJMUUdFUEcyYjJxYXFzVWR3REdxS3JoSGR3Qld1dDlCQ3p3MUpZa3dGNDJt?=
+ =?utf-8?B?WXFOVm1VdVpWckhySEh1ZEhGbllWeWk4NjRNOGs3VnVnd3kvOUhrd0NEK3Q3?=
+ =?utf-8?B?ZDl3UlZPaHpURkp4R1k3Wk1jQ0gvaGtab0pNWUpRcmtuLzJxd3JwT1M1MlU2?=
+ =?utf-8?B?djZZanVnS2F1YzJ3QXlyY1NjU3hlL1NKQVhtQkFHekJPUFdMNmZxWlB1enRM?=
+ =?utf-8?B?TXdtbkE2OVRiZFBCNlBNQW1rSHo4aEpDcFEzUVJyNGtIRm55a0ZDMElzaVB5?=
+ =?utf-8?B?Q0JEbWRYbG5rVndyZ2xsdWFkYlVLM2s3NWNjT2hVbkVhMmZ0akNRMTZoTHdI?=
+ =?utf-8?B?T0hiZHNiTU5FUkFrTzNuYWluVDRFdXRyWml3MmNWdGF3WUs3QkF5cURlYWdn?=
+ =?utf-8?B?ZDdVRlZmYmxLbVNpbUU5OXYwU3o0RjlVdjZzamlJMzFyVTUwTGE2SWxOemFh?=
+ =?utf-8?B?bjhYR1MycklsMnluZnlCL3lwWTRmR1V1c3lMMkkyY09GUlBpSGxFNWVpd0V0?=
+ =?utf-8?B?Sjd3ZjZVRlVmM21CYmFpVWZSajR5TGJ2OEM1a29yazBUQ1V5T1d6R1hVT2Z3?=
+ =?utf-8?B?RVloTjhsUWlzV010S1lTQ2p3c3U3akZmN0xheHFqU0ZjMUQ3SzNadTdMYmd5?=
+ =?utf-8?B?K0V4SVRWRmZTM3pUSzI5WVFZSVlhWXp5aDVxSUp5L2ViaWhtNmdMdlF2Q2JW?=
+ =?utf-8?B?VjhlV1gyU0JnQmt5eExzcWNQVmVkc3hGQUdmalc2ZytsT0ZQSEthZVpFVGJx?=
+ =?utf-8?B?bnFiOENiUFIvdzJ4QVQ1SlJnSlZFc2ZmTE5WeTB0RHNvd2dIOHRSZ01rRlBs?=
+ =?utf-8?B?Q3Uwei9Qd2lMOUpwQjVwMFlMTXNLcWl4VEZsYjlTbkh5eHVDVXJpam04YzdH?=
+ =?utf-8?B?dlVXaFpDWXN2T2NPeHlNMjM0RlJMU2pFbll5L1oxR2k1M3ZVMEV4V3RtaldS?=
+ =?utf-8?B?SXVjVWsxOWI3VUFScmVlektlME40VWJ6LzIwNmZKKzZhdlBSa0E0eW9YelQ1?=
+ =?utf-8?B?SnlOK21YdnpzSXdBaEt0dk1lOUdmQXlKejRnWnlwTGtyMDhJN2k0V0hqNWd5?=
+ =?utf-8?B?KzNISXI4ZFpIM3NIdHlnQmZKM0EwK2pKcDRrKzBjTktCVTM0OFVjMFZJZWdE?=
+ =?utf-8?B?VE92S0RJKy8wK3doajJ5WnhTNEZ6M20yc3Q0TUY5TG9rOXlYZ1RDTXEzbC9r?=
+ =?utf-8?B?dFlGZXBFeENTc1JreDVIMlh5bnlJc2lrcHcyT1p4Rm9Hc3RtVklPOEpKejVH?=
+ =?utf-8?B?MU04UmZYZE1QYWRoWXNEVWdKRERIOGlvVU1QQU1TNExuT1ZLZ3dDSStqL2Ux?=
+ =?utf-8?B?QmUzNVZ4OHJ0ZXYxRlJjaklOV2s4TTNnU0szelpiY04vVjdPdVIrN0ZqWU1W?=
+ =?utf-8?B?QzRyVVBkNy9NWG45OWl5cWFXQ3d6em5sT05sT3JaTmYrQmVFbnB2eGxZNHJD?=
+ =?utf-8?B?ZFlrWXJEbk1jVEc0QmR2eWdpTlgzamtKRTdvSDg0YlZ5YWdiY0Z3T2dZRmF1?=
+ =?utf-8?B?YXJiS1ovblRTYVIyQW10Y0ZhcTBJL1MwQnhQYXJxVWovRnExOGNpTDhFVDZ1?=
+ =?utf-8?B?cGpyV2EwSFRaVHljbXBkc002N0VIMjg1M0FHY3M0a3ptN0pSbEVQWWFiQ1Rq?=
+ =?utf-8?B?NGZ1T0c0b01EdXBOa3I4VG1UdFlPaWVZL0IxaGU5N0ZZelJ1RElTZUlsWnds?=
+ =?utf-8?B?QlV6TmMwdlFrelZUdTRDUTJiMTFoODFIMDE1YzFRVU5qc2tyR3FlaG5oaXVE?=
+ =?utf-8?Q?kXSCG/pDsCo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6440.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?REhyVnUraTJxYWNDY1IvM3IxOVkveGNYUFdTd3MrMnBFUzE2ODZWZlpGVDFW?=
+ =?utf-8?B?eUFxNFE3OS9xYjZvdm93ZzNMaDc4b2dGYWppNS9FMFEyT2I4WFZnRDQ5U09H?=
+ =?utf-8?B?a0hoZVRUd0d2Q0kyV1pjZUlLZTVCS0dQNlNoVnJ4OWY3SVVucXd5NmpGdHpW?=
+ =?utf-8?B?aU5kSnE2SGlVUE9GZmg4cUNsUWtyT1V6OVltWGZubEZ2ZVRMb3RqdFc5NFV5?=
+ =?utf-8?B?YVRxdU9XVlYxQ0h3Ujd4OTB3eWhaMXArVjhhdzJqRlNoN2IzUG9hRExyY2JC?=
+ =?utf-8?B?TEwyVHBKaURQOStnYTFZSmhXa3ZUYmpxSlc2OEgwZU4zM003VTBpTzZibWp0?=
+ =?utf-8?B?WXdzVmg2Y2pUaExuNjd3TmZIbXdjR01FRjVza1kyVUVrenFJaVJqZ3dkSm4r?=
+ =?utf-8?B?eVV3UXlBbCsxWEFSNENzck5WL2tUNUV5bDlHdEZjbXc3N2IxenNMbkZRM214?=
+ =?utf-8?B?T3BIdW81OFNIbk83UjZwWjNyRGlWSGttckZZcmtldU9XK3VhYXNDV0VBRXB0?=
+ =?utf-8?B?WVlZdW1zdUdCblozQksyNHFaUUl6ajllc2RjSzBlVzByNWx5Nnk4WVFDUmdP?=
+ =?utf-8?B?Zm9hSFljL1VKYkNsSWJtOUxDMGozNjFtYVJHMUdsZFptOW53UDBIbG5JRGQx?=
+ =?utf-8?B?cXlnWlZURmozdnJCWmc2VlpqaVc3dmVkSkVXNDdLbHdHeVFhNTk3akVwTmNT?=
+ =?utf-8?B?eFBLT0ZQS0F0b0dVUmhZUmYxWVNkMG8xTEhhR1Q5YjlBVWFwNDNLaVVqOWpr?=
+ =?utf-8?B?eDhmckNhdnRhMXg1cDYyT3I4NGttOGNnWDRFbDI2L1RwUnNRZEd0TFpmeWJJ?=
+ =?utf-8?B?OTBYZlFSTU9lMXBiMEg3dnY0Y2Z5Nm5tb291RFJJWXY2aExlZkdxUWVKMC8r?=
+ =?utf-8?B?cUpGdXdtT2pLTFQ2UVVZOXFLMDFXOFZZc3FWVFVmOHMrNXlBMnlwVXlnTERM?=
+ =?utf-8?B?MjUwdU9sUjFxN1dzNXdSdUlPdUtySUtNK0VZZjNuT1hNSFg4ZmQxSGhFSkY1?=
+ =?utf-8?B?dWJjL3FPQ01USk8rOGhFQVVoSC85TVdJb1FreXlkbVNDNTlIRmUrR1MxdzRI?=
+ =?utf-8?B?YVV5YlJZeEhlSEQ4TE5oY1FTNCsxbFZwNC9VRzBuY00ybWl4TUJiRXQrV1Zr?=
+ =?utf-8?B?ZFBkczRFcWxPSkptYW9Wdkg3YmhORmFuQk5vbXFGT3p6RGZ1K2RDcjcwdDRB?=
+ =?utf-8?B?a0g2VTVHUVF6QlpVbjA4M2JrQzJtYmJCemc3NnJoU2RkN1pzd21iL2JPZGxP?=
+ =?utf-8?B?cUU1aW5XaU1rWHljMnh4b2xiQTEvQWdnV2xZaWYzOTliSit0S2xjeWZYU2xy?=
+ =?utf-8?B?Q205Z2dVZDlubzAzV2xKSVRiN1h3cGhDajNjRGd6UlEzalhmTWRSNFBYeElk?=
+ =?utf-8?B?ekc2TkRXYWNGZDlxTUFVaUwzcmRTNEVqck9XQW42ZmNMQ3FzTkl2MXNuaEl2?=
+ =?utf-8?B?bDdXdnV2WVFleVhLRkM4OG15NlVyYWNoNjV0eEZUaFBsS0JwK3F4WWF1QlBL?=
+ =?utf-8?B?RmJ3N1ZPdWZ0dS9ESGRkck5rUWx0b2RwazcrbGNoa2JZZEMwUCt6RGl1V2Zn?=
+ =?utf-8?B?SVp3NVhMZmdlUXp2bGZNRXhTMkZuR0VIVGRWVGpjYmRSTW02ZXFab2R1bi9s?=
+ =?utf-8?B?NG9OdGszNzJmMmNKbFRtVElVdlNPTVdIdGhGNGJWWEpqalQrMm4wdmQybkpL?=
+ =?utf-8?B?M0pSdWpsQStxeFhEUE9oYnVvSFZQVjJYTVhrSUl3Y3QyZFQ4NnExYzluY3lE?=
+ =?utf-8?B?ZjlHSDZWZGZoNUQ0d0E1ZW1NT1dsS2lDMDlwTHBFc0krV2ErSnp0eGd2UlJ3?=
+ =?utf-8?B?ZjhLa0kveHpSYko1K0dIUUxvMnRHUnNQcG0zZU1VM0oyNUxNTnRCVXg1cmM4?=
+ =?utf-8?B?TGRtZFFzSjVQbVJmM2xNZzh5V1kzMUdLa24zY092a09XSG8rVEp2Q0Zjek9O?=
+ =?utf-8?B?NnBrM0Y3N3JoSHZiTFhlY0VqWFdPQk53V3JKdnYrS3pENWZYUlFKbDlNRG5G?=
+ =?utf-8?B?cW5Ub1p6ZWQ4S01BWDV1b0c0NjYzWFhRUzRodTdQb3NwUksxRWdiVk80NGQv?=
+ =?utf-8?B?a1I0NVBHYml1Nk8rbUN5c2hhNTRDWE9ua1J5cDVscUZkZWdpWTcvZUw3b094?=
+ =?utf-8?Q?vnnKJ3/xHsUQs0apfzgE7l+Mz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fadb52e0-824c-4450-99ba-08dd930b8616
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6440.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 17:19:46.3493
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fJc4FoVcvV9pDeNU0tm6QB5mG2bqZfzLosU/+TvuFGd/gyORHNhfrRyGiUhFyMct8BykXQ+qQFHxmlOqmZfVwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6343
 
-Hello,
+Hi Alok,
 
-syzbot found the following issue on:
+On 5/14/2025 4:34 AM, ALOK TIWARI wrote:
+> Caution: This message originated from an External Source. Use proper 
+> caution when opening attachments, clicking links, or responding.
+> 
+> 
+>> +config AMD_ISP_PLATFORM
+>> +     tristate "AMD ISP4 platform driver"
+>> +     depends on I2C && X86_64 && ACPI
+>> +     help
+>> +       Platform driver for AMD platforms containing image signal 
+>> processor
+>> +       gen 4. Provides camera sensor module board information to allow
+>> +       sensor and V4L drivers to work properly.
+>> +
+>> +       This driver can also be built as a module.  If so, the module
+> 
+> remove extra '' before If
+> 
+sure, will remove the extra space.
 
-HEAD commit:    9f35e33144ae x86/its: Fix build errors when CONFIG_MODULES=n
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=107f56f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c9b33a466dfee330
-dashboard link: https://syzkaller.appspot.com/bug?extid=1ec2f6a450f0b54af8c8
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> [clip]
+>> +/*
+>> + * Remote endpoint AMD ISP node definition. No properties defined for
+>> + * remote endpoint node for OV05C10.
+>> + */
+>> +static const struct software_node remote_ep_isp_node = {
+>> +     .name = AMDISP_OV05C10_REMOTE_EP_NAME,
+>> +};
+>> +
+>> +/*
+>> + * Remote endpoint reference for isp node included in the
+>> + * OV05C10 endpoint.
+>> + */
+>> +static const struct software_node_ref_args ov05c10_refs[] = {
+>> +     SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+>> +};
+>> +
+>> +/* OV05C supports one single link frequency */
+>> +static const u64 ov05c10_link_freqs[] = {
+>> +     925 * HZ_PER_MHZ,
+>> +};
+>> +
+>> +/* OV05C supports only 2-lane configuration */
+>> +static const u32 ov05c10_data_lanes[] = {
+>> +     1,
+>> +     2,
+>> +};
+> 
+> OV05C -> OV05C10
+> 
+ok, will fix it in next patch v15.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks,
+Pratap
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/136b6fd9c02c/disk-9f35e331.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1db87e48df97/vmlinux-9f35e331.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9588fd34964c/bzImage-9f35e331.xz
+>> +
+>> +/* OV05C10 endpoint node properties table */
+>> +static const struct property_entry ov05c10_endpoint_props[] = {
+>> +     PROPERTY_ENTRY_U32("bus-type", 4),
+>> +     PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+>> +                                  ARRAY_SIZE(ov05c10_data_lanes)),
+>> +     PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", 
+>> ov05c10_link_freqs,
+>> +                                  ARRAY_SIZE(ov05c10_link_freqs)),
+>> +     PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+>> +     { }
+>> +};
+>> +
+> [clip]
+> 
+> 
+> Thanks,
+> Alok
+> 
+> 
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in netdev_need_ops_lock include/net/netdev_lock.h:30 [inline]
-BUG: KASAN: use-after-free in netdev_unlock_ops include/net/netdev_lock.h:47 [inline]
-BUG: KASAN: use-after-free in __linkwatch_run_queue+0x7d8/0x8a0 net/core/link_watch.c:245
-Read of size 8 at addr ffff88807a5ecb88 by task kworker/u8:9/6112
-
-CPU: 0 UID: 0 PID: 6112 Comm: kworker/u8:9 Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: events_unbound linkwatch_event
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- netdev_need_ops_lock include/net/netdev_lock.h:30 [inline]
- netdev_unlock_ops include/net/netdev_lock.h:47 [inline]
- __linkwatch_run_queue+0x7d8/0x8a0 net/core/link_watch.c:245
- linkwatch_event+0x8f/0xc0 net/core/link_watch.c:304
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88807a5efc00 pfn:0x7a5ec
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 ffffea0001aedf08 ffff8880b853fa00 0000000000000000
-raw: ffff88807a5efc00 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as freed
-page last allocated via order 2, migratetype Unmovable, gfp_mask 0x446dc0(GFP_KERNEL_ACCOUNT|__GFP_ZERO|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_COMP), pid 13363, tgid 13353 (syz.0.2160), ts 637147906784, free_ts 639281975158
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
- prep_new_page mm/page_alloc.c:1726 [inline]
- get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
- __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
- __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:5004
- __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
- ___kmalloc_large_node+0x82/0x1e0 mm/slub.c:4271
- __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4299
- __do_kmalloc_node mm/slub.c:4315 [inline]
- __kvmalloc_node_noprof.cold+0xb/0x65 mm/slub.c:5012
- alloc_netdev_mqs+0xd2/0x1570 net/core/dev.c:11604
- tun_set_iff drivers/net/tun.c:2752 [inline]
- __tun_chr_ioctl+0x1964/0x4740 drivers/net/tun.c:3048
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 13353 tgid 13353 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
- __folio_put+0x329/0x450 mm/swap.c:112
- device_release+0xa4/0x240 drivers/base/core.c:2568
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1e7/0x5a0 lib/kobject.c:737
- netdev_run_todo+0x7e9/0x1320 net/core/dev.c:11305
- tun_detach drivers/net/tun.c:639 [inline]
- tun_chr_close+0xea/0x230 drivers/net/tun.c:3390
- __fput+0x402/0xb70 fs/file_table.c:465
- task_work_run+0x150/0x240 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88807a5eca80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff88807a5ecb00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff88807a5ecb80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                      ^
- ffff88807a5ecc00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff88807a5ecc80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
