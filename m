@@ -1,68 +1,73 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B286717BD9;
-	Wed, 14 May 2025 06:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0BE1F9A8B;
+	Wed, 14 May 2025 06:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203105; cv=none; b=BqefIFM/TbFnf/4snEObH3WN1MHNC5hnI9PuaGk43BEv0Wke5EHHjrJMeAzUpNDr8tbokBgcp9tQDN/4ONDakW5/Yepa/1TffmzEX8TbzkA/WMmbKRmxyq2Nwexu4MipasfniL0W1Xn2iWgTPKeRk+3rU7mcUqsCyECTDXaqJ2M=
+	t=1747203169; cv=none; b=ezatxbR602nHnpWGHTwZbWMpTN4YNej6vV8FJcfhwo/OW+T/rdhHj1Dg2drNc1TNDdf3UAI35deCpS9iHzzyk1oljmoJ496npNd901dkZUp4QJeC7t1Izy8QXT+YEDExAImuR4QI56EEny3yVvIoDigjL94+4+eK5kbP2qLsM8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203105; c=relaxed/simple;
-	bh=iNU6ZFsalzDyKnD1IiR2gOQH8W45WCdfKMygp0FZwTM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=odqwkwZV1y27LOF65A/5zUVB2KasnJkZXblIcEsluYQK/8/GShKqc6RKvX4b5fuMBBjlfYaeM3xONgbCrW2pE555o3Q5apmKlJliLo8RbI/7nTeySeidiWJoHamh7KHFe5D/RMaz/fOxaX+D9mTXFwwLlV24okcs6J7p8I3PPjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lc0qU0rS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C2OiZVCH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747203169; c=relaxed/simple;
+	bh=MbKXwjmaiYScSHrm+SxxJd9acFzoJ4VdbPHk3vs5hhM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ze8W/YkVW33URug8IzxMBp3UV/I4jsaDdfzJ8jh5ntuu38pryIbzAj0XL8nD7EPv8v1rM9G1PbtjCwPsCI9YNyRHCPPlwAg2KnqfxBTrJ34QG4MJUGXcnZq0XKATEZmN4OCIJ1skvN551pGS+VJ60hO6WJL7f/A2/IOD6Qt6TbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6GM90dt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lc0qU0rS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C2OiZVCH"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747203101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GrmuZxfTRtnulKtYxDhvbAWRofpg2amaJKto0xOSi+w=;
-	b=Lc0qU0rSmQcbXtw4owpu6pzK25+krkMKrLZyG56MaIWscwY6bb2B3DL1D0Go5WcHfge3Eu
-	lxCfp+yp+is7I1rPQ5Trvd31rARtPHZ07F59xFhHL+yj2m797Zb/mdtOcQ16X/rjYfOgQm
-	gUcnyVdLyDgwu+dWmK7C75h68G2tWFYRa9beXzIksHVeBQlY3Md3CJ8pp5e/Po7FJFPuDR
-	ipa7VfzEPE1bz7UQfsB4Belz/2neN9lMtO8qS5+zq0KnNBf/+vcboujXcl13uEZmv/dLuN
-	FPoyPw0i1d9+kAgpqOQ5Q6JCzil0jxXT++q6lS4GDes8VGRnGHx3odqCadgtew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747203101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GrmuZxfTRtnulKtYxDhvbAWRofpg2amaJKto0xOSi+w=;
-	b=C2OiZVCHMpU2C9yqUWM5qSKvMGi0RNuyEKmGWPyIoH5DN1wK9Os+Zam2W96Ax+YZ+akqLW
-	wVXux8PF6QLeJJCw==
-To: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-spdx@vger.kernel.org
-Subject: Re: [PATCH] lib/crc32: add SPDX license identifier
-In-Reply-To: <20250514052409.194822-1-ebiggers@kernel.org>
-References: <20250514052409.194822-1-ebiggers@kernel.org>
-Date: Wed, 14 May 2025 08:11:40 +0200
-Message-ID: <87bjrvk9gj.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6GM90dt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 467CBC4CEF1;
+	Wed, 14 May 2025 06:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747203168;
+	bh=MbKXwjmaiYScSHrm+SxxJd9acFzoJ4VdbPHk3vs5hhM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B6GM90dtSVJKerKJ3NbZ8dO7dGwlu3/fzlsq2Rlgu6vk53sYPeSDuKknUbwXeSDrt
+	 zX9tC4jVD8hFfKZ89Ur0823xCZVsSjcHLy3SplGFJKroAKkJ1Txa+qZUc8d4Nl6AYZ
+	 MjTwkSl0ctCe0C4YZpfehadJv1c/94vnbIODXbSreq0xh0AtJnMMvsp7ezSN7S2Aza
+	 EgLnh0cag4E/B0Jvy2my/vFJapFzvI3BuW2cxns1U5+42KQ4DQts3v49RLzz+SMhCT
+	 x8KLf3CU5D3zwWhdJISOYy2buI/w5z6GglsajqK7Lz9/l4cPo+rgaLilX7IMowAAGP
+	 H3ZPVeUz3uNVA==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-326b49bed68so65474621fa.3;
+        Tue, 13 May 2025 23:12:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV76OLFQIZIslFO1dOFqm6X6jJbH3drrcZlFPNcNaSFgiSV1b8np9hBOYTVDC+mptiie4TPXJb0lMpdqpE=@vger.kernel.org, AJvYcCVo/2hgsptCFjIvKLGBJfc2lbVV1sIvgfmNdN0XqnAlSC+lON4kFWMGW05zrqcKXEEX88h3XlbycIPbeY1k@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgR1XmjtSxR9Dv5TSPnCKD6hgucdX5P4OAA6lSoTa0HZ1rOYWE
+	zpL7Y8H2fARnnr1vg8sJ0AEOlP0l8LIPtAi9OuRYeroniga/QFiRbtTMaQ8kNRdFXc0TdwzcuCZ
+	F3Tn9ykM5AwsuO8IuvHt9dhpOW8E=
+X-Google-Smtp-Source: AGHT+IE7DHAZQj4/Ereixflgo3F4NNkUTgRVWPRf2qjeU/KsJr+A3dpr6FzsR7MAZQBC+dbm0hi3E8kBOwaN1yV4u5c=
+X-Received: by 2002:a05:6512:440b:b0:54f:c101:4c04 with SMTP id
+ 2adb3069b0e04-550d5fe9641mr766678e87.46.1747203166981; Tue, 13 May 2025
+ 23:12:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250512161006.7787-1-henrik@lxm.se>
+In-Reply-To: <20250512161006.7787-1-henrik@lxm.se>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 14 May 2025 15:12:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQoe6iOGyOkuda365mra+TYJs4aeh03pBd5xB-PFuY2EA@mail.gmail.com>
+X-Gm-Features: AX0GCFtyccKWid9sCDJZLAXpRyIaoaKkhuYgu1aOIdkqy1bVLT1M2p58eskh9As
+Message-ID: <CAK7LNAQoe6iOGyOkuda365mra+TYJs4aeh03pBd5xB-PFuY2EA@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: remove dependency on archscripts for header installation
+To: =?UTF-8?Q?Henrik_Lindstr=C3=B6m?= <henrik@lxm.se>
+Cc: nathan@kernel.org, nicolas.schier@linux.dev, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13 2025 at 22:24, Eric Biggers wrote:
-
-> From: Eric Biggers <ebiggers@google.com>
+On Tue, May 13, 2025 at 1:11=E2=80=AFAM Henrik Lindstr=C3=B6m <henrik@lxm.s=
+e> wrote:
 >
-> lib/crc32.c and include/linux/crc32.h got missed by the bulk SPDX
-> conversion because of the nonstandard explanation of the license.
-> However, crc32.c clearly states that it's licensed under the GNU General
-> Public License, Version 2.  And the comment in crc32.h clearly indicates
-> that it's meant to have the same license as crc32.c.  Therefore, apply
-> SPDX-License-Identifier: GPL-2.0-only to both files.
+> archscripts has nothing to do with headers_install.
 >
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Signed-off-by: Henrik Lindstr=C3=B6m <henrik@lxm.se>
+> ---
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Applied with Reviewed-by: Nicolas Schier <n.schier@avm.de>
+Thanks.
+
+
+--=20
+Best Regards
+Masahiro Yamada
