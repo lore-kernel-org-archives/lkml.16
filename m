@@ -1,115 +1,329 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938B921D58F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5133C21FF31;
+	Wed, 14 May 2025 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235503; cv=none; b=Ck6CB6zfqM3Au7Dh77rHrsiTp+iLXs7CEnhJBflpJghADXLP+Or1Y10FRrGKtMD+RZ/UpFl5I/E1A57lhqeJFQEtWwAxe13KN5IryDf++qtV7EalxFJKgzzinMHntdOvU/nQgXldAw1y8pJHHv8XkkGv3d1d15Gi5AU7eXCXlXY=
+	t=1747235502; cv=none; b=iOVaPcM17jiF9cIhelmFHN5ZsENlBBHpIlGMpKv729Ys7GZBksDWYoPfCoxcXOUGM80x90nf2tQG7XbC/htTRu5MrEU2SdoeJEEN6TMYjpssFCRXsVnSTbtJ3icIeq09mgjdPgCt8IniITNH6yg+W0xU1/gr/EAhXp0Uwu80iGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235503; c=relaxed/simple;
-	bh=4u/NS1smLHkxhFeUuEbvCE2uMHuDJkj0RIsb2N/7OBQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CDJbG+fyT+6/E+qTRgQ8chymbuy+WxOEdjmDZouDUoBJz97HxOSKPVBAvD9GnHYgcR2RrecSWFwsKStfXljDDywL9eZNcR58BsBaDM22L95ZNE4pRXvJ2kHybIgek4jdsyQw+am/PKK4iK8kUhRJ6Ng0wtuyrYLyOJu/l8o1gSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SOvW8FT3; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747235502; c=relaxed/simple;
+	bh=vr1ecV4IpmwbIh24JllrRkUYlyWMD7eggegSS0j+1Io=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=djDqj6afYlSkOQhudBz7SyIqFnQnYpHjelhLLLnWQhFRtIsseF26DKNPZE4Ko+x3ZjJ0jmFZEh/kufoZJWfCy/uiP23uxHLVLlYz7w3al0bvbTYD1zUhL0d1MciOb+4hiE363t5AitfBxO7TN+DPH0Awj9kSVvdJ/COu0Hvx2kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgKZBwls; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOvW8FT3"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22fa414c565so54014255ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747235501; x=1747840301; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zin9UdB1kGHf9472t90ClCu+DsenV3gklPBeEhXFkBk=;
-        b=SOvW8FT3d4LANFtjcKwButycoGew7xFHKVAAqC8upyNJp1g/mZoJUO16d8/37oCpc2
-         Uc9MIoJHoD9glkhRpEnoP2uMt2vqcGU8Cw9NtDQaJi2TTZ3fgUD9ya6+NeIE69sMvBoZ
-         uHJ4n5zySWhnFjZuzAa4yWcpy4r0N5xvAxa8iFPuM4RfFjHLc3nKURh1CHFHzd2MGQ76
-         j1WMT/DbDNzm8Pyn0BbZLPUJh/PsIVIBrZi6aaJqLKa7zb+rGsY9HrkoPLu30bAVecb9
-         o4S15sFxkyprbRX3Dn+gL+jh7PEPbF4kZDgpE47owaftnKNFI63PesoJyjj9oNXIglA9
-         kw+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747235501; x=1747840301;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zin9UdB1kGHf9472t90ClCu+DsenV3gklPBeEhXFkBk=;
-        b=iF6H8qoJqkzNuGVNVR7OrWiNMcqKjAME1cEmvCFX54SHLU2ZDFRvAf+St0OxsGzgEU
-         27jDeXhWL6ZizrdCa3QBvqqNYV2bQF+coCV1y0CsoZxN8JTsRaDauZ4226Hs+A49F9nc
-         +EAsbBxCEhXs6JfZPk9dp2jPXGf+HRp45I5Pjeh6/ebI/PspiCJvioXf+tvkgJkuxqio
-         6jyc6ua8ZbgpwfJ6oCPwpae6tfRfpHlQZWFKXbq4oEug2fEkl84HAykVXCkmyW5pSPa1
-         nEONJQN4EUYUlpI/FJvJn7TBnlQkBp9Atxn6AUJWK/ME9TNUimu5XdIGpOXhf75ggnel
-         2w3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXH/RPmw6Ym9MVZy2ynCwgAGse/nNfeYs7JcgEN/Jy7pBQNPFWaMQ1RtQOF8cuxbeahkAI/ub+0Fm90x2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM35O5qyDyD83NpEerCQrWBstko2+VYPxvtLlMU8RnD3BlQpCd
-	5X4n8R8ug4uyCUBFsKzXrJtfcClug1cyvTQbgcZOldyDKIP0zCv2
-X-Gm-Gg: ASbGncvTzdDrNOv4WNZlPAGA8pGJIiSGI8WiItwVOL/QRRVOOw6T4NgWICYaYl0psHa
-	Zcr3B1Kac3JIJuqAMzh+e6NUhFlOgBFgE2G8fLxxQTZ2ksy2R1mmtOrrzUu7t99OfGnHChDV7Tx
-	xBXwhnA9kBj7Ja1YkDl9Rm5e6zGKF0A3onRFpi4gZeQ8pBsHsgZJ5G/KuNcT1Mj4WOTYO6rDAbE
-	T9L0gAW++vhXN+b3hYBnZYusQJD1/i1D/PN54zGJBlMbnAUaVwjt1haECaIlmUNoQxL1o/ZoZar
-	x8PujnoSLj1T7Bins2kNBKnt+uzcrkrLH7jqj6pql228loOypPbSz00GIxXLHGXeoyBMnxhvwNS
-	XYLwR
-X-Google-Smtp-Source: AGHT+IGQ88drE0lWsNDyF4V9Vy8xJEiVqRdDdnIX5NlkZpbH8m9mBlqKat4+TBTu4eQ2Nf1yk/MQ3A==
-X-Received: by 2002:a17:902:f647:b0:215:9bc2:42ec with SMTP id d9443c01a7336-231983d06d8mr50986825ad.47.1747235500628;
-        Wed, 14 May 2025 08:11:40 -0700 (PDT)
-Received: from ilya.linux (M106072195001.v4.enabler.ne.jp. [106.72.195.1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc829d668sm99836795ad.201.2025.05.14.08.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 08:11:40 -0700 (PDT)
-From: ilya guterman <amfernusus@gmail.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Ilya Guterman <amfernusus@gmail.com>
-Subject: [PATCH v2] drivers/nvme: Add quirks for device 025e:f1ac
-Date: Thu, 15 May 2025 00:11:30 +0900
-Message-ID: <20250514151130.701885-1-amfernusus@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <0250510102130.14710-1-amfernusus@gmail.com>
-References: <0250510102130.14710-1-amfernusus@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgKZBwls"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401E7C4CEE3;
+	Wed, 14 May 2025 15:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747235501;
+	bh=vr1ecV4IpmwbIh24JllrRkUYlyWMD7eggegSS0j+1Io=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IgKZBwlsHk3+JLegOdk8Bfdvy0IbHqzPEw6wJ/gop+G63vxSdWltvJMK/g9Mch0ur
+	 sqTBimykdF7iJqr1a2uZEqRm+AggWvwoSKPvwbjq8ZWbbU1BOVhikqUX9e+sMPfeWt
+	 kyBAyrqClGQlQrNdiqCTD+fCd4KldBrl/jqL59O13gCrk5dgk9LDTonPhTj65xe36j
+	 mwlPFbxfDFcs1tImONgUnbrr/z4So7ILKNa35koNCI5Gfbpv+7p8iYrHOtk3WAo/QS
+	 2O19MLAtGD+y6htW6szzrc9wge+uvlUWxVeCRoxEjxNYHiJNMFi5Vapvs1IM23O4+c
+	 AiSh7ShOXGz3w==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Wed, 14 May 2025 17:10:31 +0200
+Subject: [PATCH RFT v2 11/15] drm/msm/adreno: Switch to the common UBWC
+ config struct
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-topic-ubwc_central-v2-11-09ecbc0a05ce@oss.qualcomm.com>
+References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+In-Reply-To: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747235442; l=10116;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=9JU2RVFkoLhkak/u8sJDw3gG2svYycgoNusUQ6n/+zU=;
+ b=j8oVn2Co1BPO48VApF6/zDGkWkzTBwjM+S27rJdzpkArNUeu4+OKsVA4bR5cwbXjICgGzoL9V
+ Iwc0Mfpbug8D7TscyQT2muFYwODnJFLaAnOk2sJmkxl3p2MSHyvJxeY
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-From: Ilya Guterman <amfernusus@gmail.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-This commit adds NVME_QUIRK_NO_DEEPEST_PS for
-device [126f:2262], which belongs to device SOLIDIGM P44 Pro SSDPFKKW020X7
+Now that Adreno specifics are out of the way, use the common config
+(but leave the HBB hardcoding in place until that is wired up on the
+other side).
 
-The device frequently have trouble exiting the deepest power state (5),
-resulting in the entire disk unresponsive.
-
-Verified by setting nvme_core.default_ps_max_latency_us=10000 and observing them behaving normally.
-Also by running with the patch couldn't reproduce the issue after multiple wake up from sleeps.
-Running without the patch again reprodcued the issue on the first wake from sleep.
-
-Signed-off-by: ilya guterman <amfernusus@gmail.com>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- drivers/nvme/host/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 20 +++++------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 64 ++++++++++++++++-----------------
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c |  6 ++--
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h | 45 ++++-------------------
+ 4 files changed, 50 insertions(+), 85 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 1dc12784efaf..03a64bc77f7b 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3734,6 +3734,8 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
- 	{ PCI_DEVICE(0x1e49, 0x0041),   /* ZHITAI TiPro7000 NVMe SSD */
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
-+	{ PCI_DEVICE(0x025e, 0xf1ac),   /* SOLIDIGM  P44 pro SSDPFKKW020X7  */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
- 	{ PCI_DEVICE(0xc0a9, 0x540a),   /* Crucial P2 */
- 		.driver_data = NVME_QUIRK_BOGUS_NID, },
- 	{ PCI_DEVICE(0x1d97, 0x2263), /* Lexar NM610 */
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+index 650e5bac225f372e819130b891f1d020b464f17f..611e0eb26d0e19d431673d08e042162375fd400f 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+@@ -833,8 +833,8 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
+ 
+ 	gpu_write(gpu, REG_A5XX_RBBM_AHB_CNTL2, 0x0000003F);
+ 
+-	BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+-	hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
++	BUG_ON(adreno_gpu->ubwc_config->highest_bank_bit < 13);
++	hbb = adreno_gpu->ubwc_config->highest_bank_bit - 13;
+ 
+ 	gpu_write(gpu, REG_A5XX_TPL1_MODE_CNTL, hbb << 7);
+ 	gpu_write(gpu, REG_A5XX_RB_MODE_CNTL, hbb << 1);
+@@ -1754,6 +1754,7 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
+ 	struct msm_drm_private *priv = dev->dev_private;
+ 	struct platform_device *pdev = priv->gpu_pdev;
+ 	struct adreno_platform_config *config = pdev->dev.platform_data;
++	const struct qcom_ubwc_cfg_data *common_cfg;
+ 	struct a5xx_gpu *a5xx_gpu = NULL;
+ 	struct adreno_gpu *adreno_gpu;
+ 	struct msm_gpu *gpu;
+@@ -1790,15 +1791,14 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
+ 	/* Set up the preemption specific bits and pieces for each ringbuffer */
+ 	a5xx_preempt_init(gpu);
+ 
+-	/* Set the highest bank bit */
+-	if (adreno_is_a540(adreno_gpu) || adreno_is_a530(adreno_gpu))
+-		adreno_gpu->ubwc_config.highest_bank_bit = 15;
+-	else
+-		adreno_gpu->ubwc_config.highest_bank_bit = 14;
++	/* Inherit the common config and make some necessary fixups */
++	common_cfg = qcom_ubwc_config_get_data();
++	if (IS_ERR(common_cfg))
++		return ERR_PTR(-EINVAL);
+ 
+-	/* a5xx only supports UBWC 1.0, these are not configurable */
+-	adreno_gpu->ubwc_config.macrotile_mode = 0;
+-	adreno_gpu->ubwc_config.ubwc_swizzle = 0x7;
++	/* Copy the data into the internal struct to drop the const qualifier (temporarily) */
++	adreno_gpu->_ubwc_config = *common_cfg;
++	adreno_gpu->ubwc_config = &adreno_gpu->_ubwc_config;
+ 
+ 	adreno_gpu->uche_trap_base = 0x0001ffffffff0000ull;
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index fdc843c47c075a92ec8305217c355e4ccee876dc..ae0bb7934e7ed203aa3b81e28767de204f0a4d60 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -587,64 +587,62 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+ 
+ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ {
++	const struct qcom_ubwc_cfg_data *common_cfg;
++	struct qcom_ubwc_cfg_data *cfg = &gpu->_ubwc_config;
++
+ 	/* Inherit the common config and make some necessary fixups */
+-	gpu->common_ubwc_cfg = qcom_ubwc_config_get_data();
+-	if (IS_ERR(gpu->common_ubwc_cfg))
++	common_cfg = qcom_ubwc_config_get_data();
++	if (IS_ERR(common_cfg))
+ 		return -EINVAL;
+ 
+-	gpu->ubwc_config.ubwc_swizzle = 0x6;
+-	gpu->ubwc_config.macrotile_mode = 0;
+-	gpu->ubwc_config.highest_bank_bit = 15;
++	/* Copy the data into the internal struct to drop the const qualifier (temporarily) */
++	*cfg = *common_cfg;
++
++	cfg->ubwc_swizzle = 0x6;
++	cfg->highest_bank_bit = 15;
+ 
+ 	if (adreno_is_a610(gpu)) {
+-		gpu->ubwc_config.highest_bank_bit = 13;
+-		gpu->ubwc_config.ubwc_swizzle = 0x7;
++		cfg->highest_bank_bit = 13;
++		cfg->ubwc_swizzle = 0x7;
+ 	}
+ 
+ 	if (adreno_is_a618(gpu))
+-		gpu->ubwc_config.highest_bank_bit = 14;
++		cfg->highest_bank_bit = 14;
+ 
+ 	if (adreno_is_a619(gpu))
+ 		/* TODO: Should be 14 but causes corruption at e.g. 1920x1200 on DP */
+-		gpu->ubwc_config.highest_bank_bit = 13;
++		cfg->highest_bank_bit = 13;
+ 
+ 	if (adreno_is_a619_holi(gpu))
+-		gpu->ubwc_config.highest_bank_bit = 13;
++		cfg->highest_bank_bit = 13;
+ 
+ 	if (adreno_is_a621(gpu))
+-		gpu->ubwc_config.highest_bank_bit = 13;
++		cfg->highest_bank_bit = 13;
+ 
+-	if (adreno_is_a623(gpu)) {
+-		gpu->ubwc_config.highest_bank_bit = 16;
+-		gpu->ubwc_config.macrotile_mode = 1;
+-	}
+-
+-	if (adreno_is_a680(gpu))
+-		gpu->ubwc_config.macrotile_mode = 1;
++	if (adreno_is_a623(gpu))
++		cfg->highest_bank_bit = 16;
+ 
+ 	if (adreno_is_a650(gpu) ||
+ 	    adreno_is_a660(gpu) ||
+ 	    adreno_is_a690(gpu) ||
+ 	    adreno_is_a730(gpu) ||
+ 	    adreno_is_a740_family(gpu)) {
+-		/* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+-		gpu->ubwc_config.highest_bank_bit = 16;
+-		gpu->ubwc_config.macrotile_mode = 1;
++		/* TODO: get ddr type from bootloader and use 15 for LPDDR4 */
++		cfg->highest_bank_bit = 16;
+ 	}
+ 
+ 	if (adreno_is_a663(gpu)) {
+-		gpu->ubwc_config.highest_bank_bit = 13;
+-		gpu->ubwc_config.macrotile_mode = 1;
+-		gpu->ubwc_config.ubwc_swizzle = 0x4;
++		cfg->highest_bank_bit = 13;
++		cfg->ubwc_swizzle = 0x4;
+ 	}
+ 
+-	if (adreno_is_7c3(gpu)) {
+-		gpu->ubwc_config.highest_bank_bit = 14;
+-		gpu->ubwc_config.macrotile_mode = 1;
+-	}
++	if (adreno_is_7c3(gpu))
++		cfg->highest_bank_bit = 14;
+ 
+ 	if (adreno_is_a702(gpu))
+-		gpu->ubwc_config.highest_bank_bit = 14;
++		cfg->highest_bank_bit = 14;
++
++	gpu->ubwc_config = &gpu->_ubwc_config;
+ 
+ 	return 0;
+ }
+@@ -654,14 +652,14 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+ 	u8 uavflagprd_inv = adreno_is_a650_family(adreno_gpu) || adreno_is_a7xx(adreno_gpu) ? 2 : 0;
+ 	bool min_acc_len_64b = adreno_is_a610(adreno_gpu) || adreno_is_a702(adreno_gpu);
+-	const struct qcom_ubwc_cfg_data *cfg = adreno_gpu->common_ubwc_cfg;
++	const struct qcom_ubwc_cfg_data *cfg = adreno_gpu->ubwc_config;
+ 	/*
+ 	 * We subtract 13 from the highest bank bit (13 is the minimum value
+ 	 * allowed by hw) and write the lowest two bits of the remaining value
+ 	 * as hbb_lo and the one above it as hbb_hi to the hardware.
+ 	 */
+-	BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+-	u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
++	BUG_ON(cfg->highest_bank_bit < 13);
++	u32 hbb = cfg->highest_bank_bit - 13;
+ 	bool rgb565_predicator = cfg->ubwc_enc_version >= UBWC_4_0;
+ 	u32 level2_swizzling_dis = !(cfg->ubwc_swizzle & BIT(1));
+ 	bool ubwc_mode = qcom_ubwc_get_ubwc_mode(cfg);
+@@ -695,7 +693,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+ 		  min_acc_len_64b << 23 | hbb_lo << 21);
+ 
+ 	gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL,
+-		  adreno_gpu->ubwc_config.macrotile_mode);
++		  cfg->macrotile_mode);
+ }
+ 
+ static void a7xx_patch_pwrup_reglist(struct msm_gpu *gpu)
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 2348ffb35f7eb73a26da47881901d9111dca1ad9..f072c2156e94dfba8273e33e752167d919dc4db5 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -388,16 +388,16 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_file_private *ctx,
+ 		*value = ctx->aspace->va_size;
+ 		return 0;
+ 	case MSM_PARAM_HIGHEST_BANK_BIT:
+-		*value = adreno_gpu->ubwc_config.highest_bank_bit;
++		*value = adreno_gpu->ubwc_config->highest_bank_bit;
+ 		return 0;
+ 	case MSM_PARAM_RAYTRACING:
+ 		*value = adreno_gpu->has_ray_tracing;
+ 		return 0;
+ 	case MSM_PARAM_UBWC_SWIZZLE:
+-		*value = adreno_gpu->ubwc_config.ubwc_swizzle;
++		*value = adreno_gpu->ubwc_config->ubwc_swizzle;
+ 		return 0;
+ 	case MSM_PARAM_MACROTILE_MODE:
+-		*value = adreno_gpu->ubwc_config.macrotile_mode;
++		*value = adreno_gpu->ubwc_config->macrotile_mode;
+ 		return 0;
+ 	case MSM_PARAM_UCHE_TRAP_BASE:
+ 		*value = adreno_gpu->uche_trap_base;
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index 06be95d3efaee94e4107a484ad3132e0a6a9ea46..ebbca9672f25861bbbfa3ff28878c581fae6402c 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -207,45 +207,12 @@ struct adreno_gpu {
+ 	/* firmware: */
+ 	const struct firmware *fw[ADRENO_FW_MAX];
+ 
+-	struct {
+-		/**
+-		 * @rgb565_predicator: Unknown, introduced with A650 family,
+-		 * related to UBWC mode/ver 4
+-		 */
+-		u32 rgb565_predicator;
+-		/** @uavflagprd_inv: Unknown, introduced with A650 family */
+-		u32 uavflagprd_inv;
+-		/** @min_acc_len: Whether the minimum access length is 64 bits */
+-		u32 min_acc_len;
+-		/**
+-		 * @ubwc_swizzle: Whether to enable level 1, 2 & 3 bank swizzling.
+-		 *
+-		 * UBWC 1.0 always enables all three levels.
+-		 * UBWC 2.0 removes level 1 bank swizzling, leaving levels 2 & 3.
+-		 * UBWC 4.0 adds the optional ability to disable levels 2 & 3.
+-		 *
+-		 * This is a bitmask where BIT(0) enables level 1, BIT(1)
+-		 * controls level 2, and BIT(2) enables level 3.
+-		 */
+-		u32 ubwc_swizzle;
+-		/**
+-		 * @highest_bank_bit: Highest Bank Bit
+-		 *
+-		 * The Highest Bank Bit value represents the bit of the highest
+-		 * DDR bank.  This should ideally use DRAM type detection.
+-		 */
+-		u32 highest_bank_bit;
+-		u32 amsbc;
+-		/**
+-		 * @macrotile_mode: Macrotile Mode
+-		 *
+-		 * Whether to use 4-channel macrotiling mode or the newer
+-		 * 8-channel macrotiling mode introduced in UBWC 3.1. 0 is
+-		 * 4-channel and 1 is 8-channel.
+-		 */
+-		u32 macrotile_mode;
+-	} ubwc_config;
+-	const struct qcom_ubwc_cfg_data *common_ubwc_cfg;
++	/*
++	 * The migration to the central UBWC config db is still in flight - keep
++	 * a copy containing some local fixups until that's done.
++	 */
++	const struct qcom_ubwc_cfg_data *ubwc_config;
++	struct qcom_ubwc_cfg_data _ubwc_config;
+ 
+ 	/*
+ 	 * Register offsets are different between some GPUs.
+
 -- 
 2.49.0
 
