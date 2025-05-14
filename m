@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE0E521129C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B497214202;
+	Wed, 14 May 2025 07:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209399; cv=none; b=RDznagG2+Er7tW0OSocIf1B2j8f2omVKZNEoI6oV5/rrtDlh8chIrod2Rb/MHWaZfhJFvv52tn8JiFvoh+ugMTyzUyLHhWKnC/P1EmlgyesjfjNzMqIgdPPFh5DZJVGnd8Jw1PuADjqenbMBDtYHsjWWoM1TAsxUxC+a1C4CseA=
+	t=1747209527; cv=none; b=pCkDxEQ9kGnvGEk5mDouvecYkppx3EnVLV6km2JN4fLVD19agd2Dd+1FfhjV9p6kbVrVcwcWGqx42w9EcrLGp+SRO0VdReJyyNQNW371t98PG6S15TQ4OQ20BVKdJZNW/2+Var/BeNRfNLfYSqv726LbHvJVyyfN23gCsSyfaXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209399; c=relaxed/simple;
-	bh=mcMo7PQHI1ZDZEzm9Zv9hS0UhuE9ezIrT2xvL8UJLOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QPxm1TuqrcbXzHbrof971oJosmh/PhRswkejtsokVGsnn5uRiy6rq0VQIXkr6P+e5UTE4jpcAotDsprHcnjn/lMVHO55qLDUNNkvROoI7Uwog0vuD3Lg+PbvvLA+Rur++OnQ3F3qMtttSI2lRGAQpbGNHLxnkkbWlkwQRjgJndM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CFF41688;
-	Wed, 14 May 2025 00:56:23 -0700 (PDT)
-Received: from [10.162.43.24] (K4MQJ0H1H2.blr.arm.com [10.162.43.24])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA4EF3F673;
-	Wed, 14 May 2025 00:56:26 -0700 (PDT)
-Message-ID: <b083d377-ae92-486f-9c6b-5fe30bb88397@arm.com>
-Date: Wed, 14 May 2025 13:26:22 +0530
+	s=arc-20240116; t=1747209527; c=relaxed/simple;
+	bh=6tM6IvYJ+UJwErZFj2ILocGq36fJgFxr2ZEBz5WWSCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U8HVFQEEr4z1kYTjo8nAM3Bcz4vYiUpS5ycWS0aDSUBkkHCC9dNYNY2W7D1nG+UmUnVvnrKU4f2wVhvCgAAG4gRXgL+xBKkGYSiJ0NVGqjCDZzhWUq+rsawfpCsmO95kRY9IPUVx6Fdwd1XcW4r5sQZOnKgnO2tnLkqZiMDAX9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCWqqDjQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCWqqDjQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D513DC4CEE9;
+	Wed, 14 May 2025 07:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747209526;
+	bh=6tM6IvYJ+UJwErZFj2ILocGq36fJgFxr2ZEBz5WWSCg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=QCWqqDjQJGp4+GtEMpwBpBJeJri1buuxkh2vT6h+qKn+WBBpQPZ91Y8skd0TUhBWt
+	 cF3cmslw8xMzAaM7lb50sQ2Mh4YgXiFmGcCA2tDG3CvhyhJwJRriPVJcdzUO5u6llq
+	 pq/vE07SDfNeQjGO9lw7Ui8M6hf0IbjW34io2ur1yzqZ6hkDbsgaVIAYvmUO1HKUjy
+	 lFC6SggYHzscyo8OBrHW7LQ7mX3IUvPcuUxeIaPJ4t+GYSXJrlcjylxNd7eMbvInb7
+	 VyNgJtvyRzkZRvZb+Jg6UlnWScYBJRL776cLNGfR2cRVpmuD03nzCy1pbxGiul09SF
+	 5uPhX8pxLVOcw==
+Message-ID: <ae19e684-4f46-42b7-bb4e-fc6bb13ed153@kernel.org>
+Date: Wed, 14 May 2025 09:58:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,354 +35,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] mm: make try_to_unmap_one support batched unmap for
- anon large folios
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- David Hildenbrand <david@redhat.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Kairui Song <kasong@tencent.com>, Chris Li <chrisl@kernel.org>,
- Baoquan He <bhe@redhat.com>, Dan Schatzberg <schatzberg.dan@gmail.com>,
- Kaixiong Yu <yukaixiong@huawei.com>, Fan Ni <fan.ni@samsung.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-References: <20250513084620.58231-1-21cnbao@gmail.com>
+Subject: Re: [RESEND PATCH 3/5] dt-bindings: media: allegrodvt: add decoder
+ dt-bindings for Gen3 IP
+To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>,
+ Michael Tretter <m.tretter@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+ Aradhya Bhatia <a-bhatia1@ti.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Kever Yang <kever.yang@rock-chips.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>,
+ Sebastian Fricke <sebastian.fricke@collabora.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Gaosheng Cui <cuigaosheng1@huawei.com>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+ Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250513083609.328422-1-yassine.ouaissa@allegrodvt.com>
+ <20250513083609.328422-4-yassine.ouaissa@allegrodvt.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250513084620.58231-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250513083609.328422-4-yassine.ouaissa@allegrodvt.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 13/05/2025 10:35, Yassine Ouaissa wrote:
+> Add compatible for video decoder on allegrodvt Gen 3 IP.
+> 
+> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+
+How is this resend? You already sent patches, so this is v2 or v3.
+Version your patches correctly or just use b4 for that.
 
 
-
-On 13/05/25 2:16 pm, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> My commit 354dffd29575c ("mm: support batched unmap for lazyfree large
-> folios during reclamation") introduced support for unmapping entire
-> lazyfree anonymous large folios at once, instead of one page at a time.
-> This patch extends that support to generic (non-lazyfree) anonymous
-> large folios.
-> 
-> Handling __folio_try_share_anon_rmap() and swap_duplicate() becomes
-> extremely complex—if not outright impractical—for non-exclusive
-> anonymous folios. As a result, this patch limits support to exclusive
-> large folios. Fortunately, most anonymous folios are exclusive in
-> practice, so this restriction should be acceptable in the majority of
-> cases.
-> 
-> SPARC is currently the only architecture that implements
-> arch_unmap_one(), which also needs to be batched for consistency.
-> However, this is not yet supported, so the platform is excluded for
-> now.
-> 
-> Using the following micro-benchmark to measure the time taken to perform
-> PAGEOUT on 256MB of 64KiB anonymous large folios.
-> 
->   #define _GNU_SOURCE
->   #include <stdio.h>
->   #include <stdlib.h>
->   #include <sys/mman.h>
->   #include <string.h>
->   #include <time.h>
->   #include <unistd.h>
->   #include <errno.h>
-> 
->   #define SIZE_MB 256
->   #define SIZE_BYTES (SIZE_MB * 1024 * 1024)
-> 
->   int main() {
->       void *addr = mmap(NULL, SIZE_BYTES, PROT_READ | PROT_WRITE,
->                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->       if (addr == MAP_FAILED) {
->           perror("mmap failed");
->           return 1;
->       }
-> 
->       memset(addr, 0, SIZE_BYTES);
-> 
->       struct timespec start, end;
->       clock_gettime(CLOCK_MONOTONIC, &start);
-> 
->       if (madvise(addr, SIZE_BYTES, MADV_PAGEOUT) != 0) {
->           perror("madvise(MADV_PAGEOUT) failed");
->           munmap(addr, SIZE_BYTES);
->           return 1;
->       }
-> 
->       clock_gettime(CLOCK_MONOTONIC, &end);
-> 
->       long duration_ns = (end.tv_sec - start.tv_sec) * 1e9 +
->                          (end.tv_nsec - start.tv_nsec);
->       printf("madvise(MADV_PAGEOUT) took %ld ns (%.3f ms)\n",
->              duration_ns, duration_ns / 1e6);
-> 
->       munmap(addr, SIZE_BYTES);
->       return 0;
->   }
-> 
-> w/o patch:
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 1337334000 ns (1337.334 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 1340471008 ns (1340.471 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 1385718992 ns (1385.719 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 1366070000 ns (1366.070 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 1347834992 ns (1347.835 ms)
-> 
-> w/patch:
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 698178000 ns (698.178 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 708570000 ns (708.570 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 693884000 ns (693.884 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 693366000 ns (693.366 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 690790000 ns (690.790 ms)
-> 
-> We found that the time to reclaim this memory was reduced by half.
-> 
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Harry Yoo <harry.yoo@oracle.com>
-> Cc: Kairui Song <kasong@tencent.com>
-> Cc: Chris Li <chrisl@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
-> Cc: Kaixiong Yu <yukaixiong@huawei.com>
-> Cc: Fan Ni <fan.ni@samsung.com>
-> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 > ---
->   include/linux/swap.h |  4 +--
->   mm/memory.c          |  2 +-
->   mm/rmap.c            | 79 +++++++++++++++++++++++++++++---------------
->   mm/swapfile.c        | 10 ++++--
->   4 files changed, 62 insertions(+), 33 deletions(-)
+>  .../bindings/media/allegrodvt,al300-vdec.yaml | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
 > 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index bc0e1c275fc0..8fbb8ce72016 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -479,7 +479,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry);
->   extern swp_entry_t get_swap_page_of_type(int);
->   extern int add_swap_count_continuation(swp_entry_t, gfp_t);
->   extern void swap_shmem_alloc(swp_entry_t, int);
-> -extern int swap_duplicate(swp_entry_t);
-> +extern int swap_duplicate(swp_entry_t, int nr);
-
-Missed writing the parameter name here.
-
->   extern int swapcache_prepare(swp_entry_t entry, int nr);
->   extern void swap_free_nr(swp_entry_t entry, int nr_pages);
->   extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-> @@ -546,7 +546,7 @@ static inline void swap_shmem_alloc(swp_entry_t swp, int nr)
->   {
->   }
->   
-> -static inline int swap_duplicate(swp_entry_t swp)
-> +static inline int swap_duplicate(swp_entry_t swp, int nr)
->   {
->   	return 0;
->   }
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 99af83434e7c..5a7e4c0e89c7 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -803,7 +803,7 @@ copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
->   	swp_entry_t entry = pte_to_swp_entry(orig_pte);
->   
->   	if (likely(!non_swap_entry(entry))) {
-> -		if (swap_duplicate(entry) < 0)
-> +		if (swap_duplicate(entry, 1) < 0)
->   			return -EIO;
->   
->   		/* make sure dst_mm is on swapoff's mmlist. */
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index fb63d9256f09..2607e02a0960 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1845,23 +1845,42 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
->   #endif
->   }
->   
-> -/* We support batch unmapping of PTEs for lazyfree large folios */
-> +/*
-> + * We support batch unmapping of PTEs for lazyfree or exclusive anon large
-> + * folios
-> + */
->   static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
-> -			struct folio *folio, pte_t *ptep)
-> +		struct folio *folio, pte_t *ptep, bool exclusive)
->   {
->   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->   	int max_nr = folio_nr_pages(folio);
-> +#ifndef __HAVE_ARCH_UNMAP_ONE
-> +	bool no_arch_unmap = true;
-> +#else
-> +	bool no_arch_unmap = false;
-> +#endif
->   	pte_t pte = ptep_get(ptep);
-> +	int mapped_nr;
->   
-> -	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
-> +	if (!folio_test_anon(folio))
->   		return false;
->   	if (pte_unused(pte))
->   		return false;
->   	if (pte_pfn(pte) != folio_pfn(folio))
->   		return false;
->   
-> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
-> -			       NULL, NULL) == max_nr;
-> +	mapped_nr = folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
-> +			NULL, NULL);
-> +	if (mapped_nr != max_nr)
-> +		return false;
-> +	if (!folio_test_swapbacked(folio))
-> +		return true;
+> diff --git a/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> new file mode 100644
+> index 000000000000..4218892d6950
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/allegrodvt,al300-vdec.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/allegrodvt,al300-vdec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	/*
-> +	 * The large folio is fully mapped and its mapcount is the same as its
-> +	 * number of pages, it must be exclusive.
-> +	 */
-> +	return no_arch_unmap && exclusive && folio_mapcount(folio) == max_nr;
->   }
->   
->   /*
-> @@ -2025,7 +2044,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->   				folio_mark_dirty(folio);
->   		} else if (likely(pte_present(pteval))) {
->   			if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
-> -			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
-> +			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte,
-> +			    anon_exclusive))
->   				nr_pages = folio_nr_pages(folio);
->   			end_addr = address + nr_pages * PAGE_SIZE;
->   			flush_cache_range(vma, address, end_addr);
-> @@ -2141,8 +2161,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->   				goto discard;
->   			}
->   
-> -			if (swap_duplicate(entry) < 0) {
-> -				set_pte_at(mm, address, pvmw.pte, pteval);
-> +			if (swap_duplicate(entry, nr_pages) < 0) {
-> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
->   				goto walk_abort;
->   			}
->   
-> @@ -2159,9 +2179,10 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->   
->   			/* See folio_try_share_anon_rmap(): clear PTE first. */
->   			if (anon_exclusive &&
-> -			    folio_try_share_anon_rmap_pte(folio, subpage)) {
-> -				swap_free(entry);
-> -				set_pte_at(mm, address, pvmw.pte, pteval);
-> +			    __folio_try_share_anon_rmap(folio, subpage, nr_pages,
-> +							RMAP_LEVEL_PTE)) {
-> +				swap_free_nr(entry, nr_pages);
-> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
->   				goto walk_abort;
->   			}
->   			if (list_empty(&mm->mmlist)) {
-> @@ -2170,23 +2191,27 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
->   					list_add(&mm->mmlist, &init_mm.mmlist);
->   				spin_unlock(&mmlist_lock);
->   			}
-> -			dec_mm_counter(mm, MM_ANONPAGES);
-> -			inc_mm_counter(mm, MM_SWAPENTS);
-> -			swp_pte = swp_entry_to_pte(entry);
-> -			if (anon_exclusive)
-> -				swp_pte = pte_swp_mkexclusive(swp_pte);
-> -			if (likely(pte_present(pteval))) {
-> -				if (pte_soft_dirty(pteval))
-> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> -				if (pte_uffd_wp(pteval))
-> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-> -			} else {
-> -				if (pte_swp_soft_dirty(pteval))
-> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> -				if (pte_swp_uffd_wp(pteval))
-> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-> +			add_mm_counter(mm, MM_ANONPAGES, -nr_pages);
-> +			add_mm_counter(mm, MM_SWAPENTS, nr_pages);
-> +			/* TODO: let set_ptes() support swp_offset advance */
-> +			for (pte_t *ptep = pvmw.pte; address < end_addr;
-> +			     entry.val++, address += PAGE_SIZE, ptep++) {
-> +				swp_pte = swp_entry_to_pte(entry);
-> +				if (anon_exclusive)
-> +					swp_pte = pte_swp_mkexclusive(swp_pte);
-> +				if (likely(pte_present(pteval))) {
-> +					if (pte_soft_dirty(pteval))
-> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> +					if (pte_uffd_wp(pteval))
-> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
-> +				} else {
-> +					if (pte_swp_soft_dirty(pteval))
-> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
-> +					if (pte_swp_uffd_wp(pteval))
-> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
-> +				}
-> +				set_pte_at(mm, address, ptep, swp_pte);
->   			}
-> -			set_pte_at(mm, address, pvmw.pte, swp_pte);
->   		} else {
->   			/*
->   			 * This is a locked file-backed folio,
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 026090bf3efe..189e3474ffc6 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3550,13 +3550,17 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage, int nr)
->   
->   	offset = swp_offset(entry);
->   	VM_WARN_ON(nr > SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER);
-> -	VM_WARN_ON(usage == 1 && nr > 1);
->   	ci = lock_cluster(si, offset);
->   
->   	err = 0;
->   	for (i = 0; i < nr; i++) {
->   		count = si->swap_map[offset + i];
->   
-> +		/*
-> +		 * We only support batched swap_duplicate() for unmapping
-> +		 * exclusive large folios where count should be zero
-> +		 */
-> +		VM_WARN_ON(usage == 1 && nr > 1 && swap_count(count));
->   		/*
->   		 * swapin_readahead() doesn't check if a swap entry is valid, so the
->   		 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
-> @@ -3626,11 +3630,11 @@ void swap_shmem_alloc(swp_entry_t entry, int nr)
->    * if __swap_duplicate() fails for another reason (-EINVAL or -ENOENT), which
->    * might occur if a page table entry has got corrupted.
->    */
-> -int swap_duplicate(swp_entry_t entry)
-> +int swap_duplicate(swp_entry_t entry, int nr)
->   {
->   	int err = 0;
->   
-> -	while (!err && __swap_duplicate(entry, 1, 1) == -ENOMEM)
-> +	while (!err && __swap_duplicate(entry, 1, nr) == -ENOMEM)
->   		err = add_swap_count_continuation(entry, GFP_ATOMIC);
->   	return err;
->   }
+> +title: Allegro DVT Video IP Decoder Gen 3
+> +
+> +maintainers:
+> +  - Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
+> +
+> +description:
+> +  The al300-vdec represents the latest generation of Allegro DVT IP decoding
+> +  technology, offering significant advancements over its predecessors.
+> +  This new decoder features enhanced processing capabilities with improved
+> +  throughput and reduced latency.
+> +
+> +  Communication between the host driver software and the MCU is implemented
+> +  through a specialized mailbox interface mechanism. This mailbox system
+> +  provides a structured channel for exchanging commands, parameters, and
+> +  status information between the host CPU and the MCU controlling the codec
+> +  engines.
+> +
+> +properties:
+> +  compatible:
+> +    const: allegrodvt,al300-vdec
+> +
+> +  reg:
+> +    items:
+> +      - description: The registers
+> +      - description: the MCU APB register
+> +
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: apb
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: MCU clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mcu_clk
 
+Nothing improved.
+
+Best regards,
+Krzysztof
