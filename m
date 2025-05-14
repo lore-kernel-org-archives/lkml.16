@@ -1,65 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D6817993
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18A118C011
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240689; cv=none; b=bmw3BTYsrQj3v2e7v2LEiYO83jKqBCXb1/GlWh2bfwcvFosT0RywngQge+DQ+iPgReg24K5tklt0E5hT/bfVeLIw9njlj8GMaHUywctWLnZA2yhHF4zLidGClitOY7AuG+PNjGaaeT8aW7swo913o/rGIY4scHVBiNmbxN5S1ZU=
+	t=1747240710; cv=none; b=N3ABNihQSqI5EQBiW1LF1EuMG7tAxipwrZV/0UWWhee+TjAZwhvVegDGiykluDQqHjMrLwQ48fV2g5XWMTMbbRXXReAq+HotSzKano+uFjS2RPUM1GCs6c7HxYOAmmvfS0niPwPcoiBA5xKryWW7WWnfdZkFgiim46Bj2hiXaIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240689; c=relaxed/simple;
-	bh=v7zf4XXuwJLVXVcM56Ut4k2cCMyk2LGNKG+tcwbHJjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbFHHUSF2YBN9QJ1otZyi/7VlB3cQ9RD1xNaTv1LZgIJDXAUxR3+6I5xw9+VJZtjEJb8MTvhMWiFgVcFGoiY4W39xGFU/Ytcx+i7YPE9n8KxJTOvUGMcUO5vOHZ5xlolHMW3KB42fC++Tihfx4ugoGAD1GOM7ofi2qGt1aLrXxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bd+rc0E4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747240710; c=relaxed/simple;
+	bh=bzbDzI4Ez8wa1Uh1GkwX2f0BYckJ+tBjU0J9J8XVnqo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MutA2vL58LlWesQxqEGtAZ7956dLyGdMs/9ZcIHz4Dk4eqiykshtT3NCrpeRYbdxeXJkSqSwXeq/cbBRgTRwR3I9zVthaqDduciWCK1fCgfyX0YSnBSn2wtFNI08XVTvR+PinmHdaR/sG7HPpBj2jw2fzB2K3QV81ZPzUaXJQhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7cZzGoa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bd+rc0E4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60121C4CEE3;
-	Wed, 14 May 2025 16:38:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7cZzGoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDBDC4CEE3;
+	Wed, 14 May 2025 16:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747240688;
-	bh=v7zf4XXuwJLVXVcM56Ut4k2cCMyk2LGNKG+tcwbHJjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bd+rc0E4hbESlSSaqoFXNBkqeIA/H7MHsMqucs5Syb66Yxzj9Qe+5YzPAExgh9+oC
-	 sF4mFL55XGTk3yjxSIPwVXd2h6TryooU4C+JEpq7tnf/DcY2N4HgFkPxedB5iuo72y
-	 +nv0X5SEBFrTq2u+toFfkfjwW85QBxLl32cAYAZtd1LwFRU55aFtoapjJyedtL96fm
-	 iXHSRpIpWXST0HxoklDBSBHrVF11Q0y63qlNqnq4XHzWXeWKpTXw9TuBqAmIcymzGD
-	 fMZpveRtz7m3PJLdzQRdiGIgWU7GAo1CWT526VpL9GD9QBEF8eS9eqcCYjv1q4JGZu
-	 fA5+Dx8jpPClQ==
-Date: Wed, 14 May 2025 12:38:05 -0400
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH sched_ext/for-6.16] sched_ext: Explain the temporary
- situation around scx_root dereferences
-Message-ID: <aCTG7Yp-WCJwy1BI@mtj.duckdns.org>
-References: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
- <aCRjUQJ_97-B0Rpo@gpd3>
- <aCSlvpiraPTKUqOf@mtj.duckdns.org>
- <aCSoKBu0l-vTlScT@gpd3>
- <aCSyYU6EZzm4fJUa@mtj.duckdns.org>
+	s=k20201202; t=1747240710;
+	bh=bzbDzI4Ez8wa1Uh1GkwX2f0BYckJ+tBjU0J9J8XVnqo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=h7cZzGoaqjPpJdyg15oYzhuZ2x8bT9ukTM3eWexgL59cNwzjAn/koIZduJL8epF++
+	 E5mJ1q6Qa+Y3i0C/KJU2yrKwPcrisjqyhyLMK/TPjRDPg1FlBvsdeCimSr8xpObAJL
+	 PUTrtBmWE39sdId4lL/Y8SzPdgDVH3Yk5MmOAI7aeOhDgW+6kouq5JHDFmSo2C2rwK
+	 0lnxnpU3gPz3dTnjrfHnnh0cT8r1Ms8KxlrRrp5VklSCiBW0c+UxnchHrNICb577HK
+	 NYSqzesr+IjG33WLNqfb7cM8DAOfSgqe1mlf8iWyAV90ND8wnnoAtp8PKMj/DIBBu4
+	 hR39vEmvfCz3A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 39AB7380AA66;
+	Wed, 14 May 2025 16:39:09 +0000 (UTC)
+Subject: Re: [GIT PULL] soc: fixes for 6.15, part 2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <660e30e8-7ae7-4a55-a136-9b0aa4e5ad0b@app.fastmail.com>
+References: <660e30e8-7ae7-4a55-a136-9b0aa4e5ad0b@app.fastmail.com>
+X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
+X-PR-Tracked-Message-Id: <660e30e8-7ae7-4a55-a136-9b0aa4e5ad0b@app.fastmail.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.15-2
+X-PR-Tracked-Commit-Id: 15eaaa71e8ef142b122942b35653d513cfb90050
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 00f281fd9d8ddc1a83d3b188c087edac2116a089
+Message-Id: <174724074813.2432206.562898073472288541.pr-tracker-bot@kernel.org>
+Date: Wed, 14 May 2025 16:39:08 +0000
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, soc@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCSyYU6EZzm4fJUa@mtj.duckdns.org>
 
-On Wed, May 14, 2025 at 11:10:25AM -0400, Tejun Heo wrote:
-> Naked scx_root dereferences are being used as temporary markers to indicate
-> that they need to be updated to point to the right scheduler instance.
-> Explain the situation.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Andrea Righi <arighi@nvidia.com>
+The pull request you sent on Wed, 14 May 2025 10:07:54 +0200:
 
-Applied to sched_ext/for-6.16.
+> https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.15-2
 
-Thanks.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/00f281fd9d8ddc1a83d3b188c087edac2116a089
+
+Thank you!
 
 -- 
-tejun
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
