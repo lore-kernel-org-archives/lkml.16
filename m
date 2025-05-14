@@ -1,43 +1,66 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B761F428F;
-	Wed, 14 May 2025 13:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF04274FD9
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747229689; cv=none; b=DFTNbHMPCKQ04dI6kc9NF3fY7qQQGZNaVFlVLO7IV9OepYJXQJr0G0Z/JbBs3L9VaQlAVJt2jPu9KXHy8WTQqHEokmFmLwwbrh2IOKmJPP3Y9jgCvosxtklmfvaHZaoSJ8WGIrOCByKram9WzLk9Ag+RSGiGCrsrN4okUoScB2w=
+	t=1747229780; cv=none; b=jxZSJV1TBXkGYnr+i5h59baBaAGsXR1Rs6IavPtr8u+W5Bz+QgMUc3+q+XQ7LEcsOJeEYUM3oMdm8XtihyGcJvd0jNuUY4UrayzwfDoi05ctpPHr3/qPDnc6DG2I9hRh/uIWyt0vRODaAblKSJ8WX/WV6XeJGUA4MF1Z5ag+mCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747229689; c=relaxed/simple;
-	bh=wVOcW9WcqwQ0MaauWnzbqHVaQ+oh6npsussaYish+00=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GpIIUFknL3JR6+NevNMb2UhqZjibBfmp40C4eakgEYGCOwbRMsT30CIMvMVp/PYCz9mIxxUZlmgjmAKMi27C37Oli8D1q3fU3Wg+p+Q0UuSqv+8rRy04MVVyXUAYkuU4qfBCjuPARipGxjLOo/RqEhUTl2/06lND3+V6WlwxG28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowADnkj_mmyRoeFwhFQ--.7405S2;
-	Wed, 14 May 2025 21:34:32 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: cezary.rojewski@intel.com,
-	liam.r.girdwood@linux.intel.com,
-	peter.ujfalusi@linux.intel.com,
-	yung-chuan.liao@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	pierre-louis.bossart@linux.dev,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: kuninori.morimoto.gx@renesas.com,
-	tony.luck@intel.com,
-	amadeuszx.slawinski@linux.intel.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] ASoC: Intel: avs: Add null pointer check for es8366
-Date: Wed, 14 May 2025 21:34:08 +0800
-Message-ID: <20250514133409.713-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747229780; c=relaxed/simple;
+	bh=yMgoMTH3h37N0QI1Jl75rwUN+zTne9g/7CDb67cjf10=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g4c7VwpiDTB1GCz3VRvYGfKiF9C7LE+W2824CnWeHnOrfai0PNRSwv9HfEnZNsB1LKqjw3ODc/nMILgk9NUE9tdkv2TW37WXrNaL+orIJeCBaCgHq6dpml/xJqc0xfZ/p3eSZLExUxTvP1x0EC1klotKQt4rowfyYsyfquvlfrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gt1E/nRb; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gt1E/nRb"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E6GS7A017030;
+	Wed, 14 May 2025 13:35:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=YfTUAH1ofCS4VsMDlN4kr7Gt1uhktSk0r2YXiiHdo
+	oo=; b=Gt1E/nRbl4+C/uE+mm9nztkmJGNAVpuVaB9/J8pJDIQTCZVZeJc/oF4in
+	3FYpHiuAkW1AVJDvaOAAyuo75fDOGU+s+ew2swVRFZnfhPc0iCdsYzboQ6Ah2Kw6
+	hL9UfA8dTwwu8RdaNar7x7rGQ5EtiAFIokszFUstNIVtvxOHV3FMHWSGACL5CuNI
+	b11UjlRsn8M8kJENGgqhdLCMsgAVQJQExno7IzjBIgDhh8v+kkkACfY0mrKLfNhN
+	PcLpazQBrFalfbcu9HjLTH+CXxPU3PuyQMV1fjfOOFSFAiRk3Cn4gRxt1JPCyxvY
+	NikWYVHQNIUdJi/jz1ZpNKq54Fq8Q==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8mhxf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 13:35:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDXYj3015498;
+	Wed, 14 May 2025 13:35:26 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpvdhx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 13:35:26 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EDZOJW32703132
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 13:35:24 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9BD5120128;
+	Wed, 14 May 2025 13:35:24 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8960B20127;
+	Wed, 14 May 2025 13:35:24 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 14 May 2025 13:35:24 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+	id 3768EE08A7; Wed, 14 May 2025 15:35:24 +0200 (CEST)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: [PATCH] objtool: Add missing endianess conversion when checking annations
+Date: Wed, 14 May 2025 15:35:15 +0200
+Message-ID: <20250514133515.1829691-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,65 +68,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADnkj_mmyRoeFwhFQ--.7405S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw45KrW5Zr15Cw4kJrW5Wrg_yoW8WFy5pF
-	1DWrZrKFW5Jr4xG345XayFvFy7Za48CFZ3GrWxK3s7AF4fJr93Wr1YqryjyFyakryxJw47
-	Xryj9ay8C34rJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0pRx-BiUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsCA2gkZJ+0pQAAsr
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xJ0WNLTo4dcc3szMpA0ITfuQBycRBGGS
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=68249c1f cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=OlQpHzDty6Yk0YrQ6AQA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDExNSBTYWx0ZWRfX8klJCSs/EcDw ZgFd+BUMqYcmVkdv0WaSsv39vMSfB7EGvn62OvCrxH+IkS1yzuX1Trth3nitLxPn691tbUX/4GR 2XMk34Oa+44MX0fngEZFk9+PaZczzr5StCOBfVrQryYYEZ+306OS+ssbNeRGeKjScgHvUElq8FW
+ l1j2L+48o46gmwHHY5XcP8u2XPkldBIlU7WyWcEPtG3QGmfs2bwi1nlXhpyUMLLyu4JUb726ojy Kl2fmyunqBCCbE2dWGhz6RmM7ScP37Vs3YWzYRyRPsQsKrzToMPPusqlW47SasuO00n8fFKIBLL DtZXLGihXx94vcC0JLg9+GfZjr70eycqWTU7e02u+GGnFGusMzG1gi+MeWRrPbWGffY7ZeQKqXR
+ 8XZxEZOEE+u4viHhAqQzOxm6vTHjkQAgGIc9JPK//3DGgnKBaRX+gDWEr8YJPrZwOCmbwtOk
+X-Proofpoint-GUID: xJ0WNLTo4dcc3szMpA0ITfuQBycRBGGS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1011
+ mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140115
 
-The avs_card_suspend_pre() and avs_card_resume_post() in es8336
-calls the snd_soc_card_get_codec_dai(), but does not check its return
-value which is a null pointer if the function fails. This can result
-in a null pointer dereference. A proper implementation can be found
-in acp5x_nau8821_hw_params() and card_suspend_pre().
+cross-compiling a kernel for x86 on s390 produces the following warning:
 
-Add a null pointer check for snd_soc_card_get_codec_dai() to avoid null
-pointer dereference when the function fails.
+drivers/mfd/mc13xxx-core.o: warning: objtool: mc13xxx_reg_rmw+0xc: Unknown annotation type: 50331648
 
-Fixes: 32e40c8d6ff9 ("ASoC: Intel: avs: Add es8336 machine board")
-Cc: stable@vger.kernel.org # v6.6
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Fix this by adding the required endianess conversion.
+
+Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
+Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
 ---
- sound/soc/intel/avs/boards/es8336.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/avs/boards/es8336.c b/sound/soc/intel/avs/boards/es8336.c
-index 426ce37105ae..e31cc656f076 100644
---- a/sound/soc/intel/avs/boards/es8336.c
-+++ b/sound/soc/intel/avs/boards/es8336.c
-@@ -243,6 +243,9 @@ static int avs_card_suspend_pre(struct snd_soc_card *card)
- {
- 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, ES8336_CODEC_DAI);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index b21b12ec88d9..35fb871b2c62 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2316,7 +2316,7 @@ static int read_annotate(struct objtool_file *file,
+ 	}
  
-+	if (!codec_dai)
-+		return -EINVAL;
-+
- 	return snd_soc_component_set_jack(codec_dai->component, NULL, NULL);
- }
+ 	for_each_reloc(sec->rsec, reloc) {
+-		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
++		type = bswap_if_needed(file->elf, *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4));
  
-@@ -251,6 +254,9 @@ static int avs_card_resume_post(struct snd_soc_card *card)
- 	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, ES8336_CODEC_DAI);
- 	struct avs_card_drvdata *data = snd_soc_card_get_drvdata(card);
- 
-+	if (!codec_dai)
-+		return -EINVAL;
-+
- 	return snd_soc_component_set_jack(codec_dai->component, &data->jack, NULL);
- }
- 
+ 		offset = reloc->sym->offset + reloc_addend(reloc);
+ 		insn = find_insn(file, reloc->sym->sec, offset);
 -- 
-2.42.0.windows.2
+2.45.2
 
