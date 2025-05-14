@@ -1,288 +1,362 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7887D19A;
-	Wed, 14 May 2025 00:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36180219FC;
+	Wed, 14 May 2025 00:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747182733; cv=none; b=F75mAZADyMKr4MtiQ1AK5AQy8K8BUTEcRU6M/JdbysuHu4S3AtpqKFTkALl2v85G8pLGFenVhHJVx1SgMqidZ7kw+XVNkK8Rgt842Xda/Cyw/eNwJxmE6tt9NoX/wBbkX12Iec/4b4zy0WnO3aFgo0SNuMbxXlsSg2k+iJ1DBb0=
+	t=1747182758; cv=none; b=Vw9tX1pMbwsiCUDHTBblXqRwxjp5zciojaG8Z5ARodG8eLuSZ/AkR6qCiRww/29eR3W9/8LmY9BelIaZ6vN0iqDzkioA4oWEdXte67GjVew4giwsQnqva+BPV4Ktv3pcJDchYD/6D57XSzNOBioPWTft+ROZI/R9xmwA7UyWAsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747182733; c=relaxed/simple;
-	bh=TYA6y6LVyjRM6RpZjryDyLGn4K8/QVPIoOYa5BUTDzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZlnuDwmq6wt80r42nMX2vIBJ8Z4EsUyWmKowHd0y0LmWsmRT4RgGzu6XrOwffltywDLVaW+sFb/rldjOn/KbMay2EYTwRg/yCUgd2tGLpCQyAJy8lxol6bKjY37Pc57oxJw30K7ERqF5Xc5AfwO4DUyutEuhZxM5yUjfnrJUEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE30C4CEE4;
-	Wed, 14 May 2025 00:32:12 +0000 (UTC)
-Date: Tue, 13 May 2025 20:32:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-ID: <20250513203237.0e7ff662@gandalf.local.home>
-In-Reply-To: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747182758; c=relaxed/simple;
+	bh=q9YZi9u6urfuQxOi7qxIdE44D4Yw5m8A7ZQ110VxraU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Yi7YmJp/gJiu7Nvq82qJbebM48GcXuKtDOvsJHvCnIQNF1SMwRNAg6mCr6F2nuzStzHXq8k2kvIaUO66dapHnlXXMmL2pn72D1qRplqhowE0NCCE13/wHS7egRY8AO9JINaiyQJx1RMCJFyghEAnFJPNIDglSEXWNMWV+QU0nVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgC32xGL5CNohat4AA--.52630S2;
+	Wed, 14 May 2025 08:32:13 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH 2/2] reset: eswin: Add eic7700 reset driver
+Date: Wed, 14 May 2025 08:32:09 +0800
+Message-Id: <20250514003209.531-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250514002945.415-1-dongxuyang@eswincomputing.com>
+References: <20250514002945.415-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgC32xGL5CNohat4AA--.52630S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxtrykXr43XrWxZF4kWrWDXFb_yoWfAw4xpF
+	WrGFW3Jr4UJr4fWw4xJrWvvF4ag3WfKFy8GrZrtw4Ikw13tayUJF48tFyrtF97CryDXFy5
+	tF12gayruFnrtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE-syl42
+	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+	8JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4U
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQJ57UUUUU==
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Tue, 13 May 2025 09:50:27 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Rewind persistent ring buffer pages which have been read in the
-> previous boot. Those pages are highly possible to be lost before
-> writing it to the disk if the previous kernel crashed. In this
-> case, the trace data is kept on the persistent ring buffer, but
-> it can not be read because its commit size has been reset after
-> read.
-> This skips clearing the commit size of each sub-buffer and
-> recover it after reboot.
-> 
-> Note: If you read the previous boot data via trace_pipe, that
-> is not accessible in that time. But reboot without clearing (or
-> reusing) the read data, the read data is recovered again in the
-> next boot.
-> Thus, when you read the previous boot data, clear it by
-> `echo > trace`.
+Add support for reset controller in eic7700 series chips.
+Provide functionality for asserting and deasserting resets
+on the chip.
 
-Is that a problem? I'm thinking that the data in the buffer should not be
-used. Anyway, I had to fix a bug with trace_pipe:
+Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+---
+ drivers/reset/Kconfig         |   9 ++
+ drivers/reset/Makefile        |   1 +
+ drivers/reset/reset-eic7700.c | 249 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 259 insertions(+)
+ create mode 100644 drivers/reset/reset-eic7700.c
 
-  https://lore.kernel.org/linux-trace-kernel/20250513115032.3e0b97f7@gandalf.local.home/
-
-And with that applied, it doesn't rewind all the way, but still gives you
-what's left on the reader page. I think that is the case without this patch
-too.
-
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/ring_buffer.c |   55
-> ++++++++++++++++++++++++++++++++++++++++++-- 1 file changed, 52
-> insertions(+), 3 deletions(-)
-
-Anyway, I found that this is a lot more complex than what you have here. As
-the commit size is set to zero when added back into the ring buffer, I
-needed to remove that. But things get much more trickier than that!
-
-First, we need to make the new head page found (the one that was read
-already) the new "reader page". And we need to insert the old reader page
-back into the ring buffer. And reset everything to handle all of this.
-
-I played a little with it, and came up with this. It's still a bit buggy,
-but it does give you an idea of what needs to be done.
-
--- Steve
-
-This is on top of the trace_pipe fix in the link above.
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6859008ca34d..f5dd96ca25c9 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
- 	*bpage = list_entry(p, struct buffer_page, list);
- }
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 99f6f9784e68..d6eef5358e13 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -350,6 +350,15 @@ config RESET_ZYNQMP
+ 	help
+ 	  This enables the reset controller driver for Xilinx ZynqMP SoCs.
  
-+static inline void rb_dec_page(struct buffer_page **bpage)
-+{
-+	struct list_head *p = rb_list_head((*bpage)->list.prev);
++config RESET_EIC7700
++	bool "Reset controller driver for Eswin SoCs"
++	default ARCH_ESWIN
++	help
++	  This enables the reset controller driver for Eswin SoCs. This driver is
++	  specific to Eswin SoCs and should only be enabled if using such hardware.
++	  The driver supports eic7700 series chips and provides functionality for
++	  asserting and deasserting resets on the chip.
 +
-+	*bpage = list_entry(p, struct buffer_page, list);
+ source "drivers/reset/amlogic/Kconfig"
+ source "drivers/reset/starfive/Kconfig"
+ source "drivers/reset/sti/Kconfig"
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 31f9904d13f9..2210c4e55834 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -44,3 +44,4 @@ obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+ obj-$(CONFIG_RESET_UNIPHIER_GLUE) += reset-uniphier-glue.o
+ obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+ obj-$(CONFIG_RESET_ZYNQMP) += reset-zynqmp.o
++obj-$(CONFIG_RESET_EIC7700) += reset-eic7700.o
+diff --git a/drivers/reset/reset-eic7700.c b/drivers/reset/reset-eic7700.c
+new file mode 100644
+index 000000000000..079647280cbc
+--- /dev/null
++++ b/drivers/reset/reset-eic7700.c
+@@ -0,0 +1,249 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
++ *
++ * ESWIN Reset Driver
++ *
++ * Authors:
++ *	Yifeng Huang <huangyifeng@eswincomputing.com>
++ *	Xuyang Dong <dongxuyang@eswincomputing.com>
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#define SYSCRG_CLEAR_BOOT_INFO_OFFSET (0x30C)
++#define CLEAR_BOOT_FLAG_BIT BIT_ULL(0)
++
++#define SYSCRG_RESET_OFFSET (0x400)
++
++/**
++ * struct eswin_reset_data - reset controller information structure
++ * @rcdev: reset controller entity
++ * @dev: reset controller device pointer
++ * @idr: idr structure for mapping ids to reset control structures
++ */
++struct eswin_reset_data {
++	struct reset_controller_dev rcdev;
++	struct device *dev;
++	struct idr idr;
++	struct regmap *regmap;
++};
++
++/**
++ * struct eswin_reset_control - reset control structure
++ * @dev_id: SoC-specific device identifier
++ * @reset_bit: reset mask to use for toggling reset
++ */
++struct eswin_reset_control {
++	u32 dev_id;
++	u32 reset_bit;
++};
++
++#define to_eswin_reset_data(p) container_of((p), struct eswin_reset_data, rcdev)
++
++/**
++ * eswin_reset_set() - program a device's reset
++ * @rcdev: reset controller entity
++ * @id: ID of the reset to toggle
++ * @assert: boolean flag to indicate assert or deassert
++ *
++ * This is a common internal function used to assert or deassert a device's
++ * reset by clear and set the reset bit. The device's reset is asserted if the
++ * @assert argument is true, or deasserted if @assert argument is false.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_set(struct reset_controller_dev *rcdev, unsigned long id,
++			   bool assert)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	control = idr_find(&data->idr, id);
++
++	dev_dbg(rcdev->dev, "dev_id 0x%x reset_bit 0x%x assert 0x%x\r\n",
++		control->dev_id, control->reset_bit, assert);
++
++	if (!control)
++		return -EINVAL;
++
++	if (assert) {
++		ret = regmap_clear_bits(data->regmap,
++					SYSCRG_RESET_OFFSET +
++						control->dev_id * sizeof(u32),
++					control->reset_bit);
++	} else {
++		ret = regmap_set_bits(data->regmap,
++				      SYSCRG_RESET_OFFSET +
++					      control->dev_id * sizeof(u32),
++				      control->reset_bit);
++	}
++
++	return ret;
 +}
 +
- static struct buffer_page *
- rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -1862,13 +1869,17 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
- 	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
- }
- 
-+static void rb_update_meta_reader(struct ring_buffer_per_cpu *cpu_buffer,
-+				  struct buffer_page *reader);
++static int eswin_reset_reset(struct reset_controller_dev *rcdev,
++			     unsigned long id)
++{
++	int ret;
 +
- /* If the meta data has been validated, now validate the events */
- static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
--	struct buffer_page *head_page;
-+	struct buffer_page *head_page, *orig_head;
- 	unsigned long entry_bytes = 0;
- 	unsigned long entries = 0;
-+	u64 ts;
- 	int ret;
- 	int i;
- 
-@@ -1885,8 +1896,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
- 	local_set(&cpu_buffer->reader_page->entries, ret);
- 
--	head_page = cpu_buffer->head_page;
--
- 	/* If the commit_buffer is the reader page, update the commit page */
- 	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
- 		cpu_buffer->commit_page = cpu_buffer->reader_page;
-@@ -1894,6 +1903,88 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 		goto done;
- 	}
- 
-+	orig_head = head_page = cpu_buffer->head_page;
-+	ts = cpu_buffer->reader_page->page->time_stamp;
++	ret = eswin_reset_set(rcdev, id, true);
++	if (ret != 0)
++		return ret;
 +
-+	/*
-+	 * Try to rewind the head so that we can read the pages which already
-+	 * read in the previous boot.
-+	 */
-+	if (head_page != cpu_buffer->tail_page)
-+		rb_dec_page(&head_page);
++	usleep_range(10, 15);
++	ret = eswin_reset_set(rcdev, id, false);
++	if (ret != 0)
++		return ret;
 +
-+	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
++	return 0;
++}
 +
-+		/* Rewind until tail (writer) page. */
-+		if (head_page == cpu_buffer->tail_page)
-+			break;
++static int eswin_reset_assert(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, true);
++}
 +
-+		if (ts < head_page->page->time_stamp)
-+			break;
++static int eswin_reset_deassert(struct reset_controller_dev *rcdev,
++				unsigned long id)
++{
++	return eswin_reset_set(rcdev, id, false);
++}
 +
-+		ts = head_page->page->time_stamp;
-+		if (!ts)
-+			break;
++static const struct reset_control_ops eswin_reset_ops = {
++	.reset = eswin_reset_reset,
++	.assert = eswin_reset_assert,
++	.deassert = eswin_reset_deassert,
++};
 +
-+		if (rb_page_commit(head_page) == 0)
-+			break;
++static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
++{
++	struct of_phandle_args *reset_spec = (struct of_phandle_args *)data;
++	struct eswin_reset_control *slot_control =
++		(struct eswin_reset_control *)p;
 +
-+		/* Stop rewind if the page is invalid. */
-+		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-+		if (ret < 0)
-+			break;
++	if (reset_spec->args[0] == slot_control->dev_id &&
++	    reset_spec->args[1] == slot_control->reset_bit)
++		return id;
++	else
++		return 0;
++}
 +
-+		/* Recover the number of entries. */
-+		local_set(&head_page->entries, ret);
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+		entries += ret;
-+		entry_bytes += rb_page_commit(head_page);
++/**
++ * eswin_reset_of_xlate() - translate a set of OF arguments to a reset ID
++ * @rcdev: reset controller entity
++ * @reset_spec: OF reset argument specifier
++ *
++ * This function performs the translation of the reset argument specifier
++ * values defined in a reset consumer device node. The function allocates a
++ * reset control structure for that device reset, and will be used by the
++ * driver for performing any reset functions on that reset. An idr structure
++ * is allocated and used to map to the reset control structure. This idr
++ * is used by the driver to do reset lookups.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int eswin_reset_of_xlate(struct reset_controller_dev *rcdev,
++				const struct of_phandle_args *reset_spec)
++{
++	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
++	struct eswin_reset_control *control;
++	int ret;
++
++	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	ret = idr_for_each(&data->idr, eswin_reset_of_xlate_lookup_id,
++			   (void *)reset_spec);
++	if (ret != 0)
++		return ret;
++
++	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
++	if (!control)
++		return -ENOMEM;
++
++	control->dev_id = reset_spec->args[0];
++	control->reset_bit = reset_spec->args[1];
++
++	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
++}
++
++static const struct of_device_id eswin_reset_dt_ids[] = {
++	{
++		.compatible = "eswin,eic7700-reset",
++	},
++	{ /* sentinel */ },
++};
++
++static int eswin_reset_probe(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data;
++	struct device *parent;
++
++	parent = pdev->dev.parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "no parent\n");
++		return -ENODEV;
 +	}
 +
-+	/* The last rewind page must be skipped. */
-+	if (head_page != orig_head)
-+		rb_inc_page(&head_page);
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
 +
-+	if (head_page != orig_head) {
-+		struct buffer_page *bpage = orig_head;
-+
-+		rb_dec_page(&bpage);
-+		/*
-+		 * Move the reader page between the orig_head and the page
-+		 * before it.
-+		 */
-+		cpu_buffer->reader_page->list.next = &orig_head->list;
-+		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-+		orig_head->list.prev = &cpu_buffer->reader_page->list;
-+
-+		bpage->list.next = &cpu_buffer->reader_page->list;
-+
-+		/* Make the head_page the new reader page */
-+		cpu_buffer->reader_page = head_page;
-+		bpage = head_page;
-+		rb_inc_page(&head_page);
-+		head_page->list.prev = bpage->list.prev;
-+		rb_dec_page(&bpage);
-+		bpage->list.next = &head_page->list;
-+		rb_set_list_to_head(&bpage->list);
-+
-+		cpu_buffer->head_page = head_page;
-+		meta->head_buffer = (unsigned long)head_page->page;
-+
-+		/* Reset all the indexes */
-+		bpage = cpu_buffer->reader_page;
-+		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-+		bpage->id = 0;
-+
-+		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-+		     i++, rb_inc_page(&bpage)) {
-+			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-+			bpage->id = i + 1;
-+		}
-+		head_page = orig_head;
++	data->regmap = syscon_node_to_regmap(parent->of_node);
++	if (IS_ERR(data->regmap)) {
++		dev_err(&pdev->dev, "failed to get parent regmap\n");
++		return PTR_ERR(data->regmap);
 +	}
 +
- 	/* Iterate until finding the commit page */
- 	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
- 
-@@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 */
- 	local_set(&cpu_buffer->reader_page->write, 0);
- 	local_set(&cpu_buffer->reader_page->entries, 0);
--	local_set(&cpu_buffer->reader_page->page->commit, 0);
- 	cpu_buffer->reader_page->real_end = 0;
- 
-  spin:
-@@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		cpu_buffer->read_bytes += rb_page_size(reader);
- 
- 		/* swap the pages */
--		rb_init_page(bpage);
-+//		rb_init_page(bpage);
- 		bpage = reader->page;
- 		reader->page = data_page->data;
- 		local_set(&reader->write, 0);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index cf51c30b137f..2a060c62d686 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6066,6 +6066,7 @@ struct trace_mod_entry {
- };
- 
- struct trace_scratch {
-+	int			clock_id;
- 	unsigned long		text_addr;
- 	unsigned long		nr_entries;
- 	struct trace_mod_entry	entries[];
-@@ -6181,6 +6182,7 @@ static void update_last_data(struct trace_array *tr)
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
- 
-+		tscratch->clock_id = tr->clock_id;
- 		memset(tscratch->entries, 0,
- 		       flex_array_size(tscratch, entries, tscratch->nr_entries));
- 		tscratch->nr_entries = 0;
-@@ -7403,6 +7405,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
- 	tracing_reset_online_cpus(&tr->max_buffer);
- #endif
- 
-+	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
-+		struct trace_scratch *tscratch = tr->scratch;
++	platform_set_drvdata(pdev, data);
 +
-+		tscratch->clock_id = i;
-+	}
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.ops = &eswin_reset_ops;
++	data->rcdev.of_node = pdev->dev.of_node;
++	data->rcdev.of_reset_n_cells = 2;
++	data->rcdev.of_xlate = eswin_reset_of_xlate;
++	data->rcdev.dev = &pdev->dev;
++	data->dev = &pdev->dev;
++	idr_init(&data->idr);
 +
- 	mutex_unlock(&trace_types_lock);
- 
- 	return 0;
-@@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
- 
- 	/* Scan modules to make text delta for modules. */
- 	module_for_each_mod(make_mod_delta, tr);
++	/*clear boot flag so u84 and scpu could be reseted by software*/
++	regmap_set_bits(data->regmap, SYSCRG_CLEAR_BOOT_INFO_OFFSET,
++			CLEAR_BOOT_FLAG_BIT);
++	msleep(50);
++	platform_set_drvdata(pdev, data);
 +
-+	/* Set trace_clock as the same of the previous boot. */
-+	if (tscratch->clock_id != tr->clock_id) {
-+		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
-+			pr_info("the previous trace_clock info is not valid.");
-+			goto reset;
-+		}
-+	}
- 	return;
-  reset:
- 	/* Invalid trace modules */
++	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
++}
++
++static void eswin_reset_remove(struct platform_device *pdev)
++{
++	struct eswin_reset_data *data = platform_get_drvdata(pdev);
++
++	idr_destroy(&data->idr);
++}
++
++static struct platform_driver eswin_reset_driver = {
++	.probe	= eswin_reset_probe,
++	.remove = eswin_reset_remove,
++	.driver = {
++		.name		= "eswin-reset",
++		.of_match_table	= eswin_reset_dt_ids,
++	},
++};
++
++static int __init eswin_reset_init(void)
++{
++	return platform_driver_register(&eswin_reset_driver);
++}
++arch_initcall(eswin_reset_init);
+-- 
+2.17.1
+
