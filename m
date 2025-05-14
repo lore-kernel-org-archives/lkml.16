@@ -1,151 +1,221 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A802AD2F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10A11FBE87
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747264575; cv=none; b=eRnDOEkkXPHxDddsx44P9bIXqnKoogPkPxhc7OD+EaTl4ltkSYDfxEXj5emJNIMXTj1y139iEvacxGOpiPvJYdMFZRep5O3qwbBQwzBiXOVuckdyhvEqYkFL/5a07Pz5MvTWBoYbgcEMgFZlusfZGpTvncNofGgf8QclLM8lPDc=
+	t=1747264780; cv=none; b=NsHRJ+92KqDs/o4OEB9aVVRabEnPhbWk5mjs8hao6Ez7NbZYbln2TIY8rh9+lLsgK8ZnLlcs7BJIzhiuJuoCo+gecXi3cTwSIMD5U6+JlsYf5sz9ExVlP1rVvhwbqwpzFzLvFYwZD37m3rBKDDX3XCAIFV9BbK1uxRvbwYqJZrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747264575; c=relaxed/simple;
-	bh=hGjmz+ytr/ERYvZjZjC0xo/IsJHm8WfohuB4torFsQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SnFlLKDLP81vKajCtxkU3T3ZfmlWY9xYOZxfY+khRyjUUCqR9diJftwcq64jVu6Dlxc4WRvUhjtY4Xjbp5pR5Xr30QeahgKzSTyeYAtnfaF5kVizzE4q3NXz6JZ5T5J8Yie4ODAR/aHQY16iJVbaHN/uH7FJT4az+NX+pyCkUF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lg2A8T0o; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1747264780; c=relaxed/simple;
+	bh=cNlVPYYnsQtqPjb2poMyKHUJYGJOPlxbA0jgyo6XDX8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SwcKCGuPwcmrQqXYZZPdF+cNnlTUy8xEye/00RsO6LxisPNqEoovXx8i46FVM+ItdCdMQTHnKnHvVKZS1VH3qET1uyfKj47CNwKAXpNmEAgLO9HcUeiUkP2y1weyNDoW1KibBu1LkuovUqt1dqpmu52j9Iy3n5TaWMDtbA6eVpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T3DNf+WR; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lg2A8T0o"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22c33677183so3041115ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T3DNf+WR"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30df7c1287fso284864a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747264573; x=1747869373; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tK7PATuM2XObswlBZPi3Fy1sqLR6TUymd28Xe7Esnew=;
-        b=Lg2A8T0o8bzWpDN8ErKYMbssWda/KfoeeeLrF1cf2PYrdvjbwyarbpJtaevAQ6xwJC
-         63wbismnblBfWVZNEt/IrDBe8C5wDdeLuVV8a1zbuLQJkWwoz4Ta0Fm8nx05DYlgJd5O
-         bLmKXVb02tEQ2e5FX1wqAmTs1BrpZYpXsBCk/KOgoxZGbnzMI2gp3eVySWeirRNwQYX4
-         mWnHGF9Rol8az2bKMTHzVJWLdQsPQBxbuhK9MsjIs+x1GYlmyLq5+l16mYXIeVVKrLFa
-         YUZVjP3v4BO0UGiBclCuHn+ICVX+frmlLeJ1bsJKDPFpz5EgG95qxjVVCu5K3fdTLI2A
-         uwtQ==
+        d=google.com; s=20230601; t=1747264778; x=1747869578; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=inzL0y+cbDFsyp/vzuyCwIe54VBn5YH91v/9/7m3MOg=;
+        b=T3DNf+WRt5TCmAdcQ2vjHChChL+rwFC4OyuabZZXH3xG2eihOqqE0q38YK5UjrXvfK
+         g7hSKkygwQRYlIGAsjaZhpH+GYVdZWL/ZAwRBHy6pQmVlG3igiYuBe49tVZ2KkRCyW7+
+         qMtGr+/PDlHcMVzt9pM1eBFCS01/nhzQ0oDKgB5JNKWrmLb+Pp1ASpGnBd7xjxZVVpos
+         Vw/kSahbU+LOc5hM9k9OB3lJoNIfyl5uO+n1sys9BjncipwhV0SHKay2xB/zO/4froQ9
+         2L6rWGMwqhhip/wuTW2gUrx+wlO1CxqFLgUTMFRsG9Jktw1I21fKx1IN1q99p7WjexN1
+         aM3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747264573; x=1747869373;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tK7PATuM2XObswlBZPi3Fy1sqLR6TUymd28Xe7Esnew=;
-        b=O7ilFk0glb0MZtl8AMcvR8/aDlg5o6pjOdyuvpNzP66HF1UlthKLXBmJ7F5xLMC6M5
-         saQ/mItbzmUGNkye++1rgWmWmSbScfeqUz8341663EGwV99pHKnmE3/tPE9oTc3zGDUa
-         spQjHyhMGXakLyYQQZ/blt0Vg5muDJxjKINtEKlQkbhaQ2Y84UosXT1fuMaS0rZRYVsn
-         tHwxlKrm7OklX1J6jTDh07lNFeWf9yJrrkDcgqz0Xt5laMDCYPjGl3FlZS+MNrWkCB8C
-         M+I+ByVkZcqdIexr7R7q3AMwdiqFeltrO6g6Lrv2H8+ss9DFde6MhKrtIRjkAw1JpiNj
-         YEaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIVLnnlOTSj/7ycwiwEjN/OeOtZk7J9mpuM+Und6UyrbNh5YTkjVULMDgY2UHTuPOlmsrNNgjjpMRhhMc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9cFchdpYDGYRVvoxZBXrDAQh2FjkZ6b0BUUNFsVTkBV4cKhew
-	YPep+aB3IzvXF0rMzhSK3ocWQVJT1rdylQ7VhiKW3uXFEk6tADdXNgPV2Qp+aw==
-X-Gm-Gg: ASbGncteM9KwXh9CcdIuwPea0PFp8inuoHXiBDPBRu4pA038Mtn5Hni1YO8u3WMgAMW
-	VjPKhPQKvibtBTIHsL2qjERCSzzhC8OgbBnCSe9F4ZF4V4cxjKukCh6SGVIXP9JdtfYb0r3Ztr0
-	nF5KLCh9g3fukdks3NzCpzmjfqHZeKuC8fwC+B5WMzsqCvwTitr0cKjGPlDSf3RBjsE5UvUgi6F
-	HGTNnN7jiPmOEM6cIzNEni9EL7RRHiQsQpqgTNIZVvVBKO48ClTusgRBd1E95p0gZy2kvJbf3ha
-	myW9g8N3C3kn5X2AJ9lyCM+/K3NBNxTinhVfUymIz/+RWyAPZ6DKk9uuzf0o3f440hE4CAvM4Gg
-	2qCZN9iUuLew=
-X-Google-Smtp-Source: AGHT+IEsrSGIrRf/QU64B6v5yFPwGzw3MqjHwN5SfWQd/PEk8gnJbbur5kF7m6fDr23b53A05xfT6w==
-X-Received: by 2002:a17:903:228a:b0:223:60ce:2451 with SMTP id d9443c01a7336-231b5e26004mr5188935ad.15.1747264572659;
-        Wed, 14 May 2025 16:16:12 -0700 (PDT)
-Received: from google.com (33.5.83.34.bc.googleusercontent.com. [34.83.5.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271a67sm104886415ad.114.2025.05.14.16.16.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 16:16:12 -0700 (PDT)
-Date: Wed, 14 May 2025 16:16:07 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: John Stultz <jstultz@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan <saravanak@google.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Donghoon Yu <hoony.yu@samsung.com>,
-	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Youngmin Nam <youngmin.nam@samsung.com>,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-Message-ID: <aCUkN301jWUkXJ3_@google.com>
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com>
- <Z_6OZHYfC0bC5289@mai.linaro.org>
- <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com>
- <aCNctHq6K7uqFF05@mai.linaro.org>
+        d=1e100.net; s=20230601; t=1747264778; x=1747869578;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=inzL0y+cbDFsyp/vzuyCwIe54VBn5YH91v/9/7m3MOg=;
+        b=Q4khEdv6gacFjc2QnkHFkwBFsqt1XbSr5wsupJ0sFKDXcGK8W6V6Y7Dy/f2GP9gFdp
+         f7WfXcp+Q8vBytxsTp8oaUNUw2KdC8rSNkRt+w6/EqnITeH2M7IrYl+tPU+92yXlaCn9
+         X691BLsPRGLAWjZ1m40g94bkueLt1NPgR10KWsdSZL4dJ8miGMeuet6Ab20G7tZvFqqv
+         e4zNicx50xe5TQSYcRP1ebzyGoz5Y4zoxF9T5P1oF81OUE/VxzrJJl2c+Ay94wxmUmDk
+         Ke2cQl+6w82nDX933eVS3Fh7MK9LpJEMFIdC//KMa9EflUqkyOEcUI0ablOH9uhEAeJB
+         Ki9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ7UdFYz9Q3KWiD1+Vk1+5z3jd0yWnnVrEXlvxkHPATrOCLQ4AW8ncv3wCE9Dh04gN0Hgw2Icz4eMZFFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv90NG0XDuh5RjVPy3rqjsd2HV5R3weXS2/FjdWr0NxQ5XLI8B
+	TtE6jJ5qcMLTtkfHQH4Wn4R/BDqRxZlUBRY8OREMqJdyihQ96TguX9cHs8K/tRbTEEnENnH9S/i
+	nwg==
+X-Google-Smtp-Source: AGHT+IGCQ/sRX+3EYNcQDJbTeqc67xnpDL/NXZuajHJEmLyvMC58UdBnQowu6qn5H0+QlUsXIshKg9Pma6c=
+X-Received: from pjn12.prod.google.com ([2002:a17:90b:570c:b0:2ef:8055:93d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17d2:b0:30a:214c:24c9
+ with SMTP id 98e67ed59e1d1-30e2e5d612dmr7495408a91.3.1747264778031; Wed, 14
+ May 2025 16:19:38 -0700 (PDT)
+Date: Wed, 14 May 2025 16:19:36 -0700
+In-Reply-To: <20250425111352.GF1166@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCNctHq6K7uqFF05@mai.linaro.org>
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-6-mizhang@google.com>
+ <20250425111352.GF1166@noisy.programming.kicks-ass.net>
+Message-ID: <aCUlCApeDM9Uy4a0@google.com>
+Subject: Re: [PATCH v4 05/38] perf: Add generic exclude_guest support
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 05/13/2025, Daniel Lezcano wrote:
-> On Tue, Apr 15, 2025 at 05:48:41PM -0700, John Stultz wrote:
-> > On Tue, Apr 15, 2025 at 9:50 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> > > On Wed, Apr 02, 2025 at 04:33:57PM -0700, Will McVicker wrote:
-> > > > From: Donghoon Yu <hoony.yu@samsung.com>
-> > > >
-> > > > On Arm64 platforms the Exynos MCT driver can be built as a module. On
-> > > > boot (and even after boot) the arch_timer is used as the clocksource and
-> > > > tick timer. Once the MCT driver is loaded, it can be used as the wakeup
-> > > > source for the arch_timer.
-> > >
-> > > From a previous thread where there is no answer:
-> > >
-> > > https://lore.kernel.org/all/c1e8abec-680c-451d-b5df-f687291aa413@linaro.org/
-> > >
-> > > I don't feel comfortable with changing the clocksource / clockevent drivers to
-> > > a module for the reasons explained in the aforementionned thread.
-> > 
-> > I wasn't CC'ed on that, but to address a few of your points:
-> > 
-> > > I have some concerns about this kind of changes:
-> > >
-> > >   * the core code may not be prepared for that, so loading / unloading
-> > > the modules with active timers may result into some issues
-> > 
-> > That's a fair concern, but permanent modules (which are loaded but not
-> > unloaded) shouldn't suffer this issue. I recognize having modules be
-> > fully unloadable is generally cleaner and preferred, but I also see
-> > the benefit of allowing permanent modules to be one-way loaded so a
-> > generic/distro kernel shared between lots of different platforms
-> > doesn't need to be bloated with drivers that aren't used everywhere.
-> > Obviously any single driver doesn't make a huge difference, but all
-> > the small drivers together does add up.
+On Fri, Apr 25, 2025, Peter Zijlstra wrote:
+> On Mon, Mar 24, 2025 at 05:30:45PM +0000, Mingwei Zhang wrote:
 > 
-> Perhaps using module_platform_driver_probe() should do the trick with
-> some scripts updated for my git hooks to check
-> module_platform_driver() is not used.
+> > @@ -6040,6 +6041,71 @@ void perf_put_mediated_pmu(void)
+> >  }
+> >  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+> >  
+> > +static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
+> > +{
+> > +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> > +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+> > +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> > +	if (cpuctx->task_ctx) {
+> > +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> > +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> > +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> > +	}
+> > +}
+> > +
+> > +/* When entering a guest, schedule out all exclude_guest events. */
+> > +void perf_guest_enter(void)
+> > +{
+> > +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> > +
+> > +	lockdep_assert_irqs_disabled();
+> > +
+> > +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> > +
+> > +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest)))
+> > +		goto unlock;
+> > +
+> > +	perf_host_exit(cpuctx);
+> > +
+> > +	__this_cpu_write(perf_in_guest, true);
+> > +
+> > +unlock:
+> > +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> > +}
+> > +EXPORT_SYMBOL_GPL(perf_guest_enter);
+> > +
+> > +static inline void perf_host_enter(struct perf_cpu_context *cpuctx)
+> > +{
+> > +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> > +	if (cpuctx->task_ctx)
+> > +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> > +
+> > +	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
+> > +
+> > +	if (cpuctx->task_ctx)
+> > +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> > +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> > +}
+> > +
+> > +void perf_guest_exit(void)
+> > +{
+> > +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> > +
+> > +	lockdep_assert_irqs_disabled();
+> > +
+> > +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> > +
+> > +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+> > +		goto unlock;
+> > +
+> > +	perf_host_enter(cpuctx);
+> > +
+> > +	__this_cpu_write(perf_in_guest, false);
+> > +unlock:
+> > +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> > +}
+> > +EXPORT_SYMBOL_GPL(perf_guest_exit);
+> 
+> This naming is confusing on purpose? Pick either guest/host and stick
+> with it.
 
-Using `module_platform_driver_probe()` won't work as that still defines
-a `module_exit()` hook. If you want to automatically handle this in code, then
-the best approach is to follow what Saravana did in [1] for irqchip drivers.
-Basically by using `builtin_platform_driver(drv_name##_driver)`, you will only
-define the `module_init()` hook when the driver is compiled as a module which
-ensures you always get a permanent module.
++1.  I also think the inner perf_host_{enter,exit}() helpers are superflous.
+These flows
 
-[1] https://lore.kernel.org/linux-arm-kernel/20200718000637.3632841-1-saravanak@google.com/
+After a bit of hacking, and with a few spoilers, this is what I ended up with
+(not anywhere near fully tested).  I like following KVM's kvm_xxx_{load,put}()
+nomenclature to tie everything together, so I went with "guest" instead of "host"
+even though the majority of work being down is to shedule out/in host context.
 
-Regards,
-Will
+/* When loading a guest's mediated PMU, schedule out all exclude_guest events. */
+void perf_load_guest_context(unsigned long data)
+{
+	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
 
-[...]
+	lockdep_assert_irqs_disabled();
+
+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+
+	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
+		goto unlock;
+
+	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+	if (cpuctx->task_ctx) {
+		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+	}
+
+	arch_perf_load_guest_context(data);
+
+	__this_cpu_write(guest_ctx_loaded, true);
+
+unlock:
+	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+}
+EXPORT_SYMBOL_GPL(perf_load_guest_context);
+
+void perf_put_guest_context(void)
+{
+	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+
+	lockdep_assert_irqs_disabled();
+
+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+
+	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
+		goto unlock;
+
+	arch_perf_put_guest_context();
+
+	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+	if (cpuctx->task_ctx)
+		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+
+	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
+
+	if (cpuctx->task_ctx)
+		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+
+	__this_cpu_write(guest_ctx_loaded, false);
+unlock:
+	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+}
+EXPORT_SYMBOL_GPL(perf_put_guest_context);
