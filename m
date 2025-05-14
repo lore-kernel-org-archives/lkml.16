@@ -1,139 +1,125 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED13A19CC39;
-	Wed, 14 May 2025 22:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F811323D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747261306; cv=none; b=TnPMFOD2axlnsBR/NqNiVHoBAGqYoOdmoM9kuqMrskrZtR+XtKe23UqKbhht0NDlGUqPrB0qEqPF7u3gJ9tzBaBoU2L47OFtIm8IiQ6wxv4IUylA3g9pUKw3trRH/zWAF6AjRIFaIxs4K4WP+EA91I1Tu08GGmo7xCnqOjZVrQY=
+	t=1747261408; cv=none; b=ayjsAs86ef5G2f+i8yJZq6OQC7YQ81cVdA7/XL0E6kw/ymr9Y756Qiwb290T1vxYEvWLWAoCRDl3HtSLC2vv6aZzo9kYLfds5FPu/9j8bVsnUoRnhVfq+pZmtrTedco/iA9UOErD8Pl3j+/+FPGF05UzAWW4ByTM6ldqfNixpSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747261306; c=relaxed/simple;
-	bh=3j2GE9l3wGOmBQOG6S4c822rAlthmoDqPjq3LP9n+Os=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iGDq5C0rBYvN8O/nzatVcV1CkefhPapSxFtDbRaStkzSaEkAHFTeOyKEYIOnPpYilks3nexyPIR9rDJK0KGn1Lf7OM664HEeGdS/LgCLxmamimt9y59uAH59hHozynh6rJMeV8A8FwQYDoopdScg/bboRVhja3lgQRjGqxSqI98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYinFPHV; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747261408; c=relaxed/simple;
+	bh=RwTNmCvNmlnw9Kgd5xGr7CHXS0izABe2RbMN9CFXMS8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iFOYvUWHYD5YSRwBw6pYLEW7vK9MOjUFPUIOme/tdmaHZOysWhI8GAKK6pg6KmqugXHbGOdb0up10J2ZGcTduX6wYKman2BXhnmNZNwyetBaSerVnHx0eT+vxLVr5M4e7VL3G08/TfQZ4yvvSUPPH1PwTYGQvwNhuColRrHg1Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FwniQTTN; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYinFPHV"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22fa48f7cb2so3331655ad.1;
-        Wed, 14 May 2025 15:21:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FwniQTTN"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5fce6c7598bso4077a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747261304; x=1747866104; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oHfsdh270VAzzwWx6ys6xW+UP8Uvsw1TOQddVAOSGTA=;
-        b=LYinFPHVyv7vO4TG02vFyWVg2AF1mdrhvILYi98AM/FXOAxCh61NwCd32MQPOr0N3Y
-         nAVA17iYWdC1J/D1IJ722NcNKWzmqJ+vEp2Vk3A+v9iV7nkNtphntCxdFPUmejqDpkG8
-         aOjjSgLsoI+aLbq86wsEGMbBJwzMDmgZkclKF+93EwoSx47xQrLu1RxgLQMciaSu8gO3
-         9Y0gIGhiX4aNSBDP7SkdTtlh5UYU7XnZPWMrdyu1NjxaiZ0o+qC0ORIODN70BVIrwHdr
-         p6MYLPv28HFck/eLPhHRT/VqKc4fdmEjEfLoT8JyEqvaHUivIDjbl2aBUs1UuoCxFLmN
-         qqow==
+        d=google.com; s=20230601; t=1747261405; x=1747866205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RwTNmCvNmlnw9Kgd5xGr7CHXS0izABe2RbMN9CFXMS8=;
+        b=FwniQTTNxiGxg9jBgkUyfHCL0ypZMyho/IgHGGK79kk71Wn47gMm0Ozi2K/D7Cd9f2
+         r07Sssy6rWd8knUoeas8IMFZfwsq4Hr1As+P8NJmV6Ca23uE3hi0vzT2KsBXF69lJH8I
+         7cTTiLmHBbQ2PGIaKL4E4tU2IkD32zEivIor0r0Az875cj/1YhBoqDkldG1TgwP01Owz
+         AtgF6S0D7cUAE907Z9zRbSAD7QVgTpLJTSiq8A8bklxq6ROafP9vXwcL89XaeZ3KBRn6
+         BE49fqUDvCNw0rwJqcJkdYk9YINLKMpnTBoVngL41nupnKB7aLamR6LwpxFnXJw1jTDh
+         VGyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747261304; x=1747866104;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oHfsdh270VAzzwWx6ys6xW+UP8Uvsw1TOQddVAOSGTA=;
-        b=CDlLIII81kvWzuwKR5scGU5JxHgQxhwrmehctERbol4j6PttDpxHTEA7OB/j9fL4PF
-         NoqHExs99tNLsBWPYZiwYpVTAODERSu3uFLNNy4eIgwXtb3FXF0LJxa1UYjpkNavzA/T
-         uQvXsPt4i8dwCcCkv2RHeq0TEHuwVsWxJk1Xj9TDJ5TcOkhSE/S4QwZ6mMpyqLnVzFMu
-         g3H+lJfktHlgzWzKUVzJywN/ybb9GLT/6aB5ODn+S6ik7rRPhhsYbl61zb3rWfQb0+nm
-         sbm9eEE2KdwSQA+Rgn1eCj6JsI2DpcfW6IAPVYnbZXfbctqxWziBMzer6aPSu0nC4kjV
-         YySA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdjCilhpOPSSgYKNEXPAL1tcmWGSXOlzOfg63JmRixZVf84jk+2dmuq7EAs2THBZe9/g+k71oiJ4DNRIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxBCmg3/TSCAt22udIZazu1oA1XOQvUPwakq55YWTm9LWS0Acd
-	o0xVyPbziP3qEPt8I87eY1H2pkauzf9MdTRTPRmFcPUqowyUY15xCy6eZpLcwfOTyg==
-X-Gm-Gg: ASbGncvBzv2cfx9VGMdV7tNCSygsm2mE1bq8WEwspBWFL6UAE9hqc9UvP138BwFN/P3
-	r3FoNgmsGyntqq8G3/5dsajqS/yaFHRgpAfnZjW50d6KaqR6uqUSTqqBNrsRI2tMW6z0tIuWjE4
-	qdbAg7YDV0/aChHUM5ifiEiMpm33B/r0900xxMeKiESJePVRLN09Pj0UpDRqHPGgFREjArucyUL
-	ADxgtsILiOtqqIZJZa786dQuwBaOFcRTbqbk/Qb8T4Xj+ejkBSqiW61Jd3xNum+32QFLVo+v03Q
-	bFncDJ1ZPS+OcsBeUA6PXp7M7xX428zeDoPAh6Z24IStGZDYYUq7HUwgzYJyRryVKMy7dqTN3KN
-	x
-X-Google-Smtp-Source: AGHT+IFttTpWsrfV8CTbyFUfOClZsN4VaZgrm7diOQZyUoMIOzoXxLxvFc2uEuwrls7nKlhcN5t+2w==
-X-Received: by 2002:a17:903:b0e:b0:224:76f:9e4a with SMTP id d9443c01a7336-23198119c40mr70961585ad.14.1747261304097;
-        Wed, 14 May 2025 15:21:44 -0700 (PDT)
-Received: from rahul-mintos.ban-spse ([165.204.156.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828ffbdsm103836525ad.196.2025.05.14.15.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 15:21:43 -0700 (PDT)
-From: Rahul Kumar <rk0006818@gmail.com>
-To: skhan@linuxfoundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	rk0006818@gmail.com
-Subject: [PATCH] selftests: timers: Fix grammar and clarify comments in nanosleep.c
-Date: Thu, 15 May 2025 03:51:12 +0530
-Message-ID: <20250514222112.396705-1-rk0006818@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1747261405; x=1747866205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RwTNmCvNmlnw9Kgd5xGr7CHXS0izABe2RbMN9CFXMS8=;
+        b=GZojebgov+rM/KPOmu7Z7e8aNR++r7tltWri36OL3ZkY0vN8HJuJq39SQ1EdKJa1CY
+         WqDMBNtKGA46h/54LOsITbCciw0UalMScLHoSzk3X0vf9MtF7ucvM9YQ6J/PT6KZ17Xe
+         bUqoaB4MTG8ItCZEGWX+kmnkk81dxWCtlmlkqVEvYm9Tj/pkEYxiWojmodXv9TekkFWs
+         nqqs6uecxaZBtCrrq+1HMnnSUD0CPLMoqxu8KHP+HsGTQ2ZS4O2ChL++xvEEuAW+N9WZ
+         ZAn7MerLJafzq+drkJJ41T99o3CD//l0juLCzW7iPT4gpTMKnsxBYhW2CpN6IgiITTIK
+         CJEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU87Ie/nSqFUfRN/nJFvS+3LgFMc5VdSVMHoffAMzFZcbNaJPtTr49CXd96nDCIKMjmtemSW6OEw9tAWbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5TYUuNpT1OXzXdIJ4XavCjnRH1vrahCJ5vlK1XFSbDpmLHc+K
+	MjAvqoSBHbQzlY3j4Y55o8q1gD/M1or3mG36eratmIMIIPi9F2QwhzI2PQ56keWsF/kd+a3I3yf
+	xZSGkW4LsVVZsb0BkYXDyGR4/NpdJ80XO6lN2vN1M
+X-Gm-Gg: ASbGncsBuuY7OCT+vr57AYQpDTfHmbu0m7QS/cT6i3gyIPYh8Ob1ZyzsgKllWunqfZ0
+	O+4xn+B/d6szPMjdocKbImcJmFA2ozJks5XBt958C/nrv+8yia87a/rHPcZuXBo8wpbZN3TRb0B
+	mVMOkvFkf9D1nQfk0W4UYvqfJXK4lNnQCO5Qk+rlWkBwlJ4UPOZorLCbNOPs3wGMo=
+X-Google-Smtp-Source: AGHT+IEcioS8IOc5TbxfNIfZ5cXjNsWw1XzQAseXhhNfXHRz90x7fLQmbiM1kAMbf0vqYJtrywQKEHAKfnDImrrK8/w=
+X-Received: by 2002:a50:c049:0:b0:5fd:28:c3f6 with SMTP id 4fb4d7f45d1cf-5ffc9dbe5b8mr28640a12.4.1747261405302;
+ Wed, 14 May 2025 15:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com> <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
+ <aCRdNJ2oq-REBotd@pollux> <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
+ <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com> <aCUVuXO_jORqlxwr@pollux>
+In-Reply-To: <aCUVuXO_jORqlxwr@pollux>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Wed, 14 May 2025 15:23:13 -0700
+X-Gm-Features: AX0GCFvRzMPG5-jMuSJFNadqt7uft43BjTBD2x5kHBJ84bqUjANdigcojvCVTLY
+Message-ID: <CAGSQo02nP8MT8q-_gQwjUGFNSyiW2AKOQ3V4yy9jofDzjc0SpA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Improved the clarity and grammar in the header comment of nanosleep.c
-for better readability and consistency with kernel documentation style.
+On Wed, May 14, 2025 at 3:14=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Wed, May 14, 2025 at 03:08:21PM -0700, Matthew Maurer wrote:
+> > On Wed, May 14, 2025 at 2:54=E2=80=AFAM Benno Lossin <lossin@kernel.org=
+> wrote:
+> > > Another problem that only affects complicated debugfs structures is t=
+hat
+> > > you would have to store all subdirs & files somewhere. If the structu=
+re
+> > > is dynamic and changes over the lifetime of the driver, then you'll n=
+eed
+> > > a `Vec` or store the dirs in `Arc` or similar, leading to extra
+> > > allocations.
+> >
+> > Yep, this is part of why I tried to follow the "Build it, then hold
+> > the needed handles to keep it alive" approach rather than keeping the
+> > entire structure around.
+>
+> I already replied to that [1]:
+>
+> "If it changes dynamically then it's pretty likely that we do not only wa=
+nt to
+> add entries dynamically, but also remove them, which implies that we need=
+ to be
+> able to drop them. So, I don't think that's a problem."
+>
+> It is much more of a problem if we can't remove certain entries anymore w=
+ithout
+> removing all of them.
+>
+> [1] https://lore.kernel.org/rust-for-linux/aCR9cD7OcSefeaUm@pollux/
 
-Signed-off-by: Rahul Kumar <rk0006818@gmail.com>
----
- tools/testing/selftests/timers/nanosleep.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+I think the main question here is this - is it OK to land an API that
+does static-layout or add-only-layout first, and we figure out how to
+do dynamic modification later, or do you think we need to solve the
+self-referential lifetimes issue in the first edition of DebugFS
+support?
 
-diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
-index 252c6308c569..84adf8a4ab5d 100644
---- a/tools/testing/selftests/timers/nanosleep.c
-+++ b/tools/testing/selftests/timers/nanosleep.c
-@@ -1,12 +1,12 @@
--/* Make sure timers don't return early
-- *              by: john stultz (johnstul@us.ibm.com)
-- *		    John Stultz (john.stultz@linaro.org)
-- *              (C) Copyright IBM 2012
-- *              (C) Copyright Linaro 2013 2015
-- *              Licensed under the GPLv2
-+ /*
-+ * Ensure timers do not return early.
-+ * Author: John Stultz (john.stultz@linaro.org)
-+ * Copyright (C) IBM 2012
-+ * Copyright (C) Linaro 2013, 2015
-+ * Licensed under the GPLv2
-  *
-- *  To build:
-- *	$ gcc nanosleep.c -o nanosleep -lrt
-+ * To build:
-+ *     $ gcc nanosleep.c -o nanosleep -lrt
-  *
-  *   This program is free software: you can redistribute it and/or modify
-  *   it under the terms of the GNU General Public License as published by
-@@ -61,7 +61,7 @@ char *clockstring(int clockid)
- 	case CLOCK_TAI:
- 		return "CLOCK_TAI";
- 	};
--	return "UNKNOWN_CLOCKID";
-+	return "UNKNOWN_CLOCKID"; // Could not identify clockid
- }
- 
- /* returns 1 if a <= b, 0 otherwise */
-@@ -90,7 +90,7 @@ int nanosleep_test(int clockid, long long ns)
- {
- 	struct timespec now, target, rel;
- 
--	/* First check abs time */
-+	/* First, check absolute time using clock_nanosleep with TIMER_ABSTIME */
- 	if (clock_gettime(clockid, &now))
- 		return UNSUPPORTED;
- 	target = timespec_add(now, ns);
-@@ -102,7 +102,7 @@ int nanosleep_test(int clockid, long long ns)
- 	if (!in_order(target, now))
- 		return -1;
- 
--	/* Second check reltime */
-+	/* Then, test relative time sleep */
- 	clock_gettime(clockid, &now);
- 	rel.tv_sec = 0;
- 	rel.tv_nsec = 0;
--- 
-2.43.0
-
+If you do think we need support for dynamic layout modification in the
+first patchset, do you think we want to allow static layouts that
+forget things, or mandate that we always manage all of the handles for
+the user?
