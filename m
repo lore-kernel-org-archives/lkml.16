@@ -1,138 +1,212 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-outp-cfd-1.case.edu (mta-outp-cfd-1.case.edu [129.22.103.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADEA27510A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227324; cv=none; b=o5BEdBuOCu6jJJPk3Y00PXk2AICsiqAojzZkIuUcSK8Ks7X3HEJ0tMB/No54zYYwgOsde6HNrKOSrMZGxvDDg15iZD2gT636puyLGUg/SGBXYxWDP1KFlrAoxaCpDnXQc9WppbmB1EURpDlxa5SHUy2JpfCgqAQPE+XEjx0eAGQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227324; c=relaxed/simple;
-	bh=T5PpBd950yZbcaPaQpt7z7UBm/RSooDGs8zCDWqEuNo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fvRSAL67OLBqW5v1rPfV0khy3sodBj4eo5I6rR7stztw+awEKRqXZpNGhsqIG/WO/bj/1pBMTqh2a6dlADMqZH+Pktfa2kBRcplSwFJmYqjQ8D13iY9f9HuhzecjfR1d/V5lS+cI6NuDe4DrQzebopZRdDK9nI5IMw7Y5jnMnOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oyFZlwyP; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A3D1F4639
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=129.22.103.35
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747227404; cv=pass; b=UuSAADd8xfDtAJ5f8uI0C49UhebiArR4P1iBSAc1koYH4UrN/N+b7hdoGGVIdMyprqHi4/X3VSuk8wuNLeIx4qIcgZN2+JyAzOWgLCDJqPZWv3/3p3Yl+ztT5QnHf7pOuDaY6yyKda3CArylXlscQVrQumTQ+RAUlgsoVj8nJBQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747227404; c=relaxed/simple;
+	bh=H23KFw/6YBiqbHRBAplGutuAWNOTYRKqsZ37/mbJohk=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eTxXDNMWv0GKy22i93Ku087R348o3lz2pZg5uVDlitxfB1FJMED/U3B9Nnz/XXXBS/vn2qwX4EQlC1csmVQV2vBiiVCS5wcD+5LxA+0Kj2z2+3GXGCcHeUZmd4yJ1F2nmLx+KPpwVu2VHJiooZqwgPrWD+32X2JmCh6NKOCCJR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu; spf=pass smtp.mailfrom=case.edu; dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b=SYoT6DTf; arc=pass smtp.client-ip=129.22.103.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=case.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oyFZlwyP"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a96aca21eso6916866a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:55:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b="SYoT6DTf"
+Authentication-Results: mta-outp-cfd-1;
+       spf=pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.70 as permitted sender) smtp.mailfrom=case.edu ;
+       dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case;
+       dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu;
+ARC-Filter: OpenARC Filter v1.0.0 mta-outp-cfd-1.case.edu 5924A11E0
+Authentication-Results: mta-outp-cfd-1; arc=none smtp.remote-ip=129.22.103.228
+ARC-Seal: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta; t=1747226945; cv=none;
+	b=OhXCyLAA/qstckm5Mm9NOAqUGLmZ2pkesbhsgFg1DOESTZQGMygtU5eh/LvWKkgHvogzZdDEElIW3AufkZBLpRnaNUAaleOD/dZiJMO/7TvQ6mI6O1QLlENtgh4r6Eq1J5CMxWkMRc4/hClbNBn/+mNV/U86mBsh4Cg3N2ocq/EHAM82cjB1dKXMivieuBaKMaPS7VCrodYP30kw2k5jzC1+0VBttn6Oa7ryf/gYK1ICAHRq0rUk1Q14T5ZwNJLEGXGsMwwKx3jcgz7OFP2vd69osTPgf5Aa2bHstzpFx6Xx1DOQma6ZQiB64hTo7FgZWt/RssuIF7fQzVzaD4VDTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta;
+	t=1747226945; c=relaxed/simple;
+	bh=H23KFw/6YBiqbHRBAplGutuAWNOTYRKqsZ37/mbJohk=;
+	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:From:to:
+	 subject:message-id:date:from:mime-version:dkim-signature; b=T+7kloZzX5qYpvbP3z7u4usP/vFHptKceL1bgPC91dT28XSO1vmNxSxJx20ksenwey8MD6+qJ0gmPUDv79MixNR72PsmlcsIdMR4u5HwXXbKNbeqRPFpEP2f960se6seEZ6NbrYE/dPsbd4h2gnFXgS+i2jfPgGhZD37EaYZ3DoCGpFVJfjgU5WY4QfEKnD1KWEMIKiDdDW5T61Y/tra0l5I06zH+/e7dLZ0lSyHtI+2OeMXtGTAt5ImJtA2j9a4sGf0cXHMQXjYlUVwc2FNqnoZcLGmEY3AZy54y2FI9GIdQ9LltFNXWcYLdX/PEaizNFfU1KcpKYC4fN0m58GqEw==
+ARC-Authentication-Results: i=1; mta-outp-cfd-1; spf=pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.70 as permitted sender) smtp.mailfrom=case.edu; dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case; dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu
+Received-SPF: Pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.70 as permitted sender) client-ip=209.85.219.70
+Received: from mpv-out-ksl-1.case.edu (mpv-out-ksl-1.case.edu [129.22.103.228])
+	by mta-outp-cfd-1.case.edu (Postfix) with ESMTPS id 5924A11E0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:49:05 -0400 (EDT)
+Received: from mpv-local-ksl-1.case.edu (EHLO mpv-local-ksl-1.case.edu) ([129.22.103.235])
+	by mpv-out-ksl-1.case.edu (MOS 4.4.8-GA FastPath queued)
+	with ESMTP id DCW45850;
+	Wed, 14 May 2025 08:49:05 -0400 (EDT)
+Received: from mail-qv1-f70.google.com (EHLO mail-qv1-f70.google.com) ([209.85.219.70])
+	by mpv-local-ksl-1.case.edu (MOS 4.4.8-GA FastPath queued)
+	with ESMTP id EKB30042;
+	Wed, 14 May 2025 08:49:04 -0400 (EDT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f53f748240so163258016d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747227322; x=1747832122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=76k7pW5NZ1udEa5NXUL313ttjbsC0PLRtgt+LZ6uYAM=;
-        b=oyFZlwyPU+iCuGI3Ql/gVGyvK5qd0gig7JrA5Kx/ZautjK2nWPmpK6DwW7jhY+Osge
-         CVC60stkBQ25z7CaAK0xpCrVvpBKcHGPuwlrkkTyxjg0+ziQbSWMEFCjEgRD8sqRQWxR
-         9bUOsL8czpr85CxErNMa2Iin6jon3B8qspLuYa/FHWonX8+9GkhjAvSaXxnZBcT+kUms
-         RmfXJ60VMRtJSpPmRM12e0l92ZbzmLD2o5pDFyegCaBn/9u/QaDncNvoBoVcFpuNWtkd
-         /AalTzMrxUqp7DOPbqSrnx4T7qmLq+YHEf1Rb0DozqG0Utar8DyLjVMZwsQOlWLPyAb5
-         fOcA==
+        d=case.edu; s=g-case; t=1747226944; x=1747831744; darn=vger.kernel.org;
+        h=in-reply-to:organization:autocrypt:from:references:to
+         :content-language:subject:cc:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=H23KFw/6YBiqbHRBAplGutuAWNOTYRKqsZ37/mbJohk=;
+        b=SYoT6DTfysavWjIBb5ibSZYNCh1E8E9G8hIFAkGPvK45Vyxr09CV33+fleEX2vw5/z
+         Q2j+yVXpv4HK65hVWtOEyNrKZO2c54TeOk3zeiAhn8hbn3/vZ7li9lQm1nsptDWqgA3w
+         DBGhMN3gRyhHV6Lxe7wqulqgBYuENlLMd7JGanvyTh5uloVqQK/gjcLsSmWLoToTvEs6
+         P1Frn+rYK+yqI1RIeoAB+aUOrljczehSwLPvSZmycR8urRKTHO3FITe9bEvWssAlVdxu
+         jzIODkD90fd5k7vtA4ph7N437XiIRLXfAnKCdvb9jdyYWyFJsL1HVrnMM7yxc+8d3aIA
+         rR8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747227322; x=1747832122;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=76k7pW5NZ1udEa5NXUL313ttjbsC0PLRtgt+LZ6uYAM=;
-        b=D0KymvEdBSx0NpJzsXF8/hoxOwMl+lgO2BnwVNeEhUYL11ONbqIf8VwMKNrvdoyHer
-         lPDNWPBQFfUk84OFY72qzTOjEWiksRUHo/ObBn9CAqQ99ynpUi4JyvlPimCfKiijI29U
-         nBaDaJm73+XJXMhoB0+fH0ybIAm0EaTO/PO6AhQQ0ZHiU/iunGrlNOTo8asT/jmiiitk
-         +a36XYtH80MPGQQa57yatfq3UQLb0R0U0oRfjfG5UdJBdY36WWHkhKSRnktHi14FVpGR
-         cwexo+VyHnMz+f/XEoXam2Ggud063+toW39vcuFu270xat0967SrTdPbI5ONuYjfa5bB
-         9qMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe8HSHHtSbmq4dB+VzhNL4iKOAWqJB/wRaCs3Y3wlx0eJEWPJDgCC2BMOTQmG4LGe7MxTE95BwYSz4VMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxND6onEzBqOgMd1I53QdWvEwZCgjjWQ5GaGT+O0xDEiW2tOsuh
-	kGJ4tzIAhSZdAW3bqM4CHrAnIoSG3UsA93zqej4RwVS/L2yxn8qq848K1k7TYkpyWUUUvYi1PJ1
-	/mA==
-X-Google-Smtp-Source: AGHT+IFgT95GBLG9hEKtLuWwErvNNL8LufLyA++dQg8RnFH/PcKmjBUD945AxPlGLzg/yAtEYCrcuPF5pXY=
-X-Received: from pjbso17.prod.google.com ([2002:a17:90b:1f91:b0:301:2679:9d9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc1:b0:30c:523e:89e3
- with SMTP id 98e67ed59e1d1-30e2e5ba2a8mr5425349a91.11.1747227321794; Wed, 14
- May 2025 05:55:21 -0700 (PDT)
-Date: Wed, 14 May 2025 05:55:19 -0700
-In-Reply-To: <6dd4eee79fec75a47493251b87c74595826f97bc.camel@amd.com>
+        d=1e100.net; s=20230601; t=1747226944; x=1747831744;
+        h=in-reply-to:organization:autocrypt:from:references:to
+         :content-language:subject:cc:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H23KFw/6YBiqbHRBAplGutuAWNOTYRKqsZ37/mbJohk=;
+        b=RwwQAnE1Iqg0rksdW2VtQmL/K2JICU0sNyj9+BVZryKzhoYCp93yH71YsDWonNhgYl
+         WymhOYfVfgIhw14HOspZUqJPCYlRXgyMx9c1ToTECWBVk1isD3Gv4nzmiYZ+HhPFs2qK
+         VbPibKs5DdijAFJIqQ1JK0wZbwciNVyWPHy44Yasw6M3ZAND3hbA56RVjLOrubkGzYAC
+         IJLaf0qNnvcVmcCLPlShFhETYixvSgBAbAJ9VZp/aDLnCzovFP7IznuxFYP1rfcYRqqq
+         qCkEX9vaZFmnEAKUCdUJzkMVOLfmUJ9eHlVFhK6NgzjnWHBoe2xWaZRXMnRvLXHVSwQH
+         oLHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpmK2zrn9jVhnYdF20Z/0yBfjT5CR/BM+GK1EaBiZXcd5T820uOLQnlqtAv7+ClMZ1Fx+UJBtEQ3WqMio=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjyoeJJnso5Em+ZoRaA04IdPl/G90aQQBVDZ3g3InMkLn154Rv
+	T9fQsdH/pwuhupmxyJZpI21pTQYOjQ24BGjRxH406pwBDbwAADCGsQX+ZVvF9R2odQn2DtVsatI
+	Zx60mimnMW65CK0lbHeoxt/XVaZQkbRPSGFo+h2yA0ZBnNrcorN3CgTjQ7gmIvYs=
+X-Gm-Gg: ASbGncscVnSC2+eCMVe+au6s8Q8XtGMi0mo8zR7YWzOSCZgajitm+4uR5UEPvzygzf8
+	oPrLL+JFex9ZL9BXWNBIC+R1+j+ZH/8xR3PhiO3XH9f89i2v6xL7Y2prxM5HnzLwTysfRxaj7fn
+	uQx/5S0YomaYFJrj6cwUWBTNHiUEMxjMKkAsXOuvfHcnQu3qSY6N35+a7FuCacTc7MTn3p4x6cd
+	70Rj7HLOdldMJFYuy2HEaP48gbIPEERE/PgQDWpc2jS5ZSiq0KPOpe6DZbZTya8B9Hw+x45UUWP
+	GXsdjg6BkTgGo/M3QAdimMwtATMbIm4GRRjulFoJxp9dg/32Je8KujJTOci2jHDHY7hNoVgl0w=
+	=
+X-Received: by 2002:a05:6214:21ad:b0:6f4:c602:806e with SMTP id 6a1803df08f44-6f896e3fec2mr50868666d6.13.1747226943604;
+        Wed, 14 May 2025 05:49:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEEtwlQ14DtF6O3cZcsGZzgP2A9K/NUkdK5N8BNr+YLd1S14ZNfvBQa1BEnvTAza0IpLemntQ==
+X-Received: by 2002:a05:6214:21ad:b0:6f4:c602:806e with SMTP id 6a1803df08f44-6f896e3fec2mr50868286d6.13.1747226943210;
+        Wed, 14 May 2025 05:49:03 -0700 (PDT)
+Received: from ?IPV6:2603:6010:dc00:1e:f5e5:3614:5780:f83d? ([2603:6010:dc00:1e:f5e5:3614:5780:f83d])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a52382sm80386186d6.94.2025.05.14.05.49.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 05:49:02 -0700 (PDT)
+Message-ID: <63dd526c-20cb-4493-8ac5-e87a44c74419@case.edu>
+Date: Wed, 14 May 2025 08:49:00 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-7-jon@nutanix.com>
- <aCI8pGJbn3l99kq8@google.com> <49556BAF-9244-4FE5-9BA9-846F2959ABD1@nutanix.com>
- <aCNI72KuMLfWb9F2@google.com> <6dd4eee79fec75a47493251b87c74595826f97bc.camel@amd.com>
-Message-ID: <aCSSptnxW7EBEzSQ@google.com>
-Subject: Re: [RFC PATCH 06/18] KVM: VMX: Wire up Intel MBEC enable/disable logic
-From: Sean Christopherson <seanjc@google.com>
-To: Amit Shah <Amit.Shah@amd.com>
-Cc: "jon@nutanix.com" <jon@nutanix.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: chet.ramey@case.edu
+Cc: chet.ramey@case.edu, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Etienne Champetier <champetier.etienne@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Jeffrey Altman
+ <jaltman@auristor.com>,
+        Steve French <sfrench@samba.org>, linux-afs@lists.infradead.org,
+        openafs-devel@openafs.org, linux-cifs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a
+ sticky dir
+Content-Language: en-US
+To: Christian Brauner <brauner@kernel.org>,
+        David Howells <dhowells@redhat.com>
+References: <433928.1745944651@warthog.procyon.org.uk>
+ <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
+From: Chet Ramey <chet.ramey@case.edu>
+Autocrypt: addr=chet.ramey@case.edu; keydata=
+ xsDiBEEOsGwRBACFa0A1oa71HSZLWxAx0svXzhOZNQZOzqHmSuGOG92jIpQpr8DpvgRh40Yp
+ AwdcXb8QG1J5yGAKeevNE1zCFaA725vGSdHUyypHouV0xoWwukYO6qlyyX+2BZU+okBUqoWQ
+ koWxiYaCSfzB2Ln7pmdys1fJhcgBKf3VjWCjd2XJTwCgoFJOwyBFJdugjfwjSoRSwDOIMf0D
+ /iQKqlWhIO1LGpMrGX0il0/x4zj0NAcSwAk7LaPZbN4UPjn5pqGEHBlf1+xDDQCkAoZ/VqES
+ GZragl4VqJfxBr29Ag0UDvNbUbXoxQsARdero1M8GiAIRc50hj7HXFoERwenbNDJL86GPLAQ
+ OTGOCa4W2o29nFfFjQrsrrYHzVtyA/9oyKvTeEMJ7NA3VJdWcmn7gOu0FxEmSNhSoV1T4vP2
+ 1Wf7f5niCCRKQLNyUy0wEApQi4tSysdz+AbgAc0b/bHYVzIf2uO2lIEZQNNt+3g2bmXgloWm
+ W5fsm/di50Gm1l1Na63d3RZ00SeFQos6WEwLUHEB0yp6KXluXLLIZitEJM0wQ2hldCBSYW1l
+ eSAoQ2FzZSBzdGFuZGFyZCkgPGNoZXQucmFtZXlAY2FzZS5lZHU+wl8EExECAB8FAkPi19EC
+ GwMHCwkIBwMCAQMVAgMDFgIBAh4BAheAAAoJELtYafBk6nSrelkAn31Gsuib7GcCZHbv5L5t
+ VKYR9LklAJ4hzUHKA49Z0QXR+qCb80osIcmPSc7ATQRBDrBvEAQAkK6TAOKBEM+EC4j6V/7o
+ /riVZqcgU5cid2qG9TXdwNtD9a3kvA/ObZBO93sX59wc6Bnwo4VJxsOmMlpGrAjJsxNwg3QH
+ akEtf8LXRbVpj5xStdmBdQZUhIQyalo/2/TZq5OijtddUQcL5cs70hTv/FpT3wUvr2Xr8rjF
+ 41IFEz8AAwcD/A0CZEGlzIrT5WCBnl6xBog/8vKiUCbarByat3d1mL6DbizvKNXQRTC9E/vE
+ dENAWCQCjr75Bu55xT8n3SXGtWdDC5xmZ/P3OBYORP8yl8H8I1FIosWOFirbIeYdZPq8SPD1
+ HL+EXo9zSiHVrrZRJ19ooCKKbSdXHFCY+aJG+0KZwkkEGBECAAkFAkEOsG8CGwwACgkQu1hp
+ 8GTqdKvjcACfZlkVCDwaz/NTO9cy3t69oWpVPNwAnRwe0qk/WL/gfhH346xh5B3HFbFN
+Organization: ITS, Case Western Reserve University
+In-Reply-To: <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------85Jz5FfALLMAEBt32OGUtd5w"
+X-Mirapoint-Received-SPF: 209.85.219.70 mail-qv1-f70.google.com chet.ramey@case.edu 5 none
+X-Mirapoint-Received-SPF: 129.22.103.235 mpv-local-ksl-1.case.edu chet.ramey@case.edu 5 none
+X-Junkmail-Status: score=10/90, host=mpv-out-ksl-1.case.edu
+X-Junkmail-Signature-Raw: score=unknown,
+	refid=str=0001.0A002126.6824911A.0035,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0,
+	ip=0.0.0.0,
+	so=2016-11-06 16:00:04,
+	dmn=2013-03-21 17:37:32,
+	mode=single engine
+X-Junkmail-IWF: false
 
-On Wed, May 14, 2025, Amit Shah wrote:
-> On Tue, 2025-05-13 at 06:28 -0700, Sean Christopherson wrote:
-> > On Tue, May 13, 2025, Jon Kohler wrote:
-> > > > On May 12, 2025, at 2:23=E2=80=AFPM, Sean Christopherson
-> > > > This is wrong and unnecessary.=C2=A0 As mentioned early, the input =
-that
-> > > > matters is vmcs12.=C2=A0 This flag should *never* be set for vmcs01=
-.
-> > >=20
-> > > I=E2=80=99ll page this back in, but I=E2=80=99m like 75% sure it didn=
-=E2=80=99t work when I
-> > > did it that way.
-> >=20
-> > Then you had other bugs.=C2=A0 The control is per-VMCS and thus needs t=
-o
-> > be emulated
-> > as such.=C2=A0 Definitely holler if you get stuck, there's no need to
-> > develop this in
-> > complete isolation.
->=20
-> Looking at this from the AMD GMET POV, here's how I think support for
-> this feature for a Windows guest would be implemented:
->=20
-> * Do not enable the GMET feature in vmcb01.  Only the Windows guest (L1
-> guest) sets this bit for its own guest (L2 guest).  KVM (L0) should see
-> the bit set in vmcb02 (and vmcb12).  OTOH, pass on the CPUID bit to the
-> L1 guest.
->=20
-> * KVM needs to propagate the #NPF to Windows (instead of handling
-> anything itself -- ie no shadow page table adjustments or walks
-> needed).  Windows spawns an L2 guest that causes the #NPF, and Windows
-> is the one that needs to consume that fault.
->=20
-> * KVM needs to differentiate an #NPF exit due to GMET or non-GMET
-> condition -- check the CPL and U/S bits from the exit, and the NX bit
-> from the PTE that faulted.  If due to GMET, propagate it to the guest.
-> If not, continue handling it
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------85Jz5FfALLMAEBt32OGUtd5w
+Content-Type: multipart/mixed; boundary="------------pZEuYk6TQBKl8aeUUzadh7Ih";
+ protected-headers="v1"
+From: Chet Ramey <chet.ramey@case.edu>
+Reply-To: chet.ramey@case.edu
+To: Christian Brauner <brauner@kernel.org>,
+ David Howells <dhowells@redhat.com>
+Cc: chet.ramey@case.edu, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Etienne Champetier <champetier.etienne@gmail.com>,
+ Marc Dionne <marc.dionne@auristor.com>, Jeffrey Altman
+ <jaltman@auristor.com>, Steve French <sfrench@samba.org>,
+ linux-afs@lists.infradead.org, openafs-devel@openafs.org,
+ linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <63dd526c-20cb-4493-8ac5-e87a44c74419@case.edu>
+Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a
+ sticky dir
+References: <433928.1745944651@warthog.procyon.org.uk>
+ <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
+In-Reply-To: <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
 
-Yes, but no.  KVM shouldn't need to do anything special here other than tea=
-ching
-update_permission_bitmask() to understand the GMET fault case.  Ditto for M=
-BEC.
-I'd type something up, but I would quickly encounter -ENOCOFFE :-)
+--------------pZEuYk6TQBKl8aeUUzadh7Ih
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-With the correct mmu->permissions[], permission_fault() will naturally dete=
-ct
-that a #NPF (or EPT Violation) from L2 due to a GMET/MBEC violation is a fa=
-ult
-in the nNPT/nEPT domain and route the exit to L1.
+T24gNS81LzI1IDk6MTQgQU0sIENocmlzdGlhbiBCcmF1bmVyIHdyb3RlOg0KDQo+PiBUaGlz
+IHdvcmtzIGFyb3VuZCB0aGUga2VybmVsIG5vdCBiZWluZyBhYmxlIHRvIHZhbGlkbHkgY2hl
+Y2sgdGhlDQo+PiBjdXJyZW50X2ZzdWlkKCkgYWdhaW5zdCBpX3VpZCBvbiB0aGUgZmlsZSBv
+ciB0aGUgZGlyZWN0b3J5IGJlY2F1c2UgdGhlDQo+PiB1aWRzcGFjZXMgb2YgdGhlIHN5c3Rl
+bSBhbmQgb2YgQUZTIG1heSB3ZWxsIGJlIGRpc2pvaW50LiAgVGhlIHByb2JsZW0gbGllcw0K
+Pj4gd2l0aCB0aGUgdWlkIGNoZWNrcyBpbiBtYXlfY3JlYXRlX2luX3N0aWNreSgpLg0KPj4N
+Cj4+IEhvd2V2ZXIsIHRoZSBiYXNoIHdvcmsgYXJvdW5kIGlzIGdvaW5nIHRvIGJlIHJlbW92
+ZWQ6DQo+IA0KPiBXaHkgaXMgaXQgcmVtb3ZlZD8gVGhhdCdzIGEgdmVyeSBzdHJhbmdlIGNv
+bW1lbnQ6DQoNCkkgdGhpbmsgdGhpcyBxdWVzdGlvbiBoYXMgYmVlbiBhZGVxdWF0ZWx5IGFu
+c3dlcmVkLg0KDQoNCj4gU28gdGhlbiBqdXN0IGRvbid0IHJlbW92ZSBpdC4gSSBkb24ndCBz
+ZWUgYSByZWFzb24gZm9yIHVzIHRvIHdvcmthcm91bmQNCj4gdXNlcnNwYWNlIGNyZWF0aW5n
+IGEgYnVnIGZvciBpdHNlbGYgYW5kIGZvcmNpbmcgdXMgdG8gYWRkIHR3byBuZXcgaW5vZGUN
+Cj4gb3BlcmF0aW9ucyB0byB3b3JrIGFyb3VuZCBpdC4NCg0KSSB0aGluayB0aGlzIHNob3dz
+IHRoYXQgdXNlcnNwYWNlIGFwcGxpY2F0aW9ucyBzaG91bGQgYmUgdmVyeSBjYXV0aW91cw0K
+YWJvdXQgcHV0dGluZyBpbiB3b3JrYXJvdW5kcyBmb3Iga2VybmVsIGJ1Z3MsIGFuZCBtYWtp
+bmcgdGhlbSBhcyBsaW1pdGVkDQppbiBzY29wZSBhcyBwb3NzaWJsZS4NCg0KDQotLSANCmBg
+VGhlIGx5ZiBzbyBzaG9ydCwgdGhlIGNyYWZ0IHNvIGxvbmcgdG8gbGVybmUuJycgLSBDaGF1
+Y2VyDQoJCSBgYEFycyBsb25nYSwgdml0YSBicmV2aXMnJyAtIEhpcHBvY3JhdGVzDQpDaGV0
+IFJhbWV5LCBVVGVjaCwgQ1dSVSAgICBjaGV0QGNhc2UuZWR1ICAgIGh0dHA6Ly90aXN3d3cu
+Y3dydS5lZHUvfmNoZXQvDQo=
 
-> (btw KVM MMU API question -- from the #NPF, I have the GPA of the L2
-> guest.  How to go from that guest GPA to look up the NX bit for that
-> page?  I skimmed and there doesn't seem to be an existing API for it -
-> so is walking the tables the only solution?)
+--------------pZEuYk6TQBKl8aeUUzadh7Ih--
 
-As above, KVM doesn't manually look up individual bits while handling fault=
-s.
-The walk of the guest page tables (L1's NPT/EPT for this scenario) performe=
-d by
-FNAME(walk_addr_generic) will gather the effective permissions in walker->p=
-te_access,
-and check for a permission_fault() after the walk is completed.
+--------------85Jz5FfALLMAEBt32OGUtd5w
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wmMEABEIACMWIQR8ATX7CIqvbGbGULm7WGnwZOp0qwUCaCSRPAUDAAAAAAAKCRC7WGnwZOp0q/cd
+AJ0YC9WUqxzUhmZxvvlNd+VRUfB+aACeK1+oHx4Wpo53yFc78F/fFnTazM8=
+=JIZz
+-----END PGP SIGNATURE-----
+
+--------------85Jz5FfALLMAEBt32OGUtd5w--
