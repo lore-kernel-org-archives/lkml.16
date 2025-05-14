@@ -1,104 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE2E13AA2A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2291DE4EC;
+	Wed, 14 May 2025 22:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747260967; cv=none; b=SyU/nlhwKIP6kOnAPA5nQ5AEYyclRso8C/EhHgU56m7pSRIGCd3ojmmwYbia3Q9hJzskhjF23p/yj97f7XOSkixGLfY0H0fyBC3l9RqYnRoarrey7bUtEhQ7bMrNdQiT0NJRMMMqCngp/+PzgcnGpAXyFUoz8jQzdtsQdSQ57cM=
+	t=1747260986; cv=none; b=KENE+3vnfppD0V9Y0lGl3kTciKeTJGsnDg+PVdO0f52qcHnVBGeF4wOpVCF/wOO/prols2q4QTlfrqa0dn/OJUviD/YMP4UzdrMT8R7qJTBW+aDDkyW6uiQImlKcmMIBvViSzjbjHCOzgw87+/YMB5St1jo7GYIAF54nuHq9kj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747260967; c=relaxed/simple;
-	bh=UO2MmGTydoe751te+oHea4aOogLDHSfHT6+QxXXrueo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oDI3xPBmzUXWFQj9HmWg3+qaJ9+FqggbTq1z2xmcehZ6aEBb9QlJp+cNRkuejgStDV2/4SvneoWccRq8hJQUfEZSlLUA6lvF+eFuslxcaI2t6hx3amqMHBZFTWFxAWP0oK/Pst5FHwkrzxK1KdqCgpozHpGjlnuv4hYN/AwG4do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XZp2s/AM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747260986; c=relaxed/simple;
+	bh=bSKkn3nM3v0HO325xfei4C6jwzh4vhH/n43cB4LwQQo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XFDRRMpsc7AlcrXNPQHwyOfjlR7O99Seq6KrmpQQV3pkRHVlGXagUq3xGA4od1BE588fB/1JnNyQJSF5xFkW0LRcVS93yR+u83feHtdGwzwxFHi/qllwfmwV10jR3h+iNMIcbXmphuxysS8EuKlj39fqxWDIKi03moNuNNN9W9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=EMeWv17R; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XZp2s/AM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB69C4CEE3;
-	Wed, 14 May 2025 22:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747260966;
-	bh=UO2MmGTydoe751te+oHea4aOogLDHSfHT6+QxXXrueo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XZp2s/AM1dGvqIHQ9mI/4kp0dK/+5pFWKwx+r4/6Lm0qxkKlxXkuHrnj8DYS1GWdJ
-	 3qvmXmZumk7URPl5bg5wRhSxOjOuQi4DTN0+eVHW8SWNgXCL7b6zW45JzU2DNTJ0TF
-	 nm0EvuAiq4hGqfBLzSbGyNTbKo+Wy4fvhthoPjXo=
-Date: Wed, 14 May 2025 15:16:05 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jared Kangas <jkangas@redhat.com>
-Cc: willy@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] radix tree: fix kmemleak false positive in
- radix_tree_shrink()
-Message-Id: <20250514151605.9a07943954737f52e2895b05@linux-foundation.org>
-In-Reply-To: <20250514180137.363929-1-jkangas@redhat.com>
-References: <20250514180137.363929-1-jkangas@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="EMeWv17R"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOd-001k89-MD; Thu, 15 May 2025 00:16:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=2FzBNg4m8mbkJzKlkeWZy30zedQWDfDv4O7u47x1mWw=; b=EMeWv17RUFXQ718dcHVOn3tTay
+	AaR8mGj4xF+pQHfScZpqlD/wKBjZLbJTiu7jpZwgOCIPmgTrykyf/dPHrQLlu55oIGPFkVTqGgH4O
+	KgRE8JP1iW8gcjjMHOfhZv/0XWEwDU4iJIKO4f8Mo8lkB1w+FFqsVIs3Jx4oJqaZSq717PSx+cRml
+	Xh+rRERVqOJUt7TYhUqUtGSKQ+Cfl6SrZf6udppJl+RTjpmPtBozQyX5VU2pSZVIYyd/804M6Eavi
+	u5zi+frG/qBcI4PUwmL63a+5S2IilIy872Yvh8ixQXV6e1f3oIj8CHpJAmsA203w1WvKdaLhZHOlb
+	c0Sf/6xg==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOc-00089Q-9r; Thu, 15 May 2025 00:16:15 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uFKOJ-005bJ3-U9; Thu, 15 May 2025 00:15:56 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Thu, 15 May 2025 00:15:24 +0200
+Subject: [PATCH bpf-next v3 1/8] selftests/bpf: Support af_unix SOCK_DGRAM
+ socket pair creation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftests-sockmap-redir-v3-1-a1ea723f7e7e@rbox.co>
+References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-On Wed, 14 May 2025 11:01:37 -0700 Jared Kangas <jkangas@redhat.com> wrote:
+Handle af_unix in init_addr_loopback(). For pair creation, bind() the peer
+socket to make SOCK_DGRAM connect() happy.
 
-> Kmemleak periodically produces a false positive report that resembles
-> the following:
-> 
-> unreferenced object 0xffff00000db613b8 (size 576):
->   comm "systemd", pid 1, jiffies 4294987015
->   hex dump (first 32 bytes):
->     00 22 01 00 00 00 00 00 28 1c d5 c5 00 00 ff ff  ."......(.......
->     10 e4 6c c0 00 00 ff ff d0 13 b6 0d 00 00 ff ff  ..l.............
->   backtrace (crc 520d6e1c):
->     kmemleak_alloc+0xb4/0xc4
->     kmem_cache_alloc+0x288/0x2b0
->     radix_tree_node_alloc.constprop.0+0x214/0x364
->     idr_get_free+0x3d0/0x690
->     idr_alloc_u32+0x120/0x280
->     idr_alloc_cyclic+0xe8/0x1b4
->     __kernfs_new_node+0x118/0x5a0
->     kernfs_create_dir_ns+0x8c/0x1fc
->     cgroup_create+0x1cc/0x8a0
->     cgroup_mkdir+0x13c/0x90c
->     kernfs_iop_mkdir+0x108/0x184
->     vfs_mkdir+0x3c8/0x5f0
->     do_mkdirat+0x218/0x290
->     __arm64_sys_mkdirat+0xe0/0x140
->     invoke_syscall.constprop.0+0x74/0x1e4
->     do_el0_svc+0xd0/0x1dc
-> 
-> This is a transient leak that can be traced to radix_tree_shrink(): when
-> root->xa_head is set, kmemleak may have already started traversing the
-> radix tree. If this has happened, but kmemleak fails to scan the new
-> xa_head before it moves, kmemleak will see it as a leak until the radix
-> tree is scanned again.
-> 
-> Mark the new xa_head as a transient leak to prevent this false positive
-> report.
-> 
-> ...
->
-> --- a/lib/radix-tree.c
-> +++ b/lib/radix-tree.c
-> @@ -509,6 +509,14 @@ static inline bool radix_tree_shrink(struct radix_tree_root *root)
->  		if (is_idr(root) && !tag_get(node, IDR_FREE, 0))
->  			root_tag_clear(root, IDR_FREE);
->  
-> +		/*
-> +		 * Kmemleak might report a false positive if it traverses the
-> +		 * tree while we're shrinking it, since the reference moves
-> +		 * from node->slots[0] to root->xa_head.
-> +		 */
-> +		if (radix_tree_is_internal_node(child))
-> +			kmemleak_transient_leak(entry_to_node(child));
-> +
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ .../selftests/bpf/prog_tests/socket_helpers.h      | 29 ++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-There is only one other caller of kmemleak_transient_leak().  Makes me
-think that perhaps a more fundamental fix is needed.
+diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
+index 1bdfb79ef009b16e329a80eab8598ed97dae9119..e505c2f2595a24be9dd5b534deef4793f9a02f77 100644
+--- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
++++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
+@@ -3,6 +3,7 @@
+ #ifndef __SOCKET_HELPERS__
+ #define __SOCKET_HELPERS__
+ 
++#include <sys/un.h>
+ #include <linux/vm_sockets.h>
+ 
+ /* include/linux/net.h */
+@@ -169,6 +170,15 @@ static inline void init_addr_loopback6(struct sockaddr_storage *ss,
+ 	*len = sizeof(*addr6);
+ }
+ 
++static inline void init_addr_loopback_unix(struct sockaddr_storage *ss,
++					   socklen_t *len)
++{
++	struct sockaddr_un *addr = memset(ss, 0, sizeof(*ss));
++
++	addr->sun_family = AF_UNIX;
++	*len = sizeof(sa_family_t);
++}
++
+ static inline void init_addr_loopback_vsock(struct sockaddr_storage *ss,
+ 					    socklen_t *len)
+ {
+@@ -190,6 +200,9 @@ static inline void init_addr_loopback(int family, struct sockaddr_storage *ss,
+ 	case AF_INET6:
+ 		init_addr_loopback6(ss, len);
+ 		return;
++	case AF_UNIX:
++		init_addr_loopback_unix(ss, len);
++		return;
+ 	case AF_VSOCK:
+ 		init_addr_loopback_vsock(ss, len);
+ 		return;
+@@ -315,21 +328,27 @@ static inline int create_pair(int family, int sotype, int *p0, int *p1)
+ {
+ 	__close_fd int s, c = -1, p = -1;
+ 	struct sockaddr_storage addr;
+-	socklen_t len = sizeof(addr);
++	socklen_t len;
+ 	int err;
+ 
+ 	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return s;
+ 
+-	err = xgetsockname(s, sockaddr(&addr), &len);
+-	if (err)
+-		return err;
+-
+ 	c = xsocket(family, sotype, 0);
+ 	if (c < 0)
+ 		return c;
+ 
++	init_addr_loopback(family, &addr, &len);
++	err = xbind(c, sockaddr(&addr), len);
++	if (err)
++		return err;
++
++	len = sizeof(addr);
++	err = xgetsockname(s, sockaddr(&addr), &len);
++	if (err)
++		return err;
++
+ 	err = connect(c, sockaddr(&addr), len);
+ 	if (err) {
+ 		if (errno != EINPROGRESS) {
 
-So I'll queue it for testing for now, but I won't proceed further until
-some further examination has occured.  Thanks.
+-- 
+2.49.0
 
