@@ -1,232 +1,81 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D579022576A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB3622759B;
+	Wed, 14 May 2025 09:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214413; cv=none; b=HMv/1fvY8fFKrPRFXNx6GcgQUcQwdG6BbR/qxnJitAAZKekMGM7ssUChJ+coGrq+ZTVtn8ZW256pfdm7BbQOwdqwlpP03U0Vi6Le4LAecliTMuMRy+c4T/K0xAzoeOoPKmvXekDz8xA16Wp1oy6iOWFT0oGMty/UTSRlhgvH3AM=
+	t=1747214416; cv=none; b=k5NLS+yAj1LY4ycGpiz5K+vK6StfqMUZ584kYA+6EXcsHo3AHpwiN4hjKQ65IjKx4/DKAghaKnwl2rJbavFuW6d+g2+DCpjiJ1QgI30nwbMxR7quN4bR2rt35ZISlGvYoQFJLSosJhZJyjPMjd0aYfiFXnedlXY1Q/fAhQUCvD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214413; c=relaxed/simple;
-	bh=GOqpiypNLRNqJr91PCu1R/abzdDuvB/uI9eqkTVFA1w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rPhu+/6e91mQSm7WFR8Jc16rr6oY+SNawQnaKtx+GcXRwYccbopcLA7glxiUmE7EU1mPj3We+sErtC4EjouYleT9ZG5lPeQdPrff1Ckr8cx3tRGog92eNJtefBZsPNYn8xiWJW+nse9uWHnYtHPUm42A6Br8Ub3DJp6GBuXfGtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hI30ecEi; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747214416; c=relaxed/simple;
+	bh=Te/mzdTJQVi3tOLsA4uKcCRYE3xSnphzXRz0GtFpJg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LeJJHrncWv3VhIsC7EToyi/tWplQW43Nr9IiFdZbAXLkNMCArKwQzUi2M6MCUwUrRq0/D0w2uytPlHzPdW3Ax86YnjBk077CfaraTXNi1vQ02imot4AjDg2ySnlBIL8/FT0Ef515fga1G78gu1zA+q7B0+nNSLmRz7wJ+2f/iDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnmRo8LQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hI30ecEi"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so8395184a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747214410; x=1747819210; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wIefgDJRi7fDGuMK/trl/BjX3lPmH7RSfitXfLf6tlc=;
-        b=hI30ecEi0wUW7nrKLjF19sW3287yLeaq1RJy66+omISchomuM+WzOolTBA6iWOB+lo
-         a+jptlpgzg47/q0nHEXU8BS71dndKpfVXSv4QVGtLgtJnA22KiYAOS2YF3KQIIWUCl4i
-         i14SPCL6t9mNigFczbvyrbqWvGc0z2Q7aF2ngnASkEWWSMJAgTyXBWk7Zpz7IjFyfsn2
-         tjDaqmwGphe9lbbBYurxytJlMAENLEUne6h96V3dNpqUObo9m+yN6uHwESC5mx53aQRJ
-         zgdw4KL01IrmEHBrHt8VALdtP+moln2DH63yyonJ2+emmCZtK6Ae46+rPcQvlwKTet6o
-         cvMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747214410; x=1747819210;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wIefgDJRi7fDGuMK/trl/BjX3lPmH7RSfitXfLf6tlc=;
-        b=Y4FLOi68k7mLEdGfjRaoxgxaexTMC6MqcxLTyQYFPRVrjAjZJPgu0+SeWw4zgONoqf
-         F4vO+wPs4qNJtvSZ6A5SwX0CjnosGaGinibLGZ7AeqbnApX01/huKDQtDS4OBpXgCiU5
-         lzwkQr6CQFJS2qE/4QQz51HY7sKGWdxpUBU+x7nyglvztE4VI1uxttDgpT1NjSEgvOGQ
-         mrW4167kzZzbtZOQW6Ag/K+QWIfyXyr0ySEPtVhCcK3GM+GBaek1DFyA7hNylBGJ9//Z
-         BdCubb4zxdY0YDm9HjNkS7vSekLAeeSd0CboSLrkYf3btHyQ4PSQGQivJVJtCMBoh8rh
-         TBdg==
-X-Gm-Message-State: AOJu0Yz8znE+tj/Jz/sNw9e+yQPLhraWjfBrniO3iuNtpYExZofoXg7s
-	Jke3+w7txywFmc2jeJY1Tugo58CbRQU8WGjwZ1iKcfc1QhTWzO+J+FSzT/5M
-X-Gm-Gg: ASbGncuIvv5FNvH9dvSQkKfSuvlBfdTuZfi5/XqHVmvRL9iWfa6jtX4MR8U0/B+m+/5
-	5rzqn5J+H3NGYuYraPywr7WNdxMoJV6uQZTV/CIqh1NWYtcX6NrPPGk5dDQyVrgDPAmvl06KG0F
-	BfZ+/aubCa7zHcUa2Ej4FuTR/2T5o13UUAkWPHG+kAKxfhB1W5gAjunjrUVfzSA764k8tNrM+Sc
-	9/MEqaqbsLJLiDv9Td59nrwkWumKiKqJT6xU9npQMLBxqc8SRMphJ/q1ZmFnp/G60sdcSwVqvJq
-	HthBMOGtW3PHFoDTWiNBzL8N8DCcg4Zsvz2ajn45tk4ET2TKOOiY8+rCwhS2M284GlXsPsQtkcD
-	DlhEpDrMUJb6cyw==
-X-Google-Smtp-Source: AGHT+IE39aoSVTaXl1SfHw5lbFbwc1ayxSE5XilONEz+p7K8DBg24q1sQllFP4w8lJN56lcfedSmDw==
-X-Received: by 2002:a17:90b:560f:b0:2fa:137f:5c61 with SMTP id 98e67ed59e1d1-30e2e5b7265mr5205650a91.12.1747214410390;
-        Wed, 14 May 2025 02:20:10 -0700 (PDT)
-Received: from localhost.localdomain ([14.116.239.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e1200a686sm1735830a91.0.2025.05.14.02.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 02:20:09 -0700 (PDT)
-From: Zijiang Huang <huangzjsmile@gmail.com>
-X-Google-Original-From: Zijiang Huang <kerayhuang@tencent.com>
-To: linux-kernel@vger.kernel.org,
-	mkayaalp@linux.vnet.ibm.com
-Cc: kerayhuang <kerayhuang@tencent.com>,
-	Hao Peng <flyingpeng@tencent.com>
-Subject: [PATCH] KEYS: fix memory leaks in insert-sys-cert
-Date: Wed, 14 May 2025 17:19:56 +0800
-Message-ID: <20250514091956.1708756-1-kerayhuang@tencent.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnmRo8LQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9663C4CEEB;
+	Wed, 14 May 2025 09:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747214414;
+	bh=Te/mzdTJQVi3tOLsA4uKcCRYE3xSnphzXRz0GtFpJg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pnmRo8LQpi5IKxRxe43nTenmpXHv74afXKw2XcytrIf3leNl/Kw2xr6E7ezyc7IyF
+	 HBUmsCgO/s76h5HuI41hcfZa/035ub2L04/N4HCR3v6EEybdUsoyRzTyZoyuzGuoOM
+	 zfyVSefVKyhr4eARe6kobUD5w34+Q9L6hHWfmQ84fG4CrmpnZPB8mMDLa2qisYw88X
+	 DuCU57Qms1U7/VwcX8gtJdwh3/LBkqLbLE1J+59yCLYCwCRcFbQ3ozqC7yOlxC0261
+	 0FKrDCVcoexTAG2eRIrTGrnsu23Kj8PDC1vdETTy++c4HZ7O/IsKxVFvNnurCkXHaG
+	 TcmgAZfp1pU2w==
+Date: Wed, 14 May 2025 11:20:07 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
+	pavel@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
+	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
+	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
+Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
+ warnings
+Message-ID: <aCRgRxmO6rsR-0k3@gmail.com>
+References: <20250514062637.3287779-1-shivankg@amd.com>
+ <aCRMT0TlpFvpRGYk@gmail.com>
+ <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
 
-From: kerayhuang <kerayhuang@tencent.com>
 
-This commit addresses memory leaks by ensuring that all dynamically
-allocated resources are properly released before the program exits.
-The following changes were made:
-- Added fclose() to close the system_map file.
-- Added free() to release the cert buffer.
-- Added munmap() to unmap the vmlinux file.
+* Shivank Garg <shivankg@amd.com> wrote:
 
-These changes ensure that all resources are correctly managed and
-prevent memory leaks.
+> >> @@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+> >>  #ifdef CONFIG_X86_5LEVEL
+> >>  /**
+> >>   * p4d_set_huge - setup kernel P4D mapping
+> >> + * @p4d: Pointer to a p4d entry.
+> >> + * @addr: Virtual Address associated with p4d.
+> >> + * @prot: Protection bits to use.
+> > 
+> > How about using the same capitalization you already see in this 
+> > description?
 
-Signed-off-by: kerayhuang <kerayhuang@tencent.com>
-Reviewed-by: Hao Peng <flyingpeng@tencent.com>
----
- scripts/insert-sys-cert.c | 44 ++++++++++++++++++++++++++-------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+> Please review the revised patch with suggested changes.
 
-diff --git a/scripts/insert-sys-cert.c b/scripts/insert-sys-cert.c
-index 8902836c23424..014d6bc855d95 100644
---- a/scripts/insert-sys-cert.c
-+++ b/scripts/insert-sys-cert.c
-@@ -250,6 +250,7 @@ static char *read_file(char *file_name, int *size)
- 	}
- 	if (read(fd, buf, *size) != *size) {
- 		perror("File read failed");
-+		free(buf);
- 		close(fd);
- 		return NULL;
- 	}
-@@ -285,6 +286,7 @@ int main(int argc, char **argv)
- 	int opt;
- 	Elf_Shdr *symtab = NULL;
- 	struct sym cert_sym, lsize_sym, used_sym;
-+	int ret = EXIT_FAILURE;
- 
- 	while ((opt = getopt(argc, argv, "b:c:s:")) != -1) {
- 		switch (opt) {
-@@ -304,20 +306,20 @@ int main(int argc, char **argv)
- 
- 	if (!vmlinux_file || !cert_file) {
- 		print_usage(argv[0]);
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	cert = read_file(cert_file, &cert_size);
- 	if (!cert)
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 
- 	hdr = map_file(vmlinux_file, &vmlinux_size);
- 	if (!hdr)
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 
- 	if (vmlinux_size < sizeof(*hdr)) {
- 		err("Invalid ELF file.\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	if ((hdr->e_ident[EI_MAG0] != ELFMAG0) ||
-@@ -325,22 +327,22 @@ int main(int argc, char **argv)
- 	    (hdr->e_ident[EI_MAG2] != ELFMAG2) ||
- 	    (hdr->e_ident[EI_MAG3] != ELFMAG3)) {
- 		err("Invalid ELF magic.\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	if (hdr->e_ident[EI_CLASS] != CURRENT_ELFCLASS) {
- 		err("ELF class mismatch.\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	if (hdr->e_ident[EI_DATA] != endianness()) {
- 		err("ELF endian mismatch.\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	if (hdr->e_shoff > vmlinux_size) {
- 		err("Could not find section header.\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	symtab = get_symbol_table(hdr);
-@@ -349,13 +351,13 @@ int main(int argc, char **argv)
- 		if (!system_map_file) {
- 			err("Please provide a System.map file.\n");
- 			print_usage(argv[0]);
--			exit(EXIT_FAILURE);
-+			goto cleanup;
- 		}
- 
- 		system_map = fopen(system_map_file, "r");
- 		if (!system_map) {
- 			perror(system_map_file);
--			exit(EXIT_FAILURE);
-+			goto cleanup;
- 		}
- 		get_symbol_from_map(hdr, system_map, CERT_SYM, &cert_sym);
- 		get_symbol_from_map(hdr, system_map, USED_SYM, &used_sym);
-@@ -371,7 +373,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	if (!cert_sym.offset || !lsize_sym.offset || !used_sym.offset)
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 
- 	print_sym(hdr, &cert_sym);
- 	print_sym(hdr, &used_sym);
-@@ -382,14 +384,15 @@ int main(int argc, char **argv)
- 
- 	if (cert_sym.size < cert_size) {
- 		err("Certificate is larger than the reserved area!\n");
--		exit(EXIT_FAILURE);
-+		goto cleanup;
- 	}
- 
- 	/* If the existing cert is the same, don't overwrite */
- 	if (cert_size == *used &&
- 	    strncmp(cert_sym.content, cert, cert_size) == 0) {
- 		warn("Certificate was already inserted.\n");
--		exit(EXIT_SUCCESS);
-+		ret = EXIT_SUCCESS;
-+		goto cleanup;
- 	}
- 
- 	if (*used > 0)
-@@ -406,5 +409,18 @@ int main(int argc, char **argv)
- 						cert_sym.address);
- 	info("Used %d bytes out of %d bytes reserved.\n", *used,
- 						 cert_sym.size);
--	exit(EXIT_SUCCESS);
-+
-+	ret = EXIT_SUCCESS;
-+
-+cleanup:
-+	if (cert)
-+		free(cert);
-+
-+	if (hdr)
-+		munmap(hdr, vmlinux_size);
-+
-+	if (system_map)
-+		free(system_map);
-+
-+	return ret;
- }
--- 
-2.35.1
+I think you misunderstood: why are you using 'p4d', while a line before 
+it's 'P4D'? It's an acronym, and only used lowercase when it's a local 
+variable. 'p4d is a pointer to a p4d entry' is doubly confusing in that 
+regard ...
 
+Same for PMD/PUD etc.
+
+Thanks,
+
+	Ingo
