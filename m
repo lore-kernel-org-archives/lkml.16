@@ -1,159 +1,216 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704831DF75D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747236631; cv=none; b=cAy8RLJSjSUBC8YHhsalRTnR7FRYguwyq2Jl0DX6IvrQzOt4C0W3+F3sXhelXajHCzcwoU2hF/VQufv2YGmkBM3maoLZTaqWhJ7WIGD+rOnbiyW9Ix1hz3dk+G/NNkfE6lyNXtrlhB+bZKRBiBQ2bfYIrRA/gNWkmjbukWTa7G8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747236631; c=relaxed/simple;
-	bh=moZFEINmCupMyzsdUOqHVB3JKm+jOMrn4fBI7Ik9468=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TW2E2Ar96pTW6We8bjdaUJD4JTsoJ+JFRDknwJbFxFoLm/Vtskarf9MjyE9mTlbbcnrRYSx5VmqiPm0+1rmvER/l0tIF2J1GT5QEdaDQDj5X5LM5wS5K7hRI21mVZsrFFFsVqh1DqFCR3+U/iYSpMrBSs8TxJfrejjmHEZQVSeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zo1rjdwM; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14D186342
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747236655; cv=fail; b=Qf4FAPB+DU8poTXWKA6p8AiovROcBl6bQrbZVfuoTWb62YsHDpKdZ9fuI6MysDHmGGeQjiN/cLsOzeWxnbv2bv6JuMHGxMuzXOEPrt01RFt+6IW4JZzISixtw4OXeKubHAUDlFyM4Adb8UY64T5jL/yh7Dv2SWPpWpbcqRfqmWk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747236655; c=relaxed/simple;
+	bh=WfOhH8Oxhxjdm19p3pJ0JKuoX0vGxEO880WpUUPYWT0=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T7whMsp94ozALLjs/VvRLcRgN5iOHzIm3fEOZiDPNofRiNFrFzBqa8fUdFWC3OpSo/2iykhH3/PIMilYeJ6CBmUhvtqB9aLfNSii+ZTYDXudKQBQJZtssoU0CW6VSs93en7vFH3ItlKt/K0Xtpxn2XtLjs1m+umOks+4+oz2qvw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSPf1xZC; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zo1rjdwM"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a1d8c0966fso838209f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747236628; x=1747841428; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nycOpyBxI5sRC+H1LR7ey+jyRhRD4iCs0HcWJtxwtvU=;
-        b=zo1rjdwMWVdUfHn0DPJL2RiafHIcfHF1pyTtVUPGCApTtGkNU+K2QRtfk68+B0TgPV
-         aod01e7J8yAiBTBpAFH8dL4PYOn7KI5RstxdaEgOhACd0S/uolb+NYgLIKGCMJxoxane
-         qZFU7/Zf1yBj/xxfbzig5EpoIUyPQqrMJO5xSCUEo3qF/Y1DiBA4PdAhLU8qduMI6VJG
-         VaAIUKkiRsa8XMTRSUDwM9XDxHLQnqYgotwwZR03w0/tBW5VsYejn0pkLrgz0engiLMY
-         r4TrWT35P3tC+znhTFSVbluC83y1+5XuNA4iRsVn1LtfArZ6Kt2n6P+z8I0OvcO5Q5Vy
-         ygGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747236628; x=1747841428;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nycOpyBxI5sRC+H1LR7ey+jyRhRD4iCs0HcWJtxwtvU=;
-        b=jtnTwCPyqeb0pcTW5j42gL3VNaRFR865XPjeL+yABvXCwY+iq+8MEhu7nfnXxRVXnN
-         iyFRS8zoAg0/HtjUjV2yzAaBt717n0wqrfPHUo52fE/Pkx7omIXu6eGdab5E5WOxZIcZ
-         1gXVmrNagaSCgpQB5goHMJE7ieSWyGzeb3UFi4JO9aSweLtkSJcJo2TvLfxa56uahGHv
-         l1sULzFBXghI1do8jvvvoBIhhv+OfYTR7UV80oFnJjjc9lq+dETrgWGCSajjS+kfYd9Z
-         AKU3lfvhii7zvW4+cHNmMckiVxSUsp6lHzkS5woKYPjGfHRFodotH7lkvfNB73HQZZYM
-         W6vA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeRvkTlqaoIqDyNu4Lv0vvKBrySgpJpkWqen0By1y+UTBNXSuZukmosKtI/TgrHw84bfQbq8sAEsyxggk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPhr76bBgZjnzLKpu8cS55GZwj9ssOAhZ+bQ4lIlUFoEKYrE4R
-	fIE/46oiVlhTyvKDUpRq+nO/zNjUL1HS5EcRCrg9kNSG+U74voKKp5nfk37PGGY=
-X-Gm-Gg: ASbGncsxbp9zUpne1f/XbglIv2qBAvCk/cCT99GlbDEhaiobHsdUcNCMAX6UtjtzGHO
-	M+144Yj5mwv67PzSFvX1OVvo6nNdwZHYsFrjpfRjlpZfZhaR7jrXjhcocANHsZwlrK5I8KHNJom
-	4DwomlXt36e4J9xeK7zY408VDccwWInuwfz46RaH8tVQv/eiKXDQLrBWzR6Ki4FbFNZ/2UXCynE
-	6+Pk4meUSQrbvMbeaXj2Qfdt2Z5U86ltz+u5vaIl0u4cfL3Czr564kPoFb7R/zy8InJB2Z4fSFk
-	8d9eS4XEz3qxfWMGEmf5oYSYYjUI3sr85InzG4W5d40OIzPxX5juMdAOjxMMMsdzvPuiAbjkLwG
-	zUPNpnsPpKARM9m4k9qredFo=
-X-Google-Smtp-Source: AGHT+IHTYDs/TaBgsdW3hxCoxJZWvcRCJr5SkxDS89aSiJtpbn9D4/TYDukFeKcnbKmAmLbDJRJzOg==
-X-Received: by 2002:a05:6000:2486:b0:3a0:92d9:da4 with SMTP id ffacd0b85a97d-3a340d159e1mr7054344f8f.6.1747236627686;
-        Wed, 14 May 2025 08:30:27 -0700 (PDT)
-Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c599sm20435689f8f.94.2025.05.14.08.30.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 08:30:26 -0700 (PDT)
-Message-ID: <650c336b-a698-42f5-ad59-7dcdf24667f4@linaro.org>
-Date: Wed, 14 May 2025 17:30:22 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSPf1xZC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747236654; x=1778772654;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=WfOhH8Oxhxjdm19p3pJ0JKuoX0vGxEO880WpUUPYWT0=;
+  b=CSPf1xZChy2K5RHiqHIuJeLbQXwJv4Rw+oVexYZmiwKU9TZcXN6m6n+P
+   zI2Z6STRrdN+JOH6KcJupk7g939YHpW0XvWatDk0WCf00+o4tWnxHkowY
+   CMgvsyzsz5td+sk4583KKPyynBwFxr7yVWgpy5PCmm7E0wuzWiDZb9Jf+
+   iLpZMpiVILTaMECUzNqKOZZATmaUj5d5iyfxK/bF3FwKPeAf8gE4rER1i
+   t6dgVYjqAR7051n3Sa/UYKc0FZUaiMOPLY8t93xFmirrniPx2vNAxdt9T
+   6f54Xo0cVRS24MSYSgVuoPy1u3N3osctRtdX3Xt7GmGO9MlWaK78SDYO+
+   Q==;
+X-CSE-ConnectionGUID: 3fft18W7Sha5WZKc/vXGVw==
+X-CSE-MsgGUID: D7sES/nBSDimGnnHfao1+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="59366565"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="59366565"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:30:54 -0700
+X-CSE-ConnectionGUID: yOoAAiMuTGubcbuqiTm7GA==
+X-CSE-MsgGUID: 8BlMcyY4QX6IB69slOlidA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="138128313"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:30:52 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 14 May 2025 08:30:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 14 May 2025 08:30:47 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 14 May 2025 08:30:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ObBYJhdi928AkqBwK+3LLjf7+dR0cPkkgFthWxDmbL3f/p9SNADRwMA6wKKH5OIp/tUHmg6EM2l09d9DUTSB0xEv0BTPdSb52JqBnnhdhFqTrp1m/lMFoGF3XE/DSvvaGM6mEw/DSSy5pXp43tZa5WG81LkIKIWFWGbOH7lkPwtCkoAtbw2BGKGc5oPldaQGJjreZzTM16xS0WEsPegvG5l98NovzQzII7eScBqGzAPS/zVo+RCHFKe/CH9aNdq7XJG/tOeoQgmCqjUVgVbXH8L3HVwPX3jEhqtczGta7DfUnrx5K0UQwz59V789SQeRutTigsOsyX1fZsSLrvTRYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wyrj8z4qr7dy4z2aQbnpxvb3ZRCh08YjATJ6D1iFJgM=;
+ b=LXBjuRQvT1iX/Iu+BiLoemjS2BZltF3AJAlT9GXf030Vi+5Iun02Hg79KAQLghKsF994UD9YuDSZQmG7avR+PsrAkMMcxr3mUr/M8np4laeQvwNlbmFJAdrqWzoci2q5gcWQazZCnjpQ2Ru3Iwrda1NRF85XUcuWC2TK9X1UpxiQ0EC+JYpXM/KawCCzKgZLCEFaEho7NGdaod9JFd9N1rSe1XnFabHhGkhCOjptEw5sC8L/C9CHXFaQCOdKK+9O/3WvBUK1m0XoLvjhPUo7YrcBgEUy0LzjCMHNIkSizQ4SoAYdQecN7G8Ls8gGMhXUJdb5UZXirWxbKGgjvLXgng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by CH3PR11MB7770.namprd11.prod.outlook.com (2603:10b6:610:129::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 15:30:29 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 15:30:29 +0000
+Message-ID: <60cf0948-f344-47b7-88b3-8cab57a52cbd@intel.com>
+Date: Wed, 14 May 2025 08:30:26 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 00/30] x86/resctrl: Move the resctrl filesystem code
+ to /fs/resctrl
+To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
+	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
+ Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
+	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
+	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
+ Donthineni <sdonthineni@nvidia.com>, <fenghuay@nvidia.com>
+References: <20250513171547.15194-1-james.morse@arm.com>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <20250513171547.15194-1-james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0298.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::33) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Add the NXP S32 Watchdog
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- alexandru-catalin.ionita@nxp.com
-References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
-Content-Language: en-US
-In-Reply-To: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CH3PR11MB7770:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e1acdec-cc66-49df-3cc6-08dd92fc41c0
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bU5iNUdUaXVzT1ZOY1ZSV2t2ZENETUxZcExjeGN6T1p1cjJuQUY2YXU4bWNz?=
+ =?utf-8?B?WWtJcEhMSDc4UnhHMmxUVDNoY016eWFDL2psKzZaa0kyQlNVbDduSVpnN20v?=
+ =?utf-8?B?SUlRaXJWVnJxejBMV29KKzRzMVkxZEVlZ3ZLRllpZTdEWUVpRDZKdVNheUVN?=
+ =?utf-8?B?VlR6eVBtV3N0Zk1XckZkM1JReDIrMTZ0QXhJNkNtanVOVk8zWm5tak1RbnUw?=
+ =?utf-8?B?ZENQcTFzY1ZYem1jTHBDR2JBM3BTczdjVlJQWjZTRXVtWUdGOEUrb1BjL1V4?=
+ =?utf-8?B?RFFod1lUMkZBU3hJeTBtaG83cVliMjZGTThrLzhNQ0pidzd2UU1GZldLY0RR?=
+ =?utf-8?B?V2NtSmpEWUlTWjkzdjZ5NTlJUWIzR1kvRWpoZFAvTXVjZUFsTUR2L09LcDd6?=
+ =?utf-8?B?cFYzODFjYnhmZkg3TFhQZy81Z2hNS3p0VmFCVFpOLzNCRWhRL0oraGQrZ1Vv?=
+ =?utf-8?B?aGVJRmZlYnBPcmRQNCtSb1hjOUNvZ0ZRQUlVMUZtTHdyWExVRll1aTBHbmx1?=
+ =?utf-8?B?d1FtTldBLzNWMWpIaFEzZFh6TlFORGgvanltcHl6R1NUazRvRGFtb1BSTnd5?=
+ =?utf-8?B?ck1lWlBGcDlBZEEwdFRpcjRlWU9aMW41UFJIa1Z0UllKQU05TG5LVkdoUGJy?=
+ =?utf-8?B?QnRuSUQ3bUhqUktSWnhVTGVMei9BWm53ZFowNVd0aDZOUGlXODE3QWdRZlJt?=
+ =?utf-8?B?bll5RkdwSktnUzZUQklXdm15YTVhV2tnaVludCtyN3pHZkhiaWpzeVM2MGh3?=
+ =?utf-8?B?K0pZbU0veGNicFg0ZjBwYjFOaDl4YlBUSjlhZzNrZG9wT2w5b1dXVmczZFhR?=
+ =?utf-8?B?ekJIWUN1b3BEVHRTUXBCUEhwbDk5QmR0bWw5S1lBWExYNVZIM2h6Yk9MVXBD?=
+ =?utf-8?B?WENjMU9Eb2pPL2VCWWlQOHN0akZtN3JDdTZYeXJNSDRYSkdTT21PWDBjSWFG?=
+ =?utf-8?B?bGRIamhNMUlzQVZKYU1sZ1NUZWNjaDlkb2UycWdiaHkzYm1heXBRWUl6VWhx?=
+ =?utf-8?B?ZnRBZW9FZUhTRDJkYU1WTVlBVmw2RDQyaWRON2FodDV1MUd4cjdma0VwTEJR?=
+ =?utf-8?B?R3RjOUQxZktPZHg2TTU1UWo5ZDVFY24xUHA2WXllZE1ZMkJCNXZ2bnloTEgw?=
+ =?utf-8?B?TjNYeVdNajBvR2J5U21RNk5sV1BPcnB5R2gwamlzVTRXUHZPT3hPNWhlcm5K?=
+ =?utf-8?B?N0ZLWVdPbUlsQ04zK1lLNUJwc0ZSUGtURW9WNmRXbms0YlJTMGNvK3A4RjVL?=
+ =?utf-8?B?K0hMTnJxNXlpNGhZcHVKVElvOGhmNm8ybXF6djJSUDl3TGZiYXpGamxIaG0y?=
+ =?utf-8?B?bUl6ZTdUWUQvMzRqdUljZTNDT3NBdjZzRElCTlgzM0J0bi84TGhvN04vMUNH?=
+ =?utf-8?B?VXprMnBCd3VzYlpOTyt4Yys5d0hNWTdiemJVMHpJRGJMY0o3c004R0o5V1Yw?=
+ =?utf-8?B?Yy8wVU04QmxEL1ZpRllnL3ZUNGRVZzF6WUpDTTJaOE5MQXJzdFlWMFRBL2N0?=
+ =?utf-8?B?bVh4aTVMRk9zcXFaNVppM2FGRWFBeDE2QzYxTWhxejVMc3I0Y2xOWXNIMW16?=
+ =?utf-8?B?Vzh4SC9sYk53WFhXSTFmRUtmLy9EcnFzUS96ZDBrdnV3RU1GNnRyWDY5dWdq?=
+ =?utf-8?B?TXJMUjRrUnZIeHEzbjlvZUliODdzQ2dVQll0dUdDcU1QRWlPUGx1VVNvNVZs?=
+ =?utf-8?B?Yml5QWU1VDlIMlN2VGU0aTlrZnozK0ZzQzFwQzI5N3hpRDd5QS8vL3ZhcWZi?=
+ =?utf-8?B?dytUcmk1cWlhejIxYzVtTkRSaFB1ZjI2b2FZN0Q0V0JMc0NpTW9qd3Q1aDNl?=
+ =?utf-8?B?aDdVZ2FXVFBjV3FvMVdTVUhUbjc1aFYxbTB1L0daYjZsWU1sN2hEU1ZhZ0Ur?=
+ =?utf-8?B?Nk0yVmNhY1hjbkhUdTEzSTh2SllqVWk1NHdlcTBqTzEzajdXb0hacVV0aGFX?=
+ =?utf-8?Q?h22jg0z3stg=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MmcwQTZpd2RPSjVVaHpLbjdLSnoybVNZekpSTnNVQTFYeHBWamgyZHFRSTF1?=
+ =?utf-8?B?QzlWRnE2aXBsTVZqOFlsK054MURWODBiWmk0aWh5VTVlOFFXWmQzWVJuNkc4?=
+ =?utf-8?B?MGJ6KytIVllyQkdjVTkzUFU2TjZ2ZmhaK25kTFVkRHZrVksrMWZWeUwrMmV4?=
+ =?utf-8?B?dmw2aVpIdjBRTlFDVGxYK3R5dXo2eis3MnJGQi8wd29PQjM5MWFDVSszbUV3?=
+ =?utf-8?B?dXZ3S1dKcnRla01FdWxUczgydVBUSGlxN3dkM2tpNWlWcXVUc3FiZXhwendS?=
+ =?utf-8?B?WFJYRXk5UnJMU1d2WTdoVEhycW9uMm84MVVVVEFCakJCYk5Gc21pS0xxZ08z?=
+ =?utf-8?B?dnI3OXFGa0ZwY2FYTHBFRXBVYUJvaHZUM2hlM2JOYTl6NEdZdVZrWnJHTkVq?=
+ =?utf-8?B?V24wTzJyb082czI1RVhOa1kzNjFpZWNxNVE0TWdCeDFSU3FpWXdFQjlIb2tH?=
+ =?utf-8?B?dW41M3lDeHIwSXJEajJWdG1RaHBsc2Zud2o2L1lSNmVUMTExVXVva25GR3RI?=
+ =?utf-8?B?N0ZnRU1oYTJURGZYbGpOVVVzc3lqcmppNS9pNGlNbEJiNGhCeXducnpwT01J?=
+ =?utf-8?B?d2w4MzBRcWxaa3p5SXM2RFJNNG1FdWJvT1B4ZFBEaHJxa2F6MVBjUmRaU2JV?=
+ =?utf-8?B?bkVuWHVOVGk1SDFYMkNyc1Z1cURpODQvZUpEWjRYMENMK1h1K0Z3cTdaVjdE?=
+ =?utf-8?B?WXBYQzRoTnJySmVyNmN1S200RjNxN3Q1OGNUK091U0NQS3NHbVJFZ0w4U0k2?=
+ =?utf-8?B?N1FOYkxYbkJLSjJMUEpkOW4yMlgvTitwV0VybTVYVEpZc1plVkZiZW9oNm9a?=
+ =?utf-8?B?VzZ6RGNvaEY2azY2eEZ1aTYxQVN1MTJUK05ZbDQ4OERBMVByUWNoMnhvOUUx?=
+ =?utf-8?B?OW1yMWxoM0VtdWMxRjE0dEdWRTRCQ0JSZ0srQVREYkxMVHZIMFZMWGZ2RUZH?=
+ =?utf-8?B?cXNkVzgwd05GTndudy9MUVJEK09FTDZiQmtiN3JJWmszdWljblFsQWJsNFp4?=
+ =?utf-8?B?NHBuTUNWeEZuaUk2WktTM1htK3VvM2tnUXBmdFJVeHN5QzlGMnlPRlpxUDlt?=
+ =?utf-8?B?Z1hiamxyVXg2L3VyWXV1WVAyWVg4cms2R291SmFJd1Mrai9FeDNKMzh1SnUz?=
+ =?utf-8?B?dXQwNzQ3UjdmdWE5MEhUSjdoZ1JxQjdiNDM4VEJmN0ZnOUpkUlAyMWNQdmto?=
+ =?utf-8?B?OFQ2NGtzcDlxNHE3YkEwUUxMdTdKOGl4WW1DanhDM244eHhoYnZyNUNxNkhy?=
+ =?utf-8?B?dTAwUlZwRVB3WUdsRkdmZHhSTDZ1bEovdFk4d1F6SXhjQmlDRnpNbU1yVkFn?=
+ =?utf-8?B?Ym1ac3dvU2c1Q1YzV09SRG9mU3ZDbjlaYllyZUxpaTdURTc0V2crNHdmQ1pP?=
+ =?utf-8?B?dzBCcmMweHdnK3IxNm90dmhVTi8zRk9ZS0VJY1IwTVdoQUIzY2Z3Rk92bERs?=
+ =?utf-8?B?QW9iKytSUFJlYWJjdFdNNU9aemVXa3EveGNiVnQyTHJFT2RrQlI2Vm5TQzNW?=
+ =?utf-8?B?aHlwTUhqbDVGU0NsUUFwOFlmajNSRHEyTkVnOUdGVmcrcWIyZVhIbTAzZUlR?=
+ =?utf-8?B?cHRMK3d6Y2lpWlBxN0xwYktLaFNiT1QrK2x0MW80c0ZCOEJJZU0rNCtyN2My?=
+ =?utf-8?B?dU9zQ3FkNmJTYW1tRzQ1UEtyelV5VkJIZUc1RWowT3ZEemJnUmR3NWxRV2NU?=
+ =?utf-8?B?SWNYYXV2c0c2bll0MEgwc0pKdlBmUVNydDNwTHNBMm1RTXBFS3pMY2ZPa1o3?=
+ =?utf-8?B?V1Z4Mk1qNnJFTlB0cmxIaGRFM3hWWXlqYzVyVXFtaGVSQytLZ2pkWm4razg5?=
+ =?utf-8?B?NTM1OWcwM0FYUFFia0thZWRlaUhKQi9vWHpGTmhvbFBlY1JHYmFjOHFIRTho?=
+ =?utf-8?B?ZGl4YUs4Tm85MFlXSXdZTmpDRFpKUkx3V3l4c0tBb2paTlBNMmE1ZmU3UGsy?=
+ =?utf-8?B?Y2xIclVDUnB2Yy9pS0wwZ2VUUmRWaS9VSnBva2JzbTBDb2h4TElkd2JRTXdQ?=
+ =?utf-8?B?TXdRM01FM1hWRWh6REg3NDBWbEpxdUdvQmxRVEg5d1BIVDlkVEdGaFJaaUZG?=
+ =?utf-8?B?b1VDaXBoUkpEc3hSK0dXUmpFODg3ZEFrc25SaTRSUlJRdlg1bGs5ZEZwUjhx?=
+ =?utf-8?B?Y2NPdmw1ck80cEpXeGU3NWJ4ZXltYzgvSEM0MzYxbHpNelp0bXJMT3JyQ3dF?=
+ =?utf-8?B?K3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e1acdec-cc66-49df-3cc6-08dd92fc41c0
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 15:30:29.0683
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jOpcUVLP9N/WDOL5u7qnhFKawBVJsm2/z2l5HaIjv50w78dvjSxJKxza7dTEcO0eUy28QmNsT/C4dPbXskeuhU2AJISKUWmpR+XDdGQOu5s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7770
+X-OriginatorOrg: intel.com
 
-On 4/10/25 10:26, Daniel Lezcano wrote:
-> The NXP S32 watchdog, referenced in the documentation as the Software
-> Watchdog Timer is actually a hardware watchdog. The system has one
-> watchdog per core but an assertation does not directly reset the
-> system as this behavior relies on a particular setup and another
-> component which is not part of these changes. However the first
-> watchdog on the system, tied with the Cortex-M4 #0 is a particular
-> case where it will reset the system directly. This is enough for the
-> watchdog purpose on Linux.
-> 
-> The watchdog relies on the default timeout described in the device
-> tree but if another timeout is needed at boot time, it can be changed
-> with the module parameter.
-> 
-> If the kernel has to service the watchdog in place of the userspace,
-> it can specify the 'early-enable' option at boot time.
-> 
-> And finally, if starting the watchdog has no wayback then the option
-> 'nowayout' can be also specified in the boot option.
-> 
-> Changelog:
-> 
->   - v4:
->      - Update the watchdog timeout when the callback is called (Alexandru-Catalin Ionita)
->      - Fix the clocks bindings to have all the clocks described (Krzysztof Kozlowski)
-> 
->   - v3:
->      - Add the clocks for the module and the register (Ghennadi Procopciuc)
->      - Use the clock name from the driver
->      - Removed Review-by tag from Krzysztof Kozlowski as the bindings changed
-> 
->   - v2:
->      - Removed debugfs code as considered pointless for a such simple
->        driver (Arnd Bergmann)
->      - Replaced __raw_readl / __raw_writel by readl and writel (Arnd Bergmann)
->      - Reordered alphabetically the headers (Guenter Roeck)
->      - Enclosed macro parameter into parenthesis (Guenter Roeck)
->      - Fixed checkpatch reported errors (Guenter Roeck)
->      - Clarified a ping on a stopped timer does not affect it (Guenter Roeck)
->      - Used wdt_is_running() to save an extra IO (Guenter Roeck)
->      - Fixed a misleading comment about starting the watchdog at boot time (Guenter Roeck)
->      - Replaced allocation size sizeof(struct ...) by sizeof(*var) (Krzysztof Kozlowski)
->      - Drop old way of describing the module and use table module device (Krzysztof Kozlowski)
->      - Replaced additionalProperties by unevaluatedProperties (Rob Herring)
->      - Removed the DT bindings description as it is obvious (Ghennadi Procopciuc)
->      - Fixed DT bindings compatible string (Krzysztof Kozlowski)
-> 
->   - v1: initial posting
-> 
-> Daniel Lezcano (2):
->    dt-bindings: watchdog: Add NXP Software Watchdog Timer
->    watchdog: Add the Watchdog Timer for the NXP S32 platform
-> 
->   .../bindings/watchdog/nxp,s32g2-swt.yaml      |  54 +++
->   drivers/watchdog/Kconfig                      |   9 +
->   drivers/watchdog/Makefile                     |   1 +
->   drivers/watchdog/s32g_wdt.c                   | 315 ++++++++++++++++++
->   4 files changed, 379 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,s32g2-swt.yaml
->   create mode 100644 drivers/watchdog/s32g_wdt.c
+Hi James,
 
-Hi,
+On 5/13/25 10:15 AM, James Morse wrote:
+> 
+> I can also post the 'final' version to be picked up if that is less work.
+> 
 
-Gentle ping, we are close to the merge window.
+Could you please go ahead and post the "final" version? Boris confirmed
+that this would work best with the tip processes and the series will be
+considered if it can be ready soon.
 
-Thanks!
+Thank you very much.
 
-   -- Daniel
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Reinette
