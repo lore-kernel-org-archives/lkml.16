@@ -1,202 +1,116 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760D0EEC3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1FA1F91F6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204408; cv=none; b=S0vYqsZUF8aaKtypbaFX+2I1zGbUFdhu7w85Q8eS3gy2RYuB6BLxn0KX7ghU6ckBCbxB2hVlh2T0yr3S0dLXxpgRsy9gaxgofALbRLzXAGQkDqZcBf24A1HNC4qeN3BOKQKh2tFUhJVqPhT3RQyl+9/JWZFaH/bDKbcQQeHqbso=
+	t=1747204468; cv=none; b=M8u2XKQutgiho6f56Xrys5aewSCn19FVF4eX+3pk4hAZOFUUsf7JYyDIbbiOuS98a8P1bqONmZefVD6SAunMMyAvvLmsyrg/FmgIHxBFmjPSiOdotaFNWOYPVHeZOdfTd2Ab0uau+IwjsbLtEdW2xDpRyc0hAimHIGMOYOp+r2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204408; c=relaxed/simple;
-	bh=JgpoqlmhPbga+iSpI3Dq8T9wQi7al707Y2vBFEX1SHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PbRewB6EwnXZXanL+aHuAPQUxiyxXI4fDMRNZBvpOZ0DLoOC2piw5hasQTbyUsDeAXn4+dPjh/knIbKpA8Foi2qMgh3dut09rzL9bn0PqFIuT7Vr1lS6efolvR2N1KpMC5pk+E6QOKbGf2iv2C5cpHemONJou5swHHYH2Ak3A/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Qgum9RVd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747204468; c=relaxed/simple;
+	bh=gAVhYts9N7NoNYyxKr48+bfVkq1pO2AtXQfG3GXzNnk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=lwmCCeSorO/oQVXrSwjrMzbLvWBeBwQfW4ffeuDh09jTloOG06XdTI+/nABCsNyNCxojkbyWNpTH7ZAc5s0/B5KakK80n42HoCYaB566GVm06eudiUVUgnb8Z/BnYIHQsCUq/o5n2Rkoc0BnsSC4j6NEWD/BojAQK66sTH9DzrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kW2+k1Jk; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Qgum9RVd"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E23Ao9003086
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:33:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	B5/9vS4FRS/VQGDmtMWL7u/M6hqf8gvfjYWZW3i0Gc8=; b=Qgum9RVdjs2zkR+i
-	e+oEfIDzCrFRwrJwHknja+NnTYGUe0kfBGaxE/kcH1zG/HAgklYoRDOwP9WbKIer
-	JsempM+UrVFDW0Ca2k6zuHTR3YlTCCeGehDU8P880C6sn9rTz1C17HS1IJkgknwl
-	EMbX0ZmrTikpz8hny2XKCvYV2IUuFi4JSMIobRfrCD3HsIhMxv+A8kMvaRSj+3sm
-	NVCUWEEkQnKoEsoLsdpf/TVzw03pnSRTjgfeQYWsb/Jxv+yi9STPWZqzAuqpBffr
-	1ffX7foKv+FP8pLkITytCg+xFIiiSi+DWt90BfNQaIFiFVrYDKj7i2ZQI/HkSZ1O
-	o/x1lg==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcyhmua-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:33:26 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-af59547f55bso3567192a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:33:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747204405; x=1747809205;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5/9vS4FRS/VQGDmtMWL7u/M6hqf8gvfjYWZW3i0Gc8=;
-        b=ZF4XN/oR8q40Ts9GVSb9/AlrDMfeIGH9fGGxKa1/lhm6FVhsMESBs4CMQyP4WF1BPH
-         xtLmL0y4LN4y+opJpkqP3YTq/PLHLFXzCtA5EQbXTqEjqenQw34ljwI51FrHw2uokB6X
-         aPGdhTX60Y2SJxzwxO2PRq6Ry1h6EO+3c1R2hfhNMoeH97J692Q83bIYJPWJPx1XHsas
-         5oke5HtYTP1N96fHuJMZR9JH77l9Lg1Ibu6jI+SOPRVc2Uj+C8TqrzyqOu1nR5VmwdzQ
-         fpSnCb8y3YD24Lxddnxi4OA1DwAi8f1pso1UBBVoZ9DS6WWqDk/EGpA+5xphlMtRHNbe
-         Uo2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUeyVQwdqjZy6Q0SEJkTk7YUGbj+WdvO5aKWngnvyhbTaj1E/fNZi6ILP4LG2G5PGOYdzAoKRs8FhE59FA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUJd5WPNV79286FfYFjiDqlNyC2Zr0EqoFdjWx9So83tbXVge2
-	TToozxU6ouVjb1f8b2GPLdETCgeX3vZVJc6DXxkR9inj4dZ0tI6+Zuj0WGaynEn7HXRTzU1LOK6
-	7DmxFke2klefnL98TbrIlbnr+XKish98nxFvkNlsL0e7u9nwcEVV/AMXcATwrAQs=
-X-Gm-Gg: ASbGnct+TE2wzisPVVXQEai0GjNL7Lw7D4AxuSnCSZwkGIp8YHP8qv+icWu2rj7ZMI/
-	06SgsuZd3X4Hj2pC7mx0lfggH8YDRDLh6xPQiEJzlzj9aDillkgXIV6FI5IOgmhLl7gemrPPuIv
-	6CjhnMXFxWC8NlHVCA84yAwrxp7GSolHK1l2TbG9rtPKuP4qkSWVbj/LJ3yvYFiPcX84dfiwl8W
-	4rv+kyhJYTjUod884PO0KCUhH5EeurErrGZ83JOszKts9LMUi9xmsWv/FVwSc0OlJKhOTZa0xsY
-	qn3/byTFa8X2fUnLLEQcYtP79ow7uS1IRfYsS0u+Ww==
-X-Received: by 2002:a05:6a20:2d2c:b0:1f5:72eb:8b3f with SMTP id adf61e73a8af0-215ff11a590mr3261472637.24.1747204405603;
-        Tue, 13 May 2025 23:33:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IETSoI9iwfk9eb2Ld/QSv1BSUXn0GR0U4QVFH399Z38VQi+OSfnyJ8EGrjE5OEBrun47fcpcg==
-X-Received: by 2002:a05:6a20:2d2c:b0:1f5:72eb:8b3f with SMTP id adf61e73a8af0-215ff11a590mr3261433637.24.1747204405177;
-        Tue, 13 May 2025 23:33:25 -0700 (PDT)
-Received: from [10.92.214.105] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b234941baacsm8298049a12.14.2025.05.13.23.33.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 23:33:24 -0700 (PDT)
-Message-ID: <8899a562-2efd-9a63-5fc2-2972f47a9296@oss.qualcomm.com>
-Date: Wed, 14 May 2025 12:03:16 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kW2+k1Jk"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250514063421epoutp02264dddf37ec490724319a94dd35d347c~-UTNhcyHj1735917359epoutp02B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:34:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250514063421epoutp02264dddf37ec490724319a94dd35d347c~-UTNhcyHj1735917359epoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747204461;
+	bh=Ygru++xll4r9DyOIK9p1wHB3xyd2cdMnyhRCSd9GSME=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=kW2+k1Jk756+e/vrQeX11/DWepVKi1Cc8wGwAsmxb0/pnHkyN5xVIWJKuB2FJo1vH
+	 0m1JPoT5OnIfDsd9lf419eAWcOWlv03Aa/awxPrI+T5IbTUyIXGDMwfbiaN+rVyMmU
+	 Mv04cMVy4HTYjMhenthpKfSSJpIATyS5nQ7Fhlfc=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250514063421epcas5p4e0139f7ee7e1ec5ef68675bbf9bb603c~-UTND1hfF1896418964epcas5p47;
+	Wed, 14 May 2025 06:34:21 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4Zy3Tn0Fcwz2SSKx; Wed, 14 May
+	2025 06:34:21 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e~-UTMxkWzK2033520335epcas5p2A;
+	Wed, 14 May 2025 06:34:20 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250514063420epsmtrp246d23f96284c6851041db264e6cbdbc9~-UTMwvSQN1215612156epsmtrp2e;
+	Wed, 14 May 2025 06:34:20 +0000 (GMT)
+X-AuditID: b6c32a52-41dfa70000004c16-9b-6824396c8cd2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	ED.A9.19478.C6934286; Wed, 14 May 2025 15:34:20 +0900 (KST)
+Received: from hzsscr.. (unknown [109.120.22.104]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250514063419epsmtip289f09527d11800048bb75084174ca090~-UTMCewyQ2546025460epsmtip2j;
+	Wed, 14 May 2025 06:34:19 +0000 (GMT)
+From: "feijuan.li" <feijuan.li@samsung.com>
+To: jingoohan1@gmail.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jani.nikula@linux.intel.com
+Cc: feijuan.li@samsung.com, hongfei.tang@samsung.com,
+	minggui.yan@samsung.com, qilin.wang@samsung.com
+Subject: [PATCH v3] drm/edid: fixed the bug that hdr metadata was not reset
+Date: Wed, 14 May 2025 14:35:11 +0800
+Message-Id: <20250514063511.4151780-1-feijuan.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 2/5] PCI/ERR: Add support for resetting the slots in a
- platform specific way
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>
-Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-2-7050093e2b50@linaro.org>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250508-pcie-reset-slot-v4-2-7050093e2b50@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: gyQ77QHIRhjCZryjKinS6pPuFeXD_8Gc
-X-Proofpoint-ORIG-GUID: gyQ77QHIRhjCZryjKinS6pPuFeXD_8Gc
-X-Authority-Analysis: v=2.4 cv=JszxrN4C c=1 sm=1 tr=0 ts=68243936 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=ljfrh_M9o-RCrfJy5NoA:9 a=0bXxn9q0MV6snEgNplNhOjQmxlI=:19 a=QEXdDO2ut3YA:10
- a=3WC7DwWrALyhR5TkjVHa:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA1NSBTYWx0ZWRfXwW1LnYpYqwl3
- AanX5GGZQT1KFK8ue08VocA/5Ilw4KuIcDJb2rDm++B0DsFt+ZVVdueiJL/WeChwzZe5gWXUasW
- boB5dDwGkppZfoeRUdyAB+6AmtNfjZsYR2ZOjyo/wtN05fT4S0ex7bPj7y+gCYoQoXwGdYvsdPG
- ojgq0tmnKKbHCaadFIksUK1mFltFanW9PGlTrLptiAaaV13/mbuimwQ7xLsN0I4T2KZVJ6gWamD
- GliHoIlhQP3e9R4sSPUeVSDjGYw/VhhShuADx9TQdqCJLQea3cg7q5OOdBqyfP9DThkDC844Kcf
- NUapge74J1G1Tdrk0B9dAQH5kerwMKQ1JFCR7tBUUJ1q/+UN6BVf9qZyAiSsyOy8REcrkwYQBSM
- GVJlBWNvH1z6FTymR+A6RvktNKFTJoJg72v3OP05fbJHPar9THCYKEBpuRp2t6cT7NP3L0hq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 mlxscore=0 adultscore=0 phishscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505140055
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsWy7bCSvG6OpUqGQcs+TYsT1xcxWVz5+p7N
+	4t+NT2wWm/obGS2WX17PaLHiy0x2i8u75rBZLPy4lcXi9u8ONou2zmWsFnuvHmWymP1uP7vF
+	ljcTWR14PfZ+W8DisXPWXXaPTas62TzmnQz0uN99nMmjb8sqRo/Np6s9Pm+SC+CI4rJJSc3J
+	LEst0rdL4Mr4+bmHqeA7W8Wx9/tYGxh/sXYxcnJICJhI3Jl6j6WLkYtDSGA7o8TszcvZuxg5
+	gBJSEl9muEPUCEus/PecHaLmKaPEultdYM1sAtoSm/6cB0uICHxhlNj+5SgLSIJZIFtiybF2
+	RhBbWMBb4tuyRrA4i4CqxLwTD8EW8ArYStyf6gexQF5i/8GzzCA2r4CgxMmZT6DGyEs0b53N
+	PIGRbxaS1CwkqQWMTKsYRVMLinPTc5MLDPWKE3OLS/PS9ZLzczcxgkNeK2gH47L1f/UOMTJx
+	MB5ilOBgVhLhvZ6lnCHEm5JYWZValB9fVJqTWnyIUZqDRUmcVzmnM0VIID2xJDU7NbUgtQgm
+	y8TBKdXApHFzhc7UpUkhNR4hKlk6MdzitsEBV1ZsVT74y9Zrzy/WHqGd8o0x2+/s0ec77L38
+	5+nrpXG7kxX6xVLdxfaXmfDvD0g51nq1fA+/6YHoVEa++y1CO5lmmh6ZeCF+lfb1+RMeuh3/
+	tFFMT0+HVym0TPxH5PMTFz8JtftNf3dsed0WU+bUJ0EnvtolPNmX6cP+4Jftqsjd306s+yQ+
+	c9fb/2lp1wpmJ8X2bJo5L/HpgqvzTvvnnQwWEWaZVeEU9dPD7NkM5XnLKjJEQ3tqY1/42164
+	MPfH38igrU8nTezL+tGz+aTegp0Cn08fiarY6f/xlK/HpVqLDKWdnwOb897FMs24YOHqwtjg
+	9k3z6KFuayWW4oxEQy3mouJEALw0XZ7oAgAA
+X-CMS-MailID: 20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e
+References: <CGME20250514063420epcas5p2bdd64000965a5ceffa196f123db8fb2e@epcas5p2.samsung.com>
 
+When DP connected to a device with HDR capability,
+the hdr structure was filled.Then connected to another
+sink device without hdr capability, but the hdr info
+still exist.
 
+Signed-off-by: feijuan.li <feijuan.li@samsung.com>
+---
+ drivers/gpu/drm/drm_edid.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 5/8/2025 12:40 PM, Manivannan Sadhasivam wrote:
-> Some host bridge devices require resetting the slots in a platform specific
-> way to recover them from error conditions such as Fatal AER errors, Link
-> Down etc... So introduce pci_host_bridge::reset_slot callback and call it
-> from pcibios_reset_secondary_bus() if available.
-> 
-> The 'reset_slot' callback is responsible for resetting the given slot
-> referenced by the 'pci_dev' pointer in a platform specific way and bring it
-> back to the working state if possible. If any error occurs during the slot
-> reset operation, relevant errno should be returned.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 13bc4c290b17..9edb3247c767 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -6596,6 +6596,7 @@ static void drm_reset_display_info(struct drm_connector *connector)
+ 	info->has_hdmi_infoframe = false;
+ 	info->rgb_quant_range_selectable = false;
+ 	memset(&info->hdmi, 0, sizeof(info->hdmi));
++	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_metadata));
+ 
+ 	info->edid_hdmi_rgb444_dc_modes = 0;
+ 	info->edid_hdmi_ycbcr444_dc_modes = 0;
+-- 
+2.25.1
 
-- Krishna Chaitanya.
-> ---
->   drivers/pci/pci.c      | 12 ++++++++++++
->   drivers/pci/pcie/err.c |  5 -----
->   include/linux/pci.h    |  1 +
->   3 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24ec754a135a2585c99489cfa641a9..13709bb898a967968540826a2b7ee8ade6b7e082 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4982,7 +4982,19 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
->   
->   void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
->   {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +	int ret;
-> +
-> +	if (host->reset_slot) {
-> +		ret = host->reset_slot(host, dev);
-> +		if (ret)
-> +			pci_err(dev, "failed to reset slot: %d\n", ret);
-> +
-> +		return;
-> +	}
-> +
->   	pci_reset_secondary_bus(dev);
-> +
->   }
->   
->   /**
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index de6381c690f5c21f00021cdc7bde8d93a5c7db52..b834fc0d705938540d3d7d3d8739770c09fe7cf1 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -234,11 +234,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	}
->   
->   	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> -		/*
-> -		 * TODO: Should call platform-specific
-> -		 * functions to reset slot before calling
-> -		 * drivers' slot_reset callbacks?
-> -		 */
->   		status = PCI_ERS_RESULT_RECOVERED;
->   		pci_dbg(bridge, "broadcast slot_reset message\n");
->   		pci_walk_bridge(bridge, report_slot_reset, &status);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0e8e3fd77e96713054388bdc82f439e51023c1bf..8d7d2a49b76cf64b4218b179cec495e0d69ddf6f 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -599,6 +599,7 @@ struct pci_host_bridge {
->   	void (*release_fn)(struct pci_host_bridge *);
->   	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->   	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
-> +	int (*reset_slot)(struct pci_host_bridge *bridge, struct pci_dev *dev);
->   	void		*release_data;
->   	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->   	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> 
