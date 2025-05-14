@@ -1,114 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15321D3EB
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FAD202F9A;
+	Wed, 14 May 2025 08:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210647; cv=none; b=pu7VcCC/XrjRhC/23dCbmYlGCanhzh742PsoIaceNy6nSxu8JzLFG+rNWTct+EhuyrRW/JNG1RBbQd2C6j+3a4oVBq3AMn6FRj+Dt38sg309DnbCUWtrc/GRRhlCykDJT7KrBmChAWfpweH0EEyHLqdiSPWRueLvhrQGwQDUf7c=
+	t=1747210656; cv=none; b=Tuo5mvseCT5zXTVhYcu+1HxFoSlXg7adBX4v6rdYzr/4AJ219NHZH5r6y0UjmRltLyOYMAtg1/kMSHdgHde/P2kIT1Ibm/XPclWKbrqYg9V0f31EuFsmXEKq78iu7oMfRc7kXdbgNBqYwqR1l6a51WmGsV1MZNqS1agdVAU9p3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210647; c=relaxed/simple;
-	bh=/YlYfCNn5kLnJH3oPbvXxjsXSAWLi6S2bgC3Rw4/5hc=;
+	s=arc-20240116; t=1747210656; c=relaxed/simple;
+	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BgBkERLXmWqMEaDAYOw0o6x3IJiMMBh6rbAFwhDhkNGtpaO5/yIRNub19yKws0NI3Rp9GY6KNNPjvFB65qlHjkckOxYFxNNmzBgLqya1t6k1Ysvk88PFNmZzBJkyWdBBQZvFOjmuqiBFnln0tO2Q0eEniwA3XA0zDkuEUGasQhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNYr1Nx4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZN1L0DOV3cQPfUekMm9ybf7pKoGd1GvRVcwCkAB3wX/ctGrfrsDoTRjOFzvVSDEFAFzFVfewseChf9KFBlyOkdC2zr9rfyB8/NfccvyhgJKCldfuJtHAJCj4JU4iRZHnPFqjCh1Qtfw9+v+zVJcS1mD0DzKHBdf5oZWQ5KVb4b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O31B7HzE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNYr1Nx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 920E4C4CEEB;
-	Wed, 14 May 2025 08:17:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O31B7HzE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E50C4CEE9;
+	Wed, 14 May 2025 08:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210647;
-	bh=/YlYfCNn5kLnJH3oPbvXxjsXSAWLi6S2bgC3Rw4/5hc=;
+	s=k20201202; t=1747210655;
+	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aNYr1Nx4hPsdGoXAEizPd0ddur4YtrV0jrLb8PCPE8XcXz6TMeFrbaJpxX0HC9KPQ
-	 J4IxxPVQ4nVEjeOSPtRR4+GI4OTWDvCLsh3Si3pemeCWLm6st6p6j0qa9CvEz0vptx
-	 OgTTpwwlPSkWoI7VXPlskA3W5On8YxN/MYYchlqG/60+16KjkZGjLx7I/telqxcM3a
-	 BUpvlCLYspHEhrqCKiw4bymiEzXUCBWkj27gtNd4jg/VXUeSyFuuYHmDiZtsvGGS0l
-	 tL05mj5137MNgoYOJ1JhewXwNrSDRbUeQxD5C2onetUzOgHCEVMS1bMg9yrbWYASJ0
-	 FNiLLYPa16Kvw==
-Date: Wed, 14 May 2025 10:17:23 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Brian Gerst <brgerst@gmail.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 3/6] x86/cpu: Allow caps to be set arbitrarily
- early
-Message-ID: <aCRRk_4hLD36UQVd@gmail.com>
-References: <20250513111157.717727-8-ardb+git@google.com>
- <20250513111157.717727-11-ardb+git@google.com>
- <CAMzpN2jTPFTA9NhXfsrTZ0-prUH-1DbZ5ewt92BZSMqBCZyskw@mail.gmail.com>
+	b=O31B7HzEyj3Nh4DAAJoFtHFRHPDbN7/g83eRGt9BVOdIa407ZQsTtrzwDXm08UiHf
+	 au9g7acBtuIWljLhpr1LVdKmuA8eumou+3pxY2wx3+y4tNi2Da0cT7MJesdUQoTz9M
+	 x3xxKgtVuJl2rvXx+koXEHh2vjGBnY7kezCh1XkcOUJx3DdswXJ0KhNUIt7N7AvEDZ
+	 rI9bK1c389FzNXR/9nABj8vY3s7LJ2xWKNrLciHhrbc0NFCR3BrPv935Avf+Fzw7u4
+	 T0XJMfje25BR4bZ5c1G189g5NyRAtkKpL1STKWQFKkrsIWLPUncgYk1ehmnKyxJOhp
+	 VoQMI5UaLWtjg==
+Date: Wed, 14 May 2025 10:17:30 +0200
+From: Mark Brown <broonie@kernel.org>
+To: "Darren.Ye" <darren.ye@mediatek.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] ASoC: mediatek: mt8196: support ADDA in
+ platform driver
+Message-ID: <aCRRmk2Vqplbbusn@finisterre.sirena.org.uk>
+References: <20250514081125.24475-1-darren.ye@mediatek.com>
+ <20250514081125.24475-5-darren.ye@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1Ucd00qPZdK+Pv3F"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMzpN2jTPFTA9NhXfsrTZ0-prUH-1DbZ5ewt92BZSMqBCZyskw@mail.gmail.com>
+In-Reply-To: <20250514081125.24475-5-darren.ye@mediatek.com>
+X-Cookie: Well begun is half done.
 
 
-* Brian Gerst <brgerst@gmail.com> wrote:
+--1Ucd00qPZdK+Pv3F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Tue, May 13, 2025 at 7:40 AM Ard Biesheuvel <ardb+git@google.com> wrote:
-> >
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > cpu_feature_enabled() uses a ternary alternative, where the late variant
-> > is based on code patching and the early variant accesses the capability
-> > field in boot_cpu_data directly.
-> >
-> > This allows cpu_feature_enabled() to be called quite early, but it still
-> > requires that the CPU feature detection code runs before being able to
-> > rely on the return value of cpu_feature_enabled().
-> >
-> > This is a problem for the implementation of pgtable_l5_enabled(), which
-> > is based on cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING), and may be
-> > called extremely early. Currently, there is a hacky workaround where
-> > some source files that may execute before (but also after) CPU feature
-> > detection have a different version of pgtable_l5_enabled(), based on the
-> > USE_EARLY_PGTABLE_L5 preprocessor macro.
-> >
-> > Instead, let's make it possible to set CPU feature arbitrarily early, so
-> > that the X86_FEATURE_5LEVEL_PAGING capability can be set before even
-> > entering C code.
-> >
-> > This involves relying on static initialization of boot_cpu_data and the
-> > cpu_caps_set/cpu_caps_cleared arrays, so they all need to reside in
-> > .data. This ensures that they won't be cleared along with the rest of
-> > BSS.
-> >
-> > Note that forcing a capability involves setting it in both
-> > boot_cpu_data.x86_capability[] and cpu_caps_set[].
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/kernel/cpu/common.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > index bbec5c4cd8ed..aaa6d9e51ef1 100644
-> > --- a/arch/x86/kernel/cpu/common.c
-> > +++ b/arch/x86/kernel/cpu/common.c
-> > @@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
-> >  }
-> >
-> >  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
-> > -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> > -__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> > +__u32 __read_mostly cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> > +__u32 __read_mostly cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> 
-> Is there any scenario where capabilities are changed after boot?
+On Wed, May 14, 2025 at 04:11:06PM +0800, Darren.Ye wrote:
 
-Not supposed to...
+> +#include <linux/regmap.h>
+> +#include <linux/delay.h>
+> +#include "mt8196-afe-clk.h"
+> +#include "mt8196-afe-common.h"
+> +#include "mt8196-interconnection.h"
+> +
+> +#define MTKAIF4
 
-> If not, this could possibly be __ro_after_init.
+This define is there unconditionally, what's it for?
 
-Yeah, and in a separate patch.
+--1Ucd00qPZdK+Pv3F
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-	Ingo
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkUZoACgkQJNaLcl1U
+h9DiUwf8CeXyIw1furK0nf9QfBubUYFQ3DjxWzlkFbKAyVnUb3qF3V4vkrVIRC2P
+HYiWu0j8HLfZE/o+6cFkU0RIhzDgC/TGdMp/8ZlCLG3PpX8n124t3GsigTEOv+ZP
+13p4rzmwS4GdMZD5uY7yI5mg1ScK69kNmb6ah4DeOTo92/GJQTITnJXq8B3UegXr
+P5rk8qlBWvgKL4ebpRSGbCztpZZ+rDkUzaNutwIk0I4mzdmGwfJ/u/kBk1oUNhoD
++dvn4qemKwDA8J9QV/sDzEu964KbUx+iWz1AryHn3TwKzF6kO1I2nirfld6rrqqK
+0vtfqUZc+p2IdLOgN8NnSiL0/t3h4Q==
+=xV1N
+-----END PGP SIGNATURE-----
+
+--1Ucd00qPZdK+Pv3F--
