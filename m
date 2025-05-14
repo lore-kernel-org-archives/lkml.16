@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E621C84AF;
-	Wed, 14 May 2025 15:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E022E27E7C0;
+	Wed, 14 May 2025 15:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234991; cv=none; b=eLEIypuZvzFFYBpcKIEP7+KrWKM2uiHX7/M3hoYp7TLzXh/W4X47Zt6h9FVWtDmY7SC5hz+iXD+FWcSlJlTD4+xMbOqCKtOeTyhzIGd87YVUP4VMF2pgnYmt8MqMH7qnBS8v4sdL6MXF+lK/pAXdRD3NO2oC7SR3FhjY665VhEI=
+	t=1747234996; cv=none; b=gvV1t5BYCXh/UJTyJFHtG+A4tnSha18/Z0lBnQbtceuSk+zcvA/F7gLbXEBG6bEYAyGvMC+VPsZBhvg+9XZZN+AR4qKBs1hOFPBpTYuQ/DZU0gTGy+j933erSzhVR/lDDKlAmTWXgdMwCQ1NCPJbVXzpq9oYDgz73vWYzlos/6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234991; c=relaxed/simple;
-	bh=BDjd/dPRS2L4m/ca+Hsf4jobzeV6g+TgyBgYCGTC/cU=;
+	s=arc-20240116; t=1747234996; c=relaxed/simple;
+	bh=m5xFf1VaS/qFqzTFJku5dhlZM/YKpT/P+Ikykc9C8I0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jm8X/eBAyFmk/XeKgi9FbMZy118SRDjfQzsTBiYB3XR7z4RT7yBKjrhWVDLCuMpkfQZsB1Ej+zjmBV6xKS+LXogE878LUvKD0/v4nuNAaNaaDMu0tskYgytvbQnLSZPgpOIY1fdD/AWvnM+CqHRsUtmlDGM3xo0s4I/5jfOhz4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+MrAElP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=l7hV1+ZCe/ypLrc1eVuZSEjgAeRbewbZsei48QpMr+LWrNL3Fo9LK1k99dYqpgEqELegT87PJPeLFVWoipHdVrjvp93pr+UKly+cfb0U6ATCbnJPH8U87DRI6gCvK1QBOoZaDj7rjagtvsStjL3uvodCM5Ci4xeZgkyWYzLTLYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoaE+ovG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+MrAElP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4344BC4CEF4;
-	Wed, 14 May 2025 15:03:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoaE+ovG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EEBCC4CEED;
+	Wed, 14 May 2025 15:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234991;
-	bh=BDjd/dPRS2L4m/ca+Hsf4jobzeV6g+TgyBgYCGTC/cU=;
+	s=k20201202; t=1747234995;
+	bh=m5xFf1VaS/qFqzTFJku5dhlZM/YKpT/P+Ikykc9C8I0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=u+MrAElPeeBtMKRh+3RRSIwkqvm5A2ecQxbfl+xILiFFjkW3lXGCi+kJehMXlrrWM
-	 1amp8aCS3lN/3aQJHKoJdMRzo4cwN1FfsfJKdwddS7X5rhmuXTgsUv8+vFHZrebRgi
-	 1BTdETj0aYT2C9Wk3JdRc2jRjgjuyOK7feeNlIy5RkDen71DHIFkB2UA4uzs47ggnM
-	 fyzlWvWby7ylyKosXMGVWd8nmhtWwR5KMc/8Fi8stlL4A4JntSQZareunNE4iSlgqx
-	 XKUm+/5MJLTL4z8F1e1AWSoeJbHgiG5N8qFn9cCjaXxnX7q1VgnUUZWh3/G9r9p5g+
-	 qO465+WLgh7Ag==
+	b=VoaE+ovGzsNijwqfZdX/jEeuQYTcJWGDbvwMZTzRxfWxS7z8d5dsaOSPaDJAbbKor
+	 HO94fV94Om2HGf8M3lRa7io9q2u26fyQMXdt98M4ApaUb5CPNfp3EKCdb5x0XlcGtk
+	 L2QQW01m82XMLzlzKIlhtwW2T+D8TEBzNXs/gbMs90yAB8a1DnCPkDFOZAx3ZKubba
+	 4xrJoor/ORRk7IXm8z80yyWsdqtS0NokgHeEw3JGYDRalut3A/kaB140S/cAWegCWJ
+	 dObCqFVpky1l8gsFkU3NsfsuiMb+GytkWYan7CLZNS7F2P2B2JgnMENT1SK0IFv8p/
+	 63WdZoFWDyNKw==
 From: Vinod Koul <vkoul@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-In-Reply-To: <20250312221511.277954-1-vinicius.gomes@intel.com>
-References: <20250312221511.277954-1-vinicius.gomes@intel.com>
-Subject: Re: [PATCH v1] dmaengine: idxd: Narrow the restriction on BATCH to
- ver. 1 only
-Message-Id: <174723498996.115803.6284345485157042502.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 16:03:09 +0100
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Biju Das <biju.das.jz@bp.renesas.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20250423143422.3747702-1-fabrizio.castro.jz@renesas.com>
+References: <20250423143422.3747702-1-fabrizio.castro.jz@renesas.com>
+Subject: Re: [PATCH v7 0/6] Add DMAC support to the RZ/V2H(P)
+Message-Id: <174723499195.115803.16616657624244333565.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 16:03:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,18 +54,55 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 12 Mar 2025 15:15:10 -0700, Vinicius Costa Gomes wrote:
-> Allow BATCH operations to be submitted and the capability to be
-> exposed for DSA version 2 (or later) devices.
+On Wed, 23 Apr 2025 15:34:16 +0100, Fabrizio Castro wrote:
+> This series adds DMAC support for the Renesas RZ/V2H(P) SoC.
 > 
-> DSA version 2 devices allow safe submission of BATCH operations.
+> Cheers,
+> Fab
 > 
+> v6->v7:
+> * Final touches to the RZ/V2H specific dt-bindings patch as per
+>   Geert's comments.
+> * Collected tags.
+> v5->v6:
+> * Reworked the RZ/V2H specific dt-bindings patch as per Geert's
+>   comments.
+> * Collected tags throughout.
+> v4->v5:
+> * Clock patch queued up for v6.15, therefore dropped from this
+>   version of the series
+> * Adjusted the dmac cell specification according to Geert's
+>   comments
+> * Removed registration of ACK No. throughout
+> * Reworked DMAC driver as per Geert's comments
+> v3->v4:
+> * Fixed an issue with mid_rid/req_no/ack_no initialization
+> v2->v3:
+> * Replaced rzv2h_icu_register_dma_req_ack with
+>   rzv2h_icu_register_dma_req_ack() in ICU patch changelog
+> * Added dummy for rzv2h_icu_register_dma_req_ack()
+> * Reworked DMAC driver as per Geert's suggestions.
+> v1->v2:
+> * Improved macros in ICU driver
+> * Shared new macros between ICU driver and DMAC driver
+> * Improved dt-bindings
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: Narrow the restriction on BATCH to ver. 1 only
-      commit: 31f04b537152675adca2f97582660e3f178dcfff
+[1/6] dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
+      commit: ec52f10a31dc69c1ded30812bd17335ac23b1c60
+[2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
+      commit: 22228b933ce2639d67168fd35423c1be196edab0
+[3/6] irqchip/renesas-rzv2h: Add rzv2h_icu_register_dma_req()
+      commit: 9002b75aa8e6f034ffbd1c1ccac46927a1cf0f12
+[4/6] dmaengine: sh: rz-dmac: Allow for multiple DMACs
+      commit: 056a8aac1fce52da9ad0b6488eb074e3846f37c0
+[5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
+      commit: 7de873201c44bff5b42f2e560098d463843b8a4c
+[6/6] arm64: dts: renesas: r9a09g057: Add DMAC nodes
+      commit: 7d33e0ee5f98b3fc74566fa00d0926bc5deb8174
 
 Best regards,
 -- 
