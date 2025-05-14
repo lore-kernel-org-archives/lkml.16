@@ -1,210 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from devloop.tasossah.com (devloop.tasossah.com [145.239.141.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351A11FBC8C;
-	Wed, 14 May 2025 06:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7951E834B;
+	Wed, 14 May 2025 06:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.141.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203656; cv=none; b=KbUK7Dobe2KOHmO0qrnVTF88TgzkqGe9tsoF0bN/AfzC6IfDHOL4uAuXx8FTxm/ryt1lOqPvlUo3CArP9dUY1rY7BTxDN4BRojeH/1rtWV8POhc527BPDVszNTUQEcB+syX4Q4gBHLirXTkMncnUcldJrob1G8ee+X+qtl1dlRg=
+	t=1747203711; cv=none; b=M820wim5mCKBhD+Z988uoVq50Gb9ydEF7qM4BtVN2KP6Xon++lHEsiwEDeZjhwGg3+GUaBv2nHliPHvj8mQe+VxlTDHRjP49HKT5QoxBhVzlWRPb9lColwKG+ouZ7O83aG6haLkoqgPnPBFXahRTPq32mgHH79LmfPjO5TCFFxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203656; c=relaxed/simple;
-	bh=KrSfCGjyZrny1Ondd1B+23Fo2z1scVAOk9YRyaUWKZo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W3PWM1oHuiFk0oOHtxHXTHoHco46SdmgPQQ9Ys3iCKojmrDLTrVcDZtTwHNpQREOEFzTInS/+rsHJcU+ImtzE83dTJjLB7wE+UNNdsPwh+w5uXr7/vkekd+FFn0uOqQa/ScxmygnmAF027eXsydraXQLY4CRtPVNHdizoBdymdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4FkQ37d; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747203711; c=relaxed/simple;
+	bh=6R+aFLxKCuGmzdVPIPrWabzSBgtGuu6elUKbkXjgdI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u0lshg3iLsE9IzHqFTVtGMKcITcxu0pDT4T8Qspw7i4MBJgI4MihAgqh6D/5mEUE9euedJA5+XLyQDtJkbWqu9wS4we0yvo5Xsq0wfx5UrF+JcgnvTQB/qTOMUXwUgi15JnotxqTkZhMC8WEKOTY/IA4+QiTBK7jtCWfMxOEfwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tasossah.com; spf=pass smtp.mailfrom=tasossah.com; dkim=pass (4096-bit key) header.d=tasossah.com header.i=@tasossah.com header.b=gebdCoMg; arc=none smtp.client-ip=145.239.141.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tasossah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tasossah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4FkQ37d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747203651; x=1778739651;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KrSfCGjyZrny1Ondd1B+23Fo2z1scVAOk9YRyaUWKZo=;
-  b=R4FkQ37diARJJ0i5qw7J71Hf1SyiudsCHKO2ZUjqoo2gtgfde0e6Qkwi
-   SNY2zEj7ExhjAV6kuZ8Ttj/lNU2Z05bdrb5tW3i8x5C16+w3mVsgsXIMb
-   FrMkV7+DPDSHIv4enFO4QxFDlcgDM+DTRAroFJaiGo6HMVvHJ4+D09gfI
-   70LAE1mLykT7fTqK1OfrbGSlF6GnADiXggc6gS/Hin0qYvP2qr2Rrnu1k
-   4nbzISjBnqfhjX9E84VHVPAplR0ceUYaFuJqqlg+kGPdaw4h4UYXEDbnV
-   gE+pmlC+4V+LpUrzLFtnO+G/qU1/PS3D+IT91tLgd6AigKJ5/AgSZL6dB
-   A==;
-X-CSE-ConnectionGUID: zUFxGjKcR/y+Dco2UByhQQ==
-X-CSE-MsgGUID: 1eFGpu0iT+eWJMtjDxiJTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48192374"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="48192374"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 23:20:50 -0700
-X-CSE-ConnectionGUID: 0MOdMOb9RM6yx8EKdwVrtA==
-X-CSE-MsgGUID: aYlE5Ic1SEG3XhTxUMY2kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="138867025"
-Received: from shsensorbuild.sh.intel.com ([10.239.133.18])
-  by orviesa008.jf.intel.com with ESMTP; 13 May 2025 23:20:50 -0700
-From: Even Xu <even.xu@intel.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: srinivas.pandruvada@linux.intel.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Even Xu <even.xu@intel.com>
-Subject: [PATCH v1 6/7] HID: Intel-thc-hid: Intel-quicki2c: Add driver data support
-Date: Wed, 14 May 2025 14:19:43 +0800
-Message-Id: <20250514061944.125857-7-even.xu@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250514061944.125857-1-even.xu@intel.com>
-References: <20250514061944.125857-1-even.xu@intel.com>
+	dkim=pass (4096-bit key) header.d=tasossah.com header.i=@tasossah.com header.b="gebdCoMg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=tasossah.com; s=devloop; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Cv34EH2pRDvR6ZJfwsliN7WzAGOefpJsTr53OQo+E8U=; b=gebdCoMgsayxkICI8x99mgtDo+
+	93yXr6shp6jXzT0Yd9Lh7IUfkhV2qdIQ/AkVLjk+tHVe0Q0OZDPULZACWXyBPORurC7+opwOu5Np4
+	syIz0vF3yb7ZDCVy0GJn4vgeLbnHXx/9rgSndAHUXGlE1dwLyi0Dr8HClesOI0TZ1uV1rcl+S4qFB
+	UZy5QuyAcRfJ3iSg0UopptPVVe7qFVoSXV55/kYoj4Cxwj+pYoTWCBiq9Gijj9cxgi45UimtVUEIL
+	+UUriKjfzf1N15bm455/8BLj7+nS1DKSc9EpOq0RpI54zUXQ1JBPxhp0gjofAZctQGgITldzJQRsN
+	ANA2fXJHkGklV00KXPJdXBFK6unefgKyRZgukNivmhIfXnGK0EPq284t0gMrX2dGt4H7BRYdC+BHl
+	3uxY5QNutsjYfKBykuPrVgVxVK6TeeGdv8tvOFOXk/quhLA5sw0o1whB+qg8tC5iCTpEuWgoHHSgz
+	CqdCPZSL7zfg/A+Qwr+AiobTejJ9Kty60GWuZ4oxwf62FGk4OVN6rCzTd69gjRXvh3KMNmaSRekhC
+	36wjzdNPsZTUBQNJluSldfoeQlT/dK08lpynmACtsgKQYIQWftn9nDi7C5L5cKLTEosy5TBPBInby
+	RYHuVZ4+nLaiE6yWiLJsNY8toIghDAYXmJ5qIRqwo=;
+Received: from [2a02:587:6a09:4a00:587e:ac7c:113b:c2ed]
+	by devloop.tasossah.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.97)
+	(envelope-from <tasos@tasossah.com>)
+	id 1uF5TV-0000000BGk7-36ar;
+	Wed, 14 May 2025 09:20:17 +0300
+Message-ID: <d60729c2-9fb4-4fa7-9e4b-070127d8943e@tasossah.com>
+Date: Wed, 14 May 2025 09:20:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Fix persistent buffer when commit page is
+ the reader page
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20250513115032.3e0b97f7@gandalf.local.home>
+Content-Language: el-GR, en-GB
+From: Tasos Sahanidis <tasos@tasossah.com>
+Autocrypt: addr=tasos@tasossah.com; keydata=
+ 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
+In-Reply-To: <20250513115032.3e0b97f7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch defines driver data structure and adds it into QuickI2C
-device structure. Changes PCI ID table to use PCI_DEVICE_DATA() to
-pass platform specific driver data into driver, let driver has
-capability to enable different hardware features according to
-different platform driver data.
+On 2025-05-13 18:50, Steven Rostedt wrote:
+> To trigger this bug:
+> 
+>   # echo 1 > /sys/kernel/tracing/instances/boot_mapped/events/syscalls/sys_enter_fchownat/enable
+>   # touch /tmp/x
+>   # chown sshd /tmp/x
+>   # reboot
+> 
+> On boot up, the dmesg will have:
+>  Ring buffer meta [0] is from previous boot!
+>  Ring buffer meta [1] is from previous boot!
+>  Ring buffer meta [2] is from previous boot!
+>  Ring buffer meta [3] is from previous boot!
+>  Ring buffer meta [4] commit page not found
+>  Ring buffer meta [5] is from previous boot!
+>  Ring buffer meta [6] is from previous boot!
+>  Ring buffer meta [7] is from previous boot!
+> 
+> Where the buffer on CPU 4 had a "commit page not found" error and that
+> buffer is cleared and reset causing the output to be empty and the data lost.
+> 
+> When it works correctly, it has:
+> 
+>   # cat /sys/kernel/tracing/instances/boot_mapped/trace_pipe
+>         <...>-1137    [004] .....   998.205323: sys_enter_fchownat: __syscall_nr=0x104 (260) dfd=0xffffff9c (4294967196) filename=(0xffffc90000a0002c) user=0x3e8 (1000) group=0xffffffff (4294967295) flag=0x0 (0
+> 
+Tested-by: Tasos Sahanidis <tasos@tasossah.com>
 
-Signed-off-by: Even Xu <even.xu@intel.com>
----
- .../intel-quicki2c/pci-quicki2c.c             | 25 +++++++++++--------
- .../intel-quicki2c/quicki2c-dev.h             | 24 +++++++++++++-----
- 2 files changed, 32 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-index af7282e998c7..918cb9eb6b50 100644
---- a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-+++ b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-@@ -328,6 +328,7 @@ static irqreturn_t quicki2c_irq_thread_handler(int irq, void *dev_id)
-  * quicki2c_dev_init - Initialize QuickI2C device
-  * @pdev: Pointer to the THC PCI device
-  * @mem_addr: The Pointer of MMIO memory address
-+ * @ddata: Point to quicki2c_ddata structure
-  *
-  * Alloc quicki2c_device structure and initialized THC device,
-  * then configure THC to HIDI2C mode.
-@@ -337,7 +338,8 @@ static irqreturn_t quicki2c_irq_thread_handler(int irq, void *dev_id)
-  * Return: Pointer to the quicki2c_device structure if success
-  * or NULL on failure.
-  */
--static struct quicki2c_device *quicki2c_dev_init(struct pci_dev *pdev, void __iomem *mem_addr)
-+static struct quicki2c_device *quicki2c_dev_init(struct pci_dev *pdev, void __iomem *mem_addr,
-+						 const struct quicki2c_ddata *ddata)
- {
- 	struct device *dev = &pdev->dev;
- 	struct quicki2c_device *qcdev;
-@@ -351,6 +353,7 @@ static struct quicki2c_device *quicki2c_dev_init(struct pci_dev *pdev, void __io
- 	qcdev->dev = dev;
- 	qcdev->mem_addr = mem_addr;
- 	qcdev->state = QUICKI2C_DISABLED;
-+	qcdev->ddata = ddata;
- 
- 	init_waitqueue_head(&qcdev->reset_ack_wq);
- 
-@@ -534,9 +537,9 @@ static int quicki2c_alloc_report_buf(struct quicki2c_device *qcdev)
-  *
-  * Return 0 if success or error code on failure.
-  */
--static int quicki2c_probe(struct pci_dev *pdev,
--			  const struct pci_device_id *id)
-+static int quicki2c_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
-+	const struct quicki2c_ddata *ddata = (const struct quicki2c_ddata *)id->driver_data;
- 	struct quicki2c_device *qcdev;
- 	void __iomem *mem_addr;
- 	int ret;
-@@ -574,7 +577,7 @@ static int quicki2c_probe(struct pci_dev *pdev,
- 
- 	pdev->irq = pci_irq_vector(pdev, 0);
- 
--	qcdev = quicki2c_dev_init(pdev, mem_addr);
-+	qcdev = quicki2c_dev_init(pdev, mem_addr, ddata);
- 	if (IS_ERR(qcdev)) {
- 		dev_err_once(&pdev->dev, "QuickI2C device init failed\n");
- 		ret = PTR_ERR(qcdev);
-@@ -924,13 +927,13 @@ static const struct dev_pm_ops quicki2c_pm_ops = {
- };
- 
- static const struct pci_device_id quicki2c_pci_tbl[] = {
--	{PCI_VDEVICE(INTEL, THC_LNL_DEVICE_ID_I2C_PORT1), },
--	{PCI_VDEVICE(INTEL, THC_LNL_DEVICE_ID_I2C_PORT2), },
--	{PCI_VDEVICE(INTEL, THC_PTL_H_DEVICE_ID_I2C_PORT1), },
--	{PCI_VDEVICE(INTEL, THC_PTL_H_DEVICE_ID_I2C_PORT2), },
--	{PCI_VDEVICE(INTEL, THC_PTL_U_DEVICE_ID_I2C_PORT1), },
--	{PCI_VDEVICE(INTEL, THC_PTL_U_DEVICE_ID_I2C_PORT2), },
--	{}
-+	{ PCI_DEVICE_DATA(INTEL, THC_LNL_DEVICE_ID_I2C_PORT1, NULL) },
-+	{ PCI_DEVICE_DATA(INTEL, THC_LNL_DEVICE_ID_I2C_PORT2, NULL) },
-+	{ PCI_DEVICE_DATA(INTEL, THC_PTL_H_DEVICE_ID_I2C_PORT1, NULL) },
-+	{ PCI_DEVICE_DATA(INTEL, THC_PTL_H_DEVICE_ID_I2C_PORT2, NULL) },
-+	{ PCI_DEVICE_DATA(INTEL, THC_PTL_U_DEVICE_ID_I2C_PORT1, NULL) },
-+	{ PCI_DEVICE_DATA(INTEL, THC_PTL_U_DEVICE_ID_I2C_PORT2, NULL) },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, quicki2c_pci_tbl);
- 
-diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-dev.h b/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-dev.h
-index 43372253ba9c..e130598d13c1 100644
---- a/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-dev.h
-+++ b/drivers/hid/intel-thc-hid/intel-quicki2c/quicki2c-dev.h
-@@ -7,12 +7,12 @@
- #include <linux/hid-over-i2c.h>
- #include <linux/workqueue.h>
- 
--#define THC_LNL_DEVICE_ID_I2C_PORT1	0xA848
--#define THC_LNL_DEVICE_ID_I2C_PORT2	0xA84A
--#define THC_PTL_H_DEVICE_ID_I2C_PORT1	0xE348
--#define THC_PTL_H_DEVICE_ID_I2C_PORT2	0xE34A
--#define THC_PTL_U_DEVICE_ID_I2C_PORT1	0xE448
--#define THC_PTL_U_DEVICE_ID_I2C_PORT2	0xE44A
-+#define PCI_DEVICE_ID_INTEL_THC_LNL_DEVICE_ID_I2C_PORT1		0xA848
-+#define PCI_DEVICE_ID_INTEL_THC_LNL_DEVICE_ID_I2C_PORT2		0xA84A
-+#define PCI_DEVICE_ID_INTEL_THC_PTL_H_DEVICE_ID_I2C_PORT1	0xE348
-+#define PCI_DEVICE_ID_INTEL_THC_PTL_H_DEVICE_ID_I2C_PORT2	0xE34A
-+#define PCI_DEVICE_ID_INTEL_THC_PTL_U_DEVICE_ID_I2C_PORT1	0xE448
-+#define PCI_DEVICE_ID_INTEL_THC_PTL_U_DEVICE_ID_I2C_PORT2	0xE44A
- 
- /* Packet size value, the unit is 16 bytes */
- #define MAX_PACKET_SIZE_VALUE_LNL			256
-@@ -122,6 +122,16 @@ struct quicki2c_subip_acpi_config {
- 	u64 HMSL;
- };
- 
-+/**
-+ * struct quicki2c_ddata - Driver specific data for quicki2c device
-+ * @max_detect_size: Identify max packet size detect for rx
-+ * @interrupt_delay: Identify interrupt detect delay for rx
-+ */
-+struct quicki2c_ddata {
-+	u32 max_detect_size;
-+	u32 interrupt_delay;
-+};
-+
- struct device;
- struct pci_dev;
- struct thc_device;
-@@ -135,6 +145,7 @@ struct acpi_device;
-  * @thc_hw: Point to THC device
-  * @hid_dev: Point to HID device
-  * @acpi_dev: Point to ACPI device
-+ * @ddata: Point to QuickI2C platform specific driver data
-  * @state: THC I2C device state
-  * @mem_addr: MMIO memory address
-  * @dev_desc: Device descriptor for HIDI2C protocol
-@@ -158,6 +169,7 @@ struct quicki2c_device {
- 	struct thc_device *thc_hw;
- 	struct hid_device *hid_dev;
- 	struct acpi_device *acpi_dev;
-+	const struct quicki2c_ddata *ddata;
- 	enum quicki2c_dev_state state;
- 
- 	void __iomem *mem_addr;
--- 
-2.40.1
-
+Patch resolves the issue on my end. Cheers!
