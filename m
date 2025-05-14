@@ -1,82 +1,154 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFCDF4ED;
-	Wed, 14 May 2025 03:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3071F4ED;
+	Wed, 14 May 2025 03:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747191614; cv=none; b=XWBN3wSavrJWPmnxwy0hpVdjvLJmszilWciXP7/n7xDZgeuqOfOdzlLzgXI+SLKvzeNsYbWqgwu5pdHhUWbCep8DXFuZIhNatwCPxYfMVpiFWyTQSyViAKP0g77llmLMUZ0CezA4Xil+tQ9QLZOmqBakZMDoJ9aI8tXHDcwltQM=
+	t=1747191653; cv=none; b=A6q6Z2hk7ySQESZgqAxK9i5qKcV7d5rb3iroSavdq0mb15pHrfL7WiWIFXVFDsdPy6B/vxcZehdQ1McRok+w2LNi3wTNXY+FSz8y61sFbasFtiN9auZmmpjCUA9WOWH9dEaXE34vtMjIqoEIhd40Zap65hzYzvzpUgFcRxZpZrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747191614; c=relaxed/simple;
-	bh=ubh9TlPTD7W4U6wPWbQQxXk+IE9xbwcI5RVWb/egcgk=;
+	s=arc-20240116; t=1747191653; c=relaxed/simple;
+	bh=vX8mNa31YG9zmPqphOmHRm2XjzaN7O5/YoRb0FhDIVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bp67L+2ZpzwbygHEDpXTn0GSBlrIOGZe49t959OoeKOGq2obwonUOsNWwOHt9MRo2HGdE8sHOuZ9Z/nyrt1XQSCVSZTpSTlVLBjt5K3+LajUU+JpN6bWs+Rl7Qo+tVLVBHrkscIVNU96s9vFJhRvvpGVAhS17uQjGSA0TjE+ATs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=KLD6xr14; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="KLD6xr14"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=A2IcOM+Jv51AuN+5E4zGxSWcW8AP5sQ7kd2IdjfCzVA=; b=KLD6xr14fav0AqE6JxNlinuQY0
-	BMYJvnBdLOO+FDqMJWzJVmGpx88JW3KSNSYKlmiGgicpKA6scipRliv/01e3ozOBZZyp4Ap/MVss9
-	AlFbfwdVEVvhtI3vzvZbt7c3M4AsbX6q6MfZ1GVtTbZXlrgyEuWG+WRxYVo2lXAGCml8J3zfMvni7
-	b/P0DYHh9bMxlBcHKA1IYUGqzjrClb9yRKxMsbLw9u8XbnXWC78/8KIw7RBtsRu+wcdRSuWouGbMC
-	wFrwxMA9mCY9mU9KRPPjSKYNuQptwcnxeziAADF5irLWocqKmiql2IdpkDIGSlx0JgD8GlKL4kvFx
-	kQr9a85g==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uF2LZ-005vwi-1t;
-	Wed, 14 May 2025 10:59:54 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 14 May 2025 10:59:53 +0800
-Date: Wed, 14 May 2025 10:59:53 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Zaslonko Mikhail <zaslonko@linux.ibm.com>,
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-	"Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
-Message-ID: <aCQHKQ9bGaZiVrXs@gondor.apana.org.au>
-References: <20240902105656.1383858-1-senozhatsky@chromium.org>
- <20240902105656.1383858-11-senozhatsky@chromium.org>
- <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
- <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
- <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
- <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
- <3bd33a06-f8e2-4901-ada1-e970d18afcd4@linux.ibm.com>
- <jejqy2tqaasir7vtu633ns3nybrzxvjlpebfavxnmq7inq2shz@egfzio3p2wgt>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttuXnJERibiw0gBMTSQyMFEsI9+fVYBe0WD+bbPF/ttj64ORxY6i+8ltPb47bKyN21tcEpwr63+FTBcI6YR0E8ZXMxLnklf5hW5lNjE9+2YlpFJX23FPv5+nb5vH8kEMdEGaF6Mwm6GS64THPKh+BNo8yUnyBOlk8fb76vA5no4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-65-6824075daadc
+Date: Wed, 14 May 2025 12:00:40 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net,
+	davem@davemloft.net, john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
+	vishal.moola@gmail.com
+Subject: Re: [RFC 13/19] page_pool: expand scope of is_pp_{netmem,page}() to
+ global
+Message-ID: <20250514030040.GA48035@system.software.com>
+References: <20250509115126.63190-1-byungchul@sk.com>
+ <20250509115126.63190-14-byungchul@sk.com>
+ <87y0v22dzn.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <jejqy2tqaasir7vtu633ns3nybrzxvjlpebfavxnmq7inq2shz@egfzio3p2wgt>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87y0v22dzn.fsf@toke.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsXC9ZZnoW4su0qGwZdHKhZz1q9hs1j9o8Ji
+	+YMdrBZfft5mt1i88BuzxZzzLSwWT489Yre4v+wZi8We9u3MFr0tv5ktmnasYLK4sK2P1eLy
+	rjlsFvfW/Ge1OLZAzOLb6TeMFpcOP2KxWL/vBqvF7x9z2ByEPbasvMnksXPWXXaPBZtKPTav
+	0PLounGJ2WPTqk42j02fJrF73Lm2h83jxIzfLB47d3xm8vj49BaLx/t9V9k8Pm+SC+CN4rJJ
+	Sc3JLEst0rdL4Mpo27+JqWCLRMXSt2cZGxgvC3cxcnJICJhILL++jwnG3nD5LSOIzSKgKnF4
+	6ytmEJtNQF3ixo2fQDYHh4iAo8TpH+ldjFwczAJ7mCUun50OVi8sECpx+lcDWD2vgIVEa1Mn
+	C4gtJFAr8WbrNXaIuKDEyZlPwOLMAjoSO7feYQOZySwgLbH8HwdEWF6ieetssDGcQCfcO/id
+	DcQWFVCWOLDtOBPIXgmBU+wSZx61skLcLClxcMUNlgmMgrOQrJiFZMUshBWzkKxYwMiyilEo
+	M68sNzEzx0QvozIvs0IvOT93EyMwlpfV/onewfjpQvAhRgEORiUeXgtd5Qwh1sSy4srcQ4wS
+	HMxKIrzXs4BCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUa
+	GKW4LINn7E8+9Mtl56R9mp/50yY43sl/M6csO9d8xcTbAQtlLtgfDpP7f7ykbPvSEA7r1DeK
+	zE+ehAbFLdjamvOpKUatbokic1bx+XXvIhLcBB1UJKbISR9r1Hw9V+Pt4d0pC3IVpDcdFF4Y
+	xd0WWr960hPGIKEHuU1xsspHfktdzVhycO+yUiWW4oxEQy3mouJEAHTBG17hAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsXC5WfdrBvLrpJhMLGX12LO+jVsFqt/VFgs
+	f7CD1eLLz9vsFosXfmO2mHO+hcXi6bFH7Bb3lz1jsdjTvp3ZorflN7NF044VTBaH555ktbiw
+	rY/V4vKuOWwW99b8Z7U4tkDM4tvpN4wWlw4/YrFYv+8Gq8XvH3PYHEQ8tqy8yeSxc9Zddo8F
+	m0o9Nq/Q8ui6cYnZY9OqTjaPTZ8msXvcubaHzePEjN8sHjt3fGby+Pj0FovH+31X2TwWv/jA
+	5PF5k1wAXxSXTUpqTmZZapG+XQJXRtv+TUwFWyQqlr49y9jAeFm4i5GTQ0LARGLD5beMIDaL
+	gKrE4a2vmEFsNgF1iRs3fgLZHBwiAo4Sp3+kdzFycTAL7GGWuHx2Oli9sECoxOlfDWD1vAIW
+	Eq1NnSwgtpBArcSbrdfYIeKCEidnPgGLMwvoSOzceocNZCazgLTE8n8cEGF5ieats8HGcAKd
+	cO/gdzYQW1RAWeLAtuNMExj5ZiGZNAvJpFkIk2YhmbSAkWUVo0hmXlluYmaOqV5xdkZlXmaF
+	XnJ+7iZGYGQuq/0zcQfjl8vuhxgFOBiVeHgtdJUzhFgTy4orcw8xSnAwK4nwXs8CCvGmJFZW
+	pRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTD2WHh9C3wbzdLdudD1
+	5nmBgL8bX5hfc+6zkw4+VrExxfTD+s2xBQxv5h6XWXWma4rB+jBd6brCS5pbxfcJrtm4P+fO
+	rquhNvu9WwMW1oUkei9qTHgmk7qKj31vWzaLftzz6AI3ybDnEsf7zs1qWb902pFtbB3SPC4M
+	1Y81D/57utJ7/z+dV81KLMUZiYZazEXFiQD6qRSxyAIAAA==
+X-CFilter-Loop: Reflected
 
-On Wed, May 14, 2025 at 11:56:38AM +0900, Sergey Senozhatsky wrote:
->
-> Crypto API uses a hard-coded value of -11, which wouldn't work in your
-> case.  However, if you don't use crypto API (e.g. zswap) in your setup
-> then it probably doesn't need to be patched.  Cc-ed Herbert from the
-> crypto API side, just in case.
+On Mon, May 12, 2025 at 02:46:36PM +0200, Toke Høiland-Jørgensen wrote:
+> Byungchul Park <byungchul@sk.com> writes:
 > 
-> [1] https://lore.kernel.org/linux-kernel/20250514024825.1745489-1-senozhatsky@chromium.org
+> > Other than skbuff.c might need to check if a page or netmem is for page
+> > pool, for example, page_alloc.c needs to check the page state, whether
+> > it comes from page pool or not for their own purpose.
+> >
+> > Expand the scope of is_pp_netmem() and introduce is_pp_page() newly, so
+> > that those who want to check the source can achieve the checking without
+> > accessing page pool member, page->pp_magic, directly.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > ---
+> >  include/net/page_pool/types.h |  2 ++
+> >  net/core/page_pool.c          | 10 ++++++++++
+> >  net/core/skbuff.c             |  5 -----
+> >  3 files changed, 12 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
+> > index 36eb57d73abc6..d3e1a52f01e09 100644
+> > --- a/include/net/page_pool/types.h
+> > +++ b/include/net/page_pool/types.h
+> > @@ -299,4 +299,6 @@ static inline bool is_page_pool_compiled_in(void)
+> >  /* Caller must provide appropriate safe context, e.g. NAPI. */
+> >  void page_pool_update_nid(struct page_pool *pool, int new_nid);
+> >  
+> > +bool is_pp_netmem(netmem_ref netmem);
+> > +bool is_pp_page(struct page *page);
+> >  #endif /* _NET_PAGE_POOL_H */
+> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> > index b61c1038f4c68..9c553e5a1b555 100644
+> > --- a/net/core/page_pool.c
+> > +++ b/net/core/page_pool.c
+> > @@ -1225,3 +1225,13 @@ void net_mp_niov_clear_page_pool(struct netmem_desc *niov)
+> >  
+> >  	page_pool_clear_pp_info(netmem);
+> >  }
+> > +
+> > +bool is_pp_netmem(netmem_ref netmem)
+> > +{
+> > +	return (netmem_get_pp_magic(netmem) & ~0x3UL) == PP_SIGNATURE;
+> > +}
+> > +
+> > +bool is_pp_page(struct page *page)
+> > +{
+> > +	return is_pp_netmem(page_to_netmem(page));
+> > +}
+> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> > index 6cbf77bc61fce..11098c204fe3e 100644
+> > --- a/net/core/skbuff.c
+> > +++ b/net/core/skbuff.c
+> > @@ -893,11 +893,6 @@ static void skb_clone_fraglist(struct sk_buff *skb)
+> >  		skb_get(list);
+> >  }
+> >  
+> > -static bool is_pp_netmem(netmem_ref netmem)
+> > -{
+> > -	return (netmem_get_pp_magic(netmem) & ~0x3UL) == PP_SIGNATURE;
+> > -}
+> > -
+> 
+> This has already been moved to mm.h (and the check changed) by commit:
+> 
+> cd3c93167da0 ("page_pool: Move pp_magic check into helper functions")
+> 
+> You should definitely rebase this series on top of that (and the
+> subsequent ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap
+> them when destroying the pool")), as these change the semantics of how
+> page_pool interacts with struct page.
+> 
+> Both of these are in net-next, which Mina already asked you to rebase
 
-Once we have parameter support in acomp you should be able to set
-this as an optional parameter.
+Is this net-next you are mentioning?  I will rebase on this if so.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
+
+	Byungchul
+
+> on, so I guess you'll pick it up there, put flagging it here just for
+> completeness :)
+> 
+> -Toke
+> 
