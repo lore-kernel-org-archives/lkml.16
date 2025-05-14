@@ -1,163 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic304-25.consmr.mail.gq1.yahoo.com (sonic304-25.consmr.mail.gq1.yahoo.com [98.137.68.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EC728D82E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66165191F98
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.68.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250726; cv=none; b=WJ5eXYJ0YEWaeuPFlrSMtNAjdAITRSpBKYiKX47VfPqOn1E4pdineaM1s4FEvn8gVpXtBmBK+EhW7KET7nPeB1sO3aqJi/rGI+wZfwHnVsAuETodMuevp/ilzsYRQAtDJ3dxSxRdJMahU/T6VC1JXpVt9Udii4PwbKlL+27Zky8=
+	t=1747250796; cv=none; b=MMVKX5KnTSIannJXygs8B6g7Mu39FNRhuNGAggAtGdIhwbBOy6PiNMKZuxpfWgau7d3vdX7d2iYDxJvoQuHqsekDuGE6dpUKJ0+xQLV+YImZ9HjjKAMSKDD4xmwgIbFgVt0K0+fL2+RMBMhxv4UcOcbZbBsOEIwmsRKCVbf/0TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250726; c=relaxed/simple;
-	bh=a6pXWAw3qSn8K0MGI01Y9Wef/OeVTiOkuPEXmvMQ45A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKaVFQqxa2xr4Z0lwb8Iy2snpRfLJwOKf6CUnDzcfNUnRF0myH29ll8ruUt5oqCgLTj5k0v0plhuHG29tiFaVdCu7E/WhEWBl2Q8MBstukT/CXB+swST0gOKm/HmYfFc50MvupZcBq5Hdl2EK3n54j4F7Teu/302D2mPOMdTbfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BCUubKSw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747250796; c=relaxed/simple;
+	bh=VXL/P8CLyy2P1CUPDChST5YDYNuOKCrLNS+EGjG+AFI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eEETSauq+0TIb+1z31+OolROrR984ZXN3Lf7ueLSSwOZb9nyF4fpDUEYaXykptO3Zt16M+TV2kSUF/Rm83p+I5oNkNo7UjmmnuZlovimj5cBVx4EoT2VIx/FBqGyFmw5XeU3Kgq7aRyPcvoJsO1VpBv7ceH9BUpnvfreJrYchdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=Uf8J97o5; arc=none smtp.client-ip=98.137.68.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BCUubKSw"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EIrZLA012795
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:25:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=guHnDjTo7eaE/yughOao688D
-	Svp7ZoZj4rGyk6Vz4vg=; b=BCUubKSwIOu6HQnrADk5Mgq6zf5I997Ecg93/dmd
-	xd1QBGAMiLWOXQ1bqg/HCb24sbvcH+e9XL7EU38I7WpU4Nir5OBKVfE4pOi3fY6d
-	du7y5imUF/1Q/Q25GZt3Qr4hWnb9idQAu+vUT51+yoryQ8QAPxd8p4qX6iLnLNnI
-	BbVc9HIiTqReQ/R0PfLN+0D8f8VSdfG579608VqC9EWvsUMFfQ2Qp/muTlahieWg
-	nAoIbPnEGB5puSTqSF9xeiVrBQbuPUGVNUJ+nvyNBvhkpgKAlAfRtYub1ZS2T5Bi
-	dGlKA20ShaX/St5TEZyci0yr4FyBD5YWDGITJdQA44ACdQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmkvq7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:25:24 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c793d573b2so16298385a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:25:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747250722; x=1747855522;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=guHnDjTo7eaE/yughOao688DSvp7ZoZj4rGyk6Vz4vg=;
-        b=O9uTkT3fVnNBoxYB+dci7bEDE7aUsY3prn446PqI4KCVztvO623dE93OUkHf3ZwYqS
-         EIF1joSej+Drw8CiCd+QiL72+rY+yMzUG7/gGhRkbwX3s4RbVI+1eXdYklYwvtHlSxjX
-         nMyObYOUhu1FFIYSNJykZqOmfWz3iv8M0GLkYO78aK8GTtlJWEVp3phRrmnymn2swZnZ
-         ifmLvBGsi3scfHIJ5YbwkioBGOjpbLmZ9XUXA5Mlk/u3gFp0VywNP6aq3mnvXjr3F1tq
-         qUgCnNsRD3U3jaCcZnw+ofRkNy/8fmaL8cfCkjsUin3rWG78CLqPWQDeRX4le9FQAbao
-         X+wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVu1+MSJoZDLexRGf+/pU2gQai1+boE8cQ9L0dPnpjiQc45z/P5+xy3BREvtF1mD0yzZquLXB6kZAgJpVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRWY0eS3dr8/DD8l3XuJ5Qvu/HB6+tTpfOn4BnvySNDjwLu8NL
-	N9V/7j6otCp9c4jGh00VPAiKRJHEeoJYjw4svBv6vduACZnxmmA5vIhZzIECgkkeNyCbMhR1/zs
-	UOeQBF1Kj090+Db1aBGGzdu7osd4+3DwKntV0OhO+G+0MuZmrEOyKlm4mmd9VLHHY3Yb6unQ=
-X-Gm-Gg: ASbGncuAHDDHdkkvnFvCVMQLWzIzGqfYm1NXfkjHg4NEilcLguvKLil+JA6c4z0AuCN
-	1AgidGhGJFk6nxSk0oK+vUy1OVI/ltgzKItMVePeYpsOfzW5KWgxHRmo4wm+VX3cKSyefmj6bWi
-	X7Ykc9q4dPbtsKYXZvdLzz7yWtCuYKtHuJ5Y4qgSoTg+waRdUi44lo+xIeGdcDMsrL8SCOYl63s
-	6U+icqEGug4ir514tUmHEb4fDVzN7Y0rQ8vjnk0IyG13w+2JVWiv3csREVSvZojgGAOL20sOnbF
-	3/CbyOstVirzdT2sdSoQZ0RbUFpny2aD7WGUK/f0Tdn/p7PKj4/X3Bihvrz2mZYiqtOOYq5bjig
-	=
-X-Received: by 2002:a05:620a:1a8f:b0:7c5:a25a:f0f3 with SMTP id af79cd13be357-7cd287defa6mr638170885a.8.1747250722282;
-        Wed, 14 May 2025 12:25:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGqYspBX7D3lylLVnQVlBe+b6tLYtEGKb07awj3O663BvMry8yeZxkF53c9zpzvl/w4Clu/Ag==
-X-Received: by 2002:a05:620a:1a8f:b0:7c5:a25a:f0f3 with SMTP id af79cd13be357-7cd287defa6mr638167385a.8.1747250721720;
-        Wed, 14 May 2025 12:25:21 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64cbf3fsm2333073e87.211.2025.05.14.12.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 12:25:19 -0700 (PDT)
-Date: Wed, 14 May 2025 22:25:18 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH RFC RFT v2 15/15] drm/msm/a6xx: Warn if the
- highest_bank_bit value is overwritten
-Message-ID: <wb46vfuegw2d4mj6pqx6o5my7ii4fhkrzrgte4hvey5ywiszpt@oe3qsptmanuu>
-References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
- <20250514-topic-ubwc_central-v2-15-09ecbc0a05ce@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Uf8J97o5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1747250794; bh=TPlDicIWMRqRIW2310f0dn23Sj0w+ZmFXbh4nVRsg+k=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=Uf8J97o5jm6VxNjBULCpOlmbzLlaVv39JQ00ez1Wi8X2I9nR4Lnw7phvFdaYnp5ny8TGiKOFBhLe0/BLju4iOwV9F1TMoDo+QZeWJr/khdnqno0rwRt+dZM2UepnVR7cfaouGU3Klpgm9kmPEHrhIG556TyI5Efgnw//EwRo45e55jiezTqfxNWrWxX4ed+VGV+NJuudQhGsZO4qJsTErb8nvcQm5pOI3m53hhJ+vLaAJDyoquIUCXb9Og88HtxltA7B6Mv8iOBust0Mjtno76DOzSBDRGuyC4WPde9AHY7EPO+7HcCpd2BRZJouNUjpiqw3XP8jFalKPQGA9/nEUg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747250794; bh=+5ff0kXEa0e0h+vAi3oJl+bHFNYmJloOke+aakJttal=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=GdM7iiPIvoocUsYR0XP4bJP00+JnWeQrhZbqCv3AyV6YUvFamFv5Q/gTFkooe3bSfn5uwkZCipd+aPyq6fIifrmUPoFA9bsAQF6M0PFlbxhc1JAd5chHiJ6owJuCe30isdl8ZNqyWLTaIbJeAzanN/7j7QGj/RnJSDruZHSJ0VNy9AF5QgFZFML5LWbSbJNcqRdtmHkimCZFuArfjLJdJ1iFDM8is6NIL39NEK28Ow9SqD7UIiuzv7MLKWRvxR9wp97wOC/YNoYwn29n952Vzf+fe+OpgIUSgQBPL4HCpqU5/TZTkBqxjUdJ6UYrcAOskSUoNKMmQARa2CRbHhCO7g==
+X-YMail-OSG: 1BJEQWMVM1moD7mbuebnh_iJHAhx1t2hNuGdzhiSuyggkMnLzcLzXTcn2.tXD4g
+ UZWT0gU1B5XB0.AJjkFki8xn89LTJhEii6pLQa5kyXO6XJheS2yOm6ImRZzHAx8ajokfk.3ZhdE5
+ ZIRl_T2Bp3ROszri8L3jHA88xPv31qXwfuMgyVnGdqNcQbLKBTJQ1kKIxFrXx.rvusZmLnH8xfcR
+ NVCyBVXV23VJE.WAyHNKKUHSxLStdC7erfcgNC2lNhCwVmSoLa3lxUvzOmqayLTKYeOfa39wKkDW
+ E6Tf_2dNloX9xBHvTJlrqCD9253E8SQDyHKG8FkJEwe2oQ85mpjIB_RaDJ2e5ShOV5u2wEqeLYiE
+ diRZbftsvjNLGF_DXjR0mQv6WhOvmCidBOfgeigiIbkDRqOGBaBoLQafxy.0xG5k51WU6bzHt3Xs
+ .vg0iP9fRhs1iPXxcUCYzuQ7DZo5eNBLhxIDxm5QedjbsBxGuBNJJ6WaN4pnpQ1XRmk1CuSzR3N9
+ _IbUOM4dw5fTo40IQFbRuATlBTT_04Kx4xy2_f54qRhuZ_3eJ1CciNTuTQ39GABqdqCGmnSVDsfC
+ _r.ps7Junl1CyKqNxp1nqoaLtLMQqFyeUVEJZrIlT.WR1SOKgwALEmRADd9V_5a0TEicLjageeHj
+ ifPd2QM3CNWhTvj57F9uuxUe04yFvoCIQX2KxS8MkQZLqc5wc8HgwkdhZjMvdd5xCgoEuKRt_7Rx
+ TKt5gWHBkGf3JU7YXbZEsPNUNZBgxyVz2Pal2uDiEtLmlp8B0GdT55pizIXiP57owgFcOWuYYuqG
+ KcFb0nujetDmJPq.N5U8vm4FEM4sKxI5AvzpcLhQf4PPbHRVc5h.xUgqF1H7RoQ0U0e0NaejjTXW
+ 8pW_Ly73G0JoIIL0ELW0AKeK9w0iAFptp8_OeO6I05jCk6VmQCacm6mdNVC.fo.oRIw4ujI7ph0D
+ .TwqOGNevIaA9qZbbDbeuMKlEADyQbHu5bXrOITMaF2TZwWR2XZjX6H1rmKoNgIYGc8JCUJUDdpb
+ S_66hxpXfCxECfYp1CMJn5S67YasHi2Bsoje6wHJ6acnJ8J9i83VG_env6gEdqqcheSWKKMzMk1p
+ Rfin.ZuW.o1mvcOuDVPvAkaN_lBgW.mK9fBLp76ZvAQsKwPjTtXPlecnpYX7qrvjecl.7lt_VJch
+ F.zssnTjFavfnG5DhOjI7WRoGvmP15Ybau_1wdmoy5rZy566_dgojRlujbQN_ohq96Ucf4UlUFSq
+ JIHTtZxsyCm1QRtduV_3rsSxu9msBrSqVnV_RUFJd0BV_vBb9Cd.E.PCc8vLfkS.WbVEMCFkiFRl
+ K3rh7mqIvimgu.DMw5M7EEh65hu5McrsioxzuhWx2KLT3IxTfDhvOwOz0u6pHzfifDg1BgpmqnRe
+ tKFqGONqMii5GJ.4.Y7siNu27tUFdZ6MosrvmKJN5F0p09F1DSUo1smZrUgHtKMSHZhxkfU0EwXB
+ S37OgSaaLrWqSOiwK_0kIc79i38ChRGEGn9Wh.yBLM9ySONFjLogcjf9LpLmANF.3svZjJLNsQg1
+ hmCq40EchFNC4OaLDs2EkqxsKAbI0Isgknhs4J_rb2jUnnpQkO0e3.c.Cxlvu.p_a7vV7cYzXQH3
+ U7a9sRYOcPU92ZHFrBnhAkkk7vJyFG6sWPbVbzpdZMG.XJHu45apB3Mvhbg_JDl79XFFWZ9CtEbW
+ u5rEzrkl8apb2rSj7EbuAZQeEQJSh2msOLRCyGserdc9REa64Ow6SxjLUEu8_9j2YjsJL38UDwzi
+ HkDbmBgSLf75gUhc5Oo0R32Jektrcwmj0d145m4.FZRiPZF7kl15U_mh5Hjpt0FSSfg5R.HQQ_3d
+ 7TryI3i2grnucxHnEQjDqwzYoh8Fz6h_nbUa_n3lnrLfA5mf.MC2Qtw4_EvhZX_HaM3wDfk17lqM
+ JcGohAzjat_2PAi33KMbTVBo_UeLEttaRreCeN7J_NuyC.1Vqkt7ZUcSPzYPs0QCqbLQHKLQC9kR
+ h5VaKwCOm70T8p_n5.x7tlww5BnKRTq8xCzAEhzdHzJD01QvD.T9z726sbQJjSDkYe_G7xTxL6Oc
+ Q9JKJK4RUZSQ_05f7QXoy0MEAJ6xjlS0zVHzsUE1qh3lajWGmCh17CQMzhIJJ8TutVreYbssWoiw
+ Ca7XWoXRsV3Cn9cSzlyTlh3cS
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: fae6de29-71b6-4027-8b57-58e2edef86c8
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Wed, 14 May 2025 19:26:34 +0000
+Received: by hermes--production-ir2-858bd4ff7b-bdxql (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 4b2911a8d5146feae00c6603fcc64af0;
+          Wed, 14 May 2025 19:16:22 +0000 (UTC)
+Message-ID: <098b949b8ddc5b706adb927d04460943c245bef8.camel@aol.com>
+Subject: Re: [PATCH] x86/cpu/intel: replace deprecated strcpy with strscpy
+From: Ruben Wauters <rubenru09@aol.com>
+To: "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, 	x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Date: Wed, 14 May 2025 20:16:20 +0100
+In-Reply-To: <758195078eee66ce97c05091004bca9d5c3b6cd9.camel@aol.com>
+References: <20250507185459.8769-1-rubenru09.ref@aol.com>
+		 <20250507185459.8769-1-rubenru09@aol.com>
+		 <3AFD7702-7D6F-479C-950A-CA439E01838C@zytor.com>
+	 <758195078eee66ce97c05091004bca9d5c3b6cd9.camel@aol.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514-topic-ubwc_central-v2-15-09ecbc0a05ce@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE3NyBTYWx0ZWRfXzn4TT2EvwMiK
- ZcQtVWETjbTc0AdJFv3NMojCn3cEKQdl7tN7DS81gur3wlrIq6u+j3jNfclTTvEvYa+0MuaxbDG
- qvdrb+39CmDk793I8APeYaASF6I4U7th8ZIvKDHh/8rjSmdSDNBlppMcwv9S/kaRUQdUzHfzr+N
- tbgdun1qlrz3/d6dRScmKSnHrpjxAUT5RFHOjBOkPziwI+FH72Wurj2Oj9CvjTRCTmuRuIP+OsU
- FvZSs35xM9BHkUyMrI2cRLCR2MhK0lM68ojwigB9l/lzrD8VlTp/aUdZhk2YuRc1UfVGjnvxggB
- O6D2tqjt9q3s0wEIgonCnFd4h5Sa7f0X4QCr/2BLrzSryxYpE/ZS1LMwZahdqCrJH19NHtSi94e
- 3SL9kkeyj1Q3q8wXwgn1ncueD8EGBF5j9dC+SegLrX0Bva4DELXu9E9pZgvqe4Mh4O0CGLaE
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=6824ee24 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=hUL5GJU7K_37AAI6negA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: pKTEvrniwGAffpd7FjFo_PE0c0Kriy_K
-X-Proofpoint-ORIG-GUID: pKTEvrniwGAffpd7FjFo_PE0c0Kriy_K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=963 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140177
+X-Mailer: WebService/1.1.23840 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-On Wed, May 14, 2025 at 05:10:35PM +0200, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> In preparation to resolve the issue of hardcoding HBB, throw a warning
-> if the value is being overwritten in the GPU driver.
-> 
-> The HBB value is directly correlated with the memory configuration.
-> On platforms where more than one is supported, the value must differ
-> for proper functioning of the hardware, but it also must be consistent
-> across all UBWC producers/consumers.
-> 
-> On platforms supporting only a single DRAM setup, the value may still
-> be wrong, or at least inconsistent.
-> 
-> Print a warning to help catch such cases, until we declare full trust
-> to the central database.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index eaf468b67f97ff153e92a73a45581228fcf75e46..ab812338739568d5908ca439e5c53e230a02de5d 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -637,6 +637,10 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->  	if (adreno_is_a702(gpu))
->  		cfg->highest_bank_bit = 14;
->  
-> +	if (cfg->highest_bank_bit != common_cfg->highest_bank_bit)
-> +		DRM_WARN_ONCE("Inconclusive highest_bank_bit value: %u (GPU) vs %u (UBWC_CFG)\n",
-> +			      cfg->highest_bank_bit, common_cfg->highest_bank_bit);
-> +
+On Wed, 2025-05-07 at 21:30 +0100, Ruben Wauters wrote:
+> On Wed, 2025-05-07 at 13:14 -0700, H. Peter Anvin wrote:
+> > On May 7, 2025 11:51:36 AM PDT, Ruben Wauters <rubenru09@aol.com>
+> > wrote:
+> > > strcpy is deprecated due to lack of bounds checking.
+> > > This patch replaces strcpy with strscpy, the recommended
+> > > alternative for
+> > > null terminated strings, to follow best practices.
+> > >=20
+> > > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+> > > ---
+> > > arch/x86/kernel/cpu/intel.c | 2 +-
+> > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/arch/x86/kernel/cpu/intel.c
+> > > b/arch/x86/kernel/cpu/intel.c
+> > > index 584dd55bf739..b49bba30434d 100644
+> > > --- a/arch/x86/kernel/cpu/intel.c
+> > > +++ b/arch/x86/kernel/cpu/intel.c
+> > > @@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
+> > > 		}
+> > >=20
+> > > 		if (p)
+> > > -			strcpy(c->x86_model_id, p);
+> > > +			strscpy(c->x86_model_id, p);
+> > > 	}
+> > > #endif
+> > >=20
+> >=20
+> > strscpy() needs a buffer length; this patch wouldn't even compile!
+>=20
+> Hi, this is incorrect, strscpy is defined in string.h as
+> #define strscpy(dst, src, ...)	\
+> 	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src,
+> __VA_ARGS__)
+>=20
+> the third parameter is optional, and it works perfectly fine with two
+> parameters. I have compiled it, and there are no errors.
+>=20
+> > Not to mention that the string in question is generated in such a
+> > way
+> > that cannot be unterminated.
+>=20
+> I'm not entirely sure what you mean here? The assignments above are
+> null terminated strings, which the two parameter version works fine
+> with.
 
-This really should come in an earlier patch...
+Hello
 
->  	gpu->ubwc_config = &gpu->_ubwc_config;
->  
->  	return 0;
-> 
-> -- 
-> 2.49.0
-> 
+Just wanted to check that everything was ok with this patch, and that
+any concerns were addressed or explained. Please do let me know if
+there is anything I need to do or change to get this patch applied.
 
--- 
-With best wishes
-Dmitry
+Ruben Wauters
