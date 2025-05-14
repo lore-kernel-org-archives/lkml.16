@@ -1,133 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77C13E41A;
-	Wed, 14 May 2025 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E42525DD01;
+	Wed, 14 May 2025 09:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216780; cv=none; b=uiSaW/jsdMB+x4EugaQ3K2sI7JRqlItfGihAqH9CKpog0THDV7IrONlnlylaQX4jyhuj/dq/I9qFwnYvwH3ov6ZTtfykWffpkvWBYWtM+Y35tKuONDAzNLgjG6G7/hMsP47feFxa4DZRY3ZDmOFhEMThDx32hlWWBDy2ZEU/ZH4=
+	t=1747216788; cv=none; b=MhDAQvplJVQpSa9DJ4tJkf2VIdfnGp0RF+9kXLLL8XmQLKTuioefWkmYaY2uS46huLbLWeGqYbrzcZyfETI54ZrvkLSAPtx/vSBbz9wzmuvBc/WqFxPXo5w/FZgBJJruu8U5GDGKaneWyVOBqUF7ney0z7DQe9h9ox+oaaEhmOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216780; c=relaxed/simple;
-	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfWj/fCEkIASJKGAugykXMsvkx9y56beOmBuMobx7KbRrk3+yKWo49/dUq4J72InmZNVmxwAYcbmWXXFOAaE/AUcap+UN4+AUGRPFhl4dnB4iG9fbej3EyY7c5qHyIEVEsvxVrja0D/mYiNBWi3QTAWBsb0hOA/2AjfRWEw1iaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1ZgMsxn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747216788; c=relaxed/simple;
+	bh=4XRz0KJkKBfN7JeqljSUgq0a9vhHb7LlFLvoSb4uhak=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MK0ZEvs2njMr9RhgdRWRMJCI2mNUWp/FzvvH3g4v7dySftaEA3LGKaXTXyGUb31UNsFzGPl5eQ4P0I1tr4xIbUNFSWargGOac7dHAr4LhOLJ7JF6yRpaNRI4azCR2o2sS+P3f2LvCcyX/F4NTTitG/NXBYkeMU8Wxf8Ox1Nm60M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PoXjZvsq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cOMfi0u5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1ZgMsxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0E4C4CEE9;
-	Wed, 14 May 2025 09:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747216779;
-	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1ZgMsxntfuQjd/h0unBrYQzcBKcUtoZTyNYAlmMYABq7mggbRuFNxpn9cAuJ6eDk
-	 0Z8XvWh06F7bYvpiZwiclrBuU8j/kYGkd6FpebniW4vlRWP7vflhc0jS+0li+X1D55
-	 N1L/QACKMuDc2pwJXUq8VNiM3M2ugqKzbWPVq1IIwCvakFQTbLHcJctn/pfLuR3ZW+
-	 JOkyjtI/bRtsKS0x0AdnKXUQrtSUeFaeKQ5Qn+eJez4y8yC4grPLdUyTwK8KAtoSsF
-	 A+r2Dl0BkVNvO/eI5Tc0yoN9/SB0KVF+6VRjlHN+akhG8PVIsjIekmlRQWWQNHh+Uj
-	 U/O/LV2oEVORw==
-Date: Wed, 14 May 2025 11:59:35 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v8 05/11] regmap: irq: Add support for chips without
- separate IRQ status
-Message-ID: <aCRph9Qo7BbtTjIR@finisterre.sirena.org.uk>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PoXjZvsq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cOMfi0u5"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747216785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4XRz0KJkKBfN7JeqljSUgq0a9vhHb7LlFLvoSb4uhak=;
+	b=PoXjZvsqGsYnnAqMHpmDa3Fil1eJYKpZFSsPCPu/eZN+QlAmJE698JBnYLJopZReIjFqI2
+	time4FO8cwIVdWwFWBKzHbFtdu3561ea5+g9i/AnR2ib+ENabD4imawgJe0buy8wKI58RV
+	K6W2Z8et79ibqLnBLhDwGfqGG9gAOWF9tMbeyMTs4X8+XIqafybQxSYxyPP4kMpJYLU6Dv
+	uVVp26FfryILPnffp9WzFk92rhmGPIfsA3kDa3LO/xQEXXg5ruLEM94RyubsGDxvJB8Uyv
+	j7cT61Bq7uDU47rikoWUDWhoPPJez0ETHNvWuFX19uOqU+0nqE3aa6X3U6w2Yw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747216785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4XRz0KJkKBfN7JeqljSUgq0a9vhHb7LlFLvoSb4uhak=;
+	b=cOMfi0u5c2xEeAt9kse+jZb+DW1UksZoGLiD8e2gfQRy8nIQc0qQlGfI9lMSAHB05RKhf/
+	bQrf3IH7itTUv+Cw==
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
+ <jpoimboe@redhat.com>, mingo@kernel.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+ joe.lawrence@redhat.com
+Subject: Re: [PATCH v2] sched,livepatch: Untangle cond_resched() and
+ live-patching
+In-Reply-To: <20250509113659.wkP_HJ5z@linutronix.de>
+References: <20250509113659.wkP_HJ5z@linutronix.de>
+Date: Wed, 14 May 2025 11:59:45 +0200
+Message-ID: <87tt5nikby.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Z3tfCnzQ5p+24U/H"
-Content-Disposition: inline
-In-Reply-To: <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
-X-Cookie: Well begun is half done.
+Content-Type: text/plain
 
+On Fri, May 09 2025 at 13:36, Sebastian Andrzej Siewior wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> With the goal of deprecating / removing VOLUNTARY preempt, live-patch
+> needs to stop relying on cond_resched() to make forward progress.
+>
+> Instead, rely on schedule() with TASK_FREEZABLE set. Just like
+> live-patching, the freezer needs to be able to stop tasks in a safe /
+> known state.
+>
+> Compile tested only.
+>
+> [bigeasy: use likely() in __klp_sched_try_switch() and update comments]
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
---Z3tfCnzQ5p+24U/H
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 09, 2025 at 11:14:39AM +0200, Mathieu Dubois-Briand wrote:
-> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
-> provide an IRQ status for each separate line: only the current gpio
-> level can be retrieved.
-
-This doesn't build in a wide range of configurations (none at all
-AFAICT):
-
-/build/stage/linux/drivers/base/regmap/regmap-irq.c: In function =E2=80=98r=
-egmap_add_irq
-_chip_fwnode=E2=80=99:
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:88: error: macro "a=
-rray_
-size" requires 2 arguments, but only 1 given
-  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
-e(d->
-prev_status_buf));
-      |                                                                    =
-    =20
-               ^
-In file included from /build/stage/linux/include/linux/string.h:13,
-                 from /build/stage/linux/include/linux/bitmap.h:13,
-                 from /build/stage/linux/include/linux/cpumask.h:12,
-                 from /build/stage/linux/include/linux/smp.h:13,
-                 from /build/stage/linux/include/linux/lockdep.h:14,
-                 from /build/stage/linux/include/linux/spinlock.h:63,
-                 from /build/stage/linux/include/linux/sched.h:2213,
-                 from /build/stage/linux/include/linux/ratelimit.h:6,
-                 from /build/stage/linux/include/linux/dev_printk.h:16,
-                 from /build/stage/linux/include/linux/device.h:15,
-                 from /build/stage/linux/drivers/base/regmap/regmap-irq.c:1=
-0:
-/build/stage/linux/include/linux/overflow.h:327:9: note: macro "array_size"=
- defined here
-  327 | #define array_size(a, b)        size_mul(a, b)
-      |         ^~~~~~~~~~
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: error: =E2=80=
-=98array_size=E2=80=99 undeclared (first use in this function)
-  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
-e(d->prev_status_buf));
-      |                                                           ^~~~~~~~~~
-/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: note: each unde=
-clared identifier is reported only once for each function it appears in
-
-
---Z3tfCnzQ5p+24U/H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkaYYACgkQJNaLcl1U
-h9D5cAf+JhYoPK5A9iw0gYMdc9xLOUPvzCDacN5d5KvUrO4WUo6ZpEumlPwyI5kX
-700vdHFINWEJgKwy1UTRj70pXgkPkVUDDDZ4Y2hZZloQEgl10N+mm/hUZLxNlNRS
-N6idzTanOzTogg/bVYiNuMylxLNewGi93QqK7oplFA5eaRVbgFd5y1VJsECAEyfo
-TNqEmn+isUKmP0uC3NWbADZek2IOZ5wqt7WBVPPvF3zdNaLelFCiMw+N7Zm8xI1r
-S9UOfg4eKan6E2SVhwyr5Aemj+gpEhFgpJEVRUpOXZOGIymWcf2oFqbvDFs1YuLg
-n02uX8JFzuLgwFezUggjRZsJVJxw1A==
-=Mu44
------END PGP SIGNATURE-----
-
---Z3tfCnzQ5p+24U/H--
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
