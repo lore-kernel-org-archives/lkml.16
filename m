@@ -1,39 +1,54 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF461EB36
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9BD20299B;
+	Wed, 14 May 2025 12:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747224510; cv=none; b=Xsi/CSGwDsndJZ5naKBCdqKu7W85COXO1EAe1ZhwfrNNf0/Y4k1bbFJGbRL2qzeV2ulXfrBQybJOjskmCF7Cy7hjdYckVXQaYsCtXsckK/bR+4zXKwB7MEGRwgvwdYldwjAdEG/3gw2+ajw25drgtL1QwMb2mLHY1G5NU+Yl3MU=
+	t=1747224567; cv=none; b=pUSWbOiE7n0ec8GFAtr/DGrjGAWvVSFPVer4KKtzvQ9L8hw7mN7hShVrlI9I/2HR59Vd4dZPTV4JsSTDyNtYWN0s1IHRneE990lwOxAwsOWSwe4gDHPywHAwYe3NoIfsv9UKY9GnR66DrcrdwAqkxa/N1fUC/nSW4QqkClb7Dqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747224510; c=relaxed/simple;
-	bh=4dK3QVcfc/KKEOeFjFot7/D4lRsGAvGD+gIo8LszTNQ=;
+	s=arc-20240116; t=1747224567; c=relaxed/simple;
+	bh=v5YY0SZ0PYpJOc41X3mbWN+7Qhji612T5TVNWtMUFmM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LH4oe0JfMqYXyQLiabrDp5T6E7vceG6S20PoxgvW+xt24gvr3egdWa2djRjMVGbdqh4AVNypQYAVKnCQC+zCET1zE5cHDE9pU0W8u/+fivocbaYlx+R8V9xKTewHhjQzpOGV8TBiS1F/dGbIq1j9RiHjfbQKs10tzVNDOD/Ql1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tyOh0l+T; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=HqNSG1LwE5rOtG2jPhtoAvc4MATmm+fv9pUXWdFVrl18Vwbgki25CPRrPB76aY/MfMIlwUkCUmjiPCwHXisCs7O8YWowt1cme489t3Kf8Rfgf8Z6gVj2j+NvYrvGjnriEmRSM0AunFudwTt+iaJJYTLrfCQFrXkMsjGbOJbYuLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=k0pHId3v; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tyOh0l+T"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747224504; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=7eAMLJCK5k1FYQOA++OTzL/iUPIzGdYVuMe6yqYdMHc=;
-	b=tyOh0l+T+OiaE4ic2gH7bugyj416mr0e77vx4czj+ScNUYrHwMRlW0OsscKPsW5qCoZVXFrSgDzv3HFYi76oY6X0HTeb5vbt7T0Nh2iHClGo0i5APrUBTYMDU/1iWfPTBAdCmc1HXGZRJy9/3dKRVpO+tmcJNiTeKl8M2JGQVQA=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Walxtxb_1747224503 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 May 2025 20:08:23 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH RESEND] erofs: refine readahead tracepoint
-Date: Wed, 14 May 2025 20:08:20 +0800
-Message-ID: <20250514120820.2739288-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250514115713.2719705-1-hsiangkao@linux.alibaba.com>
-References: <20250514115713.2719705-1-hsiangkao@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="k0pHId3v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=RV3QvTlWfQTkDjPmndYOu91G7Myw8NKGakZkfON1fQE=; b=k0pHId3vv5dkgHeKqe7BKSWbUj
+	A1aVdokSQszW0BY6A2Cyg5+WnDRyAy6NJrGT1i/SF4sdAyTFi1g7+M27xbWPUk8kec6M9WvFyv25a
+	7m0XmI4qq/6YVQ/dpAEQrdhSpGW6DRjtISYPHEEx9XjZJlKZYNUWqDz9hU7MVVpACDh8dllAJ46M5
+	De/cCT+hUvZS485cdREe/WRFpRnQprDo5YzNDyaEvOQUnTNmewgFhM4/m/e0nWMFi395wCO4uIb7L
+	o3R/Wh2PaDVkGU2wDialKFfrAEaEp84i5uzKhUZx28pojksDDP45tyJ8LNPCP0FDhgiecsCV2xQZU
+	7AZ9c6qw==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uFAvI-0005f9-Gp; Wed, 14 May 2025 14:09:20 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: heiko@sntech.de
+Cc: quentin.schulz@cherry.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH v3 1/6] arm64: dts: rockchip: add basic mdio node to px30
+Date: Wed, 14 May 2025 14:09:01 +0200
+Message-ID: <20250514120906.2412588-2-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250514120906.2412588-1-heiko@sntech.de>
+References: <20250514120906.2412588-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,67 +57,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
- - trace_erofs_readpages => trace_erofs_readahead;
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
- - Rename a redundant statement `nrpages = readahead_count(rac);`;
+Using snps,reset-* properties for handling the phy-reset is deprecated
+and instead a real phy node should be defined that then contains the
+reset-gpios handling.
 
- - Move the tracepoint to the beginning of z_erofs_readahead().
+To facilitate this, add the core mdio node under the px30's gmac, similar
+to how the other Rockchip socs already do this.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
-replace a stale version..
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- fs/erofs/fileio.c            | 2 +-
- fs/erofs/zdata.c             | 5 ++---
- include/trace/events/erofs.h | 2 +-
- 3 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 60c7cc4c105c..94fff404db81 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -180,7 +180,7 @@ static void erofs_fileio_readahead(struct readahead_control *rac)
- 	struct folio *folio;
- 	int err;
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index 9137dd76e72c..feabdadfa440 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -985,6 +985,12 @@ gmac: ethernet@ff360000 {
+ 		resets = <&cru SRST_GMAC_A>;
+ 		reset-names = "stmmaceth";
+ 		status = "disabled";
++
++		mdio: mdio {
++			compatible = "snps,dwmac-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
+ 	};
  
--	trace_erofs_readpages(inode, readahead_index(rac),
-+	trace_erofs_readahead(inode, readahead_index(rac),
- 			      readahead_count(rac), true);
- 	while ((folio = readahead_folio(rac))) {
- 		err = erofs_fileio_scan_folio(&io, folio);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index b8e6b76c23d5..29541e0787b8 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1855,13 +1855,12 @@ static void z_erofs_readahead(struct readahead_control *rac)
- {
- 	struct inode *const inode = rac->mapping->host;
- 	Z_EROFS_DEFINE_FRONTEND(f, inode, readahead_pos(rac));
--	struct folio *head = NULL, *folio;
- 	unsigned int nrpages = readahead_count(rac);
-+	struct folio *head = NULL, *folio;
- 	int err;
- 
-+	trace_erofs_readahead(inode, readahead_index(rac), nrpages, false);
- 	z_erofs_pcluster_readmore(&f, rac, true);
--	nrpages = readahead_count(rac);
--	trace_erofs_readpages(inode, readahead_index(rac), nrpages, false);
- 	while ((folio = readahead_folio(rac))) {
- 		folio->private = head;
- 		head = folio;
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index c69c7b1e41d1..a5f4b9234f46 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -113,7 +113,7 @@ TRACE_EVENT(erofs_read_folio,
- 		__entry->raw)
- );
- 
--TRACE_EVENT(erofs_readpages,
-+TRACE_EVENT(erofs_readahead,
- 
- 	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
- 		bool raw),
+ 	sdmmc: mmc@ff370000 {
 -- 
-2.43.5
+2.47.2
 
