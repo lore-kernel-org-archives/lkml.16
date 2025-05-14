@@ -1,150 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDBE269CE4;
-	Wed, 14 May 2025 09:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F096325E827;
+	Wed, 14 May 2025 09:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216484; cv=none; b=a7N8s8/CpzE/KQn0YND+NNewqmhpr8FJeFuPjGyIbOCKu0V2LFz5bdW1UG/zaJ4PQUGi0Lyllwz02JCbDO7Mkzr9RqfhyijHDRs3jPx+znvSRXE0WZ2A49BlFMdsXF964nRCzckcCoAFaxHj8vcS5qitySDAZQmA8c+Iyj1P14g=
+	t=1747216512; cv=none; b=AOxvzlqS0ntHxaYwUpYRm49jOV8r05WVoeY3mLrwS20jhUezDktTYRJMcP4e+CDSWizfPTYX5e4V8fMWPKf4iiPHrE4TPVo8RnYzCJLtDdsLKyyrIAbN8k/UnNn/FTWqiaAXmJIHCZbDWnq/aBozi4x6gXd/AZIpXIxvBuxL35g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216484; c=relaxed/simple;
-	bh=Q4i1YFY9BC6oY63LcLnbiox6aS6RopyQdTJcQYzHeO0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SqFpkDcfwv09dDLFTfIuD1O7G0hyvCKPsmw2B6icyCi0qcNAyWWZCJAwb/Cqe85Ih8RbjAeUnAmlfiLo9zodcb8uAPTs+Eird6TJP53AevHuO3+YLTPKZRO+6TQLLNBQB6kga081mgBne6I3g5sOYmPcmohX8Mn/SihumY7IOZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcMBFmdI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747216512; c=relaxed/simple;
+	bh=NU0/laBLJ5U/Z61R8LdAMhWaqpI9feJPmdaQdzlsQqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vB3Mf4Y+igvLoEMk0vdyqxzAx5vSkviGoZCuLNhgHBWwqSch4IXylE0AkJhqs1rH0d26F3TcQ/AYYqPF5znXLI0waaEn4ghVAZqKmi0nsAGaHOE0Vk7Fdotwt7XiLhT3P6/8qA7b0Lv8e3RwaI+BD7Yq6R6OIxZGpTBQRVxHt60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=belB5YVB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcMBFmdI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC4DFC4CEE9;
-	Wed, 14 May 2025 09:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747216484;
-	bh=Q4i1YFY9BC6oY63LcLnbiox6aS6RopyQdTJcQYzHeO0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=BcMBFmdISrvZvNb1vVC4v+ZJdxkEb+WywgMGtkavsjXwsP+YfzcRyk5vadYKGpjH3
-	 9aska77FprvEx70Mxa9uPW8tryWt4cSmjeHc8kqbZEfmt3fCu1WCSnEUSRNAD2H1ek
-	 mdY/MOd7sn2Fx31vTYE4mj5TUxlkAV2+7zNNeQosPKBR5aC0cV67ZHP5sjNHSJhDF/
-	 rrr2pDU3R4CatP3X+9+DTj/WCbTHY6R/xYf3IJINUCwhCYgoDJcYdpGvxH4uq00Jnh
-	 eFUzujg+7hdnsNMDZ/hntN+NPZWknF0YEgyfCWQpG+PemjZDc1Sb5O3eP1cCdLNsdZ
-	 t4RorkmslpIBg==
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="belB5YVB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A49C4CEE9;
+	Wed, 14 May 2025 09:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747216511;
+	bh=NU0/laBLJ5U/Z61R8LdAMhWaqpI9feJPmdaQdzlsQqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=belB5YVBvtc5H3/w8UjIZtr7Ri7Fe0orS+bV9pxjvY2IKtEBsSqdynxckERS+mIDo
+	 nZ8By2eA/s7IehP+5jFrpV3EgjTy1aRm6EtX0Qe5UeMaiSe56Tm5GogTQFYGGqz3UB
+	 w9+Du91MUj57+iGJ4bh334CDWjlAKxuNRdfA7rl0=
+Date: Wed, 14 May 2025 11:53:23 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+Message-ID: <2025051415-unloader-likely-b0e6@gregkh>
+References: <20250512172044.326436266@linuxfoundation.org>
+ <CA+G9fYuO5m0EgOAbytJv2Ytp9uj-0jHVUGddaXHLckHk+ZLEHA@mail.gmail.com>
+ <CA+G9fYsGTqCxiXQOY3HEu4Z3CEwmyQoOb8DnpzVToWMW-Y8R5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 11:54:39 +0200
-Message-Id: <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
-Cc: "Matthew Maurer" <mmaurer@google.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
- Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
-In-Reply-To: <aCRdNJ2oq-REBotd@pollux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsGTqCxiXQOY3HEu4Z3CEwmyQoOb8DnpzVToWMW-Y8R5A@mail.gmail.com>
 
-On Wed May 14, 2025 at 11:07 AM CEST, Danilo Krummrich wrote:
-> On Wed, May 14, 2025 at 09:20:49AM +0200, Benno Lossin wrote:
->> On Tue May 6, 2025 at 1:51 AM CEST, Matthew Maurer wrote:
->> > +impl kernel::Module for RustDebugFs {
->> > +    fn init(_this: &'static ThisModule) -> Result<Self> {
->> > +        // Create a debugfs directory in the root of the filesystem c=
-alled "sample_debugfs".
->> > +        let debugfs =3D Dir::new(c_str!("sample_debugfs"));
->> > +
->> > +        {
->> > +            // Create a subdirectory, so "sample_debugfs/subdir" now =
-exists.
->> > +            // We wrap it in `ManuallyDrop` so that the subdirectory =
-is not automatically discarded
->> > +            // at the end of the scope - it will be cleaned up when `=
-debugfs` is.
->> > +            let sub =3D ManuallyDrop::new(debugfs.subdir(c_str!("subd=
-ir")));
->>=20
->> I dislike the direct usage of `ManuallyDrop`. To me the usage of
->> `ManuallyDrop` signifies that one has to opt out of `Drop` without the
->> support of the wrapped type. But in this case, `Dir` is sometimes
->> intended to not be dropped, so I'd rather have a `.keep()` function I
->> saw mentioned somewhere.
->
-> I agree, if we really want to "officially" support to forget() (sub-)dire=
-ctories
-> and files in order to rely on the recursive cleanup of the "root" directo=
-ry, it
-> should be covered explicitly by the API. I.e. (sub-)directories and files=
- should
-> have some kind of keep() and / or forget() method, to make it clear that =
-this is
-> supported and by design and won't lead to any leaks.
->
-> Consequently, this would mean that we'd need something like your proposed=
- const
-> generic on the Dir type, such that keep() / forget() cannot be called on =
-the
-> "root" directory.
->
-> However, I really think we should keep the code as it is in this version =
-and
-> just don't provide an example that utilizes ManuallyDrop and forget().
->
-> I don't see how the idea of "manually dropping" (sub-)directories and fil=
-es
-> provides any real value compared to just storing their instance in a driv=
-er
-> structure as long as they should stay alive, which is much more intuitive
-> anyways.
+On Tue, May 13, 2025 at 02:29:20PM +0100, Naresh Kamboju wrote:
+> On Tue, 13 May 2025 at 11:40, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Mon, 12 May 2025 at 18:43, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 6.14.7 release.
+> > > There are 197 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > >
+> > > Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.7-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > Regressions on mips defconfig tinyconfig and allnoconfig builds failed with
+> > clang-20 toolchain on stable-rc  6.14.7-rc1, 6.12.29-rc1 and 6.6.91-rc1.
+> > But, builds pass with gcc-13.
+> >
+> > * mips, build
+> >   - clang-20-allnoconfig
+> >   - clang-20-defconfig
+> >   - clang-20-tinyconfig
+> >   - korg-clang-20-lkftconfig-hardening
+> >   - korg-clang-20-lkftconfig-lto-full
+> >   - korg-clang-20-lkftconfig-lto-thing
+> >
+> > Regression Analysis:
+> >  - New regression? Yes
+> >  - Reproducibility? Yes
+> >
+> > Build regression: mips defconfig clang-20 instantiation error expected
+> > an immediate
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > ## Build error mips
+> > <instantiation>:7:11: error: expected an immediate
+> >  ori $26, r4k_wait_idle_size - 2
+> >           ^
+> > <instantiation>:10:13: error: expected an immediate
+> >  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+> >             ^
+> > <instantiation>:10:29: error: expected an immediate
+> >  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+> >                             ^
+> > <instantiation>:7:11: error: expected an immediate
+> >  ori $26, r4k_wait_idle_size - 2
+> >           ^
+> > <instantiation>:10:13: error: expected an immediate
+> >  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+> >             ^
+> > <instantiation>:10:29: error: expected an immediate
+> >  addiu $26, r4k_wait_exit - r4k_wait_insn + 2
+> >                             ^
+> 
+> 
+> The bisection found this as first bad commit,
+> 
+>     MIPS: Fix idle VS timer enqueue
+> 
+>     [ Upstream commit 56651128e2fbad80f632f388d6bf1f39c928267a ]
 
-Yeah that's whats normally done in Rust anyways. But I think that
-lifetimes bite us in this case:
+Thanks, now dropped from all queues.
 
-    let debugfs: Dir<'static> =3D Dir::new(cstr!("sample_debugfs"));
-
-    let sub: Dir<'a> =3D debugfs.subdir(cstr!("subdir"));
-    // lifetime `'a` starts in the line above and `sub` borrows `debugfs`
-
-    /* code for creating the file etc */
-
-    Ok(Self { _debugfs: debugfs, _sub: sub })
-    // lifetime `'a` has to end in the line above, since debugfs is moved b=
-ut `sub` still borrows from it!
-
-This code won't compile, since we can't store the "root" dir in the same
-struct that we want to store the subdir, because the subdir borrows from
-the root dir.
-
-Essentially this would require self-referential structs like the
-`ouroboros` crate [1] from user-space Rust. We should rather have the
-`.keep()` function in the API than use self-referential structs.
-
-[1]: https://docs.rs/ouroboros/latest/ouroboros/attr.self_referencing.html
-
-Another problem that only affects complicated debugfs structures is that
-you would have to store all subdirs & files somewhere. If the structure
-is dynamic and changes over the lifetime of the driver, then you'll need
-a `Vec` or store the dirs in `Arc` or similar, leading to extra
-allocations.
-
-> It either just adds complexity to the API (due to the need to distingish =
-between
-> the "root" directory and sub-directories) or makes the API error prone by
-> providing a *valid looking* option to users to leak the "root" directory.
-
-I agree with this, I want that `ManuallyDrop` & `forget` are only used
-rarely mostly for low-level operations.
-
----
-Cheers,
-Benno
+greg k-h
