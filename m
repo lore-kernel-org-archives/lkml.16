@@ -1,76 +1,91 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B73F2882AD;
-	Wed, 14 May 2025 18:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA20288513
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248417; cv=none; b=u4W97xpYNI7qBArQWZulgu88aTyFNn3eBmTJq2io5jkTmUAgrPWWMqOdX3FlR3l6xqV6d/qvgi0kXfQcqs9VAAvrkMvdOB/xdOn8AYxvExL+9JyyPdKGWB149aCDfT+2Rr5DH4/1jC+PUGomVKpiWOpHirLB3dk4gEe4Mz6oDiQ=
+	t=1747248439; cv=none; b=oaBsmf4Fcjdw6zMxATqSwm6T3sa9gb7n4znt0uiE+NQx5rUYpEnNthZg4Q3xJAapEgAXPH1oM4ZZCYmXaXOu+7+/eej+aK3XlxJnrW75QQM3/4n6AJ4xSarJ6+ITJKSYnIBm+WT+UcXiFWq6qKhVZ7dZWrWp8xbGf0/o+U/6Zpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248417; c=relaxed/simple;
-	bh=KQlZ5lQwiRoCUKfotRUhhRrLB1EMUejjK0X4GqELV1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lJuLz2zrj44fAdO9TMZFcyNwmKcI7j91aiOwfWbrHglhu7fREPpKGcl5M7vOJhpdvsWgHR3dnXYxKeBMkg3+P6yl6ptOomz9RNl2Ega8iIFa6GCcF4xg2C4eKsIQR8xNzsu5Ku0uGw1ezQBLYC6iYl5VUojB0iyy2I/ylVCiLMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=POrI1Rk7; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747248439; c=relaxed/simple;
+	bh=3awbIMSQiN3/pGR0RpgPT4JWQR1hMlp0LppK89PvjRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=umf/CE4yOklsA9GSRI74cWalKJArupMAQIR7ZjoXPA5/6uQ2AougpAJSq2Ko/HELBVYtSSVitovakEN8w2y2JV6vMk7v2oQvAp04IJnK60n2oPmaBvA5QWIajrd8kls6DYIN3BmPj62vrpCZmhNxuJoNHqD2qK/QDvIhRcQZau8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LPSS/wLw; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="POrI1Rk7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XswXjKLPzSvsnGcNe4CcYUQLh/oNtrdDzfkm3+WlEpw=; b=POrI1Rk7xei4mfIgjsndQ9oBsJ
-	gGTyfLumVATIU72vu5wxw4UpdExdEt8hhAPJscC3GggxJSKiegHYjgbnd4L103PUJ0+xd7xaxzsQO
-	TzHI87elAsI+JZPjWMLHHwTGvNuPfSzayt0HC30XE5au0nTCDNOnJITZT3F/2S5iYRgxyc3ytI/AC
-	O/THBeYt7HL3ulFnfgvR7OAxBTOAlsGMdDf1qhkbjlgAJGwLLkaZAw54+z5/173Me/oALb9apJe0a
-	+vRAebYdeafq/gpvxCbqBlcjB9mitpP5fi1XpR0B5FeDKqJL6N/yID/QKW1Ghvz3N5/IkpXXpRza/
-	+5ToPiyw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFH80-00000009Znw-2xX0;
-	Wed, 14 May 2025 18:46:52 +0000
-Date: Wed, 14 May 2025 19:46:52 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: syzbot <syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com>
-Cc: brauner@kernel.org, cem@kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] general protection fault in do_move_mount (3)
-Message-ID: <20250514184652.GP2023217@ZenIV>
-References: <20250514180521.GN2023217@ZenIV>
- <6824dd34.a00a0220.104b28.0013.GAE@google.com>
- <20250514182111.GO2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LPSS/wLw"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22e4d235811so1815385ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747248437; x=1747853237; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3awbIMSQiN3/pGR0RpgPT4JWQR1hMlp0LppK89PvjRk=;
+        b=LPSS/wLwd4CUdXM4EN6sIL27nwi4vv9JTO5XIR7mSSzIbA9bWJsn71dyWhfoqNzFG2
+         GmcIp8aS5O3PP7r3G8B2CkxvX64md5ek+O7OqNydxdhgj5VeEUhmVtFmEIjwfTLqnmQh
+         NxjZVRvRLaJErOoUJIqoLGj9xZF06mrOky4XQNkuBkUL7UXMcWMt+WB1FCTd3KBPutxX
+         Yf1zf10YARddzUUL1Em2InSozmnK/fBGJyJUdSAJKxCrL159lGY4/+NiqkP7xlcsZVt2
+         6yOZbxfG9BrsMdvUmrUotd0Q1qJevsUpQE2TSWTGxUWfywtBerFj+QSFcp2NZoxr/9W1
+         8eKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747248437; x=1747853237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3awbIMSQiN3/pGR0RpgPT4JWQR1hMlp0LppK89PvjRk=;
+        b=tNYVsHnAa2Ii5XRYKUEKx1XZ3AtO6IN49Aiz8YLPwtZgQpXAejOGebkYROg2WjBq5K
+         dlguuHVwRQSo83mBDkzC+oc4Pcz985zVPR7DAkFKtnL4aDbJ61Pdq112hW184o3p8UWw
+         KXjE3DJjcjltTHKDVWNt+BjNI+d4nS9Kt07H1FDE7JN6sALUQyC8p6EnrO+2wChHgGMN
+         JRjufno59RfvwuMLalPDMjJy3q5NDz2nU62eHQC1s6t488bcFZOu6n3VoImXjxMddSDp
+         Bj3LjMVP1zxPz1YoLE7/KvJrHpUJTxSiijdvEvKuz39TVOUEK17xJAPYjDsPrksN1LuK
+         PiDA==
+X-Gm-Message-State: AOJu0Yz8cd2p6C3wH+k4LA+NQuxb2HeOMwx1tcMo+d9L4wakXpQ5YWGQ
+	5/F7WR3hDJ17pZBNPWGxtzXbljobz5ZpLvReApN2K8vDkDWU5Ac3Z1ip3Is36J7nY7isEqB3LML
+	kPN8/MVMaxZag7LqhCtIpjQ0Jit9YYk8DiwwieypSMjQZAciwgTE3
+X-Gm-Gg: ASbGncsEdmxdkNaCH6cFyBTOwXoKF6GIyAkUYJWv0Zna0Qpb7268OEw+MwdQRp3SPbQ
+	PPig8Rt2jsuXeji59AhyKPOp1ZUN0CsKzUf4YVbKReaSTI2grnYgu0Fpe0n5x2XlZ42nPQ3Frcz
+	mBF8SyMsK1KqmPVDIbM9X0JR2zdH0KAcx2386cVYj67JVyX9erv+WZYRlxdhIkXRI=
+X-Google-Smtp-Source: AGHT+IGhjfKdP65xyQg67/NXzbV7pW0f+Hu2UEi2yS3ExllYJPmOzVNNcmG9t5YCc8aX8bIxr7a3OZxEdOsRqobUKu4=
+X-Received: by 2002:a17:902:d4cc:b0:22e:3c2:d477 with SMTP id
+ d9443c01a7336-2319815c4f8mr61594305ad.25.1747248436993; Wed, 14 May 2025
+ 11:47:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514182111.GO2023217@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20250514184136.238446-1-dionnaglaze@google.com> <20250514184136.238446-4-dionnaglaze@google.com>
+In-Reply-To: <20250514184136.238446-4-dionnaglaze@google.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Wed, 14 May 2025 11:47:03 -0700
+X-Gm-Features: AX0GCFuSqhpxhjpKHFPl-kNkD1G7Ak4DdeEQl0wFSdtzCrO2XNlX70uWf2FExps
+Message-ID: <CAAH4kHYiDpE9m4fhnUPkWrBq=pmDwVGx_--zSSjw1wE8irXESQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] The ccp driver can be overloaded even with guest
+ request rate limits. The return value of -EBUSY means that there is no
+ firmware error to report back to user space, so the guest VM would see this
+ as exitinfo2 = 0. The false success can trick the guest to update its message
+ sequence number when it shouldn't have.
+To: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	Thomas Lendacky <Thomas.Lendacky@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, Borislav Petkov <bp@alien8.de>, 
+	Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 07:21:11PM +0100, Al Viro wrote:
-> On Wed, May 14, 2025 at 11:13:08AM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot tried to test the proposed patch but the build/boot failed:
-> > 
-> > failed to checkout kernel repo git://git.kernel.org//pub/scm/linux/kernel/git/viro/vfs.git/fixes: failed to run ["git" "fetch" "--force" "8a6d8037a5deb2a9d5184f299f9adb60b0c0ae04" "fixes"]: exit status 128
-> > fatal: remote error: access denied or repository not exported: //pub/scm/linux/kernel/git/viro/vfs.git
-> 
-> *blink*
-> 
-> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git 8a6d8037a5deb2a9d5184f299f9adb60b0c0ae04
-> 
-> just in case the cut'n'paste damage (extra slash before 'pub') was not
-> the only problem there...
+On Wed, May 14, 2025 at 11:42=E2=80=AFAM Dionna Glaze <dionnaglaze@google.c=
+om> wrote:
+>
+> Instead, when ccp returns -EBUSY, that is reported to userspace as the
+> throttling return value.
+>
 
-... and that copied the bogus commit id from the error message.  Sigh...
+Ah, disregard this email. Globbed one too many patch files.
 
-Anyway, actual commit id is cfaefc95bfa7eb92dd837ea9fb38bc84e62d79b5 and
-curl 'https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/patch/?id=cfaefc95bfa7eb92dd837ea9fb38bc84e62d79b5'
-definitely finds it, so commit is there.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git cfaefc95bfa7eb92dd837ea9fb38bc84e62d79b5
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
