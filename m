@@ -1,136 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A7520FAB9
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207757; cv=none; b=uguqrQkVvteAMB7uZwPzIR4OBAT00QFVlXxOElN2hJWsrpYQ3GfcpGLKJBCiMnvPr94OxDw99BxfFkr5Z65fqE7p+jzgk/w4yDzzc2V+/LGR5/LRYZ0Mf/7JpYRU/0aRQWPnT32335+ujOgC8J2X9r+w5F+r0bmWKJZXQv5jhNI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207757; c=relaxed/simple;
-	bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qhZF2UqhW+z2zYlWuIvx8MHpJXLeAhdTFs4B2RsvQ9fwI3ND/IjHJoJF37rALezHiCV3LHqj1wp09c6Ic0t/5HEHFmGmAVotPoEg2FUsaq11nXlQs21D+tTunpxKQl78EMKnBWd0OGimZs5qK/gFi9rH7v1PYuTEAp4vbd+IflQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kgh4HGDO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4762921A447;
+	Wed, 14 May 2025 07:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207768; cv=fail; b=VGzGolK01T/W49AOLUzN+LmgwOf84udnbpyAo2zN4CwNoOAEIZkDUqEsEniiftA2rq9KfSJucErzm70Hcbeu7P9WJtQv03Qd4iyEtd3Dl9gq0kBDG7y+q7hHzrwkuSSRocIebikcCWRfmy8EbUxSljXCA9MIxgELRE4aQ02n1yc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207768; c=relaxed/simple;
+	bh=MsjLYf9ia2Dd1pLtHXf5akyxV5N155EFw+TL/VfYo+Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WPLYFtg/1+jHfxMpdQJxX+4XrZS5E588Br29WC50fJW2jB5jASZumnmLU+ulmug0/Eo+DvOWz5Lsoyu/lQ8o3I6f0KxVY4GREoxfT6a2WcOZoTWoVFVkVf7WL5aRp1EfBdPtdQqxtXCFF58n5kKWEoRI1q5wjeCBh2CyPLkrOnQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5lyvSuXz; arc=fail smtp.client-ip=40.107.244.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kgh4HGDO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747207754;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
-	b=Kgh4HGDOqszb19RmdeCgIrbvN7pIHMv3Q79AFAGO604RHXomqVOyev4EWqnbnLC5mAM1cO
-	jopO0AoqWIhdSqqAMUJhf5IGA8dR1Dld3OF2B74NWybHz8Ne9EQ/NeNe3+y2hvz837xj2+
-	G6ZB55yD+4uDowohzP0HMH8dh1G7QmM=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-Cor8vXoyM2Gp-bzRHEOH7w-1; Wed, 14 May 2025 03:29:13 -0400
-X-MC-Unique: Cor8vXoyM2Gp-bzRHEOH7w-1
-X-Mimecast-MFC-AGG-ID: Cor8vXoyM2Gp-bzRHEOH7w_1747207752
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so6985456a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:29:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747207752; x=1747812552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WY9nxPgCvde8fX6n7zhRAyJTTq9PldQtI0rtg67w0yE=;
-        b=XA2HwJaN1G+7CuWxf/cIW+oQ3tMDzTB0HyHx/MNZB4LVR16wNhFqgUuaco0HpavlNO
-         m6r1/Dzg7na4kioX2F5h0FNIaiYqL3K3F9P5xoPWcIHDiV9aYARRmLUMaluU/Qu7NDjv
-         P5Nk0rLqLwoEX/5xsNcSQpn92RGRLVDW6mLekrmGs6utG7PEViP+jI43CWCXtBKRLHoz
-         BXy7To3tSjVYI0wFR4FGjpcVcaN9WmG/+Ceiv4xdDs6OHhA4+tq1vPuH93hie7vfWtkB
-         8Wu2ujngsLIg23VWn31nRZVU5VLJRcFw5HErGs9xsybD8R528tCZUh1IlSV0nwNUe679
-         PFAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRP8ROAYj3GopsGe6Z06kqi6BiuOibsYTRlzZqUUT7+qmN/OXlkzEnqt+nrKR7TasuEcan9sCfo7YQGqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypXDf3qcRVrnwZSFT7r/wbI6kyH7m/7kkgKAD9RvuXqzPtcZ2+
-	/77nshcjxJj9JGz2uNjn4NDm/kXApZovp9r7ZbSDD7uXNrCxh4ggrTHulA8ZwmKHf/qQsZoE/VD
-	PDJVEoiFsUq2GsAITdYsAEaCsi4Q/i6BCzL8NysMOsVYSRGlgCpZLvMAvPGYhNlRBVB5OM/EYly
-	4MUEgK2RCEKyfyLk3aGEyjS/DJm+NlFjXuNKuM
-X-Gm-Gg: ASbGncu/L5VNOgnPOUYQfQwuAC0aXfjmuk5+2HRFpoKAvrlZ5zNHj5RPRb9/+Qf79Zk
-	7OGfyVvCaRx6Q59nhX7PqofuA6nk852T4mT6GPbBzozFTdcpFIiDVr6ZwMxo9ghGIV4/ZMZ6eMs
-	bpZ3ewPUFLO3J0oiUfPc284IvPkw==
-X-Received: by 2002:a17:90b:58ef:b0:2ff:64c3:3bd9 with SMTP id 98e67ed59e1d1-30e2e625f04mr2998506a91.23.1747207752300;
-        Wed, 14 May 2025 00:29:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IErZhOIhtd3hI4AKZUHoezz+kYbi9KNoNaaRDKtt38OZ6UI/QdvxrBZC4rk+6QrFDTtDOghmI+q8BJtDQ8PcGA=
-X-Received: by 2002:a17:90b:58ef:b0:2ff:64c3:3bd9 with SMTP id
- 98e67ed59e1d1-30e2e625f04mr2998476a91.23.1747207751899; Wed, 14 May 2025
- 00:29:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5lyvSuXz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oCezBtYM0tddjz2y6RJ/+8S9NCDx3tK895qWuBb7bCDCauc5tdVA3//DC4OIXKPvrCLyzkuAp0YhYpmAGDuet1IMMWlHSTe9eS5jRi2Zz4ybI/SAWJu2USxy71ArpH+XN+fVrqkxM+ejanPuLL5EfqlO6w0LXJCFu6Wx2J4z6OCfam8jUAG/q7+wUoY+fdANy7JT5kcpxZ+sEhflmyYMLY0JqpEhf+/ze0vqKoIpiEu5A/QXQcj7G2E+EM3gA6FdvpaBOuUfkRUNG2BfZIVs7Wb7fw3mRpHrOP05yzl7sMYR8wKiyHSVxeY0QH8HnvHeJ9idQ3Sc1VJUJjH4j9/EsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8llopQluqzrlHjC++y5WtT/qwdxyjM7lYCjXr9MMCzY=;
+ b=OgkjMMsEGzXwTzu9dexOZuiqNnfiertDFzscgTY+gmpRVHcIftUL+szrgKHSICkakp+49JMQU6OafzSYI7ed5MKrL/36ijSSx8YEkDVkz4gp4adJkFeX6Mddu9RK4twQvoYGYUW4e865u/cDCeJqoBHcBCGxSSwKJEzrcwSK0QLizs2PDdV7hpGQggbD51qYPJ92YVwza+14thEu4BWE/3kr4tJ3ktyP9g5j+ln7yqwD5STIJfXwniSf4R/X1m9Kspfwk/5h3dgehQYTBa1G7oDn/edayXyZYWaapQ08eDeT12mxGpwdegFL9t8Wi+t0M0pmGqPXCeJuNb2AYRhXag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8llopQluqzrlHjC++y5WtT/qwdxyjM7lYCjXr9MMCzY=;
+ b=5lyvSuXzfPGKsl6dPgmvKzozNiSK7KRqcccV9siT8jkdTDH4eeOEbt37wRhOlr01rYjWYnN1aTGWUH7u7vm+3/k32X3LO+dPZyt70p7Fa+XbOYKmSWoILIOxjLXA975frwFN0T99WWEZPmfIj6Z06ZhZS7FkRzGKbvgT8nEZVGU=
+Received: from CH0PR04CA0053.namprd04.prod.outlook.com (2603:10b6:610:77::28)
+ by IA0PR12MB8304.namprd12.prod.outlook.com (2603:10b6:208:3dc::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
+ 2025 07:29:23 +0000
+Received: from CH1PEPF0000AD74.namprd04.prod.outlook.com
+ (2603:10b6:610:77:cafe::51) by CH0PR04CA0053.outlook.office365.com
+ (2603:10b6:610:77::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Wed,
+ 14 May 2025 07:29:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD74.mail.protection.outlook.com (10.167.244.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:29:23 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 14 May 2025 02:29:13 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
+Subject: [RFC PATCH v6 27/32] x86/apic: Read and write LVT* APIC registers from HV for SAVIC guests
+Date: Wed, 14 May 2025 12:47:58 +0530
+Message-ID: <20250514071803.209166-28-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514065513.463941-1-lukas.bulwahn@redhat.com> <a0c3a812-8a24-481c-9354-4475ac71d68b@flourine.local>
-In-Reply-To: <a0c3a812-8a24-481c-9354-4475ac71d68b@flourine.local>
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-Date: Wed, 14 May 2025 09:28:59 +0200
-X-Gm-Features: AX0GCFvvwL92M4FGbZOgsDbYBNn-v06sRogm_7vOCHV7R_FGPG5EmYFbXDI9rTs
-Message-ID: <CAOc5a3M2Nvv0oREzWN_kzOJqt4s+0zzmqWdG4tM58RJSWAb4BQ@mail.gmail.com>
-Subject: Re: [PATCH] block: Remove obsolete configs BLK_MQ_{PCI,VIRTIO}
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD74:EE_|IA0PR12MB8304:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00c0ba7b-0440-400e-8246-08dd92b90cc7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ukyhEMjn4mbALaol+IHunHEPFibyWgXIWv37cpkbj6gZcTssIKNDjviSBnay?=
+ =?us-ascii?Q?bFVFVVQez+wqNJnrMuxAIL6J50Ys58O3VpQ1KUS1h5AlX+dOYsPIRHC+/5yK?=
+ =?us-ascii?Q?cmOFR2twYr1e/Q1kWDFRkA4hrbLn4DPolHe3Ck5xRlMOXjrJZ2Bq63gWqgLM?=
+ =?us-ascii?Q?+nQRYE63miARGXC8I8PqXvjYilv8H4Z8yEyScvo91UFQo+XKu0/THlrAG+VJ?=
+ =?us-ascii?Q?pSd1VgNAaeAX9o+eNevBD4cYUOC7DGyDBW8S3Lkx98vYT7HqkUNhCpjj/o43?=
+ =?us-ascii?Q?asV6RLB4jIDfB/jtP4oMwLKMnB7kFUqvLlIAkc4TjTlwLlaz0ajWAMUa4Crw?=
+ =?us-ascii?Q?v5gn8jeFNdx5fcK69phn/7zaXMNJsW6wWGLRFcdm9rUDBDfTMDVnamqvXYoq?=
+ =?us-ascii?Q?9XJjG9/aEcNBYwivawhtP/tj/lOP+QRPqrHl9hKf71FZlZUbRQX0P30THFzu?=
+ =?us-ascii?Q?XimDZY1ibr9BDf4lLycYkiGNcmrRhxZHX5IQ5J7EeounrkLDeoht+j6TjIYL?=
+ =?us-ascii?Q?UcC+ONGABRIAFWxOmHK5ZVQoaOSbT8d7VvVITAobA6dGWDJ8ldquMakDFVlZ?=
+ =?us-ascii?Q?jXKyj9pzJ07VnAKNpjKe3C9L79cg+valFyVcNA7tdvDYGisW5O1AIZ3O2L0X?=
+ =?us-ascii?Q?tUuYv4zz2tfcw0WjryGwuDwC6rO2xgdcDfu9L37aGAB2YwiFeVtf0cNcbPTX?=
+ =?us-ascii?Q?tdNAkK+h4MzwXOOdroIUiAxpsbj2mav9LpyII7cFKR3oIBskuEBxbd3uK8ti?=
+ =?us-ascii?Q?hLHU874DbROdlos5YOZmdf21DByovueIPJqArzse5S+ahKwWxr5ijalGwOMI?=
+ =?us-ascii?Q?lqvgKxFGYsXtNM7m/IXgWy9DSEzkJCIj/t07ggupFCMusv1qtVRIxCeHx2xp?=
+ =?us-ascii?Q?oSWWVh3M3Ot82+JtTupXp3UMyvqzMJrpkKn5tZnf4KfSk1Vzp6vcWqj+fhFJ?=
+ =?us-ascii?Q?NOOaiYVQf0Ms4zAgMUc0z7lLt4BBy81BQMXRsaD8i/ikwkF52UzeBbS/hwX2?=
+ =?us-ascii?Q?dY1jxrgS8yoThqQPK8xgZsue51FLpOQmzvg/Q3Bk0zWmAxd/YuEn6fFohbaD?=
+ =?us-ascii?Q?geErjxT543Vms2B0YboEC+NCsoGdckX/2LkCaHwSf8S3Q2SrYjgnqDmb919a?=
+ =?us-ascii?Q?Kw0Ubl1YAHdV/xauqBjCLVKH+z5Y/qBRpve11zhfbhE3tm4nLbPVKk1vmu1+?=
+ =?us-ascii?Q?8BOAzPJxgNSZ8yYlL4DU19EupwAHLG7DrtPh4lhBPgFyzFrYaEFKWShoKh/l?=
+ =?us-ascii?Q?z/I+d6DAbcar84z4b1L6bCcPm/sbxihdEelX523mgeQURFzCKzb4E/j02HP6?=
+ =?us-ascii?Q?Ic3gZH9smtwxfINIc0e9OFqbdG4wZiiiawvOr4OYm3Gi43jWtyk8NCfMn4WP?=
+ =?us-ascii?Q?xqQYDwJcSCXObKx+Iz/i+hEepGi0puBoDxydNfkitY71bcthjx4Dj/AlPjci?=
+ =?us-ascii?Q?XZtptphGlOT6JtZPVO+JdyHYfkUX2d4zBmbGuoipV2lm0x5L0gx1yhxDx6e+?=
+ =?us-ascii?Q?5A3pcsK8BXAbNDh8nAdCU3eSvR/pprB/pQL7?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:29:23.6934
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00c0ba7b-0440-400e-8246-08dd92b90cc7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD74.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8304
 
-On Wed, May 14, 2025 at 9:10=E2=80=AFAM Daniel Wagner <dwagner@suse.de> wro=
-te:
->
-> On Wed, May 14, 2025 at 08:55:13AM +0200, Lukas Bulwahn wrote:
-> > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> >
-> > Commit 9bc1e897a821 ("blk-mq: remove unused queue mapping helpers") mak=
-es
-> > the two config options, BLK_MQ_PCI and BLK_MQ_VIRTIO, have no remaining
-> > effect.
-> >
-> > Remove the two obsolete config options.
->
-> A quick grep revealed that there is at least a test config still in the
-> tree which uses BLK_MQ_VIRTIO:
->
-> drivers/gpu/drm/ci/x86_64.config
-> 108:CONFIG_BLK_MQ_VIRTIO=3Dy
->
-> Not sure how this is supposed to be handled.
->
+Hypervisor need information about the current state of LVT registers
+for device emulation and NMI. So, forward reads and write of these
+registers to the hypervisor for Secure AVIC enabled guests.
 
-I noticed that as well, but that is really yet another clean up.
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+Changes since v5:
 
-Generally, these config files in the kernel tree are ill designed and
-terribly maintained.
+ - No change.
 
-They are ill designed, because when they are created, they are dropped
-as complete kernel configurations, whereas they intend to set a
-specific fragment of options, and have the rest as default. That
-creates needless large files, distracts from what is important in
-those files, and creates some record of the default of various options
-at this random point of time where the config was created, which now
-makes the clean-up pretty complicated.
+ arch/x86/kernel/apic/x2apic_savic.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-They are terribly maintained, i.e., the command
-./scripts/checkkconfigsymbols.py | grep "configs" -B 1, will show all
-the references to config options in those config files, for config
-options that do not exist anymore in the current tree. In the current
-linux-next tree, there are over 200 references to non-existing config
-options from such config files. At this point, I do not worry about
-adding one more such reference in one of those files.
-
-This whole proper clean-up of those files is a larger project, though;
-maybe for some later day.
-
-Lukas
-
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
->
-> Reviewed-by: Daniel Wagner <dwagner@suse.de>
->
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index 583b57636f21..0fecc295874e 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -69,6 +69,11 @@ static u32 savic_read(u32 reg)
+ 	case APIC_TMICT:
+ 	case APIC_TMCCT:
+ 	case APIC_TDCR:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_LVTERR:
+ 		return savic_ghcb_msr_read(reg);
+ 	case APIC_ID:
+ 	case APIC_LVR:
+@@ -78,11 +83,6 @@ static u32 savic_read(u32 reg)
+ 	case APIC_LDR:
+ 	case APIC_SPIV:
+ 	case APIC_ESR:
+-	case APIC_LVTTHMR:
+-	case APIC_LVTPC:
+-	case APIC_LVT0:
+-	case APIC_LVT1:
+-	case APIC_LVTERR:
+ 	case APIC_EFEAT:
+ 	case APIC_ECTRL:
+ 	case APIC_SEOI:
+@@ -204,18 +204,18 @@ static void savic_write(u32 reg, u32 data)
+ 	case APIC_LVTT:
+ 	case APIC_TMICT:
+ 	case APIC_TDCR:
+-		savic_ghcb_msr_write(reg, data);
+-		break;
+ 	case APIC_LVT0:
+ 	case APIC_LVT1:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVTERR:
++		savic_ghcb_msr_write(reg, data);
++		break;
+ 	case APIC_TASKPRI:
+ 	case APIC_EOI:
+ 	case APIC_SPIV:
+ 	case SAVIC_NMI_REQ:
+ 	case APIC_ESR:
+-	case APIC_LVTTHMR:
+-	case APIC_LVTPC:
+-	case APIC_LVTERR:
+ 	case APIC_ECTRL:
+ 	case APIC_SEOI:
+ 	case APIC_IER:
+-- 
+2.34.1
 
