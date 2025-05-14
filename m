@@ -1,214 +1,162 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EDA13B284;
-	Wed, 14 May 2025 14:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF8D1940A2;
+	Wed, 14 May 2025 14:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232866; cv=none; b=dYRykVrJL365AIWxdm7C1ip5xDwPsgp3Z3TZjZ+L0MFbqxV5gpLZYFUD8XPjaiKiag16gH3bnXd8FAQcvsoD7EpP4Gqxr4jrRQ1bEEV+JKg3FgqVQ8TOITFKK4jglUSea9kf2y4h9kkuj0U5u9eEcla6VM+PZYoFxVK/H3AHesM=
+	t=1747232876; cv=none; b=NEBTuvbtBOS6iW+CQfYG7brZg2AFAH2fQP6FPr00vpM/qHezEhzsY3B0hsGYvLML/n0nPmyE0/1q4paIMQ+tydOriNpbyL7OYcTsQiEbICOlxoKTFxjjINrOz2Kw+esfIOJ+iaGTpnJqFxSHhweVHSEQIox5fbOYm7rcOS8pdN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232866; c=relaxed/simple;
-	bh=e3LubSvZ2hA9Wz5eH+CgWgUL1D1ORqO77rCnpfWfo+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R/rBmyrLBwwyEIzs4mTFMijj2OSPD85VEFQzw0hZOaApVvvJxe8J9S46N6Gof7x27omiNNS3IsGLkrCOAcgW5jZqsind313ZjGAK3/Bv3brnag74KRkeDgtVE1g0yiVfNGlilzCmyMs95ZzEPUrSFg7XN0mNSEdF5XRxakffqew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FZ0TaHOK; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747232876; c=relaxed/simple;
+	bh=D1NNY72HS48AjdGCPYfTBbVvfFGs/MdRkl9rDPLOHzw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=OFYNWRp9AopuhXODtldlFjm6zmYOP5KP/9s4WVKOR6R6oWsYWxOdHkw+HDZVv4OpcE7ozslGf+CeQE0Hy/IC7j10lIKA0OXnXhsfvTPQZa9zCir2fW7iBHHnWAO9oZGGm8mTLoo0l0U0kV3l0yy3ey6gB8J8A3iog5Alta8RSaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1YzsFgPY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y34otpBM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FZ0TaHOK"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7ZRQr016936;
-	Wed, 14 May 2025 14:27:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=egx7Iu
-	qCYH2ItVv53dPViRPkCT0UPv7EjOBZEZOHMnQ=; b=FZ0TaHOK30+4W041sHmKj4
-	kzpKSjfyKGmop58akTTcN0dFOB/HLJXuL2AjJetjQB7bx6yhK1zGmTYQG4aquH6K
-	rf6D3FbHuWjcGRLsGjbmuHCK53upyXSW4+1J0o0KQPUVu2mGv3+z+fvguB2lEpVm
-	PvhocslnmE2oRpLssn6HdLKDudo/fuZ/jQbCJ5EDjED5hEZc6E9sxF3V/eap9taK
-	unAKnCbI9qtCZNemH3Iz2t75lO3fsgBWUur0UO/LyNJiRDK3E9IgOONHkRxS10tZ
-	iuVTc2trfLWLYdDPSQ4LgTcyS/dDjY6E97GhB1ehpt6VhV+xKywEkQavPE9udFBA
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8mumk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 14:27:29 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDaLRA015315;
-	Wed, 14 May 2025 14:27:28 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpvn21-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 14:27:28 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EEROJT60358940
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 14:27:24 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 73ABD2006A;
-	Wed, 14 May 2025 14:27:24 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EAB6420040;
-	Wed, 14 May 2025 14:27:23 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 May 2025 14:27:23 +0000 (GMT)
-Date: Wed, 14 May 2025 16:27:22 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        kernel test
- robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Linux Memory Management List
- <linux-mm@kvack.org>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: Re: [akpm-mm:mm-new 320/331] arch/s390/kvm/gaccess.c:321:2: error:
- expected identifier
-Message-ID: <20250514162722.01c6c247@p-imbrenda>
-In-Reply-To: <8e506dd6-245f-4987-91de-496c4e351ace@lucifer.local>
-References: <202505140943.IgHDa9s7-lkp@intel.com>
-	<63ddfc13-6608-4738-a4a2-219066e7a36d@kuka.com>
-	<8e506dd6-245f-4987-91de-496c4e351ace@lucifer.local>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1YzsFgPY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y34otpBM"
+Date: Wed, 14 May 2025 14:27:45 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747232866;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LT8amerTR0frbMbnJYMcNjkbRhMCJDZrMUynxGTe3WQ=;
+	b=1YzsFgPYBu0bvVM1S/Hd68pYvGvxzxOV0wvEt+/gdbqnY23CGL1YKenojC6YymOrM4HEYt
+	krxP5NpJpvwZXcxk3k5pc94DS3jxYCAgyuLHuP74xFmD0lyXrXAWZHuuqHADHpwxqhfhfn
+	BNk8rVK9BgZ9ds/c/ZIivGS8YpwqqzRpGg3X001f+Sf/QdrGKhEadGWJUgwz5lDvD3E8k5
+	+nIXfa5F8rAfi73c/PVSM2rsli53pioP9/QzzCq9v/C3vPaJf8JUEhlJo/ivshRhedxVno
+	xpjqk81E1xd9OCtNyc5C4cjFPduWqRFZyklqB8u7eTRtyfIXhxdfASdfa7PZLg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747232866;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LT8amerTR0frbMbnJYMcNjkbRhMCJDZrMUynxGTe3WQ=;
+	b=Y34otpBMcwxoG7FQzyz1K+d0+TSBqtXeDSNAxjFzOBzbeILlQT3mdVcqNTYtOugRTfZcDK
+	gYc6xVh3uHJiO/Ag==
+From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip: Drop MSI_CHIP_FLAG_SET_ACK from
+ unsuspecting MSI drivers
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250513172819.2216709-6-maz@kernel.org>
+References: <20250513172819.2216709-6-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <174723286550.406.7144630379886904318.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: yg3a8ZZEOC0Z4BsOLBfrPeJ0odXCNOv6
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6824a851 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=TAZUD9gdAAAA:8 a=i3X5FwGiAAAA:8 a=NEAV23lmAAAA:8
- a=yPCof4ZbAAAA:8 a=m4NsZjHeC5rv4vFivSYA:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 a=mmqRlSCDY2ywfjPLJ4af:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDEyMCBTYWx0ZWRfX4XuijPxY05Ar 5xq9IRfa3QBgHWzV9TamoSH0ImtlPWdQAX7Akbg4QB9d46ODcUWLk1H2X/L8j6ljPYVnWYIMR5Z nofbG5Wy5Wf/Ih9gu9+MWo5tBAVki1pFsUzzcDYyZ9Wo1PFQcq/nGdkMMmvowiDKgF1b8bWBC0d
- F3SyniISQ9mQWisf+/IVYbMmdb0JP1sSg18QLTPc0pKrkDN52ltaTtCssjIhhFU5awUIUTs5XhM VtBomDnyGMCsYgtTxtX9ujYPsORnowJA6jeu4VHtoEEk+AunV0ZllvcBNJweM1ZWrDWBKPnDgex 1Z1y1cfZ8vN3fcTT3yJdcIT40DEgTiJ3ZinyBcZBh6dRyrvED8s2/xf7SGwb88LfT530hm2zvTs
- penK1VAx/RHrDdiwE6p0cda1xYEnawXGFJFWTi6xG9SdlZ++/+qR+JzqwvhNTnHjmrVKkC/1
-X-Proofpoint-GUID: yg3a8ZZEOC0Z4BsOLBfrPeJ0odXCNOv6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1011
- mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140120
 
-On Wed, 14 May 2025 14:48:44 +0100
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+The following commit has been merged into the irq/urgent branch of tip:
 
-> +cc s390 people, kvm s390 people + lists. sorry for noise but get_maintainers.pl
-> says there's a lot of you :)
-> 
-> On Wed, May 14, 2025 at 03:28:47PM +0200, Ignacio Moreno Gonzalez wrote:
-> > Hi,
-> >
-> > Due to the line:
-> >
-> > include/linux/huge_mm.h:509 '#include <uapi/asm/mman.h>'  
-> 
-> BTW, I didn't notice at the time, but shouldn't this be linux/mman.h? You
-> shouldn't be importing this header this way generally (only other users are arch
-> code).
-> 
-> But at any rate, you will ultimately import the PROT_NONE declaration.
-> 
-> >
-> > there is a name collision in arch/s390/kvm/gaccess.c, where 'PROT_NONE' is also defined as value for 'enum prot_type'.  
-> 
-> That is crazy. Been there since 2022 also...!
-> 
-> >
-> > A possible fix for this would be to rename PROT_NONE in the enum to PROT_TYPE_NONE.  
+Commit-ID:     fb0ea6e4878a45b1ac81972027907fc424a792e6
+Gitweb:        https://git.kernel.org/tip/fb0ea6e4878a45b1ac81972027907fc424a792e6
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Tue, 13 May 2025 18:28:15 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 14 May 2025 16:24:27 +02:00
 
-please write a patch to rename PROT_NONE in our enum to
-PROT_TYPE_DUMMY, I can review it quickly.
+irqchip: Drop MSI_CHIP_FLAG_SET_ACK from unsuspecting MSI drivers
 
-if Paolo has no objections, I'm fine with having the patch go through
-the mm tree
+Commit 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default
+irq_eoi()/irq_ack()") added blanket MSI_CHIP_FLAG_SET_ACK flags,
+irrespective of whether the underlying irqchip required it or not.
 
-> 
-> Yeah this is the correct fix, IMO, but you will need to get that sorted with the
-> arch maintainers.
-> 
-> I think this suggests we should back out this change for now and try again next
-> cycle given we haven't much time left.
-> 
-> Have cc'd s390/kvm for s390 maintainers for their input however!
-> 
-> >
-> > The patch causing this problem was created by me based on a suggestion in the review process of another patch that I submitted first:
-> >
-> > https://lore.kernel.org/linux-mm/ee95ddf9-0d00-4523-ad2a-c2410fd0e1a3@lucifer.local/
-> >
-> > In case '#include <uapi/asm/mman.h>' causes unexpected trouble, we can also take the patch back... What do you think?  
-> 
-> I guess we need to back this out for the time being, since we're so near the end of the cycle.
-> 
-> >
-> > Thanks and regards
-> > Ignacio
-> >
-> > On 5/14/2025 3:05 AM, kernel test robot wrote:  
-> > >>> arch/s390/kvm/gaccess.c:344:8: error: duplicate case value: '0' and 'PROT_TYPE_LA' both equal '0'  
-> >
-> >  
-> 
-> For convenience, let me include the top of the original report. The full thing
-> is at https://lore.kernel.org/all/202505140943.IgHDa9s7-lkp@intel.com/
-> 
-> The original patch for this is at
-> https://lore.kernel.org/all/20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com/
-> 
-> Original report:
-> 
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-new
-> head:   24e96425873f27730d30dcfc639a3995e312e6f2
-> commit: cd07d277e6acce78e103478ea19a452bcf31013e [320/331] mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
-> config: s390-randconfig-r062-20250514
-> +(https://download.01.org/0day-ci/archive/20250514/202505140943.IgHDa9s7-lkp@intel.com/config)
-> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-> reproduce (this is a W=1 build):
-> +(https://download.01.org/0day-ci/archive/20250514/202505140943.IgHDa9s7-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> arch/s390/kvm/gaccess.c:321:2: error: expected identifier  
->      321 |         PROT_NONE,
->          |         ^
->    include/uapi/asm-generic/mman-common.h:16:19: note: expanded from macro 'PROT_NONE'
->       16 | #define PROT_NONE       0x0             /* page can not be accessed */
->          |                         ^
-> >> arch/s390/kvm/gaccess.c:344:8: error: duplicate case value: '0' and 'PROT_TYPE_LA' both equal '0'  
->      344 |                 case PROT_TYPE_LA:
->          |                      ^
->    arch/s390/kvm/gaccess.c:337:8: note: previous case defined here
->      337 |                 case PROT_NONE:
->          |                      ^
->    include/uapi/asm-generic/mman-common.h:16:19: note: expanded from macro 'PROT_NONE'
->       16 | #define PROT_NONE       0x0             /* page can not be accessed */
->          |                         ^
+Drop it from a number of drivers that do not require it.
 
+Fixes: 1c000dcaad2be ("irqchip/irq-msi-lib: Optionally set default irq_eoi()/irq_ack()")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250513172819.2216709-6-maz@kernel.org
+
+---
+ drivers/irqchip/irq-gic-v2m.c               | 2 +-
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c | 2 +-
+ drivers/irqchip/irq-gic-v3-mbi.c            | 2 +-
+ drivers/irqchip/irq-mvebu-gicp.c            | 2 +-
+ drivers/irqchip/irq-mvebu-odmi.c            | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index dc98c39..cc6a6c1 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -252,7 +252,7 @@ static void __init gicv2m_teardown(void)
+ static struct msi_parent_ops gicv2m_msi_parent_ops = {
+ 	.supported_flags	= GICV2M_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= GICV2M_MSI_FLAGS_REQUIRED,
+-	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+ 	.bus_select_token	= DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
+ 	.prefix			= "GICv2m-",
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index bdb04c8..c5a7eb1 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -203,7 +203,7 @@ static bool its_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ const struct msi_parent_ops gic_v3_its_msi_parent_ops = {
+ 	.supported_flags	= ITS_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= ITS_MSI_FLAGS_REQUIRED,
+-	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+ 	.bus_select_token	= DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
+ 	.prefix			= "ITS-",
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
+index 34e9ca7..647b18e 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -197,7 +197,7 @@ static bool mbi_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ static const struct msi_parent_ops gic_v3_mbi_msi_parent_ops = {
+ 	.supported_flags	= MBI_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= MBI_MSI_FLAGS_REQUIRED,
+-	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+ 	.bus_select_token	= DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
+ 	.prefix			= "MBI-",
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index d67f93f..60b9762 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -161,7 +161,7 @@ static const struct irq_domain_ops gicp_domain_ops = {
+ static const struct msi_parent_ops gicp_msi_parent_ops = {
+ 	.supported_flags	= GICP_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= GICP_MSI_FLAGS_REQUIRED,
+-	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+ 	.bus_select_token       = DOMAIN_BUS_GENERIC_MSI,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.prefix			= "GICP-",
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index 28f7e81..54f6f08 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -157,7 +157,7 @@ static const struct irq_domain_ops odmi_domain_ops = {
+ static const struct msi_parent_ops odmi_msi_parent_ops = {
+ 	.supported_flags	= ODMI_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= ODMI_MSI_FLAGS_REQUIRED,
+-	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI,
+ 	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.prefix			= "ODMI-",
