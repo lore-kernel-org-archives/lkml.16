@@ -1,127 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCE827A925
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227E27B4E7;
+	Wed, 14 May 2025 15:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238391; cv=none; b=qJcCh4kjYg7YfhDR7fBv3j9eTWc+v5reHRyZl6wA+glyphA2YBfNqgUQlLi/1+b0l0bzyS1j+oj6JpCpprd5nCSv8lwJb5QE7ciSg/p1ISoqBeukqMD2ofqyg/gn6teYRxD0oMZnu+C7Kn8ByNBtnRU06j4qd3v33u920uOVoug=
+	t=1747238395; cv=none; b=K70gHFN8mnYqk0P6ORS+qFKz8jvsvlInAo7pnm01QRcbFeznFQuFBKdBcVnqYVmmCQOMghFy+t+ifOwRtAZq9OiTomVfXXf32QA3YbRA5gROxA9JP35GwfIpUUbp/8FAyIDot6x6CS+6wgI4YwmUe8Cz8UKUlk0KuEQgbo1TmPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238391; c=relaxed/simple;
-	bh=aewlEivzOTLwX0pE3ccim5W43mB4Ebqr69oOseIDGHg=;
+	s=arc-20240116; t=1747238395; c=relaxed/simple;
+	bh=HkxsrrlsqcfaJiY7c022L88luHQzOWwXnQC741NGka0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jg8jmarSoz2d+lbY4OcAQXvLeWcIzbcSZo/m+ziXGb+0TvYK/Z/uj/pG+fvLTWEwzJu0yI++w5rKPxnQ+dWxqob1M+KPm7WKQ+gw/dIeZX6W7Jf4rJO7/g9AVQXrn2BLNiOlooXrH7zSHO0ySKrrta6Z5CkIYOyKH6uo81pKIXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T9kTsOV0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwPU/gWnvbXNh15VmAUVySO6b6JNXGzvhNUkHjJIglQIXT87QQIlT/E0mum0DmVPfO+mb5qhmOkxz9fF6gToGuHLmK5ZIU8qfaZlu+wGL6Ihdl1RVEWsYJKQHm47mq7O4Dz+RoeXtkWx/SAJhyzziQDRLzgG+vxYOktOQDtSnEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWE8onug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T9kTsOV0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747238390; x=1778774390;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aewlEivzOTLwX0pE3ccim5W43mB4Ebqr69oOseIDGHg=;
-  b=T9kTsOV0OWky3CIFc9RDRBAWyJOJhCfBjszTpb/za9Z1ZlzCYJIY5suP
-   km1CRVGOH/unbQeVsoATvZABHDKyo8y4C/IWNFgVQPGIXqo0K7v2leH7p
-   Q3nXFJm2mSlBC0WYetJhsZj3hMdfFwM0qvDbaLwBqLIkQlUNaUfybLqC7
-   hAb1Z+olry5nBXOWuKedjTDNiYBI/BpVtlTFlef7TMtkqDzBnrn7f2a8i
-   Q89I4bg0qvTGsTkq1KYQ1vaG3IZAwSyF5SB2hq3fFIk65vUiLxG07M1jk
-   W1h7oGq+zGc/0MpZYsHlJ1hOUumv4XbGFIZj8IxbjwW3aMKdae8rMuc8Y
-   g==;
-X-CSE-ConnectionGUID: OCdYejhuQjGwYlXLFBmFrQ==
-X-CSE-MsgGUID: Lvv3+rQmSA2+6/8vXnqQGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52948888"
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="52948888"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:59:49 -0700
-X-CSE-ConnectionGUID: 60pbFHHWSJ6Uow8W4fuUiQ==
-X-CSE-MsgGUID: wEH4KuqfQRSa8/eqzqoX2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="143280397"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 14 May 2025 08:59:44 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFEWE-000HIt-00;
-	Wed, 14 May 2025 15:59:42 +0000
-Date: Wed, 14 May 2025 23:58:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
-	andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-	heikki.krogerus@linux.intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
- device resource management
-Message-ID: <202505142345.jLaHG90C-lkp@intel.com>
-References: <20250514122432.4019606-2-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWE8onug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778E9C4CEED;
+	Wed, 14 May 2025 15:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747238394;
+	bh=HkxsrrlsqcfaJiY7c022L88luHQzOWwXnQC741NGka0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TWE8onugcbz50Ao7weI2Aqv17taPoevUO9o2DpBgp7cfoTXTLPEcWGJI/OVIVNXdQ
+	 +BT8fRwbXNkqoHU1Va+F32270loFzEq+mjoZZNKeTgshVX294jUthnZNXLtEfbmFz3
+	 mtJ11/F4CNIqmnmzslIZQ/wBHEiPnSku+CZd9FJ42SUA/S8D2WVk9dJTH83znp2szj
+	 X+tYvga5mL7PMxVuhdZ4qRTnhdoie2R9RQK1IXdcRREnZmOg3JmB7BMqM3KjQkVkXS
+	 1c3RZQdYe2ct2OWFR40DjT/mYohPKTIywowMCOQ062RSveZb4p8qrlCnV30yrFhcG1
+	 tE9hDXcYABSzw==
+Date: Wed, 14 May 2025 17:59:48 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
+ feature probe
+Message-ID: <6eobuzkwm6xhpis4s52dtit55fws37elv5d7zygaf64czcjag6@brz2nrc6qptu>
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-2-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yrfjxuitfb5sxxwb"
 Content-Disposition: inline
-In-Reply-To: <20250514122432.4019606-2-raag.jadav@intel.com>
-
-Hi Raag,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus staging/staging-testing staging/staging-next staging/staging-linus linus/master v6.15-rc6 next-20250514]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-auxiliary-bus-Introduce-auxiliary-device-resource-management/20250514-202748
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250514122432.4019606-2-raag.jadav%40intel.com
-patch subject: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary device resource management
-config: arm-randconfig-002-20250514 (https://download.01.org/0day-ci/archive/20250514/202505142345.jLaHG90C-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250514/202505142345.jLaHG90C-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505142345.jLaHG90C-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/base/auxiliary_sysfs.c:6:
->> include/linux/auxiliary_bus.h:246:3: error: call to undeclared function 'kfree'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     246 |                 kfree(auxdev->resource);
-         |                 ^
-   In file included from drivers/base/auxiliary_sysfs.c:7:
->> include/linux/slab.h:472:6: error: conflicting types for 'kfree'
-     472 | void kfree(const void *objp);
-         |      ^
-   include/linux/auxiliary_bus.h:246:3: note: previous implicit declaration is here
-     246 |                 kfree(auxdev->resource);
-         |                 ^
-   2 errors generated.
+In-Reply-To: <20250512171922.356408-2-peterx@redhat.com>
 
 
-vim +/kfree +246 include/linux/auxiliary_bus.h
+--yrfjxuitfb5sxxwb
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
+ feature probe
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-2-peterx@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20250512171922.356408-2-peterx@redhat.com>
 
-   242	
-   243	static inline void auxiliary_device_uninit(struct auxiliary_device *auxdev)
-   244	{
-   245		if (auxdev->resource)
- > 246			kfree(auxdev->resource);
-   247	
-   248		mutex_destroy(&auxdev->sysfs.lock);
-   249		put_device(&auxdev->dev);
-   250	}
-   251	
+Hi Peter,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Mon, May 12, 2025 at 01:19:21PM -0400, Peter Xu wrote:
+> There's a confusing paragraph in the man page on two-steps handshake for
+> userfaultfd UFFDIO_API ioctl.  In reality, after a successful UFFDIO_API
+> ioctl, the userfaultfd will be locked up on the features and any further
+> UFFDIO_API on top of an initialized userfaultfd would fail.
+>=20
+> Modify the UFFDIO_API(2const) man page to reflect the reality.  Instead,
+> add a paragraph explaining the right way to probe userfaultfd features.
+> Add that only after the "Before Linux 4.11" paragraph, as the old kernel
+> doesn't support any feature anyway.
+>=20
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  man/man2const/UFFDIO_API.2const | 43 ++++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/man/man2const/UFFDIO_API.2const b/man/man2const/UFFDIO_API.2=
+const
+> index 54b34a1bc..1c554107a 100644
+> --- a/man/man2const/UFFDIO_API.2const
+> +++ b/man/man2const/UFFDIO_API.2const
+> @@ -42,25 +42,6 @@ fields to bit masks representing all the available fea=
+tures and the generic
+>  .BR ioctl (2)
+>  operations available.
+>  .P
+> -Since Linux 4.11,
+> -applications should use the
+> -.I features
+> -field to perform a two-step handshake.
+> -First,
+> -.B UFFDIO_API
+> -is called with the
+> -.I features
+> -field set to zero.
+> -The kernel responds by setting all supported feature bits.
+> -.P
+> -Applications which do not require any specific features
+> -can begin using the userfaultfd immediately.
+> -Applications which do need specific features
+> -should call
+> -.B UFFDIO_API
+> -again with a subset of the reported feature bits set
+> -to enable those features.
+> -.P
+>  Before Linux 4.11, the
+>  .I features
+>  field must be initialized to zero before the call to
+> @@ -70,6 +51,30 @@ and zero (i.e., no feature bits) is placed in the
+>  field by the kernel upon return from
+>  .BR ioctl (2).
+>  .P
+> +Since Linux 4.11,
+> +userfaultfd supports features that need to be enabled explicitly.
+> +To enable any of the features,
+> +one needs to set the corresponding feature bits in
+> +.I features
+> +when issuing the
+> +.B UFFDIO_API
+> +ioctl.
+> +.P
+> +For historical reasons,
+> +a temporary userfaultfd is needed to probe
+> +what userfaultfd features the kernel supports.
+> +The application needs to create a temporary userfaultfd,
+> +issue an
+> +.B UFFDIO_API
+> +ioctl with
+> +.I features
+> +set to 0. After the
+
+Please use semantic newlines.  Break the line after the '.'.
+
+$ MANWIDTH=3D72 man man-pages | sed -n '/Use semantic newlines/,/^$/p'
+   Use semantic newlines
+       In the source of a manual page, new sentences should be  started
+       on  new  lines,  long  sentences  should  be split into lines at
+       clause breaks (commas, semicolons, colons, and so on), and  long
+       clauses  should be split at phrase boundaries.  This convention,
+       sometimes known as "semantic newlines", makes it easier  to  see
+       the effect of patches, which often operate at the level of indi=E2=
+=80=90
+       vidual sentences, clauses, or phrases.
+
+Also, please say "zero" instead of "0", as was in the old paragraph.
+That will allow git-diff(1) --color-moved to detect some movement of
+text.
+
+> +.B UFFDIO_API
+> +ioctl returns successfully,
+> +.I features
+> +should contain all the userfaultfd features that the kernel supports.
+> +The temporary userfaultfd can be safely closed after the probe.
+> +.P
+
+Thanks!
+
+
+Have a lovely day!
+Alex
+
+>  If the application sets unsupported feature bits,
+>  the kernel will zero out the returned
+>  .I uffdio_api
+> --=20
+> 2.49.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--yrfjxuitfb5sxxwb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgkve0ACgkQ64mZXMKQ
+wqnL3RAArQyQl/1PS8j90oq72WHMTyButnCaNkBW3UnDNQbeIxW0tpDeJgSCjQ7i
+koP6uSRiI+OQxwS8k/O60cxRlL2uoLLMV0HMi/2yFI+9xqqmR4EVe2UYc1xIMId7
+tg28KGCKJmrV9l1aK+KlNSxnS0aTeP8uSOPrIDk2Ucr4/00ssZNHOzO9cqh4p/9D
+iZSuK6G5oDPw0tuuh3yXSbzQILy9MGEO2H4V4RD6RM2F+4Okmz1OKPULBFA1JpzL
+4V4zID7sYfADRV2JyMEj4JHr4ULWJVdY9lZoL7JNfkBd+b4ii1lAzsGPr4w+CASo
+xfBpE76BIuLyaJGfdjOP4U5m1TdiynUXNmWlcBkgRbvr/35aHFyD/ipAruGGf3cD
+8Mw3c86k+QJe0/ZWKrK/CwKIq7u6Ol2vRb0rGuBORaIdS5DaTPcI+3Ss/QBMQfxX
+LFQ0mAsxNGxwy+JzajxBaTYd4nSZ9V+UpEdB9MO1bbo0SXiYBcDtCPU56aOKHYag
+GC6BKzZILWxdgMFwEaDPp+LkRAt4MD7WA+dfymnLdTl/I6Gdae97CdjeVnQokeJF
+IOa8lazizcfwt55fLQoNKcxov9oxnPNy7sE4EOjkPw1AMBbWXW4h/ABzm2ut0bub
+PDgVetkCBGTlWAxJZhvlt7dsDdh3CMPTnrOITTvLxnbq4cDgNYM=
+=o9YP
+-----END PGP SIGNATURE-----
+
+--yrfjxuitfb5sxxwb--
