@@ -1,171 +1,190 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2068.outbound.protection.outlook.com [40.107.96.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BA7156C69;
-	Wed, 14 May 2025 07:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206048; cv=none; b=NtVvsm9ZqoNTVuHKEZ/chaVsMSHGPzMscyXcV7O2BwKID3j9bcKFp8Jd4LvKc+vGrQj0yKEycalKy2KJjFhiXnc7fwKAtqtmiQRVjpq1LypO0uQwUVwYPtk1H3is6Ef5SogBDPdZwkxZT35lil/hezj49VPu9fj3PnuWYClERh0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206048; c=relaxed/simple;
-	bh=A5+riu0L8i/4nGzwO76NfQZhXIv/IQiW+JIVnjQZv7A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lHupqDNutKQvdUNUcIJghzcM0pjrCureSd2TwBDTRHDJEmL7pz9BPANAsT2MSF5eiqIEb/GUPl0IW82Vz/Tptzjnvtrhdj0Iry2WV/g8TU73XK5ctXAeiBf2hJkk1B3iXXTUmNKwOjws6QxTygtALt97eJLmsrCYJQHLvFO8rQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pnjb7qIP; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B0D156C69;
+	Wed, 14 May 2025 07:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747206061; cv=fail; b=Az1IgYz1QVpYgD4WLqocZDIFUSrjp/oM9E4NdXEEyMeDajnwoqwoa4wzsEbnRA2h0LNJctFooARJh4XXhf6ixUHvrFyEZuL8IFYtuEDzIb0/e3OVpfqvdPWNDACoX2gSJQ8uX7Bjr6V7FFjwsY//Qxf2UJYm4hH1KyHy3T45GOM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747206061; c=relaxed/simple;
+	bh=KMs8+uAYwxp3kBpMal4Xhf38EIK3vGzugCmVbGQiI2s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MrTxkwzCRfF/ZhjL/TzVmNf9v2GPZAkWgQdSKvaQSb3b3GXqCqSx3Y0vzmipHGe471s9OKh8FH8QgAqbjfospKRL9BIx2M+Td6YXoTSimR0p3W05qkOhxrTlXhRn++GXAM/6CpPOSh45vLwbTqdqZGsi4F5WGjL86LbVjiDYsCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f+GQsmxL; arc=fail smtp.client-ip=40.107.96.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pnjb7qIP"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54fcd7186dfso5004450e87.0;
-        Wed, 14 May 2025 00:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747206044; x=1747810844; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D6JW6D/024ZtieC3fNMlVsgGDeNwGuZZPl2Kjm5QYvQ=;
-        b=Pnjb7qIPA9ZXRqgBgW3dTOhUR6nXGEkQQh4qBhgnFDaW1VQuraEDVfDUOE1f4eWWua
-         8xddqeBA7hUaWPeY9ueZMp8iVMlTd5UqzGDrYgCVIQzYZcuL9poK58843lJum24lYFtR
-         w1oO8sNf4bpWCNZ74AJqdhmeGXdDCj6GA7cIekRnioOSrP9ZtP37HuKpffZ2mQ2aL+DJ
-         8ZmQHQbShoE5K7FB8lfFnpXXPPLA4EctAgVJ12Rvu1HffiEhmHvB6JlIXs/Yn8z1Qzsl
-         +8q23DTWGps5GkQRbXnvkW3mH+qjwAjyBdDiqsH4Tv0FXiHGxZ2W5Xev8F8fmxGV+2ow
-         dhzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747206044; x=1747810844;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D6JW6D/024ZtieC3fNMlVsgGDeNwGuZZPl2Kjm5QYvQ=;
-        b=rZRsOc5GIWemnt9RItrkZjNAeBh5C0gdt6hW8jf9AUpuV8kDD1pxIoMPtPttHOHXEo
-         rsIIRhn+gJmcOHmOvowD0O3oXYo8SWPPqLBVUtm+tK0+p9Rkt16btWcRYCCUazw3wkIH
-         fweM1WPmLUcz8GF8z1fWc57Whs2Cy4GFXphmk3iHDLr9XJsOs+/Fvxdh9YizvptQBwBJ
-         B90aBBY0mcXn6qgN3BbfKapM2KaK+qRyyyGxjgw0NJSjv1sYiWS4DTfkV4HfNkwrvzwi
-         khLc7PRI7lyCJg3t8mHS1YvoT9aaAUDXYESSlFEcGpKw3uWPtfUjyBHDNu95J4QNepYI
-         pQ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7jPNZONPvzz0A522i/60/QnoIECoz8YOqy0m9ZC0AfhSMDR+DH3fxnrHOQ39ZxPlNxw179OArXzEI@vger.kernel.org, AJvYcCXsc2J0sFC2vDHQYkdmDZO9hPbju1lwIzsDLxiCODFmq9LGKjx8Gw/MgmfjK9BjXF9mua8nyUXZ2pGgG9pr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1VEHXbkySvV2ktdzMwvXiX3KGP5oASMy3arqMfVLtFrLeEelt
-	omixhjizEN873TqJsP0sl7wrqdUQdIAdI2Gq3T/exn4NL8d1wRXZ
-X-Gm-Gg: ASbGncsZidU1lW+A4Ou9Y0IN5DHcC0dNBOJwgmwN5TwMnl4W2BtdyND77Irw1Hy+i63
-	RceOPYSh0ojoS3EnJASXCDp0lIR6/32PQvWDz+uAg//8EvT9hYGfIHCQZawzvKU2kvoz+yW2sZJ
-	OmPJPNxtDcbGLYOa7mVdCBPEU88vXz7klz8DUAkOHTXy6zT8Dd6VzJWfmiL4leosx2HFnFOSuS/
-	QcI50X2F9s2g5gWn4rcOrnnoatUrkEAcn1OyY2Q5i9CKotTwm1wLnogxveLoBO5dPhYss/8Yee/
-	nFjxikpYGfB51sDoiWKzFgp2ZpbHpe69Wz5cwFBwuFCmtSPIIMeP+ZxL1HW4J2I1sDmA4ULlCmx
-	jmcSeD/wg3IkAlZvBId+AApCijNdn/q0m
-X-Google-Smtp-Source: AGHT+IEFXPYjTQVFc9xBZMWwabkH4J7NL0P5X4yGgWCWobEmL+swbbwu4HTmLk4kn0yDU6COl2Tj/Q==
-X-Received: by 2002:a05:6512:450d:b0:550:d534:2b20 with SMTP id 2adb3069b0e04-550d61dddc1mr728818e87.35.1747206042530;
-        Wed, 14 May 2025 00:00:42 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64d0c46sm2151851e87.258.2025.05.14.00.00.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 00:00:40 -0700 (PDT)
-Message-ID: <df3788e9-f4ea-4c4b-bb77-20393e914df4@gmail.com>
-Date: Wed, 14 May 2025 10:00:39 +0300
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f+GQsmxL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A4GlfcztL/L4rLOhGeZi3teM9sYq0ESl0sWJYiEi201QUFzDuPbFYz9cnl4ISvpq4PwTe5i8NaalFiCCeSeiUlYhZhKTId5OctG40/791D7lYKG6bleXd/Pl8bIWh1ssUPw1Dh/7xJJMtZjAfLVjpzk1wj9C7SfKFxIs+xIKr0MtNpttyDLJk/tR9+xpZR2TGBdFXle1sLKO2k0s90v20LDjw8uWFDGkvx8UZtgp1Hw2ojNpRBrhQqLCs1CcNofB5IwteWexpieHa2xhqLMY4zOqj4GswHw+HSDx209TpNPOjv8/RI72KvMx/XqyWg4xIwQjB1XsVcmx8718s1ejGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SLonvGLI7YLu+K+u2uFI43+luOZk4A6qJ5nnb8TsFm4=;
+ b=f4+cUdOvJ6rJixw8iJPUGeUFswWZkBWi4C7CfNrmoIfAn88zkSSEF5lt9gn1S+cdCm0yFRLV+/yht8pxy2ZUtMF2INt3Zk4UEpUuZJqwWU07Jwe8JcDvVGlKKrG+ChQzWUY+Jl+PcXNCkqHd+/TjMHllp4yq/OPaBf+GUbXfLy09Num2ncwg/9l+NpTKVDeDkI6f+n4+UzKN6+q34x/EOMyw7hmMZUZbAF/KAA9lZ2JPS3tEXvmkZ+qFFC0ECNzmv/ibWGxOlt4D1+Y1pAias1ZwKGG2o1s79IRIAVmt2U1C8Aenubjvd90OL06FL7mJHBgFfpUCpZoB3dFhX+toHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SLonvGLI7YLu+K+u2uFI43+luOZk4A6qJ5nnb8TsFm4=;
+ b=f+GQsmxL5DA0UTR7o/OTRyg9C/bNgEBcR6PFz6Sq++wKonMn2nygfJ57MuiptDrm7uD/CNNQtO+ZM08h1epf9nK09ATBZZqZBm1/eB8mTb/k5kb4B5cd5erldUi4i5hPPIft6ZgF1aNqCuYS3RdHxtMbQcoBEoGt1m1s0rfYkIzWpL/xdRm+IIMGHKjiKoz3dZ4V9gTYS6wgKP5n9Tid8HMQPzofPbdgzNm09kOBOzrLj8oYqW/ui0ELFgecFeipJX/Ve8BPf8CsYbCfn0GfMaOrgK9I9vrei+pZDdVWXJLQqTbehMTD7M5dD7hVobo4o/PJsa8SDZKUb/nKN15PYg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB7548.namprd12.prod.outlook.com (2603:10b6:610:144::12)
+ by DM4PR12MB7669.namprd12.prod.outlook.com (2603:10b6:8:106::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 07:00:57 +0000
+Received: from CH3PR12MB7548.namprd12.prod.outlook.com
+ ([fe80::e8c:e992:7287:cb06]) by CH3PR12MB7548.namprd12.prod.outlook.com
+ ([fe80::e8c:e992:7287:cb06%3]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 07:00:56 +0000
+Message-ID: <9ee1bdcf-efc5-4edc-9693-bc0f35ca137e@nvidia.com>
+Date: Wed, 14 May 2025 10:00:52 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net/mlx5: Use to_delayed_work()
+To: Chen Ni <nichen@iscas.ac.cn>, saeedm@nvidia.com, leon@kernel.org,
+ tariqt@nvidia.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250514063437.2513810-1-nichen@iscas.ac.cn>
+Content-Language: en-US
+From: Mark Bloch <mbloch@nvidia.com>
+In-Reply-To: <20250514063437.2513810-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL0P290CA0012.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:5::12) To CH3PR12MB7548.namprd12.prod.outlook.com
+ (2603:10b6:610:144::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] gpiolib: don't crash on enabling GPIO HOG pins
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck
- <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Doug Anderson <dianders@chromium.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250513-pinctrl-msm-fix-v2-0-249999af0fc1@oss.qualcomm.com>
- <20250513-pinctrl-msm-fix-v2-1-249999af0fc1@oss.qualcomm.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250513-pinctrl-msm-fix-v2-1-249999af0fc1@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB7548:EE_|DM4PR12MB7669:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1d53753-8936-4044-2621-08dd92b51334
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZmUva3lqQUE2WENpVkxidkdMUVZoQzVMSjd1WlhpdGRrN2djQUVlZVlsWWpx?=
+ =?utf-8?B?OXBWeDE5djZOVXVEUHVaMmNTcm52bmdJREtKRVNGQnU4TVQ1QktlL0dLVVow?=
+ =?utf-8?B?RmVBYkxHeWtGNll5aUJNMHFtanUzT3FpMEpjQXpjTkUwcyt2NDF2TzRmblJz?=
+ =?utf-8?B?ajNZNVo5WjhYZ1J2eXRHUEo3dzVOaFpzR3NuYjg5UDVPV3l6amVWQ1dkTHI4?=
+ =?utf-8?B?dytYZHhUdXNoeXB5U2IwbUd1N2pWNm5DSXFJNzRzcTNMdThNZnRwUXZ4NUpv?=
+ =?utf-8?B?Wi82WWZoaEJHcFlmUyswNkJJZzhtQXpUQUY0UXp6VzhDK3lUSm12SzMrb01t?=
+ =?utf-8?B?WHo1VnlrYWNVOXNvWHljc0ZzM2x2VkFCajFibVVRZkVUSXhCNmJEWVFYYVZz?=
+ =?utf-8?B?c0h4RHBlTndTbXBmSzRKSi91R0ZYZ2RiY2R1c2JLZCtsY3ljeU9KeGdkbFBv?=
+ =?utf-8?B?VEhnR0NLM2hGNGxnMHhKaTl4Ky90YmZPQkszamgyUXBkNUZnNStRTHpSL1Vy?=
+ =?utf-8?B?UURFUUpXU2QzQ1VUR3lwcmN3eTFFZk1mb3gvNmxXWWJKSUIvUWVjOEhkWUxH?=
+ =?utf-8?B?RzcwbGF4eHYxaU9mTGZHZ0xEWlM0MkJuWmNKTFUzNUkxQlZtSGV0OXF1VkQy?=
+ =?utf-8?B?RkYvWkJNWkpsYitsd3lteUlITGRHSENtVzBteTZXRGlGY3lNUHhVY04xZDdQ?=
+ =?utf-8?B?bDhhL0dES21iOWZIUFV0WDUrLzNsSVBjVERUR3g3UlMwQjYzSUsrTjYyOExl?=
+ =?utf-8?B?akJCUG94TTRlNko3ZzYzSktsZXJXR0h6MnZBNFdwbkhjaHhvMUN5OU9ENHNh?=
+ =?utf-8?B?b1pqUHBsNndFT0JUY1pxQTFXbmFiTHcvU3Y1YUo4ZC85dld3MHplZm5BTG5K?=
+ =?utf-8?B?T3MzMElUSmdkaXlua2NqUHlBcGJiT0V6SVNNUDVzbVI1SE81VVdoZm1yeXZr?=
+ =?utf-8?B?aXZiQVhPSngyRkRtd1VWNkNDb295VHl4KzFrVzdUaHpBMnZacGU5ckZVVElL?=
+ =?utf-8?B?c1J1dEFNcVV6eFBjczVpTzhVTnAwN1RwdGR6WjhzTVc5SkZXTTNrZ3k1a1VT?=
+ =?utf-8?B?Y0dESFRBdTdoVnJWT0lzZkRxaXBHVGJDVjdwMTlzanEzTnk5NHNwK3hTU0Zz?=
+ =?utf-8?B?UFZ5czFKYkdOTCsyY0ZHdmtCVHpjckJGT2U1MDh1RmNZQmMwYmFyMllsdUJq?=
+ =?utf-8?B?RDNkU3lYSHJ0aGljN0FHV3lxdnZJSi9PVmJsbWNod0hkYytsNlFoNkJZQnE1?=
+ =?utf-8?B?Q05CSVlvajJ2UjhORFQzcEpTS3pXNm95TXd4SlA3eWEyU1grbUZ1aVJMVTVZ?=
+ =?utf-8?B?Uk5rdGtqVEZqL3JhVHg3dFNTUFJrUlRTQ2xrOG1iMFdJc1NRV3ZUMEQ5QmpF?=
+ =?utf-8?B?S2Nzb0xweE1VZnN6UC9UcTA0ZnpnQ1ZkeXcyUFc4Y2VONEI4azFRL2xoS0xC?=
+ =?utf-8?B?NW1QSUhPdVBRZHFkNG9nbkQyZXRqZWtzMElIM2hoWW1RdVE1OG91MVVCZHFZ?=
+ =?utf-8?B?M0lRZ2xkQ2c0S2svRmFoTnBONW1EN0FNcXhlUzAvck53d0V5NElhWjlpTUFB?=
+ =?utf-8?B?N01YWk1aUnd6TFB0cU9pTVRXai85RFgyQUpZUkNwYjFkZlNVZjg4eWlKWW9s?=
+ =?utf-8?B?WThxbnRKN3ptS2h0bTR6RTJSMGlEd05LS283dW1NaFgrYWVHaW1BUHVzNTVo?=
+ =?utf-8?B?akZ0S0lvZ2tiVm91azhCUkZhMk5SWmdRZkpMazBSVDJKeVNvallKR0crdTla?=
+ =?utf-8?B?bHFQQnFGZDNVbnZ5bWlFeEVsc0FrMXpvUUt4Ynl0azYyN2h0WkwxbTV1cjZI?=
+ =?utf-8?B?cFN5QVZmM1JDc3E0VjY4clZteXEreWVhODRhWFNnQXRKRWpJOEVKbm9SUURP?=
+ =?utf-8?B?RG9XWmNUNy9qM3V2YmVXS2Y2RlY4aEs0RTlBN1A5VG9PRVBYMHRXWkhlK0dH?=
+ =?utf-8?Q?nNwNGBiOmXc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7548.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SlFwUU5oT3dOUnIyQWN5UzJ0SzFheVhMZFMyeVdiT3N5RVZPUVh2amM0aldE?=
+ =?utf-8?B?alQ5VWtXUGxlOTlITVJSb2RwZ2RYRGk1cnduS1dlcWY1NHMrQU1lWFhmOEhB?=
+ =?utf-8?B?Zi91ak9iZ1hTYVNnYVlyejZzWS9CZ0NmYnZmTWViWE1CTCtpUjdvSmRXSXBl?=
+ =?utf-8?B?MUVPeUJJbWNZQURob3BzWTlCZ1JTS0JwaWVmNnA3RXpPRFdLclM2UVArdkV2?=
+ =?utf-8?B?cDdwT2NPRVd4SHFJT3ZNeVNmR1hpak9nczhwaktnd05wZVZHRlNROVppTXJR?=
+ =?utf-8?B?SzVGMFp6V3hwK3FMMkh4dkNYanRyU0MvRURNQW1NWFFZL0lYWUZPZHBxWlNr?=
+ =?utf-8?B?UlVDU0puZ1YwMHluQnUwWnBmaFNwdTgydGtqbU5QbFRyb2hJVzJKT3cxMkhl?=
+ =?utf-8?B?NnI3TmFtT21ya2xhdCs2TTdOTnZoTjE1S3A1OXBkL3pHVUNvRUxDU1RDMm9s?=
+ =?utf-8?B?MHNkaXlROXFEd0pZUDBYMG85TjZxcHBGeGRkTUZHdVlGQ0l0K0h3cUFoNC8r?=
+ =?utf-8?B?elZkWDRUaEpST2pZQklkOS9iejIrcHlSSGtPalJoaGY1cU1SV2JDVkFCK2tO?=
+ =?utf-8?B?NXlYL2d2WnNTd2Vna2MyWTVZcllmL3ZQMHhRZXdUSmNNV2s0NGY2aVoydHUw?=
+ =?utf-8?B?akZ6b2xhV3lnaXVXR1dsSEg3Q1MwUldid1BYNEVDREg1bkFyaXlRODZqMUpJ?=
+ =?utf-8?B?d0VuMlM4Yi9mdHVPRThnNkdsZWxPd21KbmQ1TVA1Q1lOOGhXaEpEdEdpdnRw?=
+ =?utf-8?B?WHhoNDNSNFI0Q3Flc2E5a2ZaaE9tbDZNb3FoVHBVbXMvZ0xkRlNic25pRk1Z?=
+ =?utf-8?B?MWxiTmI2UEw5ODF6bHk0NW5YdUtVRjd4ajFpeU9iRE9ISUZSbHFmMUpyOXlW?=
+ =?utf-8?B?UElYMkxNb2tJRk9SWm9NdGZ4a3RrMnlyZTV1cE1vdW92WXNOOFJFUGROYm5h?=
+ =?utf-8?B?WFIydHNzc1lSZ3J0WXlITHRQOCtXQWdCUmU3Q1RyT1Zwbm56ZFdYNFQ3RHRM?=
+ =?utf-8?B?aXdjQ0lkanNvR2cvNFpEMXVSWHIwdHhjejk0dHVGNWJyQ3BFL211b0t1V3Yy?=
+ =?utf-8?B?U1hlNXVCOUlvNVF5RGtFdmhIbWhqYVBydWJTM1F0SjMwUXJjS3BDaTZ2SmQ3?=
+ =?utf-8?B?ajhIVmtnMTk1NlFnckFZNkZ1bHM4RlZXNHNnR2ZWZDZ6N3U5Yng3Y1lzLzBJ?=
+ =?utf-8?B?N3htanhscXErUnh6K2VzV0c1VGxjcXVwbG52aWw4NDhhb3RpVFI1aXBOd0hT?=
+ =?utf-8?B?SmNGRE5zSU1yTUQrdXFFalAwWE5JUUR3VVNycjVKNnI4cmxwRmJkaGl5Uzl5?=
+ =?utf-8?B?amtkWTYzT0g3NytlQm5hUUE5bGJXT0tOeDZRWitiU0tTV0ZQYzBOWXJCaG5X?=
+ =?utf-8?B?dUl2ckJTd1lkZnBiSmVQUHhESTd0a2xBNDJ3Wklod3NxTWFwTEVzeHVoRjRk?=
+ =?utf-8?B?UVVUSTRJOTVmMEo0eXVCeUMrSFJkSWdTNHpnemE4RUdiRjFwSHhkR0Y4MDg1?=
+ =?utf-8?B?dTFuR1pVV0FjdktIOVB3bW1DOUxCY0ljajNUdFpIYnIreCsvODBuTktSRXN1?=
+ =?utf-8?B?RFhlWWhpMFRSaHNPNFl5UWRXRjdhODhRKzVKVEZJUFZsZmtXNWhKWjYvQUFW?=
+ =?utf-8?B?Q3A5K3JlWG5nU28zMDc2aEg0YUtheUxUc3FYZ1RaajgveGhObkFXejJQdDF0?=
+ =?utf-8?B?OXJBN2J0YkZDNng0WkV3cXdmOUpxa1lCTXI5VG9DOHJlOWM4eDFib0xVWXJS?=
+ =?utf-8?B?a0l2V3VIbzJzTXhER2p1eUJkWWZZaWFpYTdBZmF4c0tSMVlyNkM2MEtGRXJZ?=
+ =?utf-8?B?cTJHcFF6U0lUZ0VWWVMxT1BzSStaNW40bW0zRStVQi9rRzRKUzBnOU1Ub25C?=
+ =?utf-8?B?Ry95MmlyRk1wdnVhaWp5Q1ZIWlJsV2pMVXJPYzl6a0ZLTzFWYWszcnJ6bXY3?=
+ =?utf-8?B?NHFtdzhrVnJ6M1JhakQxWVRzekJNY0p2aUdsSm56UkRTQ0pwMkh0VlNPaEgy?=
+ =?utf-8?B?cTIyK3NGVVVZMGxUYmZTU2M1aTJCaS80ci8zTEpOcEhkSG85SHEwVHp3TUZO?=
+ =?utf-8?B?SEh2cVRxWmUvRUU1b3I1OG1WQTJ4enV3bHpmR3Z3cDk2Si9mN0dyWnZFWkRB?=
+ =?utf-8?Q?uXg2rCUDFT1irU9Rod/nHQTgE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1d53753-8936-4044-2621-08dd92b51334
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7548.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:00:56.8501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iqLmrQAIxQOQXb6/UPoQXVagSs6ILf2+lzGfGlM62xVI1BlthpwW+QEDE4XdAdeMpfBLJkPphqRYw4A0d1KA0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7669
 
-On 13/05/2025 21:38, Dmitry Baryshkov wrote:
-> On Qualcomm platforms if the board uses GPIO hogs msm_pinmux_request()
-> calls gpiochip_line_is_valid(). After commit 8015443e24e7 ("gpio: Hide
-> valid_mask from direct assignments") gpiochip_line_is_valid() uses
-> gc->gpiodev, which is NULL when GPIO hog pins are being processed.
-> Thus after this commit using GPIO hogs causes the following crash. In
-> order to fix this, verify that gc->gpiodev is not NULL.
-> 
-> Note: it is not possible to reorder calls (e.g. by calling
-> msm_gpio_init() before pinctrl registration or by splitting
-> pinctrl_register() into _and_init() and pinctrl_enable() and calling the
-> latter function after msm_gpio_init()) because GPIO chip registration
-> would fail with EPROBE_DEFER if pinctrl is not enabled at the time of
-> registration.
-> 
-> pc : gpiochip_line_is_valid+0x4/0x28
-> lr : msm_pinmux_request+0x24/0x40
-> sp : ffff8000808eb870
-> x29: ffff8000808eb870 x28: 0000000000000000 x27: 0000000000000000
-> x26: 0000000000000000 x25: ffff726240f9d040 x24: 0000000000000000
-> x23: ffff7262438c0510 x22: 0000000000000080 x21: ffff726243ea7000
-> x20: ffffab13f2c4e698 x19: 0000000000000080 x18: 00000000ffffffff
-> x17: ffff726242ba6000 x16: 0000000000000100 x15: 0000000000000028
-> x14: 0000000000000000 x13: 0000000000002948 x12: 0000000000000003
-> x11: 0000000000000078 x10: 0000000000002948 x9 : ffffab13f50eb5e8
-> x8 : 0000000003ecb21b x7 : 000000000000002d x6 : 0000000000000b68
-> x5 : 0000007fffffffff x4 : ffffab13f52f84a8 x3 : ffff8000808eb804
-> x2 : ffffab13f1de8190 x1 : 0000000000000080 x0 : 0000000000000000
-> Call trace:
->   gpiochip_line_is_valid+0x4/0x28 (P)
->   pin_request+0x208/0x2c0
->   pinmux_enable_setting+0xa0/0x2e0
->   pinctrl_commit_state+0x150/0x26c
->   pinctrl_enable+0x6c/0x2a4
->   pinctrl_register+0x3c/0xb0
->   devm_pinctrl_register+0x58/0xa0
->   msm_pinctrl_probe+0x2a8/0x584
->   sdm845_pinctrl_probe+0x20/0x88
->   platform_probe+0x68/0xc0
->   really_probe+0xbc/0x298
->   __driver_probe_device+0x78/0x12c
->   driver_probe_device+0x3c/0x160
->   __device_attach_driver+0xb8/0x138
->   bus_for_each_drv+0x84/0xe0
->   __device_attach+0x9c/0x188
->   device_initial_probe+0x14/0x20
->   bus_probe_device+0xac/0xb0
->   deferred_probe_work_func+0x8c/0xc8
->   process_one_work+0x208/0x5e8
->   worker_thread+0x1b4/0x35c
->   kthread+0x144/0x220
->   ret_from_fork+0x10/0x20
-> Code: b5fffba0 17fffff2 9432ec27 f9400400 (f9428800)
-> 
-> Fixes: 8015443e24e7 ("gpio: Hide valid_mask from direct assignments")
-> Reported-by: Doug Anderson <dianders@chromium.org>
-> Closes: https://lore.kernel.org/r/CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com
-> Tested-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
+On 14/05/2025 9:34, Chen Ni wrote:
+> Use to_delayed_work() instead of open-coding it.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 > ---
->   drivers/gpio/gpiolib.c | 6 ++++++
->   1 file changed, 6 insertions(+)
+>  drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index c787c9310e85af4c22ffc9bb8e791931fd056c89..250d47f77e2bc678b83f51958ca1bcc4db42928f 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -784,6 +784,12 @@ EXPORT_SYMBOL_GPL(gpiochip_query_valid_mask);
->   bool gpiochip_line_is_valid(const struct gpio_chip *gc,
->   				unsigned int offset)
->   {
-> +	/*
-> +	 * hog pins are requested before registering GPIO chip
-> +	 */
-> +	if (!gc->gpiodev)
-> +		return true;
-> +
->   	/* No mask means all valid */
->   	if (likely(!gc->gpiodev->valid_mask))
->   		return true;
-> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> index e53dbdc0a7a1..b1aeea7c4a91 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> @@ -927,8 +927,7 @@ static void mlx5_cmd_comp_handler(struct mlx5_core_dev *dev, u64 vec, bool force
+>  
+>  static void cb_timeout_handler(struct work_struct *work)
+>  {
+> -	struct delayed_work *dwork = container_of(work, struct delayed_work,
+> -						  work);
+> +	struct delayed_work *dwork = to_delayed_work(work);
+>  	struct mlx5_cmd_work_ent *ent = container_of(dwork,
+>  						     struct mlx5_cmd_work_ent,
+>  						     cb_timeout_work);
 
+Please specify the target tree in your future submissions just
+as you did with your Prestera patch. For the change itself:
+
+Acked-by: Mark Bloch <mbloch@nvidia.com>
