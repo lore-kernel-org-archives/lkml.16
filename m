@@ -1,48 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2ED27603F;
-	Wed, 14 May 2025 11:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D9C27F18C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747222674; cv=none; b=dINNbL1egBycAB9qduhDLxJUm6swQUu0nMhGC4jNpp11SLPV8cD9yV7M/NL9m03HWn+bdEOGuVXbXtnSaeeLz8JEy7kO3xcGp2NthVubgLdyeNFkTE8Rb5X1Sp6eW19E/ySICoFwmBJv7B+HY40LxR9wqir1cs1acuN1e4gV1+g=
+	t=1747222676; cv=none; b=SQ74sOWLqeW60yXtE7XIQW6/bcuFlmt7B8a3XVq4mSbAlqR2uzWpycGmjk5GDvJXWa9iMtLwxBpq9+WIIyyzoxTviVak+S2IQx18pWvwCWkCPXgxnVm9s4O4RYgX2d20ru7iIQuHKRYVumkQ5gZ+MFvTkmlhhdaLfHYkeMcYVS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747222674; c=relaxed/simple;
-	bh=R/MbuxF9Q/H1tecmqJbiAyPjtoLODQkOyXszcxLXrMI=;
+	s=arc-20240116; t=1747222676; c=relaxed/simple;
+	bh=hdiLO6XCduc9SOuTx7CxPdZUESw/8/50kqGgWmBu+q8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kfTSFN8ypH1FKB9i6bkyjsF9F/vZL0zaxmEWDgsIpuTpaoYAext71iRR/2E/EUil+J93XjgS99fpJQXsTWyKih5Q/twOkpcdUXUFvHJVSS/1XvDJvJfFejbWqbIbuE1SayXFOYGt6yJEX6pGnNXP+cxcwVHFajFnPTJS1prETik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuclqcQI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=TqnDJXCTy0xgbHeZcZUpzyF/spnXziT7OSh3tw9Ph15Bc8Zl49jBFf7NDCEjWi+UMMTnx6wgeLZ4EMKAer9xxIqoqheqAk9qFAsgZ3NkiVv0JqTHcmlrWuuFhebA6xf9KUDEmxaMEWVub3yY2BKR+4R2pUHWqG5VL8C4YINfzTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k69PjzF+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuclqcQI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A39C4CEEB;
-	Wed, 14 May 2025 11:37:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k69PjzF+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B502C4CEE9;
+	Wed, 14 May 2025 11:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747222673;
-	bh=R/MbuxF9Q/H1tecmqJbiAyPjtoLODQkOyXszcxLXrMI=;
+	s=k20201202; t=1747222676;
+	bh=hdiLO6XCduc9SOuTx7CxPdZUESw/8/50kqGgWmBu+q8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=uuclqcQIK1zA30nOKIaH/32sXQpqaGqEy/3n3KbGds0vfhZSwAyr7BXjqLd4A2KS9
-	 g3UVFK/jiWspQWpPxB62OJYHGseA03C2VLPrQ4KM9zfQfIRHhiQvx5a15Dtz+8KNdA
-	 tDUdMwMGjIxOfkMBu1pIVI7ygZh4EYSIcSppHgBL2FA4x1yIfwDDE7MxRkhSwund00
-	 Uko5gtKVlvq5Q5Z1JwbYnhgQK3GOUAQjLXDblDQNdwICHR0GU3B4NsuVjQh1p38W+1
-	 vFjOhyND5mNWf/R7rgr/GVCogdnMCzxMMpwgZjtVz3PD+25TdVCmhrK4r7ZlPhaKns
-	 l6ADPQA3F7FgQ==
+	b=k69PjzF+kAbdk6afuQXuAj01ZMRsc38cQ+ZfXyBKqetQTRZB2YQoBQtcr5ruU+WWE
+	 uct8t8FB1Wz/frWcrCWmCskQkmTvBn7gjD6yDzHdfn4Vnn/o5luD9NZCc33yZK3W8f
+	 mJ5I4/GHW6im7xnAFlM90EI+7ZGru35r3dliJ+QMicYIvWV/Iv8mM3AtNXZ2r2z0OY
+	 98ZRuwTlHw44wGsvKP/LCL0+2q8r7r2e79TghTuywC+tUo+XGfCQyR2QKbw7ROKikB
+	 s+7B/jF1I4J72fhMJDpdXhZXXZPima42JWzw3z3OMalU5puO803TqCdGLmbE3XLwPG
+	 8vrXVfUAtT46g==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- Biju Das <biju.das.jz@bp.renesas.com>, 
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250414145729.343133-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250414145729.343133-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 0/4] Add USB2.0 PHY support for RZ/V2H(P) SoC
-Message-Id: <174722267052.85510.5832087290882468385.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 12:37:50 +0100
+To: linux-phy@lists.infradead.org, Adam Ford <aford173@gmail.com>
+Cc: dominique.martinet@atmark-techno.com, frieder.schrempf@kontron.de, 
+ u.kleine-koenig@baylibre.com, aford@beaonembedded.com, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20250504204043.418924-1-aford173@gmail.com>
+References: <20250504204043.418924-1-aford173@gmail.com>
+Subject: Re: [PATCH 1/3] phy: freescale: fsl-samsung-hdmi: Rename
+ phy_clk_round_rate
+Message-Id: <174722267396.85510.14284912080020190459.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 12:37:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,26 +48,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 14 Apr 2025 15:57:25 +0100, Prabhakar wrote:
-> This patch series introduces support for the USB2.0 PHY on the
-> Renesas RZ/V2H(P) SoC. It includes updates to the device tree
-> bindings and driver implementation.
+On Sun, 04 May 2025 15:40:40 -0500, Adam Ford wrote:
+> phy_clk_round_rate sounds like a generic helper function.  In
+> reality, it is unique to the phy-fsl-samsung-hdmi. Rename
+> phy_clk_round_rate to fsl_samsung_hdmi_phy_clk_round_rate.
+> No functional change intended.
 > 
-> Best regards,
-> Prabhakar
 > 
-> [...]
 
 Applied, thanks!
 
-[1/4] dt-bindings: phy: renesas,usb2-phy: Add clock constraint for RZ/G2L family
-      commit: 31eebeef8cdd4c9bddc9d34053cab6553616d0b7
-[2/4] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2H(P) SoC
-      commit: 9c4fbefc962dd13694b4a5051f432ed435c92220
-[3/4] phy: renesas: phy-rcar-gen3-usb2: Sort compatible entries by SoC part number
-      commit: 9414ceb38a74470249dee69784d6079daa452c3a
-[4/4] phy: renesas: phy-rcar-gen3-usb2: Add USB2.0 PHY support for RZ/V2H(P)
-      commit: 3767474d7497a4d03f58118d02b742b903626d03
+[1/3] phy: freescale: fsl-samsung-hdmi: Rename phy_clk_round_rate
+      commit: be79213b4f9ab6e5abf870b97f8a1cab5bf049b3
+[2/3] phy: freescale: fsl-samsung-hdmi: Refactor finding PHY settings
+      commit: 41db4623346777be6ce694338b5adc570c4b671d
+[3/3] phy: freescale: fsl-samsung-hdmi: Improve LUT search for best clock
+      commit: 46a87260fc4f719f58e07a53cc1b70a38d98da37
 
 Best regards,
 -- 
