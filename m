@@ -1,210 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519622701C5;
-	Wed, 14 May 2025 15:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151951DE4CC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235515; cv=none; b=j/l2FDjgD4ZjrNzhlVOQfc0WXbRLaBxmWjIuColC/3mzQ4t9Fs1rDgKCXx8gewEOEw4Mb823duCQpuNHTG8oIG4X+pJ84yQ9BhT9NZDwlEgC2WfAdZYCrYLs0NR5QFG7BmmO7t39LbvVI7xtw8c91pKDii1PtSjYEM06d4GzqE8=
+	t=1747235520; cv=none; b=jiS6Vml19VK0mxRzJnMxTjLl2X09gS/rsAdc0n6epAOBhhZRCBTPIy582KB3xfqkuvxfOmZBMtL7aBxAYGs9q2Yj2tnekzb20Z0W2o3VdzveK/GM4t8PrJJlQuoXMoukbU7GpMxm1y3URtiRD35nbpnJAqGvMOn6VUhYENxXFz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235515; c=relaxed/simple;
-	bh=I5INupvxZovL47SmzAQjAmdQlOM2NhepqdTC7MSAgu4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZNmxY+R04HZlyxQ7KfrUWaCsWn3VliwMqTRDKsgprKxVn73I0vqpGCwrm2ve1KfpfZwJoIOmfXWGnTmvPv8eJmmW60nGsXAzVcwwAfDHuv464ztofALBDgv8Hy9P9Aun4CQdUhkrdHMa9GMUXhjhhHQ/WYDhm92f+K/dvkFeSVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZq886+v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747235520; c=relaxed/simple;
+	bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KoEzURl0QwNvR39MPO4jXo/b6EZfS8NS/HwKEpEJZDy7FWfJYsJSK66eChIwZpgHSv7ZYIXTNCUkOPULDZ72SxiGuYKWFaA8X+oKkVy1F8enLR3s49J8NXZj6Y/K90Wc0MigfvRE5/Z33EGAAm271ox0lW37ai3CedF4ruiSYSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lTRXw+6g; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZq886+v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA04C4CEE9;
-	Wed, 14 May 2025 15:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747235514;
-	bh=I5INupvxZovL47SmzAQjAmdQlOM2NhepqdTC7MSAgu4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KZq886+vVCPM3rUYOD0xEfvuv2v4I3Hpc++mgTtfrK09PySBX7XANsXurVCJ8DnPm
-	 hxpgFNRHK/t3yyLybCQQGcz0+sMItqDKGwO3OKVfHdsfsfemXGVHU0X2Uy7ZzF+Z9k
-	 6vfs+uh6Y60P6knw4/Cg6kJALG8mpuDJmbhYT6lIFfP8NKA/deExm35bsmvxpu3Za9
-	 KI1RIuhaZ12EsmztIDYUH1mKX1apyVFRbH5RgSeQmlF4Q1y1o3w1bhTnxQpgweQeBV
-	 saWHWRY60NkTnZ1Xw+85MrlzPTFUEYHF23fyqdwKFkROOMDYTZIcz/bCxn8I8VucNz
-	 /JTuZuNFNVlzw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 14 May 2025 17:10:34 +0200
-Subject: [PATCH RFT v2 14/15] soc: qcom: ubwc: Add #defines for UBWC
- swizzle bits
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTRXw+6g"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30a8cbddce3so6149609a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747235517; x=1747840317; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
+        b=lTRXw+6gte7jBswlCfPRgNoifOY3aelYkeX+D0W+eUSHEEUG3mMDUJzRN9h+l0WctY
+         Op58L0iFZeHUTXYIiLamWGPuCAIEpp9YbWMF8S9vlBU7b2Y3vyrbFOJsn38Sb4/OdO+I
+         N5N4O+CpFPoFht3Cbktutaxhjkan5MfSVhiyE/Kg/zBC6mFG4xOtPkLe60vB7fk2PDva
+         34Vy9wJHUtag4TbvmW4fykGzdbwrdN0Zrx0YgS+Of+5CpOtJcqfCGwFGe2sd7bJ28jdN
+         M7X7KNS/Beo7tDDY1swD4qicuY4uZ51odZJklhUkdTyTHCQkTWBby9MQHpyVQARrQe86
+         61Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747235517; x=1747840317;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
+        b=mX+k+3O2bWNJfBSeXilZo0Q9OrkxRzjysQFocL92ihGrEyksPK1+lc2qXFYjoUSrcC
+         wI0a2P3NrWbRM5Yy0N4IfumelpAkJGgf52quZ3kxhEGEhMo/lq3isHp+qa22Q/DlemSu
+         Fy29mSyuc/lR62Y/ms74r7JVmqviUEu8qa3TM5C5klOeTXZgleZXbBXByI7cdNwg3Jle
+         TgCLQZuIBuJnoUY+D6nI/U4y//ajr/5jmHgOB0G1eZahMJj19RCcvOfzI+Pd0eU8uCyZ
+         Tbn4V7JgfPl73B/iX6CIr+qISZH1rZno61rGQJWg8tda6o56YMcB3/ZrrHy27wf6fkCz
+         D7yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjhmHBCcJIH+KXhv1e4rfJjThaKnet+xpbDmb//ED9fakIazpXSwRJVtdhbO0Rd1giTjXZJT9RbvbB0oo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiXskjidm562h1qFpPINQc8EUqjtcZ2yUA8LsurXGmIQ5VdBTp
+	/DdMxtlw2EB7tRgeA3AnAEHma65gknawS1EnZPch/fGxFwF7g1LJhQS58wq0L+bPay5A1gbOBfm
+	C3ZnhtHsbMIcNt1HoTjFY3+eRp/0=
+X-Gm-Gg: ASbGncuCWLwsPlBmnvYURp/6rWoW48GDawLk84vXjwO2OpGt6H7n+c/v9gBahmlQc8S
+	kHhK/rRlu2F46canGaVcKekjN7Fypsd/9nwI0ejqbaSMHQILWNva3X2Ri6xbGhBuX13BQDg28mE
+	iG0IEVuPGJioxWa64Tx/WrHb+BSBeqavQ=
+X-Google-Smtp-Source: AGHT+IG09TEsTWXm1xnxST1ljuBFVosFHHQsrHWlF8haqR/5NQMLQklS/TRLbG5xiTpv0w8YGq39f69m/tRRiR/LxVY=
+X-Received: by 2002:a17:90b:5305:b0:30e:3834:4be6 with SMTP id
+ 98e67ed59e1d1-30e38344ce3mr3376184a91.3.1747235517195; Wed, 14 May 2025
+ 08:11:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-topic-ubwc_central-v2-14-09ecbc0a05ce@oss.qualcomm.com>
-References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
-In-Reply-To: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747235442; l=5575;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=eJVjVlPJmOSKBeEC55UDPEfsFOdqp+eldoqACi9JHOw=;
- b=e2sUZ2vfCD6EdTUGCZsbJsTejI0ofaYCC3XTzTAIaJJ/vouka39pG8WRk08Pc58RPgUYpFZEh
- T07oz039+u5Br19zUsv4n8lwo/Yb8JwwFlPK6VtiTzfA/dPn9HHDc3s
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+References: <20250510102130.14710-1-amfernusus@gmail.com> <20250514053802.GA24939@lst.de>
+ <CAMraO6-rQsf8T_ocOKbe3yMP+91W=AF6WtRUYVPtNuq43H8qXA@mail.gmail.com> <20250514140738.GA26520@lst.de>
+In-Reply-To: <20250514140738.GA26520@lst.de>
+From: Ilya Guterman <iliyagutermann@gmail.com>
+Date: Thu, 15 May 2025 00:11:21 +0900
+X-Gm-Features: AX0GCFuehCtDeRr6vYqnTbOU63IUI5mPaX291tiTRon8_twT5BtCmqjqyV97H2A
+Message-ID: <CAMraO6-JdHa-LzNns3TJn7-bzM5LHjB9byovP1q4y9=yt-xigQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers/nvme: Add quirks for device 025e:f1ac
+To: Christoph Hellwig <hch@lst.de>
+Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me, 
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Make the values a bit more meaningful.
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/soc/qcom/ubwc_config.c | 33 +++++++++++++++++++++------------
- include/linux/soc/qcom/ubwc.h  |  2 ++
- 2 files changed, 23 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/soc/qcom/ubwc_config.c b/drivers/soc/qcom/ubwc_config.c
-index 96b94cf01218cce2dacdba22c7573ba6148fcdd1..06ddf78eb08d31bcdd11f23dcf9ff32e390d2eff 100644
---- a/drivers/soc/qcom/ubwc_config.c
-+++ b/drivers/soc/qcom/ubwc_config.c
-@@ -32,7 +32,7 @@ static const struct qcom_ubwc_cfg_data qcm2290_data = {
- static const struct qcom_ubwc_cfg_data sa8775p_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 4,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 13,
- 	.macrotile_mode = true,
-@@ -41,7 +41,8 @@ static const struct qcom_ubwc_cfg_data sa8775p_data = {
- static const struct qcom_ubwc_cfg_data sar2130p_data = {
- 	.ubwc_enc_version = UBWC_3_0, /* 4.0.2 in hw */
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 13,
- 	.macrotile_mode = true,
-@@ -50,7 +51,8 @@ static const struct qcom_ubwc_cfg_data sar2130p_data = {
- static const struct qcom_ubwc_cfg_data sc7180_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -58,7 +60,8 @@ static const struct qcom_ubwc_cfg_data sc7180_data = {
- static const struct qcom_ubwc_cfg_data sc7280_data = {
- 	.ubwc_enc_version = UBWC_3_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- 	.macrotile_mode = true,
-@@ -74,7 +77,8 @@ static const struct qcom_ubwc_cfg_data sc8180x_data = {
- static const struct qcom_ubwc_cfg_data sc8280xp_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
-@@ -95,7 +99,7 @@ static const struct qcom_ubwc_cfg_data sdm845_data = {
- static const struct qcom_ubwc_cfg_data sm6115_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 7,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_ALL,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -103,7 +107,7 @@ static const struct qcom_ubwc_cfg_data sm6115_data = {
- static const struct qcom_ubwc_cfg_data sm6125_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_3_0,
--	.ubwc_swizzle = 7,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_ALL,
- 	.highest_bank_bit = 14,
- };
- 
-@@ -116,7 +120,8 @@ static const struct qcom_ubwc_cfg_data sm6150_data = {
- static const struct qcom_ubwc_cfg_data sm6350_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -136,7 +141,8 @@ static const struct qcom_ubwc_cfg_data sm8150_data = {
- static const struct qcom_ubwc_cfg_data sm8250_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -146,7 +152,8 @@ static const struct qcom_ubwc_cfg_data sm8250_data = {
- static const struct qcom_ubwc_cfg_data sm8350_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -156,7 +163,8 @@ static const struct qcom_ubwc_cfg_data sm8350_data = {
- static const struct qcom_ubwc_cfg_data sm8550_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -166,7 +174,8 @@ static const struct qcom_ubwc_cfg_data sm8550_data = {
- static const struct qcom_ubwc_cfg_data x1e80100_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL(2) |
-+			UBWC_SWIZZLE_ENABLE_LVL(3),
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-diff --git a/include/linux/soc/qcom/ubwc.h b/include/linux/soc/qcom/ubwc.h
-index 30d9744c5d2e06d4aa93b64f7d2bc0e855c7a10b..2a12e054ec62ae7e76c3f3291d6963da726eee4f 100644
---- a/include/linux/soc/qcom/ubwc.h
-+++ b/include/linux/soc/qcom/ubwc.h
-@@ -26,6 +26,8 @@ struct qcom_ubwc_cfg_data {
- 	 * controls level 2, and BIT(2) enables level 3.
- 	 */
- 	u32 ubwc_swizzle;
-+#define UBWC_SWIZZLE_ENABLE_ALL		GENMASK(2, 0)
-+#define UBWC_SWIZZLE_ENABLE_LVL(n)	BIT(((n) - 1))
- 
- 	/**
- 	 * @highest_bank_bit: Highest Bank Bit
-
--- 
-2.49.0
-
+my bad, I was sure I added the Signed-off-by tag.
+I will submit a new version of the patch.
