@@ -1,82 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B494A70838
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D1320C038
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212037; cv=none; b=W4f+1TSQMF+/XdKUN/4M9gCxYhLbR8QYeaHg/R8Jl2H0ygOkSq/FQj30VMErMfMoXX9H4T6L56PpTowJBrjf4xG7/ithC8Vat9wHErwDFwfdXN3/c3S2InyPC2ePa3DNP8YEuJ/nKcRZvcRJwyqxbCnx9/rxmwF72n+DFAOU6TY=
+	t=1747212037; cv=none; b=Z1kkb7bixn6g0YwhDGDydPlLyn9YKF/sSJjn7FD/nlaQM5DyLNxlvwMoGhBhUtxxOXoC0WWeBFwX0FzBjHlz2D58s+Tqubf/7kk4js3VgbZwe7laISa5plcUCKZU20FQlMOHUp07LsYzskce0qvLECd98/AMXZWzGuSgb9uwfDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747212037; c=relaxed/simple;
-	bh=x8/dZI24jwL/TPXh/+exv1bmf/+4VkSgV4hG/MmNt9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkNVuco5MtK0PjrSwpMzcid39c6SAi1QNaspOOU8W8PDkY5Qf307PVLxTZNzZVromH5fTUhwfXD55u2O9Jp+1Rom6Zi3mEwr237hLHs1+5OU1d3GjKoKtG3hV0Hp5p6F0x2z0iVyKr+3J9NRWPf6XOkYuxV+sxYnKKH/HvYeJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bgo82FC9; arc=none smtp.client-ip=10.30.226.201
+	bh=bOvlpJgB38yWtB6iHmH6Tk5IzM3ygnlwVf/ZOxmrdgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aIA3A5AF773E9Drx4sJ64pqNsJXOWlk4w7PrKjtQGeSPq6TiZpJIANQ4Txfl06s0/r85qngxMmE5a8dQA8HVIJp8H24E/GsXRlXyQWbRMViRpN19Oibyvlbrc3qkV+MURyxJPsiUN5biokBvEFl00v/0qalaIlwB/ZaXH6P6zcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZDmZZybQ; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bgo82FC9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CA4C4CEF3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747212037;
-	bh=x8/dZI24jwL/TPXh/+exv1bmf/+4VkSgV4hG/MmNt9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bgo82FC9u4mbZ4+oUr+u9QxGPRgpy+M8e3ytiS/JTGkbwAu/lhpp9Rj47oULwLeIM
-	 t9zz6jDY6VtJiV8PDh80ANUmU+23dOPRANqBPLG71UnrWwpD5miFEOxfKtnFQx/8Y6
-	 eDOnyBMMGeuGFbm9RJABOiIbWRe8w18yj9woWb/6hYQrIib2ULDzf9Fdms1OPWqZUV
-	 7mpjmXHXt8+6QksCDDM+feS/d7bILEUWJmEXmwOijLBsr3CfU/DJF4vvroG8qcB5V3
-	 K9vt8w0vovFXkrZnK7ZbqBg7i/oxEVsTu6MrtLe+s7o98650+43rs+InC1N2sHwzzV
-	 wj3jXLHihgO6A==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54ea69e9352so9021741e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:40:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXCDHAj17t1+9AETXJHvFBnBgripFpRYhQpf+cnP580NCFpZBfqWCmGKaJF4IE0Hr9DZdUodGdVYttAj/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxREhJ11D/smBuWuj8oYh3pA6tciB8lSJ/9GlCdlQZ/9iGuhEt3
-	/49EYNfgT/aPimBpIr3jP0bQkttdAA05TizlST43dxKVICR4dqKKRBeIz5eWwLxZdJofp6/fEaH
-	cbA+ESARcbmLMtPgiD0RYv/slmIA=
-X-Google-Smtp-Source: AGHT+IFqpiEcYgujniBtwPzVTsjbnZ7XH43vPfwg9VTu1wHJZTWJ/iPNzvTuvVpr7XQhhYguUHknaiCeM02K90ClQ7w=
-X-Received: by 2002:a05:6512:239a:b0:54e:819a:8327 with SMTP id
- 2adb3069b0e04-550d5fbb916mr1055957e87.13.1747212035551; Wed, 14 May 2025
- 01:40:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZDmZZybQ"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso3751299f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747212034; x=1747816834; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XUZ+TWBCEumVyKUR1t0gEvLsedm10yxyAulY/94k4bA=;
+        b=ZDmZZybQav+Ly9/LFyPILWry6DnnrY7Uj2P8/t3fZ/8N6MlvjwPOq8ochp2fYz5Xjf
+         dgWsby0IOuX+FJsM9VGytDmIRBtmPx+lpjgqFDOdam3M9q1L+onH3PauIvfnHSpBJ6LX
+         p0EBhBcBNdj3QoGi76bdIVf+Hh6vTLUG2tcLdMaeG0J5P855WrBo1AplITse9EmmDWnq
+         X2eert3ic6eWEpMyTC1vXimz+wpJWgBq7kB9HYrB/f/1OXBwEV1ul3Hdt/XvvEk96r3v
+         NQwPJcj00AtxHQF4by7aLMCaTG1GPtyylCvykwd6bg+Z2AOyM6HNVtE6MfkjGF5/8ETs
+         Jd0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747212034; x=1747816834;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XUZ+TWBCEumVyKUR1t0gEvLsedm10yxyAulY/94k4bA=;
+        b=dGZWDv2H+j449y/PLHMXWGuUfSably8xjwcaFSX2JRhiE8HzH8E52S3OQog+ZE0i2F
+         UIC+k735bOzzSrMtOlxyMv3MGkgdvwvxkq4YFEkMChn09sbNX7gHPxxJvPeHbZ8iqKfv
+         iPQ8Oah+DtMp0hNvqF3LsKnDt2Iw/1eVjKqkfd0y4TCYCD8AAskb2cCSWHGa/Rfzd/Ai
+         XocJ1Zvl2a7J0TizaW2jnSbfGxC04+iSftMgM6aOV7Rz73dQbpBInI9fG9HBkukifn1J
+         VQ97aU8ieNHHa+wY/iVvems1T6U6W/1SP1DKRQGlvS7kPVNzCL7AIkUa0/hn9ZQNe+Vn
+         douA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtvwRN00kjArg6EjsyNwhm8RiIp2exhdzxh/nA+HeFlVQ2hdkRte9fMvv1Jp0ZAg1pkauidw8WvjWQsH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNCkLIAFn8viULeHGIO7nXhXgKFjimS8eOWTXiVGb4dyJTHrl+
+	kFTjqQXNQp44VNqH9DKbmMuot+GwYHYFguWTDzUXtnSkk4okhq9Xp213wqFe5TY=
+X-Gm-Gg: ASbGncvXgItERXUDgMxmLR9Qmt8EKMqaNPy0+QSkuWdq7tSRV8LkeTYToXtadb5kHXy
+	ECg9lWouCd5ZYcM5iRJ10hJ0JFN2Mi2DsuGDtzk03hw3B5V8hkc/AhxfQmcClRonIFSMSzD4VXW
+	5ar2WkfvT1LMep7rDfKro3GeAzLhpjhghuBGIK8fq36eaYH9VQ/p7XEFENl6S8cKoU5ZbBAgdgg
+	+1OSOnlnULZDtGRIpNOnvC0JBieH4hLTomxZaL47DEW7MDpiM3hZ/lNroPx/2BvQHNoSi08YLp3
+	zrcbkjOIa3EIuDCC8hBRwxeJKmddopziPxdGmpuetIrQkrcmjJTVxg==
+X-Google-Smtp-Source: AGHT+IFF2gEltVWksw/7sMuSeu0VYvts2lcQdv0P/daOYEJ1wwTuGxfg8BHv9/A6qpkaqat5IeIqJg==
+X-Received: by 2002:a05:6000:4284:b0:3a0:7f85:1905 with SMTP id ffacd0b85a97d-3a3493dada6mr2246544f8f.0.1747212034024;
+        Wed, 14 May 2025 01:40:34 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea857f729sm7994896137.1.2025.05.14.01.40.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 01:40:33 -0700 (PDT)
+Message-ID: <3b8dad35-5af2-41f3-aea2-07db9761dd4a@suse.com>
+Date: Wed, 14 May 2025 10:40:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513111157.717727-8-ardb+git@google.com> <20250513111157.717727-12-ardb+git@google.com>
- <aCRRJ_ahL2IRXxcj@gmail.com> <CAMj1kXF0Kc+--5rOqcVKoF-NhYfzA2rioaWsB09VK1hJ49nG+w@mail.gmail.com>
- <aCRWSpS8B-B26AB6@gmail.com>
-In-Reply-To: <aCRWSpS8B-B26AB6@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 14 May 2025 09:40:23 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGypw0PY+ytYNV1sguAoWc-qTc0OL89PhPuEk938Qq0mw@mail.gmail.com>
-X-Gm-Features: AX0GCFt-4eAaOy1DTX8A7KVhqSfovRSfNfoxNBqQ09oxMfEb3uZZhgbE7JAo_2Q
-Message-ID: <CAMj1kXGypw0PY+ytYNV1sguAoWc-qTc0OL89PhPuEk938Qq0mw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 4/6] x86/boot: Set 5-level paging CPU cap before
- entering C code
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] module: Provide EXPORT_SYMBOL_GPL_FOR_MODULES()
+ helper
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com,
+ samitolvanen@google.com, da.gomez@samsung.com, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
+References: <20250502141204.500293812@infradead.org>
+ <20250502141844.369838967@infradead.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250502141844.369838967@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 14 May 2025 at 09:37, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> > > > -     if (IS_ENABLED(CONFIG_X86_5LEVEL) && (native_read_cr4() & X86_CR4_LA57))
-> > > > -             setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
-> >
-> > Note that at this point, we'll likely still have to force clear the
-> > original X86_FEATURE_LA57 bit, to address the issue that Kirill
-> > raised that user space is now likely to conflate the "la57" cpuinfo
-> > string with 5-level paging being in use.
->
-> No, I think the general outcome of your series is fine and clean in
-> terms of kernel-internal logic, and I wouldn't mess up that clarity
-> with user ABI quirks: and we can solve the /proc/cpuinfo ABI
-> compatibility requirement by exposing X86_FEATURE_5LEVEL_PAGING as
-> 'la57', and renaming X86_FEATURE_LA57 to X86_FEATURE_LA57_HW and
-> exposing it as a (new) la57_hw flag, or so.
->
+On 5/2/25 16:12, Peter Zijlstra wrote:
+> Helper macro to more easily limit the export of a symbol to a given
+> list of modules.
+> 
+> Eg:
+> 
+>   EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm");
+> 
+> will limit the use of said function to kvm.ko, any other module trying
+> to use this symbol will refure to load (and get modpost build
+> failures).
+> 
+> Requested-by: Masahiro Yamada <masahiroy@kernel.org>
+> Requested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+> [...]
+> --- a/include/linux/export.h
+> +++ b/include/linux/export.h
+> @@ -24,11 +24,17 @@
+>  	.long sym
+>  #endif
+>  
+> -#define ___EXPORT_SYMBOL(sym, license, ns)		\
+> +/*
+> + * LLVM integrated assembler cam merge adjacent string literals (like
+> + * C and GNU-as) passed to '.ascii', but not to '.asciz' and chokes on:
+> + *
+> + *   .asciz "MODULE_" "kvm" ;
+> + */
 
-Ok.
+Typo: "cam" -> "can't". I can correct it when picking up the series.
+
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+
+-- Petr
+
+> +#define ___EXPORT_SYMBOL(sym, license, ns...)		\
+>  	.section ".export_symbol","a"		ASM_NL	\
+>  	__export_symbol_##sym:			ASM_NL	\
+>  		.asciz license			ASM_NL	\
+> -		.asciz ns			ASM_NL	\
+> +		.ascii ns "\0"			ASM_NL	\
+>  		__EXPORT_SYMBOL_REF(sym)	ASM_NL	\
+>  	.previous
+>  
+> @@ -85,4 +91,6 @@
+>  #define EXPORT_SYMBOL_NS(sym, ns)	__EXPORT_SYMBOL(sym, "", ns)
+>  #define EXPORT_SYMBOL_NS_GPL(sym, ns)	__EXPORT_SYMBOL(sym, "GPL", ns)
+>  
+> +#define EXPORT_SYMBOL_GPL_FOR_MODULES(sym, mods) __EXPORT_SYMBOL(sym, "GPL", "module:" mods)
+> +
+>  #endif /* _LINUX_EXPORT_H */
+> 
+> 
