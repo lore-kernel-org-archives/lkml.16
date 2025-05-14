@@ -1,89 +1,127 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417F527703E;
-	Wed, 14 May 2025 15:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCE827A925
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238387; cv=none; b=gWfIMFeEecGBVPTln8tWvp4/j7K610gksqxOzvCdPt9oHWoJx3BMtVfKfPdUzLBKx0KkbPSgE1AcdUkz3uf+hP+v5VIWg7p7Xh8H29eNc+wFkTzPyT3F7rtWEp2QeQOr2gpoBtVptvTH25jZ1QmbaST383lTeWIV9xnnA/LHSkY=
+	t=1747238391; cv=none; b=qJcCh4kjYg7YfhDR7fBv3j9eTWc+v5reHRyZl6wA+glyphA2YBfNqgUQlLi/1+b0l0bzyS1j+oj6JpCpprd5nCSv8lwJb5QE7ciSg/p1ISoqBeukqMD2ofqyg/gn6teYRxD0oMZnu+C7Kn8ByNBtnRU06j4qd3v33u920uOVoug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238387; c=relaxed/simple;
-	bh=orMYHSP5ssuSjH/hleG580PAr5anMD7LK5PDBxTlud4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=fUGo/V6V6+I8ZJTIUHter1laA6u5lZPZSj0YteZBMtjkAEylTOLVHVyv/q76JqX6dttE/YAf2O1gcrs6oElfjLypqDm5U5gsdfl8QdEhZzlu9NucoOylPt+psNq3EiZEh2fy1iTn0PtRzqX5INaUObmm2ki2FmOuUVGI3qITafo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=dh3coW4l; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1747238391; c=relaxed/simple;
+	bh=aewlEivzOTLwX0pE3ccim5W43mB4Ebqr69oOseIDGHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jg8jmarSoz2d+lbY4OcAQXvLeWcIzbcSZo/m+ziXGb+0TvYK/Z/uj/pG+fvLTWEwzJu0yI++w5rKPxnQ+dWxqob1M+KPm7WKQ+gw/dIeZX6W7Jf4rJO7/g9AVQXrn2BLNiOlooXrH7zSHO0ySKrrta6Z5CkIYOyKH6uo81pKIXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T9kTsOV0; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="dh3coW4l"
-Received: from [127.0.0.1] (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 9891B1F91E;
-	Wed, 14 May 2025 17:51:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1747237888;
-	bh=orMYHSP5ssuSjH/hleG580PAr5anMD7LK5PDBxTlud4=; h=From:To:Subject;
-	b=dh3coW4lpuAUBquC4TUhoOP6ncC52bSE3nyZgB9wUZ8JgoTeM4NA0O9X36z3/vtmo
-	 vJClLHwHAToxJZFfYU/405c0DDZZbhU9mSwRqzpVEp8VZwvI1zjmesY82h8ldUHTVI
-	 0wIUaBu8yYLgGehvIysDjZPsiyOxxy5xFMkItZH14Jo3Cj0dembW6Sv7d/fx7V9A+d
-	 7fUrmnOWc+DJt4Btqe44v2qQ9R9yteHA32eRWCGL2bRcP5ywsTphx4dY0Os6xZLWih
-	 mETPsXNNgc5LqtDk7sxrELvXasMoWYwud3y50B7RKwsrR3J52QgstRnAxNhIjl/UBg
-	 U4Hq3Tw7DYKvg==
-Date: Wed, 14 May 2025 17:51:27 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, linux-i2c@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v1] i2c: lpi2c: implement master_xfer_atomic callback
-User-Agent: K-9 Mail for Android
-In-Reply-To: <tds5osuthulo4bnlck6dgx3g3aoanca3my2uczdhcipcfcxgpp@opzseflynjar>
-References: <20250319145114.50771-1-francesco@dolcini.it> <tds5osuthulo4bnlck6dgx3g3aoanca3my2uczdhcipcfcxgpp@opzseflynjar>
-Message-ID: <3C1EEBEB-E691-4EB7-A008-A1FE9CEE7238@dolcini.it>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T9kTsOV0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747238390; x=1778774390;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aewlEivzOTLwX0pE3ccim5W43mB4Ebqr69oOseIDGHg=;
+  b=T9kTsOV0OWky3CIFc9RDRBAWyJOJhCfBjszTpb/za9Z1ZlzCYJIY5suP
+   km1CRVGOH/unbQeVsoATvZABHDKyo8y4C/IWNFgVQPGIXqo0K7v2leH7p
+   Q3nXFJm2mSlBC0WYetJhsZj3hMdfFwM0qvDbaLwBqLIkQlUNaUfybLqC7
+   hAb1Z+olry5nBXOWuKedjTDNiYBI/BpVtlTFlef7TMtkqDzBnrn7f2a8i
+   Q89I4bg0qvTGsTkq1KYQ1vaG3IZAwSyF5SB2hq3fFIk65vUiLxG07M1jk
+   W1h7oGq+zGc/0MpZYsHlJ1hOUumv4XbGFIZj8IxbjwW3aMKdae8rMuc8Y
+   g==;
+X-CSE-ConnectionGUID: OCdYejhuQjGwYlXLFBmFrQ==
+X-CSE-MsgGUID: Lvv3+rQmSA2+6/8vXnqQGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52948888"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="52948888"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:59:49 -0700
+X-CSE-ConnectionGUID: 60pbFHHWSJ6Uow8W4fuUiQ==
+X-CSE-MsgGUID: wEH4KuqfQRSa8/eqzqoX2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="143280397"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 14 May 2025 08:59:44 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFEWE-000HIt-00;
+	Wed, 14 May 2025 15:59:42 +0000
+Date: Wed, 14 May 2025 23:58:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
+	david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
+	andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+	heikki.krogerus@linux.intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Raag Jadav <raag.jadav@intel.com>
+Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
+ device resource management
+Message-ID: <202505142345.jLaHG90C-lkp@intel.com>
+References: <20250514122432.4019606-2-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514122432.4019606-2-raag.jadav@intel.com>
 
-Il 14 maggio 2025 17:14:32 CEST, Andi Shyti <andi=2Eshyti@kernel=2Eorg> ha =
-scritto:
->Hi Francesco and Emanuele,
->
->On Wed, Mar 19, 2025 at 03:51:14PM +0100, Francesco Dolcini wrote:
->> From: Emanuele Ghidoli <emanuele=2Eghidoli@toradex=2Ecom>
->>=20
->> Rework the read and write code paths in the driver to support operation
->> in atomic contexts=2E To achieve this, the driver must not rely on IRQs
->> or perform any scheduling, e=2Eg=2E, via a sleep or schedule routine=2E=
- Even
->> jiffies do not advance in atomic contexts, so timeouts based on them
->> are substituted with delays=2E
->>=20
->> Implement atomic, sleep-free, and IRQ-less operation=2E This increases
->> complexity but is necessary for atomic I2C transfers required by some
->> hardware configurations, e=2Eg=2E, to trigger reboots on an external PM=
-IC chip=2E
->>=20
->> Signed-off-by: Emanuele Ghidoli <emanuele=2Eghidoli@toradex=2Ecom>
->> Signed-off-by: Francesco Dolcini <francesco=2Edolcini@toradex=2Ecom>
->
->this patch is causing a build regression=2E I'm going to revert it,
->please check the test report that has been reported and you are
->cc'ed=2E
->
->Andi
+Hi Raag,
 
-I am looking at it, it's a warning with W=3D1, not a build error=2E I woul=
-d not revert this patch, just wait for a follow up patch or comment that wi=
-ll address that warning=2E
+kernel test robot noticed the following build errors:
 
-Francesco=20
+[auto build test ERROR on lee-mfd/for-mfd-next]
+[also build test ERROR on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus staging/staging-testing staging/staging-next staging/staging-linus linus/master v6.15-rc6 next-20250514]
+[cannot apply to lee-mfd/for-mfd-fixes]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-auxiliary-bus-Introduce-auxiliary-device-resource-management/20250514-202748
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+patch link:    https://lore.kernel.org/r/20250514122432.4019606-2-raag.jadav%40intel.com
+patch subject: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary device resource management
+config: arm-randconfig-002-20250514 (https://download.01.org/0day-ci/archive/20250514/202505142345.jLaHG90C-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250514/202505142345.jLaHG90C-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505142345.jLaHG90C-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/base/auxiliary_sysfs.c:6:
+>> include/linux/auxiliary_bus.h:246:3: error: call to undeclared function 'kfree'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     246 |                 kfree(auxdev->resource);
+         |                 ^
+   In file included from drivers/base/auxiliary_sysfs.c:7:
+>> include/linux/slab.h:472:6: error: conflicting types for 'kfree'
+     472 | void kfree(const void *objp);
+         |      ^
+   include/linux/auxiliary_bus.h:246:3: note: previous implicit declaration is here
+     246 |                 kfree(auxdev->resource);
+         |                 ^
+   2 errors generated.
+
+
+vim +/kfree +246 include/linux/auxiliary_bus.h
+
+   242	
+   243	static inline void auxiliary_device_uninit(struct auxiliary_device *auxdev)
+   244	{
+   245		if (auxdev->resource)
+ > 246			kfree(auxdev->resource);
+   247	
+   248		mutex_destroy(&auxdev->sysfs.lock);
+   249		put_device(&auxdev->dev);
+   250	}
+   251	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
