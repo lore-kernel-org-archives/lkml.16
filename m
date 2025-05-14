@@ -1,118 +1,137 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E00F86334
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F201DDC28;
+	Wed, 14 May 2025 05:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747201065; cv=none; b=ufoxcN1/tE21JZdwk+rSpfU6su7W0BzNcPAoqV8kvkg3dSDi9SAsf/pVqUujI0eU0zJhFQjTo6ISr2Amiphb2GY78cgIoaxgiAj4G9zPM7DPK0zOv0vtIPi8k1kVEHyk9KKUDTcMDaI8eVcDg05TWD5FFBZqXrcgKtZBRl8ZDlY=
+	t=1747201081; cv=none; b=BrzFJSpLWgNXOZoFoCcT85cmNzvNP/9lWboW34GImSu/wPIbPST+zOIz7UGzLy9y86Pk+aZzjvD2swAUyjbj+pNxS9FrQGw29NGnJRc2ISfvwNS0VRZv2Aj+/h++94KchAj8ja3F11YN/bOnbTVhrTSomw7ePWgcVURzoubUn34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747201065; c=relaxed/simple;
-	bh=EEby7excLqyRAZlBVU18cvMGi7EHO5NAyeDfYhB2ybw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pHJOTyaINll4JgrbH/YMwheiMrkOujR5tnZnB/HKPPL//CVU7siOO0eyn4f3/F3Jmn3CwGabQJAlavVJwMjyXdrkxrMboUr5SZuNYpFd8EDe8cgJ+fUmliqCS8Mej0U6BbHxgmEMWl2MA3qbLxq5KKyXkZOyoWvsC/o21YO8oJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CuMxDGNy; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747201081; c=relaxed/simple;
+	bh=/ZAskp40rYSNhz66uBQbuHwURjSXVxSPsnAOOjVdcv0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aA0PceyXABFE/hkSmr+rLFl+Ju3W7y+VsQtpqFEiMiDYSr1Z3bmSU14VrEywea2FDy1WX01jS+56zeZhQUc5rYsPFGhpdPYq7fyeaXnt2czWaSDNEIyDoWSGQ9p2+4FkHV/W/luG/mfz7YWScpbkIVCPY9lU5i6bv9PjCMLF510=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UkB1dvAW; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CuMxDGNy"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf848528aso55702255e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:37:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkB1dvAW"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74264d1832eso3718044b3a.0;
+        Tue, 13 May 2025 22:38:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747201060; x=1747805860; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X6RATe/WUl9l8PIeAPNH/uJUaYuQaKoomiYz3L5vu+w=;
-        b=CuMxDGNyOaableO3MXJOxrrrJVQvwgg9JCk+sCsQAIPh+jQ5dqEogf9dxDyMUifnxb
-         6rM5Q5nXm+fTe3W3ys4VsyP+vn/AVkh0mkq/H5gNnQsC9jCNvZxEFY4paOwfuE1UTiwo
-         lNd2xxvtytoxPMdANZO50SxIjuy9K51pIx32/bnZsEPCkG03eHxknvXgSCwRUxglqPgA
-         tE7JH+rhHCRRzl6v4yGCMPVNCcXsHD08iXjxv0Tk9OfQiLJn669tV/o7oPEMAxvOpiG4
-         GNoMZdTqn1/Lj8MBVoWte1k96DRWN0RVtqpnqKMO9zJDKNRIhtWOdGACAZv4Xta2yJO/
-         z8Ow==
+        d=gmail.com; s=20230601; t=1747201080; x=1747805880; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z1FrVevl9xk1mZlS2y4IA8EHsiTRZOhyhjcDocMnWEw=;
+        b=UkB1dvAWPJrThANpUYuD3RvI+nLawMMyjL4wIluJTT/b097l2lZAZvAhvbnhkFd48k
+         WookxgPFEO+ogtK2dLW701wiK629xrdrMsTLZucOaOYNl6juFzvJz5j57sQK33VT2fRW
+         FSmp/eukDXJfU8PwXxvGr0NhI0RPWGgia9Ed/ULCZoah3WKq32SiTB4m6rjmjOFXRMLD
+         iv61xSBtHsG8Ld+paPxE1DkMi33Y0QLFGHOHJe7TZtsxrD4ULKy5BGakmfwVyc7Deoxl
+         mjIkc6SRcg4mqM8lui1bH4O9bfAoBuS+bUl2CMoOjtr/rNrEwngJPIOF5qGtNZT/thlJ
+         D8HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747201060; x=1747805860;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6RATe/WUl9l8PIeAPNH/uJUaYuQaKoomiYz3L5vu+w=;
-        b=pmTCUryAka7tzHdZ9T2NfRNv7uG1xVHe64RXlMm3A6Itt1GVXemyIxCfohNqkUOpTx
-         qxSASXL791BcEkVb+YiDdjjrSQVcsWhUQK5vJNHhkM3yTJ0b04l/nJidFDZuPNOJ7IZc
-         yFyKwvFHIUbTPQ89/+zco4oFajQlz9yaOyEjxtdU3hSo8B8uEim29WsdrB6Kd4ZKaOpz
-         AgwGHyth9Nv0OlyqYCsO/BTahaQIj/CHDp+Q19QLYMWP0uxF9g/HC46nyhygtNkcOCYn
-         smJMdW40P5g0IT8TV4Rm8FmYjakBCa5+IEn8So74onQnoQF7N6O9OusEnDprf4yGWgBh
-         Dyjw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlpcRB+i0zcw8fmMVEzPWCsOM3ZbsW00wJQjGSSO/UKmLla+muI9LxDf2tWSqb2Jd9g9+5d3A4rmtxRcY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylJ31m1dODlb6msQMJG6XnIFHvuktlKnoRBOhekAwXP7nXfpjS
-	fgqU13ljxIcSKjHeAgdA4DlyVLLTDZprbZEhfPfhMQHi9qS+TiZSCqjXAnHsH3M=
-X-Gm-Gg: ASbGncuf5LCMNP0wFqECeLkaZWKIszLP8tYaS+wbxf+jWCYJPqcW6uFilzFlYRRU5Da
-	34g6wgd3bdsvpYWFhlmyLTL635tDkU9p8LzryHlK6/7Mp6MZRA/vk1v6tKZSDJ6fTkk/yGSchiB
-	3yVYqzi6Shs+ObLfjriQNVHEyhS6dZuVuBjk12007DPNtDukrDty+Wuk9AMQqlKIt+OmYL+2NmK
-	PDJ9BgOsGmAT/j7tHGoAUAr/1Tw5uwFwCQAI8q7Pano0ZJVH61do1dX3sZUOW4SbPzybd89o+Z7
-	sa70X1vg/kI8wRCTxo+lbunoIeuRh8Gdd4QigS/QSzoJWkFfs7bEZwd6yuWci4W0uaRd0zIo97v
-	RNWYNQRARJ5nL
-X-Google-Smtp-Source: AGHT+IEH0gDtxUZnOie3UkdF+NX8VbUWlkkfab4c2RI1xS/aCqZplXS1DjQKIykuoWCzSS/8AUXEAw==
-X-Received: by 2002:a05:600c:c0b:b0:43c:f64c:44a4 with SMTP id 5b1f17b1804b1-442f20e1ac8mr15280155e9.8.1747201060355;
-        Tue, 13 May 2025 22:37:40 -0700 (PDT)
-Received: from [10.61.1.70] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebda7d2csm28574955e9.3.2025.05.13.22.37.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 22:37:39 -0700 (PDT)
-Message-ID: <e1c4cb6b-2445-47ab-a908-af3e4833385d@linaro.org>
-Date: Wed, 14 May 2025 06:37:38 +0100
+        d=1e100.net; s=20230601; t=1747201080; x=1747805880;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z1FrVevl9xk1mZlS2y4IA8EHsiTRZOhyhjcDocMnWEw=;
+        b=P/tEhOKHlCdjRWW/zxABuNYqLyUfIRYjDwCX5Ao4LITd7x4K52WdbqFZ1h8elBNwW/
+         1iYoOctt1GdaCXfHyrZY7B+Xj8daGb69gnAul9WiMMmKZB4kay1AEGwDmaJh79xNOTBS
+         Sf9LY4ixJVmeLp0uRJ7tldr9jqCcPysEl+O4rACbcAJN3gof74UikVNcLCiveaaIbEoJ
+         JDyLr7ctu/axw15ZluLEiPqVP+B2MQXT7laKFHx00G85eQwDKInkAMDbJ9QbuuG0f7Kr
+         9g11Q/pX6apxuCHj8dmBvFllXC+MQtS/xaGLKXGYwalUGf0YVm+ymT51etPAb2r1cmTv
+         pJUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWcNVm6pfZMuXTG2zAQ2xh+1T0LiO1pgZhb+lpwPc81CzUAx5Dv6R6C+0nQ3wvEHW8tclcUeJDOv7lTTc=@vger.kernel.org, AJvYcCWaEEvr/Kxyc8KoN8x26sLOmrp45uK4OqcaNAX3dboAYpsGkDgsJxI/jk5k2yHOxZEkb507SYWM2FSnmQYJs+6P@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPoUKo4w2i4fLJsncNzKKZkv/TYNitTKwFQjDsmmrWs90uuMC9
+	F5RsIjkafLGjpaZolAVIdGXdTxAaw49ppefdrI43h5jOg1sDNUh5
+X-Gm-Gg: ASbGnctJZ0Ssq4CEKhXKEsNKEtn3gCyFUVvsOrGAxV5EvFen5e08UW46AGZWyKRlS6L
+	sVfzYfxT+xKNJAEyolJvxcKLNKcgYsFVei2SOGIkMZY10gA5FATqbOGa1+F4ogSTOveTklOeyJZ
+	i49olIGtRgzlKuFPwC8eJB5lkDAODAQdWTKJjxHyj0VldtDIp7/ilVGSsWk/6FZHq/xg6NQ9wt+
+	OzduK1vPV6csbILh2Kxlo3yskT1Vw8L6SvkE3AIL1+8mqVQk+26aqZNt0ZBaWfdvkL8Ol/NUt2s
+	f0EsxxBJ0FbaB4wpWAw3/nFWbX0L7BLD/p4W11XCd5YzkE92aN0gQfStg/9C
+X-Google-Smtp-Source: AGHT+IFw4qAk9jrbGR1Hwgey0fD8K/CvhR07siSBPrK3CH8gb/JyYgc/5ALTVVOH8bNxg1xqJiBM9A==
+X-Received: by 2002:a05:6a20:258e:b0:1f5:8d91:293a with SMTP id adf61e73a8af0-215ff1c00ddmr3015791637.41.1747201079675;
+        Tue, 13 May 2025 22:37:59 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([124.156.216.125])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2349dd1fcdsm7003609a12.18.2025.05.13.22.37.55
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 13 May 2025 22:37:59 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: pablo@netfilter.org,
+	kadlec@netfilter.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	coreteam@netfilter.org,
+	linux-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	Zi Li <zi.li@linux.dev>,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling nf_conntrack_log_invalid
+Date: Wed, 14 May 2025 13:37:51 +0800
+Message-ID: <20250514053751.2271-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: sa8775p: Add CCI definitions
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vikram Sharma <quic_vikramsa@quicinc.com>,
- Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Andi Shyti <andi.shyti@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org
-References: <20250514-rb8_camera-v1-0-bf4a39e304e9@quicinc.com>
- <20250514-rb8_camera-v1-3-bf4a39e304e9@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250514-rb8_camera-v1-3-bf4a39e304e9@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14/05/2025 03:40, Wenmeng Liu wrote:
-> Qualcomm SA8775P SoC contains 4 Camera Control Interface controllers.
-> 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
-> ---
->   arch/arm64/boot/dts/qcom/sa8775p.dtsi | 268 ++++++++++++++++++++++++++++++++++
->   1 file changed, 268 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 9a8f60db87b1afdf16cf55eb2e95f83eb45803a5..a867694b15b307344b72041e972bae6e7543a98f 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -3941,6 +3941,162 @@ videocc: clock-controller@abf0000 {
->   			#power-domain-cells = <1>;
->   		};
->   
-> +		cci0: cci@ac13000 {
-> +			compatible = "qcom,sa8775p-cci", "qcom,msm8996-cci";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+From: Lance Yang <lance.yang@linux.dev>
 
-The ordering here is not consistent with upstream. Please stick to that 
-for your examples:
+When nf_log_syslog is not loaded, nf_conntrack_log_invalid fails to log
+invalid packets, leaving users unaware of actual invalid traffic. Improve
+this by loading nf_log_syslog, similar to how 'iptables -I FORWARD 1 -m
+conntrack --ctstate INVALID -j LOG' triggers it.
 
-arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-Documentation/devicetree/bindings/dts-coding-style.rst
-
+Signed-off-by: Zi Li <zi.li@linux.dev>
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
 ---
-bod
+ net/netfilter/nf_conntrack_standalone.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 2f666751c7e7..b4acff01088f 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -543,6 +543,24 @@ nf_conntrack_hash_sysctl(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
++static int
++nf_conntrack_log_invalid_sysctl(const struct ctl_table *table, int write,
++				void *buffer, size_t *lenp, loff_t *ppos)
++{
++	int ret;
++
++	ret = proc_dou8vec_minmax(table, write, buffer, lenp, ppos);
++	if (ret < 0 || !write)
++		return ret;
++
++	if (*(u8 *)table->data == 0)
++		return ret;
++
++	request_module("%s", "nf_log_syslog");
++
++	return ret;
++}
++
+ static struct ctl_table_header *nf_ct_netfilter_header;
+ 
+ enum nf_ct_sysctl_index {
+@@ -649,7 +667,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &init_net.ct.sysctl_log_invalid,
+ 		.maxlen		= sizeof(u8),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dou8vec_minmax,
++		.proc_handler	= nf_conntrack_log_invalid_sysctl,
+ 	},
+ 	[NF_SYSCTL_CT_EXPECT_MAX] = {
+ 		.procname	= "nf_conntrack_expect_max",
+-- 
+2.49.0
+
