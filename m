@@ -1,32 +1,65 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590421F540F;
-	Wed, 14 May 2025 05:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D0D7483;
+	Wed, 14 May 2025 06:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747202329; cv=none; b=Uh3TLx6E3l3awQE/yo2P6QRCB0tN7P0NZ7fOJubSZV65Hdhi/Nu55idSTOAZJ8qisH6UwGRDy+O7iD58RdjcHPQtwVtpqEBs8H4snTHstyXKYVFTDbeKeWpUNcwkhdmljZKNdRYnY/AMN5MDKdLttByaP2jqz/axhhm/U9kjG2w=
+	t=1747202429; cv=none; b=lWgwHBzx+udta3PRAVGU/WSU+8ACOrzh6vfTQIEbM0RH0VqashlhNj/xa0z5dB+sjqBkwKXYq0yi0hyEET4BfYsfeRf8vsHFIocCmjlS8y8+nXkU0rL3eBWNRWuFYHj3qrXoANP+GvGi0MIoayu/h1kgjv1Gah7lxpR2ExYIckU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747202329; c=relaxed/simple;
-	bh=cGmg9cheAxyFryRoC6Te8wackXslJx7ED00nYuEEQz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rNIMcNqkX6V2h7Dn5BF9e7xzPWLI4Oe8WKoc1kDzHBur23Ct2LyNfcQQrsbZhQI8pQ647wAK16s2zmH0VkRr8wfo3UgKzwTfRir6EksK/YzXO30m8ZEw5Oo5dw9F621CBjEOXGVkO33I3LS9jZBypYEkoRnr3ebRLA0jLaRfFEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OhKEJrFo; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747202429; c=relaxed/simple;
+	bh=LTvjPdSM/7Mv8CGzfpe8AVTP7p3kG1fD/++sDIxZ0CM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=D4TlqgTih5OZLXWifmiC8VnHEuV04SVDgQYIAgBUlBShhgy3zCrt0vISZQvbkNYNvTJJzwN4Sr9pD2PfR0Z8EPm02Ew2odEkm0NgZY40yJw8vMsLU4EtUpHV1UOWkiQu88zEUoP9JP2ub0A7kl8beFWi/G70LamErVin0DOB7H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UN1XdzFK; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OhKEJrFo"
-Received: from [10.95.65.22] (unknown [167.220.238.86])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D55FC211B7B1;
-	Tue, 13 May 2025 22:58:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D55FC211B7B1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747202322;
-	bh=NnYKdj3ij2iXDDIUiNCnIIXurGumqUl4LPz/Efn66s4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OhKEJrFoRDYaAiZrAMIMFPehgT2RWrcL7qV5C0ZFrJdW2ThNZpmJoazm9tDaFraMJ
-	 plq8adzfh++mMZeIY+0tsTJNPylkVvJriqVLGb76sY8FQCuZzWg6jOj84cFjFk2Z+I
-	 dab00ShXuanzDnR9rZdN/EZ3ZyZVCKj/UmD7bV6A=
-Message-ID: <b72e2e4d-b66f-4cba-8e8e-0afc605fa082@linux.microsoft.com>
-Date: Wed, 14 May 2025 11:28:38 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UN1XdzFK"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54fd1650b83so4409415e87.2;
+        Tue, 13 May 2025 23:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747202425; x=1747807225; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=y/kcGJ7CLXMTcnNn4N0O+1wowJptCExoAqGctHLNqIc=;
+        b=UN1XdzFKhFzvmd0eBxk2Kn74ZWS7H7RhEvYe9oXAYspJPKki14GHNUX/Su1z51Nfrr
+         StKnFCzW3GSfePMdMaxrTNCWeF4UnxTTBBJIRIlUNE+YbL8DlZdK6dDbWI68bwjTlSzT
+         hZmG6nR/Nw+bIOQFgZdVNsJCb83aA4Tr/ZO5j2etBI+e7JcFJAcwUcos4xn6T0DM9P+/
+         C9exppFiJ6h4F4LD1nXaaqd5fEkXywm+4u/lh3zqlmBEtFCe+QiahbpD8lv0umChFMdW
+         EX6cJN9sXdpyeZDGTl9dT+xCZSR1fjd3uoggL/6/p+gD73JX5kE21Q+sfmyGI0Efi06x
+         TIBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747202425; x=1747807225;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y/kcGJ7CLXMTcnNn4N0O+1wowJptCExoAqGctHLNqIc=;
+        b=tcPPq8hBC3O2BMyhYvZVZEO04LU+CuHYr2Wwwc/Vo8RonvNGB5VG0K70pVlD3WAVQq
+         b0pYSwbZ+alqlAIwU4M5U8BoobXmwiMDP2Wuc3WZ6sG4U2DUDSmkgbeOiPRUQHz6zAKr
+         cW0dTyS70VqxwQu0j/RzPu9qM1Tk83o2NGqD8Br+MrMVXclS/WHvq8T7dpiakdbbd9QP
+         kULs1BtZ+PLD6Nna2hrsH+zZ6qv/tKfDntdryXsBJg+dHT93/oLVpm8Oa80JzXtk2eeT
+         h6OUhw4siJ0Lca1amN2WxS+xpNo8H+M0k7ZteZZfmnBOwSCBKRfb5qafiG1sZkMkjtsv
+         v12A==
+X-Forwarded-Encrypted: i=1; AJvYcCU8zuztlVF/nf62Yyio8UJ0e7CeiT+6MaHAGM8rAUlRHN0PGYdD/My1siM6ALckKF3NWpQ5Hx7e/sW3@vger.kernel.org, AJvYcCUPiuv8DklpAoqqf8tn74hyrn8eMFBMqVTMs3eK2Kj5mn5tsO/EHLVmb2VrDcrS1Mt7BlxRlCBc0WtR@vger.kernel.org, AJvYcCViGkJXHv0iP5Oa6tlOXE6++Blbtb7r6l5xEEOmHyH5QJHArS7So6njsQYFr2OGDtQk6S3gZxxLpntRw6fW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJJmUcA9f3lF1ALds4/PfEJfioqv4kdPzrCC1koC57Ngwp/czf
+	QCZ3nRUHYKA9YjVn+z4xUYU8rNicSDb3cRzB7oSQSJM4/fPcFuxgrgvqSw==
+X-Gm-Gg: ASbGncsPGQBlW9ORoaVQau1AdEuwBSfb4MagKjQWEKB7RUEs5WVMMZUO9i+hcMtCjro
+	lW1LSu2xIt2TGz+QQj1L/XVnt90lmgtGadpC4lJiiZN0eQFRM4AjggRFlBZJfLWiwccPquzLzED
+	BhADlfDGlx6ey39rg/1BD0URi0BBxwWbiRtAiL2YKwYIaX3XJC6W9uXsiITnPuwb2EpB+w6rmWC
+	HsFcg7LMh8VXv88N/vVKZpYcAMnVrrJAABSP6PfH/F76jm9WaTvwI1mvMhzd+p4ntw6IVuBdn/D
+	rIlU1x60BIOUY2hkoTuothlnjsanPm1raHxgoh8TnvrbYd8oWk/vK3kz4+7a3jsGrbtQmyax/yp
+	ZlrEBEAglKbHL5f8kjAA2IConq5xAL4PE
+X-Google-Smtp-Source: AGHT+IGrKBiwzwMfRKuUQU7+APaLBY8NUIx6Vl24P5FvBWJQZN/RBiUSK29XlLe0bSZjg3O1/2dyNA==
+X-Received: by 2002:a05:6512:670b:b0:54b:1039:fe61 with SMTP id 2adb3069b0e04-550d5fbcc69mr596543e87.33.1747202425195;
+        Tue, 13 May 2025 23:00:25 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6ee3sm2110577e87.126.2025.05.13.23.00.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 23:00:23 -0700 (PDT)
+Message-ID: <876dc584-00a0-4810-b31e-daaa9f6b6597@gmail.com>
+Date: Wed, 14 May 2025 09:00:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,164 +67,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Drivers: hv: Introduce mshv_vtl driver
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Cc: Roman Kisel <romank@linux.microsoft.com>,
- Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <20250512140432.2387503-1-namjain@linux.microsoft.com>
- <20250512140432.2387503-3-namjain@linux.microsoft.com>
- <82cf1c07-026b-470e-b093-018dcfced5aa@oracle.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <82cf1c07-026b-470e-b093-018dcfced5aa@oracle.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add ROHM BD79100G
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1747123883.git.mazziesaccount@gmail.com>
+ <7deb4b69795c298ba51c9b198bc87000ad35cc9b.1747123883.git.mazziesaccount@gmail.com>
+ <20250513-coconut-reconfirm-b90590efeb45@spud>
+ <5c721d80-70e1-4cdc-974d-2007bbddfeb3@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+In-Reply-To: <5c721d80-70e1-4cdc-974d-2007bbddfeb3@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-
-On 5/14/2025 2:04 AM, ALOK TIWARI wrote:
+On 14/05/2025 08:36, Matti Vaittinen wrote:
+> On 13/05/2025 17:39, Conor Dooley wrote:
+>> On Tue, May 13, 2025 at 11:26:27AM +0300, Matti Vaittinen wrote:
+>>> The ROHM BD79100G is a 12-bit ADC which can be read over SPI. Device has
+>>> no MOSI pin. ADC results can be read from MISO by clocking in 16 bits.
+>>> The 4 leading bits will be zero, last 12 containig the data.
+>>
+>> I think it is probably worth mentioning why a rohm device is going into
+>> this binding (clone?) and that the 12-bit thing is a differentiator that
+>> is why you're not using a fallback.
 > 
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2023, Microsoft Corporation.
->> + *
->> + * Author:
->> + *   Roman Kisel <romank@linux.microsoft.com>
->> + *   Saurabh Sengar <ssengar@linux.microsoft.com>
->> + *   Naman Jain <namjain@linux.microsoft.com>
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/miscdevice.h>
->> +#include <linux/anon_inodes.h>
->> +#include <linux/pfn_t.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/count_zeros.h>
->> +#include <linux/eventfd.h>
->> +#include <linux/poll.h>
->> +#include <linux/file.h>
->> +#include <linux/vmalloc.h>
->> +#include <asm/debugreg.h>
->> +#include <asm/mshyperv.h>
->> +#include <trace/events/ipi.h>
->> +#include <uapi/asm/mtrr.h>
->> +#include <uapi/linux/mshv.h>
->> +#include <hyperv/hvhdk.h>
->> +
->> +#include "../../kernel/fpu/legacy.h"
->> +#include "mshv.h"
->> +#include "mshv_vtl.h"
->> +#include "hyperv_vmbus.h"
->> +
->> +MODULE_AUTHOR("Microsoft");
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("Microsoft Hyper-V VTL Driver");
->> +
->> +#define MSHV_ENTRY_REASON_LOWER_VTL_CALL     0x1
->> +#define MSHV_ENTRY_REASON_INTERRUPT          0x2
->> +#define MSHV_ENTRY_REASON_INTERCEPT          0x3
->> +
->> +#define MAX_GUEST_MEM_SIZE    BIT_ULL(40)
->> +#define MSHV_PG_OFF_CPU_MASK    0xFFFF
->> +#define MSHV_REAL_OFF_SHIFT    16
->> +#define MSHV_RUN_PAGE_OFFSET    0
->> +#define MSHV_REG_PAGE_OFFSET    1
->> +#define VTL2_VMBUS_SINT_INDEX    7
->> +
->> +static struct device *mem_dev;
->> +
->> +static struct tasklet_struct msg_dpc;
->> +static wait_queue_head_t fd_wait_queue;
->> +static bool has_message;
->> +static struct eventfd_ctx *flag_eventfds[HV_EVENT_FLAGS_COUNT];
->> +static DEFINE_MUTEX(flag_lock);
->> +static bool __read_mostly mshv_has_reg_page;
->> +
->> +struct mshv_vtl_hvcall_fd {
->> +    u64 allow_bitmap[2 * PAGE_SIZE];
->> +    bool allow_map_intialized;
+> Thanks for mentioning the fallback option Conor! You're a hero :)
 > 
-> typo allow_map_intialized -> allow_map_initialized
-> 
+> Now that you mentioned using a fallback, I believe I can ditch the 
+> driver changes and make BU79100G to use adc101s as a fallback!
 
-Noted. Will change it here and at other places. Thanks.
-
->> +    /*
->> +     * Used to protect hvcall setup in IOCTLs
->> +     */
->> +    struct mutex init_mutex;
->> +    struct miscdevice *dev;
->> +};
->> +
->> +struct mshv_vtl_poll_file {
->> +    struct file *file;
->> +    wait_queue_entry_t wait;
->> +    wait_queue_head_t *wqh;
->> +    poll_table pt;
->> +    int cpu;
->> +};
->> +
-> [clip]
->> +
->> +static int mshv_vtl_hvcall_setup(struct mshv_vtl_hvcall_fd *fd,
->> +                 struct mshv_vtl_hvcall_setup __user *hvcall_setup_user)
->> +{
->> +    int ret = 0;
->> +    struct mshv_vtl_hvcall_setup hvcall_setup;
->> +
->> +    mutex_lock(&fd->init_mutex);
->> +
->> +    if (fd->allow_map_intialized) {
->> +        dev_err(fd->dev->this_device,
->> +            "Hypercall allow map has already been set, pid %d\n",
->> +            current->pid);
->> +        ret = -EINVAL;
->> +        goto exit;
->> +    }
->> +
->> +    if (copy_from_user(&hvcall_setup, hvcall_setup_user,
->> +               sizeof(struct mshv_vtl_hvcall_setup))) {
->> +        ret = -EFAULT;
->> +        goto exit;
->> +    }
->> +    if (hvcall_setup.bitmap_size > ARRAY_SIZE(fd->allow_bitmap)) {
->> +        ret = -EINVAL;
->> +        goto exit;
->> +    }
-> 
-> is this valid case if hvcall_setup.bitmap_size == 0 ?
-
-If bitmap_size is 0, then nothing will be copied in copy_from_user()
-to .allow_bitmap and then mshv_vtl_hvcall_is_allowed() will start
-returning 0/false for further hvcalls . This sounds reasonable
-to me.
+I mean, ads7866 as a fallback. Sorry.
 
 > 
->> +    if (copy_from_user(&fd->allow_bitmap,
->> +               (void __user *)hvcall_setup.allow_bitmap_ptr,
->> +               hvcall_setup.bitmap_size)) {
->> +        ret = -EFAULT;
->> +        goto exit;
->> +    }
->> +
-> [clip]
+> I didn't even consider if some of the existing devices were (from SW 
+> perspective) identical. I was just happy when I found there was a driver 
+> supporting these simple SPI ADCs. Then I picked the right macro for 
+> doing register data conversion and correct shift, dumped in the bit 
+> width and extended the longish list of devices. I never checked if 
+> another device in the driver had similar set of "IC specific values".
 > 
-> 
-> 
-> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> 
-> Thanks,
-> Alok
+> Yours,
+>      -- Matti
 
-Thanks again for reviewing.
-
-Regards,
-Naman
