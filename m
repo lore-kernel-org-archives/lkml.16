@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F36B264F8B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EBC267F70
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266246; cv=none; b=KAEA1WL0xi8BbsZV0fu4iseA2QKyR8quadZs37vC6c3CCse6qLC24W6IH3qqRkya9mjwX+8df4jvrtWcoS7bEiCrnA0XuRJfL/opbdxuS2NIudC3GYLsbBT2EgVxlEu4FYv4EwtFIVVlux122DHlq/mxkzkr7Ck0DJ7czREjq/c=
+	t=1747266248; cv=none; b=gr/u3OhootrAxxLgFbSgnJe18pqxqJwvGu+zi1087pjQPNgUJQnrVLav53oaAtpzd2bXU2eEJ/5GU9TmF63K5lMqyc1KOu0GDb2vZ9GnMAOaUG5qbVp63+lQeCHbiaF3kCUZFGcr9a9rJokSdh55rYGvdFWIUN7r1vMja+wI6Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266246; c=relaxed/simple;
-	bh=1rVfuYi1WHYEYjmdy8cIEb5msrK0n7swdg38Pr4wEeg=;
+	s=arc-20240116; t=1747266248; c=relaxed/simple;
+	bh=LDbOHPoSGuNFXS8JdzaelZFxT0RmINDPbHD9pwKJJaU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PZjWZGQT2u/Kuq0KOU0e4h/L4eQeEcAB///84d62fS97D6PskxFF0RkgUU83oDcfj/RP3s/vTrtAXXPo1N6eyiD9RkkWbf87XpZfie+oPUzV64Wnul0/ltCAJkDRksddalLYefspPUBSy95f7ZiWQs06mnyUss39D/hqrHX7QyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sXv9Gz1; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=CXoyUrHq1q/k2Ng9Wnvopw/ehoK/Fy+wYNm5vY7AVImTWFmm2Fx82Wvn1cBobvRapoZvACiWA0iuY+Xkl+HeMdg8URr6M3g2XDyhriZzsenX49Dkfje/P+kuLPZVRlkp2e1IWUhcVwJLRT2X1n4ab5wONYTnX1t307zbEw3i2fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DV0gRTyo; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sXv9Gz1"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c4bdd0618so343476a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DV0gRTyo"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a80fe759bso581327a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266243; x=1747871043; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266246; x=1747871046; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BduUPNqb61B8Eivz+AJ2LgpTa1Bu3K7jmzRP1k+UIFk=;
-        b=4sXv9Gz1PxEr5sP04dFyv8besvyc183ZakczXBAeV4rW8ysPxeGZgt+7W9rm3iDaLI
-         DkDMGilK9RYcrp7CclKmiJmncD8H09ZyKuzmqHSpMdeyTCTc165txTZUjS5cCEH5aQzk
-         juLdteZq2t0zoMIvotQhK5M7l3CdYv9LM/U9dslM/4TDezuvFE5SNzoyFrDwXbQ37gyv
-         F3m5RxwMtnGb9iX9QeYGaEcK60hVTUHKFrUiBQ1LZbvEtIAeSx7FeA4vqfBYMZL3Fcmo
-         OINjqK7oJhEIdxxOXJ8qbTNDhkyQYXhveme4R5Va0UrOA+R+YJOCiA7ugb4EG8vdQ4LU
-         wPLQ==
+        bh=7kvSCkXJQhrKVgucxSGtwwGYhLWVqw+CwFYL4UvJquE=;
+        b=DV0gRTyoMlCf+hIaASLoGpat9PrzeZ1QCbiAZw970dEqBkFPkQAE0Os4NFQoba8HlV
+         SArGOOQoFnM94aj+hfSJpffgF2gCg/IaUFg5vIXaufr7dU0QVhDXEMJfnz2wIfZ+UXGA
+         IsBadfrKRNRq0D4tN+kBFVpUb5wEnM5HzNyzTAYDw6P2BLgqxjEIYXzkNoFkqw+dKEZ0
+         WbZJzTq8DtFWTa5LsW9ZNXgS4S6cJsJMN6GLlnNONDsNY8RyrQ/oRKiFAewWcJ4gF0mb
+         oq/1UnLdl3DMeAe0/5eO0xAL5J8TW+GZ8/haAx/ZxyF9hAFn6J3t8HvyX2SaY14eJ0XU
+         clog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266243; x=1747871043;
+        d=1e100.net; s=20230601; t=1747266246; x=1747871046;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BduUPNqb61B8Eivz+AJ2LgpTa1Bu3K7jmzRP1k+UIFk=;
-        b=sTT7NCuWDwifRVrGbQtrJe37ElmLdIJggSHKp8cjxAUTui7rvXTpv653fqvu3ZmPae
-         /mKoaeQ+n40Fwg1sS9C3s+kbDBkfQTVwEjD1+dOp9VU5Z/VyA4F1cTQgYh51ZzTALApK
-         su++J/A9JMDEo+8uj1N+f3i3Nk6l3IOq4vb5u/a7VyGN+i8nXV/p/xujLdGFHUAwPmMd
-         86erDeUu0NqpbbJX6B4RDL8qarlIgEJ6rFveVAzTfgEM1tK7Q4qy8fI1eb2blcoyS/IG
-         lvb89ddyT0RD8K7zAaW3h3C+POvlZUCN93RGPmJQpMGmJkaXXhKa03ChXu4Ar/+xbtyu
-         0+ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVeeQFZJNAKB80g5rXVRkfP1WtgPNfYB+SF5fLjSOXn95tNCwsM1zua/7p5pfEaQldrmCseW5uH5hJqUMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHNt4NaBDGMuTSy9TrS+Rsjvb3tvfihc+sScxswOghltndaZGj
-	GmfxjCgxJYKu42tJEq5iUyUwWmpN0x7QjUC5M/BXKw5w3kB4PIBtIVvmGa4Uj0vUVcwb8CTbWuD
-	cTD+hzyT6UOzYfKhjTJrEdw==
-X-Google-Smtp-Source: AGHT+IEjnuIuPh++1YsJBYPVFxGMfCMSkD+n47vqKHsfozYjZZGvfWXQQGTInhBsTuWssNrzOA4VxrkjA/1Su+uotw==
-X-Received: from pjbpw8.prod.google.com ([2002:a17:90b:2788:b0:301:1ea9:63b0])
+        bh=7kvSCkXJQhrKVgucxSGtwwGYhLWVqw+CwFYL4UvJquE=;
+        b=BlrUhohZ2jh+A6ScAmooSw+C6Wl2NcusP4azs1X8DPpAfGl4H/Y7+koFMULW7N9bES
+         S5xFeLxNXaAQ6TVc5j4q3+yklUAkLoM9Xl9bjmVN1S1/QhJ5JOrxk5+D5fo+IZAV/y2K
+         IHNz8kZ9mYjRimL6H8dZXGrrn7bPV7mJpdopD6+Dn3PZmcfV/T7uDhWybAYRydQaPWN3
+         cMVjLDGb3SKzoVHGrzeWi3G4gLZgStlgnsViJe5zpwnKpKwASXI3mvSw2LsZ1sj/jLJ4
+         RWMPi6aQOs04Ijiak1VPBdp8Hv9YElEWEoddjobpWfFNq48X04R7xtX+uy8rq2ZQoTnw
+         UsEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMr0LI1O07j/py6bY2DXdZlZ+V89QUuOknlJ1q6gdpW0jLnYW+XZKKVnG7FYGH/SJqLtZWz94d1dBcUEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrCcnOhJf7TT99KFvlQDO8wm3D1Uzgqo1qry5qjCJgB+0eOKJM
+	5Y4q1ZB1VJwLqkHtZa8PIwLvChs4MduZh5woO+MhHPR6L5I9EfIqj9fP81Nf/gaxigywbARuDnT
+	GNTndOGYkQBXht7PzisGCTQ==
+X-Google-Smtp-Source: AGHT+IE20STsLMarzTx6jgJoU5OziT731+lq67F3PvF/P+tS/GIdT+Mf8wt3BdWWvNKEn5ln5kbUV5Kg3XvNRqtHxw==
+X-Received: from pjbcz5.prod.google.com ([2002:a17:90a:d445:b0:2fa:a101:755])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:17c6:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-30e2e643c54mr7245629a91.31.1747266242805;
- Wed, 14 May 2025 16:44:02 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:21 -0700
+ 2002:a17:90a:d88c:b0:2f2:a664:df20 with SMTP id 98e67ed59e1d1-30e51570e69mr753738a91.7.1747266245969;
+ Wed, 14 May 2025 16:44:05 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:23 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <322b245180f09076c5cbbac0d68ea27c0a8c878b.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 42/51] KVM: selftests: Add basic selftests for
- hugetlb-backed guest_memfd
+Message-ID: <e06338f2c4aad92a6994a868483f9dcc17f84c5a.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 44/51] KVM: selftests: Test truncation paths of guest_memfd
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -97,208 +96,143 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add tests for 2MB and 1GB page sizes, and update the invalid flags
-test for GUEST_MEMFD_FLAG_HUGETLB.
+When guest_memfd folios are truncated, if pages are split, they have
+to be merged.
 
-In tests, touch every page but not every byte in page to save time
-while testing.
+For truncations, userspace will get an error if there are unexpected
+refcounts on the folios.
 
-Change-Id: I7d80a12b991a064cfd796e3c6e11f9a95fd16ec1
+For truncation on closing, kernel will handle the merging even if
+there are unexpected refcounts on the folios.
+
+This patch tests the above two scenarios.
+
+Change-Id: I0f0c619763f575605fab8b3c453858960e43ed71
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../testing/selftests/kvm/guest_memfd_test.c  | 94 +++++++++++++------
- 1 file changed, 67 insertions(+), 27 deletions(-)
+ .../kvm/guest_memfd_conversions_test.c        | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index 1e79382fd830..c8acccaa9e1d 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -13,6 +13,8 @@
- 
- #include <linux/bitmap.h>
- #include <linux/falloc.h>
+diff --git a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
+index 22126454fd6b..435f91424d5f 100644
+--- a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
++++ b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (c) 2024, Google LLC.
+  */
 +#include <linux/guestmem.h>
-+#include <linux/sizes.h>
- #include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-@@ -38,6 +40,7 @@ static void test_file_read_write(int fd)
- static void test_faulting_allowed(int fd, size_t page_size, size_t total_size)
- {
- 	const char val = 0xaa;
-+	size_t increment;
- 	char *mem;
- 	size_t i;
- 	int ret;
-@@ -45,21 +48,25 @@ static void test_faulting_allowed(int fd, size_t page_size, size_t total_size)
- 	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
- 	TEST_ASSERT(mem != MAP_FAILED, "mmaping() guest memory should pass.");
- 
--	memset(mem, val, total_size);
--	for (i = 0; i < total_size; i++)
-+	increment = page_size >> 1;
-+
-+	for (i = 0; i < total_size; i += increment)
-+		mem[i] = val;
-+	for (i = 0; i < total_size; i += increment)
- 		TEST_ASSERT_EQ(mem[i], val);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0,
- 			page_size);
- 	TEST_ASSERT(!ret, "fallocate the first page should succeed");
- 
--	for (i = 0; i < page_size; i++)
-+	for (i = 0; i < page_size; i += increment)
- 		TEST_ASSERT_EQ(mem[i], 0x00);
--	for (; i < total_size; i++)
-+	for (; i < total_size; i += increment)
- 		TEST_ASSERT_EQ(mem[i], val);
- 
--	memset(mem, val, total_size);
--	for (i = 0; i < total_size; i++)
-+	for (i = 0; i < total_size; i += increment)
-+		mem[i] = val;
-+	for (i = 0; i < total_size; i += increment)
- 		TEST_ASSERT_EQ(mem[i], val);
- 
- 	ret = munmap(mem, total_size);
-@@ -209,7 +216,7 @@ static void test_create_guest_memfd_invalid_sizes(struct kvm_vm *vm,
- 	size_t size;
- 	int fd;
- 
--	for (size = 1; size < page_size; size++) {
-+	for (size = 1; size < page_size; size += (page_size >> 1)) {
- 		fd = __vm_create_guest_memfd(vm, size, guest_memfd_flags);
- 		TEST_ASSERT(fd == -1 && errno == EINVAL,
- 			    "guest_memfd() with non-page-aligned page size '0x%lx' should fail with EINVAL",
-@@ -217,28 +224,33 @@ static void test_create_guest_memfd_invalid_sizes(struct kvm_vm *vm,
- 	}
+ #include <linux/kvm.h>
+ #include <linux/sizes.h>
+ #include <stdio.h>
+@@ -580,6 +581,97 @@ static void test_fault_type_independent_of_mem_attributes(size_t test_page_size)
+ 	cleanup_test(test_page_size, vm, guest_memfd, mem);
  }
  
--static void test_create_guest_memfd_multiple(struct kvm_vm *vm)
-+static void test_create_guest_memfd_multiple(struct kvm_vm *vm,
-+					     uint64_t guest_memfd_flags,
-+					     size_t page_size)
- {
- 	int fd1, fd2, ret;
- 	struct stat st1, st2;
- 
--	fd1 = __vm_create_guest_memfd(vm, 4096, 0);
-+	fd1 = __vm_create_guest_memfd(vm, page_size, guest_memfd_flags);
- 	TEST_ASSERT(fd1 != -1, "memfd creation should succeed");
- 
- 	ret = fstat(fd1, &st1);
- 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
--	TEST_ASSERT(st1.st_size == 4096, "memfd st_size should match requested size");
-+	TEST_ASSERT(st1.st_size == page_size, "memfd st_size should match requested size");
- 
--	fd2 = __vm_create_guest_memfd(vm, 8192, 0);
-+	fd2 = __vm_create_guest_memfd(vm, page_size * 2, guest_memfd_flags);
- 	TEST_ASSERT(fd2 != -1, "memfd creation should succeed");
- 
- 	ret = fstat(fd2, &st2);
- 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
--	TEST_ASSERT(st2.st_size == 8192, "second memfd st_size should match requested size");
-+	TEST_ASSERT(st2.st_size == page_size * 2,
-+		    "second memfd st_size should match requested size");
++static void test_truncate_shared_while_pinned(size_t test_page_size)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++	int ret;
 +
- 
- 	ret = fstat(fd1, &st1);
- 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
--	TEST_ASSERT(st1.st_size == 4096, "first memfd st_size should still match requested size");
-+	TEST_ASSERT(st1.st_size == page_size,
-+		    "first memfd st_size should still match requested size");
- 	TEST_ASSERT(st1.st_ino != st2.st_ino, "different memfd should have different inode numbers");
- 
- 	close(fd2);
-@@ -449,21 +461,13 @@ static void test_guest_memfd_features(struct kvm_vm *vm, size_t page_size,
- 	close(fd);
- }
- 
--static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
--			   bool expect_mmap_allowed)
-+static void test_guest_memfd_features_for_page_size(struct kvm_vm *vm,
-+						    uint64_t guest_memfd_flags,
-+						    size_t page_size,
-+						    bool expect_mmap_allowed)
- {
--	struct kvm_vm *vm;
--	size_t page_size;
-+	test_create_guest_memfd_multiple(vm, guest_memfd_flags, page_size);
- 
--	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
--		return;
--
--	vm = vm_create_barebones_type(vm_type);
--
--	test_create_guest_memfd_multiple(vm);
--	test_bind_guest_memfd_wrt_userspace_addr(vm);
--
--	page_size = getpagesize();
- 	if (guest_memfd_flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
- 		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
- 					  expect_mmap_allowed, true);
-@@ -479,6 +483,34 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
- 		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
- 					  expect_mmap_allowed, false);
- 	}
++	vm = setup_test(test_page_size, /*init_private=*/false, &vcpu,
++			&guest_memfd, &mem);
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE, 0, test_page_size);
++	TEST_ASSERT(!ret, "fallocate should have succeeded");
++
++	pin_pages(mem, test_page_size);
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
++			0, test_page_size);
++	if (test_page_size == PAGE_SIZE) {
++		TEST_ASSERT(!ret, "truncate should have succeeded since there is no need to merge");
++	} else {
++		TEST_ASSERT(ret, "truncate should have failed since pages are pinned");
++		TEST_ASSERT_EQ(errno, EAGAIN);
++	}
++
++	unpin_pages();
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
++			0, test_page_size);
++	TEST_ASSERT(!ret, "truncate should succeed now that pages are unpinned");
++
++	cleanup_test(test_page_size, vm, guest_memfd, mem);
 +}
 +
-+static void test_with_type(unsigned long vm_type, uint64_t base_flags,
-+			   bool expect_mmap_allowed)
++static void test_truncate_private(size_t test_page_size)
 +{
++	struct kvm_vcpu *vcpu;
 +	struct kvm_vm *vm;
-+	uint64_t flags;
++	int guest_memfd;
++	char *mem;
++	int ret;
 +
-+	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
-+		return;
++	vm = setup_test(test_page_size, /*init_private=*/true, &vcpu,
++			&guest_memfd, &mem);
 +
-+	vm = vm_create_barebones_type(vm_type);
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE, 0, test_page_size);
++	TEST_ASSERT(!ret, "fallocate should have succeeded");
 +
-+	test_bind_guest_memfd_wrt_userspace_addr(vm);
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
++			0, test_page_size);
++	TEST_ASSERT(!ret, "truncate should have succeeded since there is no need to merge");
 +
-+	printf("Test guest_memfd with 4K pages for vm_type %ld\n", vm_type);
-+	test_guest_memfd_features_for_page_size(vm, base_flags, getpagesize(), expect_mmap_allowed);
-+	printf("\tPASSED\n");
++	cleanup_test(test_page_size, vm, guest_memfd, mem);
++}
 +
-+	printf("Test guest_memfd with 2M pages for vm_type %ld\n", vm_type);
-+	flags = base_flags | GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_2MB;
-+	test_guest_memfd_features_for_page_size(vm, flags, SZ_2M, expect_mmap_allowed);
-+	printf("\tPASSED\n");
++static void __test_close_with_pinning(size_t test_page_size, bool init_private)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++	int ret;
 +
-+	printf("Test guest_memfd with 1G pages for vm_type %ld\n", vm_type);
-+	flags = base_flags | GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_1GB;
-+	test_guest_memfd_features_for_page_size(vm, flags, SZ_1G, expect_mmap_allowed);
-+	printf("\tPASSED\n");
- 
- 	kvm_vm_release(vm);
- }
-@@ -486,9 +518,14 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
- static void test_vm_with_gmem_flag(struct kvm_vm *vm, uint64_t flag,
- 				   bool expect_valid)
++	vm = setup_test(test_page_size, init_private, &vcpu, &guest_memfd, &mem);
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE, 0, test_page_size);
++	TEST_ASSERT(!ret, "fallocate should have succeeded");
++
++	if (!init_private)
++		pin_pages(mem, test_page_size);
++
++	cleanup_test(test_page_size, vm, guest_memfd, mem);
++
++	if (!init_private)
++		unpin_pages();
++
++	/*
++	 * Test this with ./guest_memfd_wrap_test_check_hugetlb_reporting.sh to
++	 * check that the HugeTLB page got merged and returned to HugeTLB.
++	 *
++	 * Sleep here to give kernel worker time to do the merge and return.
++	 */
++	sleep(1);
++}
++
++static void test_close_with_pinning(size_t test_page_size)
++{
++	__test_close_with_pinning(test_page_size, true);
++	__test_close_with_pinning(test_page_size, false);
++}
++
+ static void test_with_size(size_t test_page_size)
  {
--	size_t page_size = getpagesize();
-+	size_t page_size;
- 	int fd;
+ 	test_sharing(test_page_size);
+@@ -590,6 +682,9 @@ static void test_with_size(size_t test_page_size)
+ 	test_truncate_should_not_change_mappability(test_page_size);
+ 	test_conversions_should_fail_if_memory_has_elevated_refcount(test_page_size);
+ 	test_fault_type_independent_of_mem_attributes(test_page_size);
++	test_truncate_shared_while_pinned(test_page_size);
++	test_truncate_private(test_page_size);
++	test_close_with_pinning(test_page_size);
+ }
  
-+	if (flag == GUEST_MEMFD_FLAG_HUGETLB)
-+		page_size = get_def_hugetlb_pagesz();
-+	else
-+		page_size = getpagesize();
-+
- 	fd = __vm_create_guest_memfd(vm, page_size, flag);
- 
- 	if (expect_valid) {
-@@ -550,6 +587,9 @@ static void test_gmem_flag_validity(void)
- 	/* After conversions are supported, all VM types support shared mem. */
- 	uint64_t valid_flags = GUEST_MEMFD_FLAG_SUPPORT_SHARED;
- 
-+	if (kvm_has_cap(KVM_CAP_GMEM_HUGETLB))
-+		valid_flags |= GUEST_MEMFD_FLAG_HUGETLB;
-+
- 	test_vm_type_gmem_flag_validity(VM_TYPE_DEFAULT, valid_flags);
- 
- #ifdef __x86_64__
+ int main(int argc, char *argv[])
 -- 
 2.49.0.1045.g170613ef41-goog
 
