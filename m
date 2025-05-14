@@ -1,136 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892221B6556
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840FC1B6556
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747236467; cv=none; b=icV78ir5iMsFcY/sxfR3vXNd0aoWj+Aw4QT2yzHFc++KByCnspQRmYKo7lwBw9lEj5qXYW1C9MjoPUFHN9vO+6WhTNb7AtKnL+2XDWTCixbCQMbZgVI/OYLDo907uLwmlSub9UpoobfYe/fWId2PoNpSWD85vIJUcvGItbynybE=
+	t=1747236480; cv=none; b=gwfXh4Ry8nsEdYENrvGtnSg2cqJFJGT7JcKk5ntDBwtrmHNH13VZO2Kot/qMmY0A6PL5ccmLTAZFEPs1B/vGTq7z5dNgLwtmaoYQQrP/AjRFxokgRBvQOEbCNGuKbLK/qzyk2Ou1KW6nWKnqkfWkaETi7UDd/hvac7xPoDlXDR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747236467; c=relaxed/simple;
-	bh=O/vQ2euWN4DCd8CTZw87lWzwQaYAUMvWVWcukkW4a+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYxFYg3X/B6cnzGj31SIMbCc11Nq3HBNKpduXvUTKWOrDlz98yZ80+vCKVrIjogFv+gdYN8NGEg+7wIryVtHH2wQaC2V+zUne41sKgHAkQHvqHBrSKwUYmRzvMu46dwyE6rVW8DocngQBgOSha1gIbucj7q27mn+VMLdT16acyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnCvuQqJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747236480; c=relaxed/simple;
+	bh=SGKjeHVkf6yzlsanhJUth/0wT7fmx6nVcIxyoA2ge08=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iDV3zh4atW+O5LwXRD/sqV9pMciP6SNQieDSFclVogjrNTB4IKEV3q5e+pcEH707aJmqfLIWn9eOE0XLEVEbDVWpnIevwzZtwJ/eHsDmGgEoM6YljFN8zuwRGW3i9tL+fs9Oht4n0jS15Y013ZQoZu4jDmQNcS6eMrOvI4AfG+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grnyxb9+; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnCvuQqJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747236466; x=1778772466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O/vQ2euWN4DCd8CTZw87lWzwQaYAUMvWVWcukkW4a+E=;
-  b=KnCvuQqJlp3zBorXELPytH2i/kA5fZ+vwd/3Pz2nvT3BLJUy4VaFsgtx
-   ZKTChnMJqEv3RAL/puNzpNl/H5rZAbFEeOlWy/oVh5DbOTTBG62rTQ5ee
-   cg2uWyGtxY6qSuZt1SV57Doam30iTkqw2hM4PGM0w4SZatli1BhBxyao/
-   M6I4CUh9lUwovQgRqhFmj+1EkPXk/rACbcfpwlErPIkB+my4Q6zLVu32J
-   McOtkXnhf3jUxTkn8I5lp3GsjdI39Bq4+iQm0nodEHmZvZGaFlI90zBwa
-   7p238sOi7fV7u4LuoClzsKNMFHq5NBZ4SehJMPVPZvOnxFo8vAnDrEn/K
-   A==;
-X-CSE-ConnectionGUID: Gfda8nM2S8uBWJ5uwYntmg==
-X-CSE-MsgGUID: xnNOmtHURi27eTAESejKaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49011860"
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="49011860"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:27:43 -0700
-X-CSE-ConnectionGUID: t+PQ/0+kQqW7Kcr9S3CwCg==
-X-CSE-MsgGUID: a3wI3M/WQymOaletw6Fepg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="138597889"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 14 May 2025 08:27:40 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFE1C-000HHB-0d;
-	Wed, 14 May 2025 15:27:38 +0000
-Date: Wed, 14 May 2025 23:27:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
-	andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-	heikki.krogerus@linux.intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
- device resource management
-Message-ID: <202505142347.7wqzaBvR-lkp@intel.com>
-References: <20250514122432.4019606-2-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grnyxb9+"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad23ec87134so128632366b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747236477; x=1747841277; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SGKjeHVkf6yzlsanhJUth/0wT7fmx6nVcIxyoA2ge08=;
+        b=grnyxb9+BJjxqXifb26sykPJ3CcuBcpwvMtlEXyZVzEeelNLmTsZqCtlXlQigL1xxr
+         XuaKeEELmraKZKYJqXg3oBsnByBVl/wTzfQkjiBGeQnvBZqxxUYubSZBlZb9Il7yTc1a
+         MBBC7WeNG+7Mm2XeiwHqqRYksEb9fD5kb7ClAB0RmeC1plp+ZJqh1oYYd58euHg4dbl0
+         OVb9U8eETKStDE3Mj17vLu0z39eDd2vZ+x+9efdl9PWcScmNzRVVoffipDhas1DQ0veA
+         v9FJCpSdjIPVUtlSBEvZ2AHhOgpl90T/4XtEVTxNjKSBW0x+4o8oPme/n1wK4QSDBCHQ
+         H1uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747236477; x=1747841277;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SGKjeHVkf6yzlsanhJUth/0wT7fmx6nVcIxyoA2ge08=;
+        b=EY3zEIJstcai0RoVaw2JV4qO91xQNuSoV9iW2ahaCjCgY2WVsYr57LFlIEYL2qPWhI
+         S/CweZ8QWCuT91y0siha9sv2RWK3bozdLZvWyAYheT8Kk+J6HuZ+mWFsJUeqJ1GjUjd0
+         Z8e5OaOu84N2V6ffwMoFHkwluS6ct/87mlLOflubkqSMqlSL5dOpfUOHaZIWVKaaLYb9
+         EIL7o69LxSyHNRg7pB8BVNTKP/QULGeIFYQRa6h7JkG6Y1iRaKSxuSFFR/b3pczT2AYa
+         qoZax6kb5OMGCzbJTRL8IB8/nDJVLs8Z6dh+nM8bhhzWEskZvQCGi4gXjWdHQh5vkl9T
+         GafA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtyGirZR1si31dHKDnRonAyvMhI9I0I7P4xAeZRODGLL0Trn7/JGULpQ20G2SN6K4Yk2StlVdRigHXWVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIhW1zZConvZdlMCVCGIVcvt+4l/OKgQcrGEmF/aefZqzGy2wm
+	M6XdWJibmWbXkOxzyToqs/S4es9xqq/vVQNUKZiESoSDEDTFGpF4g3rO7Z5JRAK/Nc4BzTHhciN
+	fZSzjmqK/uG2HJ1vvvBwbSsiaJknhrnncI5yOkg==
+X-Gm-Gg: ASbGncsH/NwDvu8EHT67DW6nyDHMSzPx/bDCAAO5FsDXf7FQM7Dvp75oPronhH9kHto
+	wWdQKUISj07iuNtMQNNobtbl/i5OzY6XF4MhwKzLIwrWAAsKFAkdrKM+ZE9W0EWu0uc/MBWozT4
+	oUBOSFlFf8lQqOcRG8pcVenHIHXwAAY4E=
+X-Google-Smtp-Source: AGHT+IFI6WGyYTssVEodUuBbRbHdt/cK0IPusMpr/1+pqSkJpRWIkQArQUnuyloTmvBZCSiRQ0Ya6krvZBl9FePgExs=
+X-Received: by 2002:a17:906:4f86:b0:ad5:935:81db with SMTP id
+ a640c23a62f3a-ad5093584e3mr109467866b.10.1747236476735; Wed, 14 May 2025
+ 08:27:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514122432.4019606-2-raag.jadav@intel.com>
+References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
+ <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-5-6a143640a6cb@oss.qualcomm.com>
+ <aCRkRTMFi65zBODh@sumit-X1>
+In-Reply-To: <aCRkRTMFi65zBODh@sumit-X1>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 14 May 2025 17:27:44 +0200
+X-Gm-Features: AX0GCFubE386IXxNi4n8B2NKhYEqMdnxy1eH-BueT9owSlm2f-luFbE7L4_yv50
+Message-ID: <CACMJSev2qqnxLN6OiSEKhUqxeewY09to0Jd2oPNoE39YFS6i3A@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] firmware: qcom: scm: add support for object invocation
+To: Sumit Garg <sumit.garg@kernel.org>
+Cc: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>, 
+	Jens Wiklander <jens.wiklander@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Raag,
+On Wed, 14 May 2025 at 11:37, Sumit Garg <sumit.garg@kernel.org> wrote:
+>
+> Hi Amir,
+>
+> I am still unable to get the QCOMTEE driver to work on db845c. As I can
+> see machine: "qcom,sdm845" is not supported for tzmem based on SHM
+> brigde here: drivers/firmware/qcom/qcom_tzmem.c +81. I am still seeing
+> following logs from userspace:
+>
+> # /mnt/unittest -d
+> [test_print_diagnostics_info][31] test_get_client_env_object.
+> [test_supplicant_release][65] test_supplicant_worker killed.
+>
+> I think you should first check here for SHM bridge support. If available
+> then only add a QTEE platform device.
+>
 
-kernel test robot noticed the following build warnings:
+On platforms not supporting SHM Bridge, the module should fall back to
+non-SHM mode. Isn't it the case?
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus staging/staging-testing staging/staging-next staging/staging-linus linus/master v6.15-rc6 next-20250514]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-auxiliary-bus-Introduce-auxiliary-device-resource-management/20250514-202748
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250514122432.4019606-2-raag.jadav%40intel.com
-patch subject: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary device resource management
-config: arm-randconfig-003-20250514 (https://download.01.org/0day-ci/archive/20250514/202505142347.7wqzaBvR-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250514/202505142347.7wqzaBvR-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505142347.7wqzaBvR-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/gpu/drm/bridge/ti-sn65dsi86.c:8:0:
-   include/linux/auxiliary_bus.h: In function 'auxiliary_device_uninit':
-   include/linux/auxiliary_bus.h:246:3: error: implicit declaration of function 'kfree'; did you mean '__free'? [-Werror=implicit-function-declaration]
-      kfree(auxdev->resource);
-      ^~~~~
-      __free
-   In file included from arch/arm/include/asm/pgtable-nommu.h:13:0,
-                    from arch/arm/include/asm/pgtable.h:25,
-                    from arch/arm/include/asm/uaccess.h:17,
-                    from include/linux/uaccess.h:12,
-                    from include/linux/sched/task.h:13,
-                    from include/linux/sched/signal.h:9,
-                    from include/linux/rcuwait.h:6,
-                    from include/linux/percpu-rwsem.h:7,
-                    from include/linux/fs.h:34,
-                    from include/linux/debugfs.h:15,
-                    from drivers/gpu/drm/bridge/ti-sn65dsi86.c:12:
-   include/linux/slab.h: At top level:
->> include/linux/slab.h:472:6: warning: conflicting types for 'kfree'
-    void kfree(const void *objp);
-         ^~~~~
-   In file included from drivers/gpu/drm/bridge/ti-sn65dsi86.c:8:0:
-   include/linux/auxiliary_bus.h:246:3: note: previous implicit declaration of 'kfree' was here
-      kfree(auxdev->resource);
-      ^~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/kfree +472 include/linux/slab.h
-
-7bd230a26648ac Suren Baghdasaryan 2024-03-21  471  
-72d67229f522e3 Kees Cook          2021-11-05 @472  void kfree(const void *objp);
-72d67229f522e3 Kees Cook          2021-11-05  473  void kfree_sensitive(const void *objp);
-72d67229f522e3 Kees Cook          2021-11-05  474  size_t __ksize(const void *objp);
-05a940656e1eb2 Kees Cook          2022-09-23  475  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
