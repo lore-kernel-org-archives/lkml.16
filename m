@@ -1,178 +1,140 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A961B222590
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A5222590
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747213460; cv=none; b=TCPwbrS/gT1Db5IW6v8O5vAYxmnwsdso6C/uH/gpHLfL4DiRGs5TYSiGJ2HGL+6gETZYzGuxMDk3WVjQnsc87zzZ64Td7ydI5bPU0lSeFJIg8487krAlUhl9N4t/NHcA1l6z1SfLmBTuXuBw7vAf2vVKfQpnblKwCGuYYPKWbsY=
+	t=1747213465; cv=none; b=SvlmNJ+65fWZ+JGKAvS5f7KfXw0RKDDSeciaCpUY+1sFBltlPIJGZROoXVkb4BK/ju1ldpfW48J2bQBYUtRFPpZ01jLr+CSfOetDIum3c9yG1Nr3JLFID86Sk0rr/YcohikiQSLwn1tGKfS6neWBy7v5SHrF2sq8MNpDOvQcOyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747213460; c=relaxed/simple;
-	bh=C1LKllG2Fa8wm4iOWNMtcfEqU9DwZwq1MyCxxqcdV+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYmDL/jwaK23WZKYP01aspNKX9ogoE6YjnmJ2CjEzuYdzCMjHuc6IG64qe6ZzaMKS2Sem7c0vora3GxFM5h8KE5ro8psdNtqqXuyK5GBHcgVbd6xWURzJktz8jBy7DvfoahAnu/rbFNR9wEZkr0YaNwUpZL4Wv/2cLIthElyfuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vO9H0UFg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Nddhf0kz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vO9H0UFg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Nddhf0kz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747213465; c=relaxed/simple;
+	bh=5K9vutlNbCySpn2mNDTs4+oqYbErEJzRkyHBo6CSjUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jrsJ0kq6eh1KgveOrVvq26TLxIQh1wkX2JyXd65QopcQaoFaBsUqlDxUb7zjKCvvpSQ3elkyPpwGip7w9Tu/JaDoJ/B1zf32JbqYiZleXDv3DEFWf/j4DMWmF8MYcj1nNL9KeqDnH9cOHQKomNVmcsWHpW0fLVMIdAxoaA+FgGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=RbivllH1; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vO9H0UFg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Nddhf0kz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vO9H0UFg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Nddhf0kz"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B44D01F455;
-	Wed, 14 May 2025 09:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747213456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
-	b=vO9H0UFgUGPqAD7S9PR22XyYmZEo4xckkeaxaJy2QBBk19e+FlGmdCsHuHCdQrFO51dAN4
-	K1hyHUGgN4/RImC8hR4QHwnpOniqJ0dRR6JF0KeZeDfz3/k7RdD9faZGPYaX1yTC5Ydplb
-	kijPL7F+gCVhqt1Jg4H7vIlMIEpLoH4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747213456;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
-	b=Nddhf0kzJBh7W69czTE7u1ndGQPV5T9HrRdfSFAl72xwPjchGcqyXIzCOQwli2z7vIWld/
-	IZLdF+OQi3LUDaBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vO9H0UFg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Nddhf0kz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747213456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
-	b=vO9H0UFgUGPqAD7S9PR22XyYmZEo4xckkeaxaJy2QBBk19e+FlGmdCsHuHCdQrFO51dAN4
-	K1hyHUGgN4/RImC8hR4QHwnpOniqJ0dRR6JF0KeZeDfz3/k7RdD9faZGPYaX1yTC5Ydplb
-	kijPL7F+gCVhqt1Jg4H7vIlMIEpLoH4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747213456;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
-	b=Nddhf0kzJBh7W69czTE7u1ndGQPV5T9HrRdfSFAl72xwPjchGcqyXIzCOQwli2z7vIWld/
-	IZLdF+OQi3LUDaBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BEBE7137E8;
-	Wed, 14 May 2025 09:04:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fySAK49cJGjpIAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 14 May 2025 09:04:15 +0000
-Date: Wed, 14 May 2025 10:04:06 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 1/3] mm: introduce new .mmap_prepare() file callback
-Message-ID: <dqir4mv7twugxj6nstqziympxc6z3k5act4cwhgpg2naeqy3sx@wkn4wvnwbpih>
-References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
- <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="RbivllH1"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a1f8c85562so3427372f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1747213462; x=1747818262; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P3wGtNITHa0U9o78hhbypZiCBzOOsk2GAy0wSEWd5SI=;
+        b=RbivllH10Q9QTchRwQ9uc4Dd2nm5qVYmJvwQABgbkSafJB3aDZMHSR5dw5S2WpSSH8
+         aGbqu9ThmPKGNDHezRGtYQFVa1SH3WUUTo+CLWISHirFmnsJ+IYAg/5/SRMiZWSa/WJu
+         cO22pWZPv//sbZpldEHSZxwFBAWU7cyEoK0mAuYCQZ16+b2GfcA5IUsqm6Isg64b3yuN
+         dcvQ/zjf2rTkp1i6ahze4XzWjngOroe/hVushea33xVxjb445peCXwgwhbnAc9x/RYh3
+         t22OsS+2KWgiYVnBN544tgdt2vNgH71RT3zgUjNi3CEUpcAnqYIHfms0muWuHf93R9fg
+         rNFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747213462; x=1747818262;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P3wGtNITHa0U9o78hhbypZiCBzOOsk2GAy0wSEWd5SI=;
+        b=CYtU0E0xJUvV2LOk+OBK+O33M2+XGTe3kiFGMCoVyG+1zQJUXs5uVhwn6UZ7Z8spvx
+         yO5JjMb+fDHJ47YOb40HqiaXhBmnqDuU9CD5fIUbjS01noVSdaVoD8s5aHgCSYzJog8L
+         mCW3COz3875b698C549ml/VrAmeU3Lt8b1zamrZyDqQJQ3XI2vDO86v93grfWLlz/uhC
+         mp7xREFsvjarMDdFZLYEPFDS0HVTwCcq9qMRknceJbVH/1rS5oI/XEejzspYysnaMN3Q
+         EPMBVf5DYZ8X/NnwiPREVf6XDXDD0GvueDKGqyeAlLMisfgAdLqWzXxzX19E76O+Zdfy
+         Cxcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkuDqfEdoi3lSQ1HEL0YIzks1N6/h9HbIMvHw6osnJjem99VwjGAugy/qtTli0x6/xDleROj0TZhDha2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYMjUBE/prJKJBdwA/mEI+PimQgUTGSnysWJcpdKqYPN5pghSb
+	7BE62FrgEg0oUe1fJyohqSofpP/hVcvM2YTyTPmHbrhBEMiW5rk8XFsynXSeN54=
+X-Gm-Gg: ASbGncvweulP7HiTdiqrxGGgcTsP513dDjhwIqAtyMozeo9BDh+1UFIsSQcoiVAKWFz
+	7cz9DWbOSGIQRv4L77lArHTlH3KzrmMz0TIcdLfs3/gGB8tNa4F7OHKHrEKBsiWxcr2ELOQ+ZXv
+	qB5JSD/BE3O5Qa8qoLM8yYzFkcq2SraigcUnYZxA19qt9GElYTxkBnajaTim72D130ZrLnHIIZu
+	hBtYTna/7TYc2ITE2XoBNiAvfWLC/xXc+cyAcGihQxA4S3+iSuzaXprphKYMxRVHTDVguiehAKY
+	144a/BDtCX+Cuzk2QgJMA9ifPknU1evvgQjQokspJAXwpGDahs9pvyzaJtZUc8iAMX4Jg/qdOBo
+	Zh2ESvW1oS+6SchM=
+X-Google-Smtp-Source: AGHT+IFjZxHD0RqKbm4Bz/XFWoN+olN+g7TOLkSX6yfDvf6e23UqKDyHNvx4g80jZ4+20Yv+zITBSw==
+X-Received: by 2002:a5d:6342:0:b0:3a1:a96c:9b76 with SMTP id ffacd0b85a97d-3a34991decbmr1659237f8f.38.1747213461891;
+        Wed, 14 May 2025 02:04:21 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddfbesm19286561f8f.10.2025.05.14.02.04.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 02:04:21 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: geert+renesas@glider.be,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	magnus.damm@gmail.com
+Cc: claudiu.beznea@tuxon.dev,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 0/8] clk: renesas: rzg2l-cpg: Drop PM domain abstraction for MSTOP
+Date: Wed, 14 May 2025 12:04:07 +0300
+Message-ID: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: B44D01F455
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,oracle.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Action: no action
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 09, 2025 at 01:13:34PM +0100, Lorenzo Stoakes wrote:
-> Provide a means by which drivers can specify which fields of those
-> permitted to be changed should be altered to prior to mmap()'ing a
-> range (which may either result from a merge or from mapping an entirely new
-> VMA).
-> 
-> Doing so is substantially safer than the existing .mmap() calback which
-> provides unrestricted access to the part-constructed VMA and permits
-> drivers and file systems to do 'creative' things which makes it hard to
-> reason about the state of the VMA after the function returns.
-> 
-> The existing .mmap() callback's freedom has caused a great deal of issues,
-> especially in error handling, as unwinding the mmap() state has proven to
-> be non-trivial and caused significant issues in the past, for instance
-> those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
-> error path behaviour").
-> 
-> It also necessitates a second attempt at merge once the .mmap() callback
-> has completed, which has caused issues in the past, is awkward, adds
-> overhead and is difficult to reason about.
-> 
-> The .mmap_prepare() callback eliminates this requirement, as we can update
-> fields prior to even attempting the first merge. It is safer, as we heavily
-> restrict what can actually be modified, and being invoked very early in the
-> mmap() process, error handling can be performed safely with very little
-> unwinding of state required.
-> 
-> The .mmap_prepare() and deprecated .mmap() callbacks are mutually
-> exclusive, so we permit only one to be invoked at a time.
-> 
-> Update vma userland test stubs to account for changes.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Hi,
 
-Neat idea, thanks. This should also help out with the insane proliferation of
-vm_flags_set in ->mmap() callbacks all over. Hopefully.
+Series drops the PM domain abstraction for MSTOP to comply with the
+requirements received from the hardware team regarding the configuration
+sequence b/w the MSTOP and CLKON bits of individual modules.
 
-However, could we:
+The initial MSTOP support for RZ/G3S was proposed here:
+https://lore.kernel.org/all/20231120070024.4079344-4-claudiu.beznea.uj@bp.renesas.com/
 
-1) Add a small writeup to Documentation/filesystems/vfs.rst for this callback
+There are no DT users of this abstraction yet.
 
-2) Possibly add a ->mmap_finish()? With a fully constructed vma at that point.
-   So things like remap_pfn_range can still be used by drivers' mmap()
-   implementation.
+Please share your thoughts.
 
-1) is particularly important so our VFS and driver friends know this is supposed
-to be The Way Forward.
+Thank you,
+Claudiu Beznea
+
+Changes in v2:
+- updated the title and description for patches 1/8, 2/8 along
+  with their content
+- added patch 3/8
+- collected tags
+- drop duplicated mstop lists in patch 4/8
+- detailed changelog for each patch can be found in the individual
+  patch
+
+Claudiu Beznea (8):
+  clk: renesas: rzg2l-cpg: Postone updating priv->clks[]
+  clk: renesas: rzg2l-cpg: Move pointers after hw member
+  clk: renesas: rzg2l-cpg: Add macro to loop through module clocks
+  clk: renesas: rzg2l-cpg: Add support for MSTOP in clock enable/disable
+    API
+  clk: renesas: r9a08g045: Drop power domain instantiation
+  clk: renesas: rzg2l-cpg: Drop MSTOP based power domain support
+  dt-bindings: clock: rzg2l-cpg: Drop power domain IDs
+  Revert "dt-bindings: clock: renesas,rzg2l-cpg: Update
+    #power-domain-cells = <1> for RZ/G3S"
+
+ .../bindings/clock/renesas,rzg2l-cpg.yaml     |  18 +-
+ drivers/clk/renesas/r9a07g043-cpg.c           | 132 ++---
+ drivers/clk/renesas/r9a07g044-cpg.c           | 168 +++---
+ drivers/clk/renesas/r9a08g045-cpg.c           | 227 ++++----
+ drivers/clk/renesas/r9a09g011-cpg.c           | 116 ++---
+ drivers/clk/renesas/rzg2l-cpg.c               | 493 ++++++++++--------
+ drivers/clk/renesas/rzg2l-cpg.h               |  66 +--
+ include/dt-bindings/clock/r9a07g043-cpg.h     |  53 --
+ include/dt-bindings/clock/r9a07g044-cpg.h     |  58 ---
+ include/dt-bindings/clock/r9a07g054-cpg.h     |  58 ---
+ include/dt-bindings/clock/r9a08g045-cpg.h     |  71 ---
+ 11 files changed, 603 insertions(+), 857 deletions(-)
 
 -- 
-Pedro
+2.43.0
+
