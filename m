@@ -1,146 +1,179 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1489918B464;
-	Wed, 14 May 2025 14:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747233574; cv=none; b=W+GpsTzdHQSrzhJmnntW7SEZR/tdzlsfXL/ewvDgv2azaa7yAauFLF9aSwdBefla3KrstN9xz5bOEd97yRLKf0OA08Z22LAw4MNBy869DCpCXm9P5WjUBK+C7+3+zliRL4f4ShikKGaOEkid9nh71BDOJtmkN1zdDMoP/nVBDdc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747233574; c=relaxed/simple;
-	bh=XKEX2qhzEUVACLSTBniCIOvEwKQGjpnye85R2UUvn+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bxhCKBYmH2mvAUomrFhaKmM6jp8WgEBQ56VvUvG3NacBZDezxegVyvHo9lOwhzfVPI7R/hUkiWsBpBGMTdOwCsPxnSA8CjyiMpvdNZmzKsdNWWmK1LHNZ3sA4uoCavv1ScDcgE1zBd7A5f1DSthJuMH8FHcPR4mN+bzKAgHr0B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TWoPqJ9q; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553D352F88;
+	Wed, 14 May 2025 14:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747233659; cv=pass; b=YogHSggcIfGP+3cvceVIP0XO8A+1r+jT9hDidvxrjCLSl1BE+7yyuNEsmFtJsLv1NV/tuO+SU7TfW3oGytuXvT4gs8UYhBXjaQ2abXJYRLIZnxp3I3qoN4sK9YC77/cFt/6PE319sW67iK93rnOfiDuvWPr+QTk2XmRG4Jk7Q60=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747233659; c=relaxed/simple;
+	bh=0c83d2w4up38WYiLqe4rd4DT9kdc0wUmuTY9Wxo+lJw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LR0JC8IKTrjtiC63fgXRXL1T14qDAWVOWo4uJWGqnuKUpjFqsTKbdX6gbFxQCoMHkMlLpGMiayFqJxDSE0HMrs6nExAb4raW/BksX81p/AabTDW8f9l3kDIyOUAoxYlyoBcpd20I/D+3UtBI8sG2eB69SwY3+lw9CIyqrRjcwDY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=TAw2fi+T; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TWoPqJ9q"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E9F0QU012707;
-	Wed, 14 May 2025 14:39:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ezwU+W
-	ajc1URSZiFHClykjUSbxb5eibJQFNP5amua4A=; b=TWoPqJ9qCM5e2hA89Yjs00
-	hKluK7YvMdo8jeBYHg/gIIUXATY4BmMaUX7uNFtbXN3JqQM9V7f/WLCRpyo+Yrmb
-	j996/Dro+I8gQPiUZ4c35UjVndWaXKR53hdprHPO51ceZzrfAD5xTBqXbskh5nJh
-	7pu+0cmBGaaYEG4TYJt9sNPIwN0vXr1Ojjyjz7RkdRd2+t+jWpvV1Gj2NfruN8dm
-	++Dx5kJdQU8fPB3EB21oZPaF3COZUggcq41Z6Fsrftds8D1qP6isxM5G3s1qSyzP
-	+8AtppjrJTxo+5u02bQ9Xd4cnSAkWuiXowRefdMhlruLnXWM3BqkbdzCkFGYIILQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mrcj9k2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 14:39:16 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDJoAU026954;
-	Wed, 14 May 2025 14:39:16 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpcpfr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 14:39:16 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EEdCQU48562540
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 14:39:12 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 224BF20067;
-	Wed, 14 May 2025 14:39:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 703D72006A;
-	Wed, 14 May 2025 14:39:11 +0000 (GMT)
-Received: from [9.111.70.163] (unknown [9.111.70.163])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 May 2025 14:39:11 +0000 (GMT)
-Message-ID: <0da0f2fc-c97f-4e95-b28e-fa8e7bede9cb@linux.ibm.com>
-Date: Wed, 14 May 2025 16:39:11 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="TAw2fi+T"
+ARC-Seal: i=1; a=rsa-sha256; t=1747233634; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=MtO8KegtooDdBrJ+M1QL6UKocX0HfqS5g1u/EiYxON7/lfESJj5pv2w/NJeOXQrG5uO1jgQPS2tKqx8mJ/rlm+kkIp46Wb9dwLjaL+jTxQAyX/pC5DB6BcRlvttuCI5qty6THRP1B1UYRB7ATl9aI5satdW146JYMOkoiaM0k8Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747233634; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zvmLeQwvJW8Kb01T+DUC0a0dVewvRUOUqmlkWNLJ16k=; 
+	b=HNpcWehCoHJ53LTKhHa964QwGLX2oKesvKeGFUeg2KF3I2Qd0Xps4kvdjvK7uokiGaT+lKShDk83FNbNHQwX0bEAs0W6Awzpef8giSg1PjnXEv8McKWgJG7/PGyOR7Gb4KpJP6QZIalDapMgprwbO59HSoGPJCCEQMSWbgUbpHE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747233634;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=zvmLeQwvJW8Kb01T+DUC0a0dVewvRUOUqmlkWNLJ16k=;
+	b=TAw2fi+T1jNZNUKSQpHuTuy/a47Hk9wt6jEz+PoKZ0tsoJCPCCPvYAC3UDBjjzmr
+	LZxMQmiRPIsKt6RfgCvivwocfzSC0VQyHM6N+ZfP/QAVhfrMsajQbP0LXSL8Es6CJWP
+	8A/d0+B+SuBL8NDz+UkSsANCuiWqLrupxQGlIWvY=
+Received: by mx.zohomail.com with SMTPS id 1747233631513277.34552553411754;
+	Wed, 14 May 2025 07:40:31 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [akpm-mm:mm-new 320/331] arch/s390/kvm/gaccess.c:321:2: error:
- expected identifier
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com
-References: <202505140943.IgHDa9s7-lkp@intel.com>
- <63ddfc13-6608-4738-a4a2-219066e7a36d@kuka.com>
- <8e506dd6-245f-4987-91de-496c4e351ace@lucifer.local>
- <20250514162722.01c6c247@p-imbrenda>
-Content-Language: en-US
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <20250514162722.01c6c247@p-imbrenda>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=ZYgdNtVA c=1 sm=1 tr=0 ts=6824ab14 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8 a=MLotpr-hrvjVaw7tvBEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 8iAoW7lo_vp6J9jGatN1MfANXFUdCSHA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDEzMCBTYWx0ZWRfXy0zqz9bFhi3f U1XNqE+ms5x8XPDbBABTS0bicAxD4v/C8AhKXtfEgBE+blfAfaHQ6pYBVsFLPYLEADkNPvAwbLU NLgV2a3PJzMrek7V3rVxCVYfYDeBHiKRs/WKgKWMPdXlBFn3dzqagvutgurMEJwtI88xIRXZrG6
- dTjagqt4y0EB4Ugz9ix0Q7LHCNcYCeZl/s7fuZ1s5cFAYVCKzUwBBvtMlcKRiG6JtgU1touXLG0 4WjGrLD7MyOPMbcRsAXf/Iz8CO7S567+ZjTtc3pLkpUp5G7KUFzA2Bcw+MyHs+YjxONZy6Up1jv U/QPkUW3+MMUdGfqx/Xudi6dWiwQXKnqVFBpeTII2koF9LrEk6d77U0mSNqXfLnxJ0NYO+YDGyB
- Lyx5JCNdt4QLGLg0zIAvvMVmpNUZArKlVdjShmgeN2VLltIgDHgBwL7M/sNDvmN2UaOLxAET
-X-Proofpoint-GUID: 8iAoW7lo_vp6J9jGatN1MfANXFUdCSHA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1011 lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140130
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
+Date: Wed, 14 May 2025 11:40:15 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
+ <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
+ <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-Am 14.05.25 um 16:27 schrieb Claudio Imbrenda:
-> On Wed, 14 May 2025 14:48:44 +0100
-> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> 
->> +cc s390 people, kvm s390 people + lists. sorry for noise but get_maintainers.pl
->> says there's a lot of you :)
->>
->> On Wed, May 14, 2025 at 03:28:47PM +0200, Ignacio Moreno Gonzalez wrote:
->>> Hi,
->>>
->>> Due to the line:
->>>
->>> include/linux/huge_mm.h:509 '#include <uapi/asm/mman.h>'
->>
->> BTW, I didn't notice at the time, but shouldn't this be linux/mman.h? You
->> shouldn't be importing this header this way generally (only other users are arch
->> code).
->>
->> But at any rate, you will ultimately import the PROT_NONE declaration.
->>
->>>
->>> there is a name collision in arch/s390/kvm/gaccess.c, where 'PROT_NONE' is also defined as value for 'enum prot_type'.
->>
->> That is crazy. Been there since 2022 also...!
->>
->>>
->>> A possible fix for this would be to rename PROT_NONE in the enum to PROT_TYPE_NONE.
-> 
-> please write a patch to rename PROT_NONE in our enum to
-> PROT_TYPE_DUMMY, I can review it quickly.
-> 
-> if Paolo has no objections, I'm fine with having the patch go through
-> the mm tree
 
-Yes, lets do a quick fix and I can also do
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
 
-for a s/PROT_NONE/PROT_TYPE_NONE/g
-patch.
+> On 14 May 2025, at 10:57, Benno Lossin <lossin@kernel.org> wrote:
+>=20
+> On Wed May 14, 2025 at 3:01 PM CEST, Daniel Almeida wrote:
+>>> On 13 May 2025, at 17:01, Benno Lossin <lossin@kernel.org> wrote:
+>>> On Tue May 13, 2025 at 5:44 PM CEST, Daniel Almeida wrote:
+>>>> diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
+>>>> new file mode 100644
+>>>> index =
+0000000000000000000000000000000000000000..7b07b64f61fdd4a84ffb38e9b0f90830=
+d5291ab9
+>>>> --- /dev/null
+>>>> +++ b/rust/kernel/regulator.rs
+>>>> @@ -0,0 +1,211 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +
+>>>> +//! Regulator abstractions, providing a standard kernel interface =
+to control
+>>>> +//! voltage and current regulators.
+>>>> +//!
+>>>> +//! The intention is to allow systems to dynamically control =
+regulator power
+>>>> +//! output in order to save power and prolong battery life. This =
+applies to both
+>>>> +//! voltage regulators (where voltage output is controllable) and =
+current sinks
+>>>> +//! (where current limit is controllable).
+>>>> +//!
+>>>> +//! C header: =
+[`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/con=
+sumer.h)
+>>>> +//!
+>>>> +//! Regulators are modeled in Rust with two types: [`Regulator`] =
+and
+>>>> +//! [`EnabledRegulator`].
+>>>=20
+>>> Would it make sense to store this in a generic variable acting as a =
+type
+>>> state instead of using two different names? So:
+>>>=20
+>>>   pub struct Regulator<State: RegulatorState> { /* ... */ }
+>>>=20
+>>>   pub trait RegulatorState: private::Sealed {}
+>>>=20
+>>>   pub struct Enabled;
+>>>   pub struct Disabled;
+>>>=20
+>>>   impl RegulatorState for Enabled {}
+>>>   impl RegulatorState for Disabled {}
+>>>=20
+>>> And then one would use `Regulator<Enabled>` and =
+`Regulator<Disabled>`.
+>>=20
+>> This seems like just another way of doing the same thing.
+>>=20
+>> I have nothing against a typestate, it's an elegant solution really, =
+but so is
+>> the current one. I'd say let's keep what we have unless there is =
+something
+>> objectively better about a typestatethat makes it worthy to change =
+this.
+>=20
+> I'd say it's cleaner and we already have some APIs that utilize type
+> states, so I'd prefer we use that where it makes sense.
+>=20
+
+By the way, IIUC, regulator_disable() does not disable a regulator =
+necessarily.
+It just tells the system that you don't care about it being enabled =
+anymore. It can
+still remain on if there are other users.
+
+This means that Regulator<Disabled> is a misnomer.
+
+Also, the current solution relies on Regulator being a member of
+EnabledRegulator to keep the refcounts sane. I wonder how that is going =
+to work
+now that Regulator<Disabled> is obviously not a member of =
+Regulator<Enabled>, i.e.:
+
+impl Drop for Regulator<Enabled> {
+ fn drop(&mut self) {
+  regulator_disable(); =20
+ =20
+  // We now have to call this explicitly, because no one else will call =
+it for
+  // us.
+  regulator_put();
+ }
+}
+
+impl Drop for Regulator<Disabled> {
+ fn drop(&mut self) {
+  // We now have to repeat this in both destructors.
+  regulator_put(); =20
+ }
+}
+
+Just to confirm: is that what you have in mind?
+
+=E2=80=94 Daniel=
