@@ -1,60 +1,62 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10931F4C8D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27DD1F4C8D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747202257; cv=none; b=VqVwJZzD8+4fhzt0p2G/FXPQ811TOCMcV+Xc8gDGjtIsh9LjpVeEbarI/KwcsKOtrC4SbeGFeZXoQ1QfzSApGv6gr5YACzH5AewP6Sv3t06eo4i663BxOqc5kOuG4pSTgLBijgU8JA8U98nftBy8ZmgSo58jmRseEN7KdSsj/J4=
+	t=1747202262; cv=none; b=B/E00+FQ3vpI+R+J79tgtuyej0Nezes6aTo4mZrf+xrQ2lv+rlHMLGHSpzVioxzWS7erLA3nu9x3+GmpKghnDrO/TXl8q19XvVHB2hakfqHbTq1Me1dfHVkbacTbM7uwxCatZ2DsXuXvDV1hup35Mb1a6hOQPSotyGhfPtwW2vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747202257; c=relaxed/simple;
-	bh=k9d4wVwHo5YZav/2fiCXaibFEPXpZ3HGlFkqOL063qM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lkI5EVpN2Qohz51h5Uh8gkKoOF1V4CLJUc3A+ZRGnCaVy+NPNUJNkhdOa5c+ENmtaf5NqFbzepcujn10y4io2GflYdfm17H4+dloSbdWMoQuBjyyyUWqph757KJaY+/tLQMBcIz+959GpT58W519NpHzb3DWTkAezsYIYYuN7UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GYtqIJdm; arc=none smtp.client-ip=209.85.215.170
+	s=arc-20240116; t=1747202262; c=relaxed/simple;
+	bh=P/M7n4SDTSF4DDX2hlMecwto868uMFq8eIhCBjXO3DQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gz1xPOU04hU51lEviH+I2YvDsFH4JbRAfxeOFqjRzzpk8AZLiD8h6nH2R4UMhpiGChrXaScLDCUyf9SeAWBnTRS4DaAsVJB+u+j6KKQf/Msu3ZCYoR3kEtXF5CZe1uY/JsVmdzik7ALpzTZrX5Spiat7urVSHdLVsAvd1BNr7HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Zuw+pKv4; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GYtqIJdm"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b074d908e56so4351710a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Zuw+pKv4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e45088d6eso81103715ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747202254; x=1747807054; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7VBon2ln4fM6kR0PL6UdXDhBglynbmL1e31ZWLd3nM=;
-        b=GYtqIJdm+r2Tdrtr0kO2Xd0sNWjRY8u1An6rcEX5i6fhxCvZHe0NzvW7Lbfy7nRxJk
-         CS2WUYs1kUUu6NpIg44klitER2Psbxns8V1mGgjP7dpcAi68B1GuMAYkVrfIMYGsVviX
-         3vn2sbakLynLhF/Pg+iuM4pvI1cRE2IaxzBK6wJQUrBNgfl82tnOFsXY1JxnMJGQ6b7G
-         x/opdskgj1LIQKT3hJYdUkg/ilRPeiRw16N3a0nXqCv8DM7z1LjFmXdQX1BEYcZCfVDi
-         7dAa17OJHiyUxMc2sxIy1GF+4duYU9uG6E6nUcputDILgeN4B83CA9/PD8k5tTSnS3vz
-         d3nQ==
+        d=ventanamicro.com; s=google; t=1747202259; x=1747807059; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r3mv/YR2xZRmrbZBh7XLVUMsC3Lat0ehLZET0BefXjE=;
+        b=Zuw+pKv4Ly8gLlgsHojqbhZk6mDL8LdP0XjifOF8Y25uh/hE1ZBtxMS5NdY3HCarkf
+         HI5ZRg91KmhA+MiOktgVqTrFXE7nOYKMkDGyLmum7cQ5U4MVwopeSIQdsoGjZdWtOHw4
+         4t7HG0NPkYoEatVy69ocGwtpxQ0R1rbr+F6rWv2a3/iX+dLyG556oCkBS1NcU89OIsIx
+         pZSTu8+2daOkn0jnA+yG/YoYReYndzfQDDx6aMCNuoOFLK/AyB1SZGK5dTfClO50JN8W
+         lVieOVpx07VlriUE0aXg1qM/zE0nRq8RT+62qi8c2VwhYj0u2Lhqt4wc3/5HtBa0Uan7
+         3zBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747202254; x=1747807054;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u7VBon2ln4fM6kR0PL6UdXDhBglynbmL1e31ZWLd3nM=;
-        b=l/bexs4qZRTThreWFV9kVB8eXL5Q5s43n5J33Z3CqchsXRP+EMgjC7u4fNsKIPjJ7v
-         FNn3T8yKFsv1iyrCTKXTySgoiX+ys8jj3liuer8nDXKutiqU/WC0lS1WSdLLYBduYY4t
-         fC4KQqrI/WQJiswxvR0t6d2DFLTvUw1Sipl7bwyCp53i5YhmuhFBDFiBEmhiprX3Cnze
-         cY4Alzjnu9i1Kgw5HPQV34N5OB0O4+gao+YpmExUKnNoLGCg+e0/RLyPnyF3o2Bhh67Z
-         gsr3tiYnQFdF9JT98JgpOPczC9RJj+V1Eb7Y+E2b65q5APgR1AkCGV+DM5i18dzwzDxe
-         1yyA==
-X-Gm-Message-State: AOJu0YyBikHxKkOwenmhVdTSafJQyvIpQvVmfTgdD4DcGGWffuisaV3B
-	01V38aHbKvqzVcgvMZCgaYSQh3nAoOx5MfFvtZAOTZFphi0hZVy26Ehezz2jwycaoaDzZiSMgDx
-	71kU=
-X-Gm-Gg: ASbGncscgVUF9fGAb8bP/vk+lWgsBjVbZ3mOWOeu5uKZjr3Zty4gMjhyq6pI06UcWth
-	mXXbXGODu8RxxeSZbg3F/YzP4zf3bQEI+b8nSBJcy1VKzlAD/yek4QEvkDgXQJ0IqquCN25PxVH
-	rV0lycGniIfCuO4LmTiolFGVXXkQuX2EXTWaoIoBRPWlteOx7JG1UhcztktXNgGgDjNx7aPBFF3
-	aP/bV+v5imjOqxGqXK5dAq+BC8j9puRyZDr3+4cmcVNDP0m14U0ni8N1takM4P/mLpEUreF4BJ9
-	z9+bt8UckJCeftHqw+XG6qer1oelzi5LJHlFGeUL9NT9y1ePPjQ4hTzWHIJt+w==
-X-Google-Smtp-Source: AGHT+IHXp/JfgXqigWBcidR4kq8OP+kMXnDiqEfkci8MHcvamvdKxF9wFw2bKIstdi8Xr6ptuIylqQ==
-X-Received: by 2002:a17:902:f644:b0:21f:7880:8472 with SMTP id d9443c01a7336-231981c8d93mr39801485ad.35.1747202254322;
-        Tue, 13 May 2025 22:57:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747202259; x=1747807059;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r3mv/YR2xZRmrbZBh7XLVUMsC3Lat0ehLZET0BefXjE=;
+        b=FycXYUTj/sAA14axlaWL6HOwLeMPi1vu/8PG/RSBY9fi/x06Dn2u2/XinV6trln39l
+         /BIjsw5It3LwVfJfS2dr5zqaR74g2kcgry7oupdfXqmwtQi9iFidpiGeCUvUrxrIsl27
+         lg8GeMfEJNWDPaZRv93x0d5THO1Gx6zoUHkYubx4Iwk/7nP3qMwQSGWeo7dCWX/e1Hly
+         MUvGdLMb0nuv2r9HoX2R8KU4h9VeUqx2yuu6MAwEfRxEZhuoOyJ042Tfnje5LwlK5kCF
+         p2nw1mehd8694X+IKP2qBoMzZTX7vX0jRtxy28T8fRynt7hdCw86NiB7IfS87lPvLMKI
+         u5uA==
+X-Gm-Message-State: AOJu0YxfML4q5FiI52UYQ6uFD0HuVPGh7r/6rFX/DBKpwP/CNfx/vv3t
+	NOCokFEOLggIZhO09PbPv+1nDGX6gfhbYU9rcY44i7S570t50arDYgII/Z5d51Frwx7a3y3OygN
+	hgjM=
+X-Gm-Gg: ASbGncvd0OcyYV43dBaEbNU5Y79aBCWr1vTfRg+7ZxUai1oHQ9vu2TYyrN0S5HG1HTb
+	qN+WvBFwxljeYw/k08GvybvrbsCkyxjnZZiZwo8LEz5vrO56+muePRIIi1RqAl55eEF1ctPlgd5
+	llmCrNbgBYYy2n301V3rAMreeStV8F9vIi//ojRdfWIhzngEF+kOCAqMNZS5wLrwICdSZ/WzSi9
+	7ksU7LHnoXiXv6fHX6zMiMsQFSz0hBUROq6c68O63LMpPkP9LlyicHmzAN9cJ2Z/KjJJRtLmUgV
+	YbMaTVigGP8rHi2cYF/4bH0G1FJw+2fnsL69Fqjo0S8ikVyIev2am8dtIN6loQ==
+X-Google-Smtp-Source: AGHT+IHE6ExFWnu/zrAvRfvX4AYC0RkEswg44e9W2VNDqbKcdiZ15MPr+ykcmRts8B4KvtHH+QD0iA==
+X-Received: by 2002:a17:903:41c5:b0:21f:1bd:efd4 with SMTP id d9443c01a7336-231980d04a3mr31983045ad.19.1747202259577;
+        Tue, 13 May 2025 22:57:39 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.196.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c2dsm91721615ad.135.2025.05.13.22.57.29
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c2dsm91721615ad.135.2025.05.13.22.57.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 22:57:33 -0700 (PDT)
+        Tue, 13 May 2025 22:57:39 -0700 (PDT)
 From: Sunil V L <sunilvl@ventanamicro.com>
 To: linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
@@ -75,10 +77,12 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	Anup Patel <apatel@ventanamicro.com>,
 	Andrew Jones <ajones@ventanamicro.com>,
 	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH 0/4] RISC-V: Add ACPI support for IOMMU
-Date: Wed, 14 May 2025 11:27:19 +0530
-Message-ID: <20250514055723.1328557-1-sunilvl@ventanamicro.com>
+Subject: [PATCH 1/4] ACPICA: actbl2: Add definitions for RIMT
+Date: Wed, 14 May 2025 11:27:20 +0530
+Message-ID: <20250514055723.1328557-2-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250514055723.1328557-1-sunilvl@ventanamicro.com>
+References: <20250514055723.1328557-1-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,40 +91,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds support for RISC-V IOMMU on ACPI based platforms.
-RISC-V IO Mapping Table (RIMT) is a new static ACPI table [1] introduced
-to communicate IOMMU information to the OS.
+ACPICA commit 73c32bc89cad64ab19c1231a202361e917e6823c
 
-The first patch in the series is a ACPICA patch which is already
-available in linux-next but included in this series for completeness
-only.
+RISC-V IO Mapping Table (RIMT) is a new static table defined for RISC-V
+to communicate IOMMU information to the OS. The specification for RIMT
+is available at [1]. Add structure definitions for RIMT.
 
-[1] - https://github.com/riscv-non-isa/riscv-acpi-rimt/releases/download/v1.0/rimt-spec.pdf
+[1] - https://github.com/riscv-non-isa/riscv-acpi-rimt
 
-Sunil V L (4):
-  ACPICA: actbl2: Add definitions for RIMT
-  ACPI: RISC-V: Add support for RIMT
-  ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
-  iommu/riscv: Add ACPI support
+Link: https://github.com/acpica/acpica/commit/73c32bc8
+Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+---
+ include/acpi/actbl2.h | 83 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
- MAINTAINERS                          |   1 +
- arch/riscv/Kconfig                   |   1 +
- drivers/acpi/Kconfig                 |   4 +
- drivers/acpi/riscv/Kconfig           |   8 +
- drivers/acpi/riscv/Makefile          |   1 +
- drivers/acpi/riscv/init.c            |   2 +
- drivers/acpi/riscv/init.h            |   1 +
- drivers/acpi/riscv/rimt.c            | 537 +++++++++++++++++++++++++++
- drivers/acpi/scan.c                  |   9 +-
- drivers/iommu/riscv/iommu-platform.c |  17 +-
- drivers/iommu/riscv/iommu.c          |  10 +
- include/acpi/actbl2.h                |  83 +++++
- include/linux/acpi_rimt.h            |  21 ++
- 13 files changed, 692 insertions(+), 3 deletions(-)
- create mode 100644 drivers/acpi/riscv/Kconfig
- create mode 100644 drivers/acpi/riscv/rimt.c
- create mode 100644 include/linux/acpi_rimt.h
-
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 2e917a8f8bca..99ea8bfe47de 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -50,6 +50,7 @@
+ #define ACPI_SIG_RAS2           "RAS2"	/* RAS2 Feature table */
+ #define ACPI_SIG_RGRT           "RGRT"	/* Regulatory Graphics Resource Table */
+ #define ACPI_SIG_RHCT           "RHCT"	/* RISC-V Hart Capabilities Table */
++#define ACPI_SIG_RIMT           "RIMT"	/* RISC-V IO Mapping Table */
+ #define ACPI_SIG_SBST           "SBST"	/* Smart Battery Specification Table */
+ #define ACPI_SIG_SDEI           "SDEI"	/* Software Delegated Exception Interface Table */
+ #define ACPI_SIG_SDEV           "SDEV"	/* Secure Devices table */
+@@ -3002,6 +3003,88 @@ struct acpi_rhct_hart_info {
+ 	u32 uid;		/* ACPI processor UID */
+ };
+ 
++/*******************************************************************************
++ *
++ * RIMT - RISC-V IO Remapping Table
++ *
++ * https://github.com/riscv-non-isa/riscv-acpi-rimt
++ *
++ ******************************************************************************/
++
++struct acpi_table_rimt {
++	struct acpi_table_header header;	/* Common ACPI table header */
++	u32 num_nodes;		/* Number of RIMT Nodes */
++	u32 node_offset;	/* Offset to RIMT Node Array */
++	u32 reserved;
++};
++
++struct acpi_rimt_node {
++	u8 type;
++	u8 revision;
++	u16 length;
++	u16 reserved;
++	u16 id;
++	char node_data[];
++};
++
++enum acpi_rimt_node_type {
++	ACPI_RIMT_NODE_TYPE_IOMMU = 0x0,
++	ACPI_RIMT_NODE_TYPE_PCIE_ROOT_COMPLEX = 0x1,
++	ACPI_RIMT_NODE_TYPE_PLAT_DEVICE = 0x2,
++};
++
++struct acpi_rimt_iommu {
++	u8 hardware_id[8];	/* Hardware ID */
++	u64 base_address;	/* Base Address */
++	u32 flags;		/* Flags */
++	u32 proximity_domain;	/* Proximity Domain */
++	u16 pcie_segment_number;	/* PCIe Segment number */
++	u16 pcie_bdf;		/* PCIe B/D/F */
++	u16 num_interrupt_wires;	/* Number of interrupt wires */
++	u16 interrupt_wire_offset;	/* Interrupt wire array offset */
++	u64 interrupt_wire[];	/* Interrupt wire array */
++};
++
++/* IOMMU Node Flags */
++#define ACPI_RIMT_IOMMU_FLAGS_PCIE      (1)
++#define ACPI_RIMT_IOMMU_FLAGS_PXM_VALID (1 << 1)
++
++/* Interrupt Wire Structure */
++struct acpi_rimt_iommu_wire_gsi {
++	u32 irq_num;		/* Interrupt Number */
++	u32 flags;		/* Flags */
++};
++
++/* Interrupt Wire Flags */
++#define ACPI_RIMT_GSI_LEVEL_TRIGGERRED  (1)
++#define ACPI_RIMT_GSI_ACTIVE_HIGH       (1 << 1)
++
++struct acpi_rimt_id_mapping {
++	u32 source_id_base;	/* Source ID Base */
++	u32 num_ids;		/* Number of IDs */
++	u32 dest_id_base;	/* Destination Device ID Base */
++	u32 dest_offset;	/* Destination IOMMU Offset */
++	u32 flags;		/* Flags */
++};
++
++struct acpi_rimt_pcie_rc {
++	u32 flags;		/* Flags */
++	u16 reserved;		/* Reserved */
++	u16 pcie_segment_number;	/* PCIe Segment number */
++	u16 id_mapping_offset;	/* ID mapping array offset */
++	u16 num_id_mappings;	/* Number of ID mappings */
++};
++
++/* PCIe Root Complex Node Flags */
++#define ACPI_RIMT_PCIE_ATS_SUPPORTED   (1)
++#define ACPI_RIMT_PCIE_PRI_SUPPORTED   (1 << 1)
++
++struct acpi_rimt_platform_device {
++	u16 id_mapping_offset;	/* ID Mapping array offset */
++	u16 num_id_mappings;	/* Number of ID mappings */
++	char device_name[];	/* Device Object Name */
++};
++
+ /*******************************************************************************
+  *
+  * SBST - Smart Battery Specification Table
 -- 
 2.43.0
 
