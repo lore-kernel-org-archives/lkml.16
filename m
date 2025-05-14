@@ -1,80 +1,277 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F8C25F7AB;
-	Wed, 14 May 2025 09:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A7C26982D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216469; cv=none; b=X/HkP12MkwNvIfaFQP79QaSs9mXJ9KnWCdtEdmHjhUF01Ddv8BHxSjDi2MiIm7jMp2SqeBUSdoC6aB8eKdwArevUP689TMTDBd6mCLt6IcVaoP6zl9B00DiQSu4eM/yhISD5yYz9ZCx6Dp2FCJjpBlCDRTA2HZaXMYSJaapmRHU=
+	t=1747216474; cv=none; b=rqlQ9SupCHKRqDaYcifmULOMKs/brCEE6SApb+B7lElAQl3BYh8AZOC+tKkQsN0FdZzdMRkIhf5bmL9IYjPFF4s2d+cnj1EfhPOhy6jqKkJ+vszSGID8UpJhrNoYP3rZoMO5N6s113UauOlCpzygcxA7c+168C3wMHuFju5ttXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216469; c=relaxed/simple;
-	bh=xJRu205muvimmnOERK1br8fSgz+PKau6h99JVGbMvkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGjm/B9LxCgyy5hTltDFURyBc5nP5e45IrHnbJDF/vAeutCan9ZmdK1HiH5ftG1VG5UWYmk4Bgvrq5/3XfiJ7vijHPhbCRQ02d3o2mb7Aw0fQX+mlwe7PIO5o0xnJhX/Gj5L4heLth/lXYHaZKI3de4YaSaEgZjTsEO3Yu0Gzfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=FqHLQM61; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="FqHLQM61"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WPWZBfEum618BqwEtmL57iPCgjdAwj1Te/R1Gu+4RHk=; b=FqHLQM61uA/rOmZEQxWzza3V6e
-	eQE9M4X/CHs46P9Gi8kfEUMjKF6QZB7/++x0nnpp9MQSDMWehWha7wwy3pN8ISVe0eCfv0GCyXVi3
-	yBNMxjUljNiePcREIhZKGkrjTwrichTnm176InAYy2HXfp4ttuxnMLh3VoQkhf6xqliRmi4jsJYf/
-	0G1PfWACodspLnmZUmLUDyLTX3HijOGOHRhPdddo/+z4+2dmQ9cNynsPJtULYITZC8C02bwhucwCw
-	OAevX/q04cGCUzmRomVp9evzbfDdDq20NnAkF7Uf/SqJElyL3K5GhKmitvoL4MIw4mMXg0XCkrZKd
-	mD6nTJfw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uF8oc-0060tO-2e;
-	Wed, 14 May 2025 17:54:19 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 14 May 2025 17:54:18 +0800
-Date: Wed, 14 May 2025 17:54:18 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Kristen Accardi <kristen.c.accardi@intel.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: iaa - Optimize rebalance_wq_table()
-Message-ID: <aCRoStLRAibD-Jak@gondor.apana.org.au>
-References: <20250508195952.391587-1-yury.norov@gmail.com>
+	s=arc-20240116; t=1747216474; c=relaxed/simple;
+	bh=cuDY3+5xTbWJxxT9kRqhaRAPrxvv8oStiu958NEBvRc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=euqyDDjgvgUnW895ITm5zykHlzKZ3pm57LEQoNmSvub1tP7kXd4YdDBdcC9w5hZzCnu0GS6tKrza9Bwx+hrrEDlQ2YXIzntMxfpPaC6LT/zYzs5yXiz3/1ZeEtmIoxv6zFepE6STAwaX4DqRYURgOLJJQIby0Z+VRaKx3qKMElI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 54E9s1f5092465
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 17:54:01 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Wed, 14 May 2025
+ 17:54:01 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To:
+CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
+        Ben Zong-You Xie <ben717@andestech.com>
+Subject: [PATCH v4 7/9] riscv: dts: andes: add QiLai SoC device tree
+Date: Wed, 14 May 2025 17:53:48 +0800
+Message-ID: <20250514095350.3765716-8-ben717@andestech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514095350.3765716-1-ben717@andestech.com>
+References: <20250514095350.3765716-1-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508195952.391587-1-yury.norov@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 54E9s1f5092465
 
-On Thu, May 08, 2025 at 03:59:50PM -0400, Yury Norov wrote:
-> The function opencodes for_each_cpu() by using a plain for-loop. The
-> loop calls cpumask_weight() inside the conditional section. Because
-> cpumask_weight() is O(1), the overall complexity of the function is
-> O(node * node_cpus^2). Also, cpumask_nth() internally calls hweight(),
-> which, if not hardware accelerated, is slower than cpumask_next() in
-> for_each_cpu().
-> 
-> If switched to the dedicated for_each_cpu(), the rebalance_wq_table()
-> can drop calling cpumask_weight(), together with some housekeeping code.
-> This makes the overall complexity O(node * node_cpus), or simply speaking
-> O(nr_cpu_ids).
-> 
-> While there, fix opencoded for_each_possible_cpu() too.
-> 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  drivers/crypto/intel/iaa/iaa_crypto_main.c | 35 +++++++++-------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
+Introduce the initial device tree support for the Andes QiLai SoC.
 
-Patch applied.  Thanks.
+For further information, you can refer to [1].
+
+[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
+
+Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+---
+ MAINTAINERS                          |   2 +
+ arch/riscv/boot/dts/andes/qilai.dtsi | 186 +++++++++++++++++++++++++++
+ 2 files changed, 188 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/andes/qilai.dtsi
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1e1b98dfe7b..fd3c2deed699 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20728,9 +20728,11 @@ F:	include/linux/irqchip/riscv-imsic.h
+ RISC-V ANDES SoC Support
+ M:	Ben Zong-You Xie <ben717@andestech.com>
+ S:	Maintained
++T:	git: https://github.com/ben717-linux/linux
+ F:	Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+ F:	Documentation/devicetree/bindings/riscv/andes.yaml
+ F:	Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
++F:	arch/riscv/boot/dts/andes/
+ 
+ RISC-V ARCHITECTURE
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
+diff --git a/arch/riscv/boot/dts/andes/qilai.dtsi b/arch/riscv/boot/dts/andes/qilai.dtsi
+new file mode 100644
+index 000000000000..de3de32f8c39
+--- /dev/null
++++ b/arch/riscv/boot/dts/andes/qilai.dtsi
+@@ -0,0 +1,186 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2025 Andes Technology Corporation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		timebase-frequency = <62500000>;
++
++		cpu0: cpu@0 {
++			compatible = "andestech,ax45mp", "riscv";
++			device_type = "cpu";
++			reg = <0>;
++			riscv,isa-base = "rv64i";
++			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
++					       "zicntr", "zicsr", "zifencei",
++					       "zihpm", "xandespmu";
++			mmu-type = "riscv,sv39";
++			clock-frequency = <100000000>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-line-size = <64>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <128>;
++			d-cache-line-size = <64>;
++			next-level-cache = <&l2_cache>;
++
++			cpu0_intc: interrupt-controller {
++				compatible = "andestech,cpu-intc", "riscv,cpu-intc";
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
++
++		cpu1: cpu@1 {
++			compatible = "andestech,ax45mp", "riscv";
++			device_type = "cpu";
++			reg = <1>;
++			riscv,isa-base = "rv64i";
++			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
++					       "zicntr", "zicsr", "zifencei",
++					       "zihpm", "xandespmu";
++			mmu-type = "riscv,sv39";
++			clock-frequency = <100000000>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-line-size = <64>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <128>;
++			d-cache-line-size = <64>;
++			next-level-cache = <&l2_cache>;
++
++			cpu1_intc: interrupt-controller {
++				compatible = "andestech,cpu-intc",
++					     "riscv,cpu-intc";
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
++
++		cpu2: cpu@2 {
++			compatible = "andestech,ax45mp", "riscv";
++			device_type = "cpu";
++			reg = <2>;
++			riscv,isa-base = "rv64i";
++			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
++					       "zicntr", "zicsr", "zifencei",
++					       "zihpm", "xandespmu";
++			mmu-type = "riscv,sv39";
++			clock-frequency = <100000000>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-line-size = <64>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <128>;
++			d-cache-line-size = <64>;
++			next-level-cache = <&l2_cache>;
++
++			cpu2_intc: interrupt-controller {
++				compatible = "andestech,cpu-intc",
++					     "riscv,cpu-intc";
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
++
++		cpu3: cpu@3 {
++			compatible = "andestech,ax45mp", "riscv";
++			device_type = "cpu";
++			reg = <3>;
++			riscv,isa-base = "rv64i";
++			riscv,isa-extensions = "i", "m", "a", "f", "d", "c",
++					       "zicntr", "zicsr", "zifencei",
++					       "zihpm", "xandespmu";
++			mmu-type = "riscv,sv39";
++			clock-frequency = <100000000>;
++			i-cache-size = <0x8000>;
++			i-cache-sets = <256>;
++			i-cache-line-size = <64>;
++			d-cache-size = <0x8000>;
++			d-cache-sets = <128>;
++			d-cache-line-size = <64>;
++			next-level-cache = <&l2_cache>;
++
++			cpu3_intc: interrupt-controller {
++				compatible = "andestech,cpu-intc",
++					     "riscv,cpu-intc";
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		ranges;
++		interrupt-parent = <&plic>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++
++		plmt: timer@100000 {
++			compatible = "andestech,qilai-plmt", "andestech,plmt0";
++			reg = <0x0 0x00100000 0x0 0x100000>;
++			interrupts-extended = <&cpu0_intc 7>,
++					      <&cpu1_intc 7>,
++					      <&cpu2_intc 7>,
++					      <&cpu3_intc 7>;
++		};
++
++		l2_cache: cache-controller@200000 {
++			compatible = "andestech,qilai-ax45mp-cache",
++				     "andestech,ax45mp-cache", "cache";
++			reg = <0x0 0x00200000 0x0 0x100000>;
++			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
++			cache-line-size = <64>;
++			cache-level = <2>;
++			cache-sets = <2048>;
++			cache-size = <0x200000>;
++			cache-unified;
++		};
++
++		plic_sw: interrupt-controller@400000 {
++			compatible = "andestech,qilai-plicsw",
++				     "andestech,plicsw";
++			reg = <0x0 0x00400000 0x0 0x400000>;
++			interrupts-extended = <&cpu0_intc 3>,
++					      <&cpu1_intc 3>,
++					      <&cpu2_intc 3>,
++					      <&cpu3_intc 3>;
++		};
++
++		plic: interrupt-controller@2000000 {
++			compatible = "andestech,qilai-plic",
++				     "andestech,nceplic100";
++			reg = <0x0 0x02000000 0x0 0x2000000>;
++			#address-cells = <0>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			interrupts-extended = <&cpu0_intc 11>, <&cpu0_intc 9>,
++					      <&cpu1_intc 11>, <&cpu1_intc 9>,
++					      <&cpu2_intc 11>, <&cpu2_intc 9>,
++					      <&cpu3_intc 11>, <&cpu3_intc 9>;
++			riscv,ndev = <71>;
++		};
++
++		uart0: serial@30300000 {
++			compatible = "andestech,uart16550", "ns16550a";
++			reg = <0x0 0x30300000 0x0 0x100000>;
++			interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <50000000>;
++			reg-offset = <32>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			no-loopback-test;
++		};
++	};
++};
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.34.1
+
