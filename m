@@ -1,203 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227E27B4E7;
-	Wed, 14 May 2025 15:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0648F221721;
+	Wed, 14 May 2025 15:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238395; cv=none; b=K70gHFN8mnYqk0P6ORS+qFKz8jvsvlInAo7pnm01QRcbFeznFQuFBKdBcVnqYVmmCQOMghFy+t+ifOwRtAZq9OiTomVfXXf32QA3YbRA5gROxA9JP35GwfIpUUbp/8FAyIDot6x6CS+6wgI4YwmUe8Cz8UKUlk0KuEQgbo1TmPk=
+	t=1747238401; cv=none; b=oOeAdymFCWKHXJRMd0V+ET5pqnN5STY2xbr7GBwlQOWn1zqkrO82jpLwWE2LkaxmJizU34cQvUoAOwtN30XEIHZMI7ZZyOeCHC1VGNPgDt7BaBQ2f5Cp+sd5XzU0isNWZsbKBdH/R6zP8O8+qQyx2qJfx5OaXvsnwpu13rGfWbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238395; c=relaxed/simple;
-	bh=HkxsrrlsqcfaJiY7c022L88luHQzOWwXnQC741NGka0=;
+	s=arc-20240116; t=1747238401; c=relaxed/simple;
+	bh=vOv8RJRqrwu3FrT4+wzYt6FEwAwGIL55uoT9EYvT5XU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XwPU/gWnvbXNh15VmAUVySO6b6JNXGzvhNUkHjJIglQIXT87QQIlT/E0mum0DmVPfO+mb5qhmOkxz9fF6gToGuHLmK5ZIU8qfaZlu+wGL6Ihdl1RVEWsYJKQHm47mq7O4Dz+RoeXtkWx/SAJhyzziQDRLzgG+vxYOktOQDtSnEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWE8onug; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjspbBIbaZ9vMC9D4BCZ8ejajy2jpJA7yTQU2uza4tkgDqNDXzMq/0w4hwOJOVoIgFPigSNt3XuNrQ4rlDIWDFYSi8yFNWWGWmnUAEfE2JBON+H/CAOk2JTdpgD7nSw4CnK4DCvDp9b770OI4rJ66rVm2eclM0u4sL5ddisC46M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=huqqQjJg; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWE8onug"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778E9C4CEED;
-	Wed, 14 May 2025 15:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238394;
-	bh=HkxsrrlsqcfaJiY7c022L88luHQzOWwXnQC741NGka0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TWE8onugcbz50Ao7weI2Aqv17taPoevUO9o2DpBgp7cfoTXTLPEcWGJI/OVIVNXdQ
-	 +BT8fRwbXNkqoHU1Va+F32270loFzEq+mjoZZNKeTgshVX294jUthnZNXLtEfbmFz3
-	 mtJ11/F4CNIqmnmzslIZQ/wBHEiPnSku+CZd9FJ42SUA/S8D2WVk9dJTH83znp2szj
-	 X+tYvga5mL7PMxVuhdZ4qRTnhdoie2R9RQK1IXdcRREnZmOg3JmB7BMqM3KjQkVkXS
-	 1c3RZQdYe2ct2OWFR40DjT/mYohPKTIywowMCOQ062RSveZb4p8qrlCnV30yrFhcG1
-	 tE9hDXcYABSzw==
-Date: Wed, 14 May 2025 17:59:48 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
-	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
- feature probe
-Message-ID: <6eobuzkwm6xhpis4s52dtit55fws37elv5d7zygaf64czcjag6@brz2nrc6qptu>
-References: <20250512171922.356408-1-peterx@redhat.com>
- <20250512171922.356408-2-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="huqqQjJg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747238400; x=1778774400;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vOv8RJRqrwu3FrT4+wzYt6FEwAwGIL55uoT9EYvT5XU=;
+  b=huqqQjJgeHP3BvY8vfOj+6LrydldgypZ75VmvClWOH1HA/f/tKsyTqff
+   mjIeUQ64p4o/qiOs4X4jaXpE0nFrI9BIvj4wbjNnb13QDjrUXMOJ2Rkou
+   emAHBgxWCymM2reD0UuyhQFIp0hx+1+PsfEleGhvlRslTEjmWETSj1Z7v
+   nBn7eX9x72YHJc2z6xJcBYCRwAVsT5ZDmca4ldetaoWKWvLLdVwo2aXMG
+   SCa0W8a3P0vg04R17Cxzr4/50ZwZddjHj6mO6voSnf/BUmRO0alXkCU7Q
+   EeLsTD6Vys4h7cjto5mlUguOkdHtUcEJkl3MufR3tisvxcuFzHixcX7BK
+   g==;
+X-CSE-ConnectionGUID: 5/ClVFJrQpWBecTskKK0Yg==
+X-CSE-MsgGUID: 9xvPn6+2QXiQ9k9nYwmwnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49125248"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="49125248"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:59:59 -0700
+X-CSE-ConnectionGUID: LyMBQ3pyT9KaZwQ2LPyk6Q==
+X-CSE-MsgGUID: MGhEcIDLQ8iw5M4Wfn6M7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="142964104"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 08:59:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 75BB823F; Wed, 14 May 2025 18:59:55 +0300 (EEST)
+Date: Wed, 14 May 2025 18:59:55 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <westeri@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+Message-ID: <20250514155955.GS88033@black.fi.intel.com>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yrfjxuitfb5sxxwb"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512171922.356408-2-peterx@redhat.com>
+In-Reply-To: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
 
+On Tue, May 13, 2025 at 01:00:30PM +0300, Andy Shevchenko wrote:
+> The GPIO ACPI helpers use a few quirks which consumes approximately 20%
+> of the file. Besides that the necessary bits are sparse and being directly
+> referred. Split them to a separate file. There is no functional change.
+> 
+> For the new file I used the Hans' authorship of Hans as he the author of
+> all those bits (expect very tiny changes made by this series).
+> 
+> Hans, please check if it's okay and confirm, or suggest better alternative.
+> 
+> Andy Shevchenko (4):
+>   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
+>   gpiolib: acpi: Handle deferred list via new API
+>   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
+>   gpiolib: acpi: Move quirks to a separate file
+> 
+>  drivers/gpio/Makefile                         |   1 +
+>  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+>  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+>  drivers/gpio/gpiolib-acpi.h                   |  15 +
 
---yrfjxuitfb5sxxwb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
-	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
- feature probe
-References: <20250512171922.356408-1-peterx@redhat.com>
- <20250512171922.356408-2-peterx@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20250512171922.356408-2-peterx@redhat.com>
+All this -foo-core things look redundant to me. Why not just split it out
+and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
+Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
+and so on.
 
-Hi Peter,
-
-On Mon, May 12, 2025 at 01:19:21PM -0400, Peter Xu wrote:
-> There's a confusing paragraph in the man page on two-steps handshake for
-> userfaultfd UFFDIO_API ioctl.  In reality, after a successful UFFDIO_API
-> ioctl, the userfaultfd will be locked up on the features and any further
-> UFFDIO_API on top of an initialized userfaultfd would fail.
->=20
-> Modify the UFFDIO_API(2const) man page to reflect the reality.  Instead,
-> add a paragraph explaining the right way to probe userfaultfd features.
-> Add that only after the "Before Linux 4.11" paragraph, as the old kernel
-> doesn't support any feature anyway.
->=20
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  man/man2const/UFFDIO_API.2const | 43 ++++++++++++++++++---------------
->  1 file changed, 24 insertions(+), 19 deletions(-)
->=20
-> diff --git a/man/man2const/UFFDIO_API.2const b/man/man2const/UFFDIO_API.2=
-const
-> index 54b34a1bc..1c554107a 100644
-> --- a/man/man2const/UFFDIO_API.2const
-> +++ b/man/man2const/UFFDIO_API.2const
-> @@ -42,25 +42,6 @@ fields to bit masks representing all the available fea=
-tures and the generic
->  .BR ioctl (2)
->  operations available.
->  .P
-> -Since Linux 4.11,
-> -applications should use the
-> -.I features
-> -field to perform a two-step handshake.
-> -First,
-> -.B UFFDIO_API
-> -is called with the
-> -.I features
-> -field set to zero.
-> -The kernel responds by setting all supported feature bits.
-> -.P
-> -Applications which do not require any specific features
-> -can begin using the userfaultfd immediately.
-> -Applications which do need specific features
-> -should call
-> -.B UFFDIO_API
-> -again with a subset of the reported feature bits set
-> -to enable those features.
-> -.P
->  Before Linux 4.11, the
->  .I features
->  field must be initialized to zero before the call to
-> @@ -70,6 +51,30 @@ and zero (i.e., no feature bits) is placed in the
->  field by the kernel upon return from
->  .BR ioctl (2).
->  .P
-> +Since Linux 4.11,
-> +userfaultfd supports features that need to be enabled explicitly.
-> +To enable any of the features,
-> +one needs to set the corresponding feature bits in
-> +.I features
-> +when issuing the
-> +.B UFFDIO_API
-> +ioctl.
-> +.P
-> +For historical reasons,
-> +a temporary userfaultfd is needed to probe
-> +what userfaultfd features the kernel supports.
-> +The application needs to create a temporary userfaultfd,
-> +issue an
-> +.B UFFDIO_API
-> +ioctl with
-> +.I features
-> +set to 0. After the
-
-Please use semantic newlines.  Break the line after the '.'.
-
-$ MANWIDTH=3D72 man man-pages | sed -n '/Use semantic newlines/,/^$/p'
-   Use semantic newlines
-       In the source of a manual page, new sentences should be  started
-       on  new  lines,  long  sentences  should  be split into lines at
-       clause breaks (commas, semicolons, colons, and so on), and  long
-       clauses  should be split at phrase boundaries.  This convention,
-       sometimes known as "semantic newlines", makes it easier  to  see
-       the effect of patches, which often operate at the level of indi=E2=
-=80=90
-       vidual sentences, clauses, or phrases.
-
-Also, please say "zero" instead of "0", as was in the old paragraph.
-That will allow git-diff(1) --color-moved to detect some movement of
-text.
-
-> +.B UFFDIO_API
-> +ioctl returns successfully,
-> +.I features
-> +should contain all the userfaultfd features that the kernel supports.
-> +The temporary userfaultfd can be safely closed after the probe.
-> +.P
-
-Thanks!
-
-
-Have a lovely day!
-Alex
-
->  If the application sets unsupported feature bits,
->  the kernel will zero out the returned
->  .I uffdio_api
-> --=20
-> 2.49.0
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---yrfjxuitfb5sxxwb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgkve0ACgkQ64mZXMKQ
-wqnL3RAArQyQl/1PS8j90oq72WHMTyButnCaNkBW3UnDNQbeIxW0tpDeJgSCjQ7i
-koP6uSRiI+OQxwS8k/O60cxRlL2uoLLMV0HMi/2yFI+9xqqmR4EVe2UYc1xIMId7
-tg28KGCKJmrV9l1aK+KlNSxnS0aTeP8uSOPrIDk2Ucr4/00ssZNHOzO9cqh4p/9D
-iZSuK6G5oDPw0tuuh3yXSbzQILy9MGEO2H4V4RD6RM2F+4Okmz1OKPULBFA1JpzL
-4V4zID7sYfADRV2JyMEj4JHr4ULWJVdY9lZoL7JNfkBd+b4ii1lAzsGPr4w+CASo
-xfBpE76BIuLyaJGfdjOP4U5m1TdiynUXNmWlcBkgRbvr/35aHFyD/ipAruGGf3cD
-8Mw3c86k+QJe0/ZWKrK/CwKIq7u6Ol2vRb0rGuBORaIdS5DaTPcI+3Ss/QBMQfxX
-LFQ0mAsxNGxwy+JzajxBaTYd4nSZ9V+UpEdB9MO1bbo0SXiYBcDtCPU56aOKHYag
-GC6BKzZILWxdgMFwEaDPp+LkRAt4MD7WA+dfymnLdTl/I6Gdae97CdjeVnQokeJF
-IOa8lazizcfwt55fLQoNKcxov9oxnPNy7sE4EOjkPw1AMBbWXW4h/ABzm2ut0bub
-PDgVetkCBGTlWAxJZhvlt7dsDdh3CMPTnrOITTvLxnbq4cDgNYM=
-=o9YP
------END PGP SIGNATURE-----
-
---yrfjxuitfb5sxxwb--
+>  4 files changed, 392 insertions(+), 331 deletions(-)
+>  rename drivers/gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c} (79%)
+>  create mode 100644 drivers/gpio/gpiolib-acpi-quirks.c
+> 
+> -- 
+> 2.47.2
