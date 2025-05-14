@@ -1,60 +1,61 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624A91E1DE5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E719E28EC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747190920; cv=none; b=hsER+NgQiCCB/O/iqwIcTVIPOZwVzRr1EENSSWBoeAtnCgUg8GpLBCR1hb3pEm4vMaxMBhpAJkfIUjPafbqrcZT7OVHNRP7c4xH+N0Zeqk4bmzKKrcza0PrpdWtD6e8P3xTBjv+EXrwOJ00MklBotiCMB/2rMZg39GQz9RQ8hAM=
+	t=1747190943; cv=none; b=uOJfb7M5LgHUMWnF9rwRnLC0n2VV11Xsu5pABK3d4n3bYNyVWHnR0dWXRJqnVCLpmmI7vKmoz96w1bsNZX0JFVXSOBGR564qrk/7+1stx6ClTkyfxo3G6BGcw2IdG+JXBz/y13V/BzigGIEhnGacwBnyPHoTBGm8Oniw9WTqjwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747190920; c=relaxed/simple;
-	bh=XdJVMJ1T1WKrcopMnLrB04u+S588PAofbnd72d0zH40=;
+	s=arc-20240116; t=1747190943; c=relaxed/simple;
+	bh=FrsrCOIsrVWdZBQureWJlyAelgtZXl4vdG5/kqjT0Uo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MWBtPFUkdUd7fc2mOxPm6Pnev5Rq8iJZnhm2gv8Pzvg0AzQT9DhKkMJ74ewuxD5qLM+yKwQ1j6UR2GPxuJYDWIhizacD59GOlfw3EIbcL2EQ2Is5euVbhwPIAT82YzEPM6x7KfbaieHCMGpv0m8mgzWE/FMSqs56bm6pBAInJfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fa8P9c7k; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version; b=KS+69CQb8Rwvi3D6uEgf1leP/5zWELbG3VpQ4FN19LRk/a4e1s9onvz5EougFfBksIqVr74hyNrjeFg4XN1YehlHHQMF/vUsr4SUQhSDIv6DJDlVeFWLh2hCST4uKOKceWULWjKLgFrBeNm/t+MnCTf16Ek/CxM3GVNcs0iKRlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YaBerzYx; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fa8P9c7k"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b200047a6a5so380372a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:48:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YaBerzYx"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7410c18bb00so7532922b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747190917; x=1747795717; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1747190931; x=1747795731; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bm+4BtLol9/sqpOcVOE8llO8FpdxZiHIedhNVFbErKc=;
-        b=fa8P9c7k/E5bXui1/qfazNLDv5xzcYdeuxUrCwRaXvvoGr7rvwwBLiw8SYWwjL52kf
-         wgD3KvCcDMgb3vYIsIOjnrIoBAkySSn+8w7wlxFnuyFzkIIcOwXOkFZ8BF5xgEAQDHmO
-         PoFOaClmgKyZ8zJg1rusa8eOhbixxOn/yyoXQ=
+        bh=YfYQ/WK8QWoi6yOsmfhqLphXHC1mtE6IrX6WF+13WJo=;
+        b=YaBerzYxsCAQm85bDzqXT78Af4jcRs676q363rObnXQGcMSIGXBnD4jBnwNng0WgJs
+         QlYJYBiIZ8xwvIIbzZ1BQN2gFeTHu5E+YJV+Ep65l7xmZJwmQZS+H8djWRKgwZape23p
+         o4G33XQ9TPI1sutii8u5Q0BCPa30SvNCmqmWQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747190917; x=1747795717;
+        d=1e100.net; s=20230601; t=1747190931; x=1747795731;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bm+4BtLol9/sqpOcVOE8llO8FpdxZiHIedhNVFbErKc=;
-        b=WiLmYRjCw22wxhLtOWMM4pLV5RmhSxmJTbTUz0S00ZR1/EgW/sXnGm8Ukzhos1TFF0
-         ctgwPsJr6BnZ6z7m5jtBOmCSztzpbaHzBHpgWmxNDVK7gw/5cd17fuKSD5zYanJcbaCL
-         Gazx/Vca9O4hmomPvbFnvy2f0ah6h323Q3yLD6v6zz4T6/xLgAlwa9PE+YkOz6Dbl7zl
-         0e+Era5YJZuVlbVN27lBAHl9/kQVmswzwrKO62im+YNM8QNnzVOZth8huM1vFqhYXUDG
-         qmi112E0Gjkg7QpXGBNWRsiihU7K6O5BXtG3P8woOwFHxIa/BC4bpSYSi46Bz+jaVimq
-         b68w==
-X-Forwarded-Encrypted: i=1; AJvYcCWuuislGXZNuTcAE9Mo5dDObmkrdS/CLp5guTkwHU4v8+alA6Zj5HkjRaPbBUPWewwyIZPPkbvtgNZ0uWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3pgnOT/YXu7h3iEaEVLe4OwPanLDMWGCtBrLNntck2vMe+mIs
-	B48W1e1N4FWDL6Km/7gvtjkess7Pw55we4umIV8hjNTVkaUVdjtcFMly5h4OVg==
-X-Gm-Gg: ASbGncurXukWP8j4s9Usb66bGuBdMKOkiAVbyCymyfJYbQmDcydIOW6BxRI/J9ygm0l
-	4VdN+Eek/wfSlOaYFW8SROz0l7RVNmo2yy+Nugl7mtEGVuxM5ffuUlA8A9xOVCMPQWPVRdKxZag
-	R/Sv38BRLdqZxqP0eod4egOWTeA65OOOA5vp2lmNgUe/605U9bYs/8QmE+ulyNx9Ba+Hn0WHd2D
-	Lo6badfDazbfdNNiEwGTqAe+25Hb/VOVa9dD9PWPGpjcA8o+pWInAW4dwbWORSsQKvwCAHB5B/v
-	aTD07Rig7aC4G4lAiNY6TqkrXbGz1BFmgLc/KynUGQP8nIQBzHLglQC/FJIpLSgefDHbhI5IwOf
-	M5A==
-X-Google-Smtp-Source: AGHT+IGxdnCV7Xgmaq4ExIVkzPQEkLkcGBzTDQDOsBCcrwnoUTsrzifxMTPcrfJO6IG2sJKAEAwYqQ==
-X-Received: by 2002:a17:903:2406:b0:21f:6ce8:29df with SMTP id d9443c01a7336-2317cade041mr86349495ad.3.1747190917682;
-        Tue, 13 May 2025 19:48:37 -0700 (PDT)
+        bh=YfYQ/WK8QWoi6yOsmfhqLphXHC1mtE6IrX6WF+13WJo=;
+        b=JHx0IBWdL+sB8mwTkpHUjIUNFYLeXkMG4usuS5DSzj3d9l6MqKNzEX8p8VIOMn1Aul
+         6PjHTe0yX4oO9i3gaSxKNhz5cDvxm3nUfeoUHbNK/OdOex9VgOyDF16EBMq20xga05rr
+         dDnCzIgUX16FPL7jsw5ecPKGK6p/Cj/QVSlr4NnpMZK9jRAbs+VGGPOUM2pCjsOEldmO
+         EZTDRcZCArQWJTs430XMINjp6cR36G2Lx1N5OcZr5cCCn1XXe8zmXzjWYr9WFACv1vsk
+         j6igeCi4/WwLLiewDA5giQw0Zxnfp8hmGPRnrN8CkWAh1NKEG0s5KdpsmboQXsVPf6x3
+         P0AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPBJJfhm54GO3nhOLyalf/PEk4qTROocRyUYyvhXilGLiX+TYMONXD7t5YrDmN0oC/btUkiSy0SoxXqMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2zfTKA4rgBl7kJ8Z1PNQXJFyXhlOdWGy7O2T8frJeGKwPwKMU
+	r1rqqgtPbg/73q4W25dU0dOrhOo7O+lkvKy12pG7nBykpTG7gR1LbX6naLzljBVEj0vL8EqIc4g
+	=
+X-Gm-Gg: ASbGncsQkE6UdL/a8G1+ukRa/nF9En6tV/wqKG5N4xvki7CSyqTLttAmtJ4JFwBW3se
+	E5XxsyHAvzFCDO6BITqkdKs2MI6T1qiHxfn25r7ygtomfck/L0GssAyrfxmA2axLBFPEgPy0vgw
+	VsWdRVpiqRGLdmYkeUUeNFN+U/PlYLJMv/5dqNjsS9AZxVjLdRUQ9PL2rd0MghuqwdXZafkC/hy
+	BAL9uTLEihtubzMkLS1jEUgm25cLddJzqdv/Mx1Nv5naxC1hj3rWcet9z2V+Y6dTaOTUD/oiA4Y
+	4qub+tFUN7KWF9tFbB0r9DAngLiSq02Gux9eZeKUxAM6yhYBN8pS/wXMPZFRgB0OoDokjSR4OFw
+	nCQ==
+X-Google-Smtp-Source: AGHT+IF4ldq1Xj0QllHQs826ty0PgNOR/aQFXOR03YUP8fNtH/S40aAtPrbk82+q/rpOhKN2HsBt9g==
+X-Received: by 2002:a17:902:d4c6:b0:224:1781:a947 with SMTP id d9443c01a7336-2319813f761mr26920275ad.21.1747190920383;
+        Tue, 13 May 2025 19:48:40 -0700 (PDT)
 Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:d415:5e1d:3550:1855])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc75494cesm88759135ad.1.2025.05.13.19.48.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc75494cesm88759135ad.1.2025.05.13.19.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 19:48:37 -0700 (PDT)
+        Tue, 13 May 2025 19:48:39 -0700 (PDT)
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Zaslonko Mikhail <zaslonko@linux.ibm.com>
@@ -62,9 +63,9 @@ Cc: Minchan Kim <minchan@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH 1/2] zram: rename ZCOMP_PARAM_NO_LEVEL
-Date: Wed, 14 May 2025 11:47:50 +0900
-Message-ID: <20250514024825.1745489-2-senozhatsky@chromium.org>
+Subject: [PATCH 2/2] zram: support deflate-specific params
+Date: Wed, 14 May 2025 11:47:51 +0900
+Message-ID: <20250514024825.1745489-3-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 In-Reply-To: <20250514024825.1745489-1-senozhatsky@chromium.org>
 References: <20250514024825.1745489-1-senozhatsky@chromium.org>
@@ -76,106 +77,155 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use more generic name because this will be default "un-set"
-value for more params in the future.
+Introduce support of algorithm specific parameters in
+algorithm_params device attribute.  The expected format
+is algorithm.param=value.
+
+For starters, add support for deflate.winbits parameter.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/block/zram/backend_deflate.c | 2 +-
- drivers/block/zram/backend_lz4.c     | 2 +-
- drivers/block/zram/backend_lz4hc.c   | 2 +-
- drivers/block/zram/backend_zstd.c    | 2 +-
- drivers/block/zram/zcomp.h           | 2 +-
- drivers/block/zram/zram_drv.c        | 4 ++--
- 6 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/block/zram/backend_deflate.c | 10 ++++++----
+ drivers/block/zram/zcomp.h           |  7 +++++++
+ drivers/block/zram/zram_drv.c        | 17 +++++++++++++++--
+ 3 files changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
-index 0f7f252c12f4..4c00b5b6739f 100644
+index 4c00b5b6739f..b75016e0e654 100644
 --- a/drivers/block/zram/backend_deflate.c
 +++ b/drivers/block/zram/backend_deflate.c
-@@ -22,7 +22,7 @@ static void deflate_release_params(struct zcomp_params *params)
+@@ -8,7 +8,7 @@
+ #include "backend_deflate.h"
  
- static int deflate_setup_params(struct zcomp_params *params)
+ /* Use the same value as crypto API */
+-#define DEFLATE_DEF_WINBITS		11
++#define DEFLATE_DEF_WINBITS		(-11)
+ #define DEFLATE_DEF_MEMLEVEL		MAX_MEM_LEVEL
+ 
+ struct deflate_ctx {
+@@ -24,6 +24,8 @@ static int deflate_setup_params(struct zcomp_params *params)
  {
--	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-+	if (params->level == ZCOMP_PARAM_NOT_SET)
+ 	if (params->level == ZCOMP_PARAM_NOT_SET)
  		params->level = Z_DEFAULT_COMPRESSION;
++	if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET)
++		params->deflate.winbits = DEFLATE_DEF_WINBITS;
  
  	return 0;
-diff --git a/drivers/block/zram/backend_lz4.c b/drivers/block/zram/backend_lz4.c
-index 847f3334eb38..daccd60857eb 100644
---- a/drivers/block/zram/backend_lz4.c
-+++ b/drivers/block/zram/backend_lz4.c
-@@ -18,7 +18,7 @@ static void lz4_release_params(struct zcomp_params *params)
- 
- static int lz4_setup_params(struct zcomp_params *params)
- {
--	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-+	if (params->level == ZCOMP_PARAM_NOT_SET)
- 		params->level = LZ4_ACCELERATION_DEFAULT;
- 
- 	return 0;
-diff --git a/drivers/block/zram/backend_lz4hc.c b/drivers/block/zram/backend_lz4hc.c
-index 5f37d5abcaeb..9e8a35dfa56d 100644
---- a/drivers/block/zram/backend_lz4hc.c
-+++ b/drivers/block/zram/backend_lz4hc.c
-@@ -18,7 +18,7 @@ static void lz4hc_release_params(struct zcomp_params *params)
- 
- static int lz4hc_setup_params(struct zcomp_params *params)
- {
--	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-+	if (params->level == ZCOMP_PARAM_NOT_SET)
- 		params->level = LZ4HC_DEFAULT_CLEVEL;
- 
- 	return 0;
-diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
-index 22c8067536f3..81defb98ed09 100644
---- a/drivers/block/zram/backend_zstd.c
-+++ b/drivers/block/zram/backend_zstd.c
-@@ -58,7 +58,7 @@ static int zstd_setup_params(struct zcomp_params *params)
+ }
+@@ -57,13 +59,13 @@ static int deflate_create(struct zcomp_params *params, struct zcomp_ctx *ctx)
  		return -ENOMEM;
  
- 	params->drv_data = zp;
--	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-+	if (params->level == ZCOMP_PARAM_NOT_SET)
- 		params->level = zstd_default_clevel();
+ 	ctx->context = zctx;
+-	sz = zlib_deflate_workspacesize(-DEFLATE_DEF_WINBITS, MAX_MEM_LEVEL);
++	sz = zlib_deflate_workspacesize(params->deflate.winbits, MAX_MEM_LEVEL);
+ 	zctx->cctx.workspace = vzalloc(sz);
+ 	if (!zctx->cctx.workspace)
+ 		goto error;
  
- 	zp->cprm = zstd_get_params(params->level, PAGE_SIZE);
+ 	ret = zlib_deflateInit2(&zctx->cctx, params->level, Z_DEFLATED,
+-				-DEFLATE_DEF_WINBITS, DEFLATE_DEF_MEMLEVEL,
++				params->deflate.winbits, DEFLATE_DEF_MEMLEVEL,
+ 				Z_DEFAULT_STRATEGY);
+ 	if (ret != Z_OK)
+ 		goto error;
+@@ -73,7 +75,7 @@ static int deflate_create(struct zcomp_params *params, struct zcomp_ctx *ctx)
+ 	if (!zctx->dctx.workspace)
+ 		goto error;
+ 
+-	ret = zlib_inflateInit2(&zctx->dctx, -DEFLATE_DEF_WINBITS);
++	ret = zlib_inflateInit2(&zctx->dctx, params->deflate.winbits);
+ 	if (ret != Z_OK)
+ 		goto error;
+ 
 diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index 25339ed1e07e..cfacdfe9044c 100644
+index cfacdfe9044c..4acffe671a5e 100644
 --- a/drivers/block/zram/zcomp.h
 +++ b/drivers/block/zram/zcomp.h
-@@ -5,7 +5,7 @@
+@@ -7,6 +7,10 @@
  
- #include <linux/mutex.h>
+ #define ZCOMP_PARAM_NOT_SET	INT_MIN
  
--#define ZCOMP_PARAM_NO_LEVEL	INT_MIN
-+#define ZCOMP_PARAM_NOT_SET	INT_MIN
- 
++struct deflate_params {
++	s32 winbits;
++};
++
  /*
   * Immutable driver (backend) parameters. The driver may attach private
+  * data to it (e.g. driver representation of the dictionary, etc.).
+@@ -17,6 +21,9 @@ struct zcomp_params {
+ 	void *dict;
+ 	size_t dict_sz;
+ 	s32 level;
++	union {
++		struct deflate_params deflate;
++	};
+ 
+ 	void *drv_data;
+ };
 diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 94e6e9b80bf0..a11b7a6e35f4 100644
+index a11b7a6e35f4..54c57103715f 100644
 --- a/drivers/block/zram/zram_drv.c
 +++ b/drivers/block/zram/zram_drv.c
-@@ -1276,7 +1276,7 @@ static void comp_params_reset(struct zram *zram, u32 prio)
- 	struct zcomp_params *params = &zram->params[prio];
+@@ -1277,12 +1277,14 @@ static void comp_params_reset(struct zram *zram, u32 prio)
  
  	vfree(params->dict);
--	params->level = ZCOMP_PARAM_NO_LEVEL;
-+	params->level = ZCOMP_PARAM_NOT_SET;
+ 	params->level = ZCOMP_PARAM_NOT_SET;
++	params->deflate.winbits = ZCOMP_PARAM_NOT_SET;
  	params->dict_sz = 0;
  	params->dict = NULL;
  }
-@@ -1308,7 +1308,7 @@ static ssize_t algorithm_params_store(struct device *dev,
- 				      const char *buf,
- 				      size_t len)
+ 
+ static int comp_params_store(struct zram *zram, u32 prio, s32 level,
+-			     const char *dict_path)
++			     const char *dict_path,
++			     struct deflate_params *deflate_params)
  {
--	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NO_LEVEL;
-+	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NOT_SET;
+ 	ssize_t sz = 0;
+ 
+@@ -1300,6 +1302,7 @@ static int comp_params_store(struct zram *zram, u32 prio, s32 level,
+ 
+ 	zram->params[prio].dict_sz = sz;
+ 	zram->params[prio].level = level;
++	zram->params[prio].deflate.winbits = deflate_params->winbits;
+ 	return 0;
+ }
+ 
+@@ -1310,9 +1313,12 @@ static ssize_t algorithm_params_store(struct device *dev,
+ {
+ 	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NOT_SET;
  	char *args, *param, *val, *algo = NULL, *dict_path = NULL;
++	struct deflate_params deflate_params;
  	struct zram *zram = dev_to_zram(dev);
  	int ret;
+ 
++	deflate_params.winbits = ZCOMP_PARAM_NOT_SET;
++
+ 	args = skip_spaces(buf);
+ 	while (*args) {
+ 		args = next_arg(args, &param, &val);
+@@ -1343,6 +1349,13 @@ static ssize_t algorithm_params_store(struct device *dev,
+ 			dict_path = val;
+ 			continue;
+ 		}
++
++		if (!strcmp(param, "deflate.winbits")) {
++			ret = kstrtoint(val, 10, &deflate_params.winbits);
++			if (ret)
++				return ret;
++			continue;
++		}
+ 	}
+ 
+ 	/* Lookup priority by algorithm name */
+@@ -1364,7 +1377,7 @@ static ssize_t algorithm_params_store(struct device *dev,
+ 	if (prio < ZRAM_PRIMARY_COMP || prio >= ZRAM_MAX_COMPS)
+ 		return -EINVAL;
+ 
+-	ret = comp_params_store(zram, prio, level, dict_path);
++	ret = comp_params_store(zram, prio, level, dict_path, &deflate_params);
+ 	return ret ? ret : len;
+ }
+ 
 -- 
 2.49.0.1045.g170613ef41-goog
 
