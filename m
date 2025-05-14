@@ -1,176 +1,313 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE1A25DD09
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A8E2206B6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747218563; cv=none; b=EJmTpY7RyX//5iN+eklP2M1v+O0RHTpHWLj4Jps0VaTUijzKH5QENM5B+RsW/7M3SWtQ2Qy6QwCJPKDXudVH8AK7f8ZY1xYI5SEZCwHs0YlCSLlANFo3+oOK3cusvcgnz9qcaHXP9liC/7EP6QbgLoHqJ478A+0WhOAbPMzKBX4=
+	t=1747218590; cv=none; b=bmgO1JWpFYGFc9PaoiRE1s9kx0DOK78DgVWjw65fNsQ4Sd1Go6nYi4EVVdm3+KTTCtqXbb/Grrhhw5V/GdOia/TzYUyjKi5nWMQreElw9u6GPTDA5vBCX0Mdi4UNfMIsM94HCKvslIbhMhR5LMRC2G2TvY+D3yZKloNLJDXsTkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747218563; c=relaxed/simple;
-	bh=xV5TGWtAjUBbAlGh1TG217UQBJWDrrfWO3odDFRTQMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C13nBvsJ5jCBFxgr4MIGUrPq07vd4hVMrMOFdMEO/OMNhLwVY9Lcpo9/oPUeHjFypOQdZldQRoGVouY719dqrZmO4q5ehOVqLtoqq3R0YCtAG+wOoFw/qOTn1vF4WqxEMzYqjzUxkDsPVcpTvDKIbuhLmPsHpdlTM9BZPEOaZR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=NjgICSIA; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747218590; c=relaxed/simple;
+	bh=9DmPZ971efXGQoSbgZaCDjUZu9WAx6tuK+LFw/mfEnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1qbIWOPOH476a6NP3QChGr2zcsz2DFmm3YcTb3qbRO20w1C6CjRZxmLXqsyR8BLV39XhRaDI/TbGIDpB2iSvHlYzuv7c3AORe3wGfI/qHh0Z7Vmkuo++S/6DxmEd7xt1ZWVTJdwv7l2YVGJmOPA4FC6EBsvSjbgEVkep22SGhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtIZTZUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="NjgICSIA"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ba0b6b76so4850124f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747218560; x=1747823360; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fU4PVewcc9MxNH8+f8DwyzdamtEdKDmr83HGRbxUgQA=;
-        b=NjgICSIAzJ3DZL16X7USYlyLMHxqOLroHevQkmeuCpl+Ri0TdDcsqqISaAdt1riMMI
-         tXYarZgGlKGQ/gRyh4tz4pJAuqe4SCnkPY4sYgu3hqGpqC97V2FQiAJh2thHjp81rcuu
-         YXVPNL/XSLemYI7XE51XVwIZawukvPw8kYKQBliwoKSTeMO5io2tTNC3NEMqIsQgg01U
-         u2rHNkOKmBkY5fvyr8QOkLja9EXaMzxr3GPGGL527BI2IT2lP34CR6gGCcfhlS6M8AUF
-         em3ObpaBU79igYBcesgDsbpXp3YSkOyyLoJRJVXK1a5WIw7f0LttpNoYxuEyodAM7nLZ
-         SicQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747218560; x=1747823360;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fU4PVewcc9MxNH8+f8DwyzdamtEdKDmr83HGRbxUgQA=;
-        b=rT/mWvU4m0xSh6vgmTIImkQWb0cR/4u5tG0uNtqb9TiWlwCgZqnRbTe/UpaNEM8Ok6
-         D8oMPz2LhN6+iCXrczp5urr86/KOZLBUj67pAaSiFWXCAXUBGM5Jt+0WYjLFyai+HmDE
-         qkOfL43AViX1wNi/YOmBwZ8ztVDWR9XJ13BUZVrU0jIOBVCIVcD2IKt7KqoiFpOOxEVi
-         XrtCqnFEzFtKXgBha7dljJ+sPw5XVSawmWPUzFjATo4zhR2C2V9tcr6xL++Xrx1mnods
-         d4nkXVBPaOW9/BD5VKcFNdWB6qMNwVePbJy8KOC9DfAVK/2EH4J6tc2YZhMwlIgZTwSn
-         6zmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVk4l8dujUlsFRHRu2cdJlOZ8CuXFU63/TYMC6UQ2LW5WyOiDtEjFj0vQdJV3xNJdDd/FdAlUugDJO96uM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy74c7lBuOKy5RSVu/WpAfKMgHBb1HUP9HeMMJ7uVW1D9KhkJxZ
-	XKHm+tf+CFlpAelQZbsvUnkPpNm370kiUe7gyOIVlr7Kjcq5ImO68mJgSKIkbvA=
-X-Gm-Gg: ASbGncva/oobgajgZFrJjTM+8hY78u5ztB/6KQm6eFis6zCgsqIVhDf/5KndSd1XRL3
-	jJXmduxyO04Nk+idlr7iNpE3HTj3uPN2voYOq5plo0aQFCeRgrbh1z+/ZFX6WWNFBPhYHaLccUD
-	ZKWywmZssPhYUx5Yqq30Al91JKNNI1Rdn/B1bKQYOPSUMchQCm/G4q576OgFYevAIiqwfMzcFME
-	8GyyY33HmkMI1d4lUIlPg/Ka0IRNuxv0EVqg/PCbXKXoHQJuFFIlnfRP9CfQ4T85UCPZ5x4g0h4
-	DUSkxPqKSedX+1zNz41/4IoxmuxE009V9ChDDDyF9vMaQ75PFjBoMqBTVv4=
-X-Google-Smtp-Source: AGHT+IGyw3NxozgVzbMrkAVh72sdE2V/yiO6fwgF41eG84LxNtgGijn9Y7vFEYBwAZhyZjVRwxqXEQ==
-X-Received: by 2002:a05:6000:400c:b0:3a0:aeba:23b1 with SMTP id ffacd0b85a97d-3a349946a98mr1835187f8f.49.1747218559944;
-        Wed, 14 May 2025 03:29:19 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a22ea7a53asm7334492f8f.23.2025.05.14.03.29.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 03:29:19 -0700 (PDT)
-Message-ID: <e470715b-6f76-4b65-b1af-7a24e0432a30@tuxon.dev>
-Date: Wed, 14 May 2025 13:29:17 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtIZTZUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B2A7C4CEE9;
+	Wed, 14 May 2025 10:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747218589;
+	bh=9DmPZ971efXGQoSbgZaCDjUZu9WAx6tuK+LFw/mfEnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LtIZTZUBQha6F5BBW5m9aXBtnV/FLZ260n1CUglEcbA1Kj97lgu1tF0+oLC5p1pNv
+	 aW+f1q9DhGbk0h6GxP9kYAIS+YERL+2qANWx2REQ2OdX/U9AcCSPul0C7mHjbQRtG2
+	 LvtLKvyR0QSNAfo/equ76t31y2KSzZPGaQFgKty7SndE++o6EEnih3Q4Wo4GWdaUR2
+	 guCpaOeMWzMCs9q7CjUilyZuiNEqTcq0Cw4MKiHmLhiZElNAca8zihFdfNENzLzlX0
+	 CpkMAiS1oWEq80eVuYRoKoRVHm4+82x9lMDBdqBABOWMnju4hFGQA7h7oOIemgwozc
+	 m/XSOF0/YFP0A==
+Date: Wed, 14 May 2025 11:29:46 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: kishon@kernel.org, mripard@kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, sakari.ailus@linux.intel.com,
+	u.kleine-koenig@baylibre.com, vigneshr@ti.com,
+	aradhya.bhatia@linux.dev, s-jain1@ti.com, r-donadkar@ti.com,
+	tomi.valkeinen@ideasonboard.com
+Subject: Re: [PATCH v3 1/2] phy: cadence: cdns-dphy: Fix PLL lock and
+ O_CMN_READY polling
+Message-ID: <aCRwmohPq5E2RsGC@vaman>
+References: <20250502033451.2291330-1-devarsht@ti.com>
+ <20250502033451.2291330-2-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
- p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250512203851.GA1127434@bhelgaas>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250512203851.GA1127434@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502033451.2291330-2-devarsht@ti.com>
 
-Hi, Bjorn,
-
-On 12.05.2025 23:38, Bjorn Helgaas wrote:
-> On Fri, May 09, 2025 at 01:29:40PM +0300, Claudiu Beznea wrote:
->> On 05.05.2025 14:26, Claudiu Beznea wrote:
->>> On 01.05.2025 23:12, Bjorn Helgaas wrote:
->>>> On Wed, Apr 30, 2025 at 01:32:33PM +0300, Claudiu wrote:
->>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>
->>>>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
->>>>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
->>>>> only as a root complex, with a single-lane (x1) configuration. The
->>>>> controller includes Type 1 configuration registers, as well as IP
->>>>> specific registers (called AXI registers) required for various adjustments.
->>>>>
->>>>> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
->>>>> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
->>>>> host driver can be reused for these variants with minimal adjustments.
->> ...
+On 02-05-25, 09:04, Devarsh Thakkar wrote:
+> PLL lockup and O_CMN_READY assertion can only happen after common state
+> machine gets enabled (by programming DPHY_CMN_SSM register), but driver was
+> polling them before the common state machine was enabled. To fix this :
 > 
->>>>> +static void rzg3s_pcie_update_bits(void __iomem *base, u32 offset, u32 mask, u32 val)
->>>>> +{
->>>>> +	u32 tmp;
->>>>> +
->>>>> +	tmp = readl(base + offset);
->>>>> +	tmp &= ~mask;
->>>>> +	tmp |= val & mask;
->>>>> +	writel(tmp, base + offset);
->>>>> +}
->>>>
->>>> Nothing rzg3s-specific here.
->>>>
->>>> I think u32p_replace_bits() (include/linux/bitfield.h) is basically this.
->>>
->>> I wasn't aware of it. I'll use it in the next version. Thank for pointing it.
->>
->> I look into changing to u32p_replace_bits() but this one needs a mask that
->> can be verified at build time. It cannot be used directly in this function.
->> Would you prefer me to replace all the calls to rzg3s_pcie_update_bits() with:
->>
->> tmp = readl();
->> u32p_replace_bits(&tmp, ...)
->> writel(tmp);
+> - Add new function callbacks for polling on PLL lock and O_CMN_READY
+>   assertion.
+> - As state machine and clocks get enabled in power_on callback only, move
+>   the clock related programming part from configure callback to power_on
+>   callback and poll for the PLL lockup and O_CMN_READY assertion after
+>   state machine gets enabled.
+> - The configure callback only saves the PLL configuration received from the
+>   client driver which will be applied later on in power_on callback.
+> - Add checks to ensure configure is called before power_on and state
+>   machine is in disabled state before power_on callback is called.
+> - Disable state machine in power_off so that client driver can
+>   re-configure the PLL by following up a power_off, configure, power_on
+>   sequence.
 > 
-> It seems like this is the prevailing way it's used.
+> Cc: stable@vger.kernel.org
+> Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> ---
+> V3:
+> - Move out clock programming logic to power_on as PLL polling and enable
+>   can happen only after SSM enable
+> - Disable state machine on power off
 > 
-> You have ~20 calls, so it seems like it might be excessive to replace
-> each with readl/u32p_replace_bits/writel.
+> V2: 
+> - Return error code on polling timeout
+> - Moved out calibration logic to separate patch
 > 
-> But maybe you could use u32p_replace_bits() inside
-> rzg3s_pcie_update_bits().
+>  drivers/phy/cadence/cdns-dphy.c | 109 +++++++++++++++++++++++++-------
+>  1 file changed, 85 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
+> index ed87a3970f83..a94109a63788 100644
+> --- a/drivers/phy/cadence/cdns-dphy.c
+> +++ b/drivers/phy/cadence/cdns-dphy.c
+> @@ -79,6 +79,7 @@ struct cdns_dphy_cfg {
+>  	u8 pll_ipdiv;
+>  	u8 pll_opdiv;
+>  	u16 pll_fbdiv;
+> +	u64 hs_clk_rate;
+>  	unsigned int nlanes;
+>  };
+>  
+> @@ -99,6 +100,8 @@ struct cdns_dphy_ops {
+>  	void (*set_pll_cfg)(struct cdns_dphy *dphy,
+>  			    const struct cdns_dphy_cfg *cfg);
+>  	unsigned long (*get_wakeup_time_ns)(struct cdns_dphy *dphy);
+> +	int (*wait_for_pll_lock)(struct cdns_dphy *dphy);
+> +	int (*wait_for_cmn_ready)(struct cdns_dphy *dphy);
+>  };
+>  
+>  struct cdns_dphy {
+> @@ -108,6 +111,8 @@ struct cdns_dphy {
+>  	struct clk *pll_ref_clk;
+>  	const struct cdns_dphy_ops *ops;
+>  	struct phy *phy;
+> +	bool is_configured;
+> +	bool is_powered;
+>  };
+>  
+>  /* Order of bands is important since the index is the band number. */
+> @@ -191,6 +196,26 @@ static unsigned long cdns_dphy_get_wakeup_time_ns(struct cdns_dphy *dphy)
+>  	return dphy->ops->get_wakeup_time_ns(dphy);
+>  }
+>  
+> +static int cdns_dphy_wait_for_pll_lock(struct cdns_dphy *dphy)
+> +{
+> +	int ret = 0;
+> +
+> +	if (dphy->ops->wait_for_pll_lock)
+> +		ret = dphy->ops->wait_for_pll_lock(dphy);
+> +
+> +	return ret;
+> +}
+> +
+> +static int cdns_dphy_wait_for_cmn_ready(struct cdns_dphy *dphy)
+> +{
+> +	int ret = 0;
+> +
+> +	if (dphy->ops->wait_for_cmn_ready)
+> +		ret = dphy->ops->wait_for_cmn_ready(dphy);
+> +
+> +	return ret;
 
-I tried it like:
+We can drop ret from both, also it is called only once, so maybe open
+code this one line?
 
-#define rzg3s_pcie_update_bits(base, offset, mask, val)	\
-	do {						\
-		u32 tmp = readl((base) + (offset));	\
-		u32p_replace_bits(&tmp, (val), (mask));	\
-		writel(tmp, (base) + (offset));		\
-	} while (0)
+> +}
+> +
+>  static unsigned long cdns_dphy_ref_get_wakeup_time_ns(struct cdns_dphy *dphy)
+>  {
+>  	/* Default wakeup time is 800 ns (in a simulated environment). */
+> @@ -232,7 +257,6 @@ static unsigned long cdns_dphy_j721e_get_wakeup_time_ns(struct cdns_dphy *dphy)
+>  static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
+>  					const struct cdns_dphy_cfg *cfg)
+>  {
+> -	u32 status;
+>  
+>  	/*
+>  	 * set the PWM and PLL Byteclk divider settings to recommended values
+> @@ -249,13 +273,6 @@ static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
+>  
+>  	writel(DPHY_TX_J721E_WIZ_LANE_RSTB,
+>  	       dphy->regs + DPHY_TX_J721E_WIZ_RST_CTRL);
+> -
+> -	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
+> -			   (status & DPHY_TX_WIZ_PLL_LOCK), 0, POLL_TIMEOUT_US);
+> -
+> -	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
+> -			   (status & DPHY_TX_WIZ_O_CMN_READY), 0,
+> -			   POLL_TIMEOUT_US);
+>  }
+>  
+>  static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
+> @@ -263,6 +280,23 @@ static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
+>  	writel(div, dphy->regs + DPHY_TX_J721E_WIZ_PSM_FREQ);
+>  }
+>  
+> +static int cdns_dphy_j721e_wait_for_pll_lock(struct cdns_dphy *dphy)
+> +{
+> +	u32 status;
+> +
+> +	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
+> +			       status & DPHY_TX_WIZ_PLL_LOCK, 0, POLL_TIMEOUT_US);
+> +}
+> +
+> +static int cdns_dphy_j721e_wait_for_cmn_ready(struct cdns_dphy *dphy)
+> +{
+> +	u32 status;
+> +
+> +	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
+> +			       status & DPHY_TX_WIZ_O_CMN_READY, 0,
+> +			       POLL_TIMEOUT_US);
+> +}
+> +
+>  /*
+>   * This is the reference implementation of DPHY hooks. Specific integration of
+>   * this IP may have to re-implement some of them depending on how they decided
+> @@ -278,6 +312,8 @@ static const struct cdns_dphy_ops j721e_dphy_ops = {
+>  	.get_wakeup_time_ns = cdns_dphy_j721e_get_wakeup_time_ns,
+>  	.set_pll_cfg = cdns_dphy_j721e_set_pll_cfg,
+>  	.set_psm_div = cdns_dphy_j721e_set_psm_div,
+> +	.wait_for_pll_lock = cdns_dphy_j721e_wait_for_pll_lock,
+> +	.wait_for_cmn_ready = cdns_dphy_j721e_wait_for_cmn_ready,
+>  };
+>  
+>  static int cdns_dphy_config_from_opts(struct phy *phy,
+> @@ -298,6 +334,7 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
+>  		return ret;
+>  
+>  	opts->wakeup = cdns_dphy_get_wakeup_time_ns(dphy) / 1000;
+> +	cfg->hs_clk_rate = opts->hs_clk_rate;
+>  
+>  	return 0;
+>  }
+> @@ -334,13 +371,23 @@ static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
+>  static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+>  {
+>  	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+> -	struct cdns_dphy_cfg cfg = { 0 };
+> -	int ret, band_ctrl;
+> -	unsigned int reg;
+> +	int ret = 0;
 
-But the mask may still depend on runtime variable. E.g. there is this call
-in the driver (and other similar):
+Superfluous init
 
-static void rzg3s_pcie_msi_irq_mask(struct irq_data *d)
-{
-        struct rzg3s_pcie_msi *msi = irq_data_get_irq_chip_data(d);
-        struct rzg3s_pcie_host *host = rzg3s_msi_to_host(msi);
-        u8 reg_bit = d->hwirq % RZG3S_PCI_MSI_INT_PER_REG;
-        u8 reg_id = d->hwirq / RZG3S_PCI_MSI_INT_PER_REG;
+>  
+> -	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
+> -	if (ret)
+> -		return ret;
+> +	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &dphy->cfg);
+> +	if (!ret)
+> +		dphy->is_configured = true;
+> +
+> +	return ret;
+> +}
+> +
+> +static int cdns_dphy_power_on(struct phy *phy)
+> +{
+> +	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+> +	int ret = 0, band_ctrl;
+> +	u32 reg;
+> +
+> +	if (!dphy->is_configured || dphy->is_powered)
+> +		return -EINVAL;
+>  
+>  	/*
+>  	 * Configure the internal PSM clk divider so that the DPHY has a
+> @@ -363,9 +410,9 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+>  	 * Configure the DPHY PLL that will be used to generate the TX byte
+>  	 * clk.
+>  	 */
+> -	cdns_dphy_set_pll_cfg(dphy, &cfg);
+> +	cdns_dphy_set_pll_cfg(dphy, &dphy->cfg);
+>  
+> -	band_ctrl = cdns_dphy_tx_get_band_ctrl(opts->mipi_dphy.hs_clk_rate);
+> +	band_ctrl = cdns_dphy_tx_get_band_ctrl(dphy->cfg.hs_clk_rate);
+>  	if (band_ctrl < 0)
+>  		return band_ctrl;
+>  
+> @@ -373,19 +420,26 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+>  	      FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
+>  	writel(reg, dphy->regs + DPHY_BAND_CFG);
+>  
+> -	return 0;
+> -}
+> +	/* Start TX state machine. */
+> +	writel(DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
+> +	       dphy->regs + DPHY_CMN_SSM);
+>  
+> -static int cdns_dphy_power_on(struct phy *phy)
+> -{
+> -	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+> +	ret = cdns_dphy_wait_for_pll_lock(dphy);
+> +	if (ret) {
+> +		dev_err(&dphy->phy->dev, "Failed to lock PLL with err %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = cdns_dphy_wait_for_cmn_ready(dphy);
+> +	if (ret) {
+> +		dev_err(&dphy->phy->dev, "O_CMN_READY signal failed to assert with err %d\n", ret);
+> +		return ret;
+> +	}
+>  
+>  	clk_prepare_enable(dphy->psm_clk);
+>  	clk_prepare_enable(dphy->pll_ref_clk);
+>  
+> -	/* Start TX state machine. */
+> -	writel(DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
+> -	       dphy->regs + DPHY_CMN_SSM);
+> +	dphy->is_powered = true;
+>  
+>  	return 0;
+>  }
+> @@ -393,10 +447,17 @@ static int cdns_dphy_power_on(struct phy *phy)
+>  static int cdns_dphy_power_off(struct phy *phy)
+>  {
+>  	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+> +	u32 reg;
+>  
+>  	clk_disable_unprepare(dphy->pll_ref_clk);
+>  	clk_disable_unprepare(dphy->psm_clk);
+>  
+> +	/* Stop TX state machine. */
+> +	reg = readl(dphy->regs + DPHY_CMN_SSM);
+> +	writel(reg & ~DPHY_CMN_SSM_EN, dphy->regs + DPHY_CMN_SSM);
+> +
+> +	dphy->is_powered = false;
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.39.1
 
-        guard(raw_spinlock_irqsave)(&host->hw_lock);
-
-        rzg3s_pcie_update_bits(host->axi, RZG3S_PCI_MSIRM(reg_id),
-                               BIT(reg_bit), BIT(reg_bit));
-
-}
-
-reg_id is a runtime variable and cannot be checked at compile time thus the
-compilation of u32p_replace_bits() fails with:
-
-../include/linux/bitfield.h:166:3: error: call to ‘__bad_mask’ declared
-with attribute error: bad bitfield mask
-  166 |   __bad_mask();
-      |   ^~~~~~~~~~~~
-
-Please let me know if you have other suggestions.
-
-Thank you,
-Claudiu
+-- 
+~Vinod
