@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F245325CC51
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F36B264F8B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266239; cv=none; b=lJDAT7tu2+NphI66NtGm2Dt0ztIzAiNmLdRhIBEzCkt7cHUXKJKw0ggP2QStJx4KeStN2BEQRbwdGTMMSbpWDmO7aXtcbpwT4XYS6WUbKdjPK5s9lyWOy4kKnnGrreS1mucwviAwxoByEy1rVdAxFHywbrbu7q67MuOyRn4U9Ho=
+	t=1747266246; cv=none; b=KAEA1WL0xi8BbsZV0fu4iseA2QKyR8quadZs37vC6c3CCse6qLC24W6IH3qqRkya9mjwX+8df4jvrtWcoS7bEiCrnA0XuRJfL/opbdxuS2NIudC3GYLsbBT2EgVxlEu4FYv4EwtFIVVlux122DHlq/mxkzkr7Ck0DJ7czREjq/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266239; c=relaxed/simple;
-	bh=XwFjWjxtTsC5Fi5aJIX4EK+f5cmTCITRnhMR71nt1xI=;
+	s=arc-20240116; t=1747266246; c=relaxed/simple;
+	bh=1rVfuYi1WHYEYjmdy8cIEb5msrK0n7swdg38Pr4wEeg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SewDXK8q3kJlSEAzN1hO++qIPt7avN7lQUV6zqKwyZFi/N14trr1oQnyIm5AKi7vXtZZY4u2fchznXODtvPmx/qDwAB5q7TDuWfeU0WI65Idwe6i4hF7dBmcZoaN6xznjYf4ITsi28ObrmBD7Ro9P+2PKnvRI0HyjTgJfWCgOU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0qdpfmbI; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=PZjWZGQT2u/Kuq0KOU0e4h/L4eQeEcAB///84d62fS97D6PskxFF0RkgUU83oDcfj/RP3s/vTrtAXXPo1N6eyiD9RkkWbf87XpZfie+oPUzV64Wnul0/ltCAJkDRksddalLYefspPUBSy95f7ZiWQs06mnyUss39D/hqrHX7QyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4sXv9Gz1; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0qdpfmbI"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c4b072631so348287a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4sXv9Gz1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c4bdd0618so343476a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266236; x=1747871036; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266243; x=1747871043; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5jpW989/YFyq0v/aJ7/h6dJUf2Wl55zcXhclfQe+Us=;
-        b=0qdpfmbI37cyblg0+qfdJRk0ru4By0iCiW9qFbUvGZoE4jQY2rpe+l/tZ+qHxPPyap
-         Lj7iKpPyj9OZNxwQOJtbxOBJqhMtdzUYP4QEPnE1V8mIeLdVWPTJR3jEY/O8f/lLnQ7m
-         RqUijXdm14A04xrSjPxg6TmI2didXI6qeyjF0LZIyL/yrFvx83nYdVdv65b9zfPAiOQD
-         CXOdOQxEsMXSMwIocRipV7aU9fF0VAhZIbuBHipq5byAMk+oHgrN/dq0f/4G0RZ/P5mK
-         V/PLKpEgAM/X09TrFu0fNekIKq6+OsS8ug+BLHXy4JvP3ATlSdweo4OFF+E6CPas/78t
-         IwKQ==
+        bh=BduUPNqb61B8Eivz+AJ2LgpTa1Bu3K7jmzRP1k+UIFk=;
+        b=4sXv9Gz1PxEr5sP04dFyv8besvyc183ZakczXBAeV4rW8ysPxeGZgt+7W9rm3iDaLI
+         DkDMGilK9RYcrp7CclKmiJmncD8H09ZyKuzmqHSpMdeyTCTc165txTZUjS5cCEH5aQzk
+         juLdteZq2t0zoMIvotQhK5M7l3CdYv9LM/U9dslM/4TDezuvFE5SNzoyFrDwXbQ37gyv
+         F3m5RxwMtnGb9iX9QeYGaEcK60hVTUHKFrUiBQ1LZbvEtIAeSx7FeA4vqfBYMZL3Fcmo
+         OINjqK7oJhEIdxxOXJ8qbTNDhkyQYXhveme4R5Va0UrOA+R+YJOCiA7ugb4EG8vdQ4LU
+         wPLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266236; x=1747871036;
+        d=1e100.net; s=20230601; t=1747266243; x=1747871043;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5jpW989/YFyq0v/aJ7/h6dJUf2Wl55zcXhclfQe+Us=;
-        b=eBxTeYySB+c2B7WyQJ0c70z7aZFat0Fy6Bs8vZ+ifCDSln+KoCt5K63fbjUIKKvkkU
-         jL96BB9RIKXnHtO5wlBvnUZ6F/GfsOSrTvOnc6I0k0kzj6NI90F99SozayuKZU4VZFYm
-         7mxtHnLc8LDNEDnBnbS6GUIcpYuwxAexm5XgcRvQzGxGuhywTNsFn9xiPua99UbNPOjH
-         aZooyV9f6fuNz7Civ2v+4RmOGh2WllbYgHiGp4csW7fHX8QPqN14QdkJrMnq4loVKLj+
-         iP5UTxVPpQLYSqcj2GmuR1nO+bzdzinDc6z5rPBVNrVd6HwIEftW3B8FCxI1S9e4/GRm
-         GrrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu1sLWBNZabWDlJT5+S0ZNT3O/Gm0HrJqhW0vCx28Unz7MShNWLCM2pl4jfEizBWlIDmwXCc+s9r6XQhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8/ZuHx//N0/f6HajNvM+TlVSaGvx9kqBgz6B4SeDHM7crggSy
-	h12NPKEDBPd01Z/71OdKwOFDlLW5agSgl/jWHu61/Nhz3RrQSpfJOTmr8HNf3hkE8zwaW91rXk9
-	5k8OPUTUWjcOr/8psPH6djw==
-X-Google-Smtp-Source: AGHT+IEHmJ3lib+NJLUGZyWmKwas+lc+zkjE9XbH3FlgTmX876qh5dQdz6tJQxjBx6fJXXbdWv8qDStuh5HH5lswOQ==
-X-Received: from pjbsx3.prod.google.com ([2002:a17:90b:2cc3:b0:30a:7da4:f075])
+        bh=BduUPNqb61B8Eivz+AJ2LgpTa1Bu3K7jmzRP1k+UIFk=;
+        b=sTT7NCuWDwifRVrGbQtrJe37ElmLdIJggSHKp8cjxAUTui7rvXTpv653fqvu3ZmPae
+         /mKoaeQ+n40Fwg1sS9C3s+kbDBkfQTVwEjD1+dOp9VU5Z/VyA4F1cTQgYh51ZzTALApK
+         su++J/A9JMDEo+8uj1N+f3i3Nk6l3IOq4vb5u/a7VyGN+i8nXV/p/xujLdGFHUAwPmMd
+         86erDeUu0NqpbbJX6B4RDL8qarlIgEJ6rFveVAzTfgEM1tK7Q4qy8fI1eb2blcoyS/IG
+         lvb89ddyT0RD8K7zAaW3h3C+POvlZUCN93RGPmJQpMGmJkaXXhKa03ChXu4Ar/+xbtyu
+         0+ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVeeQFZJNAKB80g5rXVRkfP1WtgPNfYB+SF5fLjSOXn95tNCwsM1zua/7p5pfEaQldrmCseW5uH5hJqUMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHNt4NaBDGMuTSy9TrS+Rsjvb3tvfihc+sScxswOghltndaZGj
+	GmfxjCgxJYKu42tJEq5iUyUwWmpN0x7QjUC5M/BXKw5w3kB4PIBtIVvmGa4Uj0vUVcwb8CTbWuD
+	cTD+hzyT6UOzYfKhjTJrEdw==
+X-Google-Smtp-Source: AGHT+IEjnuIuPh++1YsJBYPVFxGMfCMSkD+n47vqKHsfozYjZZGvfWXQQGTInhBsTuWssNrzOA4VxrkjA/1Su+uotw==
+X-Received: from pjbpw8.prod.google.com ([2002:a17:90b:2788:b0:301:1ea9:63b0])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4a8c:b0:2ff:7331:18bc with SMTP id 98e67ed59e1d1-30e51907799mr665163a91.26.1747266236406;
- Wed, 14 May 2025 16:43:56 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:17 -0700
+ 2002:a17:90b:17c6:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-30e2e643c54mr7245629a91.31.1747266242805;
+ Wed, 14 May 2025 16:44:02 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:21 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
- guest_memfd use
+Message-ID: <322b245180f09076c5cbbac0d68ea27c0a8c878b.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 42/51] KVM: selftests: Add basic selftests for
+ hugetlb-backed guest_memfd
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -97,706 +97,208 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-In this patch, newly allocated pages are split to 4K regular pages
-before providing them to the requester (fallocate() or KVM).
+Add tests for 2MB and 1GB page sizes, and update the invalid flags
+test for GUEST_MEMFD_FLAG_HUGETLB.
 
-During a private to shared conversion, folios are split if not already
-split.
+In tests, touch every page but not every byte in page to save time
+while testing.
 
-During a shared to private conversion, folios are merged if not
-already merged.
-
-When the folios are removed from the filemap on truncation, the
-allocator is given a chance to do any necessary prep for when the
-folio is freed.
-
-When a conversion is requested on a subfolio within a hugepage range,
-faulting must be prevented on the whole hugepage range for
-correctness.
-
-See related discussion at
-https://lore.kernel.org/all/Z__AAB_EFxGFEjDR@google.com/T/
-
+Change-Id: I7d80a12b991a064cfd796e3c6e11f9a95fd16ec1
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-Signed-off-by: Vishal Annapurve <vannapurve@google.com>
-Change-Id: Ib5ee22e3dae034c529773048a626ad98d4b10af3
 ---
- mm/filemap.c           |   2 +
- virt/kvm/guest_memfd.c | 501 +++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 483 insertions(+), 20 deletions(-)
+ .../testing/selftests/kvm/guest_memfd_test.c  | 94 +++++++++++++------
+ 1 file changed, 67 insertions(+), 27 deletions(-)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index a02c3d8e00e8..a052f8e0c41e 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -223,6 +223,7 @@ void __filemap_remove_folio(struct folio *folio, void *shadow)
- 	filemap_unaccount_folio(mapping, folio);
- 	page_cache_delete(mapping, folio, shadow);
- }
-+EXPORT_SYMBOL_GPL(__filemap_remove_folio);
+diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
+index 1e79382fd830..c8acccaa9e1d 100644
+--- a/tools/testing/selftests/kvm/guest_memfd_test.c
++++ b/tools/testing/selftests/kvm/guest_memfd_test.c
+@@ -13,6 +13,8 @@
  
- void filemap_free_folio(struct address_space *mapping, struct folio *folio)
+ #include <linux/bitmap.h>
+ #include <linux/falloc.h>
++#include <linux/guestmem.h>
++#include <linux/sizes.h>
+ #include <sys/mman.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -38,6 +40,7 @@ static void test_file_read_write(int fd)
+ static void test_faulting_allowed(int fd, size_t page_size, size_t total_size)
  {
-@@ -258,6 +259,7 @@ void filemap_remove_folio(struct folio *folio)
+ 	const char val = 0xaa;
++	size_t increment;
+ 	char *mem;
+ 	size_t i;
+ 	int ret;
+@@ -45,21 +48,25 @@ static void test_faulting_allowed(int fd, size_t page_size, size_t total_size)
+ 	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+ 	TEST_ASSERT(mem != MAP_FAILED, "mmaping() guest memory should pass.");
  
- 	filemap_free_folio(mapping, folio);
- }
-+EXPORT_SYMBOL_GPL(filemap_remove_folio);
+-	memset(mem, val, total_size);
+-	for (i = 0; i < total_size; i++)
++	increment = page_size >> 1;
++
++	for (i = 0; i < total_size; i += increment)
++		mem[i] = val;
++	for (i = 0; i < total_size; i += increment)
+ 		TEST_ASSERT_EQ(mem[i], val);
  
- /*
-  * page_cache_delete_batch - delete several folios from page cache
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index c578d0ebe314..cb426c1dfef8 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -41,6 +41,11 @@ static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
- 				      pgoff_t end);
- static void kvm_gmem_invalidate_end(struct kvm_gmem *gmem, pgoff_t start,
- 				    pgoff_t end);
-+static int __kvm_gmem_filemap_add_folio(struct address_space *mapping,
-+					struct folio *folio, pgoff_t index);
-+static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
-+						pgoff_t start, size_t nr_pages,
-+						bool is_split_operation);
+ 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0,
+ 			page_size);
+ 	TEST_ASSERT(!ret, "fallocate the first page should succeed");
  
- static struct kvm_gmem_inode_private *kvm_gmem_private(struct inode *inode)
- {
-@@ -126,6 +131,31 @@ static enum shareability kvm_gmem_shareability_get(struct inode *inode,
- 	return xa_to_value(entry);
- }
+-	for (i = 0; i < page_size; i++)
++	for (i = 0; i < page_size; i += increment)
+ 		TEST_ASSERT_EQ(mem[i], 0x00);
+-	for (; i < total_size; i++)
++	for (; i < total_size; i += increment)
+ 		TEST_ASSERT_EQ(mem[i], val);
  
-+static bool kvm_gmem_shareability_in_range(struct inode *inode, pgoff_t start,
-+					    size_t nr_pages, enum shareability m)
-+{
-+	struct maple_tree *mt;
-+	pgoff_t last;
-+	void *entry;
-+
-+	mt = &kvm_gmem_private(inode)->shareability;
-+
-+	last = start + nr_pages - 1;
-+	mt_for_each(mt, entry, start, last) {
-+		if (xa_to_value(entry) == m)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static inline bool kvm_gmem_has_some_shared(struct inode *inode, pgoff_t start,
-+					    size_t nr_pages)
-+{
-+	return kvm_gmem_shareability_in_range(inode, start, nr_pages,
-+					     SHAREABILITY_ALL);
-+}
-+
- static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
- {
- 	if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
-@@ -241,6 +271,105 @@ static bool kvm_gmem_has_safe_refcount(struct address_space *mapping, pgoff_t st
- 	return refcount_safe;
- }
+-	memset(mem, val, total_size);
+-	for (i = 0; i < total_size; i++)
++	for (i = 0; i < total_size; i += increment)
++		mem[i] = val;
++	for (i = 0; i < total_size; i += increment)
+ 		TEST_ASSERT_EQ(mem[i], val);
  
-+static void kvm_gmem_unmap_private(struct kvm_gmem *gmem, pgoff_t start,
-+				   pgoff_t end)
-+{
-+	struct kvm_memory_slot *slot;
-+	struct kvm *kvm = gmem->kvm;
-+	unsigned long index;
-+	bool locked = false;
-+	bool flush = false;
-+
-+	xa_for_each_range(&gmem->bindings, index, slot, start, end - 1) {
-+		pgoff_t pgoff = slot->gmem.pgoff;
-+
-+		struct kvm_gfn_range gfn_range = {
-+			.start = slot->base_gfn + max(pgoff, start) - pgoff,
-+			.end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff,
-+			.slot = slot,
-+			.may_block = true,
-+			/* This function is only concerned with private mappings. */
-+			.attr_filter = KVM_FILTER_PRIVATE,
-+		};
-+
-+		if (!locked) {
-+			KVM_MMU_LOCK(kvm);
-+			locked = true;
-+		}
-+
-+		flush |= kvm_mmu_unmap_gfn_range(kvm, &gfn_range);
-+	}
-+
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	if (locked)
-+		KVM_MMU_UNLOCK(kvm);
-+}
-+
-+static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
-+				      pgoff_t end)
-+{
-+	struct kvm_memory_slot *slot;
-+	struct kvm *kvm = gmem->kvm;
-+	unsigned long index;
-+	bool found_memslot;
-+
-+	found_memslot = false;
-+	xa_for_each_range(&gmem->bindings, index, slot, start, end - 1) {
-+		gfn_t gfn_start;
-+		gfn_t gfn_end;
-+		pgoff_t pgoff;
-+
-+		pgoff = slot->gmem.pgoff;
-+
-+		gfn_start = slot->base_gfn + max(pgoff, start) - pgoff;
-+		gfn_end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff;
-+
-+		if (!found_memslot) {
-+			found_memslot = true;
-+
-+			KVM_MMU_LOCK(kvm);
-+			kvm_mmu_invalidate_begin(kvm);
-+		}
-+
-+		kvm_mmu_invalidate_range_add(kvm, gfn_start, gfn_end);
-+	}
-+
-+	if (found_memslot)
-+		KVM_MMU_UNLOCK(kvm);
-+}
-+
-+static pgoff_t kvm_gmem_compute_invalidate_bound(struct inode *inode,
-+						 pgoff_t bound, bool start)
-+{
-+	size_t nr_pages;
-+	void *priv;
-+
-+	if (!kvm_gmem_has_custom_allocator(inode))
-+		return bound;
-+
-+	priv = kvm_gmem_allocator_private(inode);
-+	nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
-+
-+	if (start)
-+		return round_down(bound, nr_pages);
-+	else
-+		return round_up(bound, nr_pages);
-+}
-+
-+static pgoff_t kvm_gmem_compute_invalidate_start(struct inode *inode,
-+						 pgoff_t bound)
-+{
-+	return kvm_gmem_compute_invalidate_bound(inode, bound, true);
-+}
-+
-+static pgoff_t kvm_gmem_compute_invalidate_end(struct inode *inode,
-+					       pgoff_t bound)
-+{
-+	return kvm_gmem_compute_invalidate_bound(inode, bound, false);
-+}
-+
- static int kvm_gmem_shareability_apply(struct inode *inode,
- 				       struct conversion_work *work,
- 				       enum shareability m)
-@@ -299,35 +428,53 @@ static void kvm_gmem_convert_invalidate_begin(struct inode *inode,
- 					      struct conversion_work *work)
- {
- 	struct list_head *gmem_list;
-+	pgoff_t invalidate_start;
-+	pgoff_t invalidate_end;
- 	struct kvm_gmem *gmem;
--	pgoff_t end;
-+	pgoff_t work_end;
+ 	ret = munmap(mem, total_size);
+@@ -209,7 +216,7 @@ static void test_create_guest_memfd_invalid_sizes(struct kvm_vm *vm,
+ 	size_t size;
+ 	int fd;
  
--	end = work->start + work->nr_pages;
-+	work_end = work->start + work->nr_pages;
-+	invalidate_start = kvm_gmem_compute_invalidate_start(inode, work->start);
-+	invalidate_end = kvm_gmem_compute_invalidate_end(inode, work_end);
- 
- 	gmem_list = &inode->i_mapping->i_private_list;
- 	list_for_each_entry(gmem, gmem_list, entry)
--		kvm_gmem_invalidate_begin(gmem, work->start, end);
-+		kvm_gmem_invalidate_begin(gmem, invalidate_start, invalidate_end);
- }
- 
- static void kvm_gmem_convert_invalidate_end(struct inode *inode,
- 					    struct conversion_work *work)
- {
- 	struct list_head *gmem_list;
-+	pgoff_t invalidate_start;
-+	pgoff_t invalidate_end;
- 	struct kvm_gmem *gmem;
--	pgoff_t end;
-+	pgoff_t work_end;
- 
--	end = work->start + work->nr_pages;
-+	work_end = work->start + work->nr_pages;
-+	invalidate_start = kvm_gmem_compute_invalidate_start(inode, work->start);
-+	invalidate_end = kvm_gmem_compute_invalidate_end(inode, work_end);
- 
- 	gmem_list = &inode->i_mapping->i_private_list;
- 	list_for_each_entry(gmem, gmem_list, entry)
--		kvm_gmem_invalidate_end(gmem, work->start, end);
-+		kvm_gmem_invalidate_end(gmem, invalidate_start, invalidate_end);
- }
- 
- static int kvm_gmem_convert_should_proceed(struct inode *inode,
- 					   struct conversion_work *work,
- 					   bool to_shared, pgoff_t *error_index)
- {
--	if (!to_shared) {
-+	if (to_shared) {
-+		struct list_head *gmem_list;
-+		struct kvm_gmem *gmem;
-+		pgoff_t work_end;
-+
-+		work_end = work->start + work->nr_pages;
-+
-+		gmem_list = &inode->i_mapping->i_private_list;
-+		list_for_each_entry(gmem, gmem_list, entry)
-+			kvm_gmem_unmap_private(gmem, work->start, work_end);
-+	} else {
- 		unmap_mapping_pages(inode->i_mapping, work->start,
- 				    work->nr_pages, false);
- 
-@@ -340,6 +487,27 @@ static int kvm_gmem_convert_should_proceed(struct inode *inode,
- 	return 0;
- }
- 
-+static int kvm_gmem_convert_execute_work(struct inode *inode,
-+					 struct conversion_work *work,
-+					 bool to_shared)
-+{
-+	enum shareability m;
-+	int ret;
-+
-+	m = to_shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
-+	ret = kvm_gmem_shareability_apply(inode, work, m);
-+	if (ret)
-+		return ret;
-+	/*
-+	 * Apply shareability first so split/merge can operate on new
-+	 * shareability state.
-+	 */
-+	ret = kvm_gmem_restructure_folios_in_range(
-+		inode, work->start, work->nr_pages, to_shared);
-+
-+	return ret;
-+}
-+
- static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
- 				  size_t nr_pages, bool shared,
- 				  pgoff_t *error_index)
-@@ -371,18 +539,21 @@ static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
- 
- 	list_for_each_entry(work, &work_list, list) {
- 		rollback_stop_item = work;
--		ret = kvm_gmem_shareability_apply(inode, work, m);
-+
-+		ret = kvm_gmem_convert_execute_work(inode, work, shared);
- 		if (ret)
- 			break;
+-	for (size = 1; size < page_size; size++) {
++	for (size = 1; size < page_size; size += (page_size >> 1)) {
+ 		fd = __vm_create_guest_memfd(vm, size, guest_memfd_flags);
+ 		TEST_ASSERT(fd == -1 && errno == EINVAL,
+ 			    "guest_memfd() with non-page-aligned page size '0x%lx' should fail with EINVAL",
+@@ -217,28 +224,33 @@ static void test_create_guest_memfd_invalid_sizes(struct kvm_vm *vm,
  	}
+ }
  
- 	if (ret) {
--		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
- 		list_for_each_entry(work, &work_list, list) {
-+			int r;
+-static void test_create_guest_memfd_multiple(struct kvm_vm *vm)
++static void test_create_guest_memfd_multiple(struct kvm_vm *vm,
++					     uint64_t guest_memfd_flags,
++					     size_t page_size)
+ {
+ 	int fd1, fd2, ret;
+ 	struct stat st1, st2;
+ 
+-	fd1 = __vm_create_guest_memfd(vm, 4096, 0);
++	fd1 = __vm_create_guest_memfd(vm, page_size, guest_memfd_flags);
+ 	TEST_ASSERT(fd1 != -1, "memfd creation should succeed");
+ 
+ 	ret = fstat(fd1, &st1);
+ 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
+-	TEST_ASSERT(st1.st_size == 4096, "memfd st_size should match requested size");
++	TEST_ASSERT(st1.st_size == page_size, "memfd st_size should match requested size");
+ 
+-	fd2 = __vm_create_guest_memfd(vm, 8192, 0);
++	fd2 = __vm_create_guest_memfd(vm, page_size * 2, guest_memfd_flags);
+ 	TEST_ASSERT(fd2 != -1, "memfd creation should succeed");
+ 
+ 	ret = fstat(fd2, &st2);
+ 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
+-	TEST_ASSERT(st2.st_size == 8192, "second memfd st_size should match requested size");
++	TEST_ASSERT(st2.st_size == page_size * 2,
++		    "second memfd st_size should match requested size");
 +
-+			r = kvm_gmem_convert_execute_work(inode, work, !shared);
-+			WARN_ON(r);
-+
- 			if (work == rollback_stop_item)
- 				break;
+ 
+ 	ret = fstat(fd1, &st1);
+ 	TEST_ASSERT(ret != -1, "memfd fstat should succeed");
+-	TEST_ASSERT(st1.st_size == 4096, "first memfd st_size should still match requested size");
++	TEST_ASSERT(st1.st_size == page_size,
++		    "first memfd st_size should still match requested size");
+ 	TEST_ASSERT(st1.st_ino != st2.st_ino, "different memfd should have different inode numbers");
+ 
+ 	close(fd2);
+@@ -449,21 +461,13 @@ static void test_guest_memfd_features(struct kvm_vm *vm, size_t page_size,
+ 	close(fd);
+ }
+ 
+-static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
+-			   bool expect_mmap_allowed)
++static void test_guest_memfd_features_for_page_size(struct kvm_vm *vm,
++						    uint64_t guest_memfd_flags,
++						    size_t page_size,
++						    bool expect_mmap_allowed)
+ {
+-	struct kvm_vm *vm;
+-	size_t page_size;
++	test_create_guest_memfd_multiple(vm, guest_memfd_flags, page_size);
+ 
+-	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
+-		return;
 -
--			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
- 		}
+-	vm = vm_create_barebones_type(vm_type);
+-
+-	test_create_guest_memfd_multiple(vm);
+-	test_bind_guest_memfd_wrt_userspace_addr(vm);
+-
+-	page_size = getpagesize();
+ 	if (guest_memfd_flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
+ 		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
+ 					  expect_mmap_allowed, true);
+@@ -479,6 +483,34 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
+ 		test_guest_memfd_features(vm, page_size, guest_memfd_flags,
+ 					  expect_mmap_allowed, false);
  	}
++}
++
++static void test_with_type(unsigned long vm_type, uint64_t base_flags,
++			   bool expect_mmap_allowed)
++{
++	struct kvm_vm *vm;
++	uint64_t flags;
++
++	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
++		return;
++
++	vm = vm_create_barebones_type(vm_type);
++
++	test_bind_guest_memfd_wrt_userspace_addr(vm);
++
++	printf("Test guest_memfd with 4K pages for vm_type %ld\n", vm_type);
++	test_guest_memfd_features_for_page_size(vm, base_flags, getpagesize(), expect_mmap_allowed);
++	printf("\tPASSED\n");
++
++	printf("Test guest_memfd with 2M pages for vm_type %ld\n", vm_type);
++	flags = base_flags | GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_2MB;
++	test_guest_memfd_features_for_page_size(vm, flags, SZ_2M, expect_mmap_allowed);
++	printf("\tPASSED\n");
++
++	printf("Test guest_memfd with 1G pages for vm_type %ld\n", vm_type);
++	flags = base_flags | GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_1GB;
++	test_guest_memfd_features_for_page_size(vm, flags, SZ_1G, expect_mmap_allowed);
++	printf("\tPASSED\n");
  
-@@ -434,6 +605,277 @@ static int kvm_gmem_ioctl_convert_range(struct file *file,
- 	return ret;
+ 	kvm_vm_release(vm);
  }
- 
-+#ifdef CONFIG_KVM_GMEM_HUGETLB
-+
-+static inline void __filemap_remove_folio_for_restructuring(struct folio *folio)
-+{
-+	struct address_space *mapping = folio->mapping;
-+
-+	spin_lock(&mapping->host->i_lock);
-+	xa_lock_irq(&mapping->i_pages);
-+
-+	__filemap_remove_folio(folio, NULL);
-+
-+	xa_unlock_irq(&mapping->i_pages);
-+	spin_unlock(&mapping->host->i_lock);
-+}
-+
-+/**
-+ * filemap_remove_folio_for_restructuring() - Remove @folio from filemap for
-+ * split/merge.
-+ *
-+ * @folio: the folio to be removed.
-+ *
-+ * Similar to filemap_remove_folio(), but skips LRU-related calls (meaningless
-+ * for guest_memfd), and skips call to ->free_folio() to maintain folio flags.
-+ *
-+ * Context: Expects only the filemap's refcounts to be left on the folio. Will
-+ *          freeze these refcounts away so that no other users will interfere
-+ *          with restructuring.
-+ */
-+static inline void filemap_remove_folio_for_restructuring(struct folio *folio)
-+{
-+	int filemap_refcount;
-+
-+	filemap_refcount = folio_nr_pages(folio);
-+	while (!folio_ref_freeze(folio, filemap_refcount)) {
-+		/*
-+		 * At this point only filemap refcounts are expected, hence okay
-+		 * to spin until speculative refcounts go away.
-+		 */
-+		WARN_ONCE(1, "Spinning on folio=%p refcount=%d", folio, folio_ref_count(folio));
-+	}
-+
-+	folio_lock(folio);
-+	__filemap_remove_folio_for_restructuring(folio);
-+	folio_unlock(folio);
-+}
-+
-+/**
-+ * kvm_gmem_split_folio_in_filemap() - Split @folio within filemap in @inode.
-+ *
-+ * @inode: inode containing the folio.
-+ * @folio: folio to be split.
-+ *
-+ * Split a folio into folios of size PAGE_SIZE. Will clean up folio from filemap
-+ * and add back the split folios.
-+ *
-+ * Context: Expects that before this call, folio's refcount is just the
-+ *          filemap's refcounts. After this function returns, the split folios'
-+ *          refcounts will also be filemap's refcounts.
-+ * Return: 0 on success or negative error otherwise.
-+ */
-+static int kvm_gmem_split_folio_in_filemap(struct inode *inode, struct folio *folio)
-+{
-+	size_t orig_nr_pages;
-+	pgoff_t orig_index;
-+	size_t i, j;
-+	int ret;
-+
-+	orig_nr_pages = folio_nr_pages(folio);
-+	if (orig_nr_pages == 1)
-+		return 0;
-+
-+	orig_index = folio->index;
-+
-+	filemap_remove_folio_for_restructuring(folio);
-+
-+	ret = kvm_gmem_allocator_ops(inode)->split_folio(folio);
-+	if (ret)
-+		goto err;
-+
-+	for (i = 0; i < orig_nr_pages; ++i) {
-+		struct folio *f = page_folio(folio_page(folio, i));
-+
-+		ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, f,
-+						   orig_index + i);
-+		if (ret)
-+			goto rollback;
-+	}
-+
-+	return ret;
-+
-+rollback:
-+	for (j = 0; j < i; ++j) {
-+		struct folio *f = page_folio(folio_page(folio, j));
-+
-+		filemap_remove_folio_for_restructuring(f);
-+	}
-+
-+	kvm_gmem_allocator_ops(inode)->merge_folio(folio);
-+err:
-+	WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, folio, orig_index));
-+
-+	return ret;
-+}
-+
-+static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
-+						      struct folio *folio)
-+{
-+	size_t to_nr_pages;
-+	void *priv;
-+
-+	if (!kvm_gmem_has_custom_allocator(inode))
-+		return 0;
-+
-+	priv = kvm_gmem_allocator_private(inode);
-+	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_page(priv);
-+
-+	if (kvm_gmem_has_some_shared(inode, folio->index, to_nr_pages))
-+		return kvm_gmem_split_folio_in_filemap(inode, folio);
-+
-+	return 0;
-+}
-+
-+/**
-+ * kvm_gmem_merge_folio_in_filemap() - Merge @first_folio within filemap in
-+ * @inode.
-+ *
-+ * @inode: inode containing the folio.
-+ * @first_folio: first folio among folios to be merged.
-+ *
-+ * Will clean up subfolios from filemap and add back the merged folio.
-+ *
-+ * Context: Expects that before this call, all subfolios only have filemap
-+ *          refcounts. After this function returns, the merged folio will only
-+ *          have filemap refcounts.
-+ * Return: 0 on success or negative error otherwise.
-+ */
-+static int kvm_gmem_merge_folio_in_filemap(struct inode *inode,
-+					   struct folio *first_folio)
-+{
-+	size_t to_nr_pages;
-+	pgoff_t index;
-+	void *priv;
-+	size_t i;
-+	int ret;
-+
-+	index = first_folio->index;
-+
-+	priv = kvm_gmem_allocator_private(inode);
-+	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
-+	if (folio_nr_pages(first_folio) == to_nr_pages)
-+		return 0;
-+
-+	for (i = 0; i < to_nr_pages; ++i) {
-+		struct folio *f = page_folio(folio_page(first_folio, i));
-+
-+		filemap_remove_folio_for_restructuring(f);
-+	}
-+
-+	kvm_gmem_allocator_ops(inode)->merge_folio(first_folio);
-+
-+	ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, first_folio, index);
-+	if (ret)
-+		goto err_split;
-+
-+	return ret;
-+
-+err_split:
-+	WARN_ON(kvm_gmem_allocator_ops(inode)->split_folio(first_folio));
-+	for (i = 0; i < to_nr_pages; ++i) {
-+		struct folio *f = page_folio(folio_page(first_folio, i));
-+
-+		WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, f, index + i));
-+	}
-+
-+	return ret;
-+}
-+
-+static inline int kvm_gmem_try_merge_folio_in_filemap(struct inode *inode,
-+						      struct folio *first_folio)
-+{
-+	size_t to_nr_pages;
-+	void *priv;
-+
-+	priv = kvm_gmem_allocator_private(inode);
-+	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
-+
-+	if (kvm_gmem_has_some_shared(inode, first_folio->index, to_nr_pages))
-+		return 0;
-+
-+	return kvm_gmem_merge_folio_in_filemap(inode, first_folio);
-+}
-+
-+static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
-+						pgoff_t start, size_t nr_pages,
-+						bool is_split_operation)
-+{
-+	size_t to_nr_pages;
-+	pgoff_t index;
-+	pgoff_t end;
-+	void *priv;
-+	int ret;
-+
-+	if (!kvm_gmem_has_custom_allocator(inode))
-+		return 0;
-+
-+	end = start + nr_pages;
-+
-+	/* Round to allocator page size, to check all (huge) pages in range. */
-+	priv = kvm_gmem_allocator_private(inode);
-+	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
-+
-+	start = round_down(start, to_nr_pages);
-+	end = round_up(end, to_nr_pages);
-+
-+	for (index = start; index < end; index += to_nr_pages) {
-+		struct folio *f;
-+
-+		f = filemap_get_folio(inode->i_mapping, index);
-+		if (IS_ERR(f))
-+			continue;
-+
-+		/* Leave just filemap's refcounts on the folio. */
-+		folio_put(f);
-+
-+		if (is_split_operation)
-+			ret = kvm_gmem_split_folio_in_filemap(inode, f);
-+		else
-+			ret = kvm_gmem_try_merge_folio_in_filemap(inode, f);
-+
-+		if (ret)
-+			goto rollback;
-+	}
-+	return ret;
-+
-+rollback:
-+	for (index -= to_nr_pages; index >= start; index -= to_nr_pages) {
-+		struct folio *f;
-+
-+		f = filemap_get_folio(inode->i_mapping, index);
-+		if (IS_ERR(f))
-+			continue;
-+
-+		/* Leave just filemap's refcounts on the folio. */
-+		folio_put(f);
-+
-+		if (is_split_operation)
-+			WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
-+		else
-+			WARN_ON(kvm_gmem_split_folio_in_filemap(inode, f));
-+	}
-+
-+	return ret;
-+}
-+
-+#else
-+
-+static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
-+						      struct folio *folio)
-+{
-+	return 0;
-+}
-+
-+static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
-+						pgoff_t start, size_t nr_pages,
-+						bool is_split_operation)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
- #else
- 
- static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
-@@ -563,11 +1005,16 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 		return folio;
- 
- 	if (kvm_gmem_has_custom_allocator(inode)) {
--		void *p = kvm_gmem_allocator_private(inode);
-+		size_t nr_pages;
-+		void *p;
- 
-+		p = kvm_gmem_allocator_private(inode);
- 		folio = kvm_gmem_allocator_ops(inode)->alloc_folio(p);
- 		if (IS_ERR(folio))
- 			return folio;
-+
-+		nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(p);
-+		index_floor = round_down(index, nr_pages);
- 	} else {
- 		gfp_t gfp = mapping_gfp_mask(inode->i_mapping);
- 
-@@ -580,10 +1027,11 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 			folio_put(folio);
- 			return ERR_PTR(ret);
- 		}
-+
-+		index_floor = index;
- 	}
- 	allocated_size = folio_size(folio);
- 
--	index_floor = round_down(index, folio_nr_pages(folio));
- 	ret = kvm_gmem_filemap_add_folio(inode->i_mapping, folio, index_floor);
- 	if (ret) {
- 		folio_put(folio);
-@@ -600,6 +1048,13 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 		return ERR_PTR(ret);
- 	}
- 
-+	/* Leave just filemap's refcounts on folio. */
-+	folio_put(folio);
-+
-+	ret = kvm_gmem_try_split_folio_in_filemap(inode, folio);
-+	if (ret)
-+		goto err;
-+
- 	spin_lock(&inode->i_lock);
- 	inode->i_blocks += allocated_size / 512;
- 	spin_unlock(&inode->i_lock);
-@@ -608,14 +1063,17 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 	 * folio is the one that is allocated, this gets the folio at the
- 	 * requested index.
- 	 */
--	folio = page_folio(folio_file_page(folio, index));
--	folio_lock(folio);
-+	folio = filemap_lock_folio(inode->i_mapping, index);
- 
- 	return folio;
-+
-+err:
-+	filemap_remove_folio(folio);
-+	return ERR_PTR(ret);
- }
- 
--static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
--				      pgoff_t end)
-+static void kvm_gmem_invalidate_begin_and_zap(struct kvm_gmem *gmem,
-+					      pgoff_t start, pgoff_t end)
+@@ -486,9 +518,14 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
+ static void test_vm_with_gmem_flag(struct kvm_vm *vm, uint64_t flag,
+ 				   bool expect_valid)
  {
- 	bool flush = false, found_memslot = false;
- 	struct kvm_memory_slot *slot;
-@@ -848,7 +1306,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
- 	filemap_invalidate_lock(inode->i_mapping);
+-	size_t page_size = getpagesize();
++	size_t page_size;
+ 	int fd;
  
- 	list_for_each_entry(gmem, gmem_list, entry)
--		kvm_gmem_invalidate_begin(gmem, start, end);
-+		kvm_gmem_invalidate_begin_and_zap(gmem, start, end);
- 
- 	if (kvm_gmem_has_custom_allocator(inode)) {
- 		kvm_gmem_truncate_inode_range(inode, offset, offset + len);
-@@ -978,7 +1436,7 @@ static int kvm_gmem_release(struct inode *inode, struct file *file)
- 	 * Zap all SPTEs pointed at by this file.  Do not free the backing
- 	 * memory, as its lifetime is associated with the inode, not the file.
- 	 */
--	kvm_gmem_invalidate_begin(gmem, 0, -1ul);
-+	kvm_gmem_invalidate_begin_and_zap(gmem, 0, -1ul);
- 	kvm_gmem_invalidate_end(gmem, 0, -1ul);
- 
- 	list_del(&gmem->entry);
-@@ -1289,7 +1747,7 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
- 	end = start + folio_nr_pages(folio);
- 
- 	list_for_each_entry(gmem, gmem_list, entry)
--		kvm_gmem_invalidate_begin(gmem, start, end);
-+		kvm_gmem_invalidate_begin_and_zap(gmem, start, end);
- 
- 	/*
- 	 * Do not truncate the range, what action is taken in response to the
-@@ -1330,6 +1788,9 @@ static void kvm_gmem_free_folio(struct address_space *mapping,
- 	 */
- 	folio_clear_uptodate(folio);
- 
-+	if (kvm_gmem_has_custom_allocator(mapping->host))
-+		kvm_gmem_allocator_ops(mapping->host)->free_folio(folio);
++	if (flag == GUEST_MEMFD_FLAG_HUGETLB)
++		page_size = get_def_hugetlb_pagesz();
++	else
++		page_size = getpagesize();
 +
- 	kvm_gmem_invalidate(folio);
- }
+ 	fd = __vm_create_guest_memfd(vm, page_size, flag);
  
+ 	if (expect_valid) {
+@@ -550,6 +587,9 @@ static void test_gmem_flag_validity(void)
+ 	/* After conversions are supported, all VM types support shared mem. */
+ 	uint64_t valid_flags = GUEST_MEMFD_FLAG_SUPPORT_SHARED;
+ 
++	if (kvm_has_cap(KVM_CAP_GMEM_HUGETLB))
++		valid_flags |= GUEST_MEMFD_FLAG_HUGETLB;
++
+ 	test_vm_type_gmem_flag_validity(VM_TYPE_DEFAULT, valid_flags);
+ 
+ #ifdef __x86_64__
 -- 
 2.49.0.1045.g170613ef41-goog
 
