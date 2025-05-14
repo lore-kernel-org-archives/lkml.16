@@ -1,170 +1,372 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963F225A32;
-	Wed, 14 May 2025 09:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8BA22541B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214380; cv=none; b=jWoJH1qf91VPYW/1mV5EV25+Wm7ZNwDN85O7DnRhsvnv5qZEohbabo8ZSBk+4K+F1khJyCArAgAeImrqhNCaNX3o0Hqc0S5y6hN159s7unZbpfNQTrU3JqGULudnd3s9i542f5egRAh2c8E1xKdTMNG3gHuCHSKGz98e1cT8NVU=
+	t=1747214379; cv=none; b=ZPb+lY5+uS3FyJnFo4jqKnwIDo7x/XZrBkOeWbcUE7KMIqKlYjgsJ3Eau6bXOzY50KGS3QUYlxNbraqLH76UZu5oTLuuOirnp9Abi5IwMcBmikHC7jlwOvUjReK77l46DoW2V2kv/QZfmAtuUdySZ/HEJS+O+HmvJCi1c+blL90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214380; c=relaxed/simple;
-	bh=XfJDfDjV8rQ+L03xS3i2Q0xG0ZpZdIXUG6MNi+Y37eo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KEzYJVOG02RTJGirL1hKm0uG5KwkWvGSwjkz6iOlMh1F6ewFpXzpvY0tt3eMxSlsEHsnRDyUfpmJAMbGEtSYV9EZDWsE71QYmxLA0F54XRt/6fZz7gvLhGoQL21gN23jvt/E4L/6OZWNwRVevShGK7h9LW8Vl0R9RN9WqjSIVhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=R8qmEiQV; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747214379; c=relaxed/simple;
+	bh=2D2rpbKGcSdInh62Cls4bfflDYQSGcbRv/l5aVvJN7g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C52ewuiCVERBthm+HOPboAh6cQ6AFV3e2RXMWVZISbFavmE9icRhwvyEwY1Ygbzwrdl+HZNjM5gbW6DuOpDn+Yy1B1VVLTjH3H7MtigJqd3Qi0Ew6M9GZFZcdaP1EcYTgiatznWGC5gcBLtjCj50khJ1maxmaenp+UOuCBR/nJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=SEu2+Lxx; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="R8qmEiQV"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7wArm013217;
-	Wed, 14 May 2025 11:18:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=r1a+Jd1mXikhLLAztwlCME
-	IW/Owqmg6EjmP4qjavAao=; b=R8qmEiQVSrLNiSQdVDH4qte/3nM3EBjSnabKos
-	J2pUwU63NM/AeBqq2Ff16HrzRoDAF6bXq8HHoPawB87lOu562oaKreznxYrdQ8UK
-	p5gUsFG9Q+fR6siqXVKRPlnD/NTvMsvPEkUix/e9/VWAN7lY3kYns7mWGrrCvaO1
-	FJZyqF2sANNHyXJZWT98O//LLgpOUN4OGg8o8KO1H9xuOhhyd4biiEu2onyPqou/
-	oWaT4S6uVak2nexQK65RQCLPduUYO2X3MGDWT4M6bQGbrtgFZ42S9SNWxqiJMNjI
-	HvXysMPKW+owgoPPvh2zoqQrMLbSErxbPHf8nPT+8hxJLjxQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdw2rx8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 11:18:59 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C0E7C40050;
-	Wed, 14 May 2025 11:17:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5977B41E02;
-	Wed, 14 May 2025 11:16:20 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 11:16:20 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 0/9] Add STM32MP25 PCIe drivers
-Date: Wed, 14 May 2025 11:15:21 +0200
-Message-ID: <20250514091530.3249364-1-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="SEu2+Lxx"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zy78N2fdPz9t76;
+	Wed, 14 May 2025 11:19:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747214372; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dX/+oVQTquS1mWBfFty+DmXpsce2yUrtxG5oSfbjfco=;
+	b=SEu2+LxxTcyE2nVz5ovYvIkYJ3QMqncbbRBSkF2UQlWaVDM1y8ZrpaRwy/ijZ8jQojk9Re
+	Ufr7rprT4vKbS8V5nPraSnW96eJxZBGJTz4PUls+qs3tbLML05MIS9NYjyBiWd4nErDNdl
+	mK+hbjqKwPBlRCsaa65R3qZ9dAdMzbXUjF/so9FAJT3jKQ6pCaxR/RbCpPBOrjz53gfiCb
+	tKI6pJJyg2h2YOcGTtLCjZJQJ/em+Sv/LAF9pKmR2NDRBqxWcnf3M4lLfbMR1HlhxewdYT
+	xlqy6uC+4Ig6J4PHQYPS5ion2S5kAQw9SeyDp0zxsxm7vQmukFO0KbsanAkK3Q==
+Message-ID: <b98ac3e08922f5d1a6a83d1caa9f8d1d4a7aaac2.camel@mailbox.org>
+Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, phasta@kernel.org, Lyude
+ Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
+ <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 14 May 2025 11:19:25 +0200
+In-Reply-To: <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
+References: <20250424095535.26119-2-phasta@kernel.org>
+	 <20250424095535.26119-8-phasta@kernel.org>
+	 <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
+	 <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
+	 <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
+	 <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
+X-MBO-RS-ID: 599db39402c1399f9b8
+X-MBO-RS-META: dgoc31epst7ynah537peaaxcoarzks9i
 
-Changes in v9:
-   - Describe atu and dbi2 shadowed registers in pcie_ep node
-   Address RC and EP drivers comments from Manivanna:
-   - Use dev_error_probe() for pm_runtime_enable() calls
-   - Reword Kconfig help message
-   - Move pm_runtime_get_noresume() before devm_pm_runtime_enable()
+On Wed, 2025-05-14 at 09:30 +0100, Tvrtko Ursulin wrote:
+>=20
+> On 12/05/2025 09:00, Philipp Stanner wrote:
+> > On Thu, 2025-05-08 at 13:51 +0100, Tvrtko Ursulin wrote:
+> > >=20
+> > > Hi Philipp,
+> > >=20
+> > > On 08/05/2025 12:03, Philipp Stanner wrote:
+> > > > On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
+> > > > > The unit tests so far took care manually of avoiding memory
+> > > > > leaks
+> > > > > that
+> > > > > might have occurred when calling drm_sched_fini().
+> > > > >=20
+> > > > > The scheduler now takes care by itself of avoiding memory
+> > > > > leaks
+> > > > > if
+> > > > > the
+> > > > > driver provides the callback
+> > > > > drm_sched_backend_ops.kill_fence_context().
+> > > > >=20
+> > > > > Implement that callback for the unit tests. Remove the manual
+> > > > > cleanup
+> > > > > code.
+> > > >=20
+> > > > @Tvrtko: On a scale from 1-10, how much do you love this patch?
+> > > > :)
+> > >=20
+> > > Specific patch aside, it is the series as a whole I would like to
+> > > be
+> > > sure there isn't a more elegant way to achieve the same end
+> > > result.
+> >=20
+> > I count this as a 9/10 \o/
+>=20
+> :) Yes, sorry, it would a bit lower than that, at least until someone
+> can point out a fatal flaw in my alternative. :)
 
-Changes in v8:
-   - Whitespace in comment
-   
-Changes in v7:
-   - Use device_init_wakeup to enable wakeup
-   - Fix comments (Bjorn)
+There's no fatal flaw in my approach either :)
 
-Changes in v6:
-   - Call device_wakeup_enable() to fix WAKE# wakeup.
-   Address comments from Manivanna:
-   - Fix/Add Comments
-   - Fix DT indents
-   - Remove dw_pcie_ep_linkup() in EP start link
-   - Add PCIE_T_PVPERL_MS delay in RC PERST# deassert
-   
-Changes in v5:
-   Address driver comments from Manivanna:
-   - Use dw_pcie_{suspend/resume}_noirq instead of private ones.
-   - Move dw_pcie_host_init() to probe
-   - Add stm32_remove_pcie_port cleanup function
-   - Use of_node_put in stm32_pcie_parse_port
-   - Remove wakeup-source property
-   - Use generic dev_pm_set_dedicated_wake_irq to support wake# irq
-   
-Changes in v4:
-   Address bindings comments Rob Herring
-   - Remove phy property form common yaml
-   - Remove phy-name property
-   - Move wake_gpio and reset_gpio to the host root port
-   
-Changes in v3:
-   Address comments from Manivanna, Rob and Bjorn:
-   - Move host wakeup helper to dwc core (Mani)
-   - Drop num-lanes=<1> from bindings (Rob)
-   - Fix PCI address of I/O region (Mani)
-   - Moved PHY to a RC rootport subsection (Bjorn, Mani)
-   - Replaced dma-limit quirk by dma-ranges property (Bjorn)
-   - Moved out perst assert/deassert from start/stop link (Mani)
-   - Drop link_up test optim (Mani)
-   - DT and comments rephrasing (Bjorn)
-   - Add dts entries now that the combophy entries has landed
-   - Drop delaying Configuration Requests
+>=20
+> > But jokes aside:
+> >=20
+> > >=20
+> > > Like that sketch of a counter proposal I sent for the reasons
+> > > listed
+> > > with it. Which were, AFAIR, to avoid needing to add more state
+> > > machine,
+> >=20
+> > Well the state machine added is basically just the waitqueue. The
+> > WRITE_ONCE booleans are currently just for correctness and clarity.
+> > I've looked at them and want to remove them all in an other patch,
+> > because I think they're not needed (workqueue handles that)
+> >=20
+> > But yes, the added state is > 0
+> >=20
+> > > to avoid mandating drivers have to keep an internal list,
+> >=20
+> > That's not mandated by the scheduler, but by logic itself. All
+> > drivers
+> > need to have a list of on-flight fences. Otherwise the drivers
+> > would
+> > have no chance of signaling those fences once their GPU tells them
+> > to
+> > do so.
+>=20
+> Probably it would be hard to signal without tracking of some sort
+> yes,=20
+> although it wouldn't have to be indexed by fence context, or looked
+> up=20
+> by it so maybe still simpler.
 
-Changes in v2:
-   - Fix st,stm32-pcie-common.yaml dt_binding_check	
+Well, the decisive point remains that all drivers must know all on-air
+fences, so they all are able to signal those fences.
 
-Changes in v1:
-   Address comments from Rob Herring and Bjorn Helgaas:
-   - Drop st,limit-mrrs and st,max-payload-size from this patchset
-   - Remove single reset and clocks binding names and misc yaml cleanups
-   - Split RC/EP common bindings to a separate schema file
-   - Use correct PCIE_T_PERST_CLK_US and PCIE_T_RRS_READY_MS defines
-   - Use .remove instead of .remove_new
-   - Fix bar reset sequence in EP driver
-   - Use cleanup blocks for error handling
-   - Cosmetic fixes
+>=20
+> More importantly I think with this comment I was thinking about the
+> fact=20
+> that with ops->cancel_job() approach I was able to remove the _done_=20
+> list tracking from the mock scheduler.
 
-Christian Bruel (9):
-  dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
-  PCI: stm32: Add PCIe host support for STM32MP25
-  dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
-  PCI: stm32: Add PCIe Endpoint support for STM32MP25
-  MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
-  arm64: dts: st: add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
-  arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
-  arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
-  arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
+If the done_list is just about avoiding memory leaks, then I should
+also be able to remove it completely, shouldn't I? In this patch here I
+already remove the leak-related code in drm_mock_sched_fini(), but
+hadn't looked too deeply into what else the done_list does. Is it just
+about the leaks?
 
- .../bindings/pci/st,stm32-pcie-common.yaml    |  33 ++
- .../bindings/pci/st,stm32-pcie-ep.yaml        |  67 +++
- .../bindings/pci/st,stm32-pcie-host.yaml      | 112 +++++
- MAINTAINERS                                   |   7 +
- arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |  20 +
- arch/arm64/boot/dts/st/stm32mp251.dtsi        |  57 +++
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |  21 +
- drivers/pci/controller/dwc/Kconfig            |  24 +
- drivers/pci/controller/dwc/Makefile           |   2 +
- drivers/pci/controller/dwc/pcie-stm32-ep.c    | 411 ++++++++++++++++++
- drivers/pci/controller/dwc/pcie-stm32.c       | 364 ++++++++++++++++
- drivers/pci/controller/dwc/pcie-stm32.h       |  16 +
- 12 files changed, 1134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
- create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
- create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+>=20
+> > I have now provided two users of the new API, nouveau and the unit
+> > tests. Can you think of a party for which the suggested approach
+> > wouldn't work?
+>=20
+> I did not think along those lines yet so don't know. I just thought
+> it=20
+> was too much code to implement a relatively simple thing and that
+> also a=20
+> few things in the design bothered me.
+>=20
+> If you look at the diffstat from my proposal and ignore kerneldoc and
+> unit test stats, it literally adds 8 lines to drm_sched_fini() and a=20
+> single line to gpu_scheduler.h:
+>=20
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void (*cancel_job)(struct drm_sched=
+_job *sched_job);
+>=20
+> And in the former after it stops the workers:
+>=20
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (sched->ops->cancel_job) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 struct drm_sched_job *job;
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 list_for_each_entry_reverse(job, &sched-
+> >pending_list,=20
+> list) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched->ops->ca=
+ncel_job(job);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched->ops->fr=
+ee_job(job);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 }
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> To me this looks quite clean. Unless, I say this again, I am missing=20
+> some fatal flaw why it doesn't work.
 
--- 
-2.34.1
+It does work. I've stated that before. But mine works, too. And mine
+doesn't have a hard blocker either, as far as I can see.
+
+So let's focus on the main differences:
+
+Your version adds fewer lines of code, that's correct.
+
+I think cleaning up through just having the driver signal the fences
+all at once is better because
+   1. The very same code path both for "legacy-fini" and "new-fini" is
+      responsible for cleaning up the jobs. Notably, the free_job()
+      callback is only invoked by the same parties as before, primarily
+      the work items. We don't add a new, only sometimes running, code
+      path *that free's jobs*.
+   2. The scheduler's already fractured design doesn't fracture
+      further: the free_job work item remains responsible for calling
+      free_job(). Having just one party being responsible for one thing
+      is a desirable design goal.
+   3. Considering that many drivers generously (ab)use API internals of
+      the scheduler, and considering that there is already ambiguity of
+      who's responsible for handling job lifetimes, I believe it is
+      safer not to add an additional code path that can free jobs, but
+      keep that one path.
+   4. It reads more cleanly: "We're not canceling a single job here,
+      we're killing all associated jobs now all at once", raising
+      awareness for driver programmers that this is a significant
+      event: we're tearing down while not all of your jobs have
+      finished on your GPU.
+
+>=20
+> > Don't get me wrong, your approach does work and it definitely has
+> > its
+> > charm. However, I think what I propose here is syntactically a bit
+> > cleaner because the classical order of a fence first being signaled
+> > in
+> > the driver and then the associated job being freed as usual by the
+> > scheduler is guaranteed. IOW, we primarily rely on the signaling
+> > path.
+> >=20
+> > Either way, neither your nor my approach would have worked out of
+> > the
+> > box in Nouveau without that driver exploding.
+>=20
+> What do you mean by this - the latest version of your series does or=20
+> does not work for nouveau?
+
+Mine works with Nouveau, but revealed a bug in Nouveau [1]. Yours would
+have ran into that bug, too.
+
+My point is just that your job-by-job approach wouldn't have been
+superior to my approach in practice, i.e., when implementing it in the
+first "beta tester", Nouveau. Would have been the same problem in
+different color.
+
+So just because a cancel_job() callback would result in fewer lines of
+code wouldn't mean it's superior in practice. I expect the same to be
+the case for other drivers, especially those who use scheduler
+internals.
+
+So, summarizing:
+ * My approach works. Your approach works.
+ * It works for all drivers, because they all have a list of fences.
+ * It communicates more clearly to the driver what this is all about.
+ * It keeps the scheduler's design more consistent regarding
+   responsibility / code paths for job life times.
+
+P.
+
+[1] https://lore.kernel.org/dri-devel/20250415121900.55719-2-phasta@kernel.=
+org/
+
+>=20
+> Regards,
+>=20
+> Tvrtko
+>=20
+> >=20
+> > > =C2=A0 and to align
+> > > better with the existing prototypes in the sched ops table (where
+> > > everything operates on jobs).
+> >=20
+> > That's not a hard criteria IMO. Those are sched_backend_ops, not
+> > sched_job_backend_ops, and prepare_job() already takes a parameter
+> > other than a job.
+> >=20
+> >=20
+> > Cheers,
+> > P.
+> >=20
+> > >=20
+> > > Regards,
+> > >=20
+> > > Tvrtko
+> > >=20
+> > > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > > > > ---
+> > > > > =C2=A0=C2=A0=C2=A0.../gpu/drm/scheduler/tests/mock_scheduler.c=C2=
+=A0 | 34
+> > > > > ++++++++++++-----
+> > > > > --
+> > > > > =C2=A0=C2=A0=C2=A01 file changed, 21 insertions(+), 13 deletions(=
+-)
+> > > > >=20
+> > > > > diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > > > b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > > > index f999c8859cf7..a72d26ca8262 100644
+> > > > > --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > > > +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > > > @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
+> > > > > drm_sched_job *sched_job)
+> > > > > =C2=A0=C2=A0=C2=A0 /* Mock job itself is freed by the kunit frame=
+work. */
+> > > > > =C2=A0=C2=A0=C2=A0}
+> > > > > =C2=A0=C2=A0=20
+> > > > > +static void mock_sched_fence_context_kill(struct
+> > > > > drm_gpu_scheduler
+> > > > > *gpu_sched)
+> > > > > +{
+> > > > > + struct drm_mock_scheduler *sched =3D
+> > > > > drm_sched_to_mock_sched(gpu_sched);
+> > > > > + struct drm_mock_sched_job *job;
+> > > > > + unsigned long flags;
+> > > > > +
+> > > > > + spin_lock_irqsave(&sched->lock, flags);
+> > > > > + list_for_each_entry(job, &sched->job_list, link) {
+> > > > > + spin_lock(&job->lock);
+> > > > > + if (!dma_fence_is_signaled_locked(&job-
+> > > > > > hw_fence)) {
+> > > > > + dma_fence_set_error(&job->hw_fence, -
+> > > > > ECANCELED);
+> > > > > + dma_fence_signal_locked(&job->hw_fence);
+> > > > > + }
+> > > > > + complete(&job->done);
+> > > > > + spin_unlock(&job->lock);
+> > > > > + }
+> > > > > + spin_unlock_irqrestore(&sched->lock, flags);
+> > > > > +}
+> > > > > +
+> > > > > =C2=A0=C2=A0=C2=A0static const struct drm_sched_backend_ops
+> > > > > drm_mock_scheduler_ops =3D {
+> > > > > =C2=A0=C2=A0=C2=A0 .run_job =3D mock_sched_run_job,
+> > > > > =C2=A0=C2=A0=C2=A0 .timedout_job =3D mock_sched_timedout_job,
+> > > > > - .free_job =3D mock_sched_free_job
+> > > > > + .free_job =3D mock_sched_free_job,
+> > > > > + .kill_fence_context =3D mock_sched_fence_context_kill,
+> > > > > =C2=A0=C2=A0=C2=A0};
+> > > > > =C2=A0=C2=A0=20
+> > > > > =C2=A0=C2=A0=C2=A0/**
+> > > > > @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
+> > > > > drm_mock_scheduler *sched)
+> > > > > =C2=A0=C2=A0=C2=A0 drm_mock_sched_job_complete(job);
+> > > > > =C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(&sched->lock, flags);
+> > > > > =C2=A0=C2=A0=20
+> > > > > - /*
+> > > > > - * Free completed jobs and jobs not yet processed by the
+> > > > > DRM
+> > > > > scheduler
+> > > > > - * free worker.
+> > > > > - */
+> > > > > - spin_lock_irqsave(&sched->lock, flags);
+> > > > > - list_for_each_entry_safe(job, next, &sched->done_list,
+> > > > > link)
+> > > > > - list_move_tail(&job->link, &list);
+> > > > > - spin_unlock_irqrestore(&sched->lock, flags);
+> > > > > -
+> > > > > - list_for_each_entry_safe(job, next, &list, link)
+> > > > > - mock_sched_free_job(&job->base);
+> > > > > -
+> > > > > =C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
+> > > > > =C2=A0=C2=A0=C2=A0}
+> > > > > =C2=A0=C2=A0=20
+> > > >=20
+> > >=20
+> >=20
+>=20
 
