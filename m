@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A1219D88F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCBF17A2ED;
+	Wed, 14 May 2025 14:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232193; cv=none; b=EKSqWQ6s8Xt8PIECENaAFX5sARqC3PA9+bkJKxMuWm25Ey3ou2zY/rO4cTDXdbFw0GQfGh/YZ83QjNeLV94IO4oyddORyVwreQBSleEScTpjp5TKVI6tX4OhXqxP22cBT4URqZa7JHVBhEAamCgAEVe5GaP4hJqODO6iro1buRA=
+	t=1747232282; cv=none; b=PAqVZ/s+7n7PdjNzKxIwVuXnLuPqfiHjw70Hbcx2HOPm3fcL+pWCkbXRvqjV/Df665Weh88jB7OyJWxg3V1gwFWDRDzHwRGmip70xy9ZP8YKKUJ45jnLUZF/Cnwu4YgsVwzvQeK8heKPAtiqdnAjiQjg5747zpEiBag8ct8So9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232193; c=relaxed/simple;
-	bh=8wCOIaFqXx03fTRlZJYAU8XYsKY8HDddClu3wfIQRmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5x/BN57+G5FrLnmg+O7WC6D4Rsr2yBmBYZskK0bD+Bk+KAzc+12D0kHpOx1iatjiRam/Hq02y8UMmucTH/wqeMxbOcWpY6aCbblb25yMBYP/1sk2dBY3hX2Qx3gT6oML+NwikPxZNVwzQIzMZqTcX+++qqNmyEDs3FP5WRyJpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lrQTm+Y4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747232282; c=relaxed/simple;
+	bh=Phxzd6q4YyKisxokYWmJBWJhBVP+9PoRbs2nn07gWhw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TziS9FR/JYqIWO41i1jcxsXDIH9FkPn5V/qXmRMMRcY0ckdIAr8m09U0GrD/90C6nynZk3ZdmM9PtraXiqDqphbwmnjBF3s3S1uwFNNsZQ2u7ScT37ngcb37wmM8D6zdwW3M/Xr1XyzRoZBjS++R98rM1q8RvO/2Ofy6byNztww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTWSgX37; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lrQTm+Y4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 151B5C4CEE9;
-	Wed, 14 May 2025 14:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747232193;
-	bh=8wCOIaFqXx03fTRlZJYAU8XYsKY8HDddClu3wfIQRmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lrQTm+Y4YpXh3XFYRAH/1+ugXuYmYFGl4/6ayVnXjTfjejmrWwxHRTQ9Cl73ppXZq
-	 klZITa5DOr7n0uMvbcZYnrRF/AC0VhmXQsjeuq77wGPzztn9EjB9wWVEyqx0nRo5wE
-	 w5X1cMxShWNF3idiqc/Od0flwQ7zxTJ7d9+0ZQN7yXU0aN7CrO48NrwqHAlCB4X9nX
-	 Mj417CbMKIuLYUQQgd4ekNO3IRw2c4mQRRp8EvmsDiOHXBtUxWCFVJDvZt6nVQIm9A
-	 xaOXnpM9nbT9eO5kOAAopdcE9GkwRATvoz69HU8yV1j2i6jWqOmoXIO62M94NDmqIt
-	 CjJQCpeO5Q4vQ==
-Date: Wed, 14 May 2025 10:16:30 -0400
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4 sched_ext/for-6.16] sched_ext: Clean up scx_root
- usages
-Message-ID: <aCSlvpiraPTKUqOf@mtj.duckdns.org>
-References: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
- <aCRjUQJ_97-B0Rpo@gpd3>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTWSgX37"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad21cc2594eso291630066b.1;
+        Wed, 14 May 2025 07:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747232279; x=1747837079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=smp2NfEivl6utrDP4h/0mlb9D1eyeTY+H/de43dJ9GM=;
+        b=HTWSgX370bs6iDeS22IVDHumJYFkRO4gVIFc71QrLz2yIgkSyHHn5A2RCr+xwuhGTp
+         VQ5BdFbR8jnFgm10WCJPCYGiGipknbAGioDESovZHD3nhAGDsRyrqW5lpWrWdDvxLao5
+         AvNK7J2kIng2VH2Ssi/l4IMK+mVJrWJRTBuDoX3+XdZYGbQA6hezNPRCB+e0UfcmDfCC
+         D0m9dj+yL6ZLA+IEjJxKzUn3rCPh1QAvTRvVaIWpPgFkCWYzYUdbuEqtYFzhR7/iwSpb
+         4BWMalll+r0tfpTtxJ2Iy3GhD5N6qZTP8tz4LJifjq2sKF6Q+myDvnNri+aAyIL50Wg/
+         LSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747232279; x=1747837079;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=smp2NfEivl6utrDP4h/0mlb9D1eyeTY+H/de43dJ9GM=;
+        b=LKSnr3TeFEikKXPXPC1rtmE/81YyHifryWNiC57Okpbxgn5fAkl75oxLFEJo2NFTAL
+         wB3QFRktGQHuvGg0/RPB72MjztkT4ZmHta8kIIdKq+kG0a8ZA/eF/CKZrHIQnXwcltj0
+         woa1r7uaiH4fyX3aMXvccbyKG0pQb9x/Aio+bEBmcHpCNzlTeH0JaTF4+LN+2UNO7D3B
+         I/HL5/42DTqJYK7ZTuJvs3aHCdOeK3J/78GpkkY/cyUOMMLEFE5NOAw3NHHdiLwgaW6r
+         1PMOMUc117/h+3C4uc/q6QUtz4IGRwNJxt+SljVGdwonvUyItwRAmbFtpOq+PgRHAc/4
+         Fu0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW8Qs4Vb0r7EYUAxrP/Iid6APGLY9T0khHnI9mIQrOzULbcqqE2TRGviQjPnd2gDU/yC7tUZ16PHKzYN5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlgxdqEyWHJVbY1qHDyj18Q66vZL3zvFw1GA0FIiLlJlv5TNln
+	OR9xz0RJ7srxWbyvsSwgt9/wNdQRIsoBT6DDWVL9MgJokJu2lovAzBum0qiRfGA=
+X-Gm-Gg: ASbGncuqNSYPhQdE6p3zSYlO0Q5mHja0X697laSr5jpA/sgQz0nfduosq9hU0nA5eUw
+	HifkGuQ0QPxC3XGOc3NROGHViTAPYJ1sTbVWrXmfPhig9sSw/jiPkBnsPmg5RTnhc6GYsK4pHnR
+	XZvMQs9uFZ925x+XZMtJXv7i/ga+/Iste8F14WzIhHznBy7xnFoVeYKIkMCkbTFaO5niywTC47q
+	Vw/5RuvqA01YsuWTQfkP3Ikp7wA44Yb15dfXs7FQBHksq7E5IrlOVRJqmW9l8WTHSEjllNClxkZ
+	Q8C35be0/qnLA6JIqrloVAGKOaBdUFIhHvn5DLPQvn3XlhnWPeUp4YzkU/3U
+X-Google-Smtp-Source: AGHT+IHrbyWVCrsIgP/9/vdV9ojhJie1TVJA3TTRA/5DqzAoBsaP3kr2agu/GjXzoB9DF5djDpQJzA==
+X-Received: by 2002:a17:907:c491:b0:ad2:2d84:ab80 with SMTP id a640c23a62f3a-ad4f75a9ea2mr381929166b.58.1747232278928;
+        Wed, 14 May 2025 07:17:58 -0700 (PDT)
+Received: from avt74j0.fritz.box ([2a02:8109:8617:d700:456b:224:c095:bd73])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad223992d68sm866691866b.122.2025.05.14.07.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 07:17:58 -0700 (PDT)
+From: Martin Hecht <mhecht73@gmail.com>
+To: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nmchehab@kernel.org,
+	hverkuil@xs4all.nl,
+	sakari.ailus@linux.intel.com
+Cc: laurent.pinchart@ideasonboard.com,
+	tomm.merciai@gmail.com,
+	martin.hecht@avnet.eu,
+	michael.roeder@avnet.eu,
+	Martin Hecht <mhecht73@gmail.com>
+Subject: [PATCH v1] MAINTAINERS: update my email address to gmail.com
+Date: Wed, 14 May 2025 16:17:27 +0200
+Message-ID: <20250514141727.156675-1-mhecht73@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCRjUQJ_97-B0Rpo@gpd3>
+Content-Transfer-Encoding: 8bit
 
-Hello, Andrea.
+replace my corporate email address by @gmail.com
 
-On Wed, May 14, 2025 at 11:33:05AM +0200, Andrea Righi wrote:
-...
-> >  static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags)
-> >  {
-> > +	struct scx_sched *sch = scx_root;
-> 
-> Do we need to use rcu_dereference(scx_root) here, as well as in all the
-> occurrences above where scx_root is dereferenced?
+ Signed-off-by: Martin Hecht <mhecht73@gmail.com>
 
-So, if a task knows that it's attached to a scheduler instance, it knows
-that the scheduler pointer can be dereferenced safely. In case of the root
-scheduler, as long as any task is on SCX, naked derferences of scx_root are
-safe. Also, if there are multiple scheduler instances, we wouldn't want to
-use the root scheduler but rather the scheudler that's serving this task.
+ Changes to be committed:
+	modified:   MAINTAINERS
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, currently, the code base is in a transitional state and I'm using naked
-scx_root dereferences basically as markers for necessary future
-substitutions. All naked references should be safe but they aren't great in
-that they'd trigger e.g. sparse warnings and generally don't look right.
-I'll add a comment on top of scx_root to clarify what's going on.
-
-Thanks.
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5dee8459a614..e4a4f247d826 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -811,7 +811,7 @@ F:	drivers/media/platform/allegro-dvt/
+ 
+ ALLIED VISION ALVIUM CAMERA DRIVER
+ M:	Tommaso Merciai <tomm.merciai@gmail.com>
+-M:	Martin Hecht <martin.hecht@avnet.eu>
++M:	Martin Hecht <mhecht73@gmail.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/i2c/alliedvision,alvium-csi2.yaml
 -- 
-tejun
+2.43.0
+
