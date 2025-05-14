@@ -1,188 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33139221721;
-	Wed, 14 May 2025 11:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A8426FA46;
+	Wed, 14 May 2025 11:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221495; cv=none; b=i6xp8vDLlSm95DamlPA2dbcGZ+w6HISnoGkTjV0surMMOPIvoZpOMSL84nLBuuNLhuDzYJ42d/84C3x+CYnPbRmJXTW1LSp7x9M8spCac+OGKfjp3kmmdZHZiDuipDodnXAjmiGATJ+fp+lyY7ELDG0kupPrE3gMBERNRZ54jjk=
+	t=1747221510; cv=none; b=a1Lyo5K/7Bgr+xuJFiFZLXzy6Am2ONNhLv1BFIhhrsoANn/nPIeReP+FUq6VorIIsipiGz+0bINYlAO6nJ8GoLAs9pjyBN1JiEw6VWasgBuej5FqAyRniycn6eSmyOppUuhVxzyXmsR/83dLYebTU9qLwHrPolc0+aRIQ+WYzwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221495; c=relaxed/simple;
-	bh=4f8Z+7epIpiBcxMeDi1y6we01Z096thqUtKYrJUyTbY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YqW1zWb+tK8VJR68/fa4MmW9cXjkRtSq5JI8No7NKQUv7iYb5+HCPmcEPE89yI2kXXC4lWIwH+pgVOzGYqKdIFYnZhuO7b3CzcwDE02ZOzX0EAFyEwWDZRGBp6ki2brsHy7YjUZPCwAY7OJ6SzZ5mg28fPPf35FmzgG4GabUz1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Esml3Evf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1p0rl9Ht; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747221510; c=relaxed/simple;
+	bh=/QK4PCAGhr3iUKdJkSIAbmO9/EGD6CtY5awmN8eZRzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QR8pTQ06uD/Y7Sp3jZ93EnFcozbGZZvi+CVjRMwgzozUbus1JnSy2VBqbTEOcTfmbG/mOWnp7taN8QDH+qwlhdwiKyBu65uHUfeZaVsX+y54u0djp+lBxNmUQQkjeH9jDB880/jpMAw5lhwJWQO1MKQC8eNdc2+e/gwwXkfKfT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTrZC2+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Esml3Evf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1p0rl9Ht"
-Date: Wed, 14 May 2025 11:18:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747221492;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8cAQwsnpQQu4Xz7KOoBAx4WdOO3GgendAUyq+FiVcdQ=;
-	b=Esml3Evf0N0XXyb4wK5Mnoytz/GL9aC17/ThnIS+Oa7Tmu+lCf7UyJ+ySVP1yi7G6AaBxB
-	GbpuY5xiW2GOOZdAdKE98iTXzSuI6M94vR0YBzxeWIxOV/ZdtAOgvmRU3ZR8CMmOsWiQDy
-	bWE9jTsS8x1SmF+4Wb7hn78I4dPHq9fLCtDNq5BC6Oa4pPrN+Rzi2GdZrAT0osHd+iyo0b
-	+B61uVtS6+q8kkOMslkAL065qIR+m0XxJLwwnfNBrfDoJFIuyZQuFGz3vPZna8u7QF34g0
-	w7bRi5oQHM5Ur450MGAwHJqsJXurEmOgF6awW9VyEJuNyi4oUN8Eg+tOTZWLwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747221492;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8cAQwsnpQQu4Xz7KOoBAx4WdOO3GgendAUyq+FiVcdQ=;
-	b=1p0rl9HtzOO5cgA8wRati9JyWhUuFU7JAYtL6HZxmcLisDmhIR7sOv7+83uAett/gIzQee
-	0IEt0kRWLwqnJ7Dg==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Speed up SHT_GROUP reindexing
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rong Xu <xur@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org>
-References:
- <2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTrZC2+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DBAC4CEE9;
+	Wed, 14 May 2025 11:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747221510;
+	bh=/QK4PCAGhr3iUKdJkSIAbmO9/EGD6CtY5awmN8eZRzk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lTrZC2+l3/YLjOibXtN4OPm1LLwHM5zZ7VLgJVMPu1pBtTaprIHuzpX/chs51P7Kx
+	 klZB2vaNmyE02vKnfzOJCJNSZ9KVNH38RP814zijsLS73LC/hIc9ruPBcQeD2XnmPW
+	 UyJdF2f8EiOZvOwLPbgk0bQ2yw7t66+kZF01a79iEl/VmMEyvD2MuL2saA/v+HbATs
+	 W/wXXc2FLvx+gqltGrz9niOWxXEzuhsinzoXxOVQ9b+JsNEygFyMrwzS2R43l81R2A
+	 vpaSOxhR+lignG90j9mdDZaPyJ8Nu+wZgAIVpfQ3kQh9wz3BjPAapjnTBsv1lKxZwl
+	 MV3/Gyvai3gUg==
+Message-ID: <5dd61d36-14a7-481f-8da8-43d501163ef1@kernel.org>
+Date: Wed, 14 May 2025 14:18:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174722149156.406.8813570845147463596.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 8/9] net: ethernet: ti: am65-cpsw: add network
+ flow classification support
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ danishanwar@ti.com, srk@ti.com, linux-omap@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250513-am65-cpsw-rx-class-v3-0-492d9a2586b6@kernel.org>
+ <20250513-am65-cpsw-rx-class-v3-8-492d9a2586b6@kernel.org>
+ <20250513102954.2e537e99@kernel.org>
+Content-Language: en-US
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <20250513102954.2e537e99@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     4ed9d82bf5b21d65e2f18249eec89a6a84df8f23
-Gitweb:        https://git.kernel.org/tip/4ed9d82bf5b21d65e2f18249eec89a6a84df8f23
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Wed, 07 May 2025 16:56:55 -07:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 14 May 2025 13:09:02 +02:00
 
-objtool: Speed up SHT_GROUP reindexing
+On 13/05/2025 20:29, Jakub Kicinski wrote:
+> On Tue, 13 May 2025 15:13:12 +0300 Roger Quadros wrote:
+>> +	mutex_lock(&port->rxnfc_lock);
+>> +	loc = am65_cpsw_policer_find_match(port, &cfg);
+>> +	if (loc >= 0 && loc != fs->location) {
+>> +		netdev_info(port->ndev,
+>> +			    "rule already exists in location %d. not adding\n",
+>> +			    loc);
+>> +		mutex_unlock(&port->rxnfc_lock);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* delete exisiting rule */
+>> +	if (loc >= 0) {
+>> +		rule = am65_cpsw_get_rule(port, loc);
+>> +		if (rule)
+>> +			am65_cpsw_del_rule(port, rule);
+>> +	}
+>> +
+>> +	rule = devm_kzalloc(port->common->dev, sizeof(*rule), GFP_KERNEL);
+> 
+> please don't use devm_ for objects you must support explicitly freeing
 
-After elf_update_group_sh_info() was introduced, a prototype version of
-"objtool klp diff" went from taking ~1s to several minutes, due to
-looping almost endlessly in elf_update_group_sh_info() while creating
-thousands of local symbols in a file with thousands of sections.
+OK.
 
-Dramatically improve the performance by marking all symbols' correlated
-SHT_GROUP sections while reading the object.  That way there's no need
-to search for it every time a symbol gets reindexed.
+> 
+>> +	if (!rule)
+>> +		return -ENOMEM;
+> 
+> missing unlock
 
-Fixes: 2cb291596e2c ("objtool: Fix up st_info in COMDAT group section")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Rong Xu <xur@google.com>
-Link: https://lkml.kernel.org/r/2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org
----
- tools/objtool/elf.c                 | 47 +++++++++++++++++-----------
- tools/objtool/include/objtool/elf.h |  1 +-
- 2 files changed, 30 insertions(+), 18 deletions(-)
+Ah, will fix.
+> 
+>> +
+>> +	INIT_LIST_HEAD(&rule->list);
+>> +	memcpy(&rule->cfg, &cfg, sizeof(cfg));
+>> +	rule->location = fs->location;
+>> +	ret = am65_cpsw_add_rule(port, rule);
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 8dffe68..ca5d77d 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -572,28 +572,32 @@ err:
- 	return -1;
- }
- 
--/*
-- * @sym's idx has changed.  Update the sh_info in group sections.
-- */
--static void elf_update_group_sh_info(struct elf *elf, Elf32_Word symtab_idx,
--				     Elf32_Word new_idx, Elf32_Word old_idx)
-+static int mark_group_syms(struct elf *elf)
- {
--	struct section *sec;
-+	struct section *symtab, *sec;
-+	struct symbol *sym;
-+
-+	symtab = find_section_by_name(elf, ".symtab");
-+	if (!symtab) {
-+		ERROR("no .symtab");
-+		return -1;
-+	}
- 
- 	list_for_each_entry(sec, &elf->sections, list) {
--		if (sec->sh.sh_type != SHT_GROUP)
--			continue;
--		if (sec->sh.sh_link == symtab_idx &&
--		    sec->sh.sh_info == old_idx) {
--			sec->sh.sh_info = new_idx;
--			mark_sec_changed(elf, sec, true);
--			/*
--			 * Each ELF group should have a unique symbol key.
--			 * Return early on match.
--			 */
--			return;
-+		if (sec->sh.sh_type == SHT_GROUP &&
-+		    sec->sh.sh_link == symtab->idx) {
-+			sym = find_symbol_by_index(elf, sec->sh.sh_info);
-+			if (!sym) {
-+				ERROR("%s: can't find SHT_GROUP signature symbol",
-+				      sec->name);
-+				return -1;
-+			}
-+
-+			sym->group_sec = sec;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- /*
-@@ -787,7 +791,11 @@ __elf_create_symbol(struct elf *elf, struct symbol *sym)
- 		if (elf_update_sym_relocs(elf, old))
- 			return NULL;
- 
--		elf_update_group_sh_info(elf, symtab->idx, new_idx, first_non_local);
-+		if (old->group_sec) {
-+			old->group_sec->sh.sh_info = new_idx;
-+			mark_sec_changed(elf, old->group_sec, true);
-+		}
-+
- 		new_idx = first_non_local;
- 	}
- 
-@@ -1060,6 +1068,9 @@ struct elf *elf_open_read(const char *name, int flags)
- 	if (read_symbols(elf))
- 		goto err;
- 
-+	if (mark_group_syms(elf))
-+		goto err;
-+
- 	if (read_relocs(elf))
- 		goto err;
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index c7c4e87..0a2fa3a 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -72,6 +72,7 @@ struct symbol {
- 	u8 ignore	     : 1;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
-+	struct section *group_sec;
- };
- 
- struct reloc {
+And then here on error we need to kfree(rule)
+
+>> +	mutex_unlock(&port->rxnfc_lock);
+
+-- 
+cheers,
+-roger
+
