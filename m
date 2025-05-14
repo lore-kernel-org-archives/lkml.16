@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07982741A0;
-	Wed, 14 May 2025 13:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC31B27A130;
+	Wed, 14 May 2025 13:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747228269; cv=none; b=PzQn2TAWY36f3ykxC0O9jChdZm2VOfsb3zmO5fNT0SFUkn5aHCtUxBzMyGN/y3nv84xMJ2CPe0PfLlOQH+17PQDuDRTVVH0IsjR4pdZqc4yPhbx+3TxhGFacaV90dW3j5AX7A/UfGUqVk5XaxQnsJcUCFj9KqpznQUJZI0YUx1c=
+	t=1747228270; cv=none; b=Swzg9wWJrgNhIq4YLuoVe8MzRLo4uckmPjxQuJtyauHiH+0CNlvbRXmXzAzpR6oIkLP5TPY2lOacLQwMSBYN1Xb0RTPJe9FR8tm061fKTbvQae8IkeBqv73Q+SrzUX2miCH15xaJTY8bgkyNOHY+uAEZglwQheggi4TMiDprMQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747228269; c=relaxed/simple;
-	bh=LWbOw2PG6oxFMTHL9AQ6/3txcao1bW3c/BXDFtK7IE0=;
+	s=arc-20240116; t=1747228270; c=relaxed/simple;
+	bh=ACTc1qtxv3iJUb1fSk4pVQhfR7x7JfY8PZE/Ox88sfc=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=otD0MEAvwbXn5vbJRa0pkdfYK28HhCV0++QmERHNYZuQbjkg8lwef5JZjKm8KbqkLkvi1rle6xkRcN7hhHdLpUqNry1equgK7FnfmjShJ23wRFUd1g4wG4mBbcr7U40Bus67eq3x1OfphyPedFp5Fa7zG+ZYJEPRUtYrBllt6Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFTFJRO3; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=jWylo+P42y/+e7Mfg54twaIHNt3ClYkY6DUMB2bbWKJb9nKfOCRKzQfC6sWwUfiA1EHPeRKkOc35ZxTwh0gMb/1K1esZJpFhS+a3DErPMVmcH3MtjM2PsZr+iSzaVuiBc82e8NaXTeepVaCJFNbnEyn4hREsZr+IywJpyrhsVZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQw9I1C+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFTFJRO3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32AC4C4CEE9;
-	Wed, 14 May 2025 13:11:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQw9I1C+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5779BC4CEED;
+	Wed, 14 May 2025 13:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747228268;
-	bh=LWbOw2PG6oxFMTHL9AQ6/3txcao1bW3c/BXDFtK7IE0=;
+	s=k20201202; t=1747228270;
+	bh=ACTc1qtxv3iJUb1fSk4pVQhfR7x7JfY8PZE/Ox88sfc=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rFTFJRO3fWWuWxA5WVG/97kGL1saLiNpHlW3krWanaIdC7Wm+zSQjzmmKA7ofntoD
-	 RSsTDlu1n2KshD9skw3CJOiatl8GTaeGL7pNTWGIlwLbf98TKB8Ilu5BNAxz3jaLNr
-	 o24zUi/QDJEo28ULPGbTOxNSRluGpfi69eq6Qt2f2T7D46JJqXaO9h+lFM0bpX1B1+
-	 ulRBprSO1iTvrOHy5wCnvWbAI3or235r+MNiz7fJIXGlhj56QwXaiAS0kqv6iwGcjW
-	 CKBNcRY5zJii+fO2lwFeVvkvS++UZoG38o/EcMRpdiLDm1EX0X41BGGEp0nv+BQJVk
-	 CB6JhEFzsaqRQ==
-Date: Wed, 14 May 2025 08:11:06 -0500
+	b=FQw9I1C+EdwWtQuRSfpVhAuWKrgUgwQR2snvUZisSiSy82gL0Zwx+BlyjpkMUATi6
+	 O2afthiShX2WKbNgrQ1gCbDx/fqt7sQ8i/3JH9tGVSAKdb/EsoMrZ2CAbOyEeSI97X
+	 JEF/X5/FKEb5fL1Zlc5/Z+PdsGWwfmXr737MLYExFVwJlj6yjh46Qce1bSp7YLm3xY
+	 pfMoYo6ElBnWcXx+zInlAt7RcgRxIQoBMazin89dPXfGFBjtRD8fRH6j71UcyBJJhW
+	 29njaxnq6cpPLiELuWKClppKVSdXOZfp96y1EgPbqf94uKhIQL6gUTozup3ECVrVjk
+	 of8iM1mFmlECw==
+Date: Wed, 14 May 2025 08:11:08 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,119 +36,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, 
- mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, 
- bhelgaas@google.com, kw@linux.com, johan+linaro@kernel.org, 
- linux-pci@vger.kernel.org, quic_schintav@quicinc.com, 
- alexandre.torgue@foss.st.com, manivannan.sadhasivam@linaro.org, 
- conor+dt@kernel.org, devicetree@vger.kernel.org, cassel@kernel.org, 
- shradha.t@samsung.com, linux-kernel@vger.kernel.org, 
- thippeswamy.havalige@amd.com, lpieralisi@kernel.org, krzk+dt@kernel.org
-To: Christian Bruel <christian.bruel@foss.st.com>
-In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
-References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
-Message-Id: <174722778588.1826217.8453984370826167855.robh@kernel.org>
-Subject: Re: [PATCH v9 0/9] Add STM32MP25 PCIe drivers
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+ Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+ devicetree@vger.kernel.org
+To: Prabhakar <prabhakar.csengg@gmail.com>
+In-Reply-To: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Message-Id: <174722778646.1826247.6383994216168902303.robh@kernel.org>
+Subject: Re: [PATCH 00/10] Add GBETH, OSTM, RIIC, WDT, and GPU support for
+ RZ/V2N SoC and EVK board
 
 
-On Wed, 14 May 2025 11:15:21 +0200, Christian Bruel wrote:
-> Changes in v9:
->    - Describe atu and dbi2 shadowed registers in pcie_ep node
->    Address RC and EP drivers comments from Manivanna:
->    - Use dev_error_probe() for pm_runtime_enable() calls
->    - Reword Kconfig help message
->    - Move pm_runtime_get_noresume() before devm_pm_runtime_enable()
+On Wed, 14 May 2025 11:15:18 +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Changes in v8:
->    - Whitespace in comment
+> Hi All,
 > 
-> Changes in v7:
->    - Use device_init_wakeup to enable wakeup
->    - Fix comments (Bjorn)
+> This patch series adds support for the following components on the
+> RZ/V2N SoC and RZ/V2N EVK board:
+> 1. GBETH (Gigabit Ethernet)
+> 2. OSTM (General TImer)
+> 3. RIIC (I2C)
+> 4. WDT (Watchdog Timer)
+> 5. GE3D (Mali-G31 GPU)
 > 
-> Changes in v6:
->    - Call device_wakeup_enable() to fix WAKE# wakeup.
->    Address comments from Manivanna:
->    - Fix/Add Comments
->    - Fix DT indents
->    - Remove dw_pcie_ep_linkup() in EP start link
->    - Add PCIE_T_PVPERL_MS delay in RC PERST# deassert
+> Cheers
+> Prabhakar
 > 
-> Changes in v5:
->    Address driver comments from Manivanna:
->    - Use dw_pcie_{suspend/resume}_noirq instead of private ones.
->    - Move dw_pcie_host_init() to probe
->    - Add stm32_remove_pcie_port cleanup function
->    - Use of_node_put in stm32_pcie_parse_port
->    - Remove wakeup-source property
->    - Use generic dev_pm_set_dedicated_wake_irq to support wake# irq
+> Lad Prabhakar (10):
+>   arm64: dts: renesas: r9a09g056: Add GBETH nodes
+>   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH
+>   arm64: dts: renesas: r9a09g056: Add OSTM0-OSTM7 nodes
+>   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable OSTM timers on
+>     RZ/V2N EVK
+>   arm64: dts: renesas: r9a09g056: Add RIIC controllers
+>   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable RIIC controllers
+>   arm64: dts: renesas: r9a09g056: Add WDT0-WDT3 nodes
+>   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable WDT1
+>   arm64: dts: renesas: r9a09g056: Add Mali-G31 GPU node
+>   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable Mali-G31 GPU
 > 
-> Changes in v4:
->    Address bindings comments Rob Herring
->    - Remove phy property form common yaml
->    - Remove phy-name property
->    - Move wake_gpio and reset_gpio to the host root port
-> 
-> Changes in v3:
->    Address comments from Manivanna, Rob and Bjorn:
->    - Move host wakeup helper to dwc core (Mani)
->    - Drop num-lanes=<1> from bindings (Rob)
->    - Fix PCI address of I/O region (Mani)
->    - Moved PHY to a RC rootport subsection (Bjorn, Mani)
->    - Replaced dma-limit quirk by dma-ranges property (Bjorn)
->    - Moved out perst assert/deassert from start/stop link (Mani)
->    - Drop link_up test optim (Mani)
->    - DT and comments rephrasing (Bjorn)
->    - Add dts entries now that the combophy entries has landed
->    - Drop delaying Configuration Requests
-> 
-> Changes in v2:
->    - Fix st,stm32-pcie-common.yaml dt_binding_check
-> 
-> Changes in v1:
->    Address comments from Rob Herring and Bjorn Helgaas:
->    - Drop st,limit-mrrs and st,max-payload-size from this patchset
->    - Remove single reset and clocks binding names and misc yaml cleanups
->    - Split RC/EP common bindings to a separate schema file
->    - Use correct PCIE_T_PERST_CLK_US and PCIE_T_RRS_READY_MS defines
->    - Use .remove instead of .remove_new
->    - Fix bar reset sequence in EP driver
->    - Use cleanup blocks for error handling
->    - Cosmetic fixes
-> 
-> Christian Bruel (9):
->   dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
->   PCI: stm32: Add PCIe host support for STM32MP25
->   dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
->   PCI: stm32: Add PCIe Endpoint support for STM32MP25
->   MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
->   arm64: dts: st: add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
->   arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
->   arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
->   arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
-> 
->  .../bindings/pci/st,stm32-pcie-common.yaml    |  33 ++
->  .../bindings/pci/st,stm32-pcie-ep.yaml        |  67 +++
->  .../bindings/pci/st,stm32-pcie-host.yaml      | 112 +++++
->  MAINTAINERS                                   |   7 +
->  arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |  20 +
->  arch/arm64/boot/dts/st/stm32mp251.dtsi        |  57 +++
->  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |  21 +
->  drivers/pci/controller/dwc/Kconfig            |  24 +
->  drivers/pci/controller/dwc/Makefile           |   2 +
->  drivers/pci/controller/dwc/pcie-stm32-ep.c    | 411 ++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.c       | 364 ++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.h       |  16 +
->  12 files changed, 1134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+>  arch/arm64/boot/dts/renesas/r9a09g056.dtsi    | 569 ++++++++++++++++++
+>  .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 211 +++++++
+>  2 files changed, 780 insertions(+)
 > 
 > --
-> 2.34.1
+> 2.49.0
 > 
 > 
 > 
@@ -170,25 +107,105 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/next-20250514 (best guess, 5/6 blobs matched)
+ Base: tags/next-20250514 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/st/' for 20250514091530.3249364-1-christian.bruel@foss.st.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/renesas/' for 20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com:
 
-arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg: [[1212153856, 1048576], [1213202432, 1048576], [1215299584, 524288], [268435456, 134217728]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg-names:1: 'addr_space' was expected
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-arch/arm64/boot/dts/st/stm32mp257f-dk.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg-names: ['dbi', 'dbi2', 'atu', 'addr_space'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg: [[1212153856, 1048576], [1213202432, 1048576], [1215299584, 524288], [268435456, 134217728]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg-names:1: 'addr_space' was expected
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: pcie-ep@48400000 (st,stm32mp25-pcie-ep): reg-names: ['dbi', 'dbi2', 'atu', 'addr_space'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@11800000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@11801000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@14000000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@14001000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c00000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c01000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c02000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c03000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
+	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@11c00400 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
+	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
+	'renesas,r9a09g047-wdt' was expected
+	'renesas,r9a09g057-wdt' was expected
+	'renesas,rza-wdt' was expected
+	'renesas,rzn1-wdt' was expected
+	'renesas,rzg2l-wdt' was expected
+	'renesas,rzv2m-wdt' was expected
+	'renesas,rcar-gen2-wdt' was expected
+	'renesas,rcar-gen3-wdt' was expected
+	'renesas,rcar-gen4-wdt' was expected
+	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@14400000 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
+	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
+	'renesas,r9a09g047-wdt' was expected
+	'renesas,r9a09g057-wdt' was expected
+	'renesas,rza-wdt' was expected
+	'renesas,rzn1-wdt' was expected
+	'renesas,rzg2l-wdt' was expected
+	'renesas,rzv2m-wdt' was expected
+	'renesas,rcar-gen2-wdt' was expected
+	'renesas,rcar-gen3-wdt' was expected
+	'renesas,rcar-gen4-wdt' was expected
+	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@13000000 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
+	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
+	'renesas,r9a09g047-wdt' was expected
+	'renesas,r9a09g057-wdt' was expected
+	'renesas,rza-wdt' was expected
+	'renesas,rzn1-wdt' was expected
+	'renesas,rzg2l-wdt' was expected
+	'renesas,rzv2m-wdt' was expected
+	'renesas,rcar-gen2-wdt' was expected
+	'renesas,rcar-gen3-wdt' was expected
+	'renesas,rcar-gen4-wdt' was expected
+	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
+arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@13000400 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
+	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
+	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
+	'renesas,r9a09g047-wdt' was expected
+	'renesas,r9a09g057-wdt' was expected
+	'renesas,rza-wdt' was expected
+	'renesas,rzn1-wdt' was expected
+	'renesas,rzg2l-wdt' was expected
+	'renesas,rzv2m-wdt' was expected
+	'renesas,rcar-gen2-wdt' was expected
+	'renesas,rcar-gen3-wdt' was expected
+	'renesas,rcar-gen4-wdt' was expected
+	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
 
 
 
