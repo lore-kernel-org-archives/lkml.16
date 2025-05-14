@@ -1,177 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63C420311;
-	Wed, 14 May 2025 19:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EB2211A16;
+	Wed, 14 May 2025 19:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747252391; cv=none; b=YSxE6Mj4xP17MQwqvnR0Oc1T1GW+O8/32IYrLByR+tYEZHZp50PQ8IrXGWDck+4HgbjQtobx6eTNrMU9xA5X53KdkKXHI9Gmbe5426fAJKqhv15721MDDq/oadEF0SSCMe/YEKolGCAczFei/+Gm3bXz1c7gnpu5Udb++bAex0k=
+	t=1747252420; cv=none; b=Re89Lpm+eCa/0LaDD3PcpOjxMJpl2XTkEfIrcVoyfcx3bV5C7/IEexkNKNiSIYe2Wu8ijCSum4Gstw2eDB9MYU88rQgdANW6rC8Wvux4JYOlcDAZk+UpQ46GXVtDc/Qvz254vo5ZDsz2/QGi6ZapZBxL/QEhpfDO7JX7tXOPEuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747252391; c=relaxed/simple;
-	bh=edV31lDf13nHYBn3fZUgok0YY+ziTTMaoeXYhyTImGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LW0dy39ihjadK39IROdJBtEGaqjYmwPd+dkWX/D0WthzL9Dr+uBiqds5Q2Zu86Z2F7XFg5hI6GajECBg0Eh8Xiv5nZ0w/wovZeK5BxwkDe82X1uBZH2uhGDC2wxZ7bdv1bz8lPuCLoOJvrEqgxlXcAv3cTpRwYGRFt46HLexiSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qks3wIkT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747252420; c=relaxed/simple;
+	bh=o5tDTGaiHLshY8OjJq/NGSYaAhRRUPZLjeGgRea7MvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y2r6/J0epZfWHGYT684fVleC5DQKQBeRqlRHwuV+UGn3v8QlH/j4U3WuKw2k657iwS3RBL6kAOpEFFSC+nAfu8bAIRvpSGey8QVkyfj0EGXNg/pLERkDNrjWJnW+cd8N/Hrwf4uTz49cnDHLLaOzd/Rx8voJgr0voDC7mXpQBFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+aRdVKe; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qks3wIkT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7949CC4CEE3;
-	Wed, 14 May 2025 19:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747252391;
-	bh=edV31lDf13nHYBn3fZUgok0YY+ziTTMaoeXYhyTImGY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qks3wIkTX4bh6aqc1DYNlpraBXFfvMtMN0UZ6lmcGsyL8nud8r0+T3+Ud6C40jfnO
-	 z3qquFdh/cM2BFVrEE91XagPyn9wI1snXlqXkpTJho0k2/gFevzVZLXatumEYJCs/c
-	 5Jbkyi6zjPkbWRlhYWYvLZsFzuM3zkY62v1JK098OfIhXNwR3ZS/wZKJBmF3kmF3z2
-	 69mQi8yg+1ESfo5p/S/6uZiczzCY5BU5nSKS3DKxH8dWRLTv4Peqv2Se5eGOvQPXIM
-	 lsS9TxzJmjYD2uU50nYPT6rweLIzC5k+rA8nNyKbE6kAdT/1EUA1oz58nlBtB5R3E/
-	 CyMGjpFwonYbQ==
-Message-ID: <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
-Date: Wed, 14 May 2025 14:53:09 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+aRdVKe"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b1396171fb1so52110a12.2;
+        Wed, 14 May 2025 12:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747252418; x=1747857218; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YRIf9FO0hwoJQSudwVQSivI2zAyJ6bf8L2XajTcHFwA=;
+        b=a+aRdVKe92TJFTI7P0/p4s9+cvLs1sTj9d2EhS3ToTFzB8i0yHMGu5G+XD7Muqzayg
+         BCA8bDLGNRq6I9qCrmGo1BHsIDhdJ5X2loFc69NeZCTkwUaUqlZiiiBwHOkVZzEKsM1d
+         3/uqPvtTwKvehDdazFyHgI8HmoQAnyBUTd6tJ+8RFEVg0HcMw8pbexoiMAHVbdPzpcUH
+         5bIoo1+P8h5ss1AnmBgi+XjN0amojKjZIAev3EYDvJMrtqmPg1v+MmVrIpOyKj+cDwNM
+         KD8NOFlR2O5OXSSXLXNtMQj877ALyALjPXvWxqgqXMyFcAUyvwvPtT0UnP0y9DCMq/os
+         RstA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747252418; x=1747857218;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YRIf9FO0hwoJQSudwVQSivI2zAyJ6bf8L2XajTcHFwA=;
+        b=RK4YkHtD+bf5PIQl5jrWCYl8VLguou7mlemUANvjzPgI/e0EbKt0QaHXm8NbUJnYiI
+         Tepwe0gDhah3ykjV3Mc/FpyCzQxh+j52yAywchgZd89T37ZvT29400TpeJ8dQZsitwYq
+         qQ2DkYdIDCvOVQenqT0zXa3uDURH5pbPvp2Yd564gmIuGQnrtTJSEOA/g/YcvpG0uURA
+         6N7zLMvebHCaGyUbZKU/d+zdjcP1Zdm5s2Sosnma+k20qJinyCEV2QGs21t6ADhxs+3/
+         FRXQXtPnyeueN3yxsn3iGMQwfSDVQFC0eRm+50BGiV0OWcc+dbAhlQtCoTvV1LZnORfJ
+         u05Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbUyK4/Z/Tl59RRXLLil0YMuwjzHvC9zaEag5/IC9dhSrGodiiSIcgqbBbtXwJ+6pye8KN9IRxD2thGx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDVoeZh85cUDTC6jK1EQFjLPBId+w2/KaKTKWN1OpN0Ybe4l1q
+	vMNjN6k3ho87iYAvFKk3Yoa7bPMDxTagp1ItpzK7BtP8xX9Kr9K8Pfm3G6rWPq8bADmrJAVuHfa
+	tfcvKrcq+zmlSYe5676skn1Taeoc=
+X-Gm-Gg: ASbGncvOdW2urFL7us2SZ863zcPAluIK3seCdqmkpZHJlvjtTm6U6s+a0d12ttuvdaM
+	Jvf23UhKNi1xgmdXREX2pEpzhvk+uwk7TWFwiAHYPfSO4/nX3ijKj4LjuMVtFtK3qZpaJ+jRM69
+	N8lLAt7TgwU68pZcy+vWkju8030hYzgLcq
+X-Google-Smtp-Source: AGHT+IFOC0DDoT9GlWD8T1q+isjp9mb/BojgYP2KxE58FD1VAYDQ4POHjr1Pvowm24hdS8Yg0FeBjay1oiOmx+8YF7Q=
+X-Received: by 2002:a17:90b:560b:b0:2fe:d766:ad8e with SMTP id
+ 98e67ed59e1d1-30e2e59bccamr7460665a91.4.1747252417564; Wed, 14 May 2025
+ 12:53:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-To: Denis Benato <benato.denis96@gmail.com>, Raag Jadav
- <raag.jadav@intel.com>, rafael@kernel.org, mahesh@linux.ibm.com,
- oohall@gmail.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
- aravind.iddamsetty@linux.intel.com
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-14-cgoettsche@seltendoof.de>
+In-Reply-To: <20250511173055.406906-14-cgoettsche@seltendoof.de>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Wed, 14 May 2025 15:53:16 -0400
+X-Gm-Features: AX0GCFt6tOS69tJSh3Ewsfsjru8ywew2zWR-WDHav3k3dPgw9g0D__mhxsv6AB4
+Message-ID: <CAEjxPJ4Q8_PjvvXR9JAs307A0n-9xxS8LkLWE5NmeLgiF-NrdA@mail.gmail.com>
+Subject: Re: [PATCH v3 14/14] selinux: harden MLS context string generation
+ against overflows
+To: cgzones@googlemail.com
+Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Canfeng Guo <guocanfeng@uniontech.com>, 
+	Takaya Saeki <takayas@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/14/2025 11:29 AM, Denis Benato wrote:
-> Hello,
-> 
-> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
-> 
-> you can follow an example of my problems in this [1] bug report.
-> 
-> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
-> 
-> You can see the dmesg here: https://pastebin.com/Um7bmdWi
-> 
-> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
-> 
+On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> Check the length accumulator for the MLS component of security contexts
+> does not overflow in mls_compute_context_len() resulting in
+> out-of-buffer writes in mls_sid_to_context().
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> ---
+> v3: add patch
+> ---
+>  security/selinux/ss/mls.c      | 18 +++++++++-----
+>  security/selinux/ss/services.c | 43 +++++++++++++++++++++++++++++-----
+>  2 files changed, 49 insertions(+), 12 deletions(-)
+>
+> diff --git a/security/selinux/ss/mls.c b/security/selinux/ss/mls.c
+> index 3cd36e2015fa..aa25724f0b0f 100644
+> --- a/security/selinux/ss/mls.c
+> +++ b/security/selinux/ss/mls.c
+> @@ -42,7 +42,8 @@ int mls_compute_context_len(struct policydb *p, struct =
+context *context)
+>         len =3D 1; /* for the beginning ":" */
+>         for (l =3D 0; l < 2; l++) {
+>                 u32 index_sens =3D context->range.level[l].sens;
+> -               len +=3D strlen(sym_name(p, SYM_LEVELS, index_sens - 1));
+> +               if (check_add_overflow(len, strlen(sym_name(p, SYM_LEVELS=
+, index_sens - 1)), &len))
+> +                       return -EOVERFLOW;
 
-Just for clarity - if you unplug your eGPU enclosure before suspend is 
-everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe 
-tunnels?
+I don't believe these checks are necessary, especially once the other
+limits on identifier lengths land.
+The same applies throughout.
 
-The errors after resume in amdgpu /look/ like the device is "missing" 
-from the bus or otherwise not responding.
-
-I think it would be helpful to capture the kernel log with a baseline of 
-6.14.6 but without this patch for comparison of what this patch is 
-actually causing.
-
-> 
-> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
-> 
-> On 5/4/25 11:04, Raag Jadav wrote:
-> 
->> If error flags are set on an AER capable device, most likely either the
->> device recovery is in progress or has already failed. Neither of the
->> cases are well suited for power state transition of the device, since
->> this can lead to unpredictable consequences like resume failure, or in
->> worst case the device is lost because of it. Leave the device in its
->> existing power state to avoid such issues.
->>
->> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->> ---
->>
->> v2: Synchronize AER handling with PCI PM (Rafael)
->> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>      Elaborate "why" (Bjorn)
->>
->> More discussion on [1].
->> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>
->>   drivers/pci/pci.c      | 12 ++++++++++++
->>   drivers/pci/pcie/aer.c | 11 +++++++++++
->>   include/linux/aer.h    |  2 ++
->>   3 files changed, 25 insertions(+)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 4d7c9f64ea24..25b2df34336c 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -9,6 +9,7 @@
->>    */
->>   
->>   #include <linux/acpi.h>
->> +#include <linux/aer.h>
->>   #include <linux/kernel.h>
->>   #include <linux/delay.h>
->>   #include <linux/dmi.h>
->> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>   	   || (state == PCI_D2 && !dev->d2_support))
->>   		return -EIO;
->>   
->> +	/*
->> +	 * If error flags are set on an AER capable device, most likely either
->> +	 * the device recovery is in progress or has already failed. Neither of
->> +	 * the cases are well suited for power state transition of the device,
->> +	 * since this can lead to unpredictable consequences like resume
->> +	 * failure, or in worst case the device is lost because of it. Leave the
->> +	 * device in its existing power state to avoid such issues.
->> +	 */
->> +	if (pci_aer_in_progress(dev))
->> +		return -EIO;
->> +
->>   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>   	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>   		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index a1cf8c7ef628..4040770df4f0 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>   }
->>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>   
->> +bool pci_aer_in_progress(struct pci_dev *dev)
->> +{
->> +	u16 reg16;
->> +
->> +	if (!pcie_aer_is_native(dev))
->> +		return false;
->> +
->> +	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
->> +	return !!(reg16 & PCI_EXP_AER_FLAGS);
->> +}
->> +
->>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>   {
->>   	int rc;
->> diff --git a/include/linux/aer.h b/include/linux/aer.h
->> index 02940be66324..e6a380bb2e68 100644
->> --- a/include/linux/aer.h
->> +++ b/include/linux/aer.h
->> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>   #if defined(CONFIG_PCIEAER)
->>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>   int pcie_aer_is_native(struct pci_dev *dev);
->> +bool pci_aer_in_progress(struct pci_dev *dev);
->>   #else
->>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>   {
->>   	return -EINVAL;
->>   }
->>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>   #endif
->>   
->>   void pci_print_aer(struct pci_dev *dev, int aer_severity,
-
+>
+>                 /* categories */
+>                 head =3D -2;
+> @@ -54,24 +55,29 @@ int mls_compute_context_len(struct policydb *p, struc=
+t context *context)
+>                                 /* one or more negative bits are skipped =
+*/
+>                                 if (head !=3D prev) {
+>                                         nm =3D sym_name(p, SYM_CATS, prev=
+);
+> -                                       len +=3D strlen(nm) + 1;
+> +                                       if (check_add_overflow(len, strle=
+n(nm) + 1, &len))
+> +                                               return -EOVERFLOW;
+>                                 }
+>                                 nm =3D sym_name(p, SYM_CATS, i);
+> -                               len +=3D strlen(nm) + 1;
+> +                               if (check_add_overflow(len, strlen(nm) + =
+1, &len))
+> +                                       return -EOVERFLOW;
+>                                 head =3D i;
+>                         }
+>                         prev =3D i;
+>                 }
+>                 if (prev !=3D head) {
+>                         nm =3D sym_name(p, SYM_CATS, prev);
+> -                       len +=3D strlen(nm) + 1;
+> +                       if (check_add_overflow(len, strlen(nm) + 1, &len)=
+)
+> +                               return -EOVERFLOW;
+>                 }
+>                 if (l =3D=3D 0) {
+>                         if (mls_level_eq(&context->range.level[0],
+>                                          &context->range.level[1]))
+>                                 break;
+> -                       else
+> -                               len++;
+> +                       else {
+> +                               if (check_add_overflow(len, 1, &len))
+> +                                       return -EOVERFLOW;
+> +                       }
+>                 }
+>         }
+>
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/service=
+s.c
+> index 464a4663c993..dc6dce2eb7d2 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -1247,10 +1247,12 @@ static int context_struct_to_string(struct policy=
+db *p,
+>                                     char **scontext, u32 *scontext_len)
+>  {
+>         char *scontextp;
+> +       size_t len;
+> +       int mls_len;
+>
+>         if (scontext)
+>                 *scontext =3D NULL;
+> -       *scontext_len =3D 0;
+> +       len =3D 0;
+>
+>         if (context->len) {
+>                 *scontext_len =3D context->len;
+> @@ -1263,16 +1265,45 @@ static int context_struct_to_string(struct policy=
+db *p,
+>         }
+>
+>         /* Compute the size of the context. */
+> -       *scontext_len +=3D strlen(sym_name(p, SYM_USERS, context->user - =
+1)) + 1;
+> -       *scontext_len +=3D strlen(sym_name(p, SYM_ROLES, context->role - =
+1)) + 1;
+> -       *scontext_len +=3D strlen(sym_name(p, SYM_TYPES, context->type - =
+1)) + 1;
+> -       *scontext_len +=3D mls_compute_context_len(p, context);
+> +       len +=3D strlen(sym_name(p, SYM_USERS, context->user - 1)) + 1;
+> +       len +=3D strlen(sym_name(p, SYM_ROLES, context->role - 1)) + 1;
+> +       len +=3D strlen(sym_name(p, SYM_TYPES, context->type - 1)) + 1;
+> +
+> +       mls_len =3D mls_compute_context_len(p, context);
+> +       if (unlikely(mls_len < 0)) {
+> +               pr_warn_ratelimited("SELinux: %s:  MLS security context c=
+omponent too large [%s:%s:%s[:[%s:%d]-[%s:%d]]]\n",
+> +                                   __func__,
+> +                                   sym_name(p, SYM_USERS, context->user =
+- 1),
+> +                                   sym_name(p, SYM_ROLES, context->role =
+- 1),
+> +                                   sym_name(p, SYM_TYPES, context->type =
+- 1),
+> +                                   sym_name(p, SYM_LEVELS, context->rang=
+e.level[0].sens - 1),
+> +                                   ebitmap_length(&context->range.level[=
+0].cat),
+> +                                   sym_name(p, SYM_LEVELS, context->rang=
+e.level[1].sens - 1),
+> +                                   ebitmap_length(&context->range.level[=
+1].cat));
+> +               return -EOVERFLOW;
+> +       }
+> +
+> +       if (unlikely(check_add_overflow(len, mls_len, &len) || len > CONT=
+EXT_MAXLENGTH)) {
+> +               pr_warn_ratelimited("SELinux: %s:  security context strin=
+g of length %zu too large [%s:%s:%s[:[%s:%d]-[%s:%d]]]\n",
+> +                                   __func__,
+> +                                   len,
+> +                                   sym_name(p, SYM_USERS, context->user =
+- 1),
+> +                                   sym_name(p, SYM_ROLES, context->role =
+- 1),
+> +                                   sym_name(p, SYM_TYPES, context->type =
+- 1),
+> +                                   sym_name(p, SYM_LEVELS, context->rang=
+e.level[0].sens - 1),
+> +                                   ebitmap_length(&context->range.level[=
+0].cat),
+> +                                   sym_name(p, SYM_LEVELS, context->rang=
+e.level[1].sens - 1),
+> +                                   ebitmap_length(&context->range.level[=
+1].cat));
+> +               return -EOVERFLOW;
+> +       }
+> +
+> +       *scontext_len =3D len;
+>
+>         if (!scontext)
+>                 return 0;
+>
+>         /* Allocate space for the context; caller must free this space. *=
+/
+> -       scontextp =3D kmalloc(*scontext_len, GFP_ATOMIC);
+> +       scontextp =3D kmalloc(len, GFP_ATOMIC);
+>         if (!scontextp)
+>                 return -ENOMEM;
+>         *scontext =3D scontextp;
+> --
+> 2.49.0
+>
