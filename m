@@ -1,76 +1,188 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B53B26FA46;
-	Wed, 14 May 2025 11:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33139221721;
+	Wed, 14 May 2025 11:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221486; cv=none; b=ETs9N1qbI10EmxCa4APgkRAYajVTepJVge7+anRozfhljKMSKlpBmzl/yBudLfB1+DRojFGtmI7R5695iifZYG3GQSUHSU8Zhv2dG6TIJGleCA7YRm6pQMO4l6pglMxBzHEHUNHZaxq9tGBO78+WoeNqWX/hsfe7fMtQ1r88yKQ=
+	t=1747221495; cv=none; b=i6xp8vDLlSm95DamlPA2dbcGZ+w6HISnoGkTjV0surMMOPIvoZpOMSL84nLBuuNLhuDzYJ42d/84C3x+CYnPbRmJXTW1LSp7x9M8spCac+OGKfjp3kmmdZHZiDuipDodnXAjmiGATJ+fp+lyY7ELDG0kupPrE3gMBERNRZ54jjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221486; c=relaxed/simple;
-	bh=ImfTXaWkk1+hN0PmnUt6ex6F3XnpD13fp+9U2QnEG2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X/2KkImnxqs/UMQAwhpuBDa+ts9CblrudvCtrbt83+8n203uIfZsi4a4NsXr8UW9tAg7yu4HAaZJjyBs6TBbujBCBY4GHu3obS1S5U04/AP6K2knD06EaE3ITRKsv41MA+xU9uGfz5OQQUfdKf+ekQN2o9wJUvXECm02d1HR/N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D6QKCYAc; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747221495; c=relaxed/simple;
+	bh=4f8Z+7epIpiBcxMeDi1y6we01Z096thqUtKYrJUyTbY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=YqW1zWb+tK8VJR68/fa4MmW9cXjkRtSq5JI8No7NKQUv7iYb5+HCPmcEPE89yI2kXXC4lWIwH+pgVOzGYqKdIFYnZhuO7b3CzcwDE02ZOzX0EAFyEwWDZRGBp6ki2brsHy7YjUZPCwAY7OJ6SzZ5mg28fPPf35FmzgG4GabUz1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Esml3Evf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1p0rl9Ht; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D6QKCYAc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ImfTXaWkk1+hN0PmnUt6ex6F3XnpD13fp+9U2QnEG2E=; b=D6QKCYAcXlofdQS2LF0MKo4JkN
-	dFQwI9iHkMVh7ao18DuIiQcm7niD1NUGzgZkccZxQ8TCPZ65pzk5iioyxduQnbKd7Lz+6vKiZUCJL
-	VtzgrJwU1RnzOb4cO7jJwLNwCLl9foiwMAjRto73VD/nBQgfpp/LAP45j4/n/YN+lbMwKCmgIpqd8
-	M9rIm0/ynXjzO72r9hueWw6KSVkWHsv+MXlBerfhiMpOMppG7alUxy2NcUjFKD+5iM9WKqCaJy0ok
-	48U+TPFZ3MGlnVLdSt12DwFrfJGcF2DsVtS4mB7AoP7aHAamf0R/aQ/e3KmQtFX0sj3TQ4T4Ig5FS
-	V3qjFeLg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFA7V-0000000CCan-3r4c;
-	Wed, 14 May 2025 11:17:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2F74E30082A; Wed, 14 May 2025 13:17:53 +0200 (CEST)
-Date: Wed, 14 May 2025 13:17:53 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Miroslav Benes <mbenes@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@redhat.com>, mingo@kernel.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, jpoimboe@kernel.org,
-	jikos@kernel.org, joe.lawrence@redhat.com,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] sched,livepatch: Untangle cond_resched() and
- live-patching
-Message-ID: <20250514111753.GA16434@noisy.programming.kicks-ass.net>
-References: <20250509113659.wkP_HJ5z@linutronix.de>
- <alpine.LSU.2.21.2505131529080.19621@pobox.suse.cz>
- <20250513140310.GA25639@noisy.programming.kicks-ass.net>
- <alpine.LSU.2.21.2505131604530.19621@pobox.suse.cz>
- <aCRnsN-2x4vpjpCx@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Esml3Evf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1p0rl9Ht"
+Date: Wed, 14 May 2025 11:18:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747221492;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8cAQwsnpQQu4Xz7KOoBAx4WdOO3GgendAUyq+FiVcdQ=;
+	b=Esml3Evf0N0XXyb4wK5Mnoytz/GL9aC17/ThnIS+Oa7Tmu+lCf7UyJ+ySVP1yi7G6AaBxB
+	GbpuY5xiW2GOOZdAdKE98iTXzSuI6M94vR0YBzxeWIxOV/ZdtAOgvmRU3ZR8CMmOsWiQDy
+	bWE9jTsS8x1SmF+4Wb7hn78I4dPHq9fLCtDNq5BC6Oa4pPrN+Rzi2GdZrAT0osHd+iyo0b
+	+B61uVtS6+q8kkOMslkAL065qIR+m0XxJLwwnfNBrfDoJFIuyZQuFGz3vPZna8u7QF34g0
+	w7bRi5oQHM5Ur450MGAwHJqsJXurEmOgF6awW9VyEJuNyi4oUN8Eg+tOTZWLwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747221492;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8cAQwsnpQQu4Xz7KOoBAx4WdOO3GgendAUyq+FiVcdQ=;
+	b=1p0rl9HtzOO5cgA8wRati9JyWhUuFU7JAYtL6HZxmcLisDmhIR7sOv7+83uAett/gIzQee
+	0IEt0kRWLwqnJ7Dg==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/core] objtool: Speed up SHT_GROUP reindexing
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rong Xu <xur@google.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org>
+References:
+ <2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCRnsN-2x4vpjpCx@pathway.suse.cz>
+Message-ID: <174722149156.406.8813570845147463596.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 11:51:44AM +0200, Petr Mladek wrote:
+The following commit has been merged into the objtool/core branch of tip:
 
-> IMHO, it might be easier when it goes via tip. Peter, feel free to
-> take it.
+Commit-ID:     4ed9d82bf5b21d65e2f18249eec89a6a84df8f23
+Gitweb:        https://git.kernel.org/tip/4ed9d82bf5b21d65e2f18249eec89a6a84df8f23
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Wed, 07 May 2025 16:56:55 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 14 May 2025 13:09:02 +02:00
 
-Done!
+objtool: Speed up SHT_GROUP reindexing
 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Tested-by: Petr Mladek <pmladek@suse.com>
+After elf_update_group_sh_info() was introduced, a prototype version of
+"objtool klp diff" went from taking ~1s to several minutes, due to
+looping almost endlessly in elf_update_group_sh_info() while creating
+thousands of local symbols in a file with thousands of sections.
 
-For some reason b4 didn't pick up these tags, added them manually and
-force pushed it again.
+Dramatically improve the performance by marking all symbols' correlated
+SHT_GROUP sections while reading the object.  That way there's no need
+to search for it every time a symbol gets reindexed.
+
+Fixes: 2cb291596e2c ("objtool: Fix up st_info in COMDAT group section")
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Rong Xu <xur@google.com>
+Link: https://lkml.kernel.org/r/2a33e583c87e3283706f346f9d59aac20653b7fd.1746662991.git.jpoimboe@kernel.org
+---
+ tools/objtool/elf.c                 | 47 +++++++++++++++++-----------
+ tools/objtool/include/objtool/elf.h |  1 +-
+ 2 files changed, 30 insertions(+), 18 deletions(-)
+
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 8dffe68..ca5d77d 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -572,28 +572,32 @@ err:
+ 	return -1;
+ }
+ 
+-/*
+- * @sym's idx has changed.  Update the sh_info in group sections.
+- */
+-static void elf_update_group_sh_info(struct elf *elf, Elf32_Word symtab_idx,
+-				     Elf32_Word new_idx, Elf32_Word old_idx)
++static int mark_group_syms(struct elf *elf)
+ {
+-	struct section *sec;
++	struct section *symtab, *sec;
++	struct symbol *sym;
++
++	symtab = find_section_by_name(elf, ".symtab");
++	if (!symtab) {
++		ERROR("no .symtab");
++		return -1;
++	}
+ 
+ 	list_for_each_entry(sec, &elf->sections, list) {
+-		if (sec->sh.sh_type != SHT_GROUP)
+-			continue;
+-		if (sec->sh.sh_link == symtab_idx &&
+-		    sec->sh.sh_info == old_idx) {
+-			sec->sh.sh_info = new_idx;
+-			mark_sec_changed(elf, sec, true);
+-			/*
+-			 * Each ELF group should have a unique symbol key.
+-			 * Return early on match.
+-			 */
+-			return;
++		if (sec->sh.sh_type == SHT_GROUP &&
++		    sec->sh.sh_link == symtab->idx) {
++			sym = find_symbol_by_index(elf, sec->sh.sh_info);
++			if (!sym) {
++				ERROR("%s: can't find SHT_GROUP signature symbol",
++				      sec->name);
++				return -1;
++			}
++
++			sym->group_sec = sec;
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ /*
+@@ -787,7 +791,11 @@ __elf_create_symbol(struct elf *elf, struct symbol *sym)
+ 		if (elf_update_sym_relocs(elf, old))
+ 			return NULL;
+ 
+-		elf_update_group_sh_info(elf, symtab->idx, new_idx, first_non_local);
++		if (old->group_sec) {
++			old->group_sec->sh.sh_info = new_idx;
++			mark_sec_changed(elf, old->group_sec, true);
++		}
++
+ 		new_idx = first_non_local;
+ 	}
+ 
+@@ -1060,6 +1068,9 @@ struct elf *elf_open_read(const char *name, int flags)
+ 	if (read_symbols(elf))
+ 		goto err;
+ 
++	if (mark_group_syms(elf))
++		goto err;
++
+ 	if (read_relocs(elf))
+ 		goto err;
+ 
+diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
+index c7c4e87..0a2fa3a 100644
+--- a/tools/objtool/include/objtool/elf.h
++++ b/tools/objtool/include/objtool/elf.h
+@@ -72,6 +72,7 @@ struct symbol {
+ 	u8 ignore	     : 1;
+ 	struct list_head pv_target;
+ 	struct reloc *relocs;
++	struct section *group_sec;
+ };
+ 
+ struct reloc {
