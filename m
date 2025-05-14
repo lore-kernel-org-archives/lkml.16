@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38C722F392
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F79D230BE6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266196; cv=none; b=D9NQSuLBZdHcUXyLam0r59b1IWWOPXPFMia8++S3qTetoEsibpmySFXtJrbFkPPVCbOOflcKi+bycBGLkiugABX+RV4nwQrqWTBIjpZ2UIGmLi4Zw2MXzOEsdX8I6n4HDekJkUhW4/BTEsW9nOBmD3gc53J+SyA/Iho8Y6Df8pg=
+	t=1747266198; cv=none; b=LBM7lICrs0zqpL3hxl0PgOzlJ2f9xpS7bpFsXZUp9tjM+fDXnMVO2LUqHuLO4OkZAU1o9466nPABWO0u5cuAb3WA5w7sfkKc8arBf/XXeWEJ0ENDuXeH5Ky6kFn1VPuUyCE/+VxwvGssnSShj66LcrGfpnVsokvt3uw8X441PHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266196; c=relaxed/simple;
-	bh=0PD4qw71a92H20thWZwCchz9FaTYnYvvVR8PnCp4a7I=;
+	s=arc-20240116; t=1747266198; c=relaxed/simple;
+	bh=Lmy/KateIDIbX1Vh/hc3V4OevV55wK08eNct+myEsr8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xl326rLIf8uIyOUwcxga/4pplDK60CdQB/N7idUX/AzRfvuWjEr50V/zt9vV3vGH1UHiRAI6irhoa6+wo43kKfHvbV9eijjL8/qHBHXVLsFNN35SN9hkiWfJs76JWuOy565m1dDlXfF4GbCWRbXj3W4cymPQJj7UkfhOhpZw1FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fh/HsReV; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Lexl1VdCL4UGUxXjeBxgf0CGi8issCIdo537iXoUuoi6dxYV9o6rgGhLpLm5J43XWfxmRC1dkHhNbTCF/biFc/lXrhFJ8XUYRURxq7gPovD1MiRq0LJSaKKcwf57Cri1pOG8+S5hEyxnDU3j0rRmXqPPfZHpBduCPHVq9uEerHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NUPQqZe2; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fh/HsReV"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c8c9070d2so551609a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NUPQqZe2"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a29af28d1so353229a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266193; x=1747870993; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266196; x=1747870996; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAI1pIUqm+SvgqmPkfJ097xIdC/ZKJ3Eqw0mKmDTKDI=;
-        b=fh/HsReVyuPLUFANj2xxf9xTbtrLfJzKbUKdap8B2sBewWV9LPKKZ3sp+2ST6sjxuf
-         4L3KZC3T+WxfS9Er2LzheOD0+S3f0K696S4XwQZCaeRcpQ+Ee1jaRENSB/201ea8kQjE
-         rxeoxASCNFJO6l6pHZkiXy46+KBH8+qckeS98vcwtbKdektbDo2bmm0fzymRLjRWfUOg
-         AL1K064zLnPUluK5Jfg22XBkpuJIrLYNJrR2l+SkXYT4Hu+c/7KdkGB9GqfY1fdO9oKO
-         h4PwYDXcwt31ZyCuy6s/stsVjcm1r/qgffmpen05ePyA+wTLyGOlkmA+93CCwBFN6Yao
-         yniw==
+        bh=FoX8u9X05EseKGiP0Nc90upAeUnBU0ZxWjayZNH51Ts=;
+        b=NUPQqZe2QGdmJdLKDClCFij2JW9xsxvUzq8rR/66X24mKbn6DJpq59MqlBJd/aKxos
+         +oMsjl1s/0AMjOmIdAFaYWTpyIg+ubYXoWsPf48fyVdPohIdzDezyoj0R3OUrkviNKqt
+         YKDh4lwzdRj+PdIPJwugBvvntBEueabZeo081B21VkehR5tUsMN/qRVRoo/dBxfwRvmV
+         /4Fg3xzFHV4qF1fdS5R9AjJ8NfFZ3JszNoYoz+apVnc++kzrvYscGon7Czmf+fEMjfgw
+         NTfeOpHc3WWMOU4/Zdhvc+QEm5HwuYOLwDjmR9+7YH42XPw2Sz/BfL/LVems5D4tt4xL
+         9pMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266193; x=1747870993;
+        d=1e100.net; s=20230601; t=1747266196; x=1747870996;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAI1pIUqm+SvgqmPkfJ097xIdC/ZKJ3Eqw0mKmDTKDI=;
-        b=lmk+qLJCZg0dNCnlIkCErEHwcaAPPG/FHTk3P25ZJttSzPV+RFI93fFBO1rnDlp9Gr
-         MaTBn7pPjQMTFlIDZ+CUpHM0Q7tduKRNQvLE0qFgBxbLbYBvI8sS4YZ94KFkNHF3FxUt
-         x0w3qwbiq6KnyFF4VBDZRs7sh77NJ0zAycFCH2CmLAzyVTWSU6jwmSx6SEHdNqof5aSk
-         ssP/OiIne0Swhd2yLlqlmS4qEHDjw4B+ugzH8zh3aK5civc+QYSzw1EBFfAhyWZ9Sowq
-         bA1+ZNesSOw2m2sSi1SylXqB0in6Tgx4FvZwMQ/0TYmAd9C4DmKUgll2G9eSxUV3cP0m
-         FxJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvuMbRsKdm4xyfXUpYfyvrmm7LQC8goVngbc8S0QFYI6REUdYecBkxVx4NT1xOs/UVIW6KK42J3ZM2Jdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWythUC75beu5QKNqaXukUjlp2TB39unmJpXHwO7kTEv/Qy9Bu
-	Pn9q0LANg6rh1glI+8VTb89cUt3qyoa0KaxaCG7WTYGDRLn/He7hsm9t6b5MF3OmXfRiyM1Ffpk
-	voLircQRhgvrDq7OV/hi+vg==
-X-Google-Smtp-Source: AGHT+IEzWKRHvJxFpPHhQwCbO4gUf/opoh8fdITiyrUsafwAX3adeMMi56ilVeaSPhJ42tnf1R8Ds40TdZQq21f91w==
-X-Received: from pjuw5.prod.google.com ([2002:a17:90a:d605:b0:30a:7d22:be7b])
+        bh=FoX8u9X05EseKGiP0Nc90upAeUnBU0ZxWjayZNH51Ts=;
+        b=rQkk7/oyJtNSVyA5H0lBZvnnazWiQUpVC1MHye0y1LXe7teLTsWePYBFIh6W69wFK3
+         sdaqj7RZP4gf09E7VUB/ZfsOHnmkt/Imk+6E3zsjZC4vR8mZMvuFmaOOwk6zrrmVLAKx
+         hUU21764tUf1v9RTrDuDfRZqQGAJtHD4wrn5+BZePuezXhu/zKTzZYxL9clnpS86xgLy
+         YHmzCu9yHVCpEEhigjV2IuORx55yosclx82YTIeNl4R35Cj3ggNc7EuHV5+d2FpE2jiy
+         Xm2JjUE1pUxSRIvV5CUeM5aix1vEGZd8KFUAIf+a3/BqQfEuv1y90pyyz5b/r9ztMppy
+         H6mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMVlsFHx6Ss065o5pSyxhgM5lf6qSrE9YXK9o6RkRI/3s/f68SIf4MwJhflZn3lcjUlHU6JJu/n/AJ+P8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz12i9+A40j3sbxdjvmruWkGitVBWT5Es9YD66JBEW8gzO0Eb4H
+	h6OmgKOx6tUx5bPhPmSya/UJtRPRwj3mbYpNpwkBSWOOWo1ueUhdneXmbRC1F8/G2HnRioxezlA
+	zUEyZcBYPcu/nkDFRRwgtCg==
+X-Google-Smtp-Source: AGHT+IGaGSkp5qHaaTiIyneH7AsmROzySAlzDj2Uoqwi8z9+GG2j6Ou9TrD4KSKnauVFr0+nXqu29XWOBaPDldfVrA==
+X-Received: from pjbpw18.prod.google.com ([2002:a17:90b:2792:b0:2fe:800f:23a])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:d647:b0:30c:540b:9b6 with SMTP id 98e67ed59e1d1-30e2e419501mr9812590a91.0.1747266192909;
- Wed, 14 May 2025 16:43:12 -0700 (PDT)
-Date: Wed, 14 May 2025 16:41:49 -0700
+ 2002:a17:90b:5305:b0:30e:3834:4be6 with SMTP id 98e67ed59e1d1-30e38344ce3mr5416198a91.3.1747266195801;
+ Wed, 14 May 2025 16:43:15 -0700 (PDT)
+Date: Wed, 14 May 2025 16:41:51 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <9a9db594cc0e9d059dd30d2415d0346e09065bb6.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 10/51] KVM: selftests: Refactor vm_mem_add to be more flexible
+Message-ID: <baa8838f623102931e755cf34c86314b305af49c.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 12/51] KVM: selftests: Test conversion flows for guest_memfd
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,636 +96,729 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-enum vm_mem_backing_src_type is encoding too many different
-possibilities on different axes of (1) whether to mmap from an fd, (2)
-granularity of mapping for THP, (3) size of hugetlb mapping, and has
-yet to be extended to support guest_memfd.
+Add minimal tests for guest_memfd to test that when memory is marked
+shared in a VM, the host can read and write to it via an mmap()ed
+address, and the guest can also read and write to it.
 
-When guest_memfd supports mmap() and we also want to support testing
-with mmap()ing from guest_memfd, the number of combinations make
-enumeration in vm_mem_backing_src_type difficult.
+Tests added in this patch use refcounts taken via GUP (requiring
+CONFIG_GUP_TEST) to simulate unexpected refcounts on guest_memfd
+pages.
 
-This refactor separates out vm_mem_backing_src_type from
-userspace_mem_region. For now, vm_mem_backing_src_type remains a
-possible way for tests to specify, on the command line, the
-combination of backing memory to test.
+Test that unexpected refcounts cause conversions to fail.
 
-vm_mem_add() is now the last place where vm_mem_backing_src_type is
-interpreted, to
-
-1. Check validity of requested guest_paddr
-2. Align mmap_size appropriately based on the mapping's page_size and
-   architecture
-3. Install memory appropriately according to mapping's page size
-
-mmap()ing an alias seems to be specific to userfaultfd tests and could
-be refactored out of struct userspace_mem_region and localized in
-userfaultfd tests in future.
-
-This paves the way for replacing vm_mem_backing_src_type with multiple
-command line flags that would specify backing memory more
-flexibly. Future tests are expected to use vm_mem_region_alloc() to
-allocate a struct userspace_mem_region, then use more fundamental
-functions like vm_mem_region_mmap(), vm_mem_region_madvise_thp(),
-kvm_memfd_create(), vm_create_guest_memfd(), and other functions in
-vm_mem_add() to flexibly build up struct userspace_mem_region before
-finally adding the region to the vm with vm_mem_region_add().
-
-Change-Id: Ibb37af8a1a3bbb6de776426302433c5d9613ee76
+Change-Id: I4f8c05aa511bcb9a34921a54fc8315ed89629018
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../testing/selftests/kvm/include/kvm_util.h  |  29 +-
- .../testing/selftests/kvm/include/test_util.h |   2 +
- tools/testing/selftests/kvm/lib/kvm_util.c    | 429 +++++++++++-------
- tools/testing/selftests/kvm/lib/test_util.c   |  25 +
- 4 files changed, 328 insertions(+), 157 deletions(-)
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../kvm/guest_memfd_conversions_test.c        | 589 ++++++++++++++++++
+ .../testing/selftests/kvm/include/kvm_util.h  |  74 +++
+ 3 files changed, 664 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/guest_memfd_conversions_test.c
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 373912464fb4..853ab68cff79 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -35,11 +35,26 @@ struct userspace_mem_region {
- 	struct sparsebit *protected_phy_pages;
- 	int fd;
- 	off_t offset;
--	enum vm_mem_backing_src_type backing_src_type;
-+	/*
-+	 * host_mem is mmap_start aligned upwards to an address suitable for the
-+	 * architecture. In most cases, host_mem and mmap_start are the same,
-+	 * except for s390x, where the host address must be aligned to 1M (due
-+	 * to PGSTEs).
-+	 */
-+#ifdef __s390x__
-+#define S390X_HOST_ADDRESS_ALIGNMENT 0x100000
-+#endif
- 	void *host_mem;
-+	/* host_alias is to mmap_alias as host_mem is to mmap_start */
- 	void *host_alias;
- 	void *mmap_start;
- 	void *mmap_alias;
-+	/*
-+	 * mmap_size is possibly larger than region.memory_size because in some
-+	 * cases, host_mem has to be adjusted upwards (see comment for host_mem
-+	 * above). In those cases, mmap_size has to be adjusted upwards so that
-+	 * enough memory is available in this memslot.
-+	 */
- 	size_t mmap_size;
- 	struct rb_node gpa_node;
- 	struct rb_node hva_node;
-@@ -582,6 +597,18 @@ int __vm_set_user_memory_region2(struct kvm_vm *vm, uint32_t slot, uint32_t flag
- 				 uint64_t gpa, uint64_t size, void *hva,
- 				 uint32_t guest_memfd, uint64_t guest_memfd_offset);
- 
-+struct userspace_mem_region *vm_mem_region_alloc(struct kvm_vm *vm);
-+void *vm_mem_region_mmap(struct userspace_mem_region *region, size_t length,
-+			 int flags, int fd, off_t offset);
-+void vm_mem_region_install_memory(struct userspace_mem_region *region,
-+				  size_t memslot_size, size_t alignment);
-+void vm_mem_region_madvise_thp(struct userspace_mem_region *region, int advice);
-+int vm_mem_region_install_guest_memfd(struct userspace_mem_region *region,
-+				      int guest_memfd);
-+void *vm_mem_region_mmap_alias(struct userspace_mem_region *region, int flags,
-+			       size_t alignment);
-+void vm_mem_region_add(struct kvm_vm *vm, struct userspace_mem_region *region);
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index ccf95ed037c3..bc22a5a23c4c 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -131,6 +131,7 @@ TEST_GEN_PROGS_x86 += access_tracking_perf_test
+ TEST_GEN_PROGS_x86 += coalesced_io_test
+ TEST_GEN_PROGS_x86 += dirty_log_perf_test
+ TEST_GEN_PROGS_x86 += guest_memfd_test
++TEST_GEN_PROGS_x86 += guest_memfd_conversions_test
+ TEST_GEN_PROGS_x86 += hardware_disable_test
+ TEST_GEN_PROGS_x86 += memslot_modification_stress_test
+ TEST_GEN_PROGS_x86 += memslot_perf_test
+diff --git a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
+new file mode 100644
+index 000000000000..34eb6c9a37b1
+--- /dev/null
++++ b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
+@@ -0,0 +1,589 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Test conversion flows for guest_memfd.
++ *
++ * Copyright (c) 2024, Google LLC.
++ */
++#include <linux/kvm.h>
++#include <stdio.h>
++#include <string.h>
++#include <sys/mman.h>
++#include <sys/wait.h>
++#include <unistd.h>
 +
- void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 	enum vm_mem_backing_src_type src_type,
- 	uint64_t guest_paddr, uint32_t slot, uint64_t npages,
-diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-index 77d13d7920cb..b4a03784ac4f 100644
---- a/tools/testing/selftests/kvm/include/test_util.h
-+++ b/tools/testing/selftests/kvm/include/test_util.h
-@@ -149,6 +149,8 @@ size_t get_trans_hugepagesz(void);
- size_t get_def_hugetlb_pagesz(void);
- const struct vm_mem_backing_src_alias *vm_mem_backing_src_alias(uint32_t i);
- size_t get_backing_src_pagesz(uint32_t i);
-+int backing_src_should_madvise(uint32_t i);
-+int get_backing_src_madvise_advice(uint32_t i);
- bool is_backing_src_hugetlb(uint32_t i);
- void backing_src_help(const char *flag);
- enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 815bc45dd8dc..58a3365f479c 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -824,15 +824,12 @@ void kvm_vm_free(struct kvm_vm *vmp)
- 	free(vmp);
- }
- 
--int kvm_memfd_alloc(size_t size, bool hugepages)
-+int kvm_create_memfd(size_t size, unsigned int flags)
- {
--	int memfd_flags = MFD_CLOEXEC;
--	int fd, r;
-+	int fd;
-+	int r;
- 
--	if (hugepages)
--		memfd_flags |= MFD_HUGETLB;
--
--	fd = memfd_create("kvm_selftest", memfd_flags);
-+	fd = memfd_create("kvm_selftest", flags);
- 	TEST_ASSERT(fd != -1, __KVM_SYSCALL_ERROR("memfd_create()", fd));
- 
- 	r = ftruncate(fd, size);
-@@ -844,6 +841,16 @@ int kvm_memfd_alloc(size_t size, bool hugepages)
- 	return fd;
- }
- 
-+int kvm_memfd_alloc(size_t size, bool hugepages)
++#include "kvm_util.h"
++#include "processor.h"
++#include "test_util.h"
++#include "ucall_common.h"
++#include "../../../../mm/gup_test.h"
++
++#define GUEST_MEMFD_SHARING_TEST_SLOT 10
++/*
++ * Use high GPA above APIC_DEFAULT_PHYS_BASE to avoid clashing with
++ * APIC_DEFAULT_PHYS_BASE.
++ */
++#define GUEST_MEMFD_SHARING_TEST_GPA 0x100000000ULL
++#define GUEST_MEMFD_SHARING_TEST_GVA 0x90000000ULL
++
++static int gup_test_fd;
++
++static void pin_pages(void *vaddr, uint64_t size)
 +{
-+	int memfd_flags = MFD_CLOEXEC;
++	const struct pin_longterm_test args = {
++		.addr = (uint64_t)vaddr,
++		.size = size,
++		.flags = PIN_LONGTERM_TEST_FLAG_USE_WRITE,
++	};
 +
-+	if (hugepages)
-+		memfd_flags |= MFD_HUGETLB;
++	gup_test_fd = open("/sys/kernel/debug/gup_test", O_RDWR);
++	TEST_REQUIRE(gup_test_fd > 0);
 +
-+	return kvm_create_memfd(size, memfd_flags);
++	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_START, &args), 0);
 +}
 +
- static void vm_userspace_mem_region_gpa_insert(struct rb_root *gpa_tree,
- 					       struct userspace_mem_region *region)
- {
-@@ -953,185 +960,295 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, uint32_t slot, uint32_t flags
- 		    errno, strerror(errno));
- }
- 
++static void unpin_pages(void)
++{
++	TEST_ASSERT_EQ(ioctl(gup_test_fd, PIN_LONGTERM_TEST_STOP), 0);
++}
++
++static void guest_check_mem(uint64_t gva, char expected_read_value, char write_value)
++{
++	char *mem = (char *)gva;
++
++	if (expected_read_value != 'X')
++		GUEST_ASSERT_EQ(*mem, expected_read_value);
++
++	if (write_value != 'X')
++		*mem = write_value;
++
++	GUEST_DONE();
++}
++
++static int vcpu_run_handle_basic_ucalls(struct kvm_vcpu *vcpu)
++{
++	struct ucall uc;
++	int rc;
++
++keep_going:
++	do {
++		rc = __vcpu_run(vcpu);
++	} while (rc == -1 && errno == EINTR);
++
++	switch (get_ucall(vcpu, &uc)) {
++	case UCALL_PRINTF:
++		REPORT_GUEST_PRINTF(uc);
++		goto keep_going;
++	case UCALL_ABORT:
++		REPORT_GUEST_ASSERT(uc);
++	}
++
++	return rc;
++}
++
 +/**
-+ * Allocates and returns a struct userspace_mem_region.
++ * guest_use_memory() - Assert that guest can use memory at @gva.
++ *
++ * @vcpu: the vcpu to run this test on.
++ * @gva: the virtual address in the guest to try to use.
++ * @expected_read_value: the value that is expected at @gva. Set this to 'X' to
++ *                       skip checking current value.
++ * @write_value: value to write to @gva. Set to 'X' to skip writing value to
++ *               @address.
++ * @expected_errno: the expected errno if an error is expected while reading or
++ *                  writing @gva. Set to 0 if no exception is expected,
++ *                  otherwise set it to the expected errno. If @expected_errno
++ *                  is set, 'Z' is used instead of @expected_read_value or
++ *                  @write_value.
 + */
-+struct userspace_mem_region *vm_mem_region_alloc(struct kvm_vm *vm)
++static void guest_use_memory(struct kvm_vcpu *vcpu, uint64_t gva,
++			     char expected_read_value, char write_value,
++			     int expected_errno)
++{
++	struct kvm_regs original_regs;
++	int rc;
++
++	if (expected_errno > 0) {
++		expected_read_value = 'Z';
++		write_value = 'Z';
++	}
++
++	/*
++	 * Backup and vCPU state from first run so that guest_check_mem can be
++	 * run again and again.
++	 */
++	vcpu_regs_get(vcpu, &original_regs);
++
++	vcpu_args_set(vcpu, 3, gva, expected_read_value, write_value);
++	vcpu_arch_set_entry_point(vcpu, guest_check_mem);
++
++	rc = vcpu_run_handle_basic_ucalls(vcpu);
++
++	if (expected_errno) {
++		TEST_ASSERT_EQ(rc, -1);
++		TEST_ASSERT_EQ(errno, expected_errno);
++
++		switch (expected_errno) {
++		case EFAULT:
++			TEST_ASSERT_EQ(vcpu->run->exit_reason, 0);
++			break;
++		case EACCES:
++			TEST_ASSERT_EQ(vcpu->run->exit_reason, KVM_EXIT_MEMORY_FAULT);
++			break;
++		}
++	} else {
++		struct ucall uc;
++
++		TEST_ASSERT_EQ(rc, 0);
++		TEST_ASSERT_EQ(get_ucall(vcpu, &uc), UCALL_DONE);
++
++		/*
++		 * UCALL_DONE() uses up one struct ucall slot. To reuse the slot
++		 * in another run of guest_check_mem, free up that slot.
++		 */
++		ucall_free((struct ucall *)uc.hva);
++	}
++
++	vcpu_regs_set(vcpu, &original_regs);
++}
++
++/**
++ * host_use_memory() - Assert that host can fault and use memory at @address.
++ *
++ * @address: the address to be testing.
++ * @expected_read_value: the value expected to be read from @address. Set to 'X'
++ *                       to skip checking current value at @address.
++ * @write_value: the value to write to @address. Set to 'X' to skip writing
++ *               value to @address.
++ */
++static void host_use_memory(char *address, char expected_read_value,
++			    char write_value)
++{
++	if (expected_read_value != 'X')
++		TEST_ASSERT_EQ(*address, expected_read_value);
++
++	if (write_value != 'X')
++		*address = write_value;
++}
++
++static void assert_host_cannot_fault(char *address)
++{
++	pid_t child_pid;
++
++	child_pid = fork();
++	TEST_ASSERT(child_pid != -1, "fork failed");
++
++	if (child_pid == 0) {
++		*address = 'A';
++		TEST_FAIL("Child should have exited with a signal");
++	} else {
++		int status;
++
++		waitpid(child_pid, &status, 0);
++
++		TEST_ASSERT(WIFSIGNALED(status),
++			    "Child should have exited with a signal");
++		TEST_ASSERT_EQ(WTERMSIG(status), SIGBUS);
++	}
++}
++
++static void *add_memslot(struct kvm_vm *vm, size_t memslot_size, int guest_memfd)
 +{
 +	struct userspace_mem_region *region;
- 
--/* FIXME: This thing needs to be ripped apart and rewritten. */
--void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
--		uint64_t guest_paddr, uint32_t slot, uint64_t npages,
--		uint32_t flags, int guest_memfd, uint64_t guest_memfd_offset)
-+	/* Allocate and initialize new mem region structure. */
-+	region = calloc(1, sizeof(*region));
-+	TEST_ASSERT(region != NULL, "Insufficient Memory");
-+
-+	region->unused_phy_pages = sparsebit_alloc();
-+	if (vm_arch_has_protected_memory(vm))
-+		region->protected_phy_pages = sparsebit_alloc();
-+
-+	region->fd = -1;
-+	region->region.guest_memfd = -1;
-+
-+	return region;
-+}
-+
-+static size_t compute_page_size(int mmap_flags, int madvise_advice)
-+{
-+	if (mmap_flags & MAP_HUGETLB) {
-+		int size_flags = (mmap_flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK;
-+
-+		if (!size_flags)
-+			return get_def_hugetlb_pagesz();
-+
-+		return 1ULL << size_flags;
-+	}
-+
-+	return madvise_advice == MADV_HUGEPAGE ? get_trans_hugepagesz() : getpagesize();
-+}
-+
-+/**
-+ * Calls mmap() with @length, @flags, @fd, @offset for @region.
-+ *
-+ * Think of this as the struct userspace_mem_region wrapper for the mmap()
-+ * syscall.
-+ */
-+void *vm_mem_region_mmap(struct userspace_mem_region *region, size_t length,
-+			 int flags, int fd, off_t offset)
-+{
 +	void *mem;
 +
-+	if (flags & MAP_SHARED) {
-+		TEST_ASSERT(fd != -1,
-+			    "Ensure that fd is provided for shared mappings.");
-+		TEST_ASSERT(
-+			region->fd == fd || region->region.guest_memfd == fd,
-+			"Ensure that fd is opened before mmap, and is either "
-+			"set up in region->fd or region->region.guest_memfd.");
-+	}
++	TEST_REQUIRE(guest_memfd > 0);
 +
-+	mem = mmap(NULL, length, PROT_READ | PROT_WRITE, flags, fd, offset);
-+	TEST_ASSERT(mem != MAP_FAILED, "Couldn't mmap anonymous memory");
++	region = vm_mem_region_alloc(vm);
 +
-+	region->mmap_start = mem;
-+	region->mmap_size = length;
-+	region->offset = offset;
++	guest_memfd = vm_mem_region_install_guest_memfd(region, guest_memfd);
++	mem = vm_mem_region_mmap(region, memslot_size, MAP_SHARED, guest_memfd, 0);
++	vm_mem_region_install_memory(region, memslot_size, PAGE_SIZE);
++
++	region->region.slot = GUEST_MEMFD_SHARING_TEST_SLOT;
++	region->region.flags = KVM_MEM_GUEST_MEMFD;
++	region->region.guest_phys_addr = GUEST_MEMFD_SHARING_TEST_GPA;
++	region->region.guest_memfd_offset = 0;
++
++	vm_mem_region_add(vm, region);
 +
 +	return mem;
 +}
 +
-+/**
-+ * Installs mmap()ed memory in @region->mmap_start as @region->host_mem,
-+ * checking constraints.
-+ */
-+void vm_mem_region_install_memory(struct userspace_mem_region *region,
-+				  size_t memslot_size, size_t alignment)
++static struct kvm_vm *setup_test(size_t test_page_size, bool init_private,
++				 struct kvm_vcpu **vcpu, int *guest_memfd,
++				 char **mem)
 +{
-+	TEST_ASSERT(region->mmap_size >= memslot_size,
-+		    "mmap()ed memory insufficient for memslot");
++	const struct vm_shape shape = {
++		.mode = VM_MODE_DEFAULT,
++		.type = KVM_X86_SW_PROTECTED_VM,
++	};
++	size_t test_nr_pages;
++	struct kvm_vm *vm;
++	uint64_t flags;
 +
-+	region->host_mem = align_ptr_up(region->mmap_start, alignment);
-+	region->region.userspace_addr = (uint64_t)region->host_mem;
-+	region->region.memory_size = memslot_size;
++	test_nr_pages = test_page_size / PAGE_SIZE;
++	vm = __vm_create_shape_with_one_vcpu(shape, vcpu, test_nr_pages, NULL);
++
++	flags = GUEST_MEMFD_FLAG_SUPPORT_SHARED;
++	if (init_private)
++		flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
++
++	*guest_memfd = vm_create_guest_memfd(vm, test_page_size, flags);
++	TEST_ASSERT(*guest_memfd > 0, "guest_memfd creation failed");
++
++	*mem = add_memslot(vm, test_page_size, *guest_memfd);
++
++	virt_map(vm, GUEST_MEMFD_SHARING_TEST_GVA, GUEST_MEMFD_SHARING_TEST_GPA,
++		 test_nr_pages);
++
++	return vm;
 +}
 +
++static void cleanup_test(size_t guest_memfd_size, struct kvm_vm *vm,
++			 int guest_memfd, char *mem)
++{
++	kvm_vm_free(vm);
++	TEST_ASSERT_EQ(munmap(mem, guest_memfd_size), 0);
 +
-+/**
-+ * Calls madvise with @advice for @region.
-+ *
-+ * Think of this as the struct userspace_mem_region wrapper for the madvise()
-+ * syscall.
-+ */
-+void vm_mem_region_madvise_thp(struct userspace_mem_region *region, int advice)
- {
- 	int ret;
-+
-+	TEST_ASSERT(
-+		region->host_mem && region->mmap_size,
-+		"vm_mem_region_madvise_thp() must be called after vm_mem_region_mmap()");
-+
-+	ret = madvise(region->host_mem, region->mmap_size, advice);
-+	TEST_ASSERT(ret == 0, "madvise failed, addr: %p length: 0x%lx",
-+		    region->host_mem, region->mmap_size);
++	if (guest_memfd > -1)
++		TEST_ASSERT_EQ(close(guest_memfd), 0);
 +}
 +
-+/**
-+ * Installs guest_memfd by setting it up in @region.
-+ *
-+ * Returns the guest_memfd that was installed in the @region.
-+ */
-+int vm_mem_region_install_guest_memfd(struct userspace_mem_region *region,
-+				      int guest_memfd)
++static void test_sharing(void)
 +{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++
++	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
++
++	host_use_memory(mem, 'X', 'A');
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'A', 'B', 0);
++
++	/* Toggle private flag of memory attributes and run the test again. */
++	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
++
++	assert_host_cannot_fault(mem);
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
++
++	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
++
++	host_use_memory(mem, 'C', 'D');
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'D', 'E', 0);
++
++	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
++}
++
++static void test_init_mappable_false(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++
++	vm = setup_test(PAGE_SIZE, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
++
++	assert_host_cannot_fault(mem);
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
++
++	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
++
++	host_use_memory(mem, 'A', 'B');
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
++
++	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
++}
++
++/*
++ * Test that even if there are no folios yet, conversion requests are recorded
++ * in guest_memfd.
++ */
++static void test_conversion_before_allocation(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++
++	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
++
++	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
++
++	assert_host_cannot_fault(mem);
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
++
++	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
++
++	host_use_memory(mem, 'A', 'B');
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
++
++	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
++}
++
++static void __test_conversion_if_not_all_folios_allocated(int total_nr_pages,
++							  int page_to_fault)
++{
++	const int second_page_to_fault = 8;
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	size_t total_size;
++	int guest_memfd;
++	char *mem;
++	int i;
++
++	total_size = PAGE_SIZE * total_nr_pages;
++	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
++
 +	/*
-+	 * Install a unique fd for each memslot so that the fd can be closed
-+	 * when the region is deleted without needing to track if the fd is
-+	 * owned by the framework or by the caller.
++	 * Fault 2 of the pages to test filemap range operations except when
++	 * page_to_fault == second_page_to_fault.
 +	 */
-+	guest_memfd = dup(guest_memfd);
-+	TEST_ASSERT(guest_memfd >= 0, __KVM_SYSCALL_ERROR("dup()", guest_memfd));
-+	region->region.guest_memfd = guest_memfd;
++	host_use_memory(mem + page_to_fault * PAGE_SIZE, 'X', 'A');
++	host_use_memory(mem + second_page_to_fault * PAGE_SIZE, 'X', 'A');
 +
-+	return guest_memfd;
-+}
++	guest_memfd_convert_private(guest_memfd, 0, total_size);
 +
-+/**
-+ * Calls mmap() to create an alias for mmap()ed memory at region->host_mem,
-+ * exactly the same size the was mmap()ed.
-+ *
-+ * This is used mainly for userfaultfd tests.
-+ */
-+void *vm_mem_region_mmap_alias(struct userspace_mem_region *region, int flags,
-+			       size_t alignment)
-+{
-+	region->mmap_alias = mmap(NULL, region->mmap_size,
-+				  PROT_READ | PROT_WRITE, flags, region->fd, 0);
-+	TEST_ASSERT(region->mmap_alias != MAP_FAILED,
-+		    __KVM_SYSCALL_ERROR("mmap()",  (int)(unsigned long)MAP_FAILED));
++	for (i = 0; i < total_nr_pages; ++i) {
++		bool is_faulted;
++		char expected;
 +
-+	region->host_alias = align_ptr_up(region->mmap_alias, alignment);
++		assert_host_cannot_fault(mem + i * PAGE_SIZE);
 +
-+	return region->host_alias;
-+}
-+
-+static void vm_mem_region_assert_no_duplicate(struct kvm_vm *vm, uint32_t slot,
-+					      uint64_t gpa, size_t size)
-+{
- 	struct userspace_mem_region *region;
--	size_t backing_src_pagesz = get_backing_src_pagesz(src_type);
--	size_t mem_size = npages * vm->page_size;
--	size_t alignment;
--
--	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
--
--	TEST_ASSERT(vm_adjust_num_guest_pages(vm->mode, npages) == npages,
--		"Number of guest pages is not compatible with the host. "
--		"Try npages=%d", vm_adjust_num_guest_pages(vm->mode, npages));
--
--	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
--		"address not on a page boundary.\n"
--		"  guest_paddr: 0x%lx vm->page_size: 0x%x",
--		guest_paddr, vm->page_size);
--	TEST_ASSERT((((guest_paddr >> vm->page_shift) + npages) - 1)
--		<= vm->max_gfn, "Physical range beyond maximum "
--		"supported physical address,\n"
--		"  guest_paddr: 0x%lx npages: 0x%lx\n"
--		"  vm->max_gfn: 0x%lx vm->page_size: 0x%x",
--		guest_paddr, npages, vm->max_gfn, vm->page_size);
- 
- 	/*
- 	 * Confirm a mem region with an overlapping address doesn't
- 	 * already exist.
- 	 */
--	region = (struct userspace_mem_region *) userspace_mem_region_find(
--		vm, guest_paddr, (guest_paddr + npages * vm->page_size) - 1);
--	if (region != NULL)
--		TEST_FAIL("overlapping userspace_mem_region already "
--			"exists\n"
--			"  requested guest_paddr: 0x%lx npages: 0x%lx "
--			"page_size: 0x%x\n"
--			"  existing guest_paddr: 0x%lx size: 0x%lx",
--			guest_paddr, npages, vm->page_size,
--			(uint64_t) region->region.guest_phys_addr,
--			(uint64_t) region->region.memory_size);
-+	region = userspace_mem_region_find(vm, gpa, gpa + size - 1);
-+	if (region != NULL) {
-+		TEST_FAIL("overlapping userspace_mem_region already exists\n"
-+			  "  requested gpa: 0x%lx size: 0x%lx"
-+			  "  existing gpa: 0x%lx size: 0x%lx",
-+			  gpa, size,
-+			  (uint64_t) region->region.guest_phys_addr,
-+			  (uint64_t) region->region.memory_size);
++		is_faulted = i == page_to_fault || i == second_page_to_fault;
++		expected = is_faulted ? 'A' : 'X';
++		guest_use_memory(vcpu,
++				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 expected, 'B', 0);
 +	}
- 
- 	/* Confirm no region with the requested slot already exists. */
--	hash_for_each_possible(vm->regions.slot_hash, region, slot_node,
--			       slot) {
-+	hash_for_each_possible(vm->regions.slot_hash, region, slot_node, slot) {
- 		if (region->region.slot != slot)
- 			continue;
- 
--		TEST_FAIL("A mem region with the requested slot "
--			"already exists.\n"
--			"  requested slot: %u paddr: 0x%lx npages: 0x%lx\n"
--			"  existing slot: %u paddr: 0x%lx size: 0x%lx",
--			slot, guest_paddr, npages,
--			region->region.slot,
--			(uint64_t) region->region.guest_phys_addr,
--			(uint64_t) region->region.memory_size);
-+		TEST_FAIL("A mem region with the requested slot already exists.\n"
-+			  "  requested slot: %u paddr: 0x%lx size: 0x%lx\n"
-+			  "  existing slot: %u paddr: 0x%lx size: 0x%lx",
-+			  slot, gpa, size,
-+			  region->region.slot,
-+			  (uint64_t) region->region.guest_phys_addr,
-+			  (uint64_t) region->region.memory_size);
- 	}
++
++	guest_memfd_convert_shared(guest_memfd, 0, total_size);
++
++	for (i = 0; i < total_nr_pages; ++i) {
++		host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
++		guest_use_memory(vcpu,
++				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 'C', 'D', 0);
++	}
++
++	cleanup_test(total_size, vm, guest_memfd, mem);
 +}
- 
--	/* Allocate and initialize new mem region structure. */
--	region = calloc(1, sizeof(*region));
--	TEST_ASSERT(region != NULL, "Insufficient Memory");
--	region->mmap_size = mem_size;
-+/**
-+ * Add a @region to @vm. All necessary fields in region->region should already
-+ * be populated.
-+ *
-+ * Think of this as the struct userspace_mem_region wrapper for the
-+ * KVM_SET_USER_MEMORY_REGION2 ioctl.
-+ */
-+void vm_mem_region_add(struct kvm_vm *vm, struct userspace_mem_region *region)
-+{
-+	uint64_t npages;
-+	uint64_t gpa;
-+	int ret;
- 
--#ifdef __s390x__
--	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
--	alignment = 0x100000;
--#else
--	alignment = 1;
--#endif
-+	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
- 
--	/*
--	 * When using THP mmap is not guaranteed to returned a hugepage aligned
--	 * address so we have to pad the mmap. Padding is not needed for HugeTLB
--	 * because mmap will always return an address aligned to the HugeTLB
--	 * page size.
--	 */
--	if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
--		alignment = max(backing_src_pagesz, alignment);
-+	npages = region->region.memory_size / vm->page_size;
-+	TEST_ASSERT(vm_adjust_num_guest_pages(vm->mode, npages) == npages,
-+		    "Number of guest pages is not compatible with the host. "
-+		    "Try npages=%d", vm_adjust_num_guest_pages(vm->mode, npages));
- 
--	TEST_ASSERT_EQ(guest_paddr, align_up(guest_paddr, backing_src_pagesz));
-+	gpa = region->region.guest_phys_addr;
-+	TEST_ASSERT((gpa % vm->page_size) == 0,
-+		    "Guest physical address not on a page boundary.\n"
-+		    "  gpa: 0x%lx vm->page_size: 0x%x",
-+		    gpa, vm->page_size);
-+	TEST_ASSERT((((gpa >> vm->page_shift) + npages) - 1) <= vm->max_gfn,
-+		    "Physical range beyond maximum supported physical address,\n"
-+		    "  gpa: 0x%lx npages: 0x%lx\n"
-+		    "  vm->max_gfn: 0x%lx vm->page_size: 0x%x",
-+		    gpa, npages, vm->max_gfn, vm->page_size);
- 
--	/* Add enough memory to align up if necessary */
--	if (alignment > 1)
--		region->mmap_size += alignment;
-+	vm_mem_region_assert_no_duplicate(vm, region->region.slot, gpa,
-+					  region->mmap_size);
- 
--	region->fd = -1;
--	if (backing_src_is_shared(src_type))
--		region->fd = kvm_memfd_alloc(region->mmap_size,
--					     src_type == VM_MEM_SRC_SHARED_HUGETLB);
--
--	region->mmap_start = mmap(NULL, region->mmap_size,
--				  PROT_READ | PROT_WRITE,
--				  vm_mem_backing_src_alias(src_type)->flag,
--				  region->fd, 0);
--	TEST_ASSERT(region->mmap_start != MAP_FAILED,
--		    __KVM_SYSCALL_ERROR("mmap()", (int)(unsigned long)MAP_FAILED));
--
--	TEST_ASSERT(!is_backing_src_hugetlb(src_type) ||
--		    region->mmap_start == align_ptr_up(region->mmap_start, backing_src_pagesz),
--		    "mmap_start %p is not aligned to HugeTLB page size 0x%lx",
--		    region->mmap_start, backing_src_pagesz);
--
--	/* Align host address */
--	region->host_mem = align_ptr_up(region->mmap_start, alignment);
--
--	/* As needed perform madvise */
--	if ((src_type == VM_MEM_SRC_ANONYMOUS ||
--	     src_type == VM_MEM_SRC_ANONYMOUS_THP) && thp_configured()) {
--		ret = madvise(region->host_mem, mem_size,
--			      src_type == VM_MEM_SRC_ANONYMOUS ? MADV_NOHUGEPAGE : MADV_HUGEPAGE);
--		TEST_ASSERT(ret == 0, "madvise failed, addr: %p length: 0x%lx src_type: %s",
--			    region->host_mem, mem_size,
--			    vm_mem_backing_src_alias(src_type)->name);
--	}
--
--	region->backing_src_type = src_type;
--
--	if (flags & KVM_MEM_GUEST_MEMFD) {
--		if (guest_memfd < 0) {
--			uint32_t guest_memfd_flags = 0;
--			TEST_ASSERT(!guest_memfd_offset,
--				    "Offset must be zero when creating new guest_memfd");
--			guest_memfd = vm_create_guest_memfd(vm, mem_size, guest_memfd_flags);
--		} else {
--			/*
--			 * Install a unique fd for each memslot so that the fd
--			 * can be closed when the region is deleted without
--			 * needing to track if the fd is owned by the framework
--			 * or by the caller.
--			 */
--			guest_memfd = dup(guest_memfd);
--			TEST_ASSERT(guest_memfd >= 0, __KVM_SYSCALL_ERROR("dup()", guest_memfd));
--		}
--
--		region->region.guest_memfd = guest_memfd;
--		region->region.guest_memfd_offset = guest_memfd_offset;
--	} else {
--		region->region.guest_memfd = -1;
--	}
--
--	region->unused_phy_pages = sparsebit_alloc();
--	if (vm_arch_has_protected_memory(vm))
--		region->protected_phy_pages = sparsebit_alloc();
--	sparsebit_set_num(region->unused_phy_pages,
--		guest_paddr >> vm->page_shift, npages);
--	region->region.slot = slot;
--	region->region.flags = flags;
--	region->region.guest_phys_addr = guest_paddr;
--	region->region.memory_size = npages * vm->page_size;
--	region->region.userspace_addr = (uintptr_t) region->host_mem;
- 	ret = __vm_ioctl(vm, KVM_SET_USER_MEMORY_REGION2, &region->region);
- 	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION2 IOCTL failed,\n"
--		"  rc: %i errno: %i\n"
--		"  slot: %u flags: 0x%x\n"
--		"  guest_phys_addr: 0x%lx size: 0x%lx guest_memfd: %d",
--		ret, errno, slot, flags,
--		guest_paddr, (uint64_t) region->region.memory_size,
--		region->region.guest_memfd);
-+		    "  rc: %i errno: %i\n"
-+		    "  slot: %u flags: 0x%x\n"
-+		    "  guest_phys_addr: 0x%lx size: 0x%llx guest_memfd: %d",
-+		    ret, errno, region->region.slot, region->region.flags,
-+		    gpa, region->region.memory_size,
-+		    region->region.guest_memfd);
 +
-+	sparsebit_set_num(region->unused_phy_pages, gpa >> vm->page_shift, npages);
- 
- 	/* Add to quick lookup data structures */
- 	vm_userspace_mem_region_gpa_insert(&vm->regions.gpa_tree, region);
- 	vm_userspace_mem_region_hva_insert(&vm->regions.hva_tree, region);
--	hash_add(vm->regions.slot_hash, &region->slot_node, slot);
-+	hash_add(vm->regions.slot_hash, &region->slot_node, region->region.slot);
++static void test_conversion_if_not_all_folios_allocated(void)
++{
++	const int total_nr_pages = 16;
++	int i;
++
++	for (i = 0; i < total_nr_pages; ++i)
++		__test_conversion_if_not_all_folios_allocated(total_nr_pages, i);
 +}
- 
--	/* If shared memory, create an alias. */
--	if (region->fd >= 0) {
--		region->mmap_alias = mmap(NULL, region->mmap_size,
--					  PROT_READ | PROT_WRITE,
--					  vm_mem_backing_src_alias(src_type)->flag,
--					  region->fd, 0);
--		TEST_ASSERT(region->mmap_alias != MAP_FAILED,
--			    __KVM_SYSCALL_ERROR("mmap()",  (int)(unsigned long)MAP_FAILED));
-+void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
-+		uint64_t guest_paddr, uint32_t slot, uint64_t npages,
-+		uint32_t flags, int guest_memfd, uint64_t guest_memfd_offset)
++
++static void test_conversions_should_not_affect_surrounding_pages(void)
 +{
-+	struct userspace_mem_region *region;
-+	size_t mapping_page_size;
-+	size_t memslot_size;
-+	int madvise_advice;
-+	size_t mmap_size;
-+	size_t alignment;
-+	int mmap_flags;
-+	int memfd;
- 
--		/* Align host alias address */
--		region->host_alias = align_ptr_up(region->mmap_alias, alignment);
-+	memslot_size = npages * vm->page_size;
++	struct kvm_vcpu *vcpu;
++	int page_to_convert;
++	struct kvm_vm *vm;
++	size_t total_size;
++	int guest_memfd;
++	int nr_pages;
++	char *mem;
++	int i;
 +
-+	mmap_flags = vm_mem_backing_src_alias(src_type)->flag;
-+	madvise_advice = get_backing_src_madvise_advice(src_type);
-+	mapping_page_size = compute_page_size(mmap_flags, madvise_advice);
++	page_to_convert = 2;
++	nr_pages = 4;
++	total_size = PAGE_SIZE * nr_pages;
 +
-+	TEST_ASSERT_EQ(guest_paddr, align_up(guest_paddr, mapping_page_size));
++	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
 +
-+	alignment = mapping_page_size;
-+#ifdef __s390x__
-+	alignment = max(alignment, S390X_HOST_ADDRESS_ALIGNMENT);
-+#endif
++	for (i = 0; i < nr_pages; ++i) {
++		host_use_memory(mem + i * PAGE_SIZE, 'X', 'A');
++		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 'A', 'B', 0);
++	}
 +
-+	region = vm_mem_region_alloc(vm);
++	guest_memfd_convert_private(guest_memfd, PAGE_SIZE * page_to_convert, PAGE_SIZE);
 +
-+	memfd = -1;
-+	if (backing_src_is_shared(src_type)) {
-+		unsigned int memfd_flags = MFD_CLOEXEC;
 +
-+		if (src_type == VM_MEM_SRC_SHARED_HUGETLB)
-+			memfd_flags |= MFD_HUGETLB;
++	for (i = 0; i < nr_pages; ++i) {
++		char to_check;
 +
-+		memfd = kvm_create_memfd(memslot_size, memfd_flags);
- 	}
-+	region->fd = memfd;
-+
-+	mmap_size = align_up(memslot_size, alignment);
-+	vm_mem_region_mmap(region, mmap_size, mmap_flags, memfd, 0);
-+	vm_mem_region_install_memory(region, memslot_size, alignment);
-+
-+	if (backing_src_should_madvise(src_type))
-+		vm_mem_region_madvise_thp(region, madvise_advice);
-+
-+	if (backing_src_is_shared(src_type))
-+		vm_mem_region_mmap_alias(region, mmap_flags, alignment);
-+
-+	if (flags & KVM_MEM_GUEST_MEMFD) {
-+		if (guest_memfd < 0) {
-+			TEST_ASSERT(
-+				guest_memfd_offset == 0,
-+				"Offset must be zero when creating new guest_memfd");
-+			guest_memfd = vm_create_guest_memfd(vm, memslot_size, 0);
++		if (i == page_to_convert) {
++			assert_host_cannot_fault(mem + i * PAGE_SIZE);
++			to_check = 'B';
++		} else {
++			host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
++			to_check = 'C';
 +		}
 +
-+		vm_mem_region_install_guest_memfd(region, guest_memfd);
++		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 to_check, 'D', 0);
 +	}
 +
-+	region->region.slot = slot;
-+	region->region.flags = flags;
-+	region->region.guest_phys_addr = guest_paddr;
-+	region->region.guest_memfd_offset = guest_memfd_offset;
-+	vm_mem_region_add(vm, region);
- }
- 
- void vm_userspace_mem_region_add(struct kvm_vm *vm,
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index 8ed0b74ae837..24dc90693afd 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -308,6 +308,31 @@ size_t get_backing_src_pagesz(uint32_t i)
- 	}
- }
- 
-+int backing_src_should_madvise(uint32_t i)
-+{
-+	switch (i) {
-+	case VM_MEM_SRC_ANONYMOUS:
-+	case VM_MEM_SRC_SHMEM:
-+	case VM_MEM_SRC_ANONYMOUS_THP:
-+		return true;
-+	default:
-+		return false;
++	guest_memfd_convert_shared(guest_memfd, PAGE_SIZE * page_to_convert, PAGE_SIZE);
++
++
++	for (i = 0; i < nr_pages; ++i) {
++		host_use_memory(mem + i * PAGE_SIZE, 'D', 'E');
++		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 'E', 'F', 0);
 +	}
++
++	cleanup_test(total_size, vm, guest_memfd, mem);
 +}
 +
-+int get_backing_src_madvise_advice(uint32_t i)
++static void __test_conversions_should_fail_if_memory_has_elevated_refcount(
++	int nr_pages, int page_to_convert)
 +{
-+	switch (i) {
-+	case VM_MEM_SRC_ANONYMOUS:
-+	case VM_MEM_SRC_SHMEM:
-+		return MADV_NOHUGEPAGE;
-+	case VM_MEM_SRC_ANONYMOUS_THP:
-+		return MADV_NOHUGEPAGE;
-+	default:
-+		return 0;
++	struct kvm_vcpu *vcpu;
++	loff_t error_offset;
++	struct kvm_vm *vm;
++	size_t total_size;
++	int guest_memfd;
++	char *mem;
++	int ret;
++	int i;
++
++	total_size = PAGE_SIZE * nr_pages;
++	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
++
++	pin_pages(mem + page_to_convert * PAGE_SIZE, PAGE_SIZE);
++
++	for (i = 0; i < nr_pages; i++) {
++		host_use_memory(mem + i * PAGE_SIZE, 'X', 'A');
++		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 'A', 'B', 0);
 +	}
++
++	error_offset = 0;
++	ret = __guest_memfd_convert_private(guest_memfd, page_to_convert * PAGE_SIZE,
++					    PAGE_SIZE, &error_offset);
++	TEST_ASSERT_EQ(ret, -1);
++	TEST_ASSERT_EQ(errno, EAGAIN);
++	TEST_ASSERT_EQ(error_offset, page_to_convert * PAGE_SIZE);
++
++	unpin_pages();
++
++	guest_memfd_convert_private(guest_memfd, page_to_convert * PAGE_SIZE, PAGE_SIZE);
++
++	for (i = 0; i < nr_pages; i++) {
++		char expected;
++
++		if (i == page_to_convert)
++			assert_host_cannot_fault(mem + i * PAGE_SIZE);
++		else
++			host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
++
++		expected = i == page_to_convert ? 'X' : 'C';
++		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 expected, 'D', 0);
++	}
++
++	guest_memfd_convert_shared(guest_memfd, page_to_convert * PAGE_SIZE, PAGE_SIZE);
++
++
++	for (i = 0; i < nr_pages; i++) {
++		char expected = i == page_to_convert ? 'X' : 'D';
++
++		host_use_memory(mem + i * PAGE_SIZE, expected, 'E');
++		guest_use_memory(vcpu,
++				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
++				 'E', 'F', 0);
++	}
++
++	cleanup_test(total_size, vm, guest_memfd, mem);
++}
++/*
++ * This test depends on CONFIG_GUP_TEST to provide a kernel module that exposes
++ * pin_user_pages() to userspace.
++ */
++static void test_conversions_should_fail_if_memory_has_elevated_refcount(void)
++{
++	int i;
++
++	for (i = 0; i < 4; i++)
++		__test_conversions_should_fail_if_memory_has_elevated_refcount(4, i);
 +}
 +
- bool is_backing_src_hugetlb(uint32_t i)
- {
- 	return !!(vm_mem_backing_src_alias(i)->flag & MAP_HUGETLB);
++static void test_truncate_should_not_change_mappability(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++	int ret;
++
++	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
++
++	host_use_memory(mem, 'X', 'A');
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
++			0, PAGE_SIZE);
++	TEST_ASSERT(!ret, "truncating the first page should succeed");
++
++	host_use_memory(mem, 'X', 'A');
++
++	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
++
++	assert_host_cannot_fault(mem);
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'A', 'A', 0);
++
++	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
++			0, PAGE_SIZE);
++	TEST_ASSERT(!ret, "truncating the first page should succeed");
++
++	assert_host_cannot_fault(mem);
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
++
++	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
++}
++
++static void test_fault_type_independent_of_mem_attributes(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int guest_memfd;
++	char *mem;
++
++	vm = setup_test(PAGE_SIZE, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
++	vm_mem_set_shared(vm, GUEST_MEMFD_SHARING_TEST_GPA, PAGE_SIZE);
++
++	/*
++	 * kvm->mem_attr_array set to shared, guest_memfd memory initialized as
++	 * private.
++	 */
++
++	/* Host cannot use private memory. */
++	assert_host_cannot_fault(mem);
++
++	/* Guest can fault and use memory. */
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
++
++	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
++	vm_mem_set_private(vm, GUEST_MEMFD_SHARING_TEST_GPA, PAGE_SIZE);
++
++	/* Host can use shared memory. */
++	host_use_memory(mem, 'X', 'A');
++
++	/* Guest can also use shared memory. */
++	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
++
++	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
++}
++
++int main(int argc, char *argv[])
++{
++	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
++	TEST_REQUIRE(kvm_check_cap(KVM_CAP_GMEM_SHARED_MEM));
++	TEST_REQUIRE(kvm_check_cap(KVM_CAP_GMEM_CONVERSION));
++
++	test_sharing();
++	test_init_mappable_false();
++	test_conversion_before_allocation();
++	test_conversion_if_not_all_folios_allocated();
++	test_conversions_should_not_affect_surrounding_pages();
++	test_truncate_should_not_change_mappability();
++	test_conversions_should_fail_if_memory_has_elevated_refcount();
++	test_fault_type_independent_of_mem_attributes();
++
++	return 0;
++}
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 853ab68cff79..ffe0625f2d71 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -18,11 +18,13 @@
+ #include <asm/atomic.h>
+ #include <asm/kvm.h>
+ 
++#include <string.h>
+ #include <sys/ioctl.h>
+ 
+ #include "kvm_util_arch.h"
+ #include "kvm_util_types.h"
+ #include "sparsebit.h"
++#include <sys/types.h>
+ 
+ #define KVM_DEV_PATH "/dev/kvm"
+ #define KVM_MAX_VCPUS 512
+@@ -426,6 +428,78 @@ static inline void vm_mem_set_shared(struct kvm_vm *vm, uint64_t gpa,
+ 	vm_set_memory_attributes(vm, gpa, size, 0);
+ }
+ 
++static inline int __guest_memfd_convert_private(int guest_memfd, loff_t offset,
++						size_t size, loff_t *error_offset)
++{
++	int ret;
++
++	struct kvm_gmem_convert param = {
++		.offset = offset,
++		.size = size,
++		.error_offset = 0,
++	};
++
++	ret = ioctl(guest_memfd, KVM_GMEM_CONVERT_PRIVATE, &param);
++	if (ret)
++		*error_offset = param.error_offset;
++
++	return ret;
++}
++
++static inline void guest_memfd_convert_private(int guest_memfd, loff_t offset,
++					       size_t size)
++{
++	loff_t error_offset;
++	int retries;
++	int ret;
++
++	retries = 2;
++	do {
++		error_offset = 0;
++		ret = __guest_memfd_convert_private(guest_memfd, offset, size,
++						    &error_offset);
++	} while (ret == -1 && errno == EAGAIN && --retries > 0);
++
++	TEST_ASSERT(!ret, "Unexpected error %s (%m) at offset 0x%lx",
++		    strerrorname_np(errno), error_offset);
++}
++
++static inline int __guest_memfd_convert_shared(int guest_memfd, loff_t offset,
++					       size_t size, loff_t *error_offset)
++{
++	int ret;
++
++	struct kvm_gmem_convert param = {
++		.offset = offset,
++		.size = size,
++		.error_offset = 0,
++	};
++
++	ret = ioctl(guest_memfd, KVM_GMEM_CONVERT_SHARED, &param);
++	if (ret)
++		*error_offset = param.error_offset;
++
++	return ret;
++}
++
++static inline void guest_memfd_convert_shared(int guest_memfd, loff_t offset,
++					      size_t size)
++{
++	loff_t error_offset;
++	int retries;
++	int ret;
++
++	retries = 2;
++	do {
++		error_offset = 0;
++		ret = __guest_memfd_convert_shared(guest_memfd, offset, size,
++						    &error_offset);
++	} while (ret == -1 && errno == EAGAIN && --retries > 0);
++
++	TEST_ASSERT(!ret, "Unexpected error %s (%m) at offset 0x%lx",
++		    strerrorname_np(errno), error_offset);
++}
++
+ void vm_guest_mem_fallocate(struct kvm_vm *vm, uint64_t gpa, uint64_t size,
+ 			    bool punch_hole);
+ 
 -- 
 2.49.0.1045.g170613ef41-goog
 
