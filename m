@@ -1,566 +1,454 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA8C120;
-	Wed, 14 May 2025 20:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253088; cv=none; b=FNEHJSFMGHLW3iwjzhMvAV7Xmsh6GkBecQ1Vn+BGX8sn9IaZQkTu+vu+JIQPMMCheErZWFgoQblwFmd5bPnnfhUtXkL7BKKmcEDfNslbtwcr24uGQtBNBWMTuMDhd/sEecOK9gZKzrCXzpq+fJWV4XWDGJph/La885T2T8G971c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253088; c=relaxed/simple;
-	bh=246Are/mRoUxNFRbYb0hiCd2/mp652DLO+8XgKyNyZg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=P1RWdPHLhCu0ImCJavSQF3y+q8z76Frw7rawtAK9XnysOqJ9EnwtOJ0RXIMNbqpfNuDzzG3/aJ+BFMspmPdGh99QdKBcXmfMmL2vOgaFtE2aIG7E6qqnsfBpb348kx2qkaiaaQktgjBmR9NDYGI5uYPvWHOqJ32nqjZwWclHqjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHrqa1hk; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676FDC120;
+	Wed, 14 May 2025 20:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747253098; cv=fail; b=TtmZHqWCKDdfeNokqX/Bbux6u90VhnA4K7N3B+KzzrnRfGI1mWlYgSTQPJ0PqgYaiX89fxeTvX7CWhRXBsH74rSaLXUuxOVKD7gEtIjtdimckDBETGPvAaEQGQnvg649G9Mffd2a3aU0EVwxEJ6PdBXttmCfqbXIbdt7Zc0NGrk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747253098; c=relaxed/simple;
+	bh=C9KIldj4qHQujjMALKuKTBFHPXONrRCYHOjxSDnVjg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EpwWpk7c5pS7J/ibyxG/sq3GYstf51P1ZG4MG9OPJz6+pGB6A255oaRrSDcqDk5VCYGQew1mo/3DWl+yqaKbGl0ohwmsiXND3NXc8NHUN56srEKb0bbUZq2OSZCxu071uewFHS5jfMVYeEIVvw4b92hcoEgmLfq77FjyUAjRMXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=UKvIfe2V; arc=fail smtp.client-ip=40.107.93.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHrqa1hk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49D1C4CEE3;
-	Wed, 14 May 2025 20:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747253088;
-	bh=246Are/mRoUxNFRbYb0hiCd2/mp652DLO+8XgKyNyZg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=QHrqa1hkyHdg5BQE9zJg5hzT2huZEvl5JaJtXhsr889AcpaEv2wC7jrb/sxRjqx9y
-	 FckrvB5zc33/cDOKCa9Eq2pl/iqvof72JyvIZor4Kd/yVEpjsXoz1uAQ8iUxz23/EQ
-	 gXwPngA4VgBzAYd3CnFBaYFk3zIESznnjPTyg/YgeG6G07KeA31JIsREGH9f8XS0ay
-	 AmO7gImif1KXRac1MpmGfAM73+1jxtp9GhkOY2nv1Aun/Jn+M5l52sYXbcYQOEk8Fu
-	 9+PQYraZJsZwmi3ZMMT1GTA33MgUXQCeMnM1fb8qyfCclhDjeaPl4kOU6HoOStgo3u
-	 TKyO14MBSHpWA==
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UKvIfe2V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AruhYA/TQxx/wXxvVhfFf+iHlHg5GlBgyjFhG1Wnc0tKPL3TkYVdzaBHSVXS4Pb5sTDs3/wl7QtQddmsSILLLmv5+/J027Fp78EluLE/vbw8icte/KWj5gLdJPpVmpxPci0/FPaNyLRaauVi5ZevEqoAiub49h/IwJ3W8KJGd+tbXJ+1K9EPFJlwA6wvy2i9rHF5zkVOCmbh4iVmAFn8Sn7xHsc5eZcDq8dNzmWb8O335tw9VmNw3GuvRGtC/dSRRwAyAIDi4nYbdJf4joZfyIFRtyJNzb+L/LcHGlWw7B/hWlfwsijlekGP8fB437EqCnsZKzsxHytk7MLNWhkSRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F7Am0O4uab0wETWmLAPLU9WPUT58Ini6HnVtl7+1oUM=;
+ b=UEY7sdNUDqXQ2KP28VN09uru+bwVn/tsYCcY48kw2hVlouroyLtLB+kLqMcS/DVzRZlT0JRlFJ9mCU/XRdo/Lita7RJmupNw4JmhS6r1Ll6vcq1pL3WhlE3uFEYexiFQDj82jpaH5EidnoLZunLnxsmzbvMQTP8Pyv5BegVq83xVGvFexteAjwL8iy2lZMrFIn6EfijjDZLDjoMbssu2g6u50j8XPgP7eLYkTCm60Xe8+n0lkiGQhda2pepr7Z78dXoq+oL9+XMqa8ywxJdM5aH3GfFOrn4JdtuVKw/2yzWtmNU5Bk7ixfpL8qfSlZJFM6SY5lPQnRt+KRbOXhWIUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F7Am0O4uab0wETWmLAPLU9WPUT58Ini6HnVtl7+1oUM=;
+ b=UKvIfe2VUpc/wWps5Di500rATrx2wkKxFZ66bK6mi6ibgfFe2EqR1jz8IxMOmhy5wC70LE6OYYb29geLk7zIS3J1s26mqY9Yo9olz2t5ItHwILxI68Rk2N+9qF2EkIbOxI8+wCwjmNjyO2siL9G9+VV0PnFBCyPLYe4UeMVzTl4QYiSV+aymWLY+WKJjCevw+J5HHiSL+Vn9PhTPcpWpFenG7FCoH/UzaEf7UCpSKiD9dM/9tyABVwFmMYk6/TH1X7te9I15V6QVf1whOyjyhu9NssvdIb7sv+fWT/dy48X9y/JYWZIr4AYqBtt8OndkbpJ+sotzCB9XdmBZjAWycA==
+Received: from DS7PR05CA0065.namprd05.prod.outlook.com (2603:10b6:8:57::10) by
+ PH0PR12MB7080.namprd12.prod.outlook.com (2603:10b6:510:21d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
+ 2025 20:04:52 +0000
+Received: from DS3PEPF000099DC.namprd04.prod.outlook.com
+ (2603:10b6:8:57:cafe::d6) by DS7PR05CA0065.outlook.office365.com
+ (2603:10b6:8:57::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.14 via Frontend Transport; Wed,
+ 14 May 2025 20:04:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS3PEPF000099DC.mail.protection.outlook.com (10.167.17.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 20:04:51 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 14 May
+ 2025 13:04:39 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 14 May
+ 2025 13:04:38 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Wed, 14
+ May 2025 13:04:34 -0700
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>, Alexei Starovoitov <ast@kernel.org>,
+	"Daniel Borkmann" <daniel@iogearbox.net>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	<netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, Moshe Shemesh
+	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman
+	<gal@nvidia.com>, Carolina Jubran <cjubran@nvidia.com>
+Subject: [PATCH net-next] net/mlx5e: Reuse per-RQ XDP buffer to avoid stack zeroing overhead
+Date: Wed, 14 May 2025 23:03:52 +0300
+Message-ID: <1747253032-663457-1-git-send-email-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 22:04:43 +0200
-Message-Id: <D9W5IX9Z7QMU.3DL48O2KYTN1Z@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-X-Mailer: aerc 0.20.1
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com> <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
-In-Reply-To: <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|PH0PR12MB7080:EE_
+X-MS-Office365-Filtering-Correlation-Id: 566c1189-f478-43a6-8b34-08dd93229633
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?yQqGwQ1kDiMCtu0xxT7+MWWsUEb/iNXEhN5N1BU8i4o427qRlaqBh6rc4eAA?=
+ =?us-ascii?Q?Mjeu5ssjoeapMQaK5h0uTApyokmR97SpyNh4eckJNjQkKBv00t7aznocRo/7?=
+ =?us-ascii?Q?D87ggN+RfiY26vKqbr5yAgUahwe2IHVDQPtNwET4RP8siIgalssc2S4dJKhk?=
+ =?us-ascii?Q?k9nSgqajrb2TYgaAyEzxiDz5ahFst/Bz+pK1PnEwh2Cr5AsDWjTt5OU0HKx8?=
+ =?us-ascii?Q?ieW46R+mPxKkquBf3kvdQM3YGKmKy68fzmNo4dYKjJv+Z8uYiUoy/iNLK3hk?=
+ =?us-ascii?Q?KfojRXJAsvnUqBjIZjFdjx28Qj/mVh/zP4LULls6yvOSk8feyOzxeGc0OOwb?=
+ =?us-ascii?Q?c6/Qo6mzKNj393OBOUUBSTDCUV/NgX61T9iYrYt73SdVPan8E1NiyxezwBa9?=
+ =?us-ascii?Q?DlbfvcNsTsqxw0Te2cEIVwmKiR2AVhfaxui4b/9Z+2gvLmfilWvAujarFhKk?=
+ =?us-ascii?Q?s0VJPrOLR5/YPrBNjtYiEoqD+QeMZGqwYMS6Nu+LuhA9Ps50OmEuvFwU7T7R?=
+ =?us-ascii?Q?92XitQY1pj2djfZEuOCkwe5VKLeAI6DBb9x7syBvYeSrU8kz/6AORFGcklSB?=
+ =?us-ascii?Q?fyrdaMeCzIlYEfvcZ9d0rHvQ+vhBEMmdG5Y64lqFuVJFhpJjmTzIUZxRUMWK?=
+ =?us-ascii?Q?VM3V4AhphIM32gb/HI0YW+LPL3QHJGPGE3YBUSbEX2M+JSslTmK96Wju1dvK?=
+ =?us-ascii?Q?fmAUqin3G0dmzKtVWCByUbOuLL9cTDDyCVUFMWCHDOOUA94nt9RJa9fUsxOs?=
+ =?us-ascii?Q?L+DTCm+qYcaPR2T9OTTIlh9idQhLiO9ZlqNlDqFTTjkvL+8V2Rri4Qx3z/dB?=
+ =?us-ascii?Q?BuG6t7hLbv2Ct/27Yoaztg6HXW90qnv/mmxWAsRRL6jx9TGa/BfZnwgKRDFk?=
+ =?us-ascii?Q?fs+AIWz1t+Fllx1IHA/pFq4ger0lT1+8QcUqs2w54um0a2HCv1IANRHgm8OI?=
+ =?us-ascii?Q?Z45zYmCi3Hz87ydPdoVMLdd5ve7MSXt+Ct1kvI5IX+X4rGkdNNETA89dZj8i?=
+ =?us-ascii?Q?NHSoSj+muvV7TXRNSRz31U6QXyfiP2N4kZOfVyGYdwKNUOYSZBRfdpu/lnIx?=
+ =?us-ascii?Q?GgutGae1rjdIdBh1/P8Jj9F2VtgXn2RoQ2Qf+56WVM02bUlhGIzdIpsNOHNF?=
+ =?us-ascii?Q?kyS8jCVEuCOkB8I3QI1DfgMa5YVRfs1312Qc+/9cJLeXpyUyHxM32vYgQwrS?=
+ =?us-ascii?Q?jkPxSK2JHI2C0aKDRd8X+qeRQsHeGSSrL+wliBRUVfo8sRFjnLlhHBefhgbh?=
+ =?us-ascii?Q?75HPMEsBbo7x8scblKBv1UJC2GJrW9y56YeB9oFWjmk3ZtbnIWNyKSoCYDVU?=
+ =?us-ascii?Q?5Uce8CNWrK/QFmkEjvOz2lRCmICoaOxp9q4rZaEAIx4lQ+F59+LcZUcJAH/F?=
+ =?us-ascii?Q?+AnyNzNStiKkfURFGmi4ZOUbBW+5v/Ou+gPMttIpPLgSILtLLam1kv8RgGDy?=
+ =?us-ascii?Q?n82PLulvuSRjSM7RE+p5E3W+HdrNPtz3VX9frNy6nYwK6ol15TvDSfkKs3Li?=
+ =?us-ascii?Q?KSeDYf85uFslKNsL0jH9f7i6Ejy2x1k6w6BC?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 20:04:51.3126
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 566c1189-f478-43a6-8b34-08dd93229633
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DC.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7080
 
-On Wed May 14, 2025 at 9:20 PM CEST, Daniel Almeida wrote:
-> Add support for registering IRQ handlers in Rust.
->
-> IRQ handlers are extensively used in drivers when some peripheral wants
-> to obtain the CPU attention. Registering a handler will make the system
-> invoke the passed-in function whenever the chosen IRQ line is triggered.
->
-> Both regular and threaded IRQ handlers are supported through a Handler
-> (or ThreadedHandler) trait that is meant to be implemented by a type
-> that:
->
-> a) provides a function to be run by the system when the IRQ fires and,
->
-> b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
->
-> The requirement that T is Sync derives from the fact that handlers might
-> run concurrently with other processes executing the same driver,
-> creating the potential for data races.
->
-> Ideally, some interior mutability must be in place if T is to be
-> mutated. This should usually be done through the in-flight SpinLockIrq
-> type.
->
-> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
->  rust/bindings/bindings_helper.h |   1 +
->  rust/helpers/helpers.c          |   1 +
->  rust/helpers/irq.c              |   9 +
->  rust/kernel/irq.rs              |  24 +++
->  rust/kernel/irq/flags.rs        | 102 +++++++++
->  rust/kernel/irq/request.rs      | 455 ++++++++++++++++++++++++++++++++++=
-++++++
->  rust/kernel/lib.rs              |   1 +
->  7 files changed, 593 insertions(+)
+From: Carolina Jubran <cjubran@nvidia.com>
 
-Could you split this patch into smaller chunks?
+CONFIG_INIT_STACK_ALL_ZERO introduces a performance cost by
+zero-initializing all stack variables on function entry. The mlx5 XDP
+RX path previously allocated a struct mlx5e_xdp_buff on the stack per
+received CQE, resulting in measurable performance degradation under
+this config.
 
-> +pub use request::Handler;
-> +pub use request::IrqReturn;
-> +pub use request::Registration;
-> +pub use request::ThreadedHandler;
-> +pub use request::ThreadedIrqReturn;
-> +pub use request::ThreadedRegistration;
+This patch reuses a mlx5e_xdp_buff stored in the mlx5e_rq struct,
+avoiding per-CQE stack allocations and repeated zeroing.
 
-Why not?:
+With this change, XDP_DROP and XDP_TX performance matches that of
+kernels built without CONFIG_INIT_STACK_ALL_ZERO.
 
-    pub use request::{Handler, ..., ThreadedRegistration};
+Performance was measured on a ConnectX-6Dx using a single RX channel
+(1 CPU at 100% usage) at ~50 Mpps. The baseline results were taken from
+net-next-6.15.
 
-> diff --git a/rust/kernel/irq/flags.rs b/rust/kernel/irq/flags.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..3cfaef65ae14f6c02f55ebcf4=
-d52450c0052df30
-> --- /dev/null
-> +++ b/rust/kernel/irq/flags.rs
-> @@ -0,0 +1,102 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-> +
-> +use crate::bindings;
-> +
-> +/// Flags to be used when registering IRQ handlers.
-> +///
-> +/// They can be combined with the operators `|`, `&`, and `!`.
-> +#[derive(Clone, Copy, PartialEq, Eq)]
-> +pub struct Flags(u64);
+Stack zeroing disabled:
+- XDP_DROP:
+    * baseline:                     31.47 Mpps
+    * baseline + per-RQ allocation: 32.31 Mpps (+2.68%)
 
-The constants below seem to all be 32 bit, why did you choose u64?
+- XDP_TX:
+    * baseline:                     12.41 Mpps
+    * baseline + per-RQ allocation: 12.95 Mpps (+4.30%)
 
-> +
-> +impl Flags {
-> +    pub(crate) fn into_inner(self) -> u64 {
-> +        self.0
-> +    }
-> +}
-> +pub const NO_DEBUG: Flags =3D Flags(bindings::IRQF_NO_DEBUG as u64);
+Stack zeroing enabled:
+- XDP_DROP:
+    * baseline:                     24.32 Mpps
+    * baseline + per-RQ allocation: 32.27 Mpps (+32.7%)
 
-> diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..55f0ea8f9a93dc9ada67ce91a=
-f686a9634c8e8ed
-> --- /dev/null
-> +++ b/rust/kernel/irq/request.rs
-> @@ -0,0 +1,455 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-> +
-> +//! IRQ allocation and handling
+- XDP_TX:
+    * baseline:                     11.80 Mpps
+    * baseline + per-RQ allocation: 12.24 Mpps (+3.72%)
 
-Missing `.`.
-
-> +
-> +use core::marker::PhantomPinned;
-> +use core::ptr::addr_of_mut;
-> +
-> +use pin_init::pin_init_from_closure;
-> +
-> +use crate::alloc::Allocator;
-> +use crate::error::to_result;
-> +use crate::irq::flags::Flags;
-> +use crate::prelude::*;
-> +use crate::str::CStr;
-> +use crate::sync::Arc;
-> +
-> +/// The value that can be returned from an IrqHandler or a ThreadedIrqHa=
-ndler.
-> +#[repr(u32)]
-
-I think we should let the compiler decide the layout & discriminants, it
-might do something smarter when returning this value together with
-others. Then we just need this function:
-
-    fn into_inner(self) -> u32 {
-        match self {
-            Self::None =3D> bindings::irqreturn_IRQ_NONE,
-            Self::Handled =3D> bindings::irqreturn_IRQ_HANDLED,
-        }
-    }
-
-> +pub enum IrqReturn {
-> +    /// The interrupt was not from this device or was not handled.
-> +    None =3D bindings::irqreturn_IRQ_NONE,
-> +
-> +    /// The interrupt was handled by this device.
-> +    Handled =3D bindings::irqreturn_IRQ_HANDLED,
-> +}
-> +
-> +/// Callbacks for an IRQ handler.
-> +pub trait Handler: Sync {
-> +    /// The actual handler function. As usual, sleeps are not allowed in=
- IRQ
-> +    /// context.
-> +    fn handle_irq(&self) -> IrqReturn;
-> +}
-> +
-> +impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
-> +    fn handle_irq(&self) -> IrqReturn {
-> +        T::handle_irq(self)
-> +    }
-> +}
-> +
-> +impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
-> +    fn handle_irq(&self) -> IrqReturn {
-> +        T::handle_irq(self)
-> +    }
-> +}
-> +
-> +/// A registration of an IRQ handler for a given IRQ line.
-> +///
-> +/// # Examples
-> +///
-> +/// The following is an example of using `Registration`. It uses a
-> +/// [`SpinLock`](crate::sync::SpinLockIrq) to provide the interior mutab=
-ility.
-> +/// Note that Spinlocks are not safe to use in IRQ context as of now, bu=
-t may be
-> +/// in the future.
-
-Didn't your commit message mention SpinLockIrq?
-
-> +///
-> +/// ```
-> +/// use kernel::prelude::*;
-> +/// use kernel::irq::flags;
-> +/// use kernel::irq::Registration;
-> +/// use kernel::irq::IrqReturn;
-> +/// use kernel::sync::Arc;
-> +/// use kernel::sync::SpinLock;
-> +/// use kernel::c_str;
-> +/// use kernel::alloc::flags::GFP_KERNEL;
-> +///
-> +/// // Declare a struct that will be passed in when the interrupt fires.=
- The u32
-> +/// // merely serves as an example of some internal data.
-> +/// struct Data(SpinLock<u32>);
-> +///
-> +/// // [`handle_irq`] takes &self. This example illustrates interior
-> +/// // mutability can be used when share the data between process contex=
-t and IRQ
-> +/// // context.
-> +///
-> +/// type Handler =3D Data;
-> +///
-> +/// impl kernel::irq::request::Handler for Handler {
-> +///     // This is executing in IRQ context in some CPU. Other CPUs can =
-still
-> +///     // try to access to data.
-> +///     fn handle_irq(&self) -> IrqReturn {
-> +///         // We now have exclusive access to the data by locking the
-> +///         // SpinLock.
-> +///         let mut data =3D self.0.lock();
-> +///         *data +=3D 1;
-> +///
-> +///         IrqReturn::Handled
-> +///     }
-> +/// }
-> +///
-> +/// // This is running in process context.
-> +/// fn register_irq(irq: u32, handler: Handler) -> Result<Arc<Registrati=
-on<Handler>>> {
-> +///     let registration =3D Registration::register(irq, flags::SHARED, =
-c_str!("my-device"), handler);
-> +///
-> +///     // You can have as many references to the registration as you wa=
-nt, so
-> +///     // multiple parts of the driver can access it.
-> +///     let registration =3D Arc::pin_init(registration, GFP_KERNEL)?;
-> +///
-> +///     // The handler may be called immediately after the function abov=
-e
-> +///     // returns, possibly in a different CPU.
-> +///
-> +///     {
-> +///         // The data can be accessed from the process context too.
-> +///         let mut data =3D registration.handler().0.lock();
-> +///         *data =3D 42;
-> +///     }
-> +///
-> +///     Ok(registration)
-> +/// }
-> +///
-> +/// # Ok::<(), Error>(())
-> +///```
-> +///
-> +/// # Invariants
-> +///
-> +/// * We own an irq handler using `&self` as its private data.
-> +///
-> +#[pin_data(PinnedDrop)]
-> +pub struct Registration<T: Handler> {
-> +    irq: u32,
-> +    #[pin]
-> +    handler: T,
-> +    #[pin]
-> +    /// Pinned because we need address stability so that we can pass a p=
-ointer
-> +    /// to the callback.
-> +    _pin: PhantomPinned,
-> +}
-> +
-> +impl<T: Handler> Registration<T> {
-> +    /// Registers the IRQ handler with the system for the given IRQ numb=
-er. The
-> +    /// handler must be able to be called as soon as this function retur=
-ns.
-
-The first line of documentation should be a single sentence description
-of what the item does. It will get rendered next to it on the summary &
-search pages.
-
-What is meant by the second sentence? What about this phrasing?: "The
-handler might be called immediately after this function returns.".
-
-> +    pub fn register(
-> +        irq: u32,
-> +        flags: Flags,
-> +        name: &'static CStr,
-> +        handler: T,
-> +    ) -> impl PinInit<Self, Error> {
-> +        let closure =3D move |slot: *mut Self| {
-> +            // SAFETY: The slot passed to pin initializer is valid for w=
-riting.
-> +            unsafe {
-> +                slot.write(Self {
-> +                    irq,
-> +                    handler,
-> +                    _pin: PhantomPinned,
-> +                })
-> +            };
-> +
-> +            // SAFETY:
-> +            // - The callbacks are valid for use with request_irq.
-> +            // - If this succeeds, the slot is guaranteed to be valid un=
-til the
-> +            // destructor of Self runs, which will deregister the callba=
-cks
-> +            // before the memory location becomes invalid.
-> +            let res =3D to_result(unsafe {
-> +                bindings::request_irq(
-> +                    irq,
-> +                    Some(handle_irq_callback::<T>),
-> +                    flags.into_inner() as usize,
-> +                    name.as_char_ptr(),
-> +                    &*slot as *const _ as *mut core::ffi::c_void,
-
-Please don't use `as` casts when possible, instead use `.cast()` on
-pointers.
-
-> +                )
-> +            });
-> +
-> +            if res.is_err() {
-> +                // SAFETY: We are returning an error, so we can destroy =
-the slot.
-> +                unsafe { core::ptr::drop_in_place(addr_of_mut!((*slot).h=
-andler)) };
-> +            }
-> +
-> +            res
-> +        };
-> +
-> +        // SAFETY:
-> +        // - if this returns Ok, then every field of `slot` is fully
-> +        // initialized.
-> +        // - if this returns an error, then the slot does not need to re=
-main
-> +        // valid.
-> +        unsafe { pin_init_from_closure(closure) }
-
-Please don't use `pin_init_from_closure`, instead do this:
-
-    pin_init!(Self {
-        irq,
-        handler,
-        _pin: PhantomPinned
-    })
-    .pin_chain(|this| {
-        // SAFETY: TODO: correct FFI safety requirements
-        to_result(unsafe {
-            bindings::request_irq(...)
-        })
-    })
-
-The `pin_chain` function is exactly for this use-case, doing some
-operation that might fail after initializing & it will drop the value
-when the closure fails.
-
-> +    }
-> +
-> +    /// Returns a reference to the handler that was registered with the =
-system.
-> +    pub fn handler(&self) -> &T {
-> +        &self.handler
-> +    }
-> +}
-> +
-> +#[pinned_drop]
-> +impl<T: Handler> PinnedDrop for Registration<T> {
-> +    fn drop(self: Pin<&mut Self>) {
-> +        // SAFETY:
-> +        // - `self.irq` is the same as the one passed to `reques_irq`.
-> +        // -  `&self` was passed to `request_irq` as the cookie. It is
-> +        // guaranteed to be unique by the type system, since each call t=
-o
-> +        // `register` will return a different instance of `Registration`=
-.
-
-This is missing important information: `self` is `!Unpin` **and** was
-initializing using pin-init, so it occupied the same memory location for
-the entirety of its lifetime.
-
-> +        //
-> +        // Notice that this will block until all handlers finish executi=
-ng,
-> +        // i.e.: at no point will &self be invalid while the handler is =
-running.
-
-This is good to know!
-
-> +        unsafe { bindings::free_irq(self.irq, &*self as *const Self as *=
-mut core::ffi::c_void) };
-> +    }
-> +}
-> +
-> +/// The value that can be returned from `ThreadedHandler::handle_irq`.
-> +#[repr(u32)]
-> +pub enum ThreadedIrqReturn {
-> +    /// The interrupt was not from this device or was not handled.
-> +    None =3D bindings::irqreturn_IRQ_NONE,
-> +
-> +    /// The interrupt was handled by this device.
-> +    Handled =3D bindings::irqreturn_IRQ_HANDLED,
-> +
-> +    /// The handler wants the handler thread to wake up.
-
-How about "The handler wants the handler thread to take care of the
-interrupt." or is that incorrect?
-
-> +    WakeThread =3D bindings::irqreturn_IRQ_WAKE_THREAD,
-> +}
-> +
-> +/// Callbacks for a threaded IRQ handler.
-
-What is the difference to a normal one?
-
-> +pub trait ThreadedHandler: Sync {
-> +    /// The actual handler function. As usual, sleeps are not allowed in=
- IRQ
-> +    /// context.
-> +    fn handle_irq(&self) -> ThreadedIrqReturn;
-
-Why does this `handle_irq` function return a `ThreadedIrqReturn`...
-
-> +
-> +    /// The threaded handler function. This function is called from the =
-irq
-> +    /// handler thread, which is automatically created by the system.
-> +    fn thread_fn(&self) -> IrqReturn;
-
-... and this `thread_fn` an `IrqReturn`? I would have expected it to be
-the other way around.
-
-> +}
-> +
-> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
-> +    fn handle_irq(&self) -> ThreadedIrqReturn {
-> +        T::handle_irq(self)
-> +    }
-> +
-> +    fn thread_fn(&self) -> IrqReturn {
-> +        T::thread_fn(self)
-> +    }
-> +}
-> +
-> +impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<=
-T, A> {
-> +    fn handle_irq(&self) -> ThreadedIrqReturn {
-> +        T::handle_irq(self)
-> +    }
-> +
-> +    fn thread_fn(&self) -> IrqReturn {
-> +        T::thread_fn(self)
-> +    }
-> +}
-> +
-> +/// A registration of a threaded IRQ handler for a given IRQ line.
-> +///
-> +/// Two callbacks are required: one to handle the IRQ, and one to handle=
- any
-> +/// other work in a separate thread.
-> +///
-> +/// The thread handler is only called if the IRQ handler returns `WakeTh=
-read`.
-
-Ah this is some information that should be on `ThreadedHandler`. (it
-also explains the difference in return types above)
-
-> +///
-> +/// # Examples
-> +///
-> +/// The following is an example of using `ThreadedRegistration`. It uses=
- a
-> +/// [`SpinLock`](crate::sync::SpinLockIrq) to provide the interior mutab=
-ility.
-> +/// Note that Spinlocks are not safe to use in IRQ context as of now, bu=
-t may be
-> +/// in the future.
-> +///
-> +/// ```
-> +/// use kernel::prelude::*;
-> +/// use kernel::irq::flags;
-> +/// use kernel::irq::ThreadedIrqReturn;
-> +/// use kernel::irq::ThreadedRegistration;
-> +/// use kernel::irq::IrqReturn;
-> +/// use kernel::sync::Arc;
-> +/// use kernel::sync::SpinLock;
-> +/// use kernel::alloc::flags::GFP_KERNEL;
-> +/// use kernel::c_str;
-> +///
-> +/// // Declare a struct that will be passed in when the interrupt fires.=
- The u32
-> +/// // merely serves as an example of some internal data.
-> +/// struct Data(SpinLock<u32>);
-> +///
-> +/// // [`handle_irq`] takes &self. This example illustrates interior
-> +/// // mutability can be used when share the data between process contex=
-t and IRQ
-> +/// // context.
-> +///
-> +/// type Handler =3D Data;
-> +///
-> +/// impl kernel::irq::request::ThreadedHandler for Handler {
-> +///     // This is executing in IRQ context in some CPU. Other CPUs can =
-still
-> +///     // try to access to data.
-> +///     fn handle_irq(&self) -> ThreadedIrqReturn {
-> +///         // We now have exclusive access to the data by locking the
-> +///         // SpinLockIrq.
-> +///         let mut data =3D self.0.lock();
-> +///         *data +=3D 1;
-> +///
-> +///         // By returning `WakeThread`, we indicate to the system that=
- the
-> +///         // thread function should be called. Otherwise, return
-> +///         // ThreadedIrqReturn::Handled.
-> +///         ThreadedIrqReturn::WakeThread
-> +///     }
-> +///
-> +///     // This will run (in a separate kthread) if and only if `handle_=
-irq`
-> +///     // returns `WakeThread`.
-> +///     fn thread_fn(&self) -> IrqReturn {
-> +///         // We now have exclusive access to the data by locking the S=
-pinLock.
-> +///         //
-> +///         // Ideally, we should disable interrupts while we are doing =
-this to
-> +///         // avoid deadlocks, but this is not currently possible.
-
-Would this be solved by SpinLockIrq?
-
+Reported-by: Sebastiano Miano <mianosebastiano@gmail.com>
+Reported-by: Samuel Dobron <sdobron@redhat.com>
+Link: https://lore.kernel.org/all/CAMENy5pb8ea+piKLg5q5yRTMZacQqYWAoVLE1FE9WhQPq92E0g@mail.gmail.com/
+Signed-off-by: Carolina Jubran <cjubran@nvidia.com>
+Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
 ---
-Cheers,
-Benno
+ drivers/net/ethernet/mellanox/mlx5/core/en.h  |  7 ++
+ .../net/ethernet/mellanox/mlx5/core/en/xdp.h  |  6 --
+ .../net/ethernet/mellanox/mlx5/core/en_rx.c   | 81 ++++++++++---------
+ 3 files changed, 51 insertions(+), 43 deletions(-)
 
-> +///         let mut data =3D self.0.lock();
-> +///         *data +=3D 1;
-> +///
-> +///         IrqReturn::Handled
-> +///     }
-> +/// }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 32ed4963b8ad..5b0d03b3efe8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -520,6 +520,12 @@ struct mlx5e_xdpsq {
+ 	struct mlx5e_channel      *channel;
+ } ____cacheline_aligned_in_smp;
+ 
++struct mlx5e_xdp_buff {
++	struct xdp_buff xdp;
++	struct mlx5_cqe64 *cqe;
++	struct mlx5e_rq *rq;
++};
++
+ struct mlx5e_ktls_resync_resp;
+ 
+ struct mlx5e_icosq {
+@@ -716,6 +722,7 @@ struct mlx5e_rq {
+ 	struct mlx5e_xdpsq    *xdpsq;
+ 	DECLARE_BITMAP(flags, 8);
+ 	struct page_pool      *page_pool;
++	struct mlx5e_xdp_buff mxbuf;
+ 
+ 	/* AF_XDP zero-copy */
+ 	struct xsk_buff_pool  *xsk_pool;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
+index 446e492c6bb8..46ab0a9e8cdd 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
+@@ -45,12 +45,6 @@
+ 	(MLX5E_XDP_INLINE_WQE_MAX_DS_CNT * MLX5_SEND_WQE_DS - \
+ 	 sizeof(struct mlx5_wqe_inline_seg))
+ 
+-struct mlx5e_xdp_buff {
+-	struct xdp_buff xdp;
+-	struct mlx5_cqe64 *cqe;
+-	struct mlx5e_rq *rq;
+-};
+-
+ /* XDP packets can be transmitted in different ways. On completion, we need to
+  * distinguish between them to clean up things in a proper way.
+  */
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+index 5fd70b4d55be..84b1ab8233b8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -1684,17 +1684,17 @@ mlx5e_skb_from_cqe_linear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi,
+ 
+ 	prog = rcu_dereference(rq->xdp_prog);
+ 	if (prog) {
+-		struct mlx5e_xdp_buff mxbuf;
++		struct mlx5e_xdp_buff *mxbuf = &rq->mxbuf;
+ 
+ 		net_prefetchw(va); /* xdp_frame data area */
+ 		mlx5e_fill_mxbuf(rq, cqe, va, rx_headroom, rq->buff.frame0_sz,
+-				 cqe_bcnt, &mxbuf);
+-		if (mlx5e_xdp_handle(rq, prog, &mxbuf))
++				 cqe_bcnt, mxbuf);
++		if (mlx5e_xdp_handle(rq, prog, mxbuf))
+ 			return NULL; /* page/packet was consumed by XDP */
+ 
+-		rx_headroom = mxbuf.xdp.data - mxbuf.xdp.data_hard_start;
+-		metasize = mxbuf.xdp.data - mxbuf.xdp.data_meta;
+-		cqe_bcnt = mxbuf.xdp.data_end - mxbuf.xdp.data;
++		rx_headroom = mxbuf->xdp.data - mxbuf->xdp.data_hard_start;
++		metasize = mxbuf->xdp.data - mxbuf->xdp.data_meta;
++		cqe_bcnt = mxbuf->xdp.data_end - mxbuf->xdp.data;
+ 	}
+ 	frag_size = MLX5_SKB_FRAG_SZ(rx_headroom + cqe_bcnt);
+ 	skb = mlx5e_build_linear_skb(rq, va, frag_size, rx_headroom, cqe_bcnt, metasize);
+@@ -1713,11 +1713,11 @@ mlx5e_skb_from_cqe_nonlinear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi
+ 			     struct mlx5_cqe64 *cqe, u32 cqe_bcnt)
+ {
+ 	struct mlx5e_rq_frag_info *frag_info = &rq->wqe.info.arr[0];
++	struct mlx5e_xdp_buff *mxbuf = &rq->mxbuf;
+ 	struct mlx5e_wqe_frag_info *head_wi = wi;
+ 	u16 rx_headroom = rq->buff.headroom;
+ 	struct mlx5e_frag_page *frag_page;
+ 	struct skb_shared_info *sinfo;
+-	struct mlx5e_xdp_buff mxbuf;
+ 	u32 frag_consumed_bytes;
+ 	struct bpf_prog *prog;
+ 	struct sk_buff *skb;
+@@ -1737,8 +1737,8 @@ mlx5e_skb_from_cqe_nonlinear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi
+ 	net_prefetch(va + rx_headroom);
+ 
+ 	mlx5e_fill_mxbuf(rq, cqe, va, rx_headroom, rq->buff.frame0_sz,
+-			 frag_consumed_bytes, &mxbuf);
+-	sinfo = xdp_get_shared_info_from_buff(&mxbuf.xdp);
++			 frag_consumed_bytes, mxbuf);
++	sinfo = xdp_get_shared_info_from_buff(&mxbuf->xdp);
+ 	truesize = 0;
+ 
+ 	cqe_bcnt -= frag_consumed_bytes;
+@@ -1750,8 +1750,9 @@ mlx5e_skb_from_cqe_nonlinear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi
+ 
+ 		frag_consumed_bytes = min_t(u32, frag_info->frag_size, cqe_bcnt);
+ 
+-		mlx5e_add_skb_shared_info_frag(rq, sinfo, &mxbuf.xdp, frag_page,
+-					       wi->offset, frag_consumed_bytes);
++		mlx5e_add_skb_shared_info_frag(rq, sinfo, &mxbuf->xdp,
++					       frag_page, wi->offset,
++					       frag_consumed_bytes);
+ 		truesize += frag_info->frag_stride;
+ 
+ 		cqe_bcnt -= frag_consumed_bytes;
+@@ -1760,7 +1761,7 @@ mlx5e_skb_from_cqe_nonlinear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi
+ 	}
+ 
+ 	prog = rcu_dereference(rq->xdp_prog);
+-	if (prog && mlx5e_xdp_handle(rq, prog, &mxbuf)) {
++	if (prog && mlx5e_xdp_handle(rq, prog, mxbuf)) {
+ 		if (__test_and_clear_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags)) {
+ 			struct mlx5e_wqe_frag_info *pwi;
+ 
+@@ -1770,21 +1771,23 @@ mlx5e_skb_from_cqe_nonlinear(struct mlx5e_rq *rq, struct mlx5e_wqe_frag_info *wi
+ 		return NULL; /* page/packet was consumed by XDP */
+ 	}
+ 
+-	skb = mlx5e_build_linear_skb(rq, mxbuf.xdp.data_hard_start, rq->buff.frame0_sz,
+-				     mxbuf.xdp.data - mxbuf.xdp.data_hard_start,
+-				     mxbuf.xdp.data_end - mxbuf.xdp.data,
+-				     mxbuf.xdp.data - mxbuf.xdp.data_meta);
++	skb = mlx5e_build_linear_skb(
++		rq, mxbuf->xdp.data_hard_start, rq->buff.frame0_sz,
++		mxbuf->xdp.data - mxbuf->xdp.data_hard_start,
++		mxbuf->xdp.data_end - mxbuf->xdp.data,
++		mxbuf->xdp.data - mxbuf->xdp.data_meta);
+ 	if (unlikely(!skb))
+ 		return NULL;
+ 
+ 	skb_mark_for_recycle(skb);
+ 	head_wi->frag_page->frags++;
+ 
+-	if (xdp_buff_has_frags(&mxbuf.xdp)) {
++	if (xdp_buff_has_frags(&mxbuf->xdp)) {
+ 		/* sinfo->nr_frags is reset by build_skb, calculate again. */
+ 		xdp_update_skb_shared_info(skb, wi - head_wi - 1,
+ 					   sinfo->xdp_frags_size, truesize,
+-					   xdp_buff_is_frag_pfmemalloc(&mxbuf.xdp));
++					   xdp_buff_is_frag_pfmemalloc(
++						&mxbuf->xdp));
+ 
+ 		for (struct mlx5e_wqe_frag_info *pwi = head_wi + 1; pwi < wi; pwi++)
+ 			pwi->frag_page->frags++;
+@@ -1984,10 +1987,10 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 	struct mlx5e_frag_page *frag_page = &wi->alloc_units.frag_pages[page_idx];
+ 	u16 headlen = min_t(u16, MLX5E_RX_MAX_HEAD, cqe_bcnt);
+ 	struct mlx5e_frag_page *head_page = frag_page;
++	struct mlx5e_xdp_buff *mxbuf = &rq->mxbuf;
+ 	u32 frag_offset    = head_offset;
+ 	u32 byte_cnt       = cqe_bcnt;
+ 	struct skb_shared_info *sinfo;
+-	struct mlx5e_xdp_buff mxbuf;
+ 	unsigned int truesize = 0;
+ 	struct bpf_prog *prog;
+ 	struct sk_buff *skb;
+@@ -2033,9 +2036,10 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 		}
+ 	}
+ 
+-	mlx5e_fill_mxbuf(rq, cqe, va, linear_hr, linear_frame_sz, linear_data_len, &mxbuf);
++	mlx5e_fill_mxbuf(rq, cqe, va, linear_hr, linear_frame_sz,
++			 linear_data_len, mxbuf);
+ 
+-	sinfo = xdp_get_shared_info_from_buff(&mxbuf.xdp);
++	sinfo = xdp_get_shared_info_from_buff(&mxbuf->xdp);
+ 
+ 	while (byte_cnt) {
+ 		/* Non-linear mode, hence non-XSK, which always uses PAGE_SIZE. */
+@@ -2046,7 +2050,8 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 		else
+ 			truesize += ALIGN(pg_consumed_bytes, BIT(rq->mpwqe.log_stride_sz));
+ 
+-		mlx5e_add_skb_shared_info_frag(rq, sinfo, &mxbuf.xdp, frag_page, frag_offset,
++		mlx5e_add_skb_shared_info_frag(rq, sinfo, &mxbuf->xdp,
++					       frag_page, frag_offset,
+ 					       pg_consumed_bytes);
+ 		byte_cnt -= pg_consumed_bytes;
+ 		frag_offset = 0;
+@@ -2054,7 +2059,7 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 	}
+ 
+ 	if (prog) {
+-		if (mlx5e_xdp_handle(rq, prog, &mxbuf)) {
++		if (mlx5e_xdp_handle(rq, prog, mxbuf)) {
+ 			if (__test_and_clear_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags)) {
+ 				struct mlx5e_frag_page *pfp;
+ 
+@@ -2067,10 +2072,10 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 			return NULL; /* page/packet was consumed by XDP */
+ 		}
+ 
+-		skb = mlx5e_build_linear_skb(rq, mxbuf.xdp.data_hard_start,
+-					     linear_frame_sz,
+-					     mxbuf.xdp.data - mxbuf.xdp.data_hard_start, 0,
+-					     mxbuf.xdp.data - mxbuf.xdp.data_meta);
++		skb = mlx5e_build_linear_skb(
++			rq, mxbuf->xdp.data_hard_start, linear_frame_sz,
++			mxbuf->xdp.data - mxbuf->xdp.data_hard_start, 0,
++			mxbuf->xdp.data - mxbuf->xdp.data_meta);
+ 		if (unlikely(!skb)) {
+ 			mlx5e_page_release_fragmented(rq, &wi->linear_page);
+ 			return NULL;
+@@ -2080,13 +2085,14 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 		wi->linear_page.frags++;
+ 		mlx5e_page_release_fragmented(rq, &wi->linear_page);
+ 
+-		if (xdp_buff_has_frags(&mxbuf.xdp)) {
++		if (xdp_buff_has_frags(&mxbuf->xdp)) {
+ 			struct mlx5e_frag_page *pagep;
+ 
+ 			/* sinfo->nr_frags is reset by build_skb, calculate again. */
+ 			xdp_update_skb_shared_info(skb, frag_page - head_page,
+ 						   sinfo->xdp_frags_size, truesize,
+-						   xdp_buff_is_frag_pfmemalloc(&mxbuf.xdp));
++						   xdp_buff_is_frag_pfmemalloc(
++							&mxbuf->xdp));
+ 
+ 			pagep = head_page;
+ 			do
+@@ -2097,12 +2103,13 @@ mlx5e_skb_from_cqe_mpwrq_nonlinear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *w
+ 	} else {
+ 		dma_addr_t addr;
+ 
+-		if (xdp_buff_has_frags(&mxbuf.xdp)) {
++		if (xdp_buff_has_frags(&mxbuf->xdp)) {
+ 			struct mlx5e_frag_page *pagep;
+ 
+ 			xdp_update_skb_shared_info(skb, sinfo->nr_frags,
+ 						   sinfo->xdp_frags_size, truesize,
+-						   xdp_buff_is_frag_pfmemalloc(&mxbuf.xdp));
++						   xdp_buff_is_frag_pfmemalloc(
++							&mxbuf->xdp));
+ 
+ 			pagep = frag_page - sinfo->nr_frags;
+ 			do
+@@ -2152,20 +2159,20 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
+ 
+ 	prog = rcu_dereference(rq->xdp_prog);
+ 	if (prog) {
+-		struct mlx5e_xdp_buff mxbuf;
++		struct mlx5e_xdp_buff *mxbuf = &rq->mxbuf;
+ 
+ 		net_prefetchw(va); /* xdp_frame data area */
+ 		mlx5e_fill_mxbuf(rq, cqe, va, rx_headroom, rq->buff.frame0_sz,
+-				 cqe_bcnt, &mxbuf);
+-		if (mlx5e_xdp_handle(rq, prog, &mxbuf)) {
++				 cqe_bcnt, mxbuf);
++		if (mlx5e_xdp_handle(rq, prog, mxbuf)) {
+ 			if (__test_and_clear_bit(MLX5E_RQ_FLAG_XDP_XMIT, rq->flags))
+ 				frag_page->frags++;
+ 			return NULL; /* page/packet was consumed by XDP */
+ 		}
+ 
+-		rx_headroom = mxbuf.xdp.data - mxbuf.xdp.data_hard_start;
+-		metasize = mxbuf.xdp.data - mxbuf.xdp.data_meta;
+-		cqe_bcnt = mxbuf.xdp.data_end - mxbuf.xdp.data;
++		rx_headroom = mxbuf->xdp.data - mxbuf->xdp.data_hard_start;
++		metasize =  mxbuf->xdp.data -  mxbuf->xdp.data_meta;
++		cqe_bcnt =  mxbuf->xdp.data_end -  mxbuf->xdp.data;
+ 	}
+ 	frag_size = MLX5_SKB_FRAG_SZ(rx_headroom + cqe_bcnt);
+ 	skb = mlx5e_build_linear_skb(rq, va, frag_size, rx_headroom, cqe_bcnt, metasize);
+
+base-commit: 664bf117a30804b442a88a8462591bb23f5a0f22
+-- 
+2.31.1
+
