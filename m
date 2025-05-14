@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB4B25486E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D902025A647
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266232; cv=none; b=Izu9xDY3NNd7UiyVSMuZZTWaqBZqglgsF8NH4p7tlSB6nBiJBoalNwNfZ7UIZl3+zN0riEdwQmNEJRm+Lv3l3+vSeVVC15OE597VPOFOLj7HYqMgIqEvnn68eMBeqd4GIYFv2QAwgyW5+lnVAvU8kqUeml/n4NP4xkI35N4c9Fk=
+	t=1747266235; cv=none; b=mER0t69zvy7vuWrMaOyCYVtdKJm6Z9GwrWCZppz68Mg6BvtRHVLBmSyWx1NMmvzAUX5kuyuATbfjLyB3BOoonr6v8PEjl7aTo5fNR2wVueyqDetaPUsrdIAXU+MdAJe/JBA29tW695qgymSxE10rsxq/gQ8fv/EaL+F3xzWiHvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266232; c=relaxed/simple;
-	bh=JtCHgpy0nnZ9AybihcEVe9TWyhmxkNRuz0XK1RE8q5E=;
+	s=arc-20240116; t=1747266235; c=relaxed/simple;
+	bh=VqiXtJ8KCG1AwXpHhLg8Tkfzo/8n2mGO7InnOeWdcDY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o4oj2g5PzhFSqFI1oMR9VrYWYLTK8HezKZe/E9W4XoRMlgaPnMEAe6Z9Tq6sqkz8rbdHiP94gQwePEGvxjm+SGyCYopN6uVQlXfnhPBdQ2CXbNs9gLX7OrkxqfTMg+xO6eKAXCVzVju12my0DvvABGIvQfBvoj+O+uEzyZLD6Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ecg/7N6j; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=JdHiwtstDrMkezmjeaI2J1dkzyaJ/82yQ764CixS12jQHhgHN9NhcC1xcsmryIE/qRBd9vvEdiB6iJZ0MEkXb9n6NLcRxBYcKkooE+kGmzR1T0G22I/Oy2D4cljM12F1iDvhLqtFHBtg5dYajWzQBKmNyRTb8UN5TjjXf/V2SiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=111Uf9wO; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ecg/7N6j"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c50f130d9so316645a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="111Uf9wO"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af534e796baso143661a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266228; x=1747871028; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266233; x=1747871033; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cGxf10xTbolob6ARtbQFmrKdEey0c2iLS6uYVAPHbb0=;
-        b=ecg/7N6jr0tfsB4ivTK/RhHFVIF9I4gJjgNy1SzfJm0ym9RBTCxr4/bwPtaE9qP/sP
-         UKJxACGq7Yqlv+fASu94LM8/CFjcZwx035SvNi7qIA+xO+es1wbYyhio5qXkuTxqofyj
-         px3Pw4C97KsFcnbNOofmyq0EsOQC0VJMyVeMPh9wLHSQUamq9/CcvYogLVPzEkgCDK7i
-         IWEB+0FuoUIUVy1tL8LFk0ifJw8ku/u8KGevunZuM+3vaImVV1aYjBp9iLccEKELcGLb
-         EZq1VHf61JRtKUBL5Bm3QtpMt3AykZVPtAhdODmbzpjRvr14WA16yCz52p1+Pk5xTa9n
-         T3xg==
+        bh=nKDqtrlVHa3bdl8p7B56FX6c4Fp0ZkjHF2tEioSPG28=;
+        b=111Uf9wOEjtVRI+7u5zYWfd01lgDWNNuYt8aIRyqSwV3BHctLFinfwtB7sMMSzMb7Y
+         KkDHErE14TALE8cOpztroHnZfVVrtiI1hqdQ29XCet0kqS9bKQap824RCfDEa7wWlr9H
+         iMd+rmupLM85LytKutiGMozV75kGwHgCEiFN9tmESn2fhta6Eo7Q0Gy5YG3sPcTnpXfX
+         g9NYnGteyAOoNpQr3Izzq38oKs6am5+Xkbn/zKNelh+lZvPHi8LTzCY5C+7AIK6iaMGC
+         LUuDUQ8+xP7Trq+TVdPczkIMaJ4AMZhmJXScJqmP02PIUiX766dqRysonYu5OBMHwkgJ
+         47EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266228; x=1747871028;
+        d=1e100.net; s=20230601; t=1747266233; x=1747871033;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cGxf10xTbolob6ARtbQFmrKdEey0c2iLS6uYVAPHbb0=;
-        b=U7F7XiqRpNd7TbMcccH9yftRdomC18HZ7LTDVzaVFikiIyGq+N5Ta1e/IUuKkocmz6
-         nSgMU1ByAnFterkzxPDFhcojQABMHdyuVvgU4DB4ycY51YyFPkVIWJ2y1fbXYSOxkBQ0
-         11/TdrjOb6HrJSWZItgjIZhmXLTdV2HPak3SkaQ4E5lFhJ1WR1n3LXOfYTWbmXRZFiVd
-         xaji8hy5v3Yktc6pbmiCVULRDsAYEBUOJZ7IalghY6Wl8BOohdhzrmdE9yvb2v7+aK2K
-         z4tvYVUffH7ilgSdW0APXtWo7S7rZT6FCTs9P3tHxsrZzZ/ppUSjT7pf2oiBXUTqiUtA
-         P5TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXx1uZbKAe8JE8HVmkkvV+1mcX8cDeAcwQWla5AEMbfpjAGQW+vTysrHeuL94FCnKNYXKbAGyN1a1WIRe8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6UWO9INpBqd87NM1cUgfgaDtr2nC3wRmg7Fo0gvU9e7FCs4I7
-	VTFG0T7RkM3Rw3usC4Rks6IaOKa8Zby4PcTBkV47/IlZdWjCIPV1X4gpwD9skrJpf4p6qkiice0
-	80P6bIzlXGKzQlIPTCT3p2Q==
-X-Google-Smtp-Source: AGHT+IF3s18X1WXVSpREAFxwZmEiWRkEzf4FnXZJnpCpoYmdbOqB9rnOiNcmfKVh8wkeRqqYO9tvfAUew5Jususlyg==
-X-Received: from pjbta5.prod.google.com ([2002:a17:90b:4ec5:b0:2ff:5752:a78f])
+        bh=nKDqtrlVHa3bdl8p7B56FX6c4Fp0ZkjHF2tEioSPG28=;
+        b=E3CwLbZoEGpVoyUANdJnw9I7pRUxIh5mIZvJe/TBUTB9m5hAUqSJsMTZKVkwoRYuUG
+         Gj4UCNfpJk5girI2fxfw82QfyIBJDAsMCsuze+CbzOvaSCNZAoiWOFbJBZbF7lMW7KbZ
+         T167M9K9aApWPMqrjCVElu2ZRoBcMf4vuwBoH0f4sDNOBd6rM5ORhmIPG0nuQip0d83O
+         Dx87LHEaUJgxv4yAaN4CDu/+Fkbpck/lIrLmlquHmK1EhuVmcVzoMvO3l+iPBJ58Sgzz
+         rWTFjVcaHzqMaVRFNS89ejhXiygzJQ/3hVK2WotQrv1OWtP6OCcf5KjZdEZ2oT//ppaL
+         jqcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWw2sJE4vyympl//1Ifrc6IamNyzB54/3gS2eR/4UpMSbAyzCmFdmhbzAjJ0Gh+TAARSizeHG/RH2Cyb1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6CrQF7WT0AfUJNK6KNr2e+NXZBlt5qJ65/ZIUfG0OGtMvaB+H
+	IqYuTTQZPNFa7bVhPtz3FBiLWxV8kNL6+lkxXBL32m7XjLBvMR3pc+mDJUt/oIX7kdHiVIUCnsv
+	wxsbq5bnlX5XqWM7V/VQpjQ==
+X-Google-Smtp-Source: AGHT+IGnPIRIGLxCiEdg+1CVTBfIREiEwND24QECga88Bq6mE7e6bLUoxaAGPBs3XSZHbyYwxbSdih97V+hzi1KYgg==
+X-Received: from pjbsh12.prod.google.com ([2002:a17:90b:524c:b0:308:861f:fddb])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:17c1:b0:2ee:9b09:7d3d with SMTP id 98e67ed59e1d1-30e51786009mr630115a91.19.1747266228378;
- Wed, 14 May 2025 16:43:48 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:12 -0700
+ 2002:a17:90b:2742:b0:301:98fc:9b2f with SMTP id 98e67ed59e1d1-30e2e583da8mr7514670a91.1.1747266233160;
+ Wed, 14 May 2025 16:43:53 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:15 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 33/51] KVM: guest_memfd: Allocate and truncate from
- custom allocator
+Message-ID: <28d1e564df1b9774611563146afa7da91cdd4dc0.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 36/51] mm: Convert split_folio() macro to function
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -97,243 +96,32 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-If a custom allocator is requested at guest_memfd creation time, pages
-from the custom allocator will be used to back guest_memfd.
+This will prevent the macro from overriding any function and function
+calls defined as split_folio().
 
-Change-Id: I59df960b3273790f42fe5bea54a234f40962eb75
+Change-Id: I88a66bd876731b272282a42468c3bf8ac008b7cc
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- mm/memory.c            |   1 +
- virt/kvm/guest_memfd.c | 142 +++++++++++++++++++++++++++++++++++++----
- 2 files changed, 132 insertions(+), 11 deletions(-)
+ include/linux/huge_mm.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index ba3ea0a82f7f..3af45e96913c 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -7249,6 +7249,7 @@ void folio_zero_user(struct folio *folio, unsigned long addr_hint)
- 	else
- 		process_huge_page(addr_hint, nr_pages, clear_subpage, folio);
- }
-+EXPORT_SYMBOL_GPL(folio_zero_user);
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index e893d546a49f..f392ff49a816 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -99,7 +99,11 @@ extern struct kobj_attribute thpsize_shmem_enabled_attr;
+ #define thp_vma_allowable_order(vma, vm_flags, tva_flags, order) \
+ 	(!!thp_vma_allowable_orders(vma, vm_flags, tva_flags, BIT(order)))
  
- static int copy_user_gigantic_page(struct folio *dst, struct folio *src,
- 				   unsigned long addr_hint,
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index c65d93c5a443..24d270b9b725 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -478,15 +478,13 @@ static inline void kvm_gmem_mark_prepared(struct folio *folio)
-  * leaking host data and the up-to-date flag is set.
-  */
- static int kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
--				  gfn_t gfn, struct folio *folio)
-+				  gfn_t gfn, struct folio *folio,
-+				  unsigned long addr_hint)
- {
--	unsigned long nr_pages, i;
- 	pgoff_t index;
- 	int r;
- 
--	nr_pages = folio_nr_pages(folio);
--	for (i = 0; i < nr_pages; i++)
--		clear_highpage(folio_page(folio, i));
-+	folio_zero_user(folio, addr_hint);
- 
- 	/*
- 	 * Preparing huge folios should always be safe, since it should
-@@ -554,7 +552,9 @@ static int kvm_gmem_filemap_add_folio(struct address_space *mapping,
-  */
- static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- {
-+	size_t allocated_size;
- 	struct folio *folio;
-+	pgoff_t index_floor;
- 	int ret;
- 
- repeat:
-@@ -581,8 +581,10 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 			return ERR_PTR(ret);
- 		}
- 	}
-+	allocated_size = folio_size(folio);
- 
--	ret = kvm_gmem_filemap_add_folio(inode->i_mapping, folio, index);
-+	index_floor = round_down(index, folio_nr_pages(folio));
-+	ret = kvm_gmem_filemap_add_folio(inode->i_mapping, folio, index_floor);
- 	if (ret) {
- 		folio_put(folio);
- 
-@@ -598,7 +600,17 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
- 		return ERR_PTR(ret);
- 	}
- 
--	__folio_set_locked(folio);
-+	spin_lock(&inode->i_lock);
-+	inode->i_blocks += allocated_size / 512;
-+	spin_unlock(&inode->i_lock);
-+
-+	/*
-+	 * folio is the one that is allocated, this gets the folio at the
-+	 * requested index.
-+	 */
-+	folio = page_folio(folio_file_page(folio, index));
-+	folio_lock(folio);
-+
- 	return folio;
- }
- 
-@@ -736,6 +748,92 @@ static void kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
- 	spin_unlock(&inode->i_lock);
- }
- 
-+/**
-+ * kvm_gmem_zero_range() - Zeroes all sub-pages in range [@start, @end).
-+ *
-+ * @mapping: the filemap to remove this range from.
-+ * @start: index in filemap for start of range (inclusive).
-+ * @end: index in filemap for end of range (exclusive).
-+ *
-+ * The pages in range may be split. truncate_inode_pages_range() isn't the right
-+ * function because it removes pages from the page cache; this function only
-+ * zeroes the pages.
-+ */
-+static void kvm_gmem_zero_range(struct address_space *mapping,
-+				pgoff_t start, pgoff_t end)
+-#define split_folio(f) split_folio_to_list(f, NULL)
++int split_folio_to_list(struct folio *folio, struct list_head *list);
++static inline int split_folio(struct folio *folio)
 +{
-+	struct folio_batch fbatch;
-+
-+	folio_batch_init(&fbatch);
-+	while (filemap_get_folios(mapping, &start, end - 1, &fbatch)) {
-+		unsigned int i;
-+
-+		for (i = 0; i < folio_batch_count(&fbatch); ++i) {
-+			struct folio *f;
-+			size_t nr_bytes;
-+
-+			f = fbatch.folios[i];
-+			nr_bytes = offset_in_folio(f, end << PAGE_SHIFT);
-+			if (nr_bytes == 0)
-+				nr_bytes = folio_size(f);
-+
-+			folio_zero_segment(f, 0, nr_bytes);
-+		}
-+
-+		folio_batch_release(&fbatch);
-+		cond_resched();
-+	}
++	return split_folio_to_list(folio, NULL);
 +}
-+
-+/**
-+ * kvm_gmem_truncate_inode_range() - Truncate pages in range [@lstart, @lend).
-+ *
-+ * @inode: inode to truncate from.
-+ * @lstart: offset in inode for start of range (inclusive).
-+ * @lend: offset in inode for end of range (exclusive).
-+ *
-+ * Removes full (huge)pages from the filemap and zeroing incomplete
-+ * (huge)pages. The pages in the range may be split.
-+ */
-+static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
-+					  loff_t lend)
-+{
-+	pgoff_t full_hpage_start;
-+	size_t nr_per_huge_page;
-+	pgoff_t full_hpage_end;
-+	size_t nr_pages;
-+	pgoff_t start;
-+	pgoff_t end;
-+	void *priv;
-+
-+	priv = kvm_gmem_allocator_private(inode);
-+	nr_per_huge_page = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
-+
-+	start = lstart >> PAGE_SHIFT;
-+	end = min(lend, i_size_read(inode)) >> PAGE_SHIFT;
-+
-+	full_hpage_start = round_up(start, nr_per_huge_page);
-+	full_hpage_end = round_down(end, nr_per_huge_page);
-+
-+	if (start < full_hpage_start) {
-+		pgoff_t zero_end = min(full_hpage_start, end);
-+
-+		kvm_gmem_zero_range(inode->i_mapping, start, zero_end);
-+	}
-+
-+	if (full_hpage_end > full_hpage_start) {
-+		nr_pages = full_hpage_end - full_hpage_start;
-+		kvm_gmem_truncate_inode_aligned_pages(inode, full_hpage_start,
-+						      nr_pages);
-+	}
-+
-+	if (end > full_hpage_end && end > full_hpage_start) {
-+		pgoff_t zero_start = max(full_hpage_end, start);
-+
-+		kvm_gmem_zero_range(inode->i_mapping, zero_start, end);
-+	}
-+}
-+
- static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
- {
- 	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
-@@ -752,7 +850,12 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
- 	list_for_each_entry(gmem, gmem_list, entry)
- 		kvm_gmem_invalidate_begin(gmem, start, end);
  
--	truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
-+	if (kvm_gmem_has_custom_allocator(inode)) {
-+		kvm_gmem_truncate_inode_range(inode, offset, offset + len);
-+	} else {
-+		/* Page size is PAGE_SIZE, so use optimized truncation function. */
-+		truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
-+	}
- 
- 	list_for_each_entry(gmem, gmem_list, entry)
- 		kvm_gmem_invalidate_end(gmem, start, end);
-@@ -776,6 +879,16 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
- 
- 	start = offset >> PAGE_SHIFT;
- 	end = (offset + len) >> PAGE_SHIFT;
-+	if (kvm_gmem_has_custom_allocator(inode)) {
-+		size_t nr_pages;
-+		void *p;
-+
-+		p = kvm_gmem_allocator_private(inode);
-+		nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(p);
-+
-+		start = round_down(start, nr_pages);
-+		end = round_down(end, nr_pages);
-+	}
- 
- 	r = 0;
- 	for (index = start; index < end; ) {
-@@ -1570,7 +1683,7 @@ static struct folio *__kvm_gmem_get_pfn(struct file *file,
- 
- 	*pfn = folio_file_pfn(folio, index);
- 	if (max_order)
--		*max_order = 0;
-+		*max_order = folio_order(folio);
- 
- 	*is_prepared = folio_test_uptodate(folio);
- 	return folio;
-@@ -1597,8 +1710,15 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out;
- 	}
- 
--	if (!is_prepared)
--		r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
-+	if (!is_prepared) {
-+		/*
-+		 * Use the same address as hugetlb for zeroing private pages
-+		 * that won't be mapped to userspace anyway.
-+		 */
-+		unsigned long addr_hint = folio->index << PAGE_SHIFT;
-+
-+		r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio, addr_hint);
-+	}
- 
- 	folio_unlock(folio);
- 
+ #ifdef CONFIG_PGTABLE_HAS_HUGE_LEAVES
+ #define HPAGE_PMD_SHIFT PMD_SHIFT
 -- 
 2.49.0.1045.g170613ef41-goog
 
