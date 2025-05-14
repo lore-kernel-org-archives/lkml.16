@@ -1,224 +1,479 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EAA8C11
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C1327A112;
+	Wed, 14 May 2025 13:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227934; cv=none; b=gits0cTI1lbIh+GGsYSe+gO0diPeEcLain6Js3r7VGo9tnvhtJCmox3bXODP+fNS+dW1ZSn1m97F+3+sRVY6fXxdDPoNgvj0oganDzVHy1IlsnZ45aeHYaPmjnSu71NVQ3lZzTeTkP+uznSdW653IQKPAieA0bAmodyz8jgqO7c=
+	t=1747227936; cv=none; b=mzNQb6OuMO+SBamVkcRNfn7FG59Yp0YudYIhP6sL+orJEGxGe4MdDAhN/OnDVljG64Jxbg90suHcVliRa2xsZxjrPpY3laeZd5qXIsxvi6/fNvRH2kdySipwU9DOIRjjlc0vMjUWuwFO1SR2wZe7oXOdWpmmDgFTOCOg9vhU0DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227934; c=relaxed/simple;
-	bh=cpCyTDo5beziu+utlCxkuqnuIUq75HoD01K56SLqUnM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=LrTDp6Sup5oca7XQb2G7DtqblCY9eGcVMWbA1OZrj1OcEE2CHJqjcfA4Za8tYDXbbF7TWSNesBzZLKTYbpD+cZ76jcm/jTBEcntYv+jopcFA61VV6KUB1UbXPTUciGF2ONeAEkQtHO7g2UJ8AgZgGVFa1O9SNFvqAKtOsnQ1gzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3da644c8ffeso83790665ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:05:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747227931; x=1747832731;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0IwWfYotB+0yx802A0hGzpAxpFJ2lXOkvxUwAU+FZXQ=;
-        b=CeDE6VB4hjK+DBXrTvcOS6giLsLwEOSwhvdDZimKGengMYyn+D46gQTtnXQq57iiys
-         6KUyomKDTZx2PBO1x6PqoL0RafkY6uw6PhoXfCaumcxvGnuEIXmVXIfbJxIr+iFKSzJD
-         NScmUL6rA5xa80xzXIMSyIuftqgR5ztQIHt+ptEUQnlvqijeZNTXcM/91wQCxF/GZRd+
-         5Skx6WmOUYWvdzozUH7iqpKFlL/C6SPKZwOrkvZBo9FryAosGogdSBf2rN5RfS2lePBv
-         sa9IlDJWMZlbMItZwSmuOlM0bSScEQl8/U8CiZ+7h2IdnCJDY0DwASvl5Yqx1UvhVQjv
-         4d2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVnt+F0HavlKF+XJe0lYAAfrS8YqTRIdOha9XqCDLieO0e+/xl3S56iyTklmZIlKYWJ6JE0oUmiLv7ehkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZfVoYv36sFhxZzeMQME1vOD7kkzNDipDzGuX0L+Fm/XgxdHgf
-	fAjMU5Pf64GnvIZngneTlciKG86WUZXqgVbGF2LI02GQp5GKwppEvMzIZ/xdP2biYg6Nq1hF32Q
-	4LZli6mQ3ujmbKhK5znvKDLgJGDtlSmQKri882oIIjSDCAXfh+wzf6+A=
-X-Google-Smtp-Source: AGHT+IFkA1MJSbq3wCRRYAvcd9YGL6ztb7ee4iMxOOFYZcmNLvyJXhNJsB7o2TZgdhk+YotBZYeIRSn5MooZ4KloDLSQHv5BnbLm
+	s=arc-20240116; t=1747227936; c=relaxed/simple;
+	bh=xd/365WgAdYb+IKCfnQ7lig6bhUBzS6yO814llDJ4o0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tI9qOUmW0fK1Y2kAwmWkEG6q2lmYXRWm07AzO/dinko34u+wsJkrmT98eafx3H7m2f2MGccTb30HPOqecMQAjksOAPx5HVgNUiAnLfyBbQzEiTsHambPuOiQ3VOPO8kMhAYl9ANK3qBOdrlhjyJn36aAyh+rTy+n2BYbVphsHxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qlA1FWAS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qlA1FWAS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC08CC4CEE9;
+	Wed, 14 May 2025 13:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747227935;
+	bh=xd/365WgAdYb+IKCfnQ7lig6bhUBzS6yO814llDJ4o0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qlA1FWASe8iNwyWfDNs9pSxOt0Y6oIcB6sDftu1GtbN5JyEksGyusSzING/AoctPx
+	 P2bEe6ZVvfa610khmfnbUT1fpDicBgGMv4IiFeeNHV2ifroUXVz2muFTZIWlpOFeLA
+	 5FgTm7UoRAoCXmVpw6HR4xVr6JxVMXBHnrxhw/PU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.1 00/96] 6.1.139-rc2 review
+Date: Wed, 14 May 2025 15:03:45 +0200
+Message-ID: <20250514125614.705014741@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:184e:b0:3d3:eeec:89f3 with SMTP id
- e9e14a558f8ab-3db6f7b405bmr30783005ab.13.1747227931094; Wed, 14 May 2025
- 06:05:31 -0700 (PDT)
-Date: Wed, 14 May 2025 06:05:31 -0700
-In-Reply-To: <682119bf.050a0220.f2294.0040.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6824951b.a00a0220.104b28.000d.GAE@google.com>
-Subject: Re: [syzbot] [netfs?] KASAN: slab-out-of-bounds Read in iov_iter_revert
-From: syzbot <syzbot+25b83a6f2c702075fcbc@syzkaller.appspotmail.com>
-To: dhowells@redhat.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netfs@lists.linux.dev, pc@manguebit.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.139-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.1.139-rc2
+X-KernelTest-Deadline: 2025-05-16T12:56+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+This is the start of the stable review cycle for the 6.1.139 release.
+There are 96 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-HEAD commit:    9f35e33144ae x86/its: Fix build errors when CONFIG_MODULES=n
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16388e70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c9b33a466dfee330
-dashboard link: https://syzkaller.appspot.com/bug?extid=25b83a6f2c702075fcbc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1193a6f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16899cd4580000
+Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+Anything received after that time might be too late.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-9f35e331.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b18c4a4e3b8e/vmlinux-9f35e331.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ae7ab8362f22/bzImage-9f35e331.xz
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.139-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+and the diffstat can be found below.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+25b83a6f2c702075fcbc@syzkaller.appspotmail.com
+thanks,
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in iov_iter_revert lib/iov_iter.c:633 [inline]
-BUG: KASAN: slab-out-of-bounds in iov_iter_revert+0x443/0x5a0 lib/iov_iter.c:611
-Read of size 4 at addr ffff88802912a0b8 by task kworker/u32:7/1147
+greg k-h
 
-CPU: 1 UID: 0 PID: 1147 Comm: kworker/u32:7 Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound netfs_write_collection_worker
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- iov_iter_revert lib/iov_iter.c:633 [inline]
- iov_iter_revert+0x443/0x5a0 lib/iov_iter.c:611
- netfs_retry_write_stream fs/netfs/write_retry.c:44 [inline]
- netfs_retry_writes+0x166d/0x1a50 fs/netfs/write_retry.c:231
- netfs_collect_write_results fs/netfs/write_collect.c:352 [inline]
- netfs_write_collection_worker+0x23fd/0x3830 fs/netfs/write_collect.c:374
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+-------------
+Pseudo-Shortlog of commits:
 
-Allocated by task 5936:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x223/0x510 mm/slub.c:4339
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- tomoyo_encode2+0x100/0x3e0 security/tomoyo/realpath.c:45
- tomoyo_encode+0x29/0x50 security/tomoyo/realpath.c:80
- tomoyo_realpath_from_path+0x18f/0x6e0 security/tomoyo/realpath.c:283
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x274/0x460 security/tomoyo/file.c:822
- security_file_truncate+0x84/0x1e0 security/security.c:3146
- handle_truncate fs/namei.c:3499 [inline]
- do_open fs/namei.c:3884 [inline]
- path_openat+0xc85/0x2d40 fs/namei.c:4039
- do_filp_open+0x20b/0x470 fs/namei.c:4066
- do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_creat fs/open.c:1522 [inline]
- __se_sys_creat fs/open.c:1516 [inline]
- __x64_sys_creat+0xcc/0x120 fs/open.c:1516
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.1.139-rc2
 
-Freed by task 5936:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2380 [inline]
- slab_free mm/slub.c:4642 [inline]
- kfree+0x2b6/0x4d0 mm/slub.c:4841
- tomoyo_path_perm+0x29a/0x460 security/tomoyo/file.c:842
- security_file_truncate+0x84/0x1e0 security/security.c:3146
- handle_truncate fs/namei.c:3499 [inline]
- do_open fs/namei.c:3884 [inline]
- path_openat+0xc85/0x2d40 fs/namei.c:4039
- do_filp_open+0x20b/0x470 fs/namei.c:4066
- do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_creat fs/open.c:1522 [inline]
- __se_sys_creat fs/open.c:1516 [inline]
- __x64_sys_creat+0xcc/0x120 fs/open.c:1516
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Peter Zijlstra <peterz@infradead.org>
+    x86/its: FineIBT-paranoid vs ITS
 
-The buggy address belongs to the object at ffff88802912a0a0
- which belongs to the cache kmalloc-16 of size 16
-The buggy address is located 8 bytes to the right of
- allocated 16-byte region [ffff88802912a0a0, ffff88802912a0b0)
+Josh Poimboeuf <jpoimboe@kernel.org>
+    x86/alternatives: Remove faulty optimization
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2912a
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801b442640 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000080800080 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52c00(GFP_NOIO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 1, tgid 1 (swapper/0), ts 13358119373, free_ts 11984335158
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
- prep_new_page mm/page_alloc.c:1726 [inline]
- get_page_from_freelist+0x135c/0x3920 mm/page_alloc.c:3688
- __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4970
- alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2450 [inline]
- allocate_slab mm/slub.c:2618 [inline]
- new_slab+0x244/0x340 mm/slub.c:2672
- ___slab_alloc+0xd9c/0x1940 mm/slub.c:3858
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3948
- __slab_alloc_node mm/slub.c:4023 [inline]
- slab_alloc_node mm/slub.c:4184 [inline]
- __do_kmalloc_node mm/slub.c:4326 [inline]
- __kmalloc_noprof+0x2f2/0x510 mm/slub.c:4339
- kmalloc_noprof include/linux/slab.h:909 [inline]
- usb_cache_string+0xab/0x150 drivers/usb/core/message.c:1032
- usb_enumerate_device drivers/usb/core/hub.c:2508 [inline]
- usb_new_device+0x238/0x1a20 drivers/usb/core/hub.c:2633
- register_root_hub+0x299/0x730 drivers/usb/core/hcd.c:994
- usb_add_hcd+0xaf2/0x1730 drivers/usb/core/hcd.c:2976
- dummy_hcd_probe+0x15c/0x380 drivers/usb/gadget/udc/dummy_hcd.c:2693
- platform_probe+0x102/0x1f0 drivers/base/platform.c:1404
- call_driver_probe drivers/base/dd.c:579 [inline]
- really_probe+0x23e/0xa90 drivers/base/dd.c:657
- __driver_probe_device+0x1de/0x440 drivers/base/dd.c:799
-page last free pid 838 tgid 838 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2725
- vfree+0x176/0x960 mm/vmalloc.c:3384
- delayed_vfree_work+0x56/0x70 mm/vmalloc.c:3304
- process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/alternative: Optimize returns patching
 
-Memory state around the buggy address:
- ffff888029129f80: 00 02 fc fc 00 04 fc fc 00 04 fc fc 00 04 fc fc
- ffff88802912a000: 00 05 fc fc 00 00 fc fc 00 01 fc fc 00 01 fc fc
->ffff88802912a080: 00 01 fc fc fa fb fc fc 00 00 fc fc 00 05 fc fc
-                                        ^
- ffff88802912a100: 00 01 fc fc fa fb fc fc fa fb fc fc 00 00 fc fc
- ffff88802912a180: 00 01 fc fc 00 00 fc fc 00 01 fc fc 00 01 fc fc
-==================================================================
+Eric Biggers <ebiggers@google.com>
+    x86/its: Fix build errors when CONFIG_MODULES=n
+
+Peter Zijlstra <peterz@infradead.org>
+    x86/its: Use dynamic thunks for indirect branches
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/ibt: Keep IBT disabled during alternative patching
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Align RETs in BHB clear sequence to avoid thunking
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Add "vmexit" option to skip mitigation on some CPUs
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Enable Indirect Target Selection mitigation
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Add support for ITS-safe return thunk
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Add support for ITS-safe indirect thunk
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/its: Enumerate Indirect Target Selection (ITS) bug
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    Documentation: x86/bugs/its: Add ITS documentation
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation: Remove the extra #ifdef around CALL_NOSPEC
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation: Add a conditional CS prefix to CALL_NOSPEC
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/speculation: Simplify and make CALL_NOSPEC consistent
+
+Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+    x86/bhi: Do not set BHI_DIS_S in 32-bit mode
+
+Daniel Sneddon <daniel.sneddon@linux.intel.com>
+    x86/bpf: Add IBHF call at end of classic BPF
+
+Daniel Sneddon <daniel.sneddon@linux.intel.com>
+    x86/bpf: Call branch history clearing sequence on exit
+
+James Morse <james.morse@arm.com>
+    arm64: proton-pack: Add new CPUs 'k' values for branch mitigation
+
+James Morse <james.morse@arm.com>
+    arm64: bpf: Only mitigate cBPF programs loaded by unprivileged users
+
+James Morse <james.morse@arm.com>
+    arm64: bpf: Add BHB mitigation to the epilogue for cBPF programs
+
+James Morse <james.morse@arm.com>
+    arm64: proton-pack: Expose whether the branchy loop k value
+
+James Morse <james.morse@arm.com>
+    arm64: proton-pack: Expose whether the platform is mitigated by firmware
+
+James Morse <james.morse@arm.com>
+    arm64: insn: Add support for encoding DSB
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Revert "net: phy: microchip: force IRQ polling mode for lan88xx"
+
+Jens Axboe <axboe@kernel.dk>
+    io_uring: ensure deferred completions are posted for multishot
+
+Jens Axboe <axboe@kernel.dk>
+    io_uring: always arm linked timeouts prior to issue
+
+Al Viro <viro@zeniv.linux.org.uk>
+    do_umount(): add missing barrier before refcount checks in sync case
+
+Daniel Wagner <wagi@kernel.org>
+    nvme: unblock ctrl state transition for firmware update
+
+Kevin Baker <kevinb@ventureresearch.com>
+    drm/panel: simple: Update timings for AUO G101EVN010
+
+Thorsten Blum <thorsten.blum@linux.dev>
+    MIPS: Fix MAX_REG_OFFSET
+
+Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    iio: adc: dln2: Use aligned_s64 for timestamp
+
+Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    iio: accel: adxl355: Make timestamp 64-bit aligned using aligned_s64
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    types: Complement the aligned types with signed 64-bit one
+
+Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    iio: temp: maxim-thermocouple: Fix potential lack of DMA safe buffer.
+
+Lothar Rubusch <l.rubusch@gmail.com>
+    iio: accel: adxl367: fix setting odr for activity time update
+
+Dave Penkler <dpenkler@gmail.com>
+    usb: usbtmc: Fix erroneous generic_read ioctl return
+
+Dave Penkler <dpenkler@gmail.com>
+    usb: usbtmc: Fix erroneous wait_srq ioctl return
+
+Dave Penkler <dpenkler@gmail.com>
+    usb: usbtmc: Fix erroneous get_stb ioctl error returns
+
+Oliver Neukum <oneukum@suse.com>
+    USB: usbtmc: use interruptible sleep in usbtmc_read
+
+Andrei Kuchynski <akuchynski@chromium.org>
+    usb: typec: ucsi: displayport: Fix NULL pointer access
+
+RD Babiera <rdbabiera@google.com>
+    usb: typec: tcpm: delay SNK_TRY_WAIT_DEBOUNCE to SRC_TRYWAIT transition
+
+Jim Lin <jilin@nvidia.com>
+    usb: host: tegra: Prevent host controller crash when OTG port is used
+
+Wayne Chang <waynec@nvidia.com>
+    usb: gadget: tegra-xudc: ACK ST_RC after clearing CTRL_RUN
+
+Pawel Laszczak <pawell@cadence.com>
+    usb: cdnsp: fix L1 resume issue for RTL_REVISION_NEW_LPM version
+
+Pawel Laszczak <pawell@cadence.com>
+    usb: cdnsp: Fix issue with resuming from L1
+
+Jan Kara <jack@suse.cz>
+    ocfs2: stop quota recovery before disabling quotas
+
+Jan Kara <jack@suse.cz>
+    ocfs2: implement handshaking with ocfs2 recovery thread
+
+Jan Kara <jack@suse.cz>
+    ocfs2: switch osb->disable_recovery to enum
+
+Dmitry Antipov <dmantipov@yandex.ru>
+    module: ensure that kobject_put() is safe for module type kobjects
+
+Jason Andryuk <jason.andryuk@amd.com>
+    xenbus: Use kref to track req lifetime
+
+Alexey Charkov <alchark@gmail.com>
+    usb: uhci-platform: Make the clock really optional
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu/hdp5.2: use memcfg register to post the write for HDP flush
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Copy AUX read reply data whenever length > 0
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Fix wrong handling for AUX_DEFER case
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Remove incorrect checking in dmub aux handler
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Fix the checking condition in dmub aux handling
+
+Maíra Canal <mcanal@igalia.com>
+    drm/v3d: Add job to pending list if the reset was skipped
+
+Silvano Seva <s.seva@4sigma.it>
+    iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_tagged_fifo
+
+Silvano Seva <s.seva@4sigma.it>
+    iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_fifo
+
+Gabriel Shahrouzi <gshahrouzi@gmail.com>
+    iio: adis16201: Correct inclinometer channel resolution
+
+Angelo Dureghello <adureghello@baylibre.com>
+    iio: adc: ad7606: fix serial register access
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/amd/display: Shift DMUB AUX reply command if necessary
+
+Dave Hansen <dave.hansen@linux.intel.com>
+    x86/mm: Eliminate window where TLB flushes may be inadvertently skipped
+
+Gabriel Shahrouzi <gshahrouzi@gmail.com>
+    staging: axis-fifo: Correct handling of tx_fifo_depth for size validation
+
+Gabriel Shahrouzi <gshahrouzi@gmail.com>
+    staging: axis-fifo: Remove hardware resets for user errors
+
+Gabriel Shahrouzi <gshahrouzi@gmail.com>
+    staging: iio: adc: ad7816: Correct conditional logic for store mode
+
+Aditya Garg <gargaditya08@live.com>
+    Input: synaptics - enable InterTouch on TUXEDO InfinityBook Pro 14 v5
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    Input: synaptics - enable SMBus for HP Elitebook 850 G1
+
+Aditya Garg <gargaditya08@live.com>
+    Input: synaptics - enable InterTouch on Dell Precision M3800
+
+Aditya Garg <gargaditya08@live.com>
+    Input: synaptics - enable InterTouch on Dynabook Portege X30L-G
+
+Manuel Fombuena <fombuena@outlook.com>
+    Input: synaptics - enable InterTouch on Dynabook Portege X30-D
+
+Gary Bisson <bisson.gary@gmail.com>
+    Input: mtk-pmic-keys - fix possible null pointer dereference
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: fix learning on VLAN unaware bridges
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: always rejoin default untagged VLAN on bridge leave
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: fix VLAN ID for untagged vlan on bridge leave
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: fix flushing old pvid VLAN on pvid change
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: fix clearing PVID of a port
+
+Jonas Gorski <jonas.gorski@gmail.com>
+    net: dsa: b53: allow leaky reserved multicast
+
+Paul Chaignon <paul.chaignon@gmail.com>
+    bpf: Scrub packet on bpf_redirect_peer
+
+Jozsef Kadlecsik <kadlec@netfilter.org>
+    netfilter: ipset: fix region locking in hash types
+
+Julian Anastasov <ja@ssi.bg>
+    ipvs: fix uninit-value for saddr in do_output_route4
+
+Guillaume Nault <gnault@redhat.com>
+    ipv4: Drop tos parameter from flowi4_update_output()
+
+Oliver Hartkopp <socketcan@hartkopp.net>
+    can: gw: fix RCU/BH usage in cgw_create_job()
+
+Uladzislau Rezki (Sony) <urezki@gmail.com>
+    rcu/kvfree: Add kvfree_rcu_mightsleep() and kfree_rcu_mightsleep()
+
+Kelsey Maes <kelsey@vpprocess.com>
+    can: mcp251xfd: fix TDC setting for low data bit rates
+
+Guillaume Nault <gnault@redhat.com>
+    gre: Fix again IPv6 link-local address generation.
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    sch_htb: make htb_deactivate() idempotent
+
+Wang Zhaolong <wangzhaolong1@huawei.com>
+    ksmbd: fix memory leak in parse_lease_state()
+
+Eelco Chaudron <echaudro@redhat.com>
+    openvswitch: Fix unsafe attribute parsing in output_userspace()
+
+Norbert Szetei <norbert@doyensec.com>
+    ksmbd: prevent out-of-bounds stream writes by validating *pos
+
+Marc Kleine-Budde <mkl@pengutronix.de>
+    can: mcp251xfd: mcp251xfd_remove(): fix order of unregistration calls
+
+Marc Kleine-Budde <mkl@pengutronix.de>
+    can: mcan: m_can_class_unregister(): fix order of unregistration calls
+
+Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+    arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to usdhc2
+
+Dan Carpenter <dan.carpenter@linaro.org>
+    dm: add missing unlock on in dm_keyslot_evict()
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-------------
+
+Diffstat:
+
+ Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
+ Documentation/admin-guide/hw-vuln/index.rst        |   1 +
+ .../hw-vuln/indirect-target-selection.rst          | 156 +++++++++++++
+ Documentation/admin-guide/kernel-parameters.txt    |  15 ++
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi   |  25 ++-
+ arch/arm64/include/asm/cputype.h                   |   2 +
+ arch/arm64/include/asm/insn.h                      |   1 +
+ arch/arm64/include/asm/spectre.h                   |   3 +
+ arch/arm64/kernel/proton-pack.c                    |  13 +-
+ arch/arm64/lib/insn.c                              |  76 ++++---
+ arch/arm64/net/bpf_jit_comp.c                      |  57 ++++-
+ arch/mips/include/asm/ptrace.h                     |   3 +-
+ arch/x86/Kconfig                                   |  11 +
+ arch/x86/entry/entry_64.S                          |  20 +-
+ arch/x86/include/asm/alternative.h                 |  32 +++
+ arch/x86/include/asm/cpufeatures.h                 |   3 +
+ arch/x86/include/asm/msr-index.h                   |   8 +
+ arch/x86/include/asm/nospec-branch.h               |  38 ++--
+ arch/x86/kernel/alternative.c                      | 245 ++++++++++++++++++++-
+ arch/x86/kernel/cpu/bugs.c                         | 144 +++++++++++-
+ arch/x86/kernel/cpu/common.c                       |  72 ++++--
+ arch/x86/kernel/ftrace.c                           |   2 +-
+ arch/x86/kernel/module.c                           |   7 +
+ arch/x86/kernel/static_call.c                      |   2 +-
+ arch/x86/kernel/vmlinux.lds.S                      |  10 +
+ arch/x86/kvm/x86.c                                 |   4 +-
+ arch/x86/lib/retpoline.S                           |  39 ++++
+ arch/x86/mm/tlb.c                                  |  23 +-
+ arch/x86/net/bpf_jit_comp.c                        |  60 ++++-
+ drivers/base/cpu.c                                 |   8 +
+ drivers/gpu/drm/amd/amdgpu/hdp_v5_2.c              |  12 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  20 +-
+ .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.c    |  28 ++-
+ drivers/gpu/drm/panel/panel-simple.c               |  25 ++-
+ drivers/gpu/drm/v3d/v3d_sched.c                    |  28 ++-
+ drivers/iio/accel/adis16201.c                      |   4 +-
+ drivers/iio/accel/adxl355_core.c                   |   2 +-
+ drivers/iio/accel/adxl367.c                        |  10 +-
+ drivers/iio/adc/ad7606_spi.c                       |   2 +-
+ drivers/iio/adc/dln2-adc.c                         |   2 +-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     |   6 +
+ drivers/iio/temperature/maxim_thermocouple.c       |   2 +-
+ drivers/input/keyboard/mtk-pmic-keys.c             |   4 +-
+ drivers/input/mouse/synaptics.c                    |   5 +
+ drivers/md/dm-table.c                              |   3 +-
+ drivers/net/can/m_can/m_can.c                      |   2 +-
+ drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c     |  42 +++-
+ drivers/net/dsa/b53/b53_common.c                   |  36 ++-
+ drivers/net/phy/microchip.c                        |  46 +++-
+ drivers/nvme/host/core.c                           |   3 +-
+ drivers/staging/axis-fifo/axis-fifo.c              |  14 +-
+ drivers/staging/iio/adc/ad7816.c                   |   2 +-
+ drivers/usb/cdns3/cdnsp-gadget.c                   |  31 +++
+ drivers/usb/cdns3/cdnsp-gadget.h                   |   6 +
+ drivers/usb/cdns3/cdnsp-pci.c                      |  12 +-
+ drivers/usb/cdns3/cdnsp-ring.c                     |   3 +-
+ drivers/usb/cdns3/core.h                           |   3 +
+ drivers/usb/class/usbtmc.c                         |  59 +++--
+ drivers/usb/gadget/udc/tegra-xudc.c                |   4 +
+ drivers/usb/host/uhci-platform.c                   |   2 +-
+ drivers/usb/host/xhci-tegra.c                      |   3 +
+ drivers/usb/typec/tcpm/tcpm.c                      |   2 +-
+ drivers/usb/typec/ucsi/displayport.c               |   2 +
+ drivers/xen/xenbus/xenbus.h                        |   2 +
+ drivers/xen/xenbus/xenbus_comms.c                  |   9 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c           |   2 +-
+ drivers/xen/xenbus/xenbus_xs.c                     |  18 +-
+ fs/namespace.c                                     |   3 +-
+ fs/ocfs2/journal.c                                 |  80 +++++--
+ fs/ocfs2/journal.h                                 |   1 +
+ fs/ocfs2/ocfs2.h                                   |  17 +-
+ fs/ocfs2/quota_local.c                             |   9 +-
+ fs/ocfs2/super.c                                   |   3 +
+ fs/smb/server/oplock.c                             |   7 +-
+ fs/smb/server/vfs.c                                |   7 +
+ include/linux/cpu.h                                |   2 +
+ include/linux/module.h                             |   5 +
+ include/linux/rcupdate.h                           |   3 +
+ include/linux/types.h                              |   3 +-
+ include/net/flow.h                                 |   3 +-
+ include/net/route.h                                |   6 +-
+ include/uapi/linux/types.h                         |   1 +
+ io_uring/io_uring.c                                |  61 ++---
+ kernel/params.c                                    |   4 +-
+ net/can/gw.c                                       | 151 ++++++++-----
+ net/core/filter.c                                  |   1 +
+ net/ipv6/addrconf.c                                |  15 +-
+ net/netfilter/ipset/ip_set_hash_gen.h              |   2 +-
+ net/netfilter/ipvs/ip_vs_xmit.c                    |  29 +--
+ net/openvswitch/actions.c                          |   3 +-
+ net/sched/sch_htb.c                                |  15 +-
+ net/sctp/protocol.c                                |   4 +-
+ 93 files changed, 1578 insertions(+), 398 deletions(-)
+
+
