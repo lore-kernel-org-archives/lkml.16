@@ -1,261 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80B5278162;
-	Wed, 14 May 2025 13:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C072E27A929;
+	Wed, 14 May 2025 13:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747231047; cv=none; b=IAQUCCV6jH8SE5z6BYYRH75TR5CVSo5r6h7IgUEnwigeh/MFjj4550MGm7F+Qu9eKTjtTaI/9ebHSQ9Itj7v5pJV8slS9RChtcG/HGpg0hK9AY7kzV8aK0YSaQdDML70gTWpbx5U440T4anoYfG/DVsHrlhygucp5bgBkd8N/o8=
+	t=1747231080; cv=none; b=iPtofRx8cB15NewFgbRIYi+5fAXBslP1H4PA4xyBI89fID8wzxibuuSZ054EtNQXIdsu7QqUw6Kmu6ggTJ/NoQiBxnOVuygQ+WyBCGhUMQpv32KLjXCpZQi8PtT3laQzZjEVCEQ6a1B1bOYQQP5tJWe0WcF25VDYn8fbjEKekMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747231047; c=relaxed/simple;
-	bh=BhLOVDIWnEq0nnThxI1EmaSEQnntC6wSwC5bMYkcfp4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=bANhV5LSG5itctH5nU8IqopKsKWYoIo7CZ5ZtM0T8h29n1cet8D8Qe8CHgLaA0qP0RWOO4EmWmcqJxgtHdTpqi2o8RTD+Jutkj/JowWThVO/eYf8T/mjHKpS+yEcI3DVnMsGRh9eENx1j/EFSwhSAHXh7kU+McbfE6iJy8NhhRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM/eWa2I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747231080; c=relaxed/simple;
+	bh=g8HawaKYyuUQUSgfPkZXUlib9/BoGPW/jckwCWgOItQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=FlXwNdNU0yYZlXl8fh+aJVbyMXkUnjvQfjC90vMxWg+5t/9CWEgmthgULqhxg2q8QtRHVOKSGnkt1xtLX1SE9uWCEXWIdscdkNNQXILNspShw3IKybNJP2RYScScYxzi71qXtH7af7Yfcz144/iwTdDHj94IGLGZr0IMJnIi7W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bzRwqKcP; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM/eWa2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B56AC4CEE9;
-	Wed, 14 May 2025 13:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747231047;
-	bh=BhLOVDIWnEq0nnThxI1EmaSEQnntC6wSwC5bMYkcfp4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ZM/eWa2IafVzJRCl6gFkh6G4SyEEzlPqnE78PZMlVIxe60Cxw5OI9Chs9PlTWlY6N
-	 rz83gkG+VTD0SQFjj0MgeZP146TRVO7PqJ0wsiAGqpvGYziieFEr095GlvoRB7AB3/
-	 smJ34QR+cpv96hoJejaQ/5OXZvDBp0EU3Y8m8JuqU+fGuRi8d7Hc+p6smX/totyldB
-	 2hS85ErNgrxexWxXTTSNfqiv4CfKoW27usKvwe436uCMcrF2Tr5WUc19YBuZf34vOW
-	 F6RvJMLiJr+hjbF8eJHJH6nVl+SFG8B5zSWn0b9mlp/+/AAPT0Si1eRMOKuhNxYRx0
-	 JqOP0gJfjH6/g==
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bzRwqKcP"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDDN8p014107;
+	Wed, 14 May 2025 15:57:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=8D/8IcKWoCb70xhhkBaIqG
+	mFt/1iue7zeTvtoB41pQw=; b=bzRwqKcPHFxAmBHoGfLz/4E0HEXA/zZAfiC9d/
+	nFprCDpBUGjBCWJ4hOPLRr67wFWY3zoRAvORrmG1E/C4xWA3olRUvQ4L537eK6Iv
+	1PKST+LxMeVVrn+czNZkuNudXmkmzs7gTJHvvesWi9MO2ogsxw5AHjppGhvgzLsC
+	KKit4zflVoNLj3+wQYNzdrY94NZZwZwcBHRH8Zx22sNWLA/D0Y2HyDvbFhkLcxUJ
+	gJTUmKQc6c5L63N+X6xhvC29Ot+mB8S69zpcT5R6eRQpADJtvIdBiWdI+swC08tP
+	/Kh/BNk0x+UQ7P7HFJ2I95OrUTmXdgW6YCKLGLcfSFimQHsQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbds42uv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 15:57:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 064F140053;
+	Wed, 14 May 2025 15:56:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D9417AF5651;
+	Wed, 14 May 2025 15:56:03 +0200 (CEST)
+Received: from localhost (10.252.7.3) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 15:56:03 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Wed, 14 May 2025 15:56:01 +0200
+Subject: [PATCH v5] spi: stm32-ospi: Make usage of
+ reset_control_acquire/release() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 14 May 2025 15:57:22 +0200
-Message-Id: <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Mark Brown" <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
-In-Reply-To: <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250514-b4-upstream_ospi_reset_update-v5-1-7b5de0552c8c@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIAPCgJGgC/43NsQ7CIBSF4VcxzNKUWyitk+9hTIPlogxKw6WNx
+ vTdxS5qHHT8z/CdOyOMHoltVncWcfLkwyWHWq9YfzKXI3JvczMoQZVSCH6QfBwoRTTnLtDgu4i
+ EqRsHaxJy1dY9glTGGsGyMUR0/rr4u33uk6cU4m25m+C5/itPwEsuLWqnrAXTiq0LRAWlog9n9
+ rSn6uWpUv/yKi64RlmbRrdaafj25Jsn4Jcns9c20NdON02N7tOb5/kBIVZXJ2wBAAA=
+X-Change-ID: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
+To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
 
-On Wed May 14, 2025 at 3:01 PM CEST, Daniel Almeida wrote:
->> On 13 May 2025, at 17:01, Benno Lossin <lossin@kernel.org> wrote:
->> On Tue May 13, 2025 at 5:44 PM CEST, Daniel Almeida wrote:
->>> diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..7b07b64f61fdd4a84ffb38e=
-9b0f90830d5291ab9
->>> --- /dev/null
->>> +++ b/rust/kernel/regulator.rs
->>> @@ -0,0 +1,211 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +
->>> +//! Regulator abstractions, providing a standard kernel interface to c=
-ontrol
->>> +//! voltage and current regulators.
->>> +//!
->>> +//! The intention is to allow systems to dynamically control regulator=
- power
->>> +//! output in order to save power and prolong battery life. This appli=
-es to both
->>> +//! voltage regulators (where voltage output is controllable) and curr=
-ent sinks
->>> +//! (where current limit is controllable).
->>> +//!
->>> +//! C header: [`include/linux/regulator/consumer.h`](srctree/include/l=
-inux/regulator/consumer.h)
->>> +//!
->>> +//! Regulators are modeled in Rust with two types: [`Regulator`] and
->>> +//! [`EnabledRegulator`].
->>=20
->> Would it make sense to store this in a generic variable acting as a type
->> state instead of using two different names? So:
->>=20
->>    pub struct Regulator<State: RegulatorState> { /* ... */ }
->>=20
->>    pub trait RegulatorState: private::Sealed {}
->>=20
->>    pub struct Enabled;
->>    pub struct Disabled;
->>=20
->>    impl RegulatorState for Enabled {}
->>    impl RegulatorState for Disabled {}
->>=20
->> And then one would use `Regulator<Enabled>` and `Regulator<Disabled>`.
->
-> This seems like just another way of doing the same thing.
->
-> I have nothing against a typestate, it's an elegant solution really, but =
-so is
-> the current one. I'd say let's keep what we have unless there is somethin=
-g
-> objectively better about a typestatethat makes it worthy to change this.
+As ospi reset is consumed by both OMM and OSPI drivers, use the reset
+acquire/release mechanism which ensure exclusive reset usage.
 
-I'd say it's cleaner and we already have some APIs that utilize type
-states, so I'd prefer we use that where it makes sense.
+This avoid to call reset_control_get/put() in OMM driver each time
+we need to reset OSPI children and guarantee the reset line stays
+deasserted.
 
->>> +/// # Invariants
->>> +///
->>> +/// - [`Regulator`] is a non-null wrapper over a pointer to a `struct
->>> +///   regulator` obtained from [`regulator_get()`](https://docs.kernel=
-.org/driver-api/regulator.html#c.regulator_get).
->>=20
->> This should be "`inner` is a pointer obtained from
->> [`regulator_get()`](...)".
->>=20
->>> +/// - Each instance of [`Regulator`] is associated with a single count=
- of
->>> +///   [`regulator_get()`](https://docs.kernel.org/driver-api/regulator=
-.html#c.regulator_get).
->>=20
->> This is redundant, so we should remove it.
->
-> Why is this redundant? It says that we are associated with a *single* ref=
-count.
+During resume, OMM driver takes temporarily control of reset.
 
-I'd fold it into the previous bullet point. To me they aren't really
-disjoint.
+This patch is dependent on commit 6b3754009f87
+("reset: Add devm_reset_control_array_get_exclusive_released()")
+available on tag reset-for-v6.16.
 
->>> +/// A [`Regulator`] that is known to be enabled.
->>> +///
->>> +/// # Invariants
->>> +///
->>> +/// - [`EnabledRegulator`] is a valid regulator that has been enabled.
->>=20
->> This isn't fully clear what it's supposed to mean to me. Maybe mention
->> the `regulator_enable` function?
->>=20
->>> +/// - Each instance of [`EnabledRegulator`] is associated with a singl=
-e count
->>> +///   of [`regulator_enable()`](https://docs.kernel.org/driver-api/reg=
-ulator.html#c.regulator_enable)
->>> +///   that was obtained from the [`Regulator`] instance once it was en=
-abled.
->>=20
->> Ah I see you mention it here, then what is the bullet point above about?
->
-> Again, the word _single_ is what is important here.
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes in v5:
+  - Add dependency with commit 6b3754009f87 ("reset: Add devm_reset_control_array_get_exclusive_released()")
+    in commit message.
+  - Link to v4: https://lore.kernel.org/r/20250512-b4-upstream_ospi_reset_update-v4-1-982c6f7886ef@foss.st.com
 
-I don't see the point in stating it in two separate bullet points.
+Changes in v4:
+  - Add a comment about reset sharing between OSPI and OMM drivers durig resume.
+  - Link to v3: https://lore.kernel.org/r/20250507-b4-upstream_ospi_reset_update-v3-1-7e46a8797572@foss.st.com
 
->>> +pub struct EnabledRegulator {
->>> +    inner: Regulator,
->>> +}
->>> +
->>> +impl EnabledRegulator {
->>> +    fn as_ptr(&self) -> *mut bindings::regulator {
->>> +        self.inner.inner.as_ptr()
->>> +    }
->>> +
->>> +    /// Disables the regulator.
->>> +    pub fn disable(self) -> Result<Regulator> {
->>> +        // Keep the count on `regulator_get()`.
->>> +        let regulator =3D ManuallyDrop::new(self);
->>=20
->> Why don't we drop the refcount if the `regulator_disable` call fails?
->
-> I am operating under the assumption that regulator_enable() and
-> regulator_disable() do not touch the reference count. Note that we do not
-> acquire a new reference when we build EnabledRegulator in Regulator::enab=
-le(),
-> we merely move our instance of Regulator into EnabledRegulator.
->
-> disable() takes EnabledRegulator by value in order to convert it to Regul=
-ator.
-> If we let the destructor run, that will decrement the refcount as it call=
-s
-> inner.drop(), so that is why the ManuallyDrop is there in the first place=
-. =20
->
-> Now if disable() fails, perhaps we should somehow return `self` to the ca=
-ller.
-> That would let them retry the operation, even if it's unlikely to be of a=
-ny
-> help, as Mark said. In this sense, I agree that there is a leak that I
-> overlooked.
+Changes in v3:
+  - Remove previous patch 1/2 as already merged.
+  - Keep the reset control acquired from probe() to remove().
+  - Link to v2: https://lore.kernel.org/r/20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com
 
-I see two different options on what to do about the leak:
+Changes in v2:
+  - Rebased on spi/for-next (7a978d8fcf57).
+  - Remove useless check on reset.
+  - Add error handling on reset_control_acquire().
+  - Link to v1: https://lore.kernel.org/all/20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com/
+---
+ drivers/spi/spi-stm32-ospi.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-(1) implement `disable` in terms of a new function `try_disable`
-    returning `Result<Regulator, DisableError>` where `DisableError`
-    gives access to the `EnabledRegulator`.
-
-(2) document that the `disable` function leaks the refcount if an error
-    is returned.
-
-I have a slight preference for (1), but if Mark & you decide that it's
-not necessary, since users of regulators won't need it any time soon,
-then go with (2).
-
-> On a second note, Benno, do you have a clean way to return both kernel::E=
-rror
-> and `self` here? I assume that introducing a separate error type just for=
- this
-> function is overkill.
-
-It's pretty common in Rust to have a custom error type for those cases.
-I think we should also do it here, Alice already used the pattern in the
-alloc module [1].
-
-[1]: https://lore.kernel.org/all/20250502-vec-methods-v5-3-06d20ad9366f@goo=
-gle.com
-
->>> +
->>> +        // SAFETY: Safe as per the type invariants of `Self`.
->>> +        let res =3D to_result(unsafe { bindings::regulator_disable(reg=
-ulator.as_ptr()) });
->>> +
->>> +        res.map(|()| Regulator {
->>> +            inner: regulator.inner.inner,
->>> +        })
->>> +    }
->>> +
->>> +    /// Sets the voltage for the regulator.
->>> +    pub fn set_voltage(&self, min_uv: Microvolt, max_uv: Microvolt) ->=
- Result {
->>> +        self.inner.set_voltage(min_uv, max_uv)
->>> +    }
->>> +
->>> +    /// Gets the current voltage of the regulator.
->>> +    pub fn get_voltage(&self) -> Result<Microvolt> {
->>> +        self.inner.get_voltage()
->>> +    }
->>> +}
->>> +
->>> +impl Drop for EnabledRegulator {
->>> +    fn drop(&mut self) {
->>> +        // SAFETY: By the type invariants, we know that `self` owns a =
-reference,
->>> +        // so it is safe to relinquish it now.
->>> +        unsafe { bindings::regulator_disable(self.as_ptr()) };
->>=20
->> Same here, what happens to the refcount?
->
-> It remains the same, we never acquired one when we enabled, so we are rel=
-ying
-> on inner.drop() to decrement it.
-
-Ah I overlooked that. Then it's fine.
+diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+index 668022098b1eac3628f0677e6d786e5a267346be..b2597b52beb1133155e0d6f601b0632ad4b8e8f5 100644
+--- a/drivers/spi/spi-stm32-ospi.c
++++ b/drivers/spi/spi-stm32-ospi.c
+@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ospi->rstc = devm_reset_control_array_get_optional_exclusive(dev);
++	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
+ 	if (IS_ERR(ospi->rstc))
+ 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
+ 				     "Can't get reset\n");
+@@ -936,11 +936,13 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_pm_enable;
+ 
+-	if (ospi->rstc) {
+-		reset_control_assert(ospi->rstc);
+-		udelay(2);
+-		reset_control_deassert(ospi->rstc);
+-	}
++	ret = reset_control_acquire(ospi->rstc);
++	if (ret)
++		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
++
++	reset_control_assert(ospi->rstc);
++	udelay(2);
++	reset_control_deassert(ospi->rstc);
+ 
+ 	ret = spi_register_controller(ctrl);
+ 	if (ret) {
+@@ -983,6 +985,8 @@ static void stm32_ospi_remove(struct platform_device *pdev)
+ 	if (ospi->dma_chrx)
+ 		dma_release_channel(ospi->dma_chrx);
+ 
++	reset_control_release(ospi->rstc);
++
+ 	pm_runtime_put_sync_suspend(ospi->dev);
+ 	pm_runtime_force_suspend(ospi->dev);
+ }
+@@ -993,6 +997,8 @@ static int __maybe_unused stm32_ospi_suspend(struct device *dev)
+ 
+ 	pinctrl_pm_select_sleep_state(dev);
+ 
++	reset_control_release(ospi->rstc);
++
+ 	return pm_runtime_force_suspend(ospi->dev);
+ }
+ 
+@@ -1012,6 +1018,12 @@ static int __maybe_unused stm32_ospi_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = reset_control_acquire(ospi->rstc);
++	if (ret) {
++		dev_err(dev, "Can not acquire reset\n");
++		return ret;
++	}
++
+ 	writel_relaxed(ospi->cr_reg, regs_base + OSPI_CR);
+ 	writel_relaxed(ospi->dcr_reg, regs_base + OSPI_DCR1);
+ 	pm_runtime_mark_last_busy(ospi->dev);
 
 ---
-Cheers,
-Benno
+base-commit: 1c64de886b8893c0158097edd6ba08d527a2c97a
+change-id: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
+
+Best regards,
+-- 
+Patrice Chotard <patrice.chotard@foss.st.com>
+
