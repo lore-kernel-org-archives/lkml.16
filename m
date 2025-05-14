@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C4D266F19
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B0B269CE8
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266247; cv=none; b=fNWwyfWw454eW9EdHoGH8iKnavwtKqmSnouFOoryWeqPuPJnzN8g63/Pe6we1TgXHXLrv8LAEMLo1xGYL0rg1jHlLleIjVyrZpy6tdksrT67pBcgbC5DvnqTZp7jNVHr1gzX6XNQ2p+1gj527eD9Va34mYSyLDVfCFG3Y2uVLr0=
+	t=1747266252; cv=none; b=btq8LO0GfiS52d6yX0fNCo+/GTuQnfz1D9T89bPDm3tLUVZZ/jGNHt++TSv84FN3S0D8T4Y0tQ92mZ8j4uNN8vffj7XKr51jiFTxAEZk/gvV4J30t08adomNnY3T+LsMV4L53EU3wbwQxjFoeXSholIvNXVPTxXn9bzXCT/0EzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266247; c=relaxed/simple;
-	bh=ImmIEjgg6VN8oNGIpqxRIgN7oquIvMOxprY/MGcEcGE=;
+	s=arc-20240116; t=1747266252; c=relaxed/simple;
+	bh=RmlnZgFdZqjzPPd7eIlteMHDS+xME2PjQiXp3qME9AU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UwfSSx/idjW5oYA6QLKROVHulJ/kyUh2/0rGjcQ5gE/Nywd+ARb5s67wH9MC+9yvNbDWxY2BZK1HbdxQ8Eu72V49NgCjHYZZkwvgqKTn7am7L2IakIyAwhKCTLSIc171g5Uw16tpECiH3N5mUMyEhfdgtM1NZvj1tRVUxInPniE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ckoGeI/V; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=K2tZ3Uc2h/G4RQSK2raCSrlwmzTeWsApqV3lErAVZ3Lf4q7lrWwivyfNvdbPxNVDTYZ51XElPo02yZJYMrBX3BsljVlnqMjobeJ5GX+nmXjt+L8U4FK+cAilVqFiIgp509AZC0FYKtrUKU0XIz9T0WxS6c8tzxXs9RNPLxiacXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2WyHbWhY; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ckoGeI/V"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2371b50cabso291717a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2WyHbWhY"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e540fa2d0so2717595ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266244; x=1747871044; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266250; x=1747871050; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SBKCNvKK5vlZpa9NXE6RG3mzzUtnLi6xsQAbwU+j9NQ=;
-        b=ckoGeI/VC7JcpC/2jFd9RGFu6A75HHK8rS4bFpQrh7R1EZsKlvL3GAq3Qk6ss9tXiW
-         eDWEL9xeMZpEprhp5pYhBbmkei31Nj5p67oG22lCANaYAOcBVrGWtHhYGXfHd7654VPa
-         muSt8tozcZKdp9vA21H5iswq62+SqTReYYi+QpDFqeCZ09y6RQQuvbySwAqip0ZKGqvj
-         N2fAhF8KybW4KmtN7keCOlPibPdWyJ+yzn51fbR1eJhKcG4o8853PBw7UMl8J8Ul9Kwy
-         5BqyTjbLC2xcJe/r2v9sH7TZt8rYVf2T18txmxyg9UF5AoV01iB+oFKk5/rqSBMMrqlD
-         eZdQ==
+        bh=yoLxnUTPsoaNLqVdaJcroJKZWfS4rkiGi/yftlVoHwU=;
+        b=2WyHbWhYQDt9pMVrp4KMzh8C/L/7nug049ml7nsT3/+vLPQfD8C1Vali0Ytyuejs9Y
+         i4dD3xuiFQTw0Dik0+kY7AfNmBeWdC913XiSMM1XL+5HjArG1dbX4gj0nC656WNiRrmz
+         6SMAPaZYMTEZ5IiB9wga3DyCKkhFv2AileX0FkuFMVMTVoiMoxQmcYjWxMXbY0sBaDY+
+         zonfamF00cOjoQL2LYb31AzUwR0CWOudIGbAiohw/xbpB6bRX3S3acpSM9t3KgitAHa4
+         UdB7DjVFrW+jgFlcMFhQ7p25rFErb2DmZli7ms9Dy5MBY1NHmbstW4G+BsI4WF1wAnRf
+         iKDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266244; x=1747871044;
+        d=1e100.net; s=20230601; t=1747266250; x=1747871050;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SBKCNvKK5vlZpa9NXE6RG3mzzUtnLi6xsQAbwU+j9NQ=;
-        b=I2XEVZPbkbLOWPgK7MCkxHpYPYLF7W8aIqr6HkCmqN0mx/vt9HmfslfRzUGISY+PwA
-         now7vO7ggelnP2B8e3MWlVPdA1dWTTOGtfwqQcNT0nSD5tvUs/jNR2B7Kk6Z/hy2TKbi
-         aYQEZqgVMbdSwXhAjT0Z3l+n34YQGi2YHBKeyj0+Hbs8P3dlnUi8JzAWxQejk4x6noD0
-         3Rgho3u4TiOO+qgh2WuqoT8cLmAemy1bsE/qBnnflEFo11OpQNIxCeZM+dALXEoQMhC4
-         t4Xs+nHRj4v41oZ7S/5dPzeMUA2ucYb+foaYKw8wEXS5vkPlffKzutdKs6uzz4sdte9a
-         Gvxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVryXeWiu2wOLv0QL1ZVMO+wolp4f3fpb//krL35XYlEG2QWUfBDCkzFkeT8qhuA5Vo3LbhDb+9R1YKM64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTcqmtQ3pyZhQsuSloyk8YArd8SGhDRftwLFNGJy1kCc2HbYkb
-	KwaBorg+7o8APpCuQS8++Q+AQGD6wpzlcVQHv3ybKDEDwvNEN6wo+v3sVMtT7U6NWAyfLFICaF4
-	ihXxIP4A59XedFhFOjENhfQ==
-X-Google-Smtp-Source: AGHT+IFlY73C7NnEaCyZjX9EVeyEjmbdYFDraUMzvzxmT+X894pXxbvAFLXXKcOPJa5mxHY7SeCxnzAUoVQK/RAQbA==
-X-Received: from pjbqx6.prod.google.com ([2002:a17:90b:3e46:b0:30a:7c16:a1aa])
+        bh=yoLxnUTPsoaNLqVdaJcroJKZWfS4rkiGi/yftlVoHwU=;
+        b=KnGct7pIakqLbCDKG6GM3Z3fBqowWnyufT07MdpJOrSWdn+XC279vYa9KRDLQaB31A
+         4rXtvqwtkcPnhvK1K67rAiUolAJQzMnmQhqC9PiCzSgdKumqgF9lApChS+4bE/KL9goH
+         FMI5Ygz5F5CzMv9RSVjRV1NsFnyOdUsv/WbeYtdi5oWm13+4S5Qn3OZdsmAiKbw4i0+M
+         AqOn4xsVOx2e+gEC1Hxhmaa63rir5107u71iNgWL4iWlzAmQl0I9VHmt3Ud55lhww8c2
+         2+sYhBny0oG+eWYXLVcsSifB4Um8Y8vAyfFv5vWcJkgClgHKv0x2iTQ6mo+ole5AoaSW
+         UOjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUg+bxTQydmrNagzdBieTAUBSzXsPZ3qwOyMYJCQ8iy3bYYTUiCqhzjRC17IOiVVcCYpEki6E4/l+0kQJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz67//ABBabJlFTwov1r5m5vK4YJex4FrgwJWPI7T9ak/vqIRgC
+	SNNSaFHRCD6wwjTDsL0ckTMkG4msu+YHiqgBjPRjV5cbwvisw1l8XI0Gh8IkY4eiwvKmeoti/KH
+	nTlQvzZwwNkYgAagehwygvw==
+X-Google-Smtp-Source: AGHT+IHZbq2m2KZ1WT28Acy6uWBe7uvmxINNxxXuS4/4XNP8bRQlXVNAWhWbDMLmHfKnKz0cepkUgU78XTTuk1uhxw==
+X-Received: from pgg17.prod.google.com ([2002:a05:6a02:4d91:b0:b1f:fba5:9aad])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2585:b0:2f4:4003:f3ea with SMTP id 98e67ed59e1d1-30e5195f760mr820504a91.33.1747266244464;
- Wed, 14 May 2025 16:44:04 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:22 -0700
+ 2002:a17:902:ce04:b0:22c:3294:f038 with SMTP id d9443c01a7336-231b5e3cf88mr5286885ad.18.1747266250517;
+ Wed, 14 May 2025 16:44:10 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:26 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <e232d7e84ebb1bffa323ec554474d0cf759e8bae.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 43/51] KVM: selftests: Update conversion flows test for HugeTLB
+Message-ID: <e64fc10b654b0b97cddbcc3209ef40e1d73bfe48.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 47/51] KVM: selftests: Support various types of backing
+ sources for private memory
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,454 +97,164 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-This patch updates conversion flows test to use
-GUEST_MEMFD_FLAG_HUGETLB and tests with the 2MB and 1GB sizes.
+Adds support for various type of backing sources for private
+memory (in the sense of confidential computing), similar to the
+backing sources available for shared memory.
 
-Change-Id: If5d93cb776d6bebd504a80bba553bd534e62be38
+Change-Id: I683b48c90d74f8cb99e416d26c8fb98331df0bab
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../kvm/guest_memfd_conversions_test.c        | 171 ++++++++++--------
- 1 file changed, 98 insertions(+), 73 deletions(-)
+ .../testing/selftests/kvm/include/test_util.h | 18 ++++-
+ tools/testing/selftests/kvm/lib/test_util.c   | 77 +++++++++++++++++++
+ 2 files changed, 94 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
-index 34eb6c9a37b1..22126454fd6b 100644
---- a/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_conversions_test.c
-@@ -5,6 +5,7 @@
-  * Copyright (c) 2024, Google LLC.
-  */
- #include <linux/kvm.h>
-+#include <linux/sizes.h>
- #include <stdio.h>
- #include <string.h>
- #include <sys/mman.h>
-@@ -228,6 +229,11 @@ static struct kvm_vm *setup_test(size_t test_page_size, bool init_private,
- 	if (init_private)
- 		flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
+diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
+index b4a03784ac4f..bfd9d9a897e3 100644
+--- a/tools/testing/selftests/kvm/include/test_util.h
++++ b/tools/testing/selftests/kvm/include/test_util.h
+@@ -139,9 +139,19 @@ enum vm_mem_backing_src_type {
  
-+	if (test_page_size == SZ_2M)
-+		flags |= GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_2MB;
-+	else if (test_page_size == SZ_1G)
-+		flags |= GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_1GB;
+ struct vm_mem_backing_src_alias {
+ 	const char *name;
+-	uint32_t flag;
++	uint64_t flag;
+ };
+ 
++enum vm_private_mem_backing_src_type {
++	VM_PRIVATE_MEM_SRC_GUEST_MEM,  /* Use default page size */
++	VM_PRIVATE_MEM_SRC_HUGETLB,    /* Use kernel default page size for hugetlb pages */
++	VM_PRIVATE_MEM_SRC_HUGETLB_2MB,
++	VM_PRIVATE_MEM_SRC_HUGETLB_1GB,
++	NUM_PRIVATE_MEM_SRC_TYPES,
++};
 +
- 	*guest_memfd = vm_create_guest_memfd(vm, test_page_size, flags);
- 	TEST_ASSERT(*guest_memfd > 0, "guest_memfd creation failed");
++#define DEFAULT_VM_PRIVATE_MEM_SRC VM_PRIVATE_MEM_SRC_GUEST_MEM
++
+ #define MIN_RUN_DELAY_NS	200000UL
  
-@@ -249,79 +255,80 @@ static void cleanup_test(size_t guest_memfd_size, struct kvm_vm *vm,
- 		TEST_ASSERT_EQ(close(guest_memfd), 0);
- }
- 
--static void test_sharing(void)
-+static void test_sharing(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
- 	int guest_memfd;
- 	char *mem;
- 
--	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
-+	vm = setup_test(test_page_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
- 
- 	host_use_memory(mem, 'X', 'A');
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'A', 'B', 0);
- 
- 	/* Toggle private flag of memory attributes and run the test again. */
--	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_private(guest_memfd, 0, test_page_size);
- 
- 	assert_host_cannot_fault(mem);
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
- 
--	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, 0, test_page_size);
- 
- 	host_use_memory(mem, 'C', 'D');
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'D', 'E', 0);
- 
--	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
-+	cleanup_test(test_page_size, vm, guest_memfd, mem);
- }
- 
--static void test_init_mappable_false(void)
-+static void test_init_mappable_false(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
- 	int guest_memfd;
- 	char *mem;
- 
--	vm = setup_test(PAGE_SIZE, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
-+	vm = setup_test(test_page_size, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
- 
- 	assert_host_cannot_fault(mem);
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
- 
--	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, 0, test_page_size);
- 
- 	host_use_memory(mem, 'A', 'B');
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
- 
--	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
-+	cleanup_test(test_page_size, vm, guest_memfd, mem);
- }
+ bool thp_configured(void);
+@@ -154,6 +164,12 @@ int get_backing_src_madvise_advice(uint32_t i);
+ bool is_backing_src_hugetlb(uint32_t i);
+ void backing_src_help(const char *flag);
+ enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name);
++
++void private_mem_backing_src_help(const char *flag);
++enum vm_private_mem_backing_src_type parse_private_mem_backing_src_type(const char *type_name);
++const struct vm_mem_backing_src_alias *vm_private_mem_backing_src_alias(uint32_t i);
++size_t get_private_mem_backing_src_pagesz(uint32_t i);
++
+ long get_run_delay(void);
  
  /*
-  * Test that even if there are no folios yet, conversion requests are recorded
-  * in guest_memfd.
-  */
--static void test_conversion_before_allocation(void)
-+static void test_conversion_before_allocation(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
- 	int guest_memfd;
- 	char *mem;
+diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
+index 24dc90693afd..8c4d6ec44c41 100644
+--- a/tools/testing/selftests/kvm/lib/test_util.c
++++ b/tools/testing/selftests/kvm/lib/test_util.c
+@@ -15,6 +15,8 @@
+ #include <sys/syscall.h>
+ #include <linux/mman.h>
+ #include "linux/kernel.h"
++#include <linux/kvm.h>
++#include <linux/guestmem.h>
  
--	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
-+	vm = setup_test(test_page_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
+ #include "test_util.h"
  
--	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_private(guest_memfd, 0, test_page_size);
- 
- 	assert_host_cannot_fault(mem);
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
- 
--	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, 0, test_page_size);
- 
- 	host_use_memory(mem, 'A', 'B');
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'B', 'C', 0);
- 
--	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
-+	cleanup_test(test_page_size, vm, guest_memfd, mem);
+@@ -288,6 +290,34 @@ const struct vm_mem_backing_src_alias *vm_mem_backing_src_alias(uint32_t i)
+ 	return &aliases[i];
  }
  
--static void __test_conversion_if_not_all_folios_allocated(int total_nr_pages,
-+static void __test_conversion_if_not_all_folios_allocated(size_t test_page_size,
-+							  int total_nr_pages,
- 							  int page_to_fault)
- {
- 	const int second_page_to_fault = 8;
-@@ -332,15 +339,15 @@ static void __test_conversion_if_not_all_folios_allocated(int total_nr_pages,
- 	char *mem;
- 	int i;
- 
--	total_size = PAGE_SIZE * total_nr_pages;
-+	total_size = test_page_size * total_nr_pages;
- 	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
- 
- 	/*
- 	 * Fault 2 of the pages to test filemap range operations except when
- 	 * page_to_fault == second_page_to_fault.
- 	 */
--	host_use_memory(mem + page_to_fault * PAGE_SIZE, 'X', 'A');
--	host_use_memory(mem + second_page_to_fault * PAGE_SIZE, 'X', 'A');
-+	host_use_memory(mem + page_to_fault * test_page_size, 'X', 'A');
-+	host_use_memory(mem + second_page_to_fault * test_page_size, 'X', 'A');
- 
- 	guest_memfd_convert_private(guest_memfd, 0, total_size);
- 
-@@ -348,37 +355,37 @@ static void __test_conversion_if_not_all_folios_allocated(int total_nr_pages,
- 		bool is_faulted;
- 		char expected;
- 
--		assert_host_cannot_fault(mem + i * PAGE_SIZE);
-+		assert_host_cannot_fault(mem + i * test_page_size);
- 
- 		is_faulted = i == page_to_fault || i == second_page_to_fault;
- 		expected = is_faulted ? 'A' : 'X';
- 		guest_use_memory(vcpu,
--				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+				 GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 expected, 'B', 0);
- 	}
- 
- 	guest_memfd_convert_shared(guest_memfd, 0, total_size);
- 
- 	for (i = 0; i < total_nr_pages; ++i) {
--		host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
-+		host_use_memory(mem + i * test_page_size, 'B', 'C');
- 		guest_use_memory(vcpu,
--				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+				 GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 'C', 'D', 0);
- 	}
- 
- 	cleanup_test(total_size, vm, guest_memfd, mem);
- }
- 
--static void test_conversion_if_not_all_folios_allocated(void)
-+static void test_conversion_if_not_all_folios_allocated(size_t test_page_size)
- {
- 	const int total_nr_pages = 16;
- 	int i;
- 
- 	for (i = 0; i < total_nr_pages; ++i)
--		__test_conversion_if_not_all_folios_allocated(total_nr_pages, i);
-+		__test_conversion_if_not_all_folios_allocated(test_page_size, total_nr_pages, i);
- }
- 
--static void test_conversions_should_not_affect_surrounding_pages(void)
-+static void test_conversions_should_not_affect_surrounding_pages(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	int page_to_convert;
-@@ -391,40 +398,40 @@ static void test_conversions_should_not_affect_surrounding_pages(void)
- 
- 	page_to_convert = 2;
- 	nr_pages = 4;
--	total_size = PAGE_SIZE * nr_pages;
-+	total_size = test_page_size * nr_pages;
- 
- 	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
- 
- 	for (i = 0; i < nr_pages; ++i) {
--		host_use_memory(mem + i * PAGE_SIZE, 'X', 'A');
--		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+		host_use_memory(mem + i * test_page_size, 'X', 'A');
-+		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 'A', 'B', 0);
- 	}
- 
--	guest_memfd_convert_private(guest_memfd, PAGE_SIZE * page_to_convert, PAGE_SIZE);
-+	guest_memfd_convert_private(guest_memfd, test_page_size * page_to_convert, test_page_size);
- 
- 
- 	for (i = 0; i < nr_pages; ++i) {
- 		char to_check;
- 
- 		if (i == page_to_convert) {
--			assert_host_cannot_fault(mem + i * PAGE_SIZE);
-+			assert_host_cannot_fault(mem + i * test_page_size);
- 			to_check = 'B';
- 		} else {
--			host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
-+			host_use_memory(mem + i * test_page_size, 'B', 'C');
- 			to_check = 'C';
- 		}
- 
--		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 to_check, 'D', 0);
- 	}
- 
--	guest_memfd_convert_shared(guest_memfd, PAGE_SIZE * page_to_convert, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, test_page_size * page_to_convert, test_page_size);
- 
- 
- 	for (i = 0; i < nr_pages; ++i) {
--		host_use_memory(mem + i * PAGE_SIZE, 'D', 'E');
--		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+		host_use_memory(mem + i * test_page_size, 'D', 'E');
-+		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 'E', 'F', 0);
- 	}
- 
-@@ -432,7 +439,7 @@ static void test_conversions_should_not_affect_surrounding_pages(void)
- }
- 
- static void __test_conversions_should_fail_if_memory_has_elevated_refcount(
--	int nr_pages, int page_to_convert)
-+	size_t test_page_size, int nr_pages, int page_to_convert)
- {
- 	struct kvm_vcpu *vcpu;
- 	loff_t error_offset;
-@@ -443,50 +450,50 @@ static void __test_conversions_should_fail_if_memory_has_elevated_refcount(
- 	int ret;
- 	int i;
- 
--	total_size = PAGE_SIZE * nr_pages;
-+	total_size = test_page_size * nr_pages;
- 	vm = setup_test(total_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
- 
--	pin_pages(mem + page_to_convert * PAGE_SIZE, PAGE_SIZE);
-+	pin_pages(mem + page_to_convert * test_page_size, test_page_size);
- 
- 	for (i = 0; i < nr_pages; i++) {
--		host_use_memory(mem + i * PAGE_SIZE, 'X', 'A');
--		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+		host_use_memory(mem + i * test_page_size, 'X', 'A');
-+		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 'A', 'B', 0);
- 	}
- 
- 	error_offset = 0;
--	ret = __guest_memfd_convert_private(guest_memfd, page_to_convert * PAGE_SIZE,
--					    PAGE_SIZE, &error_offset);
-+	ret = __guest_memfd_convert_private(guest_memfd, page_to_convert * test_page_size,
-+					    test_page_size, &error_offset);
- 	TEST_ASSERT_EQ(ret, -1);
- 	TEST_ASSERT_EQ(errno, EAGAIN);
--	TEST_ASSERT_EQ(error_offset, page_to_convert * PAGE_SIZE);
-+	TEST_ASSERT_EQ(error_offset, page_to_convert * test_page_size);
- 
- 	unpin_pages();
- 
--	guest_memfd_convert_private(guest_memfd, page_to_convert * PAGE_SIZE, PAGE_SIZE);
-+	guest_memfd_convert_private(guest_memfd, page_to_convert * test_page_size, test_page_size);
- 
- 	for (i = 0; i < nr_pages; i++) {
- 		char expected;
- 
- 		if (i == page_to_convert)
--			assert_host_cannot_fault(mem + i * PAGE_SIZE);
-+			assert_host_cannot_fault(mem + i * test_page_size);
- 		else
--			host_use_memory(mem + i * PAGE_SIZE, 'B', 'C');
-+			host_use_memory(mem + i * test_page_size, 'B', 'C');
- 
- 		expected = i == page_to_convert ? 'X' : 'C';
--		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+		guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 expected, 'D', 0);
- 	}
- 
--	guest_memfd_convert_shared(guest_memfd, page_to_convert * PAGE_SIZE, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, page_to_convert * test_page_size, test_page_size);
- 
- 
- 	for (i = 0; i < nr_pages; i++) {
- 		char expected = i == page_to_convert ? 'X' : 'D';
- 
--		host_use_memory(mem + i * PAGE_SIZE, expected, 'E');
-+		host_use_memory(mem + i * test_page_size, expected, 'E');
- 		guest_use_memory(vcpu,
--				 GUEST_MEMFD_SHARING_TEST_GVA + i * PAGE_SIZE,
-+				 GUEST_MEMFD_SHARING_TEST_GVA + i * test_page_size,
- 				 'E', 'F', 0);
- 	}
- 
-@@ -496,15 +503,18 @@ static void __test_conversions_should_fail_if_memory_has_elevated_refcount(
-  * This test depends on CONFIG_GUP_TEST to provide a kernel module that exposes
-  * pin_user_pages() to userspace.
-  */
--static void test_conversions_should_fail_if_memory_has_elevated_refcount(void)
-+static void test_conversions_should_fail_if_memory_has_elevated_refcount(
-+		size_t test_page_size)
- {
- 	int i;
- 
--	for (i = 0; i < 4; i++)
--		__test_conversions_should_fail_if_memory_has_elevated_refcount(4, i);
-+	for (i = 0; i < 4; i++) {
-+		__test_conversions_should_fail_if_memory_has_elevated_refcount(
-+			test_page_size, 4, i);
-+	}
- }
- 
--static void test_truncate_should_not_change_mappability(void)
-+static void test_truncate_should_not_change_mappability(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
-@@ -512,40 +522,40 @@ static void test_truncate_should_not_change_mappability(void)
- 	char *mem;
- 	int ret;
- 
--	vm = setup_test(PAGE_SIZE, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
-+	vm = setup_test(test_page_size, /*init_private=*/false, &vcpu, &guest_memfd, &mem);
- 
- 	host_use_memory(mem, 'X', 'A');
- 
- 	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			0, PAGE_SIZE);
-+			0, test_page_size);
- 	TEST_ASSERT(!ret, "truncating the first page should succeed");
- 
- 	host_use_memory(mem, 'X', 'A');
- 
--	guest_memfd_convert_private(guest_memfd, 0, PAGE_SIZE);
-+	guest_memfd_convert_private(guest_memfd, 0, test_page_size);
- 
- 	assert_host_cannot_fault(mem);
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'A', 'A', 0);
- 
- 	ret = fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			0, PAGE_SIZE);
-+			0, test_page_size);
- 	TEST_ASSERT(!ret, "truncating the first page should succeed");
- 
- 	assert_host_cannot_fault(mem);
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
- 
--	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
-+	cleanup_test(test_page_size, vm, guest_memfd, mem);
- }
- 
--static void test_fault_type_independent_of_mem_attributes(void)
-+static void test_fault_type_independent_of_mem_attributes(size_t test_page_size)
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
- 	int guest_memfd;
- 	char *mem;
- 
--	vm = setup_test(PAGE_SIZE, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
--	vm_mem_set_shared(vm, GUEST_MEMFD_SHARING_TEST_GPA, PAGE_SIZE);
-+	vm = setup_test(test_page_size, /*init_private=*/true, &vcpu, &guest_memfd, &mem);
-+	vm_mem_set_shared(vm, GUEST_MEMFD_SHARING_TEST_GPA, test_page_size);
- 
- 	/*
- 	 * kvm->mem_attr_array set to shared, guest_memfd memory initialized as
-@@ -558,8 +568,8 @@ static void test_fault_type_independent_of_mem_attributes(void)
- 	/* Guest can fault and use memory. */
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
- 
--	guest_memfd_convert_shared(guest_memfd, 0, PAGE_SIZE);
--	vm_mem_set_private(vm, GUEST_MEMFD_SHARING_TEST_GPA, PAGE_SIZE);
-+	guest_memfd_convert_shared(guest_memfd, 0, test_page_size);
-+	vm_mem_set_private(vm, GUEST_MEMFD_SHARING_TEST_GPA, test_page_size);
- 
- 	/* Host can use shared memory. */
- 	host_use_memory(mem, 'X', 'A');
-@@ -567,7 +577,19 @@ static void test_fault_type_independent_of_mem_attributes(void)
- 	/* Guest can also use shared memory. */
- 	guest_use_memory(vcpu, GUEST_MEMFD_SHARING_TEST_GVA, 'X', 'A', 0);
- 
--	cleanup_test(PAGE_SIZE, vm, guest_memfd, mem);
-+	cleanup_test(test_page_size, vm, guest_memfd, mem);
++const struct vm_mem_backing_src_alias *vm_private_mem_backing_src_alias(uint32_t i)
++{
++	static const struct vm_mem_backing_src_alias aliases[] = {
++		[VM_PRIVATE_MEM_SRC_GUEST_MEM] = {
++			.name = "private_mem_guest_mem",
++			.flag = 0,
++		},
++		[VM_PRIVATE_MEM_SRC_HUGETLB] = {
++			.name = "private_mem_hugetlb",
++			.flag = GUEST_MEMFD_FLAG_HUGETLB,
++		},
++		[VM_PRIVATE_MEM_SRC_HUGETLB_2MB] = {
++			.name = "private_mem_hugetlb_2mb",
++			.flag = GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_2MB,
++		},
++		[VM_PRIVATE_MEM_SRC_HUGETLB_1GB] = {
++			.name = "private_mem_hugetlb_1gb",
++			.flag = GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_1GB,
++		},
++	};
++	_Static_assert(ARRAY_SIZE(aliases) == NUM_PRIVATE_MEM_SRC_TYPES,
++		       "Missing new backing private mem src types?");
++
++	TEST_ASSERT(i < NUM_PRIVATE_MEM_SRC_TYPES, "Private mem backing src type ID %d too big", i);
++
++	return &aliases[i];
 +}
 +
-+static void test_with_size(size_t test_page_size)
+ #define MAP_HUGE_PAGE_SIZE(x) (1ULL << ((x >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK))
+ 
+ size_t get_backing_src_pagesz(uint32_t i)
+@@ -333,6 +363,22 @@ int get_backing_src_madvise_advice(uint32_t i)
+ 	}
+ }
+ 
++size_t get_private_mem_backing_src_pagesz(uint32_t i)
 +{
-+	test_sharing(test_page_size);
-+	test_init_mappable_false(test_page_size);
-+	test_conversion_before_allocation(test_page_size);
-+	test_conversion_if_not_all_folios_allocated(test_page_size);
-+	test_conversions_should_not_affect_surrounding_pages(test_page_size);
-+	test_truncate_should_not_change_mappability(test_page_size);
-+	test_conversions_should_fail_if_memory_has_elevated_refcount(test_page_size);
-+	test_fault_type_independent_of_mem_attributes(test_page_size);
++	switch (i) {
++	case VM_PRIVATE_MEM_SRC_GUEST_MEM:
++		return getpagesize();
++	case VM_PRIVATE_MEM_SRC_HUGETLB:
++		return get_def_hugetlb_pagesz();
++	default: {
++		uint64_t flag = vm_private_mem_backing_src_alias(i)->flag;
++
++		return 1UL << ((flag >> GUESTMEM_HUGETLB_FLAG_SHIFT) &
++			       GUESTMEM_HUGETLB_FLAG_MASK);
++	}
++	}
++}
++
+ bool is_backing_src_hugetlb(uint32_t i)
+ {
+ 	return !!(vm_mem_backing_src_alias(i)->flag & MAP_HUGETLB);
+@@ -369,6 +415,37 @@ enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name)
+ 	return -1;
  }
  
- int main(int argc, char *argv[])
-@@ -576,14 +598,17 @@ int main(int argc, char *argv[])
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_GMEM_SHARED_MEM));
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_GMEM_CONVERSION));
- 
--	test_sharing();
--	test_init_mappable_false();
--	test_conversion_before_allocation();
--	test_conversion_if_not_all_folios_allocated();
--	test_conversions_should_not_affect_surrounding_pages();
--	test_truncate_should_not_change_mappability();
--	test_conversions_should_fail_if_memory_has_elevated_refcount();
--	test_fault_type_independent_of_mem_attributes();
-+	printf("Test guest_memfd with 4K pages\n");
-+	test_with_size(PAGE_SIZE);
-+	printf("\tPASSED\n");
++static void print_available_private_mem_backing_src_types(const char *prefix)
++{
++	int i;
 +
-+	printf("Test guest_memfd with 2M pages\n");
-+	test_with_size(SZ_2M);
-+	printf("\tPASSED\n");
++	printf("%sAvailable private mem backing src types:\n", prefix);
 +
-+	printf("Test guest_memfd with 1G pages\n");
-+	test_with_size(SZ_1G);
-+	printf("\tPASSED\n");
- 
- 	return 0;
- }
++	for (i = 0; i < NUM_PRIVATE_MEM_SRC_TYPES; i++)
++		printf("%s    %s\n", prefix, vm_private_mem_backing_src_alias(i)->name);
++}
++
++void private_mem_backing_src_help(const char *flag)
++{
++	printf(" %s: specify the type of memory that should be used to\n"
++	       "     back guest private memory. (default: %s)\n",
++	       flag, vm_private_mem_backing_src_alias(DEFAULT_VM_PRIVATE_MEM_SRC)->name);
++	print_available_private_mem_backing_src_types("     ");
++}
++
++enum vm_private_mem_backing_src_type parse_private_mem_backing_src_type(const char *type_name)
++{
++	int i;
++
++	for (i = 0; i < NUM_PRIVATE_MEM_SRC_TYPES; i++)
++		if (!strcmp(type_name, vm_private_mem_backing_src_alias(i)->name))
++			return i;
++
++	print_available_private_mem_backing_src_types("");
++	TEST_FAIL("Unknown private mem backing src type: %s", type_name);
++	return -1;
++}
++
+ long get_run_delay(void)
+ {
+ 	char path[64];
 -- 
 2.49.0.1045.g170613ef41-goog
 
