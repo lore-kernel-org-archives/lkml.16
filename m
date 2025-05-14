@@ -1,46 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640F32980BC;
-	Wed, 14 May 2025 21:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9B929671C;
+	Wed, 14 May 2025 21:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747256679; cv=none; b=qCZ3yxxlg+Q/tF6LJ0qrny6NMgdv7qM3Yw9AX3BCaaunH1yDQvD8JkYFdnxQXXPaRM/M0+mBFyYqL1xBg6Rm/VUd78PQS7EP+/Xq6CQlGIu5mUR6HzCNcILyGj0jGeXDxR35RHPmxQ0dTL2vYXfqtw12vLSOIJ2o0ciMNJo5cik=
+	t=1747256690; cv=none; b=Rds1+OfBG4JMU86cOCtsLTYprkCr1yrkBGZYxT3N9dkqNMq5OlzjxGhc36mKBv1BIzQx+jB2eJ2OBvDgnYMZRLowV7Bohas9BCezJWJocZhQCrfdQLrR6qEMbpJIBmGki3DvppOSat4FU7W+yPtZbtl5FblN5kFXq5Bb6F4dg48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747256679; c=relaxed/simple;
-	bh=s2u2b8c5FrqPvRHZEXaSPt1HFS70iOZgwHrtFP+mqes=;
+	s=arc-20240116; t=1747256690; c=relaxed/simple;
+	bh=8dAQlNr8wkgJPQta9+l99fjn6mNBAmRuVHQnNcWtNzU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VQUg3m65T9y7caBQFsIL5lKjSPjKpIsn8/8zXDoGKG7tsPrXgjpjx4gHdjp7E/y9+nxkaepmayRrcK9kcdJYQV7xDv110OoFXdK5PT2YL42aa5pBtrSWD6wu0yK2r5IiMkQjghVEc+G/wnYTwsVVL9FQlxTrdsmLIT9ls9lZjxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh5garwq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jJcAa3WhGO1HcD0pFIHF+9/LjVIInJS75NVQbMzld11Xh8z846xZCljUarY+ZY0+PhsRZQhRAaFXkqML+6EVMq9Pr2U9/UbZhUx+qgd0zcQjQ4NcK60XdN4W9xy31n+GOKR+J1h9ZpteawCprJq81uuOeOgi89F6jSd8lzN4UVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d00Kcvhi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh5garwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D37C4CEED;
-	Wed, 14 May 2025 21:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d00Kcvhi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A315C4CEED;
+	Wed, 14 May 2025 21:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747256678;
-	bh=s2u2b8c5FrqPvRHZEXaSPt1HFS70iOZgwHrtFP+mqes=;
+	s=k20201202; t=1747256690;
+	bh=8dAQlNr8wkgJPQta9+l99fjn6mNBAmRuVHQnNcWtNzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nh5garwqQyEz4FPZg4q8hTBDmokrAbS6jZyBbymLjVcZYyqfFF+NKnSL64izuF6n7
-	 k+wVLTU20nL94j/1j7rXxN1LwI6xZbFkFVmC3PtbrpVa7MqXXzn7s8MXhMEWYpWb6I
-	 wIrAVgeVM6lIyTOcQQcdeBpSfPOd9SGqXTzmQjPayrWiWGMx7KU0FFtBqZjqy3Vff9
-	 bIdHHXchzOlMDCHEsjDCgLU9aqJLxBF1jDg9JY2johXNEE6f9cPhVZ2ZuLWC5WIdg5
-	 1P+RUhP8KM6B8y22IvPpJdokeL3n/LSmD2+60XbJG7QaXXxx5Zn/tvJr0O1qw/c0mH
-	 WYPLmuFBZFZLA==
+	b=d00KcvhiXjEAzWfLLrt3KzUd4TOeDwFaA4bsZqNf8mKj3+iEYHcVCsK9vPTUfyLep
+	 NstKMFFAuvOvWDV7ovwUkIZX8du1j4elV0jCSWsqmnAmMC6dm5lVoog8p9rGhty7LD
+	 Fk0eLwo2Mftov3omlga1lQOt1AuZhPKKxQArZg4gygiNWSK5YtRlMceyCx34mak6vx
+	 eQEGPvRdnIV5dDYz7XIBmoyzXcoaXO5WTZlF1DsTwnY49BW5yfQEc7H2SQS1dnxSyf
+	 JtgZ379wlEhWLacBf1q7k+QdOIi/WEV/Y8IjJ1WJS6GOIJLp1I3PnCWuBDpryg61U1
+	 wTSuKqbCAGdfw==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8650: add the missing l2 cache node
-Date: Wed, 14 May 2025 22:03:51 +0100
-Message-ID: <174725663059.90041.12352596711820703957.b4-ty@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shawn Guo <shawn.guo@linaro.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Vincent Knecht <vincent.knecht@mailoo.org>
+Cc: Stephan Gerhold <stephan@gerhold.net>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH RESEND2 v2] clk: qcom: gcc-msm8939: Fix mclk0 & mclk1 for 24 MHz
+Date: Wed, 14 May 2025 22:03:53 +0100
+Message-ID: <174725663058.90041.15815541810993408682.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250405105529.309711-1-mitltlatltl@gmail.com>
-References: <20250405105529.309711-1-mitltlatltl@gmail.com>
+In-Reply-To: <20250414-gcc-msm8939-fixes-mclk-v2-resend2-v2-1-5ddcf572a6de@mailoo.org>
+References: <20250414-gcc-msm8939-fixes-mclk-v2-resend2-v2-1-5ddcf572a6de@mailoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,16 +56,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, 05 Apr 2025 18:55:28 +0800, Pengyu Luo wrote:
-> Only two little a520s share the same L2, every a720 has their own L2
-> cache.
+On Mon, 14 Apr 2025 18:45:12 +0200, Vincent Knecht wrote:
+> Fix mclk0 & mclk1 parent map to use correct GPLL6 configuration and
+> freq_tbl to use GPLL6 instead of GPLL0 so that they tick at 24 MHz.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] arm64: dts: qcom: sm8650: add the missing l2 cache node
-      commit: 4becd72352b6861de0c24074a8502ca85080fd63
+[1/1] clk: qcom: gcc-msm8939: Fix mclk0 & mclk1 for 24 MHz
+      commit: 9e7acf70cf6aa7b22f67d911f50a8cd510e8fb00
 
 Best regards,
 -- 
