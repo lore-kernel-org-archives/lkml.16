@@ -1,166 +1,127 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADBF1FC7E7;
-	Wed, 14 May 2025 06:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204138; cv=fail; b=kf0j1H+Ukqn4reOrxd4D1XfiadttJbdU0eb3Z/x9DHQtNfNzw8X9hff1G3h2xJz3kyBaqvSQhu23EPJD7S1kcMN1GfnWvi1I4w6ZwFfsSftnktyDy8ca5GqDmQWRNq1He3Jr7LvGHCGmDjVYtuTbQUifqq2nQ487tVei+F65jw0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204138; c=relaxed/simple;
-	bh=CCMf4WsaLhz9e6nnpNse4SCP6G700qLNV0Q/DOzW/m0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K6wWlwFWami9PBSMFB8fctSZJHUrCdBYXXg+vp7d+MWHDg+1UupsEsqRnAac1TNriTgZWX9QlH5e5ey3X73jnjeO/NYVkkcwpkR1cGPC3Hrln7Aij1zA4b0gbfLawr0RA7UdkgoeYFUZszYulHz+EH//0FXFZNhm/8TJz8R+TgM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y0rvArIo; arc=fail smtp.client-ip=40.107.220.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E108F13D539;
+	Wed, 14 May 2025 06:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747204155; cv=none; b=S4npJBaPhSyoeZNlAI/gwHsRFqFAIjHZi5WTZuSalBgrkabXJ+CuXLPrQKGINQ9+karbFV8YS5He4y+gJ4gjGInavTxqw8g98P3gJ1YeQe6GP0gK9nDZT0fnPpR4aKSRTlNpLEZpg4p8AAF8j7oM6tLkZtohzLYY7wt9ZW0ahb0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747204155; c=relaxed/simple;
+	bh=PaYjBZppfnvZ2HRcS6OlMJ9h+JyKAs+WdSh7y/nlHX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gAb+Jui5H8FZnaF9f+EejcMdl2VnajasG3jF9YWjd16EeLYgWU2hX4dQ/W5jM9g/+1vdhoBW1QjPp/yhgnYwfGkAx2Zl1Ch1zCyx4ziFdislCHHNlyzz2oNz+JPXHiDIwmuSSlsXq5bGzBQGyT/K2Jf6tpPzkMCQkY8nPcDt/sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5YwTIPL; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y0rvArIo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HJ+OvbLtiAKu1nhlW1UKAfNj/q6gp34YYWTrWffghhI688xA66NGGWifX+J7sxs21nt+rVGs832U32XvJrN4/DMRAAdw6ETejOGsyEsPQ0ZofjjbrcMgc7QaxXhIAvRizor88KhXD+Ax63cRYmXT0yCNbNq5KgBKWVDRD/EYXRRcjAha1cVQFf1d1xDJ/+KHbpLxYvI6drFK5dk+sURley19UZPNmg2DHuQVkN8H3b0Fn1FRldhf7NT/8qPDY/sKLDRrkuiDkNG6g7Fxt5WiKXoSukgETME/7dWYhftZFVTvgfBX5jGV+Mlu53tauQlyt/RY48TbOlM9hriG26eiLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9cLAhnGR2pw9ZZ6or1ESe1Y/oAiVS6Dbb/g04RDC78w=;
- b=xgijx41KJYhKJIGi8EmkWUj6Fn+w3io34cVEHiRXRFLkzKYr1VToS3Sx4lHOrKv8dqjSyHjIbsDjHHvvpgewyd26V2JHO6Jm3Ar7sBjPXE8i9XNGhBfLO7f4m7rCawZ1YBpSCf33iC5bxUQF9ta1h+5En5cEq5gS2qR7B0m7td/LoXnfBB+mPUFsvxjGKImrElbn5r8jaMhgh6E83fFp5oKLGEfyWU0/UJfbhfVy5WYF3M/K15UEqQdOnPpU3mgBBLEtfVYyZSG4eszNx2nHLdh7GunncbYdqL/nojCbULeWIAA5Pm73WHXwuMNaSM8UA4/1a8IokuKJkgH+7E4OMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9cLAhnGR2pw9ZZ6or1ESe1Y/oAiVS6Dbb/g04RDC78w=;
- b=y0rvArIoPCthyld8W1VKUiSWlFMt4yd/ggqMR6agixX5x5WWhE2CTCkS/+jiVM+z7zLtpuR3sPKlmJW1x4pOniWbtOU6p25XrT0OfDwZIStkmZV0to8+pk5dE61nwksdm07KqqyAWWWCwQkg8KOnhyolCWMBpEQ6THq4rISY9Bw=
-Received: from SA1P222CA0111.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c5::8)
- by MN0PR12MB5762.namprd12.prod.outlook.com (2603:10b6:208:375::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 14 May
- 2025 06:28:50 +0000
-Received: from SA2PEPF00003AE8.namprd02.prod.outlook.com
- (2603:10b6:806:3c5:cafe::a9) by SA1P222CA0111.outlook.office365.com
- (2603:10b6:806:3c5::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.16 via Frontend Transport; Wed,
- 14 May 2025 06:28:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003AE8.mail.protection.outlook.com (10.167.248.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 06:28:49 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 01:28:43 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<luto@kernel.org>, <peterz@infradead.org>, <rafael@kernel.org>,
-	<pavel@kernel.org>, <akpm@linux-foundation.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<shivankg@amd.com>, <sohil.mehta@intel.com>, <rui.zhang@intel.com>,
-	<yuntao.wang@linux.dev>, <kai.huang@intel.com>, <xiaoyao.li@intel.com>,
-	<peterx@redhat.com>, <sandipan.das@amd.com>, <ak@linux.intel.com>,
-	<rostedt@goodmis.org>
-Subject: [PATCH RESEND 4/4] x86/apic: Fix W=1 build kernel-doc warning
-Date: Wed, 14 May 2025 06:26:42 +0000
-Message-ID: <20250514062637.3287779-4-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514062637.3287779-1-shivankg@amd.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5YwTIPL"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ad23ec87134so9839466b.2;
+        Tue, 13 May 2025 23:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747204152; x=1747808952; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PaYjBZppfnvZ2HRcS6OlMJ9h+JyKAs+WdSh7y/nlHX4=;
+        b=b5YwTIPLUT+H4XvE2TGaFsbmqSK/VfQL+oCFSm/93jjSYrwFraHffOd8eIW/XLkxWD
+         FadCo2Ke4/b11Qzbs27LrYFGxK20rT3jqFcESGvBli+a9b96q/rFfvHfoQvT3WWYV5uM
+         S3IOVY6+1u/8EUUn09aC6DXHkhu+2wpXiGgVwW3fwx+WWYVje90apsO64U2uU/IonY5m
+         KCZwD8pwxpAkY7PpOassD4b/yXtVQ1/4UFAWPv4BnR42JLyb77t5tic1Vy1q4/upMumB
+         RylT0qvjO80xT3w+TjI7QEmeU053P20eqB64VfYX1h5JQwkOg2tNbj7zPR1fxPBnMeUA
+         sDfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747204152; x=1747808952;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PaYjBZppfnvZ2HRcS6OlMJ9h+JyKAs+WdSh7y/nlHX4=;
+        b=ILoi72hs6tFR+BZ86fc+s6rKAJtUZFZ+LuOstZmJnvOzufno1EGCRfrCF0FBqTSdQO
+         ephZKmYnjWyxM+qgEDL17QuD3n6e/ibyknZm14qYV0NGzzD07sqxrXydSbzl2irpNl3f
+         /dr2k/6gnE1NXjV6QahQajmY3k0NWQ2txX/L5+AigxDHU7vCWCdJ4wDWfTcHkkFcEyy0
+         m32I52D8i44QYOhC5456e/SeggOvBc0GzHBQ8NtcOekJTvUNTUqqtuyLNzJ1FngTJJiw
+         mPgeBDMKjvdZQ3KjbX7vTNfKkTfLnp0oOKV4D1hYPu/H9/kuZuUomy1oTzzp4U9cPo4y
+         Kdgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhtydLJvDil1B2uUEDwnAWLas7Gcudk73Y6Z5HeC5H9/CJ+Me77K/RpMuBB9sUY8EsMUbhuI1VuvHCIXOuHpHS@vger.kernel.org, AJvYcCW+qGMcgvDVJTe+tpv4q9cdwA9iJIGlsUx0JxSvLXB9Dd4UDG0Bc80Oql1EkW2kTXdBRSY=@vger.kernel.org, AJvYcCXPnAnzTwF+NHEGlcXV+XcUENkr0elfi73HhnfP0WD/XvHRhVk5TWTk0B+Cu3weCPkGqgHgNhqAPXrNgQnn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/uuSjZFTLv+yeKryKS5LDRrao8azVulx3mYgZ2fbszx5SF+D2
+	cbAVKh0QfcRrKYbvxzMuRDkvayZV2DKzo3oAhanaYo5/wTa2xuWIAPoVj5l3ogtYN1SCFSEetXY
+	6ts8EleqgqvKTv28A5v60OJPq7i0=
+X-Gm-Gg: ASbGncvH1yEHmuOT7l1BNtpunIl80638ERBzrVSWn5BssOddWtfZ68vlkQg/LJ0ZXRM
+	StNcvFZpagsUm0JWae4yj26p2wYHFa8qJr8/HOl5h0cUYTNxuQh1G6f+DVsVy8hGwvTZcT6mx3x
+	qzbTg7Xwb5ulaEsxq0rZsXqU0bn0HByhs=
+X-Google-Smtp-Source: AGHT+IHLi9l3uVX4nW5VLQgBm2lV8tVCO9VuPjaDsf+SxaW0IV+yhko+vLUnG1ihrIh/6U5EoZfOVotR/SX2Qpqfql0=
+X-Received: by 2002:a17:907:a0ca:b0:ad2:33a5:f468 with SMTP id
+ a640c23a62f3a-ad4f74a5448mr235593066b.54.1747204152004; Tue, 13 May 2025
+ 23:29:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE8:EE_|MN0PR12MB5762:EE_
-X-MS-Office365-Filtering-Correlation-Id: 374cd920-3abe-4d34-bab3-08dd92b096cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LTogHDvQtWPSET96QicYkfSRLoVAKMj2Mk1O5m4MdOJvRHOIz8E2LRFGSlsX?=
- =?us-ascii?Q?Je6zyWowhEXyEYG4ZmFeOwyx78VfezaVTXQh3P8fCdrjOLApTVcNTlP0VUNb?=
- =?us-ascii?Q?erv8W59AGhkxPsU0t33WHO/xsEKxVSU976f1pw52313JP0LD5t5fTnbK0L9Z?=
- =?us-ascii?Q?7rdvjcpwQoRtKOI7VXAFs++h5UVm651wWAqS8NnG3YvJMReHYy+njeZSQ60P?=
- =?us-ascii?Q?GP0umpW/OGWlN6MISclaPYOQJ7kIPzLt01lAu22ON2bAgr+XxUqVI3oBGlGo?=
- =?us-ascii?Q?CrS/2OpkVOo+u6foy+JX/x9teyBV/m6ekE0qhZmw0nJkAfELijDSm9tysZIN?=
- =?us-ascii?Q?lW1oz3JYf3tuSwcDIJ0VoBNJ4xnQ9q9iuqjNHRX9boO2g5mgQH9+dLv5SJpN?=
- =?us-ascii?Q?won1+VfQmLB/VpGeUzp/KMUfVhVDdMKh3zQehy4vsCDUTbM2MQUPhsJe/MW+?=
- =?us-ascii?Q?TDzJe5D3J4qYr1/wgwbWD4RwqLZ72/7phlqxQTPCPyAIaMgXVWXbwZuBn3hu?=
- =?us-ascii?Q?Crh3zqW+49LxBV+suqxIBqimHMglHSD6R5F0tEBPS32kXHZMt0KgkBZVwaqf?=
- =?us-ascii?Q?WjrEAWEFAev38UBdfjFVhwgz7h9/UB1I0qoj95MMDokHH4t4yBml2V3aSbXk?=
- =?us-ascii?Q?Yt/mHAIkrB4LzAQEwj3Bb73s9SXjyqm54AiBlT02XHE4ZWwL5NFIzXgV8/PQ?=
- =?us-ascii?Q?90Ng381CQ319Gub+WF/d45wtU+GiOOxwhbQrvaleAaD2gerdAJCooc8LfP3B?=
- =?us-ascii?Q?NmuTqObHA2IP0+EckTkkLNx5j58w2nH90UAndENI3px6pbI7/fUljFZjeykH?=
- =?us-ascii?Q?GHb60GomM1nG48oPiRxoOm5Xn1Cu9RLEs5/EyHhShWFW4G1oYteXqLvMGphw?=
- =?us-ascii?Q?yRBMdA/ZrADHY4aYkWdM8JS+0I+XkacdwIk1/Kkn7YPrBPtrDGUHuxw2SYEk?=
- =?us-ascii?Q?kNcEBgaBzAlR0ebZ9fIV+9FZxUh9iThDoWH+C7n6WZnRwSwBV+4mDHiMwrJO?=
- =?us-ascii?Q?FMXQAUtr5Z4HBfdZTrfxDPjGKeHxbEMITTmwsG17Aib5CefC/qX3Y5ts2MJS?=
- =?us-ascii?Q?1e3I7BVNQ9B4Lrh1fkpObof7A8znTwvA/JAxxvgChsGs4uk7De0DljTw0Y0E?=
- =?us-ascii?Q?xu/MjV13r4AT7RdtdEe6Dm+WhNg1dxaD30eTQKIu3/exPBGQzo81KasAvqcB?=
- =?us-ascii?Q?BPJmpvFaXqh28ArH2kDK2j/VgJBevjGz1bgpvsB6UQftLIhXqR9z4V4ZMj5D?=
- =?us-ascii?Q?RD6JIy+X6TVoZlpIZPC1vqZMpSZVlOKR2ee1nGsCOOM2Yy5vXli/a1ksdo4M?=
- =?us-ascii?Q?xBarRms+uWaFTygayUT8myjRSPekLbfLEyUaMbWrpr+gHMOHVPPJrMeJBjbY?=
- =?us-ascii?Q?urP5M9mcmeNEA2iDJdecBaTH1fUUPSYaTogpUEfRtLQY85gXzIYikV87eNTI?=
- =?us-ascii?Q?BiasYjPve2C/ge7bBbaPD0DCPCxcA1FrUqmoP9mIJAkYmN3KNoQkFFi9gbae?=
- =?us-ascii?Q?7Sj8+8HIFR7oW9lsUT44utAs6gUsZDLTZ0V8f1pPoRZQB4KHQSqZP6SK9g?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 06:28:49.7778
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 374cd920-3abe-4d34-bab3-08dd92b096cc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5762
+References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <20250501073603.1402960-11-luis.gerhorst@fau.de>
+In-Reply-To: <20250501073603.1402960-11-luis.gerhorst@fau.de>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Wed, 14 May 2025 02:28:35 -0400
+X-Gm-Features: AX0GCFs-O_hhLomt9V3PLJCcKSURYY7CSGwd6Ua6n88FsUsqIjk4ubR7DgQIDuI
+Message-ID: <CAP01T75oU0zfZCiymEcH3r-GQ5A6GOc6GmYzJEnMa3=53XuUQQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 10/11] bpf: Allow nospec-protected var-offset
+ stack access
+To: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
+	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org, 
+	Maximilian Ott <ott@cs.fau.de>, Milan Stephan <milan.stephan@fau.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Building the kernel with W=1 generates the following warning:
+On Thu, 1 May 2025 at 04:17, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
+>
+> Insert a nospec before the access to prevent it from ever using an index
+> that is subject to speculative scalar-confusion.
+>
+> The access itself can either happen directly in the BPF program (reads
+> only, check_stack_read_var_off()) or in a helper (read/write,
+> check_helper_mem_access()).
+>
+> This relies on the fact that the speculative scalar confusion that leads
+> to the variable-stack access going OOBs must stem from a prior
+> speculative store or branch bypass. Adding a nospec before the
+> variable-stack access will force all previously bypassed stores/branches
+> to complete and cause the stack access to only ever go to the stack slot
+> that is accessed architecturally.
+>
+> Alternatively, the variable-offset stack access might be a write that
+> can itself be subject to speculative store bypass (this can happen in
+> theory even if this code adds a nospec /before/ the variable-offset
+> write). Only indirect writes by helpers might be affected here (e.g.,
+> those taking ARG_PTR_TO_MAP_VALUE). (Because check_stack_write_var_off()
+> does not use check_stack_range_initialized(), in-program variable-offset
+> writes are not affected.) If the in-helper write can be subject to
+> Spectre v4 and the helper writes/overwrites pointers on the BPF stack,
+> they are already a problem for fixed-offset stack accesses and should be
+> subject to Spectre v4 sanitization.
+>
+> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+> Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+> Cc: Maximilian Ott <ott@cs.fau.de>
+> Cc: Milan Stephan <milan.stephan@fau.de>
+> ---
 
-arch/x86/kernel/apic/apic.c:2140: warning: Function parameter or struct member 'spurious_interrupt' not described in 'DEFINE_IDTENTRY_IRQ'
-arch/x86/kernel/apic/apic.c:2140: warning: expecting prototype for spurious_interrupt(). Prototype was for DEFINE_IDTENTRY_IRQ() instead
+Please also address sanitize_check_bounds, it's probably prevented by
+retrieve_ptr_limit rejecting other types but it'd be better to add a
+default statement for clarity.
 
-Fix the description format to fix the warning.
-
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- arch/x86/kernel/apic/apic.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 62584a347931..f888a28d400f 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2128,9 +2128,10 @@ static noinline void handle_spurious_interrupt(u8 vector)
- }
- 
- /**
-- * spurious_interrupt - Catch all for interrupts raised on unused vectors
-- * @regs:	Pointer to pt_regs on stack
-- * @vector:	The vector number
-+ * DEFINE_IDTENTRY_IRQ - Handler for spurious interrupts
-+ * @spurious_interrupt: Catch all for interrupts raised on unused vectors
-+ * regs:	Pointer to pt_regs on stack
-+ * vector:	The vector number
-  *
-  * This is invoked from ASM entry code to catch all interrupts which
-  * trigger on an entry which is routed to the common_spurious idtentry
--- 
-2.34.1
-
+Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
