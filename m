@@ -1,202 +1,232 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2072.outbound.protection.outlook.com [40.107.20.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5031F225A35;
-	Wed, 14 May 2025 09:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214398; cv=fail; b=a1mIqPQl3i80bOgWYvmXPznNPPv8TYi1+t38IFrzNIIljxsSmhCnH0iT0JkA7X7UKXiQcfVr+LP8FF2EoMgLcb5AL0IR52WCHqb8Ok3aHPbPq0VsHaXu6iCeXGp3az81LyFCYWuTjuKLlfZ1YGksyAifGQj858sfw3JsIjRa3kg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214398; c=relaxed/simple;
-	bh=BnkcqNptr9IGgVnl1VGIOBuiX+b4JsCT5cSFNL9y+bw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qL8Tr07gbvH4tYcTxgKZ5WyhBEOM74yGROVW8KMPKjHA9i6UvkOvoNU0bYMD5QfE4SPwV/YSp2RVZXKYxgKvDtoKQxJhISqvlR3g4vlsAGLdAD3VoviMbNggpyaT4lp1lNuwMPvHZFXDJ1TIxbFgzdl72MVk0lAtNFcfXXgjo70=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=N2Bi08Gs; arc=fail smtp.client-ip=40.107.20.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D579022576A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747214413; cv=none; b=HMv/1fvY8fFKrPRFXNx6GcgQUcQwdG6BbR/qxnJitAAZKekMGM7ssUChJ+coGrq+ZTVtn8ZW256pfdm7BbQOwdqwlpP03U0Vi6Le4LAecliTMuMRy+c4T/K0xAzoeOoPKmvXekDz8xA16Wp1oy6iOWFT0oGMty/UTSRlhgvH3AM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747214413; c=relaxed/simple;
+	bh=GOqpiypNLRNqJr91PCu1R/abzdDuvB/uI9eqkTVFA1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rPhu+/6e91mQSm7WFR8Jc16rr6oY+SNawQnaKtx+GcXRwYccbopcLA7glxiUmE7EU1mPj3We+sErtC4EjouYleT9ZG5lPeQdPrff1Ckr8cx3tRGog92eNJtefBZsPNYn8xiWJW+nse9uWHnYtHPUm42A6Br8Ub3DJp6GBuXfGtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hI30ecEi; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="N2Bi08Gs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UuGFAy3KduRJhWRuSRnnJf2TPhr/fz50xYEjvGVbJB8lp0BOc4gxPgSHXriXMLf1hyqoP2h9BtHw650qU1X4fDXeU5VRRFp7FmXynHsD4qpUCPtM/jsGspWCu01leCfwEzO8BBYTNwWQpqBbj3S76MVd6jO1rdi7A6iDg7kWciDB2KTg66Nuaukgvr/60ry1wjmg0WF1+pWzrdGR596oeeIkbRrC0ZcM8PY38JmWGb/lfVtud1d4n5iT86IVv7VctWlHD4aBSWTS5RORNfB3AW/kFlMwe9y+iv2+653LuZH2qXZ9zYGcbSWozQVAoiamw2l9eACrD+FA5Ol/EQwGjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DHdAyc7T37crNON7aP7QYhLqQwfhCBf0oqkYLA2PY6c=;
- b=JWPWR8OhqtacCsgViih5lfhDa1fiicnyZwm6Gsx1jNbqplabfMUxL91OyqQE5YK5SHFvz1hnfZogTcHjDtiCED1SK5AArnY1XwBrRdSWSogZn8v6N9ibAtvS9WfkaraFoh5ScXAyOVxokKv7/sDf6Q0RWYmTA+U61BR8EQCivfvzdiaMAWyTNe3210B42INC3ZbP4mQTLL/HjIiOEodkBDP+ZtjqNZQDDzmuDMKP0eOTENDnxSKeBy3Yg5mYP4AxidSO5/YU2IAa3jnfO0Zrg9MkOmjyizpuDjnDDyEJgfC+d2xVEDkCnHnBnhwazHT5Z7xvmqp6xQHHzHMaMGvwtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHdAyc7T37crNON7aP7QYhLqQwfhCBf0oqkYLA2PY6c=;
- b=N2Bi08Gs4frfuOz9kdP0xNxNo4D3PZrCToynCWI583AG+170w0o0WvYccwXcfxXlGCoMB7emSvrbI2Ic8x0mWrhT7UxBHmrTE+f3woaMiqw1PIitZ6KKYgFQl5OwU1kDE0vKiFujNiEcdCm/nMYIxDsv8/cn6UYPMXH8W1qi80U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by DB9PR04MB10010.eurprd04.prod.outlook.com (2603:10a6:10:4ee::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 09:19:49 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 09:19:49 +0000
-Message-ID: <72f7ad52-a6b4-446b-8c2a-50f030307e31@cherry.de>
-Date: Wed, 14 May 2025 11:19:48 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add px30-cobra base dtsi and
- board variants
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Heiko Stuebner <heiko.stuebner@cherry.de>
-References: <20250513150234.2331221-1-heiko@sntech.de>
- <20250513150234.2331221-5-heiko@sntech.de>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250513150234.2331221-5-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0006.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1d::16) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hI30ecEi"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so8395184a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747214410; x=1747819210; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wIefgDJRi7fDGuMK/trl/BjX3lPmH7RSfitXfLf6tlc=;
+        b=hI30ecEi0wUW7nrKLjF19sW3287yLeaq1RJy66+omISchomuM+WzOolTBA6iWOB+lo
+         a+jptlpgzg47/q0nHEXU8BS71dndKpfVXSv4QVGtLgtJnA22KiYAOS2YF3KQIIWUCl4i
+         i14SPCL6t9mNigFczbvyrbqWvGc0z2Q7aF2ngnASkEWWSMJAgTyXBWk7Zpz7IjFyfsn2
+         tjDaqmwGphe9lbbBYurxytJlMAENLEUne6h96V3dNpqUObo9m+yN6uHwESC5mx53aQRJ
+         zgdw4KL01IrmEHBrHt8VALdtP+moln2DH63yyonJ2+emmCZtK6Ae46+rPcQvlwKTet6o
+         cvMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747214410; x=1747819210;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wIefgDJRi7fDGuMK/trl/BjX3lPmH7RSfitXfLf6tlc=;
+        b=Y4FLOi68k7mLEdGfjRaoxgxaexTMC6MqcxLTyQYFPRVrjAjZJPgu0+SeWw4zgONoqf
+         F4vO+wPs4qNJtvSZ6A5SwX0CjnosGaGinibLGZ7AeqbnApX01/huKDQtDS4OBpXgCiU5
+         lzwkQr6CQFJS2qE/4QQz51HY7sKGWdxpUBU+x7nyglvztE4VI1uxttDgpT1NjSEgvOGQ
+         mrW4167kzZzbtZOQW6Ag/K+QWIfyXyr0ySEPtVhCcK3GM+GBaek1DFyA7hNylBGJ9//Z
+         BdCubb4zxdY0YDm9HjNkS7vSekLAeeSd0CboSLrkYf3btHyQ4PSQGQivJVJtCMBoh8rh
+         TBdg==
+X-Gm-Message-State: AOJu0Yz8znE+tj/Jz/sNw9e+yQPLhraWjfBrniO3iuNtpYExZofoXg7s
+	Jke3+w7txywFmc2jeJY1Tugo58CbRQU8WGjwZ1iKcfc1QhTWzO+J+FSzT/5M
+X-Gm-Gg: ASbGncuIvv5FNvH9dvSQkKfSuvlBfdTuZfi5/XqHVmvRL9iWfa6jtX4MR8U0/B+m+/5
+	5rzqn5J+H3NGYuYraPywr7WNdxMoJV6uQZTV/CIqh1NWYtcX6NrPPGk5dDQyVrgDPAmvl06KG0F
+	BfZ+/aubCa7zHcUa2Ej4FuTR/2T5o13UUAkWPHG+kAKxfhB1W5gAjunjrUVfzSA764k8tNrM+Sc
+	9/MEqaqbsLJLiDv9Td59nrwkWumKiKqJT6xU9npQMLBxqc8SRMphJ/q1ZmFnp/G60sdcSwVqvJq
+	HthBMOGtW3PHFoDTWiNBzL8N8DCcg4Zsvz2ajn45tk4ET2TKOOiY8+rCwhS2M284GlXsPsQtkcD
+	DlhEpDrMUJb6cyw==
+X-Google-Smtp-Source: AGHT+IE39aoSVTaXl1SfHw5lbFbwc1ayxSE5XilONEz+p7K8DBg24q1sQllFP4w8lJN56lcfedSmDw==
+X-Received: by 2002:a17:90b:560f:b0:2fa:137f:5c61 with SMTP id 98e67ed59e1d1-30e2e5b7265mr5205650a91.12.1747214410390;
+        Wed, 14 May 2025 02:20:10 -0700 (PDT)
+Received: from localhost.localdomain ([14.116.239.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e1200a686sm1735830a91.0.2025.05.14.02.20.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 02:20:09 -0700 (PDT)
+From: Zijiang Huang <huangzjsmile@gmail.com>
+X-Google-Original-From: Zijiang Huang <kerayhuang@tencent.com>
+To: linux-kernel@vger.kernel.org,
+	mkayaalp@linux.vnet.ibm.com
+Cc: kerayhuang <kerayhuang@tencent.com>,
+	Hao Peng <flyingpeng@tencent.com>
+Subject: [PATCH] KEYS: fix memory leaks in insert-sys-cert
+Date: Wed, 14 May 2025 17:19:56 +0800
+Message-ID: <20250514091956.1708756-1-kerayhuang@tencent.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|DB9PR04MB10010:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ea6d70f-f317-4151-2118-08dd92c879c0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NGhUSTZ3WEV3QjQ4cjdVMVNXUXVWODNtbFFoYW9pd05mbVM3WWFSb1JxdER6?=
- =?utf-8?B?bFZQSjM5Q2xINzNybUxQUkZYcUgwZGVJQTFsNFBNdXpJTy91OEFOYmRCRjVw?=
- =?utf-8?B?bk1CcTF6VFo3VG90TWR2ZTZJQktVVGU5blhBMmZYMkhySFowWnU5V29xc2VB?=
- =?utf-8?B?WHByalJzZ0svSk5UUm51dmVneFY3WERuai8rUHVIR1pxaW1BU3c1dW4rdHZD?=
- =?utf-8?B?Y2VsbFlObnhaa0U2SzdiSkZPelJaMXVUWkVPYWFGakROOXhZT0RYM3NZblk2?=
- =?utf-8?B?NTI4Yk42Nkcwd2JaOVlRcFNJZWN1aERleC9mWmVHa2h3MUl3RUhKRGw0QzNx?=
- =?utf-8?B?UldxQjlienU3S2phODlDVFJ5S1czT0hpUkxxdWV0SlRoNk1nKy9Bb2FuMVJi?=
- =?utf-8?B?c1U1MWNXaENxQmJqaXBqaU9kTktOZWlDMlRwSWVqdzVvNUlyN0xzV202T2xw?=
- =?utf-8?B?QXJTd2FGQ2VjcVhSdllYR2JjNm1zeEJOVzAvajF4dkREZkE1aUp3Q21zaUg0?=
- =?utf-8?B?bFRxVHE5WTNweFNyaEZMNy9kU0NnWnhGSFRZajNVME93dHZoYzljNE1ycWZu?=
- =?utf-8?B?OU01aWQ5Q2c5aXVlc0FNQ3QrYUdDVE94b2xxYlk3aUkxaWtxNC8vQkVoNUwx?=
- =?utf-8?B?QzltKzZOUjV1RThuSklNWUtwRDc4d1Zod0JhK2RBbWdnbG96ck9wbmNabmR6?=
- =?utf-8?B?ekxwZUtQejZyWHZzTGkvVmdEdzZGN3NaV0s2ZDJyUkdLN2gwOEdweG4wZjJ0?=
- =?utf-8?B?aG8rcTBOWmJVaVZEY0doZEFhdWdzbFVFemRjWGU4eDhHL3FVU3FSQjZIRnUr?=
- =?utf-8?B?NlhmbDhVNnFvYTRrV0hKanZoUFlObzAxMHRUOE9hakdrVVorT3JmUU9odW5j?=
- =?utf-8?B?cEozaUt0SnIydk8xRUdNZHZJKy9zUnM3VUl2MXFVSXZSdlgrdHpBc1VkcHlK?=
- =?utf-8?B?QVBDVTBIODFpSmdOMWozaXZOV2ZBWkZsSVBQS1B1NU1oNlVPc3lTTFI2Z3ov?=
- =?utf-8?B?ZmtQUFBKZ1Z5UjE0QlVTTE4rNEFDRFFFbU1VdmNhZGJxeWtObVNnM0FvelRM?=
- =?utf-8?B?UEt0MmpsMXFyUG5BdGxvbFNINHJRNit5K0FRWjVFQXF4Tkl3NlRoRjBUWi9P?=
- =?utf-8?B?elZtbGFSWUpNbW9kbXJxR3lteXVVSEJMWllvWDBEN285Y0FwMndiQ0s4a0VV?=
- =?utf-8?B?T0U2c0dBNS9RWUV0Q1lxQ09XbzNLMU9DNFB5UzFEdEhOb1dqQUhRbldnUDB1?=
- =?utf-8?B?UUord0hHbnkxNmdOclhJZk5hK2wwNDdVTnVkTUhDMGVDTlFBVnR0YTNRS0Yr?=
- =?utf-8?B?QkFrUFQ4ZFR2clRUblVabmdlVXBBSFlUVUY1MnI0OSszaWZGM3BFV2JWczdU?=
- =?utf-8?B?RmpuTDk4VXptaEVXSGxvY0J3VVlFSDA2ZENVNnVSbmNqTFNZK2lOclFGU05J?=
- =?utf-8?B?UnVzcERyZWVJL1VaVy9Bc2doc1ZkaVZmQVNIS1Z2VWx1cExLL2JQcHp5eTk0?=
- =?utf-8?B?L1FYMkNrU2FGT21YWnhoK3FSMVN4SG0zR2QwdU5KUk55b2NjOVphVGhOMUpl?=
- =?utf-8?B?aFRZTEtZaW5tTEdtZEVBbHpVeVJvMGkrUitycm1TVFBZaVY3K1V2UGFCT3Ax?=
- =?utf-8?B?aTIrb0lmYkRnbkJTUlNuQjExTGtTbkRjOGc0Y2Q3WWMxME9mTzd4NWMwc3kw?=
- =?utf-8?B?bnNmbVJBWW5ZSWdHUzYzd1JlY0dyZ3phU3hxK0ZFQytCL2VWZXFkc2VBUXkv?=
- =?utf-8?B?Y0NOT1hjRWNodDQ0M0N3T1pKeDYzZStZNFkzS29zSHpvQ2YxUDVsVXpGdVZE?=
- =?utf-8?B?NVV2bEdpQldibUcrVHhOMnY3M2FuTEt3Sk1maHJvaHVreXRVZTVZc2F5akNO?=
- =?utf-8?B?RmE5SUVnZHltQ2NQcjh4YXY2UmQxcjBlc2NtVVVvdWptVEM5ZzN6dmlFUUxm?=
- =?utf-8?Q?ob8b0KuSkmU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ckVyMXdzL0lGVWJMWE9OeW9nSG9LOHNjazJPd0prbUZpTG1LTGY5VDRzNk1v?=
- =?utf-8?B?NENxakxpcnBxS1ZCb3VhNXpPMVlVWTRqKy9xVCtlREZmVFcvNWxwVmFnNGh4?=
- =?utf-8?B?bElzbUJxTXdYTjNhMVVlMTFBNnRrVmU2Sk5weDRmdUg2YkdkUW9kYi9pL2Rp?=
- =?utf-8?B?VGZVMWsyUTQ1SUNiWEZNT1NWaXRvOTVMZ2JWZG9VK2ZMR29tNlR2MmhNVHcy?=
- =?utf-8?B?NlV0RCtBWVhZeDF4aTNaRGxtTEhQb0hKUEwrQWsrbi8zUFF3QkhxemMvUHhW?=
- =?utf-8?B?OTdLVkplUXNTMWppSWFSeThVWStEUzlaeHRtLytpd2FGMGNtaG8xem1vMEgr?=
- =?utf-8?B?bGpuTzBQNnU3ak1YUzE5bmloZko1VjJJMHpmdmNhZVcveFZtVFJDemFmRXhu?=
- =?utf-8?B?TFZiOWlnZWRsOS9TV3BYS0xTSVVlQXp6NUx2dFR5QVRjY3pwTnh4d2lKYW9z?=
- =?utf-8?B?dEYxTzlWRjliL3hDTFBIa2hMM1NDdVd1RWdxNUk5ejVnd2daL1RndnIrUXpF?=
- =?utf-8?B?ZHhxR3dCOTlzeVpOanAxdFh4SGx1UjVYSHpFdnhOdjg0ai94cUUxUS9qdE5B?=
- =?utf-8?B?Y1RiNHlIZ3FyN2RpK2pWOEFIeDJQSkg1dTNIaUJtd1FlN3Q4VmRYNWJCdjln?=
- =?utf-8?B?dUVYR2NxN1ltSWlicmZtWTZqOXhDeTVlK0k5Ukx1UWZvU0xvU2lrT1Z3VXM0?=
- =?utf-8?B?MnBuMnhucklhVDgvSldVQTB5dHQyN09ZblpnN3FVeVJ5Q3pTVWo4bk11dXUr?=
- =?utf-8?B?Uk01WU1NNFdTMzlGT243djNMZnpDY1FlM2lhMEZZOGJTbGRRZmJ3T28yN3g4?=
- =?utf-8?B?RUQ5SmN5N2Fpbm52ZUsrVnE0Z0thcG9yell4Q1lZUXFIaGdJSGp6V0J1Y2tK?=
- =?utf-8?B?c24rMi8zWEZFOGVUZlN0R2IxTXNSZ0JUQkhFOGxPcmpwTWgvOHBrektNN2tw?=
- =?utf-8?B?TTcrOFBQWlh2MHVtd2hmVHBkS1ZpdFhIdWdvMC9xUmg4N0RXMUxKREluZnd2?=
- =?utf-8?B?MFJXTjMxdUNJTnNMSUJzbHE0aEVCNFVvU3BLOVN5Ty9DSDYyRWxvWlkvdTZw?=
- =?utf-8?B?V3dJNS9sQzFxaDNVeXo5RW0xS08rRytzcW90ZSt4VktsM2ZrMEEvVG1QWXFz?=
- =?utf-8?B?SHl3VVlvR0tzOGFKbmxHQjdETm50QlRRNWlUK2ttUE5KeTFYSG00U3U5SHFv?=
- =?utf-8?B?OTdpNHM5ODVrOXV5d2hodVNLdDEzVXpJak94TXI0b2hzR1JJQ05yNXNramc2?=
- =?utf-8?B?VE9DNEdGOWtYc1Byc3hTZW0xOXIyKy9QOFVDTlhiTEhsNWJjTG85RldJN0ZX?=
- =?utf-8?B?NGt1WmVtTExCSStYdU5GQlFtQlBHdnlYMzNtQ08zSU9zRk42YzhSMGZXeEZ1?=
- =?utf-8?B?dGl1d082OTVaWDhGd2pXMEYxZ1kzZmJTMmlMbENOb3dTeHNvZW02ODRWczUx?=
- =?utf-8?B?ZzNLSm1WMks5emdxT0Q0OXYrNHc1WGYwZzltMXZjcFV3REx1dHRZaXNTaEdp?=
- =?utf-8?B?M2xtcGFMSXhBTjFlOXBOd1krNmRuVitVb0xhMWpTV0F2THBKT3pRRHk1b0Y0?=
- =?utf-8?B?MGFFNW1aMVRTT1VEbGhuSytIWlprakNtS1lETE9rMHZ3YWxHdU9KN1hQWm5U?=
- =?utf-8?B?ZU9JcXFNL1pIMUhhTGpGZ0FBTDBUSEpRYnk5TmdFSDZTcC9hb3pFc1BkVlRE?=
- =?utf-8?B?QXR0K3RBNHdFN3RicFFiU2pNd2xBdGpySlJ1amRmM2RZaEZ4VFp2OXIzeE9B?=
- =?utf-8?B?K0NUS1I5T1NjaWkxbHh5YjMydnJIemZiSmJQT3lzN1V0alRzeStjQThPL2cr?=
- =?utf-8?B?UWRkMzZhMjFpTytmM3JsblBudFRoamlEeFR4R2krUXJNNSt2V2dYTVVUajd6?=
- =?utf-8?B?QTdEV0ZmZ0VDOTNoQ285ZWxYNVJZenpndzdHTW5CR1Z5MStqOEFZYjEzeUc2?=
- =?utf-8?B?MlJwMkthNjNpTk54bERaV05NejRsRGg5T1VBT0tRU1lQYjEvdmxYSEZpRjFC?=
- =?utf-8?B?N29oTzQxTExiZldVQkxxWWxoc2RoaG0zcHFpbk9XTWV6RkdBd3RZOXd4cE15?=
- =?utf-8?B?M3lzVktiRHgvSDAyMENPWHF4d04vR3pKcUxYU0FxNW5UbnU1ZHdxbC92dTFF?=
- =?utf-8?B?d1BKYkRmYkpsT2JYZkhQY0VtZ0EzSFlNVVhjOWJsTGJleUhZVFNUWnVVNE9h?=
- =?utf-8?B?dFE9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ea6d70f-f317-4151-2118-08dd92c879c0
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 09:19:49.1799
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mB5/k+YgAcOoYB8HiB5Xjnr04//+VtUI02Sd/plXmlq8StzUQ3DX5v7LUXzppLwW8LwUhnFUh5cH+YWxiSNvmQITNCfHXRmCabdgrIrAVxc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB10010
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Heiko,
+From: kerayhuang <kerayhuang@tencent.com>
 
-On 5/13/25 5:02 PM, Heiko Stuebner wrote:
+This commit addresses memory leaks by ensuring that all dynamically
+allocated resources are properly released before the program exits.
+The following changes were made:
+- Added fclose() to close the system_map file.
+- Added free() to release the cert buffer.
+- Added munmap() to unmap the vmlinux file.
 
-[...]
+These changes ensure that all resources are correctly managed and
+prevent memory leaks.
 
-> +	rk809: pmic@20 {
-> +		compatible = "rockchip,rk809";
-> +		reg = <0x20>;
-> +		#clock-cells = <0>;
-> +		clock-output-names = "xin32k";
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pmic_int>;
-> +		wakeup-source;
-> +		system-power-controller;
+Signed-off-by: kerayhuang <kerayhuang@tencent.com>
+Reviewed-by: Hao Peng <flyingpeng@tencent.com>
+---
+ scripts/insert-sys-cert.c | 44 ++++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
-Please order the properties alphabetically, system-power-controller is 
-not where it should be.
+diff --git a/scripts/insert-sys-cert.c b/scripts/insert-sys-cert.c
+index 8902836c23424..014d6bc855d95 100644
+--- a/scripts/insert-sys-cert.c
++++ b/scripts/insert-sys-cert.c
+@@ -250,6 +250,7 @@ static char *read_file(char *file_name, int *size)
+ 	}
+ 	if (read(fd, buf, *size) != *size) {
+ 		perror("File read failed");
++		free(buf);
+ 		close(fd);
+ 		return NULL;
+ 	}
+@@ -285,6 +286,7 @@ int main(int argc, char **argv)
+ 	int opt;
+ 	Elf_Shdr *symtab = NULL;
+ 	struct sym cert_sym, lsize_sym, used_sym;
++	int ret = EXIT_FAILURE;
+ 
+ 	while ((opt = getopt(argc, argv, "b:c:s:")) != -1) {
+ 		switch (opt) {
+@@ -304,20 +306,20 @@ int main(int argc, char **argv)
+ 
+ 	if (!vmlinux_file || !cert_file) {
+ 		print_usage(argv[0]);
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	cert = read_file(cert_file, &cert_size);
+ 	if (!cert)
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 
+ 	hdr = map_file(vmlinux_file, &vmlinux_size);
+ 	if (!hdr)
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 
+ 	if (vmlinux_size < sizeof(*hdr)) {
+ 		err("Invalid ELF file.\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	if ((hdr->e_ident[EI_MAG0] != ELFMAG0) ||
+@@ -325,22 +327,22 @@ int main(int argc, char **argv)
+ 	    (hdr->e_ident[EI_MAG2] != ELFMAG2) ||
+ 	    (hdr->e_ident[EI_MAG3] != ELFMAG3)) {
+ 		err("Invalid ELF magic.\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	if (hdr->e_ident[EI_CLASS] != CURRENT_ELFCLASS) {
+ 		err("ELF class mismatch.\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	if (hdr->e_ident[EI_DATA] != endianness()) {
+ 		err("ELF endian mismatch.\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	if (hdr->e_shoff > vmlinux_size) {
+ 		err("Could not find section header.\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	symtab = get_symbol_table(hdr);
+@@ -349,13 +351,13 @@ int main(int argc, char **argv)
+ 		if (!system_map_file) {
+ 			err("Please provide a System.map file.\n");
+ 			print_usage(argv[0]);
+-			exit(EXIT_FAILURE);
++			goto cleanup;
+ 		}
+ 
+ 		system_map = fopen(system_map_file, "r");
+ 		if (!system_map) {
+ 			perror(system_map_file);
+-			exit(EXIT_FAILURE);
++			goto cleanup;
+ 		}
+ 		get_symbol_from_map(hdr, system_map, CERT_SYM, &cert_sym);
+ 		get_symbol_from_map(hdr, system_map, USED_SYM, &used_sym);
+@@ -371,7 +373,7 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (!cert_sym.offset || !lsize_sym.offset || !used_sym.offset)
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 
+ 	print_sym(hdr, &cert_sym);
+ 	print_sym(hdr, &used_sym);
+@@ -382,14 +384,15 @@ int main(int argc, char **argv)
+ 
+ 	if (cert_sym.size < cert_size) {
+ 		err("Certificate is larger than the reserved area!\n");
+-		exit(EXIT_FAILURE);
++		goto cleanup;
+ 	}
+ 
+ 	/* If the existing cert is the same, don't overwrite */
+ 	if (cert_size == *used &&
+ 	    strncmp(cert_sym.content, cert, cert_size) == 0) {
+ 		warn("Certificate was already inserted.\n");
+-		exit(EXIT_SUCCESS);
++		ret = EXIT_SUCCESS;
++		goto cleanup;
+ 	}
+ 
+ 	if (*used > 0)
+@@ -406,5 +409,18 @@ int main(int argc, char **argv)
+ 						cert_sym.address);
+ 	info("Used %d bytes out of %d bytes reserved.\n", *used,
+ 						 cert_sym.size);
+-	exit(EXIT_SUCCESS);
++
++	ret = EXIT_SUCCESS;
++
++cleanup:
++	if (cert)
++		free(cert);
++
++	if (hdr)
++		munmap(hdr, vmlinux_size);
++
++	if (system_map)
++		free(system_map);
++
++	return ret;
+ }
+-- 
+2.35.1
 
-[...]
-
-> +	panel {
-> +		dsp_rst: dsp-rst {
-> +			rockchip,pins =
-> +				<0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +
-
-I would actually have a pull down here to hold the display in reset 
-until the driver is probed and goes through the reset procedure?
-
-With the two above done:
-
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
-
-Thanks!
-Quentin
