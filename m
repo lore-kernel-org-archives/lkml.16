@@ -1,129 +1,79 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 626F4220F5A;
-	Wed, 14 May 2025 08:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764EE221D94
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212687; cv=none; b=Ng6bPWMoSrjS2v0K91rKXiHtLiDUKuOH9gtGKtUTjbNV1gZQWImL42y1awZSY0Ca8UIct56wXOwdR9SQM824wHvOLbAA1LvybuyoC6IjTWqyo394B8u19FWAYsGD0iXKG/dllxkmrC2Cmgw4wjPQMqRbdjU4BCPzI2BAuepFXzI=
+	t=1747212700; cv=none; b=bKcJIo0qcvOmmdYb8KQODE/zaDWfus5fAiqVzMgfvLaduFO/q6cEKvOsAJKNzaDc4nOPiWPo9tfvYZgelg+oo7Uwgz5uA/QfWPuRQkfAog4brWrecaoa89jHzOUwEIdCRWXmWIZr3jsXaehZFTWRuOt6b+yK2PiHjYFxrzsOm7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212687; c=relaxed/simple;
-	bh=apq+BwYHOxkPhX8ok64w8r4oGNy7ByvWl3MYKvBniB8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=FLS+TTOWj9c03OKYfOgLul5+UgpsTZdYYJnXIfJ69ZnODfaq3rBrrQUNTInatLwi2zlX7yjmNvUb2xn/jEeASRv5Wz8jgLmXOviephV/GHJrbWliaKMbInOWJKT8vFGSdiqaSLubUEBPuYp+9fzuKZo9g/ix5RDxq+GbWU2xQWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=XwpkGXeS reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747212700; c=relaxed/simple;
+	bh=p8Dy0+kEs295ZX7uSrGMbmW7/M4KAYQKoxYzV6woizw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WuoVd5De3mlSrIPY5A6BccIWqYAJ8K0JLQv+XnfLXgOgyQtZLvSsXx7CIim4VWeQAk5Iki2XfVtr4yng7wxfPIRk2sYaooqniI76SwUmrP+qfSrvqecykD1frkf+Lm8SBal/S8wzyj/n0MLTdDr+KRgK93skAzvLjzUwd3WecYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wVeW6EZr; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="XwpkGXeS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=sBFuoDoykQLtmTPGNVji36ZhaQVrt1lynL2bW5GsBiQ=; b=X
-	wpkGXeSBwF9sgNV/XM+nzpfhi2/6IcJFl8RYdcGTFpTd+4lDjLDVXRRavMfqQ1lS
-	D1rI+B+KoNIt6NET14u7c+nMwvyOQpQ/Wq0uqC27dI5cmycMZF3qMiZb4B7WagjM
-	9LqYFFQz2IomS5CzkX69Lh0z7sGK/u2M7qyYhGJrxo=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-138 (Coremail) ; Wed, 14 May 2025 16:50:52 +0800
- (CST)
-Date: Wed, 14 May 2025 16:50:52 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Greg KH" <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <2025051405-glare-crazily-a9fa@gregkh>
-References: <20250513113817.11962-1-00107082@163.com>
- <20250514064455.5488-1-00107082@163.com>
- <2025051405-glare-crazily-a9fa@gregkh>
-X-NTES-SC: AL_Qu2fBf6avU4u5CibY+kZnEYQheY4XMKyuPkg1YJXOp80iCXjww4aeXB6GXr77cOqKSqSvxeqUxhu5uNYd61xTbA13njqx69rZwdQABWQVKxD
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wVeW6EZr"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747212694; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=IMdxeZqMjoqcnZRkSIxuyFVrrAtdBAjdsBoxCYqWgQI=;
+	b=wVeW6EZrT1KCcxr493O+6RNX3n9zYXwmI1QUM7wAhOLSwUrbG8hJHQp1LCcpM2K8F5JFLJ6VbQRaQVP0jAlWJTKrNRzMNw4zyI7zCVvCoGBZjmHenwFhi1U11LptuaT4tc+rG608OaQxhw+f+BRF9kkTie0PHk8s8zbeQcy10jk=
+Received: from 30.74.144.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WalGEVH_1747212693 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 May 2025 16:51:34 +0800
+Message-ID: <aede5e8a-4e8b-4a06-bdc4-aefc82e4e282@linux.alibaba.com>
+Date: Wed, 14 May 2025 16:51:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4b376fc2.7e7e.196cdfd512a.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iigvCgD3L9ttWSRo1UsEAA--.39926W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAxNqmgkRDyyBAAGsH
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] mm: shmem: avoid unpaired folio_unlock() in
+ shmem_swapin_folio()
+To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
+ akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
+ <20250514165047.946884-2-shikemeng@huaweicloud.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250514165047.946884-2-shikemeng@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-CkF0IDIwMjUtMDUtMTQgMTU6Mjk6NDIsICJHcmVnIEtIIiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlv
-bi5vcmc+IHdyb3RlOgo+T24gV2VkLCBNYXkgMTQsIDIwMjUgYXQgMDI6NDQ6NTVQTSArMDgwMCwg
-RGF2aWQgV2FuZyB3cm90ZToKPj4gSGksIAo+PiAKPj4gVXBkYXRlIG1lbW9yeSBmb290cHJpbnRz
-IGFmdGVyIGhvdXJzIG9mIFVTQiBkZXZpY2VzIHVzYWdlCj4+IG9uIG15IHN5c3RlbToKPj4gKEkg
-aGF2ZSB3ZWJjYW0vbWljL2tleWJvYXJkL21vdXNlL2hhcmRkaXNrIGNvbm5lY3RlZCB2aWEgVVNC
-LAo+PiBhIGZ1bGwgcGljdHVyZSBvZiBtZW1vcnkgZm9vdHByaW50cyBpcyBhdHRhY2hlZCBiZWxv
-dykKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Kwo+PiB8IGFjdGl2ZSBtZW1vcnkoYnl0ZXMpIHwgYWN0aXZlIG9iamVjdHMgfCAgICAgICAgICAg
-ICAgIGFsbG9jIGxvY2F0aW9uICAgICAgICAgICAgICB8IHRvdGFsIG9iamVjdHMgY3JlYXRlZCB8
-Cj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsK
-Pj4gfCAgICAgICAgMjI5MTIgICAgICAgICB8ICAgICAgIDI0ICAgICAgIHwgY29yZS91cmIuYzox
-MDU0OnVyYl9oY3ByaXZfbWVtcG9vbF96YWxsb2MgfCAgICAgICAgIDEwNTIzICAgICAgICAgfAo+
-PiB8ICAgICAgICAxMTc3NiAgICAgICAgIHwgICAgICAgMzEgICAgICAgfCAgICAgICAgY29yZS91
-cmIuYzo3Njp1c2JfYWxsb2NfdXJiICAgICAgICB8ICAgICAgICAgMTEwMjcgICAgICAgICB8Cj4+
-ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPj4g
-Cj4+IFRoZSBjb3VudCBmb3IgYWN0aXZlIFVSQiBvYmplY3RzIHJlbWFpbiBhdCBsb3cgbGV2ZWws
-Cj4+IGl0cyBwZWFrIGlzIGFib3V0IDEyS0Igd2hlbiBJIGNvcGllZCAxMEcgZmlsZSB0byBteSBo
-YXJkZGlzay4KPj4gVGhlIG1lbW9yeSBwb29sIGluIHRoaXMgcGF0Y2ggdGFrZXMgYWJvdXQgMjJL
-QiwgaXRzIHBlYWsgaXMgMjNLQi4KPj4gVGhlIHBhdGNoIG1lYW50IHRvIHJldXNlIG1lbW9yeSB2
-aWEgYSBtZW1wb29sLCB0aGUgbWVtb3J5IGtlcHQgaW4gcG9vbCBpcyBpbmRlZWQKPj4gdGhlICJ0
-cmFkZW9mZiIgd2hlbiB0aGUgc3lzdGVtIGlzIGlkbGUuIChXZWxsLCB3ZSBhcmUgdGFsa2luZyBh
-Ym91dCBtZW1wb29sIGFueXdheS4pCj4+IEhvdyBiYWxhbmNlIHRoZSB0cmFkZW9mZiBpcyBkZXBl
-bmRzIG9uIGhvdyB3ZWxsIHRoZSBtZW1wb29sIGlzIG1hbmFnZWQuCj4+IFRoaXMgcGF0Y2ggdGFr
-ZXMgYSBlYXN5IGFwcHJvYWNoOiBwdXQgZmFpdGggaW4gVVJCIG9iamVjdHMgbWFuYWdlbWVudCBh
-bmQgcHV0Cj4+IGEgc2luZ2xlIHNsb3Qgb2YgbWVtcG9vbCBpbiBVUkIgb24gZGVtYW5kcy4gQW5k
-IHRoZSBjaGFuZ2VzLCBieSBjb3VudGluZyBsaW5lcwo+PiBpbiB0aGlzIHBhdGNoLCBhcmUgdmVy
-eSBzaW1wbGUuCj4+IEJhc2Ugb24gdGhlIHByb2ZpbGluZywgdGhlIG51bWJlciBvZiBhY3RpdmUg
-VVJCIG9iamVjdHMgYXJlIGtlcHQgYXQgYSB2ZXJ5IGxvdyBzY2FsZSwKPj4gb25seSBzZXZlcmFs
-IGNvdWxkIGhhdmUgYSB2ZXJ5IGxvbmcgbGlmZWN5Y2xlLgo+PiBJIHRoaW5rIFVSQiBpcyBhIGdv
-b2QgY2FuZGlkYXRlIGZvciBjYWNoaW5nIHRob3NlIG1lbW9yeSBuZWVkZWQgZm9yIHByaXZhdGUg
-ZGF0YS4KPj4gQnV0IEkgY291bGQgYmUgdmVyeSB3cm9uZywgZHVlIHNpbXBseSB0byB0aGUgbGFj
-ayBvZiBrbm93bGVkZ2UuCj4+IAo+PiBBbmQgYmVmb3JlLCB3aXRob3V0IHRoZSBwYXRjaCwgYSAx
-MCBtaW51dGVzIHdlYmNhbSB1c2FnZSBhbmQgY29weWluZyAxMEcgZmlsZSB0byBoYXJkZGlzawo+
-PiB3b3VsZCB5aWVsZCBoaWdoIHJhdGUgb2YgbWVtb3J5IGFsbG9jYXRpb24gZm9yIHByaXZpYXRl
-IGRhdGEgaW4geGhjaV91cmJfZW5xdWV1ZToKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0t
-LS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLSsKPj4gfCBhY3RpdmUgbWVtb3J5KGJ5dGVzKSB8IGFjdGl2ZSBvYmpl
-Y3RzIHwgICAgICAgICAgIGFsbG9jIGxvY2F0aW9uICAgICAgICAgIHwgdG90YWwgb2JqZWN0cyBj
-cmVhdGVkIHwKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLSstLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsK
-Pj4gfCAgICAgICAgMjI3ODQgICAgICAgICB8ICAgICAgIDIzICAgICAgIHwgaG9zdC94aGNpLmM6
-MTU1NTp4aGNpX3VyYl9lbnF1ZXVlIHwgICAgICAgICA4OTQyODEgPDwgZ3Jvd3xpbmcgdmVyeSBx
-dWljawo+PiB8ICAgICAgICAxMDg4MCAgICAgICAgIHwgICAgICAgMzEgICAgICAgfCAgICBjb3Jl
-L3VyYi5jOjc1OnVzYl9hbGxvY191cmIgICAgfCAgICAgICAgICA0MDI4ICAgICAgICAgfAo+PiAr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwo+PiBJIG9ic2VydmUg
-YSBoaWdoZXN0IGFsbG9jYXRpb24gcmF0ZSBvZiAxLjVLL3MgaW4geGhjaV91cmJfZW5xdWV1ZQo+
-PiB3aGVuIEkgd2FzIGNvcHlpbmcgMTBHIGZpbGUsIGFuZCBoYWQgbXkgd2ViY2FtIG9wZW5lZCBh
-dCB0aGUgc2FtZSB0aW1lLgo+PiAKPj4gQW5kIGFnYWluLCB0byBiZSBob25lc3QsIEkgZGlkIG5v
-dCBvYnNlcnZlIGFueSBvYnNlcnZhYmxlIHBlcmZvcm1hbmNlIGltcHJvdmVtZW50IGZyb20KPj4g
-YW4gZW5kdXNlcidzIHBvaW50IG9mIHZpZXcgd2l0aCB0aGlzIHBhdGNoLiBUaGUgb25seSBzaWdu
-aWZpY2FudCBpbXByb3ZlbWVudCBpcyBtZW1vcnkgZm9vdHByaW50Cj4+IF9udW1iZXJzXy4KPj4g
-SSBndWVzcyBtZW1vcnkgYWxsb2NhdGlvbiBpcyBpbmRlZWQgIl9yZWFsbHkgZGFtbiBmYXN0XyIs
-IGJ1dCBJIHN0aWxsIGhhdmUgdGhlIG1pbmRzZXQgb2YKPj4gInRoZSBsZXNzIGFsbG9jYXRpb24g
-dGhlIGJldHRlciIuCj4KPk5vLCB0aGlzIGlzbid0IG5lY2Vzc2FyaWx5IHRydWUgYXQgYWxsLiAg
-QWxsb2NhdGlvbnMgYXJlIGZhc3QsIGFuZCBpZiB3ZQo+ZnJlZS9hbGxvY2F0ZSB0aGluZ3MgcXVp
-Y2tseSwgaXQncyBldmVuIGZhc3Rlci4gIFVTQiBpcyBsaW1pdGVkIGJ5IHRoZQo+aGFyZHdhcmUg
-dGhyb3VnaHB1dCwgd2hpY2ggaXMgX3ZlcnlfIHNsb3cgY29tcGFyZWQgdG8gbWVtb3J5IGFjY2Vz
-c2VzIG9mCj50aGUgYWxsb2NhdG9yLgo+Cj5TbyB1bmxlc3MgeW91IGNhbiBzaG93IHRoYXQgd2Ug
-YXJlIHVzaW5nIGxlc3MgQ1BVIHRpbWUsIG9yIHNvbWV0aGluZwo+ZWxzZSAicmVhbCIgdGhhdCBp
-cyBtZWFzdXJhYmxlIGluIGEgcmVhbCB3YXkgaW4gdXNlcnNwYWNlLCB0aGF0IHdvdWxkCj5qdXN0
-aWZ5IHRoZSBleHRyYSBjb21wbGV4aXR5LCBpdCdzIGdvaW5nIHRvIGJlIGhhcmQgdG8gZ2V0IG1l
-IHRvIGFncmVlCj50aGF0IHRoaXMgaXMgc29tZXRoaW5nIHRoYXQgbmVlZHMgdG8gYmUgYWRkcmVz
-c2VkIGF0IGFsbC4KClRoYW5rcyBmb3IgZmVlZGJhY2tzfiEgClRoYXQncyB2ZXJ5IHJlYXNvbmFi
-bGUgdG8gbWUsICBhbmQgSSBoYXZlIGJlZW4gcG9uZGVyaW5nIG9uIGhvdwp0byBwcm9maWxlIGEg
-VVNCIHBlcmZvcm1hbmNlLCBidXQgc3RpbGwgbm8gY2x1ZS4KCiBJIHdpbGwga2VlcCB0aGlua2lu
-ZyBhYm91dCBpdCwgaG9wZWZ1bGx5IHRoaXMgMWsrL3MgYWxsb2NhdGlvbiB3b3VsZCBzaG93IHVw
-IHNvbWV3aGVyZSwgb3IgCmNvbmNsdWRlIHRoYXQgaXQgcmVhbGx5IGhhcyBubyBzaWduaWZpY2Fu
-dCBpbXBhY3QgYXQgYWxsLgoKClRoYW5rcwpEYXZpZAoKPgo+QWxzbywgSSdtIHRvdGFsbHkgY29u
-ZnVzZWQgYXMgdG8gd2hhdCB0aGUgImxhdGVzdCIgdmVyc2lvbiBvZiB0aGlzCj5wYXRjaHNldCBp
-cy4uLgo+CnNvcnJ5LCBJIHRoaW5rIEkgbWVzcyB1cCB0aGUgbWFpbHMgd2hlbiBJIGFkZCAicmVw
-bHktdG8iIGhlYWRlciB0byBuZXdlciBwYXRjaGVzCgo+dGhhbmtzLAo+Cj5ncmVnIGstaAo=
+
+
+On 2025/5/15 00:50, Kemeng Shi wrote:
+> If we get a folio from swap_cache_get_folio() successfully but encounter
+> a failure before the folio is locked, we will unlock the folio which was
+> not previously locked.
+> Put the folio and set it to NULL when a failure occurs before the folio
+> is locked to fix the issue.
+> 
+> Fixes: 058313515d5aa ("mm: shmem: fix potential data corruption during shmem swapin")
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+
+Good catch. LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+> ---
+>   mm/shmem.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 99327c30507c..980fa15f393e 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2335,6 +2335,8 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   		 */
+>   		split_order = shmem_split_large_entry(inode, index, swap, gfp);
+>   		if (split_order < 0) {
+> +			folio_put(folio);
+> +			folio = NULL;
+>   			error = split_order;
+>   			goto failed;
+>   		}
