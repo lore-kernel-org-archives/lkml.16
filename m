@@ -1,197 +1,148 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8FA1F91F6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB74020F079
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220183; cv=none; b=hIx46oRxcSeAuTK7U3wUlJeUqo9PYynIL0Ep2OZyonD9x4CkJ6K9dO58fZeOybZMBWINL8v7RkKO4Yht1MQrk/YUqsO7p/qG87S+pFUU4j2ya2TrG84oFBtPmjJP9wPNgrcOFRFOIkhLRqKMnvxrUfo8Kwonvrd9wFd5bLVuEA8=
+	t=1747220234; cv=none; b=hv2ptEnnuD3R89Nq3yF/UHc+bLLXLg6m0PD8BpS0x9Iu7/u/JEMiJu3qblPSMFPmM3/0BrYIJ8By1dQ/pGhiEPHHkIzsxfVfkr0mkHvyBjxYK9MAygUywFOyLFfTJY/lU+UVPa2vB02vJkC7u0G82gBXx5JHkOm7sMwd5PTb50I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220183; c=relaxed/simple;
-	bh=rigjT51Bk+rEEhy0G1hWcnpbNDs6yIeqyF/rCzkkxWw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VwPC3QW0/u0PNl2wdWhDOgsudvnrr7HXDhNY5Dw0zA6uy5ODMVVWgstjSAE8QORLUBoa6NvoPn68x7sczTJ0XcW+jRYY4E/kYyJi9sQu8ucWAPTGvUDGqazz5g2ClBFBxOY4Ucn14R8PxJgAA7Eu7PyfUKvHJx9n5uUyiibC+A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FdMSqHkM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747220234; c=relaxed/simple;
+	bh=Io3JrD/y03dOQPQAcqJF5SS7b20bby4BHdbd1e9wLMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F+uO6x6hoNLOCe/8wzMccPH23PV0IRoeekTat3lZSo9Bi5b6G8L4QEWmKWrFkYabZfmZKiQNemrtw8XRO+WzltFz9NFHUDsAI5YUK8eB35d/hZuxag64MZT48ab4ScmeqzCz4KKQI66nPVVshU8odmq74GA6qiNM44QtzKACjlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b2sOJpam; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FdMSqHkM"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7Vrlc025407;
-	Wed, 14 May 2025 10:56:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hptRBY
-	daX7xMfWMddOiuBRCXkxv9o+2z/NgrtK8kdcE=; b=FdMSqHkMuSYmQFnelqmJ/f
-	F583d8XakhnDwQCFfGPJL4dYM+LU0yGSBEg1N2zEmFqzhyd0/+c7yrqswdoVrzTW
-	jrxkNkWevysOYLvWbO3Gg+E0tQAb1xQFtC41lD5GsGLCNKDGJ6ffpOxG8ywJoR50
-	2lcJqY+SlLyPbufS+f3xnuw6Sb9JRuv68+diV7gNl5Db429xm14DszfsDJu4lk7X
-	XtHXuvH1nzVKRgIYWnOLooz9ixC6art7a65nncltUyjtBBecUeqeHeZAm8azQpqW
-	Cv0gUGzsG3nI7hVBPtvZ8w9DnYKRBGSOSXmGKAHmn0mrEyr70cZCxKSAXzLdNybQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbs6knam-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 10:56:13 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54E9uMeJ015300;
-	Wed, 14 May 2025 10:56:12 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpurcm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 10:56:12 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EAuCHn19989218
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 10:56:12 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E640A5804B;
-	Wed, 14 May 2025 10:56:11 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C386658059;
-	Wed, 14 May 2025 10:56:10 +0000 (GMT)
-Received: from [9.111.92.18] (unknown [9.111.92.18])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 14 May 2025 10:56:10 +0000 (GMT)
-Message-ID: <da57330c-46f3-4af6-aa49-a5cb26df37f7@linux.ibm.com>
-Date: Wed, 14 May 2025 12:56:09 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b2sOJpam"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0ad54f0aeso584652f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747220231; x=1747825031; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4E8aOwQAaUdRX1dyEnehNt0cEoTdcyb+vzWwLzLf9I=;
+        b=b2sOJpamHS+OogMULNrBBM5HX1UW5BJQjKv6iEOLtq3+ko567dhlJcTUKKVuwnanHW
+         cF5Y6uTVamoNaz+/6K70IdrrcCMtgYEo/lbLQyNkuk0hXbmVNyc49s2q1LsbirE59Arg
+         HiV6Y/DnTSwmQcY21gkFFfrDzOHK41KeMclNimXmQs/+MBui1yahGS5gtcwJXyQSD3rD
+         ZsAXOrw3hoqt0Vlpnsq6cM9UnFzfiwn4uQ0uQCA1mMIeU0QZCZ8lg9ueaxlI+RyvN4qi
+         F94v5YudyunFL17TfSgxzHAEymYUdVlUGEQIXGRSkVhzkhk1bcqZlbpUlqvpQaRVY9pY
+         PYew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747220231; x=1747825031;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y4E8aOwQAaUdRX1dyEnehNt0cEoTdcyb+vzWwLzLf9I=;
+        b=UaxW5n5kpfP6UJ9aHdf8c6Ar8lrfCvxeXWK/+3xKrWcCmov+TIoj8PaZF6EA4L1NoX
+         QL+x9E7ZiVT88rD15XdE0dxrVR0kDxwluGsTdoQ40jcfISqDzkYIyOJqDbluDO1F8g10
+         w4iq+WlCrwjOByFP+zUDt0LZ46F27B62TMR/bZVz1QQDGn5W+sVIZAQWN9aQPaMljfw5
+         JTFoaq0cQWGuvJYwMv2kMa+Jh5RiDMyQakvF4ehoFMW3hizsf1GEiMsQG3KMpVgae6kD
+         4ukcVBaccfTljwuHwqoO67VOWo4Z36W7kLU/PuWqW3gFkMaQp4+yXvehDrvxDASe9NOS
+         J7Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+lkuSglK5l0etEK7pgg9AI6F/2yCTq9gWtRiq0rhb8VFQ3tcttTGDhjDv+lLaW53bpkGCc7+WFRWjgus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPXHQ3BLGTI5JYQ0PIpj+CrE7ND0CjV/Tvf716kfxgZK9AYdyh
+	sPoXs8d1DbYiwNzed/HkXMVrU1NnLXN/qNePsMefWUG9KQK3A4BnUDjciSlNYBQ=
+X-Gm-Gg: ASbGncsil2Hm54O9CUu2yQ4LFeSBnuwU4X8WRcRUdaS4rycDG/4P2sMwgKMZsmgZpAF
+	ZXQWfG6udzCsuG6VyJfCQcktPepWIabN8D9izWfH7An14TAVhO1+TsMQmD3kWJGTpaaTq0iZqSX
+	S2DAU7OYqCmHEuxgwTSqGfN2fRBTe9gZ4oBKe7HbXnMR0BIT7GXFeen41lMi2Exy/AJKPqxjCu9
+	1GMeO3KacwP9ajC2/6IUI4hwW+G+bbWYL09llfwGOd8KAcJbRkm/hjj4l1/szVH1ghhlj06wedL
+	etxuI2fAM/Ck1YrjmOo5jJjDKs2MV7DGnoe86BxzV62CTVMsdYXUuj6Z+E3m9uDyCQHeukvZ0F1
+	2WN4HrIbal80PWqcwGXdj6kb4vImz33RcptvNjMa5wx4FrP3MZg==
+X-Google-Smtp-Source: AGHT+IFtksBMN8N0y1ipHv0ssNQ0FUDjeBMyouJ1A0vX+2sBsa+p6vm/UIeQxO60xKTk6b6EFmeb6w==
+X-Received: by 2002:a05:6000:2207:b0:38d:b090:a0c4 with SMTP id ffacd0b85a97d-3a34991c966mr848096f8f.10.1747220231062;
+        Wed, 14 May 2025 03:57:11 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368f36sm27362985e9.1.2025.05.14.03.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 03:57:10 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Trevor Wu <trevor.wu@mediatek.com>,
+	Jiaxin Yu <jiaxin.yu@mediatek.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ASoC: dt-bindings: mediatek: Simplify mediatek,clk-provider
+Date: Wed, 14 May 2025 12:57:03 +0200
+Message-ID: <20250514105702.28622-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] zram: rename ZCOMP_PARAM_NO_LEVEL
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20250514024825.1745489-1-senozhatsky@chromium.org>
- <20250514024825.1745489-2-senozhatsky@chromium.org>
-Content-Language: en-US
-From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-In-Reply-To: <20250514024825.1745489-2-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA5MyBTYWx0ZWRfX9P0NcYKRIdjt sefySltLt/WMHyYiGT9HyjtggvKgsTUkAAn9ZYYjnTQ6zk4j1L2ZXmt2KcgzI0nVDeQxedntWkj b805sRqgFPC1huXYU4DTpMTlFCsD0grBjBVInqtpU3LArxqWYzM31I73ifx7Ys805AehlkyQ3bf
- GQ5jGHUCRFRnuzjJsabxj3stkZGF6QIPWb38nqnHNg1y3k/3Ns0InF3EY9K+LDT7Zv1UySAWMrE O+R+oJRtzKP7WQ965TpWrz7/p43ExamNChZiTuU7kIbwiTYBw7vPfhZXjmNtuc/xaQBURtSYE5j rUkPnAJXjuJdgKPwCmjRR5yVdPEbscmLk1uoA2XuxXNOjldQwUbe09kJhyJ2s9QvyM3xezQLZX7
- jDLj5uuKV86w9K1i7JYA8XY/2krmwSkTp6sCFeVACd2ry1N3kHv42yeJqgDfoW3Lcpjwvlc9
-X-Proofpoint-ORIG-GUID: 9Y-WlQI47wVuVAG3LQPL0lDpJhjl0Dbg
-X-Authority-Analysis: v=2.4 cv=d5f1yQjE c=1 sm=1 tr=0 ts=682476cd cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=cm27Pg_UAAAA:8 a=z_otd99ehmC5rH9K4kQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 9Y-WlQI47wVuVAG3LQPL0lDpJhjl0Dbg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 clxscore=1011 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 mlxlogscore=999 impostorscore=0 adultscore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140093
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1814; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=Io3JrD/y03dOQPQAcqJF5SS7b20bby4BHdbd1e9wLMA=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoJHb+RsGueHOitBQYXiszb3Mpl2m/RCzDn6fka
+ rPIPq97lmOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCR2/gAKCRDBN2bmhouD
+ 11y6D/9EcflOTi1PXfiKHcWkO2TQd8AiHmKdLSSurf7WcaMBXn8Fbwo73+EJ/2olcQAcj7XZf9D
+ 8JwECXhe1ztAZeht1jIcW49QiQRkkUoTkN2KRL4dooNvkTgUY3vgNyA87MXPGPjLmL/JcvJsnsW
+ Jry1/y+WGGXJTxvj453+yAfKNDgE2FtURccAdIPzhniUnS4RmnYp2nABLMgdTYv0aBqZbV20rqq
+ jOWXfCbRAbLEWCIeZ+nQerpgM8fHM0eTYOuV5MHzhs27OoJkYOLMLAny5qoLl7Zpm7QIs6Sf0TQ
+ 411wb3xmZHUvPljW+odA5kp7vNu74ORgeg4sifz8NSK3UY7wfPBnAVDcUwbazT4UPZjVlvd6oJB
+ M/oQZ5PI5OZXBBFcvbfNpTspmnlUpx2dl92iNd+EU3tV1ULUHEe7fMMDPmDWuya2uC0byBeV+NX
+ KHdBSm5X6JTGBik2vPT29CmY9aUOtWDqcOvbX9/mXZDAkw7FrXY3gbcj83aIpGUxHsXct9+Fp1D
+ jjQE9JCq4VNnydAnG14Q7NBEgujHn3urNMS5sHe0sb456zjEw7cQsrs0W6/JmpSTxRQ6N6UrSJU
+ AUkb7dxGDDDx+k5ZgmIRFW0TnxfwnBQbiJBYrXSPQny28+3lgQEWgXSN8AGE4cuB9MzdnPo8ura jtDQQXfb+Vlto8A==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+"mediatek,clk-provider" property is a string, not an string array, thus
+"items" is not really correct.
 
-On 14.05.2025 04:47, Sergey Senozhatsky wrote:
-> Use more generic name because this will be default "un-set"
-> value for more params in the future.
-> 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  drivers/block/zram/backend_deflate.c | 2 +-
->  drivers/block/zram/backend_lz4.c     | 2 +-
->  drivers/block/zram/backend_lz4hc.c   | 2 +-
->  drivers/block/zram/backend_zstd.c    | 2 +-
->  drivers/block/zram/zcomp.h           | 2 +-
->  drivers/block/zram/zram_drv.c        | 4 ++--
->  6 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
-> index 0f7f252c12f4..4c00b5b6739f 100644
-> --- a/drivers/block/zram/backend_deflate.c
-> +++ b/drivers/block/zram/backend_deflate.c
-> @@ -22,7 +22,7 @@ static void deflate_release_params(struct zcomp_params *params)
->  
->  static int deflate_setup_params(struct zcomp_params *params)
->  {
-> -	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-> +	if (params->level == ZCOMP_PARAM_NOT_SET)
->  		params->level = Z_DEFAULT_COMPRESSION;
->  
->  	return 0;
-> diff --git a/drivers/block/zram/backend_lz4.c b/drivers/block/zram/backend_lz4.c
-> index 847f3334eb38..daccd60857eb 100644
-> --- a/drivers/block/zram/backend_lz4.c
-> +++ b/drivers/block/zram/backend_lz4.c
-> @@ -18,7 +18,7 @@ static void lz4_release_params(struct zcomp_params *params)
->  
->  static int lz4_setup_params(struct zcomp_params *params)
->  {
-> -	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-> +	if (params->level == ZCOMP_PARAM_NOT_SET)
->  		params->level = LZ4_ACCELERATION_DEFAULT;
->  
->  	return 0;
-> diff --git a/drivers/block/zram/backend_lz4hc.c b/drivers/block/zram/backend_lz4hc.c
-> index 5f37d5abcaeb..9e8a35dfa56d 100644
-> --- a/drivers/block/zram/backend_lz4hc.c
-> +++ b/drivers/block/zram/backend_lz4hc.c
-> @@ -18,7 +18,7 @@ static void lz4hc_release_params(struct zcomp_params *params)
->  
->  static int lz4hc_setup_params(struct zcomp_params *params)
->  {
-> -	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-> +	if (params->level == ZCOMP_PARAM_NOT_SET)
->  		params->level = LZ4HC_DEFAULT_CLEVEL;
->  
->  	return 0;
-> diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
-> index 22c8067536f3..81defb98ed09 100644
-> --- a/drivers/block/zram/backend_zstd.c
-> +++ b/drivers/block/zram/backend_zstd.c
-> @@ -58,7 +58,7 @@ static int zstd_setup_params(struct zcomp_params *params)
->  		return -ENOMEM;
->  
->  	params->drv_data = zp;
-> -	if (params->level == ZCOMP_PARAM_NO_LEVEL)
-> +	if (params->level == ZCOMP_PARAM_NOT_SET)
->  		params->level = zstd_default_clevel();
->  
->  	zp->cprm = zstd_get_params(params->level, PAGE_SIZE);
-> diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-> index 25339ed1e07e..cfacdfe9044c 100644
-> --- a/drivers/block/zram/zcomp.h
-> +++ b/drivers/block/zram/zcomp.h
-> @@ -5,7 +5,7 @@
->  
->  #include <linux/mutex.h>
->  
-> -#define ZCOMP_PARAM_NO_LEVEL	INT_MIN
-> +#define ZCOMP_PARAM_NOT_SET	INT_MIN
->  
->  /*
->   * Immutable driver (backend) parameters. The driver may attach private
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 94e6e9b80bf0..a11b7a6e35f4 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -1276,7 +1276,7 @@ static void comp_params_reset(struct zram *zram, u32 prio)
->  	struct zcomp_params *params = &zram->params[prio];
->  
->  	vfree(params->dict);
-> -	params->level = ZCOMP_PARAM_NO_LEVEL;
-> +	params->level = ZCOMP_PARAM_NOT_SET;
->  	params->dict_sz = 0;
->  	params->dict = NULL;
->  }
-> @@ -1308,7 +1308,7 @@ static ssize_t algorithm_params_store(struct device *dev,
->  				      const char *buf,
->  				      size_t len)
->  {
-> -	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NO_LEVEL;
-> +	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NOT_SET;
->  	char *args, *param, *val, *algo = NULL, *dict_path = NULL;
->  	struct zram *zram = dev_to_zram(dev);
->  	int ret;
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/sound/mediatek,mt8188-mt6359.yaml  | 7 +++----
+ .../bindings/sound/mt8186-mt6366-da7219-max98357.yaml      | 7 +++----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8188-mt6359.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8188-mt6359.yaml
+index 76d5a437dc8f..7ba2ea2dfa0b 100644
+--- a/Documentation/devicetree/bindings/sound/mediatek,mt8188-mt6359.yaml
++++ b/Documentation/devicetree/bindings/sound/mediatek,mt8188-mt6359.yaml
+@@ -96,10 +96,9 @@ patternProperties:
+       mediatek,clk-provider:
+         $ref: /schemas/types.yaml#/definitions/string
+         description: Indicates dai-link clock master.
+-        items:
+-          enum:
+-            - cpu
+-            - codec
++        enum:
++          - cpu
++          - codec
+ 
+     additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/sound/mt8186-mt6366-da7219-max98357.yaml b/Documentation/devicetree/bindings/sound/mt8186-mt6366-da7219-max98357.yaml
+index cbc641ecbe94..037f21443ad1 100644
+--- a/Documentation/devicetree/bindings/sound/mt8186-mt6366-da7219-max98357.yaml
++++ b/Documentation/devicetree/bindings/sound/mt8186-mt6366-da7219-max98357.yaml
+@@ -124,10 +124,9 @@ patternProperties:
+       mediatek,clk-provider:
+         $ref: /schemas/types.yaml#/definitions/string
+         description: Indicates dai-link clock master.
+-        items:
+-          enum:
+-            - cpu
+-            - codec
++        enum:
++          - cpu
++          - codec
+ 
+     required:
+       - link-name
+-- 
+2.45.2
 
