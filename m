@@ -1,123 +1,139 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F16227BA2;
-	Wed, 14 May 2025 10:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68132205519;
+	Wed, 14 May 2025 10:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747219070; cv=none; b=RueSamcOHkv5MmVKKwQb+e1UNBGS6RocEkVSbYfxjq46lwpKs+CJH0QEEaTvSX9ee2E3iSGvfcwNZglb45wwTtlA4jijNlbtfqD/KGu0tOTHWav8y3C7rIXBSQBWgOVeLTCEC2IpfOeuuTh6e8vVoqfOAjS++axynxB8FzFL+2I=
+	t=1747219134; cv=none; b=E+xtGey3UP1Hs1VQvUj74P1vHIG7SEF3ND1YAneFcYi80tR/uV/RP/483X6LacLWL8KtennpnmiQOBZ3Jrb6Irax5p28y9tvXAQxz6JmVQgNeQcGZlEt3jEKLxhv4UAk6uOCmbbpwzQmBwQ03+MC+zLMs+31lc2yvaQeRND23Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747219070; c=relaxed/simple;
-	bh=DyFXiTcMAkicdWTVDAKnT/4bbZdHgYHMQphd7Xj8oq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bPvEoIz1gnKsLt/aZsIK/q8ReTCDPj1MuxbwAkHlEequPxr68zwwoxfEfMaCIMLkFfodLirh08sPupcHBNTS0dAJ2ym3qTgZ+cGXOVv0sJcBOzTMwUSz1uNOSjenSgOTHzAWwACa0UMYRV3eOrmWJFR9jBEdzsjLC9eEYUWMHOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=FSXoj7xB; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1747219134; c=relaxed/simple;
+	bh=QLH0gNrBQapb4DgKV7C9hWr0X48Qc8YYIoKa2VE6OQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eontHHzPxbk/Exvd3RKfcra/ug3GPe//m29fNygnlnBmVBrtqln6ud5uqiz019PaNfpXSwhrchD/BNq/3HGNEn9foyOPm/hWc7DFld8IfJwokQM9zhZrSJqqceSfEywCGw6J35cbohnRmjgzkJAW5ow552mgOipz63MGt+0dE38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kqm9pMei; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="FSXoj7xB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1747218755;
-	bh=7dNO5ovMYH1mWfxjDIePge4MNb8pZoHkoH4FCjpkoGM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FSXoj7xByPT3d6/Fz5Zoy7IH3KAZAeXALVWGXacOn8FUQN3yhQvfTME5QWogDFQDJ
-	 Cq5GnGpb3R4ooTvO7JfncVFvPt0FxHPYpJusO7mhAGytVYgDQnD8aVCQjXh8Ks2QBa
-	 EPLsrMcy5n8TNgqirHYXMexaaQcJpYhK8/Dm/U6k=
-Received: from [IPV6:2408:822e:4b0:fb41:1d81:21ec:4709:dc61] ([2408:822e:4b0:fb41:1d81:21ec:4709:dc61])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 8209080A; Wed, 14 May 2025 18:32:32 +0800
-X-QQ-mid: xmsmtpt1747218752tcrmi01u7
-Message-ID: <tencent_984AF5DAF2F307EA419A747031F0920C7C09@qq.com>
-X-QQ-XMAILINFO: MtZ6QPwsmM9Xc4kQFqh/DnQ+d6a0cPXvuLpK4kC59gnGC4fa2b7/ItgsCafU4t
-	 YJU0t3WjecYSE66bKOjpuTmMwV4cT2618krSETTAGOuKB2L5ESsiGHcE+r8CpQYaa5TvjXXxsYTN
-	 CQ5QoX5c3NhLkVup5VvNJdqit/6LEZPlo/ZUyMrcOUm/um4EUgOqIWJiRq/ABH7RE4ZAmWTHZymq
-	 laxOoRsVdh3Ci6GJ8L7FqvKjyyCNj6Lc+OP2As4OZs/SLXspriUlQ7tOpREJX9KrI4iERWsPR7Fr
-	 BekXctBPq+zlIccbI/1GqWFhTM9B/BaebwkQeohFEgYNR+L/XOex7J1f2SeqGNOqbxGJTfQ3ZWab
-	 /N71Ju4plBC3UjO9tFJzXH9ZAo9GWXsnHzYr+FM1qmne6a/OGzA9H+96KLsWz3WwOT3ESHD8CD/B
-	 FNPSVUwGMbm/NgyTlbfN88RFloKEXGevemcWONln6qsPMB7e138Q0fSdBcvT0b0IQB8bk9tKOtcD
-	 aglHVuC/2fWKJ+dj5o3vrVu71M0yOBgJ2s5KHQU2rz1vejgphKs7/0MY6L4FxyFFx3jp5l1fT4XQ
-	 balvg0amN466HmB3TcRyezrHK3paqePrhvCgQEwMe7IArcqvkVI2VWykbK9tyb1ReChZ1PjMYRg1
-	 j/ajjugBilYAE2jC3HZ4EwhFH+R153ujgknU6RSlKvpkU9X9fhZAOuiaVpf7XlLqlQ0R7br/pit0
-	 h8Bht/49A7FTipRAm2cT923VLmZdFx8kmF4W4DJlIYe4+JHyRea5ACf8qK7daYqUEK+czItBPdV5
-	 Bt6wyQsOeEoBWoEpD/qcx+zv5GRO98aX3eL3/q9BR9h6ciBWotlbLvR4hn3Y+VKS58GAr9VVA0PM
-	 hObLGidqR/H+BWjWfe4XvaAE/gYbcagQVnVgKCtTzJpB7NvAhf2ARPHhm46ljqfvGSQI+7elA9Ng
-	 cQld0tpVPjIXbxws9WKg==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-OQ-MSGID: <cc1104ab-89df-40ad-b3f9-ff15f4012008@foxmail.com>
-Date: Wed, 14 May 2025 18:32:32 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kqm9pMei"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so8997830e87.1;
+        Wed, 14 May 2025 03:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747219130; x=1747823930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u18rizJH6zQQVk6mtazUuj8QZQOQdRFQC+xxUzR/EJw=;
+        b=Kqm9pMeiPj6Vy61mLm6TXx3rgplHL0sZEkcO7olw2k2+B5FkMkUdW1Y5hiqPE3CEE1
+         iXwlLlB8pVAW+Wm1WXctJc51EgYTRJv6IAr21cOvieHrH/7qV1KSKgy9UKK+j+1u2YYR
+         71N3jwcHwpPaLC/IOCb8ZO0CHRe5C9V0wTyEmncccuNcIUIsq3t8FnJSPNdddu4egwln
+         auOYlhAQeqGsim42js5B5XnevPQGHBAbOhFfeyOgXkqzYzCPDpzDh8XErZ0E/lchU/10
+         ozXUoP1v00oOUY2+w2AgZ3fV7bq5kgT1/HrcCiztn+Q0Rjpns28oyplZV6rlJlRFzrYY
+         ce+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747219130; x=1747823930;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u18rizJH6zQQVk6mtazUuj8QZQOQdRFQC+xxUzR/EJw=;
+        b=NtXqGL8idsIndIeNhapQuXYssMRX+z5u+T0rHl/FeAxLDU65HZZW5MRwabMhvSuHLU
+         n2L7GIAuHIryJJfjDB74DgcGoZ3yuAURfMPgfV1kqXmRWiRF1nYDRGw2Vdw5TMDXjjT+
+         oHiMu/1W8DSFXUQQaio0lBDfNaDs5RdYkeX/NqKhPW1lUcfmwNG04s3vSD+rL+wzlZQ+
+         BEviyrTE8tMlik/ikKLC8W81Xl/3dmgWzN37yb9T/yW2icaFMgcnlW/ekS48KA2o91Bv
+         ZELOV0axsahMn4oCejog6a11OBu2kOyu2+7C4tc7NYKkO9xnatn7pcaFitUWUJ+gdVCF
+         ofNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHY77cPkgsguaDLRUF9y8ntQpBE1MqGrVEfAA4TMOkEklXjX46bQwHEF31EssZZpIan7oUUdb8@vger.kernel.org, AJvYcCWo+Bc78NQ3PVASVXdJo6Tzg6MEXzKYGnaFATo48vLdeq/XT33WlA4HZC9xLv4TraXXEhMI3wqOdMHmVqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ+m5vX9m7H+F48QgGA2ORNAXfPbXQa4n1WCfDGlvCbVODuiSu
+	UYbV98q5n1s4JpXZ3wstAUgn9+2XYC7yRFDScZsyXonJ+/PT2Skr
+X-Gm-Gg: ASbGncuu7YeKgj4d24vsujwNpfm82S6PtaW9cqbVeZd4Bt5tfBm3ohwD2yN8YvJfo4d
+	idCPJJL11+22VumO8pYkgnP/u15D1XnQMwyoxywXmWkswaYrqC0XaaJoFiQX8aIM9G7ieZ2Oh4d
+	ospSKVohCr/IcaMuLRPuCMw53GiJVkS3B1IL5ep4RPktNrobIdXdiMdhtJxsuZW4gzAw/ivLfa6
+	5mmao3ZusnCikR1BYN3PTZaXlryTM2LxfUPqUPjsTBNb11Wuks0mtdTybQKklNVNmWKRTQ4fllV
+	8/e+TYnG9rMLKq3nLb/4+kGDM7k5R4k2qvGd0lYbv4C3AqTKupTw6VKOWaaTbLXL2AHDVI+YZVa
+	J
+X-Google-Smtp-Source: AGHT+IFIIeAIX8+mI9Youa23uFVdTyrEGM2yaHMFY1grmhUQonUuDWo6/3mO/dKIWsCisjaqVpzwiA==
+X-Received: by 2002:a05:651c:505:b0:30b:a20d:1c06 with SMTP id 38308e7fff4ca-327ecf6b72bmr11420301fa.0.1747219130279;
+        Wed, 14 May 2025 03:38:50 -0700 (PDT)
+Received: from localhost.localdomain ([91.197.2.199])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326e19da2bcsm11535601fa.74.2025.05.14.03.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 03:38:49 -0700 (PDT)
+From: Andrey Kriulin <kitotavrik.s@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org,
+	Andrey Kriulin <kitotavrik.media@gmail.com>
+Subject: [PATCH v2] fs: minix: Fix handling of corrupted directories
+Date: Wed, 14 May 2025 13:38:35 +0300
+Message-ID: <20250514103837.27152-1-kitotavrik.s@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
- diffing object files
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
- Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org,
- Song Liu <song@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>,
- Fazla Mehrab <a.mehrab@bytedance.com>,
- Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
- <tencent_8AACB6DF7CFB7A9826455C093C0903B15207@qq.com>
- <c63auxjhv2lanvir4rryy3kp6qpni4q7p62ng6hnvoo4w4idvf@i4mx3asblvis>
-Content-Language: en-US
-From: laokz <laokz@foxmail.com>
-In-Reply-To: <c63auxjhv2lanvir4rryy3kp6qpni4q7p62ng6hnvoo4w4idvf@i4mx3asblvis>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/14/2025 4:45 AM, Josh Poimboeuf wrote:
-> On Tue, May 13, 2025 at 10:49:59PM +0800, laokz wrote:
->> On 5/10/2025 4:17 AM, Josh Poimboeuf wrote:
->>> +
->>> +#define sym_for_each_reloc(elf, sym, reloc)				\
->>> +	for (reloc = find_reloc_by_dest_range(elf, sym->sec,		\
->>> +					      sym->offset, sym->len);	\
->>> +	     reloc && reloc_offset(reloc) <  sym->offset + sym->len;	\
->>> +	     reloc = rsec_next_reloc(sym->sec->rsec, reloc))
->>
->> This macro intents to walk through ALL relocations for the 'sym'. It seems
->> we have the assumption that, there is at most one single relocation for the
->> same offset and find_reloc_by_dest_range only needs to do 'less than' offset
->> comparison:
->>
->> 	elf_hash_for_each_possible(reloc, reloc, hash,
->> 				   sec_offset_hash(rsec, o)) {
->> 		if (reloc->sec != rsec)
->> 			continue;
->> 		if (reloc_offset(reloc) >= offset &&
->> 		    reloc_offset(reloc) < offset + len) {
->> less than ==>		if (!r || reloc_offset(reloc) < reloc_offset(r))
->> 					r = reloc;
->>
->> Because if there were multiple relocations for the same offset, the returned
->> one would be the last one in section entry order(hash list has reverse order
->> against section order), then broken the intention.
-> 
-> Right.  Is that a problem?  I don't believe I've ever seen two
-> relocations for the same offset.
-> 
+If the directory is corrupted and the number of nlinks is less than 2
+(valid nlinks have at least 2), then when the directory is deleted, the
+minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+value.
 
-Thanks for the clarification. I asked this because I noticed the 
-patchset have done some code refactoring, so guess if we could make it 
-more general to other architectures which not support objtool yet. Such 
-as RISC-V, it is not unusual having multiple relocs for same offset, 
-like vmlinux.o might have:
+Make nlinks validity check for directory.
 
-000c 0000010a00000017 R_RISCV_PCREL_HI20 0000000000000000 .LANCHOR0 + 48
-000c 0000000000000033 R_RISCV_RELAX                         48
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-0044 0000061700000023 R_RISCV_ADD32   0000000000000048 pe_head_start + 0
-0044 000dd5b900000027 R_RISCV_SUB32   0000000000000002 _start + 0
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
+Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
+---
+v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
+<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
+directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
 
-But it is a bit off-topic:/
+ fs/minix/inode.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Regards,
-laokz
+diff --git a/fs/minix/inode.c b/fs/minix/inode.c
+index f007e389d5d2..d815397b8b0d 100644
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -517,6 +517,14 @@ static struct inode *V1_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-ESTALE);
+ 	}
++	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
++		printk("MINIX-fs: inode directory with corrupted number of links");
++		if (!sb_rdonly(inode->i_sb)) {
++			brelse(bh);
++			iget_failed(inode);
++			return ERR_PTR(-EUCLEAN);
++		}
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -555,6 +563,14 @@ static struct inode *V2_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-ESTALE);
+ 	}
++	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
++		printk("MINIX-fs: inode directory with corrupted number of links");
++		if (!sb_rdonly(inode->i_sb)) {
++			brelse(bh);
++			iget_failed(inode);
++			return ERR_PTR(-EUCLEAN);
++		}
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+-- 
+2.47.2
 
