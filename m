@@ -1,84 +1,103 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF354C6D;
-	Wed, 14 May 2025 21:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E7C221271;
+	Wed, 14 May 2025 21:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747258366; cv=none; b=PBbKgTQXA0+cyYy3N/0X4DyP2UXPkkpS2G3O0a9UhlzkQkGPH74k5VMvflMzt9dM43NOg/xg77zUWcPm0RxU2Eehx0rrEjgCg+z4ENCxyCPdvPIuaITcrq0vybEPMDpwGv/vVK67Xtc4SjMsDQcoZ5knKkM9fzlq7bj0fZyeKBk=
+	t=1747258370; cv=none; b=IE/1S9QxneJCHwFqdzJxKIRhODOihxsWZOZirblNiF7LfEVLOf46qLnPG1yHN3GNQ1HWdQ8euTOhjX0YOvmATUznSxDpt2mjP3Bzj43ID/hBOhPsE3/tRE9tBvYgkGEzU+5sAT+5KyX6Z68789lQR8r5Rw/mN5WsXEFJHCGhZes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747258366; c=relaxed/simple;
-	bh=RC5fmh5roIicKEjisa/u+zzgbg9XEtk6Plu0+SmtQu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJA2i3J06G40TBGJjjE1nRd9HfFsdETbtNYR7p9MV6az/fMWVGMXl7BDsJM4Tc3fDxq+ujKRrLyg7Nh9FYtCbyJedKJe8DGNx2LcHFRu4dVhTWTFwIknKZHfS3AkkW2+0S89DRRTTv4xfB4qTBxIHHU02zhbCFLsEKCU0a38QTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vUIQhp6Q; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747258370; c=relaxed/simple;
+	bh=mXXP6jPmHjrLDq0YvJKfrILeEi0rih83V0iyKJkz37w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skm0mUqAAJ+lpZP3BzSpeE9BJ9zYf2zvQgQ+CCMLAR1c8hotjsfF3GWG1lEr6JZx4KbJ5dlnZ6c4tvRdmCE0yeWk5IV063sTk56EfiBc2iZTsU7oeZM/zbWvHZhoilqoktqzLCn26pXEkrOjyHvrZZqbfeLm1ulV0xA7qMa3VEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eklo3P8g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vUIQhp6Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=PeJJjp4f4LB9WolqfCSgCTxrRZ+eAI3I62Gy14YqPtc=; b=vUIQhp6QtF12At3r0x+162hvsI
-	KD7Sa3V5GCJ+cek4iBNbTjrL7TWqcqBvyYUAm7JsTnXEEdbwVen/8k9wIZHNCYaLUz+ntjUzMsmxK
-	HYPhlAnc8HlzoRM4IL4ZJJcF7Td4+OVW19U76jyGYj2pxGbglEcWn8tsU3ASz7LPWyP43vOaW2+8U
-	B+r0C7pB7yS4CcplSID5lKhuhUHeq9v5UIgPQhXziUrouDoVv7aMqdyQiD4dy0Y7StYfO+lQsQMTN
-	eBeagqWmY6gNm3MhDsEYrdDzV9RuHPiRyxfZ8XkQfSzZUGMek4ZOo5eoV6iHAFVLmREycINCIjqFA
-	BuVR/GJw==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFJiW-0000000GOk0-0I2x;
-	Wed, 14 May 2025 21:32:44 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	linux-fsdevel@vger.kernel.org,
-	Chen Linxuan <chenlinxuan@uniontech.com>
-Subject: [PATCH] fuse: dev: avoid a build warning when PROC_FS is not set
-Date: Wed, 14 May 2025 14:32:43 -0700
-Message-ID: <20250514213243.3685364-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eklo3P8g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A3D3C4CEE3;
+	Wed, 14 May 2025 21:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747258369;
+	bh=mXXP6jPmHjrLDq0YvJKfrILeEi0rih83V0iyKJkz37w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eklo3P8gO3ZA/poAviqKg20Jo5FLMmxCWg/QyoBrT+JcE0uc8kxa0Ps8m0ovUG5aA
+	 mcUIBXxORo606F5yOGujkrHa4+2JIZgrWNg/+hhiwxwP2p+quNVO3OnVswmgVoHAp5
+	 1oOA1qsA3OfZWdpYGsi7PvNzFr6zJS2StHzUOvo/kybJAyO/8FhHEsoxbAJS7qOqik
+	 gZ1gVA7xuk/FEADQvzcwXntGdrNwBQvIBr1oXKDJn+xFcwboM8C7GPrT9GQY7+ZztA
+	 BcDCJ/l//GCCv6TV+MfNAhAejNGGt5Z+pY1VyYX9UxRBXpOwz+b1zHMJitu8Ppdiew
+	 l8FMVbVx/p6Wg==
+Date: Wed, 14 May 2025 16:32:47 -0500
+From: Rob Herring <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [net-next PATCH v4 07/11] dt-bindings: net: ethernet-controller:
+ permit to define multiple PCS
+Message-ID: <20250514213247.GA3053278-robh@kernel.org>
+References: <20250511201250.3789083-1-ansuelsmth@gmail.com>
+ <20250511201250.3789083-8-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511201250.3789083-8-ansuelsmth@gmail.com>
 
-Fix a build warning when CONFIG_PROC_FS is not set by surrounding the
-function with #ifdef CONFIG_PROC_FS.
+On Sun, May 11, 2025 at 10:12:33PM +0200, Christian Marangi wrote:
+> Drop the limitation of a single PCS in pcs-handle property. Multiple PCS
+> can be defined for an ethrnet-controller node to support various PHY
 
-fs/fuse/dev.c:2620:13: warning: 'fuse_dev_show_fdinfo' defined but not used [-Wunused-function]
- 2620 | static void fuse_dev_show_fdinfo(struct seq_file *seq, struct file *file)
+typo
 
-Fixes: 514d9210bf45 ("fs: fuse: add dev id to /dev/fuse fdinfo")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>
----
- fs/fuse/dev.c |    2 ++
- 1 file changed, 2 insertions(+)
+> interface mode type.
+> 
+> It's very common for SoCs to have a 2 or more dedicated PCS for Base-X
+> (for example SGMII, 1000base-x, 2500base-x, ...) and Base-R (for example
+> USXGMII,10base-r, ...) with the MAC selecting one of the other based on
+> the attached PHY.
 
---- linux-next-20250514.orig/fs/fuse/dev.c
-+++ linux-next-20250514/fs/fuse/dev.c
-@@ -2617,6 +2617,7 @@ static long fuse_dev_ioctl(struct file *
- 	}
- }
- 
-+#ifdef CONFIG_PROC_FS
- static void fuse_dev_show_fdinfo(struct seq_file *seq, struct file *file)
- {
- 	struct fuse_dev *fud = fuse_get_dev(file);
-@@ -2625,6 +2626,7 @@ static void fuse_dev_show_fdinfo(struct
- 
- 	seq_printf(seq, "fuse_connection:\t%u\n", fud->fc->dev);
- }
-+#endif
- 
- const struct file_operations fuse_dev_operations = {
- 	.owner		= THIS_MODULE,
+I'm confused what you need. The restriction was no arg cells allowed. 
+Any number of phandles was allowed. The former would need a 
+"#pcs-handle-cells" type property.
+
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/net/ethernet-controller.yaml | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index 7cbf11bbe99c..60605b34d242 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -84,8 +84,6 @@ properties:
+>  
+>    pcs-handle:
+>      $ref: /schemas/types.yaml#/definitions/phandle-array
+> -    items:
+> -      maxItems: 1
+>      description:
+>        Specifies a reference to a node representing a PCS PHY device on a MDIO
+>        bus to link with an external PHY (phy-handle) if exists.
+> -- 
+> 2.48.1
+> 
