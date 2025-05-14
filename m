@@ -1,65 +1,33 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C4E1F4262
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373DC1F3FED;
+	Wed, 14 May 2025 05:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747201409; cv=none; b=Bpx/l/z1WNd2T9ACE+SkQs73H5u8/RlP4T6SnS8rgVduyZl7LNHOp1LK1dI3UI+7mKbOpZeJ7voNVjH9vyUbAxsAA03bQnEC3gPkBi16STK9BSLRunuzTN7zRkLzH1T2lUfhA6gkfad9bWnKjd/V7LJnU9INQnQx/WCin4oe9VU=
+	t=1747201419; cv=none; b=a8KpznJJ5S1Fnm519/xWciCfV88eUORyZnDTTOoCLRXNZfGvsWGkqyaw4Gcc7sd/6ORVmCgSyfsUCV3QD0w5IPEMuZ3b/D0T5ZTIWZFhM2USmzZpFJH+t94fFEBv8OB0Edy6nV1u6vN57wwHiiLT+6E63h3Av6SU+pzHGzDbVl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747201409; c=relaxed/simple;
-	bh=ngkdWREDhxJP3Z8+vA88rzmJHoCKElBQPHF6jlZulMU=;
+	s=arc-20240116; t=1747201419; c=relaxed/simple;
+	bh=ToBGjHXrPQqmhHhPi2h5AhEO0dYh0gr5acZEkolmOZk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DovWerlqY1tUutLTtUZIamqhjQ/v/ThoaJQrNDr1mhfMFT2wmZfORZVOkzq94rcgrBDjGoBGylc7TkT/RjZ+T5P/mnjc/QyYuFDuNzZgTcIR7RKgDqWaRheOtrFG7yeQX1eTjzlA9lXuhoIBT9QuWNsvpbNnycT8VP7BeVtJd3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SpGDP0hM; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=i/Sq4aBhmWUy57rQnWHLcUbdPPb/KYvoitzkttnA3VBEH9YgxGBX6dOOZTYgIEzLxZPHXmZzFpXuO086m8BtL1E/++USVgWxKLe6+ZTKks69cvXADxBe28sQycZy4fGmb5qwqr1LFoP+QNk4OaHTAeUkuSURl3HkpvuVt7B0AbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hi489zuy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SpGDP0hM"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so47507415e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747201405; x=1747806205; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WekKOZDHzata3CIxzPDhxW/QBdknDrhZbw8Dut8DkN8=;
-        b=SpGDP0hMCCN7x+CcjdnbDQWm4c22I+5OxLvnAGs1+YekNptlIJtOyz7F7xj+E5+1vu
-         LdyyQUYN9AlxP5AUzRYlHA63N46OyWO+GRi/+YLlRgLFll2L1W1JJ44hxijoCXIVQiUb
-         ZpJlzByS/9OeegoQbKJq5ef66LipTIoo0f6kZDhXOZQodqMTtS8HMUT6DmSM025kRNX0
-         um0G/hSpzdQc9K8w+VMGkaXspr6xIJ8vMbxyyKuXiQxb0nipNNgd2S8iUAuc9ilYJYjY
-         /G8bhnr+O7IhtaP+SyYU4aQZrbqqE5MmcS4QSLJpRW2anrpVgD4jSlqyjl1YxucRSfOG
-         E2VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747201405; x=1747806205;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WekKOZDHzata3CIxzPDhxW/QBdknDrhZbw8Dut8DkN8=;
-        b=VE0BCiM2RlAaXLyXiaRFoowWCbgC7QiB/8PR8jU25J4Yz7miNvQgpebcHg/9OmqMjX
-         fTlX+tHyGXWrxH/gXnrU8vjbsB5EIDbuOzXVSzPoyFiUKintBWAlYI70+LjCScA27H5L
-         zkLIgaMsPmwFaXx/IzZ59Vo0axiK6cLXQmAZL36ZSWEM6kSalhmrlhZwwn6dz8Tjt+Tb
-         a31qcRa0Y3cOzs7xHn/bgBzQ9QnFP3dMXKYEeI/7m3KMhjtIhScVPJkLpV5Wk4P53D7i
-         7yXppTYwYsEDuaonMlStYCjp+uGR43UuoAmWp9kFA7D7qBL3jsQoBXglUWLZ3ruGelpp
-         60Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCXkdacRMk86nTOX7cvJS4/o7WMLwLkFaQEAMzOj7B3IF7gLHPMwiAPlKV1j3bMnEKs+KIeVrin9hRtH+ZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcdl4zN13QWeOlw8V+GbYTWnBgWe7Wa5HlxJip7zbYIV1GSzId
-	1kg9ARqJTR0MTm6EjmpiBH3pTbGosg5tvmxkk00YH7O2CP69J3x3HqyvL9X5N1s=
-X-Gm-Gg: ASbGnctQOHSI/n/jKNz4KeKghbHKh7uRwkFwSZytnnlVfrg+KHvoxzR7w4ux+wf2obl
-	jytdPGkQ+gyCMe94QMi2g6raM9GHLg5iIpv3cWmdMUL55sRGjww6F17g9XzkafZN/QvNCayxZzw
-	6BOLygCMcyBu4He4IwxtBslmGLleX72qpBa7anh/nXhve6+wtU08DsmM/onoXUkYfDugr/38XuH
-	KBq3CcThGa3uC/nkUdcACK1S4VY3LMlKRlP7Qg3F+0/OYMxRqZrBn5aNirde33V5+fYggYoVH9r
-	cZA0S185bnl1SxoNnZ4tHMxNuj2pPyIIqdJ2gCq1D19Vzx8CEpMtHkLBEDnYhWyLGN9jVi3KByk
-	dTTenf18j1Aya
-X-Google-Smtp-Source: AGHT+IG+3TNrM0TUrHdUyJXWOShIKsXvcyKhriY5sc/GEJhp8byyCrjzheMxPynRGxPI+f0IKwcCeg==
-X-Received: by 2002:a05:600d:1b:b0:442:f4d4:53a with SMTP id 5b1f17b1804b1-442f4d43e20mr4691955e9.2.1747201404948;
-        Tue, 13 May 2025 22:43:24 -0700 (PDT)
-Received: from [10.61.1.70] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3950bccsm14069945e9.19.2025.05.13.22.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 22:43:24 -0700 (PDT)
-Message-ID: <2e9d06be-719c-44e4-af14-7839ee5957b7@linaro.org>
-Date: Wed, 14 May 2025 06:43:22 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hi489zuy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FB5C4CEEB;
+	Wed, 14 May 2025 05:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747201418;
+	bh=ToBGjHXrPQqmhHhPi2h5AhEO0dYh0gr5acZEkolmOZk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hi489zuy7UUyWUDRDFNgiBeo9dJtPEb/Q16yZoOqRWv/Rmv87uNOSRoS+5PxRZNUF
+	 IXLqALij7GK9UoeXGx/A9Oswwb27cjHkRElsQ41AmN92Eu+NV0qPqFoTEEZEt2KdSU
+	 yyrPIMa7rCz6nX24UB0XXkTOtH5dBRd1Wz9q2CDJw3858qRmiGGiR6CtXGVhh16g7R
+	 TzxDNSHvzmKthF/rpsMLEhZKj08KOVeE+XqIguLq4Qj0DpuBFWWoOvVSA0aJgWGKkE
+	 B2O/3wk+UNY3sCM4NKzkAFHyN4Jjy4h/enG9UdXn8IUuNAy0D6i5curbkgP2cI1URh
+	 vp94dAUdg4mIg==
+Message-ID: <8d38bf57-ad99-4889-8e5a-9ae7e5c5b39e@kernel.org>
+Date: Wed, 14 May 2025 07:43:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,333 +35,185 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: qcs9075-rb8: Enable IMX577 camera
- sensor
-To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vikram Sharma <quic_vikramsa@quicinc.com>,
- Loic Poulain <loic.poulain@oss.qualcomm.com>,
- Andi Shyti <andi.shyti@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org
-References: <20250514-rb8_camera-v1-0-bf4a39e304e9@quicinc.com>
- <20250514-rb8_camera-v1-4-bf4a39e304e9@quicinc.com>
+Subject: Re: [PATCH 1/2] vt: bracketed paste support
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250514015554.19978-1-nico@fluxnic.net>
+ <20250514015554.19978-2-nico@fluxnic.net>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250514-rb8_camera-v1-4-bf4a39e304e9@quicinc.com>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250514015554.19978-2-nico@fluxnic.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 14/05/2025 03:40, Wenmeng Liu wrote:
-> The qcs9075-iq-9075-evk board has 4 camera CSI interfaces.
-> Enable the third interface with an imx577 sensor for qcs9075-iq-9075-evk.
+On 14. 05. 25, 3:52, Nicolas Pitre wrote:
+> From: Nicolas Pitre <npitre@baylibre.com>
 > 
-> An example media-ctl pipeline for the imx577 is:
+> This is comprised of 3 aspects:
 > 
-> media-ctl --reset
-> media-ctl -V '"imx577 '0-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+> - Take note of when applications advertise bracketed paste support via
+>    "\e[?2004h" and "\e[?2004l".
 > 
-> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+> - Insert bracketed paste markers ("\e[200~" and "\e[201~") around pasted
+>    content in paste_selection() when bracketed paste is active.
 > 
-> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> - Add TIOCL_GETBRACKETEDPASTE to return bracketed paste status so user
+>    space daemons implementing cut-and-paste functionality (e.g. gpm,
+>    BRLTTY) may know when to insert bracketed paste markers.
+> 
+> Link: https://en.wikipedia.org/wiki/Bracketed-paste
+
+LGTM.
+
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+
+In case (and only then) you resend for some reason, I have some nits below.
+
+(And a question at the bottom.)
+
+> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 > ---
->   arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts | 110 +++++++++++++++++++
->   arch/arm64/boot/dts/qcom/sa8775p.dtsi            | 132 +++++++++++++++++++++++
->   2 files changed, 242 insertions(+)
+>   drivers/tty/vt/selection.c     | 35 ++++++++++++++++++++++++++++++----
+>   drivers/tty/vt/vt.c            | 15 +++++++++++++++
+>   include/linux/console_struct.h |  1 +
+>   include/uapi/linux/tiocl.h     |  1 +
+>   4 files changed, 48 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> index eadc59739a4baafedfa456bdb71b72214810b1c1..83c286b3b1428bc90445f41740997f2421824a54 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> @@ -20,6 +20,38 @@ aliases {
->   	chosen {
->   		stdout-path = "serial0:115200n8";
->   	};
+> diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+> index 791e2f1f7c0b..ac86b82411a8 100644
+> --- a/drivers/tty/vt/selection.c
+> +++ b/drivers/tty/vt/selection.c
+...
+> @@ -427,10 +433,31 @@ int paste_selection(struct tty_struct *tty)
+>   			continue;
+>   		}
+>   		__set_current_state(TASK_RUNNING);
 > +
-> +	vreg_cam0_1p8: vreg_cam0_1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_cam0_1p8";
-> +		startup-delay-us = <10000>;
-> +		enable-active-high;
-> +		gpio = <&pmm8654au_0_gpios 7 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	vreg_cam1_1p8: vreg_cam1_1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_cam1_1p8";
-> +		startup-delay-us = <10000>;
-> +		enable-active-high;
-> +		gpio = <&pmm8654au_0_gpios 8 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	vreg_cam2_1p8: vreg_cam2_1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_cam2_1p8";
-> +		startup-delay-us = <10000>;
-> +		enable-active-high;
-> +		gpio = <&pmm8654au_0_gpios 9 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	vreg_cam3_1p8: vreg_cam3_1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vreg_cam3_1p8";
-> +		startup-delay-us = <10000>;
-> +		enable-active-high;
-> +		gpio = <&pmm8654au_0_gpios 10 GPIO_ACTIVE_HIGH>;
-> +	};
->   };
+> +		if (bps) {
+> +			count = tty_ldisc_receive_buf(ld, bps, NULL, strlen(bps));
+> +			bps += count;
+> +			if (*bps == '\0')
+> +				bps = NULL;
+> +			else
+> +				continue;
 
-I would submit the regulators as a separate patch - especially because 
-you only use 1/4 of the regulators you are adding here.
+This could have been simpler:
 
-That in itself deserves a commit log explanation.
+bps += tty_ldisc_receive_buf(ld, bps, NULL, strlen(bps));
+if (*bps != '\0')
+   continue;
 
->   &apps_rsc {
-> @@ -241,6 +273,84 @@ vreg_l8e: ldo8 {
->   	};
->   };
+bps = NULL;
+
+> +		}
+> +
+>   		count = vc_sel.buf_len - pasted;
+> -		count = tty_ldisc_receive_buf(ld, vc_sel.buffer + pasted, NULL,
+> -					      count);
+> -		pasted += count;
+> +		if (count) {
+> +			count = tty_ldisc_receive_buf(ld, vc_sel.buffer + pasted,
+> +						      NULL, count);
+> +			pasted += count;
+
+Same here for pasted.
+
+> +			if (vc_sel.buf_len > pasted)
+> +				continue;
+> +		}
+> +
+> +		if (bpe) {
+> +			count = tty_ldisc_receive_buf(ld, bpe, NULL, strlen(bpe));
+> +			bpe += count;
+
+And bpe.
+
+> +			if (*bpe == '\0')
+> +				bpe = NULL;
+> +		}
+>   	}
+>   	mutex_unlock(&vc_sel.lock);
+>   	remove_wait_queue(&vc->paste_wait, &wait);
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index efb761454166..ed39d9cb4432 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -1870,6 +1870,14 @@ int mouse_reporting(void)
+>   	return vc_cons[fg_console].d->vc_report_mouse;
+>   }
 >   
-> +&camcc {
-> +	status = "okay";
-> +};
-> +
-> +&camss {
-> +	vdda-pll-supply = <&vreg_l1c>;
-> +	vdda-phy-supply = <&vreg_l4a>;
-> +
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@3 {
-> +			reg = <3>;
-> +			csiphy3_ep: endpoint {
-> +				clock-lanes = <7>;
-> +				data-lanes = <0 1 2 3>;
-> +				remote-endpoint = <&imx577_ep3>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&cci0 {
-> +	status = "disabled";
-> +	pinctrl-0 = <&cci0_0_default>;
-> +	pinctrl-1 = <&cci0_0_sleep>;
-> +};
-> +
-> +&cci1 {
-> +	status = "disabled";
-> +	pinctrl-0 = <&cci1_0_default>;
-> +	pinctrl-1 = <&cci1_0_sleep>;
-> +};
-> +
-> +&cci2 {
-> +	status = "disabled";
-> +	pinctrl-0 = <&cci2_0_default>;
-> +	pinctrl-1 = <&cci2_0_sleep>;
-> +};
-> +
-> +&cci3 {
-> +	status = "okay";
-> +	pinctrl-0 = <&cci3_0_default>;
-> +	pinctrl-1 = <&cci3_0_sleep>;
-> +};
+> +/* invoked via ioctl(TIOCLINUX) */
+> +static int get_bracketed_paste(struct tty_struct *tty)
 
-You should only have to enable the bus you are using..
+vc_bracketed_paste is unsigned. (I understand tioclinux() returns an int.)
 
+> +{
+> +	struct vc_data *vc = tty->driver_data;
 > +
-> +&cci3_i2c0 {
-> +	camera@1a {
-> +		compatible = "sony,imx577";
-> +		reg = <0x1a>;
+> +	return vc->vc_bracketed_paste;
+> +}
 > +
-> +		reset-gpios = <&tlmm 135 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default", "suspend";
-> +		pinctrl-0 = <&cam3_default>;
-> +		pinctrl-1 = <&cam3_suspend>;
-> +
-> +		clocks = <&camcc CAM_CC_MCLK3_CLK>;
-> +		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
-> +		assigned-clock-rates = <24000000>;
-> +
-> +		dovdd-supply = <&vreg_s4a>;
-> +		avdd-supply = <&vreg_cam3_1p8>;
-> +		/* dvdd-supply = <&vdc_5v>; */
+>   enum {
+>   	CSI_DEC_hl_CURSOR_KEYS	= 1,	/* CKM: cursor keys send ^[Ox/^[[x */
+>   	CSI_DEC_hl_132_COLUMNS	= 3,	/* COLM: 80/132 mode switch */
+...
+> --- a/include/uapi/linux/tiocl.h
+> +++ b/include/uapi/linux/tiocl.h
+> @@ -36,5 +36,6 @@ struct tiocl_selection {
+>   #define TIOCL_BLANKSCREEN	14	/* keep screen blank even if a key is pressed */
+>   #define TIOCL_BLANKEDSCREEN	15	/* return which vt was blanked */
+>   #define TIOCL_GETKMSGREDIRECT	17	/* get the vt the kernel messages are restricted to */
+> +#define TIOCL_GETBRACKETEDPASTE	18	/* get whether paste may be bracketed */
 
-Either include vdc_5v or drop the comment.
+Do you plan on updating man-pages too?
 
-> +
-> +		port {
-> +			imx577_ep3: endpoint {
-> +				clock-lanes = <7>;
-> +				link-frequencies = /bits/ 64 <600000000>;
-> +				data-lanes = <0 1 2 3>;
-> +				remote-endpoint = <&csiphy3_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &qupv3_id_1 {
->   	status = "okay";
->   };
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index a867694b15b307344b72041e972bae6e7543a98f..d50f0d84fdb5130d8386b107702800382bcaac47 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -4756,6 +4756,138 @@ tlmm: pinctrl@f000000 {
->   			gpio-ranges = <&tlmm 0 0 149>;
->   			wakeup-parent = <&pdc>;
->   
-> +			cam0_default: cam0-default {
-> +				mclk {
-> +					pins = "gpio72";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio132";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +			};
-> +
-> +			cam0_suspend: cam0-suspend {
-> +				mclk {
-> +					pins = "gpio72";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio132";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-down;
-> +					output-low;
-> +				};
-> +			};
-> +
-> +			cam1_default: cam1-default {
-> +				mclk {
-> +					pins = "gpio73";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio133";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +			};
-> +
-> +			cam1_suspend: cam1-suspend {
-> +				mclk {
-> +					pins = "gpio73";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio133";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-down;
-> +					output-low;
-> +				};
-> +			};
-> +
-> +			cam2_default: cam2-default {
-> +				mclk {
-> +					pins = "gpio74";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio134";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +			};
-> +
-> +			cam2_suspend: cam2-suspend {
-> +				mclk {
-> +					pins = "gpio74";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio134";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-down;
-> +					output-low;
-> +				};
-> +			};
-> +
-> +			cam3_default: cam3-default {
-> +				mclk {
-> +					pins = "gpio75";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio135";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +			};
-> +
-> +			cam3_suspend: cam3-suspend {
-> +				mclk {
-> +					pins = "gpio75";
-> +					function = "cam_mclk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				rst {
-> +					pins = "gpio135";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-down;
-> +					output-low;
-> +				};
-> +			};
-> +
->   			cci0_0_default: cci0-0-default-state {
->   					pins = "gpio60", "gpio61";
->   					function = "cci_i2c";
-> 
+https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/man/man2const/TIOCLINUX.2const
 
----
-bod
-
+thanks,
+-- 
+js
+suse labs
