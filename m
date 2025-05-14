@@ -1,285 +1,80 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8462701D6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893B3187346;
+	Wed, 14 May 2025 11:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220881; cv=none; b=gLKaF9n9sJ3tbEQKZWsNS9iO7JreyAXBDrr0zooSKDj4P7c0x4zkOQIE6YuVEkt7i80IJXcQZVMRo3SfeduW+CC7++NNdHj2sNb3A7Yh0+s2/6/ZcAtrhpH+uvCSoMj7UQFgRrq3nHxKLSNe+rszCQbeskgwBonGADBbe0QGFtU=
+	t=1747220972; cv=none; b=Z9MAmoLLCzll3fqzvygOg6S1hysKv50ZbseWAzZZOKhCnMVBTDYwRQOxNV6k2+kaaRZGdiyPwZyeT6Qw/zEWcz43WdGLDn1I5VBeKB58Y74+lSwUA4LcmrmNKzmR+KR8UaDRfpHCfTollX70zTrolFwpKAKcO0Pzj9P0opyJehI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220881; c=relaxed/simple;
-	bh=pnumnEgMONqC2sB0h2/3e/8Px5yvws2pdjGq64D49Tg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qMfR4SrmCb6Nw0pIUSFdEOgcxxjYBX2PlVH+GppQmwSyvBDKH8WeDT/29ciFMxF/lE1fmIXhrlABgOuJwCrrqP9E9xHk/iDtXBNTVS5CKLSWe+NNRQ15dlzrLT+W1x2KxWQSSdPUSBDYlemmwZR87kGNuM3rK8tf789LrKEHvSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gw/kboGv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NptUQNUC; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1747220972; c=relaxed/simple;
+	bh=gs6oVQZghPS4vPL6JjYWbVPJu95Py1bNj+u6Ia9TJRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWEsm3zLaID+E7/O7RLa/BHY8jChIk9XTQima3EBA5iqxN2QS64MdFSRP73w7W6dDt9q4CVqkj+DUiK0n/8D85LrfwqWezoNqJYTC9vPtTGB9qIRyrBX+CeiC1NnZhxUziWdzLAaOZpJoTVi9Dt58K9MUvmwxHio15svwIUQ0FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CX3AZRd2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ii2l2BLL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gw/kboGv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NptUQNUC"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CX3AZRd2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ii2l2BLL"
+Date: Wed, 14 May 2025 13:09:27 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747220876;
+	s=2020; t=1747220969;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9L1epFIrxpVQ8bZI5Xv86SU+O2nArDBf9rMp846oO1Q=;
-	b=gw/kboGvHKtr3220Y4fWAvupL2+QPWKSaKrhK+EFDIy1LkV42q7CUQLA7ExGE95S1hKwqE
-	jbriUGYd9S0Iy3HY2FTBNtWd96uUS3CN0UjMGvlj7b0Pl74DlrA+EatFsvRh/hMtiarpwq
-	Vs7s7TdWuV1qBnMB3j1+c4j6ew7lSDHv05o3RiN5/a/UTI/iycPTpLpeqW8TIDIzHU+0Mu
-	mQLmiewu4fsVzcj2xsHS4Z51EJ37w0g5h7oE7YkQCnk+KTSGwYg05gaK7KhqooRbOHvuej
-	B27zeDXp7SLu6MozlyQztH0uX/on/2g/rz12wrTJvfZrwOHL5RJXllGxP17DJg==
+	bh=03vPXI9ofAu7xmrYXYtVxCHVRk/wSESU2ZQWVeOCLwU=;
+	b=CX3AZRd2reIxv0bRwhXGMfOC+DeuqFdSD96E+h0RVZR5gj3ZPYDeGTPFPqg82MuNhR3Lwk
+	XZ58aCiQfLHj9sv9ksEeVvYqwBBeyXkZQP1/rOWF/wUfgi+KvEblbNFWWkd+8IVx2JTnPW
+	zu3bbW2dCYNPlNalzqhsRep6XOgkdeYfTqveo5C5K5mxAnp+/Vev5WgRNflrYQ822NNClS
+	jEdqywlitgrAh2KH59T0NQeE0CCdrSPO9zl6sIcoByXLkKLh0vnAAB2EVKrDzFrcCNOe1F
+	vIRYPa/FBULE0cziLuWxRrXHiLsbDNya+sRaiZDWghLreGGNLVehsoHa0hnu8A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747220876;
+	s=2020e; t=1747220969;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9L1epFIrxpVQ8bZI5Xv86SU+O2nArDBf9rMp846oO1Q=;
-	b=NptUQNUC5PYCajkvYRCtRxwF23w8eD5EtDDGE6bulyVo0pf8Zj/O12MO0UNOSk/IbM27yv
-	zs4iOrK3f8QB9ZAA==
-To: linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: tglx@linutronix.de,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
+	bh=03vPXI9ofAu7xmrYXYtVxCHVRk/wSESU2ZQWVeOCLwU=;
+	b=Ii2l2BLLLc2LxtAsdtk70ZwjJyLSg37whUHMMhLEicnBgGDHjt0iQEfM/pqMhsRWMRlY36
+	zpvkFygs9uwGoGAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Cc: tglx@linutronix.de, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
 	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/2] local_lock: Move this_cpu_ptr() notation from internal to main header.
-Date: Wed, 14 May 2025 13:07:49 +0200
-Message-ID: <20250514110750.852919-2-bigeasy@linutronix.de>
-In-Reply-To: <20250514110750.852919-1-bigeasy@linutronix.de>
+	"David S. Miller" <davem@davemloft.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 2/2] cryptd: Use nested-BH locking for cryptd_cpu_queue
+Message-ID: <20250514110927.cwwZr3Sw@linutronix.de>
 References: <20250514110750.852919-1-bigeasy@linutronix.de>
+ <20250514110750.852919-3-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250514110750.852919-3-bigeasy@linutronix.de>
 
-The local_lock.h is the main entry for the local_lock_t type and
-provides wrappers around internal functions prefixed with __ in
-local_lock_internal.h.
+On 2025-05-14 13:07:50 [+0200], To linux-kernel@vger.kernel.org wrote:
+> cryptd_queue::cryptd_cpu_queue is a per-CPU variable and relies on
+> disabled BH for its locking. Without per-CPU locking in
+> local_bh_disable() on PREEMPT_RT this data structure requires explicit
+> locking.
+> 
+> Add a local_lock_t to the struct cryptd_cpu_queue and use
+> local_lock_nested_bh() for locking. This change adds only lockdep
+> coverage and does not alter the functional behaviour for !PREEMPT_RT.
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: linux-crypto@vger.kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Move the this_cpu_ptr() dereference of the variable from the internal to
-the main header. Since it is all macro implemented, this_cpu_ptr() will
-still happen within the preempt/ IRQ disabled section.
-This will free the internal implementation (__) to be used on
-local_lock_t types which are local variables and must not be accessed
-via this_cpu_ptr().
+This is meant as an example for #1 and should not be applied.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/local_lock.h          | 20 +++++++++----------
- include/linux/local_lock_internal.h | 30 ++++++++++++++---------------
- 2 files changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4f8310b..2ba8464195244 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -13,13 +13,13 @@
-  * local_lock - Acquire a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_lock(lock)		__local_lock(lock)
-+#define local_lock(lock)		__local_lock(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irq - Acquire a per CPU local lock and disable interrupts
-  * @lock:	The lock variable
-  */
--#define local_lock_irq(lock)		__local_lock_irq(lock)
-+#define local_lock_irq(lock)		__local_lock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-@@ -28,19 +28,19 @@
-  * @flags:	Storage for interrupt flags
-  */
- #define local_lock_irqsave(lock, flags)				\
--	__local_lock_irqsave(lock, flags)
-+	__local_lock_irqsave(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_unlock - Release a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_unlock(lock)		__local_unlock(lock)
-+#define local_unlock(lock)		__local_unlock(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irq - Release a per CPU local lock and enable interrupts
-  * @lock:	The lock variable
-  */
--#define local_unlock_irq(lock)		__local_unlock_irq(lock)
-+#define local_unlock_irq(lock)		__local_unlock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-@@ -49,7 +49,7 @@
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
--	__local_unlock_irqrestore(lock, flags)
-+	__local_unlock_irqrestore(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_lock_init - Runtime initialize a lock instance
-@@ -64,7 +64,7 @@
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
--#define local_trylock(lock)		__local_trylock(lock)
-+#define local_trylock(lock)		__local_trylock(this_cpu_ptr(lock))
-=20
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and d=
-isable
-@@ -77,7 +77,7 @@
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock_irqsave(lock, flags)			\
--	__local_trylock_irqsave(lock, flags)
-+	__local_trylock_irqsave(this_cpu_ptr(lock), flags)
-=20
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
- 	     local_lock(_T),
-@@ -91,10 +91,10 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __=
-percpu,
- 		    unsigned long flags)
-=20
- #define local_lock_nested_bh(_lock)				\
--	__local_lock_nested_bh(_lock)
-+	__local_lock_nested_bh(this_cpu_ptr(_lock))
-=20
- #define local_unlock_nested_bh(_lock)				\
--	__local_unlock_nested_bh(_lock)
-+	__local_unlock_nested_bh(this_cpu_ptr(_lock))
-=20
- DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
- 	     local_lock_nested_bh(_T),
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock=
-_internal.h
-index 8d5ac16a9b179..b4d7b24882835 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -99,14 +99,14 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);			\
- 		tl =3D (local_trylock_t *)l;				\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({			\
- 				lockdep_assert(tl->acquired =3D=3D 0);	\
- 				WRITE_ONCE(tl->acquired, 1);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);		\
- 		local_lock_acquire(l);					\
- 	} while (0)
-=20
-@@ -133,7 +133,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		preempt_disable();				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			preempt_enable();			\
- 			tl =3D NULL;				\
-@@ -150,7 +150,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		local_irq_save(flags);				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			local_irq_restore(flags);		\
- 			tl =3D NULL;				\
-@@ -167,15 +167,15 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);				\
- 		tl =3D (local_trylock_t *)l;				\
- 		local_lock_release(l);					\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({			\
- 				lockdep_assert(tl->acquired =3D=3D 1);	\
- 				WRITE_ONCE(tl->acquired, 0);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);		\
- 	} while (0)
-=20
- #define __local_unlock(lock)					\
-@@ -199,11 +199,11 @@ do {								\
- #define __local_lock_nested_bh(lock)				\
- 	do {							\
- 		lockdep_assert_in_softirq();			\
--		local_lock_acquire(this_cpu_ptr(lock));	\
-+		local_lock_acquire((lock));			\
- 	} while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
--	local_lock_release(this_cpu_ptr(lock))
-+	local_lock_release((lock))
-=20
- #else /* !CONFIG_PREEMPT_RT */
-=20
-@@ -227,7 +227,7 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock(__lock)					\
- 	do {							\
- 		migrate_disable();				\
--		spin_lock(this_cpu_ptr((__lock)));		\
-+		spin_lock((__lock));				\
- 	} while (0)
-=20
- #define __local_lock_irq(lock)			__local_lock(lock)
-@@ -241,7 +241,7 @@ typedef spinlock_t local_trylock_t;
-=20
- #define __local_unlock(__lock)					\
- 	do {							\
--		spin_unlock(this_cpu_ptr((__lock)));		\
-+		spin_unlock((__lock));				\
- 		migrate_enable();				\
- 	} while (0)
-=20
-@@ -252,12 +252,12 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock_nested_bh(lock)				\
- do {								\
- 	lockdep_assert_in_softirq_func();			\
--	spin_lock(this_cpu_ptr(lock));				\
-+	spin_lock((lock));					\
- } while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
- do {								\
--	spin_unlock(this_cpu_ptr((lock)));			\
-+	spin_unlock((lock));					\
- } while (0)
-=20
- #define __local_trylock(lock)					\
-@@ -268,7 +268,7 @@ do {								\
- 			__locked =3D 0;				\
- 		} else {					\
- 			migrate_disable();			\
--			__locked =3D spin_trylock(this_cpu_ptr((lock)));	\
-+			__locked =3D spin_trylock((lock));	\
- 			if (!__locked)				\
- 				migrate_enable();		\
- 		}						\
---=20
-2.49.0
-
+Sebastian
