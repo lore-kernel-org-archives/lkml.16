@@ -1,76 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26691DED5D;
-	Wed, 14 May 2025 15:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6A81C5D4C;
+	Wed, 14 May 2025 15:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234980; cv=none; b=iQOZT2UU9PLJu8lyx1FlhV9cz4Jsthaw/fMZUuT9PaBiIgMyB6B356D6blUtBNEIYXMvyCuNkwoCM1JvYs/mkdccmYAnqiR7hQt+FEJouzm2c4oGxRBrZwEnkytPciiwZHtxmPb2CtX68UuPHMSzYeMuPIAdMnV/DDkKLh9J4uM=
+	t=1747234984; cv=none; b=pOrYD4BKmhQuwd0i79WGXl8QMYLAZQCfSgLPxXknBzZB+rey88mzA6J1vamS1HDqaqnKEVRAfRBCG8qizDGyd4G0XuIQi6EtN4WinfPM8+MqdTzFEaarWn4eUE8EYDr09i4WwovbNAg0HJbHqGoU5PLus54mzr4OqUDL7PrtsB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234980; c=relaxed/simple;
-	bh=15Etcu4xfg85YZbJ8Ox9B4ke3VtIDNM5//5H62ElP5Y=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=srVrsI+Zt9QmDxZxnnGVHMNDU+5KHhMcXIqZPkLHXpA69VbUumU7guX8ItSjra7FVrpZmkfeRXh04P3ZqAyzD67fd+T1Nfie69BMd8u3Oy6fhmrj8KxoKZXGMHcQ2H++hsiJKy/xqyAYZEwBFrcKdf+/07eviNgLnoZ4o3oiqR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTb7jo6w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747234984; c=relaxed/simple;
+	bh=NVTeZvfxf0TTJ63mEFLn3cG2cWZrBFw3VUAXHUbszm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bp0mGUpIMy1YjGED5srYUe3WR2oH+btqOeTshZ9E/cOc5Bvzlh9dSGVtRLo/aqqL7p2t/XSa5HaA44XTRjf5bYNweTw9e21AyqMbXTBLaDIzQDObAR/bZGz4uXfisBOE0rJOJs8CTJg9eJuIffkN2562yRuRlZB8/Ei2GZ3p5Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhnHHmq5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTb7jo6w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB8AC4CEE3;
-	Wed, 14 May 2025 15:02:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhnHHmq5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A6DC4CEE9;
+	Wed, 14 May 2025 15:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234980;
-	bh=15Etcu4xfg85YZbJ8Ox9B4ke3VtIDNM5//5H62ElP5Y=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=UTb7jo6w30T8CfHLjPZc3AtxTyqT+WAeYMjDfjy9sbvmeAy4/uN2vH2W6hR79Q6af
-	 fJMnFMQz5JyUfVmi6JMHBTTK+d9LDhPxuY3hlp27QlnorQYH2/a0G70IPGeA09sSuv
-	 eU2gChFMELFg06Br5BPHfk4osa7O9X4sN6lrB8w4MyuTBrJnEB1ywTiNbmzVsSncsU
-	 E4mdRpTEoC1/AqsNS4QuT8t5vBTgbZd5zBltT1efs+jaZfi9yiA+b5JYNIfrLLiqiH
-	 E70up5Ri8Jlzj9DvRXn7LCZkk5Q/PBHkakRUVGH7oXWtosZJKRUdLfNk4fs9DYWS2u
-	 XN/dcfhPtvFXA==
-From: Vinod Koul <vkoul@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- "Sheetal ." <sheetal@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, 
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250512050010.1025259-1-sheetal@nvidia.com>
-References: <20250512050010.1025259-1-sheetal@nvidia.com>
-Subject: Re: [PATCH v2 0/2] Add Tegra264 support in ADMA driver
-Message-Id: <174723497746.115803.4058332926629460459.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 16:02:57 +0100
+	s=k20201202; t=1747234983;
+	bh=NVTeZvfxf0TTJ63mEFLn3cG2cWZrBFw3VUAXHUbszm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AhnHHmq5MDDYmKUdS8eKOXml59H0suRwaGsL2hAi0Ck9P42Jik5n3hudxYgcSmyTY
+	 qAWD/oAtR1TZh6f+ZohlCXlio6mU796xPt7bTCuxNRYOZY2X51SFCcGIG4ZBzoa8z2
+	 T6NzxNzDs7I6gl6a5ADsfDseUKsHk/D4Cu7CeBCj6/NmDdtaIFhWm4wzbdAmJtDEOl
+	 5bII2eQxMLWCNQcbM+48H+HpoahrpZjZxZw91ekhtK3y5INJuQYY6BhSPUcOiUFQY8
+	 BvZGBFWTjIHptbPHhD+dlZuXbRuqMs8wOYs3tpYz2hFmgRBvRZtXirRfD9KZ50ZtXL
+	 wZFYkh1aiD41w==
+Date: Wed, 14 May 2025 17:02:57 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 2/2] UFFDIO_API.2const: Add an entry for UFFDIO_MOVE
+Message-ID: <sxwdi5itwngdermj4w77ycwgyes4x7yyfl7v66mxj7co4xm6xm@27aqjwxvh4qk>
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-3-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nidofqj76swi3rsd"
+Content-Disposition: inline
+In-Reply-To: <20250512171922.356408-3-peterx@redhat.com>
 
 
-On Mon, 12 May 2025 05:00:08 +0000, Sheetal . wrote:
-> The patch series includes the necessary changes to enable
-> support for the Tegra264 platforms in ADMA drivers.
-> 
-> Changelog
-> =========
-> 
-> v1 -> v2:
-> ---------
->  - Patch 1/2: Update commit message and Tegra264 bindings properly.
->  - Patch 2/2: No header update.
-> 
-> [...]
+--nidofqj76swi3rsd
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 2/2] UFFDIO_API.2const: Add an entry for UFFDIO_MOVE
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-3-peterx@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20250512171922.356408-3-peterx@redhat.com>
 
-Applied, thanks!
+Hi Peter,
 
-[1/2] dt-bindings: Document Tegra264 ADMA support
-      commit: b81cd165e4a5599bd96c11adf40872fcbc5fa54f
-[2/2] dmaengine: tegra210-adma: Add Tegra264 support
-      commit: 21e12738779f74d9ae63faa995f5743656eadc07
+On Mon, May 12, 2025 at 01:19:22PM -0400, Peter Xu wrote:
+> Add the entry for UFFDIO_MOVE in UFFDIO_API.
+>=20
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 
-Best regards,
--- 
-~Vinod
+Should we add the following tag?
+
+Fixes: d7dec35a3b19 (2025-05-01; "man/man2/ioctl_userfaultfd.2, man/man2con=
+st/UFFDIO_MOVE.2const: Document UFFDIO_MOVE")
+
+Also, I think the subject should mention UFFD_FEATURE_MOVE, or at least
+somewhere in the commit message.
 
 
+Have a lovely day!
+Alex
+
+> ---
+>  man/man2const/UFFDIO_API.2const | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/man/man2const/UFFDIO_API.2const b/man/man2const/UFFDIO_API.2=
+const
+> index 1c554107a..17ea6f905 100644
+> --- a/man/man2const/UFFDIO_API.2const
+> +++ b/man/man2const/UFFDIO_API.2const
+> @@ -204,6 +204,12 @@ ioctl.
+>  If this feature bit is set,
+>  the write protection faults would be asynchronously resolved
+>  by the kernel.
+> +.TP
+> +.BR UFFD_FEATURE_MOVE " (since Linux 6.8)"
+> +If this feature bit is set,
+> +the kernel supports resolving faults with the
+> +.B UFFDIO_MOVE
+> +ioctl.
+>  .P
+>  The returned
+>  .I argp->ioctls
+> --=20
+> 2.49.0
+>=20
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--nidofqj76swi3rsd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgksJsACgkQ64mZXMKQ
+wqncdRAAsZOy2KyMvMv5Z9/V2yr1nO8j9UP7z1ByyxhBVlcMzzyuXVSIR/AQK0QF
+iaGFAhSowNgMIuN8opxzarC3m84s/zt4WsbnyNXcnJeVk/QgrZeIWO/79yfVd+mS
+3zF8WZlGrGMDpqBYwpnuAMNV8LL/tqEXWmb6HnbVf0Wuby+dg7AIkb1hVqU0BWaE
+cQdj8uV0Lp5I7mR0JCM/Sp8008XnxSINcvxRFd5QUhNX4qWiPFYV6eTYwAIpnIMG
+L028Vp972eBRUwFzdUBin+jg3ssBsjLE7LmPllP+lNEjLLASWUd/GJTRNEv10hbI
+16cqSMupIh824qW2LlyrQqvtLU9YOt5T2ky5XZ8ShLeUUYtubIChm91AkuJhDAJz
+LCJV/NoPzJr+wFCWRvhZ8m1IBDE77/E85x0R255rcJXw6Hj+fEemNs0kZQTJYlhH
+LgW3iWSpTvMod7HF/ZMP6qNHswR7iO+Nyv7sKs5QZbX7qMN12QpUcT1Rj0ryFsuF
+/Q6NIj9/bHZ7BDw8TJDm76L7v67rD/7S509Wce7VeYPLQioDPQMBlBdcOggRN20X
+Z2NloDd7cX/X2FKxihxpTTyXGa/cImCFxO9EPOTi9xNs5lsCAXzVsKVuEbHfomHb
+I7kK4tiyFriLUScWrzqWlSH/6QoqGNfA00g9XRWkKPB/quVYyws=
+=ooxR
+-----END PGP SIGNATURE-----
+
+--nidofqj76swi3rsd--
