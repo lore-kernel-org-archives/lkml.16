@@ -1,113 +1,95 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A6E221F21;
-	Wed, 14 May 2025 08:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282084B5AE;
+	Wed, 14 May 2025 08:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212876; cv=none; b=gVf6Tbna2GnqxRxNpOVMjkduDrfu/9ue9+Mr7Mt/HoZ5+oVlvO/AxGNG3IsLJivwbcDOIoE9/ujVjPSJi7sLkR75wTPmA52LAeeSfzUrqd19CJX4jFbnYkrAjygn2h6zRkNtpw/HnMForhjy7d5KYvZ8oh7TJqpY4u7moSaRyYQ=
+	t=1747212883; cv=none; b=LMrnaY4TJLlAO5ibJYkVIV2eaav2Ip+6oZZh3HEvqHB/NfXMjf/LGG9rYxwqQsTNWpLzOpBK8wZdJK5WpeJhGsso/5tWjAbnkGLaS2Ll38vmB+2e62lG7CZGt69wb59wbwR/yYTjH45T2EoWKx4wlZtSZJitlzA/rQk8NjlLflA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212876; c=relaxed/simple;
-	bh=NSB3KYpYuZwE5geG5kldlOXmJgRY/zvHKfDYIujp2c0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iAwOI32qPtflvVMqCUDkmo93XHslHDrlwAs36xe7hztO420GYniBik/NdIRwo/B9xk5QIekoT1xnqLTKneoLWHgSzZkYQjAIRYGWWxLt57Zoc0WzfpkuBIKw9wN1oqasKwwmCZOIqvVMtk3e/6n9YeGhut6ognrWIorWyhH18eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=geX9DKyC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=76FbdPpm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747212883; c=relaxed/simple;
+	bh=xw5uD58QST9stWyPF9wBRPxKJjr7Ja1UDw/xcOocFfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejHYK31xdQIuUCFn/v6+K8KJwhAeTeoHOuvohJAixAzZZ1SOL9WMr2mpZJeUQL+Q/LKjTZyPrpOwYHBzeD+m0flframRYcYPNn/JLvxxClzMIKzUGohtuYca2CryXLclETcbiZAmkaRIA4CM8ycjtsUYMDoAszb28DBznmxqtbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZ11nnEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="geX9DKyC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="76FbdPpm"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747212873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dR0nfxpeD75uPlrjbS3tiAFIhXTeUmWW74aUM3I0kug=;
-	b=geX9DKyCf7fqXREn5zPWbkALfbNRagl//Y6J6TuCBDhHCW915C3FL/nPfc8QCt/AmzaXAl
-	hbehstWaTavr5kAqtygUb6UZkv3oH5QuySfwFMp4xojhZ9esyerhPLFmVpeqS1psvIGRcD
-	+Amn0rOvr4uf+6MHGsmuRjq4MF1URIYlUDKHTnyrNAqBqCJ8NtRemJcHH504gQi9432Fpg
-	sTviWQjkhdxfWU3xTSVEn1wm7DhxPAJnDK3cfct6zGItUUr6VQfsflxfSg39c9pr0L6kqC
-	/2d40uUr7sqQM8jmHjle0Yy/XlszOJ+R+CauRPwHGtXY6TcSDg8iVtH0v6lpAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747212873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dR0nfxpeD75uPlrjbS3tiAFIhXTeUmWW74aUM3I0kug=;
-	b=76FbdPpmfQRFgytAgOIJ4zOF2NdKYISUCWzG/cKWpCUHfvON6wwr5dbtHSjHcAZ6yCFQkJ
-	p6YHQSyIpgjK3xDw==
-To: Miroslav Lichvar <mlichvar@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Richard
- Cochran <richardcochran@gmail.com>, Christopher Hall
- <christopher.s.hall@intel.com>, David Zage <david.zage@intel.com>, John
- Stultz <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Werner Abt
- <werner.abt@meinberg-usa.com>, David Woodhouse <dwmw2@infradead.org>,
- Stephen Boyd <sboyd@kernel.org>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?=
- <thomas.weissschuh@linutronix.de>, Kurt Kanzenbach <kurt@linutronix.de>,
- Nam Cao <namcao@linutronix.de>, Alex Gieringer <gieri@linutronix.de>
-Subject: Re: [patch 00/26] timekeeping: Provide support for independent PTP
- timekeepers
-In-Reply-To: <aCRCe8STiX03WcxU@localhost>
-References: <20250513144615.252881431@linutronix.de>
- <aCRCe8STiX03WcxU@localhost>
-Date: Wed, 14 May 2025 10:54:33 +0200
-Message-ID: <871psrk1x2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZ11nnEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3C5C4CEE9;
+	Wed, 14 May 2025 08:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747212882;
+	bh=xw5uD58QST9stWyPF9wBRPxKJjr7Ja1UDw/xcOocFfc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fZ11nnEjAdHJMfSucx20z0NavXjnsj8DnmLykqMROz0e5BiM9ovpfHz5mrhf+4daL
+	 uxGbwU1YtnjSrpltFMHNdPtxoLslRr/Wbj1xEZWNZkSiRFNpRAMU8Zp50B1Esopl9B
+	 zMxud3HoZ/1ooyXaWwinfk9uNcM+Uto4AJmrA6ioKJLN6X+cuUdHUfvcIBwu/vgAR3
+	 j8STdXt93KWcwE2q8zay6QWAaa88kkL8DXb9Q5QgiPTZm/bSwMg5w2wl+6Naf0qwlW
+	 I9/FWnnru/FvjwFqWrC3nxzh0FkMmiH65NR4X4GpLb1xT+P9muguD50bACwx7Qbips
+	 pNB31oJ6FfWeg==
+Date: Wed, 14 May 2025 10:54:37 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Jiaxin Yu <jiaxin.yu@mediatek.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/13] ASoC: mediatek: use reserved memory or enable
+ buffer pre-allocation
+Message-ID: <aCRaTY76dnaavsrd@finisterre.sirena.org.uk>
+References: <20250424102509.1083185-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="U6cHvsBIp+ec+dLN"
+Content-Disposition: inline
+In-Reply-To: <20250424102509.1083185-1-wenst@chromium.org>
+X-Cookie: Well begun is half done.
 
-On Wed, May 14 2025 at 09:12, Miroslav Lichvar wrote:
-> On Tue, May 13, 2025 at 05:12:54PM +0200, Thomas Gleixner wrote:
->> This series addresses the timekeeping part by utilizing the existing
->> timekeeping and NTP infrastructure, which has been prepared for
->> multi-instance in recent kernels.
->
-> This looks very interesting. I ran some quick tests and it seems to
-> work as expected from the user space point of view. I can enable the
-> clock and synchronize it to a PTP HW clock or the system REALTIME
-> clock. ADJ_TICK works too.
 
-Cool.
+--U6cHvsBIp+ec+dLN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> To get accuracy and stability comparable to CLOCK_REALTIME, there will
-> need to be some support for cross timestamping against CLOCK_REALTIME
-> and/or PTP HW clocks, e.g. a variant of the PTP_SYS_OFFSET_PRECISE and
-> PTP_SYS_OFFSET_EXTENDED ioctls where the target clock can be selected.
+On Thu, Apr 24, 2025 at 06:24:54PM +0800, Chen-Yu Tsai wrote:
 
-Yes, that's required, but for that to implement we need the core muck
-first :)
+> This is v2 of what was just a single patch "ASoC: mediatek: re-enable
+> buffer pre-allocation on some platforms". Link to v1:
+>=20
+>     https://lore.kernel.org/all/20250401085659.1222008-1-wenst@chromium.o=
+rg/
+>=20
+> Angelo requested that these platforms use reserved memory regions if
+> possible, and fall back to pre-allocated buffers only if that fails,
+> to align with other MediaTek SoCs / platforms that already use reserved
+> memory. The series covers MediaTek's MT8173, MT8183, MT8186, and MT8192
+> SoCs.
 
-> The "PTP" naming of these new clocks doesn't seem right to me though
-> and I suspect it would just create more confusion. I don't see
-> anything specific to PTP here. There is no timestamping of network
-> packets, no /dev/ptp device, no PTP ioctls. To me they look like
-> secondary or auxiliary system realtime clocks. I propose to rename
-> them from CLOCK_PTP0-7 to CLOCK_REALTIME2-9, CLOCK_AUXILIARY0-7, or
-> CLOCK_AUX0-7.
+AngeloGioacchino?
 
-CLOCK_REALTIME2-9 would be weird as those clocks have not necessarily a
-relationship to CLOCK_REALTIME. They can have a seperate resulting
-frequency and starting point when they are soleley used for application
-specific purposes within a network (think automation, automotive, audio
-etc.).
+--U6cHvsBIp+ec+dLN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-CLOCK_AUX0-7 sounds really good to me and makes sense. I picked PTP
-because that's where I was coming from. I'll rework that accordingly and
-make the config enablement independent of PTP as well:
+-----BEGIN PGP SIGNATURE-----
 
-config POSIX_CLOCKS_AUX
-       bool "Enable auxiliary POSIX clocks" if POSIX_TIMERS
-       help
-            Add blurb
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkWk0ACgkQJNaLcl1U
+h9DPngf9HFu/3ZkDnoocrHYYu5p+eGsgCT9kWQ5SHJS29c9lsMZ30HwQZo/2vDhr
+LDZ87sH8is2iPnBLPKzC5eJTKi7IHkj15yVKd3yWn050kVCPM3GICvomDajGSSr9
+byq5kvn7QdweGf0pLByBQuowHY6cG3ogpFmihc3YJiNxfpGDSATvAht6P9dRNJSD
+UxzlHu9i5iEz1h9J3SHF/ywynx897V9X3JgmB8ygPA2kqen58+D6uecKrGCJYpjf
+0e1GaIuq5ZPDzo0uDXz+s1rWUydrVSs9So23cBxhuWirlc+LkzQUvPULwUWlWV9A
+uR+j5rrJ6Bqy9TXGYNLkZ/W4dp63dA==
+=pmSJ
+-----END PGP SIGNATURE-----
 
-and PTP can eventually select it (or not). Something like that.
-
-Thanks,
-
-        tglx
+--U6cHvsBIp+ec+dLN--
