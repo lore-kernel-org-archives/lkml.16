@@ -1,53 +1,38 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DF31F540F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848FB1F3BBB
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747199350; cv=none; b=bkLKQgeycRxp/FWp3Vl8nZf4BFqaXScG/yUnI2tLgIyHs9oga3rLr9PmpbmC5op1JwSywHOhTOsQ7REfDE6Vt7Mos3cmJcMHZNwbZDzaZLVGPggCp4mNwcPJ4il9oD7dxQoShrW+SAqNTzEGeH/INxA9NkW0x3eDxdje6DyZBAs=
+	t=1747199412; cv=none; b=gAe2oG9mPPuaacK/7weJzMc7AyCKB8r3SH30FjZKHqfZKVMn0csiawyQBYGoXdQJfIW2Lt0O02yUOGKSdrn2ZElQ4VgR3B/d+pPPRSxN9lgqDJV4oI3887EdZ73KVG81IoVTBKdID0Hdk9LcghUqgOSqlvYKrmU8XUI/QsgvdbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747199350; c=relaxed/simple;
-	bh=cMXg1Zoafpf6T/Bl4D/YqFLGcqsmHolvDIggz69J7Jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VtTtDQOnt/fwUEm3l3qTp0M5VjaYpXgcwAtcB5ROWNnln/vVSAhgzQ3MIIbHcF9VMJJnL7L8V5ONNkkKfTl/IkKwFVwAS4G2A89G3wuqpSa2bFVUhEE0zWNF3RvAKUlKySavJlCqp0N8aQkddc66WMpQAgw2ZAleFPEvRxlX2a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BB6zKS6f; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747199412; c=relaxed/simple;
+	bh=PDa29Sv9SoHZihYYkY9aK12HwQ73g5N7pKfrjrFP0V0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QQJyre2DHQWbuUAdNB5R9mwQZlcZSFf1samAsoyaEzEcXWEwpg5R/WlS+wDYm4Nfzj8wLfWJAMBAZgMGY1pwTfXs8Em1LbUqnWbJ/RLIt7pBPgk2bUATsby2whi75nFeMulT+DSH1xWYMsavNhtN86wmw6Ru4F126RQSOEox/D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/c2Pc4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BB6zKS6f"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747199346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NuiqYU5xQUJzlD4OF0DY6DzP++awncv0NldqTEFbrbk=;
-	b=BB6zKS6fZt3IpK/PR2CCdNoGUYOkfDyeW0jJMjAtx0JRxkzb3wR1CwWeIyeUXF6F8CVPyQ
-	RIxNVBrlQPoCKw9bPu6nsPBuDBXncIYIHIJ/NBJu2AQ/6VwHqfxddK4NDXmwlv6OuYPqAu
-	3X6ncWadCJ7SIUgeaoUy8vmHHxLLaVg=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 7/7] memcg: objcg stock trylock without irq disabling
-Date: Tue, 13 May 2025 22:08:13 -0700
-Message-ID: <20250514050813.2526843-8-shakeel.butt@linux.dev>
-In-Reply-To: <20250514050813.2526843-1-shakeel.butt@linux.dev>
-References: <20250514050813.2526843-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/c2Pc4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69834C4CEED;
+	Wed, 14 May 2025 05:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747199412;
+	bh=PDa29Sv9SoHZihYYkY9aK12HwQ73g5N7pKfrjrFP0V0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g/c2Pc4rVhOHSrmO4q6xV8oxmNNeeQsNkdRk9oxrUgvL28La47hLehOJIxiXY8gFn
+	 1zDGS6a+6RwDoSmNORI1/pi8rfQ+E/E+Uw/KFT9XQ4eNeV/zMv1J2jN5XRf0kk50kN
+	 VCEIHsy15yeGw6+k/Nnk/XiXM5LqA4zzwE5Qh8ez8QdEkuiY8FD382ZKdboUikAYTb
+	 hFZhR5iHT0My+2vOZ0HbQ8KoFpfwOzMLzFKk2L7bIuCgncCm4ZOPxnndUzObKIomQD
+	 G8AMqGpHt1r2HPSGuCEa4svpxsYDQmuZJ1lkbdxIxjMuuzMDudkoVkHtTj3SI9OrGz
+	 SRw/cX7Wjtq3g==
+From: alexs@kernel.org
+To: corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	Alex Shi <alexs@kernel.org>
+Subject: [GIT PULL] Chinese-doc changes for v6.16-rc1
+Date: Wed, 14 May 2025 13:09:54 +0800
+Message-ID: <20250514050954.56918-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,97 +40,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-There is no need to disable irqs to use objcg per-cpu stock, so let's
-just not do that but consume_obj_stock() and refill_obj_stock() will
-need to use trylock instead to avoid deadlock against irq. One
-consequence of this change is that the charge request from irq context
-may take slowpath more often but it should be rare.
+The following changes since commit 9f488ccd0f567ca66a146bc31e6578cba3b5abee:
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/memcontrol.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+  Merge branch 'mauro' into docs-mw (2025-04-09 12:24:51 -0600)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 78a41378b8f3..73b19137901a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1907,18 +1907,17 @@ static void drain_local_memcg_stock(struct work_struct *dummy)
- static void drain_local_obj_stock(struct work_struct *dummy)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 
- 	if (WARN_ONCE(!in_task(), "drain in non-task context"))
- 		return;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	local_lock(&obj_stock.lock);
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	drain_obj_stock(stock);
- 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
-+	local_unlock(&obj_stock.lock);
- }
- 
- static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-@@ -2901,10 +2900,10 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			      struct pglist_data *pgdat, enum node_stat_item idx)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 	bool ret = false;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	if (!local_trylock(&obj_stock.lock))
-+		return ret;
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
-@@ -2915,7 +2914,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			__account_obj_stock(objcg, stock, nr_bytes, pgdat, idx);
- 	}
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
-+	local_unlock(&obj_stock.lock);
- 
- 	return ret;
- }
-@@ -3004,10 +3003,16 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		enum node_stat_item idx)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 	unsigned int nr_pages = 0;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	if (!local_trylock(&obj_stock.lock)) {
-+		if (pgdat)
-+			mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
-+		nr_pages = nr_bytes >> PAGE_SHIFT;
-+		nr_bytes = nr_bytes & (PAGE_SIZE - 1);
-+		atomic_add(nr_bytes, &objcg->nr_charged_bytes);
-+		goto out;
-+	}
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
-@@ -3029,8 +3034,8 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		stock->nr_bytes &= (PAGE_SIZE - 1);
- 	}
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
--
-+	local_unlock(&obj_stock.lock);
-+out:
- 	if (nr_pages)
- 		obj_cgroup_uncharge_pages(objcg, nr_pages);
- }
--- 
-2.47.1
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/alexs/linux.git tags/Chinese-doc-6.16-rc1
+
+for you to fetch changes up to 794056966da84f46679c970133f358733ea6d847:
+
+  MAINTAINERS: Change Yanteng's email address (2025-04-10 16:26:00 +0800)
+
+----------------------------------------------------------------
+Chinese translation docs for 6.16-rc1
+
+This is the Chinese translation subtree for 6.16-rc1. It just
+includes few changes:
+        - MAINTAINERS: Change Yanteng's email address
+        - docs/zh_CN: Add how-to of Chinese translation
+        - Add networking translation index
+        - Docs/zh_CN: Translate msg_zerocopy.rst to Simplified Chinese
+
+Above patches are tested by 'make htmldocs/pdfdocs'
+
+Signed-off-by: Alex Shi <alexs@kernel.org>
+
+----------------------------------------------------------------
+Wang Yaxin (2):
+      Docs/zh_CN: Translate index.rst to Simplified Chinese
+      Docs/zh_CN: Translate msg_zerocopy.rst to Simplified Chinese
+
+Yanteng Si (2):
+      docs/zh_CN: Add how-to of Chinese translation
+      MAINTAINERS: Change Yanteng's email address
+
+ Documentation/translations/zh_CN/how-to.rst                  | 459 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Documentation/translations/zh_CN/index.rst                   |  24 ++---
+ Documentation/translations/zh_CN/networking/index.rst        | 160 ++++++++++++++++++++++++++++++++++
+ Documentation/translations/zh_CN/networking/msg_zerocopy.rst | 223 +++++++++++++++++++++++++++++++++++++++++++++++
+ MAINTAINERS                                                  |   2 +-
+ 5 files changed, 855 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/translations/zh_CN/how-to.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/index.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/msg_zerocopy.rst
 
