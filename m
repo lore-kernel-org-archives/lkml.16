@@ -1,80 +1,73 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6E122D7B2
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E965C259CB1;
+	Wed, 14 May 2025 09:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216311; cv=none; b=O5ilZtwRw72f7fsgObk19DluTj8DLcuOXF/4tDIOZ/4uZKp9uCbUO4Il69w4UXvo1KQnsxQzSpBl13aOIeBBJRY3HR40e3XNRb2DKk+/rEty3GPvw0644qycTUKNFAMiZm1HI66xqt3JT0YIycYl63O9Pqgnp5mN1eH20nduWPo=
+	t=1747216373; cv=none; b=h9AOqXzH9DSo1lRlgUxU+QhKUWBfrQRfVEYCgWRqJ1u98WlcO++V01Q2fMs1eFsVsppKm8sNEgcVw8ln5RHOVb1y0Hrm72mMoLawE+MjTkVgSMc56brlyf2mkhSb37P8XBxtBwcM6HDGahvVv3xBvKJWTeQMFbGuJ2rOqWkNPAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216311; c=relaxed/simple;
-	bh=0UCu58qx5+r5o2FkoxTbEmZMlUiAS0WASZpHPgpTZJg=;
+	s=arc-20240116; t=1747216373; c=relaxed/simple;
+	bh=DlDgEjTIw8VY2y5DvL0wFj1k14fF3hRHHDZCoRPLVMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4btbfTA/Wm1FPAuklMrQHIshONj0EaoanhJvpMWypsWPAq7Ywh4KlX6WN99pz96GVkVlig7pRN6HNZj8U64DqipuOvwwWlWzAkRw0Il5tEBUqxklYlOsxQDgWQ4QfkqOaTBHawTcIFp6JxOI5DtPibiO/rvOd57f+lXJHOR0Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QkKLksqX; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TVpoJ/FcIarnB6+gdACaHpcZYt8hO3oHYpEXa5Cvu0nBHijRLJvqasHBLML3OC6D3KvuyWmXy/M03d9/LPmIkAqj8pRUzHJoJlIPRseM4IH2xi9t14zElawQ3vbM0vrpLxYQclQ7Mv5+jzx+yUrsGTnNN/Nc3chmG7oQXvzm6+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xp3ySUz6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QkKLksqX"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f624291db6so11247454a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747216307; x=1747821107; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BVybws1t+U40/vbtZIfwab2hNrCdVfeHjc91VuDwjDg=;
-        b=QkKLksqXEpMVIOBhNhrC+QEbTjfiONxRrVZwgNHrIAjEj87rzkusngGuuVit2oQV0n
-         mQGMNkgLtJ2KYt+MgC6TyU/N723i4jTxgSE55mgaOJMx6Ee3vc7ufV5IHNVcWSuBDswo
-         pEuXoBK84mROqaM5zCZ2O5dA4YNwbHIbxVFpz73NjsZoz90ATvZyexYxSTbtmxYzh8Op
-         lisp7QGm3A3XPl+OjJecziEeM6jgVGElBe7xlPvhOyYh9OhOGaabR+Vta9XCLUS/pdej
-         mlKQjJARDKunglS1Lvtvfn6yQ5d1CujD/2d8+nyy/3k0/2TcV3yHOk6UwHc5SBCtDy2+
-         8AlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747216307; x=1747821107;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BVybws1t+U40/vbtZIfwab2hNrCdVfeHjc91VuDwjDg=;
-        b=HPJi2O84jLnOqdCIX9RCQ2aiTG9WBcgN6N0rIc9w3WZSzM8mvNcyyEqB3bLUPyVYpE
-         Z+82Cg6xXcx09Qed6QeSZ3GiXlySZjV686Q1nog8LgCVsjTribeuhSHTgDEqk0WYF7+e
-         oL/Nsw/l+ys1tnkXYDdMQYlPWcbiK9N+vp03IvNCQkA8r6iVFoUsBYV/ofRii1zyQmCb
-         z5k3HWK5/SkQy06wGgalFBqEu7kxZ4AbRC/dMeN3lyLicdbeJsWNQPB0UkFGYa2WdNyr
-         rRyc9zb+aUcFg0EpgrK1mrNhUl9w2/VHqflzfClgr9ijxw1qrfHxhTxpgjcnn6z4FaZP
-         wSrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKAzxbyRMsaYsFrW4X3RjZQArXz4mjvSPJtH72QTyZM6TE+Opm4VrMG/4OlH++HHvls0sGY9crL3sGHLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPnnIZ0w/GNs6SH5CQUt9r8RJ9r6CxfBuW8rkpO/NkXqhIlHHk
-	1Yt4DKTkdIuwkOfSEyVTPQpAe7tFjSiY9EoRIMPDLIPrweYq0hqtEmbq8zkoXo0=
-X-Gm-Gg: ASbGnct+UR3cpadMP/dODREGubFBEpUXJlhTJDNegwkh6jLsXsviCacp+K84pAC53HQ
-	ifzsny6x7xcRT5c41U2mfL4l8vW5cthVXoYoNjquYB7nWy4GP9Q+1XC297nhEJ12h67wP3WxiLM
-	SAXTwIUDbg2m86xNhZNc62TSnGxsyFv+xFEAQyZti2dYkXVZG1YmJk3cLyURytX3LXRx78pFj1w
-	70J1pYBSeXa2QjBhrRGEB1mjVgaC8o2gVJKMXyg62GHkxkeFhc/ZOhe6tCrQzKjjzC6dEUt8MYf
-	qGAE9JWOr8bw8g8YXoxB2g6H/eaYMFwOU/Avhkq9ym98/EgwAhz3DQ==
-X-Google-Smtp-Source: AGHT+IGSd1rvJVl8u3DfNMX7dhF6Gp8/xiI2G+noTAd6SIJPTmFef2VtUgYEzSt6Qp8SoVIvBvzS5Q==
-X-Received: by 2002:a17:907:9443:b0:ad2:1d1c:1c8e with SMTP id a640c23a62f3a-ad4f750e521mr279713966b.49.1747216307144;
-        Wed, 14 May 2025 02:51:47 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad221288a91sm873089766b.15.2025.05.14.02.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 02:51:46 -0700 (PDT)
-Date: Wed, 14 May 2025 11:51:44 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Miroslav Benes <mbenes@suse.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@redhat.com>, mingo@kernel.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, jpoimboe@kernel.org,
-	jikos@kernel.org, joe.lawrence@redhat.com,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] sched,livepatch: Untangle cond_resched() and
- live-patching
-Message-ID: <aCRnsN-2x4vpjpCx@pathway.suse.cz>
-References: <20250509113659.wkP_HJ5z@linutronix.de>
- <alpine.LSU.2.21.2505131529080.19621@pobox.suse.cz>
- <20250513140310.GA25639@noisy.programming.kicks-ass.net>
- <alpine.LSU.2.21.2505131604530.19621@pobox.suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xp3ySUz6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747216372; x=1778752372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DlDgEjTIw8VY2y5DvL0wFj1k14fF3hRHHDZCoRPLVMY=;
+  b=Xp3ySUz6q9qtPP+5sTiRQAgBhy8FmmJHhYuMp9dYgdMo6WJpUNMR6oGr
+   9TyBKumXOm2Lki68qA4+Mvmav9NZIQywgV7fq0YF1UT204l8NrRSOc/6w
+   lToMb8yh4RY8sMQ2UY2Pk8x/XYGlLOccH3OVwp+a5rqnbWOH1MrnwRjdf
+   bR0ws3VtItHwUQy8qIdRJFlqm9Duk56xOv6bPxXn8OQZHoklR00It39vL
+   L+CDr7zp37XJELeV0KPF9t8ThV8R8ZOwKZIj6L11yPLDuMR9LMtsOMfcL
+   OgiYj9DXhjDuYuXxNhPPy9AVw+/su1fsaC9ylKMRcjwSyZ9s7AoHamrwK
+   Q==;
+X-CSE-ConnectionGUID: jg1Dc9RuRb+dsHy9BLFutg==
+X-CSE-MsgGUID: dC78j0cpTL2dfPSUXrb3fQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="52911883"
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="52911883"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 02:52:51 -0700
+X-CSE-ConnectionGUID: 1vGlQfU6TTiVJ/FihayGEA==
+X-CSE-MsgGUID: vcaR5YHEQmC6RgOptATxfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="142866085"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 14 May 2025 02:52:46 -0700
+Date: Wed, 14 May 2025 17:47:12 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Zhi Wang <zhiw@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Alexey Kardashevskiy <aik@amd.com>,
+	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	vivek.kasireddy@intel.com, dan.j.williams@intel.com,
+	yilun.xu@intel.com, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aCRmoDupzK9zTqFL@yilunxu-OptiPlex-7050>
+References: <371ab632-d167-4720-8f0d-57be1e3fee84@amd.com>
+ <4b6dc759-86fd-47a7-a206-66b25a0ccc6d@amd.com>
+ <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
+ <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
+ <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
+ <20250509184318.GD5657@nvidia.com>
+ <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
+ <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
+ <20250513130315.0158a626.zhiw@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,61 +76,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2505131604530.19621@pobox.suse.cz>
+In-Reply-To: <20250513130315.0158a626.zhiw@nvidia.com>
 
-On Tue 2025-05-13 16:05:51, Miroslav Benes wrote:
-> On Tue, 13 May 2025, Peter Zijlstra wrote:
+On Tue, May 13, 2025 at 01:03:15PM +0300, Zhi Wang wrote:
+> On Mon, 12 May 2025 11:06:17 -0300
+> Jason Gunthorpe <jgg@nvidia.com> wrote:
 > 
-> > On Tue, May 13, 2025 at 03:34:50PM +0200, Miroslav Benes wrote:
-> > > Hi,
-> > > 
-> > > thanks for the updated version.
-> > > 
-> > > On Fri, 9 May 2025, Sebastian Andrzej Siewior wrote:
-> > > 
-> > > > From: Peter Zijlstra <peterz@infradead.org>
-> > > > 
-> > > > With the goal of deprecating / removing VOLUNTARY preempt, live-patch
-> > > > needs to stop relying on cond_resched() to make forward progress.
-> > > > 
-> > > > Instead, rely on schedule() with TASK_FREEZABLE set. Just like
-> > > > live-patching, the freezer needs to be able to stop tasks in a safe /
-> > > > known state.
-> > > > 
-> > > > Compile tested only.
-> > > 
-> > > livepatch selftests pass and I also ran some more.
-> > >  
-> > > > [bigeasy: use likely() in __klp_sched_try_switch() and update comments]
-> > > > 
-> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > 
-> > > Acked-by: Miroslav Benes <mbenes@suse.cz>
-> > > 
-> > > A nit below if there is an another version, otherwise Petr might fix it 
-> > > when merging.
+> > On Mon, May 12, 2025 at 07:30:21PM +1000, Alexey Kardashevskiy wrote:
 > > 
-> > Petr or Peter?
+> > > > > I'm surprised by this.. iommufd shouldn't be doing PCI stuff,
+> > > > > it is just about managing the translation control of the device.
+> > > > 
+> > > > I have a little difficulty to understand. Is TSM bind PCI stuff?
+> > > > To me it is. Host sends PCI TDISP messages via PCI DOE to put the
+> > > > device in TDISP LOCKED state, so that device behaves differently
+> > > > from before. Then why put it in IOMMUFD?
+> > > 
+> > > 
+> > > "TSM bind" sets up the CPU side of it, it binds a VM to a piece of
+> > > IOMMU on the host CPU. The device does not know about the VM, it
+> > > just enables/disables encryption by a request from the CPU (those
+> > > start/stop interface commands). And IOMMUFD won't be doing DOE, the
+> > > platform driver (such as AMD CCP) will. Nothing to do for VFIO here.
+> > > 
+> > > We probably should notify VFIO about the state transition but I do
+> > > not know VFIO would want to do in response.
 > > 
-> > That is, who are we expecting to merge this :-)
+> > We have an awkward fit for what CCA people are doing to the various
+> > Linux APIs. Looking somewhat maximally across all the arches a "bind"
+> > for a CC vPCI device creation operation does:
+> > 
+> >  - Setup the CPU page tables for the VM to have access to the MMIO
+> >  - Revoke hypervisor access to the MMIO
+> >  - Setup the vIOMMU to understand the vPCI device
+> >  - Take over control of some of the IOVA translation, at least for
+> > T=1, and route to the the vIOMMU
+> >  - Register the vPCI with any attestation functions the VM might use
+> >  - Do some DOE stuff to manage/validate TDSIP/etc
+> > 
+> > So we have interactions of things controlled by PCI, KVM, VFIO, and
+> > iommufd all mushed together.
+> > 
+> > iommufd is the only area that already has a handle to all the required
+> > objects:
+> >  - The physical PCI function
+> >  - The CC vIOMMU object
+> >  - The KVM FD
+> >  - The CC vPCI object
+> > 
+> > Which is why I have been thinking it is the right place to manage
+> > this.
+> > 
+> > It doesn't mean that iommufd is suddenly doing PCI stuff, no, that
+> > stays in VFIO.
+> > 
+> > > > > So your issue is you need to shoot down the dmabuf during vPCI
+> > > > > device destruction?
+> > > > 
+> > > > I assume "vPCI device" refers to assigned device in both shared
+> > > > mode & prvate mode. So no, I need to shoot down the dmabuf during
+> > > > TSM unbind, a.k.a. when assigned device is converting from
+> > > > private to shared. Then recover the dmabuf after TSM unbind. The
+> > > > device could still work in VM in shared mode.
+> > 
+> > What are you trying to protect with this? Is there some intelism where
+> > you can't have references to encrypted MMIO pages?
+> > 
 > 
-> Petr Mladek if it goes through the live patching tree, you if tip. Feel 
-> free to pick it up :).
+> I think it is a matter of design choice. The encrypted MMIO page is
+> related to the TDI context and secure second level translation table
+> (S-EPT). and S-EPT is related to the confidential VM's context.
+> 
+> AMD and ARM have another level of HW control, together
+> with a TSM-owned meta table, can simply mask out the access to those
+> encrypted MMIO pages. Thus, the life cycle of the encrypted mappings in
+> the second level translation table can be de-coupled from the TDI
+> unbound. They can be reaped un-harmfully later by hypervisor in another
+> path.
+> 
+> While on Intel platform, it doesn't have that additional level of
+> HW control by design. Thus, the cleanup of encrypted MMIO page mapping
+> in the S-EPT has to be coupled tightly with TDI context destruction in
+> the TDI unbind process.
 
-IMHO, it might be easier when it goes via tip. Peter, feel free to
-take it.
+Thanks for the accurate explanation. Yes, in TDX, the references/mapping
+to the encrypted MMIO page means a CoCo-VM owns the MMIO page. So TDX
+firmware won't allow the CC vPCI device (which physically owns the MMIO
+page) unbind/freed from a CoCo-VM, while the VM still have the S-EPT mapping.
 
-The patch does not create any conflict with the klp tree.
-But I guess that there might be some dependent patches in tip...
+AMD doesn't use KVM page table to track CC ownership, so no need to
+interact with KVM.
 
-That said, I could take it via the livepatch tree if Peter preferred
-it from some reasons.
+Thanks,
+Yilun
 
-Anyway, the patch looks good and passes the tests. Feel free to use:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Tested-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
+> 
+> If the TDI unbind is triggered in VFIO/IOMMUFD, there has be a
+> cross-module notification to KVM to do cleanup in the S-EPT.
+> 
+> So shooting down the DMABUF object (encrypted MMIO page) means shooting
+> down the S-EPT mapping and recovering the DMABUF object means
+> re-construct the non-encrypted MMIO mapping in the EPT after the TDI is
+> unbound. 
+> 
+> Z.
+> 
+> > > > What I really want is, one SW component to manage MMIO dmabuf,
+> > > > secure iommu & TSM bind/unbind. So easier coordinate these 3
+> > > > operations cause these ops are interconnected according to secure
+> > > > firmware's requirement.
+> > >
+> > > This SW component is QEMU. It knows about FLRs and other config
+> > > space things, it can destroy all these IOMMUFD objects and talk to
+> > > VFIO too, I've tried, so far it is looking easier to manage. Thanks,
+> > 
+> > Yes, qemu should be sequencing this. The kernel only needs to enforce
+> > any rules required to keep the system from crashing.
+> > 
+> > Jason
+> > 
+> 
