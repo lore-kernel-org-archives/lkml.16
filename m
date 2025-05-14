@@ -1,98 +1,147 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8A01F8676
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE251F8676
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223853; cv=none; b=TqiWwOgnOS7N045n2LZEzzAXOJmiC66TUyvlPDv8+Svitw145lnrjTK3Ab9QBTwmk1tfEXJ0SO28QdWICn3fwo3wwIKtILxTY7jF7pPeHqdDUcPV9G6qZFJkkuHR6N0D4bsDCx5g+5cTq8cH1l9FOMWwv/pQjqNSPWKIl9N3S+Y=
+	t=1747223917; cv=none; b=AJn5iSgQiqe9HIgWtaAOBAhzpZmLVZvogRldtf5kAGRGA3ax6jg5uer034eLwlLw+ldP4qyEWQfZE+UrEycwj2I/wWHWUiqTO+Ujtb+KB4aY2kQcC+TdY7EQxyiVe0pz/o/yTdBhK5K/r3MqMpRuJPj1S+BEjmLI4k80GG8j0JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223853; c=relaxed/simple;
-	bh=7o2UTN2Hk2J5TcPymHM0vTaw+1G2DDoWlH6zf9b+SbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ep+53mjfEMWodgr/dSsPXTogz/MoEwM4t+pA3r5aEGH2thtcLi3HhHv/ICBabLWh6c9M8Lc3P8L0EwD/HHtBhMeSfYIBM7Wymuei7MSHW6Hcwn1w/rb53o3oxvRnyZg/nnPuU437iM9Sh4nXF1fMrXlIo8lzeKQMnaKlOBHStN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dj06PK2Y; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dj06PK2Y"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747223840; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=X6Xt+gme88eWtaAzO7wjB1rqU85g/KZnskzOAk8sCIk=;
-	b=dj06PK2Y7bIXqgY7FIWGT0u93ysUnZDrD/04/DptaMqj7nA+YIBVhYG5rJTxz1Iv3qMmx8BOVK0AxtaXCxazW80j6a6JTQeuZipT/o3kCwmKh+Y9KOalHLyzv5K4OSzVU3An86HEpBU6oYVnbM+nihIXVCa57tBZ0Retob0c4gY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Walx0ZR_1747223834 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 May 2025 19:57:19 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: refine readahead tracepoint
-Date: Wed, 14 May 2025 19:57:13 +0800
-Message-ID: <20250514115713.2719705-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1747223917; c=relaxed/simple;
+	bh=VsIVw4xokloDRCGfjLe0h2WbmfHH9FiXqip0fmR9Lng=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JjYR1dKT6FxfdW0BVUTUirNNw2Z4Eogjh41RWFbCLT34qKTC6XgLec9NyHVgRa41B8EdXEZjb0T2N4M2zRVmuLK5qWmdg0VCxtjigoF9RsIKtQtjeE84RWCx9KZD+VziKAScmHimk1qpAC94PtjVPKuDEFAjSdKGmbowMg38v2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da6f284ca5so137959315ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:58:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747223915; x=1747828715;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xanK211PDjhttY7lq/HHASWhl8OC9jDCyANHlbZueGM=;
+        b=SQh8s6+T0sLjP3a5dtkVwHxPILH09jmWM7aucMaiBdlT8RzP0AxLQVmxzV2RfDXhQP
+         3QfBdNH3ymwcfoEvWcWhNiDfOGSZwQrvigYHyJrvMg8ZRJhqCR5LN9shW3oVAZK6Lm0p
+         fAyhroI2/fwMQeoTOOg2vOPaEy4t47iOucOrllyhV7Zo5qAuPkFdqAhY2jkYPIgcIhPB
+         NzfAi3/PMN7bLtAPoS3aAmvme839AKt0l6CpObU4g0ajPifACRanTemQihkCvf+EwOhK
+         LUP2ImbPDlhNPVTreV/kJnfJN2X0nsY5vhrC2PLduHzFGGaNvx0N7ixXVIlTtPX05kZF
+         Cv9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWfRAM4CkGsWSiuj9/ACkMXXtP0F/UuVaLyJEUMuGLyPEKpS/5cAnDEJbHMaajS4nUhcdujiISkuo+KtxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWfK9ZpU+URKKIDkoYXEiNgmIGIiJMcghCpdI0Evwv1gwUqAs+
+	eJlQkIS07njoR/qKJgXL10BWoEJuPFqxzLYJufqsdL9AmmDuLEbSr19Gg1bS4IbLg7biyvIsCkb
+	6MzzqlFBjHS4qtG5EJ8SVyE7zQltoAUO3GCY3/P+o+i4pAsFpKNIdn4E=
+X-Google-Smtp-Source: AGHT+IEPrc90FBj7HM1zAUyIsfyFsUxNNlVwmdhMdT1v4h8Dqc1PEvr7OAn65L0BvdUk58lmsjPwc9y2b/KNVlPv8oq3l7zt+CGj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:194b:b0:3d0:1fc4:edf0 with SMTP id
+ e9e14a558f8ab-3db6f7f465dmr30634785ab.15.1747223914791; Wed, 14 May 2025
+ 04:58:34 -0700 (PDT)
+Date: Wed, 14 May 2025 04:58:34 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6824856a.a00a0220.104b28.000c.GAE@google.com>
+Subject: [syzbot] [bpf?] WARNING in free_mem_alloc_no_barrier
+From: syzbot <syzbot+ba09f1d8f92da05bd539@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, sdf@fomichev.me, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
- - trace_erofs_readpages => trace_erofs_readahead;
+Hello,
 
- - Rename a redundant statement `nrpages = readahead_count(rac);`;
+syzbot found the following issue on:
 
- - Move the tracepoint to the beginning of z_erofs_readahead().
+HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=15a66cf4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
+dashboard link: https://syzkaller.appspot.com/bug?extid=ba09f1d8f92da05bd539
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+userspace arch: arm64
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ba09f1d8f92da05bd539@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 113 at kernel/bpf/memalloc.c:649 check_mem_cache kernel/bpf/memalloc.c:649 [inline]
+WARNING: CPU: 1 PID: 113 at kernel/bpf/memalloc.c:649 check_leaked_objs kernel/bpf/memalloc.c:667 [inline]
+WARNING: CPU: 1 PID: 113 at kernel/bpf/memalloc.c:649 free_mem_alloc_no_barrier+0x204/0x514 kernel/bpf/memalloc.c:683
+Modules linked in:
+CPU: 1 UID: 0 PID: 113 Comm: kworker/u8:4 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: events_unbound free_mem_alloc_deferred
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : check_mem_cache kernel/bpf/memalloc.c:649 [inline]
+pc : check_leaked_objs kernel/bpf/memalloc.c:667 [inline]
+pc : free_mem_alloc_no_barrier+0x204/0x514 kernel/bpf/memalloc.c:683
+lr : check_mem_cache kernel/bpf/memalloc.c:649 [inline]
+lr : check_leaked_objs kernel/bpf/memalloc.c:667 [inline]
+lr : free_mem_alloc_no_barrier+0x204/0x514 kernel/bpf/memalloc.c:683
+sp : ffff80009b427a10
+x29: ffff80009b427a20 x28: ffffffffffffffff x27: 0000000000000000
+x26: ffff80008ec24258 x25: ffff80008ec24258 x24: dfff800000000000
+x23: fffffdffbf6e0ce8 x22: fffffdffbf6e0c40 x21: 1ffff00011d8484b
+x20: ffff0000f0b02f08 x19: ffff0000f0b02f00 x18: 1fffe00033871676
+x17: ffff80010d12e000 x16: ffff80008adb421c x15: 0000000000000001
+x14: 1ffff00013684f24 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff700013684f25 x10: 0000000000ff0100 x9 : 0000000000000000
+x8 : ffff0000c55d1e80 x7 : ffff80008adc3498 x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008adc37ac
+x2 : 0000000000000001 x1 : 0000000000000003 x0 : 0000000000000000
+Call trace:
+ check_mem_cache kernel/bpf/memalloc.c:649 [inline] (P)
+ check_leaked_objs kernel/bpf/memalloc.c:667 [inline] (P)
+ free_mem_alloc_no_barrier+0x204/0x514 kernel/bpf/memalloc.c:683 (P)
+ free_mem_alloc kernel/bpf/memalloc.c:706 [inline]
+ free_mem_alloc_deferred+0x2c/0x1a4 kernel/bpf/memalloc.c:713
+ process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x958/0xed8 kernel/workqueue.c:3400
+ kthread+0x5fc/0x75c kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+irq event stamp: 254062
+hardirqs last  enabled at (254061): [<ffff80008add4c80>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:159 [inline]
+hardirqs last  enabled at (254061): [<ffff80008add4c80>] _raw_spin_unlock_irq+0x30/0x80 kernel/locking/spinlock.c:202
+hardirqs last disabled at (254062): [<ffff80008adaf5e0>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
+softirqs last  enabled at (253980): [<ffff800086383a80>] spin_unlock_bh include/linux/spinlock.h:396 [inline]
+softirqs last  enabled at (253980): [<ffff800086383a80>] nsim_dev_trap_report drivers/net/netdevsim/dev.c:820 [inline]
+softirqs last  enabled at (253980): [<ffff800086383a80>] nsim_dev_trap_report_work+0x67c/0x9fc drivers/net/netdevsim/dev.c:851
+softirqs last disabled at (253978): [<ffff8000863839f8>] spin_lock_bh include/linux/spinlock.h:356 [inline]
+softirqs last disabled at (253978): [<ffff8000863839f8>] nsim_dev_trap_report drivers/net/netdevsim/dev.c:816 [inline]
+softirqs last disabled at (253978): [<ffff8000863839f8>] nsim_dev_trap_report_work+0x5f4/0x9fc drivers/net/netdevsim/dev.c:851
+---[ end trace 0000000000000000 ]---
+
+
 ---
- fs/erofs/zdata.c             | 5 ++---
- include/trace/events/erofs.h | 4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index b8e6b76c23d5..29541e0787b8 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1855,13 +1855,12 @@ static void z_erofs_readahead(struct readahead_control *rac)
- {
- 	struct inode *const inode = rac->mapping->host;
- 	Z_EROFS_DEFINE_FRONTEND(f, inode, readahead_pos(rac));
--	struct folio *head = NULL, *folio;
- 	unsigned int nrpages = readahead_count(rac);
-+	struct folio *head = NULL, *folio;
- 	int err;
- 
-+	trace_erofs_readahead(inode, readahead_index(rac), nrpages, false);
- 	z_erofs_pcluster_readmore(&f, rac, true);
--	nrpages = readahead_count(rac);
--	trace_erofs_readpages(inode, readahead_index(rac), nrpages, false);
- 	while ((folio = readahead_folio(rac))) {
- 		folio->private = head;
- 		head = folio;
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index c69c7b1e41d1..644d4cbd3d80 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -113,7 +113,7 @@ TRACE_EVENT(erofs_read_folio,
- 		__entry->raw)
- );
- 
--TRACE_EVENT(erofs_readpages,
-+TRACE_EVENT(erofs_readahead,
- 
- 	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
- 		bool raw),
-@@ -138,7 +138,7 @@ TRACE_EVENT(erofs_readpages,
- 
- 	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
- 		show_dev_nid(__entry),
--		(unsigned long)__entry->start,
-+		(unsigned long)__entry->start,`
- 		__entry->nrpage,
- 		__entry->raw)
- );
--- 
-2.43.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
