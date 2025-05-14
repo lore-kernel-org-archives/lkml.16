@@ -1,504 +1,268 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96923223DED
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B373F2063F0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212289; cv=none; b=Y6Y8HLtYU60DL43ZgGHMeKdgrYASb+Pqu7caiuAKUt6wQUQCPP2sfLg6xmXU2v2yGcoNdFfd35gH2ybVg1BuCAF94Xbcqjkvr5E/evlson4XdzaWNej5to8/etyLmiu0QtgnkX+xPdsCpPqbJpJNQ/vxb9oRoLrA5Yq1eM1r38k=
+	t=1747212337; cv=none; b=pl7ey/sA2R/kG8Z3UNPRPKuNzDc57lz9Us0dpqhhTjZlVkc6od8O+W+B3km50fhW32zfVjN/lW/P3qCN6NPGTuJNy8fgb4/pIZCO9pq5i4uiU2w/NjYGibHR377J9eFnCcefneMYm1WrquMrezbnXLANOQUZnNbg8R2xQqA6TOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212289; c=relaxed/simple;
-	bh=JQllrsynzjm68Qj/f/HNSQitBzIq2FfcbBmseRxy/mA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SKkFOiFjKQC1phNjRBwXcIzxqQiKMDb4G67LTEBKPXe0R5GR5vMWyFJm9BFtO52ELiG6jGobqem2MxBBC8bD8CcZtFtEv0mx46Z+SzSPnxChFGd1ra8NUravqCaFMupezcWHUK+VOTbvBZ1i6uC6xTm5yBAk0MT/d8uy7E3OS0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eDfT7ykd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747212337; c=relaxed/simple;
+	bh=k+JHv0XVi54wbwq6bEgxtmCxeoEp1UKIWaYdn0D/15o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BkA8E4EqHtmLHTbeLnAo9ooO+cgmLMsgoAOB97lJDSqMEVhLHqylHEZDp2a+dJM22e8blPcLoZUUhTJVDchg3N9BQpAFYzp+BCBiYVPJm2yz7PJERh3+Qxg+ymqT6byVRQjGsjHOR9TjCml4W+ohdyuyZ04wEgWTUe5qJ4SbZyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=M5aD5Yyr; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eDfT7ykd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747212286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tDUti7k9M7nDIV6nH94mmZUc7PAtTA41xzVPHy++Yzo=;
-	b=eDfT7ykd7U7VfL9oZF69b7dYsQJA1m/dbbRvGIrdb1AuDhLjZNpb0y5SYrbrmT4FuY1ZVC
-	V+3cO6rWp8e2JMVElbyPX+QMNtxDufY6lJJsf3DPfwG6AeICGZ98UjbR8X8p5M4f9Hbnkj
-	UmeS1mMGWhnH/xIzK30+mNrV4+yHnZE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-MlX00-HuN-GuKdOmZA5pVw-1; Wed,
- 14 May 2025 04:44:43 -0400
-X-MC-Unique: MlX00-HuN-GuKdOmZA5pVw-1
-X-Mimecast-MFC-AGG-ID: MlX00-HuN-GuKdOmZA5pVw_1747212281
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D138A180035E;
-	Wed, 14 May 2025 08:44:41 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.189])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48A761953B80;
-	Wed, 14 May 2025 08:44:35 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nam Cao <namcao@linutronix.de>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Juri Lelli <jlelli@redhat.com>
-Subject: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
-Date: Wed, 14 May 2025 10:43:14 +0200
-Message-ID: <20250514084314.57976-13-gmonaco@redhat.com>
-In-Reply-To: <20250514084314.57976-1-gmonaco@redhat.com>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="M5aD5Yyr"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c336fcdaaso61216155ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1747212335; x=1747817135; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqfaI6lq6zJ1eRV2oVQK96ezohU415kTZ70pK/0AFE0=;
+        b=M5aD5Yyrn8khguH/OUVmWuJtgy1Pf46c4Ud7epDTnCqMnYnHPjbxjq/Wne4khCQlL1
+         cyf5xsRWhe1SmDBQvMbErCuZMmn+PqOmcUWP5VX/P+SOcmJT/GJhW0uKoK3SRp3NHRPn
+         WeNVhQiS33sUAiGKPcxtP78ApJaGyTtyu5GWk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747212335; x=1747817135;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dqfaI6lq6zJ1eRV2oVQK96ezohU415kTZ70pK/0AFE0=;
+        b=uGwuOqT/imE+rfXG1LlRIWNGdJkybLYDycBm16iOn/TLc37hulqtxtsT2Jisu7fI2c
+         8UwINSe98I6BhQhZQKGjUUbpMNYmJmzoLHkXWfS0ZyMHVr+t02xacoTcaBL0xZSnqTKz
+         dWDIKlunhFU2rRkcvnMNQCR4X8RUPefW1zziH0AlBPtEmTM+ZW2gHW+aouFOPk3auJ4f
+         HHWCye3bvwlHBH6sREmF8vfCN6Qygl1zbhMjMOfRf7TQovFtLRNBj5GTHVo0JwODkw5u
+         MmD1vAOlFUbrZ8UJMMeUzTF8RUqTrqIKvjH3HaVoqA7xTiQqVEHRjvczWw5HBM3zzmV/
+         4H6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVClQBMA/rmaVL9WbZEW0/3hirNO9VoopCzHqv1ccl1mKWBSSvV0jakn9BZRU/1rtrB8gxNIl8XLmgjR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywci8FSZ4hM/7zdXeHg0jLp/pMw5TnUAO8EfKwrK1k2AHgrH5Zy
+	nX0UT+lMH0UUAgOJ0wqGKZ/y5rMmuWiK5Ow6QH78OZY15LwhYPf0EgAw07Bg6Q==
+X-Gm-Gg: ASbGncsoBitxBBKP44J4/rIHiXUJ2rmO/2Qq6x3qyjSm5w89qeZ1ZPQeedM9CkdntvH
+	vs4J/jIzg3hCaAGGS2j6+hwOVFQxc+cex5a1DwjfN1RE8WrpyMwyDCofyDK1ZG/t1Fgv147Kskg
+	15rp2wk3Ox+RQIVyks0znVy6QXx7548tDIs3Bh6neTNLtptcyFEbYaXPQHQveeacaUppcytJ/F7
+	0M6/OcJ2RfOwO9F7ePbNR1PSQbJNxjPwKtdrw7BFfYfB0x17M7rjM4d2mU8B4fBAOvvhp6TDFQT
+	3kCeDSOCxasnWl3dKiiBOYoJhzPM8MRCYlQO1d604z7ySQKNrHXIN8GVKi3T9UaAI8iKJ9aEMMN
+	H3w==
+X-Google-Smtp-Source: AGHT+IHheWBGRMi5B8z6uGT+BiWaum7PrTyN+U6ONEj4/ZVUQsz41yaiHBfuxbJ/bJ1fXa38lNCRjQ==
+X-Received: by 2002:a17:903:198b:b0:22e:3b65:9279 with SMTP id d9443c01a7336-23198186ec8mr40757895ad.53.1747212334984;
+        Wed, 14 May 2025 01:45:34 -0700 (PDT)
+Received: from [10.48.4.8] ([89.207.171.78])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc764a52bsm94863785ad.59.2025.05.14.01.45.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 01:45:34 -0700 (PDT)
+Message-ID: <b37ea0be-0f37-4a78-b6ce-fc49610c00cc@broadcom.com>
+Date: Wed, 14 May 2025 10:45:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] net: bcmgenet: switch to use 64bit statistics
+To: Zak Kemble <zakkemble@gmail.com>, Doug Berger <opendmb@gmail.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250513144107.1989-1-zakkemble@gmail.com>
+ <20250513144107.1989-2-zakkemble@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250513144107.1989-2-zakkemble@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a per-cpu monitor as part of the sched model:
-* opid: operations with preemption and irq disabled
-    Monitor to ensure wakeup and need_resched occur with irq and
-    preemption disabled or in irq handlers.
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- Documentation/trace/rv/monitor_sched.rst   |  48 +++++++
- kernel/trace/rv/Kconfig                    |   1 +
- kernel/trace/rv/Makefile                   |   1 +
- kernel/trace/rv/monitors/opid/Kconfig      |  17 +++
- kernel/trace/rv/monitors/opid/opid.c       | 151 +++++++++++++++++++++
- kernel/trace/rv/monitors/opid/opid.h       |  64 +++++++++
- kernel/trace/rv/monitors/opid/opid_trace.h |  15 ++
- kernel/trace/rv/rv_trace.h                 |   1 +
- tools/verification/models/sched/opid.dot   |  35 +++++
- 9 files changed, 333 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/opid/Kconfig
- create mode 100644 kernel/trace/rv/monitors/opid/opid.c
- create mode 100644 kernel/trace/rv/monitors/opid/opid.h
- create mode 100644 kernel/trace/rv/monitors/opid/opid_trace.h
- create mode 100644 tools/verification/models/sched/opid.dot
 
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-index 97f0f1a10f43..f044bca7ac31 100644
---- a/Documentation/trace/rv/monitor_sched.rst
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -315,6 +315,54 @@ after the task got to ``sleeping`` until a ``wakeup``::
-                                         |                            |
-                                         +----------------------------+
- 
-+Monitor opid
-+------------
-+
-+The operations with preemption and irq disabled (opid) monitor ensures
-+operations like ``wakeup`` and ``need_resched`` occur with interrupts and
-+preemption disabled or during IRQs, in such case preemption may not be disabled
-+explicitly.
-+``need_resched`` can be set by some RCU internals functions, in which case it
-+doesn't match a task wakeup and might occur with only interrupts disabled::
-+
-+                 |                     sched_need_resched
-+                 |                     sched_waking
-+                 |                     irq_entry
-+                 |                   +--------------------+
-+                 v                   v                    |
-+               +------------------------------------------------------+
-+  +----------- |                     disabled                         | <+
-+  |            +------------------------------------------------------+  |
-+  |              |                 ^                                     |
-+  |              |          preempt_disable      sched_need_resched      |
-+  |       preempt_enable           |           +--------------------+    |
-+  |              v                 |           v                    |    |
-+  |            +------------------------------------------------------+  |
-+  |            |                   irq_disabled                       |  |
-+  |            +------------------------------------------------------+  |
-+  |                              |             |        ^                |
-+  |                          irq_entry         |        |                |
-+  |     sched_need_resched       v             |   irq_disable           |
-+  |     sched_waking +--------------+          |        |                |
-+  |           +----- |              |     irq_enable    |                |
-+  |           |      |    in_irq    |          |        |                |
-+  |           +----> |              |          |        |                |
-+  |                  +--------------+          |        |          irq_disable
-+  |                     |                      |        |                |
-+  | irq_enable          | irq_enable           |        |                |
-+  |                     v                      v        |                |
-+  |            #======================================================#  |
-+  |            H                     enabled                          H  |
-+  |            #======================================================#  |
-+  |              |                   ^         ^ preempt_enable     |    |
-+  |       preempt_disable     preempt_enable   +--------------------+    |
-+  |              v                   |                                   |
-+  |            +------------------+  |                                   |
-+  +----------> | preempt_disabled | -+                                   |
-+               +------------------+                                      |
-+                 |                                                       |
-+                 +-------------------------------------------------------+
-+
- References
- ----------
- 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index f106cf7b2fd3..9ebb80931a9f 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -36,6 +36,7 @@ source "kernel/trace/rv/monitors/sncid/Kconfig"
- source "kernel/trace/rv/monitors/sts/Kconfig"
- source "kernel/trace/rv/monitors/nrp/Kconfig"
- source "kernel/trace/rv/monitors/sssw/Kconfig"
-+source "kernel/trace/rv/monitors/opid/Kconfig"
- # Add new monitors here
- 
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index c076cf48af18..0eca5e77d0d2 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_RV_MON_SNCID) += monitors/sncid/sncid.o
- obj-$(CONFIG_RV_MON_STS) += monitors/sts/sts.o
- obj-$(CONFIG_RV_MON_NRP) += monitors/nrp/nrp.o
- obj-$(CONFIG_RV_MON_SSSW) += monitors/sssw/sssw.o
-+obj-$(CONFIG_RV_MON_OPID) += monitors/opid/opid.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/opid/Kconfig b/kernel/trace/rv/monitors/opid/Kconfig
-new file mode 100644
-index 000000000000..c59d51654cd1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/opid/Kconfig
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_OPID
-+	depends on RV
-+	depends on IRQSOFF_TRACER
-+	depends on PREEMPT_TRACER
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "opid monitor"
-+	help
-+	  Monitor to ensure operations like wakeup and need resched occur with
-+	  interrupts and preemption disabled or during IRQs, where preemption
-+	  may not be disabled explicitly.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/opid/opid.c b/kernel/trace/rv/monitors/opid/opid.c
-new file mode 100644
-index 000000000000..d8732d681753
---- /dev/null
-+++ b/kernel/trace/rv/monitors/opid/opid.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "opid"
-+
-+#include <trace/events/sched.h>
-+#include <trace/events/irq.h>
-+#include <trace/events/preemptirq.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "opid.h"
-+
-+static struct rv_monitor rv_opid;
-+DECLARE_DA_MON_PER_CPU(opid, unsigned char);
-+
-+#ifdef CONFIG_X86_LOCAL_APIC
-+#include <asm/trace/irq_vectors.h>
-+
-+static void handle_vector_irq_entry(void *data, int vector)
-+{
-+	da_handle_event_opid(irq_entry_opid);
-+}
-+
-+static void attach_vector_irq(void) {
-+	rv_attach_trace_probe("opid", local_timer_entry, handle_vector_irq_entry);
-+}
-+
-+static void detach_vector_irq(void) {
-+	rv_detach_trace_probe("opid", local_timer_entry, handle_vector_irq_entry);
-+}
-+
-+#else
-+/* We assume irq_entry tracepoints are sufficient on other architectures */
-+static void attach_vector_irq() { }
-+static void detach_vector_irq() { }
-+#endif
-+
-+static void handle_irq_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_opid(irq_disable_opid);
-+}
-+
-+static void handle_irq_enable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_opid(irq_enable_opid);
-+}
-+
-+static void handle_irq_entry(void *data, int irq, struct irqaction *action)
-+{
-+	da_handle_event_opid(irq_entry_opid);
-+}
-+
-+static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_opid(preempt_disable_opid);
-+}
-+
-+static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_opid(preempt_enable_opid);
-+}
-+
-+static void handle_sched_need_resched(void *data, struct task_struct *tsk, int cpu, int tif)
-+{
-+	if(in_irq())
-+		da_handle_event_opid(sched_need_resched_opid);
-+	else
-+		da_handle_start_event_opid(sched_need_resched_opid);
-+}
-+
-+static void handle_sched_waking(void *data, struct task_struct *p)
-+{
-+	if(in_irq())
-+		da_handle_event_opid(sched_waking_opid);
-+	else
-+		da_handle_start_event_opid(sched_waking_opid);
-+}
-+
-+static int enable_opid(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_opid();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("opid", irq_disable, handle_irq_disable);
-+	rv_attach_trace_probe("opid", irq_enable, handle_irq_enable);
-+	rv_attach_trace_probe("opid", irq_handler_entry, handle_irq_entry);
-+	rv_attach_trace_probe("opid", preempt_disable, handle_preempt_disable);
-+	rv_attach_trace_probe("opid", preempt_enable, handle_preempt_enable);
-+	rv_attach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
-+	rv_attach_trace_probe("opid", sched_waking, handle_sched_waking);
-+	attach_vector_irq();
-+
-+	return 0;
-+}
-+
-+static void disable_opid(void)
-+{
-+	rv_opid.enabled = 0;
-+
-+	rv_detach_trace_probe("opid", irq_disable, handle_irq_disable);
-+	rv_detach_trace_probe("opid", irq_enable, handle_irq_enable);
-+	rv_detach_trace_probe("opid", irq_handler_entry, handle_irq_entry);
-+	rv_detach_trace_probe("opid", preempt_disable, handle_preempt_disable);
-+	rv_detach_trace_probe("opid", preempt_enable, handle_preempt_enable);
-+	rv_detach_trace_probe("opid", sched_set_need_resched_tp, handle_sched_need_resched);
-+	rv_detach_trace_probe("opid", sched_waking, handle_sched_waking);
-+	detach_vector_irq();
-+
-+	da_monitor_destroy_opid();
-+}
-+
-+/*
-+ * This is the monitor register section.
-+ */
-+static struct rv_monitor rv_opid = {
-+	.name = "opid",
-+	.description = "operations with preemption and irq disabled.",
-+	.enable = enable_opid,
-+	.disable = disable_opid,
-+	.reset = da_monitor_reset_all_opid,
-+	.enabled = 0,
-+};
-+
-+static int __init register_opid(void)
-+{
-+	rv_register_monitor(&rv_opid, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_opid(void)
-+{
-+	rv_unregister_monitor(&rv_opid);
-+}
-+
-+module_init(register_opid);
-+module_exit(unregister_opid);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("opid: operations with preemption and irq disabled.");
-diff --git a/kernel/trace/rv/monitors/opid/opid.h b/kernel/trace/rv/monitors/opid/opid.h
-new file mode 100644
-index 000000000000..4c6d4a3964c5
---- /dev/null
-+++ b/kernel/trace/rv/monitors/opid/opid.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of opid automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_opid {
-+	disabled_opid = 0,
-+	enabled_opid,
-+	in_irq_opid,
-+	irq_disabled_opid,
-+	preempt_disabled_opid,
-+	state_max_opid
-+};
-+
-+#define INVALID_STATE state_max_opid
-+
-+enum events_opid {
-+	irq_disable_opid = 0,
-+	irq_enable_opid,
-+	irq_entry_opid,
-+	preempt_disable_opid,
-+	preempt_enable_opid,
-+	sched_need_resched_opid,
-+	sched_waking_opid,
-+	event_max_opid
-+};
-+
-+struct automaton_opid {
-+	char *state_names[state_max_opid];
-+	char *event_names[event_max_opid];
-+	unsigned char function[state_max_opid][event_max_opid];
-+	unsigned char initial_state;
-+	bool final_states[state_max_opid];
-+};
-+
-+static const struct automaton_opid automaton_opid = {
-+	.state_names = {
-+		"disabled",
-+		"enabled",
-+		"in_irq",
-+		"irq_disabled",
-+		"preempt_disabled"
-+	},
-+	.event_names = {
-+		"irq_disable",
-+		"irq_enable",
-+		"irq_entry",
-+		"preempt_disable",
-+		"preempt_enable",
-+		"sched_need_resched",
-+		"sched_waking"
-+	},
-+	.function = {
-+		{         INVALID_STATE, preempt_disabled_opid,         disabled_opid,         INVALID_STATE,     irq_disabled_opid,         disabled_opid,         disabled_opid },
-+		{     irq_disabled_opid,         INVALID_STATE,         INVALID_STATE, preempt_disabled_opid,          enabled_opid,         INVALID_STATE,         INVALID_STATE },
-+		{         INVALID_STATE,          enabled_opid,         INVALID_STATE,         INVALID_STATE,         INVALID_STATE,           in_irq_opid,           in_irq_opid },
-+		{         INVALID_STATE,          enabled_opid,           in_irq_opid,         disabled_opid,         INVALID_STATE,     irq_disabled_opid,         INVALID_STATE },
-+		{         disabled_opid,         INVALID_STATE,         INVALID_STATE,         INVALID_STATE,          enabled_opid,         INVALID_STATE,         INVALID_STATE },
-+	},
-+	.initial_state = disabled_opid,
-+	.final_states = { 0, 1, 0, 0, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/opid/opid_trace.h b/kernel/trace/rv/monitors/opid/opid_trace.h
-new file mode 100644
-index 000000000000..3df6ff955c30
---- /dev/null
-+++ b/kernel/trace/rv/monitors/opid/opid_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_OPID
-+DEFINE_EVENT(event_da_monitor, event_opid,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_opid,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_OPID */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index d12ab74dcabc..5d3c5c3f7545 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -63,6 +63,7 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- #include <monitors/snep/snep_trace.h>
- #include <monitors/sncid/sncid_trace.h>
- #include <monitors/sts/sts_trace.h>
-+#include <monitors/opid/opid_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
- 
- #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
-diff --git a/tools/verification/models/sched/opid.dot b/tools/verification/models/sched/opid.dot
-new file mode 100644
-index 000000000000..2d5e1df3405f
---- /dev/null
-+++ b/tools/verification/models/sched/opid.dot
-@@ -0,0 +1,35 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_disabled"};
-+	{node [shape = circle] "disabled"};
-+	{node [shape = doublecircle] "enabled"};
-+	{node [shape = circle] "enabled"};
-+	{node [shape = circle] "in_irq"};
-+	{node [shape = circle] "irq_disabled"};
-+	{node [shape = circle] "preempt_disabled"};
-+	"__init_disabled" -> "disabled";
-+	"disabled" [label = "disabled"];
-+	"disabled" -> "disabled" [ label = "sched_need_resched\nsched_waking\nirq_entry" ];
-+	"disabled" -> "irq_disabled" [ label = "preempt_enable" ];
-+	"disabled" -> "preempt_disabled" [ label = "irq_enable" ];
-+	"enabled" [label = "enabled", color = green3];
-+	"enabled" -> "enabled" [ label = "preempt_enable" ];
-+	"enabled" -> "irq_disabled" [ label = "irq_disable" ];
-+	"enabled" -> "preempt_disabled" [ label = "preempt_disable" ];
-+	"in_irq" [label = "in_irq"];
-+	"in_irq" -> "enabled" [ label = "irq_enable" ];
-+	"in_irq" -> "in_irq" [ label = "sched_need_resched\nsched_waking" ];
-+	"irq_disabled" [label = "irq_disabled"];
-+	"irq_disabled" -> "disabled" [ label = "preempt_disable" ];
-+	"irq_disabled" -> "enabled" [ label = "irq_enable" ];
-+	"irq_disabled" -> "in_irq" [ label = "irq_entry" ];
-+	"irq_disabled" -> "irq_disabled" [ label = "sched_need_resched" ];
-+	"preempt_disabled" [label = "preempt_disabled"];
-+	"preempt_disabled" -> "disabled" [ label = "irq_disable" ];
-+	"preempt_disabled" -> "enabled" [ label = "preempt_enable" ];
-+	{ rank = min ;
-+		"__init_disabled";
-+		"disabled";
-+	}
-+}
+On 5/13/2025 4:41 PM, Zak Kemble wrote:
+> Update the driver to use ndo_get_stats64, rtnl_link_stats64 and
+> u64_stats_t counters for statistics.
+> 
+> Signed-off-by: Zak Kemble <zakkemble@gmail.com>
+> ---
+
+[snip]
+
+>   
+> +
+> +
+
+This is unrelated to your changes.
+
+>   static void bcmgenet_get_ethtool_stats(struct net_device *dev,
+>   				       struct ethtool_stats *stats,
+>   				       u64 *data)
+>   {
+>   	struct bcmgenet_priv *priv = netdev_priv(dev);
+> +	struct u64_stats_sync *syncp;
+> +	struct rtnl_link_stats64 stats64;
+> +	unsigned int start;
+>   	int i;
+>   
+>   	if (netif_running(dev))
+>   		bcmgenet_update_mib_counters(priv);
+>   
+> -	dev->netdev_ops->ndo_get_stats(dev);
+> +	dev_get_stats(dev, &stats64);
+>   
+>   	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
+>   		const struct bcmgenet_stats *s;
+>   		char *p;
+>   
+>   		s = &bcmgenet_gstrings_stats[i];
+> -		if (s->type == BCMGENET_STAT_NETDEV)
+> -			p = (char *)&dev->stats;
+> +		if (s->type == BCMGENET_STAT_RTNL)
+> +			p = (char *)&stats64;
+>   		else
+>   			p = (char *)priv;
+>   		p += s->stat_offset;
+> -		if (sizeof(unsigned long) != sizeof(u32) &&
+> +		if (s->type == BCMGENET_STAT_SOFT64) {
+> +			syncp = (struct u64_stats_sync *)(p - s->stat_offset +
+> +											  s->syncp_offset);
+
+This is a bit difficult to read, but I understand why you would want to 
+do something like this to avoid discerning the rx from the tx stats...
+
+> +			do {
+> +				start = u64_stats_fetch_begin(syncp);
+> +				data[i] = u64_stats_read((u64_stats_t *)p);
+> +			} while (u64_stats_fetch_retry(syncp, start));
+> +		} else if (sizeof(unsigned long) != sizeof(u32) &&
+>   		    s->stat_sizeof == sizeof(unsigned long))
+>   			data[i] = *(unsigned long *)p;
+
+>   		else
+> @@ -1857,6 +1881,7 @@ static unsigned int __bcmgenet_tx_reclaim(struct net_device *dev,
+>   					  struct bcmgenet_tx_ring *ring)
+>   {
+>   	struct bcmgenet_priv *priv = netdev_priv(dev);
+> +	struct bcmgenet_tx_stats64 *stats = &ring->stats64;
+>   	unsigned int txbds_processed = 0;
+>   	unsigned int bytes_compl = 0;
+>   	unsigned int pkts_compl = 0;
+> @@ -1896,8 +1921,10 @@ static unsigned int __bcmgenet_tx_reclaim(struct net_device *dev,
+>   	ring->free_bds += txbds_processed;
+>   	ring->c_index = c_index;
+>   
+> -	ring->packets += pkts_compl;
+> -	ring->bytes += bytes_compl;
+> +	u64_stats_update_begin(&stats->syncp);
+> +	u64_stats_add(&stats->packets, pkts_compl);
+> +	u64_stats_add(&stats->bytes, bytes_compl);
+> +	u64_stats_update_end(&stats->syncp);
+>   
+>   	netdev_tx_completed_queue(netdev_get_tx_queue(dev, ring->index),
+>   				  pkts_compl, bytes_compl);
+> @@ -1983,9 +2010,11 @@ static void bcmgenet_tx_reclaim_all(struct net_device *dev)
+>    * the transmit checksum offsets in the descriptors
+>    */
+>   static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
+> -					struct sk_buff *skb)
+> +					struct sk_buff *skb,
+> +					struct bcmgenet_tx_ring *ring)
+>   {
+>   	struct bcmgenet_priv *priv = netdev_priv(dev);
+> +	struct bcmgenet_tx_stats64 *stats = &ring->stats64;
+>   	struct status_64 *status = NULL;
+>   	struct sk_buff *new_skb;
+>   	u16 offset;
+> @@ -2001,7 +2030,9 @@ static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
+>   		if (!new_skb) {
+>   			dev_kfree_skb_any(skb);
+>   			priv->mib.tx_realloc_tsb_failed++;
+> -			dev->stats.tx_dropped++;
+> +			u64_stats_update_begin(&stats->syncp);
+> +			u64_stats_inc(&stats->dropped);
+> +			u64_stats_update_end(&stats->syncp);
+>   			return NULL;
+>   		}
+>   		dev_consume_skb_any(skb);
+> @@ -2089,7 +2120,7 @@ static netdev_tx_t bcmgenet_xmit(struct sk_buff *skb, struct net_device *dev)
+>   	GENET_CB(skb)->bytes_sent = skb->len;
+>   
+>   	/* add the Transmit Status Block */
+> -	skb = bcmgenet_add_tsb(dev, skb);
+> +	skb = bcmgenet_add_tsb(dev, skb, ring);
+>   	if (!skb) {
+>   		ret = NETDEV_TX_OK;
+>   		goto out;
+> @@ -2233,6 +2264,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+>   {
+>   	struct bcmgenet_priv *priv = ring->priv;
+>   	struct net_device *dev = priv->dev;
+> +	struct bcmgenet_rx_stats64 *stats = &ring->stats64;
+>   	struct enet_cb *cb;
+>   	struct sk_buff *skb;
+>   	u32 dma_length_status;
+> @@ -2253,7 +2285,9 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+>   		   DMA_P_INDEX_DISCARD_CNT_MASK;
+>   	if (discards > ring->old_discards) {
+>   		discards = discards - ring->old_discards;
+> -		ring->errors += discards;
+> +		u64_stats_update_begin(&stats->syncp);
+> +		u64_stats_add(&stats->errors, discards);
+> +		u64_stats_update_end(&stats->syncp);
+>   		ring->old_discards += discards;
+
+Cannot you fold the update into a single block?
+
+>   
+>   		/* Clear HW register when we reach 75% of maximum 0xFFFF */
+> @@ -2279,7 +2313,9 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+>   		skb = bcmgenet_rx_refill(priv, cb);
+>   
+>   		if (unlikely(!skb)) {
+> -			ring->dropped++;
+> +			u64_stats_update_begin(&stats->syncp);
+> +			u64_stats_inc(&stats->dropped);
+> +			u64_stats_update_end(&stats->syncp);
+>   			goto next;
+
+Similar comment as above, this would be better moved to a single 
+location, and this goes on below.
 -- 
-2.49.0
+Florian
 
