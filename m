@@ -1,134 +1,109 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F07B3EA98;
-	Wed, 14 May 2025 05:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6B41D63C3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747200209; cv=none; b=YuXAIflqtVunlkrSaZDYx4QDpsulot8q0jVLetIZV1mLuLQgavx6DZpY8F/lMI2szOiIPeG9NOa1ezlpWn0w1k3LrM9ljFEd8wotwivNLLxvy8kqRTgmkjDodN3T3RTSifol9oru8ggdNgXzfyu0r9Jzhzpefgnk2RuJ1sPmbmI=
+	t=1747200216; cv=none; b=bPT6N5sSt+sFR3wnc0gI+B1fv5zimy2Jb7jTjvv6RynUeQ/QFUn7k/0X1HKuXhAXXEYpLWJftwCqPPxuVGh5dqreDbSieap4z+qbkGjhmlLFESpV2CU67AZMxWhjFoTKoUdlR/VjDKJvE/pAoFvyIC69R5Im8IsZdybj5g+WYpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747200209; c=relaxed/simple;
-	bh=PjZkzPb6qnl12zHf3pahrAM5KdkGBNztYJzBS7MQ4GY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dqiUuSBRedXlkli2kbQkg1vxx6S5GbPhLGqyIVhiluixQ7K0+zPzA0Go1sqw0Baj+/j7fT8kuDUiJa0MAY4Oyx8/4SoBly5P9f58o4YiY14lRab7SdbTyQUkgbItq+LnLNZuSzqV9RFlUaEiCWryPco4rjCNZ4vTH+3pvf3TE4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=mnO46xr3; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747200216; c=relaxed/simple;
+	bh=zfRw9Q6wMM5hfi/a/N4gYjmSXwSiWk60aFMz9qmobxc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fXekazEqrrumg5c7vLSBF+YkRlyZ4GjylTKwxToQ/JGWPpNYhTJ5t82Z0XIkzLAogom09eqhG8KE4EePRKDZxAaQ9x/smG6NotWDph7m6syCldSNO+tn7Elr3Kmd2YfgrfcIVfyndstYLgtAAwPa/yaw+uKXMgCDcleTmaGfpOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CyA8C2QY; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mnO46xr3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747200200;
-	bh=i+7zWi9EvsmtyiPZJIl0RxaxjOBp9ccf2cSnG0886H8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=mnO46xr3GFylUW55UzbiZA5fx1x6dRWQoyNZxHRr8i9poHYi02Kv6ilAmxCPP20a6
-	 49po66PlQtkCW/9Z1sCFkVJsjL7C6MkiXWg7QGa960x3p+Z8N9ImcAk9DVu5xBvd8h
-	 b0m/Wn3kaT3fGFIFZq1MKeNqH6I+43laB+QSlmVD54oM9gHnbKzCGo0JYeYTF9qahJ
-	 zbKdVvAsT7xLcmbV19gShdciD2wxU/uLHoYmvNAmj+SaDGeW4x3UrascrC8HJe+XAX
-	 Y7Db6dsfOrfYcsWeJbxyaFR2i7hwCn8n7qG11MZxGbBne0ouU+n10Loinr+BQYtNa/
-	 n3stZRf25EO+Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zy1vq4xsQz4x8f;
-	Wed, 14 May 2025 15:23:19 +1000 (AEST)
-Date: Wed, 14 May 2025 15:23:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>
-Cc: Raju Rangoju <Raju.Rangoju@amd.com>, Networking
- <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the tip tree
-Message-ID: <20250514152318.52714b39@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyA8C2QY"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-7426c44e014so3017725b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747200214; x=1747805014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=goylnnXwS8ybZyEks8opAvaKL8A6WtBVF6S/CDmfx2I=;
+        b=CyA8C2QYJvlok4viOB83Iy8/qzIL5voatVUYNOqdFHoP3usD/C4SG0MiBBe4NNhlCf
+         aJawv6XInCR9E3BhhLMXp6XJ/L4EHZzVoQXqj/6NFGY51kSRnyORTrmMIPXnyfcpCMs+
+         nWe2n1wGpjuS3thNbAhTd4noNPjMCQB8uQGjoh2Vk6JOnseVqXoBl1qMQ7uXp9R1Uecg
+         AsukubwMF/AocxcX8cRXcITiV++Xmu7iMKZqdHvcO4WQRMeY+0Dhn5vaTVFo2CE7m+pF
+         dJSjK4JzJpw3cUbhGXEc18eSMcQmn7V8mi3lsOiQTPmzVkpey3wlDEq2/LfGXTnv0oKd
+         U7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747200214; x=1747805014;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=goylnnXwS8ybZyEks8opAvaKL8A6WtBVF6S/CDmfx2I=;
+        b=W0bDEBVvp2y9cOdy806Q9DRn4ZjweOeKDfNZZ/dJQEwebpppPLc3lKET8UJi8o+vIo
+         izTrAqiTRBLwg0twZ88kg6HKJUtpzSrCCNMGUSk8EOashZK6wUwLMfLXoN16ls/Vk30Y
+         pGUGDeY3GH60ywaLf+a+LisxbcROA/7K60RJovwRJxTb53n6V64XoUEQAWdCPRLDn0VA
+         flK6hY/kwQNgfzFVi4zIhcpR0Yi4HGfYES/gX/RGT/Rv4Ka7wFIv0Ihy6hhfacy6STdM
+         4An/CzalSdFoJTn1PqyzWbTDNbkNVe5WvwyqnumQGwWXrK8yr+jRbpdTwGuIgfIdQmJ1
+         c01Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKW86D1la/UoXVvoZiLNpAk1clrKHpr3RveccAVmnf4WfVw5kWwGCUd8Uldp1ObhziwcuQRyQJAipMLlw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzytDEiqUL6mKpmYx0NCrBHbGPrKE432tkN+GQJB0BVeol8NNkl
+	qebXpiAkDZ/Km7eZjKEluVpeiCRxExvxuXySYqqtf1+Ax2LK41O2
+X-Gm-Gg: ASbGncuZEF7tkrYxQolh6n1YaapYThcjC57ucciQdU8IdXMT6Ol4XWLYLxjhdV380OF
+	hAiWLXk6/GRuphlKwERTI04feJd7aweEG4syavWbLsOo5/XO3fnnziNYuILQGByzWBYV7XbVjYI
+	On/koC4EbAtmwrTI6SmQLSEvZ/xOOp3dC9OwhsV6tOGGfogJxt4W9Rpig8BP3uGRKJzCqZ0JhHv
+	Ajt7yRX3vtj9xLg4P9yGFjefEHQBCUmZnAf6eweqOdLHE3CuDCzTXPkCjnBMZuW1u+O6It18gF/
+	a6Fp5wBas9DbJtY/S+aHyAcw87+vXxV8p8fwDhzmsJlAz68f7Lp5zfOr98u3o9ujziq+pw==
+X-Google-Smtp-Source: AGHT+IElzChTEhLjYwx8jW3A4q9KnQyI3f1Xl4EGUUaR9HnsdocrPUlzzgKm0VhWDIL9nynTBByXJQ==
+X-Received: by 2002:a05:6a21:398c:b0:1f3:3ca3:8216 with SMTP id adf61e73a8af0-215ff0abd4bmr2898128637.5.1747200214365;
+        Tue, 13 May 2025 22:23:34 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.228.33])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b235199034esm6864786a12.66.2025.05.13.22.23.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 22:23:33 -0700 (PDT)
+From: Siddarth Gundu <siddarthsgml@gmail.com>
+To: geert@linux-m68k.org
+Cc: linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Siddarth Gundu <siddarthsgml@gmail.com>
+Subject: [PATCH] m68k: apollo: replace strcpy() with strscpy()
+Date: Wed, 14 May 2025 10:53:27 +0530
+Message-ID: <20250514052327.96537-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/G7FAMtDx3rupFH52VPU.BBt";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/G7FAMtDx3rupFH52VPU.BBt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+strcpy() is deprecated; use strscpy() instead.
 
-Hi all,
+strscpy was chosen because the code expects a NUL-terminated string
+without zero-padding.
 
-After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
-
-In file included from drivers/net/ethernet/amd/xgbe/xgbe-dev.c:18:
-drivers/net/ethernet/amd/xgbe/xgbe-smn.h:15:10: fatal error: asm/amd_nb.h: =
-No such file or directory
-   15 | #include <asm/amd_nb.h>
-      |          ^~~~~~~~~~~~~~
-
-Caused by commit
-
-  bcbb65559532 ("x86/platform/amd: Move the <asm/amd_nb.h> header to <asm/a=
-md/nb.h>")
-
-interacting with commit
-
-  e49479f30ef9 ("amd-xgbe: add support for new XPCS routines")
-
-from the net-next tree.
-
-I have applied the following merge resolution for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 14 May 2025 14:49:31 +1000
-Subject: [PATCH] fix up for "x86/platform/amd: Move the <asm/amd_nb.h> head=
-er
- to <asm/amd/nb.h>"
-
-interacting with "amd-xgbe: add support for new XPCS routines" from the
-net-next tree.
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-smn.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/m68k/apollo/config.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-smn.h b/drivers/net/etherne=
-t/amd/xgbe/xgbe-smn.h
-index 3fd03d39c18a..c6ae127ced03 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-smn.h
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-smn.h
-@@ -12,7 +12,7 @@
-=20
- #ifdef CONFIG_AMD_NB
-=20
--#include <asm/amd_nb.h>
-+#include <asm/amd/nb.h>
-=20
- #else
-=20
---=20
-2.47.2
+diff --git a/arch/m68k/apollo/config.c b/arch/m68k/apollo/config.c
+index e161ecd76035..d4cc145e1611 100644
+--- a/arch/m68k/apollo/config.c
++++ b/arch/m68k/apollo/config.c
+@@ -7,6 +7,7 @@
+ #include <linux/rtc.h>
+ #include <linux/vt_kern.h>
+ #include <linux/interrupt.h>
++#include <linux/string.h>
+ 
+ #include <asm/setup.h>
+ #include <asm/bootinfo.h>
+@@ -218,7 +219,7 @@ static void dn_dummy_reset(void)
+ 
+ static void dn_get_model(char *model)
+ {
+-    strcpy(model, "Apollo ");
++    strscpy(model, "Apollo ");
+     if (apollo_model >= APOLLO_DN3000 && apollo_model <= APOLLO_DN4500)
+         strcat(model, apollo_models[apollo_model - APOLLO_DN3000]);
+ }
+-- 
+2.43.0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/G7FAMtDx3rupFH52VPU.BBt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgkKMYACgkQAVBC80lX
-0GzBUQf/S64XRZpKD5EbVXfNAbmm9ocGmqdb6XJB0l6y7NS3Rc2i7DJj8Vof9qJt
-ZwHBK75oUf+iLmXOQLxdsSvy5xTARlK6qjt/qeWRSQm+Lwxy2Ed4Sh02bLnwkrVr
-bpRcfguGBFBN4ZWzUdeFKGBj3JtdPKxboGXWxqJc9pjsHUxWnzE7sVdnW5JbGTvD
-k62B76HgGe4dYcUGfo11BXMpTFwF9NVFD04I5TP4rko4UNQvYKFq7HovHPcogvii
-zz9l66nNNID9Kd6VBou5pA1UOiF2IG5zxrmOkaqjG5UXB1yGK9RfGqISavF5mUDT
-t9yiwRxSJ+Nmw61krY3WOikpCthuRw==
-=SMPZ
------END PGP SIGNATURE-----
-
---Sig_/G7FAMtDx3rupFH52VPU.BBt--
