@@ -1,483 +1,224 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464A31DED6F;
-	Wed, 14 May 2025 18:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747249178; cv=none; b=gjy2jrZiZS0B/1RMxRzecsqW0vo2MYw87Iemnmg5YUfHwsKLij91OFm7am6gdswXX4vjbWbVXt9cjfgjxGC+9ySh4T/d7dXYYnRqxZbfCNzvo6rTB3QamfYQax5G8E8kWoncDc8uo/SLAwxAJY2Sk8dRouwx1QuJBnNxYBkqa+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747249178; c=relaxed/simple;
-	bh=HXx1eCl8xZNA1+Z0jZ649FoSSxumZ7ayffO1EaHox0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OSxkWW/zOSumW739yUe2f56cveeMa1JLlgYpo0qsxUvgRgK2/nULmDJCUg6/ojlj8/AZkLR78OmGDHznNf7nhSgnoEvH1o7i22Do6dVOKmtEo0Zr39k/9Qctu6o1hhGbY2qsV4hTfylCFHrEm8o35+jVdOPRV+uY+PXlFKUziY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ATQAXdmX; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E350C28C840;
+	Wed, 14 May 2025 19:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747249237; cv=fail; b=ZC+VxvvIOnkMaLcNq5LBsh2yGaREBZKtHn2hwgW046V/TP0m3y64K6Sjalih2Qsv3BI8glO9gpW8ZUK+jJiASHqVEHz1TiajzfTQJ4sba5wX7HcUact7u2mpRZWsk6lMuDpCVOFr/Jm/iTUASfF/NK3ynYNa9vXoZF/oPqd8qLk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747249237; c=relaxed/simple;
+	bh=gpm2WgB9G8LmCkmJwPUDUP5MQrVXqIUKekdGqcYZmZo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ahmnBvAa5rLLYyyWEWXWGY7SzdgB6AZa/m9p26ebOAyOM8qyQKHMLB/e6mY7vOSfzajCZ3fWXpzZ/cJwzrjDyR3ZZOHYBoViF/aHgqZ+nisW0mjBgmX03BtR8daYsq2ShCxk25E9p3BpGtTMJRn3zXUZVq2FvtyCKCB4zmZlXys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=O8kkXDzn; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=N7M7KfCd; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATQAXdmX"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3081fe5987eso167266a91.3;
-        Wed, 14 May 2025 11:59:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O8kkXDzn";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="N7M7KfCd"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDhx42028372;
+	Wed, 14 May 2025 18:59:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=f9Jc7FKEeHBwqSJA/y/xLDYD4ajT3YGPLHjwI/nbK7g=; b=
+	O8kkXDznqgAvVmBgaklD/2jel1ZEda255WGwyRyd+aNrv8cLRjQsN8djUQNJ9WNH
+	e1fhujVeshH46wSdbtukfzcNKj/jNZtrjilQJFl2kkpHzlSlXllKbk4+GaHFh0+l
+	jzWSap+x5j2B9CxOMvfoxDyD+5kGI7KQYx8axMqY/YYxw2pU/O2hf1r2C4vU/jBF
+	whQPBeC8TWqOi96VONwogpGcJHFeJqz3u0W3B2tbI3TdJT2fbFct6MkdPRk6Lfh7
+	j426u8NTYKCELtJuVV7aiP7s7pAIzt7k3wAwcNN2sbaZ+0t3C+SxyZdQSvUlE5uc
+	OwsZnLlaD/jNpKoINWEbaA==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46mbcmjh63-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 18:59:55 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54EHnMP3004265;
+	Wed, 14 May 2025 18:59:54 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2042.outbound.protection.outlook.com [104.47.58.42])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mrmd5wue-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 18:59:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B2WR8jXPD2YV5RzA1yzGimeY5ihuKAgdHgfZsJFxe7sxa8yzNYco6wheVN1n2vC9C4KlDU/grw8sskD+BxgOE+GxERbz3TMpmX8IfN3OkoJipivoQGOc/apXyqgpn4VNX3PdsnFunMA+5m3MUH2mGEsOr4ofSgH830tJKEaNPbal5JJcsQzTgvv+gRKVu6XTNvoaZpE+/KI3aR52lTrzKYBfIR75U50bISKtlUWjGJBApe7XVdoZ0Zv5y5gPe0ZY++vXe42Zm6FDARccXNwr18MfQTckqFTC3T40ZQKUnKbSsoSnjmdACw3EcmxsiEJskPOpOB3j2LskI5/uELMoiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f9Jc7FKEeHBwqSJA/y/xLDYD4ajT3YGPLHjwI/nbK7g=;
+ b=YPo/g7yNTPkGjnnpVqnWeRFnBVnwWJlEjYucdR7GFvUYb6hnohCivQ/3sCXtHh4reA3K2xOii/jFXBqiFGU6Dt5ZduRHu5Do0pe6zGd+SkagAVAsaZDR5W4lmlY9C4cHiYqPNUDj4v2gr8FKdz0in9ItR1YqhYfr8ztLmN4NoXWzm5kIoHFTvZGuuj88nJznaqmX8Guh3pJoxxBpTfFXyqLA6nDWNeEBL2jzfKA01uVOVfMPglAXavzciAlPDn/ZvzCSCjEKhKZYMV1Q50UypJaji7gfY3VeES6oA3NXRf/NeQwoQ7yTM520x5fTEQmSJyzXIm8HjsQB8l5oaWDfBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747249174; x=1747853974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gB/fBrSOiGmKgir1N1aKyUJGw8tNr0qalJakQgrxaKc=;
-        b=ATQAXdmXAEr3BQTKURAGGTDR68Bu2Wz8ROCwbHgMIzOe7cg5DE2KEoyt7P4qkfDVhp
-         WXVB7kbxqucTUZlHFy8pX8iYe+tn6bbEVjABbYHP20Do/NrvAsX/8cc5JiNCk8TBJAAE
-         Rqt7taNNQOoOVbCUoS/FCveAL536oBZe2UmQW+WBhjQEMupqmqpHNIYxqREftqmlgj1v
-         t2gktPPnsCqi6xfjo4rXWV6waJCtlsskV3ubd0p5NWEFQ0iPkMvdx2bVI6m+bU+PFJE3
-         Ck+UdcChGcb/HfsWU1Nywgoski8a/3jfKkWC+MjL890ls5oLqEeovKGBeKHBEuNASQF1
-         2mTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747249174; x=1747853974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gB/fBrSOiGmKgir1N1aKyUJGw8tNr0qalJakQgrxaKc=;
-        b=RvONQdvLW/k9NxAcJ+SyTPSeB/bE5m80ELzSaDqiBQHMzqENPRfcgjV+ZJEdOx3rOs
-         8ApswLeN978yhGvtYhroVqvMaa51T7v1rXNr/qtxZ/7me39AlQB6QZQaHQwJ9lcLHn+i
-         ZREbc3x+0ax+nfPJhshrz9E61U7wDmVoazFj8Itb/nNwwQYf01Zy7O2Q+JbK7dWrIuHT
-         VI/UY963ONjyKNrONiZLHJzuZaFCQaBjrTEchLler0bFQEjPaJ/QKrLDbslvwpXV5oUh
-         AmZDldTrE7L0qUAAQHVdDtCzRMfKGQPzRjhgxNB3cT81fJsYWV6W6n9gpHq3/ZDL0rIJ
-         rM6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWKipYHhxYKZZ/Eym0EALXcHtEMX4QdXs21mo/YVWwjOq7+qdqadvpZAbmf6ZoO/fpYMkEmTutfnESJjg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV32Th8+0tB4/s1DqFqAhHZiRGOfLY/oRy+uFuzwzpz6G0++L7
-	Ir0fFeV0wFD797N1GUhq47MP0G2bhz6958/TDJaT1t7Iht6fhuhjJ/6pDPTcLh9uqAIIOcvtwDV
-	QZzYGkf/4C2CdIph03hc884KAdqs=
-X-Gm-Gg: ASbGnctbINy/aWAf6GZD+d5w7VGHTcFAFclCFMrm47C6LGfcizwQgVxeS+NWqOflsCN
-	cYaqyvSGmzk/+g9EoZCfJMpkptrqkrvrwxCFWgiMd7vul9OUvI2uvWg1ekz0vgUnduFoHI6H40n
-	eOdMl5Ri+wfg8B0itlUiqCVlTS1jOVIlbQ5YpCLxMFnqY=
-X-Google-Smtp-Source: AGHT+IEEvh/Sq6oe9hlV6nUaIxHbp3qlNCX47pYW1mxmnWpB/jQKAPUCcHv2ljt8W/nOcqrZVbn49x9cmteG0iDe+/s=
-X-Received: by 2002:a17:90b:17d2:b0:2f7:4cce:ae37 with SMTP id
- 98e67ed59e1d1-30e2e5d1a22mr8150961a91.18.1747249174257; Wed, 14 May 2025
- 11:59:34 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f9Jc7FKEeHBwqSJA/y/xLDYD4ajT3YGPLHjwI/nbK7g=;
+ b=N7M7KfCdpI2cdDT8UBNFSUQMrY7iu4hIDy1De6+TCdq++DyX+Pq5anuwHUhNtO4KNdvRQgkqgFFrNodEE2g/dpnx08GNJbxSrWTKf8ErHbxaLJqeAJQE4JSiXjQRC0KXzY1Y7JV4G5dxilvq9WVuAgPlYFSmOMlVEqogkJtsVbY=
+Received: from DM4PR10MB6886.namprd10.prod.outlook.com (2603:10b6:8:102::10)
+ by SJ0PR10MB6352.namprd10.prod.outlook.com (2603:10b6:a03:47a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 18:59:52 +0000
+Received: from DM4PR10MB6886.namprd10.prod.outlook.com
+ ([fe80::bdcc:98f5:ebd5:cd38]) by DM4PR10MB6886.namprd10.prod.outlook.com
+ ([fe80::bdcc:98f5:ebd5:cd38%4]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 18:59:51 +0000
+Message-ID: <861004b4-e036-4306-b129-252b9cb983c7@oracle.com>
+Date: Thu, 15 May 2025 00:29:40 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+        rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com,
+        broonie@kernel.org, Darren Kenny <darren.kenny@oracle.com>
+References: <20250514125617.240903002@linuxfoundation.org>
+Content-Language: en-US
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20250514125617.240903002@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0238.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::34) To DM4PR10MB6886.namprd10.prod.outlook.com
+ (2603:10b6:8:102::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-9-cgoettsche@seltendoof.de>
-In-Reply-To: <20250511173055.406906-9-cgoettsche@seltendoof.de>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 14 May 2025 14:59:22 -0400
-X-Gm-Features: AX0GCFuq9e0CYCn2G54VVEdXNhGqc3P9Des91xzc5owXRPCxqO8TC5-hC1YLF1k
-Message-ID: <CAEjxPJ6ikjKZWxztGFjM_4ZjRB9RWjMcZ4ocGZRHb_pjC+DCUg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/14] selinux: beef up isvalid checks
-To: cgzones@googlemail.com
-Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
-	Casey Schaufler <casey@schaufler-ca.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	Canfeng Guo <guocanfeng@uniontech.com>, Takaya Saeki <takayas@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB6886:EE_|SJ0PR10MB6352:EE_
+X-MS-Office365-Filtering-Correlation-Id: c22cd00a-d7d9-47bf-3277-08dd9319814f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y2JEZTFBdWJHTk8wY05qaGJkcE5DTHNVNHFnNWFhMHFubk56SnJrbnd3MmE2?=
+ =?utf-8?B?RFRpNVhFdTdNRWR2TDh3RmdHanFyYmxvSTc2OEdmTitubEZuMVk5RS9FdzE2?=
+ =?utf-8?B?dUpROGtQTG1IaHFWdVV3OFJUV0t0TmkyaElTdTBhN2hZNFpiMkswc1Z6cXBp?=
+ =?utf-8?B?bE5aMXlzV2s1Y1JVWS80aW1vblF0dlM0Slc5KzA0TUtZVnY1STd5elBEVjBE?=
+ =?utf-8?B?a01FRFNRQXVLM3NFcU9pV0JPQUR1Z2FuZmZzTFhUZTJuRW04NlVteFN0SlJQ?=
+ =?utf-8?B?b0JOM2orcXErdVFnSkpUbkRocjYvOVhxN3c5OWlMd0RBSmZXTWI2QWZtSXdS?=
+ =?utf-8?B?NXNuSS9oOFhOR2lYTWlqZzBwWDUydGxXY2dZWTR0Tkx0dHdhcDZkMkZmK3Jq?=
+ =?utf-8?B?MGtVZW5QblljQTJoNEQwb3RWS2VmbzEyR3QyMmdkb25ZR3QvZE1saWpmdndT?=
+ =?utf-8?B?cW5kOHBzdFpOWHp5NEFSMkwrN0VwUG5EY0thSWRaMVB5c0oxNUdjaENiMXVQ?=
+ =?utf-8?B?ay9xYlJ1RUJkb29UazBtazFXNGs4TjZYbW5WRkY4L3Y2NDEvVTkxWU1FU3Jl?=
+ =?utf-8?B?VVVFZU5NRGxDZ0N0bld0bVFWUnVyQ3FaMy9CMTRKc3UzU2NxdXpNTVBSMTYx?=
+ =?utf-8?B?am1rNTB0clhOSTlSQjVhYVRKN3kxMlR0RnF6bDlIUEtiVHRGSmM1VG5zdHVm?=
+ =?utf-8?B?R0o3UC9NWXRSQ2psVXh6U3ZuQ2s3M01uK0ZsaE9YTWhjSzlvNE9DOHVvVkRl?=
+ =?utf-8?B?by9ncTZMblVCZnZzWmpZWCs2djZ5WWZ0YlhDUk0xbGFvMEpRSXYzekJCZzZR?=
+ =?utf-8?B?UWdLSGw3dVZGMnoycTdmNWdPc1E5TlJnSytQN3dUV1hVNFRadnFNQko3S2pw?=
+ =?utf-8?B?Tld1SUxGVEx6VEU5RWlqOTdJMjRKVytkTzFabGliVUVTTzdndE1EUGF0Y2Mz?=
+ =?utf-8?B?VWdYeXVoUHZJQXZ3RHprNVNYN0JCUGRvWGZnSWxjZ3dzSU5PU2crblJUM3BP?=
+ =?utf-8?B?aHRINEpJOElOMW54a2F4RlB1c0xxOTNTeEtwMzRFeUFvbm1XMUZMV2hnanpR?=
+ =?utf-8?B?VkhkMXhyUENtNXhobEFzOTVveERpbEVkdzR2TnVIejNQQzN5aWZva240a0dO?=
+ =?utf-8?B?V1h3RnZ6bkQ4TVc2SlN5Y0JhNTgvWk5ZbGJhNGsyNnZPTnU2d3R4ZHJxcUJR?=
+ =?utf-8?B?UloyWHRzank0OHo0eGxoL2tDR1JZRVJ2N2hnT3NKSVpNV0syZ1NJNEcyMXU2?=
+ =?utf-8?B?U0dEeHpzN3U1R3JrUEQ3cnk2Vk4vTGYwNnZ4K0YwOXpQRlpGUU5WeU53MWJB?=
+ =?utf-8?B?TjNldDMxa2FXV052OVBIdG5qMHpBaXNibFJnVjJLbndCeWlIVWRFeklGbS9M?=
+ =?utf-8?B?ZU1VSzFRL0xsbHlWVzZmSFBPRU1vWmprdW1kTW1uN1N4NGlOd0kxeFp5OFRW?=
+ =?utf-8?B?K2N0ZzczUFF6c1Jmb1NzcG9HbEVoNUNtRnQ2dTc3VWl0UjVRc3hXZDRpdW1x?=
+ =?utf-8?B?VTBSUUY4amlQYk81QUlxZ0pYUjB2RmxLa0tXNlVtRzc2L2pmbVhaYUFHWmlk?=
+ =?utf-8?B?ckJWeURua3EzNkZnbkhpY2RxK2hvUjgrdGhzOVZwRHZkckZhWi83S0RWcmpj?=
+ =?utf-8?B?UWdmdHFvT0JkOXNqUitjOUphaEwvS3JVQWVwVUU2dkpjcm5xNTB3bVpEemQ5?=
+ =?utf-8?B?TUtGNkxrK3pVS1JCbjY5YUF3aFdlVCtzZWdQR0g4a1EvVTFqcFJpVWVLOEdB?=
+ =?utf-8?B?TVpRdnJIVnorNC9TMGRtUWhmd1ZyYkxydExTbjNmL0R0cEVFM3AyMWRkaHZx?=
+ =?utf-8?B?Mi9OY2hianhQZWU2RWpkNmkvZEJyaXpuMDZtVU9NMXg3cUgvV0t1Rm13SEp2?=
+ =?utf-8?B?cHY2YUlHU1QvS2g5eUdYelRZbGo2by9Vam5GaGREbHU1czl5UStheWZTNmlD?=
+ =?utf-8?Q?PTSSKC6jNgI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB6886.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SDFJNGhtZnFadkZQNURGV09SN2JxdjNJSHplU3NWVjRRQm03YjMyd1NHWnZH?=
+ =?utf-8?B?bVBNL0ZtSTkvY1k2SmVuR2dVaDdhUGVrOVVaWndGWTNWV0MwWlNPWVdKdVly?=
+ =?utf-8?B?RWovNUV1QWNzZjdNQitTODE5WmJzSnM4d1NYSmM4cXhhTWViQ3MzRGdHN1A3?=
+ =?utf-8?B?MVlRT2dVZFBMQURqbk53Q2V6Qkd3SmpsMW5QK1ArTjBFdUJNV1BQT05aK29O?=
+ =?utf-8?B?NUtuT3FoNlNqdmlCM2ZMTW54ZFUyVVdTcWZ3S3dMK3JtV3BseFpmUlQ4cWtG?=
+ =?utf-8?B?L1FRTWk1Wmh4WmFDcDZSWG4rSXpaNmR3UE9xZE53dnRMdnFiSjhkLzUvOVpV?=
+ =?utf-8?B?c1c0L1A2RjEzQXVuNUFJNVF3ZWlTZWhLSUhwWERReG0rWnlpQTc5VkkyNmx5?=
+ =?utf-8?B?a3htTFFtakIyWjVBVmMyU2pESVVncUNNY0xDayt6OHY4REkrT1ZMaGs5bUNR?=
+ =?utf-8?B?OU9lcGh4SmVQQVFqR0gzUWRRWlQ1UlJuUnF3T2k0Y1FpbDQ3YUNSQVg0Mmtn?=
+ =?utf-8?B?YzROQnNrZXllRmZodWpFaU9KNUtPTElyTDQ1U2ZZdVBLUUlnZ1dlN1ErRkVX?=
+ =?utf-8?B?Wkk0clpuZyt2R1d2UzlFS29idGltZjhTWGozNkkrV1lBelphTUJuRHFDRDh3?=
+ =?utf-8?B?RmN3cVdzcytiV1lPS0ZTOTRpWWV4dXN1SEZSa0VrcWxKamRYOXJCMVV3Nm43?=
+ =?utf-8?B?ckZFSXpia3NDRmJTQWh6Q2xLbXU1MmJ5bkF5aE43SzNwQ1NaR1ZSdDM0dWtK?=
+ =?utf-8?B?WjFQbC9GbDJpL3JCZE5Xa000SlRFMzFnTUw5eHd4eTY3Zks4RGRWRzI3MWNH?=
+ =?utf-8?B?WW55QVZ2c3FXRzE1cHo1RzhXNWZTc25mcFZHMnQ1dFVZMmZTMi8yZ2tEeXNG?=
+ =?utf-8?B?RDlsQVNsL3hzVTRpQnM3dU12cUNJSDg4NGtTYWZYZzZtMi9VY1NJa2NTY0Jh?=
+ =?utf-8?B?eDY0YzJsYVdUck5ZMWxQRnNsMkdlclpRWXU4dmNMTG9zdE9kRjZaU0N3OE96?=
+ =?utf-8?B?U2VwdTB2WWZ1MitIV3ZiN2FQTGdEeVgvMWJKZkI5Z0VDcmcxYmQ0NUo3ajZm?=
+ =?utf-8?B?V2MvcW9UdVE0NkU5cXdNSFpnS3pWeVhrOFhyeFMvdWtNRU9ZVUVsN2QyL3RL?=
+ =?utf-8?B?Q1JsV2dCeFl3bk12TkJiRUlYY1NWNy85L2RnUThDaDN6ZTRlbHhsSmU2eTBm?=
+ =?utf-8?B?RlRKbWRZc24xdHhUS3hiRVUyNTdMcWVoR3VEZ1BWaStiWm5xMVRwOWlWb3lJ?=
+ =?utf-8?B?NEhDYkF6REI1RHFjZlZpUGl1Qjc1QkR5ZU5QWjFCZlJHTURvRjdKL2xKbDJv?=
+ =?utf-8?B?YjZLZ2FTREsrWXl6RW5jQlgrWlRRMFBYNlJHb25YYzZVVDhMNUp0ejFnNmww?=
+ =?utf-8?B?azBUbnBqRkhzb2VZRlVieWM4Ymt3b0V2bXBsb3ZxUXhGTzdPK1dFNklZOWJY?=
+ =?utf-8?B?NGFxY0RydlNEcjJFa3BrcnJDd2FTNE9scGM4TVdDbUdNeVh3OUxRU0xpTGUv?=
+ =?utf-8?B?STFleHI4VlBYa013cFlXY0tTMVF4RlNna085MEErSmU4M21WeUlvZjk0a3VJ?=
+ =?utf-8?B?RGlxVXNGRmVsbmthZjNWeEhpVU5DY290L2VMZEhqdzVvL2kzS1gxd05WTmNS?=
+ =?utf-8?B?U24xQ2pha202c2VvSnQ2ZDU2Q1NlYjJ3OENTMGhVZHRkT2w0dS9HMVc5ZDgv?=
+ =?utf-8?B?cGd4dUczN01qdXVDY0phM2t0a05vYktGT1pXZituUURsZGZNQ08xUWdDc3dS?=
+ =?utf-8?B?ZmpoZ2JDaGU3R1AwS1RCU2kxYzdjQ2E1Q3c5UlpjYjhxUWpBaUhJZnNEOURK?=
+ =?utf-8?B?S3pzU2Y3UU83ZDN0Zzg3T1hjTm0ydzlNc1pYc3l1eGovaTB2YXpoTERTbzcr?=
+ =?utf-8?B?bVdRVFRJdG9ySTNteUc3ZHlQaUt4MkZLVXVvQjNWRXN5OXJNcnlRWDM0NEhX?=
+ =?utf-8?B?MG1Ienk2WjNjQXVjZHBhbDVFTFYxcFVhNzU4SGRGMG5ZSjFhd1M2YnlwYXQ1?=
+ =?utf-8?B?SmloNGZ4NWo3Ynk1L3o2bVlRZExMUTdaNkVYNDRwOWIwSDNaUjNoTjNmSjFY?=
+ =?utf-8?B?YWREV0grK1J3Rm9Jdm5SbkpvelhqYTlOSjdHdGFsZlRLSnlDYkppdVJxL1dv?=
+ =?utf-8?B?S2dtQzNmOGIxSHhSK05zbUtBL3lUcERUQ2hZejlUMERLeG1sRlI2U2ZGbThq?=
+ =?utf-8?Q?x476qjV6ByBhPbqDyMY+CGA=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	sWglg74ELcPftbj18WduH4EOAGITRuPQ6CrnAmLSJUAI3/XXbMMpYwHDsaiLymklbg7M7vJeQwzRXLvWTy+MF9GuNx9aEP1rtMeGR9UpTKwyK+6cr8Q/ZpbYM/N8/EeLoFAenQ9Gl12m/OEUsM5SCVTN6REZvYV5T9WPrx1NX6lTKW7lCroCF50lc+XVMxV436ItmIwFHRi5GBfMd0yWWYpyBSCZL4gr5s+9r8jkI7nlSw3y5vf26XfgiC3lkop/JBnKUB/Ry4OXNKH00yf/6ygnC8o79Kygyute/2/9f9aqe8C6Ud5BBMN8RHt247uP8FvW0ravQdJhjLNfP4VpOpI38Mep4xkmGscwb16cW+P/ApVYiV2+RMfRejVNu2ii/KtyBqhgylaBcm/sjDEek/7VCydkVqB7xrMpS18c59T6E0a9i+7pEPaJTCBtm8PXrSOnF7ExRLNPo3j3UtrRlURyd2FlfiwHs/MzahJMN3P2d8WodSRVAZK9Vj08TAXB1cD96BWlywGnOPdOf3Nhd8XZeeJV/WqlMlx2I5BFUvaFrBaYA0JQS2biJHNjI+fNk0Sa5qtkl7MUVUm9dzxb9qJsc82nXcUrO/GjjFGs2g8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c22cd00a-d7d9-47bf-3277-08dd9319814f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB6886.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 18:59:51.3202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IbsqmaL+E1nT9nC6sJrdM9HpQ+qRLfB+7YiVwYNooBiHqGlpQssSiFPQZzBDnkMDDu8P5TBAxmcMnpX65CZxJryqAsYsJsu0BvcmBF16fFRFiAw+u9TKRLANvl3Hm9eV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB6352
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505140173
+X-Proofpoint-ORIG-GUID: 5OThCvOUXuxWXfQC3TniHDOOM2VFr_iV
+X-Authority-Analysis: v=2.4 cv=f+RIBPyM c=1 sm=1 tr=0 ts=6824e82b cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=SquU6FTJUu4YZNhsXOIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE3MyBTYWx0ZWRfX4t17H+oTOT7a rpT05CG2wG4n8bLnawBJnO3s8hQ5r9LbkBrk7XPaPu46+gINTzqEAjHlHKMN8OQLPn7QdV4CXeg o/ianQ1WMGofj90UYCtSdV2uvYI9YRVe13REvmKT7TYvz3Ly7YNnMpugMqGC24Fu2jMFjyPtv6l
+ /wVj95oDeQQPbTjq6ifIVq3gP4sm+ZpmUVPq/QhstCRcAdRsNJ6oXV80bgFuIWefGtlD6u43cir gUThPgWFQgofds5gkGPQ9eGx4dPEEPwnMHYQlamZlI/Jd7bBS1MmLbr2/qx/zYhmG5cFQogTReU 4lXG9zh+DSescS6RgDIw2mjIzwveWfus/kDg0s0bzL7gTf/4ESLfjs5LeJi9c+hCcZ0U123G83c
+ iFhCgWcwIeS5ajBzrX/NJ7LPBp13QPRqzGB2AlVOvWPjq46T3roKg/TcQVuRdERmoNjTSTlp
+X-Proofpoint-GUID: 5OThCvOUXuxWXfQC3TniHDOOM2VFr_iV
 
-On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
-<cgoettsche@seltendoof.de> wrote:
->
-> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
->
-> Check that an ID does not refer to a gap in the global array of
-> definitions.
->
-> Constify parameters of isvalid() function and change return type to
-> bool.
->
-> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+Hi Greg,
+On 14/05/25 18:34, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.91 release.
+> There are 113 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+ld: vmlinux.o: in function `patch_retpoline':
+alternative.c:(.text+0x3b6f1): undefined reference to `module_alloc'
+make[2]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
 
-> ---
->  security/selinux/ss/hashtab.h  |  4 +--
->  security/selinux/ss/mls.c      | 66 +++++++++++++++++++++-------------
->  security/selinux/ss/mls.h      |  6 ++--
->  security/selinux/ss/policydb.c | 56 ++++++++++++++++-------------
->  security/selinux/ss/policydb.h | 12 +++----
->  security/selinux/ss/services.c |  2 +-
->  security/selinux/ss/symtab.c   |  2 +-
->  security/selinux/ss/symtab.h   |  2 +-
->  8 files changed, 88 insertions(+), 62 deletions(-)
->
-> diff --git a/security/selinux/ss/hashtab.h b/security/selinux/ss/hashtab.=
-h
-> index deba82d78c3a..c641fb12916b 100644
-> --- a/security/selinux/ss/hashtab.h
-> +++ b/security/selinux/ss/hashtab.h
-> @@ -94,11 +94,11 @@ static inline int hashtab_insert(struct hashtab *h, v=
-oid *key, void *datum,
->   * Returns NULL if no entry has the specified key or
->   * the datum of the entry otherwise.
->   */
-> -static inline void *hashtab_search(struct hashtab *h, const void *key,
-> +static inline void *hashtab_search(const struct hashtab *h, const void *=
-key,
->                                    struct hashtab_key_params key_params)
->  {
->         u32 hvalue;
-> -       struct hashtab_node *cur;
-> +       const struct hashtab_node *cur;
->
->         if (!h->size)
->                 return NULL;
-> diff --git a/security/selinux/ss/mls.c b/security/selinux/ss/mls.c
-> index a6e49269f535..3cd36e2015fa 100644
-> --- a/security/selinux/ss/mls.c
-> +++ b/security/selinux/ss/mls.c
-> @@ -32,7 +32,7 @@
->  int mls_compute_context_len(struct policydb *p, struct context *context)
->  {
->         int i, l, len, head, prev;
-> -       char *nm;
-> +       const char *nm;
->         struct ebitmap *e;
->         struct ebitmap_node *node;
->
-> @@ -86,7 +86,8 @@ int mls_compute_context_len(struct policydb *p, struct =
-context *context)
->  void mls_sid_to_context(struct policydb *p, struct context *context,
->                         char **scontext)
->  {
-> -       char *scontextp, *nm;
-> +       const char *nm;
-> +       char *scontextp;
->         int i, l, head, prev;
->         struct ebitmap *e;
->         struct ebitmap_node *node;
-> @@ -155,27 +156,44 @@ void mls_sid_to_context(struct policydb *p, struct =
-context *context,
->         *scontext =3D scontextp;
->  }
->
-> -int mls_level_isvalid(struct policydb *p, struct mls_level *l)
-> +bool mls_level_isvalid(const struct policydb *p, const struct mls_level =
-*l)
->  {
-> -       struct level_datum *levdatum;
-> +       const char *name;
-> +       const struct level_datum *levdatum;
-> +       struct ebitmap_node *node;
-> +       u32 bit;
-> +       int rc;
->
->         if (!l->sens || l->sens > p->p_levels.nprim)
-> -               return 0;
-> -       levdatum =3D symtab_search(&p->p_levels,
-> -                                sym_name(p, SYM_LEVELS, l->sens - 1));
-> +               return false;
-> +
-> +       name =3D sym_name(p, SYM_LEVELS, l->sens - 1);
-> +       if (!name)
-> +               return false;
-> +
-> +       levdatum =3D symtab_search(&p->p_levels, name);
->         if (!levdatum)
-> -               return 0;
-> +               return false;
->
->         /*
-> -        * Return 1 iff all the bits set in l->cat are also be set in
-> +        * Validate that all bits set in l->cat are also be set in
->          * levdatum->level->cat and no bit in l->cat is larger than
->          * p->p_cats.nprim.
->          */
-> -       return ebitmap_contains(&levdatum->level.cat, &l->cat,
-> -                               p->p_cats.nprim);
-> +       rc =3D ebitmap_contains(&levdatum->level.cat, &l->cat,
-> +                             p->p_cats.nprim);
-> +       if (!rc)
-> +               return false;
-> +
-> +       ebitmap_for_each_positive_bit(&levdatum->level.cat, node, bit) {
-> +               if (!sym_name(p, SYM_CATS, bit))
-> +                       return false;
-> +       }
-> +
-> +       return true;
->  }
->
-> -int mls_range_isvalid(struct policydb *p, struct mls_range *r)
-> +bool mls_range_isvalid(const struct policydb *p, const struct mls_range =
-*r)
->  {
->         return (mls_level_isvalid(p, &r->level[0]) &&
->                 mls_level_isvalid(p, &r->level[1]) &&
-> @@ -183,32 +201,32 @@ int mls_range_isvalid(struct policydb *p, struct ml=
-s_range *r)
->  }
->
->  /*
-> - * Return 1 if the MLS fields in the security context
-> + * Return true if the MLS fields in the security context
->   * structure `c' are valid.  Return 0 otherwise.
->   */
-> -int mls_context_isvalid(struct policydb *p, struct context *c)
-> +bool mls_context_isvalid(const struct policydb *p, const struct context =
-*c)
->  {
-> -       struct user_datum *usrdatum;
-> +       const struct user_datum *usrdatum;
->
->         if (!p->mls_enabled)
-> -               return 1;
-> +               return true;
->
->         if (!mls_range_isvalid(p, &c->range))
-> -               return 0;
-> +               return false;
->
->         if (c->role =3D=3D OBJECT_R_VAL)
-> -               return 1;
-> +               return true;
->
->         /*
->          * User must be authorized for the MLS range.
->          */
->         if (!c->user || c->user > p->p_users.nprim)
-> -               return 0;
-> +               return false;
->         usrdatum =3D p->user_val_to_struct[c->user - 1];
-> -       if (!mls_range_contains(usrdatum->range, c->range))
-> -               return 0; /* user may not be associated with range */
-> +       if (!usrdatum || !mls_range_contains(usrdatum->range, c->range))
-> +               return false; /* user may not be associated with range */
->
-> -       return 1;
-> +       return true;
->  }
->
->  /*
-> @@ -449,8 +467,8 @@ int mls_convert_context(struct policydb *oldp, struct=
- policydb *newp,
->                 return 0;
->
->         for (l =3D 0; l < 2; l++) {
-> -               char *name =3D sym_name(oldp, SYM_LEVELS,
-> -                                     oldc->range.level[l].sens - 1);
-> +               const char *name =3D sym_name(oldp, SYM_LEVELS,
-> +                                           oldc->range.level[l].sens - 1=
-);
->
->                 levdatum =3D symtab_search(&newp->p_levels, name);
->
-> diff --git a/security/selinux/ss/mls.h b/security/selinux/ss/mls.h
-> index 07980636751f..93cde1b22992 100644
-> --- a/security/selinux/ss/mls.h
-> +++ b/security/selinux/ss/mls.h
-> @@ -27,9 +27,9 @@
->  int mls_compute_context_len(struct policydb *p, struct context *context)=
-;
->  void mls_sid_to_context(struct policydb *p, struct context *context,
->                         char **scontext);
-> -int mls_context_isvalid(struct policydb *p, struct context *c);
-> -int mls_range_isvalid(struct policydb *p, struct mls_range *r);
-> -int mls_level_isvalid(struct policydb *p, struct mls_level *l);
-> +bool mls_context_isvalid(const struct policydb *p, const struct context =
-*c);
-> +bool mls_range_isvalid(const struct policydb *p, const struct mls_range =
-*r);
-> +bool mls_level_isvalid(const struct policydb *p, const struct mls_level =
-*l);
->
->  int mls_context_to_sid(struct policydb *p, char oldc, char *scontext,
->                        struct context *context, struct sidtab *s, u32 def=
-_sid);
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
-b.c
-> index 326d82f8db8c..f8d6e993ce89 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -923,51 +923,59 @@ int policydb_load_isids(struct policydb *p, struct =
-sidtab *s)
->         return 0;
->  }
->
-> -int policydb_class_isvalid(struct policydb *p, u16 class)
-> +bool policydb_class_isvalid(const struct policydb *p, u16 class)
->  {
->         if (!class || class > p->p_classes.nprim)
-> -               return 0;
-> -       return 1;
-> +               return false;
-> +       if (!p->sym_val_to_name[SYM_CLASSES][class - 1])
-> +               return false;
-> +       return true;
->  }
->
-> -int policydb_role_isvalid(struct policydb *p, unsigned int role)
-> +bool policydb_role_isvalid(const struct policydb *p, u32 role)
->  {
->         if (!role || role > p->p_roles.nprim)
-> -               return 0;
-> -       return 1;
-> +               return false;
-> +       if (!p->sym_val_to_name[SYM_ROLES][role - 1])
-> +               return false;
-> +       return true;
->  }
->
-> -int policydb_type_isvalid(struct policydb *p, unsigned int type)
-> +bool policydb_type_isvalid(const struct policydb *p, u32 type)
->  {
->         if (!type || type > p->p_types.nprim)
-> -               return 0;
-> -       return 1;
-> +               return false;
-> +       if (!p->sym_val_to_name[SYM_TYPES][type - 1])
-> +               return false;
-> +       return true;
->  }
->
-> -int policydb_boolean_isvalid(const struct policydb *p, u32 boolean)
-> +bool policydb_boolean_isvalid(const struct policydb *p, u32 boolean)
->  {
->         if (!boolean || boolean > p->p_bools.nprim)
-> -               return 0;
-> -       return 1;
-> +               return false;
-> +       if (!p->sym_val_to_name[SYM_BOOLS][boolean - 1])
-> +               return false;
-> +       return true;
->  }
->
->  /*
-> - * Return 1 if the fields in the security context
-> + * Return true if the fields in the security context
->   * structure `c' are valid.  Return 0 otherwise.
->   */
-> -int policydb_context_isvalid(struct policydb *p, struct context *c)
-> +bool policydb_context_isvalid(const struct policydb *p, const struct con=
-text *c)
->  {
-> -       struct role_datum *role;
-> -       struct user_datum *usrdatum;
-> +       const struct role_datum *role;
-> +       const struct user_datum *usrdatum;
->
->         if (!c->role || c->role > p->p_roles.nprim)
-> -               return 0;
-> +               return false;
->
->         if (!c->user || c->user > p->p_users.nprim)
-> -               return 0;
-> +               return false;
->
->         if (!c->type || c->type > p->p_types.nprim)
-> -               return 0;
-> +               return false;
->
->         if (c->role !=3D OBJECT_R_VAL) {
->                 /*
-> @@ -976,24 +984,24 @@ int policydb_context_isvalid(struct policydb *p, st=
-ruct context *c)
->                 role =3D p->role_val_to_struct[c->role - 1];
->                 if (!role || !ebitmap_get_bit(&role->types, c->type - 1))
->                         /* role may not be associated with type */
-> -                       return 0;
-> +                       return false;
->
->                 /*
->                  * User must be authorized for the role.
->                  */
->                 usrdatum =3D p->user_val_to_struct[c->user - 1];
->                 if (!usrdatum)
-> -                       return 0;
-> +                       return false;
->
->                 if (!ebitmap_get_bit(&usrdatum->roles, c->role - 1))
->                         /* user may not be associated with role */
-> -                       return 0;
-> +                       return false;
->         }
->
->         if (!mls_context_isvalid(p, c))
-> -               return 0;
-> +               return false;
->
-> -       return 1;
-> +       return true;
->  }
->
->  /*
-> diff --git a/security/selinux/ss/policydb.h b/security/selinux/ss/policyd=
-b.h
-> index 42117adb2ca0..1367387beaa7 100644
-> --- a/security/selinux/ss/policydb.h
-> +++ b/security/selinux/ss/policydb.h
-> @@ -320,11 +320,11 @@ struct policy_file {
->
->  extern void policydb_destroy(struct policydb *p);
->  extern int policydb_load_isids(struct policydb *p, struct sidtab *s);
-> -extern int policydb_context_isvalid(struct policydb *p, struct context *=
-c);
-> -extern int policydb_class_isvalid(struct policydb *p, u16 class);
-> -extern int policydb_type_isvalid(struct policydb *p, unsigned int type);
-> -extern int policydb_role_isvalid(struct policydb *p, unsigned int role);
-> -extern int policydb_boolean_isvalid(const struct policydb *p, u32 boolea=
-n);
-> +extern bool policydb_context_isvalid(const struct policydb *p, const str=
-uct context *c);
-> +extern bool policydb_class_isvalid(const struct policydb *p, u16 class);
-> +extern bool policydb_type_isvalid(const struct policydb *p, u32 type);
-> +extern bool policydb_role_isvalid(const struct policydb *p, u32 role);
-> +extern bool policydb_boolean_isvalid(const struct policydb *p, u32 boole=
-an);
->  extern int policydb_read(struct policydb *p, struct policy_file *fp);
->  extern int policydb_write(struct policydb *p, struct policy_file *fp);
->
-> @@ -395,7 +395,7 @@ static inline int put_entry(const void *buf, size_t b=
-ytes, size_t num,
->         return 0;
->  }
->
-> -static inline char *sym_name(struct policydb *p, unsigned int sym_num,
-> +static inline const char *sym_name(const struct policydb *p, unsigned in=
-t sym_num,
->                              unsigned int element_nr)
->  {
->         return p->sym_val_to_name[sym_num][element_nr];
-> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/service=
-s.c
-> index 3fb971fe4fd9..5b1d0e80d975 100644
-> --- a/security/selinux/ss/services.c
-> +++ b/security/selinux/ss/services.c
-> @@ -464,7 +464,7 @@ static void security_dump_masked_av(struct policydb *=
-policydb,
->         struct common_datum *common_dat;
->         struct class_datum *tclass_dat;
->         struct audit_buffer *ab;
-> -       char *tclass_name;
-> +       const char *tclass_name;
->         char *scontext_name =3D NULL;
->         char *tcontext_name =3D NULL;
->         char *permission_names[SEL_VEC_MAX];
-> diff --git a/security/selinux/ss/symtab.c b/security/selinux/ss/symtab.c
-> index 832660fd84a9..a756554e7f1d 100644
-> --- a/security/selinux/ss/symtab.c
-> +++ b/security/selinux/ss/symtab.c
-> @@ -50,7 +50,7 @@ int symtab_insert(struct symtab *s, char *name, void *d=
-atum)
->         return hashtab_insert(&s->table, name, datum, symtab_key_params);
->  }
->
-> -void *symtab_search(struct symtab *s, const char *name)
-> +void *symtab_search(const struct symtab *s, const char *name)
->  {
->         return hashtab_search(&s->table, name, symtab_key_params);
->  }
-> diff --git a/security/selinux/ss/symtab.h b/security/selinux/ss/symtab.h
-> index 8e667cdbf38f..7cfa3b44953a 100644
-> --- a/security/selinux/ss/symtab.h
-> +++ b/security/selinux/ss/symtab.h
-> @@ -21,6 +21,6 @@ struct symtab {
->  int symtab_init(struct symtab *s, u32 size);
->
->  int symtab_insert(struct symtab *s, char *name, void *datum);
-> -void *symtab_search(struct symtab *s, const char *name);
-> +void *symtab_search(const struct symtab *s, const char *name);
->
->  #endif /* _SS_SYMTAB_H_ */
-> --
-> 2.49.0
->
+We see this build error in 6.6.91-rc2 tag.
+
+This is similar error to what Pavel reported.
+
+Thanks,
+Harshit
