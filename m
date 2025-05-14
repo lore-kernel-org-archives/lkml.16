@@ -1,266 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352B7296712
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253988; cv=fail; b=GkkB54VjS5sOt+dQO32jaWQo+txc3NnW+F2Q3lEa//6S9c8EbJ6+9SeepO+EwzLH7KWdbfaLhDHZeKM26srQRQOf5y3nObbMwooZwiHwpjD8VItfgfrpTX3iyRS1C8DXJqBjHClezky1iea4IEXNbA2DTrR94uV84sRLz3PVeaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253988; c=relaxed/simple;
-	bh=KnI3jM+g+en3UKv9f9ABHnrcI507X89df5CNP1uAYaI=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Iv+EOhLvmW3wA7bnoRKINz6dqKawWGmGZFj9uj4t0FCIrJqaJlmQG6JmBU8EnZYsh/RZgbNn1/I6HrV8UgIWkcqRaNN8zFC5ocjQpe9YsHHf51FljtXSlsFM0H69mrfj5PsflMkSNogfaVOzy1ujhM9/mhienpQd2LxYRjUEJDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLr+gKsc; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AC52989B4
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747253990; cv=none; b=cto2nYcJbPap/ndhtNs6K/6J4DEpDmDjP2uXuisabAZZ5HDbEgx8IQB16G94dn9it3tEUEUKSpGvZlaCedRDShEJbNEb6zRzVtTfwtZucbagu3dIYlQK7UbzuGLKfNR8FLU1S9Y+csJ4vKnS44y1uZwFvKJTCjsx4VB39Xf8jDk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747253990; c=relaxed/simple;
+	bh=OPT0y+WRZjCsDogNhl8lTzBq71NZbHgq+ogF/DweRgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hGKCh8Ajhe7Te7F0CPeWN8pZdWvP8YiLhDq8yCtslqbWXyv0e/gNDFcybnyGvmRdr+PuSqj1A1aO6siHVOkmwmWjgWMx+qD279StbGB4Phi+wOVisijeQ8baU2kb5HVeCLgZhHbY1n/oQn5pVsFEzgYmgNlzv7icSgw5p2UBBmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hVO8ZUXU; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLr+gKsc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747253986; x=1778789986;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=KnI3jM+g+en3UKv9f9ABHnrcI507X89df5CNP1uAYaI=;
-  b=gLr+gKsc6F79ShlbazTK/DcrsFwcqzBkOSRvBJ3Ic1wZLjSAU1qHaj9e
-   TO3cKQMQVLm+23Wc98sKtW773Krtfh5irjh8yyHoDPXyofuhMrderXL8P
-   78qgDwFrSu2+r3lW/XtEBla1r0IbxjtdioqiNY7FPxgLfYrbhVxPIjl15
-   s+tGuTlerJJ7pXM6XUVCNwDZHQdmjUj+dUXry6rcKRSZnUHJN0e9Buux7
-   hIxMEHqjmxImbHn6QFo2iPQpg7CsC6xBzacHHhYUp1ADVzWTIcJL/MOwU
-   nvakQgCYA9k3chQZ6b+A0v4/FKEugF7k1OlkKPKtIQle/P+E1P3/3WMjP
-   g==;
-X-CSE-ConnectionGUID: XixdyTWDT6mtfMxXw9mKmw==
-X-CSE-MsgGUID: POpRa/XuRmSQJLFi6WI72Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71678023"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="71678023"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 13:19:45 -0700
-X-CSE-ConnectionGUID: RC+AB+WIQGSjMY+xI1uDuQ==
-X-CSE-MsgGUID: pXvwyy1JQWO192VH5AEoDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="143254058"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 13:19:45 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 14 May 2025 13:19:44 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 14 May 2025 13:19:44 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 14 May 2025 13:19:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p4gDzBpp3vgyI4D18uCybWziVr0JV2GfZwsPwEByd6P0yaeko9U9SmTg0XH6YNJ/x20k0cyaAlLL84z7inP6pEWDyUuMaf+0u0vvyXTSEgksm7M7OQ0qkKEKkd3VnZJMB7cyeLT3QN6y3aZlLVPNKrS9WNMq7kshJAYvrJBJI72AFOBpFnIwEQHyNzP+MbZTY8FpyaNWVj9x0gBpO0be+fm2c0A3xOINCqGbbECivVxqOH9vagz57P5ZcLkuZwBXZGzN92KWvxfPlLrqyIdoPqbQb7TUJR+vTTxRRl8AbEpioR4KK3/obduFNrKXPy8dX+Qbfa5qoPmZlZfgZy5mlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VApe87+MInqjzkqmKC5uJdfjWYHEDKxgBNlIMNgo6E4=;
- b=CTB4e5MYgasIdOz37BuZEx+iif+HtDg2MnzYlrvkCKI42MtxdXBdGezTVNz5eW9AsRKKXxcrwjOVCTx2fzw7HhEkzYsG5Pig/6ZsUgeMbEs59K3WF+VlvWrCTushJe+4/QquoinWk3vYqhTvNLXxATJL//93y2LIhoOfCJ+JZ8LWFpQTA5znucwRMMZILpUsfMkjBZQz4qjJKWrXHNaM75U/EHCO5CqTJyMLzGd8Xo6BzLSWZQrcGJreV9IGSgKWq0VQ6UO3K/Djumb9+3yHZtGP654Jwn9GXMxpjIsfD6sfnxaq9MVze9oNFpn5/d/cPR+ey7X6tCUslZvYWoNPDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by DS7PR11MB7932.namprd11.prod.outlook.com (2603:10b6:8:e5::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.19; Wed, 14 May 2025 20:19:40 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 20:19:40 +0000
-Message-ID: <ce10214c-84ac-438a-ac0b-d876e322b2f6@intel.com>
-Date: Wed, 14 May 2025 13:19:38 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 02/30] find: add find_first_andnot_bit()
-To: Fenghua Yu <fenghuay@nvidia.com>, James Morse <james.morse@arm.com>,
-	<x86@kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, "Yury Norov [NVIDIA]"
-	<yury.norov@gmail.com>
-References: <20250513171547.15194-1-james.morse@arm.com>
- <20250513171547.15194-3-james.morse@arm.com>
- <4f8b88aa-524c-4416-9eaa-74ea68ff1ed6@nvidia.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <4f8b88aa-524c-4416-9eaa-74ea68ff1ed6@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BY5PR13CA0016.namprd13.prod.outlook.com
- (2603:10b6:a03:180::29) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hVO8ZUXU"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22e45088d6eso2842175ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747253988; x=1747858788; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0MUnnnVN3b+cBPjyOT3GG4FgLxBLXNmZ4SICIB9ihgo=;
+        b=hVO8ZUXUodiiWdoUGQhEV9z/YE3qlP3j94XgRlsHzH3U9NwPsgw2P5BKO9sZREyu4S
+         dYNc3oGEAJVH8KgqB9fX9vYe7l8c9G3XWxXBPAprE82TFg4XzApUHjrKE8q/c0GxOjTR
+         0WNVq+qYgPJS9+4fWyc57S+K/XWjYDlxZqxpW7gCfx5yCtMj7g2zVrGle65l+yCC034b
+         C5YtnS8PEyBA69S2vi/ZGN2N3bbAbmUWxqJn36r0mqhcm09aNtOswau5WKdyyI3CpldL
+         wCu8po9f10E2Wbei5gFkgzCleinys4KuMYyRCErtCK4cF5SsRS6KGT7kP+pO9T0AMvuu
+         sLEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747253988; x=1747858788;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0MUnnnVN3b+cBPjyOT3GG4FgLxBLXNmZ4SICIB9ihgo=;
+        b=QKcFTrPG8rXBBuBTPPRl9q1360EvtJ1MwwRJKGhLWxQrgPP0coegm1X8p8MR2JPiUq
+         Rbq7Xnz7OJFio2cjLdHN3dP+Yx356HP9SqY96rPTghdDbnfWS5HMmY+dz//pRaddd3jY
+         eQHW0k4UPEZqqXr5hDhhAyM5u7ygUCkFmRWBqSncQWWqdQtx17qxabH2CiEYbv3wiS9+
+         BAqnnel4hEd+iYzE7tiwYjfFls4cvegO6mrRU8GFEFf7Gc1r6o1v866P9vP/5AzG4moJ
+         4KFQwzfE9lpZuIN90nT/H29ebFcckykeUBkvmqBFrsflDP0GWRHKGsIszXtKF4sMzJF1
+         mrCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV36oKvd/57CEXFZ0y6ORQhTnYUjvCr9lb3EM+y6+lAv6sbdV0jile3rNW4BzHYk7O8zMPMJR6mdkcES6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/NsEwD5AIjfdBpGMw4g/GSXKKSwlCCJIig4GjRp7cQwtW2PTN
+	e2/Qb1q8ZT/UPS43fE/8u9Asb4BKyTHp81qoU2nbB/6CZ1lXH4QU
+X-Gm-Gg: ASbGncsUABi+NtZ9JTecYTgeq3LKllETTwZqlBUhppInokHaGpIFVxHgq91GG5EeQeF
+	e2feWMGqyftovAnVYNFAHeqPYr++9P5mWqMSjAAJEP1oA4lro6rbF4goKeub+TIu7cwEMvvziwH
+	zxaf156hxyeru5mqYIIfgeuCSPo5vEe7VKgS7MYhchJJFjepHaMlAm3thDnAUlw6WA+TIKNzIzz
+	uB8rkHggBhMM867CHL5BFyWX5TnGZQI8OK4EIgXyJqdLmxQipw17oRthwXACXxEG1mK4+tgAXGf
+	LqUnNrmwOkwyUk5SiSLLuLrjHU9OL/3gkHwtcF/pFPDL2nInToi/uD64xnEoVTK9JDUqKFKhJkW
+	alt1AHv0=
+X-Google-Smtp-Source: AGHT+IEwvmfAco98nGh9c9I804LgK/NI5B5gMjpE0yaCnjlhpRcIVXov0YtvuVPKefXIAwHAA8PGVQ==
+X-Received: by 2002:a17:902:dad2:b0:22e:5e70:b2d3 with SMTP id d9443c01a7336-231980bbe7cmr66312145ad.1.1747253988233;
+        Wed, 14 May 2025 13:19:48 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([101.32.222.185])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401934sm2003692a91.9.2025.05.14.13.19.43
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 14 May 2025 13:19:47 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Hugh Dickins <hughd@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Baoquan He <bhe@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 25/28] mm/workingset: leave highest 8 bits empty for anon shadow
+Date: Thu, 15 May 2025 04:17:25 +0800
+Message-ID: <20250514201729.48420-26-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250514201729.48420-1-ryncsn@gmail.com>
+References: <20250514201729.48420-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DS7PR11MB7932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c1f576b-8923-4ea6-0666-08dd9324a7f4
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?MVlhRWRQWUJVM0pQV2NnckhsSEw5MGNrQi91aWZVNjZpeldLRXNPUmQ4dEZJ?=
- =?utf-8?B?QjNsSEtJVEk4bUlwcmlJb1J5V05NY2QxRkNONWNDeEpWTFJpb3paOVdRVXdX?=
- =?utf-8?B?RnZVeC91MnVjajB6NkN6dGFia1FJbGVhekJoZTc4QWJzNVFpdzZpRGJIZzNE?=
- =?utf-8?B?UkZDTFNRbWkzZVBla0ZJWFpqYmxVZlQ5dmNPanRoS00rZW8zS3c1ejhnc3o2?=
- =?utf-8?B?djF6R0w3NGVQTG4vL3VFaHQrYmZEWDVVa1JRYzlsOWJOWVZpWFRhaWg2RzY2?=
- =?utf-8?B?aW1Bc3pxZ0ZpTEpiZU9tSENibmlFVzE1cjJVMEJ6Z1JpK3lIR1NtMnRRTFU3?=
- =?utf-8?B?VnFNcmo5dXBYYWI2V3ZiN0tnL1BKMDE0OFRYMzlkTWFwTkZDZEZHNFhZLzdo?=
- =?utf-8?B?R2U5aGtqRWFPeGFzZkpzbVhkaWNZeXR3bEp3TmhFUnRoWnMrMmVmUHlGeFJC?=
- =?utf-8?B?TVdZdk5MaVFiekZMM2kvWXVXY1NWOEJiWUR0clBjNFRCUWk3ekZnQTQwenBI?=
- =?utf-8?B?VkVORytpcTVaM1JEUGJNa2JvcnVSb2loeDRUVmxJcDZDenBFUDZNMGYrNXF5?=
- =?utf-8?B?bEwxR0JEUWpZWmdGOXJKck05aDlkUzk4aDVOOFk5aFl6bHlabG5FY0lHOXEy?=
- =?utf-8?B?by9JUmt1SlhhbytCczlIdUcxZU82QXBCQk00S1NKS0FVUDY0YTlVSWNoWlRQ?=
- =?utf-8?B?NW1tY3BCWnBScXJSYWtGcG1IOVRRTmV5ZGpqRFYxeTF6bnBRMUs2NVJXamgw?=
- =?utf-8?B?NDlIK0FWRWZPZVpPSGFNZS90YmpZNENBeTBvNDNCbTNhWVNHTnpueXBBOC9q?=
- =?utf-8?B?b2VJZUpUeHJvdDRncnoyeWY0ZWEzd3FNTjUyNnFtQ2doRnVHdXJSTzd6NGFQ?=
- =?utf-8?B?L2xQRXY0RGNPdVdNb2pZSjYramdrSGEvSjE1WGp0bTRLNEp0UU4yV1NHUzFH?=
- =?utf-8?B?aDhYZ1hnb0FRWWJ1YlIwNnFMZkRsTnpMK0k1bk1RTEp4cWRLQkNRRWJoRm0x?=
- =?utf-8?B?QTNPdEh3a2hyNmpqL0NOenZhSXZvcno0cy82M0FSNFlNQ29zTlh2MEVnZ1VE?=
- =?utf-8?B?cUo4TEZoZDFGVldwRWVZRGFadmI1ZHlwRVBCR3lGWUx2SEdpNXRLZkVvVE5P?=
- =?utf-8?B?VVErVlFxQnB1RU1hU0dqbHk3VkJqVU9VNkg5aXZiNTFFZW5xOGJTN2RaUWtu?=
- =?utf-8?B?SmlmcFFlRkhEeXhLUSs4a1ZBdzkyajZ6YnRsQjVxZWFCTXYvKzRCcTVxbmxz?=
- =?utf-8?B?YW4zOFNpMUVQeWFaTE1HUTg0Tm8vN0FZeXVNcDhza2hjY0Q1NjN2Y3lDWU1a?=
- =?utf-8?B?YWVQQkRjNFdlR1lwTDNqbE1EVHFnenNXQU1QR0h3QlIvNVNSblN5UTlMajNs?=
- =?utf-8?B?RzN6TjlLRHlRdk0xdUpUMlFJYUwyNmFhY1ZheWRlRlpKQlhNNFhSUm5FakJT?=
- =?utf-8?B?RG1GdmtxdEpRK0ZOc2kvaGlqbHZLZVJoUWxVNjd2ajl6U3c5b2VRclZ3M28r?=
- =?utf-8?B?aVJ6TnU0eTlWNkt4R3FhTlpxOVFqU0Z4Y2JYdFp2eGxoUmhpOXNDamxnSGR3?=
- =?utf-8?B?aElYMllYTWpMK3JzVjFMc2hzakFwQlkrOWF6a0dYSE9qNHhDaUxvYXNlckJl?=
- =?utf-8?B?dDZnUHordytlT3hoOTgxU2k3NkJXdXZ2NDVLY1pXQ1RiVThnSGhmZG1pRlJC?=
- =?utf-8?B?eG1xUEZUMXdkTEQyZEQ5MXordlRiRmIveXF0d0dvOGdrZlJIRU81S1J0M1M4?=
- =?utf-8?B?VGdING4zM3czQy8rMXNQQlBMZFR1cDdva3BCY2NFeFZBK1hJRUM1emMwdlpa?=
- =?utf-8?B?Z3piRFhVODNpM1pLS1ZuWjlNVld4MFR6NHJjWVdHb0Jjcm5odVZQRVZwOGkr?=
- =?utf-8?Q?yqFCkbVltMUUj?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Ni9nZlhwQzkzODZLZW5hVlB3Mjk4SGsvTHJ3ekl0TWFXOEorWHRWR1puVWZl?=
- =?utf-8?B?NmFmYVh1UytSODdMOFM3WmgzYXVQYi9NazB5Z1E0cFo0aXE3eFlsQyswdUZa?=
- =?utf-8?B?QklBN2s1eUZvL2IxdzZqcEJlU0wvNUhiUm1xVG0weTE0TkFxRms3K21HV01s?=
- =?utf-8?B?dk9id1I5WTBjNWQrd09QQmJUdDAwbkZ0SUY4VldSK2wvdmRTMGhCbXIvWktC?=
- =?utf-8?B?d3VuSzh1bFQ3cUNwUlRyS2lwTUgvdjEwUXBJbXpOWVZqcW1sa2d1SWQ4cFAy?=
- =?utf-8?B?MmhIMU9CeXAzSXNzNXdnc0RuTURXZDB4cFlhYWpQbjNlWUVuQU5PRE1BbTdU?=
- =?utf-8?B?eThUaG4xU2FtY1FxS1hxOHozNjRITGFLeEhoOGcxT3FOV3Y2ODNuaWJGMkg5?=
- =?utf-8?B?UFl1OE03NzI4TW1YWWE1TnhDR2N0RXVaanpibVloMWhSR3hzSFBEdFptMnJT?=
- =?utf-8?B?TUtWaVd5TngwNFF0blROMjduQnhqbHk0dnVIc0hzT0NlTjUzZ1RTbjA4bHVm?=
- =?utf-8?B?dkFzdFhCRXhiUEw2bmU1R1kwWWV4K215RWtrS2E3bUl1NXN1cmtoL2FOWW14?=
- =?utf-8?B?TnlhdEZoQkM2QWllVW1mSXk2MmkwY0NtL21sRTl4Y0IxQTlvaldBWmFIZHpt?=
- =?utf-8?B?WXJPSzJSL0hSeDRBelQzZGZwRjVGclZxOEkyaWtWREFUNjV3c0ZRMnUxKzRK?=
- =?utf-8?B?SW02RGxtSEZnMTFYMXZFZ3RsZDR3ZjZMR3NvK2JJTFNmVGNQcUZFN2tsUXJu?=
- =?utf-8?B?YXNQQWpzS2UvMDVnZ2FPcm5rK1RJTDJaNGJhamErYmIrNEw1bHlUcmZWWGk3?=
- =?utf-8?B?RDFid0ZTWERnN2hlc1crNG5aa1krM2xMcjMzMjVrUkZmbG9ZUkNyREZoY2to?=
- =?utf-8?B?ZlViK2NpSmdtWWcrQXdWREdVd2ZmVGtYamhtMGpIaTh5cHRTcVBzNWZOMkt3?=
- =?utf-8?B?bjNMMlkxeWlDNk5SeEVqeDJUeEphTjJ5bnltb2I5TjBnQm53RTEwOVFCOUJ6?=
- =?utf-8?B?TjZ3Tit6WXlQeDF5R2hNeU5vMHN5UG5ndDhSL044djFSN3pQQ2tWMTNzNFI2?=
- =?utf-8?B?enpacHAvMWlPYkdJYTdkWm9qOTNTZXZ3TmhJMUY2RmRxZ0RPNTJxbFB4byts?=
- =?utf-8?B?MDQ1cmkrMGN5UytKVlo1cUk1S05NY3lOTjlCa3dGN2lGVjlVeTN4NXdXV2JZ?=
- =?utf-8?B?Y3A3Sko3ZTAvMXpqemtBQVR1QUJ0MDhKSTkrT3Q2RDAvdUcvcnROK3NpVkZa?=
- =?utf-8?B?M3BpaTR6eFlSalUrUVF5QkxCK0NVUXNmaFZrUU05QUNjMGVVVVE1UkU4S1VY?=
- =?utf-8?B?c1k2TFZXcDBLYnpNOEFXSnJHemlaYVp6bVd0aDZWLzFKaTFYNUp5MUlqeGxZ?=
- =?utf-8?B?S2c2bC9Ib3A3ZUYyMGdTMEEwT1JGN09lbzZyQko5YzNmcTU5OEV6V1dlN2dE?=
- =?utf-8?B?SUUvKzA5S1JqQnVLbHFHa2VzbWkycFVVQjN0Y084ckRwMzhoZmUzcytoNU1n?=
- =?utf-8?B?WnNaQ2ZmNHpFL0JWSVY0YldkbTlvL2FFalFkRDdrdzJCbUxWUjVNU1BsTCs3?=
- =?utf-8?B?OUJqcng1YVhDTU8wUm1CMUlYRWQyNk12MDBXNSs5MVpDak9TbXNZR2ZmclI2?=
- =?utf-8?B?ckNmdmp3TWtjZFJWQjZhWXB3Zm1lVVYybkN0WkVPYlVtTkZaZGp6d092VmVD?=
- =?utf-8?B?RzdiRzhaTXFYQnNVRXA1ajNDRkNwTXpZYmlaVFRUMGpmU21oTmkwRzZSVWRQ?=
- =?utf-8?B?Vng3bzNBNVJibVc5OExaNGRRWVdyajJIRmN5STdzNDRjRE9heEt5emdLWkZx?=
- =?utf-8?B?V3RQUUlWdTFtdjJEU2hUVUdpYzBGZ1FWOW15V3VVVGd5dFU5OWJVUVVkVTZq?=
- =?utf-8?B?YktZMzhVeGVGRFRIUVhNM2NBSVZBM0NqMUhyNzRsT1B0RVF1TmlSdmRXem5M?=
- =?utf-8?B?cVJCTU83V1R2aXN1Qmsyckw0NmY4bDRvTEZIMVV4Q282b3RmRVlNQ2J0SmhZ?=
- =?utf-8?B?UHpLUnNYWEhTTWJMT2tDT2RGUmhkUE12d0RHUWwwMGxtS3JraTdEYjFEa2tl?=
- =?utf-8?B?WTZvTitlZllnN2kzdjJMK294YVBnMlRIa0VoQ29XOEJvTU5XUVplK1QzV2xT?=
- =?utf-8?B?T3R0UjEzOVFsRzdlSWhwcmZxVWhmOGVJeFg0aENGTmdrYVozWTZtS1oxa1Z0?=
- =?utf-8?B?QUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c1f576b-8923-4ea6-0666-08dd9324a7f4
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 20:19:40.3995
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1eXc3zs1S/DoeRrlYFVkx9tPL5YVX5DlnCw+QTafLDamQvZqilMatfyqjrSTJwaOeWZ2ZZpFk33/CnyoBicxwBhKQj68srms3eCJGKuKS0Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7932
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Fenghua,
+From: Kairui Song <kasong@tencent.com>
 
-On 5/14/25 12:59 PM, Fenghua Yu wrote:
-> Hi, James and Yury,
-> 
-> On 5/13/25 10:15, James Morse wrote:
->> From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
->>
->> The function helps to implement cpumask_andnot() APIs.
->>
->> Tested-by: James Morse <james.morse@arm.com>
->> Reviewed-by: James Morse <james.morse@arm.com>
->> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
->> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
->> Signed-off-by: James Morse <james.morse@arm.com>
->> ---
->>   include/linux/find.h | 25 +++++++++++++++++++++++++
->>   lib/find_bit.c       | 11 +++++++++++
->>   2 files changed, 36 insertions(+)
->>
->> diff --git a/include/linux/find.h b/include/linux/find.h
->> index 68685714bc18..5a2c267ea7f9 100644
->> --- a/include/linux/find.h
->> +++ b/include/linux/find.h
->> @@ -29,6 +29,8 @@ unsigned long __find_nth_and_andnot_bit(const unsigned long *addr1, const unsign
->>                       unsigned long n);
->>   extern unsigned long _find_first_and_bit(const unsigned long *addr1,
->>                        const unsigned long *addr2, unsigned long size);
->> +unsigned long _find_first_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
->> +                 unsigned long size);
->>   unsigned long _find_first_and_and_bit(const unsigned long *addr1, const unsigned long *addr2,
->>                         const unsigned long *addr3, unsigned long size);
->>   extern unsigned long _find_first_zero_bit(const unsigned long *addr, unsigned long size);
->> @@ -347,6 +349,29 @@ unsigned long find_first_and_bit(const unsigned long *addr1,
->>   }
->>   #endif
->>   +/**
->> + * find_first_andnot_bit - find the first bit set in 1st memory region and unset in 2nd
->> + * @addr1: The first address to base the search on
->> + * @addr2: The second address to base the search on
->> + * @size: The bitmap size in bits
->> + *
->> + * Returns the bit number for the first set bit
->> + * If no bits are set, returns >= @size.
->> + */
->> +static __always_inline
->> +unsigned long find_first_andnot_bit(const unsigned long *addr1,
->> +                 const unsigned long *addr2,
->> +                 unsigned long size)
-> CHECK: Alignment should match open parenthesis
-> 
+Swap table entry will need 8 bits reserved for swap count, so anon
+shadow should have 8 bits remain 0.
 
-This was brought up [2] during review of V1 of this specific work [1]. 
+This should be OK for foreseeable future, take 52 bits physical address
+space as example: for 4K pages, there would be at most 40 bits for
+addressable pages. Currently we have 36 bits available (with NODES_SHIFT
+set to 10, this can be decreased for more bits), so in worst case
+refault distance compare will be done for every 64K sized bucket.
 
-Please compare this code to the rest of the file. Specifically, this
-alignment guidance is not adhered to in this file. In this contribution
-we thus accept the contribution from bitmap API maintainer (Yury) without
-dictating how formatting should be done.
+This commit may increases the bucket size to 16M, which should be fine
+as the workingset size will be way larger than the bucket size for such
+large machines.
 
-Reinette
+For MGLRU 28 bits can track a huge amount of gens already, there should
+be no problem either.
 
-[1] https://lore.kernel.org/all/20250407153856.133093-1-yury.norov@gmail.com/
-[2] https://lore.kernel.org/all/062e5e61-e2c3-418e-987b-33fd9009d03f@intel.com/
+And the 8 bits can be changed to 6 or even fewer bits later.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ mm/swap_table.h |  1 +
+ mm/workingset.c | 39 ++++++++++++++++++++++++++-------------
+ 2 files changed, 27 insertions(+), 13 deletions(-)
+
+diff --git a/mm/swap_table.h b/mm/swap_table.h
+index 9356004d211a..afb2953d408a 100644
+--- a/mm/swap_table.h
++++ b/mm/swap_table.h
+@@ -65,6 +65,7 @@ static inline swp_te_t shadow_swp_te(void *shadow)
+ 	BUILD_BUG_ON((BITS_PER_XA_VALUE + 1) != BITS_PER_BYTE * sizeof(swp_te_t));
+ 	BUILD_BUG_ON((unsigned long)xa_mk_value(0) != ENTRY_SHADOW_MARK);
+ 	VM_WARN_ON_ONCE(shadow && !xa_is_value(shadow));
++	VM_WARN_ON((unsigned long)shadow & ENTRY_COUNT_MASK);
+ 	swp_te.counter |= ENTRY_SHADOW_MARK;
+ 	return swp_te;
+ }
+diff --git a/mm/workingset.c b/mm/workingset.c
+index 6e7f4cb1b9a7..86a549a17ae1 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -16,6 +16,7 @@
+ #include <linux/dax.h>
+ #include <linux/fs.h>
+ #include <linux/mm.h>
++#include "swap_table.h"
+ #include "internal.h"
+ 
+ /*
+@@ -184,7 +185,9 @@
+ #define EVICTION_SHIFT	((BITS_PER_LONG - BITS_PER_XA_VALUE) +	\
+ 			 WORKINGSET_SHIFT + NODES_SHIFT + \
+ 			 MEM_CGROUP_ID_SHIFT)
++#define EVICTION_SHIFT_ANON	(EVICTION_SHIFT + SWAP_COUNT_SHIFT)
+ #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
++#define EVICTION_MASK_ANON	(~0UL >> EVICTION_SHIFT_ANON)
+ 
+ /*
+  * Eviction timestamps need to be able to cover the full range of
+@@ -194,12 +197,16 @@
+  * that case, we have to sacrifice granularity for distance, and group
+  * evictions into coarser buckets by shaving off lower timestamp bits.
+  */
+-static unsigned int bucket_order __read_mostly;
++static unsigned int bucket_order[ANON_AND_FILE] __read_mostly;
+ 
+ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
+-			 bool workingset)
++			 bool workingset, bool file)
+ {
+-	eviction &= EVICTION_MASK;
++	if (file)
++		eviction &= EVICTION_MASK;
++	else
++		eviction &= EVICTION_MASK_ANON;
++
+ 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+ 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+ 	eviction = (eviction << WORKINGSET_SHIFT) | workingset;
+@@ -244,7 +251,8 @@ static void *lru_gen_eviction(struct folio *folio)
+ 	struct mem_cgroup *memcg = folio_memcg(folio);
+ 	struct pglist_data *pgdat = folio_pgdat(folio);
+ 
+-	BUILD_BUG_ON(LRU_GEN_WIDTH + LRU_REFS_WIDTH > BITS_PER_LONG - EVICTION_SHIFT);
++	BUILD_BUG_ON(LRU_GEN_WIDTH + LRU_REFS_WIDTH >
++		     BITS_PER_LONG - max(EVICTION_SHIFT, EVICTION_SHIFT_ANON));
+ 
+ 	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+ 	lrugen = &lruvec->lrugen;
+@@ -254,7 +262,7 @@ static void *lru_gen_eviction(struct folio *folio)
+ 	hist = lru_hist_from_seq(min_seq);
+ 	atomic_long_add(delta, &lrugen->evicted[hist][type][tier]);
+ 
+-	return pack_shadow(mem_cgroup_id(memcg), pgdat, token, workingset);
++	return pack_shadow(mem_cgroup_id(memcg), pgdat, token, workingset, type);
+ }
+ 
+ /*
+@@ -381,6 +389,7 @@ void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages)
+ void *workingset_eviction(struct folio *folio, struct mem_cgroup *target_memcg)
+ {
+ 	struct pglist_data *pgdat = folio_pgdat(folio);
++	int file = folio_is_file_lru(folio);
+ 	unsigned long eviction;
+ 	struct lruvec *lruvec;
+ 	int memcgid;
+@@ -397,10 +406,10 @@ void *workingset_eviction(struct folio *folio, struct mem_cgroup *target_memcg)
+ 	/* XXX: target_memcg can be NULL, go through lruvec */
+ 	memcgid = mem_cgroup_id(lruvec_memcg(lruvec));
+ 	eviction = atomic_long_read(&lruvec->nonresident_age);
+-	eviction >>= bucket_order;
++	eviction >>= bucket_order[file];
+ 	workingset_age_nonresident(lruvec, folio_nr_pages(folio));
+ 	return pack_shadow(memcgid, pgdat, eviction,
+-				folio_test_workingset(folio));
++			   folio_test_workingset(folio), folio_is_file_lru(folio));
+ }
+ 
+ /**
+@@ -438,7 +447,7 @@ bool workingset_test_recent(void *shadow, bool file, bool *workingset,
+ 
+ 	rcu_read_lock();
+ 	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, workingset);
+-	eviction <<= bucket_order;
++	eviction <<= bucket_order[file];
+ 
+ 	/*
+ 	 * Look up the memcg associated with the stored ID. It might
+@@ -780,8 +789,8 @@ static struct lock_class_key shadow_nodes_key;
+ 
+ static int __init workingset_init(void)
+ {
++	unsigned int timestamp_bits, timestamp_bits_anon;
+ 	struct shrinker *workingset_shadow_shrinker;
+-	unsigned int timestamp_bits;
+ 	unsigned int max_order;
+ 	int ret = -ENOMEM;
+ 
+@@ -794,11 +803,15 @@ static int __init workingset_init(void)
+ 	 * double the initial memory by using totalram_pages as-is.
+ 	 */
+ 	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
++	timestamp_bits_anon = BITS_PER_LONG - EVICTION_SHIFT_ANON;
+ 	max_order = fls_long(totalram_pages() - 1);
+-	if (max_order > timestamp_bits)
+-		bucket_order = max_order - timestamp_bits;
+-	pr_info("workingset: timestamp_bits=%d max_order=%d bucket_order=%u\n",
+-	       timestamp_bits, max_order, bucket_order);
++	if (max_order > (BITS_PER_LONG - EVICTION_SHIFT))
++		bucket_order[WORKINGSET_FILE] = max_order - timestamp_bits;
++	if (max_order > timestamp_bits_anon)
++		bucket_order[WORKINGSET_ANON] = max_order - timestamp_bits_anon;
++	pr_info("workingset: timestamp_bits=%d (anon: %d) max_order=%d bucket_order=%u (anon: %d)\n",
++		timestamp_bits, timestamp_bits_anon, max_order,
++		bucket_order[WORKINGSET_FILE], bucket_order[WORKINGSET_ANON]);
+ 
+ 	workingset_shadow_shrinker = shrinker_alloc(SHRINKER_NUMA_AWARE |
+ 						    SHRINKER_MEMCG_AWARE,
+-- 
+2.49.0
 
