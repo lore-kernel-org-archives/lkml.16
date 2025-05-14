@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0F619341F;
-	Wed, 14 May 2025 15:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90D194A44;
+	Wed, 14 May 2025 15:02:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234962; cv=none; b=e8cJCuOot4TP9MMTLPVevPpPYLG2Hb5iRB20FpciyxvRx12LGwtK99pYc+1uBAm+hx/Jf+fvKo2SkMzI2CXTy/eNuGiM368FTBOXMv/u+zSC4leFPxWfYNf4pxCsDGpoDW2Ae/hGqbI7a4xRBjD+NifFnlqIOPNg3gg1rDpiD9E=
+	t=1747234976; cv=none; b=MhV2uG8h1hmmk4WnCms06IcamCqayX7UM5Of0Je+jtYnGMXLg216QhHDinUeJdoxivCDo4czbjbUG9k8Yu+tFNw9Evknm22wa0O/Zgn/tW1g5A4+eDcdCUM/VhSut8h/s9H7Vo3R/Q/DkEL+E4zJP9TxWofYcOsWvkDjo/raYcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234962; c=relaxed/simple;
-	bh=D5QrjYtZqdxl9aDAD4Mt0N5C+A1l4Okat5ZD8j05CX8=;
+	s=arc-20240116; t=1747234976; c=relaxed/simple;
+	bh=iR7Lb9hQDeqA8HuTsx6n4WKA1nTEaMPSviN3JG5WKI4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AR6qa3T9qHeJ5fILtafQJU7TJD/dYXefbbT9tOgVFaJ7mkfumJAQCjLgVGi6j542Lf14QQcLKFrrAd1d6Gb35DJtQkai1/WyTjpWnY2+bdKYGzho6aHK6dRDYCcY75aCs6tlc+JkVNe1Gwvua69kRktSiBKL6YLr3CE/Ex2Rufg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYkEz35g; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jq7Kg1USDeT+OYb5yZbIFjxlaJT074yLuA3x+FA9fSOClmu5SMwlhUz/e17SdPkEK2z4WAOBijvxdlTc74pYM6h1SIwXEB6Mz2HtoKwRafVh1/p1EbSRQOEnBDt/GXGia03iwDJJ3XQKQVrQ9HLYru+2QRVEh0rrfkjmdDogCDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6x5PZt/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYkEz35g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9DCC4CEE3;
-	Wed, 14 May 2025 15:02:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6x5PZt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06454C4CEE3;
+	Wed, 14 May 2025 15:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747234960;
-	bh=D5QrjYtZqdxl9aDAD4Mt0N5C+A1l4Okat5ZD8j05CX8=;
+	s=k20201202; t=1747234975;
+	bh=iR7Lb9hQDeqA8HuTsx6n4WKA1nTEaMPSviN3JG5WKI4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=iYkEz35ghEPY/E/ZEsQiPGJVJ70ATHHNVAVhBU4YQd4KlA0o7ljoi31EUooIirf4l
-	 L5QMIjyZqYu4M7IdQcxyO0LFT8tEGScl/+NdqWCVLF5DWwm9//jGp8YgTqhD2iul0L
-	 rZ2X+hio3TR93rTlo0V5tMxEYQlqyv++E01kyLMz1EVBeMahtJHttcauIEUIjlJ7Ok
-	 hT7leKp/L1ehnLcOJjlwBwkK2bR6fglZuh4Om/zoppilPOeL5qWNS6nN1hEiKZEVv+
-	 IXLZZN7TLUfIaKswbtSJq6vVxiA+vQubPX5Fbamt9YnoYbzcwjvlZSpzzNdo5yQ+Cy
-	 1yBGTaWr73+4g==
+	b=L6x5PZt/CXC8i+BJp0BTxgk3XeVkVMhc8o9i0VqsGL0B6aZU8J2EPcqAgSbA7ugVD
+	 3wO9NM9+cUePYzw6AD7FhkMEWSjbBzzBb2KSTAgpzqYwxQslPLYmgWJ3pNx8M6QDRE
+	 GzuucBQuEGkUMzpd/hTdPsO9yrQhVKYRKjG/itOUkfNRimm5OYjWsk0+JOF3V8UU8A
+	 T2LpIcUIO8uOyPX+wCD6A78+827qgw71gp6SylN/2ApFg2G6LwI51v4jnR5kl8tqJy
+	 JpsncNFeKsGjh34Mbv+G48dGRyWsE+GWhrH2K5xVkzenwY95aWFNHKgCzecWYJ3yYN
+	 tdF73HzawBzhw==
 From: Vinod Koul <vkoul@kernel.org>
-To: sean.wang@mediatek.com, matthias.bgg@gmail.com, 
- angelogioacchino.delregno@collabora.com, 
- Qiu-ji Chen <chenqiuji666@gmail.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
- baijiaju1990@gmail.com, stable@vger.kernel.org
-In-Reply-To: <20250508073634.3719-1-chenqiuji666@gmail.com>
-References: <20250508073634.3719-1-chenqiuji666@gmail.com>
-Subject: Re: [PATCH v2] dmaengine: mediatek: Fix a possible deadlock error
- in mtk_cqdma_tx_status()
-Message-Id: <174723495814.115648.10076437402947235700.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 16:02:38 +0100
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Biju Das <biju.das.jz@bp.renesas.com>, 
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+Subject: Re: (subset) [PATCH v6 0/6] Add DMAC support to the RZ/V2H(P)
+Message-Id: <174723497166.115803.2774078282550893427.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 16:02:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,26 +50,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 08 May 2025 15:36:33 +0800, Qiu-ji Chen wrote:
-> Fix a potential deadlock bug. Observe that in the mtk-cqdma.c
-> file, functions like mtk_cqdma_issue_pending() and
-> mtk_cqdma_free_active_desc() properly acquire the pc lock before the vc
-> lock when handling pc and vc fields. However, mtk_cqdma_tx_status()
-> violates this order by first acquiring the vc lock before invoking
-> mtk_cqdma_find_active_desc(), which subsequently takes the pc lock. This
-> reversed locking sequence (vc → pc) contradicts the established
-> pc → vc order and creates deadlock risks.
+On Tue, 22 Apr 2025 18:39:31 +0100, Fabrizio Castro wrote:
+> This series adds DMAC support for the Renesas RZ/V2H(P) SoC.
+> 
+> Cheers,
+> Fab
+> 
+> v5->v6:
+> * Reworked the RZ/V2H specific dt-bindings patch as per Geert's
+>   comments.
+> * Collected tags throughout.
+> v4->v5:
+> * Clock patch queued up for v6.15, therefore dropped from this
+>   version of the series
+> * Adjusted the dmac cell specification according to Geert's
+>   comments
+> * Removed registration of ACK No. throughout
+> * Reworked DMAC driver as per Geert's comments
+> v3->v4:
+> * Fixed an issue with mid_rid/req_no/ack_no initialization
+> v2->v3:
+> * Replaced rzv2h_icu_register_dma_req_ack with
+>   rzv2h_icu_register_dma_req_ack() in ICU patch changelog
+> * Added dummy for rzv2h_icu_register_dma_req_ack()
+> * Reworked DMAC driver as per Geert's suggestions.
+> v1->v2:
+> * Improved macros in ICU driver
+> * Shared new macros between ICU driver and DMAC driver
+> * Improved dt-bindings
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()
-      commit: 157ae5ffd76a2857ccb4b7ce40bc5a344ca00395
+[2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
+      commit: 22228b933ce2639d67168fd35423c1be196edab0
 
 Best regards,
 -- 
