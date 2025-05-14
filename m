@@ -1,61 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D75227A442;
-	Wed, 14 May 2025 17:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766151C862D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747243321; cv=none; b=FVqpSyMHf2nEcgI/Oj3d+rYVNj1xhdLveZyHMZ7NkIFVYhhAbn8EXVAqIDRA0L+9PDxl/nO/iDhKReICQYSfjL2VakVYb6DvoGIHM7CtwS2gPt6KA4Llvgk7y1c1aafe+d7iY14o7JuidmrPzEoOumOwUL7wXkmuvq5gEcB3c4k=
+	t=1747243386; cv=none; b=t+6jAkvPP9eBNRLSVXSiXk1YNckinrPR922b19cldp+qEgHBZ4ynDTQWB5MXWhualEtfAkxNg6owWz00dFq4Z8wagb/S1Qofez0OefY4v2HvcRoSTyT4CFcmGtmXmMKJh/4y00lP9u3ATjXo8zWHTi6cmcoXedp/Cr6lk3iwFlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747243321; c=relaxed/simple;
-	bh=8Y9W9EkHp0OgfQElHMfELzV6tfQK0+t1W9DfZ3iYUMQ=;
+	s=arc-20240116; t=1747243386; c=relaxed/simple;
+	bh=X4L9dP5e9Ou7Dht7qWV02nDeywOY9NeHjoxT0uRXMD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNTqHr37YA+utaUbhfXxeiAtSa17f6+RHPAax4OUOgRFe5p3UMa8kbz5JVsGI3RQQdznBVzf1z5xErakQTqv7+L1biWKoB4A0Sh4Yk+f+RSzsOg9fx8T2Caok+XY3cQKI22QZwIfHjgA7tPedve11yiNKpm5593T1WuWsM271rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=B+60nnov; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfmEpjae7eGMXMWvQRR3Vmm8zRH//4ntS2NkkCaF+MI3Eb+GlSBiOHG3LfG+IYDd/sy6GcoXwAVQMHFicp29WfjWsQYBc9jO+BRRo5NK/1JdZ1Aptb6Q22OkfRMETmVHLJu4vcwo92V7YI+Oy+hlgARCiFnO6SwJJ0SbGHc5La0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wzb6dnkv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="B+60nnov"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3DA0F40E0239;
-	Wed, 14 May 2025 17:21:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jZNuwh63kGqM; Wed, 14 May 2025 17:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747243306; bh=wYhpoOFARMdfnUYYy0x+ezUoiYCtxlRLDwSjosU3JwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B+60nnovfgJQkcpIoxYA2aBG6C4C/NzhlKUq/kc56fNhonAnqpuOiPP1g2aikOoVV
-	 jqJUX8UZJ2sCTnidzJNprvwbUgRHA0HnnQStfAe5JRgWYOZ19DWMj4DKaO6Bt6Njbv
-	 ECoxQ+NckU3vpKUtAtk1qjOXsT4L3EuBoWbaHEMQJLLIZiTidRS/aC8Yz9c31n/vMI
-	 ToUK4fZ29HIyYBy6wpcELPf8iUa7ltOYbEgO9NERvSXjQb0j3J8PNetVACQJFhY5Gh
-	 fh/csdjJ2+yZ60G/tzxrahCddG5EWYUYbarRmm8AeS0qtfw0SpCAdhzkXfph/72Lpi
-	 woJ90JgVOdDywXJom5+kNkSKZG6n+BXW9TQ1UNPSKx/hAJHadwZXGP5sea3hiEs0Bj
-	 Hj+Vpwe46EfrE8jlAnLd75K5fiSgdisMVAP8DgJ94wT7EpJJvHC2I9RPXBHETM0BKD
-	 KgoxJSj1OWurhdjorXq9Mvu0rE8I55qRBXUKe0PKaBQzCc7Fp9hwrc0Vv+Hq1iP/2B
-	 OBSXG3GLaGkDeoixerScmNhofIGdLWbraIjHkkl/mneC7aHVRYbNS8iFheh4QQckdv
-	 bixLH9qOCCpKfLpikgaY1YjwHcowswJWppqy5Fjuztqhem9seM6Gh3w6SQ6hr8hN8H
-	 76xDZBSd5o3wFdnCmhcD5N1Y=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C613940E0163;
-	Wed, 14 May 2025 17:21:36 +0000 (UTC)
-Date: Wed, 14 May 2025 19:21:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <20250514172130.GAaCTRGoRL3nYieIE7@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wzb6dnkv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747243383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/oElXM1ODP5fr3xuW+gv4HSACPr/9xzmW3Yqp8drdpo=;
+	b=Wzb6dnkvshPX3LPuhz2sJ78Rf+3Veu3xUMehp18KYCYgvqUJWCx/gQk/YF2vSSZqv8QFtQ
+	G6hMVUk8Thsem5Py4zs6OCrRDM7NhJAFHR3HquMNhbMRr9R4OrgZI2w+FRcUGIESTXGcWA
+	dGTEBeb7R95gkW2appzzJK+SmHcyC44=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-486-xnWetLSCOmmM4S6x-Iiqeg-1; Wed, 14 May 2025 13:23:02 -0400
+X-MC-Unique: xnWetLSCOmmM4S6x-Iiqeg-1
+X-Mimecast-MFC-AGG-ID: xnWetLSCOmmM4S6x-Iiqeg_1747243382
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c790dc38b4so22010985a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:23:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747243381; x=1747848181;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/oElXM1ODP5fr3xuW+gv4HSACPr/9xzmW3Yqp8drdpo=;
+        b=KJ4+h3gy+CB/RDtXJ6vq22tzZrWP7Fa4mHWqvX0lpBzyvGo2RESqGkGm5aK9mmGq6W
+         C18LRTp1SKXfk2Sgb0vvUcWnBPb/BArXnjBR9GVXmR2B5GXjoHpYbAYToRDSxBZX9Egd
+         iFHCQZkLEhQKHK5ElH0et5NyMfbTfjEQ4ieXCwspzU9iQZdUBP7QztZGolHT/8Jf0vEw
+         70RcfYxhQfosQrDU6sPIz8/h42iPuLwlCfYseLt5dP6M3l0d6q9L5AwVQquAOo10BCgz
+         t2sDMva6mvr1Lbr5Ee+IV632+vcSJQczeBE7VmCXZng4bBSozyHiA3IVPZMngu7MMouZ
+         ezZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj3v8t6EyRN99P4L3aN3GzkXwqxiDs2C2gJa3wDf8EbtxNVii8KvEIwCdajRKt1F42fQD6pEXKH9aBVkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL752l7gR9yBHt/VSQrriYYLSW+RkBDC0AO1RThpHbMUIQmi/B
+	+VogswqWqRw2AtpDfD4A43DjPHpS8cydv/e0W6nwATVnn6VGfWzYcGeZq+y/c8/iD5Z5rO6N7J2
+	mWG+aGXBfofETURE58E2skI4DvpWeq1hLtfoOvaqjn+AH1f9iv0thU/RHkNq/AS+H+zwUsw==
+X-Gm-Gg: ASbGncvvIglN78gYWh96S+jU0RQ7LizwzwhgaaXGRFLGCKLIovEyLKyWL02A22cBHS+
+	101LREmzeZ19Upgv9S3aJeN+F+dVggLMK7M7BTC7hXMx3uN8aR8w+M6JdZkA3UDhVhuFkJ3ymNq
+	l4uDpGIqXAjaAAtNclGEdZorslekk2RTQhybeDkNkIRcMrHRR95ul8YC5Zdp9dvVkjLPWIgETrf
+	UgW45ma2rxVxTTOtYFlPKqIVvmd/c7LYj+/n4h4HyHE8CU4YQuowsxz0Fz6crK+3w6vqBcivLZe
+	X/4=
+X-Received: by 2002:a05:620a:4256:b0:7c5:afc9:5144 with SMTP id af79cd13be357-7cd39e0b62bmr46161785a.23.1747243381553;
+        Wed, 14 May 2025 10:23:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHTGZ9NJoeSdVbaYm/syrhmviXCEheXcLINvfYcLnmeElUJOkvK5KSz5hTibErul8dXI9ys5g==
+X-Received: by 2002:a05:620a:4256:b0:7c5:afc9:5144 with SMTP id af79cd13be357-7cd39e0b62bmr46158985a.23.1747243381236;
+        Wed, 14 May 2025 10:23:01 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00fe9909sm877643285a.113.2025.05.14.10.23.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 10:23:00 -0700 (PDT)
+Date: Wed, 14 May 2025 13:22:49 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 2/2] UFFDIO_API.2const: Add an entry for UFFDIO_MOVE
+Message-ID: <aCTRaebpHZjVJHut@x1.local>
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-3-peterx@redhat.com>
+ <sxwdi5itwngdermj4w77ycwgyes4x7yyfl7v66mxj7co4xm6xm@27aqjwxvh4qk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,27 +86,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512190834.332684-23-ardb+git@google.com>
+In-Reply-To: <sxwdi5itwngdermj4w77ycwgyes4x7yyfl7v66mxj7co4xm6xm@27aqjwxvh4qk>
 
-On Mon, May 12, 2025 at 09:08:35PM +0200, Ard Biesheuvel wrote:
-> This is somewhat intrusive, as there are many data objects that are
-> referenced both by startup code and by ordinary code, and an alias needs
-> to be emitted for each of those. If startup code references anything
-> that has not been made available to it explicitly, a build time link
-> error will occur.
+On Wed, May 14, 2025 at 05:02:57PM +0200, Alejandro Colomar wrote:
+> Hi Peter,
+> 
+> On Mon, May 12, 2025 at 01:19:22PM -0400, Peter Xu wrote:
+> > Add the entry for UFFDIO_MOVE in UFFDIO_API.
+> > 
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> Should we add the following tag?
+> 
+> Fixes: d7dec35a3b19 (2025-05-01; "man/man2/ioctl_userfaultfd.2, man/man2const/UFFDIO_MOVE.2const: Document UFFDIO_MOVE")
 
-Makes me wonder: what will be our rule for what should be made available to
-startup code, what should be moved to startup code etc....
+Sure.
 
-I guess as less as possible but past experience teaches us differently.
-I guess applying the usual skeptical approach should be sane enough...
+> 
+> Also, I think the subject should mention UFFD_FEATURE_MOVE, or at least
+> somewhere in the commit message.
 
-We'll see.
+I'll rename the subject to:
 
-Thx.
+  UFFDIO_API.2const: Add an entry for UFFDIO_FEATURE_MOVE
+
+I didn't know we need Fixes for man pages.  I'll also attach a fixes for
+the first patch for commit a252b3345 ("ioctl_userfaultfd.2: Describe
+two-step feature handshake").
+
+Thanks,
 
 -- 
-Regards/Gruss,
-    Boris.
+Peter Xu
 
-https://people.kernel.org/tglx/notes-about-netiquette
