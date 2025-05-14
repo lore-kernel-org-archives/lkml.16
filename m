@@ -1,368 +1,151 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9191922FA
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E2F1624EA;
+	Wed, 14 May 2025 14:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747234475; cv=none; b=AFDbHQhbQA8fiEXDGdT5W9K6CoAwPBNrQsp2usO8o6BRLj7gz+IMYv7NA7kEfHbGnRDr/Ahpuvjc5/FuvTIFDEzDNQgULv4M6+q4Rhu81jycw47vXxQmCPgfOEsCfp+ms2zhe+9/Xiktm3TtRQ61aeiVE/KyYrdq51gHC1a37ps=
+	t=1747234586; cv=none; b=n5tOa3lR10KQHJleD4ojCxxA/0sx+W3iLPGYWeAHLkOtcUsMjGvRpo3tpqiK0KoJUFYLNgmPeG0iZaLUpePXYKdm/VA0/7vjPNGCKBBoVchb7YekL5YRI2eJ4Sz7WUTQipr8yUxo6Ql6P1js6DN2jkzMRtvXkwmvTcEISkMIrmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747234475; c=relaxed/simple;
-	bh=uZVwsua7TTsZE/eKl7BoqWQFLMqRe1pWhoHiPZfq5hE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uQYqbg5ehUcewbAN6JKvsXaPAzg52qU4tRMHqw2geYzQ+x+y6Bgz99mWe7NimHd4gctjnrH0GJgFTyXB2otBlUx/nHVHCKtdZkZ7ovPfqYs+miqSf0w49Z01XHEzAm360PMIXuAqx6AJPE78+Rh5EtTcANNPQWwRy17yozBnQy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86186c58c41so614515639f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:54:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747234473; x=1747839273;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vcaImI2KAOkoeEjN33AzYoWsZgkP5GSWaOlmM8RyyOc=;
-        b=Gq0Tf0fshQk5HzGx23SJltmyvxDRujqyQuGOBdcddc14eOzs3zySuaQX4fUCX5piZ9
-         WBJ0KMplazQ+aPR1ctbus+Ws/r/sw0QRrScKmMefaFYg6acT7XYz1ypj6BFywVy8Nh1/
-         uJYEOExV9ULGz7HW2L+gcZLwfZf4pjTFXB2Gx8nKvQ1S+R1TLnxwfnRQiclACcs7dEQz
-         pNPGpk4/cETwMOiKkEzuOHxilsRjnbrVxBtOpfGgv6k7j0AvWTQDeV6zgJbQxn7kaYdq
-         UpZOpFudlTwOJ4wHJyPhbHOun5SSzGvDsa6SwbOXPlBAoQEIIwrVNwhUd0hVLhq9Axmi
-         rl7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX9uaWlMoQIzR1L8jLHDyD+OVgpAoiNQ0wDCKR1Xfp7Gcrtjf2oVHpOm9uRZZnzgedHKWoBr/c9YK08YfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDkyvnQG1E58Zbta4gnJkTVrruKQBtCIq7lhevDobGRcBSHG7k
-	f3rvuy+eprSmJ7BS13nkRSC1JVzSTB1JY+fCb4A7RBOSU0tvFCDRuKb3iPo6S0n6MlhIHXedGRI
-	qWd0xWRJoa0WPyS8DKpgfAOcghJb81dh5GgcDcPtztwjjyX2I2T5z6zY=
-X-Google-Smtp-Source: AGHT+IGMubNa81uA1O79pnClccBYlxGMeRHA5r+HhJSj2UUjWdfTKMl7O4hCW9xOOxbTspCRFc2GyqLXMNFuQFdqsoJCN7+6pbSS
+	s=arc-20240116; t=1747234586; c=relaxed/simple;
+	bh=vqOW1WuEtnGSH0H1EDi7EaJBHJtwR6S8ZbdbfjGrhwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cbr+V0wKxuwhNThLIwSxc184ZQQz+u6IfqUm/rSAbMiP2gWVxbvUoeL5ubMcPEGdIE//zuM2rtW5EFuzKhei41WM2FFYSiDF7eKePooT7ToJsdWArMmRRpdAoNPD/ug6Pvqcvx3yJAJugI9LxM59ZiHqtt0eqhrBbQBq4qSGK2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=LHWtmkWW; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="LHWtmkWW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=5p9FTy7AYLJTuOgTYlyr5CXgIB8ZTMo/qUcqJKJ+R2A=; b=LHWtmkWWW0cgvOXeSkW5bnE2fg
+	fF8OFmRs3E23GBjNKjvlIhsDPzL4M7H/qMbzMMjXCcPnTlWz1yItm8KGVjDHobIUgfQrByyOqovtS
+	P1kfJUHIV4vmrDFCHRHT/VuGRnMkpvLmUaNB2YbaxnZDovY9paCznZm6mNeuPN96BbIMF6ZYmuDsi
+	G7SWWK7P9TmzuWdnOzkdfeWbx21aGkzSy03eKU3E27JB7vEMUyG2x2+gNqpOgEciZtmzbayRmcyGM
+	ia4gSsIt7Qc2FxQNEbWP6LYkYzM7+lV9dUeYX+cqvdJbTO3DN2qTOcOalkDVyajAcGiOVegtL6w37
+	B4yiBFMA==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uFDWs-0006q0-Jr; Wed, 14 May 2025 16:56:18 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>
+Cc: quentin.schulz@cherry.de, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject:
+ Re: [PATCH v2 4/6] arm64: dts: rockchip: add px30-cobra base dtsi and board
+ variants
+Date: Wed, 14 May 2025 16:56:17 +0200
+Message-ID: <38830328.XM6RcZxFsP@diego>
+In-Reply-To: <20250514133951.GA1975151-robh@kernel.org>
+References:
+ <20250513150234.2331221-1-heiko@sntech.de>
+ <20250513150234.2331221-5-heiko@sntech.de>
+ <20250514133951.GA1975151-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3814:b0:864:68b0:60b3 with SMTP id
- ca18e2360f4ac-86a08e4e738mr491625139f.12.1747234472675; Wed, 14 May 2025
- 07:54:32 -0700 (PDT)
-Date: Wed, 14 May 2025 07:54:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6824aea8.a00a0220.104b28.0011.GAE@google.com>
-Subject: [syzbot] [lsm?] [integrity?] KMSAN: uninit-value in
- ima_add_template_entry (3)
-From: syzbot <syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com>
-To: dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
-	roberto.sassu@huawei.com, serge@hallyn.com, syzkaller-bugs@googlegroups.com, 
-	zohar@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hello,
+Am Mittwoch, 14. Mai 2025, 15:39:51 Mitteleurop=C3=A4ische Sommerzeit schri=
+eb Rob Herring:
+> On Tue, May 13, 2025 at 05:02:32PM +0200, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> >=20
+> > Cobra are Touchscreen devices built around the PX30 SoC using
+> > a variety of display options.
+> >=20
+> > The devices feature an EMMC, network port, usb host + OTG ports and
+> > a 720x1280 display with a touchscreen.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/Makefile         |   4 +
+> >  .../rockchip/px30-cobra-ltk050h3146w-a2.dts   |  39 ++
+> >  .../dts/rockchip/px30-cobra-ltk050h3146w.dts  |  39 ++
+> >  .../dts/rockchip/px30-cobra-ltk050h3148w.dts  |  39 ++
+> >  .../dts/rockchip/px30-cobra-ltk500hd1829.dts  |  73 +++
+> >  arch/arm64/boot/dts/rockchip/px30-cobra.dtsi  | 566 ++++++++++++++++++
+> >  6 files changed, 760 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146=
+w-a2.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146=
+w.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3148=
+w.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra-ltk500hd182=
+9.dts
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/px30-cobra.dtsi
+> >=20
+> > diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dt=
+s/rockchip/Makefile
+> > index 3e8771ef69ba..8151e8bb1cd3 100644
+> > --- a/arch/arm64/boot/dts/rockchip/Makefile
+> > +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> > @@ -1,4 +1,8 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-cobra-ltk050h3146w-a2.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-cobra-ltk050h3146w.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-cobra-ltk050h3148w.dtb
+> > +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-cobra-ltk500hd1829.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-evb.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-engicam-px30-core-ctouch2.dtb
+> >  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D px30-engicam-px30-core-ctouch2-of10.d=
+tb
+> > diff --git a/arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dt=
+s b/arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dts
+> > new file mode 100644
+> > index 000000000000..1d26164be7b8
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/px30-cobra-ltk050h3146w-a2.dts
+> > @@ -0,0 +1,39 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright (c) 2025 Cherry Embedded Solutions GmbH
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "px30-cobra.dtsi"
+> > +
+> > +/ {
+> > +	model =3D "Theobroma Systems Cobra with LTK050H3146W-A2 Display";
+> > +	compatible =3D "tsd,px30-cobra-ltk050h3146w-a2", "tsd,px30-cobra", "r=
+ockchip,px30";
+> > +};
+> > +
+> > +&dsi {
+> > +	status =3D "okay";
+> > +
+> > +	panel@0 {
+> > +		compatible =3D "leadtek,ltk050h3146w-a2";
+> > +		reg =3D <0>;
+> > +		backlight =3D <&backlight>;
+> > +		iovcc-supply =3D <&vcc_1v8>;
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&dsp_rst>;
+> > +		reset-gpios =3D <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+> > +		vci-supply =3D <&vcc_2v8>;
+> > +
+> > +		port {
+>=20
+> 'port' is not allowed by this binding.
 
-syzbot found the following issue on:
-
-HEAD commit:    02ddfb981de8 Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11169670580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f0b3970f154dfc95e6e
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1574d768580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5ca57f5a3f77/disk-02ddfb98.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3f23cbc11e68/vmlinux-02ddfb98.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/73e63afac354/bzImage-02ddfb98.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/0afd18737aed/mount_2.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com
-
-bcachefs (loop2): going read-write
-bcachefs (loop2): done starting filesystem
-=====================================================
-BUG: KMSAN: uninit-value in ima_lookup_digest_entry security/integrity/ima/ima_queue.c:64 [inline]
-BUG: KMSAN: uninit-value in ima_add_template_entry+0x7a5/0x8d0 security/integrity/ima/ima_queue.c:191
- ima_lookup_digest_entry security/integrity/ima/ima_queue.c:64 [inline]
- ima_add_template_entry+0x7a5/0x8d0 security/integrity/ima/ima_queue.c:191
- ima_store_template security/integrity/ima/ima_api.c:122 [inline]
- ima_store_measurement+0x388/0x970 security/integrity/ima/ima_api.c:383
- process_measurement+0x3075/0x40e0 security/integrity/ima/ima_main.c:393
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-<Zero or more stacks not recorded to save memory>
-
-Uninit was stored to memory at:
- sha256_transform lib/crypto/sha256.c:117 [inline]
- sha256_transform_blocks+0x276d/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_finalize include/crypto/sha256_base.h:101 [inline]
- __sha256_final lib/crypto/sha256.c:142 [inline]
- sha256_final+0x169/0x460 lib/crypto/sha256.c:148
- crypto_sha256_final+0xca/0x120 crypto/sha256_generic.c:49
- crypto_shash_final+0x72/0xa0 crypto/shash.c:58
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:498 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x240a/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- sha256_transform lib/crypto/sha256.c:117 [inline]
- sha256_transform_blocks+0x276d/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
- sha256_update+0x392/0x410 lib/crypto/sha256.c:136
- crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
- crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- BLEND_OP lib/crypto/sha256.c:61 [inline]
- sha256_transform lib/crypto/sha256.c:91 [inline]
- sha256_transform_blocks+0xded/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
- sha256_update+0x392/0x410 lib/crypto/sha256.c:136
- crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
- crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- BLEND_OP lib/crypto/sha256.c:61 [inline]
- sha256_transform lib/crypto/sha256.c:92 [inline]
- sha256_transform_blocks+0xe00/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
- sha256_update+0x392/0x410 lib/crypto/sha256.c:136
- crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
- crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- BLEND_OP lib/crypto/sha256.c:61 [inline]
- sha256_transform lib/crypto/sha256.c:93 [inline]
- sha256_transform_blocks+0xe15/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
- sha256_update+0x392/0x410 lib/crypto/sha256.c:136
- crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
- crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- LOAD_OP lib/crypto/sha256.c:56 [inline]
- sha256_transform lib/crypto/sha256.c:82 [inline]
- sha256_transform_blocks+0x268b/0x2880 lib/crypto/sha256.c:127
- lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
- sha256_update+0x392/0x410 lib/crypto/sha256.c:136
- crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
- crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was stored to memory at:
- memcpy_to_iter lib/iov_iter.c:65 [inline]
- iterate_kvec include/linux/iov_iter.h:86 [inline]
- iterate_and_advance2 include/linux/iov_iter.h:306 [inline]
- iterate_and_advance include/linux/iov_iter.h:328 [inline]
- _copy_to_iter+0x176c/0x32f0 lib/iov_iter.c:185
- copy_page_to_iter+0x43c/0x8b0 lib/iov_iter.c:362
- copy_folio_to_iter include/linux/uio.h:198 [inline]
- filemap_read+0xced/0x2190 mm/filemap.c:2753
- bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
- __kernel_read+0x750/0xda0 fs/read_write.c:528
- integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x1ff9/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- __alloc_frozen_pages_noprof+0x689/0xf00 mm/page_alloc.c:4993
- alloc_pages_mpol+0x328/0x860 mm/mempolicy.c:2301
- alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
- alloc_pages_noprof mm/mempolicy.c:2392 [inline]
- folio_alloc_noprof+0x109/0x360 mm/mempolicy.c:2402
- filemap_alloc_folio_noprof+0x9d/0x420 mm/filemap.c:1007
- ractl_alloc_folio mm/readahead.c:186 [inline]
- ra_alloc_folio mm/readahead.c:441 [inline]
- page_cache_ra_order+0x93f/0x14f0 mm/readahead.c:509
- page_cache_sync_ra+0x108a/0x13e0 mm/readahead.c:621
- filemap_get_pages+0xfb3/0x3a70 mm/filemap.c:2591
- filemap_read+0x5c6/0x2190 mm/filemap.c:2702
- bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
- __kernel_read+0x750/0xda0 fs/read_write.c:528
- integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0x1ff9/0x3fd0 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
- process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
- ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbf/0x530 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x5ac3/0x6760 fs/namei.c:4039
- do_filp_open+0x280/0x660 fs/namei.c:4066
- do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x240/0x300 fs/open.c:1455
- x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 UID: 0 PID: 7337 Comm: syz.2.106 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8 #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
+It is since last week [0], because the Leadtek displays got their port
+property added.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
+mit/?id=3Dbf0636f4348e098e2338eebbe42d7780c58a1195
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
