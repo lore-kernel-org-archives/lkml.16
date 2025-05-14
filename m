@@ -1,143 +1,126 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C31B26FD91
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A5325DD07
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747217654; cv=none; b=F64s9s4riwASEevqiZSjfzrrebKvpBLKKjnzypPMW687Fj/UWhd5hQr497ZCptwsS7H06B0YWKkkcGsC6rTvbTjC1OvpUuHJvwkcuZcOdzLcgtje1fkUMePWGTyjq3Nqhh5v0c6fpz8jdDFsxF86RVcFZUPAwULfjFEGeMWkgCs=
+	t=1747217706; cv=none; b=O38Gos9Tlhu74e4uBNnq/KhqIPvRus2qsRu22YF3QPhtPfH2ds1Wfhq4mDiwIVRzN06S9lYhc5Q9r1pLVCXJsXGFXNBRvHuUVJTCtFar/XSm4Fx1ijjI9qP/GXE3rY1J0OatQnUlr2ndDVRnT+H6O8eQochofBLw5lezW9edLuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747217654; c=relaxed/simple;
-	bh=3ztXQE4MkXDtUYJaD+ZaiOi7FWZGY6Vu31hVlu0DjWc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qog4E8/Q5n6KeDD6iTtA1vfglwGZMxrc7YHt0C1Fh3d16nO99Um71EByn0Nsf1GGW6/o00P/k+4iORKahpRFJPTFROiZmTsHLLG+2Zk/lwikGYwpQcsJObn/lpGgsKOYD76ljyssN6NzmgXQzFE2SO5Op5+7MY/D+f//HFiJcHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r4jJSjK2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K4VExY8r; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r4jJSjK2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K4VExY8r; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747217706; c=relaxed/simple;
+	bh=wDmraekW7m0pgFwPRFE4S7PnYUyPMFc7PeEJ7Alaud0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LeGhrooD+SmQVpTTA4kMSUZemr3dhc8ZihC/jRA7gHbRnrHSQy8UvYicjqQW0eZrSSYHPp2yYB2IJ/jKxyZT0boVgiMg+bSYqhak+yvbnTjuoUkEQHdBxjoRFGBFGDHBPX8ya2LzzyVQpnv2zFC+lJsyUXHnJfO2Qi7dPx/A3kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iVsAw0OE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r4jJSjK2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K4VExY8r";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r4jJSjK2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K4VExY8r"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 93A4C21203;
-	Wed, 14 May 2025 10:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747217650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iVsAw0OE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747217703;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CtUFdaL5kz+cWKfdHOIHrY0ZY1xSx9fKzhnfQdH0lTw=;
-	b=r4jJSjK2mqAIcTOctdT+ShfYzeqvyysFf6V6Z01jTq9fzQBhJbelgXt5bh4wuC2zAan0AN
-	b/qUGd4q59yUlReZtprVbiq1yRI4vvU1M8Kh3f/Sj0OH3UsBWf+bZyO2ePUlqxz/jvzM8N
-	7Ta9r9WsWeUdySkhwBplyQ6k8r9MFe0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747217650;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CtUFdaL5kz+cWKfdHOIHrY0ZY1xSx9fKzhnfQdH0lTw=;
-	b=K4VExY8rj0LV+NPj8NjHJ7x6CC3ypuVoSqeiOTZzCVctJL7ElWGNRLlppr/TrGATa0j2fF
-	f4XVe0xRJr9fssAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r4jJSjK2;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=K4VExY8r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747217650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CtUFdaL5kz+cWKfdHOIHrY0ZY1xSx9fKzhnfQdH0lTw=;
-	b=r4jJSjK2mqAIcTOctdT+ShfYzeqvyysFf6V6Z01jTq9fzQBhJbelgXt5bh4wuC2zAan0AN
-	b/qUGd4q59yUlReZtprVbiq1yRI4vvU1M8Kh3f/Sj0OH3UsBWf+bZyO2ePUlqxz/jvzM8N
-	7Ta9r9WsWeUdySkhwBplyQ6k8r9MFe0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747217650;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CtUFdaL5kz+cWKfdHOIHrY0ZY1xSx9fKzhnfQdH0lTw=;
-	b=K4VExY8rj0LV+NPj8NjHJ7x6CC3ypuVoSqeiOTZzCVctJL7ElWGNRLlppr/TrGATa0j2fF
-	f4XVe0xRJr9fssAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 650E313306;
-	Wed, 14 May 2025 10:14:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oZ6AF/JsJGjVOgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 14 May 2025 10:14:10 +0000
-Date: Wed, 14 May 2025 12:14:10 +0200
-Message-ID: <87wmajts7h.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] ALSA: es1968: Add error handling for snd_pcm_hw_constraint_pow2()
-In-Reply-To: <20250514092444.331-1-vulab@iscas.ac.cn>
-References: <20250514092444.331-1-vulab@iscas.ac.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=K8LKDxEPlK0zUrqmN4DZvo7SZOHbpNlPdUFt+T51TxI=;
+	b=iVsAw0OE2vGJCyUNvW6ugcxjU7vSSbGD92RyjT5sMmupNXNUIMZ88541/tp/VEhQ7n1qUT
+	oyWnl0avt8d9/CuW1efMdgdTscgETcK1B+EEX2UgC5ldbk+X3PFwvq/x10HC/J02w9tfJK
+	dbjyRG8CUIEO5V+pbDti8SHEJ2epFCE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-696-nkjWSNYMMLqNZseHEO-MeA-1; Wed, 14 May 2025 06:15:02 -0400
+X-MC-Unique: nkjWSNYMMLqNZseHEO-MeA-1
+X-Mimecast-MFC-AGG-ID: nkjWSNYMMLqNZseHEO-MeA_1747217701
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad224fe3745so534391666b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:15:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747217701; x=1747822501;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K8LKDxEPlK0zUrqmN4DZvo7SZOHbpNlPdUFt+T51TxI=;
+        b=n0GsYDf80dsUvScVpiGQuX0JfWE2/s4OOrYug7tcmEtGU0H7NbpWvj0CspnQlV4M9r
+         7UfnJg53Uxmx5ZkEDPWJIGnQe+s69iNTWwlaxXI+KDxpZv7RlMG9M8aU3+P9/+A5FB6i
+         zuu7mrF7GVrHEoNiASuvXH78ySYm0JM/vAXUd6iIhajQOH2ogsTsWap2UWZdgPL6lnMo
+         00Iz2EsT6i9stEzNKetESc7NeQVaW3dKuSpyWZewjRwhmg/phttMTDy/xRErq0dZC+2V
+         YqijVNu+6cTdMAwwCHUzsRy8KibVYc8h627zvQsRclcylSPWY8oxjayQP0WibD44l7DH
+         ZIvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXr6uP003cgadx21zhiXDTjfjrbWesOUxMOC1TGHAgcTnyz7/+LODyCysCRukLnIa09g1Sd5j0AUhw3K8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymJVtT+d2KrptdJ7iBOfzL8qVU6jPiDgWK/zHK2otrx39KKb9I
+	Qe/Y58XMeuF7puvklax4qIpRlMSf11PNgFIb0ZyyCb0qb5pSvZbEB5r9IYCWngN79LStvcV+yi5
+	jnRAwzv9ZeI6ndtv1kc0DmUOL+io3segVyXziX5rTHJOKb9PKqhuUsT9cBf31pg==
+X-Gm-Gg: ASbGncs2r+BrqVlQXzKeSNe3Yf0zUbt/9mdmGAswXq+hOk4IaSbgpMQcHMv/LDCOhVc
+	+DT6OaCS4Rkjmt7JgOPrDe8H98kkUpXWH/Gu63wVhM6kyaa8ONYLxrdOC++REGkkIjRKiLdSYgV
+	wcv8+0THXl/JaNyhFnyWxSBh/evN86DI/owCZwc3Wq6vaGiHsIOhmhLb9iR5HDUC2F5Q7Ockx3L
+	9bVCP9J0HXFdCgHEkMyBOz82oqvQYrck63a2NDp9KEHfr33IrU/kkB9HUzEcpagQiSjzMaVHVf2
+	h6E7or5qGHeAYW3oVQ==
+X-Received: by 2002:a17:907:96ab:b0:ad2:293d:166e with SMTP id a640c23a62f3a-ad4f717a571mr262750166b.31.1747217700925;
+        Wed, 14 May 2025 03:15:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHL7kdzll3t4oQ25ZYCbLYS9k6oyFJfi2q4wOT/F3rxR/d4Hx5O00NDK2zGNm+A5NAW2+hs3g==
+X-Received: by 2002:a17:907:96ab:b0:ad2:293d:166e with SMTP id a640c23a62f3a-ad4f717a571mr262748266b.31.1747217700550;
+        Wed, 14 May 2025 03:15:00 -0700 (PDT)
+Received: from [192.168.37.224] ([109.36.142.219])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad21947acf8sm912226966b.85.2025.05.14.03.14.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 03:14:59 -0700 (PDT)
+Message-ID: <adda844f-1dc7-4c4d-90f1-ddba1c99be65@redhat.com>
+Date: Wed, 14 May 2025 12:14:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 93A4C21203
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Mika Westerberg <westeri@kernel.org>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 14 May 2025 11:24:44 +0200,
-Wentao Liang wrote:
+Hi,
+
+On 13-May-25 12:00, Andy Shevchenko wrote:
+> The GPIO ACPI helpers use a few quirks which consumes approximately 20%
+> of the file. Besides that the necessary bits are sparse and being directly
+> referred. Split them to a separate file. There is no functional change.
 > 
-> The function snd_es1968_capture_open() calls the function
-> snd_pcm_hw_constraint_pow2(), but does not check its return
-> value. A proper implementation can be found in snd_cx25821_pcm_open().
+> For the new file I used the Hans' authorship of Hans as he the author of
+> all those bits (expect very tiny changes made by this series).
 > 
-> Add error handling for snd_pcm_hw_constraint_pow2() and propagate its
-> error code.
+> Hans, please check if it's okay and confirm, or suggest better alternative.
+
+Thanks, the entire series looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+
+> Andy Shevchenko (4):
+>   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
+>   gpiolib: acpi: Handle deferred list via new API
+>   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
+>   gpiolib: acpi: Move quirks to a separate file
 > 
-> Fixes: b942cf815b57 ("[ALSA] es1968 - Fix stuttering capture")
-> Cc: stable@vger.kernel.org # v2.6.22
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+>  drivers/gpio/Makefile                         |   1 +
+>  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+>  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+>  drivers/gpio/gpiolib-acpi.h                   |  15 +
+>  4 files changed, 392 insertions(+), 331 deletions(-)
+>  rename drivers/gpio/{gpiolib-acpi.c => gpiolib-acpi-core.c} (79%)
+>  create mode 100644 drivers/gpio/gpiolib-acpi-quirks.c
+> 
 
-Thanks, applied now.
-
-
-Takashi
