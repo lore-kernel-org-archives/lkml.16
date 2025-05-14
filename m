@@ -1,78 +1,149 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921D627A929
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22295191F98;
+	Wed, 14 May 2025 13:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747231086; cv=none; b=XGmdN1CbTvZ5c3NY1Vg0L13UzEw84Ymuxd1wVqGLQZIoWon428287sXC1NQjXpirdzPLVFQuy9g6ZFmAlDvtYgUS3oFDCXSU10kCDFMG4FYJmZMwErRnPRqcYlBnA25UJvJhyjia/AYL84Hvac1M7b/986KM8pOrEHPVZLKt6zI=
+	t=1747231194; cv=none; b=n47/74yuqS94pNstuu2dyEjk5hSKPl216hCNfe3wFtKVw2NthnQcvEaV6a9prX7O32XW9TTGk5g/LBaVcjastNXhwPd7JKoGj0e84sDTaiRQGMEsE+AEJrAUAGw0tGS1d0+8TIIV1UI+OtPRXTr/acRHNiFSVJfhltIXy8I0EsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747231086; c=relaxed/simple;
-	bh=LWyAOvzRnXuIZA8cLevaGutmbqIQDsqlc4rNxMh6jXc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CcuZNRLPReyrmJffc6momqIyGGAvByOTHvOSDSyAMEemXAqa2FTFN58gEir26IoXgvhlqNC78tXWIbJxpFwqPoU3h148ol1IRX+MgFF1msSNG6QnI6SvZsSlSTDMHx551nCsSMNo/B1YIbzuluRPGv8fr7aUSioa4BLXM3LFOjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3da8e79f6c6so40190485ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:58:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747231083; x=1747835883;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D0+yF4RILSxJaNDLV//8NLYN3xc4izbjtIG3syz7JXc=;
-        b=X4CYS1xVmYeQxfMPEBxpyGAd6UuDmVIme+FS+8W67GFmJZawlhWp3Q0N7HjA41S6G0
-         9ITyu1158cYlOEIMcduTpJ2FG3sJJAjjzMevtOfvBb+NpFEd6lvj8ljjPAXD6crHJJs/
-         zUoNo9jrzRaVTQTfQwry9i78DUWZimKf/wNtcLZP4wiFDBeFDWaRf0jJLS4q7Q2DxC67
-         wTDziqUXpfccKw+tFu+F7w5yyAPHs3ibVfXHe0Rjnb7+qwG8dJtlG5W3fDxONCAaZJ50
-         cjpEAWtTKAW2ElAVOSbHqyaKva4v2coJFkKEnvrzPebfsnsl86omhZT29KhoFmi73wjP
-         WKQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXopMH5TFJFTQKr5SLw3WGs659DvbJS+9DVHS++Islr//YBK8iGy7ajt5DDJvlLU7o5hKjZFrBLhl1/C4U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBTRDuMfR77DTiVMK3m5m1EUhgqrKxDZgZ+qW7ZYc+PFFwvQT2
-	5Ncw4KIh42Py86PGTfeB1XuzOTO12wVNh3xZI5oDizrp4ZrlMTqdhayUmJ1+00yiAyZIJNJebxR
-	lkw5eD9mNWuzCAp+SKJIoosHT8h+wMGsR5AapFTsHOiPKyQnkJX0OXuA=
-X-Google-Smtp-Source: AGHT+IG7nK7DACC9FvxEeV9+wB2/wCISw0/U2axZ45Q+rzSrmJ5n0M5GBgXa4if78wtL/2uUoiiQbLrwRmJIqknQFKiKHVqvdU08
+	s=arc-20240116; t=1747231194; c=relaxed/simple;
+	bh=Vp0cWt1QN9P8A+6/RDjk5kaawoFIZGE0tA1Ec+A9zK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=INC5uK8lEicwrPhgwDUpNp0xtfZsTM12P7b12UvmiPCjqL9lDXhsdCERwO8LaqmgvHLgiT0yswa74am+xLYuNhyzY9baZD+1JKT5T0ZSKM9TJRmgGrHdsBQAmKx56CZEVJGAWu8J7pEhwblVc4zfA+Ah58S5Yl2omU+S0DNgg64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lW9JP3Qs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lW9JP3Qs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E06FC4CEE3;
+	Wed, 14 May 2025 13:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747231193;
+	bh=Vp0cWt1QN9P8A+6/RDjk5kaawoFIZGE0tA1Ec+A9zK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lW9JP3QscXtn5vrRZSJ9lc2lrqpCQLKHKp/dVbGH1p3ZDoeBCK6DaOZEPpZmRshCz
+	 ogrCvwu4IQDsMOIb1NGdbRMh0qtRQMqTnT9jWDI0fKK+icsCWLGs3mRZWHbBdy/Vu+
+	 WIroWOysEfJ47GxW1xztuq0PQM1s+LJ2RnmMajFCzwG4FffXIEnWTAjx5OPIoOHaxo
+	 x3flP6wOKaENmTjACcTH3MtZtc6hrybQN3e9BZkyKC+Dwr8vadrmeMAKkBaw109Hag
+	 3N+WCYKoKSAww6TH/0j/Bulqod1clSedfoSH4VFP+81Gj6pEazC9LnGEzj5Zkgy3VL
+	 CyLX8Wm2YDX2g==
+Date: Wed, 14 May 2025 15:59:48 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Hans Holmberg <Hans.Holmberg@wdc.com>
+Cc: "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, 
+	Dave Chinner <david@fromorbit.com>, "Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] xfs: free the item in xfs_mru_cache_insert on failure
+Message-ID: <rc3lc5eexwkmrdskw2hq63jhtccwtajus2vpd4dewysmxi3bwh@3opnt2majubs>
+References: <20250514104937.15380-1-hans.holmberg@wdc.com>
+ <9LMrAvjyedm7xNxjrgohdvh5SMMXvERDG8oPUAaNiuSfQf8-fOFdkj49_0hwtfvbEquKrs6OvA6elgVWnzgAjQ==@protonmail.internalid>
+ <20250514104937.15380-2-hans.holmberg@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b4c:b0:3d9:6c9a:f35d with SMTP id
- e9e14a558f8ab-3db6f7ad066mr33144265ab.10.1747231083625; Wed, 14 May 2025
- 06:58:03 -0700 (PDT)
-Date: Wed, 14 May 2025 06:58:03 -0700
-In-Reply-To: <67f1c7df.050a0220.0a13.0256.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6824a16b.a70a0220.3e9d8.0015.GAE@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in mremap
-From: syzbot <syzbot+5250c4727db03e3436cc@syzkaller.appspotmail.com>
-To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, eadavis@qq.com, 
-	jannh@google.com, liam.howlett@oracle.com, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, lorenzo.stoakes@oracle.com, nogikh@google.com, 
-	pfalcato@suse.de, syzkaller-bugs@googlegroups.com, syzkaller@googlegroups.com, 
-	vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514104937.15380-2-hans.holmberg@wdc.com>
 
-syzbot suspects this issue was fixed by commit:
+On Wed, May 14, 2025 at 10:50:37AM +0000, Hans Holmberg wrote:
+> From: Christoph Hellwig <hch@lst.de>
+> 
+> Call the provided free_func when xfs_mru_cache_insert as that's what
+> the callers need to do anyway.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
+> ---
+>  fs/xfs/xfs_filestream.c | 15 ++++-----------
+>  fs/xfs/xfs_mru_cache.c  | 15 ++++++++++++---
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+> 
 
-commit 36eed5400805b294f1df39b0e3ebc5b7971b3c16
-Author: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Date:   Sun Mar 30 16:20:48 2025 +0000
+Looks fine.
 
-    mm/mremap: do not set vrm->vma NULL immediately prior to checking it
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118356f4580000
-start commit:   a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
-dashboard link: https://syzkaller.appspot.com/bug?extid=5250c4727db03e3436cc
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1693d404580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178ac94c580000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: mm/mremap: do not set vrm->vma NULL immediately prior to checking it
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
+> index a961aa420c48..044918fbae06 100644
+> --- a/fs/xfs/xfs_filestream.c
+> +++ b/fs/xfs/xfs_filestream.c
+> @@ -304,11 +304,9 @@ xfs_filestream_create_association(
+>  	 * for us, so all we need to do here is take another active reference to
+>  	 * the perag for the cached association.
+>  	 *
+> -	 * If we fail to store the association, we need to drop the fstrms
+> -	 * counter as well as drop the perag reference we take here for the
+> -	 * item. We do not need to return an error for this failure - as long as
+> -	 * we return a referenced AG, the allocation can still go ahead just
+> -	 * fine.
+> +	 * If we fail to store the association, we do not need to return an
+> +	 * error for this failure - as long as we return a referenced AG, the
+> +	 * allocation can still go ahead just fine.
+>  	 */
+>  	item = kmalloc(sizeof(*item), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
+>  	if (!item)
+> @@ -316,14 +314,9 @@ xfs_filestream_create_association(
+> 
+>  	atomic_inc(&pag_group(args->pag)->xg_active_ref);
+>  	item->pag = args->pag;
+> -	error = xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
+> -	if (error)
+> -		goto out_free_item;
+> +	xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
+>  	return 0;
+> 
+> -out_free_item:
+> -	xfs_perag_rele(item->pag);
+> -	kfree(item);
+>  out_put_fstrms:
+>  	atomic_dec(&args->pag->pagf_fstrms);
+>  	return 0;
+> diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
+> index d0f5b403bdbe..08443ceec329 100644
+> --- a/fs/xfs/xfs_mru_cache.c
+> +++ b/fs/xfs/xfs_mru_cache.c
+> @@ -414,6 +414,8 @@ xfs_mru_cache_destroy(
+>   * To insert an element, call xfs_mru_cache_insert() with the data store, the
+>   * element's key and the client data pointer.  This function returns 0 on
+>   * success or ENOMEM if memory for the data element couldn't be allocated.
+> + *
+> + * The passed in elem is freed through the per-cache free_func on failure.
+>   */
+>  int
+>  xfs_mru_cache_insert(
+> @@ -421,14 +423,15 @@ xfs_mru_cache_insert(
+>  	unsigned long		key,
+>  	struct xfs_mru_cache_elem *elem)
+>  {
+> -	int			error;
+> +	int			error = -EINVAL;
+> 
+>  	ASSERT(mru && mru->lists);
+>  	if (!mru || !mru->lists)
+> -		return -EINVAL;
+> +		goto out_free;
+> 
+> +	error = -ENOMEM;
+>  	if (radix_tree_preload(GFP_KERNEL))
+> -		return -ENOMEM;
+> +		goto out_free;
+> 
+>  	INIT_LIST_HEAD(&elem->list_node);
+>  	elem->key = key;
+> @@ -440,6 +443,12 @@ xfs_mru_cache_insert(
+>  		_xfs_mru_cache_list_insert(mru, elem);
+>  	spin_unlock(&mru->lock);
+> 
+> +	if (error)
+> +		goto out_free;
+> +	return 0;
+> +
+> +out_free:
+> +	mru->free_func(mru->data, elem);
+>  	return error;
+>  }
+> 
+> --
+> 2.34.1
