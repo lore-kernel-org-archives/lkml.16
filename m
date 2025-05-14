@@ -1,99 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3601F282ED;
-	Wed, 14 May 2025 15:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C1719CCF5
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747237851; cv=none; b=hlAFfV2juk/vlp+OmY42Nt6CccLwXgLL09ylvsAKKcuOawRaHeGVcOTAPoJrLqCOZGp4+P77uH/VXswwRmphx5VFa4Ui7FMXSSXpFWSKbbOeVnZrbYrScU0BomW+26P3Ctz/8PJXzIIAGHILyhUsyXtkLAleLxu7ZWu5UR9iZls=
+	t=1747237942; cv=none; b=bvSfr6Rv/Jg8VtXjD1DC8q6diSe6Vd2E6vOn38PBK2l/9bEQFTMADPjU2W+ajS9ZP84hy4YMAp9nTlyy0s8J1wNNDgizOIuEWV6kWJBbncBYWsDNRxIc0QMEU78KHHI6wOmOQBS+fj8NRaqkZFw1GG2JtkXL3Y/eoz37+BijaSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747237851; c=relaxed/simple;
-	bh=KYcDtelwc+CQhffPMVw7iv8P+rH8uAeIxnknCg0hfjo=;
+	s=arc-20240116; t=1747237942; c=relaxed/simple;
+	bh=Fdymo7U/XQEsHjtymqpQe81QQ1ZBEYcPOe4F2NEP0dA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wuu3xcb8ivUdfObcvlbLlBlRAamaiyqH3U/bKAYqitla+Qq+PpDB/f0LyXHOCRgIf3Fi+ta8ckJ13pbsnqvKY/VfHeloUDRnBaaBWmM6gu3HudstqsobJsBkqqnoTmp2lbNhiyjvRpZmnkb1FA+R6ye7EM5fEvwIO9yyDGtJCRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLrafxgV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdAuOj6usV5yyDVNi53kmDhkfFDw/Z/jFWcGA2UYGXEwHBdTsqVZi8y5ksyg7oWq2DriKt58AKM/DqzN9naY2Q54yYpQcw79DbPh7y/uyVGsVkxjT0ag6nEscBY0PIQNxiR7WqwPwvD34NP0i/TQt9X0g84If09ERaJUZNCvUvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZH6D9Bpo; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLrafxgV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE800C4CEE3;
-	Wed, 14 May 2025 15:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747237850;
-	bh=KYcDtelwc+CQhffPMVw7iv8P+rH8uAeIxnknCg0hfjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jLrafxgV6GzrNiib24vzEJkseU++71XKHooh2UjpdDPq3ctaMbW7nqeQfg84NjTi3
-	 tkb/Non8CtO7n34xE9ddB4DzD9C54g4G8NQC6coIruWeYHVII58656z1fE6kofmmh8
-	 OF/VVcP0UnxchE5nFJM6VG6AWdPScJN8/sO3sqoNFo8VVIBTR3gis+i6ZLL6jDkUso
-	 6xtDyB/JwPqhtjUqEPZJW+KhXSM7momvCoxHbakF6rAhKq8QlAoMib7B7kTipt1rL5
-	 sz2BH9CEzfKtUfk/1ivsWrh/q+CRZTPosVJC7FeuK0AP2eYdsFIrrCTIySB0VTktTl
-	 Vsc08h8ZkFzUQ==
-Date: Wed, 14 May 2025 17:50:46 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
- <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
- <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
- <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZH6D9Bpo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747237940; x=1778773940;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Fdymo7U/XQEsHjtymqpQe81QQ1ZBEYcPOe4F2NEP0dA=;
+  b=ZH6D9BpoA6g/fMzCLsEWcg3stAUITwU50YSmC1/Xm73zn0rv56qiwLU0
+   ZiIcUL3MZ5zGcayTGj9ZKT6hxG3KCq6zwuo3PoYfRHPO3yyhpyIEUshbj
+   9I+K3MI3wYRoFNIg0qjhbW1eGoRQu4DD9gUDDV0sWGrNn4VltoEcAoEqe
+   6Uhd138mZsdo3lsStdH5v158YZaxRHWjgUyPG92DmN5QjI8u9ke1NXzUW
+   7Ej+rhYFor40uyKtLESCM4orsqldz9kAiRA8uZrthWxn4dfW7UYckXYY/
+   y+7CTbwlvfc8BeYOWkgiHAC0dkQAFnMxWPCVs/CqHruqHCfd4dEJcLTFt
+   A==;
+X-CSE-ConnectionGUID: ZQCw9QFIQK2lAkwUeGojIg==
+X-CSE-MsgGUID: b+LEqMVBTk64UIbQuf9sKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51782772"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="51782772"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:19 -0700
+X-CSE-ConnectionGUID: rQSTQNjNSJOC6i4n3g2xKw==
+X-CSE-MsgGUID: jqP9JqDoT+OHu+94y0EHDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="161369778"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:16 -0700
+Date: Wed, 14 May 2025 18:52:13 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
+	andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+	heikki.krogerus@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
+ device resource management
+Message-ID: <aCS8LThO37Vt26im@black.fi.intel.com>
+References: <20250514122432.4019606-1-raag.jadav@intel.com>
+ <20250514122432.4019606-2-raag.jadav@intel.com>
+ <2025051433-fade-flirt-d3e0@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Zn34bd8tAQ2Lmo08"
-Content-Disposition: inline
-In-Reply-To: <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
-X-Cookie: Well begun is half done.
-
-
---Zn34bd8tAQ2Lmo08
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <2025051433-fade-flirt-d3e0@gregkh>
 
-On Wed, May 14, 2025 at 05:38:40PM +0200, Benno Lossin wrote:
-> On Wed May 14, 2025 at 4:40 PM CEST, Daniel Almeida wrote:
+On Wed, May 14, 2025 at 02:35:01PM +0200, Greg KH wrote:
+> On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
+> > With more and more drivers adopting to auxiliary bus infrastructure comes
+> > the need for managing resources at auxiliary device level. This is useful
+> > for cases where parent device shares variable number and type of resources
+> > with auxiliary child device but doesn't require any active involvement in
+> > managing them.
+> > 
+> > This reduces potential duplication of resource APIs that may be required by
+> > parent device driver. With this in place parent driver will be responsible
+> > for filling up respective resources and its count in auxiliary device
+> > structure before registering it, so that the leaf drivers can utilize in
+> > their probe function. Lifecycle of these resources will be as long as the
+> > auxiliary device exists.
+> > 
+> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > ---
+> >  drivers/base/auxiliary.c      | 145 ++++++++++++++++++++++++++++++++++
+> >  include/linux/auxiliary_bus.h |  18 +++++
+> >  2 files changed, 163 insertions(+)
+> 
+> Sorry, but again, you are not following the required rules for Intel
+> kernel submissions for this subsystem.  Please work with the Intel
+> kernel team to fix this up before you resend.
 
-> > By the way, IIUC, regulator_disable() does not disable a regulator necessarily.
-> > It just tells the system that you don't care about it being enabled anymore. It can
-> > still remain on if there are other users.
+Apologies again if I have broken any rules here. Since this is following
+the recommendations[1][2] of community maintainers, my understanding is
+that this needed their attention.
 
-> Hmm, so a `struct regulator` might already be enabled and calling
-> `regulator_enable` doesn't do anything?
+[1] https://lore.kernel.org/r/2025032514-ipad-schilling-9928@gregkh
+[2] https://lore.kernel.org/r/20250501125028.GM1567507@google.com
 
-It takes a reference to the regulator.  This may or may not result in a
-change in an underlying physical regulator.
+Thanks for guidance, let me fix this.
 
---Zn34bd8tAQ2Lmo08
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgku9UACgkQJNaLcl1U
-h9Ci8wf9GqNo0Cri3dG3onMfDV5aJMf/mJ8NBJoFfqD9DH6rkCXK1qpO4ZCU9SGp
-QSGWqxFbhPAg8lEOWRfVsqI4LHCIStgN1QYQwEcUeFFbB2p6id+aT762/fWioqQC
-ilg2DH6PYzflFhmGAwZ3eN0MHz38BOKbqYayL+ud0SkrutiRX2SFQK0VXC6j+rNY
-i0KlUgFcYb21FYy1Hm0n5y4pdePWpgBKGYDyM7yDpGrtrCnOj3o7qOL0smbqV4bx
-SWHNoKvWNGZgTDNHnNwiBVx4SOQnLEpbAh6qaiCGWeA5cEOSjBxgY9bmgOVeKGuu
-0xOT4smNNj8sYGT5Y3ECOgEMtrxHPA==
-=ZCvN
------END PGP SIGNATURE-----
-
---Zn34bd8tAQ2Lmo08--
+Raag
