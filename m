@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26FF253F2B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAE422CBF8
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266226; cv=none; b=puwDDK3s1IrYsuJjroQ5yWlL/Hh7JP1JicOamI95DMu7IQxOHtLukh4Vr3jsa89mZSR0ajo0ndR6Slt1gQOAd/K+h0deuZf0ty4GY6jpAnN0bnX0MRpdnwZeZys6eMH6wefnWeEXhEPmK2J83o+zy2On5w3uMZBq0ocgWBdtOlw=
+	t=1747266227; cv=none; b=gB4ofHOalQ1KaJq95z1I4Uj3niG3XXl0Nf2i3wUnFEh7oqUPAn3se/M6iGJ5WWi3Z045lMpZQPENS00W82RUP7uaZ+YShT4PyuNMFChc93EVvd+v2AIjeSoyDDNFWWFcbQpuIo2ifWm/e6NMf8PHpvgIucXN1Y2BsH8ioRprLzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266226; c=relaxed/simple;
-	bh=2eqGb+Z54Yf6chN7C9tBb9iG2LUsZRU/FE89bpzSmJQ=;
+	s=arc-20240116; t=1747266227; c=relaxed/simple;
+	bh=880XVl+KH7tuOh/Vi4slppYflzAbo1wGOw0YlbCi5yM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fe+hqZHr33a7F+xK9+mrhPHbubE9hW4uSRsAfLVklAyh6cFcDQW0e6JUXCDyyM5Y/kWlWW/sju8FnMJiSVz4WHRNCodyQiuf2o0/1pBBqYtHdxQbW71nCtvBV2Tg6Fzg1hVfRyDy5DjJRJB9QM+23ymt6M1JlPYPThjA1jFJ4Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aWNXuEX7; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=snjyXC7Wyr9K0jgDQKDWTaUMa/rc2lI1Fzad/cBDTdE1ryw20wvso6JTCmtifb6AaTVu0xHpuMto7ytDA1hIiTXfJ+GuABA5mvQdltPgAx9H3i3gsh/w128CaUuzkasARVIC9uDvzkpylLujt5amwbvYtBHVUxFerjwEiJtWJU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3xwVpFHK; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aWNXuEX7"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c371c34e7so404283a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3xwVpFHK"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ac97eda56so541433a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266224; x=1747871024; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266225; x=1747871025; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZHhjGByLJzVXtoqJOTMMGXn3R5joV4I6usoUliN7uk=;
-        b=aWNXuEX7cDO7EekPjQNk5sZnm613GFjh/aFf+2MdTDHO18fvEX0HXle0hAk1j039T8
-         lycxb2dpSkGCee8KcULM+sY9CEGECF+xtlDWT6Cw1meJTMx4AGA9McvfimYQ9ia0+KSs
-         fZBsZdYdRp3RqR/RNdxwvwZIPJ6GPTDhJ5MQyf99pka8GgzTZteQ8sq7/66+eYb7my1q
-         5Jzq6xYiSxGkZiCcREszbKsK614SayXJyghlGeKftvK7YT/SVjRimiVzPdPWpP1jDd4V
-         RQB9xULsU/2l3u5Ji1onD4/RIc4OSacj0Y6x0BxdmQX5Ms56CjxTkYPweWjHBml8rG9P
-         pHqg==
+        bh=n2xHpbJgtJxOVMnodYqV0AgaR/C3WrhDv288edrMISE=;
+        b=3xwVpFHKSMmumGg6IWWrYZCj09DbaupqvdpMpHbUttXSsqjHMSNb1ezJicT7uToZ08
+         WQTjgosk+89QtTFBJSN9bU/DQsWS2UtRRyDSA/h+gCIoAYxugmHMiZQXgBow+NXiYO/W
+         giDpH1ZWa+DwjMxCyCl//ltdvCzbYoGdCA5Ihvl/BQEPd7Rbr6M5uCMkCsI/njkJQW2N
+         rBVF6U2L/kVlNx9DxNd9VTWq4NKQF8MEgYL+VMKe8EnE1KHLmhBgbshDtVqpwzeAtqq1
+         rw5thxRwJ7hKaniGoQPZwFFGJYFGqbBIeHgF4cg+rbN6SSEPyH1ht6fN4QdgPxIsGWVv
+         x4xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266224; x=1747871024;
+        d=1e100.net; s=20230601; t=1747266225; x=1747871025;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lZHhjGByLJzVXtoqJOTMMGXn3R5joV4I6usoUliN7uk=;
-        b=dFGaStFKbrKrPzmFX1AY+pQ4TRO13epbnig+2Lewdvy3aQpuKcFfh2jquNiP8EuRn2
-         az+AQABjc268KXKdEUCVSWOmOezNk+toxLFl8PK4yIjWPjWofScXqCtSj7h0zWisUtPy
-         GDlx4QVJMXN554ptX66rMGFJB1qfPQ8TPX1tmo3f9ONvPhFp4uY4lSRwF7YGHQL4bGS6
-         5587eLg44cTpCBnEl9Nj2wWyMltcfyeuWXHAiwocKIuWItSHF+2Vp+pbFq8EwXIIMfSc
-         lKbyj4vILqnFCOlqK1bDioYzRxZIvWoGJFGw+yOkB+3/e8Ah/g7/WJKt4yNi8VgZGpCv
-         rAMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBT1cWxXGEWf5522rQwN5OJ3hBrMiKpzovl0Xw7JDjwf4BnEyL3iq/rdbTuH5yUFTSwp2C1/wwpXoCBCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIx0hExSyU5Fv+5CD18gOa+QHuvbaVMhBp8RCpK6oHH63uQeMo
-	B9bWxL0tq+SgMPSo+Kjic6nCwqt3oKFME78GEUvNe4S1N9k1HMef4R5x58/TJMdunXkvF1j2HzZ
-	sp5+3hCLeSUgSzttjouaZlg==
-X-Google-Smtp-Source: AGHT+IEyquCcT5XxZ9BgIpP/32+sIegfX+nvFI1VSjxlaKftnmHI/Ogt7pc+GLW7KEnHncBj/7BeWAroc3//byxO4g==
-X-Received: from pjq12.prod.google.com ([2002:a17:90b:560c:b0:2ff:5516:6add])
+        bh=n2xHpbJgtJxOVMnodYqV0AgaR/C3WrhDv288edrMISE=;
+        b=c+ADOjIR96p+YziwiTR8dGqzLO5eFOPnNVCJPt9ENVQWtSMCwz00MLT4H+8eJ/8sUZ
+         R+FOq3q4rKv2TzlAROLPHekeNMhIO1V4ITnVrlUS4ciisYWQbDNDdfiDR/GSvnHBob5Y
+         Un9CRHUP8vNDDsehwNrqDa76szswFEghMlb31M+Ayo3g9hFkM5oII981LLbAjFVbS7N8
+         kYTL73rHIds2COlEuRL5B2MDbBffGLmvZfhIM8uNb435y1sFe77Ng09sgokNKAYFyuVe
+         x9/M59lxIQ013ApQ04Gko9LdlV2fdUO5uqrJbrBczcLTfv6ZvgsqHlF3cgAYFMLgDsE3
+         3WQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWma1PV/eA0+Us3UHSHnU/LebU7pWI3jbrLGdcakL8McBLm0r3t1gRD7UcMi1yj7paLL4ecrXuG34DzgvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLElT8Eoe9mg5JpacfYL3ezfprbrrEuGT0vjEqRF2tJkyHlD5u
+	WjGaYxCndGPvQREtAmxUO23MTM5eCONdWcUXvQyIHmQ0hu8rAAy9wohJXZDWMWyhgyexoadj91I
+	1kk9x/2NS7uBOJKNJcyvKpA==
+X-Google-Smtp-Source: AGHT+IEnxUnflQCwANEToR4+zQJiUqjf1j7XWon+tqwv5PtG2ghVVngVh87NrGZhCVUyi9zCtLfCOzjpKjbtnaQ2Wg==
+X-Received: from pjn6.prod.google.com ([2002:a17:90b:5706:b0:30a:9720:ea33])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4c51:b0:30c:5604:f654 with SMTP id 98e67ed59e1d1-30e515873cemr701793a91.9.1747266223852;
- Wed, 14 May 2025 16:43:43 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:09 -0700
+ 2002:a17:90b:6c6:b0:30e:ee6:6745 with SMTP id 98e67ed59e1d1-30e2e5b6599mr8868127a91.10.1747266225334;
+ Wed, 14 May 2025 16:43:45 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:10 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <cebe2aa139ba2cdeabcef69eca235cada32b4a70.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 30/51] mm: truncate: Expose truncate_inode_folio()
+Message-ID: <4acb9139318e3ae35d61ed7da9d41db2e328dc40.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 31/51] KVM: x86: Set disallow_lpage on base_gfn and
+ guest_memfd pgoff misalignment
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,72 +97,98 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-guest_memfd will be using truncate_inode_folio() to remove folios from
-guest_memfd's filemap.
+When slot->base_gfn and userspace_addr are not aligned wrt each other,
+large page support is disabled for the entire memslot.
 
-Change-Id: Iab72c6d4138cf19f6efeb38341eabe28ded42fd6
+This patch applies the same logic for when slot->base_gfn and
+gmem.pgoff are not aligned wrt each other.
+
+Change-Id: Iab21b8995e77beae6dbadc3b623a1e9e07e6dce6
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- include/linux/mm.h    | 1 +
- mm/guestmem_hugetlb.c | 2 +-
- mm/internal.h         | 1 -
- mm/truncate.c         | 1 +
- 4 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 53 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index e4e73c231ced..74ca6b7d1d43 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2530,6 +2530,7 @@ extern void truncate_pagecache(struct inode *inode, loff_t new);
- extern void truncate_setsize(struct inode *inode, loff_t newsize);
- void pagecache_isize_extended(struct inode *inode, loff_t from, loff_t to);
- void truncate_pagecache_range(struct inode *inode, loff_t offset, loff_t end);
-+int truncate_inode_folio(struct address_space *mapping, struct folio *folio);
- int generic_error_remove_folio(struct address_space *mapping,
- 		struct folio *folio);
- 
-diff --git a/mm/guestmem_hugetlb.c b/mm/guestmem_hugetlb.c
-index 5459ef7eb329..ec5a188ca2a7 100644
---- a/mm/guestmem_hugetlb.c
-+++ b/mm/guestmem_hugetlb.c
-@@ -4,12 +4,12 @@
-  * as an allocator for guest_memfd.
-  */
- 
--#include <linux/mm_types.h>
- #include <linux/guestmem.h>
- #include <linux/hugetlb.h>
- #include <linux/hugetlb_cgroup.h>
- #include <linux/mempolicy.h>
- #include <linux/mm.h>
-+#include <linux/mm_types.h>
- #include <linux/pagemap.h>
- 
- #include <uapi/linux/guestmem.h>
-diff --git a/mm/internal.h b/mm/internal.h
-index 25a29872c634..a1694f030539 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -448,7 +448,6 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
- unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
- 		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
- void filemap_free_folio(struct address_space *mapping, struct folio *folio);
--int truncate_inode_folio(struct address_space *mapping, struct folio *folio);
- bool truncate_inode_partial_folio(struct folio *folio, loff_t start,
- 		loff_t end);
- long mapping_evict_folio(struct address_space *mapping, struct folio *folio);
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 057e4aa73aa9..4baab1e5d2cf 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -176,6 +176,7 @@ int truncate_inode_folio(struct address_space *mapping, struct folio *folio)
- 	filemap_remove_folio(folio);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 12433b1e755b..ee0e3420cc17 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -12950,6 +12950,46 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages)
  	return 0;
  }
-+EXPORT_SYMBOL_GPL(truncate_inode_folio);
  
- /*
-  * Handle partial folios.  The folio may be entirely within the
++static inline bool kvm_is_level_aligned(u64 value, int level)
++{
++	return IS_ALIGNED(value, KVM_PAGES_PER_HPAGE(level));
++}
++
++static inline bool
++kvm_should_allow_lpage_for_slot(struct kvm_memory_slot *slot, int level)
++{
++	bool gfn_and_userspace_addr_aligned;
++	unsigned long ugfn;
++
++	ugfn = slot->userspace_addr >> PAGE_SHIFT;
++
++	/*
++	 * If addresses are not aligned wrt each other, then large page mapping
++	 * cannot be allowed for the slot since page tables only allow guest to
++	 * host translations to function at fixed levels.
++	 */
++	gfn_and_userspace_addr_aligned =
++		kvm_is_level_aligned(slot->base_gfn ^ ugfn, level);
++
++	/*
++	 * If slot->userspace_addr is 0 (disabled), 0 is always aligned so the
++	 * check is deferred to gmem.pgoff.
++	 */
++	if (!gfn_and_userspace_addr_aligned)
++		return false;
++
++	if (kvm_slot_has_gmem(slot)) {
++		bool gfn_and_gmem_pgoff_aligned;
++
++		gfn_and_gmem_pgoff_aligned = kvm_is_level_aligned(
++			slot->base_gfn ^ slot->gmem.pgoff, level);
++
++		return gfn_and_gmem_pgoff_aligned;
++	}
++
++	return true;
++}
++
+ static int kvm_alloc_memslot_metadata(struct kvm *kvm,
+ 				      struct kvm_memory_slot *slot)
+ {
+@@ -12971,7 +13011,6 @@ static int kvm_alloc_memslot_metadata(struct kvm *kvm,
+ 
+ 	for (i = 1; i < KVM_NR_PAGE_SIZES; ++i) {
+ 		struct kvm_lpage_info *linfo;
+-		unsigned long ugfn;
+ 		int lpages;
+ 		int level = i + 1;
+ 
+@@ -12983,16 +13022,12 @@ static int kvm_alloc_memslot_metadata(struct kvm *kvm,
+ 
+ 		slot->arch.lpage_info[i - 1] = linfo;
+ 
+-		if (slot->base_gfn & (KVM_PAGES_PER_HPAGE(level) - 1))
++		if (!kvm_is_level_aligned(slot->base_gfn, level))
+ 			linfo[0].disallow_lpage = 1;
+-		if ((slot->base_gfn + npages) & (KVM_PAGES_PER_HPAGE(level) - 1))
++		if (!kvm_is_level_aligned(slot->base_gfn + npages, level))
+ 			linfo[lpages - 1].disallow_lpage = 1;
+-		ugfn = slot->userspace_addr >> PAGE_SHIFT;
+-		/*
+-		 * If the gfn and userspace address are not aligned wrt each
+-		 * other, disable large page support for this slot.
+-		 */
+-		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
++
++		if (!kvm_should_allow_lpage_for_slot(slot, level)) {
+ 			unsigned long j;
+ 
+ 			for (j = 0; j < lpages; ++j)
 -- 
 2.49.0.1045.g170613ef41-goog
 
