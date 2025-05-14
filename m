@@ -1,177 +1,313 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC71519BBC
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D52122615;
+	Wed, 14 May 2025 13:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747230403; cv=none; b=EMVN/Dzsis7HE93EotfhaPPhCQjewb6IUszS9xpjy5K1yBQJXx15z+p21t7xOPz7EB4D6ObEoGTFsZnsKbCKgp6r+I2vloXxn4zpbPeRbesVFd925Sx/UZGYRXTjLPE10Arh0mFFljYER2sgSuU2WVYybNgQPT2W6i/7X0Qycwk=
+	t=1747230403; cv=none; b=HZ5oP7SkEmfzcXDjxr5mmWw+/8pCOgmAzbrW6VEtV6yZhN0SR3vXb4AzWv6WHbGUEv/KjVlf9sYSHvDEdYJ218hkPqMgyOt48qTcsQD9cR9DAga2ocO9/cQWcnbXkj5Q0jJJRB8X27+ofsU42vvjezO4TZTYzdsnorUrNNINVGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747230403; c=relaxed/simple;
-	bh=PSDzFJ6pwrZPT3XWZdI28VfZnrFAtzEea9+QlIcF/0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Vfcb85spxoTZIhR6/vr8Z75hdNy4rrVOhw3JyrRBBZM4BOS8ZtrU9ZFoQH34IWQHga2S+vlEdn9Loy1MVTBVWehZ/YkHjQ0mQwxX4JOMZIZNCsQ9dVgpYOWcujn4uqxfrTxW6LCLI10jzWYtQsnhq1KklvBh/GWpLpVI+qs31Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f7WUk6OP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=rK8crzKNsT9l/5ZEsMIGnF+i2H4Z59zJPO5cKuaMaIc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=btSqxQC9MvlCtxaXc8G7OXB847hH3TXebPU6d5j+I4D8R8XXo3TB4k1qYoOztmcY/yi2lBa89i2FU4WY30vz4nBqW0E48nXApQH9+nt5tKFCzHzH3rz2JZoQCMCAJ2avUplTW7xO7SKjeo6vAHPAOeNyyQNX45iRoCU9AT2YPMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=tz44HVin; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7WUk6OP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747230400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=s6k9/GzU7jK7zlNovm76Gy0+NwNfyykNoxZQiNddalM=;
-	b=f7WUk6OPTaxohewWw5gxTHFZdvkCSZyceI84kgDXAd3E9e1TERl327+MxD4HeaRblBcyTG
-	75ZWX5kC//TL1OXPPsPZDnj6ZXSTf+BEbX0rDHieNIiUNNquBKpWbuej0K0GIaQUzh4TN5
-	lcF+u62wreVX5tLVw4assxBQzvzy9zQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-Qjqq5oshMOarxr2MkNdxmg-1; Wed, 14 May 2025 09:46:39 -0400
-X-MC-Unique: Qjqq5oshMOarxr2MkNdxmg-1
-X-Mimecast-MFC-AGG-ID: Qjqq5oshMOarxr2MkNdxmg_1747230398
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso33728115e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:46:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747230398; x=1747835198;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s6k9/GzU7jK7zlNovm76Gy0+NwNfyykNoxZQiNddalM=;
-        b=vDzYr2kwL6Y4T9yXdHZhq+6GDC/357xvbVJjoZk1CdIT8B8D31oLV4ZcHi5bxoYmZA
-         Mw2xc5R42BQu7Jyerx0BDY7lRMAqkz7q2+BCPnUeUxSyg3VthmE2VujuQbl4ndV6KyS/
-         i9DmpVith0vDojDdraVXU30NHHYdpr1/giqFIhqHU0EmyyUm6o3rrbTb+eGvnPdnX5aq
-         AIe60ru5d7r5eJQ7qvsQwgszkn8JZftpMkCfu/MSZjwfNB10qUW2iKPFmFkJLXSOZbqp
-         RyP5BDQgGHSfYIeefH7aOyd0NFl0USinETxeglyurxNQ2pLfXUkyB1xvNkHBxmWud88E
-         o6MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwpXGCOX1ivMyV2si9oVZFxcvuDavrjVf8l4lpTDu0LA4MylgQWzW/nQBoZjXoihdussO+AE4/FXzkdeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgD2ba0l6LiXC/qXu4KLC7yR2sqq9NKlW2OyixFvI5snLH9+Pg
-	/bNZzYBeaKXXWpSVBE4LQW/0KMtgp7Pz9+y/T1v+XLEBzFwLo0RJcsKefOXBd36DHzSfTmmP+Yb
-	TwcfQHUAFY4hjdNuvh3zoAkXX1MsTEUQpDa/PwdQQ5xCyaWcKOUHz9RbMH/h0ZQ==
-X-Gm-Gg: ASbGnctRBW7L88Gl4FFisn6fC8NR3KadVQR7Jom68tynT3+a2xcc+LFOkFM5yUd1v10
-	cKcJitJktnGgsmbrtRvz/Kb2I8OPPuog/LZIqpubjH9tOHk608KOvGgngAeLtSd45YSLBkgSuSs
-	totn46hbsnR+E07reWbNta5W62d7M2jtEQm/qLFRamKP7CzXVuxtY5bmGfg7HozeYvfLyeP7yhl
-	aahQLcm4vySSX/JsJt/cncxIN04NA7VHPJdBLhDkfPJkmFBEt+dEFckg321DT2qN/HYpWGTm7ts
-	ivA9Ow6RJziO9xNIDuY=
-X-Received: by 2002:a05:600c:c07:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-442f21690d0mr31437675e9.26.1747230397909;
-        Wed, 14 May 2025 06:46:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY9vh+bpQG79sp/6DI8di3RxLNOV35Az0tewqTY/ffxwzq3/IqQ2Ik1HsPTwPjASd5o1gbLA==
-X-Received: by 2002:a05:600c:c07:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-442f21690d0mr31437185e9.26.1747230397293;
-        Wed, 14 May 2025 06:46:37 -0700 (PDT)
-Received: from stex1.redhat.com ([193.207.148.196])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3951b62sm32993785e9.22.2025.05.14.06.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 06:46:35 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	linux-integrity@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH v5 0/4] tpm: add support for sync send() and use it in ftpm and svsm drivers
-Date: Wed, 14 May 2025 15:46:26 +0200
-Message-ID: <20250514134630.137621-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="tz44HVin"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747230377; x=1747835177; i=spasswolf@web.de;
+	bh=+TQ+F6UqZ2YyIp8s6fLPHLaOot28CRqH0fegWBi2AcU=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tz44HVinuJs8Y0QCguGTcvOE6R4NTA1Um5IgeTSe2IbclTbby/seD4xFTQIF/UPF
+	 +gJVWxQBCBQnHKWT7aNMZtHQAKawEt0ECtvSWQleOJZ7NjRIiwEPRSg1XxUYkWSod
+	 fBM1LjE2mKPOIh0WbKJqi9o4Bcjvfb7B3AHdV5qFeMc1hmG3Nxx9fT90cY8dMbG3K
+	 GrlDsYQdyyZ1qzPPnfjzoH+HxOkHCoZi4+VWplVejhpvEhiDdQtGHMKaq3zg2TKkm
+	 9fTXyTUxZ0/EfF68iilZPxFiOrzIK6YUH+y19th78D95cEeKnn3omYclL/TEaxSBy
+	 Py5ZAVMsyL/8XpVR0Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N3oz4-1uxA6a2ooC-017frE; Wed, 14
+ May 2025 15:46:16 +0200
+Message-ID: <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Johannes Berg <johannes@sipsolutions.net>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>
+Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, 
+ "llvm@lists.linux.dev"
+	 <llvm@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-wireless@vger.kernel.org, spasswolf@web.de
+Date: Wed, 14 May 2025 15:46:15 +0200
+In-Reply-To: <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+			 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+		 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+	 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4L5PY97agYt03K0vBnhFzdRDh8ErKa43ybp1GTTY66Ule2AeLa2
+ 0jHVEqUH4dVxJMQSaL+tWSYe/PWJ+iHibjgVqe3o97BbGfjT29rRPJb0UtCqB6OQzAZHPSj
+ OZQ2TmjXkXcczcW1F8Peor0XT08y5x1D/Tmx0kCI8nlJaJF6WgYIH258twbcPQtBDNnWJ1l
+ XjByS6l3XDp+MmLNrDoLg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:IkS5GNLRGpw=;DEAgzj28aTuoYCOarQcylnT0Vt+
+ 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
 
-This series is a follow-up to the discussion we had about whether or not
-to add send_recv() op in tpm_class_ops[1]. Much boilerplate code has
-already been removed by Jarkko with commit 980a573621ea ("tpm: Make
-chip->{status,cancel,req_canceled} opt"). With this series we try to
-avoid also the temporary buffers needed between send() and recv() for
-devices that do not support interrupts and provide a single operation
-to send the command and receive the response on the same buffer like
-tpm_ftpm_tee.
+Am Mittwoch, dem 14.05.2025 um 12:23 +0200 schrieb Johannes Berg:
+> + linux-wireless
+>=20
+> On Wed, 2025-05-14 at 09:32 +0000, Bert Karwatzki wrote:
+>=20
+> > Then I reapplied commit 76a853f86c97 hunk by hunk and found the one hu=
+nk that
+> > causes the problem:
+> >=20
+> > diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+> > index 3e751dd3ae7b..63df21228029 100644
+> > --- a/net/mac80211/tx.c
+> > +++ b/net/mac80211/tx.c
+> > @@ -4648,8 +4648,7 @@ static void ieee80211_8023_xmit(struct
+> > ieee80211_sub_if_data *sdata,
+> >                         memcpy(IEEE80211_SKB_CB(seg), info, sizeof(*in=
+fo));
+> >         }
+> >=20
+> > -       if (unlikely(skb->sk &&
+> > -                    skb_shinfo(skb)->tx_flags & SKBTX_WIFI_STATUS)) {
+> > +       if (unlikely(skb->sk && sock_flag(skb->sk, SOCK_WIFI_STATUS)))=
+ {
+> >                 info->status_data =3D ieee80211_store_ack_skb(local, s=
+kb,
+> >                                                             &info->fla=
+gs, NULL);
+> >                 if (info->status_data)
+>=20
+> I think it crashed later on the status, but this inserts the skb into
+> the IDR so the status can pick it up to return the status and afaict
+> _that's_ where it crashed.
+>=20
+> Still I don't really know what could go wrong? The (copied) skb should
+> still have been keeping the socket alive.
+>=20
+> > This is enough to cause a kernel panic when compiled with clang (clang=
+-19.1.7
+> > from debian sid). Compiling the same kernel with gcc (gcc-14.2.0 from =
+debian
+> > sid) shows no problem.
+>=20
+> Right, even stranger. But I can't even say you should look at this place
+> (which inserts) or the other (which takes it out again and crashed) to
+> compare the code :-/
+>=20
+>=20
+> johannes
 
-The biggest advantage for this approach is with tpm_ftpm_tee where we
-remove the local buffer and extra memory copies. For tpm_svsm it does
-not change much since we continue to use the pre-allocated buffer,
-to avoid making an allocation for each command.
+I've split off the problematic piece of code into an noinline function to =
+simplify the disassembly:
 
-Introduce a new flag (TPM_CHIP_FLAG_SYNC) to support synchronous send().
-If that flag is set by the driver, tpm_try_transmit() will use the send()
-callback to send the command and receive the response on the same buffer
-synchronously. In that case send() return the number of bytes of the
-response on success, or -errno on failure.
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 20de6e6b0929..075e012d9992 100644
+=2D-- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -4582,7 +4582,19 @@ static bool ieee80211_tx_8023(struct ieee80211_sub_=
+if_data *sdata,
+ 	return ret;
+ }
+=20
+-static noinline void ieee80211_8023_xmit(struct ieee80211_sub_if_data *sd=
+ata,
++static noinline void ieee80211_8023_xmit_clang_debug_helper(struct sk_buf=
+f *skb,
++							    struct ieee80211_local *local,
++							    struct ieee80211_tx_info *info)
++{
++	if (unlikely(skb->sk && sock_flag(skb->sk, SOCK_WIFI_STATUS))) {
++		info->status_data =3D ieee80211_store_ack_skb(local, skb,
++							    &info->flags, NULL);
++		if (info->status_data)
++			info->status_data_idr =3D 1;
++	}
++}
++
++static void ieee80211_8023_xmit(struct ieee80211_sub_if_data *sdata,
+ 				struct net_device *dev, struct sta_info *sta,
+ 				struct ieee80211_key *key, struct sk_buff *skb)
+ {
+@@ -4648,12 +4660,7 @@ static noinline void ieee80211_8023_xmit(struct iee=
+e80211_sub_if_data *sdata,
+ 			memcpy(IEEE80211_SKB_CB(seg), info, sizeof(*info));
+ 	}
+=20
+-	if (unlikely(skb->sk && sock_flag(skb->sk, SOCK_WIFI_STATUS))) {
+-		info->status_data =3D ieee80211_store_ack_skb(local, skb,
+-							    &info->flags, NULL);
+-		if (info->status_data)
+-			info->status_data_idr =3D 1;
+-	}
++	ieee80211_8023_xmit_clang_debug_helper(skb, local, info);
+=20
+ 	dev_sw_netstats_tx_add(dev, skbs, len);
+ 	sta->deflink.tx_stats.packets[queue] +=3D skbs;
 
-This series is based on "[PATCH v7 0/4] Enlightened vTPM support for SVSM
-on SEV-SNP" [2], which is currently merged in the tip tree and available
-in linux-next.
+This shows the the behaviour as the old code, i.e. kernel panic when compi=
+led with clang(-19.1.7), no problem when
+compiled with gcc(-14.2.0).
 
-Thanks,
-Stefano
+When compiled with clang the disassembly of the function is (from objdump =
+-d)
 
-Changelog
-- v4 -> v5
-  - changed order and parameter names to match tpm_try_transmit() [Jarkko]
-  - rebased on next-20250514
-- v3 -> v4: https://lore.kernel.org/linux-integrity/20250509085713.76851-1-sgarzare@redhat.com/
-  - reworked commit descriptions [Jarkko]
-  - added Jarkko's R-b on patch 2
-  - added Sumit's R-b on patch 3
-  - rebased on next-20250508
-- v2 -> v3: https://lore.kernel.org/linux-integrity/20250414145653.239081-1-sgarzare@redhat.com/
-  - fixed comment style [Jarkko]
-  - renamend `out_send_sync` label to `out_sync` [Jarkko]
-- v1 -> v2: https://lore.kernel.org/linux-integrity/20250408083208.43512-1-sgarzare@redhat.com/
-  - changed title since we removed send_recv() op
-  - implemented TPM_CHIP_FLAG_SYNC idea [Jarkko]
-  - removed Jens' T-b
-- RFC -> v1: https://lore.kernel.org/linux-integrity/20250320152433.144083-1-sgarzare@redhat.com/
-  - added Jens' T-b on ftpm driver
-  - removed last patch since [2] is not yet merged and will require a new version
-- RFC: https://lore.kernel.org/linux-integrity/20250311100130.42169-1-sgarzare@redhat.com/
+000000000000a260 <ieee80211_8023_xmit_clang_debug_helper>:
+    a260:	48 8b 47 18          	mov    0x18(%rdi),%rax
+    a264:	48 85 c0             	test   %rax,%rax
+    a267:	74 0c                	je     a275 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x15>
+    a269:	53                   	push   %rbx
+    a26a:	48 f7 40 60 00 00 08 	testq  $0x80000,0x60(%rax)
+    a271:	00=20
+    a272:	75 07                	jne    a27b <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x1b>
+    a274:	5b                   	pop    %rbx
+    a275:	2e e9 00 00 00 00    	cs jmp a27b <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x1b>
+    a27b:	48 89 f8             	mov    %rdi,%rax
+    a27e:	48 89 f7             	mov    %rsi,%rdi
+    a281:	48 89 c6             	mov    %rax,%rsi
+    a284:	48 89 d3             	mov    %rdx,%rbx
+    a287:	31 c9                	xor    %ecx,%ecx
+    a289:	e8 02 ff ff ff       	call   a190 <ieee80211_store_ack_skb>
+    a28e:	25 ff 1f 00 00       	and    $0x1fff,%eax
+    a293:	89 c2                	mov    %eax,%edx
+    a295:	b9 0f 00 fe ff       	mov    $0xfffe000f,%ecx
+    a29a:	23 4b 04             	and    0x4(%rbx),%ecx
+    a29d:	c1 e2 04             	shl    $0x4,%edx
+    a2a0:	09 d1                	or     %edx,%ecx
+    a2a2:	89 4b 04             	mov    %ecx,0x4(%rbx)
+    a2a5:	85 c0                	test   %eax,%eax
+    a2a7:	74 cb                	je     a274 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x14>
+    a2a9:	83 c9 08             	or     $0x8,%ecx
+    a2ac:	89 4b 04             	mov    %ecx,0x4(%rbx)
+    a2af:	eb c3                	jmp    a274 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x14>
+    a2b1:	66 66 66 66 66 66 2e 	data16 data16 data16 data16 data16 cs nopw=
+ 0x0(%rax,%rax,1)
+    a2b8:	0f 1f 84 00 00 00 00=20
+    a2bf:	00=20
 
-[1] https://lore.kernel.org/linux-integrity/Z8sfiDEhsG6RATiQ@kernel.org/
-[2] https://lore.kernel.org/linux-integrity/20250410135118.133240-1-sgarzare@redhat.com/
+When compiled with gcc the disassembly is
 
-Stefano Garzarella (4):
-  tpm: add bufsiz parameter in the .send callback
-  tpm: support devices with synchronous send()
-  tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
-  tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+00000000000010e0 <ieee80211_8023_xmit_clang_debug_helper>:
+    10e0:	48 8b 4f 18          	mov    0x18(%rdi),%rcx
+    10e4:	48 89 f8             	mov    %rdi,%rax
+    10e7:	48 85 c9             	test   %rcx,%rcx
+    10ea:	75 05                	jne    10f1 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x11>
+    10ec:	e9 00 00 00 00       	jmp    10f1 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x11>
+    10f1:	48 8b 49 60          	mov    0x60(%rcx),%rcx
+    10f5:	f7 c1 00 00 08 00    	test   $0x80000,%ecx
+    10fb:	74 ef                	je     10ec <ieee80211_8023_xmit_clang_deb=
+ug_helper+0xc>
+    10fd:	48 83 ec 08          	sub    $0x8,%rsp
+    1101:	48 89 f7             	mov    %rsi,%rdi
+    1104:	31 c9                	xor    %ecx,%ecx
+    1106:	48 89 c6             	mov    %rax,%rsi
+    1109:	48 89 14 24          	mov    %rdx,(%rsp)
+    110d:	e8 ce f8 ff ff       	call   9e0 <ieee80211_store_ack_skb>
+    1112:	48 8b 14 24          	mov    (%rsp),%rdx
+    1116:	89 c1                	mov    %eax,%ecx
+    1118:	8b 42 04             	mov    0x4(%rdx),%eax
+    111b:	81 e1 ff 1f 00 00    	and    $0x1fff,%ecx
+    1121:	c1 e1 04             	shl    $0x4,%ecx
+    1124:	25 0f 00 fe ff       	and    $0xfffe000f,%eax
+    1129:	09 c8                	or     %ecx,%eax
+    112b:	89 42 04             	mov    %eax,0x4(%rdx)
+    112e:	a9 f0 ff 01 00       	test   $0x1fff0,%eax
+    1133:	74 04                	je     1139 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x59>
+    1135:	80 4a 04 08          	orb    $0x8,0x4(%rdx)
+    1139:	48 83 c4 08          	add    $0x8,%rsp
+    113d:	e9 00 00 00 00       	jmp    1142 <ieee80211_8023_xmit_clang_deb=
+ug_helper+0x62>
+    1142:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+    1149:	00 00 00 00=20
+    114d:	0f 1f 00             	nopl   (%rax)
+    1150:	90                   	nop
+    1151:	90                   	nop
+    1152:	90                   	nop
+    1153:	90                   	nop
+    1154:	90                   	nop
+    1155:	90                   	nop
+    1156:	90                   	nop
+    1157:	90                   	nop
+    1158:	90                   	nop
+    1159:	90                   	nop
+    115a:	90                   	nop
+    115b:	90                   	nop
+    115c:	90                   	nop
+    115d:	90                   	nop
+    115e:	90                   	nop
+    115f:	90                   	nop
 
- drivers/char/tpm/tpm_ftpm_tee.h      |  4 --
- include/linux/tpm.h                  |  4 +-
- drivers/char/tpm/st33zp24/st33zp24.c |  2 +-
- drivers/char/tpm/tpm-interface.c     | 22 ++++++++--
- drivers/char/tpm/tpm_atmel.c         |  3 +-
- drivers/char/tpm/tpm_crb.c           |  2 +-
- drivers/char/tpm/tpm_ftpm_tee.c      | 66 +++++++++-------------------
- drivers/char/tpm/tpm_i2c_atmel.c     |  3 +-
- drivers/char/tpm/tpm_i2c_infineon.c  |  3 +-
- drivers/char/tpm/tpm_i2c_nuvoton.c   |  3 +-
- drivers/char/tpm/tpm_ibmvtpm.c       |  6 ++-
- drivers/char/tpm/tpm_infineon.c      |  3 +-
- drivers/char/tpm/tpm_nsc.c           |  3 +-
- drivers/char/tpm/tpm_svsm.c          | 28 +++++-------
- drivers/char/tpm/tpm_tis_core.c      |  3 +-
- drivers/char/tpm/tpm_tis_i2c_cr50.c  |  6 ++-
- drivers/char/tpm/tpm_vtpm_proxy.c    |  4 +-
- drivers/char/tpm/xen-tpmfront.c      |  3 +-
- 18 files changed, 83 insertions(+), 85 deletions(-)
 
--- 
-2.49.0
+I've not yet taken a closer look, but perhaps the error is obvious
+for some one else.
+
+Bert Karwatzki
 
