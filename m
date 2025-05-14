@@ -1,62 +1,35 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F2317736;
-	Wed, 14 May 2025 02:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F8E17736
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747188149; cv=none; b=YcQoHtBv8dG+2hrcT3Ep7P/v83RT59NSoRPhy+JkG0ly8eIhnjwNB9Qyzbw7fRb9bTHkPg8ux8brmyprtOplobPm23PguFCNGGeeQE8NU8fzdC/gs0OR2XfLRTbY75MyX1rwvg6EFN7SFAQTvlpgxXo2A6qjAiWpzzPpYyAG4m8=
+	t=1747188221; cv=none; b=nZcl7NduZG0ONzN3secMjAWlBCepjnYmdg2PNxCiEjNWjTdgU3cehs19/iTqH8Qs7Q5RyMn/h24nDgMwsxIGjJM3aIl6NRWawWFj/e2RVRa3XKPtkh3dXXgVgqra/ViCJ7ygsqaKwLLHlVLDdz6LxE53/5HbXPMaofCqiX37nHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747188149; c=relaxed/simple;
-	bh=9gZ+V/mzuQKZTq/D1Z4x1IxGr2aBpJFoWrl3VOdws7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WQ2TB01wiXecrWWzuDkApMTf1vTFDlkSeBAIDdW3EaMMqdauHQE/6LzPjeB1kwssmxFkJy4sZ7vnHK3mm1wLI/EIAvRW7CrClwo47KDcEGHn2Zm3UkXjWudnbLWFIfb28WREtn8XkSN9TiSMm3yzpbSQTaYT++pmg8fjDlsS7ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5ba363f1aso1004574385a.0;
-        Tue, 13 May 2025 19:02:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747188147; x=1747792947;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3Q9xaOIn3zBynpsjqY4jBiZO//jx0sk7GdoLvm9O8dQ=;
-        b=X0kmNDujZE+F8P+7+l6B1y0aqa17KFoFMpX0fuhLHDK0Hm2w3Sy8uPZlZjpOjT+RY4
-         jKhzNXBx5XCA4EmP7lmcta8BraLX6jS2Sz/wvwvTOqyNPE9WO4jEZujsWaMyLyoE6XN4
-         1lPFttLO+MSRbUJYbXEbUaf16wilmtzFoGBn5TcnPZSmVTSyUdoboqCw8DGbOSI3EhMc
-         oS5Ff7Uygez9Ze06NPAZFPsfGBOiP3+x80HJzKQ7Kod4F0zOr1Avjipo+bAN5fTEzviK
-         0SLy+xCu2PWRj4I9XVMfew2bnmp/cdeJHqZOXC6FsXUlSkaR2h5DK+pk6phHKyPRFe5h
-         LQ5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUlBeWVuKMH1+WKhuWQ48snqBXakJJMZgm09U7NAF1oEGtAJQ13knzWqLojl17oOZlWbchDgJ3fYnKbROWXkMd7@vger.kernel.org, AJvYcCVjApsEU7WkUyMoVMYSO/Vw78REUtk1Cpc3KI645RXOHfxO5UA7DXBJkrkCXhkb5YpmmQIzpkcKp9Nk6HdU@vger.kernel.org, AJvYcCWkSOZOzVGOAS2jXHNyjWk6eHx9KlLFb/m9yndZnfof2PRVsbwa40eLN/djJYJt/asa3PF2k1rH5tr15xli@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfAUjXmEEcjEnGJ5b4KTGesPVe1g7AGQe52wgjeCzAFa2xLBnr
-	GYs9Kt5Nez0GEVQZ1Q6Vkp+2TgUUV1Kp8cKe0aHGenOOVNIUyZAc4/J4BysLpmo=
-X-Gm-Gg: ASbGncufjCiHfQ2eYCvp9UMOTZRMaIK3Rq0EHyXYxWTYFNPx5SpTCew1NHR3/hcjWMF
-	QAxu883b1CPBZgcnumoyyxAkPYYQp7MkLf6rIjWPKIrr1mjAHouPX/I3DZnjMkMCtVtHUUctvmg
-	qn3CpA+l+aPGbNuSV7VqErOfjF7GZXqflrWc69pZaRg/5XHDDYCkM9jzH3kaJH6qgUa/ErOUHEP
-	Jv5CeHySiuODVlwLVXThL6nUGBoBNxm7TXs1PqgDuTQl7EyRRyJReoGBiePmQFoCoBis+q1mFkF
-	297IOjW3WxVhXL7CQ1s90nvZvivJl3s7euj1kBZ1A3/bG0iXIkEI1eye8JFDx5//SfDnXwR342u
-	XQGW+CkMLUDM=
-X-Google-Smtp-Source: AGHT+IFETPzTQLmaXKcK8Kq/hNxJjRgRYtgHuQwMQbuYn6Fys4VHp0rQxmasyeEorxDcwD0jthBUGA==
-X-Received: by 2002:a05:620a:1928:b0:7c5:3d60:7f91 with SMTP id af79cd13be357-7cd28817cacmr239763685a.15.1747188146611;
-        Tue, 13 May 2025 19:02:26 -0700 (PDT)
-Received: from localhost.localdomain (ip170.ip-51-81-44.us. [51.81.44.170])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f9b24esm778229085a.62.2025.05.13.19.02.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 19:02:26 -0700 (PDT)
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Christian Brauner <brauner@kernel.org>,
-	Seth Forshee <sforshee@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: remove duplicated function definition
-Date: Wed, 14 May 2025 10:02:02 +0800
-Message-ID: <20250514020203.198681-1-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747188221; c=relaxed/simple;
+	bh=Mag2Qt50i6+C+tN7rbbRWDI5IBPcNobhhFsAgSE1gKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Hlej0aVGsR3KbAW2pIZUEcrbniHSJ05zTxCaWgcwVfbvDwroMfN8YX8erLF5POdYoVOpBMcAL4jmJWxKikeNnBtKg52GefslZwMDn9n1yXnLSrx4umzJONLD0aWHca6OHaGBfnqTzIKQQ8g6+V9hzYqy67sRZ7slvHRW7x5ZD7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-54-6823f9f336fc
+From: Rakie Kim <rakie.kim@sk.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH] MAINTAINERS: add mm memory policy section
+Date: Wed, 14 May 2025 11:03:18 +0900
+Message-ID: <20250514020325.314-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250513160007.132378-1-lorenzo.stoakes@oracle.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,32 +37,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsXC9ZZnke7nn8oZBrtO8VnMWb+GzWLXjRCL
+	r+t/MVsc3zqP3eLyrjlsFvfW/Ge1ODlrJYvFtz5pi9lH77E7cHrsnHWX3WPxnpdMHps+TWL3
+	ODHjN4tHb/M7No+PT2+xeLzfd5XN4/MmuQCOKC6blNSczLLUIn27BK6MFQ+nsBUs5q9Yf3ky
+	awPjKZ4uRk4OCQETiUsz3zHB2Gf2HAKyOTjYBJQkju2NATFFBAwkrp6LAKlgFjjEJLH3jAuI
+	LSzgJHHo8kVmEJtFQFXiTVMHI4jNK2AssebdahaIiZoSDZfugU3nFHCUODP/F1hcSIBH4tWG
+	/VD1ghInZz5hgZgvL9G8dTbQTC6g3i1sEj2bHzFDDJKUOLjiBssERv5ZSHpmIelZwMi0ilEo
+	M68sNzEzx0QvozIvs0IvOT93EyMwsJfV/onewfjpQvAhRgEORiUeXgtd5Qwh1sSy4srcQ4wS
+	HMxKIrzXs4BCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUa
+	GJmP/Fgb7jXhh6x2U4HRgZtvTn2W51vH8r/e5qPoYz+LhdkbnhopuE00dtPaG3DGqiMpY+W8
+	bN9POWrxXcsncTyq5pZorOKv23v09ByD5zHpwXJb5h1ebmC75OKz6Hvby44GZq68/DJsuluB
+	rsqLK0sXzPrqURyyVv3CTcWMzUmdGiWtcpVOL5RYijMSDbWYi4oTAaTIIKJoAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsXCNUNNS/fTT+UMgx3fbCzmrF/DZrHrRojF
+	1/W/mC2Ob53HbnF51xw2i3tr/rNanJy1ksXiW5+0xaFrz1ktZh+9x+7A5bFz1l12j8V7XjJ5
+	bPo0id3jxIzfLB69ze/YPD4+vcXi8X7fVTaPb7c9PD5vkgvgjOKySUnNySxLLdK3S+DKWPFw
+	ClvBYv6K9ZcnszYwnuLpYuTkkBAwkTiz5xBTFyMHB5uAksSxvTEgpoiAgcTVcxEgFcwCh5gk
+	9p5xAbGFBZwkDl2+yAxiswioSrxp6mAEsXkFjCXWvFvNAjFRU6Lh0j0mEJtTwFHizPxfYHEh
+	AR6JVxv2Q9ULSpyc+YQFYr68RPPW2cwTGHlmIUnNQpJawMi0ilEkM68sNzEzx1SvODujMi+z
+	Qi85P3cTIzBIl9X+mbiD8ctl90OMAhyMSjy8FrrKGUKsiWXFlbmHGCU4mJVEeK9nAYV4UxIr
+	q1KL8uOLSnNSiw8xSnOwKInzeoWnJggJpCeWpGanphakFsFkmTg4pRoYD7i+T+aXVvyk7qPa
+	btVk2aDy9USVm6n6B4ObbcfyN+95wiy4OeqEKrPd+fwVEZumC3L8tG/5smWJusdXOxa9XVME
+	dxubp5+Z+HDJmR+HPt3cVt9nuCVVi/vT5F9PvqxMPGbL/eFdtcuq0B1sngYM+k2/J0371vKz
+	zHiBaKye2htu0W+Ls41XKrEUZyQaajEXFScCAOfygWNOAgAA
+X-CFilter-Loop: Reflected
 
-I failed to build this test on Ubuntu 24.04. Compiler complains that
-function sys_open_tree has already been defined in
-"../filesystems/overlayfs/wrappers.h".
+On Tue, 13 May 2025 17:00:07 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+> As part of the ongoing efforts to sub-divide memory management
+> maintainership and reviewership, establish a section for memory policy and
+> migration and add appropriate maintainers and reviewers.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+> 
+> REVIEWERS NOTES:
+> 
+> I took a look through git blame, past commits, etc. and came up with what
+> seems to be a reasonable list of people here, if you don't feel you ought
+> to be here, or if you feel anybody is missing (including yourself!) let me
+> know :)
+> 
+> David has kindly already agreed to be co-maintainer for this section.
+> 
+>  MAINTAINERS | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 80aa09f2e735..29d73593038c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15567,6 +15567,24 @@ W:	http://www.linux-mm.org
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>  F:	mm/gup.c
+> 
+> +MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +M:	David Hildenbrand <david@redhat.com>
+> +R:	Zi Yan <ziy@nvidia.com>
+> +R:	Alistair Popple <apopple@nvidia.com>
+> +R:	Matthew Brost <matthew.brost@intel.com>
+> +R:	Joshua Hahn <joshua.hahnjy@gmail.com>
+> +R:	Rakie Kim <rakie.kim@sk.com>
 
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- tools/testing/selftests/mount_setattr/mount_setattr_test.c | 5 -----
- 1 file changed, 5 deletions(-)
+I'll do my best review in this area.
+Thank you.
+Reviewed-by: Rakie Kim <rakie.kim@sk.com>
 
-diff --git a/tools/testing/selftests/mount_setattr/mount_setattr_test.c b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
-index 48a000cabc971..eaa4e912120ab 100644
---- a/tools/testing/selftests/mount_setattr/mount_setattr_test.c
-+++ b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
-@@ -173,11 +173,6 @@ static inline int sys_mount_setattr(int dfd, const char *path, unsigned int flag
- #define AT_RECURSIVE 0x8000 /* Apply to the entire subtree */
- #endif
- 
--static inline int sys_open_tree(int dfd, const char *filename, unsigned int flags)
--{
--	return syscall(__NR_open_tree, dfd, filename, flags);
--}
--
- static ssize_t write_nointr(int fd, const void *buf, size_t count)
- {
- 	ssize_t ret;
--- 
-2.43.0
-
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	include/linux/mempolicy.h
+> +F:	include/linux/migrate.h
+> +F:	mm/mempolicy.c
+> +F:	mm/migrate.c
+> +F:	mm/migrate_device.c
+> +
+>  MEMORY MANAGEMENT - NUMA MEMBLOCKS AND NUMA EMULATION
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	Mike Rapoport <rppt@kernel.org>
+> --
+> 2.49.0
+> 
