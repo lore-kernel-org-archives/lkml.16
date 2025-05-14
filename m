@@ -1,68 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09B21E7C24
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB03C1E7C24;
+	Wed, 14 May 2025 16:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239825; cv=none; b=CKFzG2NQjFtuLM2AWC7YaZGjQ8o5odZXH7gwqfh69Z7nKZjznu/3AZBiVKmxIhszxDajUbT3t2sfthNhqImZlWVK1pVnAYjrYkCVcIryI2ahP65H68xo0SA3Q0qIHB16LvVcwBR4M8V2Zmi/a2PtjvsP6KNsudYZ3upB6dTe5AU=
+	t=1747239836; cv=none; b=JKl9qyaFtHaGCjP7kjmbbBgGTtYtPJPhnRJNxBcvCGGoHm3eUxXKfecP3alWrC5rRcIgN6KGxWp1jpYSn8iPJmDiLUxmcag/RwdmpTFTdeiC01gtUY/w8XOLpij5GqYylp7FdORmL5K6AOI4GLmaH9RPp/o+Uj0tZCnRpm1dAOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239825; c=relaxed/simple;
-	bh=uLYLi5sPLzFsbuoX9uoR+EmNVUpFHJUk1wUc7bBfx5g=;
+	s=arc-20240116; t=1747239836; c=relaxed/simple;
+	bh=y/Gwr1iuLNTEtohQ9qMnFDngBSZXs0TWtln2nglYeRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crM0k52jOJ+MOFwltyWggK/3tHetXA6VoDFZcIz3qVIIC/Zvvx0v+HzwqfcpSGaEN9VcHGQjeUhfe74JXl+/o0iIKt9/aCHU8egxcKbhbFYKFiVOtbi4JTpEM0ed1woBXI+rnpwQgKxT+QkSt5dq9V8yiYMRbnUcRaUEp9iCb3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HUdr5od6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jMBY+v1rzV+K4tYFQ0PoKnuFmn8q5aBFa3901y+/79FnZTheO6NXX4PB+YDcfXJ8V4m3WaeTRLDqSoG8IBZga0iceP68X+8CvoTdae1cFNkcIx/lqFRJIgfe53z2QB0VXwNtPzd0PRJs4QVxcxKdlSaRO2k/qrU2DcfqRd9D7/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ApFPw8ES; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HUdr5od6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747239822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O/3Vrn9aMLQKAG/4WrELKX6B5u1E7rwwnaweJ9QsMPM=;
-	b=HUdr5od62xTSFJAjsegYcNJ5N8HFtR094gta0f3t092w2LCPKDeAqZfOpQcd68rTz4fhSG
-	u607iIkaKy4q1jYx3icJU2yd6biEjKBiI5pe+A+K2wkSGdA6TFxumS29W/Upgo+zspThxj
-	Ro9E0krzWy3bXWoEqBTaJgQ4qUwYmC0=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-338-Ot4MCk9uPoWoDdgWs2u_eA-1; Wed,
- 14 May 2025 12:23:41 -0400
-X-MC-Unique: Ot4MCk9uPoWoDdgWs2u_eA-1
-X-Mimecast-MFC-AGG-ID: Ot4MCk9uPoWoDdgWs2u_eA_1747239820
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A21DE195609E;
-	Wed, 14 May 2025 16:23:39 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E8FD19560AD;
-	Wed, 14 May 2025 16:23:38 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 54EGNbgU3731968
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 12:23:37 -0400
-Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 54EGNa373731967;
-	Wed, 14 May 2025 12:23:36 -0400
-Date: Wed, 14 May 2025 12:23:36 -0400
-From: Benjamin Marzinski <bmarzins@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
-        dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
-        snitzer@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCTDiHMuMncwdp_X@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <aCLe5UT2kfzI96TQ@infradead.org>
- <aCMQ5S-gI6vZJxmq@redhat.com>
- <aCQiz88HksKg791Z@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ApFPw8ES"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522AEC4CEE3;
+	Wed, 14 May 2025 16:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747239835;
+	bh=y/Gwr1iuLNTEtohQ9qMnFDngBSZXs0TWtln2nglYeRc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ApFPw8ESUEeLvkU3THXmvMJ24t31cJUjFVSBLz67D8lDzfJrkjoTcVEfDWyAkuskz
+	 LvB5kjjl2nKaqQTvXm3nTUWfHlIe78IqnmiNb2JzEXMzUMYJyXNydnneAFDbQzDW5s
+	 ive8gxHVt60uXAxovWVNvppZU7X+5526Ig+++zAbmySQs2bu7cydKfm5prB77ADaR+
+	 ENFr+ql2t1iNJZd7UMsRSFags3rEOrR3o2AeE2aS9v1Pi059UUmi5glH2ca8EqMzpm
+	 nYa3CHSVSEun1+LHqsvX+oJjVLaKxc/aEKHNJX6SIhWLAcKCrJqg4R2E/FW98WEh9F
+	 kDOLDqhdkSecg==
+Date: Wed, 14 May 2025 18:23:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Shirish Baskaran <sbaskaran@nvidia.com>
+Subject: Re: [PATCH v3 16/19] nova-core: Add support for VBIOS ucode
+ extraction for boot
+Message-ID: <aCTDk9UKRWHWYexR@pollux>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,51 +59,376 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCQiz88HksKg791Z@infradead.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20250507-nova-frts-v3-16-fcb02749754d@nvidia.com>
 
-On Tue, May 13, 2025 at 09:57:51PM -0700, Christoph Hellwig wrote:
-> On Tue, May 13, 2025 at 11:29:09AM +0200, Kevin Wolf wrote:
-> > Am 13.05.2025 um 07:55 hat Christoph Hellwig geschrieben:
-> > > On Mon, May 12, 2025 at 05:18:43PM +0200, Kevin Wolf wrote:
-> > > > Yes, it's a bit unfortunate, but we have to work with what we have. QEMU
-> > > > doesn't even necessarily know that it's dealing with a multipath device,
-> > > > so it just has to blindly try the ioctl and see if it works.
-> > > 
-> > > Why is qemu even using SG_IO to start with?
-> > 
-> > How else would you do SCSI passthrough?
-> > 
-> > Ok, from your replies to Hannes I understand an implicit message, you
-> > wouldn't. But I don't think that's really an answer, at least not for
-> > all users.
-> 
-> SG_IO is fine and the only way for SCSI passthrough.  But doing
-> SCSI passthrough through md-multipath just doesn't work.  SCSI isn't
-> built for layering, and ALUA and it's vendor-specific variants and
-> alternatives certainly isn't.  If you try that you're playing with
-> fire and is not chance of ever moving properly.
+On Wed, May 07, 2025 at 10:52:43PM +0900, Alexandre Courbot wrote:
+> +/// PCI Data Structure as defined in PCI Firmware Specification
+> +#[derive(Debug, Clone)]
+> +#[repr(C)]
+> +struct PcirStruct {
+> +    /// PCI Data Structure signature ("PCIR" or "NPDS")
+> +    pub signature: [u8; 4],
+> +    /// PCI Vendor ID (e.g., 0x10DE for NVIDIA)
+> +    pub vendor_id: u16,
+> +    /// PCI Device ID
+> +    pub device_id: u16,
+> +    /// Device List Pointer
+> +    pub device_list_ptr: u16,
+> +    /// PCI Data Structure Length
+> +    pub pci_data_struct_len: u16,
+> +    /// PCI Data Structure Revision
+> +    pub pci_data_struct_rev: u8,
+> +    /// Class code (3 bytes, 0x03 for display controller)
+> +    pub class_code: [u8; 3],
+> +    /// Size of this image in 512-byte blocks
+> +    pub image_len: u16,
+> +    /// Revision Level of the Vendor's ROM
+> +    pub vendor_rom_rev: u16,
+> +    /// ROM image type (0x00 = PC-AT compatible, 0x03 = EFI, 0x70 = NBSI)
+> +    pub code_type: u8,
+> +    /// Last image indicator (0x00 = Not last image, 0x80 = Last image)
+> +    pub last_image: u8,
+> +    /// Maximum Run-time Image Length (units of 512 bytes)
+> +    pub max_runtime_image_len: u16,
+> +}
 
-Could you be a bit more specific. All multipath is doing here is
-forwarding the ioctls to an underlying scsi device, and passing back up
-the result. Admittedly, it doesn't always make sense to pass the ioctl
-on from the multipath device to just one scsi device. Persistent
-Reservations are perfect example of this, and that's why QEMU doesn't
-use DMs ioctl passthrough code to handle them. Also, when you have ALUA
-setups, not all the scsi devices are equal. But multipath isn't naievely
-assuming that they are. It's only passing ioctls to the highest priority
-activated paths, just like it does for IO, and multipath is in charge of
-handling explicit alua devices. This hasn't proved to be problematic in
-practice.
+Here and in a couple more cases below, please don't use pub for fields of
+private structures.
 
-The reality of the situation is that customers have been using this for
-a while, and the only issue that they run into is that multipath can't
-tell when a SG_IO has failed due to a retryable error. Currently,
-they're left with waiting for multipathd's preemptive path checking to
-fail the path so they can retry down a new one. The purpose of this
-patchset and Martin's previous one is to handle this problem. If there
-are unavoidable critical problems that you see with this setup, it would
-be really helpful to know what they are.
+> +
+> +impl PcirStruct {
+> +    fn new(pdev: &pci::Device, data: &[u8]) -> Result<Self> {
+> +        if data.len() < core::mem::size_of::<PcirStruct>() {
+> +            dev_err!(pdev.as_ref(), "Not enough data for PcirStruct\n");
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut signature = [0u8; 4];
+> +        signature.copy_from_slice(&data[0..4]);
+> +
+> +        // Signature should be "PCIR" (0x52494350) or "NPDS" (0x5344504e)
+> +        if &signature != b"PCIR" && &signature != b"NPDS" {
+> +            dev_err!(
+> +                pdev.as_ref(),
+> +                "Invalid signature for PcirStruct: {:?}\n",
+> +                signature
+> +            );
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut class_code = [0u8; 3];
+> +        class_code.copy_from_slice(&data[13..16]);
+> +
+> +        Ok(PcirStruct {
+> +            signature,
+> +            vendor_id: u16::from_le_bytes([data[4], data[5]]),
+> +            device_id: u16::from_le_bytes([data[6], data[7]]),
+> +            device_list_ptr: u16::from_le_bytes([data[8], data[9]]),
+> +            pci_data_struct_len: u16::from_le_bytes([data[10], data[11]]),
+> +            pci_data_struct_rev: data[12],
+> +            class_code,
+> +            image_len: u16::from_le_bytes([data[16], data[17]]),
+> +            vendor_rom_rev: u16::from_le_bytes([data[18], data[19]]),
+> +            code_type: data[20],
+> +            last_image: data[21],
+> +            max_runtime_image_len: u16::from_le_bytes([data[22], data[23]]),
+> +        })
 
--Ben
+Quite some of those fields seem unused, do we still want to have them? Same for
+other structures below.
 
+> +    }
+> +
+> +    /// Check if this is the last image in the ROM
+> +    fn is_last(&self) -> bool {
+> +        self.last_image & LAST_IMAGE_BIT_MASK != 0
+> +    }
+> +
+> +    /// Calculate image size in bytes
+> +    fn image_size_bytes(&self) -> Result<usize> {
+> +        if self.image_len > 0 {
+> +            // Image size is in 512-byte blocks
+> +            Ok(self.image_len as usize * 512)
+> +        } else {
+> +            Err(EINVAL)
+> +        }
+> +    }
+> +}
+> +
+> +/// BIOS Information Table (BIT) Header
+> +/// This is the head of the BIT table, that is used to locate the Falcon data.
+> +/// The BIT table (with its header) is in the PciAtBiosImage and the falcon data
+> +/// it is pointing to is in the FwSecBiosImage.
+> +#[derive(Debug, Clone, Copy)]
+> +#[expect(dead_code)]
+> +struct BitHeader {
+> +    /// 0h: BIT Header Identifier (BMP=0x7FFF/BIT=0xB8FF)
+> +    pub id: u16,
+> +    /// 2h: BIT Header Signature ("BIT\0")
+> +    pub signature: [u8; 4],
+> +    /// 6h: Binary Coded Decimal Version, ex: 0x0100 is 1.00.
+> +    pub bcd_version: u16,
+> +    /// 8h: Size of BIT Header (in bytes)
+> +    pub header_size: u8,
+> +    /// 9h: Size of BIT Tokens (in bytes)
+> +    pub token_size: u8,
+> +    /// 10h: Number of token entries that follow
+> +    pub token_entries: u8,
+> +    /// 11h: BIT Header Checksum
+> +    pub checksum: u8,
+> +}
+> +
+> +impl BitHeader {
+> +    fn new(data: &[u8]) -> Result<Self> {
+> +        if data.len() < 12 {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut signature = [0u8; 4];
+> +        signature.copy_from_slice(&data[2..6]);
+> +
+> +        // Check header ID and signature
+> +        let id = u16::from_le_bytes([data[0], data[1]]);
+> +        if id != 0xB8FF || &signature != b"BIT\0" {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        Ok(BitHeader {
+> +            id,
+> +            signature,
+> +            bcd_version: u16::from_le_bytes([data[6], data[7]]),
+> +            header_size: data[8],
+> +            token_size: data[9],
+> +            token_entries: data[10],
+> +            checksum: data[11],
+> +        })
+> +    }
+> +}
+> +
+> +/// BIT Token Entry: Records in the BIT table followed by the BIT header
+> +#[derive(Debug, Clone, Copy)]
+> +#[expect(dead_code)]
+> +struct BitToken {
+> +    /// 00h: Token identifier
+> +    pub id: u8,
+> +    /// 01h: Version of the token data
+> +    pub data_version: u8,
+> +    /// 02h: Size of token data in bytes
+> +    pub data_size: u16,
+> +    /// 04h: Offset to the token data
+> +    pub data_offset: u16,
+> +}
+> +
+> +// Define the token ID for the Falcon data
+> +pub(in crate::vbios) const BIT_TOKEN_ID_FALCON_DATA: u8 = 0x70;
+
+This can just be private.
+
+> +
+> +impl BitToken {
+> +    /// Find a BIT token entry by BIT ID in a PciAtBiosImage
+> +    pub(in crate::vbios) fn from_id(image: &PciAtBiosImage, token_id: u8) -> Result<Self> {
+
+Same here.
+
+<snip>
+
+> +struct PciAtBiosImage {
+> +    base: BiosImageBase,
+> +    bit_header: Option<BitHeader>,
+> +    bit_offset: Option<usize>,
+
+Why are those Options? AFAICS, this structure is only ever created from
+
+	impl TryFrom<BiosImageBase> for PciAtBiosImage
+
+and there you fail if you can't find the bit header anyways.
+
+Also BitToken::from_id fails if bit_header == None, and it doesn't seem to be
+used anywhere else.
+
+I think we should remove the Option wrapper for both.
+
+<snip>
+
+> +/// The PmuLookupTableEntry structure is used to find the PmuLookupTableEntry
+> +/// for a given application ID. The table of entries is pointed to by the falcon
+> +/// data pointer in the BIT table, and is used to locate the Falcon Ucode.
+> +#[expect(dead_code)]
+> +struct PmuLookupTable {
+> +    version: u8,
+> +    header_len: u8,
+> +    entry_len: u8,
+> +    entry_count: u8,
+> +    table_data: KVec<u8>,
+> +}
+> +
+> +impl PmuLookupTable {
+> +    fn new(data: &[u8]) -> Result<Self> {
+> +        if data.len() < 4 {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let header_len = data[1] as usize;
+> +        let entry_len = data[2] as usize;
+> +        let entry_count = data[3] as usize;
+> +
+> +        let required_bytes = header_len + (entry_count * entry_len);
+> +
+> +        if data.len() < required_bytes {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        // Create a copy of only the table data
+> +        let mut table_data = KVec::new();
+> +
+> +        // "last_entry_bytes" is a debugging aid.
+> +        let mut last_entry_bytes: Option<KVec<u8>> = if cfg!(debug_assertions) {
+> +            Some(KVec::new())
+> +        } else {
+> +            None
+> +        };
+> +
+> +        for &byte in &data[header_len..required_bytes] {
+> +            table_data.push(byte, GFP_KERNEL)?;
+
+This should just be
+
+	table_data.extend_from_slice(&data[header_len..required_bytes], GFP_KERNEL)?;
+
+so you don't need the loop and potentially lots of re-allocations.
+
+Subsequently you can implement the debugging stuff as
+
+	if cfg!(debug_assertions) {
+	    let mut last_entry_bytes = KVec::new();
+	
+	    for &byte in &data[header_len..required_bytes] {
+	        // Debugging (dumps the table data to dmesg):
+	        last_entry_bytes.push(byte, GFP_KERNEL)?;
+	
+	        let last_entry_bytes_len = last_entry_bytes.len();
+	        if last_entry_bytes_len == entry_len {
+	            pr_info!("Last entry bytes: {:02x?}\n", &last_entry_bytes[..]);
+	            last_entry_bytes = KVec::new();
+	        }
+	    }
+	}
+
+In general, I feel like this patch utilizes the Option type way too much and
+often without actual need. Can you please also double check?
+
+> +
+> +            if cfg!(debug_assertions) {
+> +                // Debugging (dumps the table data to dmesg):
+> +                if let Some(ref mut last_entry_bytes) = last_entry_bytes {
+> +                    last_entry_bytes.push(byte, GFP_KERNEL)?;
+> +
+> +                    let last_entry_bytes_len = last_entry_bytes.len();
+> +                    if last_entry_bytes_len == entry_len {
+> +                        pr_info!("Last entry bytes: {:02x?}\n", &last_entry_bytes[..]);
+
+Please use dev_dbg!().
+
+> +                        *last_entry_bytes = KVec::new();
+> +                    }
+> +                }
+> +            }
+> +        }
+> +
+> +        Ok(PmuLookupTable {
+> +            version: data[0],
+> +            header_len: header_len as u8,
+> +            entry_len: entry_len as u8,
+> +            entry_count: entry_count as u8,
+> +            table_data,
+> +        })
+> +    }
+> +
+> +    fn lookup_index(&self, idx: u8) -> Result<PmuLookupTableEntry> {
+> +        if idx >= self.entry_count {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let index = (idx as usize) * self.entry_len as usize;
+> +        PmuLookupTableEntry::new(&self.table_data[index..])
+> +    }
+> +
+> +    // find entry by type value
+> +    fn find_entry_by_type(&self, entry_type: u8) -> Result<PmuLookupTableEntry> {
+> +        for i in 0..self.entry_count {
+> +            let entry = self.lookup_index(i)?;
+> +            if entry.application_id == entry_type {
+> +                return Ok(entry);
+> +            }
+> +        }
+> +
+> +        Err(EINVAL)
+> +    }
+> +}
+> +
+> +/// The FwSecBiosImage structure contains the PMU table and the Falcon Ucode.
+> +/// The PMU table contains voltage/frequency tables as well as a pointer to the
+> +/// Falcon Ucode.
+> +impl FwSecBiosImage {
+> +    fn setup_falcon_data(
+> +        &mut self,
+> +        pdev: &pci::Device,
+> +        pci_at_image: &PciAtBiosImage,
+> +        first_fwsec_image: &FwSecBiosImage,
+> +    ) -> Result<()> {
+
+Just Result will do.
+
+> +        let mut offset = pci_at_image.falcon_data_ptr(pdev)? as usize;
+> +
+> +        // The falcon data pointer assumes that the PciAt and FWSEC images
+> +        // are contiguous in memory. However, testing shows the EFI image sits in
+> +        // between them. So calculate the offset from the end of the PciAt image
+> +        // rather than the start of it. Compensate.
+> +        offset -= pci_at_image.base.data.len();
+> +
+> +        // The offset is now from the start of the first Fwsec image, however
+> +        // the offset points to a location in the second Fwsec image. Since
+> +        // the fwsec images are contiguous, subtract the length of the first Fwsec
+> +        // image from the offset to get the offset to the start of the second
+> +        // Fwsec image.
+> +        offset -= first_fwsec_image.base.data.len();
+> +
+> +        self.falcon_data_offset = Some(offset);
+> +
+> +        // The PmuLookupTable starts at the offset of the falcon data pointer
+> +        self.pmu_lookup_table = Some(PmuLookupTable::new(&self.base.data[offset..])?);
+> +
+> +        match self
+> +            .pmu_lookup_table
+> +            .as_ref()
+> +            .ok_or(EINVAL)?
+> +            .find_entry_by_type(FALCON_UCODE_ENTRY_APPID_FWSEC_PROD)
+> +        {
+> +            Ok(entry) => {
+> +                let mut ucode_offset = entry.data as usize;
+> +                ucode_offset -= pci_at_image.base.data.len();
+> +                ucode_offset -= first_fwsec_image.base.data.len();
+> +                self.falcon_ucode_offset = Some(ucode_offset);
+> +                if cfg!(debug_assertions) {
+> +                    // Print the v3_desc header for debugging
+> +                    let v3_desc = self.fwsec_header(pdev.as_ref())?;
+> +                    pr_info!("PmuLookupTableEntry v3_desc: {:#?}\n", v3_desc);
+> +                }
+> +            }
+> +            Err(e) => {
+> +                dev_err!(
+> +                    pdev.as_ref(),
+> +                    "PmuLookupTableEntry not found, error: {:?}\n",
+> +                    e
+> +                );
+> +            }
+> +        }
+> +        Ok(())
+> +    }
+> +
+> +    /// TODO: These were borrowed from the old code for integrating this module
+> +    /// with the outside world. They should be cleaned up and integrated properly.
+
+Okay, won't review for now then. :)
