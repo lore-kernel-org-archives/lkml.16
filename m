@@ -1,166 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7042A82;
-	Wed, 14 May 2025 11:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3964342A82;
+	Wed, 14 May 2025 11:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221879; cv=none; b=QHnqv1LztKbiVKT59JGDgVaJs0+bLPWqpqfj3HAo9am8+rd/boX0FWAuVeu+4DhCcRXt2QYZS+DZYxqPn+SHNciwp1OazTvqhfNwZj6tL4XlkjnJwj0LYCtj/fIoe6+4ejjaVz5+XOXHYgVO1juyZZ8DaJx1a2xItHYuBIpT6jU=
+	t=1747221968; cv=none; b=hp4EKA8J8C3juV2Xfw1TTG+JwepxgJy6Ci0C/oflRjaltPDxFY90mzOqgj66VBil5p+pMeIMhm8DAIpik/JYm8JSvFoyOSxT47S6j1MRIbRhJ6MK7O4sXjkpy30D/YXjQ5rOrhgmimKvvRqFmtpBubXuefI29P/BkFm2ITpwXKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221879; c=relaxed/simple;
-	bh=gmgCElPVE0zz99nGO29XUN1y5zd8AhbRBwx8UQ5oge0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBI/+01yO8CsErIUtgGK29nP6uBNG8ruNc7W9Wvdw14kug2MsLyyOmpo008r99ghzH77FD3qFCt2wnK/slskN6Sn5Hc7tTyvSu2l4LWbu/UYrxcJ9nG83yrenVySMU7GLXzN5r7lJPk/fFHgHsUYd+QN3PWqufwjpmEKTF5m8b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zm9x/9i+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747221968; c=relaxed/simple;
+	bh=6Es3TSn+9TBgkKBVy9/057O5E2HKdAbufSTal0Abt0M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e6s6i/vGfZf3pIggMTjIYSzqt0H6tdzKwmxc27fAjMbZBEhL2GAJ9qIAoIoQGVhngPZWDa5fKQgT2AID+kDGzYkU57SKDIp1T34guEjvJSkwkEhb6FKyraLRGjw3O8UBZJO6j4Ly7W9vrHvH9TstVDIijFM52sz+JUFymt2JFfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uvt3+tzm; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zm9x/9i+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB61C4CEE9;
-	Wed, 14 May 2025 11:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747221878;
-	bh=gmgCElPVE0zz99nGO29XUN1y5zd8AhbRBwx8UQ5oge0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zm9x/9i+2KZphUfiROiOwodWUrnsqA1D0MV/8szPyZ023qNfYsDNL32vfi23VN5lY
-	 EUqSm2eLLeLWH2qUKyot73kzMQtGcxwtOEBon0ZPDS8WZ4BTigLBK0lBC7SAaKwZAm
-	 jPZLDtmUP6aUx7uk5wGPyp4Un0z8XiGanT8oEcGAdaNgRRXrDc/DAdTbS/k9pNn3sH
-	 E5migZmhc+QUkaajHhKm6Nh884jwNFWYx7Iowa2jHfq1NAHRkTE2gIxNoEkp158qYp
-	 gB3cjJcIim8uPbktFNfg/otib/ciPZgQO454IuZ/rGDGGjlOnaL21BfxBDms64QRuF
-	 6fDs13bVBVFdw==
-Date: Wed, 14 May 2025 13:24:32 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <aCR9cD7OcSefeaUm@pollux>
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
- <aCRdNJ2oq-REBotd@pollux>
- <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uvt3+tzm"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54EBPZDM3126758
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 06:25:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747221935;
+	bh=9iHE5FSyMX7LDgx8S9Lh0j23+vUZqY7ICZe0fWhMXys=;
+	h=From:To:CC:Subject:Date;
+	b=uvt3+tzm1qnIr0y1GDFRyhaxTpC0bWXKh8eZMoiucBjIu38h8ZqrOMJmPJMHIu8I1
+	 8Y6CoXFoIGvtG3YWt+EtZl8PHmYthEAmwrjWje/1icCjoBHODRg1o35zAz0qp2TYc7
+	 3c8oYiZeM/00XYgr/cWoKHRu6UlnPXQALiZxujFw=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54EBPZ74119976
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 14 May 2025 06:25:35 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
+ May 2025 06:25:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 14 May 2025 06:25:34 -0500
+Received: from ws.dhcp.ti.com (ws.dhcp.ti.com [10.24.69.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54EBPSV6107507;
+	Wed, 14 May 2025 06:25:29 -0500
+From: Rishikesh Donadkar <r-donadkar@ti.com>
+To: <jai.luthra@linux.dev>, <laurent.pinchart@ideasonboard.com>,
+        <mripard@kernel.org>
+CC: <r-donadkar@ti.com>, <y-abhilashchandra@ti.com>, <devarsht@ti.com>,
+        <vaishnav.a@ti.com>, <s-jain1@ti.com>, <vigneshr@ti.com>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <sakari.ailus@linux.intel.com>,
+        <hverkuil-cisco@xs4all.nl>, <tomi.valkeinen@ideasonboard.com>,
+        <jai.luthra@ideasonboard.com>, <changhuang.liang@starfivetech.com>,
+        <jack.zhu@starfivetech.com>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 00/12] media: cadence,ti: CSI2RX Multistream Support
+Date: Wed, 14 May 2025 16:55:15 +0530
+Message-ID: <20250514112527.1983068-1-r-donadkar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, May 14, 2025 at 11:54:39AM +0200, Benno Lossin wrote:
-> On Wed May 14, 2025 at 11:07 AM CEST, Danilo Krummrich wrote:
-> > On Wed, May 14, 2025 at 09:20:49AM +0200, Benno Lossin wrote:
-> >> On Tue May 6, 2025 at 1:51 AM CEST, Matthew Maurer wrote:
-> >> > +impl kernel::Module for RustDebugFs {
-> >> > +    fn init(_this: &'static ThisModule) -> Result<Self> {
-> >> > +        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
-> >> > +        let debugfs = Dir::new(c_str!("sample_debugfs"));
-> >> > +
-> >> > +        {
-> >> > +            // Create a subdirectory, so "sample_debugfs/subdir" now exists.
-> >> > +            // We wrap it in `ManuallyDrop` so that the subdirectory is not automatically discarded
-> >> > +            // at the end of the scope - it will be cleaned up when `debugfs` is.
-> >> > +            let sub = ManuallyDrop::new(debugfs.subdir(c_str!("subdir")));
-> >> 
-> >> I dislike the direct usage of `ManuallyDrop`. To me the usage of
-> >> `ManuallyDrop` signifies that one has to opt out of `Drop` without the
-> >> support of the wrapped type. But in this case, `Dir` is sometimes
-> >> intended to not be dropped, so I'd rather have a `.keep()` function I
-> >> saw mentioned somewhere.
-> >
-> > I agree, if we really want to "officially" support to forget() (sub-)directories
-> > and files in order to rely on the recursive cleanup of the "root" directory, it
-> > should be covered explicitly by the API. I.e. (sub-)directories and files should
-> > have some kind of keep() and / or forget() method, to make it clear that this is
-> > supported and by design and won't lead to any leaks.
-> >
-> > Consequently, this would mean that we'd need something like your proposed const
-> > generic on the Dir type, such that keep() / forget() cannot be called on the
-> > "root" directory.
-> >
-> > However, I really think we should keep the code as it is in this version and
-> > just don't provide an example that utilizes ManuallyDrop and forget().
-> >
-> > I don't see how the idea of "manually dropping" (sub-)directories and files
-> > provides any real value compared to just storing their instance in a driver
-> > structure as long as they should stay alive, which is much more intuitive
-> > anyways.
-> 
-> Yeah that's whats normally done in Rust anyways. But I think that
-> lifetimes bite us in this case:
-> 
->     let debugfs: Dir<'static> = Dir::new(cstr!("sample_debugfs"));
-> 
->     let sub: Dir<'a> = debugfs.subdir(cstr!("subdir"));
->     // lifetime `'a` starts in the line above and `sub` borrows `debugfs`
-> 
->     /* code for creating the file etc */
-> 
->     Ok(Self { _debugfs: debugfs, _sub: sub })
->     // lifetime `'a` has to end in the line above, since debugfs is moved but `sub` still borrows from it!
-> 
-> This code won't compile, since we can't store the "root" dir in the same
-> struct that we want to store the subdir, because the subdir borrows from
-> the root dir.
-> 
-> Essentially this would require self-referential structs like the
-> `ouroboros` crate [1] from user-space Rust. We should rather have the
-> `.keep()` function in the API than use self-referential structs.
+This series adds multi-stream support for Cadence CSI2RX and TI CSI2RX
+SHIM drivers.
 
-Fair enough -- I think we should properly document those limitations, recommend
-using keep() for those cases and ensure that we can't call keep() on the "root"
-directory then.
+PATCH 1-6:  Support multiple DMA contexts/video nodes in TI CSI2RX
+PATCH 7-8:  Use get_frame_desc to propagate virtual channel
+            information across Cadence and TI CSI-RX subdevs
+PATCH 9-10: Use new multi-stream APIs across the drivers to support
+            multiplexed cameras from sources like UB960 (FPDLink)
+PATCH 11:   Optimize stream on by submitting all queued buffers to DMA
+PATCH 12:   Change the drain architecture to support multi-stream
 
-Unless, we can find a better solution, which, unfortunately, I can't think of
-one. The only thing I can think of is to reference count (parent) directories,
-which would be contrary to how the C API works and not desirable.
+Testing for this series has been done on top of media tree with 4x IMX219
+camera modules connected to TI's AM62A using V3 Link fusion mini board.
 
-> [1]: https://docs.rs/ouroboros/latest/ouroboros/attr.self_referencing.html
-> 
-> Another problem that only affects complicated debugfs structures is that
-> you would have to store all subdirs & files somewhere. If the structure
-> is dynamic and changes over the lifetime of the driver, then you'll need
-> a `Vec` or store the dirs in `Arc` or similar, leading to extra
-> allocations.
+Overlay and defconfig changes for the same can be found below:
+https://github.com/RISHI27-dot/linux/commits/u/multistream_v4
 
-If it changes dynamically then it's pretty likely that we do not only want to
-add entries dynamically, but also remove them, which implies that we need to be
-able to drop them. So, I don't think that's a problem.
+v4l2-compliance results:
+https://gist.github.com/Rishikesh-D/4ddf957da2f62191eefe7a9e5ff212ab
 
-What I see more likely to happen is a situation where the "root" directory
-(almost) lives forever, and hence subsequent calls, such as
+---
+Changes in v4:
 
-	root.subdir("foo").keep()
+[PATCH 01/13] dt-bindings: media: ti,j721e-csi2rx-shim: Support 32 dma chans
+  - No change
+[PATCH 02/13] media: ti: j721e-csi2rx: separate out device and context
+  - Add ctx identifier in the dev_err() message
+  - No change
+[PATCH 04/13] media: ti: j721e-csi2rx: prepare SHIM code for multiple contexts
+  - Reduced the name string lenght from 32 chars to 5 chars
+[PATCH 05/13] media: ti: j721e-csi2rx: add a subdev for the core device
+  - Add .enum_mbus_code callback
+  - Replace statically allocated struct with a global static const struct
+    v4l2_mbus_framefmt and used that in the _init_state() function
+[PATCH 06/13] media: ti: j721e-csi2rx: get number of contexts from device tree
+  - Fix the drain buffer being leaked
+  - If the shows more number of ctx than the TI_CSI2RX_MAX_CTX, return an error
+    instead of warning
+[PATCH 07/13] media: cadence: csi2rx: add get_frame_desc wrapper
+  - No change
+[PATCH 08/13] media: ti: j721e-csi2rx: add support for processing virtual channels
+  - Call ti_csi2rx_get_vc() only once on first stream start and cache the VC data in
+    the driver, use the corresponding VC in all subsequent stream starts.
+[PATCH 09/13] media: cadence: csi2rx: Use new enable stream APIs
+[PATCH 10/13] media: cadence: csi2rx: Enable multi-stream support
+  - Squash the above two patches into
+    [PATCH v4 09/12] media: cadence: csi2rx: add multistream support
+  - Use already obtained csi2rx->source_pad in enable_streams() and
+    disable_streams() call
+  - Update commit message with the reason for using a custom helper for s_stream
+    instead of v4l2_subdev_s_stream_helper()
+  - Use v4l2_get_link_freq() variant that takes pad of the source as its first
+    argument instead of the one that takes v4l2_ctrl_handler
+  - Call v4l2_get_link_freq() with bpp = 0 to prevent fallback to V4L2_CID_PIXEL_RATE
+    in multi-stream case
+  - Use lock guards to simplify error handling
+  - Call csi2rx_update_vc_select() at first stream start before enabling the controller
+[PATCH 11/13] media: ti: j721e-csi2rx: add multistream support
+  - No change
+[PATCH 12/13] media: ti: j721e-csi2rx: Submit all available buffers
+  - No change
+[PATCH 13/13] media: ti: j721e-csi2rx: Change the drain architecture for multistream
+  - Fix checkpatch warning
+  - Change commit message to give a better description of the patch
 
-effectively are leaks.
+Link to (v3):
+  https://lore.kernel.org/all/20250417065554.437541-1-r-donadkar@ti.com/
 
-One specific example for that would be usb_debug_root, which is created in the
-module scope of usb-common and is used by USB host / gadget / phy drivers.
+Changes in v3:
 
-The same is true for other cases where the debugfs "root" is created in the
-module scope, but subsequent entries are created by driver instances. If a
-driver would use keep() in such a case, we'd effectively leak memory everytime a
-device is unplugged (or unbound in general).
+- Drop [PATCH v2 01/13] media: cadence: csi2rx: Support runtime PM from
+  v2, support for runtime PM will be added in a separate series:
+  https://lore.kernel.org/all/20250224-ti_csi_pm-v1-0-8f8c29ef646d@ideasonboard.com/
+- Change the drain architecture to prevent FIFO overflow in multistream
+  usecases.
+- With the new drain architecture, we don't need the the driver to wait
+  for userspace to start streaming on all "actively routed" video nodes
+  before starting streaming on the source. So, revert back to the capture
+  architecture where streams can be started and stopped independent
+  to each other.
 
-> 
-> > It either just adds complexity to the API (due to the need to distingish between
-> > the "root" directory and sub-directories) or makes the API error prone by
-> > providing a *valid looking* option to users to leak the "root" directory.
-> 
-> I agree with this, I want that `ManuallyDrop` & `forget` are only used
-> rarely mostly for low-level operations.
-> 
-> ---
-> Cheers,
-> Benno
+Link to (v2):
+  https://lore.kernel.org/r/20240627-multistream-v2-0-6ae96c54c1c3@ti.com
+
+Changes in v2:
+
+- Change the multi-camera capture architecture to be similar to that of
+  Tomi's RPi5 FE series, where the driver will wait for userspace to
+  start streaming on all "actively routed" video nodes before starting
+  streaming on the source. This simplifies things a lot from the HW
+  perspective, which might run into deadlocks due to a shared FIFO
+  between multiple DMA channels.
+
+- Drop a few fixes that were posted separately and are already merged
+- Fix dtschema warnings reported by Rob on [02/13]
+- Fix warnings for uninitialized `used_vc` variable in cdns-csi2rx.c
+- Return -EBUSY if someone updates routes for j721e-csi2rx subdev while
+  streaming
+- Only allow single-streams to be routed to the source pads (linked to
+  video nodes) of the j721e-csi2rx device
+- Squash the patches marked "SQUASH" in the v1 RFC series
+
+Link to RFC (v1):
+https://lore.kernel.org/r/20240222-multistream-v1-0-1837ed916eeb@ti.com
+
+
+Jai Luthra (7):
+  dt-bindings: media: ti,j721e-csi2rx-shim: Support 32 dma chans
+  media: ti: j721e-csi2rx: separate out device and context
+  media: ti: j721e-csi2rx: add a subdev for the core device
+  media: ti: j721e-csi2rx: add support for processing virtual channels
+  media: cadence: csi2rx: add multistream support
+  media: ti: j721e-csi2rx: add multistream support
+  media: ti: j721e-csi2rx: Submit all available buffers
+
+Pratyush Yadav (4):
+  media: ti: j721e-csi2rx: prepare SHIM code for multiple contexts
+  media: ti: j721e-csi2rx: allocate DMA channel based on context index
+  media: ti: j721e-csi2rx: get number of contexts from device tree
+  media: cadence: csi2rx: add get_frame_desc wrapper
+
+Rishikesh Donadkar (1):
+  media: ti: j721e-csi2rx: Change the drain architecture for multistream
+
+ .../bindings/media/ti,j721e-csi2rx-shim.yaml  |  39 +-
+ drivers/media/platform/cadence/cdns-csi2rx.c  | 372 +++++--
+ .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 958 +++++++++++++-----
+ 3 files changed, 1025 insertions(+), 344 deletions(-)
+
+-- 
+2.34.1
+
