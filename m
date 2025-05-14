@@ -1,170 +1,112 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577271F76A8;
-	Wed, 14 May 2025 18:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A127D1ACEDA;
+	Wed, 14 May 2025 18:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747246561; cv=none; b=XGXaGWgE/FgtBpH6sFFxv1dh25NQhlod3h6THT4B/qpYaDX5yRGtMqiS1UpBDyuIs8hczC1CllP40urEPze5BlRyKVPZgcHtCQEJAVwMdOkKuOdNMTOpFfWAEj4/bQhtKvGu8QFCuXChOEW4Cg53CgbVWuDZ9y2EUnneGZojL/8=
+	t=1747246825; cv=none; b=mzYkruE0O4iQeGiRJT81v2a+VXXDz2RX8th0vFAO5XL2qPh6JKZCci+r/J8z1G0ZjEZoRcPE0QgCkz7L5COvcyVcCkUkBXS0SuVO6LKwUuWjUW16JpV2Tp2wwsLTfu4AS8xnXKCSdE2k/hXhoYrIdNHQVEOkVexYq4gnjPWnjEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747246561; c=relaxed/simple;
-	bh=S7s8gyB+LxdrzjPZwmAEQBK/PjRLNUJW31jjKnw/QVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ag+uqKnOwsXTdMltA5g9LLdOE/LFrx+GUPeG+W840OQ5X0GHmp8IHpAaqafPHP2hZz6Zu5ou+00Fewu6SJFImHGLj3CHwM/kiK9EbjChYTp0VbKSA7hF7Bp3iGDWrma5/tFLJbBdD45C6HtBSu5EHVXwzX74IALyodnrpB+8zf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFH7TiAh; arc=none smtp.client-ip=209.85.216.51
+	s=arc-20240116; t=1747246825; c=relaxed/simple;
+	bh=LShLumqkihJQzxK2oSUHJJEnrPGHQ9OvLbKc+cZLSzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ae5b0zevEsUQiARnRC5f+Pf06Jvpv8ukz2JwRo+KYNiugSTeDofRyNQPNi9pTUJ4jIGbWgJgBN8alhSMa8SlloJjIJy/vJwahhuNHIiXbmhqzrC7KZUoIHgAwZTBrfavPDnqvfVx5pss9E9BckHbqwc2Q10eet9AWO1HFsCvXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kE05pZ4+; arc=none smtp.client-ip=209.85.214.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFH7TiAh"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30c47918d84so166637a91.3;
-        Wed, 14 May 2025 11:15:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kE05pZ4+"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-23198fcdeb0so1226425ad.2;
+        Wed, 14 May 2025 11:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747246558; x=1747851358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ks2e3ghqHLXQQkdmaQokVVmeEBA0ZdlTacN0FP7jAkc=;
-        b=lFH7TiAh7XYVd94Em2s3jeqXA43a/ch3p8KYYqB/P6CUhQRQ+1Y6xfUP/wBIg4RVuJ
-         GhTBM1cWXZKO820UWmlzmtR9Dz1pOLw3yKsxD60m8duPzRC82CL6YbhpnCcJUNjeskg0
-         bbC6KQo5vfHavrrRlrMMk4blbUhQjI9rYrfCDsHVygaCcdiKK5R8f68U9Yos09rxXLMi
-         IpT4/C5KLmNOFM6QKggbUdhYB4fEkyAUJOFntAPjefbSc2NFhL/8qXDimIUjkA2nR4dd
-         z+lZF/yxFeawTWOQdkM68IzfOmrS6ArX7HND1Sy6bCCI6tpqrPgabykwfnBCRlUOBJ0b
-         C+kg==
+        d=gmail.com; s=20230601; t=1747246823; x=1747851623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QgkpdbQA01DcUJClm3tXU5YnYdU7zJmZW671sYK0pa4=;
+        b=kE05pZ4+kcnDx7WisPilNjoMXufMMNgTjFWSwwZA8gviVvIcXCCQf3d3R153ZQl6zN
+         v0n5pKtwSobrdcRjUfOyrgVbzAq5Lo956vW3MMei6RHRihM2sCGlSL2366dym1GBjfOV
+         ecB36o3usXfCR9rXVLlKyaD4HlSep9Qr5GJTnLyHOqx0ReWYu7O1TyiwuQdmzB7Y9Zmv
+         QRIsfT2oiQuh/C0E++AbuRhf85X+v3oSyxpd0v9UrJfJp3MVGp30vzShGlxtI2s3SKoj
+         IkCwbar3r3kg7R79yz2TU2PIi4NqnDAdLuo2iJP1NZDer0e8qg0VgAXzxMxIDIL5m7A7
+         Cc/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747246558; x=1747851358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ks2e3ghqHLXQQkdmaQokVVmeEBA0ZdlTacN0FP7jAkc=;
-        b=qnqM+u3WHQ2E3P6eVuDgk4CQJzsnmEwDjG10xtTOaA7aW9jOWXbJHbIPQaWZ71BCf2
-         m0OaisAvMNG7rdzDrno9V8vuHuzqTcJZGBw9hm0zJ4OIS7n9+eb4p2TUPy1GolfOggJ3
-         57T5GItgQgl4ZMKzRuCl2VZKfla69rtEIYaNSNz1MgsVHL8wl9Z/V/QvcGisuFOR+RDp
-         IBA5fgpiWUYt666RRPwpoJEKoFuEfZbnZ6YnjmYVDPoOWb3AIZpM9C4/LxHOOTw+eLfQ
-         MsqoX9iTvGEKfaMe9FIKfiGuUIkBlYeug8eC7ZMkFFr/siSoMU2p5JMW7kmrm1esdkLv
-         lSHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0vllzd8+tfevAnYtNsshP23YUe5PE818eG9kn2XUsBL6U9lXRPoCp/1g02ldzjxn4hFATaV79KS4uEl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7ars7+VW+8jaO+IbFOzwrBeUpcThNmVGuhZlnM+kaTCC3WuWJ
-	xpRm/UnM2lGMZc6yKbCx/NBm1Ymuk+iP7sUhE2LSKW3p2Yq0xykwVX7AJU9NsKCOcQAo5ZKAJ4k
-	APEJLT/gJx3YPMHd5+cIiXa5i/Sk=
-X-Gm-Gg: ASbGncvremAkJxpmpThak/lh+mJ5TolZp8jqFLV9B4ztcJNasSriWcHEsC1BOntLQj/
-	4crhepU3DCVntM158La0z9dlhe1btY8/z1D072Sa0/eoTVSMUXJtCLqpKZzDuT0Tm/Fv+PstYq9
-	6aDzsVQVVi2NOtMutKrAncKM/kybIuS6SD
-X-Google-Smtp-Source: AGHT+IGxCJKg/pkOQyap434EC4iAHQqIV2wczjYn10oi46YgFZxe/KF8s1Ax+jTiPn2uwFMZfmiqjSib0U7g6gj2Mxk=
-X-Received: by 2002:a17:90b:2e52:b0:2ff:4f04:4266 with SMTP id
- 98e67ed59e1d1-30e2e62a703mr5725096a91.23.1747246557848; Wed, 14 May 2025
- 11:15:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747246823; x=1747851623;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QgkpdbQA01DcUJClm3tXU5YnYdU7zJmZW671sYK0pa4=;
+        b=N8IDg83o2Q67noV3IsSOmSuChdgphFxmGQ9pBAJUSmpQebLsFsXaZgtEpw+wc1glXy
+         adZP7EqZ5FEfAWLh27ptrsYKwxeT1sr7wAuyp4BpEw5DT7etokERvC50BtuGqSzOU0gq
+         PWEMJGmHnGdsLcStYgAjlaUM/EgJN1ayNDKJvnrmXRXFqGe9Jalvv/HDlb7DCmy+nzQ1
+         QLxivAIIEsE4DOW7DCMYZJbdKRf6At4QJQcDM1rrIj8jCnoqenqczQmHlg+ZUXf2uLTv
+         5mxzbkIo6g4VWfHrRQ+fALgdiuGwrjqmsG7uDU6D+ulhqNJUPTM95L3EHF8RXX0+KVpV
+         XOrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2k10+nK051F65TGwGH7fKr9u3Xkd9LRojKUTou80ZzjXnMdMpVjeRQbV8SaA586d4ZGPzb41q00s5@vger.kernel.org, AJvYcCWMgjkWhZ1XNypPdlTv9hlYsu0c/s35XhiMud1bpmC4y9V1tCe4XjcYQ2nfMnLyEPW333Dcr9HzWTsCA0M=@vger.kernel.org, AJvYcCWNS6F2Mfs2ct26EiRokfh56NMzGvQ78EG8XEpDHbFgU7IOokXktvDUj+GU7wMRNs4sio7GKXEFL+8aHU6x@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2i8UfAIin8KMBuqlp6Dr/9q9Vyx87YcuZDFZgpTZpeec9ZplV
+	kKkAY4Mm47cAhUmkAL10YVvE4ziygKQXqeFx5mwRteFxUlJtvEDPuv7oC9lD
+X-Gm-Gg: ASbGncv2S8TaqX3H12gCkPuYzIDkqar0LZItbOjGiZNp+2eQVlpwxh8GuGNHvwizq2V
+	8RZneZ38SSM8KpZT/q2b42gMiNa3eiWrtSkkh/PyKhpyS5xvHb774oAGao2BhF+KePyCSmGkpDn
+	K0PDnlTGLHugZR/u+9MgwnuF/JjKt7toJw0RDqtiEIZ2rO/KTvHRex7sEYnBKIDpypdKtg6bhx9
+	gwjKBz59jeLAAGThy8bQ5u/IP37HiIaHp/TKAtZM726lQWZu2I7C0LhnQ5LyYz2WAzxJZ43VyP7
+	BekOt3vHWUJ8pyuF1Nss5BfvMx+S6RDuX9BrnKIqY5B+dFOeTgFaXAtaQS2PaTalgsS5Cw==
+X-Google-Smtp-Source: AGHT+IFN9UctYMQlaAiLxuxtHAyS1yTR41k3TKQuKvdDE0nUJljmffGv5faKmGgk4C8wB16wzDcS9Q==
+X-Received: by 2002:a17:903:234a:b0:224:a74:28cd with SMTP id d9443c01a7336-23198124c72mr53403505ad.31.1747246822676;
+        Wed, 14 May 2025 11:20:22 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.228.33])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc828b422sm101914245ad.186.2025.05.14.11.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 11:20:22 -0700 (PDT)
+From: Siddarth Gundu <siddarthsgml@gmail.com>
+To: idryomov@gmail.com
+Cc: dongsheng.yang@easystack.cn,
+	axboe@kernel.dk,
+	ceph-devel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Siddarth Gundu <siddarthsgml@gmail.com>
+Subject: [PATCH] rbd: replace strcpy() with strscpy()
+Date: Wed, 14 May 2025 23:50:15 +0530
+Message-ID: <20250514182015.163117-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-7-cgoettsche@seltendoof.de>
-In-Reply-To: <20250511173055.406906-7-cgoettsche@seltendoof.de>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 14 May 2025 14:15:46 -0400
-X-Gm-Features: AX0GCFuY7KSaYvvPpUqSnV13wlvbHU8Cx7hV9W-p8TaAIzwW51hfE-FCjq20_pM
-Message-ID: <CAEjxPJ4G_0m8gM5QyJ7UZmmRut6p46O0qAihDbsJ3U-N5dDKqA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/14] selinux: check type attr map overflows
-To: cgzones@googlemail.com
-Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
-	Eric Suen <ericsu@linux.microsoft.com>, Canfeng Guo <guocanfeng@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
-<cgoettsche@seltendoof.de> wrote:
->
-> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
->
-> Validate that no types with an invalid too high ID are present in the
-> attribute map.  Gaps are still not checked.
->
-> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+strcpy() is deprecated; use strscpy() instead.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Both the destination and source buffer are of fixed length
+so strscpy with 2-arguments is used.
 
-But see my commentary below.
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+---
+ drivers/block/rbd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
-> v3: squash with previous patch ("selinux: introduce
->     ebitmap_highest_set_bit()")
-> ---
->  security/selinux/ss/ebitmap.c  | 27 +++++++++++++++++++++++++++
->  security/selinux/ss/ebitmap.h  |  1 +
->  security/selinux/ss/policydb.c |  5 +++++
->  3 files changed, 33 insertions(+)
->
-> diff --git a/security/selinux/ss/ebitmap.c b/security/selinux/ss/ebitmap.=
-c
-> index 43bc19e21960..5d6b5b72b3e5 100644
-> --- a/security/selinux/ss/ebitmap.c
-> +++ b/security/selinux/ss/ebitmap.c
-> @@ -257,6 +257,33 @@ int ebitmap_contains(const struct ebitmap *e1, const=
- struct ebitmap *e2,
->         return 1;
->  }
->
-> +u32 ebitmap_highest_set_bit(const struct ebitmap *e)
-> +{
-> +       const struct ebitmap_node *n;
-> +       unsigned long unit;
-> +       u32 pos =3D 0;
-> +
-> +       n =3D e->node;
-> +       if (!n)
-> +               return 0;
-> +
-> +       while (n->next)
-> +               n =3D n->next;
-> +
-> +       for (unsigned int i =3D EBITMAP_UNIT_NUMS; i > 0; i--) {
-> +               unit =3D n->maps[i - 1];
-> +               if (unit =3D=3D 0)
-> +                       continue;
-> +
-> +               pos =3D (i - 1) * EBITMAP_UNIT_SIZE;
-> +               while (unit >>=3D 1)
-> +                       pos++;
-> +               break;
-> +       }
-> +
-> +       return n->startbit + pos;
-> +}
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index faafd7ff43d6..92b38972db1c 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -39,6 +39,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/device.h>
++#include <linux/string.h>
+ #include <linux/module.h>
+ #include <linux/blk-mq.h>
+ #include <linux/fs.h>
+@@ -3654,7 +3655,7 @@ static void __rbd_lock(struct rbd_device *rbd_dev, const char *cookie)
+ 	struct rbd_client_id cid = rbd_get_cid(rbd_dev);
+ 
+ 	rbd_dev->lock_state = RBD_LOCK_STATE_LOCKED;
+-	strcpy(rbd_dev->lock_cookie, cookie);
++	strscpy(rbd_dev->lock_cookie, cookie);
+ 	rbd_set_owner_cid(rbd_dev, &cid);
+ 	queue_work(rbd_dev->task_wq, &rbd_dev->acquired_lock_work);
+ }
+-- 
+2.43.0
 
-Always fun to see new extensions to the ebitmap code that dates back
-at least to 1996 in the original Flask code base. It's changed a lot
-since then. That said, if we ever want to compute this frequently
-we'll likely want to cache it in the ebitmap struct itself but this
-seems fine for this usage. On a different but related note, I saw a
-lot of time spent spinning through all-bits-set category set ebitmaps
-in child SELinux namespaces due to the global SID mapping needing to
-map contexts to each namespace. I solved that by introducing a cache
-for the global SID mapping but was wondering if we ought to have a
-more compressed representation of the all-bits-set ebitmap and more
-efficient iterators for it. Just noting for future, not a request to
-change this.
-
-
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
-b.c
-> index 8969f7c8637c..27f6809b562a 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -2955,6 +2955,11 @@ int policydb_read(struct policydb *p, struct polic=
-y_file *fp)
->                         if (rc)
->                                 goto bad;
->                 }
-> +
-> +               rc =3D -EINVAL;
-> +               if (ebitmap_highest_set_bit(e) >=3D p->p_types.nprim)
-> +                       goto bad;
-> +
->                 /* add the type itself as the degenerate case */
->                 rc =3D ebitmap_set_bit(e, i, 1);
->                 if (rc)
-> --
-> 2.49.0
->
