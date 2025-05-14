@@ -1,114 +1,154 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 444BD17BD9;
-	Wed, 14 May 2025 00:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE31C27;
+	Wed, 14 May 2025 00:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747181289; cv=none; b=jN6azlPqIneS8N/8AnHb5KZzH2pNeHOtn9WKpTeu4zTEwZ+NchEuTrdwNggEuM8iLyDpIVLiy01xK0wczf5KrOugB8AOOjz8VCZ8IFKZaQ55JYL7vLip8MK9GUE1dg9hWMvvm5DubvEz3CC9zVjocIiblmsHlIeFjrDh6xNUAlE=
+	t=1747181472; cv=none; b=qOzt6Uhx5VVJtAz0CvlkN0+h9/vE1hxhsiX8DPVDHuGiAVkSBgW5MMzbvHp3lThLIROUSrOmL3JVr6x7GFTcUhH6DRBjGVgJas71bdIwCIYQKYoleIlpLhtrENRiyFQk+D80II2Nqnqs+75vVFn81zGyXbxjM48UafqjxBtce5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747181289; c=relaxed/simple;
-	bh=VymPZz5dxqp//+cI6U/6LPh2jAhgsDMsNBoWUdgFXuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a5g1esearoSE+lZ+GWEyHORNC5GFJw3G4Wy8kNjBRpRIUyL2hQcEZPJbepHIk9twlyb9k4Rr0t3/s7EwK1dDAi0V/xiStNp6Mk+dvYnK4FcSqg1AvLH5qTOC6n5HNkcVcvTJ9MSb339u2F4G/poA5B/+AufRrcMf23jeGKqPVfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-97-6823dedb8991
-Date: Wed, 14 May 2025 09:07:49 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, ast@kernel.org, daniel@iogearbox.net,
-	davem@davemloft.net, john.fastabend@gmail.com,
-	andrew+netdev@lunn.ch, edumazet@google.com, pabeni@redhat.com,
-	vishal.moola@gmail.com
-Subject: Re: [RFC 01/19] netmem: rename struct net_iov to struct netmem_desc
-Message-ID: <20250514000749.GA51632@system.software.com>
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-2-byungchul@sk.com>
- <ea4f2f83-e9e4-4512-b4be-af91b3d6b050@gmail.com>
- <20250512132939.GF45370@system.software.com>
- <eae3e1a9-1d82-40b7-a835-978be4a6ef56@gmail.com>
+	s=arc-20240116; t=1747181472; c=relaxed/simple;
+	bh=wkfDB2oVIWKK1a5eXkQoWzJ/nlBkrw3GK1U6oYBNAQ8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VCZtkzFjTmvISy3kUhFFOdFxfgCLwJaowPgenh3DRz8hvl9DVmJXtJCeJ/SFv2fX6XlgJBoSkABJ2WFV87NdAoEyEtxCPMPnkDEhn1JBbEqE1q5wB2GxOIqyHEUHXrnaIrey4YnlmpLVt72wit8pbdVLgw5d9PjNnKshldHscz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=A4eu4F4u; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="A4eu4F4u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747181467; x=1747786267; i=spasswolf@web.de;
+	bh=op1KZQkRCtc3+W3fATc0uPEXHj/b7P0Lr/rtvLPmTPU=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=A4eu4F4u1O16nrMqsqe6e9WO88QQRZIF8yaEzmoXMWG0cwkW1NkO5udkFzRPXcZP
+	 KDw0IutqvA5tyzcDgsWOo9b+lN71C4nVU+gB87NJN0QgUZ+gzWf0X0pYWEPsMU0Pe
+	 /VDN6bNnbQt/p3tXIxgA6Ns+RngP2WbiCekhEa9IzzKkvald6klTq41tFe2DWLNB3
+	 DVx56trOOk/Kl28CxJJoTciPclV28HCiS7avoiz6faZazmP2S8j6VVy6d1VgJbVvu
+	 KdlaGCjlrgjckCemMe/5NjmnD2D7HIvP4luJdnhdD37TZifI1FNXTAAqPgkAbel01
+	 HwY3/R//5IRd2Xf11g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MjxeO-1uhTqV0nrE-00ndWS; Wed, 14
+ May 2025 02:11:07 +0200
+Message-ID: <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, llvm@lists.linux.dev, Johannes Berg
+	 <johannes.berg@intel.com>, spasswolf@web.de
+Date: Wed, 14 May 2025 02:11:05 +0200
+In-Reply-To: <87h61ojg3g.ffs@tglx>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eae3e1a9-1d82-40b7-a835-978be4a6ef56@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsXC9ZZnke7te8oZBs8vyVnMWb+GzWL1jwqL
-	5Q92sFrMWbWN0eLLz9vsFosXfmO2mHO+hcXi6bFH7Bb3lz1jsdjTvp3ZorflN7NF044VTBYX
-	tvWxWlzeNYfN4t6a/6wWxxaIWXw7/YbRYv2+G6wWv3/MYXMQ9tiy8iaTx85Zd9k9Fmwq9di8
-	Qsuj68YlZo9NqzrZPDZ9msTucefaHjaPEzN+s3js3PGZyePj01ssHu/3XWXz+LxJLoA3issm
-	JTUnsyy1SN8ugStjwrrfbAU7+SumfN7K1MB4kruLkZNDQsBEYuu7FiYYe8Gva6xdjBwcLAKq
-	Ejc3GoKE2QTUJW7c+MkMYosIaEu8vn6IvYuRi4NZYA+zxOWz0xlBEsICPhIXXt5nB7F5BSwk
-	vsyYxAZSJCTwjVHi7pONjBAJQYmTM5+wgNjMAloSN/69ZAJZxiwgLbH8HwdImFPAVuL41h9g
-	94gKKEsc2HacCWSOhMAxdone9bfZIA6VlDi44gbLBEaBWUjGzkIydhbC2AWMzKsYhTLzynIT
-	M3NM9DIq8zIr9JLzczcxAqNzWe2f6B2Mny4EH2IU4GBU4uG10FXOEGJNLCuuzD3EKMHBrCTC
-	ez0LKMSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoHRjjVZ
-	7aDJvYnHH39/LchimqLRse/Yit9L/vvwfP4TekGglvnLdZH4jS/5F0x8fSnSSuVFpiKzTff6
-	Oa+2LTylzK971+DY3K74cM1bTOcL+47qpRmddlv1LCbm2eQv9hbTcwQNbst2Wqp9vrHrn+sC
-	OQ2OKwUl/VYBVm0XVnKuN1p+e8dC6zB/JZbijERDLeai4kQAabFjA8oCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsXC5WfdrHv7nnKGwck+Jos569ewWaz+UWGx
-	/MEOVos5q7YxWnz5eZvdYvHCb8wWc863sFg8PfaI3eL+smcsFnvatzNb9Lb8ZrZo2rGCyeLw
-	3JOsFhe29bFaXN41h83i3pr/rBbHFohZfDv9htFi/b4brBa/f8xhcxDx2LLyJpPHzll32T0W
-	bCr12LxCy6PrxiVmj02rOtk8Nn2axO5x59oeNo8TM36zeOzc8ZnJ4+PTWywe7/ddZfNY/OID
-	k8fnTXIBfFFcNimpOZllqUX6dglcGRPW/WYr2MlfMeXzVqYGxpPcXYycHBICJhILfl1j7WLk
-	4GARUJW4udEQJMwmoC5x48ZPZhBbREBb4vX1Q+xdjFwczAJ7mCUun53OCJIQFvCRuPDyPjuI
-	zStgIfFlxiQ2kCIhgW+MEnefbGSESAhKnJz5hAXEZhbQkrjx7yUTyDJmAWmJ5f84QMKcArYS
-	x7f+YAKxRQWUJQ5sO840gZF3FpLuWUi6ZyF0L2BkXsUokplXlpuYmWOqV5ydUZmXWaGXnJ+7
-	iREYa8tq/0zcwfjlsvshRgEORiUeXgtd5Qwh1sSy4srcQ4wSHMxKIrzXs4BCvCmJlVWpRfnx
-	RaU5qcWHGKU5WJTEeb3CUxOEBNITS1KzU1MLUotgskwcnFINjLdE7m7eMXmNyvc/QYx5orYS
-	Ebu3Kao/tOv2yE+5nb0sZOPkN9zHteXWmD3PmyjwqM2c59qDL7y7S9c/0VI0PXjW4OTL6LU5
-	r9zrJTZ+ePDpEGfa9NaGktNG02I8e5P5FuimG3sp3i8PcI5Uvch0ZN/tGsb5T4N4Pp2+kf3s
-	7ckbwua8T3YKT1diKc5INNRiLipOBAAkrAYasQIAAA==
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oPtwMikyUfZ7uvY4o2qRU0Hn/RpJAD9cDevhup5xGQepFv6jujd
+ k+K2uv5LgzgIuo6gF6NZcAQ1WGBoS9WAeGwRD9W+qPfc8y66foFFjsZF6OqdjKno1E1HKn5
+ lO6AMZzZSqz0fym+JRnSG0e7YcZyS7ZQUQOARJg85gYolBBFcTtZjflgMOVu5/x48rxLUuY
+ RKn6eauM58n8PZvNW1uyA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:6H6/ew3cfHk=;Cc/dGYOQdL+WFhwqQKouJIiYS14
+ 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
+ aT8tyxcrwvObM=
 
-On Tue, May 13, 2025 at 01:49:56PM +0100, Pavel Begunkov wrote:
-> On 5/12/25 14:29, Byungchul Park wrote:
-> > On Mon, May 12, 2025 at 02:11:13PM +0100, Pavel Begunkov wrote:
-> > > On 5/9/25 12:51, Byungchul Park wrote:
-> > > > To simplify struct page, the page pool members of struct page should be
-> > > > moved to other, allowing these members to be removed from struct page.
-> > > > 
-> > > > Reuse struct net_iov for also system memory, that already mirrored the
-> > > > page pool members.
-> > > > 
-> > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > > > ---
-> > > >    include/linux/skbuff.h                  |  4 +--
-> > > >    include/net/netmem.h                    | 20 ++++++------
-> > > >    include/net/page_pool/memory_provider.h |  6 ++--
-> > > >    io_uring/zcrx.c                         | 42 ++++++++++++-------------
-> > > 
-> > > You're unnecessarily complicating it for yourself. It'll certainly
-> > > conflict with changes in the io_uring tree, and hence it can't
-> > > be taken normally through the net tree.
-> > > 
-> > > Why are you renaming it in the first place? If there are good
-> > 
-> > It's because the struct should be used for not only io vetor things but
-> > also system memory.  Current network code uses struct page as system
-> 
-> Not sure what you mean by "io vector things", but it can already
-> point to system memory, and if anything, the use conceptually more
-> resembles struct pages rather than iovec. IOW, it's just a name,
-> neither gives a perfect understanding until you look up details,
-> so you could just leave it net_iov. Or follow what Mina suggested,
-> I like that option.
+Am Mittwoch, dem 14.05.2025 um 00:33 +0200 schrieb Thomas Gleixner:
+> On Tue, May 13 2025 at 18:48, Bert Karwatzki wrote:
+> > >=20
+> > > I'll now start a bisection where I revert 76a853f86c97 where possibl=
+e in
+> > > order to find the remaining bugs.
+> >=20
+> > The second bisection (from v6.15-rc6 to next-20250512) is finished now=
+:
+> >=20
+> > This commit leads to lockups and kernel panics after
+> > watching ~5-10min of a youtube video while compiling a kernel,
+> > reverting it in next-20250512 is possible:
+> > 76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
+> > This commit leads to the boot failure, reverting leads to the
+> > compile error it is supposed to fix:
+> > 97f4b999e0c8 ("genirq: Use scoped_guard() to shut clang up")
+>=20
+> I really have a hard time to understand what you are trying to explain
+> here. 'This commit leads..' is so unspecified that I can't make any
+> sense of it.
+>=20
+> Also please make sure that you have commit b5fcb6898202 ("genirq: Ensure
+> flags in lock guard is consistently initialized") in your tree when
+> re-testing. That's fixing another subtle (AFAICT clang only) problem in
+> the guard conversion. If it's not in next yet, you can just merge
+>=20
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+>=20
+> into next or wait for the next next integration.
+>=20
+> Thanks
+>=20
+>         tglx
 
-I appreciate all of your feedback and will try to apply them.
 
-	Byungchul
+I merged git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/cor=
+e into
+next-20250513 and this fixes the boot failure but the system still locks u=
+p
+after a few minutes (with flashing capslock). To solve this I need to reve=
+rt=20
+76a853f86c97 ("wifi: free SKBTX_WIFI_STATUS skb tx_flags flag")
 
-> > memory descriptor but struct page fields for page pool will be gone.
-> > 
-> > So I had to reuse struct net_iov and I thought renaming it made more
-> > sense.  It'd be welcome if you have better idea.
-> -- 
-> Pavel Begunkov
+Also commit 97f4b999e0c8 did not actually cause the boot failure that was =
+a
+bisection error.
+
+Bert Karwatzki
