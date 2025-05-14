@@ -1,63 +1,62 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062F529827A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E53B29899B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253980; cv=none; b=aXjf75zwMVkoC+IbObWHmv0aaP50k1kglAFhxJNXfSh2ybW3LKEOC5FRsIpNlqrFfai7rof3oilA21NlwsF9XzTwePU8Vcf6l9vGrmQnHnYMf2IkJHMFiZMXxzn0uj+aQTv5EuwIuH2ML8H2JvdWHZ1US5UvXynfPsisf2du4Ts=
+	t=1747253986; cv=none; b=fhgaqKOQYplRi9NNEzE4hsDds+vc2K3Oj77Qra89Of9Ket27+SL0HVlMozZMVR1zNlqZ5iV+GF0IzQmU0sfeD/XvjWJaO/aBpBFK7+ZFm+PRiypMVxMKJ9Wc/8ngCWPhxrfX1OSxitXwAJFfVaqvzbze3K/2nteCigXXJI4q5M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253980; c=relaxed/simple;
-	bh=g+1jY4JQtidJcaTAImsT0t1pCHOxs6b24whD2ZiSzfA=;
+	s=arc-20240116; t=1747253986; c=relaxed/simple;
+	bh=7wQ6zVnj9EKELsTAYy0JyAexEb8K5QXyOXgGjnfqHVo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ql7BUMGDfFmY7WraBpvIE9XIhfnKu3ttWJWZaunJsCx2AB35qNtTa57fhRiOEmoMc/z+4hYsqM6wz+l13vdoZnf1SEl2eH7TJG8FPeop22liEEVhskHsXVGfDEqRsYllPca/tSpmtMQt8CrNexWMgmQbqxJtdFSP26GMUlcXwms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NXwuV7XU; arc=none smtp.client-ip=209.85.216.49
+	 MIME-Version; b=WypAHIpUBZTsypF6a53e7iGNxidd8l5rzeYmuLxBbdVFRQkEIW7Z9kKGpmOOmS1htqYtX7q+A4vqnDKiZ9m0ZzVsuWx22zPxAsiY0aWcanKRb1h2tAUxOFsZY5mWygDdH0g9MHF8pkpugP+fT6ui8jcIeJRErhNzFCaX0K1c8aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AmeaeGRe; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXwuV7XU"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30ab344a1d8so279976a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:19:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmeaeGRe"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30820167b47so259918a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747253978; x=1747858778; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747253983; x=1747858783; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=m/tKAWQg/dKBRoqSNJTqNYIKEPlXdDROP0NJrD1IvN8=;
-        b=NXwuV7XU3o/UTSSn+F6B8C/jggWtxvdmPdDjnj5wEB9bM2Z2+L0e9eHL3WFtRfaWDD
-         iDSzg1y5INyTuo+hzU86foK1K5pPwT4IsCXmxjhf+bpF8pQhfeW18ZXTvm1c3ZzL9ytX
-         AgeCmrfDqLGiiESuvZRpxau3ynAfRb1r1fTHVV15KtE3esI92beM4cmochX2oRC7okvp
-         wjGzwfpnck1lRuuXGO/IBKcDpu72OSH6pR0XRWCB0Qiu2PDP8LHh/luMUXEV4OL2ZQGH
-         CCcGuGpZpffq7Yee0HAM2WivNJElDXfEXmztbphIvRLb46oMOjk7rGuxd2DC0EXktu3R
-         xFGw==
+        bh=6yvNaKoiyhdGzQTNSpSTtFq3TIsydM+hZJJMZKRox3o=;
+        b=AmeaeGReoz++osi93Qy4BfaYt2xOj0BkHx6nTvOHqX2calXOFWP+vovQKlNTj0q8jV
+         d31VmPrhic8WKGvDw7ccAu67gITS5a2uTS3h8j16MCsFp8MBEKQPfxLyyKk1p3b6XVPb
+         BXosGkKOyASFnqw/Wa8xjR0ln1Qe6dEkD9KNBJX6gKom+OtXEUW5/0mjkIDGUCLl8Vq3
+         A8+gmWsoljKvGE2YYB8nco/JMAlra66q2Du102bWlhVMJqKx6BCybvwDEMbRs9TiQOJg
+         qVZUopN49OW1CahHDFGV8R0g1Aayenz7+71UIv7XjwlFlz9L63xd+K+ZBred/C3pp18W
+         pLUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253978; x=1747858778;
+        d=1e100.net; s=20230601; t=1747253983; x=1747858783;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=m/tKAWQg/dKBRoqSNJTqNYIKEPlXdDROP0NJrD1IvN8=;
-        b=Jj3zRfVQ5jtgdiIc77BgssMEuT7nm59HghU02qBb4pwGk3DelpIBqZ4naW9AuQy+o+
-         LDiR1H3AtFA/FeCqT67N0pCgCS8p15B15F4clOsEdZn1G1OqHu8NL2K5o8vgcbumjYjo
-         HF41w+zbFlGwdbalbsd3dHFHBYfBfNELJ0eu37RcdEZtK+knuta8nqEe80hQ2f0qE3TX
-         54OBYhIln312HKTibxgjLk/dl44cjSlv6XYVA059MatGnDtUDMWyuR9gb33xCzks4gLX
-         JAhzyZDSm1Ss4r1O5phuoZAFVKHH02Vo+RVQNYpF5RskuoXF0idfaQWafT0Jd/J00/li
-         r5KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHEc8wKl+eM6B1SJWF3ykh7NbNWmv+o90kue+hkZ5y+1I/mZ6AtouNifSYXs2NfGoOP9QFKLLeFZjnFz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya2xbppVJ3gbHsJY07aTiUu2Ccd52EdUiYarrEA7GvQwHStln6
-	t+dvXY/fdfpM9sElW+wvyqSHhu8AwE1HkmxxAC7VZ7lYTVN8o3Fu
-X-Gm-Gg: ASbGnctMgtqqp4fibZPG1iFhShBaYfF7eIJlPuUDsq4LdPODUT3kqNomY5QpXGghgGg
-	MgeLQBjlG2Ao7b3oGYL1V80W1fOWLt+6cKk46tqOKejWNTvFBfK4on7R86PjSeNhQCYOHRtFGWV
-	USqAtRkXeiw6SPAgfhy8u3Qzm0oPCoJlAGA2/T6yyYrYvU8bY1ORkqeCmdlegvyId78QEPsfj6U
-	dgMsLOnhTSuQlDc2qE8DeVf5Rszpzf7+6RhlXMkhj+lcQqjYtj2LjsCIt1kZLUdbG+EsJKqCJrH
-	4VXepueRGRjFcawOGgpryYnXk7uvD3uQChH1jYT+p7AEILflRhNSMotp4ear7FwVdNhcKYLcLpA
-	vZaklOJs=
-X-Google-Smtp-Source: AGHT+IG5lNgQcqNb+IiMkrtSM4av6IuLMumXdGBLwYB3DyizguwyfvVk3iJ+oU+OFH2+AD7NZkOOwQ==
-X-Received: by 2002:a17:90b:2742:b0:301:98fc:9b2f with SMTP id 98e67ed59e1d1-30e2e583da8mr6754772a91.1.1747253978100;
-        Wed, 14 May 2025 13:19:38 -0700 (PDT)
+        bh=6yvNaKoiyhdGzQTNSpSTtFq3TIsydM+hZJJMZKRox3o=;
+        b=iNekTzz82/0ihnnr5p34vQ/e1g5IPi1wsEC8daTsq1D+npZQWH0mqAvj7iJsFEVVYr
+         1Tv5zipVJ9QbNRBsbHEyuRp0B1C5Tk9KsIOZ73qArKt57IsQC2hAmi7lahfHu/ztU6Zz
+         dcrh2VIbRkapShapZKG5N2fDguAaF6iqYWh6bepu/B3/V27n1yqXdXMENKbHLD3YDIrG
+         D9YwxTankwPdvg8PFlrR80+zuKXtG9vaUFG85T/3CCT8DgbgnlJuyY2tofg7S9qIKszX
+         vhQEUlUQGAUdpjZWVTHT06a84qxvw1CbN/+2ZJx0+Tt/AHGLJK+DC5xan0u7/n8SER36
+         9Yzw==
+X-Forwarded-Encrypted: i=1; AJvYcCU24AbK/tMc677chNQknjI3ZOEdCy7bPkgWz6mRUP8jUVypDa9oluTN716i0C+XzvkoNV3421GqkT7DqFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPCZymBkR0Fn5ZJ7+3HVkFd4Q3aaDxR9EUtoFZk6Bf1ZF4Nbny
+	ez3cell92PcVwCPEkPNVzFbErR8EEvzoY0405kg0Od2R/X1CO+af0QzN
+X-Gm-Gg: ASbGnctXjDd2Q3rOr54INzdExtVSfFq6SKSJpgVhUqU1FViOXxYJ/+rIEXCgb5W5iuu
+	eEDei/+oqEzfn+X6h4S/i2IcIjZcuQ3Jvx196y92WO0mytcfX6qaBBE00DVlh9BK7XTCyXqjOH5
+	IY9A/bF4ERAawCX6q4OVN5ucMQC1BPuQAN/+60heC2QNK22MzNXElpPKxq7xz0mWqTO/svUwWf6
+	3xf8gc6MRgtndY/7rgmHGk5fRb+OY9J81XJan+GPeaZJ+S0QqpgoGw7PHkv9lhsYIvrDKL7Ub7j
+	sIX10yEPu2odpEHsAiVmLVEY3KlNes/QcbZVtJnFmwuEtoIP+Ms9seqsFJ/6325XrD+6poeW
+X-Google-Smtp-Source: AGHT+IGzwbynZkVxEox6mUaD39pJPSF0MdkK7lxUBurI2jti1PYOMDflNME+e3xh2xNygeW7R+QKAg==
+X-Received: by 2002:a17:90b:3d10:b0:30a:882f:3120 with SMTP id 98e67ed59e1d1-30e4db0fc4emr1291920a91.5.1747253983159;
+        Wed, 14 May 2025 13:19:43 -0700 (PDT)
 Received: from KASONG-MC4.tencent.com ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401934sm2003692a91.9.2025.05.14.13.19.33
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401934sm2003692a91.9.2025.05.14.13.19.38
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 May 2025 13:19:37 -0700 (PDT)
+        Wed, 14 May 2025 13:19:42 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -78,9 +77,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Ryan Roberts <ryan.roberts@arm.com>,
 	linux-kernel@vger.kernel.org,
 	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 23/28] mm, swap: remove no longer needed _swap_info_get
-Date: Thu, 15 May 2025 04:17:23 +0800
-Message-ID: <20250514201729.48420-24-ryncsn@gmail.com>
+Subject: [PATCH 24/28] mm, swap: implement helpers for reserving data in swap table
+Date: Thu, 15 May 2025 04:17:24 +0800
+Message-ID: <20250514201729.48420-25-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250514201729.48420-1-ryncsn@gmail.com>
 References: <20250514201729.48420-1-ryncsn@gmail.com>
@@ -95,132 +94,212 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-There is now only two users of _swap_info_get after consolidating these
-callers, folio_try_reclaim_swap and swp_swapcount.
-
-folio_try_reclaim_swap holds the folio lock and the folio is in swap
-cache, _swap_info_get is redundant.
-
-For swp_swapcount, _swap_info_get is insufficient as the swap entry is
-no pinned so the device could be swapped off anytime, it should use
-get_swap_device instead.
-
-And after these change, _swap_info_get is no longer used, we can safely
-remove it.
+To prepare for using swap table as the unified swap layer, introduce
+macro and helpers for storing multiple kind of data in an swap table
+entry.
 
 Signed-off-by: Kairui Song <kasong@tencent.com>
 ---
- mm/swapfile.c | 63 +++++++++++++--------------------------------------
- 1 file changed, 16 insertions(+), 47 deletions(-)
+ mm/swap_table.h | 130 ++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 119 insertions(+), 11 deletions(-)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index c2154f19c21b..28bb0a74e4a6 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1364,35 +1364,6 @@ void folio_free_swap_cache(struct folio *folio)
- 	folio_ref_sub(folio, folio_nr_pages(folio));
- }
+diff --git a/mm/swap_table.h b/mm/swap_table.h
+index 69a074339444..9356004d211a 100644
+--- a/mm/swap_table.h
++++ b/mm/swap_table.h
+@@ -5,9 +5,41 @@
+ #include "swap.h"
  
--static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
--{
--	struct swap_info_struct *si;
--	unsigned long offset;
--
--	if (!entry.val)
--		goto out;
--	si = swp_get_info(entry);
--	if (!si)
--		goto bad_nofile;
--	if (data_race(!(si->flags & SWP_USED)))
--		goto bad_device;
--	offset = swp_offset(entry);
--	if (offset >= si->max)
--		goto bad_offset;
--	return si;
--
--bad_offset:
--	pr_err("%s: %s%08lx\n", __func__, Bad_offset, entry.val);
--	goto out;
--bad_device:
--	pr_err("%s: %s%08lx\n", __func__, Unused_file, entry.val);
--	goto out;
--bad_nofile:
--	pr_err("%s: %s%08lx\n", __func__, Bad_file, entry.val);
--out:
--	return NULL;
--}
--
- static unsigned char swap_put_entry_locked(struct swap_info_struct *si,
- 					   struct swap_cluster_info *ci,
- 					   swp_entry_t entry)
-@@ -1549,7 +1520,7 @@ int swp_swapcount(swp_entry_t entry)
- 	pgoff_t offset;
- 	unsigned char *map;
- 
--	si = _swap_info_get(entry);
-+	si = get_swap_device(entry);
- 	if (!si)
- 		return 0;
- 
-@@ -1579,6 +1550,7 @@ int swp_swapcount(swp_entry_t entry)
- 	} while (tmp_count & COUNT_CONTINUED);
- out:
- 	swap_unlock_cluster(ci);
-+	put_swap_device(si);
- 	return count;
- }
- 
-@@ -1610,26 +1582,10 @@ static bool swap_page_trans_huge_swapped(struct swap_info_struct *si,
- 	return ret;
- }
- 
--static bool folio_swapped(struct folio *folio)
--{
--	swp_entry_t entry = folio->swap;
--	struct swap_info_struct *si = _swap_info_get(entry);
--
--	if (!si)
--		return false;
--
--	if (!IS_ENABLED(CONFIG_THP_SWAP) || likely(!folio_test_large(folio)))
--		return swap_entry_swapped(si, entry);
--
--	return swap_page_trans_huge_swapped(si, entry, folio_order(folio));
--}
--
- static bool folio_swapcache_freeable(struct folio *folio)
- {
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
- 
--	if (!folio_test_swapcache(folio))
--		return false;
- 	if (folio_test_writeback(folio))
- 		return false;
- 
-@@ -1665,9 +1621,22 @@ static bool folio_swapcache_freeable(struct folio *folio)
+ /*
+- * Swap table entry could be a pointer (folio), a XA_VALUE (shadow), or NULL.
++ * Swap table entry type and bit layouts:
++ *
++ * NULL:     | ------------    0   -------------|
++ * Shadow:   | SWAP_COUNT |---- SHADOW_VAL ---|1|
++ * Folio:    | SWAP_COUNT |------ PFN -------|10|
++ * Pointer:  |----------- Pointer ----------|100|
++ *
++ * Usage:
++ * - NULL: Swap Entry is unused.
++ *
++ * - Shadow: Swap Entry is used and not cached (swapped out).
++ *   It's reusing XA_VALUE format to be compatible with workingset
++ *   shadows. SHADOW_VAL part could be all 0.
++ *
++ * - Folio: Swap Entry is in cache.
++ *
++ * - Pointer: Unused yet. Because only the last three bit of a pointer
++ *   is usable so now `100` is reserved for potential pointer use.
   */
- bool folio_free_swap(struct folio *folio)
- {
-+	bool swapped;
-+	struct swap_info_struct *si;
-+	swp_entry_t entry = folio->swap;
-+
-+	if (!folio_test_swapcache(folio))
-+		return false;
- 	if (!folio_swapcache_freeable(folio))
- 		return false;
--	if (folio_swapped(folio))
-+
-+	si = swp_info(entry);
-+	if (!IS_ENABLED(CONFIG_THP_SWAP) || !folio_test_large(folio))
-+		swapped = swap_entry_swapped(si, entry);
-+	else
-+		swapped = swap_page_trans_huge_swapped(si, entry,
-+						       folio_order(folio));
-+	if (swapped)
- 		return false;
  
- 	folio_free_swap_cache(folio);
++#define ENTRY_COUNT_BITS	BITS_PER_BYTE
++#define ENTRY_SHADOW_MARK	0b1UL
++#define ENTRY_PFN_MARK		0b10UL
++#define ENTRY_PFN_LOW_MASK	0b11UL
++#define ENTRY_PFN_SHIFT		2
++#define ENTRY_PFN_MASK		((~0UL) >> ENTRY_COUNT_BITS)
++#define ENTRY_COUNT_MASK	(~((~0UL) >> ENTRY_COUNT_BITS))
++#define ENTRY_COUNT_SHIFT	(BITS_PER_LONG - BITS_PER_BYTE)
++#define ENTRY_COUNT_MAX		((1 << ENTRY_COUNT_BITS) - 2)
++#define ENTRY_COUNT_BAD		((1 << ENTRY_COUNT_BITS) - 1) /* ENTRY_BAD */
++#define ENTRY_BAD		(~0UL)
++
++/* For shadow offset calculation */
++#define SWAP_COUNT_SHIFT	ENTRY_COUNT_BITS
++
+ /*
+  * Helpers for casting one type of info into a swap table entry.
+  */
+@@ -19,17 +51,27 @@ static inline swp_te_t null_swp_te(void)
+ 
+ static inline swp_te_t folio_swp_te(struct folio *folio)
+ {
+-	BUILD_BUG_ON(sizeof(swp_te_t) != sizeof(void *));
+-	swp_te_t swp_te = { .counter = (unsigned long)folio };
++	BUILD_BUG_ON((MAX_POSSIBLE_PHYSMEM_BITS - PAGE_SHIFT) >
++		     (BITS_PER_LONG - ENTRY_PFN_SHIFT - ENTRY_COUNT_BITS));
++	swp_te_t swp_te = {
++		.counter = (folio_pfn(folio) << ENTRY_PFN_SHIFT) | ENTRY_PFN_MARK
++	};
+ 	return swp_te;
+ }
+ 
+ static inline swp_te_t shadow_swp_te(void *shadow)
+ {
+-	BUILD_BUG_ON((BITS_PER_XA_VALUE + 1) !=
+-		     BITS_PER_BYTE * sizeof(swp_te_t));
+-	VM_WARN_ON_ONCE(shadow && !xa_is_value(shadow));
+ 	swp_te_t swp_te = { .counter = ((unsigned long)shadow) };
++	BUILD_BUG_ON((BITS_PER_XA_VALUE + 1) != BITS_PER_BYTE * sizeof(swp_te_t));
++	BUILD_BUG_ON((unsigned long)xa_mk_value(0) != ENTRY_SHADOW_MARK);
++	VM_WARN_ON_ONCE(shadow && !xa_is_value(shadow));
++	swp_te.counter |= ENTRY_SHADOW_MARK;
++	return swp_te;
++}
++
++static inline swp_te_t bad_swp_te(void)
++{
++	swp_te_t swp_te = { .counter = ENTRY_BAD };
+ 	return swp_te;
+ }
+ 
+@@ -43,7 +85,7 @@ static inline bool swp_te_is_null(swp_te_t swp_te)
+ 
+ static inline bool swp_te_is_folio(swp_te_t swp_te)
+ {
+-	return !xa_is_value((void *)swp_te.counter) && !swp_te_is_null(swp_te);
++	return ((swp_te.counter & ENTRY_PFN_LOW_MASK) == ENTRY_PFN_MARK);
+ }
+ 
+ static inline bool swp_te_is_shadow(swp_te_t swp_te)
+@@ -51,19 +93,63 @@ static inline bool swp_te_is_shadow(swp_te_t swp_te)
+ 	return xa_is_value((void *)swp_te.counter);
+ }
+ 
++static inline bool swp_te_is_valid_shadow(swp_te_t swp_te)
++{
++	/* The shadow could be empty, just for holding the swap count */
++	return xa_is_value((void *)swp_te.counter) &&
++	       xa_to_value((void *)swp_te.counter);
++}
++
++static inline bool swp_te_is_bad(swp_te_t swp_te)
++{
++	return swp_te.counter == ENTRY_BAD;
++}
++
++static inline bool __swp_te_is_countable(swp_te_t ent)
++{
++	return (swp_te_is_shadow(ent) || swp_te_is_folio(ent) ||
++		swp_te_is_null(ent));
++}
++
+ /*
+  * Helpers for retrieving info from swap table.
+  */
+ static inline struct folio *swp_te_folio(swp_te_t swp_te)
+ {
+ 	VM_WARN_ON(!swp_te_is_folio(swp_te));
+-	return (void *)swp_te.counter;
++	return pfn_folio((swp_te.counter & ENTRY_PFN_MASK) >> ENTRY_PFN_SHIFT);
+ }
+ 
+ static inline void *swp_te_shadow(swp_te_t swp_te)
+ {
+ 	VM_WARN_ON(!swp_te_is_shadow(swp_te));
+-	return (void *)swp_te.counter;
++	return (void *)(swp_te.counter & ~ENTRY_COUNT_MASK);
++}
++
++static inline unsigned char swp_te_get_count(swp_te_t swp_te)
++{
++	VM_WARN_ON(!__swp_te_is_countable(swp_te));
++	return ((swp_te.counter & ENTRY_COUNT_MASK) >> ENTRY_COUNT_SHIFT);
++}
++
++static inline unsigned char swp_te_try_get_count(swp_te_t swp_te)
++{
++	if (__swp_te_is_countable(swp_te))
++		return swp_te_get_count(swp_te);
++	return 0;
++}
++
++static inline swp_te_t swp_te_set_count(swp_te_t swp_te,
++					unsigned char count)
++{
++	VM_BUG_ON(!__swp_te_is_countable(swp_te));
++	VM_BUG_ON(count > ENTRY_COUNT_MAX);
++
++	swp_te.counter &= ~ENTRY_COUNT_MASK;
++	swp_te.counter |= ((unsigned long)count) << ENTRY_COUNT_SHIFT;
++	VM_BUG_ON(swp_te_get_count(swp_te) != count);
++
++	return swp_te;
+ }
+ 
+ /*
+@@ -87,17 +173,39 @@ static inline swp_te_t __swap_table_get(struct swap_cluster_info *ci, pgoff_t of
+ static inline void __swap_table_set_folio(struct swap_cluster_info *ci, pgoff_t off,
+ 					  struct folio *folio)
+ {
+-	__swap_table_set(ci, off, folio_swp_te(folio));
++	swp_te_t swp_te;
++	unsigned char count;
++
++	swp_te = __swap_table_get(ci, off);
++	count = swp_te_get_count(swp_te);
++	swp_te = swp_te_set_count(folio_swp_te(folio), count);
++
++	__swap_table_set(ci, off, swp_te);
+ }
+ 
+ static inline void __swap_table_set_shadow(struct swap_cluster_info *ci, pgoff_t off,
+ 					   void *shadow)
+ {
+-	__swap_table_set(ci, off, shadow_swp_te(shadow));
++	swp_te_t swp_te;
++	unsigned char count;
++
++	swp_te = __swap_table_get(ci, off);
++	count = swp_te_get_count(swp_te);
++	swp_te = swp_te_set_count(shadow_swp_te(shadow), count);
++
++	__swap_table_set(ci, off, swp_te);
+ }
+ 
+ static inline void __swap_table_set_null(struct swap_cluster_info *ci, pgoff_t off)
+ {
+ 	__swap_table_set(ci, off, null_swp_te());
+ }
++
++static inline void __swap_table_set_count(struct swap_cluster_info *ci, pgoff_t off,
++					  unsigned char count)
++{
++	swp_te_t swp_te;
++	swp_te = swp_te_set_count(__swap_table_get(ci, off), count);
++	__swap_table_set(ci, off, swp_te);
++}
+ #endif
 -- 
 2.49.0
 
