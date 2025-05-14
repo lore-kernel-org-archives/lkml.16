@@ -1,84 +1,74 @@
-Received: from unicorn.mansr.com (unicorn.mansr.com [81.2.72.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482401E04BD;
-	Wed, 14 May 2025 08:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.2.72.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C730E55B;
+	Wed, 14 May 2025 08:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212086; cv=none; b=fCV9uvHzMjtweQ+S60cZrWEg8qi5n3s1NfPhXQsiw3xjbadvaGFMTP0l0f4wWu75YsAn3EurrUhurMXptRC7HviogpOyqn5goPUYcAnvnWlT+bOkQWLSMfHMGDUxtB6JpTy3V9L06z75ONTAxXA6DyglWLQN7Vg0YzZChiy8Pdc=
+	t=1747212166; cv=none; b=SVpoRK/Hp1WpbMzCVfVWrgA6xlW/QVnZA0RsHkY+4dskVdExljbYv214US9KwhFNjg4V8zrUrIpdKGA59nS0p5tt7eVwDHk+vhxaWFcNTOT3M5O7UlbdsnSCpyWAsLtnqjCllgG1Eqmo9wN74gjr9lQcaXYUkCYCXD3/UQas7Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212086; c=relaxed/simple;
-	bh=BHG6ZK7DUhY1prFc6nxmJ13YsH63YJl0RUxivpgX9qs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Bh8y/NgsiaeD4DDm9Nb8IM1A6mOoeeeXTH/lT/huC9mJVVIV9eFkn4q6I5slq48IZkGfv61SxddEUL9NIP21qjYkG4Hj/ayDgDVAY23a1oGqSs3UG8RiRF9H72hxtjJyuRhFAY7mFvebbGm+7PSKyzVEyUZOPj1xgO0365aRmho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com; spf=pass smtp.mailfrom=mansr.com; arc=none smtp.client-ip=81.2.72.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mansr.com
-Received: from raven.mansr.com (raven.mansr.com [81.2.72.235])
-	by unicorn.mansr.com (Postfix) with ESMTPS id 1DA1C15360;
-	Wed, 14 May 2025 09:41:17 +0100 (BST)
-Received: by raven.mansr.com (Postfix, from userid 51770)
-	id AF3BB21A3DA; Wed, 14 May 2025 09:41:16 +0100 (BST)
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] tty: serial: 8250_omap: fix TX with DMA for am33xx
-In-Reply-To: <20250514072035.2757435-1-jirislaby@kernel.org> (Jiri Slaby's
-	message of "Wed, 14 May 2025 09:20:35 +0200")
-References: <20250514072035.2757435-1-jirislaby@kernel.org>
-Date: Wed, 14 May 2025 09:41:16 +0100
-Message-ID: <yw1xldqzlh3n.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/29.4 (gnu/linux)
+	s=arc-20240116; t=1747212166; c=relaxed/simple;
+	bh=huX/tfz1n6SVCqrMcxeGuPLIU7IfmSzg5HNLXYpyCjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBsATiKOKGztXbUYThzXy6z8LMCGcCYYaB4ecxXGhxvdapsNRTTfjpjKugIr6ldCNUTW8aSid/CQAoxSYIM5FIarknUrK0vtcRIbGF0NSYtMmfr+m+/QwfzEjAOUkWfxy3UJ+k1zOvxD2veS4l8FHyCFaey0EVUGzPBc8AForxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHBgj5Vx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHBgj5Vx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E9EC4CEE9;
+	Wed, 14 May 2025 08:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747212165;
+	bh=huX/tfz1n6SVCqrMcxeGuPLIU7IfmSzg5HNLXYpyCjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nHBgj5VxstSFtIygnteUP8m0H/l2aACoxXCzfYpkbg7Tmjqeh306C4LKegIVk95ZX
+	 0W+axqzUd712og2DBkARmvW3nzegaCnAdyu7k4sd4dLlhFQBvNrzV40dsAmABSE3Qd
+	 XMY1aG1XY59JOWIpJYGn+gH4rx7llllC86K8tLLw/5Aua+50/v39oiGeENqFOPPfOz
+	 MT7i7uXwXnnnJWA/gpS11AJMkXk1730Dzl7RBCBgApW6CtA+lYM3nWTQe8zDzQdG6p
+	 elj2/Bl9Dro2aytn7YgMJ2gPfRk/2URR8q/TixZqyHDNIEgVZ/Pjj8pK/j7CJAmJ2o
+	 Ggio9B0DwolFA==
+Date: Wed, 14 May 2025 09:42:42 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 0/2] USB PHY support for Exynos990 SoCs
+Message-ID: <aCRXgpD0Ld2W4lHE@vaman>
+References: <20250420-usb-resends-april-v2-0-25dc7d2e6dd4@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420-usb-resends-april-v2-0-25dc7d2e6dd4@mentallysanemainliners.org>
 
-"Jiri Slaby (SUSE)" <jirislaby@kernel.org> writes:
+On 20-04-25, 21:28, Igor Belwon wrote:
+> Hi all!
+> 
+> This patchset adds support for the USB 2.0 PHY of the Exynos990 SoC.
+> This SoC has a combo PHY that supports highspeed, superspeed USB and
+> DisplayPort, however due to my inability to test the superspeed part of
+> the combo phy (device always enumerated as high-speed, even on the
+> vendor kernels/bootloaders) only the highspeed part is brought up.
+> 
+> These changes have been tested and confirmed working (with the USB_ETH
+> gadget and telnet/ssh in a ramdisk) on a device from the hubble family
+> (x1s) and also a device from the canvas family (c1s).
 
-> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> introduced an error in the TX DMA handling for 8250_omap.
->
-> When the OMAP_DMA_TX_KICK flag is set, the "skip_byte" is pulled from
-> the kfifo and emitted directly in order to start the DMA. While the
-> kfifo is updated, dma->tx_size is not decreased. This leads to
-> uart_xmit_advance() called in omap_8250_dma_tx_complete() advancing the
-> kfifo by one too much.
->
-> In practice, transmitting N bytes has been seen to result in the last
-> N-1 bytes being sent repeatedly.
->
-> This change fixes the problem by moving all of the dma setup after the
-> OMAP_DMA_TX_KICK handling and using kfifo_len() instead of the DMA size
-> for the 4-byte cutoff check. This slightly changes the behaviour at
-> buffer wraparound, but it still transmits the correct bytes somehow.
->
-> Now, the "skip_byte" would no longer be accounted to the stats. As
-> previously, dma->tx_size included also this skip byte, up->icount.tx was
-> updated by aforementioned uart_xmit_advance() in
-> omap_8250_dma_tx_complete(). Fix this by using the uart_fifo_out()
-> helper instead of bare kfifo_get().
->
-> Based on patch by Mans Rullgard <mans@mansr.com>
->
-> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> Reported-by: Mans Rullgard <mans@mansr.com>
-> Cc: stable@vger.kernel.org
->
-> ---
-> The same as for the original patch, I would appreaciate if someone
-> actually tests this one on a real HW too.
->
-> A patch to optimize the driver to use 2 sgls is still welcome. I will
-> not add it without actually having the HW.
+I am missing the dt patch, can you pls report the whole series if you
+would like me to review and apply this
 
-Are you seriously expecting me to waste even more time on this?
-Do your damn job like you should have to begin with.
-
---=20
-M=E5ns Rullg=E5rd
+-- 
+~Vinod
