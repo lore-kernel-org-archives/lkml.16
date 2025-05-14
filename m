@@ -1,298 +1,167 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8C8296D14
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D445297B66;
+	Wed, 14 May 2025 20:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253955; cv=none; b=NF9EbIPCYo/vxcE/gLgf/oUAV4J1rNyEb3qytjNKMVgYI0odo6XcuRCWtSzHs7tOm13iqRokJu2toY/f2qMRREsfYVlmBWUcCRi8g8mmBxLmEnQEOap9zIrEweKokSb/sZ4jmdaYugy+4qg087MAe46sB4vpQ7GNgdR7e8Rq7Cs=
+	t=1747253956; cv=none; b=cTYfEVXDX/EX8Nwdoaqg/OXAjrAKY2vB8o19tde+FpPY7jOR2qEzY1Ic91qlvT6//CGLP1YD2+GSfPx9rxnmTFgSSncFy+d376uvFbaGGL65os+wHk5Mwt7yqmKCpa/hjgzh79FACO7P6w4tw3uoV/EePVL0qj7hnIuQRowVasQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253955; c=relaxed/simple;
-	bh=5o9tgBb7tgPFgAoAzu8I/e35Zyoh1N7OdGgS/IOxsbc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B4lSJZhEGfUkUe/oyvgxD0rp7XQpB6wPMQJUE9YeE2lc8i8UvVHqoUc2pC3pgI4ElW2j4+CpplG9aUtOYEMpyahXBM6BdKesxqZ7AM601GsKo9rKnpoxT/mzIGPK0A2kpaZZYDrjmyoK+euSUUVpjjXo+3TBX9J7Os1k9Agjz+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0X3i77J; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747253956; c=relaxed/simple;
+	bh=hYrU9RvV+4y2DHFLaQiCECHzjwEV+OkrnWnu8hwtrgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWrInO6x2H9b0gn3AGxsnG8oFx210UazMW94Sl3TcJcCBsW2EeOq1Jq76R1hsIh4wwA7C7MdvhGt3VJW9xxfvosv9aP48AXOAryEa12v8k+b/SuVTlHS2ACNJC97kybmaeBTb0Hr67UdkSNLlHCG3a8Dq46dZW4FAzAGr4fv2/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W5A4U/Mu; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0X3i77J"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30820167b47so259573a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:19:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747253952; x=1747858752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UvmaxbsPM6qyK/MiHoJQD413Xxi7HR6Fgym3PRJ3v+c=;
-        b=T0X3i77JGLBfy0oIFaiAj1un7EKJ8tiRzYeGp4wMrpxayrV+xBAYdIp46SgdDm+3hv
-         8py5f+ipybE9tU4vCrj1KG1x6lW96rTNdKac4gWGX218J3UTQ/ROcmhcDlYIIAjGwN+7
-         e5VHPuj3vK+O0ov091Q5lCm13pSxUnnZKDv54x+5iLWlkLrDLaHpIqhZDHO6YksUhKgW
-         hUGZXogn+C7ylGiFRwveuIaKtlL96/v0Zz8s3xjNLTJdNuSwx8gLkOck/RNPBHlvsPrZ
-         6EoBu0npZBdii5MmAtgE7Va8UwVIaSSHFxWEzShfyWZthbQXmzT03KR3K/FQAHaquoe6
-         NvjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253952; x=1747858752;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UvmaxbsPM6qyK/MiHoJQD413Xxi7HR6Fgym3PRJ3v+c=;
-        b=tdzkOqKaz7mhJyQmocWqTmuCdqgNCsqaVHFr45ctK048Nq/7i4phvGijyJuuaXDlrg
-         PCf7Y/3jguPnU2Ufp+43ZFJ8MSuuVZQ6LRz/lfYY4la/2Hdq1TMky+rwOWtv6efSwEr8
-         3+rhxdmSKdR3zzNINChamcjPYKaRXJsyWW9x91oIUmGQahFFEgxTWxzbfBepXjoHkc2Y
-         tDtgdgZ1cETPXQpyE9hem85+QLTELWKwDO/wNgwTP4TpCmTQXWh1Wn9GhF+9oTt99FLd
-         OX+144zgkl7YQdHCf75GpKpy0B4LTgbC/PC8PHzgDXJXPBVgDDmspo1WltxFufTeHWd9
-         kwZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLvlwiV8dIxewRgzReAUevPXYv6tYNMoltfq3SQyhSYDICDciYwMNy9M8stqi2c0xUiqZNnIt+z5Zx1C4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhJRdVgVrwZGxPUNzbopDFmZUIHgfQTgkrtHJbq4APfflIPJl5
-	o5gn8YoV4IIGxd05TZOx07dOudNcZi6tWy9gdfYWk+W3BiekyR61
-X-Gm-Gg: ASbGncvefDW/Vgh0H6K/WD4cnuuOSQIJSzQOvfoKWD/eCVCFmjl7AK74WVaGVFSZaLu
-	J5dMncHePZQeB4ZP1YQX+3A4p2NpQ21hOGDk5Rng4aY6Pyjt0h9Z2NOT+6w15OMm6jWY1ofXqt6
-	HrCKuY3M8RC14pnhhRz9FK6gqLNjr+Dsg2DtgaUP0yV1Zd1WtLs7T/QsCEn8cIrzYgqKBfXl32x
-	jZL1LeNjQe7aH8ZRMjN51VXYj0tBb+z0Hr9aa0VcXobEv95UqKtc9h+gL++tPP2j5jrwrCDf7/b
-	0TwGJa7h6GNGk8mjbij7bKlAfWHS8IHZwqsGZCF0Ma//rxE68NO5Fl7uLPPjIYYPPEBSsXKx
-X-Google-Smtp-Source: AGHT+IGo6fZOY9gD9/a6oJ7A/qen0iR8c9NVCuv0m4jHSlVjCl2c3TmOEpL+9XDYNMKoEDGonGxBrg==
-X-Received: by 2002:a17:90b:50c4:b0:30a:9cd5:5932 with SMTP id 98e67ed59e1d1-30e4db6c453mr1350875a91.13.1747253952529;
-        Wed, 14 May 2025 13:19:12 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33401934sm2003692a91.9.2025.05.14.13.19.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 14 May 2025 13:19:11 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Baoquan He <bhe@redhat.com>,
-	Barry Song <baohua@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 18/28] mm, swap: rename and introduce folio_free_swap_cache
-Date: Thu, 15 May 2025 04:17:18 +0800
-Message-ID: <20250514201729.48420-19-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514201729.48420-1-ryncsn@gmail.com>
-References: <20250514201729.48420-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W5A4U/Mu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747253954; x=1778789954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hYrU9RvV+4y2DHFLaQiCECHzjwEV+OkrnWnu8hwtrgU=;
+  b=W5A4U/MuznMYUwssUybHr6Rm/LiqYcRbcNvoGaVrM0pMreeuwRcSJ8Ka
+   84wBWgCnBpmzoL4ysw+gfyJlXo1Hqi1/wC7cgo/3j9fnTCCn1vG7uzFWD
+   D/iq/HDdKCuxjsMvnHPZjla4jtDtYm9cDkvkW2IKpvDl4Jj86amqx6BcK
+   8U7whg80bbHgzJrj6dHAvem/AMlFbgAtMYXesN8Q7ExgLZ8logmU9r2tb
+   pQGMO7Spj/C0Rcwg4YwWjlhMEXntykI3xoonrVhoMMM7mJXTCpFyJdRNK
+   mPtmNXNDE5VBkY52/svEXTCCvTzFEf7N1M/boNYR/0+CRRM+cEDXwQhaz
+   g==;
+X-CSE-ConnectionGUID: 5QWR/utISUGSfEbj7XcfMQ==
+X-CSE-MsgGUID: ROBM/K5iR62ukral0Mu3MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71677944"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="71677944"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 13:19:14 -0700
+X-CSE-ConnectionGUID: aoXVi9WcQ9WWpZlstv9FhA==
+X-CSE-MsgGUID: c9k03sXERRO7riqhJkfvNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="169084389"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 May 2025 13:19:10 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFIZH-000HWZ-2b;
+	Wed, 14 May 2025 20:19:07 +0000
+Date: Thu, 15 May 2025 04:18:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Xianwei Zhao <xianwei.zhao@amlogic.com>
+Subject: Re: [PATCH 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+Message-ID: <202505150408.vMuuQH5G-lkp@intel.com>
+References: <20250514-s6-s7-pinctrl-v1-5-39d368cad250@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514-s6-s7-pinctrl-v1-5-39d368cad250@amlogic.com>
 
-From: Kairui Song <kasong@tencent.com>
+Hi Xianwei,
 
-We now have folio_alloc_swap, folio_dup_swap, folio_put_swap, and
-folio_free_swap (which is actually try to free). Also rename
-delete_from_swap_cache to folio_free_swap_cache, because swap cache will
-always be the last reference of a folio bounded entry now. Freeing the
-swap cache will also attempt to free the swap entries.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Kairui Song <kasong@tencent.com>
----
- mm/memory-failure.c |  2 +-
- mm/memory.c         |  2 +-
- mm/shmem.c          |  4 ++--
- mm/swap.h           | 14 +++++++++-----
- mm/swap_state.c     | 12 ------------
- mm/swapfile.c       | 23 +++++++++++++++++++++--
- mm/zswap.c          |  2 +-
- 7 files changed, 35 insertions(+), 24 deletions(-)
+[auto build test ERROR on aa94665adc28f3fdc3de2979ac1e98bae961d6ca]
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index b91a33fb6c69..ba96aaf96e83 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1185,7 +1185,7 @@ static int me_swapcache_clean(struct page_state *ps, struct page *p)
- 	struct folio *folio = page_folio(p);
- 	int ret;
- 
--	delete_from_swap_cache(folio);
-+	folio_free_swap_cache(folio);
- 
- 	ret = delete_from_lru_cache(folio) ? MF_FAILED : MF_RECOVERED;
- 	folio_unlock(folio);
-diff --git a/mm/memory.c b/mm/memory.c
-index c000e39b3eb2..a70624a55aa2 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4727,7 +4727,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 		 */
- 		if (!folio_test_anon(folio)) {
- 			WARN_ON_ONCE(folio_test_dirty(folio));
--			delete_from_swap_cache(folio);
-+			folio_free_swap_cache(folio);
- 			goto out_nomap;
- 		}
- 	}
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 0d23c1c12204..c7475629365c 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2123,7 +2123,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
- 	nr_pages = folio_nr_pages(folio);
- 	folio_wait_writeback(folio);
- 	folio_put_swap(folio, NULL);
--	delete_from_swap_cache(folio);
-+	folio_free_swap_cache(folio);
- 	/*
- 	 * Don't treat swapin error folio as alloced. Otherwise inode->i_blocks
- 	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
-@@ -2365,7 +2365,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 		folio_mark_accessed(folio);
- 
- 	folio_put_swap(folio, NULL);
--	delete_from_swap_cache(folio);
-+	folio_free_swap_cache(folio);
- 	folio_mark_dirty(folio);
- 	put_swap_device(si);
- 
-diff --git a/mm/swap.h b/mm/swap.h
-index 4c4a71081895..467996dafbae 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -151,10 +151,15 @@ extern void __swap_cache_put_entries(struct swap_info_struct *si,
-  *
-  * Swap in maps a folio in swap cache and decrease the swap table entry
-  * count with folio_put_swap.
-+ *
-+ * Swap uses lazy free, so a folio may stay in swap cache for a long time
-+ * and pin the swap entry. folio_free_swap_cache and folio_free_swap can
-+ * be used to reclaim the swap cache.
-  */
- int folio_alloc_swap(struct folio *folio, gfp_t gfp_mask);
- int folio_dup_swap(struct folio *folio, struct page *subpage);
- void folio_put_swap(struct folio *folio, struct page *subpage);
-+void folio_free_swap_cache(struct folio *folio);
- 
- /* linux/mm/page_io.c */
- int sio_pool_init(void);
-@@ -226,7 +231,6 @@ static inline bool folio_swap_contains(struct folio *folio, swp_entry_t entry)
- }
- 
- void show_swap_cache_info(void);
--void delete_from_swap_cache(struct folio *folio);
- void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry, int nr);
- struct folio *read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
- 		struct vm_area_struct *vma, unsigned long addr,
-@@ -300,6 +304,10 @@ static inline void folio_put_swap(struct folio *folio, struct page *page)
- {
- }
- 
-+static inline void folio_free_swap_cache(struct folio *folio)
-+{
-+}
-+
- static inline void swap_read_folio(struct folio *folio, struct swap_iocb **plug)
- {
- }
-@@ -387,10 +395,6 @@ static inline void *swap_cache_get_shadow(swp_entry_t end)
- 	return NULL;
- }
- 
--static inline void delete_from_swap_cache(struct folio *folio)
--{
--}
--
- static inline unsigned int folio_swap_flags(struct folio *folio)
- {
- 	return 0;
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 715aff5aca57..c8bb16835612 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -216,18 +216,6 @@ void __swap_cache_del_folio(swp_entry_t entry,
- 	__swap_cache_put_entries(si, ci, entry, nr_pages);
- }
- 
--void delete_from_swap_cache(struct folio *folio)
--{
--	struct swap_cluster_info *ci;
--	swp_entry_t entry = folio->swap;
--
--	ci = swap_lock_cluster(swp_info(entry), swp_offset(entry));
--	__swap_cache_del_folio(entry, folio, NULL);
--	swap_unlock_cluster(ci);
--
--	folio_ref_sub(folio, folio_nr_pages(folio));
--}
--
- /*
-  * Caller must hold a reference on the swap device, and check if the
-  * returned folio is still valid after locking it (e.g. folio_swap_contains).
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index daf7810bcb28..0a8b36ecbf08 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -273,7 +273,7 @@ static int __try_to_reclaim_swap(struct swap_info_struct *si,
- 	if (!need_reclaim)
- 		goto out_unlock;
- 
--	delete_from_swap_cache(folio);
-+	folio_free_swap_cache(folio);
- 	folio_set_dirty(folio);
- 	ret = nr_pages;
- out_unlock:
-@@ -1354,6 +1354,25 @@ void folio_put_swap(struct folio *folio, struct page *subpage)
- 	swap_entries_put_map(swp_info(entry), entry, nr_pages);
- }
- 
-+/*
-+ * folio_free_swap_cache() - Remove the folio from swap cache, and free
-+ * all entires with zero count.
-+ *
-+ * NOTE: if the folio is dirty and any of its swap entries' count is not
-+ * zero, freeing the swap cache without write back may cause data loss.
-+ */
-+void folio_free_swap_cache(struct folio *folio)
-+{
-+	struct swap_cluster_info *ci;
-+	swp_entry_t entry = folio->swap;
-+
-+	ci = swap_lock_cluster(swp_info(entry), swp_offset(entry));
-+	__swap_cache_del_folio(entry, folio, NULL);
-+	swap_unlock_cluster(ci);
-+
-+	folio_ref_sub(folio, folio_nr_pages(folio));
-+}
-+
- static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
- {
- 	struct swap_info_struct *si;
-@@ -1787,7 +1806,7 @@ bool folio_free_swap(struct folio *folio)
- 	if (folio_swapped(folio))
- 		return false;
- 
--	delete_from_swap_cache(folio);
-+	folio_free_swap_cache(folio);
- 	folio_set_dirty(folio);
- 	return true;
- }
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 65c1aff5c4a4..6bac50bc2bf5 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1141,7 +1141,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
- 
- out:
- 	if (ret && ret != -EEXIST) {
--		delete_from_swap_cache(folio);
-+		folio_free_swap_cache(folio);
- 		folio_unlock(folio);
- 	}
- 	folio_put(folio);
+url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-pinctl-amlogic-pinctrl-a4-Add-compatible-string-for-S7/20250514-150438
+base:   aa94665adc28f3fdc3de2979ac1e98bae961d6ca
+patch link:    https://lore.kernel.org/r/20250514-s6-s7-pinctrl-v1-5-39d368cad250%40amlogic.com
+patch subject: [PATCH 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+config: arm64-randconfig-004-20250514 (https://download.01.org/0day-ci/archive/20250515/202505150408.vMuuQH5G-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505150408.vMuuQH5G-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505150408.vMuuQH5G-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/meson/pinctrl-amlogic-a4.c:128:13: error: designator into flexible array member subobject
+     128 |         .multi_data[0] = {
+         |                    ^~~~~~~
+     129 |                 .m_bank_id = AMLOGIC_GPIO_CC,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     130 |                 .m_bit_offs = 24,
+         |                 ~~~~~~~~~~~~~~~~~
+     131 |                 .sid = (AMLOGIC_GPIO_X << 8) + 16,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     132 |                 .eid = (AMLOGIC_GPIO_X << 8) + 19,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     133 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:138:13: error: designator into flexible array member subobject
+     138 |         .multi_data[0] = {
+         |                    ^~~~~~~
+     139 |                 .m_bank_id = AMLOGIC_GPIO_CC,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     140 |                 .m_bit_offs = 24,
+         |                 ~~~~~~~~~~~~~~~~~
+     141 |                 .sid = (AMLOGIC_GPIO_X << 8) + 16,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     142 |                 .eid = (AMLOGIC_GPIO_X << 8) + 19,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     143 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:144:13: error: designator into flexible array member subobject
+     144 |         .multi_data[1] = {
+         |                    ^~~~~~~
+     145 |                 .m_bank_id = AMLOGIC_GPIO_F,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     146 |                 .m_bit_offs = 4,
+         |                 ~~~~~~~~~~~~~~~~
+     147 |                 .sid = (AMLOGIC_GPIO_D << 8) + 6,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     148 |                 .eid = (AMLOGIC_GPIO_D << 8) + 6,
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     149 |         },
+         |         ~
+   drivers/pinctrl/meson/pinctrl-amlogic-a4.c:69:19: note: initialized flexible array member 'multi_data' is here
+      69 |         struct multi_mux multi_data[];
+         |                          ^
+   3 errors generated.
+
+
+vim +128 drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+
+   125	
+   126	const struct aml_pctl_data s7_priv_data = {
+   127		.number = 1,
+ > 128		.multi_data[0] = {
+   129			.m_bank_id = AMLOGIC_GPIO_CC,
+   130			.m_bit_offs = 24,
+   131			.sid = (AMLOGIC_GPIO_X << 8) + 16,
+   132			.eid = (AMLOGIC_GPIO_X << 8) + 19,
+   133		},
+   134	};
+   135	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
