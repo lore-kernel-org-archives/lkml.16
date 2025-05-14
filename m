@@ -1,64 +1,73 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DB818DB2F;
-	Wed, 14 May 2025 19:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78146158520
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747252549; cv=none; b=Ujk8HFijSzc+H/fxR7FJrYh61vi+6Cup8ApJeWewJtmQZQce4NMBMjrHjzCdEh/ITy6HVANOkTivu+6AHMGkCVKfF6UVmznqVWSDa7Mn2KbQk7gU3BdfgX+MNoDWsnSwhEbhmCHIWcFG1D00ePksNaRR3uhXWkxGuTibtPLSc+U=
+	t=1747252641; cv=none; b=DrorPE2xcLdlWGIbrz5JiVhFKxYoNlqPXhbYvogZmDR7ZiI04Go4jgbPT8AsaqB9wnpIIGUORg5onmKvW13jcw+JDU8Jpe2aaAtg8ABTL/rN5BECWL1CSnNMpR6xJxKQrXOPpsdorx2g3tLHxKkalxDIELOwYjf/ILN7+f+jYtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747252549; c=relaxed/simple;
-	bh=JZLzcttBqgNUx4bsAMzaO3A/KL7m0UzGC4lYkWkPjxQ=;
+	s=arc-20240116; t=1747252641; c=relaxed/simple;
+	bh=G4r7l7bGGrgOPxVZ5jSwQFr8DJcJpkNR7+13/BrUy0U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mrnQkpD9cuULzyxV6bg/O0ecM1jsep0yTIKxCBpjI1/lvXOqNF1CZ99NK6eKWQjNkhTS721iCEZta9+fIRP0MuVrxtNJa4q28yALrxDO20VT9K3wv8KTnj+1M4UTxc9WlFo7H2odvt6sEEsef2nj5BFf2BvVpMFHP4AaGrbvVQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxYkzVLg; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=Xm0CzoLp+cH+xsb5Rda/IUVvdPRuIrjEAYWdHJ15HLsKxGXYspBqJEvQtdu2GhOd0QnxKtH8Jj/bji2dBAsailnZWwNqLQNdJ/fShlgYu8RDBK+oPpAK8a0HsA8PA18vtgkla2KNC2dDAEyNmHPFDmhWBLbmyNyNzZo6i7/95HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CsGpZHGr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxYkzVLg"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so417519a12.0;
-        Wed, 14 May 2025 12:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747252546; x=1747857346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+O0+opsInUOmBnYBdK6LRXgW6r8ZAFurB6LRvWWPYB0=;
-        b=VxYkzVLgb3iXMRH5v4rbkmRldfQTWOL5609ROdgOe/RWHrsR3nR0GwaC1cx/9GDBjj
-         FaYV3bQQt9JXyjYC1bRYDeOBI+IDlfTc5/Z8us6BsNANNbiD/q7anLQ224JFBzm1Zd2I
-         pRHjejvftfq/MEcslwKTZAmD1UmGG3JnOPESClDnTqvU9Y0M7aeZWq+BLOD8BoM9JZkk
-         g4R8kynJNHPp0Jd0jqM9JfoTErYsrEbXLc8J954vcafWPE+Q2xcxEfc+2ni33A+NwjHI
-         6Ejct11vJvFpO5Mpsbxd0u6nQQHi4tJLxGqbUbQ6FmjQJ5QqYfoJ4f0gBpUgw7EQoCPL
-         lS4A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CsGpZHGr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747252638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/HQ8qR6osfBxrwmsNfgAt5dvj7Kw18nbvrMfafMSslo=;
+	b=CsGpZHGrxYZy0dJKG7qDmUmThuFTG8OFsH+GqAzJojnNgtaGqGPHvsLsHheY8QygdiloFN
+	j+/AniEGAV/JNKWeHxTjJ3uBxTXoo6l73XVLOP9sJ1ZX2POtvaI67GZV2h1ZJ6AJSkZ7T3
+	8MySWKvDfA3sHYLgffrr7OLbBYL+oXY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-446-7ElZSiVwNouUi5HyAqBj5Q-1; Wed, 14 May 2025 15:57:17 -0400
+X-MC-Unique: 7ElZSiVwNouUi5HyAqBj5Q-1
+X-Mimecast-MFC-AGG-ID: 7ElZSiVwNouUi5HyAqBj5Q_1747252636
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso640820f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:57:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747252546; x=1747857346;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+O0+opsInUOmBnYBdK6LRXgW6r8ZAFurB6LRvWWPYB0=;
-        b=LjjNQ7LUSTbszLERaHvFVxlWFldqtGb/4fGN3bF1qyL+VFTAp8K8jlM89j9236vsuJ
-         mZ5UxEu2UKANYEKb4V2oTaPeXn0CFSgJ3X0kiSQ5MzeejLMjhX67zp9J4TXliGk2/fyD
-         TOGLLvJQiCQSCN/UH/sPkUrop2tRSeeGBo5Cf50IGOlUtkmYE5zujVrP02dFtfRq4yX+
-         uKMG/j6HbHsXodOR9s0tprTcepLXvc5cLKUjc271afXRydFZv8aR7/1sNNKVcBXMeKYi
-         YBwpIBAqSQxPk/QO0Gvg+CP1lU+hMVi2R1y/SyB1zkUVNYPZDYIL8RNpLCBi6Rkq7m2z
-         Pfhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpTgXPepIxT6qS8jPDWdIEnfd1+B5VGBPiBX9exAydJiLWca4OJZxGquUm2kaub9ivbkmhGd9pcb8hlC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqBdbxJOCByx9CV1LxipfYME1ujnMGIa6L11JzZbX9M+Yi2D40
-	ohg0i1aPK3SGmkTG3qUff25EiwW8sZxisHnOionMZmf5IOpTXCSY
-X-Gm-Gg: ASbGncviVjmS6MvRTLUqoQ/JgVXeqGCKBExRwRyW/6zQMqyF5M/TV2TJrwK2YAr4McX
-	gU++Kp5dvEd+fdQE8fSeMTMZGX0gY5roymmszn6snBaWqdJw7RNK5Vo3450Sj2TAu6qjwYCyaeo
-	ccg44LCp5AJkpotlF2qi/CTruOdE6rR66Wr1SXBnOJSinPKF1SJROOxX7V99/Ri209heFuDK45G
-	Tg7a57FzpGeupBS+9wF4RN1akKO3V3iFqxlEr4kUM9NI9YtQmeHY4w7bzO0CQr99t3TSFYA/KXk
-	5lPDW4o+V/HmgwVUx09qD4GZqr0CssIqrTPlUN3IhQh2YyHI1oRjfhvUhg8aWurB
-X-Google-Smtp-Source: AGHT+IHWqFNy5dqLdzGXWHocJYS3intKZp5bWh8LrVE+yaimhMSqUfC4GwMMYkCwDcyzr+pSfzbPhA==
-X-Received: by 2002:a17:907:724e:b0:ad4:d32e:b571 with SMTP id a640c23a62f3a-ad4f71aa5e7mr503430566b.24.1747252546208;
-        Wed, 14 May 2025 12:55:46 -0700 (PDT)
-Received: from [192.168.0.131] ([194.183.54.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad23fc53241sm733558966b.51.2025.05.14.12.55.44
+        d=1e100.net; s=20230601; t=1747252636; x=1747857436;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/HQ8qR6osfBxrwmsNfgAt5dvj7Kw18nbvrMfafMSslo=;
+        b=vB17lNFD1V5IG00bkgbpjOejsw3jWgoIF7WzwQsBXOV+iQyv8A103r+NLIYmseF54f
+         /j5v74nSpWcH1uODy9IRg0nihsArlcZFmDdaN0ARmu7Bv0RPBvDI6/NeVdeeofspw0DM
+         awZLHfKU/ZK1NAPrY92MrhW4gik/7nquM/RKb+tGobPfymuW5o6x8W3RZP92UUFDi23p
+         8H74qBQiS5KSnDqQ3c/nkPLqiep6ZDjI8gGf7+RMHk8aBVGHTInRmo+H8gIKRsFGkFSQ
+         LA5WFiUFGP6Hc637j4Kt+QfOZONbgTrUn8HPUHO2PeV982IkyFs7nmfzsKhtYct6yyTU
+         Z48w==
+X-Gm-Message-State: AOJu0YxOxfxYM1WGLx/rupKBk588yx8ZTeJDAa08lq5MQEzFZzC2jZ6X
+	ePSBzJ9zzIXU3dX2qLp4Lm+DUECkpuvKehj/QcJYNVX97juxB5sTyIIXb9psJ+f4WrBYrrL1+bg
+	WWB5/4x3iMdJlpg6cIh1ylNEOvppBVJ99c6Eed2vKrcwtvWqxwldVzIP+cXloKRqEdjwoqM4+xL
+	uqmuzHiIiSkszRcHwtlXu+Eat5MZhvc3osX17gHhyqeNoY
+X-Gm-Gg: ASbGnctyrMyD0yWRnaqOEilgVVuP5oQujgWWOq+piR1o9UR9y/yFhvk8Od/A9qLDMgI
+	ngk6Etfk5j4lv1V9Z8ohggswd4SRSTKnuB0n3IPBPQXypUNKgyAa00Bq6BllbHK8peKQVmfvpvp
+	HVe7j68bKxr0ybP8Z6lwq1RD9BUrjumG3E4DI8/pCi/CXvsDshk3DQF1xjYMLPIuB/HmAJ1vtyr
+	hTnma1lVGODJU2Wrtd5NBosvt5DUo9PpneVkV/C1tjz2UCIQPsIwdUq4flatAG35mgZgMVxZlsJ
+	dLtL4IIvVjgR9eJ3b7g+aVRrgwDa+qR1I1Jx4ITK8p3VrP8z4wY3hJPTAFTzDJd6BUPayNJJjV8
+	vc84XO9cUsPjQ1agE6sn6q2XcWJu9nhi3sJD/o7k=
+X-Received: by 2002:a05:600c:3e08:b0:43d:b33:679c with SMTP id 5b1f17b1804b1-442f850c54amr7419045e9.14.1747252636103;
+        Wed, 14 May 2025 12:57:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGlb0J3692FHeLltBMPddwsHcQQKYuL1jq9K15qHO8quLnVObfi8tEqOJXFEm2JgNK6bTieaw==
+X-Received: by 2002:a05:600c:3e08:b0:43d:b33:679c with SMTP id 5b1f17b1804b1-442f850c54amr7418665e9.14.1747252635530;
+        Wed, 14 May 2025 12:57:15 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f15:6200:d485:1bcd:d708:f5df? (p200300d82f156200d4851bcdd708f5df.dip0.t-ipconnect.de. [2003:d8:2f15:6200:d485:1bcd:d708:f5df])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3369138sm45340745e9.8.2025.05.14.12.57.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 12:55:45 -0700 (PDT)
-Message-ID: <449cf572-f637-42c9-b804-aaf74178e96b@gmail.com>
-Date: Wed, 14 May 2025 21:55:43 +0200
+        Wed, 14 May 2025 12:57:15 -0700 (PDT)
+Message-ID: <19683dac-3e21-462a-8957-78a0b28b57c4@redhat.com>
+Date: Wed, 14 May 2025 21:57:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,83 +75,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-To: Johan Adolfsson <Johan.Adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>
-Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Kernel <Kernel@axis.com>
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
- <5d34aec7-5027-4575-b860-afdf7b2c0757@gmail.com>
- <PAWPR02MB92815DC59F65E90956269EEC9B91A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+Subject: Re: [PATCH v1 2/2] mm/memory_hotplug: remove -EBUSY handling from
+ scan_movable_pages()
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, virtualization@lists.linux.dev,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>
+References: <20250514111544.1012399-1-david@redhat.com>
+ <20250514111544.1012399-3-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-In-Reply-To: <PAWPR02MB92815DC59F65E90956269EEC9B91A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250514111544.1012399-3-david@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Johan,
-
-On 5/14/25 16:34, Johan Adolfsson wrote:
-> From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Sent: Tuesday, May 13, 2025 21:52
-> To: Johan Adolfsson; Lee Jones; Pavel Machek
-> Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel
-> Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct multi_index
-> ..
->>>                        }
->>> +                     ret = fwnode_property_read_u32(led_node, "reg", &multi_index);
->>> +                     if (ret) {
->>> +                             multi_index = num_colors;
->>
->> Why not to fail if 'reg' parsing fails?
->> It is marked required in DT bindings [0].
+On 14.05.25 13:15, David Hildenbrand wrote:
+> Now that we can reliably identify PageOffline() pages that allow for
+> memory offlining in has_unmovable_pages(), start_isolate_page_range()
+> will fail on PageOffline() pages that would prevent memory offlining, and
+> we no longer have to detect them in scan_movable_pages() anymore.
 > 
-> I didn't want to start failing if reg is missing since it has never been handled until now, despite what the doc says since 2022...
+> Note that the previous mechanism relied on MEM_GOING_OFFLINE, whereby we
+> were not able to distinguish the types of PageOffline() before
+> MEM_GOING_OFFLINE.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
 
-There is one in-tree user [0], and we will need to patch it as well,
-because it uses reg 0,1,2 for each RGB LED module, instead of iout
-numbers as it will be after your change.
+Hmm, I'm having second thoughts about this patch.
 
-We will need to also state clearly in the bindings that 'reg' property
-maps to iouts for the non-banked RGB LED modules.
+With hyper-v, I think we can hotplug partial memory blocks (e.g., 64 
+MiB) and online it to ZONE_MOVABLE. These blocks cannot get offlined so 
+far -- in contrast to virtio-mem -- and has_unmovable_pages() would not 
+identify that.
 
-For banked RGB LED modules it is more tricky, because there is one
-LED multicolor class device created for them. Probably to be correct
-we would need make the 'reg' properties in the subnodes also arrays
-reflecting iouts that will be governed by BANK_A_Color, BANK_B_Color,
-and BANK_C_Color registers respectively. And DT parser in the driver
-would need to enforce proper iout definition for the banked modules
-
-E.g. the multi-led@3 node from the example should look like below:
-
-             multi-led@3 {
-                 #address-cells = <1>;
-                 #size-cells = <0>;
-                 reg = <0x3>, <0x4>, <0x5>;
-                 color = <LED_COLOR_ID_RGB>;
-                 function = LED_FUNCTION_STANDBY;
-
-                 led@9 {
-                     reg = <0x9>, <0xc>, <0xf>;
-                     color = <LED_COLOR_ID_RED>;
-                 };
-
-                 led@a {
-                     reg = <0xa>, <0xd>, <0x10>;
-                     color = <LED_COLOR_ID_GREEN>;
-                 };
-
-                 led@b {
-                     reg = <0xb>, <0xe>, <0x11>;
-                     color = <LED_COLOR_ID_BLUE>;
-                 };
-
-
-[0] arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
+So probably best to keep that in for now.
 
 -- 
-Best regards,
-Jacek Anaszewski
+Cheers,
+
+David / dhildenb
 
