@@ -1,250 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E51F8676;
-	Wed, 14 May 2025 12:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4535B27510A;
+	Wed, 14 May 2025 12:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747225300; cv=none; b=MdOiZST2s8fyQyYFzcDeuwUrDuL/Sf0d8iBtbb4EczOHkTMlGr+8rz4mAC6Q1Ghz/98OgqeBFfc/P3ROXioZJ2YtPBHLQncWojqCF/wBW1jQIEvZ1wOjTuL7YFYb3J7Q0vZrzreTTwIq9HmiXNnjmlUhCTmNfDNFgHx3+VOIrIk=
+	t=1747225307; cv=none; b=KVcVF2ULyga5YtQKIhrZSPCAUzkKpYsKyogxZ1EFSW2rGO7jLTZBtNyqQyWTj4G9u212lVYDUh7zAo5MUNyK1mc3iKFh6ScNwJBlAJaIMfSJNZ5zDgKbe7rokQLA3vNS5JZ+03M19AadhaiHh/mkOIY/Yhm7vTqYMxfvAtT/Hl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747225300; c=relaxed/simple;
-	bh=EoXutM9PbRThg+M3pY+4biVE8gUy8AVfCsmM3x3cWtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9GanbnkryUfnYL383KE16yMGCvXjfFrbGj22owl8ZEoboelb+a0obV5SSnmqNlDTboFPvlnfxD5lMShqauLwkWWReH1mFGiVDoMaaVQHsjOj6SK1Ve453ENSA/YIc4lz/zwEngzcSG1pKW1TkoUR2CFtT+R08ZRY3gjs7EuVY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LFyB6TpE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747225307; c=relaxed/simple;
+	bh=Ymu0unxrdD4AbfbR2cd5zhAgf8o4S6x1avMoiulo4yk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=dnzC9xziiZvcd0whU9eFQUmkLHN5AKYvFETwrNsZWpKOQZRihH8tnQFvSU7uHq+GvIkgGxzLd0os4znTOrUmukiz5/YyiHVlpDfqY/mU+5Vzwh7zgCG04vDPZXtGgTu1aFYmh55PZK4c1jBWaZ6FWDxWuSYkT+oblff5w9/P3G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BKhF4ukX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LFyB6TpE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747225299; x=1778761299;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EoXutM9PbRThg+M3pY+4biVE8gUy8AVfCsmM3x3cWtE=;
-  b=LFyB6TpEmyR42RhjG30hgnWj2H5u6NIgfmZO99Oc9T16qcQ74SddN3NF
-   qSbOJ/aIs0NEPeNzgXEO987gekoJmCmKeU0C2KDh5Hl8o7g7Dkus9IPb8
-   KTbnwbJArS3AsvBQrB4BNnUZL1dF3PPexevi+yqVSov6DrvRdHrR+L42B
-   FwBrFV8uDZAL4EB6eJpDlMfC4ph1O64UBO4BzUmPLTMgpUWuxVxM5EwW3
-   NdCGjVkfdMa9VfoM9lzfiymgE+Bk8TFqgtBO7DVsEsRYZo0SPJMauvWCz
-   ga4R8niu6ok2rtfc+aMR7zNrWlmHeKbGFg5t0uzW0Pwa0G0myqNTj63Rz
-   A==;
-X-CSE-ConnectionGUID: DKcVDr2WRkK+M6EmAJMipA==
-X-CSE-MsgGUID: W6pv7AgORfGb/pArtVAvpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="66526126"
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="66526126"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:21:38 -0700
-X-CSE-ConnectionGUID: dCU4ZW5WSYWQffXhrmD5IA==
-X-CSE-MsgGUID: jUhGvMw4T0OxK6yb6BEz7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="138946674"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:21:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uFB76-00000001Y0G-1JFE;
-	Wed, 14 May 2025 15:21:32 +0300
-Date: Wed, 14 May 2025 15:21:32 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Judith Mendez <jm@ti.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Bin Liu <b-liu@ti.com>,
-	Andrew Davis <afd@ti.com>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/7] serial: 8250: Add PRUSS UART driver
-Message-ID: <aCSKzFHGl5ua3rrP@smile.fi.intel.com>
-References: <20250513215934.933807-1-jm@ti.com>
- <20250513215934.933807-4-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKhF4ukX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82DB7C4CEED;
+	Wed, 14 May 2025 12:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747225306;
+	bh=Ymu0unxrdD4AbfbR2cd5zhAgf8o4S6x1avMoiulo4yk=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=BKhF4ukX4v+i+ULC+RgzqXNJB61patkwsZ/5DUQO77T8SqrNZJcuqQ0BN2RhwXhgc
+	 fSIG2Bey2WeH8nFLKh27lA3dYHEFfNps9xMpp/G8A25oLAEiiV8C45PuvvVdeuKiGZ
+	 dJPBTXSZD22RH+vfeWGXuY4Wx76BhU00yqF8Z/xvUITdwjvq82jyVfLIXsQHkSv5FY
+	 lxrtlgfyDxsjtVkkxsk47oo82Bl6NOOrYcIHyVRBLQNqXz+YZZPZLO3tUaYfstTr3L
+	 yE9Bavq5L2WZne7fbezJz+k+ushRIqeB6fcIlOpYRrCwDfVU2rLoSBbhgfSVlpg/hb
+	 IWk9av+EBTVuw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513215934.933807-4-jm@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 May 2025 14:21:41 +0200
+Message-Id: <D9VVOENW6H8P.32D4SGCFJ0LJU@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Matthew Maurer" <mmaurer@google.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
+ <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
+ <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org> <aCR9cD7OcSefeaUm@pollux>
+In-Reply-To: <aCR9cD7OcSefeaUm@pollux>
 
-On Tue, May 13, 2025 at 04:59:30PM -0500, Judith Mendez wrote:
-> From: Bin Liu <b-liu@ti.com>
-> 
-> This adds a new serial 8250 driver that supports the UART in PRUSS or
-> PRU_ICSS*.
-> 
-> The UART sub-module is based on the industry standard TL16C550 UART
-> controller, which has 16-bytes FIFO and supports 16x and 13x over
-> samplings.
+On Wed May 14, 2025 at 1:24 PM CEST, Danilo Krummrich wrote:
+> On Wed, May 14, 2025 at 11:54:39AM +0200, Benno Lossin wrote:
+>> On Wed May 14, 2025 at 11:07 AM CEST, Danilo Krummrich wrote:
+>> > On Wed, May 14, 2025 at 09:20:49AM +0200, Benno Lossin wrote:
+>> >> On Tue May 6, 2025 at 1:51 AM CEST, Matthew Maurer wrote:
+>> >> > +impl kernel::Module for RustDebugFs {
+>> >> > +    fn init(_this: &'static ThisModule) -> Result<Self> {
+>> >> > +        // Create a debugfs directory in the root of the filesyste=
+m called "sample_debugfs".
+>> >> > +        let debugfs =3D Dir::new(c_str!("sample_debugfs"));
+>> >> > +
+>> >> > +        {
+>> >> > +            // Create a subdirectory, so "sample_debugfs/subdir" n=
+ow exists.
+>> >> > +            // We wrap it in `ManuallyDrop` so that the subdirecto=
+ry is not automatically discarded
+>> >> > +            // at the end of the scope - it will be cleaned up whe=
+n `debugfs` is.
+>> >> > +            let sub =3D ManuallyDrop::new(debugfs.subdir(c_str!("s=
+ubdir")));
+>> >>=20
+>> >> I dislike the direct usage of `ManuallyDrop`. To me the usage of
+>> >> `ManuallyDrop` signifies that one has to opt out of `Drop` without th=
+e
+>> >> support of the wrapped type. But in this case, `Dir` is sometimes
+>> >> intended to not be dropped, so I'd rather have a `.keep()` function I
+>> >> saw mentioned somewhere.
+>> >
+>> > I agree, if we really want to "officially" support to forget() (sub-)d=
+irectories
+>> > and files in order to rely on the recursive cleanup of the "root" dire=
+ctory, it
+>> > should be covered explicitly by the API. I.e. (sub-)directories and fi=
+les should
+>> > have some kind of keep() and / or forget() method, to make it clear th=
+at this is
+>> > supported and by design and won't lead to any leaks.
+>> >
+>> > Consequently, this would mean that we'd need something like your propo=
+sed const
+>> > generic on the Dir type, such that keep() / forget() cannot be called =
+on the
+>> > "root" directory.
+>> >
+>> > However, I really think we should keep the code as it is in this versi=
+on and
+>> > just don't provide an example that utilizes ManuallyDrop and forget().
+>> >
+>> > I don't see how the idea of "manually dropping" (sub-)directories and =
+files
+>> > provides any real value compared to just storing their instance in a d=
+river
+>> > structure as long as they should stay alive, which is much more intuit=
+ive
+>> > anyways.
+>>=20
+>> Yeah that's whats normally done in Rust anyways. But I think that
+>> lifetimes bite us in this case:
+>>=20
+>>     let debugfs: Dir<'static> =3D Dir::new(cstr!("sample_debugfs"));
+>>=20
+>>     let sub: Dir<'a> =3D debugfs.subdir(cstr!("subdir"));
+>>     // lifetime `'a` starts in the line above and `sub` borrows `debugfs=
+`
+>>=20
+>>     /* code for creating the file etc */
+>>=20
+>>     Ok(Self { _debugfs: debugfs, _sub: sub })
+>>     // lifetime `'a` has to end in the line above, since debugfs is move=
+d but `sub` still borrows from it!
+>>=20
+>> This code won't compile, since we can't store the "root" dir in the same
+>> struct that we want to store the subdir, because the subdir borrows from
+>> the root dir.
+>>=20
+>> Essentially this would require self-referential structs like the
+>> `ouroboros` crate [1] from user-space Rust. We should rather have the
+>> `.keep()` function in the API than use self-referential structs.
+>
+> Fair enough -- I think we should properly document those limitations, rec=
+ommend
+> using keep() for those cases and ensure that we can't call keep() on the =
+"root"
+> directory then.
+>
+> Unless, we can find a better solution, which, unfortunately, I can't thin=
+k of
+> one. The only thing I can think of is to reference count (parent) directo=
+ries,
+> which would be contrary to how the C API works and not desirable.
 
-...
+Yeah, I also don't have an idea, but if I find something, I'll let you
+know.
 
-+ bits.h
+>> [1]: https://docs.rs/ouroboros/latest/ouroboros/attr.self_referencing.ht=
+ml
+>>=20
+>> Another problem that only affects complicated debugfs structures is that
+>> you would have to store all subdirs & files somewhere. If the structure
+>> is dynamic and changes over the lifetime of the driver, then you'll need
+>> a `Vec` or store the dirs in `Arc` or similar, leading to extra
+>> allocations.
+>
+> If it changes dynamically then it's pretty likely that we do not only wan=
+t to
+> add entries dynamically, but also remove them, which implies that we need=
+ to be
+> able to drop them. So, I don't think that's a problem.
 
-> +#include <linux/clk.h>
+Yeah that's true.
 
-+ math.h
+> What I see more likely to happen is a situation where the "root" director=
+y
+> (almost) lives forever, and hence subsequent calls, such as
+>
+> 	root.subdir("foo").keep()
+>
+> effectively are leaks.
+>
+> One specific example for that would be usb_debug_root, which is created i=
+n the
+> module scope of usb-common and is used by USB host / gadget / phy drivers=
+.
+>
+> The same is true for other cases where the debugfs "root" is created in t=
+he
+> module scope, but subsequent entries are created by driver instances. If =
+a
+> driver would use keep() in such a case, we'd effectively leak memory ever=
+ytime a
+> device is unplugged (or unbound in general).
 
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/serial_reg.h>
-> +#include <linux/serial_core.h>
+Hmm that is unfortunate. But I don't see a problem with having:
 
-Can you keep them sorted?
+    static USB_DEBUGFS: Dir<'static> =3D ...; // or some on-demand init pro=
+cess
 
+Then users can store subdir that also is `Dir<'static>` and just borrow
+the USB_DEBUGFS for `'static`.
 
+The docs on `keep` should definitely warn about leaks.
 
-...
-
-> +static int pruss8250_startup(struct uart_port *port)
-> +{
-> +	int ret;
-> +
-> +	port->serial_out(port, PRUSS_UART_PEREMU_MGMT, 0);
-> +
-> +	ret = serial8250_do_startup(port);
-
-Please, use standard pattern, i.e.
-
-	if (ret)
-		return ret;
-	...
-	return 0;
-
-I believe I have told this previously. Can you double check that you read and
-addressed all of the comments?
-
-> +	if (!ret)
-> +		port->serial_out(port, PRUSS_UART_PEREMU_MGMT, PRUSS_UART_TX_EN |
-> +							       PRUSS_UART_RX_EN |
-> +							       PRUSS_UART_FREE_RUN);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static unsigned int pruss8250_get_divisor(struct uart_port *port,
-> +					  unsigned int baud,
-> +					  unsigned int *frac)
-> +{
-> +	unsigned int uartclk = port->uartclk;
-> +	unsigned int div_13, div_16;
-> +	unsigned int abs_d13, abs_d16;
-> +	u16 quot;
-> +
-> +	div_13 = DIV_ROUND_CLOSEST(uartclk, 13 * baud);
-> +	div_16 = DIV_ROUND_CLOSEST(uartclk, 16 * baud);
-> +	div_13 = div_13 ? : 1;
-> +	div_16 = div_16 ? : 1;
-> +
-> +	abs_d13 = abs(baud - uartclk / 13 / div_13);
-> +	abs_d16 = abs(baud - uartclk / 16 / div_16);
-> +
-> +	if (abs_d13 >= abs_d16) {
-
-Isn't this something like abs_diff() ?
-
-> +		*frac = PRUSS_UART_MDR_16X_MODE;
-> +		quot = div_16;
-> +	} else {
-> +		*frac = PRUSS_UART_MDR_13X_MODE;
-> +		quot = div_13;
-> +	}
-> +
-> +	return quot;
-> +}
-
-> +static int pruss8250_probe(struct platform_device *pdev)
-> +{
-> +	struct uart_8250_port port8250;
-> +	struct uart_port *port = &port8250.port;
-> +	struct device *dev = &pdev->dev;
-> +	struct pruss8250_data *data;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-
-Needs device/devres.h.
-
-> +	if (!data)
-> +		return -ENOMEM;
-
-Needs err.h (actually errno.h, but that's not enough for the following IS_ERR()
-et al.)
-
-> +	memset(&port8250, 0, sizeof(port8250));
-
-Instead of having dependency on string.h (which is missed) just assign it to {}
-in the definition.
-
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Failed to get resource");
-> +		return -EINVAL;
-
-	return dev_err_probe();
-
-> +	}
-
-> +	if (!port->uartclk) {
-> +		data->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(data->clk)) {
-> +			dev_err(dev, "Failed to get clock!\n");
-> +			return -ENODEV;
-> +		} else {
-> +			port->uartclk = clk_get_rate(data->clk);
-> +			devm_clk_put(dev, data->clk);
-
-I think you completely ignored my review I have done in previous version...
-
-> +		}
-> +	}
-
-Should be done after uart_read_properties().
-
-> +	port->dev = dev;
-> +	port->mapbase = res->start;
-> +	port->mapsize = resource_size(res);
-> +	port->type = PORT_16550A;
-> +	port->flags = UPF_BOOT_AUTOCONF | UPF_FIXED_PORT | UPF_FIXED_TYPE |
-> +		      UPF_IOREMAP;
-> +	port->startup = pruss8250_startup;
-> +	port->rs485_config = serial8250_em485_config;
-> +	port->get_divisor = pruss8250_get_divisor;
-> +	port->set_divisor = pruss8250_set_divisor;
-> +
-> +	ret = uart_read_port_properties(port);
-> +	if (ret)
-> +		return ret;
-> +
-> +	port->iotype = UPIO_MEM32;
-> +	port->regshift = 2;
-> +
-> +	spin_lock_init(&port8250.port.lock);
-> +	port8250.capabilities = UART_CAP_FIFO | UART_CAP_AFE;
-> +
-> +	ret = serial8250_register_8250_port(&port8250);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Unable to register 8250 port.\n");
-> +
-> +	data->line = ret;
-> +	platform_set_drvdata(pdev, data);
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+---
+Cheers,
+Benno
