@@ -1,89 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D03E21770D;
-	Wed, 14 May 2025 11:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8A01F8676
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747223770; cv=none; b=fZXwF6QOgXkGH7fmBjt2SaF0OQF04US5H8GFotUsetIqA9K97/dHoD11FlkUwrDMzhU6s/bZr2wor/f0edJZ4i1V5OMMTeqSUeYvfUb6Ix/lPHgiey10YuM06EOATB8Ycmho//hKRZoap0Oit1I3vjBU0fjj3wAEkIHe7WAw6JA=
+	t=1747223853; cv=none; b=TqiWwOgnOS7N045n2LZEzzAXOJmiC66TUyvlPDv8+Svitw145lnrjTK3Ab9QBTwmk1tfEXJ0SO28QdWICn3fwo3wwIKtILxTY7jF7pPeHqdDUcPV9G6qZFJkkuHR6N0D4bsDCx5g+5cTq8cH1l9FOMWwv/pQjqNSPWKIl9N3S+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747223770; c=relaxed/simple;
-	bh=03qO4U7yeAMiNm8NqrhsDiQX3XmavNIEE2Y1aHqZjhQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K4LJWDbp6A4uJ7LOePF9wSu7WSgkoE6OTLBSYSufgY3oNRTkMEV5ZNrZtcdKKdcnjh7Ura34M47nm/5O2MeWEpSVFUOvxwe//VWH8gY2Hib8JNvM2eCr27rv8nRxCf2oKzR/mZza49RCHnVISSDL4ctOnouEPhWMaauujh1z1/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAMSzKpg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747223853; c=relaxed/simple;
+	bh=7o2UTN2Hk2J5TcPymHM0vTaw+1G2DDoWlH6zf9b+SbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ep+53mjfEMWodgr/dSsPXTogz/MoEwM4t+pA3r5aEGH2thtcLi3HhHv/ICBabLWh6c9M8Lc3P8L0EwD/HHtBhMeSfYIBM7Wymuei7MSHW6Hcwn1w/rb53o3oxvRnyZg/nnPuU437iM9Sh4nXF1fMrXlIo8lzeKQMnaKlOBHStN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dj06PK2Y; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAMSzKpg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA9A4C4CEEF;
-	Wed, 14 May 2025 11:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747223769;
-	bh=03qO4U7yeAMiNm8NqrhsDiQX3XmavNIEE2Y1aHqZjhQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fAMSzKpgasPE1vP13EZmdRVW0RR8kBprF5+4OXR5/BGoCUfbcl1WXU0EbuoF6E3QZ
-	 ccHsP/2AoqSjDeoGBGm9V9aPkrxmSkuaNju0N8ouiN7LW5JC6Twi5JTNYkZFDqPQlY
-	 37ypGLWsloOricYhzMrvPCBHlEQfHrc3OEKS8x9bKaj7ijzbhig9mItaksrSssA3C1
-	 eQxdOGpNCcfAWtgBwl6JaBWqJxvMZMmtO2rpw3eKHWokKbxxgT17Q1JD+LmS2JARsI
-	 LSNDpEX1uilkJAf6S7FL3NO5gCzss/lv5LD0czlQX89R0/nOSIX/CHt/NMGMpRJbuc
-	 PDwko8NGrs8GA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79F0C3ABCC;
-	Wed, 14 May 2025 11:56:09 +0000 (UTC)
-From: Alejandro Enrique via B4 Relay <devnull+alejandroe1.geotab.com@kernel.org>
-Date: Wed, 14 May 2025 13:55:54 +0200
-Subject: [PATCH 1/2] dt-bindings: gnss: add u-blox,neo-9m compatible
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dj06PK2Y"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747223840; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=X6Xt+gme88eWtaAzO7wjB1rqU85g/KZnskzOAk8sCIk=;
+	b=dj06PK2Y7bIXqgY7FIWGT0u93ysUnZDrD/04/DptaMqj7nA+YIBVhYG5rJTxz1Iv3qMmx8BOVK0AxtaXCxazW80j6a6JTQeuZipT/o3kCwmKh+Y9KOalHLyzv5K4OSzVU3An86HEpBU6oYVnbM+nihIXVCa57tBZ0Retob0c4gY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Walx0ZR_1747223834 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 May 2025 19:57:19 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: refine readahead tracepoint
+Date: Wed, 14 May 2025 19:57:13 +0800
+Message-ID: <20250514115713.2719705-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
-References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
-In-Reply-To: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
-To: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Alejandro Enrique <alejandroe1@geotab.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747223768; l=746;
- i=alejandroe1@geotab.com; s=20250514; h=from:subject:message-id;
- bh=3xJpnPbRisAKL2+dPmneQBdkYHGq5g2cneB0rP+Fuic=;
- b=63IpCvQdkbBYkX0QTX0yjWJPaRm8LjZ6cUlPCKhvTUdIEoLLNVv0Vw08upHRK3rV/fghhc+QD
- Q1JftRbJlOlCW3069s5l46Y8yLR1FmfPU4uVd/P9BCdocsGqBINdEjE
-X-Developer-Key: i=alejandroe1@geotab.com; a=ed25519;
- pk=xzHMPbqczL/tMsjXr26iLoHwIzLveHVnT+GIU4p1k38=
-X-Endpoint-Received: by B4 Relay for alejandroe1@geotab.com/20250514 with
- auth_id=404
-X-Original-From: Alejandro Enrique <alejandroe1@geotab.com>
-Reply-To: alejandroe1@geotab.com
+Content-Transfer-Encoding: 8bit
 
-From: Alejandro Enrique <alejandroe1@geotab.com>
+ - trace_erofs_readpages => trace_erofs_readahead;
 
-Add compatible for u-blox NEO-9M GPS module.
+ - Rename a redundant statement `nrpages = readahead_count(rac);`;
 
-Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+ - Move the tracepoint to the beginning of z_erofs_readahead().
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ fs/erofs/zdata.c             | 5 ++---
+ include/trace/events/erofs.h | 4 ++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8156a72170965929bb7e 100644
---- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-+++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-@@ -22,6 +22,7 @@ properties:
-       - u-blox,neo-6m
-       - u-blox,neo-8
-       - u-blox,neo-m8
-+      - u-blox,neo-m9
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index b8e6b76c23d5..29541e0787b8 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1855,13 +1855,12 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ {
+ 	struct inode *const inode = rac->mapping->host;
+ 	Z_EROFS_DEFINE_FRONTEND(f, inode, readahead_pos(rac));
+-	struct folio *head = NULL, *folio;
+ 	unsigned int nrpages = readahead_count(rac);
++	struct folio *head = NULL, *folio;
+ 	int err;
  
-   reg:
-     description: >
-
++	trace_erofs_readahead(inode, readahead_index(rac), nrpages, false);
+ 	z_erofs_pcluster_readmore(&f, rac, true);
+-	nrpages = readahead_count(rac);
+-	trace_erofs_readpages(inode, readahead_index(rac), nrpages, false);
+ 	while ((folio = readahead_folio(rac))) {
+ 		folio->private = head;
+ 		head = folio;
+diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+index c69c7b1e41d1..644d4cbd3d80 100644
+--- a/include/trace/events/erofs.h
++++ b/include/trace/events/erofs.h
+@@ -113,7 +113,7 @@ TRACE_EVENT(erofs_read_folio,
+ 		__entry->raw)
+ );
+ 
+-TRACE_EVENT(erofs_readpages,
++TRACE_EVENT(erofs_readahead,
+ 
+ 	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
+ 		bool raw),
+@@ -138,7 +138,7 @@ TRACE_EVENT(erofs_readpages,
+ 
+ 	TP_printk("dev = (%d,%d), nid = %llu, start = %lu nrpage = %u raw = %d",
+ 		show_dev_nid(__entry),
+-		(unsigned long)__entry->start,
++		(unsigned long)__entry->start,`
+ 		__entry->nrpage,
+ 		__entry->raw)
+ );
 -- 
-2.34.1
-
+2.43.5
 
