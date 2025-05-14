@@ -1,138 +1,119 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0D4B5AE
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E781F4198
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211895; cv=none; b=T9wJoMmot/McFELEE5ft3ObA39npYOxlANwn8Pbq+c2vOpccPZWpRfSuIVZ3hbhmKXX0Fnrj7zzp7u7XqPzNTM4jXsJVLVMkhTRJwnpoKX+Oq0RRN3U3n3nM/zqskCwss7VOwlB7baaqknuzfDR0q4kFHT8InrpIWw+zh+h8DRs=
+	t=1747211959; cv=none; b=FQxL1GyRi96Lp7cDM7+/VgA9qI4vV1cjaD0r0/Fxa4LEz59Bh4T9g6kQk3wcomcqBcf60UtziM3HxetWipMv/DdLJN5HmzsPfHy7SycLTHHy0zUv0rdHgwjZviqtBYX2B0HP3mi+44PviSkoq0lhS/6CrljIPVf94rYVGcXiMbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211895; c=relaxed/simple;
-	bh=v3bAcO92mgzkH7OCDOt9w7M93EuoBxmV5z7loDAnBuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uaIVkxVACAvTHO1DAIBvKdgBj11yf21Htn6H92fuKBy0ehRp9SCv/GDA9B8sf0s4LATzEBexJxWdO8oU+X8CqWNMNqFGRYEzfSRry908HC7rDDGTs6Gn8gXjzuoP1nqnuBwvKHoISiHu7pOf9H2bW2u4ZcTA5KsN+pZtbkE/ksY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZhkZAO55; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747211959; c=relaxed/simple;
+	bh=p7lqTSbhpl+X4ro7s8x927L/vs+KkGr8AAWtN9A/9d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GHMw1Khwo7UtA6YeFXcPtDxlpcmiXp5D/ndErUDILfD2dDpe5IQqZhSgE/dEScaOiGoOXCQZUKzZ9unDuBUimVuXWimAvDHmC7NKt4HtMhv9vFa8SQsARiH0UNgpqvFo3CLpplU2nve30/L9rRM2bvGraI+88u7xnpXOXNGfMSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCd63urY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZhkZAO55"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0ebf39427so5391837f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747211891; x=1747816691; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QuS3rpk01oe59tAY91l0mlGNbZV+w+wwZIkg9yAUzvM=;
-        b=ZhkZAO55n0ryFMXrDFb5HKYgvgQrxFx08NgE0N9VgVSgn1fTXBJF49j7xxaxuvw0yR
-         zmSxBFTZt5XBasUGK8+AiBC6RZjuFRJuMM7mhJOTRjyvWrP8qYYnrpWjv2Io9ZzZCYsv
-         tyfvLjkIF6vH4DRrZQlKfivRVZ2Luxj1E91w8LboCLQ0XzJuUrk5rq/3DrIFsUiVa1xI
-         6x5mtZTL/bRt/ZpJTP0js+3qw5cDujZQJeB6nRJ+qZG1W9d9C27ngzJd2pN8h/TfcuxG
-         EvmrmPhE+NBdQ2eUM1EoHpWNCof2ntx9+gHv4nBndQBjzbflpsafmVOPaL7t9vF91S0t
-         sUXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747211891; x=1747816691;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QuS3rpk01oe59tAY91l0mlGNbZV+w+wwZIkg9yAUzvM=;
-        b=JSVBR1X6GHgYm6BuF9MCoVc1kHqmBUSZE2RQI4b2fGHj37URDoA2P9ZFdT6XZOQV0a
-         FVTKUCzGpOxai673OhoWloWCJgR9PTse19DsyDT9COdLvc7PRpRz6H6Nkw9v4QYByUJK
-         AEkA8TJYHQosTepXD6xJp1ti0hLxOIPnOGd39Q4g79pdJrUfotDZTyFNuikV6MlSbW6i
-         9TcOtDWtAcIiLePmDrYafklinoXgMNLfJ81ygSfu/o2tAHDOT5IA4eF+TM1bsXJ7Vt2U
-         XFgVCKK+GHpT5f+JV268NABM/siCKrIpPBdK0EPIZ69skOivnIO1vRYc+4los3P+QSos
-         MIvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXem3sRGQou7z7daB0V19PXhVr6axu+9GBBvxfO6r9g7Z2/ERQllkqtNvviFR+j3HJo8+Zfd3pdAIgx904=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6jDkwjLYURv3lNS4ZOECaleciTgNTxD9DVHwoLx522YHOVQgw
-	OndCeo4gF1fKJbu3caey7KQMf5K0hTKxpKX9kv8TG3s4kSZGq9eADPG61U2h1jU=
-X-Gm-Gg: ASbGnctk0VUOEJb7akSYcDTMB1ZbM+AQHTisYFcqZRciNq9QvEaEC3dWjxe2AwkReho
-	Ud32o02bQGiK5gtMVy8mQwhwGSHT6yZoOtA0jQd5HkQZfIykuVKUKEer5d6o5HT3MttP+UBw1F/
-	dWSMYmCL63SxLrXh9ckksei0uOIMmqkzdilSKibWmX5VWwG34D83ongTCgKWMeED2kEos3prZYI
-	8JLofiH6t8RdUmNAnrZwXXYWsfN60F1oijQckN0OS025vKRFO+2KCcnpWZaLru1MFumVk+1VAv7
-	CrE/UEEiHyFF0EeCJxLB2W8iv8BzAuwMpWK3oqa9M7YqnYDH26Ab6w==
-X-Google-Smtp-Source: AGHT+IHyTzdduROE+Wg2w8XB61vo2bG33XhlahD4daZpMp6hYwmVe0Tbz/IVhZE17N/e//M2fErR6A==
-X-Received: by 2002:a5d:64c6:0:b0:3a0:b84c:52b4 with SMTP id ffacd0b85a97d-3a349695581mr2013629f8f.10.1747211891494;
-        Wed, 14 May 2025 01:38:11 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea8580188sm8048020137.4.2025.05.14.01.38.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 01:38:11 -0700 (PDT)
-Message-ID: <0dff052c-3857-4af3-a809-30ba124c4686@suse.com>
-Date: Wed, 14 May 2025 10:38:00 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCd63urY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9261CC4CEEB;
+	Wed, 14 May 2025 08:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747211959;
+	bh=p7lqTSbhpl+X4ro7s8x927L/vs+KkGr8AAWtN9A/9d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gCd63urYf1MlqOTw0+0JXgzPzopA0QipWnU3ziqG6WxtTBSoIXgr6XFQQ9XUuYFB6
+	 OdskHhqYyvwX5nPTxb3I9aSaLG6OSwgHVxk05KS1wyqyiB661mQE93WXkdutJS0HO7
+	 JaD0MmtMGBRZebJCJsGuroCeXhnnAcZyJDk5vPSYeForXCizFcTK/X4nn040fxTre6
+	 O2kbb5KpUVfS1SgRmRelLy8/5hlq2ZQLDn0c5Vfi1VKrPUDj9pq0CYI7AL9MQPmsUf
+	 e/RdC7l2F1BswIH1hparqfjPXJlUxxkiOXjPz+1r0dAgAXK7qh2tZinqscMiuC5mWC
+	 zFtEDW/cgtojw==
+Date: Wed, 14 May 2025 10:39:15 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 2/6] x86/cpu: Use a new feature flag for 5 level
+ paging
+Message-ID: <aCRWs-5UozA4xQkl@gmail.com>
+References: <20250513111157.717727-8-ardb+git@google.com>
+ <20250513111157.717727-10-ardb+git@google.com>
+ <7uh3pi23cdd5r2t6ln5p2z2htgmzo5b6omlhb6vyddobcbqqnt@nyujbhsnpioh>
+ <aCROdV_fIygO8OoM@gmail.com>
+ <CAMj1kXGChWHhbfjUgTQ37+epLjivrKhV8unwyZCHvNTJL2f57w@mail.gmail.com>
+ <aCRUxffQmM9dbGe6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] module: Account for the build time module name
- mangling
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com,
- samitolvanen@google.com, da.gomez@samsung.com, masahiroy@kernel.org,
- nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
- hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk,
- Sean Christopherson <seanjc@google.com>
-References: <20250502141204.500293812@infradead.org>
- <20250502141844.263611823@infradead.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250502141844.263611823@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCRUxffQmM9dbGe6@gmail.com>
 
-On 5/2/25 16:12, Peter Zijlstra wrote:
-> Sean noted that scripts/Makefile.lib:name-fix-token rule will mangle
-> the module name with s/-/_/g.
+
+* Ingo Molnar <mingo@kernel.org> wrote:
+
 > 
-> Since this happens late in the build, only the kernel needs to bother
-> with this, the modpost tool still sees the original name.
+> * Ard Biesheuvel <ardb@kernel.org> wrote:
 > 
-> Reported-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Tested-by: Sean Christopherson <seanjc@google.com>
-> ---
->  kernel/module/main.c |   26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+> > On Wed, 14 May 2025 at 09:04, Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > >
+> > > * Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > >
+> > > > On Tue, May 13, 2025 at 01:12:00PM +0200, Ard Biesheuvel wrote:
+> > > > > From: Ard Biesheuvel <ardb@kernel.org>
+> > > > >
+> > > > > Currently, the LA57 CPU feature flag is taken to mean two different
+> > > > > things at once:
+> > > > > - whether the CPU implements the LA57 extension, and is therefore
+> > > > >   capable of supporting 5 level paging;
+> > > > > - whether 5 level paging is currently in use.
+> > > > >
+> > > > > This means the LA57 capability of the hardware is hidden when a LA57
+> > > > > capable CPU is forced to run with 4 levels of paging. It also means the
+> > > > > the ordinary CPU capability detection code will happily set the LA57
+> > > > > capability and it needs to be cleared explicitly afterwards to avoid
+> > > > > inconsistencies.
+> > > > >
+> > > > > Separate the two so that the CPU hardware capability can be identified
+> > > > > unambigously in all cases.
+> > > >
+> > > > Unfortunately, there's already userspace that use la57 flag in
+> > > > /proc/cpuinfo as indication that 5-level paging is active. :/
+> > > >
+> > > > See va_high_addr_switch.sh in kernel selftests for instance.
+> > >
+> > > Kernel selftests do not really count if that's the only userspace that
+> > > does this - but they indeed increase the likelihood that some external
+> > > userspace uses /proc/cpuinfo in that fashion. Does such external
+> > > user-space code exist?
+> > >
+> > 
+> > Bah, that seems likely if this is the only way user space is able to 
+> > infer that the kernel is using 5-level paging.
 > 
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -170,6 +170,30 @@ static inline void add_taint_module(stru
->  }
->  
->  /*
-> + * Like strncmp(), except s/-/_/g as per scripts/Makefile.lib:name-fix-token rule.
-> + */
-> +static int mod_strncmp(const char *str_a, const char *str_b, size_t n)
-> +{
-> +	for (int i = 0; i < n; i++) {
+> The price of past mistakes. :-/
+> 
+> So, the pragmatic, forward compatible solution would be to:
+> 
+>  - Keep the 'la57' user-visible flag in /proc/cpuinfo, but map it to 
+>    the X86_FEATURE_5LEVEL_PAGING flag internally.
+> 
+>  - Rename X86_FEATURE_LA57 to X86_FEATURE_LA57_HW, and expose it 
+>    as la57_hw.
+> 
+> This way, any LA57-supporting CPUs would always have la57_cpu set, 
+> while 'la57' is only set when it's enabled in the kernel.
 
-Nit: This could be 'size_t i' for consistency. I can adjust it when
-picking up the series.
+s/would always have la57_hw set
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-
--- Petr
-
-> +		char a = str_a[i];
-> +		char b = str_b[i];
-> +		int d;
-> +
-> +		if (a == '-') a = '_';
-> +		if (b == '-') b = '_';
-> +
-> +		d = a - b;
-> +		if (d)
-> +			return d;
-> +
-> +		if (!a)
-> +			break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> [...]
+> 
+> An additional minor bonus would be that by renaming it to 
+> X86_FEATURE_LA57_HW, the change in behavior also becomes a bit more 
+> obvious at first glance to kernel developers.
+> 
+> Thanks,
+> 
+> 	Ingo
