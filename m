@@ -1,83 +1,65 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31423221F35
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2D221A428;
+	Wed, 14 May 2025 08:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212810; cv=none; b=rkMYpAL8P9gl95xVA3rXPkBkBxse8o3EC6x6NOxreZXkMUKsPRT8Gk9PQ5NTiE3iJjzdmmdn3cSkVxiI7oxYrcgyHUa9BIqe6Bmg/G0sy8Xf5TVFpIsc91c7Wh7v0n+lJeWmIcRV/cP+b9x72fjsdHZlxtRv1/tF+fujN0Oaw/c=
+	t=1747212826; cv=none; b=QPAnmvw0LGHz3Z4JMfr0eMtFgqEcm3qahkSFUDkWNgjbMcsqZe2w38Qn5clt5RwjNg6cVoFBVbdC9wmniU0Z16IaeUXkIeJOC9zZsbiQ02lnh53IBWqwLcL+X1faj8254HdsorLrvpRvgD2SHUp969529EkG/Ey3yj8Sc9895RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212810; c=relaxed/simple;
-	bh=yeTjpZBeqlHP8Y6FFPXxgsVoRw8CFVc5jstjbGaoZeM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KqSLAY7SM3dNFY1hPCgWvAy6TO2O7ADlIcdFcF/aEUe149hFZrppFmr1w5Ux22lQh+D2ev1PuvzUTWSKAeYoBOIo4wJ7B8NeuybbVnGWfdFkMeA+iqRvygzTrnmiezu5YtKgLm6egH4vFZ08xHTZA/KKOB+XY+9wNpn7x/V648o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ipMlIF4P; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747212826; c=relaxed/simple;
+	bh=jphH8oNDnfTOFAMSK14ojGHuFyDi41SV2joIAPM1BkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rrqf7t/lkVqD100N+He2YG+lblgILlFfhIz1jEz2kw6NPbPclzqUbjOdB+od2KMlYDLbwp7zskXwiWAJdI204qTddvma35HTBCfG0sYTfbYfaCD9DWNh8T6Q1OWf7WzYOeY/ggWMmWwsk34aG92ykV03IGZF8Oqk4u0fK6lbB60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt+h7VEH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ipMlIF4P"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747212799; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=JJ/rSHDh81oBKwQroykvuLx9r2TIlV4SlOmwfKdL/s4=;
-	b=ipMlIF4P6G2znkUMOci3tXxmbVp626JWthZ9j8NtOpcewk9a2A1Dtv79w6roPUAyRyOE3ziIYpD+mwlcxKuX+R8UUweFdXSj+282+Bfl7suBQZpu4iojURsIqzxRQCKm7ysvt1bX6aPKkDuS3Rux8a96ChBT20vkxYS0dXPOIMs=
-Received: from 30.74.144.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WalDO3f_1747212798 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 May 2025 16:53:18 +0800
-Message-ID: <5b615ac3-6080-473f-a0ff-19c38de4ab59@linux.alibaba.com>
-Date: Wed, 14 May 2025 16:53:18 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt+h7VEH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F16E9C4CEE9;
+	Wed, 14 May 2025 08:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747212826;
+	bh=jphH8oNDnfTOFAMSK14ojGHuFyDi41SV2joIAPM1BkM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rt+h7VEHFJdQPrI6Kf86AYYBjHqfox+C9NRxYFga9cDEX1gOozmPpXGIYClSmPmxj
+	 9o5lDQrBePdtCiacbDumjgZlzgKT8hPL8lti1jg3QaSTcmR3RblIng8Ky2boJtfQcM
+	 e+c3GnI0jDmAkVnJhFJSOoknfGFEtU/haZK0duUDRBULcUFsVGBQu/B9HfiW3E2Zs5
+	 7eM87gWvfq122VhNzWBhd6iy8II2LDzOBiWs44Hm4MdoqzscpSHuRV1KmC+J4JJRJt
+	 8eBKj0XcOXACyDpljurHriQQEYyEapLi9TiJTbywtdoFkoYlC6CoHAjpMbIx7+lfGi
+	 xLHbi1ajkoLhw==
+Date: Wed, 14 May 2025 09:53:41 +0100
+From: Simon Horman <horms@kernel.org>
+To: Hariprasad Kelam <hkelam@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [net] octeontx2-pf: Fix ethtool support for SDP representors
+Message-ID: <20250514085341.GD3339421@horms.kernel.org>
+References: <20250512062901.629584-1-hkelam@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] mm: shmem: add missing shmem_unacct_size() in
- __shmem_file_setup()
-To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
- <20250514165047.946884-3-shikemeng@huaweicloud.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250514165047.946884-3-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250512062901.629584-1-hkelam@marvell.com>
 
-
-
-On 2025/5/15 00:50, Kemeng Shi wrote:
-> We will miss shmem_unacct_size() when is_idmapped_mnt() returns a failure.
-> Move is_idmapped_mnt() before shmem_acct_size() to fix the issue.
+On Mon, May 12, 2025 at 11:59:01AM +0530, Hariprasad Kelam wrote:
+> The hardware supports multiple MAC types, including RPM, SDP, and LBK.
+> However, features such as link settings and pause frames are only available
+> on RPM MAC, and not supported on SDP or LBK.
 > 
-> Fixes: 7a80e5b8c6fa7 ("shmem: support idmapped mounts for tmpfs")
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   mm/shmem.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+> This patch updates the ethtool operations logic accordingly to reflect
+> this behavior.
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 980fa15f393e..495e661eb8bb 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -5812,12 +5812,12 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
->   	if (size < 0 || size > MAX_LFS_FILESIZE)
->   		return ERR_PTR(-EINVAL);
->   
-> -	if (shmem_acct_size(flags, size))
-> -		return ERR_PTR(-ENOMEM);
-> -
->   	if (is_idmapped_mnt(mnt))
->   		return ERR_PTR(-EINVAL);
->   
-> +	if (shmem_acct_size(flags, size))
-> +		return ERR_PTR(-ENOMEM);
-> +
->   	inode = shmem_get_inode(&nop_mnt_idmap, mnt->mnt_sb, NULL,
->   				S_IFREG | S_IRWXUGO, 0, flags);
->   	if (IS_ERR(inode)) {
+> Fixes: 2f7f33a09516 ("octeontx2-pf: Add representors for sdp MAC")
+> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+
+Reviewed-by: Simon Horman <horms@kernel.org>
