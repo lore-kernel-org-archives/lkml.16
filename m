@@ -1,210 +1,115 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B3F3C465
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0C625C71A;
+	Wed, 14 May 2025 12:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747226569; cv=none; b=lLnSC7p35vKi32wId2/ML1NjrDFRQpnqrmbM84yRaq/ZIglJ9McBL3liuFHrKEDUg49jK37GEOP0tg4/ZMKxnP5OaO54eNx5/BAb9tglu/Sw9C9uskWmOyrbwH3zuiZFeYYgf3fPq0msblESNVfhd3Sn+xpGzupDkHZe47qTAq8=
+	t=1747226595; cv=none; b=AmSwpuvyZY7QaS0kMWWvXuIi6l4N9wRTIGRqLW8GZtoRcXpOSvVXUq0ov5ce1/yC/qv9cyYABHZbqxq6Xbp3LaHLaeHU3vFyndNLZw5Zz9A3mytM9CwdCKWflQ29781pWmiFL93VQxBf/UiNl+sFqGYCUdlu0Mq1sVqBcNHB0Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747226569; c=relaxed/simple;
-	bh=6nZuboOA30WBNNEDdcR8KyhnYeSIryQCQKm1f8SF4GI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R+g4TGwjlLVtps8HG3MPGhqZPNGhTa0cM08mYp+x5cwylZElQ1oaFhNxWBnH7bLeqvjXXa+v48+xtG441il0eN0SrH7Yf27t2TEZ5CgdLSkHC0I44Vj0lkgXP9xsNJFt6rHKscOKHWZSYfCzaGJgzojJk+jl0dyqPQIPxmpzxMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eVZ2g0Fy; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1747226595; c=relaxed/simple;
+	bh=UyGdIibVSOqSmBCOI28bfc7IbRGF7lf1cPNTd2CyAns=;
+	h=Content-Type:MIME-Version:Content-Disposition:In-Reply-To:
+	 References:Subject:From:Cc:To:Date:Message-ID; b=DWFx661hcahJ1QJgk6Rah1ubZ5crbytPLzzsMUpxL4uRzSmv+7/SMStYDFg4HyI8y8JhBlk3sSBX0GuKQ6Fl4A3ohOXXPFUPzThIStPH4RXakZKxP3WWl+fnuuD+Rm2HWN3Q+Nj7ZoWTH13fPYwcVKL1ffI8hEWyVm6zYC5NIHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JJu+36tq; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eVZ2g0Fy"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7adcaea616so2800501276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1747226567; x=1747831367; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ViWIq89CnQbfFGU5jOIVTePtdrJPV3QtZptxNPCRszs=;
-        b=eVZ2g0FytI+Sn+0S2M5PwL9WgBoYWoZRS0Yxey8zA8GOv7rI50V3thTTVLJ3yWuXm3
-         uc5wELINqyS4WkTDvfsh4OfVHiyprjHAYL5+OzA/+cw3dGWdF3mnUOSKaPRFLej2YJol
-         +DRKuFBpT02iixlAm2DME4bcWCduQLSIJ7qsY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747226567; x=1747831367;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ViWIq89CnQbfFGU5jOIVTePtdrJPV3QtZptxNPCRszs=;
-        b=u+Qrbm6GNz+siP1KqmripIyizke+IpwLKFtGXiD38SCXWBDhjk4gniL+vo4pnlbVhh
-         QJy4m7o6GHHvmrF2sXsOCRkSBkkFf7bUAUSt3yCjWE2VNCvaDgMaYapFblC1dpRdPhvr
-         uUjpJJ9PTTK0yihfdJn8E849xuBkldL3p+ShF1PjUm2vpQoKpaCCFCfgm2Kt8hdnqAMd
-         D63lS6N45YpPU71Lh02PJNwb3ILt2doKp82Nih4kfA8o62r3Idgyh1edPrumm6Cz827B
-         S3cMoiGiF5gWTigSspVpvnX88dkXXgMqK9shEwuoOXS5mZesyyxFJyjg689GGGmN8vGH
-         2wRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWm9cKhJSIEVYcUN0Wp/mSXoe7IExmiRfMAQ9If22cxull5ObGRPafmNZgsFbB7LpyNfH5m9MGQOTs7Mrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7tmEpQ/RAB1JblE4tjDDF9KbqkOzoq7TAs68rb2lf/VPzDX5n
-	rDR+PjB8kymG7CWJOSGBLy6lhuoUDKJEEWxb/rLDnJvvVmGv6hAQNPeMzdA5NoCgJvdOrrfu4WR
-	gQ6McQu1Kb+O5xwKv5tqu9D07hFNkwao56pHC
-X-Gm-Gg: ASbGncspM+k8xXbUoRRcKhjni5MK99YxjPaPbRlfvDOHnnn5hP1Bp1Scmd7mPazaG7E
-	HqbVM8gEduU/RzyjoP8hTll9qiHnjVhFdXzGpHyq5+OSN4wRWBGqCb7KXaoG/InLQanYwZODEma
-	E8FwlgMGEVmVDXTSdqoWLMlrD/+tMa6Hxu7Q==
-X-Google-Smtp-Source: AGHT+IFkT3Ez11mwYSJdqSiG1eHU/LuNAhzLBW92qX3r/N9y+8oovvnAiGXynEYGLqCyBPKEk01OWOeMFm/UoNlLA9g=
-X-Received: by 2002:a05:6902:2743:b0:e6d:e87f:ca78 with SMTP id
- 3f1490d57ef6-e7b3d4d7b62mr3921511276.14.1747226566510; Wed, 14 May 2025
- 05:42:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JJu+36tq"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:65db:9f82:d481:46e1:75d5:ff64])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9F9AF735;
+	Wed, 14 May 2025 14:42:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747226575;
+	bh=UyGdIibVSOqSmBCOI28bfc7IbRGF7lf1cPNTd2CyAns=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=JJu+36tq1IYVxgGC+Ks0XsnOJXYLnul0pg1u/qmC4ZgDg+mHDF87F+UELy8vr0MWf
+	 ivUrQHezq4T4ZMKcqq8PXJRKCYwdUL2fJa7HqTljxEf44hXN0/+qWIot4cPBqteiVf
+	 z356sf3yn+bqglGI2wJ4GkKLlOxhL8RjUVu5imvo=
+Content-Type: multipart/signed; micalg="pgp-sha512"; protocol="application/pgp-signature"; boundary="===============2589365894410712436=="
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514073126.85443-2-phasta@kernel.org>
-In-Reply-To: <20250514073126.85443-2-phasta@kernel.org>
-From: Zack Rusin <zack.rusin@broadcom.com>
-Date: Wed, 14 May 2025 08:42:35 -0400
-X-Gm-Features: AX0GCFvtv-r6IEF5l3tnJpfH_DbSiOyPxfv6oxACFJFtUVM3Cz_D_N8Jhyp39zE
-Message-ID: <CABQX2QNQbO4dMq-Hi6tvpi7OTwcVfjM62eCr1OGkzF8Phy-Shw@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/vmwgfx: Use non-hybrid PCI devres API
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000e20d17063517e28f"
+Content-Disposition: inline
+In-Reply-To: <20250514-imx415-v1-1-bb29fa622bb1@emfend.at>
+References: <20250514-imx415-v1-1-bb29fa622bb1@emfend.at>
+Subject: Re: [PATCH] media: i2c: imx415: Request the sensor clock without a name
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>
+To: Matthias Fend <matthias.fend@emfend.at>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michael Riesch <michael.riesch@wolfvision.net>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Wed, 14 May 2025 14:42:57 +0200
+Message-ID: <174722657707.1845803.6950232855047026897@selene>
+User-Agent: alot/0.12.dev11+g1dd20f1f
 
---000000000000e20d17063517e28f
-Content-Type: text/plain; charset="UTF-8"
+--===============2589365894410712436==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 3:31=E2=80=AFAM Philipp Stanner <phasta@kernel.org>=
- wrote:
->
-> vmwgfx enables its PCI device with pcim_enable_device(). This,
-> implicitly, switches the function pci_request_regions() into managed
-> mode, where it becomes a devres function.
->
-> The PCI subsystem wants to remove this hybrid nature from its
-> interfaces. To do so, users of the aforementioned combination of
-> functions must be ported to non-hybrid functions.
->
-> Moreover, since both functions are already managed in this driver, the
-> calls to pci_release_regions() are unnecessary.
->
-> Remove the calls to pci_release_regions().
->
-> Replace the call to sometimes-managed pci_request_regions() with one to
-> always-managed pcim_request_all_regions().
->
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
+Hi Matthias,
+
+Thanks for the patch.
+
+Quoting Matthias Fend (2025-05-14 12:51:01)
+> Request the sensor clock without specifying a name so that the driver
+> behaves as described in the imx415 bindings.
+>=20
+> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+
+Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
+
 > ---
-> Changes in v3:
->   - Use the correct driver name in the commit message. (Zack)
+>  drivers/media/i2c/imx415.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/i2c/imx415.c b/drivers/media/i2c/imx415.c
+> index 9f37779bd6111f434c198ad1cf70c14b80724042..278e743646ea15819d5a79577=
+e786b47c259dbfa 100644
+> --- a/drivers/media/i2c/imx415.c
+> +++ b/drivers/media/i2c/imx415.c
+> @@ -1251,7 +1251,7 @@ static int imx415_parse_hw_config(struct imx415 *se=
+nsor)
+>                 return dev_err_probe(sensor->dev, PTR_ERR(sensor->reset),
+>                                      "failed to get reset GPIO\n");
+> =20
+> -       sensor->clk =3D devm_clk_get(sensor->dev, "inck");
+> +       sensor->clk =3D devm_clk_get(sensor->dev, NULL);
+>         if (IS_ERR(sensor->clk))
+>                 return dev_err_probe(sensor->dev, PTR_ERR(sensor->clk),
+>                                      "failed to get clock\n");
+>=20
+> ---
+> base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
+> change-id: 20250514-imx415-c65889e55211
+>=20
+> Best regards,
+> --=20
+> Matthias Fend <matthias.fend@emfend.at>
 >
-> Changes in v2:
->   - Fix unused variable error.
+--===============2589365894410712436==
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Description: signature
+Content-Type: application/pgp-signature; name="signature.asc"; charset="us-ascii"
 
-Thank you! I've pushed it to drm-misc-next.
+-----BEGIN PGP SIGNATURE-----
 
-z
+iQIzBAABCgAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgkj9AACgkQQ96R+SSa
+cUUBBQ//WCo/WnrJIOXDyUFiyYWlz7WpTIjN7DMRKbXFaDseWL8Za6KijHU10hbK
+6B/H+rVGOi5OnwxyoxD0EmqxYldWitIu17nh0X5SShg+lq+ccRBmcgKobBhsTRtb
+0zzAo1ENDlePYc+RqtmTLowVc1kmeNDpI9B2uk84pfq1sqTTM2LOrGHnULi3h7vS
+hPNaMX+dH4E+Wo8u7WlNDqukPIAUd71fvTN8v+R55OcNM5AnJE0WuT3uPAbmLFgr
+9S1srWpnUhSL7XT/jOP+R5YbpbxtRqiYFfdjwU//JftGBlQmizSZ649kY7dUmeXZ
++WzgClE6EXxEDyq1TOIK49pyBZCIgZSMwGop2wQJ+3wMlxEW+iAKUtiuTz5RYvc/
+y5Pv/PImh/GdZCMhrDI7gJ1EyFdEFOjv8569qao6QhmM4J4z14x4esIKWY05kyhF
+BrCc/AvdRKPedG9hHVZi1LkQgMHHCGnRUv3QNi07ad+1VOay2d7kNGzKs0764SpP
+yyJHk9ugv4wrOPnLb1Z061f0CveKIcY390h8cbaoobuFDtYJMyAP5nwu3aR3fpMa
+D+7s02a5ohyyAqJJtsCAM/U+oGhw+YBmUxuZcEfMS4J0kt3MgXziNd32WvjVm1BY
+lkvSN6H5sdeGIW6AgMAOOz5ul/AeSi8jCjLL6I1uLWOiTy8WSF4=
+=5KmA
+-----END PGP SIGNATURE-----
 
---000000000000e20d17063517e28f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
-SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
-uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
-s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
-SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
-QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
-fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
-iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
-3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
-91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
-06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
-b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
-VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIEsy
-EduzAyxTiEyeP6pvTnQwfWfn/xlPSSF/f6lES35PMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI1MDUxNDEyNDI0N1owXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAIG4DpQs7UM1DRXVLKE7SmWOLz1yLd+hnV6kg23S
-bL6dJCGZZLD1PT7zGy/aAqfXvf3wvgEBWc3yAf02EuAKf3gDVzM7SJwyrd1q8udpnKMtA9RkdQKz
-PhqjC3iHEQ94KzAA3m3REW7O/DtlJ95N5zrxTe9opqD0NtrFfrxK37JDTA90jT81ovJyhhZF5G14
-2VsMM4HK6jtAxYIlGwuu/4We47umjpJK1yMxaJyNoSuUi68ARilHVy0FLSs9oXS3h9wWJ4IFlvSz
-hQMUvsjmnZPv96fF9a+YVAM0/mL3i10g9rFjAR+V1w+h61SSUWFGAhAzFrJ51IcbKtsI0WXtaok=
---000000000000e20d17063517e28f--
+--===============2589365894410712436==--
