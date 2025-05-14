@@ -1,171 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFEA1B3952
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D351A9B4D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747232389; cv=none; b=rWj2YzVHbRZqhSyphh4t60a3uL2T+q6pLnz5YXY72CYeitDj0liLFYnvO5mdP0vurPfF4/UD7DkZk1kDVqaFrrB6ua3I1I+Lzfq8wi3/kSWzZKIXOLDpHYfmuY5zLsA69oVQLIeHhePsAk3jfqxxmtZinCh7JjNwMQFJxV+sYIg=
+	t=1747232396; cv=none; b=QFEMXmIMS8wu95Du6/zjj3AuWtVu6DZyVH4mBlrcJZ43nBl05zgiYv/tnEzRmoxk7T3qZV1pTDcwRQQc/GgtRb+WXymn7ts7seSjGceVFwb0B/vPWsm1axTIXXIIs22KglF+DOvqlf0AVOChV4pGOUpW+8tKRIYFAHHbg4GcrCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747232389; c=relaxed/simple;
-	bh=5Sj5KzI/F46StOB82OyP21k7diNVwpEzL2KwJR5OdEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NpdoT+IXoQvYkIee2V2KMH9TW6sYGnQB+SG969wziYVi6UITIdLAwi/KkryNdzO1ts3Wid+mLKbiSiYi+DfyhwKiZXPeEDGTsnaugUIcDJ+OvygHYulOcmoivIJK3EfEUFlwXT4NdIdFcZaGkIo2EnrxnQYJzODP3hOz1R23XwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RsgLmJUq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747232396; c=relaxed/simple;
+	bh=i52tK7Qa/0vWcBMHQa2r8gocDr7NDY3QhsZwnqxCFdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZfoRz3TbuAxAEuk9g46FT/vQE+4wps2QHO2yoM4ecgXlYeXqNq7IMmLM+hdnFen661LV8EMy9yorEQ0Q59Kz5wU42MlgTh1z71VIbgBGsgkht+xwhQkIhcY7Aif7zHgdenLyCq9wrF3THs1WXyhNbgXp6gUr+3ESeNtGUh8WADs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M279litz; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RsgLmJUq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747232387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Zvmt/u8Of+L1THnq1idxvoVHR9sJvksCbQhIaqH1ko=;
-	b=RsgLmJUqx2Jye3nWFC/liW9hAgF2raciqJz/WvwXogsCQrYLTfJNqZZ1q/q8BPtScIJX3k
-	6O/YLNKCujOGlXXkEbsNuuVkabrMBFxjHG9TEvodCMHW4/f1PYNA+/hiL8NnKHNOpCaYB0
-	PfkObO15UwbAvsui2SIP1T98CV6wD9s=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-pQChAy8wOoC1f-1tUszhxA-1; Wed, 14 May 2025 10:19:45 -0400
-X-MC-Unique: pQChAy8wOoC1f-1tUszhxA-1
-X-Mimecast-MFC-AGG-ID: pQChAy8wOoC1f-1tUszhxA_1747232385
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b7120290so3177834f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:19:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M279litz"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7390294782bso1032367b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747232394; x=1747837194; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UCWsXRxmXy6QdMutDWOCFJCtCkw/mbPHpF2mtN1WEno=;
+        b=M279litzb8jETl5WmbHNcwcBT2wVMzcjDNUHR8QuNLGIf6pQWuM3p6HTjrPRZqvfDV
+         bhxaHge2pEa93zyATYv9TrFhOC1i9npbp5VFottZ1Kp5ypmJ+9ZMB2GA5xAMUqrxkIir
+         WrDAoU5N6jr0goDkNPNwsaV/xnhW+J/6g4PxAMIMhm0En3drnNLaFiC1XFfXZHpYMyOg
+         qeqO0JBg6nBMEZRPLnZ3trc7OYgo8KRxplVd+aLrI4dJ7MD5aWmdBr0ex45RH4NmrhBe
+         ZarSzK+De8c3sD+CVRwEqPPJ8yJ8HhTHhaQqLDF1Ejx0Vi8tOMfrQqDQJARlSDawDxX6
+         l3IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747232384; x=1747837184;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747232394; x=1747837194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8Zvmt/u8Of+L1THnq1idxvoVHR9sJvksCbQhIaqH1ko=;
-        b=d2uL9XdZnMbvNCfQOcWf9ZzK4o8Di3XOHfiQi5j/5V8oj8XdeORehUNq0i+zQ+5GdA
-         wYSsTL7Ze+71ErC6ZRcR6/zOQjiHW07XrdAhRg/va3J8EpFpqsUmIuShGUaMwwpVxWIf
-         EQnDN7KhmZFlXjFuZMcQDpIUshPXZw3kH5Ncvq7d2vYObTjomBGEOSIjtknO2rg8fHlF
-         bINj4us+pQ36hwDDA33+z3Lzz7PqdQC5PmzWfMqGfXV4FR6/QlvVj9RJg0lvqE9TKxNp
-         hvwd/s1HSeNw/D6Lx4e0oHPPYbmMEazUmkbnUreuUMXa0UOqk37pc3Xbw5Qb2eu3oMyr
-         RWcg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/yZZf6YF2lmqC7o56JHL9EmohI1Ymxifh6c6TsZQ7bpOA0UQ972gpTXmQTScH0ptXIsEtqtJp5NrOFO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Vi+vUgwC8pT1jLu7P/Qu0VweSjvk8x2QHSCbezfLd+3FbD9S
-	IQFrNNSUWrcMppWwu05gtGaFCtavSWE06QiRSpVtFeErPvQfQjnQUAOj2wQqw2a5jUiYG8H52qV
-	swqfdg23xvgu87eB8KIc1Rcl5RJnAC5IKWS/6joHiEwN6VhHvWlP1AUsjFCHExw==
-X-Gm-Gg: ASbGnctoQjQ+xGAPYYrHDAihWn+ZGoPKLnfeqgtFaPpWjUEWOf3QgQcqRZAFX3LWzwU
-	reQfnNvxrI8wI8oT2RUJ1dhHhlqhg8xNs9fBotPmlZuvc//tlysh1xuKkgSvV1i7Pfe/+vkFFsB
-	OZxQk1PyWoLM5dyrfoRRKiPqk6JQsjJDS+oKAdA1MNUyJHwO6/vt3QDo4wUcYXp/2PbH9hN94Ej
-	3NFcew+fQz0DXEHkM4DqDbWVkYM8xLWnO2QsS5sMizOhcd2kVJKK+Eua/uLrfPpLlDm5Ko2mps9
-	ksEXcNY12DDEqOJ8Yw==
-X-Received: by 2002:a05:6000:2011:b0:3a1:fcd9:f2ff with SMTP id ffacd0b85a97d-3a349694e9fmr2882893f8f.12.1747232384550;
-        Wed, 14 May 2025 07:19:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlD0Y36veSQX0bZUBU4CJr9Oc/mcPJK9k57/34jB6gCQcLqBmTZi0wMgJYerwAAhbWQRLHsQ==
-X-Received: by 2002:a05:6000:2011:b0:3a1:fcd9:f2ff with SMTP id ffacd0b85a97d-3a349694e9fmr2882865f8f.12.1747232384019;
-        Wed, 14 May 2025 07:19:44 -0700 (PDT)
-Received: from stex1.redhat.com ([193.207.203.94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f28f7sm19625694f8f.41.2025.05.14.07.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 07:19:43 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: netdev@vger.kernel.org
-Cc: virtualization@lists.linux.dev,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 2/3] vsock/test: retry send() to avoid occasional failure in sigpipe test
-Date: Wed, 14 May 2025 16:19:26 +0200
-Message-ID: <20250514141927.159456-3-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514141927.159456-1-sgarzare@redhat.com>
-References: <20250514141927.159456-1-sgarzare@redhat.com>
+        bh=UCWsXRxmXy6QdMutDWOCFJCtCkw/mbPHpF2mtN1WEno=;
+        b=DNsvIRnJTg0wHZ0m7cTOQ60tv5OYtxPbU9v46cu6mEDyuv17xEarBw7JK0VUntVRrd
+         T/HM+bclUKfAqNfFYCxCwldilospFmkj5WHxo47/BfrNeDXMooNFoFZTKiCdnDFUWHqK
+         Htdo+iiW30LVq4yau51dqcrwyX/ew96jpx899OVMXE+xs/82G7mWWig0x6fT9tdMwto2
+         SwZ3XVTcqCMqdFBrL511DLbsQ7yBDJ5paYSD4NrjVHC0/D/XXfQuR7YSAlmIhGYjQFQa
+         THMpKZ3/kYbt1FrZkZb9ulaHd60H2ZY/+oBpD0UbLTupOo7wRQ7ZnmLm7NoiaS8CW4On
+         AHqg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+9qm24uvSBz3YJhvZyTnY8nGfLxIVEhNOwyCbLfGsEKb3StQTHfbX2yVptwazwsb2ToBrY+J2HY4UaRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhneA5Ef6De9OeT2pvzEUPyCp85U6xKtKNvngX8Z36uXVpsHG/
+	mQzTr41wdX66zPN4J+L71+vw5Ny3XFr1eR5DcupU5CkKBP4jvmjrzIPVfdmRK0iz+N+oPBUJeu3
+	qClFWBUXL7XXsRVPte7QrWL7YP+w=
+X-Gm-Gg: ASbGnctj+FdJuMFRjE27XdCQdpSNTSVXozLPSw4y7b6ldscqwm0eNu59RujAgCfvbbd
+	kZS5FHiZxQa65RMNpXf+oAZN8MeLoOWnVDeePxY74iNNZWhk5Fnd2SLIpMgCbCfl4dkA2uYY5M6
+	EXkbgcZfYQiKv45O2vm9PfVtrarx6sUP3S
+X-Google-Smtp-Source: AGHT+IFmSfpurhemLwc+ZOF8rZWME7jh33OjnpZDBlz8vLnAa0zqEy2lMLnutVH+y3PAEEspBAxozniI7M430eNACkY=
+X-Received: by 2002:a17:903:2f8d:b0:224:88c:9255 with SMTP id
+ d9443c01a7336-2319810fdf6mr22460295ad.3.1747232394295; Wed, 14 May 2025
+ 07:19:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250514011610.136607-1-linux@treblig.org>
+In-Reply-To: <20250514011610.136607-1-linux@treblig.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 14 May 2025 10:19:42 -0400
+X-Gm-Features: AX0GCFvKCnzC_zdkgna2rr71SSUfv7aXR8OPd3gdZJqS1dVizK6WKhUHuuj4ZSc
+Message-ID: <CADnq5_PK-orH987qxNkArVFWEW2hE5UrRhX7oR2J4+4dAH=wGQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon/cik: Clean up doorbells
+To: linux@treblig.org
+Cc: alexander.deucher@amd.com, christophe.jaillet@wanadoo.fr, 
+	christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On Tue, May 13, 2025 at 9:53=E2=80=AFPM <linux@treblig.org> wrote:
+>
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>
+> Free doorbells in the error paths of cik_init and in cik_fini.
+>
+> Build tested only.
+>
+> Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-When the other peer calls shutdown(SHUT_RD), there is a chance that
-the send() call could occur before the message carrying the close
-information arrives over the transport. In such cases, the send()
-might still succeed. To avoid this race, let's retry the send() call
-a few times, ensuring the test is more reliable.
+Applied.  Thanks!
 
-Sleep a little before trying again to avoid flooding the other peer
-and filling its receive buffer, causing false-negative.
+Alex
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v2:
-- add little sleep [Paolo]
----
- tools/testing/vsock/vsock_test.c | 38 +++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 8 deletions(-)
-
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index d0f6d253ac72..68f425af00cc 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -1058,17 +1058,34 @@ static void sigpipe(int signo)
- 	have_sigpipe = 1;
- }
- 
-+#define SEND_SLEEP_USEC (10 * 1000)
-+
- static void test_stream_check_sigpipe(int fd)
- {
- 	ssize_t res;
- 
- 	have_sigpipe = 0;
- 
--	res = send(fd, "A", 1, 0);
--	if (res != -1) {
--		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
--		exit(EXIT_FAILURE);
-+	/* When the other peer calls shutdown(SHUT_RD), there is a chance that
-+	 * the send() call could occur before the message carrying the close
-+	 * information arrives over the transport. In such cases, the send()
-+	 * might still succeed. To avoid this race, let's retry the send() call
-+	 * a few times, ensuring the test is more reliable.
-+	 */
-+	timeout_begin(TIMEOUT);
-+	while(1) {
-+		res = send(fd, "A", 1, 0);
-+		if (res == -1)
-+			break;
-+
-+		/* Sleep a little before trying again to avoid flooding the
-+		 * other peer and filling its receive buffer, causing
-+		 * false-negative.
-+		 */
-+		timeout_usleep(SEND_SLEEP_USEC);
-+		timeout_check("send");
- 	}
-+	timeout_end();
- 
- 	if (!have_sigpipe) {
- 		fprintf(stderr, "SIGPIPE expected\n");
-@@ -1077,11 +1094,16 @@ static void test_stream_check_sigpipe(int fd)
- 
- 	have_sigpipe = 0;
- 
--	res = send(fd, "A", 1, MSG_NOSIGNAL);
--	if (res != -1) {
--		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
--		exit(EXIT_FAILURE);
-+	timeout_begin(TIMEOUT);
-+	while(1) {
-+		res = send(fd, "A", 1, MSG_NOSIGNAL);
-+		if (res == -1)
-+			break;
-+
-+		timeout_usleep(SEND_SLEEP_USEC);
-+		timeout_check("send");
- 	}
-+	timeout_end();
- 
- 	if (have_sigpipe) {
- 		fprintf(stderr, "SIGPIPE not expected\n");
--- 
-2.49.0
-
+> ---
+> RFC->v1
+>   Renamed ringCP[12]->ring_cp[12]
+>   Cleaned up doorbells in cik_startup failure case
+>
+>  drivers/gpu/drm/radeon/cik.c | 42 +++++++++++++++++++++++++-----------
+>  1 file changed, 30 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
+> index 11a492f21157..51a3e0fc2f56 100644
+> --- a/drivers/gpu/drm/radeon/cik.c
+> +++ b/drivers/gpu/drm/radeon/cik.c
+> @@ -8548,7 +8548,7 @@ int cik_suspend(struct radeon_device *rdev)
+>   */
+>  int cik_init(struct radeon_device *rdev)
+>  {
+> -       struct radeon_ring *ring;
+> +       struct radeon_ring *ring, *ring_cp1, *ring_cp2;
+>         int r;
+>
+>         /* Read BIOS */
+> @@ -8623,19 +8623,22 @@ int cik_init(struct radeon_device *rdev)
+>         ring->ring_obj =3D NULL;
+>         r600_ring_init(rdev, ring, 1024 * 1024);
+>
+> -       ring =3D &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
+> -       ring->ring_obj =3D NULL;
+> -       r600_ring_init(rdev, ring, 1024 * 1024);
+> -       r =3D radeon_doorbell_get(rdev, &ring->doorbell_index);
+> +       ring_cp1 =3D &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
+> +       ring_cp2 =3D &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
+> +       ring_cp1->ring_obj =3D NULL;
+> +       ring_cp2->ring_obj =3D NULL;
+> +       ring_cp1->doorbell_index =3D RADEON_MAX_DOORBELLS;
+> +       ring_cp2->doorbell_index =3D RADEON_MAX_DOORBELLS;
+> +
+> +       r600_ring_init(rdev, ring_cp1, 1024 * 1024);
+> +       r =3D radeon_doorbell_get(rdev, &ring_cp1->doorbell_index);
+>         if (r)
+>                 return r;
+>
+> -       ring =3D &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
+> -       ring->ring_obj =3D NULL;
+> -       r600_ring_init(rdev, ring, 1024 * 1024);
+> -       r =3D radeon_doorbell_get(rdev, &ring->doorbell_index);
+> +       r600_ring_init(rdev, ring_cp2, 1024 * 1024);
+> +       r =3D radeon_doorbell_get(rdev, &ring_cp2->doorbell_index);
+>         if (r)
+> -               return r;
+> +               goto out;
+>
+>         ring =3D &rdev->ring[R600_RING_TYPE_DMA_INDEX];
+>         ring->ring_obj =3D NULL;
+> @@ -8653,12 +8656,16 @@ int cik_init(struct radeon_device *rdev)
+>
+>         r =3D r600_pcie_gart_init(rdev);
+>         if (r)
+> -               return r;
+> +               goto out;
+>
+>         rdev->accel_working =3D true;
+>         r =3D cik_startup(rdev);
+>         if (r) {
+>                 dev_err(rdev->dev, "disabling GPU acceleration\n");
+> +               radeon_doorbell_free(rdev, ring_cp1->doorbell_index);
+> +               radeon_doorbell_free(rdev, ring_cp2->doorbell_index);
+> +               ring_cp1->doorbell_index =3D RADEON_MAX_DOORBELLS;
+> +               ring_cp2->doorbell_index =3D RADEON_MAX_DOORBELLS;
+>                 cik_cp_fini(rdev);
+>                 cik_sdma_fini(rdev);
+>                 cik_irq_fini(rdev);
+> @@ -8678,10 +8685,16 @@ int cik_init(struct radeon_device *rdev)
+>          */
+>         if (!rdev->mc_fw && !(rdev->flags & RADEON_IS_IGP)) {
+>                 DRM_ERROR("radeon: MC ucode required for NI+.\n");
+> -               return -EINVAL;
+> +               r =3D -EINVAL;
+> +               goto out;
+>         }
+>
+>         return 0;
+> +
+> +out:
+> +       radeon_doorbell_free(rdev, ring_cp1->doorbell_index);
+> +       radeon_doorbell_free(rdev, ring_cp2->doorbell_index);
+> +       return r;
+>  }
+>
+>  /**
+> @@ -8695,6 +8708,7 @@ int cik_init(struct radeon_device *rdev)
+>   */
+>  void cik_fini(struct radeon_device *rdev)
+>  {
+> +       struct radeon_ring *ring;
+>         radeon_pm_fini(rdev);
+>         cik_cp_fini(rdev);
+>         cik_sdma_fini(rdev);
+> @@ -8708,6 +8722,10 @@ void cik_fini(struct radeon_device *rdev)
+>         radeon_ib_pool_fini(rdev);
+>         radeon_irq_kms_fini(rdev);
+>         uvd_v1_0_fini(rdev);
+> +       ring =3D &rdev->ring[CAYMAN_RING_TYPE_CP1_INDEX];
+> +       radeon_doorbell_free(rdev, ring->doorbell_index);
+> +       ring =3D &rdev->ring[CAYMAN_RING_TYPE_CP2_INDEX];
+> +       radeon_doorbell_free(rdev, ring->doorbell_index);
+>         radeon_uvd_fini(rdev);
+>         radeon_vce_fini(rdev);
+>         cik_pcie_gart_fini(rdev);
+> --
+> 2.49.0
+>
