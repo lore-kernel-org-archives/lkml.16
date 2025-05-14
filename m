@@ -1,125 +1,126 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3E528DF06;
-	Wed, 14 May 2025 19:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250519; cv=pass; b=dB7adRCawNz3niZOSaWmZSzeJyATLVcNokheEmPiGnMpapdTX+venpdr33NOb/I0gYspoL5DfQARFSreBCqwAR1TE4evazK+06338p9K/tStKrY23NpY9xmY2m2/QrRlqdI6uD9O1IhW4motE3F39QzEOJvVeMNanj/fy8fZ3aU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250519; c=relaxed/simple;
-	bh=oQQtLGpaLQeTz3MBR+hp0bvhk8AGqQPKXrLnOeR+ATM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=izv/p9BiCON2wCfNEqksUyZqpD+C+4mhkGy77R5xbUva5t1DUzNaVYr0LUbKEnAP1H5j91P6JQqR1i7YE6IvyBffm9J92SDELbF/q5a7bQPT+cynUdxECmRwAx67kJb+6fmTP/0s/jvcl46bK7uu207OEcOCxYKfYrDT2PpEf50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=dfyo+wf5; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E4328D8DF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747250529; cv=none; b=dTwxp/jLtB3zacUamYOFSuycnKyQcweZGkQOpVQKstROrxDDw6RdN+ZQzD1tpXrFfSFH9UU4nPOH3od6DfdF9n5TNvBetC8DgXBcYDyYBHW0yndROdvb/HUrgTGW+B9uJjpkmVIXrB5ozoYyYl75HdzQXqkBs6+hZseCQeqLPCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747250529; c=relaxed/simple;
+	bh=6GLh2vAUb131giOvQk8M/um3okSJGroCjyJghDkewc8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=K1ukvOipv4x/EHSONeDOerPSk1vtt7Tx453V5BZ7WUtiAq50wnJDp+JsLrNKOXyRjjy10zypCgOUs3JNrfoyxLY8q8hfztjykBy+GgEyVmC5azNdtTUL9YXkBwth2107QXSeSiLgZSRaOS0ub+N6zsr/IDoAb749vJgt6zRB52E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UJ+nSYMP; arc=none smtp.client-ip=209.85.166.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="dfyo+wf5"
-ARC-Seal: i=1; a=rsa-sha256; t=1747250485; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Wfdv1B8T83o9DZh8SpH3dWjoG+NTYUUTDN3N6T04dqDdUySysMaEQtwSuiXpMoZO47Bdx40Rae5NeKPqLtLejgZg+US1VWSxMMSbnwQIcS6OvjejyXLK9YZT6/mrc4Lbh98vPRPP2N2ZWPZCZnuQF8ihwHsd6HQzfEXwEGTdhXA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747250485; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yP+1ifj6zxHBL7CjkL5Fc2BNoyCt8ujOfFQ4GKtCvSY=; 
-	b=LQ0vpiNJ08nH9SBAY+1izlBcuL5Czk9B0Zujtgr2iyWFo+8rhncS2DLh1PuOmYVHs+s6Dz6GDxuA0VwtExrAS/W6zQpM5Cqwe5/x5xIAmFIL2gYRNIQASM84/3Ws92JmtlsiOtZRTwTkJfiwoNhrqkwZ7x53JFckQgy+rpYzw8g=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747250485;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=yP+1ifj6zxHBL7CjkL5Fc2BNoyCt8ujOfFQ4GKtCvSY=;
-	b=dfyo+wf5Y1K1R0eLQZvMOeyDt/NWY+npmbKxge28jKcjKUDKZsieiq+zHs2hhPKh
-	G7vci3Vlal6iJZP8DWNw4dHJ5z87kVIm34ddK2ji8/wxdS6IlnlJ1SlcigokxHjXrXh
-	PFKyv6XbVuzlxEXV6LCZSMh4etRYjtBi6SjrHOPA=
-Received: by mx.zohomail.com with SMTPS id 1747250482588551.1658179621887;
-	Wed, 14 May 2025 12:21:22 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Subject: [PATCH v3 0/2] rust: add support for request_irq
-Date: Wed, 14 May 2025 16:20:50 -0300
-Message-Id: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJ+nSYMP"
+Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3db6f98ddf7so2665455ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747250525; x=1747855325; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c8ePtC5HFZo+bckSClZmheBHRBfYWwooCNAcmQiJQhY=;
+        b=UJ+nSYMPX7xyaXdluGbrLXYlIgkX+ncmsGE1ZoopKj/U8aYSeceM5ClmY34DUvOXyf
+         Jdf7ptUaJ8+ePDlJy+UNpxwSWbaxdASi+u0gYEZevbJVahqMlHbPtNGIvyJyiJ1zIBw1
+         dSbtIkKdfB49tj3Ew57ph7EyrrnZONv2FtVwdAWuNMFOkjTnhFxbKILXFkgPl289t+Ph
+         zYaKmTnc008o8tVFgk/ZMhj2Pyo869S3kj8OB1ownMrUBq+8X9XZwWSrcXNRaHaTmH1l
+         RIxJqTomrn1FuuB8GOENr6Jg68fjGwAiBToF29W0+JKRn2cvte4X5j3kCg4VhJYheNei
+         XTug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747250525; x=1747855325;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c8ePtC5HFZo+bckSClZmheBHRBfYWwooCNAcmQiJQhY=;
+        b=vxHfndI4ZeTv0lNnx2EpY1NiQU52GnC7TePO3pVMX5pTRJX7W83gHqozl/KUjPnL1/
+         19m6Yz+K7Bei/adVrG13xBtMDuetO1z0rHtPSoN+15IJvsqqpqYhfYIsZv4kIiYeC/Rb
+         I+d+ork0pKd5/LcvX6rkPzP7jKMfKRlPBwwTOfyo5J9UeRatYr50pKoKqNg5DdtGVbSP
+         m4dnPSla/E7MuxwHBOzamMq+q/KeYRiRX89p8w6S8mq9lzG0Sg4i1/wBH07+Np36l3Zq
+         ypuD0v9BMBnFA5sq/c3enztSv+rKaCGWk8UBzRKBWF4t8J0gWkuULsKx/Wk0FEntdYjC
+         Z6HA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Tpka3Qrn4z98/LSPSEsW4YnoRhgFHgzUzXjFnXNMCP6NXPNgCgstr0CzpxmnSDbe28PlLK/VNKf042s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3uuCIpoMkSOJozYLohl9Up+7j/gPzMnQny4OLhK0Y7Ffhpvmu
+	t87biIYFCQaq7O0j3TiEpLyJsqbm55qfLg/GuFwQASHG73RTqXH0IQ5Dx+s3FV51rZS9cfNHVOq
+	WjMbcjQ==
+X-Google-Smtp-Source: AGHT+IF1ogsTmn2Q4LFsh6tOmFxWnhQ3nGtiA78U3XsyCpRhWXAptzz3zxmhkhTqbmqZ1kXN3wTOk6bikL9+
+X-Received: from ilbbt9.prod.google.com ([2002:a05:6e02:2489:b0:3d9:37ff:afd7])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:178f:b0:3d6:cbad:235c
+ with SMTP id e9e14a558f8ab-3db6f7ad141mr53575415ab.6.1747250525722; Wed, 14
+ May 2025 12:22:05 -0700 (PDT)
+Date: Wed, 14 May 2025 19:21:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABLtJGgC/52NQQ6CMBBFr0K6toS2UNCV9zDG1DLIJEBhWomEc
- HcL3sDl+8l7f2UeCMGzS7Iyghk9uiGCOiXMtmZ4Acc6MpOZLLJC5Dy4Ea3nYSFOML3BhwfSxPN
- GG5VVqgRTsSiPBA1+jvDtHrlFHxwtx88s9vWXFFIKrc5KprnW55ILXpsBoUtN1wPW5mpd15mnI
- 5Na17M9Ncv/9W3bvgK1QL7zAAAA
-X-Change-ID: 20250514-topics-tyr-request_irq-4f6a30837ea8
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250514192159.1751538-1-rananta@google.com>
+Subject: [PATCH 0/3] KVM: arm64: Allow vGICv4 configuration per VM
+From: Raghavendra Rao Ananta <rananta@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
+injection by default to all the VMs in the system, aka GICv4. A
+shortcoming of the GIC architecture is that there's an absolute limit on
+the number of vPEs that can be tracked by the ITS. It is possible that
+an operator is running a mix of VMs on a system, only wanting to provide
+a specific class of VMs with hardware interrupt injection support.
+
+To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
+for the userspace to enable or disable vGICv4 for a given VM.
+
+The attribute allows the configuration only when vGICv4 is enabled in KVM,
+else it acts a read-only attribute returning
+KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE as the value.
+
+On the other hand, if KVM has the vGICv4 enabled via the cmdline, the
+VM absorbs this configuration by default to maintain the backward
+compatibility. Userspace can get the attribute's value to check if the VM
+has vGICv4 support if it sees KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE as the
+value. As required, it can disable vGICv4 by setting
+KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE as the value.
+
+The patches are distrubuted as:
+
+Patch-1 contains the KVM code that introduces the
+KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr, and adds all the support around it.
+
+Patch-2 adds the documentation for the said attribute.
+
+Patch-3 extends the vgic_init kvm/arm64 selftest that tests the get and
+set of this attribute in various configurations.
+
+Thank you.
+Raghavendra
+
+Raghavendra Rao Ananta (3):
+  kvm: arm64: Add support for KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr
+  docs: kvm: devices/arm-vgic-v3: Document KVM_DEV_ARM_VGIC_CONFIG_GICV4
+    attr
+  KVM: selftests: Extend vgic_init to test GICv4 config attr
+
+ .../virt/kvm/devices/arm-vgic-v3.rst          | 24 ++++++--
+ arch/arm64/include/uapi/asm/kvm.h             |  7 +++
+ arch/arm64/kvm/vgic/vgic-init.c               |  3 +
+ arch/arm64/kvm/vgic/vgic-its.c                |  2 +-
+ arch/arm64/kvm/vgic/vgic-kvm-device.c         | 39 +++++++++++++
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c            | 12 ++--
+ arch/arm64/kvm/vgic/vgic-v3.c                 | 16 ++++-
+ arch/arm64/kvm/vgic/vgic-v4.c                 |  8 +--
+ include/kvm/arm_vgic.h                        |  5 ++
+ tools/testing/selftests/kvm/arm64/vgic_init.c | 58 +++++++++++++++++++
+ 10 files changed, 157 insertions(+), 17 deletions(-)
 
 
----
-Changes in v3:
-- Rebased on driver-core-next
-- Added patch to get the irq numbers from a platform device (thanks,
-  Christian!)
-- Split flags into its own file.
-- Change iff to "if and only if"
-- Implement PartialEq and Eq for Flags
-- Fix some broken docs/markdown
-- Reexport most things so users can elide ::request from the path
-- Add a blanket implementation of ThreadedHandler and Handler for
-  Arc/Box<T: Handler> that just forwards the call to the T. This lets us
-  have Arc<Foo> and Box<Foo> as handlers if Foo: Handler.
-- Rework the examples a bit.
-- Remove "as _" casts in favor of "as u64" for flags. This is needed to
-  cast the individual flags into u64.
-- Use #[repr(u32)] for ThreadedIrqReturn and IrqReturn.
-- Wrapped commit messages to < 75 characters
-
-- Link to v2: https://lore.kernel.org/r/20250122163932.46697-1-daniel.almeida@collabora.com
-
-Changes in v2:
-- Added Co-developed-by tag to account for the work that Alice did in order to
-figure out how to do this without Opaque<T> (Thanks!)
-- Removed Opaque<T> in favor of plain T
-- Fixed the examples
-- Made sure that the invariants sections are the last entry in the docs
-- Switched to slot.cast() where applicable,
-- Mentioned in the safety comments that we require that T: Sync,
-- Removed ThreadedFnReturn in favor of IrqReturn,
-- Improved the commit message
-
-Link to v1: https://lore.kernel.org/rust-for-linux/20241024-topic-panthor-rs-request_irq-v1-1-7cbc51c182ca@collabora.com/
-
----
-Daniel Almeida (2):
-      rust: irq: add support for request_irq()
-      rust: platform: add irq accessors
-
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/irq.c              |   9 +
- rust/kernel/irq.rs              |  24 +++
- rust/kernel/irq/flags.rs        | 102 +++++++++
- rust/kernel/irq/request.rs      | 455 ++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/platform.rs         |  52 +++++
- 8 files changed, 645 insertions(+)
----
 base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250514-topics-tyr-request_irq-4f6a30837ea8
-
-Best regards,
--- 
-Daniel Almeida <daniel.almeida@collabora.com>
+--
+2.49.0.1101.gccaa498523-goog
 
