@@ -1,66 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1BF1DDC22
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3E01C84A4;
+	Wed, 14 May 2025 15:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235468; cv=none; b=quBqh/0rOC4mTLiHVwT065kHyVQz65CkktS59T/gLVaRMZ5Ag1tM8W7/4w6PIFAPd0GocgwgqLA0wsYWIHJT3yC2oZCidke+XCxroQOxXOsZzdDo1QHr8RsNkjsGxA0RmABKaiQyW1FewuokLZoRQDsbR+gLi/H7T35V76yIyIY=
+	t=1747235473; cv=none; b=Upobt8XN21pM/emJuyBJBpYKU2EkhHCcfePe0oJ+sj0varFyt83yRqs7hKdE89ApNlNKAxGRjjbS1A0xRYgKnPtqQAqfMDCdkQDtOTXTt58V42qasi2auazth/lPc9gsZ1kTy6Gda5jkuOCvyQBMVqkGnVfMiz/d3c/IANvZMvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235468; c=relaxed/simple;
-	bh=De5huDuHNfBRJRK8hKACdHG/i0THQ2Gl/veZyb7GF7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJ4ibCOfXjqVQekwe/DgNm3ikkTOqzHdjkqsFF5oi8TIUEVydKse2JzQ4r9BEzQaY0nPg2PMeyMTd7dZ5CnX1IU2DXeYVTSdsCy9VDYiWFxfs54n5jC5o9qck/x2gIQqMh5Yu0si6/gbZsawqiYfp0Bk2L/3m+HCv8innnt5Q1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Av/CCwZR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747235473; c=relaxed/simple;
+	bh=hL3aN23RbdhK+nJBxfRLZ6FaNf71Aao4oJmKsCMkwUI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SCosisygRGwo9THMYbR6K4SPSI+OLrpWSaRbVW84/6uOM2Q+LXr6aZwk6/8VrR4lsLPh1VEA/P6ll1INPA2HLnjKFKNgIIJPxFjUxWjV7Yla8MQUyiDK9F95HH9e2ezZVUPB6ASRX1nnKJXEKCa4HWNnQpwmckm1wq6y3kwAFG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cc90RYmn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Av/CCwZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC1FC4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cc90RYmn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F60C4CEED;
 	Wed, 14 May 2025 15:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747235468;
-	bh=De5huDuHNfBRJRK8hKACdHG/i0THQ2Gl/veZyb7GF7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Av/CCwZR1U0ZHtd/50ng5e5sDxLRH2IbmgpF/8h214uxTRDKAP5e2kuFwgYMrknkj
-	 UfXNWH5kXqKUUU+gUKE5BZmNSpLrP+8coFPO9Xb9tem7SyHlTKEBb/tT9lekkbaqub
-	 4y/YHfuwVu8brwswhEB3UuMsHDDYHRLvNw67UDqgr7458fu3iIJFVBO/FmBhlPHCnO
-	 TSYjAi+amKwAwc0qMeeTLyPQ6YcQXAOO6Xf2AF7LCuI9TvrmeBzij1S/ye0wF21H3O
-	 2oGq+RjgqMoDz2sX+0mMG2/S90ZXXebx275S5HxM1V0VxW/Gwy078OemSLcS5Nn8iB
-	 gFfY/O8i75Z3A==
-Date: Wed, 14 May 2025 11:11:06 -0400
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4 sched_ext/for-6.16] sched_ext: Clean up scx_root
- usages
-Message-ID: <aCSyikNoPIhG_ZtE@mtj.duckdns.org>
-References: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
+	s=k20201202; t=1747235472;
+	bh=hL3aN23RbdhK+nJBxfRLZ6FaNf71Aao4oJmKsCMkwUI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=cc90RYmnLhvW5Afh4sps6r24qrDQFjG1NjVO7Ja7bJtCHHByyfQn3+5aygAB3VGrA
+	 IQtFaSXAV6li0txXd3w3Gan27vXsKCXx1vtGlwrL71cAMxKCkxd3F3YsFl45aIZMIH
+	 KIHrIrfEyu5Xwaww9DBgjoGw/xl2ODkFaV23L1nlabJxAuAyYCoJ5pp2aGPW5WkXOQ
+	 aHAqHvcMox4Uv4V5jlcSmBlELOWz/88z9SJyZluM8kW1tuO5F155N9iGaY4Gz4fyEG
+	 qUm4Zb8Wq6/A/Ym6+MBKTP3BsZpq5ceTCXZFkKIUSfFKyAnrOSPyGMHOOHftoxokhJ
+	 Xu4FkvC0jFEgg==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Wed, 14 May 2025 17:10:25 +0200
+Subject: [PATCH RFT v2 05/15] drm/msm/a6xx: Resolve the meaning of AMSBC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-topic-ubwc_central-v2-5-09ecbc0a05ce@oss.qualcomm.com>
+References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+In-Reply-To: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747235442; l=3323;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=p6lmRPBIIshocTtSmkKCM3pmT//8eDH1Lyx6WXabKCg=;
+ b=9e2YN9fRz0m2UIoVxYq8vMxHcHx2tPW2TztLi8beq05Kp9qhKw43UUK+op2PugAbnGLsr66k5
+ RLKKNquXb68BkPhMkHbXdVt42IG9EEg077ohlEb8Dqa2Up4N1DHDyGP
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Wed, May 14, 2025 at 12:47:46AM -0400, Tejun Heo wrote:
-> - Always cache scx_root into local variable sch before using.
-> 
-> - Don't use scx_root if cached sch is available.
-> 
-> - Wrap !sch test with unlikely().
-> 
-> - Pass @scx into scx_cgroup_init/exit().
-> 
-> No behavior changes intended.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Applied 1-4 to sched_ext/for-6.16.
+The bit must be set to 1 if the UBWC encoder version is >= 3.0, drop it
+as a separate field.
 
-Thanks.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index ba20ff92780dbd565374f8113ea99f615b80d105..334a4c4627ffb562a83f51e6e2c95e31af950c08 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -617,21 +617,16 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 
+ 	if (adreno_is_a621(gpu)) {
+ 		gpu->ubwc_config.highest_bank_bit = 13;
+-		gpu->ubwc_config.amsbc = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 	}
+ 
+ 	if (adreno_is_a623(gpu)) {
+ 		gpu->ubwc_config.highest_bank_bit = 16;
+-		gpu->ubwc_config.amsbc = 1;
+ 		gpu->ubwc_config.rgb565_predicator = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 		gpu->ubwc_config.macrotile_mode = 1;
+ 	}
+ 
+-	if (adreno_is_a640_family(gpu))
+-		gpu->ubwc_config.amsbc = 1;
+-
+ 	if (adreno_is_a680(gpu))
+ 		gpu->ubwc_config.macrotile_mode = 1;
+ 
+@@ -642,7 +637,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 	    adreno_is_a740_family(gpu)) {
+ 		/* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+ 		gpu->ubwc_config.highest_bank_bit = 16;
+-		gpu->ubwc_config.amsbc = 1;
+ 		gpu->ubwc_config.rgb565_predicator = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 		gpu->ubwc_config.macrotile_mode = 1;
+@@ -650,7 +644,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 
+ 	if (adreno_is_a663(gpu)) {
+ 		gpu->ubwc_config.highest_bank_bit = 13;
+-		gpu->ubwc_config.amsbc = 1;
+ 		gpu->ubwc_config.rgb565_predicator = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 		gpu->ubwc_config.macrotile_mode = 1;
+@@ -659,7 +652,6 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 
+ 	if (adreno_is_7c3(gpu)) {
+ 		gpu->ubwc_config.highest_bank_bit = 14;
+-		gpu->ubwc_config.amsbc = 1;
+ 		gpu->ubwc_config.uavflagprd_inv = 2;
+ 		gpu->ubwc_config.macrotile_mode = 1;
+ 	}
+@@ -675,6 +667,7 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
++	const struct qcom_ubwc_cfg_data *cfg = adreno_gpu->common_ubwc_cfg;
+ 	/*
+ 	 * We subtract 13 from the highest bank bit (13 is the minimum value
+ 	 * allowed by hw) and write the lowest two bits of the remaining value
+@@ -682,6 +675,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+ 	 */
+ 	BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+ 	u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
++	bool amsbc = cfg->ubwc_enc_version >= UBWC_3_0;
+ 	u32 hbb_hi = hbb >> 2;
+ 	u32 hbb_lo = hbb & 3;
+ 	u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+@@ -690,7 +684,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+ 	gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
+ 		  level2_swizzling_dis << 12 |
+ 		  adreno_gpu->ubwc_config.rgb565_predicator << 11 |
+-		  hbb_hi << 10 | adreno_gpu->ubwc_config.amsbc << 4 |
++		  hbb_hi << 10 | amsbc << 4 |
+ 		  adreno_gpu->ubwc_config.min_acc_len << 3 |
+ 		  hbb_lo << 1 | ubwc_mode);
+ 
 
 -- 
-tejun
+2.49.0
+
