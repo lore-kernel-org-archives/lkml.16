@@ -1,308 +1,186 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D649717993;
-	Wed, 14 May 2025 17:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D6B183CA6
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747242871; cv=none; b=RPYgcXs7KqJGKSAFBdib6Wv0KwtsZhL5XJYvFnTA8KqPZIms4+8CMcnfRmVf2zXLu5nEEpafsnTIt6XiFf2Mljn6f/+sO7+p7cD3aeZQiQM5XsW/5X6OybuVK2ZHA0UK4pzkwj9huKW2hDPgfc98WX+7x0ngFSmAkbEuGIcZUR4=
+	t=1747243058; cv=none; b=DrtGvYRuANI4Ir6UPXgsQAai33a+FIE2xWTjw9ng+Id8jpssnkQ3XIeyeO0bXDQS0KA40rtc4leqi+mgWTJ2yC/Nd4TOZ8cjU4y8N2XUDJa9iaueT5wrLNkWhpgtAJx0kRl8EE0p3xHyhVcm88hE2acLYMh86hRRboYmmyUg92Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747242871; c=relaxed/simple;
-	bh=S/K1zsUF7eLsrRUFZOdB1YfAGqHwutjswN+i2l4kwXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=macF1/8EQrbOTXCeiYVvGe2sze2HBXJ8ZR0sIbL0WFarBIzIHi5QEd2O6i8sU0HOw8Grb1ASPgdeL0T52v+8gmLzmu/ewlJIZ4LdbPyk0FdYKUt9wDgWRsIBXzXXzkphzTEfcnMSxoDv3VP41HihYBqbHF6p0ys+aoMAUwEVQoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RaOwWc91; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747243058; c=relaxed/simple;
+	bh=FDhdtyxCTap+04aKrlvv+t4yDmBNbsQsV62cqYnEcWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O9ILbhnNyh2Ky6xlhGlAoTlA056dV0DxNd4E7YNtVKDiE7ROAp7FFfn+rH3KTZrbp0BMdiE+gXt2L9/xVQvC00r+58NvutiCehgbDNY7bkDb+i1gaE2drl64+Xe462L8GxXXV+0Ax7WYwp9CFf2peeaWt4tPON6tyEaVceAci7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxVmr/ft; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RaOwWc91"
-Received: from [100.65.162.40] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id F05C5211B7AC;
-	Wed, 14 May 2025 10:14:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F05C5211B7AC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747242869;
-	bh=vhVY/JQGbSryNshzZz8qJI1/wNOosPR4nvGb9r2ZXLI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RaOwWc914e5RgadGPG6SCxAen6STpf/HWDyAPrkvuF7Ctrk+un2ZJnqOU46sOoxLO
-	 /EpgvM6BunyNJJe+5Kr/KMDP1PngmEJz4xKCP7QHPwkEfHO9BcaOucDK4AVlAHAykz
-	 bigP6ObOIB0tCMbRvmXg6nay+bzxiDLeiPOBtN8s=
-Message-ID: <51587714-f363-43a5-96e0-9071c0cac8d6@linux.microsoft.com>
-Date: Wed, 14 May 2025 10:14:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxVmr/ft"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB840C116D0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747243057;
+	bh=FDhdtyxCTap+04aKrlvv+t4yDmBNbsQsV62cqYnEcWQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GxVmr/ftS93uarBMKzJWceF4i9WcC7bKkCJh8F6Nhk59cFukYASZ88mOuaxpNBYKj
+	 xD1zOe+mXSuBIXQjSjIg8ZUWQRWkLb2GQWLUbD0qmprod5Qoc5C4FmNwZty0XAV8rv
+	 LoHWK9XhMs5fGj79eLOUvSiiiLzqeZmpUSkiwBv1Bj7kbhniF7c5+k5A2JBXOyS+Q7
+	 YvqzPZYjq0KOnnqvvCiyUyKEfiLf0qqAyUGACDO7AIQwCYWB6rApq9vWnkJ7Ysf5L9
+	 URg/w2CjDBbpfqq3YcE+ivuaZsXk/L6ulnw9KwYBHASfYyCiAYu+yeUtuns0F3NQq8
+	 YKIQlC8ao2elg==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbed53b421so149885a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:17:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXyHRhEDkPovhyF4VEQ70B5C5Y/YMjrK/Y9M/WOjYja+hWln3Luxlu4rx9JWoBAauoPoS/elIg0Cc2jWKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN+ww8mMxD5ESvhnMQFqs5BKRpcJjOxMyZWwYoa4yGJ8AVouza
+	2l7SVMR7RQuEzAMDc9LAh7hUi1Sdlfbgd24jiluaRExAqhdQnUVh4ZldpJAatV89kDI/VmhE0Vf
+	XwA8+r+w8o6v/NYU9VD7MjSOT9UI+nBso00Oz
+X-Google-Smtp-Source: AGHT+IEOVd6ylZgHdYkHjW+kgS0JvvQJmlojiJ55yxngXk0tGlu2ur8qbDKzXcFMtelFrk1TuWFTRE31C+Kg7x92aJA=
+X-Received: by 2002:a05:6402:238f:b0:5ff:b606:930b with SMTP id
+ 4fb4d7f45d1cf-5ffb6069372mr1068438a12.12.1747243056124; Wed, 14 May 2025
+ 10:17:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/54] 5.15.183-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250512172015.643809034@linuxfoundation.org>
-Content-Language: en-US
-From: Hardik Garg <hargar@linux.microsoft.com>
-In-Reply-To: <20250512172015.643809034@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+ <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com> <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
+In-Reply-To: <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Wed, 14 May 2025 19:17:25 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
+X-Gm-Features: AX0GCFsMtrdPzfS33E-5H3itP3YDxJJoQNEUvaPpI7wNO1nxLfvV3IZXpPdMWT8
+Message-ID: <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Paul Moore <paul@paul-moore.com>, bboscaccy@linux.microsoft.com, bpf@vger.kernel.org, 
+	code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, dhowells@redhat.com, 
+	gnoack@google.com, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	jmorris@namei.org, jstancek@redhat.com, justinstitt@google.com, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, llvm@lists.linux.dev, 
+	masahiroy@kernel.org, mic@digikod.net, morbo@google.com, nathan@kernel.org, 
+	neal@gompa.dev, nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu, 
+	nkapron@google.com, roberto.sassu@huawei.com, serge@hallyn.com, 
+	shuah@kernel.org, teknoraver@meta.com, xiyou.wangcong@gmail.com, 
+	kysrinivasan@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The kernel, bpf tool and perf tool builds fine for v5.15.183-rc1 on x86
-and arm64 Azure VM.
+On Wed, May 14, 2025 at 5:39=E2=80=AFPM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Sun, 2025-05-11 at 04:01 +0200, KP Singh wrote:
+> [...]
+> > >
+> > For this specific BPF case, we will directly sign a composite of the
+> > first message and the hash of the second. Let H_meta =3D H(M_metadata).
+> > The block to be signed is effectively:
+> >
+> >     B_signed =3D I_loader || H_meta
+> >
+> > The signature generated is Sig(B_signed).
+> >
+> > The process then follows a similar pattern to the Alice and Bob
+> > model,
+> > where the kernel (Bob) verifies I_loader and H_meta using the
+> > signature. Then, the trusted I_loader is responsible for verifying
+> > M_metadata against the trusted H_meta.
+> >
+> > From an implementation standpoint:
+> >
+> > # Build
+> >
+> > bpftool (or some other tool in the user's build environment) knows
+> > about the metadata (M_metadata) and the loader program (I_loader). It
+> > first calculates H_meta =3D H(M_metadata). Then it constructs the
+> > object
+> > to be signed and computes the signature:
+> >
+> >     Sig(I_loader || H_meta)
+> >
+> > # Loader
+> >
+> > bpftool generates the loader program. The initial instructions of
+> > this loader program are designed to verify the SHA256 hash of the
+> > metadata (M_metadata) that will be passed in a map. These
+> > instructions effectively embed the precomputed H_meta as immediate
+> > values.
+> >
+> >     ld_imm64 r1, const_ptr_to_map // insn[0].src_reg =3D=3D
+> > BPF_PSEUDO_MAP_IDX
+> >     r2 =3D *(u64 *)(r1 + 0);
+> >     ld_imm64 r3, sha256_of_map_part1 // constant precomputed by
+> > bpftool (part of H_meta)
+> >     if r2 !=3D r3 goto out;
+> >
+> >     r2 =3D *(u64 *)(r1 + 8);
+> >     ld_imm64 r3, sha256_of_map_part2 // (part of H_meta)
+> >     if r2 !=3D r3 goto out;
+> >
+> >     r2 =3D *(u64 *)(r1 + 16);
+> >     ld_imm64 r3, sha256_of_map_part3 // (part of H_meta)
+> >     if r2 !=3D r3 goto out;
+> >
+> >     r2 =3D *(u64 *)(r1 + 24);
+> >     ld_imm64 r3, sha256_of_map_part4 // (part of H_meta)
+> >     if r2 !=3D r3 goto out;
+> >     ...
+> >
+> > This implicitly makes the payload equivalent to the signed block
+> > (B_signed)
+> >
+> >     I_loader || H_meta
+> >
+> > bpftool then generates the signature of this I_loader payload (which
+> > now contains the expected H_meta) using a key (system or user) with
+> > new flags that work in combination with bpftool -L
+>
+> Could I just push back a bit on this.  The theory of hash chains (which
+> I've cut to shorten) is about pure data structures.  The reason for
+> that is that the entire hash chain is supposed to be easily
+> independently verifiable in any environment because anything can
+> compute the hashes of the blocks and links.  This independent
+> verification of the chain is key to formally proving hash chains to be
+> correct.  In your proposal we lose the easy verifiability because the
+> link hash is embedded in the ebpf loader program which has to be
+> disassembled to do the extraction of the hash and verify the loader is
+> actually checking it.
 
-KernelCI with LTP and kselftest results: Tree: stable/linux-5.15.y 
-<https://dashboard.kernelci.org/tree/3b8db0e4f2631c030ab86f78d199ec0b198578f3?o=microsoft&p=t&ti%7Cc=v5.15.182&ti%7Cch=3b8db0e4f2631c030ab86f78d199ec0b198578f3&ti%7Cgb=linux-5.15.y&ti%7Cgu=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fstable%2Flinux.git&ti%7Ct=stable>
+I am not sure I understand your concern. This is something that can
+easily be built into tooling / annotations.
 
+    bpftool -S -v <verification_key> <loader> <metadata>
 
-Tested-by: Hardik Garg <hargar@linux.microsoft.com>
+Could you explain what's the use-case for "easy verifiability".
 
+>
+> I was looking at ways we could use a pure hash chain (i.e. signature
+> over loader and real map hash) and it does strike me that the above
+> ebpf hash verification code is pretty invariant and easy to construct,
+> so it could run as a separate BPF fragment that then jumps to the real
+> loader.  In that case, it could be constructed on the fly in a trusted
+> environment, like the kernel, from the link hash in the signature and
+> the signature could just be Sig(loader || map hash) which can then be
 
-Thanks,
-Hardik
+The design I proposed does the same thing:
 
-On 5/12/2025 10:29 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.183 release.
-> There are 54 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.183-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
-> -------------
-> Pseudo-Shortlog of commits:
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->      Linux 5.15.183-rc1
->
-> Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
->      x86/bhi: Do not set BHI_DIS_S in 32-bit mode
->
-> Daniel Sneddon <daniel.sneddon@linux.intel.com>
->      x86/bpf: Add IBHF call at end of classic BPF
->
-> Daniel Sneddon <daniel.sneddon@linux.intel.com>
->      x86/bpf: Call branch history clearing sequence on exit
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->      Revert "net: phy: microchip: force IRQ polling mode for lan88xx"
->
-> Al Viro <viro@zeniv.linux.org.uk>
->      do_umount(): add missing barrier before refcount checks in sync case
->
-> Daniel Wagner <wagi@kernel.org>
->      nvme: unblock ctrl state transition for firmware update
->
-> Kevin Baker <kevinb@ventureresearch.com>
->      drm/panel: simple: Update timings for AUO G101EVN010
->
-> Thorsten Blum <thorsten.blum@linux.dev>
->      MIPS: Fix MAX_REG_OFFSET
->
-> Jonathan Cameron <Jonathan.Cameron@huawei.com>
->      iio: adc: dln2: Use aligned_s64 for timestamp
->
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->      types: Complement the aligned types with signed 64-bit one
->
-> Dave Penkler <dpenkler@gmail.com>
->      usb: usbtmc: Fix erroneous generic_read ioctl return
->
-> Dave Penkler <dpenkler@gmail.com>
->      usb: usbtmc: Fix erroneous wait_srq ioctl return
->
-> Dave Penkler <dpenkler@gmail.com>
->      usb: usbtmc: Fix erroneous get_stb ioctl error returns
->
-> Oliver Neukum <oneukum@suse.com>
->      USB: usbtmc: use interruptible sleep in usbtmc_read
->
-> Andrei Kuchynski <akuchynski@chromium.org>
->      usb: typec: ucsi: displayport: Fix NULL pointer access
->
-> RD Babiera <rdbabiera@google.com>
->      usb: typec: tcpm: delay SNK_TRY_WAIT_DEBOUNCE to SRC_TRYWAIT transition
->
-> Jim Lin <jilin@nvidia.com>
->      usb: host: tegra: Prevent host controller crash when OTG port is used
->
-> Wayne Chang <waynec@nvidia.com>
->      usb: gadget: tegra-xudc: ACK ST_RC after clearing CTRL_RUN
->
-> Pawel Laszczak <pawell@cadence.com>
->      usb: cdnsp: fix L1 resume issue for RTL_REVISION_NEW_LPM version
->
-> Pawel Laszczak <pawell@cadence.com>
->      usb: cdnsp: Fix issue with resuming from L1
->
-> Jan Kara <jack@suse.cz>
->      ocfs2: stop quota recovery before disabling quotas
->
-> Jan Kara <jack@suse.cz>
->      ocfs2: implement handshaking with ocfs2 recovery thread
->
-> Jan Kara <jack@suse.cz>
->      ocfs2: switch osb->disable_recovery to enum
->
-> Dmitry Antipov <dmantipov@yandex.ru>
->      module: ensure that kobject_put() is safe for module type kobjects
->
-> Jason Andryuk <jason.andryuk@amd.com>
->      xenbus: Use kref to track req lifetime
->
-> Alexey Charkov <alchark@gmail.com>
->      usb: uhci-platform: Make the clock really optional
->
-> Wayne Lin <Wayne.Lin@amd.com>
->      drm/amd/display: Fix wrong handling for AUX_DEFER case
->
-> Silvano Seva <s.seva@4sigma.it>
->      iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_tagged_fifo
->
-> Silvano Seva <s.seva@4sigma.it>
->      iio: imu: st_lsm6dsx: fix possible lockup in st_lsm6dsx_read_fifo
->
-> Gabriel Shahrouzi <gshahrouzi@gmail.com>
->      iio: adis16201: Correct inclinometer channel resolution
->
-> Angelo Dureghello <adureghello@baylibre.com>
->      iio: adc: ad7606: fix serial register access
->
-> Dave Hansen <dave.hansen@linux.intel.com>
->      x86/mm: Eliminate window where TLB flushes may be inadvertently skipped
->
-> Gabriel Shahrouzi <gshahrouzi@gmail.com>
->      staging: axis-fifo: Correct handling of tx_fifo_depth for size validation
->
-> Gabriel Shahrouzi <gshahrouzi@gmail.com>
->      staging: axis-fifo: Remove hardware resets for user errors
->
-> Gabriel Shahrouzi <gshahrouzi@gmail.com>
->      staging: iio: adc: ad7816: Correct conditional logic for store mode
->
-> Aditya Garg <gargaditya08@live.com>
->      Input: synaptics - enable InterTouch on TUXEDO InfinityBook Pro 14 v5
->
-> Dmitry Torokhov <dmitry.torokhov@gmail.com>
->      Input: synaptics - enable SMBus for HP Elitebook 850 G1
->
-> Aditya Garg <gargaditya08@live.com>
->      Input: synaptics - enable InterTouch on Dell Precision M3800
->
-> Aditya Garg <gargaditya08@live.com>
->      Input: synaptics - enable InterTouch on Dynabook Portege X30L-G
->
-> Manuel Fombuena <fombuena@outlook.com>
->      Input: synaptics - enable InterTouch on Dynabook Portege X30-D
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: fix learning on VLAN unaware bridges
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: always rejoin default untagged VLAN on bridge leave
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: fix VLAN ID for untagged vlan on bridge leave
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: fix flushing old pvid VLAN on pvid change
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: fix clearing PVID of a port
->
-> Jonas Gorski <jonas.gorski@gmail.com>
->      net: dsa: b53: allow leaky reserved multicast
->
-> Jozsef Kadlecsik <kadlec@netfilter.org>
->      netfilter: ipset: fix region locking in hash types
->
-> Oliver Hartkopp <socketcan@hartkopp.net>
->      can: gw: fix RCU/BH usage in cgw_create_job()
->
-> Uladzislau Rezki (Sony) <urezki@gmail.com>
->      rcu/kvfree: Add kvfree_rcu_mightsleep() and kfree_rcu_mightsleep()
->
-> Eric Dumazet <edumazet@google.com>
->      can: gw: use call_rcu() instead of costly synchronize_rcu()
->
-> Guillaume Nault <gnault@redhat.com>
->      gre: Fix again IPv6 link-local address generation.
->
-> Eelco Chaudron <echaudro@redhat.com>
->      openvswitch: Fix unsafe attribute parsing in output_userspace()
->
-> Marc Kleine-Budde <mkl@pengutronix.de>
->      can: mcp251xfd: mcp251xfd_remove(): fix order of unregistration calls
->
-> Marc Kleine-Budde <mkl@pengutronix.de>
->      can: mcan: m_can_class_unregister(): fix order of unregistration calls
->
->
-> -------------
->
-> Diffstat:
->
->   Makefile                                           |   4 +-
->   arch/mips/include/asm/ptrace.h                     |   3 +-
->   arch/x86/kernel/cpu/bugs.c                         |   5 +-
->   arch/x86/kernel/cpu/common.c                       |   9 +-
->   arch/x86/mm/tlb.c                                  |  23 ++-
->   arch/x86/net/bpf_jit_comp.c                        |  52 +++++++
->   .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.c    |  28 +++-
->   drivers/gpu/drm/panel/panel-simple.c               |  25 +--
->   drivers/iio/accel/adis16201.c                      |   4 +-
->   drivers/iio/adc/ad7606_spi.c                       |   2 +-
->   drivers/iio/adc/dln2-adc.c                         |   2 +-
->   drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c     |   6 +
->   drivers/input/mouse/synaptics.c                    |   5 +
->   drivers/net/can/m_can/m_can.c                      |   2 +-
->   drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c     |   2 +-
->   drivers/net/dsa/b53/b53_common.c                   |  36 +++--
->   drivers/net/phy/microchip.c                        |  46 +++++-
->   drivers/nvme/host/core.c                           |   3 +-
->   drivers/staging/axis-fifo/axis-fifo.c              |  14 +-
->   drivers/staging/iio/adc/ad7816.c                   |   2 +-
->   drivers/usb/cdns3/cdnsp-gadget.c                   |  31 ++++
->   drivers/usb/cdns3/cdnsp-gadget.h                   |   6 +
->   drivers/usb/cdns3/cdnsp-pci.c                      |  12 +-
->   drivers/usb/cdns3/cdnsp-ring.c                     |   3 +-
->   drivers/usb/cdns3/core.h                           |   3 +
->   drivers/usb/class/usbtmc.c                         |  59 +++++---
->   drivers/usb/gadget/udc/tegra-xudc.c                |   4 +
->   drivers/usb/host/uhci-platform.c                   |   2 +-
->   drivers/usb/host/xhci-tegra.c                      |   3 +
->   drivers/usb/typec/tcpm/tcpm.c                      |   2 +-
->   drivers/usb/typec/ucsi/displayport.c               |   2 +
->   drivers/xen/xenbus/xenbus.h                        |   2 +
->   drivers/xen/xenbus/xenbus_comms.c                  |   9 +-
->   drivers/xen/xenbus/xenbus_dev_frontend.c           |   2 +-
->   drivers/xen/xenbus/xenbus_xs.c                     |  18 ++-
->   fs/namespace.c                                     |   3 +-
->   fs/ocfs2/journal.c                                 |  80 +++++++---
->   fs/ocfs2/journal.h                                 |   1 +
->   fs/ocfs2/ocfs2.h                                   |  17 ++-
->   fs/ocfs2/quota_local.c                             |   9 +-
->   fs/ocfs2/super.c                                   |   3 +
->   include/linux/rcupdate.h                           |   3 +
->   include/linux/types.h                              |   3 +-
->   include/uapi/linux/types.h                         |   1 +
->   kernel/params.c                                    |   4 +-
->   net/can/gw.c                                       | 167 +++++++++++++--------
->   net/ipv6/addrconf.c                                |  15 +-
->   net/netfilter/ipset/ip_set_hash_gen.h              |   2 +-
->   net/openvswitch/actions.c                          |   3 +-
->   49 files changed, 538 insertions(+), 204 deletions(-)
+    Sig(loader || H_metadata)
+
+metadata is actually the data (programs, context etc) that's passed in
+the map. The verification just happens in the loader program and the
+loader || H_metadata is implemented elegantly to avoid any separate
+payloads.
+
+> easily verified without having to disassemble ebpf code.  So we get the
+> formal provability benefits of using a real hash chain while still
+> keeping your verification in BPF.
+>
+> Regards,
+>
+> James
 >
 >
