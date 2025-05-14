@@ -1,128 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08C3227E8A;
-	Wed, 14 May 2025 09:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408F71F428F
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215235; cv=none; b=B76UWwN9vWPC4WzfxkJrb3VljHpOKbTjZgZuAPVDmAS0kHtYK1gDSgL9ogVvT058S8Ld9W4zO5vecw3ZzgMiRfzn1NtIxFZ7zUlOUg7Tio95R3mD55afjt/+VLq8mYP07ywlnmxTLba+HPA9f/mwM3F8Yf4wFY8ATINh00ZhzDw=
+	t=1747215266; cv=none; b=RPaHU0yMGwiGRAA+GFOw9jc/N6W9C1IEpVnFl7qp1O2cEwVNhaTpYDdVjrrDLfQRbGhLQfml+9GhqIk5Ywv/GAmdp1oK6cCbod5gtIXOozVRXgof+UNaOY619sfxfeBDsg+LWr1xTrcsfWlSy/+1KzPDYb9k9Aaf68ItbxuSOXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215235; c=relaxed/simple;
-	bh=001qyor2xDVXczQ1I1uPsfetah7D3sKu1ILOVywqFnk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=goWf0DO5l/T9yiK+dvpM0wRWtQ0HuuEggh8wFvvOF4+Y304Oke925OXf6bHfNrYg/bUJjwTxrYRPF3yJMFY+d4GprFfUXVnbTeBHcD467z76eqiJ0uIxb3wKKr6+QYldQKq7p82izdxYm1Aksuw/ak2xIq2xtmRo1aNLTXESwlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAqFqcpm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747215266; c=relaxed/simple;
+	bh=/6nGC5BjccxoMp2RpNx9KKztyfvcmY9G/pI4GwtOFzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XqyqqdGAU3SWw0/IrYoz0iAVgmD3QTh6ny14l0m4xev6bzkMKq9+8XYnln2YC5Uv0v+p2RmwGZqox0pJy9CJJX/GRgcdzc4YEo1d4g/0BNvuv1KaiAcYsV0fhRj8RUvri0/vdnP42vVPuHKegCxjNlr+as6i7RzR91PcHz/FsM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LvE6IK2R; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAqFqcpm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45060C4CEE9;
-	Wed, 14 May 2025 09:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215234;
-	bh=001qyor2xDVXczQ1I1uPsfetah7D3sKu1ILOVywqFnk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oAqFqcpmzH/13hbR8m/oQ4XroGsKo3tle3aJJsWrsQtLYro2z+PLvjOsuG88n/OxJ
-	 34FvuHxK9/XH2rEkDkqevKA3Zm4RLx3TeYfuRmhdCmm/8LPM9f2joGVL1/H9yAQ2w7
-	 qw+hk6NEElGhiwaleELGFNnRJkOZ8sTl5xHlheBLypOX+6C8a5S5AV5fGR3Ea5F2Iz
-	 3/OiHuAPYPcgR16yDChngd6pC8mELRDahRp+jzf2AFxHuz/0wOYB28RUt92XcHMVGT
-	 V5A4ofsYMhlnn1DcsOUps8IUWyew4W6IuckFhHB5U55kOM/su9P9yW9kj58iy2KjS3
-	 ibRlwfrHxQdpg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uF8Up-00Ennz-DL;
-	Wed, 14 May 2025 10:33:51 +0100
-Date: Wed, 14 May 2025 10:33:50 +0100
-Message-ID: <86o6vvfse9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Anup Patel <anup@brainfault.org>,
-	Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexander Potapenko <glider@google.com>,
-	kvmarm@lists.linux.dev,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	x86@kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	linux-riscv@lists.infradead.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	kvm-riscv@lists.infradead.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v5 3/6] KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus
-In-Reply-To: <20250512180407.659015-4-mlevitsk@redhat.com>
-References: <20250512180407.659015-1-mlevitsk@redhat.com>
-	<20250512180407.659015-4-mlevitsk@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LvE6IK2R"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso65409925e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747215262; x=1747820062; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dkOm0GV86xe5XfURWCDnGvFTrA8iPthriDTjd8Ct5Pk=;
+        b=LvE6IK2Rae9teU2CahXBRRxRTvLyxbiN2aDRbERmRR+cOyddBF4cgecS4IUayMtJyj
+         Jp3FwvTgME3rolh4HplO1dkfdm3/tvPDy23wu5vxvQ02wRYsRRC02pOsNtas26E2ZzGk
+         LBqCipBidmvIHcILIPIjg5guXu11gl6kvYuHmfmRSDhgZ99dlb4P9oDgINKkGftLQvHI
+         RPjd9pT7uJzspKaFwaBg69/e8f1QbhspoFBsSY+xwj9CGrOXfvTcMb18bjtKYswI7HB1
+         NQOsaBjg2l0suRu37x1JZBmaQW4Tu9N4LJZP8FGVI8XCytRYoDBfLY41Nzo5po9XkklQ
+         EDXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747215262; x=1747820062;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dkOm0GV86xe5XfURWCDnGvFTrA8iPthriDTjd8Ct5Pk=;
+        b=nMAzBoSVCzxx233Uzoj8uDzwal92EZmAGkecptJ8bN8C//TQiCsoY1H7B+uHQEsy5M
+         sd68cyhxcERBXDfDtGHEowOkXPGlI3jbu52ybH8waQImE4JzrsxLyBG6hT6Thf9uEMhM
+         d1owHnYRXLpDTdD+4VCOk5Pa3mw49eM6HcCRsKghp5aM7D2OEq4KqFl3e6itGUpOkaag
+         7v17CAnamRRHg/fhS4YEYxfxyXzgpxWwcWnKZKcVm1qF6bNjLUuFWNnZPI3aSZyzUK6m
+         22XxeiTUcr6ZQoPzDqZI5qahgHk3KvTTT/W85s3TeGNlW4ZRKB1ndvuwfyzmHJhp0+w/
+         72Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbuPejcBH0QM6iOvGKQXEK7sUkbtg1Cj1Jq+TC4Or7huix1etTv6HndCXqdgsgS3Vwq/1To6BHoPAZWtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ4gKZOUlMqIGUJf9BuV2cYIgrsj8ITJLGIsQYlHJ1jT6foqPr
+	zIT8nRTBSDeYdmO7jpiPrahmPPTHMTx9XOdsS8LwOcPESr5nJuJQM6tKLQYEV18Q1vmXiH3YK3y
+	R
+X-Gm-Gg: ASbGncuWjopZPK5SknCD7/NQ9EyCWH/eYYzzxe6sZ5eD9eDPH/eE7Eg/hjM8641LWq2
+	FyQ/QO9IWAZlNqyegj3oJRRBywjH/I041rXZJ2ZRLt+JdCkogMwlWpqOJnoegtUOLRoUnGtVWiM
+	MJiinJJSW3B5jh6uVaWFcmNsHFXB27lknvV/9COVCyib6y0NdVVm+bNBP656yFVuJtFMG4tjFdU
+	fDw9LbpRnMQbhNnK74x5SVE0rTthYXpR48VT/3ofxwnX3mQk3gXxBeT/tagV11hhE4NjZ/pAHli
+	tKtAQLmbdBIqufQE/bHHWrJjwJlX5RVGq4P/8s4dUnSJkNTVeWg4aMuewkcaA8hNVf7AVYi8pWX
+	x4gUKbqMZ1QpImu1tWA==
+X-Google-Smtp-Source: AGHT+IErPByvJLeshashjjG1N09s4DzUxeDwok3Mn1Gx1IYAEmLVhz4feJdw3gZO4FDj/ParQ9zrqg==
+X-Received: by 2002:a05:600c:1986:b0:43c:f575:e305 with SMTP id 5b1f17b1804b1-442f4735b79mr15076405e9.8.1747215262532;
+        Wed, 14 May 2025 02:34:22 -0700 (PDT)
+Received: from ?IPV6:2001:a61:133d:b101:9ea2:16fa:3380:8e40? ([2001:a61:133d:b101:9ea2:16fa:3380:8e40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e8545sm23038825e9.31.2025.05.14.02.34.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 02:34:22 -0700 (PDT)
+Message-ID: <d00a5238-90e7-4651-aaae-2919848be33b@suse.com>
+Date: Wed, 14 May 2025 11:34:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mlevitsk@redhat.com, kvm@vger.kernel.org, suzuki.poulose@arm.com, jingzhangos@google.com, hpa@zytor.com, sebott@redhat.com, lishusen2@huawei.com, longman@redhat.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com, bp@alien8.de, anup@brainfault.org, will@kernel.org, palmer@dabbelt.com, glider@google.com, kvmarm@lists.linux.dev, keisuke.nishimura@inria.fr, yuzenghui@huawei.com, peterz@infradead.org, atishp@atishpatra.org, joey.gouly@arm.com, x86@kernel.org, seanjc@google.com, andre.przywara@arm.com, jiangkunkun@huawei.com, linux-riscv@lists.infradead.org, rdunlap@infradead.org, pbonzini@redhat.com, boqun.feng@gmail.com, catalin.marinas@arm.com, alex@ghiti.fr, linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com, oliver.upton@linux.dev, kvm-riscv@lists.infradead.org, mingo@redhat.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+To: Greg KH <gregkh@linuxfoundation.org>, David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250513113817.11962-1-00107082@163.com>
+ <20250514064455.5488-1-00107082@163.com>
+ <2025051405-glare-crazily-a9fa@gregkh>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <2025051405-glare-crazily-a9fa@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 12 May 2025 19:04:04 +0100,
-Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> 
-> In a few cases, usually in the initialization code, KVM locks all vCPUs
-> of a VM to ensure that userspace doesn't do funny things while KVM performs
-> an operation that affects the whole VM.
-> 
-> Until now, all these operations were implemented using custom code,
-> and all of them share the same problem:
-> 
-> Lockdep can't cope with simultaneous locking of a large number of locks of
-> the same class.
-> 
-> However if these locks are taken while another lock is already held,
-> which is luckily the case, it is possible to take advantage of little known
-> _nest_lock feature of lockdep which allows in this case to have an
-> unlimited number of locks of same class to be taken.
-> 
-> To implement this, create two functions:
-> kvm_lock_all_vcpus() and kvm_trylock_all_vcpus()
-> 
-> Both functions are needed because some code that will be replaced in
-> the subsequent patches, uses mutex_trylock, instead of regular mutex_lock.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+On 14.05.25 09:29, Greg KH wrote:
+  
+> No, this isn't necessarily true at all.  Allocations are fast, and if we
+> free/allocate things quickly, it's even faster.  USB is limited by the
+> hardware throughput, which is _very_ slow compared to memory accesses of
+> the allocator.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+If and only if we do not trigger disk IO. If you really want to give this patch
+a good performance testing you'd have to do it under memory pressure.
 
-	M.
+	Regards
+		Oliver
 
--- 
-Without deviation from the norm, progress is not possible.
