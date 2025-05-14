@@ -1,98 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038F21F4CB7;
-	Wed, 14 May 2025 18:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADF827CCE7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248815; cv=none; b=E27VCWcgNoAgdZ2dk3xysN8ZE3Z4JxpWSKqbLAs/i+USisN/ghTcQ7KmbifyKvexJtXA0gKGXZYPSmM6Qvc6sZkYlgqU1VTsgGXuTbdbn5stND4JEsGYLr7zYlVYas5y4xvTg+8WOoZrGRJo7ZtWWXWMsp+dzDevUB0e1h2WomA=
+	t=1747248816; cv=none; b=NqbIFcj544IYeYZpC7GJzbxz0/ovFVPEaqny6gIdbxnwLkhvhsDimYgJi2D9CrXu5BTPBL2r/t5PqdG7AFXZ/sFticj7LYPa+vl33bfDR6Vp6nQXMWlvO6qdjU1i2d0tCz/KIYV2BNGo5kqbZjh3tXnoUnosnonBjWSSm+wMoiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248815; c=relaxed/simple;
-	bh=YSTjlKLYnT97FPs44P2jpPLaU/lb/Bpao4PKukaWgLo=;
+	s=arc-20240116; t=1747248816; c=relaxed/simple;
+	bh=DenyVCoE0RAHWPP7ykajv60a+GLIC/b1a2OG1bz8byA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DNHxOb5yYnMcyr0ONyQWxkYkI1NI0MXZYOZRgK6/I/t7FsA4S1TyST1fxZ+qLyFexv768gUEgXZblb5W910i2NsIgRDJxXWUG9lr/Hs8EqlsBMKb0qeE1Pe79F6B7Q/uEKgQbI5L19sFUch7vozNlAj9sBfWjHznS/VIpqD2t1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KEq4lG6l; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=hcuSL11+bZEtxAv7x6ZEo+GaMjefY9yHeJNgyQ2BACdW1Edl80WIg/4gcb6wZJD8pMebV7U1am35RIAOV2HEvEs8eUCcp+YrySqYEZGB/RF7PGNI4WK8U47v2OnVmq628+r1yxCcqgEtB9GSZmqsDp+FAvFXfjv9T5PKs4GbuQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LGN1rBZc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KEq4lG6l"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C44FC40E01ED;
-	Wed, 14 May 2025 18:53:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 81vlMqCq15_R; Wed, 14 May 2025 18:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747248806; bh=0vOGV0XILyspb43g1V9dqHl1wEdSi7Jd2w2s+KezepE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KEq4lG6lhO260DYBtkqrYSrmiOzw3jD5ZJdJH9KTTxHaGq03netrVBk2YRlvBYU6a
-	 9tkFi2RIM8KZHjmofzrBrxfiSl0NVtUq0raip+3xvjBS6tPyZEN6CY/KaASpV6XzxV
-	 KXfMSX/JH8Z5SmD5jcILXBz0aSLUwRLj6cfahloYVHfo02fYZp0NeQpjX60hXzCpGV
-	 tTXCIKcC2Ikdxa35Succ9EEzq/Bdme48FWNZ33DApCgmKwkKI00N2zJKFvVa2AnOgD
-	 6PhVebNH0FgBPj62ljtl6Npu9mpV1sMneFD2cofUtNAgi1YYXsons7uPg9O//3aoMx
-	 KrJ13LhTWB7u8LgqaSxER82Wx0xI9qv1B6KEFm1gVqb5/JLtXgq/b3sp7THnIE4PQ0
-	 aN6wW+hE2T0oOriofo0Paue8bXyNe59OkjqLovpuSgyE3ZxXpKCkdXt5h4Nbv0yAbU
-	 bHd2Qtdq5kvIjxxRrqoRKt43HU8mNjI+aYblRxZZHdpPpnURMh3acWnrCd1qvWHH29
-	 zd1nrdPnD4sbBcbyyAuoFfB+ARagNc99cnuwSFvgi6+0yRdqrnsspdJsPOJXjaq/Nb
-	 IA2w+SPrUFUqz+e4WrDRBkQUSXWkBd3bgpugow/jQhPcs0dd/G2J5DsiARB5GJDGul
-	 Am9MCXnV3UDcl87K75jKlV3A=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BBDE40E01CF;
-	Wed, 14 May 2025 18:53:17 +0000 (UTC)
-Date: Wed, 14 May 2025 20:53:16 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <20250514185316.GJaCTmnPdcK9goOFWc@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250514172130.GAaCTRGoRL3nYieIE7@fat_crate.local>
- <CAMj1kXHnt25JoTLdsPWB2C0xqzs+21PBGC_NXNhmsHdL0yLFnQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LGN1rBZc"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EAugCw020138
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:53:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=g1u9AjxY4YHd0zzxyGQLIleU
+	CRHdyFyktyL3hnCDzbg=; b=LGN1rBZcyZ6Fb2C93lULqvsXn2Y7OCTNQy9zeHPd
+	3qdtlX2oRYfQ836qLHSHeqOUfQJNwnSgjTd8U1YkeMFNjP2EBX/xUnZy1edXmsJQ
+	jUNqnPDYUlQUx0CA9ERhLlBCZBx9FC/A8p2X1pAZAlgHeR6gNXWXwzJ13PktAxup
+	GMtgaSTpOJ/KzrkZ2OT8gZe4AF3+pBsvW9R/dCK8zWoXbxOP7hA2Bxs+CLCO8eXA
+	MAlETUQyovpborVg/Imd1x4aDv0fZEIUEqp4aQWZeSQC83jbMHyUzIm6+fISg/Mp
+	1/bU3TU4KhGKi2DymZV41g9xCmMtsL95ON0wF5/LtegNug==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnkr3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:53:33 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5e2a31f75so19337385a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:53:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747248808; x=1747853608;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g1u9AjxY4YHd0zzxyGQLIleUCRHdyFyktyL3hnCDzbg=;
+        b=FFOHspk3MoNRvX3ZKAckpoIztjp/MaTMiXSe/e0q57yXv0iREVGRuRFdAbK8/XbgZY
+         MYVryOu5cP0BIwgjPUjnCPnGDRkVSwB+Vy4Ica0y7BEg6HzA4mcovmujWcDz5DaWY3K/
+         VI+BWNFKYhEJPfI4EhoncMguCq5/Vy0l1Rsv0mzYlxLVTzUBZbElI984CvaDPChg0q+Z
+         oWKlgWYK7x87RPL3O1rai/9UJpqf5nhBVFQj0eEF4y1iYQiJQFOd1+1pEqxH9Vp1nfBc
+         ZA8/uarKTc30W23DHsFRSkxvb0ig9CGB14pgcPDgoF6A5kToKB1eHR79Ow+eWstr+Kw3
+         Owsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNWuGrx/MTkrJguPKqU7a/lTPAF8mv4N+SEUowzgX8g1NyCvDw6RQDsIfIGWzJb2TBZdfTkT/E7JvXv6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNIrmA2tvcu7/U3ff/iH/gAG4UxVutL1eDs/cQdpIlU0XHtgdK
+	MJfIFbRYI/OZWkoT//D2PX+kueNiu88iPHowTUASCOpLkoZ9d4bS7YomGurEYFrrl2mrCxjeEeb
+	gbKwvErV9/wzxMwr57e5Wm9vADbSXqFNIm8YKHEEKO//sD3hIYin5j4szmQF1SGc=
+X-Gm-Gg: ASbGnctr8OC5/mJQJGu5ov8ZxeK5C4TmwTwFFoBu1LsrHcfy65/aCwTt3Vi0LGdQXch
+	Rs4cPo0vAOlGOrLzXssJ1D7dGTaquIzrNOAm6pwBe+Vk1xF/q4UHRrYtWdygK/vMZOQjbNrAxgz
+	eO61FEhKM60br9jXhPhAiuLJKrp0HJiWddZ7iZ086ls7JAhzhKXCyQzRd5KqQiNUc9YV+LYrzlj
+	UsjyC39zMFS6xI7fDqm0BGsd+cLj8BoR66RNJGN53BSGGd1TA+8Of0SUH5JKzNyFyRpt7hcP/WQ
+	TbVyIge0eY1FN+5xgMGoVsQ63Ord26w9kv0mpbdKCavEV0zxcUYzugPHmXyl+xWPSUs5i+KUpj8
+	=
+X-Received: by 2002:a05:620a:2685:b0:7ca:f021:4d3a with SMTP id af79cd13be357-7cd28846e89mr557328685a.39.1747248807895;
+        Wed, 14 May 2025 11:53:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEni7d5kUjD2KP2PjQKe+EW9a164yH0fjztcPSlhC8TjwdgfR6PFawkMxitDxR1Q62D/acBqw==
+X-Received: by 2002:a05:620a:2685:b0:7ca:f021:4d3a with SMTP id af79cd13be357-7cd28846e89mr557324885a.39.1747248807417;
+        Wed, 14 May 2025 11:53:27 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64cd303sm2361639e87.245.2025.05.14.11.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 11:53:26 -0700 (PDT)
+Date: Wed, 14 May 2025 21:53:24 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH] ASoC: q6apm-lpass-dais: Print APM port id in decimal on
+ enable error
+Message-ID: <xtq5rvhihppgmi47sihvz36k3t5zrj6lmuskoevilzdffrode7@nlxr4go7hwo4>
+References: <20250514-topic-asoc_print_hexdec-v1-1-85e90947ec4f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXHnt25JoTLdsPWB2C0xqzs+21PBGC_NXNhmsHdL0yLFnQ@mail.gmail.com>
+In-Reply-To: <20250514-topic-asoc_print_hexdec-v1-1-85e90947ec4f@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: LS1pAlkJRh5XuTl24efnAgSVQpvv4EbR
+X-Authority-Analysis: v=2.4 cv=aIbwqa9m c=1 sm=1 tr=0 ts=6824e6ad cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=lIfUitz33hkrLK1uG6cA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: LS1pAlkJRh5XuTl24efnAgSVQpvv4EbR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE3MiBTYWx0ZWRfXwSeA7HSs6XSA
+ NDft2MXVhQraNi9XTidBd7PLXK5PB7quU7+gqK/zRyF8/dIOztF4eNNG2FuL4UlZ3E6fqU1ggaG
+ CY16sisGIyuoGsczPqiZm3JypKQnZ4tXvMMp9ZcRyx+qnENWoargwBYOPjWAjUrKNnH1SQgZrf5
+ Gv7A1862sS3GD0Ut56Z86nnDNYSTlPXx3C/Vq/IGCWX639Y+WLNmLp+Zyv08wEIzFavyJZXNUGw
+ +1m3NmpR6PpCh6iBn1O06OMTjHr5y+HSjhwhDjuQHt0jWv3MyKzqSXHFC81ThptZR0yID9xqblp
+ crLWFD5k0IJ5OoS0gLKCZ2QOHliqA+wLVRsncgllR1jQda4FxyLjarPG8fDhbIZtInP8Si2QUqx
+ LuSvpJivq1bcursIeZYJrhFg89v+UuP8UW6yROfgwQeKUNzH1PudJ6OFPvhNo4L3HdWqtCc1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=743 malwarescore=0 bulkscore=0 impostorscore=0
+ clxscore=1015 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505140172
 
-On Wed, May 14, 2025 at 06:37:14PM +0100, Ard Biesheuvel wrote:
-> The rule is really that you can no longer randomly call other code
-> without being forced to consider carefully what else gets pulled in,
-> and whether or not that code is guaranteed to behave correctly when
-> being called via the 1:1 mapping.
-
-I like "consider carefully". Right now, the decompressor is a mess and
-untangling it is a losing game.
-
-> Basically, the first order of business when calling the kernel via the
-> 1:1 mapping is to create the kernel virtual mapping in the page
-> tables. It is just really unfortunate that SEV-SNP requires so much
-> prep work before we can even map the kernel.
+On Wed, May 14, 2025 at 07:53:38PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 > 
-> I don't anticipate that this code will grow a lot after I'm done with it.
+> Change the port enable failure error message format specifier to make
+> it less confusing.
+> 
+> Take the chance to align the style ('fail'->'Failed') while at it.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  sound/soc/qcom/qdsp6/q6apm-lpass-dais.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Right, ok.
-
-Lemme keep looking.
-
-Thx.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+With best wishes
+Dmitry
