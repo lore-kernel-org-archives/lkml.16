@@ -1,108 +1,122 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF50513D539;
-	Wed, 14 May 2025 06:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757D8101DE;
+	Wed, 14 May 2025 06:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203459; cv=none; b=b5eT+uZawmT2yuuTAh3o2kZbysf2u/CXYnOFu92GlFocGUMBBnQOMOsh4aZ8vWWXxaAyhB+1cHu+mQfQDpJa3/DdJiSe0muNkXFgPtGxdjNKprrUTQopihqH7eyUIZNIbwL5vadKPqBBk1vt6a3LvaRmz5xC5AOD6QnrQwzUdgI=
+	t=1747203637; cv=none; b=Y8/0PD86k2kv0TtDEH+0aX0QVxgiD+yjVmcD2RXZYFs672m21t9CvLHS6El3dSQPEbvU6rYVIQlr3ghzc/6TTI88n9Pb+msFj3NnHXZ0uyfIOQbI0pb3gIC5yy+oeP4PYVSe4L1V9ri5jeQ4ZUJ5VuWJUrA2weuns/CLN7KxTI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203459; c=relaxed/simple;
-	bh=CWHORAXG2oiiaHYAWxfkNRLv9y4YW0URPt7RpnYjehg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kj8wQIQI5wkmGYSbxXcFnAhDjY9MPuZfOH+vpyDwfyauY7peHI18hb+AH1skNGOQQGM0hqRm4xKbXd9R250yO9r105qIYdvWo/iBMavqtsubhUbXgCkmmOyurwvO8RyH07bKqOX+7MM7fF+ONwpTXC/NMMvGEE9Ce9KlozS4IfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7cd0a7b672bso305311785a.2;
-        Tue, 13 May 2025 23:17:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747203456; x=1747808256;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ckf4J7K6nhKzDsTt0cIUCHXIZuk9xFjMGBfmOU3gBK0=;
-        b=G35C11uL6IchaVz5AgxrfSy+4cM1yE84Y2j+Fgmbp8zFkg5sOj+Qdr+daaEPxrEasI
-         +procYuEDZ6keZ7DDrUI6m43R+sXer0j0cflNT2LpIxxajUiqoi4Atr01QsUd3ctw5qf
-         q5VvzjurwDVj2MgQpVdKHt7AwOCsY2sfxp00kUiEJCjC2cElYTyYAYUVWvK88N23XQuX
-         LZj2VqZ922akkOgUAvtsFm2zqTlzsm7t3io0gidvgZbEzzR4GVAP2IiO9fXFBXQk1cnp
-         DlW9a01/4j1qtlwuqJdw3CNFVJRoZJhXZvidipVT+hURG1DUtIZdpbRM6ZyWr//b39dk
-         bmKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCab+8oYAJO1HTNkNMz75DFROAK0Z+fM7H+ZQkuUf98fSMUH8M/O8fs0m+ugKdpLiTUQD84ekuC8sXYo0H+Q==@vger.kernel.org, AJvYcCXk6QKcIdRgjzSCoEpJf9BHmjwRCX/8NTbsirHe3lb8ESxwlRCIvniPkumS+6828n6mgybNB8p0DEo=@vger.kernel.org, AJvYcCXw5biE2bMra6xPXJS/jNNvFMg6h5YIpYCN1YpQrDw57c7J78De1ISEoh10pqcHVi9EUek+dc4LDxFZZM6I@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI5UAkIPpHJbMjgTp/7iaIvpR+/7+4cR5Mdvf1TmFjZxL0noGt
-	DBU981/0xHcnXoOt/MMPXoJk3RxIHAEvJJ382gxsKKI/aktpE3z4jg8lsAVLYGU=
-X-Gm-Gg: ASbGncv60gLM1DJt9gf75pz44vN8vFTijnTC2N3I8bpLKxjOM1o+21+GmFAkOz9DQ0Q
-	za8+KiQ3s7mOKKDWuTiu3k//jJNmj+3E1Q7u8LsJ3b9PCb1bReIzvIt0twT1SMSH/jAt+QICur5
-	rNrXB+ONYBE9waHz+b8sp+ntCjhAqsSpDTEJlw/A83ZN+GjIs5HEKx6hzlo6ZKAgF6wD4L8oqNt
-	I+v3hFG8F2GkQIVdRfobBjhGEB5Lc6WBfmLgc94OLEjfBDd5t3RKk/BgXobycDFFfq4eVWJwlYR
-	S/EVfuqaAPjbfKVGhS9UpC1gj805U7CLpBAIIWLAisLVdTlOnf1Xi8Aq+xC/XzxWDNU0He4/kI9
-	Vs5YF0LQUCljTK9fJrHTqCg==
-X-Google-Smtp-Source: AGHT+IFQ60TWyhSc7sQ4amWJetvm+Kt1H/in4TeBBB4ppBeiWIkLKv3Ija3+K6/Fnd8UfI6vwl9dPQ==
-X-Received: by 2002:a05:620a:2596:b0:7c5:e226:9da2 with SMTP id af79cd13be357-7cd2888e3b3mr365807085a.47.1747203456454;
-        Tue, 13 May 2025 23:17:36 -0700 (PDT)
-Received: from localhost.localdomain (ip170.ip-51-81-44.us. [51.81.44.170])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f9b24esm807118985a.62.2025.05.13.23.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 23:17:36 -0700 (PDT)
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	wentao@uniontech.com,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] doc: fuse: Add max_background and congestion_threshold
-Date: Wed, 14 May 2025 14:17:04 +0800
-Message-ID: <20250514061703.483505-2-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747203637; c=relaxed/simple;
+	bh=PLDqcmSDaOp+qb5YFcXzw305AJnn0Y7PQrpTkMISjZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=irk0Lwy1sP0EAQjuqpO1CETT3nooo94+6ff0faX7zKGEbs5I2qhLI0XlsFnRhnBIiwQJcEKz0s8GZ13B0i5pcFsBlGzC8p465gLMCNkt5lYVOCVAoeJBu94S4QxXVTbzp4DaSis3zq7Eg0ur2gxsj7MNTBcvBc6e2+qxrYrkjQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smzt+dvt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smzt+dvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824D1C4CEE9;
+	Wed, 14 May 2025 06:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747203636;
+	bh=PLDqcmSDaOp+qb5YFcXzw305AJnn0Y7PQrpTkMISjZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Smzt+dvt5tfSuQZPeyZimmhJnl4kz8wzMCP/VrcM8yV1kOtpICNv+vSGHrCiP0N/7
+	 Rtg5zRKRVkmTA0/S6ehoAHyOnLbhckgKC1RyRi640gI6epgtHhPlYJFUIasxv5wKTm
+	 nV/ZIe/6Rz1AhlXwjihHNnhAnLHjB10+a5urgMK7mxSKqZqWMbbp6FoJzVuIwuL6+l
+	 /OexObRYOtaxXSJ0vwIG93MaeuS7XZNiMLRghjBw4GZO3Z3QBHs3lBEOvuJeVKqerQ
+	 Lay4nBP4l+9RpqwxSL/SakcroDGwLHtBJWQXkZzOaXHLBU0U5wQl6VDxw4eqjMdpW7
+	 zCZX3aQ/nuM0w==
+Date: Wed, 14 May 2025 08:20:31 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+Message-ID: <aCQ2L3L2DQX80blY@gmail.com>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+ <aCMYrgd9DDQl7G1W@gmail.com>
+ <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
+ <aCMraFZ2yJQNyHf3@gmail.com>
+ <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
 
-As I preparing patches adding selftests for fusectl,
-I notice that documentation of max_background and congestion_threshold
-is missing.
 
-This patch add some descriptions about these two files.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-Cc: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- Documentation/filesystems/fuse.rst | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> > Note that two of those fixes were from Ard who is working on 
+> > further robustifying the startup code - a much needed change.
+> 
+> Please do explain why is it much needed?
 
-diff --git a/Documentation/filesystems/fuse.rst b/Documentation/filesystems/fuse.rst
-index 1e31e87aee68c..c589316c8bb35 100644
---- a/Documentation/filesystems/fuse.rst
-+++ b/Documentation/filesystems/fuse.rst
-@@ -129,6 +129,20 @@ For each connection the following files exist within this directory:
- 	  connection.  This means that all waiting requests will be aborted an
- 	  error returned for all aborted and new requests.
- 
-+        max_background
-+          The maximum number of background requests that can be outstanding
-+          at a time. When the number of background requests reaches this limit,
-+          further requests will be blocked until some are completed, potentially
-+          causing I/O operations to stall.
-+
-+        congestion_threshold
-+          The threshold of background requests at which the kernel considers
-+          the filesystem to be congested. When the number of background requests
-+          exceeds this value, the kernel will skip asynchronous readahead
-+          operations, reducing read-ahead optimizations but preserving essential
-+          I/O, as well as suspending non-synchronous writeback operations
-+          (WB_SYNC_NONE), delaying page cache flushing to the filesystem.
-+
- Only the owner of the mount may read or write these files.
- 
- Interrupting filesystem operations
--- 
-2.43.0
+See Ard's excellent description:
 
+    https://lore.kernel.org/r/CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com
+
+    This C startup code has been expanding, and in particular, the SEV-SNP
+    startup code has been expanding over the past couple of years, and
+    grown many of these warts, where the C code needs to use special
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    annotations or helpers to access global objects.
+
+    Google uses Clang internally, and as expected, it does not behave
+    quite like GCC in this regard either. The result is that the SEV-SNP
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    boot tended to break in cryptic ways with Clang built kernels, due to
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    absolute references in the startup code that runs before those
+    absolute references are mapped.
+
+    I've done a preliminary pass upstream with RIP_REL_REF() and
+    rip_rel_ptr() and the use of the .head.text section for startup code
+    to ensure that we detect such issues at build time, and it has already
+    resulted in a number of true positives where the code in question
+    would have failed at boot time. At this point, I'm not aware of any
+    issues caused by absolute references going undetected.
+
+    However, Linus kindly indicated that the resulting diagnostics
+    produced by the relocs tool do not meet his high standards, and so I
+    proposed another approach, which I am implementing now (see cover
+    letter for details). Note that this approach is also much more robust,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    as annotating things as __head by hand to get it emitted into the
+    section to which the diagnostics are applied is obviously not
+    foolproof.
+
+    Fixing the existing 5-level paging and kernel mapping code was rather
+    straight-forward. However, splitting up the SEV-SNP code has been
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    rather challenging due to the way it was put together, i.e., as a
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    single source file used everywhere, and to which additional
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    functionality has been added piecemeal (i.e., the SVSM support).
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+I've highlighted all the robustness problems and design flaws of the 
+existing SEV* startup code...
+
+> Really? Much needed huh?
+
+Your failure to follow and understand this series is not an excuse for 
+the flippant and condescending tone you are using in your replies ...
+
+Ard is being very generous in his responses, and I'll defer to him as 
+to the timing of this series: v6.17 is perfectly fine too.
+
+Thanks,
+
+	Ingo
