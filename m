@@ -1,151 +1,232 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6982C2868A4
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C052868A4;
+	Wed, 14 May 2025 19:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747249536; cv=none; b=WQ3v4Dj/xWZCx899kQyWpoF+UshIXznMhTOpMl7fiM/xCjniAHYvNUfZQMFPdN39+quW8LN9UjRVBL3f34IivkcCe9JymPWvzZV/ycZqpcPpu2jh+DPtHBhCA8rwpQ7XA9ZpOn0p6O6Z1YPNdzr8H9l/Fe9zOHf5TUvxClhH1LQ=
+	t=1747249581; cv=none; b=M1UQYd1tuUIyY8MsmFPXSTREF3BOcbqaOs50Yeys7jiEmhVBpBuQUbyzNHoghLkEwXoQnUH+oSV3szGmTet3GoX4em8Vz+yXv4RzQqUWhzhFLSHheVoUoZCAkuQZBb5lZ1n0fOION+zm+XcX4lCe3u47LSM7umiR81lGc8wYMkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747249536; c=relaxed/simple;
-	bh=yUdYH9OrXaddZ8qfFOzEvGbXdetQrQZedioCTo4Z/Xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejTL3ASeGBd8pVuIdvXavBZyrBO/xLHWlNK5wU/JNgxEXvC6U8FpHd8IiD9/2gA5pPoeauw5eMOa0hNIVTogU6+I8wAU0o/2NhpIRsA9E3ikJhtK3xi/M8i2/8+dqbStBDRkAKidfhaZ3JRlZV6xbnWGnFas/Hnvi5Hlk7d0++4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E464yPX2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747249581; c=relaxed/simple;
+	bh=pkPGLWmnxyL2lTg/4/v2SuPNj8kowqjrvrA9NC7P7yE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YUIbzStTvf5xUXB8Om53WUtxt5MeCaWoJ6/bzFyWXdPI3zuVhp6uSt/BIxeVIPjgE6DyF0TI9AEy39ykq8cRrTSfLrXepqLXtt/rTP2VI6SufKauzOojBav+xDsE8TkVW234L3b4euXX4chLcmNEvmtbQkHiNSee2nRxdDRaNsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jqxFTff0; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E464yPX2"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EAuuLm030331
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:05:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=ywYtj0jJCUfwAnlUn+KfhCG1
-	HPC+N0krcot5RSineC4=; b=E464yPX28jlgQe3n5SUSqJIb7FKLpRL3y3uvX299
-	3aORlz1ybgZA3Up+TgQFUwiWZgEL+f4z/eurMb6+4iSN9WWtaUdiOvHeJOb9GcUZ
-	T9hqBhHJ6SPe4OA457ZuEagma2U/HtpKpVuonLR86vH7EeixbF/0dnjiozkWLNEC
-	sHy3LSjNnI0YfE1TuN5rbPWZ3DJLH3FKOFfB6gx44A/9SbD8Sstjf0IBadgAWU6e
-	bbR+4RIhIYKZUgDO0LwarnTe8bN8beyymbSxYBtqxPXH5kdhZwkxsRfamEcpxjMt
-	t9RKqnS1OVFszZUYO4N0FuiYT1Sn79SuaUHp1MH+odHrhA==
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnut93-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:05:33 +0000 (GMT)
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3da7584d395so2225345ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:05:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747249533; x=1747854333;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqxFTff0"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30a8c9906e5so223502a91.1;
+        Wed, 14 May 2025 12:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747249579; x=1747854379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ywYtj0jJCUfwAnlUn+KfhCG1HPC+N0krcot5RSineC4=;
-        b=CqF3wbuJnXfQi5R4S6bZRclm8NQC+QJXsyMjfFAOqHyUlcNO+yBe6fxIhVg3jpx8vz
-         HQJ1Z0FLKryGoCiXlh5Jnln0yMUbWkIdxwRTxFQtTHHRof9O+5TGU9JOpqyAUlT8dt5M
-         Dw1r4W8fIvW6Dis3gXEZBB6VIOTR4+1NdUcYTS3jhNYaYJqfL9HIlbKWlfr/lXzHN28j
-         NJ+Wk0dIqw+Y8q/lOyDBqmIYkfGsbbN/Qf8nU0vu+nDF6iGXL0nyDuTs+0LsNH8eTCQm
-         uO9aAWnaLcx8KDrgDTNxv7BooyuZvcn6a+QqHnI5dEG9XjrMD2gCw9c5sintKlBL2SqQ
-         8JyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtmiTJ4Tui70rXxL5JjEwKrLWAFUHqZIznPqYCvYVQ1AdtLGanMTP2Ps/kR1gk1VEmvEx7i5htkluymUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjU7Wq4sEHtvh1ubY61YZ3O6CH/Zt8ANBCFsnNIIKucAnPByV6
-	m7/D3zZ26yul8VINXEN4Rsp09qOVCDNHCwX/gatjq3fa8i1/l7pRGrGFY8L4+ibhs3W4R897CLc
-	lLxlZNgneVU/vjJ7QZ43k8ynITum5sMDeUuNizFAUVhKHJHXC0jfB9jaB9ejMlak=
-X-Gm-Gg: ASbGncuscpgzhTJd0NQHrpVtDB5BRlAXrAmlC27eSvhxcbqQuBguJArrNy1mTR45u7r
-	60ke6eVFmBzsSnX7f85w5XvXyoMo7uK1bpUO9P/iReKEaDzrsX9paSZZMTGA8PY+qqMg67k7oqb
-	Ut52PJJZB+L+p8iIUKC85ST0i/qBLLUEsk7EPy4bBg0iMT3E7hcOkgYfjQrnkfMYm2U2FSmqNun
-	r47bkMfLoETZp2jDZK92GeqzChP65H1RSbbJ4pRqydF4rsmoCOYp5sUqe6vzhAwTNM7/1UfOHe3
-	5yTKsPXKk6bEgc3/IvDe4V+oM7QcpjPeVJA39gWmgMABfG22sP2bcjrxP+MrCSCb8oHkqjfK0nQ
-	=
-X-Received: by 2002:a92:cda4:0:b0:3d9:6485:39f0 with SMTP id e9e14a558f8ab-3db6f7a5a65mr52467175ab.9.1747249532531;
-        Wed, 14 May 2025 12:05:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHgYTQv4QXSnMN9YVJaEI3JUAXQjoi8ESN5pboKgw0mTBEWnrDUyYQEekWZqNeBYQdzQK0Khw==
-X-Received: by 2002:a92:cda4:0:b0:3d9:6485:39f0 with SMTP id e9e14a558f8ab-3db6f7a5a65mr52466645ab.9.1747249532072;
-        Wed, 14 May 2025 12:05:32 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b6bbesm2340443e87.154.2025.05.14.12.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 12:05:31 -0700 (PDT)
-Date: Wed, 14 May 2025 22:05:29 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH RFT v2 03/15] drm/msm: Use the central UBWC config
- database
-Message-ID: <g654eiekiyqfjt65dtueowx4tqdg2tqs2xoik7xoun7dzz634f@ikftorfburay>
-References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
- <20250514-topic-ubwc_central-v2-3-09ecbc0a05ce@oss.qualcomm.com>
+        bh=u1pMypX06ZzS76nW/kI23orBa+jzmujGeNficFMCZFk=;
+        b=jqxFTff0IB2FdM5Me89pj16hnpVBYqBhyvoz2SkP3vhot/BECG988VyUG765+uCSdK
+         yvIMwhCHwb/qSIitN3gFEtQsMUZeNNv4WEQNnw1EFjO7Gvpmy3rT1DyFPDluV1i8aN7f
+         uAcmJqkoL7lNKJ+FRMBSCI1QDjlsobMLUGqBNGYBiz7t4Ebmpat7E/Iqx97QVHrlYqrX
+         qsHcTVvEs1sZ7katONhV+IcQmRWRLCT+9jh8d1gEsUZq5+tEiFTGKTD/5W1MLeSdYUU/
+         6m8bA0vWCjzvcajcm/RXZ1Nqge+ol180sCMskqqxgDFGCTTj0Rdx+jQl9lQ71gKK2Y0o
+         af5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747249579; x=1747854379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u1pMypX06ZzS76nW/kI23orBa+jzmujGeNficFMCZFk=;
+        b=LvjunBFByNInXwYrDTBxmgIGmXacgm2mEZzgIfcca5LjVvt+laaSdDcduOCJyNhFmB
+         21U6f4EVdcJ6iuiLR7XChFwFG2te24zdMKr/cNXrLWX+0/N6cOn+6oIHUrG/vefYBuHb
+         WVAXw1YqxM7Vi2Qc9XcpKKyDLzyJmb/TVZPS+JlY5AdLRsM+kX0P1Gkw0IlVzG1McBVS
+         6IOKekcO3XWr8M3KtqS7Ex5oRLqJafhe0iYOZMbq5GkL2mKCb0DnyAP/dJmxR5mTcInC
+         wT3MIi2EBkd6G4/fxhdwIpajLOZq/POfCudJIzSS05DflJH2cBuRsxOR6jLJ0QGAMtgG
+         SCVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKPenp1Ovhe80iaMJgaresMCzsPMSYHJfy5MKwkIBK+wvPz6WVKegn4lv95dusq9Yf9nbhtyimfbYI+FM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUWH4bgP9EoVP7JHAs1KhvzXZse5QN16+0FvTDZg9KxPg3tsAp
+	3hw4ErrzdhJtaT9wXPIunjhtlYUcHWg4YSIdqvYQigkIb3gcB6LtDn3MjKS/PvcEQP19MOBF06U
+	ZMSCBYWQZsSawF5sQepyVhVa+PiU=
+X-Gm-Gg: ASbGnctn23h6exofXOxTNjxA5pQ6RxBWcHTkdeEuW7ii1LaOtL3+f93Jsz+JMJv6RkT
+	yV82JYRyPjiaZaqHy41cIsgbl5aEeGntCyagQeVIlaKijCBMFJsPA41ZF+tzkWixeLqbvK1gnR5
+	JFEb4C115Tlk8MIsjP7K1JlUcLsAKOkOgo
+X-Google-Smtp-Source: AGHT+IH8NXPz6aovZauT3wvH+Rgd/TCbj/Lng8D8ng36OU4Fiej4pyWd4kw8wz7C3NDdXUq/AopoZdFg+12wLyaC3sU=
+X-Received: by 2002:a17:90a:e188:b0:2ee:8427:4b02 with SMTP id
+ 98e67ed59e1d1-30e2e620774mr7584187a91.28.1747249578867; Wed, 14 May 2025
+ 12:06:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514-topic-ubwc_central-v2-3-09ecbc0a05ce@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: RATs_daFS4H7DaYetsYlAEvkS0qnwYB_
-X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=6824e97d cx=c_pps
- a=i7ujPs/ZFudY1OxzqguLDw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=2JnZN4u0TTcLH5SyeT4A:9 a=CjuIK1q_8ugA:10
- a=Ti5FldxQo0BAkOmdeC3H:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE3MyBTYWx0ZWRfX9ZDjKZNjrma/
- uf4QrYh46Ns1c02vXuWzIsWNs58vR+XyYydMhokmA4sjCTc7gSv2gM6F0HpXMr+RbFQpWGWoN3O
- p0YZeG0Nwo2Xwo9ODq/JyvfzmXOgZo7AImL1ognm1RBFjtUwm71z8CPXfU7SEO8q9hgfAQJ4Qxh
- 2l6EWfqOHuD/9pC4ynlnrW3bjPltDlvp2fQx43Ns09qLwglxdQX1uX+OHJkricy66yH7VXFq6CP
- J8nE3TNfYB/0x3hf54vTiy3MuHaPdQSYLwKdpCNep6TfSA4rZZ+9ed4z7u5PIO34IQsolP+T2Di
- TMNfHapoN6WACa6lFKJ2iV+FgecYZV+TmSOMo1i0yKzX+gJNuYVIrmGXY0HGId3UZcBCNGkAR+m
- sQ5v33dPs4U3RWpBbhuaxuPD8YNrlJJVWe2N+90JXEZQ1TfZZ7JYe1U28fpQ8gvWIO3VjSFs
-X-Proofpoint-GUID: RATs_daFS4H7DaYetsYlAEvkS0qnwYB_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505140173
+References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-10-cgoettsche@seltendoof.de>
+In-Reply-To: <20250511173055.406906-10-cgoettsche@seltendoof.de>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Wed, 14 May 2025 15:06:07 -0400
+X-Gm-Features: AX0GCFu-o75HyZ3-ihQ9FQt_qlf08mGXT9ZKkWOIPPXXR0HMdCtsCTXkz4QkX5w
+Message-ID: <CAEjxPJ5NVZ4HzSm4doEpTG5pLFD-F7A3MZnrM_noxHh4b-mJAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 10/14] selinux: validate symbols
+To: cgzones@googlemail.com
+Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 05:10:23PM +0200, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> As discussed a lot in the past, the UBWC config must be coherent across
-> a number of IP blocks (currently display and GPU, but it also may/will
-> concern camera/video as the drivers evolve).
-> 
-> So far, we've been trying to keep the values reasonable in each of the
-> two drivers separately, but it really make sense to do so centrally,
-> especially given certain fields (e.g. HBB) may need to be gathered
-> dynamically.
-> 
-> To reduce room for error, move to fetching the config from a central
-> source, so that the data programmed into the hardware is consistent
-> across all multimedia blocks that request it.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> Some symbol tables need to be validated after indexing, since during
+> indexing their referenced entries might not yet have been indexed.
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+
+NB role dominance is already gone in checkpolicy and never supported by sec=
+ilc.
+At some point likely should drop corresponding kernel and libsepol support =
+too.
+
 > ---
->  drivers/gpu/drm/msm/Kconfig                 |   1 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c |   6 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h |   4 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |   7 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     |   2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c   |   3 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      |   2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h      |   2 +-
->  drivers/gpu/drm/msm/msm_mdss.c              | 327 +++++-----------------------
->  drivers/gpu/drm/msm/msm_mdss.h              |  28 ---
->  10 files changed, 73 insertions(+), 309 deletions(-)
-> 
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
--- 
-With best wishes
-Dmitry
+>  security/selinux/ss/policydb.c | 94 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>
+> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
+b.c
+> index f8d6e993ce89..4559c8918134 100644
+> --- a/security/selinux/ss/policydb.c
+> +++ b/security/selinux/ss/policydb.c
+> @@ -673,6 +673,84 @@ static int (*const index_f[SYM_NUM])(void *key, void=
+ *datum, void *datap) =3D {
+>  };
+>  /* clang-format on */
+>
+> +static int role_validate(void *key, void *datum, void *datap)
+> +{
+> +       const struct policydb *p =3D datap;
+> +       const struct role_datum *role =3D datum;
+> +       struct ebitmap_node *node;
+> +       u32 i;
+> +
+> +       ebitmap_for_each_positive_bit(&role->dominates, node, i) {
+> +               if (!policydb_role_isvalid(p, i))
+> +                       goto bad;
+> +       }
+> +
+> +       ebitmap_for_each_positive_bit(&role->types, node, i) {
+> +               if (!policydb_type_isvalid(p, i + 1))
+> +                       goto bad;
+> +       }
+> +
+> +       return 0;
+> +
+> +bad:
+> +       pr_err("SELinux:  invalid role %s\n", sym_name(p, SYM_ROLES, role=
+->value - 1));
+> +       return -EINVAL;
+> +}
+> +
+> +static int user_validate(void *key, void *datum, void *datap)
+> +{
+> +       const struct policydb *p =3D datap;
+> +       const struct user_datum *usrdatum =3D datum;
+> +       struct ebitmap_node *node;
+> +       u32 i;
+> +
+> +       ebitmap_for_each_positive_bit(&usrdatum->roles, node, i) {
+> +               if (!policydb_role_isvalid(p, i))
+> +                       goto bad;
+> +       }
+> +
+> +       if (!mls_range_isvalid(p, &usrdatum->range))
+> +               goto bad;
+> +
+> +       if (!mls_level_isvalid(p, &usrdatum->dfltlevel))
+> +               goto bad;
+> +
+> +       return 0;
+> +
+> +bad:
+> +       pr_err("SELinux:  invalid user %s\n", sym_name(p, SYM_USERS, usrd=
+atum->value - 1));
+> +       return -EINVAL;
+> +}
+> +
+> +static int sens_validate(void *key, void *datum, void *datap)
+> +{
+> +       const struct policydb *p =3D datap;
+> +       const struct level_datum *levdatum =3D datum;
+> +
+> +       if (!mls_level_isvalid(p, &levdatum->level))
+> +               goto bad;
+> +
+> +       return 0;
+> +
+> +bad:
+> +       pr_err("SELinux:  invalid sensitivity\n");
+> +       return -EINVAL;
+> +}
+> +
+> +
+> +/* clang-format off */
+> +static int (*const validate_f[SYM_NUM])(void *key, void *datum, void *da=
+tap) =3D {
+> +       NULL, /* Everything validated in common_read() and common_index()=
+ */
+> +       NULL, /* Everything validated in class_read() and class_index() *=
+/
+> +       role_validate,
+> +       NULL, /* Everything validated in type_read(), type_index() and ty=
+pe_bounds_sanity_check() */
+> +       user_validate,
+> +       NULL, /* Everything validated in cond_read_bool() and cond_index_=
+bool() */
+> +       sens_validate,
+> +       NULL, /* Everything validated in cat_read() and cat_index() */
+> +};
+> +/* clang-format on */
+> +
+>  #ifdef CONFIG_SECURITY_SELINUX_DEBUG
+>  static void hash_eval(struct hashtab *h, const char *hash_name,
+>                       const char *hash_details)
+> @@ -765,6 +843,16 @@ static int policydb_index(struct policydb *p)
+>                 if (rc)
+>                         goto out;
+>         }
+> +
+> +       for (i =3D 0; i < SYM_NUM; i++) {
+> +               if (!validate_f[i])
+> +                       continue;
+> +
+> +               rc =3D hashtab_map(&p->symtab[i].table, validate_f[i], p)=
+;
+> +               if (rc)
+> +                       goto out;
+> +       }
+> +
+>         rc =3D 0;
+>  out:
+>         return rc;
+> @@ -1087,6 +1175,12 @@ static int context_read_and_validate(struct contex=
+t *c, struct policydb *p,
+>                         pr_err("SELinux: error reading MLS range of conte=
+xt\n");
+>                         goto out;
+>                 }
+> +
+> +               rc =3D -EINVAL;
+> +               if (!mls_range_isvalid(p, &c->range)) {
+> +                       pr_warn("SELinux: invalid range in security conte=
+xt\n");
+> +                       goto out;
+> +               }
+>         }
+>
+>         rc =3D -EINVAL;
+> --
+> 2.49.0
+>
