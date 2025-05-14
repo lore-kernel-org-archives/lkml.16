@@ -1,26 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613DE205519
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682621C3039
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747219019; cv=none; b=aChUcoF2zy437gTkmQzL04se0dW9I48Dc1D5V8p3GiNZX1rvub7F/T5qHZJQVEbxDEXYI94tLVVslxrFjH3JN4JFkWN931y97RxbFvNb6zV+dAXFvIApNYP9Z4LiCmg5TyW+C5kDa+G5kO7pIv4KB6jMkszbRf4zUV7UqJafuiI=
+	t=1747219020; cv=none; b=Q2FavFW0ClTunCaTcRDTlF7Fgu9L161N3bdYEogmfQWAF+RF3kF0iyRdh0dYzcdgmY2BU8NAGgMZ+P6M2dMa6APRwfR8x5lzDbC/3VCn0LRCYiTVUdx+H9z9WOVUEEKUo4vrp6sQZozx/rzHN8QmlmQis+hkXWZYghPxHbwol18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747219019; c=relaxed/simple;
-	bh=lJ7cPoy+4jZVX3BbYjrDRQXW6NGet469EWbjVCV4x/s=;
+	s=arc-20240116; t=1747219020; c=relaxed/simple;
+	bh=uKFFlHLknlfJ9L1hP+29ctSOJj1098wcy9w2nmieQ14=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s9z5k+4r5JKNiclYU1Dw1v8pPWsJZKbaLyeE+bdWdfbuabFamAE2ojBj9hErjqswXPOrur8/xJqwRdQV95Iza0GypRCbFflutjo6+XZc0AChDP8FzOKSZ1NqVPNIdz3DNHKuXkp1lFMyvh5hqP6avlxgFn20KbzPiAL/RHFUKHU=
+	 In-Reply-To:To:Cc; b=CUadkpRxS5vaX4IRhLk/VqKI9mObpRFE9pixKCmxKWi0kphLVEwOOSVtTKIuKY6JrRITkFELBGEHDZX4i3fQJV1IBJ/NeTsqhZIm4IVarldd+ivxD7WwoOAvaAp17fB533KDydS0NhJjF4Ox2kU67M69fsd6/KZt8SyrkNIHPLg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=ratatoskr.trumtrar.info)
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <s.trumtrar@pengutronix.de>)
-	id 1uF9Tk-0004uZ-Ng; Wed, 14 May 2025 12:36:48 +0200
+	id 1uF9Tm-0004uZ-Gb; Wed, 14 May 2025 12:36:50 +0200
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Date: Wed, 14 May 2025 12:36:28 +0200
-Subject: [PATCH v2 1/4] dt-bindings: leds: add lp5860 LED controller
+Date: Wed, 14 May 2025 12:36:31 +0200
+Subject: [PATCH v2 4/4] leds: lp5860: detect and report fault state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-v6-14-topic-ti-lp5860-v2-1-72ecc8fa4ad7@pengutronix.de>
+Message-Id: <20250514-v6-14-topic-ti-lp5860-v2-4-72ecc8fa4ad7@pengutronix.de>
 References: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
 In-Reply-To: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
 To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
@@ -45,140 +45,276 @@ X-SA-Exim-Mail-From: s.trumtrar@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The lp5860 is a LED matrix driver with 18 constant current sinks and 11
-scan switches for 198 LED dots:
-  * Supply range from 2.7 V to 5.5 V
-  * 0.1mA - 50mA per current sink
-  * 1MHz I2C and 12MHz SPI control interface
-  * 8-bit analog dimming
-  * 8/16-bit PWM dimming
-  * individual ON and OFF control for each LED dot
-  * globat 3-bit Maximum Current setting for all LED dots
-  * individual LED dot open/short detection
+The lp5860 can detect shorts and open circuits. If an open (LOD) or
+short (LSD) is detected, the global bit in LP5860_FAULT_STATE is set.
+The channel that caused this can be read from the corresponding Dot_lsdX
+and Dot_lodX register and bit offset.
+
+The global bits can be cleared by writing 0xf to the LOD/LSD_clear
+register.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
- .../devicetree/bindings/leds/leds-lp5860.yaml      | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+ Documentation/ABI/testing/sysfs-class-spi-lp5860 |  50 +++++++++
+ drivers/leds/leds-lp5860-core.c                  | 137 +++++++++++++++++++++++
+ drivers/leds/leds-lp5860.h                       |  10 ++
+ 3 files changed, 197 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp5860.yaml b/Documentation/devicetree/bindings/leds/leds-lp5860.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..330ff42b27fb19395e64f813da4b0ab1fa22fe69
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lp5860.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-lp5860.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/ABI/testing/sysfs-class-spi-lp5860 b/Documentation/ABI/testing/sysfs-class-spi-lp5860
+index d24b49d38ecae55f1a1a4e465fbe71d30eff497e..292e5988ef5c6c1b353446f362dbd5b82d185c54 100644
+--- a/Documentation/ABI/testing/sysfs-class-spi-lp5860
++++ b/Documentation/ABI/testing/sysfs-class-spi-lp5860
+@@ -21,3 +21,53 @@ Contact:        Steffen Trumtrar <kernel@pengutronix.de>
+ Description:
+ 	Contains and sets the current for the R color group.
+ 	Can be adjusted in 128 steps from 0% to 100% of the maximum output current.
 +
-+title: LED driver for LP5860 RGB LED from Texas Instruments.
++What:           /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state
++Date:           May 2025
++KernelVersion:  6.15
++Contact:        Steffen Trumtrar <kernel@pengutronix.de>
++Description:
++	Contains and sets the global fault state:
 +
-+maintainers:
-+  - Steffen Trumtrar <kernel@pengutronix.de>
++	* 3: Open and short detected
++	* 2: Open detected
++	* 1: Short detected
 +
-+description: |
-+  The LP5860 is multi-channel, I2C and SPI RGB LED Driver that can group RGB LEDs
-+  into a LED group or control them individually.
++	Can be cleared by writing the corresponding value back to fault_state.
 +
-+  For more product information please see the link below:
-+  https://www.ti.com/lit/ds/symlink/lp5860.pdf
++	Example usage::
 +
-+properties:
-+  compatible:
-+    enum:
-+      - ti,lp5860
++		## Read
++		# cat /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state
++		2
 +
-+  reg:
-+    maxItems: 1
++		## Write
++		# echo 2 > /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state
 +
-+  spi-max-frequency:
-+    maximum: 12000000
++What:           /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state_open
++Date:           May 2025
++KernelVersion:  6.15
++Contact:        Steffen Trumtrar <kernel@pengutronix.de>
++Description:
++	Contains all LEDs and channels where an open condition was detected.
++	The format is ledname:channel.
 +
-+  '#address-cells':
-+    const: 1
++	Example usage::
 +
-+  '#size-cells':
-+    const: 0
++		## Read
++		# cat /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state_open
++		rgb1:0 rgb2:4
 +
-+patternProperties:
-+  '^multi-led@[0-9a-f]+$':
-+    type: object
-+    $ref: leds-class-multicolor.yaml#
-+    unevaluatedProperties: false
++What:           /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state_short
++Date:           May 2025
++KernelVersion:  6.15
++Contact:        Steffen Trumtrar <kernel@pengutronix.de>
++Description:
++	Contains all LEDs and channels where a short condition was detected.
++	The format is ledname:channel.
 +
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 198
-+        description:
-+          This property denotes the LED module number that is used
-+          for the child node.
++	Example usage::
 +
-+      '#address-cells':
-+        const: 1
++		## Read
++		# cat /sys/class/spi_master/spi<bus>/spi<bus>.<dev>/fault_state_short
++		rgb1:0 rgb2:4
+diff --git a/drivers/leds/leds-lp5860-core.c b/drivers/leds/leds-lp5860-core.c
+index c3ce2528783a1910a267c1b35a65ad27a63083db..0a802bc7a6aca25dab5cf012a1a0fcb2edcf9432 100644
+--- a/drivers/leds/leds-lp5860-core.c
++++ b/drivers/leds/leds-lp5860-core.c
+@@ -27,6 +27,140 @@ static struct lp5860_led *mcled_cdev_to_led(struct led_classdev_mc *mc_cdev)
+ 	return container_of(mc_cdev, struct lp5860_led, mc_cdev);
+ }
+ 
++static const char *lp5860_find_led(struct lp5860 *lp, unsigned int idx)
++{
++	struct mc_subled *mc_led_info;
++	struct lp5860_led *led;
++	int i, j;
 +
-+      '#size-cells':
-+        const: 0
++	for (i = lp->leds_size - 1; i >= 0; i--) {
++		led = &lp->leds[i];
 +
-+    patternProperties:
-+      "^led@[0-9a-f]+$":
-+        type: object
-+        $ref: common.yaml#
-+        unevaluatedProperties: false
++		mc_led_info = led->mc_cdev.subled_info;
 +
-+        properties:
-+          reg:
-+            maxItems: 1
++		for (j = 0; j < led->mc_cdev.num_colors; j++) {
++			if (mc_led_info[j].channel == idx)
++				goto out;
++		}
++	}
 +
-+        required:
-+          - reg
++out:
++	return led->mc_cdev.led_cdev.dev->kobj.name;
++}
 +
-+required:
-+  - compatible
-+  - reg
++static ssize_t lp5860_fault_state_lod_lsd(struct lp5860 *led, char *buf,
++					  unsigned int reg, unsigned int length)
++{
++	unsigned int value = 0;
++	unsigned int i, j;
++	unsigned int max_bits;
++	unsigned int offset = 0;
++	int len = 0;
++	bool match = false;
++	int ret;
 +
-+additionalProperties: false
++	for (i = 0; i < length; i++) {
++		match = false;
++		ret = regmap_read(led->regmap, reg + i, &value);
++		if (ret)
++			return ret;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/leds/common.h>
++		max_bits = BITS_PER_BYTE;
++		// every 3rd Dot_x register only has 2 bits
++		if (i%3 == 2)
++			max_bits = 2;
 +
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++		for (j = 0; j < max_bits; j++) {
++			offset++;
++			if (value & BIT(j)) {
++				len += sprintf(buf + len, "%s:%d",
++					       lp5860_find_led(led, offset),
++					       offset-1);
++				match = true;
++				len += sprintf(buf + len, " ");
++			}
++		}
++	}
 +
-+        led-controller@0 {
-+            compatible = "ti,lp5860";
-+            reg = <0x0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++	buf[len++] = '\n';
 +
-+            multi-led@0 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                reg = <0x0>;
-+                color = <LED_COLOR_ID_RGB>;
++	return len;
++}
 +
-+                led@0 {
-+                     reg = <0x0>;
-+                     color = <LED_COLOR_ID_RED>;
-+                };
++static ssize_t lp5860_fault_state_open_show(struct device *dev,
++					    struct device_attribute *attr,
++					    char *buf)
++{
++	struct lp5860 *led = dev_get_drvdata(dev);
++	unsigned int value = 0;
++	int ret;
 +
-+                led@1 {
-+                     reg = <0x1>;
-+                     color = <LED_COLOR_ID_GREEN>;
-+                };
++	ret = regmap_read(led->regmap, LP5860_FAULT_STATE, &value);
++	if (ret)
++		return ret;
 +
-+                led@2 {
-+                     reg = <0x2>;
-+                     color = <LED_COLOR_ID_BLUE>;
-+                };
-+            };
-+        };
-+    };
++	if (!(value & LP5860_FAULT_STATE_LOD))
++		return 0;
++
++	return lp5860_fault_state_lod_lsd(led, buf, LP5860_DOT_LOD_START,
++					  LP5860_DOT_LOD_LENGTH);
++}
++static LP5860_DEV_ATTR_R(fault_state_open);
++
++static ssize_t lp5860_fault_state_short_show(struct device *dev,
++					     struct device_attribute *attr, char *buf)
++{
++	struct lp5860 *led = dev_get_drvdata(dev);
++	unsigned int value = 0;
++	int ret;
++
++	ret = regmap_read(led->regmap, LP5860_FAULT_STATE, &value);
++	if (ret)
++		return ret;
++
++	if (!(value & LP5860_FAULT_STATE_LSD))
++		return 0;
++
++	return lp5860_fault_state_lod_lsd(led, buf, LP5860_DOT_LSD_START,
++					  LP5860_DOT_LSD_LENGTH);
++}
++static LP5860_DEV_ATTR_R(fault_state_short);
++
++static ssize_t lp5860_fault_state_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct lp5860 *led = dev_get_drvdata(dev);
++	unsigned int value = 0;
++	int ret;
++
++	ret = regmap_read(led->regmap, LP5860_FAULT_STATE, &value);
++	if (ret)
++		return ret;
++	return sysfs_emit(buf, "%d\n", (value & 0x3));
++}
++
++static ssize_t lp5860_fault_state_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t len)
++{
++	struct lp5860 *led = dev_get_drvdata(dev);
++	unsigned int value = 0;
++	int ret;
++
++	if (kstrtoint(buf, 0, &value))
++		return -EINVAL;
++
++	if (value & LP5860_FAULT_STATE_LOD)
++		ret = regmap_write(led->regmap, LP5860_LOD_CLEAR, 0xf);
++	if (value & LP5860_FAULT_STATE_LSD)
++		ret = regmap_write(led->regmap, LP5860_LSD_CLEAR, 0xf);
++
++	if (ret < 0)
++		return ret;
++	return len;
++}
++static LP5860_DEV_ATTR_RW(fault_state);
++
+ LP5860_SHOW_MODE(r_current_set, LP5860_R_CURRENT_SET, LP5860_CC_GROUP_MASK, 0)
+ LP5860_STORE_MODE(r_current_set, LP5860_R_CURRENT_SET, LP5860_CC_GROUP_MASK, 0)
+ static LP5860_DEV_ATTR_RW(r_current_set);
+@@ -40,6 +174,9 @@ LP5860_STORE_MODE(b_current_set, LP5860_B_CURRENT_SET, LP5860_CC_GROUP_MASK, 0)
+ static LP5860_DEV_ATTR_RW(b_current_set);
+ 
+ static struct attribute *lp5860_attributes[] = {
++	&dev_attr_fault_state_open.attr,
++	&dev_attr_fault_state_short.attr,
++	&dev_attr_fault_state.attr,
+ 	&dev_attr_r_current_set.attr,
+ 	&dev_attr_g_current_set.attr,
+ 	&dev_attr_b_current_set.attr,
+diff --git a/drivers/leds/leds-lp5860.h b/drivers/leds/leds-lp5860.h
+index 3b8342a832bc75afdf2318fd4ee1ee9ce105cbe3..4b1f9e2f85b9bbd16d4082521a25cdb217a5a315 100644
+--- a/drivers/leds/leds-lp5860.h
++++ b/drivers/leds/leds-lp5860.h
+@@ -196,6 +196,9 @@
+ #define LP5860_DOT_CS_ON		0x01
+ #define LP5860_DOT_CS_OFF		0x00
+ 
++#define LP5860_FAULT_STATE_LOD		BIT(1)
++#define LP5860_FAULT_STATE_LSD		BIT(0)
++
+ /* dot lod Value */
+ #define LP5860_DOT_LOD0_OFFSET		0
+ #define LP5860_DOT_LOD1_OFFSET		1
+@@ -209,6 +212,8 @@
+ #define LP5860_DOT_LOD_ON		0x01
+ #define LP5860_DOT_LOD_OFF		0x00
+ 
++#define LP5860_DOT_LOD_LENGTH		0x20
++
+ /* dot lsd Value */
+ #define LP5860_DOT_LSD0_OFFSET		0
+ #define LP5860_DOT_LSD1_OFFSET		1
+@@ -222,6 +227,8 @@
+ #define LP5860_DOT_LSD_ON		0x01
+ #define LP5860_DOT_LSD_OFF		0x00
+ 
++#define LP5860_DOT_LSD_LENGTH		0x20
++
+ /* REG FAULT_STATE */
+ #define LP5860_GLOBAL_LOD_OFFSET	1
+ #define LP5860_GLOBAL_LOD_STATE		BIT(1)
+@@ -257,6 +264,9 @@
+  */
+ #define LP5860_MAX_LED_CHANNELS		4
+ 
++#define LP5860_DEV_ATTR_R(name)	\
++	DEVICE_ATTR(name, 0444, lp5860_##name##_show, NULL)
++
+ #define LP5860_DEV_ATTR_RW(name)	\
+ 	DEVICE_ATTR(name, 0644, lp5860_##name##_show, lp5860_##name##_store)
+ 
 
 -- 
 2.47.1
