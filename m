@@ -1,66 +1,50 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E54C27C877
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895BB1B043A;
+	Wed, 14 May 2025 16:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240809; cv=none; b=OPEhRMQAEqoIMNhd87mx06zkrydhqblZVFqUaBCF09DOBhxIOccHkJDbHNbwC9+++KtbC36iXUi75nKjLmnHIBPOuEULKNbnTWAVuU/PPJitI2h8rrxoTgyshUvZlBfEjMNNsJtDtKhG+NKjR/rjOZ36qx37GEj1yDdX7GEsGrg=
+	t=1747240944; cv=none; b=lJ32OKcCuKAW+UXtYF7iUv7ubw+5W8zFpaN6PM00k5Up8jENy+lAVjxVpXeMoqnl79yrJUCd5twtzqHkabmI1CCWas/LWBg1IPqY0U7e6Sq50jkrTiCZoXWHkgw26RLAJvQJq/dzT01F6rdfqKK+MKNBfadanYlAE/MYle7VaJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240809; c=relaxed/simple;
-	bh=qsRC4rtpzeZl/HCQxJZ/jiHUAZWLUGs7TC++Y1ifxbs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HR0Jgu01f+0l+zqAkjUUU/uMmwpEemeeaJ0Ty50qyYZh/dGYEX45KBuzXg3pLCrbywDrzZNJMT70vz3u5FyZRUtfup0i2XS3PsrlHaRlxZD01i6O/CTPpqmMUACEPv2dYfPgVQRsmT8Scjq3etmb0sHu+5FBlgbfNqrfAWmebQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MNymLfdW; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747240944; c=relaxed/simple;
+	bh=3a/AGcV2Rv7gzIvog99Z8j2jxhg8+75lupWlsqOGDM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rJrS4LItxswKMebNbJA05GitItgwzKCWIB1E8uw3HMB71RJRF2SAw/RoQa+usCRTMqDUztSPqW2t8zBL2zRniWL6M10maGuuBqwm0Ug1ul4HPxlUgJdj30S1zHf8rQBtRXWZklKkTImq6lH55mihkXOQbAh8jvuWWXujTsNYTZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tk1wk66N; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MNymLfdW"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0ebf39427so5898643f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747240806; x=1747845606; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z8WZ1b2439ywq9jfEuQpDBO1suID2dCRujieJMdn7yE=;
-        b=MNymLfdWywwCMD3mwZeiObXjVQ3vpq9Bh0G9RTErj3NGj5K4LQke9kKt8huzcg4/ws
-         AOp9sKusNTzGnkfBzL8Jd3bGMftfuT1LtcFHDrgvB2FlEsPIpw0UmXPuYShlzcJ5IyeL
-         u5JN+3wE2PPuReT5dUATNGZiD+bu2E48zXWaSqWYo6pDxMm53WIB4/5UETfYrJ3EfL3L
-         SO2V3yDmc8nnlYesFtqv2f+ZlXRRf8JFMGKsN48OXJqdUfafBOdivq7g7t1rtZeJYHZG
-         TF6hEjqT4k4d9TDJ89aq9qdr+giXtmK0vVeW8L2Ng8qGDs+AnV8BeFjdOmEIh/QplHqh
-         kVMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240806; x=1747845606;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z8WZ1b2439ywq9jfEuQpDBO1suID2dCRujieJMdn7yE=;
-        b=aicqAiIGkAwISPRDN9xCopiHwv6HsKNTW84wL0oeOunfHgt+gr6PHw0mSciXATsNec
-         D3BU6DgWM0RdWNqM2pMH3/x5/x438/oYfPiFkXFC0PfAq6M4lIPcIcE6m/zt+CDv6v5I
-         Hul5+Bbjf5bJwuKCKSeTzFPdLj4/k/sEKdj4CdxMbuBUbJyyIhA2vkADR8W84uux++Bo
-         qWsGYM08J8CBkTt93vx3STplrFhWMJaNWfAKAR9S8VxOwEy0hy2RSWysYsYWyS/ZiaXj
-         UbiAJgmAHI2AiRxpiYJ4iWr/r7Ch8I3fZSmco3BwsZ8+j5VuRKZpavylrxY7od4Trqai
-         DNcw==
-X-Gm-Message-State: AOJu0Yx51cCtGpf0pCSRWBgcd5RGZldMU6tZV+I15Sy6q4O/fq/3hAMU
-	xcjc3yDbgWCuxHAqLOasQQG1kSVavyrFceZiWqz7NSxIJmgYobk6o0IwPAXtWys=
-X-Gm-Gg: ASbGncuxcEho3o6g+nontConvsC6HgowRay9z9IMmvLU988SJfRh/1/mLSTG9AsaEC9
-	XOauoxfSM+2i2Yd7ktPZ7bA+BAaQHG0raqFdAJRQr9Ku+0NPpN7dS2wFwVNqg7Lo1xJc8EVw66M
-	T59eGDtON83uUk7TS4LI6rUwDk8cqV6oxTZolAhnp9xkB9KDNpA16bCbga5U4hMESTKNOMTxs84
-	7l19uyyD6FBhmprpd6vOxWys9GZH3b6IaIKqIV5Ey2KSWgLCQH4HYJx7tG+2RNe7CMOuZUw7ub3
-	LXHuPAXPYmTkG1n/z31SrBnsSxKkJFlmYlkSGhzQg2LWSvENQREEQWEhtTo6Wd8qfypLGqtMz74
-	WQuhWfeSBxV3Er0Pw+Hic+G0=
-X-Google-Smtp-Source: AGHT+IEPbAF4Q3bMuaTmqRM9qQbhF4Gz5x0v56o5JMbzAafCu6BVNra2bXvw9299wzIEP0EieOV7oA==
-X-Received: by 2002:a05:6000:2088:b0:3a1:f5c6:2bd with SMTP id ffacd0b85a97d-3a3496c36d5mr3666848f8f.31.1747240805928;
-        Wed, 14 May 2025 09:40:05 -0700 (PDT)
-Received: from [10.61.1.139] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2ce36sm20542941f8f.71.2025.05.14.09.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 09:40:05 -0700 (PDT)
-Message-ID: <43aac8b0-1fec-4b2a-8046-c26f96ca532e@linaro.org>
-Date: Wed, 14 May 2025 18:40:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tk1wk66N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747240942; x=1778776942;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3a/AGcV2Rv7gzIvog99Z8j2jxhg8+75lupWlsqOGDM0=;
+  b=Tk1wk66NiickztNvxpnaBNXlcocHEYYVtBcZp0KO8BNVTTc/ngo7Uw1e
+   DFfQzmg3DOFuAKAZpFTBvPASodl8ggB5qpvdC6jvxD+UQUPsUELpipg2C
+   juZZP1FJCqpW7KuPi+h4s7V3et1sSzuZKE++PB5tJolMMaJhgnEJBnnbI
+   OH3B0TIVNj8KcchHjTNQuRC00CaulEdwquq1nzFhatgXSe6kNNdHtHfsF
+   e49PQjAeEw2b49xIdxZy1JXJMQa+z+M49l94N77FyA3JkmtjVVQ4/mzgV
+   19OsvbB4lxG7WxAxB4O9clLqyDp7Nv/H8fxY6TDxQx5D89fbBhZd9OLH0
+   w==;
+X-CSE-ConnectionGUID: 83qnpMfKRDu3szjfHo/8jw==
+X-CSE-MsgGUID: Q2pvI0cdTi2dzJ4gQj10Lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48262181"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="48262181"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 09:42:20 -0700
+X-CSE-ConnectionGUID: v0zwh2NRShuM7ho+Ce271Q==
+X-CSE-MsgGUID: rxO74IssSCOLhS1RUO3Gjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="138154268"
+Received: from mgoodin-mobl3.amr.corp.intel.com (HELO [10.124.222.100]) ([10.124.222.100])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 09:42:17 -0700
+Message-ID: <abe64cda-729e-44e2-bc1e-d43d3566980e@linux.intel.com>
+Date: Wed, 14 May 2025 09:42:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,80 +52,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v2 1/2] phy: qcom: qmp-pcie: Update PHY settings for
- SA8775P
-To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
- quic_nayiluri@quicinc.com, quic_ramkri@quicinc.com,
- quic_nitegupt@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>
-References: <20250514-update_phy-v2-0-d4f319221474@quicinc.com>
- <20250514-update_phy-v2-1-d4f319221474@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250514-update_phy-v2-1-d4f319221474@quicinc.com>
+Subject: Re: [PATCH v4 2/5] PCI/ERR: Add support for resetting the slots in a
+ platform specific way
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
+ Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>
+Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
+ <20250508-pcie-reset-slot-v4-2-7050093e2b50@linaro.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250508-pcie-reset-slot-v4-2-7050093e2b50@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 14/05/2025 13:37, Mrinmay Sarkar wrote:
-> From: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
-> 
-> Make changes to update the PHY settings to align with the latest
-> PCIe PHY Hardware Programming Guide for both PCIe controllers
-> on the SA8775P platform.
-> 
-> Add the ln_shrd region for SA8775P, incorporating new register
-> writes as specified in the updated Hardware Programming Guide.
-> 
-> Update pcs table for QCS8300, since both QCS8300 and SA8775P are
-> closely related and share same pcs settings.
-> 
-> Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+On 5/8/25 12:10 AM, Manivannan Sadhasivam wrote:
+> Some host bridge devices require resetting the slots in a platform specific
+> way to recover them from error conditions such as Fatal AER errors, Link
+> Down etc... So introduce pci_host_bridge::reset_slot callback and call it
+> from pcibios_reset_secondary_bus() if available.
+>
+> The 'reset_slot' callback is responsible for resetting the given slot
+> referenced by the 'pci_dev' pointer in a platform specific way and bring it
+> back to the working state if possible. If any error occurs during the slot
+> reset operation, relevant errno should be returned.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 89 ++++++++++++----------
->   drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h |  2 +
->   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5_20.h      |  4 +
->   .../phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v5.h | 11 +++
->   drivers/phy/qualcomm/phy-qcom-qmp.h                |  1 +
->   5 files changed, 66 insertions(+), 41 deletions(-
 
-I think the subject should be "Update PHY settings for QCS8300 & SA8775P".
+Looks good to me.
 
-As my comment on patch 2, what's the relationship ? does those PHY settings fix
-the "Gen4 stability issues" or are needed for the Gen4 equalization ?
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Thanks,
-Neil
+>   drivers/pci/pci.c      | 12 ++++++++++++
+>   drivers/pci/pcie/err.c |  5 -----
+>   include/linux/pci.h    |  1 +
+>   3 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4d7c9f64ea24ec754a135a2585c99489cfa641a9..13709bb898a967968540826a2b7ee8ade6b7e082 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4982,7 +4982,19 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
+>   
+>   void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
+>   {
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +	int ret;
+> +
+> +	if (host->reset_slot) {
+> +		ret = host->reset_slot(host, dev);
+> +		if (ret)
+> +			pci_err(dev, "failed to reset slot: %d\n", ret);
+> +
+> +		return;
+> +	}
+> +
+>   	pci_reset_secondary_bus(dev);
+> +
+>   }
+>   
+>   /**
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index de6381c690f5c21f00021cdc7bde8d93a5c7db52..b834fc0d705938540d3d7d3d8739770c09fe7cf1 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -234,11 +234,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	}
+>   
+>   	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> -		/*
+> -		 * TODO: Should call platform-specific
+> -		 * functions to reset slot before calling
+> -		 * drivers' slot_reset callbacks?
+> -		 */
+>   		status = PCI_ERS_RESULT_RECOVERED;
+>   		pci_dbg(bridge, "broadcast slot_reset message\n");
+>   		pci_walk_bridge(bridge, report_slot_reset, &status);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77e96713054388bdc82f439e51023c1bf..8d7d2a49b76cf64b4218b179cec495e0d69ddf6f 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -599,6 +599,7 @@ struct pci_host_bridge {
+>   	void (*release_fn)(struct pci_host_bridge *);
+>   	int (*enable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+>   	void (*disable_device)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+> +	int (*reset_slot)(struct pci_host_bridge *bridge, struct pci_dev *dev);
+>   	void		*release_data;
+>   	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>   	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
