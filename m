@@ -1,147 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FE81552FD;
-	Wed, 14 May 2025 15:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938B921D58F
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235496; cv=none; b=qHtyA5QwNDgt/1+NuxHTGoJ8dfvDAaGXxZg2YcCFE8eg97P5JUlYltwUVF7G+49rNXBp4jz9J4g8cTqOrtSJ/vtoNQhRW6BJP6i8YKIm8Zsbakar6m31JgfmGyIXzFPVsun/7cDmEiDEDAkGhnZTj9PzmE4fwhZx5S/Cu8s4jKE=
+	t=1747235503; cv=none; b=Ck6CB6zfqM3Au7Dh77rHrsiTp+iLXs7CEnhJBflpJghADXLP+Or1Y10FRrGKtMD+RZ/UpFl5I/E1A57lhqeJFQEtWwAxe13KN5IryDf++qtV7EalxFJKgzzinMHntdOvU/nQgXldAw1y8pJHHv8XkkGv3d1d15Gi5AU7eXCXlXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235496; c=relaxed/simple;
-	bh=BScU0o75rdjqo7v+0vtZDV4yX5PMZ7a9GXPYTLvpD9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l7NJFAkNhEz2KamMq9hrHruFbSg7Cip05BNQKpwSMLcJbZBQrEbqTM0/RFML95mnRIL8ikugMuh42FyCAjZR2fDJsbBbaEuD3h2bHoFhEC1FqHCOp8thyR/d0P0Ujla+J7xTGTcwH46JHAWFWu9kmoOe/Ck77EA4sMFW5OWC9Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LoUHGmDj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747235503; c=relaxed/simple;
+	bh=4u/NS1smLHkxhFeUuEbvCE2uMHuDJkj0RIsb2N/7OBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CDJbG+fyT+6/E+qTRgQ8chymbuy+WxOEdjmDZouDUoBJz97HxOSKPVBAvD9GnHYgcR2RrecSWFwsKStfXljDDywL9eZNcR58BsBaDM22L95ZNE4pRXvJ2kHybIgek4jdsyQw+am/PKK4iK8kUhRJ6Ng0wtuyrYLyOJu/l8o1gSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SOvW8FT3; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LoUHGmDj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551F0C4CEF6;
-	Wed, 14 May 2025 15:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747235496;
-	bh=BScU0o75rdjqo7v+0vtZDV4yX5PMZ7a9GXPYTLvpD9w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LoUHGmDj1tg5Aw4YyBi8GoFHrYsWOUHRm72wwDDKouq1K8VnG6DZRoNxDgpBUx/LE
-	 huMuGjWOJ8zVB7KZ6xytRqEO6idUewKTZ276c2M6sZg2CL6b3qNHspj/wCovT4xc8D
-	 /db7+0NIJnWRHTsIxE5rXtYow4mWzidGIM/DAKxp7FHqsyW9bMlyBYgTHON9hXeno+
-	 F8ERLeqIPltOtwhAxq6LR8H3+4aRS970TqVbU3Z7fT2Bmmy0N1MYTDyYT5qPFyYPJS
-	 xvooC3FN0OVCTSrj4VTZfYtBxmOBtsGmMq8NwslJaUuQhjKODi0PWTH5AZCjXlb60c
-	 l2aEo2OHRfmlw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 14 May 2025 17:10:30 +0200
-Subject: [PATCH RFT v2 10/15] drm/msm/a6xx: Simplify min_acc_len
- calculation
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOvW8FT3"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22fa414c565so54014255ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747235501; x=1747840301; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zin9UdB1kGHf9472t90ClCu+DsenV3gklPBeEhXFkBk=;
+        b=SOvW8FT3d4LANFtjcKwButycoGew7xFHKVAAqC8upyNJp1g/mZoJUO16d8/37oCpc2
+         Uc9MIoJHoD9glkhRpEnoP2uMt2vqcGU8Cw9NtDQaJi2TTZ3fgUD9ya6+NeIE69sMvBoZ
+         uHJ4n5zySWhnFjZuzAa4yWcpy4r0N5xvAxa8iFPuM4RfFjHLc3nKURh1CHFHzd2MGQ76
+         j1WMT/DbDNzm8Pyn0BbZLPUJh/PsIVIBrZi6aaJqLKa7zb+rGsY9HrkoPLu30bAVecb9
+         o4S15sFxkyprbRX3Dn+gL+jh7PEPbF4kZDgpE47owaftnKNFI63PesoJyjj9oNXIglA9
+         kw+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747235501; x=1747840301;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zin9UdB1kGHf9472t90ClCu+DsenV3gklPBeEhXFkBk=;
+        b=iF6H8qoJqkzNuGVNVR7OrWiNMcqKjAME1cEmvCFX54SHLU2ZDFRvAf+St0OxsGzgEU
+         27jDeXhWL6ZizrdCa3QBvqqNYV2bQF+coCV1y0CsoZxN8JTsRaDauZ4226Hs+A49F9nc
+         +EAsbBxCEhXs6JfZPk9dp2jPXGf+HRp45I5Pjeh6/ebI/PspiCJvioXf+tvkgJkuxqio
+         6jyc6ua8ZbgpwfJ6oCPwpae6tfRfpHlQZWFKXbq4oEug2fEkl84HAykVXCkmyW5pSPa1
+         nEONJQN4EUYUlpI/FJvJn7TBnlQkBp9Atxn6AUJWK/ME9TNUimu5XdIGpOXhf75ggnel
+         2w3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXH/RPmw6Ym9MVZy2ynCwgAGse/nNfeYs7JcgEN/Jy7pBQNPFWaMQ1RtQOF8cuxbeahkAI/ub+0Fm90x2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM35O5qyDyD83NpEerCQrWBstko2+VYPxvtLlMU8RnD3BlQpCd
+	5X4n8R8ug4uyCUBFsKzXrJtfcClug1cyvTQbgcZOldyDKIP0zCv2
+X-Gm-Gg: ASbGncvTzdDrNOv4WNZlPAGA8pGJIiSGI8WiItwVOL/QRRVOOw6T4NgWICYaYl0psHa
+	Zcr3B1Kac3JIJuqAMzh+e6NUhFlOgBFgE2G8fLxxQTZ2ksy2R1mmtOrrzUu7t99OfGnHChDV7Tx
+	xBXwhnA9kBj7Ja1YkDl9Rm5e6zGKF0A3onRFpi4gZeQ8pBsHsgZJ5G/KuNcT1Mj4WOTYO6rDAbE
+	T9L0gAW++vhXN+b3hYBnZYusQJD1/i1D/PN54zGJBlMbnAUaVwjt1haECaIlmUNoQxL1o/ZoZar
+	x8PujnoSLj1T7Bins2kNBKnt+uzcrkrLH7jqj6pql228loOypPbSz00GIxXLHGXeoyBMnxhvwNS
+	XYLwR
+X-Google-Smtp-Source: AGHT+IGQ88drE0lWsNDyF4V9Vy8xJEiVqRdDdnIX5NlkZpbH8m9mBlqKat4+TBTu4eQ2Nf1yk/MQ3A==
+X-Received: by 2002:a17:902:f647:b0:215:9bc2:42ec with SMTP id d9443c01a7336-231983d06d8mr50986825ad.47.1747235500628;
+        Wed, 14 May 2025 08:11:40 -0700 (PDT)
+Received: from ilya.linux (M106072195001.v4.enabler.ne.jp. [106.72.195.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc829d668sm99836795ad.201.2025.05.14.08.11.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 08:11:40 -0700 (PDT)
+From: ilya guterman <amfernusus@gmail.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ilya Guterman <amfernusus@gmail.com>
+Subject: [PATCH v2] drivers/nvme: Add quirks for device 025e:f1ac
+Date: Thu, 15 May 2025 00:11:30 +0900
+Message-ID: <20250514151130.701885-1-amfernusus@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <0250510102130.14710-1-amfernusus@gmail.com>
+References: <0250510102130.14710-1-amfernusus@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-topic-ubwc_central-v2-10-09ecbc0a05ce@oss.qualcomm.com>
-References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
-In-Reply-To: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747235442; l=2994;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=uhzxCTkLiBWghA8reLOOCpmixDKdE/ADomLDXGc8h5U=;
- b=U7siDj/37mEwCSQ2F+kLgyeY1VmNLata928UU2xISDKTHxpZERVjWqSvFYC/sUdBFIHZ/AzOA
- xPWWtJEyvG/BZPX1hz3YY6sM17Lf6ZVTTeKF32lkxgU2TR3rY86/EK7
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+From: Ilya Guterman <amfernusus@gmail.com>
 
-It's only necessary for some lower end parts.
-Also rename it to min_acc_len_64b to denote that if set, the minimum
-access length is 64 bits, 32b otherwise.
+This commit adds NVME_QUIRK_NO_DEEPEST_PS for
+device [126f:2262], which belongs to device SOLIDIGM P44 Pro SSDPFKKW020X7
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The device frequently have trouble exiting the deepest power state (5),
+resulting in the entire disk unresponsive.
+
+Verified by setting nvme_core.default_ps_max_latency_us=10000 and observing them behaving normally.
+Also by running with the patch couldn't reproduce the issue after multiple wake up from sleeps.
+Running without the patch again reprodcued the issue on the first wake from sleep.
+
+Signed-off-by: ilya guterman <amfernusus@gmail.com>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 5ee5f8dc90fe0d1647ce07b7dbcadc6ca2ecd416..fdc843c47c075a92ec8305217c355e4ccee876dc 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -592,14 +592,12 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- 	if (IS_ERR(gpu->common_ubwc_cfg))
- 		return -EINVAL;
- 
--	gpu->ubwc_config.min_acc_len = 0;
- 	gpu->ubwc_config.ubwc_swizzle = 0x6;
- 	gpu->ubwc_config.macrotile_mode = 0;
- 	gpu->ubwc_config.highest_bank_bit = 15;
- 
- 	if (adreno_is_a610(gpu)) {
- 		gpu->ubwc_config.highest_bank_bit = 13;
--		gpu->ubwc_config.min_acc_len = 1;
- 		gpu->ubwc_config.ubwc_swizzle = 0x7;
- 	}
- 
-@@ -645,10 +643,8 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- 		gpu->ubwc_config.macrotile_mode = 1;
- 	}
- 
--	if (adreno_is_a702(gpu)) {
-+	if (adreno_is_a702(gpu))
- 		gpu->ubwc_config.highest_bank_bit = 14;
--		gpu->ubwc_config.min_acc_len = 1;
--	}
- 
- 	return 0;
- }
-@@ -657,6 +653,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	u8 uavflagprd_inv = adreno_is_a650_family(adreno_gpu) || adreno_is_a7xx(adreno_gpu) ? 2 : 0;
-+	bool min_acc_len_64b = adreno_is_a610(adreno_gpu) || adreno_is_a702(adreno_gpu);
- 	const struct qcom_ubwc_cfg_data *cfg = adreno_gpu->common_ubwc_cfg;
- 	/*
- 	 * We subtract 13 from the highest bank bit (13 is the minimum value
-@@ -676,18 +673,18 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
- 		  level2_swizzling_dis << 12 |
- 		  rgb565_predicator << 11 |
- 		  hbb_hi << 10 | amsbc << 4 |
--		  adreno_gpu->ubwc_config.min_acc_len << 3 |
-+		  min_acc_len_64b << 3 |
- 		  hbb_lo << 1 | ubwc_mode);
- 
- 	gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL,
- 		  level2_swizzling_dis << 6 | hbb_hi << 4 |
--		  adreno_gpu->ubwc_config.min_acc_len << 3 |
-+		  min_acc_len_64b << 3 |
- 		  hbb_lo << 1 | ubwc_mode);
- 
- 	gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL,
- 		  level2_swizzling_dis << 12 | hbb_hi << 10 |
- 		  uavflagprd_inv << 4 |
--		  adreno_gpu->ubwc_config.min_acc_len << 3 |
-+		  min_acc_len_64b << 3 |
- 		  hbb_lo << 1 | ubwc_mode);
- 
- 	if (adreno_is_a7xx(adreno_gpu))
-@@ -695,7 +692,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
- 			  FIELD_PREP(GENMASK(8, 5), hbb_lo));
- 
- 	gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL,
--		  adreno_gpu->ubwc_config.min_acc_len << 23 | hbb_lo << 21);
-+		  min_acc_len_64b << 23 | hbb_lo << 21);
- 
- 	gpu_write(gpu, REG_A6XX_RBBM_NC_MODE_CNTL,
- 		  adreno_gpu->ubwc_config.macrotile_mode);
-
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 1dc12784efaf..03a64bc77f7b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3734,6 +3734,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
+ 	{ PCI_DEVICE(0x1e49, 0x0041),   /* ZHITAI TiPro7000 NVMe SSD */
+ 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
++	{ PCI_DEVICE(0x025e, 0xf1ac),   /* SOLIDIGM  P44 pro SSDPFKKW020X7  */
++		.driver_data = NVME_QUIRK_NO_DEEPEST_PS, },
+ 	{ PCI_DEVICE(0xc0a9, 0x540a),   /* Crucial P2 */
+ 		.driver_data = NVME_QUIRK_BOGUS_NID, },
+ 	{ PCI_DEVICE(0x1d97, 0x2263), /* Lexar NM610 */
 -- 
 2.49.0
 
