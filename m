@@ -1,249 +1,386 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE66222068E;
-	Wed, 14 May 2025 08:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF0721C17B
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210315; cv=none; b=AhqFhzio6mbu/hsAPfWkRcRB3TGoiuSbEdjdf0/GfvdBf2IToIbWcffTJm5CHWc86An6YmeyEtzRg6CVt+emYmc1LBhu2WFs0QMZa2q1kyc1GfWLhKOI6+U4HWPVPXw4/fFeTG2O31mhl6gq6kmhPUa1sIeaYZBy4eZdaKB6oWY=
+	t=1747210323; cv=none; b=gUgpOgxifncpJTJ0reL8TGhGtNnpG+oJQcFwtMa4qzYD898adsKpZiIzd/dKp7I1BrniaaFcVgCnxwMQQIr9x3sJnWJKf0ZAZTn0LpCFfw5Rs/kkHk+scdQ9rgDXo3V10N6gc0883Zfc4pcBVxZl1l0W7Y0nWt7LWQ51MlV5psU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210315; c=relaxed/simple;
-	bh=NcvD0uAmpsHhAnoMgJvb28PbFb92iIhISgI68ms+8Eg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ddNYF55h/fyOytpRmsAvDmyyZIbUsaZTmBo1LCoKzWx/ee1UXhJhh3IAb1aEs8qEP50Qn70pHJ3Um+rDhuRiF0oWli7U6iIU88voUFP5oRrrlUja3asICOZOIcVIZMkTf0tZWiaTMtleC1fQ/10/oT69MnBJOKDxGnxW/dPtzkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app2 (Coremail) with SMTP id TQJkCgAHp5U5UCRoqb15AA--.19521S2;
-	Wed, 14 May 2025 16:11:39 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v3 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
-Date: Wed, 14 May 2025 16:11:35 +0800
-Message-Id: <20250514081135.636-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250514080928.385-1-luyulin@eswincomputing.com>
-References: <20250514080928.385-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1747210323; c=relaxed/simple;
+	bh=kj/t2hsLGhef1ip5Z1/Zxqn8DrX1n3cGTyKw783xicM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XR9zIticlz8hvgEsMeIkH5Lj1P9lSQJRVieP7RByPdRmqXbZ38DkaQIYBzB5QaNkyWXmlSlpoCCcYeoMy2Wb34hwfnkq5uaqsX8lxETrWvkml2UQxmm3f38ulk6UySfCTxgJWykaBrxQMpXhDpVjz9zxlWVgfM7fBLrIkNngKmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xT6ssqL/; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xT6ssqL/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747210312; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=+oizZpEkmtTf8cVqbY/PSADFdSY5b973g5WjvB6kVgg=;
+	b=xT6ssqL/fNVewAeTyCV4pdGzaRQ9LvBMYKbAdRry8ehmZjaBSIJdxDHurnltVV8V2Pc02/rG0SiCV1pmA1jk1mTJj3LZ2n5sqfAkjVT8CYBwJtPI+dXWA6yt/ow9cpm9w7uQWReAEQoGeCmExmcMNnZ7LMMM+1voc4PG6Qd4QKg=
+Received: from 30.74.144.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wal2zHK_1747210309 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 May 2025 16:11:50 +0800
+Message-ID: <dfdf06eb-faf5-487a-b0e6-57c1ceb58fcc@linux.alibaba.com>
+Date: Wed, 14 May 2025 16:11:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] mm: make try_to_unmap_one support batched unmap for
+ anon large folios
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ David Hildenbrand <david@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
+ Kairui Song <kasong@tencent.com>, Chris Li <chrisl@kernel.org>,
+ Baoquan He <bhe@redhat.com>, Dan Schatzberg <schatzberg.dan@gmail.com>,
+ Kaixiong Yu <yukaixiong@huawei.com>, Fan Ni <fan.ni@samsung.com>,
+ Tangquan Zheng <zhengtangquan@oppo.com>
+References: <20250513084620.58231-1-21cnbao@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250513084620.58231-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgAHp5U5UCRoqb15AA--.19521S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFWrJF1DZw4DtFy7ZFWDArb_yoW7tF17pF
-	43W34fJFnFqr1xGa9Ivw109F1fJan7AF9xAF1qyry3Xw1Yq3WSyr4ayr45WFWUWr4kJry3
-	Zayjqay0qF4UCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-Add EIC7700 pinctrl device for all configurable pins.
-For the EIC7700 pinctrl registers, each register (32 bits)
-controls the characteristics of a single pin.
-It supports setting function multiplexing, Schmitt trigger,
-drive strength, pull-up/pull-down, and input enable.
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
----
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 157 ++++++++++++++++++
- 1 file changed, 157 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-new file mode 100644
-index 000000000000..dbdfcc9a1b36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-@@ -0,0 +1,157 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin Eic7700 Pinctrl
-+
-+maintainers:
-+  - Yulin Lu <luyulin@eswincomputing.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+description: |
-+  eic7700 pin configuration nodes act as a container for an arbitrary number of
-+  subnodes. Each of these subnodes represents some desired configuration for one or
-+  more pins. This configuration can include the mux function to select on those pin(s),
-+  and various pin configuration parameters, such as input-enable, pull-up, etc.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  vrgmii-supply:
-+    description:
-+      Regulator supply for the RGMII interface IO power domain.
-+      This property should reference a regulator that provides either 1.8V or 3.3V,
-+      depending on the board-level voltage configuration required by the RGMII interface.
-+
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+
-+        properties:
-+          pins:
-+            description:
-+              For eic7700, specifies the name(s) of one or more pins to be configured by
-+              this node.
-+            items:
-+              enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
-+                      rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
-+                      jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
-+                      jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
-+                      pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
-+                      jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
-+                      rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
-+                      i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
-+                      rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
-+                      i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
-+                      rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
-+                      rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
-+                      i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
-+                      rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
-+                      spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
-+                      rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
-+                      i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
-+                      i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
-+                      uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
-+                      uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
-+                      fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
-+                      mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
-+                      mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
-+                      mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
-+                      mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
-+                      spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
-+                      spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
-+                      i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
-+                      boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
-+
-+          function:
-+            description:
-+              Specify the alternative function to be configured for the
-+              given pins.
-+            enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
-+                    gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
-+                    lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
-+                    rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
-+
-+          input-schmitt-enable: true
-+
-+          input-schmitt-disable: true
-+
-+          bias-disable: true
-+
-+          bias-pull-down: true
-+
-+          bias-pull-up: true
-+
-+          input-enable: true
-+
-+          input-disable: true
-+
-+          drive-strength-microamp: true
-+
-+        required:
-+          - pins
-+
-+        additionalProperties: false
-+
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
-+
-+          - if:
-+              properties:
-+                pins:
-+                  anyOf:
-+                    - pattern: '^rgmii'
-+                    - const: lpddr_ref_clk
-+            then:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
-+            else:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
-+
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pinctrl@51600080 {
-+      compatible = "eswin,eic7700-pinctrl";
-+      reg = <0x51600080 0x1fff80>;
-+      vrgmii-supply = <&vcc_1v8>;
-+
-+      dev-active-grp{
-+        /* group node defining 1 standard pin */
-+        gpio10-pins {
-+          pins = "jtag1_tdo";
-+          function = "gpio";
-+          input-enable;
-+          bias-pull-up;
-+        };
-+
-+        /* group node defining 2 I2C pins */
-+        i2c6-pins {
-+          pins = "uart1_cts", "uart1_rts";
-+          function = "i2c";
-+        };
-+      };
-+    };
--- 
-2.25.1
+On 2025/5/13 16:46, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> My commit 354dffd29575c ("mm: support batched unmap for lazyfree large
+> folios during reclamation") introduced support for unmapping entire
+> lazyfree anonymous large folios at once, instead of one page at a time.
+> This patch extends that support to generic (non-lazyfree) anonymous
+> large folios.
+> 
+> Handling __folio_try_share_anon_rmap() and swap_duplicate() becomes
+> extremely complex—if not outright impractical—for non-exclusive
+> anonymous folios. As a result, this patch limits support to exclusive
+> large folios. Fortunately, most anonymous folios are exclusive in
+> practice, so this restriction should be acceptable in the majority of
+> cases.
+> 
+> SPARC is currently the only architecture that implements
+> arch_unmap_one(), which also needs to be batched for consistency.
+> However, this is not yet supported, so the platform is excluded for
+> now.
+> 
+> Using the following micro-benchmark to measure the time taken to perform
+> PAGEOUT on 256MB of 64KiB anonymous large folios.
+> 
+>   #define _GNU_SOURCE
+>   #include <stdio.h>
+>   #include <stdlib.h>
+>   #include <sys/mman.h>
+>   #include <string.h>
+>   #include <time.h>
+>   #include <unistd.h>
+>   #include <errno.h>
+> 
+>   #define SIZE_MB 256
+>   #define SIZE_BYTES (SIZE_MB * 1024 * 1024)
+> 
+>   int main() {
+>       void *addr = mmap(NULL, SIZE_BYTES, PROT_READ | PROT_WRITE,
+>                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>       if (addr == MAP_FAILED) {
+>           perror("mmap failed");
+>           return 1;
+>       }
+> 
+>       memset(addr, 0, SIZE_BYTES);
+> 
+>       struct timespec start, end;
+>       clock_gettime(CLOCK_MONOTONIC, &start);
+> 
+>       if (madvise(addr, SIZE_BYTES, MADV_PAGEOUT) != 0) {
+>           perror("madvise(MADV_PAGEOUT) failed");
+>           munmap(addr, SIZE_BYTES);
+>           return 1;
+>       }
+> 
+>       clock_gettime(CLOCK_MONOTONIC, &end);
+> 
+>       long duration_ns = (end.tv_sec - start.tv_sec) * 1e9 +
+>                          (end.tv_nsec - start.tv_nsec);
+>       printf("madvise(MADV_PAGEOUT) took %ld ns (%.3f ms)\n",
+>              duration_ns, duration_ns / 1e6);
+> 
+>       munmap(addr, SIZE_BYTES);
+>       return 0;
+>   }
+> 
+> w/o patch:
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1337334000 ns (1337.334 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1340471008 ns (1340.471 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1385718992 ns (1385.719 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1366070000 ns (1366.070 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 1347834992 ns (1347.835 ms)
+> 
+> w/patch:
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 698178000 ns (698.178 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 708570000 ns (708.570 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 693884000 ns (693.884 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 693366000 ns (693.366 ms)
+> ~ # ./a.out
+> madvise(MADV_PAGEOUT) took 690790000 ns (690.790 ms)
+> 
+> We found that the time to reclaim this memory was reduced by half.
 
+Do you have some performance numbers for the base page?
+
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Harry Yoo <harry.yoo@oracle.com>
+> Cc: Kairui Song <kasong@tencent.com>
+> Cc: Chris Li <chrisl@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dan Schatzberg <schatzberg.dan@gmail.com>
+> Cc: Kaixiong Yu <yukaixiong@huawei.com>
+> Cc: Fan Ni <fan.ni@samsung.com>
+> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>   include/linux/swap.h |  4 +--
+>   mm/memory.c          |  2 +-
+>   mm/rmap.c            | 79 +++++++++++++++++++++++++++++---------------
+>   mm/swapfile.c        | 10 ++++--
+>   4 files changed, 62 insertions(+), 33 deletions(-)
+> 
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index bc0e1c275fc0..8fbb8ce72016 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -479,7 +479,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry);
+>   extern swp_entry_t get_swap_page_of_type(int);
+>   extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+>   extern void swap_shmem_alloc(swp_entry_t, int);
+> -extern int swap_duplicate(swp_entry_t);
+> +extern int swap_duplicate(swp_entry_t, int nr);
+>   extern int swapcache_prepare(swp_entry_t entry, int nr);
+>   extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+>   extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> @@ -546,7 +546,7 @@ static inline void swap_shmem_alloc(swp_entry_t swp, int nr)
+>   {
+>   }
+>   
+> -static inline int swap_duplicate(swp_entry_t swp)
+> +static inline int swap_duplicate(swp_entry_t swp, int nr)
+>   {
+>   	return 0;
+>   }
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 99af83434e7c..5a7e4c0e89c7 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -803,7 +803,7 @@ copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>   	swp_entry_t entry = pte_to_swp_entry(orig_pte);
+>   
+>   	if (likely(!non_swap_entry(entry))) {
+> -		if (swap_duplicate(entry) < 0)
+> +		if (swap_duplicate(entry, 1) < 0)
+>   			return -EIO;
+>   
+>   		/* make sure dst_mm is on swapoff's mmlist. */
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index fb63d9256f09..2607e02a0960 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1845,23 +1845,42 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+>   #endif
+>   }
+>   
+> -/* We support batch unmapping of PTEs for lazyfree large folios */
+> +/*
+> + * We support batch unmapping of PTEs for lazyfree or exclusive anon large
+> + * folios
+> + */
+>   static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> -			struct folio *folio, pte_t *ptep)
+> +		struct folio *folio, pte_t *ptep, bool exclusive)
+>   {
+>   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>   	int max_nr = folio_nr_pages(folio);
+> +#ifndef __HAVE_ARCH_UNMAP_ONE
+> +	bool no_arch_unmap = true;
+> +#else
+> +	bool no_arch_unmap = false;
+> +#endif
+>   	pte_t pte = ptep_get(ptep);
+> +	int mapped_nr;
+>   
+> -	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+> +	if (!folio_test_anon(folio))
+>   		return false;
+>   	if (pte_unused(pte))
+>   		return false;
+>   	if (pte_pfn(pte) != folio_pfn(folio))
+>   		return false;
+>   
+> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+> -			       NULL, NULL) == max_nr;
+> +	mapped_nr = folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+> +			NULL, NULL);
+> +	if (mapped_nr != max_nr)
+> +		return false;
+> +	if (!folio_test_swapbacked(folio))
+> +		return true;
+> +
+> +	/*
+> +	 * The large folio is fully mapped and its mapcount is the same as its
+> +	 * number of pages, it must be exclusive.
+> +	 */
+> +	return no_arch_unmap && exclusive && folio_mapcount(folio) == max_nr;
+>   }
+>   
+>   /*
+> @@ -2025,7 +2044,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   				folio_mark_dirty(folio);
+>   		} else if (likely(pte_present(pteval))) {
+>   			if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
+> -			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
+> +			    can_batch_unmap_folio_ptes(address, folio, pvmw.pte,
+> +			    anon_exclusive))
+>   				nr_pages = folio_nr_pages(folio);
+>   			end_addr = address + nr_pages * PAGE_SIZE;
+>   			flush_cache_range(vma, address, end_addr);
+> @@ -2141,8 +2161,8 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   				goto discard;
+>   			}
+>   
+> -			if (swap_duplicate(entry) < 0) {
+> -				set_pte_at(mm, address, pvmw.pte, pteval);
+> +			if (swap_duplicate(entry, nr_pages) < 0) {
+> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
+>   				goto walk_abort;
+>   			}
+>   
+> @@ -2159,9 +2179,10 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   
+>   			/* See folio_try_share_anon_rmap(): clear PTE first. */
+>   			if (anon_exclusive &&
+> -			    folio_try_share_anon_rmap_pte(folio, subpage)) {
+> -				swap_free(entry);
+> -				set_pte_at(mm, address, pvmw.pte, pteval);
+> +			    __folio_try_share_anon_rmap(folio, subpage, nr_pages,
+> +							RMAP_LEVEL_PTE)) {
+> +				swap_free_nr(entry, nr_pages);
+> +				set_ptes(mm, address, pvmw.pte, pteval, nr_pages);
+>   				goto walk_abort;
+>   			}
+>   			if (list_empty(&mm->mmlist)) {
+> @@ -2170,23 +2191,27 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   					list_add(&mm->mmlist, &init_mm.mmlist);
+>   				spin_unlock(&mmlist_lock);
+>   			}
+> -			dec_mm_counter(mm, MM_ANONPAGES);
+> -			inc_mm_counter(mm, MM_SWAPENTS);
+> -			swp_pte = swp_entry_to_pte(entry);
+> -			if (anon_exclusive)
+> -				swp_pte = pte_swp_mkexclusive(swp_pte);
+> -			if (likely(pte_present(pteval))) {
+> -				if (pte_soft_dirty(pteval))
+> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> -				if (pte_uffd_wp(pteval))
+> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> -			} else {
+> -				if (pte_swp_soft_dirty(pteval))
+> -					swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> -				if (pte_swp_uffd_wp(pteval))
+> -					swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +			add_mm_counter(mm, MM_ANONPAGES, -nr_pages);
+> +			add_mm_counter(mm, MM_SWAPENTS, nr_pages);
+> +			/* TODO: let set_ptes() support swp_offset advance */
+> +			for (pte_t *ptep = pvmw.pte; address < end_addr;
+> +			     entry.val++, address += PAGE_SIZE, ptep++) {
+> +				swp_pte = swp_entry_to_pte(entry);
+> +				if (anon_exclusive)
+> +					swp_pte = pte_swp_mkexclusive(swp_pte);
+> +				if (likely(pte_present(pteval))) {
+> +					if (pte_soft_dirty(pteval))
+> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> +					if (pte_uffd_wp(pteval))
+> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +				} else {
+> +					if (pte_swp_soft_dirty(pteval))
+> +						swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> +					if (pte_swp_uffd_wp(pteval))
+> +						swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> +				}
+> +				set_pte_at(mm, address, ptep, swp_pte);
+>   			}
+> -			set_pte_at(mm, address, pvmw.pte, swp_pte);
+>   		} else {
+>   			/*
+>   			 * This is a locked file-backed folio,
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 026090bf3efe..189e3474ffc6 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3550,13 +3550,17 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage, int nr)
+>   
+>   	offset = swp_offset(entry);
+>   	VM_WARN_ON(nr > SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER);
+> -	VM_WARN_ON(usage == 1 && nr > 1);
+>   	ci = lock_cluster(si, offset);
+>   
+>   	err = 0;
+>   	for (i = 0; i < nr; i++) {
+>   		count = si->swap_map[offset + i];
+>   
+> +		/*
+> +		 * We only support batched swap_duplicate() for unmapping
+> +		 * exclusive large folios where count should be zero
+> +		 */
+> +		VM_WARN_ON(usage == 1 && nr > 1 && swap_count(count));
+
+I think we should return an error instead of a warning. Although we 
+triggered this warning (which might not be reported in an actual 
+product), the program will continue to run and potentially cause more 
+serious consequences, because the add_swap_count_continuation() needs to 
+know which offset in the large swap entry to perform recovery.
+
+>   		/*
+>   		 * swapin_readahead() doesn't check if a swap entry is valid, so the
+>   		 * swap entry could be SWAP_MAP_BAD. Check here with lock held.
+> @@ -3626,11 +3630,11 @@ void swap_shmem_alloc(swp_entry_t entry, int nr)
+>    * if __swap_duplicate() fails for another reason (-EINVAL or -ENOENT), which
+>    * might occur if a page table entry has got corrupted.
+>    */
+> -int swap_duplicate(swp_entry_t entry)
+> +int swap_duplicate(swp_entry_t entry, int nr)
+>   {
+>   	int err = 0;
+>   
+> -	while (!err && __swap_duplicate(entry, 1, 1) == -ENOMEM)
+> +	while (!err && __swap_duplicate(entry, 1, nr) == -ENOMEM)
+>   		err = add_swap_count_continuation(entry, GFP_ATOMIC);
