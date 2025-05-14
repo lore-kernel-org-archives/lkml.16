@@ -1,203 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917F6296709
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F746296174
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747255303; cv=none; b=XMlQAGF1tZ9XL+Q4Qa+ZSvTu6KicgGeDndZnNAiQUepTkqudWM83Vki6O3kFkMbOzfCFWF0Yo46nWhUAqpHD3zbgtvzkWwePdwB/QuMqiQ48GKnY+sZnDmmA3/boWFYwqPHy645f3DdWBJPRdVcc5Z/rbvLCNGF704hCsnI+RBE=
+	t=1747255317; cv=none; b=YPGNjxqPu3r8NeN0O2yLxdZ7dilECsa+3MjKrO8+SrPWYZe4vVHPapK+5rwL1zT2uvDkJvivH6op5LpUP/fkfmFaiKMHSFtZmWICiMYlptOqNlLJZOg2+QCWEJOtGallCp5WaF9Qt65AVNLGWcm3EY4EJLCt6koN1apBLzLUi2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747255303; c=relaxed/simple;
-	bh=tOkMF7Bwact06Na7dZKX9/UA7Qz24kXdUH1fectYcHs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k4XkaBwNAAsi4fBZEvVKSnQN3Aae6NcRa5++nfD9zbfXv9fOvTbxP+GAhjp6RDwAWkz+iQ+d6spN4DL47nfTWXNxdWzw74UglV9xvsor2DU5gi1L5IRdkZm8Z462o0btSDQAhufTuAXmL79eZ+BddkrZJ6RecDZgi2ESCicOMls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bjbgQse/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747255317; c=relaxed/simple;
+	bh=rUK4scPkzZakFgDXHbi8BfoYHgboRKWeDbAQdsEl4zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXQFhlPpb4cGCrT6NuFaRuzka/4b0r0yFSHvDLHdRxUnjsPjtDIT6+q2q9daOH4SYp7tJc+oLCUnn1F69TS7gqsBFsQXvqU1Y2jZMAYF4Tz9Qv4lpfUtyBdZXwoKlFLfOkrciIlIPYE1o4QO5IKXHNEZwYLX0+2aEYw12Qv2DgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fUb7GOAh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bjbgQse/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242F9C116C6
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747255303;
-	bh=tOkMF7Bwact06Na7dZKX9/UA7Qz24kXdUH1fectYcHs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bjbgQse/xG3MsQG9+HYMHVgWKDbUp4uOEAfRz61yWri4PVqMfmkOPk4TRkkB+bmBN
-	 9PSIOQpm50Jg5XNWbWL3EVqRD60iSeAWle9HkK3FHPfIW82+pM7//61QAsuelDWNW+
-	 KTsWAZEb4zkob0afRFK3ZpmvxKh+ke98YgsZPZpQyb0Qs064URcH4y+LuQpICRRZey
-	 /LVcsOqNCbNzZtCUjpSTRwYT9lgrHdPOG76OJjDWi4HVq0Bdrt1xbNBfud+WQq1HOj
-	 uyZUERufRc33KTJsdVqtOqRg1o6Qm4jqtEBD/pV9tgMpUViXcqV9ZcWENIF/xmtCLK
-	 xW8CymGzt8H5g==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so491773a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:41:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWwwR3vz47hn1KPvEL+xQlRyKeek8QlpMgkN8EdPu2nXGbjLfhjWKIKE/GRcTsWf8kUIRLbUYv2t3B9kwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxhdyp8Wenb1ScMSyAJueaG0kdtTe8eIKoZMGMkw9BeHW5/bMI
-	dgiBowWA5jzqt84XGSnMCQk1etLTfQjamu84LdD2AEpCvjy7O2kd+p45LaLOnHLVrL8HE2qs+G8
-	B3hXj5QRmbY1TWvVKtahNqdmRAjivbG41Fpv8
-X-Google-Smtp-Source: AGHT+IG3uEVTmfjxY/9iZZiVBkcC3BqC8ZuWsZMesREaLwP/YP638UxFHKWvkWLaZ8NvWpWAPIRDz/WcSvbhhhM7aXI=
-X-Received: by 2002:a05:6402:3588:b0:5fb:1be2:270d with SMTP id
- 4fb4d7f45d1cf-5ff988def11mr3639855a12.29.1747255301288; Wed, 14 May 2025
- 13:41:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fUb7GOAh"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EJKQTP030331
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:41:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Mjtp2bpakb8zijMOh2vfgyB1
+	1iNvN+koMsm1Lt3WJgA=; b=fUb7GOAhZV2NpdRKbTaWEDI5KuVpmLWMoYGqJqy/
+	pBtd4TeJ5uWbj/95o4bpffcNXZTqRLrUtRlKKdVt0ghSl93kyHSdR496clxjSSPU
+	FrzJXx75Dn/u7A6m4GAoWWLVKTcuBeUrZTk1ETww8r/guLZT6X3JaETba9w0u51L
+	vaH8LHxSAfTGy/CdS7VvfD+XzicvcsLnU1qLbCxueshdrf4K+KWso+ihGXP+Qrw4
+	9o8IQV1Cn2MP9hkif0I9UXTHALEJMe1UjVGnpbx03isCpSJQUPWmAzwAywr9ZOWQ
+	wy2C64awwjjO9dV3X6lYBaUV0i/iI+qIGkUM8XwE6aTK6A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnv13y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:41:55 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caee988153so34280585a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:41:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747255308; x=1747860108;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mjtp2bpakb8zijMOh2vfgyB11iNvN+koMsm1Lt3WJgA=;
+        b=S7ZoDOQ714AL8xs32tuEvjrEY/0/G14zmjwOeoljTYHklv/AW1lUk9WKVKlPvQMSVy
+         zq+fkipotZiczZQO/VbIjtGnmG6JAv71fSqI80QHVDU+JWxC1BnEUmtGTquUFiUNBeBR
+         Dh4UV3FZDIEevSYgvORRR/FQeFD4Ph32ojx2avr5lG11/P1oRiwNUGnIQn/N1KwXz9xn
+         8opgYUftusqS8TVQC/vonnbDVnOe9Lbru7uPhWpjBoNV/+W5w96yKWUe4TIjleR3gmwy
+         H9p8p7YmVlq5WKzPO1eW+QBxYBUVfPyoarin8v/MYSXnIJ0xP65tgjCBjXawHJCYMUFo
+         xbjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeAmAqyCeT/19xiW70Nys/oSzTHd3xn2ulwzzPKjM32Vu3vXDb0MEVqr8Yk3jgU9usGzO5C8/20od45wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRHrPdPUZ4obcO+nGxvA//JE2FkQsHCvH+zA5aH06M+HPgrRmg
+	NP0xi1LF2A98/YCjQ4B4q2NO3vONs2oVWjvQudyUQ0gVPbwiGaXkMGPai/KVnyNAYpC0NycCt3O
+	aYA0eIPEvLgRof0WDW4Krgtt5FfmI2jZn0Paw1v6Li4vf9EaPFkhgW1OJcPuPa3rzpJJlgrE=
+X-Gm-Gg: ASbGncu4G5XssrgRmUzwKL1rx3Eb2cQR96UyFMteIRBY+46plgU8pRg3r2wKHFPCJSP
+	Wd7J1SJDushPgCnuet/uAHJSyKlI5/vcliSTz48gpJkDrQQCkbJolg9a7+tW6vPGVFVKO2ApyRF
+	qlxnc9aYCs/M+6FjuK/XktEUDuDVmTnNcgVQwxZpFlNTuX0k0m430A1uJpWQRd4IP68J2X8POi7
+	QD9dqcsx33tjaHN+Q5i87Qw0Jvz+iLx1+IHd6keHgQoJb28CW+m8tPdBfSxLlFbTzQ1sFrdxD9B
+	SKrzAbfLvAKLQdCIoWGmac9bWOeB0V4fEyKZ+mnKriYUWHoXjvPpP/Z9SgBgGJToEFumN1bYlAc
+	=
+X-Received: by 2002:a05:620a:2904:b0:7cc:7704:bf87 with SMTP id af79cd13be357-7cd28847321mr718007885a.42.1747255308096;
+        Wed, 14 May 2025 13:41:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFIv0FZP5V22QFAaqy0UmracF7uLbzENjoAZw0LJM2m+3CM+j1fWH7H1eegN8tzKPugcHv6GA==
+X-Received: by 2002:a05:620a:2904:b0:7cc:7704:bf87 with SMTP id af79cd13be357-7cd28847321mr718005185a.42.1747255307745;
+        Wed, 14 May 2025 13:41:47 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64b700dsm2396390e87.130.2025.05.14.13.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 13:41:46 -0700 (PDT)
+Date: Wed, 14 May 2025 23:41:45 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: x1e001de-devkit: Enable support
+ for both Type-A USB ports
+Message-ID: <knljchftq4rl7ve735jmqso2lhybjrmz2axgd2xrqr3k64g6zy@f2fx6auvb4bj>
+References: <20250514-x1e001de-devkit-dts-enable-usb-a-ports-v1-1-8322ca898314@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
- <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com>
- <4f92fcfaeffd179ff6ae265822dc79856310d6a3.camel@HansenPartnership.com>
- <CACYkzJ7Oh62u7bHwQ_nOLG54qnhyNU9msF5mWV_vFrBXw1oZqw@mail.gmail.com> <2f71d6c03698eb17d51f7247efde777627ee578a.camel@HansenPartnership.com>
-In-Reply-To: <2f71d6c03698eb17d51f7247efde777627ee578a.camel@HansenPartnership.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Wed, 14 May 2025 22:41:30 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ6PSFORZdSovJxN1+D59eTfyCkhWFsYYgYa=vbO5Tb4WA@mail.gmail.com>
-X-Gm-Features: AX0GCFv872xEPuwZl65stdeayBR4vTasOjSF4TX-Op_MckziGdwZlnt80nuf65g
-Message-ID: <CACYkzJ6PSFORZdSovJxN1+D59eTfyCkhWFsYYgYa=vbO5Tb4WA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Paul Moore <paul@paul-moore.com>, bboscaccy@linux.microsoft.com, bpf@vger.kernel.org, 
-	code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, dhowells@redhat.com, 
-	gnoack@google.com, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	jmorris@namei.org, jstancek@redhat.com, justinstitt@google.com, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, llvm@lists.linux.dev, 
-	masahiroy@kernel.org, mic@digikod.net, morbo@google.com, nathan@kernel.org, 
-	neal@gompa.dev, nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu, 
-	nkapron@google.com, roberto.sassu@huawei.com, serge@hallyn.com, 
-	shuah@kernel.org, teknoraver@meta.com, xiyou.wangcong@gmail.com, 
-	kysrinivasan@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514-x1e001de-devkit-dts-enable-usb-a-ports-v1-1-8322ca898314@linaro.org>
+X-Proofpoint-ORIG-GUID: NFF2d5uM2LdbB5JzKirngi1lyfeVPKte
+X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=68250013 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=-ogRkZ1lWjz2smMNko0A:9
+ a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE5MSBTYWx0ZWRfXzzFplZfbwPN1
+ l04LhcGLbV7H5GpGhMw5V57EvKKnz+dppeG/YEeXP9lpa1/UKhv/hmHHwPy5myO+9ocygKlWfCY
+ UQMwicp/ltsTBGvpoCzfCNL9kRuDNDqCy42EP8gOFIyc3yPeTYAsnjvacsehQM95s2H0J073HCv
+ cKL2OFQIMzoLe0eBirzV+78y6kcpTadbv1uwVZw5+3CvvGB79zoC+7X5lpxREosCr7lYWtmWKkU
+ lqIbqpPL4zt5sRSRA5a4xx9L4eTA2NvO/2cIqaIqPeMMuCmRfFK+vBdIOj0NEPlOK00wMlcKSOx
+ MbHjREL8KPaCiS4bzVVvMn/JBaU24hm4PjG7YSZjsNLewArCO91evJQfE1LNlXSUtl+Cesd0q90
+ 4hTOvTZ8mGBx3uMX1nnkyDjHd0IxEaLdQVTN/l0cSbduh0GCDy1WaKyLajubXEpRg/51aVxI
+X-Proofpoint-GUID: NFF2d5uM2LdbB5JzKirngi1lyfeVPKte
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=407 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505140191
 
-On Wed, May 14, 2025 at 10:32=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2025-05-14 at 20:35 +0200, KP Singh wrote:
-> > On Wed, May 14, 2025 at 7:45=E2=80=AFPM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> > >
-> > > On Wed, 2025-05-14 at 19:17 +0200, KP Singh wrote:
-> > > > On Wed, May 14, 2025 at 5:39=E2=80=AFPM James Bottomley
-> > > > <James.Bottomley@hansenpartnership.com> wrote:
-> > > > > On Sun, 2025-05-11 at 04:01 +0200, KP Singh wrote:
-> > > [...]
-> > > > > > This implicitly makes the payload equivalent to the signed
-> > > > > > block
-> > > > > > (B_signed)
-> > > > > >
-> > > > > >     I_loader || H_meta
-> > > > > >
-> > > > > > bpftool then generates the signature of this I_loader payload
-> > > > > > (which now contains the expected H_meta) using a key (system
-> > > > > > or
-> > > > > > user) with new flags that work in combination with bpftool -L
-> > > > >
-> > > > > Could I just push back a bit on this.  The theory of hash
-> > > > > chains
-> > > > > (which I've cut to shorten) is about pure data structures.  The
-> > > > > reason for that is that the entire hash chain is supposed to be
-> > > > > easily independently verifiable in any environment because
-> > > > > anything
-> > > > > can compute the hashes of the blocks and links.  This
-> > > > > independent
-> > > > > verification of the chain is key to formally proving hash
-> > > > > chains to
-> > > > > be correct.  In your proposal we lose the easy verifiability
-> > > > > because the link hash is embedded in the ebpf loader program
-> > > > > which
-> > > > > has to be disassembled to do the extraction of the hash and
-> > > > > verify
-> > > > > the loader is actually checking it.
-> > > >
-> > > > I am not sure I understand your concern. This is something that
-> > > > can
-> > > > easily be built into tooling / annotations.
-> > > >
-> > > >     bpftool -S -v <verification_key> <loader> <metadata>
-> > > >
-> > > > Could you explain what's the use-case for "easy verifiability".
-> > >
-> > > I mean verifiability of the hash chain link.  Given a signed
-> > > program, (i.e. a .h file which is generated by bpftool) which is a
-> > > signature over the loader only how would one use simple
-> > > cryptographic operations to verify it?
-> > >
-> >
-> > I literally just said it above the hash can be extracted if you
-> > really want offline verification. Are you saying this code is hard to
-> > write? or is the tooling hard to write? Do you have some definition
-> > of "simple cryptographic operations".  All operations use tooling.
->
-> As I said, you have a gap in that you not only have to extract the hash
-> and verify it against the map (which I agree is fairly simple) but also
-> verify the loader program actually checks it correctly.  That latter
-> operation is not a simple cryptographic one and represents a security
-> gap between this proposal and the hash linked chains you introduced in
-> your first email in this thread.
+On Wed, May 14, 2025 at 11:14:30PM +0300, Abel Vesa wrote:
+> The Qualcomm X Elite Devkit has 2 USB-A ports, both connected to the USB
+> multiport controller, each one via a separate NXP PTN3222 eUSB2-to-USB2
+> redriver to the eUSB2 PHY for High-Speed support, with a dedicated QMP
+> PHY for SuperSpeed support.
+> 
+> Describe each redriver and then enable each pair of PHYs and the
+> USB controller itself, in order to enable support for the 2 USB-A ports.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 86 ++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
 
-Sure, but I don't see this as being problematic. If it's hard for
-folks who do theoretical work, then I think it's okay to push this
-effort on them rather than every user.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
 
->
-> > > > > I was looking at ways we could use a pure hash chain (i.e.
-> > > > > signature over loader and real map hash) and it does strike me
-> > > > > that the above ebpf hash verification code is pretty invariant
-> > > > > and easy to construct, so it could run as a separate BPF
-> > > > > fragment that then jumps to the real loader.  In that case, it
-> > > > > could be constructed on the fly in a trusted environment, like
-> > > > > the kernel, from the link hash in the signature and the
-> > > > > signature could just be Sig(loader || map hash) which can then
-> > > > > be
-> > > >
-> > > > The design I proposed does the same thing:
-> > > >
-> > > >     Sig(loader || H_metadata)
-> > > >
-> > > > metadata is actually the data (programs, context etc) that's
-> > > > passed in the map. The verification just happens in the loader
-> > > > program and the loader || H_metadata is implemented elegantly to
-> > > > avoid any separate payloads.
-> > >
-> > > OK, so I think this is the crux of the problem:  In formal methods
-> > > proving the validity of a data based hash link is an easy set of
-> > > cryptographic operations.  You can assert that's equivalent to a
-> > > signature over a program that verifies the hash, but formally
-> > > proving it requires a formal analysis of the program to show that
-> > > 1) it contains the correct hash and 2) it correctly checks the hash
-> > > against the map.  That makes the task of someone receiving the .h
-> > > file containing the signed skeleton way harder: it's easy to prove
-> > > the signature matches the loader instructions, but they still have
-> > > to prove the instructions contain and verify the correct map hash.
-> > >
-> >
-> > I don't see this as a problem for 2 reasons:
-> >
-> > 1. It's not hard
->
-> it requires disassembling the first 20 or so BPF instructions and
-> verifying their operation, so that's harder than simply calculating
-> hashes and signatures.
->
-> > 2. Your typical user does not want to do formal verification and
-> > extract signatures etc.
->
-> Users don't want to do formal verification, agreed ... but they do want
-> to know that security experts have verified the algorithms they're
-> using.
->
-> That's why I was thinking, since the loader preamble that verifies the
-> hash is easy to construct, that the scheme could use a real hash linked
-> chain, which has already been formally verified and is well understood,
-> then construct the preamble for the loader you want in a trusted
-> environment based on the hashes, meaning there's no security gap.
->
-> Regards,
->
-> James
->
+-- 
+With best wishes
+Dmitry
