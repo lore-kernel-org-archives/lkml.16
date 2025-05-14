@@ -1,109 +1,154 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3B421C16D;
-	Wed, 14 May 2025 23:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3203D21C16D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747263836; cv=none; b=DUoP8ScyirKaZSRBtWVbK5kZFoHij3eGHL3K4jErS7eoxdrbsGKekeVYsIMwBJtyX5Y+zqqdNakE9s93fyQwBDM9/0Si+9U4gLLDHsAajZ7NLb2uL96EG97L9TCgNZz2z6d2A27ryv3whGsb7lQYRfP6pXKD9GRwbJxrhswP7p8=
+	t=1747263911; cv=none; b=ZDUekGmfDTXczZ/5Vik7dOKDn/n8+vk88+yePuVxppJEbjtyT8CMtjQCt6jeWbUUl0yJmc60vCjCXWKdrJ3ihMPrZdOwVnVMfNH59DdQGWz8pMk4iRaO8O18ymX/rwIB/at9Uf3iU8mzBT6Nbc0uZcG7Qa8vO6d5pA5fRyNWIGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747263836; c=relaxed/simple;
-	bh=JiaSEY2q1m/VU/U18b6n/bNJAaSQsucRFWniPhL8yZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K0xBeOcPTYrEjtpFILSFs6poaVJpQHEEkenhrrzZJeCGc8OlKxY4BpCLlYCMjXzNLM6VXzUKGpzIUeYUtPyAFbC3hD+edq3ScNaK0VDSjXsogiZdaeJs3j3IxQn7QQ2xAISOAJIATGRD+SsLA3wO3vIo+BsFypIA+u56nCWzWxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3MDQ0b6; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3MDQ0b6"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-477296dce8dso4324561cf.3;
-        Wed, 14 May 2025 16:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747263833; x=1747868633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JiaSEY2q1m/VU/U18b6n/bNJAaSQsucRFWniPhL8yZg=;
-        b=W3MDQ0b6lU5v1D88AtcKfUuZQY3iOo8xlVP5dcc1ZpKUDe9D85qo4SAkYeKuk3d8aQ
-         6BxYY1dsVQPokY/+aoa+xXtdBCbKMvacBlP+7KKffJihEj8r7ug/qTu9YbfvAIEfeS1h
-         +OPzxvJ01VHEObO/Ag7wNXdXx5zASdwv2i2Xcg2cn8TsWwQ9PXz44OgA8KBry1CU7qGn
-         lgTYpU9OKjcNjx/wq4PmwC1aFY5JhaHrgdiHFmovlArPoxRklaCfo8yW/aqGUn0hbH19
-         FOP0UDIYn/9ZwietcQLUxR/16TOjoilHVfUL2dxgumsOWyEHCG6kWbX0EmfH2uYD6yz4
-         iBXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747263833; x=1747868633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JiaSEY2q1m/VU/U18b6n/bNJAaSQsucRFWniPhL8yZg=;
-        b=StCQe+I07DSFS6cq1Ll6EKXfZdkTgk/5DWc3FSloPpBaHb0M/DK6RfELxPeKZayLtn
-         Apn9S5yiQjr3Mq3nwUcZsxsiktZniluyQ1ha/rxLhqIgsDfynrq3EEhRcwQbV2I4lwsr
-         1KJLDCBe0YQkzPkBeKwmQLhaFNl15/6OM3L8IvOMBOe8KuZSREcLCLYS0thw7AHvEKWp
-         OgEDQ5YJ1S32xY7j6T6yz9spfMzkN5S9S0+hrQviW4n6gvzMW4u5JgNX8x3Wu64H5Kg+
-         WDhmianvD+Hr40coobp6GmVyAOf4rxhhrIkICZMqJPY4cmKpBp8XfoQv/tXAy01fjb74
-         7JDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3lN+fcgXyHt7qvZhTZ48DIBAW1rqDrGFLQ83KpdU13B7YKxjQBo8+tjyMmsrjPllJn1QmoFmY6WnJE1zJ@vger.kernel.org, AJvYcCV4d5uq3R1dm1fw2MJH/MSgjVBAAPsZUlXU+vAsqeON9gCs+UNO7ovKiY6/GDV+nDhuQVOh9z5VjUF036IC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/V0NDKtEJ1OORy9Dj0HJ9dsW7Zgakm516+4E+qP8GZ8T8Qv5F
-	d7BhwBg8m5X6EkVPfHdbhOkuovvmu/0vwF2Qz16tZNTqDeRK3GDP38vCW3ewykSN8aeGpTzsqBN
-	YxeWvqE9FONXigIog9XthTvEzfs8=
-X-Gm-Gg: ASbGncvwlVGPr+nCjrvrEU0fi+To91yt/4mHcR9fslqo1WVvyG+RmNfSm7PXqdQFvDp
-	GqHQMD9uNb+oAkhzYL2QOMwz8YTNluaGiMQnlamvTbaIWj+ct3NjHSIB5QSvDmzxggdZvYkunZV
-	ML/IIhZnI/72Ji3r2dheLh2FHhjH7Z2OtY
-X-Google-Smtp-Source: AGHT+IFmDaklKWp2i/eCGiRl5Pax/EU6O2pehN6h4S1klYEEakMzA3gk3zT2iQ+m+CT9cUXP7o0HDwPdzVRnw6/Vmh4=
-X-Received: by 2002:a05:622a:5a8f:b0:476:7b0b:30fb with SMTP id
- d75a77b69052e-49495c9c44bmr75855581cf.22.1747263833408; Wed, 14 May 2025
- 16:03:53 -0700 (PDT)
+	s=arc-20240116; t=1747263911; c=relaxed/simple;
+	bh=GQA7mWgNl37lqtIm0ioryedNTtquEHPq3EzBwjkpnoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXzfuSRiVeKYj/Y9fOy9lvMVgxTcvfJszKxT6w4Z0esNB9mnjfOF9bFZs5e8jXVxAky7geIQ9cWsPUA4SJpGecfKaTfD0IMtVUhLJTMi09RRqKT1ufli+a8ZdyHPtnqI7SDB9/66sfdr1snqTnuNDDfclp/sKtJrbzOpO1F7L+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uFL9i-00032n-7V; Thu, 15 May 2025 01:04:54 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uFL9f-002mOC-2x;
+	Thu, 15 May 2025 01:04:52 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uFL9g-004ex0-0e;
+	Thu, 15 May 2025 01:04:52 +0200
+Date: Thu, 15 May 2025 01:04:52 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+	jonas@kwiboo.se, jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH 1/3] drm/bridge: fsl-ldb: make use of driver_private
+Message-ID: <20250514230452.622hktklws6kka2y@pengutronix.de>
+References: <20250514222453.440915-1-m.felsch@pengutronix.de>
+ <20250514222453.440915-2-m.felsch@pengutronix.de>
+ <20250514224515.GM23592@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250509-fusectl-backing-files-v3-0-393761f9b683@uniontech.com>
- <CAOQ4uxjDwk6NA_UKiJuXfyY=2G33rruu3jr70pthFpBBbSgp1A@mail.gmail.com>
- <CAJfpegvEYUgEbpATpQx8NqVR33Mv-VK96C+gbTag1CEUeBqvnA@mail.gmail.com>
- <CAJnrk1ZxpOBENHk3Q1dJVY78RSdE+PtFR8UpYukT0dLJv3scHw@mail.gmail.com> <CAJfpegunxRn3EG3ZoQYteyZ3B6ny_DG1U65=VX25tohQuHCpVQ@mail.gmail.com>
-In-Reply-To: <CAJfpegunxRn3EG3ZoQYteyZ3B6ny_DG1U65=VX25tohQuHCpVQ@mail.gmail.com>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 14 May 2025 16:03:42 -0700
-X-Gm-Features: AX0GCFughAO2uS0pEY_DdVUmp9BQvn96UCXQhtdV5dbbjs_VhUtOBQPkLvvdLFY
-Message-ID: <CAJnrk1ZH3hwgtgOq7a=J-vxop5fCm5K_ZEek0W3kX9N1xf4HAA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] fuse: Expose more information of fuse backing
- files to userspace
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>, chenlinxuan@uniontech.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514224515.GM23592@pendragon.ideasonboard.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, May 14, 2025 at 1:50=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
->
-> On Tue, 13 May 2025 at 20:52, Joanne Koong <joannelkoong@gmail.com> wrote=
-:
->
-> > For getting from conn to fuse server pid, what about adding the server
-> > pid to fuse's sysfs info? This use case has come up a few times in
-> > production where we've encountered a stuck server and have wanted to
-> > identify its pid. I have a patch on a branch I need to clean up and
-> > send out for this, but it adds a new "info" file to
-> > /sys/fs/fuse/connections/*/ where libfuse can write any identifying
-> > info to that file like the server pid or name. If the connection gets
-> > migrated to another process then libfuse is responsible for modifying
-> > that to reflect the correct info.
->
-> Fine, but then why not just write something in /var/run/fuse?
+Hi Laurent,
 
-Oh cool, I didn't know there's a /var/run directory. But I guess one
-advantage of doing it in sysfs is that it'll work for unprivileged
-servers whereas I think with /var/run/, there needs to be elevated
-permissions to write to anything in that directory path.
+On 25-05-15, Laurent Pinchart wrote:
+> Hi Marco,
+> 
+> Thank you for the patch.
+> 
+> On Thu, May 15, 2025 at 12:24:51AM +0200, Marco Felsch wrote:
+> > Make use of the drm_bridge::driver_private data instead of
+> > container_of() wrapper.
+> 
+> I suppose this is a personal preference, but I like usage of
+> container_of() better. In my opinion it conveys better that struct
+> fsl_ldb "unherits" from struct drm_bridge.
 
+Yes, we can drop this patch if container_of() or to_fsl_ldb() is
+preferred. I just saw the driver_private field and why not making use of
+it since we do that a lot, same is true for container_of :)
 
-Thanks,
-Joanne
+Regards,
+  Marco
 
->
-> Thanks,
-> Miklos
+> > No functional changes.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/gpu/drm/bridge/fsl-ldb.c | 14 +++++---------
+> >  1 file changed, 5 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
+> > index 0fc8a14fd800..fa29f2bf4031 100644
+> > --- a/drivers/gpu/drm/bridge/fsl-ldb.c
+> > +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
+> > @@ -99,11 +99,6 @@ static bool fsl_ldb_is_dual(const struct fsl_ldb *fsl_ldb)
+> >  	return (fsl_ldb->ch0_enabled && fsl_ldb->ch1_enabled);
+> >  }
+> >  
+> > -static inline struct fsl_ldb *to_fsl_ldb(struct drm_bridge *bridge)
+> > -{
+> > -	return container_of(bridge, struct fsl_ldb, bridge);
+> > -}
+> > -
+> >  static unsigned long fsl_ldb_link_frequency(struct fsl_ldb *fsl_ldb, int clock)
+> >  {
+> >  	if (fsl_ldb_is_dual(fsl_ldb))
+> > @@ -115,7 +110,7 @@ static unsigned long fsl_ldb_link_frequency(struct fsl_ldb *fsl_ldb, int clock)
+> >  static int fsl_ldb_attach(struct drm_bridge *bridge,
+> >  			  enum drm_bridge_attach_flags flags)
+> >  {
+> > -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
+> > +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
+> >  
+> >  	return drm_bridge_attach(bridge->encoder, fsl_ldb->panel_bridge,
+> >  				 bridge, flags);
+> > @@ -124,7 +119,7 @@ static int fsl_ldb_attach(struct drm_bridge *bridge,
+> >  static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
+> >  				  struct drm_bridge_state *old_bridge_state)
+> >  {
+> > -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
+> > +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
+> >  	struct drm_atomic_state *state = old_bridge_state->base.state;
+> >  	const struct drm_bridge_state *bridge_state;
+> >  	const struct drm_crtc_state *crtc_state;
+> > @@ -226,7 +221,7 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
+> >  static void fsl_ldb_atomic_disable(struct drm_bridge *bridge,
+> >  				   struct drm_bridge_state *old_bridge_state)
+> >  {
+> > -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
+> > +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
+> >  
+> >  	/* Stop channel(s). */
+> >  	if (fsl_ldb->devdata->lvds_en_bit)
+> > @@ -270,7 +265,7 @@ fsl_ldb_mode_valid(struct drm_bridge *bridge,
+> >  		   const struct drm_display_info *info,
+> >  		   const struct drm_display_mode *mode)
+> >  {
+> > -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
+> > +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
+> >  
+> >  	if (mode->clock > (fsl_ldb_is_dual(fsl_ldb) ? 160000 : 80000))
+> >  		return MODE_CLOCK_HIGH;
+> > @@ -309,6 +304,7 @@ static int fsl_ldb_probe(struct platform_device *pdev)
+> >  	fsl_ldb->dev = &pdev->dev;
+> >  	fsl_ldb->bridge.funcs = &funcs;
+> >  	fsl_ldb->bridge.of_node = dev->of_node;
+> > +	fsl_ldb->bridge.driver_private = fsl_ldb;
+> >  
+> >  	fsl_ldb->clk = devm_clk_get(dev, "ldb");
+> >  	if (IS_ERR(fsl_ldb->clk))
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
