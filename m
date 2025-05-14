@@ -1,440 +1,226 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1439296149
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE21295506
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253648; cv=none; b=lt9t5XQFOxDybqm7mQF2F8aJ+DcYFitUNeTv9wtedQ+lmqDuLR77yEQ8TFB4xZHq4WkfhkJGXfb5IuvSUlMK5EDCeru1s8D3NYU39xHrlEyZmHvkYCWFF3NXTA9uJjHos8MRDNpVwq4C7iP7+IQilM6CULFO/rKSoG3gD/yZiHk=
+	t=1747253682; cv=none; b=oX0Hu0w2hAjW10/lZP7fE2jnbF45JSfkVsOpfvXusp7PlPMGSTt4eudez8dgMPUNLlJWzLzTQ+T4Ff8jXd3+IOAQoNm3+6UUYzAX990jPBRTxAlUC2/K0CrP0YWdZPRqfsX9WAzql3w1EVcIglUQ9jZzw467leyu7xl7AqFPr1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253648; c=relaxed/simple;
-	bh=mSyvG5UdJEvIjesZtc4MF1mH7iQifdrrGu9X9uNA56I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bgj6VLQ25q+37GHRJOESqYJGEuUmOvyq94blfepi8WXGhypAhZsqXvKPRtfE+cP1Y54BX7EaPU/zeBb98ucOqdFFEVaxj6Zp2hm3uuRKU2Un4/qEdkDnFVfr9rnUNkeRJjNrqet+C/sCCw3PPW6CWal8pDJLvLGJod8EDNfYW3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QC8eMc7c; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747253682; c=relaxed/simple;
+	bh=k9auSPKt0xDsiEz8cyRI0UCs31hNeF6aYfn1A9QhgOg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WwBDLNA9sZc7LaLLlxPlnVB/ZjObkzIVyu+/I4YntbKJkRTFfM676dwtedVOA5W2AJwRc8THlwjm8sX8UvVenzL2P9pZ2PbDSCyjCbBU5GOxhImO/z80CWAbK8PM11VL6AYHmFl8qXOvgj+qKtQz6jqM6mFoUkXzLCLeDWU2+hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wMAKkOq7; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QC8eMc7c"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30a8cbddca4so285175a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:14:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wMAKkOq7"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edb40f357so1804125e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747253646; x=1747858446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c/inNegz0udXErsdOR9yI4TlKw0UxuhD6QnZdnsPtzs=;
-        b=QC8eMc7cK4HBHQYe+XGXZWpFExwfQuAhatyZJKOP6OALqKvkELOxeHIDaswYZ/6eg2
-         qGQHKOkfL+vT/aLr3ZQCTEIj5PcsYMaq1ViT/2XplaVKoPk8Cr0UtZ2ueuyiF2q3QWt9
-         cnj10/lqK2UZdBg+cLlJz+/as5MatMFl64QqQ=
+        d=linaro.org; s=google; t=1747253678; x=1747858478; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LTS81nyVkU32wlX4TnObp+0zngaZswbVsK7/OVV7Vtw=;
+        b=wMAKkOq75mYMbWFlNeLEHoZ9WylcLpk8nqg6trHwekM3/IcJd47+xix5w/vTeUsVN9
+         c/oHhnl5a5Xuzz5wDdmGkVf0fGXcDhEbfQ/VwVyoKnCmIF8v934CvP6kntygVG341zJJ
+         6yn6K5eC0QxUPak053IivzFRqFqfuCWIBlyhejSpUiitcymrPHhXIyiv5Si1IjgG2SUR
+         D2owCEZB5QhWdpEKm7vlIQH5lJWetCRTbsTHWqDdKKc1J+wqmO+oDqzc/vgCZKISjmus
+         VVMggIeY8HW90G6WU8S8pVGeB+ZNb2a0fkAFQeeM3SsuTTSqJfl6psVTYXZUYopVu5ty
+         CwIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747253646; x=1747858446;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c/inNegz0udXErsdOR9yI4TlKw0UxuhD6QnZdnsPtzs=;
-        b=QCj7M4FjKiuGl8HS1qzZQOog9YG3+MrQZSa9eQ/OKQ2iyTKtYKIUvl07l7693lgTX0
-         DfO5WxsE7C8nQ+GtjvCK8jYZWdPVifHXRLoIlHk1luLrO1qsF4H6IqDUp2rIt+cWZiiZ
-         z2c1ohLhGSqKTrLvujmns2iDtL1CoDeviT3y1RSKp9HCnwSjrApJU5AQAvtl1dHzf6BT
-         G+1GY8PzFIYxeEiIUZlEHygyghPB2UrHmZIZOgwn1ZUBAjqKXl3v0k7iCkX+NLT9t8eY
-         QSdHh9CdRheg+3Teebgvdev+Rxvc+NUm4uZaN2n6aUbj5jGm7h/nK8IfeiuPm8DEJsFm
-         Tu+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWwLByARxaD1z/UBXGpl0/o7uKZB8QDaEe7EoRcgDBoaO2gM94dTlSkV1s2DOCMZHS38mWp5jjXcULV7sc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyopnhhEWYDlmbGgY3nnfSavl9jaMCOBD1+/7tgG9XJ+EZnsvDq
-	vo8aDtCp5HlvFCG1AVE6SbqHXbXJoiBXogtfi2jjvwasZcoqujHfi72FkYy0gA==
-X-Gm-Gg: ASbGnctE9t+pzFbrLNN+P4H2bwKhlvn7KH0mDFDG0RZ2v72K1le23UzzZ69XJjxIDqw
-	hk3+Ty6yhbfPIsfOimBGvTEpOQAssHlayFO6yuj3IHyjwN4vxnEON95cBa7PfCTYTIu/yzeYulk
-	oJnNdLqK/bjQ2LTst+Hxq+LwGZK3YifNnlPicxDbGepBPXhutUTxMSO7s3ytQhWtF32q11weIKs
-	j+9RBOweYRpqfq4JS9rd4OOc77tZUfaowjWIvGYWPhK1OhnJEhqCVmWZFJyF/VMVzjqzqPBsQBh
-	DWuKRHK/B2xGBb+NUQFMYWHAnpjTWpSjhCrC5b3mkC+WE5bsgorrX8tybzsV1BsMmiO23MLFZdy
-	wg94jlglttErRGg==
-X-Google-Smtp-Source: AGHT+IE6N6/l5Z5kIFwQP+/AgCIZzsQ9hjTmZoL4EwJxImdHLHDgQE9ZQv0BHDn5CEiearFmuQXUWA==
-X-Received: by 2002:a17:90b:4c0a:b0:30a:9025:84d6 with SMTP id 98e67ed59e1d1-30e2e630012mr7264208a91.29.1747253645680;
-        Wed, 14 May 2025 13:14:05 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:cd06:335b:936a:7dc1])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30e33424dbbsm1972832a91.11.2025.05.14.13.14.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 13:14:05 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tsai Sung-Fu <danielsftsai@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2 2/2] genirq: Add kunit tests for depth counts
-Date: Wed, 14 May 2025 13:13:17 -0700
-Message-ID: <20250514201353.3481400-3-briannorris@chromium.org>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-In-Reply-To: <20250514201353.3481400-1-briannorris@chromium.org>
-References: <20250514201353.3481400-1-briannorris@chromium.org>
+        d=1e100.net; s=20230601; t=1747253678; x=1747858478;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LTS81nyVkU32wlX4TnObp+0zngaZswbVsK7/OVV7Vtw=;
+        b=lZnNrGZ7UMmpmcZw51eRDRvFFw5VSMa6PMYFB+EeU3C8eOTBvyrqGrTauYxS6Dw1q9
+         dmCaGrfqvroBIWjEjYefsGXs94TrShCeju69RSdLRwv+XRboKmxztjvTV2299YZbqXKw
+         GavK+WdpZKOHvyrMhuZQiX9ihBMVqFpEA1eh8GtERnhRVhXL4juwJ2e15MpwEA+F05wB
+         IxRt5UcuFe26iRvGYE6BLw6bvCuU7hOdfEJhwIEOgEzS49JYPDvpGUMGKGvZ0mTeIoDJ
+         bAAPjJPMmaEPbbJssKmECFAa3d6PaXMIkpY98onNtho0OQJT88cw+9UrnF8nkT9pCyde
+         gdMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFV46ssWt4h1RYQnvlhIewaQhlvljAlOmtAGZHv7j7LP6HsxbbW1a0Rt06atS8fqErpGcqjV0KzhNvKcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAP/xaIu1PlhK7F0O0KEamalTy5aSZGT124HviSSd+xXcimO5T
+	AsRIrR9DnPa3y2SNcuE/58crBRAY/zj0aFXcYLgh9u6DRbZvHxtDQfau8CgCpf8B5Vlvh2sxCd/
+	T4yNZ7Q==
+X-Gm-Gg: ASbGncufvMgQ5hAFsMMJ0j/YmMR9tk9P3Fec2ey3zqIR9gZACEdjTzq23lW1H5BHQos
+	iY1HsolqIDVqR/SvlqjK8l81SUVKjSW91rnP8Lon1QVlZAENat/fZf+IKs6ACzneF8RRzVNPdjP
+	sJvCKmvB2+x1y0oVk81t2NMeRwA/kXDYUivhq5nIpmdVY8+DxPO3rzf+tnzSYLeiohFTg+/LoLv
+	71FwFEfbyAYTP50XzurMyalD5/GaaQiKeFJg+ucTuK6kCE+rz43wCibR2/7kvTihaY/JNLP0E+S
+	1Ji/GP9DBSYq/RQSm8aH9HEpKlhcFIEI6vVjYR8nCIpczS7DDA==
+X-Google-Smtp-Source: AGHT+IEi2OMAZu4ycoKGP3miraj2CUArxSL++8D9f8vQASuAdWs0ZHPZclYRmP3Xge2X40kAm0I9wQ==
+X-Received: by 2002:a05:600c:4686:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-442f20e9013mr45029565e9.13.1747253678141;
+        Wed, 14 May 2025 13:14:38 -0700 (PDT)
+Received: from [127.0.1.1] ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e851bsm43686505e9.28.2025.05.14.13.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 13:14:37 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Wed, 14 May 2025 23:14:30 +0300
+Subject: [PATCH RESEND] arm64: dts: qcom: x1e001de-devkit: Enable support
+ for both Type-A USB ports
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-x1e001de-devkit-dts-enable-usb-a-ports-v1-1-8322ca898314@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.15-dev-dedf8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3076; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=k9auSPKt0xDsiEz8cyRI0UCs31hNeF6aYfn1A9QhgOg=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBoJPmnw9ZOxqarAgMg+R/FEvvd8ehntqeM3jJTF
+ E1gqILEzSeJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCaCT5pwAKCRAbX0TJAJUV
+ VlyPD/kBdZlSOW9kr7TSU/CW6CUIYXOUtePzpjPBpS2kyshWGdH2YOhF4PUZU2g0rCc8zQwvwY/
+ UffSqwlzNAIN5nmHTBF6UQB+mR1LYQ/Rr7AV4iHocKaXqGQOdOe3mfesmFEfqfZ1R/C77YRSAbS
+ YWNjNGLOjVgWPkH7do20pQrh63xml8FpjcgRmxAOSbCnWjBxZQTkVruRORuMff2WCCFGSwHHHTW
+ Rzm5NGkjzLtjE4cmU0JxypnHleidcCQJMLeCz6Ivd+2zSJ8laZgPiYb5s2ER6ixUDOjNwxqw66v
+ jYKr4BbpbywhXBWNblmZqtHlyql+oThePCPiVhJmj5x55Z5vNo8/l/QuLRXGlT9A6ER2yioYw0G
+ +4C3s4gxq8InfUNgQmriaRiPgQ2kOg+DPr+IBygeUtETcwHqWbUnJHQmiL82Shn3YsER4Bjthnv
+ g/+vMpywYnq6feOBsMC6Yi+efzzeeHaDH337s3X0AASRrmj8j2C5Cu6XEoGFMW1kSBcNedaofx3
+ FZO7hyKJAifAYZyX+Gy7OBzcIbZwBnFW6Zf6gShS5b6GY/j4aYE3pRWPaZPiSxj05q+UATCXh+j
+ 1iH0rxrLxvEkke6Ppx1t2TxgdriGgRUi5Pmx+B2Gp6T2+b0llupgbyyYJ1lV80PQHGVooKN61li
+ BGAnu1D14FJ5HHQ==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-There have been a few bugs and/or misunderstandings about the reference
-counting, and startup/shutdown behaviors in the IRQ core and related CPU
-hotplug code. These 4 test cases try to capture a few interesting cases.
+The Qualcomm X Elite Devkit has 2 USB-A ports, both connected to the USB
+multiport controller, each one via a separate NXP PTN3222 eUSB2-to-USB2
+redriver to the eUSB2 PHY for High-Speed support, with a dedicated QMP
+PHY for SuperSpeed support.
 
-* irq_disable_depth_test: basic request/disable/enable sequence
+Describe each redriver and then enable each pair of PHYs and the
+USB controller itself, in order to enable support for the 2 USB-A ports.
 
-* irq_free_disabled_test: request/disable/free/re-request sequence -
-  this catches errors on previous revisions of my work
-
-* irq_cpuhotplug_test: exercises managed-affinity IRQ + CPU hotplug.
-  This captures a problematic test case that I've fixed.
-  This test requires CONFIG_SMP and a hotpluggable CPU#1.
-
-* irq_shutdown_depth_test: exercises similar behavior from
-  irq_cpuhotplug_test, but directly using irq_*() APIs instead of going
-  through CPU hotplug. This still requires CONFIG_SMP, because
-  managed-affinity is stubbed out (and not all APIs are even present)
-  without it.
-
-Note the use of 'imply SMP': ARCH=um doesn't support SMP, and kunit is
-often exercised there. Thus, 'imply' will force SMP on where possible
-(such as ARCH=x86_64), but leave it off where it's not.
-
-Behavior on various SMP and ARCH configurations:
-
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*' --arch x86_64 --qemu_args '-smp 2'
-  [...]
-  [11:12:24] Testing complete. Ran 4 tests: passed: 4
-
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*' --arch x86_64
-  [...]
-  [11:13:27] [SKIPPED] irq_cpuhotplug_test
-  [11:13:27] ================= [PASSED] irq_test_cases ==================
-  [11:13:27] ============================================================
-  [11:13:27] Testing complete. Ran 4 tests: passed: 3, skipped: 1
-
-  # default: ARCH=um
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*'
-  [11:14:26] [SKIPPED] irq_shutdown_depth_test
-  [11:14:26] [SKIPPED] irq_cpuhotplug_test
-  [11:14:26] ================= [PASSED] irq_test_cases ==================
-  [11:14:26] ============================================================
-  [11:14:26] Testing complete. Ran 4 tests: passed: 2, skipped: 2
-
-Without the prior fix ("genirq: Retain depth for managed IRQs across CPU
-hotplug"), we fail as follows:
-
-  [11:18:55] =============== irq_test_cases (4 subtests) ================
-  [11:18:55] [PASSED] irq_disable_depth_test
-  [11:18:55] [PASSED] irq_free_disabled_test
-  [11:18:55]     # irq_shutdown_depth_test: EXPECTATION FAILED at kernel/irq/irq_test.c:147
-  [11:18:55]     Expected desc->depth == 1, but
-  [11:18:55]         desc->depth == 0 (0x0)
-  [11:18:55] ------------[ cut here ]------------
-  [11:18:55] Unbalanced enable for IRQ 26
-  [11:18:55] WARNING: CPU: 1 PID: 36 at kernel/irq/manage.c:792 __enable_irq+0x36/0x60
-  ...
-  [11:18:55] [FAILED] irq_shutdown_depth_test
-  [11:18:55]  #1
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:202
-  [11:18:55]     Expected irqd_is_activated(data) to be false, but is true
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:203
-  [11:18:55]     Expected irqd_is_started(data) to be false, but is true
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:204
-  [11:18:55]     Expected desc->depth == 1, but
-  [11:18:55]         desc->depth == 0 (0x0)
-  [11:18:55] ------------[ cut here ]------------
-  [11:18:55] Unbalanced enable for IRQ 27
-  [11:18:55] WARNING: CPU: 0 PID: 38 at kernel/irq/manage.c:792 __enable_irq+0x36/0x60
-  ...
-  [11:18:55] [FAILED] irq_cpuhotplug_test
-  [11:18:55]     # module: irq_test
-  [11:18:55] # irq_test_cases: pass:2 fail:2 skip:0 total:4
-  [11:18:55] # Totals: pass:2 fail:2 skip:0 total:4
-  [11:18:55] ================= [FAILED] irq_test_cases ==================
-  [11:18:55] ============================================================
-  [11:18:55] Testing complete. Ran 4 tests: passed: 2, failed: 2
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
+ arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 86 ++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
-Changes in v2:
- * add request_irq()/disable_irq()/free_irq()/request_irq() test
-   sequence
- * clean up more resources in tests
- * move tests to patch 2 (i.e., after bugs are fixed and tests pass)
- * adapt to irq_startup_managed() (new API)
-
- kernel/irq/Kconfig    |  11 ++
- kernel/irq/Makefile   |   1 +
- kernel/irq/irq_test.c | 229 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+)
- create mode 100644 kernel/irq/irq_test.c
-
-diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index 3f02a0e45254..7429abe5011f 100644
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -144,6 +144,17 @@ config GENERIC_IRQ_DEBUGFS
- config GENERIC_IRQ_KEXEC_CLEAR_VM_FORWARD
- 	bool
+diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+index 74911861a3bf2606add8cf4aaa3816542e837513..643ab2876222b00bfd60b74b20dd79f105a43143 100644
+--- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
++++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+@@ -877,6 +877,40 @@ retimer_ss0_con_sbu_out: endpoint {
+ 	};
+ };
  
-+config IRQ_KUNIT_TEST
-+	tristate "KUnit tests for IRQ management APIs" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	imply SMP
-+	help
-+	  This option enables KUnit tests for the IRQ subsystem API. These are
-+	  only for development and testing, not for regular kernel use cases.
++&i2c5 {
++	clock-frequency = <400000>;
 +
-+	  If unsure, say N.
++	status = "okay";
 +
- endmenu
- 
- config GENERIC_IRQ_MULTI_HANDLER
-diff --git a/kernel/irq/Makefile b/kernel/irq/Makefile
-index c0f44c06d69d..6ab3a4055667 100644
---- a/kernel/irq/Makefile
-+++ b/kernel/irq/Makefile
-@@ -19,3 +19,4 @@ obj-$(CONFIG_GENERIC_IRQ_IPI_MUX) += ipi-mux.o
- obj-$(CONFIG_SMP) += affinity.o
- obj-$(CONFIG_GENERIC_IRQ_DEBUGFS) += debugfs.o
- obj-$(CONFIG_GENERIC_IRQ_MATRIX_ALLOCATOR) += matrix.o
-+obj-$(CONFIG_IRQ_KUNIT_TEST) += irq_test.o
-diff --git a/kernel/irq/irq_test.c b/kernel/irq/irq_test.c
-new file mode 100644
-index 000000000000..5161b56a12f9
---- /dev/null
-+++ b/kernel/irq/irq_test.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: LGPL-2.1+
++	eusb3_repeater: redriver@47 {
++		compatible = "nxp,ptn3222";
++		reg = <0x47>;
++		#phy-cells = <0>;
 +
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdesc.h>
-+#include <linux/irqdomain.h>
-+#include <linux/nodemask.h>
-+#include <kunit/test.h>
++		vdd3v3-supply = <&vreg_l13b_3p0>;
++		vdd1v8-supply = <&vreg_l4b_1p8>;
 +
-+#include "internals.h"
++		reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
 +
-+static irqreturn_t noop_handler(int irq, void *data)
-+{
-+	return IRQ_HANDLED;
-+}
-+
-+static void noop(struct irq_data *data) { }
-+static unsigned int noop_ret(struct irq_data *data) { return 0; }
-+
-+static int noop_affinity(struct irq_data *data, const struct cpumask *dest,
-+			 bool force)
-+{
-+	irq_data_update_effective_affinity(data, dest);
-+
-+	return 0;
-+}
-+
-+static struct irq_chip fake_irq_chip = {
-+	.name           = "fake",
-+	.irq_startup    = noop_ret,
-+	.irq_shutdown   = noop,
-+	.irq_enable     = noop,
-+	.irq_disable    = noop,
-+	.irq_ack        = noop,
-+	.irq_mask       = noop,
-+	.irq_unmask     = noop,
-+	.irq_set_affinity = noop_affinity,
-+	.flags          = IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+static void irq_disable_depth_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	int virq, ret;
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, NULL);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_free_disabled_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	int virq, ret;
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, NULL);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	free_irq(virq, NULL);
-+	KUNIT_EXPECT_GE(test, desc->depth, 1);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_shutdown_depth_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	struct irq_data *data;
-+	int virq, ret;
-+	struct irq_affinity_desc affinity = {
-+		.is_managed = 1,
-+		.mask = CPU_MASK_ALL,
++		pinctrl-0 = <&eusb3_reset_n>;
++		pinctrl-names = "default";
 +	};
 +
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		kunit_skip(test, "requires CONFIG_SMP for managed shutdown");
++	eusb6_repeater: redriver@4f {
++		compatible = "nxp,ptn3222";
++		reg = <0x4f>;
++		#phy-cells = <0>;
 +
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, &affinity);
-+	KUNIT_ASSERT_GE(test, virq, 0);
++		vdd3v3-supply = <&vreg_l13b_3p0>;
++		vdd1v8-supply = <&vreg_l4b_1p8>;
 +
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
++		reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
 +
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
++		pinctrl-0 = <&eusb6_reset_n>;
++		pinctrl-names = "default";
++	};
++};
 +
-+	data = irq_desc_get_irq_data(desc);
-+	KUNIT_ASSERT_PTR_NE(test, data, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_affinity_is_managed(data));
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	irq_shutdown_and_deactivate(desc);
-+
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+
-+	KUNIT_EXPECT_EQ(test, irq_activate(desc), 0);
-+#ifdef CONFIG_SMP
-+	irq_startup_managed(desc);
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_cpuhotplug_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	struct irq_data *data;
-+	int virq, ret;
-+	struct irq_affinity_desc affinity = {
-+		.is_managed = 1,
+ &i2c7 {
+ 	clock-frequency = <400000>;
+ 
+@@ -1129,6 +1163,22 @@ wcd_tx: codec@0,3 {
+ &tlmm {
+ 	gpio-reserved-ranges = <44 4>; /* SPI (TPM) */
+ 
++	eusb3_reset_n: eusb3-reset-n-state {
++		pins = "gpio6";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
 +	};
 +
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		kunit_skip(test, "requires CONFIG_SMP for CPU hotplug");
-+	if (!get_cpu_device(1))
-+		kunit_skip(test, "requires more than 1 CPU for CPU hotplug");
-+	if (!cpu_is_hotpluggable(1))
-+		kunit_skip(test, "CPU 1 must be hotpluggable");
++	eusb6_reset_n: eusb6-reset-n-state {
++		pins = "gpio184";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
++	};
 +
-+	cpumask_copy(&affinity.mask, cpumask_of(1));
+ 	nvme_reg_en: nvme-reg-en-state {
+ 		pins = "gpio18";
+ 		function = "gpio";
+@@ -1371,3 +1421,39 @@ &usb_1_ss2_dwc3_hs {
+ &usb_1_ss2_qmpphy_out {
+ 	remote-endpoint = <&retimer_ss2_ss_in>;
+ };
 +
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, &affinity);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &fake_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	data = irq_desc_get_irq_data(desc);
-+	KUNIT_ASSERT_PTR_NE(test, data, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_affinity_is_managed(data));
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	KUNIT_EXPECT_EQ(test, remove_cpu(1), 0);
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_GE(test, desc->depth, 1);
-+	KUNIT_EXPECT_EQ(test, add_cpu(1), 0);
-+
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static struct kunit_case irq_test_cases[] = {
-+	KUNIT_CASE(irq_disable_depth_test),
-+	KUNIT_CASE(irq_free_disabled_test),
-+	KUNIT_CASE(irq_shutdown_depth_test),
-+	KUNIT_CASE(irq_cpuhotplug_test),
-+	{}
++&usb_mp {
++	status = "okay";
 +};
 +
-+static struct kunit_suite irq_test_suite = {
-+	.name = "irq_test_cases",
-+	.test_cases = irq_test_cases,
++&usb_mp_hsphy0 {
++	vdd-supply = <&vreg_l2e_0p8>;
++	vdda12-supply = <&vreg_l3e_1p2>;
++
++	phys = <&eusb6_repeater>;
++
++	status = "okay";
 +};
 +
-+kunit_test_suite(irq_test_suite);
-+MODULE_DESCRIPTION("IRQ unit test suite");
-+MODULE_LICENSE("GPL");
++&usb_mp_hsphy1 {
++	vdd-supply = <&vreg_l2e_0p8>;
++	vdda12-supply = <&vreg_l3e_1p2>;
++
++	phys = <&eusb3_repeater>;
++
++	status = "okay";
++};
++
++&usb_mp_qmpphy0 {
++	vdda-phy-supply = <&vreg_l3e_1p2>;
++	vdda-pll-supply = <&vreg_l3c_0p8>;
++
++	status = "okay";
++};
++
++&usb_mp_qmpphy1 {
++	vdda-phy-supply = <&vreg_l3e_1p2>;
++	vdda-pll-supply = <&vreg_l3c_0p8>;
++
++	status = "okay";
++};
+
+---
+base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
+change-id: 20250324-x1e001de-devkit-dts-enable-usb-a-ports-6d6e4934cb97
+
+Best regards,
 -- 
-2.49.0.1045.g170613ef41-goog
+Abel Vesa <abel.vesa@linaro.org>
 
