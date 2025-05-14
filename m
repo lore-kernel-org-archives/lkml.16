@@ -1,154 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920125DD07;
-	Wed, 14 May 2025 10:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7795725DD07
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220059; cv=none; b=F37vufmpOzB7CD8ih6pmSizUVPhFU/pEkexRWuoZ+WvWrg+ICbYuuorgf7s4c6yWmGJ19FgQqTBy6B/HZDAMQ3q6NVBryarg5LbgI3q6d5YIjpZeVZq7pAw1T5KhsTkt1SbHYyX/iaPE13VQ0lS2R9Ua3aSlIKBbfTDNJ6lNxUI=
+	t=1747220127; cv=none; b=fa6wRMBOe01e2cVnh0MEaik0LNUaVkE4KsnN1C1GmVjV5CmOvbyyuUQWGgVbSFTZtuR6H6ivY/JlCtHZY0e6pKTx1s1X6v+hJvJ2whYMgntq2mxQ9FH6fnT5+bhniiLM4W8JPCbUhm31Kx7pKVBYpDUK4N/GIayYSc9/95I83HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220059; c=relaxed/simple;
-	bh=5C0Di50yZg3ty4QVTSTQB3iKbWQP64UKAoZRv5/Vnm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lao2fmeaxuZ3yD1Ygz1lWcqmyU/NggLCyEgTs6Mt7G3hPBmtzm8iThNOYH/ROyP1QD8JTbnOSL4pK1n8IzeuiJqpSlLQ+3WcUSorZNplHqa75nXBZl08jagaYBuJonRNF6i+3xPnFrLDk1nBXZtSd3MNyd7MdnH2nxXuJFMW5Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ldsy8J/p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747220127; c=relaxed/simple;
+	bh=Wz9I9xC4F27JXB+jiXgRktQ8fB8iSJ26dOapb8gTGWk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rGwP8ujEhuMJuwQ0LSh2N2xyaKl53Yp1FbgoMevTFS71S4OvroX2IYiKRFamH1sjWtb2dzhVcV5+NeAbZzL6OpT8Kh8lHT7C1OrC2/OA8KXf30Qn4LWetxagB6JhEBi52J1nhESSlCLt3hVfOgp88JNBWn5k/BvMTBzCr5mrLRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=izzjTcC/; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ldsy8J/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C348C4CEE9;
-	Wed, 14 May 2025 10:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747220057;
-	bh=5C0Di50yZg3ty4QVTSTQB3iKbWQP64UKAoZRv5/Vnm8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ldsy8J/pJGV5VEi08QDYMpAMPTnsoY09dAYYi7nPToxlDhNYYhovz1Aymg5iHKLxn
-	 2qpcL02TN07fuVobHfT3EkzvwkM/3sDjVixJh9ZoA3QZyqUANutNZsn+2DQwa2K5TZ
-	 mt6km69+IS5Ns/TR0UKcgsh+0syJ/AfMe7qGiaqCXYdl1IbIlkr+vT2XQYzu8WynkT
-	 E5d8nFienaJ4TTylUPRu6NEn+6O5yfNc4n0h81jS1XEISzP34nOvoLasQomy/EC7/l
-	 azgXWH4tVZ76xtyGGLX9W8rwovxMMUD4VQwpSyvO/fpfXcwgmibj4DCoX6sv1P9itJ
-	 jtXFRPHY7ZtpA==
-Message-ID: <e74d82b3-ed4a-433b-9305-a80b68130a6f@kernel.org>
-Date: Wed, 14 May 2025 12:54:12 +0200
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="izzjTcC/"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-86a07a1acffso82187039f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:55:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1747220124; x=1747824924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRXF9DYELCFr5DWcRHF2au4ZCt3rEGvlc0W9vQ4Jvt0=;
+        b=izzjTcC/LTj6htqYkDqTLqrJQ7iJ4FRsB5avH+7QVoi7Wr/eg7ydZC9IVwq2JfbCmC
+         uRYbORPRdXFL1PeesKTqq7afkpaD2UZGCK7h62aFtcDYW/Hk7XLejB9Wv91lgxR/ZLj5
+         mFnt1lMHLEJdGa3bCzMz60llxLqvqX6ndKdhy+erC64Q02U0qQrHczMUEQ9M5Ppg9u2F
+         YB6SeYwjuIAhOGf2RIM7zjVH6tTT1Q7Vx3qKWMsJVJ0S5YFfWJQcjlAnbwI6uUoeNuXJ
+         rXyuZ/jBdTHIrYhA5yypnWlz/rlsHXIaYjTjRHXazlH2uGT/vNoyAOmOE9hxLg10NZij
+         v8eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747220124; x=1747824924;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FRXF9DYELCFr5DWcRHF2au4ZCt3rEGvlc0W9vQ4Jvt0=;
+        b=Qkdeqztt/oCM3Bw1U6734c4gdSdcJstJ5ugE8MPe1oKya+Cyn3giJQIqsf0BbCymIz
+         L1EZV0CYyQHBE4jeVl4FIspxyyLt96GywGtxmqjDr13gDzlZSQm+GBGBc4fbAsYJV7Ik
+         baaSHrCkEH///wBhxNbcX0JI9IPE7kmghCXN93i8GeyHFQscEU3//8hSpMwFVILmxMg7
+         u/tr9DfTVzkEEf6xuW3jTz/3hyUqQcvYu4aqdJwOOnoBV00axB00/7dACCfY76VN2fos
+         B8YHCq4Dh1LdmUkVWoxx4F6hn9y13QTcq95XEexOpJyOGvhFMpi4R3d6L4c5WogwIqph
+         Fm7A==
+X-Forwarded-Encrypted: i=1; AJvYcCU0ax73/XwHe6Ie51DK83zbvYRtxQItseiEgPtGjbK+wbtsHOqqUUmox3cI/MjOQdaMDM3XqWlSiWoiiTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlMAr/WJ/JNghZXN+0hPINDYfGRqvI9lToQ9ZV7UquA+HeIRHM
+	1OZ6aRuFHWnaxS2GF4Iocw6UI5gZUpSZuUF5XUMHAna9lrInrwlw8M44xITd4ZbnCFS/BUVpKve
+	WsWANswuITLuDSThwJM/7qWxf/h8Bw/nEOrzO3Q==
+X-Gm-Gg: ASbGncsGJEw7HvxVHHLwPcyplbNdxqaf4Vi82LYzT+EzBJiiDDOltvbOtt4J3GGydj0
+	J3OTJkNfpECkroVZdxwXC2GWewvNe6btBw+8d3Lp9dRXrvgg4XF8iJTOxbRpljOleFPidJCrtrc
+	Z090RHWw46xLxpBM0yFz0Ug6Mt2DStjeSH46miE6Btrs59
+X-Google-Smtp-Source: AGHT+IEsUcIqOtDh4qY84VrR7dhWsUpg7gwW9C2txJWoPP6k/tpHi1CvIf0OsIfE3p0Zr1XdgR25bvUfnZ7cRBd3PFw=
+X-Received: by 2002:a05:6e02:198b:b0:3db:75b6:7624 with SMTP id
+ e9e14a558f8ab-3db75b6780fmr2850135ab.11.1747220124329; Wed, 14 May 2025
+ 03:55:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add
- audio AFE document
-To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <20250514081125.24475-1-darren.ye@mediatek.com>
- <20250514081125.24475-9-darren.ye@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250514081125.24475-9-darren.ye@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250513-fix_scounteren_vs-v1-1-c1f52af93c79@rivosinc.com>
+In-Reply-To: <20250513-fix_scounteren_vs-v1-1-c1f52af93c79@rivosinc.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 14 May 2025 16:25:12 +0530
+X-Gm-Features: AX0GCFtIxlTWYfHTygNZSZFPokesN2cLhuuKOTpmwdkrTRv-yq2sET779gpzlaA
+Message-ID: <CAAhSdy2LbLwRxuFVtMrrcTTD5NCxVCGLy4o=ZUowxT_9DXGqBA@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: KVM: Disable instret/cycle for VU mode by default
+To: Atish Patra <atishp@rivosinc.com>
+Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/05/2025 10:11, Darren.Ye wrote:
-> From: Darren Ye <darren.ye@mediatek.com>
-> 
-> Add mt8196 audio AFE document.
+On Wed, May 14, 2025 at 12:13=E2=80=AFPM Atish Patra <atishp@rivosinc.com> =
+wrote:
+>
+> The KVM virtualizes PMU in RISC-V and disables all counter access except
+> TM bit by default vi hstateen CSR. There is no benefit in enabling CY/TM
+> bits in scounteren for the guest user space as it can't be run without
+> hcounteren anyways.
+>
+> Allow only TM bit which matches the hcounteren default setting.
+>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/kvm/vcpu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index 60d684c76c58..873593bfe610 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -146,8 +146,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>         if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
+>                 return -ENOMEM;
+>
+> -       /* By default, make CY, TM, and IR counters accessible in VU mode=
+ */
+> -       reset_csr->scounteren =3D 0x7;
+> +       /* By default, only TM should be accessible in VU mode */
+> +       reset_csr->scounteren =3D 0x2;
 
-A nit, subject: drop second/last, redundant "document".
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+Let's remove this as well because the Linux SBI PMU driver
+does initialize scounteren correctly.
 
-> 
-> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
-
-
-...
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - mediatek,vlpcksys
-> +  - power-domains
-> +  - memory-region
-> +  - clocks
-> +  - clock-names
-
-
-Keep the same order as in properties:.
-
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-
-Best regards,
-Krzysztof
+Regards,
+Anup
