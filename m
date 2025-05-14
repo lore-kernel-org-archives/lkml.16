@@ -1,164 +1,108 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D2623CE;
-	Wed, 14 May 2025 16:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239028; cv=none; b=OF7dNI7ull767oMNcsRTEFjENytj90QFe6qC4oVJUm1nSJq9f13URofA5zFX88w95dRdD7o7wydHafvBT1Gjv6EIQQGlU2c5XVTyleQHXuaSr76SnhisjAnXiXmXsU4UezoUYFbQ7PKo2EQ8CP3HQUch9FjGL4vJZHhuRHxgAJc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239028; c=relaxed/simple;
-	bh=gGwiUiW+HXiTkW5h4eGIohF0qoaEcQJpmzc0TrVJeeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u761uebkdrm8BBZBs8woOr2K7I++FyfNtgZi2IMNqUfZm8XVSIFHpAP38Kb/JpewIBvaloqa71s1NmUroohj/QuOsutWz2FIjEtDQLOqxIxyZbt0ZMVB+d+lbxPii6WBPcT0okpnXn+O8nKLBPG5NpkTusTdqYugoJ+/99GhdwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b7fmcAP2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17801E9B1A;
+	Wed, 14 May 2025 16:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747239094; cv=pass; b=Q3fk5uJ0dbDnzuQs09gi/K6tRxqgcJfJf/N/+HdS/TJj6395RQB08gD7H6EffFS5m3KLK9PPI8CNVQYkbtEVWMozy0AvPD1nY36Ow+mhI4KooRlAVATTjuGnVuQgsdp71pca/IzYCZOxsBNZpkzwX699tbhogXsgsN4kCBrUPgo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747239094; c=relaxed/simple;
+	bh=lQHCQ80hYkI7tRsS4CYNGCZob1ejmy5HFD0OETYTAcc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=JCtYDiJ8ZK8WmeKMq19l1kUCpPdM9//GQrrUac+2IqNiGU9RQwniFKgEZBWfyoO7lC5t3LQTgqsSC0rFz/BxGSqQomtsoHe0iVonz8QT1nVQ5hLvAc4qdbH5JNQ+Knun+VEDktmWWl1jlf0cT9Pu5P2xdSJ8AVF47HDfk1PbeDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ND9+wKun; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b7fmcAP2"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDn45X003568;
-	Wed, 14 May 2025 16:10:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Gx2b4Z
-	IlWG4aK2ZNItTwwPT+mm7hjHfKNLZ7/PvK6W0=; b=b7fmcAP2H+fmHZNZmAYAHW
-	6fmF5/CmNz6wG77TsK29vTYx/9JZgq3unTcnFoOU/9vHjz4Y4M9rsbM4IPbOTtC8
-	XpcZKMYMW5wehJLS4iulp7S5x50V5uKzMcEnYu6d1iNgiIfkz8iKAL7NaHpDTOE7
-	+VRUdtF09xtM0MtDNZSsQGpxjCZWS89SvghP9xdBdrdErNgDnoNzg0stwE8QXzPV
-	D+iNAxc3d2Oht8N4uYn5xSt1XgzDHyMJt+L1czqoOOt96CEBVxIoDnkufWJxy22s
-	zKbFXUrwOh8cVNRNYGua1e9ataus+rNLqFWZvAWeBocfKkZz+HDDUXi8AHfjFg/g
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mvd38ugx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 16:10:10 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDZJBF021396;
-	Wed, 14 May 2025 16:10:10 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrn5kj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 16:10:09 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EGA5vm19988794
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 16:10:06 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD038200B7;
-	Wed, 14 May 2025 16:10:05 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 456B4200B8;
-	Wed, 14 May 2025 16:10:05 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 May 2025 16:10:05 +0000 (GMT)
-Date: Wed, 14 May 2025 18:10:03 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Ignacio Moreno
- Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        kernel test robot
- <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Linux Memory Management List
- <linux-mm@kvack.org>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: Re: [akpm-mm:mm-new 320/331] arch/s390/kvm/gaccess.c:321:2: error:
- expected identifier
-Message-ID: <20250514181003.3b4caa3c@p-imbrenda>
-In-Reply-To: <6d415e22-9461-4434-9a0b-25423478674f@lucifer.local>
-References: <202505140943.IgHDa9s7-lkp@intel.com>
-	<63ddfc13-6608-4738-a4a2-219066e7a36d@kuka.com>
-	<8e506dd6-245f-4987-91de-496c4e351ace@lucifer.local>
-	<20250514162722.01c6c247@p-imbrenda>
-	<0da0f2fc-c97f-4e95-b28e-fa8e7bede9cb@linux.ibm.com>
-	<20250514164822.4b44dc5c@p-imbrenda>
-	<6f8f3780-902b-49d4-a766-ea2e1a8f85ea@linux.ibm.com>
-	<6d415e22-9461-4434-9a0b-25423478674f@lucifer.local>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ND9+wKun"
+ARC-Seal: i=1; a=rsa-sha256; t=1747239070; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Q1kEt3vYykVudZA/dTsWLFYqzCv7YpU1k5tZLAD+bvbA2TwRjbaNth23/5txx4kges/BuAZFNELFqviLGdThokHqQsqDRoevjU6XjIDjFy0qCPW/ukFwL84Tf6mO7i78V6+TIuGZs5HJlfD4F/nEqB2Jj59C1DbVct2J1GGMfvU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747239070; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=nv0IqvoJtsBRELJdGMAbLYGlK2WwW+8ndubCbm6OaW0=; 
+	b=PgRE70nldNbtQxYusCVK7vWz6Zs8TR25CMVe15pnTw/20BNMgrLtykZi7xb9l9Hv03+aZX84gW7r+INDmyg41z8tZLuaucSSCktRhy7xc9VVOqv0AWMATEtT9HRyS0faIe2RIjUhdTLHQLcfHAHZ9iWn0K9woSmXUD71m9Qqycg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747239070;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=nv0IqvoJtsBRELJdGMAbLYGlK2WwW+8ndubCbm6OaW0=;
+	b=ND9+wKundDUgTRxHuHRfEmmEbNtLBkElZK3Xp60NtdEP1gOUwpRVKmddxGFvTwW4
+	lfsBi9sCO3bqoQOSOxwEEExwyx0fpo4daREGGSgGnTi5WRCC1IELWASpgPrwrB/7yfH
+	NNhwdAaMBdnZ/87Na+vHL6AMhwadJ8IgNMNIWLog=
+Received: by mx.zohomail.com with SMTPS id 1747239068698495.8203448866441;
+	Wed, 14 May 2025 09:11:08 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NXX-GJsxG1skImeDNDQFWIh7c_4GFWUe
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE0MCBTYWx0ZWRfX1/d3m/tOXQtF tzyxSEThKWfVNTi+WJgbIXOlxjmKHk5+dOT14LOsVr+x0xpgHJEy8fuQPB5YmHgTy0+IR2mo58s QmkS/QLJorv90PhXS6fbezdM0qtWXztw1unJIZZOeg8kvtBycaxQZpM96SWROoUcDaBcarUbzSj
- oHG9QUWtDT4KdD4jZkVBbF7wcmcdVLkkXjUSR2+c+aKe7p0Cou7YZ/RuyrG34N0RQarn6YpfN8C uoVf2h1/jnsn5E7x3KReezSS0f/XJ+1Np2hsf9ds8+nk/LJOXc3Ttidp3W+NelDVKB0SLSerNHS j30Ubw/w6Hd2LtT8hc/+gISTQl/SH0xC9I6SU/U/oVWbkKAMluSHyowovz+PN4cQEEKf965f4jB
- GTEen1yxYL1YbJxjsMC/VHg1ZFmxV5mkxfYbcBhdV312B3RyUj8m9HosWG1BJURdmrYihrci
-X-Proofpoint-ORIG-GUID: NXX-GJsxG1skImeDNDQFWIh7c_4GFWUe
-X-Authority-Analysis: v=2.4 cv=GbEXnRXL c=1 sm=1 tr=0 ts=6824c062 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=OnEVUMqZS2F2_DRSUccA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140140
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
+Date: Wed, 14 May 2025 13:10:52 -0300
+Cc: Benno Lossin <lossin@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4EF1B72A-826A-4435-A586-B7E0EB2DCF84@collabora.com>
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
+ <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
+ <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
+ <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
+ <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
+ <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
+To: Mark Brown <broonie@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
-On Wed, 14 May 2025 17:01:55 +0100
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> On Wed, May 14, 2025 at 04:52:18PM +0200, Christian Borntraeger wrote:
-> >
-> >
-> > Am 14.05.25 um 16:48 schrieb Claudio Imbrenda:
-> >  
-> > > > > > > A possible fix for this would be to rename PROT_NONE in the enum to PROT_TYPE_NONE.  
-> > > > >
-> > > > > please write a patch to rename PROT_NONE in our enum to
-> > > > > PROT_TYPE_DUMMY, I can review it quickly.
-> > > > >
-> > > > > if Paolo has no objections, I'm fine with having the patch go through
-> > > > > the mm tree  
-> > > >
-> > > > Yes, lets do a quick fix and I can also do
-> > > > Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > > >
-> > > > for a s/PROT_NONE/PROT_TYPE_NONE/g
-> > > > patch.  
-> > >
-> > > I'd rather have PROT_TYPE_DUMMY, since it's a dummy value and not
-> > > something that indicates "no protection"  
-> >
-> > makes sense.  
-> 
-> Thanks for the quick response guys, did you want us to write the patch?
 
-yes please
+> On 14 May 2025, at 12:50, Mark Brown <broonie@kernel.org> wrote:
+>=20
+> On Wed, May 14, 2025 at 05:38:40PM +0200, Benno Lossin wrote:
+>> On Wed May 14, 2025 at 4:40 PM CEST, Daniel Almeida wrote:
+>=20
+>>> By the way, IIUC, regulator_disable() does not disable a regulator =
+necessarily.
+>>> It just tells the system that you don't care about it being enabled =
+anymore. It can
+>>> still remain on if there are other users.
+>=20
+>> Hmm, so a `struct regulator` might already be enabled and calling
+>> `regulator_enable` doesn't do anything?
+>=20
+> It takes a reference to the regulator.  This may or may not result in =
+a
+> change in an underlying physical regulator.
 
-please don't forget to also add the following tags:
 
-Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
-Cc: stable@vger.kernel.org
+I assume these are two different reference counts, right? One for
+regulator_get()/regulator_put(), and one for
+regulator_enable()/regulator_disable().
 
-> 
-> We can put something together quickly if so and cc you on it.
-
-yep
-
-> 
-> Ack on the comment above, of course!
-> 
-> Cheers, Lorenzo
-
+Looking at regulator_dev, I can see both "use_count" and "open_count" =
+for
+example.=
