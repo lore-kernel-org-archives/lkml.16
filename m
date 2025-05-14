@@ -1,141 +1,218 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8461D54EF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747187850; cv=none; b=uiWMQGvok2WiFB6MML6Bk9h/YeJwGmlFlaq3HwDQ5pAr8GS18tj+3jTS2CuSUiP4RkRkggkdREKUfifvQjRho68dxLeRgi+w/S4J6NCs4adB9ENk481Wc2MnSd6Vm/+4Gn+fx/SHr1WD37KUVJIVuh5KyD0b0dPvLU8uheJky6A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747187850; c=relaxed/simple;
-	bh=tDrvq9S8UbkdawsX8X91djBZBoRSYZ+8h/HviY3r1dk=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=A2QdygRh7a+UX+R4N+yMKkroy5xE+wsaf7Sy4aDSVgUhKquJP/luwEEro4WnoJQ8MJMRZNMjZS/ooPeBwyxTHctAiKkFcKtUeYCjn9sQ7DZlHKzdJ0msib6g3Qpb6JR3XiMZTHEFdDhIFaK4bT34MviSbSI+ujLnfUA0ot+XXdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZxxLB5ppbz8R044;
-	Wed, 14 May 2025 09:57:22 +0800 (CST)
-Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
-	by mse-fl2.zte.com.cn with SMTP id 54E1vEuk019126;
-	Wed, 14 May 2025 09:57:14 +0800 (+08)
-	(envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp01[null])
-	by mapi (Zmail) with MAPI id mid14;
-	Wed, 14 May 2025 09:57:15 +0800 (CST)
-Date: Wed, 14 May 2025 09:57:15 +0800 (CST)
-X-Zmail-TransId: 2b036823f87bffffffffe21-f0575
-X-Mailer: Zmail v1.0
-Message-ID: <20250514095715517YAAvcCEiCPevDbByvfkG8@zte.com.cn>
-In-Reply-To: <20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn>
-References: 20250510155413259V4JNRXxukdDgzsaL0Fo6a@zte.com.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B7E8F6E;
+	Wed, 14 May 2025 01:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747187967; cv=fail; b=GfedgkdvRT+CkU6mAl0nyG4XLPbRWcFsWPHOpbmFEDnRDDfVbHxXRmBRyzMkQrSGAZXqeIMbuiAw+1N4BEiF/x+ToVCWvdOxlG7kcw0Q5kTWhtlTvc8+6yMhY6xdXq0rYEv7N4md6/kTwLeybhJWQ1rcOiUrBrHpPj48PdOTCyY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747187967; c=relaxed/simple;
+	bh=EYSa56g0rgNBiKWm+I3QBNpmPTjZA41rtP6DPvEImYw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=otZ44Pep7um0DCdWuYm7VUGZigckdIFgKvSNvxQXSBh23Tt+8VSOZmnuq6yNz0kzOF13DOvugz1oMPrpraoXyAwZo0FBK/N9XZAUIMJ9HlV8VfrOT6yL6ggJxhUGUSKceQCRQ7tDAXnL3D3eno2BYHY7rCzi308VuDj5fmLtOBQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E0qF41020364;
+	Wed, 14 May 2025 01:59:06 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46mbc8rds6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 01:59:05 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Bx/w8l8yIip8KoEmHb/LqHEFpYbwaiIfOV/JMUWSZQrgjtTe+ISufuxPpPrEwU6+X4RjJadeDFF+OHn8f798Xhk6WYO9FmZCjofIsQ6ZVeyfNBg0Y3GLBTKq70ZlX6NgMvVCU+CHs79XhI4bBYJ+ol+B5vzlNz1SC4wB4QWSkmnerMqw3kKf90+0ACpBVdyw4WF+mO2qHxtalv0bjoAzouNssp/h4uuwersptpQxOltoSOljEErTmAlC53HoyTplD9Ka5Dgc8v0DR6CuwE9aKJDf6M0dkn75Hv8yu6KOTDmK90s/zGW3hNYMOyzvWk691o9HKTDujXM4yeeYqg4zVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eP/CEHDxx3mJ4QyqO0Rp3PUNbOESPjsZhqJu8MzuAKU=;
+ b=jp98YODG1SW6/lzSB9v90jHxs/53pBvwxnxvOM6+3Fo+O1jJk+DkeyMd7liQQOIxmHCu8hCEDUk6Lmil+HBJsJxIwXIZuih4Aec5oQ5rC46wetQmmHXKPTp8N8tVjuOglfTof4ge5xfpHY7yXRkbkfpMQ2hRMqMxts+jGTx01nwJ427U/Vq3X8/ffekbE9xViuw7xxFOEUvA4ASFlUyOjsdHhzm8SnAQ12AM1M4cd9Qfm5CgyHJK4VSC7hdhhwmchdLQcdcLvyyJR0brVSRI6vCydH7e/tu5al8gUdH0dYymjMw5cmI139tp44NbsayzBAeysS1ISEDf182d8r2Bow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from IA1PR11MB6170.namprd11.prod.outlook.com (2603:10b6:208:3ea::11)
+ by DM6PR11MB4593.namprd11.prod.outlook.com (2603:10b6:5:2a3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
+ 2025 01:59:01 +0000
+Received: from IA1PR11MB6170.namprd11.prod.outlook.com
+ ([fe80::f850:53da:e11b:1653]) by IA1PR11MB6170.namprd11.prod.outlook.com
+ ([fe80::f850:53da:e11b:1653%4]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 01:59:01 +0000
+From: "Ren, Jianqi (Jacky) (CN)" <Jianqi.Ren.CN@windriver.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "penguin-kernel@i-love.sakura.ne.jp" <penguin-kernel@i-love.sakura.ne.jp>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "daniel.starke@siemens.com" <daniel.starke@siemens.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: RE: [PATCH 5.15.y] tty: add the option to have a tty reject a new
+ ldisc
+Thread-Topic: [PATCH 5.15.y] tty: add the option to have a tty reject a new
+ ldisc
+Thread-Index: AQHbwMLZ/1a9ca3tp0C3sbGllH9xqbPPDXeAgAJYW5A=
+Date: Wed, 14 May 2025 01:59:01 +0000
+Message-ID:
+ <IA1PR11MB61702B6E5E5031139DA5967BBB91A@IA1PR11MB6170.namprd11.prod.outlook.com>
+References: <20250509091454.3241846-1-jianqi.ren.cn@windriver.com>
+ <2025051221-creature-refund-8fe0@gregkh>
+In-Reply-To: <2025051221-creature-refund-8fe0@gregkh>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6170:EE_|DM6PR11MB4593:EE_
+x-ms-office365-filtering-correlation-id: b404bd84-8bf9-48e6-cbbc-08dd928ae5b7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?GANdOtqD3FWsbOy805jxWmQusupL67oHQIGcBxOA3nUkzTOiAKOvfSiZ74ql?=
+ =?us-ascii?Q?M7hdHynA29wVMR3VF93eP3W3yBAT34FoOSsz6IJFr9d0J5cT06RQXUu5CNMP?=
+ =?us-ascii?Q?7B5AfCQu1a6m8/GrKyTlEGdU/HWAZGKUa/EsdOpMc/myFBSFCSbMpTdRETQr?=
+ =?us-ascii?Q?vXmck8yqdfqVoEvC2Jqwqn1T/eYbhK/CKlFTQafacZ9mdc2p85jUPls/fg/O?=
+ =?us-ascii?Q?ch+/dT9Ur65XMzPFgKPPi3IlN3lbAQneMiS89CQzI28CbMonCI7OVlY/MqQl?=
+ =?us-ascii?Q?zvl4YKF2syh1Hfvs7aGpGpF3C6i+B6B41+AxYbgtsBZ9uP3oES6whBQqsv2S?=
+ =?us-ascii?Q?0D64QYc9U+Hvnzp6q2QIjV0nTdlA/NmPULSwIO/GMI/V8hk4cCPhSUP7YgUn?=
+ =?us-ascii?Q?xGqUXvkE/11Q05WY5SZ0M+XoRYhHFM3Lv7ZI133eEhg2sFUTJxwJmkaVtNvJ?=
+ =?us-ascii?Q?ItjraHv9nC4B78t1bQ9vIFU7STGBaChil34A0y4MZ4IUk9Diux2DoJPou2US?=
+ =?us-ascii?Q?kg52WtBBOD9E0r7RU3bTjv5S2sGA2s5/MNM34y7c56Ch0wCK+76Y1/6Yiqns?=
+ =?us-ascii?Q?hmcpwCrDUzuQReCDJrzBoSYCevicVPTKDGRriXo6NxjLbAHqAmpNGk987axI?=
+ =?us-ascii?Q?Vl5qUsVD9VgFSxFwwSx3KMOoLj842sFqMu3tEDNQy3nUNC2ttNkbLdNbSljx?=
+ =?us-ascii?Q?VRyxnzJa/u/Vwh0W9IuS8kG1DFUW8yqm4ZOX+fiEBSvowvEDjDsSNnh2IDRD?=
+ =?us-ascii?Q?2mk4iDzWhbtZBtguKy0wv6pbk89pu/QwygOGBg/N/B8ILqYIJtFRw7nwqx4H?=
+ =?us-ascii?Q?iRsjKgFxwRNpnNyf7wkd8c5XIByrrta3d1Tzh2pmDbV87loDnh1DuxNiFfMe?=
+ =?us-ascii?Q?Q/ETclFMlw/bkZdk3TpCz8b6lP6ku5AKO0JoPTc0bYMOLvpCIROH2Pw8RpzX?=
+ =?us-ascii?Q?Jketobze8ibWFHWqirkJQZCQKHarLvpDcF/Nyk1GLJuUJsJSD/Fb4RHwh6Ah?=
+ =?us-ascii?Q?9ApeFXCNfYmVGd4UB0izsCoLlj/JXqFBE82b/dw1axU1U/eIq9VsN0DzuBmN?=
+ =?us-ascii?Q?nS4vLLmUF3zgAh+MpCOXwxtWkAgkjA1kcYo2nhjQR53+aBhwXuJK1PoxvegE?=
+ =?us-ascii?Q?k4pVKtg2neO6DhmpUb6CtBXS4KzzoiydFwtWQcDPVC5WNzjgspRUuOHAC38S?=
+ =?us-ascii?Q?YHFLMKwkI84My6uwLHtazSYFEe9GKj7ZEHCcbBZnq5MUeFcu5hSmKxYMl4cI?=
+ =?us-ascii?Q?UdjjQdXToNUIXIZPIQbwMOuEA93Tj4T/LX/avkk5otmC0HP538NB/U7fZCDC?=
+ =?us-ascii?Q?dcnoFSqny5Me4cfBdIQK75RBef8uXqOM/CXHKQpO5efZ4HIQ6qV6WFe2bOYW?=
+ =?us-ascii?Q?WfMwOMmT4gtnz94cWA+IfAGtk/HY4cDO86z3WD0+Hciy689kvd4fWPRDzeT8?=
+ =?us-ascii?Q?KcMPzq02Iw9Ep8rYfJNf6h8e6H7B4maMed69qNMZ2m8Wwcf9DVecBA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6170.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?1MJvBqDyy1ZI8bs3OIDaOl1XFeq2ccdfNlGutWq5RgdSHgCqHM9qRLtK3MPE?=
+ =?us-ascii?Q?KLiTFZ/Jao6U2eRVLfArdzwEt0IwTf+JkK2LGSHI1Mjavvnuc76Kla2BAEaK?=
+ =?us-ascii?Q?0KY7kVEC6ghjfBF3qZybzCn9GXxaZ5EyQGYSI0Tp1+Q8ffrUwhEvme9Az4vL?=
+ =?us-ascii?Q?oCwAd79tHJn8DBi3YTa2rLMCnoLRMjsWCEZkhjytrTkEyFybouDW6pRB7sdU?=
+ =?us-ascii?Q?WROlFhaPsdpfBOPPjyq5/3BOR4xf632RY9w9w453NOfNYN9EJH8hF0Dl6AdB?=
+ =?us-ascii?Q?LY1Kvx1cZiGadwbxifwYOXqcBMNpMJm2ZmKK9/e0SRU5+7XAnRK9SD2WSQFS?=
+ =?us-ascii?Q?YPuhkGxiOR58l+aMiGp/PYrmdlvVIBRL7JTh9tJVRhG0Eq9fv8kn2p34SdZM?=
+ =?us-ascii?Q?6p1Q0zrIi1Z9Gd4z/BvGfOsmfDIgz7oZ38AVMd2zW60Idi1G+QJ0IOzvPHvD?=
+ =?us-ascii?Q?51CLwVP8Do1UV7lFbfaA/Pc87vhl0zLw4aigHmsSwKDopx21Rn7TluKd22jp?=
+ =?us-ascii?Q?iLJezlQiamkYNjUteDdyVnqcfKUtz575T701laJbFZJ8JT5zewIZ+28dT7ZH?=
+ =?us-ascii?Q?kp/zgLwZPc7KPFINPRZmG9SwCkdL5Q5Nzsyo9/uYOfZf1DQFWxsnILdqnaOq?=
+ =?us-ascii?Q?gPsUQFUAKCeBL4K1arDjRRguQDR4q6OSzEWAi5DjO0kvgy70WDq5uD1H5mno?=
+ =?us-ascii?Q?1ZoYdGwj6N3WIj+2dwC/gE+WjczHW3EbOwaDWrXo406T6+nhfBXXSd+YJwmz?=
+ =?us-ascii?Q?/rhLK6mIb/4hr8C5kI52qXXUzDPC9Yl9BiJVYA7Hpxs+sw7opc5WQgO8lWyv?=
+ =?us-ascii?Q?l3VBfceRMyR0f+jOiMM/frLsnnrXB0/EGdoF1pXTiB3F1z5uDE8uvhcoHpAq?=
+ =?us-ascii?Q?U5GvgCeVPdtm56ocnLSjgOxYgv7XAz7gTUO0gmDIE2CMcdX+fZYoCp2rpY6G?=
+ =?us-ascii?Q?Ul55nMPzC50wvFvJH93SGm+l9E/VlE9AkmlkVR3KkqGHe+1Y31Wr65xP2UZp?=
+ =?us-ascii?Q?wWxHdMPrLjk/ugnMgm9g+sqpfzFxfTgIZxEIm0CivamfiIgLuO5xuC6Aev2q?=
+ =?us-ascii?Q?Sils9caR4L/c/VM1APQVo3vnfCdsjypolAVUw1n0pmLeUJpMsC+QLcWX3YVJ?=
+ =?us-ascii?Q?C2zceoi8OgcFJNAoGgW3zjhplvcfEG1ENv74/p64hUIhC6vokr3dUaP9cdf+?=
+ =?us-ascii?Q?R74cQpEh3eGiLpAQtYJXpOVBulufYMGRd3fV1jVfMTy0vcquqtVxj8UJCu0Z?=
+ =?us-ascii?Q?OKNS0pfnwnRyPL1T8v9smJG5x2Vh2cPfIcd0pXAjLPVIOz1K7TO83L727hOy?=
+ =?us-ascii?Q?j35k0vhHLKjyJwlrIVrZonpiG4HvkEWypw2ynM/Z3xLSk/0eFlZ437hp2OW+?=
+ =?us-ascii?Q?YaBcUurAC4CT6D5BTm4j/J7sBylYKzQOJ7J9fqetXc8cKzfjnxDqyuvL6jlE?=
+ =?us-ascii?Q?GmD4sYfSq6FeZ0lpZneoYqOYLT9sorHOu3m7ydYTxMp3jMkXetBjudrnvpVZ?=
+ =?us-ascii?Q?AxpIGPAzWofw3i/7kl2+LdMVogtrb8UbORG6RjQ6YI0Kz39r1FcuRO9bTVZN?=
+ =?us-ascii?Q?fE8kEfdFeougo5eDnjMXSDiKxAA5h8+2oCO7vqj6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <yang.yang29@zte.com.cn>
-To: <jiang.kun2@zte.com.cn>, <wang.yaxin@zte.com.cn>
-Cc: <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
-        <bsingharora@gmail.com>, <jiang.kun2@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <akpm@linux-foundation.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsaW51eCBuZXh0XSB0YXNrc3RhdHM6IGZpeCBzdHJ1Y3QgdGFza3N0YXRzIGJyZWFrcyBiYWNrd2FyZAogY29tcGF0aWJpbGl0eSBzaW5jZSB2ZXJzaW9uIDE1?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 54E1vEuk019126
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6823F882.004/4ZxxLB5ppbz8R044
+MIME-Version: 1.0
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6170.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b404bd84-8bf9-48e6-cbbc-08dd928ae5b7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 01:59:01.3263
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 48nbtmSmBGt0LeUh8pxL1n7m/xWT0XWs20jbw4gssDe2zvgd7gvGjiJlrYw3ORCotR4xen9fONsOv5izn149rXE8emSCQEk0/UqkWK/M2Fs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4593
+X-Proofpoint-GUID: 0o3dMn99QUPm4mF0ImQWXitWCRH7lyyq
+X-Proofpoint-ORIG-GUID: 0o3dMn99QUPm4mF0ImQWXitWCRH7lyyq
+X-Authority-Analysis: v=2.4 cv=IIACChvG c=1 sm=1 tr=0 ts=6823f8e9 cx=c_pps a=hHPfuxNGWHHq0fQgDGst2w==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=py2lGXHgnwZgnTii:21 a=xqWC_Br6kY4A:10
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=ag1SF4gXAAAA:8 a=t7CeM3EgAAAA:8 a=VwQbUJbxAAAA:8 a=Z4Rwk6OoAAAA:8 a=a_U1oVfrAAAA:8 a=wvPkM9v7g1_ikmSEda4A:9 a=CjuIK1q_8ugA:10 a=Yupwre4RP9_Eg_Bd0iYG:22 a=FdTzh2GWekK77mhwV6Dw:22 a=HkZW87K1Qel5hWWM3VKY:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDAxNSBTYWx0ZWRfX+f4rN/vETJ/h V+R7dcriVYGeYbn3AzwAlk48IUEqP0Uyd3dDeOz9SjBx9GAGsXVTS7LXve0PPqcqeTDItg7WFik qKPNnijuQoU3oQkuhx/4wc+QTdnlyyIKn80ifFb7SySQDpAbyG5d0BUwfd4HYdPB4ZgfJN+T1i5
+ upEjdl24tyV87El2NE6e0SPaZE41suTK4SItFWjA+540HFIM1IIZBysmUkuwU0HYT4R9az7X/qk hY52BEH0MDI/SjOkrEFeB18pavOLsBFhA4XR1fChG+y/NkEXS05b74X3lrNrfHf+722ES8jAybn 2ZcMvm8JD6rZZHVj3lAZ2PFDoyh4djUANT3t5qNwDaa/9cikp3tfUCVSkIRVfdSQGtVDZr3mhDw
+ HfHpw8k25x8SEqGsCpnijiBgj4xHmt/hCREMQvyiGFO1SDpM6H5MzYtSyG+BPuVTingZXrDg
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ bulkscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
+ clxscore=1015 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505070000
+ definitions=main-2505140015
 
+Hello,
 
+We don't have such device, but we saw in the commit log that "use it to lim=
+it the virtual terminals to just N_TTY.  They are kind of special" and thou=
+ght that it may help prevent other unexpected ldisc. So, we submitted this =
+patch for review. If it's improper we will stop here for both 5.15 and 5.10=
+.
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+-----Original Message-----
+From: Greg KH <gregkh@linuxfoundation.org>=20
+Sent: Monday, May 12, 2025 22:10
+To: Ren, Jianqi (Jacky) (CN) <Jianqi.Ren.CN@windriver.com>
+Cc: stable@vger.kernel.org; patches@lists.linux.dev; linux-kernel@vger.kern=
+el.org; penguin-kernel@i-love.sakura.ne.jp; akpm@linux-foundation.org; dani=
+el.starke@siemens.com; torvalds@linux-foundation.org
+Subject: Re: [PATCH 5.15.y] tty: add the option to have a tty reject a new =
+ldisc
 
+CAUTION: This email comes from a non Wind River email account!
+Do not click links or open attachments unless you recognize the sender and =
+know the content is safe.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+On Fri, May 09, 2025 at 05:14:54PM +0800, jianqi.ren.cn@windriver.com wrote=
+:
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+>
+> [ Upstream commit 6bd23e0c2bb6c65d4f5754d1456bc9a4427fc59b ]
+>
+> ... and use it to limit the virtual terminals to just N_TTY.  They are=20
+> kind of special, and in particular, the "con_write()" routine violates=20
+> the "writes cannot sleep" rule that some ldiscs rely on.
+>
+> This avoids the
+>
+>    BUG: sleeping function called from invalid context at=20
+> kernel/printk/printk.c:2659
+>
+> when N_GSM has been attached to a virtual console, and gsmld_write()=20
+> calls con_write() while holding a spinlock, and con_write() then tries=20
+> to get the console lock.
 
+WHy do you want this in 5.15 and older kernels?  You have already disabledf=
+ n_gsm from your kernels already so this isn't an issue, right?
+Unless you have this hardware, and explicitly know what is talking to it, t=
+hat is the recommendation for this code.
 
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+And how was this and the 5.10.y backport tested?  Did you see the above "BU=
+G:" line without it?
 
-PiBTb2x1dGlvbj4gPT09PT09PT09PiBtb3ZlIGRlbGF5IG1heCBhbmQgZGVsYXkgbWluIHRvIHRo
-ZSBlbmQgb2YgdGFza3N0YXQsIGFuZCBidW1wPiB0aGUgdmVyc2lvbiB0byAxNiBhZnRlciB0aGUg
-Y2hhbmdlDQpQbGVhc2Ugbm90aWNlIERvY3VtZW50YXRpb24vYWNjb3VudGluZy90YXNrc3RhdHMu
-cnN0LCBpdCBzYWlkOg0KQWRkaW5nIG1vcmUgZmllbGRzIHRvIHRoZSBlbmQgb2YgdGhlIGV4aXN0
-aW5nIHN0cnVjdCB0YXNrc3RhdHMuDQoNCj4gKyBfX3U2NCB3cGNvcHlfZGVsYXlfbWF4Oz4gKyBf
-X3U2NCB3cGNvcHlfZGVsYXlfbWluOw0KVGhlcmUgc2VlbXMgdG8gaGF2ZSBhIHdoaXRlc3BhY2Ug
-cHJvYmxlbXMsIGVsc2UgTEdUTS4NClJldmlld2VkLWJ5OiBZYW5nIFlhbmcgPHlhbmcueWFuZzI5
-QHp0ZS5jb20uY24+DQoNCkFub3RoZXIgdGhpbmcgdG8gbWFrZSBpdCBiZXR0ZXIgKG1heWJlIG5l
-eHQgcGF0Y2gpOiBzdHJ1Y3QgdGFza3N0YXRzDQpoYWQgY29tbWVudHMgdG8gZXhwbGFpbiB4eHhf
-Y291bnQgYW5kIHh4eF9kZWxheV90b3RhbCwgd2Ugc2hvdWxkDQphbHNvIGV4cGxhaW4geHh4X2Rl
-bGF5X21pbi9tYXgu
+thanks,
 
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwIHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZh
-bWlseTrlvq7ova/pm4Xpu5EsTWljcm9zb2Z0IFlhSGVpOyI+Jmd0OyA8c3BhbiBzdHlsZT0iZm9u
-dC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90O0x1Y2lk
-YSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBi
-YWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij5Tb2x1dGlvbjwvc3Bhbj48YnIg
-c3R5bGU9ImJveC1zaXppbmc6IGJvcmRlci1ib3g7IG91dGxpbmU6IDBweDsgZm9udC1mYW1pbHk6
-IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90O0x1Y2lkYSBHcmFuZGUm
-cXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmOyB3aGl0ZS1zcGFj
-ZTogbm9ybWFsOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij48c3BhbiBz
-dHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZx
-dW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5z
-LXNlcmlmOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij4mZ3Q7ID09PT09
-PT09PTwvc3Bhbj48YnIgc3R5bGU9ImJveC1zaXppbmc6IGJvcmRlci1ib3g7IG91dGxpbmU6IDBw
-eDsgZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQgWWFoZWkmcXVvdDssICZxdW90
-O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwgSGVsdmV0aWNhLCBzYW5zLXNl
-cmlmOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUs
-IDI1NSk7Ij48c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6IEFyaWFsLCAmcXVvdDtNaWNyb3NvZnQg
-WWFoZWkmcXVvdDssICZxdW90O0x1Y2lkYSBHcmFuZGUmcXVvdDssIFZlcmRhbmEsIEx1Y2lkYSwg
-SGVsdmV0aWNhLCBzYW5zLXNlcmlmOyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjU1LCAyNTUsIDI1
-NSk7Ij4mZ3Q7IG1vdmUgZGVsYXkgbWF4IGFuZCBkZWxheSBtaW4gdG8gdGhlIGVuZCBvZiB0YXNr
-c3RhdCwgYW5kIGJ1bXA8L3NwYW4+PGJyIHN0eWxlPSJib3gtc2l6aW5nOiBib3JkZXItYm94OyBv
-dXRsaW5lOiAwcHg7IGZvbnQtZmFtaWx5OiBBcmlhbCwgJnF1b3Q7TWljcm9zb2Z0IFlhaGVpJnF1
-b3Q7LCAmcXVvdDtMdWNpZGEgR3JhbmRlJnF1b3Q7LCBWZXJkYW5hLCBMdWNpZGEsIEhlbHZldGlj
-YSwgc2Fucy1zZXJpZjsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgYmFja2dyb3VuZC1jb2xvcjogcmdi
-KDI1NSwgMjU1LCAyNTUpOyI+PHNwYW4gc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgJnF1b3Q7
-TWljcm9zb2Z0IFlhaGVpJnF1b3Q7LCAmcXVvdDtMdWNpZGEgR3JhbmRlJnF1b3Q7LCBWZXJkYW5h
-LCBMdWNpZGEsIEhlbHZldGljYSwgc2Fucy1zZXJpZjsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1
-NSwgMjU1LCAyNTUpOyI+Jmd0OyB0aGUgdmVyc2lvbiB0byAxNiBhZnRlciB0aGUgY2hhbmdlPC9z
-cGFuPjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk65b6u6L2v6ZuF6buR
-LE1pY3Jvc29mdCBZYUhlaTsiPlBsZWFzZSBub3RpY2UmbmJzcDtEb2N1bWVudGF0aW9uL2FjY291
-bnRpbmcvdGFza3N0YXRzLnJzdCwgaXQgc2FpZDo8L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZToxNHB4
-O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7Ij5BZGRpbmcgbW9yZSBm
-aWVsZHMgdG8gdGhlIGVuZCBvZiB0aGUgZXhpc3Rpbmcgc3RydWN0IHRhc2tzdGF0cy48L3A+PHAg
-c3R5bGU9ImZvbnQtc2l6ZToxNHB4O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQg
-WWFIZWk7Ij48YnI+PC9wPjxwPiZndDsgKyBfX3U2NCB3cGNvcHlfZGVsYXlfbWF4OzxiciBzdHls
-ZT0iYm94LXNpemluZzogYm9yZGVyLWJveDsgb3V0bGluZTogMHB4OyBmb250LWZhbWlseTogQXJp
-YWwsICZxdW90O01pY3Jvc29mdCBZYWhlaSZxdW90OywgJnF1b3Q7THVjaWRhIEdyYW5kZSZxdW90
-OywgVmVyZGFuYSwgTHVjaWRhLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7IHdoaXRlLXNwYWNlOiBu
-b3JtYWw7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPiZndDsgKyBfX3U2
-NCB3cGNvcHlfZGVsYXlfbWluOzwvcD48cD5UaGVyZSBzZWVtcyB0byBoYXZlIGEgd2hpdGVzcGFj
-ZSBwcm9ibGVtcywgZWxzZSBMR1RNLjwvcD48cD5SZXZpZXdlZC1ieTombmJzcDtZYW5nIFlhbmcg
-Jmx0O3lhbmcueWFuZzI5QHp0ZS5jb20uY24mZ3Q7PC9wPjxwPjxicj48L3A+PHA+QW5vdGhlciB0
-aGluZyB0byBtYWtlIGl0IGJldHRlciAobWF5YmUgbmV4dCBwYXRjaCk6IHN0cnVjdCB0YXNrc3Rh
-dHM8L3A+PHA+aGFkIGNvbW1lbnRzIHRvIGV4cGxhaW4geHh4X2NvdW50IGFuZCB4eHhfZGVsYXlf
-dG90YWwsIHdlIHNob3VsZDwvcD48cD5hbHNvIGV4cGxhaW4geHh4X2RlbGF5X21pbi9tYXguPC9w
-PjwvZGl2Pg==
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
-
+greg k-h
