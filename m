@@ -1,108 +1,95 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69653D984;
-	Wed, 14 May 2025 01:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961223C465;
+	Wed, 14 May 2025 01:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747185430; cv=none; b=sfbN9WxxUCUkOIrCzHihjlUbXqBsxcPnZr/7H0OtxfHYoyY5Rw2gCUajjwgOZXT5FrxG66YwtKPjV6KuAVeEaTsbNtBH7JEWr/oqoT7z5+26H5v9Wx6b+b3llKm7MJE2i5J5ta/9B+fzlcF3CbmE/2WuhBfah6uUL8/sq8QCnAM=
+	t=1747185618; cv=none; b=jDTb6sr8bSVR9cRrBfOZa5n1kJ/SJUsbhsPg4HQNVgarRJMU8RsI0RHzuhRjEz6jxKnprlRh8J2YzMKzvON3K08RzjZSkupX6+nFvpriq0pgFsrVJkiSAXh2UFipTJoUAD9ItKU0sOHncEmRPHM1DMVpDECf2RMZ0Srv+lhWrys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747185430; c=relaxed/simple;
-	bh=nSrQLIIz5NOYeKv3kZaGWloZT+mJKQ6M7Z/Z39vrA4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9kttIrdSA4BDmVb5XdFaZEMNhbM2TFE/BCTLdNvhS9bdCu9yPsVwDdMf4YwRInw0NCporIIXmqAdbawdcXWTy5Um/JyMIqPhpdoNGTqqFTI+CYzvpKW7223lLJBwwNvGJdd6PNfm2Q4LUrrjfw7i0xL9loKMK45DiQSxGwnjko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWdg4JyX; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747185618; c=relaxed/simple;
+	bh=KdGOJpWhkG5aCZovyVjlPOMdNid9TydX7NrAFCJGDjA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=MsHY4h0b4ZklZvUO2Z4R5rptfNVHyKrZZQKopEndbaHf3Qxrn1us/ws1YEuZI8yRt0gSPUqW3zsV2VlSewMdOiwlAHwb/BHCz1lwMmr9l7EvgBq+V3AQ+SYIxxP0d+Zr1pSg1rdIXvCTdJMPb+7tiZg5FFak5FNhfYOFaV60ipI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVnbcZ6I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWdg4JyX"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f5373067b3so88991426d6.2;
-        Tue, 13 May 2025 18:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747185427; x=1747790227; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nEaVOh/9lfsZXQCmNPE6lSqX4P2H8nzTwz/gMp/qKyg=;
-        b=NWdg4JyX+k3PGBStFbWwTw1A7SF6FnE9w9WR1oBl0IbO9YbLgS2Ym+ChmRdGA4m/2v
-         n40tn5RWhUDlCWOgzfKW4zUHDJxN3ZsEvYhXwsTQyWwsEpa6rANqgJLMmWJwzKKhx+2H
-         hU5/XxuGbjtVtCrRVWLAT2mqMxxrvNNw5oQJP860lF1E2BRAyiUNFBQERLqHBwK7KOj9
-         KfHdOxxsSmAsrlxZLZ4guj11L/WDGN03utEM4U5LXkj5ykiyzy8aLxwsbVSgACr6Fzw6
-         G8HGT0hDFqp74ZbLsoDrf92l2HF4X7ZX7xj0wQpf8WeQByz/O32qkD6HsmbQ0EtJWuDz
-         OBOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747185427; x=1747790227;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nEaVOh/9lfsZXQCmNPE6lSqX4P2H8nzTwz/gMp/qKyg=;
-        b=E2e3kNPUAP/9tfAE7ICVzc2YXe76mmfk0H1AbOhmoU+miWI8fAbDajTdSMvHMCmHs3
-         e0A8iZ7U2vt6rfSX+uSwVjd2S+1osy4qOaYbMXX4OWyPeC8RPd6tPuYke0JRgaeARp9v
-         EDpGNHILYg95mta92hohu9MFiNyfPtg7xOa9LIFrN1g/PZfekMYDUKYgHXF3pBO928v/
-         HjjjmXsWFSrseB2snmRJtCNSisb5Ipe+d+04V8fPSskBvfGntIV8DvF56alb0AV5YY82
-         xF9ovAtxzmmVhxSJUPTepA19aDggQeMTepmgxypPtUv8ef7WrsxxvY8Ol88LzdoJDhyW
-         zT/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdzOOHr2ij+GdVONp47UVhytscV3icsMi1tdqCVQbVMQA7kt1gaZWQyTXqNlfBlOhnwLYVVaPU7IWY@vger.kernel.org, AJvYcCVjn13RECH4tglXPaDJDuMYX+qNMVmKEGiBz2+ZjunfYPZDeQYiLVkAYFjq+5XLWTtP/NRJP6lktEIKnQLn@vger.kernel.org, AJvYcCVpEiOlSllR1f6W4SpjBG7nkUT/4ihMthXxrPlNvv0kvilJXJJ1GyS9hDcG7FhG8iyAoirSM6OTHHM9@vger.kernel.org, AJvYcCVpigvjM6nC3jsaWFQ1fSvDWkM1BAaxbxP/0SVP/u0k2j9ztg6gavanyG8BTQmmU0WnDUCIHS03JVai@vger.kernel.org, AJvYcCXhminsnedlBW3vF7JvAO0IGqGISrcNIZrMBMMrPr3e1kDJl9YibzxgnluSDHfH23jBIci8Xzhj83EDlVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyry1cmqnmo1rSGHOU5znnjYgaD+CceGxCAJWWSQ+EY7U+B488J
-	eyJotgQ0msaqSeS8WVpodfZamOXj/Wi+Mh8MrOxzvtPpvtTF7RAF
-X-Gm-Gg: ASbGncs+XNjovWJGQyftVMo+1Ys6K6pFLMgfB2BXbRupm9x8IbgOCeyhkOKmheuKlpX
-	+gGuX43KEC82fG0VWmmT+aRlU2FrfZbRrxQYqfe5s82aQCTorhpHZvvFJoEBfzYMgT2Fy5GWjkt
-	/TzPgNlyabfWMa77M/mPaVndE61+z1d5Q9MzvRzcjdpB8nQo5GzAZXkNkNJ7bk4cYlVWkwoxbIM
-	5Bd/zdFhWBHC3wr0qfPIny/SxWfJXRpNn3Ha5gvqWQmJC4S0XEFMX1ZZpaJ0WAsQqdiC2LRcR0O
-	VYoo3bbPD/9DzG7IFSWpNEY6vkI=
-X-Google-Smtp-Source: AGHT+IFq80xt7wr+N4Is1nsHfkVqlHuQBXPmL2/8vRvaUgO/7OiqL00yD+wmu1pLVR3Zg8H9LoV5EQ==
-X-Received: by 2002:a05:6214:2468:b0:6d4:238e:35b0 with SMTP id 6a1803df08f44-6f896e4c936mr24184336d6.17.1747185427543;
-        Tue, 13 May 2025 18:17:07 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f6e39f588asm74175596d6.49.2025.05.13.18.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 18:17:07 -0700 (PDT)
-Date: Wed, 14 May 2025 09:16:35 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>, Jisheng Zhang <jszhang@kernel.org>, 
-	Chao Wei <chao.wei@sophgo.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v2 02/10] dt-bindings: timer: Add Sophgo SG2044 ACLINT
- timer
-Message-ID: <g45xqtuit7apkduwsfsmw7giqttrb7kjtobejs44rtslx37ynp@ugic2medlczo>
-References: <20250413223507.46480-1-inochiama@gmail.com>
- <20250413223507.46480-3-inochiama@gmail.com>
- <aCNYItP6SWImMvFv@mai.linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVnbcZ6I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5AAC4CEE4;
+	Wed, 14 May 2025 01:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747185616;
+	bh=KdGOJpWhkG5aCZovyVjlPOMdNid9TydX7NrAFCJGDjA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=LVnbcZ6IbRsHUSEP7DCi6RcHJn+aTvvSA/QNWMkyu/yQljQafO0gJg06ArLlE3uXf
+	 vr7pH3yiSTi+MBX4S6NhkmnwjjDGMAVMY0ik5RckJDjuhP6cw0BLhqXzjklQf54lZW
+	 ZU4b/3URTI4BLp9WNhqDJrUKWxg0Sz27IdmTCCBgvaO6pmvnynHHDbjZYoWfxgl5X8
+	 U9FYlt1eyFgZF/T0rwdffNVbrX4W06dYnVB4xpbRGv7SiAgU3s9ED/sVnPorqoOYTH
+	 zDPI2bsOFyqL0bs1MhDknacjGPQnq0315sQ1Lzt8nFd/Pc/bZX3/ykNAF9ZLyM6aEX
+	 oU91Dk1w4e7RA==
+Date: Tue, 13 May 2025 20:20:14 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCNYItP6SWImMvFv@mai.linaro.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linmin@eswincomputing.com, krzk+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ mturquette@baylibre.com, sboyd@kernel.org, ningyu@eswincomputing.com, 
+ conor+dt@kernel.org, devicetree@vger.kernel.org, 
+ huangyifeng@eswincomputing.com
+To: dongxuyang@eswincomputing.com
+In-Reply-To: <20250514002516.290-1-dongxuyang@eswincomputing.com>
+References: <20250514002233.187-1-dongxuyang@eswincomputing.com>
+ <20250514002516.290-1-dongxuyang@eswincomputing.com>
+Message-Id: <174718561404.161129.10398945158829194944.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: eswin: Documentation for
+ eic7700 SoC
 
-On Tue, May 13, 2025 at 04:33:06PM +0200, Daniel Lezcano wrote:
-> On Mon, Apr 14, 2025 at 06:34:56AM +0800, Inochi Amaoto wrote:
-> > Like SG2042, SG2044 implements an enhanced ACLINT, so add necessary
-> > compatible string for SG2044 SoC.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
+
+On Wed, 14 May 2025 08:25:16 +0800, dongxuyang@eswincomputing.com wrote:
+> From: Xuyang Dong <dongxuyang@eswincomputing.com>
 > 
-> Applied patch 2, thanks!
+> Add device tree binding documentation and header file for
+> the ESWIN EIC7700 clock controller module.
+> 
+> Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+> ---
+>  .../bindings/clock/eswin,eic7700-clock.yaml   |  43 ++
+>  .../dt-bindings/clock/eswin,eic7700-clock.h   | 588 ++++++++++++++++++
+>  2 files changed, 641 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/eswin,eic7700-clock.h
 > 
 
-Thanks, as you take this patch, I will drop this one in our repo
-to avoid duplicate.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Regards,
-Inochi
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/clock/eswin,eic7700-clock.example.dtb: sys-crg@51828000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
+	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/clock/eswin,eic7700-clock.example.dtb: sys-crg@51828000 (syscon): reg: [[0, 1367506944], [0, 524288]] is too long
+	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250514002516.290-1-dongxuyang@eswincomputing.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
