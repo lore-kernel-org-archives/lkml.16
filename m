@@ -1,107 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D69425D8FB;
-	Wed, 14 May 2025 09:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F14525D8FB
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216408; cv=none; b=E/AaLyJOAhzeRAuYCi1hAK4WE4aA+XTfDm0ngZgdnmK3w5wHuLeHYgKS2/abrv4BJTgui3P26pgMNX2XpFs3OqQBQE5I0C4XJDTIae9Bnn5tfIUtvLBdN0BlZORzs5DQXtKipfzZSfdZ4CgQi1cHP5J3hNolE8sgbIF6s4dAu1M=
+	t=1747216424; cv=none; b=Tc3BPEC4K4V73RIyH6lIWofvD/bwEzhd/LhwBgI5XDTLXDyrOLMbsEVrNc7PeUJXJMUdMbTvj4cP4BfCIXwdRi6cvtNUBK5zfYcYDxoFE9fMxvuk4v8OoUgyPkUTJ3YWtJsokA3Qgqb5fKfdALS+fnKSPonCwXR6naeyLZ1nvEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216408; c=relaxed/simple;
-	bh=nCJNvHeJ3lOaR92r/sGROXzErn/axn4KsepOyscEUuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mcloDefHfbeqGvmeWj2iRcjl+cLZLEvS7bXgBWpbJDq8jzkufIVp+Suka2BfhSU2LmXp9CbWmwFIJrCkkbvZZpjKHvdnU0T2xVMXzXpfbjYTAIPN8UzokCS1qGxvmT7k6P931HVVPZcot/VoUzr4B6sw4woF7ZHwPXmfMrFaL7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ih5t4l4o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747216424; c=relaxed/simple;
+	bh=qzfrVWIrtpfJTjmH7ep2gUq4Zq97d9cu9Umr2PFxAYU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=N3+BCLsKCy5b8gU/mJNqbc9FP4cqnYMLvS+UtnOFwU/KZ/stwM5qWU0/3uOwHCCHzh62XkQl+G/m2UzjlGnWoylf6om/vGxVgq8C7z6fl7toej4dqItHiCYCSQQ0w3+5pNefkkbBdp9EJ3xy/nwlMZjKIZX31oUvigZDY+oDc5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=N0Db7/Fo; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ih5t4l4o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8856FC4CEE9;
-	Wed, 14 May 2025 09:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747216407;
-	bh=nCJNvHeJ3lOaR92r/sGROXzErn/axn4KsepOyscEUuU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ih5t4l4ogT7ie2vaP9EelIWt2TPxtpHWOBMzwBo0PzauX2fWy2YtritrPr6ayDV5N
-	 rswM2JEGrf6+nlr3S9tYzd8EJ4QNoUsXyo+JZkvDdBmqta7OQAf+y5DBKojXRN3cgs
-	 4AFTn9POfHboA73GPVzvVxo22w5T7x/vtIY2Jux8qbiRotGhuWS2/9MCXKuj5usloh
-	 39Qo9ZWgkfXVl+onvcAVcO0vLtYVWvb525lpzOgYVT8MboYQ7g0vRlAh+YFCIIWSyK
-	 PUsXEY69LSjhrgDrR7UXb71pfgBLi85kparsi6RuZ69GWLU47RpyD6ZU9Pnyi5Cgqr
-	 OGrdCz8+FIBjw==
-Message-ID: <56e681d8-6e16-4ba0-b95a-4e9f646cf9fc@kernel.org>
-Date: Wed, 14 May 2025 11:53:24 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N0Db7/Fo"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250514095333epoutp028e62b3a52bc0364d676d5f88352f1bfc~-XBIsnvvE2571725717epoutp02n
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:53:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250514095333epoutp028e62b3a52bc0364d676d5f88352f1bfc~-XBIsnvvE2571725717epoutp02n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747216413;
+	bh=rzfjBDdCV1bMbhaN4veuqL28+nSEvMmCnFpMP9vcanM=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=N0Db7/Fo5XU7Fd0VgOAREVIIj/KC/Gz7Q60spdghuJ8DJ9HNc4VL1SKh73hkQjOBU
+	 2YPF5/ZO1zGVCmgkYYltO0wTWL2iv7C5x3Du5V/rtRUq+scYXGijMP7dspBv+hubZL
+	 MlHBnh/IIoS3DotgPKeLvl7Zk8kNjfUYoDscjpMI=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250514095333epcas2p2e4f261863a747b91ce04e7400387a839~-XBIczive2406324063epcas2p2g;
+	Wed, 14 May 2025 09:53:33 +0000 (GMT)
+Received: from epcas2p2.samsung.com (unknown [182.195.36.100]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4Zy7vc5CrJz2SSKm; Wed, 14 May
+	2025 09:53:32 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250514095332epcas2p4ab71a73ab68e55f0e5e34cd9c4c7b483~-XBHdTRKJ3207832078epcas2p4W;
+	Wed, 14 May 2025 09:53:32 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250514095332epsmtrp196f32a0b5e6edcf2b367aaf70c3297f4~-XBHcl-ma1996119961epsmtrp1K;
+	Wed, 14 May 2025 09:53:32 +0000 (GMT)
+X-AuditID: b6c32a28-46cef70000001e8a-04-6824681cc9d5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E6.C4.07818.C1864286; Wed, 14 May 2025 18:53:32 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.126]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250514095331epsmtip13fc246ce0f9b028881178be751c13600~-XBHO_1A23233232332epsmtip1S;
+	Wed, 14 May 2025 09:53:31 +0000 (GMT)
+From: Sangwook Shin <sw617.shin@samsung.com>
+To: krzk@kernel.org, alim.akhtar@samsung.com, wim@linux-watchdog.org,
+	linux@roeck-us.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Sangwook Shin
+	<sw617.shin@samsung.com>
+Subject: [PATCH v2 0/5] Increase max timeout value of s3c2410 watchdog
+Date: Wed, 14 May 2025 18:42:15 +0900
+Message-Id: <20250514094220.1561378-1-sw617.shin@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: serial: 8250_omap: fix TX with DMA for am33xx
-To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250514072035.2757435-1-jirislaby@kernel.org>
- <yw1xldqzlh3n.fsf@mansr.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <yw1xldqzlh3n.fsf@mansr.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSnK5MhkqGwZ2zHBYP5m1jszh/fgO7
+	xabH11gtLu+aw2Yx4/w+Josb6/axWzxZeIbJYsbik2wWj1/+Y3bg9Ni0qpPNY+WaNawem5fU
+	e+z83sDu0bdlFaPH501yAWxRXDYpqTmZZalF+nYJXBk9S04yFrzhrNj60LyBcRpHFyMnh4SA
+	icSdN1vYuxi5OIQEdjNKHLrzjbmLkQMoISXx7pklRI2wxP2WI6wQNR8YJWbs/8cGkmAT0JGY
+	/u82C4gtIhAncax9MzNIEbPATkaJlum/mUESwgJuEk83vmICsVkEVCWOnL8GZvMK2EosO9LH
+	BLFBXmLmpe/sEHFBiZMzn4ANZQaKN2+dzTyBkW8WktQsJKkFjEyrGCVTC4pz03OTDQsM81LL
+	9YoTc4tL89L1kvNzNzGCA1hLYwfju29N+ocYmTgYDzFKcDArifBez1LOEOJNSaysSi3Kjy8q
+	zUktPsQozcGiJM670jAiXUggPbEkNTs1tSC1CCbLxMEp1cCUI7CbM9rVMf3F00OB5xN47lz4
+	rWsYtNbmq+f3hEtP/+0PvJCy2L6KPXTZx6LeNp3T/47+vi3YEJ7y7hGfZ35J6vPG1JunTz+K
+	KD/gs1q/V1XnqIzFmuN6vJv2fRJZNVv0meX0ZakCbkdv9AtLPNhR4LLzcF+r5MLkjy/P73nH
+	zDbz+hHdCY+fTXa3jNx8Ud/3tL7th9LPXgcv1/wuk5nsrXTDucjwjPc+gSXbFhQVcQQukDwq
+	m7Vu7x1Lg98/db9we3zrv3e48v6hnFrhdytvpTrcrNztPc/+SFh3zM2ClP0N+1ovcBidObzn
+	h5P/juk7J7Wf66qtc5yxY/Yit/W676TSPkVIck+6lHw/7T77ZCWW4oxEQy3mouJEAP5kI7DP
+	AgAA
+X-CMS-MailID: 20250514095332epcas2p4ab71a73ab68e55f0e5e34cd9c4c7b483
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,N
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250514095332epcas2p4ab71a73ab68e55f0e5e34cd9c4c7b483
+References: <CGME20250514095332epcas2p4ab71a73ab68e55f0e5e34cd9c4c7b483@epcas2p4.samsung.com>
 
-On 14. 05. 25, 10:41, Måns Rullgård wrote:
->> A patch to optimize the driver to use 2 sgls is still welcome. I will
->> not add it without actually having the HW.
-> 
-> Are you seriously expecting me to waste even more time on this?
+The ExynosAutoV9 and ExynosAutoV920 SoCs have a 32-bit counter register,
+but due to code constraints, only 16-bit values could be used.
+This series enables these SoCs to use the 32-bit counter.
+Additionally, it addresses the issue where the ExynosAutoV9 SoC supports
+the DBGACK bit but it was not set.
 
-It needs not be namely you.
+V1->V2:
+  - Modify the max_timeout calculation considering overflow
+  - Separate tha max_timeout calculation into a separate patch
+  - Add max_cnt in struct s3c2410_wdt
+  - Set max_cnt once in probe function
+  - Add patch that uses S3C2410_WTCON_PRESCALE_MAX instead of hardcoded one
+  - Remove unnecessary inner parentheses
+  - Link to v1:
+    https://lore.kernel.org/linux-watchdog/20250513094711.2691059-1-sw617.shin@samsung.com/
 
-> Do your damn job like you should have to begin with.
+Sangwook Shin (5):
+  watchdog: s3c2410_wdt: Replace hardcoded values with macro definitions
+  watchdog: s3c2410_wdt: Fix max_timeout being calculated larger
+  watchdog: s3c2410_wdt: Increase max timeout value of watchdog
+  watchdog: s3c2410_wdt: exynosautov920: Enable QUIRK_HAS_32BIT_MAXCNT
+  watchdog: s3c2410_wdt: exynosautov9: Enable supported features
 
-Well, in the first place, I'm not your slave. It's definitely not my job 
-to optimize code for you esp. in case I don't have the HW.
+ drivers/watchdog/s3c2410_wdt.c | 37 +++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
 
 -- 
-js
-suse labs
+2.40.1
+
