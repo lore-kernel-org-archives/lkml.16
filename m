@@ -1,151 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282CB277038;
-	Wed, 14 May 2025 12:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40137270EAD
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747226318; cv=none; b=MxJeaaLrtoCoDkgDhH+HvaEMGCvDPhWg/IKGfEcmXMGN/qbpA04c0EgNoi8kUIMfKNY7m1Rau8K1HdyzvAV23d5j7kfPCJ/e1yqgo+dnRFX7zJWoOO6Fdu9iG/WSx3gfH3rX7PPMfwrdoW7uhQAu1BFGuSl09S1Xooi684M3ZPE=
+	t=1747226330; cv=none; b=WcpD6fSQJEYS5Bqt2z+o2jSudfFMwxiDqZfn+fLYR/I4aI67Pb65hH8q5IKTS1cEbB0EXJhk3zGLB3fi0+nki9gEUQFM9tIFE9pyHc14ZmSMBcfJicXQcNAzL1ZW/c65AnAGTGPfkesrzE2RORbzeBXqrdsttMTuGq2SHc2yTd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747226318; c=relaxed/simple;
-	bh=ZRAbtDLU7nP6o3LdOmMc3nAAyiNgbM8NKuOVKfOJ8W8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ji46UF2tUg3bgIm2v0d5PmIRnX8z15bP4VVBeJ7dvlH/UQSt/vx/2YhIm6FhPFPyDswO3P6CRU9NxWIWJTwKGO5E4xHQlNTL3R853A7k6MGQLvhqt1iQN8lEyDPcPAqknb9VuSUlrzIEGX0CLcE8NDON+LIO6nTJrYwFrgsMtVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1h+8wh4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747226330; c=relaxed/simple;
+	bh=CCfNfJ5bb7qCHfRJizyQOx3CnzJAaVM58ug6LQ5hZEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VTZIWocalCDwYD+rCwp3Llztq20wwbC7wi/q30unSfU0XiLxXURI5b3ql9FtS/IWd0jANVrT4F0V0hhgxY4dVPdMzrSK6u71VB2FU1YYMJUSA0yT8hPVRBAIl3TH74tlXBXns8YeHQbgyMReixOVD6jZOCu4zfWro+RWLNJjS/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pd+jKYcK; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1h+8wh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E945C4CEE9;
-	Wed, 14 May 2025 12:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747226317;
-	bh=ZRAbtDLU7nP6o3LdOmMc3nAAyiNgbM8NKuOVKfOJ8W8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b1h+8wh4M9WYHlvQBBJt8UhjWW7n06dcTRpU2HcbXxZEwu9RwNhTKVPC+yneJNMZB
-	 x3ZjUS+ohxAGqbDVY3NbF/kh9sr/2xDsubiKpuNayqz6l20/BnBiIxw+eyB7K0yohf
-	 BtMf3re71j5ozdb66cSmRypL8rn4FvcMbLJRv6vLZqO2BD4lIe3MAbvavBmqQ/5nyL
-	 VfiavAY79QjbnoEzqpIxCcJI1KS/54rXt3Ze7KeZcTSmC5emLahMzJp4C1Ok28JZHu
-	 wuWOAN2cqHoz1SYrTYFS5/BLqqhx+gHCZVuOA2DiOzEPNDaUbwwudf5onaHfoExTNe
-	 yTPDuje/sgJ8A==
-Date: Wed, 14 May 2025 07:38:35 -0500
-From: Rob Herring <robh@kernel.org>
-To: Markus Burri <markus.burri@mt.com>
-Cc: linux-kernel@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manuel Traut <manuel.traut@mt.com>, Marek Vasut <marex@denx.de>,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	Markus Burri <markus.burri@bbv.ch>
-Subject: Re: [PATCH v3 6/7] dt-bindings: rtc-rv8803: add tamper detection
- property node
-Message-ID: <20250514123835.GA1729201-robh@kernel.org>
-References: <20250513161922.4064-1-markus.burri@mt.com>
- <20250513161922.4064-7-markus.burri@mt.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pd+jKYcK"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E841If017405;
+	Wed, 14 May 2025 12:38:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=bxX0vL
+	xS6Jo7Bb6L7DQCh6f0IX5p4iN4W6BATOc3hjE=; b=pd+jKYcK6VVmTWK8fo1cml
+	AKgh6HSqX3qT4QlkMSjmMwo6LGWp+wAX1pBuSyZq4PLbDSV2T2XvMl/LmXZnrIYG
+	+qhklX58pj9kD+c0VI2OzbFf1/UEHcHXIx8G9/6RDcQ3DMzQFsYQ8AmSul6IAOAY
+	ZYUOd+1RUFJCeWcQssYILwWTqgUlJM533REUUKTwgp8i18xkSPRan9JaplOh3SV6
+	yuY1ulUnQ+oHPjPafkzqXSl5pMcq8HX6tW72GP1p8Vl0Yc52BEDe24IQxqXobvDq
+	rON/xWjyn3A2Qdki3qhmln5dE3r5q7FTC1RjaOqAQ+235JXlpOkKNEXM8D3mHC8A
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8m7k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 12:38:02 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EA64AA021574;
+	Wed, 14 May 2025 12:38:01 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrm593-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 12:38:01 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54ECc0CI32637636
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 12:38:00 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 71E2058057;
+	Wed, 14 May 2025 12:38:00 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B74C658058;
+	Wed, 14 May 2025 12:37:57 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 14 May 2025 12:37:57 +0000 (GMT)
+Message-ID: <d3bb8ecd-3ac2-4025-bd81-4d612bb26995@linux.ibm.com>
+Date: Wed, 14 May 2025 18:07:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513161922.4064-7-markus.burri@mt.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 4/6] Sched: Add scheduler stat for cpu time slice
+ extension
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        tglx@linutronix.de, bigeasy@linutronix.de, kprateek.nayak@amd.com,
+        linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250513214554.4160454-1-prakash.sangappa@oracle.com>
+ <20250513214554.4160454-5-prakash.sangappa@oracle.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20250513214554.4160454-5-prakash.sangappa@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -QDDZYzDNeHwMWmy81_oDstfQx7pGSOL
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=68248eaa cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=tvvlUZRM0BAFnUtkwMwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDExMSBTYWx0ZWRfXximS2Yh56Paf 9XOw6zqdDUn+b9Sb/Yn09/Bme3sNPMxZ7yUdjhbyQA6ebnQD4Eysmb2ZT48R5F8IJbRSg3V54FS 5/LF0O81hsNIX1OgZjUy7Bf69IG3G6HMQqbREtoz/3THr3ZRDNLxXOnqUIOSdaEk9q0SqD3PO7I
+ F3Llmtapki28E4hyiRdhqEFf7DCA1rQeRjdAt39HDbeoHlInFuE54xretI+LwGwqpqMbr+/UWEU 6zj5osP+KZC956lFBLVZ2oIn4CTPMJrqhtSN3w4YL9WiBuGDd2K5GYWXlmR0Rf2MUxCCx9Vglsv OaO5NiHcTVX0fZ+pw76g67/NrWBXvVkQTMm9kmTsfPnluEfC7rQG1hJ2/gspvKJo3fBq7bpJBgY
+ c1/ZSJyCjhtENbtabbKFUrJrdIx22EnbPHjWoT1Ifgq8+QEgKJqiRUT7tjhbup+xRi5RVIfz
+X-Proofpoint-GUID: -QDDZYzDNeHwMWmy81_oDstfQx7pGSOL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140111
 
-On Tue, May 13, 2025 at 06:19:21PM +0200, Markus Burri wrote:
-> Document tamper detection property for epson,rx8901 rtc chip.
-
-Looks like a lot more than 1 property. Explain the feature and why it is 
-needed. What the change is is obvious reading the diff.
-
+On 14/05/25 03:15, Prakash Sangappa wrote:
+> Add scheduler stat to record number of times the thread was granted
+> cpu time slice extension.
 > 
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
+> Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 > ---
->  .../devicetree/bindings/rtc/epson,rx8900.yaml | 40 +++++++++++++++++--
->  1 file changed, 37 insertions(+), 3 deletions(-)
+>  include/linux/sched.h | 2 ++
+>  kernel/rseq.c         | 1 +
+>  kernel/sched/core.c   | 5 +++++
+>  kernel/sched/debug.c  | 1 +
+>  4 files changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml b/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
-> index 03af81754482..c2e542c9bdc6 100644
-> --- a/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.yaml
-> @@ -9,9 +9,6 @@ title: EPSON RX8900 / Microcrystal RV8803 Real-Time Clock
->  maintainers:
->    - Marek Vasut <marex@denx.de>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index c279232ca6a2..8cf756e80ae9 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -340,6 +340,7 @@ extern void io_schedule_finish(int token);
+>  extern long io_schedule_timeout(long timeout);
+>  extern void io_schedule(void);
+>  extern void hrtick_local_start(u64 delay);
+> +extern void update_stat_preempt_delayed(struct task_struct *t);
 >  
-> -allOf:
-> -  - $ref: rtc.yaml#
-> -
->  properties:
->    compatible:
->      enum:
-> @@ -33,6 +30,43 @@ properties:
+>  /* wrapper function to trace from this header file */
+>  DECLARE_TRACEPOINT(sched_set_state_tp);
+> @@ -563,6 +564,7 @@ struct sched_statistics {
+>  	u64				nr_wakeups_affine_attempts;
+>  	u64				nr_wakeups_passive;
+>  	u64				nr_wakeups_idle;
+> +	u64				nr_preempt_delay_granted;
 >  
->    wakeup-source: true
+>  #ifdef CONFIG_SCHED_CORE
+>  	u64				core_forceidle_sum;
+> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> index 44d0f3ae0cd3..c4bc52f8ba9c 100644
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -475,6 +475,7 @@ bool rseq_delay_resched(void)
+>  		return false;
 >  
-> +  tamper:
-> +    description: Subnode for tamper configuration. This
-> +      subnode is only available for epson,rx8901.
+>  	t->sched_time_delay = 1;
+> +	update_stat_preempt_delayed(t);
+>  
+>  	return true;
+>  }
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 31928cbcd907..880368756b48 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -938,6 +938,11 @@ void hrtick_local_start(u64 delay)
+>  	rq_unlock(rq, &rf);
+>  }
+>  
+> +void update_stat_preempt_delayed(struct task_struct *t)
+> +{
+> +	schedstat_inc(t->stats.nr_preempt_delay_granted);
 
-Wrap at 80 char.
+I think schedstat documentation also needs to be updated
+and may be bump the version number.
 
-> +    type: object
-> +    additionalProperties: false
+Thanks,
+Madadi Vineeth Reddy
 
-blank line
-
-> +    properties:
-> +      buffer-mode:
-> +        description: Set the buffer mode to inhibit (0) or overwrite (1).
-> +        minimum: 0
-> +        maximum: 1
-
-Could be boolean?
-
-blank line
-
-> +    patternProperties:
-> +      "^evin-[0-3]$":
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 3
-> +        maxItems: 3
-> +        description: |
-> +          Event input pin configuration.
-> +          The configuration is an array of tree values and contains
-> +          "pull-resistore", "trigger" and "filter".
-
-pull-resistor
-
-> +          For a detaild description, see epson-rx8901 datasheet.
-
-detailed
-
-blank line between paragraphs.
-
+> +}
 > +
-> +allOf:
-> +  - $ref: rtc.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - epson,rx8901
-> +    then:
-> +      properties:
-> +        tamper: true
+>  static void hrtick_rq_init(struct rq *rq)
+>  {
+>  #ifdef CONFIG_SMP
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 4cba21f5d24d..6b753f56c312 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -1216,6 +1216,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+>  		P_SCHEDSTAT(nr_wakeups_affine_attempts);
+>  		P_SCHEDSTAT(nr_wakeups_passive);
+>  		P_SCHEDSTAT(nr_wakeups_idle);
+> +		P_SCHEDSTAT(nr_preempt_delay_granted);
+>  
+>  		avg_atom = p->se.sum_exec_runtime;
+>  		if (nr_switches)
 
-Don't need this. It is allowed by default. Invert the if.
-
-> +    else:
-> +      # property is not allowed:
-
-Drop comment
-
-> +      properties:
-> +        tamper: false
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.39.5
-> 
