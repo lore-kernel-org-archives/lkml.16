@@ -1,185 +1,189 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4FE28151A;
-	Wed, 14 May 2025 17:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370DA2820B7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747244375; cv=none; b=fjQOSag6l1GKXsJdM2GfHQ3++soUCY2XnyKq4ldVBrcyhX4M0wrBxkywBxFDgO9o5ZYYbijEGsk3MVvLN1ung8cben/S/8VkW0dkDBX53a9e52T/qx5zPoYYc9aSPB5+VZfuVZW5/cfO16GhfVfhtv4p6lzKcqc//CKO2SE9NR0=
+	t=1747244377; cv=none; b=SamI/U9nJar1KGUDu/zlH4Q506Fd0LKhB5CGkxck39QF40KnMCKegDRlmzAbmatPy3BGho+S1Lec7JsWPXu9rcAc8Fa60Y7AGwZVp+k+0iVaxzyq8JC/EXshjr+gVw1+QTiA93+w9zwKoCMG9zoBOGcN7MocqwVKRwS63bHhjv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747244375; c=relaxed/simple;
-	bh=cSLxshIeNr+V/+u5rK75CUAgh5kaX3jKR2fw3mz1P70=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cE+ypBouNpEhThlsb/SrVCASfAxbLcZXDDDaNO95a1iXFSHmYfQqyQU1dkvayBZoKqISAPNcDoqgRnh8Hcdh0M6xIXDGBkPHtdf+xp6a1928ZiFWe9WAeqkmdUAE82xgxIIcQj6CdiT14LcWEwMglxQ1Gaa+t4cmqH35NcCS8jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a3sLf5q9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a3sLf5q9"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EGNoGp017016;
-	Wed, 14 May 2025 17:37:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OhYFTK
-	3Y8z/4xazu3XKdTqh8g1BwjMNXvG+8F5JF5lY=; b=a3sLf5q95rLq+ogvCQJGZX
-	V2yY+OSkcxJPwWlGLm5m+YbRqDyBCHDuKaJVszSbyc6wBgriio9qhcS8jZL2kmpm
-	Wt4GZx+6jyOB5ckxK023vjDNAOCrH9Qi1jhunvuv1GZoIrmF8NkPqaIvsKPNtKt6
-	4hgT1Iv7BiUX4NQbm2Gd9ZUtJ6/alASi/l3hSrJm8hGMWRzCT58Ss5nfVjHM8Kb8
-	Aq+p5zH55xzrkCg7OLiv6NLv6BxdnZLp6mjSsBqNtkqxVdTmfyAGiN3UmAdMbp6K
-	DM/3Caw67cLgGwwlDPxkdaL+pvtp/ntrzw506jlQg3dF0R5Xe+sq5+5xXnYcX5Lg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8nxys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 17:37:55 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54EHbtLg031046;
-	Wed, 14 May 2025 17:37:55 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8nxyp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 17:37:55 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EGaGqc019883;
-	Wed, 14 May 2025 17:37:53 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfrnhv8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 17:37:53 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EHbrIw26608194
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 17:37:53 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 716EB58055;
-	Wed, 14 May 2025 17:37:53 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C906C58043;
-	Wed, 14 May 2025 17:37:51 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 14 May 2025 17:37:51 +0000 (GMT)
-Message-ID: <edeb23e7884e94006d560898b7f9d2dd257a275e.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 2/9] ima: efi: Drop unnecessary check for
- CONFIG_MODULE_SIG/CONFIG_KEXEC_SIG
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        Masahiro
- Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Petr Pavlu
- <petr.pavlu@suse.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Daniel
- Gomez <da.gomez@samsung.com>, Paul Moore <paul@paul-moore.com>,
-        James
- Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael
- Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao
- <naveen@kernel.org>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Dmitry
- Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg
- <eric.snowberg@oracle.com>,
-        Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Fabian =?ISO-8859-1?Q?Gr=FCnbichler?= <f.gruenbichler@proxmox.com>,
-        Arnout Engelen <arnout@bzzt.net>, Mattia Rizzolo <mattia@mapreri.org>,
-        kpcyrd <kpcyrd@archlinux.org>, Christian Heusel <christian@heusel.eu>,
-        =?ISO-8859-1?Q?C=E2ju?= Mihai-Drosi <mcaju95@gmail.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-integrity@vger.kernel.org
-Date: Wed, 14 May 2025 13:37:51 -0400
-In-Reply-To: <10ca077d6d51fac10e56c94db4205a482946d15f.camel@linux.ibm.com>
-References: <20250429-module-hashes-v3-0-00e9258def9e@weissschuh.net>
-	 <20250429-module-hashes-v3-2-00e9258def9e@weissschuh.net>
-	 <10ca077d6d51fac10e56c94db4205a482946d15f.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1747244377; c=relaxed/simple;
+	bh=P60oCLcDrdUwtGdNHayln3q6TmR6kM8Yph3/LG9T5W4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uFUuM+ALLgXJyEvRQyDJTOnuBqFBhHJ1t6muYOJ5PMhf0RTpW3GikSriSK3z1nLTmL33LOmQBNZR+hCh8vjuS2VpN5OdZMl+TijVXPjFP9ihHfdI6/ATQXFNMElUobFOLubzkdOPKdYUXZwvJYddjGAnKH6SSFeG5e0pIbiMf1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3da707dea42so512465ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:39:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747244374; x=1747849174;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4td5ZvB12f4GIO9XjioyIOmoiX2OFM6YxSWuLsZQPe0=;
+        b=ZeyK3ysDsIfTH3NWdhauHxiVV5Xe6FDeTbXFCc+17ooRlTEJAKvCChscA7oWAQJUPe
+         vG7pXTgXljh/pH1v6PLkjNYU1EXbOP8oe9/SKQguOJbAlUqN9WY2vJNf8VljCtKMj2B9
+         1+PfGTQdneVG0JoDCUpBsqc7qX4jtXVhF5tBy+IRIhOcAUne5uigyz+UaorZ7HKm7zmv
+         bfYlqhpBDgplUjiHl455FnqjhAZIMDFIfD6SsosEC3Gk7MCCvJm7LBUP85KaLd+3UALS
+         tm4im/S3ZiHYh87zcYiNikanKgz/bO/ETtn2HMMSrc/sIN5FCxblp7EdhXv02IpwO28J
+         O2NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV52FgNpz6AN2jja6euGy4Zv1SIQUMcw5fiG4EWQRryz4OZInTh7OjpjGfQolTY3aUIXvaHkJ+QLjIu1eE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9j9SApaJm4Ria+xMzxVApacVg5M0p+R7diyxpyZ7rI/OTHmUB
+	28p0obiUUxZVtQJGrTtUq+Jf35zzKxa+JfS6sQewbkoYqyW1TUCMxxruLvvDo8AZsSPvD/qAwx4
+	CrcSgJOIRHw7rL0mtBAH9vARSj/SqohZco/6KmBNTHt5ndIyjFPbnu+k=
+X-Google-Smtp-Source: AGHT+IHZm4fZcliofXwf/INTb7fvK7RjZwaMLifmbJTjLC4LeFAtW/nzNy/5AKHw2k5CvzKYCobhF4GhtXBqmvoFeeWTz7v0tuBq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RPOjhr87gRyfajPTapmF9ThaYjREaKWR
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6824d4f4 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VTue-mJiAAAA:8 a=VnNF1IyMAAAA:8 a=cvE8ob5KMqMXAi4NVQcA:9 a=QEXdDO2ut3YA:10
- a=S9YjYK_EKPFYWS37g-LV:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE1OSBTYWx0ZWRfXw38stgEBAl0t 92v/U+3cUWiDo2+zByc4gM0wk3jePfyswMAaKF8sD4OxddTZs4UE+NB2VcDeYErV+mi7iXDLJvh jytWmpJowyB3HAFvoC/P87zqtuhU4ohvwApvR4JcscvN5E9rFDkFyfB3MP21mi3Zb3l+g+pWZQ5
- /zisZSh5IrT0P2FTctMhkdbGJ+vk/ngQWR21ZkgpICCF4flVjz33Zf7h1seH2KutvMUEHN3jFoN qHhzfy21Le9jr+tImfrJxzgiHGbORUqwHkT3WM+yq8fA3vvdM8IpHWRhsKpfgfdpjELXgFLQIs6 IT8J9qyUx1t9E14ZCdCK7Cxb9XNiDRPETyybcLAf7J3irr/+jfvhA770zoy0OcXw3arFlBdT6iP
- uQgkQZKJLprO24T3AJbCT8A8FRFqOLmv6LIX4yNw5rmj3w8Rk4AvjRlvWa145C4lQPlIu3+5
-X-Proofpoint-GUID: DzVVxD_mhRAfjC9jgp_93CXh0t-Hz9hv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140159
+X-Received: by 2002:a05:6e02:4414:10b0:3db:72f7:d7be with SMTP id
+ e9e14a558f8ab-3db72f7dbdcmr19492295ab.3.1747244374281; Wed, 14 May 2025
+ 10:39:34 -0700 (PDT)
+Date: Wed, 14 May 2025 10:39:34 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6824d556.a00a0220.104b28.0012.GAE@google.com>
+Subject: [syzbot] [xfs?] general protection fault in do_move_mount (3)
+From: syzbot <syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com>
+To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-05-14 at 11:09 -0400, Mimi Zohar wrote:
-> On Tue, 2025-04-29 at 15:04 +0200, Thomas Wei=C3=9Fschuh wrote:
-> > When configuration settings are disabled the guarded functions are
-> > defined as empty stubs, so the check is unnecessary.
-> > The specific configuration option for set_module_sig_enforced() is
-> > about to change and removing the checks avoids some later churn.
-> >=20
-> > Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> >=20
-> > ---
-> > This patch is not strictly necessary right now, but makes looking for
-> > usages of CONFIG_MODULE_SIG easier.
-> > ---
-> > =C2=A0security/integrity/ima/ima_efi.c | 6 ++----
-> > =C2=A01 file changed, 2 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/security/integrity/ima/ima_efi.c b/security/integrity/ima/=
-ima_efi.c
-> > index
-> > 138029bfcce1e40ef37700c15e30909f6e9b4f2d..a35dd166ad47beb4a7d46cc3e8fc6=
-04f57e03ecb
-> > 100644
-> > --- a/security/integrity/ima/ima_efi.c
-> > +++ b/security/integrity/ima/ima_efi.c
-> > @@ -68,10 +68,8 @@ static const char * const sb_arch_rules[] =3D {
-> > =C2=A0const char * const *arch_get_ima_policy(void)
-> > =C2=A0{
-> > =C2=A0	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboo=
-t()) {
-> > -		if (IS_ENABLED(CONFIG_MODULE_SIG))
-> > -			set_module_sig_enforced();
-> > -		if (IS_ENABLED(CONFIG_KEXEC_SIG))
-> > -			set_kexec_sig_enforced();
-> > +		set_module_sig_enforced();
-> > +		set_kexec_sig_enforced();
-> > =C2=A0		return sb_arch_rules;
->=20
-> Hi Thomas,
->=20
-> I'm just getting to looking at this patch set.=C2=A0 Sorry for the delay.
->=20
-> Testing whether CONFIG_MODULE_SIG and CONFIG_KEXEC_SIG are configured giv=
-es priority
-> to them, rather than to the IMA support.=C2=A0 Without any other changes,=
- both signature
-> verifications would be enforced.=C2=A0 Is that the intention?
+Hello,
 
-Never mind, got it.
+syzbot found the following issue on:
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+HEAD commit:    bec6f00f120e Merge tag 'usb-6.15-rc6' of git://git.kernel...
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1030b4d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
+dashboard link: https://syzkaller.appspot.com/bug?extid=799d4cf78a7476483ba2
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eb1670580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17794cf4580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f0524618260b/disk-bec6f00f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/130c881068f0/vmlinux-bec6f00f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/cb7c13b37bb0/bzImage-bec6f00f.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/291441c6276e/mount_0.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=13eb1670580000)
+
+The issue was bisected to:
+
+commit 267fc3a06a37bec30cc5b4d97fb8409102bc7a9d
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Tue Apr 29 01:43:23 2025 +0000
+
+    do_move_mount(): don't leak MNTNS_PROPAGATING on failures
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16979670580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=15979670580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11979670580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com
+Fixes: 267fc3a06a37 ("do_move_mount(): don't leak MNTNS_PROPAGATING on failures")
+
+XFS (loop0): Ending clean mount
+XFS (loop0): Quotacheck needed: Please wait.
+XFS (loop0): Quotacheck: Done.
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+CPU: 1 UID: 0 PID: 5821 Comm: syz-executor358 Not tainted 6.15.0-rc5-syzkaller-00275-gbec6f00f120e #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:is_anon_ns fs/mount.h:165 [inline]
+RIP: 0010:do_move_mount+0x27d/0xb10 fs/namespace.c:3725
+Code: e8 98 53 85 ff 41 be ea ff ff ff 49 bd 00 00 00 00 00 fc ff df 48 8b 6c 24 18 4c 8b 7c 24 08 48 8d 5d 48 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 74 08 48 89 df e8 54 22 e5 ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90004197d50 EFLAGS: 00010206
+RAX: 0000000000000006 RBX: 0000000000000032 RCX: ffff888034268000
+RDX: 0000000000000000 RSI: ffffffff8d9214e1 RDI: ffff88801b2d77b8
+RBP: ffffffffffffffea R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff8238eb99 R12: ffffffff8dde9718
+R13: dffffc0000000000 R14: 00000000ffffffea R15: ffff88803401e480
+FS:  0000555582a39380(0000) GS:ffff888126200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 000000003414c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __do_sys_move_mount fs/namespace.c:4678 [inline]
+ __se_sys_move_mount+0x41e/0x580 fs/namespace.c:4616
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7effb3efc739
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcb2b585e8 EFLAGS: 00000246 ORIG_RAX: 00000000000001ad
+RAX: ffffffffffffffda RBX: 00007ffcb2b587b8 RCX: 00007effb3efc739
+RDX: 00000000ffffff9c RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00007effb3f78610 R08: 0000000000000224 R09: 00007ffcb2b587b8
+R10: 0000200000000040 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffcb2b587a8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:is_anon_ns fs/mount.h:165 [inline]
+RIP: 0010:do_move_mount+0x27d/0xb10 fs/namespace.c:3725
+Code: e8 98 53 85 ff 41 be ea ff ff ff 49 bd 00 00 00 00 00 fc ff df 48 8b 6c 24 18 4c 8b 7c 24 08 48 8d 5d 48 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 74 08 48 89 df e8 54 22 e5 ff 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90004197d50 EFLAGS: 00010206
+RAX: 0000000000000006 RBX: 0000000000000032 RCX: ffff888034268000
+RDX: 0000000000000000 RSI: ffffffff8d9214e1 RDI: ffff88801b2d77b8
+RBP: ffffffffffffffea R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff8238eb99 R12: ffffffff8dde9718
+R13: dffffc0000000000 R14: 00000000ffffffea R15: ffff88803401e480
+FS:  0000555582a39380(0000) GS:ffff888126200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 000000003414c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	e8 98 53 85 ff       	call   0xff85539d
+   5:	41 be ea ff ff ff    	mov    $0xffffffea,%r14d
+   b:	49 bd 00 00 00 00 00 	movabs $0xdffffc0000000000,%r13
+  12:	fc ff df
+  15:	48 8b 6c 24 18       	mov    0x18(%rsp),%rbp
+  1a:	4c 8b 7c 24 08       	mov    0x8(%rsp),%r15
+  1f:	48 8d 5d 48          	lea    0x48(%rbp),%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 54 22 e5 ff       	call   0xffe5228d
+  39:	48 8b 1b             	mov    (%rbx),%rbx
+  3c:	31 ff                	xor    %edi,%edi
+  3e:	48                   	rex.W
+  3f:	89                   	.byte 0x89
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
