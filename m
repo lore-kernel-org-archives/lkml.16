@@ -1,36 +1,60 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC8DE17736;
-	Wed, 14 May 2025 00:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F331CD0C;
+	Wed, 14 May 2025 00:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747182207; cv=none; b=Rwu3enZxBh6KQbGU2RS+D9g2aQMOmTGX3J3Y0CEmuc5Gotf4XrZvLDGbKLsfNma8sG7Q+KxApKiK6bISaFwLfEclZ0tJvQAO4PdZstCLNLbdygWrdZptkBEtsN1LKXGCR9iaPOZm1xqvMmypDfuHCaj68WJ0/R0VtSokLeMDYgM=
+	t=1747182328; cv=none; b=NWwuxUYyD19rDX4tR9p/oL1tZlP2ilcYDuoLPSW7lmS2uaZnu6eIgXpVgp08Q7nViN3LXx2+JuhFzVY3KonkMqv8rc+9kh9VAixmfewMNTzfyJ8soNfI+IKXZzf+O7aF95O+NI5jxSQSLXf62s5mQGUm5vsYfg9IkQWaqSdqU7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747182207; c=relaxed/simple;
-	bh=cFC1F7++j3WMyMwjFA/nCZ2NwSzv1c9tSpdx48jRjmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sMnIQgOOCyib3Kl11T8EOQiWGHSbgDZ7efYNZerHfP5HQoiStqE2bqR/Ol9Ugutk2QRnogVZ7YZy9BJ67spaWJ9yBQguVePfyKhhmiblhUPuWCEYGojoBOxFIteWkLsi2k29x1jSM8AxYv6YEfXXmTIYSgmBfk/V4Eg2HI0hEFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgDHWZNp4iNonLF4AA--.2974S2;
-	Wed, 14 May 2025 08:23:07 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH 0/2] Add driver support for ESWIN eic700 SoC clock controller
-Date: Wed, 14 May 2025 08:22:33 +0800
-Message-Id: <20250514002233.187-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+	s=arc-20240116; t=1747182328; c=relaxed/simple;
+	bh=dgjJ844r8BgnZ2mWaTMe1zHaDX+mRVRhsLIQvxqYhzc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vBBs4TbgdDtVmhNfu4vilb92d4gmUCNIuxE+/WKe0uI1WqNiw26mH4i34CpcpgMPyIe4zFCUWE20PrgoBIgKh25Bvw+QpAutRFyvMoS6CszAHTECTzouObNmT0PWraCnbS6otec+GCZUKE+Zli5GtDhd5Z93vZIKGVFEf8QKCcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tIZ+4Gt2; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tIZ+4Gt2"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54E0PEES2457992
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 May 2025 19:25:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747182314;
+	bh=XXR+h3GqlCTeX8EJC/ptbJ1T3qhG9N1tHc2h+giQv+k=;
+	h=From:To:CC:Subject:Date;
+	b=tIZ+4Gt23xS2gjY7gfDula52QWbp2gP7P+GvPKivsqTqpAVZPV2wAsJN/41infqR+
+	 0qrU0UMJZUpykKyl1Cb4HsmWbR3SjvUBRYvjI+8gmd779CdfMpvALqMgyv0Cj/wDdc
+	 VZu+i8BF8fh8cZPJOzs8wDeNc+pzhtEBEffh2WkA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54E0PEZ9115900
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 13 May 2025 19:25:14 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
+ May 2025 19:25:13 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 13 May 2025 19:25:13 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54E0PDeM015693;
+	Tue, 13 May 2025 19:25:13 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf
+ Hansson <ulf.hansson@linaro.org>
+CC: Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Francesco Dolcini
+	<francesco@dolcini.it>,
+        Hiago De Franco <hiagofranco@gmail.com>, Moteen Shah
+	<m-shah@ti.com>
+Subject: [PATCH v5] mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62 compatible
+Date: Tue, 13 May 2025 19:25:13 -0500
+Message-ID: <20250514002513.1179186-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,75 +62,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgDHWZNp4iNonLF4AA--.2974S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4DJryxKw15Aw45GF15Jwb_yoW8Zw45pF
-	4UCF95Ar1UXFW7Xa1xtayF9ryfAan7JFyYkFZ7Xa4UZas0yFy8JF4ftas8JF97Zw1xAw1S
-	qFn0ga1rCF4UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
+Add a new struct for platform data for the ti,am62-sdhci compatible to
+apply additional quirks, namely "SDHCI_QUIRK2_SUPPRESS_V1P8_ENA", to
+host controllers with am62 compatible.
 
-	Add support for the clock functionality in the Linux kernel.
-	The driver provides basic functionality to manage and control
-	the clock signals for the eic7700 series chips, which are part of
-	the ESWIN SoC family.
+This fixes MMC init failures seen across am62x boards.
 
-	The driver is integrated with the Linux clock subsystem, allowing
-	kernel code to use clock signals on hardware and ensuring proper
-	handling of clock events.
+Fixes: ac5a41b472b4 ("Revert "mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch"")
+Fixes: 941a7abd4666 ("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch")
+Cc: stable@vger.kernel.org
+Suggested-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changes since v4:
+- Drop support for quirk in sdhci.c
+- Add quirk member to driver data struct that shall be per compatible quirks
 
-	Features:
-	 Implement support for the ESWIN eic7700 SoC clock controller.
-	 Provide API to manage clock signals for the eic7700 series SoC.
-	 Integrate with the Linux clock subsystem for consistency and
-	 scalability.
+Tested on am62x SK, am64x EVM and am64x SK. Tested-bys are welcome
 
-	Supported chips:
-	 ESWIN eic7700 series SoC.
+Link to v4:
+https://lore.kernel.org/linux-mmc/20250424180036.1541568-1-jm@ti.com/
+Link to v3 RESEND:
+https://lore.kernel.org/linux-mmc/8678d284-db12-451a-b789-2b75f9932f9f@ti.com
+Link to v2:
+https://lore.kernel.org/linux-mmc/20250417182652.3521104-1-jm@ti.com/
+Link to v1:
+https://lore.kernel.org/linux-mmc/20250407222702.2199047-1-jm@ti.com/
+---
+ drivers/mmc/host/sdhci_am654.c | 41 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-	Test:
-	 The tests tested on the Sifive HiFive Premier P550 (which uses the EIC7700 SoC),
-	 including system boot, networking, EMMC, display, and other peripherals.
-	 The drivers for these modules all use the clock module,
-	 so the verifies that this clock driver patch is working properly.
+diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+index f75c31815ab0..c2bea228a67a 100644
+--- a/drivers/mmc/host/sdhci_am654.c
++++ b/drivers/mmc/host/sdhci_am654.c
+@@ -155,6 +155,7 @@ struct sdhci_am654_data {
+ 	u32 tuning_loop;
+ 
+ #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
++#define SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA BIT(1)
+ };
+ 
+ struct window {
+@@ -166,6 +167,7 @@ struct window {
+ struct sdhci_am654_driver_data {
+ 	const struct sdhci_pltfm_data *pdata;
+ 	u32 flags;
++	u32 quirks;
+ #define IOMUX_PRESENT	(1 << 0)
+ #define FREQSEL_2_BIT	(1 << 1)
+ #define STRBSEL_4_BIT	(1 << 2)
+@@ -356,6 +358,29 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+ 	sdhci_set_clock(host, clock);
+ }
+ 
++static int sdhci_am654_start_signal_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
++	int ret;
++
++	if ((sdhci_am654->quirks & SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA) &&
++	    ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
++		if (!IS_ERR(mmc->supply.vqmmc)) {
++			ret = mmc_regulator_set_vqmmc(mmc, ios);
++			if (ret < 0) {
++				pr_err("%s: Switching to 1.8V signalling voltage failed,\n",
++				       mmc_hostname(mmc));
++				return -EIO;
++			}
++		}
++		return 0;
++	}
++
++	return sdhci_start_signal_voltage_switch(mmc, ios);
++}
++
+ static u8 sdhci_am654_write_power_on(struct sdhci_host *host, u8 val, int reg)
+ {
+ 	writeb(val, host->ioaddr + reg);
+@@ -650,6 +675,18 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
+ 	.flags = IOMUX_PRESENT,
+ };
+ 
++static const struct sdhci_pltfm_data sdhci_am62_4bit_pdata = {
++	.ops = &sdhci_j721e_4bit_ops,
++	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
++static const struct sdhci_am654_driver_data sdhci_am62_4bit_drvdata = {
++	.pdata = &sdhci_am62_4bit_pdata,
++	.flags = IOMUX_PRESENT,
++	.quirks = SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA,
++};
++
+ static const struct soc_device_attribute sdhci_am654_devices[] = {
+ 	{ .family = "AM65X",
+ 	  .revision = "SR1.0",
+@@ -872,7 +909,7 @@ static const struct of_device_id sdhci_am654_of_match[] = {
+ 	},
+ 	{
+ 		.compatible = "ti,am62-sdhci",
+-		.data = &sdhci_j721e_4bit_drvdata,
++		.data = &sdhci_am62_4bit_drvdata,
+ 	},
+ 	{ /* sentinel */ }
+ };
+@@ -906,6 +943,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
+ 	pltfm_host = sdhci_priv(host);
+ 	sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
+ 	sdhci_am654->flags = drvdata->flags;
++	sdhci_am654->quirks = drvdata->quirks;
+ 
+ 	clk_xin = devm_clk_get(dev, "clk_xin");
+ 	if (IS_ERR(clk_xin)) {
+@@ -940,6 +978,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
+ 
++	host->mmc_host_ops.start_signal_voltage_switch = sdhci_am654_start_signal_voltage_switch;
+ 	host->mmc_host_ops.execute_tuning = sdhci_am654_execute_tuning;
+ 
+ 	pm_runtime_get_noresume(dev);
 
-Xuyang Dong (2):
-  dt-bindings: clock: eswin: Documentation for eic7700 SoC
-  clock: eswin: Add eic7700 clock driver
-
- .../bindings/clock/eswin,eic7700-clock.yaml   |   53 +
- drivers/clk/Kconfig                           |    1 +
- drivers/clk/Makefile                          |    1 +
- drivers/clk/eswin/Kconfig                     |   10 +
- drivers/clk/eswin/Makefile                    |    8 +
- drivers/clk/eswin/clk-eic7700.c               | 3811 +++++++++++++++++
- drivers/clk/eswin/clk-eic7700.h               |  194 +
- drivers/clk/eswin/clk.c                       | 1069 +++++
- drivers/clk/eswin/clk.h                       |  209 +
- .../dt-bindings/clock/eswin,eic7700-clock.h   |  588 +++
- 10 files changed, 5944 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
- create mode 100644 drivers/clk/eswin/Kconfig
- create mode 100644 drivers/clk/eswin/Makefile
- create mode 100644 drivers/clk/eswin/clk-eic7700.c
- create mode 100644 drivers/clk/eswin/clk-eic7700.h
- create mode 100644 drivers/clk/eswin/clk.c
- create mode 100644 drivers/clk/eswin/clk.h
- create mode 100644 include/dt-bindings/clock/eswin,eic7700-clock.h
-
---
-2.17.1
+base-commit: aa94665adc28f3fdc3de2979ac1e98bae961d6ca
+-- 
+2.49.0
 
