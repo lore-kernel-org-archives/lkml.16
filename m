@@ -1,83 +1,244 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1973E25DAF7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72587253359
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216889; cv=none; b=P3sz/2Q+h1ahdSWm4BKEsufKyF+Ps+yKK0mYp3Jk8XGSJjldWTkT0UijuKMXgXmRyO0svUBub3+EHG18wUQQYOTkvMRMbdi08QUv9Lw+4nGTeXLsPwR12dkTGFYLqbtXg8X93AyJDslxihffvtONl2HpCnc7FZuZGe6imbPUjqY=
+	t=1747216916; cv=none; b=SCixTwFz4KPwSKeW9lsjIT2JWTF6yPrKXQvgD2kj0df5YnOzbnSa5emUfES6OAABxdCPBX+Sbkk+9ljJZIkIfwjF7otC0UJ66H+GVZMVwe4yS+TvD7XQAUYLJDap7KV4oFbey1SN8fMIYi84FE8KzNaPgmEzw/8jjHBO9WcIeBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216889; c=relaxed/simple;
-	bh=pobJ400CLepzNXb/cYSUGRmG1PO7LIUNV7zydd02BtY=;
+	s=arc-20240116; t=1747216916; c=relaxed/simple;
+	bh=VVS2WTybSPbS/SG0YWlD7O5FkHMWLh8k8y1Nr+psFC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=leZLj4T8m+JuxdSv+sjLuirvll3hHqsh/K9gpsMnnDcO2m56F4M7/+y6BqspVbDq7yG7VgvpAn7xcyIklQ6iQyr0HA893wcDFfwQhRMm/aPRbbUMcNXPA6sye5WyB372tw+omDlUPi4u0VSwHT88TtCUcgqL18p8nXGk/XhRdz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JJyTD8Ao; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Yw/VqjqA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESsJVnIhWK1gZb1trJMUMBE/q4q6/gjB8dke+YL+wAJ71W/5sPe17X64Csg0XAKM+ra7SCr6JFf1kOoMQKRWQ/UfzOXlDXwNepjWqOzpCm0SB14eUZ39VKFzAA9kGqIUBlTEBPwTiPlKQzWGGsbdXF84MyXCzni4DMu8xyTRxGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OMhGCGQJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Fby0+Cd/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OMhGCGQJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Fby0+Cd/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JJyTD8Ao";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yw/VqjqA"
-Date: Wed, 14 May 2025 12:01:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747216886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OMhGCGQJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Fby0+Cd/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OMhGCGQJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Fby0+Cd/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7CC43211D0;
+	Wed, 14 May 2025 10:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747216912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/yjJ8VTCfJF3mh532Vvi9mnXCuXqEe7OAhye5pR0w08=;
-	b=JJyTD8Ao92BZRcVKabvPvKBtz2HtA8d6TJiDDphuBIRYm0oVVhxATBhDhml5NQ3syJkx66
-	y9LfcfFOkp+UeB+hGUtsIuEPKF4RBbRS4R/Tz+7KBT6f/ZZzHQ163W6gFv3p1QXuGZSm8/
-	xtXGLCS260+bzl5TRVv+BOis2k1yydT1LXp5yIemUeJtAKS83Sou9m3KJqINZu6Kep29b1
-	I+2kKwdHMmNxrU2ZTR/RAgtEPHtmmajjOT2ZcouWetnUp2JDMXmJqovgZqjn1WvU0D1nMe
-	IvOmLgKRDoAI7USdoxYpL+hwNYAxRPAP7ZmPXdksDqPtlo5Jy766u354twljuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747216886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
+	b=OMhGCGQJey9EaGuP4MAxOm1U6wITxW42sRXkpw+vhjFteV1yKucf35eQc0IqkNmlQP6N1T
+	J//7jilJzTlY8/ZEOvhuC07prHFMXw2olb+a/cAKS+swhzm7rU/InP1O9gWRJ/RhDXdMsd
+	t/OhITkHjXg1a0rh1kVv+h61jYyHnrw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747216912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/yjJ8VTCfJF3mh532Vvi9mnXCuXqEe7OAhye5pR0w08=;
-	b=Yw/VqjqAIPadN0tqNqnAHVHf1OReRfhru2LMX6IT+9ugZFxd3qRL3vHDy94d5Tiw6qMhgy
-	8HbdjDtJPy0HVmAA==
-From: Nam Cao <namcao@linutronix.de>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] riscv: Add kprobes KUnit test
-Message-ID: <20250514100125.KjX0gdp9@linutronix.de>
-References: <20250513151631.3520793-1-namcao@linutronix.de>
- <b6df6923-1028-4a6e-8cf4-e10e8fd55475@ghiti.fr>
+	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
+	b=Fby0+Cd/bt2q98+8gHe/IaIYZPAXdZV/i2QMGngR2mg9vvawgdAlMEDGvHUnCwl5Gw6SnR
+	S1UoZ5ZWAaSeX6BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747216912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
+	b=OMhGCGQJey9EaGuP4MAxOm1U6wITxW42sRXkpw+vhjFteV1yKucf35eQc0IqkNmlQP6N1T
+	J//7jilJzTlY8/ZEOvhuC07prHFMXw2olb+a/cAKS+swhzm7rU/InP1O9gWRJ/RhDXdMsd
+	t/OhITkHjXg1a0rh1kVv+h61jYyHnrw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747216912;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0qFvpH2MgN8teidabV80M0BZ5ot+a2R9QqLMuMJOrW4=;
+	b=Fby0+Cd/bt2q98+8gHe/IaIYZPAXdZV/i2QMGngR2mg9vvawgdAlMEDGvHUnCwl5Gw6SnR
+	S1UoZ5ZWAaSeX6BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7F8B613306;
+	Wed, 14 May 2025 10:01:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id B/sAHA9qJGjtNgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 14 May 2025 10:01:51 +0000
+Date: Wed, 14 May 2025 11:01:49 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 1/3] mm: introduce new .mmap_prepare() file callback
+Message-ID: <e3olqweuiyxlkewat26n4vyltpn5ordg6ckfndejwjleoemrtw@e2mo6nocaepy>
+References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
+ <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
+ <dqir4mv7twugxj6nstqziympxc6z3k5act4cwhgpg2naeqy3sx@wkn4wvnwbpih>
+ <e18fea49-388d-40d2-9b55-b9f91ac3ce11@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6df6923-1028-4a6e-8cf4-e10e8fd55475@ghiti.fr>
+In-Reply-To: <e18fea49-388d-40d2-9b55-b9f91ac3ce11@lucifer.local>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Wed, May 14, 2025 at 10:22:03AM +0200, Alexandre Ghiti wrote:
-> On 13/05/2025 17:16, Nam Cao wrote:
-> > +	for (i = 0; i < num_kprobe; ++i) {
-> > +		kp[i].addr = test_kprobes_addresses[i];
-> > +		kp[i].pre_handler = kprobe_dummy_handler;
-> > +		KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp[i]));
+On Wed, May 14, 2025 at 10:12:49AM +0100, Lorenzo Stoakes wrote:
+> On Wed, May 14, 2025 at 10:04:06AM +0100, Pedro Falcato wrote:
+> > On Fri, May 09, 2025 at 01:13:34PM +0100, Lorenzo Stoakes wrote:
+> > > Provide a means by which drivers can specify which fields of those
+> > > permitted to be changed should be altered to prior to mmap()'ing a
+> > > range (which may either result from a merge or from mapping an entirely new
+> > > VMA).
+> > >
+> > > Doing so is substantially safer than the existing .mmap() calback which
+> > > provides unrestricted access to the part-constructed VMA and permits
+> > > drivers and file systems to do 'creative' things which makes it hard to
+> > > reason about the state of the VMA after the function returns.
+> > >
+> > > The existing .mmap() callback's freedom has caused a great deal of issues,
+> > > especially in error handling, as unwinding the mmap() state has proven to
+> > > be non-trivial and caused significant issues in the past, for instance
+> > > those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
+> > > error path behaviour").
+> > >
+> > > It also necessitates a second attempt at merge once the .mmap() callback
+> > > has completed, which has caused issues in the past, is awkward, adds
+> > > overhead and is difficult to reason about.
+> > >
+> > > The .mmap_prepare() callback eliminates this requirement, as we can update
+> > > fields prior to even attempting the first merge. It is safer, as we heavily
+> > > restrict what can actually be modified, and being invoked very early in the
+> > > mmap() process, error handling can be performed safely with very little
+> > > unwinding of state required.
+> > >
+> > > The .mmap_prepare() and deprecated .mmap() callbacks are mutually
+> > > exclusive, so we permit only one to be invoked at a time.
+> > >
+> > > Update vma userland test stubs to account for changes.
+> > >
+> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> >
+> > Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> >
+> > Neat idea, thanks. This should also help out with the insane proliferation of
+> > vm_flags_set in ->mmap() callbacks all over. Hopefully.
+[snip] 
+> >
+> > 2) Possibly add a ->mmap_finish()? With a fully constructed vma at that point.
+> >    So things like remap_pfn_range can still be used by drivers' mmap()
+> >    implementation.
 > 
+> Thanks for raising the remap_pfn_range() case! Yes this is definitely a
+> thing.
 > 
-> Will kp be freed if the test fails?
+> However this proposed callback would totally undermine the purpose of the
+> change - the idea is to never give a vma because if we do so we lose all of
+> the advantages here and may as well just leave the mmap in place for
+> this...
+>
 
-Yes. Unlike KUNIT_ASSERT_EQ() which terminates the test, KUNIT_EXPECT_EQ()
-still lets the test continues.
+Yes, good point.
 
-> Thanks for adding new tests, KUnit tests do not run yet in the CI but I'll
-> add them soon!
+> However I do think we'll need a new callback at some point (previously
+> discussed in thread).
+> 
+> We could perhaps provide the option to _explicitly_ remap for instance. I
+> would want it to be heavily locked down as to what can happen and to happen
+> as early as possible.
+>
 
-Well I promised Björn this test back in 2023 ;) But I wasn't sure how to
-implement it (I was still a student at that time) and then got busy with
-other stuffs. But I guess better late than never.
+I think we can simply combine various ideas here. Like:
 
-Nam
+struct vm_area_desc_private {
+	struct vm_area_desc desc;
+	struct vm_area_struct *vma;
+};
+
+Then, for this "mmap_finish" callback and associated infra:
+
+	int (*mmap_finish)(struct vm_area_desc *desc);
+
+int mmap_remap_pfn_range(struct vm_area_desc *desc, /*...*/)
+{
+	struct vm_area_desc_private *private = container_of(desc, struct vm_area_desc_private, desc);
+	return remap_pfn_range(private->vma, /*...*/);
+}
+
+int random_driver_mmap_finish(struct vm_area_desc *desc)
+{
+	return mmap_remap_pfn_range(desc, desc->start, some_pfn, some_size,
+				    desc->page_prot);
+}
+
+
+I think something of the sort would be quite less prone to abuse, and we could
+take the time to then even polish up the interface (e.g maybe it would be nicer
+if mmap_remap_pfn_range took a vma offset, and not a start address).
+
+Anyway, just brainstorming. This idea came to mind, I think it's quite interesting.
+
+> This is something we can iterate on, as trying to find the ideal scheme
+> immediately will just lead to inaction, the big advantage with the approach
+> here is we can be iterative.
+> 
+> We provide this, use it in a scenario which allows us to eliminate merge
+> retry, and can take it from there :)
+
+Yep, totally.
+
+> 
+> So indeed, watch this space basically... I will be highly proactive on this
+> stuff moving forward.
+> 
+> >
+> > 1) is particularly important so our VFS and driver friends know this is supposed
+> > to be The Way Forward.
+> 
+> I think probably the answer is for me to fully update the document to be
+> bang up to date, right? But that would obviously work best as a follow up
+> patch :)
+>
+
+You love your big projects :p I had the impression the docs were more or less up to date?
+The VFS people do update it somewhat diligently. And for mm we only have ->mmap, ->get_unmapped_area,
+and now ->mmap_prepare. And the descriptions are ATM quite useless, just
+"called by the mmap(2) system call".
+
+-- 
+Pedro
