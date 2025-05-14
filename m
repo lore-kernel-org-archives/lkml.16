@@ -1,217 +1,359 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8A013D539;
-	Wed, 14 May 2025 06:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204084; cv=fail; b=f5o1VlipL0+ICu5dWOHLwTFNyjawodtg9tMUZSDt7wloKK5JCtSTLUz01jOajj7CIiMYhCZFu0YN8u2nbsxtOTK75Lv0NNRBmshU9kuIi7Z2NscWMpF+I4H39/hNHZWC41/O4NSoKGUg7L7jOCCL33uTvSEB+8m5CG0OD63AJ7c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204084; c=relaxed/simple;
-	bh=jkko+dSxlA3vu2foAHJTl6PspEMXghYR7EKmFVggUDI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P7cuMZ4ype0W4hBHW8c39fmXHM046rpzoW9QuasZnArfoWyTvjdJQYHhOP+iSS0K++mtLBrv3B0mozs6QUK+oYsvbjGas+bg1kOH6e16o9RWyRMnVuLFoddSuSiBwC0ginPgea728qNC0Ud7tnbIaff+F+dqJFaPfLOYpIfkGRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ROzCPoX0; arc=fail smtp.client-ip=40.107.220.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF80D1FC7E7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747204093; cv=none; b=KACDtOOTKNhECkQlad+RUXDM8sCvWnMMP2koZYhcfaN6PrDABuv3Fpnbt6EkxddlBGAXGGcwpbeFBaC3M6k/4tFFXMM9N7k/gniVM5nglvAetGPOClfp4EUpbaeDU57GCp9xohu4JJqkWbIUJWyh0xFPmRs6UyHudROzvV31dts=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747204093; c=relaxed/simple;
+	bh=UQ1J5sAQuLUSnUT79u1IDdk8KzumY3Ko6aSIBtrrU9E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kx+Hu9gFfEQiBmq6nh2EtExNcfDQ6pTiTpCr4305/7WSpdpxJQYTfM91nX8TLwngNDo/GdUgfmuSlaLn9tOqom362fzEkjRDPLazNHCPmzWn/uuwO0hYbMajCHz2ZZ/42psyXdz99SWxItJNAeYWTpNolgjj4tzG7ZNHElwLLWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Di/90cZ4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ROzCPoX0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hGCH8uoUZ0aS4Znjt7Ga58OMnySk/4DCAG0l+L92mXfO5p8Soa6xsOc1K8ZXsmVQW4w9zMKw8l0mN2XnaezApAF0CQstXBWD3NSp1V2cZp5OTM4P6dXc3b6Bj/QJUGwwR2y7TYUT2SezSnl4LK2Y+v/DUPxYwxgLba0018jTSQkPfcUYSSDl76BjIIJtZDVofZtWnt5yVxQW2dCwmmfpvsaVhjKOadIXy7PFV/exu9dtVSTKE0Dg9CtIrE6UsAEsfJDC1x+FtErNm/437qoJLjOcNsURQwBa/jzAuG1X7LlYLJ72Ic7ysxl3VYsxjCFWh33NUkCwu4JiFGJbdAULAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aNz3cMNZ3ElbEyfvYMkG7IbScQP2YRAHZ/MKAr3/a8M=;
- b=r0qejjBYcMAkZF/MMZZHwkyTjAQBP6TO2y+Qc3YQ6FlLA/rLYOlGG5I6m0P8sAE5jgZVUu2dZ/WJGXwjnp34KvkK5odmM5vJBGJSnTSpePrRwzL2DWrh7iWyoQixu/0kUH6RwThEK8fXVXYtOMeh4jmmiFRPob4R6PEKIpxf/pB3AA/rnjKlo8TuE4XNYRdAvaDUCF0irM5GYeOo9Ko9HCLxeVdC020zywjb8wAjL9JfDR8kkmnNEzSJ6ZXUfx4az4Bj2fBgNTiKaXE/Zi5l3c52X0vzJjE7Nh9nTbVT4cAnlbDfOw4Yh/ajd5iJM32/WQAnqZOK1DWzhMt2t9EkFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNz3cMNZ3ElbEyfvYMkG7IbScQP2YRAHZ/MKAr3/a8M=;
- b=ROzCPoX0R+lOYBFAyXTvZTEyiyx8SWfIS9mcxa8IVqEHNutahNHikoJOpegdp9u1M+qaEyRMNNZYQTvIvo2ekAW+vCDZLG/XwxI2JLqT/3hqWWmc9gv1Ys8gZ9ygT4jsOvQaNCCoE5f9op+pFgFOsoquUvY4EUHiAMuMBVL8lxo=
-Received: from SN7PR04CA0047.namprd04.prod.outlook.com (2603:10b6:806:120::22)
- by IA1PR12MB7519.namprd12.prod.outlook.com (2603:10b6:208:418::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 06:27:58 +0000
-Received: from SA2PEPF00003AE6.namprd02.prod.outlook.com
- (2603:10b6:806:120:cafe::6d) by SN7PR04CA0047.outlook.office365.com
- (2603:10b6:806:120::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Wed,
- 14 May 2025 06:27:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003AE6.mail.protection.outlook.com (10.167.248.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 06:27:58 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 01:27:51 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<luto@kernel.org>, <peterz@infradead.org>, <rafael@kernel.org>,
-	<pavel@kernel.org>, <akpm@linux-foundation.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<shivankg@amd.com>, <sohil.mehta@intel.com>, <rui.zhang@intel.com>,
-	<yuntao.wang@linux.dev>, <kai.huang@intel.com>, <xiaoyao.li@intel.com>,
-	<peterx@redhat.com>, <sandipan.das@amd.com>, <ak@linux.intel.com>,
-	<rostedt@goodmis.org>
-Subject: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc warnings
-Date: Wed, 14 May 2025 06:26:36 +0000
-Message-ID: <20250514062637.3287779-1-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Di/90cZ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747204090;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hOp4hY0PMAH5wqsNNGlH3vrlg2J5pgcfFuboWc+PXtg=;
+	b=Di/90cZ435SI9Dsm7fdWp/j6ZuoKAcVIYlhBkoopfxXmyu2lm84Yr91MQwRc9hGMp+n+Uo
+	0ihdK9NHZBGuA/e4phLvEQ35GRpsHapf6t0KlZ0CQiHaDCXQpqA8zfxy+EkJpN6F7YDSAx
+	V8cNAgLq70qHVW/IwQT2bf5ppoyuRlg=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-278-6M00uCQHMmS4Ayyc-IE6PQ-1; Wed, 14 May 2025 02:28:08 -0400
+X-MC-Unique: 6M00uCQHMmS4Ayyc-IE6PQ-1
+X-Mimecast-MFC-AGG-ID: 6M00uCQHMmS4Ayyc-IE6PQ_1747204087
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30a80fe759bso8506976a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:28:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747204087; x=1747808887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hOp4hY0PMAH5wqsNNGlH3vrlg2J5pgcfFuboWc+PXtg=;
+        b=J26m7RKfm/juHqB3EImHgPzjxLi4l2QwE1NqmzPT3WFfPQwf0fHu3PxXCMh+rY7NSf
+         gjjG+Ic9jrp4XYRiuICT4g9lTH28sQTr1kU1pqHpfypZx8pymb0mz6JZPm+3+ee0Nmr2
+         r4N55udARtMgPYLwgiAqNW53bAlPhwlqAkNokPSWeNsDmuitg89Z7CPg1A+aX2aNvefh
+         YhD14KUcelWNzACNcGYI3yWojLHZ5V0olhOAfiXt46KTNQ6/WGKbO5Yap6XARTOUlVeH
+         XAUyQzRVzqGYcsIHEhOAnzv/RG5gGiY4X1DMQk3NEV9S5k2UkI/GMnXZJcHElaLTNmt2
+         Tn+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUtric8xr3uqKoIigPhHACM1PfrqOMIx1ivJrvwYLZxjSGsC6XPajlVJlfS/mGftMLRMs05LUnKMw+C9LQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqrw+7kzEO1OV8aPRrB+EKQk+4qIoIVZ5BkwYBilE6/3jiYRMG
+	h3eoBp3bHpFvK4iktIYaOHChz0isPMO1vj5KwJTiMuLoUIdBJc/pkZqZEr6+9qAGaPqDa9qD35M
+	H1pPZKR6zMIR+g0rMVG64mO/RBB6zIzYVG2VKGllumV67KshHfMMcefVUnZv9LeTAH3dYFGZAg+
+	ttBs2Dn44v1ix1SMESyWQczKGlb4lxWKJUKCgq
+X-Gm-Gg: ASbGnctR67enrSw4I92grWAiwpsRJFPwHKn+37lDVN2LTuoUEOvkm3clWWGJsQs8yre
+	LOjV7eOCXhjPiltMpAF91pis+MPNP/0aB0IqS4kM5wr0TJUiax+vnE4S/H2OD9nNJO0L3
+X-Received: by 2002:a17:90b:3b4a:b0:2ff:6a5f:9b39 with SMTP id 98e67ed59e1d1-30e2e5dcde5mr3933264a91.18.1747204087113;
+        Tue, 13 May 2025 23:28:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGa8v+OcSzRWdhZzNcxoBuSbj+/AdqHp+HfAdjjwy0jvkIl0bUIQMv+O4S+pz9KyLi+opmWvTkyIhYe/KrmvWU=
+X-Received: by 2002:a17:90b:3b4a:b0:2ff:6a5f:9b39 with SMTP id
+ 98e67ed59e1d1-30e2e5dcde5mr3933239a91.18.1747204086621; Tue, 13 May 2025
+ 23:28:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE6:EE_|IA1PR12MB7519:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0feb86a3-0b7a-4aba-853f-08dd92b077fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UrpqlpFNwEQNGl6mPme+JaUbe9PPn3+qdUfj779afdVhsNJ2tXLwRxaLyo/K?=
- =?us-ascii?Q?PgXPImePmKp3SumsQgyMtjV9AO/UzqGEWJYrd5ud7iqryCs/wpN+4ot/Vhjh?=
- =?us-ascii?Q?Ff522AJUntRZRLF0jT3b3EWOYeh2sK+ClJJxpmFt1vp90cuIKOkBCCruZt4d?=
- =?us-ascii?Q?/3z0wXMGBljhx8NPe9AxVQ5yXna9T3EeNH9WIBvslfqmmoxaBrrNXAVaJw7H?=
- =?us-ascii?Q?KJ3BqXxTGKyiD30wk8nbBgxFrLthiaYU00ukL9IyX0jleu+wIkNWqpwDp/g3?=
- =?us-ascii?Q?PXavD/qS1UXlB0yc+dwjuU8R4HYlaACaSecoWTfBqgx/O3XDgp61ZAcNQSNU?=
- =?us-ascii?Q?KRLMU9kPbuMEXIsHcw7oE+fWwKjIy3t4da8JgSV7nPB0BsOr/+S0BnJtSy1m?=
- =?us-ascii?Q?avIqAEXqv4MM16n/Uval/Wl2yWxuX9xtW2fALzUVgoKpThvYaVDfxY9AjSAE?=
- =?us-ascii?Q?+Xtourk6kf/P3k6VKRiQZk6wjhW2JczEVEKYqKBaJuxNvDfZoJgEf9Dzrubc?=
- =?us-ascii?Q?n1wPbZt9UTaE5RgjgpBcFP3nvSZ6I8RJnnxsTXHqK5mDeS/frUTibbRjyl1x?=
- =?us-ascii?Q?gSAqJcSnUVoVxIM32Y/TncMqD3rYybWjoar41/IIljUbNlsEIGGgNfrA2QCM?=
- =?us-ascii?Q?+up6spFJARi5cWImq7cQMF/lfvgil9r9HHr5c46Okazdx4HU803RDWYzvga5?=
- =?us-ascii?Q?nv0qWUu2P/o1V5GhJCgofE6aTkFBsGNsgqUlCw6e00xmmo7MW22U1KqF3MEK?=
- =?us-ascii?Q?p5KRLiSKwLZx+2cm0Jj2DaZNZBQ43uUT3OKc2zMLMdGfJIVQ4L0QbOP1jOJ0?=
- =?us-ascii?Q?WSn0GfR01DNxLZ92APVVW30ccL+s0Ky17B5u/smoAxFAtfLzJRdLap0RqXuM?=
- =?us-ascii?Q?aBXqdMd47J45Q1pscWXD7KB4lZkKYIXjWDBcHCQR+RUqbdXGg+TgHEYp+0tW?=
- =?us-ascii?Q?7c8nmdoTBBIAwD+uJUCpvbwNNh0zl/jAjjVpDvlCR3PazluFbT8MTXZCJLvS?=
- =?us-ascii?Q?zngfK294f7iGJKvzIphfuP3nrk/l2PGgqk6GOApQXrNISutOnUOok49maKSO?=
- =?us-ascii?Q?giujgcorvNZgObKiaCob6AXdhw7QJ+KovQkILr5ALoIQFHpTby0htJc8hBQF?=
- =?us-ascii?Q?UpfDSPFy3UdiIhtoSatS9oI4m9+5LfaPrABSh1gf285ba0Lg0XNx8rZv38N3?=
- =?us-ascii?Q?NddS31yOfWyTPvnZHZhbY8S+lD3mePrEQJGScgkXMWoLEdMENOxOp3IG+0GW?=
- =?us-ascii?Q?Im1HlRfMtH19P06hAHq+XgIK+H99shamgDYVQI08K6iDXxNdIsKPmYVYFnsH?=
- =?us-ascii?Q?SyL6E9K5WjES4Lx845yh26feKnrnCe2OSC1Dv9KeBuItQIEkdWjIHAZrDj7R?=
- =?us-ascii?Q?8x/y5oEdjDvRqFuK7MOfVFZbrVhKL80DPEe2KnNnhAhE4o2QXwNZ08acVE0V?=
- =?us-ascii?Q?N1CPqcLGAfSfmVgpR9G8g/vAf6jaAY5YwWpnJ8jxSKiE//R9J/wx+Do7IsYE?=
- =?us-ascii?Q?GPVcay7VwX28AMPkO+KPeNAi+G00dt9S//JAggj6+iiru9WCslIOmGJVgA?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 06:27:58.0797
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0feb86a3-0b7a-4aba-853f-08dd92b077fd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE6.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7519
+References: <20250404145241.1125078-1-jon@nutanix.com> <CACGkMEsFc-URhXBCGZ1=CTMZKcWPf57pYy1TcyKLL=N65u+F0Q@mail.gmail.com>
+ <B32E2C5D-25FB-427F-8567-701C152DFDE6@nutanix.com> <CACGkMEucg5mduA-xoyrTRK5nOkdHvUAkG9fH6KpO=HxMVPYONA@mail.gmail.com>
+ <CAJaqyWdhLCNs_B0gcxXHut7xufw23HMR6PaO11mqAQFoGkdfXQ@mail.gmail.com> <92470838-2B98-4FC6-8E5B-A8AF14965D4C@nutanix.com>
+In-Reply-To: <92470838-2B98-4FC6-8E5B-A8AF14965D4C@nutanix.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 14 May 2025 14:27:55 +0800
+X-Gm-Features: AX0GCFvO5_TynaC7ilLiE_zM1DHi8DARvxgXq012o8cd1y0a6sUXeX2xGypEwtA
+Message-ID: <CACGkMEugQPYZuL75i7xBGy9vUmkH=6NN1uhi9wuLa4ruebAcew@mail.gmail.com>
+Subject: Re: [PATCH] vhost/net: remove zerocopy support
+To: Jon Kohler <jon@nutanix.com>
+Cc: Eugenio Perez Martin <eperezma@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefano Brivio <sbrivio@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Warnings generated with 'make W=1':
-arch/x86/mm/pgtable.c:623: warning: Function parameter or struct member 'reserve' not described in 'reserve_top_address'
-arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'p4d' not described in 'p4d_set_huge'
-arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'addr' not described in 'p4d_set_huge'
-... so on
+On Thu, May 1, 2025 at 9:21=E2=80=AFAM Jon Kohler <jon@nutanix.com> wrote:
+>
+>
+>
+> > On Apr 16, 2025, at 6:15=E2=80=AFAM, Eugenio Perez Martin <eperezma@red=
+hat.com> wrote:
+> >
+> > !-------------------------------------------------------------------|
+> >  CAUTION: External Email
+> >
+> > |-------------------------------------------------------------------!
+> >
+> > On Tue, Apr 8, 2025 at 8:28=E2=80=AFAM Jason Wang <jasowang@redhat.com>=
+ wrote:
+> >>
+> >> On Tue, Apr 8, 2025 at 9:18=E2=80=AFAM Jon Kohler <jon@nutanix.com> wr=
+ote:
+> >>>
+> >>>
+> >>>
+> >>>> On Apr 6, 2025, at 7:14=E2=80=AFPM, Jason Wang <jasowang@redhat.com>=
+ wrote:
+> >>>>
+> >>>> !-------------------------------------------------------------------=
+|
+> >>>> CAUTION: External Email
+> >>>>
+> >>>> |-------------------------------------------------------------------=
+!
+> >>>>
+> >>>> On Fri, Apr 4, 2025 at 10:24=E2=80=AFPM Jon Kohler <jon@nutanix.com>=
+ wrote:
+> >>>>>
+> >>>>> Commit 098eadce3c62 ("vhost_net: disable zerocopy by default") disa=
+bled
+> >>>>> the module parameter for the handle_tx_zerocopy path back in 2019,
+> >>>>> nothing that many downstream distributions (e.g., RHEL7 and later) =
+had
+> >>>>> already done the same.
+> >>>>>
+> >>>>> Both upstream and downstream disablement suggest this path is rarel=
+y
+> >>>>> used.
+> >>>>>
+> >>>>> Testing the module parameter shows that while the path allows packe=
+t
+> >>>>> forwarding, the zerocopy functionality itself is broken. On outboun=
+d
+> >>>>> traffic (guest TX -> external), zerocopy SKBs are orphaned by eithe=
+r
+> >>>>> skb_orphan_frags_rx() (used with the tun driver via tun_net_xmit())
+> >>>>
+> >>>> This is by design to avoid DOS.
+> >>>
+> >>> I understand that, but it makes ZC non-functional in general, as ZC f=
+ails
+> >>> and immediately increments the error counters.
+> >>
+> >> The main issue is HOL, but zerocopy may still work in some setups that
+> >> don't need to care about HOL. One example the macvtap passthrough
+> >> mode.
+> >>
+> >>>
+> >>>>
+> >>>>> or
+> >>>>> skb_orphan_frags() elsewhere in the stack,
+> >>>>
+> >>>> Basically zerocopy is expected to work for guest -> remote case, so
+> >>>> could we still hit skb_orphan_frags() in this case?
+> >>>
+> >>> Yes, you=E2=80=99d hit that in tun_net_xmit().
+> >>
+> >> Only for local VM to local VM communication.
+>
+> Sure, but the tricky bit here is that if you have a mix of VM-VM and VM-e=
+xternal
+> traffic patterns, any time the error path is hit, the zc error counter wi=
+ll go up.
+>
+> When that happens, ZC will get silently disabled anyhow, so it leads to s=
+poradic
+> success / non-deterministic performance.
 
-Add missing parameter documentation in page table functions to
-fix kernel-doc warnings.
+As discussed, the main issue is safety: a malicious VM can refuse to
+receive packets which may cause tx to be stuck. So scarfing
+performance for safety is the only way to go. If we can find a way to
+fix them, it could be relaxed.
 
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- arch/x86/mm/pgtable.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> >>
+> >>> If you punch a hole in that *and* in the
+> >>> zc error counter (such that failed ZC doesn=E2=80=99t disable ZC in v=
+host), you get ZC
+> >>> from vhost; however, the network interrupt handler under net_tx_actio=
+n and
+> >>> eventually incurs the memcpy under dev_queue_xmit_nit().
+> >>
+> >> Well, yes, we need a copy if there's a packet socket. But if there's
+> >> no network interface taps, we don't need to do the copy here.
+> >>
+>
+> Agreed on the packet socket side. I recently fixed an issue in lldpd [1] =
+that prevented
+> this specific case; however, there are still other trip wires spread out =
+across the
+> stack that would need to be addressed.
+>
+> [1] https://github.com/lldpd/lldpd/commit/622a91144de4ae487ceebdb333863e9=
+f660e0717
 
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index f7ae44d3dd9e..8a5bc4545ad3 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -614,7 +614,7 @@ pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
- 
- /**
-  * reserve_top_address - reserves a hole in the top of kernel address space
-- * @reserve - size of hole to reserve
-+ * @reserve: Size of hole to reserve.
-  *
-  * Can be used to relocate the fixmap area and poke a hole in the top
-  * of kernel address space to make room for a hypervisor.
-@@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- #ifdef CONFIG_X86_5LEVEL
- /**
-  * p4d_set_huge - setup kernel P4D mapping
-+ * @p4d: Pointer to a p4d entry.
-+ * @addr: Virtual Address associated with p4d.
-+ * @prot: Protection bits to use.
-  *
-  * No 512GB pages yet -- always return 0
-  */
-@@ -675,8 +678,9 @@ int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
- 
- /**
-  * p4d_clear_huge - clear kernel P4D mapping when it is set
-+ * @p4d: Pointer to the p4d entry to clear.
-  *
-- * No 512GB pages yet -- always return 0
-+ * No 512GB pages yet -- do nothing
-  */
- void p4d_clear_huge(p4d_t *p4d)
- {
-@@ -685,6 +689,9 @@ void p4d_clear_huge(p4d_t *p4d)
- 
- /**
-  * pud_set_huge - setup kernel PUD mapping
-+ * @pud: Pointer to a pud entry.
-+ * @addr: Virtual Address associated with pud.
-+ * @prot: Protection bits to use.
-  *
-  * MTRRs can override PAT memory types with 4KiB granularity. Therefore, this
-  * function sets up a huge page only if the complete range has the same MTRR
-@@ -716,6 +723,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- 
- /**
-  * pmd_set_huge - setup kernel PMD mapping
-+ * @pmd: Pointer to a pmd entry.
-+ * @addr: Virtual Address associated with pmd.
-+ * @prot: Protection bits to use.
-  *
-  * See text over pud_set_huge() above.
-  *
-@@ -745,6 +755,7 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
- 
- /**
-  * pud_clear_huge - clear kernel PUD mapping when it is set
-+ * @pud: Pointer to the pud entry to clear.
-  *
-  * Returns 1 on success and 0 on failure (no PUD map is found).
-  */
-@@ -760,6 +771,7 @@ int pud_clear_huge(pud_t *pud)
- 
- /**
-  * pmd_clear_huge - clear kernel PMD mapping when it is set
-+ * @pmd: Pointer to the pmd entry to clear.
-  *
-  * Returns 1 on success and 0 on failure (no PMD map is found).
-  */
--- 
-2.34.1
+I see.
+
+>
+> >
+> > Hi!
+> >
+> > I need more time diving into the issues. As Jon mentioned, vhost ZC is
+> > so little used I didn't have the chance to experiment with this until
+> > now :). But yes, I expect to be able to overcome these for pasta, by
+> > adapting buffer sizes or modifying code etc.
+>
+> Another tricky bit here is that it has been disabled both upstream and do=
+wnstream
+> for so long, the code naturally has a bit of wrench-in-the-engine.
+>
+> RE Buffer sizes: I tried this as well, because I think on sufficiently fa=
+st systems,
+> zero copy gets especially interesting in GSO/TSO cases where you have meg=
+a
+> payloads.
+
+Yes.
+
+>
+> I tried playing around with the good copy value such that ZC restricted i=
+tself to
+> only lets say 32K payloads and above, and while it *does* work (with enou=
+gh
+> holes punched in), absolute t-put doesn=E2=80=99t actually go up, its jus=
+t that CPU utilization
+> goes down a pinch. Not a bad thing for certain, but still not great.
+>
+> In fact, I found that tput actually went down with this path, even with Z=
+C occurring
+> successfully, as there was still a mix of ZC and non-ZC because you can o=
+nly
+> have so many pending at any given time before the copy path kicks in agai=
+n.
+
+TCP has hursitisc that may try to coalesce more writes into a larger
+packet so we might get "worse" throughput when vhost becomes faster.
+For example, only my testing environment, qemu, is faster than vhost
+single TCP stream testing of netperf.
+
+>
+>
+> >
+> >>>
+> >>> This is no more performant, and in fact is actually worse since the t=
+ime spent
+> >>> waiting on that memcpy to resolve is longer.
+> >>>
+> >>>>
+> >>>>> as vhost_net does not set
+> >>>>> SKBFL_DONT_ORPHAN.
+> >>
+> >> Maybe we can try to set this as vhost-net can hornor ulimit now.
+>
+> Yea I tried that, and while it helps kick things further down the stack, =
+its not actually
+> faster in any testing I=E2=80=99ve drummed up.
+
+Can I see the codes?
+
+>
+> >>
+> >>>>>
+> >>>>> Orphaning enforces a memcpy and triggers the completion callback, w=
+hich
+> >>>>> increments the failed TX counter, effectively disabling zerocopy ag=
+ain.
+> >>>>>
+> >>>>> Even after addressing these issues to prevent SKB orphaning and err=
+or
+> >>>>> counter increments, performance remains poor. By default, only 64
+> >>>>> messages can be zerocopied, which is immediately exhausted by workl=
+oads
+> >>>>> like iperf, resulting in most messages being memcpy'd anyhow.
+> >>>>>
+> >>>>> Additionally, memcpy'd messages do not benefit from the XDP batchin=
+g
+> >>>>> optimizations present in the handle_tx_copy path.
+> >>>>>
+> >>>>> Given these limitations and the lack of any tangible benefits, remo=
+ve
+> >>>>> zerocopy entirely to simplify the code base.
+> >>>>>
+> >>>>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> >>>>
+> >>>> Any chance we can fix those issues? Actually, we had a plan to make
+> >>>> use of vhost-net and its tx zerocopy (or even implement the rx
+> >>>> zerocopy) in pasta.
+> >>>
+> >>> Happy to take direction and ideas here, but I don=E2=80=99t see a cle=
+ar way to fix these
+> >>> issues, without dealing with the assertions that skb_orphan_frags_rx =
+calls out.
+> >>>
+> >>> Said another way, I=E2=80=99d be interested in hearing if there is a =
+config where ZC in
+> >>> current host-net implementation works, as I was driving myself crazy =
+trying to
+> >>> reverse engineer.
+> >>
+> >> See above.
+> >>
+> >>>
+> >>> Happy to collaborate if there is something we could do here.
+> >>
+> >> Great, we can start here by seeking a way to fix the known issues of
+> >> the vhost-net zerocopy code.
+> >>
+> >
+> > Happy to help here :).
+> >
+> > Jon, could you share more details about the orphan problem so I can
+> > speed up the help? For example, can you describe the code changes and
+> > the code path that would lead to that assertion of
+> > skb_orphan_frags_rx?
+> >
+> > Thanks!
+> >
+>
+> Sorry for the slow response, getting back from holiday and catching up.
+>
+> When running through tun.c, there are a handful of places where ZC turns =
+into
+> a full copy, whether that is in the tun code itself, or in the interrupt =
+handler when
+> tun xmit is running.
+>
+> For example, tun_net_xmit mandatorily calls skb_orphan_frags_rx. Anything
+> with frags will get this memcpy, which are of course the =E2=80=9Cjuicy=
+=E2=80=9D targets here as
+> they would take up the most memory bandwidth in general. Nasty catch22 :)
+>
+> There are also plenty of places that call normal skb_orphan_frags, which
+> triggers because vhost doesn=E2=80=99t set SKBFL_DONT_ORPHAN. That=E2=80=
+=99s an easy
+> fix, but still something to think about.
+>
+> Then there is the issue of packet sockets, which throw a king sized wrenc=
+h into
+> this. Its slightly insidious, but it isn=E2=80=99t directly apparent that=
+ loading some user
+> space app nukes zero copy, but it happens.
+>
+> See my previous comment about LLDPD, where a simply compiler snafu caused
+> one socket option to get silently break, and it then ripped out ZC capabi=
+lity. Easy
+> fix, but its an example of how this can fall over.
+>
+> Bottom line, I=E2=80=99d *love****** have ZC work, work well and so on. I=
+=E2=80=99m open to ideas
+> here :) (up to and including both A) fixing it and B) deleting it)
+
+Zerocopy still has its advantages in some specific setups. Maybe a way
+to start is to make it work automatically depending on the lower
+setups? For example, enable it by default with macvtap.
+
+Thanks
+
+>
 
