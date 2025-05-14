@@ -1,80 +1,229 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2817B18BC0C;
-	Wed, 14 May 2025 13:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C11612E1CD;
+	Wed, 14 May 2025 13:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747230316; cv=none; b=aNTv75zYEHpdyJN+eNCZ9yvv4Ug/YauGUaYNHtrLKkN15OiFvACc87DFiWqnCSHFWwd8k1sYux6iazdGz73hlr4UcgtjmYXe5yFGBWICrxuvqwxMumjD+y8Gh/pCMU58EydQ4B/GdadONOsAJfFc9STacsY+AExKRfnegjM+zUU=
+	t=1747230316; cv=none; b=CSvB/DEzImo9FJv423GzS3bK8gCIYum6EIVw52c1rRgBfDhIS20XpijVmBy36PqdJDIuqjnsTVVwaus9KdaaRXlDFwigrHZFfZQZweQ6qQbmOfo+1S0h/1JDcO2xyHull6VY45bkfIYSKavQMID3nvJxMaT3XArRdJO7ssmQy+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747230316; c=relaxed/simple;
-	bh=bB5rVOkZWWCkarXDIzHRAxzDsnnjJj5znI8/OdBZc/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atIrPg1rufg4HJUynZVSnNNHdecNTIuXnreSsWAXuGgs7Fs/hqP+HKqfeYFpPZSPFIWUGT4+Pfq+gvLYP1iayAhC1Gle+2L/qcmNP2qUSrxdYlYR2SOlk+G+eU/Y6I8h/BYJzc189La0Dt5uGjLAW7GrGX37qlf5glCIfXg7WuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XjL04Znn; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=tY9VSV3EYK6S15qOsqtZyfX3P45eQ9SCKeZAOKjnJZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQLHc/YU2Mk0bshAhGhttiKUD5gSHBcxNZQFF1ChoX6I0Lv8eDN5QIB2stvmFc5Enc7677Mdk/CBXl4A2mBE1Nz2Ewm1vipbgurE5B6CekfYsDqp68jNNqzpLI2WSdcQcZinuTFmA9x7br3D2r1cVgMhA9ZfvuJI0zVfDoHgD08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poaFxfsG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XjL04Znn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747230312;
-	bh=bB5rVOkZWWCkarXDIzHRAxzDsnnjJj5znI8/OdBZc/o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XjL04Znn+duXifSpO3JVXeTJTwdoNk98bmvDozvd8NPLVotoRJrqpNGw45HGkv6QA
-	 JiRYgv6BgbHCYKdbHVfpm70o2j1NZ9+z9gQVJkzdd78lu6R+1kW4CEALffdz5tlM9x
-	 Gh/c0qsuDAdc92v42YW9G0lD7kkdqLXmZxvhjOiYuc/C0ejOrQjPr1PWwg18zJEVMt
-	 vHKmfTkFKEZ+pQUQuVAI2ySIj8pZn6ZBWpNonVolNQJEL7Mbg9UQM+xNia1QMGqag2
-	 o7c3ts0sZ9fGpA/42EeVar7XqJ3nheRi8HeGqmQ5MbXvYEYDQOBB5vhYHFl4p5Dk8m
-	 GhlVAyyKeGYfA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 123C517E07C9;
-	Wed, 14 May 2025 15:45:11 +0200 (CEST)
-Message-ID: <825f9c5c-79e8-42f4-b489-854e58211fca@collabora.com>
-Date: Wed, 14 May 2025 15:45:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poaFxfsG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EFCC4CEE9;
+	Wed, 14 May 2025 13:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747230315;
+	bh=tY9VSV3EYK6S15qOsqtZyfX3P45eQ9SCKeZAOKjnJZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=poaFxfsG3CXVf7CPsoaC7uKLVBomAiUmow3+AqCC1SSxUugf1t1Mu9mbKennO1UZe
+	 e90OWXbI1hhiVNxl6vKdjPtv5G4TckIAFUf96SIlpqaFmsAOMWSP2fyudlvY7COdiZ
+	 5bV/sTy+G0uGTEOCTq3KEVArFYpaxu7UBCUQ+IuWVCOrlylV1RwUrY5Fwfk+jdAC1J
+	 PnkYoFFLQAmjjTWNc8h/lo8DN60Sh+lrFtck4xu0u6b11FTeKNdaZLTaBPt5fa3N9b
+	 FP+h3RXvu1wWCsz2rdAIMMo3fTBtrOixNFJZSQbEVKZae9dTo4kHSADlt1dF1bH1zG
+	 J1/mTCh0OYIkw==
+Date: Wed, 14 May 2025 19:14:57 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 09/11] qcomtee: add primordial object
+Message-ID: <aCSeWWCYNyGJakRp@sumit-X1>
+References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
+ <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-9-6a143640a6cb@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: mediatek: mt6397: Add
- #sound-dai-cells property
-To: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?=
- <nfraprado@collabora.com>, Hui Liu <hui.liu@mediatek.com>,
- Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Tinghan Shen <tinghan.shen@mediatek.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
-References: <20250514-mt8395-dtb-errors-v2-0-d67b9077c59a@collabora.com>
- <20250514-mt8395-dtb-errors-v2-1-d67b9077c59a@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250514-mt8395-dtb-errors-v2-1-d67b9077c59a@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-9-6a143640a6cb@oss.qualcomm.com>
 
-Il 14/05/25 10:19, Julien Massot ha scritto:
-> The 'mt6359.dtsi' file already uses the '#sound-dai-cells' property.
-> Add the corresponding property to the binding to fix the following
-> dtb-check error:
+On Mon, Apr 28, 2025 at 11:06:30PM -0700, Amirreza Zarrabi wrote:
+> After booting, the kernel provides a static object known as the
+> primordial object. This object is utilized by QTEE for native
+> kernel services such as yield or privileged operations.
 > 
-> mediatek/mt8395-radxa-nio-12l.dtb: pmic: '#sound-dai-cells', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-> from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/tee/qcomtee/Makefile          |  1 +
+>  drivers/tee/qcomtee/core.c            | 19 +++++++---
+>  drivers/tee/qcomtee/primordial_obj.c  | 65 +++++++++++++++++++++++++++++++++++
+>  drivers/tee/qcomtee/qcomtee_private.h |  3 ++
+>  4 files changed, 83 insertions(+), 5 deletions(-)
+
+Looks reasonable to me, feel free to add:
+
+Acked-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+
+-Sumit
+
 > 
-> Fixes: 9bc8353be720 ("arm64: dts: mt6359: Add #sound-dai-cells property")
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+> diff --git a/drivers/tee/qcomtee/Makefile b/drivers/tee/qcomtee/Makefile
+> index 1b14b943e5f5..a3a2d00e83f0 100644
+> --- a/drivers/tee/qcomtee/Makefile
+> +++ b/drivers/tee/qcomtee/Makefile
+> @@ -3,6 +3,7 @@ obj-$(CONFIG_QCOMTEE) += qcomtee.o
+>  qcomtee-objs += async.o
+>  qcomtee-objs += call.o
+>  qcomtee-objs += core.o
+> +qcomtee-objs += primordial_obj.o
+>  qcomtee-objs += qcom_scm.o
+>  qcomtee-objs += release.o
+>  qcomtee-objs += shm.o
+> diff --git a/drivers/tee/qcomtee/core.c b/drivers/tee/qcomtee/core.c
+> index ad3b28f32529..a1ac492fd21a 100644
+> --- a/drivers/tee/qcomtee/core.c
+> +++ b/drivers/tee/qcomtee/core.c
+> @@ -39,10 +39,12 @@ int qcomtee_next_arg_type(struct qcomtee_arg *u, int i,
+>  }
+>  
+>  /*
+> - * QTEE expects IDs with the QCOMTEE_MSG_OBJECT_NS_BIT set for objects
+> - * of the QCOMTEE_OBJECT_TYPE_CB type.
+> + * QTEE expects IDs with QCOMTEE_MSG_OBJECT_NS_BIT set for objects of
+> + * QCOMTEE_OBJECT_TYPE_CB type. The first ID with QCOMTEE_MSG_OBJECT_NS_BIT
+> + * set is reserved for the primordial object.
+>   */
+> -#define QCOMTEE_OBJECT_ID_START (QCOMTEE_MSG_OBJECT_NS_BIT + 1)
+> +#define QCOMTEE_OBJECT_PRIMORDIAL (QCOMTEE_MSG_OBJECT_NS_BIT)
+> +#define QCOMTEE_OBJECT_ID_START (QCOMTEE_OBJECT_PRIMORDIAL + 1)
+>  #define QCOMTEE_OBJECT_ID_END (U32_MAX)
+>  
+>  #define QCOMTEE_OBJECT_SET(p, type, ...) \
+> @@ -127,7 +129,9 @@ static void qcomtee_object_release(struct kref *refcount)
+>   */
+>  int qcomtee_object_get(struct qcomtee_object *object)
+>  {
+> -	if (object != NULL_QCOMTEE_OBJECT && object != ROOT_QCOMTEE_OBJECT)
+> +	if (object != &qcomtee_primordial_object &&
+> +	    object != NULL_QCOMTEE_OBJECT &&
+> +	    object != ROOT_QCOMTEE_OBJECT)
+>  		return kref_get_unless_zero(&object->refcount);
+>  
+>  	return 0;
+> @@ -140,7 +144,9 @@ EXPORT_SYMBOL_GPL(qcomtee_object_get);
+>   */
+>  void qcomtee_object_put(struct qcomtee_object *object)
+>  {
+> -	if (object != NULL_QCOMTEE_OBJECT && object != ROOT_QCOMTEE_OBJECT)
+> +	if (object != &qcomtee_primordial_object &&
+> +	    object != NULL_QCOMTEE_OBJECT &&
+> +	    object != ROOT_QCOMTEE_OBJECT)
+>  		kref_put(&object->refcount, qcomtee_object_release);
+>  }
+>  EXPORT_SYMBOL_GPL(qcomtee_object_put);
+> @@ -222,6 +228,9 @@ static struct qcomtee_object *qcomtee_local_object_get(unsigned int object_id)
+>  {
+>  	struct qcomtee_object *object;
+>  
+> +	if (object_id == QCOMTEE_OBJECT_PRIMORDIAL)
+> +		return &qcomtee_primordial_object;
+> +
+>  	guard(rcu)();
+>  	object = xa_load(&xa_qcom_local_objects, object_id);
+>  	/* It already checks for %NULL_QCOMTEE_OBJECT. */
+> diff --git a/drivers/tee/qcomtee/primordial_obj.c b/drivers/tee/qcomtee/primordial_obj.c
+> new file mode 100644
+> index 000000000000..a30967d89c91
+> --- /dev/null
+> +++ b/drivers/tee/qcomtee/primordial_obj.c
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/delay.h>
+> +#include "qcomtee_private.h"
+> +
+> +/**
+> + * DOC: Primordial Object
+> + *
+> + * After boot, the kernel provides a static object of type
+> + * %QCOMTEE_OBJECT_TYPE_CB called the primordial object. This object is used
+> + * for native kernel services or privileged operations.
+> + *
+> + * We support:
+> + *  - %QCOMTEE_OBJECT_OP_YIELD to yield by the thread running in QTEE.
+> + *  - %QCOMTEE_OBJECT_OP_SLEEP to wait for a period of time.
+> + */
+> +
+> +#define QCOMTEE_OBJECT_OP_YIELD 1
+> +#define QCOMTEE_OBJECT_OP_SLEEP 2
+> +
+> +static int
+> +qcomtee_primordial_obj_dispatch(struct qcomtee_object_invoke_ctx *oic,
+> +				struct qcomtee_object *primordial_object_unused,
+> +				u32 op, struct qcomtee_arg *args)
+> +{
+> +	int err = 0;
+> +
+> +	switch (op) {
+> +	case QCOMTEE_OBJECT_OP_YIELD:
+> +		cond_resched();
+> +		/* No output object. */
+> +		oic->data = NULL;
+> +		break;
+> +	case QCOMTEE_OBJECT_OP_SLEEP:
+> +		/* Check message format matched QCOMTEE_OBJECT_OP_SLEEP op. */
+> +		if (qcomtee_args_len(args) != 1 ||
+> +		    args[0].type != QCOMTEE_ARG_TYPE_IB ||
+> +		    args[0].b.size < sizeof(u32))
+> +			return -EINVAL;
+> +
+> +		msleep(*(u32 *)(args[0].b.addr));
+> +		/* No output object. */
+> +		oic->data = NULL;
+> +		break;
+> +	default:
+> +		err = -EINVAL;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static struct qcomtee_object_operations qcomtee_primordial_obj_ops = {
+> +	.dispatch = qcomtee_primordial_obj_dispatch,
+> +};
+> +
+> +struct qcomtee_object qcomtee_primordial_object = {
+> +	.name = "primordial",
+> +	.object_type = QCOMTEE_OBJECT_TYPE_CB,
+> +	.ops = &qcomtee_primordial_obj_ops
+> +};
+> diff --git a/drivers/tee/qcomtee/qcomtee_private.h b/drivers/tee/qcomtee/qcomtee_private.h
+> index a6f2c0591580..e59cfb3b79dd 100644
+> --- a/drivers/tee/qcomtee/qcomtee_private.h
+> +++ b/drivers/tee/qcomtee/qcomtee_private.h
+> @@ -219,4 +219,7 @@ int qcomtee_user_object_submit(struct tee_context *ctx,
+>  			       struct tee_param *params, int num_params,
+>  			       int req_id, int errno);
+>  
+> +/* (2) Primordial Object. */
+> +extern struct qcomtee_object qcomtee_primordial_object;
+> +
+>  #endif /* QCOMTEE_PRIVATE_H */
+> 
+> -- 
+> 2.34.1
+> 
