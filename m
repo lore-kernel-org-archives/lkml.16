@@ -1,151 +1,114 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861E288506
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9E22882A8;
+	Wed, 14 May 2025 18:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248176; cv=none; b=Ewk5jcB6r9IrMkB9A2GIpCn2gk2H7GiABZMczjQwb/+uiVwmnIQ7ut20JlBYtGmQBuyOH/fJG2QlIpmwvksc2I9Z/PTGzkDd0N5xhhoaAJUA5Z2h0/+d7jn07gvKE1a8nUtkeX5cQCLsoBZf2FIo9TOQ15goGw6Re1Cz7uqaAwU=
+	t=1747248271; cv=none; b=UAHkOeORFW3Xqd7ssq9ypcb40INNzob1mdIKM4GThxNUD8j5QxmNN/cXyPxcKEGUXT0pGsz9tI4zB3Y9ZXG8VRBTszUxBG5wl/vyN0sZsji9q/evJBYUz9uwWgogRH0Ct7fPxqQAC57ExK+Slcl8E96JjgSERn8AOntNuvGTwPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248176; c=relaxed/simple;
-	bh=eOV34W3QxTAg9tNCEM3huHB/nJbyQjF4t6Sq0HwlHdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SCNDihsFWf89SfuBs1WLSD3dfU5Bv2r6QdhOI2Q+Pt82J7ag2ne59CMfjwesUdymf4QDHcvpidecvcqivN+5ONEa9k3+rJO3y2oXcurI1IAFOEdF9TyusxCJJI0pqF6+Zo7Yf8wkUUSSuUc2he/Rblpq6vsiS6/3bYlsIA2Cj3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z5+Yysz/; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747248271; c=relaxed/simple;
+	bh=Cfm72KHPHjpJ3mEVdxevFjdi0RZmu1Tw2rX5MxcaV9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gM32Q8lq//g9BNqgmWNc4AY+Ic7KtGRA1LQHw+zEunxp1sMueucp7hHOBWkA1WU3YBQ6IRwr1GWaahw4MUcILP/Ko+LmFIIrO3vIusj073rXZG5zBFgpXq/hKDWSlXlxf040SsjHi77sczGxNQju9LOP5yKxOfzT+oksHp258L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fiDx2PUw; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z5+Yysz/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747248171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t4sog0H8PQnyhxh0qyypANz3qKaJTBcH3eV85qDti8s=;
-	b=Z5+Yysz/a0FdntBwdRVd8vs8HsgqhcPMP+VKoaKIvnPkLTDX4LkzhvGK1PfZ7VZPIKZMun
-	JBNzghWN4lIUeiS04Y8Rcd9V0puEcW7IGz7xPLlH0EmzJODv/2n91JroIJvlIakoJCqSkL
-	VAjiedXqXbQZ+nC5FqwmFn+0vYrU1DA=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH v2 7/7] memcg: objcg stock trylock without irq disabling
-Date: Wed, 14 May 2025 11:41:58 -0700
-Message-ID: <20250514184158.3471331-8-shakeel.butt@linux.dev>
-In-Reply-To: <20250514184158.3471331-1-shakeel.butt@linux.dev>
-References: <20250514184158.3471331-1-shakeel.butt@linux.dev>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fiDx2PUw"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54EIiHq93491750;
+	Wed, 14 May 2025 13:44:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747248258;
+	bh=j4huf+pjoLBdGdp5HHE13FYd6EiUoz1nox0QBs0LEos=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=fiDx2PUwBd6vkq74f6eTISYXaf9I/kMg9MB5Cc78GmaVQDdh3a007JIjMxTjSM1aA
+	 4DVuQWGwCNvL/u3AVHnp3Jcjc9UiYlHh+TX3fPZ8OtVAHqrmHyWooVlp3T0O3zGY3g
+	 NggJNXgCXP1BCHflfmkYow1frpFTvDCXwqZZMuoc=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54EIiHbI2335529
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 14 May 2025 13:44:17 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 14
+ May 2025 13:44:17 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 14 May 2025 13:44:16 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54EIiHnw049959;
+	Wed, 14 May 2025 13:44:17 -0500
+Message-ID: <483c7c41-4dd4-4ab8-ab09-bd301de2e540@ti.com>
+Date: Wed, 14 May 2025 13:44:17 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA
+ quirk to am62 compatible
+To: Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>
+CC: Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Francesco Dolcini
+	<francesco@dolcini.it>,
+        Hiago De Franco <hiagofranco@gmail.com>, Moteen Shah
+	<m-shah@ti.com>
+References: <20250514002513.1179186-1-jm@ti.com>
+ <d3222aeb-4920-41a2-a8d7-2551115ab776@intel.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <d3222aeb-4920-41a2-a8d7-2551115ab776@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-There is no need to disable irqs to use objcg per-cpu stock, so let's
-just not do that but consume_obj_stock() and refill_obj_stock() will
-need to use trylock instead to avoid deadlock against irq. One
-consequence of this change is that the charge request from irq context
-may take slowpath more often but it should be rare.
+Hi Adrian,
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/memcontrol.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+On 5/14/25 4:10 AM, Adrian Hunter wrote:
+> On 14/05/2025 03:25, Judith Mendez wrote:
+>> Add a new struct for platform data for the ti,am62-sdhci compatible to
+>> apply additional quirks, namely "SDHCI_QUIRK2_SUPPRESS_V1P8_ENA", to
+>> host controllers with am62 compatible.
+> 
+> Could add:
+> 
+> Note, the fix was originally introduced by commit 941a7abd4666
+> ("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch") but was
+> found to be applied too broadly and had to be reverted.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 04d756be708b..e17b698f6243 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1882,18 +1882,17 @@ static void drain_local_memcg_stock(struct work_struct *dummy)
- static void drain_local_obj_stock(struct work_struct *dummy)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 
- 	if (WARN_ONCE(!in_task(), "drain in non-task context"))
- 		return;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	local_lock(&obj_stock.lock);
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	drain_obj_stock(stock);
- 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
-+	local_unlock(&obj_stock.lock);
- }
- 
- static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-@@ -2876,10 +2875,10 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			      struct pglist_data *pgdat, enum node_stat_item idx)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 	bool ret = false;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	if (!local_trylock(&obj_stock.lock))
-+		return ret;
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
-@@ -2890,7 +2889,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 			__account_obj_stock(objcg, stock, nr_bytes, pgdat, idx);
- 	}
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
-+	local_unlock(&obj_stock.lock);
- 
- 	return ret;
- }
-@@ -2979,10 +2978,16 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		enum node_stat_item idx)
- {
- 	struct obj_stock_pcp *stock;
--	unsigned long flags;
- 	unsigned int nr_pages = 0;
- 
--	local_lock_irqsave(&obj_stock.lock, flags);
-+	if (!local_trylock(&obj_stock.lock)) {
-+		if (pgdat)
-+			mod_objcg_mlstate(objcg, pgdat, idx, nr_bytes);
-+		nr_pages = nr_bytes >> PAGE_SHIFT;
-+		nr_bytes = nr_bytes & (PAGE_SIZE - 1);
-+		atomic_add(nr_bytes, &objcg->nr_charged_bytes);
-+		goto out;
-+	}
- 
- 	stock = this_cpu_ptr(&obj_stock);
- 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
-@@ -3004,8 +3009,8 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 		stock->nr_bytes &= (PAGE_SIZE - 1);
- 	}
- 
--	local_unlock_irqrestore(&obj_stock.lock, flags);
--
-+	local_unlock(&obj_stock.lock);
-+out:
- 	if (nr_pages)
- 		obj_cgroup_uncharge_pages(objcg, nr_pages);
- }
--- 
-2.47.1
+Sure I can add for v6
+
+...
+
+>>   
+>> +static const struct sdhci_pltfm_data sdhci_am62_4bit_pdata = {
+>> +	.ops = &sdhci_j721e_4bit_ops,
+>> +	.quirks = SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
+>> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+>> +};
+> 
+> sdhci_am62_4bit_pdata is the same as sdhci_j721e_4bit_pdata
+
+oh right sdhci_am62_4bit_pdata can be removed. thanks. will fix for v6
+
+Judith
+
+> 
+>> +
+>> +static const struct sdhci_am654_driver_data sdhci_am62_4bit_drvdata = {
+>> +	.pdata = &sdhci_am62_4bit_pdata,
+>> +	.flags = IOMUX_PRESENT,
+>> +	.quirks = SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA,
+>> +};
+>> +
+
+...
 
