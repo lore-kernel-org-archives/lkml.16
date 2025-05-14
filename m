@@ -1,380 +1,353 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22BE1E834B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2061D1F9406
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203746; cv=none; b=YzKo95qe6HrxzTlENBlJUWYVSIPIG41a1RTkuzmhi+pThxktM1X88ZfYUn1yfsP4ibWBU5GcD4hpQ+IpRSIpeZ9qwnI2bDfpqoi8nuZe2y2g0mOzwrdENY7dZv7QTIxKnOmSPYfeyeK9Aew+KOUAhp46vIQBctzNqNUUGiJ+JKA=
+	t=1747203828; cv=none; b=kx8Aa9q5j+QSPJgH5ize8B+FZkaxy2oh1CEw0Sn/3e4Vnsa9Z0uZ0kVCWa86esZ94jQJHexnYUmQVA/Ozxojdnjt1YkGRFLuJD6a4oLNOq5L3dD1blzj4IJO3zmYOV6sAkJja4tY4q2RvFSMyTF8M67sNGskHYLBgSHF6Yiwssw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203746; c=relaxed/simple;
-	bh=nYoAm5K+v+UNGUwXrbNCA/YO1FoKlWscMXUhycNJpxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjxY5e0gYU+e7gJOFhocwcp367rDA0HHcweiJsESHnoP8QywopmLXuw4eUsIKsuH4XtlYSHHmq2eQNuJz1TeHoTqMViV4I5i/aMT2TenMBmoiXvULZRfId5khTdLMN2bX7FLueIEuMcmE4r1/y3rMlaptuTI08pa54DZ5zOC7EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mbuBEoha; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747203828; c=relaxed/simple;
+	bh=1XU22ycLcbDAX06mAwm81add3aZRPxk3l4Z+xrdqXqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WnpzpfYjmCukh6q6w337wugT3ep8fclD+OK72aNAT23SUqibnOH0LlxIfZjWmC6GdaO17lKxqcjP903EOZax7E4R23n6OLx7leLNbMzaeEjNe9Jy/GVVoVEeyKpwEKvc8XWE1YnOZYjnGcGJa9N6Tk1q325PJz4QIW42gwvza2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aj454twW; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mbuBEoha"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E3pNUp009632
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:22:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TpcnhsLrhDkPiVpw8TutfV9wpiw5v+hVj2kZ6M53/V0=; b=mbuBEohaaTRVXRQ3
-	nRlsMvJA/63kSHK4tk97ct9Y9UcZVeOjTXlGol82OLGngt3/y2Jf/jsomkiQJiDX
-	N13brAnQzZBfkCcFzzwK2EwzAX4RHWXojyw2UrpWMurejXPOYVCxY+8kLb8jDWdn
-	hILGUZqSsoN8pnz/hGZC/es+m6V6l6hgE2v9WC/hlZRFzKmphlZnmvi6dkOqKhIP
-	TydY+OznPP6bgSc0zGRC4rZU8BhL0wbCyNq3ushbTVt09lynOcce6kHF8IKB7vCu
-	8fvAEZe8Rs+1xgrfYav82BIoGC/e1lYruoyrS6kd9iLv7wM7diNpIfhQhvgDuR3Q
-	EnixEg==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcr1km9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:22:23 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22e3b59e46eso94774795ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:22:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aj454twW"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0b637db6eso3834785f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 23:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747203824; x=1747808624; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wmHBW6sfnSn/ftW0IvqkP48U4Cb81zY632t73DCuU7Y=;
+        b=Aj454twW+3mhS8G5xjwKPrG/G3XFAH3VHB4EamXJTfFZkulrIm/hRULg9DIFx2DuoZ
+         +Tog7nRPF9V132r/grAEXYP4vPRdM0etK1kQjmTbSk3PkkLmVueyi9ypRZcfaRz3CXsy
+         A5sbMvwfalXati5ED6hJyvRtPNniAXpyh4xcQM1XccZ5XXWHn5J599HWiZGRYzmYVEoj
+         yo6Cf0U1NV6hq9e43SFeDvJUc7ROnC8xWN8ZCUtsMACLhOogc9BpOPSsU8fcRwp9Zs5V
+         Ej2fEPcaW8SEWT1aFBiZyap1UozROSql6daeYWgjAfPiGOSght16YliXkRwVRW/2XobX
+         dGXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747203742; x=1747808542;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TpcnhsLrhDkPiVpw8TutfV9wpiw5v+hVj2kZ6M53/V0=;
-        b=m/3oNcTYZze0UuXUydR/G8qaoVtlng8+GDNjvgsamRuERP6+gAj5luf2o0BLo9Q2GH
-         0UVRfjQbL7qGHdRM/upgERf8D/qLWS1G07n/gBg+cIBZSAVGr2123BMbI3QOG4UIwBgb
-         k61oWDHSuGFhpb7qjC8pBeuGiCXD5Uo0zO5iMu2TMO6ea7MJSUrPul9voeok9qsaWh5/
-         YuKYDQvOW6lMXZZW+SBvLttX2qhRW8+GMz5RHuuVp4LDRXfHXx3PlyQ9l0deQvwq6QOh
-         +e2Ptjm9xeL6PQxRp3Iam6bo1UMrOZG44bdQcfZwYPjPYgPzHmvVjt5P0rHURzo6BfDU
-         WS3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdy8qdOLlB/fWeKhxswZVUafwstAgaGf4Ofc3paMkfSbZAWABrDg0J1mGTpKNZZsOsU7DUuNwsi2/RwdA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDzbF4FVgjdVCZVPcGX0/O2crUjQ1u9e3FMrZPvpal2mA2bjMB
-	9GiDd3MDyk3AFBR3NDLK5pXYZyc6+abk9jg00VgzWRkm84ZcqF/7vDoHmj6gV/wRyQoWzzHjyyx
-	bpozU/EaV/SWcoRfslQU+qqU+GyIspwrsNjA7XElfc0kHFQKfM1jlp53YkhKGId4=
-X-Gm-Gg: ASbGnctLOC2Hq0yBJ7cWcDkF5Hoot0hGFp5/aIPQGfCy5HIhE4f3EJDg5e0fwOk2FZr
-	fADyhU9E6Xi/rAAsu7HQkWoAUwsRkq1AKLvZnh2BWent8hm41CZC59zdw8Xz5B3ACX5YXeXKhPV
-	Nklsj4SLfAOjSGn993WI7IewsOyyJYX+nagKtbK+h0ZQ96q6KW05bxaLPHfKrEX+bt5wFtn75N8
-	K+rnJQFOnk0QIdxIEEn/Dz2D0HlUJCC8F7Snus7r6jesbqm2IHwPVQAu5rGsmThPzJ+XrgLTvzV
-	4yFWcnG7EqLMbqkrlvjceGRy5ksCZ0qDUznS+cnVqA==
-X-Received: by 2002:a17:903:230d:b0:22e:4586:e33f with SMTP id d9443c01a7336-231981b9260mr30796275ad.45.1747203741833;
-        Tue, 13 May 2025 23:22:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaXIvN8kd6OCTrUzx47gTLqMaj0yTncjdEtMWu1eqbRLeCm9H7LLRmX+0fMvEBUQxpsSm/dw==
-X-Received: by 2002:a17:903:230d:b0:22e:4586:e33f with SMTP id d9443c01a7336-231981b9260mr30795875ad.45.1747203741359;
-        Tue, 13 May 2025 23:22:21 -0700 (PDT)
-Received: from [10.92.214.105] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc753fe13sm91478365ad.14.2025.05.13.23.22.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 May 2025 23:22:20 -0700 (PDT)
-Message-ID: <1b4b7ee5-1d7e-573c-0647-44aad654354a@oss.qualcomm.com>
-Date: Wed, 14 May 2025 11:52:13 +0530
+        d=1e100.net; s=20230601; t=1747203824; x=1747808624;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wmHBW6sfnSn/ftW0IvqkP48U4Cb81zY632t73DCuU7Y=;
+        b=i+LlPoby0RwfwftyTrx8+kPujTH956AqtRnOgTp8Mn0YkJ5RE7gFNmPHdD8ebBJBou
+         7TdV6oFz4BWQRtk8Pq7GwXfA642MDraUNBqfcrbmJ5rf8lmVPv5uQKqkGdY4r/TCrgpp
+         Ew4beLk/DVkh4HhRbM2OV6+287SiiLCJvc58ERpW14giYrC3bUMtfO3PkdqrTiZYVhUO
+         2vqARRv0pA95osGsvQLFNpGwQNwR9v4/ORe403y5QlE708r38eBkcqyFCs9ohOCQxMTK
+         LwaMR0Pfrw6mn2MmeaVxhfRKisac1ljirGR52skZr+p2jfXjWGBuio5G4YMLca9varRs
+         OwFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ9WPSqk8NzRMxzHaso0HWiIroqCF66Z8kwm24Ktu/VWKecYWLbOrpBBeqsPLtkVRzcp55pyQBhk0TiIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTiQ9tpnA4T1wMvyZc+1pwOqAxQR5UsIjVE7i1qZORfq3R6mQu
+	uKZdWf45w2MyuEfGDJ55QIN0gTEF3OPKwbffzmv5SzEpDMJFOYht
+X-Gm-Gg: ASbGnctYXtwAHaAhtc6znJ0DYggsA2EvlQ0pTy4PicZd/wt/tORY7GZ9GveUKK5KoGG
+	gNbB62Vh9lVG4U2IpsY6sCDIXeWZdwE1khZx72gOKr16F7M+GiowbCKcZjfqJ0irPjyvli+GFVK
+	nakfPIjQPtD+BEfkYxFE/bwWUwJPxbsMK6CU7DY2k87LsnGN2j180XWBO+r9WZ47D+zein+bWW+
+	DskXh5/JIGC9XCsyaqp7lSeRbX9v/JRxCWogz3k5LGqrACMhyItoxj0flkFEXeTyprmZKE10tAm
+	UXArkum+948aUTqCn/jZdoj1qPEHDS9zZ+2d9d5BBNi5EnNLzH1LIN2U15qKmCX1AsMnzDCgIR5
+	AG8hl4JdCHjPT8hywfEtRiQ+x2ESJGvjqaR96YBWDbY+qm+TwDeY=
+X-Google-Smtp-Source: AGHT+IGBHmGTvAbAtGxrvaGYWFE1srTooXJtUkMdGFrvXFAukwpk6BK2D1AfgrCfJ/xOKtgugJYtCA==
+X-Received: by 2002:a05:6000:3104:b0:3a0:6f92:ef7c with SMTP id ffacd0b85a97d-3a3496a4e93mr1529943f8f.17.1747203824224;
+        Tue, 13 May 2025 23:23:44 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-0400-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:400::8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a22ea7a53asm6600341f8f.23.2025.05.13.23.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 23:23:43 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: linux-mtd@lists.infradead.org,
+	dregan@broadcom.com,
+	miquel.raynal@bootlin.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	florian.fainelli@broadcom.com,
+	rafal@milecki.pl,
+	computersforpeace@gmail.com,
+	kamal.dasu@broadcom.com,
+	dan.beygelman@broadcom.com,
+	william.zhang@broadcom.com,
+	frieder.schrempf@kontron.de,
+	linux-kernel@vger.kernel.org,
+	vigneshr@ti.com,
+	richard@nod.at,
+	bbrezillon@kernel.org,
+	kdasu.kdev@gmail.com,
+	jaimeliao.tw@gmail.com,
+	kilobyte@angband.pl,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH v3] mtd: rawnand: brcmnand: legacy exec_op implementation
+Date: Wed, 14 May 2025 08:23:41 +0200
+Message-Id: <20250514062341.774919-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 5/5] PCI: qcom: Add support for resetting the slot due
- to link down event
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>
-Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-References: <20250508-pcie-reset-slot-v4-0-7050093e2b50@linaro.org>
- <20250508-pcie-reset-slot-v4-5-7050093e2b50@linaro.org>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250508-pcie-reset-slot-v4-5-7050093e2b50@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: hIqA6uy3ymDIVFpU16JE16BP9NDka22E
-X-Authority-Analysis: v=2.4 cv=Auju3P9P c=1 sm=1 tr=0 ts=6824369f cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=HZEN96OWHqwnsOiu:21 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
- a=EUspDBNiAAAA:8 a=67gqzJqB-RPUT0o4obAA:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: hIqA6uy3ymDIVFpU16JE16BP9NDka22E
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA1MyBTYWx0ZWRfX2uXjU1w08dnA
- l/EjZ7iLPLVgo2e7yn9jRsWW/GpIADeutPZObZTCyjlkKNOsmCq42bIZzMFjy+Qf3/BHHFzzgcp
- jWjhmpx9Ox6MgzlrFqXp9TXY95rVLeiMRSo4I4Kg1nt8wEDG1EA/mgKHcfMBP677Zc0iufoyflv
- bJ32rBuJ5gqR9fcI/XWu8J9N/sF2dslRywgZ+5YgKSP9+pz6OmdEYv2xskx8nlpLsmSd/L8kp+0
- 9mtgxjADRvL4l1lQdz3rZBxBo/hm5x8UjOwfWFEcqo4YdaX5F2AbY2H9XTeM2mbvCBdTJdVVw88
- fBS5K1QzIpbsnbYpxFJ/MzG2emiUapGkJL3wXwTdSg3z7eRIh18xUz0GcdQOGASpPDQ/+wtax3F
- OfQZJul7YW7wWBvoC7pP3zVGZTiBpoIyFUU1VTSoMJ88lu661XCCU1uunK1w8f1xeA4QfTqP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_01,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 mlxscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- phishscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140053
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+removed legacy interface functions, breaking < v5.0 controllers support.
+In order to fix older controllers we need to add an alternative exec_op
+implementation which doesn't rely on low level registers.
 
+Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 178 ++++++++++++++++++++++-
+ 1 file changed, 172 insertions(+), 6 deletions(-)
 
-On 5/8/2025 12:40 PM, Manivannan Sadhasivam wrote:
-> The PCIe link can go down under circumstances such as the device firmware
-> crash, link instability, etc... When that happens, the PCIe slot needs to
-> be reset to make it operational again. Currently, the driver is not
-> handling the link down event, due to which the users have to restart the
-> machine to make PCIe link operational again. So fix it by detecting the
-> link down event and resetting the slot.
-> 
-> Since the Qcom PCIe controllers report the link down event through the
-> 'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
-> bit in PARF_INT_ALL_MASK register.
-> 
-> Then in the case of the event, call pci_host_handle_link_down() API
-> in the handler to let the PCI core handle the link down condition. Note
-> that both link up and link down events could be set at a time when the
-> handler runs. So always handle link down first.
-> 
-> The API will internally call, 'pci_host_bridge::reset_slot()' callback to
-> reset the slot in a platform specific way. So implement the callback to
-> reset the slot by first resetting the PCIe core, followed by reinitializing
-> the resources and then finally starting the link again.
-> 
-Only one comment see below.
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->   drivers/pci/controller/dwc/Kconfig     |   1 +
->   drivers/pci/controller/dwc/pcie-qcom.c | 112 ++++++++++++++++++++++++++++++---
->   2 files changed, 105 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..ce04ee6fbd99cbcce5d2f3a75ebd72a17070b7b7 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -296,6 +296,7 @@ config PCIE_QCOM
->   	select PCIE_DW_HOST
->   	select CRC8
->   	select PCIE_QCOM_COMMON
-> +	select PCI_HOST_COMMON
->   	help
->   	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
->   	  PCIe controller uses the DesignWare core plus Qualcomm-specific
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index dc98ae63362db0422384b1879a2b9a7dc564d091..e577619d0f8ceddf0955139ae6b939842f8cb7be 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -34,6 +34,7 @@
->   #include <linux/units.h>
->   
->   #include "../../pci.h"
-> +#include "../pci-host-common.h"
->   #include "pcie-designware.h"
->   #include "pcie-qcom-common.h"
->   
-> @@ -55,6 +56,7 @@
->   #define PARF_INT_ALL_STATUS			0x224
->   #define PARF_INT_ALL_CLEAR			0x228
->   #define PARF_INT_ALL_MASK			0x22c
-> +#define PARF_STATUS				0x230
->   #define PARF_SID_OFFSET				0x234
->   #define PARF_BDF_TRANSLATE_CFG			0x24c
->   #define PARF_DBI_BASE_ADDR_V2			0x350
-> @@ -130,9 +132,14 @@
->   
->   /* PARF_LTSSM register fields */
->   #define LTSSM_EN				BIT(8)
-> +#define SW_CLEAR_FLUSH_MODE			BIT(10)
-> +#define FLUSH_MODE				BIT(11)
->   
->   /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> -#define PARF_INT_ALL_LINK_UP			BIT(13)
-> +#define INT_ALL_LINK_DOWN			1
-> +#define INT_ALL_LINK_UP				13
-> +#define PARF_INT_ALL_LINK_DOWN			BIT(INT_ALL_LINK_DOWN)
-> +#define PARF_INT_ALL_LINK_UP			BIT(INT_ALL_LINK_UP)
->   #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
->   
->   /* PARF_NO_SNOOP_OVERRIDE register fields */
-> @@ -145,6 +152,9 @@
->   /* PARF_BDF_TO_SID_CFG fields */
->   #define BDF_TO_SID_BYPASS			BIT(0)
->   
-> +/* PARF_STATUS fields */
-> +#define FLUSH_COMPLETED				BIT(8)
-> +
->   /* ELBI_SYS_CTRL register fields */
->   #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
->   
-> @@ -169,6 +179,7 @@
->   						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
->   
->   #define PERST_DELAY_US				1000
-> +#define FLUSH_TIMEOUT_US			100
->   
->   #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
->   
-> @@ -274,11 +285,14 @@ struct qcom_pcie {
->   	struct icc_path *icc_cpu;
->   	const struct qcom_pcie_cfg *cfg;
->   	struct dentry *debugfs;
-> +	int global_irq;
->   	bool suspended;
->   	bool use_pm_opp;
->   };
->   
->   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> +				  struct pci_dev *pdev);
->   
->   static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
->   {
-> @@ -1263,6 +1277,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->   			goto err_assert_reset;
->   	}
->   
-> +	pp->bridge->reset_slot = qcom_pcie_reset_slot;
-> +
->   	return 0;
->   
->   err_assert_reset:
-> @@ -1517,6 +1533,74 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->   	}
->   }
->   
-> +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> +				  struct pci_dev *pdev)
-> +{
-> +	struct pci_bus *bus = bridge->bus;
-> +	struct dw_pcie_rp *pp = bus->sysdata;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	struct device *dev = pcie->pci->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	/* Wait for the pending transactions to be completed */
-> +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
-> +					 val & FLUSH_COMPLETED, 10,
-> +					 FLUSH_TIMEOUT_US);
-> +	if (ret) {
-> +		dev_err(dev, "Flush completion failed: %d\n", ret);
-> +		goto err_host_deinit;
-> +	}
-> +
-> +	/* Clear the FLUSH_MODE to allow the core to be reset */
-> +	val = readl(pcie->parf + PARF_LTSSM);
-> +	val |= SW_CLEAR_FLUSH_MODE;
-> +	writel(val, pcie->parf + PARF_LTSSM);
-> +
-> +	/* Wait for the FLUSH_MODE to clear */
-> +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
-> +					 !(val & FLUSH_MODE), 10,
-> +					 FLUSH_TIMEOUT_US);
-> +	if (ret) {
-> +		dev_err(dev, "Flush mode clear failed: %d\n", ret);
-> +		goto err_host_deinit;
-> +	}
-> +
-> +	qcom_pcie_host_deinit(pp);
-> +
-> +	ret = qcom_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "Host init failed\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = dw_pcie_setup_rc(pp);
-> +	if (ret)
-> +		goto err_host_deinit;
-> +
-> +	/*
-> +	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
-> +	 * non-sticky.
-> +	 */
-> +	if (pcie->global_irq)
-> +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-> +			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-> +
-> +	qcom_pcie_start_link(pci);
-> +	if (!dw_pcie_wait_for_link(pci))
-> +		qcom_pcie_icc_opp_update(pcie);
-This icc opp update can we removed as this can updated from the global
-IRQ.
+ v3: add changes requested by Florian and other improvements:
+  - Add associative array for native command conversion.
+  - Add function pointer to brcmnand_controller for exec_instr
+    functionality.
+  - Fix CMD_BLOCK_ERASE address.
+  - Drop NAND_CMD_READOOB support.
 
-- Krishna Chaitanya.
-> +
-> +	dev_dbg(dev, "Slot reset completed\n");
-> +
-> +	return 0;
-> +
-> +err_host_deinit:
-> +	qcom_pcie_host_deinit(pp);
-> +
-> +	return ret;
-> +}
-> +
->   static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
->   {
->   	struct qcom_pcie *pcie = (struct qcom_pcie *)dev_get_drvdata(s->private);
-> @@ -1559,11 +1643,20 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
->   	struct qcom_pcie *pcie = data;
->   	struct dw_pcie_rp *pp = &pcie->pci->pp;
->   	struct device *dev = pcie->pci->dev;
-> -	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> +	unsigned long status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
->   
->   	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
->   
-> -	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> +	/*
-> +	 * It is possible that both Link Up and Link Down events might have
-> +	 * happended. So always handle Link Down first.
-> +	 */
-> +	if (test_and_clear_bit(INT_ALL_LINK_DOWN, &status)) {
-> +		dev_dbg(dev, "Received Link down event\n");
-> +		pci_host_handle_link_down(pp->bridge);
-> +	}
-> +
-> +	if (test_and_clear_bit(INT_ALL_LINK_UP, &status)) {
->   		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
->   		/* Rescan the bus to enumerate endpoint devices */
->   		pci_lock_rescan_remove();
-> @@ -1571,11 +1664,12 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
->   		pci_unlock_rescan_remove();
->   
->   		qcom_pcie_icc_opp_update(pcie);
-> -	} else {
-> -		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
-> -			      status);
->   	}
->   
-> +	if (status)
-> +		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
-> +			      (u32) status);
-> +
->   	return IRQ_HANDLED;
->   }
->   
-> @@ -1732,8 +1826,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   			goto err_host_deinit;
->   		}
->   
-> -		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
-> -			       pcie->parf + PARF_INT_ALL_MASK);
-> +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-> +			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-> +
-> +		pcie->global_irq = irq;
->   	}
->   
->   	qcom_pcie_icc_opp_update(pcie);
-> 
+ v2: multiple improvements:
+  - Use proper native commands for checks.
+  - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
+  - Remove host->last_addr usage.
+  - Remove sector_size_1k since it only applies to v5.0+ controllers.
+  - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
+  - Use j instead of i for flash_cache loop.
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 17f6d9723df9..f4fabe7ffd9d 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
+ #define CMD_PARAMETER_READ		0x0e
+ #define CMD_PARAMETER_CHANGE_COL	0x0f
+ #define CMD_LOW_LEVEL_OP		0x10
++#define CMD_NOT_SUPPORTED		0xff
+ 
+ struct brcm_nand_dma_desc {
+ 	u32 next_desc;
+@@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] = {
+ 	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x34,
+ };
+ 
++/* Native command conversion */
++static const u8 native_cmd_conv[] = {
++	[NAND_CMD_READ0]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READ1]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDOUT]	= CMD_PARAMETER_CHANGE_COL,
++	[NAND_CMD_PAGEPROG]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READOOB]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_ERASE1]	= CMD_BLOCK_ERASE,
++	[NAND_CMD_STATUS]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_SEQIN]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDIN]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READID]	= CMD_DEVICE_ID_READ,
++	[NAND_CMD_ERASE2]	= CMD_NULL,
++	[NAND_CMD_PARAM]	= CMD_PARAMETER_READ,
++	[NAND_CMD_GET_FEATURES]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_SET_FEATURES]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RESET]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READSTART]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READCACHESEQ]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_READCACHEEND]	= CMD_NOT_SUPPORTED,
++	[NAND_CMD_RNDOUTSTART]	= CMD_NULL,
++	[NAND_CMD_CACHEDPROG]	= CMD_NOT_SUPPORTED,
++};
++
+ /* Controller feature flags */
+ enum {
+ 	BRCMNAND_HAS_1K_SECTORS			= BIT(0),
+@@ -237,6 +262,10 @@ struct brcmnand_controller {
+ 	/* List of NAND hosts (one for each chip-select) */
+ 	struct list_head host_list;
+ 
++	/* Function to be called from exec_op */
++	int (*exec_instr)(struct nand_chip *chip,
++			  const struct nand_operation *op);
++
+ 	/* EDU info, per-transaction */
+ 	const u16               *edu_offsets;
+ 	void __iomem            *edu_base;
+@@ -2490,14 +2519,149 @@ static int brcmnand_op_is_reset(const struct nand_operation *op)
+ 	return 0;
+ }
+ 
++static int brcmnand_exec_instructions(struct nand_chip *chip,
++				      const struct nand_operation *op)
++{
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	unsigned int i;
++	int ret = 0;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		ret = brcmnand_exec_instr(host, i, op);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
++					     const struct nand_operation *op)
++{
++	struct mtd_info *mtd = nand_to_mtd(chip);
++	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
++	const struct nand_op_instr *instr;
++	unsigned int i, j;
++	u8 cmd = CMD_NULL, last_cmd = CMD_NULL;
++	int ret = 0;
++	u64 last_addr;
++
++	for (i = 0; i < op->ninstrs; i++) {
++		instr = &op->instrs[i];
++
++		if (instr->type == NAND_OP_CMD_INSTR) {
++			cmd = native_cmd_conv[instr->ctx.cmd.opcode];
++			if (cmd == CMD_NOT_SUPPORTED) {
++				dev_err(ctrl->dev, "unsupported cmd=%d\n",
++					instr->ctx.cmd.opcode);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++		} else if (instr->type == NAND_OP_ADDR_INSTR) {
++			u64 addr = 0;
++
++			if (cmd == CMD_NULL)
++				continue;
++
++			if (instr->ctx.addr.naddrs > 8) {
++				dev_err(ctrl->dev, "unsupported naddrs=%u\n",
++					instr->ctx.addr.naddrs);
++				ret = -EOPNOTSUPP;
++				break;
++			}
++
++			for (j = 0; j < instr->ctx.addr.naddrs; j++)
++				addr |= (instr->ctx.addr.addrs[j]) << (j << 3);
++
++			if (cmd == CMD_BLOCK_ERASE)
++				addr <<= chip->page_shift;
++			else if (cmd == CMD_PARAMETER_CHANGE_COL)
++				addr &= ~((u64)(FC_BYTES - 1));
++
++			brcmnand_set_cmd_addr(mtd, addr);
++			brcmnand_send_cmd(host, cmd);
++			last_addr = addr;
++			last_cmd = cmd;
++			cmd = CMD_NULL;
++			brcmnand_waitfunc(chip);
++
++			if (last_cmd == CMD_PARAMETER_READ ||
++			    last_cmd == CMD_PARAMETER_CHANGE_COL) {
++				/* Copy flash cache word-wise */
++				u32 *flash_cache = (u32 *)ctrl->flash_cache;
++
++				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
++
++				/*
++				 * Must cache the FLASH_CACHE now, since changes in
++				 * SECTOR_SIZE_1K may invalidate it
++				 */
++				for (j = 0; j < FC_WORDS; j++)
++					/*
++					 * Flash cache is big endian for parameter pages, at
++					 * least on STB SoCs
++					 */
++					flash_cache[j] = be32_to_cpu(brcmnand_read_fc(ctrl, j));
++
++				brcmnand_soc_data_bus_unprepare(ctrl->soc, true);
++			}
++		} else if (instr->type == NAND_OP_DATA_IN_INSTR) {
++			u8 *in = instr->ctx.data.buf.in;
++
++			if (last_cmd == CMD_DEVICE_ID_READ) {
++				u32 val;
++
++				if (instr->ctx.data.len > 8) {
++					dev_err(ctrl->dev, "unsupported len=%u\n",
++						instr->ctx.data.len);
++					ret = -EOPNOTSUPP;
++					break;
++				}
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					if (j == 0)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID);
++					else if (j == 4)
++						val = brcmnand_read_reg(ctrl, BRCMNAND_ID_EXT);
++
++					in[j] = (val >> (24 - ((j % 4) << 3))) & 0xff;
++				}
++			} else if (last_cmd == CMD_PARAMETER_READ ||
++				   last_cmd == CMD_PARAMETER_CHANGE_COL) {
++				u64 addr;
++				u32 offs;
++
++				for (j = 0; j < instr->ctx.data.len; j++) {
++					addr = last_addr + j;
++					offs = addr & (FC_BYTES - 1);
++
++					if (j > 0 && offs == 0)
++						nand_change_read_column_op(chip, addr, NULL, 0,
++									   false);
++
++					in[j] = ctrl->flash_cache[offs];
++				}
++			}
++		} else if (instr->type == NAND_OP_WAITRDY_INSTR) {
++			ret = bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY, NAND_CTRL_RDY, 0);
++		} else {
++			dev_err(ctrl->dev, "unsupported instruction type: %d\n", instr->type);
++			ret = -EINVAL;
++		}
++	}
++
++	return ret;
++}
++
+ static int brcmnand_exec_op(struct nand_chip *chip,
+ 			    const struct nand_operation *op,
+ 			    bool check_only)
+ {
+ 	struct brcmnand_host *host = nand_get_controller_data(chip);
++	struct brcmnand_controller *ctrl = host->ctrl;
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	u8 *status;
+-	unsigned int i;
+ 	int ret = 0;
+ 
+ 	if (check_only)
+@@ -2525,11 +2689,7 @@ static int brcmnand_exec_op(struct nand_chip *chip,
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 0);
+ 
+-	for (i = 0; i < op->ninstrs; i++) {
+-		ret = brcmnand_exec_instr(host, i, op);
+-		if (ret)
+-			break;
+-	}
++	ctrl->exec_instr(chip, op);
+ 
+ 	if (op->deassert_wp)
+ 		brcmnand_wp(mtd, 1);
+@@ -3142,6 +3302,12 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+ 	if (ret)
+ 		goto err;
+ 
++	/* Only v5.0+ controllers have low level ops support */
++	if (ctrl->nand_version >= 0x0500)
++		ctrl->exec_instr = brcmnand_exec_instructions;
++	else
++		ctrl->exec_instr = brcmnand_exec_instructions_legacy;
++
+ 	/*
+ 	 * Most chips have this cache at a fixed offset within 'nand' block.
+ 	 * Some must specify this region separately.
+-- 
+2.39.5
+
