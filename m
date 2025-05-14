@@ -1,216 +1,204 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56841F5425
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF2926AC3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747261022; cv=none; b=nM5iRDNNwHkt/Db9m1nM+hO3mOmJmNdeNFVWjmV76R2SxcDmFfIrtjfDV/woUP18nX14yA+7142jBo4wLVXNQHKBma+j8lITZrBmy+1WGaM7j6qhlKdeXO+/JhwL40Q4pfJd5aIkSh3UEnO5XH83PKjmh8RgU/ZMyCzNCV85TsI=
+	t=1747261105; cv=none; b=U6nX0MjBF7C50fe8VnYndESLHH52Z2RlW/sZ0bTYsigHrWKefpdMIRjuI9nfXOQTjaPP2Ca+HqYQmtx8b53TCubOqDyOJAKmPIT7XxsnA1mH25jmaBpbRmB4+JM8dEtyNYPNh2EvKSq0gXHvWlQyyerZPWSYQd8CtXMx8R/YJoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747261022; c=relaxed/simple;
-	bh=PkrQTx8TEbBB1JrAOdOjyVlxp0j9o3FA7f6jcBYQ/MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lksGazZx9xA12AUznIZuUStJNniuLSOGjwUthz4O9dRYiHebq9fBt1naPLXHVHKJz+/3EsOJjcwiWjnNG+kWfNivd/u09b2YwPSAXnlB4ze1smKWSwQtuHJyWPXIQnWY5IDE0SnNaZ4ixASR3izL0LC6w5+Qm1iqTuLvw0VxtCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=DvbM47jE; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1747261105; c=relaxed/simple;
+	bh=tgC0H8Q9B4oE8lwmj+HHc15ZhgeuD1cfHRSNail4ffs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KtKwq5zZyak9QfTGjwxvRCFodaNcnU9cLt5FJqcoRADbCXOLJ1/CBBMazhNOXTSQzp4lcLPFzxi3jyeHsabNyw3vNxDrLCssx2rTSuzs1lbFh1Os5rmTKYu6b41CZ3VJr+drdGytW5JNLr5aBJfjwbw9surU/VmK4R5iyFXR8MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oJwd+/A0; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="DvbM47jE"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22fb6eda241so4097395ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1747261020; x=1747865820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTXW/b5AGrSthg3xhTu8NtwS/HDi+o41c2Sy8mzRhBM=;
-        b=DvbM47jEIrBpj+68ChRKpB94OLsP+SgPs+FHteoTF3UJuS/Ugbp4nnYhsKeHknJcGK
-         tMT8jTm8+63gaPdO/rHBoRsDEwHSoUnlLdq6nYQYnfFl4uHjxHEoUjxWqao0BCLIUfyP
-         OomJQtEkZhST1QAA2idEH8izxGHnLoMZNhP2n+Z5/DPdVkyv55XKhU+lCeIWGO16gTCG
-         k8N+c/YLKoymTXLShwv3bj9dfRvMoHV/h2HIXaLqcHbl3zyW95FS0yZW56EtpdA+oqVv
-         /twFKYXxDwZH6wyuQ44WLViaRBSDVZtamYkm45x+kkGum1LmutBwAdFaj960vokijd9L
-         wr7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747261020; x=1747865820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mTXW/b5AGrSthg3xhTu8NtwS/HDi+o41c2Sy8mzRhBM=;
-        b=po6G8yRI+ZXspU2piAMk47Lj4i1QJ5gPzk2Hb2t+Q45sLi4LUSn4VLjWNR5QptK/f2
-         /xrkrwhliGh3gIjGhjJ1I0rwZmOk3DAmdFTV0j5XVqkubwIE1XncivAZe7M/w57GPk3j
-         NduQ31Zcy52i5F9cGUCxM56tEdPkx76jXZJMap1DmVGIwfO/kPolrzGfQnQtt6aEe8sS
-         gvyooV4z04JUAt31AHWOdyQxNJFgVQdcqNXPDJ1KbPAHUwFxdUU0rjGZ/tjcxvgeQANp
-         1a9sHMMjB4pRVdvfE9K47u7nUJB06V737ekY1kJ/tt7kkuxkX18lZkMiddP4x1+B6j4d
-         AV8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDqTasNZ01h/Q0DcyFaRfcxUImHa7jRVb8xSm0NrzuRb5LnCbhHOU6aBBuk9YZ4jLBlrRgDbkovYmJKrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUT2v7wt51/TGoJA18sm4pQiaoNhkHUWGCNGx+lzPFuZwNMvbO
-	YJqjQUAUbHtizcr1zRaMDbUcxXltoM+VCyLfNcL+cBvHYMYrOeTYefbMFVDObHQ=
-X-Gm-Gg: ASbGncu29CD9xVmhEi/8mZ8+3ddxipt51ek0tb5RR41MF+A7XVDT+F2isezOCKSIECZ
-	iPo9eqJ1gx7bqjB29lvxZnjlJSWbjt4BuGRqqKgKy6jeNZCAAUSq0+CceP7m+C7yKICARWhXJmA
-	443wSUxP6dgbaM3BOJX43G5yS5LWIVsULH5M8ybUUyjByF+t/9Qd/WcdZrLpq2jWpav0DZr6/xP
-	B6a1RMrtvWY0KMm20QyQNLYi7RASqhSn3Fq7B1G7yNSwbJYrg98U8OUJaZLDeacahqqpKKxnbqF
-	Q7qrJC/EEqGeg5JkeXSJEZJEZa+oTYhsmeO+gRBqZZCM03pCoxrcksLOlBBjvDbR8KEHzDqTq1n
-	A6Den0Dd0i/3PLYM2Ri967Dfajdc=
-X-Google-Smtp-Source: AGHT+IFtcfkKFcQ1y+IU/YHQJ/jTy6H/ktxEDim05gdbCjo9IqgU4jwoQElOEDUYKNcIwPuaGsEN6A==
-X-Received: by 2002:a17:902:e747:b0:224:a96:e39 with SMTP id d9443c01a7336-2319810e266mr67798885ad.9.1747261019967;
-        Wed, 14 May 2025 15:16:59 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c17sm104954665ad.121.2025.05.14.15.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 15:16:59 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98.2)
-	(envelope-from <david@fromorbit.com>)
-	id 1uFKPI-00000003ZxT-1fNQ;
-	Thu, 15 May 2025 08:16:56 +1000
-Date: Thu, 15 May 2025 08:16:56 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: cen zhang <zzzccc427@gmail.com>, cem@kernel.org,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com, zhenghaoran154@gmail.com
-Subject: Re: Subject: [BUG] Five data races in in XFS Filesystem,one
- potentially harmful
-Message-ID: <aCUWWBmhAOFHDszj@dread.disaster.area>
-References: <CAFRLqsVtQ0CY-6gGCafMBJ1ORyrZtRiPUzsfwA2uNjOdfLHPLw@mail.gmail.com>
- <aCSX29o_xGAUWtIl@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oJwd+/A0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747261103; x=1778797103;
+  h=date:from:to:cc:subject:message-id;
+  bh=tgC0H8Q9B4oE8lwmj+HHc15ZhgeuD1cfHRSNail4ffs=;
+  b=oJwd+/A0iXm1PXoe6zqMAIKmZ6e6RYXcViCbppgrE+2wWgWrb9W4MJ9u
+   usNkdUU3TJZEbA4yzANrPYFJlsPcYOfXrLZB7UYm3CpA8WcDuMsDdygmr
+   qXPsqqXofOXJu0IEN5HKTXAW7fZ4XcaVp2KV9VIYWxDwtd13vE72G8Uup
+   MkyTChbqPMDvdV64tSq8QuZuLtMwq5Izko7Br2BoXyRXI77hmgJR5BoOJ
+   TVeq4uLZgRx/T3tLX/mo1apiFTYmnDk2dJUWYEZRb8Axnt/4sHAVG2OGm
+   E98ggfiBj0fP88LCCSDVtS+NtrtzRlQqNzQUHC43ILGH7PtwtPL+ca+eI
+   A==;
+X-CSE-ConnectionGUID: Ubezp2YQSR+yUDPXvprPDA==
+X-CSE-MsgGUID: O0KSTdxpRLe8At7DhIvlZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60189687"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="60189687"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 15:18:23 -0700
+X-CSE-ConnectionGUID: U+88hYBxRXeoSDYOeXeOUw==
+X-CSE-MsgGUID: 8OuKwv8iSrO8lH+C/OAstw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="143368047"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 14 May 2025 15:18:22 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFKQd-000Hdx-2U;
+	Wed, 14 May 2025 22:18:19 +0000
+Date: Thu, 15 May 2025 06:17:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 24ee8d9432b5744fce090af3d829a39aa4abf63f
+Message-ID: <202505150635.4NCkhX36-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCSX29o_xGAUWtIl@infradead.org>
 
-On Wed, May 14, 2025 at 06:17:15AM -0700, Christoph Hellwig wrote:
-> > 1. Race in `xfs_bmapi_reserve_delalloc()` and  `xfs_vn_getattr()`
-> > ----------------------------------------------------------------
-> > 
-> > A data race on `ip->i_delayed_blks`.
-> 
-> This is indeed a case for data_race as getattr is just reporting without any
-> locks.  Can you send a patch?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 24ee8d9432b5744fce090af3d829a39aa4abf63f  x86/CPU/AMD: Add X86_FEATURE_ZEN6
 
-No, please don't play data_race() whack-a-mole with
-xfs_vn_getattr().
+elapsed time: 1462m
 
-Please introduce infrastructure that allows us to mark entire
-functions with something like __attribute__(data_race) so the
-sanitiser infrastructure knows that all accesses within that
-function are known to be potentially racy and should not be warned
-about.
+configs tested: 127
+configs skipped: 3
 
-We can then mark every ->getattr method in every filesystem the same
-way in a single patch, and knock out that entire class of false
-positive in one hit. That's a much more efficient way of dealing
-with this problem than one false positive at a time.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > 2. Race on `xfs_trans_ail_update_bulk` in `xfs_inode_item_format`
-> > -------------------------------------.
-> > 
-> > We observed unsynchronized access to `lip->li_lsn`, which may exhibit
-> > store/load tearing. However, we did not observe any symptoms
-> > indicating harmful behavior.
-> 
-> I think we'll need READ_ONCE/WRITE_ONCE here to be safe on 64-bit
-> systems to avoid tearing/reordering.  But that still won't help
-> with 32-bit systems.
+tested configs:
+alpha                            alldefconfig    gcc-14.2.0
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                        nsim_700_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250514    gcc-13.3.0
+arc                   randconfig-002-20250514    gcc-14.2.0
+arc                           tb10x_defconfig    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250514    clang-21
+arm                   randconfig-002-20250514    clang-21
+arm                   randconfig-003-20250514    gcc-7.5.0
+arm                   randconfig-004-20250514    gcc-7.5.0
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250514    clang-17
+arm64                 randconfig-002-20250514    gcc-5.5.0
+arm64                 randconfig-003-20250514    gcc-5.5.0
+arm64                 randconfig-004-20250514    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250514    gcc-13.3.0
+csky                  randconfig-002-20250514    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250514    clang-21
+hexagon               randconfig-002-20250514    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250514    clang-20
+i386        buildonly-randconfig-002-20250514    gcc-12
+i386        buildonly-randconfig-003-20250514    clang-20
+i386        buildonly-randconfig-004-20250514    clang-20
+i386        buildonly-randconfig-005-20250514    gcc-12
+i386        buildonly-randconfig-006-20250514    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                 loongson3_defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250514    gcc-14.2.0
+loongarch             randconfig-002-20250514    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip27_defconfig    gcc-14.2.0
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250514    gcc-7.5.0
+nios2                 randconfig-002-20250514    gcc-11.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250514    gcc-12.4.0
+parisc                randconfig-002-20250514    gcc-10.5.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                      katmai_defconfig    clang-21
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc                      pcm030_defconfig    clang-21
+powerpc               randconfig-001-20250514    clang-17
+powerpc               randconfig-002-20250514    gcc-5.5.0
+powerpc               randconfig-003-20250514    gcc-7.5.0
+powerpc64             randconfig-001-20250514    gcc-10.5.0
+powerpc64             randconfig-002-20250514    clang-19
+powerpc64             randconfig-003-20250514    gcc-5.5.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                               defconfig    clang-21
+riscv                    nommu_k210_defconfig    clang-21
+riscv                 randconfig-001-20250514    gcc-7.5.0
+riscv                 randconfig-002-20250514    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250514    clang-21
+s390                  randconfig-002-20250514    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250514    gcc-11.5.0
+sh                    randconfig-002-20250514    gcc-9.3.0
+sh                          rsk7203_defconfig    gcc-14.2.0
+sh                             shx3_defconfig    gcc-14.2.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250514    gcc-8.5.0
+sparc                 randconfig-002-20250514    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250514    gcc-14.2.0
+sparc64               randconfig-002-20250514    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250514    gcc-12
+um                    randconfig-002-20250514    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250514    clang-20
+x86_64      buildonly-randconfig-002-20250514    gcc-12
+x86_64      buildonly-randconfig-003-20250514    gcc-12
+x86_64      buildonly-randconfig-004-20250514    gcc-12
+x86_64      buildonly-randconfig-005-20250514    clang-20
+x86_64      buildonly-randconfig-006-20250514    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250514    gcc-10.5.0
+xtensa                randconfig-002-20250514    gcc-12.4.0
+xtensa                    xip_kc705_defconfig    gcc-14.2.0
 
-We had problems with LSN tearing on 32 bit systems 20-odd years ago
-back at SGI on MIPS Irix systems. This is why
-xfs_trans_ail_copy_lsn() exists - LSNs are only even updated under
-the AIL lock, so any read that might result in a critical tear (e.g.
-flush lsn tracking in inodes and quots) was done under the AIL
-lock on 32 bit systems.
-
-> Other lsn fields use an atomic64_t for, which
-> is pretty heavy-handed.
-
-They use atomic64_t because they aren't protected by a specific lock
-anymore. This was not done for torn read/write avoidance, but for
-scalability optimisation. There is no reason for lip->li_lsn to be
-an atomic, as all updates are done under the same serialising lock
-(the ail->ail_lock).
-
-As for reordering, nothing that is reading the lip->li_lsn should be
-doing so in a place where compiler reordering should make any
-difference. It's only updated in two places (set on AIL insert,
-cleared on AIL remove) and neither of these two things will race
-with readers using the lsn for fsync/formatting/verifier purposes.
-
-I think that even the old use of xfs_trans_ail_copy_lsn() is likely no
-longer necessary because flushing of dquots/inodes and reading the
-LSN are now fully gated on the objects being locked and unpinned. The
-LSN updates occur whilst the object is pinned and pinning can
-only occur whilst the object is locked. Hence we -cannot- be doing
-simultaneous lip->li_lsn updates and reading lip->li_lsn for
-formatting purposes....
-
-We extensively copy LSNs into the V5 on disk format with "racy"
-reads and these on disk LSNs are critical to correct recovery
-processing. If torn lip->li_lsn reads are actually happening then we
-should be seeing this in random whacky recovery failures on
-platforms where this happens. The V5 format has been around for well
-over a decade now, so we should have seen somei evidence of this if
-torn LSN reads were actually a real world problem.
-
-> > Function: xfs_alloc_longest_free_extent+0x164/0x580
-> 
-> > Function: xfs_alloc_update_counters+0x238/0x720 fs/xfs/libxfs/xfs_alloc.c:908
-> 
-> Both of these should be called with b_sema held.
-
-Definitely not. Yes xfs_alloc_update_counters() must be called with
-the AGF locked, but that's because it's -modifying the AGF-. The
-update of the perag piggybacks on this so we don't lose writes. i.e.
-we get write vs write serialisation here, we are explicitly not
-trying to provide write vs read serialisation.
-
-That's because the AG selection algorithm in
-xfs_bmap_btalloc_select_lengths() is an optimistic, unlocked
-algorithm. It always has been. It uses the in-memory
-pag variables first to select an AG, and we don't care if we race
-with an ongoing allocation, because if we select that AG we will
-recheck the selection (i.e. the free space info in the pag) once
-we've locked the AGF in xfs_alloc_fix_freelist().
-
-IOWs, this is simply another unlocked check, lock, check again
-pattern. it's a lot further apart than your typical single logic
-statement like:
-
-	if (foo) {
-		lock(foo_lock)
-		if (foo) {
-			/* do something */
-		}
-		unlock(foo_lock)
-	}
-
-But it is exactly the same logic pattern where no binding decision
-is made until all the correct locks are held.
-
-As I've already said - the patterns are endemic in XFS. They may not
-be as obvious as the common if - lock - if structure above, but
-that's just the simplest form of this common lock avoidance pattern.
-
-IOWs, these data races need a lot more careful analysis and
-knowledge of what problem the unlocked reads are solving to
-determine what the correct fix might be.
-
-To me, having to add READ_ONCE() or data_race() - and maybe comments
-- to hundreds of variable accesses across the code base adds noise
-without really adding anything of value. This isn't finding new
-bugs - it's largely crying wolf about structures and algorithms we
-intentionally designed to work this way long ago...
-
-> Does your tool
-> treat a semaphore with an initial count of 1 as a lock?  That is still
-> a pattern in Linux as mutexes don't allow non-owner unlocks.
-
-If it did, then the bp->b_addr init race wouldn't have been flagged
-as an issue.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
