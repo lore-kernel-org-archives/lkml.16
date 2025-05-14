@@ -1,93 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5F21E7C12
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC721E7C12
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747262552; cv=none; b=DoNNTWo5L7KZLdI9Jr/KoM+GnHvZGSDDFGmd8LQTWA5kzL9TqDkbKglCxnkr55nBabVj/qFREdZCjLFNHiu2EI+KKa2wdkNwEo0uHQ9z1zoEylZ8FPIDCpMNHm0Man8hLDZHov0nL4ynGdpyv8zrPI2aYqvqnyqGjZdWYildKlo=
+	t=1747262580; cv=none; b=RQT+7EEk1f6S9lVtoebUbx2D+rpwTy1UbYZhrqedGekLclagTwySZX+kIJx1VLUS1nB86Eqey+lRukBBdydvVIm9KtcDT1V3fzZ805fH7LqASqMpxtqfaGBpYkhC4aKeeFAWWZOdib5RKO8EloJp8B+Krm7kCvQCKvgIwjFDATw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747262552; c=relaxed/simple;
-	bh=HqBvV6Mm43C+fTjfNeVnhDD5t+2VPUTPH97oAV+b0AU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pttjiZJIOHU1i7Ap3E2mY1j9hzy6VKGGCBnyURlUCxc+vtWVkq+x0shTedNcIwaoerqW61dM5IIugiexm3uSVAWCE7bf6TDLUzjJ2ZFPGguhwWHYdYoBoWPeiHz4l04G8oFJ9B8zudK3cf1HySz3eOEpWRUeVdRWwtS6VYWx+r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EXlg+C3Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747262580; c=relaxed/simple;
+	bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IQRvUB8sDV8KaqGSl3WaVk4AXA3Vv7qRWICB8b4M+wlge0mgqdyoFbEF6R7EtkG9UJSREYyGZSFwCkEwl50coVhcBUs4qCE1w+Kmt1pMpLNtBBbHj3sUUTfnUPtk1PnX9fgWQ+m4QdPd0EvjVSL4bEaqeteIcpJ9anQw+w+Rsk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s85SoNad; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EXlg+C3Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC0CC4CEE3;
-	Wed, 14 May 2025 22:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1747262551;
-	bh=HqBvV6Mm43C+fTjfNeVnhDD5t+2VPUTPH97oAV+b0AU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EXlg+C3Y7yoQuMP5MoSRZjXVXr63qNxhNvMrGJOjHkmX6x2Frx1wZFtHRtc+QpVKN
-	 PdNP/Tcs7AEFU9X5WZLbL9JZgvjNOzBey4KE/e59GvdPfW9irnB3pkOlZWFsSfOMEX
-	 dQPHpRs02+DkLM7MP4j0NLSy7tVw7Jk0KBLC0KnU=
-Date: Wed, 14 May 2025 15:42:30 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Suren Baghdasaryan <surenb@google.com>, Tianyang Zhang
- <zhangtianyang@loongson.cn>, Harry Yoo <harry.yoo@oracle.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, Michal Hocko
- <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>, Johannes Weiner
- <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
-Subject: Re: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by
- cpuset race
-Message-Id: <20250514154230.7e121cbc89ee6bf35a193bd5@linux-foundation.org>
-In-Reply-To: <e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
-References: <20250416082405.20988-1-zhangtianyang@loongson.cn>
-	<aAYXP4f417_bx6Is@harry>
-	<025e3f51-2ab5-bc58-5475-b57103169a82@loongson.cn>
-	<20250422171116.f3928045a13205dc1b9a46ea@linux-foundation.org>
-	<CAJuCfpHbXmjAr2Rt0Mo_i32hpGOyXnVtXUd4qFjXriH9eYFDkQ@mail.gmail.com>
-	<20250510200740.b7de2408e40be7ad5392fed9@linux-foundation.org>
-	<CAJuCfpFdC6hgFSPy3M2sagkFobWeCuxLdcWiyV5pnzB55dgjZg@mail.gmail.com>
-	<20250513121609.a9741e49a0e865f25f966de1@linux-foundation.org>
-	<e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s85SoNad"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fce6c7598bso4173a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747262577; x=1747867377; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
+        b=s85SoNadIzhAVB2X+ehz87h3Up3PKQ4vQc8H/UR80ygwWhUTuU3N6/qRNC8E2v/y0X
+         fcqTEmTlAodQNCC0qirCSHqVwOS7b99lPBra+YIDGCRt0SgWqpIgaMV4hOteEgIvJIjO
+         2bWOSNBgBiHpP1ggdQj9u+kPGiw3ONXqGzUys1cEg4UbqIhEYvLzmG7rFMQefCY2MkQg
+         MCoGB8w3B0cN7GCvnyqVqq2dvmHlyUIvViumVkFquy8qewLf0b4jghHONU749UOokM0r
+         tKsuZ+O3EFIg055TDkffj27Pp72QJgX1GXEwFrkjwpzWDIBCqDJzVn6bRei1L26wJbw5
+         0/Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747262577; x=1747867377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
+        b=bkTm8S0MzU5K3O6vEvZE2UCVwv+r4rh+gw//stSmwuTfRLq372LHUY+w1zaf/RYZee
+         56xBB8alqYq56U4gIztK8C7D14frazEIA3FuWq6KtZRd4oHZhi4TT9ktNrUSOSa4PVSE
+         ciQpWKbAr6JInHPCVoWJe2qORxiXfcNCUy3SRABpde87hco0e4w/49UGXFMG9MSj7hzr
+         yssJoZSaEwKyZSjkapjBlJ7r19d9omzdUa5R/gdmFd6qTgJMsqsxH9BxG7InWWajaEIs
+         pBfHxsse0SNhaKNq3s6KAESS2251ljjo3xuTl07oUc9VZOM75cJqCLyoP/HVsOOXnRWN
+         YkFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7pPvyTQjHDZv+tDcq4azSF9Exb14FvYomMZwWeFA6vsc+sYm66VqnBhluUXdCxM6W+GRvazFGo1AG240=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj6KS/VtrdjQXq4UKtKuEQ9cwNFCnz5X8T9uJJbWZK8Eky8B7q
+	1ExI2jGVLcs8FUM18kC/b+jg0K4agGMZeI4OkOmPHJya0OVvAemlFKzDYZUvtGObozSWbCvyG8H
+	IzW0ST028QD72ASDBKnc2PZaGovtZsMuly1tj+DE+
+X-Gm-Gg: ASbGncuaocCCsq4xnfjZ1676Lx0Ed8aje39Yu1j9xudAm7XWHgypA4Lu6nBmuTTB/Nu
+	MOylUO1qwTSP+5ZdwsNVyVjhK5/HOuXjwbGt8u1DgvCLdUq7R+oItv9IPo3+F7Q0TBK2iOmpxbY
+	UmaKiVEUINUQe6jboN4vClf04FUJF6PkYLuuvyw6pLD5WqfqRXzfo7AJY5seAyD4o=
+X-Google-Smtp-Source: AGHT+IHU5Im31tvtHgwHOxA22uas4hBjTuXNbL5LJxD9MN/KwYiyJvt4pBB8Ap/BPSBA0Mm9bModh/Lb20VewV6efp8=
+X-Received: by 2002:a50:cd19:0:b0:5fc:a9f0:3d15 with SMTP id
+ 4fb4d7f45d1cf-5ffce28bb43mr11926a12.1.1747262577341; Wed, 14 May 2025
+ 15:42:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com> <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
+ <aCRdNJ2oq-REBotd@pollux> <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
+ <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com>
+ <aCUVuXO_jORqlxwr@pollux> <CAGSQo02nP8MT8q-_gQwjUGFNSyiW2AKOQ3V4yy9jofDzjc0SpA@mail.gmail.com>
+ <CAGSQo017FgGmStYxLX7JeqV+AcMUMjmnxF6KBesFhc31BieBbw@mail.gmail.com> <d61e11e2d99659cf13d0e20f56afe319720d03b7.camel@nvidia.com>
+In-Reply-To: <d61e11e2d99659cf13d0e20f56afe319720d03b7.camel@nvidia.com>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Wed, 14 May 2025 15:42:46 -0700
+X-Gm-Features: AX0GCFtfpNUWJr0poQ4vDSPImERirBrJ6RO-O60RIY74nWeZMm7_rHwF_g6VGdI
+Message-ID: <CAGSQo02-vYG-hkP2VXBVX9Lp8+=gxkyKh7TAYkAYhpiz6gj54w@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+To: Timur Tabi <ttabi@nvidia.com>
+Cc: "dakr@kernel.org" <dakr@kernel.org>, "tmgross@umich.edu" <tmgross@umich.edu>, 
+	"benno.lossin@proton.me" <benno.lossin@proton.me>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, 
+	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "lossin@kernel.org" <lossin@kernel.org>, 
+	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
+	"rafael@kernel.org" <rafael@kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
+	"aliceryhl@google.com" <aliceryhl@google.com>, "ojeda@kernel.org" <ojeda@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"samitolvanen@google.com" <samitolvanen@google.com>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 14 May 2025 09:34:53 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
-
-> On 5/13/25 21:16, Andrew Morton wrote:
-> > On Tue, 13 May 2025 09:26:53 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
-> > 
-> >> > > > This has been in mm-hotfixes-unstable for six days.  Hopefully we'll
-> >> > > > see some review activity soon (please).
-> >> > >
-> >> > > I reviewed and provided my feedback but saw neither a reply nor a
-> >> > > respin with proposed changes.
-> >> >
-> >> > OK, thanks.  Do you have time to put together a modified version of this?
-> >> 
-> >> I think the code is fine as is. Would be good to add Fixes: tag but it
-> >> will require some investigation to find the appropriate patch to
-> >> reference here.
-> > 
-> > Below is what is in mm-hotfixes.  It doesn't actually have any
-> > acked-by's or reviewed-by's.
-> > 
-> > So... final call for review, please.
-> > 
-> 
-> ...
+On Wed, May 14, 2025 at 3:40=E2=80=AFPM Timur Tabi <ttabi@nvidia.com> wrote=
+:
 >
-> After the discussion in this thread, Suren retracted this Fixes: suggestion.
-> I think it actually goes back to this one which introduced the
-> preferred_zoneref caching.
-> 
-> Fixes: c33d6c06f60f ("mm, page_alloc: avoid looking up the first zone in a
-> zonelist twice")
+> On Wed, 2025-05-14 at 15:32 -0700, Matthew Maurer wrote:
+> > One further possibility here, which we'd need Greg to weigh in on - we
+> > could add a method to the debugfs API intended for Rust usage which
+> > specifically releases a directory or file *without* releasing any
+> > nested elements. This would mean we could get rid of all the lifetimes
+> > on directory and file handles.
+>
+> I had a conversation with Greg about this topic just the other week.
+>
+> https://lore.kernel.org/linux-doc/20250429173958.3973958-1-ttabi@nvidia.c=
+om/
+>
+> There are two versions of debugfs_remove:
+>
+> void debugfs_remove(struct dentry *dentry);
+> #define debugfs_remove_recursive debugfs_remove
+>
+> Unfortunately, the direction that we've been going is to get rid of debug=
+fs_remove_recursive() and
+> have drivers only call debugfs_remove().
+>
+> What would solve your problem is doing the opposite: making debugfs_remov=
+e() be non-recursive and
+> require drivers to call debugfs_remove_recursive() if that's what they re=
+ally want.
+>
+> Maybe we need debugfs_remove_single()?
+>
 
-Updated.
-
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks.
+Yes, having access to `debugfs_remove_single()`, if it has the
+properties I would expect (namely that the kernel objects for
+inaccessible directories continue to exist, they're just not reachable
+through the VFS) would allow this design. It's not obvious to me if
+it's the design we want, but it would enable that design.
