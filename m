@@ -1,127 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA3E204592;
-	Wed, 14 May 2025 06:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23501F2C56
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204698; cv=none; b=hS9OxhgIml4+OCz1k1Um40eO9bX/Xe1zwV0+In9oeCDOwpGOfDhVSVxLRzMSEZH6mZjLqChSfMP9jyhK+ZxeMtWR4DPK++fgLx+TMmLwP72tZgsDpyZn9UswOVsYs+C30L3cJlHHFHnbmZ7plC631iKxCruqW8aymX4uuCn8nYA=
+	t=1747204776; cv=none; b=V0UW32WMAqpf0451EhrWaMig1T6ZA6Z3ePmmeTv5FV9Kq4TumuhnMv2msILsJoU5ru9wTt6u7CLK1Jqzn5h4OEJiCi2Pg+TemigOlxzio9ij4ijt0zqouT5hG4UDAOUtI9/XHPPuXlMv9NpuReMQ+wSbWMrymt9HBPh+ruEtjYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204698; c=relaxed/simple;
-	bh=O5XoA45OVZeec67U6NzneQ/tSvQ4WPrXJXEkDN3BaKw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V1WE186z0nFHW+yDJ1YzJikQpyXWjk0VbVIN5pf5zdCcpa6QXxvNMJYeeM/jebMVjKQJKzkkK00ugvUXp15DwCrIU/+ZoAc06L85tcJi1PDpfqCFTyliRkbO78XZV1sBQL6kHcTzgjXaj8sMpD8w4C8Xpk+t2cryU4IxmR8q17A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mmdMUL8y; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747204776; c=relaxed/simple;
+	bh=t+I9jepCTpJL8tyV3dOboQAZCLRWhrYhIPZr5m8t808=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OvqoJxgdY/z7SNHtp0cXqfsZvDfyJcNPwBb/yHs0+D9Tyscbga3TMLvw1mrsPvSblFS5gekNj6fpch8I4Cj3jie/MSwvjAY5qH9L3EbcPemFaOm+rmPxAyXt5A6Ubc67ome1GJA7eRQRjyMY0DXju31vV2nA9osaAqsrKGxP7kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1DrrCWys; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M6KEQfAy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1DrrCWys; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M6KEQfAy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mmdMUL8y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747204697; x=1778740697;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=O5XoA45OVZeec67U6NzneQ/tSvQ4WPrXJXEkDN3BaKw=;
-  b=mmdMUL8ypZvJhchuOhc/g+Bgfb+ZAvbf1Gri61gzz6PHTBbtKQYgR1lY
-   Szn2s6T6bSxeSQblO8HZ2vWC9wdTZr25B9A/Gg7i5CMXLQUiI7+zAjztT
-   6MquPAr/I7F3MV/g00Uj3HkxeTsvJhiwavjy1rZOxDc01X9n7H27HDZAM
-   rzW3cxcmDvya/VXKUC5KvRBuUh66o+sNsV0VPYQaA30Xb9ez5JNlCX4RZ
-   GMPO/WLC2tNgSypIq4wYzYErEMeyiIuCtLyaQaZXQ2AP+SiNvCoO0heuW
-   u9Ufwav7r1zE9AP9eIUdaChuBBKGxLJyuaOGPd3gGtBrGzEvr0a7c195P
-   g==;
-X-CSE-ConnectionGUID: drpuVKXATWGCsMIpFMEPbQ==
-X-CSE-MsgGUID: Gp+Wf9iITPa2Cv3wuks6zg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="49247427"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="49247427"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 23:38:17 -0700
-X-CSE-ConnectionGUID: 7KRsks/CQ3e38/Id89Eakg==
-X-CSE-MsgGUID: hzxwkZHYRJGw1MUjBHdYbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="138933969"
-Received: from shsensorbuild.sh.intel.com ([10.239.133.18])
-  by fmviesa009.fm.intel.com with ESMTP; 13 May 2025 23:38:14 -0700
-From: Even Xu <even.xu@intel.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org
-Cc: srinivas.pandruvada@linux.intel.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Even Xu <even.xu@intel.com>,
-	Chong Han <chong.han@intel.com>
-Subject: [PATCH v1 3/3] HID: Intel-thc-hid: Intel-quicki2c: Enable Wake-on-Touch feature
-Date: Wed, 14 May 2025 14:37:35 +0800
-Message-Id: <20250514063735.141950-4-even.xu@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250514063735.141950-1-even.xu@intel.com>
-References: <20250514063735.141950-1-even.xu@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1DrrCWys";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M6KEQfAy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1DrrCWys";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M6KEQfAy"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D0A1D1F793;
+	Wed, 14 May 2025 06:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747204766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0kF4dO/+KxJMqI/h3j7CUouKL+W5cmBwxlegzo07i8=;
+	b=1DrrCWys1+JN1yBIJncm+kcW7DfWTTRCAEUXbiv1K+lcDKnvdlpGh68U3hVV1LKyClp6aG
+	KtCtWmA2/MXFIZMPt8HOJyN/no5HOyiwnkJWyLXjQuMuz1j9HMab+IaHVXe1MtTCKxssdF
+	KQpXmgAkHm15HBofyURIvb6UTRG5MEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747204766;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0kF4dO/+KxJMqI/h3j7CUouKL+W5cmBwxlegzo07i8=;
+	b=M6KEQfAyo+8S/KYWgukPNV970s1dpMk/NrXWUfBbq+LNepfQ61k2gxRG0rlWOwYM9xG7Kj
+	iqHaRAxIOl05rlCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747204766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0kF4dO/+KxJMqI/h3j7CUouKL+W5cmBwxlegzo07i8=;
+	b=1DrrCWys1+JN1yBIJncm+kcW7DfWTTRCAEUXbiv1K+lcDKnvdlpGh68U3hVV1LKyClp6aG
+	KtCtWmA2/MXFIZMPt8HOJyN/no5HOyiwnkJWyLXjQuMuz1j9HMab+IaHVXe1MtTCKxssdF
+	KQpXmgAkHm15HBofyURIvb6UTRG5MEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747204766;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0kF4dO/+KxJMqI/h3j7CUouKL+W5cmBwxlegzo07i8=;
+	b=M6KEQfAyo+8S/KYWgukPNV970s1dpMk/NrXWUfBbq+LNepfQ61k2gxRG0rlWOwYM9xG7Kj
+	iqHaRAxIOl05rlCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C2D1137E8;
+	Wed, 14 May 2025 06:39:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IQm8OJ06JGjZcQAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 14 May 2025 06:39:25 +0000
+Message-ID: <37bb9993-baaa-4dc8-b5d4-e66201e4a462@suse.de>
+Date: Wed, 14 May 2025 08:39:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+To: Benjamin Marzinski <bmarzins@redhat.com>,
+ Christoph Hellwig <hch@infradead.org>
+Cc: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
+ dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+ snitzer@kernel.org, linux-kernel@vger.kernel.org
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
+ <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
+ <aCLjPLCztuXhgpnA@infradead.org>
+ <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
+ <aCLrbz3bRLwUbA8p@infradead.org> <aCNzf7MJa-hLQpmv@redhat.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <aCNzf7MJa-hLQpmv@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
+X-Spam-Score: -4.30
 
-This patch call THC helper functions to enable Wake-on-Touch (WoT)
-during driver initialization and disable it when driver is removed.
+On 5/13/25 18:29, Benjamin Marzinski wrote:
+> On Mon, May 12, 2025 at 11:49:19PM -0700, Christoph Hellwig wrote:
+>> On Tue, May 13, 2025 at 08:32:12AM +0200, Hannes Reinecke wrote:
+>>> Reservations and stuff.
+>>
+>> They should use the kernel persistent reservation API.
+> 
+> Currently QEMU isn't sending Persistent Reservation requests to
+> multipath devices at all. It's sending those directly to the underlying
+> scsi devices. The issue here is with all the other SCSI commands that
+> users want to send to their SCSI passthrough device that is actually a
+> multipath device on top of a number of SCSI paths. They expect to
+> get back the actual sense and status information, so QEMU needs to
+> send them via SG_IOs.
+> 
+> Without reading that sense and status information in kernel, the
+> multipath target can't know if it needs to fail a path and retry the
+> ioctl down a different path. QEMU can read this information, but it
+> doesn't know what path the multipath device send the ioctl down. This
+> patch just gives users a way to check the paths in the active pathgroup
+> (which all should be able to handle IO) and fail those that can't.
+> While QEMU is the driver of this, it's completely general functionality.
+> 
+Ouch.
+Different reservations on different paths? Really?
+How do you manage to keep the reservations up-to-date?
 
-Signed-off-by: Even Xu <even.xu@intel.com>
-Tested-by: Chong Han <chong.han@intel.com>
----
- .../intel-thc-hid/intel-quicki2c/pci-quicki2c.c    | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+My recommendation is to use the _same_ reservation on all paths,
+precisely to avoid having to re-do reservations on path failure.
+And for that scenario the kernel persistent reservation API
+would work fine.
 
-diff --git a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-index 40faba5bd81d..3335775dcf4d 100644
---- a/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-+++ b/drivers/hid/intel-thc-hid/intel-quicki2c/pci-quicki2c.c
-@@ -11,8 +11,11 @@
- #include <linux/sizes.h>
- #include <linux/pm_runtime.h>
- 
-+#include <linux/gpio/consumer.h>
-+
- #include "intel-thc-dev.h"
- #include "intel-thc-hw.h"
-+#include "intel-thc-wot.h"
- 
- #include "quicki2c-dev.h"
- #include "quicki2c-hid.h"
-@@ -31,6 +34,14 @@ static guid_t i2c_hid_guid =
- static guid_t thc_platform_guid =
- 	GUID_INIT(0x84005682, 0x5b71, 0x41a4, 0x8d, 0x66, 0x81, 0x30, 0xf7, 0x87, 0xa1, 0x38);
- 
-+/* QuickI2C Wake-on-Touch GPIO resource */
-+static const struct acpi_gpio_params wake_gpio = { 0, 0, true };
-+
-+static const struct acpi_gpio_mapping quicki2c_gpios[] = {
-+	{ "wake-on-touch", &wake_gpio, 1 },
-+	{ }
-+};
-+
- /**
-  * quicki2c_acpi_get_dsm_property - Query device ACPI DSM parameter
-  * @adev: Point to ACPI device
-@@ -398,6 +409,8 @@ static struct quicki2c_device *quicki2c_dev_init(struct pci_dev *pdev, void __io
- 
- 	thc_interrupt_enable(qcdev->thc_hw, true);
- 
-+	thc_wot_config(qcdev->thc_hw, &quicki2c_gpios[0]);
-+
- 	qcdev->state = QUICKI2C_INITED;
- 
- 	return qcdev;
-@@ -413,6 +426,7 @@ static void quicki2c_dev_deinit(struct quicki2c_device *qcdev)
- {
- 	thc_interrupt_enable(qcdev->thc_hw, false);
- 	thc_ltr_unconfig(qcdev->thc_hw);
-+	thc_wot_unconfig(qcdev->thc_hw);
- 
- 	qcdev->state = QUICKI2C_DISABLED;
- }
+Cheers,
+
+Hannes
 -- 
-2.40.1
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
