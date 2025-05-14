@@ -1,178 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FD9286D52
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794E92868AC;
+	Wed, 14 May 2025 18:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747247752; cv=none; b=lyq5DmpKtFnELLIxTuAHMKOaBgVrKeomp8W3HUQ9vL4Xqsf2fLtKRMfmxbC7adBo6hP/ThuzJQA4KUJm2AodYst/V2iGcaCuG6u9X8wCcGekTDcx21WS2LxL3s6wwut1t5kDBiP7JzWOpNC0g1jZu7ZIBfaYwDbXsLIXlJnQUM8=
+	t=1747247763; cv=none; b=S17kghtk7RpugArzYKHOExKJlPCtNIFHtExT8r/0ZlmzxGkbZ+GjGHzAeYW7Yyx2dUl+N0hRe2b81TXhPA9WGfIIZ5/NclKGMU7drvzT4dgAAlpKdefaPUJkXkI3QTc8iP8EjVI+R42P/Br5G4UM4YWJ0+sykW7LgEX1Oa8EjaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747247752; c=relaxed/simple;
-	bh=FXR+yoHky+nwxXWGDuzeNtD0Pl66EDMCJYYq1hhFKLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fNht1in7AFmdjAO0UjcLAUtmHmoUEBvy7Hhqrl1gMQksf7a6wMP/aNIlhlnCuMWGguBUHFSYugccRLVY4MsG8FmjstjBhQ0Q8qp4rvm4ozQ3UtDdsC41WUBJjIkXmoniXBliWhTwhTkdxvZTc0kkIWc1OMb+k5bi7lLAS/HKmak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzFXTm6p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747247763; c=relaxed/simple;
+	bh=GI6GV8zDIzVOjtLbHyquzeknCcpj5W9CpPsYjq4PvkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HrIB1na04J92ItdPTdDj2LGKueeZ9pmH83tYrmj3WS+IYEfWrcSw1RQS/Kc3bo/8qQtCMKRhGeICN7cslzru9en5IXYSrl7ZicUL77yErzoBiwimICN0i4nXTXEJbSyfrYi1hNz9oNMr8u8Pp1Mr4Y+HTwB54sS8S76jAcKlvuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFEyPEPy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzFXTm6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 892B2C4CEFA
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:35:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFEyPEPy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082F6C4CEE3;
+	Wed, 14 May 2025 18:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747247752;
-	bh=FXR+yoHky+nwxXWGDuzeNtD0Pl66EDMCJYYq1hhFKLE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CzFXTm6pYTm3IvFXuLGBNTrojvDZ4pcyUIX/pniAZRBOfJIUdCk0nVWmfzi0m5TgT
-	 nOsOV+uLSOiTCgJcA7Ey208+W5NAFvE5v3OpSg1O7e7KtSduzo1K1RHjJ3HMO6Trej
-	 hyGN4OY1HiyBWHZbcThBH3f4ibd99Jjn5p0T7ELy/XJH8sml9xFDczT6GsYyTDnkMR
-	 NW7az8rjYgR3YqCPqNOInJzDSiOJ/xM5huA43kuwW6WciZfacZtThoOIkfKnjfAVnh
-	 pnAm+gZgzhY96ILzfg6OdszsrSCRM1eTcolG9UIn3XEFAJT4k6KaZWWdOZwGw8rm3G
-	 5an1Jlur3hW6A==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5fbee322ddaso291319a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:35:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpfOq2gN9CMgq2ounLt5aWg6UouXwWujqNABQ63htl4Ieec3dfQlFc2HGk0e9WI1tF1V3UWoFrJ1VRrVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU/G1JOTgQTOtxUG2z+t3odjKpFzkXppWigQZxqSo68mF2k4kv
-	qcz9fhWDbwO82Veh2E+j/pNvvXz6PTTB2hzZGMHTAIThUGzm46pRxwAP/XPlC2Lja7eXpiOyvV6
-	pfyivR6RaW7LPi61VRgO5SpfDJj6Fm2iPb1Ls
-X-Google-Smtp-Source: AGHT+IFtQMXy9LFulSzKje1GuSuGBtYynlXEWPAAMjiUP2194GFK8Vq6VYTuT87LMKZh7Uff3AMO5FsjIgB/BYZJ9Bw=
-X-Received: by 2002:a05:6402:2553:b0:5fc:3f48:a673 with SMTP id
- 4fb4d7f45d1cf-5ff98897f75mr3681731a12.2.1747247739543; Wed, 14 May 2025
- 11:35:39 -0700 (PDT)
+	s=k20201202; t=1747247763;
+	bh=GI6GV8zDIzVOjtLbHyquzeknCcpj5W9CpPsYjq4PvkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RFEyPEPyPQShQEyw7OO65b7wRiCkFyPD4qO5J8476xB+ZF0W8QcKubvwS8mlCXBA1
+	 nym/QsVGIx6lSZJ+cfzCdtBIULFlX1MxgFiynWX3+CiRY5D08w9WEhS5a/6vhnkH22
+	 1JEm8Zdl3werjDFztltg+n/5Uc5xZPZa7ueA6F23db7KK4Pq5KlIi/61Qutf7zkJ3S
+	 I0dmaSeswWLd7QjUg236A/nrPoyTaSld8gzTCVTrcz4jHg4NtuwLoRV835fbFyKSfa
+	 vpVx/RQikuLb5ASnnmm70sXM9E9x4cWWBot4f8gfykVoUoLx+F/rElm62yIEeo9aTk
+	 SwN1OJz73t3Hg==
+Date: Wed, 14 May 2025 20:35:57 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 2/2] UFFDIO_API.2const: Add an entry for UFFDIO_MOVE
+Message-ID: <vieccowqkugkj3zmeamlcwzbw6k4ezektgvpwinnc3cok3wjch@e6xx2momytki>
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-3-peterx@redhat.com>
+ <sxwdi5itwngdermj4w77ycwgyes4x7yyfl7v66mxj7co4xm6xm@27aqjwxvh4qk>
+ <aCTRaebpHZjVJHut@x1.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
- <CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com>
- <beaa81748cf1325df67930bf74ea87e6cdcb3e46.camel@HansenPartnership.com>
- <CACYkzJ5XJOj08+hKheWDcqbPrFAwa+fFvOw+4QPAHBz1u2HgAg@mail.gmail.com> <4f92fcfaeffd179ff6ae265822dc79856310d6a3.camel@HansenPartnership.com>
-In-Reply-To: <4f92fcfaeffd179ff6ae265822dc79856310d6a3.camel@HansenPartnership.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Wed, 14 May 2025 20:35:28 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ7Oh62u7bHwQ_nOLG54qnhyNU9msF5mWV_vFrBXw1oZqw@mail.gmail.com>
-X-Gm-Features: AX0GCFu6wgKt8ns7B4WmAYl1fFIsHpTPOSXa547IdWuqOMoeu6YVbaSdA5YH5n0
-Message-ID: <CACYkzJ7Oh62u7bHwQ_nOLG54qnhyNU9msF5mWV_vFrBXw1oZqw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Paul Moore <paul@paul-moore.com>, bboscaccy@linux.microsoft.com, bpf@vger.kernel.org, 
-	code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, dhowells@redhat.com, 
-	gnoack@google.com, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	jmorris@namei.org, jstancek@redhat.com, justinstitt@google.com, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, llvm@lists.linux.dev, 
-	masahiroy@kernel.org, mic@digikod.net, morbo@google.com, nathan@kernel.org, 
-	neal@gompa.dev, nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu, 
-	nkapron@google.com, roberto.sassu@huawei.com, serge@hallyn.com, 
-	shuah@kernel.org, teknoraver@meta.com, xiyou.wangcong@gmail.com, 
-	kysrinivasan@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7aocn3ddjkiyj4pl"
+Content-Disposition: inline
+In-Reply-To: <aCTRaebpHZjVJHut@x1.local>
+
+
+--7aocn3ddjkiyj4pl
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrea Arcangeli <aarcange@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org, 
+	Robert O'Callahan <robert@ocallahan.org>, Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH 2/2] UFFDIO_API.2const: Add an entry for UFFDIO_MOVE
+References: <20250512171922.356408-1-peterx@redhat.com>
+ <20250512171922.356408-3-peterx@redhat.com>
+ <sxwdi5itwngdermj4w77ycwgyes4x7yyfl7v66mxj7co4xm6xm@27aqjwxvh4qk>
+ <aCTRaebpHZjVJHut@x1.local>
+MIME-Version: 1.0
+In-Reply-To: <aCTRaebpHZjVJHut@x1.local>
 
-On Wed, May 14, 2025 at 7:45=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2025-05-14 at 19:17 +0200, KP Singh wrote:
-> > On Wed, May 14, 2025 at 5:39=E2=80=AFPM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> > > On Sun, 2025-05-11 at 04:01 +0200, KP Singh wrote:
-> [...]
-> > > > This implicitly makes the payload equivalent to the signed block
-> > > > (B_signed)
-> > > >
-> > > >     I_loader || H_meta
-> > > >
-> > > > bpftool then generates the signature of this I_loader payload
-> > > > (which now contains the expected H_meta) using a key (system or
-> > > > user) with new flags that work in combination with bpftool -L
-> > >
-> > > Could I just push back a bit on this.  The theory of hash chains
-> > > (which I've cut to shorten) is about pure data structures.  The
-> > > reason for that is that the entire hash chain is supposed to be
-> > > easily independently verifiable in any environment because anything
-> > > can compute the hashes of the blocks and links.  This independent
-> > > verification of the chain is key to formally proving hash chains to
-> > > be correct.  In your proposal we lose the easy verifiability
-> > > because the link hash is embedded in the ebpf loader program which
-> > > has to be disassembled to do the extraction of the hash and verify
-> > > the loader is actually checking it.
-> >
-> > I am not sure I understand your concern. This is something that can
-> > easily be built into tooling / annotations.
-> >
-> >     bpftool -S -v <verification_key> <loader> <metadata>
-> >
-> > Could you explain what's the use-case for "easy verifiability".
->
-> I mean verifiability of the hash chain link.  Given a signed program,
-> (i.e. a .h file which is generated by bpftool) which is a signature
-> over the loader only how would one use simple cryptographic operations
-> to verify it?
->
+Hi Peter,
 
-I literally just said it above the hash can be extracted if you really
-want offline verification. Are you saying this code is hard to write?
-or is the tooling hard to write? Do you have some definition of
-"simple cryptographic operations".  All operations use tooling.
+On Wed, May 14, 2025 at 01:22:49PM -0400, Peter Xu wrote:
+> On Wed, May 14, 2025 at 05:02:57PM +0200, Alejandro Colomar wrote:
+> > Hi Peter,
+> >=20
+> > On Mon, May 12, 2025 at 01:19:22PM -0400, Peter Xu wrote:
+> > > Add the entry for UFFDIO_MOVE in UFFDIO_API.
+> > >=20
+> > > Signed-off-by: Peter Xu <peterx@redhat.com>
+> >=20
+> > Should we add the following tag?
+> >=20
+> > Fixes: d7dec35a3b19 (2025-05-01; "man/man2/ioctl_userfaultfd.2, man/man=
+2const/UFFDIO_MOVE.2const: Document UFFDIO_MOVE")
+>=20
+> Sure.
+>=20
+> >=20
+> > Also, I think the subject should mention UFFD_FEATURE_MOVE, or at least
+> > somewhere in the commit message.
+>=20
+> I'll rename the subject to:
+>=20
+>   UFFDIO_API.2const: Add an entry for UFFDIO_FEATURE_MOVE
+>=20
+> I didn't know we need Fixes for man pages.
 
->
-> >
-> > > I was looking at ways we could use a pure hash chain (i.e.
-> > > signature over loader and real map hash) and it does strike me that
-> > > the above ebpf hash verification code is pretty invariant and easy
-> > > to construct, so it could run as a separate BPF fragment that then
-> > > jumps to the real loader.  In that case, it could be constructed on
-> > > the fly in a trusted environment, like the kernel, from the link
-> > > hash in the signature and the signature could just be Sig(loader ||
-> > > map hash) which can then be
-> >
-> > The design I proposed does the same thing:
-> >
-> >     Sig(loader || H_metadata)
-> >
-> > metadata is actually the data (programs, context etc) that's passed
-> > in the map. The verification just happens in the loader program and
-> > the loader || H_metadata is implemented elegantly to avoid any
-> > separate payloads.
->
-> OK, so I think this is the crux of the problem:  In formal methods
-> proving the validity of a data based hash link is an easy set of
-> cryptographic operations.  You can assert that's equivalent to a
-> signature over a program that verifies the hash, but formally proving
-> it requires a formal analysis of the program to show that 1) it
-> contains the correct hash and 2) it correctly checks the hash against
-> the map.  That makes the task of someone receiving the .h file
-> containing the signed skeleton way harder: it's easy to prove the
-> signature matches the loader instructions, but they still have to prove
-> the instructions contain and verify the correct map hash.
->
+We don't *need* it (as you don't technically need it in any projects),
+but it's nice to have.  :)
 
-I don't see this as a problem for 2 reasons:
+>  I'll also attach a fixes for
+> the first patch for commit a252b3345 ("ioctl_userfaultfd.2: Describe
+> two-step feature handshake").
 
-1. It's not hard
-2. Your typical user does not want to do formal verification and
-extract signatures etc.
+Thanks!
 
-[1] alone is enough.
 
-The key user journey is:
+Cheers,
+Alex
 
-* Build the program and the metadata
-* Sign the blob once (as explained)
-* A simple API to verify the sequence of operations.
+>=20
+> Thanks,
+>=20
+> --=20
+> Peter Xu
+>=20
 
-The user builds a program and signs the blob, they sign it because it
-contains the hash of the metadata. It seems like you are optimizing
-for the formal researcher but not for the tooling. The user just needs
-good tooling and a simple API which is exactly what was proposed.
+--=20
+<https://www.alejandro-colomar.es/>
 
-- KP
+--7aocn3ddjkiyj4pl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Regards,
->
-> James
->
->
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgk4owACgkQ64mZXMKQ
+wql+Ug/9GTYACgiGC27vbkTq4/4Q6Kz/RK3llG4BN7VYlq/YvIYRyY7zyP5JV3H2
+EtTF7EQrzUFUvLeJvTnOmOjUvevApLL9t9uBRoWLpnLnW/YfERgaXNymQmAVdDIb
+ZM/09aw4w/cStT1OkjJtcoHhVKhTDkYiF7kvhYHeHhUB+HcvcsRoET3eoPG6k5cd
+Xhe3r8LeHVbfyo2IAg4Ivhum9aPFcC2EN5vqLj8S2xLzWGEEoACYm4pnx3MMzRZL
+SDTjtgfcjv+zo72C8l6Iyci7J9TZyG7KG/pRHEOtmX9BIKD2GYdVjpRe8Y+WJVgU
+Tcz3ZQ3dl7/KzWnmPqZnoReYabK45hrkNtUA5cGlqttcqlUg8WmEgHo/x1aZUxuY
+BEFzkC1bkHneD62uttkEBcyOfCqussJE9QbhgOqk2qgmgJ47VrJfqugRRL8V0yMD
+5rTgexJ6awlt424LqP9yYFAPIm2SCoCLIzFuPwqdxiIS6RCjS+9yEKcgVlKkSFIz
+8LiJPaS5HOxTiTX6WPeJ5UpiwXZeBL+881qphqWs5Gxj9k3G7DS5N6D4B/Ln+us5
+qHdowcT8muY4eHY5JY3+4P/JXM68L3i33YFZUYegnUdEhsG+FMl9HUlaG2c4Hh2z
+GpXhV8X7USFJX7ZHRJYRRer2YnynRa8m3Y5clFcZ9W1bBKW0OtU=
+=StKk
+-----END PGP SIGNATURE-----
+
+--7aocn3ddjkiyj4pl--
