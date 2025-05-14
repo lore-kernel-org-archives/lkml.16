@@ -1,109 +1,211 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E0A1F4C96
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9149761FF2;
+	Wed, 14 May 2025 21:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747258582; cv=none; b=py5UFd6iCz4OrsB8ezuo11bW+Z9NECK9wNqpnLPkbtQ3cP5uOJ+bUQv4yDRJR68EFleUmKTRO5NWINMtPeVsPnUVFPxEbLT6wSkcJ0KkTcjaZQBS57EBDWugaW2eglTKV0j+Bbw5Q3RH2NAR+p2gGoDUialVIN7/Ix4eS+H4zC8=
+	t=1747258641; cv=none; b=QLseGd0vF+anYwHtCMSStRy+4lTGE2lMWZ0HcK8cCFlrixP3auShjh2lqy6pII28fAH1/BgjlwSyWdo+hk/HHhfsu7k3pqYS/89/9H24rkbAPoZHARftqHUkyXRcEQDwj32kQBeCnKKC4lpvh1L4YiI/eEjcYcrXZBj7qwlLR0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747258582; c=relaxed/simple;
-	bh=FIQf+pI+HA3ZvOhS2Ssnr8uj7ZeK3pm+nL4eDCGxlqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XrWagEi28vB6EKo0MqjwZ2fl7Y4dy/yeqFZWWoVY/8PHl7Tibv4RhOzTfuY6kjnTRsSA9NkiX+a6QDvgv/vx3G09a9hfCKnG8fkmcwK2rzCjv1+1yROlyB92S2ix4NCma28sH9Njs+C3EJqQkgT1MmsidGul7vByDpNXL5vIDQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYyLmtMP; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747258641; c=relaxed/simple;
+	bh=xRFOVzuv9WFmt0OA/lEjVrkz1nJAEAvQhv3PjcQUuUc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d49vKWuOw+R2sGHETNeaenFjPz2iy7fuEjEVmbT9MwY4Csvfo2uKNSQVP+iCC3MeHCmRBcXiDrhQ1sWdZ3yheGDrGaFh9aHE8JVTGfpIr/681wbAyct4kjfRk3o6gbevnh7jshZelE+ABBhvhbgk/w23GjKVFBeUf8YMMohKhgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qnFQzg7H; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYyLmtMP"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so355014a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747258578; x=1747863378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5+DNS9xaFvD08mwIBHjANTPXx95oyivENI1zztffOE=;
-        b=UYyLmtMPK54BzLMgE8DTWk6rdQymQIcOE1mibvWA3wpYgakmUraONacQi3t0YUQnUc
-         ENBwAtd7OV18xWW5PmXylm8HkC3zodN4JmWC19AEnevQibTkIyHYju1t5O/MY/JVP84p
-         64ZGzq36QUHk2mf2Shol4bVU4/TRQf0xn4DWE7qNFgOZrKXCYqNzpSaBAk/FEf0rzizO
-         wtPKvm4kb13QTwhazJayS8y43yg+ZrgV0/1CGiMgWhOffEbJ6Kn/iGe4ml5sSk4uqNGG
-         l80fPYp38i4TQ6s+SF2pgrCGqujzCj0LOhw8HnJApNB61aYqjfoPIJJ2c4s3uq473i0S
-         wVlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747258578; x=1747863378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v5+DNS9xaFvD08mwIBHjANTPXx95oyivENI1zztffOE=;
-        b=TQzCUjBW116RD6/hw2H3T/MjIom5Sb5d3e1bhLM9oZ8SkAaI0MiCZdcgQYNUAvUOrU
-         e49GLkiHUYFWJUvO4TCQ7UvLFVIutFPMSzNU+1gdTIkNfvFbUs0LH4/kXDvoxX0m5Kf4
-         M7lXSs725juokdMYq6peV/dNDeeKxw2IW5FUoqa1ym5B32KPCFE8Jz1bbDM8r0kN/sPj
-         VTVnfP7zruhtzuu5y1j7YIXG9zX0gSdKFzIuSwFfuJKzIgmmGRv+xgGBAtznlPfLh4jJ
-         HTZ6tc1M2EPuQnjrdnABbGx8BOOknVEYxgL/X0/CqjrOproNTNdP98uFTvzkJcpKD0jE
-         fQdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUF0f2an8BsRoRkIqz/kiredcoc5pu3vqGmP3GnEWtExldWTpCGfO7fNL3a0Ggs6eijlBH20y0pJLCY36M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlyYklOGb7aHuLScaJ927/EZGksBnbbcTkFGHEJddmyEBkpW3F
-	78WrzonwPRn7Sljaqz75/dq5Xmcq0FxHh3QgeEPYzm6hH7sIEJXY
-X-Gm-Gg: ASbGncsIAjH3IMjL5X0PEyFeT2qXE60yQ+fhHM2rz5Jbv55WDAs7AzHN4TlCet52HVc
-	pwHxYYuvGzUm6Z/yWjjW+twENKhEM0mHDKWrkx3QQMEUHU01HelN9GH8HQIRxeqzvXkhLd172oo
-	fzG1eD+DBe4FBh5+5qilXd9gClaLh5bcIHyeT3ZXziEsPxm0r9Qo+uu0hWmfJTJ1tNlu1CZSELG
-	6SXX7mj+hLgpKu7gIHdQ6FmI2UAVaxYJ7tjQ3eUxrfWB2UUKwJhg1RwuNHsVdxHoY5Ji6TOMEyz
-	Hpj3sxBYKVKcI6+uWSE0las4NvsJs+nQzVzr3j8Ay3LD7En+62X8cFQXv2BTnXFvhw==
-X-Google-Smtp-Source: AGHT+IHOlcKTEqpmbbwYa6fymXr66iLa7UzzLeEx4mTbWzk9LmvInpwWaQApBbo8ZP8SyJLL2+etOQ==
-X-Received: by 2002:a17:90b:1c09:b0:30c:540b:99e with SMTP id 98e67ed59e1d1-30e2e5b678cmr7925932a91.13.1747258578130;
-        Wed, 14 May 2025 14:36:18 -0700 (PDT)
-Received: from rahul-mintos.ban-spse ([165.204.156.251])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33425194sm2026770a91.14.2025.05.14.14.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 14:36:17 -0700 (PDT)
-From: Rahul Kumar <rk0006818@gmail.com>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	skhan@linuxfoundation.org
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	rk0006818@gmail.com
-Subject: [PATCH] docs: fix doc warning for DC_HDCP_LC_ENABLE_SW_FALLBACK in amd_shared.h
-Date: Thu, 15 May 2025 03:05:11 +0530
-Message-ID: <20250514213511.380890-1-rk0006818@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qnFQzg7H"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EIsOfN012674;
+	Wed, 14 May 2025 21:36:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=xRFOVz
+	uv9WFmt0OA/lEjVrkz1nJAEAvQhv3PjcQUuUc=; b=qnFQzg7HUiK+nls3CnYth2
+	E65MbfXC4F7eIKUnxhjoxc2QNG9QskMUZofNp9wV+dyFBlM1N43/gSxtAzLB0Umu
+	NwiYVLio++qMzar+i3Ay/xz8ctDRy8AIHNwwVJG28mSDJbDOUVdCQ27ye5kXkNi4
+	thdVHNtQk5c18yvGFni8gUH09/BXB0OtwYP5SsqO3ta8KmaHcinJZVpQByhuKy/P
+	3lZnAHqiX6jyl2QKQASRr/PPH2oh8KQkkUtIvOvzRZkuGMr98zXAbQZzK2tloR+f
+	1YE7YOrtytMi9/L37H35fcyImDjfqX4bZo45VQ8BTE/WrHe2G7dy8WDnQa0art+g
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46n0v6gsv5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 21:36:25 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54ELaOks014072;
+	Wed, 14 May 2025 21:36:25 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46n0v6gsv2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 21:36:24 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EJbtR5024288;
+	Wed, 14 May 2025 21:36:23 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfs6ppb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 21:36:23 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54ELaM1A28508780
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 21:36:23 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A87175805A;
+	Wed, 14 May 2025 21:36:22 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 00EAC5805C;
+	Wed, 14 May 2025 21:36:20 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 14 May 2025 21:36:19 +0000 (GMT)
+Message-ID: <3bc7c90c620d46378978f30e03cf8375dc0cbc42.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 2/9] ima: efi: Drop unnecessary check for
+ CONFIG_MODULE_SIG/CONFIG_KEXEC_SIG
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor
+ <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Luis Chamberlain
+ <mcgrof@kernel.org>,
+        Petr Pavlu <petr.pavlu@suse.com>,
+        Sami Tolvanen
+ <samitolvanen@google.com>,
+        Daniel Gomez <da.gomez@samsung.com>, Paul Moore
+ <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn"
+ <serge@hallyn.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Madhavan Srinivasan
+ <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas
+ Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg
+ <eric.snowberg@oracle.com>,
+        Nicolas Schier <nicolas.schier@linux.dev>,
+        Fabian =?ISO-8859-1?Q?Gr=FCnbichler?= <f.gruenbichler@proxmox.com>,
+        Arnout
+ Engelen <arnout@bzzt.net>, Mattia Rizzolo <mattia@mapreri.org>,
+        kpcyrd
+ <kpcyrd@archlinux.org>, Christian Heusel <christian@heusel.eu>,
+        =?ISO-8859-1?Q?C=E2ju?= Mihai-Drosi <mcaju95@gmail.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-integrity@vger.kernel.org
+Date: Wed, 14 May 2025 17:36:19 -0400
+In-Reply-To: <17aaa56b-5ee7-4a7f-a3c1-206e2114645d@weissschuh.net>
+References: <20250429-module-hashes-v3-0-00e9258def9e@weissschuh.net>
+	 <20250429-module-hashes-v3-2-00e9258def9e@weissschuh.net>
+	 <10ca077d6d51fac10e56c94db4205a482946d15f.camel@linux.ibm.com>
+	 <edeb23e7884e94006d560898b7f9d2dd257a275e.camel@linux.ibm.com>
+	 <17aaa56b-5ee7-4a7f-a3c1-206e2114645d@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=IqAecK/g c=1 sm=1 tr=0 ts=68250cd9 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VTue-mJiAAAA:8 a=KLImt8Xm0npdB1J_YwkA:9 a=QEXdDO2ut3YA:10
+ a=S9YjYK_EKPFYWS37g-LV:22
+X-Proofpoint-ORIG-GUID: f5XBtQh4mBIUFD0svQ8WZ4natbLj1BXZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDIwMSBTYWx0ZWRfX0J/q+sNmdfdm i1ZHU47UsEXxhb9YRuiVfLyTUlkU8TH00xq7HIG19po+fL1JGIpvZjM/uX6q5+4t0NPh5dp4k4A uN7188bKesc49xrTc6GBTy7lOMs+ZNjaWji652m5L6f1AxxoZd/vEoWK+Kuo+ncsW4y8DHTRM7p
+ R6fGlTFx5BEJHKJnQaF5K8E1e00WUGwmeibIplYY4v8jFk1SvdHod2h8Nvl+2aCydTecEoo+n2L vSxA3VNRMDV35wrChVwg5zFikRo5P7f2GYU6VboeHo7mguezLscbb4UFmlb2+dU11GdR62pNfTH EqfQwq6lweOyKgkbd7Vp1A4adwXhKyw8C6BaU4Dd+SyySDBKc9yjiTWTRQqlZ+cUd2MW2Iv5eSZ
+ CLMdhE4i1h3uz8OTg/w+xX0bvEzrampxKZGJR0T8KnUmpNAA9Aq1CKvRJUMlTq/5jsMGFxqX
+X-Proofpoint-GUID: mwVJ5c7YLe1v2I9fxeVNmrltNyZdPkRw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140201
 
-Fixes a kernel-doc warning by correctly documenting the enum value
-`DC_HDCP_LC_ENABLE_SW_FALLBACK` in the DC_DEBUG_MASK enum.
+On Wed, 2025-05-14 at 20:25 +0200, Thomas Wei=C3=9Fschuh wrote:
+> May 14, 2025 19:39:37 Mimi Zohar <zohar@linux.ibm.com>:
+>=20
+> > On Wed, 2025-05-14 at 11:09 -0400, Mimi Zohar wrote:
+> > > On Tue, 2025-04-29 at 15:04 +0200, Thomas Wei=C3=9Fschuh wrote:
+> > > > When configuration settings are disabled the guarded functions are
+> > > > defined as empty stubs, so the check is unnecessary.
+> > > > The specific configuration option for set_module_sig_enforced() is
+> > > > about to change and removing the checks avoids some later churn.
+> > > >=20
+> > > > Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> > > >=20
+> > > > ---
+> > > > This patch is not strictly necessary right now, but makes looking f=
+or
+> > > > usages of CONFIG_MODULE_SIG easier.
+> > > > ---
+> > > > =C2=A0security/integrity/ima/ima_efi.c | 6 ++----
+> > > > =C2=A01 file changed, 2 insertions(+), 4 deletions(-)
+> > > >=20
+> > > > diff --git a/security/integrity/ima/ima_efi.c b/security/integrity/=
+ima/ima_efi.c
+> > > > index
+> > > > 138029bfcce1e40ef37700c15e30909f6e9b4f2d..a35dd166ad47beb4a7d46cc3e=
+8fc604f57e03ecb
+> > > > 100644
+> > > > --- a/security/integrity/ima/ima_efi.c
+> > > > +++ b/security/integrity/ima/ima_efi.c
+> > > > @@ -68,10 +68,8 @@ static const char * const sb_arch_rules[] =3D {
+> > > > =C2=A0const char * const *arch_get_ima_policy(void)
+> > > > =C2=A0{
+> > > > =C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_i=
+ma_get_secureboot()) {
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_MODULE_=
+SIG))
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_m=
+odule_sig_enforced();
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_KEXEC_S=
+IG))
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_k=
+exec_sig_enforced();
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_module_sig_enforced();
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_kexec_sig_enforced();
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sb_arch_rules;
+> > >=20
+> > > Hi Thomas,
+> > >=20
+> > > I'm just getting to looking at this patch set.=C2=A0 Sorry for the de=
+lay.
+> > >=20
+> > > Testing whether CONFIG_MODULE_SIG and CONFIG_KEXEC_SIG are configured=
+ gives priority
+> > > to them, rather than to the IMA support.=C2=A0 Without any other chan=
+ges, both signature
+> > > verifications would be enforced.=C2=A0 Is that the intention?
+> >=20
+> > Never mind, got it.
+> >=20
+> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>=20
+> Thanks for the review!
+>=20
+> Given that this series has no chance
+> of getting into the next merge window,
+> would it be possible to take the two IMA preparation patches
+> through the IMA tree to have them out of the way?
 
-The previous documentation was incorrectly formatted and incomplete.
-Updated to follow proper kernel-doc syntax with a full description.
+I'm fine with picking up the two patches simply as code cleanup, meaning dr=
+opping the last
+sentence of the patch description, after some testing.
 
-Verified fix using `make htmldocs`, and the warning is no longer present.
+Mimi
 
-Signed-off-by: Rahul Kumar <rk0006818@gmail.com>
----
- drivers/gpu/drm/amd/include/amd_shared.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/include/amd_shared.h b/drivers/gpu/drm/amd/include/amd_shared.h
-index 4c95b885d1d0..ebe0caf1fda4 100644
---- a/drivers/gpu/drm/amd/include/amd_shared.h
-+++ b/drivers/gpu/drm/amd/include/amd_shared.h
-@@ -366,7 +366,7 @@ enum DC_DEBUG_MASK {
- 	DC_HDCP_LC_FORCE_FW_ENABLE = 0x80000,
- 
- 	/**
--	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
-+	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK: Enables software fallback for HDCP locality check if the firmware fails.
- 	 * path failure, retry using legacy SW path.
- 	 */
- 	DC_HDCP_LC_ENABLE_SW_FALLBACK = 0x100000,
--- 
-2.43.0
 
