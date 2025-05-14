@@ -1,99 +1,137 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3791F4281;
-	Wed, 14 May 2025 05:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EF43EA98;
+	Wed, 14 May 2025 05:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747199705; cv=none; b=V6GnFHFO/it3oflEws/x6N5WK3K0sjnERj/M+Iers39qSQkyPD+GJDtZsKjGE/Dz9GmGSTL9Qfb35qbuk9pWvEc68aavLVEpKStx1CyVeRADBNamALuTEESV/DsgnqzjXny0oxKVCcZFh2f1W9GLtuWSgBRc3oQ8W10rYhC9oAM=
+	t=1747199729; cv=none; b=WeN3gB+abKkBGw+VgEK6fxALbNeH259bbMQwSgL+t23WywMrAHaQRVInX6CsCJHprmDEHeux1IOWu8XgS12gGBjHPOKgAQt3zIL8n6wpKHPNeVqSdnOhsK2Fb521qjmyRv56fkxrfM/5I8CS+Rb+5nWvR0gUXEOvA2MU88uab/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747199705; c=relaxed/simple;
-	bh=hoge9D2mSjKOtaJKv/jYyK3UIA1n2r6xt550GXehXV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Op/MCgXbVz5ddBPGc8tDDlOlE3kvQhQUo4lUbM+W0qAFoy6Mvq2FEp5aUbMpEWTNMmrWMhDYqz7/AVyKU+76X9QI5aoclB9YPro3OWWSj5fW+y/nBX9dXOhhuveZBqKvXqRLSBrDJ/RCF9tuV76KC5buuJOowVccLAHN85sumOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=pJVxEwgY; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747199729; c=relaxed/simple;
+	bh=eFw1BfYnPC6LmkfRtAtYqLZ6BKk+kEAe1jllLDkqNpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WLyVcHBEu0mJLsUHv4o/fWEm9C8P9HHb33Y9YGUocs5egXB0aReG1V1wzBcvVrhqqxhCH4Lf0eBJh/YG/Cslll9Fm6we83YH+qYv6oYAQ1SOtjFCKtgu57xoaoPhnNDl854WoVIMf23U3n+xI0FMr4gTYz38leMz0Q9X5T5MvEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGmkeJ4F; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="pJVxEwgY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=RXMQrcEfKqnWQN1+EdIIyggXXSvqo3Wi1fgUbQZ7v58=; b=pJVxEwgYcPOCg45zcY+i+eSo66
-	tkKkLD1ittwSssNPhXHvCQfMAZ1zejqWqr8866rCvQmuU1VE4t24qvxCtU5M5gyiV9Eg9bLdyJh3Z
-	d6cW7DB+Fl6uvH0kIwPPhCakyKf416JLFMN+3B15UH6RHqX1QlUEDj862PJYbpLQlsxGywaCk0Zrb
-	sKfrZfq0eTDRcQcpw1h6dommgcGhH/19JhcOtABSPN6sGDn2P2eKcyTt+1VCFccQzibW7pgP3uNrr
-	H+l4kuQ5j08Fu0vGbSrPr8rdvAMW3zJ6vIGFLA1K8NRG8oH+6LCiWHdA90lFVXE0fe7dXieBJD0FO
-	5eZUm7kg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uF4SH-005x4H-2J;
-	Wed, 14 May 2025 13:14:58 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 14 May 2025 13:14:57 +0800
-Date: Wed, 14 May 2025 13:14:57 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGmkeJ4F"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30a93117e1bso8341448a91.1;
+        Tue, 13 May 2025 22:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747199727; x=1747804527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbgHUhLTFdpIfxXqLYxPxEoyz3s4oC9scCc+c5WkiQw=;
+        b=SGmkeJ4F/PivhWTLugJRWxh8VlvhdzFLkGjEHo+9f6f8vJ2holp35MHKQLn4mvBkZw
+         tr7cEq6oSExYOajmSLZq5XHrFT20mdUWaJ7Dngz+8vVHGeWpxrUtyrEtgI+3T/48pd5R
+         n/D5kVETv8xir4Ejw8GnRdGg7cHF+Rxz0lMiD5q7RzWkfbX94y1sqVzGVDXTXjXbmAvy
+         tFCU84jEe8NXjDntSk6r9eQwt90t8WD316rLTqc5jtds+AfAbolR19Yf6Mk8I5EBWPsr
+         A5XSO+tHzPcuLW8DcLOh91K4T/y3NDDNfRsfRepdSPMG0yJAtPhESNm95AzwRYEosHDE
+         EXKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747199727; x=1747804527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CbgHUhLTFdpIfxXqLYxPxEoyz3s4oC9scCc+c5WkiQw=;
+        b=FSXR/RyUZA3PTUPnYWD55zzP02afXuCndykJQqGMUzIfqO3QI+33dhsDu5ixECBruI
+         tMtnPUMoW/lAiktobZU+3YnuS71L1Qifogp+BVo/s72OpU1MxvuQoEQekvR28w7Y8+g4
+         vz8mGfwhryluROb36wToqfntzgyJUeKiKM5ywht6/HQIwYhXf62dl5gwHd+/G6UyUW/w
+         YHmB9FrawY9ECSixHaPcwnWJrSsSvsA/TqhikGDMyyII2sOXrbzcKkQT5HjF7M+Y1scj
+         G6jhflBpurTQ/zChcKVVupnlsnHM4G4y3LJegs7YI0DlJxkPy/1nMKLNvsf33gpOkcey
+         +SDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJS39S4+tZVxd7PfU9JDppSkceSBw63q05riIsmUKtZH5KxFui5hGqL7B7BKSv99PmdSNiG+Wg7JX6Ed17iE83@vger.kernel.org, AJvYcCXMuvGN/q9pF6Kqv8DWrHLnDEu1QkQ94QT1YOjqec/H6FT42w4U6JTws6iLvnvHpFm/tFU15dcMfhFGwek=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpq1RGL1o9kikngFZBHLdatMZlVzQz2ns7NfD96odfJZ/4y0nC
+	GElW6D1eVhhG/j1XJcqF/7dW0Y0w8A66sBjywrsWrW86QX1jG9L1
+X-Gm-Gg: ASbGncvnAyQa3orZgTcBUOGB83PkreNuwtW/1ufEG9JEGLzCOmywsVoQOZaebFE73FT
+	xlx/FhShuOVC/W1Qr6TSIttNFVk061LVUPV3ebjYuKve9uHGKIA6HmA4Gw2PUuwCJwar4WUsYjT
+	N1VesvtPwiXWg8Tf6iuDX4u8QHvgAATaoLC7OSyiy54Cq86ujXIzSututuTaFAPdjn3uGC5ULk5
+	p14A5BpOs65xVWDwqW7s5utBGljlft05pYU3N4jjvX3Fcxbq4KRKSR2sfFiUL3RGY9IHPqEHxU2
+	t/XlarCDxzkQB8rvCRe9HsuBgI7s8LM2p5G1IwMeycCI080ZUaQ117vrWrnm
+X-Google-Smtp-Source: AGHT+IGvqXzMfcnyqNrj7p7wdnvTyszTPNPdWx0CWx39jKf1J8JTm3+PQhCMuWqtdtAl4jV5nLIrKw==
+X-Received: by 2002:a17:903:b0e:b0:224:ff0:4360 with SMTP id d9443c01a7336-2319816828amr32312535ad.53.1747199727007;
+        Tue, 13 May 2025 22:15:27 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([124.156.216.125])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271af7sm89967845ad.151.2025.05.13.22.15.23
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 13 May 2025 22:15:26 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: pablo@netfilter.org,
+	kadlec@netfilter.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	coreteam@netfilter.org,
 	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
-References: <aBw_iC_4okpiKglQ@gondor.apana.org.au>
- <dd55ba91a5aebce0e643cab5d57e4c87a006600f.camel@gmail.com>
- <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
+	netfilter-devel@vger.kernel.org,
+	Zi Li <zili@linux.dev>,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [PATCH 1/1] netfilter: load nf_log_syslog on enabling nf_conntrack_log_invalid
+Date: Wed, 14 May 2025 13:15:07 +0800
+Message-ID: <20250514051507.87494-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
 
-On Wed, May 14, 2025 at 07:12:52AM +0200, Klaus Kudielka wrote:
->
-> drivers/crypto/marvell/cesa/hash.c: In function ‘mv_cesa_ahash_complete’:
-> drivers/crypto/marvell/cesa/hash.c:403:25: error: implicit declaration of function ‘HASH_FBREQ_ON_STACK’; did you mean ‘SHASH_DESC_ON_STACK’? [-Wimplicit-function-declaration]
->   403 |                         HASH_FBREQ_ON_STACK(fbreq, ahashreq);
->       |                         ^~~~~~~~~~~~~~~~~~~
->       |                         SHASH_DESC_ON_STACK
-> drivers/crypto/marvell/cesa/hash.c:403:45: error: ‘fbreq’ undeclared (first use in this function)
->   403 |                         HASH_FBREQ_ON_STACK(fbreq, ahashreq);
->       |                                             ^~~~~
-> drivers/crypto/marvell/cesa/hash.c:403:45: note: each undeclared identifier is reported only once for each function it appears in
-> drivers/crypto/marvell/cesa/hash.c:405:25: error: implicit declaration of function ‘crypto_ahash_import_core’; did you mean ‘crypto_ahash_import’? [-Wimplicit-function-declaration]
->   405 |                         crypto_ahash_import_core(fbreq, &state);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~
->       |                         crypto_ahash_import
->   CC [M]  drivers/crypto/marvell/cesa/tdma.o
-> drivers/crypto/marvell/cesa/hash.c:407:25: error: implicit declaration of function ‘crypto_ahash_export_core’; did you mean ‘crypto_ahash_export’? [-Wimplicit-function-declaration]
->   407 |                         crypto_ahash_export_core(fbreq, &state);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~
->       |                         crypto_ahash_export
-> make[9]: *** [scripts/Makefile.build:203: drivers/crypto/marvell/cesa/hash.o] Error 1
+From: Lance Yang <lance.yang@linux.dev>
 
-Sorry, should've mentioned that this goes on top of the current
-cryptodev tree:
+When nf_log_syslog is not loaded, nf_conntrack_log_invalid fails to log
+invalid packets, leaving users unaware of actual invalid traffic. Improve
+this by loading nf_log_syslog, similar to how 'iptables -I FORWARD 1 -m
+conntrack --ctstate INVALID -j LOG' triggers it.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/log/
+Signed-off-by: Zi Li <zili@linux.dev>
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+---
+ net/netfilter/nf_conntrack_standalone.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-Cheers,
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 2f666751c7e7..b4acff01088f 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -543,6 +543,24 @@ nf_conntrack_hash_sysctl(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
++static int
++nf_conntrack_log_invalid_sysctl(const struct ctl_table *table, int write,
++				void *buffer, size_t *lenp, loff_t *ppos)
++{
++	int ret;
++
++	ret = proc_dou8vec_minmax(table, write, buffer, lenp, ppos);
++	if (ret < 0 || !write)
++		return ret;
++
++	if (*(u8 *)table->data == 0)
++		return ret;
++
++	request_module("%s", "nf_log_syslog");
++
++	return ret;
++}
++
+ static struct ctl_table_header *nf_ct_netfilter_header;
+ 
+ enum nf_ct_sysctl_index {
+@@ -649,7 +667,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &init_net.ct.sysctl_log_invalid,
+ 		.maxlen		= sizeof(u8),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dou8vec_minmax,
++		.proc_handler	= nf_conntrack_log_invalid_sysctl,
+ 	},
+ 	[NF_SYSCTL_CT_EXPECT_MAX] = {
+ 		.procname	= "nf_conntrack_expect_max",
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.49.0
+
