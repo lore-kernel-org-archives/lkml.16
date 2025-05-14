@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13B726A0DF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7650926AA94
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266254; cv=none; b=YcMhh5DM/kXcn91kfhzTHnh7wPefIy5otTs0dYbvXlTXk6VB0n0nJW1KbUQ1XYoy8DmXFvtvDGvT0BUQK5g7EQ2GNI9/EmyKibVMxN3a1AEQJagMsEHeI2rxsbVQEA7scMwRDrMTPdeP57byLcOvrshgFVLtk2vF6t6ygUisnDc=
+	t=1747266256; cv=none; b=TTKMNHGTgICSRyv3CZ/fvn0C7pc2BK7MzNCG1jzMuJoA1H/hLvcSG327L/5u9lw6EZrz2bvwgkXSj1ndWsNnzRd4RoPL1TY3lpjNC8GCbRBVBdjAs5M2aKAou5YMkCFPjAVpB0zDAc84cGy7e5dhzRU9vOXb3OwX1WKlrLdZc1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266254; c=relaxed/simple;
-	bh=aPgC7xelTHDVWDAUkE1HCYXZKLL8arCU43wTrXitw0Y=;
+	s=arc-20240116; t=1747266256; c=relaxed/simple;
+	bh=W4BuF5k7B7Tw/7iEJJF+2Dr7h9c8MMcjTfURTwwSkno=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BVo2pJ/j385uX6bj4tSc0hBzTAzm1qC9ybJN8uWa/rnW1d30pOsiAfwWA0BBaVVqvMmjQgIgOsBGQ4H/kkh3IiTucr+uv+FWY8bm1TmK7rYnJZcOiQeBLwp5F6ZVG1GnypBvU3q9sE+QHoE5ddzKGFJUxMP/APVgDHTXgOHOSoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RmD2sQg9; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=fNQgbNxqTtX5e/j609lAFY6wOMW1kbQhGvuOOVNMJ9OgYmwqEui4zuOFCEJ/rV0uVOhiurwFh+KL1y1+BFgXJYJta8Ofha9qDtOBs5RgtGrmzSTHW8m7rwC30RRDi+QBgxAWQBzqEOALyYHCSFJePVcNKLYenoDPFXyK0eRx1Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xN3xVQ5M; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmD2sQg9"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e3b59e46eso5979805ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xN3xVQ5M"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ad1e374e2so381739a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266252; x=1747871052; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266254; x=1747871054; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIHO3z7qgUdLCctBcJJdIeKM53vTdpjbrMww0TEetmg=;
-        b=RmD2sQg9MN8h5oYzAJRutyJer64ydMRG+TvuT3E1XO5U3RDpSX44m5ab4YZckA8SD/
-         lNqRd5Ezwo0NGMFaZEzrSHeCwnr7uK5adnfL8taWsrucKC+2SPsfktXffs5w3hZXSJYA
-         2gzRunhj8IaQ5F/Kx182nnvw8/OH7Lm5JxDozaRk0J/Sh/8uiqefAqIwS2RKlQnxxjyZ
-         hftQ40PTZMF8R7xuCwYi6CcYjRMu4V0VWEGsK6OH/DmqRJBhP5yEPqx0dpDaGloCimxc
-         QpDJxiXMutZzfACbKEdgMSBtXI1EXtVQfp+H/tB0qZY0jKsNvfvTSxd7eA3DuLanir8w
-         ob7Q==
+        bh=cgpRGOQjA/CW069YjbpUEsTR9l1DVf09U2PvTNruEdk=;
+        b=xN3xVQ5MBlt7ING8YtP7kdoFTcQQYr+idO4YOSfyE8Ov36J/U2IVYS69BUq7bVUYvk
+         BgUcHYh3wUgg+HuAv60t/SlMBOdOk4cGiJnIS0Ht5RH1DGVfbZ2sVTPn/vv/m44tInVj
+         sghXHb0U4NYVnjbsFBqKd9Go64SNTHw+S5Ty10gTT+6bSQp5lXMl3eXVy16vTNcx8Loy
+         sKlMvcW0WKkxHK8W50y8zkgqrH7QGGuoHNOrw2bMMWFaFsH81PApXdSLEJteHTaP+69r
+         wh9fYBCV4naU0lR5QDBaDCFSGq85ixY16itXygSnvMzesmHzpaZm/nc1n/qkKDfXr2ty
+         Yyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266252; x=1747871052;
+        d=1e100.net; s=20230601; t=1747266254; x=1747871054;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIHO3z7qgUdLCctBcJJdIeKM53vTdpjbrMww0TEetmg=;
-        b=OMwvpursrxaISSia4FZUYSEC9np2NCCjS6KwczYG88DuBPYD1lM2YPrb0JiJ36JYje
-         Gfehdsv0XwZINnrmOiysAEEMOBIcrwhocm3s5HLoCwXrkl7q8UZo+alVyeA887g7oCXu
-         v6fiE8iiywBKUhLpEAMwFUpNoWsHgWuyBOAm9De9DIZHzCMlRhaTZ/hdgYW5PQe5pBHJ
-         gZqtDNhVzHubbR8z3+a5mkr2I6+8FiiE7f2sQh0xVdIYMOp7ulgsu3ma0fsd7KPrNBye
-         d6eKECoWPg48GONikKN6f339FxD+Dc/Oub+HN3HI5tCi9an2YYHq4+S0VnAUNEaH4OET
-         5Yug==
-X-Forwarded-Encrypted: i=1; AJvYcCU3DOF4MS5hpTP1t/+9gE+/CD8370i7nyX97SXKOKsq/Oi35tgjYCYKdbTUrxGhHRFnvL3fCV4QkL6Ye6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhlqnYIe2zJu6d7v7tcAy64nTb5ac5hRHUKcaHSeavqEVcPElH
-	7btQ6AOExQaaqvDax4UL/IgnzEzxqiwrRLK7ZvFcDFXx849UsjCGCokqRUdKj1zAgGovJk+14sA
-	TEX/1wTcZZ98Zz9GEQUOBbQ==
-X-Google-Smtp-Source: AGHT+IHmwCzSwN6Nfb7PIWHR4ZLGRIGjOq8g3mWPjJm4bmOxXDdJ3v5NacuKAC2o4rPhtu2Mbj8tJejqtkdzvZ+2iQ==
-X-Received: from plgk17.prod.google.com ([2002:a17:902:ce11:b0:22e:15c1:3510])
+        bh=cgpRGOQjA/CW069YjbpUEsTR9l1DVf09U2PvTNruEdk=;
+        b=eugnMFnwKXjREsrIEesbfcAkVw3j37I+b6YXHx2p8VYhHmb14HZ6KyGQbgpmEhrUd0
+         b8h4mYptnSzE4yYCfNQY2bzPOCrAcc5BOihCpUZj0GZJMgEGid4XOO/7ErlkpJE2RTTR
+         Oj4HRonBUB83WxXOcjqv4RbwPYHz6B7kj4oTQVeHAO2rFCIE4cxRCF/ww2TtMtC2eQSS
+         qdLWlV7XXPszcmJBrB0IOUzj0Ai4WPMmqt8aN8YzpExohsiLjK9LbqcWt1QtJy7/DD8B
+         LyPE0zDb2/3PewmX4V1B9jdiq8bx5HvXKU0K6Nro+a8OppiYTB7rNiOxFeoGc/9LG4Qs
+         LrEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrWqR3R+vxGoy51Wi4A+KcqoD1EpjFhYsBbtyoitC/urzuM8d2B5WIP/iNxPbUPmK2LPJCLQVeUOu9Htc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKbv8he9/VLj7NCo+Rzh1oH+ZNLn71BuWFmmwj6DMdkBNAv/eC
+	LwsJxNJGtCAhaQC3R/nOSVwB5Uyj+BTMkwNaQhY84Xyv4thkzHgqtocGOFmaLWjT8JhaNMc4hL0
+	zToPAx20ilXQfBRgGsXDNwQ==
+X-Google-Smtp-Source: AGHT+IGCW/uG3koL7ZmUpNQ3fu2bu9Qxb+Pwj1sAO0kEu9QYRpIBgr98bzhS9ZJB60f0G+PEHbBrD9llUcw4LLEWwA==
+X-Received: from pjboh6.prod.google.com ([2002:a17:90b:3a46:b0:2f4:465d:5c61])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:1744:b0:223:f639:69df with SMTP id d9443c01a7336-231b60fd7e5mr4722055ad.41.1747266252099;
- Wed, 14 May 2025 16:44:12 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:27 -0700
+ 2002:a17:90b:2d4f:b0:2fe:a336:fe63 with SMTP id 98e67ed59e1d1-30e5190763cmr782897a91.24.1747266253599;
+ Wed, 14 May 2025 16:44:13 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:28 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <db8bb0ba64c858913d169f0d3e95a17fabf2096e.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 48/51] KVM: selftests: Update test for various private
- memory backing source types
+Message-ID: <d8cab3a09f541bebb327decc043d830da3384f9c.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 49/51] KVM: selftests: Update private_mem_conversions_test.sh
+ to test with HugeTLB pages
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -97,124 +97,66 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Update private_mem_conversions_test for various private memory backing
-source types, testing HugeTLB support in guest_memfd.
+Update test script to also test HugeTLB support for guest_memfd.
 
-Change-Id: I50facb166a282f97570591eb331c3f19676b01cc
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
----
- .../kvm/x86/private_mem_conversions_test.c    | 42 +++++++++++++------
- 1 file changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
-index ec20bb7e95c8..5a0fd9155ce8 100644
---- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
-+++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
-@@ -450,21 +450,18 @@ static void *__test_mem_conversions(void *params)
- }
+Change-Id: I7c6cc25d6b86e1e0dc74018f46c7e2796fab6357
+---
+ .../kvm/x86/private_mem_conversions_test.sh   | 29 ++++++++++++++-----
+ 1 file changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
+index 5dda6916e071..0d2c5fa729fd 100755
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
+@@ -57,6 +57,17 @@ backing_src_types+=( shmem )
+ 	backing_src_types+=( shared_hugetlb ) || \
+ 	echo "skipping shared_hugetlb backing source type"
  
- static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
-+				 enum vm_private_mem_backing_src_type private_mem_src_type,
- 				 uint32_t nr_vcpus, uint32_t nr_memslots,
- 				 bool back_shared_memory_with_guest_memfd)
- {
--	/*
--	 * Allocate enough memory so that each vCPU's chunk of memory can be
--	 * naturally aligned with respect to the size of the backing store.
--	 */
--	const size_t alignment = max_t(size_t, SZ_2M, get_backing_src_pagesz(src_type));
- 	struct test_thread_args *thread_args[KVM_MAX_VCPUS];
--	const size_t per_cpu_size = align_up(PER_CPU_DATA_SIZE, alignment);
--	const size_t memfd_size = per_cpu_size * nr_vcpus;
--	const size_t slot_size = memfd_size / nr_memslots;
- 	struct kvm_vcpu *vcpus[KVM_MAX_VCPUS];
- 	pthread_t threads[KVM_MAX_VCPUS];
-+	size_t per_cpu_size;
-+	size_t memfd_size;
- 	struct kvm_vm *vm;
-+	size_t alignment;
-+	size_t slot_size;
- 	int memfd, i, r;
- 	uint64_t flags;
- 
-@@ -473,6 +470,18 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
- 		.type = KVM_X86_SW_PROTECTED_VM,
- 	};
- 
-+	/*
-+	 * Allocate enough memory so that each vCPU's chunk of memory can be
-+	 * naturally aligned with respect to the size of the backing store.
-+	 */
-+	alignment = max_t(size_t, SZ_2M,
-+			  max_t(size_t, get_backing_src_pagesz(src_type),
-+				get_private_mem_backing_src_pagesz(
-+					private_mem_src_type)));
-+	per_cpu_size = align_up(PER_CPU_DATA_SIZE, alignment);
-+	memfd_size = per_cpu_size * nr_vcpus;
-+	slot_size = memfd_size / nr_memslots;
++private_mem_backing_src_types=( private_mem_guest_mem )
++[ -n "$hugepage_default_enabled" ] && \
++	private_mem_backing_src_types+=( private_mem_hugetlb ) || \
++	echo "skipping private_mem_hugetlb backing source type"
++[ -n "$hugepage_2mb_enabled" ] && \
++	private_mem_backing_src_types+=( private_mem_hugetlb_2mb ) || \
++	echo "skipping private_mem_hugetlb_2mb backing source type"
++[ -n "$hugepage_1gb_enabled" ] && \
++	private_mem_backing_src_types+=( private_mem_hugetlb_1gb ) || \
++	echo "skipping private_mem_hugetlb_1gb backing source type"
 +
- 	TEST_ASSERT(slot_size * nr_memslots == memfd_size,
- 		    "The memfd size (0x%lx) needs to be cleanly divisible by the number of memslots (%u)",
- 		    memfd_size, nr_memslots);
-@@ -483,6 +492,7 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
- 	flags = back_shared_memory_with_guest_memfd ?
- 			GUEST_MEMFD_FLAG_SUPPORT_SHARED :
- 			0;
-+	flags |= vm_private_mem_backing_src_alias(private_mem_src_type)->flag;
- 	memfd = vm_create_guest_memfd(vm, memfd_size, flags);
+ set +e
  
- 	for (i = 0; i < nr_memslots; i++) {
-@@ -547,10 +557,13 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
- static void usage(const char *cmd)
- {
- 	puts("");
--	printf("usage: %s [-h] [-g] [-m nr_memslots] [-s mem_type] [-n nr_vcpus]\n", cmd);
-+	printf("usage: %s [-h] [-g] [-m nr_memslots] [-s mem_type] [-p private_mem_type] [-n nr_vcpus]\n",
-+	       cmd);
- 	puts("");
- 	backing_src_help("-s");
- 	puts("");
-+	private_mem_backing_src_help("-p");
-+	puts("");
- 	puts(" -n: specify the number of vcpus (default: 1)");
- 	puts("");
- 	puts(" -m: specify the number of memslots (default: 1)");
-@@ -561,6 +574,7 @@ static void usage(const char *cmd)
+ TEST_EXECUTABLE="$(dirname "$0")/private_mem_conversions_test"
+@@ -66,17 +77,21 @@ TEST_EXECUTABLE="$(dirname "$0")/private_mem_conversions_test"
  
- int main(int argc, char *argv[])
- {
-+	enum vm_private_mem_backing_src_type private_mem_src_type = DEFAULT_VM_PRIVATE_MEM_SRC;
- 	enum vm_mem_backing_src_type src_type = DEFAULT_VM_MEM_SRC;
- 	bool back_shared_memory_with_guest_memfd = false;
- 	uint32_t nr_memslots = 1;
-@@ -569,11 +583,14 @@ int main(int argc, char *argv[])
+ 	for src_type in "${backing_src_types[@]}"; do
  
- 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+-		set -x
++		for private_mem_src_type in "${private_mem_backing_src_types[@]}"; do
  
--	while ((opt = getopt(argc, argv, "hgm:s:n:")) != -1) {
-+	while ((opt = getopt(argc, argv, "hgm:s:p:n:")) != -1) {
- 		switch (opt) {
- 		case 's':
- 			src_type = parse_backing_src_type(optarg);
- 			break;
-+		case 'p':
-+			private_mem_src_type = parse_private_mem_backing_src_type(optarg);
-+			break;
- 		case 'n':
- 			nr_vcpus = atoi_positive("nr_vcpus", optarg);
- 			break;
-@@ -590,9 +607,8 @@ int main(int argc, char *argv[])
- 		}
- 	}
+-                $TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test
+-		$TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test -m $num_memslots_to_test
++			set -x
  
--	test_mem_conversions(src_type, nr_vcpus, nr_memslots,
--			     back_shared_memory_with_guest_memfd);
--
-+	test_mem_conversions(src_type, private_mem_src_type, nr_vcpus,
-+			     nr_memslots, back_shared_memory_with_guest_memfd);
+-                $TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test -g
+-		$TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test -m $num_memslots_to_test -g
++			$TEST_EXECUTABLE -s "$src_type" -p "$private_mem_src_type" -n $num_vcpus_to_test
++			$TEST_EXECUTABLE -s "$src_type" -p "$private_mem_src_type" -n $num_vcpus_to_test -m $num_memslots_to_test
  
- 	return 0;
- }
+-		{ set +x; } 2>/dev/null
++			$TEST_EXECUTABLE -s "$src_type" -p "$private_mem_src_type" -n $num_vcpus_to_test -g
++			$TEST_EXECUTABLE -s "$src_type" -p "$private_mem_src_type" -n $num_vcpus_to_test -m $num_memslots_to_test -g
+ 
+-		echo
++			{ set +x; } 2>/dev/null
++
++			echo
++
++		done
+ 
+ 	done
+ )
 -- 
 2.49.0.1045.g170613ef41-goog
 
