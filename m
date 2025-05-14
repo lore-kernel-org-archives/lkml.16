@@ -1,89 +1,68 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3027D2063F0;
-	Wed, 14 May 2025 08:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5865E4C6C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210935; cv=none; b=HgoK13U4Ygf9dLkJD2M28bkyrW3uxLLBimtyBDKFhdj7gsJigA8dEaDQV9Rblhmo7AEeeH8od9IYCwO1vzr+Fd6VcG8fOOUwzLh04f6WJGW2D5oADWVg2Sk2+7zQviZr1JtTcSOFj2IWOCl4HDFlz6Yw3Rio7PgJNvJ3tsMBikE=
+	t=1747211047; cv=none; b=ND00t1m4TcnBppQ160j2uCdk5/g1Gptyq2qXP4ecRqpPcl+FQ0TILJgR+KXkr9yEj1658HdaThMMx82ZNExg7CGxx0x/+yuftQE4Wh3h56U312DnvI0Gt3H5VR40CFxGJY8eUuv37zqlijQ94r/j/lwBpLaX5Mf52FnEsRznWq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210935; c=relaxed/simple;
-	bh=g4ftrT3Y1diYK/vCIN1dyaP/i3jvVe8cYbbMXbhVDSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uu3SfS1bgtkYDT69mGY/LTlP53fGjnAjH9fYnd4SfeLWaeYJ/yg5HZG1iKw5EUuzNG02SMZAC4Tx3oKl9jGAAXYiMGjlKyiMCYbKhBqP65I1UwaHG5FNVzxi560bG2HfFgCxow33wGyl8lhPk7J5qs/2RdiMoDBkn0e4tOrc8Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Fo2WMeMu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fo2WMeMu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BC7F140E0163;
-	Wed, 14 May 2025 08:22:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UBpfIHn--jso; Wed, 14 May 2025 08:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747210927; bh=+Nwf+c9pXNlMrfiw/N5h45Pxm/oamtWzy4ZxIo6/j3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fo2WMeMu8CA3WlfstGOdLaFGlaRAifEjv4CoUvd1TQzW32iEMwJp98hEVIQiJDFom
-	 BBp2IjmB3GVWTuy1AiUpXTU8TqsEzmfGqYf/88W6BV7qs9VCsszaSTFDhfLXlFQ90D
-	 xl/mlnt/B/zpgIvTuE7JEXn74kDXZ2TQKgWJHLddvq5D5xq3EkucE5iQY9xOcCGEHo
-	 YvBzCLlmKZjFg9pn7Zaceqem6MDyNRxKoILQma4VCrotwVBKYKdBDsFw6PjE0mCw98
-	 cH9wMLlXSvXfTbwy/ZnnR8kNg03dAhyF43M3ZlM5nbQHC/Gy5Pi9JH9/DVIM5rZPke
-	 upLDQGdhVkydsAmIweJPPV8p0F1evxBMh1vN2gpkBjPiT0wJ2DI+KO1XKuvn23MKl3
-	 jHSlUY3tNjQ93mZaGKlMOSLlwtwCVl0eYT+QMO4Q61tx3ceEHxj+JXhUbFP9HFoB4u
-	 FKwBzTAb163MRjsWJACzDg+8O0ZXYaMabZkLMztAdPPopmjFjTmYU8WInZ/fyPuibT
-	 Aw3YwnTe+WhtBei2VLUTUbl1O7lsucNHkyWMJPBu65xEKjtgMHjwh4kxlNkjKQAjmD
-	 Fmaiahuv7SCBi1qcjKtFQkoEpJOQbAUtf7w3aLgQX4qHkVUWyJ9fTLmOAhfMjs5+lO
-	 Zz4Zk6HL8jter8KqUPckU5yQ=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	s=arc-20240116; t=1747211047; c=relaxed/simple;
+	bh=S7mfk1HdTzLSLmpVIW7q3D+ovdCW9ja16x7BWEHeXk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tNKBVxvSDp63Oq4hY3FnHMOSkCYwmCO3oz7o8JoFNiuNMNVRMY5sf2HGWnUBYu2FL04x6gZPU2holYzJ+MhAas3adOfgQ5D/yH8vaFmcrtxgcuJgAg0DpEdw8FJoA4lVVgJ1Wy2r74ffC1K/34m9GkQ5+k5ajb0Y2bjJZ3V+EWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.192] (ip5f5af522.dynamic.kabel-deutschland.de [95.90.245.34])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AF58F40E0266;
-	Wed, 14 May 2025 08:21:57 +0000 (UTC)
-Date: Wed, 14 May 2025 10:21:57 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <20250514082157.GCaCRSpffav0xWQ586@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com>
- <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
- <aCMraFZ2yJQNyHf3@gmail.com>
- <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
- <aCQ2L3L2DQX80blY@gmail.com>
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B9FB061E6479A;
+	Wed, 14 May 2025 10:23:45 +0200 (CEST)
+Message-ID: <12cc81d5-f134-4460-9139-754a69821f12@molgen.mpg.de>
+Date: Wed, 14 May 2025 10:23:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCQ2L3L2DQX80blY@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: qca6174 hw3.2 target 0x05030000 chip_id 0x00340aff: firmware
+ crashed!
+To: Jamie <jamie@stimulussoft.com>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+ Jeff Johnson <jjohnson@kernel.org>, ath10k@lists.infradead.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <5aa2dae4-94ba-45cb-b138-bb40c89a85eb@molgen.mpg.de>
+ <486e9f27-3b03-4317-a1fc-1bd92235db1c@molgen.mpg.de>
+ <90a764d0-c230-43bb-b7e5-189544839f8d@quicinc.com>
+ <e2e58098-4589-4ae4-bc38-6b009823b071@molgen.mpg.de>
+ <82b9e966-5e12-4a13-98d4-0ffa88505f97@molgen.mpg.de>
+ <1909038a-bde9-4def-bcb8-0f67bff5c62d@stimulussoft.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <1909038a-bde9-4def-bcb8-0f67bff5c62d@stimulussoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 08:20:31AM +0200, Ingo Molnar wrote:
-> See Ard's excellent description:
+Dear Jamie,
 
-Btw, you somehow conveniently ignored the patch Ard mentioned started all
-this: a patch you committed without any review.
 
-Sounds familiar?
+Am 14.05.25 um 10:19 schrieb Jamie:
+> Check your voltages. In my case, my voltage settings were wrong.
 
--- 
-Regards/Gruss,
-    Boris.
+Where did you do this? In the system firmware?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> After adjusting them, the drivers started working again.
+Then it’s a different problem. I am using a Dell XPS 13 9360 laptop, and 
+I didn’t fiddle with any voltages. Even if Linux’ power management 
+behavior changed, it’s hard to pinpoint a possible regression, as I have 
+no reproducer.
+
+
+Kind regards,
+
+Paul
