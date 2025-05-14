@@ -1,252 +1,764 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazolkn19010001.outbound.protection.outlook.com [52.103.13.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FFD4400;
-	Wed, 14 May 2025 04:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.13.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747198046; cv=fail; b=Fa4NG7DrZi9T8i7wWpL9CkWkH5s+swoyRscybyVl8/X0b0Q3ppFtxvsy3lVZdfQxA41KSP8YxuB9xihQu0hxqNSmUB8B4cZ7QKgJ0wwggyF2nlIPJbXeDi78QNvVnaYmR/qoLaEcI28zxx8bQXt605N8eDB94WPyLjPfvOxARiA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747198046; c=relaxed/simple;
-	bh=8U6UaKfD6fz6kXAPz70DlIohsrfZ3h15fIaZd7m1l5I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EcxG7NCkjcY/tsjk+mOZt18i6eARmfmAe8at3uN/jrkKvPNV/sfwlKEF6Gsn4zW7RMy9gtTI8ALpU7IXtbBFHQdc7h4NpKewlkBf2qTaSCehU7agu98aQ+dGvM+vOa+1OFnOM8YAvu6iqhy3MtIBLf/0/wmbgqk4sTs1a9SoiPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CbzFzDH4; arc=fail smtp.client-ip=52.103.13.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABF81D63C3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747198067; cv=none; b=ZgjkoF6W3bn3Ox8XrMkuNnS9p/dUrAxtPlJISknJ6gCDq+Q8FeC8KE3svS5XwOckEXuGT2fSQ5NeYHvErjW5NoVdBlbBpZfsBL7ryFFHlfGAJH6LfsOKD3m5nwszrp1s260lzHPgvuewYLbEGmYTb8dNk0VpbRpsNWjIkYSmkwU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747198067; c=relaxed/simple;
+	bh=FhLoY+PyrmHt8zibP34j3xBZtI+4VRQeKOmyGg3oCnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=O6Fb+2xvBmMXARSI+TXgBQy4A7V2AYPyroHRkh05Z8yITUdnOEBGlRS+HqhwsikKD9JWW9jNjpdRaRfxUmb/bVFmHNqA9CotBCIGhC5q4oDEPXiCNfGJMVO1DRpQ7Uc7hGb1P9tUCrLm28Q6v00ipEHKsK/E8ePrvhEkEBD2CAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpUBDKLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CbzFzDH4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jncee3BK9bP0LGa6ou5lVw8aD9D9abJrXZgfzzAMozN6kyUcESwCgl0Lbj+8bglyTwOlRmzzT6qKrJcUmjVXTHsVP1BguiEmsGQbDiDu15UeDADlsgJJVBuw1KsQJdayPe3K5PRdvAKjmFbefY014v/8hm9j9y/WzAn2Tusjm+hfapWMpS/41b3TLCKhXaFgqhXuuddSCzUcVYdnFxdP+PXNJMlsrc4Op+GoI01XhFH/16X8VZ+sk96m8NkaDWzn7f3akueZK0pg7vSFLxF7jkF5YmBzof5qefztB3ZxY3Qa6Znr0LDepB3Yc18t+rBN7HnO9hw6T2jDkVazzm1g6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XG0afGEW7WFrOejit/9JMonLh6OfLUZxIIsZdM4v19o=;
- b=R6/UbvxCy+2xSrb5WzTuGX1LM6F80dDSaU6mUr57dp/wqt1LL0zLPfWQhgkCJ5h6RW6FqICTo2/CWFXCtpFlIut5GDGI7+fopAubUBGygapDkl5gozGW021LhZPoZIhY2LvN/w4Tcniz8WUrJzcFJQ3WPxrWU3Wc8XDfLPOh2jPODX5y//bhLmDP+CnYV90S3jgZJ+qCfPyflz96zmf8gu/HGBXxwvMrbO4FvvDluRpP6nI4nSbH7q5nJFtCwQQ8u0wAbhjhW2F/T4WWXKHFtGrfKFXXykFY0UtZ6hKN1VPR4+ckXa4dk6JxPriH1OMK55rVnY46V9Y+QZjlCsV4fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XG0afGEW7WFrOejit/9JMonLh6OfLUZxIIsZdM4v19o=;
- b=CbzFzDH42mN2TO6D2ZUrOaAsry/8SUiEV9vRK5ip6/85Jv/jdClOnC3vwT2bwYATyYoWaQ6owhrjf5ppODVSSCJTDFcmURcJLq17+OYwLK1991vt6vHYX7dhbzXAM5iJay6I4HBzs5OauKW4fmvpO/4dpxTDoHrR2A45ux/VqrVjwHd231tePih9yx8vG7lyGgwsGhbW/Tpwhl5Lw8eDGStDbHGCcyFXo4zcMeYJaICyv1OHFeel+gw3Q8PmeKUJ40LpdCxB9vmWJy0IgXDUfA4Li5eieLuXTx8PJ/RWLvCaVvtGf31CEOpM1ac3NmZoEBxQDxy/s5+VxwIjILNYEQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CO6PR02MB8756.namprd02.prod.outlook.com (2603:10b6:303:140::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 14 May
- 2025 04:47:21 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 04:47:21 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Wei Liu <wei.liu@kernel.org>
-CC: "Gustavo A. R. Silva" <gustavoars@kernel.org>, "K. Y. Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui
-	<decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] PCI: hv: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Thread-Topic: [PATCH][next] PCI: hv: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Thread-Index: AQHbtgJUCHBVQ2nlJkec17kVDKNMEbO3nz/ggBhLkbCAAPXvgIAAyVqw
-Date: Wed, 14 May 2025 04:47:19 +0000
-Message-ID:
- <SN6PR02MB4157EC72378905EE97CA0934D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <aAu8qsMQlbgH82iN@kspp>
- <SN6PR02MB41574AAF7B468757A9F9ED79D4862@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB4157E7C91785BEA1E597B0EAD496A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aCN3E7pQc5UHJ-4w@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-In-Reply-To: <aCN3E7pQc5UHJ-4w@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CO6PR02MB8756:EE_
-x-ms-office365-filtering-correlation-id: 6375c053-f80f-4caf-3be6-08dd92a26897
-x-ms-exchange-slblob-mailprops:
- /UmSaZDmfYCV7gMu87/GtwOd6jzNwNFlWTVG0fcdJrIkmgmUqwjFQiW+8+vA/9mCw7PnL+VwiWmriXeInJ2xFVS27UWw5yOB3Z8blMyC4giiFk30E0PZ7xEq83hl0QkZ4gHDRHHVOI8K1z25YJK+Mv79ifP9OQ26zSsHKeCKYse4BLm6Yz3uAQQpa7R6lGrTAGnbee6583A3Kof5hkrh9WRSA89OcHo2RRf8cE4wO1ta27zH+oxPXZQJ3enE56qdFSS4uCWJ+uj5jIoAYSQQJH2xKbdu6NHqkXY6XnZm6tT6REENIslPjqMfiM3xoFGMCdDDAMIrvvjqH+vV9Z7I2jxLm8170A3CzCNDEFIvF+iN600ldzPscsMRCiLmdPWQEIxhIdPrQORQ4cJ+ohnPcJM5Eh9AixIx6eM5AG/16AfLuJN6wt48kDKz3tVKReVqV4leRd0KDsJA+hatOxuuKjPVDg6tSj2pvuqwiuZEDOFgkauAzkzprIMkN1Z0IfpQaj87lrWc3iQlh8V3uwSRL1jroXQQoZHrv3Qc4ljCwP59iugyk+I1ARuzbUtXIiqq0zDUjpXVTnumSHeT0iAC7fKQJHmRTb8TfEs4NozQlgZTe7nq3sQJglPy2v1L8vzBDKHagXtjV7j4xT17mErSUevqguD6Ri/Tm03phjBXHbNsLRB/eawXmNq7NI5sNNDVwDGxkCjuh5O8G+4mn3evtG4mWHxHGv98zlLQEmJ0qW+Cmz/zSZKyWt89vPMQ3gKGplieKjKv0r7Bv6KZgb7DjLK3pBhjVq05XYpKvSUG4/QsfpgqFcRMDvpiH9CDvBjfGt+ekgWapLy9A9VekiMf8w==
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799009|8062599006|8060799009|19110799006|461199028|4302099013|3412199025|440099028|102099032|10035399007|1602099012;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?Ml+WANZbm3a5MzE7KIH3sNzMkqu00umWDQuK4VF86ox1GkR3SixdhM6D7w?=
- =?iso-8859-2?Q?GunmpPdgzdn8zbtfawRqlQ0dqXpKPbkhPiYckEvJ98drsnOHlt5szdJ9fy?=
- =?iso-8859-2?Q?gCUIG74mBXIYDy8ceMMfljtP6kNZKALuD6Ij+y/eyMezqRsNrnYZqVepRb?=
- =?iso-8859-2?Q?wjYLky5tJQsMiCujHdjo8IA8VYSP9XjFzrOjxiSqMA7ovqQA00R447feTJ?=
- =?iso-8859-2?Q?hpB+Q3XwJ3NeMc5JuSh/Tt0gCE78PBVGfcK7EISx886Dkrtvb2pEe6RdQk?=
- =?iso-8859-2?Q?FVAQfKy5Ov6WBSHBSt61xUHLBT0zX1uq43Bc7+ANd4VgpYQF+FJw/3mVDF?=
- =?iso-8859-2?Q?0xvCa2mSrbGqs8+vVJ4iMl0KlEatZsRoPPZSIaozvGLvUNmrHcVH415WOw?=
- =?iso-8859-2?Q?PeDb5/z6TknOaryaaA0BPBVN3Te1NLhVQn8+nfTc0S3KSknhIFCD80SoTq?=
- =?iso-8859-2?Q?BZ2aXlHsNPVM8hJ910eVOdmDTx656bS+ULgB7GRr58AGwK8s9nLC66nMvO?=
- =?iso-8859-2?Q?00NskqtpSey4Pu2B7hNzjfjNGhJBo2eifDJjDgjlHxolIQZsJs/yVU5wub?=
- =?iso-8859-2?Q?i0/aa+EJE6Ccoht/UcmH+T3HUli3e36my8tS2Z56uwj+tzlEvk89eDFLzi?=
- =?iso-8859-2?Q?lc+ailBQS+Bjbik7x0uuYEIjFUgjibsjZCtGoVEOc0fN+eQWOo/4fYM3sg?=
- =?iso-8859-2?Q?eqDTO+cL+i77U/eT5zSZrDCZNp3TaA1DMquak+Jp7iAbQB7Qzkbg2wSnCH?=
- =?iso-8859-2?Q?W01xCP6h4bL0OFmH3jM5qCzTWpkG/kQemwZo1xEtWj2RX8jgQL9hSVCHYB?=
- =?iso-8859-2?Q?N/D4jS8JOWca12V/n5zTwOJGsDi6fkDOo1RnWwftVv0D2MmdpJORDRx4Gz?=
- =?iso-8859-2?Q?enOdUNgWW3igsKiVi7eUxMQjqP4PDmLpUfgVCt2CpnZIR52q5XlqPqqL1+?=
- =?iso-8859-2?Q?O16p+LHdEGLxuomew1e+CGCsuXeJEN+qlF9e34wYQsiqDvz9O5We3q4JEc?=
- =?iso-8859-2?Q?vg3V7rVLidMkBEoV1Rj9gOjHhr62i9N2121Tlcry6+8KAmek1nQOSDWlpB?=
- =?iso-8859-2?Q?jBuPGhnNRpBytio1dVVsKuPdF4ggK6W2Y+Ge76keeHkHPnTunnsQcR56X6?=
- =?iso-8859-2?Q?dziCyVeMU+0BKQ3ohz5heuyMm/1UHotCMwE+ie8Yh/A1ZfRpIXQj806aac?=
- =?iso-8859-2?Q?kcltkku3XC+00TQ5Lf2qzerLmwj3wytaijNCLt3MM07C69HcNlPYiZTc8m?=
- =?iso-8859-2?Q?MiCH2EN3mqPZFBXuS6RTrKncqqyZbpE/7ioX4e9cf//5u0gDxkNw5fd+up?=
- =?iso-8859-2?Q?PwVy?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?lUwLPJsJJGqkLk3YDZxeQ4FlDWokD7PowU13xmYSr6oe7cqC8hQQcRg2TC?=
- =?iso-8859-2?Q?P92s+xN8nhMjuLSQG3kqV7wTT7ZK98qeCSOYQ61XOfrVSlSGuUVtef50va?=
- =?iso-8859-2?Q?TLBQEvy0J9WbQ9eVWnG8CFkx1rrCC9DuUB7iGANzrOwjD5Wic/1Z7+/vdh?=
- =?iso-8859-2?Q?50WiEjp/evacQkvwIcDGrExkNsR/cVHs+L7Rpp+/hh3eLeUcohay62hDJ5?=
- =?iso-8859-2?Q?/FiAXTUUBFjzxYtWNjOFcBoLyNShpGa/y4ZYFae1BSlDqxg2lXaT1ZSIPv?=
- =?iso-8859-2?Q?Umk76iXDVq7ZEkYf7AkLBQv3EZZxS9A839JDcCW/o9qvXwi4Z5bBwJqUPw?=
- =?iso-8859-2?Q?7MLWvC2XyLDPgUCyxovV5idnM0PHK0sPQ2Gzk7LWP+OqO8+Somfby5fFjg?=
- =?iso-8859-2?Q?ZCgkP3Hqk5D5n9QaiiawSjzFDPFV4S+lGIbR4hLBhiHIHe7b8BkgIdXw1B?=
- =?iso-8859-2?Q?0E+U9E7WjMwG7j8rOLtPyoclHj1iD0mbUfMwoUMbVqFHL73EouqAEotOBh?=
- =?iso-8859-2?Q?db6Eg/ns4mW3jJFZAQks+MMMr6FOdyc3uksdJnAXiPXTFd15oAgUdIZytB?=
- =?iso-8859-2?Q?dcxePNclM0uAOe3Z75TqfgduHNyqOHASKEZq8VjFsLooFUj9zfTZrOrH9H?=
- =?iso-8859-2?Q?B/jxa/NewcllgcNu6qZHZW0xjtWZrHWAGnbVcaopywx3apqZ8lVSfgzefx?=
- =?iso-8859-2?Q?c2TrFs807MDvQ+c4qKnWQT1hF6t0mTgM/653IDw5wS+Vl7DwSnqDo+3LRn?=
- =?iso-8859-2?Q?ZLPZp/SEgzSf+tMITBZXXbn7/UN6tRqWbzjCx/m/IvLobDLX4itquhYMhH?=
- =?iso-8859-2?Q?8byShW+Ric8oOqsAgV0WVDOxbRm/8JQjItiD1Dty/lplsQkU8iKCc4zTSC?=
- =?iso-8859-2?Q?WAHWGyiskWuqmiEdJqQnMc2fzusQJgXI/25POh+L5gOCCyMiFBchWixM9Y?=
- =?iso-8859-2?Q?oLHlqb0tF2aGuIgXji6A3KdFY1lVO+RusQewLPY4I3wIo02NdcAHI5mVer?=
- =?iso-8859-2?Q?jC0YDjmeOy/iOsu/lNqq7oxj0FhMVBDtGwGoWQpO1jKjSpNVsAIio/i50b?=
- =?iso-8859-2?Q?wHEfcju/w5Q5uX6qft4b/DByE9D6xzPWkzt/8eW3QkKdCjazGidE1QQEDB?=
- =?iso-8859-2?Q?twgcN6x0oCrd8b+0L1WyHtARGD3GyHUrh1MJaeyPZrC0xbKEDlxKX/+yoS?=
- =?iso-8859-2?Q?Q/V8rtRt+gmJlaS7XLATs/+oPvVfK82q3sVY6FpNXmBT9TsNwW1ykcAoVy?=
- =?iso-8859-2?Q?SoW4OS6mXJlv6g6UXNxMCrCozX8cqjnFRTwuN5lyQ=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpUBDKLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849B8C4CEED;
+	Wed, 14 May 2025 04:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747198067;
+	bh=FhLoY+PyrmHt8zibP34j3xBZtI+4VRQeKOmyGg3oCnY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DpUBDKLQXOJtL6DbjjdjChbmdVRs0Yi+Xk078SFf8Yn7/mCuQT5f5u5a0Qn3yCWOX
+	 60oY6cvgAGb4VU6dOw8+pAwvYb0NeiAPqHBtmjEAizdTpcJgHKSXbkbBIGVqj0w6D6
+	 TkDyNg+bB4ojH5U6euBRsgzCrHzKVEnefgtkgvCbBzTVFNwM1MfZ2laBq86h1uj55d
+	 abm0CXTpCgb/YxLjhd77Aapb/cus7iZ03m9fwZzIgqJfC3bnkeX1ZiWH6z053kmfmC
+	 F+SvJJDE5phLWl2lPj0wCkVvLj8GSlUxlRO4UJmSnUM9ACZjp/0TEiPJssjdTNuuvp
+	 x6PMYhitYWr0Q==
+Date: Wed, 14 May 2025 00:47:46 -0400
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4 sched_ext/for-6.16] sched_ext: Clean up scx_root usages
+Message-ID: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6375c053-f80f-4caf-3be6-08dd92a26897
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2025 04:47:19.3112
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB8756
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, May 13, 2025 9:45 AM
->=20
-> On Tue, May 13, 2025 at 02:07:45AM +0000, Michael Kelley wrote:
-> > From: Michael Kelley <mhklinux@outlook.com> Sent: Sunday, April 27, 202=
-5 8:22 AM
-> > >
-> > > From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Friday, April=
- 25, 2025 9:48 AM
-> > > >
-> > > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > > getting ready to enable it, globally.
-> > > >
-> > > > Use the `DEFINE_RAW_FLEX()` helper for a few on-stack definitions
-> > > > of a flexible structure where the size of the flexible-array member
-> > > > is known at compile-time, and refactor the rest of the code,
-> > > > accordingly.
-> > > >
-> > > > So, with these changes, fix the following warnings:
-> > > >
-> > > > drivers/pci/controller/pci-hyperv.c:3809:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:2831:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:2468:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:1830:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:1593:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:1504:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > > > drivers/pci/controller/pci-hyperv.c:1424:35: warning: structure con=
-taining a flexible
-> > > > array member is not at the end of another structure [-Wflex-array-m=
-ember-not-at-end]
-> > >
-> > > I'm supportive of cleaning up these warnings. I've worked with the pc=
-i-hyperv.c
-> > > code a fair amount over the years, but never had looked closely at th=
-e on-stack
-> > > structs that are causing the warnings. The current code is a bit unus=
-ual and
-> > > perhaps unnecessarily obtuse.
-> > >
-> > > Rather than the approach you've taken below, I tried removing the fle=
-x array
-> > > entirely from struct pci_packet. In all cases except one, it was used=
- only to
-> > > locate the end of struct pci_packet, which is the beginning of the fo=
-llow-on
-> > > message. Locating that follow-on message can easily be done by just r=
-eferencing
-> > > the "buf" field in the on-stack structs, or as (pkt + 1) in the dynam=
-ically allocated
-> > > case. In both cases, there's no need for the flex array. In the one e=
-xception, a
-> > > couple of minor tweaks avoids the need for the flex array as well.
-> > >
-> > > So here's an alternate approach to solving the problem. This approach=
- is
-> > > 14 insertions and 15 deletions, so it's a lot less change than your a=
-pproach.
-> > > I still don't understand why the on-stack struct are declared as (for=
- example):
-> > >
-> > > 	struct {
-> > > 		struct pci_packet pkt;
-> > > 		char buf[sizeof(struct pci_read_block)];
-> > > 	} pkt;
-> > >
-> > > instead of just:
-> > >
-> > > 	struct {
-> > > 		struct pci_packet pkt;
-> > > 		struct pci_read_block msg;
-> > > 	} pkt;
-> > >
-> > > but that's a topic for another time.  Anyway, here's my proposed diff=
-, which I've
-> > > compiled and smoke-tested in a VM in the Azure cloud:
-> > >
-> >
-> > Gustavo -- Are you waiting for me to submit a patch with my alternate p=
-roposal?
-> > I had not seen any follow up, so wanted to make sure we have clarity on=
- who
-> > has the next action. Thx.
->=20
-> Michael, I prefer your approach. Please send a patch.
->=20
+- Always cache scx_root into local variable sch before using.
 
-Patch posted here:  https://lore.kernel.org/linux-hyperv/20250514044440.489=
-24-1-mhklinux@outlook.com/
+- Don't use scx_root if cached sch is available.
 
-Michael
+- Wrap !sch test with unlikely().
+
+- Pass @scx into scx_cgroup_init/exit().
+
+No behavior changes intended.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ kernel/sched/ext.c      |  157 +++++++++++++++++++++++++++++-------------------
+ kernel/sched/ext_idle.c |    4 -
+ 2 files changed, 100 insertions(+), 61 deletions(-)
+
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -2220,20 +2220,20 @@ static void do_enqueue_task(struct rq *r
+ 		goto direct;
+ 
+ 	/* see %SCX_OPS_ENQ_EXITING */
+-	if (!(scx_root->ops.flags & SCX_OPS_ENQ_EXITING) &&
++	if (!(sch->ops.flags & SCX_OPS_ENQ_EXITING) &&
+ 	    unlikely(p->flags & PF_EXITING)) {
+ 		__scx_add_event(sch, SCX_EV_ENQ_SKIP_EXITING, 1);
+ 		goto local;
+ 	}
+ 
+ 	/* see %SCX_OPS_ENQ_MIGRATION_DISABLED */
+-	if (!(scx_root->ops.flags & SCX_OPS_ENQ_MIGRATION_DISABLED) &&
++	if (!(sch->ops.flags & SCX_OPS_ENQ_MIGRATION_DISABLED) &&
+ 	    is_migration_disabled(p)) {
+ 		__scx_add_event(sch, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED, 1);
+ 		goto local;
+ 	}
+ 
+-	if (unlikely(!SCX_HAS_OP(scx_root, enqueue)))
++	if (unlikely(!SCX_HAS_OP(sch, enqueue)))
+ 		goto global;
+ 
+ 	/* DSQ bypass didn't trigger, enqueue on the BPF scheduler */
+@@ -2311,6 +2311,7 @@ static void clr_task_runnable(struct tas
+ 
+ static void enqueue_task_scx(struct rq *rq, struct task_struct *p, int enq_flags)
+ {
++	struct scx_sched *sch = scx_root;
+ 	int sticky_cpu = p->scx.sticky_cpu;
+ 
+ 	if (enq_flags & ENQUEUE_WAKEUP)
+@@ -2340,7 +2341,7 @@ static void enqueue_task_scx(struct rq *
+ 	rq->scx.nr_running++;
+ 	add_nr_running(rq, 1);
+ 
+-	if (SCX_HAS_OP(scx_root, runnable) && !task_on_rq_migrating(p))
++	if (SCX_HAS_OP(sch, runnable) && !task_on_rq_migrating(p))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, runnable, rq, p, enq_flags);
+ 
+ 	if (enq_flags & SCX_ENQ_WAKEUP)
+@@ -2352,11 +2353,12 @@ out:
+ 
+ 	if ((enq_flags & SCX_ENQ_CPU_SELECTED) &&
+ 	    unlikely(cpu_of(rq) != p->scx.selected_cpu))
+-		__scx_add_event(scx_root, SCX_EV_SELECT_CPU_FALLBACK, 1);
++		__scx_add_event(sch, SCX_EV_SELECT_CPU_FALLBACK, 1);
+ }
+ 
+ static void ops_dequeue(struct rq *rq, struct task_struct *p, u64 deq_flags)
+ {
++	struct scx_sched *sch = scx_root;
+ 	unsigned long opss;
+ 
+ 	/* dequeue is always temporary, don't reset runnable_at */
+@@ -2375,7 +2377,7 @@ static void ops_dequeue(struct rq *rq, s
+ 		 */
+ 		BUG();
+ 	case SCX_OPSS_QUEUED:
+-		if (SCX_HAS_OP(scx_root, dequeue))
++		if (SCX_HAS_OP(sch, dequeue))
+ 			SCX_CALL_OP_TASK(SCX_KF_REST, dequeue, rq, p, deq_flags);
+ 
+ 		if (atomic_long_try_cmpxchg(&p->scx.ops_state, &opss,
+@@ -2404,6 +2406,8 @@ static void ops_dequeue(struct rq *rq, s
+ 
+ static bool dequeue_task_scx(struct rq *rq, struct task_struct *p, int deq_flags)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	if (!(p->scx.flags & SCX_TASK_QUEUED)) {
+ 		WARN_ON_ONCE(task_runnable(p));
+ 		return true;
+@@ -2423,12 +2427,12 @@ static bool dequeue_task_scx(struct rq *
+ 	 * information meaningful to the BPF scheduler and can be suppressed by
+ 	 * skipping the callbacks if the task is !QUEUED.
+ 	 */
+-	if (SCX_HAS_OP(scx_root, stopping) && task_current(rq, p)) {
++	if (SCX_HAS_OP(sch, stopping) && task_current(rq, p)) {
+ 		update_curr_scx(rq);
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, stopping, rq, p, false);
+ 	}
+ 
+-	if (SCX_HAS_OP(scx_root, quiescent) && !task_on_rq_migrating(p))
++	if (SCX_HAS_OP(sch, quiescent) && !task_on_rq_migrating(p))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, quiescent, rq, p, deq_flags);
+ 
+ 	if (deq_flags & SCX_DEQ_SLEEP)
+@@ -2446,9 +2450,10 @@ static bool dequeue_task_scx(struct rq *
+ 
+ static void yield_task_scx(struct rq *rq)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct task_struct *p = rq->curr;
+ 
+-	if (SCX_HAS_OP(scx_root, yield))
++	if (SCX_HAS_OP(sch, yield))
+ 		SCX_CALL_OP_2TASKS_RET(SCX_KF_REST, yield, rq, p, NULL);
+ 	else
+ 		p->scx.slice = 0;
+@@ -2456,9 +2461,10 @@ static void yield_task_scx(struct rq *rq
+ 
+ static bool yield_to_task_scx(struct rq *rq, struct task_struct *to)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct task_struct *from = rq->curr;
+ 
+-	if (SCX_HAS_OP(scx_root, yield))
++	if (SCX_HAS_OP(sch, yield))
+ 		return SCX_CALL_OP_2TASKS_RET(SCX_KF_REST, yield, rq, from, to);
+ 	else
+ 		return false;
+@@ -3011,7 +3017,7 @@ static int balance_one(struct rq *rq, st
+ 	rq->scx.flags |= SCX_RQ_IN_BALANCE;
+ 	rq->scx.flags &= ~(SCX_RQ_BAL_PENDING | SCX_RQ_BAL_KEEP);
+ 
+-	if ((scx_root->ops.flags & SCX_OPS_HAS_CPU_PREEMPT) &&
++	if ((sch->ops.flags & SCX_OPS_HAS_CPU_PREEMPT) &&
+ 	    unlikely(rq->scx.cpu_released)) {
+ 		/*
+ 		 * If the previous sched_class for the current CPU was not SCX,
+@@ -3019,7 +3025,7 @@ static int balance_one(struct rq *rq, st
+ 		 * core. This callback complements ->cpu_release(), which is
+ 		 * emitted in switch_class().
+ 		 */
+-		if (SCX_HAS_OP(scx_root, cpu_acquire))
++		if (SCX_HAS_OP(sch, cpu_acquire))
+ 			SCX_CALL_OP(SCX_KF_REST, cpu_acquire, rq, cpu_of(rq), NULL);
+ 		rq->scx.cpu_released = false;
+ 	}
+@@ -3050,7 +3056,7 @@ static int balance_one(struct rq *rq, st
+ 	if (consume_global_dsq(sch, rq))
+ 		goto has_tasks;
+ 
+-	if (unlikely(!SCX_HAS_OP(scx_root, dispatch)) ||
++	if (unlikely(!SCX_HAS_OP(sch, dispatch)) ||
+ 	    scx_rq_bypassing(rq) || !scx_rq_online(rq))
+ 		goto no_tasks;
+ 
+@@ -3101,7 +3107,7 @@ no_tasks:
+ 	 * %SCX_OPS_ENQ_LAST is in effect.
+ 	 */
+ 	if (prev_on_rq &&
+-	    (!(scx_root->ops.flags & SCX_OPS_ENQ_LAST) || scx_rq_bypassing(rq))) {
++	    (!(sch->ops.flags & SCX_OPS_ENQ_LAST) || scx_rq_bypassing(rq))) {
+ 		rq->scx.flags |= SCX_RQ_BAL_KEEP;
+ 		__scx_add_event(sch, SCX_EV_DISPATCH_KEEP_LAST, 1);
+ 		goto has_tasks;
+@@ -3176,6 +3182,8 @@ static void process_ddsp_deferred_locals
+ 
+ static void set_next_task_scx(struct rq *rq, struct task_struct *p, bool first)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	if (p->scx.flags & SCX_TASK_QUEUED) {
+ 		/*
+ 		 * Core-sched might decide to execute @p before it is
+@@ -3188,7 +3196,7 @@ static void set_next_task_scx(struct rq
+ 	p->se.exec_start = rq_clock_task(rq);
+ 
+ 	/* see dequeue_task_scx() on why we skip when !QUEUED */
+-	if (SCX_HAS_OP(scx_root, running) && (p->scx.flags & SCX_TASK_QUEUED))
++	if (SCX_HAS_OP(sch, running) && (p->scx.flags & SCX_TASK_QUEUED))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, running, rq, p);
+ 
+ 	clr_task_runnable(p, true);
+@@ -3232,6 +3240,7 @@ preempt_reason_from_class(const struct s
+ 
+ static void switch_class(struct rq *rq, struct task_struct *next)
+ {
++	struct scx_sched *sch = scx_root;
+ 	const struct sched_class *next_class = next->sched_class;
+ 
+ #ifdef CONFIG_SMP
+@@ -3242,7 +3251,7 @@ static void switch_class(struct rq *rq,
+ 	 */
+ 	smp_store_release(&rq->scx.pnt_seq, rq->scx.pnt_seq + 1);
+ #endif
+-	if (!(scx_root->ops.flags & SCX_OPS_HAS_CPU_PREEMPT))
++	if (!(sch->ops.flags & SCX_OPS_HAS_CPU_PREEMPT))
+ 		return;
+ 
+ 	/*
+@@ -3264,7 +3273,7 @@ static void switch_class(struct rq *rq,
+ 	 *  next time that balance_scx() is invoked.
+ 	 */
+ 	if (!rq->scx.cpu_released) {
+-		if (SCX_HAS_OP(scx_root, cpu_release)) {
++		if (SCX_HAS_OP(sch, cpu_release)) {
+ 			struct scx_cpu_release_args args = {
+ 				.reason = preempt_reason_from_class(next_class),
+ 				.task = next,
+@@ -3279,10 +3288,11 @@ static void switch_class(struct rq *rq,
+ static void put_prev_task_scx(struct rq *rq, struct task_struct *p,
+ 			      struct task_struct *next)
+ {
++	struct scx_sched *sch = scx_root;
+ 	update_curr_scx(rq);
+ 
+ 	/* see dequeue_task_scx() on why we skip when !QUEUED */
+-	if (SCX_HAS_OP(scx_root, stopping) && (p->scx.flags & SCX_TASK_QUEUED))
++	if (SCX_HAS_OP(sch, stopping) && (p->scx.flags & SCX_TASK_QUEUED))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, stopping, rq, p, true);
+ 
+ 	if (p->scx.flags & SCX_TASK_QUEUED) {
+@@ -3306,7 +3316,7 @@ static void put_prev_task_scx(struct rq
+ 		 * which should trigger an explicit follow-up scheduling event.
+ 		 */
+ 		if (sched_class_above(&ext_sched_class, next->sched_class)) {
+-			WARN_ON_ONCE(!(scx_root->ops.flags & SCX_OPS_ENQ_LAST));
++			WARN_ON_ONCE(!(sch->ops.flags & SCX_OPS_ENQ_LAST));
+ 			do_enqueue_task(rq, p, SCX_ENQ_LAST, -1);
+ 		} else {
+ 			do_enqueue_task(rq, p, 0, -1);
+@@ -3381,10 +3391,12 @@ static struct task_struct *pick_task_scx
+ 		}
+ 
+ 		if (unlikely(!p->scx.slice)) {
+-			if (!scx_rq_bypassing(rq) && !scx_root->warned_zero_slice) {
++			struct scx_sched *sch = scx_root;
++
++			if (!scx_rq_bypassing(rq) && !sch->warned_zero_slice) {
+ 				printk_deferred(KERN_WARNING "sched_ext: %s[%d] has zero slice in %s()\n",
+ 						p->comm, p->pid, __func__);
+-				scx_root->warned_zero_slice = true;
++				sch->warned_zero_slice = true;
+ 			}
+ 			refill_task_slice_dfl(p);
+ 		}
+@@ -3415,12 +3427,14 @@ static struct task_struct *pick_task_scx
+ bool scx_prio_less(const struct task_struct *a, const struct task_struct *b,
+ 		   bool in_fi)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	/*
+ 	 * The const qualifiers are dropped from task_struct pointers when
+ 	 * calling ops.core_sched_before(). Accesses are controlled by the
+ 	 * verifier.
+ 	 */
+-	if (SCX_HAS_OP(scx_root, core_sched_before) &&
++	if (SCX_HAS_OP(sch, core_sched_before) &&
+ 	    !scx_rq_bypassing(task_rq(a)))
+ 		return SCX_CALL_OP_2TASKS_RET(SCX_KF_REST, core_sched_before, NULL,
+ 					      (struct task_struct *)a,
+@@ -3493,6 +3507,8 @@ static void task_woken_scx(struct rq *rq
+ static void set_cpus_allowed_scx(struct task_struct *p,
+ 				 struct affinity_context *ac)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	set_cpus_allowed_common(p, ac);
+ 
+ 	/*
+@@ -3503,13 +3519,14 @@ static void set_cpus_allowed_scx(struct
+ 	 * Fine-grained memory write control is enforced by BPF making the const
+ 	 * designation pointless. Cast it away when calling the operation.
+ 	 */
+-	if (SCX_HAS_OP(scx_root, set_cpumask))
++	if (SCX_HAS_OP(sch, set_cpumask))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, set_cpumask, NULL,
+ 				 p, (struct cpumask *)p->cpus_ptr);
+ }
+ 
+ static void handle_hotplug(struct rq *rq, bool online)
+ {
++	struct scx_sched *sch = scx_root;
+ 	int cpu = cpu_of(rq);
+ 
+ 	atomic_long_inc(&scx_hotplug_seq);
+@@ -3519,15 +3536,15 @@ static void handle_hotplug(struct rq *rq
+ 	 * stable here. Note that we can't depend on scx_enabled() test as the
+ 	 * hotplug ops need to be enabled before __scx_enabled is set.
+ 	 */
+-	if (!scx_root)
++	if (unlikely(!sch))
+ 		return;
+ 
+ 	if (scx_enabled())
+-		scx_idle_update_selcpu_topology(&scx_root->ops);
++		scx_idle_update_selcpu_topology(&sch->ops);
+ 
+-	if (online && SCX_HAS_OP(scx_root, cpu_online))
++	if (online && SCX_HAS_OP(sch, cpu_online))
+ 		SCX_CALL_OP(SCX_KF_UNLOCKED, cpu_online, NULL, cpu);
+-	else if (!online && SCX_HAS_OP(scx_root, cpu_offline))
++	else if (!online && SCX_HAS_OP(sch, cpu_offline))
+ 		SCX_CALL_OP(SCX_KF_UNLOCKED, cpu_offline, NULL, cpu);
+ 	else
+ 		scx_exit(SCX_ECODE_ACT_RESTART | SCX_ECODE_RSN_HOTPLUG,
+@@ -3621,6 +3638,8 @@ void scx_tick(struct rq *rq)
+ 
+ static void task_tick_scx(struct rq *rq, struct task_struct *curr, int queued)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	update_curr_scx(rq);
+ 
+ 	/*
+@@ -3630,7 +3649,7 @@ static void task_tick_scx(struct rq *rq,
+ 	if (scx_rq_bypassing(rq)) {
+ 		curr->scx.slice = 0;
+ 		touch_core_sched(rq, curr);
+-	} else if (SCX_HAS_OP(scx_root, tick)) {
++	} else if (SCX_HAS_OP(sch, tick)) {
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, tick, rq, curr);
+ 	}
+ 
+@@ -3698,11 +3717,12 @@ static void scx_set_task_state(struct ta
+ 
+ static int scx_init_task(struct task_struct *p, struct task_group *tg, bool fork)
+ {
++	struct scx_sched *sch = scx_root;
+ 	int ret;
+ 
+ 	p->scx.disallow = false;
+ 
+-	if (SCX_HAS_OP(scx_root, init_task)) {
++	if (SCX_HAS_OP(sch, init_task)) {
+ 		struct scx_init_task_args args = {
+ 			SCX_INIT_TASK_ARGS_CGROUP(tg)
+ 			.fork = fork,
+@@ -3749,6 +3769,7 @@ static int scx_init_task(struct task_str
+ 
+ static void scx_enable_task(struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct rq *rq = task_rq(p);
+ 	u32 weight;
+ 
+@@ -3765,28 +3786,30 @@ static void scx_enable_task(struct task_
+ 
+ 	p->scx.weight = sched_weight_to_cgroup(weight);
+ 
+-	if (SCX_HAS_OP(scx_root, enable))
++	if (SCX_HAS_OP(sch, enable))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, enable, rq, p);
+ 	scx_set_task_state(p, SCX_TASK_ENABLED);
+ 
+-	if (SCX_HAS_OP(scx_root, set_weight))
++	if (SCX_HAS_OP(sch, set_weight))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, set_weight, rq, p, p->scx.weight);
+ }
+ 
+ static void scx_disable_task(struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct rq *rq = task_rq(p);
+ 
+ 	lockdep_assert_rq_held(rq);
+ 	WARN_ON_ONCE(scx_get_task_state(p) != SCX_TASK_ENABLED);
+ 
+-	if (SCX_HAS_OP(scx_root, disable))
++	if (SCX_HAS_OP(sch, disable))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, disable, rq, p);
+ 	scx_set_task_state(p, SCX_TASK_READY);
+ }
+ 
+ static void scx_exit_task(struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct scx_exit_task_args args = {
+ 		.cancelled = false,
+ 	};
+@@ -3809,7 +3832,7 @@ static void scx_exit_task(struct task_st
+ 		return;
+ 	}
+ 
+-	if (SCX_HAS_OP(scx_root, exit_task))
++	if (SCX_HAS_OP(sch, exit_task))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, exit_task, task_rq(p), p, &args);
+ 	scx_set_task_state(p, SCX_TASK_NONE);
+ }
+@@ -3915,10 +3938,12 @@ void sched_ext_free(struct task_struct *
+ static void reweight_task_scx(struct rq *rq, struct task_struct *p,
+ 			      const struct load_weight *lw)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	lockdep_assert_rq_held(task_rq(p));
+ 
+ 	p->scx.weight = sched_weight_to_cgroup(scale_load_down(lw->weight));
+-	if (SCX_HAS_OP(scx_root, set_weight))
++	if (SCX_HAS_OP(sch, set_weight))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, set_weight, rq, p, p->scx.weight);
+ }
+ 
+@@ -3928,13 +3953,15 @@ static void prio_changed_scx(struct rq *
+ 
+ static void switching_to_scx(struct rq *rq, struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	scx_enable_task(p);
+ 
+ 	/*
+ 	 * set_cpus_allowed_scx() is not called while @p is associated with a
+ 	 * different scheduler class. Keep the BPF scheduler up-to-date.
+ 	 */
+-	if (SCX_HAS_OP(scx_root, set_cpumask))
++	if (SCX_HAS_OP(sch, set_cpumask))
+ 		SCX_CALL_OP_TASK(SCX_KF_REST, set_cpumask, rq,
+ 				 p, (struct cpumask *)p->cpus_ptr);
+ }
+@@ -3986,6 +4013,7 @@ static bool scx_cgroup_enabled;
+ 
+ int scx_tg_online(struct task_group *tg)
+ {
++	struct scx_sched *sch = scx_root;
+ 	int ret = 0;
+ 
+ 	WARN_ON_ONCE(tg->scx_flags & (SCX_TG_ONLINE | SCX_TG_INITED));
+@@ -3993,7 +4021,7 @@ int scx_tg_online(struct task_group *tg)
+ 	percpu_down_read(&scx_cgroup_rwsem);
+ 
+ 	if (scx_cgroup_enabled) {
+-		if (SCX_HAS_OP(scx_root, cgroup_init)) {
++		if (SCX_HAS_OP(sch, cgroup_init)) {
+ 			struct scx_cgroup_init_args args =
+ 				{ .weight = tg->scx_weight };
+ 
+@@ -4014,11 +4042,13 @@ int scx_tg_online(struct task_group *tg)
+ 
+ void scx_tg_offline(struct task_group *tg)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	WARN_ON_ONCE(!(tg->scx_flags & SCX_TG_ONLINE));
+ 
+ 	percpu_down_read(&scx_cgroup_rwsem);
+ 
+-	if (scx_cgroup_enabled && SCX_HAS_OP(scx_root, cgroup_exit) &&
++	if (scx_cgroup_enabled && SCX_HAS_OP(sch, cgroup_exit) &&
+ 	    (tg->scx_flags & SCX_TG_INITED))
+ 		SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_exit, NULL, tg->css.cgroup);
+ 	tg->scx_flags &= ~(SCX_TG_ONLINE | SCX_TG_INITED);
+@@ -4028,6 +4058,7 @@ void scx_tg_offline(struct task_group *t
+ 
+ int scx_cgroup_can_attach(struct cgroup_taskset *tset)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct cgroup_subsys_state *css;
+ 	struct task_struct *p;
+ 	int ret;
+@@ -4052,7 +4083,7 @@ int scx_cgroup_can_attach(struct cgroup_
+ 		if (from == to)
+ 			continue;
+ 
+-		if (SCX_HAS_OP(scx_root, cgroup_prep_move)) {
++		if (SCX_HAS_OP(sch, cgroup_prep_move)) {
+ 			ret = SCX_CALL_OP_RET(SCX_KF_UNLOCKED, cgroup_prep_move, NULL,
+ 					      p, from, css->cgroup);
+ 			if (ret)
+@@ -4066,7 +4097,7 @@ int scx_cgroup_can_attach(struct cgroup_
+ 
+ err:
+ 	cgroup_taskset_for_each(p, css, tset) {
+-		if (SCX_HAS_OP(scx_root, cgroup_cancel_move) &&
++		if (SCX_HAS_OP(sch, cgroup_cancel_move) &&
+ 		    p->scx.cgrp_moving_from)
+ 			SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_cancel_move, NULL,
+ 				    p, p->scx.cgrp_moving_from, css->cgroup);
+@@ -4079,6 +4110,8 @@ err:
+ 
+ void scx_cgroup_move_task(struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	if (!scx_cgroup_enabled)
+ 		return;
+ 
+@@ -4086,7 +4119,7 @@ void scx_cgroup_move_task(struct task_st
+ 	 * @p must have ops.cgroup_prep_move() called on it and thus
+ 	 * cgrp_moving_from set.
+ 	 */
+-	if (SCX_HAS_OP(scx_root, cgroup_move) &&
++	if (SCX_HAS_OP(sch, cgroup_move) &&
+ 	    !WARN_ON_ONCE(!p->scx.cgrp_moving_from))
+ 		SCX_CALL_OP_TASK(SCX_KF_UNLOCKED, cgroup_move, NULL,
+ 				 p, p->scx.cgrp_moving_from, tg_cgrp(task_group(p)));
+@@ -4100,6 +4133,7 @@ void scx_cgroup_finish_attach(void)
+ 
+ void scx_cgroup_cancel_attach(struct cgroup_taskset *tset)
+ {
++	struct scx_sched *sch = scx_root;
+ 	struct cgroup_subsys_state *css;
+ 	struct task_struct *p;
+ 
+@@ -4107,7 +4141,7 @@ void scx_cgroup_cancel_attach(struct cgr
+ 		goto out_unlock;
+ 
+ 	cgroup_taskset_for_each(p, css, tset) {
+-		if (SCX_HAS_OP(scx_root, cgroup_cancel_move) &&
++		if (SCX_HAS_OP(sch, cgroup_cancel_move) &&
+ 		    p->scx.cgrp_moving_from)
+ 			SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_cancel_move, NULL,
+ 				    p, p->scx.cgrp_moving_from, css->cgroup);
+@@ -4119,10 +4153,12 @@ out_unlock:
+ 
+ void scx_group_set_weight(struct task_group *tg, unsigned long weight)
+ {
++	struct scx_sched *sch = scx_root;
++
+ 	percpu_down_read(&scx_cgroup_rwsem);
+ 
+ 	if (scx_cgroup_enabled && tg->scx_weight != weight) {
+-		if (SCX_HAS_OP(scx_root, cgroup_set_weight))
++		if (SCX_HAS_OP(sch, cgroup_set_weight))
+ 			SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_set_weight, NULL,
+ 				    tg_cgrp(tg), weight);
+ 		tg->scx_weight = weight;
+@@ -4263,7 +4299,7 @@ out_unlock_rcu:
+ }
+ 
+ #ifdef CONFIG_EXT_GROUP_SCHED
+-static void scx_cgroup_exit(void)
++static void scx_cgroup_exit(struct scx_sched *sch)
+ {
+ 	struct cgroup_subsys_state *css;
+ 
+@@ -4283,7 +4319,7 @@ static void scx_cgroup_exit(void)
+ 			continue;
+ 		tg->scx_flags &= ~SCX_TG_INITED;
+ 
+-		if (!scx_root->ops.cgroup_exit)
++		if (!sch->ops.cgroup_exit)
+ 			continue;
+ 
+ 		if (WARN_ON_ONCE(!css_tryget(css)))
+@@ -4298,7 +4334,7 @@ static void scx_cgroup_exit(void)
+ 	rcu_read_unlock();
+ }
+ 
+-static int scx_cgroup_init(void)
++static int scx_cgroup_init(struct scx_sched *sch)
+ {
+ 	struct cgroup_subsys_state *css;
+ 	int ret;
+@@ -4318,7 +4354,7 @@ static int scx_cgroup_init(void)
+ 		     (SCX_TG_ONLINE | SCX_TG_INITED)) != SCX_TG_ONLINE)
+ 			continue;
+ 
+-		if (!scx_root->ops.cgroup_init) {
++		if (!sch->ops.cgroup_init) {
+ 			tg->scx_flags |= SCX_TG_INITED;
+ 			continue;
+ 		}
+@@ -4348,8 +4384,8 @@ static int scx_cgroup_init(void)
+ }
+ 
+ #else
+-static void scx_cgroup_exit(void) {}
+-static int scx_cgroup_init(void) { return 0; }
++static void scx_cgroup_exit(struct scx_sched *sch) {}
++static int scx_cgroup_init(struct scx_sched *sch) { return 0; }
+ #endif
+ 
+ 
+@@ -4792,7 +4828,7 @@ static void scx_disable_workfn(struct kt
+ 	 * doesn't race against scx_exit_task().
+ 	 */
+ 	scx_cgroup_lock();
+-	scx_cgroup_exit();
++	scx_cgroup_exit(sch);
+ 	scx_cgroup_unlock();
+ 
+ 	/*
+@@ -5018,6 +5054,7 @@ static void scx_dump_task(struct seq_buf
+ 			  struct task_struct *p, char marker)
+ {
+ 	static unsigned long bt[SCX_EXIT_BT_LEN];
++	struct scx_sched *sch = scx_root;
+ 	char dsq_id_buf[19] = "(n/a)";
+ 	unsigned long ops_state = atomic_long_read(&p->scx.ops_state);
+ 	unsigned int bt_len = 0;
+@@ -5040,7 +5077,7 @@ static void scx_dump_task(struct seq_buf
+ 		  p->scx.dsq_vtime, p->scx.slice, p->scx.weight);
+ 	dump_line(s, "      cpus=%*pb", cpumask_pr_args(p->cpus_ptr));
+ 
+-	if (SCX_HAS_OP(scx_root, dump_task)) {
++	if (SCX_HAS_OP(sch, dump_task)) {
+ 		ops_dump_init(s, "    ");
+ 		SCX_CALL_OP(SCX_KF_REST, dump_task, NULL, dctx, p);
+ 		ops_dump_exit();
+@@ -5059,6 +5096,7 @@ static void scx_dump_state(struct scx_ex
+ {
+ 	static DEFINE_SPINLOCK(dump_lock);
+ 	static const char trunc_marker[] = "\n\n~~~~ TRUNCATED ~~~~\n";
++	struct scx_sched *sch = scx_root;
+ 	struct scx_dump_ctx dctx = {
+ 		.kind = ei->kind,
+ 		.exit_code = ei->exit_code,
+@@ -5087,7 +5125,7 @@ static void scx_dump_state(struct scx_ex
+ 		dump_stack_trace(&s, "  ", ei->bt, ei->bt_len);
+ 	}
+ 
+-	if (SCX_HAS_OP(scx_root, dump)) {
++	if (SCX_HAS_OP(sch, dump)) {
+ 		ops_dump_init(&s, "");
+ 		SCX_CALL_OP(SCX_KF_UNLOCKED, dump, NULL, &dctx);
+ 		ops_dump_exit();
+@@ -5110,7 +5148,7 @@ static void scx_dump_state(struct scx_ex
+ 		idle = list_empty(&rq->scx.runnable_list) &&
+ 			rq->curr->sched_class == &idle_sched_class;
+ 
+-		if (idle && !SCX_HAS_OP(scx_root, dump_cpu))
++		if (idle && !SCX_HAS_OP(sch, dump_cpu))
+ 			goto next;
+ 
+ 		/*
+@@ -5144,7 +5182,7 @@ static void scx_dump_state(struct scx_ex
+ 				  cpumask_pr_args(rq->scx.cpus_to_wait));
+ 
+ 		used = seq_buf_used(&ns);
+-		if (SCX_HAS_OP(scx_root, dump_cpu)) {
++		if (SCX_HAS_OP(sch, dump_cpu)) {
+ 			ops_dump_init(&ns, "  ");
+ 			SCX_CALL_OP(SCX_KF_REST, dump_cpu, NULL, &dctx, cpu, idle);
+ 			ops_dump_exit();
+@@ -5180,7 +5218,7 @@ static void scx_dump_state(struct scx_ex
+ 	dump_line(&s, "Event counters");
+ 	dump_line(&s, "--------------");
+ 
+-	scx_read_events(scx_root, &events);
++	scx_read_events(sch, &events);
+ 	scx_dump_event(s, &events, SCX_EV_SELECT_CPU_FALLBACK);
+ 	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
+ 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
+@@ -5505,7 +5543,7 @@ static int scx_enable(struct sched_ext_o
+ 	 * never sees uninitialized tasks.
+ 	 */
+ 	scx_cgroup_lock();
+-	ret = scx_cgroup_init();
++	ret = scx_cgroup_init(sch);
+ 	if (ret)
+ 		goto err_disable_unlock_all;
+ 
+@@ -6039,6 +6077,7 @@ static void kick_cpus_irq_workfn(struct
+  */
+ void print_scx_info(const char *log_lvl, struct task_struct *p)
+ {
++	struct scx_sched *sch = scx_root;
+ 	enum scx_enable_state state = scx_enable_state();
+ 	const char *all = READ_ONCE(scx_switching_all) ? "+all" : "";
+ 	char runnable_at_buf[22] = "?";
+@@ -6054,7 +6093,7 @@ void print_scx_info(const char *log_lvl,
+ 	 */
+ 	if (copy_from_kernel_nofault(&class, &p->sched_class, sizeof(class)) ||
+ 	    class != &ext_sched_class) {
+-		printk("%sSched_ext: %s (%s%s)", log_lvl, scx_root->ops.name,
++		printk("%sSched_ext: %s (%s%s)", log_lvl, sch->ops.name,
+ 		       scx_enable_state_str[state], all);
+ 		return;
+ 	}
+@@ -6066,7 +6105,7 @@ void print_scx_info(const char *log_lvl,
+ 
+ 	/* print everything onto one line to conserve console space */
+ 	printk("%sSched_ext: %s (%s%s), task: runnable_at=%s",
+-	       log_lvl, scx_root->ops.name, scx_enable_state_str[state], all,
++	       log_lvl, sch->ops.name, scx_enable_state_str[state], all,
+ 	       runnable_at_buf);
+ }
+ 
+@@ -6844,7 +6883,7 @@ __bpf_kfunc s32 scx_bpf_dsq_nr_queued(u6
+ 	preempt_disable();
+ 
+ 	sch = rcu_dereference_sched(scx_root);
+-	if (!sch) {
++	if (unlikely(!sch)) {
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+@@ -6920,7 +6959,7 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(str
+ 	kit->dsq = NULL;
+ 
+ 	sch = rcu_dereference_check(scx_root, rcu_read_lock_bh_held());
+-	if (!sch)
++	if (unlikely(!sch))
+ 		return -ENODEV;
+ 
+ 	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
+--- a/kernel/sched/ext_idle.c
++++ b/kernel/sched/ext_idle.c
+@@ -733,6 +733,7 @@ static void update_builtin_idle(int cpu,
+  */
+ void __scx_update_idle(struct rq *rq, bool idle, bool do_notify)
+ {
++	struct scx_sched *sch = scx_root;
+ 	int cpu = cpu_of(rq);
+ 
+ 	lockdep_assert_rq_held(rq);
+@@ -744,8 +745,7 @@ void __scx_update_idle(struct rq *rq, bo
+ 	 * Idle transitions are indicated by do_notify being set to true,
+ 	 * managed by put_prev_task_idle()/set_next_task_idle().
+ 	 */
+-	if (SCX_HAS_OP(scx_root, update_idle) &&
+-	    do_notify && !scx_rq_bypassing(rq))
++	if (SCX_HAS_OP(sch, update_idle) && do_notify && !scx_rq_bypassing(rq))
+ 		SCX_CALL_OP(SCX_KF_REST, update_idle, rq, cpu_of(rq), idle);
+ 
+ 	/*
+
