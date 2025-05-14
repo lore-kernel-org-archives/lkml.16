@@ -1,130 +1,153 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BA720102D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE1F24291C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221787; cv=none; b=I0ODnNqXc9caYhAogFUoXqNcXz1864kC4FluH7JyI+ulzOG4PGlux88h8jj/5sdOyYIh2xw4LQLp6DW30Xgo8e4ViElfFePlg2ldYMEdH19gloeFh65XpX+gJ1w6AdDf1KuM3q66URfeZ1A1KdbnKnsR99qTiygzmj2G5073H+8=
+	t=1747221837; cv=none; b=R6jmgXtj2mznKhzOb48UnAdfRF1ON59JA2BhHSeX1+5e0Uc++hzUEnjPYxIu26uvf3dHwARL20FwzdPZHE7x9D6fCXhD12X3ilwW38/3y/HVl1NuqdzfqOQDRbXbZ8Hg9kA25TH1zdl/MSL6YpCnx/IH+ly6U8kQqn4hGC/73/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221787; c=relaxed/simple;
-	bh=EfetSGfqB81IHkN/PGxR2QwCQXA/JyJpHsnfb7Zgb8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c5iJdN1f7BJsVPWJGMUrCnFuHiX2SneQp6UcdK39YMJaLXvazgaGwzXF+FUKcd11mKG9Wa1ZZQkyqMw7wtXhnUFgRZ4VBXOOIp1pDYR9by/u0sT4DVRVpi+ONILh/7MlE3dSUZgcaSODFle9E2xb7K6XTga/Y2VY8UiFQ2CbXks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aNof1HXb; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747221837; c=relaxed/simple;
+	bh=tx8YzHNBUj2kXpeOe64RZVIheqYx8JBL48xF8A/l0Vg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o/1g/tVcdTMcwhLXIdPdngjVj48CQMoW2Xl382wcGW/EaDrO6zjE3hl1Hv7sE9GsMDJ/FY5NgJUnS1RV4lEwcnelZCr6spyNSVhJ1q1wTZqz+YNAzLn8N1IBTG0bi6o41N77YY5+I7FepSTNenki1rtIDhtT9UXnFS9R/qzE00Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CifpsKCr; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aNof1HXb"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fbed53b421so10742499a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:23:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CifpsKCr"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0be50048eso5226123f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747221783; x=1747826583; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=btVpNFKgUcPUatiYhN505Sc3nSf9yR9Iw/noU9VBOO0=;
-        b=aNof1HXbRXUR1cH1MIz/DrVjWmj9beSY3mN2uy0ppmjZ7oZEiwamT++74sUtBaBBRo
-         OPIjo7nc0f7nkcwA2jf7KFTiwNiAK02GB8SD5y01g2vOK375MOVkTHVQs73yWV10MLeJ
-         xlXJFccreWu3mi7pjk1O8kWAhmq9RV8vq8ekbNZiLkKthTaEoXfcubm/XdUrH67QyFZd
-         WSCIj8CTjaJraMP0P+q4NDnzi+xbXQWZVcrVH4y/90+qTCxCrGjOgtZYJiu5otZM5iD2
-         NT7lw+WoBCkx+qdD4eCfueUujEfnHJjTbb/SOzH58TzlZ+8Vo/OGn0ajd/MTNe7T3BEN
-         SwRg==
+        d=linaro.org; s=google; t=1747221834; x=1747826634; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PqwsD7WCcNuEv2WTK4iZPHlU9QaOgxXWeL2peqyTOEE=;
+        b=CifpsKCrJBJiAVrvwso4NA8fFFwDFo94V+mnbRYznzJ0XoIprLJ3N+y5ht9jkHDViL
+         KctlCTvlv/BRnU5y1fyffDWoztowmALzV6dvBaQCs3yNX4RxGnNxM6htFnY8QQKitUEG
+         ElTRImyLAkKA6rNQpXNSbkRKw7TnQ+/3NkKvqVAMvaszbRIN/NpSVpilrE9uAaAOkARH
+         W4LN8LXN/px+KEaPkKBWJKV4n7amQcffOZpbiZQWH/QHC2sBY99SA1NLtnVlq8/SIN7d
+         Cjx1xxltAYRc8U08Ji3DK1wAi5qaM+KKL3eAi5QdK3ZIOKdGT4glG5FCVssKPjt0E+JK
+         JEXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747221783; x=1747826583;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1747221834; x=1747826634;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=btVpNFKgUcPUatiYhN505Sc3nSf9yR9Iw/noU9VBOO0=;
-        b=FbXglrBR7QQr5yyu43wEpd127V5HsJRw/gsfCEn0/xbOG+2OkFeoz8tRaWsEAL1pRP
-         pFPjF0iITmnDvJ4uhOdKoH9uQIKJ6ifMdqqsCtBS4Xlx0tmKrLsgQeqbrGrvW5m876hr
-         /+dA78gKlvd2BvItMYsZaBdmFaGtwH66DAjtNSYGD15xv+f/Ugupuf5oHWKWsIysKXBO
-         wXdXaCz0NBI73sYUV7Vny6DrDoCWCkKS3wyte+FCp049t8pRZICyLQKp3uCV8IUg70vH
-         k0GI6ywAUpj+OtnhFihShQxcuzoiqo2l5YpLqz2J3LHkWGsVW1WOoCu+Ijqw/bDhFfOX
-         kbiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLK9ybCOediJPCLZsv+SyqUP42k4e2LPIKVmE5/LTuuwLE9dnV1BPInjp9jPzOizOwrMXflGb0I/4BCYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL9a1rrEu0xucwBE5rEBXglEH6s3KMmTZVDxeOMBESB3dX/uMt
-	FJmcU/m/r5FEdYHvOQeb1YymWvwDzezxCjENPAyxHerDRkmBqIMgwPL0L7aSppbYx3U0IpYhFvd
-	E
-X-Gm-Gg: ASbGncutgd5I9i51YcAwQm3RlHYH4/UWC+XGg13KL8u70jkt9abJphoU9iAIJelW/Yf
-	zldkRfdPr5XUzvab7V34aje3ELXfrgi0lj8VU9+wfzpEkJUF91IrzNPn8qsbWOGzSiFPciTtGyL
-	iJYnFEwTVJYyoLq4ZHf27gar1D3tKelVWncfU3Wn9C9nm3Nz7r2MkGmkVNfSSKP0BjrGYj8b11E
-	sJ61EI1Ni4y8T6QRURSdJvyKGHmgbEKOCdNWStlT/up53/4Yufvu29OjTaiSyBk+D4OdcIb3I1U
-	00EWi3gYEUw5+2HQvhxem19PisPIE0/FzF2OFBfcDx+GmZVdwpAWyRHpzsJYDLvSkYp7aVBeLEC
-	99afWtkpNd+LxF3z/Zi/ApOq/AxCT
-X-Google-Smtp-Source: AGHT+IFd1ZVLlqOazM0JM6spYOaDAtNpkRG4R/J+DRb7NLGEkcdjusWFkZMkSqwh1fAuoOXWtmztPQ==
-X-Received: by 2002:a05:6402:4304:b0:5f6:218d:34e6 with SMTP id 4fb4d7f45d1cf-5ff988dc0famr2575205a12.26.1747221783487;
-        Wed, 14 May 2025 04:23:03 -0700 (PDT)
-Received: from ?IPV6:2001:a61:133d:b101:9ea2:16fa:3380:8e40? ([2001:a61:133d:b101:9ea2:16fa:3380:8e40])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9d700e6fsm8527536a12.62.2025.05.14.04.23.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 04:23:03 -0700 (PDT)
-Message-ID: <51fe78fb-5d73-458f-b3d1-fc84cd6c5869@suse.com>
-Date: Wed, 14 May 2025 13:23:02 +0200
+        bh=PqwsD7WCcNuEv2WTK4iZPHlU9QaOgxXWeL2peqyTOEE=;
+        b=k4FfeRRLh5VYDNN2FnVVjTA0gxQWFmiWzCgcwHzMl9hLctVvvS/ctUWTYIgHnt25W1
+         +dmHrZmkz2kyTaH2MoDsgMzKbqqJ5TjcwkTRAXz+cOWVpJyODJ1wYV7fjx1TWxTchsV1
+         72L4f9lfETjRJbnfu/Fbl/4fpMgZTp7O+9ndLlkIrBa7UvnNArUudzK4Iw8td4qRk7TX
+         ithJUrWqNWzfDPta+WDs5XisPddJ579XzrEFGqT+klUXW7/moelmV2863nw0+al7WgGB
+         S7poi4vhpXcYlKz/p6n+AW9o5/HS1bVoKOLfo+0CEW2YM37QdNubiwFcWRG8wPcLnnJO
+         /nGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSWqE/WJ4EvKZMhIwTzyrquIkupXOh2JGsB1iO8rErMm4ZVtuyUwFLEqWJcIUD8zBTjhoyk/5Tfp+bYIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvdycCVotpJfYrLVuhReREWaIkoVQU9DclS8OXwgkYoiRoeQ/l
+	Hgn1iynVfyEbbHLToH4dA8hBefFjtzQ2y5xV3tHSi6WAeanq5wtMPcVQOi5bDv0=
+X-Gm-Gg: ASbGnctjka3fzZLLBWE99XtE5eMUl0/wZpmxaoLkM7fuGBf53fSr7NwlpE3My6npdha
+	WH8Hx6/UMH8boNySKNks3nb57io8f3F+OJ4jlQW2yHHyDg7fQPHaP7ZcEt+Rzv+rOTnc3SUa6eF
+	qeXCZDdHmpOEPxzQ5lJ+2/0SiYpdzaRRGBvbTYL+m0z4N8FrXnbOaikfcRmcjwU7RYUFbFQdyYm
+	39kj1eb4TDMIlVG7DBJD/LhVBSjD9kUpGhWyttF+Pruc4ocnMK7KQhEEh+PkoskOpKIvfpdSMRb
+	bGuGZs4GZ3exTskwBfYdeapLrh4EL28VwiexkYwFHhuacAsx79iUhcLFXSPvNZWmAI1Hc3wCkVO
+	BCCr4Bf6B4CESQw==
+X-Google-Smtp-Source: AGHT+IHd28mYJHFkZ2YC/3FfmJfsWok8nxf/8sbB3FWwSEaJKR0MYxIrlFfEdGODFNdqer26tUf9qA==
+X-Received: by 2002:a05:6000:2506:b0:39c:13f5:dba0 with SMTP id ffacd0b85a97d-3a3496a48a7mr1875484f8f.13.1747221834230;
+        Wed, 14 May 2025 04:23:54 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2b02sm19714077f8f.51.2025.05.14.04.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 04:23:53 -0700 (PDT)
+Date: Wed, 14 May 2025 13:23:51 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
+	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b" <llvm@lists.linux.dev>
+Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
+Message-ID: <aCR9RzGMWEuI0pxS@mai.linaro.org>
+References: <20250430123306.15072-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
- host-controller private data
-To: David Wang <00107082@163.com>, mathias.nyman@intel.com,
- gregkh@linuxfoundation.org, oneukum@suse.com
-Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250512150724.4560-1-00107082@163.com>
- <20250513113817.11962-1-00107082@163.com>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <20250513113817.11962-1-00107082@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430123306.15072-1-linux.amoon@gmail.com>
 
+On Wed, Apr 30, 2025 at 06:02:56PM +0530, Anand Moon wrote:
+> Hi All,
 
+Hi Anand,
 
-On 13.05.25 13:38, David Wang wrote:
-> ---
+if the goal of the changes is to do cleanups, I recommend to rework
+how the code is organized. Instead of having the data->soc check all
+around the functions, write per platform functions and store them in
+struct of_device_id data field instead of the soc version.
 
-Hi,
+Basically get rid of exynos_map_dt_data by settings the different ops
+in a per platform structure.
 
-still an issue after a second review.
-I should have noticed earlier.
+Then the initialization routine would be simpler to clean.
 
-> --- a/drivers/usb/core/urb.c
-> +++ b/drivers/usb/core/urb.c
-> @@ -23,6 +23,7 @@ static void urb_destroy(struct kref *kref)
->   
->   	if (urb->transfer_flags & URB_FREE_BUFFER)
->   		kfree(urb->transfer_buffer);
-> +	kfree(urb->hcpriv_mempool);
+> This patch series is a rework of my previous patch series [1],
+> where the code changes were not adequately justified.
+> 
+> In this new series, I have improved the commit subject
+> and commit message to better explain the changes.
+> 
+> v6: Add new patch to use devm_clk_get_enabled
+>     and Fix few typo in subject as suggested by Daniel.
+> v5: Drop the guard mutex patch
+> v4: Tried to address Lukasz review comments.
+> 
+> Tested on Odroid U3 amd XU4 SoC boards.
+> Build with clang with W=1 enable.
+> 
+> [4] https://lore.kernel.org/all/20250410063754.5483-2-linux.amoon@gmail.com/
+> [3] https://lore.kernel.org/all/20250310143450.8276-2-linux.amoon@gmail.com/
+> [2] https://lore.kernel.org/all/20250216195850.5352-2-linux.amoon@gmail.com/
+> [1] https://lore.kernel.org/all/20220515064126.1424-1-linux.amoon@gmail.com/
+> [0] https://lore.kernel.org/lkml/CANAwSgS=08fVsqn95WHzSF71WTTyD2-=K2C6-BEz0tY0t6A1-g@mail.gmail.com/T/#m77e57120d230d57f34c29e1422d7fc5f5587ac30
+> 
+> Thanks
+> -Anand
+> 
+> Anand Moon (4):
+>   thermal/drivers/exynos: Refactor clk_sec initialization inside
+>     SOC-specific case
+>   thermal/drivers/exynos: Use devm_clk_get_enabled() helpers
+>   thermal/drivers/exynos: Remove redundant IS_ERR() checks for clk_sec
+>     clock
+>   thermal/drivers/exynos: Fixed the efuse min max value for exynos5422
+> 
+>  drivers/thermal/samsung/exynos_tmu.c | 100 ++++++++++-----------------
+>  1 file changed, 35 insertions(+), 65 deletions(-)
+> 
+> 
+> base-commit: b6ea1680d0ac0e45157a819c41b46565f4616186
+> -- 
+> 2.49.0
+> 
 
-What if somebody uses usb_init_urb()?
-  
->   	kfree(urb);
->   }
-> @@ -1037,3 +1038,25 @@ int usb_anchor_empty(struct usb_anchor *anchor)
->   
->   EXPORT_SYMBOL_GPL(usb_anchor_empty);
->   
-> +/**
-> + * urb_hcpriv_mempool_zalloc - alloc memory from mempool for hcpriv
-> + * @urb: pointer to URB being used
-> + * @size: memory size requested by current host controller
-> + * @mem_flags: the type of memory to allocate
-> + *
-> + * Return: NULL if out of memory, otherwise memory are zeroed
-> + */
-> +void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags)
-> +{
-> +	if (urb->hcpriv_mempool_size < size) {
-> +		kfree(urb->hcpriv_mempool);
-> +		urb->hcpriv_mempool_size = size;
-> +		urb->hcpriv_mempool = kmalloc(size, mem_flags);
+-- 
 
-That could use kzalloc().
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-	Regards
-		Oliver
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
