@@ -1,31 +1,76 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749D11F1921;
-	Wed, 14 May 2025 04:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51CB1CFBC
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747197223; cv=none; b=ODyMIGlT3kEcxaYebtYv1LxljH4y1tV5jVzZ66Scccrx0NJdGmphhEg65iqYDhU0unKYbmReUK1uzCyUqkzD0agNnSU+FMZft7Np5Efq3c3c4znWDfRYEJNqtIlvZcxLJEs11C9JNFYMM8yc4leiv0Y8CpO+P+s09H+qvC3C4cA=
+	t=1747197660; cv=none; b=SfrSdxk/kemdeFJNPTk0UVc8vc3lfOiiWdr3z5UOYMw1oWS7Olt3/tpG4O629FVkuyFeJtOwGLq1QbFrV1rNCtqSpBPF0As7B/BuonOOeQL6QJfhpzxh8Fe9u6MipaAfIDFvS9BwrhKxVk/ZLq+RfPfC6b9DrIRcdJO3EGNuHec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747197223; c=relaxed/simple;
-	bh=A6RnKORevZid870HTtZcCFA2jySe9hzw8ZnSSBzZ4sE=;
+	s=arc-20240116; t=1747197660; c=relaxed/simple;
+	bh=dMeHU9ueqZCEzk+JqLjzQzByWFHEMzqwLA6e/bhThOg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X0rUH/0VL7hqqg5i+tFJW0/ieAsGsQkoUudW5yX7m239ZTfhxP3YupcUa/wcJkKSpTuCtom2dQsgC6H6jZDmKak/l7ZVSi73neEXadj+QuQZy1STPsCI5LhBChF0lUrI+f6JqZlc4Omc5o3lphcWmxS2DfzF81ojuPwNmguBRSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-77-68241d1cc1f5
-Date: Wed, 14 May 2025 13:33:27 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	osalvador@suse.de, kernel-dev@igalia.com, stable@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
-	Gavin Shan <gshan@redhat.com>, kernel_team@skhynix.com
-Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-Message-ID: <20250514043326.GA4318@system.software.com>
-References: <20250513093448.592150-1-gavinguo@igalia.com>
- <20250513175633.85f4e19f4232a68ab04c8e41@linux-foundation.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+OjvYNf2ii0/w6jRWhIHP5waBxYUO+gSwl0tv5yMs9sLuW7Ovbm/k1GjFDrinEY+tSuxwE5G+MjOMlT4syGQbYzogWMAZTwWhY+paIDL1o2hwzZLAfS13IFnG8PqkqIeteY8KtNb58xSJsRZFXfOAD1u4SOQ8grduiI/GMwAnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gu8mGbXb; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gu8mGbXb"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DIbBUm022705;
+	Wed, 14 May 2025 04:40:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:to; s=pp1; bh=njUmuZXjpyPTwcVnt3iKG
+	ijw4LyFNZsH60QUrmxYuUw=; b=gu8mGbXbiYUZnjOduOVf9SVdb53eFGk3bU5Fk
+	bagFwo8UdpVU6mtyPRM7A2H2x+Kre664BBWhM8MqIwSKWGlTtRbMbpksSWGSi+L7
+	/Sb7nTXBNVHbjX9IKjOOS5CbPOjfUwXCxhD6PmEsRutelr9/hwL54eUPc0m2AOfM
+	h3mYzjpv5NEFLkvC9bPPHM8oi2qV69YV6c6XePUs3xcqrEhacX0ISIMHi7nzugL5
+	qMZrgBNxJYYoj4AJHh1n0Z3PR6JJckoa3YZvQeTShOTZEhTrO1D1i0M+p19EUzJP
+	MWLAGnmtnJUTp4cMv5MgVRNmVDJFokQTeUgxmbZ5GgCZ2ITxQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbh3j6wa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 04:40:32 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54E4eVBC029429;
+	Wed, 14 May 2025 04:40:31 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbh3j6w7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 04:40:31 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54E298xF021459;
+	Wed, 14 May 2025 04:40:30 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrjbax-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 04:40:30 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54E4eSKf27722132
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 04:40:28 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9AC6B20119;
+	Wed, 14 May 2025 04:24:51 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EFD0920117;
+	Wed, 14 May 2025 04:24:48 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.39.25.27])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 14 May 2025 04:24:48 +0000 (GMT)
+Date: Wed, 14 May 2025 09:54:46 +0530
+From: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: maddy@linux.ibm.com, tglx@linutronix.de, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] irqdomain: ppc: Switch to of_fwnode_handle()
+Message-ID: <zofmgipjaniwwwb43quo6eoct66cnq65g36dgnk2qbrs4p5kxr@ge5gilezyu6g>
+Reply-To: mahesh@linux.ibm.com
+References: <20250415104758.106890-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,94 +79,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250513175633.85f4e19f4232a68ab04c8e41@linux-foundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsXC9ZZnka6MrEqGwdXnohZz1q9hs1iy9gyz
-	xctd25gsnn7qY7E49+I7k8XlXXPYLO6t+c9qsWznQxaLM9OKLLpn/mC1WLDxEaMDt8eCTaUe
-	E2Z3s3ls+jSJ3ePEjN8sHgsbpjJ7vN93lc1j8+lqj8+b5AI4orhsUlJzMstSi/TtErgyLv/o
-	YSroFK64fm0XUwPjH54uRk4OCQETia5Jz9lg7Ja+tWA2i4CqxMebD1lAbDYBdYkbN34yg9gi
-	AroSq57vArK5OJgFNjNJ9LbvAGsQFkiRuHZgG1gDr4C5xK6Vu5lAbCGBKol/k1qg4oISJ2c+
-	AbOZBbQkbvx7CVTDAWRLSyz/xwES5hTwlvh9ZyUriC0qoCxxYNtxJpBdEgK32SSmTNzBCHGo
-	pMTBFTdYJjAKzEIydhaSsbMQxi5gZF7FKJSZV5abmJljopdRmZdZoZecn7uJERgdy2r/RO9g
-	/HQh+BCjAAejEg+vha5yhhBrYllxZe4hRgkOZiUR3utZQCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2Mrlsm3X9+Y5WfEJ+39KFODW//xj8mz78rr/my
-	cLbZYxPtba/U1XsXy2zX5WEwSTNZzHdKzH+ua/7iCPtJM/mWs76fJVpQMaWv5FH+9fina5W3
-	dCxyv+rH5rRipegxI9nI6WrXzDjWi9x9kZ/51WzzQytrpQXP/W9U77bQXdsziZd54h/haIdT
-	SizFGYmGWsxFxYkAEwi5WIoCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC5WfdrCsjq5Jh0Lqe22LO+jVsFkvWnmG2
-	eLlrG5PF0099LBbnXnxnsjg89ySrxeVdc9gs7q35z2qxbOdDFosz04osumf+YLVYsPERowOP
-	x4JNpR4TZnezeWz6NInd48SM3yweCxumMnu833eVzWPxiw9MHptPV3t83iQXwBnFZZOSmpNZ
-	llqkb5fAlXH5Rw9TQadwxfVru5gaGP/wdDFyckgImEi09K1lA7FZBFQlPt58yAJiswmoS9y4
-	8ZMZxBYR0JVY9XwXkM3FwSywmUmit30HWIOwQIrEtQPbwBp4Bcwldq3czQRiCwlUSfyb1AIV
-	F5Q4OfMJmM0soCVx499LoBoOIFtaYvk/DpAwp4C3xO87K1lBbFEBZYkD244zTWDknYWkexaS
-	7lkI3QsYmVcximTmleUmZuaY6hVnZ1TmZVboJefnbmIEhvqy2j8TdzB+uex+iFGAg1GJh9dC
-	VzlDiDWxrLgy9xCjBAezkgjv9SygEG9KYmVValF+fFFpTmrxIUZpDhYlcV6v8NQEIYH0xJLU
-	7NTUgtQimCwTB6dUA2NooEmhb5/RyfvpRRLu6qVdkzrX7C+e3Lr92NmNfF78HfktVy03c+3M
-	DE6+3x+/Icb+2q2pWqY3vjllTDonaTTt8Y/zsWIzM2Q3H73vpnHv1KIPdh8K3CYenxymNMPq
-	CNPbsI45LDvsE/6Y/P30yURy4spZT58t3F3nbTJ/sVe8nqDmso9zu5mVWIozEg21mIuKEwG5
-	eAQ7cQIAAA==
-X-CFilter-Loop: Reflected
+In-Reply-To: <20250415104758.106890-1-jirislaby@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDAzOCBTYWx0ZWRfX3M5aMGs60Kw6 Cb07YYZbYivfhOZoAlGU/oWG7XKyegVXWeqmm7eYoRVT3l+6fiYTy6NuisPGMrs7YDTrrLqaHkg Wh1OQzDbWGB7Pda5KQU+pG44Ig427AZcw4k3vpbGMDLeB4pqmnmhV/nGrJvM7s+0PD6IOg/wl+v
+ 0bXC9lw8AN0Br1SclZwfcUjkTo56Cn85uh+IBh4nBs0msdUTPcnR8yIJB6NNv7lhzR3l2uz4l2y 7EdqQJ7qrh4NLtKF/miAq6+cykQUezvC7PEWdyqov8+FMH2naBejDNYJzTIYsqCH3UGAleHtfs5 jEP5vSNv7lfyPeU9rQrC/eMn7UG+vSTa4DobjMzJ3HTjEzPQK8TSiFQ6MHKIWMMICnaOIeu+Ih8
+ pjm2Ke60UZRMsiiRtioSOfk7lH6l8kegUFcL19fFvAmYf+eTqsFmGZeAISWTGQt98/pAdJPm
+X-Authority-Analysis: v=2.4 cv=D9dHKuRj c=1 sm=1 tr=0 ts=68241ec0 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=pGLkceISAAAA:8 a=1UX6Do5GAAAA:8 a=voM4FWlXAAAA:8
+ a=6f77wMeQDGy-RQiA4bAA:9 a=CjuIK1q_8ugA:10 a=Et2XPkok5AAZYJIKzHr1:22 a=IC2XNlieTeVoXbcui8wp:22
+X-Proofpoint-GUID: Re8y-s0F5H7dMszqyQdmYg3FgXM1ZMIV
+X-Proofpoint-ORIG-GUID: 78mfj4bI3w8blIn5tMJ_UU06Hzwp3Q3i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_01,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=601 clxscore=1011
+ impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 spamscore=0 suspectscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140038
 
-On Tue, May 13, 2025 at 05:56:33PM -0700, Andrew Morton wrote:
-> On Tue, 13 May 2025 17:34:48 +0800 Gavin Guo <gavinguo@igalia.com> wrote:
+On 2025-04-15 12:47:58 Tue, Jiri Slaby (SUSE) wrote:
+> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+> defined of_fwnode_handle(). The former is in the process of being
+> removed, so use the latter instead.
 > 
-> > The patch fixes a deadlock which can be triggered by an internal
-> > syzkaller [1] reproducer and captured by bpftrace script [2] and its log
-> > [3] in this scenario:
-> > 
-> > Process 1                              Process 2
-> > ---				       ---
-> > hugetlb_fault
-> >   mutex_lock(B) // take B
-> >   filemap_lock_hugetlb_folio
-> >     filemap_lock_folio
-> >       __filemap_get_folio
-> >         folio_lock(A) // take A
-> >   hugetlb_wp
-> >     mutex_unlock(B) // release B
-> >     ...                                hugetlb_fault
-> >     ...                                  mutex_lock(B) // take B
-> >                                          filemap_lock_hugetlb_folio
-> >                                            filemap_lock_folio
-> >                                              __filemap_get_folio
-> >                                                folio_lock(A) // blocked
-> >     unmap_ref_private
-> >     ...
-> >     mutex_lock(B) // retake and blocked
-> > 
-> > This is a ABBA deadlock involving two locks:
-> > - Lock A: pagecache_folio lock
-> > - Lock B: hugetlb_fault_mutex_table lock
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> This is an indepent patch, please apply directly.
 > 
-> Nostalgia.  A decade or three ago many of us spent much of our lives
-> staring at ABBA deadlocks.  Then came lockdep and after a few more
-> years, it all stopped.  I've long hoped that lockdep would gain a
-> solution to custom locks such as folio_wait_bit_common(), but not yet.
-> 
-> Byungchul, please take a look.  Would DEPT
-> (https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com)
-> have warned us about this?
+> The patch was previously a part of a large series [1], but I would like
+> maintainers to feed the independent parts through their trees.
 
-Sure, I will check it.  I think this type of deadlock is what DEPT can do
-the best.
+Looks good to me.
 
-	Byungchul
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-> >
-> > ...
-> >
-> > The deadlock occurs between two processes as follows:
-> >
-> > ...
-> > 
-> > Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
-> > Cc: <stable@vger.kernel.org>
+Thanks,
+-Mahesh.
+
 > 
-> It's been there for three years so I assume we aren't in a hurry.
+> [1] https://lore.kernel.org/all/20250319092951.37667-1-jirislaby@kernel.org/
+> ---
+>  arch/powerpc/platforms/powernv/pci-ioda.c | 2 +-
+>  arch/powerpc/platforms/pseries/msi.c      | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> The fix looks a bit nasty, sorry.  Perhaps designed for a minimal patch
-> footprint?  That's good for a backportable fixup, but a more broadly
-> architected solution may be needed going forward.
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index ae4b549b5ca0..d8ccf2c9b98a 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -1897,7 +1897,7 @@ static int __init pnv_msi_allocate_domains(struct pci_controller *hose, unsigned
+>  		return -ENOMEM;
+>  	}
+>  
+> -	hose->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(hose->dn),
+> +	hose->msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(hose->dn),
+>  						     &pnv_msi_domain_info,
+>  						     hose->dev_domain);
+>  	if (!hose->msi_domain) {
+> diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
+> index f9d80111c322..5b191f70c088 100644
+> --- a/arch/powerpc/platforms/pseries/msi.c
+> +++ b/arch/powerpc/platforms/pseries/msi.c
+> @@ -628,7 +628,7 @@ static int __pseries_msi_allocate_domains(struct pci_controller *phb,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	phb->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(phb->dn),
+> +	phb->msi_domain = pci_msi_create_irq_domain(of_fwnode_handle(phb->dn),
+>  						    &pseries_msi_domain_info,
+>  						    phb->dev_domain);
+>  	if (!phb->msi_domain) {
+> -- 
+> 2.49.0
 > 
-> I'll queue it for 6.16-rc1 with a cc:stable, so this should be
-> presented to the -stable trees 3-4 weeks from now.
+> 
+
+-- 
+Mahesh J Salgaonkar
