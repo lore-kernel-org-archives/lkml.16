@@ -1,150 +1,163 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3582822A1E5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB2B14900B;
+	Wed, 14 May 2025 16:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239132; cv=none; b=nlCLwfNoPd164WwNFOSZNhLYrzechCwxgk5bSr7g/Xv/GKDaGdUOS6SAOiwiIX1ybmBHziZKzfJS/lX3rSAmxeG5+IZ85cVdoOUow1jWZS+p9INDtYoni8zFL8CVFza9B0xGGfOFh67Uklq/GeVz+InoA/Bpwyx8+LgNIQpUAMM=
+	t=1747239225; cv=none; b=nrCvqaRI1MCP31aAzuLM/JAF5HYcbDy083my2wWbzYLfULX/sND+EOVoPm+Z17GfyJ3guowVZgqxnAgwitVhagaYrNgL7pPwU2u8Ao0diG3Bd3o8rO160yUyaXiu6whBQ3lR1CVjm4g8YqsvN+aAYZNvYd/1iszdSQ9xOk9T5U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239132; c=relaxed/simple;
-	bh=Tc1WEC6mukBGISKXbX7oV3/8t3QATZkL0G9tUHp6EiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nsxgtx/405PErIUCIdv/I8IkugmG6njV6Wfrofz2X7HvXwZ5RpJeLQA5bOZYEmLtaC2Bg8cgw97RbTE2HtcwzeKeWB2eh0FMk4RD4PprWYrg2SnGJKoOUlKz+n2hB9lQXG52T2LWac9H0csnZIBO8HZ0f7h0P25PBTLvYySlDiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EJmOGm9P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lZHtHWmK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EJmOGm9P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lZHtHWmK; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747239225; c=relaxed/simple;
+	bh=nZ/xAcZFUK5W+kvFt62ZRN6Usy7slEUmRt1vB7ZWHnM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hS1jrr5Au6cTXCht3eB+ZhOWERyu0QPdzOB1ggQOOnx8Db8S2264VDT/bJ9NOhn37Tieu34UEP0eP60GKMurYbo6L69Fw+oj8JeA40E/hf6/tGa6lSZg3XJRZTC8JYk48PGlRGsDLtXlLkjtoiPtvtdTL316G/xIrjXkESAPeAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VmoOv9uA; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EJmOGm9P";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lZHtHWmK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EJmOGm9P";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lZHtHWmK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 32D5A1F385;
-	Wed, 14 May 2025 16:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747239129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
-	b=EJmOGm9PKixSH0pBR91qRqXYKq8qKdFnS6nqlcRpChmGnbpdfRKJgQdCHpXH9MTlBc9Vjn
-	GOfCAMklY65GzKhDbBpgJwKm/30lDEGJQ4j8j/e7pH5Zq4y5Wjy8NSad4HsAFEpfcOBdEv
-	ySZwBtHVBedzbw31oMKEZ6nZ8UZo130=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747239129;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
-	b=lZHtHWmK8s/xncFAvTbbHnL0HfsbqcJjLsrOs2UFu20Hk0aX881NBzWxAesZ590ueFCLn5
-	3CoWIMsnzTcSf2BQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747239129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
-	b=EJmOGm9PKixSH0pBR91qRqXYKq8qKdFnS6nqlcRpChmGnbpdfRKJgQdCHpXH9MTlBc9Vjn
-	GOfCAMklY65GzKhDbBpgJwKm/30lDEGJQ4j8j/e7pH5Zq4y5Wjy8NSad4HsAFEpfcOBdEv
-	ySZwBtHVBedzbw31oMKEZ6nZ8UZo130=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747239129;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
-	b=lZHtHWmK8s/xncFAvTbbHnL0HfsbqcJjLsrOs2UFu20Hk0aX881NBzWxAesZ590ueFCLn5
-	3CoWIMsnzTcSf2BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0BC6F13306;
-	Wed, 14 May 2025 16:12:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id g0F1AtnAJGhgNwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 14 May 2025 16:12:09 +0000
-Date: Wed, 14 May 2025 18:12:04 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <llong@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v6 3/9] nvme-pci: use block layer helpers to calculate
- num of queues
-Message-ID: <66cd13b0-3339-4495-8d1a-fae3211f92b9@flourine.local>
-References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
- <20250424-isolcpus-io-queues-v6-3-9a53a870ca1f@kernel.org>
- <aB1eswAv6Tz2WDpc@fedora>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VmoOv9uA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=wn
+	eBS4nlvV0le2Nrp5XhT7onZfXQi2MY0e3ZJOJZyhw=; b=VmoOv9uA/V48UZVaZh
+	kVCuyB8NUxIXKh7v8PPZZJ6/vmHXutBx9Wjru+AzazK4Hx9621mkRbhMsN8XjZFZ
+	toVXKK1PjWoN2mc0Nf5mZUDpJZlSYFuaxHUXjI9Tmm01XKsYJ1OlpKbBFUJJX1ko
+	0A7LzrSmmJ8u9p12LXpgFCH9U=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wC3VU0LwSRo5cN_BQ--.35962S2;
+	Thu, 15 May 2025 00:12:59 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	kw@linux.com
+Cc: cassel@kernel.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v12 0/6] Refactor capability search into common macros
+Date: Thu, 15 May 2025 00:12:52 +0800
+Message-Id: <20250514161258.93844-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aB1eswAv6Tz2WDpc@fedora>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3VU0LwSRo5cN_BQ--.35962S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw4DJrW5JFWxCF43KF1DAwb_yoWrAryrpF
+	yfG3ZxCr48ArZrC3Z7Aa1I9ay3X3Z7A34xJ3y3Kw13XF13uFyrtr1xKF4rAF9rKrZFq3W7
+	ZFW3trykCF1DAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pElApxUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw9No2gkvuBvxQAAsW
 
-On Fri, May 09, 2025 at 09:47:31AM +0800, Ming Lei wrote:
-> On Thu, Apr 24, 2025 at 08:19:42PM +0200, Daniel Wagner wrote:
-> > Multiqueue devices should only allocate queues for the housekeeping CPUs
-> > when isolcpus=io_queue is set. This avoids that the isolated CPUs get
-> > disturbed with OS workload.
-> 
-> The commit log needs to be updated:
-> 
-> - io_queue isn't introduced yet
-> 
-> - this patch can only reduce nr_hw_queues, and queue mapping isn't changed
-> yet, so nothing to do with
-> 
->  "This avoids that the isolated CPUs get disturbed with OS workload"
+Dear Maintainers,
 
-What about:
+This patch series addresses long-standing code duplication in PCI
+capability discovery logic across the PCI core and controller drivers.
+The existing implementation ties capability search to fully initialized
+PCI device structures, limiting its usability during early controller
+initialization phases where device/bus structures may not yet be
+available.
 
-  The calculation of the upper limit for queues does not depend solely on
-  the number of possible CPUs; for example, the isolcpus kernel
-  command-line option must also be considered.
+The primary goal is to decouple capability discovery from PCI device
+dependencies by introducing a unified framework using config space
+accessor-based macros. This enables:
 
-  To account for this, the block layer provides a helper function to
-  retrieve the maximum number of queues. Use it to set an appropriate
-  upper queue number limit.
+1. Early Capability Discovery: Host controllers (e.g., Cadence, DWC)
+can now perform capability searches during pre-initialization stages
+using their native config accessors.
 
-I would use this version for the other patches as well,
-s/possible/online/ where necessary.
+2. Code Consolidation: Common logic for standard and extended capability
+searches is refactored into shared macros (`PCI_FIND_NEXT_CAP_TTL` and
+`PCI_FIND_NEXT_EXT_CAPABILITY`), eliminating redundant implementations.
+
+3. Safety and Maintainability: TTL checks are centralized within the
+macros to prevent infinite loops, while hardcoded offsets in drivers
+are replaced with dynamic discovery, reducing fragility.
+
+Key improvements include:  
+- Driver Conversions: DesignWare and Cadence drivers are migrated to
+  use the new macros, removing device-specific assumptions and ensuring
+  consistent error handling.
+
+- Enhanced Readability: Magic numbers are replaced with symbolic
+  constants, and config space accessors are standardized for clarity.
+
+- Backward Compatibility: Existing PCI core behavior remains unchanged.
+
+---
+Changes since v11:
+- Resolved some compilation warning.
+- Add some include.
+- Add the *** BLURB HERE *** description(Corrected by Mani and Krzysztof).
+
+Changes since v10:
+- The patch [v10 2/6] remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+- The patch [v10 3/6] remove #include <uapi/linux/pci_regs.h> and commit message were modified.
+- The other patches have not been modified.
+
+Changes since v9:
+- Resolved [v9 4/6] compilation error.
+  The latest 6.15 rc1 merge __dw_pcie_find_vsec_capability, which uses 
+  dw_pcie_find_next_ext_capability.
+- The other patches have not been modified.
+
+Changes since v8:
+- Split patch.
+- The patch commit message were modified.
+- Other patches(4/6, 5/6, 6/6) are unchanged.
+
+Changes since v7:
+- Patch 2/5 and 3/5 compilation error resolved.
+- Other patches are unchanged.
+
+Changes since v6:
+- Refactor capability search into common macros.
+- Delete pci-host-helpers.c and MAINTAINERS.
+
+Changes since v5:
+- If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
+  the kernel's .text section even if it's known already at compile time
+  that they're never going to be used (e.g. on x86).
+- Move the API for find capabilitys to a new file called
+  pci-host-helpers.c.
+- Add new patch for MAINTAINERS.
+
+Changes since v4:
+- Resolved [v4 1/4] compilation warning.
+- The patch subject and commit message were modified.
+
+Changes since v3:
+- Resolved [v3 1/4] compilation error.
+- Other patches are not modified.
+
+Changes since v2:
+- Add and split into a series of patches.
+---
+
+Hans Zhang (6):
+  PCI: Introduce generic bus config read helper function
+  PCI: Clean up __pci_find_next_cap_ttl() readability
+  PCI: Refactor capability search into common macros
+  PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+  PCI: cadence: Use common PCI host bridge APIs for finding the
+    capabilities
+  PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
+
+ drivers/pci/access.c                          | 17 ++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
+ drivers/pci/controller/cadence/pcie-cadence.c | 28 ++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 18 ++--
+ drivers/pci/controller/dwc/pcie-designware.c  | 81 +++--------------
+ drivers/pci/pci.c                             | 68 ++------------
+ drivers/pci/pci.h                             | 88 +++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |  2 +
+ 8 files changed, 194 insertions(+), 148 deletions(-)
+
+
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+-- 
+2.25.1
+
