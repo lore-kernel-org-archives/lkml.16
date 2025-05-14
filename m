@@ -1,63 +1,67 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5861F873B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED88A227B94
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266180; cv=none; b=BiBENMeDE548+J/GFDoxSVjj4W3EQqcgXaAwnLTWIPWcUwGU29rN9I2UDc0G3Sj31QEpcslkhZcgJuiqJOpmg+1G9d2MGCgV6aVXRC8PRIdWqWS361g4P94qiS+UIQMpR2AyTI66CJI+YPil6KC6Ogm7g8i+ubHdcnP8uukNc5k=
+	t=1747266182; cv=none; b=o/bnipASv0dMB4QdClJDiGTlsesL9CmMDSRSqfp/bgG2y3uvwVKyPpP7i+vmVSQMiQEGEOFDV8Ffp+EimPM1ctCqV12u5AfkaCJzGidZPXJ5eoGU0guDyQJL6rqDlkQ9e0ikdIUJUR5nVOcRmitPtwhX0Rbn3TGyOeNBryeyzqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266180; c=relaxed/simple;
-	bh=kG7HoMTrfHXv8bqvsDGKYcmezmpctmHwllOqn9qt2cs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aJP+3iF7BOy4IylxqsAh1mBXXl4F/R37/Rbw+tU/aJmoHuVaCRCIcJdIEPIwRSxxgVHw+/KfeQRE8WxKLnsg6QZjZ5TWH7+n6HAlTiEogZNGsJ0YcOBhTVjazp8bln+cczWW3oB6RlaG09rEKJGLIFmqcK86h8r5YbxKVEucFn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dYdTzitm; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1747266182; c=relaxed/simple;
+	bh=Z3mPvWkTUo74uZNv1q+N4L5sLrbeGWDIQpX5nFgYkp0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uI5nQiwDCUdP3vFO+01G6AZmIYX6MQ01ETb6DtAZZ5vaHzHoCxqxvSyKK200FXUmcJMkzcYwCO/MnK6l2jcQPhjj56oWvaHdrDS7yvGN23P7uAiWWh2QdlcFPgh0pR1gFbo3WBght9jkn+IU6qvE5nOFzKWrZ0dEB+a7gi2zIlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cye03Usj; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dYdTzitm"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e48854445so266050a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cye03Usj"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74255209c4bso567230b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266177; x=1747870977; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zwqGrUiOjHvJJnxbyG+X+anw8ewdbXKmpYSNoes50/Y=;
-        b=dYdTzitmVv6y+TD329LfdTqV5s6eDzgDWz90QFEFBQsDg4O2kdW4tO+g+iPLI8CH0X
-         Ow/NdMeGhUHeFb0Fwl02SwSFCVHDJsm5Lfnjma2D5dwMYAXbAy0Fb/qX+jenfcdD6EgU
-         VxDmROMNSjIb3M1xgEay34k3hP+YB+OIypxh8deDHk3DHCx5HCMBHhTLISMEN5mpRAQB
-         e6C0NCGVGebl2DcgdyqLGo6B/z4xuPZYU25wWLaf8FW3O4TXT7M3kh/IqwOdZc0wtR1D
-         MVTzoGUVUVJY12hzAOKi5FDJM1wUN49xDWqSBLpnLvfWoF6iXjQWyvOY3bX8xTTon/E5
-         Oodg==
+        d=google.com; s=20230601; t=1747266180; x=1747870980; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uFE+VAE/0TzxtaL5pFdDBk9KqgEP3a2++vmAovntxU8=;
+        b=Cye03UsjdQFqf0FL962CMQGfQ9JsavD6n+zt4YMeR2fDcH90mdwYwvaD2tQ0BL2REu
+         0p6cBKSSR6OxoWFT4PPRxB2whD56xlg2l6gfIOAAItX3sTgtqAKhFDnldGLZQpGvIUrX
+         CpMkrQE8y5AKbCYC6dSpO7w/hf1AYB+Z4fBQuvFOkIhEZvT6sc1fYGzzjgcsZbeDQWRl
+         WnRIIVVLeoeTt3gygA6WRcl6NdIFQHSfOSWF0hEJCziczcDUWbKWvhqYj3pQY3NuetL5
+         2W/r5WMJ0SkR+zsIrnW+u1RriGrrDwT4cdrBBFBqd/jJkXnHDFJZF6RlOnhRl9E8phkl
+         OLcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266177; x=1747870977;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zwqGrUiOjHvJJnxbyG+X+anw8ewdbXKmpYSNoes50/Y=;
-        b=WD9+HFf0oDgenM/Bvwwu5mehWG+u9i3pkQtS+SSWxP/3B/7ijt5/V/gfj2nOnMv57X
-         3RqYNJ0j2wt2H/LuZxVxQzmcK5o2uyrin3HG19rEqtF+vgF9p7AkllsBSYWK0LI1HXxC
-         3H6Q7+z8ujsUej9FmNBINanmLgYYKciTo9hCU+2/eb0VjNOM4sOkVTXxq+0YiKnJDOPd
-         7QgFfOeJodxv5knfR7uifIR4rmQnp2uOo3MSkoJfbETeczXWDp0c/ZIy6sy2frZRIBOU
-         K7slqsP52CsW0E065NJHFUSD2vNqV1O0WoDCVe7vMQXYwgy5FNZw9cn1OSjO5C7+QunM
-         Mwaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWf1AF8KgWlhCxVzRKauM+05/OHW9mMuK7Zjt5rrudiYxlM8TRQ3mx+6v8DA+NWV4FCYep7JRrDewgd40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz61qUvLbROVFJqwFwLZHTgyqHvD3Xgg2SHUGY4+xGKkbCB0jVV
-	VlmGC0HiVAvp9glR7uPKPWIZzAN+rNljaEEme6odG1rJzpydjAkdG0EjOBms35a+y3V5RGCDTcO
-	NWZoG3nBNOfsv2PKAVVjDCQ==
-X-Google-Smtp-Source: AGHT+IERrB6TWSBQZL8LGOX6EETFEN6+F+QJfjTnuW65iRmylkCaeR55nU6SQCFovka0Yb5n9ELAV7ZNQnoM1ohNmw==
-X-Received: from pjf3.prod.google.com ([2002:a17:90b:3f03:b0:2fb:fa85:1678])
+        d=1e100.net; s=20230601; t=1747266180; x=1747870980;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uFE+VAE/0TzxtaL5pFdDBk9KqgEP3a2++vmAovntxU8=;
+        b=JKkIybpL6EvQStReJ2QCYvw4e1aIU84gEuBemHbKxgqIZ0SM82mHAFK6mQBlb6aalM
+         9p+gUBNXlaeHuyZaRB23KUYqNj4G0w8c1aV3GYjEDZDi1lOQiHaZzBFFa0Kz2nqd/Wrz
+         mXsEcLWqxr7Xv7d8hw2Po6f6K67LHdleLTI8nzV/Sp3Dha7LBkcQl67810F6YABj2Oxt
+         DgJw4UMgPr3Pkcg2YlPxDIMwqOOVN9vvv8Gg6uwfAFvgvt1i5BItHReRotLtQmauEE9H
+         6yjprUM+OxqgWA4ZdUpTtjjEaXVq/j1eaIc03otJb5FqjlfhAvUAMwg6fnMN1yxT/GdY
+         r5xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxrePhsiqU7iYWRPQHZtEi7JM8MsriuR43zu/3XncRbYeFPdon3gxqjSqfvUMzJL1kNFXl3cjwJ8HC8rY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd2BHGCpj4VnOWM21rjVNemrS/RN8XoZueWCFfBdS0GUpADpvF
+	v3aXPJI6uwZuUYASS/wTn1lVAwUdZhzHrLwkxTuKxnSgg8bMSk6zdALHVsryjTV5L70+2ElU71W
+	WHhEZTsqTLzDZJxlBmWtTxw==
+X-Google-Smtp-Source: AGHT+IH2SLSnX8hsNiO9/wgN08juESR9wv9AYUbEDhzJBJHGfElIKJ6uImvash75kjiAopzOkjbf2Pzlkbo1QoRW6g==
+X-Received: from pfx11.prod.google.com ([2002:a05:6a00:a44b:b0:741:e763:be68])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5403:b0:301:1d9f:4ba2 with SMTP id 98e67ed59e1d1-30e51914ea8mr650385a91.28.1747266176876;
- Wed, 14 May 2025 16:42:56 -0700 (PDT)
-Date: Wed, 14 May 2025 16:41:39 -0700
+ 2002:a05:6a00:1941:b0:740:9e87:9625 with SMTP id d2e1a72fcca58-742984c1549mr854404b3a.4.1747266180097;
+ Wed, 14 May 2025 16:43:00 -0700 (PDT)
+Date: Wed, 14 May 2025 16:41:41 -0700
+In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <cover.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 00/51] 1G page support for guest_memfd
+Message-ID: <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use shareability
+ to guard faulting
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -93,252 +97,275 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Track guest_memfd memory's shareability status within the inode as
+opposed to the file, since it is property of the guest_memfd's memory
+contents.
 
-This patchset builds upon discussion at LPC 2024 and many guest_memfd
-upstream calls to provide 1G page support for guest_memfd by taking
-pages from HugeTLB.
+Shareability is a property of the memory and is indexed using the
+page's index in the inode. Because shareability is the memory's
+property, it is stored within guest_memfd instead of within KVM, like
+in kvm->mem_attr_array.
 
-This patchset is based on Linux v6.15-rc6, and requires the mmap support
-for guest_memfd patchset (Thanks Fuad!) [1].
+KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
+retained to allow VMs to only use guest_memfd for private memory and
+some other memory for shared memory.
 
-For ease of testing, this series is also available, stitched together,
-at https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-support-rfc-v2
+Not all use cases require guest_memfd() to be shared with the host
+when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
+which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
+private to the guest, and therefore not mappable by the
+host. Otherwise, memory is shared until explicitly converted to
+private.
 
-This patchset can be divided into two sections:
-
-(a) Patches from the beginning up to and including "KVM: selftests:
-    Update script to map shared memory from guest_memfd" are a modified
-    version of "conversion support for guest_memfd", which Fuad is
-    managing [2].
-
-(b) Patches after "KVM: selftests: Update script to map shared memory
-    from guest_memfd" till the end are patches that actually bring in 1G
-    page support for guest_memfd.
-
-These are the significant differences between (a) and [2]:
-
-+ [2] uses an xarray to track sharability, but I used a maple tree
-  because for 1G pages, iterating pagewise to update shareability was
-  prohibitively slow even for testing. I was choosing from among
-  multi-index xarrays, interval trees and maple trees [3], and picked
-  maple trees because
-    + Maple trees were easier to figure out since I didn't have to
-      compute the correct multi-index order and handle edge cases if the
-      converted range wasn't a neat power of 2.
-    + Maple trees were easier to figure out as compared to updating
-      parts of a multi-index xarray.
-    + Maple trees had an easier API to use than interval trees.
-+ [2] doesn't yet have a conversion ioctl, but I needed it to test 1G
-  support end-to-end.
-+ (a) Removes guest_memfd from participating in LRU, which I needed, to
-  get conversion selftests to work as expected, since participation in
-  LRU was causing some unexpected refcounts on folios which was blocking
-  conversions.
-
-I am sending (a) in emails as well, as opposed to just leaving it on
-GitHub, so that we can discuss by commenting inline on emails. If you'd
-like to just look at 1G page support, here are some key takeaways from
-the first section (a):
-
-+ If GUEST_MEMFD_FLAG_SUPPORT_SHARED is requested during guest_memfd
-  creation, guest_memfd will
-    + Track shareability (whether an index in the inode is guest-only or
-      if the host is allowed to fault memory at a given index).
-    + Always be used for guest faults - specifically, kvm_gmem_get_pfn()
-      will be used to provide pages for the guest.
-    + Always be used by KVM to check private/shared status of a gfn.
-+ guest_memfd now has conversion ioctls, allowing conversion to
-  private/shared
-    + Conversion can fail if there are unexpected refcounts on any
-      folios in the range.
-
-Focusing on (b) 1G page support, here's an overview:
-
-1. A bunch of refactoring patches for HugeTLB that isolates the
-   allocation of a HugeTLB folio from other HugeTLB concepts such as
-   VMA-level reservations, and HugeTLBfs-specific concepts, such as
-   where memory policy is stored in the VMA, or where the subpool is
-   stored on the inode.
-2. A few patches that add a guestmem_hugetlb allocator within mm/. The
-   guestmem_hugetlb allocator is a wrapper around HugeTLB to modularize
-   the memory management functions, and to cleanly handle cleanup, so
-   that folio cleanup can happen after the guest_memfd inode (and even
-   KVM) goes away.
-3. Some updates to guest_memfd to use the guestmem_hugetlb allocator.
-4. Selftests for 1G page support.
-
-Here are some remaining issues/TODOs:
-
-1. Memory error handling such as machine check errors have not been
-   implemented.
-2. I've not looked into preparedness of pages, only zeroing has been
-   considered.
-3. When allocating HugeTLB pages, if two threads allocate indices
-   mapping to the same huge page, the utilization in guest_memfd inode's
-   subpool may momentarily go over the subpool limit (the requested size
-   of the inode at guest_memfd creation time), causing one of the two
-   threads to get -ENOMEM. Suggestions to solve this are appreciated!
-4. max_usage_in_bytes statistic (cgroups v1) for guest_memfd HugeTLB
-   pages should be correct but needs testing and could be wrong.
-5. memcg charging (charge_memcg()) for cgroups v2 for guest_memfd
-   HugeTLB pages after splitting should be correct but needs testing and
-   could be wrong.
-6. Page cache accounting: When a hugetlb page is split, guest_memfd will
-   incur page count in both NR_HUGETLB (counted at hugetlb allocation
-   time) and NR_FILE_PAGES stats (counted when split pages are added to
-   the filemap). Is this aligned with what people expect?
-
-Here are some optimizations that could be explored in future series:
-
-1. Pages could be split from 1G to 2M first and only split to 4K if
-   necessary.
-2. Zeroing could be skipped for Coco VMs if hardware already zeroes the
-   pages.
-
-Here's RFC v1 [4] if you're interested in the motivation behind choosing
-HugeTLB, or the history of this patch series.
-
-[1] https://lore.kernel.org/all/20250513163438.3942405-11-tabba@google.com/T/
-[2] https://lore.kernel.org/all/20250328153133.3504118-1-tabba@google.com/T/
-[3] https://lore.kernel.org/all/diqzzfih8q7r.fsf@ackerleytng-ctop.c.googlers.com/
-[4] https://lore.kernel.org/all/cover.1726009989.git.ackerleytng@google.com/T/
-
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Co-developed-by: Vishal Annapurve <vannapurve@google.com>
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+Co-developed-by: Fuad Tabba <tabba@google.com>
+Signed-off-by: Fuad Tabba <tabba@google.com>
+Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
 ---
+ Documentation/virt/kvm/api.rst |   5 ++
+ include/uapi/linux/kvm.h       |   2 +
+ virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 129 insertions(+), 2 deletions(-)
 
-Ackerley Tng (49):
-  KVM: guest_memfd: Make guest mem use guest mem inodes instead of
-    anonymous inodes
-  KVM: guest_memfd: Introduce and use shareability to guard faulting
-  KVM: selftests: Update guest_memfd_test for INIT_PRIVATE flag
-  KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-  KVM: guest_memfd: Skip LRU for guest_memfd folios
-  KVM: Query guest_memfd for private/shared status
-  KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
-  KVM: selftests: Test flag validity after guest_memfd supports
-    conversions
-  KVM: selftests: Test faulting with respect to
-    GUEST_MEMFD_FLAG_INIT_PRIVATE
-  KVM: selftests: Refactor vm_mem_add to be more flexible
-  KVM: selftests: Allow cleanup of ucall_pool from host
-  KVM: selftests: Test conversion flows for guest_memfd
-  KVM: selftests: Add script to exercise private_mem_conversions_test
-  KVM: selftests: Update private_mem_conversions_test to mmap
-    guest_memfd
-  KVM: selftests: Update script to map shared memory from guest_memfd
-  mm: hugetlb: Consolidate interpretation of gbl_chg within
-    alloc_hugetlb_folio()
-  mm: hugetlb: Cleanup interpretation of gbl_chg in
-    alloc_hugetlb_folio()
-  mm: hugetlb: Cleanup interpretation of map_chg_state within
-    alloc_hugetlb_folio()
-  mm: hugetlb: Rename alloc_surplus_hugetlb_folio
-  mm: mempolicy: Refactor out policy_node_nodemask()
-  mm: hugetlb: Inline huge_node() into callers
-  mm: hugetlb: Refactor hugetlb allocation functions
-  mm: hugetlb: Refactor out hugetlb_alloc_folio()
-  mm: hugetlb: Add option to create new subpool without using surplus
-  mm: truncate: Expose preparation steps for truncate_inode_pages_final
-  mm: hugetlb: Expose hugetlb_subpool_{get,put}_pages()
-  mm: Introduce guestmem_hugetlb to support folio_put() handling of
-    guestmem pages
-  mm: guestmem_hugetlb: Wrap HugeTLB as an allocator for guest_memfd
-  mm: truncate: Expose truncate_inode_folio()
-  KVM: x86: Set disallow_lpage on base_gfn and guest_memfd pgoff
-    misalignment
-  KVM: guest_memfd: Support guestmem_hugetlb as custom allocator
-  KVM: guest_memfd: Allocate and truncate from custom allocator
-  mm: hugetlb: Add functions to add/delete folio from hugetlb lists
-  mm: guestmem_hugetlb: Add support for splitting and merging pages
-  mm: Convert split_folio() macro to function
-  KVM: guest_memfd: Split allocator pages for guest_memfd use
-  KVM: guest_memfd: Merge and truncate on fallocate(PUNCH_HOLE)
-  KVM: guest_memfd: Update kvm_gmem_mapping_order to account for page
-    status
-  KVM: Add CAP to indicate support for HugeTLB as custom allocator
-  KVM: selftests: Add basic selftests for hugetlb-backed guest_memfd
-  KVM: selftests: Update conversion flows test for HugeTLB
-  KVM: selftests: Test truncation paths of guest_memfd
-  KVM: selftests: Test allocation and conversion of subfolios
-  KVM: selftests: Test that guest_memfd usage is reported via hugetlb
-  KVM: selftests: Support various types of backing sources for private
-    memory
-  KVM: selftests: Update test for various private memory backing source
-    types
-  KVM: selftests: Update private_mem_conversions_test.sh to test with
-    HugeTLB pages
-  KVM: selftests: Add script to test HugeTLB statistics
-  KVM: selftests: Test guest_memfd for accuracy of st_blocks
-
-Elliot Berman (1):
-  filemap: Pass address_space mapping to ->free_folio()
-
-Fuad Tabba (1):
-  mm: Consolidate freeing of typed folios on final folio_put()
-
- Documentation/filesystems/locking.rst         |    2 +-
- Documentation/filesystems/vfs.rst             |   15 +-
- Documentation/virt/kvm/api.rst                |    5 +
- arch/arm64/include/asm/kvm_host.h             |    5 -
- arch/x86/include/asm/kvm_host.h               |   10 -
- arch/x86/kvm/x86.c                            |   53 +-
- fs/hugetlbfs/inode.c                          |    2 +-
- fs/nfs/dir.c                                  |    9 +-
- fs/orangefs/inode.c                           |    3 +-
- include/linux/fs.h                            |    2 +-
- include/linux/guestmem.h                      |   23 +
- include/linux/huge_mm.h                       |    6 +-
- include/linux/hugetlb.h                       |   19 +-
- include/linux/kvm_host.h                      |   32 +-
- include/linux/mempolicy.h                     |   11 +-
- include/linux/mm.h                            |    2 +
- include/linux/page-flags.h                    |   32 +
- include/uapi/linux/guestmem.h                 |   29 +
- include/uapi/linux/kvm.h                      |   16 +
- include/uapi/linux/magic.h                    |    1 +
- mm/Kconfig                                    |   13 +
- mm/Makefile                                   |    1 +
- mm/debug.c                                    |    1 +
- mm/filemap.c                                  |   12 +-
- mm/guestmem_hugetlb.c                         |  512 +++++
- mm/guestmem_hugetlb.h                         |    9 +
- mm/hugetlb.c                                  |  488 ++---
- mm/internal.h                                 |    1 -
- mm/memcontrol.c                               |    2 +
- mm/memory.c                                   |    1 +
- mm/mempolicy.c                                |   44 +-
- mm/secretmem.c                                |    3 +-
- mm/swap.c                                     |   32 +-
- mm/truncate.c                                 |   27 +-
- mm/vmscan.c                                   |    4 +-
- tools/testing/selftests/kvm/Makefile.kvm      |    2 +
- .../kvm/guest_memfd_conversions_test.c        |  797 ++++++++
- .../kvm/guest_memfd_hugetlb_reporting_test.c  |  384 ++++
- ...uest_memfd_provide_hugetlb_cgroup_mount.sh |   36 +
- .../testing/selftests/kvm/guest_memfd_test.c  |  293 ++-
- ...memfd_wrap_test_check_hugetlb_reporting.sh |   95 +
- .../testing/selftests/kvm/include/kvm_util.h  |  104 +-
- .../testing/selftests/kvm/include/test_util.h |   20 +-
- .../selftests/kvm/include/ucall_common.h      |    1 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |  465 +++--
- tools/testing/selftests/kvm/lib/test_util.c   |  102 +
- .../testing/selftests/kvm/lib/ucall_common.c  |   16 +-
- .../kvm/x86/private_mem_conversions_test.c    |  195 +-
- .../kvm/x86/private_mem_conversions_test.sh   |  100 +
- virt/kvm/Kconfig                              |    5 +
- virt/kvm/guest_memfd.c                        | 1655 ++++++++++++++++-
- virt/kvm/kvm_main.c                           |   14 +-
- virt/kvm/kvm_mm.h                             |    9 +-
- 53 files changed, 5080 insertions(+), 640 deletions(-)
- create mode 100644 include/linux/guestmem.h
- create mode 100644 include/uapi/linux/guestmem.h
- create mode 100644 mm/guestmem_hugetlb.c
- create mode 100644 mm/guestmem_hugetlb.h
- create mode 100644 tools/testing/selftests/kvm/guest_memfd_conversions_test.c
- create mode 100644 tools/testing/selftests/kvm/guest_memfd_hugetlb_reporting_test.c
- create mode 100755 tools/testing/selftests/kvm/guest_memfd_provide_hugetlb_cgroup_mount.sh
- create mode 100755 tools/testing/selftests/kvm/guest_memfd_wrap_test_check_hugetlb_reporting.sh
- create mode 100755 tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
-
---
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 86f74ce7f12a..f609337ae1c2 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
+ The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
+ This is validated when the guest_memfd instance is bound to the VM.
+ 
++If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
++supports GUEST_MEMFD_FLAG_INIT_PRIVATE.  Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
++will initialize the memory for the guest_memfd as guest-only and not faultable
++by the host.
++
+ See KVM_SET_USER_MEMORY_REGION2 for additional details.
+ 
+ 4.143 KVM_PRE_FAULT_MEMORY
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 4cc824a3a7c9..d7df312479aa 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1567,7 +1567,9 @@ struct kvm_memory_attributes {
+ #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+ 
+ #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
++
+ #define GUEST_MEMFD_FLAG_SUPPORT_SHARED	(1UL << 0)
++#define GUEST_MEMFD_FLAG_INIT_PRIVATE	(1UL << 1)
+ 
+ struct kvm_create_guest_memfd {
+ 	__u64 size;
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 239d0f13dcc1..590932499eba 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -4,6 +4,7 @@
+ #include <linux/falloc.h>
+ #include <linux/fs.h>
+ #include <linux/kvm_host.h>
++#include <linux/maple_tree.h>
+ #include <linux/pseudo_fs.h>
+ #include <linux/pagemap.h>
+ 
+@@ -17,6 +18,24 @@ struct kvm_gmem {
+ 	struct list_head entry;
+ };
+ 
++struct kvm_gmem_inode_private {
++#ifdef CONFIG_KVM_GMEM_SHARED_MEM
++	struct maple_tree shareability;
++#endif
++};
++
++enum shareability {
++	SHAREABILITY_GUEST = 1,	/* Only the guest can map (fault) folios in this range. */
++	SHAREABILITY_ALL = 2,	/* Both guest and host can fault folios in this range. */
++};
++
++static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index);
++
++static struct kvm_gmem_inode_private *kvm_gmem_private(struct inode *inode)
++{
++	return inode->i_mapping->i_private_data;
++}
++
+ /**
+  * folio_file_pfn - like folio_file_page, but return a pfn.
+  * @folio: The folio which contains this index.
+@@ -29,6 +48,58 @@ static inline kvm_pfn_t folio_file_pfn(struct folio *folio, pgoff_t index)
+ 	return folio_pfn(folio) + (index & (folio_nr_pages(folio) - 1));
+ }
+ 
++#ifdef CONFIG_KVM_GMEM_SHARED_MEM
++
++static int kvm_gmem_shareability_setup(struct kvm_gmem_inode_private *private,
++				      loff_t size, u64 flags)
++{
++	enum shareability m;
++	pgoff_t last;
++
++	last = (size >> PAGE_SHIFT) - 1;
++	m = flags & GUEST_MEMFD_FLAG_INIT_PRIVATE ? SHAREABILITY_GUEST :
++						    SHAREABILITY_ALL;
++	return mtree_store_range(&private->shareability, 0, last, xa_mk_value(m),
++				 GFP_KERNEL);
++}
++
++static enum shareability kvm_gmem_shareability_get(struct inode *inode,
++						 pgoff_t index)
++{
++	struct maple_tree *mt;
++	void *entry;
++
++	mt = &kvm_gmem_private(inode)->shareability;
++	entry = mtree_load(mt, index);
++	WARN(!entry,
++	     "Shareability should always be defined for all indices in inode.");
++
++	return xa_to_value(entry);
++}
++
++static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
++{
++	if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
++		return ERR_PTR(-EACCES);
++
++	return kvm_gmem_get_folio(inode, index);
++}
++
++#else
++
++static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
++{
++	return 0;
++}
++
++static inline struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
++{
++	WARN_ONCE("Unexpected call to get shared folio.")
++	return NULL;
++}
++
++#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
++
+ static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 				    pgoff_t index, struct folio *folio)
+ {
+@@ -333,7 +404,7 @@ static vm_fault_t kvm_gmem_fault_shared(struct vm_fault *vmf)
+ 
+ 	filemap_invalidate_lock_shared(inode->i_mapping);
+ 
+-	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
++	folio = kvm_gmem_get_shared_folio(inode, vmf->pgoff);
+ 	if (IS_ERR(folio)) {
+ 		int err = PTR_ERR(folio);
+ 
+@@ -420,8 +491,33 @@ static struct file_operations kvm_gmem_fops = {
+ 	.fallocate	= kvm_gmem_fallocate,
+ };
+ 
++static void kvm_gmem_free_inode(struct inode *inode)
++{
++	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
++
++	kfree(private);
++
++	free_inode_nonrcu(inode);
++}
++
++static void kvm_gmem_destroy_inode(struct inode *inode)
++{
++	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
++
++#ifdef CONFIG_KVM_GMEM_SHARED_MEM
++	/*
++	 * mtree_destroy() can't be used within rcu callback, hence can't be
++	 * done in ->free_inode().
++	 */
++	if (private)
++		mtree_destroy(&private->shareability);
++#endif
++}
++
+ static const struct super_operations kvm_gmem_super_operations = {
+ 	.statfs		= simple_statfs,
++	.destroy_inode	= kvm_gmem_destroy_inode,
++	.free_inode	= kvm_gmem_free_inode,
+ };
+ 
+ static int kvm_gmem_init_fs_context(struct fs_context *fc)
+@@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
+ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+ 						      loff_t size, u64 flags)
+ {
++	struct kvm_gmem_inode_private *private;
+ 	struct inode *inode;
++	int err;
+ 
+ 	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
+ 	if (IS_ERR(inode))
+ 		return inode;
+ 
++	err = -ENOMEM;
++	private = kzalloc(sizeof(*private), GFP_KERNEL);
++	if (!private)
++		goto out;
++
++	mt_init(&private->shareability);
++	inode->i_mapping->i_private_data = private;
++
++	err = kvm_gmem_shareability_setup(private, size, flags);
++	if (err)
++		goto out;
++
+ 	inode->i_private = (void *)(unsigned long)flags;
+ 	inode->i_op = &kvm_gmem_iops;
+ 	inode->i_mapping->a_ops = &kvm_gmem_aops;
+@@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+ 	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+ 
+ 	return inode;
++
++out:
++	iput(inode);
++
++	return ERR_PTR(err);
+ }
+ 
+ static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
+@@ -654,6 +769,9 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
+ 	if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
+ 		valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
+ 
++	if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
++		valid_flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
++
+ 	if (flags & ~valid_flags)
+ 		return -EINVAL;
+ 
+@@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	if (!file)
+ 		return -EFAULT;
+ 
++	filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
++
+ 	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
+ 	if (IS_ERR(folio)) {
+ 		r = PTR_ERR(folio);
+@@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		*page = folio_file_page(folio, index);
+ 	else
+ 		folio_put(folio);
+-
+ out:
++	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+ 	fput(file);
+ 	return r;
+ }
+-- 
 2.49.0.1045.g170613ef41-goog
+
