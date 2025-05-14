@@ -1,203 +1,177 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7087AE55B;
-	Wed, 14 May 2025 07:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7A820C038
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747208149; cv=none; b=fWLKh+cssXK/ibzdxXSKfygC2xGjbOEIFDw7J4JwgTUNYtx5CNao2U6oaevdtrhsGpt9kdgskgjQ+muWXbeLIkqwquWqCw0KSHebtBbz1+AHTKSS+VT9p6pIh0gY54OiLdBMoYmlplQjJMueVWUVZeoRHZLLPdNzybYqvDpC6AU=
+	t=1747208154; cv=none; b=iN/Ukd/equFJkC/P142EOITVfgMFNKHrupQPheuBkqBv2CXUfu3NI2PspGF9Dn+f4fODrRV8K5bRCVziYvAHllvNrgiuz5DRsfjCBhxLhOpOB1dg+NleBFVi9EeQRsHYlkjFJwoyLSf//t3qHRg7WhwHFsU2BIOaLkVGomgwEAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747208149; c=relaxed/simple;
-	bh=OOOOn912lXFs2smEIwrvy1xSU9BCFYHFtFCKTzjR2xs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RIbzWt0nX+3fJMn4aXa0ufh8PeQszWBfUIelOLOkcLSgvxcpRRY9peTeS8njyJKB1GkxOuEl/sqMfWtCq49nSQAkKmD9HCh8lcyiRJHbtsTCE1g0lAE9eTKZHqvB2akqOnyhTRE2Kk4lXxLxvEeup/ETsCtkk9X4s7OTtYn/g4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNlmhIeA; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747208154; c=relaxed/simple;
+	bh=bsg6bw0yPfNZ4O08qHdudsUY91A0rZ+kVoO8mgYHzzA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Z1txquR8fHovPOuXfAH5ANKnes3nT7ostx8RxNYStY540GxP2yd7OTJ6V/UECdSWJ8xCTKBJYkb3RS/KVgR5q7El6XVx6gd44Zec8ae/silkXQzgnoBnmqIUYr0syAs/EbT2uwFbABiqDyKReV/EwkfCxRqXJY7ITJB4AU5aXcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nNgNkH+N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NtAYZTz7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNlmhIeA"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a1fb17bb8cso4145204f8f.0;
-        Wed, 14 May 2025 00:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747208145; x=1747812945; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ul5ASNAAqaRo57R6T172xXbaOjPecgoWC4kEAPl+0WA=;
-        b=PNlmhIeA2GsCzT+Pe5qxzcRqiwLEdqx7g+4Gq5XfcgbEoM7ur67/Lz4nB+Y7mE7pJ5
-         WAg32esUM6/Szeky2APvvVZuJGL/d0tx2VDbQzpuDPEnTe5jgsO9CyWHgegNEf0F6gm8
-         ZiPurvz8hNlFJAXFxjMw3cCxoj1KZlkO8B5SLZs1//IBk/Px3dsPCqde0XdvubDyjz7Y
-         omn8IjbrSnAFK/hOlTaZyy8+67/z1lXDe1Kq3pe8GRGb5zYMbc8Og9q8up9YmPmDR4eF
-         2/BXgE0GIj16TDBEeA/dpam10yRKrTTNEboktaTB+xLZOG1auoSMRpyr7sAILISC1J3E
-         SpEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747208145; x=1747812945;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ul5ASNAAqaRo57R6T172xXbaOjPecgoWC4kEAPl+0WA=;
-        b=DiuvlfvEaOh7nwhu6uQOKYkwsv8j7lXe3QiGOJlFkRtAaiyGjUyELPxUnXKSbgDNSz
-         VqdhmDgRWGXEB2T1VIrW5uvBBAOOtXjfV9gSBtA/v7aKJfJEv5Ygq4KAh75gZYBM+f9k
-         LIBP2RDf5ojD53aVgn5vlE5rG45bx5miRy+/mB2dHehHnGzD/cEPG0r1I8bw+jaHCZ3I
-         3hbsLeUXy0UbP/trSURlAg+7qMhy88s9l7X2ExkX1XLTkPhTsYP6bZP/xNiNxG/beaF7
-         K4EjP1nf5e5ICHXe02BZPox9+jNE7qKuBL+jUwrU3/nvtAF9FkdC5M/rvWpJiPDCUQwh
-         CoDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYIbv5HRCUZl23HVSN6ISF+KitZW/l1W7KpVN9kCvWzUFThvvaWFpAnO93xHoql92i3dtdyVM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweKCpVz0norUzosxThzDdbg0aXzYFljEQB+/ijq0K+1yHvyIR4
-	R0+aUzMjKohuKDb3J33lBoSDpx/61H2PG3XiUgUndTORnEGMwywbFNCleBsjyec=
-X-Gm-Gg: ASbGncupohApScell59T7cztBistfce0iIooGDNuTVEzBrALS6a8y3fHnh8xcxfw9KW
-	02l98eO2J/ggLzSyq5zNdAIN9hgIgDKIvZ9dx5BwQKpHTJYS0a2jUzfrtuf0tzYCITmJvo5c72b
-	LWHQmcYKZY/IhwH7W+VAfJp0xsX3VXfMp5Tj0RyXWmDeweI7cA/w5bWv+6s5nvUybc0eAJG+jdz
-	qI/OiUFZUJwEbCz2qVzLGR0D9L8uH88eZblJPkSLGPeuzrNusdqcCmP9y4MRCeko4N7QTH1HTBc
-	2WY0N5TOrHF0DnWVHL0Xtb1gQzsyrnPpc/qjg07UTFsmZ0tqAaTvWBwwP2YP3bYywgDY7Vg5muo
-	mR4w07oSl/EiI
-X-Google-Smtp-Source: AGHT+IGwSbCTBRmv6Oqn2oCWAU+RV3ceeVmjLx7z/b1CEEgub3G4qNbpYnPJ+pIaA6n08/cBLfamsw==
-X-Received: by 2002:a05:6000:1864:b0:3a2:1fd:afd9 with SMTP id ffacd0b85a97d-3a34994faf5mr1882054f8f.58.1747208144654;
-        Wed, 14 May 2025 00:35:44 -0700 (PDT)
-Received: from fedora.advaoptical.com ([82.166.23.19])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3951b6dsm17924165e9.17.2025.05.14.00.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 00:35:44 -0700 (PDT)
-From: Sagi Maimon <maimon.sagi@gmail.com>
-To: jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Sagi Maimon <maimon.sagi@gmail.com>
-Subject: [PATCH v5] ptp: ocp: Limit signal/freq counts in summary output functions
-Date: Wed, 14 May 2025 10:35:41 +0300
-Message-ID: <20250514073541.35817-1-maimon.sagi@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nNgNkH+N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NtAYZTz7"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747208150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xF4E5LVzONdS3f7YqJRhw616wWVZro5wISDTX0iuhEA=;
+	b=nNgNkH+NwoKusOWd5fvUACBLqXIt3SKSuR+6DttQBbby9p00EDh6Sk+9aNuibxCaK16thw
+	xa0JqZJnB6k5UI6CWWqpxJKQVdhNTtwGxENw7mP0sYrTWbN9rfvpxFyzQW40nWvZELPhqR
+	f8ZzJ0oZj55sUBbcOO5pbnTij9spptCB6vljwtjW//4pB+Hcc6/uu0mTlRFRbQNaodPDAk
+	SSzp7ZFwHhCU0JBwbYq68dPCJ8sIDglcnKhQy1NYiavMPcQJBD1WmcVQ4iHPEQNm95COoT
+	oyNbWFx6VB53QJyjNLD7pUasQEpz6c/B9BvAYSsPkksQYHiCafB/H3EjfAp57w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747208150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xF4E5LVzONdS3f7YqJRhw616wWVZro5wISDTX0iuhEA=;
+	b=NtAYZTz7zkP1E60poG9LK42fTjWAXipEYuS8rual0CM9qeGI5taQLyvmPa9rKjUhgiXuj7
+	8L5OVSeP7yntyJBA==
+To: Brian Norris <briannorris@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>, Tsai Sung-Fu
+ <danielsftsai@google.com>, linux-kernel@vger.kernel.org, Brian Norris
+ <briannorris@chromium.org>
+Subject: Re: [PATCH 2/2] genirq: Retain disable depth across irq
+ shutdown/startup
+In-Reply-To: <20250513224402.864767-3-briannorris@chromium.org>
+References: <20250513224402.864767-1-briannorris@chromium.org>
+ <20250513224402.864767-3-briannorris@chromium.org>
+Date: Wed, 14 May 2025 09:35:49 +0200
+Message-ID: <877c2jk5ka.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The debugfs summary output could access uninitialized elements in
-the freq_in[] and signal_out[] arrays, causing NULL pointer
-dereferences and triggering a kernel Oops (page_fault_oops).
-This patch adds u8 fields (nr_freq_in, nr_signal_out) to track the
-number of initialized elements, with a maximum of 4 per array.
-The summary output functions are updated to respect these limits,
-preventing out-of-bounds access and ensuring safe array handling.
+On Tue, May 13 2025 at 15:42, Brian Norris wrote:
+> If an IRQ is shut down and restarted while it was already disabled, its
+> depth is clobbered and reset to 0. This can produce unexpected results,
+> as:
+> 1) the consuming driver probably expected it to stay disabled and
+> 2) the kernel starts complaining about "Unbalanced enable for IRQ N" the
+>    next time the consumer calls enable_irq()
+>
+> This problem can occur especially for affinity-managed IRQs that are
+> already disabled before CPU hotplug.
 
-Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
----
-Addressed comments from Vadim Fedorenko:
-- https://www.spinics.net/lists/kernel/msg5683022.html
-Addressed comments from Jakub Kicinski:
-- https://www.spinics.net/lists/netdev/msg1091131.html
-Changes since v4:
-- remove fix from signal/freq show/store routines.
----
----
- drivers/ptp/ptp_ocp.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+Groan.
 
-diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-index 2ccdca4f6960..e63481f24238 100644
---- a/drivers/ptp/ptp_ocp.c
-+++ b/drivers/ptp/ptp_ocp.c
-@@ -315,6 +315,8 @@ struct ptp_ocp_serial_port {
- #define OCP_BOARD_ID_LEN		13
- #define OCP_SERIAL_LEN			6
- #define OCP_SMA_NUM			4
-+#define OCP_SIGNAL_NUM			4
-+#define OCP_FREQ_NUM			4
- 
- enum {
- 	PORT_GNSS,
-@@ -342,8 +344,8 @@ struct ptp_ocp {
- 	struct dcf_master_reg	__iomem *dcf_out;
- 	struct dcf_slave_reg	__iomem *dcf_in;
- 	struct tod_reg		__iomem *nmea_out;
--	struct frequency_reg	__iomem *freq_in[4];
--	struct ptp_ocp_ext_src	*signal_out[4];
-+	struct frequency_reg	__iomem *freq_in[OCP_FREQ_NUM];
-+	struct ptp_ocp_ext_src	*signal_out[OCP_SIGNAL_NUM];
- 	struct ptp_ocp_ext_src	*pps;
- 	struct ptp_ocp_ext_src	*ts0;
- 	struct ptp_ocp_ext_src	*ts1;
-@@ -378,10 +380,12 @@ struct ptp_ocp {
- 	u32			utc_tai_offset;
- 	u32			ts_window_adjust;
- 	u64			fw_cap;
--	struct ptp_ocp_signal	signal[4];
-+	struct ptp_ocp_signal	signal[OCP_SIGNAL_NUM];
- 	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
- 	const struct ocp_sma_op *sma_op;
- 	struct dpll_device *dpll;
-+	int signals_nr;
-+	int freq_in_nr;
- };
- 
- #define OCP_REQ_TIMESTAMP	BIT(0)
-@@ -2697,6 +2701,8 @@ ptp_ocp_fb_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->eeprom_map = fb_eeprom_map;
- 	bp->fw_version = ioread32(&bp->image->version);
- 	bp->sma_op = &ocp_fb_sma_op;
-+	bp->signals_nr = 4;
-+	bp->freq_in_nr = 4;
- 
- 	ptp_ocp_fb_set_version(bp);
- 
-@@ -2862,6 +2868,8 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->fw_version = ioread32(&bp->reg->version);
- 	bp->fw_tag = 2;
- 	bp->sma_op = &ocp_art_sma_op;
-+	bp->signals_nr = 4;
-+	bp->freq_in_nr = 4;
- 
- 	/* Enable MAC serial port during initialisation */
- 	iowrite32(1, &bp->board_config->mro50_serial_activate);
-@@ -2888,6 +2896,8 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
- 	bp->flash_start = 0xA00000;
- 	bp->eeprom_map = fb_eeprom_map;
- 	bp->sma_op = &ocp_adva_sma_op;
-+	bp->signals_nr = 2;
-+	bp->freq_in_nr = 2;
- 
- 	version = ioread32(&bp->image->version);
- 	/* if lower 16 bits are empty, this is the fw loader. */
-@@ -4008,7 +4018,7 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+> I'm not very confident this is a fully correct fix, as I'm not sure I've
+> grokked all the startup/shutdown logic in the IRQ core. This probably
+> serves better as an example method to pass the tests in patch 1.
+
+It's close enough except for a subtle detail.
+
+> @@ -272,7 +272,9 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
+>  	const struct cpumask *aff = irq_data_get_affinity_mask(d);
+>  	int ret = 0;
+>  
+> -	desc->depth = 0;
+> +	desc->depth--;
+> +	if (desc->depth)
+> +		return 0;
+
+This breaks a
+
+     request_irq()
+     disable_irq()
+     free_irq()
+     request_irq()
+
+sequence.
+  
+So the only case where the disable depth needs to be preserved is for
+managed interrupts in the hotunplug -> shutdown -> hotplug -> startup
+scenario. Making that explicit avoids chasing all other places and
+sprinkle desc->depth = 1 into them. Something like the uncompiled below
+should do the trick.
+
+Thanks,
+
+        tglx
+---
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 36cf1b09cc84..b88e9d36d933 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -223,6 +223,19 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+ 		return IRQ_STARTUP_ABORT;
+ 	return IRQ_STARTUP_MANAGED;
+ }
++
++void irq_startup_managed(struct irq_desc *desc)
++{
++	/*
++	 * Only start it up when the disable depth is 1, so that a disable,
++	 * hotunplug, hotplug sequence does not end up enabling it during
++	 * hotplug unconditionally.
++	 */
++	desc->depth--;
++	if (!desc->depth)
++		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
++}
++
+ #else
+ static __always_inline int
+ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+@@ -290,6 +303,7 @@ int irq_startup(struct irq_desc *desc, bool resend, bool force)
+ 			ret = __irq_startup(desc);
+ 			break;
+ 		case IRQ_STARTUP_ABORT:
++			desc->depth = 1;
+ 			irqd_set_managed_shutdown(d);
+ 			return 0;
+ 		}
+@@ -322,7 +336,13 @@ void irq_shutdown(struct irq_desc *desc)
  {
- 	struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
- 	struct ptp_ocp_signal *signal = &bp->signal[nr];
--	char label[8];
-+	char label[16];
- 	bool on;
- 	u32 val;
+ 	if (irqd_is_started(&desc->irq_data)) {
+ 		clear_irq_resend(desc);
+-		desc->depth = 1;
++		/*
++		 * Increment disable depth, so that a managed shutdown on
++		 * CPU hotunplug preserves the actual disabled state when the
++		 * CPU comes back online. See irq_startup_managed().
++		 */
++		desc->depth++;
++
+ 		if (desc->irq_data.chip->irq_shutdown) {
+ 			desc->irq_data.chip->irq_shutdown(&desc->irq_data);
+ 			irq_state_set_disabled(desc);
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index 15a7654eff68..3ed5b1592735 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -219,7 +219,7 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+ 		return;
  
-@@ -4031,7 +4041,7 @@ static void
- _frequency_summary_show(struct seq_file *s, int nr,
- 			struct frequency_reg __iomem *reg)
- {
--	char label[8];
-+	char label[16];
- 	bool on;
- 	u32 val;
+ 	if (irqd_is_managed_and_shutdown(data))
+-		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
++		irq_startup_managed(desc);
  
-@@ -4175,11 +4185,11 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
- 	}
+ 	/*
+ 	 * If the interrupt can only be directed to a single target
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index b0290849c395..8d2b3ac80ef3 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -87,6 +87,7 @@ extern void __enable_irq(struct irq_desc *desc);
+ extern int irq_activate(struct irq_desc *desc);
+ extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
+ extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
++void irq_startup_managed(struct irq_desc *desc);
  
- 	if (bp->fw_cap & OCP_CAP_SIGNAL)
--		for (i = 0; i < 4; i++)
-+		for (i = 0; i < bp->signals_nr; i++)
- 			_signal_summary_show(s, bp, i);
- 
- 	if (bp->fw_cap & OCP_CAP_FREQ)
--		for (i = 0; i < 4; i++)
-+		for (i = 0; i < bp->freq_in_nr; i++)
- 			_frequency_summary_show(s, i, bp->freq_in[i]);
- 
- 	if (bp->irig_out) {
--- 
-2.47.0
-
+ extern void irq_shutdown(struct irq_desc *desc);
+ extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
