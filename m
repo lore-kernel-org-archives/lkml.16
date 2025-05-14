@@ -1,150 +1,141 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61A41F1524;
-	Wed, 14 May 2025 07:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B161FCFFC;
+	Wed, 14 May 2025 07:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206063; cv=none; b=DC7XCSCJgkj/Z4M5jLGjGWqaQ9ZkHOznw5wC6iM7XnkKYSOYmNDndsCmQ+g13JP9sQJRPRh/iq7FR5RbOSO8jCQFpz047QnzmVCKiPFt0eA7QiPwzxmU+w8ZYLwUg9kf+5Bx956Atk/2wJgUzlPH60qZuEFYhccRJaRHaL8JZAk=
+	t=1747206102; cv=none; b=MJYLH8EOdx7rMd46ED5XhY4fnb1uU7/zMVLSrbRREu8zBYj1fSw73n3EKCT8HIpOfwC+Tc8KVCXkYXPYWCWeWv2hrhRDd5CpebJSIeSVj2P1O1iOVa3BbsV2dDpR3s7v66ct3YNA9YrJo3FO+ChAeOUZLQKaC+oOKW9LzKI5Cvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206063; c=relaxed/simple;
-	bh=00TG9hraW+ho4aYNxAKghUbX1JBVLpm/zp47GHTcitw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cThG7r4rm3Ez9UhC6x7fM4SOPmPmKluINqIEMfyNaU4W2vno8nUoc13/sk2llb3q8RT2BjkPBUCPfa3EOAXuj5RgDNMUnbw0LqEpyP4gjzSDNAN95CcOgqYtIRaHCdaNqrF6gl88eykOBYOx/UzcSbvfyaEGjFftpjk3FmyBrHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPBehcNK; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747206102; c=relaxed/simple;
+	bh=urScH87aRUYYRU4uMH/UcgcwqDXNvfnULC466CYiu1A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mGWrlicG8UdSkYLOJerFRlRjY5XDBbRgDLFqFDluF4SBNL4gfRXYjpXLMXtQEdnWdNXGujp1Gk0kqzp7T+43DSdx9++T9YAtdg5a724wV+SuSCcN3d8EytwY17bSqgFDQTjpIwPaubeIE1AewWuRfHuozwOwhTXOKCbk9LaJDTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNcD5uGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPBehcNK"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54acc0cd458so7128138e87.0;
-        Wed, 14 May 2025 00:01:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747206060; x=1747810860; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e4UWq00FQ3wfcO8+cSz3Rl5HWcj+xSQgpD/JijtD+sU=;
-        b=YPBehcNKbzjobQyqhRAJSyjd7U2srH1qw3sKXU9irKjZ8Pm70t9KH3qviwH3xSHULf
-         zypxvWTmVla8+BDbjHYDSHNXfSfZ80O0BOo4c6tKm2VYKw02SV9G+wh8yI4Q8Q5Ppo7n
-         qrTvBkbSmj0eJmPoEerHMsD31HZiBKS2k4IIbq+PN3HfdyjFkDFxRD2jUevo821HOFw9
-         zkc4EIPt2v6ARxOi09Blm7tGWvNhJVcTP39y3w5i89U+IMMPnJ+aYzRG6X5YfkpzruUt
-         cSeSB1ymUk3PCmeHU332ojNn+Czc2zFboOTlr+m2VVoS5JVfIGI/sWGLO9kNybpS5Z5w
-         q3Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747206060; x=1747810860;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e4UWq00FQ3wfcO8+cSz3Rl5HWcj+xSQgpD/JijtD+sU=;
-        b=pslAg+o9b5LDGfRXz3N3QTDYG62bTj9qd7QGM7rYHMKSOm81AYmS5e5eCMWZqGU6jD
-         W7SWEn2DZtyHkRyixGgAc5JYHiSmhD/HwUThpWScOVN4sJJtaSGgBd8dP3kZxR/v1cUE
-         Z2Bf3VMYgYWgt542M0ZkdE88WqqH9RbwhYmUYkGLCO7KTZXviYsWwWndp2fkvIU2T7OB
-         JzqaBmp3Ic7+QUGa97op/2nsoup+R/8EVvOPRKB4AS2sJjYIdTdlz4Rjj8v0GKBfDLXW
-         XYXv4zyMZJ7854qGrsdVHrYBuSxnlaR25QKNBQe4hxUZHuuStoJgP7e3Ko/T9c+uKgMB
-         Hx1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVPzC6ETVycgO//9Iz7aNc/IcSVgIvGUpV7K2F6nbl93g0VRE3qO4lgMLxd2VDx4Q1/BDkiY2AzBKNAl6I=@vger.kernel.org, AJvYcCW9rGi75p+SX7OYsif5oc3OnJvkZKTDIky834UtJVgqWRytuu1EbiF7Y894TXmz9AknT9K+KDIBjMjxUybrLKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGnHhMmmtcLL61OGsyHG9cX2Ho4l0MkGOLRuaNlJht+TWUYtmd
-	ekPo+DYj5t4UdPWQHsutyKycDU1qRT8VQiUcVpJ89UffdAuFwNcs
-X-Gm-Gg: ASbGnctsaQKzUM7nrAYEN6ifwexYWQdvydOqmtt+wthTTVnI2mh3gRPMWJpPDele0R6
-	bmEgcu0HtG98L8GTbMkb6svNNGC3m+/oxC3wXEvhq1iipu5JMjhLCtwQqmVJ39gU3revoNy4RmI
-	Jd84Y81ivR/pb4hEwu9uxbTTEIIijb+EDlianRtThM4a7gpBiuoRHnx0+5j1EPW9VyjkeWFn5I7
-	D67afmK1eWs5sWEp+sbpiVFg/+0v5FdYlt0eLsmFvnGbgfC9K4B1ARpLbr1gdZsZKgYSyQHuqe1
-	/l+X+bEwkhExxOjUkI76iI1Ki0Ed4HqW7m2aYtHxo0P4qmYMu15zx/p3MCJY151L+jaWdT7lxSN
-	n4k32ppK0n1E393QUSmGlhrRE76xpANkOe1I8w4k=
-X-Google-Smtp-Source: AGHT+IHFvZG1KdFnKOihoApsIRTLV2xT/k/MQynT2nLT5kj+9wfpveOdmyHEDnx5dVQDVckkFIOS+Q==
-X-Received: by 2002:a05:6512:6c4:b0:54f:c57d:d25 with SMTP id 2adb3069b0e04-550d61ddbe6mr762503e87.48.1747206059504;
-        Wed, 14 May 2025 00:00:59 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550d747b54bsm145249e87.216.2025.05.14.00.00.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 00:00:58 -0700 (PDT)
-Message-ID: <77afb898-fe6e-480d-9b7a-05cc31d8545b@gmail.com>
-Date: Wed, 14 May 2025 10:00:58 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNcD5uGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 54D4FC4CEF3;
+	Wed, 14 May 2025 07:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747206102;
+	bh=urScH87aRUYYRU4uMH/UcgcwqDXNvfnULC466CYiu1A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=UNcD5uGQI9/jVyg8Di29D94BA3lKhnw11VkC391nr75+adpIkN071VF/MsE2+vrA0
+	 +3vu8f0btFQcB+KRwbLqMN03cxrGnEwzPK0w0rSh30VztddhiA73C5rgTxVGTDN0uu
+	 OEBbCNDG5H+UDkGePv5de6fRQKWCUDctFhz+E/laIG1sBCTfo9sWn6MLf/1bo5J8uz
+	 pxsHx9nqDkU/hJSyVo4isAaxf3+J5Fp+63HutVj2ONwrGePxK0SPD2ht8OGWPNMXP3
+	 PrKw97EuTruCSAvf39BfyK//xCTp1rV4GQdD4S34qIW80Y/Ra37Mo6BEzKGwmIx3+r
+	 x1of5bS0L+Ypg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF4AC3ABDC;
+	Wed, 14 May 2025 07:01:42 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Wed, 14 May 2025 15:01:31 +0800
+Subject: [PATCH 4/8] pinctrl: meson: a4: remove special data processing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] scatterlist rust bindings
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: dakr@kernel.org, lyude@redhat.com, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>, Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
- <78DB1F66-9DF5-4679-ADC4-177BED5D4FDE@collabora.com>
-Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <78DB1F66-9DF5-4679-ADC4-177BED5D4FDE@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-s6-s7-pinctrl-v1-4-39d368cad250@amlogic.com>
+References: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+In-Reply-To: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747206100; l=1982;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=FRMEmxN5zjpQVQOxtUKSm3GQm/lC+q2P8YsijCrDdRM=;
+ b=+6hLKSp0TODk9+4jPyX0PxesuamsmX2QcK+x5esdSc3SYblzTFKWXatB/oAB2U0+Tfv5MEg6X
+ ZWVfF23ZwRGA4BhIn08ObpMSlwTK3z44oHVT+iB42n7EHzbE+Qh2xO9
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
+
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+According to the data specifications of Amlogic's existing SoCs,
+the function register offset and the bit offset are the same
+value among various chips. Therefore, general processing can
+be carried out without the need for private data modification.
+Drop special data processing.
+
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 33 +++---------------------------
+ 1 file changed, 3 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+index a76f266b4b94..90d4d10ca10b 100644
+--- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
++++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+@@ -50,15 +50,8 @@ struct aml_pio_control {
+ 	u32 bit_offset[AML_NUM_REG];
+ };
+ 
+-struct aml_reg_bit {
+-	u32 bank_id;
+-	u32 reg_offs[AML_NUM_REG];
+-	u32 bit_offs[AML_NUM_REG];
+-};
+-
+ struct aml_pctl_data {
+ 	unsigned int number;
+-	struct aml_reg_bit rb_offs[];
+ };
+ 
+ struct aml_pmx_func {
+@@ -843,31 +836,11 @@ static const struct gpio_chip aml_gpio_template = {
+ static void init_bank_register_bit(struct aml_pinctrl *info,
+ 				   struct aml_gpio_bank *bank)
+ {
+-	const struct aml_pctl_data *data = info->data;
+-	const struct aml_reg_bit *aml_rb;
+-	bool def_offs = true;
+ 	int i;
+ 
+-	if (data) {
+-		for (i = 0; i < data->number; i++) {
+-			aml_rb = &data->rb_offs[i];
+-			if (bank->bank_id == aml_rb->bank_id) {
+-				def_offs = false;
+-				break;
+-			}
+-		}
+-	}
+-
+-	if (def_offs) {
+-		for (i = 0; i < AML_NUM_REG; i++) {
+-			bank->pc.reg_offset[i] = aml_def_regoffs[i];
+-			bank->pc.bit_offset[i] = 0;
+-		}
+-	} else {
+-		for (i = 0; i < AML_NUM_REG; i++) {
+-			bank->pc.reg_offset[i] = aml_rb->reg_offs[i];
+-			bank->pc.bit_offset[i] = aml_rb->bit_offs[i];
+-		}
++	for (i = 0; i < AML_NUM_REG; i++) {
++		bank->pc.reg_offset[i] = aml_def_regoffs[i];
++		bank->pc.bit_offset[i] = 0;
+ 	}
+ }
+ 
+
+-- 
+2.37.1
 
 
-On 12/05/2025 14:19, Daniel Almeida wrote:
-> Hi Abdiel,
-> 
->> On 12 May 2025, at 06:53, Abdiel Janulgue <abdiel.janulgue@gmail.com> wrote:
->>
->> Hi,
->>
->> Here are the scatterlist bindings that has been brewing for a while in my
->> local tree while working with Nova code. The bindings are used mostly to
->> build the radix3 table from the GSP firmware which is loaded via dma.
->> This interface can be used on top of existing kernel scatterlist objects
->> or to allocate a new one from scratch.
->>
->> Some questions still need to be resolved, which mostly come from
->> the DeviceSGTable::dma_map() function. Primarily, what if you call
->> bindings::dma_map_sgtable() on an already mapped sg_table? From my
-> 
-> Perhaps we should introduce a type for buffers which are known to be mapped. Then
-> we can simply not offer the option to map for that type.
-> 
->> experiments it doesn't seem to do anything and no indication is returned if
->> the call succeeded or not. Should we save the "mapping info" to a list
->> everytime we call DeviceSGTable::dma_map more than once?
-> 
-> What mapping info are you referring to?
-> 
-Basically the dma_data_direction enum and possibly `Device`, if we 
-decouple SGTable from the device. So this approach would mean that 
-every-time SGTable::dma_map() is called, unique mapping object(s) would 
-be created, and which would get unmapped later on the destructor:
-
-struct SgtDmaMap {
-     dev: ARef<Device>,
-     dir: DmaDataDirection,
-}
-
-impl SgtDmaMap {
-     /// Creates a new mapping object
-     fn new(dev: &Device, dir: DmaDataDirection) -> Self {
-         Self { dev: dev.into(), dir, }
-     }
-}
-...
-...
-
-impl SGTable {
-     pub fn dma_map(dev: &Device, dir: DmaDataDirection) -> 
-Result<SgtDmaMap>
-
-But I'm not sure if there is any point to that as the C 
-`dma_map_sgtable()` doesn't seem to care anyway (I could be wrong with 
-this) if the sg_table gets mapped more than once?
-
-Regards,
-Abdiel
