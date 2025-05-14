@@ -1,235 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957421D7E4A;
-	Wed, 14 May 2025 20:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE79171C9;
+	Wed, 14 May 2025 20:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747255321; cv=none; b=HRDIEAY50E4kZ9dU28/8/Ut2fXwUzEocDZVxTX6/8kxlqqIzrpLBI6HsJ8SSvutSXZYjrsFxbRUfFprsoDTndF1p4abEok3JT4GoXFGOm38jYvbQQRuUrBb49HAn95CY2FsLzXRbLm0s08Ndh63ai3eUaLCFzi9NyP5hzMkyQ7A=
+	t=1747255641; cv=none; b=mR9/+pEH9/ZZaMIFji6HS7YZPhT7T5kqd8sagdciqRXyZKnEDbiHJijXcJ5b2woS/xZCdz+sViP9/vMcyFz35IWSPeu5yf0TqAi3ZR5SlApAE1dUZFaOrWmrxzq+yddwM+6EpSMlqAi5Z+GPjhjgx/BoynKA2pUSPS74ZH4y44U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747255321; c=relaxed/simple;
-	bh=1nE6gDM710mArLvk8E1p58a4DYvORFAG2fv7jv7gJYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=li56WdVennGJbGJ8m2tfPjIovZqOgVNa6dnV/31SQf/11y28mxRb9mb+3vdBVsqKKvk7FesfKoRdp6Avq8URUxbioD+4kOtuaCQOHoLx80EHSJBFjS8Aqk1Iwilr9goHWzH+4A9GdQo3AUiZJiflUpWXDjW4kvTa02azN6C4vsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgX7UJ0O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747255641; c=relaxed/simple;
+	bh=8s4k0AuPpCeYnVbTJcNtLPjbu2CtKFkPiZBd7kxJuH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TerMbFb6/0b8wupwx4gt3a1S/tdHdJccoIbSEh/BnB3vyftABvSSAuu8iayrZq1HZMU3I8nEt6ZmfHlx4glRX2ku82cgCNxbhoekNCkTRF1NGC8LLtRmgdvLoxCol+wFSP65gPIr0URJ+RpRvlSHRoTnAC59oHDl8r/L7JgyK+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3A3fZrG; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgX7UJ0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF31FC4CEE3;
-	Wed, 14 May 2025 20:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747255321;
-	bh=1nE6gDM710mArLvk8E1p58a4DYvORFAG2fv7jv7gJYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgX7UJ0ORV80PdKWdTiVaSKiLqiJu8KEgd1oOECl94udYTE+vNMVKO5p1LwC6znmp
-	 l+NzChA2KQUGy394FcGExuTm+J19Kh7o2NS7gFbsUIkrFpSXCXjswnBagsNxWF+M3r
-	 k9QwzPaOs46gYBBpUsJozyfWY/nAnBr6rWhUIJXhV5Jz290HA1ZaTaPHZFQztZ7AhP
-	 9Py47ERmQVc3xHHs/2UCqhcpytDcjoosUJc7u6cqRE+h5JACDZVCq8B+vexn7ppDf8
-	 LYRlWkjcZmM12lV+GYRYjZHs4jGHm2ewRANAofA9ZQNLFSFFomlBCeptXiCDBBEB5e
-	 cXu+FW0R+FoAA==
-Date: Wed, 14 May 2025 15:41:59 -0500
-From: Rob Herring <robh@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: spi: Add VIA/WonderMedia serial flash
- controller
-Message-ID: <20250514204159.GA2988411-robh@kernel.org>
-References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
- <20250510-wmt-sflash-v1-1-02a1ac6adf12@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3A3fZrG"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30df7c98462so278969a91.3;
+        Wed, 14 May 2025 13:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747255638; x=1747860438; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=yqZtoMhgtAkMYZTJ9JntJG1rUnS0RQTY7ZMyliu0Sq0=;
+        b=a3A3fZrGl8WpBfucqex992kCm/3B5Qsc4m2ubr6uJro1oX3g65sJhcZHU1qfiHth2X
+         IGCYIgAr5OUy5vlyr79ioc/8HGfuoU4IANFPe55a5SzW7gHIILAPQdEC6TWS1AXwmYJd
+         AmR+G8V3JKR/qr6L+EzsL6uvrK6lVqowe1B63+yEfQSfC7reHe8CTIdrJfn8BuyX/Xyi
+         N1aneDrJ9FiMF0A2LTzEEyFy+PJ73zW7IYorrSGCGQc8D1CCNB0EubjlHOvHKnpvVI4P
+         5xuFQc6R9yhOu2FEIsBgaFI5JfVUfe4ZEBSsBco4TaPPizMgZcC0RgxrtnwqIK6UNIW8
+         cxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747255638; x=1747860438;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yqZtoMhgtAkMYZTJ9JntJG1rUnS0RQTY7ZMyliu0Sq0=;
+        b=ZJhRWPZ2Tr0a4xbBNKiVQrISg6xKWU4jRD432Qt2dUIx4MMFGNBrgujNCLa32NVQ1c
+         /Hsb61uvc1HYVQZg9lPMlAYhrPrcS9NmYgv+NGeQUvMzK9+2wt/kOuJU/IOoeYnrA2K/
+         MXKd9UyKLEwRtOiT8vnypXKYW3HA4JXSpeYp8YJNBym+fkrEGoRhWqLF+kAWOUv5IjZo
+         99Xc5ZZ9eEOe1AcIs6u+Ilv45SfIczVMKi9icBR9gefyALeI+9aco1p1MDbJt6f+LLfh
+         aM3m9j1PMPGYzMHkTZf7bcuuIln8O4bxajEc9KeEb2j3hd5Lxw3yszTr8DyuYPgpOLnt
+         axLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbyfSk7sELYQcQDXcrlNXgCvXFD+noA8qjxioyVFl7DcThY5xFgYER49DyyL/KXRMpBh/IJk/tLsBsBJc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZrdGKEIw8OhY3FfUfnlHg/t4XIGGNSjDziDLIHYKrhLgHoZvT
+	LCpim1guoUEoWUFja46CbX1K2UwvMLaanJqgROnqQ3l6jKnw4pdL
+X-Gm-Gg: ASbGncuC3dzfzp/AfRGznsPZV98hfkvmQuzANhgY/SGZku8SYURaUHPFWD3jxoE3l3e
+	HrjJz8nz30Ci8OI4YYgfW3vRd0+0Rc/a1vS4mMhelhEkFCItFIGOv0ZQnz23kTYxvlHjZfkwdrg
+	xtf02f2kOWtVShviuQaZJPBNvktfrCpA1JkhgueIy5WrC6fY99cZpIfW3pYyYTANBuJKM2EAn98
+	vv1hS9UNKu1RCvUbeLLmGi8r3QqFSuN4yAKcXsQJaeUCkD4g73UKLk5iP6wXt2nIkm6n7EFuLPg
+	JLMNoj1VvV46qrEpIphtBiX1PmDHw0JvbRHPEU27BccHkvLdMZ0hjTqbGxC7CUhuoTXl3xGXZh/
+	X7PFD1yMn0QBY5fl1oUKag6YpK+pzvwfUZi4=
+X-Google-Smtp-Source: AGHT+IG9j6gSupit9bAat/jSXs7+pnKLnNEXVkwPrPgcaQAFYHuXV4S74wJV5w2etXtHakVW5rorbA==
+X-Received: by 2002:a17:90b:1a89:b0:2fe:85f0:e115 with SMTP id 98e67ed59e1d1-30e2e65e6e3mr6039908a91.26.1747255638286;
+        Wed, 14 May 2025 13:47:18 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e3345e60esm2017829a91.28.2025.05.14.13.47.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 13:47:17 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <54e21b79-a7bd-4e35-ae0f-268daeda5557@roeck-us.net>
+Date: Wed, 14 May 2025 13:47:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250510-wmt-sflash-v1-1-02a1ac6adf12@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Darren Kenny <darren.kenny@oracle.com>
+References: <20250514125617.240903002@linuxfoundation.org>
+ <861004b4-e036-4306-b129-252b9cb983c7@oracle.com>
+ <2025051440-sturdily-dragging-3843@gregkh>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <2025051440-sturdily-dragging-3843@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 10, 2025 at 11:42:21PM +0400, Alexey Charkov wrote:
-> Add a binding for the serial flash controller found on VIA/WonderMedia
-> SoCs, which provides semi-transparent access to SPI NOR chips by
-> mapping their contents to the physical CPU address space.
+On 5/14/25 13:05, Greg Kroah-Hartman wrote:
+> On Thu, May 15, 2025 at 12:29:40AM +0530, Harshit Mogalapalli wrote:
+>> Hi Greg,
+>> On 14/05/25 18:34, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 6.6.91 release.
+>>> There are 113 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+>>> Anything received after that time might be too late.
+>>
+>> ld: vmlinux.o: in function `patch_retpoline':
+>> alternative.c:(.text+0x3b6f1): undefined reference to `module_alloc'
+>> make[2]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
+>>
+>> We see this build error in 6.6.91-rc2 tag.
 > 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  .../devicetree/bindings/spi/via,vt8500-sflash.yaml | 122 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 123 insertions(+)
+> What is odd about your .config?  Have a link to it?  I can't duplicate
+> it here on my builds.
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/via,vt8500-sflash.yaml b/Documentation/devicetree/bindings/spi/via,vt8500-sflash.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d2ea0dacdd56118c0cb5a1cb510ceb7591e1e5ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/via,vt8500-sflash.yaml
-> @@ -0,0 +1,122 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/via,vt8500-sflash.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VIA/WonderMedia serial flash controller
-> +
-> +description:
-> +  This controller is used on VIA/WonderMedia SoCs such as VIA VT8500,
-> +  WonderMedia WM8850 and similar. It provides a semi-transparent interface
-> +  for reading and writing SPI NOR chip contents via a physical memory map,
-> +  abstracting away all SPI communication, while also providing a direct
-> +  mechanism for issuing "programmable commands" to the underlying SPI chip
-> +
-> +maintainers:
-> +  - Alexey Charkov <alchark@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - via,vt8500-sflash
-> +      - wm,wm8505-sflash
-> +      - wm,wm8650-sflash
-> +      - wm,wm8750-sflash
-> +      - wm,wm8850-sflash
-> +
-> +  reg:
-> +    items:
-> +      - description: MMIO registers region of the controller
-> +      - description:
-> +          Physical memory region within which the controller will map the
-> +          flash contents of chip 0 for reading and writing. If the flash
-> +          size is smaller than this region, it will be mapped at its end.
-> +          Note that if this chip is used as the boot device (as is most
-> +          often the case), the boot ROM maps it at the very end of the
-> +          CPU address space (i.e. ending at 0xffffffff)
 
-Period needed on the end.
+Start with allnoconfig and add configuration flags until CONFIG_MITIGATION_ITS
+is enabled while CONFIG_MODULES is still disabled. Adding
 
-> +      - description:
-> +          Physical memory region within which the controller will map the
-> +          flash contents of chip 1 for reading and writing. If the flash
-> +          size is smaller than this region, it will be mapped at its end
+CONFIG_64BIT=y
+CONFIG_CPU_MITIGATIONS=y
+CONFIG_RETHUNK=y
 
-Period needed on the end.
+followed by "make olddefconfig" should do.
 
-> +
-> +  reg-names:
-> +    items:
-> +      - const: io
-> +      - const: chip0-mmap
-> +      - const: chip1-mmap
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
+Guenter
 
-This follows the SPI binding, right? Drop these 2 and add a $ref to 
-spi-controller.yaml.
-
-> +
-> +patternProperties:
-> +  "^flash@[0-1]$":
-> +    type: object
-> +    additionalProperties: true
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    sflash: spi-nor-controller@d8002000 {
-
-spi@...
-
-> +        compatible = "wm,wm8850-sflash";
-> +        reg = <0xd8002000 0x400>,
-> +              <0xff800000 0x800000>,
-> +              <0xef800000 0x800000>;
-> +        reg-names = "io", "chip0-mmap", "chip1-mmap";
-> +        clocks = <&clksf>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        flash@0 {
-> +            compatible = "jedec,spi-nor";
-> +            reg = <0>;
-> +
-> +            partitions {
-> +                compatible = "fixed-partitions";
-> +                #address-cells = <1>;
-> +                #size-cells = <1>;
-> +
-> +                partition@0 {
-> +                    label = "U-boot";
-
-The somewhat standard value here is 'u-boot'.
-
-> +                    reg = <0 0x50000>;
-> +                    read-only;
-> +                };
-> +
-> +                partition@1 {
-> +                    label = "U-boot environment 1";
-
-u-boot-env
-
-> +                    reg = <0x50000 0x10000>;
-> +                };
-> +
-> +                partition@2 {
-> +                    label = "U-boot environment 2";
-
-alt-u-boot-env or u-boot-env-backup?
-
-> +                    reg = <0x60000 0x10000>;
-> +                };
-> +
-> +                partition@3 {
-> +                    label = "W-load";
-> +                    reg = <0x70000 0x10000>;
-> +                    read-only;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6dbdf02d6b0c9357ad1da520a0f6c16b7f38f879..f09c457bbfc5ef71a3f8379c111bac52b767cbbc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3475,6 +3475,7 @@ F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
->  F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
->  F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
->  F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-> +F:	Documentation/devicetree/bindings/spi/via,vt8500-sflash.yaml
->  F:	arch/arm/boot/dts/vt8500/
->  F:	arch/arm/mach-vt8500/
->  F:	drivers/clocksource/timer-vt8500.c
-> 
-> -- 
-> 2.49.0
-> 
