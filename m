@@ -1,412 +1,399 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2099.outbound.protection.outlook.com [40.107.241.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE91013D539
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.99
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747201337; cv=fail; b=oF8MpVDPfewTMWW7Lffxqm9TsrBCHc7RvuuZCVuo+7DFV3AdloAwAKc53Ss6nN6Fhte+xLoy3TmSlKhuesFOfi1Li7Q554S+QoeiIh4hXSEVLJk2mmQawUep51+m8N1XKj3gcvlT/krXRnu8JMyrnox+SZaYLRz4dgeRN6zp74M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747201337; c=relaxed/simple;
-	bh=O65VM6f0IQs1i/o2lRWX8RoNfF/0MFl55bjhwDdBb3M=;
-	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ppfAqON2hjO5EX+ijRmHZV4Sf9ob5RZc9vAaStTBp/ElCQhTGe496W5tZMShrCYC9x4xp05YKfUNnGipdDTfrNS6FTKMuMPzoJSwHtUs+lP9tkAzjAR91Lc/5K8Eo3sdsDYVyO8OAuJGXaMUENE77MZYMtYFpZPFzJOebjm1Tes=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=lmQBa074; arc=fail smtp.client-ip=40.107.241.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C4E1F4262
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747201409; cv=none; b=Bpx/l/z1WNd2T9ACE+SkQs73H5u8/RlP4T6SnS8rgVduyZl7LNHOp1LK1dI3UI+7mKbOpZeJ7voNVjH9vyUbAxsAA03bQnEC3gPkBi16STK9BSLRunuzTN7zRkLzH1T2lUfhA6gkfad9bWnKjd/V7LJnU9INQnQx/WCin4oe9VU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747201409; c=relaxed/simple;
+	bh=ngkdWREDhxJP3Z8+vA88rzmJHoCKElBQPHF6jlZulMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DovWerlqY1tUutLTtUZIamqhjQ/v/ThoaJQrNDr1mhfMFT2wmZfORZVOkzq94rcgrBDjGoBGylc7TkT/RjZ+T5P/mnjc/QyYuFDuNzZgTcIR7RKgDqWaRheOtrFG7yeQX1eTjzlA9lXuhoIBT9QuWNsvpbNnycT8VP7BeVtJd3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SpGDP0hM; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="lmQBa074"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b57LHRpjkOKIEbTkXRPDrjH/Q/UhLfIwdVnWhuZVmQXiqlB+jHjJQRUSI+ZILtd2Z36OvroJSE5UTEX7I7opL29moFNNY1+7XYY+sMaW7xHFkEJ9BrBMz6m/iBQgcc8YvrvXfYwrXsxVOxIhuvRrry5W6W3DW4KpReOdAztQS7DSFxltdfbhrb2d5kgBTb06wWPLhCqjFBorL7gyqtcE1VYExdXfqt9ItVkIFfsq/wrN1QHPxFg6/qPX9EYBSAE/oj1bL2hhP9QrNMZaiRlvbOxUohfwuoGEDNHsFZPObS391wMYd1SxKC8PbZTrg+MTJNfnm4SoTUybz2r5Jg86uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O65VM6f0IQs1i/o2lRWX8RoNfF/0MFl55bjhwDdBb3M=;
- b=TGqmj6J2IN7UHpfjYYR3jfM642A+aZhN7uVztHWD+lSRTTR936VIq07XHqF+ErwSVrm7OVl70xtCtJfB7Si45l9+p7dfPke6yCcaMCxghRzzVRXV/WvyORdrAMCAjEy15R3gwi0IjLOGcweWvGF8T9GjgRZO1xdWDBLAFrsLlr41Y66d/j4mgiBoPXliuiKElVVMP+5Q5cZdD0RPnYEVbizOY6CNTAls7Wt6krQxadYW3aO6NFPrVQY8ppPbWg/PAJQXr+C4WVK5qhsFgDqjL0gDH3rrM7aoIfkQioJbB/tDCp5mufwXJVViYjocA91czm9m0PQqy1p+gwSBw1Q0Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 13.93.42.39) smtp.rcpttodomain=amd.com smtp.mailfrom=topic.nl; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=topic.nl;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O65VM6f0IQs1i/o2lRWX8RoNfF/0MFl55bjhwDdBb3M=;
- b=lmQBa074ynCjqcu5xN5JIjXwv08TY1F6TNMDXgQ5V4/0UQZIfJ2SL20IZTicOqpsbuV1Z7x/TfDc3Qc8D0yOchWUFhAU3TKJKJoOexR6W9oMYJIqNoGP6/NWeSqGyhmBULdLZkgwUDdRTcIknatFkrm850uABsS9yYFks3V50bsawxqWDRqZI2KrRP2afTmP6CM3Ai6WGS/iZl1qvgH9dfDsiP6+swbrjN1ZGoGg4a4F4Bxlxi4cFBPgeKdmqDocrYw0w1pXJ5S/Czic1Y1IjnO/xHJuz/Nxph0yobV4Q3Lc+PXsvnhTrWADNBTY2ZvJzDtROtC/RiIo7hJlGooPgA==
-Received: from DB7PR02CA0027.eurprd02.prod.outlook.com (2603:10a6:10:52::40)
- by AS8PR04MB9112.eurprd04.prod.outlook.com (2603:10a6:20b:44b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 05:42:09 +0000
-Received: from DB3PEPF0000885B.eurprd02.prod.outlook.com
- (2603:10a6:10:52:cafe::21) by DB7PR02CA0027.outlook.office365.com
- (2603:10a6:10:52::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Wed,
- 14 May 2025 05:42:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
- smtp.mailfrom=topic.nl; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
- 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
- client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
-Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
- DB3PEPF0000885B.mail.protection.outlook.com (10.167.242.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 05:42:08 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (104.47.18.109) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 14 May 2025 05:42:07 +0000
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=topic.nl;
-Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
- by VI1PR04MB7103.eurprd04.prod.outlook.com (2603:10a6:800:123::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 05:42:05 +0000
-Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
- ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
- ([fe80::e86d:f110:534e:480a%6]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 05:42:04 +0000
-Message-ID: <c399c68b-ee60-4d54-b901-a40e744f287c@topic.nl>
-Date: Wed, 14 May 2025 07:42:04 +0200
-User-Agent: Mozilla Thunderbird
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2] phy-zynqmp: Postpone getting clock rate until actually
- needed
-To: Michal Simek <michal.simek@amd.com>, linux-phy@lists.infradead.org,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- "Katakam, Harini" <harini.katakam@amd.com>
-CC: Kishon Vijay Abraham I <kishon@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Vinod Koul <vkoul@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.298e943d-5a80-491d-b36f-77b3b9a86df9@emailsignatures365.codetwo.com>
- <20250428063648.22034-1-mike.looijmans@topic.nl>
- <c71408b5-2ead-4408-83b3-dad30f153d2d@amd.com>
-Content-Language: nl, en-US
-Organization: TOPIC
-In-Reply-To: <c71408b5-2ead-4408-83b3-dad30f153d2d@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: AM0PR01CA0171.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:aa::40) To AS8PR04MB8644.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::12)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SpGDP0hM"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so47507415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 22:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747201405; x=1747806205; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WekKOZDHzata3CIxzPDhxW/QBdknDrhZbw8Dut8DkN8=;
+        b=SpGDP0hMCCN7x+CcjdnbDQWm4c22I+5OxLvnAGs1+YekNptlIJtOyz7F7xj+E5+1vu
+         LdyyQUYN9AlxP5AUzRYlHA63N46OyWO+GRi/+YLlRgLFll2L1W1JJ44hxijoCXIVQiUb
+         ZpJlzByS/9OeegoQbKJq5ef66LipTIoo0f6kZDhXOZQodqMTtS8HMUT6DmSM025kRNX0
+         um0G/hSpzdQc9K8w+VMGkaXspr6xIJ8vMbxyyKuXiQxb0nipNNgd2S8iUAuc9ilYJYjY
+         /G8bhnr+O7IhtaP+SyYU4aQZrbqqE5MmcS4QSLJpRW2anrpVgD4jSlqyjl1YxucRSfOG
+         E2VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747201405; x=1747806205;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WekKOZDHzata3CIxzPDhxW/QBdknDrhZbw8Dut8DkN8=;
+        b=VE0BCiM2RlAaXLyXiaRFoowWCbgC7QiB/8PR8jU25J4Yz7miNvQgpebcHg/9OmqMjX
+         fTlX+tHyGXWrxH/gXnrU8vjbsB5EIDbuOzXVSzPoyFiUKintBWAlYI70+LjCScA27H5L
+         zkLIgaMsPmwFaXx/IzZ59Vo0axiK6cLXQmAZL36ZSWEM6kSalhmrlhZwwn6dz8Tjt+Tb
+         a31qcRa0Y3cOzs7xHn/bgBzQ9QnFP3dMXKYEeI/7m3KMhjtIhScVPJkLpV5Wk4P53D7i
+         7yXppTYwYsEDuaonMlStYCjp+uGR43UuoAmWp9kFA7D7qBL3jsQoBXglUWLZ3ruGelpp
+         60Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXkdacRMk86nTOX7cvJS4/o7WMLwLkFaQEAMzOj7B3IF7gLHPMwiAPlKV1j3bMnEKs+KIeVrin9hRtH+ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxcdl4zN13QWeOlw8V+GbYTWnBgWe7Wa5HlxJip7zbYIV1GSzId
+	1kg9ARqJTR0MTm6EjmpiBH3pTbGosg5tvmxkk00YH7O2CP69J3x3HqyvL9X5N1s=
+X-Gm-Gg: ASbGnctQOHSI/n/jKNz4KeKghbHKh7uRwkFwSZytnnlVfrg+KHvoxzR7w4ux+wf2obl
+	jytdPGkQ+gyCMe94QMi2g6raM9GHLg5iIpv3cWmdMUL55sRGjww6F17g9XzkafZN/QvNCayxZzw
+	6BOLygCMcyBu4He4IwxtBslmGLleX72qpBa7anh/nXhve6+wtU08DsmM/onoXUkYfDugr/38XuH
+	KBq3CcThGa3uC/nkUdcACK1S4VY3LMlKRlP7Qg3F+0/OYMxRqZrBn5aNirde33V5+fYggYoVH9r
+	cZA0S185bnl1SxoNnZ4tHMxNuj2pPyIIqdJ2gCq1D19Vzx8CEpMtHkLBEDnYhWyLGN9jVi3KByk
+	dTTenf18j1Aya
+X-Google-Smtp-Source: AGHT+IG+3TNrM0TUrHdUyJXWOShIKsXvcyKhriY5sc/GEJhp8byyCrjzheMxPynRGxPI+f0IKwcCeg==
+X-Received: by 2002:a05:600d:1b:b0:442:f4d4:53a with SMTP id 5b1f17b1804b1-442f4d43e20mr4691955e9.2.1747201404948;
+        Tue, 13 May 2025 22:43:24 -0700 (PDT)
+Received: from [10.61.1.70] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3950bccsm14069945e9.19.2025.05.13.22.43.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 May 2025 22:43:24 -0700 (PDT)
+Message-ID: <2e9d06be-719c-44e4-af14-7839ee5957b7@linaro.org>
+Date: Wed, 14 May 2025 06:43:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AS8PR04MB8644:EE_|VI1PR04MB7103:EE_|DB3PEPF0000885B:EE_|AS8PR04MB9112:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfe200e6-0ed7-4eec-b8b5-08dd92aa1136
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?eVY4WW5pM2piNTRyWTFqaHgvK05CYmZ2bmNJelRna0MwaE04dnFPU2V4cDlI?=
- =?utf-8?B?bmVrdGJadUlvUnBXckl2MmtySTJmbWQ2cXU1MDYwckRKaVk5U0dhdTBzelgz?=
- =?utf-8?B?WXN5SncvV0xEWXRKSy9KYWROZCtqbWl3UTFmaHhuRzVNVUZIQms5Y2J1V0p0?=
- =?utf-8?B?VnVzVis3NFpSdnJnQ2UzT3NNaXNHbU1aSURRenZOUmtJeXJwMGE0c0doQ0xF?=
- =?utf-8?B?MlJTZUl2cE90ZVpUdk1XdTR1WnM0TXQyK2h0UXBiU0xmTmp6MDgrbXBpMXBQ?=
- =?utf-8?B?VmNCK0pNU21odGJJVWZOUEE3WEdhK0dDNlpTVHhGNktQOVBZZlZtRDFyRko1?=
- =?utf-8?B?NlZvcTl6bWlQd0ZxSnBwNklRczZkRGtwbTFMbXF1eUpqNmJKc1RDYTVXNGc0?=
- =?utf-8?B?Ump4M0RGc1JjVGRrQ09ia1BNdEZsYVd0NjdYajkrN0w4dGRyT3ZkUEhuaXR4?=
- =?utf-8?B?cWhFVEVZaWhFak53eEpjZlBHUytpQkpwVWFPakVTSE5uYTBnMVE2UjJsNnpS?=
- =?utf-8?B?RXdiUjdDTS9TN1cwdHM4SEhuOTVxRE5mNHFFRlhXTlp6TkViM2pJY0FLZVNT?=
- =?utf-8?B?NGNBV1lVYitzeHJzYzdQTTFmaGVxd29XQ2FBQi8rcE5xemlYQm9Ibm1nR25r?=
- =?utf-8?B?bUQrYlBGbC9IUkdnc1BmNGdkZzV6ang3eXUreTNNckF5L1dQdFZkcXRyQ0tQ?=
- =?utf-8?B?MmxDRnhWVElNaVlobnBoc0I3ZDN5NXMrbS8wY01VOTZhWDdPWXRXQm9JVDBZ?=
- =?utf-8?B?M3pVK2gySzVjM25sTGRac0poZm12UW5YWWNMc05WZ3dhSFpaNHFNSDYwQVph?=
- =?utf-8?B?M0R3RUVsMDE0cVJETDBYeVNKSjZpZDlZWit5aHg2cU90YjZQd0NKSUs0Sm56?=
- =?utf-8?B?Nmh5M0JtcnJYV3hDdXdRM1dEc3pRY0hZeHRLdlNIVWRsM1E4VDlhWDZvbGcw?=
- =?utf-8?B?VFZFMmZLMytBUWNRNjBZZXlyY05OVXNNRkdBRnU4N0JRcE9TVFRjT051Ylk5?=
- =?utf-8?B?M08yMHBVNDhnVnpnZVlhZForcW5HVHA3WUwrS3JOK1lCMWE1N0dLMHphakt5?=
- =?utf-8?B?eEFUNXZqNGVQU0lrenhzL25LV2RLVklwL2hCVnZSbXJoQm1MOXlTYlNQdUIy?=
- =?utf-8?B?Ymk2WndlT0dpalJkSk1aNERtYVYwd2EyNzFZeHlyZTRWZjBwQURNNUNJd1p5?=
- =?utf-8?B?azRlSUd0TEJHeDdRT2wxYmpXdDVRdGhPLytmaXJCTGRiQXByYk43aGpFN2Z3?=
- =?utf-8?B?emErYUhGMmlEMUNpT3pneUw4ZnZFczZTYjI0d2JxWjRQWHhZelMrWDJnaHN5?=
- =?utf-8?B?b1BrUmhDeVAvU0FNcE5Jb1B5Vldvcm9BT004czhqVnJIN0UvWVowRmVlQkJJ?=
- =?utf-8?B?MFRjdlN2VFVyK2I4SFpIcDhZMlQ5VXg4aXgxdjd2bjdGcFZnN2pITmFwVC9z?=
- =?utf-8?B?TEZsRk5QK1F0R216MSsrV1IzQzlYNGpDWkpwb25zdit3a0dUdTBFeFhHcEUx?=
- =?utf-8?B?Y2Y0QStsdWw2M1VjbkNvRlVSZW1aR1h4Z3E1NGsvMi9kMGxCQzZwWW1uVUZC?=
- =?utf-8?B?QllkclFpRGRoNHYxSFI2TmhXWHl4TnRBcHN6ME5YRGNKTUhYWk1IZDE0aGF3?=
- =?utf-8?B?MUVIK0RmMk53bWdqWmludlJPTXlUZ3VlS1JCNjhKSGNSQUNnVU1WRXhlb3RE?=
- =?utf-8?B?Qzh0SWVxRG45OWhUdEd6dHFDeGxHaXgzdkkzQzhqcmhKbmcvcXUvOVFUU0U4?=
- =?utf-8?B?YjNlanhPSThaVDRSY1crYUJBZmp1aXVQbVpLNWthRnByeTcwYk5sVStVa1FK?=
- =?utf-8?B?QXdkMnFZa3IyK01mTENaZGZ6TmllUnB5SS9ERFAxM2VTZG9Obms4cGFIdVhW?=
- =?utf-8?B?bkFKZDl2anZxdU1xQ2p2SDN0elFLZ1dQaExrVjhPaXMxcUVLSU1LaEk0RjV4?=
- =?utf-8?Q?FzYIRa1r/hU=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7103
-X-CodeTwo-MessageID: be8c07b2-7d09-4270-b1c9-4981b8bf0a58.20250514054207@westeu12-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB3PEPF0000885B.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	74ef8924-7ce3-4504-ca62-08dd92aa0eba
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|35042699022|1800799024|14060799003|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZHpVWUc4dGJmZEN2K3RKbTlYWlhLSTNHZHRZcDZvL0taTlJnTHd6MUlYZ1cy?=
- =?utf-8?B?ZXg1bVN3VDhGOXlsNVdiUmJFMnM5YWZnRjVHRGowU3p0ckpKdkhDRnlBMDFl?=
- =?utf-8?B?MWVZTlpyd0JlbXoySFFKQXdlVzBzOFVzVVdjRUZ4d2JGc3BjdTNwRGc4NmdM?=
- =?utf-8?B?cUx4K0JxNUZCQUh6Q1F6WEZkQmdheG9yak1uQkdFcTErbzhsTk1OUDVXTVg0?=
- =?utf-8?B?R3JyKytybWlmMlBXM2ZoQ3YwVFBUc1VvSFEzNGpZZzhBZTR4eWVmS1JPSjFx?=
- =?utf-8?B?VThRaE9XTzJVakhPMXJWQTBSY1RPQVc0dTZHZEFjajNjam5Ud3ZJeTkxUHo5?=
- =?utf-8?B?elo4cG0zb2F0U3ZCS3YrR2hUTDFvdzV3aXRpT0kzZWNSMlQ0UjViRVRHZUNW?=
- =?utf-8?B?a1J3TTBMTnp6L0FCaTJzdWJSZm9semlONDZYalZkdU8wZ3VEM0krL1MzUkxl?=
- =?utf-8?B?UitCdmRCVzdUZ05vUGZDYVc1UzlzMy9JNGRocGh4Yk51TC9ZeHpBV3JET1FI?=
- =?utf-8?B?WU4zRVFJY0tSOUFTbUY1TjNFbXcwcnhyV2hrOERxU1Uvd2YrZ29tdnFqR2Qx?=
- =?utf-8?B?ODVsVFhJSURzejlka01YVUNyUWE0cVhIVm1kK2RwdFFkblVOREpxWWtYV01u?=
- =?utf-8?B?TGFQTDJFb2tqRWxvb1dla05qYU1ZWDFGZm9HL2hVZGtmUjI3QW1Ja2NZMWxC?=
- =?utf-8?B?bzAyNUZsQnBLTys4OWllUzB3Z1Q4QVZYSitkWEpIWnBTR1Y3alQ4czdSQlo2?=
- =?utf-8?B?cGZkQjJaVFFmcDNOUXQ0a3dxZXk3a1poakE4bThjT0xhZG1rWVNsb0FXUkdw?=
- =?utf-8?B?V0dWZ2R0aEdSeVhFcGFqbE5MSWgvcEVWM2crbzhSTERIWitDZ3JhWGViMlRw?=
- =?utf-8?B?TFpiclBjcjN4TXQyU2FJWXc0RE5xYU5Bc1FXbjBRWXRMOTVGZFhFTEFxTDN5?=
- =?utf-8?B?YmZOcW1CWWhMV2JnNkR6Skh4Z1ZSVjZFTTA1ZTFFZXJUSEFrT2pWQU16a2cx?=
- =?utf-8?B?NUIvVmhRUkNpOEx4aTZJMWVxSWJ6R0tXQVhQcWJWeUQwMVZJUFVUYVR0UzdV?=
- =?utf-8?B?K05TSE1KWHJQY0xEN0VtQ0I4WlBZTVdMeVIwSGVuNWJXbVBHNUhDaGN3Zk9y?=
- =?utf-8?B?YzdpTmdtdnRESWNwNnlQYlMzbmt0Mlk1NnlyOUxPTVR6OURTQm02UUVZeFZT?=
- =?utf-8?B?TWdHUzJZb01QOWtBdUtKUHFIRjE0NnM0MUhISHp4TkpEanJjTEkzRWVlbDYy?=
- =?utf-8?B?K3FVTXAzN1ZDYUoxSHVkVnhJdi9xcjJPcUNkeSsyUFhmTW1ZaXB6cWhHd3JJ?=
- =?utf-8?B?S0RncC9hOFhpYUI4VGZQQlpORVU0cFhCbVlLcVFKc2xqUDk2djBFL1djYzJv?=
- =?utf-8?B?ZW5ZdlJnRFhnbDhIY3V5cDl3cFdBUHBCeWlvMG1wYTNwMCtxVCtTRTQ3amhJ?=
- =?utf-8?B?dXpha1FPZEpjajE1TGZjd0VDUE9JWkR3eHNxSkViblJmVU5GYWVLdktJK2lG?=
- =?utf-8?B?U2NmREZGb2RCZWk2MVJDdTNsUzc2Uyt1eE1wckd2TzlqTFh2dFp3bWdFbXNZ?=
- =?utf-8?B?VkhTNDBFQ2xFZkxEOTR6eWpPcXRFdmVFT3JvdkpBbitXVnd4Y1dvOHRTYWdG?=
- =?utf-8?B?TzhMTWh3RlB3cWZUam51ZVl0blhaZGM4VitDQW1TTkZMbmI2TWV4RnpLN2V6?=
- =?utf-8?B?SDhyek1ycmtKZGlTTTRjdStOc0p6NnhSRjV2aHU3UG5kZ2hQQjdxakg4MnJZ?=
- =?utf-8?B?bzhObWpxT1dEUXdxRDFuWE8yR1NZZzc1UjVYR2MwdkJhNWdIODUyVkIzRHZH?=
- =?utf-8?B?VkY2dzFDc1JxQk51VmhJNFoxYktNMGRKSUp2YmxOZXpXQ2Qxajh0R1laSy9M?=
- =?utf-8?B?N0RLREVoRHBpSDJCYVFBOFlJNkZHNTh0cU1hN1VmZUJXbGtFeTkvUWlsU0VJ?=
- =?utf-8?B?U1Z5eU1sYVllNmhsZVhMQjVRUjIxTU92MjN4UGswa25zK05zeURTdE5xYUgr?=
- =?utf-8?B?bm4vQWZSOVM0R1N2NEtaeEt2RjlsK04wTzhTdktEbUpxYThBZXNxbWRCNTBa?=
- =?utf-8?Q?gtyDmq?=
-X-Forefront-Antispam-Report:
-	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(36860700013)(35042699022)(1800799024)(14060799003)(82310400026)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 05:42:08.5765
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfe200e6-0ed7-4eec-b8b5-08dd92aa1136
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB3PEPF0000885B.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9112
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: qcs9075-rb8: Enable IMX577 camera
+ sensor
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Vikram Sharma <quic_vikramsa@quicinc.com>,
+ Loic Poulain <loic.poulain@oss.qualcomm.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-i2c@vger.kernel.org
+References: <20250514-rb8_camera-v1-0-bf4a39e304e9@quicinc.com>
+ <20250514-rb8_camera-v1-4-bf4a39e304e9@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250514-rb8_camera-v1-4-bf4a39e304e9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 29-04-2025 10:36, Michal Simek wrote:
-> + Radhey, Harini
->
-> On 4/28/25 08:35, Mike Looijmans wrote:
->> At probe time the driver would display the following error and abort:
->> =C2=A0=C2=A0 xilinx-psgtr fd400000.phy: Invalid rate 0 for reference clo=
-ck 0
->>
->> At probe time, the associated GTR driver (e.g. SATA or PCIe) hasn't
->> initialized the clock yet, so clk_get_rate() likely returns 0 if the clo=
-ck
->> is programmable. So this driver only works if the clock is fixed.
->>
->> The PHY driver doesn't need to know the clock frequency at probe yet, so
->> wait until the associated driver initializes the lane before requesting =
-the
->> clock rate setting.
->>
->> In addition to allowing the driver to be used with programmable clocks,
->> this also reduces the driver's runtime memory footprint by removing an
->> array of pointers from struct xpsgtr_phy.
->>
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->>
->> Changes in v2:
->> Explain the issue and the fix better in the commit text
->> Propagate errors (as reported by Laurent Pinchart)
->>
->> =C2=A0 drivers/phy/xilinx/phy-zynqmp.c | 70 +++++++++++++++++-----------=
------
->> =C2=A0 1 file changed, 37 insertions(+), 33 deletions(-)
->>
->> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zy=
-nqmp.c
->> index 05a4a59f7c40..fe6b4925d166 100644
->> --- a/drivers/phy/xilinx/phy-zynqmp.c
->> +++ b/drivers/phy/xilinx/phy-zynqmp.c
->> @@ -222,7 +222,6 @@ struct xpsgtr_phy {
->> =C2=A0=C2=A0 * @siou: siou base address
->> =C2=A0=C2=A0 * @gtr_mutex: mutex for locking
->> =C2=A0=C2=A0 * @phys: PHY lanes
->> - * @refclk_sscs: spread spectrum settings for the reference clocks
->> =C2=A0=C2=A0 * @clk: reference clocks
->> =C2=A0=C2=A0 * @tx_term_fix: fix for GT issue
->> =C2=A0=C2=A0 * @saved_icm_cfg0: stored value of ICM CFG0 register
->> @@ -235,7 +234,6 @@ struct xpsgtr_dev {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void __iomem *siou;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex gtr_mutex; /* mutex for lock=
-ing */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct xpsgtr_phy phys[NUM_LANES];
->> -=C2=A0=C2=A0=C2=A0 const struct xpsgtr_ssc *refclk_sscs[NUM_LANES];
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct clk *clk[NUM_LANES];
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool tx_term_fix;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int saved_icm_cfg0;
->> @@ -398,13 +396,40 @@ static int xpsgtr_wait_pll_lock(struct phy *phy)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->> =C2=A0 }
->> =C2=A0 +/* Get the spread spectrum (SSC) settings for the reference cloc=
-k rate */
->> +static const struct xpsgtr_ssc *xpsgtr_find_sscs(struct xpsgtr_phy *gtr=
-_phy)
->> +{
->> +=C2=A0=C2=A0=C2=A0 unsigned long rate;
->> +=C2=A0=C2=A0=C2=A0 struct clk *clk;
->> +=C2=A0=C2=A0=C2=A0 unsigned int i;
->> +
->> +=C2=A0=C2=A0=C2=A0 clk =3D gtr_phy->dev->clk[gtr_phy->refclk];
->> +=C2=A0=C2=A0=C2=A0 rate =3D clk_get_rate(clk);
->> +
->> +=C2=A0=C2=A0=C2=A0 for (i =3D 0 ; i < ARRAY_SIZE(ssc_lookup); i++) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Allow an error of 100 ppm=
- */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long error =3D ssc_=
-lookup[i].refclk_rate / 10000;
->> +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (abs(rate - ssc_lookup[i]=
-.refclk_rate) < error)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
-rn &ssc_lookup[i];
->> +=C2=A0=C2=A0=C2=A0 }
->> +
->> +=C2=A0=C2=A0=C2=A0 dev_err(gtr_phy->dev->dev, "Invalid rate %lu for ref=
-erence clock %u\n",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rate, gtr_phy->refclk);
->> +
->> +=C2=A0=C2=A0=C2=A0 return NULL;
->> +}
->> +
->> =C2=A0 /* Configure PLL and spread-sprectrum clock. */
->> -static void xpsgtr_configure_pll(struct xpsgtr_phy *gtr_phy)
->> +static int xpsgtr_configure_pll(struct xpsgtr_phy *gtr_phy)
->> =C2=A0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct xpsgtr_ssc *ssc;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 step_size;
->> =C2=A0 -=C2=A0=C2=A0=C2=A0 ssc =3D gtr_phy->dev->refclk_sscs[gtr_phy->re=
-fclk];
->> +=C2=A0=C2=A0=C2=A0 ssc =3D xpsgtr_find_sscs(gtr_phy);
->> +=C2=A0=C2=A0=C2=A0 if (!ssc)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 step_size =3D ssc->step_size;
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xpsgtr_clr_set(gtr_phy->dev, PLL_R=
-EF_SEL(gtr_phy->lane),
->> @@ -446,6 +471,8 @@ static void xpsgtr_configure_pll(struct xpsgtr_phy=20
->> *gtr_phy)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xpsgtr_clr_set_phy(gtr_phy, L0_PLL_SS_STE=
-P_SIZE_3_MSB,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 STEP_SIZE_3_MASK, (step_size & STEP_SIZE_3_MASK) |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 FORCE_STEP_SIZE | FORCE_STEPS);
->> +
->> +=C2=A0=C2=A0=C2=A0 return 0;
->> =C2=A0 }
->> =C2=A0 =C2=A0 /* Configure the lane protocol. */
->> @@ -658,7 +685,10 @@ static int xpsgtr_phy_init(struct phy *phy)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Configure the PLL, the lane proto=
-col, and perform protocol-specific
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * initialization.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> -=C2=A0=C2=A0=C2=A0 xpsgtr_configure_pll(gtr_phy);
->> +=C2=A0=C2=A0=C2=A0 ret =3D xpsgtr_configure_pll(gtr_phy);
->> +=C2=A0=C2=A0=C2=A0 if (ret)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out;
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xpsgtr_lane_set_protocol(gtr_phy);
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (gtr_phy->protocol) {
->> @@ -823,8 +853,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 refclk =3D args->args[3];
->> -=C2=A0=C2=A0=C2=A0 if (refclk >=3D ARRAY_SIZE(gtr_dev->refclk_sscs) ||
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !gtr_dev->refclk_sscs[refclk=
-]) {
->> +=C2=A0=C2=A0=C2=A0 if (refclk >=3D ARRAY_SIZE(gtr_dev->clk)) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "Inv=
-alid reference clock number %u\n", refclk);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-E=
-INVAL);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> @@ -928,9 +957,7 @@ static int xpsgtr_get_ref_clocks(struct xpsgtr_dev=20
->> *gtr_dev)
->> =C2=A0 {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int refclk;
->> =C2=A0 -=C2=A0=C2=A0=C2=A0 for (refclk =3D 0; refclk < ARRAY_SIZE(gtr_de=
-v->refclk_sscs); ++refclk) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long rate;
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int i;
->> +=C2=A0=C2=A0=C2=A0 for (refclk =3D 0; refclk < ARRAY_SIZE(gtr_dev->clk)=
-; ++refclk) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct clk *clk;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char name[8];
->> =C2=A0 @@ -946,29 +973,6 @@ static int xpsgtr_get_ref_clocks(struct xpsg=
-tr_dev=20
->> *gtr_dev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 continue;
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gtr_dev->c=
-lk[refclk] =3D clk;
->> -
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Get the spread spect=
-rum (SSC) settings for the reference
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * clock rate.
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rate =3D clk_get_rate(clk);
->> -
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0 ; i < ARRAY_SIZ=
-E(ssc_lookup); i++) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* A=
-llow an error of 100 ppm */
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsi=
-gned long error =3D ssc_lookup[i].refclk_rate / 10000;
->> -
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
-abs(rate - ssc_lookup[i].refclk_rate) < error) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 gtr_dev->refclk_sscs[refclk] =3D &ssc_lookup[i];
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 break;
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> -
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (i =3D=3D ARRAY_SIZE(ssc_=
-lookup)) {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_=
-err(gtr_dev->dev,
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 "Invalid rate %lu for reference clock %u\n",
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 rate, refclk);
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
-rn -EINVAL;
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->
-> Sorry for delay.
-> Radhey/Harini: Please test this but I have read that code and changes loo=
-ks=20
-> good to me.
->
-> Acked-by: Michal Simek <michal.simek@amd.com>
->
-> Thanks,
-> Michal
->
-Any further comments? Anything I need to do?
+On 14/05/2025 03:40, Wenmeng Liu wrote:
+> The qcs9075-iq-9075-evk board has 4 camera CSI interfaces.
+> Enable the third interface with an imx577 sensor for qcs9075-iq-9075-evk.
+> 
+> An example media-ctl pipeline for the imx577 is:
+> 
+> media-ctl --reset
+> media-ctl -V '"imx577 '0-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
+> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
+> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
+> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+> 
+> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+> 
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts | 110 +++++++++++++++++++
+>   arch/arm64/boot/dts/qcom/sa8775p.dtsi            | 132 +++++++++++++++++++++++
+>   2 files changed, 242 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> index eadc59739a4baafedfa456bdb71b72214810b1c1..83c286b3b1428bc90445f41740997f2421824a54 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> @@ -20,6 +20,38 @@ aliases {
+>   	chosen {
+>   		stdout-path = "serial0:115200n8";
+>   	};
+> +
+> +	vreg_cam0_1p8: vreg_cam0_1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_cam0_1p8";
+> +		startup-delay-us = <10000>;
+> +		enable-active-high;
+> +		gpio = <&pmm8654au_0_gpios 7 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	vreg_cam1_1p8: vreg_cam1_1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_cam1_1p8";
+> +		startup-delay-us = <10000>;
+> +		enable-active-high;
+> +		gpio = <&pmm8654au_0_gpios 8 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	vreg_cam2_1p8: vreg_cam2_1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_cam2_1p8";
+> +		startup-delay-us = <10000>;
+> +		enable-active-high;
+> +		gpio = <&pmm8654au_0_gpios 9 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	vreg_cam3_1p8: vreg_cam3_1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_cam3_1p8";
+> +		startup-delay-us = <10000>;
+> +		enable-active-high;
+> +		gpio = <&pmm8654au_0_gpios 10 GPIO_ACTIVE_HIGH>;
+> +	};
+>   };
 
-M.
+I would submit the regulators as a separate patch - especially because 
+you only use 1/4 of the regulators you are adding here.
 
+That in itself deserves a commit log explanation.
 
+>   &apps_rsc {
+> @@ -241,6 +273,84 @@ vreg_l8e: ldo8 {
+>   	};
+>   };
+>   
+> +&camcc {
+> +	status = "okay";
+> +};
+> +
+> +&camss {
+> +	vdda-pll-supply = <&vreg_l1c>;
+> +	vdda-phy-supply = <&vreg_l4a>;
+> +
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@3 {
+> +			reg = <3>;
+> +			csiphy3_ep: endpoint {
+> +				clock-lanes = <7>;
+> +				data-lanes = <0 1 2 3>;
+> +				remote-endpoint = <&imx577_ep3>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&cci0 {
+> +	status = "disabled";
+> +	pinctrl-0 = <&cci0_0_default>;
+> +	pinctrl-1 = <&cci0_0_sleep>;
+> +};
+> +
+> +&cci1 {
+> +	status = "disabled";
+> +	pinctrl-0 = <&cci1_0_default>;
+> +	pinctrl-1 = <&cci1_0_sleep>;
+> +};
+> +
+> +&cci2 {
+> +	status = "disabled";
+> +	pinctrl-0 = <&cci2_0_default>;
+> +	pinctrl-1 = <&cci2_0_sleep>;
+> +};
+> +
+> +&cci3 {
+> +	status = "okay";
+> +	pinctrl-0 = <&cci3_0_default>;
+> +	pinctrl-1 = <&cci3_0_sleep>;
+> +};
 
+You should only have to enable the bus you are using..
+
+> +
+> +&cci3_i2c0 {
+> +	camera@1a {
+> +		compatible = "sony,imx577";
+> +		reg = <0x1a>;
+> +
+> +		reset-gpios = <&tlmm 135 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default", "suspend";
+> +		pinctrl-0 = <&cam3_default>;
+> +		pinctrl-1 = <&cam3_suspend>;
+> +
+> +		clocks = <&camcc CAM_CC_MCLK3_CLK>;
+> +		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
+> +		assigned-clock-rates = <24000000>;
+> +
+> +		dovdd-supply = <&vreg_s4a>;
+> +		avdd-supply = <&vreg_cam3_1p8>;
+> +		/* dvdd-supply = <&vdc_5v>; */
+
+Either include vdc_5v or drop the comment.
+
+> +
+> +		port {
+> +			imx577_ep3: endpoint {
+> +				clock-lanes = <7>;
+> +				link-frequencies = /bits/ 64 <600000000>;
+> +				data-lanes = <0 1 2 3>;
+> +				remote-endpoint = <&csiphy3_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>   &qupv3_id_1 {
+>   	status = "okay";
+>   };
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> index a867694b15b307344b72041e972bae6e7543a98f..d50f0d84fdb5130d8386b107702800382bcaac47 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> @@ -4756,6 +4756,138 @@ tlmm: pinctrl@f000000 {
+>   			gpio-ranges = <&tlmm 0 0 149>;
+>   			wakeup-parent = <&pdc>;
+>   
+> +			cam0_default: cam0-default {
+> +				mclk {
+> +					pins = "gpio72";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio132";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			cam0_suspend: cam0-suspend {
+> +				mclk {
+> +					pins = "gpio72";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio132";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-pull-down;
+> +					output-low;
+> +				};
+> +			};
+> +
+> +			cam1_default: cam1-default {
+> +				mclk {
+> +					pins = "gpio73";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio133";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			cam1_suspend: cam1-suspend {
+> +				mclk {
+> +					pins = "gpio73";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio133";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-pull-down;
+> +					output-low;
+> +				};
+> +			};
+> +
+> +			cam2_default: cam2-default {
+> +				mclk {
+> +					pins = "gpio74";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio134";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			cam2_suspend: cam2-suspend {
+> +				mclk {
+> +					pins = "gpio74";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio134";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-pull-down;
+> +					output-low;
+> +				};
+> +			};
+> +
+> +			cam3_default: cam3-default {
+> +				mclk {
+> +					pins = "gpio75";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio135";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			cam3_suspend: cam3-suspend {
+> +				mclk {
+> +					pins = "gpio75";
+> +					function = "cam_mclk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				rst {
+> +					pins = "gpio135";
+> +					function = "gpio";
+> +					drive-strength = <2>;
+> +					bias-pull-down;
+> +					output-low;
+> +				};
+> +			};
+> +
+>   			cci0_0_default: cci0-0-default-state {
+>   					pins = "gpio60", "gpio61";
+>   					function = "cci_i2c";
+> 
+
+---
+bod
 
