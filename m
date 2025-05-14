@@ -1,111 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C4421B9E4;
-	Wed, 14 May 2025 08:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2924C6D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211398; cv=none; b=eIKEkJ18VfR4LZeN/4ccUS4h/GDMI8NqBB4MLgGWgMmrO9aVw9iVg4k2ebSg4ZdpS538/537/iatlt3Q46JzwMxKDjauAkMFKOXioQUuy81Ep/z7YiS7a17MN+LKXfa7HDStSFSuRJZqhJ/2rTeIIE6yvVPtd+ND5dgxzBHiRK0=
+	t=1747211447; cv=none; b=S1kkuLJdFHVXIKBw/hL98zal/l/uYKgug87Gb4zLhx/QBC7Grum7cL9QM/gOImew4fUzo3h4Yj6ag1k0ZSsJUPUPoyfGnG8122bc6wzSOVmfKjVkKDObm+JIySjvBRk618VJoV62ciGbXEbOHJAG+A044uYQByadQTKIiT2aRZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211398; c=relaxed/simple;
-	bh=UDo0iqhDIRPoWj9+ujO/asZadhdSeDpkcJfUIyMlvW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lc1yZIPscA3xFDg3yhd/Z0iL0+3kAxtwI5XAZVlMVUCshCROFz+yYBf4CCSxFJE/rW2zEPT03M3MNThAb5nTAE1QQJFgs/mxKE1OlREvHCgRVqdKlm6c3DBdBOBZX00SKgtLCXvvb8TRwienDBNCoF6H/WFgGdnjRun79oeBPDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rReAGh3r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747211447; c=relaxed/simple;
+	bh=tSU4yVBDCFssREzNh/Qic5N2LgH6hPowAt66gJr+47I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uog8aNmB/0nWtIw0LBD0XcZTuB7LaTIVam86SHsp/0KJMu7LI7tRTDgu0UlhMGveY+Lb0NHvrWjjutep94lpKJpOft9Vl4LmVjVTYMjWHMr1A2XkI8SSZPN0ME9HI13T3niGa7si4+NHXnFGfDpy19tMlEqieEJpPIHJFNEvb44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HQ8aBzkJ; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rReAGh3r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E751EC4CEE9;
-	Wed, 14 May 2025 08:29:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747211397;
-	bh=UDo0iqhDIRPoWj9+ujO/asZadhdSeDpkcJfUIyMlvW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rReAGh3rraICJW7PHr5bGqurPZIijRdHUf6O2t4PQ2GFGukHHvGbUxPpZGIx30gwN
-	 6pozWu4Gtm0aP/jOBlKnHsiGtBEZQj34p594VAW2gwjt9L9ReN1BJ3BWWDhVbghr4/
-	 qxKhUbFoT2lpjcyqeHrdlZrIMmI2BgLQ9co3ttv/5lZIdKfBzZwrOUZmqzS5asYPUr
-	 nCmZocE98PxncZGWposgmZXJdQRfbMFv+hqa4x7lRLYiTfGDHsZo52vhy61t6l3fyC
-	 ydpxbdBF7RDcIf9UdjXg84cg+r/wPnnpLpelKdjq2+4qrZdyTKvAVPcKQ8XCL7UVeL
-	 pj5ytNgOalXrA==
-Date: Wed, 14 May 2025 10:29:53 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Simon Trimmer <simont@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com, tiwai@suse.de
-Subject: Re: [PATCH 2/2] ALSA: hda: cs35l56: Log tuning unique identifiers
- during firmware load
-Message-ID: <aCRUgeFcG4iubmSV@finisterre.sirena.org.uk>
-References: <cover.1747142267.git.simont@opensource.cirrus.com>
- <2fcc0e6fc5b8669acb026bebe44a4995ac83b967.1747142267.git.simont@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HQ8aBzkJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=J4EJOcH+vlC4UCADKWOXQAd1u2Z9w7HxAlnVkfrIfXo=; b=HQ8aBzkJzh+L0MyBPN/SSET9z9
+	IboaoWX+7S8scFijWy5q7ZVeVhYKv7r9JrWalVwZEUrzA/OVOYBLxMGoHvxvbX5uEhPO1LEXN5+v/
+	Jde6FY5H2uDz8RDNIXxn6jeRy1kd6ojI+9BojZFS3KNX6g9gb5OSwhOLoearuySbyB3X50aOcwZWs
+	vZiIZCJ3YSHgodd8thHjzDGoy4jaV1XaZ0GDGvHQke6KeDNX7t5fEmQxv25DsNze/0GMeUkAyKFUI
+	ZPfnXypK3HQtCui3M95dEAmFuDDD+hUHVKiZMmpfxhi494K0Ak8cpSIAiIsb5sBgbUl8i6F/e8ESj
+	Weo5B72w==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uF7Pv-0083Ee-FV; Wed, 14 May 2025 10:30:26 +0200
+Message-ID: <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
+Date: Wed, 14 May 2025 09:30:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e+812Av5nI8WoFLT"
-Content-Disposition: inline
-In-Reply-To: <2fcc0e6fc5b8669acb026bebe44a4995ac83b967.1747142267.git.simont@opensource.cirrus.com>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
+To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250424095535.26119-2-phasta@kernel.org>
+ <20250424095535.26119-8-phasta@kernel.org>
+ <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
+ <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
+ <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---e+812Av5nI8WoFLT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/05/2025 09:00, Philipp Stanner wrote:
+> On Thu, 2025-05-08 at 13:51 +0100, Tvrtko Ursulin wrote:
+>>
+>> Hi Philipp,
+>>
+>> On 08/05/2025 12:03, Philipp Stanner wrote:
+>>> On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
+>>>> The unit tests so far took care manually of avoiding memory leaks
+>>>> that
+>>>> might have occurred when calling drm_sched_fini().
+>>>>
+>>>> The scheduler now takes care by itself of avoiding memory leaks
+>>>> if
+>>>> the
+>>>> driver provides the callback
+>>>> drm_sched_backend_ops.kill_fence_context().
+>>>>
+>>>> Implement that callback for the unit tests. Remove the manual
+>>>> cleanup
+>>>> code.
+>>>
+>>> @Tvrtko: On a scale from 1-10, how much do you love this patch? :)
+>>
+>> Specific patch aside, it is the series as a whole I would like to be
+>> sure there isn't a more elegant way to achieve the same end result.
+> 
+> I count this as a 9/10 \o/
 
-On Tue, May 13, 2025 at 01:39:24PM +0000, Simon Trimmer wrote:
-> The cs35l56 smart amplifier has some informational firmware controls
-> that are populated by a tuning bin file to unique values - logging these
-> during firmware load identifies the specific configuration being used on
-> that device instance.
+:) Yes, sorry, it would a bit lower than that, at least until someone 
+can point out a fatal flaw in my alternative. :)
 
-Adding Takashi since this is an ALSA patch (and not deleting context for
-him), Takashi is this OK to go via ASoC?
+> But jokes aside:
+> 
+>>
+>> Like that sketch of a counter proposal I sent for the reasons listed
+>> with it. Which were, AFAIR, to avoid needing to add more state
+>> machine,
+> 
+> Well the state machine added is basically just the waitqueue. The
+> WRITE_ONCE booleans are currently just for correctness and clarity.
+> I've looked at them and want to remove them all in an other patch,
+> because I think they're not needed (workqueue handles that)
+> 
+> But yes, the added state is > 0
+> 
+>> to avoid mandating drivers have to keep an internal list,
+> 
+> That's not mandated by the scheduler, but by logic itself. All drivers
+> need to have a list of on-flight fences. Otherwise the drivers would
+> have no chance of signaling those fences once their GPU tells them to
+> do so.
 
-As documented in submitting-patches.rst please send patches to the=20
-maintainers for the code you would like to change.  The normal kernel
-workflow is that people apply patches from their inboxes, if they aren't
-copied they are likely to not see the patch at all and it is much more
-difficult to apply patches.
+Probably it would be hard to signal without tracking of some sort yes, 
+although it wouldn't have to be indexed by fence context, or looked up 
+by it so maybe still simpler.
 
->=20
-> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-> ---
->  sound/pci/hda/cs35l56_hda.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/sound/pci/hda/cs35l56_hda.c b/sound/pci/hda/cs35l56_hda.c
-> index b6fecf119261..aed7d7284231 100644
-> --- a/sound/pci/hda/cs35l56_hda.c
-> +++ b/sound/pci/hda/cs35l56_hda.c
-> @@ -676,6 +676,8 @@ static void cs35l56_hda_fw_load(struct cs35l56_hda *c=
-s35l56)
->  	if (ret)
->  		cs_dsp_stop(&cs35l56->cs_dsp);
-> =20
-> +	cs35l56_log_tuning(&cs35l56->base, &cs35l56->cs_dsp);
-> +
->  err_powered_up:
->  	if (!cs35l56->base.fw_patched)
->  		cs_dsp_power_down(&cs35l56->cs_dsp);
-> --=20
-> 2.43.0
->=20
+More importantly I think with this comment I was thinking about the fact 
+that with ops->cancel_job() approach I was able to remove the _done_ 
+list tracking from the mock scheduler.
 
---e+812Av5nI8WoFLT
-Content-Type: application/pgp-signature; name="signature.asc"
+> I have now provided two users of the new API, nouveau and the unit
+> tests. Can you think of a party for which the suggested approach
+> wouldn't work?
 
------BEGIN PGP SIGNATURE-----
+I did not think along those lines yet so don't know. I just thought it 
+was too much code to implement a relatively simple thing and that also a 
+few things in the design bothered me.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkVIAACgkQJNaLcl1U
-h9DLsQf8CwmbSDW21fooswjD03I5LXbtmieVj4i5y7p9tN20imlRpOx1+CQfMNNY
-FjNLdVgmWzT97Hb4FLN3KKZheWy9x1Ozy3S6/BgSaLMuz+xQsDgA1Z2Ei6M2fHP6
-qNhogLtISqVXpsV0gGL4pzbc+M89OexChf0ek4Ivv/Bahe1ZEZZA9UlPZv4USRbZ
-aEBpiu/dWVpMDhfSxmr2tgByPBvmmCD85h2rg6RtwtZjK3BIc6hZhfUXatCl/c/e
-Rg0zp19PVZ/btrVPZvXpG9Hb5V2fCZcc9HO5KoBd65YDSKEc4WevO/56WTjhxbyF
-h7vDbqEvkse+FPuP3Din9HRo1e1fgQ==
-=gUuS
------END PGP SIGNATURE-----
+If you look at the diffstat from my proposal and ignore kerneldoc and 
+unit test stats, it literally adds 8 lines to drm_sched_fini() and a 
+single line to gpu_scheduler.h:
 
---e+812Av5nI8WoFLT--
++       void (*cancel_job)(struct drm_sched_job *sched_job);
+
+And in the former after it stops the workers:
+
++       if (sched->ops->cancel_job) {
++               struct drm_sched_job *job;
++
++               list_for_each_entry_reverse(job, &sched->pending_list, 
+list) {
++                       sched->ops->cancel_job(job);
++                       sched->ops->free_job(job);
++               }
++       }
+
+To me this looks quite clean. Unless, I say this again, I am missing 
+some fatal flaw why it doesn't work.
+
+> Don't get me wrong, your approach does work and it definitely has its
+> charm. However, I think what I propose here is syntactically a bit
+> cleaner because the classical order of a fence first being signaled in
+> the driver and then the associated job being freed as usual by the
+> scheduler is guaranteed. IOW, we primarily rely on the signaling path.
+> 
+> Either way, neither your nor my approach would have worked out of the
+> box in Nouveau without that driver exploding.
+
+What do you mean by this - the latest version of your series does or 
+does not work for nouveau?
+
+Regards,
+
+Tvrtko
+
+> 
+>>   and to align
+>> better with the existing prototypes in the sched ops table (where
+>> everything operates on jobs).
+> 
+> That's not a hard criteria IMO. Those are sched_backend_ops, not
+> sched_job_backend_ops, and prepare_job() already takes a parameter
+> other than a job.
+> 
+> 
+> Cheers,
+> P.
+> 
+>>
+>> Regards,
+>>
+>> Tvrtko
+>>
+>>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>>>> ---
+>>>>    .../gpu/drm/scheduler/tests/mock_scheduler.c  | 34
+>>>> ++++++++++++-----
+>>>> --
+>>>>    1 file changed, 21 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>> index f999c8859cf7..a72d26ca8262 100644
+>>>> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>> @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
+>>>> drm_sched_job *sched_job)
+>>>>    	/* Mock job itself is freed by the kunit framework. */
+>>>>    }
+>>>>    
+>>>> +static void mock_sched_fence_context_kill(struct
+>>>> drm_gpu_scheduler
+>>>> *gpu_sched)
+>>>> +{
+>>>> +	struct drm_mock_scheduler *sched =
+>>>> drm_sched_to_mock_sched(gpu_sched);
+>>>> +	struct drm_mock_sched_job *job;
+>>>> +	unsigned long flags;
+>>>> +
+>>>> +	spin_lock_irqsave(&sched->lock, flags);
+>>>> +	list_for_each_entry(job, &sched->job_list, link) {
+>>>> +		spin_lock(&job->lock);
+>>>> +		if (!dma_fence_is_signaled_locked(&job-
+>>>>> hw_fence)) {
+>>>> +			dma_fence_set_error(&job->hw_fence, -
+>>>> ECANCELED);
+>>>> +			dma_fence_signal_locked(&job->hw_fence);
+>>>> +		}
+>>>> +		complete(&job->done);
+>>>> +		spin_unlock(&job->lock);
+>>>> +	}
+>>>> +	spin_unlock_irqrestore(&sched->lock, flags);
+>>>> +}
+>>>> +
+>>>>    static const struct drm_sched_backend_ops
+>>>> drm_mock_scheduler_ops = {
+>>>>    	.run_job = mock_sched_run_job,
+>>>>    	.timedout_job = mock_sched_timedout_job,
+>>>> -	.free_job = mock_sched_free_job
+>>>> +	.free_job = mock_sched_free_job,
+>>>> +	.kill_fence_context = mock_sched_fence_context_kill,
+>>>>    };
+>>>>    
+>>>>    /**
+>>>> @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
+>>>> drm_mock_scheduler *sched)
+>>>>    		drm_mock_sched_job_complete(job);
+>>>>    	spin_unlock_irqrestore(&sched->lock, flags);
+>>>>    
+>>>> -	/*
+>>>> -	 * Free completed jobs and jobs not yet processed by the
+>>>> DRM
+>>>> scheduler
+>>>> -	 * free worker.
+>>>> -	 */
+>>>> -	spin_lock_irqsave(&sched->lock, flags);
+>>>> -	list_for_each_entry_safe(job, next, &sched->done_list,
+>>>> link)
+>>>> -		list_move_tail(&job->link, &list);
+>>>> -	spin_unlock_irqrestore(&sched->lock, flags);
+>>>> -
+>>>> -	list_for_each_entry_safe(job, next, &list, link)
+>>>> -		mock_sched_free_job(&job->base);
+>>>> -
+>>>>    	drm_sched_fini(&sched->base);
+>>>>    }
+>>>>    
+>>>
+>>
+> 
+
