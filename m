@@ -1,121 +1,290 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459EE170A0B;
-	Wed, 14 May 2025 21:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55EB221F35;
+	Wed, 14 May 2025 21:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747258801; cv=none; b=RSHPS8qlkZ11X4l52SyN8vxCy4WRFPSxHxOHVwY3W0MEaSSq8mDeeNcrxb6ZyJCxrzTV0yzuAvf9v7qokILQU0LuHjcaQVla+B3b0iD2aEUe/9vrZJGrjZXbcb+8qbGxz9AMz20WuqHMjyuyDca/rRtHdwVoxuPgsxuKYXdNzHM=
+	t=1747258953; cv=none; b=Kx96Po81wQcebc2Ybti7X+7AtWEyEeEWcnBnDBuLc4AhIjFGV9kxXBkMe67ogG+P/NorTcsvZ/MOUlSGCTRYm+oxTGoYu2Tg7Uh0iqbhXdQsNxdUVdaKYluq9xqWVUfZhsPu4+YO/tgpqmX0xe7TjboPTR6CpPHOnE3fUkMR0uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747258801; c=relaxed/simple;
-	bh=IURAvQtt/axKYIqZpx8RM2/Z378J6+PcqELHyaH1Z3Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CgdZzCcUEOt8qnrshBJ0kmiAURFBRgEYfUlGOtfwyEnM/pQ74+hDwnJhq8l0JD5dkhusak0bIg7wBCSOCfXm0a9LrqsdPTHcAEjH+LMCkzyQTFEjKbCXkVDKDdOBieYdhJosRv2vseJkMC5w6G2WNUm70PHsh3V8XWHZZ+6i6As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsQKDuuN; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747258953; c=relaxed/simple;
+	bh=TasTW5iZCDuPstVF8wJUlKJ9vaBQQ1wm4aP4Dzf3XPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BQHt+gP3O8qRnLBK+APpNf/2Lq2xpbmyJNTRBAxF6TrcJxgk/iIuDyzy7tVum9nMtEDBhIDx4SV4h0PKYH7++/wYbP3VJDbvjvVOmjZRoVXKw0IroFOGx3yJ5ZTUJYT3N1B+BqFagYska993qSpJmGbdZ7jM9e95p94LbfOn1P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhijWoAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsQKDuuN"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe574976so1870055e9.1;
-        Wed, 14 May 2025 14:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747258797; x=1747863597; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6DVUkLd2+oHlU9eD7Q1RFXSgVfC01U9SYfc51OE9qKo=;
-        b=PsQKDuuN7RAI2EZJvpFEInGbpfvagQNjlgJxQd+muutVn5EJUIPAPmto0h2VinIt5J
-         YJYABT4tcYDO8KIQsEwsDoJlZA66kYtZfym9YaQJSgdMGE5ybHJjytqO0abmTMOw+i8D
-         39L2y7AXs54q7fmG3rPaUloP/H0Ji1Q7pTtazIhhshwB8b/MfhXQhbtEapT9KrXmnJZe
-         cvpFlJOSjjjHExVLZ5zTj9Lt47Dc2A66poTH8Qg4DtjPIVa6TMcsFaWa8caO5yV6FzqI
-         ygTtYQe1OjvL061tvbVXBNUgkKioL4dX3gTvJtuI4h8j3mjbdD/5P0V2geC/kINmwPwa
-         UDNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747258797; x=1747863597;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6DVUkLd2+oHlU9eD7Q1RFXSgVfC01U9SYfc51OE9qKo=;
-        b=EGZWDH80QgfsxfSnvb0zLvAPFHW/czxEAsK0VceSp8nFLQWAIJ4y3uvbX6b9Re8Kt3
-         H9SfZNA1s7fXNDsyf87w8My3FKzJUGZPPwH1OMo5sIAIf3wvtNTH2Mh1d/QFcjUFCnJN
-         nRQsPh+ecIFxYZV1KfdTwRbAYgsLshaAvR9+CSAZncMtMv8RbbYFoeS8Z3ypCj9UVwCP
-         j+xhXu57vwyL4fw5nFPSqvBQY8fw3DjIAyMoRoie+t5lDeJPZojLMYMixZe/VrUXGUDM
-         fURtSpigPgtrVxlnNdec56fpACYdwSq40YxfOGXjgdvAP1PfBxZZKRw/iNPJZS5v8eNA
-         rPlw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Wl1XPcMoeeRqJ6/dwdyKKT+mHsaO53qCvsskHTxE7K3DW/D+wS8ID5HSa8XyCWNvi0Zw5+NiroyFcGY=@vger.kernel.org, AJvYcCWxXf4iynbkpk2FrCnGNhICSb5Z0TI2TyASVp/YVeMgXsoNqkDi0lSHJ4TuYUh4Mi8fRQI4IfgCOwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxDpXxaPQHlr+aGtCjGMNsYY0vVfewp78ldzdnhNDrfQK+5Kb+
-	ldVcUoe+xfE2Mpna0eNuLyviWdd09IHqpj+3NthVlO/KdOXlLVPm
-X-Gm-Gg: ASbGncuUTF/1cCQ4Aavp/m/bHL+MsMwBF7CZraCyNS0/i4pWh0MRJeav2XPQG7niMsk
-	Yeol/IAfr2B3DEJ+HgwdNmigkD8O9BU9GN0KgAzDD7KdyVQlUgTqg2ookFOy+jeVYhwFMkLXGAM
-	teu7p5hiLos8685CmAJGgc2189uSD78dW6QLOAolzgNfYyPrV7Z4vLmDjb+GZac8HsK0HUJCeqq
-	RtPovWhFWw4u+XyjRe27mFy8DFeHdN4X/JRMynHv2PeZqGtxkcmldPObN12qYh30ElLTSq7v5dC
-	zuTPBVamgNPvDJ74PoWrCLmwbZFhwIwv15puH++rVAaopgolSkXxwDVTyc982cg0Ut1ZbMCHRlq
-	g/s1Lo8RakwoPH4rJgAkD
-X-Google-Smtp-Source: AGHT+IEetmnOgRCTSfIMvsWozvfB/jVXgNt0sQB1k2wskyHJG++w/QiJlg5bnKijUGzqM0dtGaqWyg==
-X-Received: by 2002:a05:600c:5305:b0:43d:fa58:81d3 with SMTP id 5b1f17b1804b1-442f84cce76mr9357555e9.32.1747258797224;
-        Wed, 14 May 2025 14:39:57 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f397b680sm45963285e9.40.2025.05.14.14.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 14:39:56 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	ALOK TIWARI <alok.a.tiwari@oracle.com>
-Subject: [PATCH] thermal: airoha: Fix spelling mistake
-Date: Wed, 14 May 2025 23:39:12 +0200
-Message-ID: <20250514213919.2321490-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhijWoAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F158DC4CEE3;
+	Wed, 14 May 2025 21:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747258953;
+	bh=TasTW5iZCDuPstVF8wJUlKJ9vaBQQ1wm4aP4Dzf3XPM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qhijWoAyAjAF/hRTtKYyCog7hVOuPqhfGN1rwXLTEiw4JKiOoDnRFJHGxyncUFubS
+	 fHStjRJ1rsQfd+suHaOIto4lEQgHOwuNXdP2USXAAS6eWUcEbsS6JzjzDYhU+u8loN
+	 o6NX2WCw59OFbVTDOrPGW8h0+04hXz0joXUGyPwy/NKFzDjPoFjsZKarJUDF8KDoT3
+	 ON2I9MMfbXVCvbpg298I/z4YFw1ZLyhc5mRnWRiDWCxcW7yCX+Rb4Zlcm6pCmHBUf0
+	 rhRwATsNsxmvHf6J7+A3T/nRpTK7H0Is8roTCFsHXe0f47Y27B5PwXl4/5ZlRZ78Bb
+	 QRtsgT+MOU+YA==
+Date: Wed, 14 May 2025 15:42:27 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
+Subject: [PATCH v3][next] wifi: iwlwifi: mvm/fw: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <aCUOQ6wdD1jQjO36@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fix various spelling mistake in airoha_thermal_setup_monitor() and
-define.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Reported-by: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()`
+helper to create a new tagged `struct iwl_tx_cmd_v6_hdr`. This
+structure groups together all the members of the flexible `struct
+iwl_tx_cmd_v6` except the flexible array.
+
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct iwl_tx_cmd_v6` to `struct iwl_tx_cmd_v6_hdr`.
+
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
+
+This approach avoids having to implement `struct iwl_tx_cmd_v6_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
+
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible-array
+member, if necessary.
+
+Also, as part of the refactoring required to use `__struct_group()`,
+remove unused flex array `payload`.
+
+So, with these changes, fix the following warnings:
+
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/thermal/airoha_thermal.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Changes in v3:
+ - Rebase on top of commit e4248670c0ae ("wifi: iwlwifi: use normal versioning convention for iwl_tx_cmd")
 
-diff --git a/drivers/thermal/airoha_thermal.c b/drivers/thermal/airoha_thermal.c
-index 45116cdaee65..9a7a702a17de 100644
---- a/drivers/thermal/airoha_thermal.c
-+++ b/drivers/thermal/airoha_thermal.c
-@@ -155,7 +155,7 @@
-  * Can operate in:
-  * - 1 sample
-  * - 2 sample and make average of them
-- * - 4,6,10,16 sample, drop max and min and make avgerage of them
-+ * - 4,6,10,16 sample, drop max and min and make average of them
+Changes in v2:
+ - Update changelog text - mention removal of flex array `payload`.
+   (Kees)
+ - Fix kernel-doc block. (Johannes).
+ - Add RB tag.
+ - Link: https://lore.kernel.org/linux-hardening/aAv7RiLsmXq5d0ge@kspp/
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/Z-9G-GHufhXKeYft@kspp/
+
+ .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  4 +-
+ .../net/wireless/intel/iwlwifi/fw/api/tx.h    | 63 ++++++++++---------
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  8 ++-
+ drivers/net/wireless/intel/iwlwifi/mvm/tdls.c | 10 +--
+ 4 files changed, 45 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+index 58d5a6ef633e..84cb7faac647 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+@@ -50,7 +50,7 @@ struct iwl_tdls_channel_switch_timing {
   */
- #define   EN7581_MSRCTL_1SAMPLE			0x0
- #define   EN7581_MSRCTL_AVG2SAMPLE		0x1
-@@ -365,12 +365,12 @@ static void airoha_thermal_setup_monitor(struct airoha_thermal_priv *priv)
- 	/*
- 	 * Configure ADC valid reading addr
- 	 * The AHB temp monitor system doesn't have direct access to the
--	 * thermal sensor. It does instead work by providing all kind of
--	 * address to configure how to access and setup an ADC for the
-+	 * thermal sensor. It does instead work by providing various
-+	 * addresses to configure how to access and setup an ADC for the
- 	 * sensor. EN7581 supports only one sensor hence the
- 	 * implementation is greatly simplified but the AHB supports
--	 * up to 4 different sensor from the same ADC that can be
--	 * switched by tuning the ADC mux or wiriting address.
-+	 * up to 4 different sensors from the same ADC that can be
-+	 * switched by tuning the ADC mux or writing address.
- 	 *
- 	 * We set valid instead of volt as we don't enable valid/volt
- 	 * split reading and AHB read valid addr in such case.
+ struct iwl_tdls_channel_switch_frame {
+ 	__le32 switch_time_offset;
+-	struct iwl_tx_cmd_v6 tx_cmd;
++	struct iwl_tx_cmd_v6_hdr tx_cmd;
+ 	u8 data[IWL_TDLS_CH_SW_FRAME_MAX_SIZE];
+ } __packed; /* TDLS_STA_CHANNEL_SWITCH_FRAME_API_S_VER_1 */
+ 
+@@ -131,7 +131,7 @@ struct iwl_tdls_config_cmd {
+ 	struct iwl_tdls_sta_info sta_info[IWL_TDLS_STA_COUNT];
+ 
+ 	__le32 pti_req_data_offset;
+-	struct iwl_tx_cmd_v6 pti_req_tx_cmd;
++	struct iwl_tx_cmd_v6_hdr pti_req_tx_cmd;
+ 	u8 pti_req_template[];
+ } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index 557832563f89..05860687aba0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -205,8 +205,7 @@ enum iwl_tx_offload_assist_flags_pos {
+  * @tid_tspec: TID/tspec
+  * @pm_frame_timeout: PM TX frame timeout
+  * @reserved4: reserved
+- * @payload: payload (same as @hdr)
+- * @hdr: 802.11 header (same as @payload)
++ * @hdr: 802.11 header
+  *
+  * The byte count (both len and next_frame_len) includes MAC header
+  * (24/26/30/32 bytes)
+@@ -222,34 +221,36 @@ enum iwl_tx_offload_assist_flags_pos {
+  * and then the actial payload.
+  */
+ struct iwl_tx_cmd_v6 {
+-	__le16 len;
+-	__le16 offload_assist;
+-	__le32 tx_flags;
+-	struct {
+-		u8 try_cnt;
+-		u8 btkill_cnt;
+-		__le16 reserved;
+-	} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
+-	__le32 rate_n_flags;
+-	u8 sta_id;
+-	u8 sec_ctl;
+-	u8 initial_rate_index;
+-	u8 reserved2;
+-	u8 key[16];
+-	__le32 reserved3;
+-	__le32 life_time;
+-	__le32 dram_lsb_ptr;
+-	u8 dram_msb_ptr;
+-	u8 rts_retry_limit;
+-	u8 data_retry_limit;
+-	u8 tid_tspec;
+-	__le16 pm_frame_timeout;
+-	__le16 reserved4;
+-	union {
+-		DECLARE_FLEX_ARRAY(u8, payload);
+-		DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
+-	};
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(iwl_tx_cmd_v6_hdr, __hdr, __packed,
++		__le16 len;
++		__le16 offload_assist;
++		__le32 tx_flags;
++		struct {
++			u8 try_cnt;
++			u8 btkill_cnt;
++			__le16 reserved;
++		} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
++		__le32 rate_n_flags;
++		u8 sta_id;
++		u8 sec_ctl;
++		u8 initial_rate_index;
++		u8 reserved2;
++		u8 key[16];
++		__le32 reserved3;
++		__le32 life_time;
++		__le32 dram_lsb_ptr;
++		u8 dram_msb_ptr;
++		u8 rts_retry_limit;
++		u8 data_retry_limit;
++		u8 tid_tspec;
++		__le16 pm_frame_timeout;
++		__le16 reserved4;
++	);
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_6 */
++static_assert(offsetof(struct iwl_tx_cmd_v6, hdr) == sizeof(struct iwl_tx_cmd_v6_hdr),
++	      "struct member likely outside of __struct_group()");
+ 
+ struct iwl_dram_sec_info {
+ 	__le32 pn_low;
+@@ -748,7 +749,7 @@ struct iwl_compressed_ba_notif {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v6 {
+-	struct iwl_tx_cmd_v6 tx;
++	struct iwl_tx_cmd_v6_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+@@ -767,7 +768,7 @@ struct iwl_mac_beacon_cmd_v6 {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v7 {
+-	struct iwl_tx_cmd_v6 tx;
++	struct iwl_tx_cmd_v6_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index 9098a36530cc..67139f704e2c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -1039,7 +1039,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v6(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v6 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd_v6, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+@@ -1059,7 +1061,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v7(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v7 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd_v6, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+index 36379b738de1..d475a2fb9c59 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+@@ -342,6 +342,8 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 	struct iwl_tdls_channel_switch_cmd_tail *tail =
+ 		iwl_mvm_chan_info_cmd_tail(mvm, &cmd.ci);
+ 	u16 len = sizeof(cmd) - iwl_mvm_chan_info_padding(mvm);
++	struct iwl_tx_cmd_v6 *tx_cmd =
++		container_of(&tail->frame.tx_cmd, struct iwl_tx_cmd_v6, __hdr);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&mvm->mutex);
+@@ -410,14 +412,12 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+-		iwl_mvm_set_tx_cmd_ccmp(info, &tail->frame.tx_cmd);
++		iwl_mvm_set_tx_cmd_ccmp(info, tx_cmd);
+ 	}
+ 
+-	iwl_mvm_set_tx_cmd(mvm, skb, &tail->frame.tx_cmd, info,
+-			   mvmsta->deflink.sta_id);
++	iwl_mvm_set_tx_cmd(mvm, skb, tx_cmd, info, mvmsta->deflink.sta_id);
+ 
+-	iwl_mvm_set_tx_cmd_rate(mvm, &tail->frame.tx_cmd, info, sta,
+-				hdr->frame_control);
++	iwl_mvm_set_tx_cmd_rate(mvm, tx_cmd, info, sta, hdr->frame_control);
+ 	rcu_read_unlock();
+ 
+ 	memcpy(tail->frame.data, skb->data, skb->len);
 -- 
-2.48.1
+2.43.0
 
