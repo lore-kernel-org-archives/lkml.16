@@ -1,108 +1,111 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBF827A44C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F0927A451;
+	Wed, 14 May 2025 13:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747230074; cv=none; b=SBsBRswck7UMeDm1cPlLyP/c83jrYFMGXApwVn499jXjfOHm/15nIzjdUyjpliP8V5NjX795wQUibTVgmI/57Fz8bdUPK1wUN8e1jUdiBL7334j1TpwWCsu1vKvSxqT9wgLuMxf1lwqlz5jaJBfkvkGyO60VQ629c5byr/H7r8E=
+	t=1747230084; cv=none; b=jf1ASiMUO8mqcNjGfStnPWBJVnsis6DhEgdebI8Df+Yj71DRD0+3J6/lmaqaxBRoUAkFWSlXNUdJvmDc1UfQF1GqtAmibFJfpAlTeHFasSw2Zusr6PSFvRZHRaIKWHwpsEP2pbTmf/3wHNelBTG2nJZYlQA2x1mjzsc3p5F05jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747230074; c=relaxed/simple;
-	bh=QdpEPJ8gEYzpOoGgSc70hLnLhxzBAJR+99wYqefKZis=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ONrt8vc8tJnuMi2eRigHUr8EtT1pLey+2n30oyfz1hkrSEm3WBnrSBfY24yNQLwIHBCt5n4U9AVMXsGgZVGI8DFdZU0foFua8Iv5p0QBs8NCClSV1dt9fRoE+QccvBC/5RcyqnyPc15ml9LQ8feJQ0znU1WTwbEiSE6eKZLrF4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HKsKVVPH; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747230084; c=relaxed/simple;
+	bh=H/N51E0LqMl7HeehbCHJuuOwqwUbhjnbjpt/f0tR828=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D48H/IipBQ6xyWoflMfzpgsVO+fiTVG5q+pnU2D2KxKBMeXXE3D7Ef0jIyfdLsLpbUcrCgQNdPAhTknAQrzbUhlLHKQkNe3m+131goaysM0tATGFEwhnb5CvvSVQB8OzXtvZ7AbsScG3opmIJpNcLcNRiJ7dLqc7CZhhkm+upfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Etg9//1p; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HKsKVVPH"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a96aca21eso6960499a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:41:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Etg9//1p"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7423df563d6so5484246b3a.0;
+        Wed, 14 May 2025 06:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747230072; x=1747834872; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYjVSGsMHKEcRuY737iQ9jOd94jFmJlbiKkyJxWPX0o=;
-        b=HKsKVVPHroYn2U1qNCyo0ZZQD6pCUwxFPocSM4FTwuomPIGelqvPHWhYHF9dKH7v+w
-         2yrutxSfNcHi9m4zj4SQuo+GBVx9TvgN5mZGjzZCfEUlHxteHoLcVH1aFuotA6/PoZHE
-         +27dZkcNyhh6fayYDmfPU5RAgUW2myD5A1wu3wlKBmpxTvd5GHK3Vj76ZUwutsdKyqvs
-         +CiEcr1nYKhj4UvQeTHWr0DCLj5J1418YzjUExmKM5amTJUR9EIEdLfuYtsh6nrA2VLn
-         U/VAhBjF64XfUD6bLAtXhGtk/IWD7OL4ZZFz/aygH1ZNWV7soQD8Phy4DIjEWicGalup
-         1XFg==
+        d=gmail.com; s=20230601; t=1747230082; x=1747834882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rivdPuEvC6CEZBUy2Q25Rs7NDnkf11vHyvHzOhnGBpU=;
+        b=Etg9//1px8J5vEjRjbUpQ8SiiHsaeiXpvu50gTLsgtkig7FpcH92yOAA6taWISMO8A
+         8S2Ygyr0yFTopMz44RolI7cl8Q/IvZwLB0TlM/fwNsGAB+EgBlNqWyL+jJulxilVzwmH
+         vigmnpqsH18Y1iftgL21aWJsEvBPz2wNVmt0fZH0ubtR9HqILD7T4le209UpeyOWbHZI
+         ahF6UdWMSF1JY+oHTTA0JxwvbBRvhJ4bdO/6QVEd/nvYSnQgnnxBl+Nixi7Fo2dsciHr
+         Tj/XRwrgI/Ng8SvJHpvyYKM2YYZYkt+Cbmld4iZLlC8sfacBpdwN4I1QgYztoWUz/kP/
+         08rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747230072; x=1747834872;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYjVSGsMHKEcRuY737iQ9jOd94jFmJlbiKkyJxWPX0o=;
-        b=Jq097p9xtC1p/+dydE1+YFj2oYhmhYzXeZdV8kvytyYiu227lUbOv2PZ+eFBaugkNM
-         n7UQLmW4YQrN0enF0YhPxuCzqrDaOLBA6fSiH9ypDVy6N6tFt7qPrHCH/poCZ5Oalkm+
-         i9MKOZjNllyPWHF6MzuR208z5FHsLYRn6FghhLCGMOP0NmXwE4i6S1C7kzC+nfE9nXCw
-         GPXRA0830VKpJVSrpsx6eBhTgnRAs7hhWgS7Ck8txp+vRa/FSBypkRr3R6CcRhrtqoGs
-         SswxcR2zdAYHWcnvM6ZVRwYljfjhHduWMRHJ+6nqMDUcWRves5JPmHI8tx3LPyZxBIuP
-         dNzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPddRpfbPvnyGr5J7OZk65Bo6RA62yxnFpeP5jpMqFFRnloWQuCYnM/sjvpAwia4aTY457NLyaOY+WTvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPzQTsEmuKfg+jcmvkOwlWQRpBkcIhvAVHmOq4qJrmGGva4K7n
-	6529CJOMEXyURF3IUsIUSalbWIo6RC0tmOr66gXzgoUyF9v+KG4u3zuXQ0gKaeqIRdLxe3VvNse
-	iDA==
-X-Google-Smtp-Source: AGHT+IErt22KB6Bdmg93RK4s626ZQgvKZVAsGQc1try2WwfIQuCLiAkCsQttfSHfUk5K1Biq89347r4kD1I=
-X-Received: from pjbsy6.prod.google.com ([2002:a17:90b:2d06:b0:2e0:915d:d594])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51c5:b0:308:6d7a:5d30
- with SMTP id 98e67ed59e1d1-30e2e5c9248mr6985235a91.18.1747230072267; Wed, 14
- May 2025 06:41:12 -0700 (PDT)
-Date: Wed, 14 May 2025 06:41:10 -0700
-In-Reply-To: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+        d=1e100.net; s=20230601; t=1747230082; x=1747834882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rivdPuEvC6CEZBUy2Q25Rs7NDnkf11vHyvHzOhnGBpU=;
+        b=SZomALA4Sl6tXx6WQuOKgK68tYRy2VJqxbUKl80YLBqVPG/hYmU/0r2am6DaMunRos
+         wvhxBw3ZLJlUJGyMMoXd12bNULh1Unfz8Ze3l2I3rhrqQyn/tLibgAbgnrh0ywdxT+bS
+         LBAXcnCslBdXF0Xslsn6TH7wKQ8OjDmxYaDXF2eEjKHijz1CmjRRsI5nrJCjR+ihvB/1
+         Q1o7vA/oaPhRhp3e3uTt1pbnb1wjTbMReiwlmrwFf7tt6X6OHGSJU6xVMp0K/dI7XmtN
+         on7qr1vviVyquzW3XKTwQKHtlu6OEOQWUvgFeV2s2ZcRRBNvMfJrLJz1lbaxOdrJxZJM
+         shUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdGsnbfKnL38EyHbqelNtu8oOEvJICubyfnZzZjmduibmYeC/7N3E1xLMN7UeF3EdyXr9c25HSWxkcYeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3+znSOPK8Pvgsm+dhToYPlywUeU+EQUjF1N5qiTIkALfQA1Vw
+	ttFkYNX28IS0phi+r1jV4/rJoj4HnqyhTeSYXC10WhXvHwc0iYMp
+X-Gm-Gg: ASbGncs3YhP+SwptVI9Xq0AdXpVM8Otc46jtiFOsnZqhwjRHF5tSgKAE3DszeZfzmG2
+	MpuO/EZwziD2FEkXEqo6tgTrwjxgSXp+3KkSHNmywkANyPvmAK6Nw7rZGxAzkWEQvXCw4a1rabz
+	sS8T5GKDQP1I+U0lftsCOEgnSATEIbHKzX56UBpGYqdDSJbqF9FPv3JABJkU1vvxriDAXeP5D2f
+	HIe9hCENzNVwbARojEn7zRZYoM/p2HMclTcuv10ULKP9aT868NFxewaxkGetnb2EPiVP0WQ4k7a
+	YIs8Wn+dLhTvmcf/rh7xqByb/hUqn1o1VXXbiS0eT8uVsfZQ81v93eM0YJG2gX9Q33/gOqf4kIW
+	jF2baWA9MhXcSwEHI/15QF/MtELElIg/wtBAuce4/eT7I
+X-Google-Smtp-Source: AGHT+IG7v5XjeboOI0O4h15ehtIlHLg82qIQw27/8YEWo2PzF+Jzb+j/iJWgUCU2QE1pyY8DnHYUKA==
+X-Received: by 2002:a05:6a21:b94:b0:215:eca3:c146 with SMTP id adf61e73a8af0-215ff1910fbmr5898909637.29.1747230081951;
+        Wed, 14 May 2025 06:41:21 -0700 (PDT)
+Received: from localhost.localdomain (123-194-189-72.dynamic.kbronet.com.tw. [123.194.189.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0cde3sm9784501b3a.94.2025.05.14.06.41.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 06:41:21 -0700 (PDT)
+From: "jay.chen" <shawn2000100@gmail.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"jay.chen" <shawn2000100@gmail.com>
+Subject: [PATCH] usb: xhci: Set avg_trb_len = 8 for EP0 during Address Device Command
+Date: Wed, 14 May 2025 21:40:08 +0800
+Message-ID: <20250514134011.16285-1-shawn2000100@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
-Message-ID: <aCSddrn7D4J-9iUU@google.com>
-Subject: Re: [RFC, PATCH 00/12] TDX: Enable Dynamic PAMT
-From: Sean Christopherson <seanjc@google.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, isaku.yamahata@intel.com, 
-	kai.huang@intel.com, yan.y.zhao@intel.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	kvm@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 02, 2025, Kirill A. Shutemov wrote:
-> This RFC patchset enables Dynamic PAMT in TDX. It is not intended to be
-> applied, but rather to receive early feedback on the feature design and
-> enabling.
+According to the xHCI 1.2 spec (Section 6.2.3, p.454), the Average
+TRB Length (avg_trb_len) for control endpoints should be set to 8.
 
-In that case, please describe the design, and specifically *why* you chose this
-particular design, along with the constraints and rules of dynamic PAMTs that
-led to that decision.  It would also be very helpful to know what options you
-considered and discarded, so that others don't waste time coming up with solutions
-that you already rejected.
+Currently, during the Address Device Command, EP0's avg_trb_len remains 0,
+which may cause some xHCI hardware to reject the Input Context, resulting
+in device enumeration failures. In extreme cases, using a zero avg_trb_len
+in calculations may lead to division-by-zero errors and unexpected system
+crashes.
 
-> >From our perspective, this feature has a lower priority compared to huge
-> page support. I will rebase this patchset on top of Yan's huge page
-> enabling at a later time, as it requires additional work.
-> 
-> Any feedback is welcome. We are open to ideas.
-> 
-> =========================================================================
-> 
-> The Physical Address Metadata Table (PAMT) holds TDX metadata for
-> physical memory and must be allocated by the kernel during TDX module
-> initialization.
-> 
-> The exact size of the required PAMT memory is determined by the TDX
-> module and may vary between TDX module versions, but currently it is
-> approximately 0.4% of the system memory. This is a significant
-> commitment, especially if it is not known upfront whether the machine
-> will run any TDX guests.
-> 
-> The Dynamic PAMT feature reduces static PAMT allocations. PAMT_1G and
-> PAMT_2M levels are still allocated on TDX module initialization, but the
-> PAMT_4K level is allocated dynamically, reducing static allocations to
-> approximately 0.004% of the system memory.
-> 
-> PAMT memory is dynamically allocated as pages gain TDX protections.
-> It is reclaimed when TDX protections have been removed from all
-> pages in a contiguous area.
+This patch sets avg_trb_len to 8 for EP0 in
+xhci_setup_addressable_virt_dev(), ensuring compliance with the spec
+and improving compatibility across various host controller implementations.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=220033
+Signed-off-by: jay.chen <shawn2000100@gmail.com>
+---
+ drivers/usb/host/xhci-mem.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index d698095fc88d..fed9e9d1990c 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1166,6 +1166,8 @@ int xhci_setup_addressable_virt_dev(struct xhci_hcd *xhci, struct usb_device *ud
+ 	ep0_ctx->deq = cpu_to_le64(dev->eps[0].ring->first_seg->dma |
+ 				   dev->eps[0].ring->cycle_state);
+ 
++	ep0_ctx->tx_info |= cpu_to_le32(EP_AVG_TRB_LENGTH(8));
++
+ 	trace_xhci_setup_addressable_virt_device(dev);
+ 
+ 	/* Steps 7 and 8 were done in xhci_alloc_virt_device() */
+-- 
+2.43.5
+
