@@ -1,96 +1,206 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548332F42;
-	Wed, 14 May 2025 06:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D98C1FC7E7;
+	Wed, 14 May 2025 06:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203907; cv=none; b=BP4GGL8Ge+96lIySSp7WOWIvKCfFwdgGovu/RJ2ctYMPX6YLl/jZ0RHI62O/aUTSfwHHFQgRLA/hnUCzDXfFG4Y6hhUptgldWm0/kb7DfVOQEn6E4Se0gKPGBYodi0yT1DtDFpZVIWj3HGd5w1zHvKZWEsO90tZbQJ88ezKqsCc=
+	t=1747203922; cv=none; b=OekSpb45sErmAUEVx70q5aF2ok2uUqm1sNy02JVU1100I9XbPJwHmnOrj2TYXupwuIRUUA/UtH540/Tyc4NJmzqoJpMFKZeoll/+w5mqNO/evkeY8UwxcainbR/ICq2YQ9X6bytbPl0MtNXheyR+y+RNEycBPlahpdhDohzB4ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203907; c=relaxed/simple;
-	bh=vEjRrrhKGba3tAjU8EN/hoGC1slSv2vkn6NtFzJIEiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MSkc0t3yA/wtfxbMNs5NC8JeYxlcJbCD79MftoiCDJXrpVXyytJqCTSqtfluPwoSi58A81U17RHhx3X6o/bwHLPabFT17OOBXGcQ+YpQrdr3jbuDPCVTB3nrLbHGHCSbQlUY3Ko4wtnVfpf/3T2L8W2/KWFfQy6N9rW3Rk2TM9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WLm+u0xJ; arc=none smtp.client-ip=209.85.218.66
+	s=arc-20240116; t=1747203922; c=relaxed/simple;
+	bh=SxFtNj3A/V71eVMZQHnVZ4xd0hC12ZVeGOedJhpQlmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ln1AdlHjndCMthIv01RJFYw/tlm23jXnHMDbC5cWbUhuo3uu2sIeLZ5yEfHPNAwA37a2h87p9EgygAbx7ew8tcfMc0aQjro3tRkuUUOkfLWjj2diuhcPKGi1/UhIW8R27WofaYnjSPzGtaA+aoUIfl+RSMRuNjjIUZ3h9fswU2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lHxnYFdU; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLm+u0xJ"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so1206568866b.2;
-        Tue, 13 May 2025 23:25:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHxnYFdU"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-326cd354cf3so18126301fa.1;
+        Tue, 13 May 2025 23:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747203903; x=1747808703; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vEjRrrhKGba3tAjU8EN/hoGC1slSv2vkn6NtFzJIEiI=;
-        b=WLm+u0xJxuORuwFAHNXCe2VRjuJgs9yUcRandZEKbtfb1seHLMMEaZLf1ZIm/iBbqy
-         f1ALBflUTR8oBThdFQIVpJAeOeg9PghGL1GBwY+zJPP9ac0xnRIA82ORDj0cDCerTgFZ
-         5ZD+C94egGNj6kv4qbALSy0N9MIZHI/uFvc1qVCqY+mQxJFrQzgxEJc+o4w8uh/WLMOn
-         D1jjRkz6kyiKH0HFz37mbak1PqAJPUxiK5/rEXzfK/9051BuCW3nCox4xyDGrFWBUKez
-         1iuzuiSzfchSo7L0SgMOLMOiznnJJiR6aO4+e+nLAcWm2zU3NVb8VmVNw5c/LG72T6Mz
-         pE+A==
+        d=gmail.com; s=20230601; t=1747203919; x=1747808719; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/GlegKmII1NP1WUaApvwkeaPmRs0nyMlhrzEpWMeltc=;
+        b=lHxnYFdU+NUHldhQ8DBSnDaypY9R5urduNGJjnaAsD6Vwnz3tcQ20Hb1WVCXBRrJSi
+         xLb5R/5osepxyz3Zl+0AMF/TlneG36d+STYNnKLgBQADj5B/qtYRjFymPwucJnPyYJbb
+         bZA7G/uunhjGrOzStwNUnjkMXqIS1+pnCiaj4OLe0+TUNHvbjKcf3m7ReBKCgC7j2rfD
+         fLl2AyzAQnT3fXNkSqRZ0eksB4m+qCh3uy3h6vwVAFlzmTBt1K5jP4+Sz5+SFX2dTPb/
+         ALxuvXLW/SLMB+5Hk7PIv1hzm4m7tb1LguPUwKh86U7UWwWc7NMA3vws5hUtVjhhw6d4
+         DrRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747203903; x=1747808703;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vEjRrrhKGba3tAjU8EN/hoGC1slSv2vkn6NtFzJIEiI=;
-        b=oipZwrN3Lzv7CHoqjXID6IyYSYNXAjhPIPKS8Rj+aoriQi42K1MUPTJg0F09XpX3di
-         yg946CNe3jYl3F4Ma7bdTaGYgmDODtOpkouxFs6tCeGySE12UDdknC5rZvu8Jahv8vWE
-         Sp5SD3E9UVOxGXoeNBAKvbArWrNska/CL7huRnZzF2zpnXmTaRdAxewr3U8dTvDpo16m
-         /jMwJFOmYECm8UxWgVSe393KOrsH76zBTX3bqNCkDr8QkvelJavNlW1RdDvikhcMbCIE
-         Zb8O9r8qlSpsD4kRiKw2wUvVRL2HBxpWd5TSy2NoqYUHWcpuJIOZM1htLSerZuFC28Fa
-         rxyA==
-X-Forwarded-Encrypted: i=1; AJvYcCV72aL/TODFrvtzga3cH1y5ckgefj3zvLXcsPA2S43Yq3aG+FowKl0L1c76yLujBFNCFLVmEJ2EySc2cNCFl5XN@vger.kernel.org, AJvYcCWnBzjB+GsdEKJq2GRbkgbb9m2ZIigRcoJ1uVSu9wX/24nCWJDU+uLn1OTuQZX9SMHptlY=@vger.kernel.org, AJvYcCXT0DXueXo8RtSDaKZSAvFb9hTSbK4BWVxA5YH2pQu2qAR0Ma+oRH4pJEeEf7vdjcl1TdO3ENuumvM+BhpW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDsOZJwD79icGRTmgW9UyP1s33bioGZNieuBOEb5UdqF524bNG
-	HtncRzVb4QEVxAef4rvmIBHF9++v3jDGJ+MKfGcK9VMsCTLlfe7cfyaBqRSB4tciZ6rNhqiO65Z
-	b45jlyEFt9Qkrc0PbGbZVzThgCi0=
-X-Gm-Gg: ASbGncuGvi44f+ymV35Ccx2WFJLAyhpaf9mq9PB2YzUL+cWc0wP6gRydv44ZR71uciv
-	ZjwhPIlMloVh5/zimw99Ow1g+k8dT4p9Oei51at/yvAr6jYfYpeuWJGuuXNs9apqAIVG3BDmcVq
-	XaJWtOEwlctZYD6tmdqe2HU5O/pZbsJxw=
-X-Google-Smtp-Source: AGHT+IGp26N/Qy84kSU01eK/5Do0fYdJsM4es4PrHHge+o69giKbvBU1ENd/2FnoaAbJwMTNlGTDVz9olNhPboIJDFk=
-X-Received: by 2002:a17:907:60cf:b0:ad2:39f2:3a9a with SMTP id
- a640c23a62f3a-ad4f7292c9amr203602266b.42.1747203903305; Tue, 13 May 2025
- 23:25:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747203919; x=1747808719;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GlegKmII1NP1WUaApvwkeaPmRs0nyMlhrzEpWMeltc=;
+        b=gSemEWsMGDAXkWoI/LRzCwMcvkLhNjkcHKL5sTvUvd6cP0GzgALWpdZq1WXwNsnHov
+         r/qLyaC2fjwhyBruVT1uEPVWsOq5tQTNjf3UJ3CjTLTPSkGW8GAsMElCz3t0ZJ7fsjyb
+         9mg8E7iGJk9eH9JMOs6x8JvOecEwb1gP2208Ng8U3TwqQg8MBjiWMkZY2PhcBf4tEnRO
+         0VxyWR9LQJfpeGR6RZon+A1bFr/RSjWyCT2oPsBppzkg61F49nlF7wciQBeHRCifoo8z
+         +kRf+Vd4ooHAbi38FL1+yymLRhfT+NYOY3Vd1YR4+y0/uj/tGjyijUXbtrCNTfJSXGZu
+         gwtg==
+X-Forwarded-Encrypted: i=1; AJvYcCU914gKrvCtFbUb2KWNXC9iLY9dNyUJienjxP+ze+Js4okSH4CGxvaZokAW76notEw0j5SMdwkUHOwsJjQv@vger.kernel.org, AJvYcCWPR+IFQ/sS2GIa2XTm5aJ+8Y+T6VUHjAOoh/S5UWKWb0VrZdmAvJfTNuI+8Ab1WWT9bteOtyM5XslV@vger.kernel.org, AJvYcCXB+tSo2id2rDw1LkIhlZu+jF39dhhPsL9KiZILlfmcfXSC9xo0jEGjR8NdsgMBaOe1ALy+CmXb3oOy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhWwIiH/SKZswfxB/nDE1SMMVwlWCxJcbZxkl/1n/L+5O1DfGc
+	H2nOgfXOE8dR+HZ9qLvWfIP8qWaXfKTw4Kco4zFqVTS2z7qpuNOJ
+X-Gm-Gg: ASbGncvsTGj0wbNn54V2mLw9HHpDmETyt88Wd07vS3MNpTI0qaoUyRHXp1auXab7dfp
+	ADrjPzkn9FP7JhI0QsxsMUgri3X9fzFAbKDNRyzqqrMZCoqsWeuDgYHvrfxo8zUKi5k4BEkAuXY
+	rbQuYO1I3eu/83+rHCouHCy+IA1/ksfTUe9N2otB69+JkULPkso4eVZySvY8PNiuE/ixH90Dum4
+	A8T5ZpJC7GKml7CPja+S95ekZcvhPjB4pXn2++Ja+s7856y9XR4SZwoTSvz4kwafUO0kofyqwax
+	zOFw6p1ZmGi9bSvg1AGVvya23YXQ0TA1+x85zSs8B6S8OzGSrn4R2vBTsg==
+X-Google-Smtp-Source: AGHT+IHoB6FO6g2Ohune4q/gbUojXZCtKJpNzYPO/vslgLH49xlJeujPpeKYHdJgKT8/e9+l7ZVjwg==
+X-Received: by 2002:a2e:b88a:0:b0:30b:f775:bae0 with SMTP id 38308e7fff4ca-327ed22671fmr7294321fa.36.1747203918906;
+        Tue, 13 May 2025 23:25:18 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c358ba95sm18713261fa.110.2025.05.13.23.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 23:25:17 -0700 (PDT)
+Date: Wed, 14 May 2025 09:25:13 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: iio: adc: Add ROHM BD79100G
+Message-ID: <4907a096eee1f54afae834213cf721b551382d4e.1747203712.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <20250501073603.1402960-10-luis.gerhorst@fau.de>
-In-Reply-To: <20250501073603.1402960-10-luis.gerhorst@fau.de>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Wed, 14 May 2025 02:24:27 -0400
-X-Gm-Features: AX0GCFtu2D5_c8Hbz8VwjEw3nJ68h3pprbAnRl5y5vgEzz8EGiuxhoCH3nu-9uw
-Message-ID: <CAP01T74DY4+n28oWZMS0Sh2FwYYxyMbTLxp8cf+OZ62AS7nOPg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 09/11] selftests/bpf: Add test for Spectre v1 mitigation
-To: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
-	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
-	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D+TIE2Xv0NKK201S"
+Content-Disposition: inline
 
-On Thu, 1 May 2025 at 04:03, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
->
-> This is based on the gadget from the description of commit 9183671af6db
-> ("bpf: Fix leakage under speculation on mispredicted branches").
->
-> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> ---
 
-Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+--D+TIE2Xv0NKK201S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+The ROHM BD79100G is a 12-bit ADC which can be read over SPI. Device has
+no MOSI pin. ADC results can be read from MISO by clocking in 16 bits.
+The 4 leading bits will be zero, last 12 containig the data.
+
+Device has only VCC supply pin, which acts also as a VFS, determining the
+voltage for full 12-bits. Specifying it is mandatory.
+
+This seems identical to the ti,ads7866.
+
+Support ROHM BU79100G using ti,ads7866 as a fallback.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+---
+Revision history:
+v1 =3D> v2:
+ - Support BU79100G using ti,ads7866 as a fallback to avoid duplicated
+   driver code.
+
+v1 link:
+https://lore.kernel.org/all/cover.1747123883.git.mazziesaccount@gmail.com/
+
+ .../bindings/iio/adc/adi,ad7476.yaml          | 63 ++++++++++---------
+ 1 file changed, 34 insertions(+), 29 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml b/Do=
+cumentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
+index 44c671eeda73..d0cb32f136e5 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7476.yaml
+@@ -17,35 +17,40 @@ description: |
+=20
+ properties:
+   compatible:
+-    enum:
+-      - adi,ad7091
+-      - adi,ad7091r
+-      - adi,ad7273
+-      - adi,ad7274
+-      - adi,ad7276
+-      - adi,ad7277
+-      - adi,ad7278
+-      - adi,ad7466
+-      - adi,ad7467
+-      - adi,ad7468
+-      - adi,ad7475
+-      - adi,ad7476
+-      - adi,ad7476a
+-      - adi,ad7477
+-      - adi,ad7477a
+-      - adi,ad7478
+-      - adi,ad7478a
+-      - adi,ad7495
+-      - adi,ad7910
+-      - adi,ad7920
+-      - adi,ad7940
+-      - ti,adc081s
+-      - ti,adc101s
+-      - ti,adc121s
+-      - ti,ads7866
+-      - ti,ads7867
+-      - ti,ads7868
+-      - lltc,ltc2314-14
++    oneOf:
++      - items:
++          - enum:
++              - adi,ad7091
++              - adi,ad7091r
++              - adi,ad7273
++              - adi,ad7274
++              - adi,ad7276
++              - adi,ad7277
++              - adi,ad7278
++              - adi,ad7466
++              - adi,ad7467
++              - adi,ad7468
++              - adi,ad7475
++              - adi,ad7476
++              - adi,ad7476a
++              - adi,ad7477
++              - adi,ad7477a
++              - adi,ad7478
++              - adi,ad7478a
++              - adi,ad7495
++              - adi,ad7910
++              - adi,ad7920
++              - adi,ad7940
++              - ti,adc081s
++              - ti,adc101s
++              - ti,adc121s
++              - ti,ads7866
++              - ti,ads7867
++              - ti,ads7868
++              - lltc,ltc2314-14
++      - items:
++          - const: rohm,bu79100g
++          - const: ti,ads7866
+=20
+   reg:
+     maxItems: 1
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+--=20
+2.49.0
+
+
+--D+TIE2Xv0NKK201S
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmgkNz8ACgkQeFA3/03a
+ocVIhggAkUcDwTET84K8Jpgp1axDZyw34ScLv1pecnLENUK6WOUud4BMZSMBV/eQ
+oEcHKdrYw/Rsjni09OsAMd+295/LmIMrSdPY3v9K2R6FEH/CRBLn1wWeZz98IW7v
+rr77xRXxu1DS6p3teZCUDT9e0aomfLkRvh6mFp6Eh7C0eEfbP0lMifaaT6Qsticj
+/qm16JFeFbD7gNP3ixrCNj84x9FswUitlOF0H+2IQ/a7+n/++ylocGMLISgo8Q3S
+RL9pKrG2mmgTMEKnbSwE0C/f0Kgd6WNpVCxXHV5gqrgNtZhqQjF21Eqmmhq3lIlP
+yu940QZgWsjxDFJOSc7dUVaVibVLsg==
+=e3t3
+-----END PGP SIGNATURE-----
+
+--D+TIE2Xv0NKK201S--
