@@ -1,106 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEB22ACCE;
-	Wed, 14 May 2025 09:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C720B21C16D;
+	Wed, 14 May 2025 09:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215477; cv=none; b=YSPiGqLT6OzUx8NWPDStDgKdnH43pehOZqC9q7CMwQ2tblHfah6Sx/wiyzzqkE1ZocnkptpE+mYivvpo5XJN7kgqoNGDhsY2/nzIexLR+/rcdOS/idDvAxYi97bOJPd21AMIXYX+4DuVRxd6+ykUZfrTKsg91JK6pL0HvY4EGuo=
+	t=1747215536; cv=none; b=CkA7AOe0n//JtGBgXAd7El46X+a3ZqFQPqjM+iAlwYpgss53DMO5w2LIYVPOyM4Zrg/YZf8DGmsfSB9gr0oMAlmCHmEOEHRTv+qte/+sXEFktY2/xfcf7mXiTjZWj8AyYsChjQgbKvq/BIH3NIYDHJVtHiVM2+ciqQydCwGFUQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215477; c=relaxed/simple;
-	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgQvUFNWaIknILT3HxuLtcnu3ILxmaGjPOpKs5MeRHoxan4gp3da0GmzLW4whyPLHAEd13aFd2/0LVCDngW17Zxz2sM3zxBQRm98xmhWa/KCEwfL8IyfelB7vX+cSJ7XKcbESsDpJ+jyAf1EOb7AZNZQ6vT1BAFX5rK7ccAQLJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBYxh0W3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747215536; c=relaxed/simple;
+	bh=/HtRjQVvBFILgrC0Hi5f/Rs7A+6DOr3qwrunJOTC18A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=Fp+pz4gDJgvOdWhKoaOE4fIpKC3q+pLJox4zBnLAxTcQvCTJPDUZQyrbCuJHOz4PtSZ0I/0zJkpk1YryT/tIQk9jzL7/RC5+7nqoCJOb3AuQvL6OXyIfi2LPBNASbOBCAdyuyDNtMbOfylMmBWnxckuZXvt9KQQft6R8y1MMABg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDgYAL4Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBYxh0W3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D65DC4CEEB;
-	Wed, 14 May 2025 09:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDgYAL4Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48677C4CEE9;
+	Wed, 14 May 2025 09:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747215476;
-	bh=NurdwnwGbSV9JUS/xzW5xcSfhaak9b3QqCAV7BzFooA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBYxh0W3tiCiq6Ri/9ZWOL4LFwslxGL8iDU9kKOrVza7U2egvvwsWSjfZWtRhBKED
-	 FeuiIqGeiawtU/chMWX+08IyuhK++0NZwI3O7MjcVwqr897AnF6Wcvpx3Hl1BUZ/9R
-	 h2U7T8YKt8C+WqrpqxAbRA+LM1ls9BXOf+fy8dS0nEV7XM8VMREff6m9gypZraKL/M
-	 /UTXYGUwa3sKzXofDq74PbH+7ZUlQrlYVZVYjJUXOASDGVXvnm+k8BU0TuCiT45UWx
-	 tT85cjVrBLNx4n3EhKiRCyFRykqQ6rFY44JxUiy0tqbgjOdItiSugScA/JFqPMxISb
-	 K1EDDzvY81d8A==
-Date: Wed, 14 May 2025 10:37:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: mhklinux@outlook.com
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH net 2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to
- send VMBus messages
-Message-ID: <20250514093751.GF3339421@horms.kernel.org>
-References: <20250513000604.1396-1-mhklinux@outlook.com>
- <20250513000604.1396-3-mhklinux@outlook.com>
+	s=k20201202; t=1747215535;
+	bh=/HtRjQVvBFILgrC0Hi5f/Rs7A+6DOr3qwrunJOTC18A=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=PDgYAL4QCpqxzaUFU7HIqjmKxnVK11e8ppHvbMfn1Zbcg2eqGbZlS8eR9OW1A2Vle
+	 qN5Ht1MP6WvBk22zYLZnjmISz7jsWspWDB22B+Ilh5dNTsBmAypBCfDYZaT1Sc6s/W
+	 UDMVwjBbvvjpI3gL/lV0fjilZaRHPgKrdomzQbmLWAiawJTT+0Wu/86ju4QQ/cjmRt
+	 2ESiBHlrhqt3F1m4f8sm/mvzlypwE7opAUqdRmAKZFTY8xrWRr9OY72oAMLDtz66pF
+	 /Y7SUExgAPJjpQ/KDWWNJFSTq+KZ9euY3YlKpwAiWrooxyCokS71r4S8xbFX5Msbez
+	 b8/aRT7qrN8Jw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513000604.1396-3-mhklinux@outlook.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 May 2025 11:38:50 +0200
+Message-Id: <D9VS7Q1LVMU0.14MJI8ACKVXLU@kernel.org>
+Subject: Re: [PATCH v5 1/4] rust: debugfs: Bind DebugFS directory creation
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Matthew Maurer" <mmaurer@google.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-1-3e93ce7bb76e@google.com>
+ <D9VPJFJ44PUP.3D0HGIEJC9UGY@kernel.org>
+ <2025051451-charm-lankiness-8d59@gregkh>
+In-Reply-To: <2025051451-charm-lankiness-8d59@gregkh>
 
-On Mon, May 12, 2025 at 05:06:01PM -0700, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> netvsc currently uses vmbus_sendpacket_pagebuffer() to send VMBus
-> messages. This function creates a series of GPA ranges, each of which
-> contains a single PFN. However, if the rndis header in the VMBus
-> message crosses a page boundary, the netvsc protocol with the host
-> requires that both PFNs for the rndis header must be in a single "GPA
-> range" data structure, which isn't possible with
-> vmbus_sendpacket_pagebuffer(). As the first step in fixing this, add a
-> new function netvsc_build_mpb_array() to build a VMBus message with
-> multiple GPA ranges, each of which may contain multiple PFNs. Use
-> vmbus_sendpacket_mpb_desc() to send this VMBus message to the host.
-> 
-> There's no functional change since higher levels of netvsc don't
-> maintain or propagate knowledge of contiguous PFNs. Based on its
-> input, netvsc_build_mpb_array() still produces a separate GPA range
-> for each PFN and the behavior is the same as with
-> vmbus_sendpacket_pagebuffer(). But the groundwork is laid for a
-> subsequent patch to provide the necessary grouping.
-> 
-> Cc: <stable@vger.kernel.org> # 6.1.x
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  drivers/net/hyperv/netvsc.c | 50 +++++++++++++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index d6f5b9ea3109..6d1705f87682 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -1055,6 +1055,42 @@ static int netvsc_dma_map(struct hv_device *hv_dev,
->  	return 0;
->  }
->  
-> +/* Build an "array" of mpb entries describing the data to be transferred
-> + * over VMBus. After the desc header fields, each "array" entry is variable
-> + * size, and each entry starts after the end of the previous entry. The
-> + * "offset" and "len" fields for each entry imply the size of the entry.
-> + *
-> + * The pfns are in HV_HYP_PAGE_SIZE, because all communication with Hyper-V
-> + * uses that granularity, even if the system page size of the guest is larger.
-> + * Each entry in the input "pb" array must describe a contiguous range of
-> + * guest physical memory so that the pfns are sequential if the range crosses
-> + * a page boundary. The offset field must be < HV_HYP_PAGE_SIZE.
+On Wed May 14, 2025 at 10:49 AM CEST, Greg Kroah-Hartman wrote:
+> On Wed, May 14, 2025 at 09:33:05AM +0200, Benno Lossin wrote:
+>> On Tue May 6, 2025 at 1:51 AM CEST, Matthew Maurer wrote:
+>> > +impl<'a> Dir<'a> {
+>> > +    /// Create a new directory in DebugFS. If `parent` is [`None`], i=
+t will be created at the root.
+>> > +    #[cfg(CONFIG_DEBUG_FS)]
+>> > +    fn create<'b>(name: &CStr, parent: Option<&'a Dir<'b>>) -> Self {
+>> > +        let parent_ptr =3D match parent {
+>> > +            Some(parent) =3D> parent.0.as_ptr(),
+>> > +            None =3D> core::ptr::null_mut(),
+>> > +        };
+>> > +        // SAFETY:
+>> > +        // * `name` argument points to a NUL-terminated string that l=
+ives across the call, by
+>> > +        //   invariants of `&CStr`.
+>> > +        // * If `parent` is `None`, `parent` accepts null pointers to=
+ mean create at root.
+>> > +        // * If `parent` is `Some`, `parent` accepts live dentry debu=
+gfs pointers.
+>> > +        //   so we can call `Self::from_ptr`.
+>> > +        let dir =3D unsafe { bindings::debugfs_create_dir(name.as_cha=
+r_ptr(), parent_ptr) };
+>> > +
+>> > +        // SAFETY: `debugfs_create_dir` either returns an error code =
+or a legal `dentry` pointer,
+>> > +        Self(unsafe { Entry::from_ptr(dir) })
+>> > +    }
+>> > +
+>> > +    #[cfg(not(CONFIG_DEBUG_FS))]
+>> > +    fn create<'b>(_name: &CStr, _parent: Option<&'a Dir<'b>>) -> Self=
+ {
+>> > +        Self(Entry::new())
+>> > +    }
+>> > +
+>> > +    /// Create a DebugFS subdirectory.
+>>=20
+>> I'm not familiar with debugfs, if I run `Dir::create(c"foo", None)`
+>> twice, will both of the returned values refer to the same or different
+>> directories?=20
+>
+> You can not create a directory, or file, in the same location with the
+> same name.  The call will fail, so don't do that :)
+>
+>> What if I give a parent?
+>
+> Same thing, it will fail.
+>
+>> If the answer in both cases is that they will refer to the same
+>> directory, then I'd change the docs to mention that.
+>
+> Nope, that does not happen.
+>
+>> So instead of
+>> "Creates" we could say "Finds or creates" or something better.
+>
+> Find does not happen.
+>
+>> If they refer to different files, then I am confused how that would look
+>> like in user-land :)
+>
+> Agreed, which is why that does not happen :)
 
-Hi Michael,
+Ah that makes sense, thanks for explaining :)
 
-Is there a guarantee that this constraint is met. And moreover, is there a
-guarantee that all of the entries will fit in desc? I am slightly concerned
-that there may be an overrun lurking here.
-
-...
+---
+Cheers,
+Benno
