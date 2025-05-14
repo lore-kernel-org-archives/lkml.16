@@ -1,75 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0768F2951A6;
-	Wed, 14 May 2025 20:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747253563; cv=none; b=U2Ldwm1yVc2UkHM6TR7httQPyMlgzHGBbFAijREDikc6Qh9w1T/U/quJgdrmyyaJm+8ORPb7DmUgiD9fNV4ZRtwplH++NLj0i7LBifZsFoK1wJIO1GWo+UGCrQMKKpajj0GCykgTOQNKrfxmqXry6LZuUVJajlI0KMGDj8ye1kg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747253563; c=relaxed/simple;
-	bh=OzKdPvbRk8hZ5qrmc01ogW5Qt/80h78/YBJYjWWOc4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=urRKIJzbyAW6in45N7aIQRZpT50No0TSWsEN/V74N3Spm2Wjlbn99jVKUHaAldHSwEdhZVMkl90LqHj6xUuJHGsFrMlZI73eI3VJtLBUnifNZ60gB4oJOkORb/3Lv96B+nYYotr2nGJMv/5cbAX1psCxZEZ/oj7vmWzDLcmQ4C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjrD7uF3; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CA9295DAD;
+	Wed, 14 May 2025 20:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747253581; cv=pass; b=XkZ2vh8Yya4rSX9Voctn/aLWEmBIczxdtiKB2+dYbBn/HVt7z/PSAq44IaC0cZA/bTGO86v5heCObrjMEM9nmlVoai6FYPlWMsrOucxKOIegMS4odh3SWMoa0pHtKqDrtGvzkpbQbPOdpK6+OVU6ZVdQ9MCyjITeFEgj8MdjArc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747253581; c=relaxed/simple;
+	bh=4kbrFdfegcLlKNTTEmfJbeJMuDiyKOX75mhhyBLzkd4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ktmm/VqMw/7ALIAeipmFUsX9GDkZDxohdGVPNDQEm9JtInzqUzsbxr3gJtmWwLNsybx0zz7/Yudr0AOD9vw8eBlgAiyy8twHwkdEv5NJS399RLVDhpR8mXu7gCawxYgcdluED4ZUzyyh9RAtH3Ldb7WeRlA9DoV5FU7hwgLfPy8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=EZyuNKoB; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjrD7uF3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB4FC4CEE3;
-	Wed, 14 May 2025 20:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747253562;
-	bh=OzKdPvbRk8hZ5qrmc01ogW5Qt/80h78/YBJYjWWOc4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YjrD7uF3s4MzpmCi5++bmuEF1uYLGz2YMBnsiMqoFW7YDj5mc8aOQESHbZu88v1DH
-	 /d18hc+b+qCiFIU8wjE+VT3AUBn0WHkoTjMtfQSxakcobRGXhUIUhXcjPqfE+3ENm4
-	 50iYiKTv8Q57RXy9OlgNnwEWWkUcdDj30VbH5Lu0yYNjQhv5K538xqA5La1qGLzQyq
-	 J+Y37RDoc0V7KiNuD3QEUxsqrff7ZF0EBInFFBUijITqyrdwWAepJiQqqBBdPcRYzZ
-	 baQkY+Gry6SJbiMS9tY+h8YfTzXl7CVbMG3lItpymdu1EpEzqXNWmzOfa9fyCEN98Z
-	 xI4qL7dgk4dgw==
-Date: Wed, 14 May 2025 15:12:41 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Olivier Benjamin <olivier.benjamin@bootlin.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-kernel@vger.kernel.org,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicholas Roth <nicholas@rothemail.net>,
-	linux-rockchip@lists.infradead.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Heiko Stuebner <heiko@sntech.de>, imx@lists.linux.dev,
-	Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: media: imx258: inherit
- video-interface-devices properties
-Message-ID: <174725356050.2958291.9709026924364137236.robh@kernel.org>
-References: <20250509-camera-v3-0-dab2772d229a@bootlin.com>
- <20250509-camera-v3-2-dab2772d229a@bootlin.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="EZyuNKoB"
+ARC-Seal: i=1; a=rsa-sha256; t=1747253530; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QYA8Eg75yzMjCYAfrcL0IA+RNeOuU419/PpIjASU2DH9m07g2U84mJUk/hxcRsyTH1FHHbp9xg9Xy0TakuIA1ELRLLP2OHYtak/mF3f2OQ+lC1yWRp1vbZLbdbSLLm5L/WIUMjOF8gFyKA0p45n7KCR2pLcbxnDcesgsMHQ1ndM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747253530; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=e1XTWQTONEKrdp5HpcuF1hY26M4jNPKA5Df1xgJ7H3s=; 
+	b=mjrW4oOlEe544byYcZHUNxy9Uk+bbzJiCfZFvp6aEg7Wr9f/6hQGv679yAHgTJE7pOpNRFq0FYsoXwxFN6MUkEYhZdtmz3YFwOz8q/nZ1VrkuxTCvPC8ohhKdbF4LvXjJskGMgalPZmA+OZFeBF7DJKooBmb+jKTcphuT8SfZ90=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747253529;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=e1XTWQTONEKrdp5HpcuF1hY26M4jNPKA5Df1xgJ7H3s=;
+	b=EZyuNKoB6X7+qoRRAJ9YGB/ng6DQs5X9zFdtARXDD2PbZy0+thtG7aiJ1eNToluL
+	ZCDVMRa6h6y8/cWWmy5+WBFjEE+JcDN0rI3wuD55I85jzI48dIWvoeJru3t5EUr2ob4
+	GlGT2YRvbs5yzpLWgca9IdAhX3v5VchZ02HZisIM=
+Received: by mx.zohomail.com with SMTPS id 1747253527937960.6041502544936;
+	Wed, 14 May 2025 13:12:07 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-camera-v3-2-dab2772d229a@bootlin.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v2 2/2] rust: drm: Add GPUVM abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aAj7gAzFVRX3dN7L@pollux>
+Date: Wed, 14 May 2025 17:11:50 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Lyude Paul <lyude@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ Asahi Lina <lina@asahilina.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AEB7ACF6-EF2A-4F7B-A7E2-8E4B2A0B7EC8@collabora.com>
+References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
+ <20250422-gpuvm-v2-2-44d4fc25e411@collabora.com>
+ <aAgHGuzCZzh7YPz2@cassiopeiae>
+ <DBB3E8CE-19AA-437D-AF54-BF23763B254F@collabora.com>
+ <aAj7gAzFVRX3dN7L@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-ZohoMailClient: External
 
 
-On Fri, 09 May 2025 23:51:38 +0200, Olivier Benjamin wrote:
-> Update the IMX258 binding to inherit properties defined in the
-> video-interface-devices binding.
-> 
-> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+>=20
+> The lock might be held already by the driver or by TTM when things are =
+called
+> from TTM callbacks.
+>=20
+> This is why GPUVM never takes locks by itself, but asserts that the =
+correct lock
+> is held.
+>=20
+> I think we really want to get proof by the driver by providing lock =
+guard
+> references.
+>=20
+>> See my comment about =E2=80=9C[..] a new type for GEM objects which =
+are known to be locked"
+>> below.
+>=20
+> <snip>
+>=20
+>>>> +
+>>>> +    /// Obtains the [`GpuVmBo`] object that connects `obj` to this =
+VM.
+>>>> +    ///
+>>>> +    /// This connection is unique, so an instane of [`GpuVmBo`] =
+will be
+>>>> +    /// allocated for `obj` once, and that instance will be =
+returned from that
+>>>> +    /// point forward.
+>>>> +    pub fn obtain_bo(&mut self, obj: &DriverObject<T>) -> =
+Result<ARef<GpuVmBo<T>>> {
+>>>> +        // SAFETY: LockedGpuVm implies the right locks are held.
+>>>=20
+>>> No, this must be locked by the dma-resv or the GEM gpuva lock, not =
+by the
+>>> GPUVM lock that protects the interval tree.
+>>=20
+>> By =E2=80=9CGEM gpuva lock=E2=80=9D you=E2=80=99re referring to the =
+custom lock which we
+>> currently do not support, right?
+>=20
+> Yes.
+>=20
+>> This series currently rely on manual calls to dma_resv_{lock,unlock}, =
+I wonder
+>> if we should ditch that in favor of something written in Rust =
+directly. This
+>> would let us introduce a new type for GEM objects which are known to =
+have
+>> `resv` locked. WDYT?
+>=20
+> Not all functions that require the dma-resv lock to be held are called =
+with a
+> GEM object parameter, it could also be a struct drm_gpuvm_bo, struct =
+drm_gpuva
+> or struct drm_gpuvm, since they all carry GEM object pointers.
+>=20
+> For reference, you can look for "_held" in =
+drivers/gpu/drm/drm_gpuvm.c.
+>=20
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Looking at Lyude=E2=80=99s (excellent) KMS series, one thing that comes =
+to mind is
+using Lock::from_raw() on the dma-resv lock. This will build a rust =
+Mutex that
+we can then assert to be locked (or fail with an Error otherwise).
+
+See [0] for the specific patch whose idea I want to copy.
+
+Can I get a +1 on this idea before pursuing it?
+
+-- Daniel
+
+[0] =
+https://lore.kernel.org/rust-for-linux/20250305230406.567126-10-lyude@redh=
+at.com/
 
