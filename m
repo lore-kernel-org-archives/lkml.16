@@ -1,209 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B943B235C01;
-	Wed, 14 May 2025 21:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6F729673C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747257999; cv=none; b=OsYupaJf98F8VMorEBsLG8ELCjQmmQxrUuW8Ry2gRlhPpyCCSOg9lHiM+kJ+toc4Zsd9gH6QKBbZQq8S9p3BU8b7KlOO8KPX75Bj2i8v5LkGpqQWJZ3Lpn6GnLv/AjTlZDoC+KCge1NS1CQNNDE47ouwmWA3hbF+kkW5geGxgnM=
+	t=1747258143; cv=none; b=lyXgSMwZwaujJinPbkpChKEY2r+jQN6RbfGl4rBscsDkwOrnV9ymgL4IzirXcB1oims257k0c7QSUXF24LJF9DH5bQbHDyjdU0QmWWjULWiTA4MN7RRLvgEoGz/N0GcEpFWsKMvTNR8pZ9DXUnZ38ieEoAA3mFEiP4iCdrzQQFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747257999; c=relaxed/simple;
-	bh=6A33sYQdjDk+F4iBMB1qydcIOHVTBcwxBUobGMjX9aI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZdYxQr4wU/VybEO9GWbdO0li0wFMVtjZ7UKHYyOOSuuWl6Ro7XYOXT5YWeoScwvmXV49o206WeYET5SUWtWpKQ1Ym70V2RysjXc/AaJ8bCRQh3BzePw5jGd01BI9tpUGBseTEtbmqGdLr3ptJrARCr8XmFT/IEdUphGy0jn26DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18BB8150C;
-	Wed, 14 May 2025 14:26:23 -0700 (PDT)
-Received: from [192.168.178.25] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 607613F5A1;
-	Wed, 14 May 2025 14:26:22 -0700 (PDT)
-Message-ID: <d6692902-837a-4f30-913b-763f01a5a7ea@arm.com>
-Date: Wed, 14 May 2025 23:26:18 +0200
+	s=arc-20240116; t=1747258143; c=relaxed/simple;
+	bh=gTxoIidJRIRRVDXdvOL1GC+8KB4tp/V3gMpMeWY69LU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bCwtYa9wvmQelGG7C/Sc36XGkQxzBJYOoeiL467i3x6c34y/vGiMPxQJsT9ksJmO/LvmH1JVErgCnW7zJ9sMjuaQ+hf/Hh6YihB4SUb+ZRkctMrd1PQSTiVVJ+MhHKEsg0mM2GtgUxvGRAlBDvv/QvdjjahTxVBoh7W9NyrK4vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Wi6YVY2w; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Wi6YVY2w"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EKF3RS013189
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:29:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RsYghxjwwfqPkfH16SB+W2N9
+	Bybu234eeCOwqX95rqg=; b=Wi6YVY2w4bveQCVSvdE1Ny/xwhIXNZkoOJVRNzSN
+	FYipLExrZ5u8Ufvl9ZCsPEMR7sp6DMAH++wjMFKsHHUgDyKs0HhjEZ1+CWshP0rt
+	zMgTYGOccJ8Xy4VkNDnzUQB4HVzyGz8l5pI0gph98zZf9onW+J98UXIRZi3MHRl4
+	qnboshFlotKP9wXE3Vtz/bJyEiq0KGugXXO+mcxMTIFE6OwK18ZrI34ZCxgPi6Up
+	BctPYyGElvEhVv2U8dXDWMiZR8m/6YwK5KKuwuMieyrGBqdFGIv0tDVJFljiX1pa
+	coOQtP4oUzH0dwmha7dKT5P3/TJSDTiI1oY3nrQ1ygEJFw==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmm5vs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:28:59 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-478f78ff9beso6863131cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 14:28:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747258138; x=1747862938;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RsYghxjwwfqPkfH16SB+W2N9Bybu234eeCOwqX95rqg=;
+        b=TZZpNF6e3Po55esVIgXTkBydI/LurqH9TeH5NimdW7LX/wgxHwSjFSSj+UXDTq5vaz
+         oM2YlJRxg9MmXSXvEdcH9019h9CJcTdNUFaI2jUUslnIBMrcrVDCg4u1U5MYnxCR0KH8
+         zwZqXuXRZILg/Pz9PX9E2Ip3y6pFyuKbHEqS2ECw9Q4f01C8t15cC7h4v5nbko3hYHMU
+         ibYL6ofZiaE2CDeqK2GOLGMpjQqJeKuQN5CO9hXRfewEH704fLY2AAnQL7owEY/O9zrR
+         e8bd8H9S4kLqjPrcgzyJcv9F/K6J+HYcNB2m/t5QuQMkwPOUT5/WvcGRiPTthBOK5CXn
+         vYRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUe3wJ975NOAEl7psockD2aV/HB9yY0mGmOjfuWzo8DwVqQ/GfdpkNCrwFHXQUQzt5hi+wiZmfsH+4GOw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDYh5MBjzeXT6wqTZEvskVIODi+uEJgXtnSBHBwmmjG2tpJN8Z
+	fvTwO+AIy4hL58UMkMW7VSwy1s1mTSM/hY/4tfnwIP0lwj02DBOpYv93kbfTnxemgETxvNDz09z
+	LYdCUu73H273gBECuc5ntRHwSAEb3wjpxUUjioypulroYm80DRngI4eWfglx+Fu8=
+X-Gm-Gg: ASbGncsbCoSUKTUFmJdxCZHBhTXK8qBTMx2zmnKd/GpEXGaog0RudkfHjIpWzYEKP5z
+	tAFiVhV7FbKee6m9dpoUJSC1uJlqvHXt93W5/EAnB2PcSBNRI+6v+cQEe1kGcJaNDvD+LkniB7n
+	zrMhS+cOCIZsf7GknbVnQHrXBoq1NKXPYWvQ6m4au6sACOpcm/65no4BsO5MKC6/lsoJSpZg+Qf
+	lCAP7U6VJp/ip+7yqeeoi6JS4b+EVZd2EfXrTEZPdgJr60IBdcv7TCZNuksovadHq9a+a6tUilb
+	ykOgR0vAQljElcwzEG4bBy/hfob+MRFjyWUaN94oCUvRV3M6fdUHPAcpjdISI1jGmaeecbB43zA
+	=
+X-Received: by 2002:ac8:5782:0:b0:494:59b0:7347 with SMTP id d75a77b69052e-494a338f8cdmr4118361cf.37.1747258138510;
+        Wed, 14 May 2025 14:28:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlKluSGkmg0f5Bl+QdFi/VJlor5IWupRH/g1xYafaDWacbs+pcDc5DlUBZtWHHVfOpPHCLkQ==
+X-Received: by 2002:ac8:5782:0:b0:494:59b0:7347 with SMTP id d75a77b69052e-494a338f8cdmr4117841cf.37.1747258138020;
+        Wed, 14 May 2025 14:28:58 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645cee9sm2378489e87.75.2025.05.14.14.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 14:28:56 -0700 (PDT)
+Date: Thu, 15 May 2025 00:28:54 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jagadeesh Kona <quic_jkona@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v4 02/18] dt-bindings: clock: qcom: Update sc8280xp camcc
+ bindings
+Message-ID: <xlul47xvzvaexbs7w3erpfel754p3nyvnkaqdwjktbafugee5h@ppgxmt4cgnv6>
+References: <20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com>
+ <20250515-videocc-pll-multi-pd-voting-v4-2-571c63297d01@quicinc.com>
+ <oogbxu2uphyhknr4fjbc4ato6q7r2iermvxbqezyqd2xwamqtr@cddhw4kh6zzx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: EEVDF regression still exists
-To: "Prundeanu, Cristian" <cpru@amazon.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
- "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>,
- "Saidi, Ali" <alisaidi@amazon.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- "Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
- "Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy
- <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
- Joseph Salisbury <joseph.salisbury@oracle.com>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-tip-commits@vger.kernel.org" <linux-tip-commits@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, Chris Redpath <Chris.Redpath@arm.com>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
- <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
- <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
- <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
- <20250502084844.GT4198@noisy.programming.kicks-ass.net>
- <935376C2-71B9-4E41-9738-99A4BCC55B48@amazon.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <935376C2-71B9-4E41-9738-99A4BCC55B48@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <oogbxu2uphyhknr4fjbc4ato6q7r2iermvxbqezyqd2xwamqtr@cddhw4kh6zzx>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE5OCBTYWx0ZWRfX3aT3IiY48w/l
+ 3bEWcMOtx/6TtDbYYpU9W80C7b0dgfYn3GzcbfwA62VEfDoefrjhwwJUZKsY1bR3OJlRn5+4+be
+ o1lkBiyTJJhaIxNQSNmHO3sJuqcbCAiNtqohH6p+TsWm61cFreCKlmHUb7vqqV5M1EPeFWZ0OFm
+ 2YARYO345bqyGD4j/UqI7Zz61wYhgPXTL5ob+C+OTZdCiHNDmGGVb3eFFRgEcuTGW8MmXEIgpQ6
+ TCf4cqzBOORUtwlDfFIXhsjJxQvXcvy+kcT53ExcKOQK3+UUyKiu9YSmMXsDHsL1VWfnewa4RJp
+ z61hALPXv6NQcpD6wqG5iy9hwCVlzPaRjPVHhuKY2puocY2r3l4KNEBBIsw+GzOUu8ZuSgZjCh1
+ 3vz58ajKDR8eoyzBF6UVY30yNwu0kBVPi+jaKx8ew18Nwd6PpOE0rM3xbU72lPuEwatwszDs
+X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=68250b1b cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=3T6xumy5ldElVCuf34YA:9 a=CjuIK1q_8ugA:10 a=a_PwQJl-kcHnX1M80qC6:22
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: BodKzWkTNLswtfSgIZveOJbnrRwT4-Ct
+X-Proofpoint-ORIG-GUID: BodKzWkTNLswtfSgIZveOJbnrRwT4-Ct
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140198
 
-+ Chris Redpath <Chris.Redpath@arm.com>
-
-On 02/05/2025 18:52, Prundeanu, Cristian wrote:
-> On 2025-05-02, 03:50, "Peter Zijlstra" <peterz@infradead.org <mailto:peterz@infradead.org>> wrote:
+On Thu, May 15, 2025 at 12:15:30AM +0300, Dmitry Baryshkov wrote:
+> On Thu, May 15, 2025 at 12:38:47AM +0530, Jagadeesh Kona wrote:
+> > SC8280XP camcc only requires the MMCX power domain, unlike
+> > SM8450 camcc which will now support both MMCX and MXC power
+> > domains. Hence move SC8280XP camcc bindings from SM8450 to
+> > SA8775P camcc.
 > 
->> On Thu, May 01, 2025 at 04:16:07PM +0000, Prundeanu, Cristian wrote:
->>
->>> (Please keep in mind that the target isn't to get SCHED_BATCH to the same
->>> level as 6.5-default; it's to resolve the regression from 6.5-default to
->>> 6.6+ default, and from 6.5-SCHED_BATCH to 6.6+ SCHED_BATCH).
->>
->> No, the target definitely is not to make 6.6+ default match 6.5 default.
->>
->> The target very much is getting you performance similar to the 6.5
->> default that you were happy with with knobs we can live with.
+> It requires MX for PLLs. I know that we were not modelling that
+> relationship beforehand, but maybe we should start doing that?
+
+On the other hand, it's irrelevant. If we add MX, we can as well add
+MXA. So this seems to be correct move anyway.
+
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+
 > 
-> If we're talking about new knobs in 6.6+, absolutely.
+> > SA8775P camcc doesn't support required-opps property currently
+> > but SC8280XP camcc need that property,  so add required-opps
+> > based on SC8280XP camcc conditional check in SA8775P camcc
+> > bindings.
+> > 
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> > ---
+> >  .../devicetree/bindings/clock/qcom,sa8775p-camcc.yaml     | 15 +++++++++++++++
+> >  .../devicetree/bindings/clock/qcom,sm8450-camcc.yaml      |  2 --
+> >  2 files changed, 15 insertions(+), 2 deletions(-)
+> > 
 > 
-> For this particular case, SCHED_BATCH existed before 6.6. Users who already
-> enable SCHED_BATCH now have no recourse. We can't, with a straight face,
-> claim that this is a sufficient fix, or that there is no regression.
-> 
-> I am, of course, interested to discuss any knob tweaks as a stop-gap measure.
-> (That is also why I proposed moving NO_PLACE_LAG and NO_RUN_TO_PARITY to sysctl
-> a few months back: to give users, including distro maintainers, a reasonable
-> way to preconfigure their systems in a standard, persistent way, while this is
-> being worked on).
-> None of this should be considered a permanent solution though. It's not a fix,
-> and was never meant to be anything but a short-term relief while debugging the
-> regression is ongoing.
+> -- 
+> With best wishes
+> Dmitry
 
-I've been running those tests as well on an environment pretty close to
-yours. I use c7g.16xlarge and m7gd.16xlarge ('maxcpus=16 nr_cpus=16') AWS
-instances for LoadGen (hammerdb) and SUT (mysqld).
-
-We tried to figure out whether only changing the mysql (SUT) 'connection'
-tasks to SCHED_BATCH is sufficient to see a performance uplift. There is
-one of those tasks per virtual user.
-
-I ran (1)-(3) (like you) plus (4):
-
-
-(1) default
-
-(2) NO_PL NO_RTP ... run w/ NO_PLACE_LAG and NO_RUN_TO_PARITY
-
-(3) SCHED_BATCH  ... launch mysqld.service with 'CPUSchedulingPolicy=batch'
-                     [/lib/systemd/system/mysql.service]
-
-(4) mysql patch  ... run 'connection' threads as SCHED_BATCH
-
-
-Kernel   | Runtime      | mysql  | Throughput | P50 latency
-aarch64  | parameters   | patch* | (NOPM)     | (larger is worse)
----------+--------------+--------+------------+------------------
-6.5      | default      |        |  baseline  |  baseline
-         | SCHED_BATCH  |        |  +10.9%    |  -42.9%
-         | default      |   x    |   +9.5%    |  -33.0%
----------+--------------+--------+------------+------------------
-6.6      | default      |        |   -2.7%    |  -23.7%
-         | NO_PL NO_RTP |        |   +4.4%    |   +8.8%
-         | SCHED_BATCH  |        |   +4.5%    |    -*
-         | default      |   x    |   +4.2%    |  -38.8%
----------+--------------+--------+------------+------------------
-6.8      | default      |        |   -3.7%    |    -
-         | NO_PL NO_RTP |        |   +2.5%    |  -24.0%
-         | SCHED_BATCH  |        |   +6.2%    |  -38.6%
-         | default      |   x    |   +2.7%    |  -37.0%
----------+--------------+--------+------------+------------------
-6.12     | default      |        |   -6.3%    |    -
-         | NO_PL NO_RTP |        |   -4.0%    |  -34.1%
-         | SCHED_BATCH  |        |   -2.3%    |  -35.9%
-         | default      |   x    |   -2.1%    |  -33.6%
----------+--------------+--------+------------+------------------
-6.13     | default      |        |   -7.3%    |   -9.2%
-         | NO_PL NO_RTP |        |   -3.7%    |  -35.0%
-         | SCHED_BATCH  |        |      0%    |  -38.2%
-         | default      |   x    |   -1.7%    |  -34.3%
----------+--------------+--------+------------+------------------
-6.14     | default      |        |   -7.3%    |  -19.3%
-         | NO_PL NO_RTP |        |   -5.3%    |  -36.6%
-         | SCHED_BATCH  |        |   -2.9%    |  -40.1%
-         | default      |   x    |   -2.4%    |  -39.0%
----------+--------------+--------+------------+------------------
-6.15-rc5 | default      |        |   -9.6%    |  -19.3%
-         | NO_PL NO_RTP |        |   -7.7%    |  -34.7%
-         | SCHED_BATCH  |        |   -5.1%    |  -38.6%
-         | default      |   x    |   -5.6%    |    -
----------+--------------+------------+--------+------------------
-
-'-'* 'repro-regression' didn't provide latency numbers
-
-Looks like (4) is almost as good as (3). And we see this uplift also on
-CFS (6.5). The patch below is trivial and easily to apply. 
-
-That said, I also see the policy unrelated regression you're describing
-(especially from '6.8 -> 6.12' and then from '6.14 -> 6.15-rc5'.
-
-I will have time the next couple of days to also look into these issues
-using our setup.
-
----
-
-Patch applied to mysql-8.0-8.0.42 source package (Ubuntu 22.04):
-
--->8--
-
-From: Chris Redpath <chris.redpath@arm.com>
-Date: Thu, 13 Mar 2025 16:30:13 +0000
-Subject: [PATCH] Make sure we use SCHED_BATCH for thread-per-connection mode
-
-Hack in a small change in the thread init code for the handlers to choose
-the correct scheduler policy.
-
-Signed-off-by: "Chris Redpath" <chris.redpath@arm.com>
----
- sql/conn_handler/connection_handler_per_thread.cc | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/sql/conn_handler/connection_handler_per_thread.cc b/sql/conn_handler/connection_handler_per_thread.cc
-index 68641b55723..10086cd3c6f 100644
---- a/sql/conn_handler/connection_handler_per_thread.cc
-+++ b/sql/conn_handler/connection_handler_per_thread.cc
-@@ -249,6 +249,7 @@ static void *handle_connection(void *arg) {
-       Connection_handler_manager::get_instance();
-   Channel_info *channel_info = static_cast<Channel_info *>(arg);
-   bool pthread_reused [[maybe_unused]] = false;
-+  struct sched_param param = {0};
- 
-   if (my_thread_init()) {
-     connection_errors_internal++;
-@@ -260,6 +261,15 @@ static void *handle_connection(void *arg) {
-     return nullptr;
-   }
- 
-+  // Set the scheduling policy to SCHED_BATCH
-+  if (sched_setscheduler(0, SCHED_BATCH, &param) == -1) {
-+    perror("sched_setscheduler");
-+    // Handle the error as needed
-+    delete channel_info;
-+    my_thread_exit(nullptr);
-+    return nullptr;
-+  }
-+
-   for (;;) {
-     THD *thd = init_new_thd(channel_info);
-     if (thd == nullptr) {
 -- 
-2.34.1
-
+With best wishes
+Dmitry
