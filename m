@@ -1,83 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4FF282ED;
-	Wed, 14 May 2025 15:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7F41E7C11
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238026; cv=none; b=Bd0LXW8FPfFhG6oLX3J7Q9vv+2moqDUaAHN33iXhyAeoUaC8wlvri/D6j4GPVNdQF9cpijHd/5/cNgI9mTzBZX6/w0SbhSMDDlJH3EyEf1INeHMP5UNGmt2jXVL09ie3PW53VBMpl7RhMbRUaLwkHW9eZkb5vEG4rAD1uD+6jK8=
+	t=1747238054; cv=none; b=V4Mfun3zaCFP87pC0ITt/AfFB1DzcGpmP4EnrjF6q7VPV5wkSxVqIZFMqqjvs1cwiRJBcM1Aq4xaT/aHOHaK7qt0zVRxx2bDDsKAszPDcY7tfp6aOPYUJaVYnFY/wtHvSN8Qym65b6Whn/uPwmwpJ6v9FHusDtx+Lbnw7VWquzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238026; c=relaxed/simple;
-	bh=vUJao5RA1FECEfxSWQAdWVDba5icQlbRNS/+nM7I1XA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P8v1D9t+r/Qw//9rej7zlM8jSMWm5LZ3rrcjR8uBhVrCSvTH0C4dCEW3bKw0WjX2zzGAcwgEP3zjivn3nO+FWAe3bKw3lN3Uw9HzN5iapGXRLnWVVireHmhhRVU0rD00Igh24smMKM1GBbGLDBeghWjAVvkpbv4C5/iXz2SutyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y78eKOdR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747238054; c=relaxed/simple;
+	bh=weHHEddq3NgCnyhJObSar682vkZHiYlxMVkeLdj5YaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6ZtGhiFoaCneflqpYH5wpASoFLo1kOUlzoR9XB3Obo5O8cFUv+EOabyLGq5eqVUlRUCqt0Xb6t9QF6tSbC1HERYHVVeq4lt7b8hn9vXnS2X+zPszVIsGRxg1Ikb01Kc8ysn4qUvjiXK2gX4AIzkIbjzsoVDtugoaquTgJX0Ab8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OOJMXwb7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=w2e7ojmm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OOJMXwb7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=w2e7ojmm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y78eKOdR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE2EDC4CEE3;
-	Wed, 14 May 2025 15:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238025;
-	bh=vUJao5RA1FECEfxSWQAdWVDba5icQlbRNS/+nM7I1XA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y78eKOdRFrLUEiUBM1SjlXL7oRujznCCqxO9wf2G2oOD9TN2Ebo6oDaN8UqBIfxeb
-	 aWnLSJptIzyb6deKVSSSaG88mP/gOk6blsI0ixxK0+ugCcbLT1sTUEH+wPSqqoFCzd
-	 NrDwhODn1LHwSSlOcsHP+Z2yBK+YWGzd3S51vCqksTihqk7j4GjdvM6dfDYLosMJQC
-	 XgEAIne+vE4btJf6fvGkPkSjMIwj7l1TtRocV9S04g7Jz/aJY1+DhtiW03cOXkXjxc
-	 sJZ9LtUJAz42jN4OnviELHlaWXL/q9M6Lhuf6E6+CxlrrIShttRlcoaJckbAksStvY
-	 mbWRrlg51jbGA==
-From: Conor Dooley <conor@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	tglx@linutronix.de,
-	daniel.lezcano@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	tim609@andestech.com
-Subject: Re: (subset) [PATCH v4 0/9] add Voyager board support
-Date: Wed, 14 May 2025 16:53:34 +0100
-Message-ID: <20250514-spherical-spindle-0315375167ea@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250514095350.3765716-1-ben717@andestech.com>
-References: <20250514095350.3765716-1-ben717@andestech.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OOJMXwb7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="w2e7ojmm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OOJMXwb7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="w2e7ojmm"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4C2DE2122B;
+	Wed, 14 May 2025 15:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747238044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ExnqCH3sIsMHmrUOVPISaMOlvbAx9glFwsFKy/6VWQc=;
+	b=OOJMXwb7FgME1WSTXArMf9oRfdfehSRRcN9AKsyAUa3Q2E7k+uPUdCwcO0lx2Dm+sno6ni
+	2mgvqn0ZLLOUug4Oft6FQP8AAh1cFagNCZ9JH3A8fea1uYTrl8tnI2ZVoR6219epG1ChND
+	GIhwVBwmRM/27Wnc+k0DfImlIe+eH4s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747238044;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ExnqCH3sIsMHmrUOVPISaMOlvbAx9glFwsFKy/6VWQc=;
+	b=w2e7ojmmtZGmZZY1IARMCL6WifP+qctBKtpuZx8y6l+U2T9YrQE1MZcr65Krtl5wgK/uXm
+	VmaDPidi7EwqOUCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747238044; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ExnqCH3sIsMHmrUOVPISaMOlvbAx9glFwsFKy/6VWQc=;
+	b=OOJMXwb7FgME1WSTXArMf9oRfdfehSRRcN9AKsyAUa3Q2E7k+uPUdCwcO0lx2Dm+sno6ni
+	2mgvqn0ZLLOUug4Oft6FQP8AAh1cFagNCZ9JH3A8fea1uYTrl8tnI2ZVoR6219epG1ChND
+	GIhwVBwmRM/27Wnc+k0DfImlIe+eH4s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747238044;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ExnqCH3sIsMHmrUOVPISaMOlvbAx9glFwsFKy/6VWQc=;
+	b=w2e7ojmmtZGmZZY1IARMCL6WifP+qctBKtpuZx8y6l+U2T9YrQE1MZcr65Krtl5wgK/uXm
+	VmaDPidi7EwqOUCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3DBAD13306;
+	Wed, 14 May 2025 15:54:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XDALD5y8JGjVMQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 14 May 2025 15:54:04 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7803CA0A02; Wed, 14 May 2025 17:54:03 +0200 (CEST)
+Date: Wed, 14 May 2025 17:54:03 +0200
+From: Jan Kara <jack@suse.cz>
+To: Andrey Kriulin <kitotavrik.s@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, 
+	Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	stable@vger.kernel.org, Andrey Kriulin <kitotavrik.media@gmail.com>
+Subject: Re: [PATCH v2] fs: minix: Fix handling of corrupted directories
+Message-ID: <s5pju6jp2k4ddyuuz2xydeys5lhashkbvwa2lmtw3dmtedupw5@sjdrgnhwsvza>
+References: <20250514103837.27152-1-kitotavrik.s@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=566; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=o01yVTTzZFhpDmtQ1GzGggNP3iMTUpd+Z6Ki8ySZNTY=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBkqe2plgqcGXXx24ZJRo7eKQ0z/e+93Vx9a5G6+3NHcd vhTz3+OjlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAExkzURGhpvcXafWN5TLGk0V kuDQE2MseHjPKVR0cfSi1uzww2WX5zEyHFtzLcn4jujdLJevx6ZcnXtsso5DEvskM7Fwjw8iR5f 1cgEA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514103837.27152-1-kitotavrik.s@gmail.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,infradead.org,toxicpanda.com,suse.de,suse.cz,vger.kernel.org,linuxtesting.org,gmail.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email]
+X-Spam-Score: -2.30
 
-From: Conor Dooley <conor.dooley@microchip.com>
-
-On Wed, 14 May 2025 17:53:41 +0800, Ben Zong-You Xie wrote:
-> The Voyager is a 9.6” x 9.6” Micro ATX form factor development board
-> including Andes QiLai SoC. This patch series adds minimal device tree
-> files for the QiLai SoC and the Voyager board [1].
+On Wed 14-05-25 13:38:35, Andrey Kriulin wrote:
+> If the directory is corrupted and the number of nlinks is less than 2
+> (valid nlinks have at least 2), then when the directory is deleted, the
+> minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+> value.
 > 
-> Now only support basic uart drivers to boot up into a basic console. Other
-> features will be added later.
+> Make nlinks validity check for directory.
 > 
-> [...]
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
+> Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
+> ---
+> v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
+> <jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
+> directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
+> 
+>  fs/minix/inode.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/fs/minix/inode.c b/fs/minix/inode.c
+> index f007e389d5d2..d815397b8b0d 100644
+> --- a/fs/minix/inode.c
+> +++ b/fs/minix/inode.c
+> @@ -517,6 +517,14 @@ static struct inode *V1_minix_iget(struct inode *inode)
+>  		iget_failed(inode);
+>  		return ERR_PTR(-ESTALE);
+>  	}
+> +	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
+> +		printk("MINIX-fs: inode directory with corrupted number of links");
 
-Applied to riscv-cache-for-next, thanks!
+A message like this is rather useless because it shows nothing either about
+the inode or the link count or the filesystem where this happened. I'd
+either improve or delete it.
 
-[6/9] dt-bindings: cache: add QiLai compatible to ax45mp
-      https://git.kernel.org/conor/c/51b081cdb923
+> +		if (!sb_rdonly(inode->i_sb)) {
+> +			brelse(bh);
+> +			iget_failed(inode);
+> +			return ERR_PTR(-EUCLEAN);
+> +		}
 
-Thanks,
-Conor.
+OK, but when the inode is cached in memory with the wrong link count and
+then the filesystem is remounted read-write, you will get the same problem
+as before? I guess the easiest is to fudge i_nlinks count in memory to 2 to
+avoid issues...
+
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
