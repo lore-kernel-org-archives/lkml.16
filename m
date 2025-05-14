@@ -1,298 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4705225A50;
-	Wed, 14 May 2025 10:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00CC1F4611
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747219175; cv=none; b=WTuovkCm6P7JendnxhpKmvtTsixpT/cTAKU6mkn8bQr0Uxkn9TG8Lm8wobaPE49Z69pQ6nDJz00gPg7X/R/hfw5cqvJMy2K5F0ehPt8pL/drC10fI8yq2awmHTDIfM7fbn5AYmhLP7uhMQzcExBHzE/xeX0MJhqlG0zfbR3J6TQ=
+	t=1747219384; cv=none; b=ZbUps8duDCVhZjLkADn6dXIaC7yBT6jpDNo6Mj5zaimOCXVhKyvznwZBeoPXBNaJ7gl2mVGWAElBL5/8UlrUD4DJFxBQzmsLLn7r8bN/PnBBQ/OL5keya0+ctTK7vfSoIslf0WUjREepD/yOYhHFtaSMawGNperKOkDzK9BAj/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747219175; c=relaxed/simple;
-	bh=jdaKOxD2qt2jrO1zGt5BuJsLgrxKO8Tjw4sVNPmGmNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XqVwE/cWbmzjQ4PAfqXGomeD/Jq97yg5hYmwe4OhwsZXN4H1AZ33xj2RQksfTASwKAx5caWmELLx1nOZZngoWLNEEp0fbtNzFMAkCJu4j8B3bIhCjyo4sZN41vyIjChCv4wlsICwVW+crXMvWcuiqT89tdHY51Q4hb4L7p2Gt2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2sbotfm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747219384; c=relaxed/simple;
+	bh=yxpRDaXQ0oD5yOuhFsK/cjE9fYO5RsIUokYtNCOOmU0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fyh17YZvDE9hPJmkJ/rMD6jzyjj+EMV0/engMrQLjW7AOHpKQsNT3ZEtm6FR0wXK6fL6gi2SRmJiaVw8d/NMQqKGHa//YXo5EQZGjbPWsXQF5wFkCINdZ9K9xj3CrbRxl1/vMX//HDNYiB8dVuEXDDWPC5/78M6Z0cFU3HXptss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i62khi/x; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2sbotfm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF48C4CEE9;
-	Wed, 14 May 2025 10:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747219174;
-	bh=jdaKOxD2qt2jrO1zGt5BuJsLgrxKO8Tjw4sVNPmGmNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m2sbotfmS8yko3IJtk8XVsHgYCDFtBVsGhhCxwPZlon3shJEZXif2/gpZglkjaOir
-	 5ys+PFUjoRr4jsgRlDaOsQZ8dKT7+n2DQ97IGnxK6MKxTSqwiBvNA1sCaIc0FO4jKO
-	 R8HFtSJ2mxI+TZm+NI/LZfsx9yAGU8MaWB4qbVthLFocMpXaaVyE6mQ4dIoeH6AhS8
-	 AkaxffMkxGBqNEu15rfuGoFkQH+pKTh3/IlSITZBJzh79ateLjk3W2E0anKIbrcFy9
-	 ut4DKOO26SynEkltCKpjgN6/WkNXhY8oxCT6CZQty64AQ4cxjQ5O85YX3wNHLCYtA/
-	 WH8qs5ei9qPpA==
-Date: Wed, 14 May 2025 12:39:28 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 18/26] arm64: smp: Support non-SGIs for IPIs
-Message-ID: <aCRy4K/jvLr95GOp@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i62khi/x"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-442cd12d151so46207295e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747219381; x=1747824181; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tWcLVbqvM8OdX8Xrj0W4Do+rrn8NbuSF3KWq+UJch+4=;
+        b=i62khi/xIjqJBOPiOF/QJVXpGuIl/Q1bZ3f9ooHyjCkoafGbcDe4ylQ6ikOBKHfhoL
+         kB2I36tqN94ExikYbT356iWpJEO9QEJ9lkOc0QET8Kk40pUxSEKaSvw+pItyO7YfW5TR
+         nW/61EUsWrWAh48/zpnl9ZH+oOQ7sXT1ttzXLTeu3KaBcoL5oaxGL698A4VN3d3TT0+U
+         Yoid5gs7WLVeFw/shGnTClGibgqrYB3PVEM45vXcHSc2zyhjKsKl+fFjlQQyg5StczOk
+         tYnB0vBjATNGJzRaFVqWiGXEw45Z3lHXnees6v66SSVpRbyvWRPWBlYtyxTimL5L/p3Y
+         K0dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747219381; x=1747824181;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tWcLVbqvM8OdX8Xrj0W4Do+rrn8NbuSF3KWq+UJch+4=;
+        b=VqqG/tZ7OaccLBFRt+EAe4Etrjq4m8FbJbF8lW1L9qO61DZTmSERYaPSwfGGDXoblh
+         xOuX3fmdbJChdjtvnoRGUiEg+/AUMXMKx7gJ/Pdho9uyTz2qk3/9jYzAJP4o80n0nNqE
+         LqIOh/WyqW2ibVIVzMUuhiaDzlbbv4cNSTxQFKwO3L0FlyYANk8VUdw2k9FtB1eQi11y
+         1FmDv5sn9EUhesMaZSvImzSQvy/Eo1lWBC4ry0zedFq9mDcHf1mzsTPm6KOi+Y2rBy8D
+         cksioNBf8a0OVihLqlePiERQooB7PNfbH2QHFtqHAZQQCrp5J8C+GTD7u/w0lQ83cWCl
+         QFAA==
+X-Gm-Message-State: AOJu0Ywjzmjw78giX/0XMnrsMujY2OMCmmfYc9R39G+i0xP52P8+RhXQ
+	5lYnoZKcjAl+JXYENeA00aDIwrScLwn0iNQ5koRbngls315kS5mj5vQyOxdWf3yDLafwe5+7oah
+	jwreeq40f1224kEoP9HtqHBaelfOWHOmlSsFAy3xh02KFoT6QesshoxuOlXDqhQcK/ROXaSp4Bm
+	z16jWVqiZJYqrj6mTtPosF7MvhKLASqQ==
+X-Google-Smtp-Source: AGHT+IFmHiQzSODKtQPB3eZ+mlgjWeZ7UetSBHXxKn0JAVIb5Yh0OaZHqnrS1iGnElaynESwat71Odv+
+X-Received: from wmbes27.prod.google.com ([2002:a05:600c:811b:b0:43b:bd03:5d2])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4e11:b0:441:b5cb:4f94
+ with SMTP id 5b1f17b1804b1-442f20baefamr28591775e9.5.1747219381017; Wed, 14
+ May 2025 03:43:01 -0700 (PDT)
+Date: Wed, 14 May 2025 12:42:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3966; i=ardb@kernel.org;
+ h=from:subject; bh=QjHGIO6l5Tyo84ulsaWQKmauCBnGuK5nh/dokZsyLV8=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUOleDEjx25Jm7Kln1S+sS/4cec989ONNfWy9azXt+gVu
+ r08vC6go5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEwkj4Phn0JW47Fj21fvU3kU
+ OP8re4ekkn6Uqt1lG7UHlxgKPG+Wr2FkmHnzSJKB9Ev3K9vC1x9NKRIU7P914yRrYVrqt19slgt 92AE=
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250514104242.1275040-9-ardb+git@google.com>
+Subject: [PATCH v3 0/7] x86: Robustify pgtable_l5_enabled()
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 13, 2025 at 07:48:11PM +0200, Lorenzo Pieralisi wrote:
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[...]
+This is a follow-up to the discussion at [0], broken out of that series
+so we can progress while the SEV changes are being reviewed and tested.
 
->  /*
->   * Called from the secondary holding pen, this is the secondary CPU entry point.
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 3b3f6b56e733039cad7ff5b8995db16a68f3c762..3f3712e47c94c62836fb89cd4bfb3595fbb41557 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -83,7 +83,26 @@ enum ipi_msg_type {
->  
->  static int ipi_irq_base __ro_after_init;
->  static int nr_ipi __ro_after_init = NR_IPI;
-> -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
-> +
-> +struct ipi_descs {
-> +	struct irq_desc *descs[MAX_IPI];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
-> +
-> +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
-> +
-> +static bool percpu_ipi_descs __ro_after_init;
-> +
-> +static int ipi_to_irq(int ipi, int cpu)
-> +{
-> +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
-> +}
-> +
-> +static int irq_to_ipi(int irq)
-> +{
-> +	return (irq - ipi_irq_base) % nr_ipi;
-> +}
->  
->  static bool crash_stop;
->  
-> @@ -844,7 +863,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
->  			   prec >= 4 ? " " : "");
->  		for_each_online_cpu(cpu)
-> -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
-> +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
->  		seq_printf(p, "      %s\n", ipi_types[i]);
->  	}
->  
-> @@ -919,7 +938,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
->  
->  static void arm64_backtrace_ipi(cpumask_t *mask)
->  {
-> -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
-> +	unsigned int cpu;
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-> +	else
-> +		for_each_cpu(cpu, mask)
-> +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
->  }
->  
->  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-> @@ -944,7 +969,7 @@ void kgdb_roundup_cpus(void)
->  		if (cpu == this_cpu)
->  			continue;
->  
-> -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
-> +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
->  	}
->  }
->  #endif
-> @@ -1013,14 +1038,21 @@ static void do_handle_IPI(int ipinr)
->  
->  static irqreturn_t ipi_handler(int irq, void *data)
->  {
-> -	do_handle_IPI(irq - ipi_irq_base);
-> +	do_handle_IPI(irq_to_ipi(irq));
->  	return IRQ_HANDLED;
->  }
->  
->  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
->  {
-> +	unsigned int cpu;
-> +
->  	trace_ipi_raise(target, ipi_types[ipinr]);
-> -	__ipi_send_mask(ipi_desc[ipinr], target);
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
-> +	else
-> +		for_each_cpu(cpu, target)
-> +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
->  }
->  
->  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
-> @@ -1046,11 +1078,15 @@ static void ipi_setup(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			prepare_percpu_nmi(ipi_irq_base + i);
-> -			enable_percpu_nmi(ipi_irq_base + i, 0);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				prepare_percpu_nmi(ipi_irq_base + i);
-> +				enable_percpu_nmi(ipi_irq_base + i, 0);
-> +			} else {
-> +				enable_percpu_irq(ipi_irq_base + i, 0);
-> +			}
->  		} else {
-> -			enable_percpu_irq(ipi_irq_base + i, 0);
-> +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
-> @@ -1064,44 +1100,79 @@ static void ipi_teardown(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			disable_percpu_nmi(ipi_irq_base + i);
-> -			teardown_percpu_nmi(ipi_irq_base + i);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				disable_percpu_nmi(ipi_irq_base + i);
-> +				teardown_percpu_nmi(ipi_irq_base + i);
-> +			} else {
-> +				disable_percpu_irq(ipi_irq_base + i);
-> +			}
->  		} else {
-> -			disable_percpu_irq(ipi_irq_base + i);
-> +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
->  #endif
->  
-> -void __init set_smp_ipi_range(int ipi_base, int n)
-> +static void ipi_setup_ppi(int ipi)
-> +{
-> +	int err, irq, cpu;
-> +
-> +	irq = ipi_irq_base + ipi;
-> +
-> +	if (ipi_should_be_nmi(irq)) {
-> +		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
-> +		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
-> +	} else {
-> +		err = request_percpu_irq(irq, ipi_handler, "IPI", &irq_stat);
-> +		WARN(err, "Could not request IRQ %d as IRQ, err=%d\n", irq, err);
-> +	}
-> +
-> +	for_each_possible_cpu(cpu)
-> +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
-> +
-> +	irq_set_status_flags(irq, IRQ_HIDDEN);
-> +}
-> +
-> +static void ipi_setup_lpi(int ipi, int ncpus)
-> +{
-> +	for (int cpu = 0; cpu < ncpus; cpu++) {
-> +		int err, irq;
-> +
-> +		irq = ipi_to_irq(ipi, cpu);
-> +
-> +		err = irq_force_affinity(irq, cpumask_of(cpu));
-> +
-> +		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
-> +
-> +		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
-> +				  &irq_stat);
+The current implementation of pgtable_l5_enabled() is problematic
+because it has two implementations, and source files need to opt into
+the correct one if they contain code that might be called very early.
+Other related global pseudo-constants exist that assume different values
+based on the number of paging levels, and it is hard to reason about
+whether or not all memory mapping and page table code is guaranteed to
+observe consistent values of all of these at all times during the boot.
+Case in point: currently, KASAN needs to be disabled during alternatives
+patching because otherwise, it will reliably produce false positive
+reports due to such inconsistencies.
 
-Heads-up, kbuild bot (sparse) barfed (correctly) at this, because the
-&irq_stat pointer does not match the request_irq() void *dev_id parameter
-signature (it is void __percpu *).
+This v2 drops the early variant entirely, and makes the existing late
+variant, which is based on cpu_feature_enabled(), work as expected in
+all cases by tweaking the CPU capability code so that it permits setting
+the 5-level paging capability from assembler before calling the C
+entrypoint of the core kernel.
 
-Of course, the &irq_stat parameter is unused so this is harmless.
+Runtime constants were considered for PGDIR_SHIFT and PTRS_PER_P4D but
+were found unsuitable as they do not support loadable modules, and so
+they are replaced with expressions based on pgtable_l5_enabled(). Earlier
+patching of alternatives based on CPU capabilities may be feasible, but
+whether or not this improves performance is TBD. In any case, doing so
+from the startup code is unlikely to be worth the added complexity.
 
-I would just pass NULL (because AFAICS irq_stat in the action handler is
-unused), the question is why are we passing &irq_stat in
-request_percpu_irq() if that's unused in ipi_handler() ?
+Build and boot tested using QEMU with LA57 emulation.
 
-Was it used before and we removed its usage ? Should we clean it up
-for completeness ?
+Changes since v2:
+- Drop first patch which has been merged
+- Rename existing "la57" CPU flag to "la57_hw" and use "la57" to
+  indicate that 5 level paging is being used
+- Move memset() out of identify_cpu()
+- Make set/clear cap override arrays ro_after_init
+- Split off asm-offsets update
 
-Thanks,
-Lorenzo
+[0] https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
 
-> +
-> +		WARN(err, "Could not request IRQ %d, err=%d\n", irq, err);
-> +
-> +		irq_set_status_flags(irq, (IRQ_HIDDEN | IRQ_NO_BALANCING_MASK));
-> +
-> +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
-> +	}
-> +}
-> +
-> +void __init set_smp_ipi_range_percpu(int ipi_base, int n, int ncpus)
->  {
->  	int i;
->  
->  	WARN_ON(n < MAX_IPI);
->  	nr_ipi = min(n, MAX_IPI);
->  
-> -	for (i = 0; i < nr_ipi; i++) {
-> -		int err;
-> -
-> -		if (ipi_should_be_nmi(i)) {
-> -			err = request_percpu_nmi(ipi_base + i, ipi_handler,
-> -						 "IPI", &irq_stat);
-> -			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
-> -			     i, err);
-> -		} else {
-> -			err = request_percpu_irq(ipi_base + i, ipi_handler,
-> -						 "IPI", &irq_stat);
-> -			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
-> -			     i, err);
-> -		}
-> -
-> -		ipi_desc[i] = irq_to_desc(ipi_base + i);
-> -		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
-> -	}
-> -
-> +	percpu_ipi_descs = !!ncpus;
->  	ipi_irq_base = ipi_base;
->  
-> +	for (i = 0; i < nr_ipi; i++) {
-> +		if (!percpu_ipi_descs)
-> +			ipi_setup_ppi(i);
-> +		else
-> +			ipi_setup_lpi(i, ncpus);
-> +	}
-> +
->  	/* Setup the boot CPU immediately */
->  	ipi_setup(smp_processor_id());
->  }
-> 
-> -- 
-> 2.48.0
-> 
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+
+Ard Biesheuvel (7):
+  x86/cpu: Use a new feature flag for 5 level paging
+  x86/cpu: Allow caps to be set arbitrarily early
+  x86/asm-offsets: Export struct cpuinfo_x86 layout for asm use
+  x86/boot: Set 5-level paging CPU cap before entering C code
+  x86/boot: Drop the early variant of pgtable_l5_enabled()
+  x86/boot: Drop 5-level paging related variables and early updates
+  x86/cpu: Make CPU capability overrides __ro_after_init
+
+ arch/x86/boot/compressed/misc.h                  |  8 +++---
+ arch/x86/boot/compressed/pgtable_64.c            | 12 ---------
+ arch/x86/boot/startup/map_kernel.c               | 21 +---------------
+ arch/x86/boot/startup/sme.c                      |  9 -------
+ arch/x86/include/asm/cpufeature.h                | 12 ++++++---
+ arch/x86/include/asm/cpufeatures.h               |  3 ++-
+ arch/x86/include/asm/page_64.h                   |  2 +-
+ arch/x86/include/asm/pgtable_64_types.h          | 25 ++++---------------
+ arch/x86/kernel/alternative.c                    | 12 ---------
+ arch/x86/kernel/asm-offsets.c                    |  8 ++++++
+ arch/x86/kernel/asm-offsets_32.c                 |  9 -------
+ arch/x86/kernel/cpu/common.c                     | 26 +++-----------------
+ arch/x86/kernel/head64.c                         | 11 ---------
+ arch/x86/kernel/head_64.S                        | 15 +++++++++++
+ arch/x86/kvm/x86.h                               |  4 +--
+ arch/x86/mm/kasan_init_64.c                      |  3 ---
+ drivers/iommu/amd/init.c                         |  4 +--
+ drivers/iommu/intel/svm.c                        |  4 +--
+ tools/testing/selftests/kvm/x86/set_sregs_test.c |  2 +-
+ 19 files changed, 55 insertions(+), 135 deletions(-)
+
+
+base-commit: 64797551baec252f953fa8234051f88b0c368ed5
+-- 
+2.49.0.1101.gccaa498523-goog
+
