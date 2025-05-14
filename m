@@ -1,142 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729832222B9;
-	Wed, 14 May 2025 08:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D654C6C;
+	Wed, 14 May 2025 08:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210562; cv=none; b=bw/oDROTJZih30hdJzZB2HewY491Z7QTCp0dbj29OdmrlHaQhhPcY6USC87KgP/X6Kw7F76zpPO9e3hFObHDjUnvna2vLo6ykBmTWkwd/p5UlzMz805a03gJOqiDtzbfD/5pbSXcsOS+dMO35+5TfbiiuLq+iAfjVRM7t6PZmxs=
+	t=1747210645; cv=none; b=WTWUAmfELpGstRkAAJbC3wY+2w64enm6Ho7iqwMiO3RuHfaM+AZLWwA/1aZpN6nsjM10boDs03tTl8Sfl0OcYlOA9kZhDyXdD4nW8V1XQEPp3FEDv22+9Nao70u1Ky2PEQl6xT0QsbyQExqTV9VQ/ixZNQIDmAPXlAcX5IHqZ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210562; c=relaxed/simple;
-	bh=mWLNDnatG6xVgkJtpID1GmaF+BJbhEmDLi+tmSnmJY8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RfRR8vWzWrCR0firnt4BLECWGqWNSCegd+FtxJAvddTD/EsIGI+WHLeD+/gjBKOZsmJUn6NOqENaOp5l+tCMHs/hwL8WV195PThZowG+cAvZA0jZsTXQBWHzXO0Jdqk6gQr4liOnGYvWIkssy07l0IObd3/y09TM/v2VWQES1SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bKqKMOAc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LOmrDegf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747210645; c=relaxed/simple;
+	bh=5AoP0C45Rujt2/qmyP1ByxUZYaf/jnuzWCg4Vm2Q7qY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFBvxoKudLHzhUqqCPJVhB/4cysjdW1FNMmeEQC2yMKZdjSJWuwEuJPQ5tuYtBL5aFvWL5MT5AVYrI+tRT8kidp2kJZSZKpY24wvlPR2IJxUVcGE92qqjhevPyHQQ66yIuVxzldzLBkmeFQjduaAzR1D2sWnj6Ov83WsoxT55PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TXlMDxp0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bKqKMOAc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LOmrDegf"
-Date: Wed, 14 May 2025 08:15:56 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747210557;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0bcw7JMdnkEvRhff3/pmf6K4X3Rjj+ZkR7PQYauiRf8=;
-	b=bKqKMOAcRWXGkM6vv5ja5FBr77qXdj3aYGRK2hXSXWEkL8T2s88GSIlDcTWYZos34nVX2N
-	oqaI41FiuAuEvecW1/7hDfp14DZjG6w5aE+81NiX5Tlm5S9sKecw4lqICnfVI0rRU59st2
-	yeZvLxI8GMwEvx7JPJayolFpqAL4/I0f0sFl2cIAqWvC8e+oepxL6Gacfyp45utbbuLO5y
-	ohIXHbZDbjWHMfFZ5d3XZ1i26GowmXqRnu+GerSqpnj5hz2mSfSiaRnlhnqRqXgHkdUceZ
-	/CgDOzK4atHOi3FqWQqtUdMJwKDJ0k2HU57IXHAJnfm1RTbcc4BlVF+W28frSQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747210557;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0bcw7JMdnkEvRhff3/pmf6K4X3Rjj+ZkR7PQYauiRf8=;
-	b=LOmrDegfDp/W4vn7OOUGjgoJQu3fLfwUlpgNak56d4jgFXden2iqTVr1PP1Q7X4oUH/gYF
-	UbkWotWr/A5fIiBw==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/boot: Defer initialization of VM space related
- global variables
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250513111157.717727-9-ardb+git@google.com>
-References: <20250513111157.717727-9-ardb+git@google.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TXlMDxp0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1577E40E0266;
+	Wed, 14 May 2025 08:17:21 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id WoSoz4lF6Fqx; Wed, 14 May 2025 08:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747210637; bh=zt66luONkXkTmFTbUwrKTLRryiIVYQEFM3dwgSKR15Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TXlMDxp0xyXwRgGDj1jUhLnT/x4p/H8WCQotvm5GSyaLEZ8divHZuVZNNi109MX9s
+	 ExFsQM5OeN9nIZsVavPma4HO3WZVeHbMuvhayRFygXTfBQu0KddoZD49X2AdKiI8Tn
+	 tZTNm8FHJFwB8odaCxHb6S+/D6PXwA5dHIY36++OIj24ko8GUX0BV+B9don/4HVctD
+	 FvfNF5C73EoX/nYqu/f7YSKFUF+LbK5tcojVB6PGkuYIIZmT+P7PIdkKZL8VD1/qqt
+	 y2x+/VvdD0Zaq+UkW4qgdsRq4RGDBEw7CoOFaOzhxAAPPyBvaUNYuYSJoynEZwsoSF
+	 1NmVgZFgTc+AGx9/+Quv/LS8bxJ4LCbVq45AkM/ZdZjg5STUMaGo1IO/h+cd2ZHEhW
+	 Piu7pFvpQ0/nWc66o/SL2glISqq3Is6t6CRiZBGvcXieMWKeGET5IMRp/Jho5oNAkq
+	 jJj50qE2GnAetdQBjkYalnsaSjAvfcgJCm3Dt2x2cxHFTHj/SD4mZtIABkAQqYF+WQ
+	 ysg2LeTIbC0O82IBaORSOhc+mNwNAUOWt1U6EoKe6Cg5ARGsooRkRH1WWFB/aZWeXF
+	 yubYpSrFAC7/Xdos1HaqalbikqZHKDOh2wW/ir2vOu6+Ts0fusQBxsmu/UYKtEiCUK
+	 pGuy2aeaeRTxKNtboRYefJYk=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CA0EB40E0239;
+	Wed, 14 May 2025 08:17:06 +0000 (UTC)
+Date: Wed, 14 May 2025 10:17:06 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+Message-ID: <20250514081706.GBaCRRguKiuyx3gcd4@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+ <aCMYrgd9DDQl7G1W@gmail.com>
+ <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
+ <aCMraFZ2yJQNyHf3@gmail.com>
+ <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
+ <aCQ2L3L2DQX80blY@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174721055669.406.6313674757003043527.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aCQ2L3L2DQX80blY@gmail.com>
 
-The following commit has been merged into the x86/core branch of tip:
+On Wed, May 14, 2025 at 08:20:31AM +0200, Ingo Molnar wrote:
+> I've highlighted all the robustness problems and design flaws of the 
+> existing SEV* startup code...
 
-Commit-ID:     64797551baec252f953fa8234051f88b0c368ed5
-Gitweb:        https://git.kernel.org/tip/64797551baec252f953fa8234051f88b0c368ed5
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Tue, 13 May 2025 13:11:59 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 14 May 2025 10:06:35 +02:00
+You can highlight all you want - nothing warrants rushing those in without
+testing. Period. No matter how much you try to spin it and flip it.
 
-x86/boot: Defer initialization of VM space related global variables
+> Your failure to follow and understand this series is not an excuse for 
+> the flippant and condescending tone you are using in your replies ...
 
-The global pseudo-constants 'page_offset_base', 'vmalloc_base' and
-'vmemmap_base' are not used extremely early during the boot, and cannot be
-used safely until after the KASLR memory randomization code in
-kernel_randomize_memory() executes, which may update their values.
+You must be confusing me with someone else to constantly give me that
+condescending schoolteacher tone.
 
-So there is no point in setting these variables extremely early, and it
-can wait until after the kernel itself is mapped and running from its
-permanent virtual mapping.
+If you do shit like you do, you will get called on it until you behave
+according to the rules we all have agreed upon.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250513111157.717727-9-ardb+git@google.com
----
- arch/x86/boot/startup/map_kernel.c |  3 ---
- arch/x86/kernel/head64.c           |  9 ++++++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+-- 
+Regards/Gruss,
+    Boris.
 
-diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-index 099ae25..905e873 100644
---- a/arch/x86/boot/startup/map_kernel.c
-+++ b/arch/x86/boot/startup/map_kernel.c
-@@ -29,9 +29,6 @@ static inline bool check_la57_support(void)
- 	__pgtable_l5_enabled	= 1;
- 	pgdir_shift		= 48;
- 	ptrs_per_p4d		= 512;
--	page_offset_base	= __PAGE_OFFSET_BASE_L5;
--	vmalloc_base		= __VMALLOC_BASE_L5;
--	vmemmap_base		= __VMEMMAP_BASE_L5;
- 
- 	return true;
- }
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 510fb41..14f7dda 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -62,13 +62,10 @@ EXPORT_SYMBOL(ptrs_per_p4d);
- #ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
- unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
- EXPORT_SYMBOL(page_offset_base);
--SYM_PIC_ALIAS(page_offset_base);
- unsigned long vmalloc_base __ro_after_init = __VMALLOC_BASE_L4;
- EXPORT_SYMBOL(vmalloc_base);
--SYM_PIC_ALIAS(vmalloc_base);
- unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
- EXPORT_SYMBOL(vmemmap_base);
--SYM_PIC_ALIAS(vmemmap_base);
- #endif
- 
- /* Wipe all early page tables except for the kernel symbol map */
-@@ -244,6 +241,12 @@ asmlinkage __visible void __init __noreturn x86_64_start_kernel(char * real_mode
- 	/* Kill off the identity-map trampoline */
- 	reset_early_page_tables();
- 
-+	if (pgtable_l5_enabled()) {
-+		page_offset_base	= __PAGE_OFFSET_BASE_L5;
-+		vmalloc_base		= __VMALLOC_BASE_L5;
-+		vmemmap_base		= __VMEMMAP_BASE_L5;
-+	}
-+
- 	clear_bss();
- 
- 	/*
+https://people.kernel.org/tglx/notes-about-netiquette
