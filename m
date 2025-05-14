@@ -1,60 +1,60 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EF6278E53
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCFA25A350
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220337; cv=none; b=hDp2gz81933FYUmussO+7yWFLgwnnDJfl9MD1J/BoqFE8ywIkfvMUhRYIdFx670Tx4d3XEi8FFPI7XYKKL7CpckiobqgbBYq+YXziekf9QaFKVod8xRhkocYHvVy4PhixcYhSoRkNmdPzmT7ltSpuUDpxoKKja+nNT7mwdx9rjw=
+	t=1747220347; cv=none; b=rnAQort6J6yLF7mZlKgw/pgZAmmFm5DTcnkec6A5AJh4PwAczT/G1e9EXhpwqLNtwqLC3taUgcDkKPt0MhWtTa1vou4K32kdNo00u0ujciizGhaqjuFydn1XI040bIxwKaTwHP9SFnfr+WA4fa7X44xqlHk4QeydrJyMpJpX9pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220337; c=relaxed/simple;
-	bh=UICIsAOuY4v+Bsy4Q/NjNK0aCOcLZXPpVUJOEItgdJE=;
+	s=arc-20240116; t=1747220347; c=relaxed/simple;
+	bh=FZmui5N70R9j6A2haZ4i9o42S03szwkNyO8aN6nVt2w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lJ1ESCewe4KNfxo6O7+ecVUHIaZhwcff+ArE3QSEZTLWIRczD9+EopmJIskfZXOz8A/VVE2pHvaX4Rl9X6TkMOyygS79pWd2KSBhlRUah29iOsAs1vkjW+9X/RBVIhP+CgVjNvWtCI+sSLq9yov8uSBVStDECyNEKNPom/wtDXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ni8Xan43; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=SVnP5nbsmIAaQXJFVhOpAPGinQCpaWt1ZpPB49dSFonj8v/wgNTrIk0UikLmN/wacRhrFwJ0fjD3hJFMWPMpaQMz/RkKN9s4/yQA2OxLUKzbHJEsiyMABH4aj9YoBWI19MQ70FQCvSvQcBAF7NI4ppL3Iog+/01nzjHI790MiG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=moAU+5gj; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ni8Xan43"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E6IOpn026361;
-	Wed, 14 May 2025 10:58:48 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="moAU+5gj"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E6ZJws017233;
+	Wed, 14 May 2025 10:58:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=BetRiI
-	ZTQ7bdSxfWgGALXL5bpIbRUZUx65iTjrbnDlM=; b=ni8Xan43Ox8RyB5clmk2bA
-	u9uqxqODZltxKqtiQvuuOHjIRqV/RkTpFRXu0wO6GEZdcxnoDRQLwc3e+q2OhJtS
-	Z9Ggc20/8r/h1BWxAs03kf/7CWMY6+CaqtcWMQO5vzlA3Ef7yv0c6Un58RJ/Ctff
-	KURlWmkQ2RWq/hjxLCqXPZ9lZOpyri4mapfewgvf10VJJe/vPgZgYNMKWLEd9Q0G
-	YaSq9P36l6yTaARhKMbwzMf2i9PNVv67xb5WP+N369BhvcNlzGYo9JKADDxo61Ph
-	7vGwHJ5kU8ynF8DPIVzFF1RAPZxvjMfISsngoN8V4ot0JSd91oEVMRSl0TqXkwzQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Vyk5bD
+	FJOkFJMuPkk2R5cMc9uiZrtyj7xClCWija3Qk=; b=moAU+5gjeJiGP/5/3LGSOA
+	RBkr6SoLKYJ9LeM1oWRPfWltF8kceHfDktB8+ix3YUQu967V50LJUZHsffjFANtE
+	VAf5gEBmmg6IN3eheUHPKrO2lKSN0PMrRQ9ie80v75xw/+C5y/z7OIr5jfZo99tZ
+	wgVQiK5WbpBtWmI+egPn4V0p19V3CjzWtKjLkLrfZL/nHdeGWvZ5WxJbD5TKPz30
+	fGTksPEySmzSF5beNnCqeEW43oqeYASHTiH2fpQsNQmGHapquAUt1+D8Ji5it18D
+	o2tCjcKlezfQRhVLzEQpMlP5E+cUe+4kErA4MvMaCHa4wUD6nlq+/pzaGFClTMxg
 	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mnst18gg-1
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mbq8krpm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 10:58:48 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EA5JVB015329;
-	Wed, 14 May 2025 10:58:47 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpurn3-1
+	Wed, 14 May 2025 10:58:50 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54E9nxcA026947;
+	Wed, 14 May 2025 10:58:49 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpbrp5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 10:58:47 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EAwkjh28836458
+	Wed, 14 May 2025 10:58:49 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EAwn5a4063894
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 May 2025 10:58:46 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B24F5804B;
-	Wed, 14 May 2025 10:58:46 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E3B1658055;
-	Wed, 14 May 2025 10:58:44 +0000 (GMT)
-Received: from [9.111.92.18] (unknown [9.111.92.18])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 14 May 2025 10:58:44 +0000 (GMT)
-Message-ID: <bec7391c-e40d-4633-a2d0-881eb6d18f19@linux.ibm.com>
-Date: Wed, 14 May 2025 12:58:44 +0200
+	Wed, 14 May 2025 10:58:49 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2C5E58053;
+	Wed, 14 May 2025 10:58:48 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE91358043;
+	Wed, 14 May 2025 10:58:45 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 14 May 2025 10:58:45 +0000 (GMT)
+Message-ID: <ddc80d60-0cea-4e07-a4ef-fb21d5f5a0fa@linux.ibm.com>
+Date: Wed, 14 May 2025 16:28:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,238 +62,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] zram: support deflate-specific params
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Heiko Carstens <hca@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-References: <20250514024825.1745489-1-senozhatsky@chromium.org>
- <20250514024825.1745489-3-senozhatsky@chromium.org>
+Subject: Re: [PATCH V4 1/6] Sched: Scheduler time slice extension
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        tglx@linutronix.de, bigeasy@linutronix.de, kprateek.nayak@amd.com,
+        linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250513214554.4160454-1-prakash.sangappa@oracle.com>
+ <20250513214554.4160454-2-prakash.sangappa@oracle.com>
 Content-Language: en-US
-From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-In-Reply-To: <20250514024825.1745489-3-senozhatsky@chromium.org>
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20250513214554.4160454-2-prakash.sangappa@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: L_ETc4ufNI1v3IPanPc7xG0qTfvH269h
-X-Authority-Analysis: v=2.4 cv=V+590fni c=1 sm=1 tr=0 ts=68247768 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=cm27Pg_UAAAA:8 a=mYzGZE5f00aBUjGx16gA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: L_ETc4ufNI1v3IPanPc7xG0qTfvH269h
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA5MyBTYWx0ZWRfXyfTQETzYEIYv 3U66ROmOY7GI+ddWKXybCol7oktWJslIPJcwQWxHbmX8VqoqkKX6FaokbhuU8j8SlmHrSdjWCK6 kgL70r3JpnLCybnxW08c7G8ulehamSC4yraVz1M5TN/GqWKVahVRhLRUjjdVWqFxgNLEHHj5VwC
- I/qeLwNUunFPRN34oZGu13L5RTilM4uWJqwEXzYL9+FH1p7EX19XiPJW1yoJiILVtu58ij6bnLk V8d3ftxqKCG2UzN3iGrZGR/AV/HE3SEaHNXV3r2KClHRaCZJAFCxalP+9QQGVatNTvkIGGKkqGv Wvhl612g9OQoAFJcun+nDhKJgS45XnIeZJDWurXs/1+Uch/Gz3AlbULmyeJ6F/px1iyU8uleDbv
- ZuWhwmj83/8ycdWJL2MM/FOyEMoX9ccykV/Ne+5wDyHGJaIgCU/ww3gYssruT9DhaDGDqW/b
+X-Proofpoint-ORIG-GUID: kI32AY6MMjuBT4ENeFB8JOdDuqOBToZe
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6824776a cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=JfrnYn6hAAAA:8 a=yPCof4ZbAAAA:8 a=a7wRBuKbf9VA6CU1hboA:9 a=QEXdDO2ut3YA:10
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA5MyBTYWx0ZWRfXwhBNirkdH9bz nwwFrRay8r8vSpUGA6RGfNB7F9kJTjV6B6OJCJeskGDhryjWAARPJSHrNwoXZWBoNe046MbLPtt hLCDrnXkZ4unXvw/QM9qZg65UdyEVogoNfjWbOjjyZaE8DHszmpcqAW9JnjuWtU1ilz3q5pBUQ2
+ /2rptuCM7BECfp+t2N5D4QNWkthFUYRMVlmDtqSh8sgAMwbaTCy67H3XzRFqWFnP3gfLZqlk/NA IzRzaJle5douUTg2ZEE0c6Ced3L1hWMo+NI7uysi153V11SBMoEIiEmbWm7fiRv0hmmUVfXbvn7 cbCntEseev8grRrwMw4wOfi+nFdlJD+P3IgSNQaZptnoNay04dw6g4A16rGW5bHero8d4C8xY2i
+ pX6ngYHB905uKg6ZuECQQhQsXME3TjaN8G/07aZ5Z1foAkDxl4zv8BLLnWNBLFY7xZwjchBE
+X-Proofpoint-GUID: kI32AY6MMjuBT4ENeFB8JOdDuqOBToZe
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 clxscore=1011
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1011
+ mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
  definitions=main-2505140093
 
-Looks good to me.
+Hi Prakash,
 
-Just a minor comment. If we intend to use raw deflate only, like we do now (no zlib header or
-trailer for the compressed data), we should probably change deflate.winbits to unsigned and
-pass '-deflate.winbits' to zlib_deflateInit2().
-
-
-Also, here is another patch suggestion from my side on top of this one. 
-Let me know what you think.
-
----8<---
-
-zram: Utilize s390 hardware deflate acceleration for zram
-
-Utilize s390 hardware deflate acceleration for zram deflate compression
-by default when the facility is available.
-
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-
-diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
-index b75016e0e654..5bfc57522e3a 100644
---- a/drivers/block/zram/backend_deflate.c
-+++ b/drivers/block/zram/backend_deflate.c
-@@ -22,10 +22,23 @@ static void deflate_release_params(struct zcomp_params *params)
-
- static int deflate_setup_params(struct zcomp_params *params)
- {
--       if (params->level == ZCOMP_PARAM_NOT_SET)
--               params->level = Z_DEFAULT_COMPRESSION;
--       if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET)
--               params->deflate.winbits = DEFLATE_DEF_WINBITS;
-+       /*
-+        * In case of s390 zlib hardware support available,
-+        * use maximum window size and level one as default compression
-+        * parameters in order to utilize hardware deflate acceleration.
-+        */
-+       if (params->level == ZCOMP_PARAM_NOT_SET) {
-+               if (zlib_deflate_dfltcc_enabled())
-+                       params->level = Z_BEST_SPEED;
-+               else
-+                       params->level = Z_DEFAULT_COMPRESSION;
-+       }
-+       if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET) {
-+               if (zlib_deflate_dfltcc_enabled())
-+                       params->deflate.winbits = -MAX_WBITS;
-+               else
-+                       params->deflate.winbits = DEFLATE_DEF_WINBITS;
-+       }
-
-        return 0;
- }
-
-
-
-On 14.05.2025 04:47, Sergey Senozhatsky wrote:
-> Introduce support of algorithm specific parameters in
-> algorithm_params device attribute.  The expected format
-> is algorithm.param=value.
+On 14/05/25 03:15, Prakash Sangappa wrote:
+> Add support for a thread to request extending its execution time slice on
+> the cpu. The extra cpu time granted would help in allowing the thread to
+> complete executing the critical section and drop any locks without getting
+> preempted. The thread would request this cpu time extension, by setting a
+> bit in the restartable sequences(rseq) structure registered with the kernel.
 > 
-> For starters, add support for deflate.winbits parameter.
+> Kernel will grant a 30us extension on the cpu, when it sees the bit set.
+> With the help of a timer, kernel force preempts the thread if it is still
+> running on the cpu when the 30us timer expires. The thread should yield
+> the cpu by making a system call after completing the critical section.
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Suggested-by: Peter Ziljstra <peterz@infradead.org>
+> Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 > ---
->  drivers/block/zram/backend_deflate.c | 10 ++++++----
->  drivers/block/zram/zcomp.h           |  7 +++++++
->  drivers/block/zram/zram_drv.c        | 17 +++++++++++++++--
->  3 files changed, 28 insertions(+), 6 deletions(-)
+>  include/linux/entry-common.h | 11 +++++--
+>  include/linux/sched.h        | 16 +++++++++++
+>  include/uapi/linux/rseq.h    |  7 +++++
+>  kernel/entry/common.c        | 19 ++++++++----
+>  kernel/rseq.c                | 56 ++++++++++++++++++++++++++++++++++++
+>  kernel/sched/core.c          | 14 +++++++++
+>  kernel/sched/syscalls.c      |  5 ++++
+>  7 files changed, 120 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
-> index 4c00b5b6739f..b75016e0e654 100644
-> --- a/drivers/block/zram/backend_deflate.c
-> +++ b/drivers/block/zram/backend_deflate.c
-> @@ -8,7 +8,7 @@
->  #include "backend_deflate.h"
+> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+> index fc61d0205c97..cec343f95210 100644
+> --- a/include/linux/entry-common.h
+> +++ b/include/linux/entry-common.h
+> @@ -303,7 +303,8 @@ void arch_do_signal_or_restart(struct pt_regs *regs);
+>   * exit_to_user_mode_loop - do any pending work before leaving to user space
+>   */
+>  unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+> -				     unsigned long ti_work);
+> +				     unsigned long ti_work,
+> +				     bool irq);
 >  
->  /* Use the same value as crypto API */
-> -#define DEFLATE_DEF_WINBITS		11
-> +#define DEFLATE_DEF_WINBITS		(-11)
->  #define DEFLATE_DEF_MEMLEVEL		MAX_MEM_LEVEL
->  
->  struct deflate_ctx {
-> @@ -24,6 +24,8 @@ static int deflate_setup_params(struct zcomp_params *params)
+>  /**
+>   * exit_to_user_mode_prepare - call exit_to_user_mode_loop() if required
+> @@ -315,7 +316,8 @@ unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+>   *    EXIT_TO_USER_MODE_WORK are set
+>   * 4) check that interrupts are still disabled
+>   */
+> -static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
+> +static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs,
+> +						bool irq)
 >  {
->  	if (params->level == ZCOMP_PARAM_NOT_SET)
->  		params->level = Z_DEFAULT_COMPRESSION;
-> +	if (params->deflate.winbits == ZCOMP_PARAM_NOT_SET)
-> +		params->deflate.winbits = DEFLATE_DEF_WINBITS;
+>  	unsigned long ti_work;
 >  
->  	return 0;
->  }
-> @@ -57,13 +59,13 @@ static int deflate_create(struct zcomp_params *params, struct zcomp_ctx *ctx)
->  		return -ENOMEM;
+> @@ -326,7 +328,10 @@ static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
 >  
->  	ctx->context = zctx;
-> -	sz = zlib_deflate_workspacesize(-DEFLATE_DEF_WINBITS, MAX_MEM_LEVEL);
-> +	sz = zlib_deflate_workspacesize(params->deflate.winbits, MAX_MEM_LEVEL);
->  	zctx->cctx.workspace = vzalloc(sz);
->  	if (!zctx->cctx.workspace)
->  		goto error;
->  
->  	ret = zlib_deflateInit2(&zctx->cctx, params->level, Z_DEFLATED,
-> -				-DEFLATE_DEF_WINBITS, DEFLATE_DEF_MEMLEVEL,
-> +				params->deflate.winbits, DEFLATE_DEF_MEMLEVEL,
->  				Z_DEFAULT_STRATEGY);
->  	if (ret != Z_OK)
->  		goto error;
-> @@ -73,7 +75,7 @@ static int deflate_create(struct zcomp_params *params, struct zcomp_ctx *ctx)
->  	if (!zctx->dctx.workspace)
->  		goto error;
->  
-> -	ret = zlib_inflateInit2(&zctx->dctx, -DEFLATE_DEF_WINBITS);
-> +	ret = zlib_inflateInit2(&zctx->dctx, params->deflate.winbits);
->  	if (ret != Z_OK)
->  		goto error;
->  
-> diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-> index cfacdfe9044c..4acffe671a5e 100644
-> --- a/drivers/block/zram/zcomp.h
-> +++ b/drivers/block/zram/zcomp.h
-> @@ -7,6 +7,10 @@
->  
->  #define ZCOMP_PARAM_NOT_SET	INT_MIN
->  
-> +struct deflate_params {
-> +	s32 winbits;
-> +};
+>  	ti_work = read_thread_flags();
+>  	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
+> -		ti_work = exit_to_user_mode_loop(regs, ti_work);
+> +		ti_work = exit_to_user_mode_loop(regs, ti_work, irq);
 > +
->  /*
->   * Immutable driver (backend) parameters. The driver may attach private
->   * data to it (e.g. driver representation of the dictionary, etc.).
-> @@ -17,6 +21,9 @@ struct zcomp_params {
->  	void *dict;
->  	size_t dict_sz;
->  	s32 level;
-> +	union {
-> +		struct deflate_params deflate;
-> +	};
+> +	if (irq)
+> +		rseq_delay_resched_fini();
 >  
->  	void *drv_data;
->  };
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index a11b7a6e35f4..54c57103715f 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -1277,12 +1277,14 @@ static void comp_params_reset(struct zram *zram, u32 prio)
+>  	arch_exit_to_user_mode_prepare(regs, ti_work);
 >  
->  	vfree(params->dict);
->  	params->level = ZCOMP_PARAM_NOT_SET;
-> +	params->deflate.winbits = ZCOMP_PARAM_NOT_SET;
->  	params->dict_sz = 0;
->  	params->dict = NULL;
->  }
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index c08fd199be4e..14bf0508bfca 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -339,6 +339,7 @@ extern int __must_check io_schedule_prepare(void);
+>  extern void io_schedule_finish(int token);
+>  extern long io_schedule_timeout(long timeout);
+>  extern void io_schedule(void);
+> +extern void hrtick_local_start(u64 delay);
 >  
->  static int comp_params_store(struct zram *zram, u32 prio, s32 level,
-> -			     const char *dict_path)
-> +			     const char *dict_path,
-> +			     struct deflate_params *deflate_params)
->  {
->  	ssize_t sz = 0;
->  
-> @@ -1300,6 +1302,7 @@ static int comp_params_store(struct zram *zram, u32 prio, s32 level,
->  
->  	zram->params[prio].dict_sz = sz;
->  	zram->params[prio].level = level;
-> +	zram->params[prio].deflate.winbits = deflate_params->winbits;
->  	return 0;
->  }
->  
-> @@ -1310,9 +1313,12 @@ static ssize_t algorithm_params_store(struct device *dev,
->  {
->  	s32 prio = ZRAM_PRIMARY_COMP, level = ZCOMP_PARAM_NOT_SET;
->  	char *args, *param, *val, *algo = NULL, *dict_path = NULL;
-> +	struct deflate_params deflate_params;
->  	struct zram *zram = dev_to_zram(dev);
->  	int ret;
->  
-> +	deflate_params.winbits = ZCOMP_PARAM_NOT_SET;
-> +
->  	args = skip_spaces(buf);
->  	while (*args) {
->  		args = next_arg(args, &param, &val);
-> @@ -1343,6 +1349,13 @@ static ssize_t algorithm_params_store(struct device *dev,
->  			dict_path = val;
->  			continue;
->  		}
-> +
-> +		if (!strcmp(param, "deflate.winbits")) {
-> +			ret = kstrtoint(val, 10, &deflate_params.winbits);
-> +			if (ret)
-> +				return ret;
-> +			continue;
-> +		}
->  	}
->  
->  	/* Lookup priority by algorithm name */
-> @@ -1364,7 +1377,7 @@ static ssize_t algorithm_params_store(struct device *dev,
->  	if (prio < ZRAM_PRIMARY_COMP || prio >= ZRAM_MAX_COMPS)
->  		return -EINVAL;
->  
-> -	ret = comp_params_store(zram, prio, level, dict_path);
-> +	ret = comp_params_store(zram, prio, level, dict_path, &deflate_params);
->  	return ret ? ret : len;
->  }
->  
+>  /* wrapper function to trace from this header file */
+>  DECLARE_TRACEPOINT(sched_set_state_tp);
+> @@ -1044,6 +1045,7 @@ struct task_struct {
+>  	/* delay due to memory thrashing */
+>  	unsigned                        in_thrashing:1;
+>  #endif
+> +	unsigned			sched_time_delay:1;
 
+Can this be placed in #ifdef CONFIG_RSEQ?
+
+>  #ifdef CONFIG_PREEMPT_RT
+>  	struct netdev_xmit		net_xmit;
+>  #endif
+
+[..snip..]
+
+> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+> index cd38f4e9899d..1b2b64fe0fb1 100644
+> --- a/kernel/sched/syscalls.c
+> +++ b/kernel/sched/syscalls.c
+> @@ -1378,6 +1378,11 @@ static void do_sched_yield(void)
+>   */
+>  SYSCALL_DEFINE0(sched_yield)
+>  {
+> +	if (IS_ENABLED(CONFIG_RSEQ) && current->sched_time_delay) {
+> +		schedule();
+> +		return 0;
+> +	}
+> +
+>  	do_sched_yield();
+>  	return 0;
+>  }
+
+As mentioned in previous versions, does this not change the semantics for
+sched_yield()? Why is this necessary to immediately call schedule() and skip
+going through do_sched_yield()?
+
+For a task if a delay is granted on CPU A, but the task migrates to CPU B before
+the IRQ-return hook, the timer never fires and the thread might overrun its bonus?
+Any thoughts on this?
+
+Thanks,
+Madadi Vineeth Reddy
