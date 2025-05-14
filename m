@@ -1,94 +1,83 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DA520299B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E5F20299B;
+	Wed, 14 May 2025 12:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747225214; cv=none; b=dFbIcR//HxuVL0gj91FPVD41Q426EDULOXRsp1eLUR+nJ9cYAaQeQGzw8LjsURwhETadoI/Xx21Q2ezbrKhcjTYNtVFwCAVBfshPTXE7OHN2n80lhjpq51beyfoMsoUqANz6wfaITbFijX4NHDoT8ts6mQpmT9KJVu6h2uVe9k0=
+	t=1747225226; cv=none; b=MPtGbFyxB2ye8A6KT0ldZNBEV16iSBv36tK0SgHdjYGg/ooK4G5TtbYUGIheij9vY2QRv0RUT9EWj9/iI29JmSPSu9m1xx8sHuZavcN7Whc/gSpFspTEdBGKjeOq/QgvI6AG9djL4D4neeYAJD40wWR0OtoqkLmNMg2Qy6iALtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747225214; c=relaxed/simple;
-	bh=nQujC6034IbbV1/Takj+ktYRPduuI1NiEdr6M8Bk9tM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ilV5hzRX7gwMKfwhfyU3++d14MZjo+rlUnc8ezU2UqdOVWAQS67lTSpc6L9kJ2o3duSxritxiw23rbsoFtKe2zJygabxpM9meeQRDko5oIbxYF1eiFI9cOqXwUCtA3Kby+TZw3sWlvTC9G0Qoh7mRxQi9KkSah7021225UZFByA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Cbyiefzc; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=nCjGAj7c reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1747225226; c=relaxed/simple;
+	bh=NlajYTJSfazmLSRiirqfAL+mECUgQnC0dhtub+re41U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EMDKw+0FSEIt2eWIeNuIvpkBn663Fh8rWKd+H3Vu9HJwviarz4WZbvVWEHAYdymODOym2vLzUqbTEiClt2NpZnb7JC+V3tXuVuTtp1fUfoXPW6yDqSKBNq9uSpxfUtqX6fL36tDCTd4C4yGy7cM6+VomKflMe3J1Z33iXlMmPj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M1p5Iwb0; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Cbyiefzc";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="nCjGAj7c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1747225212; x=1778761212;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UaNOIapp4J5KzxMU+tHJGWnVbFnnDP/ugTkRCJiT7PY=;
-  b=Cbyiefzcu3OxiuGZ30Zub1TjDgkubV3JrdPlPsmP2mgBCWIbELQMogw8
-   0xm6Dkjiriz3UhML1EbCYMz3HZaZaWwp7SFEnD3vMjYgwpyrtqbUYd1WK
-   7zEWldqUDe+UTBMO0Cw3madjllbJSz5ljCZKxh2l1vKBMWkylqtU6oioP
-   iy3B6M2pmzPHudAcNYHO/i77tyRGrmez68IQPIXdFmFrQa3eopw2spUZ7
-   tS1VNY89tmWMVRUTQf+2JEFcSgxF1k5xb0tA9OB6QGX6029MsIS5udAht
-   g2EeF3ItZP/+O+XXO5Q1ZBvD65tApS17+swPzuNeqmybZOrSoopTELySm
-   Q==;
-X-CSE-ConnectionGUID: HAcQnEHfShqHv1+SBVGxZw==
-X-CSE-MsgGUID: mbQtCp59SpSYqWIfPy6W4A==
-X-IronPort-AV: E=Sophos;i="6.15,288,1739833200"; 
-   d="scan'208";a="44071281"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 14 May 2025 14:20:08 +0200
-X-CheckPoint: {68248A77-2D-68AAF6F9-E177A1A4}
-X-MAIL-CPID: 4549570F796F46B7B2130055CA730564_2
-X-Control-Analysis: str=0001.0A006399.68248A86.0043,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 31CEC16943A;
-	Wed, 14 May 2025 14:20:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1747225203;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M1p5Iwb0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9CB291FCEC;
+	Wed, 14 May 2025 12:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747225222;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UaNOIapp4J5KzxMU+tHJGWnVbFnnDP/ugTkRCJiT7PY=;
-	b=nCjGAj7cjlzcLzHErOoBUFEnftHlEuyYPnQh6/QZAJWos7YEO3xx0qhP+GkXR5Vpk3I++P
-	B7An+cwjkc8gfI5EaOdToZgHZrZSHNIVJj1TeO4FjTzfljerS7JP+HDyvkFdLbX8p24r7u
-	/PieN2D6UmH43MzIj94SB4bKnYbCt99J9PvZznicSq2meEpkTRiHlgf+xniIpRkHnNWJk1
-	nm6PnWJ45Ei2aUIc8XpTOc4SeEptV76Fq9M+9r2U+lkI8Tt8hToHSnto8O2Wbn/KhvknJn
-	h6p9vOpCI+Cdsdb+PkkCs1KbF/6tPk/5Z1btqb8ofC+Yrq0YJfUcHlVUIZHUPQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
-Date: Wed, 14 May 2025 14:19:54 +0200
-Message-ID: <20250514121954.707596-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xo1B64wUILKqKAiHJaL+05TTgFkZmbh/SeeSl0kMN+o=;
+	b=M1p5Iwb0tlv7JLuTw2+gFp4ksPtaemsttIVn9dOhwoCJ5B+4SIx0E/X8BpAftxPYsHS1w0
+	Moy16PdLUkaTy0RZRWCZib7Hr8uYoHO8IbMnOyKUU/ul+VK6OATMjySmtBCLBIqFPQc/QC
+	wLHFVxnn6j3GWCX0upkx7dzNs4prqQWKY5+f59W1HNE4TjyVhmIAumV5RuayPpUU7HuJ/M
+	qe6z6kCjjC+ZTrAPibNZNExYjIs6CWJ2194TjYKjFiKHOdP/qBYkUI6UpQj69NioHo4lDG
+	JNsOvs8bsMRfbFPS79wFlxyWbIlADHDfKlmtKhw8DJ5X5ybtzUuZfvhSAlOe7g==
+Date: Wed, 14 May 2025 14:20:19 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/3] net: phy: dp83869: Support 1Gbps fiber SFP
+ modules
+Message-ID: <20250514142019.56372b4e@2a02-8440-d105-dfa7-916a-7e1b-fec1-3a90.rev.sfr.net>
+In-Reply-To: <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
+References: <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeileejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfgleelvddtffdvkeduieejudeuvedvveffheduhedvueduteehkeehiefgteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeekgeegtdemugdutdehmegufhgrjeemleduiegrmeejvgdusgemfhgvtgdumeefrgeltdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmeguuddtheemughfrgejmeeludeirgemjegvudgsmehfvggtudemfegrledtpdhhvghlohepvdgrtddvqdekgeegtddqugdutdehqdgufhgrjedqleduiegrqdejvgdusgdqfhgvtgduqdefrgeltddrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehrohhmrghinhdrghgrnhhtohhishess
+ ghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Select PINCTRL for NXP i.MX SoCs.
+Hi Romain,
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, 14 May 2025 09:49:56 +0200
+Romain Gantois <romain.gantois@bootlin.com> wrote:
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a541bb029aa4e..49c3bc25e5f68 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -219,6 +219,7 @@ config ARCH_MXC
- 	select ARM64_ERRATUM_845719 if COMPAT
- 	select IMX_GPCV2
- 	select IMX_GPCV2_PM_DOMAINS
-+	select PINCTRL
- 	select PM
- 	select PM_GENERIC_DOMAINS
- 	select SOC_BUS
--- 
-2.43.0
+> Hello everyone,
+> 
+> This is version one of my series which adds support for downstream
+> 1000Base-X SFP modules in the DP83869 PHY driver. It depends on the
+> following series from Maxime Chevallier, which introduces an ethernet port
+> representation and simplifies SFP support in PHY drivers:
+> 
+> https://lore.kernel.org/all/20250507135331.76021-1-maxime.chevallier@bootlin.com/
 
+Thanks a lot for giving this work a shot ! Maybe a small nit, but as
+the dependency isn't merged yet, you should mark this series as RFC, as
+it will fail on the autobuilders.
+
+I'll take a deeper look into that this week.
+
+Maxime
