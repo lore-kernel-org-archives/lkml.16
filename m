@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAEA22D789
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B431B22D9FF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215543; cv=none; b=XOMgRlX5GNGEXm+MWGF5f5D2PEHB9WjHUukBQpWxQFKAPAcHrg7FX1QR0dCr3NgCFe8Q5PzXpMquSbdYWXhyh536VLR7C+/wmE565i0i2n+A4T3DhIA1gGk3Q7Vx5OsHxbv1w6owPwejynGH9kQ8NS3jmE3rKU4aAs+94SO4jzE=
+	t=1747215544; cv=none; b=Z5KIQcQWbwQK8Dvp2LZ0SwmWO1Hr2dq7krWpK+cnBEEfyBFAB5ppqH6QdHgXP5A4JdPi8TT1iIgyUXnftzjSPfrrvF3p1qOfGR3TdeH5ACyUKfJUSNMDZpW/L2do99cO8pAICzTpIc7eeAgbz5TgcQRHhng/LhZSNhQn1Fg6fAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215543; c=relaxed/simple;
-	bh=AubDRqfkPRHxBp7SUrQ2lcZs1wpYfs5RlqD8dw6LGIc=;
+	s=arc-20240116; t=1747215544; c=relaxed/simple;
+	bh=bTLzb+Ezuh7TwlU6p0BQuHaTpUzDUWvpnpKsbIn10+4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HhfMd/dkI9MUMHtwvmhGFhX/ztm2W9B+SH25PDG+SXb9JQkGO5qvaB8hZCs9WWanaIwl35vKHRfa/c3zNgoCinXwC2Nb6eLUUGNT8FcyBVZaE46rXNl4e/7Av31Tpb8vTRyQT1clHR/h0vFfIhbXhX3nYDkc0/1+6sYCft/cjHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RyufCY3k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ibtVUyaV; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=rjrCRpyX/y9sKQl/XQZmEUy/hHzBWp0ukwrdeLERKmpMCFhQRp5Zp8bzFJUYVZL/uRZJV/JScSZQY3tNYK5RYSz/bCx6gaHUc7Klpp5lXccCSDn6MMpKTB3V41exj0inTII1X7wnbjzY9oN6rfKCn2oqY0Fy4bbdg/NF8g7g/4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DRvvYk6c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d38MzEbN; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RyufCY3k";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ibtVUyaV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DRvvYk6c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d38MzEbN"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747215539;
+	s=2020; t=1747215541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OfgQRDO7AB6uETq0DU5GYjI7YmKL4k2E304qWHHoNUk=;
-	b=RyufCY3k//eNjv7tWeK1662ub2Z1eNq9TjWH1G8DQK4D6b8QfLj8WHd9EU6AIz25PNz3KV
-	gjFDj1dWabJE9+kk7WBAlxgezpJSyahavni5xgGhb1RcWu2G4lZtCZgwdvpUdSj04ZnKdA
-	1qy4FBB8x78xGuRvSMvITyc1G4azGitqZaRZatOgtL1afnB7XZp8KuCyfSK7jEtkE2AdyK
-	YRNocxKLzf0hwRcQK6JmfZIl+LRuH4lH9vJEip9gf8bK+EYOl6GHkQhQaj1fsgfaLYD3vX
-	/U9BBLtNFi9Bbb6B4ev/v/qi9LvEEk5uYBg+2H8Z1Xmlzvbr/TfHKKKYMfhE9A==
+	bh=K31BZ+j3XRd8vHo0dCxUnqdgWHJZ/Z7V6F2CPRYuCbE=;
+	b=DRvvYk6c/U8XNuYzayAq7PxEtAYweKvWNdyc99uyL2joXAAABOHAdOI3pRm5eOFVFVEgUR
+	MBSQGF63KB8eFq01XLppGYCSkBPzzqfCj+cW6DoMORslUFgaGCoun0dZ6MMqp4s2fTCfGi
+	lZCbLz9fvn6wBNTCo8nwHe5CHpIqtBhqnzndo3heuQ7DiKYXdXaC/PWgqAKODAodptbU0C
+	g/kf5t8cStoeBHG6ACz6Xt69cz0H86uA+sXA97VNFmDztTp39TzoxT+8w+f+HLpWzlftAl
+	+Gt4CkXT6orIZ+ShHxBVnoNb9hp7K1SRA+DZpQaLSWVaflO9dCtalG4FghwZlQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747215539;
+	s=2020e; t=1747215541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OfgQRDO7AB6uETq0DU5GYjI7YmKL4k2E304qWHHoNUk=;
-	b=ibtVUyaVu6qhfG/3XG4o82j7JacZZzxQp03SCi18+9zGlP8MgkBLnsK2EsFCVg/Zf6nSvK
-	ZmyRew9ruVmob8BA==
+	bh=K31BZ+j3XRd8vHo0dCxUnqdgWHJZ/Z7V6F2CPRYuCbE=;
+	b=d38MzEbN7AJxqLXq5RdEhXH154Ne6BMPE07o2CY8WmsywLpE0O7fi9iezjGRtFewNvDqXO
+	26244oroFV8C+HAw==
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
@@ -47,9 +47,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 07/11] riscv: kprobes: Remove duplication of RVC_EXTRACT_C2_RS1_REG
-Date: Wed, 14 May 2025 11:38:46 +0200
-Message-Id: <d56955cd683411c6d2f63d13c78e0572462a3269.1747215274.git.namcao@linutronix.de>
+Subject: [PATCH v2 11/11] riscv: kprobes: Remove duplication of RV_EXTRACT_ITYPE_IMM
+Date: Wed, 14 May 2025 11:38:50 +0200
+Message-Id: <8ae34e966c312ae5cf6c09a35ddc290cce942208.1747215274.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747215274.git.namcao@linutronix.de>
 References: <cover.1747215274.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use RVC_EXTRACT_C2_RS1_REG, instead of reimplementing it in
-simulate_c_jr_jalr().
+Use RV_EXTRACT_ITYPE_IMM, instead of re-implementing it in simulate_jalr().
 
 Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
@@ -71,19 +70,19 @@ Signed-off-by: Nam Cao <namcao@linutronix.de>
 
 diff --git a/arch/riscv/kernel/probes/simulate-insn.c b/arch/riscv/kernel/p=
 robes/simulate-insn.c
-index 5defbde4dd50..f5d64613dab5 100644
+index 2b3cd69d6f8e..fa581590c1f8 100644
 --- a/arch/riscv/kernel/probes/simulate-insn.c
 +++ b/arch/riscv/kernel/probes/simulate-insn.c
-@@ -188,7 +188,7 @@ static bool __kprobes simulate_c_jr_jalr(u32 opcode, un=
-signed long addr, struct
+@@ -64,7 +64,7 @@ bool __kprobes simulate_jalr(u32 opcode, unsigned long ad=
+dr, struct pt_regs *reg
+ 	 */
+ 	bool ret;
+ 	unsigned long base_addr;
+-	u32 imm =3D (opcode >> 20) & 0xfff;
++	u32 imm =3D RV_EXTRACT_ITYPE_IMM(opcode);
+ 	u32 rd_index =3D RV_EXTRACT_RD_REG(opcode);
+ 	u32 rs1_index =3D RV_EXTRACT_RS1_REG(opcode);
 =20
- 	unsigned long jump_addr;
-=20
--	u32 rs1 =3D (opcode >> 7) & 0x1f;
-+	u32 rs1 =3D RVC_EXTRACT_C2_RS1_REG(opcode);
-=20
- 	if (rs1 =3D=3D 0) /* C.JR is only valid when rs1 !=3D x0 */
- 		return false;
 --=20
 2.39.5
 
