@@ -1,135 +1,230 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F709DDC1
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62EEDDC1;
+	Wed, 14 May 2025 22:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747262726; cv=none; b=t6BciGRLz9/CGNnC7UE/s93oOhLnQpApSv5alyopPsH3U3oepQ6oLpaXjQElGitKJxQ9wQI1Tihkjvf3WptXIMAA2HoWB7muBZGUwFtFevLsPrOa1ba6BLs6gS/SQkLln8iRdolvdkA3oN8Wz4WJDA9vFdGLQjz0RJgoelBzSWU=
+	t=1747262767; cv=none; b=gV3thTjlF9Y585nu1kY/4o8zqVuWXQvqGOH2t82bIIU0DuUmXKefRXAFx37lDlYrGAxUlCkOtA+qoLmbTn3RX2Ye/l5S1ZXSNSTP7sqzHwRaWbTYiSir8lL06pNJ3ocZmg3KKSKILcNTM4RcqzXLd7UCnuINsZxdQ0GeB0woAXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747262726; c=relaxed/simple;
-	bh=mqJP2sZT8Eo6k92CZV4PoOt3At0pB7bBNfTKSsvm9II=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gIkBTHr2VQHhevG+nEmAvtwsmESlsJRys+XJK8ncCeRDWyi/CX+YjehtKDRYObrNoKUdZl6ZMpUxhEZw9X4jT3ElWLefDAbpI9iQfM3Wzqj3EbbRvbUBCY633UQW4MFDQ8cI+GLAPaGAWWUTsPovYExx7HuGcAiTfroi7Sfh25M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=b+9XFCzN; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747262767; c=relaxed/simple;
+	bh=ZsyvH9DIWeaFMfPnZooNrPBXpUdpw8lz+3vNzKJrMOw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hlPurwuaRj1E4k9xyEwNYcHm6OIL8Zm0CuycSZ7lJoJ0bW9tKBpkJwgmlPdEeLFhODeozuZaiydTY78L1CMZlR/EtiWm+y821lixB6oGMOC9cKHI39tBLiypz6HGRbvSYTd1Jx5hGLc+hNJoldHiPQ7CckoDLpf3647DYzSRkTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=RCE7JJPa; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b+9XFCzN"
-Received: from pendragon.ideasonboard.com (cust-east-par-46-193-72-226.cust.wifirst.net [46.193.72.226])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 45DAD725;
-	Thu, 15 May 2025 00:45:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747262706;
-	bh=mqJP2sZT8Eo6k92CZV4PoOt3At0pB7bBNfTKSsvm9II=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b+9XFCzNmHGLlmuuL5bVjHpnCb8lRRK8Tct4qrdz+Rax/F1cNREijoh2j59yqAzTK
-	 qCip3W/dSJeGZ6RMPo5ubyAXtO30xC0gDHnI3j9EUrbGmKzgGt2Ry01ukmBGjYuqpQ
-	 pVY3xSI6uCQkEdxaky+AUqEUYeZgFuejOjHHZWck=
-Date: Thu, 15 May 2025 00:45:15 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	jonas@kwiboo.se, jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 1/3] drm/bridge: fsl-ldb: make use of driver_private
-Message-ID: <20250514224515.GM23592@pendragon.ideasonboard.com>
-References: <20250514222453.440915-1-m.felsch@pengutronix.de>
- <20250514222453.440915-2-m.felsch@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="RCE7JJPa"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOg-001veu-Eq; Thu, 15 May 2025 00:16:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=HY7Xi8OzdrnVquA1jOAiIn6f3FOUOBUfyJUv25gTw1Q=; b=RCE7JJPatJsjcKYqWo0PpekN6x
+	Bj9XutplDaWgLFSbpRfBBSf8AYdWZzh7YVQbjaq+Sar5PY5ceggHWGdD8pyGmOE92/MKNbyiRz6nE
+	DnfVy2Y1AovkaoA8qrDe7WEGf6ReyXQX0x1eS8fTUVdQsR1Rz2FvhzlFhmQC+DNayyWuH0ev+Bf1/
+	saGu37sRMdbvLaF95IdRwH/7N/KJ3PzXazomliPZXhaUAt4l4z4x9zOxdL9WcZPqw9PQzasCZ6Xq5
+	h4bVKI71vRe5xCB39OIsZ5+6ET0dbKmCoqcjn2HCPobmx+kXwTvC4NybcvOBVO6wv8W6JLIh+SLlQ
+	bdSdQ3iw==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOg-0004JU-4x; Thu, 15 May 2025 00:16:18 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uFKOQ-005bJ3-A1; Thu, 15 May 2025 00:16:02 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Thu, 15 May 2025 00:15:31 +0200
+Subject: [PATCH bpf-next v3 8/8] selftests/bpf: sockmap_listen cleanup:
+ Drop af_inet SOCK_DGRAM redir tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514222453.440915-2-m.felsch@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftests-sockmap-redir-v3-8-a1ea723f7e7e@rbox.co>
+References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-Hi Marco,
+Remove tests covered by sockmap_redir.
 
-Thank you for the patch.
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ .../selftests/bpf/prog_tests/sockmap_listen.c      | 126 ---------------------
+ 1 file changed, 126 deletions(-)
 
-On Thu, May 15, 2025 at 12:24:51AM +0200, Marco Felsch wrote:
-> Make use of the drm_bridge::driver_private data instead of
-> container_of() wrapper.
-
-I suppose this is a personal preference, but I like usage of
-container_of() better. In my opinion it conveys better that struct
-fsl_ldb "unherits" from struct drm_bridge.
-
-> No functional changes.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  drivers/gpu/drm/bridge/fsl-ldb.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
-> index 0fc8a14fd800..fa29f2bf4031 100644
-> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
-> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-> @@ -99,11 +99,6 @@ static bool fsl_ldb_is_dual(const struct fsl_ldb *fsl_ldb)
->  	return (fsl_ldb->ch0_enabled && fsl_ldb->ch1_enabled);
->  }
->  
-> -static inline struct fsl_ldb *to_fsl_ldb(struct drm_bridge *bridge)
-> -{
-> -	return container_of(bridge, struct fsl_ldb, bridge);
-> -}
-> -
->  static unsigned long fsl_ldb_link_frequency(struct fsl_ldb *fsl_ldb, int clock)
->  {
->  	if (fsl_ldb_is_dual(fsl_ldb))
-> @@ -115,7 +110,7 @@ static unsigned long fsl_ldb_link_frequency(struct fsl_ldb *fsl_ldb, int clock)
->  static int fsl_ldb_attach(struct drm_bridge *bridge,
->  			  enum drm_bridge_attach_flags flags)
->  {
-> -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
-> +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
->  
->  	return drm_bridge_attach(bridge->encoder, fsl_ldb->panel_bridge,
->  				 bridge, flags);
-> @@ -124,7 +119,7 @@ static int fsl_ldb_attach(struct drm_bridge *bridge,
->  static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
->  				  struct drm_bridge_state *old_bridge_state)
->  {
-> -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
-> +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
->  	struct drm_atomic_state *state = old_bridge_state->base.state;
->  	const struct drm_bridge_state *bridge_state;
->  	const struct drm_crtc_state *crtc_state;
-> @@ -226,7 +221,7 @@ static void fsl_ldb_atomic_enable(struct drm_bridge *bridge,
->  static void fsl_ldb_atomic_disable(struct drm_bridge *bridge,
->  				   struct drm_bridge_state *old_bridge_state)
->  {
-> -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
-> +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
->  
->  	/* Stop channel(s). */
->  	if (fsl_ldb->devdata->lvds_en_bit)
-> @@ -270,7 +265,7 @@ fsl_ldb_mode_valid(struct drm_bridge *bridge,
->  		   const struct drm_display_info *info,
->  		   const struct drm_display_mode *mode)
->  {
-> -	struct fsl_ldb *fsl_ldb = to_fsl_ldb(bridge);
-> +	struct fsl_ldb *fsl_ldb = bridge->driver_private;
->  
->  	if (mode->clock > (fsl_ldb_is_dual(fsl_ldb) ? 160000 : 80000))
->  		return MODE_CLOCK_HIGH;
-> @@ -309,6 +304,7 @@ static int fsl_ldb_probe(struct platform_device *pdev)
->  	fsl_ldb->dev = &pdev->dev;
->  	fsl_ldb->bridge.funcs = &funcs;
->  	fsl_ldb->bridge.of_node = dev->of_node;
-> +	fsl_ldb->bridge.driver_private = fsl_ldb;
->  
->  	fsl_ldb->clk = devm_clk_get(dev, "ldb");
->  	if (IS_ERR(fsl_ldb->clk))
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index 4f38dd7d23daf3aee83793be49748916d26d93b7..1d98eee7a2c3a711950ade30959e3bbf8c78e13d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -1366,69 +1366,6 @@ static void test_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	}
+ }
+ 
+-static void pairs_redir_to_connected(int cli0, int peer0, int cli1, int peer1,
+-				     int sock_mapfd, int nop_mapfd,
+-				     int verd_mapfd, enum redir_mode mode,
+-				     int send_flags)
+-{
+-	const char *log_prefix = redir_mode_str(mode);
+-	unsigned int pass;
+-	int err, n;
+-	u32 key;
+-	char b;
+-
+-	zero_verdict_count(verd_mapfd);
+-
+-	err = add_to_sockmap(sock_mapfd, peer0, peer1);
+-	if (err)
+-		return;
+-
+-	if (nop_mapfd >= 0) {
+-		err = add_to_sockmap(nop_mapfd, cli0, cli1);
+-		if (err)
+-			return;
+-	}
+-
+-	/* Last byte is OOB data when send_flags has MSG_OOB bit set */
+-	n = xsend(cli1, "ab", 2, send_flags);
+-	if (n >= 0 && n < 2)
+-		FAIL("%s: incomplete send", log_prefix);
+-	if (n < 2)
+-		return;
+-
+-	key = SK_PASS;
+-	err = xbpf_map_lookup_elem(verd_mapfd, &key, &pass);
+-	if (err)
+-		return;
+-	if (pass != 1)
+-		FAIL("%s: want pass count 1, have %d", log_prefix, pass);
+-
+-	n = recv_timeout(mode == REDIR_INGRESS ? peer0 : cli0, &b, 1, 0, IO_TIMEOUT_SEC);
+-	if (n < 0)
+-		FAIL_ERRNO("%s: recv_timeout", log_prefix);
+-	if (n == 0)
+-		FAIL("%s: incomplete recv", log_prefix);
+-
+-	if (send_flags & MSG_OOB) {
+-		/* Check that we can't read OOB while in sockmap */
+-		errno = 0;
+-		n = recv(peer1, &b, 1, MSG_OOB | MSG_DONTWAIT);
+-		if (n != -1 || errno != EOPNOTSUPP)
+-			FAIL("%s: recv(MSG_OOB): expected EOPNOTSUPP: retval=%d errno=%d",
+-			     log_prefix, n, errno);
+-
+-		/* Remove peer1 from sockmap */
+-		xbpf_map_delete_elem(sock_mapfd, &(int){ 1 });
+-
+-		/* Check that OOB was dropped on redirect */
+-		errno = 0;
+-		n = recv(peer1, &b, 1, MSG_OOB | MSG_DONTWAIT);
+-		if (n != -1 || errno != EINVAL)
+-			FAIL("%s: recv(MSG_OOB): expected EINVAL: retval=%d errno=%d",
+-			     log_prefix, n, errno);
+-	}
+-}
+-
+ static void test_reuseport(struct test_sockmap_listen *skel,
+ 			   struct bpf_map *map, int family, int sotype)
+ {
+@@ -1469,68 +1406,6 @@ static void test_reuseport(struct test_sockmap_listen *skel,
+ 	}
+ }
+ 
+-static int inet_socketpair(int family, int type, int *s, int *c)
+-{
+-	return create_pair(family, type | SOCK_NONBLOCK, s, c);
+-}
+-
+-static void udp_redir_to_connected(int family, int sock_mapfd, int verd_mapfd,
+-				   enum redir_mode mode)
+-{
+-	int c0, c1, p0, p1;
+-	int err;
+-
+-	err = inet_socketpair(family, SOCK_DGRAM, &p0, &c0);
+-	if (err)
+-		return;
+-	err = inet_socketpair(family, SOCK_DGRAM, &p1, &c1);
+-	if (err)
+-		goto close_cli0;
+-
+-	pairs_redir_to_connected(c0, p0, c1, p1, sock_mapfd, -1, verd_mapfd,
+-				 mode, NO_FLAGS);
+-
+-	xclose(c1);
+-	xclose(p1);
+-close_cli0:
+-	xclose(c0);
+-	xclose(p0);
+-}
+-
+-static void udp_skb_redir_to_connected(struct test_sockmap_listen *skel,
+-				       struct bpf_map *inner_map, int family)
+-{
+-	int verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
+-	int verdict_map = bpf_map__fd(skel->maps.verdict_map);
+-	int sock_map = bpf_map__fd(inner_map);
+-	int err;
+-
+-	err = xbpf_prog_attach(verdict, sock_map, BPF_SK_SKB_VERDICT, 0);
+-	if (err)
+-		return;
+-
+-	skel->bss->test_ingress = false;
+-	udp_redir_to_connected(family, sock_map, verdict_map, REDIR_EGRESS);
+-	skel->bss->test_ingress = true;
+-	udp_redir_to_connected(family, sock_map, verdict_map, REDIR_INGRESS);
+-
+-	xbpf_prog_detach2(verdict, sock_map, BPF_SK_SKB_VERDICT);
+-}
+-
+-static void test_udp_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+-			   int family)
+-{
+-	const char *family_name, *map_name;
+-	char s[MAX_TEST_NAME];
+-
+-	family_name = family_str(family);
+-	map_name = map_type_str(map);
+-	snprintf(s, sizeof(s), "%s %s %s", map_name, family_name, __func__);
+-	if (!test__start_subtest(s))
+-		return;
+-	udp_skb_redir_to_connected(skel, map, family);
+-}
+-
+ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		      int family)
+ {
+@@ -1539,7 +1414,6 @@ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	test_redir(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_DGRAM);
+-	test_udp_redir(skel, map, family);
+ }
+ 
+ void serial_test_sockmap_listen(void)
 
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
