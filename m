@@ -1,149 +1,334 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA6D20E6E7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833A120E6E7;
+	Wed, 14 May 2025 23:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747264060; cv=none; b=YzThQ5XQ2icfbxl3tV67aa3PCU9eYaUQU+KmioXorVAhqDAgJmkW1tV6f0O6VJ296lfwZrFIOiiFZipjgD66SWC+uliFGUOMtII/R8R4nFh0C68ZXXojuMmY1Tyffcn++ZJM+aOGHkYmGLtpc3Ipb8ovPw2Kd3u7Hd0YP+6lNMU=
+	t=1747264125; cv=none; b=nlbe7QHW/rdsrnn7HQdrDHvDiyEFcspdkqHe4SPlYBhSKIeLcUNhcV1hrb/3nswvwrKWVXPAnpESyI3t2UxNbTArfxlhCrz847Z7zLRGV+HHaAHuCsD51DQgeQtfj55w1UkuStRVk5O45P7FsMI6lAIg8UAJncfvga76Cqi+trU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747264060; c=relaxed/simple;
-	bh=wUcH2iTBfljSCxkviRVSrLkqLoksGITmeGA7aQVR91E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATy7hDdQ3FbCCJ56VB7TZgN81FoOn9HIVSPSsfdkiXomnyrhp3Ew0di7o0Bzk/DAUfTDlsk5ahzWrJ6HXmD8cOZ1OZ79rGMtspRZjBELhPOFD7vv+a0yFqCUICO52yw/qMcG44ZizwCFLKTz6ILI8coMu3fX8dhUlrMXYNYCsEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uFLCA-0003Tq-OO; Thu, 15 May 2025 01:07:26 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uFLC9-002maB-16;
-	Thu, 15 May 2025 01:07:25 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uFLC9-004f9s-28;
-	Thu, 15 May 2025 01:07:25 +0200
-Date: Thu, 15 May 2025 01:07:25 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	jonas@kwiboo.se, jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 3/3] drm/bridge: fsl-ldb: simplify device_node error
- handling
-Message-ID: <20250514230725.fmqnrxrr3odwzn4a@pengutronix.de>
-References: <20250514222453.440915-1-m.felsch@pengutronix.de>
- <20250514222453.440915-4-m.felsch@pengutronix.de>
- <20250514224410.GL23592@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1747264125; c=relaxed/simple;
+	bh=KnQkdp4PuJIqcd44bLxDryVtdBfFszktP1VdxL9wWz0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WB77ubYxeIghKbwei1wrLIyIDK1/A+W2w5GYIFYkfl6h8Li30JAFb5AAK9l8QpwCYsxybDtH6pJ1OiLxUAvaejfV4xEm3DUj8mUnMvEZOmGAPvyRrdXwTz/zo+x+eVoYRRUGCOOkiKjYVhKI+IfBUd/hBGUOjqryCWqa7I/RhTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=DT+kGBjc; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="DT+kGBjc"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOh-001vf2-Pn; Thu, 15 May 2025 00:16:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=9xhO29vFcmTnpIi4IR/kL+pG5kZoH+hvhoDGRurs7Ls=; b=DT+kGBjc7ZHWGoTYK+SMXNmIAs
+	ltm/XCzwXM5Ya4AUfi7snGiQtGZ2h+qd4IiE3I4zd96dginsIb+6/XHozB4BcYVlbFcNZ9vG9CZGd
+	QOdTSn+UuW11pm6+3SE4i7Y/BtqEb9Au/7BbnAAaZEX8ai36VA3Ivx62hhJ8jVMQv6nQguvib2wgu
+	5W0ND/agZIODWwbCSlgYyNqMLvndSZsNKoJiYgN8F3SRGyA02totplloEncIboptgDNc6rVBaJtGB
+	iVTJoL8zQzDajoLd79MAFBtaG7kqmvhK3x9TsVuvE97K0oTJIZvUKp7n8c1WLcH/GG2tKxjqtnSKi
+	XiDTIM/A==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOh-0008AA-Et; Thu, 15 May 2025 00:16:19 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uFKOP-005bJ3-BD; Thu, 15 May 2025 00:16:01 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Thu, 15 May 2025 00:15:30 +0200
+Subject: [PATCH bpf-next v3 7/8] selftests/bpf: sockmap_listen cleanup:
+ Drop af_unix redir tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514224410.GL23592@pendragon.ideasonboard.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftests-sockmap-redir-v3-7-a1ea723f7e7e@rbox.co>
+References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-Hi Laurent,
+Remove tests covered by sockmap_redir.
 
-On 25-05-15, Laurent Pinchart wrote:
-> Hi Marco,
-> 
-> On Thu, May 15, 2025 at 12:24:53AM +0200, Marco Felsch wrote:
-> > Make use of __free(device_node) to simplify the of_node_put() error
-> > handling paths. No functional changes.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/gpu/drm/bridge/fsl-ldb.c | 24 +++++++++---------------
-> >  1 file changed, 9 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
-> > index e0a229c91953..cea9ddaa5e01 100644
-> > --- a/drivers/gpu/drm/bridge/fsl-ldb.c
-> > +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-> > @@ -287,8 +287,9 @@ static const struct drm_bridge_funcs funcs = {
-> >  static int fsl_ldb_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> > -	struct device_node *panel_node;
-> > -	struct device_node *remote1, *remote2;
-> > +	struct device_node *panel_node __free(device_node) = NULL;
-> > +	struct device_node *remote1 __free(device_node) = NULL;
-> > +	struct device_node *remote2 __free(device_node) = NULL;
-> >  	struct drm_panel *panel;
-> >  	struct fsl_ldb *fsl_ldb;
-> >  	int dual_link;
-> > @@ -321,21 +322,16 @@ static int fsl_ldb_probe(struct platform_device *pdev)
-> >  	remote2 = of_graph_get_remote_node(dev->of_node, 2, 0);
-> >  	fsl_ldb->ch0_enabled = (remote1 != NULL);
-> >  	fsl_ldb->ch1_enabled = (remote2 != NULL);
-> > -	panel_node = of_node_get(remote1 ? remote1 : remote2);
-> > -	of_node_put(remote1);
-> > -	of_node_put(remote2);
-> > +	panel_node = remote1 ? remote1 : remote2;
-> 
-> This will cause a double put of panel_node, once due to __free() on
-> remote1 or remote2, and the second time due to __free() on panel_node.
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ .../selftests/bpf/prog_tests/sockmap_listen.c      | 219 ---------------------
+ 1 file changed, 219 deletions(-)
 
-Argh.. you're right. I drop the __free() from the panel_node.
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index f0ad548bdf09d1c5ffdcedfbba11c304b19490c0..4f38dd7d23daf3aee83793be49748916d26d93b7 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -1429,64 +1429,6 @@ static void pairs_redir_to_connected(int cli0, int peer0, int cli1, int peer1,
+ 	}
+ }
+ 
+-static void unix_redir_to_connected(int sotype, int sock_mapfd,
+-			       int verd_mapfd, enum redir_mode mode)
+-{
+-	int c0, c1, p0, p1;
+-	int sfd[2];
+-
+-	if (socketpair(AF_UNIX, sotype | SOCK_NONBLOCK, 0, sfd))
+-		return;
+-	c0 = sfd[0], p0 = sfd[1];
+-
+-	if (socketpair(AF_UNIX, sotype | SOCK_NONBLOCK, 0, sfd))
+-		goto close0;
+-	c1 = sfd[0], p1 = sfd[1];
+-
+-	pairs_redir_to_connected(c0, p0, c1, p1, sock_mapfd, -1, verd_mapfd,
+-				 mode, NO_FLAGS);
+-
+-	xclose(c1);
+-	xclose(p1);
+-close0:
+-	xclose(c0);
+-	xclose(p0);
+-}
+-
+-static void unix_skb_redir_to_connected(struct test_sockmap_listen *skel,
+-					struct bpf_map *inner_map, int sotype)
+-{
+-	int verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
+-	int verdict_map = bpf_map__fd(skel->maps.verdict_map);
+-	int sock_map = bpf_map__fd(inner_map);
+-	int err;
+-
+-	err = xbpf_prog_attach(verdict, sock_map, BPF_SK_SKB_VERDICT, 0);
+-	if (err)
+-		return;
+-
+-	skel->bss->test_ingress = false;
+-	unix_redir_to_connected(sotype, sock_map, verdict_map, REDIR_EGRESS);
+-	skel->bss->test_ingress = true;
+-	unix_redir_to_connected(sotype, sock_map, verdict_map, REDIR_INGRESS);
+-
+-	xbpf_prog_detach2(verdict, sock_map, BPF_SK_SKB_VERDICT);
+-}
+-
+-static void test_unix_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+-			    int sotype)
+-{
+-	const char *family_name, *map_name;
+-	char s[MAX_TEST_NAME];
+-
+-	family_name = family_str(AF_UNIX);
+-	map_name = map_type_str(map);
+-	snprintf(s, sizeof(s), "%s %s %s", map_name, family_name, __func__);
+-	if (!test__start_subtest(s))
+-		return;
+-	unix_skb_redir_to_connected(skel, map, sotype);
+-}
+-
+ static void test_reuseport(struct test_sockmap_listen *skel,
+ 			   struct bpf_map *map, int family, int sotype)
+ {
+@@ -1589,162 +1531,6 @@ static void test_udp_redir(struct test_sockmap_listen *skel, struct bpf_map *map
+ 	udp_skb_redir_to_connected(skel, map, family);
+ }
+ 
+-static void inet_unix_redir_to_connected(int family, int type, int sock_mapfd,
+-					int verd_mapfd, enum redir_mode mode)
+-{
+-	int c0, c1, p0, p1;
+-	int sfd[2];
+-	int err;
+-
+-	if (socketpair(AF_UNIX, type | SOCK_NONBLOCK, 0, sfd))
+-		return;
+-	c0 = sfd[0], p0 = sfd[1];
+-
+-	err = inet_socketpair(family, type, &p1, &c1);
+-	if (err)
+-		goto close;
+-
+-	pairs_redir_to_connected(c0, p0, c1, p1, sock_mapfd, -1, verd_mapfd,
+-				 mode, NO_FLAGS);
+-
+-	xclose(c1);
+-	xclose(p1);
+-close:
+-	xclose(c0);
+-	xclose(p0);
+-}
+-
+-static void inet_unix_skb_redir_to_connected(struct test_sockmap_listen *skel,
+-					    struct bpf_map *inner_map, int family)
+-{
+-	int verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
+-	int verdict_map = bpf_map__fd(skel->maps.verdict_map);
+-	int sock_map = bpf_map__fd(inner_map);
+-	int err;
+-
+-	err = xbpf_prog_attach(verdict, sock_map, BPF_SK_SKB_VERDICT, 0);
+-	if (err)
+-		return;
+-
+-	skel->bss->test_ingress = false;
+-	inet_unix_redir_to_connected(family, SOCK_DGRAM, sock_map, verdict_map,
+-				    REDIR_EGRESS);
+-	inet_unix_redir_to_connected(family, SOCK_STREAM, sock_map, verdict_map,
+-				    REDIR_EGRESS);
+-	skel->bss->test_ingress = true;
+-	inet_unix_redir_to_connected(family, SOCK_DGRAM, sock_map, verdict_map,
+-				    REDIR_INGRESS);
+-	inet_unix_redir_to_connected(family, SOCK_STREAM, sock_map, verdict_map,
+-				    REDIR_INGRESS);
+-
+-	xbpf_prog_detach2(verdict, sock_map, BPF_SK_SKB_VERDICT);
+-}
+-
+-static void unix_inet_redir_to_connected(int family, int type, int sock_mapfd,
+-					 int nop_mapfd, int verd_mapfd,
+-					 enum redir_mode mode, int send_flags)
+-{
+-	int c0, c1, p0, p1;
+-	int sfd[2];
+-	int err;
+-
+-	err = inet_socketpair(family, type, &p0, &c0);
+-	if (err)
+-		return;
+-
+-	if (socketpair(AF_UNIX, type | SOCK_NONBLOCK, 0, sfd))
+-		goto close_cli0;
+-	c1 = sfd[0], p1 = sfd[1];
+-
+-	pairs_redir_to_connected(c0, p0, c1, p1, sock_mapfd, nop_mapfd,
+-				 verd_mapfd, mode, send_flags);
+-
+-	xclose(c1);
+-	xclose(p1);
+-close_cli0:
+-	xclose(c0);
+-	xclose(p0);
+-}
+-
+-static void unix_inet_skb_redir_to_connected(struct test_sockmap_listen *skel,
+-					    struct bpf_map *inner_map, int family)
+-{
+-	int verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
+-	int nop_map = bpf_map__fd(skel->maps.nop_map);
+-	int verdict_map = bpf_map__fd(skel->maps.verdict_map);
+-	int sock_map = bpf_map__fd(inner_map);
+-	int err;
+-
+-	err = xbpf_prog_attach(verdict, sock_map, BPF_SK_SKB_VERDICT, 0);
+-	if (err)
+-		return;
+-
+-	skel->bss->test_ingress = false;
+-	unix_inet_redir_to_connected(family, SOCK_DGRAM,
+-				     sock_map, -1, verdict_map,
+-				     REDIR_EGRESS, NO_FLAGS);
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, -1, verdict_map,
+-				     REDIR_EGRESS, NO_FLAGS);
+-
+-	unix_inet_redir_to_connected(family, SOCK_DGRAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_EGRESS, NO_FLAGS);
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_EGRESS, NO_FLAGS);
+-
+-	/* MSG_OOB not supported by AF_UNIX SOCK_DGRAM */
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_EGRESS, MSG_OOB);
+-
+-	skel->bss->test_ingress = true;
+-	unix_inet_redir_to_connected(family, SOCK_DGRAM,
+-				     sock_map, -1, verdict_map,
+-				     REDIR_INGRESS, NO_FLAGS);
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, -1, verdict_map,
+-				     REDIR_INGRESS, NO_FLAGS);
+-
+-	unix_inet_redir_to_connected(family, SOCK_DGRAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_INGRESS, NO_FLAGS);
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_INGRESS, NO_FLAGS);
+-
+-	/* MSG_OOB not supported by AF_UNIX SOCK_DGRAM */
+-	unix_inet_redir_to_connected(family, SOCK_STREAM,
+-				     sock_map, nop_map, verdict_map,
+-				     REDIR_INGRESS, MSG_OOB);
+-
+-	xbpf_prog_detach2(verdict, sock_map, BPF_SK_SKB_VERDICT);
+-}
+-
+-static void test_udp_unix_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+-				int family)
+-{
+-	const char *family_name, *map_name;
+-	struct netns_obj *netns;
+-	char s[MAX_TEST_NAME];
+-
+-	family_name = family_str(family);
+-	map_name = map_type_str(map);
+-	snprintf(s, sizeof(s), "%s %s %s", map_name, family_name, __func__);
+-	if (!test__start_subtest(s))
+-		return;
+-
+-	netns = netns_new("sockmap_listen", true);
+-	if (!ASSERT_OK_PTR(netns, "netns_new"))
+-		return;
+-
+-	inet_unix_skb_redir_to_connected(skel, map, family);
+-	unix_inet_skb_redir_to_connected(skel, map, family);
+-
+-	netns_free(netns);
+-}
+-
+ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		      int family)
+ {
+@@ -1754,7 +1540,6 @@ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	test_reuseport(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_DGRAM);
+ 	test_udp_redir(skel, map, family);
+-	test_udp_unix_redir(skel, map, family);
+ }
+ 
+ void serial_test_sockmap_listen(void)
+@@ -1770,14 +1555,10 @@ void serial_test_sockmap_listen(void)
+ 	skel->bss->test_sockmap = true;
+ 	run_tests(skel, skel->maps.sock_map, AF_INET);
+ 	run_tests(skel, skel->maps.sock_map, AF_INET6);
+-	test_unix_redir(skel, skel->maps.sock_map, SOCK_DGRAM);
+-	test_unix_redir(skel, skel->maps.sock_map, SOCK_STREAM);
+ 
+ 	skel->bss->test_sockmap = false;
+ 	run_tests(skel, skel->maps.sock_hash, AF_INET);
+ 	run_tests(skel, skel->maps.sock_hash, AF_INET6);
+-	test_unix_redir(skel, skel->maps.sock_hash, SOCK_DGRAM);
+-	test_unix_redir(skel, skel->maps.sock_hash, SOCK_STREAM);
+ 
+ 	test_sockmap_listen__destroy(skel);
+ }
 
-Thanks,
-  Marco
+-- 
+2.49.0
 
-> 
-> >  
-> > -	if (!fsl_ldb->ch0_enabled && !fsl_ldb->ch1_enabled) {
-> > -		of_node_put(panel_node);
-> > +	if (!fsl_ldb->ch0_enabled && !fsl_ldb->ch1_enabled)
-> >  		return dev_err_probe(dev, -ENXIO, "No panel node found");
-> > -	}
-> >  
-> >  	dev_dbg(dev, "Using %s\n",
-> >  		fsl_ldb_is_dual(fsl_ldb) ? "dual-link mode" :
-> >  		fsl_ldb->ch0_enabled ? "channel 0" : "channel 1");
-> >  
-> >  	panel = of_drm_find_panel(panel_node);
-> > -	of_node_put(panel_node);
-> >  	if (IS_ERR(panel))
-> >  		return dev_err_probe(dev, PTR_ERR(panel), "drm panel not found\n");
-> >  
-> > @@ -345,14 +341,12 @@ static int fsl_ldb_probe(struct platform_device *pdev)
-> >  				     "drm panel-bridge add failed\n");
-> >  
-> >  	if (fsl_ldb_is_dual(fsl_ldb)) {
-> > -		struct device_node *port1, *port2;
-> > +		struct device_node *port1 __free(device_node) =
-> > +			of_graph_get_port_by_id(dev->of_node, 1);
-> > +		struct device_node *port2 __free(device_node) =
-> > +			of_graph_get_port_by_id(dev->of_node, 2);
-> >  
-> > -		port1 = of_graph_get_port_by_id(dev->of_node, 1);
-> > -		port2 = of_graph_get_port_by_id(dev->of_node, 2);
-> >  		dual_link = drm_of_lvds_get_dual_link_pixel_order(port1, port2);
-> > -		of_node_put(port1);
-> > -		of_node_put(port2);
-> > -
-> >  		if (dual_link < 0)
-> >  			return dev_err_probe(dev, dual_link,
-> >  					     "Error getting dual link configuration\n");
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
