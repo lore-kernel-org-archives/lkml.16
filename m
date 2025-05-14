@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D96267F5D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13B726A0DF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266251; cv=none; b=hPLZ/K9ReVIPOL0RCcQVNW3+yigSHQeAH4YAm8cvZu0r28JV2R5WBkS23qRzrJ4Ch40fuVeu2E+IzfQB5Otds2BG+WkgolBGfpLioLjIdB+8LyUGbQuS8S4JX2paMx0wIoT3H7X7ztvtS+7GN5/Z94ux3OJ0yA1G3tmxtm5Xigw=
+	t=1747266254; cv=none; b=YcMhh5DM/kXcn91kfhzTHnh7wPefIy5otTs0dYbvXlTXk6VB0n0nJW1KbUQ1XYoy8DmXFvtvDGvT0BUQK5g7EQ2GNI9/EmyKibVMxN3a1AEQJagMsEHeI2rxsbVQEA7scMwRDrMTPdeP57byLcOvrshgFVLtk2vF6t6ygUisnDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266251; c=relaxed/simple;
-	bh=YaXMZqa/CJWT3sVvlMcRl825YHOjaW+jUzinohijxTk=;
+	s=arc-20240116; t=1747266254; c=relaxed/simple;
+	bh=aPgC7xelTHDVWDAUkE1HCYXZKLL8arCU43wTrXitw0Y=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=t1HNVyx9zStU1yWh2tEhhMmF9al+OO7zY1G3/EkPR/m9m8CKz8nlY98RD6bBLDtIRrTYSbf3RBuDp8EukyPIMtir8jDlNRCFIzGdyMXdzr+bSoI9jkBKjkW6PlQEutnpI/SnzwP0i3fKXa5YMtz8SFlj2VX1XsxL0gOFk60nKDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EdodJE/p; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=BVo2pJ/j385uX6bj4tSc0hBzTAzm1qC9ybJN8uWa/rnW1d30pOsiAfwWA0BBaVVqvMmjQgIgOsBGQ4H/kkh3IiTucr+uv+FWY8bm1TmK7rYnJZcOiQeBLwp5F6ZVG1GnypBvU3q9sE+QHoE5ddzKGFJUxMP/APVgDHTXgOHOSoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RmD2sQg9; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EdodJE/p"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e2bd11716so359832a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmD2sQg9"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e3b59e46eso5979805ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266249; x=1747871049; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266252; x=1747871052; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAqx7PB78yrm1J6fClisMvqbdgg3BicIqBxSbwrmM4g=;
-        b=EdodJE/pViH8yZ5i7aF3n2+feodg4+9ORS4RGoYH7yF7QL/sRoP09Qsn8f2v2aH0bN
-         sxYjkOSPWY6XYE0E+f6iS2LToOsUXVLnLdWuJXeHshMz8MJCewxeXFElHHvis3oFYQBp
-         m6+kk803Q0r1Nb+3sPCQNaUMoT+V+4xzTZf8OqDlcl+AVklOeD6CPK8ZvUamVdYmUGxx
-         svTmmNLYfO8Q83EpaJoepQLlaXmRo1BmebejJR2Fn9/mtw6SAGlnvlaMV7uaWpnldutf
-         Q4QRmi/o4RheTQkF8XxmQSD9kG8Smm/O1jPEOXxNqiff24sJDgxeiiZs3VT8STEiuP8v
-         O7vw==
+        bh=VIHO3z7qgUdLCctBcJJdIeKM53vTdpjbrMww0TEetmg=;
+        b=RmD2sQg9MN8h5oYzAJRutyJer64ydMRG+TvuT3E1XO5U3RDpSX44m5ab4YZckA8SD/
+         lNqRd5Ezwo0NGMFaZEzrSHeCwnr7uK5adnfL8taWsrucKC+2SPsfktXffs5w3hZXSJYA
+         2gzRunhj8IaQ5F/Kx182nnvw8/OH7Lm5JxDozaRk0J/Sh/8uiqefAqIwS2RKlQnxxjyZ
+         hftQ40PTZMF8R7xuCwYi6CcYjRMu4V0VWEGsK6OH/DmqRJBhP5yEPqx0dpDaGloCimxc
+         QpDJxiXMutZzfACbKEdgMSBtXI1EXtVQfp+H/tB0qZY0jKsNvfvTSxd7eA3DuLanir8w
+         ob7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266249; x=1747871049;
+        d=1e100.net; s=20230601; t=1747266252; x=1747871052;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAqx7PB78yrm1J6fClisMvqbdgg3BicIqBxSbwrmM4g=;
-        b=qWw0VHmFv0M43KRShbqPKGPE6LzrYz82KQ/1YaMJGd0GURD9DS75K/x853AD33dlFy
-         LI2zhPyZ8CSEUMYEnykwuNsoE724T2wgNfW+jpfUsn9zj3eSLrLcGiQsRkvnjHjNzV7+
-         TUwQjKcbVtZh0/b7z9UB0Dyutdg8AwSQrPe2crsTyoHxVrUGdIOEFTmPv0PgP6VYy67k
-         JxyOcRH3D0qgWbeEm++E2V7forgWPzvI1Fy8dy8ZfmMMLj1dQLmfG1DlelY+7Y7fkEe1
-         fqyjSK67Au5pd8CQblZaDN7sc5MHM5c5d1tEWaXm92lHTDA/fOMlUPMKi3z+Jd+vpz3E
-         8wWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJevmXaHiWKOyUDZhFiKwXgxBK/uxaiqvfXz54TVL1566MV3mSmYD4ZL3IcCB90QgbVv6ZzuteJ1u+How=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOWmiyiIt1OB9Yk2Ezg6vq4cVv3FBRrSB6LslgTm4fCUKY81vE
-	qxxwGH4QGTulnr3fnaYkO76oB6IDqjNsLYoEx5/51iRx7/inq3NsEp0gxcCxKNytfxIuZXbHPOH
-	zM8gKM2Jo8bwsgpjhZRdAUA==
-X-Google-Smtp-Source: AGHT+IHTYGGI34KSQ5XCdFQVJvWJnhJg093+O7Y4UZIaW3vTNyanshiaJtG95L6+3kUV6GJKWdEgPBz38RMwUlzgHQ==
-X-Received: from pjbpw18.prod.google.com ([2002:a17:90b:2792:b0:2fe:800f:23a])
+        bh=VIHO3z7qgUdLCctBcJJdIeKM53vTdpjbrMww0TEetmg=;
+        b=OMwvpursrxaISSia4FZUYSEC9np2NCCjS6KwczYG88DuBPYD1lM2YPrb0JiJ36JYje
+         Gfehdsv0XwZINnrmOiysAEEMOBIcrwhocm3s5HLoCwXrkl7q8UZo+alVyeA887g7oCXu
+         v6fiE8iiywBKUhLpEAMwFUpNoWsHgWuyBOAm9De9DIZHzCMlRhaTZ/hdgYW5PQe5pBHJ
+         gZqtDNhVzHubbR8z3+a5mkr2I6+8FiiE7f2sQh0xVdIYMOp7ulgsu3ma0fsd7KPrNBye
+         d6eKECoWPg48GONikKN6f339FxD+Dc/Oub+HN3HI5tCi9an2YYHq4+S0VnAUNEaH4OET
+         5Yug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3DOF4MS5hpTP1t/+9gE+/CD8370i7nyX97SXKOKsq/Oi35tgjYCYKdbTUrxGhHRFnvL3fCV4QkL6Ye6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhlqnYIe2zJu6d7v7tcAy64nTb5ac5hRHUKcaHSeavqEVcPElH
+	7btQ6AOExQaaqvDax4UL/IgnzEzxqiwrRLK7ZvFcDFXx849UsjCGCokqRUdKj1zAgGovJk+14sA
+	TEX/1wTcZZ98Zz9GEQUOBbQ==
+X-Google-Smtp-Source: AGHT+IHmwCzSwN6Nfb7PIWHR4ZLGRIGjOq8g3mWPjJm4bmOxXDdJ3v5NacuKAC2o4rPhtu2Mbj8tJejqtkdzvZ+2iQ==
+X-Received: from plgk17.prod.google.com ([2002:a17:902:ce11:b0:22e:15c1:3510])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:498c:b0:301:1bce:c26f with SMTP id 98e67ed59e1d1-30e5156ed71mr757330a91.3.1747266249098;
- Wed, 14 May 2025 16:44:09 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:25 -0700
+ 2002:a17:903:1744:b0:223:f639:69df with SMTP id d9443c01a7336-231b60fd7e5mr4722055ad.41.1747266252099;
+ Wed, 14 May 2025 16:44:12 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:27 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <56149cfab1ab08d73618fd3914addd51dd42193a.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 46/51] KVM: selftests: Test that guest_memfd usage is
- reported via hugetlb
+Message-ID: <db8bb0ba64c858913d169f0d3e95a17fabf2096e.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 48/51] KVM: selftests: Update test for various private
+ memory backing source types
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -97,466 +97,124 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Using HugeTLB as the huge page allocator for guest_memfd allows reuse
-of HugeTLB's reporting mechanism, hence HugeTLB stats must be kept
-up-to-date.
+Update private_mem_conversions_test for various private memory backing
+source types, testing HugeTLB support in guest_memfd.
 
-This patch tests for the above.
-
+Change-Id: I50facb166a282f97570591eb331c3f19676b01cc
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Change-Id: Ida3319b1d40c593d8167a03506c7030e67fc746b
 ---
- tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../kvm/guest_memfd_hugetlb_reporting_test.c  | 384 ++++++++++++++++++
- ...uest_memfd_provide_hugetlb_cgroup_mount.sh |  36 ++
- 3 files changed, 421 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/guest_memfd_hugetlb_reporting_test.c
- create mode 100755 tools/testing/selftests/kvm/guest_memfd_provide_hugetlb_cgroup_mount.sh
+ .../kvm/x86/private_mem_conversions_test.c    | 42 +++++++++++++------
+ 1 file changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index bc22a5a23c4c..2ffe6bc95a68 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -132,6 +132,7 @@ TEST_GEN_PROGS_x86 += coalesced_io_test
- TEST_GEN_PROGS_x86 += dirty_log_perf_test
- TEST_GEN_PROGS_x86 += guest_memfd_test
- TEST_GEN_PROGS_x86 += guest_memfd_conversions_test
-+TEST_GEN_PROGS_x86 += guest_memfd_hugetlb_reporting_test
- TEST_GEN_PROGS_x86 += hardware_disable_test
- TEST_GEN_PROGS_x86 += memslot_modification_stress_test
- TEST_GEN_PROGS_x86 += memslot_perf_test
-diff --git a/tools/testing/selftests/kvm/guest_memfd_hugetlb_reporting_test.c b/tools/testing/selftests/kvm/guest_memfd_hugetlb_reporting_test.c
-new file mode 100644
-index 000000000000..8ff1dda3e02f
---- /dev/null
-+++ b/tools/testing/selftests/kvm/guest_memfd_hugetlb_reporting_test.c
-@@ -0,0 +1,384 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Tests that HugeTLB statistics are correct at various points of the lifecycle
-+ * of guest_memfd with 1G page support.
-+ *
-+ * Providing a HUGETLB_CGROUP_PATH will allow cgroup reservations to be
-+ * tested.
-+ *
-+ * Either use
-+ *
-+ *   ./guest_memfd_provide_hugetlb_cgroup_mount.sh ./guest_memfd_hugetlb_reporting_test
-+ *
-+ * or provide the mount with
-+ *
-+ *   export HUGETLB_CGROUP_PATH=/tmp/hugetlb-cgroup
-+ *   mount -t cgroup -o hugetlb none $HUGETLB_CGROUP_PATH
-+ *   ./guest_memfd_hugetlb_reporting_test
-+ *
-+ *
-+ * Copyright (C) 2025 Google LLC
-+ *
-+ * Authors:
-+ *   Ackerley Tng <ackerleytng@google.com>
-+ */
-+
-+#include <fcntl.h>
-+#include <linux/falloc.h>
-+#include <linux/guestmem.h>
-+#include <linux/kvm.h>
-+#include <linux/limits.h>
-+#include <linux/memfd.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+
-+#include "kvm_util.h"
-+#include "test_util.h"
-+#include "processor.h"
-+
-+static unsigned long read_value(const char *file_name)
-+{
-+	FILE *fp;
-+	unsigned long num;
-+
-+	fp = fopen(file_name, "r");
-+	TEST_ASSERT(fp != NULL, "Error opening file %s!\n", file_name);
-+
-+	TEST_ASSERT_EQ(fscanf(fp, "%lu", &num), 1);
-+
-+	fclose(fp);
-+
-+	return num;
-+}
-+
-+enum hugetlb_statistic {
-+	FREE_HUGEPAGES,
-+	NR_HUGEPAGES,
-+	NR_OVERCOMMIT_HUGEPAGES,
-+	RESV_HUGEPAGES,
-+	SURPLUS_HUGEPAGES,
-+	NR_TESTED_HUGETLB_STATISTICS,
-+};
-+
-+enum hugetlb_cgroup_statistic {
-+	LIMIT_IN_BYTES,
-+	MAX_USAGE_IN_BYTES,
-+	USAGE_IN_BYTES,
-+	NR_TESTED_HUGETLB_CGROUP_STATISTICS,
-+};
-+
-+enum hugetlb_cgroup_statistic_category {
-+	USAGE = 0,
-+	RESERVATION,
-+	NR_HUGETLB_CGROUP_STATISTIC_CATEGORIES,
-+};
-+
-+static const char *hugetlb_statistics[NR_TESTED_HUGETLB_STATISTICS] = {
-+	[FREE_HUGEPAGES] = "free_hugepages",
-+	[NR_HUGEPAGES] = "nr_hugepages",
-+	[NR_OVERCOMMIT_HUGEPAGES] = "nr_overcommit_hugepages",
-+	[RESV_HUGEPAGES] = "resv_hugepages",
-+	[SURPLUS_HUGEPAGES] = "surplus_hugepages",
-+};
-+
-+static const char *hugetlb_cgroup_statistics[NR_TESTED_HUGETLB_CGROUP_STATISTICS] = {
-+	[LIMIT_IN_BYTES] = "limit_in_bytes",
-+	[MAX_USAGE_IN_BYTES] = "max_usage_in_bytes",
-+	[USAGE_IN_BYTES] = "usage_in_bytes",
-+};
-+
-+enum test_page_size {
-+	TEST_SZ_2M,
-+	TEST_SZ_1G,
-+	NR_TEST_SIZES,
-+};
-+
-+struct test_param {
-+	size_t page_size;
-+	int memfd_create_flags;
-+	uint64_t guest_memfd_flags;
-+	char *hugetlb_size_string;
-+	char *hugetlb_cgroup_size_string;
-+};
-+
-+const struct test_param *test_params(enum test_page_size size)
-+{
-+	static const struct test_param params[] = {
-+		[TEST_SZ_2M] = {
-+			.page_size = PG_SIZE_2M,
-+			.memfd_create_flags = MFD_HUGETLB | MFD_HUGE_2MB,
-+			.guest_memfd_flags = GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_2MB,
-+			.hugetlb_size_string = "2048kB",
-+			.hugetlb_cgroup_size_string = "2MB",
-+		},
-+		[TEST_SZ_1G] = {
-+			.page_size = PG_SIZE_1G,
-+			.memfd_create_flags = MFD_HUGETLB | MFD_HUGE_1GB,
-+			.guest_memfd_flags = GUEST_MEMFD_FLAG_HUGETLB | GUESTMEM_HUGETLB_FLAG_1GB,
-+			.hugetlb_size_string = "1048576kB",
-+			.hugetlb_cgroup_size_string = "1GB",
-+		},
-+	};
-+
-+	return &params[size];
-+}
-+
-+static unsigned long read_hugetlb_statistic(enum test_page_size size,
-+					    enum hugetlb_statistic statistic)
-+{
-+	char path[PATH_MAX] = "/sys/kernel/mm/hugepages/hugepages-";
-+
-+	strcat(path, test_params(size)->hugetlb_size_string);
-+	strcat(path, "/");
-+	strcat(path, hugetlb_statistics[statistic]);
-+
-+	return read_value(path);
-+}
-+
-+static unsigned long read_hugetlb_cgroup_statistic(const char *hugetlb_cgroup_path,
-+						   enum test_page_size size,
-+						   enum hugetlb_cgroup_statistic statistic,
-+						   bool reservations)
-+{
-+	char path[PATH_MAX] = "";
-+
-+	strcat(path, hugetlb_cgroup_path);
-+
-+	if (hugetlb_cgroup_path[strlen(hugetlb_cgroup_path) - 1] != '/')
-+		strcat(path, "/");
-+
-+	strcat(path, "hugetlb.");
-+	strcat(path, test_params(size)->hugetlb_cgroup_size_string);
-+	if (reservations)
-+		strcat(path, ".rsvd");
-+	strcat(path, ".");
-+	strcat(path, hugetlb_cgroup_statistics[statistic]);
-+
-+	return read_value(path);
-+}
-+
-+static unsigned long hugetlb_baseline[NR_TEST_SIZES]
-+				     [NR_TESTED_HUGETLB_STATISTICS];
-+
-+static unsigned long
-+	hugetlb_cgroup_baseline[NR_TEST_SIZES]
-+			       [NR_TESTED_HUGETLB_CGROUP_STATISTICS]
-+			       [NR_HUGETLB_CGROUP_STATISTIC_CATEGORIES];
-+
-+
-+static void establish_baseline(const char *hugetlb_cgroup_path)
-+{
-+	const char *p = hugetlb_cgroup_path;
-+	int i, j;
-+
-+	for (i = 0; i < NR_TEST_SIZES; ++i) {
-+		for (j = 0; j < NR_TESTED_HUGETLB_STATISTICS; ++j)
-+			hugetlb_baseline[i][j] = read_hugetlb_statistic(i, j);
-+
-+		if (!hugetlb_cgroup_path)
-+			continue;
-+
-+		for (j = 0; j < NR_TESTED_HUGETLB_CGROUP_STATISTICS; ++j) {
-+			hugetlb_cgroup_baseline[i][j][USAGE] =
-+				read_hugetlb_cgroup_statistic(p, i, j, USAGE);
-+			hugetlb_cgroup_baseline[i][j][RESERVATION] =
-+				read_hugetlb_cgroup_statistic(p, i, j, RESERVATION);
-+		}
-+	}
-+}
-+
-+static void assert_stats_at_baseline(const char *hugetlb_cgroup_path)
-+{
-+	const char *p = hugetlb_cgroup_path;
-+
-+	/* Enumerate these for easy assertion reading. */
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_2M, FREE_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_2M][FREE_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_2M, NR_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_2M][NR_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_2M, NR_OVERCOMMIT_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_2M][NR_OVERCOMMIT_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_2M, RESV_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_2M][RESV_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_2M, SURPLUS_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_2M][SURPLUS_HUGEPAGES]);
-+
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_1G, FREE_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_1G][FREE_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_1G, NR_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_1G][NR_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_1G, NR_OVERCOMMIT_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_1G][NR_OVERCOMMIT_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_1G, RESV_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_1G][RESV_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(TEST_SZ_1G, SURPLUS_HUGEPAGES),
-+		       hugetlb_baseline[TEST_SZ_1G][SURPLUS_HUGEPAGES]);
-+
-+	if (!hugetlb_cgroup_path)
-+		return;
-+
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_2M, LIMIT_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[TEST_SZ_2M][LIMIT_IN_BYTES][USAGE]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_2M, MAX_USAGE_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[TEST_SZ_2M][MAX_USAGE_IN_BYTES][USAGE]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_2M, USAGE_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[TEST_SZ_2M][USAGE_IN_BYTES][USAGE]);
-+
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_1G, LIMIT_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[TEST_SZ_1G][LIMIT_IN_BYTES][RESERVATION]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_1G, MAX_USAGE_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[TEST_SZ_1G][MAX_USAGE_IN_BYTES][RESERVATION]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, TEST_SZ_1G, USAGE_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[TEST_SZ_1G][USAGE_IN_BYTES][RESERVATION]);
-+}
-+
-+static void assert_stats(const char *hugetlb_cgroup_path,
-+			 enum test_page_size size, unsigned long num_reserved,
-+			 unsigned long num_faulted)
-+{
-+	size_t pgsz = test_params(size)->page_size;
-+	const char *p = hugetlb_cgroup_path;
-+
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(size, FREE_HUGEPAGES),
-+		       hugetlb_baseline[size][FREE_HUGEPAGES] - num_faulted);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(size, NR_HUGEPAGES),
-+		       hugetlb_baseline[size][NR_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(size, NR_OVERCOMMIT_HUGEPAGES),
-+		       hugetlb_baseline[size][NR_OVERCOMMIT_HUGEPAGES]);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(size, RESV_HUGEPAGES),
-+		       hugetlb_baseline[size][RESV_HUGEPAGES] + num_reserved - num_faulted);
-+	TEST_ASSERT_EQ(read_hugetlb_statistic(size, SURPLUS_HUGEPAGES),
-+		       hugetlb_baseline[size][SURPLUS_HUGEPAGES]);
-+
-+	if (!hugetlb_cgroup_path)
-+		return;
-+
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, LIMIT_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[size][LIMIT_IN_BYTES][USAGE]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, MAX_USAGE_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[size][MAX_USAGE_IN_BYTES][USAGE]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, USAGE_IN_BYTES, USAGE),
-+		hugetlb_cgroup_baseline[size][USAGE_IN_BYTES][USAGE] + num_faulted * pgsz);
-+
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, LIMIT_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[size][LIMIT_IN_BYTES][RESERVATION]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, MAX_USAGE_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[size][MAX_USAGE_IN_BYTES][RESERVATION]);
-+	TEST_ASSERT_EQ(
-+		read_hugetlb_cgroup_statistic(p, size, USAGE_IN_BYTES, RESERVATION),
-+		hugetlb_cgroup_baseline[size][USAGE_IN_BYTES][RESERVATION] + num_reserved * pgsz);
-+}
-+
-+/* Use hugetlb behavior as a baseline. guest_memfd should have comparable behavior. */
-+static void test_hugetlb_behavior(const char *hugetlb_cgroup_path, enum test_page_size test_size)
-+{
-+	const struct test_param *param;
-+	char *mem;
-+	int memfd;
-+
-+	param = test_params(test_size);
-+
-+	assert_stats_at_baseline(hugetlb_cgroup_path);
-+
-+	memfd = memfd_create("guest_memfd_hugetlb_reporting_test",
-+			     param->memfd_create_flags);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 0, 0);
-+
-+	mem = mmap(NULL, param->page_size, PROT_READ | PROT_WRITE,
-+		   MAP_SHARED | MAP_HUGETLB, memfd, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "Couldn't mmap()");
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 0);
-+
-+	*mem = 'A';
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 1);
-+
-+	munmap(mem, param->page_size);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 1);
-+
-+	madvise(mem, param->page_size, MADV_DONTNEED);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 1);
-+
-+	madvise(mem, param->page_size, MADV_REMOVE);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 1);
-+
-+	close(memfd);
-+
-+	assert_stats_at_baseline(hugetlb_cgroup_path);
-+}
-+
-+static void test_guest_memfd_behavior(const char *hugetlb_cgroup_path,
-+				      enum test_page_size test_size)
-+{
-+	const struct test_param *param;
-+	struct kvm_vm *vm;
-+	int guest_memfd;
-+
-+	param = test_params(test_size);
-+
-+	assert_stats_at_baseline(hugetlb_cgroup_path);
-+
-+	vm = vm_create_barebones_type(KVM_X86_SW_PROTECTED_VM);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 0, 0);
-+
-+	guest_memfd = vm_create_guest_memfd(vm, param->page_size,
-+					    param->guest_memfd_flags);
-+
-+	/* fd creation reserves pages. */
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 0);
-+
-+	fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE, 0, param->page_size);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 1);
-+
-+	fallocate(guest_memfd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0,
-+		  param->page_size);
-+
-+	assert_stats(hugetlb_cgroup_path, test_size, 1, 0);
-+
-+	close(guest_memfd);
-+
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+index ec20bb7e95c8..5a0fd9155ce8 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.c
+@@ -450,21 +450,18 @@ static void *__test_mem_conversions(void *params)
+ }
+ 
+ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
++				 enum vm_private_mem_backing_src_type private_mem_src_type,
+ 				 uint32_t nr_vcpus, uint32_t nr_memslots,
+ 				 bool back_shared_memory_with_guest_memfd)
+ {
+-	/*
+-	 * Allocate enough memory so that each vCPU's chunk of memory can be
+-	 * naturally aligned with respect to the size of the backing store.
+-	 */
+-	const size_t alignment = max_t(size_t, SZ_2M, get_backing_src_pagesz(src_type));
+ 	struct test_thread_args *thread_args[KVM_MAX_VCPUS];
+-	const size_t per_cpu_size = align_up(PER_CPU_DATA_SIZE, alignment);
+-	const size_t memfd_size = per_cpu_size * nr_vcpus;
+-	const size_t slot_size = memfd_size / nr_memslots;
+ 	struct kvm_vcpu *vcpus[KVM_MAX_VCPUS];
+ 	pthread_t threads[KVM_MAX_VCPUS];
++	size_t per_cpu_size;
++	size_t memfd_size;
+ 	struct kvm_vm *vm;
++	size_t alignment;
++	size_t slot_size;
+ 	int memfd, i, r;
+ 	uint64_t flags;
+ 
+@@ -473,6 +470,18 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
+ 		.type = KVM_X86_SW_PROTECTED_VM,
+ 	};
+ 
 +	/*
-+	 * Wait a little for stats to be updated in rcu callback. resv_hugepages
-+	 * is updated on truncation in ->free_inode, and ->free_inode() happens
-+	 * in an rcu callback.
++	 * Allocate enough memory so that each vCPU's chunk of memory can be
++	 * naturally aligned with respect to the size of the backing store.
 +	 */
-+	usleep(300 * 1000);
++	alignment = max_t(size_t, SZ_2M,
++			  max_t(size_t, get_backing_src_pagesz(src_type),
++				get_private_mem_backing_src_pagesz(
++					private_mem_src_type)));
++	per_cpu_size = align_up(PER_CPU_DATA_SIZE, alignment);
++	memfd_size = per_cpu_size * nr_vcpus;
++	slot_size = memfd_size / nr_memslots;
 +
-+	assert_stats_at_baseline(hugetlb_cgroup_path);
-+
-+	kvm_vm_free(vm);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	char *hugetlb_cgroup_path;
-+
-+	hugetlb_cgroup_path = getenv("HUGETLB_CGROUP_PATH");
-+
-+	establish_baseline(hugetlb_cgroup_path);
-+
-+	test_hugetlb_behavior(hugetlb_cgroup_path, TEST_SZ_2M);
-+	test_hugetlb_behavior(hugetlb_cgroup_path, TEST_SZ_1G);
-+
-+	test_guest_memfd_behavior(hugetlb_cgroup_path, TEST_SZ_2M);
-+	test_guest_memfd_behavior(hugetlb_cgroup_path, TEST_SZ_1G);
-+}
-diff --git a/tools/testing/selftests/kvm/guest_memfd_provide_hugetlb_cgroup_mount.sh b/tools/testing/selftests/kvm/guest_memfd_provide_hugetlb_cgroup_mount.sh
-new file mode 100755
-index 000000000000..4180d49771c8
---- /dev/null
-+++ b/tools/testing/selftests/kvm/guest_memfd_provide_hugetlb_cgroup_mount.sh
-@@ -0,0 +1,36 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Wrapper that runs test, providing a hugetlb cgroup mount in environment
-+# variable HUGETLB_CGROUP_PATH
-+#
-+# Example:
-+#   ./guest_memfd_provide_hugetlb_cgroup_mount.sh ./guest_memfd_hugetlb_reporting_test
-+#
-+# Copyright (C) 2025, Google LLC.
-+
-+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-+
-+temp_dir=$(mktemp -d /tmp/guest_memfd_hugetlb_reporting_test_XXXXXX)
-+if [[ -z "$temp_dir" ]]; then
-+  echo "Error: Failed to create temporary directory for hugetlb cgroup mount." >&2
-+  exit 1
-+fi
-+
-+delete_temp_dir() {
-+  rm -rf $temp_dir
-+}
-+trap delete_temp_dir EXIT
-+
-+
-+mount -t cgroup -o hugetlb none $temp_dir
-+
-+
-+cleanup() {
-+  umount $temp_dir
-+  rm -rf $temp_dir
-+}
-+trap cleanup EXIT
-+
-+
-+HUGETLB_CGROUP_PATH=$temp_dir $@
+ 	TEST_ASSERT(slot_size * nr_memslots == memfd_size,
+ 		    "The memfd size (0x%lx) needs to be cleanly divisible by the number of memslots (%u)",
+ 		    memfd_size, nr_memslots);
+@@ -483,6 +492,7 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
+ 	flags = back_shared_memory_with_guest_memfd ?
+ 			GUEST_MEMFD_FLAG_SUPPORT_SHARED :
+ 			0;
++	flags |= vm_private_mem_backing_src_alias(private_mem_src_type)->flag;
+ 	memfd = vm_create_guest_memfd(vm, memfd_size, flags);
+ 
+ 	for (i = 0; i < nr_memslots; i++) {
+@@ -547,10 +557,13 @@ static void test_mem_conversions(enum vm_mem_backing_src_type src_type,
+ static void usage(const char *cmd)
+ {
+ 	puts("");
+-	printf("usage: %s [-h] [-g] [-m nr_memslots] [-s mem_type] [-n nr_vcpus]\n", cmd);
++	printf("usage: %s [-h] [-g] [-m nr_memslots] [-s mem_type] [-p private_mem_type] [-n nr_vcpus]\n",
++	       cmd);
+ 	puts("");
+ 	backing_src_help("-s");
+ 	puts("");
++	private_mem_backing_src_help("-p");
++	puts("");
+ 	puts(" -n: specify the number of vcpus (default: 1)");
+ 	puts("");
+ 	puts(" -m: specify the number of memslots (default: 1)");
+@@ -561,6 +574,7 @@ static void usage(const char *cmd)
+ 
+ int main(int argc, char *argv[])
+ {
++	enum vm_private_mem_backing_src_type private_mem_src_type = DEFAULT_VM_PRIVATE_MEM_SRC;
+ 	enum vm_mem_backing_src_type src_type = DEFAULT_VM_MEM_SRC;
+ 	bool back_shared_memory_with_guest_memfd = false;
+ 	uint32_t nr_memslots = 1;
+@@ -569,11 +583,14 @@ int main(int argc, char *argv[])
+ 
+ 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+ 
+-	while ((opt = getopt(argc, argv, "hgm:s:n:")) != -1) {
++	while ((opt = getopt(argc, argv, "hgm:s:p:n:")) != -1) {
+ 		switch (opt) {
+ 		case 's':
+ 			src_type = parse_backing_src_type(optarg);
+ 			break;
++		case 'p':
++			private_mem_src_type = parse_private_mem_backing_src_type(optarg);
++			break;
+ 		case 'n':
+ 			nr_vcpus = atoi_positive("nr_vcpus", optarg);
+ 			break;
+@@ -590,9 +607,8 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	test_mem_conversions(src_type, nr_vcpus, nr_memslots,
+-			     back_shared_memory_with_guest_memfd);
+-
++	test_mem_conversions(src_type, private_mem_src_type, nr_vcpus,
++			     nr_memslots, back_shared_memory_with_guest_memfd);
+ 
+ 	return 0;
+ }
 -- 
 2.49.0.1045.g170613ef41-goog
 
