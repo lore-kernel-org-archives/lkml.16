@@ -1,191 +1,210 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2068.outbound.protection.outlook.com [40.107.102.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8501F4639;
-	Wed, 14 May 2025 07:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207589; cv=none; b=DaJo5MuBD3LtAeMOlNA88ghwyFLK0J2Qxw/Ahr1/Oinp564Jgf4ITwriPGBFvdnAHkny3ZINkH4HGhkyYMNX3iDhTe/ccByiTtuI08jbv6FcliRS6DR807Wsp9c0+YR0qV84Ba2wvoBHDpv2G3IWgPQoDaSUKCtl47aj0eQkGII=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207589; c=relaxed/simple;
-	bh=sm0LNJOmtGN8g+G8nc3LgAZN7j10adbZr0FKkpv6VoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=I5zi4CbNpLH1AWUqmIGz5mUYc32UmaQMdawC8u/MdPUsUCI3hNM+f+E7FmkM5xLRDIG+yCxM9SGv6mSjU0SwLTKggRncf5ESPNilflCd4SxIcuEiUpekMmnyWpq+AwKcluvhIEUkBGjGZefZzr2NUpBHqqoF/FN4KqM+sAMjCwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Wi7Wuioj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47302040B0;
+	Wed, 14 May 2025 07:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207603; cv=fail; b=s4RYtP0NqlWxgrNRub+o7C+vjZtV9GVH+g2yBYiC3CBtICQVmPsmqGSfMNigDuO0QSo5oh0uuIgZJRPpsJuxbTFPff2lrXx/gHSaHAN/N5IYOiipbeDV17tXmohH+jLfxCRWZrp6kSq7u6t+K9J13T9TQ1SinMhLk3iuUDIZhQs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207603; c=relaxed/simple;
+	bh=MLypz5x+F+4Zg7ZQgBQ0JVVGGOtyC/q8EEPPQo0+Hc0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=onD7qVg3EW7ZjlmMbu//a8wURkAfJRB8u/B9dnR0nF06UrMXfudx2mwkcUZtRfYob7Z+E3QMH6Ad0f2m+GTt0U/892OF+v0I0NsXtbsBAqiXqlEU59PQ8io5OEB2qeKAP8Uo5HEmZBVbOs0FcQF+z7k01DpK5jXUPamAnk2+0u0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MpwAFtl+; arc=fail smtp.client-ip=40.107.102.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Wi7Wuioj"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E26mZg007826;
-	Wed, 14 May 2025 07:26:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Bm4yFLJeVj/zJGWYwL7wW/NnhgD3btzMiwSwZpR7Ok=; b=Wi7Wuioj8iPCKbGu
-	OAMlgag16TWjjoew5AtFFKGZ5sATW0lPFiDDCI/Xcc0GnZ1heRWOongbkarJAF3D
-	V0J9Ifo4Kjia8Tkb8Lpx3tXz8anTcIuYIg6C0FTGRj2P+tnK2qKEGoo2SS0XqMxc
-	vnympTKkM5hLpWInLKrgGTUSOGWUsM5mblwtDMPk6Rh5KDGI3OzYogS9awZq1/Wt
-	Lwo3Bc9ciCcVDGDUtjn3/Z/lCVO6juBzllQ30d0psqhDUAbGRkycEyL0XLV11zU9
-	Nsv4M98xIQA9moHO3ijdMrl4joiQUJV/DNg6AUurKrco1pKm7zEObOoQppOoPOta
-	yS7HHg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnssnd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 07:25:59 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54E7PxVt006424
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 07:25:59 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 14 May
- 2025 00:25:54 -0700
-Message-ID: <486616b7-9400-4288-b4b4-c56ec628b0f3@quicinc.com>
-Date: Wed, 14 May 2025 15:25:52 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MpwAFtl+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d9gWuFTv66ZJneN6Z+14HdH8Ykziio1jOBNQRRg3FhIyXunaoPul+nL1QdMnC/0P8PEoBIuiaGZZqjE8A5cG24Nawr2E8UXFpRthrSrJGKCF9WCxN6Sne7BvfM2UOlOFiOchbBDGsCyhjlnugn2Z5ib0RtCV5WH4+Wo9CLakPhWNlg17eqpxLyPGBxSXMDmCcm7Sf1T3gaGkKh+8qmfcpvpQURajfh7Wa6CqQSYUp2tcNuDpz4tBgP15SLQUhJJhV3kTjDG6q2eEmlNmjLXNsRW177I56ZiWKC3yuNg/Jgx93rguvqWVR9NPbz3wGQpjhk3Pa1rKqanWvK7+BaJ35w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0N+g2xhxf8iJxk+zBjhv9c1acE3159SvmBKyO+wHCLk=;
+ b=bSepFEtOdq3zmFrT+UiyjXpCcv3Ns9KzJu25qUI5kyhYIvegUB9rksTqyn9yqeVbbJa/xp0XsBCUJU6dijMVaepYHldPpLsObXxxCXGUxl2HaXdCEgN6miqmWPgLJ+ZsXAIe/dqA06l4+fsnDbVJz75rTEpThJr9oBnV+Uz8chhEyxW7g0Brywn1CcJJRWTC5GpwR5FFT5SdZLUv45ID70TTt+Y9qF/Wo1jfQaZIvp6pqlZqzmQwFmLBNFPeLFGoMyLGKR04DZCGp3F9LovmG+mEoQtcofPBH0Cy2p6mEZ8IchiFQAjMSLLenjgKISrt5dTHg4F1CSM3YfoHGA4ltg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0N+g2xhxf8iJxk+zBjhv9c1acE3159SvmBKyO+wHCLk=;
+ b=MpwAFtl+rTiu8mEXxtD8AV0TVYjHccg1hgMMYNsLA+Q61dgslMXdgG5/gmAEIZz8LQmqCSaPDbcXaWNdvwUCJls94KZi3y4uuCSaevHZ8o3VRcCKK8F3XEeiSvUOlKnHY5OHssj/S26XYNLzyD6FORe4uN27jhdCggOBvF4aeQU=
+Received: from BLAPR03CA0117.namprd03.prod.outlook.com (2603:10b6:208:32a::32)
+ by MW4PR12MB7238.namprd12.prod.outlook.com (2603:10b6:303:229::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
+ 2025 07:26:37 +0000
+Received: from BN3PEPF0000B074.namprd04.prod.outlook.com
+ (2603:10b6:208:32a:cafe::db) by BLAPR03CA0117.outlook.office365.com
+ (2603:10b6:208:32a::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Wed,
+ 14 May 2025 07:26:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B074.mail.protection.outlook.com (10.167.243.119) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:26:36 +0000
+Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 14 May 2025 02:26:26 -0500
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
+Subject: [RFC PATCH v6 20/32] x86/apic: Add update_vector() callback for Secure AVIC
+Date: Wed, 14 May 2025 12:47:51 +0530
+Message-ID: <20250514071803.209166-21-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] scsi: ufs: core: skip UFS clkscale if host
- asynchronous scan in progress
-To: Bart Van Assche <bvanassche@acm.org>, <quic_cang@quicinc.com>,
-        <mani@kernel.org>, <beanhuo@micron.com>, <avri.altman@wdc.com>,
-        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>,
-        <quic_nguyenb@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <neil.armstrong@linaro.org>,
-        <luca.weiss@fairphone.com>, <konrad.dybcio@oss.qualcomm.com>,
-        <peter.wang@mediatek.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
- <fd13e179-f2d8-4085-86da-c6b0fce2de5b@acm.org>
- <5748d0cc-a603-4b44-bbfc-d39d684b2ea6@quicinc.com>
- <c428f074-c010-4225-960e-56aa65a799d8@acm.org>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <c428f074-c010-4225-960e-56aa65a799d8@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AgmqrHl9WlQR8wJ9-mK9bylvzcjOkf-Z
-X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=68244587 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=8xSKCfN-9FFblOZXFZwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA2MyBTYWx0ZWRfX2sMU9T6XWX15
- eEeeS2YQXLnprr7JwLiVMGygpHMd0VmvW29YXDCZkbaBl9HT2FaQPFdhStS28u9ToqEN2DYznwh
- Mujr4B+7vNwBq9G0PISsZYN2M5uk9UpR5ROQGM9gTD2+Po+nN2y15+g/WpGqZwfm4Yr1WEgCJEI
- gVrMJcl+hfp+bIhYfYht16QgLRi6XRdvz2kyfIzLK0t4SYXRY44tFtOjVEZ6J313UmJ5FF82UjE
- P7p7OkdhVn3fPp4FWzobKwjs7lSHTti0bWxaSe8+oxt6ZiRIHjv3JksT9r3yLJ5jgQ3vyyN4t9I
- UriVKbIVwRxShVGYt+4zshtiyZTRI/Cd8hc/uMopZ3FuA8JpVG2NMhUF52AlPEfT3bgGjSLM1X0
- +Q6Uqmf2L2cmcalduMLL58qMrcs1OCExgUKW66kJwWaczDRpVskTYyLMDghgofVlENCEzT8u
-X-Proofpoint-GUID: AgmqrHl9WlQR8wJ9-mK9bylvzcjOkf-Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505140063
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B074:EE_|MW4PR12MB7238:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2cf45769-ac26-4482-6b1c-08dd92b8a92f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vm/gMYKODd/aQkX4Q8COoroxrtdbVjNoHkIggDvaaDUIyiipxDXFjDoOO0EP?=
+ =?us-ascii?Q?/xcsw2x8pf6Zfm03uUn39WH9ugXhnUrzIE6CmX1hjm3EeYIgSuXZioinSxNl?=
+ =?us-ascii?Q?gSv15dKtk0KoecCKW/9mypjtEuGgA7FUUvMZp3YelaT8DTS7n3VqiBqVGQBg?=
+ =?us-ascii?Q?72SVTETVK+pZOa2kxL6QbtwJDUs2qesZozBfUOdJFmgiAD3ZNQrAX2eJKjZM?=
+ =?us-ascii?Q?S1aYmXjooPQnh09PMyIeEuFBP3gdC1Ez06cXk4+LiLIyt20biNF8UPcjPwyF?=
+ =?us-ascii?Q?aTssmVBpgiq7eQpjZZjz74xOBMDkgkSiGj5OaKJZ0WwRPslgz5bkLCx6qcWt?=
+ =?us-ascii?Q?uOXmbsNnxsgr+ZsPQradp1D6yU+CODj2WuYKBSdfu/evEWuE80jWScOZs1L8?=
+ =?us-ascii?Q?PfXTPMIDEvp6fMaX/ZmAUMj7FDo4TXoPHnPxc/bzLFMNBk6vdL9uwxWGjzgO?=
+ =?us-ascii?Q?NoBOnuM8/3+du/VM6fU9JJ9xw/i7v+ZbWcMoUSvSda4MGIIwICYnPhD2VWVB?=
+ =?us-ascii?Q?JIEYC5QrBJvdksXnZjAG3uFpXor2XjxAJZ9vx8khrxxsYRGW4gWJB5AdnsBT?=
+ =?us-ascii?Q?S5TUdjTrSkANrCq9/YEsRl4WuzVZpf8tpYkDW6soYXvvyDeqrxI9RedZT9VS?=
+ =?us-ascii?Q?5YnSEP415HG2soziQNwzYTga2736YrDhuCIQCWGCdSHZS81jS5s1UYUONAJB?=
+ =?us-ascii?Q?ENiWZs8U5htCamNzSPg3bFizDIN1IuKyMoqUCUTsU9/vVn6055gF7Mu4fjJ8?=
+ =?us-ascii?Q?Idqc3XcFxPV8e6JPLgfnRD40hYPTw9sFW4Ql09ZoX8E9RfQMG1EvaN+uU8gM?=
+ =?us-ascii?Q?hiLQ8iPWt1OBjZZnArqOwbdrofbVTRYKekw2SeMVtCO/Fc6wiRT1D3Ob1Bgb?=
+ =?us-ascii?Q?rWmn1GWl4lqdi3yg2t/ZR/jEc3dfCOPr1paHbtUumqhK+E77pknQqs6rH2BY?=
+ =?us-ascii?Q?E7zYdBI6KmhVpV171npgpLnbDk1C17673fxugcbq17L0Vk+Jsa85/7cXl8UU?=
+ =?us-ascii?Q?7ndlaxh+EgRtbhpfSvSUZuswT+WCMn5dyF8O90l+MtpDk9VwP1AwldQ1mYvH?=
+ =?us-ascii?Q?+Vy+NL46rL+jjg4dnajIo+QoSwL4Ht5dK5LpGKl8vJAKCv1scnKUumepn/5S?=
+ =?us-ascii?Q?+6835Nmv6Z/NUbT5rghxhD0kRpdQbbVE0AcczNHTzE1+7zHThg+yaQnrTb+y?=
+ =?us-ascii?Q?tWWQoVDz8T0rwC//AF63n9v9rQsjnvPlX/RSYUfyyQ9A1tPenRckxrdWmLUS?=
+ =?us-ascii?Q?C5aOuJ62fs8uMbciiFpRMUinh2gpSl9OL7Y0olOzPtEAUCAoKnQeSd3BGpki?=
+ =?us-ascii?Q?5OrF0q2K0WGimZZH1Llhqu5m12jXDfLuMJ7dOulBP2t0gxsJa83pGkUF1CtY?=
+ =?us-ascii?Q?46Tl8KcFpRBqL9rRRNWyxoVG3h8PvSfFhJe+NVd2qx5yNqZshak4gClwwLIp?=
+ =?us-ascii?Q?tdXluJrxqsMi1FWU/k41WiLO1xawFm0bCMsuClQY3rteKshK2vGGk5VQADUP?=
+ =?us-ascii?Q?M/Rcmp1JOFOOeYypJ/VbsV6UxFHGPHnHu97P?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:26:36.6151
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cf45769-ac26-4482-6b1c-08dd92b8a92f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B074.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7238
 
+Add update_vector() callback to set/clear ALLOWED_IRR field in
+a vCPU's APIC backing page for vectors which are emulated by the
+hypervisor.
 
+The ALLOWED_IRR field indicates the interrupt vectors which the
+guest allows the hypervisor to inject (typically for emulated devices).
+Interrupt vectors used exclusively by the guest itself and the vectors
+which are not emulated by the hypervisor, such as IPI vectors, should
+not be set by the guest in the ALLOWED_IRR fields.
 
-On 5/13/2025 6:31 AM, Bart Van Assche wrote:
-> On 5/8/25 10:02 PM, Ziqi Chen wrote:
->>
->>
->> On 5/9/2025 12:06 AM, Bart Van Assche wrote:
->>> On 5/8/25 2:38 AM, Ziqi Chen wrote:
->>>> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
->>>> index 1c53ccf5a616..04f40677e76a 100644
->>>> --- a/drivers/ufs/core/ufshcd.c
->>>> +++ b/drivers/ufs/core/ufshcd.c
->>>> @@ -1207,6 +1207,9 @@ static bool 
->>>> ufshcd_is_devfreq_scaling_required(struct ufs_hba *hba,
->>>>       if (list_empty(head))
->>>>           return false;
->>>> +    if (hba->host->async_scan)
->>>> +        return false;
->>>
->>> Testing a boolean is never a proper way to synchronize code sections.
->>> As an example, the SCSI core could set hba->host->async_scan after this
->>> check completed and before the code below is executed. I think we need a
->>> better solution.
->>
->> Hi Bart,
->>
->> I get your point, we have also taken this into consideration. That's why
->> we move ufshcd_devfreq_init() out of ufshd_add_lus().
->>
->> Old sequence:
->>
->> | ufshcd_async_scan()
->>    |ufshcd_add_lus()
->>      |ufshcd_devfreq_init()
->>      |  | enable UFS clock scaling
->>      |scsi_scan_host()
->>         |scsi_prep_async_scan()
->>         |    | set host->async_scan to '1'
->>         |async_schedule(do_scan_async, data)
->>
->> With this old sequence , The ufs devfreq monitor started before the
->> scsi_prep_async_scan(),  the SCSI core could set hba->host->async_scan
->> after this check.
->>
->> New sequence:
->>
->> | ufshcd_async_scan()
->>    |ufshcd_add_lus()
->>    | |scsi_scan_host()
->>    |    |scsi_prep_async_scan()
->>    |    |    | set host->async_scan to '1'
->>    |    |async_schedule(do_scan_async, data)
->>    |ufshcd_devfreq_init()
->>    |    |enable UFS clock scaling
->>
->> With the new sequence , it is guaranteed that host->async_scan
->> is set before the UFS clock scaling enabling.
->>
->> I guess you might be worried about out-of-order execution will
->> cause this flag not be set before clock scaling enabling with
->> extremely low probability?
->> If yes, do you have any suggestion on this ?
-> 
-> The new sequence depends on SCSI core internals that may change at
-> any time. SCSI drivers like the UFS drivers shouldn't depend on this
-> behavior since there are no guarantees that this behavior won't change.
-> 
-> Can host->scan_mutex be used to serialize clock scaling and LUN
-> scanning? I think this mutex is already used by a SCSI driver to
-> serialize against LUN addition and removal (storvsc).
-> 
-Hi Bart,
+As clearing/setting state of a vector will also be used in subsequent
+commits for other APIC regs (such as APIC_IRR update for sending IPI),
+add a common update_vector() in Secure AVIC driver.
 
-I tried the scan_mutex, from debugging logs, it seems okay for now.
-I will provide to our internal test team for stability test.
-And I will try to collect the extra time spent on clock scaling
-path with applying scan_mutex.
-If everything is fine, I will update a new version.
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+Changes since v5:
 
-BRs,
-Ziqi
+ - Use common apic_set_vector(), apic_clear_vector().
 
-> Thanks,
-> 
-> Bart.
+ arch/x86/kernel/apic/x2apic_savic.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index 618643e7242f..2e6b62041968 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -23,6 +23,24 @@ static int savic_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ 	return x2apic_enabled() && cc_platform_has(CC_ATTR_SNP_SECURE_AVIC);
+ }
+ 
++static inline void *get_reg_bitmap(unsigned int cpu, unsigned int offset)
++{
++	struct apic_page *ap = per_cpu_ptr(apic_page, cpu);
++
++	return &ap->bytes[offset];
++}
++
++static inline void update_vector(unsigned int cpu, unsigned int offset,
++				 unsigned int vector, bool set)
++{
++	void *bitmap = get_reg_bitmap(cpu, offset);
++
++	if (set)
++		apic_set_vector(vector, bitmap);
++	else
++		apic_clear_vector(vector, bitmap);
++}
++
+ #define SAVIC_ALLOWED_IRR	0x204
+ 
+ static u32 savic_read(u32 reg)
+@@ -131,6 +149,11 @@ static void savic_write(u32 reg, u32 data)
+ 	}
+ }
+ 
++static void savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
++{
++	update_vector(cpu, SAVIC_ALLOWED_IRR, vector, set);
++}
++
+ static void init_apic_page(struct apic_page *ap)
+ {
+ 	u32 apic_id;
+@@ -212,6 +235,8 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 	.eoi				= native_apic_msr_eoi,
+ 	.icr_read			= native_x2apic_icr_read,
+ 	.icr_write			= native_x2apic_icr_write,
++
++	.update_vector			= savic_update_vector,
+ };
+ 
+ apic_driver(apic_x2apic_savic);
+-- 
+2.34.1
 
