@@ -1,122 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757D8101DE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27001E5B7E;
 	Wed, 14 May 2025 06:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747203637; cv=none; b=Y8/0PD86k2kv0TtDEH+0aX0QVxgiD+yjVmcD2RXZYFs672m21t9CvLHS6El3dSQPEbvU6rYVIQlr3ghzc/6TTI88n9Pb+msFj3NnHXZ0uyfIOQbI0pb3gIC5yy+oeP4PYVSe4L1V9ri5jeQ4ZUJ5VuWJUrA2weuns/CLN7KxTI0=
+	t=1747203639; cv=none; b=o5T89W1AYt+ofrSQ5fkXHubIuxW2/Eh/ARVSJvY//SmanXfNmMOG7HJJyFeKzijOlFNfBmlK/2ovxXwVnaMmMoe5O82CHmq28G4GUNey2FaNQw5F6hrfao3qymdD8btXgVdhlMSI6serzN9iATj1bLOQXMa1MIiQCVokJF79bY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747203637; c=relaxed/simple;
-	bh=PLDqcmSDaOp+qb5YFcXzw305AJnn0Y7PQrpTkMISjZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irk0Lwy1sP0EAQjuqpO1CETT3nooo94+6ff0faX7zKGEbs5I2qhLI0XlsFnRhnBIiwQJcEKz0s8GZ13B0i5pcFsBlGzC8p465gLMCNkt5lYVOCVAoeJBu94S4QxXVTbzp4DaSis3zq7Eg0ur2gxsj7MNTBcvBc6e2+qxrYrkjQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Smzt+dvt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747203639; c=relaxed/simple;
+	bh=88nezXdYGNGQB9lTU7R3VQCwT/9EyWgD9gKupfZ20zQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sieCjDsyj8mdkSFEo8wJXJ+nIB3mfKKWpBbrPL+rPz4nm0CEZ3t+T/WzEBUc/ltHsI2HQYs4umRkLFE6lsS6P1QTCCtDBfhEnjqNVIiFKwZc3eybmJOg8NEuithQi9hLqwwQFkHmmTvAKOeNVEifnmMv4SpjmX517e/HPvN9O/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L4L20iy8; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Smzt+dvt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824D1C4CEE9;
-	Wed, 14 May 2025 06:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747203636;
-	bh=PLDqcmSDaOp+qb5YFcXzw305AJnn0Y7PQrpTkMISjZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Smzt+dvt5tfSuQZPeyZimmhJnl4kz8wzMCP/VrcM8yV1kOtpICNv+vSGHrCiP0N/7
-	 Rtg5zRKRVkmTA0/S6ehoAHyOnLbhckgKC1RyRi640gI6epgtHhPlYJFUIasxv5wKTm
-	 nV/ZIe/6Rz1AhlXwjihHNnhAnLHjB10+a5urgMK7mxSKqZqWMbbp6FoJzVuIwuL6+l
-	 /OexObRYOtaxXSJ0vwIG93MaeuS7XZNiMLRghjBw4GZO3Z3QBHs3lBEOvuJeVKqerQ
-	 Lay4nBP4l+9RpqwxSL/SakcroDGwLHtBJWQXkZzOaXHLBU0U5wQl6VDxw4eqjMdpW7
-	 zCZX3aQ/nuM0w==
-Date: Wed, 14 May 2025 08:20:31 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <aCQ2L3L2DQX80blY@gmail.com>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com>
- <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
- <aCMraFZ2yJQNyHf3@gmail.com>
- <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L4L20iy8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747203637; x=1778739637;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=88nezXdYGNGQB9lTU7R3VQCwT/9EyWgD9gKupfZ20zQ=;
+  b=L4L20iy8E4iNEpDFazKjs6oc1qMeDCmaoAWPSYfaAmL/nVr5a2/5aR82
+   AxbhL82Jji9xwDtrpQ6NmrfS/aTXfGIr3YfuqS0QP96FYpsrHEKuYzKFo
+   Z/pvlMlJRgG7LnfV8TwgSK0c46Q/XErfwBUNmkNJxOG0dl0MND42/5qw/
+   y9JHRzAXB8zkGF5imNcm3edzoeVgEesZoPcxxR/oppVmaQBQjZwmhkYYh
+   JREAE4AwNbKprVNPhBOdvRZrBpDQdcpKPqwyA+l7kPt6Y2/lBBcbWC0S6
+   InpoeysPkTaOCPbpqLyh7b+OwKMtNrqXBHfrma83y90fsytMrMBpGwAZp
+   Q==;
+X-CSE-ConnectionGUID: IB64I9kIRpistIyTn6yW7g==
+X-CSE-MsgGUID: 9zIV6tnLR0OqE6rIQFEmXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48192356"
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="48192356"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 23:20:37 -0700
+X-CSE-ConnectionGUID: vc8AOPCRRiuqJC3SOXoJTA==
+X-CSE-MsgGUID: hQ+sP/jIS2OPowGLfyDujQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
+   d="scan'208";a="138866960"
+Received: from shsensorbuild.sh.intel.com ([10.239.133.18])
+  by orviesa008.jf.intel.com with ESMTP; 13 May 2025 23:20:36 -0700
+From: Even Xu <even.xu@intel.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org
+Cc: srinivas.pandruvada@linux.intel.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Even Xu <even.xu@intel.com>
+Subject: [PATCH v1 0/7] Add two new features for QuickI2C
+Date: Wed, 14 May 2025 14:19:37 +0800
+Message-Id: <20250514061944.125857-1-even.xu@intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
+Content-Transfer-Encoding: 8bit
 
+In order to improve THC compatibility with lagacy HIDI2C touch device,
+on Panther lake (PTL) platform, THC hardware introduces two new features
+for I2C subsystem:
+- Input max input size control
+- Input interrupt delay
 
-* Borislav Petkov <bp@alien8.de> wrote:
+This patch set adds APIs for above two features' setting and enabling
+in THC hardware layer driver, and enable them in QuickI2C driver.
 
-> > Note that two of those fixes were from Ard who is working on 
-> > further robustifying the startup code - a much needed change.
-> 
-> Please do explain why is it much needed?
+Even Xu (7):
+  HID: Intel-thc-hid: Intel-thc: Add thc_dma_content into kernel doc
+  HID: Intel-thc-hid: Intel-thc: Refine code comments
+  HID: Intel-thc-hid: Intel-thc: Introduce max input size control
+  HID: Intel-thc-hid: Intel-thc: Introduce interrupt delay control
+  HID: Intel-thc-hid: Intel-quicki2c: Refine code comments
+  HID: Intel-thc-hid: Intel-quicki2c: Add driver data support
+  HID: Intel-thc-hid: Intel-quicki2c: Add two new features to PTL
 
-See Ard's excellent description:
+ Documentation/hid/intel-thc-hid.rst           |  27 +++
+ .../intel-quicki2c/pci-quicki2c.c             | 204 +++++++++++-------
+ .../intel-quicki2c/quicki2c-dev.h             |  55 +++--
+ .../intel-thc-hid/intel-thc/intel-thc-dev.c   | 140 ++++++++++++
+ .../intel-thc-hid/intel-thc/intel-thc-dev.h   |  29 ++-
+ .../intel-thc-hid/intel-thc/intel-thc-dma.c   |  40 ++++
+ .../intel-thc-hid/intel-thc/intel-thc-dma.h   |  38 ++--
+ .../intel-thc-hid/intel-thc/intel-thc-hw.h    |   5 +
+ 8 files changed, 417 insertions(+), 121 deletions(-)
 
-    https://lore.kernel.org/r/CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com
+-- 
+2.40.1
 
-    This C startup code has been expanding, and in particular, the SEV-SNP
-    startup code has been expanding over the past couple of years, and
-    grown many of these warts, where the C code needs to use special
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^
-    annotations or helpers to access global objects.
-
-    Google uses Clang internally, and as expected, it does not behave
-    quite like GCC in this regard either. The result is that the SEV-SNP
-                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    boot tended to break in cryptic ways with Clang built kernels, due to
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    absolute references in the startup code that runs before those
-    absolute references are mapped.
-
-    I've done a preliminary pass upstream with RIP_REL_REF() and
-    rip_rel_ptr() and the use of the .head.text section for startup code
-    to ensure that we detect such issues at build time, and it has already
-    resulted in a number of true positives where the code in question
-    would have failed at boot time. At this point, I'm not aware of any
-    issues caused by absolute references going undetected.
-
-    However, Linus kindly indicated that the resulting diagnostics
-    produced by the relocs tool do not meet his high standards, and so I
-    proposed another approach, which I am implementing now (see cover
-    letter for details). Note that this approach is also much more robust,
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    as annotating things as __head by hand to get it emitted into the
-    section to which the diagnostics are applied is obviously not
-    foolproof.
-
-    Fixing the existing 5-level paging and kernel mapping code was rather
-    straight-forward. However, splitting up the SEV-SNP code has been
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    rather challenging due to the way it was put together, i.e., as a
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    single source file used everywhere, and to which additional
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    functionality has been added piecemeal (i.e., the SVSM support).
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-I've highlighted all the robustness problems and design flaws of the 
-existing SEV* startup code...
-
-> Really? Much needed huh?
-
-Your failure to follow and understand this series is not an excuse for 
-the flippant and condescending tone you are using in your replies ...
-
-Ard is being very generous in his responses, and I'll defer to him as 
-to the timing of this series: v6.17 is perfectly fine too.
-
-Thanks,
-
-	Ingo
