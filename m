@@ -1,155 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2407E1A3155;
-	Wed, 14 May 2025 10:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3EE1A3155;
+	Wed, 14 May 2025 10:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747217119; cv=none; b=BpIp/DNQE6wCqXSaGEi1DwH3bFf1mHLkICK3bfrNxn8hpLiJUh4v1+xr7xxnq3a6bKoUe3r69bJSnFFN1wboAHu3QUmQbjn3/oifWZmO1iSJfaE2jtEjjLdEWxlbeOgV+jXNIWo95xn/TqLvOu0Qevw/G3dKPr83vJvSnvFWdwE=
+	t=1747217157; cv=none; b=exCqT1DxooBkah3zklhjxalN2zmZy009+H3TTsamd5LJa3w662z+fKyhSyAfCeQrm/6C22zsZkSZV0BM4nxXbxrodu8v6eQDH7wSlwWZ3dzcFpO1VF/5vBJ+Gf7bNEcFuej2hPIoIZn8DJtXDTcycQ3LsRamdNXWDbdmlHB99dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747217119; c=relaxed/simple;
-	bh=kITsxbCJWQENOnKhbH75PkR8+Js5zmGnIQSaxyrbZS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vFbUgi51KuKaR+jIOdASifaHwsRufAM4+PyqLr1xn42GPu0ACw+eaxUiXASzsk1Vtoc4cNqS8NvRDPzzRyF0QXOm5me3mgMKEltHQnjZ8QKpws3kA9pv8XWt+ipFxK4M6UsZKbbXIxYMhR0bfySbgrd2IblsOvjn4Uso7fjuvkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhkJtu/Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747217157; c=relaxed/simple;
+	bh=NYSmKEbAOdJG/SX+PS/JBDn7qXoAVnPYjv1kKaO6mBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sTAPtDuHU0l8lzytmDrI9oUCSOJjQdVA18yN4ZAz/A6mhRPYqaFukJghadRaGlxn+3RapaHAEM1xagK98IA91oJ/xss4BCUgmWEzYh5GIuENCO1q2bDN7LyUiBHKTq5YgTuAO71E92BVxJZsB/ZZ2fdB9Ebny53xCfrmnX2r4no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9TUSGOx; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhkJtu/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8773C4CEE9;
-	Wed, 14 May 2025 10:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747217118;
-	bh=kITsxbCJWQENOnKhbH75PkR8+Js5zmGnIQSaxyrbZS0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bhkJtu/YUchVVSclF2fE1TtYPbybleNNZtHAQ9hQchmLkYcIAALhCsZpL/r//HDdL
-	 QH9dTU3Lrur+qAs3383SfJ+OmbKuskTBOCiqu4dntYhSCaSK712Zynad0WLzS4kxWF
-	 jJulO6hkxCA4YLORUwlug00FJP2KkSZzrlqysKilUPJSKdJq30/s/sbLQXfS3Wn3xw
-	 xAEWMmAsZbdJTuN0fCSmo3gKWdPCBSzEipuD+UlYP3bWCvxpFMAT9k1ebgrtP0ql82
-	 LFkGT8k4E/cxXp+Hwo9iSBes4PacHK2Tqv3hrJJlq6AVYxoZwMrGVvUFQ5u/ng6Fnb
-	 96zGN9qJrFL7w==
-Message-ID: <e4317fef-c4e9-405c-9bcb-4d5447dd8367@kernel.org>
-Date: Wed, 14 May 2025 12:05:14 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9TUSGOx"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e9021d2b5so868863e87.1;
+        Wed, 14 May 2025 03:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747217153; x=1747821953; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmdIq6qyH0eLEtriOCHpTWROy8Nurvm9ujMkcBHK6F0=;
+        b=l9TUSGOxCE/+f8LsPgSBPEEMCd6xZ8J1WVYEU/eo8HJH4k/8JoXJ1ytXyBcI6zI+xS
+         ydRuPlPcUztV2shDT8DgLFk81RquFANcPpYvK1L8eKWb1M8kj+QOoU+4LL3ubtVRC+MV
+         8qaVhpmYvDI8x3jTTlNAhCIBHWHZK11cCNgMgKkt+m9Rw4oHiWyKFm7zjMNVhXgE8+GN
+         7c1RP/4JAzdwNjUrOtJ0nunDw8cFg8tWAlIUwRq23xoNRE0oWxN+oRVRb0QSQA3FIGDD
+         kRpmRz7iAhhHavcu9xzxBtCIuNi3F231xa+eB/11ITKvj/Qeu1TTX8f7O7HBycegNH3D
+         aM8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747217153; x=1747821953;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pmdIq6qyH0eLEtriOCHpTWROy8Nurvm9ujMkcBHK6F0=;
+        b=hksGfJIwN/mX/j+g07vjqE4GgX/6VEllL4aHjUQfV/XqpuDVlL+gOxkC00FE37Ix2P
+         tLI+9CzL5fGb8cnkVi2x635G++LGa6oZFV+gGBuwdgdBOIqg7/9Ps3MVs/nMqrizxu9o
+         KQ1Erd+0XYifOhtGgnmdW3Kmu9i2cd2mSfRuPyBwxcSQ6ZSKe1uDmZyNM+2tLlquNpc8
+         8dkg7h8IUWVEFbtCSCCv0io8IP/ii0xlP6FfPI1KxuBAPghEDODYJDiDDPmY8Q/wBY2b
+         lDu/px2O4DJWn8O6puQGrp6YnheUiIgMPDoicFH1RCSZUXYBqzqwL4Q4O9kTSF7Gndfu
+         ngvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhXvqTr1b0qwKiPxt8yIAH3IjJkOCT8Va5uncG4IdAttfRjaUZdiQSzl1cFj1OHQAAZvBPARCw@vger.kernel.org, AJvYcCX2YfSPiZm6IIJ1eDsPajwu8W2CMW+CPQG6sEhXdTXDm7b1VnsWtvgxMd7P2k1zPkTGFjuJyp73GKIGKek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAULyFlmVqzZyovDllrF7Dt9ba+aXdtTAgqe1qnmoXEBorNka8
+	IptmK8g9DSXzKy+wkvXCJymiVtZ61bIy3bSxbXPBbeVldjpQ9wYa
+X-Gm-Gg: ASbGncs4Nwg/W3JdlR0P8XXpBIyzq9j0X3D0Yeg4M1ehMVfH4o5ghB/8eTKYSTfwj0f
+	aC58wEVJgEoagats2JnJeyBlLFG5Wvm5Ang82Gsv1S7I7BIureUVTXjgSZ9p1wH2x8Jl6DadNEI
+	R4DUwlVb2E+BJ2wvNoinP0V5Q0dB543TiiyvVCGdaWrIWDNQCrbRbiNqMBjPNxBLCleTwymYS7o
+	aHEYEXZxA/VSS0VpNN8/4Uj71cADp8JzUa1/ufvfd7SJzLmKwE1CM98jPvXr6bxunHnPeoACHyG
+	8vwUUI2Ouwf6/AXEHGNLGw95f6KymrOA7++FpEMRRUq4J2Ytb124LUfy9CszUWR/udMyUk55212
+	j
+X-Google-Smtp-Source: AGHT+IFAiosPT9P0KrMvz7v43+Z/+PsGFzGQEumyNwPQuzDEWCshn1lTLlSbn+SGS9f1mfQ9m7J4qw==
+X-Received: by 2002:a05:6512:3d86:b0:54b:117f:67a0 with SMTP id 2adb3069b0e04-550d0c0a508mr2681992e87.28.1747217153021;
+        Wed, 14 May 2025 03:05:53 -0700 (PDT)
+Received: from localhost.localdomain ([91.197.2.199])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c35b04bfsm18897081fa.113.2025.05.14.03.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 03:05:52 -0700 (PDT)
+From: Andrey Kriulin <kitotavrik.s@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2 2/2] fs: minix: Fix handling of corrupted directories
+Date: Wed, 14 May 2025 13:05:31 +0300
+Message-ID: <20250514100536.23262-1-kitotavrik.s@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXT] Re: [PATCH v2 2/2] drivers: i3c: Add driver for NXP P3H2x4x
- i3c-hub device
-To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
- "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "robh@kernel.org"
- <robh@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Vikash Bansal <vikash.bansal@nxp.com>,
- Priyanka Jain <priyanka.jain@nxp.com>,
- Shashank Rebbapragada <shashank.rebbapragada@nxp.com>,
- Frank Li <frank.li@nxp.com>
-References: <20250508045711.2810207-1-aman.kumarpandey@nxp.com>
- <20250508045711.2810207-2-aman.kumarpandey@nxp.com>
- <b46e3766-75b7-4635-a505-3039e4394f07@kernel.org>
- <GVXPR04MB9778CD46464F6BEE25D5D0529997A@GVXPR04MB9778.eurprd04.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <GVXPR04MB9778CD46464F6BEE25D5D0529997A@GVXPR04MB9778.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/05/2025 13:45, Aman Kumar Pandey wrote:
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Thursday, May 8, 2025 11:40 AM
->> To: Aman Kumar Pandey <aman.kumarpandey@nxp.com>; linux-
->> kernel@vger.kernel.org; linux-i3c@lists.infradead.org;
->> alexandre.belloni@bootlin.com; krzk+dt@kernel.org; robh@kernel.org;
->> conor+dt@kernel.org; devicetree@vger.kernel.org
->> Cc: Vikash Bansal <vikash.bansal@nxp.com>; Priyanka Jain
->> <priyanka.jain@nxp.com>; Shashank Rebbapragada
->> <shashank.rebbapragada@nxp.com>; Frank Li <frank.li@nxp.com>
->> Subject: [EXT] Re: [PATCH v2 2/2] drivers: i3c: Add driver for NXP P3H2x4x i3c-
->> hub device
->>
->> [Some people who received this message don't often get email from
->> krzk@kernel.org. Learn why this is important at
->> https://aka.ms/LearnAboutSenderIdentification ]
->>
->> Caution: This is an external email. Please take care when clicking links or
->> opening attachments. When in doubt, report the message using the 'Report
->> this email' button
->>
->>
->> On 08/05/2025 06:57, Aman Kumar Pandey wrote:
->>> +
->>> +static void p3h2x4x_of_get_tp_dt_conf(struct device *dev,
->>> +                                   const struct device_node *node) {
->>> +     struct p3h2x4x *priv = dev_get_drvdata(dev);
->>> +     struct device_node *dev_node;
->>> +     u64 tp_port;
->>> +
->>> +     for_each_available_child_of_node(node, dev_node) {
->>> +             if (!dev_node->name || of_node_cmp(dev_node->name,
->>> + "target-port"))
->>
->>
->> Same NAK as before. You ignored the comment and nothing improved.
->>
-> 
-> Thanks for reviewing the patch.
-> As per your comment I have used proper function to get reg instead of sscanf. And our driver is not having direct interface with userspace.
+If the directory is corrupted and the number of nlinks is less than 2
+(valid nlinks have at least 2), then when the directory is deleted, the
+minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+value.
 
-What was the comment - undocumented ABI.
+Make nlinks validity check for directory in minix_lookup.
 
-> What should I change here ?
+Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
+---
+v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
+<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
+directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
 
-How did you solve that comment?
+ fs/minix/inode.c | 16 ++++++++++++++++
+ fs/minix/namei.c |  7 +------
+ 2 files changed, 17 insertions(+), 6 deletions(-)
 
+diff --git a/fs/minix/inode.c b/fs/minix/inode.c
+index f007e389d5d2..d815397b8b0d 100644
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -517,6 +517,14 @@ static struct inode *V1_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-ESTALE);
+ 	}
++	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
++		printk("MINIX-fs: inode directory with corrupted number of links");
++		if (!sb_rdonly(inode->i_sb)) {
++			brelse(bh);
++			iget_failed(inode);
++			return ERR_PTR(-EUCLEAN);
++		}
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -555,6 +563,14 @@ static struct inode *V2_minix_iget(struct inode *inode)
+ 		iget_failed(inode);
+ 		return ERR_PTR(-ESTALE);
+ 	}
++	if (S_ISDIR(raw_inode->i_mode) && raw_inode->i_nlinks < 2) {
++		printk("MINIX-fs: inode directory with corrupted number of links");
++		if (!sb_rdonly(inode->i_sb)) {
++			brelse(bh);
++			iget_failed(inode);
++			return ERR_PTR(-EUCLEAN);
++		}
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+diff --git a/fs/minix/namei.c b/fs/minix/namei.c
+index 5717a56fa01a..8938536d8d3c 100644
+--- a/fs/minix/namei.c
++++ b/fs/minix/namei.c
+@@ -28,13 +28,8 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
+ 		return ERR_PTR(-ENAMETOOLONG);
+ 
+ 	ino = minix_inode_by_name(dentry);
+-	if (ino) {
++	if (ino)
+ 		inode = minix_iget(dir->i_sb, ino);
+-		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
+-			iput(inode);
+-			return ERR_PTR(-EIO);
+-		}
+-	}
+ 	return d_splice_alias(inode, dentry);
+ }
+ 
+-- 
+2.47.2
 
-Best regards,
-Krzysztof
