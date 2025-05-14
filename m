@@ -1,145 +1,85 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host7-snip4-7.eps.apple.com [57.103.64.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3321D583;
-	Wed, 14 May 2025 23:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3652213E8E
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747264153; cv=none; b=hJrrpY1/tcRAmrereKQGAvzeMdbvvI23NxdyXB04Q6P3FhlPXJrYFaaQ/rJwoek2KQfRBmDbjUJb3Jcrcmegyvdjf2NgjLjAMzH+3Pro9TxiPyrhWMjhQn83kjr0/J+W3KmH/tMbuZgRLxUS0ql3Eeocv+sL4AriQexmYSEYl9o=
+	t=1747264380; cv=none; b=u1XlHhoYYMdXj2aykCWTUfmPIcoFKBCW1cVD7NMVZScjjoicv/XlmJ4jaNcHyhn2p9awDhWxuhNCrIBI6Nde9s5wTgEVcDsUsg10m0Pw/tDA7RwPbxJzdh0MBT6tmBnEBAeoJQQ5tsTM3oyED0ueGezac6F+rZqdw17b8MpAI0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747264153; c=relaxed/simple;
-	bh=Iuzoe7DKzMD2kAfuDIP169BtqFJDXUA+gwo+3nrjFhU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LZyDSfisMnU3lQrivsw+AmEhbNlvnEZ6Vp8ox7Mw7/UqOkUkwAFZt3URaJsHjysLV+oWtLfVVOHEAyGzzBZnkemqEalSvw2ZMwM/zrgXbD+clGsg8aTMGdN7Y1vAVv/RznH/ziOw8VOmmVqDLz3t/KKtCSZss5ILm/aX8OXc46Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=VSqETHou; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1747264380; c=relaxed/simple;
+	bh=5mT+RQkMC8J5+wPg+K0XzcqnqF5PVE9oDpIqPmC9zvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q76tZeYSTUw+OXq/iPZd4RDaXRQsBsNKjE8N25NQRiBeR189dZgYLKU7nlfcC+IYfdXUoAtZEtq7+tvnwe5CMN+jAKXW/p/LuW6k1SSmu0KYXfbLdoBB1VoIQv3PxLPqGUWZr7tbeG5FZba6upowfeO32/ve3V3xXDnqF51+3Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=e5pJzhcV; arc=none smtp.client-ip=57.103.64.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="VSqETHou"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uFKOX-001vcm-U4; Thu, 15 May 2025 00:16:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=jWUYdUduK67slCNoez8gpDfTauScyXVzhPIoLCAsEKo=; b=VSqETHouk5UKAXnwg76AhdXkR4
-	lJpWg0VG3vPKAdYyKI3kjtZzBXyVJXXZVU4LSCONrQTx1j67L1L3HLmjFAPxrFTtkTB4JpK0g3wOe
-	os1qIJXFE/p0iLcOQfx4IygFJMwaCGh52srarYEcuxV0VkTR3ejyAf7B5+h9lq+RmXfiB+Cx98UHx
-	dLJJmamPaIJH6DX3bxTTBxP7gsfgFEbRvUzA/zA75neg6jHiZTEQ5iX9buACRf7ajhWA0yEchjuIS
-	oD1dh1ct1phBUVyfPyznJT53I9T2pLc9+quJ5dUj6OaGgewGsB5g6Xdv6bcOvrzM2knL3ZBCWxI3S
-	H57O+dhQ==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uFKOW-00088m-Vq; Thu, 15 May 2025 00:16:09 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uFKOK-005bJ3-QP; Thu, 15 May 2025 00:15:56 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 15 May 2025 00:15:25 +0200
-Subject: [PATCH bpf-next v3 2/8] selftests/bpf: Add socket_kind_to_str() to
- socket_helpers
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="e5pJzhcV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=ccwJU/LTdnXEs9iAVCu4zSGeS8J9jkqJWbyKvJzQ6hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=e5pJzhcVeETD5S8VCgumVLW/shAHu+rlzp6wqHDJe49W0viMmf80Y0haG1Ei2Gv1I
+	 zgsWyq5b/PH9Sy80F5TDF6JP3IL9Ztf/ctZLhUzwQQfR543DjMI6IHZpFX/+xkzP8Q
+	 z8FKDdwamLFM9bQ0j6jqGY0qFcyMIy6FzPe84VoXkF4G6e2slyy46MZZjIsD2bLwyw
+	 BPut8wr7B7zPxmo7m77RoeQN9wWDvDSXryHBmetXa1wO5dJH3S31w5AY7SCjZrQKjQ
+	 ypd7fhQkMAR276OdLXlGOvyCStw1ARh0jc9SY4mihYPN9yE3S2IITCmiUyKVubtq+b
+	 wqpvpzjAjMRUw==
+Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 1B4A41800EA2;
+	Wed, 14 May 2025 23:12:55 +0000 (UTC)
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id AACED1800453;
+	Wed, 14 May 2025 23:12:53 +0000 (UTC)
+Message-ID: <9302bf79-dd42-4c4f-a521-b25fc94569d4@icloud.com>
+Date: Thu, 15 May 2025 07:12:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] PCI: of: Fix OF device node refcount leakages
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org,
+ Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>
+References: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250407-fix_of_pci-v1-0-a14d981fd148@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-selftests-sockmap-redir-v3-2-a1ea723f7e7e@rbox.co>
-References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
-In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
-To: Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
- Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: JDlOn7mvHZ_8tPmSTVyMKBnbbdILqJtJ
+X-Proofpoint-ORIG-GUID: JDlOn7mvHZ_8tPmSTVyMKBnbbdILqJtJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
+ spamscore=0 clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503310001 definitions=main-2505140215
 
-Add function that returns string representation of socket's domain/type.
+On 2025/4/7 22:14, Zijun Hu wrote:
+> This patch series is to fix OF device node refcount leakage for
+>  - of_irq_parse_and_map_pci()
+>  - of_pci_prop_intr_map()
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+> Zijun Hu (2):
+>       PCI: of: Fix OF device node refcount leakage in API of_irq_parse_and_map_pci()
+>       PCI: of: Fix OF device node refcount leakages in of_pci_prop_intr_map()
 
-Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- .../selftests/bpf/prog_tests/socket_helpers.h      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Hi Bjorn,
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-index e505c2f2595a24be9dd5b534deef4793f9a02f77..e02cabcc814e9a6a11d61ad02cf38696fb0f27ff 100644
---- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-+++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-@@ -410,4 +410,59 @@ static inline int create_socket_pairs(int family, int sotype, int *c0, int *c1,
- 	return err;
- }
- 
-+static inline const char *socket_kind_to_str(int sock_fd)
-+{
-+	socklen_t opt_len;
-+	int domain, type;
-+
-+	opt_len = sizeof(domain);
-+	if (getsockopt(sock_fd, SOL_SOCKET, SO_DOMAIN, &domain, &opt_len))
-+		FAIL_ERRNO("getsockopt(SO_DOMAIN)");
-+
-+	opt_len = sizeof(type);
-+	if (getsockopt(sock_fd, SOL_SOCKET, SO_TYPE, &type, &opt_len))
-+		FAIL_ERRNO("getsockopt(SO_TYPE)");
-+
-+	switch (domain) {
-+	case AF_INET:
-+		switch (type) {
-+		case SOCK_STREAM:
-+			return "tcp4";
-+		case SOCK_DGRAM:
-+			return "udp4";
-+		}
-+		break;
-+	case AF_INET6:
-+		switch (type) {
-+		case SOCK_STREAM:
-+			return "tcp6";
-+		case SOCK_DGRAM:
-+			return "udp6";
-+		}
-+		break;
-+	case AF_UNIX:
-+		switch (type) {
-+		case SOCK_STREAM:
-+			return "u_str";
-+		case SOCK_DGRAM:
-+			return "u_dgr";
-+		case SOCK_SEQPACKET:
-+			return "u_seq";
-+		}
-+		break;
-+	case AF_VSOCK:
-+		switch (type) {
-+		case SOCK_STREAM:
-+			return "v_str";
-+		case SOCK_DGRAM:
-+			return "v_dgr";
-+		case SOCK_SEQPACKET:
-+			return "v_seq";
-+		}
-+		break;
-+	}
-+
-+	return "???";
-+}
-+
- #endif // __SOCKET_HELPERS__
+Not sure if this patch series is still in your review queue.
 
--- 
-2.49.0
+Also show below mainline fixes for your reference.
+
+962a2805e47b ("of/irq: Fix device node refcount leakage in API
+irq_of_parse_and_map()")
+ff93e7213d6c ("of/irq: Fix device node refcount leakage in API
+of_irq_parse_raw()")
 
