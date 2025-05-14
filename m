@@ -1,335 +1,124 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859E6194A44;
-	Wed, 14 May 2025 17:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53E7194A44;
+	Wed, 14 May 2025 17:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245339; cv=none; b=VTa0NuzcXQ+PaO1VrjmmoceErgjJ2TTIryNyUviuCTBz4lIrI1B0nKBjnOMfrHlWi5SJIgPPRY8jShz3VrXrOzoQKIjT6kzbxEOTXBLm3BqwXSMUfo3VNqq2YkYRdSvpJL2YmWCkbO5EzglEmW7kaZJZPdmtF36yZ8tYOUv19NM=
+	t=1747245358; cv=none; b=tWDeR7ZRuQiFrKwy5V43EA7qnaZMtX52eAO/jDnbbUXrdFmV/JBo9pPT3bbtF+xDw02IX44FIFdP99lB/0KAb68MOxARylplZYjVje+vKnBrOhOBteM4VjR6NYWAX8QPzHnE1wLzs+fsT3Qh5ipNbH32S2LrhqGLnSoyb3oFTZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245339; c=relaxed/simple;
-	bh=Nb9soRPWW/Bkmf9bNl5lKFfsL7TR7HDW08E3O55Lx1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ENSymUpmdtHfqAAottTwc8EueLYH4QN5bUnmUjNnMyYXNWGRDdJAMRcR9FlcEjduTg4d3DcLjUlYxGtCprjgRH6Ga9k93TC63JQZxKuNIko73bDFyl8LbIQtN4KpxNa+YS6U0WFhtXFaZu5mppx8ahLBT8T8w4S1GNimHTLhOao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHVjI9O0; arc=none smtp.client-ip=209.85.216.50
+	s=arc-20240116; t=1747245358; c=relaxed/simple;
+	bh=388Q4Y2vXw/88ABph+aL+8fVavpaQXXIqL0c5ylbmAM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C044tPtU4GYWG5JKYXRmW8QodTg84bTcLTqf/CVERmPrMGZAj/51jWaCCPCI6JiKIWkCfF0A0oIN/OAFMTx/jcxtEkF6uJX7JzQyMRySyFUKG7jGi3JZBalbuifl/2GaYoSxg4lAxuMP+af30t4mOTwiocovt8joG2SUU7zsjeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MZgBuILq; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHVjI9O0"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30dfd9e7fa8so193390a91.2;
-        Wed, 14 May 2025 10:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZgBuILq"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7398d65476eso121425b3a.1;
+        Wed, 14 May 2025 10:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747245337; x=1747850137; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1747245356; x=1747850156; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HinAnEqnVncicm1J5/rWSAfFai4NtUO8ZqhXp4ch57g=;
-        b=bHVjI9O0QBp7CjJg8Hm9sNHBjCXDjRlj05A1CNT3YKZj5ibkXkFT2lq6jBKyAwl5MV
-         r437cBb4v/97/QtJjibUrvH1puSPPfz+HkTtBpk60sLMCetBNNRbumMIaYy4fIyK938c
-         6WsYv4OhBOtATo7RZoUtsO4DdXCvNY7nZBcNSHXJoUtiXnKnQSchs1/ewtvEaF/B9ded
-         q1gDTnQ3ZhLkYA/a5tmz8F+6tihbRKaX+21Lu32SvS6QqAD8GEMJY0Z9VONFs7sMp4xH
-         bSaWvEKkvsZFbCqHzGq3iLBE0Yo/9v2AKo14JOpaOpT78/Xjzd6ixnl61NXyPWw66VOI
-         iKBg==
+        bh=6Pxupw0mnheBn4UC0J0PHtfsiWVwGvSizaV6fVHNumo=;
+        b=MZgBuILqozZMml5jtmc31MqJaHNiUvDknJwIDMYJXd53552bWC7LuiAycy2BWoXhF8
+         SmC6u7apqApMZYTNwTZapuB3CBFzrOvFtsX0vsSZOXmdIrikPpcGipbdrk20z9mO2AA1
+         6nc2jdfkEZ8AZpqzSmznED4pvBu5svhJcXvcC709wmsyW5jQOKC0/+LhvMj7uH0F7CiI
+         0rMtFfr1VoATtsm6NOjOz6ZRON68e/zUxxKUDM5vcRUGsTpqtbRpBUHPjj7pq/ov8m+S
+         rckCVNHlS1dTFVN/2Xe2UPt4ZbXe/k2aqtMJNzMkg215Irvf7+f/4S+5wF2ThKS7O98i
+         8m+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245337; x=1747850137;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747245356; x=1747850156;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HinAnEqnVncicm1J5/rWSAfFai4NtUO8ZqhXp4ch57g=;
-        b=QtEea/ckRfkVwd35objpnxPjAm4F7pXRU5qzGO89V6Ctl9NgKjSBvoJN6j1EsNgcZ5
-         YcK6G+isEOGQ+9uC+26nECq9eWLPLC/ICIdPu3A0muqgbsdH7WdyW2S4icJe3XIDGiuf
-         bgPxnFjZBSustc7haPNCxJBKOcy6KuWKyQG07ncN1W1uKdzu+zy/H0MEP4uE+lyV/l+/
-         29l2m2joOmqbrM1iSQYHJB46S2eILirXzgOpC/Q931LASXdu4DmLKX868NzfNGYu8bCd
-         cIgyfGn0t2aIq4CIfjsdt8HDcVkluy5+dmBB19uahgPkSgZzVJpHJ8U8WYVfrajiwrOr
-         tSmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqJOjA4PP42EbQo40d4FfD/WDYY2o46z/X9h2c5Wux9IRJtv8H29Q3lnQ7OeX7emG8y5OIETRkz7kdq68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweO0KTsC256rh9UC28hxxEGMDq2uXPPb44Tei0apQeqriRs5t6
-	E7aGMIrsWfve6M3MUETLelgJZLft64WiPGGKeyd6wIfqExno38MAGRnKrwdsXxU2tP0VW8Xe/OJ
-	V613kqKz5UyBrI2XfYf21sPUNZPk=
-X-Gm-Gg: ASbGncuJlWz94JyDCb+j5uB+Ismuhlwak5eDWqHnaPumux5xnmtcNmjztNVYFKp2HmU
-	BgKfI85G1nV4Oys2OFp2GwwCvsHE8/FtJ1a6DStlZYynT+DB+dUfs44Uy5WfHslyZDmCRPkrrqr
-	ISGOdyqDSFVVn7dz/j7CVxs3u3wq5l5WUw8z8vCVa9NsM=
-X-Google-Smtp-Source: AGHT+IFfKXnDMG167efnn7uspsFJXow32kMeNYgLNSBSl4xo0UFrvl+FPK6B9CNVcOeIOfWSExXKk7t/Dv0amZQzHxM=
-X-Received: by 2002:a17:90b:2e8e:b0:2ee:9e06:7db0 with SMTP id
- 98e67ed59e1d1-30e2e5c322dmr6722075a91.11.1747245336642; Wed, 14 May 2025
- 10:55:36 -0700 (PDT)
+        bh=6Pxupw0mnheBn4UC0J0PHtfsiWVwGvSizaV6fVHNumo=;
+        b=AfT00B6leOuhCCy6whZM/GKBQxLOqW4+9EoE4wORnJlSPdT9DLxg2UBkpsDti0zpdn
+         hKX6XgnzNUfL2dzAf8r56h9ktioeRevgEFy9vX082TALL0sqGWSg4LlTlYayW8m/sDgd
+         iaZx6vAhmQSrZ+83oU5UEJizSlb9nG2JAJ6VzA2LtD/3on2d2b1mYmtDsZC8g+S5IWQQ
+         PxbclSL38KacP1tq8muOGKOYUqfmCNYQC2nh5z5AMp4ApIwfmKQRvCDL4i6+hNPcKixW
+         fCO5r48Dj5UrY7H+UOZTjLutTOmWR8WbU7hzJfBhyAv62xkBbsZug98SKiWCPYJ9VqRZ
+         6xoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHRLLBkddHXdsYzy+e7RNFsXfplWeTHLtYpD4v5eBwWuBajn5XRsVIfKROj369BCya7a58S0LFdnV3bMLM@vger.kernel.org, AJvYcCXFROUX6HJjxVG252wfk8F5lEtDVpuvthca1lhGiZLN5BPDHvyiPMjjkSTrMzndiZlZrkdfMqWxxiW4Yupx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+G9AewBu7l+PjY3FbK1bdML5xvZdNyKcTC3ovTR9uasuY8+BP
+	y7HWyoqRq8iG2Ia5YneX7EaZ6el5RaFQ6h7WyI1c9ie8PKKL0MQWGjSV
+X-Gm-Gg: ASbGnctMwZtEv1xd5RRi+7DaF/3D11sfheIVDDF8lHVQq7AaOrwV88wr4lbohNhRU1Y
+	gyFRt8wAPUX1ir6j/8niBWmbofUI0FUkzGkTFjfTIv2pCcSICE1aDaqrWXuKsrQBHGdKHPyXQ7p
+	nKuG/s6XFuguQB8xwbFYpwf//pa+onRWL/FGHBx1D5F4AOTBCM8aQ0mGrtkLBIu9J41LJYhhETQ
+	TB+4vaV1xf/r80BtVToF7oD9+dTtp4KV3rguYS05nfxJhb7miN7G861H8P8awu7zlK09DpSEj2j
+	qFgIvRGkmsqpnKI8VTZRHXe7tiVVimJ6jwJwFNclLmlezPpTOosFTlGKRY1qStzuAPrj7M+upsR
+	e9z7WRAdb7/jIERmd1GFpRVkOZw==
+X-Google-Smtp-Source: AGHT+IHjF82FgDHpaZyfZ0mh0WyzjGVyaIiByKx50y4IkVOdD/N+GORUPRIwiVFdseTs+TiJRwcj2g==
+X-Received: by 2002:a05:6a00:2986:b0:732:706c:c4ff with SMTP id d2e1a72fcca58-7429625def6mr688672b3a.7.1747245356164;
+        Wed, 14 May 2025 10:55:56 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a4997dsm9853111b3a.150.2025.05.14.10.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 10:55:55 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor path
+Date: Wed, 14 May 2025 10:53:15 -0700
+Message-ID: <20250514175527.42488-2-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250514175527.42488-1-robdclark@gmail.com>
+References: <20250514175527.42488-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-6-cgoettsche@seltendoof.de>
-In-Reply-To: <20250511173055.406906-6-cgoettsche@seltendoof.de>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 14 May 2025 13:55:25 -0400
-X-Gm-Features: AX0GCFvnnjhU6Cuj2FW8Ym85eUsePyT2qlqzPuNPB8ZTlgVlRyyWgy6K-lhKJ5A
-Message-ID: <CAEjxPJ7kg1xB2xy0uhzgpyN+0cpqoTyXSy_FYFx3Ases79FTXQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/14] selinux: pre-validate conditional expressions
-To: cgzones@googlemail.com
-Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
-<cgoettsche@seltendoof.de> wrote:
->
-> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
->
-> Validate conditional expressions while reading the policy, to avoid
-> unexpected access decisions on malformed policies.
->
-> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
-> ---
->  security/selinux/ss/conditional.c | 116 ++++++++++++++++++++----------
->  security/selinux/ss/policydb.c    |   7 ++
->  security/selinux/ss/policydb.h    |   1 +
->  3 files changed, 88 insertions(+), 36 deletions(-)
->
-> diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/cond=
-itional.c
-> index 92ed4f23a217..ce0281cce739 100644
-> --- a/security/selinux/ss/conditional.c
-> +++ b/security/selinux/ss/conditional.c
-> @@ -21,65 +21,119 @@
->   * or undefined (-1). Undefined occurs when the expression
->   * exceeds the stack depth of COND_EXPR_MAXDEPTH.
->   */
-> -static int cond_evaluate_expr(struct policydb *p, struct cond_expr *expr=
-)
-> +static int cond_evaluate_expr(const struct policydb *p, const struct con=
-d_expr *expr)
->  {
->         u32 i;
->         int s[COND_EXPR_MAXDEPTH];
->         int sp =3D -1;
->
-> -       if (expr->len =3D=3D 0)
-> -               return -1;
-> +       if (unlikely(expr->len =3D=3D 0))
-> +               goto invalid;
+From: Rob Clark <robdclark@chromium.org>
 
-If this is not possible at runtime due to load-time checking, drop it
-please. Same applies later. Split the evaluator checking between
-load-time and runtime so we don't do it twice.
+See commit a414fe3a2129 ("drm/msm/gem: Drop obj lock in
+msm_gem_free_object()") for justification.
 
->
->         for (i =3D 0; i < expr->len; i++) {
-> -               struct cond_expr_node *node =3D &expr->nodes[i];
-> +               const struct cond_expr_node *node =3D &expr->nodes[i];
->
->                 switch (node->expr_type) {
->                 case COND_BOOL:
-> -                       if (sp =3D=3D (COND_EXPR_MAXDEPTH - 1))
-> -                               return -1;
-> +                       if (unlikely(sp >=3D (COND_EXPR_MAXDEPTH - 1)))
-> +                               goto invalid;
->                         sp++;
->                         s[sp] =3D p->bool_val_to_struct[node->boolean - 1=
-]->state;
->                         break;
->                 case COND_NOT:
-> -                       if (sp < 0)
-> -                               return -1;
-> +                       if (unlikely(sp < 0))
-> +                               goto invalid;
->                         s[sp] =3D !s[sp];
->                         break;
->                 case COND_OR:
-> -                       if (sp < 1)
-> -                               return -1;
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] |=3D s[sp + 1];
->                         break;
->                 case COND_AND:
-> -                       if (sp < 1)
-> -                               return -1;
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] &=3D s[sp + 1];
->                         break;
->                 case COND_XOR:
-> -                       if (sp < 1)
-> -                               return -1;
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] ^=3D s[sp + 1];
->                         break;
->                 case COND_EQ:
-> -                       if (sp < 1)
-> -                               return -1;
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] =3D (s[sp] =3D=3D s[sp + 1]);
->                         break;
->                 case COND_NEQ:
-> -                       if (sp < 1)
-> -                               return -1;
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] =3D (s[sp] !=3D s[sp + 1]);
->                         break;
->                 default:
-> -                       return -1;
-> +                       goto invalid;
->                 }
->         }
-> +
-> +       if (unlikely(sp !=3D 0))
-> +               goto invalid;
-> +
->         return s[0];
-> +
-> +invalid:
-> +       /* Should *never* be reached, cause malformed expressions should
-> +        * have been filtered by cond_validate_expr().
-> +        */
-> +       WARN_ONCE(true, "SELinux: invalid conditional expression passed v=
-alidation\n");
-> +       return -1;
-> +}
-> +
-> +static int cond_validate_expr(const struct policydb *p, const struct con=
-d_expr *expr)
-> +{
-> +       u32 i;
-> +       int depth =3D -1;
-> +
-> +       if (expr->len =3D=3D 0)
-> +               return -EINVAL;
-> +
-> +       for (i =3D 0; i < expr->len; i++) {
-> +               const struct cond_expr_node *node =3D &expr->nodes[i];
-> +
-> +               switch (node->expr_type) {
-> +               case COND_BOOL:
-> +                       if (depth >=3D (COND_EXPR_MAXDEPTH - 1))
-> +                               return -EINVAL;
-> +                       depth++;
-> +                       if (!policydb_boolean_isvalid(p, node->boolean))
-> +                               return -EINVAL;
-> +                       break;
-> +               case COND_NOT:
-> +                       if (depth < 0)
-> +                               return -EINVAL;
-> +                       break;
-> +               case COND_OR:
-> +               case COND_AND:
-> +               case COND_XOR:
-> +               case COND_EQ:
-> +               case COND_NEQ:
-> +                       if (depth < 1)
-> +                               return -EINVAL;
-> +                       depth--;
-> +                       break;
-> +               default:
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       if (depth !=3D 0)
-> +               return -EINVAL;
-> +
-> +       return 0;
->  }
->
->  /*
-> @@ -356,21 +410,6 @@ static int cond_read_av_list(struct policydb *p, str=
-uct policy_file *fp,
->         return 0;
->  }
->
-> -static int expr_node_isvalid(struct policydb *p, struct cond_expr_node *=
-expr)
-> -{
-> -       if (expr->expr_type <=3D 0 || expr->expr_type > COND_LAST) {
-> -               pr_err("SELinux: conditional expressions uses unknown ope=
-rator.\n");
-> -               return 0;
-> -       }
-> -
-> -       if (expr->expr_type =3D=3D COND_BOOL &&
-> -           (expr->boolean =3D=3D 0 || expr->boolean > p->p_bools.nprim))=
- {
-> -               pr_err("SELinux: conditional expressions uses unknown boo=
-l.\n");
-> -               return 0;
-> -       }
-> -       return 1;
-> -}
-> -
->  static int cond_read_node(struct policydb *p, struct cond_node *node, st=
-ruct policy_file *fp)
->  {
->         __le32 buf[2];
-> @@ -385,6 +424,8 @@ static int cond_read_node(struct policydb *p, struct =
-cond_node *node, struct pol
->
->         /* expr */
->         len =3D le32_to_cpu(buf[1]);
-> +       if (len =3D=3D 0)
-> +               return -EINVAL;
->
->         /* we will read 64 bytes per node */
->         rc =3D size_check(2 * sizeof(u32), len, fp);
-> @@ -406,9 +447,12 @@ static int cond_read_node(struct policydb *p, struct=
- cond_node *node, struct pol
->
->                 expr->expr_type =3D le32_to_cpu(buf[0]);
->                 expr->boolean =3D le32_to_cpu(buf[1]);
-> +       }
->
-> -               if (!expr_node_isvalid(p, expr))
-> -                       return -EINVAL;
-> +       rc =3D cond_validate_expr(p, &node->expr);
-> +       if (rc) {
-> +               pr_err("SELinux: invalid conditional expression\n");
-> +               return rc;
->         }
->
->         rc =3D cond_read_av_list(p, fp, &node->true_list, NULL);
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
-b.c
-> index a8397ed66109..8969f7c8637c 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -945,6 +945,13 @@ int policydb_type_isvalid(struct policydb *p, unsign=
-ed int type)
->         return 1;
->  }
->
-> +int policydb_boolean_isvalid(const struct policydb *p, u32 boolean)
-> +{
-> +       if (!boolean || boolean > p->p_bools.nprim)
-> +               return 0;
-> +       return 1;
-> +}
-> +
->  /*
->   * Return 1 if the fields in the security context
->   * structure `c' are valid.  Return 0 otherwise.
-> diff --git a/security/selinux/ss/policydb.h b/security/selinux/ss/policyd=
-b.h
-> index bb96a6cb6101..42117adb2ca0 100644
-> --- a/security/selinux/ss/policydb.h
-> +++ b/security/selinux/ss/policydb.h
-> @@ -324,6 +324,7 @@ extern int policydb_context_isvalid(struct policydb *=
-p, struct context *c);
->  extern int policydb_class_isvalid(struct policydb *p, u16 class);
->  extern int policydb_type_isvalid(struct policydb *p, unsigned int type);
->  extern int policydb_role_isvalid(struct policydb *p, unsigned int role);
-> +extern int policydb_boolean_isvalid(const struct policydb *p, u32 boolea=
-n);
->  extern int policydb_read(struct policydb *p, struct policy_file *fp);
->  extern int policydb_write(struct policydb *p, struct policy_file *fp);
->
-> --
-> 2.49.0
->
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/drm_gpuvm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+index f9eb56f24bef..1e89a98caad4 100644
+--- a/drivers/gpu/drm/drm_gpuvm.c
++++ b/drivers/gpu/drm/drm_gpuvm.c
+@@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
+ 	drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
+ 	drm_gpuvm_bo_list_del(vm_bo, evict, lock);
+ 
+-	drm_gem_gpuva_assert_lock_held(obj);
++	if (kref_read(&obj->refcount) > 0)
++		drm_gem_gpuva_assert_lock_held(obj);
++
+ 	list_del(&vm_bo->list.entry.gem);
+ 
+ 	if (ops && ops->vm_bo_free)
+@@ -1871,7 +1873,8 @@ drm_gpuva_unlink(struct drm_gpuva *va)
+ 	if (unlikely(!obj))
+ 		return;
+ 
+-	drm_gem_gpuva_assert_lock_held(obj);
++	if (kref_read(&obj->refcount) > 0)
++		drm_gem_gpuva_assert_lock_held(obj);
+ 	list_del_init(&va->gem.entry);
+ 
+ 	va->vm_bo = NULL;
+-- 
+2.49.0
+
