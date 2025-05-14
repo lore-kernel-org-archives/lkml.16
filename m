@@ -1,182 +1,400 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ADB221F27
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0026FA46;
+	Wed, 14 May 2025 11:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221449; cv=none; b=ITUWOeGKsY/AdXyqWTl8RFOQ0udblCkw9TK+bf4YFl+Mc5oBMcbCil5s214OXvaHWQGiq8x9CDTib1TDCSSlgjYnLT8OvR6gm6cF78yzjOqwgITmVvpJOfZdyI8JGKZ9lqmLqPg+I/HzZZwc49WU0nj2Q93rJ+7LQowhXVmpJ0Y=
+	t=1747221469; cv=none; b=NY26h2WGJUAn1jnCJxWAztvSR/QifMjeOkL7+knmjdv47tMxaXEpmq4U0wOgSDx5+JU+QmrzzKOcc7FOHy4x30Vz7J/5oImpxCLNuRR88BanzphivXv1hrEgpRGi/IMESPBly3ZNug7Ril4/4X6rnsqzH68oRuB633bdh4OldlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221449; c=relaxed/simple;
-	bh=RBuPlFJQCXaOH//7zIjvUQYlISJ+GKa/bcBTM3fzAS0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FZ0N943SfBUh0b9IhB3e6CP9iGRoXvlA2I1yI93PRY07pX2zCEqZp9b6SJZz2D9hTDqCmZ6pCazQA0DZxbeTFrdpSvuvYpopsb2zzRp5Hrnem9msQR+4X5rVKgtSobjnm9PHCl92yJKfnL37K4mn27LLEJSmIvDTxjmaBPE3ti8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NlcgFt58; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747221469; c=relaxed/simple;
+	bh=gU04qVy90YcsWIRoib9ilAm0k5riivERstZTiKN/WwI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QEjsvSDUkg2yQO0Aa7zQYrFtYTgjLkBlGg1hpBhPYsNERY9Y61MWMaJL3iTp33Kama52AbClk05ebAvlhnYgIHPhJO0IqjNdovD9kVE1ZfDuN+XdoDPssuFcC54uGIKP2w4BQ/BvI4JiWVZbN/4xW57BOiqSvJHcnjO4HzQyKzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OLiQ6Ab4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a5mpvpXa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlcgFt58"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747221446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OLiQ6Ab4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a5mpvpXa"
+Date: Wed, 14 May 2025 11:17:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747221465;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rtu6wXenoWLkyS7hMHKw/YacghO9Vh2vvDpQZW7iexY=;
-	b=NlcgFt58HITRmMsQxZWqDZaAoSP8pSjgPdY34Klx5BPJwsyWNr5PlFMAI50i2bI9BZCg7T
-	lxVNLgACZZnbJPHB73grTCFcub7d4GyqbyQWY3TQe/oBbSjFYqjJld3sB1nFGHJMSncQ2G
-	bRyMshUJfMnhBU/hEPUEL89nJolofE0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-491-VQnLTfkbNeyeYn0FGBSCTQ-1; Wed, 14 May 2025 07:17:25 -0400
-X-MC-Unique: VQnLTfkbNeyeYn0FGBSCTQ-1
-X-Mimecast-MFC-AGG-ID: VQnLTfkbNeyeYn0FGBSCTQ_1747221444
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac6ce5fe9bfso639397066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 04:17:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747221444; x=1747826244;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rtu6wXenoWLkyS7hMHKw/YacghO9Vh2vvDpQZW7iexY=;
-        b=XHC/QZGnJsETHl0zZ96ctwgdF38ornxWgGxM9WHJyY93GPr01l0GlbXtueTbSDLPkz
-         y81nRPE+XaQ+fXkNssoxwjiWE/ATspe/d8AU0gib4SZI74785YHPyYkX2ZbJfUfCnplF
-         8n27sMMdJG+Grf4Hbrm9kcvwrXupKu0NCQwXvH1ba9O/xetuLBTYxaPfpV9Oo/bXOE1o
-         f2WHiTGqjrdjj5tm9kXJyo5edY6asfKhbSmjwae3joipJ5b4MpNjVRrUWEwJ2ZnQWJSs
-         DHWHIM0AJX3g85oswnmUfzZGOQg5VDJUMR/rn2amVcgzcKAlCsOMUtDHHkMs9j7lJIax
-         dTyA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1nai8zwYd57b6c+6nxkf/BEt0V9mBnPMzHJlRklneL/nSaQ4z19lhHof17zaOItcrTegsexZqIVYYpEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzro0G2IPiixtfBWKgCXCSk1sqIStCiMfnOjer7P34Iqa5gdNHY
-	UbLqFWmJZFZTzsxzmH/rA1T7BbVmpB5InXg+bPo0qJBof/FQfhG1eHRA/LSP+3xZL3Ajb87KyI3
-	PvEYeSLAxjgwXOBKMOp7hjKs7W09GSmfmLQgpyWlQ6J7u4f+ZqJwch1kaKx2c9A==
-X-Gm-Gg: ASbGncu8cx0XLdfBS/XZGDAWxETXNHTFpZ21o+RLEdQ/tMqSOKtvWapBlm9xl6hIrXo
-	IAB5fdY5fv0cLamuN+a1ATKw4AXul6Jn7cOwVfxGjJJ9oIkoQJP+0Dh+sbBPVrnmX16jI67GXC9
-	+yklDVU/t7w3cy+peYIF6vmXhwxCO5me9Pn030D8thDj8uZ2vxboGvNFGmVQcEPb7SN0tesUxI2
-	wS4HpsrzjwcAK5l1NEMx1z1AaBdwoSqUF4sejauFV/wh6iz3JJryz5c1YKJd03Z5iJTCnxx46FQ
-	UJ4sAKcD
-X-Received: by 2002:a17:907:c003:b0:ad2:40e0:3e56 with SMTP id a640c23a62f3a-ad4f74d3f1amr245862266b.57.1747221443648;
-        Wed, 14 May 2025 04:17:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHoCS8Bs/IxXF7z3Ch8iAlM1Jx+122ikfD38kD4H0+EEUxHOyys24VpB3hPGN7/3sYd5dZbNA==
-X-Received: by 2002:a17:907:c003:b0:ad2:40e0:3e56 with SMTP id a640c23a62f3a-ad4f74d3f1amr245857966b.57.1747221443111;
-        Wed, 14 May 2025 04:17:23 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad50451381csm48430366b.138.2025.05.14.04.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 04:17:22 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 5EA191A734CC; Wed, 14 May 2025 13:17:21 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, almasrymina@google.com, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, edumazet@google.com,
- pabeni@redhat.com, vishal.moola@gmail.com
-Subject: Re: [RFC 13/19] page_pool: expand scope of is_pp_{netmem,page}() to
- global
-In-Reply-To: <20250514030040.GA48035@system.software.com>
-References: <20250509115126.63190-1-byungchul@sk.com>
- <20250509115126.63190-14-byungchul@sk.com> <87y0v22dzn.fsf@toke.dk>
- <20250514030040.GA48035@system.software.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 14 May 2025 13:17:21 +0200
-Message-ID: <874ixnl9vi.fsf@toke.dk>
+	bh=1GeVX9hQodX/OtNr53La1nzqrSy9bBCOAu2y0PBYT3E=;
+	b=OLiQ6Ab44M7IGTgwTqogJ2WfRbV/vFY8io2e5MKKEx9lhCwLYvL4X7Zbg6y393EFe+MlCL
+	zpjAzUnSvWYascRpayECo0eRkzqcISIDc54XeBGZFNaLS8bbeiJh3k8V+gynKtqaQHVi3M
+	fjb7NuwNXsRBxeBPY40mUTjfnN4cXAeY0GmmEreKKlEVGndMew3s4941YPMtxiOptbW8RM
+	cwuO/aZIJwaCj0C5Gx4QIVc3hE8IQcXuE3ZTdU40UAnvXVIS/MeEkVRko4oEJbGyELi21Q
+	53dI33g1EFWYQXLJLiGY6PZGmSf1MWjT/EH3mtBlBs37eUzZ5218bcSWR9n+mg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747221465;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1GeVX9hQodX/OtNr53La1nzqrSy9bBCOAu2y0PBYT3E=;
+	b=a5mpvpXa31Fngmwh2O0Hqg7nRfMrDfpgNroDQYsTheUCmal9Z8AALCgQSj8Q8NXJCqEB9z
+	NweI6oQGlynkSTDg==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: sched/core] sched,livepatch: Untangle cond_resched() and live-patching
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Miroslav Benes <mbenes@suse.cz>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250509113659.wkP_HJ5z@linutronix.de>
+References: <20250509113659.wkP_HJ5z@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174722146422.406.1553254299090389626.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Byungchul Park <byungchul@sk.com> writes:
+The following commit has been merged into the sched/core branch of tip:
 
-> On Mon, May 12, 2025 at 02:46:36PM +0200, Toke H=C3=B8iland-J=C3=B8rgense=
-n wrote:
->> Byungchul Park <byungchul@sk.com> writes:
->>=20
->> > Other than skbuff.c might need to check if a page or netmem is for page
->> > pool, for example, page_alloc.c needs to check the page state, whether
->> > it comes from page pool or not for their own purpose.
->> >
->> > Expand the scope of is_pp_netmem() and introduce is_pp_page() newly, so
->> > that those who want to check the source can achieve the checking witho=
-ut
->> > accessing page pool member, page->pp_magic, directly.
->> >
->> > Signed-off-by: Byungchul Park <byungchul@sk.com>
->> > ---
->> >  include/net/page_pool/types.h |  2 ++
->> >  net/core/page_pool.c          | 10 ++++++++++
->> >  net/core/skbuff.c             |  5 -----
->> >  3 files changed, 12 insertions(+), 5 deletions(-)
->> >
->> > diff --git a/include/net/page_pool/types.h b/include/net/page_pool/typ=
-es.h
->> > index 36eb57d73abc6..d3e1a52f01e09 100644
->> > --- a/include/net/page_pool/types.h
->> > +++ b/include/net/page_pool/types.h
->> > @@ -299,4 +299,6 @@ static inline bool is_page_pool_compiled_in(void)
->> >  /* Caller must provide appropriate safe context, e.g. NAPI. */
->> >  void page_pool_update_nid(struct page_pool *pool, int new_nid);
->> >=20=20
->> > +bool is_pp_netmem(netmem_ref netmem);
->> > +bool is_pp_page(struct page *page);
->> >  #endif /* _NET_PAGE_POOL_H */
->> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
->> > index b61c1038f4c68..9c553e5a1b555 100644
->> > --- a/net/core/page_pool.c
->> > +++ b/net/core/page_pool.c
->> > @@ -1225,3 +1225,13 @@ void net_mp_niov_clear_page_pool(struct netmem_=
-desc *niov)
->> >=20=20
->> >  	page_pool_clear_pp_info(netmem);
->> >  }
->> > +
->> > +bool is_pp_netmem(netmem_ref netmem)
->> > +{
->> > +	return (netmem_get_pp_magic(netmem) & ~0x3UL) =3D=3D PP_SIGNATURE;
->> > +}
->> > +
->> > +bool is_pp_page(struct page *page)
->> > +{
->> > +	return is_pp_netmem(page_to_netmem(page));
->> > +}
->> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
->> > index 6cbf77bc61fce..11098c204fe3e 100644
->> > --- a/net/core/skbuff.c
->> > +++ b/net/core/skbuff.c
->> > @@ -893,11 +893,6 @@ static void skb_clone_fraglist(struct sk_buff *sk=
-b)
->> >  		skb_get(list);
->> >  }
->> >=20=20
->> > -static bool is_pp_netmem(netmem_ref netmem)
->> > -{
->> > -	return (netmem_get_pp_magic(netmem) & ~0x3UL) =3D=3D PP_SIGNATURE;
->> > -}
->> > -
->>=20
->> This has already been moved to mm.h (and the check changed) by commit:
->>=20
->> cd3c93167da0 ("page_pool: Move pp_magic check into helper functions")
->>=20
->> You should definitely rebase this series on top of that (and the
->> subsequent ee62ce7a1d90 ("page_pool: Track DMA-mapped pages and unmap
->> them when destroying the pool")), as these change the semantics of how
->> page_pool interacts with struct page.
->>=20
->> Both of these are in net-next, which Mina already asked you to rebase
->
-> Is this net-next you are mentioning?  I will rebase on this if so.
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
+Commit-ID:     fe2ece0700df81ee1fc91d51d80a1a3f37e59806
+Gitweb:        https://git.kernel.org/tip/fe2ece0700df81ee1fc91d51d80a1a3f37e59806
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 09 May 2025 13:36:59 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 14 May 2025 13:09:50 +02:00
 
-Yup :)
+sched,livepatch: Untangle cond_resched() and live-patching
 
--Toke
+With the goal of deprecating / removing VOLUNTARY preempt, live-patch
+needs to stop relying on cond_resched() to make forward progress.
 
+Instead, rely on schedule() with TASK_FREEZABLE set. Just like
+live-patching, the freezer needs to be able to stop tasks in a safe /
+known state.
+
+[bigeasy: use likely() in __klp_sched_try_switch() and update comments]
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/r/20250509113659.wkP_HJ5z@linutronix.de
+---
+ include/linux/livepatch_sched.h | 14 +++------
+ include/linux/sched.h           |  6 +----
+ kernel/livepatch/transition.c   | 49 ++++++++-----------------------
+ kernel/sched/core.c             | 50 +++++---------------------------
+ 4 files changed, 27 insertions(+), 92 deletions(-)
+
+diff --git a/include/linux/livepatch_sched.h b/include/linux/livepatch_sched.h
+index 013794f..065c185 100644
+--- a/include/linux/livepatch_sched.h
++++ b/include/linux/livepatch_sched.h
+@@ -3,27 +3,23 @@
+ #define _LINUX_LIVEPATCH_SCHED_H_
+ 
+ #include <linux/jump_label.h>
+-#include <linux/static_call_types.h>
++#include <linux/sched.h>
+ 
+ #ifdef CONFIG_LIVEPATCH
+ 
+ void __klp_sched_try_switch(void);
+ 
+-#if !defined(CONFIG_PREEMPT_DYNAMIC) || !defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
+-
+ DECLARE_STATIC_KEY_FALSE(klp_sched_try_switch_key);
+ 
+-static __always_inline void klp_sched_try_switch(void)
++static __always_inline void klp_sched_try_switch(struct task_struct *curr)
+ {
+-	if (static_branch_unlikely(&klp_sched_try_switch_key))
++	if (static_branch_unlikely(&klp_sched_try_switch_key) &&
++	    READ_ONCE(curr->__state) & TASK_FREEZABLE)
+ 		__klp_sched_try_switch();
+ }
+ 
+-#endif /* !CONFIG_PREEMPT_DYNAMIC || !CONFIG_HAVE_PREEMPT_DYNAMIC_CALL */
+-
+ #else /* !CONFIG_LIVEPATCH */
+-static inline void klp_sched_try_switch(void) {}
+-static inline void __klp_sched_try_switch(void) {}
++static inline void klp_sched_try_switch(struct task_struct *curr) {}
+ #endif /* CONFIG_LIVEPATCH */
+ 
+ #endif /* _LINUX_LIVEPATCH_SCHED_H_ */
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index f96ac19..b981959 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -44,7 +44,6 @@
+ #include <linux/seqlock_types.h>
+ #include <linux/kcsan.h>
+ #include <linux/rv.h>
+-#include <linux/livepatch_sched.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/tracepoint-defs.h>
+ #include <asm/kmap_size.h>
+@@ -2089,9 +2088,6 @@ extern int __cond_resched(void);
+ 
+ #if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
+ 
+-void sched_dynamic_klp_enable(void);
+-void sched_dynamic_klp_disable(void);
+-
+ DECLARE_STATIC_CALL(cond_resched, __cond_resched);
+ 
+ static __always_inline int _cond_resched(void)
+@@ -2112,7 +2108,6 @@ static __always_inline int _cond_resched(void)
+ 
+ static inline int _cond_resched(void)
+ {
+-	klp_sched_try_switch();
+ 	return __cond_resched();
+ }
+ 
+@@ -2122,7 +2117,6 @@ static inline int _cond_resched(void)
+ 
+ static inline int _cond_resched(void)
+ {
+-	klp_sched_try_switch();
+ 	return 0;
+ }
+ 
+diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+index ba06945..2351a19 100644
+--- a/kernel/livepatch/transition.c
++++ b/kernel/livepatch/transition.c
+@@ -29,22 +29,13 @@ static unsigned int klp_signals_cnt;
+ 
+ /*
+  * When a livepatch is in progress, enable klp stack checking in
+- * cond_resched().  This helps CPU-bound kthreads get patched.
++ * schedule().  This helps CPU-bound kthreads get patched.
+  */
+-#if defined(CONFIG_PREEMPT_DYNAMIC) && defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
+-
+-#define klp_cond_resched_enable() sched_dynamic_klp_enable()
+-#define klp_cond_resched_disable() sched_dynamic_klp_disable()
+-
+-#else /* !CONFIG_PREEMPT_DYNAMIC || !CONFIG_HAVE_PREEMPT_DYNAMIC_CALL */
+ 
+ DEFINE_STATIC_KEY_FALSE(klp_sched_try_switch_key);
+-EXPORT_SYMBOL(klp_sched_try_switch_key);
+ 
+-#define klp_cond_resched_enable() static_branch_enable(&klp_sched_try_switch_key)
+-#define klp_cond_resched_disable() static_branch_disable(&klp_sched_try_switch_key)
+-
+-#endif /* CONFIG_PREEMPT_DYNAMIC && CONFIG_HAVE_PREEMPT_DYNAMIC_CALL */
++#define klp_resched_enable() static_branch_enable(&klp_sched_try_switch_key)
++#define klp_resched_disable() static_branch_disable(&klp_sched_try_switch_key)
+ 
+ /*
+  * This work can be performed periodically to finish patching or unpatching any
+@@ -365,26 +356,18 @@ static bool klp_try_switch_task(struct task_struct *task)
+ 
+ void __klp_sched_try_switch(void)
+ {
+-	if (likely(!klp_patch_pending(current)))
+-		return;
+-
+ 	/*
+-	 * This function is called from cond_resched() which is called in many
+-	 * places throughout the kernel.  Using the klp_mutex here might
+-	 * deadlock.
+-	 *
+-	 * Instead, disable preemption to prevent racing with other callers of
+-	 * klp_try_switch_task().  Thanks to task_call_func() they won't be
+-	 * able to switch this task while it's running.
++	 * This function is called from __schedule() while a context switch is
++	 * about to happen. Preemption is already disabled and klp_mutex
++	 * can't be acquired.
++	 * Disabled preemption is used to prevent racing with other callers of
++	 * klp_try_switch_task(). Thanks to task_call_func() they won't be
++	 * able to switch to this task while it's running.
+ 	 */
+-	preempt_disable();
++	lockdep_assert_preemption_disabled();
+ 
+-	/*
+-	 * Make sure current didn't get patched between the above check and
+-	 * preempt_disable().
+-	 */
+-	if (unlikely(!klp_patch_pending(current)))
+-		goto out;
++	if (likely(!klp_patch_pending(current)))
++		return;
+ 
+ 	/*
+ 	 * Enforce the order of the TIF_PATCH_PENDING read above and the
+@@ -395,11 +378,7 @@ void __klp_sched_try_switch(void)
+ 	smp_rmb();
+ 
+ 	klp_try_switch_task(current);
+-
+-out:
+-	preempt_enable();
+ }
+-EXPORT_SYMBOL(__klp_sched_try_switch);
+ 
+ /*
+  * Sends a fake signal to all non-kthread tasks with TIF_PATCH_PENDING set.
+@@ -508,7 +487,7 @@ void klp_try_complete_transition(void)
+ 	}
+ 
+ 	/* Done!  Now cleanup the data structures. */
+-	klp_cond_resched_disable();
++	klp_resched_disable();
+ 	patch = klp_transition_patch;
+ 	klp_complete_transition();
+ 
+@@ -560,7 +539,7 @@ void klp_start_transition(void)
+ 			set_tsk_thread_flag(task, TIF_PATCH_PENDING);
+ 	}
+ 
+-	klp_cond_resched_enable();
++	klp_resched_enable();
+ 
+ 	klp_signals_cnt = 0;
+ }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a3507ed..bece0ba 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -66,6 +66,7 @@
+ #include <linux/vtime.h>
+ #include <linux/wait_api.h>
+ #include <linux/workqueue_api.h>
++#include <linux/livepatch_sched.h>
+ 
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ # ifdef CONFIG_GENERIC_ENTRY
+@@ -6676,6 +6677,8 @@ static void __sched notrace __schedule(int sched_mode)
+ 	if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
+ 		hrtick_clear(rq);
+ 
++	klp_sched_try_switch(prev);
++
+ 	local_irq_disable();
+ 	rcu_note_context_switch(preempt);
+ 
+@@ -7336,7 +7339,6 @@ EXPORT_STATIC_CALL_TRAMP(might_resched);
+ static DEFINE_STATIC_KEY_FALSE(sk_dynamic_cond_resched);
+ int __sched dynamic_cond_resched(void)
+ {
+-	klp_sched_try_switch();
+ 	if (!static_branch_unlikely(&sk_dynamic_cond_resched))
+ 		return 0;
+ 	return __cond_resched();
+@@ -7508,7 +7510,6 @@ int sched_dynamic_mode(const char *str)
+ #endif
+ 
+ static DEFINE_MUTEX(sched_dynamic_mutex);
+-static bool klp_override;
+ 
+ static void __sched_dynamic_update(int mode)
+ {
+@@ -7516,8 +7517,7 @@ static void __sched_dynamic_update(int mode)
+ 	 * Avoid {NONE,VOLUNTARY} -> FULL transitions from ever ending up in
+ 	 * the ZERO state, which is invalid.
+ 	 */
+-	if (!klp_override)
+-		preempt_dynamic_enable(cond_resched);
++	preempt_dynamic_enable(cond_resched);
+ 	preempt_dynamic_enable(might_resched);
+ 	preempt_dynamic_enable(preempt_schedule);
+ 	preempt_dynamic_enable(preempt_schedule_notrace);
+@@ -7526,8 +7526,7 @@ static void __sched_dynamic_update(int mode)
+ 
+ 	switch (mode) {
+ 	case preempt_dynamic_none:
+-		if (!klp_override)
+-			preempt_dynamic_enable(cond_resched);
++		preempt_dynamic_enable(cond_resched);
+ 		preempt_dynamic_disable(might_resched);
+ 		preempt_dynamic_disable(preempt_schedule);
+ 		preempt_dynamic_disable(preempt_schedule_notrace);
+@@ -7538,8 +7537,7 @@ static void __sched_dynamic_update(int mode)
+ 		break;
+ 
+ 	case preempt_dynamic_voluntary:
+-		if (!klp_override)
+-			preempt_dynamic_enable(cond_resched);
++		preempt_dynamic_enable(cond_resched);
+ 		preempt_dynamic_enable(might_resched);
+ 		preempt_dynamic_disable(preempt_schedule);
+ 		preempt_dynamic_disable(preempt_schedule_notrace);
+@@ -7550,8 +7548,7 @@ static void __sched_dynamic_update(int mode)
+ 		break;
+ 
+ 	case preempt_dynamic_full:
+-		if (!klp_override)
+-			preempt_dynamic_disable(cond_resched);
++		preempt_dynamic_disable(cond_resched);
+ 		preempt_dynamic_disable(might_resched);
+ 		preempt_dynamic_enable(preempt_schedule);
+ 		preempt_dynamic_enable(preempt_schedule_notrace);
+@@ -7562,8 +7559,7 @@ static void __sched_dynamic_update(int mode)
+ 		break;
+ 
+ 	case preempt_dynamic_lazy:
+-		if (!klp_override)
+-			preempt_dynamic_disable(cond_resched);
++		preempt_dynamic_disable(cond_resched);
+ 		preempt_dynamic_disable(might_resched);
+ 		preempt_dynamic_enable(preempt_schedule);
+ 		preempt_dynamic_enable(preempt_schedule_notrace);
+@@ -7584,36 +7580,6 @@ void sched_dynamic_update(int mode)
+ 	mutex_unlock(&sched_dynamic_mutex);
+ }
+ 
+-#ifdef CONFIG_HAVE_PREEMPT_DYNAMIC_CALL
+-
+-static int klp_cond_resched(void)
+-{
+-	__klp_sched_try_switch();
+-	return __cond_resched();
+-}
+-
+-void sched_dynamic_klp_enable(void)
+-{
+-	mutex_lock(&sched_dynamic_mutex);
+-
+-	klp_override = true;
+-	static_call_update(cond_resched, klp_cond_resched);
+-
+-	mutex_unlock(&sched_dynamic_mutex);
+-}
+-
+-void sched_dynamic_klp_disable(void)
+-{
+-	mutex_lock(&sched_dynamic_mutex);
+-
+-	klp_override = false;
+-	__sched_dynamic_update(preempt_dynamic_mode);
+-
+-	mutex_unlock(&sched_dynamic_mutex);
+-}
+-
+-#endif /* CONFIG_HAVE_PREEMPT_DYNAMIC_CALL */
+-
+ static int __init setup_preempt_mode(char *str)
+ {
+ 	int mode = sched_dynamic_mode(str);
