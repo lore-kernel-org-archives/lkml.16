@@ -1,81 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8B918787A;
-	Wed, 14 May 2025 16:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E1A1E3762;
+	Wed, 14 May 2025 16:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238891; cv=none; b=Lj3ZYClq+BFrfdVW/pot1OxhBa63sJLnzw6NLNtrUngcS/PITk19IGI4Y3iyQI3Bb2x2B4uV9gqRe7S89QryZmHu9L9qQH+NrbE3M9NBElnePaAzt9n9UoXH2rFc1+rDpYqHxJEAcQ60Z+T7g67cNfnAjre2dAYud8AIiRskfqI=
+	t=1747238923; cv=none; b=mkJF473ltfHKpiEvEhgWt0ooe6Qrt7A43twjNqH954IhUOkBQ25ErAe3B8jf1ji1CnhlqLHBAHmppJ0dqmiZOlMebdHjxqBczkirZFLFbbHw94zviOePpEt6BMuHjL6PVGLfKhav8aQjHDXsURU5cbJKjSRUhIkf+COX6/42kbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238891; c=relaxed/simple;
-	bh=bFpwNz08zrSCvP6Znm9FT0VWYBH5RsAskPNCp1Ece1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q3ru26y3luiNids29pWcnzmQ36Mn/Fg0aAeAfy/GobgGTrQK63+Z3HU7TWizyQ+/R549fQRh5Nfji8Z8WfE4RBpQGKNmwE38hkD7R3BHjkgTBC3lZ01CcVLZkXTodIZZ62UNVKCeCPcoh+7o1CQR8whtIaZ4S3kGJEfk4GYNQzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnMcVn45; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747238923; c=relaxed/simple;
+	bh=hGOUe2xSoGL9oXowpjGUL9c1Ap2l3UhYWn76o1uRYSE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=keZ8ULmuUzb6e+2eR/gi0h90Ety7KrLab9hFqEcMjmhimOHw1Gj+h/CEglvXMG4FsiFpqLbjIqjrus1abMzyeWCPSP7zk68w2cHpfybSYcSS05noimDtQRtaKOssTqoSnSCgUPi8i/JTvh9xl1Qa9qbVVAKWvpLCJOLUgZhsgTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8uRb7z1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnMcVn45"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF96EC4CEE3;
-	Wed, 14 May 2025 16:08:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8uRb7z1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E61FC4CEE3;
+	Wed, 14 May 2025 16:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238889;
-	bh=bFpwNz08zrSCvP6Znm9FT0VWYBH5RsAskPNCp1Ece1Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OnMcVn45/YQTMIQkGZtwuJuiEwJWKEacaq6GeYjLQnCndzGAqgOagk6/qTzPlfuY+
-	 zUwJBDdV7sLPhCZNScCUM1T0jMvjdaVwfyKHLc+ejCmZPKLaCHlA/jVFPb9TYPgsrI
-	 1V6bl/jh7ZNvIG4zwiRlhyKAr16MUeqcMcWiHJUhl2LizjNw7D/73bZix5QYLPZxky
-	 3vXDqoG0ygV+jsYzjL5X9jKkhRDeSqxCh2X8XoTy7WHUgNLX59nwhm3qnkCSm2dA+u
-	 tpyLRAxP8en5uVuJC6PouadUeOhoIadEWPHYuVVqLSxSM0di6aJeDm6P/LyR0rDPG3
-	 4RD36ULntTS3w==
-Date: Wed, 14 May 2025 09:08:08 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <andrew+netdev@lunn.ch>, <horms@kernel.org>, <shenjian15@huawei.com>,
- <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
- <chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
- <shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
- <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net 2/2] net: hibmcge: fix wrong ndo.open() after reset
- fail issue.
-Message-ID: <20250514090808.2ae43183@kernel.org>
-In-Reply-To: <743a78cc-10d4-45f0-9c46-f021258b577d@huawei.com>
-References: <20250430093127.2400813-1-shaojijie@huawei.com>
-	<20250430093127.2400813-3-shaojijie@huawei.com>
-	<20250501072329.39c6304a@kernel.org>
-	<743a78cc-10d4-45f0-9c46-f021258b577d@huawei.com>
+	s=k20201202; t=1747238923;
+	bh=hGOUe2xSoGL9oXowpjGUL9c1Ap2l3UhYWn76o1uRYSE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X8uRb7z1GWP22+I2dXUrFBGSE7xdYgRUBQrit6b2xTY2KWEoAk0DGNhUefhtYCY6X
+	 J24fzQj0vxVuuNZvQFctlJJuMuV+dUWB9dcMS0ThxLxPk/ZjMyD+kkPvTJ2BamajE+
+	 b6CA1ThkzukP4wqbDUruCiAp+LRjEMwKvubELh4VRPWLGDmtamyl66grw7rl6g3jt7
+	 0kCqWY/Pf4hFESUJH0elOFD+lSgu4PBeT6QAMkYFQ3luovFvG2Xc8kQI2/ymuMuWMY
+	 zAhMFK57lv7YxLzXQEXXVFylFbTTwkNWYM7qzD/5CekHuVPk0GWdGncXDyMj7NSMWM
+	 un8qvC4OwQiog==
+Date: Wed, 14 May 2025 11:08:41 -0500
+From: Rob Herring <robh@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
+ for clock-controller
+Message-ID: <20250514160841.GA2427890-robh@kernel.org>
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
+ <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
+ <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
+ <aCNGSwL7043GoJBz@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCNGSwL7043GoJBz@linaro.org>
 
-On Wed, 14 May 2025 10:40:26 +0800 Jijie Shao wrote:
-> on 2025/5/1 22:23, Jakub Kicinski wrote:
-> > On Wed, 30 Apr 2025 17:31:27 +0800 Jijie Shao wrote:  
-> >> If the driver reset fails, it may not work properly.
-> >> Therefore, the ndo.open() operation should be rejected.  
-> > Why not call netif_device_detach() if the reset failed and let the core
-> > code handle blocking the callbacks?  
+On Tue, May 13, 2025 at 02:16:59PM +0100, Stephan Gerhold wrote:
+> On Sun, May 11, 2025 at 05:48:11PM -0500, Bjorn Andersson wrote:
+> > On Tue, May 06, 2025 at 03:10:08PM +0200, Stephan Gerhold wrote:
+> > > APCS "global" is sort of a "miscellaneous" hardware block that combines
+> > > multiple registers inside the application processor subsystem. Two distinct
+> > > use cases are currently stuffed together in a single device tree node:
+> > > 
+> > >  - Mailbox: to communicate with other remoteprocs in the system.
+> > >  - Clock: for controlling the CPU frequency.
+> > > 
+> > > These two use cases have unavoidable circular dependencies: the mailbox is
+> > > needed as early as possible during boot to start controlling shared
+> > > resources like clocks and power domains, while the clock controller needs
+> > > one of these shared clocks as its parent. Currently, there is no way to
+> > > distinguish these two use cases for generic mechanisms like fw_devlink.
+> > > 
+> > > This is currently blocking conversion of the deprecated custom "qcom,ipc"
+> > > properties to the standard "mboxes", see e.g. commit d92e9ea2f0f9
+> > > ("arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM"):
+> > >   1. remoteproc &rpm needs mboxes = <&apcs1_mbox 8>;
+> > >   2. The clock controller inside &apcs1_mbox needs
+> > >      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>.
+> > >   3. &rpmcc is a child of remoteproc &rpm
+> > > 
+> > > The mailbox itself does not need any clocks and should probe early to
+> > > unblock the rest of the boot process. The "clocks" are only needed for the
+> > > separate clock controller. In Linux, these are already two separate drivers
+> > > that can probe independently.
+> > > 
+> > 
+> > Why does this circular dependency need to be broken in the DeviceTree
+> > representation?
+> > 
+> > As you describe, the mailbox probes and register the mailbox controller
+> > and it registers the clock controller. The mailbox device isn't affected
+> > by the clock controller failing to find rpmcc...
+> > 
 > 
-> If driver call netif_device_detach() after reset failed,
-> The network port cannot be operated. and I can't re-do the reset.
-> So how does the core code handle blocking callbacks?
-> Is there a good time to call netif_device_attach()?
+> That's right, but the problem is that the probe() function of the
+> mailbox driver won't be called at all. The device tree *looks* like the
+> mailbox depends on the clock, so fw_devlink tries to defer probing until
+> the clock is probed (which won't ever happen, because the mailbox is
+> needed to make the clock available).
 > 
-> Or I need to implement pci_error_handlers.resume()?
-> 
-> 
-> [root@localhost sjj]# ethtool --reset enp132s0f1 dedicated
-> ETHTOOL_RESET 0xffff
-> Cannot issue ETHTOOL_RESET: Device or resource busy
-> [root@localhost sjj]# ethtool --reset enp132s0f1 dedicated
-> ETHTOOL_RESET 0xffff
-> Cannot issue ETHTOOL_RESET: No such device
-> [root@localhost sjj]# ifconfig enp132s0f1 up
-> SIOCSIFFLAGS: No such device
+> I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
+> them anyway, but fact is that we need to split this up in order to avoid
+> warnings and have the supplies/consumers set up properly. Those device
+> links are created based on the device tree and not the drivers.
 
-netdev APIs may not be the right path to recover the device after reset
-failure. Can you use a PCI reset (via sysfs) or devlink ?
+Does "post-init-providers" providers solve your problem?
+
+Rob
