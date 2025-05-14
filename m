@@ -1,175 +1,127 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6767146A66;
-	Wed, 14 May 2025 12:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCC425C71A;
+	Wed, 14 May 2025 12:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227217; cv=none; b=MFyFYw09tdiH7pBZSqQWvDBziu4E8RFYs2OFxVX12X7DtkjC+xEdZCzmpWgzhnWQ++SdTaM+oJXMUq1O/k3k63CvA851nGIet2JS2gYrKz9MahfRfiMh2NjNr4WqfzTAgpfmrUnyhDVDnAb+rakjJsa98dbsn69REoOzfL8q4Ps=
+	t=1747227241; cv=none; b=esDB1x5a8Ik3kpdsyjVw7WVDTftxymYE4w0hpkiyPC9maWR3byd0CH+ATV8c8bUsP+Ofe2KwFHpwHZUE14nyfw54Y73ZzN+cZVq5XQgtaWRoqTmSzKHs8a1+H4+Bc/lzbcYet1GMYBgV2WR06RvHoXe8VSCwnH0lnsRHFN1xEdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227217; c=relaxed/simple;
-	bh=l2PN6QcepbAXB+iWYlA33obbARXQBzt9YebmBHehVqk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N5Hkne7w7PYuid9kS7qoca9b80kwEVMS1+FH4tI2cRPLzxR1oU52gl0twFOZTFrStNptbMJETCYmtzGsvfpD9OVxfJgznbm40cry/8uKfaxEGkA5UcniDO/v+4YH6Kz42hf21mN6lhTlKnK/zODybouQHaxMd283JIT0oTIEw/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=HNR9i4K6; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747227241; c=relaxed/simple;
+	bh=scugkR344tI8V7Z0hxaim6O4g7gQTV4zdpmzPnDsWhA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kwmR6RCJSxS/HHqiftF5PgxgOFuaTfEAwbY8SEGzhP4m8+tFvcj+Y7B1CKNFHzOsp5D/8g+WSsD5+DjFe2Do7Jk+Puz3I1X2iGXBYeqyjKa63K5f9nDx/U05Bejy9KflfV688u2ctH7f/Sj36YpDRVMtjlA00oO99KznzjdKv0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hU3dXRFQ; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="HNR9i4K6"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZyCv90K1mz9tHh;
-	Wed, 14 May 2025 14:53:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747227205; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hU3dXRFQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1E16E1FD4C;
+	Wed, 14 May 2025 12:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747227237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Lm/MiXf4ihAaUzAEA46o1hoZuKLtMGGmVsS5HYc+ftY=;
-	b=HNR9i4K6g4d8AIbT72lAahbjubd4mU4WEI0EoZJba/Wkj8pOgiE7EGE+WmfOzG7MRYinOP
-	JPHyc/Rzc9OUyQJCXigpzzvt2v2v2l9q9TFsmTzZkRrS3YiwITrUz+yTj51djjqcWZ+MPH
-	Az59TrdqUI14isAdxFeLnnpuLLtAtzSAEuygcLSGII7P5z4Tu+CG0Ti1DU9SbwKIIbSoyj
-	hK7PiVOsUnuwz79nWch6JnMA5tTcufEK1YqqrgpLlrP9tjqnQbWkA8dOve1eiGAumsCCOH
-	TrartWS8kn4VlkP2cl2zE3hoYdP3Uba25A411/1lx8E+wIiX5S5LDMIM6r5n6g==
-Message-ID: <27825c551adeda28f4b329f44c316ad2ab67fa5d.camel@mailbox.org>
-Subject: Re: [PATCH v9 09/10] drm/doc: document some tracepoints as uAPI
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, Jonathan
- Corbet <corbet@lwn.net>, Matthew Brost <matthew.brost@intel.com>,  Danilo
- Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Sumit Semwal
- <sumit.semwal@linaro.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, =?ISO-8859-1?Q?Ma=EDra?= Canal
-	 <mcanal@igalia.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
-	 <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Date: Wed, 14 May 2025 14:53:17 +0200
-In-Reply-To: <20250424083834.15518-10-pierre-eric.pelloux-prayer@amd.com>
-References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
-	 <20250424083834.15518-10-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	bh=BPtptJ2HNoiU8PMKYqOrssaWS6cta88HVQHAl0Pn9aw=;
+	b=hU3dXRFQTHD3aiFxk4goUMdnyTgKFFjSv9ac6VTBUkjJeycYyAjqKxa5YvB8gOv5WvIjDX
+	Ym5o2RpHZ88ERll2TbB5805wvy9HaSrbRMdxGSMLb8s6cSSE60jQ4nJkmMOvLrPeeiRKPT
+	Cy3bnnw21GLJfJPSPk7VP8egScePCfEaLbX8I6iR+x8tdHHrRreHBoi/lSGivN5Yyd6LWP
+	F1X/NmL/+/IfeLEODIHWH6uogJq4QX+8G8L6ZhwQQNZbbQ6pVLDAtMUh+e09J++n9DGitw
+	wxA3XRsE/wl7rl8EO5tNIOFKAzjgqzMRDCEaeH+Wy0Nqjvp0sVyioBpGBz9kbw==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH net-next 0/3] net: phy: dp83869: Support 1Gbps fiber SFP modules
+Date: Wed, 14 May 2025 14:53:54 +0200
+Message-ID: <1877501.VLH7GnMWUR@fw-rgant>
+In-Reply-To:
+ <20250514142019.56372b4e@2a02-8440-d105-dfa7-916a-7e1b-fec1-3a90.rev.sfr.net>
+References:
+ <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
+ <20250514142019.56372b4e@2a02-8440-d105-dfa7-916a-7e1b-fec1-3a90.rev.sfr.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: acfe79c786622b263c1
-X-MBO-RS-META: t1hfj4zih9aibaphwnzyumj39wajigan
+Content-Type: multipart/signed; boundary="nextPart8620414.NyiUUSuA9g";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdejtdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetveeileegkeetvefgtdegffdviefgvdevkefhgfetieffvddvkedujeefvdfgtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigr
+ dhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Thu, 2025-04-24 at 10:38 +0200, Pierre-Eric Pelloux-Prayer wrote:
-> This commit adds a document section in drm-uapi.rst about
-> tracepoints,
-> and mark the events gpu_scheduler_trace.h as stable uAPI.
->=20
-> The goal is to explicitly state that tools can rely on the fields,
-> formats and semantics of these events.
->=20
-> Acked-by: Lucas Stach <l.stach@pengutronix.de>
-> Acked-by: Ma=C3=ADra Canal <mcanal@igalia.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: Pierre-Eric Pelloux-Prayer
-> <pierre-eric.pelloux-prayer@amd.com>
-> ---
-> =C2=A0Documentation/gpu/drm-uapi.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 19
-> +++++++++++++++++++
-> =C2=A0.../gpu/drm/scheduler/gpu_scheduler_trace.h=C2=A0=C2=A0 | 19
-> +++++++++++++++++++
-> =C2=A02 files changed, 38 insertions(+)
->=20
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-
-> uapi.rst
-> index 69f72e71a96e..4863a4deb0ee 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -693,3 +693,22 @@ dma-buf interoperability
-> =C2=A0
-> =C2=A0Please see Documentation/userspace-api/dma-buf-alloc-exchange.rst
-> for
-> =C2=A0information on how dma-buf is integrated and exposed within DRM.
-> +
-> +
-> +Trace events
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +See Documentation/trace/tracepoints.rst for information about using
-> +Linux Kernel Tracepoints.
-> +In the DRM subsystem, some events are considered stable uAPI to
-> avoid
-> +breaking tools (e.g.: GPUVis, umr) relying on them. Stable means
-> that fields
-> +cannot be removed, nor their formatting updated. Adding new fields
-> is
-> +possible, under the normal uAPI requirements.
-> +
-> +Stable uAPI events
-> +------------------
-> +
-> +From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
-> +
-> +.. kernel-doc::=C2=A0 drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> +=C2=A0=C2=A0 :doc: uAPI trace events
-> \ No newline at end of file
-> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> index 781b20349389..7e840d08ef39 100644
-> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-> @@ -32,6 +32,25 @@
-> =C2=A0#define TRACE_SYSTEM gpu_scheduler
-> =C2=A0#define TRACE_INCLUDE_FILE gpu_scheduler_trace
-> =C2=A0
-> +/**
-> + * DOC: uAPI trace events
-> + *
-> + * ``drm_sched_job_queue``, ``drm_sched_job_run``,
-> ``drm_sched_job_add_dep``,
-> + * ``drm_sched_job_done`` and ``drm_sched_job_unschedulable`` are
-> considered
-> + * stable uAPI.
-> + *
-> + * Common trace events attributes:
-> + *
-> + * * ``dev``=C2=A0=C2=A0 - the dev_name() of the device running the job.
-> + *
-> + * * ``ring``=C2=A0 - the hardware ring running the job. Together with
-> ``dev`` it
-> + *=C2=A0=C2=A0 uniquely identifies where the job is going to be executed=
-.
-> + *
-> + * * ``fence`` - the &dma_fence.context and the &dma_fence.seqno of
-> + *=C2=A0=C2=A0 &drm_sched_fence.finished
-> + *
-> + */
+--nextPart8620414.NyiUUSuA9g
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Date: Wed, 14 May 2025 14:53:54 +0200
+Message-ID: <1877501.VLH7GnMWUR@fw-rgant>
+MIME-Version: 1.0
 
-For my understanding, why do you use the double apostrophes here?
+Hi Maxime,
 
-Also, the linking for the docu afair here two requires you to write
+On Wednesday, 14 May 2025 14:20:19 CEST Maxime Chevallier wrote:
+> Hi Romain,
+> 
+> On Wed, 14 May 2025 09:49:56 +0200
+> 
+> Romain Gantois <romain.gantois@bootlin.com> wrote:
+> > Hello everyone,
+> > 
+> > This is version one of my series which adds support for downstream
+> > 1000Base-X SFP modules in the DP83869 PHY driver. It depends on the
+> > following series from Maxime Chevallier, which introduces an ethernet port
+> > representation and simplifies SFP support in PHY drivers:
+> > 
+> > https://lore.kernel.org/all/20250507135331.76021-1-maxime.chevallier@bootl
+> > in.com/
+> Thanks a lot for giving this work a shot ! Maybe a small nit, but as
+> the dependency isn't merged yet, you should mark this series as RFC, as
+> it will fail on the autobuilders.
 
-&struct dma_fence.seqno
+Ah I see, I'll fix that in v2 then.
 
-If I am not mistaken
+Thanks,
 
-https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#highlights=
--and-cross-references
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart8620414.NyiUUSuA9g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgkkmIACgkQ3R9U/FLj
+285jKw/+PKpg4jg8INKJQ0Mp53ofOft5er9GeMS8E7xBhcUHN2FugIo9xajYkIE8
+3TL0+QvABBCpu6VhDoP3UZ+k5joEcpOU4WgS0G7hzrxK0shjSZsOK8DM+xZ1Trql
+wlprLYM0oGu7tbk0KlBLPTZ2N8dNC6UAgnscykiBRDde+IbGmEELMmpJ3qr0Drz9
+NouBsErwEBw933FwuTnC7PmUfkLEs0XR0wZWuvXDCsiBah1L/6Vi00/AiYr/Dcmk
+jvR4x4E3oY8ovSqHmNK3G49yoxwyOXez6HARuixIBqx2M0wy6u4W7ce7GSqo5F0i
+wsDqEI1WRqjazHR11Zu00ymjXpJJ7tc3S8whH08ox/VjiG6Djea8LxSJQANx9FvG
+RQoLpszYDzt1EheQ4UXEDAIk9Mpxo8O/tnt5da7GwFG6uNoLG4aGG9VD9ayvb/df
+B1/MQNvXtrsr2zOuA5VYLROynqATx+f6QWwVQ5O27+f2V3ChSI7tPUqoreQXUXpe
+18DOS1NTqEiIGbdkvsM+Q8zAgYGDb3YIaXZD9o4kb3wdk/HR3eyzL1d/SL8H8chW
+o/5VQhaWue/cVWhVu0MyoRLfWHQEGSu6zGr4oD1a0E1oyt4TQcy02STyulqidoFF
+/auswQ0rkBI1ijzFNwiPCNKzjj8zXPTQRqkJ0dtaoXxH739S0hg=
+=4Pp+
+-----END PGP SIGNATURE-----
+
+--nextPart8620414.NyiUUSuA9g--
 
 
-P.
-
-> +
-> =C2=A0DECLARE_EVENT_CLASS(drm_sched_job,
-> =C2=A0	=C2=A0=C2=A0=C2=A0 TP_PROTO(struct drm_sched_job *sched_job, struc=
-t
-> drm_sched_entity *entity),
-> =C2=A0	=C2=A0=C2=A0=C2=A0 TP_ARGS(sched_job, entity),
 
