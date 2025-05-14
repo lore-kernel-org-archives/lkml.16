@@ -1,119 +1,228 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952DF22D7B7
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92E3022E3FA
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215544; cv=none; b=MqhKXiQBbmhKHpM+Nj4iyCh3mn7n+U4pPhX0813qTerSvutrhTPVMhPfcqLzN5ytD+NEj6cdXg++KkwmMWyFsYnSjws7UPVK9B+R6OefQwJwFdkdmjW36IHiw6wejgOD+2hPumm2TQ+93LlxEwEsGciaynGPIaRuzGTxEVqMbm0=
+	t=1747215545; cv=none; b=P8K7ZyHcdXGMvvzTXXbjj9vrXQjjT15ZzKm7szLoWK/g+oVmkZYILymWhSdtuW/43gMQv2Uc33AXYUmPTvx+2u30YrLEaejKv7oThmMahiPYqPKzwNb/9/MIDtbeqkewD0tuu7I49RyjMG6F8qUJ7+Z4PbjhHBFQHxsu49/pl4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215544; c=relaxed/simple;
-	bh=2gM43omb8x6mSTqYiUz/2moBg01FcZhf0F+9slbotVs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AUmKpEtjmo+JIUO6hv67m/erCQ2ViT2YYMxsmFihOAz4ccWTiOsI+b1xAR0+oioNJ4m4AjREASKx16qo3raPjxwB2oibkOQ38Dx7UhfUzB8tc6VsMk5Gm51fL0RsOErC9Wy30JdXHzUR5kIYz1PgaaYKWeYUAqu4/70y8/0vv6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LkcgnH8c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rXSEls3N; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LkcgnH8c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rXSEls3N"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747215540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lDp33p40Fs1LitBtjBZir0UwSJ9OxuzJPP9MYbv6Fc8=;
-	b=LkcgnH8cWHAmLFA4pMJkssj8pMMZACHqx4p5AjiUS9IiINzmH8+09AS29UnKZRbq8iimyf
-	oLDu32l7xViCJAkc60RGG1AGbO9ZHNO1n/81dDv+zyG27Q+PBFQg/gMN8/yMgxw366JvKc
-	xxOEImHJBw5E5upnU4Qss6zpAlwQE6lLmSU7HDaa3Zbq3u8F63b3B27Zf0DcYv69ayzpf3
-	TR+jkjUF5xYJacdAtdNnlhoPcwa+AE891+ObrkmY7jJlTFmpG2qHpsMFghnVvROTKU+Qvm
-	tW/VJ9whm2/0nKS+Z4zd5mv/rgv3TFrhkKivi98FM+zHbdSBrvPNf/+tqm7TCQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747215540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lDp33p40Fs1LitBtjBZir0UwSJ9OxuzJPP9MYbv6Fc8=;
-	b=rXSEls3Ngno0szaoJwN4237PfBnnJgQ6yeAC/E36Vrahzxi+Wfsg2+hMkDXSqHjx4CT2RC
-	sTsJhDPy3O+VVNDA==
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 09/11] riscv: kprobes: Remove duplication of RV_EXTRACT_RD_REG
-Date: Wed, 14 May 2025 11:38:48 +0200
-Message-Id: <b31e5b41df5839a76103348e54dc034c8a43447a.1747215274.git.namcao@linutronix.de>
-In-Reply-To: <cover.1747215274.git.namcao@linutronix.de>
-References: <cover.1747215274.git.namcao@linutronix.de>
+	s=arc-20240116; t=1747215545; c=relaxed/simple;
+	bh=6nYxrLW3NXCHbRW7UvNTAGjfbfQBaEqy3Bt7wmhfCvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iyRQtca9J5qr+zci8h5lG1AY+VgDyq1NPRGQGSaS4JJecaiqyd81q7myf52STrcBAwwtfKtV2/pUFnMICToLG1LajFwtx5UZbHRzB2pZ820yfDbBEcdkSqm38DJqXCYfVdaBk4pcFTh6L7c2rGqUUsMTQiTy9O8eZBZnTQeWHMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8362C1688;
+	Wed, 14 May 2025 02:38:51 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BCB53F5A1;
+	Wed, 14 May 2025 02:39:02 -0700 (PDT)
+Date: Wed, 14 May 2025 10:39:00 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] coresight: prevent deactivate active config while
+ enabling the config
+Message-ID: <20250514093900.GF26114@e132581.arm.com>
+References: <20250513170622.3071637-1-yeoreum.yun@arm.com>
+ <20250513170622.3071637-2-yeoreum.yun@arm.com>
+ <20250513170622.3071637-3-yeoreum.yun@arm.com>
+ <20250513170622.3071637-4-yeoreum.yun@arm.com>
+ <20250514093019.GE26114@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514093019.GE26114@e132581.arm.com>
 
-Use RV_EXTRACT_RD_REG, instead of reimplementing its code.
+On Wed, May 14, 2025 at 10:30:19AM +0100, Leo Yan wrote:
+> On Tue, May 13, 2025 at 06:06:22PM +0100, Yeoreum Yun wrote:
+> > While enable active config via cscfg_csdev_enable_active_config(),
+> > active config could be deactivated via configfs' sysfs interface.
+> > This could make UAF issue in below scenario:
+> > 
+> > CPU0                                          CPU1
+> > (sysfs enable)                                load module
+> >                                               cscfg_load_config_sets()
+> >                                               activate config. // sysfs
+> >                                               (sys_active_cnt == 1)
+> > ...
+> > cscfg_csdev_enable_active_config()
+> > lock(csdev->cscfg_csdev_lock)
+> > // here load config activate by CPU1
+> > unlock(csdev->cscfg_csdev_lock)
+> > 
+> >                                               deactivate config // sysfs
+> >                                               (sys_activec_cnt == 0)
+> >                                               cscfg_unload_config_sets()
+> >                                               unload module
+> > 
+> > // access to config_desc which freed
+> > // while unloading module.
+> > cscfg_csdev_enable_config
+> > 
+> > To address this, use cscfg_config_desc's active_cnt as a reference count
+> >  which will be holded when
+> >     - activate the config.
+> >     - enable the activated config.
+> > and put the module reference when config_active_cnt == 0.
+> > 
+> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- arch/riscv/kernel/probes/simulate-insn.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+And please add a fix tag:
 
-diff --git a/arch/riscv/kernel/probes/simulate-insn.c b/arch/riscv/kernel/p=
-robes/simulate-insn.c
-index e670e55954d2..1717df780409 100644
---- a/arch/riscv/kernel/probes/simulate-insn.c
-+++ b/arch/riscv/kernel/probes/simulate-insn.c
-@@ -42,7 +42,7 @@ bool __kprobes simulate_jal(u32 opcode, unsigned long add=
-r, struct pt_regs *regs
- 	 */
- 	bool ret;
- 	s32 imm;
--	u32 index =3D (opcode >> 7) & 0x1f;
-+	u32 index =3D RV_EXTRACT_RD_REG(opcode);
-=20
- 	ret =3D rv_insn_reg_set_val(regs, index, addr + 4);
- 	if (!ret)
-@@ -65,7 +65,7 @@ bool __kprobes simulate_jalr(u32 opcode, unsigned long ad=
-dr, struct pt_regs *reg
- 	bool ret;
- 	unsigned long base_addr;
- 	u32 imm =3D (opcode >> 20) & 0xfff;
--	u32 rd_index =3D (opcode >> 7) & 0x1f;
-+	u32 rd_index =3D RV_EXTRACT_RD_REG(opcode);
- 	u32 rs1_index =3D RV_EXTRACT_RS1_REG(opcode);
-=20
- 	ret =3D rv_insn_reg_get_val(regs, rs1_index, &base_addr);
-@@ -81,9 +81,6 @@ bool __kprobes simulate_jalr(u32 opcode, unsigned long ad=
-dr, struct pt_regs *reg
- 	return ret;
- }
-=20
--#define auipc_rd_idx(opcode) \
--	((opcode >> 7) & 0x1f)
--
- #define auipc_imm(opcode) \
- 	((((opcode) >> 12) & 0xfffff) << 12)
-=20
-@@ -104,7 +101,7 @@ bool __kprobes simulate_auipc(u32 opcode, unsigned long=
- addr, struct pt_regs *re
- 	 *        20       5     7
- 	 */
-=20
--	u32 rd_idx =3D auipc_rd_idx(opcode);
-+	u32 rd_idx =3D RV_EXTRACT_RD_REG(opcode);
- 	unsigned long rd_val =3D addr + auipc_offset(opcode);
-=20
- 	if (!rv_insn_reg_set_val(regs, rd_idx, rd_val))
---=20
-2.39.5
+Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
 
+> > ---
+> >  .../hwtracing/coresight/coresight-config.h    |  2 +-
+> >  .../hwtracing/coresight/coresight-syscfg.c    | 49 +++++++++++++------
+> >  2 files changed, 35 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+> > index b9ebc9fcfb7f..90fd937d3bd8 100644
+> > --- a/drivers/hwtracing/coresight/coresight-config.h
+> > +++ b/drivers/hwtracing/coresight/coresight-config.h
+> > @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
+> >   * @feats_csdev:references to the device features to enable.
+> >   */
+> >  struct cscfg_config_csdev {
+> > -	const struct cscfg_config_desc *config_desc;
+> > +	struct cscfg_config_desc *config_desc;
+> >  	struct coresight_device *csdev;
+> >  	bool enabled;
+> >  	struct list_head node;
+> > diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > index 5d194b9269f5..6d8c212ad434 100644
+> > --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> > +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> > @@ -870,6 +870,25 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+> >  
+> > +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc)
+> 
+> I would like to change the return type to int, so the error is handled
+> within the function.  As a result, the caller _cscfg_activate_config()
+> does not need to explicitly return an error value.
+> 
+> Otherwise, the patch looks good to me.
+> 
+> Thanks,
+> Leo
+> 
+> > +{
+> > +	if (!atomic_fetch_inc(&config_desc->active_cnt)) {
+> > +		/* must ensure that config cannot be unloaded in use */
+> > +		if (unlikely(cscfg_owner_get(config_desc->load_owner))) {
+> > +			atomic_dec(&config_desc->active_cnt);
+> > +			return false;
+> > +		}
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static void cscfg_config_desc_put(struct cscfg_config_desc *config_desc)
+> > +{
+> > +	if (!atomic_dec_return(&config_desc->active_cnt))
+> > +		cscfg_owner_put(config_desc->load_owner);
+> > +}
+> > +
+> >  /*
+> >   * This activate configuration for either perf or sysfs. Perf can have multiple
+> >   * active configs, selected per event, sysfs is limited to one.
+> > @@ -893,22 +912,17 @@ static int _cscfg_activate_config(unsigned long cfg_hash)
+> >  			if (config_desc->available == false)
+> >  				return -EBUSY;
+> >  
+> > -			/* must ensure that config cannot be unloaded in use */
+> > -			err = cscfg_owner_get(config_desc->load_owner);
+> > -			if (err)
+> > +			if (!cscfg_config_desc_get(config_desc)) {
+> > +				err = -EINVAL;
+> >  				break;
+> > +			}
+> > +
+> >  			/*
+> >  			 * increment the global active count - control changes to
+> >  			 * active configurations
+> >  			 */
+> >  			atomic_inc(&cscfg_mgr->sys_active_cnt);
+> >  
+> > -			/*
+> > -			 * mark the descriptor as active so enable config on a
+> > -			 * device instance will use it
+> > -			 */
+> > -			atomic_inc(&config_desc->active_cnt);
+> > -
+> >  			err = 0;
+> >  			dev_dbg(cscfg_device(), "Activate config %s.\n", config_desc->name);
+> >  			break;
+> > @@ -923,9 +937,8 @@ static void _cscfg_deactivate_config(unsigned long cfg_hash)
+> >  
+> >  	list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item) {
+> >  		if ((unsigned long)config_desc->event_ea->var == cfg_hash) {
+> > -			atomic_dec(&config_desc->active_cnt);
+> >  			atomic_dec(&cscfg_mgr->sys_active_cnt);
+> > -			cscfg_owner_put(config_desc->load_owner);
+> > +			cscfg_config_desc_put(config_desc);
+> >  			dev_dbg(cscfg_device(), "Deactivate config %s.\n", config_desc->name);
+> >  			break;
+> >  		}
+> > @@ -1050,7 +1063,7 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+> >  				     unsigned long cfg_hash, int preset)
+> >  {
+> >  	struct cscfg_config_csdev *config_csdev_active = NULL, *config_csdev_item;
+> > -	const struct cscfg_config_desc *config_desc;
+> > +	struct cscfg_config_desc *config_desc;
+> >  	unsigned long flags;
+> >  	int err = 0;
+> >  
+> > @@ -1065,8 +1078,8 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+> >  	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+> >  	list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, node) {
+> >  		config_desc = config_csdev_item->config_desc;
+> > -		if ((atomic_read(&config_desc->active_cnt)) &&
+> > -		    ((unsigned long)config_desc->event_ea->var == cfg_hash)) {
+> > +		if (((unsigned long)config_desc->event_ea->var == cfg_hash) &&
+> > +				cscfg_config_desc_get(config_desc)) {
+> >  			config_csdev_active = config_csdev_item;
+> >  			csdev->active_cscfg_ctxt = (void *)config_csdev_active;
+> >  			break;
+> > @@ -1100,7 +1113,11 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+> >  				err = -EBUSY;
+> >  			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+> >  		}
+> > +
+> > +		if (err)
+> > +			cscfg_config_desc_put(config_desc);
+> >  	}
+> > +
+> >  	return err;
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+> > @@ -1139,8 +1156,10 @@ void cscfg_csdev_disable_active_config(struct coresight_device *csdev)
+> >  	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+> >  
+> >  	/* true if there was an enabled active config */
+> > -	if (config_csdev)
+> > +	if (config_csdev) {
+> >  		cscfg_csdev_disable_config(config_csdev);
+> > +		cscfg_config_desc_put(config_csdev->config_desc);
+> > +	}
+> >  }
+> >  EXPORT_SYMBOL_GPL(cscfg_csdev_disable_active_config);
+> >  
+> > -- 
+> > LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> > 
+> _______________________________________________
+> CoreSight mailing list -- coresight@lists.linaro.org
+> To unsubscribe send an email to coresight-leave@lists.linaro.org
