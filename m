@@ -1,127 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7375921ABC5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBD221FF35;
+	Wed, 14 May 2025 08:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210032; cv=none; b=iHWeXq7zeqbDC3Fj3i5cADIXSvxbbcgxNGgax9DNb3k+BnSOA4tdUaf/ay2YVQqZk/q3BbJgru9VD8IYlNQKjMcZPGxq578h2QI/Xoi7EGa0T0b/5cMoRjkT70fRGZYSNI7jvfLzXi+ouA/NpUqHQQ30TflIVy8/29IKE+gel2Q=
+	t=1747210035; cv=none; b=thWBTlRw2HxWY1RIEB2f4kbuNo35pLpToNsreixUa4mIvpRT8/RhoIG3dsitMz5xtirb1EPisrXPiMLLeBzvpFY/WjCjuPQmM6iRlKS6EhhrGJrYsO2IgbPlFWGHupEs4+gSjz/LKSctbN/mq156FuwFNzvPswk4V7Sr+SCLPus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210032; c=relaxed/simple;
-	bh=atq4OyunGhqoNfgvwaQn9WsZWeXNxlUETXtkiRCcoKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tBebB59zx/RqhDEIGfIe65a4Net7LmmXPBrR5w+/Fa9grT0KL+nzyF1xQ+JDGriK/y60xpgYBXDbsJpBJHIpe17XEmnHkBR1HeLyynupHZkQTYAKXyRLsY1a3f9k1dtnSoJj5ZGIGB5r/AzE6ueKMp2SD3ehcqJJJzwrIZCYb7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dk2G5NsW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747210035; c=relaxed/simple;
+	bh=fOEZFM2FyPnab4TgEDY8lrYsnLTj0SuNcr34p3JVdik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjzoCwK2PIzfUTRmC4ilvFkunkv6awSsnLctO3IGt8P4oyHG2J+0eOA4UAc+U2Dgg7qpEgDHTPrihlcyEXziqpDnLTAPmghqqRYa/5tAuSIgHFnavHJr6EFz7D/FGoKbK8AbDavSD5e7dGfcqYLSzsQdqsdW7YEikpphV6A3HXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kC91pTGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dk2G5NsW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FDCC4CEF1;
-	Wed, 14 May 2025 08:07:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kC91pTGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4190FC4CEF2;
+	Wed, 14 May 2025 08:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210031;
-	bh=atq4OyunGhqoNfgvwaQn9WsZWeXNxlUETXtkiRCcoKU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dk2G5NsWaWPX2GuVGxH0z8BjZtgXiGG854Vji5wK12Gb8ewT/FlY01rIuUNb2U28p
-	 /7MliM2imLmkkQn2kge7KDHqjAhJSeJ2DCoU0cMBYRj3RCXvCtBUneeVJ57v2js5b0
-	 tgU3Yg66mEnke21LlqIGQr/aTL1PuJyc85a2dG+yUL4TrQQSQdUTSGDu6Pyq2GWnMP
-	 76TKlxGc3b4XFQdSb7Yxg3jqmAI45kn5PZLa8fu84sAqGfc1ixEKe8wASnzDlLWKzl
-	 eGmN03/JeR2SpY79OnU02f5olnOsUZDMni4ZLl4WQ9QB0I+usncU2yUBhmttzGnlJX
-	 QjwNoJ5LOcHtA==
-Message-ID: <ec74ae4e-7fd6-45e6-a5c0-4b98cc97d6e0@kernel.org>
-Date: Wed, 14 May 2025 10:07:08 +0200
+	s=k20201202; t=1747210034;
+	bh=fOEZFM2FyPnab4TgEDY8lrYsnLTj0SuNcr34p3JVdik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kC91pTGhB2njr5VNoOkir8Gc5DhgyU3qcb00RmqUp17fIvZUAQuXZpVZUJLrJmMwV
+	 Asr0jn30tAYTcuDhrggfk4PRBAtPo1DI/qECLY0gbi68TBFlpJYl9Uv7JgVhKcbxx4
+	 MrWIsN+bXx4dNFVCBTB22t5aHciF4JGPm4GpMwgR1NUsPwK+wInYII2EPmcu7jNckj
+	 g2TZTTpZW3zcvXDC0/EaQLagFzA5Wj4RzaFij96/e8Vk1u3bg1nHnP9u7XGLpjPDEL
+	 M8Is7OMW80/rv9oH2ijItbxvo2cvnRa4AsKfE8Rt9WBioR9XkbOLHLxngJUfqamQL0
+	 Zj8bVbw/bVVvA==
+Date: Wed, 14 May 2025 10:07:11 +0200
+From: Antoine Tenart <atenart@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
+	David Zage <david.zage@intel.com>, John Stultz <jstultz@google.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
+	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt Kanzenbach <kurt@linutronix.de>, 
+	Nam Cao <namcao@linutronix.de>, Alex Gieringer <gieri@linutronix.de>
+Subject: Re: [patch 26/26] timekeeping: Provide interface to control
+ independent PTP clocks
+Message-ID: <htnwor46q3435pddkafm7flmx4m2bs4553gq3mx4jzevtfgg2l@h4abniqo4dzf>
+References: <20250513144615.252881431@linutronix.de>
+ <20250513145138.212062332@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable configs for MediaTek Genio EVK
- boards
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <20250513-genio-defconfig-v1-1-c3862f91b6b2@collabora.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250513-genio-defconfig-v1-1-c3862f91b6b2@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513145138.212062332@linutronix.de>
 
-On 13/05/2025 22:59, Nícolas F. R. A. Prado wrote:
-> Enable the missing configs to get all devices on the MediaTek Genio
-> 1200, 700, 510 and 350 EVK boards probing, as indicated by the DT
-> kselftest.
+On Tue, May 13, 2025 at 05:13:44PM +0200, Thomas Gleixner wrote:
+> Independent PTP clocks are disabled by default and attempts to access them
+> fail.
 > 
-> This includes support for:
+> Provide an interface to enable/disable them at run-time.
 > 
-> Genio 1200/700/510/350:
-> * MT6359/MT6357 PMICs Auxiliary ADC
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  Documentation/ABI/stable/sysfs-kernel-time-ptp |    6 +
+>  kernel/time/timekeeping.c                      |  125 +++++++++++++++++++++++++
+>  2 files changed, 131 insertions(+)
 > 
-> Genio 1200/700/510:
-> * MDP3 (video scaling and color space conversion IP block)
-> * ITE IT5205 Type-C USB Alternate Mode Passive MUX
-> * Himax HX8279 controller based KD070FHFID078 DSI panel
-> 
-> Genio 700/510:
-> * Richtek RT1715 USB Type-C PD Controller
-> 
-> Genio 1200:
-> * MediaTek PCIe PHY
-> * Mediatek MT6360 USB Type-C Port Controller
-> 
-> Genio 350:
-> * STARTEK KD070FHFID015 DSI panel
-> * MediaTek UART DMA controller (APDMA)
-> 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-kernel-time-ptp
+> @@ -0,0 +1,6 @@
+> +What:		/sys/kernel/time/ptp/<ID>/enable
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The path added below is /sys/kernel/time/ptp_clocks/<ID>/enable.
 
-Best regards,
-Krzysztof
+> +Date:		May 2025
+> +Contact:	Thomas Gleixner <tglx@linutronix.de>
+> +Description:
+> +		Controls the enablement of independent PTP clock
+> +		timekeepers.
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/sched/loadavg.h>
+>  #include <linux/sched/clock.h>
+>  #include <linux/syscore_ops.h>
+> +#include <linux/sysfs.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/time.h>
+> @@ -2900,6 +2901,130 @@ const struct k_clock clock_ptp = {
+>  	.clock_adj		= ptp_clock_adj,
+>  };
+>  
+> +static void ptp_clock_enable(unsigned int id)
+> +{
+> +	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
+> +	struct tk_data *tkd = ptp_get_tk_data(id);
+> +	struct timekeeper *tks = &tkd->shadow_timekeeper;
+> +
+> +	/* Prevent the core timekeeper from changing. */
+> +	guard(raw_spinlock_irq)(&tk_core.lock);
+> +
+> +	/*
+> +	 * Setup the PTP clock assuming that the raw core timekeeper clock
+> +	 * frequency conversion is close enough. PTP userspace has to
+> +	 * adjust for the deviation via clock_adjtime(2).
+> +	 */
+> +	guard(raw_spinlock_nested)(&tkd->lock);
+> +
+> +	/* Remove leftovers of a previous registration */
+> +	memset(tks, 0, sizeof(*tks));
+> +	/* Restore the timekeeper id */
+> +	tks->id = tkd->timekeeper.id;
+> +	/* Setup the timekeeper based on the current system clocksource */
+> +	tk_setup_internals(tks, tkr_raw->clock);
+> +
+> +	/* Mark it valid and set it live */
+> +	tks->clock_valid = true;
+> +	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
+> +}
+> +
+> +static void ptp_clock_disable(unsigned int id)
+> +{
+> +	struct tk_data *tkd = ptp_get_tk_data(id);
+> +
+> +	guard(raw_spinlock_irq)(&tkd->lock);
+> +	tkd->shadow_timekeeper.clock_valid = false;
+> +	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
+> +}
+> +
+> +static DEFINE_MUTEX(ptp_clock_mutex);
+> +
+> +static ssize_t ptp_clock_enable_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +				      const char *buf, size_t count)
+> +{
+> +	/* Lazy atoi() as name is "0..7" */
+> +	int id = kobj->name[0] & 0x7;
+> +	bool enable;
+> +
+> +	if (!capable(CAP_SYS_TIME))
+> +		return -EPERM;
+> +
+> +	if (kstrtobool(buf, &enable) < 0)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&ptp_clock_mutex);
+> +	if (enable == test_bit(id, &ptp_timekeepers))
+> +		return count;
+> +
+> +	if (enable) {
+> +		ptp_clock_enable(CLOCK_PTP + id);
+> +		set_bit(id, &ptp_timekeepers);
+> +	} else {
+> +		ptp_clock_disable(CLOCK_PTP + id);
+> +		clear_bit(id, &ptp_timekeepers);
+> +	}
+> +	return count;
+> +}
+> +
+> +static ssize_t ptp_clock_enable_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+> +{
+> +	unsigned long active = READ_ONCE(ptp_timekeepers);
+> +	/* Lazy atoi() as name is "0..7" */
+> +	int id = kobj->name[0] & 0x7;
+> +
+> +	return sysfs_emit(buf, "%d\n", test_bit(id, &active));
+> +}
+> +
+> +static struct kobj_attribute ptp_clock_enable_attr = __ATTR_RW(ptp_clock_enable);
+> +
+> +static struct attribute *ptp_clock_enable_attrs[] = {
+> +	&ptp_clock_enable_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group ptp_clock_enable_attr_group = {
+> +	.attrs = ptp_clock_enable_attrs,
+> +};
+> +
+> +static int __init tk_ptp_sysfs_init(void)
+> +{
+> +	struct kobject *ptpo, *tko = kobject_create_and_add("time", kernel_kobj);
+> +
+> +	if (!tko) {
+> +		pr_warn("Unable to create /sys/kernel/time/. POSIX PTP clocks disabled.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ptpo = kobject_create_and_add("ptp_clocks", tko);
+> +	if (!ptpo) {
+> +		pr_warn("Unable to create /sys/kernel/time/ptp_clocks. POSIX PTP clocks disabled.\n");
+> +		kobject_put(tko);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++) {
+> +		char id[2] = { [0] = '0' + (i - TIMEKEEPER_PTP), };
+> +		struct kobject *clk = kobject_create_and_add(id, ptpo);
+> +
+> +		if (!clk) {
+> +			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d\n",
+> +				i - TIMEKEEPER_PTP);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		int ret = sysfs_create_group(clk, &ptp_clock_enable_attr_group);
+> +
+> +		if (ret) {
+> +			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d/enable\n",
+> +				i - TIMEKEEPER_PTP);
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +late_initcall(tk_ptp_sysfs_init);
+> +
+>  static __init void tk_ptp_setup(void)
+>  {
+>  	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++)
+> 
+> 
