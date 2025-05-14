@@ -1,135 +1,280 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF1B27703E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D2227FB3A;
+	Wed, 14 May 2025 17:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747242812; cv=none; b=HSfKzvDR7tVN8qIrVCBkOxxgtipiI5nJFZgdP2fvOtb/RmS+Mj9HoYsMlUhRQqiwyAQ5iJk+YFRsP/Al5RsF5TCvQamuF4WXQXQxurONKQhiChZWzFimi6WwH+ZT8LqC9OEMu7xTvZt6uJkj909hUOG438hFdHmDM1fbGa9I0q8=
+	t=1747242821; cv=none; b=outFewa7EXQr2i79UDHEUenrtRlRdW+I0CKNJEoo55ebCSNy9GcR3P9Rvi0uyKXMCaSuJvLr2Ghp7Fbbno1+X3jDsat4Ikk4E94QRomqYMvGXDR8dk6JuFyGYLZoWKHM3kZjZfCsNYVbdfgx5H4u34mxMHekhG5C1SHncN7C05o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747242812; c=relaxed/simple;
-	bh=1W3PcA8bCbg+zejQozgUTRildrayKUBNtPVVXezDAYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZASOovJ0Bp4vDGoZPmap1l0IElR/cLX1rYXo8GWxSM5yZKhdkHa8citK6cEn9YPEGyrZHg9o1xpZpL/1pfzNhK6QRcXz/Mhd/O5k0F3LJs0PvYntJjjU585qAm5I6rSKJSLWdGc9B17s+E7RotU3/Snmtfbk5Y5R90RIGjw6Kac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uyYA6A9q; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1747242821; c=relaxed/simple;
+	bh=Ujrh3uSOn5VinB5VvrwG1pHqcGvMo7e5QbA7xYeJtBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gAlqcM1/UTAiy2FzOSpKCnATqetCJVelV+eH5x98/ivoHJbeodr6YY4x4nMe6vUN+wQnLfQ2L/psbim2vwchVZPaEQp65P03/hE9+5NBwj4uufM4hDSruO35y3M3D4XaiZTj1znl4mnLu6yJ6U2sRCOH5JKCuKstqACIeF1cZ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VQQraAzy; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uyYA6A9q"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30ac24ede15so138889a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:13:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQQraAzy"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3da8e1259dfso37845ab.3;
+        Wed, 14 May 2025 10:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747242809; x=1747847609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DFmrqNw23zFWte6KPawqZJqj+5gefj3fndfHRw4esMo=;
-        b=uyYA6A9qnA2zDAHWZMdgeI1xsqB0b6wj4itzplkezunrCXZXbnZeH3r7n8VIjyUfZz
-         RIyA5uv2Z5xXrZGw5gHrrDd2yePHT6OQBnMJevPsksLb2cRzaFmTiJFlA5TcMe7rN6OB
-         F/TSYXerp3l+0Qk0aqIkidYOZlprU1935pG8tH5nhcGfmUU8wMc9bR0g1XRG7HDCxWZd
-         DkYRJv45mayKyNrdLQv+Z83iWUhMcaHUFgBdZ1eprTV7ERSfyQFqkCXIMCWTT0PMm5gF
-         HDH/i3uejqmDds8T2FF1WM+ixqu15jv/57R6aRm/p5L+LREVzuPmgVJDN1FnBARdn+RU
-         HqEQ==
+        d=gmail.com; s=20230601; t=1747242816; x=1747847616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YfVONBHVtRTPlHRwr1fa3nrvIurV0bZBwrMg9aBjdsY=;
+        b=VQQraAzyI83zqryQgNE+yt81zussiMEJsJnaqdXVVil94zH9aCIuYWbmgEuWeYsKPM
+         ndKxFP+i35Myzk2fmnFFZBziQXkiTnpfqW6RGxHiMqcKUp3grvP3sTF7EFvaV9FnGCn7
+         6PqMJWCFXKYmm7YBQra7Wn+y6RB9xKZHcYC+HY4oKqy9xOFTBu5Wsiu0TQQVEnk2dHmG
+         J1c1Goqm6xV6XAZsN8VMUlipl7kFfrLeGpw2rxijHIyywoutnhBISxrIv3vAvXyx31vY
+         mX+DpeTnzMVIkAOhb6p8p/XC0h2dsGBNflgOnEYalNJB1VmogtQLssCxCGl6VutexzSj
+         QA1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747242809; x=1747847609;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DFmrqNw23zFWte6KPawqZJqj+5gefj3fndfHRw4esMo=;
-        b=nM2I0npTD+RMVPyIkbrI9DZGWZXJ0n1vMSv2fl6BDs2FSlghYQ/3s6IXcsbbHSzxON
-         BlrSqwOl2w0h1E5J8+rfRTvLhK/3HrZXm+9O2e1+V4eeuO0RcwY3KEiqs48iHRn6fOOH
-         Ppi+Ez8a9eWJvOuz6xebZxhiVxy1ZNh7Jld638f6MRQ6zYr9IOOUCfmt71AI3Y1prF4P
-         +AN89F4AHxnSaqBEI/4JSbkTSV+XmaV4ZBNxA7YqR9W16Qe7QYcJfjH7BECZ0VXjKbBt
-         SVblPG2Z4IaCdxs0E+zdIxluxKIJrbWXkzn/gvjXbCXqARq0ShjDn+xRQcmekCEjb1p1
-         D7SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIQR89wqoAcp4Bai/JK3+zPOXIEAUQNv7LY+XIIUUuuu4utRJSTZQ5vXeXxcONa7myRuDon2XEfOeVbto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrmG7gFp7MinsiYgxVEB5SaRA7qjt5+ffZcpN+FM2tMFNISsQC
-	4gq2S+hZMDsZRHhijFmd54CuFPFPhAfwiEYtXXO4nCM6LNPf0r5+sbCXmSfwYP0=
-X-Gm-Gg: ASbGnct20W1k9xzk6p0YFjnNDwR6fzkMyoHh1VsZLRbO1RE/n6u+zSDt9P+9FoU94a/
-	xQt/jVxG9HdrInsX4Gx6TNooXvsafOCaij7vnCy1aLCNfUMoD8A2HOc+vuIoaJAon9cKeYwJOnR
-	qPSp2ClGSOFPay5ORIj8xpTF0wJ9MVlMMEV2XCQs74TB3Ug+fXM9yvBsVbwh8lHrJG3hw/BcqBC
-	2ilfYyypX/OD/SytdgDmWF+3ObwBijkDv4kpl1M2H7k+hipQv3tHV5/roTwoPDbvRQ8PUPFYFyu
-	9TfMIjIWaEPWugGk1MilUTkbxWsP/R/ifP3gt2BaSuDBMv4kvSO2mBhlhEFs6+qLxsEbcA==
-X-Google-Smtp-Source: AGHT+IHEz09rrp9A5xMq+F70RrKD5NQcRcTQkwXPv03ntDr7BNJbuVIz4Tc+xYk2wF0okCEF9ptrSA==
-X-Received: by 2002:a17:90b:520f:b0:306:b65e:13a8 with SMTP id 98e67ed59e1d1-30e2e5ba382mr6771219a91.8.1747242809252;
-        Wed, 14 May 2025 10:13:29 -0700 (PDT)
-Received: from abrestic.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e334018e0sm1953256a91.2.2025.05.14.10.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 10:13:28 -0700 (PDT)
-From: Andrew Bresticker <abrestic@rivosinc.com>
-To: Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Bresticker <abrestic@rivosinc.com>
-Subject: [PATCH] irqchip/riscv-imsic: Start local sync timer on correct CPU
-Date: Wed, 14 May 2025 10:13:20 -0700
-Message-ID: <20250514171320.3494917-1-abrestic@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1747242816; x=1747847616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YfVONBHVtRTPlHRwr1fa3nrvIurV0bZBwrMg9aBjdsY=;
+        b=Scn0btvhna8MF0NMUc3QdRNzTg4uAsJuiN2e4ssPFO+S64Wh1KEnHUBvtDIQ5ej9pa
+         Z28Xcep0m/6wRTbGUF5TqRK/SvP0SmDB5xp/ayK9kBbaddzo443CMWy8uDR/Aw5BHo9c
+         bNFy+uagRXQAi1wxN9RmzN+50dm9Mz4gHEZ2TXwiVlQAUe4TZvG2GCxnQJIxNpJ77BZP
+         oDljSEwlP1AYdSFs8aBM1kXfiRTFF1wvJvZXPnYgi8aMpimfkwD7YmlVoo/xXlhSXYG6
+         QdjR0seqq7JYkgrExDWCmPQQaeXJMII6GNe8bzxRdZLBl41oyHok80kV/t9qT75/w0Do
+         Hh7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVkkjcRYnmhSwAFPY0xSKwdZhn4fnZwG/2XpkaYo5Q5sie/k4Ynd5Vs3KcCkW/w0bt0mO2g2BswUdvZQu7U@vger.kernel.org, AJvYcCWrVZUY0f9ghyemhU6ao2yGaMZdEJNECuJUb6EKI+7WTKlnSZzYJLd7sza2sSefEJPUC2P9iz39LUBQVTW1@vger.kernel.org, AJvYcCXB/1pebBEAtHl0gb51pbjCLMDTErTR4sNxFILu0cMSobOg5yjM0ZY2Uenxbeu/HZiCtMOgeaodwLoQR3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxql8zgyBgocUY10CfHxnG4ScKjQ+JA9MzpmR+tTEZlnkcSX2rO
+	UMelNhSbmMe/OHVRt/dmPP2lJTc8lHUvo7bVCy7uT+inTeRU6YadYPjPQBGSgnt+lsMciH506xA
+	zoVF/Qy9YGHjU1lBb5uM9bjNbcuQ=
+X-Gm-Gg: ASbGnctgc7suV4UM4YvEUTQvWoTyI7Dghh26EfTz1orAWDbHPkioPIknvLMWwAAIRDN
+	piTGHYGSCKvjZ6INAgMXasnT8+z7zFjDitO8mAMhfVC844GEzsU59AWMoWGECIIRKTSMR9EpQvN
+	Xpc5othSVycwojpAMiqKuU9QNSOfxdgm1Cx8sVxb4uurqRRFjSSsYCz7K3K/sUgto=
+X-Google-Smtp-Source: AGHT+IGdnAsVW3kt1rSy4GKPI8bMIOEfIFvsaubQbJQ7eRiduk9GI/aaU1w3nrEUXuN5lOaJKQ2zh99tpo1qR+67hEs=
+X-Received: by 2002:a05:6e02:1707:b0:3db:72f7:d7b3 with SMTP id
+ e9e14a558f8ab-3db72f7dc1dmr29424625ab.4.1747242815480; Wed, 14 May 2025
+ 10:13:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250514170118.40555-1-robdclark@gmail.com>
+In-Reply-To: <20250514170118.40555-1-robdclark@gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 14 May 2025 10:13:22 -0700
+X-Gm-Features: AX0GCFvpGGezYiytY2MOS6dtC60ihdSd-WE1u91XYjWUz5Y9tDHJIetJpvazfio
+Message-ID: <CAF6AEGvEsB9F4=qnSvQkiAGdn=60ae-uGLbZVf2qFwfGof2Nkw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/40] drm/msm: sparse / "VM_BIND" support
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Christopher Snowhill <chris@kode54.net>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Eugene Lepshy <fekz115@gmail.com>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Jonathan Marek <jonathan@marek.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linaro-mm-sig@lists.linaro.org>, 
+	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linux-media@vger.kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Nicolin Chen <nicolinc@nvidia.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Sean Paul <sean@poorly.run>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When starting the local sync timer to synchronize the state of a remote
-CPU it should be added on the CPU to be synchronized, not the initiating
-CPU. This results in interrupt delivery being delayed until the timer
-eventually runs (due to another mask/unmask/migrate operation) on the
-target CPU.
+hmm, looks like git-send-email died with a TLS error a quarter of the
+way thru this series.. I'll try to resend later
 
-Fixes: 0f67911e821c ("irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector")
-Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
----
- drivers/irqchip/irq-riscv-imsic-state.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+BR,
+-R
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index bdf5cd2037f2..62f76950a113 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.c
-+++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -208,17 +208,17 @@ static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
- }
- 
- #ifdef CONFIG_SMP
--static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
-+static void __imsic_local_timer_start(struct imsic_local_priv *lpriv, unsigned int cpu)
- {
- 	lockdep_assert_held(&lpriv->lock);
- 
- 	if (!timer_pending(&lpriv->timer)) {
- 		lpriv->timer.expires = jiffies + 1;
--		add_timer_on(&lpriv->timer, smp_processor_id());
-+		add_timer_on(&lpriv->timer, cpu);
- 	}
- }
- #else
--static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
-+static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv, unsigned int cpu)
- {
- }
- #endif
-@@ -233,7 +233,7 @@ void imsic_local_sync_all(bool force_all)
- 	if (force_all)
- 		bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
- 	if (!__imsic_local_sync(lpriv))
--		__imsic_local_timer_start(lpriv);
-+		__imsic_local_timer_start(lpriv, smp_processor_id());
- 
- 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
- }
-@@ -278,7 +278,7 @@ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu
- 				return;
- 		}
- 
--		__imsic_local_timer_start(lpriv);
-+		__imsic_local_timer_start(lpriv, cpu);
- 	}
- }
- #else
--- 
-2.43.0
-
+On Wed, May 14, 2025 at 10:03=E2=80=AFAM Rob Clark <robdclark@gmail.com> wr=
+ote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Conversion to DRM GPU VA Manager[1], and adding support for Vulkan Sparse
+> Memory[2] in the form of:
+>
+> 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP_MAP/
+>    MAP_NULL/UNMAP commands
+>
+> 2. A new VM_BIND ioctl to allow submitting batches of one or more
+>    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+>
+> I did not implement support for synchronous VM_BIND commands.  Since
+> userspace could just immediately wait for the `SUBMIT` to complete, I don=
+'t
+> think we need this extra complexity in the kernel.  Synchronous/immediate
+> VM_BIND operations could be implemented with a 2nd VM_BIND submitqueue.
+>
+> The corresponding mesa MR: https://gitlab.freedesktop.org/mesa/mesa/-/mer=
+ge_requests/32533
+>
+> Changes in v4:
+> - Various locking/etc fixes
+> - Optimize the pgtable preallocation.  If userspace sorts the VM_BIND ops
+>   then the kernel detects ops that fall into the same 2MB last level PTD
+>   to avoid duplicate page preallocation.
+> - Add way to throttle pushing jobs to the scheduler, to cap the amount of
+>   potentially temporary prealloc'd pgtable pages.
+> - Add vm_log to devcoredump for debugging.  If the vm_log_shift module
+>   param is set, keep a log of the last 1<<vm_log_shift VM updates for
+>   easier debugging of faults/crashes.
+> - Link to v3: https://lore.kernel.org/all/20250428205619.227835-1-robdcla=
+rk@gmail.com/
+>
+> Changes in v3:
+> - Switched to seperate VM_BIND ioctl.  This makes the UABI a bit
+>   cleaner, but OTOH the userspace code was cleaner when the end result
+>   of either type of VkQueue lead to the same ioctl.  So I'm a bit on
+>   the fence.
+> - Switched to doing the gpuvm bookkeeping synchronously, and only
+>   deferring the pgtable updates.  This avoids needing to hold any resv
+>   locks in the fence signaling path, resolving the last shrinker related
+>   lockdep complaints.  OTOH it means userspace can trigger invalid
+>   pgtable updates with multiple VM_BIND queues.  In this case, we ensure
+>   that unmaps happen completely (to prevent userspace from using this to
+>   access free'd pages), mark the context as unusable, and move on with
+>   life.
+> - Link to v2: https://lore.kernel.org/all/20250319145425.51935-1-robdclar=
+k@gmail.com/
+>
+> Changes in v2:
+> - Dropped Bibek Kumar Patro's arm-smmu patches[3], which have since been
+>   merged.
+> - Pre-allocate all the things, and drop HACK patch which disabled shrinke=
+r.
+>   This includes ensuring that vm_bo objects are allocated up front, pre-
+>   allocating VMA objects, and pre-allocating pages used for pgtable updat=
+es.
+>   The latter utilizes io_pgtable_cfg callbacks for pgtable alloc/free, th=
+at
+>   were initially added for panthor.
+> - Add back support for BO dumping for devcoredump.
+> - Link to v1 (RFC): https://lore.kernel.org/dri-devel/20241207161651.4105=
+56-1-robdclark@gmail.com/T/#t
+>
+> [1] https://www.kernel.org/doc/html/next/gpu/drm-mm.html#drm-gpuvm
+> [2] https://docs.vulkan.org/spec/latest/chapters/sparsemem.html
+> [3] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=3D=
+909700
+>
+> Rob Clark (40):
+>   drm/gpuvm: Don't require obj lock in destructor path
+>   drm/gpuvm: Allow VAs to hold soft reference to BOs
+>   drm/gem: Add ww_acquire_ctx support to drm_gem_lru_scan()
+>   drm/sched: Add enqueue credit limit
+>   iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
+>   drm/msm: Rename msm_file_private -> msm_context
+>   drm/msm: Improve msm_context comments
+>   drm/msm: Rename msm_gem_address_space -> msm_gem_vm
+>   drm/msm: Remove vram carveout support
+>   drm/msm: Collapse vma allocation and initialization
+>   drm/msm: Collapse vma close and delete
+>   drm/msm: Don't close VMAs on purge
+>   drm/msm: drm_gpuvm conversion
+>   drm/msm: Convert vm locking
+>   drm/msm: Use drm_gpuvm types more
+>   drm/msm: Split out helper to get iommu prot flags
+>   drm/msm: Add mmu support for non-zero offset
+>   drm/msm: Add PRR support
+>   drm/msm: Rename msm_gem_vma_purge() -> _unmap()
+>   drm/msm: Drop queued submits on lastclose()
+>   drm/msm: Lazily create context VM
+>   drm/msm: Add opt-in for VM_BIND
+>   drm/msm: Mark VM as unusable on GPU hangs
+>   drm/msm: Add _NO_SHARE flag
+>   drm/msm: Crashdump prep for sparse mappings
+>   drm/msm: rd dumping prep for sparse mappings
+>   drm/msm: Crashdec support for sparse
+>   drm/msm: rd dumping support for sparse
+>   drm/msm: Extract out syncobj helpers
+>   drm/msm: Use DMA_RESV_USAGE_BOOKKEEP/KERNEL
+>   drm/msm: Add VM_BIND submitqueue
+>   drm/msm: Support IO_PGTABLE_QUIRK_NO_WARN_ON
+>   drm/msm: Support pgtable preallocation
+>   drm/msm: Split out map/unmap ops
+>   drm/msm: Add VM_BIND ioctl
+>   drm/msm: Add VM logging for VM_BIND updates
+>   drm/msm: Add VMA unmap reason
+>   drm/msm: Add mmu prealloc tracepoint
+>   drm/msm: use trylock for debugfs
+>   drm/msm: Bump UAPI version
+>
+>  drivers/gpu/drm/drm_gem.c                     |   14 +-
+>  drivers/gpu/drm/drm_gpuvm.c                   |   15 +-
+>  drivers/gpu/drm/msm/Kconfig                   |    1 +
+>  drivers/gpu/drm/msm/Makefile                  |    1 +
+>  drivers/gpu/drm/msm/adreno/a2xx_gpu.c         |   25 +-
+>  drivers/gpu/drm/msm/adreno/a2xx_gpummu.c      |    5 +-
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |   17 +-
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |   17 +-
+>  drivers/gpu/drm/msm/adreno/a5xx_debugfs.c     |    4 +-
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |   22 +-
+>  drivers/gpu/drm/msm/adreno/a5xx_power.c       |    2 +-
+>  drivers/gpu/drm/msm/adreno/a5xx_preempt.c     |   10 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |   32 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h         |    2 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |   49 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c   |    6 +-
+>  drivers/gpu/drm/msm/adreno/a6xx_preempt.c     |   10 +-
+>  drivers/gpu/drm/msm/adreno/adreno_device.c    |    4 -
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c       |   99 +-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   23 +-
+>  .../drm/msm/disp/dpu1/dpu_encoder_phys_wb.c   |   14 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c   |   18 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_formats.h   |    2 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   18 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     |   14 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h     |    4 +-
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_crtc.c     |    6 +-
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c      |   28 +-
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_plane.c    |   12 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c     |    4 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      |   19 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |   12 +-
+>  drivers/gpu/drm/msm/dsi/dsi_host.c            |   14 +-
+>  drivers/gpu/drm/msm/msm_drv.c                 |  184 +--
+>  drivers/gpu/drm/msm/msm_drv.h                 |   35 +-
+>  drivers/gpu/drm/msm/msm_fb.c                  |   18 +-
+>  drivers/gpu/drm/msm/msm_fbdev.c               |    2 +-
+>  drivers/gpu/drm/msm/msm_gem.c                 |  494 +++---
+>  drivers/gpu/drm/msm/msm_gem.h                 |  247 ++-
+>  drivers/gpu/drm/msm/msm_gem_prime.c           |   15 +
+>  drivers/gpu/drm/msm/msm_gem_shrinker.c        |  104 +-
+>  drivers/gpu/drm/msm/msm_gem_submit.c          |  295 ++--
+>  drivers/gpu/drm/msm/msm_gem_vma.c             | 1471 ++++++++++++++++-
+>  drivers/gpu/drm/msm/msm_gpu.c                 |  214 ++-
+>  drivers/gpu/drm/msm/msm_gpu.h                 |  144 +-
+>  drivers/gpu/drm/msm/msm_gpu_trace.h           |   14 +
+>  drivers/gpu/drm/msm/msm_iommu.c               |  302 +++-
+>  drivers/gpu/drm/msm/msm_kms.c                 |   18 +-
+>  drivers/gpu/drm/msm/msm_kms.h                 |    2 +-
+>  drivers/gpu/drm/msm/msm_mmu.h                 |   38 +-
+>  drivers/gpu/drm/msm/msm_rd.c                  |   62 +-
+>  drivers/gpu/drm/msm/msm_ringbuffer.c          |   10 +-
+>  drivers/gpu/drm/msm/msm_submitqueue.c         |   96 +-
+>  drivers/gpu/drm/msm/msm_syncobj.c             |  172 ++
+>  drivers/gpu/drm/msm/msm_syncobj.h             |   37 +
+>  drivers/gpu/drm/scheduler/sched_entity.c      |   16 +-
+>  drivers/gpu/drm/scheduler/sched_main.c        |    3 +
+>  drivers/iommu/io-pgtable-arm.c                |   27 +-
+>  include/drm/drm_gem.h                         |   10 +-
+>  include/drm/drm_gpuvm.h                       |   12 +-
+>  include/drm/gpu_scheduler.h                   |   13 +-
+>  include/linux/io-pgtable.h                    |    8 +
+>  include/uapi/drm/msm_drm.h                    |  149 +-
+>  63 files changed, 3484 insertions(+), 1251 deletions(-)
+>  create mode 100644 drivers/gpu/drm/msm/msm_syncobj.c
+>  create mode 100644 drivers/gpu/drm/msm/msm_syncobj.h
+>
+> --
+> 2.49.0
+>
