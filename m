@@ -1,216 +1,127 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9B325DAE1
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3877325DD01
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216430; cv=none; b=HZXTmvB5muErPsUV51vnRKI1J5M6sY1cvtYug4RNagPm9RMr2QYQ61ltiM8IyKw0opERhwikcbO8DjwZ8CxBdIMy82nS0pP+N5ezguglT7E2JcKO3Ph7WbvsWjjPKkeZ2FU9DGoD69nNvzP93TJFuvIWxd0TOkzBO7CK2BeRngQ=
+	t=1747216447; cv=none; b=iXLZZohTWGz8eUk4LxLbB1MXYHaTC2WmT4LdHRjHVc0BfDgR13Vg/MzBDI/8QkJqlUCqcz0Seq0JbKmihSYDtIkl8ntjbMi6gIoRBPuZ9AYF8O8xKgeK/rwXWTTjWi5ZpkRuVSl6FE4X+3W10/y24K7tK4Bi00K2MjSVT0u8R3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216430; c=relaxed/simple;
-	bh=vR0UQoO2XxwJQek/TZEpTck1zQ7UkY4WavIhIGGCiHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=pAB5bNJKE0/E2E7KZZO9S9zJEB4quhDEF73LAVrl21yXXLlzl8wJ5hORphL8/17wFbFPnkpQS7r5h3qGSXnbQr42//astYzRzy+2uHUU/EGjV5gCTchA/1n4TeZElOTlVcwvKtb+NVnXZPxT9k9ah841UgJtDUl18jWgrxkMMM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cPgcvyY/; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cPgcvyY/"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250514095341epoutp03aa3f865d4639f33e9682bc0432d1cbcb~-XBQDm6xn1552515525epoutp03b
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:53:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250514095341epoutp03aa3f865d4639f33e9682bc0432d1cbcb~-XBQDm6xn1552515525epoutp03b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747216421;
-	bh=M3b1Psw+JucOaMEaVCgfFq85fzdpxooWfq61IOT0Tpk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cPgcvyY/UF3i4/R78cS6a6Nc4BjrYoyUzGDMr+hJ2BKmIPQ+JkAlmlYWYw0f8FbEh
-	 McoPcvXjd4wFGl9RLgakNjj4XXtnBPEDK+TV3UOHt1RBwvR9UsvfuVi4nRybsM/Jyt
-	 S1uHlyZ9K5HNWQ712ilJ2bbtDaA4ZwSuLQfPG7MI=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250514095341epcas2p4a56583edd09d7c993c68efd8667ab8d3~-XBPxewzu0188301883epcas2p4R;
-	Wed, 14 May 2025 09:53:41 +0000 (GMT)
-Received: from epcas2p2.samsung.com (unknown [182.195.36.88]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4Zy7vm5x42z3hhTG; Wed, 14 May
-	2025 09:53:40 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250514095340epcas2p2c58454d8e0e27f46d5a71475f22e614e~-XBO7Nqho0657806578epcas2p2d;
-	Wed, 14 May 2025 09:53:40 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250514095340epsmtrp19c55ac68ac736c446cac4b9212cf74d2~-XBO6ce_J1996219962epsmtrp1Q;
-	Wed, 14 May 2025 09:53:40 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-47-68246824665f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	59.AB.08766.42864286; Wed, 14 May 2025 18:53:40 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.126]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250514095339epsmtip17dca7478570878620e0152c719068ba8~-XBOreiFl3233232332epsmtip1X;
-	Wed, 14 May 2025 09:53:39 +0000 (GMT)
-From: Sangwook Shin <sw617.shin@samsung.com>
-To: krzk@kernel.org, alim.akhtar@samsung.com, wim@linux-watchdog.org,
-	linux@roeck-us.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Sangwook Shin
-	<sw617.shin@samsung.com>, Kyunghwan Seo <khwan.seo@samsung.com>
-Subject: [PATCH v2 3/5] watchdog: s3c2410_wdt: Increase max timeout value of
- watchdog
-Date: Wed, 14 May 2025 18:42:18 +0900
-Message-Id: <20250514094220.1561378-4-sw617.shin@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250514094220.1561378-1-sw617.shin@samsung.com>
+	s=arc-20240116; t=1747216447; c=relaxed/simple;
+	bh=+ZMUYISTfTwcrj64ss9VlyTDNjFku1NDAD9TnAW5WL0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ujPjzq+R3qlJ9IR3O6aItiPwaEcV9eSO8lITFm3eU1oDed1tVvM/5DXCTi42QjLP2UMukY8TgENRqumSvxbdtc/B3FqoA5suihvvKwwzY0JqEBgP+eDAZlRWLndF5H5NeKdGwH0hfMyjML7Pywii+AIL14n0QB6cGErjK73tj7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 54E9rpkt092294
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 17:53:51 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
+ (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Wed, 14 May 2025
+ 17:53:51 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To:
+CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <alex@ghiti.fr>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
+        Ben Zong-You Xie <ben717@andestech.com>
+Subject: [PATCH v4 0/9] add Voyager board support
+Date: Wed, 14 May 2025 17:53:41 +0800
+Message-ID: <20250514095350.3765716-1-ben717@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsWy7bCSnK5KhkqGwcnVbBYP5m1js5jffonR
-	4vz5DewWmx5fY7W4vGsOm8WM8/uYLG6s28du8WThGSaLGYtPslk8fvmP2YHLY9OqTjaPlWvW
-	sHpsXlLvsfN7A7tH35ZVjB6fN8kFsEVx2aSk5mSWpRbp2yVwZXxqv8xYcF+l4vjkRsYGxity
-	XYycHBICJhKPdy9g62Lk4hAS2M0o8f3eWfYuRg6ghJTEu2eWEDXCEvdbjrBC1HxglPi4aj4r
-	SIJNQEdi+r/bLCC2iECcxLH2zcwgRcwCjxglrszrYQJJCAuESnx+c54dxGYRUJX4MXMtWJxX
-	wFZi/pxudogN8hIzL30HszkF7CTmtrSygRwhBFTTtN0DolxQ4uTMJ2C7mIHKm7fOZp7AKDAL
-	SWoWktQCRqZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBoa+luYNx+6oPeocYmTgY
-	DzFKcDArifBez1LOEOJNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbL
-	xMEp1cC0U2rHsWSjNU1LH6kG336/Y2mI9DV2FwXFBucFO1x/aP1+ue343HVhEy0EhEo+JliE
-	brT4tLNrgZKccU7Rnor6aPMiMV2p2PbLM1V+GUq4qLy8Fa3PN9fwW9bSqYsc9h88tu4xk3La
-	59rgOwefXTttH8RxZH9M+s5pAev+/lFLZWq259xwarmsX2TAtXlNcrkvEjTCWibXhx9dZPLf
-	J0Zz2te+S/nrDtg22r17scO/a8PcNUUnu5u9e5TPZ+3/0eLUynu5TDBo5YSXv5xZRN76fS/8
-	78nxpORLwrZH12bp3Mt74/rhe4uUj7rJo6l9cZ6+rsFHNT6bb4jlsXV4vbckt/vGEdbtnFds
-	y/qeCxopsRRnJBpqMRcVJwIADso1IewCAAA=
-X-CMS-MailID: 20250514095340epcas2p2c58454d8e0e27f46d5a71475f22e614e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,N
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250514095340epcas2p2c58454d8e0e27f46d5a71475f22e614e
-References: <20250514094220.1561378-1-sw617.shin@samsung.com>
-	<CGME20250514095340epcas2p2c58454d8e0e27f46d5a71475f22e614e@epcas2p2.samsung.com>
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 54E9rpkt092294
 
-Increase max_timeout value from 55s to 3664647s (1017h 57min 27s) with
-38400000 frequency system if the system has 32-bit WTCNT register.
+The Voyager is a 9.6” x 9.6” Micro ATX form factor development board
+including Andes QiLai SoC. This patch series adds minimal device tree
+files for the QiLai SoC and the Voyager board [1].
 
-cat /sys/devices/platform/10060000.watchdog_cl0/watchdog/watchdog0/max_timeout
-3664647
+Now only support basic uart drivers to boot up into a basic console. Other
+features will be added later.
 
-[    0.302473] s3c2410-wdt 10060000.watchdog_cl0: Heartbeat: count=1099394100000, timeout=3664647, freq=300000
-[    0.302479] s3c2410-wdt 10060000.watchdog_cl0: Heartbeat: timeout=3664647, divisor=256, count=1099394100000 (fff8feac)
-[    0.302510] s3c2410-wdt 10060000.watchdog_cl0: starting watchdog timer
-[    0.302722] s3c2410-wdt 10060000.watchdog_cl0: watchdog active, reset enabled, irq disabled
-
-If system has 32-bit WTCNT, add QUIRK_HAS_32BIT_MAXCNT to its quirk flags, then
-it will operation with 32-bit counter. If not, with 16-bit counter like previous.
-
-Signed-off-by: Sangwook Shin <sw617.shin@samsung.com>
-Signed-off-by: Kyunghwan Seo <khwan.seo@samsung.com>
+[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
 ---
- drivers/watchdog/s3c2410_wdt.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-index c6166d927155..1c7299deec5d 100644
---- a/drivers/watchdog/s3c2410_wdt.c
-+++ b/drivers/watchdog/s3c2410_wdt.c
-@@ -34,6 +34,7 @@
- #define S3C2410_WTCLRINT	0x0c
- 
- #define S3C2410_WTCNT_MAXCNT	0xffff
-+#define S3C2410_WTCNT_MAXCNT_32	0xffffffff
- 
- #define S3C2410_WTCON_RSTEN		BIT(0)
- #define S3C2410_WTCON_INTEN		BIT(2)
-@@ -119,6 +120,10 @@
-  * %QUIRK_HAS_DBGACK_BIT: WTCON register has DBGACK_MASK bit. Setting the
-  * DBGACK_MASK bit disables the watchdog outputs when the SoC is in debug mode.
-  * Debug mode is determined by the DBGACK CPU signal.
-+ *
-+ * %QUIRK_HAS_32BIT_MAXCNT: WTDAT and WTCNT are 32-bit registers. With these
-+ * 32-bit registers, larger values to be set, which means that larger timeouts
-+ * value can be set.
-  */
- #define QUIRK_HAS_WTCLRINT_REG			BIT(0)
- #define QUIRK_HAS_PMU_MASK_RESET		BIT(1)
-@@ -126,6 +131,7 @@
- #define QUIRK_HAS_PMU_AUTO_DISABLE		BIT(3)
- #define QUIRK_HAS_PMU_CNT_EN			BIT(4)
- #define QUIRK_HAS_DBGACK_BIT			BIT(5)
-+#define QUIRK_HAS_32BIT_MAXCNT			BIT(6)
- 
- /* These quirks require that we have a PMU register map */
- #define QUIRKS_HAVE_PMUREG \
-@@ -194,6 +200,7 @@ struct s3c2410_wdt {
- 	struct notifier_block	freq_transition;
- 	const struct s3c2410_wdt_variant *drv_data;
- 	struct regmap *pmureg;
-+	unsigned int		max_cnt;
- };
- 
- static const struct s3c2410_wdt_variant drv_data_s3c2410 = {
-@@ -379,7 +386,7 @@ static inline unsigned int s3c2410wdt_max_timeout(struct s3c2410_wdt *wdt)
- {
- 	const unsigned long freq = s3c2410wdt_get_freq(wdt);
- 
--	return S3C2410_WTCNT_MAXCNT / DIV_ROUND_UP(freq,
-+	return wdt->max_cnt / DIV_ROUND_UP(freq,
- 		(S3C2410_WTCON_PRESCALE_MAX + 1) * S3C2410_WTCON_MAXDIV);
- }
- 
-@@ -534,7 +541,7 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
- {
- 	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
- 	unsigned long freq = s3c2410wdt_get_freq(wdt);
--	unsigned int count;
-+	unsigned long count;
- 	unsigned int divisor = 1;
- 	unsigned long wtcon;
- 
-@@ -544,7 +551,7 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
- 	freq = DIV_ROUND_UP(freq, 128);
- 	count = timeout * freq;
- 
--	dev_dbg(wdt->dev, "Heartbeat: count=%d, timeout=%d, freq=%lu\n",
-+	dev_dbg(wdt->dev, "Heartbeat: count=%lu, timeout=%d, freq=%lu\n",
- 		count, timeout, freq);
- 
- 	/* if the count is bigger than the watchdog register,
-@@ -552,8 +559,8 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
- 	   actually make this value
- 	*/
- 
--	if (count >= 0x10000) {
--		divisor = DIV_ROUND_UP(count, 0xffff);
-+	if (count > wdt->max_cnt) {
-+		divisor = DIV_ROUND_UP(count, wdt->max_cnt);
- 
- 		if (divisor > S3C2410_WTCON_PRESCALE_MAX + 1) {
- 			dev_err(wdt->dev, "timeout %d too big\n", timeout);
-@@ -561,7 +568,7 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
- 		}
- 	}
- 
--	dev_dbg(wdt->dev, "Heartbeat: timeout=%d, divisor=%d, count=%d (%08x)\n",
-+	dev_dbg(wdt->dev, "Heartbeat: timeout=%d, divisor=%d, count=%lu (%08lx)\n",
- 		timeout, divisor, count, DIV_ROUND_UP(count, divisor));
- 
- 	count = DIV_ROUND_UP(count, divisor);
-@@ -764,6 +771,10 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(wdt->src_clk))
- 		return dev_err_probe(dev, PTR_ERR(wdt->src_clk), "failed to get source clock\n");
- 
-+	wdt->max_cnt = S3C2410_WTCNT_MAXCNT;
-+	if ((wdt->drv_data->quirks & QUIRK_HAS_32BIT_MAXCNT))
-+		wdt->max_cnt = S3C2410_WTCNT_MAXCNT_32;
-+
- 	wdt->wdt_device.min_timeout = 1;
- 	wdt->wdt_device.max_timeout = s3c2410wdt_max_timeout(wdt);
- 
--- 
-2.40.1
+Changelog from v3 to v4:
+  - Restore the modification to cache-sets and cache-size in patch 6
+  - Do not constrain renesas,r9a07g043f-ax45mp-cache since it's independent to
+    this series.
+  - Delete the redundant example added by patch 6
 
+v3: https://lore.kernel.org/all/20250513094933.1631493-1-ben717@andestech.com/
+
+Changelog from v2 to v3:
+  - Rebase the series on Conor/riscv-soc-for-next
+  - Reform patch 6 as suggested by Conor
+  - Modify l2_cache's compatible in qilai.dtsi due to patch 6
+  - Add Conor's Acked-by tag to patch 4
+  - Add Conor's Acked-by tag to patch 5
+  - Add Conor's Acked-by tag to patch 9
+
+v2: https://lore.kernel.org/all/20250503151829.605006-5-ben717@andestech.com/
+
+Changelog from v1 to v2:
+  - Add detailed descriptions to PLIC_SW and PLMT0
+  - Move the aliases node and memory node from qilai.dtsi to qilai-voyager.dts
+  - Drop "status = okay" in each CPU node since the status property is by
+    default "okay"
+  - Reorder the nodes in qilai.dtsi by unit address in ascending order
+  - Add myself as the maintainer of Andes's SoC tree
+  - Add Rob's Reviewed-by tag to patch 2
+  - Add Rob's Acked-by tag to patch 3
+  - Add Rob's Acked-by tag to patch 6.
+
+v1: https://lore.kernel.org/all/20250407104937.315783-1-ben717@andestech.com/
+
+---
+Ben Zong-You Xie (9):
+  riscv: add Andes SoC family Kconfig support
+  dt-bindings: riscv: add Andes QiLai SoC and the Voyager board bindings
+  dt-bindings: interrupt-controller: add Andes QiLai PLIC
+  dt-bindings: interrupt-controller: add Andes machine-level software
+    interrupt controller
+  dt-bindings: timer: add Andes machine timer
+  dt-bindings: cache: add QiLai compatible to ax45mp
+  riscv: dts: andes: add QiLai SoC device tree
+  riscv: dts: andes: add Voyager board device tree
+  riscv: defconfig: enable Andes SoC
+
+ .../cache/andestech,ax45mp-cache.yaml         |  18 +-
+ .../andestech,plicsw.yaml                     |  54 +++++
+ .../sifive,plic-1.0.0.yaml                    |   1 +
+ .../devicetree/bindings/riscv/andes.yaml      |  25 +++
+ .../bindings/timer/andestech,plmt0.yaml       |  53 +++++
+ MAINTAINERS                                   |   9 +
+ arch/riscv/Kconfig.errata                     |   2 +-
+ arch/riscv/Kconfig.socs                       |   9 +
+ arch/riscv/boot/dts/Makefile                  |   1 +
+ arch/riscv/boot/dts/andes/Makefile            |   2 +
+ arch/riscv/boot/dts/andes/qilai-voyager.dts   |  28 +++
+ arch/riscv/boot/dts/andes/qilai.dtsi          | 186 ++++++++++++++++++
+ arch/riscv/configs/defconfig                  |   1 +
+ 13 files changed, 387 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+ create mode 100644 Documentation/devicetree/bindings/riscv/andes.yaml
+ create mode 100644 Documentation/devicetree/bindings/timer/andestech,plmt0.yaml
+ create mode 100644 arch/riscv/boot/dts/andes/Makefile
+ create mode 100644 arch/riscv/boot/dts/andes/qilai-voyager.dts
+ create mode 100644 arch/riscv/boot/dts/andes/qilai.dtsi
+
+--
+2.34.1
