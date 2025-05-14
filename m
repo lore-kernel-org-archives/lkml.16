@@ -1,127 +1,93 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600E54C9F
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B00B4C9F;
+	Wed, 14 May 2025 23:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747265455; cv=none; b=LJk+RcoC5bTgqJnLP9H9kaIiE+8lnTdim1DGurzebyN6pILDXMOzwaHCtYw7AinFuNNvK8XiAjJ/DqnKhUVhTwJWkO7O88Weray3uHh48XixMkt4uzYyW05dsAtEjdjWlI7DyZ3OzlatKFQFkjuAEe1WH5NghxSWWfa4XOyohU0=
+	t=1747265614; cv=none; b=mzmsi6hKf6Qx5pJFxCBoHkxI2LaokfDhxnOj51X6RWBjmoaQrQSx7ziT2rQkhpAH+ggfi55jjxVs8EWiLuJQsE0W1658Uy04zPB1rodMjJL42tquShsBDxrW+pjE8q5DJISLGjmuNTTzgLatX+3MdhtHiZo4V0FcUnP7RcNaGTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747265455; c=relaxed/simple;
-	bh=8IwAmJ0usLb0XmLJEmRAj1KQT7kUoSHh+GUD4ztFINU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aZ7YbfT2QtTMQFw4D6bB2TwEp76m4gj1Vuqskdgr4S+uogMWdv2CBOka+7+jIjKa76tqE4T8fDwyhWsbvM12P1MVd5xGApnuYkzYsfTJqJKKWlWh6N13DU0+hixuh83flP4QShZPUINFGxNCChTmAIHVjdA3hDHQ5DaG7kc68dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rhS8+rB6; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747265614; c=relaxed/simple;
+	bh=1tvcw8O6qPhy4x/kVyY2+rbpVwaq1j0ptYpEM3zH2e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p1JuE6vlNWHn1OIJK55fax4LfD8es3mhpno8T/EhNNLQndo24cnoYTeFltNwiGP5ImwJgzlX36qf2cwlr97cTogYX0YpKIMlYX6x/ivop7joJSa8E1Ofv9cGjnOr+T8Cmo4rAGmdG0UA99/r9+ZQ18tKVsXJMoSFTathRt0sgn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dOa5SACz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rhS8+rB6"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c06465976so350464a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747265453; x=1747870253; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
-        b=rhS8+rB6n5ez4I56fUlA2ea8yo2iMu8mHM4munJorrMkjZ4JK0fe6kOQpePclO/gRM
-         LE8FWui0h6m8RKwc0n7dHRFM/H/lL5x+7xRFg6ALmnIL6k+oyWoGM3xGoB4MxX6ps6vS
-         fM7R1ORHSZquSl8kYImaTs+VcCvSgf+IbOihdLZbZLxsat3vfEZBKkvjUfL2ZYCcXKdx
-         9Q/jGgOLe3dEHLhW6D4TyNAsOofvZsbo7nKVs667kRgenKkZxkYqHIyHgc4kzRRGvfm3
-         R+tpC7hEnI84pJufBOZtD9rb6+uiwieEEmV3SLGvNE/jrKCQbMpxKDCNZ02bEMRhAZwo
-         Edaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747265453; x=1747870253;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
-        b=tE3aTRyS9nJ1rZIAX1493YWPofiyd8NyFkQXRMsIHzDBIJMt8Q61fWh7X8wMcZj/WR
-         pQ1VdLAuyZa3WM4q37P8qnS80rZ//g2fkv96JJ+csFeA9srJMhSW8mhR2bDLUejg17Nm
-         lk4axXsMTmoLnNYE0GiIvSbWnhIyPVZAsAt71s2JjmJeQJzo+FNVduU/Zy3uxyQwEczA
-         xA/qYsEpqSFJO8O7157nO6ySJh8E6CaGkvCQaG4GD6I1SsdyVGiFmoTwpq6FWjlElNM0
-         nQ5tuQgFqpHafSj99+ksJA/zB6bUKGeBfDXxNkD6Fyt8XTvprxNhsl9AMna+dCw+vBUM
-         YE7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWYY8Qpc/YU9KP6WYhFP/LnTsnfyINWTacPpo7Jb9f5fNCMBnv3v2HXixCfUeUihW5kp1DGNdDYODTUP2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbYOrSpTDNP2WN1WOtTHh9V5108apKSll26wBILDxJBW8wOEOR
-	B6bsGE3uqyOo3Eg9UBTxxfZLfB4x9NDBHwZ5XjWqbF1gJQ3wN+qGoNEDAnmbuLABs0gwbj54Roc
-	evA==
-X-Google-Smtp-Source: AGHT+IFAtfFAcg5G+bktrxdFp1CjONIgOLPqtbYX0j8nNBPhJiLTtnFl1U1b1LHV+tCsNxvNYjV//Y0pDCQ=
-X-Received: from pjbee14.prod.google.com ([2002:a17:90a:fc4e:b0:301:1bf5:2f07])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5292:b0:2ff:5357:1c7f
- with SMTP id 98e67ed59e1d1-30e2e64260bmr8268883a91.30.1747265453399; Wed, 14
- May 2025 16:30:53 -0700 (PDT)
-Date: Wed, 14 May 2025 16:30:51 -0700
-In-Reply-To: <20250324173121.1275209-10-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dOa5SACz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747265606;
+	bh=1z7j5acc80gp0B4nI85jZpyRvzCYqpqZu0WrzXaJCt8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dOa5SACz2Fh/fuE8Yb0p5QqkPJ2r+qpOocynBLoaVgW10nxfmjNYL7s3Z5zGQM0m9
+	 Q0sq4s7QOQMT+uMM+773OU7tnY7OaIB1WfzyF4H2u8tHy6M+p7sF9dPuxdzNDy8N9i
+	 OTq9sS+t0LERs6+vzoRGxslHXT2F0QCaF+fT8M2pUu9VMftxaLa1z3ULE7IeJmfV5J
+	 SrB+f+jg+MueAqKOXgaOvobR8ToLAT6IDwTnTW17JiUmGO/yIMSBf+8aMcbJlN5mly
+	 Sxc6BXV0b7MkjrJLPAhoscJtDS9VDAlinHueIiT92LpaZv1Ckcvdzwpa1+X9bDTD9/
+	 qKaMuoVFk4DGg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZyV5f5dgKz4wxx;
+	Thu, 15 May 2025 09:33:26 +1000 (AEST)
+Date: Thu, 15 May 2025 09:33:25 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Qiu-ji Chen <chenqiuji666@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the dmaengine-fixes tree
+Message-ID: <20250515093325.4e29e8a6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-10-mizhang@google.com>
-Message-ID: <aCUnq4M33yTj_t1F@google.com>
-Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/riIBSQ/vVjamgiuYCYU8mdN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> When entering/exiting a guest, some contexts for a guest have to be
-> switched. For examples, there is a dedicated interrupt vector for
-> guests on Intel platforms.
-> 
-> When PMI switch into a new guest vector, guest_lvtpc value need to be
-> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
-> bit should be cleared also, then PMI can be generated continuously
-> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
-> and switch_guest_ctx().
-> 
-> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
-> may require switching the guest context. It can avoid going through the
-> huge pmus list.
-> 
-> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  include/linux/perf_event.h | 17 +++++++++++--
->  kernel/events/core.c       | 51 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 65 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 37187ee8e226..58c1cf6939bf 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -584,6 +584,11 @@ struct pmu {
->  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->  	 */
->  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
-> +
-> +	/*
-> +	 * Switch guest context when a guest enter/exit, e.g., interrupt vectors.
-> +	 */
-> +	void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
+--Sig_/riIBSQ/vVjamgiuYCYU8mdN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-IMO, putting this in "struct pmu" is unnecessarily convoluted and complex, and a
-poor fit for what needs to be done.  The only usage of the hook is for the CPU to
-swap the LVTPC, and the @data payload communicates exactly that.  I.e. this has
-one user, and can't reasonably be extended to other users without some ugliness.
+Hi all,
 
-And if by some miracle there's no CPU pmu in perf, KVM's mediated PMU still needs
-to swap to its PMI IRQ.  So rather than per-PMU hook along with a list and a
-spinlock, just make this an arch hook.  And if all of the mediated PMU code is
-guarded by a Kconfig, then perf doesn't even needs __weak stubs.
+After merging the dmaengine-fixes tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
+drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-W=
+error=3Dunused-variable]
+  423 |         unsigned long flags;
+      |                       ^~~~~
+
+Caused by commit
+
+  157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_=
+cqdma_tx_status()")
+
+I have used the dmaengine-fixes tree from next-20250514 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/riIBSQ/vVjamgiuYCYU8mdN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmglKEUACgkQAVBC80lX
+0GxjyQf+MomWvDEffN97vSCV4FiuCsfORjxLfHtlQOLVz7+sz148VdD7G9omjq/n
+O457xuEtZ9UaqHClwiP7aPelEzV/TNEQT16URajQxWWb3FEMpMdFtWCoAOpi3zDU
+6ZZFwB7dK92wF8ShQMYjMftYyMIMk05Tn193QBGqZqMLpr1LlromNS80f01Y6Imq
+QeSDD96G4D5Ui0hLBjoOC3JZcevYqI9RRURZE+WGkYhAzmS/eI1Z/VuyboCRuCNr
+7WUojTt8NZNcEoEGK55IAKpN+1lIx9bFYgZ/6d3wwAsmfVhRNwTm6qsIWeKilqzR
+3AD+mmotGbB3cEdy7vgb/OAb5ygIjg==
+=67rq
+-----END PGP SIGNATURE-----
+
+--Sig_/riIBSQ/vVjamgiuYCYU8mdN--
