@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255B125290E
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD277253941
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266222; cv=none; b=lVMMsu9W/CH3nh4mFzoP5UluVIdMLjIBKT3mmhRnogGYuPD48Vr5Xc6bIvF3yFDi3W9vfLKfsWLiCiHR/j10oJ6g+jHnUjN4vvVl9HQvmagB7BWOR2NWewdp0uOL1FAnx2sz/sLXyfknNWr6JoqSAPlYzy8dO93WP++uxi/Je4U=
+	t=1747266223; cv=none; b=DalbPs7NBamH8409Utf0GF21sdozA7PrmxoPnfd0bUUDqGwBzUxZNuvjf8el3ezKIOphPJSrWDpCFpUMn2YSBpwyhrHAYdlAHrwUxZHoLH1VeK168k+nvqD5XdFu7Znn4imVsRgeI73xb0BXTyxOXwyAvzaJpR+utrXkfn3QFSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266222; c=relaxed/simple;
-	bh=VN6Zy91LaMiTbU6A7di8uTmOZRNoQlpEPvLShP2HHx8=;
+	s=arc-20240116; t=1747266223; c=relaxed/simple;
+	bh=HJj8WHDdya4gA/Ti/ZVYOZJkvqr0Goeoxk9qXCNBqnE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HZoY8Fxy4K0/MCa+1XUB2hRTz5pHthff7hhoP3sR8OwFLAckMoYFDqqdVITeZnmcJfbXyVQjr8xHLNQ6xKk+18GhVqBODfeCGznSGF470cbnQI+UCzTLHTK9l3t7qvL570H2nFKRhW1O3F+FqoX1DTN/wrctQzCLfVC80C1KziY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uwowlui7; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=apsP+pZs+ue3aegjmoHbFmOQLimRkFGNQLRHz2PvZqWhfzStwOam1TICmLyxC5mG23zSf4QSgKyL3ekgXoD8t+lChFztyUoXBod65ncZ1UWurHN+aAelTN7DEmMPURGqy+ZPtpblSMIUuPnWh4mkbcH7xGEiAtZ0ZXoSPXYwdp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rjauxxvn; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwowlui7"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b269789425bso262920a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rjauxxvn"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab4d56096so389075a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266219; x=1747871019; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266221; x=1747871021; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xjDNmSUtedoYx4zVHC06mLM1phpXgQwReFmVa/WU1hs=;
-        b=uwowlui7Ww0uHOqUJdsSdieK6tzzSnYW1m3kcEE+SdU49ghYQexl1gy5lOrJ2t3Aag
-         A8Y3tVar8D+uyo81+ljRrO06eD7AQshMg/pV70KSwmJvp1VxAVOU2qBfAeIbZx1WjJKZ
-         45gI2HGzOn+3hfJhr7A/HLOKvaK7ITrfo0lbSuWMtXpp1pOfH+qQt+BRUReukZ5BT/Xc
-         4g/KLtHBmQrRrhvI8buuowdzpCIXWKiFNBXopXk/1tkSZm6aHK9XX/9fcKN0CohE98GU
-         LDmfTIys6RbDkB9rKU762zFAVZWnLVe2nFJBXowJyFr8Zmgg2SVKAeNWuOyd/ODZbMpn
-         14vg==
+        bh=ybRHoummrWWH+GOSU2oOA7jlRVO35C0Hs9Na7WUf7vY=;
+        b=rjauxxvnkmlCQciFC1cBv84vzGq+Wfhw+sBoog1q+7lIVhyHjKqv9dHEwEllbtNE+K
+         LY5n/2YXuYow3vbKac+ROkRTBVDfYptKw3hC5SAtR89RzHjIX3L9n86Oy0dJSgZqHzkC
+         dtcRZuWueadH5QXTyWN4mIyF4VTfEPS89m/kiwRmMWHpuAhGCtqQFUQTXuxfOldsc5RK
+         rTG7HJTYD4JDnd/0udIc/RBXFZOhfqkvlYozhqsbWjUy1JjYG5dmsGnwOgIqIE/w0ogV
+         B8JyhJL96locyMTIAgkVSxvT6xzMRVS2YFNZlNDT4l2UbyQwVoK2PAQxvzVMGMGlMpqE
+         W2nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266219; x=1747871019;
+        d=1e100.net; s=20230601; t=1747266221; x=1747871021;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xjDNmSUtedoYx4zVHC06mLM1phpXgQwReFmVa/WU1hs=;
-        b=jDGldrrUXSrE4CfBlnhtoprDOPq5+5zIH2UeH5FOC8MpoEu7RzUPdcz0xk+oPhSQ9F
-         C4mccNkX4ODWm2JPfi9qfL+eAgKRAfrikwm2uB7RYyWxHIbvCEnoJplS54nsvKAIe3m5
-         xotfGLM3HRssmovHi+WWTABPp9RHvWSjsQ9v1CKmUMQoprid/WybyC+VVoVxaIsjwGFJ
-         lv9LfkRx2m742z0uYoSPE9a3B8n//Ury7Qjz1qmmlt4CVUoT6jNufXTxc/ERfJzrWfBM
-         4w/FEXpZyUXKA38h0cALaqcjYVrkVpqINpO3UyXUmjJZj3gfDyJJDuvp6sSk+wrz3T9N
-         VwGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSkh3RWafNQnDt2+UdTy372qBHf2xey2yhj/KJG8VqqUn7+128oATRjZ82o4xWfB+RTB2rMFiznAuiFMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0eWbsTeEHFRr2EwMLDlRJKRIcGuTLrXANk67O07nsLRgmtfVi
-	ERcxhe272VOe9kgWtbJVzfthNBhpDdav3LQfAkdLOWl8tk70t6mwHP/dWkQfv01JL+c+xBx+89P
-	JzohLMeRYNNHiK/sel/fQLA==
-X-Google-Smtp-Source: AGHT+IF1YPUusmAbmb3ZD3GPQhCrYy6/top7yw+u+NgqlU9DG8yUspI8ex9oYsbLJOClXn04qHIYKawEAR+7VdCYWQ==
-X-Received: from pfbbd12.prod.google.com ([2002:a05:6a00:278c:b0:740:555:f7af])
+        bh=ybRHoummrWWH+GOSU2oOA7jlRVO35C0Hs9Na7WUf7vY=;
+        b=q33DIbHth98/DtdLNZbGm6qC73UPrMm+Foe14Vna49rNkBKKrsEb5FOx6N64pqoXuh
+         I5Pq4pWfpdLccAotswbdPDdF6FasS+P4Nx0zFHnPbmNELcVpq+9z83MMMB461OXGMbV6
+         7xvxJmnNUMJP5NrRZnqxkit5UL3vtTBMnor14Nzmd3aUYFekKzjhAKDr94gop4DYxs/q
+         Enlzb+Suuf3KMCKIbhyF4RhK4sv60I0cmyeoTxbqQZ89FRhHKeyRwMyGS359WxD5qUXJ
+         UJ4WESZ0DZx4pPPMxIH0NXmPab6h6TXLR07xMnFzscfmMV3FuvRNAoZWB0xmKyw3bgGF
+         dCPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4RDtFch+eK7YG9fH66JU0/cactvApRgiQznBtmKRLTYzuVa7k+L2zKjMm5RItXwNZ7NrkckqLAoqiGmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB5ETs0Yc+gZ0uj6wi3DbHxbb9HvPRKjeSrb+XEg7Te1sb5RsY
+	Y2dO+R0+f5o2YNXU2LkbtYMbojX98QBCjI7aPpSD5Zpp2Agt0Bcj7cduJHziH7ndDtLvE1FN4zj
+	l1Du/8Koepbr6Es7DRnRYIw==
+X-Google-Smtp-Source: AGHT+IF7CTIjvQ3/Yejxf4LzxERKUbwh5QUADPu51M5AW0vpxWcS4ShcwU93trN4MwXAS2gTS+MsKTv3PqeW6YPJgA==
+X-Received: from pjuj4.prod.google.com ([2002:a17:90a:d004:b0:30a:89a8:cef0])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:3949:b0:1ee:dded:e5b with SMTP id adf61e73a8af0-215ff11a531mr7641318637.24.1747266219362;
- Wed, 14 May 2025 16:43:39 -0700 (PDT)
-Date: Wed, 14 May 2025 16:42:06 -0700
+ 2002:a17:90b:4a85:b0:30a:3dde:6af4 with SMTP id 98e67ed59e1d1-30e2e687a50mr6884071a91.31.1747266221046;
+ Wed, 14 May 2025 16:43:41 -0700 (PDT)
+Date: Wed, 14 May 2025 16:42:07 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <779107f1ff8c79095ca0b2d7921e4c54e20861ad.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 27/51] mm: hugetlb: Expose hugetlb_subpool_{get,put}_pages()
+Message-ID: <8f8b6d6f44cdc6b27db11e1e867dc92efca6d177.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 28/51] mm: Introduce guestmem_hugetlb to support
+ folio_put() handling of guestmem pages
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,53 +97,174 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-This will allow hugetlb subpools to be used by guestmem_hugetlb.
+The PGTY_guestmem_hugetlb is introduced so folios can be marked for
+further cleanup by guestmem_hugetlb.
 
+guestmem_hugetlb folios can have positive mapcounts, which will
+conflict with the installation of a page type. Hence,
+PGTY_guestmem_hugetlb will only be installed when a folio is
+truncated, after the folio has been unmapped and has a mapcount of 0.
+
+Signed-off-by: Fuad Tabba <tabba@google.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Change-Id: I909355935f2ab342e65e7bfdc106bedd1dc177c9
----
- include/linux/hugetlb.h | 3 +++
- mm/hugetlb.c            | 6 ++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index c59264391c33..e6b90e72d46d 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -119,6 +119,9 @@ struct hugepage_subpool *hugepage_new_subpool(struct hstate *h, long max_hpages,
- 					      long min_hpages, bool use_surplus);
- void hugepage_put_subpool(struct hugepage_subpool *spool);
+Change-Id: I635f8929e06f73d7899737bd47090b7cbc7222dc
+---
+ include/linux/page-flags.h | 17 +++++++++++++++++
+ mm/Kconfig                 | 10 ++++++++++
+ mm/Makefile                |  1 +
+ mm/debug.c                 |  1 +
+ mm/guestmem_hugetlb.c      | 14 ++++++++++++++
+ mm/guestmem_hugetlb.h      |  9 +++++++++
+ mm/swap.c                  |  9 +++++++++
+ 7 files changed, 61 insertions(+)
+ create mode 100644 mm/guestmem_hugetlb.c
+ create mode 100644 mm/guestmem_hugetlb.h
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 9dd60fb8c33f..543f6481ca60 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -965,6 +965,7 @@ enum pagetype {
+ 	PGTY_zsmalloc		= 0xf6,
+ 	PGTY_unaccepted		= 0xf7,
+ 	PGTY_large_kmalloc	= 0xf8,
++	PGTY_guestmem_hugetlb	= 0xf9,
  
-+long hugepage_subpool_get_pages(struct hugepage_subpool *spool, long delta);
-+long hugepage_subpool_put_pages(struct hugepage_subpool *spool, long delta);
+ 	PGTY_mapcount_underflow = 0xff
+ };
+@@ -1114,6 +1115,22 @@ FOLIO_TYPE_OPS(hugetlb, hugetlb)
+ FOLIO_TEST_FLAG_FALSE(hugetlb)
+ #endif
+ 
++/*
++ * PGTY_guestmem_hugetlb, for now, is used to mark a folio as requiring further
++ * cleanup by the guestmem_hugetlb allocator.  This page type is installed only
++ * at truncation time, by guest_memfd, if further cleanup is required.  It is
++ * safe to install this page type at truncation time because by then mapcount
++ * would be 0.
++ *
++ * The plan is to always set this page type for any folios allocated by
++ * guestmem_hugetlb once typed folios can be mapped to userspace cleanly.
++ */
++#ifdef CONFIG_GUESTMEM_HUGETLB
++FOLIO_TYPE_OPS(guestmem_hugetlb, guestmem_hugetlb)
++#else
++FOLIO_TEST_FLAG_FALSE(guestmem_hugetlb)
++#endif
 +
- void hugetlb_dup_vma_private(struct vm_area_struct *vma);
- void clear_vma_resv_huge_pages(struct vm_area_struct *vma);
- int move_hugetlb_page_tables(struct vm_area_struct *vma,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index d22c5a8fd441..816f257680be 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -205,8 +205,7 @@ void hugepage_put_subpool(struct hugepage_subpool *spool)
-  * only be different than the passed value (delta) in the case where
-  * a subpool minimum size must be maintained.
-  */
--static long hugepage_subpool_get_pages(struct hugepage_subpool *spool,
--				      long delta)
-+long hugepage_subpool_get_pages(struct hugepage_subpool *spool, long delta)
- {
- 	long ret = delta;
+ PAGE_TYPE_OPS(Zsmalloc, zsmalloc, zsmalloc)
  
-@@ -250,8 +249,7 @@ static long hugepage_subpool_get_pages(struct hugepage_subpool *spool,
-  * The return value may only be different than the passed value (delta)
-  * in the case where a subpool minimum size must be maintained.
-  */
--static long hugepage_subpool_put_pages(struct hugepage_subpool *spool,
--				       long delta)
-+long hugepage_subpool_put_pages(struct hugepage_subpool *spool, long delta)
- {
- 	long ret = delta;
- 	unsigned long flags;
+ /*
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..131adc49f58d 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1216,6 +1216,16 @@ config SECRETMEM
+ 	  memory areas visible only in the context of the owning process and
+ 	  not mapped to other processes and other kernel page tables.
+ 
++config GUESTMEM_HUGETLB
++	bool "Enable guestmem_hugetlb allocator for guest_memfd"
++	depends on HUGETLBFS
++	help
++	  Enable this to make HugeTLB folios available to guest_memfd
++	  (KVM virtualization) as backing memory.
++
++	  This feature wraps HugeTLB as a custom allocator that
++	  guest_memfd can use.
++
+ config ANON_VMA_NAME
+ 	bool "Anonymous VMA name support"
+ 	depends on PROC_FS && ADVISE_SYSCALLS && MMU
+diff --git a/mm/Makefile b/mm/Makefile
+index e7f6bbf8ae5f..c91c8e8fef71 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -127,6 +127,7 @@ obj-$(CONFIG_PAGE_EXTENSION) += page_ext.o
+ obj-$(CONFIG_PAGE_TABLE_CHECK) += page_table_check.o
+ obj-$(CONFIG_CMA_DEBUGFS) += cma_debug.o
+ obj-$(CONFIG_SECRETMEM) += secretmem.o
++obj-$(CONFIG_GUESTMEM_HUGETLB) += guestmem_hugetlb.o
+ obj-$(CONFIG_CMA_SYSFS) += cma_sysfs.o
+ obj-$(CONFIG_USERFAULTFD) += userfaultfd.o
+ obj-$(CONFIG_IDLE_PAGE_TRACKING) += page_idle.o
+diff --git a/mm/debug.c b/mm/debug.c
+index db83e381a8ae..439ab128772d 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -56,6 +56,7 @@ static const char *page_type_names[] = {
+ 	DEF_PAGETYPE_NAME(table),
+ 	DEF_PAGETYPE_NAME(buddy),
+ 	DEF_PAGETYPE_NAME(unaccepted),
++	DEF_PAGETYPE_NAME(guestmem_hugetlb),
+ };
+ 
+ static const char *page_type_name(unsigned int page_type)
+diff --git a/mm/guestmem_hugetlb.c b/mm/guestmem_hugetlb.c
+new file mode 100644
+index 000000000000..51a724ebcc50
+--- /dev/null
++++ b/mm/guestmem_hugetlb.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * guestmem_hugetlb is an allocator for guest_memfd. guest_memfd wraps HugeTLB
++ * as an allocator for guest_memfd.
++ */
++
++#include <linux/mm_types.h>
++
++#include "guestmem_hugetlb.h"
++
++void guestmem_hugetlb_handle_folio_put(struct folio *folio)
++{
++	WARN_ONCE(1, "A placeholder that shouldn't trigger. Work in progress.");
++}
+diff --git a/mm/guestmem_hugetlb.h b/mm/guestmem_hugetlb.h
+new file mode 100644
+index 000000000000..5c9452b77252
+--- /dev/null
++++ b/mm/guestmem_hugetlb.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_MM_GUESTMEM_HUGETLB_H
++#define _LINUX_MM_GUESTMEM_HUGETLB_H
++
++#include <linux/mm_types.h>
++
++void guestmem_hugetlb_handle_folio_put(struct folio *folio);
++
++#endif
+diff --git a/mm/swap.c b/mm/swap.c
+index d0a5971787c4..2747230ced89 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -40,6 +40,10 @@
+ 
+ #include "internal.h"
+ 
++#ifdef CONFIG_GUESTMEM_HUGETLB
++#include "guestmem_hugetlb.h"
++#endif
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/pagemap.h>
+ 
+@@ -101,6 +105,11 @@ static void free_typed_folio(struct folio *folio)
+ 	case PGTY_hugetlb:
+ 		free_huge_folio(folio);
+ 		return;
++#endif
++#ifdef CONFIG_GUESTMEM_HUGETLB
++	case PGTY_guestmem_hugetlb:
++		guestmem_hugetlb_handle_folio_put(folio);
++		return;
+ #endif
+ 	default:
+ 		WARN_ON_ONCE(1);
 -- 
 2.49.0.1045.g170613ef41-goog
 
