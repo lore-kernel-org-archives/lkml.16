@@ -1,157 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036C827A112;
-	Wed, 14 May 2025 18:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98DF28136B;
+	Wed, 14 May 2025 18:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747247113; cv=none; b=ZDLDQPRHD5rQNL88+FkUqoV+os4BZFWfLNfLqENYf+nAQMO++XDgvf245aFJ2yKH3Jl5NGGAz8J0v8TbKCFMo+azelKv3ZD73jVIz7exA0kPib/yuQ/FZW80ZvJFPlz56LX5oklp0oY2PfL075w8prF/GNJwg2hQEQG+OBGRO8Y=
+	t=1747247149; cv=none; b=stuAlaM4LMPj1ji1pH3hKpONmbODhQ2Rn4+NfSzANSIjvkt9qzDOaIrOk1dIaS68wzz5KX4QyKNFVoUvsC6rHIYkQdTezXWMcnUA+swNG6QlC50e8hhUXspHHlZj63MYo2Na/qC0R11ez0LNduXgL8w7CWFikyLNAj8MU/st4CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747247113; c=relaxed/simple;
-	bh=l4oaE46B7vL0FO5cEYhhQyinrpnk40AbBuyp4cLW2Oo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ISefudo+gtlkInTkjMlcbaGvknUU5mhbKXb+yZf3NfZdvhzpvEFySkeS02q8fqTvTQicDG7E4BR5J2jC3E3mqNksVLUxspRY//Iyi/5+cow12xZYGH91r2X6G5ghzPH1lgC/ZzY413/hR+C7SgNG2mobjMIhSxS08X69lnMvpao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fXq7yA6q; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747247149; c=relaxed/simple;
+	bh=Sk6K50SJwRVBX41TpMia1ozjSbtn+RFQ/xSJZ1d8+m0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=P2aDFl6UO8r1Os/8zQzWvLV1tYA2ZM5MoMX0pX4p3+JlvOWctF0YaVZiHDS5fXdgQ5VtdA+XSaYzF4VFXK82H0k8KzBi6wvowM26k8QHYcsMLTsaAVrVwkv2Y1465riSpZepVFckb7FTSMGrfVPNncbuTGHKnRF3QEjFrAy1mJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=sr0OtqzI; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fXq7yA6q"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EAug9i020138;
-	Wed, 14 May 2025 18:24:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	J49uDkCb9HKOce56BSBOkcrkK/RKgG1QwXA27OlhT64=; b=fXq7yA6qg3X9LptV
-	4MUsBu3fv6pYXkzdpX886aCRYl7rz40evf8YpVgY4Lv3HPZynN8rrcwM1K19KOtu
-	A3+a8r/+k2Bg9jex7GogUNc0U0bF0N1SPBXnlPSMJk4h46dKfCXFPneTgszGmv3U
-	mGqmV22doQk8dXtRet/Zf6IbgzIb/LMQZEKNFRWrxAOO5P9t/ylV03lnVu+FUuF4
-	0eChBUsGUQ/fFMFgA21WM60PePO4zI+rwkNsq05zH7nc5Gj1R4nzhIjOVGVTa51T
-	PwMhfUQdXBsnqmgwZc823/yhz1VD4TdbTG771ysuEGL4ePE2ijf0HhclvskY9duw
-	+dItcw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnknqy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 18:24:55 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54EIOsvs026769
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 18:24:54 GMT
-Received: from [10.71.113.47] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 14 May
- 2025 11:24:53 -0700
-Message-ID: <5183b76b-8043-4309-b25d-e1ae505f929e@quicinc.com>
-Date: Wed, 14 May 2025 11:24:48 -0700
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="sr0OtqzI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1747247137;
+	bh=Sk6K50SJwRVBX41TpMia1ozjSbtn+RFQ/xSJZ1d8+m0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=sr0OtqzImkjWIiWULL7qcXg/qcMho0hs2xaNucwcAreBWQ2E45Z4IIQOyS+7+B/9Z
+	 wMiLLhMsWTW9FAwOJzQDW7ieAtsPf/Rs2zUIKJPVF3ajqcQxESgMoxyM8ON+2GcBW1
+	 L8qZcUsSGEIr4hfmDvc1N8xI98e0pDP4tIuKtUls=
+Date: Wed, 14 May 2025 20:25:34 +0200 (GMT+02:00)
+From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	=?UTF-8?Q?Fabian_Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>,
+	Arnout Engelen <arnout@bzzt.net>,
+	Mattia Rizzolo <mattia@mapreri.org>, kpcyrd <kpcyrd@archlinux.org>,
+	Christian Heusel <christian@heusel.eu>,
+	=?UTF-8?Q?C=C3=A2ju_Mihai-Drosi?= <mcaju95@gmail.com>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-integrity@vger.kernel.org
+Message-ID: <17aaa56b-5ee7-4a7f-a3c1-206e2114645d@weissschuh.net>
+In-Reply-To: <edeb23e7884e94006d560898b7f9d2dd257a275e.camel@linux.ibm.com>
+References: <20250429-module-hashes-v3-0-00e9258def9e@weissschuh.net> <20250429-module-hashes-v3-2-00e9258def9e@weissschuh.net> <10ca077d6d51fac10e56c94db4205a482946d15f.camel@linux.ibm.com> <edeb23e7884e94006d560898b7f9d2dd257a275e.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 2/9] ima: efi: Drop unnecessary check for
+ CONFIG_MODULE_SIG/CONFIG_KEXEC_SIG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
-To: Vinod Koul <vkoul@kernel.org>
-CC: Melody Olvera <melody.olvera@oss.qualcomm.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250409-sm8750_usb_master-v4-0-6ec621c98be6@oss.qualcomm.com>
- <20250409-sm8750_usb_master-v4-6-6ec621c98be6@oss.qualcomm.com>
- <Z/exOF4T+0vNLQwg@vaman> <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
- <aCRVaNDQP/PdAXPR@vaman>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <aCRVaNDQP/PdAXPR@vaman>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: F8I7biqEH_-DftRpl4rk57BfXlJJqFGt
-X-Authority-Analysis: v=2.4 cv=aIbwqa9m c=1 sm=1 tr=0 ts=6824dff8 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=_9SOoMVj05wlhOc5M30A:9 a=QEXdDO2ut3YA:10 a=aM5GUTHLM7wA:10
- a=AkvdQnL7tdoA:10
-X-Proofpoint-GUID: F8I7biqEH_-DftRpl4rk57BfXlJJqFGt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE2NyBTYWx0ZWRfX4isQh/phoKL7
- gNDYG3ctyr8fuuqzZFPj6IggNXhjWBDL5ogCgcNsGwC5wuF+88+7gNzdLw6ayLccV+mT3DjgQls
- q5FJwXv5IjmwnnKB+bjItELeLBl3E0HuA8FM5mv4PzZH8goauI610a46plxlu2bVGmgmBmC1xY3
- BBLUhgfJOrB0pmILepR+8HMOwaJ5eVBHslVs0Lq9ouIg+blN+QljpxL4Q3WslkpHD4/TM4JQmgp
- mNlbsbLaYxiLV+PRn9OxC1hPkXfHJn8v1QOCSNM1FeCBd6SkrA9fZJ8eZLb7y6uud8boMHxBt3I
- NgbWnscTxcheU1x99B9dCiesQF/QaCRpgU+jVh5hwd7sldVgBkKUlYAnh9u/UWJ9oVFsE+80asp
- 3Ko7aMXimriZxwIetQjAUS2CM4ZpVb31IK0YKwgNdGFb9SCDTnD7asGXB9wjpl2oemknpOhC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 impostorscore=0
- clxscore=1011 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505140167
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <17aaa56b-5ee7-4a7f-a3c1-206e2114645d@weissschuh.net>
 
-Hi Vinod,
+May 14, 2025 19:39:37 Mimi Zohar <zohar@linux.ibm.com>:
 
-On 5/14/2025 1:33 AM, Vinod Koul wrote:
-> On 16-04-25, 15:45, Wesley Cheng wrote:
->> Hi Vinod,
+> On Wed, 2025-05-14 at 11:09 -0400, Mimi Zohar wrote:
+>> On Tue, 2025-04-29 at 15:04 +0200, Thomas Wei=C3=9Fschuh wrote:
+>>> When configuration settings are disabled the guarded functions are
+>>> defined as empty stubs, so the check is unnecessary.
+>>> The specific configuration option for set_module_sig_enforced() is
+>>> about to change and removing the checks avoids some later churn.
+>>>
+>>> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+>>>
+>>> ---
+>>> This patch is not strictly necessary right now, but makes looking for
+>>> usages of CONFIG_MODULE_SIG easier.
+>>> ---
+>>> =C2=A0security/integrity/ima/ima_efi.c | 6 ++----
+>>> =C2=A01 file changed, 2 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/security/integrity/ima/ima_efi.c b/security/integrity/ima/=
+ima_efi.c
+>>> index
+>>> 138029bfcce1e40ef37700c15e30909f6e9b4f2d..a35dd166ad47beb4a7d46cc3e8fc6=
+04f57e03ecb
+>>> 100644
+>>> --- a/security/integrity/ima/ima_efi.c
+>>> +++ b/security/integrity/ima/ima_efi.c
+>>> @@ -68,10 +68,8 @@ static const char * const sb_arch_rules[] =3D {
+>>> =C2=A0const char * const *arch_get_ima_policy(void)
+>>> =C2=A0{
+>>> =C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_g=
+et_secureboot()) {
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_MODULE_SIG)=
+)
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_modul=
+e_sig_enforced();
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ENABLED(CONFIG_KEXEC_SIG))
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_kexec=
+_sig_enforced();
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_module_sig_enforced();
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_kexec_sig_enforced();
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return sb_arch_rules;
 >>
->> On 4/10/2025 4:53 AM, Vinod Koul wrote:
->>> On 09-04-25, 10:48, Melody Olvera wrote:
->>>
->>>> +static int m31eusb2_phy_write_readback(void __iomem *base, u32 offset,
->>>> +					const u32 mask, u32 val)
->>>> +{
->>>> +	u32 write_val;
->>>> +	u32 tmp;
->>>> +
->>>> +	tmp = readl_relaxed(base + offset);
->>>> +	tmp &= ~mask;
->>>> +	write_val = tmp | val;
->>>> +
->>>> +	writel_relaxed(write_val, base + offset);
->>>> +
->>>> +	tmp = readl_relaxed(base + offset);
->>>
->>> Why are you using _relaxed version here?
->>>
+>> Hi Thomas,
 >>
->> No particular reason.  I think someone pointed this out previously, and I
->> was open to use the non-relaxed variants, but I assume using the relaxed vs
->> non-relaxed apis comes down to preference in this case.
-> 
-> Nope you cant! There _needs_ to be a specific reasons!
-> When you are doing read, modify, write, it is very important to know the
-> right version to use...
-> 
+>> I'm just getting to looking at this patch set.=C2=A0 Sorry for the delay=
+.
+>>
+>> Testing whether CONFIG_MODULE_SIG and CONFIG_KEXEC_SIG are configured gi=
+ves priority
+>> to them, rather than to the IMA support.=C2=A0 Without any other changes=
+, both signature
+>> verifications would be enforced.=C2=A0 Is that the intention?
+>
+> Never mind, got it.
+>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-I mean, its a write readback, which ensures the bus transaction is complete
-based on [1], hence why **in this situation** it is up to preference.
+Thanks for the review!
 
-Otherwise, w/o the readback then we'd need to ensure writes are made
-depending on the required sequencing (in spots where the sequence is
-strictly defined), and that can be enforced using barriers.  If you feel
-like using the non-relaxed variant is preferred let me know.  I can replace
-it and remove the readback.
+Given that this series has no chance
+of getting into the next merge window,
+would it be possible to take the two IMA preparation patches
+through the IMA tree to have them out of the way?
 
-Thanks
-Wesley Cheng
 
-[1] - https://www.kernel.org/doc/html/latest/driver-api/io_ordering.html
+Thomas
