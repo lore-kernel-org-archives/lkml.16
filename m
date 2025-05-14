@@ -1,308 +1,112 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59721C198
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C264F1DF994;
+	Wed, 14 May 2025 16:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240013; cv=none; b=ToHN6TaHAsST/HomsIi4n7Fa69olsK4RPhG/lnXljilHpsgSqprC2q/Fq5R/l8GCqxWoq7GbVF2K/0X54l2ZuZXILm6hKvbiqoo7cX7ghm1uGjyeNyb+mczDb5FsAq9ecMpcoQdrr8TmLmpSMi4uyAvA3jIRtYy6W8e05P4Xj3M=
+	t=1747240131; cv=none; b=QaIicDjjwADaTDccRc03faSbe9Xna61LXLHwDiOYF500SJ7qusx/x4izAhq8zcy8ctQSjyiSi0j1XDI2hYX34jEv3VJlzc+dOXRN7MdggD4xlAvwuO+X1zZFibXewJ5UncmUu9zdvGLrxM9gARqMZQPAmv/hoZN8nWUGVHfqHpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240013; c=relaxed/simple;
-	bh=9QOQNm1DtryVnoeSN7DGC61nsEhaIMM2YYX27XDU2u4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=laRVroHSXN6RQNEfDjnCr85A2ocAaZkDPCMq4l2aWGVhFq5etWek300UmDlfC6XJ3+lOMNS5YGZhW4AUFt2zxnOqYGlFnl7VpDwjqZOcU9JjH/7pfShaOF3BidkewMz+e02/MJWzN1pee8+qIxVuqgZQnFJYIYbnD2NQ7vIl+oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=tW6KXxWl; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	s=arc-20240116; t=1747240131; c=relaxed/simple;
+	bh=XwpvdJj7/FvWWHGNfEpZ5k4PCCpLNXQ1N0RRVFxieuQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=GjgTNB93zWa9R7RPwQ4uIRwladSfJP8pFybPo3cBSk7ry/z2Dar86CXTv+bukDHkar5reQo8/81jX8eSRN37+emj1S699D6bdZJYqvXXMm9QvADUZ52T+uWRzkviBixXxPtSskwQutu5JnC61J7VQ6Y+g0uGQfzZq2E3E59rqlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzerA7hm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="tW6KXxWl"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-70a23f4fe8bso66163037b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1747240010; x=1747844810; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gJ0AzCyNbBw7LmTlYnlYRUZRvc6BiWujoVO60kyzOiU=;
-        b=tW6KXxWljaiMmR2np+P1joBCEqM4CtD+NZd0mrqRmHRWzXS828ZOSDtNmgq4vBxlMh
-         +yJfIY98WIpc7m8RNjqvDRv3fAJunQRYFGUL2QEdxfliDqkG+t8q6eKdeJ5iotFAbfOB
-         g6dKFfqVbNLxXZlpPifyHJPGWhg122FRdGhA2D6Iadw1fY85506ZM0tnTGsvTUgaDBaY
-         zuP5k1vmEkGdzyX9WerwK4ePCv2i+Ff5juHT0AYHiRHoUbz6Bd5kghDTl6/obqQcRfVy
-         ZOStTNr6eW/y01sdLU9P4zFgHolRPuO52CPlgSP0hll7RaRAujd4WzU6gGrNFoMowqoD
-         MtnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240010; x=1747844810;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gJ0AzCyNbBw7LmTlYnlYRUZRvc6BiWujoVO60kyzOiU=;
-        b=Zn+AJYVQbqjzHbfUznWmFf89pQnXW23fVwkvNOquwuyzBEgNNdvKgVL7KK4avRiFw7
-         KUzPWu+q4ttbteGxq4LsGs5levm3qdh3G35xdnvo5/N50UPQs/d8vlmp0ybAay9rkEmR
-         cYPizGcODwbdjtwMgLsJf1ULJ6ontZYN4uUYxKg+IXQTtjWwaZtaM/0d2eTa6G7N31mh
-         tE59KRPRb7lVbYbXGgrImMCT3tzBSYpHLaC4a+6HHW8gzBgPEAEHjWexC56iydpsux0I
-         YAkzyJfrqXZFV/uYg72S6yQ7+0mqHlWYBPluI6RHlTo5XHfabQJHTJUY6ua8tE5zcOq1
-         y9wA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7VPTqWBQ7HJXN4UVTSuU+U9BYqf2076+sHRZGHLqvinWRy5SrjZpANhvMK4Jsff8rUSCRtFTGEtQabO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEYcY5E3WBOZeGDzE014w3tDE6RIef9YoPVy+YgWG4GVojpzYX
-	0RlXGqBAZ+pBE4ZbnjyRHdS41jHPopI86Au0qSB4+oaxOfhIsM743uSAr6KQM/8=
-X-Gm-Gg: ASbGnct4qOVHeG6QxHCRjWG9vPha9YKgNxSNIAhGVL6TzIu/GI3lYvub7x6gqIBYcp5
-	Z1/o2pXTU99LBnIFR2WPsNeqxDvZ1lyK7gfyWf1fpiJ0QVOMoNvcKd9mvfyXnaDMbziLbzuJl0s
-	wBYe6ZiKSreohl8O6w3+Ed8QmLK8fVaCt6iOTD800iqO0b+cdVgT6ps1wwxjRg42AtiU5vFiu9v
-	nTcqgy0gv9H+pacscTIeVZ7miaWu/tSc/3fA3R1cd3C+3FjlveMi84+zXmEQDAE1S67fY2DNtUV
-	LYeyOeCpVQBXbBMxBPd1wg+TkTAr2yhkeR+IdomE5guxHQWqorsT5cXzuxnt1NKsg56hIhg0AVB
-	vMxzzAY5rkMGlIM7DCvU=
-X-Google-Smtp-Source: AGHT+IG+uTH2mFy8MPlKHWxCcLd2xL3H9qSutUTXT/habpIlOeQQg0fLL94X9rKsK/xpDtOCZ5yThg==
-X-Received: by 2002:a05:690c:3341:b0:6ef:94db:b208 with SMTP id 00721157ae682-70c7f221d1amr55077777b3.24.1747240010102;
-        Wed, 14 May 2025 09:26:50 -0700 (PDT)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70a3d9cb5ccsm29779187b3.90.2025.05.14.09.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 09:26:49 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e78f528aa8eso6069068276.3;
-        Wed, 14 May 2025 09:26:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQL6ZUqYR60/mjV7HZhQEUUW3dKH/vXljeyx4HVQPs53n/4gdMFXJA60weEhzFTn9PbJPN0f/vY2QqEHr3@vger.kernel.org, AJvYcCUkiGgBr2jDg+RYBsWsC6RF+sbXYhchzxbvXkmUid1KIu74NSQ52V5i1zj7LZBhXSQfJuuLC9kFnYIj@vger.kernel.org, AJvYcCUrtu+y4sofV1DOlWAtNJKGYdJdeQ3kPSMCaDUI7en2vDddYaeBCRz6BMixfN+3/ZPvzdwY0o3SchsGZq0=@vger.kernel.org, AJvYcCVcOXqOIpGd59hPHSY2ywtDrnJ3+QTcI6Kis0KdjT/oMPW7lFkqx5un/W9UnT9spgVJRek7n+8cQRbW@vger.kernel.org
-X-Received: by 2002:a05:6902:1202:b0:e6d:f160:bbdf with SMTP id
- 3f1490d57ef6-e7b3d59ae2fmr4832866276.36.1747240009056; Wed, 14 May 2025
- 09:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzerA7hm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93972C4CEE9;
+	Wed, 14 May 2025 16:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747240131;
+	bh=XwpvdJj7/FvWWHGNfEpZ5k4PCCpLNXQ1N0RRVFxieuQ=;
+	h=From:To:Subject:Date:From;
+	b=MzerA7hmXnTWXA0YHp2z8MTiAsbXU6kd30TJDfDgit2MIU/3CGTY+PtteLvtVbzFe
+	 XJmQCZJFRBRGObdrr8ivkb/wr85JMqvslrpz1ABh2oZGaCk5cOCUxRprN2rNjjot/x
+	 mIVOtg+/Iy3G5dg5nQD4dveg75JwGn1mQHgYrwqUBp+gkwIbCwvY5dApevTzyZNiAa
+	 5g1/SLSd+RuJ1CZRdHPX6bNymOh3MHdafr8Eyn5HMhH81vaFk87D4uGYhoVB3lBJOS
+	 PW1Ir+k5ESsgLFlH45k5ut6W9YFXJMTgqPkBgRSq5vq2EKWE/CCz5RjoZxDyEMS9xM
+	 dnrx4dtoZaw3Q==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	bettyzhou@google.com,
+	ynaffit@google.com,
+	tkjos@google.com,
+	jacek.anaszewski@gmail.com,
+	Pavel Machek <pavel@kernel.org>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] leds: led-test: Move common LED class registration code into helper function
+Date: Wed, 14 May 2025 17:27:52 +0100
+Message-ID: <20250514162807.708010-1-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
- <20250225-6-10-rocket-v2-1-d4dbcfafc141@tomeuvizoso.net> <20250225160248.GA2563229-robh@kernel.org>
-In-Reply-To: <20250225160248.GA2563229-robh@kernel.org>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Wed, 14 May 2025 18:26:38 +0200
-X-Gmail-Original-Message-ID: <CAAObsKD01rdYf0E6Vev6oFRZEf1f006oi+ghgVUn+h=aRx-hmQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvDEBwxCoW2ZGLJEEIKb_2H5q_lCEI2NWi7ZFVAMNUkSoshPa20AanOMV0
-Message-ID: <CAAObsKD01rdYf0E6Vev6oFRZEf1f006oi+ghgVUn+h=aRx-hmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: npu: rockchip,rknn: Add bindings
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Rob,
+Since we will always need to register an LED class, it makes sense to
+avoid duplicating this part over and over.
 
-On Tue, Feb 25, 2025 at 5:02=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Tue, Feb 25, 2025 at 08:55:47AM +0100, Tomeu Vizoso wrote:
-> > Add the bindings for the Neural Processing Unit IP from Rockchip.
-> >
-> > v2:
-> > - Adapt to new node structure (one node per core, each with its own
-> >   IOMMU)
-> > - Several misc. fixes from Sebastian Reichel
-> >
-> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  .../bindings/npu/rockchip,rknn-core.yaml           | 152 +++++++++++++=
-++++++++
-> >  1 file changed, 152 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/npu/rockchip,rknn-core.y=
-aml b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..e8d0afe4a7d1c4f166cf13a=
-9f4aa7c1901362a3f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
-> > @@ -0,0 +1,152 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Neural Processing Unit IP from Rockchip
-> > +
-> > +maintainers:
-> > +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> > +
-> > +description:
-> > +  Rockchip IP for accelerating inference of neural networks, based on =
-NVIDIA's
-> > +  open source NVDLA IP.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: '^npu-core@[a-f0-9]+$'
-> > +
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - rockchip,rk3588-rknn-core-top
-> > +          - const: rockchip,rknn-core-top
->
-> Drop the fallbacks unless you have some evidence that the IP is the
-> same across a lot of SoCs. If you don't, then
-> rockchip,rk3588-rknn-core-top can be the fallback whenever there are
-> more compatible SoCs.
->
-> Or if there's version/feature registers that otherwise make it
-> discoverable, then a common compatible is fine.
->
-> > +      - items:
-> > +          - enum:
-> > +              - rockchip,rk3588-rknn-core
-> > +          - const: rockchip,rknn-core
->
-> I don't understand the difference between core and core-top. That needs
-> to be explained in the top-level description.
->
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 2
-> > +    maxItems: 4
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: aclk
-> > +      - const: hclk
-> > +      - const: npu
-> > +      - const: pclk
-> > +    minItems: 2
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  iommus:
-> > +    maxItems: 1
-> > +
-> > +  npu-supply: true
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    maxItems: 2
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: srst_a
-> > +      - const: srst_h
-> > +
-> > +  sram-supply: true
->
-> Group supply properties together
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - iommus
-> > +  - npu-supply
-> > +  - power-domains
-> > +  - resets
-> > +  - reset-names
-> > +  - sram-supply
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - rockchip,rknn-core-top
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          minItems: 4
-> > +
-> > +        clock-names:
-> > +          minItems: 4
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - rockchip,rknn-core
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          maxItems: 2
-> > +        clock-names:
-> > +          maxItems: 2
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/power/rk3588-power.h>
-> > +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-> > +
-> > +    bus {
-> > +      #address-cells =3D <2>;
-> > +      #size-cells =3D <2>;
-> > +
-> > +      rknn_core_top: npu-core@fdab0000 {
->
-> npu@...
+Returning void and not propagating errors is expected here since the
+assert will terminate the process early if an error condition is
+encountered.
 
-Can you extend on why you would prefer to have npu@? As each node
-corresponds to a core inside the NPU, I went with npu-core@.
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ drivers/leds/led-test.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-Thanks,
+diff --git a/drivers/leds/led-test.c b/drivers/leds/led-test.c
+index ddf9aa967a6a..0f152fb12dfb 100644
+--- a/drivers/leds/led-test.c
++++ b/drivers/leds/led-test.c
+@@ -22,10 +22,10 @@ static enum led_brightness led_test_brightness_get(struct led_classdev *cdev)
+ 	return LED_TEST_POST_REG_BRIGHTNESS;
+ }
+ 
+-static void led_test_class_register(struct kunit *test)
++static void led_test_class_register_helper(struct kunit *test)
+ {
+ 	struct led_test_ddata *ddata = test->priv;
+-	struct led_classdev *cdev_clash, *cdev = &ddata->cdev;
++	struct led_classdev *cdev = &ddata->cdev;
+ 	struct device *dev = ddata->dev;
+ 	int ret;
+ 
+@@ -36,6 +36,17 @@ static void led_test_class_register(struct kunit *test)
+ 
+ 	ret = devm_led_classdev_register(dev, cdev);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
++}
++
++static void led_test_class_register(struct kunit *test)
++{
++	struct led_test_ddata *ddata = test->priv;
++	struct led_classdev *cdev_clash, *cdev = &ddata->cdev;
++	struct device *dev = ddata->dev;
++	int ret;
++
++	/* Register initial device - same as always */
++	led_test_class_register_helper(test);
+ 
+ 	KUNIT_EXPECT_EQ(test, cdev->max_brightness, LED_FULL);
+ 	KUNIT_EXPECT_EQ(test, cdev->brightness, LED_TEST_POST_REG_BRIGHTNESS);
+@@ -63,12 +74,9 @@ static void led_test_class_add_lookup_and_get(struct kunit *test)
+ 	struct led_classdev *cdev = &ddata->cdev, *cdev_get;
+ 	struct device *dev = ddata->dev;
+ 	struct led_lookup_data lookup;
+-	int ret;
+ 
+ 	/* First, register a LED class device */
+-	cdev->name = "led-test";
+-	ret = devm_led_classdev_register(dev, cdev);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
++	led_test_class_register_helper(test);
+ 
+ 	/* Then make the LED available for lookup */
+ 	lookup.provider = cdev->name;
+-- 
+2.49.0.1045.g170613ef41-goog
 
-Tomeu
-
-> > +        compatible =3D "rockchip,rk3588-rknn-core-top", "rockchip,rknn=
--core-top";
-> > +        reg =3D <0x0 0xfdab0000 0x0 0x9000>;
-> > +        assigned-clocks =3D <&scmi_clk SCMI_CLK_NPU>;
-> > +        assigned-clock-rates =3D <200000000>;
-> > +        clocks =3D <&cru ACLK_NPU0>, <&cru HCLK_NPU0>,
-> > +                 <&scmi_clk SCMI_CLK_NPU>, <&cru PCLK_NPU_ROOT>;
-> > +        clock-names =3D "aclk", "hclk", "npu", "pclk";
-> > +        interrupts =3D <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
-> > +        iommus =3D <&rknn_mmu_top>;
-> > +        npu-supply =3D <&vdd_npu_s0>;
-> > +        power-domains =3D <&power RK3588_PD_NPUTOP>;
-> > +        resets =3D <&cru SRST_A_RKNN0>, <&cru SRST_H_RKNN0>;
-> > +        reset-names =3D "srst_a", "srst_h";
-> > +        sram-supply =3D <&vdd_npu_mem_s0>;
-> > +      };
-> > +
-> > +      rknn_core_1: npu-core@fdac0000 {
-> > +        compatible =3D "rockchip,rk3588-rknn-core", "rockchip,rknn-cor=
-e";
-> > +        reg =3D <0x0 0xfdac0000 0x0 0x9000>;
-> > +        clocks =3D <&cru ACLK_NPU1>, <&cru HCLK_NPU1>;
-> > +        clock-names =3D "aclk", "hclk";
-> > +        interrupts =3D <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>;
-> > +        iommus =3D <&rknn_mmu_1>;
-> > +        npu-supply =3D <&vdd_npu_s0>;
-> > +        power-domains =3D <&power RK3588_PD_NPU1>;
-> > +        resets =3D <&cru SRST_A_RKNN1>, <&cru SRST_H_RKNN1>;
-> > +        reset-names =3D "srst_a", "srst_h";
-> > +        sram-supply =3D <&vdd_npu_mem_s0>;
-> > +      };
-> > +    };
-> > +...
-> >
-> > --
-> > 2.48.1
-> >
