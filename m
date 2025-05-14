@@ -1,75 +1,102 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151951DE4CC
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA8E28368D;
+	Wed, 14 May 2025 15:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235520; cv=none; b=jiS6Vml19VK0mxRzJnMxTjLl2X09gS/rsAdc0n6epAOBhhZRCBTPIy582KB3xfqkuvxfOmZBMtL7aBxAYGs9q2Yj2tnekzb20Z0W2o3VdzveK/GM4t8PrJJlQuoXMoukbU7GpMxm1y3URtiRD35nbpnJAqGvMOn6VUhYENxXFz4=
+	t=1747235520; cv=none; b=RFkM6wpWyVLnG7Y20yZ18Ad2FXk7RXOip503/rD04N89TXoE6Iy+3YlEHTz3iGFRCVazKdYjJ0HG+bAR6TiXazj5IEvKlXjHt9hQhgOnC0RswjfHCNzK7Bt0X78iTiOrL/0Tv56ccDOlngsShCwPUjpa6qBdfwIdQSBS97unFQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747235520; c=relaxed/simple;
-	bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KoEzURl0QwNvR39MPO4jXo/b6EZfS8NS/HwKEpEJZDy7FWfJYsJSK66eChIwZpgHSv7ZYIXTNCUkOPULDZ72SxiGuYKWFaA8X+oKkVy1F8enLR3s49J8NXZj6Y/K90Wc0MigfvRE5/Z33EGAAm271ox0lW37ai3CedF4ruiSYSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lTRXw+6g; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=Hf3yeg1WG/z7INDo4b2QRGGuu17lQVYeFJrtiNhG/f4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=azyFBRYTuUqxlDo2mcNJZ2qH/KHRYviMe/xkYCztYYp1F7GZ6FPCEj3gJz/WC7ZEB+/TzU1cqwvr0RxpRkUDpp8kV3/WDgm3Xqll9IbquW0V3nyzXpLdG6GdoJtn2Kg3WVn5sgMasiWbQXsthEYv/im6REToHaWMXh2PnZC41ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ne11gRYW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTRXw+6g"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30a8cbddce3so6149609a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747235517; x=1747840317; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
-        b=lTRXw+6gte7jBswlCfPRgNoifOY3aelYkeX+D0W+eUSHEEUG3mMDUJzRN9h+l0WctY
-         Op58L0iFZeHUTXYIiLamWGPuCAIEpp9YbWMF8S9vlBU7b2Y3vyrbFOJsn38Sb4/OdO+I
-         N5N4O+CpFPoFht3Cbktutaxhjkan5MfSVhiyE/Kg/zBC6mFG4xOtPkLe60vB7fk2PDva
-         34Vy9wJHUtag4TbvmW4fykGzdbwrdN0Zrx0YgS+Of+5CpOtJcqfCGwFGe2sd7bJ28jdN
-         M7X7KNS/Beo7tDDY1swD4qicuY4uZ51odZJklhUkdTyTHCQkTWBby9MQHpyVQARrQe86
-         61Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747235517; x=1747840317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=awf475v5L8HDJn+JWb3kNXX4Vy1fIT4q517NqJ8iR48=;
-        b=mX+k+3O2bWNJfBSeXilZo0Q9OrkxRzjysQFocL92ihGrEyksPK1+lc2qXFYjoUSrcC
-         wI0a2P3NrWbRM5Yy0N4IfumelpAkJGgf52quZ3kxhEGEhMo/lq3isHp+qa22Q/DlemSu
-         Fy29mSyuc/lR62Y/ms74r7JVmqviUEu8qa3TM5C5klOeTXZgleZXbBXByI7cdNwg3Jle
-         TgCLQZuIBuJnoUY+D6nI/U4y//ajr/5jmHgOB0G1eZahMJj19RCcvOfzI+Pd0eU8uCyZ
-         Tbn4V7JgfPl73B/iX6CIr+qISZH1rZno61rGQJWg8tda6o56YMcB3/ZrrHy27wf6fkCz
-         D7yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjhmHBCcJIH+KXhv1e4rfJjThaKnet+xpbDmb//ED9fakIazpXSwRJVtdhbO0Rd1giTjXZJT9RbvbB0oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiXskjidm562h1qFpPINQc8EUqjtcZ2yUA8LsurXGmIQ5VdBTp
-	/DdMxtlw2EB7tRgeA3AnAEHma65gknawS1EnZPch/fGxFwF7g1LJhQS58wq0L+bPay5A1gbOBfm
-	C3ZnhtHsbMIcNt1HoTjFY3+eRp/0=
-X-Gm-Gg: ASbGncuCWLwsPlBmnvYURp/6rWoW48GDawLk84vXjwO2OpGt6H7n+c/v9gBahmlQc8S
-	kHhK/rRlu2F46canGaVcKekjN7Fypsd/9nwI0ejqbaSMHQILWNva3X2Ri6xbGhBuX13BQDg28mE
-	iG0IEVuPGJioxWa64Tx/WrHb+BSBeqavQ=
-X-Google-Smtp-Source: AGHT+IG09TEsTWXm1xnxST1ljuBFVosFHHQsrHWlF8haqR/5NQMLQklS/TRLbG5xiTpv0w8YGq39f69m/tRRiR/LxVY=
-X-Received: by 2002:a17:90b:5305:b0:30e:3834:4be6 with SMTP id
- 98e67ed59e1d1-30e38344ce3mr3376184a91.3.1747235517195; Wed, 14 May 2025
- 08:11:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ne11gRYW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7831CC4CEE3;
+	Wed, 14 May 2025 15:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747235520;
+	bh=Hf3yeg1WG/z7INDo4b2QRGGuu17lQVYeFJrtiNhG/f4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Ne11gRYWj3lgEpcZrYSohDydfOYZvORQ1fzMRn23X7XgnG5NBJu5ZptVagwkDDdWB
+	 77mnYKrnKHaO/0a7UIUGmw12f13ew0CjDDoOgdvdLoi0Zsz/armAGlQL02TKvHS4bX
+	 qQtnX1PE5cJ8ahIAEPBwl0FF1I9J7EgZUMgMmxJ2Nvo6dVY0muBQYrdJXH/a8qzG4V
+	 fVSsnfpEkoDSacxo2OUEAlSGPgc43vNl1txhBeTvO4eBgnbyY85bx3awQi0W520EpZ
+	 K4ThhfSrDds0sCys1P8rOo/Ny3zyBJLVEx4iCX2mSiFnQ6QFwM2iLMppH5OSqNlrtn
+	 4Q9syGAR98YxA==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Wed, 14 May 2025 17:10:35 +0200
+Subject: [PATCH RFC RFT v2 15/15] drm/msm/a6xx: Warn if the
+ highest_bank_bit value is overwritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250510102130.14710-1-amfernusus@gmail.com> <20250514053802.GA24939@lst.de>
- <CAMraO6-rQsf8T_ocOKbe3yMP+91W=AF6WtRUYVPtNuq43H8qXA@mail.gmail.com> <20250514140738.GA26520@lst.de>
-In-Reply-To: <20250514140738.GA26520@lst.de>
-From: Ilya Guterman <iliyagutermann@gmail.com>
-Date: Thu, 15 May 2025 00:11:21 +0900
-X-Gm-Features: AX0GCFuehCtDeRr6vYqnTbOU63IUI5mPaX291tiTRon8_twT5BtCmqjqyV97H2A
-Message-ID: <CAMraO6-JdHa-LzNns3TJn7-bzM5LHjB9byovP1q4y9=yt-xigQ@mail.gmail.com>
-Subject: Re: [PATCH] drivers/nvme: Add quirks for device 025e:f1ac
-To: Christoph Hellwig <hch@lst.de>
-Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me, 
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-topic-ubwc_central-v2-15-09ecbc0a05ce@oss.qualcomm.com>
+References: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+In-Reply-To: <20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747235442; l=1451;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=NNwmHE/NXY7JNBB9ewjFIbDQ2ogaNlnpROm0GZClv6g=;
+ b=c2HWY6JbvvY3r20QpOfuIVaoNxVaYPVeIJTkCQio4TyRUikHhSB6rqKK5+IfpP8nIUNZkkGbk
+ 03TnjpR85eqAiGlt0YgcL7Dc/g0lQUQA6bnpCfJUs4vsAjvI2pUmGSK
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-my bad, I was sure I added the Signed-off-by tag.
-I will submit a new version of the patch.
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+In preparation to resolve the issue of hardcoding HBB, throw a warning
+if the value is being overwritten in the GPU driver.
+
+The HBB value is directly correlated with the memory configuration.
+On platforms where more than one is supported, the value must differ
+for proper functioning of the hardware, but it also must be consistent
+across all UBWC producers/consumers.
+
+On platforms supporting only a single DRAM setup, the value may still
+be wrong, or at least inconsistent.
+
+Print a warning to help catch such cases, until we declare full trust
+to the central database.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index eaf468b67f97ff153e92a73a45581228fcf75e46..ab812338739568d5908ca439e5c53e230a02de5d 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -637,6 +637,10 @@ static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 	if (adreno_is_a702(gpu))
+ 		cfg->highest_bank_bit = 14;
+ 
++	if (cfg->highest_bank_bit != common_cfg->highest_bank_bit)
++		DRM_WARN_ONCE("Inconclusive highest_bank_bit value: %u (GPU) vs %u (UBWC_CFG)\n",
++			      cfg->highest_bank_bit, common_cfg->highest_bank_bit);
++
+ 	gpu->ubwc_config = &gpu->_ubwc_config;
+ 
+ 	return 0;
+
+-- 
+2.49.0
+
