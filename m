@@ -1,338 +1,321 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2060.outbound.protection.outlook.com [40.107.96.60])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2113.outbound.protection.outlook.com [40.107.220.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4082AC2F2
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA5818D620;
+	Wed, 14 May 2025 20:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.113
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747254641; cv=fail; b=l8OuBu79mwNAhqmUDm+3mjGsKtPqYI9cxZylY8TBmAMb/+eDFdvWiJUCp45uBzpNpMhU+NM+i3JNeXAPDr6ta5f9LfZuheZ0hzD1viD0TbPPJXAI/NKgst1DHRcO4dJcW9JdqhX9Xndzgbt4KXM19DjxJiNVEY9lb6lmtQ0kbG0=
+	t=1747254661; cv=fail; b=ZVij6NNDQkJSDVW/uFbkYPSSRDwaUplVf303btAQGaQDne96LQhp8ET//P+pBdRsbOUwp073L0JyqCDvnC0RmFft4hpztzAI4GHzCSAFVXPNerRjYoqpHOd+mw8dfdj/qYhv/+QlNoUusb20CorePtnU7ftMmELtrgzC/ie7ntk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747254641; c=relaxed/simple;
-	bh=tNPYANixIP69beMV2QIZb+BaOVq42zU23ytn9zO4Scg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cAx/N+LLitJAyAQwxwGoz3j2qd/7xlaS/mxcIR3csPgTlhwD6jzctYGHinvK9xdDfPhRXxYsRDzYsTgWHMk0RdWbq1d7fiUCW6xS+eg1j0mrodjipczG1TtHGP8dWuvWYDs43rSdhz/ypbyCZpWL8yTGOYL95901MvrOLed2V+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jxnwJttk; arc=fail smtp.client-ip=40.107.96.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1747254661; c=relaxed/simple;
+	bh=rn8SG94OryjRFEbs9vhmWNUop141RpmCuxyWtE92jag=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=aVnI/T1cAvfoMmNMHFvOFSUyd9sDUv9MIOjmngPm5c1eFOvJq+LLNPIasybQG2uU3wWQU7ff4z1hSgbrDq1M1gcOnq1unCXPec05F9KPxfxlbyfnewz27IlRn/py9jt1GGSFjrWv3rZc66WtV659RtQQ+jbZf2TDpKxxX8Pz9Bs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=GEd0cZXh; arc=fail smtp.client-ip=40.107.220.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jxnwJttk"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GEd0cZXh"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ccmZ1h5LBlTqCejUkUtjT8OYJpdl17my1zg+3+3ww4Bt9cNxPuADtxZzr9rdz4n5Bgb76NKfcvEA1bbL9O3XQsZYflzuup0lfsrCx6j8XCJ8l8UU6h5s8Q01poT0pq32bBMAv3Edu0JdnzinrVengmm8GT1lwGhJwiRZUXsKZOYabWk2PEr/vJ+187yK4nL8iDIS2Fb/3v9B9g1KJRhIl/GqFOtjkP2sVNac4T0pYbKIqQOaFJv/MenSKz7KK+jeci4HdUg5w/52XgvIR9AX7dSboi2dWssXlxW7GF5dV3QBLUM2NNgJBdce+SIL2keFAlX1lbcQ8d+FgNfmn8dgYg==
+ b=iKrLvx+drq6zzO99sOi9I+N3i+uK39rCckfMY2uNwuKLpDR5uZE4mLCv51jdP2M7b8Zir4SS9GZRLoIHXz6SERe2AzgY0rugfgpsoSzEljqRJZQV2KkyeV8MwL+RuAb2Byu/Ocz/FcnrcN6NFHOIPkrnrXxy2mYD5vkt7468Ob54eksBa5aG/PjmdyfSz7+DTC8ksHm1XITCOkLvpO9oS6e2Rj/qMrKFde7CDGrmONwfyCxB3DAyadnbTm6x8HBY8QRaMuXbKQxfjOL7sMMM19sWGFY3Um8v6LyZ32sSxKraODCu8T53hocSyIZXPUGSYbkx3Nz2kEkJoMkzo83Lig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=451TJi/qi+0YhAjSmC4XWk341FlTPZEn6A5i4UcgLh8=;
- b=hsFp9hwllwZ7DMTcdD+Ml/xc/3s7ekWvFXMjLtxEhSFDMd+HefaO1fLzv8e9gyaJ7u9d2KJPKN9StOBWj4szkW6EwEzZ2nEMDWB4nrTZx0fuYbBmatkb7Ol+lmrb1JItoB6wN9Ns7rzN1yxTLv/xdMbpDj4pNGArZ10mdlawdMoKLLrnMSLr1kqEehY7YRek/7puy7ow0e6fUu3JkNOA7hK9cSVw6z431lJhJ8S679ZuHc6mz8u+u041U7vymxnkFsy5nVP+tyo0VXGuijz2esxPBrnLzM+8a8PYmIVd29NytdhYpFn12WxSM3IJJ25iWmpOWQv/AookIoWz0mEeRg==
+ bh=ocnMhGeucWy7hvTdivHoX7fXj64JRi0p1AywjRoEhAs=;
+ b=kRqsVGjM1/U2WTdggWnFbWpaSQkMMI2A7vXizBlGXu6b82JwKTYe8tYeJuROvMPLeVWrxRTuLEByB0Zroloxdxbgxz4hPCqcN3YWTwjzIZfkl/9e8mllGlh+z15tKvejMUNPB2FhZ0fzelX8phFejq4TOe0Qk0JPFI9mAHYoqlZbxVomGtBC4KfXrsZ8uv8uAARj/27wVW0jcGz7Zxwdia3eZTACohh8r+IU0qvyvHCIcq2xGAdJaJfPgbg4ngD+DfUe7eDS2Sd5hA4ptjUDl4dtBLZpSKmTmb78YYEv5hnjLFKezyY72laCAUdFXQ3v4287wdaBkJmXl4dbj4PTfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=451TJi/qi+0YhAjSmC4XWk341FlTPZEn6A5i4UcgLh8=;
- b=jxnwJttkQ+lAkIm5YihspzA9vLBgy4UKotQUi+Z7WaA3fbqSqoDIDU1UJ6cos5FYmd2nXYXjfQpY64cww3z260oGkt/Scjl8Qa5cJ1ljyYZKwrF9LPZzhdFWHOCiQGg/dceTlWBCRdcjqIiUByUSiFjRKMp6GtlcuQ58X4+GAoYemmqI2G2eEu9ton7lq+eAaFxG6TE0etbiajVBSC72fvrBWxmJJVpmZeN3Il8T1fKziqRSfmZyGfwRQLR54SfGzbH36jCHvSoAuwJLCugDlT+aSwoCJugkO/R+FVFg89Qab3oUPRjTnH7XZNoYyzo32xyjk2ucxf2LsYw0JMSQHw==
+ bh=ocnMhGeucWy7hvTdivHoX7fXj64JRi0p1AywjRoEhAs=;
+ b=GEd0cZXhYBUCZrXAdezoal4JiUURXFpn7aYHgIEfVLu8NS26ZDFVU8/3hNH/0+ojHF3y3SvA+Ex7dWHiM4bT8GsizpePKlrNk3JB7DqSVmvBhOti16RkQW833CLT/YEyofTtJzCsftOpp2qNfilOMPeWnY+V4sv6i7FuAMTmNx8=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH7PR12MB7915.namprd12.prod.outlook.com (2603:10b6:510:27c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 20:30:36 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 20:30:35 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: Re: [PATCH v1 1/2] mm/memory_hotplug: PG_offline_skippable for
- offlining memory blocks with PageOffline pages
-Date: Wed, 14 May 2025 16:30:33 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <0F0BB46A-F7C2-40BE-A045-C65525956D52@nvidia.com>
-In-Reply-To: <fb12fab1-f2df-4b4f-ae83-1b45e2a7d6bd@redhat.com>
-References: <20250514111544.1012399-1-david@redhat.com>
- <20250514111544.1012399-2-david@redhat.com>
- <7E5BD96D-971F-4AFC-AC09-503310BE8E68@nvidia.com>
- <fb12fab1-f2df-4b4f-ae83-1b45e2a7d6bd@redhat.com>
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1451.namprd21.prod.outlook.com (2603:10b6:5:25c::16)
+ by DM4PR21MB3059.namprd21.prod.outlook.com (2603:10b6:8:5f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.14; Wed, 14 May 2025 20:30:56 +0000
+Received: from DM6PR21MB1451.namprd21.prod.outlook.com
+ ([fe80::7a3a:a395:66:b992]) by DM6PR21MB1451.namprd21.prod.outlook.com
+ ([fe80::7a3a:a395:66:b992%6]) with mapi id 15.20.8769.001; Wed, 14 May 2025
+ 20:30:56 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next,v4] net: mana: Add handler for hardware servicing events
+Date: Wed, 14 May 2025 13:30:37 -0700
+Message-Id: <1747254637-3537-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL1P223CA0024.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::29) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+X-ClientProxiedBy: MW4PR04CA0195.namprd04.prod.outlook.com
+ (2603:10b6:303:86::20) To DM6PR21MB1451.namprd21.prod.outlook.com
+ (2603:10b6:5:25c::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH7PR12MB7915:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7859a79-9d10-49c1-4aeb-08dd93262e67
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1451:EE_|DM4PR21MB3059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0908609d-0678-4761-8dac-08dd93263a68
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sFxd3KYfDDRMdDQS6xAKErtdabCKCBppbhBn+3eDJ6jUilJkG4nv4ZWCkcsI?=
- =?us-ascii?Q?cKGnB9/TLmVZOu+9LLS9MGirkpJmweXTMtULIrrQG6jQ3J8pO7Q+G54rumXm?=
- =?us-ascii?Q?zuoxtExQeB6vXzv7wzjhtiYhmngPysFmHlMymRzsUHCpmTyM1IWNuZ6GolVk?=
- =?us-ascii?Q?rtrNpKx8dotqbM6geyBxaTtNwJGCCA2GaPjPpO6SSP/Mcih62O+1k81b0Qj9?=
- =?us-ascii?Q?0+80DN2KYfWbtJhyzIEOJzWlESDW6tOdU3A85HaepIQGc4WId5ttkOa8ZTOj?=
- =?us-ascii?Q?gFLcUUjdhTYE0ALMU4r6z4vcwG5Gd3lNwbpy5omU6hIczM4CWb//aH4l9LW+?=
- =?us-ascii?Q?PhTnIdjmcORjXYTYtbF+RoH7kxvhZ4IxnxuOsAlZBV1VJqBlTlSW6+JA7KkD?=
- =?us-ascii?Q?6InlKx2eRbdtpc4ho5U3OVV1gttdR5B0e9pxR0lZkN7nmi+1Cy7wyi2GH++h?=
- =?us-ascii?Q?+bY9D5MbnCWxrINOa9DxsdOEvaPW9DnNJZWnmLoM/GJSEqHDC0iaJSOlYMXa?=
- =?us-ascii?Q?e3s9aVhWnGoBiEdLFRdC6JoWZpadW2F4sxbqq7r4kdtpT1GjLv5OU2kNWSn0?=
- =?us-ascii?Q?8tnRNE1N6PIiQFN9/8ctCyLToE6h5O9ED9UEJv3n+sxb0WCo9Oh8ZnlSsdeZ?=
- =?us-ascii?Q?o7FOP5O4QXeg4GbW7sn470nHSK1L3KQvOhXLZkBE3z8vCm16CPIgK9vObDEo?=
- =?us-ascii?Q?HafykTBuS5oOYoxzbktH6GWuNai2eWudZA3Mo1NFdW1ZcpQ65+q+PXanwpRD?=
- =?us-ascii?Q?m/PiaE5nwZ6sZ+VRpjwpcM8X8ah7APOip0c+TQf7l5DEVyydAnGjvzFAe/fc?=
- =?us-ascii?Q?mHjgqtxEE5rcwGafcHtIeLX92O8MMYtmviUauCqY+nQUAKxtNFsZDpGVmbxN?=
- =?us-ascii?Q?L2dtfS5uAxYhJutFSu5NPu0TJhAkkJCzmDSesD9Do6umn5IMvrjc/LETZvbk?=
- =?us-ascii?Q?uhYpdXRi6Ks9yJzsFgkxfSMTRifjd75ol3ZGuMrBdpvEawFnX2UqvNbQw7nN?=
- =?us-ascii?Q?EwZvs071iojhEBhiHvB32KvTpOaRwjqzhxxPsyn7SlaKbVVD5M0iIy7bPMOQ?=
- =?us-ascii?Q?dVJJM8BknUbSEVNnHqxvbKbREparWJc8/hXO4wz6lw+KaNUvjnFs3AxRliV7?=
- =?us-ascii?Q?nOnhL0kOYQMWEkA8LnE2sni2gHZL+GSPbKO5fIsDWn1ylgsZP8pkw2BYrJBp?=
- =?us-ascii?Q?tMnNwFpwwmY82tR11A+SKw88LACPYxWEiFK3L6Z1bK/0Agxym4vxvhtTPLv2?=
- =?us-ascii?Q?Iu4kjXBezHuK3PQ4EFanLOHTn4y5zoMLtbALKNFb6P+a5oNELUAa0FhWJPR7?=
- =?us-ascii?Q?zXvuajSkIKj0qeEL3uwSlIISzJVq/u9R4cPD5iSz+JdhGZq0sio2btvkiW36?=
- =?us-ascii?Q?MLFmPe30bN9OEUPZH5C1UBbmABa0mMKMj4LvYOIuoj1VSfQXhxwBN252A0Iq?=
- =?us-ascii?Q?qfUlca7xSbk=3D?=
+	=?us-ascii?Q?YGwMBdjeqSjDzFywCBNinURw1YUqgF5FIP3XrUSWsvcb8pe1XbZ1RIOqHzXP?=
+ =?us-ascii?Q?e8ntsoWa0Dpdsg3G8azBEc8qMfGscBoCKjkA0AA0pM38O85qFWXKZaS8nnRb?=
+ =?us-ascii?Q?W60Ci056h7n0WpjJk2UN9tizjRuFsfRvfl813VyWZfgrc/tdE4T9mRiD+fbs?=
+ =?us-ascii?Q?rg5QON/oyJR7mtVnMLXHJP4X01QjYDvUQkhRBdnV5pHphP9zxATcq0umGMoK?=
+ =?us-ascii?Q?ydjETJhjQuN9Kfs5hDZl6m/bJWN+Ecvkrb3GwxJck/DijntqltmhT+LJMrYf?=
+ =?us-ascii?Q?hvsR0OsHf+tCetWNWTpme8gBaNHN0Hl6ymFcCRzF+Y1Ifq7lteDRwtPlnCNP?=
+ =?us-ascii?Q?GcNYPPwbBlra+X+ksEjvB+0ZUKntjAj/zS6NXdlI7PC3ssM7XV1Hg8Af1eZx?=
+ =?us-ascii?Q?Dw7OnY0StIR7ACs2MMaLvYJMTobrLk/YN2BsyXAVfiKhch7bFurzkT41px96?=
+ =?us-ascii?Q?R74FftULKOI9TWfQopTWT0KYCgVsowi/hcTl8utpIzGQsojilpFDhUEN8Uek?=
+ =?us-ascii?Q?dzkvTYmyoTi0Zm2FuZCaqSfPWnMnocsaF/4ZHE1g4WG36/KHC5A1c890jwt3?=
+ =?us-ascii?Q?an2z9mP+/5v4IJU6S2Nhdi6fcJ6H+ud9KS98xxepA6QQVORjy54OAj9iVUQA?=
+ =?us-ascii?Q?aayTfDMEc8ZneidCIa1Muj2hBcBhd8rppEtx6NiBH7WmI1v+75E0vZnhH5yY?=
+ =?us-ascii?Q?VCkeS9Xp0/COJk8NLV6cglIqVD1WpkSMuwBkA3mPzCRTDHqneq2ngwxeBgv/?=
+ =?us-ascii?Q?Q6HvS57GZsYz3FRb2Seklx9q0HZVKAevVqs3t+STDvjK1SStiBSbZQcLvsQA?=
+ =?us-ascii?Q?2l6yQdoD6H0LNjD8GmEa2cmC7AQ7W3l1/GwPs/BJks3wyvnX30iZNU16x5is?=
+ =?us-ascii?Q?AVJyleJLgqn+j/6tiBmwpAQT1tQikg4rpdRQGSyGKJkK28egjpa2Fa4tRcsD?=
+ =?us-ascii?Q?CE+h3E0WTixX8j2DwnFIfUjrdkwWVMzJW7yptsYnz2ZqqdRFVTeqmzTFLNhk?=
+ =?us-ascii?Q?mAlwCHJGyOI0MZvNHA46qBkllcI70rMkADJvgtYwc9i/59MvJg1ui8STKxYl?=
+ =?us-ascii?Q?9PDtIkD5Hr4tm+zHWUxajwPSj1+lnzn7vQfWy0NsnyW4IU0gAXfRItx5cx2s?=
+ =?us-ascii?Q?1dfUVTYSrC/0+K7+sOVr8RKn66qskc5g9AqVDy8a+IgyhTj4fGQ7S3QX/bP4?=
+ =?us-ascii?Q?F/bq6e4Fs4EnQu7FmiwituoNOscodrJMSgjnMicHKJLeqk1lnpBWWjxNlynz?=
+ =?us-ascii?Q?1ZOqCpNgqt0vBasi0oLlAFyFbkkp+/dR88L1/0GFc080eJsFzS86bM5fmknk?=
+ =?us-ascii?Q?g+SponhgVO6s0iD2YMerz3D7OHahINVrn4tHUpLjrxxXjNu6i2SUMXyJ07qI?=
+ =?us-ascii?Q?zr/+wsn5+Vajz7Tno9XWb8SxbeFMv5MNDgn97j3CLnVZQACUdistCKMdOSKv?=
+ =?us-ascii?Q?X8yEc3iKIDNtl4cjm+eB12xuuvOqEOmK5CtTGQzX9xarf9muqCRdsA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1451.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jnKR0Y3uE1v2HTZlx13q8yyqMRyCGef3TKVcT3cHrxKNPjwSNHtjGW9+oBKD?=
- =?us-ascii?Q?yd5a8YGiq3z84rWt+winUMkPS6aPvEBlHphNbZoKzCMWApQuZZiVnFBuAG2T?=
- =?us-ascii?Q?SIjI/PlPVPaYpSTJSwF6bVa/DxzHKBpEQdlpF4AW8AflhKSVmRpfKBmjErSJ?=
- =?us-ascii?Q?pjjLqBXX9CX6V7mzptspFTCP/rTW9XIG//NsHvKC55eGgG9urtWz71agS2Iy?=
- =?us-ascii?Q?HHFXLlUf03UIt8kUcGURNJ/lke48JaiEtBN6DM2yBHUnzJKc91q3LXGnKasL?=
- =?us-ascii?Q?AQMdWL27P4LyFQEiEOosO2ZxKGAMIIaCMkUcUT6ncGslaqf3EMgU/x0CaZFi?=
- =?us-ascii?Q?9WwoDkocPqylZGUHF4aSguPV3vgJq0ZqfuAOt2Ju2b4sWI16Wk2XEUgvMYPJ?=
- =?us-ascii?Q?JCui8K3p0RNbaUIqkNZshzSpzLh4lh9fRiZ/qxdivqCAQ++XWqxWK236Pif9?=
- =?us-ascii?Q?2elTvbjosWB0+y/K3TT5NE1wYXPCooWoBJPUax3UXIb1NZOWuL6M8NW7rs8e?=
- =?us-ascii?Q?5PP29phNmHLlWzRVt0JVEQ3t7D44rR+UXIRn3ObkXxl4rJK3ltZW6Nqk/k+E?=
- =?us-ascii?Q?1r29gVwE+tVZhN06bj+OPIIpByA0V1b2H9MhC/7D4uLF3msypsBNZDEIk6OY?=
- =?us-ascii?Q?PAl7AUgVO/Onha7Qri9mYkb6G/NwpzaS21/OaIj9ImD/iSdgg7+zXaRqUtwj?=
- =?us-ascii?Q?ds2oG8FbqO99G7Lb0dBg9APWshwhqb0cDWcGRwGuEtk1H1WYu5rtnt5H7Pk/?=
- =?us-ascii?Q?O7jUfMK977KPuWjR+OWuMP/sCruVb5sWKVwY8UsYUmdFQr3QhIRm4HzqelvW?=
- =?us-ascii?Q?QnXaGeGVBuiDDbuVb4hRgjiIkH9Haa0W8MfW964iQQ6S9HTtfOFd5K51ixCu?=
- =?us-ascii?Q?bHfHEd4mkmIErF9Om5c+3NVY61mEQZCPbVBCFsT4zMkzdRHrmAwASMm9VKw5?=
- =?us-ascii?Q?rfGHnoB20D1tQOvZl7MQGzesjPQANVH0vZMsmqGJ7PlBw7Aqi9IXgd8O4nUI?=
- =?us-ascii?Q?wn/MYwRMe17nFnQTb5MAKCXmIkL7eB4EiJnvijieHgP3fn1OeAHXTDMV4slB?=
- =?us-ascii?Q?wv+spELHy2KWzSq5rgE2lN8CMI8+V3ChnguuUt/I0ZScdlQKa7qSPAA3Xy5p?=
- =?us-ascii?Q?zm2kM2Rd9Z4PAlZeOaa+AfhfXLfuEc4kQ2RKv62m7SN84zZmXJGmugBcjATm?=
- =?us-ascii?Q?qT9cOBee1jFwALb7SeDeVJpVSZsppR04HoNFftPb948JIQmbyYzok9Rf+82t?=
- =?us-ascii?Q?K9QPoBhsSrPRfnASyX+zPEpjhTNJPGt3W5zkj2VJqJRY0TOgUbJdpN7VARrM?=
- =?us-ascii?Q?/TivoosICbWoRSmdlavZcWVjT0aNTpGgp18OXc+OaQheBFryBtxYbpaVwFrT?=
- =?us-ascii?Q?iBB0YXc31PXB+Z20FS5erTP9qZI+zzcAvz56cCJXCGKiSqsbl6B9zNiYBXnH?=
- =?us-ascii?Q?f80gA4W/1fzq72X9D2yRxxCtlD4JMzVXqzhnnwdKxkL365PLgUs9uUjB4ow0?=
- =?us-ascii?Q?q5rbTlhrsr3qSE3M14DlQqNK7Z9ajrrNMT3JiK73XfS11YRT7bt0oQvycPeo?=
- =?us-ascii?Q?Yf4o2BGdtwbqXUoy3+lbKvAQIak0CFrefy7pZ2lK?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7859a79-9d10-49c1-4aeb-08dd93262e67
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+	=?us-ascii?Q?VFaNXop2p5KH9BsHGJJh22vHKqxUFlGOaHeweoNtTHUPEuRj8kP7u+eTxWrs?=
+ =?us-ascii?Q?isA2O+dhSwR3Xl0pjKCvUWWenW5d3hzVBN122gefLeX9xHh/T/wug2jyQtEZ?=
+ =?us-ascii?Q?D7IaVH7Izc02WfgKywnqIrLPj0zCHUsH3Ul6Yqls5fap++pVLyZsqtF1t8a6?=
+ =?us-ascii?Q?lxI1Mg0k1sXMckV27kXJBmi8Mvxxp8GCFl4Xe4IKoGteXaFzZbR7VIoquNha?=
+ =?us-ascii?Q?XgMKhNP4c7AUBmyhoHDAI8bUieU+n2pPJFcOfNjstM47SatJC+P+3UXVRtBk?=
+ =?us-ascii?Q?YlDUm8L+8VMH9b7ooEDn7uCnhFzrCEew8qoXAAH5V+NjJJ33xnFl30BuGhdN?=
+ =?us-ascii?Q?3saz4G2NcNaSPLjT5jueBBwZ1JqAz/cMMfeXA2r2nVGuKtzEDBfMedNxAkm/?=
+ =?us-ascii?Q?n8+eBpzbO0eBDzJ37ajGwrTCFAQR82NpRYi+pSmZ/iQ/1GGAcCxP//hG6wGH?=
+ =?us-ascii?Q?Pqbw/+zkYjPT2exKaITzcd3sazcnPQSrXCvNHjAtmdKIikRyQCJl6ZWgmDf7?=
+ =?us-ascii?Q?6hM5Oj0M7U9rnX9OQfzqx+V4zrE5ji163F975bLlim1O4tWX8qnUlb70lNlH?=
+ =?us-ascii?Q?oorwKMaz1Pkmm8cS5dz9pm6kgfmt9cUsJfYUSGVqgigYho2bOV/ZcBBlv+Jn?=
+ =?us-ascii?Q?PVm6hgFUfMvN6CgHgv/4L7KYBQpiPx3EDKcDWbtAwElFgSzkJtKASxdkN8eP?=
+ =?us-ascii?Q?QvdMVGGT+x5voCZ/0cD2oDN9hqNraouCczmFFIWpxk2gxDnf214GmN0TzafO?=
+ =?us-ascii?Q?81zVZK8ZnPF4zV0X9wTI82AH8GlUDpiKfr8LWFwecW3uCbplQMxcphilNC5m?=
+ =?us-ascii?Q?ScrpfSR+NnZS1XTwIjv0f03D9goQfuFUlcJYU1uX712HnWRiLeMT7cDB8/jP?=
+ =?us-ascii?Q?H3k25ndJjAe9iSnaxN0xIZ1fvvj+8MtOvk4Ezmn3Xj7fXOV2yT7SgP/7wsdc?=
+ =?us-ascii?Q?vslOoZiiiMRPECT+Jlkf5qZ0C70z7L9la1ieW8ZZYedUKimrEhPfZdnRqvLd?=
+ =?us-ascii?Q?v6RCuSrY7B7cubdo5YM/rX4R/e5/xc/tI/m5+4K8m33EH8dQRckIvvvhiDYr?=
+ =?us-ascii?Q?jjsAB4skhfUwPYMNGZJ4RdIotBQWD65yXYvshAeSatTKm194CAzJmfdBcTPa?=
+ =?us-ascii?Q?xk11cOT4OGz/qOVu06Nlsi1xG9TZe1a8pmBJncYvHGkzgLXlqdwmn8E+H9sl?=
+ =?us-ascii?Q?iHizJ/X7NGzxU2PoCSnRgUSOKL1YeKVtcsISq25pRoACM7zjqOH8cQ12KIvo?=
+ =?us-ascii?Q?R1qtk+EHZi9YUC4P14N6W0elDnb1fJB+E0kV6ZVO30anUTU4OKEvr27l3YNA?=
+ =?us-ascii?Q?sT778FLCkQi06/AuXsWPuhHpu34eH8OyvijU6skItFru+g7Bb5rYAA+9LafM?=
+ =?us-ascii?Q?Q69bEI8/knvdUgdEkcJbPvLebPasudexwfs3HtZUYomAv5lr5Mmm29P8lNa4?=
+ =?us-ascii?Q?DCcrtJnhNd6FMLZV7WsjoAY0FFGyQW3CsCKVsuIR7PiQ2Qwok5hOxm1XGAZC?=
+ =?us-ascii?Q?LMriFvkL5mYXY/h5vzS4qi4+5EJlfSYx9PVBdLZtTda5GiLF3MZRZQMQMo6k?=
+ =?us-ascii?Q?xmeMmEYs6iaTGpFrzEuUCeFEq2hU4ZomWNBuoHWG?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0908609d-0678-4761-8dac-08dd93263a68
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1451.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 20:30:35.4164
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 20:30:56.0391
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VjP2wKxOurFJJ4MVKiw75/asWmqoU7TUjTgrhoPJfSevKhwrMM8//DBxbqg6bcDo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7915
+X-MS-Exchange-CrossTenant-UserPrincipalName: sheANfBLWyQNCH7Qz8iyG7xAMjRkx5+/GLFxd954WkaT87IifWsTv+MYCf9EbBTG+UPvBURa8Em3KE2bY9kZYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3059
 
-On 14 May 2025, at 15:51, David Hildenbrand wrote:
+To collaborate with hardware servicing events, upon receiving the special
+EQE notification from the HW channel, remove the devices on this bus.
+Then, after a waiting period based on the device specs, rescan the parent
+bus to recover the devices.
 
-> Thanks a bucnh for the review!
->
->>> +
->>> +		if (PageOffline(page) && PageOfflineSkippable(page))
->>> +			continue;
->>> +
->>
->> Some comment like "Skippable PageOffline() pages are not migratable bu=
-t are
->> skipped during memory offline" might help understand the change.
->
-> I can add a comment like for the other cases.
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v4:
+Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
+be multiple cases of this reset request.
 
-Thanks.
+v3:
+Updated for checkpatch warnings as suggested by Simon Horman.
 
->>
->> Some thoughts after reading the related code:
->>
->> offline_pages() is a little convoluted, since it has two steps to make=
+v2:
+Added dev_dbg for service type as suggested by Shradha Gupta.
+Added driver cap bit.
 
->> sure a range of memory can be offlined:
->> 1. start_isolate_page_range() checks unmovable (maybe not migratable
->> is more precise) pages using has_unmovable_pages(), but leaves unmovab=
-le
->> PageOffline() page handling to the driver;
->
-> Right, it's best-effort. For ZONE_MOVABLE we're skipping the checks com=
-pletely.
->
-> I was wondering for a longer time that -- with the isolate flag being a=
- separate bit soon :) -- we could simply isolate the whole range, and the=
-n fail if we stumble over
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 64 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 11 +++-
+ 2 files changed, 73 insertions(+), 2 deletions(-)
 
-Talking about that, I will need your input on my change to move_pfn_range=
-_to_zone()
-in online_pages()[1]. Making MIGRATE_ISOLATE a separate bit means if you =
-isolate
-a pageblock without a migratetype, unisolating it will give an unpredicta=
-ble
-migratetype.
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 4ffaf7588885..08b8297e1800 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -352,11 +352,55 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++#define MANA_SERVICE_PERIOD 10
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_bus *bus, *parent;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	if (!pdev)
++		goto out;
++
++	bus = pdev->bus;
++	if (!bus) {
++		dev_err(&pdev->dev, "MANA service: no bus\n");
++		goto out;
++	}
++
++	parent = bus->parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "MANA service: no parent bus\n");
++		goto out;
++	}
++
++	pci_stop_and_remove_bus_device_locked(bus->self);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	pci_lock_rescan_remove();
++	pci_rescan_bus(parent);
++	pci_unlock_rescan_remove();
++
++out:
++	kfree(mns_wk);
++}
++
+ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ {
+ 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+ 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+ 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
++	struct mana_serv_work *mns_wk;
+ 	union gdma_eqe_info eqe_info;
+ 	enum gdma_eqe_type type;
+ 	struct gdma_event event;
+@@ -400,6 +444,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		eq->eq.callback(eq->eq.context, eq, &event);
+ 		break;
+ 
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++	case GDMA_EQE_HWC_RESET_REQUEST:
++		dev_dbg(gc->dev, "Recv MANA service type:%d\n", type);
++
++		if (gc->in_service) {
++			dev_info(gc->dev, "Already in service\n");
++			break;
++		}
++
++		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
++		if (!mns_wk)
++			break;
++
++		dev_info(gc->dev, "Start MANA service type:%d\n", type);
++		gc->in_service = true;
++		mns_wk->pdev = to_pci_dev(gc->dev);
++		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
++		schedule_work(&mns_wk->serv_work);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 228603bf03f2..23ca45d207ba 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -58,8 +58,9 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+-	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
++	GDMA_EQE_HWC_RESET_REQUEST	= 135,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+ };
+ 
+@@ -388,6 +389,8 @@ struct gdma_context {
+ 	u32			test_event_eq_id;
+ 
+ 	bool			is_pf;
++	bool			in_service;
++
+ 	phys_addr_t		bar0_pa;
+ 	void __iomem		*bar0_va;
+ 	void __iomem		*shm_base;
+@@ -558,12 +561,16 @@ enum {
+ /* Driver can handle holes (zeros) in the device list */
+ #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+ 
++/* Driver can self reset on EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE BIT(14)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
++	 GDMA_DRV_CAP_FLAG_1_SELF_RESET_ON_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+-- 
+2.34.1
 
-[1] https://lore.kernel.org/linux-mm/20250509200111.3372279-3-ziy@nvidia.=
-com/
-
-> an unmovable page during migration. That is, get rid of has_unmovable_p=
-ages() entirely. Un-doing the isolation would then properly preserve the =
-migratetype -- no harm done?
->
-> Certainly worth a look. What do you think about that?
-
-In principle, the method should work and simplifies the code. But it suff=
-ers more
-penalty (pages are migrated) when an unmovable page is encountered after =
-the
-isolation, since before nothing will be migrated. To mitigate this,
-we probably would want some retry mechanism. For example, register a call=
-back
-to each unmovable page and once the unmovable page is deallocated,
-alloc_contig_range() can move forward progress.
-
->
->> 2. scan_movable_pages() and do_migrate_range() migrate pages and handl=
-e
->> different types of PageOffline() pages.
->
-> Right, migrate what we can, skip these special once, and bail out on an=
-y others (at least in this patch, patch #2 restores the pre-virtio-mem be=
-havior).
->
->>
->> It might make the logic cleaner if start_isolate_page_range() can
->> have a callback to allow driver to handle PageOffline() pages.
->
-> We have to identify them repeadetly, so start_isolate_page_range() woul=
-d not be sufficient. Also, callbacks are rather tricky for the case where=
- we cannot really stabilize the page.
-
-During start_isolate_page_range(), all pageblocks are isolated, so
-free pages cannot be used by anyone else, meaning no new PageOffline()
-pages or any other unmovable pages, right?
-
->
->>
->> Hmm, Skippable PageOffline() pages are virtio-mem specific, I wonder
->> why offline_pages() takes care of them. Shouldn't virtio-mem driver
->> handle them?
->> I also realize that the two steps in offline_pages()> are very similar=
- to alloc_contig_range() and virtio-mem is using
->> alloc_contig_range(). I wonder if the two steps in offline_pages()
->> can be abstracted out and shared with virtio-mem.Yes, offline_pages()>=
- operates at memory section granularity, different from the granularity,
->> pageblock size, of alloc_contig_range() used in virtio-mem, but
->> both are trying to check unmovable pages and migrate movable pages.
->
-> Not sure I get completely what you mean. virtio-mem really wants to use=
- alloc_contig_range() to allocate ranges it wants to unplug, because it w=
-ill fail fast and allows for smaller ranges.
->
-> offline_pages() is primarily also about offlining the memory section, w=
-hich virtio-mem must do in order to remove the Linux memory block.
-
-To clarify, I mean the steps of start_isolate_page_range(), scan_movable_=
-pages(),
-do_migrate_range(), dissolve_free_hugetlb_folios() and test_pages_isolate=
-d() in
-offline_pages() is very similar to the steps of start_isolate_page_range(=
-),
-__alloc_contig_migrate_range(), replace_free_hugepage_folios(),
-and test_pages_isolate() in alloc_contig_range(). So I wonder if a common=
-
-function routine can be shared.
-
->
->>
->>
->>>   		folio =3D page_folio(page);
->>>
->>>   		if (!folio_try_get(folio))
->>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>> index a6fe1e9b95941..325b51c905076 100644
->>> --- a/mm/page_alloc.c
->>> +++ b/mm/page_alloc.c
->>> @@ -7023,12 +7023,12 @@ unsigned long __offline_isolated_pages(unsign=
-ed long start_pfn,
->>>   			continue;
->>>   		}
->>>   		/*
->>> -		 * At this point all remaining PageOffline() pages have a
->>> -		 * reference count of 0 and can simply be skipped.
->>> +		 * At this point all remaining PageOffline() pages must be
->>> +		 * "skippable" and have exactly one reference.
->>>   		 */
->>>   		if (PageOffline(page)) {
->>> -			BUG_ON(page_count(page));
->>> -			BUG_ON(PageBuddy(page));
->>> +			WARN_ON_ONCE(!PageOfflineSkippable(page));
->>> +			WARN_ON_ONCE(page_count(page) !=3D 1);
->>>   			already_offline++;
->>>   			pfn++;
->>>   			continue;
->>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
->>> index b2fc5266e3d26..debd898b794ea 100644
->>> --- a/mm/page_isolation.c
->>> +++ b/mm/page_isolation.c
->>> @@ -121,16 +121,11 @@ static struct page *has_unmovable_pages(unsigne=
-d long start_pfn, unsigned long e
->>>   			continue;
->>>
->>>   		/*
->>> -		 * We treat all PageOffline() pages as movable when offlining
->>> -		 * to give drivers a chance to decrement their reference count
->>> -		 * in MEM_GOING_OFFLINE in order to indicate that these pages
->>> -		 * can be offlined as there are no direct references anymore.
->>> -		 * For actually unmovable PageOffline() where the driver does
->>> -		 * not support this, we will fail later when trying to actually
->>> -		 * move these pages that still have a reference count > 0.
->>> -		 * (false negatives in this function only)
->>> +		 * PageOffline() pages that are marked as "skippable"
->>> +		 * are treated like movable pages for memory offlining.
->>>   		 */
->>> -		if ((flags & MEMORY_OFFLINE) && PageOffline(page))
->>> +		if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
->>> +		    PageOfflineSkippable(page))
->>>   			continue;
->>
->> With this change, we are no longer give non-virtio-mem driver a chance=
-
->> to decrease PageOffline(page) refcount? Or virtio-mem is the only driv=
-er
->> doing this?
->
-> The only in-tree driver making use of this so far, yes.
-
-Got it. Thanks.
->
->
-> There is one tweak I'll have to perform in the virtio-mem driver to cov=
-er one corner case: when force-unloading the virtio-mem driver, we have t=
-o make sure that memory blocks with fake-offline pages cannot get offline=
-d (re-onlining would be bad). I'll fix that up.
-
-
---
-Best Regards,
-Yan, Zi
