@@ -1,372 +1,522 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8BA22541B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DF62253EB;
+	Wed, 14 May 2025 09:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214379; cv=none; b=ZPb+lY5+uS3FyJnFo4jqKnwIDo7x/XZrBkOeWbcUE7KMIqKlYjgsJ3Eau6bXOzY50KGS3QUYlxNbraqLH76UZu5oTLuuOirnp9Abi5IwMcBmikHC7jlwOvUjReK77l46DoW2V2kv/QZfmAtuUdySZ/HEJS+O+HmvJCi1c+blL90=
+	t=1747214394; cv=none; b=K4RzEet2lwbr6SFclDL4kr7+oS7MoP4H8uKlkrMBlL9Bp3HR7zxuLjoheO0Urp581IPpKI5CMvsuPdhGurVRxM7EeIY/5ZFbPI867S4YPbw7pnxWJlVmsLDVPEdsmBAOpJPEtrAlxpHWHpLuG73liOw8lltoAs61318AnCNVtzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214379; c=relaxed/simple;
-	bh=2D2rpbKGcSdInh62Cls4bfflDYQSGcbRv/l5aVvJN7g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C52ewuiCVERBthm+HOPboAh6cQ6AFV3e2RXMWVZISbFavmE9icRhwvyEwY1Ygbzwrdl+HZNjM5gbW6DuOpDn+Yy1B1VVLTjH3H7MtigJqd3Qi0Ew6M9GZFZcdaP1EcYTgiatznWGC5gcBLtjCj50khJ1maxmaenp+UOuCBR/nJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=SEu2+Lxx; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747214394; c=relaxed/simple;
+	bh=SCXHLzweUhrUJ4W/a5xtDXw1cIdiaxcL2f89K1zgy2I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o3qKQfrkqqE+rh8ggV8+KgMgbIb8d3RZsLi9C75WZ4N8Mk57wRLeD8U+Ar+qltk+m2x7qCbtWDSRSMu/QrPC2H03Xl7u6msq8LOTK3YwwMM7RcTdKDBy1Cb7FllXZfB4q4ddAl+VB90/stWmLn5EwAhxoSo3OK15+oALXyEKzqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eLnfgYk1; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="SEu2+Lxx"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zy78N2fdPz9t76;
-	Wed, 14 May 2025 11:19:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747214372; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dX/+oVQTquS1mWBfFty+DmXpsce2yUrtxG5oSfbjfco=;
-	b=SEu2+LxxTcyE2nVz5ovYvIkYJ3QMqncbbRBSkF2UQlWaVDM1y8ZrpaRwy/ijZ8jQojk9Re
-	Ufr7rprT4vKbS8V5nPraSnW96eJxZBGJTz4PUls+qs3tbLML05MIS9NYjyBiWd4nErDNdl
-	mK+hbjqKwPBlRCsaa65R3qZ9dAdMzbXUjF/so9FAJT3jKQ6pCaxR/RbCpPBOrjz53gfiCb
-	tKI6pJJyg2h2YOcGTtLCjZJQJ/em+Sv/LAF9pKmR2NDRBqxWcnf3M4lLfbMR1HlhxewdYT
-	xlqy6uC+4Ig6J4PHQYPS5ion2S5kAQw9SeyDp0zxsxm7vQmukFO0KbsanAkK3Q==
-Message-ID: <b98ac3e08922f5d1a6a83d1caa9f8d1d4a7aaac2.camel@mailbox.org>
-Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, phasta@kernel.org, Lyude
- Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
- <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 14 May 2025 11:19:25 +0200
-In-Reply-To: <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
-References: <20250424095535.26119-2-phasta@kernel.org>
-	 <20250424095535.26119-8-phasta@kernel.org>
-	 <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
-	 <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
-	 <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
-	 <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eLnfgYk1"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vumr021744;
+	Wed, 14 May 2025 11:19:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	2ge3N4SZms2+ktUaFsxam/0rl408JhaycQhZhQP/FUk=; b=eLnfgYk1ZdxJgWjj
+	4VeY6rJqoZBIgcg4pXYmvzxs3lo5gdn/kD/61NsWkPkF8vzzZEDrDq4Rh9YhNM1Z
+	IN/OAQT14MAySEY3CdWcwc3tCzxp8TyOiG+nLi+YKTnEWWbTN5sI9PgekD52y1L9
+	qnzSjj+x5qqHWCAqItxFbfWsVxo3uBj6PqOkeEqTSbChxce090oiuZC0dE7Lz0lN
+	LOseoM+64WjL+PMhz+snjdEzXppSbSb2LYRMBAt07xVItD2//kapmkQYn3ndYj2c
+	waDil9y5Yaj/u7hke6LWgQckBN4824CI0dRos9Obs+dUB+ilR96LgpW+GJTp24ys
+	3XNNfA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdrau8p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:19:24 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 067634005E;
+	Wed, 14 May 2025 11:17:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9A612B41561;
+	Wed, 14 May 2025 11:16:34 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:16:34 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+Date: Wed, 14 May 2025 11:15:23 +0200
+Message-ID: <20250514091530.3249364-3-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 599db39402c1399f9b8
-X-MBO-RS-META: dgoc31epst7ynah537peaaxcoarzks9i
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
-On Wed, 2025-05-14 at 09:30 +0100, Tvrtko Ursulin wrote:
->=20
-> On 12/05/2025 09:00, Philipp Stanner wrote:
-> > On Thu, 2025-05-08 at 13:51 +0100, Tvrtko Ursulin wrote:
-> > >=20
-> > > Hi Philipp,
-> > >=20
-> > > On 08/05/2025 12:03, Philipp Stanner wrote:
-> > > > On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
-> > > > > The unit tests so far took care manually of avoiding memory
-> > > > > leaks
-> > > > > that
-> > > > > might have occurred when calling drm_sched_fini().
-> > > > >=20
-> > > > > The scheduler now takes care by itself of avoiding memory
-> > > > > leaks
-> > > > > if
-> > > > > the
-> > > > > driver provides the callback
-> > > > > drm_sched_backend_ops.kill_fence_context().
-> > > > >=20
-> > > > > Implement that callback for the unit tests. Remove the manual
-> > > > > cleanup
-> > > > > code.
-> > > >=20
-> > > > @Tvrtko: On a scale from 1-10, how much do you love this patch?
-> > > > :)
-> > >=20
-> > > Specific patch aside, it is the series as a whole I would like to
-> > > be
-> > > sure there isn't a more elegant way to achieve the same end
-> > > result.
-> >=20
-> > I count this as a 9/10 \o/
->=20
-> :) Yes, sorry, it would a bit lower than that, at least until someone
-> can point out a fatal flaw in my alternative. :)
+Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+controller based on the DesignWare PCIe core.
 
-There's no fatal flaw in my approach either :)
+Supports MSI via GICv2m, Single Virtual Channel, Single Function
 
->=20
-> > But jokes aside:
-> >=20
-> > >=20
-> > > Like that sketch of a counter proposal I sent for the reasons
-> > > listed
-> > > with it. Which were, AFAIR, to avoid needing to add more state
-> > > machine,
-> >=20
-> > Well the state machine added is basically just the waitqueue. The
-> > WRITE_ONCE booleans are currently just for correctness and clarity.
-> > I've looked at them and want to remove them all in an other patch,
-> > because I think they're not needed (workqueue handles that)
-> >=20
-> > But yes, the added state is > 0
-> >=20
-> > > to avoid mandating drivers have to keep an internal list,
-> >=20
-> > That's not mandated by the scheduler, but by logic itself. All
-> > drivers
-> > need to have a list of on-flight fences. Otherwise the drivers
-> > would
-> > have no chance of signaling those fences once their GPU tells them
-> > to
-> > do so.
->=20
-> Probably it would be hard to signal without tracking of some sort
-> yes,=20
-> although it wouldn't have to be indexed by fence context, or looked
-> up=20
-> by it so maybe still simpler.
+Supports WAKE# GPIO.
 
-Well, the decisive point remains that all drivers must know all on-air
-fences, so they all are able to signal those fences.
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+---
+ drivers/pci/controller/dwc/Kconfig      |  12 +
+ drivers/pci/controller/dwc/Makefile     |   1 +
+ drivers/pci/controller/dwc/pcie-stm32.c | 364 ++++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-stm32.h |  15 +
+ 4 files changed, 392 insertions(+)
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
 
->=20
-> More importantly I think with this comment I was thinking about the
-> fact=20
-> that with ops->cancel_job() approach I was able to remove the _done_=20
-> list tracking from the mock scheduler.
-
-If the done_list is just about avoiding memory leaks, then I should
-also be able to remove it completely, shouldn't I? In this patch here I
-already remove the leak-related code in drm_mock_sched_fini(), but
-hadn't looked too deeply into what else the done_list does. Is it just
-about the leaks?
-
->=20
-> > I have now provided two users of the new API, nouveau and the unit
-> > tests. Can you think of a party for which the suggested approach
-> > wouldn't work?
->=20
-> I did not think along those lines yet so don't know. I just thought
-> it=20
-> was too much code to implement a relatively simple thing and that
-> also a=20
-> few things in the design bothered me.
->=20
-> If you look at the diffstat from my proposal and ignore kerneldoc and
-> unit test stats, it literally adds 8 lines to drm_sched_fini() and a=20
-> single line to gpu_scheduler.h:
->=20
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void (*cancel_job)(struct drm_sched=
-_job *sched_job);
->=20
-> And in the former after it stops the workers:
->=20
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (sched->ops->cancel_job) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct drm_sched_job *job;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 list_for_each_entry_reverse(job, &sched-
-> >pending_list,=20
-> list) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched->ops->ca=
-ncel_job(job);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched->ops->fr=
-ee_job(job);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 }
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=20
-> To me this looks quite clean. Unless, I say this again, I am missing=20
-> some fatal flaw why it doesn't work.
-
-It does work. I've stated that before. But mine works, too. And mine
-doesn't have a hard blocker either, as far as I can see.
-
-So let's focus on the main differences:
-
-Your version adds fewer lines of code, that's correct.
-
-I think cleaning up through just having the driver signal the fences
-all at once is better because
-   1. The very same code path both for "legacy-fini" and "new-fini" is
-      responsible for cleaning up the jobs. Notably, the free_job()
-      callback is only invoked by the same parties as before, primarily
-      the work items. We don't add a new, only sometimes running, code
-      path *that free's jobs*.
-   2. The scheduler's already fractured design doesn't fracture
-      further: the free_job work item remains responsible for calling
-      free_job(). Having just one party being responsible for one thing
-      is a desirable design goal.
-   3. Considering that many drivers generously (ab)use API internals of
-      the scheduler, and considering that there is already ambiguity of
-      who's responsible for handling job lifetimes, I believe it is
-      safer not to add an additional code path that can free jobs, but
-      keep that one path.
-   4. It reads more cleanly: "We're not canceling a single job here,
-      we're killing all associated jobs now all at once", raising
-      awareness for driver programmers that this is a significant
-      event: we're tearing down while not all of your jobs have
-      finished on your GPU.
-
->=20
-> > Don't get me wrong, your approach does work and it definitely has
-> > its
-> > charm. However, I think what I propose here is syntactically a bit
-> > cleaner because the classical order of a fence first being signaled
-> > in
-> > the driver and then the associated job being freed as usual by the
-> > scheduler is guaranteed. IOW, we primarily rely on the signaling
-> > path.
-> >=20
-> > Either way, neither your nor my approach would have worked out of
-> > the
-> > box in Nouveau without that driver exploding.
->=20
-> What do you mean by this - the latest version of your series does or=20
-> does not work for nouveau?
-
-Mine works with Nouveau, but revealed a bug in Nouveau [1]. Yours would
-have ran into that bug, too.
-
-My point is just that your job-by-job approach wouldn't have been
-superior to my approach in practice, i.e., when implementing it in the
-first "beta tester", Nouveau. Would have been the same problem in
-different color.
-
-So just because a cancel_job() callback would result in fewer lines of
-code wouldn't mean it's superior in practice. I expect the same to be
-the case for other drivers, especially those who use scheduler
-internals.
-
-So, summarizing:
- * My approach works. Your approach works.
- * It works for all drivers, because they all have a list of fences.
- * It communicates more clearly to the driver what this is all about.
- * It keeps the scheduler's design more consistent regarding
-   responsibility / code paths for job life times.
-
-P.
-
-[1] https://lore.kernel.org/dri-devel/20250415121900.55719-2-phasta@kernel.=
-org/
-
->=20
-> Regards,
->=20
-> Tvrtko
->=20
-> >=20
-> > > =C2=A0 and to align
-> > > better with the existing prototypes in the sched ops table (where
-> > > everything operates on jobs).
-> >=20
-> > That's not a hard criteria IMO. Those are sched_backend_ops, not
-> > sched_job_backend_ops, and prepare_job() already takes a parameter
-> > other than a job.
-> >=20
-> >=20
-> > Cheers,
-> > P.
-> >=20
-> > >=20
-> > > Regards,
-> > >=20
-> > > Tvrtko
-> > >=20
-> > > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > > > > ---
-> > > > > =C2=A0=C2=A0=C2=A0.../gpu/drm/scheduler/tests/mock_scheduler.c=C2=
-=A0 | 34
-> > > > > ++++++++++++-----
-> > > > > --
-> > > > > =C2=A0=C2=A0=C2=A01 file changed, 21 insertions(+), 13 deletions(=
--)
-> > > > >=20
-> > > > > diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > > b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > > index f999c8859cf7..a72d26ca8262 100644
-> > > > > --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > > +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > > @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
-> > > > > drm_sched_job *sched_job)
-> > > > > =C2=A0=C2=A0=C2=A0 /* Mock job itself is freed by the kunit frame=
-work. */
-> > > > > =C2=A0=C2=A0=C2=A0}
-> > > > > =C2=A0=C2=A0=20
-> > > > > +static void mock_sched_fence_context_kill(struct
-> > > > > drm_gpu_scheduler
-> > > > > *gpu_sched)
-> > > > > +{
-> > > > > + struct drm_mock_scheduler *sched =3D
-> > > > > drm_sched_to_mock_sched(gpu_sched);
-> > > > > + struct drm_mock_sched_job *job;
-> > > > > + unsigned long flags;
-> > > > > +
-> > > > > + spin_lock_irqsave(&sched->lock, flags);
-> > > > > + list_for_each_entry(job, &sched->job_list, link) {
-> > > > > + spin_lock(&job->lock);
-> > > > > + if (!dma_fence_is_signaled_locked(&job-
-> > > > > > hw_fence)) {
-> > > > > + dma_fence_set_error(&job->hw_fence, -
-> > > > > ECANCELED);
-> > > > > + dma_fence_signal_locked(&job->hw_fence);
-> > > > > + }
-> > > > > + complete(&job->done);
-> > > > > + spin_unlock(&job->lock);
-> > > > > + }
-> > > > > + spin_unlock_irqrestore(&sched->lock, flags);
-> > > > > +}
-> > > > > +
-> > > > > =C2=A0=C2=A0=C2=A0static const struct drm_sched_backend_ops
-> > > > > drm_mock_scheduler_ops =3D {
-> > > > > =C2=A0=C2=A0=C2=A0 .run_job =3D mock_sched_run_job,
-> > > > > =C2=A0=C2=A0=C2=A0 .timedout_job =3D mock_sched_timedout_job,
-> > > > > - .free_job =3D mock_sched_free_job
-> > > > > + .free_job =3D mock_sched_free_job,
-> > > > > + .kill_fence_context =3D mock_sched_fence_context_kill,
-> > > > > =C2=A0=C2=A0=C2=A0};
-> > > > > =C2=A0=C2=A0=20
-> > > > > =C2=A0=C2=A0=C2=A0/**
-> > > > > @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
-> > > > > drm_mock_scheduler *sched)
-> > > > > =C2=A0=C2=A0=C2=A0 drm_mock_sched_job_complete(job);
-> > > > > =C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(&sched->lock, flags);
-> > > > > =C2=A0=C2=A0=20
-> > > > > - /*
-> > > > > - * Free completed jobs and jobs not yet processed by the
-> > > > > DRM
-> > > > > scheduler
-> > > > > - * free worker.
-> > > > > - */
-> > > > > - spin_lock_irqsave(&sched->lock, flags);
-> > > > > - list_for_each_entry_safe(job, next, &sched->done_list,
-> > > > > link)
-> > > > > - list_move_tail(&job->link, &list);
-> > > > > - spin_unlock_irqrestore(&sched->lock, flags);
-> > > > > -
-> > > > > - list_for_each_entry_safe(job, next, &list, link)
-> > > > > - mock_sched_free_job(&job->base);
-> > > > > -
-> > > > > =C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
-> > > > > =C2=A0=C2=A0=C2=A0}
-> > > > > =C2=A0=C2=A0=20
-> > > >=20
-> > >=20
-> >=20
->=20
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index d9f0386396ed..387151f25f5f 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -410,6 +410,18 @@ config PCIE_SPEAR13XX
+ 	help
+ 	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+ 
++config PCIE_STM32_HOST
++	tristate "STMicroelectronics STM32MP25 PCIe Controller (host mode)"
++	depends on ARCH_STM32 || COMPILE_TEST
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	help
++	  Enables Root Complex (RC) support for the DesignWare core based PCIe
++	  controller found in STM32MP25 SoC.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called pcie-stm32.
++
+ config PCI_DRA7XX
+ 	tristate
+ 
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index 908cb7f345db..9d3b43504725 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+ obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+ obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
++obj-$(CONFIG_PCIE_STM32_HOST) += pcie-stm32.o
+ 
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
+new file mode 100644
+index 000000000000..f08c81a5797f
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-stm32.c
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * STMicroelectronics STM32MP25 PCIe root complex driver.
++ *
++ * Copyright (C) 2025 STMicroelectronics
++ * Author: Christian Bruel <christian.bruel@foss.st.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/pinctrl/devinfo.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include "pcie-designware.h"
++#include "pcie-stm32.h"
++#include "../../pci.h"
++
++struct stm32_pcie {
++	struct dw_pcie pci;
++	struct regmap *regmap;
++	struct reset_control *rst;
++	struct phy *phy;
++	struct clk *clk;
++	struct gpio_desc *perst_gpio;
++	struct gpio_desc *wake_gpio;
++};
++
++static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
++{
++	/* Delay PERST# de-assertion until the power stabilizes */
++	msleep(PCIE_T_PVPERL_MS);
++
++	gpiod_set_value(stm32_pcie->perst_gpio, 0);
++
++	/* Wait for the REFCLK to stabilize */
++	if (stm32_pcie->perst_gpio)
++		msleep(PCIE_T_RRS_READY_MS);
++}
++
++static void stm32_pcie_assert_perst(struct stm32_pcie *stm32_pcie)
++{
++	gpiod_set_value(stm32_pcie->perst_gpio, 1);
++}
++
++static int stm32_pcie_start_link(struct dw_pcie *pci)
++{
++	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
++
++	return regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++				  STM32MP25_PCIECR_LTSSM_EN,
++				  STM32MP25_PCIECR_LTSSM_EN);
++}
++
++static void stm32_pcie_stop_link(struct dw_pcie *pci)
++{
++	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
++
++	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++			   STM32MP25_PCIECR_LTSSM_EN, 0);
++}
++
++static int stm32_pcie_suspend_noirq(struct device *dev)
++{
++	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
++	int ret;
++
++	ret = dw_pcie_suspend_noirq(&stm32_pcie->pci);
++	if (ret)
++		return ret;
++
++	stm32_pcie_assert_perst(stm32_pcie);
++
++	clk_disable_unprepare(stm32_pcie->clk);
++
++	if (!device_wakeup_path(dev))
++		phy_exit(stm32_pcie->phy);
++
++	return pinctrl_pm_select_sleep_state(dev);
++}
++
++static int stm32_pcie_resume_noirq(struct device *dev)
++{
++	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
++	int ret;
++
++	/*
++	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
++	 * thus if no device is present, must force it low with an init pinmux
++	 * to be able to access the DBI registers.
++	 */
++	if (!IS_ERR(dev->pins->init_state))
++		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
++	else
++		ret = pinctrl_pm_select_default_state(dev);
++
++	if (ret) {
++		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
++		return ret;
++	}
++
++	if (!device_wakeup_path(dev)) {
++		ret = phy_init(stm32_pcie->phy);
++		if (ret) {
++			pinctrl_pm_select_default_state(dev);
++			return ret;
++		}
++	}
++
++	ret = clk_prepare_enable(stm32_pcie->clk);
++	if (ret)
++		goto err_phy_exit;
++
++	stm32_pcie_deassert_perst(stm32_pcie);
++
++	ret = dw_pcie_resume_noirq(&stm32_pcie->pci);
++	if (ret)
++		goto err_disable_clk;
++
++	pinctrl_pm_select_default_state(dev);
++
++	return 0;
++
++err_disable_clk:
++	stm32_pcie_assert_perst(stm32_pcie);
++	clk_disable_unprepare(stm32_pcie->clk);
++
++err_phy_exit:
++	phy_exit(stm32_pcie->phy);
++	pinctrl_pm_select_default_state(dev);
++
++	return ret;
++}
++
++static const struct dev_pm_ops stm32_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend_noirq,
++				  stm32_pcie_resume_noirq)
++};
++
++static const struct dw_pcie_host_ops stm32_pcie_host_ops = {
++};
++
++static const struct dw_pcie_ops dw_pcie_ops = {
++	.start_link = stm32_pcie_start_link,
++	.stop_link = stm32_pcie_stop_link
++};
++
++static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie,
++			       struct platform_device *pdev)
++{
++	struct device *dev = stm32_pcie->pci.dev;
++	unsigned int wake_irq;
++	int ret;
++
++	/* Start to enable resources with PERST# asserted */
++
++	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
++	if (ret)
++		return ret;
++
++	ret = phy_init(stm32_pcie->phy);
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++				 STM32MP25_PCIECR_TYPE_MASK,
++				 STM32MP25_PCIECR_RC);
++	if (ret)
++		goto err_phy_exit;
++
++	stm32_pcie_deassert_perst(stm32_pcie);
++
++	if (stm32_pcie->wake_gpio) {
++		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
++		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
++		if (ret) {
++			dev_err(dev, "Failed to enable wakeup irq %d\n", ret);
++			goto err_assert_perst;
++		}
++		irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
++	}
++
++	return 0;
++
++err_assert_perst:
++	stm32_pcie_assert_perst(stm32_pcie);
++
++err_phy_exit:
++	phy_exit(stm32_pcie->phy);
++
++	return ret;
++}
++
++static void stm32_remove_pcie_port(struct stm32_pcie *stm32_pcie)
++{
++	stm32_pcie_assert_perst(stm32_pcie);
++
++	phy_exit(stm32_pcie->phy);
++}
++
++static int stm32_pcie_parse_port(struct stm32_pcie *stm32_pcie)
++{
++	struct device *dev = stm32_pcie->pci.dev;
++	struct device_node *root_port;
++
++	root_port = of_get_next_available_child(dev->of_node, NULL);
++
++	stm32_pcie->phy = devm_of_phy_get(dev, root_port, NULL);
++	if (IS_ERR(stm32_pcie->phy)) {
++		of_node_put(root_port);
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
++				     "Failed to get pcie-phy\n");
++	}
++
++	stm32_pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
++						       "reset", GPIOD_OUT_HIGH, NULL);
++	if (IS_ERR(stm32_pcie->perst_gpio)) {
++		if (PTR_ERR(stm32_pcie->perst_gpio) != -ENOENT) {
++			of_node_put(root_port);
++			return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
++					     "Failed to get reset GPIO\n");
++		}
++		stm32_pcie->perst_gpio = NULL;
++	}
++
++	stm32_pcie->wake_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
++						      "wake", GPIOD_IN, NULL);
++
++	if (IS_ERR(stm32_pcie->wake_gpio)) {
++		if (PTR_ERR(stm32_pcie->wake_gpio) != -ENOENT) {
++			of_node_put(root_port);
++			return dev_err_probe(dev, PTR_ERR(stm32_pcie->wake_gpio),
++					     "Failed to get wake GPIO\n");
++		}
++		stm32_pcie->wake_gpio = NULL;
++	}
++
++	of_node_put(root_port);
++
++	return 0;
++}
++
++static int stm32_pcie_probe(struct platform_device *pdev)
++{
++	struct stm32_pcie *stm32_pcie;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
++	if (!stm32_pcie)
++		return -ENOMEM;
++
++	stm32_pcie->pci.dev = dev;
++	stm32_pcie->pci.ops = &dw_pcie_ops;
++	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
++
++	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
++	if (IS_ERR(stm32_pcie->regmap))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
++				     "No syscfg specified\n");
++
++	stm32_pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(stm32_pcie->clk))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
++				     "Failed to get PCIe clock source\n");
++
++	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(stm32_pcie->rst))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
++				     "Failed to get PCIe reset\n");
++
++	ret = stm32_pcie_parse_port(stm32_pcie);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, stm32_pcie);
++
++	ret = pm_runtime_set_active(dev);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to activate runtime PM\n");
++
++	pm_runtime_get_noresume(dev);
++
++	ret = devm_pm_runtime_enable(dev);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
++
++	ret = stm32_add_pcie_port(stm32_pcie, pdev);
++	if (ret) {
++		pm_runtime_put_noidle(&pdev->dev);
++		return ret;
++	}
++
++	reset_control_assert(stm32_pcie->rst);
++	reset_control_deassert(stm32_pcie->rst);
++
++	ret = clk_prepare_enable(stm32_pcie->clk);
++	if (ret) {
++		dev_err(dev, "Core clock enable failed %d\n", ret);
++		goto err_remove_port;
++	}
++
++	ret = dw_pcie_host_init(&stm32_pcie->pci.pp);
++	if (ret)
++		goto err_disable_clk;
++
++	if (stm32_pcie->wake_gpio)
++		device_init_wakeup(dev, true);
++
++	return 0;
++
++err_disable_clk:
++	clk_disable_unprepare(stm32_pcie->clk);
++
++err_remove_port:
++	stm32_remove_pcie_port(stm32_pcie);
++	pm_runtime_put_noidle(&pdev->dev);
++
++	return ret;
++}
++
++static void stm32_pcie_remove(struct platform_device *pdev)
++{
++	struct stm32_pcie *stm32_pcie = platform_get_drvdata(pdev);
++	struct dw_pcie_rp *pp = &stm32_pcie->pci.pp;
++
++	if (stm32_pcie->wake_gpio)
++		device_init_wakeup(&pdev->dev, false);
++
++	dw_pcie_host_deinit(pp);
++
++	clk_disable_unprepare(stm32_pcie->clk);
++
++	stm32_remove_pcie_port(stm32_pcie);
++
++	pm_runtime_put_noidle(&pdev->dev);
++}
++
++static const struct of_device_id stm32_pcie_of_match[] = {
++	{ .compatible = "st,stm32mp25-pcie-rc" },
++	{},
++};
++
++static struct platform_driver stm32_pcie_driver = {
++	.probe = stm32_pcie_probe,
++	.remove = stm32_pcie_remove,
++	.driver = {
++		.name = "stm32-pcie",
++		.of_match_table = stm32_pcie_of_match,
++		.pm = &stm32_pcie_pm_ops,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++};
++
++module_platform_driver(stm32_pcie_driver);
++
++MODULE_AUTHOR("Christian Bruel <christian.bruel@foss.st.com>");
++MODULE_DESCRIPTION("STM32MP25 PCIe Controller driver");
++MODULE_LICENSE("GPL");
++MODULE_DEVICE_TABLE(of, stm32_pcie_of_match);
+diff --git a/drivers/pci/controller/dwc/pcie-stm32.h b/drivers/pci/controller/dwc/pcie-stm32.h
+new file mode 100644
+index 000000000000..387112c4e42c
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-stm32.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * ST PCIe driver definitions for STM32-MP25 SoC
++ *
++ * Copyright (C) 2025 STMicroelectronics - All Rights Reserved
++ * Author: Christian Bruel <christian.bruel@foss.st.com>
++ */
++
++#define to_stm32_pcie(x)	dev_get_drvdata((x)->dev)
++
++#define STM32MP25_PCIECR_TYPE_MASK	GENMASK(11, 8)
++#define STM32MP25_PCIECR_LTSSM_EN	BIT(2)
++#define STM32MP25_PCIECR_RC		BIT(10)
++
++#define SYSCFG_PCIECR			0x6000
+-- 
+2.34.1
 
