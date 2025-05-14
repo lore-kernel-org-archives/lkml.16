@@ -1,252 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84F14900B;
-	Wed, 14 May 2025 16:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238738; cv=none; b=ZhjXnoppfHjSHSuu9f5gfYERKct8D77uZPyhHaeAHNoKQe3K1ZwGFERQWB5+czO1Buw0ZvQB6YX+XuvV5aLq+JoKzZc2OE/R0RJGmkLaiLqsMgVDyCBxddh3RnRmoCUt6iB83e4oXyPhB6wlbuv9J1WPjPwae+E25IsMKzJm9b0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238738; c=relaxed/simple;
-	bh=9G/dho57kzWG+845DqzNm+Vc+/T2+p3QlemMEguLtc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C2rojh8Q3NiUZUOzFHNzlca5u2o6pRLndAc49CpU811KFof6ppi1O37uTs+xkfRKzIMJEyDI/nEs4aqKH2wjblMM5eMdQGPZIdFmp6eKSYV02bX7AnCx2nYqMgRv12YYtYRl3kTGdf66boNNn8PiHqd/69cNBZZ5u0IXq61O2AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhgUKevX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F60E1C84A4
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747238804; cv=fail; b=gFye2VbX6eTHhh7JaRqrkjLQAFdgocT3oIvbwxwYgp9m343X9Vq65TzleSLPlncgjlNJd+RHnnMrWRUk7+Nn/ZFooL9llw1dmx/bQwlhWPKap4uB7FDCqAyU6oo3XUQ7VGqOfk2BOlSQCh965qIJFpCpMSu568b+xSpKGWF5tx4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747238804; c=relaxed/simple;
+	bh=5LGCJYiR4jVPyjlM4izpLbY8F3pgt9KYF60xnQ9o77w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LX++YmF2TLfN264P2mfl+zNHXmXEwf/5o2j4KeS+jACLiW/cG58eDItVtvxULkV9eV1wjTUvkE1ZBgr5OdWj8kb97mphUyWQN7j0GnSUsbL8raLPjXztmVPPrc3Xy5sJyrMDPCSVKW2Vv2S41/zxDH6mmWLR5XXbh3r9yToB/mU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=upxb0mJ4; arc=fail smtp.client-ip=40.107.243.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhgUKevX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B575C4CEE9;
-	Wed, 14 May 2025 16:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238738;
-	bh=9G/dho57kzWG+845DqzNm+Vc+/T2+p3QlemMEguLtc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fhgUKevX4jd886+FJAyjiX/2MSRhZVDJGgLri+N6u5AdRw6Ku7xmZDLFa3qTD9EDz
-	 r4Cd/VV5rfwnUDTLhWli/QLXdWSya2YjIu6uGhzKpdbTqb1nm68GIcKzxHtiX8iKi2
-	 4dTvBfk27E3llp84ceI18yPlmUKIBgBYf6o1hLbY/uQM6/fo3sdjZtKqY1/NHOewdv
-	 RC7ap+GjI5f34f4Y9u7jyo6IlcysllCn3YUOMHcqdD/RY49RIpuZU68cM5pem0WaSs
-	 mGWdPZ6yTO3PbkOdQc/cxNkz2kFddEvt/VnspA8zJXrIn1yaRbRa4Zs3sdCz+YiFJp
-	 ropsDWs3x3+5w==
-Date: Wed, 14 May 2025 18:05:31 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 18/26] arm64: smp: Support non-SGIs for IPIs
-Message-ID: <aCS/SxDG9M+jh7Wr@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
- <aCRy4K/jvLr95GOp@lpieralisi>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="upxb0mJ4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KHYS2geY5WlBsxWV4ldGKlPPMk6FGMopSS+JCToPfK+g8xJzxGiLjkKtIb98v5UdKOGFFsPqqrRb+2fA6+qyyHnf8xK0PAGOVaKF6q6mTsE49ig2uufu0KUpqwuROc0KMcwos4iUOFZ1rXCaiqEo5BGyukFR12N/ixwdKGQqnPSOuK/0a0ZsqjDBfVgNGDQSC8LZl7vQbOfwBmUYvlxy8+/4qxMXuBW3l1Wad+dpWmjq9Bma2QNJYF+QEFld4a0++XSHG80Zc8Ir+8uswf/w5i8fi42EYghtkj/BVin4KELYdYWIwCE2xvi37QaC7lIf9PeJAtCw3FLNJvT27vJ2GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zS+sdeeizzM079WRUar2eM97ZAR+595dZN+D5WKhITs=;
+ b=prcY4wmqYPxZqBJvf8TS8n+qxQqKCPz1qetA3mbVdYqQM8sOWO2yF2rM1h6rAYEJ1SqGydIMhPAQM8EVdAglE26HyfTc+aZNqM3kJNQkt98uOBoQWiafkp+lwsFT3lZA8+34tViQtv+tO/x/cRjk9dWAsNE3grd2RkaIH1pEMNonwDDMQVTAJOpY7xqygxa4D6RmDp8j+JQ2yZmRk/cAAuNM+teN8n09Ef5ZDihE/oshSugZ5T8dHHQn5SS5GkbJMjyyWz7PIsI6xMcI/C2Akj8m/rdEY3equAQWRCn+mm19MtvnAU3qDp2pGOzk3jFF7cmFEP2ZdpNxm9R0NA8KkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zS+sdeeizzM079WRUar2eM97ZAR+595dZN+D5WKhITs=;
+ b=upxb0mJ4eBbx7XgrfaLub/uGGCqElcF7F5GNxpbZf8pncd41lL0ula9UHSQDZ8LsMkbP+CRJKFL4QqCnnvMDzkPJdZTp7/oyGBHRgPDagpdqmfTBSg/aaJxE2fU3MH7LtFaUlvGpEJwi8oLrPgEl3GufzsDw/VxVRWwDzcirmQ/sFUJPLa55QyCnntUmFONHyxcKnafgq7oXvu83boYm0raKJ9qv4nvmsthxxvtfCko90pMpynb6RgrBEoXSzn8jf+Jrgtn78ZF76s6qzaLvHDjSOoNV8qQtMh5jpZtMeUphOU4S/yzkUuUEUA8YKIlR2JgRMcCqRHJglJKtZsH0ng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by CH1PPFC908D89D1.namprd12.prod.outlook.com (2603:10b6:61f:fc00::623) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.39; Wed, 14 May
+ 2025 16:06:40 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%7]) with mapi id 15.20.8722.027; Wed, 14 May 2025
+ 16:06:40 +0000
+Date: Wed, 14 May 2025 18:06:31 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH sched_ext/for-6.16] sched_ext: Explain the temporary
+ situation around scx_root dereferences
+Message-ID: <aCS_hx4ew_E60nfg@gpd3>
+References: <aCQgcilBgDVu_Rrp@mtj.duckdns.org>
+ <aCRjUQJ_97-B0Rpo@gpd3>
+ <aCSlvpiraPTKUqOf@mtj.duckdns.org>
+ <aCSoKBu0l-vTlScT@gpd3>
+ <aCSyYU6EZzm4fJUa@mtj.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCSyYU6EZzm4fJUa@mtj.duckdns.org>
+X-ClientProxiedBy: MI2P293CA0005.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:45::12) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCRy4K/jvLr95GOp@lpieralisi>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|CH1PPFC908D89D1:EE_
+X-MS-Office365-Filtering-Correlation-Id: b86def3e-1931-44ac-43b6-08dd93015018
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CUdVQWZWwoIyCrRJJQ7GFUkLIUyHQkMkUKZ90StBtXgl0qHS+DGyEL/fc9S1?=
+ =?us-ascii?Q?i3pGCbRTb/JXFoQAyF0q3WX4/vlx/ZsUeSrFzVh1+uOumPj+Zikn6u6c4gnt?=
+ =?us-ascii?Q?WLZOxtJxtudyJXugl7iFJxqVguz6oFQCdL4vOeVtVxnEjEKX06Ah7x9MZIkZ?=
+ =?us-ascii?Q?fyxqVEijqKPbTSJKczN3IGp5KE4z90JSBciBBSvIyv/pRrmLEmMksgxt9ihe?=
+ =?us-ascii?Q?5ln+cNsUCNvKWRtcvbJN3TaL1iOughzphoDn5BOIZ2UMamma4UpJ/WjXq4Vf?=
+ =?us-ascii?Q?jh1792WjZp3diY3myoDsiijNCrdXq+9SvgC69GKp/UWqc+FvkcNhCcbnoJ71?=
+ =?us-ascii?Q?hWAU7u4daKTz4AZyvNoYZ2JcJCwUwNUG8Z0CQTLVBwWBfqzZKQEx8ky9Xsxr?=
+ =?us-ascii?Q?C901yQSXckY/oEU8E0NW6k/W6Kfub0Q6bEmsX3LRBKbg65ALhJTQ31CtRwVk?=
+ =?us-ascii?Q?tXIg0iXH5t7QFQBdYmnd3rrgWnhfXZBEbnj+0Et/p2fEEeGmSb9Yg2N9rATI?=
+ =?us-ascii?Q?QHrLHkXLDBRy48yAWG9vA1YO4EEyWJnP1t86b187J3GB/M2jzlJijK9PSxEj?=
+ =?us-ascii?Q?Vye++Jz4iQRMvENKTa09wbSDMnVV4YO3+lYnR2ChKFPfKDWifCIdAbZlak6q?=
+ =?us-ascii?Q?dLt8rTA2lj8sR+ZDLDknB2GM71DTFhkcyopYHhhJa3CR7hJYAKdRojHuNCyL?=
+ =?us-ascii?Q?+CzLtM25YIUign23jobR3OT00OO3u8nFm6GUcV6ik+8S/7wBh7xIdrUVQLiU?=
+ =?us-ascii?Q?6oSY0Bo68KB640Lm+iTFjCsLUhg3ly/vSpSg3SGTuc5D2WXymijsIPLmHKRb?=
+ =?us-ascii?Q?VdhL0tjDCQt1lQVSoAoIAN3ozFBWOKgbFVJdfUCOmH7FYUGkVQkGRRispniT?=
+ =?us-ascii?Q?K3/mZtp3v14qlTZ0eoCTok/5p9qwdg85m5pmDoDhl+MA88q5TOvTOO/9y1yq?=
+ =?us-ascii?Q?mQaSSsJznqIxwF3Vvuqg8sX5zCFHeqC5aqZa0HNTTN5pu3KbBpTMg1Ral1JH?=
+ =?us-ascii?Q?WlngwwapSxJYiRluQRnY9xJN7t1qlWwcaClbgXX40pTcJ/34k92/6T+gclob?=
+ =?us-ascii?Q?NIeWqjbqu4JJeKJymhQrWcbLAS/ZuDCXyJ24mi7Yx04csbmbqWbNpsE4kJU/?=
+ =?us-ascii?Q?PKVQNoToDMpB0CefB6ReHg9Wkr61MZsvlv6eQwltuJEjCT+Ew2FP4chBA/Za?=
+ =?us-ascii?Q?SlmkBZCGZBoiupofky0oueh8D9zw+pBpJdjbAXy10kiYJym38QJ78PUkYRj6?=
+ =?us-ascii?Q?uz7EGdljPq/cqxGJmwuk1yFEeUmKigJYzbYxR6LS867CdfZc3i3D40RrVA5B?=
+ =?us-ascii?Q?ia+8D4Y9wR6ix6gFyptZCmb+5/CeDCNbnck4moloMQFnH1oRHLOOyZFYOaOH?=
+ =?us-ascii?Q?qih29B+0kZWh7zSJHKET8o83NHXmyOXtFLJNCXtkEAoxoqSfTd8CDuQSIsds?=
+ =?us-ascii?Q?rz2Lvh4p5yo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+NMb1aZLNcWjQ9J9PTllWfxqqP3/sB1z9e8Yvjdpk5stp5YD9y6MFC0dNRGG?=
+ =?us-ascii?Q?LRvSGaZdomCG97ecVlN2Bgg+1vYFhARWmAut5zB+UYOMZ54L54ky09ft7d89?=
+ =?us-ascii?Q?PXxzje7xPiayHyOGcd70qqYF7cpguIeDuE8CF1bK7/Y//5MOL+yMUiBALQEH?=
+ =?us-ascii?Q?/PNERm8rhJP2gNuVYH/SHFwxpzZfs/MuhbK8ZOt+3Hw7W79D9IteuiyEGHby?=
+ =?us-ascii?Q?KoZFXdm4qhzXzwGPYeZR1D2B234wrD97wdgJIt5aENxdNwC62UCBWNc+gryE?=
+ =?us-ascii?Q?v7mKObTfHABtw6HhB1iiLrOOWUrn9BnCLqUMFm/eF/sdNH5HXiErSRMPUIcn?=
+ =?us-ascii?Q?VV/cP1XDavh5gTTm7AwBWjXNdaSqt3nGfA8peAOm3C4i8w7KBlikl26jfi1o?=
+ =?us-ascii?Q?PKZlrc74TezBnOUrD9Q+1GVmELb7NXsVfv8+wA0nLp74UG3fbXY+XZECi37+?=
+ =?us-ascii?Q?B88B/N78cSP8ybxv/H1CA6i0iuFW89bxCPmynkv9X7Nt+arunasoSXXUc8lS?=
+ =?us-ascii?Q?UL4MCKKQ7PrYmHmpGNhaXhyjkMOAYTWPHKQ7SDjPZcbyyXmOPiSUFUZZtQtp?=
+ =?us-ascii?Q?NbfqutC7AFNgI+OlN0COarqo2+3qn9qXmNQUe1/V6XG9sksK/Znd8oPOmRJJ?=
+ =?us-ascii?Q?CH5D/Lx15TFOWkrNwryuFQLVFJLA5m2LxrP/4Pqf5uYGJw+V91o3HnZnOu2Q?=
+ =?us-ascii?Q?77OZkqyqNF9plXfGINCiDAWBpYw5P4uJt9tRYE3ppyQqyhm/OQjfpx2OQlls?=
+ =?us-ascii?Q?lHQ7S/shCiVvppRgGV6MiI/aLCWhVOYaSEvJHVwmA/f69n0sHfm5rv0tnmAi?=
+ =?us-ascii?Q?KPN8kcMj2aLNbqSdzAEgKtbrIHJnGUD+dSnaPdi+Q+IBqa3yHyDX/KD2O3X0?=
+ =?us-ascii?Q?lbsf+EFN3uubnOtqYjn+hlWSYkqKLInnJA7yZWPiF9AZkP6qmk8fP1lXV6C/?=
+ =?us-ascii?Q?dGjbF1+uFfdIAYsBFPY929cEl67TXdLuu/FPsuZOFolUaPXdAl/6NFJAvdrN?=
+ =?us-ascii?Q?UqwBD8xtEnPVok5zhyK8p+SVdgKkG9S4sDunKjc2Nk/uGkPh16VlwK4CN6zs?=
+ =?us-ascii?Q?t83R07NHjWlc888TUiBngp5F2Yab7skHNEvT649KT3ehMSl2kNvWmV6Lk81V?=
+ =?us-ascii?Q?vu8vTmo0jSxl6jyt844sSoxVGJrTl8SxwkEiSRdNuJ2eiaw0HP4oKjajlgnx?=
+ =?us-ascii?Q?1UlJXJZyR/oYcbqjtBogiCtr2n1f7+OhMZGxMtO9aXI3f4V+fQdKbvy5RSXL?=
+ =?us-ascii?Q?YYF6x/6KO/l2mbYUmqsiVzR0IX3fgD83euViJhFy+P7AS20xyCC/jtAHhA5p?=
+ =?us-ascii?Q?uHEUhXbN3ljIeenGMoVCvuJmd66IPqjWMceuZ8zP/XjgPFYLyWzaMu9DeSUe?=
+ =?us-ascii?Q?ERs1BMgA4Lkj5ieULe14WGutGAquOpaQGe4Juoz875z56+LTgk8T1sw740nx?=
+ =?us-ascii?Q?Dh61IvN6Wlp+G5hqHXh894QyhajZiVm/QogQ7dDRclrTS2TDalblWS1+GuEW?=
+ =?us-ascii?Q?d5VZz7e/2aKYwlsx0FU+S1j8q/1Vo4MS5rm2tlSNlje8WMa9XULC0RYnbJOW?=
+ =?us-ascii?Q?NTYsZH7eGnmbF9kSpu8NqqHRSYhwMWIKs8yEGzF3?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b86def3e-1931-44ac-43b6-08dd93015018
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 16:06:40.5431
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jhzSAEqS19SrHqYbFWQ0LWaghVhLSEjFGRh6FeUjsPF1ROkegPjZBJQAk0fwrOSl2ATd8qV0Ox8nmApMbON8BQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFC908D89D1
 
-On Wed, May 14, 2025 at 12:39:28PM +0200, Lorenzo Pieralisi wrote:
-> On Tue, May 13, 2025 at 07:48:11PM +0200, Lorenzo Pieralisi wrote:
+On Wed, May 14, 2025 at 11:10:25AM -0400, Tejun Heo wrote:
+> Naked scx_root dereferences are being used as temporary markers to indicate
+> that they need to be updated to point to the right scheduler instance.
+> Explain the situation.
 > 
-> [...]
-> 
-> >  /*
-> >   * Called from the secondary holding pen, this is the secondary CPU entry point.
-> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> > index 3b3f6b56e733039cad7ff5b8995db16a68f3c762..3f3712e47c94c62836fb89cd4bfb3595fbb41557 100644
-> > --- a/arch/arm64/kernel/smp.c
-> > +++ b/arch/arm64/kernel/smp.c
-> > @@ -83,7 +83,26 @@ enum ipi_msg_type {
-> >  
-> >  static int ipi_irq_base __ro_after_init;
-> >  static int nr_ipi __ro_after_init = NR_IPI;
-> > -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
-> > +
-> > +struct ipi_descs {
-> > +	struct irq_desc *descs[MAX_IPI];
-> > +};
-> > +
-> > +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
-> > +
-> > +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
-> > +
-> > +static bool percpu_ipi_descs __ro_after_init;
-> > +
-> > +static int ipi_to_irq(int ipi, int cpu)
-> > +{
-> > +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
-> > +}
-> > +
-> > +static int irq_to_ipi(int irq)
-> > +{
-> > +	return (irq - ipi_irq_base) % nr_ipi;
-> > +}
-> >  
-> >  static bool crash_stop;
-> >  
-> > @@ -844,7 +863,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
-> >  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
-> >  			   prec >= 4 ? " " : "");
-> >  		for_each_online_cpu(cpu)
-> > -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
-> > +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
-> >  		seq_printf(p, "      %s\n", ipi_types[i]);
-> >  	}
-> >  
-> > @@ -919,7 +938,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
-> >  
-> >  static void arm64_backtrace_ipi(cpumask_t *mask)
-> >  {
-> > -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
-> > +	unsigned int cpu;
-> > +
-> > +	if (!percpu_ipi_descs)
-> > +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-> > +	else
-> > +		for_each_cpu(cpu, mask)
-> > +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
-> >  }
-> >  
-> >  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-> > @@ -944,7 +969,7 @@ void kgdb_roundup_cpus(void)
-> >  		if (cpu == this_cpu)
-> >  			continue;
-> >  
-> > -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
-> > +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
-> >  	}
-> >  }
-> >  #endif
-> > @@ -1013,14 +1038,21 @@ static void do_handle_IPI(int ipinr)
-> >  
-> >  static irqreturn_t ipi_handler(int irq, void *data)
-> >  {
-> > -	do_handle_IPI(irq - ipi_irq_base);
-> > +	do_handle_IPI(irq_to_ipi(irq));
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> >  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
-> >  {
-> > +	unsigned int cpu;
-> > +
-> >  	trace_ipi_raise(target, ipi_types[ipinr]);
-> > -	__ipi_send_mask(ipi_desc[ipinr], target);
-> > +
-> > +	if (!percpu_ipi_descs)
-> > +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
-> > +	else
-> > +		for_each_cpu(cpu, target)
-> > +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
-> >  }
-> >  
-> >  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
-> > @@ -1046,11 +1078,15 @@ static void ipi_setup(int cpu)
-> >  		return;
-> >  
-> >  	for (i = 0; i < nr_ipi; i++) {
-> > -		if (ipi_should_be_nmi(i)) {
-> > -			prepare_percpu_nmi(ipi_irq_base + i);
-> > -			enable_percpu_nmi(ipi_irq_base + i, 0);
-> > +		if (!percpu_ipi_descs) {
-> > +			if (ipi_should_be_nmi(i)) {
-> > +				prepare_percpu_nmi(ipi_irq_base + i);
-> > +				enable_percpu_nmi(ipi_irq_base + i, 0);
-> > +			} else {
-> > +				enable_percpu_irq(ipi_irq_base + i, 0);
-> > +			}
-> >  		} else {
-> > -			enable_percpu_irq(ipi_irq_base + i, 0);
-> > +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
-> >  		}
-> >  	}
-> >  }
-> > @@ -1064,44 +1100,79 @@ static void ipi_teardown(int cpu)
-> >  		return;
-> >  
-> >  	for (i = 0; i < nr_ipi; i++) {
-> > -		if (ipi_should_be_nmi(i)) {
-> > -			disable_percpu_nmi(ipi_irq_base + i);
-> > -			teardown_percpu_nmi(ipi_irq_base + i);
-> > +		if (!percpu_ipi_descs) {
-> > +			if (ipi_should_be_nmi(i)) {
-> > +				disable_percpu_nmi(ipi_irq_base + i);
-> > +				teardown_percpu_nmi(ipi_irq_base + i);
-> > +			} else {
-> > +				disable_percpu_irq(ipi_irq_base + i);
-> > +			}
-> >  		} else {
-> > -			disable_percpu_irq(ipi_irq_base + i);
-> > +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
-> >  		}
-> >  	}
-> >  }
-> >  #endif
-> >  
-> > -void __init set_smp_ipi_range(int ipi_base, int n)
-> > +static void ipi_setup_ppi(int ipi)
-> > +{
-> > +	int err, irq, cpu;
-> > +
-> > +	irq = ipi_irq_base + ipi;
-> > +
-> > +	if (ipi_should_be_nmi(irq)) {
-> > +		err = request_percpu_nmi(irq, ipi_handler, "IPI", &irq_stat);
-> > +		WARN(err, "Could not request IRQ %d as NMI, err=%d\n", irq, err);
-> > +	} else {
-> > +		err = request_percpu_irq(irq, ipi_handler, "IPI", &irq_stat);
-> > +		WARN(err, "Could not request IRQ %d as IRQ, err=%d\n", irq, err);
-> > +	}
-> > +
-> > +	for_each_possible_cpu(cpu)
-> > +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
-> > +
-> > +	irq_set_status_flags(irq, IRQ_HIDDEN);
-> > +}
-> > +
-> > +static void ipi_setup_lpi(int ipi, int ncpus)
-> > +{
-> > +	for (int cpu = 0; cpu < ncpus; cpu++) {
-> > +		int err, irq;
-> > +
-> > +		irq = ipi_to_irq(ipi, cpu);
-> > +
-> > +		err = irq_force_affinity(irq, cpumask_of(cpu));
-> > +
-> > +		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
-> > +
-> > +		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
-> > +				  &irq_stat);
-> 
-> Heads-up, kbuild bot (sparse) barfed (correctly) at this, because the
-> &irq_stat pointer does not match the request_irq() void *dev_id parameter
-> signature (it is void __percpu *).
-> 
-> Of course, the &irq_stat parameter is unused so this is harmless.
-> 
-> I would just pass NULL (because AFAICS irq_stat in the action handler is
-> unused), the question is why are we passing &irq_stat in
-> request_percpu_irq() if that's unused in ipi_handler() ?
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: Andrea Righi <arighi@nvidia.com>
 
-Right, we have to have it there even if the ipi_handler() does not use
-it, that's as much as I can gather by checking the request_percpu_irq()
-interface and the percpu flow handler (handle_percpu_devid_irq()) used
-for SGIs IRQs on GICv3.
+Looks good, thanks!
 
-For non-SGI IPIs, I will just pass NULL to request_irq() as void *dev_id
-because AFAICS it is not used in arm64 ipi_handler() (I use the
-handle_percpu_irq() flow handler), I applied the fix-up locally FYI.
+Acked-by: Andrea Righi <arighi@nvidia.com>
 
-Lorenzo
+-Andrea
+
+> ---
+>  kernel/sched/ext.c |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -1016,6 +1016,14 @@ enum scx_ops_state {
+>  #define SCX_OPSS_STATE_MASK	((1LU << SCX_OPSS_QSEQ_SHIFT) - 1)
+>  #define SCX_OPSS_QSEQ_MASK	(~SCX_OPSS_STATE_MASK)
+>  
+> +/*
+> + * NOTE: sched_ext is in the process of growing multiple scheduler support and
+> + * scx_root usage is in a transitional state. Naked dereferences are safe if the
+> + * caller is one of the tasks attached to SCX and explicit RCU dereference is
+> + * necessary otherwise. Naked scx_root dereferences trigger sparse warnings but
+> + * are used as temporary markers to indicate that the dereferences need to be
+> + * updated to point to the associated scheduler instances rather than scx_root.
+> + */
+>  static struct scx_sched __rcu *scx_root;
+>  
+>  /*
