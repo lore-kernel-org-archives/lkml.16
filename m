@@ -1,127 +1,138 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCC425C71A;
-	Wed, 14 May 2025 12:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADEA27510A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747227241; cv=none; b=esDB1x5a8Ik3kpdsyjVw7WVDTftxymYE4w0hpkiyPC9maWR3byd0CH+ATV8c8bUsP+Ofe2KwFHpwHZUE14nyfw54Y73ZzN+cZVq5XQgtaWRoqTmSzKHs8a1+H4+Bc/lzbcYet1GMYBgV2WR06RvHoXe8VSCwnH0lnsRHFN1xEdc=
+	t=1747227324; cv=none; b=o5BEdBuOCu6jJJPk3Y00PXk2AICsiqAojzZkIuUcSK8Ks7X3HEJ0tMB/No54zYYwgOsde6HNrKOSrMZGxvDDg15iZD2gT636puyLGUg/SGBXYxWDP1KFlrAoxaCpDnXQc9WppbmB1EURpDlxa5SHUy2JpfCgqAQPE+XEjx0eAGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747227241; c=relaxed/simple;
-	bh=scugkR344tI8V7Z0hxaim6O4g7gQTV4zdpmzPnDsWhA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kwmR6RCJSxS/HHqiftF5PgxgOFuaTfEAwbY8SEGzhP4m8+tFvcj+Y7B1CKNFHzOsp5D/8g+WSsD5+DjFe2Do7Jk+Puz3I1X2iGXBYeqyjKa63K5f9nDx/U05Bejy9KflfV688u2ctH7f/Sj36YpDRVMtjlA00oO99KznzjdKv0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hU3dXRFQ; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747227324; c=relaxed/simple;
+	bh=T5PpBd950yZbcaPaQpt7z7UBm/RSooDGs8zCDWqEuNo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fvRSAL67OLBqW5v1rPfV0khy3sodBj4eo5I6rR7stztw+awEKRqXZpNGhsqIG/WO/bj/1pBMTqh2a6dlADMqZH+Pktfa2kBRcplSwFJmYqjQ8D13iY9f9HuhzecjfR1d/V5lS+cI6NuDe4DrQzebopZRdDK9nI5IMw7Y5jnMnOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oyFZlwyP; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hU3dXRFQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1E16E1FD4C;
-	Wed, 14 May 2025 12:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747227237;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BPtptJ2HNoiU8PMKYqOrssaWS6cta88HVQHAl0Pn9aw=;
-	b=hU3dXRFQTHD3aiFxk4goUMdnyTgKFFjSv9ac6VTBUkjJeycYyAjqKxa5YvB8gOv5WvIjDX
-	Ym5o2RpHZ88ERll2TbB5805wvy9HaSrbRMdxGSMLb8s6cSSE60jQ4nJkmMOvLrPeeiRKPT
-	Cy3bnnw21GLJfJPSPk7VP8egScePCfEaLbX8I6iR+x8tdHHrRreHBoi/lSGivN5Yyd6LWP
-	F1X/NmL/+/IfeLEODIHWH6uogJq4QX+8G8L6ZhwQQNZbbQ6pVLDAtMUh+e09J++n9DGitw
-	wxA3XRsE/wl7rl8EO5tNIOFKAzjgqzMRDCEaeH+Wy0Nqjvp0sVyioBpGBz9kbw==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH net-next 0/3] net: phy: dp83869: Support 1Gbps fiber SFP modules
-Date: Wed, 14 May 2025 14:53:54 +0200
-Message-ID: <1877501.VLH7GnMWUR@fw-rgant>
-In-Reply-To:
- <20250514142019.56372b4e@2a02-8440-d105-dfa7-916a-7e1b-fec1-3a90.rev.sfr.net>
-References:
- <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
- <20250514142019.56372b4e@2a02-8440-d105-dfa7-916a-7e1b-fec1-3a90.rev.sfr.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oyFZlwyP"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a96aca21eso6916866a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 05:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747227322; x=1747832122; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=76k7pW5NZ1udEa5NXUL313ttjbsC0PLRtgt+LZ6uYAM=;
+        b=oyFZlwyPU+iCuGI3Ql/gVGyvK5qd0gig7JrA5Kx/ZautjK2nWPmpK6DwW7jhY+Osge
+         CVC60stkBQ25z7CaAK0xpCrVvpBKcHGPuwlrkkTyxjg0+ziQbSWMEFCjEgRD8sqRQWxR
+         9bUOsL8czpr85CxErNMa2Iin6jon3B8qspLuYa/FHWonX8+9GkhjAvSaXxnZBcT+kUms
+         RmfXJ60VMRtJSpPmRM12e0l92ZbzmLD2o5pDFyegCaBn/9u/QaDncNvoBoVcFpuNWtkd
+         /AalTzMrxUqp7DOPbqSrnx4T7qmLq+YHEf1Rb0DozqG0Utar8DyLjVMZwsQOlWLPyAb5
+         fOcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747227322; x=1747832122;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=76k7pW5NZ1udEa5NXUL313ttjbsC0PLRtgt+LZ6uYAM=;
+        b=D0KymvEdBSx0NpJzsXF8/hoxOwMl+lgO2BnwVNeEhUYL11ONbqIf8VwMKNrvdoyHer
+         lPDNWPBQFfUk84OFY72qzTOjEWiksRUHo/ObBn9CAqQ99ynpUi4JyvlPimCfKiijI29U
+         nBaDaJm73+XJXMhoB0+fH0ybIAm0EaTO/PO6AhQQ0ZHiU/iunGrlNOTo8asT/jmiiitk
+         +a36XYtH80MPGQQa57yatfq3UQLb0R0U0oRfjfG5UdJBdY36WWHkhKSRnktHi14FVpGR
+         cwexo+VyHnMz+f/XEoXam2Ggud063+toW39vcuFu270xat0967SrTdPbI5ONuYjfa5bB
+         9qMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe8HSHHtSbmq4dB+VzhNL4iKOAWqJB/wRaCs3Y3wlx0eJEWPJDgCC2BMOTQmG4LGe7MxTE95BwYSz4VMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxND6onEzBqOgMd1I53QdWvEwZCgjjWQ5GaGT+O0xDEiW2tOsuh
+	kGJ4tzIAhSZdAW3bqM4CHrAnIoSG3UsA93zqej4RwVS/L2yxn8qq848K1k7TYkpyWUUUvYi1PJ1
+	/mA==
+X-Google-Smtp-Source: AGHT+IFgT95GBLG9hEKtLuWwErvNNL8LufLyA++dQg8RnFH/PcKmjBUD945AxPlGLzg/yAtEYCrcuPF5pXY=
+X-Received: from pjbso17.prod.google.com ([2002:a17:90b:1f91:b0:301:2679:9d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc1:b0:30c:523e:89e3
+ with SMTP id 98e67ed59e1d1-30e2e5ba2a8mr5425349a91.11.1747227321794; Wed, 14
+ May 2025 05:55:21 -0700 (PDT)
+Date: Wed, 14 May 2025 05:55:19 -0700
+In-Reply-To: <6dd4eee79fec75a47493251b87c74595826f97bc.camel@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart8620414.NyiUUSuA9g";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdejtdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetveeileegkeetvefgtdegffdviefgvdevkefhgfetieffvddvkedujeefvdfgtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigr
- dhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: romain.gantois@bootlin.com
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-7-jon@nutanix.com>
+ <aCI8pGJbn3l99kq8@google.com> <49556BAF-9244-4FE5-9BA9-846F2959ABD1@nutanix.com>
+ <aCNI72KuMLfWb9F2@google.com> <6dd4eee79fec75a47493251b87c74595826f97bc.camel@amd.com>
+Message-ID: <aCSSptnxW7EBEzSQ@google.com>
+Subject: Re: [RFC PATCH 06/18] KVM: VMX: Wire up Intel MBEC enable/disable logic
+From: Sean Christopherson <seanjc@google.com>
+To: Amit Shah <Amit.Shah@amd.com>
+Cc: "jon@nutanix.com" <jon@nutanix.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
---nextPart8620414.NyiUUSuA9g
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Date: Wed, 14 May 2025 14:53:54 +0200
-Message-ID: <1877501.VLH7GnMWUR@fw-rgant>
-MIME-Version: 1.0
+On Wed, May 14, 2025, Amit Shah wrote:
+> On Tue, 2025-05-13 at 06:28 -0700, Sean Christopherson wrote:
+> > On Tue, May 13, 2025, Jon Kohler wrote:
+> > > > On May 12, 2025, at 2:23=E2=80=AFPM, Sean Christopherson
+> > > > This is wrong and unnecessary.=C2=A0 As mentioned early, the input =
+that
+> > > > matters is vmcs12.=C2=A0 This flag should *never* be set for vmcs01=
+.
+> > >=20
+> > > I=E2=80=99ll page this back in, but I=E2=80=99m like 75% sure it didn=
+=E2=80=99t work when I
+> > > did it that way.
+> >=20
+> > Then you had other bugs.=C2=A0 The control is per-VMCS and thus needs t=
+o
+> > be emulated
+> > as such.=C2=A0 Definitely holler if you get stuck, there's no need to
+> > develop this in
+> > complete isolation.
+>=20
+> Looking at this from the AMD GMET POV, here's how I think support for
+> this feature for a Windows guest would be implemented:
+>=20
+> * Do not enable the GMET feature in vmcb01.  Only the Windows guest (L1
+> guest) sets this bit for its own guest (L2 guest).  KVM (L0) should see
+> the bit set in vmcb02 (and vmcb12).  OTOH, pass on the CPUID bit to the
+> L1 guest.
+>=20
+> * KVM needs to propagate the #NPF to Windows (instead of handling
+> anything itself -- ie no shadow page table adjustments or walks
+> needed).  Windows spawns an L2 guest that causes the #NPF, and Windows
+> is the one that needs to consume that fault.
+>=20
+> * KVM needs to differentiate an #NPF exit due to GMET or non-GMET
+> condition -- check the CPL and U/S bits from the exit, and the NX bit
+> from the PTE that faulted.  If due to GMET, propagate it to the guest.
+> If not, continue handling it
 
-Hi Maxime,
+Yes, but no.  KVM shouldn't need to do anything special here other than tea=
+ching
+update_permission_bitmask() to understand the GMET fault case.  Ditto for M=
+BEC.
+I'd type something up, but I would quickly encounter -ENOCOFFE :-)
 
-On Wednesday, 14 May 2025 14:20:19 CEST Maxime Chevallier wrote:
-> Hi Romain,
-> 
-> On Wed, 14 May 2025 09:49:56 +0200
-> 
-> Romain Gantois <romain.gantois@bootlin.com> wrote:
-> > Hello everyone,
-> > 
-> > This is version one of my series which adds support for downstream
-> > 1000Base-X SFP modules in the DP83869 PHY driver. It depends on the
-> > following series from Maxime Chevallier, which introduces an ethernet port
-> > representation and simplifies SFP support in PHY drivers:
-> > 
-> > https://lore.kernel.org/all/20250507135331.76021-1-maxime.chevallier@bootl
-> > in.com/
-> Thanks a lot for giving this work a shot ! Maybe a small nit, but as
-> the dependency isn't merged yet, you should mark this series as RFC, as
-> it will fail on the autobuilders.
+With the correct mmu->permissions[], permission_fault() will naturally dete=
+ct
+that a #NPF (or EPT Violation) from L2 due to a GMET/MBEC violation is a fa=
+ult
+in the nNPT/nEPT domain and route the exit to L1.
 
-Ah I see, I'll fix that in v2 then.
+> (btw KVM MMU API question -- from the #NPF, I have the GPA of the L2
+> guest.  How to go from that guest GPA to look up the NX bit for that
+> page?  I skimmed and there doesn't seem to be an existing API for it -
+> so is walking the tables the only solution?)
 
-Thanks,
-
--- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---nextPart8620414.NyiUUSuA9g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgkkmIACgkQ3R9U/FLj
-285jKw/+PKpg4jg8INKJQ0Mp53ofOft5er9GeMS8E7xBhcUHN2FugIo9xajYkIE8
-3TL0+QvABBCpu6VhDoP3UZ+k5joEcpOU4WgS0G7hzrxK0shjSZsOK8DM+xZ1Trql
-wlprLYM0oGu7tbk0KlBLPTZ2N8dNC6UAgnscykiBRDde+IbGmEELMmpJ3qr0Drz9
-NouBsErwEBw933FwuTnC7PmUfkLEs0XR0wZWuvXDCsiBah1L/6Vi00/AiYr/Dcmk
-jvR4x4E3oY8ovSqHmNK3G49yoxwyOXez6HARuixIBqx2M0wy6u4W7ce7GSqo5F0i
-wsDqEI1WRqjazHR11Zu00ymjXpJJ7tc3S8whH08ox/VjiG6Djea8LxSJQANx9FvG
-RQoLpszYDzt1EheQ4UXEDAIk9Mpxo8O/tnt5da7GwFG6uNoLG4aGG9VD9ayvb/df
-B1/MQNvXtrsr2zOuA5VYLROynqATx+f6QWwVQ5O27+f2V3ChSI7tPUqoreQXUXpe
-18DOS1NTqEiIGbdkvsM+Q8zAgYGDb3YIaXZD9o4kb3wdk/HR3eyzL1d/SL8H8chW
-o/5VQhaWue/cVWhVu0MyoRLfWHQEGSu6zGr4oD1a0E1oyt4TQcy02STyulqidoFF
-/auswQ0rkBI1ijzFNwiPCNKzjj8zXPTQRqkJ0dtaoXxH739S0hg=
-=4Pp+
------END PGP SIGNATURE-----
-
---nextPart8620414.NyiUUSuA9g--
-
-
-
+As above, KVM doesn't manually look up individual bits while handling fault=
+s.
+The walk of the guest page tables (L1's NPT/EPT for this scenario) performe=
+d by
+FNAME(walk_addr_generic) will gather the effective permissions in walker->p=
+te_access,
+and check for a permission_fault() after the walk is completed.
