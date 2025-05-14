@@ -1,65 +1,72 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD7527A914;
-	Wed, 14 May 2025 18:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4A52741A0;
+	Wed, 14 May 2025 18:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248925; cv=none; b=TMX3JUVxt9PiBC6vBIFhtz7cMdNMuOvRV4pB4UbnrgYVndQU1Dr0IpsqOch748rtBr3Y6VtpFNE0w8SZoRExzcuVINHDYHqLqhV8I/JcnB5QWumae9Tf22FDF9HVz89NukqdjKxI8GjQ+JUr+OTS1c5QgxZR2zQZS+qOnlaY6W8=
+	t=1747249018; cv=none; b=fthvCwxnkMdvHV32fOgjsQHQ2e05Gywv4pyFLehZKzwgYZgJzCOFO3cU8PE69Cjvj5F4LY8Gp/dbiWRhz9vri5joBFAH2qwBA4Pic1JQOfDzRR7Ec/QA7sPhYB2d7rfXfcaFSxdpm4+/2TIUPyt50MyPboiB4cDIYeOWNKHTANI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248925; c=relaxed/simple;
-	bh=Dd1AbBJnN/eobVfbg16kvz/0BKo+XOYNcMxSAbROsnU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MeCR59k+5yzpV//yVobdomUKxVfiIhDRF9xt6xJ6rffMklKAicrnnWD1VH/ZyuEr0ggudi/XOPkWXsKm4il2Lx/+3hlv4yKH8JMQJZv+Uvvcp17jJiUJsC3zSuvTBtY6RhDe5mXh8y+xGUAx4R6RF43ehY05NXWz0mcj7JDU8pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=CoxdR9vO; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1747249018; c=relaxed/simple;
+	bh=KKvM3hBd7nGNbOxN+FBIYvDoZnjs3M9pvChXhh0uJdY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Piq0HhldovosrW6Qskw2fx7vdkhtMqaFZi/Mw//fP25ZGUrv6e6Y7VktrcAVzBXbtpkZmHS0UYqoNwzP1dAqdTvZkUDkVtWZAFxRyvDaLudvT1qu/9z3Y3trUlOArNSF6IILQEuCNLzhIOBljeXkQDdOmZF3vbmDeftOr5V/ebY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fhr8Yem1; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="CoxdR9vO"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7688B4107B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1747248914; bh=qusa+C5EMMyC7j+Dkx9wlnXabaGtwDCwcq+bgHcJ2YE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CoxdR9vOfNppadw8zY6V1IiRBCzhQKTiEWiU5qwtYHqnJjIC+8olI8FSjQE/vpCmf
-	 Qb6dtKVgd0XFTXU41YtWx6xfl4JLtCOX5j61t2VzJ2V39dcT90Sk2+oP8Cn0CSj/fb
-	 PVQ/X9FXzARIh29dRawtxGKyR55d3UMVyaQh/Sa43JBG7tWklseGmmCajEs/aBBDbV
-	 DK6WRTeknzumAI3qQe84XbeMIVZ084tM+FKgQdYqDsHn0jN/d4TA/PEzIlZw5oRvYG
-	 kdWITstrgbo0vIEq0roAsMwF2+u6fk2gryuWPNETak8JSgVJGPlwqpE5OT+aHL8ndT
-	 qkAtmekorzbSg==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 7688B4107B;
-	Wed, 14 May 2025 18:55:13 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Alexey Dobriyan <adobriyan@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] CodingStyle: make Documentation/CodingStyle into
- symlink
-In-Reply-To: <d5b360c6-1ef4-4344-9ad5-91ba5d962183@p183>
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <87frhcsrva.fsf@trenco.lwn.net>
- <77f03295-df5d-4bc0-9a61-5be829969662@p183>
- <2025051203-secluded-emphases-1c76@gregkh>
- <d5b360c6-1ef4-4344-9ad5-91ba5d962183@p183>
-Date: Wed, 14 May 2025 12:55:10 -0600
-Message-ID: <87sel7nhtd.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fhr8Yem1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=KKvM3hBd7nGNbOxN+FBIYvDoZnjs3M9pvChXhh0uJdY=;
+	t=1747249017; x=1748458617; b=fhr8Yem12lVE49MtBkHcpjMN12ZLa2IpM1LysnNxRBi9Rh5
+	QCs5O3+bDicDW5gL+Bw98GG2XgEeG0+S6kalHjreXu+0sTTRZBK9StpN2O7mgPmEoIz4+YJuUBLOL
+	4ybjcTE8KNWvNIIFAW7vSsA+rAmiHmOO/YdQeIWQ2dOEByazWismWHhmRDwak9m05domEcinWrXZu
+	aP/0SKdLkD4dEhSzYFhFI0fEEewhrODZ/rAt+IU+RB9YcPyBvLnlch9oJVPpdwSBjmik1AqjKtta8
+	OfP2P5g+T1RRm4qWkt+UQXZtGFQ4vM4MDgaS53fA+6QN6jJTDbqCjoKgMYNXZkKQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uFHHi-00000008e1l-26qY;
+	Wed, 14 May 2025 20:56:54 +0200
+Message-ID: <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Bert Karwatzki <spasswolf@web.de>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, 
+ "llvm@lists.linux.dev"
+	 <llvm@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-wireless@vger.kernel.org
+Date: Wed, 14 May 2025 20:56:53 +0200
+In-Reply-To: <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+				 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+			 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+		 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+	 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-malware-bazaar: not-scanned
 
-Alexey Dobriyan <adobriyan@gmail.com> writes:
+>=20
+> I've split off the problematic piece of code into an noinline function to=
+ simplify the disassembly:
+>=20
 
-> I never liked cover letters because they don't get captured in
-> the commit messages so why bother.
+Oh and also, does it even still crash with that? :)
 
-FWIW, if a cover letter contains useful information, I capture it in a
-merge commit that brings in the rest.  I think I'm far from the only one
-who does that...
+Still I feel it's possibly some kind of weird side-effect and not
+strictly a compiler issue? But I don't see anything so far.
 
-jon
+johannes
