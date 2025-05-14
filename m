@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC31B27A130;
-	Wed, 14 May 2025 13:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C73727AC26;
+	Wed, 14 May 2025 13:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747228270; cv=none; b=Swzg9wWJrgNhIq4YLuoVe8MzRLo4uckmPjxQuJtyauHiH+0CNlvbRXmXzAzpR6oIkLP5TPY2lOacLQwMSBYN1Xb0RTPJe9FR8tm061fKTbvQae8IkeBqv73Q+SrzUX2miCH15xaJTY8bgkyNOHY+uAEZglwQheggi4TMiDprMQQ=
+	t=1747228275; cv=none; b=Fe5c+lHwcn8BFpVmcSLqvvF2I8B1qrGYu5DMJKAQffhTSUTJLP+qjymmI3+e3tXPBwhMmQ+CdxieOLGPUvBhZLPysHVdRKK83+R1fv+eLE+c6ypYRs5n6K9kHNJxuOgTs5vBYITEyh1VHnSGh/XMmHdYRdfwhXuF1F8HEX8jO1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747228270; c=relaxed/simple;
-	bh=ACTc1qtxv3iJUb1fSk4pVQhfR7x7JfY8PZE/Ox88sfc=;
+	s=arc-20240116; t=1747228275; c=relaxed/simple;
+	bh=RMIUJ4PPQ4ztksuWTTjccEyOC4ctSkUxCvsZak+d20Y=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=jWylo+P42y/+e7Mfg54twaIHNt3ClYkY6DUMB2bbWKJb9nKfOCRKzQfC6sWwUfiA1EHPeRKkOc35ZxTwh0gMb/1K1esZJpFhS+a3DErPMVmcH3MtjM2PsZr+iSzaVuiBc82e8NaXTeepVaCJFNbnEyn4hREsZr+IywJpyrhsVZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQw9I1C+; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=PxBWaiEVS/aVqT4Uo64W8guDxCK2wl9IiqS/ZYduOZqu8WhYtxzcKs7EkgNQ+3PIndRGCr6afbSPvNJeWCyRAW9/kiD6ZXNIEchhSMTJmC0n1EZ9yH9iuTIeIPWVxMnTqUzxlaGTtlVi8LtckPdTMtqQ6JW3VUGHSnvtauflcr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPfVpSme; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQw9I1C+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5779BC4CEED;
-	Wed, 14 May 2025 13:11:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPfVpSme"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54A83C4CEED;
+	Wed, 14 May 2025 13:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747228270;
-	bh=ACTc1qtxv3iJUb1fSk4pVQhfR7x7JfY8PZE/Ox88sfc=;
+	s=k20201202; t=1747228274;
+	bh=RMIUJ4PPQ4ztksuWTTjccEyOC4ctSkUxCvsZak+d20Y=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=FQw9I1C+EdwWtQuRSfpVhAuWKrgUgwQR2snvUZisSiSy82gL0Zwx+BlyjpkMUATi6
-	 O2afthiShX2WKbNgrQ1gCbDx/fqt7sQ8i/3JH9tGVSAKdb/EsoMrZ2CAbOyEeSI97X
-	 JEF/X5/FKEb5fL1Zlc5/Z+PdsGWwfmXr737MLYExFVwJlj6yjh46Qce1bSp7YLm3xY
-	 pfMoYo6ElBnWcXx+zInlAt7RcgRxIQoBMazin89dPXfGFBjtRD8fRH6j71UcyBJJhW
-	 29njaxnq6cpPLiELuWKClppKVSdXOZfp96y1EgPbqf94uKhIQL6gUTozup3ECVrVjk
-	 of8iM1mFmlECw==
-Date: Wed, 14 May 2025 08:11:08 -0500
+	b=sPfVpSmehjedO3NMxNnnHSljQ3eOjEPchdLZMDEzAjQQs3sC2cqnoBx3HGziV63ww
+	 gZC1R15YhL0bzL2gz4nZIspWlD757TdI9FJUZEpWNInpv0/u76BW5Wpygrt/gnrRJ/
+	 6Xql+1APuuhfOYWmLN1TlQuzlWhKMDlSqIcWR17Ig+ZJX2NBPvYyLB40VFRqMffF3R
+	 DnIMS0skU589z+LId7B3NAmnAFWRP7cVj8ExWbPJVT2viGjHTiAnlIOhh4SWQHh6eb
+	 VvCEKFSrkW19j8CNINvCQr2XdxMZDFCzt5VBHVTVIO4F2rPRj9qYAszo5jhGyXb/Zi
+	 B80zVGQtXtzVw==
+Date: Wed, 14 May 2025 08:11:12 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,56 +36,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
- Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
- devicetree@vger.kernel.org
-To: Prabhakar <prabhakar.csengg@gmail.com>
-In-Reply-To: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Message-Id: <174722778646.1826247.6383994216168902303.robh@kernel.org>
-Subject: Re: [PATCH 00/10] Add GBETH, OSTM, RIIC, WDT, and GPU support for
- RZ/V2N SoC and EVK board
+Cc: linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+References: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+Message-Id: <174722778770.1826547.7211789941819434766.robh@kernel.org>
+Subject: Re: [PATCH 0/8] Add support for Amlogic S7/S7D/S6 pinctrl
 
 
-On Wed, 14 May 2025 11:15:18 +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, 14 May 2025 15:01:27 +0800, Xianwei Zhao wrote:
+> In some Amlogic SoCs, to save register space or due to some
+> abnormal arrangements, two sets of pins share one mux register.
+> A group starting from pin0 is the main pin group, which acquires
+> the register address through DTS and has management permissions,
+> but the register bit offset is undetermined.
+> Another GPIO group as a subordinate group. Some pins mux use share
+> register and bit offset from bit0 . But this group do not have
+> register management permissions.
 > 
-> Hi All,
+> In SoC S7 and S7D, GPIOX(16~19) mux share with GPIOCC mux register.
 > 
-> This patch series adds support for the following components on the
-> RZ/V2N SoC and RZ/V2N EVK board:
-> 1. GBETH (Gigabit Ethernet)
-> 2. OSTM (General TImer)
-> 3. RIIC (I2C)
-> 4. WDT (Watchdog Timer)
-> 5. GE3D (Mali-G31 GPU)
+> In SoC S6, GPIOX(16~19) mux share with GPIOCC mux register, and GPIOD(6)
+> mux share with GPIOF mux register.
 > 
-> Cheers
-> Prabhakar
+> Add S7/S7D/S6 pinctrl compatible string and device node.
 > 
-> Lad Prabhakar (10):
->   arm64: dts: renesas: r9a09g056: Add GBETH nodes
->   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable GBETH
->   arm64: dts: renesas: r9a09g056: Add OSTM0-OSTM7 nodes
->   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable OSTM timers on
->     RZ/V2N EVK
->   arm64: dts: renesas: r9a09g056: Add RIIC controllers
->   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable RIIC controllers
->   arm64: dts: renesas: r9a09g056: Add WDT0-WDT3 nodes
->   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable WDT1
->   arm64: dts: renesas: r9a09g056: Add Mali-G31 GPU node
->   arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable Mali-G31 GPU
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+> Xianwei Zhao (8):
+>       dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for S7
+>       dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for S7D
+>       dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for S6
+>       pinctrl: meson: a4: remove special data processing
+>       pinctrl: meson: support amlogic S6/S7/S7D SoC
+>       dts: arm64: amlogic: add S7 pinctrl node
+>       dts: arm64: amlogic: add S7D pinctrl node
+>       dts: arm64: amlogic: add S6 pinctrl node
 > 
->  arch/arm64/boot/dts/renesas/r9a09g056.dtsi    | 569 ++++++++++++++++++
->  .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 211 +++++++
->  2 files changed, 780 insertions(+)
+>  .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |   9 +-
+>  arch/arm64/boot/dts/amlogic/amlogic-s6.dtsi        |  97 ++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi        |  81 +++++++++++++++
+>  arch/arm64/boot/dts/amlogic/amlogic-s7d.dtsi       |  90 +++++++++++++++++
+>  drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 111 ++++++++++++++++-----
+>  5 files changed, 363 insertions(+), 25 deletions(-)
+> ---
+> base-commit: aa94665adc28f3fdc3de2979ac1e98bae961d6ca
+> change-id: 20250514-s6-s7-pinctrl-af1ebda88a4e
 > 
+> Best regards,
 > --
-> 2.49.0
+> Xianwei Zhao <xianwei.zhao@amlogic.com>
 > 
 > 
 > 
@@ -106,106 +113,19 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250514 (exact match)
+ Base: using specified base-commit aa94665adc28f3fdc3de2979ac1e98bae961d6ca
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/renesas/' for 20250514101528.41663-1-prabhakar.mahadev-lad.rj@bp.renesas.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/amlogic/' for 20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com:
 
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@11800000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@11801000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@14000000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@14001000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c00000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c01000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c02000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: timer@12c03000 (renesas,r9a09g056-ostm): compatible:0: 'renesas,r9a09g056-ostm' is not one of ['renesas,r7s72100-ostm', 'renesas,r7s9210-ostm', 'renesas,r9a07g043-ostm', 'renesas,r9a07g044-ostm', 'renesas,r9a07g054-ostm', 'renesas,r9a09g057-ostm']
-	from schema $id: http://devicetree.org/schemas/timer/renesas,ostm.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@11c00400 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
-	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
-	'renesas,r9a09g047-wdt' was expected
-	'renesas,r9a09g057-wdt' was expected
-	'renesas,rza-wdt' was expected
-	'renesas,rzn1-wdt' was expected
-	'renesas,rzg2l-wdt' was expected
-	'renesas,rzv2m-wdt' was expected
-	'renesas,rcar-gen2-wdt' was expected
-	'renesas,rcar-gen3-wdt' was expected
-	'renesas,rcar-gen4-wdt' was expected
-	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@14400000 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
-	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
-	'renesas,r9a09g047-wdt' was expected
-	'renesas,r9a09g057-wdt' was expected
-	'renesas,rza-wdt' was expected
-	'renesas,rzn1-wdt' was expected
-	'renesas,rzg2l-wdt' was expected
-	'renesas,rzv2m-wdt' was expected
-	'renesas,rcar-gen2-wdt' was expected
-	'renesas,rcar-gen3-wdt' was expected
-	'renesas,rcar-gen4-wdt' was expected
-	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@13000000 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
-	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
-	'renesas,r9a09g047-wdt' was expected
-	'renesas,r9a09g057-wdt' was expected
-	'renesas,rza-wdt' was expected
-	'renesas,rzn1-wdt' was expected
-	'renesas,rzg2l-wdt' was expected
-	'renesas,rzv2m-wdt' was expected
-	'renesas,rcar-gen2-wdt' was expected
-	'renesas,rcar-gen3-wdt' was expected
-	'renesas,rcar-gen4-wdt' was expected
-	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
-arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: watchdog@13000400 (renesas,r9a09g056-wdt): compatible: 'oneOf' conditional failed, one must be fixed:
-	['renesas,r9a09g056-wdt', 'renesas,r9a09g057-wdt'] is too long
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r7s72100-wdt', 'renesas,r7s9210-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a06g032-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a07g043-wdt', 'renesas,r9a07g044-wdt', 'renesas,r9a07g054-wdt', 'renesas,r9a08g045-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r9a09g011-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a7742-wdt', 'renesas,r8a7743-wdt', 'renesas,r8a7744-wdt', 'renesas,r8a7745-wdt', 'renesas,r8a77470-wdt', 'renesas,r8a7790-wdt', 'renesas,r8a7791-wdt', 'renesas,r8a7792-wdt', 'renesas,r8a7793-wdt', 'renesas,r8a7794-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a774a1-wdt', 'renesas,r8a774b1-wdt', 'renesas,r8a774c0-wdt', 'renesas,r8a774e1-wdt', 'renesas,r8a7795-wdt', 'renesas,r8a7796-wdt', 'renesas,r8a77961-wdt', 'renesas,r8a77965-wdt', 'renesas,r8a77970-wdt', 'renesas,r8a77980-wdt', 'renesas,r8a77990-wdt', 'renesas,r8a77995-wdt']
-	'renesas,r9a09g056-wdt' is not one of ['renesas,r8a779a0-wdt', 'renesas,r8a779f0-wdt', 'renesas,r8a779g0-wdt', 'renesas,r8a779h0-wdt']
-	'renesas,r9a09g047-wdt' was expected
-	'renesas,r9a09g057-wdt' was expected
-	'renesas,rza-wdt' was expected
-	'renesas,rzn1-wdt' was expected
-	'renesas,rzg2l-wdt' was expected
-	'renesas,rzv2m-wdt' was expected
-	'renesas,rcar-gen2-wdt' was expected
-	'renesas,rcar-gen3-wdt' was expected
-	'renesas,rcar-gen4-wdt' was expected
-	from schema $id: http://devicetree.org/schemas/watchdog/renesas,wdt.yaml#
+arch/arm64/boot/dts/amlogic/amlogic-s7d-s905x5m-bm202.dtb: bus@fe000000 (simple-bus): pinctrl:ranges: [[0, 0, 0, 16384, 0, 832]] is not of type 'boolean'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm64/boot/dts/amlogic/amlogic-s6-s905x5-bl209.dtb: bus@fe000000 (simple-bus): pinctrl:ranges: [[0, 0, 0, 16384, 0, 832]] is not of type 'boolean'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm64/boot/dts/amlogic/amlogic-s7-s805x3-bp201.dtb: bus@fe000000 (simple-bus): pinctrl:ranges: [[0, 0, 0, 16384, 0, 832]] is not of type 'boolean'
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
 
 
 
