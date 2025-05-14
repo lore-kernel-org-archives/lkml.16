@@ -1,162 +1,83 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60130200B99;
-	Wed, 14 May 2025 10:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1973E25DAF7
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747216872; cv=none; b=U1XfEs+DnTt+Xl5f4juKizzDelzsQWuGe3BDBRqPr2SIPrEoamQfdBtzY4I/BP8ASADBP9cNNoyqhp6mas+U1NTIbKsLVAb0gPwhZD3mpMuqm2QVtnlVS+eUZZrIZs609e8u5iUpws1SMJ22ZweQnxuSJbavzS9upTEArhtMj3U=
+	t=1747216889; cv=none; b=P3sz/2Q+h1ahdSWm4BKEsufKyF+Ps+yKK0mYp3Jk8XGSJjldWTkT0UijuKMXgXmRyO0svUBub3+EHG18wUQQYOTkvMRMbdi08QUv9Lw+4nGTeXLsPwR12dkTGFYLqbtXg8X93AyJDslxihffvtONl2HpCnc7FZuZGe6imbPUjqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747216872; c=relaxed/simple;
-	bh=xgejKCY26b7QnWUrHBoSnHvtIr2J2lGHRx2kHSUwXUQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qsiVJs1NcZRAcfWUZzyvCpBpZsE6Svk/wX+kFWh05amszecCQzhHFZUtA49D9OEp1FDhW8C0bU7Aiha/vK50e/hcV4FSdswlnFQP3KX93elWlrp6whznCVdjBE4tHv8WaCdGaKiRb455z0rR1NGRw1rcEZRpXEwITsVnK65pVEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iAA3qGji; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747216889; c=relaxed/simple;
+	bh=pobJ400CLepzNXb/cYSUGRmG1PO7LIUNV7zydd02BtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=leZLj4T8m+JuxdSv+sjLuirvll3hHqsh/K9gpsMnnDcO2m56F4M7/+y6BqspVbDq7yG7VgvpAn7xcyIklQ6iQyr0HA893wcDFfwQhRMm/aPRbbUMcNXPA6sye5WyB372tw+omDlUPi4u0VSwHT88TtCUcgqL18p8nXGk/XhRdz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JJyTD8Ao; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Yw/VqjqA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iAA3qGji"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 162C943B0C;
-	Wed, 14 May 2025 10:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747216862;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JJyTD8Ao";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yw/VqjqA"
+Date: Wed, 14 May 2025 12:01:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747216886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0cBmAD5G29UYSNRJHoUJrQxri296/wPmhf/JLxSLT5M=;
-	b=iAA3qGji0wSuWTpqIQ9sjB4VDUj0LEd6kzA80IlnQ0WF7FZw04sU/H4cSf+lcOr65wQVod
-	uPsDM3sdQ/mSptxPKwjVknLpw9FOOgU6Z1D83Qga9/ddZQ84uwHH9ORGtSDEFm4oEA1phh
-	bJot1WHALXUmbhVppXfvCapmt653uj4CTaRSjaXMUAfCttP+k/fdXP3RHMZiOKYMke+80T
-	RJvBJ+QQ4+fYOTMZJECfxLfKKg2ubHIPXmbgsoXvPshWum+PVvm2MiaGSR7wonyafeePVd
-	KXjsq2maAd5CbUEwxHGKxBQOYsJ0nyyKhT0n6D3OcIro1KQIi27DRyulv47h5A==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Antoine Tenart <atenart@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH net-next 3/3] net: phy: dp83869: Support 1000Base-X SFP modules
-Date: Wed, 14 May 2025 12:00:54 +0200
-Message-ID: <4702428.LvFx2qVVIh@fw-rgant>
-In-Reply-To: <3iyvm6curoco35xuyos5llxvnvopvphl5cnndaacg2v5jiu3l7@aaic3jfqhjaz>
-References:
- <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
- <20250514-dp83869-1000basex-v1-3-1bdb3c9c3d63@bootlin.com>
- <3iyvm6curoco35xuyos5llxvnvopvphl5cnndaacg2v5jiu3l7@aaic3jfqhjaz>
+	bh=/yjJ8VTCfJF3mh532Vvi9mnXCuXqEe7OAhye5pR0w08=;
+	b=JJyTD8Ao92BZRcVKabvPvKBtz2HtA8d6TJiDDphuBIRYm0oVVhxATBhDhml5NQ3syJkx66
+	y9LfcfFOkp+UeB+hGUtsIuEPKF4RBbRS4R/Tz+7KBT6f/ZZzHQ163W6gFv3p1QXuGZSm8/
+	xtXGLCS260+bzl5TRVv+BOis2k1yydT1LXp5yIemUeJtAKS83Sou9m3KJqINZu6Kep29b1
+	I+2kKwdHMmNxrU2ZTR/RAgtEPHtmmajjOT2ZcouWetnUp2JDMXmJqovgZqjn1WvU0D1nMe
+	IvOmLgKRDoAI7USdoxYpL+hwNYAxRPAP7ZmPXdksDqPtlo5Jy766u354twljuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747216886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/yjJ8VTCfJF3mh532Vvi9mnXCuXqEe7OAhye5pR0w08=;
+	b=Yw/VqjqAIPadN0tqNqnAHVHf1OReRfhru2LMX6IT+9ugZFxd3qRL3vHDy94d5Tiw6qMhgy
+	8HbdjDtJPy0HVmAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: Add kprobes KUnit test
+Message-ID: <20250514100125.KjX0gdp9@linutronix.de>
+References: <20250513151631.3520793-1-namcao@linutronix.de>
+ <b6df6923-1028-4a6e-8cf4-e10e8fd55475@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2419873.ElGaqSPkdT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeiieelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhvdelkeevgfeijedtudeiheefffejhfelgeduuefhleetudeiudektdeiheelgfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghtvghnrghrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegur
- ghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b6df6923-1028-4a6e-8cf4-e10e8fd55475@ghiti.fr>
 
---nextPart2419873.ElGaqSPkdT
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Antoine Tenart <atenart@kernel.org>
-Date: Wed, 14 May 2025 12:00:54 +0200
-Message-ID: <4702428.LvFx2qVVIh@fw-rgant>
-MIME-Version: 1.0
-
-On Wednesday, 14 May 2025 11:01:07 CEST Antoine Tenart wrote:
-> On Wed, May 14, 2025 at 09:49:59AM +0200, Romain Gantois wrote:
-> > +static int dp83869_port_configure_serdes(struct phy_port *port, bool
-> > enable, +					 phy_interface_t interface)
-> > +{
-> > +	struct phy_device *phydev = port_phydev(port);
-> > +	struct dp83869_private *dp83869;
-> > +	int ret;
-> > +
-> > +	if (!enable)
-> > +		return 0;
-> > +
-> > +	dp83869 = phydev->priv;
-> > +
-> > +	switch (interface) {
-> > +	case PHY_INTERFACE_MODE_1000BASEX:
-> > +		dp83869->mode = DP83869_RGMII_1000_BASE;
-> > +		break;
-> > +	default:
-> > +		phydev_err(phydev, "Incompatible SFP module inserted\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = dp83869_configure_mode(phydev, dp83869);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Update advertisement */
-> > +	if (mutex_trylock(&phydev->lock)) {
-> > +		ret = dp83869_config_aneg(phydev);
-> > +		mutex_unlock(&phydev->lock);
-> > +	}
+On Wed, May 14, 2025 at 10:22:03AM +0200, Alexandre Ghiti wrote:
+> On 13/05/2025 17:16, Nam Cao wrote:
+> > +	for (i = 0; i < num_kprobe; ++i) {
+> > +		kp[i].addr = test_kprobes_addresses[i];
+> > +		kp[i].pre_handler = kprobe_dummy_handler;
+> > +		KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp[i]));
 > 
-> Just skimmed through this quickly and it's not clear to me why aneg is
-> restarted only if there was no contention on the global phydev lock;
-> it's not guaranteed a concurrent holder would do the same. If this is
-> intended, a comment would be welcomed.
+> 
+> Will kp be freed if the test fails?
 
-The reasoning here is that there are code paths which call 
-dp83869_port_configure_serdes() with phydev->lock already held, for example:
+Yes. Unlike KUNIT_ASSERT_EQ() which terminates the test, KUNIT_EXPECT_EQ()
+still lets the test continues.
 
-phy_start() -> sfp_upstream_start() -> sfp_start() -> \
-	sfp_sm_event() -> __sfp_sm_event() -> sfp_sm_module() -> \ 
-	sfp_module_insert() -> phy_sfp_module_insert() -> \
-	dp83869_port_configure_serdes()
+> Thanks for adding new tests, KUnit tests do not run yet in the CI but I'll
+> add them soon!
 
-so taking this lock could result in a deadlock.
+Well I promised Björn this test back in 2023 ;) But I wasn't sure how to
+implement it (I was still a student at that time) and then got busy with
+other stuffs. But I guess better late than never.
 
-mutex_trylock() is definitely not a perfect solution though, but I went with it
-partly because the marvell-88x2222 driver already does it this way, and partly 
-because if phydev->lock() is held, then there's a solid chance that the phy 
-state machine is already taking care of reconfiguring the advertisement. 
-However, I'll admit that this is a bit of a shaky argument.
-
-If someone has a better solution in mind, I'll gladly hear it out, but for now 
-I guess I'll just add a comment explaining why trylock() is being used.
-
-Thanks!
-
--- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---nextPart2419873.ElGaqSPkdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgkadYACgkQ3R9U/FLj
-286kbBAAibjDg6Go6aP54fLnt6EVxt/93lm7K4gVHOfRktWGmeIJljLPhlQVFGIM
-1WxCumiEiHJ5ArWHAWJglGs30SK0MkQxiaah0Czok1EDSX64KXCMK9EA1R/4UeFJ
-Z5IsIOyJiuvF79r6bf93BpLJohubx9ikxrF9BStp+VeNw3MmJHKtDPqTV+rI8KLu
-kCCiJWiYrXiUggUbtEToL4y/KNUmW2TXeIX/u/Hrsq2ydVjUHuzEv0Do9s7h7Jmd
-jLHHaiy0597ij1z2DUdLLpuuTKEbFkTDcDhFssiOK+3+QPDcdGe/k+KUm4OpxTFp
-LbSh2gPAIZSe3WkaOioL0IEAdgM+ZcqdcV5gKlOMCBJi5oEPetmqk6F/bAg6j/qk
-b+xz1FLuDO8mhwVRZ6n/X/2Iff7ec8S7NvelAftPLthDQPYNpVu1yxR3EQMSPuTs
-YT7pi90XVtIK8kBT/l1SKN7XFOTC3VDefD5fKB5ZyFqwiqmtdvlaYOkU+Mj0/UYg
-fTAjGX0soK17EEbyg2jWT34PDDGkk91daTIXSm6aZn8stfRm0iMSpCag65mgQipS
-04joVQnSKLTmBdhtFVxttBvd2vlXS6ga5vlomdNO1EYgb00gMPrhx5iXo1KsuBZF
-2KO35EHQNRPsq05uXI2mw4jLB7eZ/vLtJKnZpi/NpAA/ZJYp/58=
-=fBHx
------END PGP SIGNATURE-----
-
---nextPart2419873.ElGaqSPkdT--
-
-
-
+Nam
