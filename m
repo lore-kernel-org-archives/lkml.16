@@ -1,65 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2D221A428;
-	Wed, 14 May 2025 08:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F1770838;
+	Wed, 14 May 2025 08:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212826; cv=none; b=QPAnmvw0LGHz3Z4JMfr0eMtFgqEcm3qahkSFUDkWNgjbMcsqZe2w38Qn5clt5RwjNg6cVoFBVbdC9wmniU0Z16IaeUXkIeJOC9zZsbiQ02lnh53IBWqwLcL+X1faj8254HdsorLrvpRvgD2SHUp969529EkG/Ey3yj8Sc9895RA=
+	t=1747212860; cv=none; b=tlV+kpIVI7lVaK2GtmJOih7vpYqCs7gyT3PnNpAlHE8qW8JKiO6SEj054inVhB+aRxgoAXCZeevdFjv/fJW+npxq/uJC+D1SxKmovCv/TNIiRaN9h/8EzxV5MKxOydD8eSKTc5GGn73Y8Jbo9O2hfqIPedpHfBrdezQIbNPkwYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212826; c=relaxed/simple;
-	bh=jphH8oNDnfTOFAMSK14ojGHuFyDi41SV2joIAPM1BkM=;
+	s=arc-20240116; t=1747212860; c=relaxed/simple;
+	bh=VQBOK2idp1nxsNCCEs74fOX/cJ4nuhcieBGWeFG1D/g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rrqf7t/lkVqD100N+He2YG+lblgILlFfhIz1jEz2kw6NPbPclzqUbjOdB+od2KMlYDLbwp7zskXwiWAJdI204qTddvma35HTBCfG0sYTfbYfaCD9DWNh8T6Q1OWf7WzYOeY/ggWMmWwsk34aG92ykV03IGZF8Oqk4u0fK6lbB60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt+h7VEH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOTYaBHGKnqJGhgXXTHU4iDu/qEmAoz+n+jZwSsaxIiPHjiUXiGpMueQM9v9mo7bLPB5BfnhXu1DuTwRkGXIojANgHDRx8OqTY4EjbssCFl++wq0/AzqGPzYFyCsttLY+ctGNElyPtKcuzmhXp+BGXCIay+4RVdzIzTf+5v+w9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du1CDjSy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt+h7VEH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F16E9C4CEE9;
-	Wed, 14 May 2025 08:53:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du1CDjSy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E610C4CEE9;
+	Wed, 14 May 2025 08:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747212826;
-	bh=jphH8oNDnfTOFAMSK14ojGHuFyDi41SV2joIAPM1BkM=;
+	s=k20201202; t=1747212859;
+	bh=VQBOK2idp1nxsNCCEs74fOX/cJ4nuhcieBGWeFG1D/g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rt+h7VEHFJdQPrI6Kf86AYYBjHqfox+C9NRxYFga9cDEX1gOozmPpXGIYClSmPmxj
-	 9o5lDQrBePdtCiacbDumjgZlzgKT8hPL8lti1jg3QaSTcmR3RblIng8Ky2boJtfQcM
-	 e+c3GnI0jDmAkVnJhFJSOoknfGFEtU/haZK0duUDRBULcUFsVGBQu/B9HfiW3E2Zs5
-	 7eM87gWvfq122VhNzWBhd6iy8II2LDzOBiWs44Hm4MdoqzscpSHuRV1KmC+J4JJRJt
-	 8eBKj0XcOXACyDpljurHriQQEYyEapLi9TiJTbywtdoFkoYlC6CoHAjpMbIx7+lfGi
-	 xLHbi1ajkoLhw==
-Date: Wed, 14 May 2025 09:53:41 +0100
-From: Simon Horman <horms@kernel.org>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [net] octeontx2-pf: Fix ethtool support for SDP representors
-Message-ID: <20250514085341.GD3339421@horms.kernel.org>
-References: <20250512062901.629584-1-hkelam@marvell.com>
+	b=Du1CDjSyWSoA/EGDHyC2KaC7ioh46+/frf7hBPrUuxcmVMtDLpQh2YGmf6Htgda82
+	 D/1VYuweFU0f5lW1SJN0O3pk/xfVGwWGQcCoCbwPd5Nq/WNgHhAasRRtgnbpwQoyyP
+	 gARh7W+PfZYovJQVDG6V1+YPmdz7UCYBLTWrZTXgNyrBqj4ULhM5PlTPqTsSuAm4lN
+	 4ay46Z+yRtFYfSxTUU4wYvhuW5/2wdkQDW30QzT08o/3qT7TmoL+n9Wc62BsGIXlm4
+	 C6q7kiAQ4hevMYDsCsWzCGu9VHmwvgGB1MtT+OPFrCXz10lrREuDR+h7XdxoKYqdb+
+	 oKPjomluptx/w==
+Date: Wed, 14 May 2025 10:54:15 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Jiaxin Yu <jiaxin.yu@mediatek.com>, linux-sound@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Darren Ye <darren.ye@mediatek.com>
+Subject: Re: [PATCH 0/3] ASoC: mediatek: mt8183-afe-pcm: Shorten source code
+Message-ID: <aCRaN27p32c9gxDN@finisterre.sirena.org.uk>
+References: <20250425082551.1467042-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RJEVfGPvKI8lIx/3"
+Content-Disposition: inline
+In-Reply-To: <20250425082551.1467042-1-wenst@chromium.org>
+X-Cookie: Well begun is half done.
+
+
+--RJEVfGPvKI8lIx/3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250512062901.629584-1-hkelam@marvell.com>
 
-On Mon, May 12, 2025 at 11:59:01AM +0530, Hariprasad Kelam wrote:
-> The hardware supports multiple MAC types, including RPM, SDP, and LBK.
-> However, features such as link settings and pause frames are only available
-> on RPM MAC, and not supported on SDP or LBK.
-> 
-> This patch updates the ethtool operations logic accordingly to reflect
-> this behavior.
-> 
-> Fixes: 2f7f33a09516 ("octeontx2-pf: Add representors for sdp MAC")
-> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+On Fri, Apr 25, 2025 at 04:25:47PM +0800, Chen-Yu Tsai wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> This series is meant as an example on how to use macros and range cases
+> to shorten the MediaTek audio frontend drivers. The drivers have large
+> tables describing the registers and register fields for every supported
+> audio DMA interface. (Some are actually skipped!) There's a lot of
+> duplication which can be eliminated using macros. This should serve as
+> a reference for the MT8196 AFE driver that I had commented on.
+
+AngeloGioacchino?
+
+--RJEVfGPvKI8lIx/3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkWjYACgkQJNaLcl1U
+h9D/1Af/XElCtNyti+25emI4YNKEfk2R9v0BZ0vK0d5J9W/iLMsLIU37Tr+WcgFA
+oxm/P+uo3MjQwbQUj7c8d5XOXFtpMoUR+QlEIGuR43vkTM+e02n9CqGaY9m408WM
+LHUx6i1REXPRha8FgKbFvcWsDqdSnATl04GWrGOKTXNH8QhZbLL884SCxYwZGaty
+HLrBvsUYhiFN/LHz4RUCCuvm42rp4lA7/5EQ07+QEy3tHqmRYSxyegKkkQ++v3Og
+EslpX2I7nIyz2X0+U0Y9rSJfYBWQR2APwqSq/AKqzlp6YkbTv9MTO6KUhCr4k4ah
+F7qUWkQs6HfYygh4haJYsdX0s9WacA==
+=PgTh
+-----END PGP SIGNATURE-----
+
+--RJEVfGPvKI8lIx/3--
