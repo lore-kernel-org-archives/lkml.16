@@ -1,108 +1,158 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C652882D1
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DB92882AD
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248125; cv=none; b=Xfn9qhIwvjzdPIb2XMA/z4s2L/aaPzL88SeIf4F1YkXmeZPYelLMfyZlGgTSV58ywropYzXJIFZMhMqun3Yv2vRUDYacyh8s7CcdIDNgm8y2f1EPeqn92bX8589LoC3dUIyWwuik4Zy4zIwdMekLELosLACl1R6WsnghoPWBhqo=
+	t=1747248144; cv=none; b=pbTAxuB57yWFb7+lqagK/CekFmXimyvLnyqMJ0BQj10BAdOekzRndFycf0ek2liPkdgKUjQwE34MGULu8n61P+/fCBnLmgA3x0GITfBvhtuUFRTKZOnbX+FN6q3njAPdyyocB54yBZfo2AjxevitsE+ZDUIP+nkIGoVP4xP/wbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248125; c=relaxed/simple;
-	bh=8WPS6fJFn9ZOxrssZfprQKVrhRW5a0xtdjp+RK/angE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nOT4qTtSzfGchsCMlCEWL8IaoxsPc9R2kClfAvxrCS96Sj9dxzwm2dC1X2P9WkEQnaybQxNa5aN53EiEhGYqJk3NnaGPbER5dnOxbj/jKrO6N5kq7ljV7dV9TNoHmknZEbHVhqOYp47ImUOiat9AeeuRkTX7Y0geaoH3la0b08w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p8NkvsKP; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com
+	s=arc-20240116; t=1747248144; c=relaxed/simple;
+	bh=3Fr0cQ+G90nKuUSZg94me3gC2Oyt2UO3Hef1WWjs74U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bz/sJnw7RY74a1msRCDFvW2q6mqCpIZO6sGfRe8HkDzmGtv3ETrhM3eK4hYCdBS/ezcCblbCL/nWw/O/I3cQFUus18+XJQjpmja3GDgwssBEnC3criZPDn0s9snZTQ2UzUSSqkqQXAcqj5FhffwQx93jpvAc3KkJhMiAAr2cYIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L9zMuLin; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p8NkvsKP"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso30401a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:42:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747248123; x=1747852923; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYJuHf6JfZCBn/xacOL2tI46jqMW4+1r9XjhA6jdQBY=;
-        b=p8NkvsKPnNZ+zrvsTHEQjWzLb7E6Mb53DL0RSpRW1F0PrZPxzKFPKssadzM+phgSff
-         I/tpjw3zfzsIcXCB7DYeWvJ0y4rlPMZC3a+3v+0S5idn4r+YTo/w5w9rcCEvFlanBN/m
-         GT/hyb7gpk/WM5Bc41F/XzqVMVLqtGijFzeDWokwbhMsqBEc9CepwWJkUk2zztEKMYn5
-         B55/G0ClyEvabZaNtJCXr9u2jDp9Xlnb9al53MaiJtSQx/kijKgz7B/TSacbPV5++FAY
-         MF6beYoWQg2FNYQx6QVN39v6MztgFbjpEXX8PDz6iMmXTT7aoBQpKT5uaZqRau87Wm7F
-         yv0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747248123; x=1747852923;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYJuHf6JfZCBn/xacOL2tI46jqMW4+1r9XjhA6jdQBY=;
-        b=uw+hit6gvFdo52bkSuebGF6ujtfKFFUHHdvfpmQyjmd5tHrGdeVcpY7v/Fut94qcRO
-         6dM5tRqK3MfMZCzwGBjZnnSbl7wj20jskZUuPejnJ/6Qs3NrQ+cAfuLNHw2o7ufmd0ND
-         qFksKj8a5e3GR3LA4kNi0P41AdS4gqnhbYU94jxQ5FSLKWW8AdqxS1GtDRjsyvCf/GY0
-         wkUUzS4yRAIh+QBXhwX5u6UlF2lI30ibXT/1Z9nGMo/ts8Hk/hLwTaxbySDpZDNIpQTi
-         oy7Za0CRAE/ZFjvu/4JOdpLdeELbJ+DIutSfN9j8qPa1yFS3CwzLe0L/dnhTh+5SCDNy
-         Zdsg==
-X-Gm-Message-State: AOJu0YylS6hk+4Jdc/pzMrXmj7d2v7putCKx6ODDL4aDlUsnoB3m5LE0
-	9xm3A8SApQfSBTWMu+HUqhQ633PSsc9E22HOMKqOX1S26iMYmOy/zX93wdVSbI1Na7te3JO2NsK
-	l4KorZ+vMm29tFjJBLmsyPg==
-X-Google-Smtp-Source: AGHT+IHaW0tGNG2An47wn7ypYPKbD5kAKXhci3mLdyKHvLgmgeV/RB/EAKA0ZnHx69e5p2D6/yHVAiXZ18yI4rGUsg==
-X-Received: from pfks12.prod.google.com ([2002:a05:6a00:194c:b0:740:6f6:7346])
- (user=dionnaglaze job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:6d88:b0:1f5:5ca4:2744 with SMTP id adf61e73a8af0-215ff0d4647mr5637627637.17.1747248122860;
- Wed, 14 May 2025 11:42:02 -0700 (PDT)
-Date: Wed, 14 May 2025 18:41:36 +0000
-In-Reply-To: <20250514184136.238446-1-dionnaglaze@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L9zMuLin"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747248139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I1JZROuIroIvEzIUKiaMX+NW2Feg9mUr1VdRm7ju+Rc=;
+	b=L9zMuLin+KdSVhzEN0SGMJKsSLDXu2kWmM+sbQ2yv1PrTje8O/eF0Gy1pQg2iugldzHZ+T
+	M7psiGTwbuAYe7PTX0V1VJcEOxef1/R4hP0pUoImfGXbfRl58KPC0yIkyYMzoNlqhdjxFf
+	e8EZzcrUZShSAZ0loYLOk0N7rzBcYl8=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH v2 1/7] memcg: memcg_rstat_updated re-entrant safe against irqs
+Date: Wed, 14 May 2025 11:41:52 -0700
+Message-ID: <20250514184158.3471331-2-shakeel.butt@linux.dev>
+In-Reply-To: <20250514184158.3471331-1-shakeel.butt@linux.dev>
+References: <20250514184158.3471331-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250514184136.238446-1-dionnaglaze@google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250514184136.238446-4-dionnaglaze@google.com>
-Subject: [PATCH v4 2/2] The ccp driver can be overloaded even with guest
- request rate limits. The return value of -EBUSY means that there is no
- firmware error to report back to user space, so the guest VM would see this
- as exitinfo2 = 0. The false success can trick the guest to update its message
- sequence number when it shouldn't have.
-From: Dionna Glaze <dionnaglaze@google.com>
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	Dionna Glaze <dionnaglaze@google.com>, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
-	Borislav Petkov <bp@alien8.de>, Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Instead, when ccp returns -EBUSY, that is reported to userspace as the
-throttling return value.
+The function memcg_rstat_updated() is used to track the memcg stats
+updates for optimizing the flushes. At the moment, it is not re-entrant
+safe and the callers disabled irqs before calling. However to achieve
+the goal of updating memcg stats without irqs, memcg_rstat_updated()
+needs to be re-entrant safe against irqs.
 
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Peter Gonda <pgonda@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Sean Christopherson <seanjc@google.com>
+This patch makes memcg_rstat_updated() re-entrant safe using this_cpu_*
+ops. On archs with CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS, this patch is
+also making memcg_rstat_updated() nmi safe.
 
-Signed-off-by: Dionna Glaze <dionnaglaze@google.com>
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- arch/x86/kvm/svm/sev.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ mm/memcontrol.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index ddbfdce9dc18..5901a7f59f88 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -4065,6 +4065,11 @@ static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_
- 	 * the PSP is dead and commands are timing out.
- 	 */
- 	ret = sev_issue_cmd(kvm, SEV_CMD_SNP_GUEST_REQUEST, &data, &fw_err);
-+	if (ret == -EBUSY) {
-+		svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VMM_ERR_BUSY, fw_err));
-+		ret = 1;
-+		goto out_unlock;
-+	}
- 	if (ret && !fw_err)
- 		goto out_unlock;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 89476a71a18d..2464a58fbf17 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -505,8 +505,8 @@ struct memcg_vmstats_percpu {
+ 	unsigned int			stats_updates;
+ 
+ 	/* Cached pointers for fast iteration in memcg_rstat_updated() */
+-	struct memcg_vmstats_percpu	*parent;
+-	struct memcg_vmstats		*vmstats;
++	struct memcg_vmstats_percpu __percpu	*parent_pcpu;
++	struct memcg_vmstats			*vmstats;
+ 
+ 	/* The above should fit a single cacheline for memcg_rstat_updated() */
+ 
+@@ -588,16 +588,21 @@ static bool memcg_vmstats_needs_flush(struct memcg_vmstats *vmstats)
+ 
+ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+ {
++	struct memcg_vmstats_percpu __percpu *statc_pcpu;
+ 	struct memcg_vmstats_percpu *statc;
+-	int cpu = smp_processor_id();
++	int cpu;
+ 	unsigned int stats_updates;
+ 
+ 	if (!val)
+ 		return;
+ 
++	/* Don't assume callers have preemption disabled. */
++	cpu = get_cpu();
++
+ 	cgroup_rstat_updated(memcg->css.cgroup, cpu);
+-	statc = this_cpu_ptr(memcg->vmstats_percpu);
+-	for (; statc; statc = statc->parent) {
++	statc_pcpu = memcg->vmstats_percpu;
++	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
++		statc = this_cpu_ptr(statc_pcpu);
+ 		/*
+ 		 * If @memcg is already flushable then all its ancestors are
+ 		 * flushable as well and also there is no need to increase
+@@ -606,14 +611,15 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
+ 		if (memcg_vmstats_needs_flush(statc->vmstats))
+ 			break;
+ 
+-		stats_updates = READ_ONCE(statc->stats_updates) + abs(val);
+-		WRITE_ONCE(statc->stats_updates, stats_updates);
++		stats_updates = this_cpu_add_return(statc_pcpu->stats_updates,
++						    abs(val));
+ 		if (stats_updates < MEMCG_CHARGE_BATCH)
+ 			continue;
+ 
++		stats_updates = this_cpu_xchg(statc_pcpu->stats_updates, 0);
+ 		atomic64_add(stats_updates, &statc->vmstats->stats_updates);
+-		WRITE_ONCE(statc->stats_updates, 0);
+ 	}
++	put_cpu();
+ }
+ 
+ static void __mem_cgroup_flush_stats(struct mem_cgroup *memcg, bool force)
+@@ -3691,7 +3697,7 @@ static void mem_cgroup_free(struct mem_cgroup *memcg)
+ 
+ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
+ {
+-	struct memcg_vmstats_percpu *statc, *pstatc;
++	struct memcg_vmstats_percpu *statc, __percpu *pstatc_pcpu;
+ 	struct mem_cgroup *memcg;
+ 	int node, cpu;
+ 	int __maybe_unused i;
+@@ -3722,9 +3728,9 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		if (parent)
+-			pstatc = per_cpu_ptr(parent->vmstats_percpu, cpu);
++			pstatc_pcpu = parent->vmstats_percpu;
+ 		statc = per_cpu_ptr(memcg->vmstats_percpu, cpu);
+-		statc->parent = parent ? pstatc : NULL;
++		statc->parent_pcpu = parent ? pstatc_pcpu : NULL;
+ 		statc->vmstats = memcg->vmstats;
+ 	}
  
 -- 
-2.49.0.1045.g170613ef41-goog
+2.47.1
 
