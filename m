@@ -1,92 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FAD202F9A;
-	Wed, 14 May 2025 08:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE32215056;
+	Wed, 14 May 2025 08:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210656; cv=none; b=Tuo5mvseCT5zXTVhYcu+1HxFoSlXg7adBX4v6rdYzr/4AJ219NHZH5r6y0UjmRltLyOYMAtg1/kMSHdgHde/P2kIT1Ibm/XPclWKbrqYg9V0f31EuFsmXEKq78iu7oMfRc7kXdbgNBqYwqR1l6a51WmGsV1MZNqS1agdVAU9p3I=
+	t=1747210663; cv=none; b=ooSAf37kbKRLCuTRZVpzDUTaOGY1ax8ZHcamWuZldyVrwGto3711LYWkafYIRAYtZoiAhj5ljXF+BEn+jEZPbC5TYSLYUdgB77uu2bWtUHJEXgsVFNZLS+63ORmId4tgoz2VdR1He6KNzWnEbu8kXR55MrAF8CpLmaamxzaDs5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210656; c=relaxed/simple;
-	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
+	s=arc-20240116; t=1747210663; c=relaxed/simple;
+	bh=72OM0jFnfvOiTNtoij/yR761qoWbDdVO5QtkLQdgXFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZN1L0DOV3cQPfUekMm9ybf7pKoGd1GvRVcwCkAB3wX/ctGrfrsDoTRjOFzvVSDEFAFzFVfewseChf9KFBlyOkdC2zr9rfyB8/NfccvyhgJKCldfuJtHAJCj4JU4iRZHnPFqjCh1Qtfw9+v+zVJcS1mD0DzKHBdf5oZWQ5KVb4b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O31B7HzE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Db38Ku3ZLH+T57+p/pI+f5vVXBXdaV1YbeOwxYGSdpjka5DgWVAfxBzIGQlZCu+zU24V0whOevDuMUsMk+vMYpMDXVQkMTYRhN1HS9imrmHett4ARHctx7ZtAMRYvjZE8WxIvC0tlSw56LOZR2GtTq6qQoviA7PtmaII0VQ0Uuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJ1h4bDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O31B7HzE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E50C4CEE9;
-	Wed, 14 May 2025 08:17:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJ1h4bDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21234C4CEE9;
+	Wed, 14 May 2025 08:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210655;
-	bh=HrEby8X97oMS/rj+guNPUJDiVtS8KqyTeO4FfPyEZHU=;
+	s=k20201202; t=1747210662;
+	bh=72OM0jFnfvOiTNtoij/yR761qoWbDdVO5QtkLQdgXFM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O31B7HzEyj3Nh4DAAJoFtHFRHPDbN7/g83eRGt9BVOdIa407ZQsTtrzwDXm08UiHf
-	 au9g7acBtuIWljLhpr1LVdKmuA8eumou+3pxY2wx3+y4tNi2Da0cT7MJesdUQoTz9M
-	 x3xxKgtVuJl2rvXx+koXEHh2vjGBnY7kezCh1XkcOUJx3DdswXJ0KhNUIt7N7AvEDZ
-	 rI9bK1c389FzNXR/9nABj8vY3s7LJ2xWKNrLciHhrbc0NFCR3BrPv935Avf+Fzw7u4
-	 T0XJMfje25BR4bZ5c1G189g5NyRAtkKpL1STKWQFKkrsIWLPUncgYk1ehmnKyxJOhp
-	 VoQMI5UaLWtjg==
-Date: Wed, 14 May 2025 10:17:30 +0200
-From: Mark Brown <broonie@kernel.org>
-To: "Darren.Ye" <darren.ye@mediatek.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] ASoC: mediatek: mt8196: support ADDA in
- platform driver
-Message-ID: <aCRRmk2Vqplbbusn@finisterre.sirena.org.uk>
-References: <20250514081125.24475-1-darren.ye@mediatek.com>
- <20250514081125.24475-5-darren.ye@mediatek.com>
+	b=PJ1h4bDbtsgm7lPMX1BGiGMLnYLbDkgv0NhBUeCyRO6sp+hsuezK8+w1OIYjckX/h
+	 vGRIfnhaejq4v7VYqiy2HQ17rgMtLY7QnscfEqLfnuXSVbOMeTC9EQXNExgh20lYBC
+	 5A4HKlrR6uyTJ72ryVpqCa0O0+Yx66V14G1+S/ieS/N+s4+c6ucmdSAglHWukxFKHB
+	 gj4Qu70aju3BPeBjj/asTck1bR8a0hcsjVt8X0zpEGT1qtfmkhBAcG7syH3OSKq512
+	 4NyztKtZSYeyURiW229fjS7lmc0DfcBryVm0ZyWjngiqG3Ebr4V0MqpUsbfDRLwWbB
+	 Ajpc8hJlm43SQ==
+Date: Wed, 14 May 2025 11:17:38 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Shay Drory <shayd@nvidia.com>
+Subject: Re: linux-next: manual merge of the rdma tree with Linus' tree
+Message-ID: <20250514081738.GN22843@unreal>
+References: <20250514122455.3593b083@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1Ucd00qPZdK+Pv3F"
-Content-Disposition: inline
-In-Reply-To: <20250514081125.24475-5-darren.ye@mediatek.com>
-X-Cookie: Well begun is half done.
-
-
---1Ucd00qPZdK+Pv3F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250514122455.3593b083@canb.auug.org.au>
 
-On Wed, May 14, 2025 at 04:11:06PM +0800, Darren.Ye wrote:
+On Wed, May 14, 2025 at 12:24:55PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the rdma tree got a conflict in:
+> 
+>   drivers/infiniband/core/umem_odp.c
+> 
+> between commit:
+> 
+>   9a0e6f15029e ("RDMA/core: Silence oversized kvmalloc() warning")
+> 
+> from Linus' tree and commit:
+> 
+>   1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
+> 
+> from the rdma tree.
+> 
+> I fixed it up (the latter removed the code updated by the former) and
+> can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
-> +#include <linux/regmap.h>
-> +#include <linux/delay.h>
-> +#include "mt8196-afe-clk.h"
-> +#include "mt8196-afe-common.h"
-> +#include "mt8196-interconnection.h"
-> +
-> +#define MTKAIF4
+Thanks, this is the right resolution.
 
-This define is there unconditionally, what's it for?
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
---1Ucd00qPZdK+Pv3F
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkUZoACgkQJNaLcl1U
-h9DiUwf8CeXyIw1furK0nf9QfBubUYFQ3DjxWzlkFbKAyVnUb3qF3V4vkrVIRC2P
-HYiWu0j8HLfZE/o+6cFkU0RIhzDgC/TGdMp/8ZlCLG3PpX8n124t3GsigTEOv+ZP
-13p4rzmwS4GdMZD5uY7yI5mg1ScK69kNmb6ah4DeOTo92/GJQTITnJXq8B3UegXr
-P5rk8qlBWvgKL4ebpRSGbCztpZZ+rDkUzaNutwIk0I4mzdmGwfJ/u/kBk1oUNhoD
-+dvn4qemKwDA8J9QV/sDzEu964KbUx+iWz1AryHn3TwKzF6kO1I2nirfld6rrqqK
-0vtfqUZc+p2IdLOgN8NnSiL0/t3h4Q==
-=xV1N
------END PGP SIGNATURE-----
-
---1Ucd00qPZdK+Pv3F--
