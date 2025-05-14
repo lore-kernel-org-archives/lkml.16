@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382D0276057;
-	Wed, 14 May 2025 11:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE84A277818;
+	Wed, 14 May 2025 11:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747222645; cv=none; b=vDMhJPnQDGuftavpBkvRiZ/sp37raonNOaTFxuj6w9LN8by65ebkD2VbCLDmrOv8sCjZiUgr/lZ3+dNVj+4EDNnialrMZRPByL3q46TkVq7daFZNi40SXxNrB8xgQwiGeBCSuP0VWVscRjBYZwvU7EDxCu+9ZMJi9e+UmxkXFpY=
+	t=1747222648; cv=none; b=QbZ1VPwEeC9Kw7Vacj1NoZHQ4GXxNVfXka9irpoSBSR4P2asNxua8JfhYWaruf1oYmgqsfgcCAp2oLY9rTZLsPb+JNzOo7XgPaMhEBnHccOZsjuTBtYdEgW+9kj3RaJv1GbyUsZUGBfFx6Xum+GTmJ7CfmVk9EznC1RdahtqpCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747222645; c=relaxed/simple;
-	bh=whRcHaYLmRc/wgTuZhRzziRr5/mx4mKqhn1YvlOKatU=;
+	s=arc-20240116; t=1747222648; c=relaxed/simple;
+	bh=QBZg9ajvmrl3SpUn5aZzbOp5nzqEVoNIB4YA06ESVQs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BmjJYxsSGQEF3JWDy2CgQJEcwv/81/J819CyHE751qknCyFmDEELp2J3WVCWP0QB44UnKonakhfoiQ4J/SHs0NEDfnBDIPsKMi0wArhU98eKANIPiZmt73LXIf9PzgIPeicdgKiKQ8wOtWwIvYctmTsazkCntH3R/e0x9M1iMjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1Tc2Fsm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=OWXaJTpXTHLmRH7Ja5GP8k+Z4Lq1qXjhBwlrwW0K2j7c9+KG+K2V8gICqrERpDt01Skjk2y7zNgVgZrpiE05HFmDVN7NJSGkZcSlxBGAsPGZtfj6bhTHvzzOR5Jh4kh367b7gAQ1fP6alMa3EF1nD7aOVjy5KBKYYtraKodSd9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7WeLSqN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1Tc2Fsm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50175C4CEE9;
-	Wed, 14 May 2025 11:37:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7WeLSqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF1FC4CEEB;
+	Wed, 14 May 2025 11:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747222644;
-	bh=whRcHaYLmRc/wgTuZhRzziRr5/mx4mKqhn1YvlOKatU=;
+	s=k20201202; t=1747222648;
+	bh=QBZg9ajvmrl3SpUn5aZzbOp5nzqEVoNIB4YA06ESVQs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=C1Tc2Fsmdztc7wrkLG8g4Qw1VjJzyv6ONkGp80F7mHpl9kJgjuB8d/P+ffsdAblyY
-	 GzB/W49Ykc52JGnYcw0p6YUUBZ+mWI6Rw/W8cYfCBvfbejIifts5rvSGBzFVweflkf
-	 wgJBO8psGajac9THxdwmFu831I/7OUtnYm5KyT9lL+FdMMk03kBgiSKAbxhG+Upml1
-	 mtK9gD1SI0kZ8sPhNQMB5RvkORgO64tWIIWuXBEEsAlVmrzTakzlKv98ajvMxRvjCA
-	 +gGCLJuoNg6gr8F5tKjy0r8yiKApWw1uvevZgBmydn9gL2j30gx0Tp0YfMTZB8qZUQ
-	 p6AaWgtiverFQ==
+	b=T7WeLSqNOdHzt4AbmZhuc1tD0i4CAtVNQ8HjgGVnFn7UGSdetiaAcZ691NtRjOoPc
+	 /OKootVEK0361QHSVwDGD812DW865qfS7q6iaqhC6EAxjBGNMEO6Zj04eMaHtNU0B+
+	 hpULSQAyeOrWdwHfRxumHrefUABj54bXRw7rnFozYHN1WIsTp2tPTAb+kCASImYKhU
+	 GWCJve/M6LPq8K/VtNlm2klNY5lnPIf+LWAR+FbeoxXs29NfTirR8sc7RBZpHlqKFh
+	 6vzTu454sK4z9f2FuXE/cMbBA+je/4VA6aEr4oYMbyBvNbSwXBV9NpA3NBIe/ucp4/
+	 x6eZeyxIcKQlg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-In-Reply-To: <20250416202419.3836688-1-robh@kernel.org>
-References: <20250416202419.3836688-1-robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: phy: rockchip: Convert RK3399 Type-C
- PHY to schema
-Message-Id: <174722264197.85510.7578170417818621392.b4-ty@kernel.org>
-Date: Wed, 14 May 2025 12:37:21 +0100
+To: chunfeng.yun@mediatek.com, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+ conor+dt@kernel.org, matthias.bgg@gmail.com, chunkuang.hu@kernel.org, 
+ p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com
+In-Reply-To: <20250416120220.147798-1-angelogioacchino.delregno@collabora.com>
+References: <20250416120220.147798-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: mediatek,dsi-phy: Add support
+ for MT6893
+Message-Id: <174722264485.85510.16108514718041133697.b4-ty@kernel.org>
+Date: Wed, 14 May 2025 12:37:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,21 +52,19 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Wed, 16 Apr 2025 15:24:17 -0500, Rob Herring (Arm) wrote:
-> Convert the Rockchip RK3399 Type-C PHY to DT schema format. Add the
-> missing "power-domains" property and "port" and "orientation-switch"
-> properties in the child nodes.
+On Wed, 16 Apr 2025 14:02:19 +0200, AngeloGioacchino Del Regno wrote:
+> Add support for the MediaTek Dimensity 1200 (MT6893) SoC: the DSI
+> PHY found in this chip is fully compatible with the one found in
+> the MT8183 SoC.
 > 
-> Omit the previously deprecated properties as they aren't used anywhere.
 > 
-> Drop the 2nd example which was pretty much identical to the 1st example.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: phy: rockchip: Convert RK3399 Type-C PHY to schema
-      commit: 2063eedf3c9c4449fbf417c9b84ecd08251c3b34
+[1/2] dt-bindings: phy: mediatek,dsi-phy: Add support for MT6893
+      commit: fe750a871d90e081c52ce1988e1fbc85576152a3
+[2/2] dt-bindings: phy: mediatek,tphy: Add support for MT6893
+      commit: 1b1e949924fb59e98d9401681b139e92e75686ac
 
 Best regards,
 -- 
