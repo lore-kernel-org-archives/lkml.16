@@ -1,124 +1,165 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC721E7C12
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB21F222584
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747262580; cv=none; b=RQT+7EEk1f6S9lVtoebUbx2D+rpwTy1UbYZhrqedGekLclagTwySZX+kIJx1VLUS1nB86Eqey+lRukBBdydvVIm9KtcDT1V3fzZ805fH7LqASqMpxtqfaGBpYkhC4aKeeFAWWZOdib5RKO8EloJp8B+Krm7kCvQCKvgIwjFDATw=
+	t=1747262594; cv=none; b=SuLLNXyRy045dy+Vvd1eJzY0RzAq2X2cghtSqpuLOkAHaVcSgpQwQG80h5B3GNanvkQ9k7Ke84iPWw6oW5bXRJNAKTBN5+SY+xoJby76VLqC5x3bbVvnLjq3NGGIb4NEj4MVXEWYTR93pDho+tKm/s3ZhVQmwbfsVTsJZ/A4Xr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747262580; c=relaxed/simple;
-	bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IQRvUB8sDV8KaqGSl3WaVk4AXA3Vv7qRWICB8b4M+wlge0mgqdyoFbEF6R7EtkG9UJSREYyGZSFwCkEwl50coVhcBUs4qCE1w+Kmt1pMpLNtBBbHj3sUUTfnUPtk1PnX9fgWQ+m4QdPd0EvjVSL4bEaqeteIcpJ9anQw+w+Rsk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s85SoNad; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747262594; c=relaxed/simple;
+	bh=QaLq3SL5OMyc+7AJ0LFBdLmC+RjvCwNSMZ9ekuidqGc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CsEru+e2w3TYgGJ6txePggOJm1Gj9O27NWh/7KBY9mYfuMaV+D6AP+OXTTt3ZWbI8HgsmRyppz9MzQbsGfZ3PJmL+gDoBQnaK2xC13XVh8N+TLjGsKhmeYO58Uf1YO8qYZEJbEbu0pq7JDVEd/aURK4UtCE20A/fcOnrYLAYhzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=Fu8gYC92; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s85SoNad"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fce6c7598bso4173a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747262577; x=1747867377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
-        b=s85SoNadIzhAVB2X+ehz87h3Up3PKQ4vQc8H/UR80ygwWhUTuU3N6/qRNC8E2v/y0X
-         fcqTEmTlAodQNCC0qirCSHqVwOS7b99lPBra+YIDGCRt0SgWqpIgaMV4hOteEgIvJIjO
-         2bWOSNBgBiHpP1ggdQj9u+kPGiw3ONXqGzUys1cEg4UbqIhEYvLzmG7rFMQefCY2MkQg
-         MCoGB8w3B0cN7GCvnyqVqq2dvmHlyUIvViumVkFquy8qewLf0b4jghHONU749UOokM0r
-         tKsuZ+O3EFIg055TDkffj27Pp72QJgX1GXEwFrkjwpzWDIBCqDJzVn6bRei1L26wJbw5
-         0/Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747262577; x=1747867377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dTPmZVat3iQg7xidgKQIVmtAxTHyJlLqxSmrH1cnngg=;
-        b=bkTm8S0MzU5K3O6vEvZE2UCVwv+r4rh+gw//stSmwuTfRLq372LHUY+w1zaf/RYZee
-         56xBB8alqYq56U4gIztK8C7D14frazEIA3FuWq6KtZRd4oHZhi4TT9ktNrUSOSa4PVSE
-         ciQpWKbAr6JInHPCVoWJe2qORxiXfcNCUy3SRABpde87hco0e4w/49UGXFMG9MSj7hzr
-         yssJoZSaEwKyZSjkapjBlJ7r19d9omzdUa5R/gdmFd6qTgJMsqsxH9BxG7InWWajaEIs
-         pBfHxsse0SNhaKNq3s6KAESS2251ljjo3xuTl07oUc9VZOM75cJqCLyoP/HVsOOXnRWN
-         YkFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7pPvyTQjHDZv+tDcq4azSF9Exb14FvYomMZwWeFA6vsc+sYm66VqnBhluUXdCxM6W+GRvazFGo1AG240=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj6KS/VtrdjQXq4UKtKuEQ9cwNFCnz5X8T9uJJbWZK8Eky8B7q
-	1ExI2jGVLcs8FUM18kC/b+jg0K4agGMZeI4OkOmPHJya0OVvAemlFKzDYZUvtGObozSWbCvyG8H
-	IzW0ST028QD72ASDBKnc2PZaGovtZsMuly1tj+DE+
-X-Gm-Gg: ASbGncuaocCCsq4xnfjZ1676Lx0Ed8aje39Yu1j9xudAm7XWHgypA4Lu6nBmuTTB/Nu
-	MOylUO1qwTSP+5ZdwsNVyVjhK5/HOuXjwbGt8u1DgvCLdUq7R+oItv9IPo3+F7Q0TBK2iOmpxbY
-	UmaKiVEUINUQe6jboN4vClf04FUJF6PkYLuuvyw6pLD5WqfqRXzfo7AJY5seAyD4o=
-X-Google-Smtp-Source: AGHT+IHU5Im31tvtHgwHOxA22uas4hBjTuXNbL5LJxD9MN/KwYiyJvt4pBB8Ap/BPSBA0Mm9bModh/Lb20VewV6efp8=
-X-Received: by 2002:a50:cd19:0:b0:5fc:a9f0:3d15 with SMTP id
- 4fb4d7f45d1cf-5ffce28bb43mr11926a12.1.1747262577341; Wed, 14 May 2025
- 15:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="Fu8gYC92"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOi-001vfF-Uv; Thu, 15 May 2025 00:16:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=YG06fwNA91GgAgl0iabbu4fCCpsHoTGuufLEYHdsOVQ=; b=Fu8gYC92Gc4FYsuJmGaB3Vwd6T
+	rThnDcs+ZCtJlOcVhBbC2b/gHkYSlbQfV2lWzK6zkBSKT20rjoaM6eJ4D2b752oRCEyfzAeq1+BTk
+	Akr4mOhl0Sc0S4m8D0oFqLeUx2kPfQYhn+WTnYgOe/oT4h9L3l7rESvGkD57m9huIKd8osIx8WAra
+	eMq00unNsAmAmFFZO989oMwca5PZXevX+AnjAglQ1N+6LzTVUMr3k4/GNXiyWMA4uXsL9mPAQonXI
+	HFOBi+dGkw7KoLOqiyx7Xnn+FiqZhdc9lT3N1Z5g2/GFYkqizWTTqEwmBTVqyyaWv5+uB2oOX0GGs
+	b7Z7uN+A==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFKOi-0008AG-J3; Thu, 15 May 2025 00:16:20 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uFKOL-005bJ3-Mr; Thu, 15 May 2025 00:15:57 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Thu, 15 May 2025 00:15:26 +0200
+Subject: [PATCH bpf-next v3 3/8] selftests/bpf: Add u32()/u64() to
+ sockmap_helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com> <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
- <aCRdNJ2oq-REBotd@pollux> <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
- <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com>
- <aCUVuXO_jORqlxwr@pollux> <CAGSQo02nP8MT8q-_gQwjUGFNSyiW2AKOQ3V4yy9jofDzjc0SpA@mail.gmail.com>
- <CAGSQo017FgGmStYxLX7JeqV+AcMUMjmnxF6KBesFhc31BieBbw@mail.gmail.com> <d61e11e2d99659cf13d0e20f56afe319720d03b7.camel@nvidia.com>
-In-Reply-To: <d61e11e2d99659cf13d0e20f56afe319720d03b7.camel@nvidia.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 14 May 2025 15:42:46 -0700
-X-Gm-Features: AX0GCFtfpNUWJr0poQ4vDSPImERirBrJ6RO-O60RIY74nWeZMm7_rHwF_g6VGdI
-Message-ID: <CAGSQo02-vYG-hkP2VXBVX9Lp8+=gxkyKh7TAYkAYhpiz6gj54w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-To: Timur Tabi <ttabi@nvidia.com>
-Cc: "dakr@kernel.org" <dakr@kernel.org>, "tmgross@umich.edu" <tmgross@umich.edu>, 
-	"benno.lossin@proton.me" <benno.lossin@proton.me>, 
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, 
-	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "lossin@kernel.org" <lossin@kernel.org>, 
-	"bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
-	"rafael@kernel.org" <rafael@kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
-	"aliceryhl@google.com" <aliceryhl@google.com>, "ojeda@kernel.org" <ojeda@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"samitolvanen@google.com" <samitolvanen@google.com>, 
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftests-sockmap-redir-v3-3-a1ea723f7e7e@rbox.co>
+References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+To: Andrii Nakryiko <andrii@kernel.org>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-On Wed, May 14, 2025 at 3:40=E2=80=AFPM Timur Tabi <ttabi@nvidia.com> wrote=
-:
->
-> On Wed, 2025-05-14 at 15:32 -0700, Matthew Maurer wrote:
-> > One further possibility here, which we'd need Greg to weigh in on - we
-> > could add a method to the debugfs API intended for Rust usage which
-> > specifically releases a directory or file *without* releasing any
-> > nested elements. This would mean we could get rid of all the lifetimes
-> > on directory and file handles.
->
-> I had a conversation with Greg about this topic just the other week.
->
-> https://lore.kernel.org/linux-doc/20250429173958.3973958-1-ttabi@nvidia.c=
-om/
->
-> There are two versions of debugfs_remove:
->
-> void debugfs_remove(struct dentry *dentry);
-> #define debugfs_remove_recursive debugfs_remove
->
-> Unfortunately, the direction that we've been going is to get rid of debug=
-fs_remove_recursive() and
-> have drivers only call debugfs_remove().
->
-> What would solve your problem is doing the opposite: making debugfs_remov=
-e() be non-recursive and
-> require drivers to call debugfs_remove_recursive() if that's what they re=
-ally want.
->
-> Maybe we need debugfs_remove_single()?
->
+Add integer wrappers for convenient sockmap usage.
 
-Yes, having access to `debugfs_remove_single()`, if it has the
-properties I would expect (namely that the kernel objects for
-inaccessible directories continue to exist, they're just not reachable
-through the VFS) would allow this design. It's not obvious to me if
-it's the design we want, but it would enable that design.
+While there, fix misaligned trailing slashes.
+
+Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ .../selftests/bpf/prog_tests/sockmap_helpers.h     | 25 ++++++++++------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h b/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
+index 3e5571dd578d12a6f8195bf3d25e069a1e477416..d815efac52fda9592274bb8606c8698fa4baf9c6 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_helpers.h
+@@ -5,12 +5,15 @@
+ 
+ #define MAX_TEST_NAME 80
+ 
++#define u32(v) ((u32){(v)})
++#define u64(v) ((u64){(v)})
++
+ #define __always_unused	__attribute__((__unused__))
+ 
+ #define xbpf_map_delete_elem(fd, key)                                          \
+ 	({                                                                     \
+ 		int __ret = bpf_map_delete_elem((fd), (key));                  \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_delete");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -18,7 +21,7 @@
+ #define xbpf_map_lookup_elem(fd, key, val)                                     \
+ 	({                                                                     \
+ 		int __ret = bpf_map_lookup_elem((fd), (key), (val));           \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_lookup");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -26,7 +29,7 @@
+ #define xbpf_map_update_elem(fd, key, val, flags)                              \
+ 	({                                                                     \
+ 		int __ret = bpf_map_update_elem((fd), (key), (val), (flags));  \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("map_update");                              \
+ 		__ret;                                                         \
+ 	})
+@@ -35,7 +38,7 @@
+ 	({                                                                     \
+ 		int __ret =                                                    \
+ 			bpf_prog_attach((prog), (target), (type), (flags));    \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("prog_attach(" #type ")");                  \
+ 		__ret;                                                         \
+ 	})
+@@ -43,7 +46,7 @@
+ #define xbpf_prog_detach2(prog, target, type)                                  \
+ 	({                                                                     \
+ 		int __ret = bpf_prog_detach2((prog), (target), (type));        \
+-		if (__ret < 0)                                               \
++		if (__ret < 0)                                                 \
+ 			FAIL_ERRNO("prog_detach2(" #type ")");                 \
+ 		__ret;                                                         \
+ 	})
+@@ -66,21 +69,15 @@
+ 		__ret;                                                         \
+ 	})
+ 
+-static inline int add_to_sockmap(int sock_mapfd, int fd1, int fd2)
++static inline int add_to_sockmap(int mapfd, int fd1, int fd2)
+ {
+-	u64 value;
+-	u32 key;
+ 	int err;
+ 
+-	key = 0;
+-	value = fd1;
+-	err = xbpf_map_update_elem(sock_mapfd, &key, &value, BPF_NOEXIST);
++	err = xbpf_map_update_elem(mapfd, &u32(0), &u64(fd1), BPF_NOEXIST);
+ 	if (err)
+ 		return err;
+ 
+-	key = 1;
+-	value = fd2;
+-	return xbpf_map_update_elem(sock_mapfd, &key, &value, BPF_NOEXIST);
++	return xbpf_map_update_elem(mapfd, &u32(1), &u64(fd2), BPF_NOEXIST);
+ }
+ 
+ #endif // __SOCKMAP_HELPERS__
+
+-- 
+2.49.0
+
