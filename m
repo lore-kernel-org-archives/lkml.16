@@ -1,74 +1,184 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C08F26FDBD
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B47327703E
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747252145; cv=none; b=TjK0Ky0D/2Zc3QDq3i2z1u8gXCE0viTz2nUkj+f+YXKZQI1jLZ2y0/LsApdH7TYUjuo5/kt6R0EU1AiMnr4nsQW9PzwGUYcFLj8NVqfHoWYsCSPMxEd1WSaDvahBttTxE0uer58fUO+ZNdSvzWZxX/W7G5p3JsW2arORMw+ZocI=
+	t=1747252157; cv=none; b=jOs+s23WxNv34Weuc/yRLs9hE3t9sEb0zSGcyIKK+8DeXBChl/iPcZ0V5TY3zxPR+1mLk6LjToRJeBZdFPSeWnGB7xjEL290qP/jBosGHT2nO02AAshtxgWklxNiryyHDjrFcx9S8DSFD4ojeHbRpWN1QgCyy5HKGrPlSRg4Mgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747252145; c=relaxed/simple;
-	bh=oIrs49oF22LdOayzkJxHulEMqFcJxB98u0gpNzS1tJw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=T0Zj2cVzUByfluFe9AP0Ku5fODMUkL+LiKOS3cJPdXqEDrIPFN+qZGyIhreEb2otjxSoB3VId7FQ0zaOt4fYvcSdTzkcEuGKGgg27aL899OILmgfw7YBn+2e3qhkemARFVsyWMRJPvUoWJuvvN7lU/hTq90ODE5NAsfbMtXVBb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85c552b10b9so24376739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:49:02 -0700 (PDT)
+	s=arc-20240116; t=1747252157; c=relaxed/simple;
+	bh=tu3E+VpQhbIEijZggilmf8ohmLQphkPrIyuMiy2Iyn4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ut8sq33v2l3LgJb/WZGU8BLB4H9DMRknBe+0y2xTzWbCEhHCRXxg1pVaF7I336w4NrZqBhUnyD71i/bDypbj01wexbZF3Ih+N04og0txikbNPsqixNbUFIf8PlKCgCiddOBbydQfwlD3CWQMOg/adDPZoXlBsOmjs/HH5QN6CL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iU4/9UrV; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iU4/9UrV"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72bc3987a05so185860a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747252153; x=1747856953; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZkh8g9me+Nykm0HQx0KLgmoG9EtGGARK97CTcvbJUE=;
+        b=iU4/9UrVFjLLmv260Co+IbJFtnWMh6EXrpgdQ0cAouWMc+EP5ELfEuGELXzksl9P4k
+         u6JDGcJG7L39WoSCBnaWSFefD9m/gV0Rn/5TXhv1raiO4XSWZCqFnMXvstH/bi+Ium7J
+         gJdX8sLbL/t9LAH/yOMnisP4hoLRMQD1Kyqs8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747252142; x=1747856942;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Im8wekS7D0YSdnMIfDocgAHGRdGBxTKIXIfbrUkKCCY=;
-        b=bIqP05DG583E4k9Sf7LvkICZBTYjZL2RGl8x7SBjACVydMHwssQ4F9x1DnqT5olqm6
-         9i+f8g+P4aGuYpXh+2IB4OzpTKmruNn1x+I76KHjgc9tEGGYhlMsl8GE9AuI2TAg1Gpv
-         hYNUTAV+sThgGx95lbjzbRL7M3msHarPhs4X9htXld9TS6AhX7Zm41hytWh72kCIQk1O
-         LQgxL2bONF+eViIMxFkcKWCo9iAGGFXCbl1ThruDI+iQM4+PI7vUi4mN+u0T7qoo5bRy
-         UDhuydoJcpT7lMXf9MqQn5W/0ArbrUYCW9iUUInrm83cLuteeJ54g4ar0loCYFSeWi3A
-         JTwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTEDg0c+UvYzE2pcHo2m/eiH2c4XBBARmEOeoj2LpXfpLMSOimT4iH2UthKSnIkrjET9EVEUf5+wZ1HrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGvYztGiI/6TpBn43LrUbRXkA2GuRTGX/gYO7/Xr0LlM7ZFY1c
-	/AylxdKDKsltb78z1Xsm+baRWhfuwoeNph2VW3kU2Xx587weP+G8glepCI28bR/H8xMsJhDlYyl
-	JO+ajCABMbVjb0ObCI7sMlT6g9GEW69Z2T6nwLlAAF7dMZDC07f7aIOA=
-X-Google-Smtp-Source: AGHT+IHi1nA9q05RgsrvMcaw4+vkrl4VzwVZ7QmhuqaphmWHt3YXymWvrvMvRn2WUOpe2Ha7COf3DHODkvj9pxX72z9wyoUxAbTe
+        d=1e100.net; s=20230601; t=1747252153; x=1747856953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZkh8g9me+Nykm0HQx0KLgmoG9EtGGARK97CTcvbJUE=;
+        b=PHrW3+rjmkZ6wOD9ejH/5NQuQD6Zj+Uo0hzcmJ10azWR7iTtjQK7WXjOjcpX/xMd3s
+         ApuWSdcpHjKOPn2TCiBGL+YkOEKWh+9JkZKMU1u4CFBxMwRZNuLwZLSggds5xdtwPIkC
+         43p1LJtIUJjbuT6NqfSLgezl5d8WL/mqsFPAFGlM71kHtaBDUeay+XBU13LaHYtFlPp/
+         xat1gekAt7etL6a1qbYQXYAIYupsm6RXUVg1dvPCP91G0XKqUsWJ3vzoraLDUi+gfrPc
+         Nt162ZGZxSDoE4ij0jUTU88zJOPG6hsujNKKqNNRGBzGRa4CGiKhiswHdILju4ZJtE8d
+         Eo6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEFQd1U1K2lj8IODpjHmflVmZYIbsTzwTeUlOeBzG/KfUj90qvfdVVkjD8Ozf4j9yFoQPYV6gE4zlLJJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzJBAP8yFpGUZ1ozj8wR13tb2d5flg1bcUMI1tJWMrLqnKwK5s
+	OjzdXcutD2ljKrhvKAKgdxb9/PPwD9YzP2Fur5jskbBI2YBlWEMLBVWLUIIS765CY+TSph+pwGj
+	jMLydvP2mGvlhvpNvc64rJ8aTRgT/upTbzPNY5pYR2YPUc9O116dM
+X-Gm-Gg: ASbGnctedxIX4etscyAvC2nsP7mIpctWY+Dbi16cujd61UXCl8+6WX2bykkit+CTpMh
+	Xk8DkAX8u2e+zUn5YSA6vzCn1uXZ7IFjEn8eILybHYmYBZa4WM/VtuyHhUdJiPWeWOXhvXQ7snV
+	O+h6QRZ2URnUP7dj8pcVM7yeRKvV24CcwrOjxKMdmVD7DcJ6n3EUp95jZTqQVmXA==
+X-Google-Smtp-Source: AGHT+IFCJSg8hIfl+Y+fxKZiYgrSWqqDLysVmocjXAAcg6uBcAFRx9APEaATMEgkLVcMFoVK/5iaOwFvZXjnUM20XV4=
+X-Received: by 2002:a05:6830:3814:b0:72b:8593:d3eb with SMTP id
+ 46e09a7af769-734ec6bf6bcmr531328a34.2.1747252153472; Wed, 14 May 2025
+ 12:49:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:368e:b0:85b:4afc:11d1 with SMTP id
- ca18e2360f4ac-86a08dccf99mr546554139f.5.1747252142169; Wed, 14 May 2025
- 12:49:02 -0700 (PDT)
-Date: Wed, 14 May 2025 12:49:02 -0700
-In-Reply-To: <20250514184652.GP2023217@ZenIV>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6824f3ae.a70a0220.3e9d8.001b.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] general protection fault in do_move_mount (3)
-From: syzbot <syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com>
-To: brauner@kernel.org, cem@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
+References: <20240410000730.628043-1-treapking@chromium.org>
+ <9c5aa4fb-a83c-470e-acf8-dd31303e50c2@collabora.com> <77c4437f2643475de495733d7840421198b78f49.camel@mediatek.com>
+In-Reply-To: <77c4437f2643475de495733d7840421198b78f49.camel@mediatek.com>
+From: Pin-yen Lin <treapking@chromium.org>
+Date: Wed, 14 May 2025 15:49:02 -0400
+X-Gm-Features: AX0GCFtecwOi8CEP2jK1ekxhH3Moa-nChPFzhyIRNlzu-0bbcdPxgTRcYXfWwSA
+Message-ID: <CAEXTbpdNxFd7-RMXyvYraqC5cj_BgycAO6JWdNUo50DVn+yntw@mail.gmail.com>
+Subject: Re: [PATCH] thermal/drivers/mediatek/lvts_thermal: Remove redundant
+ code in lvts_ctrl_configure
+To: =?UTF-8?B?Q2hhbmctWWkgTGluICjmnpfplbflhIQp?= <ds_chang-yi.lin@mediatek.com>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "nico@fluxnic.net" <nico@fluxnic.net>, 
+	"rafael@kernel.org" <rafael@kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	"rui.zhang@intel.com" <rui.zhang@intel.com>, "lukasz.luba@arm.com" <lukasz.luba@arm.com>, 
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "duminjie@vivo.com" <duminjie@vivo.com>, 
+	Alexandre Mergnat <amergnat@baylibre.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"bchihi@baylibre.com" <bchihi@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
+	Nicolas Prado <nfraprado@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Chang-Yi,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+On Wed, Apr 30, 2025 at 4:26=E2=80=AFAM Chang-Yi Lin (=E6=9E=97=E9=95=B7=E5=
+=84=84)
+<ds_chang-yi.lin@mediatek.com> wrote:
+>
+> On Wed, 2024-04-10 at 11:55 +0200, AngeloGioacchino Del Regno wrote:
+> > Il 10/04/24 02:07, Pin-yen Lin ha scritto:
+> > > The removed variable assignment is never written to the register,
+> > > so it
+> > > has no effect on the device behavior.  Mediatek has confirmed that
+> > > it
+> > > is not required to initialize this register for current platforms,
+> > > so
+> > > remove this segment to avoid confusion.
+> > >
+> > > Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+> > >
+> >
+> > Added Nicolas Pitre to the loop;
+> >
+> > Nicolas, since you're pushing support for those, can you please check
+> > if CALSCALE
+> > is used/useful/necessary on MT8186/88 before I give a R-b to this
+> > commit?
+> >
+> > P.S.: Can anyone from MediaTek please confirm if the 0x300 value is
+> > right for this
+> >        register? I'd still like Linux to properly initialize the
+> > registers, even if
+> >        this could technically be a default value.
+> >
+> >
+> > > ---
+> > >
+> > >   drivers/thermal/mediatek/lvts_thermal.c | 6 ------
+> > >   1 file changed, 6 deletions(-)
+> > >
+> > > diff --git a/drivers/thermal/mediatek/lvts_thermal.c
+> > > b/drivers/thermal/mediatek/lvts_thermal.c
+> > > index fd4bd650c77a..48d2f8ba3f18 100644
+> > > --- a/drivers/thermal/mediatek/lvts_thermal.c
+> > > +++ b/drivers/thermal/mediatek/lvts_thermal.c
+> > > @@ -985,12 +985,6 @@ static int lvts_ctrl_configure(struct device
+> > > *dev, struct lvts_ctrl *lvts_ctrl)
+> > >   value =3D LVTS_TSSEL_CONF;
+> > >   writel(value, LVTS_TSSEL(lvts_ctrl->base));
+> > >
+> > > -/*
+> > > - * LVTS_CALSCALE : ADC voltage round
+> > > - */
+> > > -value =3D 0x300;
+> > > -value =3D LVTS_CALSCALE_CONF;
+> >
+> > As a side note, I believe that the original author wanted to write,
+> > instead...
+> >
+> > value =3D LVTS_CALSCALE_CONF;
+> > writel(value, LVTS_CALSCALE(lvts_ctrl->base);
+> >
+> > Cheers,
+> > Angelo
+> >
+> > > -
+> > >   /*
+> > >    * LVTS_MSRCTL0 : Sensor filtering strategy
+> > >    *
+> >
+> >
+> Base on xiaojun.zheng
+>      The register is for PTP function, and in MT8192 it's not required
+> to do such setting any more
 
-Reported-by: syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com
-Tested-by: syzbot+799d4cf78a7476483ba2@syzkaller.appspotmail.com
+This driver is now also used by mt7988, mt8188, and mt8195. Could you
+confirm if the PTP function are not required for all these SoCs, so we
+are safe to remove this?
 
-Tested on:
+As a side note, Mediatek explained PTP in an offline discussion with us:
+PTPOD stands for PTP (Performance Thermal Power) OD (Overdrive).
+PTPOD is a technique to let the HW runs at the same frequency but with
+lower operating voltage to save power.
 
-commit:         cfaefc95 fix a braino in "do_move_mount(): don't leak ..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=11865cd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b9683d529ec1b880
-dashboard link: https://syzkaller.appspot.com/bug?extid=799d4cf78a7476483ba2
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Regards,
+Pin-yen
+>
+>
+> ************* MEDIATEK Confidentiality Notice
+>  ********************
+> The information contained in this e-mail message (including any
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be
+> conveyed only to the designated recipient(s). Any use, dissemination,
+> distribution, printing, retaining or copying of this e-mail (including it=
+s
+> attachments) by unintended recipient(s) is strictly prohibited and may
+> be unlawful. If you are not an intended recipient of this e-mail, or beli=
+eve
+>
+> that you have received this e-mail in error, please notify the sender
+> immediately (by replying to this e-mail), delete any and all copies of
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
