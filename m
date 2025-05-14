@@ -1,124 +1,98 @@
-Received: from mail-il1-f195.google.com (mail-il1-f195.google.com [209.85.166.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351B8289823
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038F21F4CB7;
+	Wed, 14 May 2025 18:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747248746; cv=none; b=FlbSl5KpKjV7zOhQS8Fzalhzzpebx5fu3nQxzoqyoltE6moXTz43EZXhpmFRNkhA+tmcqBIe2042bTB0qsBbD9tzKsB0NeuorYjVs8cUk134MtfVmLhyzdzsr6BHIbLU7GaJHryrX2OdpGbpNRB50ssw+MjOvZLEdEHEQ+LZ5Yk=
+	t=1747248815; cv=none; b=E27VCWcgNoAgdZ2dk3xysN8ZE3Z4JxpWSKqbLAs/i+USisN/ghTcQ7KmbifyKvexJtXA0gKGXZYPSmM6Qvc6sZkYlgqU1VTsgGXuTbdbn5stND4JEsGYLr7zYlVYas5y4xvTg+8WOoZrGRJo7ZtWWXWMsp+dzDevUB0e1h2WomA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747248746; c=relaxed/simple;
-	bh=CQJ/Izdemu9Upqt5gzxnWRlT+ZgctMHmGm8idYAOny8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=djxYnE8aMllVaBhRwSbFGjP4QRA+QpNVkosw2EbPAJwmjwizIfk08ZdEbIyndK+rM9Xr5J8dBS33qKiQSwZtmZKXWeNq2Sp8kh2J0Y1gTN7a/z+6hKZtb2rFrbQRNQerdPhspW7ACKufbnQqr9dKl/yRHpI6mza+mE9/o8gT3Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=STw0v52y; arc=none smtp.client-ip=209.85.166.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1747248815; c=relaxed/simple;
+	bh=YSTjlKLYnT97FPs44P2jpPLaU/lb/Bpao4PKukaWgLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DNHxOb5yYnMcyr0ONyQWxkYkI1NI0MXZYOZRgK6/I/t7FsA4S1TyST1fxZ+qLyFexv768gUEgXZblb5W910i2NsIgRDJxXWUG9lr/Hs8EqlsBMKb0qeE1Pe79F6B7Q/uEKgQbI5L19sFUch7vozNlAj9sBfWjHznS/VIpqD2t1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KEq4lG6l; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="STw0v52y"
-Received: by mail-il1-f195.google.com with SMTP id e9e14a558f8ab-3da73df6c4eso997865ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1747248743; x=1747853543; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HGMN7yT051U8CF0u0W3zG/2Gp6ABI+Yzeacfvbogg24=;
-        b=STw0v52yb5f0mPL9IZXFtif2MvZtEGQ2168zGGYzHCPb6t4M0vFI1jgwVwp1LT9Pn2
-         Za9nauB7EZCqRUQTpEvQ2fc5DQm9SbI5ueJz6kx8+ASZEMaH0r5RKD0q77mQfTOU3xpZ
-         WRuxwr5X3agOghIhOz2VBvaJVhlUgfFwPjXSI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747248743; x=1747853543;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HGMN7yT051U8CF0u0W3zG/2Gp6ABI+Yzeacfvbogg24=;
-        b=GO7je86Ym3/lXoTIKJEzNMy7VFfEXYlHoQXvQmZASLYQgXg2UrJtGRiPI7RSvP56Lt
-         1njXi9sBzISvmD9cawF6DNZ0iD5YgEy7f/DQ1a4y/s79+xNWNMPEpoiT4Y1C32JmpLyk
-         uVkaKCeKmLSyjPgRBiiPzHQzSxHTnaqF6moDltihLEHcIpXE6es/OyxEpGTKvHjgYIjD
-         p55+mZL32NeQw2/aaJ1CTxT/gbYnlPs/V2LgfI/TGlKHmEWlFRGLgtepuoGZ5c0Tw0om
-         6+q97BMY1U+PE9zPeQvRpkWtQDvCTZ+IBGPplVh77CZypk4xZqpls5EKd2eTId5bVKCB
-         ytHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhSfQfzjK9Rr/aNlJCSWM19FJx72KydC/UOWpdhfIaHkuo1JexE/7pdapyaTq5EBGFg0cRjneYNsI+pT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9WHjVHrPIdYXcQTwTlJlB158IzEancTWPvXIepdF3y3kgRVB
-	Ce3cIQ5u53tZVgSOpc62dviRqlz74Qin3ksrhnWvrzYj5hbpgg3/iqcT7BhYMQ==
-X-Gm-Gg: ASbGncvzAN5YlKQbsTBSovqBrugLOt2ErJzgiW0hz9cC2OZYNZ/Op8jMkbfmNdoHl6/
-	blYiPTZdpySxMEYA9jBjwFPQsDiZOTAgSBMSLplifjKHhcERiiPSBL43DUDwNXxMcBqw5ilRCCh
-	oZ8Q87dkiEYZ6F4Cor/9sQe+SYKdWYaPJ6CIVhPZfS3UiIyQ2ptIVJXLa5Nx5p5ftQifvXBqUNW
-	eyq/IwpMnQ457L0XEkv3P/yQti0aiiWLZEPNAKIZYxy1rU3c9hEbnLo6KGrHnrkOvlOICaKz4gG
-	A+AfyGJglMv8sXb/1yEahcvyNZWHrIY2Syr9iA9XQDWYFsfx3rZudcvU3MBeGsc98RzLnPbCcF5
-	qZLm3xt6vsg==
-X-Google-Smtp-Source: AGHT+IFWNOPlW3Guyw5uFAogWr2c6RBmPpeNia2yV6RQZMbC2QrNjBo4dAxX2hlRCnwwzJwFcrXEhA==
-X-Received: by 2002:a05:6e02:4415:10b0:3db:7007:297e with SMTP id e9e14a558f8ab-3db70072a21mr27112305ab.6.1747248742981;
-        Wed, 14 May 2025 11:52:22 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4fa226587acsm2718570173.115.2025.05.14.11.52.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 11:52:22 -0700 (PDT)
-Message-ID: <9c69fb88-d4e1-4567-93ec-ed303b9ba01a@ieee.org>
-Date: Wed, 14 May 2025 13:52:20 -0500
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KEq4lG6l"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C44FC40E01ED;
+	Wed, 14 May 2025 18:53:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 81vlMqCq15_R; Wed, 14 May 2025 18:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747248806; bh=0vOGV0XILyspb43g1V9dqHl1wEdSi7Jd2w2s+KezepE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KEq4lG6lhO260DYBtkqrYSrmiOzw3jD5ZJdJH9KTTxHaGq03netrVBk2YRlvBYU6a
+	 9tkFi2RIM8KZHjmofzrBrxfiSl0NVtUq0raip+3xvjBS6tPyZEN6CY/KaASpV6XzxV
+	 KXfMSX/JH8Z5SmD5jcILXBz0aSLUwRLj6cfahloYVHfo02fYZp0NeQpjX60hXzCpGV
+	 tTXCIKcC2Ikdxa35Succ9EEzq/Bdme48FWNZ33DApCgmKwkKI00N2zJKFvVa2AnOgD
+	 6PhVebNH0FgBPj62ljtl6Npu9mpV1sMneFD2cofUtNAgi1YYXsons7uPg9O//3aoMx
+	 KrJ13LhTWB7u8LgqaSxER82Wx0xI9qv1B6KEFm1gVqb5/JLtXgq/b3sp7THnIE4PQ0
+	 aN6wW+hE2T0oOriofo0Paue8bXyNe59OkjqLovpuSgyE3ZxXpKCkdXt5h4Nbv0yAbU
+	 bHd2Qtdq5kvIjxxRrqoRKt43HU8mNjI+aYblRxZZHdpPpnURMh3acWnrCd1qvWHH29
+	 zd1nrdPnD4sbBcbyyAuoFfB+ARagNc99cnuwSFvgi6+0yRdqrnsspdJsPOJXjaq/Nb
+	 IA2w+SPrUFUqz+e4WrDRBkQUSXWkBd3bgpugow/jQhPcs0dd/G2J5DsiARB5GJDGul
+	 Am9MCXnV3UDcl87K75jKlV3A=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BBDE40E01CF;
+	Wed, 14 May 2025 18:53:17 +0000 (UTC)
+Date: Wed, 14 May 2025 20:53:16 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+Message-ID: <20250514185316.GJaCTmnPdcK9goOFWc@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250514172130.GAaCTRGoRL3nYieIE7@fat_crate.local>
+ <CAMj1kXHnt25JoTLdsPWB2C0xqzs+21PBGC_NXNhmsHdL0yLFnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rbd: replace strcpy() with strscpy()
-To: Siddarth Gundu <siddarthsgml@gmail.com>, idryomov@gmail.com
-Cc: dongsheng.yang@easystack.cn, axboe@kernel.dk, ceph-devel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250514182015.163117-1-siddarthsgml@gmail.com>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20250514182015.163117-1-siddarthsgml@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHnt25JoTLdsPWB2C0xqzs+21PBGC_NXNhmsHdL0yLFnQ@mail.gmail.com>
 
-On 5/14/25 1:20 PM, Siddarth Gundu wrote:
-> strcpy() is deprecated; use strscpy() instead.
+On Wed, May 14, 2025 at 06:37:14PM +0100, Ard Biesheuvel wrote:
+> The rule is really that you can no longer randomly call other code
+> without being forced to consider carefully what else gets pulled in,
+> and whether or not that code is guaranteed to behave correctly when
+> being called via the 1:1 mapping.
+
+I like "consider carefully". Right now, the decompressor is a mess and
+untangling it is a losing game.
+
+> Basically, the first order of business when calling the kernel via the
+> 1:1 mapping is to create the kernel virtual mapping in the page
+> tables. It is just really unfortunate that SEV-SNP requires so much
+> prep work before we can even map the kernel.
 > 
-> Both the destination and source buffer are of fixed length
-> so strscpy with 2-arguments is used.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
-> ---
->   drivers/block/rbd.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index faafd7ff43d6..92b38972db1c 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -39,6 +39,7 @@
->   
->   #include <linux/kernel.h>
->   #include <linux/device.h>
-> +#include <linux/string.h>
->   #include <linux/module.h>
->   #include <linux/blk-mq.h>
->   #include <linux/fs.h>
-> @@ -3654,7 +3655,7 @@ static void __rbd_lock(struct rbd_device *rbd_dev, const char *cookie)
+> I don't anticipate that this code will grow a lot after I'm done with it.
 
-Could the cookie argument possibly be defined with
-its size?  I.e.:
-   __rbd_lock(struct rbd_device *rbd_dev, const char cookie[32])
+Right, ok.
 
-I see all the callers pass an array that's 32 characters,
-but the function argument doesn't guarantee that.
+Lemme keep looking.
 
-You could also abstract the cookie with a typedef and
-operations on it.
+Thx.
 
-					-Alex
+-- 
+Regards/Gruss,
+    Boris.
 
->   	struct rbd_client_id cid = rbd_get_cid(rbd_dev);
->   
->   	rbd_dev->lock_state = RBD_LOCK_STATE_LOCKED;
-> -	strcpy(rbd_dev->lock_cookie, cookie);
-> +	strscpy(rbd_dev->lock_cookie, cookie);
->   	rbd_set_owner_cid(rbd_dev, &cid);
->   	queue_work(rbd_dev->task_wq, &rbd_dev->acquired_lock_work);
->   }
-
+https://people.kernel.org/tglx/notes-about-netiquette
