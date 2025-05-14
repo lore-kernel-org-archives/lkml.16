@@ -1,84 +1,82 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451BCC2F2;
-	Wed, 14 May 2025 06:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590FC201032;
+	Wed, 14 May 2025 06:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747204902; cv=none; b=KiciNAnZpuoTm8fTFh/aTKmgu0xIRUvvXIIYJC+be9MAJVU6Eqew0ZgSgvKS+f31RK3cvImfApAxn6fUf8ELePQH1NZhL2W3/ae0+vJ9MRefrnd8GFZmTE8+IdkSeZ5Tu0C38JFoDUGwkmVs4kXSNNTeF44ElxFYbNVBx/9vmyU=
+	t=1747204926; cv=none; b=Qv7e7WEohNipRcJ2t0XcMtnOG6lu15jY5mAIlLdxpYdMZhT5jIe3sEPVhnNCrQgudaL7hSD3/97P31ccA8E5MhKHod1FoEpMcYzNhyLSB5cHlqJAafL345TfuAecjCjfC6aypySN9ETgBykuJyoit/nmTWMGvw0oFQI5NJU8E+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747204902; c=relaxed/simple;
-	bh=pXpGTTsBM5hN6UrpUhonUG+zxf3mvGi7XQK2dwi2KE4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JfhftNJmAc6nzwW7TfE/clVbKNf4wpCSwD1hHs/zVbpk18CddEmwL53PZqBGCGqIuwhBpKsHgAJ12Ijut5bLZsmhMjfbOhOecw7Q+/liF+ck6Qe5DDEszWEvleBLRvbFFnEpaLk35Mi9cr2O3g3FIjlLvLD7myQfXIFcpenjrxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=mZS/91Ua; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="mZS/91Ua"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=WpBd/LWCyMZR8JEkg8orJSH16WPBwgpXbBt/9i1YTMQ=;
-	t=1747204901; x=1748414501; b=mZS/91Uatkw5oIjjd7ITwfy98Svh937VyGeP9acovRCnX53
-	P5UT0kDOzk69YiMRmLaPcgEAiutpo2zrjP/cuamgv+JgUFF1eGPiJp36jmpHJWOvP/5/cwzJ6uyoR
-	Fookh7iJG5hGISgZzxAlakyQetB5jMNLZqyShfAQhFg9PFR39ndCncfpWH2x0zZOcCrwTR5MRUdwT
-	fbapaT/jjB/ucxEdk1uCZWnO8jAH2wAldzx5HWnXMM7PFl78/aoPxNgjcJjo7FD2yByROqEu5m6Cm
-	6svBAbiRmkLrgoANZKG0d/i2JgKhCOr4KePdlGzX3mt2WSzJeAxkl/XchtqlugDw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uF5o8-00000007V8p-3r6F;
-	Wed, 14 May 2025 08:41:37 +0200
-Message-ID: <958ec4672d9263d23b1f47d8acd1047037e7ff25.camel@sipsolutions.net>
-Subject: Re: linux-next: manual merge of the iwlwifi-next tree with Linus'
- tree
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Date: Wed, 14 May 2025 08:41:35 +0200
-In-Reply-To: <20250514125524.1528467f@canb.auug.org.au>
-References: <20250506114402.2f440664@canb.auug.org.au>
-		<f53576b21774ab6ba8294c5d1954f0528764f2fb.camel@sipsolutions.net>
-		<20250507111026.4700e392@canb.auug.org.au>
-		<3d5761da40d0ddf4109d10d6f3c3d2538c4d89d4.camel@sipsolutions.net>
-		<20250508132459.04bd8e70@canb.auug.org.au>
-		<20250514124131.15d0117f@canb.auug.org.au>
-	 <20250514125524.1528467f@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1747204926; c=relaxed/simple;
+	bh=+7twghZ6n/HSHp/zDA5F7VuniUgpxiLvUlKenwUOllI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bbX3UGWqqMLSCmJJ3c90gvO0Kln8zyKGNjC+zn3CcSeypHEgBAgxt0a8TiuO3cr4tksu0jyriOrugfCe8ehwB2k300LwRXj7VaF1zdm8oimEUblSRkoynjBeBCE30XD2+Z4iuqgOmhAFUNiAFbgylUmiEcy/joMXrf3s0KJ70Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowADXfjsvOyRo8fb1FA--.59329S2;
+	Wed, 14 May 2025 14:41:51 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: taras.chornyi@plvision.eu,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH net-next] net: prestera: Use to_delayed_work()
+Date: Wed, 14 May 2025 14:40:53 +0800
+Message-Id: <20250514064053.2513921-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADXfjsvOyRo8fb1FA--.59329S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1xJF4fZw4fGFyxtF47urg_yoWDurc_ur
+	9rXryDGr45Wr4fKw4Ygr43Zr9YyryDZrykGw42qrZrC3y8XF1aqr10yF4xJayDGr4rXFnx
+	Gr1Sqr1fZ3srKjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb-8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCFx2IqxV
+	CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+	6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+	6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UYxBIdaVFxhVjvjDU0xZFpf9x0JU5R67UUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hi Stephen,
+Use to_delayed_work() instead of open-coding it.
 
-> > I keep getting more conflicts in the above files (each time one of them
-> > get modified in the iwlwifi-next tree.  Could you please merge commit
-> >=20
-> >  ebedf8b7f05b ("wifi: iwlwifi: add support for Killer on MTL")
-> >=20
-> > or the current net tree
-> > (git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git#main)
-> > into the iwlwifi-next tree and fix up the conflicts.  I believe that
-> > will clean up all the conflicts - that are really just between bug
-> > fixes for iwlwifi and the new development).
->=20
-> Or, of course, I assume the iwlwifi-next tree will be merged into the
-> net-next tree at some point soon ...
->=20
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/net/ethernet/marvell/prestera/prestera_counter.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yes, should be really soon now, though into wireless-next. But that's
-up-to-date with net, so would resolve all of these issues. In fact that
-was the plan all along, it's just been taking a bit longer than
-expected, sorry about that.
+diff --git a/drivers/net/ethernet/marvell/prestera/prestera_counter.c b/drivers/net/ethernet/marvell/prestera/prestera_counter.c
+index 4cd53a2dae46..634f4543c1d7 100644
+--- a/drivers/net/ethernet/marvell/prestera/prestera_counter.c
++++ b/drivers/net/ethernet/marvell/prestera/prestera_counter.c
+@@ -336,8 +336,7 @@ prestera_counter_block_get_by_idx(struct prestera_counter *counter, u32 idx)
+ 
+ static void prestera_counter_stats_work(struct work_struct *work)
+ {
+-	struct delayed_work *dl_work =
+-		container_of(work, struct delayed_work, work);
++	struct delayed_work *dl_work = to_delayed_work(work);
+ 	struct prestera_counter *counter =
+ 		container_of(dl_work, struct prestera_counter, stats_dw);
+ 	struct prestera_counter_block *block;
+-- 
+2.25.1
 
-johannes
