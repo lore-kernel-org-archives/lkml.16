@@ -1,48 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D801722172F;
-	Wed, 14 May 2025 08:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226A921E098
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212656; cv=none; b=jUPW796Is5Tpqyxt7lnF3OiMYjcqau4VWgufHU+nVM5cA48nLGbu9WP59A7L/KbVtAWaWqJb7ciUhQ+g3/HZMvfPikWOo1+GVkJZKcvM9jVVtuGweOtDDdtOR0ZkOBRls9/Ik/KGB/sc1Q7utU4v4/WrgaUu/fr6ZZWrBvCts0E=
+	t=1747212666; cv=none; b=FYxiZ9WKJmLUNbwsgIe3RMKbVq1wUeWJjUuX2bJMcsLfWZTCs9zH+6lASMmOUIJsnR0NjZkFbh5kawu7vvAB/BRZVrWgFV8J6xI1XiCcjMQE/7q7HSgjdtO8+yB2R0Dix3BU5qCfUS70rmO4mYstXXoAoqehAjowS/8jR2nhMJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212656; c=relaxed/simple;
-	bh=bPJvJAlEG0gOfJqjqZ+91FUwlJXWKk81fnhHqDaQHG8=;
+	s=arc-20240116; t=1747212666; c=relaxed/simple;
+	bh=6tEYE069E4mzL3+5dNxHHrmo0j7FVAindoCB3iDcvBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFfIjT/LI0HLqj0V/LWZukBnnCJicE5+pCEitObpCATBe7L9GUOVDr3X9RzirVfkVPu90ZJmGOYROGOQ3YD/j7i927+3XFEYUKCF3Kt1UCd75SpRAooL9ss6Ji+XfWZes9ikoX49VlRFrKx8eJNCLPCbx8DIdFjSH2Wt1eYE748=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pX0TR5qW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=d4rOVAnzV+wD/gHyBFsMBqIMVLVVEn6BmfE2X0AVs+8VF+wVkc+ZxOcpLFiKA0LTHwqzma1NIZJ/jZPuUSjYKS9YmBiP1QqCzcJErdSdn2U0qDKdMffQeEQAmMqv1Qv1AxcvQiZe/J05K5ny4l2OZq89FasyfsfKol9jQKXs+PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u2ECZjR3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/l6f7NQ+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u2ECZjR3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/l6f7NQ+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pX0TR5qW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961E3C4CEE9;
-	Wed, 14 May 2025 08:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747212655;
-	bh=bPJvJAlEG0gOfJqjqZ+91FUwlJXWKk81fnhHqDaQHG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pX0TR5qWdb3VXmfeH9EVnwfs/BTG+FfwuDGtTzY9sXVnq36NxEW0Y7GfKRA53rGB4
-	 6YZ8xIkcq7lxo+g+58KhbiCPsuQ2WGLcjJtrkDiz/UlCzDv2FmPZFwgz85NMWai5h3
-	 RN3zMijGH4z8tT4bz84CGZzsY1EfTY24b+zb00RQ=
-Date: Wed, 14 May 2025 10:49:06 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] rust: debugfs: Bind DebugFS directory creation
-Message-ID: <2025051451-charm-lankiness-8d59@gregkh>
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-1-3e93ce7bb76e@google.com>
- <D9VPJFJ44PUP.3D0HGIEJC9UGY@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u2ECZjR3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/l6f7NQ+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u2ECZjR3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/l6f7NQ+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 24EE021201;
+	Wed, 14 May 2025 08:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747212662; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1U2ujuZD1jkB0o1rfSCE6ebNEMGjdZEJaT7dHDxjfSc=;
+	b=u2ECZjR3e1UIcJ1Cl9Ch3q93M8Kx/H21EsXRySOh8CWj2ha8JXy5U7SnYYD0MZMeyR+K6w
+	cbuPP+vVecZKcD+pK9fzOupcrXTUXfordU3SSI1c8b2rgkbN5Jx6uoU2Z8jFZDmVa2XIF8
+	3Tv8oOQqylZkteqzE122GA7qUtFhV2o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747212662;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1U2ujuZD1jkB0o1rfSCE6ebNEMGjdZEJaT7dHDxjfSc=;
+	b=/l6f7NQ+h5DrDRwc8EAJztzyphVOW4AYnVxcluu0qZsoeBsj6D+fyATUejRNJKT8qgF4l1
+	/9DsX0OFaPZkJnAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747212662; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1U2ujuZD1jkB0o1rfSCE6ebNEMGjdZEJaT7dHDxjfSc=;
+	b=u2ECZjR3e1UIcJ1Cl9Ch3q93M8Kx/H21EsXRySOh8CWj2ha8JXy5U7SnYYD0MZMeyR+K6w
+	cbuPP+vVecZKcD+pK9fzOupcrXTUXfordU3SSI1c8b2rgkbN5Jx6uoU2Z8jFZDmVa2XIF8
+	3Tv8oOQqylZkteqzE122GA7qUtFhV2o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747212662;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1U2ujuZD1jkB0o1rfSCE6ebNEMGjdZEJaT7dHDxjfSc=;
+	b=/l6f7NQ+h5DrDRwc8EAJztzyphVOW4AYnVxcluu0qZsoeBsj6D+fyATUejRNJKT8qgF4l1
+	/9DsX0OFaPZkJnAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 310D8137E8;
+	Wed, 14 May 2025 08:51:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id G6TeCHVZJGimHAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 14 May 2025 08:51:01 +0000
+Date: Wed, 14 May 2025 09:50:55 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] mm: remove WARN_ON_ONCE() in file_has_valid_mmap_hooks()
+Message-ID: <pt5ni6ofhzbiiemnmrueg3w2hicfmi5qvqctz4ixasl2qrgjo7@dr5qcp52txuf>
+References: <20250514084024.29148-1-lorenzo.stoakes@oracle.com>
+ <9b5d232e-7579-42a9-bcbe-a4674bf76fe4@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,63 +91,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9VPJFJ44PUP.3D0HGIEJC9UGY@kernel.org>
+In-Reply-To: <9b5d232e-7579-42a9-bcbe-a4674bf76fe4@suse.cz>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,intel.com:email,suse.de:email,oracle.com:email,imap1.dmz-prg2.suse.org:helo]
 
-On Wed, May 14, 2025 at 09:33:05AM +0200, Benno Lossin wrote:
-> On Tue May 6, 2025 at 1:51 AM CEST, Matthew Maurer wrote:
-> > +impl<'a> Dir<'a> {
-> > +    /// Create a new directory in DebugFS. If `parent` is [`None`], it will be created at the root.
-> > +    #[cfg(CONFIG_DEBUG_FS)]
-> > +    fn create<'b>(name: &CStr, parent: Option<&'a Dir<'b>>) -> Self {
-> > +        let parent_ptr = match parent {
-> > +            Some(parent) => parent.0.as_ptr(),
-> > +            None => core::ptr::null_mut(),
-> > +        };
-> > +        // SAFETY:
-> > +        // * `name` argument points to a NUL-terminated string that lives across the call, by
-> > +        //   invariants of `&CStr`.
-> > +        // * If `parent` is `None`, `parent` accepts null pointers to mean create at root.
-> > +        // * If `parent` is `Some`, `parent` accepts live dentry debugfs pointers.
-> > +        //   so we can call `Self::from_ptr`.
-> > +        let dir = unsafe { bindings::debugfs_create_dir(name.as_char_ptr(), parent_ptr) };
-> > +
-> > +        // SAFETY: `debugfs_create_dir` either returns an error code or a legal `dentry` pointer,
-> > +        Self(unsafe { Entry::from_ptr(dir) })
-> > +    }
-> > +
-> > +    #[cfg(not(CONFIG_DEBUG_FS))]
-> > +    fn create<'b>(_name: &CStr, _parent: Option<&'a Dir<'b>>) -> Self {
-> > +        Self(Entry::new())
-> > +    }
-> > +
-> > +    /// Create a DebugFS subdirectory.
+On Wed, May 14, 2025 at 10:42:53AM +0200, Vlastimil Babka wrote:
+> On 5/14/25 10:40, Lorenzo Stoakes wrote:
+> > Having encountered a trinity report in linux-next (Linked in the 'Closes'
+> > tag) it appears that there are legitimate situations where a file-backed
+> > mapping can be acquired but no file->f_op->mmap or file->f_op->mmap_prepare
+> > is set, at which point do_mmap() should simply error out with -ENODEV.
+> > 
+> > Since previously we did not warn in this scenario and it appears we rely
+> > upon this, restore this situation, while retaining a WARN_ON_ONCE() for the
+> > case where both are set, which is absolutely incorrect and must be
+> > addressed and thus always requires a warning.
+> > 
+> > If further work is required to chase down precisely what is causing this,
+> > then we can later restore this, but it makes no sense to hold up this
+> > series to do so, as this is existing and apparently expected behaviour.
+> > 
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Closes: https://lore.kernel.org/oe-lkp/202505141434.96ce5e5d-lkp@intel.com
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > 
-> I'm not familiar with debugfs, if I run `Dir::create(c"foo", None)`
-> twice, will both of the returned values refer to the same or different
-> directories? 
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-You can not create a directory, or file, in the same location with the
-same name.  The call will fail, so don't do that :)
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-> What if I give a parent?
-
-Same thing, it will fail.
-
-> If the answer in both cases is that they will refer to the same
-> directory, then I'd change the docs to mention that.
-
-Nope, that does not happen.
-
-> So instead of
-> "Creates" we could say "Finds or creates" or something better.
-
-Find does not happen.
-
-> If they refer to different files, then I am confused how that would look
-> like in user-land :)
-
-Agreed, which is why that does not happen :)
-
-thanks,
-
-greg k-h
+-- 
+Pedro
