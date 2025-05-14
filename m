@@ -1,122 +1,65 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340FE215075
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B8224236
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747262208; cv=none; b=BmWHx+yd8IVBvYWCxsptDT/g4RwwP+XTMNnn+L1crLf1njM55Rb+Lz+f8+yZW7w3DquiE67RgJmB2N4X0Ul73Dsw4sV21Et8SRecrRS8hN0SN9wpo7c2KI5nCnFJtiGsQ+iCU835hTwjtuQwwFtnzKgF/xHoaypyawIYTbuxgUQ=
+	t=1747262209; cv=none; b=R7Jf4gkL6R9LlQQIeh5ngvXrky0SqFSSXFWbGjx65aixLrbRjXnqrrD/RZ4+UoEfHFnrthM5G+JRXxrpfnhPzqhpsWR9t1M+1ql4bK8CmPrMGE+XCMC5ZyhuiiSUTbANS3+xZIgqD6tA6rV+EM/Y8g8wRHKqyNJjc8BcqvxX8+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747262208; c=relaxed/simple;
-	bh=sa2uCyX7Z3JYK87vSFtE4RQ6/9Zp2oN+ivGmFG29byw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A55RjX0OyZlg6Yd42bNHx7oJj+JVsbAKDKOP2+4JHzG5xF6BfR8D+sJu+t61rYYQhGyEzaTN9I2Aw3QiQfBbFE026+BYON4abVyMNsWhkXcVZFLxSszSIuEzNGfwoUDQZUCghrSYLegsGvdzWT85fysEwLBFGtC5xdnYoXfHV24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=B2Ynz6JG; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747262209; c=relaxed/simple;
+	bh=vXSl1bs64zVyfrEvR+wpBlXx2d2mWt9pKA/B0vOVxMs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lu1NKdKYPIGyyJjTQo+vafCsYyOChkr6pyEiAlMYrp7GS/Rt3DIVwfm3qNhaG3jlKC4C/uePAMx7MKlkFMhy7Ic9YoayXDHfO9EK9eYwOftZA/q0cm9kIgar0jxNvj52jxwg/dbSJic1ZCVlyR0BP6OBclI8ycvByvRReIDpRIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yVu60wOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B2Ynz6JG"
-Received: from pendragon.ideasonboard.com (cust-east-par-46-193-72-226.cust.wifirst.net [46.193.72.226])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0FBBD725;
-	Thu, 15 May 2025 00:36:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747262187;
-	bh=sa2uCyX7Z3JYK87vSFtE4RQ6/9Zp2oN+ivGmFG29byw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B2Ynz6JGIsTxD1aYvu6V7clVPuN5xsBO7D7XWwM3xD7xbYJDDRxp8ibCQ/6xoy5ws
-	 MHb+kJCPzywH3MQw695DHmtmQ84IKbAlHJiZ7ifJOoR67xNel2UC+jcb6TiDZR2VrH
-	 wFbQTAAf7Jd0y773TJP0GLd+VqxEb1QemTlApnPg=
-Date: Thu, 15 May 2025 00:36:36 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	jonas@kwiboo.se, jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 2/3] drm/bridge: fsl-ldb: make use of dev_err_probe
-Message-ID: <20250514223636.GK23592@pendragon.ideasonboard.com>
-References: <20250514222453.440915-1-m.felsch@pengutronix.de>
- <20250514222453.440915-3-m.felsch@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yVu60wOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9278C4CEF1;
+	Wed, 14 May 2025 22:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747262208;
+	bh=vXSl1bs64zVyfrEvR+wpBlXx2d2mWt9pKA/B0vOVxMs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yVu60wOUsWmfTtD3eJG1JQLGkyZq5AaT/EsA5x2IcpdC3w6rNlnD8wj0LednTVo/7
+	 Df+SJRcEyrqkI8qgwOSGYxiJ9yc7+FkF9mB+BcTzrgLjwZHDrFYIk/+x5VbPhjPI9R
+	 k0B+G9AeusUHUxWMivoo63ECBsfCkBpaUDyGKnCs=
+Date: Wed, 14 May 2025 15:36:48 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, yang@os.amperecomputing.com,
+ willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
+Message-Id: <20250514153648.598bb031a2e498b1ac505b60@linux-foundation.org>
+In-Reply-To: <b12548c7-9f1c-48bc-a728-d169fcd5e16f@kuka.com>
+References: <20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com>
+	<3ed9ff7f-d360-4bca-9805-b70cf51cb023@lucifer.local>
+	<106c0d2c-7492-4a81-969c-de4f1798586c@kuka.com>
+	<42872c96-e9c5-4c3c-9095-3f12202dd803@lucifer.local>
+	<b12548c7-9f1c-48bc-a728-d169fcd5e16f@kuka.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514222453.440915-3-m.felsch@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Marco,
+On Wed, 14 May 2025 17:59:23 +0200 Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com> wrote:
 
-Thank you for the patch.
-
-On Thu, May 15, 2025 at 12:24:52AM +0200, Marco Felsch wrote:
-> Make use of dev_err_probe() to easily spot issues via the debugfs or
-> kernel log. No functional changes.
+> > Did you want to Iganacio?
+> > 
+> > I would suggest chasing up with them to see if they plan to do it or you ought
+> > to do so.
+> > 
+> > I can also do it if you need it quick, but I don't want to deprive you of the
+> > opportunity to patch that :)
 > 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> For me it's fine if you create the patch. That will probably be faster ;)
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The original patch adds the only direct inclusion of uapi/asm/mman.h
+under include/, which is a big red flag.
 
-> ---
->  drivers/gpu/drm/bridge/fsl-ldb.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fsl-ldb.c
-> index fa29f2bf4031..e0a229c91953 100644
-> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
-> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-> @@ -308,11 +308,13 @@ static int fsl_ldb_probe(struct platform_device *pdev)
->  
->  	fsl_ldb->clk = devm_clk_get(dev, "ldb");
->  	if (IS_ERR(fsl_ldb->clk))
-> -		return PTR_ERR(fsl_ldb->clk);
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->clk),
-> +				     "Failed to get ldb clk\n");
->  
->  	fsl_ldb->regmap = syscon_node_to_regmap(dev->of_node->parent);
->  	if (IS_ERR(fsl_ldb->regmap))
-> -		return PTR_ERR(fsl_ldb->regmap);
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->regmap),
-> +				     "Failed to get regmap\n");
->  
->  	/* Locate the remote ports and the panel node */
->  	remote1 = of_graph_get_remote_node(dev->of_node, 1, 0);
-> @@ -335,12 +337,12 @@ static int fsl_ldb_probe(struct platform_device *pdev)
->  	panel = of_drm_find_panel(panel_node);
->  	of_node_put(panel_node);
->  	if (IS_ERR(panel))
-> -		return PTR_ERR(panel);
-> +		return dev_err_probe(dev, PTR_ERR(panel), "drm panel not found\n");
->  
->  	fsl_ldb->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
->  	if (IS_ERR(fsl_ldb->panel_bridge))
-> -		return PTR_ERR(fsl_ldb->panel_bridge);
-> -
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->panel_bridge),
-> +				     "drm panel-bridge add failed\n");
->  
->  	if (fsl_ldb_is_dual(fsl_ldb)) {
->  		struct device_node *port1, *port2;
-> @@ -356,10 +358,9 @@ static int fsl_ldb_probe(struct platform_device *pdev)
->  					     "Error getting dual link configuration\n");
->  
->  		/* Only DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS is supported */
-> -		if (dual_link == DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS) {
-> -			dev_err(dev, "LVDS channel pixel swap not supported.\n");
-> -			return -EINVAL;
-> -		}
-> +		if (dual_link == DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS)
-> +			return dev_err_probe(dev, -EINVAL,
-> +					     "LVDS channel pixel swap not supported.\n");
->  	}
->  
->  	platform_set_drvdata(pdev, fsl_ldb);
-
--- 
-Regards,
-
-Laurent Pinchart
+I'll drop this version of the patch, thanks.
