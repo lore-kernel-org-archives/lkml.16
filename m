@@ -1,142 +1,169 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C67E20297F;
-	Wed, 14 May 2025 07:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A5020E002;
+	Wed, 14 May 2025 07:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206130; cv=none; b=uVRXXjcVXdHFcjQRyIbnv3eDWuSwkoFbeShKw0bTPipE6mL12cyWyhsNgsh6G2qfwRQdWpa73+csiz0VFqKjOfXlcxnTxYLkPS7igdsRQ+HesSLE62sjQ9BeZXEAX0TlMQraNahPnmWm2tajVfnRBEFmuRq2ge6f99IBbndpjZU=
+	t=1747206146; cv=none; b=kKb3Vz4gnEiqAASE+ttkROndzF6zNf5dYLfQEoRulpnwtVTBOCa3+cHIsxoCml/A2v+W/Hjq3uA0o0JIk7JsaaL56xpAbRJVc+DBwKIXykoPe++Lrd9rDPzlHl3mwBk8OOpDvAR72tAX9QbBgvvAb2JJ3bzk7bIVJkv0UFT2vrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206130; c=relaxed/simple;
-	bh=vs5b+EHYKYPsWMhmT/qyRr8Xjgec3HQB2Fry1oY6b54=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HVmsXnteJ9fLxE0i9MHjO/r6SCxuw2gfwhSQ9R6k7O85t1mtH9zciYsIPYvlZDIrX2e4V+oxcyvglpU1YJ4MlwOKCuC06Xs1Rm0zjhBLx+/BYSJCdGK0R+rb9EWVZDHNKyAPv+zTbG21/HXy/mmNnlhFtAudyx4B+xnsnf1LBSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1747206146; c=relaxed/simple;
+	bh=rOHLs8WcPCSweIFVaL2DKr9XOsbdFF+IFU25g0KfInc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EIPrJE0Rcpj88prBPPktWNBbVkSsE32FIpcT5uD35kGzpnjNN0Vn3DVTC6aeyJ24ol/FI+Ryg43O1YKnNybRmA1N907rk2gtjfaen0ooVNhRKesERAR8sF38DW4pN1E/SPNf9qBf+oGhpR9MJ19BhELN7/73VCLd8Yq223gXbOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zy40p0dS2zyVKc;
-	Wed, 14 May 2025 14:57:46 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 87E68140155;
-	Wed, 14 May 2025 15:02:04 +0800 (CST)
-Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
- (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 14 May
- 2025 15:02:03 +0800
-From: Yuntao Liu <liuyuntao12@huawei.com>
-To: <x86@kernel.org>, <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <liuyuntao12@huawei.com>
-Subject: [PATCH] kvm: x86: fix infinite loop in kvm_guest_time_update when tsc is 0
-Date: Wed, 14 May 2025 06:49:41 +0000
-Message-ID: <20250514064941.51609-1-liuyuntao12@huawei.com>
-X-Mailer: git-send-email 2.34.1
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zy41M2xZGzQkxj;
+	Wed, 14 May 2025 14:58:15 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 10056180080;
+	Wed, 14 May 2025 15:02:16 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 14 May 2025 15:02:15 +0800
+Message-ID: <475c6308-97f7-4707-b9a6-7b4572b00752@huawei.com>
+Date: Wed, 14 May 2025 15:02:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH v2] nfs: handle failure of nfs_get_lock_context in unlock
+ path
+To: Anna Schumaker <anna.schumaker@oracle.com>, <trondmy@kernel.org>,
+	<anna@kernel.org>, <jlayton@kernel.org>, <bcodding@redhat.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250513074226.3362070-1-lilingfeng3@huawei.com>
+ <33bee0b7-cd55-4d1a-9afe-63b3b93420ab@oracle.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <33bee0b7-cd55-4d1a-9afe-63b3b93420ab@oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-Syzkaller testing detected a soft lockup.
+Hi Anna,
 
-watchdog: BUG: soft lockup - CPU#3 stuck for 127s! [syz.1.2088:9817]
-Modules linked in:
-CPU: 3 PID: 9817 Comm: syz.1.2088 Tainted: G S                 6.6.0+
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x8/0x20 kernel/kcov.c:313
-Code: bf 03 00 00 00 e9 48 fe ff ff 0f 1f 84 00 00 00 00 00 90 90 90 90
-90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 0c 24 <89> f2 89
-   fe bf 05 00 00 00 e9 1a fe ff ff 66 2e 0f 1f 84 00 00 00
-RSP: 0018:ffff888016d8fad8 EFLAGS: 00000206
-RAX: 0000000000080000 RBX: ffff88810e242540 RCX: ffffffff901150d6
-RDX: 0000000000080000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff888016d8fb50 R08: 0000000000000001 R09: ffffed1021c484af
-R10: 0000000000000000 R11: 0000000000000277 R12: 0000000000000000
-R13: fffffed357281918 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007f2a8f6ea6c0(0000) GS:ffff888119780000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000012c56c0 CR3: 000000000dce8001 CR4: 0000000000772ee0
-DR0: 0000000000000000 DR1: 0000000000d3eb1c DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-PKRU: 80000000
-Call Trace:
- <TASK>
- kvm_get_time_scale arch/x86/kvm/x86.c:2458 [inline]
- kvm_guest_time_update+0x926/0xb00 arch/x86/kvm/x86.c:3268
- vcpu_enter_guest.constprop.0+0x1e70/0x3cf0 arch/x86/kvm/x86.c:10678
- vcpu_run+0x129/0x8d0 arch/x86/kvm/x86.c:11126
- kvm_arch_vcpu_ioctl_run+0x37a/0x13d0 arch/x86/kvm/x86.c:11352
- kvm_vcpu_ioctl+0x56b/0xe60 virt/kvm/kvm_main.c:4188
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl+0x12d/0x190 fs/ioctl.c:857
- do_syscall_x64 arch/x86/entry/common.c:51 [inline]
- do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
- entry_SYSCALL_64_after_hwframe+0x78/0xe2
+Thank you for reviewing the patch.
+I agree that handling the error case first makes the code cleaner and
+reduces nesting. Your suggested change looks great to me.
+I'll send v3 soon.
 
-ioctl$KVM_SET_TSC_KHZ(r2, 0xaea2, 0x1)
-user_tsc_khz = 0x1
-	|
-kvm_set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz)
-	|
-	ioctl$KVM_RUN(r2, 0xae80, 0x0)
-		|
-		...
-	kvm_guest_time_update(struct kvm_vcpu *v)
-		|
-		if (kvm_caps.has_tsc_control)
-			tgt_tsc_khz = kvm_scale_tsc(tgt_tsc_khz,
-					    v->arch.l1_tsc_scaling_ratio);
-			|
-			kvm_scale_tsc(u64 tsc, u64 ratio)
-			|
-			__scale_tsc(u64 ratio, u64 tsc)
-			ratio=122380531, tsc=2299998, N=48
-			ratio*tsc >> N = 0.999... -> 0
-			|
-		kvm_get_time_scale
+Lingfeng
 
-In function __scale_tsc, it uses fixed point number to calculate
-tsc, therefore, a certain degree of precision is lost, the actual tsc
-value of 0.999... would be 0. In function kvm_get_time_scale
-tps32=tps64=base_hz=0, would lead second while_loop infinite. when
-CONFIG_PREEMPT is n, it causes a soft lockup issue.
-
-Fixes: 35181e86df97 ("KVM: x86: Add a common TSC scaling function")
-Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
----
- arch/x86/kvm/x86.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1fa5d89f8d27..3e9d6f368eed 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2605,10 +2605,14 @@ static void kvm_track_tsc_matching(struct kvm_vcpu *vcpu)
-  * point number (mult + frac * 2^(-N)).
-  *
-  * N equals to kvm_caps.tsc_scaling_ratio_frac_bits.
-+ *
-+ * return 1 if _tsc is 0.
-  */
- static inline u64 __scale_tsc(u64 ratio, u64 tsc)
- {
--	return mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits);
-+	u64 _tsc = mul_u64_u64_shr(tsc, ratio, kvm_caps.tsc_scaling_ratio_frac_bits);
-+
-+	return  !_tsc ? 1 : _tsc;
- }
- 
- u64 kvm_scale_tsc(u64 tsc, u64 ratio)
--- 
-2.34.1
-
+在 2025/5/13 21:50, Anna Schumaker 写道:
+> Hi Li,
+>
+> On 5/13/25 3:42 AM, Li Lingfeng wrote:
+>> When memory is insufficient, the allocation of nfs_lock_context in
+>> nfs_get_lock_context() fails and returns -ENOMEM. If we mistakenly treat
+>> an nfs4_unlockdata structure (whose l_ctx member has been set to -ENOMEM)
+>> as valid and proceed to execute rpc_run_task(), this will trigger a NULL
+>> pointer dereference in nfs4_locku_prepare. For example:
+>>
+>> BUG: kernel NULL pointer dereference, address: 000000000000000c
+>> PGD 0 P4D 0
+>> Oops: Oops: 0000 [#1] SMP PTI
+>> CPU: 15 UID: 0 PID: 12 Comm: kworker/u64:0 Not tainted 6.15.0-rc2-dirty #60
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40
+>> Workqueue: rpciod rpc_async_schedule
+>> RIP: 0010:nfs4_locku_prepare+0x35/0xc2
+>> Code: 89 f2 48 89 fd 48 c7 c7 68 69 ef b5 53 48 8b 8e 90 00 00 00 48 89 f3
+>> RSP: 0018:ffffbbafc006bdb8 EFLAGS: 00010246
+>> RAX: 000000000000004b RBX: ffff9b964fc1fa00 RCX: 0000000000000000
+>> RDX: 0000000000000000 RSI: fffffffffffffff4 RDI: ffff9ba53fddbf40
+>> RBP: ffff9ba539934000 R08: 0000000000000000 R09: ffffbbafc006bc38
+>> R10: ffffffffb6b689c8 R11: 0000000000000003 R12: ffff9ba539934030
+>> R13: 0000000000000001 R14: 0000000004248060 R15: ffffffffb56d1c30
+>> FS: 0000000000000000(0000) GS:ffff9ba5881f0000(0000) knlGS:00000000
+>> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 000000000000000c CR3: 000000093f244000 CR4: 00000000000006f0
+>> Call Trace:
+>>   <TASK>
+>>   __rpc_execute+0xbc/0x480
+>>   rpc_async_schedule+0x2f/0x40
+>>   process_one_work+0x232/0x5d0
+>>   worker_thread+0x1da/0x3d0
+>>   ? __pfx_worker_thread+0x10/0x10
+>>   kthread+0x10d/0x240
+>>   ? __pfx_kthread+0x10/0x10
+>>   ret_from_fork+0x34/0x50
+>>   ? __pfx_kthread+0x10/0x10
+>>   ret_from_fork_asm+0x1a/0x30
+>>   </TASK>
+>> Modules linked in:
+>> CR2: 000000000000000c
+>> ---[ end trace 0000000000000000 ]---
+>>
+>> Free the allocated nfs4_unlockdata when nfs_get_lock_context() fails and
+>> return NULL to terminate subsequent rpc_run_task, preventing NULL pointer
+>> dereference.
+>>
+>> Fixes: f30cb757f680 ("NFS: Always wait for I/O completion before unlock")
+>> Link: https://lore.kernel.org/all/21817f2c-2971-4568-9ae4-1ccc25f7f1ef@huawei.com/
+>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>> ---
+>> Changes in v2:
+>>    Add a comment explaining that error handling for ctx acquisition failure
+>>    is unnecessary.
+> Thanks for the patch!
+>
+>>   fs/nfs/nfs4proc.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index 970f28dbf253..e52e2ac1ab39 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -7074,18 +7074,29 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
+>>   	struct nfs4_unlockdata *p;
+>>   	struct nfs4_state *state = lsp->ls_state;
+>>   	struct inode *inode = state->inode;
+>> +	struct nfs_lock_context *l_ctx;
+>>   
+>>   	p = kzalloc(sizeof(*p), GFP_KERNEL);
+>>   	if (p == NULL)
+>>   		return NULL;
+>> +	l_ctx = nfs_get_lock_context(ctx);
+>> +	if (!IS_ERR(l_ctx)) {
+>> +		p->l_ctx = l_ctx;
+>> +	} else {
+>> +		kfree(p);
+>> +		return NULL;
+>> +	}
+> I was thinking the code would look a little neater if this if / else block
+> was changed to:
+>
+>          if (IS_ERR(l_ctx)) {
+>                  kfree(p);
+>                  return NULL;
+>          }
+>
+>>   	p->arg.fh = NFS_FH(inode);
+>>   	p->arg.fl = &p->fl;
+>>   	p->arg.seqid = seqid;
+>>   	p->res.seqid = seqid;
+>>   	p->lsp = lsp;
+>>   	/* Ensure we don't close file until we're done freeing locks! */
+>> +	/*
+>> +	 * Since the caller holds a reference to ctx, the refcount must be non-zero.
+>> +	 * Therefore, error handling for failed ctx acquisition is unnecessary here.
+>> +	 */
+>>   	p->ctx = get_nfs_open_context(ctx);
+>> -	p->l_ctx = nfs_get_lock_context(ctx);
+> And then update this to set p->l_ctx = l_ctx.
+>
+> What do you think?
+> Anna
+>
+>>   	locks_init_lock(&p->fl);
+>>   	locks_copy_lock(&p->fl, fl);
+>>   	p->server = NFS_SERVER(inode);
+>
