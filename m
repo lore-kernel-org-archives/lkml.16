@@ -1,755 +1,359 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B2528D82E;
-	Wed, 14 May 2025 19:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250526; cv=pass; b=q9wIzonauigrQFV49Txe3VItwAjy7MALRG1gtxTYcScVRiJ1F5TVfepv16sH93iNKTS4LR2xGSSCkdIOrSWiLvKbmRmh1R3YmrP1lad88h2h1rPIpjMPgDHdCN0Rql6IAu3gAxsWqL96mWTexaujzlD8WHckrb4XzqOTPlycSK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250526; c=relaxed/simple;
-	bh=Xwi0cAKU397L1g71406+7vd4lb2Js1cXkmrzJbQB7r8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ss8yRRXMouDYot6ro0afhq9uqwN1iqfuqNaBgLtbJqruk2A/ljQyWLMQpWoSB/qNGhurLbXZrFmSKfz0FAVeBlnM9vY/3/k3oqUFaEQHbXvJt6zIzXOyKgRLjBWTjeUS6Qqdz4aF2+XhRcFTRu84iqboBhKDpiPatNMe4qlzUSM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=El2WJ6G+; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C82918FE
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747250529; cv=none; b=gWYvrdTf3SAjvG+Ai8kx6UrE4oU53CIG6TLE+jCn09rC1qL/Q+MAuQenec0/b3cdII1JX4EdXD7wdPfOQu9iUVTz9Bd3BynBnmIu1jBS7AzeHuPWUvPK6PVmOiNm56jiC1KAFwgB303LIAI8n5tgtWwsJ28VctfBDGjoyJ/bIig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747250529; c=relaxed/simple;
+	bh=lOdxofayiKe/1Vjymgyk3XUfVBPe4mBc2wD0vdOwXzo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SuaQCaFMIfdjIWjoOk5Fprj1SlhXJe5IMk852ws8EmJcmzEuSq7K+gVHkLDh4w/aIgWCraa14LTngwtix6A96jFscSvw0Jx+sPXSd6lNs5pY83+nssBN6vW2v/Uy1IbKnUqa/6gdDPrlvqGCW8isPE7ENu+JB8lU9FY5MLBZZYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UYNIA72q; arc=none smtp.client-ip=209.85.166.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="El2WJ6G+"
-ARC-Seal: i=1; a=rsa-sha256; t=1747250489; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Mw+bSoajMJrcLMHGjNrS2R3ckLCzLA3LHK8kwPaZVeYnL45dksuk8U+rT4WdpMUz5ary3HxbVTiBKAZH3rXEeTRQYM3754fBVkQC4IeSDSGQHhudPy8IMmjhh2ixyYA5bGWBWaJmRDwr1FVspaUQ7krBYf9fXRl2ohomK0edq2k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747250489; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=VnbUbKc2xDi0YCX1DyhPnZeDgMvBFcod7VTwrTEwzlY=; 
-	b=iuh51/oO9wtA3EI1Nc/bsOfpYWLVOBpEthuAjOJmsfzh2byW2vNo99luMlTreROJbfxmS3Co9IRqyh11yPWM6iCGsNH0JXGMGb3NIXe9Mw+p8UqS4rjPswfMtw+Zp6boqY6IShQ5U+pebrAUMIcW0Q6wNL7eZWAu9j9DDIc4row=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747250489;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=VnbUbKc2xDi0YCX1DyhPnZeDgMvBFcod7VTwrTEwzlY=;
-	b=El2WJ6G+0rnm5jEuk9gl6shGauOGbel4coqgKl43+YJIQnMkhyHGPlb7AzzzWVsv
-	nxW/loIUeqU1fM5YqUODAZ+RRjFMVi8J5pfQlMohgj86vyDrYtsDA0Y9G66Tl4tx9xv
-	gzXSDca6F/1iZWRSndK94kEgD9CmFqxezAIpD59c=
-Received: by mx.zohomail.com with SMTPS id 1747250486977302.73191471573443;
-	Wed, 14 May 2025 12:21:26 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Wed, 14 May 2025 16:20:51 -0300
-Subject: [PATCH v3 1/2] rust: irq: add support for request_irq()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYNIA72q"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-85dad56a6cbso11443639f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:22:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747250526; x=1747855326; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W3MauCW+urlix1RrycVNh0XN4aZXJqzxAZQYVw1ClTM=;
+        b=UYNIA72qzxec5Ea+tNSxB2J0VRMAv24bTO35xidFweojbC8XBFbWOszN7CSx08Z6U4
+         NW7yp3WfesmtB5bdx+L808KRYayxSUL8EFLi90lWRgWPztL1PlLvBIuzvZBCxCfMU1D5
+         9hlRgx72r8ceSxvOUpZ8ADdy13vNxdoKMz0TiMJxKaGAeT4YDLNnctqKYhCBMbzSOR4u
+         oCjBt2gECDd7JsrcSDf0xGFFrEM9yOpJvyfPinSqnCjNZhAN+oZbIJrvpPHvhLCXWfP1
+         XVUirwY0ZFwlgiKXUaJfApr7iEFWrOCJeZzsNDhwDRUWUmroEhdCCPI1I57ADAsR5oiB
+         7wlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747250526; x=1747855326;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W3MauCW+urlix1RrycVNh0XN4aZXJqzxAZQYVw1ClTM=;
+        b=KzUY63tNQwqi26z3IxQghlybGKzEomKCtnZ8f3Ab/frD+URKDfYE/Gt7UE2Hpz1LYO
+         yIbQEBJ3xX4yygJTkr3d62yiTjHeoTU0GCB86gtMZswiGo8mHh03m8agzecqzMix1hg1
+         uwN0rJ/uN6fNPXe01iCh8Qy4AclomH1ltGqU7SbSKFXvXj4wa9JxLlpszZv4SxvM1NFq
+         us3qGKzTI1p9re7G9gNsk6CoAE66Ijmb6mpXHsZoTxfmuuu3EwndcnYdGm0jREWeZyK1
+         0QwQtahS4cctybeBCjVdoZFChMKBaRF2FhzcKbcuJL7yJpWS6jGgF9qm5lEYS4aTDtfT
+         RdsA==
+X-Forwarded-Encrypted: i=1; AJvYcCViy+D498x+/yvxc6uO2ympCgKDMIwAgXlBnZ6Wi+vbQuhgU6HGfKuKJvJyGAlHx6fNwT6Zj+cUCyPe2g8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEm6aXT+T1zjw0x+3dMAKJH2SLNDHRs0eKzjchQNl+aCn8Judr
+	cxNjhG6luiuRR3n0wK32NbhKCFIXeP2eUvVmtQEA2QMxxrC5NE5M1dgWqLx1xUpRjv4ifcAjBdX
+	qldvi4A==
+X-Google-Smtp-Source: AGHT+IEy09eku3jD263yCQYKQ2rr3/0cu+Cf3UzUC6jmBnOz4zk6Mpi7GLuEdzeaZ4KU1bn0EY+ScGzWk8y2
+X-Received: from ilsx3.prod.google.com ([2002:a05:6e02:743:b0:3d9:367f:729a])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:3784:b0:3d9:5d50:e3b1
+ with SMTP id e9e14a558f8ab-3db6f7f1597mr60756865ab.18.1747250526441; Wed, 14
+ May 2025 12:22:06 -0700 (PDT)
+Date: Wed, 14 May 2025 19:21:57 +0000
+In-Reply-To: <20250514192159.1751538-1-rananta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
-In-Reply-To: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Mime-Version: 1.0
+References: <20250514192159.1751538-1-rananta@google.com>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250514192159.1751538-2-rananta@google.com>
+Subject: [PATCH 1/3] kvm: arm64: Add support for KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr
+From: Raghavendra Rao Ananta <rananta@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for registering IRQ handlers in Rust.
+When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
+injection by default to all the VMs in the system, aka GICv4. A
+shortcoming of the GIC architecture is that there's an absolute limit on
+the number of vPEs that can be tracked by the ITS. It is possible that
+an operator is running a mix of VMs on a system, only wanting to provide
+a specific class of VMs with hardware interrupt injection support.
 
-IRQ handlers are extensively used in drivers when some peripheral wants
-to obtain the CPU attention. Registering a handler will make the system
-invoke the passed-in function whenever the chosen IRQ line is triggered.
+To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
+for the userspace to enable or disable vGICv4 for a given VM. Make the
+interface backward compatible by leaving vGICv4 enabled by default.
 
-Both regular and threaded IRQ handlers are supported through a Handler
-(or ThreadedHandler) trait that is meant to be implemented by a type
-that:
-
-a) provides a function to be run by the system when the IRQ fires and,
-
-b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
-
-The requirement that T is Sync derives from the fact that handlers might
-run concurrently with other processes executing the same driver,
-creating the potential for data races.
-
-Ideally, some interior mutability must be in place if T is to be
-mutated. This should usually be done through the in-flight SpinLockIrq
-type.
-
-Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+Suggested-by: Oliver Upton <oliver.upton@linux.dev>
+Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/irq.c              |   9 +
- rust/kernel/irq.rs              |  24 +++
- rust/kernel/irq/flags.rs        | 102 +++++++++
- rust/kernel/irq/request.rs      | 455 ++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs              |   1 +
- 7 files changed, 593 insertions(+)
+ arch/arm64/include/uapi/asm/kvm.h     |  7 +++++
+ arch/arm64/kvm/vgic/vgic-init.c       |  3 +++
+ arch/arm64/kvm/vgic/vgic-its.c        |  2 +-
+ arch/arm64/kvm/vgic/vgic-kvm-device.c | 39 +++++++++++++++++++++++++++
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c    | 12 ++++-----
+ arch/arm64/kvm/vgic/vgic-v3.c         | 16 +++++++++--
+ arch/arm64/kvm/vgic/vgic-v4.c         |  8 +++---
+ include/kvm/arm_vgic.h                |  5 ++++
+ 8 files changed, 79 insertions(+), 13 deletions(-)
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70d52e69b754bf855bc19911d156d8..37fff7476c81ed39fcfd280bfc432d043725df30 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -18,6 +18,7 @@
- #include <linux/ethtool.h>
- #include <linux/file.h>
- #include <linux/firmware.h>
-+#include <linux/interrupt.h>
- #include <linux/fs.h>
- #include <linux/jiffies.h>
- #include <linux/jump_label.h>
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index e1c21eba9b15b672c5e4ab10c4e4c01ed407fae6..8c6d00219fe021b2e2b3ca27ad1d5ccb58b365fd 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -15,6 +15,7 @@
- #include "cred.c"
- #include "device.c"
- #include "err.c"
-+#include "irq.c"
- #include "fs.c"
- #include "io.c"
- #include "jump_label.c"
-diff --git a/rust/helpers/irq.c b/rust/helpers/irq.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..1faca428e2c047a656dec3171855c1508d67e60b
---- /dev/null
-+++ b/rust/helpers/irq.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+index af9d9acaf997..6762683f7e0f 100644
+--- a/arch/arm64/include/uapi/asm/kvm.h
++++ b/arch/arm64/include/uapi/asm/kvm.h
+@@ -428,6 +428,13 @@ enum {
+ #define   KVM_DEV_ARM_ITS_RESTORE_TABLES        2
+ #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
+ #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
++#define   KVM_DEV_ARM_VGIC_CONFIG_GICV4	5
 +
-+#include <linux/interrupt.h>
++enum {
++	KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE = 0,
++	KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE,
++	KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE,
++};
+ 
+ /* Device Control API on vcpu fd */
+ #define KVM_ARM_VCPU_PMU_V3_CTRL	0
+diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
+index 1f33e71c2a73..cd345df2271f 100644
+--- a/arch/arm64/kvm/vgic/vgic-init.c
++++ b/arch/arm64/kvm/vgic/vgic-init.c
+@@ -132,6 +132,9 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
+ 
+ 	kvm->arch.vgic.in_kernel = true;
+ 	kvm->arch.vgic.vgic_model = type;
++	kvm->arch.vgic.gicv4_config = kvm_vgic_global_state.has_gicv4 ?
++				      KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE :
++				      KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE;
+ 
+ 	kvm->arch.vgic.vgic_dist_base = VGIC_ADDR_UNDEF;
+ 
+diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
+index fb96802799c6..bba635e4e851 100644
+--- a/arch/arm64/kvm/vgic/vgic-its.c
++++ b/arch/arm64/kvm/vgic/vgic-its.c
+@@ -2242,7 +2242,7 @@ static int vgic_its_save_itt(struct vgic_its *its, struct its_device *device)
+ 		 * have direct access to that state without GICv4.1.
+ 		 * Let's simply fail the save operation...
+ 		 */
+-		if (ite->irq->hw && !kvm_vgic_global_state.has_gicv4_1)
++		if (ite->irq->hw && !kvm_vm_has_gicv4_1(its->dev->kvm))
+ 			return -EACCES;
+ 
+ 		ret = vgic_its_save_ite(its, device, ite, gpa);
+diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+index 359094f68c23..f03b80fc816e 100644
+--- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
++++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+@@ -279,6 +279,33 @@ static int vgic_set_common_attr(struct kvm_device *dev,
+ 			unlock_all_vcpus(dev->kvm);
+ 			mutex_unlock(&dev->kvm->lock);
+ 			return r;
++		case KVM_DEV_ARM_VGIC_CONFIG_GICV4: {
++			u8 __user *uaddr = (u8 __user *)(long)attr->addr;
++			u8 val;
 +
-+int rust_helper_request_irq(unsigned int irq, irq_handler_t handler,
-+			    unsigned long flags, const char *name, void *dev)
++			if (!kvm_vgic_global_state.has_gicv4)
++				return -ENXIO;
++
++			if (get_user(val, uaddr))
++				return -EFAULT;
++
++			if (vgic_initialized(dev->kvm) &&
++				val != dev->kvm->arch.vgic.gicv4_config)
++				return -EBUSY;
++
++			switch (val) {
++			case KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE:
++			case KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE:
++				mutex_lock(&dev->kvm->arch.config_lock);
++				dev->kvm->arch.vgic.gicv4_config = val;
++				mutex_unlock(&dev->kvm->arch.config_lock);
++				break;
++			default:
++				return -EINVAL;
++			}
++
++			return 0;
++		}
+ 		}
+ 		break;
+ 	}
+@@ -309,6 +336,16 @@ static int vgic_get_common_attr(struct kvm_device *dev,
+ 		r = put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
+ 		break;
+ 	}
++	case KVM_DEV_ARM_VGIC_GRP_CTRL: {
++		switch (attr->attr) {
++		case KVM_DEV_ARM_VGIC_CONFIG_GICV4: {
++			u8 __user *uaddr = (u8 __user *)(long)attr->addr;
++
++			r = put_user(dev->kvm->arch.vgic.gicv4_config, uaddr);
++			break;
++		}
++		}
++	}
+ 	}
+ 
+ 	return r;
+@@ -684,6 +721,8 @@ static int vgic_v3_has_attr(struct kvm_device *dev,
+ 			return 0;
+ 		case KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES:
+ 			return 0;
++		case KVM_DEV_ARM_VGIC_CONFIG_GICV4:
++			return 0;
+ 		}
+ 	}
+ 	return -ENXIO;
+diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+index ae4c0593d114..66b365f59c51 100644
+--- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+@@ -50,8 +50,8 @@ bool vgic_has_its(struct kvm *kvm)
+ 
+ bool vgic_supports_direct_msis(struct kvm *kvm)
+ {
+-	return (kvm_vgic_global_state.has_gicv4_1 ||
+-		(kvm_vgic_global_state.has_gicv4 && vgic_has_its(kvm)));
++	return kvm_vm_has_gicv4(kvm) &&
++		(kvm_vgic_global_state.has_gicv4_1 || vgic_has_its(kvm));
+ }
+ 
+ /*
+@@ -86,7 +86,7 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
+ 		}
+ 		break;
+ 	case GICD_TYPER2:
+-		if (kvm_vgic_global_state.has_gicv4_1 && gic_cpuif_has_vsgi())
++		if (kvm_vm_has_gicv4_1(vcpu->kvm) && gic_cpuif_has_vsgi())
+ 			value = GICD_TYPER2_nASSGIcap;
+ 		break;
+ 	case GICD_IIDR:
+@@ -119,7 +119,7 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
+ 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
+ 
+ 		/* Not a GICv4.1? No HW SGIs */
+-		if (!kvm_vgic_global_state.has_gicv4_1 || !gic_cpuif_has_vsgi())
++		if (!kvm_vm_has_gicv4_1(vcpu->kvm) || !gic_cpuif_has_vsgi())
+ 			val &= ~GICD_CTLR_nASSGIreq;
+ 
+ 		/* Dist stays enabled? nASSGIreq is RO */
+@@ -133,7 +133,7 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
+ 		if (is_hwsgi != dist->nassgireq)
+ 			vgic_v4_configure_vsgis(vcpu->kvm);
+ 
+-		if (kvm_vgic_global_state.has_gicv4_1 &&
++		if (kvm_vm_has_gicv4_1(vcpu->kvm) &&
+ 		    was_enabled != dist->enabled)
+ 			kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_RELOAD_GICv4);
+ 		else if (!was_enabled && dist->enabled)
+@@ -178,7 +178,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct kvm_vcpu *vcpu,
+ 		}
+ 	case GICD_CTLR:
+ 		/* Not a GICv4.1? No HW SGIs */
+-		if (!kvm_vgic_global_state.has_gicv4_1)
++		if (!kvm_vm_has_gicv4_1(vcpu->kvm))
+ 			val &= ~GICD_CTLR_nASSGIreq;
+ 
+ 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
+diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
+index b9ad7c42c5b0..bc8cb9184be9 100644
+--- a/arch/arm64/kvm/vgic/vgic-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-v3.c
+@@ -20,6 +20,18 @@ static bool common_trap;
+ static bool dir_trap;
+ static bool gicv4_enable;
+ 
++int kvm_vm_has_gicv4(struct kvm *kvm)
 +{
-+	return request_irq(irq, handler, flags, name, dev);
-+}
-diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..639690b7166f5201f5aaf52267ffe6e1e712d805
---- /dev/null
-+++ b/rust/kernel/irq.rs
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! IRQ abstractions.
-+//!
-+//! An IRQ is an interrupt request from a device. It is used to get the CPU's
-+//! attention so it can service a hardware event in a timely manner.
-+//!
-+//! The current abstractions handle IRQ requests and handlers, i.e.: it allows
-+//! drivers to register a handler for a given IRQ line.
-+//!
-+//! C header: [`include/linux/device.h`](srctree/include/linux/interrupt.h)
-+
-+/// IRQ allocation and handling.
-+pub mod request;
-+
-+/// Flags to be used when registering IRQ handlers.
-+pub mod flags;
-+
-+pub use request::Handler;
-+pub use request::IrqReturn;
-+pub use request::Registration;
-+pub use request::ThreadedHandler;
-+pub use request::ThreadedIrqReturn;
-+pub use request::ThreadedRegistration;
-diff --git a/rust/kernel/irq/flags.rs b/rust/kernel/irq/flags.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..3cfaef65ae14f6c02f55ebcf4d52450c0052df30
---- /dev/null
-+++ b/rust/kernel/irq/flags.rs
-@@ -0,0 +1,102 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-+
-+use crate::bindings;
-+
-+/// Flags to be used when registering IRQ handlers.
-+///
-+/// They can be combined with the operators `|`, `&`, and `!`.
-+#[derive(Clone, Copy, PartialEq, Eq)]
-+pub struct Flags(u64);
-+
-+impl Flags {
-+    pub(crate) fn into_inner(self) -> u64 {
-+        self.0
-+    }
++	return kvm->arch.vgic.gicv4_config ==
++		KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE;
 +}
 +
-+impl core::ops::BitOr for Flags {
-+    type Output = Self;
-+    fn bitor(self, rhs: Self) -> Self::Output {
-+        Self(self.0 | rhs.0)
-+    }
++int kvm_vm_has_gicv4_1(struct kvm *kvm)
++{
++	return (kvm_vm_has_gicv4(kvm) &&
++		kvm_vgic_global_state.has_gicv4_1);
 +}
 +
-+impl core::ops::BitAnd for Flags {
-+    type Output = Self;
-+    fn bitand(self, rhs: Self) -> Self::Output {
-+        Self(self.0 & rhs.0)
-+    }
-+}
+ void vgic_v3_set_underflow(struct kvm_vcpu *vcpu)
+ {
+ 	struct vgic_v3_cpu_if *cpuif = &vcpu->arch.vgic_cpu.vgic_v3;
+@@ -404,7 +416,7 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
+ 	 * The above vgic initialized check also ensures that the allocation
+ 	 * and enabling of the doorbells have already been done.
+ 	 */
+-	if (kvm_vgic_global_state.has_gicv4_1) {
++	if (kvm_vm_has_gicv4_1(kvm)) {
+ 		unmap_all_vpes(kvm);
+ 		vlpi_avail = true;
+ 	}
+@@ -581,7 +593,7 @@ int vgic_v3_map_resources(struct kvm *kvm)
+ 		return -EBUSY;
+ 	}
+ 
+-	if (kvm_vgic_global_state.has_gicv4_1)
++	if (kvm_vm_has_gicv4_1(kvm))
+ 		vgic_v4_configure_vsgis(kvm);
+ 
+ 	return 0;
+diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
+index c7de6154627c..814d54f4ce13 100644
+--- a/arch/arm64/kvm/vgic/vgic-v4.c
++++ b/arch/arm64/kvm/vgic/vgic-v4.c
+@@ -86,7 +86,7 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+ 	struct kvm_vcpu *vcpu = info;
+ 
+ 	/* We got the message, no need to fire again */
+-	if (!kvm_vgic_global_state.has_gicv4_1 &&
++	if (!kvm_vm_has_gicv4_1(vcpu->kvm) &&
+ 	    !irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
+ 		disable_irq_nosync(irq);
+ 
+@@ -245,7 +245,7 @@ int vgic_v4_init(struct kvm *kvm)
+ 
+ 	lockdep_assert_held(&kvm->arch.config_lock);
+ 
+-	if (!kvm_vgic_global_state.has_gicv4)
++	if (!kvm_vm_has_gicv4(kvm))
+ 		return 0; /* Nothing to see here... move along. */
+ 
+ 	if (dist->its_vm.vpes)
+@@ -286,7 +286,7 @@ int vgic_v4_init(struct kvm *kvm)
+ 		 * On GICv4.1, the doorbell is managed in HW and must
+ 		 * be left enabled.
+ 		 */
+-		if (kvm_vgic_global_state.has_gicv4_1)
++		if (kvm_vm_has_gicv4_1(kvm))
+ 			irq_flags &= ~IRQ_NOAUTOEN;
+ 		irq_set_status_flags(irq, irq_flags);
+ 
+@@ -392,7 +392,7 @@ int vgic_v4_load(struct kvm_vcpu *vcpu)
+ 	 * doorbell interrupt that would still be pending. This is a
+ 	 * GICv4.0 only "feature"...
+ 	 */
+-	if (!kvm_vgic_global_state.has_gicv4_1)
++	if (!kvm_vm_has_gicv4_1(vcpu->kvm))
+ 		err = irq_set_irqchip_state(vpe->irq, IRQCHIP_STATE_PENDING, false);
+ 
+ 	return err;
+diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+index 714cef854c1c..8883dc677674 100644
+--- a/include/kvm/arm_vgic.h
++++ b/include/kvm/arm_vgic.h
+@@ -296,6 +296,8 @@ struct vgic_dist {
+ 	 * else.
+ 	 */
+ 	struct its_vm		its_vm;
 +
-+impl core::ops::Not for Flags {
-+    type Output = Self;
-+    fn not(self) -> Self::Output {
-+        Self(!self.0)
-+    }
-+}
++	u8			gicv4_config;
+ };
+ 
+ struct vgic_v2_cpu_if {
+@@ -447,4 +449,7 @@ bool vgic_state_is_nested(struct kvm_vcpu *vcpu);
+ void kvm_vgic_cpu_up(void);
+ void kvm_vgic_cpu_down(void);
+ 
++int kvm_vm_has_gicv4(struct kvm *kvm);
++int kvm_vm_has_gicv4_1(struct kvm *kvm);
 +
-+/// Use the interrupt line as already configured.
-+pub const TRIGGER_NONE: Flags = Flags(bindings::IRQF_TRIGGER_NONE as u64);
-+
-+/// The interrupt is triggered when the signal goes from low to high.
-+pub const TRIGGER_RISING: Flags = Flags(bindings::IRQF_TRIGGER_RISING as u64);
-+
-+/// The interrupt is triggered when the signal goes from high to low.
-+pub const TRIGGER_FALLING: Flags = Flags(bindings::IRQF_TRIGGER_FALLING as u64);
-+
-+/// The interrupt is triggered while the signal is held high.
-+pub const TRIGGER_HIGH: Flags = Flags(bindings::IRQF_TRIGGER_HIGH as u64);
-+
-+/// The interrupt is triggered while the signal is held low.
-+pub const TRIGGER_LOW: Flags = Flags(bindings::IRQF_TRIGGER_LOW as u64);
-+
-+/// Allow sharing the irq among several devices.
-+pub const SHARED: Flags = Flags(bindings::IRQF_SHARED as u64);
-+
-+/// Set by callers when they expect sharing mismatches to occur.
-+pub const PROBE_SHARED: Flags = Flags(bindings::IRQF_PROBE_SHARED as u64);
-+
-+/// Flag to mark this interrupt as timer interrupt.
-+pub const TIMER: Flags = Flags(bindings::IRQF_TIMER as u64);
-+
-+/// Interrupt is per cpu.
-+pub const PERCPU: Flags = Flags(bindings::IRQF_PERCPU as u64);
-+
-+/// Flag to exclude this interrupt from irq balancing.
-+pub const NOBALANCING: Flags = Flags(bindings::IRQF_NOBALANCING as u64);
-+
-+/// Interrupt is used for polling (only the interrupt that is registered
-+/// first in a shared interrupt is considered for performance reasons).
-+pub const IRQPOLL: Flags = Flags(bindings::IRQF_IRQPOLL as u64);
-+
-+/// Interrupt is not reenabled after the hardirq handler finished. Used by
-+/// threaded interrupts which need to keep the irq line disabled until the
-+/// threaded handler has been run.
-+pub const ONESHOT: Flags = Flags(bindings::IRQF_ONESHOT as u64);
-+
-+/// Do not disable this IRQ during suspend. Does not guarantee that this
-+/// interrupt will wake the system from a suspended state.
-+pub const NO_SUSPEND: Flags = Flags(bindings::IRQF_NO_SUSPEND as u64);
-+
-+/// Force enable it on resume even if [`NO_SUSPEND`] is set.
-+pub const FORCE_RESUME: Flags = Flags(bindings::IRQF_FORCE_RESUME as u64);
-+
-+/// Interrupt cannot be threaded.
-+pub const NO_THREAD: Flags = Flags(bindings::IRQF_NO_THREAD as u64);
-+
-+/// Resume IRQ early during syscore instead of at device resume time.
-+pub const EARLY_RESUME: Flags = Flags(bindings::IRQF_EARLY_RESUME as u64);
-+
-+/// If the IRQ is shared with a [`NO_SUSPEND`] user, execute this interrupt
-+/// handler after suspending interrupts. For system wakeup devices users
-+/// need to implement wakeup detection in their interrupt handlers.
-+pub const COND_SUSPEND: Flags = Flags(bindings::IRQF_COND_SUSPEND as u64);
-+
-+/// Don't enable IRQ or NMI automatically when users request it. Users will
-+/// enable it explicitly by `enable_irq` or `enable_nmi` later.
-+pub const NO_AUTOEN: Flags = Flags(bindings::IRQF_NO_AUTOEN as u64);
-+
-+/// Exclude from runnaway detection for IPI and similar handlers, depends on
-+/// `PERCPU`.
-+pub const NO_DEBUG: Flags = Flags(bindings::IRQF_NO_DEBUG as u64);
-diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..55f0ea8f9a93dc9ada67ce91af686a9634c8e8ed
---- /dev/null
-+++ b/rust/kernel/irq/request.rs
-@@ -0,0 +1,455 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-+
-+//! IRQ allocation and handling
-+
-+use core::marker::PhantomPinned;
-+use core::ptr::addr_of_mut;
-+
-+use pin_init::pin_init_from_closure;
-+
-+use crate::alloc::Allocator;
-+use crate::error::to_result;
-+use crate::irq::flags::Flags;
-+use crate::prelude::*;
-+use crate::str::CStr;
-+use crate::sync::Arc;
-+
-+/// The value that can be returned from an IrqHandler or a ThreadedIrqHandler.
-+#[repr(u32)]
-+pub enum IrqReturn {
-+    /// The interrupt was not from this device or was not handled.
-+    None = bindings::irqreturn_IRQ_NONE,
-+
-+    /// The interrupt was handled by this device.
-+    Handled = bindings::irqreturn_IRQ_HANDLED,
-+}
-+
-+/// Callbacks for an IRQ handler.
-+pub trait Handler: Sync {
-+    /// The actual handler function. As usual, sleeps are not allowed in IRQ
-+    /// context.
-+    fn handle_irq(&self) -> IrqReturn;
-+}
-+
-+impl<T: ?Sized + Handler + Send> Handler for Arc<T> {
-+    fn handle_irq(&self) -> IrqReturn {
-+        T::handle_irq(self)
-+    }
-+}
-+
-+impl<T: ?Sized + Handler, A: Allocator> Handler for Box<T, A> {
-+    fn handle_irq(&self) -> IrqReturn {
-+        T::handle_irq(self)
-+    }
-+}
-+
-+/// A registration of an IRQ handler for a given IRQ line.
-+///
-+/// # Examples
-+///
-+/// The following is an example of using `Registration`. It uses a
-+/// [`SpinLock`](crate::sync::SpinLockIrq) to provide the interior mutability.
-+/// Note that Spinlocks are not safe to use in IRQ context as of now, but may be
-+/// in the future.
-+///
-+/// ```
-+/// use kernel::prelude::*;
-+/// use kernel::irq::flags;
-+/// use kernel::irq::Registration;
-+/// use kernel::irq::IrqReturn;
-+/// use kernel::sync::Arc;
-+/// use kernel::sync::SpinLock;
-+/// use kernel::c_str;
-+/// use kernel::alloc::flags::GFP_KERNEL;
-+///
-+/// // Declare a struct that will be passed in when the interrupt fires. The u32
-+/// // merely serves as an example of some internal data.
-+/// struct Data(SpinLock<u32>);
-+///
-+/// // [`handle_irq`] takes &self. This example illustrates interior
-+/// // mutability can be used when share the data between process context and IRQ
-+/// // context.
-+///
-+/// type Handler = Data;
-+///
-+/// impl kernel::irq::request::Handler for Handler {
-+///     // This is executing in IRQ context in some CPU. Other CPUs can still
-+///     // try to access to data.
-+///     fn handle_irq(&self) -> IrqReturn {
-+///         // We now have exclusive access to the data by locking the
-+///         // SpinLock.
-+///         let mut data = self.0.lock();
-+///         *data += 1;
-+///
-+///         IrqReturn::Handled
-+///     }
-+/// }
-+///
-+/// // This is running in process context.
-+/// fn register_irq(irq: u32, handler: Handler) -> Result<Arc<Registration<Handler>>> {
-+///     let registration = Registration::register(irq, flags::SHARED, c_str!("my-device"), handler);
-+///
-+///     // You can have as many references to the registration as you want, so
-+///     // multiple parts of the driver can access it.
-+///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-+///
-+///     // The handler may be called immediately after the function above
-+///     // returns, possibly in a different CPU.
-+///
-+///     {
-+///         // The data can be accessed from the process context too.
-+///         let mut data = registration.handler().0.lock();
-+///         *data = 42;
-+///     }
-+///
-+///     Ok(registration)
-+/// }
-+///
-+/// # Ok::<(), Error>(())
-+///```
-+///
-+/// # Invariants
-+///
-+/// * We own an irq handler using `&self` as its private data.
-+///
-+#[pin_data(PinnedDrop)]
-+pub struct Registration<T: Handler> {
-+    irq: u32,
-+    #[pin]
-+    handler: T,
-+    #[pin]
-+    /// Pinned because we need address stability so that we can pass a pointer
-+    /// to the callback.
-+    _pin: PhantomPinned,
-+}
-+
-+impl<T: Handler> Registration<T> {
-+    /// Registers the IRQ handler with the system for the given IRQ number. The
-+    /// handler must be able to be called as soon as this function returns.
-+    pub fn register(
-+        irq: u32,
-+        flags: Flags,
-+        name: &'static CStr,
-+        handler: T,
-+    ) -> impl PinInit<Self, Error> {
-+        let closure = move |slot: *mut Self| {
-+            // SAFETY: The slot passed to pin initializer is valid for writing.
-+            unsafe {
-+                slot.write(Self {
-+                    irq,
-+                    handler,
-+                    _pin: PhantomPinned,
-+                })
-+            };
-+
-+            // SAFETY:
-+            // - The callbacks are valid for use with request_irq.
-+            // - If this succeeds, the slot is guaranteed to be valid until the
-+            // destructor of Self runs, which will deregister the callbacks
-+            // before the memory location becomes invalid.
-+            let res = to_result(unsafe {
-+                bindings::request_irq(
-+                    irq,
-+                    Some(handle_irq_callback::<T>),
-+                    flags.into_inner() as usize,
-+                    name.as_char_ptr(),
-+                    &*slot as *const _ as *mut core::ffi::c_void,
-+                )
-+            });
-+
-+            if res.is_err() {
-+                // SAFETY: We are returning an error, so we can destroy the slot.
-+                unsafe { core::ptr::drop_in_place(addr_of_mut!((*slot).handler)) };
-+            }
-+
-+            res
-+        };
-+
-+        // SAFETY:
-+        // - if this returns Ok, then every field of `slot` is fully
-+        // initialized.
-+        // - if this returns an error, then the slot does not need to remain
-+        // valid.
-+        unsafe { pin_init_from_closure(closure) }
-+    }
-+
-+    /// Returns a reference to the handler that was registered with the system.
-+    pub fn handler(&self) -> &T {
-+        &self.handler
-+    }
-+}
-+
-+#[pinned_drop]
-+impl<T: Handler> PinnedDrop for Registration<T> {
-+    fn drop(self: Pin<&mut Self>) {
-+        // SAFETY:
-+        // - `self.irq` is the same as the one passed to `reques_irq`.
-+        // -  `&self` was passed to `request_irq` as the cookie. It is
-+        // guaranteed to be unique by the type system, since each call to
-+        // `register` will return a different instance of `Registration`.
-+        //
-+        // Notice that this will block until all handlers finish executing,
-+        // i.e.: at no point will &self be invalid while the handler is running.
-+        unsafe { bindings::free_irq(self.irq, &*self as *const Self as *mut core::ffi::c_void) };
-+    }
-+}
-+
-+/// The value that can be returned from `ThreadedHandler::handle_irq`.
-+#[repr(u32)]
-+pub enum ThreadedIrqReturn {
-+    /// The interrupt was not from this device or was not handled.
-+    None = bindings::irqreturn_IRQ_NONE,
-+
-+    /// The interrupt was handled by this device.
-+    Handled = bindings::irqreturn_IRQ_HANDLED,
-+
-+    /// The handler wants the handler thread to wake up.
-+    WakeThread = bindings::irqreturn_IRQ_WAKE_THREAD,
-+}
-+
-+/// Callbacks for a threaded IRQ handler.
-+pub trait ThreadedHandler: Sync {
-+    /// The actual handler function. As usual, sleeps are not allowed in IRQ
-+    /// context.
-+    fn handle_irq(&self) -> ThreadedIrqReturn;
-+
-+    /// The threaded handler function. This function is called from the irq
-+    /// handler thread, which is automatically created by the system.
-+    fn thread_fn(&self) -> IrqReturn;
-+}
-+
-+impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
-+    fn handle_irq(&self) -> ThreadedIrqReturn {
-+        T::handle_irq(self)
-+    }
-+
-+    fn thread_fn(&self) -> IrqReturn {
-+        T::thread_fn(self)
-+    }
-+}
-+
-+impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<T, A> {
-+    fn handle_irq(&self) -> ThreadedIrqReturn {
-+        T::handle_irq(self)
-+    }
-+
-+    fn thread_fn(&self) -> IrqReturn {
-+        T::thread_fn(self)
-+    }
-+}
-+
-+/// A registration of a threaded IRQ handler for a given IRQ line.
-+///
-+/// Two callbacks are required: one to handle the IRQ, and one to handle any
-+/// other work in a separate thread.
-+///
-+/// The thread handler is only called if the IRQ handler returns `WakeThread`.
-+///
-+/// # Examples
-+///
-+/// The following is an example of using `ThreadedRegistration`. It uses a
-+/// [`SpinLock`](crate::sync::SpinLockIrq) to provide the interior mutability.
-+/// Note that Spinlocks are not safe to use in IRQ context as of now, but may be
-+/// in the future.
-+///
-+/// ```
-+/// use kernel::prelude::*;
-+/// use kernel::irq::flags;
-+/// use kernel::irq::ThreadedIrqReturn;
-+/// use kernel::irq::ThreadedRegistration;
-+/// use kernel::irq::IrqReturn;
-+/// use kernel::sync::Arc;
-+/// use kernel::sync::SpinLock;
-+/// use kernel::alloc::flags::GFP_KERNEL;
-+/// use kernel::c_str;
-+///
-+/// // Declare a struct that will be passed in when the interrupt fires. The u32
-+/// // merely serves as an example of some internal data.
-+/// struct Data(SpinLock<u32>);
-+///
-+/// // [`handle_irq`] takes &self. This example illustrates interior
-+/// // mutability can be used when share the data between process context and IRQ
-+/// // context.
-+///
-+/// type Handler = Data;
-+///
-+/// impl kernel::irq::request::ThreadedHandler for Handler {
-+///     // This is executing in IRQ context in some CPU. Other CPUs can still
-+///     // try to access to data.
-+///     fn handle_irq(&self) -> ThreadedIrqReturn {
-+///         // We now have exclusive access to the data by locking the
-+///         // SpinLockIrq.
-+///         let mut data = self.0.lock();
-+///         *data += 1;
-+///
-+///         // By returning `WakeThread`, we indicate to the system that the
-+///         // thread function should be called. Otherwise, return
-+///         // ThreadedIrqReturn::Handled.
-+///         ThreadedIrqReturn::WakeThread
-+///     }
-+///
-+///     // This will run (in a separate kthread) if and only if `handle_irq`
-+///     // returns `WakeThread`.
-+///     fn thread_fn(&self) -> IrqReturn {
-+///         // We now have exclusive access to the data by locking the SpinLock.
-+///         //
-+///         // Ideally, we should disable interrupts while we are doing this to
-+///         // avoid deadlocks, but this is not currently possible.
-+///         let mut data = self.0.lock();
-+///         *data += 1;
-+///
-+///         IrqReturn::Handled
-+///     }
-+/// }
-+///
-+/// // This is running in process context.
-+/// fn register_threaded_irq(irq: u32, handler: Handler) -> Result<Arc<ThreadedRegistration<Handler>>> {
-+///     let registration = ThreadedRegistration::register(irq, flags::SHARED, c_str!("my-device"), handler);
-+///
-+///     // You can have as many references to the registration as you want, so
-+///     // multiple parts of the driver can access it.
-+///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-+///
-+///     // The handler may be called immediately after the function above
-+///     // returns, possibly in a different CPU.
-+///
-+///     {
-+///         // The data can be accessed from the process context too.
-+///         //
-+///         // Ideally, we should disable interrupts while we are doing this to
-+///         // avoid deadlocks, but this is not currently possible.
-+///         let mut data = registration.handler().0.lock();
-+///         *data = 42;
-+///     }
-+///
-+///     Ok(registration)
-+/// }
-+///
-+///
-+/// # Ok::<(), Error>(())
-+///```
-+///
-+/// # Invariants
-+///
-+/// * We own an irq handler using `&self` as its private data.
-+///
-+#[pin_data(PinnedDrop)]
-+pub struct ThreadedRegistration<T: ThreadedHandler> {
-+    irq: u32,
-+    #[pin]
-+    handler: T,
-+    #[pin]
-+    /// Pinned because we need address stability so that we can pass a pointer
-+    /// to the callback.
-+    _pin: PhantomPinned,
-+}
-+
-+impl<T: ThreadedHandler> ThreadedRegistration<T> {
-+    /// Registers the IRQ handler with the system for the given IRQ number. The
-+    /// handler must be able to be called as soon as this function returns.
-+    pub fn register(
-+        irq: u32,
-+        flags: Flags,
-+        name: &'static CStr,
-+        handler: T,
-+    ) -> impl PinInit<Self, Error> {
-+        let closure = move |slot: *mut Self| {
-+            // SAFETY: The slot passed to pin initializer is valid for writing.
-+            unsafe {
-+                slot.write(Self {
-+                    irq,
-+                    handler,
-+                    _pin: PhantomPinned,
-+                })
-+            };
-+
-+            // SAFETY:
-+            // - The callbacks are valid for use with request_threaded_irq.
-+            // - If this succeeds, the slot is guaranteed to be valid until the
-+            // destructor of Self runs, which will deregister the callbacks
-+            // before the memory location becomes invalid.
-+            let res = to_result(unsafe {
-+                bindings::request_threaded_irq(
-+                    irq,
-+                    Some(handle_threaded_irq_callback::<T>),
-+                    Some(thread_fn_callback::<T>),
-+                    flags.into_inner() as usize,
-+                    name.as_char_ptr(),
-+                    slot.cast(),
-+                )
-+            });
-+
-+            if res.is_err() {
-+                // SAFETY: We are returning an error, so we can destroy the slot.
-+                unsafe { core::ptr::drop_in_place(addr_of_mut!((*slot).handler)) };
-+            }
-+
-+            res
-+        };
-+
-+        // SAFETY:
-+        // - if this returns Ok(()), then every field of `slot` is fully
-+        // initialized.
-+        // - if this returns an error, then the slot does not need to remain
-+        // valid.
-+        unsafe { pin_init_from_closure(closure) }
-+    }
-+
-+    /// Returns a reference to the handler that was registered with the system.
-+    pub fn handler(&self) -> &T {
-+        &self.handler
-+    }
-+}
-+
-+#[pinned_drop]
-+impl<T: ThreadedHandler> PinnedDrop for ThreadedRegistration<T> {
-+    fn drop(self: Pin<&mut Self>) {
-+        // SAFETY:
-+        // - `self.irq` is the same as the one passed to `request_threaded_irq`.
-+        // -  `&self` was passed to `request_threaded_irq` as the cookie. It is
-+        // guaranteed to be unique by the type system, since each call to
-+        // `register` will return a different instance of
-+        // `ThreadedRegistration`.
-+        //
-+        // Notice that this will block until all handlers finish executing, so,
-+        // at no point will &self be invalid while the handler is running.
-+        unsafe { bindings::free_irq(self.irq, &*self as *const Self as *mut core::ffi::c_void) };
-+    }
-+}
-+
-+/// # Safety
-+///
-+/// This function should be only used as the callback in `request_irq`.
-+unsafe extern "C" fn handle_irq_callback<T: Handler>(
-+    _irq: i32,
-+    ptr: *mut core::ffi::c_void,
-+) -> core::ffi::c_uint {
-+    // SAFETY: `ptr` is a pointer to T set in `Registration::new`
-+    let data = unsafe { &*(ptr as *const T) };
-+    T::handle_irq(data) as _
-+}
-+
-+/// # Safety
-+///
-+/// This function should be only used as the callback in `request_threaded_irq`.
-+unsafe extern "C" fn handle_threaded_irq_callback<T: ThreadedHandler>(
-+    _irq: i32,
-+    ptr: *mut core::ffi::c_void,
-+) -> core::ffi::c_uint {
-+    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
-+    let data = unsafe { &*(ptr as *const T) };
-+    T::handle_irq(data) as _
-+}
-+
-+/// # Safety
-+///
-+/// This function should be only used as the callback in `request_threaded_irq`.
-+unsafe extern "C" fn thread_fn_callback<T: ThreadedHandler>(
-+    _irq: i32,
-+    ptr: *mut core::ffi::c_void,
-+) -> core::ffi::c_uint {
-+    // SAFETY: `ptr` is a pointer to T set in `ThreadedRegistration::new`
-+    let data = unsafe { &*(ptr as *const T) };
-+    T::thread_fn(data) as _
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5fe46fd89517e234b97a6590c8e93..4caa1a8f96c6c9a2ac6979bd7fcb60d2b6f55132 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -56,6 +56,7 @@
- pub mod init;
- pub mod io;
- pub mod ioctl;
-+pub mod irq;
- pub mod jump_label;
- #[cfg(CONFIG_KUNIT)]
- pub mod kunit;
-
+ #endif /* __KVM_ARM_VGIC_H */
 -- 
-2.49.0
+2.49.0.1101.gccaa498523-goog
 
