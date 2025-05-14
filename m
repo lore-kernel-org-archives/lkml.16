@@ -1,46 +1,46 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2291DE4EC;
-	Wed, 14 May 2025 22:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996F91EB189;
+	Wed, 14 May 2025 22:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747260986; cv=none; b=KENE+3vnfppD0V9Y0lGl3kTciKeTJGsnDg+PVdO0f52qcHnVBGeF4wOpVCF/wOO/prols2q4QTlfrqa0dn/OJUviD/YMP4UzdrMT8R7qJTBW+aDDkyW6uiQImlKcmMIBvViSzjbjHCOzgw87+/YMB5St1jo7GYIAF54nuHq9kj8=
+	t=1747260988; cv=none; b=P+rrA5a1di7w9vD1n9mrKdP9sB9JZdwvFHq5UlVb6wWxjBhsoyU4dAD+JJ5ME6NkVxPlw6ZDLNzg8Vdd05xXkvv/OY9z3wTLDDe9nNoBG7e/urdw0lOVDWdf5tKaTKgjt63m+Q2bbKyAZkrpKfUZxO5+cJJlbUtclTsceRx99pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747260986; c=relaxed/simple;
-	bh=bSKkn3nM3v0HO325xfei4C6jwzh4vhH/n43cB4LwQQo=;
+	s=arc-20240116; t=1747260988; c=relaxed/simple;
+	bh=AWk9Ca73id5F9YQWEPEIhc+mFJs28UXN1ReaPw4guow=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XFDRRMpsc7AlcrXNPQHwyOfjlR7O99Seq6KrmpQQV3pkRHVlGXagUq3xGA4od1BE588fB/1JnNyQJSF5xFkW0LRcVS93yR+u83feHtdGwzwxFHi/qllwfmwV10jR3h+iNMIcbXmphuxysS8EuKlj39fqxWDIKi03moNuNNN9W9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=EMeWv17R; arc=none smtp.client-ip=185.226.149.38
+	 In-Reply-To:To:Cc; b=lDkxWJLVNA/QaZiObJubUED2QRxSd2jIfRChdP8yBOAbU7Kz1CSBtpBA9rZX5KGyKiEfNfhdkI667r2/jZLGpveXWBENleifVl4Amse8NSl0aCO2U0rvqeHYcGYnz2n/Rgm2pfjpEcKgUZbBgDId2WbKkJFlSRLlpiuWQeujqQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=cht9WUif; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="EMeWv17R"
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="cht9WUif"
 Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <mhal@rbox.co>)
-	id 1uFKOd-001k89-MD; Thu, 15 May 2025 00:16:15 +0200
+	id 1uFKOk-001k8n-6z; Thu, 15 May 2025 00:16:22 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
 	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=2FzBNg4m8mbkJzKlkeWZy30zedQWDfDv4O7u47x1mWw=; b=EMeWv17RUFXQ718dcHVOn3tTay
-	AaR8mGj4xF+pQHfScZpqlD/wKBjZLbJTiu7jpZwgOCIPmgTrykyf/dPHrQLlu55oIGPFkVTqGgH4O
-	KgRE8JP1iW8gcjjMHOfhZv/0XWEwDU4iJIKO4f8Mo8lkB1w+FFqsVIs3Jx4oJqaZSq717PSx+cRml
-	Xh+rRERVqOJUt7TYhUqUtGSKQ+Cfl6SrZf6udppJl+RTjpmPtBozQyX5VU2pSZVIYyd/804M6Eavi
-	u5zi+frG/qBcI4PUwmL63a+5S2IilIy872Yvh8ixQXV6e1f3oIj8CHpJAmsA203w1WvKdaLhZHOlb
-	c0Sf/6xg==;
+	bh=UbCVgwxpRFnpFZpXah8Lt7X+QYdpyqNgSqr+wPpYtPk=; b=cht9WUifGa0X8aAJ6An+SP07zu
+	DUPWUug0oVB9ikoJn8A6bqspOAtUkB+Y0VuycJzgnla9gyavB6yVm6TPme+SJcDpbwySTIkAMrS2I
+	vetY2jFnsmlTk42EWZRvIWN+CB8hZlh7xSGJK1Y3MIMLncdvoHIPWDvo3dZksC6TwgkrkwOJn0F0z
+	IDPO/fn7Nv48EZvbSCKk85iCrQ4LbLziYbOYiOJ5h8iXp0hHMrvUL2TfVZb91RqHtnjVRQjXI5m6k
+	A6wfQSyYwRA3/kqoFUPub4s9JoaoXlk1yqkeWLVRSsYmazAIh+C5Tj3L+UTcCExj6+oXh2FNAwU/B
+	9hzFOTJA==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
 	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <mhal@rbox.co>)
-	id 1uFKOc-00089Q-9r; Thu, 15 May 2025 00:16:15 +0200
+	id 1uFKOj-0008AM-S3; Thu, 15 May 2025 00:16:22 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1uFKOJ-005bJ3-U9; Thu, 15 May 2025 00:15:56 +0200
+	id 1uFKOM-005bJ3-Kf; Thu, 15 May 2025 00:15:58 +0200
 From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 15 May 2025 00:15:24 +0200
-Subject: [PATCH bpf-next v3 1/8] selftests/bpf: Support af_unix SOCK_DGRAM
- socket pair creation
+Date: Thu, 15 May 2025 00:15:27 +0200
+Subject: [PATCH bpf-next v3 4/8] selftests/bpf: Introduce verdict programs
+ for sockmap_redir
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-selftests-sockmap-redir-v3-1-a1ea723f7e7e@rbox.co>
+Message-Id: <20250515-selftests-sockmap-redir-v3-4-a1ea723f7e7e@rbox.co>
 References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
 In-Reply-To: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
 To: Andrii Nakryiko <andrii@kernel.org>, 
@@ -62,90 +62,93 @@ To: Andrii Nakryiko <andrii@kernel.org>,
  Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
 Cc: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>, 
- Michal Luczaj <mhal@rbox.co>
+ Michal Luczaj <mhal@rbox.co>, Jiayuan Chen <mrpre@163.com>
 X-Mailer: b4 0.14.2
 
-Handle af_unix in init_addr_loopback(). For pair creation, bind() the peer
-socket to make SOCK_DGRAM connect() happy.
+Instead of piggybacking on test_sockmap_listen, introduce
+test_sockmap_redir especially for sockmap redirection tests.
 
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Suggested-by: Jiayuan Chen <mrpre@163.com>
 Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- .../selftests/bpf/prog_tests/socket_helpers.h      | 29 ++++++++++++++++++----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ .../selftests/bpf/progs/test_sockmap_redir.c       | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-index 1bdfb79ef009b16e329a80eab8598ed97dae9119..e505c2f2595a24be9dd5b534deef4793f9a02f77 100644
---- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-+++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-@@ -3,6 +3,7 @@
- #ifndef __SOCKET_HELPERS__
- #define __SOCKET_HELPERS__
- 
-+#include <sys/un.h>
- #include <linux/vm_sockets.h>
- 
- /* include/linux/net.h */
-@@ -169,6 +170,15 @@ static inline void init_addr_loopback6(struct sockaddr_storage *ss,
- 	*len = sizeof(*addr6);
- }
- 
-+static inline void init_addr_loopback_unix(struct sockaddr_storage *ss,
-+					   socklen_t *len)
-+{
-+	struct sockaddr_un *addr = memset(ss, 0, sizeof(*ss));
+diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_redir.c b/tools/testing/selftests/bpf/progs/test_sockmap_redir.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..34d9f4f2f0a2e638c6e05cfa9f19971bd36c11ea
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_sockmap_redir.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	addr->sun_family = AF_UNIX;
-+	*len = sizeof(sa_family_t);
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
++#include "bpf_misc.h"
++
++SEC(".maps") struct {
++	__uint(type, BPF_MAP_TYPE_SOCKMAP);
++	__uint(max_entries, 1);
++	__type(key, __u32);
++	__type(value, __u64);
++} nop_map, sock_map;
++
++SEC(".maps") struct {
++	__uint(type, BPF_MAP_TYPE_SOCKHASH);
++	__uint(max_entries, 1);
++	__type(key, __u32);
++	__type(value, __u64);
++} nop_hash, sock_hash;
++
++SEC(".maps") struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(max_entries, 2);
++	__type(key, int);
++	__type(value, unsigned int);
++} verdict_map;
++
++/* Set by user space */
++int redirect_type;
++int redirect_flags;
++
++#define redirect_map(__data)                                                   \
++	_Generic((__data),                                                     \
++		 struct __sk_buff * : bpf_sk_redirect_map,                     \
++		 struct sk_msg_md * : bpf_msg_redirect_map                     \
++	)((__data), &sock_map, (__u32){0}, redirect_flags)
++
++#define redirect_hash(__data)                                                  \
++	_Generic((__data),                                                     \
++		 struct __sk_buff * : bpf_sk_redirect_hash,                    \
++		 struct sk_msg_md * : bpf_msg_redirect_hash                    \
++	)((__data), &sock_hash, &(__u32){0}, redirect_flags)
++
++#define DEFINE_PROG(__type, __param)                                           \
++SEC("sk_" XSTR(__type))                                                        \
++int prog_ ## __type ## _verdict(__param data)                                  \
++{                                                                              \
++	unsigned int *count;                                                   \
++	int verdict;                                                           \
++									       \
++	if (redirect_type == BPF_MAP_TYPE_SOCKMAP)                             \
++		verdict = redirect_map(data);                                  \
++	else if (redirect_type == BPF_MAP_TYPE_SOCKHASH)                       \
++		verdict = redirect_hash(data);                                 \
++	else                                                                   \
++		verdict = redirect_type - __MAX_BPF_MAP_TYPE;                  \
++									       \
++	count = bpf_map_lookup_elem(&verdict_map, &verdict);                   \
++	if (count)                                                             \
++		(*count)++;                                                    \
++									       \
++	return verdict;                                                        \
 +}
 +
- static inline void init_addr_loopback_vsock(struct sockaddr_storage *ss,
- 					    socklen_t *len)
- {
-@@ -190,6 +200,9 @@ static inline void init_addr_loopback(int family, struct sockaddr_storage *ss,
- 	case AF_INET6:
- 		init_addr_loopback6(ss, len);
- 		return;
-+	case AF_UNIX:
-+		init_addr_loopback_unix(ss, len);
-+		return;
- 	case AF_VSOCK:
- 		init_addr_loopback_vsock(ss, len);
- 		return;
-@@ -315,21 +328,27 @@ static inline int create_pair(int family, int sotype, int *p0, int *p1)
- {
- 	__close_fd int s, c = -1, p = -1;
- 	struct sockaddr_storage addr;
--	socklen_t len = sizeof(addr);
-+	socklen_t len;
- 	int err;
- 
- 	s = socket_loopback(family, sotype);
- 	if (s < 0)
- 		return s;
- 
--	err = xgetsockname(s, sockaddr(&addr), &len);
--	if (err)
--		return err;
--
- 	c = xsocket(family, sotype, 0);
- 	if (c < 0)
- 		return c;
- 
-+	init_addr_loopback(family, &addr, &len);
-+	err = xbind(c, sockaddr(&addr), len);
-+	if (err)
-+		return err;
++DEFINE_PROG(skb, struct __sk_buff *);
++DEFINE_PROG(msg, struct sk_msg_md *);
 +
-+	len = sizeof(addr);
-+	err = xgetsockname(s, sockaddr(&addr), &len);
-+	if (err)
-+		return err;
-+
- 	err = connect(c, sockaddr(&addr), len);
- 	if (err) {
- 		if (errno != EINPROGRESS) {
++char _license[] SEC("license") = "GPL";
 
 -- 
 2.49.0
