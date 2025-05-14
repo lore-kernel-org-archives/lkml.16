@@ -1,153 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3676721FF2D;
-	Wed, 14 May 2025 08:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2F821B9C8;
+	Wed, 14 May 2025 08:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211151; cv=none; b=Z738/0Zwh8vyOZKivOjtehNhc8jvzWHlDZWPk8KjZrNI57lW5sFZ3IuUf9663JsuMWSntKP92SzdU+zxvOyZmFsgbe6dNBpV81ly5T15nYN37QhrpKDcnQZyTTt7J1q0uL5MhWd00kMvZ06P7MuiQ2/vpNTWVWLDzpyh5S89jjc=
+	t=1747211218; cv=none; b=KT/RK1ayLMwwKr5EOhkp6pfxRa7lX/1eelXqnE9keNVA5p+vFWU4gwuR5cJOL/VGsPyH4zAGjsCiWwfT7bAyxVEQkbR56xzfMz+J3Om4HmtLpyIp1VeZqhvSlVV2vEwUJM6tc9vG6AbhknEkcrVEw5x1fHztEiKzY58UQuaIoPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211151; c=relaxed/simple;
-	bh=HtHDjWfGtN0kaERKegXTHdWKl092bZPW8dRDILDzl2Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tynRDZvfXau3285mvMxngX451KTUQhKXP57g44CqaIwrtA+wyyLajDl6BlLVm8AaKM2pMGb6++xQ2vbYE98iwURYMDc3o2EtYc9fsaq2pHpGtjF4vdvqL926MwGENm9rHHiwuExiS0jc4UYtvLmGrg2yisTLwtxsCoah4fJSQs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SR9XP5cP; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747211218; c=relaxed/simple;
+	bh=pazwyUs7Ot0cc4KDotDE+lY96H0cEXZeAVpbnhs/JgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rYOKDUfZIa8ts7xm9ya/hsnS2XI4ypX9tvMynBphnnsFR3LBNSMed+KgB76LUwF39/ZMU41BFqgzk4hgZp3KTHWAh+fZ2J+8zpEXNK8r3WF7pjR901YaZX5NY0SuVUuX8CzIodYBIPZKqy2VpIG2qtwb2N/di9ddRh7LkGmRiVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=pMGlMrFN; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SR9XP5cP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747211151; x=1778747151;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HtHDjWfGtN0kaERKegXTHdWKl092bZPW8dRDILDzl2Y=;
-  b=SR9XP5cPYcM6k7ZcLBUO2Zn6E1wk4F3egk1iG9iYqLsg2wuS0zXrOgZe
-   qUDfKe06t/Xjs3NYLREaxBn2ApFSyKtvwG+I8KQ+vLyTz7KcXZuG0Thez
-   9j8CvjaRBaFOGBmyloxwC8y7ULjvMK4Bv60dDy2KGtORoawzvzOEDu+Lb
-   vJooQBOmA0nzglfuKE58/zuqP3qhZ7Nlz0QxEdKnJl445rGXqpYs/eBis
-   5CBRXykPaAY24l4l6e/LrQS8dWCe7MpDKkybJu8sFXXi09hfojzTG2xGQ
-   Q/CXTrXR7vVhdQjGbeTvkPF/lOzXbaSbKVUqm/j0lcueXrX2LE8IWKeHA
-   A==;
-X-CSE-ConnectionGUID: sN1xnEHKSR6L6oYZ5DCubA==
-X-CSE-MsgGUID: z7dEfjtLT8KJY8F5NgGQkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48962696"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="48962696"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 01:25:50 -0700
-X-CSE-ConnectionGUID: +5oQgNfWS4OKRPz9Fxm98g==
-X-CSE-MsgGUID: HWQL2Jd7Q+G2LVGkXeW1Cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="142729518"
-Received: from opintica-mobl1 (HELO mdjait-mobl) ([10.245.245.145])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 01:25:46 -0700
-Date: Wed, 14 May 2025 10:25:36 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
-	Daniel Scally <dan.scally@ideasonboard.com>
-Cc: sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, 
-	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, 
-	kieran.bingham@ideasonboard.com, naush@raspberrypi.com, mchehab@kernel.org, 
-	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <dhbbpogydqclblzpd2qn2tr2cyyh5gq5cgostzbiq6ygsixj46@oopsp75svt4c>
-References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
- <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="pMGlMrFN"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vtKW023076;
+	Wed, 14 May 2025 10:26:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ds5+8iM4sRf0Jo4IyqmV53NfBcmFz2cJwNiJZ/wCrmk=; b=pMGlMrFN7CKCc5l+
+	/xUdEV5gxnTpRkg4FOuwGXS51BtuZ1kYDbW2LqiQMA2nhQSxwBFpjwLYCC2AhmDk
+	msfLU+TozS7alcR8HZhZhXZb623TTILmwa7sKOnjfrj5H6LqzSSBzRZvyWS96QXC
+	IWewdZXh737I31ekESxstCKDAXVXyOg1jGM5JpXfULiVEi+6tUDx4AHPQbn9ke2c
+	LGDbfmqBSsPHm40wvkDE9bbbYeAJlHl5fGiH4T7HQpRId+2j7ux8/eK9Vy/8e4s8
+	2DWJq5H67SsCDvyIICQi6YLh8xDI53BVvYN7sh5Yup55vf0X5feVmbg0IB1O8w3z
+	+IM2dA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdxtj5k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 10:26:24 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C8B5240044;
+	Wed, 14 May 2025 10:25:13 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C3FDB3A736;
+	Wed, 14 May 2025 10:24:03 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 10:24:02 +0200
+Message-ID: <7f79af9a-2b42-48c0-98c5-6bf2afc61206@foss.st.com>
+Date: Wed, 14 May 2025 10:24:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset)[PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM,
+ IIO, counter, clocksource
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, <daniel.lezcano@linaro.org>,
+        <lee@kernel.org>, <tglx@linutronix.de>
+CC: <ukleinek@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jic23@kernel.org>, <robh@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>, <wbg@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
+References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
 
-Hello Hans,
+Hi Fabrice
 
-thank you for the comment.
-
-On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
-> Hi Mehdi,
+On 4/29/25 14:51, Fabrice Gasnier wrote:
+> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+> clocksource low-power timer (LPTIM) drivers.
+> This new variant is managed by using a new DT compatible string, hardware
+> configuration and version registers.
+> It comes with a slightly updated register set, some new features and new
+> interconnect signals inside the SoC.
+> Same feature list as on STM32MP1x is supported currently.
+> The device tree files add all instances in stm32mp251 dtsi file.
 > 
-> On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
-> > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
-> > platforms to retrieve a reference to the clock producer from firmware.
-> > 
-> > This helper behaves the same as clk_get_optional() except where there is
-> > no clock producer like in ACPI-based platforms.
-> > 
-> > For ACPI-based platforms the function will read the "clock-frequency"
-> > ACPI _DSD property and register a fixed frequency clock with the frequency
-> > indicated in the property.
-> > 
-> > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> 
-> This certainly looks quite useful, thank you for working
-> on this.
-> 
-> Note on some IPU3 platforms where the clk is provided by
-> a clk-generator which is part of a special sensor-PMIC
-> the situation is a bit more complicated.
-> 
-> Basically if there is both a clk provider and a clock-frequency
-> property then the clock-frequency value should be set as freq
-> to the clk-provider, see:
-> 
 
-is it even possible to get a reference to the clock producer in ACPI
-systems or am I missing something here ?
+Following patches are applied on stm32-next:
 
-Here is what I gathered online for the discussion leading to this patch:
-----------------------------------------------------------------------------------------------------------------------------------------------
-ClockInput resource added to ACPI v6.5: https://uefi.org/specs/ACPI/6.5/19_ASL_Reference.html#clockinput-clock-input-resource-descriptor-macro
-- commit adding ClockInput resource to acpica: https://github.com/acpica/acpica/commit/661feab5ee01a34af95a389a18c82e79f1aba05a
-- commit kernel upstream: 520d4a0ee5b6d9c7a1258ace6caa13a94ac35ef8 "ACPICA: add support
-  for ClockInput resource (v6.5)"
+[PATCH v6 5/7] arm64: defconfig: enable STM32 LP timer clockevent driver
+[PATCH v6 6/7] arm64: dts: st: add low-power timer nodes on stm32mp251
+[PATCH v6 7/7] arm64: dts: st: use lptimer3 as tick broadcast source on 
+stm32mp257f-ev1
 
-this does not mean we can use it: I found this out-of-tree patch to supports fixed clock sources
-https://github.com/niyas-sait/linux-acpi/blob/main/0001-acpi-add-clock-bindings-for-fixed-clock-resources.patch
-it was not sent to the acpi mailing list. It was mentioned in this
-dicussion: https://lore.kernel.org/linux-kernel/78763d69bae04204b2af37201b09f8b5@huawei.com/
 
-Another interesting link: https://linaro.atlassian.net/wiki/spaces/CLIENTPC/pages/28822175758/ACPI+Clock+Input+Resources
-----------------------------------------------------------------------------------------------------------------------------------------------
-
-link for the dicussion: https://lore.kernel.org/linux-media/20250220154909.152538-1-mehdi.djait@linux.intel.com/
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
-> 
-> for an example of a driver which handles this case.
-
-So if I understood the above correctly: in the ov8865 IPU3/ACPI case:
-
-1) sensor->extclk is NULL because the clock producer is not available in
-ACPI systems. ClockInput() ACPI resource was introduced to acpica after
-the ov8865 patch and the resource is not even being used in the upstream kernel.
-
-2) the sensor->extclk_rate will be set from reading
-the clock-frequency _DSD property in:
-
-	ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency", &rate);
-
-> 
-> IMHO it would be good if the generic helper would handle
-> this case too and if there is both a clk-provider and
-> a clock-frequency property then try to set the clock-frequency
-> value with clk_set_rate(), arguably you could just warn on
-> a failure to set the rate though, instead of the error
-> the ov8865 driver currently throws.
-> 
-> Sakari, Laurent any opinions on adding handling this case
-> to the generic helper ?
-> 
-> Regards,
-> 
-> Hans
-
---
-Kind Regards
-Mehdi Djait
+Thanks
+Alex
