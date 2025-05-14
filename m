@@ -1,133 +1,107 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E113D1C6FF9;
-	Wed, 14 May 2025 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A081A315C
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235965; cv=none; b=Qx3BFUgIVgkaZ5If0QV3XsoS/saEl4R+eqvJLuTJwtDA4FkRMssREWgwUz3INlDeqjW2mSIJtFW/YQF+W2NGFKCsEh5uEOKU5ZA6Ocl1jtAbVotth0W9enRy5xkgWHc5t3fB2P9Jo+yrm0umwXMjr/KjWEBRsmiOwUF1ZGFs2ZA=
+	t=1747236079; cv=none; b=I/cKB2MRpQVgtQfgrSyVo1vxvKN10XoN/roCLJrBS7tjvpdYJMdTDKGCn60PmiF7+2qUJmIic76jqpr1WZQw4YjW9HShxpWiwEtB6TRZ4uTdYTZZ2Yq1N2iIdBSD712nWz6AcUhDgf9a1/x7HhUloXdPpeTiazClP6dEDzbrBbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235965; c=relaxed/simple;
-	bh=fbDxkuzpwYjrGZLFi5VIbeGvuh+o5LtR/w6gApnTSJQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=PBbTx9Xys+AZ94m1F3tzBRKbIbtL7Ym3EcA5WHTc9GgRWCe4onHEXII/pIuvuwwezilFekuO5M6WdtIhTV9hfS72jrHG6RK4LYu4jZqLqJoliaxK7lpDewsYJXXdrVsIdKMCVm6AR1KMywBBFzdUUJa9gVcpQHaXEtsb9Rj7JOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=djZFgxiA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747236079; c=relaxed/simple;
+	bh=LJZDt5Jt2glmNZ/wOhrOamQWBH4PbWPLnCGN7Nze7uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pR5j0JQBilDekx4TChehHzt3OlAwx7n91Gb8aTidJSZkZVk2l+2Mq9E54jmqFkMa0tdXLgPW4ZiNagyl1gR0F1ZpP1xhm8aFoXQObBKlQTjwodiI59s+BnRt6zhncqASNJysJRHoQEM/DbD5Qa509asJPETMNgjIfpVJFNUnZZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DrfcIG0h; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="djZFgxiA"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54EFAEbT3012887
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 14 May 2025 08:10:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54EFAEbT3012887
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747235422;
-	bh=yapZ2s67BLNwus6ibHABzXGBCoZzVlVupFJe/q2qy/U=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=djZFgxiAUJE7iFHA0Wd/yFppU4TGqi4fxmoBT1mvTgxRmRiu+8QH1zl3CND+QbbP4
-	 97UVxN+J8QD8iz78UlxzP16emoOIxJpWaoO9qxu1Ec5we80T+FOOb4RfHy40YAODf4
-	 27XX25rvc06YcNMTsxppaOiXgVXhowu2DQa6R8gC1Tcuq8Oq9GVQp3swa9CciK5Vg/
-	 jv/tWyK4JR8CJyAVAYMpVNTUaE0Ax5AVAQfxExqancQ8ZpUjlh9FBEWFvjm5PCVbut
-	 6qwwqWO9GyDweGO8bFsU0TsmuX3ejxdQaqkTWk3Ymh6Yue7onjRsMrCGmrkfplN9Ef
-	 P/Ifsp+Ororjw==
-Date: Wed, 14 May 2025 08:10:12 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Arnd Bergmann <arnd@arndb.de>, Andrey Albershteyn <aalbersh@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.osdn.me>, Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        =?ISO-8859-1?Q?G=FCnther_Noack?= <gnoack@google.com>,
-        =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Amir Goldstein <amir73il@gmail.com>
-CC: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-m68k@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-api@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
-        selinux@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Andrey Albershteyn <aalbersh@kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_0/7=5D_fs=3A_introduce_fi?=
- =?US-ASCII?Q?le=5Fgetattr_and_file=5Fsetattr_syscalls?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org> <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
-Message-ID: <B17E8366-DB80-45E6-90D6-294824C40FD9@zytor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DrfcIG0h"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so5375355e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747236075; x=1747840875; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KSC7AS1sDT3kiP+IimhJbkxckYibl8Clt4YmfXjLex0=;
+        b=DrfcIG0hzTyrs6zcbm9K+lw72n/R20afOyB/L18a6OsH+GeNLpT4G1oOBoXrL3lcXW
+         muE/GtpXPvE6bvrOulPJCs/azgShKn5PtLeEs1LL4XpBAY3m1OPzACX4RzuxKNrYjGbW
+         HAknvgt4G2kLx5nkedYXvpD2Upx6qKK20ie/Uegv445ZRDJseUJ9adTL1Pf/XLzLluyW
+         +aZ4VSzFmrF66Xx3c28MUYf+YPMAoHrpxktCUVwNoIRxo38hSjL8eIq6OttbgEYOPqh7
+         6YptkuZAx490A5sTQYQjClF9nY6MF5GpC+CI5UUCA/IY05b4lPDlDfVDNtCAR+pW3XvS
+         tb6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747236075; x=1747840875;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KSC7AS1sDT3kiP+IimhJbkxckYibl8Clt4YmfXjLex0=;
+        b=h0hm1jSaCOMk2QVHT1RFyJATOaC8Zfx9ypfJsCz7MtSzHMSspEWmLeYWvyUOZJ7PfV
+         CGR22q+YByuci5bF1uuIxcFulTfldVD87+QTm8wrTKYtaU8uIw/hrotFRwLnwUzv3MSI
+         pOfxR6HW8dFHMA7342t+W46mTs4QlYLbWqETWcC7lAKgYGKyy+zisTAN/dkEgd5FHPKA
+         8w1ksqDNR4KPzZdQeaJPXoYaRmznuao/46Bf14q5okSLmmRkpYG4NHKoCmMTIFDj6Dfb
+         ck+4b37AU1KfIekeQ34FeJkei/x/sknsjFYIQpoDiF3mmdL9JKy3jmhWHSPaKWrEHvL7
+         1+EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+/tp8EQJW+T9Dyo2Z1h25tmQbslWGZG5SkIE+7qJU4+/8rnSU13TS2vs08peOpjsAb7XrVo1cW2hqKHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz94PQcyzFVGlS6TWxoF54dYnX+cR63Clrs7xCnqBj5hM+Kv/87
+	r8wrvnY7j1o+wp9hh6WBDfU9+TWG23Z9OzDsqDnTS00CQ2Nq+tQvZ9viznlPbeQ=
+X-Gm-Gg: ASbGnct9+ydyLar/V1JO6B/vQPyflLud7Eg/sU2zd2nUxy05TjX+AfrwLttMuXk+nNF
+	3BWn4CIPfa1rwxlx+zAMFfZhOR/V+h8k9m5+A/YoTFkht9r/L+xL/EiG+FwiGNwSKF4g82VnDxd
+	LUz0pcYQ6SyvrXSTueMroDKJ6/N7LKSkRZDf2fEqnj9+WUIQOMQh74yaC16ayQohDIXssFw43J0
+	JfimEjqVi9MsF7TiddunJZTSrWcwL3xkgvDfChy/EEYelgxMajmb5zpRKHQu21QOXUsvvPEp6wR
+	ZENYieqpDudjGIf+oOwUacLQlfBkCDfaBiRoFVcs69RSwhjTvlW7OgMpAawP1tZpdIbSuZerESo
+	bvvH+/kKFf27NBg==
+X-Google-Smtp-Source: AGHT+IGe1ne4Td1Ml7Z+Wncf1fBtA4hEtl4bvauo0/AxKZED1m8DaHt11KVpSSf0ZkBUNpGoY5FUfQ==
+X-Received: by 2002:a05:600c:c0c3:10b0:43b:4829:8067 with SMTP id 5b1f17b1804b1-442eac9f98cmr49562565e9.6.1747236074746;
+        Wed, 14 May 2025 08:21:14 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39ef81csm33273325e9.34.2025.05.14.08.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 08:21:12 -0700 (PDT)
+Date: Wed, 14 May 2025 17:21:10 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, tglx@linutronix.de,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, geert+renesas@glider.be,
+	magnus.damm@gmail.com, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	tim609@andestech.com, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v4 5/9] dt-bindings: timer: add Andes machine timer
+Message-ID: <aCS05j9ZYqga6dIO@mai.linaro.org>
+References: <20250514095350.3765716-1-ben717@andestech.com>
+ <20250514095350.3765716-6-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250514095350.3765716-6-ben717@andestech.com>
 
-On May 13, 2025 2:53:23 AM PDT, Arnd Bergmann <arnd@arndb=2Ede> wrote:
->On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
->
->>
->> 	long syscall(SYS_file_getattr, int dirfd, const char *pathname,
->> 		struct fsxattr *fsx, size_t size, unsigned int at_flags);
->> 	long syscall(SYS_file_setattr, int dirfd, const char *pathname,
->> 		struct fsxattr *fsx, size_t size, unsigned int at_flags);
->
->I don't think we can have both the "struct fsxattr" from the uapi
->headers, and a variable size as an additional argument=2E I would
->still prefer not having the extensible structure at all and just
->use fsxattr, but if you want to make it extensible in this way,
->it should use a different structure (name)=2E Otherwise adding
->fields after fsx_pad[] would break the ioctl interface=2E
->
->I also find the bit confusing where the argument contains both
->"ignored but assumed zero" flags, and "required to be zero"
->flags depending on whether it's in the fsx_pad[] field or
->after it=2E This would be fine if it was better documented=2E
->
->
->> 		fsx=2Efsx_xflags |=3D FS_XFLAG_NODUMP;
->> 		error =3D syscall(468, dfd, "=2E/foo", &fsx, 0);
->
->The example still uses the calling conventions from a previous
->version=2E
->
->       Arnd
+On Wed, May 14, 2025 at 05:53:46PM +0800, Ben Zong-You Xie wrote:
+> Add the DT binding documentation for Andes machine timer.
+> 
+> The RISC-V architecture defines a machine timer that provides a real-time
+> counter and generates timer interrupts. Andes machiner timer (PLMT0) is
+> the implementation of the machine timer, and it contains memory-mapped
+> registers (mtime and mtimecmp). This device supports up to 32 cores.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+> ---
 
-Well, ioctls carry the structure size in the ioctl number, so changing the=
- structure size would change the ioctl number with it=2E
+The patch does not apply on my tree due to conflict with other patches
+of the series on the MAINTAINER file.
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
