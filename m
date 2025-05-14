@@ -1,85 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F2813CA9C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D75227A442;
+	Wed, 14 May 2025 17:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747243286; cv=none; b=FLcirTqLdqNxFgpZODeLUz7Z7bjVQpdPqFHeBIP4WxQTHqOktcgzuBuzO5kwlpLB2LjK4gfptT+6JLu/LipUTZKAFJJWuPaw/OUT2O5kysdcULrIPR6dY8y3BYiz0RlTue498Sa0PJUycMVSK6zsKwvPxLd4AOcET6dZfzJX/bY=
+	t=1747243321; cv=none; b=FVqpSyMHf2nEcgI/Oj3d+rYVNj1xhdLveZyHMZ7NkIFVYhhAbn8EXVAqIDRA0L+9PDxl/nO/iDhKReICQYSfjL2VakVYb6DvoGIHM7CtwS2gPt6KA4Llvgk7y1c1aafe+d7iY14o7JuidmrPzEoOumOwUL7wXkmuvq5gEcB3c4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747243286; c=relaxed/simple;
-	bh=xGa9vmwXydEwlPLupPDKkTKtG05KmVxcjZ3uA4nOhuk=;
+	s=arc-20240116; t=1747243321; c=relaxed/simple;
+	bh=8Y9W9EkHp0OgfQElHMfELzV6tfQK0+t1W9DfZ3iYUMQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ha+iSH+FPVhoga/o4x1dRcEj1Ao36QMOLOBvJRI7AcPu3BiuQDMkSdIGFrO/Ip8fEsW5xNvLvqah4I5EUz4lvz6mckxCcdjfAqff2UZvoAE4t/x/9rWh8DA5YqBObMv3OUFf2fbS2i64atdmn0hL5CmZkzTLDXJIM/Sn35QcgD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K89yV6R0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNTqHr37YA+utaUbhfXxeiAtSa17f6+RHPAax4OUOgRFe5p3UMa8kbz5JVsGI3RQQdznBVzf1z5xErakQTqv7+L1biWKoB4A0Sh4Yk+f+RSzsOg9fx8T2Caok+XY3cQKI22QZwIfHjgA7tPedve11yiNKpm5593T1WuWsM271rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=B+60nnov; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K89yV6R0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747243283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XrntOKw058pFaozmugo5yCPQxOrKWoF9hOsnY8/r2Kg=;
-	b=K89yV6R0mC8ZhJ4x1hpqYxrxtaPzB4jcwFinXFMO5cdLpPW381UoDuU8bjvPJ26gWpOJcB
-	nwJ1viWXzNmrnGS5GpGcC5BNCsJl2sxwesq8HYYntg/wn7ty9U/TT3NiabRjl1LVhhgP2b
-	zk/U7v0qfSxU6tBH2g5U2saWTdFLEvw=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-617-RLIcapC9O1aIr3hpKHi2RA-1; Wed, 14 May 2025 13:21:22 -0400
-X-MC-Unique: RLIcapC9O1aIr3hpKHi2RA-1
-X-Mimecast-MFC-AGG-ID: RLIcapC9O1aIr3hpKHi2RA_1747243281
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c955be751aso1294607385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:21:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747243281; x=1747848081;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XrntOKw058pFaozmugo5yCPQxOrKWoF9hOsnY8/r2Kg=;
-        b=V1+wRcsrWII+UbKaH/sR29kiUuuHvLUT2RbyOjMqi75aHr2TzwMVh/AR53A8n8++yx
-         YbGUE6IEd2+C/s6lY7zLcDIXYCBea5PQ9pg3b9yIbGJZAzOft7tiYblfGQuBArSbZkta
-         JjiHSndJkTEi4Gcrz0oNCU4qZ6HjD6/BV0k4XPQOzt+vuOVgcxZYluJi4g0KJkItVxVt
-         XKa2OtHxJnDddKgljqf9cF41Ax5XxjVxiHyiEtUFtL8vx8/6rk6Wv21d6XWbEoLZ3IH7
-         x5WgNDfk7fauFGWy34AEzj8yooTs9azZK5W141vDOLL69Gqu1i0Y0KBHJ0ZNzCPcZs4p
-         xmhg==
-X-Forwarded-Encrypted: i=1; AJvYcCULRLG1ujsZm/DkCOW5mEJKL4t/rG2flikwDBcfaVjl+o9u+M8KQgawzbLrfQjBTSwqCSrITBaQvZKJwio=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy77gGMiXTJudCUc7uV24Konb8p98fQARdZFOa4Ygr3klV6YU0M
-	enhCEWN1y5TLE31zbDtgxtx5NLk3zAzfqhipqhhHUyl2UuJzzhEJLDHfoOXQMputt3djp7LrbUw
-	pBMmR9x27rQgMgZy9rrTmg7sZqv7Aq4jkK+yzz2Qp/e8Dr5UIsTcL2oKhrDNBzw==
-X-Gm-Gg: ASbGnctf1HrnvPCF6+Uivg9ZmyQA6R/xSKfljalky3t0ajI+SIkD6XqxPuN1se0gt/K
-	A1zoDxdfbEg11j7SPs7Sv+ARL1wGAsflsg6cicKgwiynMtZGu0Axnu8bDjGrMUDqusCqn9+Gbd9
-	w8N0tDA7zCnWDpO76d+uVQk3Q6q+nFCwg973WGTU5r/p/Dr0wjvGWoDNzU1Co1tlywv/UrrshNH
-	fcvgd7MmoNrDfh9tz1/IBrgACrx7HOdC6b7JG9OQpcyevmbZncGlNKS7kgQ2r6Ve77QD4/1hlMD
-	Q10=
-X-Received: by 2002:a05:620a:3902:b0:7c5:94e0:cafb with SMTP id af79cd13be357-7cd2885ce98mr656490285a.48.1747243281673;
-        Wed, 14 May 2025 10:21:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlRhej31PFKXT+uomnSZgUi1MBJW96d3uyGJIRGzzt4n9pb6pmzr2pMVVfkmYyry22hZPjdQ==
-X-Received: by 2002:a05:620a:3902:b0:7c5:94e0:cafb with SMTP id af79cd13be357-7cd2885ce98mr656487685a.48.1747243281342;
-        Wed, 14 May 2025 10:21:21 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00fe77c6sm874667585a.108.2025.05.14.10.21.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 10:21:20 -0700 (PDT)
-Date: Wed, 14 May 2025 13:21:17 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Kyle Huey <me@kylehuey.com>, linux-mm@kvack.org,
-	Robert O'Callahan <robert@ocallahan.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH 1/2] UFFDIO_API.2const: Update userfaultfd handshake and
- feature probe
-Message-ID: <aCTRDSCSiRrswEXP@x1.local>
-References: <20250512171922.356408-1-peterx@redhat.com>
- <20250512171922.356408-2-peterx@redhat.com>
- <6eobuzkwm6xhpis4s52dtit55fws37elv5d7zygaf64czcjag6@brz2nrc6qptu>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="B+60nnov"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3DA0F40E0239;
+	Wed, 14 May 2025 17:21:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jZNuwh63kGqM; Wed, 14 May 2025 17:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747243306; bh=wYhpoOFARMdfnUYYy0x+ezUoiYCtxlRLDwSjosU3JwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+60nnovfgJQkcpIoxYA2aBG6C4C/NzhlKUq/kc56fNhonAnqpuOiPP1g2aikOoVV
+	 jqJUX8UZJ2sCTnidzJNprvwbUgRHA0HnnQStfAe5JRgWYOZ19DWMj4DKaO6Bt6Njbv
+	 ECoxQ+NckU3vpKUtAtk1qjOXsT4L3EuBoWbaHEMQJLLIZiTidRS/aC8Yz9c31n/vMI
+	 ToUK4fZ29HIyYBy6wpcELPf8iUa7ltOYbEgO9NERvSXjQb0j3J8PNetVACQJFhY5Gh
+	 fh/csdjJ2+yZ60G/tzxrahCddG5EWYUYbarRmm8AeS0qtfw0SpCAdhzkXfph/72Lpi
+	 woJ90JgVOdDywXJom5+kNkSKZG6n+BXW9TQ1UNPSKx/hAJHadwZXGP5sea3hiEs0Bj
+	 Hj+Vpwe46EfrE8jlAnLd75K5fiSgdisMVAP8DgJ94wT7EpJJvHC2I9RPXBHETM0BKD
+	 KgoxJSj1OWurhdjorXq9Mvu0rE8I55qRBXUKe0PKaBQzCc7Fp9hwrc0Vv+Hq1iP/2B
+	 OBSXG3GLaGkDeoixerScmNhofIGdLWbraIjHkkl/mneC7aHVRYbNS8iFheh4QQckdv
+	 bixLH9qOCCpKfLpikgaY1YjwHcowswJWppqy5Fjuztqhem9seM6Gh3w6SQ6hr8hN8H
+	 76xDZBSd5o3wFdnCmhcD5N1Y=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C613940E0163;
+	Wed, 14 May 2025 17:21:36 +0000 (UTC)
+Date: Wed, 14 May 2025 19:21:30 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+Message-ID: <20250514172130.GAaCTRGoRL3nYieIE7@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,44 +64,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6eobuzkwm6xhpis4s52dtit55fws37elv5d7zygaf64czcjag6@brz2nrc6qptu>
+In-Reply-To: <20250512190834.332684-23-ardb+git@google.com>
 
-On Wed, May 14, 2025 at 05:59:48PM +0200, Alejandro Colomar wrote:
-> > +.P
-> > +For historical reasons,
-> > +a temporary userfaultfd is needed to probe
-> > +what userfaultfd features the kernel supports.
-> > +The application needs to create a temporary userfaultfd,
-> > +issue an
-> > +.B UFFDIO_API
-> > +ioctl with
-> > +.I features
-> > +set to 0. After the
-> 
-> Please use semantic newlines.  Break the line after the '.'.
+On Mon, May 12, 2025 at 09:08:35PM +0200, Ard Biesheuvel wrote:
+> This is somewhat intrusive, as there are many data objects that are
+> referenced both by startup code and by ordinary code, and an alias needs
+> to be emitted for each of those. If startup code references anything
+> that has not been made available to it explicitly, a build time link
+> error will occur.
 
-This one was overlooked indeed, will fix it.
+Makes me wonder: what will be our rule for what should be made available to
+startup code, what should be moved to startup code etc....
 
-> 
-> $ MANWIDTH=72 man man-pages | sed -n '/Use semantic newlines/,/^$/p'
->    Use semantic newlines
->        In the source of a manual page, new sentences should be  started
->        on  new  lines,  long  sentences  should  be split into lines at
->        clause breaks (commas, semicolons, colons, and so on), and  long
->        clauses  should be split at phrase boundaries.  This convention,
->        sometimes known as "semantic newlines", makes it easier  to  see
->        the effect of patches, which often operate at the level of indi‐
->        vidual sentences, clauses, or phrases.
-> 
-> Also, please say "zero" instead of "0", as was in the old paragraph.
-> That will allow git-diff(1) --color-moved to detect some movement of
-> text.
+I guess as less as possible but past experience teaches us differently.
+I guess applying the usual skeptical approach should be sane enough...
 
-This was not part of the old text, but sure, will do.
+We'll see.
 
-Thanks,
+Thx.
 
 -- 
-Peter Xu
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
