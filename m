@@ -1,126 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40631DED6F;
-	Wed, 14 May 2025 15:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365DF86342;
+	Wed, 14 May 2025 15:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747236699; cv=none; b=pXEc8bjWigzJH0eal7pIhIJb5PZD3iwrE4MxIXyuSzLnaAI7uhMTaY97Ntoidd9EzzEVAm1zgdyFNbSd7zHKyQzAQrBZ2TMRmHAB9yDw0JDGNPovcQLugDQtXNQVwYlx2W5QcmB54kfQnjgWoiYSf6AzYLrCsPVFi3BHFgh0Gc0=
+	t=1747236724; cv=none; b=T24kc+FvUeB73SHpqKaarl4zJGdajZ4lhNgAH546aX34nETZrzUwNQzjtGgrU3ldm24gYfWig8g48cxxRHnTd/7dogxgEvBayMIsY23cxdm+lF3TIzvTr0H2WvhANDSuP5A8Ur0dLdUz1HCS1SlpzODTZQUjSrqonIPGYPE1MUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747236699; c=relaxed/simple;
-	bh=xqJWKUGqmyqxS6gBUEsrfrsWb3T0VTFFocyiRBfIyWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nDB3fWbMAOmsbeeqwhNI9mN9Xid6Jf+bqVnjIDKLe1WLEtAAqpa9G+q+bWm7T9QWFq5sD7qNE9IyvMtQFTyafaLmXfxfGU13q0yQCh5RWCtHm9311ibwyvuE+3MCWazGxxLAI83sh+dH6p7EnQiS8SUoepYzCsE/VpMFxKJ4NOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8782150C;
-	Wed, 14 May 2025 08:31:24 -0700 (PDT)
-Received: from [10.57.91.10] (unknown [10.57.91.10])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A34F3F5A1;
-	Wed, 14 May 2025 08:31:33 -0700 (PDT)
-Message-ID: <933f4191-4075-4b02-998a-35b1711e778c@arm.com>
-Date: Wed, 14 May 2025 16:31:31 +0100
+	s=arc-20240116; t=1747236724; c=relaxed/simple;
+	bh=ihibllTK5dNCmqfG3tHi2CbY4kCGDEdbxwlZxVd311c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dXh3pur5gH+Ezc+/opSvBUkWu0+pAU4Ql2jFUfbEhy5D1t0PkIIsUkQeYkRInNv9BhOcIz2zFULhjtxnoG9oJd1A6HwXXDHQZdqoyJmlHRJAWFwT7IPpF1FjhBd0+Adsrwr9ylPQ9PugC6vhY+BC4n523ex4nEkqUUStRiEI+YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/1r6hnr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/1r6hnr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53615C4CEE9;
+	Wed, 14 May 2025 15:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747236723;
+	bh=ihibllTK5dNCmqfG3tHi2CbY4kCGDEdbxwlZxVd311c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o/1r6hnroO6sRKCZTeKK8nUJy754L3JPrwucXbKnenZfru2xcZH1pqwakgbHl8/Sm
+	 5sQAjzAo7kx5rfsxAoz5fcw898u6+28lZWXAWcT1l7aLHn8FjJMiJet8SToU9Inpej
+	 d8uLMrr04xssUkZ6R/NTOdnjz24rY0/OkSeZI3dbj0W0MqzG7MuOlI8BepyGkrzmpU
+	 Gcual0K5jAZDmJ4fm6Arh8lLbiaYZMR7vYIzcv21t5Uv2phIdzzvkVn/Tm5UrATj1h
+	 eJcsVjRpvh31+H/sECUOQQ65HROx5p8s2XnI40t+FF7rpzK/a1+jSwsXCY70pSSiJS
+	 kk0QxhBzLEJ9w==
+Date: Wed, 14 May 2025 17:31:57 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Jan Dabros <jsd@semihalf.com>, Sanket Goswami <Sanket.Goswami@amd.com>, 
+	Wolfram Sang <wsa@kernel.org>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Nehal Bakulchandra Shah <Nehal-Bakulchandra.shah@amd.com>, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: designware: Fix an error handling path in
+ i2c_dw_pci_probe()
+Message-ID: <757u65xqcuadsr5uteb5x6vnnps4wq3tqrheexxekuf2mxnbj2@wdjzz7wkjdkb>
+References: <fcd9651835a32979df8802b2db9504c523a8ebbb.1747158983.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 5/5] mm/filemap: Allow arch to request folio size
- for exec memory
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-6-ryan.roberts@arm.com>
- <20250509135223.GB5707@willie-the-truck>
- <c52861ac-9622-4d4f-899e-3a759f04af12@arm.com>
- <20250514151400.GB10762@willie-the-truck>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250514151400.GB10762@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcd9651835a32979df8802b2db9504c523a8ebbb.1747158983.git.christophe.jaillet@wanadoo.fr>
 
-On 14/05/2025 16:14, Will Deacon wrote:
-> On Tue, May 13, 2025 at 01:46:06PM +0100, Ryan Roberts wrote:
->> On 09/05/2025 14:52, Will Deacon wrote:
->>> On Wed, Apr 30, 2025 at 03:59:18PM +0100, Ryan Roberts wrote:
->>>> diff --git a/mm/filemap.c b/mm/filemap.c
->>>> index e61f374068d4..37fe4a55c00d 100644
->>>> --- a/mm/filemap.c
->>>> +++ b/mm/filemap.c
->>>> @@ -3252,14 +3252,40 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->>>>  	if (mmap_miss > MMAP_LOTSAMISS)
->>>>  		return fpin;
->>>>  
->>>> -	/*
->>>> -	 * mmap read-around
->>>> -	 */
->>>>  	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->>>> -	ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
->>>> -	ra->size = ra->ra_pages;
->>>> -	ra->async_size = ra->ra_pages / 4;
->>>> -	ra->order = 0;
->>>> +	if (vm_flags & VM_EXEC) {
->>>> +		/*
->>>> +		 * Allow arch to request a preferred minimum folio order for
->>>> +		 * executable memory. This can often be beneficial to
->>>> +		 * performance if (e.g.) arm64 can contpte-map the folio.
->>>> +		 * Executable memory rarely benefits from readahead, due to its
->>>> +		 * random access nature, so set async_size to 0.
->>>
->>> In light of this observation (about randomness of instruction fetch), do
->>> you think it's worth ignoring VM_RAND_READ for VM_EXEC?
->>
->> Hmm, yeah that makes sense. Something like:
->>
->> ---8<---
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index 7b90cbeb4a1a..6c8bf5116c54 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -3233,7 +3233,8 @@ static struct file *do_sync_mmap_readahead(struct vm_fault
->> *vmf)
->>         if (!ra->ra_pages)
->>                 return fpin;
->>
->> -       if (vm_flags & VM_SEQ_READ) {
->> +       /* VM_EXEC case below is already intended for random access */
->> +       if ((vm_flags & (VM_SEQ_READ | VM_EXEC)) == VM_SEQ_READ) {
->>                 fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->>                 page_cache_sync_ra(&ractl, ra->ra_pages);
->>                 return fpin;
->> ---8<---
+Hi Christophe,
+
+On Tue, May 13, 2025 at 07:56:41PM +0200, Christophe JAILLET wrote:
+> If navi_amd_register_client() fails, the previous i2c_dw_probe() call
+> should be undone by a corresponding i2c_del_adapter() call, as already done
+> in the remove function.
 > 
-> I was thinking about the:
-> 
-> 	if (vm_flags & VM_RAND_READ)
-> 		return fpin;
+> Fixes: 17631e8ca2d3 ("i2c: designware: Add driver support for AMD NAVI GPU")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Yes sorry, I lost my mind when doing that patch... I intended to do it for the
-VM_RAND_READ as you suggested, but my fingers did something completely different.
-
-> 
-> code above this which bails if VM_RAND_READ is set. That seems contrary
-> to the code you're adding which says that, even for random access
-> patterns where readahead doesn't help, it's still worth sizing the folio
-> appropriately for contpte mappings.
-
-Anyway, I totally agree with this. So I'll avoid the early return VM_RAND_READ
-if VM_EXEC is also set.
+merged to i2c/i2c-host-fixes.
 
 Thanks,
-Ryan
-
-> 
-> Will
-
+Andi
