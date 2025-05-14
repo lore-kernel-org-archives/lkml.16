@@ -1,265 +1,112 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2924C6D
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8D44C6D
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211447; cv=none; b=S1kkuLJdFHVXIKBw/hL98zal/l/uYKgug87Gb4zLhx/QBC7Grum7cL9QM/gOImew4fUzo3h4Yj6ag1k0ZSsJUPUPoyfGnG8122bc6wzSOVmfKjVkKDObm+JIySjvBRk618VJoV62ciGbXEbOHJAG+A044uYQByadQTKIiT2aRZ8=
+	t=1747211466; cv=none; b=p7WeKP2rCEn2bqQKCawmNcvrOv+/hSZQ3cNVWuN5URyiG+3ZGVxhCah1BI7GVqsgV2jtVdc41HtozBQtEWahZlEzBaZmTAOEKPG7rYodTvsmhRBJTFwZ+zNmW7RQ4ksXxbO//Xvvm0FVW2qMAX1/+yolujnvoFVJnikj8MGp4zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211447; c=relaxed/simple;
-	bh=tSU4yVBDCFssREzNh/Qic5N2LgH6hPowAt66gJr+47I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uog8aNmB/0nWtIw0LBD0XcZTuB7LaTIVam86SHsp/0KJMu7LI7tRTDgu0UlhMGveY+Lb0NHvrWjjutep94lpKJpOft9Vl4LmVjVTYMjWHMr1A2XkI8SSZPN0ME9HI13T3niGa7si4+NHXnFGfDpy19tMlEqieEJpPIHJFNEvb44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HQ8aBzkJ; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747211466; c=relaxed/simple;
+	bh=CbNDFQDhb/wBOoxx+pn0/q2yIrFVDiKuHeorTjh9e8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmkSlt8dfR0aHe3gIsxEs4tv87nm6bgSoVn60nWAZfV74scrPrI8KOaQQGzh3+VKguP7K8hvefCItxrN2XkIxx7tHHdq6SkvDAPzeuFQU7KfT46oJPUz2pWmhu7YAzvTOKFzc78/DmqfojdIUV/7vT864Vr/qPUfSMNPIVs8rxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSrohg1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HQ8aBzkJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=J4EJOcH+vlC4UCADKWOXQAd1u2Z9w7HxAlnVkfrIfXo=; b=HQ8aBzkJzh+L0MyBPN/SSET9z9
-	IboaoWX+7S8scFijWy5q7ZVeVhYKv7r9JrWalVwZEUrzA/OVOYBLxMGoHvxvbX5uEhPO1LEXN5+v/
-	Jde6FY5H2uDz8RDNIXxn6jeRy1kd6ojI+9BojZFS3KNX6g9gb5OSwhOLoearuySbyB3X50aOcwZWs
-	vZiIZCJ3YSHgodd8thHjzDGoy4jaV1XaZ0GDGvHQke6KeDNX7t5fEmQxv25DsNze/0GMeUkAyKFUI
-	ZPfnXypK3HQtCui3M95dEAmFuDDD+hUHVKiZMmpfxhi494K0Ak8cpSIAiIsb5sBgbUl8i6F/e8ESj
-	Weo5B72w==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uF7Pv-0083Ee-FV; Wed, 14 May 2025 10:30:26 +0200
-Message-ID: <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
-Date: Wed, 14 May 2025 09:30:25 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSrohg1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 773A9C4CEE9;
+	Wed, 14 May 2025 08:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747211466;
+	bh=CbNDFQDhb/wBOoxx+pn0/q2yIrFVDiKuHeorTjh9e8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DSrohg1MeNDtpjnWCpMpKS42idOWS7vkUM+NBZKIK36ycIILMxEsmDlxLEKFU7DT5
+	 rwR36Kxwl44yoFWvF3uYu320mtpaRJsBnHPkjH0zlsY2+fST4lg5MKTAtqiEkHAc+J
+	 1tXXhIVoCzGFY1fvAJ5D66vEZzg7bhObDIGONkTOqEEcf4Vm1BbdFu0H+Dnrt9JEa2
+	 gt7giyu3FfbeuPYDcEAFD4MC4j6DXcipxuN5Z/Zwtqamf0YEdJB0TuQLC+bVE+IH6y
+	 kWsYSmt3wn/Z24n9s5kksOuMqEFmBOAig7FCrGSLp4b8ig3t0RJx0ov3jFeLp41oh8
+	 leMosIS+PWLKA==
+Date: Wed, 14 May 2025 10:31:01 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 2/6] x86/cpu: Use a new feature flag for 5 level
+ paging
+Message-ID: <aCRUxffQmM9dbGe6@gmail.com>
+References: <20250513111157.717727-8-ardb+git@google.com>
+ <20250513111157.717727-10-ardb+git@google.com>
+ <7uh3pi23cdd5r2t6ln5p2z2htgmzo5b6omlhb6vyddobcbqqnt@nyujbhsnpioh>
+ <aCROdV_fIygO8OoM@gmail.com>
+ <CAMj1kXGChWHhbfjUgTQ37+epLjivrKhV8unwyZCHvNTJL2f57w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
-To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250424095535.26119-2-phasta@kernel.org>
- <20250424095535.26119-8-phasta@kernel.org>
- <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
- <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
- <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGChWHhbfjUgTQ37+epLjivrKhV8unwyZCHvNTJL2f57w@mail.gmail.com>
 
 
-On 12/05/2025 09:00, Philipp Stanner wrote:
-> On Thu, 2025-05-08 at 13:51 +0100, Tvrtko Ursulin wrote:
->>
->> Hi Philipp,
->>
->> On 08/05/2025 12:03, Philipp Stanner wrote:
->>> On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
->>>> The unit tests so far took care manually of avoiding memory leaks
->>>> that
->>>> might have occurred when calling drm_sched_fini().
->>>>
->>>> The scheduler now takes care by itself of avoiding memory leaks
->>>> if
->>>> the
->>>> driver provides the callback
->>>> drm_sched_backend_ops.kill_fence_context().
->>>>
->>>> Implement that callback for the unit tests. Remove the manual
->>>> cleanup
->>>> code.
->>>
->>> @Tvrtko: On a scale from 1-10, how much do you love this patch? :)
->>
->> Specific patch aside, it is the series as a whole I would like to be
->> sure there isn't a more elegant way to achieve the same end result.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
+
+> On Wed, 14 May 2025 at 09:04, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> >
+> > > On Tue, May 13, 2025 at 01:12:00PM +0200, Ard Biesheuvel wrote:
+> > > > From: Ard Biesheuvel <ardb@kernel.org>
+> > > >
+> > > > Currently, the LA57 CPU feature flag is taken to mean two different
+> > > > things at once:
+> > > > - whether the CPU implements the LA57 extension, and is therefore
+> > > >   capable of supporting 5 level paging;
+> > > > - whether 5 level paging is currently in use.
+> > > >
+> > > > This means the LA57 capability of the hardware is hidden when a LA57
+> > > > capable CPU is forced to run with 4 levels of paging. It also means the
+> > > > the ordinary CPU capability detection code will happily set the LA57
+> > > > capability and it needs to be cleared explicitly afterwards to avoid
+> > > > inconsistencies.
+> > > >
+> > > > Separate the two so that the CPU hardware capability can be identified
+> > > > unambigously in all cases.
+> > >
+> > > Unfortunately, there's already userspace that use la57 flag in
+> > > /proc/cpuinfo as indication that 5-level paging is active. :/
+> > >
+> > > See va_high_addr_switch.sh in kernel selftests for instance.
+> >
+> > Kernel selftests do not really count if that's the only userspace that
+> > does this - but they indeed increase the likelihood that some external
+> > userspace uses /proc/cpuinfo in that fashion. Does such external
+> > user-space code exist?
+> >
 > 
-> I count this as a 9/10 \o/
+> Bah, that seems likely if this is the only way user space is able to 
+> infer that the kernel is using 5-level paging.
 
-:) Yes, sorry, it would a bit lower than that, at least until someone 
-can point out a fatal flaw in my alternative. :)
+The price of past mistakes. :-/
 
-> But jokes aside:
-> 
->>
->> Like that sketch of a counter proposal I sent for the reasons listed
->> with it. Which were, AFAIR, to avoid needing to add more state
->> machine,
-> 
-> Well the state machine added is basically just the waitqueue. The
-> WRITE_ONCE booleans are currently just for correctness and clarity.
-> I've looked at them and want to remove them all in an other patch,
-> because I think they're not needed (workqueue handles that)
-> 
-> But yes, the added state is > 0
-> 
->> to avoid mandating drivers have to keep an internal list,
-> 
-> That's not mandated by the scheduler, but by logic itself. All drivers
-> need to have a list of on-flight fences. Otherwise the drivers would
-> have no chance of signaling those fences once their GPU tells them to
-> do so.
+So, the pragmatic, forward compatible solution would be to:
 
-Probably it would be hard to signal without tracking of some sort yes, 
-although it wouldn't have to be indexed by fence context, or looked up 
-by it so maybe still simpler.
+ - Keep the 'la57' user-visible flag in /proc/cpuinfo, but map it to 
+   the X86_FEATURE_5LEVEL_PAGING flag internally.
 
-More importantly I think with this comment I was thinking about the fact 
-that with ops->cancel_job() approach I was able to remove the _done_ 
-list tracking from the mock scheduler.
+ - Rename X86_FEATURE_LA57 to X86_FEATURE_LA57_HW, and expose it 
+   as la57_hw.
 
-> I have now provided two users of the new API, nouveau and the unit
-> tests. Can you think of a party for which the suggested approach
-> wouldn't work?
+This way, any LA57-supporting CPUs would always have la57_cpu set, 
+while 'la57' is only set when it's enabled in the kernel.
 
-I did not think along those lines yet so don't know. I just thought it 
-was too much code to implement a relatively simple thing and that also a 
-few things in the design bothered me.
+An additional minor bonus would be that by renaming it to 
+X86_FEATURE_LA57_HW, the change in behavior also becomes a bit more 
+obvious at first glance to kernel developers.
 
-If you look at the diffstat from my proposal and ignore kerneldoc and 
-unit test stats, it literally adds 8 lines to drm_sched_fini() and a 
-single line to gpu_scheduler.h:
+Thanks,
 
-+       void (*cancel_job)(struct drm_sched_job *sched_job);
-
-And in the former after it stops the workers:
-
-+       if (sched->ops->cancel_job) {
-+               struct drm_sched_job *job;
-+
-+               list_for_each_entry_reverse(job, &sched->pending_list, 
-list) {
-+                       sched->ops->cancel_job(job);
-+                       sched->ops->free_job(job);
-+               }
-+       }
-
-To me this looks quite clean. Unless, I say this again, I am missing 
-some fatal flaw why it doesn't work.
-
-> Don't get me wrong, your approach does work and it definitely has its
-> charm. However, I think what I propose here is syntactically a bit
-> cleaner because the classical order of a fence first being signaled in
-> the driver and then the associated job being freed as usual by the
-> scheduler is guaranteed. IOW, we primarily rely on the signaling path.
-> 
-> Either way, neither your nor my approach would have worked out of the
-> box in Nouveau without that driver exploding.
-
-What do you mean by this - the latest version of your series does or 
-does not work for nouveau?
-
-Regards,
-
-Tvrtko
-
-> 
->>   and to align
->> better with the existing prototypes in the sched ops table (where
->> everything operates on jobs).
-> 
-> That's not a hard criteria IMO. Those are sched_backend_ops, not
-> sched_job_backend_ops, and prepare_job() already takes a parameter
-> other than a job.
-> 
-> 
-> Cheers,
-> P.
-> 
->>
->> Regards,
->>
->> Tvrtko
->>
->>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
->>>> ---
->>>>    .../gpu/drm/scheduler/tests/mock_scheduler.c  | 34
->>>> ++++++++++++-----
->>>> --
->>>>    1 file changed, 21 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>> index f999c8859cf7..a72d26ca8262 100644
->>>> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
->>>> @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
->>>> drm_sched_job *sched_job)
->>>>    	/* Mock job itself is freed by the kunit framework. */
->>>>    }
->>>>    
->>>> +static void mock_sched_fence_context_kill(struct
->>>> drm_gpu_scheduler
->>>> *gpu_sched)
->>>> +{
->>>> +	struct drm_mock_scheduler *sched =
->>>> drm_sched_to_mock_sched(gpu_sched);
->>>> +	struct drm_mock_sched_job *job;
->>>> +	unsigned long flags;
->>>> +
->>>> +	spin_lock_irqsave(&sched->lock, flags);
->>>> +	list_for_each_entry(job, &sched->job_list, link) {
->>>> +		spin_lock(&job->lock);
->>>> +		if (!dma_fence_is_signaled_locked(&job-
->>>>> hw_fence)) {
->>>> +			dma_fence_set_error(&job->hw_fence, -
->>>> ECANCELED);
->>>> +			dma_fence_signal_locked(&job->hw_fence);
->>>> +		}
->>>> +		complete(&job->done);
->>>> +		spin_unlock(&job->lock);
->>>> +	}
->>>> +	spin_unlock_irqrestore(&sched->lock, flags);
->>>> +}
->>>> +
->>>>    static const struct drm_sched_backend_ops
->>>> drm_mock_scheduler_ops = {
->>>>    	.run_job = mock_sched_run_job,
->>>>    	.timedout_job = mock_sched_timedout_job,
->>>> -	.free_job = mock_sched_free_job
->>>> +	.free_job = mock_sched_free_job,
->>>> +	.kill_fence_context = mock_sched_fence_context_kill,
->>>>    };
->>>>    
->>>>    /**
->>>> @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
->>>> drm_mock_scheduler *sched)
->>>>    		drm_mock_sched_job_complete(job);
->>>>    	spin_unlock_irqrestore(&sched->lock, flags);
->>>>    
->>>> -	/*
->>>> -	 * Free completed jobs and jobs not yet processed by the
->>>> DRM
->>>> scheduler
->>>> -	 * free worker.
->>>> -	 */
->>>> -	spin_lock_irqsave(&sched->lock, flags);
->>>> -	list_for_each_entry_safe(job, next, &sched->done_list,
->>>> link)
->>>> -		list_move_tail(&job->link, &list);
->>>> -	spin_unlock_irqrestore(&sched->lock, flags);
->>>> -
->>>> -	list_for_each_entry_safe(job, next, &list, link)
->>>> -		mock_sched_free_job(&job->base);
->>>> -
->>>>    	drm_sched_fini(&sched->base);
->>>>    }
->>>>    
->>>
->>
-> 
-
+	Ingo
