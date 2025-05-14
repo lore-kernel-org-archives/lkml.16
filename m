@@ -1,193 +1,142 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20902283FD5;
-	Wed, 14 May 2025 17:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E62921348
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245525; cv=none; b=JBCCXTFOtxITTEF9U5jn9HaTqjMHrD2lFWYWIAQuVkqUxa9ZZSaOe5VSIGD7amQT34MtVkr128Dxxw3glT5DY3WbXzCslWAblZmjJEDgIoZ87OzuBm5fupG80fnNKZI1gWEgcxuusC6I9wfwUuX/fjhcFBnvvzpXsWrTcDaSmRE=
+	t=1747245735; cv=none; b=VTWXIxDbndfM1NCQU9Hzlj39ni/38zwj3Kyoo7sLZkS88jIW2NKPK5IiTbrMAe+mzRUML/DwaY1Gxij/wnCeeMQMCB6bbyRJ4UlO06dddMOTxj54jArAcpsH5RUl5jldGu6Z4KhVeEP6LxHoBWzYtRCyHojnagkXoDMZXLxnIsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245525; c=relaxed/simple;
-	bh=LGi6DWjEpC9cOxvWmzOAj8f4i4+0/VuUdibXMe2cma4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSoMMBqgQSTez9FPxm+uE1h/PUFvs7BtXV8Qj/B5PBHrkimpDp2ng58ayQOX9ays2WgvW3OOVR23Zpo4eRda2hkgKZw7D4PhRRi9ptzl5jT8gxpH1XNeHgnZ9+9jsGRL3E+iWWi93ctFnaC7RTmHJDG5LnyoVeeBrSo3k/s4YdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DW4PWdYm; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747245735; c=relaxed/simple;
+	bh=0Nrfm3Nf9Zx8RUs1cbKjPiuKqqo5HNgrXRNIgxSHjUg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A9gq+3XGTeyhzGJYwFkWNwR7ZW7MNMKWiK/cVpDqS8+R4rPpnJxOFphfoh6arS/9XmpBv7bLJNGAQOgkLXhrowxIUubbwmHRpI9NlwMcC4GIzq+gU4Jz4JVcY7N5NBAtCmE0kxSwE0XBBS1sFz5sqe+pIkdTVEQAc8sye7mY8dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F3XpEkHg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DW4PWdYm"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e4d235811so1276225ad.2;
-        Wed, 14 May 2025 10:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747245523; x=1747850323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rz8UEmK4WSUnkB745SlVfM9IGUxFwWLlI6m1UkBfmaA=;
-        b=DW4PWdYmlHpPs/B0Cv+jfRpoaSg8//69Ih4AwmQ8RzpbVi0S1GCituKn4FVM5V4xBa
-         2DWNNHqW6S0A60FKsbOXwyJ1kw3Ty4K19+aN8REgFR4gG1lNLySgBavGc029kc8chcvw
-         X+fkJvS09zeeMjsvdo7pspZ/BvBR9JyDLecBUVV+OS6OYgVYIEEkhfR9OcXcDny91ePj
-         d3MpcAoK17typ8rfrVNCyCrtIcgOxX2luobzzbGcjDI1jnlJIOmb1Unvys9m4GXll0VU
-         W+YatpJopYJicpsmghTnX+lmJ/aQXk1pqwVslu+jTJDGfsH/3BOb701LOQbcyy76WMAX
-         WNvA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F3XpEkHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747245732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=829jWq9v+mfMDPX2geL7wicz1x81Omla9QORxkV/k20=;
+	b=F3XpEkHgqhKduXCu7aXa8Gf7iwMc3cytpHMRcirIRFW8brKmtDbGuc2YcEQ9ZyYTMAoSq8
+	/LBhc+6tVeyu/E7whe/whbaZX0qfiQqHEA5JYjGjmwgXQjzYwfHTZYYrGFOeOonVJShbRu
+	Wkj+8tox1IXqgiY3ooua6CzZATVjQZ0=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125-7eAi1eN5MICRqXyuSMu4Dg-1; Wed, 14 May 2025 14:02:11 -0400
+X-MC-Unique: 7eAi1eN5MICRqXyuSMu4Dg-1
+X-Mimecast-MFC-AGG-ID: 7eAi1eN5MICRqXyuSMu4Dg_1747245731
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f5486b2f00so2220436d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 11:02:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245523; x=1747850323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rz8UEmK4WSUnkB745SlVfM9IGUxFwWLlI6m1UkBfmaA=;
-        b=TkifhBZ7WB9If+deKjx7qkwpK/pCjMwWx13RR6NyA0elvJH0rB94wAkDxghIoOfWXZ
-         mTQT1hX6u8QcCKrDd799Po7goNKmrWYwSoPiAd3a1IJG5c7up+f8PEpOEa/IPRgnpAtu
-         V6obvnOCC7kE3YFNhmAeUXCLmveAIJCGWERSnsNNbfv9nb5k1mFlMzfKKyw4Uq8lKUra
-         FS94ftNmW0Q8p5F1KbPJUsM7TSXP0Fw8lRyV3Q0UqATeuSwOV5bhXJxFQlk9A9v9NPZr
-         J6nMQw1cAZz8fHbHqL8zEodTLIywhyJ0cQN1iU9RTPCxSzZwK5BztHwvrss/F3GLR9XG
-         Wr2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVA2HWxm47a5qTC9pSMxF069Ei/wI0C9yxxskbl4DRz3Rkd1jmEQZlxA8mPMsPTkKFt7WUsvXhpgS94umE=@vger.kernel.org, AJvYcCVBzRZq9wHrJYAlo9O6Fnea9PP9jlNvA8JqnKuOzceoaFglHDWaaGCzDsfZznHZPO0Qa4t0NJG0heyqjQ==@vger.kernel.org, AJvYcCWp8bNDk+pW03Xkq5eJbu1/39hBKOmR38e8Z5Nbm9740meIXLeqbQ/w1gcQoihzBWhg5RHVjblikXfp@vger.kernel.org, AJvYcCX/l4Vlh4Z5wCmYD0Lo21HZS40uh0FnXBJ5jPba2nSigFqlN0JydV1hybzY+uYHega+gcRmR2JsvlkJH0GV@vger.kernel.org, AJvYcCXS0VGWM6OW30bZ5j7mYZCI+0SXczbDRnSfl5V7bZkQ6INN7WHP+TwDilj7J8K+lLrFaEUnDp/R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztnf3qAcmR7HISj2QE8YFKIMxuENVaNUhEyt47o4WqodEt/DO2
-	+ntVSzDNCw+f6iHDLbyJ2mnQvUPw1hbT39AU4IkI/SMV9eOhJF7z
-X-Gm-Gg: ASbGncs72J1UFvZYfW+ooQTW0rlSfqeRMRwsD5uFaykcS7mHKckCw2HtJd6r5+2nuEu
-	loxqhr0me/bBr2elGRJ1oYvKEHPattuqEhHG0ormwwnY8PMpUnkKYx+WVEHLYdJNows9rhawu/y
-	CTzs+1PBrei467fZToo35D49atNOFf6uCEzDl+9m7A+yxIG0QSUGWvaXfgGjeukWDv36Gocpvh5
-	T4w5M425wCb5w+PNPxzq+lzuo4pAfDmx8sS0Wk4hgHGkiGuk9MMNUSm5tN8/kXFVY5lMzqvnI03
-	bDDNJW8uMUYSiHlRb2gZ9CgIa8LAuCeneATqsPawQPgFzfKpCWw=
-X-Google-Smtp-Source: AGHT+IEeyGGKEKTQBjte0H1mQVkFdabAaUg0tK61x92eMxOEScpw39HrOLgRuI+uILMIjebb4cT/0A==
-X-Received: by 2002:a17:902:d492:b0:223:619e:71da with SMTP id d9443c01a7336-231982c8c7dmr63004855ad.49.1747245523303;
-        Wed, 14 May 2025 10:58:43 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc773e7aasm102346245ad.69.2025.05.14.10.58.42
+        d=1e100.net; s=20230601; t=1747245731; x=1747850531;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=829jWq9v+mfMDPX2geL7wicz1x81Omla9QORxkV/k20=;
+        b=gZZ5ZUxN7gVIH1WPBCvjk3Rs2NiwrHx/hgAI935hb+1qqnq59jU9WKfvaqihwYtTkr
+         UwrQ2diPcLryPFQ/IcR9aheXJzdY5c5Ydw+2wx8Okd+CvXQGSCaDhvZ5BtR4fBiVSV1a
+         ODdGYaTvtBVjoQm0C/dgpztqUF79NJMeKl+vBbvG51XKtFPXfV49ydHMpiFcuWkEDA8z
+         Kv3GNGawzA8iAHj5snCRmhcFw50Qh7eZ/dmXrvmADFCbkHJz5pdw03BhhPud5IUD5eLw
+         W5RV7Vkuzl6kQ+mPNPZH3ohaozj5IkWl9O1gja/n3WM97GrIfOQf+Px1aLZ0ekwRusH5
+         FmxA==
+X-Gm-Message-State: AOJu0YxtrNRfIdOCcWs61YJOJQSbjuysM6ZfBI+MsmxBf4qFK+Z/rIjp
+	1T9pD6P8NM6ltadIMZhGTcZHc0JZOQ3i9Yos/KQ+t+nSR/fxCUZ0bsvvscHfLSDIbbzOOTMOOH3
+	vX6nbVHXpAmMWRqHyr1zwYmK2JuweJr4f865wGlH0FQjoQEOXC9vyqmU1bR7pLQ==
+X-Gm-Gg: ASbGncsXCofVyKPSZGmFJHpl5P7oeZQaPDj8B2l1ZL6Ry8wAJk4Av+Nddggn/fVVnNy
+	9wHH5zHcVEoDbU18v2lXsLh9HmtdQbn4TmdOONq1QrutsfoKS1LwxtdeirA+UrYEu3d7OpckpmK
+	csagb9oUx9QYkwKb1hVUmxTR01ssRcuqmoFfQ6UT+B7d6PuA92uhn6J9f4P/0yw0Ka8CvklnqT7
+	hZMEhDGUZsnwd1IIBrZsgi5jVFX6QNJbXSqNnAwVwP0igcyY4fD1DNBluK1Ihuc9L94pNbRVLhJ
+	ijNnax/mvEgWWGyoFBbotL4J5iQgXuDalt1Y3f9/WOA=
+X-Received: by 2002:ad4:5ba3:0:b0:6e2:3761:71b0 with SMTP id 6a1803df08f44-6f8a318471cmr7623846d6.5.1747245730835;
+        Wed, 14 May 2025 11:02:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHihCvsDNg+KNgZipkOFnNnS70/fG6gACBZer5xpIAo6hhWZo3wAparzap8rnzwGYfpQthN7Q==
+X-Received: by 2002:ad4:5ba3:0:b0:6e2:3761:71b0 with SMTP id 6a1803df08f44-6f8a318471cmr7623206d6.5.1747245730233;
+        Wed, 14 May 2025 11:02:10 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a60479sm83616096d6.120.2025.05.14.11.02.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 10:58:42 -0700 (PDT)
-Date: Wed, 14 May 2025 13:58:40 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v3 3/4] net: mana: Allow irq_setup() to skip cpus for
- affinity
-Message-ID: <aCTZ0J8F7JkWMlYW@yury>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1746785625-4753-1-git-send-email-shradhagupta@linux.microsoft.com>
- <SN6PR02MB41577E2FAA79E2803C3384B0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aCTK5PjV1n1EYOpi@yury>
- <SN6PR02MB4157AA971E41FE92B1878F9DD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+        Wed, 14 May 2025 11:02:09 -0700 (PDT)
+From: Jared Kangas <jkangas@redhat.com>
+To: willy@infradead.org,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Jared Kangas <jkangas@redhat.com>
+Subject: [PATCH] radix tree: fix kmemleak false positive in radix_tree_shrink()
+Date: Wed, 14 May 2025 11:01:37 -0700
+Message-ID: <20250514180137.363929-1-jkangas@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB4157AA971E41FE92B1878F9DD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 05:26:45PM +0000, Michael Kelley wrote:
-> > Hope that helps.
-> 
-> Yes, that helps! So the key to understanding "weight" is that
-> NUMA locality is preferred over sibling dislocality.
-> 
-> This is a great summary!  All or most of it should go as a
-> comment describing the function and what it is trying to do.
+Kmemleak periodically produces a false positive report that resembles
+the following:
 
-OK, please consider applying:
+unreferenced object 0xffff00000db613b8 (size 576):
+  comm "systemd", pid 1, jiffies 4294987015
+  hex dump (first 32 bytes):
+    00 22 01 00 00 00 00 00 28 1c d5 c5 00 00 ff ff  ."......(.......
+    10 e4 6c c0 00 00 ff ff d0 13 b6 0d 00 00 ff ff  ..l.............
+  backtrace (crc 520d6e1c):
+    kmemleak_alloc+0xb4/0xc4
+    kmem_cache_alloc+0x288/0x2b0
+    radix_tree_node_alloc.constprop.0+0x214/0x364
+    idr_get_free+0x3d0/0x690
+    idr_alloc_u32+0x120/0x280
+    idr_alloc_cyclic+0xe8/0x1b4
+    __kernfs_new_node+0x118/0x5a0
+    kernfs_create_dir_ns+0x8c/0x1fc
+    cgroup_create+0x1cc/0x8a0
+    cgroup_mkdir+0x13c/0x90c
+    kernfs_iop_mkdir+0x108/0x184
+    vfs_mkdir+0x3c8/0x5f0
+    do_mkdirat+0x218/0x290
+    __arm64_sys_mkdirat+0xe0/0x140
+    invoke_syscall.constprop.0+0x74/0x1e4
+    do_el0_svc+0xd0/0x1dc
 
-From abdf5cc6dabd7f433b1d1e66db86333a33a2cd15 Mon Sep 17 00:00:00 2001
-From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-Date: Wed, 14 May 2025 13:45:26 -0400
-Subject: [PATCH] net: mana: explain irq_setup() algorithm
+This is a transient leak that can be traced to radix_tree_shrink(): when
+root->xa_head is set, kmemleak may have already started traversing the
+radix tree. If this has happened, but kmemleak fails to scan the new
+xa_head before it moves, kmemleak will see it as a leak until the radix
+tree is scanned again.
 
-Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
-added the irq_setup() function that distributes IRQs on CPUs according
-to a tricky heuristic. The corresponding commit message explains the
-heuristic.
+Mark the new xa_head as a transient leak to prevent this false positive
+report.
 
-Duplicate it in the source code to make available for readers without
-digging git in history. Also, add more detailed explanation about how
-the heuristics is implemented.
-
-Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Signed-off-by: Jared Kangas <jkangas@redhat.com>
 ---
- .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ lib/radix-tree.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 4ffaf7588885..f9e8d4d1ba3a 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
- 	r->size = 0;
- }
+diff --git a/lib/radix-tree.c b/lib/radix-tree.c
+index 976b9bd02a1b5..79b3702a0cb54 100644
+--- a/lib/radix-tree.c
++++ b/lib/radix-tree.c
+@@ -509,6 +509,14 @@ static inline bool radix_tree_shrink(struct radix_tree_root *root)
+ 		if (is_idr(root) && !tag_get(node, IDR_FREE, 0))
+ 			root_tag_clear(root, IDR_FREE);
  
-+/*
-+ * Spread on CPUs with the following heuristics:
-+ *
-+ * 1. No more than one IRQ per CPU, if possible;
-+ * 2. NUMA locality is the second priority;
-+ * 3. Sibling dislocality is the last priority.
-+ *
-+ * Let's consider this topology:
-+ *
-+ * Node            0               1
-+ * Core        0       1       2       3
-+ * CPU       0   1   2   3   4   5   6   7
-+ *
-+ * The most performant IRQ distribution based on the above topology
-+ * and heuristics may look like this:
-+ *
-+ * IRQ     Nodes   Cores   CPUs
-+ * 0       1       0       0-1
-+ * 1       1       1       2-3
-+ * 2       1       0       0-1
-+ * 3       1       1       2-3
-+ * 4       2       2       4-5
-+ * 5       2       3       6-7
-+ * 6       2       2       4-5
-+ * 7       2       3       6-7
-+ *
-+ * The heuristics is implemented as follows.
-+ *
-+ * The outer for_each() loop resets the 'weight' to the actual number
-+ * of CPUs in the hop. Then inner for_each() loop decrements it by the
-+ * number of sibling groups (cores) while assigning first set of IRQs
-+ * to each group. IRQs 0 and 1 above are distributed this way.
-+ *
-+ * Now, because NUMA locality is more important, we should walk the
-+ * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
-+ * implemented by the medium while() loop. We do like this unless the
-+ * number of IRQs assigned on this hop will not become equal to number
-+ * of CPUs in the hop (weight == 0). Then we switch to the next hop and
-+ * do the same thing.
-+ */
++		/*
++		 * Kmemleak might report a false positive if it traverses the
++		 * tree while we're shrinking it, since the reference moves
++		 * from node->slots[0] to root->xa_head.
++		 */
++		if (radix_tree_is_internal_node(child))
++			kmemleak_transient_leak(entry_to_node(child));
 +
- static int irq_setup(unsigned int *irqs, unsigned int len, int node)
- {
- 	const struct cpumask *next, *prev = cpu_none_mask;
+ 		/*
+ 		 * We have a dilemma here. The node's slot[0] must not be
+ 		 * NULLed in case there are concurrent lookups expecting to
 -- 
-2.43.0
+2.49.0
 
